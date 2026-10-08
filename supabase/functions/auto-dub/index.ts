@@ -33,7 +33,7 @@ const WORKER_CONFIGURED = !!WORKER_SECRET && (WORKER_URL.startsWith('https://') 
 /** Every language the synthesiser speaks. The picker offers more; a language
  *  outside this set can have subtitles but not a voice. */
 export const DUB_LANGS = [
-  'ar', 'da', 'de', 'el', 'en', 'es', 'fi', 'fr', 'he', 'hi', 'it', 'ja', 'ko', 'ms', 'nl', 'no', 'pl', 'pt', 'ru', 'sv', 'sw', 'tr', 'zh', 'zh-TW',
+  'ar', 'da', 'de', 'el', 'en', 'es', 'fi', 'fr', 'he', 'hi', 'it', 'ja', 'ko', 'ms', 'nl', 'no', 'pl', 'pt', 'ru', 'sv', 'sw', 'tr', 'zh',
 ];
 /** Filled for every eligible video without anybody asking. */
 const AUTO_LANGS = (Deno.env.get('DUB_AUTO_LANGS') || 'en,es,pt,fr,de,ar,hi,zh')
@@ -104,13 +104,8 @@ async function submit(db: any, row: DubRow): Promise<Submit> {
     .maybeSingle();
 
   if (tr?.status !== 'ready') {
-    if (tr?.status !== 'processing') {
-      fetch(`${SUPABASE_URL}/functions/v1/translate-transcript`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SERVICE_KEY}` },
-        body: JSON.stringify({ transcriptId: row.transcript_id, lang: row.language }),
-      }).catch((e) => console.warn('translate kick failed', e));
-    }
+    // The caption path owns translation. Reuse that exact regional-language
+    // row instead of starting another translation or waking the disabled sweep.
     return 'waiting-translation';
   }
 
@@ -228,8 +223,8 @@ async function sweep(db: any) {
 /* ─────────────────────────────── request ────────────────────────────────── */
 
 async function request(db: any, body: any) {
-  const lang = normalizeLang(body?.lang);
-  if (!lang || !DUB_LANGS.includes(lang)) return json({ error: `unsupported language '${body?.lang}'` }, 400);
+  const lang = String(body?.lang ?? '').trim().toLowerCase().replace(/_/g, '-');
+  if (!/^[a-z]{2}(-[a-z0-9]{2,8}){0,2}$/.test(lang) || lang.length > 16 || !DUB_LANGS.includes(lang.split('-')[0])) return json({ error: 'unsupported dub language' }, 400);
 
   const transcriptId = typeof body?.transcriptId === 'string' ? body.transcriptId : null;
   const target = transcriptId ? null : parseTarget(body);
@@ -243,7 +238,7 @@ async function request(db: any, body: any) {
   if (!t || t.source_kind !== 'video') return json({ error: 'no video transcript' }, 404);
   if (t.status !== 'ready') return json({ ok: true, status: 'no-transcript' }, 409);
   if (t.visibility !== 'public') return json({ error: 'only public videos can use the shared dub cache' }, 403);
-  if (normalizeLang(t.source_lang) === lang) return json({ ok: true, status: 'same-as-source' });
+  if (normalizeLang(t.source_lang) === normalizeLang(lang)) return json({ ok: true, status: 'same-as-source' });
   if (Number(t.duration_seconds ?? 0) > MAX_REQUEST_SECONDS) return json({ ok: true, status: 'too-long' });
 
   if (!WORKER_CONFIGURED) return json({ ok: true, status: 'unavailable' });
