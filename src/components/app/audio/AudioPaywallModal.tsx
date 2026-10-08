@@ -31,7 +31,7 @@
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
+import { DhbCoin } from '@/components/app/DhbAmount';
 import {
   Drawer,
   DrawerContent,
@@ -238,7 +238,7 @@ export function AudioPaywallModal({
               <div className="mt-1.5 flex items-center justify-between text-xs">
                 <span className="text-zinc-500">{t('creator.yourBalance')}</span>
                 <span className={hasEnoughBalance ? 'text-zinc-400' : 'text-red-400'}>
-                  {formatDhb(userBalance)} <DhbCoin />
+                  {formatDhb(userBalance)} <DhbCoin label={t('buyCoins.tokensUnit')} />
                 </span>
               </div>
             </div>
@@ -265,7 +265,7 @@ export function AudioPaywallModal({
               </>
             ) : hasEnoughBalance ? (
               <>
-                {t('creator.payAction')} <DhbAmount amount={formatDhb(costDhb)} />
+                {t('creator.payAction')} <span className="inline-flex items-center gap-1">{formatDhb(costDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /></span>
               </>
             ) : (
               t('creator.insufficientDhb')

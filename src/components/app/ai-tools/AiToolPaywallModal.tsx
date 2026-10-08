@@ -189,7 +189,7 @@ export function AiToolPaywallModal({
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-sm font-medium text-white">${optionCostUsd.toFixed(2)}</p>
-                          <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin /></p>
+                          <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /></p>
                         </div>
                       </button>
                     );
@@ -241,11 +241,11 @@ export function AiToolPaywallModal({
               <>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <img src={dhbCoinImage} alt="DHB" className="w-6 h-6" />
+                    <img src={dhbCoinImage} alt="" className="w-6 h-6" />
                     <span className="text-white font-medium">{t('tokenPaywall.payWithTokens')}</span>
                   </div>
                   <div className="text-right">
-                    <p className="text-xl font-bold text-white">{formatDhb(costDhb)} <DhbCoin /></p>
+                    <p className="text-xl font-bold text-white">{formatDhb(costDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /></p>
                     <p className="text-xs text-zinc-500">{t('tokenPaywall.pricePerToken', { price: dhbPrice?.toFixed(6) })}</p>
                   </div>
                 </div>
@@ -263,12 +263,12 @@ export function AiToolPaywallModal({
           <div className="flex items-center justify-between text-sm bg-zinc-800/30 rounded-lg p-3">
             <span className="text-zinc-400">{t('tokenPaywall.yourTokens')}</span>
             <div className="flex items-center gap-2">
-              <img src={dhbCoinImage} alt="DHB" className="w-4 h-4" />
+              <img src={dhbCoinImage} alt="" className="w-4 h-4" />
               {isWalletLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               ) : (
                 <span className={needsTokens ? 'text-red-400' : 'text-white font-bold'}>
-                  {formatDhb(walletDhb)} <DhbCoin />
+                  {formatDhb(walletDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} />
                 </span>
               )}
             </div>

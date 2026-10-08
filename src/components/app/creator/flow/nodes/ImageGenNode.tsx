@@ -142,7 +142,7 @@ export default function ImageGenNode({ id, data, selected }: NodeProps<FlowNode>
           <div className="flex h-full min-h-[140px] w-full flex-col items-center justify-center gap-2 text-white/35">
             {busy ? <Loader2 size={18} className="animate-spin text-white/70" /> : <Sparkles size={18} />}
             <span className="max-w-[80%] text-center text-[11px] leading-snug">
-              {busy ? (data.pipelineQueued ? t('creatorFlow.queued') : t('creatorFlow.rendering')) : shownError ?? t('creatorFlow.imageGenEmpty')}
+              {busy ? (data.pipelineQueued ? t('creatorFlow.queued') : t('creatorFlow.rendering')) : shownError?.replace(/\bDHB\b/g, t('buyCoins.tokensUnit')) ?? t('creatorFlow.imageGenEmpty')}
             </span>
           </div>
         )}
@@ -152,7 +152,7 @@ export default function ImageGenNode({ id, data, selected }: NodeProps<FlowNode>
           </div>
         )}
         {shownError && shownUrl && (
-          <p className="absolute inset-x-2 top-2 rounded-md bg-black/80 px-2 py-1 text-[10px] text-white">{shownError}</p>
+          <p className="absolute inset-x-2 top-2 rounded-md bg-black/80 px-2 py-1 text-[10px] text-white">{shownError.replace(/\bDHB\b/g, t('buyCoins.tokensUnit'))}</p>
         )}
 
         <div className="absolute left-2 top-2 flex items-center gap-1.5">

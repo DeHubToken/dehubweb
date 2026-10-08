@@ -255,7 +255,7 @@ const ResultCard = memo(function ResultCard({ job, onOpen }: { job: GenerationJo
           {t(job.status === 'cancelled' ? 'creator.cancelled' : 'creator.failed')}
         </span>
         <span className="line-clamp-2 text-[10px] leading-snug text-white/55">
-          {job.error || t('creator.somethingWentWrong')}
+          {job.error?.replace(/\bDHB\b/g, t('buyCoins.tokensUnit')) || t('creator.somethingWentWrong')}
         </span>
       </button>
     );
@@ -499,7 +499,7 @@ function ResultViewer({
                 {t(job.status === 'cancelled' ? 'creator.youCancelledRun' : 'creator.runFailed')}
               </p>
               <p className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed text-white/45">
-                {job.error || t('creator.noFurtherDetail')}
+                {job.error?.replace(/\bDHB\b/g, t('buyCoins.tokensUnit')) || t('creator.noFurtherDetail')}
               </p>
             </div>
           ) : job.kind === 'video' ? (
