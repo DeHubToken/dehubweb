@@ -1,6 +1,8 @@
+import { JPEG } from "./visualHighlightFixture";
 import { describe, expect, it } from "vitest";
-import { HighlightChatSession, highlightChatRequest, type HighlightChatRuntime, type HighlightChatState } from "./highlightChat";
-import { highlightProject } from "./highlights";
+import { HighlightChatSession, highlightChatRequest, highlightVisualScope, type HighlightChatRuntime, type HighlightChatState } from "./highlightChat";
+import { visualSampleTimes, validVisualBatch, type VisualWindow, type VisualFrame } from "./visualHighlightContract";
+import { highlightProject, type HighlightRange } from "./highlights";
 import type { CaptionWord } from "./captionLayout";
 import type { MediaClip, ProjectSnapshot } from "./types";
 
@@ -141,4 +143,84 @@ describe("highlight chat session", () => {
     expect(signal!.aborted).toBe(true); saved.resolve(false);
     expect(await creating).toEqual({ status: "cancelled" }); expect(create.session.state.clipId).toBeNull();
   });
+});
+
+const visualFrames = (windows: VisualWindow[]): VisualFrame[] => windows.flatMap(window => visualSampleTimes(window).map(at => ({ windowId: window.id, at, dataUrl: JPEG })));
+const visualRanges: HighlightRange[] = [{ start: 0, end: 6, score: 0.9, text: "The cover starts lifting" }, { start: 6, end: 12, score: 0.98, text: "The red block is revealed" }];
+
+describe("opt-in visual highlight chat", () => {
+  it("keeps ordinary requests on speech and never samples frames without opt-in", async () => {
+    let visualCalls = 0;
+    const h = setup({ visual: { sample: async () => { visualCalls++; return []; }, analyse: async () => { visualCalls++; return []; } } });
+    expect((await h.session.start(request, [])).status).toBe("found");
+    expect(visualCalls).toBe(0); expect(h.counts()).toEqual({ transcriptions: 1, plans: 1, creates: 0 });
+  });
+  it("ranks real frame windows for silent footage without speech or caption requests", async () => {
+    let samples = 0, analyses = 0;
+    const h = setup({ visual: {
+      sample: async (source, windows) => { samples++; expect(source).toBe(clip); return visualFrames(windows); },
+      analyse: async batch => {
+        analyses++; expect(validVisualBatch(batch)).toBe(true); expect(batch.optIn).toBe(true);
+        expect(batch.focus).toBe("The red block reveal"); expect(batch.seconds).toBe(15);
+        expect(Object.keys(batch).sort()).toEqual(["duration", "focus", "frames", "optIn", "seconds", "windows"].sort());
+        return visualRanges;
+      },
+    } });
+    const original = h.current();
+    expect(await h.session.start({ ...request, useVisual: true, visualScope: highlightVisualScope(project(), []), useCaptions: true, seconds: 15, focus: "The red block reveal" }, [])).toEqual({ status: "found", count: 2, total: 2 });
+    expect(samples).toBe(1); expect(analyses).toBe(1); expect(h.counts()).toEqual({ transcriptions: 0, plans: 0, creates: 0 });
+    expect(h.session.preview(1)).toEqual({ start: 13, end: 19 }); expect(h.current()).toBe(original);
+    expect(await h.session.review("Remove moment 1")).toEqual({ status: "reviewed", count: 1, total: 2 });
+    expect(await h.session.create()).toEqual({ status: "created", count: 1, total: 1 });
+    expect(h.current()?.id).toBe("copy"); expect(original?.id).toBe("original"); expect(original?.clips[0]).toBe(clip);
+  });
+  it("refuses unavailable visual analysis without falling back to transcription", async () => {
+    const h = setup();
+    expect(await h.session.start({ ...request, useVisual: true, visualScope: highlightVisualScope(project(), []) }, [])).toEqual({ status: "error", error: "failed" });
+    expect(h.counts()).toEqual({ transcriptions: 0, plans: 0, creates: 0 });
+  });
+  it("refuses source changes between frame sampling and the provider request", async () => {
+    let providerCalls = 0;
+    const h = setup({ visual: {
+      sample: async (_source, windows) => { h.change({ ...project(), title: "Changed during sampling" }); return visualFrames(windows); },
+      analyse: async () => { providerCalls++; return visualRanges; },
+    } });
+    expect(await h.session.start({ ...request, useVisual: true, visualScope: highlightVisualScope(project(), []) }, [])).toEqual({ status: "error", error: "changed" });
+    expect(providerCalls).toBe(0); expect(h.session.state.ranges).toBeNull(); expect(h.counts().transcriptions).toBe(0);
+  });
+  it("ignores a late provider response after cancellation and keeps retries explicit", async () => {
+    const late = deferred<HighlightRange[]>(); let calls = 0; let started!: () => void;
+    const ready = new Promise<void>(resolve => { started = resolve; });
+    const h = setup({ visual: { sample: async (_source, windows) => visualFrames(windows), analyse: async () => { calls++; started(); return late.promise; } } });
+    const pending = h.session.start({ ...request, useVisual: true, visualScope: highlightVisualScope(project(), []) }, []); await ready;
+    h.session.cancel(); late.resolve(visualRanges);
+    expect(await pending).toEqual({ status: "cancelled" }); expect(calls).toBe(1); expect(h.session.state.ranges).toBeNull(); expect(h.session.state.busy).toBe(false);
+  });
+  it("does not retry a provider error or substitute a speech-only result", async () => {
+    let calls = 0;
+    const h = setup({ visual: { sample: async (_source, windows) => visualFrames(windows), analyse: async () => { calls++; throw new Error("payment_required"); } } });
+    expect(await h.session.start({ ...request, useVisual: true, visualScope: highlightVisualScope(project(), []) }, [])).toEqual({ status: "error", error: "failed" });
+    expect(calls).toBe(1); expect(h.counts()).toEqual({ transcriptions: 0, plans: 0, creates: 0 }); expect(h.session.state.ranges).toBeNull();
+  });
+  it("rejects unsupported visual duration and ambiguous selections before sampling", async () => {
+    let calls = 0;
+    const h = setup({ visual: { sample: async () => { calls++; return []; }, analyse: async () => { calls++; return []; } } });
+    h.change({ ...project(), clips: [clip, { ...clip, id: "second" }] });
+    expect(await h.session.start({ ...request, useVisual: true, visualScope: highlightVisualScope(project(), []) }, [])).toEqual({ status: "error", error: "selectVideo" });
+    h.change({ ...project(), clips: [{ ...clip, duration: 800, speed: 0.5 }] });
+    expect(await h.session.start({ ...request, useVisual: true, visualScope: highlightVisualScope(project(), []) }, [])).toEqual({ status: "error", error: "limit" });
+    expect(calls).toBe(0); expect(h.counts()).toEqual({ transcriptions: 0, plans: 0, creates: 0 });
+  });
+});
+
+it("requires visual consent for the current project, selection and source assets", async () => {
+  let calls = 0;
+  const h = setup({ visual: { sample: async () => { calls++; return []; }, analyse: async () => { calls++; return []; } } });
+  expect(await h.session.start({ ...request, useVisual: true }, [])).toEqual({ status: "error", error: "changed" });
+  const consent = highlightVisualScope(project(), []);
+  h.change({ ...project(), clips: [{ ...clip, mediaId: "replacement" }] });
+  expect(await h.session.start({ ...request, useVisual: true, visualScope: consent }, [])).toEqual({ status: "error", error: "changed" });
+  h.change(project());
+  expect(await h.session.start({ ...request, useVisual: true, visualScope: consent }, ["video"])).toEqual({ status: "error", error: "changed" });
+  expect(calls).toBe(0); expect(h.counts().transcriptions).toBe(0);
 });
