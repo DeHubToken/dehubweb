@@ -1,6 +1,7 @@
 import { X, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { LinkPreviewData } from '@/lib/api/link-preview';
+import { PredictionDetails } from '@/components/app/cards/PredictionDetails';
 
 interface LinkPreviewCardProps {
   preview: LinkPreviewData;
@@ -39,7 +40,7 @@ export function LinkPreviewCard({ preview, onRemove }: LinkPreviewCardProps) {
             <ExternalLink className="w-3 h-3" />
             <span className="truncate">{preview.siteName || domain}</span>
           </div>
-          <h4 className="text-sm font-medium text-white line-clamp-1 mb-0.5">
+          <h4 className={`text-sm font-medium text-white mb-0.5 ${preview.prediction ? '' : 'line-clamp-1'}`}>
             {preview.title}
           </h4>
           {preview.description && (
@@ -47,6 +48,7 @@ export function LinkPreviewCard({ preview, onRemove }: LinkPreviewCardProps) {
               {preview.description}
             </p>
           )}
+          <PredictionDetails preview={preview} />
         </div>
       </div>
 
