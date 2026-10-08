@@ -21,7 +21,8 @@ if (process.argv.includes('--assets')) {
     }
   }
   rewrite('dist');
-  appendFileSync(process.env.GITHUB_STEP_SUMMARY, `Review build: ${process.env.GITHUB_SHA}\n\n[Open Home preview](${origin}/app)\n`);
+  const version = JSON.parse(readFileSync('dist/version.json', 'utf8'));
+  appendFileSync(process.env.GITHUB_STEP_SUMMARY, `Review build: ${version.id}\n\n[Open Home preview](${origin}/app)\n`);
 } else {
   const { token, account } = normalizeCredentials(process.env.CLOUDFLARE_APITOKEN, process.env.CLOUDFLARE_ID);
   console.log(`::add-mask::${token}`);

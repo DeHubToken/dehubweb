@@ -40,6 +40,8 @@ jobs:
           CLOUDFLARE_ID: ${{ secrets.CLOUDFLARE_ID }}
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm build
+        env:
+          VITE_HOME_UI_REVIEW: 'true'
       - run: node scripts/prepare-home-review.mjs --assets
       - name: Publish branch preview
         run: pnpm exec wrangler deploy --config wrangler.home-review.jsonc

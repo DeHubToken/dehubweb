@@ -114,8 +114,9 @@ export function ThemePreviewCard({ value, label, active, available, onSelect }: 
           <div
             style={{
               height: 12,
+              ...(value === 'immersive' ? { width: 52, alignSelf: 'center' as const } : {}),
               borderRadius: pad,
-              background: s.flat ? 'transparent' : s.bento,
+              background: s.flat && value !== 'immersive' ? 'transparent' : s.bento,
               border: `1px solid ${s.border}`,
               display: 'flex',
               alignItems: 'center',
