@@ -15,8 +15,11 @@ import { useEditorUiStore } from '@/store/editorUiStore';
 import { useEditorAgentStore, type AgentChatEntry } from '@/store/editorAgentStore';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { applyOps, askAgent, askSceneAgent, type AgentMessage } from '@/lib/editor/agent';
-import { highlightChatRequest, type HighlightChatResult } from '@/lib/editor/highlightChat';
+import { highlightChatRequest, highlightVisualScope, type HighlightChatResult } from '@/lib/editor/highlightChat';
 import { useHighlightChat } from '@/lib/editor/useHighlightChat';
+import { getMedia } from '@/lib/editor/mediaStore';
+import { processVisualFrames } from '@/lib/editor/processVisualFrames';
+import { analyseVisualHighlights } from '@/lib/editor/visualHighlightApi';
 import { transcribeClipWords } from '@/lib/editor/captions';
 import { createHighlightEdit } from '@/lib/editor/applyHighlights';
 import { shotTime } from '@/lib/editor/shots';
@@ -41,12 +44,24 @@ export function AgentPanel() {
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const quota = useEditorQuota();
   const [draft, setDraft] = useState('');
+  const [visualConsent, setVisualConsent] = useState<string | null>(null);
+  const visualScope = useEditorStore(s => highlightVisualScope(s.toSnapshot(), s.selectedClipIds));
+  const useVisual = visualConsent === visualScope;
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const previewEnd = useRef<number | null>(null);
   const [highlightState, highlights] = useHighlightChat({
     current: () => useEditorStore.getState().toSnapshot(),
     plan: askSceneAgent,
+    visual: {
+      sample: async (clip, windows, signal, progress) => {
+        useEditorStore.getState().setIsPlaying(false);
+        const stored = await getMedia(clip.mediaId);
+        if (!stored) throw new Error('media unavailable');
+        return processVisualFrames(stored.blob, clip, windows, signal, progress);
+      },
+      analyse: analyseVisualHighlights,
+    },
     transcribe: async (clip, progress, signal) => {
       const media = useEditorStore.getState().media.find(m => m.id === clip.mediaId);
       if (!media) throw new Error('media unavailable');
@@ -121,7 +136,7 @@ export function AgentPanel() {
     const request = highlightChatRequest(prompt);
     if (request || highlights.reviewing) {
       previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
-      recordHighlights(request ? await highlights.start(request, useEditorStore.getState().selectedClipIds) : await highlights.review(prompt));
+      recordHighlights(request ? await highlights.start({ ...request, useVisual, visualScope, focus: request.focus || (useVisual ? prompt.slice(0, 240) : "") }, useEditorStore.getState().selectedClipIds) : await highlights.review(prompt));
       inputRef.current?.focus();
       return;
     }
@@ -154,7 +169,7 @@ export function AgentPanel() {
       setBusy(false);
       inputRef.current?.focus();
     }
-  }, [busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t]);
+  }, [useVisual, visualScope, busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -227,6 +242,11 @@ export function AgentPanel() {
         className="shrink-0 border-t border-white/10 p-2"
         onSubmit={(e) => { e.preventDefault(); void send(draft); }}
       >
+        {!highlights.reviewing && !assemblyState.sourceId && <fieldset className="mb-2 space-y-1 px-1" disabled={working}>
+          <legend className="text-[10px] text-white/50">{t('editor.highlights.title')}</legend>
+          <label className="flex items-center gap-2 text-[11px] text-white/75"><input type="checkbox" checked={useVisual} onChange={event => setVisualConsent(event.target.checked ? visualScope : null)} />{t('editor.highlights.visual')}</label>
+          {useVisual && <p className="text-[10px] leading-relaxed text-white/50">{t('editor.highlights.visualPrivacy')}</p>}
+        </fieldset>}
         <div className="flex items-end gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] p-1.5 focus-within:border-white/30">
           <textarea
             ref={inputRef}
@@ -256,7 +276,7 @@ export function AgentPanel() {
         <div className="mt-1 flex items-center justify-between px-1 text-[10px] text-white/35">
           <span>{t('editor.agent.hint')}</span>
           {entries.length > 0 && (
-            <button type="button" onClick={() => { closeHighlights(); closeAssembly(); clear(); }} className="flex items-center gap-1 hover:text-white/70">
+            <button type="button" onClick={() => { closeHighlights(); closeAssembly(); setVisualConsent(null); clear(); }} className="flex items-center gap-1 hover:text-white/70">
               <Trash2 className="h-3 w-3" /> {t('editor.agent.clear')}
             </button>
           )}
