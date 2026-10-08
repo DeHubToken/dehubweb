@@ -4,7 +4,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 const PHONE_QUERY = '(max-width: 639px)';
 
 /**
- * True on phones in the System theme, where the feeds use the full-width
+ * True on phones in the Immersive theme, where the feeds use the full-width
  * "cinematic" layouts (same breakpoint as the cinematic CSS in index.css).
  */
 export function useCinematicPhone(): boolean {
@@ -21,5 +21,5 @@ export function useCinematicPhone(): boolean {
     return () => mql.removeEventListener('change', onChange);
   }, []);
 
-  return isPhone && theme === 'system';
+  return isPhone && theme === 'immersive';
 }

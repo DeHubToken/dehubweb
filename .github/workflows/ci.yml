@@ -15,6 +15,44 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  home-uix-review:
+    name: Home UI web preview
+    needs: [i18n, edge-cors, typecheck, tests, stage-remux, boot-path]
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'ui/home-classic-immersive-review'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - name: Prepare isolated review host
+        run: node scripts/prepare-home-review.mjs
+        env:
+          CLOUDFLARE_APITOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CLOUDFLARE_ID: ${{ secrets.CLOUDFLARE_ID }}
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm build
+      - run: node scripts/prepare-home-review.mjs --assets
+      - name: Publish branch preview
+        run: pnpm exec wrangler deploy --config wrangler.home-review.jsonc
+      - name: Verify preview revision
+        env:
+          REVIEW_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          curl --fail --silent --show-error "$HOME_REVIEW_ORIGIN/version.json" --output preview-version.json
+          node --input-type=module -e "import fs from 'node:fs'; const v = JSON.parse(fs.readFileSync('preview-version.json')); if (v.id !== process.env.REVIEW_SHA.slice(0, 8)) throw new Error('Preview revision mismatch');"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: home-web-review-version
+          path: preview-version.json
+
   deployment-credentials:
     name: Deployment credential parsing
     runs-on: ubuntu-latest

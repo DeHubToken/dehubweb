@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/app/PageHeader';
 const mocks = vi.hoisted(() => ({
   navigate: vi.fn(),
   key: 'feed-entry',
-  theme: 'system',
+  theme: 'immersive',
 }));
 
 vi.mock('react-router-dom', () => ({
@@ -18,7 +18,7 @@ vi.mock('@/contexts/SidebarCollapseContext', () => ({ useSidebarCollapse: () => 
 beforeEach(() => {
   mocks.navigate.mockReset();
   mocks.key = 'feed-entry';
-  mocks.theme = 'system';
+  mocks.theme = 'immersive';
   window.history.replaceState({ idx: 1 }, '');
 });
 afterEach(() => {
@@ -26,7 +26,7 @@ afterEach(() => {
   window.history.replaceState(null, '');
 });
 
-describe('System page navigation', () => {
+describe('Immersive page navigation', () => {
   it('uses a back control without the old title bar and preserves page actions', () => {
     const options = vi.fn();
     render(<PageHeader title="Profile" rightActions={<button onClick={options}>Options</button>} />);
@@ -70,8 +70,8 @@ describe('System page navigation', () => {
     expect(mocks.navigate).not.toHaveBeenCalled();
   });
 
-  it('retains the page title in other themes', () => {
-    mocks.theme = 'minimal';
+  it.each(['minimal', 'cosmic'])('retains the page title in %s', (theme) => {
+    mocks.theme = theme;
     render(<PageHeader title="Profile" />);
     expect(screen.getByRole('heading', { name: 'Profile' })).toBeInTheDocument();
   });

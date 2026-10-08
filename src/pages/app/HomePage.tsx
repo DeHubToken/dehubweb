@@ -119,9 +119,9 @@ export default function HomePage() {
   const { isCollapsed } = useSidebarCollapse();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
-  // System theme on phones: the tab pill rests hidden and the island capsule
+  // Immersive theme on phones: the tab pill rests hidden and the island capsule
   // (FeedIslandCapsule) opens it.
-  const islandTopBar = theme === 'system';
+  const islandTopBar = theme === 'immersive';
   const navVisible = useScrollDirection();
   // While any overlay (share/options drawers, dialogs — bottom sheets on
   // mobile — side sheets, story viewer, …) is open, the tab bar must get out
@@ -504,7 +504,7 @@ export default function HomePage() {
 
   const handleTabClick = useCallback((tabValue: string) => {
     // Island mode: picking a feed closes the capsule's dropdown.
-    if (document.documentElement.dataset.theme === 'system') setTimeout(() => setFeedTabsOpen(false), 350);
+    if (document.documentElement.dataset.theme === 'immersive') setTimeout(() => setFeedTabsOpen(false), 350);
     // If a post overlay is currently covering the feed, tapping any tab should
     // dismiss the overlay and take the user back to the feed on that tab —
     // otherwise the tab change happens underneath the overlay and looks broken.
@@ -895,7 +895,7 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   return (
-    <div>
+    <div data-classic-feed-layout={theme === 'system' ? '' : undefined}>
       {/* One cached instance serves /, /app, /videos and /shorts — meta must
           follow the URL (not tab state: a sessionStorage-restored tab on "/"
           would otherwise declare /videos canonical for the root) or three

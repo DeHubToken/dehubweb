@@ -474,6 +474,7 @@ export default function ProfilePage() {
   const profileContent = (
     <div 
       ref={data.profileContainerRef}
+      data-classic-feed-layout={theme === 'system' ? '' : undefined}
       className="min-h-screen"
       onTouchStart={data.pullHandlers.onTouchStart}
       onTouchMove={data.pullHandlers.onTouchMove}
@@ -538,9 +539,9 @@ export default function ProfilePage() {
         </div>
       )}
       
-      <div className={cn('p-2 sm:p-3 space-y-3', theme === 'system' && 'max-sm:pt-0')}>
+      <div className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
-        <div className={cn('relative', theme === 'system' && 'max-sm:-mx-2')}>
+        <div className={cn('relative', theme === 'immersive' && 'max-sm:-mx-2')}>
         <PageHeader overlay />
         <ProfileHeader
           profile={data.profile}
