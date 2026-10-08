@@ -85,9 +85,9 @@ export function AgentPanel() {
   const recordHighlights = useCallback((result: HighlightChatResult) => {
     if (result.status === 'cancelled') return;
     const errors = { selectVideo: 'editor.highlights.chatSelectVideo', changed: 'editor.highlights.changed', limit: 'editor.highlights.chatLimit', captionsMissing: 'editor.highlights.chatCaptionsMissing', failed: 'editor.highlights.reviewFailed' };
-    const content = result.status === 'error' ? t(errors[result.error]) : result.status === 'created' ? t('editor.highlights.created') : result.status === 'reviewed' ? t('editor.highlights.reviewResult', result) : result.count ? t('editor.highlights.chatFound', result) : t('editor.highlights.none');
+    const content = result.status === 'error' ? t(errors[result.error]) : result.status === 'created' ? t('editor.highlights.created') : result.status === 'reviewed' ? t('editor.highlights.reviewResult', result) : result.count ? t('editor.highlights.chatFound', result) : t(highlights.state.visual ? 'follow.noResults' : 'editor.highlights.none');
     push({ id: nextId(), role: 'assistant', content, error: result.status === 'error' });
-  }, [push, t]);
+  }, [highlights, push, t]);
   const closeHighlights = () => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); highlights.reset(); };
   useEffect(() => {
     const unsubscribe = useEditorStore.subscribe(state => {
