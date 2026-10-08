@@ -1,0 +1,41 @@
+name: Editor cloud projects
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261008160000_editor_cloud_projects.sql'
+      - 'tests/sql/editor-cloud-*'
+      - '.github/workflows/editor-cloud-projects.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/20261008160000_editor_cloud_projects.sql'
+      - 'tests/sql/editor-cloud-*'
+      - '.github/workflows/editor-cloud-projects.yml'
+permissions:
+  contents: read
+jobs:
+  database:
+    name: Cloud project ownership and history
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: cloud-test
+          POSTGRES_DB: cloud_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: cloud-test
+      PGDATABASE: cloud_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008160000_editor_cloud_projects.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-projects.sql
