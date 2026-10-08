@@ -90,6 +90,7 @@
     "heading": "ሓጺርቲ DeHub"
   },
   "settings": {
+    "postingChain": "ናይ ልጥፋት ብሎክቸይን",
     "showOnline": "ኣብ ኢንተርነት ከለኹ ኣርኢ",
     "showOnlineDesc": "እቶም እትልእኮም ሰባት DeHub ክትጥቀም ከለኻ ኣብ ጥቓ ስምካ ዘሎ ሕጫውቲ ነጥቢ ይርእዩ",
     "smartReplies": "ዝተጠቕሱ መልስታት",
@@ -7306,6 +7307,7 @@
         }
       },
       "settings": {
+    "postingChain": "ናይ ልጥፋት ብሎክቸይን",
         "title": "ኣቀማምጣ",
         "intro": "ነቲ ናይ DeHub ተመኩሮኻ ብቛንቋ ፡ ብሕታዊነትን ብምርኣይ ምርጫታትን ኣማዕብል ።",
         "steps": {

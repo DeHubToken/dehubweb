@@ -94,6 +94,7 @@
     "heading": "DeHub ছোডো ভিডিও"
   },
   "settings": {
+    "postingChain": "পোস্টর ব্লকচেইন",
     "showOnline": "আমার অনলাইন থাকলে দেখাও",
     "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
     "smartReplies": "পরামর্শ দেওয়া জবাব",
@@ -6947,6 +6948,7 @@
         }
       },
       "settings": {
+    "postingChain": "পোস্টর ব্লকচেইন",
         "title": "সেটিংস",
         "intro": "আপনার DeHub অভিজ্ঞতা ব্যবহারকারী ভাষা, গোপনীয়তা, এবং প্রদর্শন পছন্দ অনুযায়ী সমন্বিত করুন।",
         "steps": {

@@ -108,7 +108,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'privacy', anchor: 'geo-blocking', label: 'Geo-blocking', labelKey: 'settings.geoBlocking', keywords: 'country region restrict' },
 
   // Content
-  { tab: 'content', anchor: 'posting-chain', label: 'Posting chain', keywords: 'post mint blockchain network base bnb ethereum solana database' },
+  { tab: 'content', anchor: 'posting-chain', label: 'Posting chain', labelKey: 'settings.postingChain', keywords: 'post mint blockchain network base bnb ethereum solana database' },
   { tab: 'content', anchor: 'auto-save-drafts', label: 'Auto-Save Drafts', labelKey: 'settings.autoSaveDrafts', keywords: 'drafts save' },
   { tab: 'content', anchor: 'mature-content', label: 'Show Mature Content', labelKey: 'settings.matureContent', keywords: 'nsfw adult sensitive explicit filter' },
   { tab: 'content', anchor: 'hide-watched', label: 'Hide watched videos', labelKey: 'settings.hideWatched', keywords: 'seen history feed' },

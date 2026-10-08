@@ -90,6 +90,7 @@
     "heading": "DeHub Fohy"
   },
   "settings": {
+    "postingChain": "Blockchain ho an’ny lahatsoratra",
     "showOnline": "Asehoy rehefa an-tserasera aho",
     "showOnlineDesc": "Ny olona izay alefanao dia mahita teboka maitso eo akaikin'ny anaranao raha mampiasa DeHub ianao",
     "smartReplies": "Valiny atolotra",
@@ -7454,6 +7455,7 @@
         }
       },
       "settings": {
+    "postingChain": "Blockchain ho an’ny lahatsoratra",
         "title": "Settings",
         "intro": "Amboary ny traikefanao DeHub amin'ny alàlan'ny safidinao fiteny, fiainana manokana ary fampisehoana.",
         "steps": {

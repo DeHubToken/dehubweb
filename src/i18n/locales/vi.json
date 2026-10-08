@@ -90,6 +90,7 @@
     "heading": "Video ngắn DeHub"
   },
   "settings": {
+    "postingChain": "Chuỗi khối đăng bài",
     "showOnline": "Hiển thị khi tôi trực tuyến",
     "showOnlineDesc": "Những người bạn nhắn tin thấy một dấu chấm màu xanh lá cây bên cạnh tên của bạn trong khi bạn đang sử dụng DeHub",
     "smartReplies": "Câu trả lời gợi ý",
@@ -7538,6 +7539,7 @@
         }
       },
       "settings": {
+    "postingChain": "Chuỗi khối đăng bài",
         "title": "Cài đặt",
         "intro": "Tùy chỉnh trải nghiệm DeHub của bạn với các tùy chọn ngôn ngữ, quyền riêng tư và hiển thị.",
         "steps": {

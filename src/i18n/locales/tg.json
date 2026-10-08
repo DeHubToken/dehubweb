@@ -90,6 +90,7 @@
     "heading": "Кӯтоҳҳои DeHub"
   },
   "settings": {
+    "postingChain": "Блокчейни нашрҳо",
     "showOnline": "Ipakita kapag ako online",
     "showOnlineDesc": "Ang mga tao na iyong mensahe ay makita ng isang green dot sa tabi ng iyong pangalan habang gumagamit",
     "smartReplies": "Ҷавобҳои пешниҳодшуда",
@@ -7381,6 +7382,7 @@
         }
       },
       "settings": {
+    "postingChain": "Блокчейни нашрҳо",
         "title": "Танзимот",
         "intro": "Таҷрибаи DeHub-и худро бо афзалиятҳои забон, махфият ва намоиш танзим кунед.",
         "steps": {

@@ -90,6 +90,7 @@
     "heading": "DeHub gysga wideolary"
   },
   "settings": {
+    "postingChain": "Ýazgylaryň blokçeýni",
     "showOnline": "Men onlayn bolanymda görkeziň",
     "showOnlineDesc": "Adamlar DeHub ulanýan wagtyň özünde adyňyň ýanynda ýaşyl dot görýärler.",
     "smartReplies": "Teklip edilýän jogaplar",
@@ -7357,6 +7358,7 @@
         }
       },
       "settings": {
+    "postingChain": "Ýazgylaryň blokçeýni",
         "title": "Sazlamalar",
         "intro": "Diliňizi, gizlinligiňizi we görkezme sazlaryňyzyň üýtgedip, DeHub tejribäňizi sazlaň.",
         "steps": {

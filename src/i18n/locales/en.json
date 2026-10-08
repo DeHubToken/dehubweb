@@ -90,6 +90,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Posting chain",
     "showOnline": "Show when I'm online",
     "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
     "smartReplies": "Suggested replies",
@@ -7749,6 +7750,7 @@
         }
       },
       "settings": {
+    "postingChain": "Posting chain",
         "title": "Settings",
         "intro": "Customize your DeHub experience with language, privacy, and display preferences.",
         "steps": {

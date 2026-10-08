@@ -90,6 +90,7 @@
     "heading": "Di DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Blockchain wey you go use post",
     "showOnline": "Wen yu dey online.",
     "showOnlineDesc": "Pipo wey dey message you go see green dot for beside your name while you dey use DeHub.",
     "smartReplies": "Reply wey we suggest",
@@ -6237,6 +6238,7 @@
         }
       },
       "settings": {
+    "postingChain": "Blockchain wey you go use post",
         "title": "Settings",
         "steps": {
           "1": "Klik 'Settings' for inside sidebar.",

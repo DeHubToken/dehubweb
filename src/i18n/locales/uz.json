@@ -90,6 +90,7 @@
     "heading": "DeHub qisqa videolari"
   },
   "settings": {
+    "postingChain": "Postlar blokcheyni",
     "showOnline": "Onlayn bo&#39;lganimda ko&#39;rsatilsin",
     "showOnlineDesc": "DeHub’dan foydalanayotganingizda xabar yuborgan odamlaringiz ismingiz yonida yashil nuqta ko‘rishadi",
     "smartReplies": "Tavsiya etilgan javoblar",
@@ -7479,6 +7480,7 @@
         }
       },
       "settings": {
+    "postingChain": "Postlar blokcheyni",
         "title": "Sozlamalar",
         "intro": "Til, maxfiylik va displey sozlamalari yordamida DeHub tajribangizni sozlang.",
         "steps": {
