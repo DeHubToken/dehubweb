@@ -6723,6 +6723,19 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Révision du projet",
+      "shared": "Partagé avec vous",
+      "time": "Temps (s)",
+      "assign": "Attribuer un portefeuille"
+    },
+    "textFit": {
+      "wrap": "Retour à la ligne",
+      "width": "Largeur du texte",
+      "shrink": "Réduire le texte pour l’ajuster",
+      "height": "Hauteur du texte",
+      "captions": "Ajuster la piste de sous-titres"
+    },
     "canvas": {
       "dropMedia": "Glisser pour ajouter à votre design",
       "dropText": "Glisser pour ajouter du texte",
@@ -7127,6 +7140,8 @@
       "unchanged": "Les coupes n'ont pas pu être alignées."
     },
     "highlights": {
+      "visual": "Moments visuels forts",
+      "visualPrivacy": "Envoyer des images sélectionnées pour l'analyse visuelle.",
       "chatSuggest": "Trouve les meilleurs moments de cette vidéo",
       "chatFound": "{{count}} moments trouvés. Prévisualisez-les, affinez la sélection, puis créez un montage séparé.",
       "chatHint": "Sélection des moments forts. Indiquez quoi garder ou retirer, ou revenez au montage.",

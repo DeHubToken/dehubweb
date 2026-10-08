@@ -6346,6 +6346,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Moments visuals destacats",
+      "visualPrivacy": "Envia fotogrames seleccionats per a l'anàlisi visual."
+    },
+    "review": {
+      "title": "Revisió del projecte",
+      "shared": "Compartit amb tu",
+      "time": "Temps (s)",
+      "assign": "Assigna una cartera"
+    },
+    "textFit": {
+      "wrap": "Ajusta les línies",
+      "width": "Amplada del text",
+      "shrink": "Redueix el text perquè hi càpiga",
+      "height": "Alçada del text",
+      "captions": "Ajusta la pista de subtítols"
+    },
     "canvas": {
       "dropMedia": "Deixa caure per afegir al teu disseny",
       "dropText": "Deixa caure per afegir text",

@@ -6347,6 +6347,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuaaliset kohokohdat",
+      "visualPrivacy": "Lähetä valitut ruudut visuaalista analyysia varten."
+    },
+    "review": {
+      "title": "Projektin tarkistus",
+      "shared": "Jaettu kanssasi",
+      "time": "Aika (s)",
+      "assign": "Määritä lompakko"
+    },
+    "textFit": {
+      "wrap": "Rivitä teksti",
+      "width": "Tekstin leveys",
+      "shrink": "Pienennä teksti sopivaksi",
+      "height": "Tekstin korkeus",
+      "captions": "Sovita tekstitysraita"
+    },
     "canvas": {
       "dropMedia": "Lisää suunnitteluusi pudottamalla",
       "dropText": "Lisää tekstiä pudottamalla",

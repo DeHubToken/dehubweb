@@ -5435,6 +5435,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Xalên girîng ên dîtbarî",
+      "visualPrivacy": "Çarçoveyên bijartî ji bo analîza dîtbarî bişînin."
+    },
+    "review": {
+      "title": "Vekolîna projeyê",
+      "shared": "Bi te re parvekirî",
+      "time": "Dem (s)",
+      "assign": "Cuzdan diyar bike"
+    },
+    "textFit": {
+      "wrap": "Rêzan bibire",
+      "width": "Firehiya nivîsê",
+      "shrink": "Nivîsê biçûk bike da ku bicîh bibe",
+      "height": "Bilindahiya nivîsê",
+      "captions": "Rêya binnivîsê lihev bîne"
+    },
     "canvas": {
       "dropMedia": "دایبنێ بۆ زیادکردن بۆ دیزاینەکەت",
       "dropText": "دایبنێ بۆ زیادکردنی دەق",

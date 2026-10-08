@@ -6353,6 +6353,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Àwọn ìṣẹ̀lẹ̀ àwòrán pàtàkì",
+      "visualPrivacy": "Fi àwọn férémù tí a yàn ránṣẹ́ fún ìtúpalẹ̀ àwòrán."
+    },
+    "review": {
+      "title": "Àyẹ̀wò iṣẹ́",
+      "shared": "Pín pẹ̀lú rẹ",
+      "time": "Àkókò (s)",
+      "assign": "Yan àpò owó"
+    },
+    "textFit": {
+      "wrap": "Pín àwọn ìlà",
+      "width": "Ìbú ọ̀rọ̀",
+      "shrink": "Dín ọ̀rọ̀ kù kí ó lè wọlé",
+      "height": "Gíga ọ̀rọ̀",
+      "captions": "Mú ipa ọ̀rọ̀ abẹ́lẹ̀ bá a mu"
+    },
     "canvas": {
       "dropMedia": "Fi sílẹ̀ láti fi kún àwòrán rẹ",
       "dropText": "Fi sílẹ̀ láti fi ọ̀rọ̀ kún",

@@ -6386,6 +6386,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Oge ọhụụ pụtara ìhè",
+      "visualPrivacy": "Ziga frem ahọpụtara maka nyocha ọhụụ."
+    },
+    "review": {
+      "title": "Nyocha ọrụ",
+      "shared": "Ekekọrịtara gị",
+      "time": "Oge (s)",
+      "assign": "Kenye waleti"
+    },
+    "textFit": {
+      "wrap": "Kewaa ahịrị",
+      "width": "Obosara ederede",
+      "shrink": "Belata ederede ka ọ dabara",
+      "height": "Ogologo ederede",
+      "captions": "Hazie egwu ndepụta okwu"
+    },
     "canvas": {
       "dropMedia": "Dàlị iji tinye na imewe gị",
       "dropText": "Dàlị iji tinye ederede",

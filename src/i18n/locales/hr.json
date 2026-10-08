@@ -6351,6 +6351,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizualni vrhunci",
+      "visualPrivacy": "Pošaljite odabrane kadrove za vizualnu analizu."
+    },
+    "review": {
+      "title": "Pregled projekta",
+      "shared": "Podijeljeno s vama",
+      "time": "Vrijeme (s)",
+      "assign": "Dodijeli novčanik"
+    },
+    "textFit": {
+      "wrap": "Prelamanje redaka",
+      "width": "Širina teksta",
+      "shrink": "Smanji tekst da stane",
+      "height": "Visina teksta",
+      "captions": "Prilagodi zapis titlova"
+    },
     "canvas": {
       "dropMedia": "Spusti za dodavanje u svoj dizajn",
       "dropText": "Spusti za dodavanje teksta",

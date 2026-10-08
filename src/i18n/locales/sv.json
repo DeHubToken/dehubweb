@@ -6349,6 +6349,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuella höjdpunkter",
+      "visualPrivacy": "Skicka utvalda bildrutor för visuell analys."
+    },
+    "review": {
+      "title": "Projektgranskning",
+      "shared": "Delat med dig",
+      "time": "Tid (s)",
+      "assign": "Tilldela plånbok"
+    },
+    "textFit": {
+      "wrap": "Radbryt text",
+      "width": "Textbredd",
+      "shrink": "Förminska texten så att den får plats",
+      "height": "Texthöjd",
+      "captions": "Anpassa undertextspår"
+    },
     "canvas": {
       "dropMedia": "Släpp för att lägga till i din design",
       "dropText": "Släpp för att lägga till text",

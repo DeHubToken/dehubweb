@@ -6348,6 +6348,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizuální zajímavosti",
+      "visualPrivacy": "Odeslat vybrané snímky k vizuální analýze."
+    },
+    "review": {
+      "title": "Kontrola projektu",
+      "shared": "Sdíleno s vámi",
+      "time": "Čas (s)",
+      "assign": "Přiřadit peněženku"
+    },
+    "textFit": {
+      "wrap": "Zalamovat řádky",
+      "width": "Šířka textu",
+      "shrink": "Zmenšit text, aby se vešel",
+      "height": "Výška textu",
+      "captions": "Přizpůsobit stopu titulků"
+    },
     "canvas": {
       "dropMedia": "Přetáhněte pro přidání do svého návrhu",
       "dropText": "Přetáhněte pro přidání textu",

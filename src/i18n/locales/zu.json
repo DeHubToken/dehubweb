@@ -6464,6 +6464,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Izikhathi ezigqamile ezibonwayo",
+      "visualPrivacy": "Thumela amafreyimu akhethiwe ukuze kuhlaziywe izithombe."
+    },
+    "review": {
+      "title": "Ukubuyekezwa kwephrojekthi",
+      "shared": "Kwabelwane nawe",
+      "time": "Isikhathi (s)",
+      "assign": "Nikeza isikhwama"
+    },
+    "textFit": {
+      "wrap": "Songa imigqa",
+      "width": "Ububanzi bombhalo",
+      "shrink": "Nciphisa umbhalo ukuze ulingane",
+      "height": "Ukuphakama kombhalo",
+      "captions": "Lungisa ithrekhi yemibhalo engezansi"
+    },
     "canvas": {
       "dropMedia": "Yeka ukwengeza kumklamo wakho",
       "dropText": "Yeka ukwengeza umbhalo",

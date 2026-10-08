@@ -6426,6 +6426,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuaalsed tipphetked",
+      "visualPrivacy": "Saada valitud kaadrid visuaalseks analüüsiks."
+    },
+    "review": {
+      "title": "Projekti ülevaatus",
+      "shared": "Sinuga jagatud",
+      "time": "Aeg (s)",
+      "assign": "Määra rahakott"
+    },
+    "textFit": {
+      "wrap": "Murra ridu",
+      "width": "Teksti laius",
+      "shrink": "Vähenda teksti, et see mahuks",
+      "height": "Teksti kõrgus",
+      "captions": "Sobita subtiitrite rada"
+    },
     "canvas": {
       "dropMedia": "Lisamiseks kujundusse lohistage",
       "dropText": "Teksti lisamiseks lohistage",

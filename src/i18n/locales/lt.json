@@ -6458,6 +6458,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vaizdo akcentai",
+      "visualPrivacy": "Siųsti pasirinktus kadrus vaizdinei analizei."
+    },
+    "review": {
+      "title": "Projekto peržiūra",
+      "shared": "Bendrinama su jumis",
+      "time": "Laikas (s)",
+      "assign": "Priskirti piniginę"
+    },
+    "textFit": {
+      "wrap": "Laužyti eilutes",
+      "width": "Teksto plotis",
+      "shrink": "Sumažinti tekstą, kad tilptų",
+      "height": "Teksto aukštis",
+      "captions": "Pritaikyti subtitrų takelį"
+    },
     "canvas": {
       "dropMedia": "Numeskite, kad pridėtumėte prie savo dizaino",
       "dropText": "Numeskite, kad pridėtumėte tekstą",
