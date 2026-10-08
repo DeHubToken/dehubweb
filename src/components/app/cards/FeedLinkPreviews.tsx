@@ -5,7 +5,7 @@
  * Fetches OG data for URLs found in post content.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ExternalLink } from 'lucide-react';
@@ -14,6 +14,8 @@ import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/l
 import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetchAppByDomain, type MiniAppListing } from '@/lib/miniapp/registry';
+import { PredictionDetails } from './PredictionDetails';
+import { parsePredictionLink } from '@/lib/predictions';
 
 interface FeedLinkPreviewsProps {
   text: string;
@@ -32,29 +34,28 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
   const [app, setApp] = useState<MiniAppListing | null>(null);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const fetchedRef = useRef(false);
+  const url = externalUrls(text)[0];
 
   useEffect(() => {
-    if (fetchedRef.current) return;
-    const urls = externalUrls(text);
-    if (urls.length === 0) { setLoading(false); return; }
-
-    fetchedRef.current = true;
-
-    // Fetch only the first URL to keep feed lightweight
-    const url = urls[0];
+    let cancelled = false;
+    setPreviews(new Map());
+    setApp(null);
+    setLoading(!!url);
+    if (!url) return;
     try {
-      void fetchAppByDomain(new URL(url).hostname).then(setApp);
+      if (!parsePredictionLink(url)) void fetchAppByDomain(new URL(url).hostname).then(row => { if (!cancelled) setApp(row); });
     } catch {
       /* not a URL we can read a host from */
     }
     fetchLinkPreview(url).then((preview) => {
+      if (cancelled) return;
       if (preview) {
         setPreviews(new Map([[url, preview]]));
       }
       setLoading(false);
     });
-  }, [text]);
+    return () => { cancelled = true; };
+  }, [url]);
 
   const urls = externalUrls(text);
   if (urls.length === 0) return null;
@@ -129,7 +130,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
                   <ExternalLink className="w-3 h-3 flex-shrink-0" />
                   <span className="truncate">{preview.siteName || domain}</span>
                 </div>
-                <h4 className="text-sm font-medium text-white line-clamp-1 mb-0.5">
+                <h4 className={`text-sm font-medium text-white mb-0.5 ${preview.prediction ? '' : 'line-clamp-1'}`}>
                   {preview.title}
                 </h4>
                 {preview.description && (
@@ -137,6 +138,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
                     {preview.description}
                   </p>
                 )}
+                <PredictionDetails preview={preview} />
               </div>
             </motion.a>
           );

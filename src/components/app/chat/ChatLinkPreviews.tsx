@@ -5,12 +5,13 @@
  * Shows only the first URL to keep chat lightweight.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { fetchLinkPreview, type LinkPreviewData } from '@/lib/api/link-preview';
+import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PredictionDetails } from '@/components/app/cards/PredictionDetails';
 
 // Reuse the URL regex from TranslatableText to match the same URLs shown as 🔗
 const URL_REGEX = /(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%_+~#=]+(?:\.[-a-zA-Z0-9@:%_+~#=]+)*\.(?:com|org|net|io|co|app|dev|ai|me|tv|xyz|info|gg|cc|ly|fm|sh|site|tech|live|space|link|page|pro|art|club|world|social|store|online|digital|media|studio|agency|blog|shop|network|land|zone|fund|games|gaming|vc|nft|crypto|dao|eth|web3|defi|music|video|news|chat|cloud|host|money|finance|trade|market|exchange|lol|meme|cool|to|uk|de|fr|jp|cn|ru|br|in|au|ca|es|it|nl|se|no|fi|dk|pl|pt|cz|at|ch|be|ie|nz|za|kr|mx|ar|cl|hu|ro|bg|hr|sk|si|lt|lv|ee|is)\b(?:[-a-zA-Z0-9()@:%_+.~#?&\/=]*)/gi;
@@ -33,21 +34,19 @@ interface ChatLinkPreviewsProps {
 export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
   const [preview, setPreview] = useState<LinkPreviewData | null>(null);
   const [loading, setLoading] = useState(true);
-  const fetchedRef = useRef(false);
-
-  const url = extractFirstUrl(content);
+  const url = extractUrlsFromText(content).find(value => !parseDehubLink(value)) ?? extractFirstUrl(content);
 
   useEffect(() => {
-    if (fetchedRef.current || !url) {
-      setLoading(false);
-      return;
-    }
-    fetchedRef.current = true;
-
+    let cancelled = false;
+    setPreview(null);
+    setLoading(!!url);
+    if (!url) return;
     fetchLinkPreview(url).then((data) => {
+      if (cancelled) return;
       if (data) setPreview(data);
       setLoading(false);
     });
+    return () => { cancelled = true; };
   }, [url]);
 
   if (!url) return null;
@@ -99,7 +98,7 @@ export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
               <ExternalLink className="w-2.5 h-2.5 flex-shrink-0" />
               <span className="truncate">{preview.siteName || new URL(preview.url).hostname.replace('www.', '')}</span>
             </div>
-            <h4 className="text-xs font-medium text-white line-clamp-1 mb-0.5">
+            <h4 className={`text-xs font-medium text-white mb-0.5 ${preview.prediction ? '' : 'line-clamp-1'}`}>
               {preview.title}
             </h4>
             {preview.description && (
@@ -107,6 +106,7 @@ export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
                 {preview.description}
               </p>
             )}
+            <PredictionDetails preview={preview} />
           </div>
         </motion.a>
       ) : loading ? (
