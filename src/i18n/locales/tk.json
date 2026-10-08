@@ -6368,6 +6368,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Taslama syny",
+      "shared": "Siziň bilen paýlaşylan",
+      "time": "Wagt (s)",
+      "assign": "Gapjyk belle"
+    },
     "textFit": {
       "wrap": "Setirleri böl",
       "width": "Tekstiň ini",

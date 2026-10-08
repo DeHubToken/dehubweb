@@ -6307,6 +6307,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Layihə baxışı",
+      "shared": "Sizinlə paylaşılanlar",
+      "time": "Vaxt (s)",
+      "assign": "Pul kisəsi təyin et"
+    },
     "textFit": {
       "wrap": "Sətirləri bük",
       "width": "Mətn eni",

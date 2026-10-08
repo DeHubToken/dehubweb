@@ -6439,6 +6439,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Ukaguzi wa mradi",
+      "shared": "Umeshirikiwa",
+      "time": "Muda (s)",
+      "assign": "Kabidhi pochi"
+    },
     "textFit": {
       "wrap": "Vunja mistari",
       "width": "Upana wa maandishi",

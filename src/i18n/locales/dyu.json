@@ -6251,6 +6251,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Porozɛ lajɛ",
+      "shared": "I fɛ tila",
+      "time": "Waati (s)",
+      "assign": "Warimarayɔrɔ sugandi"
+    },
     "textFit": {
       "wrap": "Sɛbɛnni tɔgɔw tilan",
       "width": "Sɛbɛnni bonya",

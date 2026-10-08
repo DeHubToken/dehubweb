@@ -6700,6 +6700,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Semakan projek",
+      "shared": "Dikongsi dengan anda",
+      "time": "Masa (s)",
+      "assign": "Tetapkan dompet"
+    },
     "textFit": {
       "wrap": "Balut baris",
       "width": "Lebar teks",

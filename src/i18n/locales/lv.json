@@ -6438,6 +6438,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projekta pārskatīšana",
+      "shared": "Kopīgots ar jums",
+      "time": "Laiks (s)",
+      "assign": "Piešķirt maku"
+    },
     "textFit": {
       "wrap": "Aplauzt rindas",
       "width": "Teksta platums",

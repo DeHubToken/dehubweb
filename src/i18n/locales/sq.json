@@ -6449,6 +6449,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Shqyrtimi i projektit",
+      "shared": "Ndarë me ju",
+      "time": "Koha (s)",
+      "assign": "Cakto portofolin"
+    },
     "textFit": {
       "wrap": "Mbështill rreshtat",
       "width": "Gjerësia e tekstit",

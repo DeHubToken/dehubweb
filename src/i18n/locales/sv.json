@@ -6348,6 +6348,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projektgranskning",
+      "shared": "Delat med dig",
+      "time": "Tid (s)",
+      "assign": "Tilldela plånbok"
+    },
     "textFit": {
       "wrap": "Radbryt text",
       "width": "Textbredd",

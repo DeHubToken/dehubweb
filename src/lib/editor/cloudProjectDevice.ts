@@ -15,7 +15,7 @@ function extension(name: string, mime: string): string {
 export function browserCloudProjectSession(address: string, check: () => void) {
   const wallet = address.toLowerCase(), api = cloudProjectApi(wallet);
   const key = (id: string) => `${wallet}:${id}`;
-  return { api, session: cloudProjectSession({ wallet, check, api, uuid: () => crypto.randomUUID(), saveLocal: saveProject,
+  return { api, uuid: () => crypto.randomUUID(), session: cloudProjectSession({ wallet, check, api, uuid: () => crypto.randomUUID(), saveLocal: saveProject,
     readLink: async id => ((await (await links()).get("links", key(id))) ?? null) as CloudProjectLink | null,
     writeLink: async (id, link) => { await (await links()).put("links", link, key(id)); },
     upload: async (localId, cloudId, guard) => {
@@ -33,10 +33,10 @@ export function browserCloudProjectSession(address: string, check: () => void) {
       for (const field of ["width", "height", "duration"] as const) if ((meta[field] || 0) > 0) source[field] = meta[field];
       return source;
     },
-    hydrate: async (source, guard) => {
+    hydrate: async (source, guard, sourceOwner = wallet) => {
       let local = await getMedia(source.id); guard();
       if (!local || local.blob.size !== source.size) {
-        const url = await api.sourceUrl(source.storagePath); guard();
+        const url = await api.sourceUrl(source.storagePath, sourceOwner); guard();
         const response = await fetch(url); guard();
         if (!response.ok) throw new Error("A saved project source is unavailable");
         const blob = await response.blob(); guard();
