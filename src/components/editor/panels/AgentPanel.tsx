@@ -24,6 +24,8 @@ import { assemblyRequest } from '@/lib/editor/assembly';
 import { useAssembly } from '@/lib/editor/useAssembly';
 import { createAssemblyEdit } from '@/lib/editor/applyAssembly';
 import AssemblyReview from '../AssemblyReview';
+import AssemblyMediaPreview from '../AssemblyMediaPreview';
+import type { MediaClip } from '@/lib/editor/types';
 
 let entrySeq = 0;
 const nextId = () => `a${Date.now().toString(36)}${(entrySeq++).toString(36)}`;
@@ -53,13 +55,16 @@ export function AgentPanel() {
     },
     create: (original, clipId, ranges, signal) => createHighlightEdit(original, clipId, ranges, t('editor.highlights.projectTitle', { title: original.title }), signal),
   });
+  const [libraryPreview, setLibraryPreview] = useState<MediaClip | null>(null);
   const [assemblyState, assembly] = useAssembly({
     current: () => useEditorStore.getState().toSnapshot(),
-    create: (original, plan, signal) => createAssemblyEdit(original, plan, `${original.title} — ${t('editor.video.video')}`, signal),
+    library: () => useEditorStore.getState().media.filter(media => !!media.url),
+    create: (original, plan, signal, library) => createAssemblyEdit(original, plan, `${original.title} — ${t('editor.video.video')}`, signal, library),
   });
   const assemblyChanged = useEditorStore(s => assemblyState.sourceId !== null && !assembly.matchesSource(s.toSnapshot()));
   const assemblyMedia = useEditorStore(s => s.media);
-  const closeAssembly = () => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); assembly.reset(); };
+  const closeAssembly = () => { setLibraryPreview(null); previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); assembly.reset(); };
+  useEffect(() => { if (assemblyChanged || !assemblyState.sourceId) setLibraryPreview(null); }, [assemblyChanged, assemblyState.sourceId]);
   const sourceChanged = useEditorStore(s => highlightState.clipId !== null && !highlights.matchesSource(s.toSnapshot()));
   const working = busy || highlightState.busy || assemblyState.busy;
   const recordHighlights = useCallback((result: HighlightChatResult) => {
@@ -108,7 +113,7 @@ export function AgentPanel() {
     const draftRequest = assemblyRequest(prompt);
     if (draftRequest || assembly.state.sourceId) {
       previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
-      if (draftRequest) { highlights.reset(); assembly.start(draftRequest, useEditorStore.getState().selectedClipIds); }
+      if (draftRequest) { highlights.reset(); assembly.start(draftRequest, useEditorStore.getState().selectedClipIds, useEditorStore.getState().media.filter(media => !!media.url)); }
       const reviewed = draftRequest || assembly.review(prompt);
       push({ id: nextId(), role: 'assistant', content: t(reviewed ? 'easyTrade.reviewTitle' : 'editor.agent.nothingToDo') });
       inputRef.current?.focus(); return;
@@ -207,8 +212,9 @@ export function AgentPanel() {
           </div>
         </section>}
 
+        <AssemblyMediaPreview clip={libraryPreview} onClose={() => setLibraryPreview(null)} />
         <AssemblyReview state={assemblyState} session={assembly} changed={assemblyChanged} names={Object.fromEntries(assemblyMedia.map(m => [m.id, m.name]))}
-          onPreview={index => { const range = assembly.preview(index); if (!range) return; previewEnd.current = range.end; useEditorStore.getState().selectClip(range.id); useEditorStore.getState().setCurrentTime(range.start); useEditorStore.getState().setIsPlaying(true); }}
+          onPreview={index => { const range = assembly.preview(index); if (!range) return; if (range.libraryClip) { setLibraryPreview(range.libraryClip); return; } previewEnd.current = range.end; useEditorStore.getState().selectClip(range.id); useEditorStore.getState().setCurrentTime(range.start); useEditorStore.getState().setIsPlaying(true); }}
           onCreate={() => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); void assembly.create().then(saved => { if (saved) push({ id: nextId(), role: 'assistant', content: t('common.done') }); }); }} onClose={closeAssembly} />
         {working && (
           <div className="flex items-center gap-2 px-1 text-[11px] text-white/50">
