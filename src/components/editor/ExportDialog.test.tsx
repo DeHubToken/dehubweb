@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ExportDialog } from "./ExportDialog";
 import { useEditorStore } from "@/store/editorStore";
@@ -38,5 +38,19 @@ describe("page download naming", () => {
     expect(close).toHaveBeenCalledWith(false);
     expect(useEditorStore.getState().settings).toBe(settings);
     expect(useEditorStore.getState().clips).toBe(clips);
+  });
+
+  it("cancels a page batch before another render, archive or download", async () => {
+    let finish!: (value: { blob: Blob; filename: string }) => void;
+    vi.mocked(exportStill).mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+    const settings = useEditorStore.getState().settings;
+    render(<ExportDialog open onOpenChange={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "editor.export.download" }));
+    await waitFor(() => expect(exportStill).toHaveBeenCalledOnce());
+    fireEvent.click(screen.getByRole("button", { name: "editor.export.cancel" }));
+    await act(async () => { finish({ blob: new Blob(["page"]), filename: "page.png" }); });
+    await waitFor(() => expect(screen.getByRole("button", { name: "editor.export.download" })).toBeEnabled());
+    expect(exportStill).toHaveBeenCalledOnce(); expect(zipFiles).not.toHaveBeenCalled();
+    expect(downloaded).toEqual([]); expect(useEditorStore.getState().settings).toBe(settings);
   });
 });

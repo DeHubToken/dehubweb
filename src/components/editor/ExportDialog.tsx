@@ -15,7 +15,8 @@ import { Download, X, Scissors } from "lucide-react";
 import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
-import { getPages, pageAt } from "@/lib/editor/pages";
+import { getPages } from "@/lib/editor/pages";
+import { pageExportFrames } from "@/lib/editor/pageExports";
 import { exportFilename } from "@/lib/editor/exportName";
 import { zipFiles } from "@/lib/editor/zip";
 import { useAuth } from "@/contexts/AuthContext";
@@ -119,28 +120,36 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     setBusy(true);
     setProgress(50);
     setLabel(t("editor.export.rendering"));
+    const ctl = new AbortController(); abortRef.current = ctl;
+    const check = () => { if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError"); };
     try {
       const snapshot = toSnapshot();
+      const frames = pageExportFrames(snapshot, currentTime, allPages ? "all" : "current", format as StillFormat);
       if (multiPage && allPages) {
         const files: { name: string; blob: Blob }[] = [];
-        for (const p of pages) {
-          setProgress(Math.round((p.index / pages.length) * 100));
-          setLabel(t("editor.pages.exporting", { current: p.index + 1, total: pages.length }));
-          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: p.start });
-          files.push({ name: exportFilename(snapshot.title, format, `-${String(p.index + 1).padStart(2, "0")}`, "design"), blob });
+        for (const frame of frames) {
+          check();
+          setProgress(Math.round((frame.index / frames.length) * 100));
+          setLabel(t("editor.pages.exporting", { current: frame.index + 1, total: frames.length }));
+          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: frame.time });
+          check();
+          files.push({ name: frame.filename, blob });
         }
         const zip = await zipFiles(files);
+        check();
         download(zip, exportFilename(snapshot.title, "zip", "", "design"));
       } else {
-        const time = multiPage ? pageAt(pages, currentTime).start : currentTime;
+        const time = frames[0].time;
         const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time });
+        check();
         download(blob, filename);
       }
       onOpenChange(false);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : t("editor.export.failed"));
-      console.error("Still export failed:", e);
+      if ((e as Error).name === "AbortError") toast.message(t("editor.export.cancelled"));
+      else { toast.error(e instanceof Error ? e.message : t("editor.export.failed")); console.error("Still export failed:", e); }
     } finally {
+      if (abortRef.current === ctl) abortRef.current = null;
       setBusy(false);
     }
   };
@@ -335,12 +344,10 @@ export function ExportDialog({ open, onOpenChange }: Props) {
 
         <div className="flex justify-end gap-2 pt-1">
           {busy ? (
-            !still && (
               <Button variant="ghost" onClick={() => abortRef.current?.abort()}
                 className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white">
                 <X className="mr-1 h-4 w-4" /> {t("editor.export.cancel")}
               </Button>
-            )
           ) : (
             <>
               <Button variant="ghost" onClick={() => onOpenChange(false)}
