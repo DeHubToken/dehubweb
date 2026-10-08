@@ -319,7 +319,7 @@ const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investi
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left"><!--hl-body-->
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
-<p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs">Read the docs</a></p>
 <p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">DeHub press coverage</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
@@ -376,7 +376,7 @@ const DOCS_PAGES = {
   'overview': { title: 'DeHub Docs — Overview', description: 'What DeHub is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure and creator monetization.' },
   'dapps': { title: "DeHub dApps — The Complete Ecosystem", description: "DeHub's decentralized apps: streaming, feed, messaging, communities, wallet and more — how they fit together in one user-owned ecosystem." },
   'games': { title: 'DeHub Games — Play & Win On-Chain', description: "DeHub's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
-  'token/overview': { title: 'DHB Currency Overview — DeHub Docs', description: 'How the $DHB currency works in-app: tipping, unlocking content, rewards, AI generation credits, profit share and the $0.001 in-app peg.' },
+  'token/overview': { title: 'Currency Overview — DeHub Docs', description: 'How DeHub tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.' },
   'token/economics': { title: 'DeHub tokens Economics — DeHub Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
   'token/stake': { title: 'Staking tokens — DeHub Docs', description: 'How tokens staking works: rewards, mechanics and what staking unlocks across DeHub.' },
   'roadmap': { title: 'DeHub Roadmap — DeHub Docs', description: "Where DeHub is headed: shipped milestones and what's next across the app, token and games." },
@@ -3426,7 +3426,7 @@ ${Array.isArray(job.tags) && job.tags.length ? `<p>Tags: ${job.tags.slice(0, 10)
 ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 <p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants${Number(job.view_count) ? ` · ${Number(job.view_count).toLocaleString('en-US')} views` : ''}</p>
 <h2>How a DeHub bounty works</h2>
-<p>A bounty is a scoped task with a budget attached, posted by a DeHub account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(job.currency || 'DHB')} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
+<p>A bounty is a scoped task with a budget attached, posted by a DeHub account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
   });
 }
 
