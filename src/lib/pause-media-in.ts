@@ -83,9 +83,9 @@ function pauseAll(els: readonly HTMLMediaElement[], spare?: HTMLMediaElement | n
  * subtree that is genuinely still on screen, in its own always-on-top window,
  * so the user can both see it and stop it themselves.
  */
-export function pauseMediaIn(root: Element): HTMLMediaElement[] {
+export function pauseMediaIn(root: Element, spare?: HTMLMediaElement): HTMLMediaElement[] {
   const inDocument = Array.from(root.querySelectorAll<HTMLMediaElement>('video, audio'));
-  return pauseAll([...inDocument, ...offDocumentIn(root)]);
+  return pauseAll([...inDocument, ...offDocumentIn(root)], spare);
 }
 
 /**

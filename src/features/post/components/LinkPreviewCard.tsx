@@ -2,6 +2,7 @@ import { X, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { LinkPreviewData } from '@/lib/api/link-preview';
 import { PredictionDetails } from '@/components/app/cards/PredictionDetails';
+import { RichLinkCard } from '@/components/app/cards/RichLinkCardLazy';
 
 interface LinkPreviewCardProps {
   preview: LinkPreviewData;
@@ -9,6 +10,7 @@ interface LinkPreviewCardProps {
 }
 
 export function LinkPreviewCard({ preview, onRemove }: LinkPreviewCardProps) {
+  if (preview.rich) return <RichLinkCard preview={{ ...preview, rich: preview.rich }} onRemove={onRemove} />;
   const domain = new URL(preview.url).hostname.replace('www.', '');
 
   return (

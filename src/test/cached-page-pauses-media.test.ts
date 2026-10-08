@@ -65,6 +65,17 @@ describe('pauseMediaIn — a hidden cached page stops making noise', () => {
     expect(audio.paused).toBe(true);
   });
 
+  it('can give a share player focus without pausing the player that just started', () => {
+    const current = fakeMedia('audio', true);
+    const old = fakeMedia('video', true);
+    root.append(current, old);
+    const offscreen = fakeMedia('audio', true);
+    const unregister = registerOffDocumentMedia(offscreen, () => root);
+    expect(pauseMediaIn(root, current)).toEqual([old, offscreen]);
+    expect(current.pause).not.toHaveBeenCalled();
+    unregister();
+  });
+
   it('finds media nested anywhere in the page, not just at the top', () => {
     const deep = document.createElement('div');
     deep.innerHTML = '<div><section><div></div></section></div>';
