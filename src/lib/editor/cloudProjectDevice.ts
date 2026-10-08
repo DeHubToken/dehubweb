@@ -18,7 +18,7 @@ export function browserCloudProjectSession(address: string, check: () => void) {
   return { api, uuid: () => crypto.randomUUID(), session: cloudProjectSession({ wallet, check, api, uuid: () => crypto.randomUUID(), saveLocal: saveProject,
     readLink: async id => ((await (await links()).get("links", key(id))) ?? null) as CloudProjectLink | null,
     writeLink: async (id, link) => { await (await links()).put("links", link, key(id)); },
-    upload: async (localId, cloudId, guard) => {
+    upload: async (localId, cloudId, guard, shared) => {
       const local = await getMedia(localId); guard();
       const live = useEditorStore.getState().media.find(media => media.id === localId);
       if (!local && !live) throw new Error("A project source is missing from this device");
@@ -26,7 +26,7 @@ export function browserCloudProjectSession(address: string, check: () => void) {
       let blob = local?.blob;
       if (!blob) { const response = await fetch(live!.url); guard(); if (!response.ok) throw new Error("A project source could not be downloaded"); blob = await response.blob(); guard(); }
       if (!blob.size) throw new Error("A project source is empty");
-      const slot = await api.prepareMedia(cloudId, blob.size, extension(meta.name, meta.mimeType)); guard();
+      const slot = await (shared ? api.editing.prepareMedia(shared.owner, shared.projectId, cloudId, blob.size, extension(meta.name, meta.mimeType)) : api.prepareMedia(cloudId, blob.size, extension(meta.name, meta.mimeType))); guard();
       const response = await fetch(slot.signedUrl, { method: "PUT", headers: { "Content-Type": meta.mimeType || "application/octet-stream", "x-upsert": "false" }, body: blob }); guard();
       if (!response.ok) throw new Error("A project source could not be uploaded");
       const source: CloudProjectMedia = { id: cloudId, storagePath: slot.path, name: meta.name, kind: meta.kind, mimeType: meta.mimeType, size: blob.size, provenance: meta.provenance };
