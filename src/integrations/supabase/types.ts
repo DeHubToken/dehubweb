@@ -1620,6 +1620,24 @@ export type Database = {
           },
         ]
       }
+      chirp_speech_usage: {
+        Row: {
+          characters: number
+          month: string
+          updated_at: string
+        }
+        Insert: {
+          characters?: number
+          month: string
+          updated_at?: string
+        }
+        Update: {
+          characters?: number
+          month?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       client_error_logs: {
         Row: {
           component: string | null
@@ -2946,6 +2964,95 @@ export type Database = {
           updated_at?: string
           wallet_address?: string
           width?: number | null
+        }
+        Relationships: []
+      }
+      editor_cloud_projects: {
+        Row: {
+          created_at: string
+          id: string
+          revision: number
+          state_version: number
+          title: string
+          trashed_at: string | null
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          revision?: number
+          state_version?: number
+          title: string
+          trashed_at?: string | null
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          revision?: number
+          state_version?: number
+          title?: string
+          trashed_at?: string | null
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      editor_cloud_revisions: {
+        Row: {
+          created_at: string
+          document: Json
+          project_id: string
+          request_id: string
+          revision: number
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          document: Json
+          project_id: string
+          request_id: string
+          revision: number
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          document?: Json
+          project_id?: string
+          request_id?: string
+          revision?: number
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_revisions_wallet_address_project_id_fkey"
+            columns: ["wallet_address", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
+      editor_cloud_uploads: {
+        Row: {
+          expires_at: string
+          path: string
+          size_bytes: number
+          wallet_address: string
+        }
+        Insert: {
+          expires_at?: string
+          path: string
+          size_bytes: number
+          wallet_address: string
+        }
+        Update: {
+          expires_at?: string
+          path?: string
+          size_bytes?: number
+          wallet_address?: string
         }
         Relationships: []
       }
@@ -6855,6 +6962,7 @@ export type Database = {
           runpod_endpoint_id: string | null
           secret: string
           updated_at: string
+          worker_url: string | null
         }
         Insert: {
           id: number
@@ -6862,6 +6970,7 @@ export type Database = {
           runpod_endpoint_id?: string | null
           secret: string
           updated_at?: string
+          worker_url?: string | null
         }
         Update: {
           id?: number
@@ -6869,6 +6978,7 @@ export type Database = {
           runpod_endpoint_id?: string | null
           secret?: string
           updated_at?: string
+          worker_url?: string | null
         }
         Relationships: []
       }
@@ -8142,6 +8252,49 @@ export type Database = {
         Args: { p_max_discovered?: number }
         Returns: Json
       }
+      editor_cloud_history: { Args: { p_id: string }; Returns: Json }
+      editor_cloud_list: { Args: never; Returns: Json }
+      editor_cloud_list_trash: { Args: never; Returns: Json }
+      editor_cloud_load: {
+        Args: { p_id: string; p_revision?: number }
+        Returns: Json
+      }
+      editor_cloud_prepare_media: {
+        Args: { p_extension: string; p_id: string; p_size: number }
+        Returns: Json
+      }
+      editor_cloud_restore: {
+        Args: {
+          p_expected_revision: number
+          p_id: string
+          p_request_id: string
+          p_revision: number
+        }
+        Returns: Json
+      }
+      editor_cloud_save: {
+        Args: {
+          p_document: Json
+          p_expected_revision: number
+          p_id: string
+          p_request_id: string
+        }
+        Returns: Json
+      }
+      editor_cloud_set_trash: {
+        Args: {
+          p_expected_revision: number
+          p_expected_state: number
+          p_id: string
+          p_trashed: boolean
+        }
+        Returns: Json
+      }
+      editor_cloud_validate: {
+        Args: { p_document: Json; p_project_id: string; p_wallet: string }
+        Returns: undefined
+      }
+      editor_cloud_wallet: { Args: never; Returns: string }
       end_inactive_stages: { Args: never; Returns: number }
       erase_account_app_data: {
         Args: { p_user_id?: string; p_wallet: string }
@@ -8318,6 +8471,10 @@ export type Database = {
           p_salt: string
         }
         Returns: Json
+      }
+      reserve_chirp_characters: {
+        Args: { p_characters: number }
+        Returns: boolean
       }
       reserve_fraction_listing: {
         Args: { p_listing_id: string; p_quantity: number }
