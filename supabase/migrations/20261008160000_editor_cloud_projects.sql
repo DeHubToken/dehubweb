@@ -95,7 +95,7 @@ BEGIN
   SELECT coalesce(sum(u.size_bytes),0) INTO reserved FROM public.editor_cloud_uploads u
     WHERE u.wallet_address=wallet AND u.expires_at>now() AND u.path<>object_path
       AND NOT EXISTS(SELECT 1 FROM storage.objects o WHERE o.bucket_id='editor-project-media' AND o.name=u.path AND coalesce((o.metadata->>'size')::bigint,0)>0);
-  IF usage+reserved+CASE WHEN EXISTS(SELECT 1 FROM storage.objects WHERE bucket_id='editor-project-media' AND name=object_path AND coalesce((metadata->>'size')::bigint,0)>0) THEN 0 ELSE p_size END>10737418240 THEN
+  IF usage+reserved+(CASE WHEN EXISTS(SELECT 1 FROM storage.objects WHERE bucket_id='editor-project-media' AND name=object_path AND coalesce((metadata->>'size')::bigint,0)>0) THEN 0 ELSE p_size END)>10737418240 THEN
     RAISE EXCEPTION 'Cloud project media storage is full';
   END IF;
   INSERT INTO public.editor_cloud_uploads(wallet_address,path,size_bytes) VALUES(wallet,object_path,p_size)
@@ -109,7 +109,7 @@ CREATE OR REPLACE FUNCTION public.editor_cloud_guard_media() RETURNS trigger
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE reservation public.editor_cloud_uploads; actual bigint; old_actual bigint;
 BEGIN
-  IF NEW.bucket_id<>'editor-project-media' THEN RETURN NEW; END IF;
+  IF NEW.bucket_id IS DISTINCT FROM 'editor-project-media' THEN RETURN NEW; END IF;
   SELECT * INTO reservation FROM public.editor_cloud_uploads WHERE path=NEW.name;
   IF NOT FOUND OR reservation.expires_at<=now() THEN RAISE EXCEPTION 'Reserve cloud project media before upload'; END IF;
   IF NEW.metadata->>'size' IS NOT NULL AND NEW.metadata->>'size' !~ '^[0-9]+$' THEN RAISE EXCEPTION 'Invalid cloud media size'; END IF;
