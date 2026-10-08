@@ -47,6 +47,7 @@ export function AgentPanel() {
   const [visualConsent, setVisualConsent] = useState<string | null>(null);
   const visualScope = useEditorStore(s => highlightVisualScope(s.toSnapshot(), s.selectedClipIds));
   const useVisual = visualConsent === visualScope;
+  useEffect(() => { setVisualConsent(null); }, [visualScope]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const previewEnd = useRef<number | null>(null);
