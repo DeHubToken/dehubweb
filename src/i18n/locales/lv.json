@@ -6438,6 +6438,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizuāli spilgtākie mirkļi",
+      "visualPrivacy": "Nosūtīt atlasītos kadrus vizuālai analīzei."
+    },
     "review": {
       "title": "Projekta pārskatīšana",
       "shared": "Kopīgots ar jums",

@@ -6425,6 +6425,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuaalsed tipphetked",
+      "visualPrivacy": "Saada valitud kaadrid visuaalseks analüüsiks."
+    },
     "review": {
       "title": "Projekti ülevaatus",
       "shared": "Sinuga jagatud",

@@ -6523,6 +6523,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuele hoogtepunte",
+      "visualPrivacy": "Stuur gekose rame vir visuele ontleding."
+    },
     "review": {
       "title": "Projekhersiening",
       "shared": "Met jou gedeel",

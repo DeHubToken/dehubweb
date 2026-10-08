@@ -6465,6 +6465,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Kirim bingkai terpilih untuk analisis visual."
+    },
     "review": {
       "title": "Tinjauan proyek",
       "shared": "Dibagikan kepada Anda",

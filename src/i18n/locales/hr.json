@@ -6350,6 +6350,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizualni vrhunci",
+      "visualPrivacy": "Pošaljite odabrane kadrove za vizualnu analizu."
+    },
     "review": {
       "title": "Pregled projekta",
       "shared": "Podijeljeno s vama",

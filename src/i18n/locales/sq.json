@@ -6449,6 +6449,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Momentet pamore kryesore",
+      "visualPrivacy": "Dërgo kuadrot e zgjedhura për analizë pamore."
+    },
     "review": {
       "title": "Shqyrtimi i projektit",
       "shared": "Ndarë me ju",

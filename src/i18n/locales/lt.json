@@ -6457,6 +6457,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vaizdo akcentai",
+      "visualPrivacy": "Siųsti pasirinktus kadrus vaizdinei analizei."
+    },
     "review": {
       "title": "Projekto peržiūra",
       "shared": "Bendrinama su jumis",
