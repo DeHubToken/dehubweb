@@ -63,7 +63,12 @@ describe('reviewing generation drafts from editor chat', () => {
     const length = screen.getByRole('textbox', { name: 'filters.duration 1' });
     fireEvent.change(length, { target: { value: '1.' } }); expect(length).toHaveValue('1.');
     fireEvent.change(length, { target: { value: '1.25' } });
-    fireEvent.change(screen.getByRole('textbox', { name: 'editor.shots.preview 1' }), { target: { value: '1.5' } });
+    const offset = screen.getByRole('textbox', { name: 'editor.shots.preview 1' });
+    fireEvent.change(offset, { target: { value: '' } });
+    expect(screen.getByRole('button', { name: 'editor.shots.preview —' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'nav.create' })).toBeDisabled();
+    expect(screen.queryByText(/NaN/)).not.toBeInTheDocument();
+    fireEvent.change(offset, { target: { value: '1.5' } });
     expect(useEditorStore.getState().clips).toBe(original.clips); expect(useEditorStore.getState().past).toHaveLength(0);
     await act(async () => fireEvent.click(screen.getByRole('button', { name: 'nav.create' })));
     const copy = useEditorStore.getState().toSnapshot();

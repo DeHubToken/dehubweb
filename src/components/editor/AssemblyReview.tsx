@@ -29,7 +29,7 @@ export default function AssemblyReview({ state, session, changed, names, onPrevi
         <div className="flex flex-wrap items-center gap-2">
           <label className="flex items-center gap-1"><span>{t("editor.shots.preview")}</span><NumericValue value={s.offset} label={`${t("editor.shots.preview")} ${index + 1}`} disabled={disabled} commit={value => session.range(s.id, value, s.duration)} /></label>
           <label className="flex items-center gap-1"><span>{t("filters.duration")}</span><NumericValue value={s.duration} label={`${t("filters.duration")} ${index + 1}`} disabled={disabled} commit={value => session.range(s.id, s.offset, value)} /></label>
-          <button disabled={disabled} onClick={() => onPreview(index)} className="rounded border border-white/15 px-2 py-1">{t("editor.shots.preview")} {shotTime(s.offset)}–{shotTime(s.offset + s.duration)}</button>
+          <button disabled={disabled || state.error === "limit"} onClick={() => onPreview(index)} className="rounded border border-white/15 px-2 py-1">{t("editor.shots.preview")} {previewRange(s.offset, s.duration)}</button>
         </div>
       </div>)}
     </div>
@@ -47,4 +47,9 @@ function NumericValue({ value, label, disabled, commit }: { value: number; label
   const [text, setText] = useState(String(value));
   useEffect(() => { if (Number.isFinite(value) && (!text.trim() || Number(text.replace(",", ".")) !== value)) setText(String(value)); }, [value]);
   return <input type="text" inputMode="decimal" aria-label={label} disabled={disabled} value={text} className="w-16 rounded border border-white/15 bg-black px-1 py-1" onChange={e => { const next = e.target.value; setText(next); commit(/^\d+(?:[.,]\d*)?$/.test(next) ? Number(next.replace(",", ".")) : NaN); }} />;
+}
+
+function previewRange(offset: number, duration: number) {
+  return Number.isFinite(offset) && Number.isFinite(duration) && offset >= 0 && duration > 0
+    ? `${shotTime(offset)}–${shotTime(offset + duration)}` : "—";
 }
