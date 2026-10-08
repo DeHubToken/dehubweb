@@ -12,6 +12,7 @@ import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/l
 import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PredictionDetails } from '@/components/app/cards/PredictionDetails';
+import { RichLinkCard } from '@/components/app/cards/RichLinkCard';
 
 // Reuse the URL regex from TranslatableText to match the same URLs shown as 🔗
 const URL_REGEX = /(?:https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%_+~#=]+(?:\.[-a-zA-Z0-9@:%_+~#=]+)*\.(?:com|org|net|io|co|app|dev|ai|me|tv|xyz|info|gg|cc|ly|fm|sh|site|tech|live|space|link|page|pro|art|club|world|social|store|online|digital|media|studio|agency|blog|shop|network|land|zone|fund|games|gaming|vc|nft|crypto|dao|eth|web3|defi|music|video|news|chat|cloud|host|money|finance|trade|market|exchange|lol|meme|cool|to|uk|de|fr|jp|cn|ru|br|in|au|ca|es|it|nl|se|no|fi|dk|pl|pt|cz|at|ch|be|ie|nz|za|kr|mx|ar|cl|hu|ro|bg|hr|sk|si|lt|lv|ee|is)\b(?:[-a-zA-Z0-9()@:%_+.~#?&\/=]*)/gi;
@@ -54,7 +55,7 @@ export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
 
   return (
     <div className="mt-1.5" data-no-navigate="true">
-      {preview ? (
+      {preview?.rich ? <RichLinkCard preview={{ ...preview, rich: preview.rich }} /> : preview ? (
         <motion.a
           href={preview.url}
           target="_blank"

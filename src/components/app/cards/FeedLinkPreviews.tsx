@@ -16,6 +16,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { fetchAppByDomain, type MiniAppListing } from '@/lib/miniapp/registry';
 import { PredictionDetails } from './PredictionDetails';
 import { parsePredictionLink } from '@/lib/predictions';
+import { parseRichLink } from '@/lib/rich-links';
+import { RichLinkCard } from './RichLinkCard';
 
 interface FeedLinkPreviewsProps {
   text: string;
@@ -43,7 +45,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
     setLoading(!!url);
     if (!url) return;
     try {
-      if (!parsePredictionLink(url)) void fetchAppByDomain(new URL(url).hostname).then(row => { if (!cancelled) setApp(row); });
+      if (!parsePredictionLink(url) && !parseRichLink(url)) void fetchAppByDomain(new URL(url).hostname).then(row => { if (!cancelled) setApp(row); });
     } catch {
       /* not a URL we can read a host from */
     }
@@ -68,6 +70,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
     <div className="mt-2 space-y-2" data-no-navigate>
       <AnimatePresence mode="popLayout">
         {visiblePreviews.map((preview) => {
+          if (preview.rich) return <RichLinkCard key={preview.url} preview={{ ...preview, rich: preview.rich }} />;
           const domain = new URL(preview.url).hostname.replace('www.', '');
           if (app && new URL(preview.url).hostname.toLowerCase() === app.domain) {
             const open = (e: { stopPropagation: () => void }) => {
