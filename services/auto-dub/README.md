@@ -23,7 +23,7 @@ include in the existing TLS server block, validate nginx, then reload it.
 
 The service reads the existing shared worker secret from `/etc/dehub-dub.env`
 (root-owned, mode 0600). Set the service-only `video_dub_worker.worker_url` to
-`https://api-legacy.dehub.io/internal/video-dubs/jobs`; the Edge Function reads
+`https://live.dehub.io/internal/video-dubs/jobs`; the Edge Function reads
 that row when environment overrides are absent. Apply the HTTP configuration
 migration before deploying the function. Keep the sweep cron disabled.
 
