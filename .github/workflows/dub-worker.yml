@@ -1,0 +1,38 @@
+name: Dub worker
+on:
+  pull_request:
+    paths:
+      - 'services/auto-dub/**'
+      - '.github/workflows/dub-worker.yml'
+      - 'supabase/migrations/20261008140000_chirp_speech_budget.sql'
+      - 'scripts/test-chirp-budget.py'
+jobs:
+  audio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install numpy soundfile requests
+      - run: python -m unittest discover -s services/auto-dub -p 'test_*.py'
+  speech-budget:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test-only
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: test-only
+    steps:
+      - uses: actions/checkout@v4
+      - run: psql -v ON_ERROR_STOP=1 -c 'CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS;'
+      - run: psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008140000_chirp_speech_budget.sql
+      - run: python scripts/test-chirp-budget.py

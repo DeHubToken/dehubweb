@@ -35,6 +35,7 @@ import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useMediaVolume } from '@/lib/video-preferences';
 import { useDubPreference, useSpeechVoices, pickVoice, primeSpeech } from '@/hooks/dub-preference';
+import { hasCachedDubLanguage } from '@/lib/cached-dub-languages';
 
 // The speech engine only matters once a dub is playing; keep it off the boot path.
 const VoiceDubEngine = lazy(() => import('./VoiceDubEngine'));
@@ -201,7 +202,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     if (normalizedLang !== 'original') return null;
     const guess = i18n?.resolvedLanguage || i18n?.language || 'en';
     if (guess === 'original' || sameAsSource(guess)) return null;
-    return pickVoice(voices, guess) ? guess : null;
+    return hasCachedDubLanguage(guess) || pickVoice(voices, guess) ? guess : null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [normalizedLang, sourceLang, voices, i18n?.resolvedLanguage, i18n?.language]);
 
@@ -209,7 +210,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const [dubFailed, setDubFailed] = useState(false);
   useEffect(() => { setDubFailed(false); }, [dubOn, dubLang]);
 
-  const wantDub = dubOn && !dubFailed && isReady && !!dubLang && !!dubVoice;
+  const wantDub = dubOn && !dubFailed && isReady && !!dubLang && (hasCachedDubLanguage(dubLang) || !!dubVoice);
   useEffect(() => { onDubAvailableChange?.(wantDub); }, [wantDub, onDubAvailableChange]);
   useEffect(() => () => { onDubAvailableChange?.(false); }, [onDubAvailableChange]);
   const {
@@ -239,7 +240,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const dubHint: 'preparing' | 'unavailable' | null =
     !dubOn || !isReady || !dubLang ? null
     // Voices load a moment after the page; an empty list is not a "no".
-    : !dubVoice ? (voices.length ? 'unavailable' : 'preparing')
+    : !dubVoice && !hasCachedDubLanguage(dubLang) ? (voices.length ? 'unavailable' : 'preparing')
     : dubFailed || dubTranslationStatus === 'failed' ? 'unavailable'
     : dubSegments ? null
     : 'preparing';
@@ -453,6 +454,9 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
             videoRef={videoRef}
             segments={dubSegments ?? null}
             voice={dubVoice}
+            transcriptId={transcript?.id ?? null}
+            language={dubLang}
+            audible={audible}
             onFailed={() => setDubFailed(true)}
           />
         </Suspense>

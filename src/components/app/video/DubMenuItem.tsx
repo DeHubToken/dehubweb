@@ -10,6 +10,7 @@ import { Check, Languages } from 'lucide-react';
 import { toast } from 'sonner';
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
 import { useDubPreference, loadVoices, pickVoice, primeSpeech } from '@/hooks/dub-preference';
+import { hasCachedDubLanguage } from '@/lib/cached-dub-languages';
 
 interface Props {
   tokenId: number | string;
@@ -55,7 +56,7 @@ export function DubMenuItem({ tokenId, className, onDone, onEnabled }: Props) {
       return;
     }
 
-    if (!pickVoice(await loadVoices(), lang)) {
+    if (!hasCachedDubLanguage(lang) && !pickVoice(await loadVoices(), lang)) {
       toast(t('dub.noVoice'));
       return;
     }
