@@ -27,14 +27,19 @@ beforeEach(() => {
     onload?: () => void;
     set src(_: string) { queueMicrotask(() => this.onload?.()); }
   });
+  const listeners = new Map<string, Set<() => void>>();
+  let time = 0;
   const video = {
-    duration: 20, readyState: 4, onloadeddata: null as null | (() => void), onerror: null,
-    addEventListener: (_: string, cb: () => void) => { handler = cb; }, removeEventListener: () => { handler = undefined; },
+    duration: 20, readyState: 4, seeking: false, onloadeddata: null as null | (() => void), onerror: null,
+    addEventListener: (event: string, cb: () => void) => { if (!listeners.has(event)) listeners.set(event, new Set()); listeners.get(event)!.add(cb); },
+    removeEventListener: (event: string, cb: () => void) => { listeners.get(event)?.delete(cb); },
     pause: vi.fn(), load: vi.fn(), removeAttribute: vi.fn(),
     set src(_: string) { queueMicrotask(() => this.onloadeddata?.()); },
-    get currentTime() { return time; }, set currentTime(value: number) { time = value; seeks.push(value); queueMicrotask(() => handler?.()); },
+    get currentTime() { return time; }, set currentTime(value: number) {
+      time = value; seeks.push(value); this.seeking = true;
+      queueMicrotask(() => { this.seeking = false; for (const listener of listeners.get("seeked") ?? []) listener(); });
+    },
   };
-  let handler: (() => void) | undefined, time = 0;
   const context = { clearRect: vi.fn(), fillRect: vi.fn(), save: vi.fn(), restore: vi.fn(), getImageData: () => ({ data: new Uint8ClampedArray(16 * 16 * 4) }) };
   vi.spyOn(document, "createElement").mockImplementation(((name: string) => name === "video" ? video : { getContext: () => context }) as typeof document.createElement);
 });
