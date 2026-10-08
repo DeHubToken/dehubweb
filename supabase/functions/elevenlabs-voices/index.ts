@@ -15,6 +15,7 @@
  * nobody else's ever.
  */
 import { rateLimitByIp, resolveDeHubAddress, serviceClient } from '../_shared/auth.ts';
+import { chirpConfigured, chirpVoices } from '../_shared/chirp-tts.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -42,6 +43,20 @@ Deno.serve(async (req) => {
   if (limited) return limited;
 
   try {
+    const requestUrl = new URL(req.url);
+    if (requestUrl.searchParams.get('provider') === 'google' && chirpConfigured()) {
+      const voices = await chirpVoices(requestUrl.searchParams.get('language') || 'en-US', requestUrl.searchParams.get('search') || '');
+      const token = req.headers.get('x-dehub-token');
+      const wallet = token ? await resolveDeHubAddress(token) : null;
+      if (wallet) {
+        const { data: own } = await serviceClient().from('custom_voices').select('elevenlabs_voice_id, name').eq('wallet_address', wallet);
+        for (const v of own ?? []) {
+          if (v.elevenlabs_voice_id) voices.push({ voice_id: v.elevenlabs_voice_id, name: v.name || 'My voice', description: 'Custom voice', labels: { gender: '', accent: '' }, preview_url: null });
+        }
+      }
+      return new Response(JSON.stringify({ voices, provider: 'google-chirp3-hd' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (requestUrl.searchParams.get('provider') === 'google') console.info('stage-tts catalogue fallback', { provider: 'elevenlabs', reason: 'google-tts-not-configured' });
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
     if (!ELEVENLABS_API_KEY) {
       return new Response(

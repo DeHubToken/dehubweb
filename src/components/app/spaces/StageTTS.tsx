@@ -21,7 +21,7 @@ interface VoiceOption {
 }
 
 export function StageTTS() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [text, setText] = useState('');
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -46,7 +46,7 @@ export function StageTTS() {
   const fetchVoices = useCallback(async (query: string) => {
     setIsLoadingVoices(true);
     try {
-      const params = new URLSearchParams({ page_size: '30' });
+      const params = new URLSearchParams({ page_size: '30', provider: 'google', language: i18n.resolvedLanguage || i18n.language || 'en-US' });
       if (query.trim()) params.set('search', query.trim());
 
       const res = await fetch(
@@ -69,7 +69,7 @@ export function StageTTS() {
     } finally {
       setIsLoadingVoices(false);
     }
-  }, [selectedVoice]);
+  }, [selectedVoice, i18n.resolvedLanguage, i18n.language]);
 
   useEffect(() => {
     fetchVoices('');

@@ -1,19 +1,18 @@
-FROM runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04
+FROM python:3.11-slim
 
-ENV COQUI_TOS_AGREED=1 \
-    PYTHONUNBUFFERED=1 \
-    TTS_HOME=/models
+ENV PYTHONUNBUFFERED=1 HF_HOME=/home/user/.cache/huggingface DUB_CPU_THREADS=2
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ffmpeg libsndfile1 \
+ && apt-get install -y --no-install-recommends ffmpeg libsndfile1 git \
  && rm -rf /var/lib/apt/lists/*
 
+RUN useradd -m -u 1000 user
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir torch==2.6.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cpu \
+ && pip install --no-cache-dir -r requirements.txt
 
-# Bake the model into the image so a cold worker does not download 1.8 GB.
-RUN python -c "from TTS.api import TTS; TTS('tts_models/multilingual/multi-dataset/xtts_v2')"
-
-COPY handler.py .
-CMD ["python", "-u", "handler.py"]
+COPY handler.py server.py ./
+USER user
+EXPOSE 7860
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1"]

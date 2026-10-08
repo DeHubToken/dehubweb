@@ -10,9 +10,9 @@ Pipeline, per job:
   1. pull the video, extract mono 24 kHz audio
   2. build a voice sample: the loudest-talking speaker's clean stretches,
      stitched to ~20 s
-  3. read each translated line with XTTS-v2 in that voice
+  3. read each translated line with Chatterbox in that voice
   4. fit each line into its slot (speed up a little, never more than 1.5x)
-  5. duck the original under the new speech so music and room tone survive
+  5. keep only the new speech; players mix original audio separately
   6. encode AAC, PUT to the signed URL, report back
 
 Runs as a RunPod serverless handler by default. `python handler.py job.json`
@@ -35,21 +35,17 @@ import soundfile as sf
 import torch
 
 SR = 24_000
-MODEL = "tts_models/multilingual/multi-dataset/xtts_v2"
+MODEL = "chatterbox-multilingual-v3"
 REF_TARGET_S = 20.0
 REF_MIN_S = 4.0
 MAX_STRETCH = 1.5
-DUCK_SPEECH = 0.12
-DUCK_IDLE = 0.55
-RAMP_S = 0.08
-# Lines shorter than this are folded into a neighbour: XTTS reads a two-word
+# Lines shorter than this are folded into a neighbour: a two-word
 # fragment badly, and the join is inaudible when the gap is under half a second.
 MERGE_GAP_S = 0.5
 MERGE_MAX_S = 9.0
 MERGE_MAX_CHARS = 240
 
-# Picker codes → what XTTS calls them.
-XTTS_LANG = {"zh": "zh-cn"}
+LANGUAGES = {"ar", "da", "de", "el", "en", "es", "fi", "fr", "he", "hi", "it", "ja", "ko", "ms", "nl", "no", "pl", "pt", "ru", "sv", "sw", "tr", "zh"}
 
 _tts = None
 
@@ -57,11 +53,14 @@ _tts = None
 def tts():
     global _tts
     if _tts is None:
-        from TTS.api import TTS  # heavy import, deferred so the container boots fast
+        from chatterbox.mtl_tts import ChatterboxMultilingualTTS
 
         device = "cuda" if torch.cuda.is_available() else "cpu"
         print(f"loading {MODEL} on {device}")
-        _tts = TTS(MODEL).to(device)
+        torch.set_num_threads(int(os.environ.get("DUB_CPU_THREADS", "2")))
+        _tts = ChatterboxMultilingualTTS.from_pretrained(device=device, t3_model="v3")
+        if _tts.sr != SR:
+            raise RuntimeError(f"unexpected sample rate {_tts.sr}")
     return _tts
 
 
@@ -101,7 +100,7 @@ def stretch(wav: np.ndarray, factor: float, tmp: str) -> np.ndarray:
 # ───────────────────────────── voice sample ──────────────────────────────
 
 
-def build_reference(orig: np.ndarray, source_segments: list[dict], tmp: str) -> tuple[str, str]:
+def build_reference(orig: np.ndarray, source_segments: list[dict], tmp: str) -> tuple[str | None, str]:
     """Return (path, 'cloned'|'stock'). Picks the speaker who talks most and
     stitches their longest lines up to REF_TARGET_S."""
     by_speaker: dict[str, float] = {}
@@ -120,7 +119,7 @@ def build_reference(orig: np.ndarray, source_segments: list[dict], tmp: str) -> 
     total = 0.0
     gap = np.zeros(int(0.2 * SR), dtype=np.float32)
     for s in lines:
-        a = int(float(s["start"]) * SR)
+        a = max(0, int(float(s["start"]) * SR))
         b = min(len(orig), int(float(s["end"]) * SR))
         if b <= a:
             continue
@@ -132,16 +131,13 @@ def build_reference(orig: np.ndarray, source_segments: list[dict], tmp: str) -> 
 
     voice = "cloned"
     if total < REF_MIN_S:
-        # Not enough attributable speech — use the opening of the track and
-        # hope; the caller records that the voice is not really theirs.
-        pieces = [orig[: int(REF_TARGET_S * SR)]]
-        voice = "stock" if len(orig) < REF_MIN_S * SR else "cloned"
+        return None, "stock"
 
-    ref = np.concatenate(pieces) if pieces else orig[: int(REF_TARGET_S * SR)]
+    ref = np.concatenate(pieces)[: int(REF_TARGET_S * SR)]
     peak = float(np.max(np.abs(ref))) if len(ref) else 0.0
     if peak > 0:
         ref = ref * (0.9 / peak)
-    path = os.path.join(tmp, "ref.wav")
+    path = os.path.join(tmp, f"ref-{len(os.listdir(tmp))}.wav")
     sf.write(path, ref, SR)
     return path, voice
 
@@ -176,9 +172,15 @@ def merge_lines(segments: list[dict]) -> list[dict]:
 # ───────────────────────────── synthesis ─────────────────────────────────
 
 
-def synth(text: str, ref: str, lang: str) -> np.ndarray:
-    wav = tts().tts(text=text, speaker_wav=ref, language=XTTS_LANG.get(lang, lang), split_sentences=True)
-    arr = np.asarray(wav, dtype=np.float32)
+def synth(text: str, ref: str | None, lang: str) -> np.ndarray:
+    engine = tts()
+    original_conditioning = engine.conds
+    try:
+        with torch.inference_mode():
+            wav = engine.generate(text, language_id=lang, audio_prompt_path=ref)
+        arr = wav.squeeze().detach().cpu().numpy().astype(np.float32)
+    finally:
+        engine.conds = original_conditioning
     # Trim leading/trailing near-silence so the line lands on its cue.
     thresh = 0.01
     idx = np.where(np.abs(arr) > thresh)[0]
@@ -187,14 +189,13 @@ def synth(text: str, ref: str, lang: str) -> np.ndarray:
     return arr
 
 
-def render(orig: np.ndarray, lines: list[dict], ref: str, lang: str, tmp: str) -> tuple[np.ndarray, int]:
+def render(orig: np.ndarray, lines: list[dict], refs: dict[str, str | None], lang: str, tmp: str) -> tuple[np.ndarray, int]:
     speech = np.zeros_like(orig)
-    windows: list[tuple[int, int]] = []
     cursor = 0.0  # where the previous line actually ended, in seconds
     spoken = 0
 
     for i, line in enumerate(lines):
-        wav = synth(line["text"], ref, lang)
+        wav = synth(line["text"], refs.get(str(line.get("speaker") or "0")), lang)
         if not len(wav):
             continue
         start = max(line["start"], cursor + 0.05)
@@ -212,23 +213,10 @@ def render(orig: np.ndarray, lines: list[dict], ref: str, lang: str, tmp: str) -
         if b <= a:
             break
         speech[a:b] += wav[: b - a]
-        windows.append((a, b))
         cursor = b / SR
         spoken += 1
 
-    # Duck the original under each line with short ramps either side.
-    gain = np.full(len(orig), DUCK_IDLE, dtype=np.float32)
-    ramp = int(RAMP_S * SR)
-    for a, b in windows:
-        lo = max(0, a - ramp)
-        hi = min(len(orig), b + ramp)
-        gain[lo:hi] = DUCK_SPEECH
-        if lo < a:
-            gain[lo:a] = np.linspace(DUCK_IDLE, DUCK_SPEECH, a - lo, dtype=np.float32)
-        if b < hi:
-            gain[b:hi] = np.linspace(DUCK_SPEECH, DUCK_IDLE, hi - b, dtype=np.float32)
-
-    mix = orig * gain + speech
+    mix = speech
     peak = float(np.max(np.abs(mix))) if len(mix) else 0.0
     if peak > 0.95:
         mix = mix * (0.95 / peak)
@@ -243,21 +231,23 @@ def report(job: dict, payload: dict) -> None:
     if not url:
         print("no callback:", json.dumps(payload)[:300])
         return
-    body = {"action": "complete", "secret": job.get("secret"), "dubId": job.get("dubId"), **payload}
+    body = {"action": "complete", "secret": job.get("secret"), "dubId": job.get("dubId"), "jobId": job.get("jobId"), **payload}
     for attempt in range(3):
         try:
             r = requests.post(url, json=body, timeout=30)
             if r.ok:
                 return
-            print(f"callback {r.status_code}: {r.text[:200]}")
-        except Exception as e:  # noqa: BLE001
-            print("callback error", e)
+            print(f"callback failed: {r.status_code}")
+        except requests.RequestException:
+            print("callback connection failed")
         time.sleep(2 * (attempt + 1))
 
 
 def process(job: dict) -> dict:
     t0 = time.time()
     lang = str(job["lang"]).lower()
+    if lang not in LANGUAGES:
+        raise RuntimeError("unsupported dub language")
     segments = job.get("segments") or []
     source_segments = job.get("sourceSegments") or segments
     if not segments:
@@ -268,7 +258,11 @@ def process(job: dict) -> dict:
         with requests.get(job["videoUrl"], stream=True, timeout=120) as r:
             r.raise_for_status()
             with open(video, "wb") as f:
+                size = 0
                 for chunk in r.iter_content(1 << 20):
+                    size += len(chunk)
+                    if size > 500 * 1024 * 1024:
+                        raise RuntimeError("video exceeds download limit")
                     f.write(chunk)
 
         orig_path = os.path.join(tmp, "orig.wav")
@@ -276,10 +270,19 @@ def process(job: dict) -> dict:
         orig = read_wav(orig_path)
         if len(orig) < SR:
             raise RuntimeError("audio too short")
+        if len(orig) > 900 * SR:
+            raise RuntimeError("video exceeds duration limit")
 
-        ref, voice = build_reference(orig, source_segments, tmp)
+        refs = {}
+        cloned = False
+        for speaker in {str(s.get("speaker") or "0") for s in segments}:
+            sample_lines = [s for s in source_segments if str(s.get("speaker") or "0") == speaker]
+            ref, kind = build_reference(orig, sample_lines, tmp)
+            refs[speaker] = ref
+            cloned = cloned or kind == "cloned"
+        voice = "cloned" if cloned else "stock"
         lines = merge_lines(segments)
-        mix, spoken = render(orig, lines, ref, lang, tmp)
+        mix, spoken = render(orig, lines, refs, lang, tmp)
         if spoken == 0:
             raise RuntimeError("nothing synthesised")
 
@@ -297,11 +300,10 @@ def process(job: dict) -> dict:
             timeout=120,
         )
         if not up.ok:
-            raise RuntimeError(f"upload {up.status_code}: {up.text[:200]}")
+            raise RuntimeError(f"upload failed ({up.status_code})")
 
     # The signed URL is .../upload/sign/<bucket>/<path>?token=…; the row wants <path>.
-    path = job["uploadUrl"].split("/upload/sign/", 1)[1].split("?", 1)[0]
-    path = path.split("/", 1)[1]  # drop the bucket
+    path = job["path"]
     result = {
         "ok": True,
         "path": path,

@@ -1,41 +1,66 @@
-# auto-dub worker
+---
+title: DeHub video dubs
+sdk: docker
+app_port: 7860
+---
 
-Voice-cloned dubbing for video posts. `supabase/functions/auto-dub` decides
-what to dub and calls this; this turns one job into one AAC track.
+# Video dubbing
 
-Stack: XTTS-v2 (Coqui, open weights) for voice-cloned speech, ffmpeg for the
-audio plumbing. No paid API in the loop — the cost is GPU seconds.
+Chatterbox Multilingual v3 reads translated transcript segments using a sample
+of each identified speaker. The cached AAC contains speech only. Web and mobile
+play it alongside the video, with independent voice and original-volume controls.
+Original volume stays constant between lines. If no suitable sample exists,
+the worker uses its stock voice. No database credentials reach the worker.
 
-## Deploy (RunPod serverless)
+## Hosting
 
-1. RunPod → Serverless → New Endpoint → **GitHub repo**, this repository,
-   Dockerfile path `services/auto-dub/Dockerfile`.
-2. GPU: any 16 GB+ card (RTX 4090 / A5000 / L4). Workers: min 0, max 3.
-   Idle timeout 30 s. Container disk 20 GB (the model is baked into the image).
-3. Copy the endpoint id into the Supabase secrets:
-
-```
-RUNPOD_API_KEY=…            RunPod → Settings → API keys
-RUNPOD_DUB_ENDPOINT_ID=…    the endpoint id
-DUB_WORKER_SECRET=…         any long random string; the worker echoes it back
-DUB_AUTO_LANGS=en,es,pt,fr,de,ar,hi,zh   (optional) languages the sweeper fills
-DUB_MAX_SECONDS=180                       (optional) sweeper length ceiling
-```
-
-The job payload is self-contained (video URL, lines, a signed upload URL and a
-callback), so the worker needs **no** environment variables of its own.
-
-## Run one locally
+The Dockerfile targets CPU and serves one job at a time on port 7860. It can run
+on existing compute or a Hugging Face Docker Space using CPU Basic hardware.
+Copy this directory to the Space root. Set its `DUB_WORKER_SECRET` secret and
+set these backend secrets:
 
 ```
-python handler.py job.json
+DUB_WORKER_URL=https://<host>/jobs
+DUB_WORKER_SECRET=<same random secret>
 ```
 
-`job.json` is the `input` object the function sends — grab one from the
-function logs. Works on CPU, slowly.
+Do not publish secrets in the repository. Requests require the shared secret;
+downloads and reference audio stay in a temporary directory removed after each
+job. Only public videos enter the shared public audio cache. Callback results
+must match both the dub and the current job ID, with a separate upload path per
+attempt. Concurrent viewer requests claim a row before dispatching work.
 
-## Cost
+Chatterbox has no per-character licence fee. CPU hosting can be free within a
+host's allowance, but first renders can be slow and idle hosts may sleep. No
+latency or throughput has been established for this deployment. The first job
+downloads the weights; subsequent jobs reuse them. Device speech remains the
+fallback while a render is pending or the host is unavailable. Finished audio
+is shared by subsequent viewers on both platforms.
 
-A 60-second short into one language is ~15–30 GPU-seconds end to end on a
-4090-class card, i.e. well under a cent. Cold start (model already in the
-image) is ~20 s.
+The existing RunPod adapter is also supported with a suitable CUDA image and
+`python handler.py` as its command. It requires `RUNPOD_API_KEY` and
+`RUNPOD_DUB_ENDPOINT_ID`; this is an optional paid host, not the default Docker
+deployment. Do not enable the disabled sweep cron for this rollout.
+
+## Stage speech
+
+Stage voice pickers request Google Chirp 3 HD through the existing speech
+endpoints. Set backend secret `GOOGLE_TTS_API_KEY` to a server-only Google Cloud
+key restricted to the enabled Text-to-Speech API. Deploy `elevenlabs-voices`
+and `elevenlabs-tts` after applying `20261008140000_chirp_speech_budget.sql`.
+Existing custom voices retain their ownership checks and original provider.
+
+The shared database reserves characters atomically before each Chirp call and
+stops at 1,000,000 per billing month. Failed or uncertain calls remain counted;
+there is no automatic paid fallback after that cap. This counter covers this
+application, not unrelated use of the same Google Cloud project. Before the
+Google secret is configured, the picker retains the existing voice catalogue
+and logs the fallback reason. Google API errors are surfaced to the caller.
+
+## Verification
+
+Cloud CI tests speech-only output, per-speaker references and callback attempt
+identity without downloading weights. Deployment still requires a real public
+video render and an authenticated stage speech request on production. Confirm
+the cached voice follows pause, seek, mute and playback speed on web/mobile,
+and that each volume slider affects only its own track.
