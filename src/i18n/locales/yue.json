@@ -6455,6 +6455,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "自動換行",
+      "width": "文字闊度",
+      "shrink": "縮細文字以配合",
+      "height": "文字高度",
+      "captions": "調整字幕軌道大小"
+    },
     "canvas": {
       "dropMedia": "拖曳以加入您的設計",
       "dropText": "拖曳以加入文字",

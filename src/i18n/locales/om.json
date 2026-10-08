@@ -6410,6 +6410,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Sarara cabsuu",
+      "width": "Bal'ina barruu",
+      "shrink": "Barruu akka seenuuf xiqqeessi",
+      "height": "Olka'iinsa barruu",
+      "captions": "Daandii barruu jalaa sirreessi"
+    },
     "canvas": {
       "dropMedia": "Dizaayinii keetti dabaluuf gadi dhiisi",
       "dropText": "Gadi dhiisi jecha dabaluuf",

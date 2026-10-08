@@ -6385,6 +6385,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Kewaa ahịrị",
+      "width": "Obosara ederede",
+      "shrink": "Belata ederede ka ọ dabara",
+      "height": "Ogologo ederede",
+      "captions": "Hazie egwu ndepụta okwu"
+    },
     "canvas": {
       "dropMedia": "Dàlị iji tinye na imewe gị",
       "dropText": "Dàlị iji tinye ederede",

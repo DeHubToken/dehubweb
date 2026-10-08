@@ -6462,6 +6462,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "A capo automatico",
+      "width": "Larghezza del testo",
+      "shrink": "Riduci il testo per adattarlo",
+      "height": "Altezza del testo",
+      "captions": "Adatta la traccia dei sottotitoli"
+    },
     "canvas": {
       "dropMedia": "Trascina per aggiungere al tuo progetto",
       "dropText": "Trascina per aggiungere testo",

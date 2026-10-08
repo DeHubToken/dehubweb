@@ -6471,6 +6471,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Ajustar líneas",
+      "width": "Ancho del texto",
+      "shrink": "Reducir el texto para que encaje",
+      "height": "Altura del texto",
+      "captions": "Ajustar pista de subtítulos"
+    },
     "canvas": {
       "dropMedia": "Arrastra para añadir a tu diseño",
       "dropText": "Arrastra para añadir texto",

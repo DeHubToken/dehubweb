@@ -5765,6 +5765,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Break di lines",
+      "width": "Text width",
+      "shrink": "Make text small make e fit",
+      "height": "Text height",
+      "captions": "Make subtitle track fit"
+    },
     "canvas": {
       "dropMedia": "Drop-am for add-am for yua design",
       "dropText": "Drop-am for add text",

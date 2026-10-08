@@ -6431,6 +6431,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Whati ngā rārangi",
+      "width": "Whānui kuputuhi",
+      "shrink": "Whakaitia te kuputuhi kia uru",
+      "height": "Teitei kuputuhi",
+      "captions": "Whakaurua te ara kupu hauraro"
+    },
     "canvas": {
       "dropMedia": "Tukua hei tāpiri ki tō hoahoa",
       "dropText": "Tukua hei tāpiri kuputuhi",

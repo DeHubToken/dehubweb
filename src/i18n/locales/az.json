@@ -6307,6 +6307,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Sətirləri bük",
+      "width": "Mətn eni",
+      "shrink": "Mətni sığacaq qədər kiçilt",
+      "height": "Mətn hündürlüyü",
+      "captions": "Altyazı yolunu uyğunlaşdır"
+    },
     "canvas": {
       "dropMedia": "Dizaynınıza əlavə etmək üçün buraxın",
       "dropText": "Mətn əlavə etmək üçün buraxın",
