@@ -1,6 +1,7 @@
-import { useEffect } from "react";
-import { CloudUpload, History, RefreshCw } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CloudUpload, History, RefreshCw, RotateCcw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore } from "@/store/editorStore";
@@ -11,12 +12,15 @@ import { toast } from "sonner";
 
 export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onOpenChange(value: boolean): void }) {
   const { walletAddress } = useAuth();
+  const [query, setQuery] = useState("");
   const preserve = async () => { const snapshot = useEditorStore.getState().toSnapshot(); await saveProject(snapshot); setLastProjectId(snapshot.id); };
   const cloud = useCloudProjects(walletAddress, browserCloudProjectSession, {
     current: () => useEditorStore.getState().toSnapshot(), preserve,
     open: snapshot => { useEditorStore.getState().loadSnapshot(snapshot); setLastProjectId(snapshot.id); },
   });
   useEffect(() => { if (open && walletAddress) void cloud.refresh(); }, [open, walletAddress]);
+  useEffect(() => { setQuery(""); }, [walletAddress]);
+  const matching = cloud.projects.filter(project => (project.title || "Untitled").toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
   return <Dialog open={open} onOpenChange={value => { if (value || !cloud.busy) onOpenChange(value); }}>
     <DialogContent className="max-h-[85dvh] max-w-lg overflow-y-auto border-white/10 bg-black/95 text-white">
       <DialogHeader><DialogTitle className="flex items-center gap-2"><CloudUpload className="h-5 w-5" /> Cloud projects</DialogTitle>
@@ -30,7 +34,13 @@ export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onO
       {cloud.busy && <p role="status" className="text-sm text-white/60">Transferring project…</p>}
       {cloud.error && <p role="alert" className="text-sm text-red-300">{cloud.error}</p>}
       {cloud.saved && <p role="status" className="text-sm text-white/80">Cloud version saved.</p>}
-      <div className="flex items-center justify-between"><h3 className="text-sm font-medium">{cloud.selected ? "Version history" : "Your cloud projects"}</h3>
+      <div className="flex gap-2" role="group" aria-label="Cloud project library">
+        <Button size="sm" variant={cloud.viewTrash ? "outline" : "secondary"} disabled={!cloud.available || cloud.busy} aria-pressed={!cloud.viewTrash} onClick={() => { void cloud.switchView(false); }}>Projects</Button>
+        <Button size="sm" variant={cloud.viewTrash ? "secondary" : "outline"} disabled={!cloud.available || cloud.busy} aria-pressed={cloud.viewTrash} onClick={() => { void cloud.switchView(true); }}><Trash2 className="mr-2 h-4 w-4" />Trash</Button>
+      </div>
+      {!cloud.selected && <Input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search projects" aria-label="Search cloud projects" disabled={!cloud.available} />}
+      {cloud.viewTrash && <p className="text-xs text-white/60">Versions and source media are kept. Restore a project to continue editing.</p>}
+      <div className="flex items-center justify-between"><h3 className="text-sm font-medium">{cloud.selected ? "Version history" : cloud.viewTrash ? "Trash" : "Your cloud projects"}</h3>
         {cloud.selected ? <Button variant="ghost" size="sm" disabled={cloud.busy} onClick={cloud.clearHistory}>Back</Button>
           : <Button variant="ghost" size="icon" disabled={!cloud.available || cloud.busy} aria-label="Refresh cloud projects" onClick={() => { void cloud.refresh(); }}><RefreshCw className="h-4 w-4" /></Button>}</div>
       {cloud.selected ? <div className="space-y-2">{cloud.history.map(version => <div key={version.revision} className="rounded-lg border border-white/10 p-3">
@@ -38,11 +48,14 @@ export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onO
         <p className="mb-2 truncate text-xs text-white/60">{version.title}</p>
         <div className="flex gap-2"><Button size="sm" variant="outline" disabled={cloud.busy} onClick={() => { void cloud.open(version.projectId, version.revision); }}>Open copy</Button>
           <Button size="sm" variant="outline" disabled={cloud.busy || version.revision === cloud.selected?.revision} onClick={() => { void cloud.restore(version.revision); }}>Restore as new version</Button></div>
-      </div>)}</div> : <div className="space-y-2">{cloud.projects.map(project => <div key={project.projectId} className="flex items-center gap-2 rounded-lg border border-white/10 p-3">
-        <button className="min-w-0 flex-1 text-left" disabled={cloud.busy} onClick={() => { void cloud.open(project.projectId); }}><span className="block truncate text-sm">{project.title || "Untitled"}</span>
+      </div>)}</div> : <div className="space-y-2">{matching.map(project => <div key={project.projectId} className="flex items-center gap-2 rounded-lg border border-white/10 p-3">
+        <button className="min-w-0 flex-1 text-left" disabled={cloud.busy || cloud.viewTrash} onClick={() => { void cloud.open(project.projectId); }}><span className="block truncate text-sm">{project.title || "Untitled"}</span>
           <span className="text-xs text-white/50">Version {project.revision} · {new Date(project.savedAt).toLocaleDateString()}</span></button>
-        <Button variant="ghost" size="icon" disabled={cloud.busy} aria-label={`History for ${project.title}`} onClick={() => { void cloud.showHistory(project); }}><History className="h-4 w-4" /></Button>
-      </div>)}{!cloud.projects.length && cloud.available && !cloud.busy && !cloud.error && <p className="text-sm text-white/50">No cloud projects yet.</p>}</div>}
+        {!cloud.viewTrash && <Button variant="ghost" size="icon" disabled={cloud.busy} aria-label={`History for ${project.title}`} onClick={() => { void cloud.showHistory(project); }}><History className="h-4 w-4" /></Button>}
+        <Button variant="ghost" size={cloud.viewTrash ? "sm" : "icon"} disabled={cloud.busy} aria-label={`${cloud.viewTrash ? "Restore" : "Move to Trash"}: ${project.title}`} onClick={() => { void cloud.setTrash(project, !cloud.viewTrash); }}>
+          {cloud.viewTrash ? <><RotateCcw className="mr-2 h-4 w-4" />Restore</> : <Trash2 className="h-4 w-4" />}
+        </Button>
+      </div>)}{!matching.length && cloud.available && !cloud.busy && !cloud.error && <p className="text-sm text-white/50">{query.trim() ? "No matching projects." : cloud.viewTrash ? "Trash is empty." : "No cloud projects yet."}</p>}</div>}
     </DialogContent>
   </Dialog>;
 }
