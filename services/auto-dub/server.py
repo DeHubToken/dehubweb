@@ -1,4 +1,4 @@
-"""One bounded worker, deployable on an existing host or a free CPU Space."""
+"""One bounded worker, deployable on an existing host."""
 import hmac
 import os
 from concurrent.futures import ThreadPoolExecutor
