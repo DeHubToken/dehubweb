@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { extractShareUrls, fetchRichPreview, normalizeRichPreview, parseRichLink, publicMediaUrl } from '../rich-links';
+import { extractShareUrls, fetchRichPreview, parseRichLink, publicMediaUrl } from '../rich-links';
+import { normalizeRichPreview } from '../rich-link-data';
 
 const originalFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = originalFetch; vi.restoreAllMocks(); });

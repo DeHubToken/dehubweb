@@ -2,7 +2,7 @@ import { X, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { LinkPreviewData } from '@/lib/api/link-preview';
 import { PredictionDetails } from '@/components/app/cards/PredictionDetails';
-import { RichLinkCard } from '@/components/app/cards/RichLinkCard';
+import { RichLinkCard } from '@/components/app/cards/RichLinkCardLazy';
 
 interface LinkPreviewCardProps {
   preview: LinkPreviewData;
