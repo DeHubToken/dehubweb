@@ -558,7 +558,12 @@ export default function ProfilePage() {
         
         {/* Profile Card Bento */}
         <div className={cn('relative', theme === 'system' && 'max-sm:-mx-2')}>
-        {theme === 'system' && <PageHeader overlay />}
+        {theme === 'system' && (
+          <PageHeader
+            overlay
+            className="top-[calc(env(safe-area-inset-top,0px)+0.5rem)] left-[calc(env(safe-area-inset-left,0px)+0.5rem)] right-[calc(env(safe-area-inset-right,0px)+0.5rem)]"
+          />
+        )}
         <ProfileHeader
           profile={data.profile}
           apiProfile={data.apiProfile}
