@@ -6365,6 +6365,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Kala jab sadaradaha",
+      "width": "Ballaca qoraalka",
+      "shrink": "Yaree qoraalka si uu u galo",
+      "height": "Dhererka qoraalka",
+      "captions": "Hagaaji jidka qoraalka hoose"
+    },
     "canvas": {
       "dropMedia": "Halkan ku sii daa si aad ugu darto naqshadaada",
       "dropText": "Halkan ku sii daa si aad qoraal ugu darto",

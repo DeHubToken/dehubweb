@@ -6368,6 +6368,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Setirleri böl",
+      "width": "Tekstiň ini",
+      "shrink": "Teksti sygjak ýaly kiçelt",
+      "height": "Tekstiň beýikligi",
+      "captions": "Subtitr ýoluny sazla"
+    },
     "canvas": {
       "dropMedia": "Dizýaňyza goşmak üçin taşlaň",
       "dropText": "Tekst goşmak üçin taşlaň",

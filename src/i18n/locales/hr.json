@@ -6350,6 +6350,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Prelamanje redaka",
+      "width": "Širina teksta",
+      "shrink": "Smanji tekst da stane",
+      "height": "Visina teksta",
+      "captions": "Prilagodi zapis titlova"
+    },
     "canvas": {
       "dropMedia": "Spusti za dodavanje u svoj dizajn",
       "dropText": "Spusti za dodavanje teksta",

@@ -5379,6 +5379,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Break lines",
+      "width": "Text width",
+      "shrink": "Make text small so e fit",
+      "height": "Text height",
+      "captions": "Make subtitle track fit"
+    },
     "canvas": {
       "dropMedia": "Drop am make e enter your design",
       "dropText": "Drop am to add text",

@@ -6461,6 +6461,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Zeilen umbrechen",
+      "width": "Textbreite",
+      "shrink": "Text verkleinern, bis er passt",
+      "height": "Texthöhe",
+      "captions": "Untertitelspur einpassen"
+    },
     "canvas": {
       "dropMedia": "Ablegen, um es zu Ihrem Design hinzuzufügen",
       "dropText": "Ablegen, um Text hinzuzufügen",

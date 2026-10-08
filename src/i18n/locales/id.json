@@ -6465,6 +6465,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Bungkus baris",
+      "width": "Lebar teks",
+      "shrink": "Perkecil teks agar pas",
+      "height": "Tinggi teks",
+      "captions": "Sesuaikan trek takarir"
+    },
     "canvas": {
       "dropMedia": "Jatuhkan untuk ditambahkan ke desain Anda",
       "dropText": "Jatuhkan untuk menambahkan teks",
