@@ -5,15 +5,12 @@
  * editorStore so opening a panel never lands in the undo history.
  */
 import { create } from 'zustand';
+import type { GenerationDraft } from '@/lib/editor/generationDraft';
 
 export type EditorPanel = 'agent' | 'design' | 'elements' | 'layers' | 'assets' | 'media' | 'text' | 'generate' | 'library' | 'inspector';
 
 /** A generation the AI agent prepared; the Generate panel shows it for the user to confirm. */
-export interface GeneratePrefill {
-  kind: 'image' | 'video';
-  prompt: string;
-  aspect?: string;
-}
+export type GeneratePrefill = GenerationDraft;
 
 interface EditorUiState {
   /** Open panel, or null when the rail is collapsed to give the canvas room. */
