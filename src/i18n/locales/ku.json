@@ -5434,6 +5434,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Vekolîna projeyê",
+      "shared": "Bi te re parvekirî",
+      "time": "Dem (s)",
+      "assign": "Cuzdan diyar bike"
+    },
     "textFit": {
       "wrap": "Rêzan bibire",
       "width": "Firehiya nivîsê",

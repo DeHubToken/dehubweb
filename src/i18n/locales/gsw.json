@@ -6417,6 +6417,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projektprüefig",
+      "shared": "Mit dir teilt",
+      "time": "Ziit (s)",
+      "assign": "Wallet zuewiise"
+    },
     "textFit": {
       "wrap": "Ziile umbreche",
       "width": "Textbreiti",

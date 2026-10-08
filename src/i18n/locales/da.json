@@ -6374,6 +6374,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projektgennemgang",
+      "shared": "Delt med dig",
+      "time": "Tid (s)",
+      "assign": "Tildel tegnebog"
+    },
     "textFit": {
       "wrap": "Ombryd linjer",
       "width": "Tekstbredde",

@@ -6471,6 +6471,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Rurayta qhawana",
+      "shared": "Qamwan rakisqa",
+      "time": "Pacha (s)",
+      "assign": "Billeterata akllay"
+    },
     "textFit": {
       "wrap": "Siq'ikunata t'aqay",
       "width": "Qillqap kinraynin",

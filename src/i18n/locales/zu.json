@@ -6463,6 +6463,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Ukubuyekezwa kwephrojekthi",
+      "shared": "Kwabelwane nawe",
+      "time": "Isikhathi (s)",
+      "assign": "Nikeza isikhwama"
+    },
     "textFit": {
       "wrap": "Songa imigqa",
       "width": "Ububanzi bombhalo",
