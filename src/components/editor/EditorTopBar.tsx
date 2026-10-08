@@ -2,7 +2,6 @@ import { useEditorStore } from "@/store/editorStore";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
 import { Save, Download, Undo2, Redo2, FilePlus2, Info, Sparkles } from "lucide-react";
-import { toast } from "sonner";
 import { useCallback, useState, useEffect } from "react";
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +12,7 @@ import { ExportDialog } from "@/components/editor/ExportDialog";
 import { PostToDeHub } from "@/components/editor/PostToDeHub";
 import { AboutDialog } from "@/components/editor/AboutDialog";
 import { AppState } from "@/components/app/AppState";
+import { CloudProjectsDialog } from "./CloudProjectsDialog";
 
 export function EditorTopBar() {
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ export function EditorTopBar() {
   const [open, setOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [cloudOpen, setCloudOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectSnapshot[]>([]);
   useEffect(() => {
     if (!open) return;
@@ -42,6 +43,7 @@ export function EditorTopBar() {
       setOpen(false);
       setExportOpen(false);
       setAboutOpen(false);
+      setCloudOpen(false);
     }, []),
   );
   const surfaceEpoch = useSurfaceEpoch();
@@ -120,7 +122,7 @@ export function EditorTopBar() {
         <LiquidGlassBubble2
           label="Save"
           icon={<Save className="h-4 w-4" />}
-          onClick={() => toast.success("Project autosaved.")}
+          onClick={() => setCloudOpen(true)}
           width="92px"
           height="36px"
         />
@@ -144,7 +146,7 @@ export function EditorTopBar() {
       {/* Below lg the same actions stay reachable as icons. Previously they
           lived only in the phone bottom bar, which the rail replaced. */}
       <div className="flex items-center gap-0.5 lg:hidden">
-        <Button size="icon" variant="ghost" onClick={() => toast.success("Project autosaved.")}
+        <Button size="icon" variant="ghost" onClick={() => setCloudOpen(true)}
           aria-label="Save project"
           className="h-9 w-9 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
           <Save className="h-4 w-4" />
@@ -163,6 +165,7 @@ export function EditorTopBar() {
       </div>
       <ExportDialog key={`export-${surfaceEpoch}`} open={exportOpen} onOpenChange={setExportOpen} />
       <AboutDialog key={`about-${surfaceEpoch}`} open={aboutOpen} onOpenChange={setAboutOpen} />
+      <CloudProjectsDialog key={`cloud-${surfaceEpoch}`} open={cloudOpen} onOpenChange={setCloudOpen} />
     </header>
   );
 }
