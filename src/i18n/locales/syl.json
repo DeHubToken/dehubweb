@@ -93,6 +93,7 @@
     "heading": "DeHub শর্টস"
   },
   "settings": {
+    "postingChain": "পোস্টর ব্লকচেইন",
     "showOnline": "কবে অনলাইন আছি দেখাও",
     "showOnlineDesc": "DeHub ব্যবহার করার সময় আপনার নামের পাশে একটি সবুজ ডট দেখতে পাবেন।",
     "smartReplies": "ꠙꠞꠣꠝꠞ꠆ꠡ ꠖꠤꠅꠣ ꠎꠛꠣꠛ",

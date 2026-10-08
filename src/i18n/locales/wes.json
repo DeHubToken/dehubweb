@@ -90,6 +90,7 @@
     "heading": "Shorts dem for DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain wey you go use post",
     "showOnline": "Show when I'm online",
     "showOnlineDesc": "Di pipo wey you dey message go see smol green dot for your name when you dey use DeHub",
     "smartReplies": "Ansa dem weh wi propose",

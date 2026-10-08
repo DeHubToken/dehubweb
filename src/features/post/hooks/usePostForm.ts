@@ -24,11 +24,11 @@ import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_
 // handlePost to keep the wallet stack out of the entry bundle
 // (scripts/check-entry-bundle.mjs fails the build otherwise). Only the light
 // chain-config constants are imported statically.
-import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { usePostingChain } from '@/hooks/use-posting-chain';
 import { isSolanaChain } from '@/lib/chains/constants';
 import { connectSolanaWallet } from '@/lib/solana/wallet';
 import { broadcastSolanaMint } from '@/lib/solana/mint';
-import { confirmEvmMint, getSolanaStatus } from '@/lib/api/dehub/solana';
+import { confirmEvmMint } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -263,7 +263,6 @@ interface UsePostFormReturn {
     deleteDraft: (id: string) => void;
     startRecording: () => void;
     stopRecording: () => void;
-    setChainId: (chainId: PostChainId) => void;
     setSelectedCategory: (category: string) => void;
     setShowTitle: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
@@ -362,27 +361,7 @@ export function usePostForm(
   const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [chainId, setChainIdState] = useState<PostChainId>(BASE_CHAIN_ID as PostChainId);
-
-  /**
-   * Selecting Solana asks the backend whether it can mint there before the
-   * chain is committed. Without this the user only found out at mint time —
-   * after the media had already been uploaded — via "Solana minting is not
-   * enabled on the server". A status endpoint that is down or slow must not
-   * block the choice, so failures fall through to the old behaviour.
-   */
-  const setChainId = useCallback((next: PostChainId) => {
-    setChainIdState(next);
-    if (!isSolanaChain(next)) return;
-    getSolanaStatus()
-      .then((status) => {
-        if (status.mintingEnabled === false) {
-          toast.error(status.message || 'Solana posting is temporarily unavailable. Try Base or BNB instead.');
-          setChainIdState(BASE_CHAIN_ID as PostChainId);
-        }
-      })
-      .catch(() => {});
-  }, []);
+  const { chainId } = usePostingChain();
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     // Active draft category takes priority, then saved defaults
     if (d?.selectedCategory) return d.selectedCategory;
@@ -1155,7 +1134,6 @@ export function usePostForm(
     setLiveMode(null);
     setPoll(null);
     setScheduledDate(null);
-    setChainId(BASE_CHAIN_ID as PostChainId);
     setTitleText('');
     // Cleared per post, deliberately. A board is usually specific to what was
     // just posted, and one that quietly carries over ends up on content it has
@@ -1273,7 +1251,6 @@ export function usePostForm(
     if (p.tokenSymbol !== undefined) setTokenSymbol(p.tokenSymbol);
     if (p.tokenAmount !== undefined) setTokenAmount(p.tokenAmount);
     if (p.poll !== undefined) setPoll(p.poll ?? null);
-    if (p.chainId !== undefined) setChainIdState(p.chainId as PostChainId);
     if (p.shopLinks !== undefined) setShopLinks(p.shopLinks as ShopLink[]);
     if (p.shopListingIds !== undefined) setShopListingIds(p.shopListingIds);
     if (p.scheduledDate !== undefined) {
@@ -2658,7 +2635,6 @@ export function usePostForm(
       deleteDraft,
       startRecording,
       stopRecording,
-      setChainId,
       setSelectedCategory,
       markCategorySaved: () => { categorySavedRef.current = true; },
       setShowTitle: handleSetShowTitle,

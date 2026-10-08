@@ -20,7 +20,6 @@ import { useAssetPicker } from '@/hooks/use-asset-picker';
 import { useAssetSearch } from '@/hooks/use-asset-ref';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { ChainSelector, type PostChainId } from '@/components/app/ChainSelector';
 
 interface PostContentAreaProps {
   text: string;
@@ -61,9 +60,6 @@ interface PostContentAreaProps {
   isRecording?: boolean;
   recordingTime?: number;
   onStopRecording?: () => void;
-  // Chain selector props
-  chainId: PostChainId;
-  onChainChange: (chainId: PostChainId) => void;
   // Title props
   showTitle: boolean;
   titleText: string;
@@ -146,8 +142,6 @@ export function PostContentArea({
   isRecording,
   recordingTime,
   onStopRecording,
-  chainId,
-  onChainChange,
   showTitle,
   titleText,
   setTitleText,
@@ -588,7 +582,7 @@ export function PostContentArea({
             <AvatarFallback className="rounded-xl">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
 
-          {/* Schedule/Drafts/Chain buttons - top right corner */}
+          {/* Schedule/Drafts buttons - top right corner */}
           <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
           {/* Schedule indicator */}
           {scheduledDate && (
@@ -608,13 +602,6 @@ export function PostContentArea({
               {drafts.length} draft{drafts.length !== 1 ? 's' : ''}
             </span>
           )}
-
-          {/* Chain selector button */}
-          <ChainSelector
-            selectedChainId={chainId}
-            onChainChange={onChainChange}
-            variant="icon"
-          />
 
           {/* Schedule button */}
           <Tooltip>

@@ -90,6 +90,7 @@
     "heading": "Shkurtimëtra DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain për postimet",
     "showOnline": "Shfaq kur jam online",
     "showOnlineDesc": "Njerëzve që u dërgon mesazhe u shfaqet një pikë e gjelbër pranë emrit tënd ndërsa përdor DeHub",
     "smartReplies": "Përgjigje të sugjeruara",
