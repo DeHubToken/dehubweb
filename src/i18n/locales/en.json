@@ -2509,10 +2509,10 @@
         "compute": "AI compute",
         "aiTools": "AI tools",
         "infrastructure": "Infrastructure",
-        "payments": "Payment fees"
+        "payments": "Payment fees",
+        "tax": "Token tax"
       },
       "title": "Revenue & costs",
-      "revenueHint": "{{buys}} buys · {{fees}} fees",
       "loss": "Net loss",
       "profit": "Net profit",
       "netHint": "revenue minus costs",

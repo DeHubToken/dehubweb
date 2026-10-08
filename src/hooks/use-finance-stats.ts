@@ -20,9 +20,9 @@ export interface FinanceSource {
   id: string;
   label: string;
   kind: FinanceKind;
-  /** `buys` and `fees` for revenue; `compute`, `ai_tools`, `infrastructure`, `payments` for costs. */
+  /** `buys`, `fees` and `tax` for revenue; `compute`, `ai_tools`, `infrastructure`, `payments` for costs. */
   group: string;
-  origin: 'database' | 'api' | 'digitalocean' | 'stripe' | 'config';
+  origin: 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain';
   /** `unavailable` means it could not be read this time — not that it was zero. */
   status: 'ok' | 'unavailable';
   note: string;

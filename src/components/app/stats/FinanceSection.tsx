@@ -41,7 +41,7 @@ function windowDays(range: Range): number | null {
 /** Past two months of days the chart switches to one point per month. */
 const MONTHLY_AFTER_DAYS = 62;
 
-const REVENUE_GROUPS = ['buys', 'fees'] as const;
+const REVENUE_GROUPS = ['buys', 'fees', 'tax'] as const;
 const COST_GROUPS = ['compute', 'ai_tools', 'infrastructure', 'payments'] as const;
 
 // ---------------------------------------------------------------------------
@@ -61,10 +61,17 @@ function formatSigned(n: number): string {
   return `${n < 0 ? '−' : '+'}${formatUsd(n)}`;
 }
 
-/** Axis ticks: whole dollars where the tick is whole, and a sign on refund days that dip below zero. */
+/**
+ * Axis ticks: short, so a narrow axis never clips them. Whole dollars under a
+ * thousand, then K and M without a trailing ".0", and a sign on refund days
+ * that dip below zero.
+ */
 function formatAxisUsd(n: number): string {
   const abs = Math.abs(n);
-  const body = Number.isInteger(abs) && abs < 10_000 ? `$${abs.toLocaleString('en-US')}` : formatUsd(abs);
+  let body: string;
+  if (abs >= 1_000_000) body = `$${(abs / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
+  else if (abs >= 1000) body = `$${(abs / 1000).toFixed(abs >= 10_000 ? 0 : 1).replace(/\.0$/, '')}K`;
+  else body = Number.isInteger(abs) ? `$${abs}` : formatUsd(abs);
   return n < 0 ? `−${body}` : body;
 }
 
@@ -357,8 +364,7 @@ export function FinanceSection({ range }: { range: Range }) {
       revenueTotal,
       costTotal,
       net: revenueTotal - costTotal,
-      buys: byGroup(revenue, 'buys'),
-      fees: byGroup(revenue, 'fees'),
+      revenueByGroup: REVENUE_GROUPS.map((group) => ({ group, usd: byGroup(revenue, group) })),
       chart,
     };
   }, [stats, span]);
@@ -382,12 +388,21 @@ export function FinanceSection({ range }: { range: Range }) {
         : t('stats.countries.window', 'last {{days}} days', { days: view.days });
   const coveredPct = view.costTotal > 0 ? (view.revenueTotal / view.costTotal) * 100 : null;
   // Under one percent is not zero, and rounding it there would say nobody paid for anything.
+  // Past ten times over, a percentage stops being readable ("166203%"), so it
+  // reads as a multiple instead.
   const covered =
-    coveredPct == null ? '—' : coveredPct > 0 && coveredPct < 1 ? '<1%' : `${Math.round(coveredPct)}%`;
+    coveredPct == null
+      ? '—'
+      : coveredPct > 0 && coveredPct < 1
+        ? '<1%'
+        : coveredPct >= 1000
+          ? `${Math.round(coveredPct / 100).toLocaleString('en-US')}×`
+          : `${Math.round(coveredPct)}%`;
 
   const groupLabels: Record<string, string> = {
     buys: t('stats.money.group.buys', 'In-app buys'),
     fees: t('stats.money.group.fees', 'Fees'),
+    tax: t('stats.money.group.tax', 'Token tax'),
     compute: t('stats.money.group.compute', 'AI compute'),
     ai_tools: t('stats.money.group.aiTools', 'AI tools'),
     infrastructure: t('stats.money.group.infrastructure', 'Infrastructure'),
@@ -407,10 +422,14 @@ export function FinanceSection({ range }: { range: Range }) {
         <StatTile
           label={revenueLabel}
           value={formatUsd(view.revenueTotal)}
-          hint={t('stats.money.revenueHint', '{{buys}} buys · {{fees}} fees', {
-            buys: formatUsd(view.buys),
-            fees: formatUsd(view.fees),
-          })}
+          hint={
+            // Only the groups that earned something in this window — "$0.00
+            // fees" next to a year of token tax is noise.
+            view.revenueByGroup
+              .filter((g) => g.usd >= 0.005)
+              .map((g) => `${formatUsd(g.usd)} ${(groupLabels[g.group] ?? g.group).toLowerCase()}`)
+              .join(' · ') || windowHint
+          }
         />
         <StatTile label={costsLabel} value={formatUsd(view.costTotal)} hint={windowHint} />
         <StatTile

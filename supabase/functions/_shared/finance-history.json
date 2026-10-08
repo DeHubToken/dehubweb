@@ -1,0 +1,1385 @@
+{
+ "note": "Historical revenue that no live API reports. Each row is a UTC day, in USD at that day's BNB/USDT close on Binance. Traced once from the chain (the token stopped trading with tax in 2022); each source's provenance says exactly how, so the figures can be re-derived independently.",
+ "sources": [
+  {
+   "id": "bsc_token_tax",
+   "label": "DeHub token tax (BSC)",
+   "group": "tax",
+   "note": "The share of the original DeHub token's 12% trading tax kept as BNB for operations: the 2% collateral and 2% distribution sales paid straight to the operations wallets, plus the collateral BNB the contract paid out to the owner wallet. The 4% buyback (burned), 2% liquidity, 1% reflection and the holders' claimed rewards are not counted.",
+   "provenance": {
+    "chain": "BNB Smart Chain",
+    "token": "0xFC206f429d55c71cb7294EfF40c6ADb20dC21508",
+    "pair": "0xE876eE0945CE80Ef821633f2C18950b33Fb85633",
+    "router": "0x340c9fe71d6cd7bee9e67041cd359877e47c6f90",
+    "wallets": [
+     "0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4",
+     "0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f",
+     "0xbf8ff255ad1f369929715a3290d1ef71d79f8954"
+    ],
+    "method": "trace_transaction on every SoldTokensForCollateral / SoldTokensForDistribution transaction, summing the BNB the router paid to a wallet other than the token; plus every CollateralizeDone event.",
+    "payouts": 609,
+    "firstDay": "2021-08-30",
+    "lastDay": "2023-03-18",
+    "totalBnb": 3857.8669,
+    "totalUsd": 1956621.0,
+    "byWallet": {
+     "0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4": 394.797,
+     "0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f": 3338.4291,
+     "0xbf8ff255ad1f369929715a3290d1ef71d79f8954": 124.6408
+    }
+   }
+  }
+ ],
+ "rows": [
+  {
+   "date": "2021-08-30",
+   "source": "bsc_token_tax",
+   "usd": 3620.79,
+   "bnb": 7.866162
+  },
+  {
+   "date": "2021-09-03",
+   "source": "bsc_token_tax",
+   "usd": 19464.43,
+   "bnb": 39.845303
+  },
+  {
+   "date": "2021-09-11",
+   "source": "bsc_token_tax",
+   "usd": 12366.75,
+   "bnb": 30.527641
+  },
+  {
+   "date": "2021-09-14",
+   "source": "bsc_token_tax",
+   "usd": 4637.62,
+   "bnb": 11.193875
+  },
+  {
+   "date": "2021-09-15",
+   "source": "bsc_token_tax",
+   "usd": 1417.41,
+   "bnb": 3.286367
+  },
+  {
+   "date": "2021-09-16",
+   "source": "bsc_token_tax",
+   "usd": 1318.37,
+   "bnb": 3.107155
+  },
+  {
+   "date": "2021-09-17",
+   "source": "bsc_token_tax",
+   "usd": 2588.39,
+   "bnb": 6.365946
+  },
+  {
+   "date": "2021-09-18",
+   "source": "bsc_token_tax",
+   "usd": 1221.2,
+   "bnb": 2.973466
+  },
+  {
+   "date": "2021-09-19",
+   "source": "bsc_token_tax",
+   "usd": 1945.43,
+   "bnb": 4.761211
+  },
+  {
+   "date": "2021-09-20",
+   "source": "bsc_token_tax",
+   "usd": 2894.14,
+   "bnb": 7.948748
+  },
+  {
+   "date": "2021-09-21",
+   "source": "bsc_token_tax",
+   "usd": 599.48,
+   "bnb": 1.740648
+  },
+  {
+   "date": "2021-09-22",
+   "source": "bsc_token_tax",
+   "usd": 10341.68,
+   "bnb": 27.286751
+  },
+  {
+   "date": "2021-09-23",
+   "source": "bsc_token_tax",
+   "usd": 13135.26,
+   "bnb": 34.251013
+  },
+  {
+   "date": "2021-09-24",
+   "source": "bsc_token_tax",
+   "usd": 11692.05,
+   "bnb": 32.935356
+  },
+  {
+   "date": "2021-09-25",
+   "source": "bsc_token_tax",
+   "usd": 30729.2,
+   "bnb": 87.898178
+  },
+  {
+   "date": "2021-09-26",
+   "source": "bsc_token_tax",
+   "usd": 46398.51,
+   "bnb": 134.879398
+  },
+  {
+   "date": "2021-09-27",
+   "source": "bsc_token_tax",
+   "usd": 43540.72,
+   "bnb": 129.778598
+  },
+  {
+   "date": "2021-09-28",
+   "source": "bsc_token_tax",
+   "usd": 22702.95,
+   "bnb": 68.177026
+  },
+  {
+   "date": "2021-09-29",
+   "source": "bsc_token_tax",
+   "usd": 8957.73,
+   "bnb": 24.361527
+  },
+  {
+   "date": "2021-09-30",
+   "source": "bsc_token_tax",
+   "usd": 16269.87,
+   "bnb": 41.986749
+  },
+  {
+   "date": "2021-10-01",
+   "source": "bsc_token_tax",
+   "usd": 7863.13,
+   "bnb": 18.655118
+  },
+  {
+   "date": "2021-10-02",
+   "source": "bsc_token_tax",
+   "usd": 15111.4,
+   "bnb": 35.381421
+  },
+  {
+   "date": "2021-10-04",
+   "source": "bsc_token_tax",
+   "usd": 6934.88,
+   "bnb": 16.267616
+  },
+  {
+   "date": "2021-10-05",
+   "source": "bsc_token_tax",
+   "usd": 6226.22,
+   "bnb": 14.083287
+  },
+  {
+   "date": "2021-10-06",
+   "source": "bsc_token_tax",
+   "usd": 6006.7,
+   "bnb": 13.811683
+  },
+  {
+   "date": "2021-10-08",
+   "source": "bsc_token_tax",
+   "usd": 8027.05,
+   "bnb": 19.148488
+  },
+  {
+   "date": "2021-10-09",
+   "source": "bsc_token_tax",
+   "usd": 11399.44,
+   "bnb": 27.019282
+  },
+  {
+   "date": "2021-10-11",
+   "source": "bsc_token_tax",
+   "usd": 5717.79,
+   "bnb": 13.841178
+  },
+  {
+   "date": "2021-10-12",
+   "source": "bsc_token_tax",
+   "usd": 5712.98,
+   "bnb": 12.861269
+  },
+  {
+   "date": "2021-10-13",
+   "source": "bsc_token_tax",
+   "usd": 5980.81,
+   "bnb": 12.7035
+  },
+  {
+   "date": "2021-10-14",
+   "source": "bsc_token_tax",
+   "usd": 6149.25,
+   "bnb": 13.008769
+  },
+  {
+   "date": "2021-10-16",
+   "source": "bsc_token_tax",
+   "usd": 5697.09,
+   "bnb": 12.23076
+  },
+  {
+   "date": "2021-10-18",
+   "source": "bsc_token_tax",
+   "usd": 5244.0,
+   "bnb": 10.814605
+  },
+  {
+   "date": "2021-10-20",
+   "source": "bsc_token_tax",
+   "usd": 5327.69,
+   "bnb": 10.627748
+  },
+  {
+   "date": "2021-10-21",
+   "source": "bsc_token_tax",
+   "usd": 4736.7,
+   "bnb": 10.058825
+  },
+  {
+   "date": "2021-10-22",
+   "source": "bsc_token_tax",
+   "usd": 6387.32,
+   "bnb": 13.326354
+  },
+  {
+   "date": "2021-10-25",
+   "source": "bsc_token_tax",
+   "usd": 6217.0,
+   "bnb": 12.815921
+  },
+  {
+   "date": "2021-10-26",
+   "source": "bsc_token_tax",
+   "usd": 6205.6,
+   "bnb": 12.979715
+  },
+  {
+   "date": "2021-10-28",
+   "source": "bsc_token_tax",
+   "usd": 15220.35,
+   "bnb": 30.94196
+  },
+  {
+   "date": "2021-10-29",
+   "source": "bsc_token_tax",
+   "usd": 9733.97,
+   "bnb": 18.355595
+  },
+  {
+   "date": "2021-10-30",
+   "source": "bsc_token_tax",
+   "usd": 8760.15,
+   "bnb": 16.581773
+  },
+  {
+   "date": "2021-11-01",
+   "source": "bsc_token_tax",
+   "usd": 9163.67,
+   "bnb": 16.621935
+  },
+  {
+   "date": "2021-11-02",
+   "source": "bsc_token_tax",
+   "usd": 24485.93,
+   "bnb": 44.166534
+  },
+  {
+   "date": "2021-11-03",
+   "source": "bsc_token_tax",
+   "usd": 13613.44,
+   "bnb": 23.950449
+  },
+  {
+   "date": "2021-11-05",
+   "source": "bsc_token_tax",
+   "usd": 32643.51,
+   "bnb": 53.751867
+  },
+  {
+   "date": "2021-11-06",
+   "source": "bsc_token_tax",
+   "usd": 17313.15,
+   "bnb": 27.149362
+  },
+  {
+   "date": "2021-11-07",
+   "source": "bsc_token_tax",
+   "usd": 17186.46,
+   "bnb": 26.456985
+  },
+  {
+   "date": "2021-11-08",
+   "source": "bsc_token_tax",
+   "usd": 13782.04,
+   "bnb": 21.08958
+  },
+  {
+   "date": "2021-11-09",
+   "source": "bsc_token_tax",
+   "usd": 15956.6,
+   "bnb": 25.128498
+  },
+  {
+   "date": "2021-11-10",
+   "source": "bsc_token_tax",
+   "usd": 13320.52,
+   "bnb": 21.691133
+  },
+  {
+   "date": "2021-11-11",
+   "source": "bsc_token_tax",
+   "usd": 6696.72,
+   "bnb": 10.656773
+  },
+  {
+   "date": "2021-11-12",
+   "source": "bsc_token_tax",
+   "usd": 6671.02,
+   "bnb": 10.641278
+  },
+  {
+   "date": "2021-11-13",
+   "source": "bsc_token_tax",
+   "usd": 35812.56,
+   "bnb": 55.13866
+  },
+  {
+   "date": "2021-11-14",
+   "source": "bsc_token_tax",
+   "usd": 19797.41,
+   "bnb": 30.420116
+  },
+  {
+   "date": "2021-11-15",
+   "source": "bsc_token_tax",
+   "usd": 21066.34,
+   "bnb": 33.23815
+  },
+  {
+   "date": "2021-11-16",
+   "source": "bsc_token_tax",
+   "usd": 48267.2,
+   "bnb": 81.989475
+  },
+  {
+   "date": "2021-11-17",
+   "source": "bsc_token_tax",
+   "usd": 76846.65,
+   "bnb": 132.952679
+  },
+  {
+   "date": "2021-11-18",
+   "source": "bsc_token_tax",
+   "usd": 49760.34,
+   "bnb": 93.56965
+  },
+  {
+   "date": "2021-11-19",
+   "source": "bsc_token_tax",
+   "usd": 80404.69,
+   "bnb": 138.390175
+  },
+  {
+   "date": "2021-11-20",
+   "source": "bsc_token_tax",
+   "usd": 94849.51,
+   "bnb": 156.957652
+  },
+  {
+   "date": "2021-11-21",
+   "source": "bsc_token_tax",
+   "usd": 86864.73,
+   "bnb": 148.740973
+  },
+  {
+   "date": "2021-11-22",
+   "source": "bsc_token_tax",
+   "usd": 76704.62,
+   "bnb": 137.14397
+  },
+  {
+   "date": "2021-11-23",
+   "source": "bsc_token_tax",
+   "usd": 51804.15,
+   "bnb": 87.64025
+  },
+  {
+   "date": "2021-11-24",
+   "source": "bsc_token_tax",
+   "usd": 62591.94,
+   "bnb": 106.034125
+  },
+  {
+   "date": "2021-11-25",
+   "source": "bsc_token_tax",
+   "usd": 46834.56,
+   "bnb": 73.28206
+  },
+  {
+   "date": "2021-11-26",
+   "source": "bsc_token_tax",
+   "usd": 26840.18,
+   "bnb": 45.700975
+  },
+  {
+   "date": "2021-11-27",
+   "source": "bsc_token_tax",
+   "usd": 14717.95,
+   "bnb": 24.534005
+  },
+  {
+   "date": "2021-11-28",
+   "source": "bsc_token_tax",
+   "usd": 13554.98,
+   "bnb": 22.174029
+  },
+  {
+   "date": "2021-11-29",
+   "source": "bsc_token_tax",
+   "usd": 38580.52,
+   "bnb": 61.887271
+  },
+  {
+   "date": "2021-11-30",
+   "source": "bsc_token_tax",
+   "usd": 11337.24,
+   "bnb": 18.21243
+  },
+  {
+   "date": "2021-12-01",
+   "source": "bsc_token_tax",
+   "usd": 23030.59,
+   "bnb": 36.70213
+  },
+  {
+   "date": "2021-12-02",
+   "source": "bsc_token_tax",
+   "usd": 31475.74,
+   "bnb": 50.775516
+  },
+  {
+   "date": "2021-12-03",
+   "source": "bsc_token_tax",
+   "usd": 20540.14,
+   "bnb": 34.521239
+  },
+  {
+   "date": "2021-12-04",
+   "source": "bsc_token_tax",
+   "usd": 30777.44,
+   "bnb": 54.128457
+  },
+  {
+   "date": "2021-12-05",
+   "source": "bsc_token_tax",
+   "usd": 7659.64,
+   "bnb": 13.731881
+  },
+  {
+   "date": "2021-12-06",
+   "source": "bsc_token_tax",
+   "usd": 7758.89,
+   "bnb": 13.206626
+  },
+  {
+   "date": "2021-12-07",
+   "source": "bsc_token_tax",
+   "usd": 7222.81,
+   "bnb": 12.481087
+  },
+  {
+   "date": "2021-12-08",
+   "source": "bsc_token_tax",
+   "usd": 7416.45,
+   "bnb": 12.214179
+  },
+  {
+   "date": "2021-12-09",
+   "source": "bsc_token_tax",
+   "usd": 14496.91,
+   "bnb": 25.424251
+  },
+  {
+   "date": "2021-12-10",
+   "source": "bsc_token_tax",
+   "usd": 15389.46,
+   "bnb": 27.859265
+  },
+  {
+   "date": "2021-12-11",
+   "source": "bsc_token_tax",
+   "usd": 5453.27,
+   "bnb": 9.660358
+  },
+  {
+   "date": "2021-12-12",
+   "source": "bsc_token_tax",
+   "usd": 7676.29,
+   "bnb": 13.460088
+  },
+  {
+   "date": "2021-12-13",
+   "source": "bsc_token_tax",
+   "usd": 24041.19,
+   "bnb": 46.144322
+  },
+  {
+   "date": "2021-12-14",
+   "source": "bsc_token_tax",
+   "usd": 5168.32,
+   "bnb": 9.78664
+  },
+  {
+   "date": "2021-12-15",
+   "source": "bsc_token_tax",
+   "usd": 5193.0,
+   "bnb": 9.597116
+  },
+  {
+   "date": "2021-12-16",
+   "source": "bsc_token_tax",
+   "usd": 4249.48,
+   "bnb": 8.075791
+  },
+  {
+   "date": "2021-12-17",
+   "source": "bsc_token_tax",
+   "usd": 8746.73,
+   "bnb": 16.644578
+  },
+  {
+   "date": "2021-12-19",
+   "source": "bsc_token_tax",
+   "usd": 7848.26,
+   "bnb": 14.813631
+  },
+  {
+   "date": "2021-12-21",
+   "source": "bsc_token_tax",
+   "usd": 3692.62,
+   "bnb": 6.989628
+  },
+  {
+   "date": "2021-12-22",
+   "source": "bsc_token_tax",
+   "usd": 3605.91,
+   "bnb": 6.757708
+  },
+  {
+   "date": "2021-12-23",
+   "source": "bsc_token_tax",
+   "usd": 3723.98,
+   "bnb": 6.783207
+  },
+  {
+   "date": "2021-12-24",
+   "source": "bsc_token_tax",
+   "usd": 4014.66,
+   "bnb": 7.405749
+  },
+  {
+   "date": "2021-12-25",
+   "source": "bsc_token_tax",
+   "usd": 1763.93,
+   "bnb": 3.222373
+  },
+  {
+   "date": "2021-12-26",
+   "source": "bsc_token_tax",
+   "usd": 3523.99,
+   "bnb": 6.449474
+  },
+  {
+   "date": "2021-12-27",
+   "source": "bsc_token_tax",
+   "usd": 24400.09,
+   "bnb": 43.285599
+  },
+  {
+   "date": "2021-12-28",
+   "source": "bsc_token_tax",
+   "usd": 12496.94,
+   "bnb": 23.393746
+  },
+  {
+   "date": "2021-12-30",
+   "source": "bsc_token_tax",
+   "usd": 2957.25,
+   "bnb": 5.703469
+  },
+  {
+   "date": "2022-01-01",
+   "source": "bsc_token_tax",
+   "usd": 3230.18,
+   "bnb": 6.125888
+  },
+  {
+   "date": "2022-01-03",
+   "source": "bsc_token_tax",
+   "usd": 3242.04,
+   "bnb": 6.333346
+  },
+  {
+   "date": "2022-01-05",
+   "source": "bsc_token_tax",
+   "usd": 2646.86,
+   "bnb": 5.582915
+  },
+  {
+   "date": "2022-01-07",
+   "source": "bsc_token_tax",
+   "usd": 2793.38,
+   "bnb": 6.233823
+  },
+  {
+   "date": "2022-01-09",
+   "source": "bsc_token_tax",
+   "usd": 2827.71,
+   "bnb": 6.445654
+  },
+  {
+   "date": "2022-01-11",
+   "source": "bsc_token_tax",
+   "usd": 3426.75,
+   "bnb": 7.391605
+  },
+  {
+   "date": "2022-01-13",
+   "source": "bsc_token_tax",
+   "usd": 9918.87,
+   "bnb": 20.873053
+  },
+  {
+   "date": "2022-01-14",
+   "source": "bsc_token_tax",
+   "usd": 3609.32,
+   "bnb": 7.365969
+  },
+  {
+   "date": "2022-01-15",
+   "source": "bsc_token_tax",
+   "usd": 1882.0,
+   "bnb": 3.805864
+  },
+  {
+   "date": "2022-01-16",
+   "source": "bsc_token_tax",
+   "usd": 8213.63,
+   "bnb": 16.473381
+  },
+  {
+   "date": "2022-01-17",
+   "source": "bsc_token_tax",
+   "usd": 3703.8,
+   "bnb": 7.79419
+  },
+  {
+   "date": "2022-01-19",
+   "source": "bsc_token_tax",
+   "usd": 3993.76,
+   "bnb": 8.646375
+  },
+  {
+   "date": "2022-01-20",
+   "source": "bsc_token_tax",
+   "usd": 4431.67,
+   "bnb": 10.067393
+  },
+  {
+   "date": "2022-01-21",
+   "source": "bsc_token_tax",
+   "usd": 2607.73,
+   "bnb": 6.792729
+  },
+  {
+   "date": "2022-01-22",
+   "source": "bsc_token_tax",
+   "usd": 1207.56,
+   "bnb": 3.370236
+  },
+  {
+   "date": "2022-01-25",
+   "source": "bsc_token_tax",
+   "usd": 2916.79,
+   "bnb": 7.574104
+  },
+  {
+   "date": "2022-01-27",
+   "source": "bsc_token_tax",
+   "usd": 3101.28,
+   "bnb": 7.954032
+  },
+  {
+   "date": "2022-01-29",
+   "source": "bsc_token_tax",
+   "usd": 3101.42,
+   "bnb": 7.966655
+  },
+  {
+   "date": "2022-01-31",
+   "source": "bsc_token_tax",
+   "usd": 2681.65,
+   "bnb": 7.164432
+  },
+  {
+   "date": "2022-02-01",
+   "source": "bsc_token_tax",
+   "usd": 1293.86,
+   "bnb": 3.367683
+  },
+  {
+   "date": "2022-02-02",
+   "source": "bsc_token_tax",
+   "usd": 1313.93,
+   "bnb": 3.581162
+  },
+  {
+   "date": "2022-02-03",
+   "source": "bsc_token_tax",
+   "usd": 1342.59,
+   "bnb": 3.606216
+  },
+  {
+   "date": "2022-02-04",
+   "source": "bsc_token_tax",
+   "usd": 2610.65,
+   "bnb": 6.53479
+  },
+  {
+   "date": "2022-02-06",
+   "source": "bsc_token_tax",
+   "usd": 2633.97,
+   "bnb": 6.272849
+  },
+  {
+   "date": "2022-02-07",
+   "source": "bsc_token_tax",
+   "usd": 3159.71,
+   "bnb": 7.288841
+  },
+  {
+   "date": "2022-02-08",
+   "source": "bsc_token_tax",
+   "usd": 2632.87,
+   "bnb": 6.456283
+  },
+  {
+   "date": "2022-02-09",
+   "source": "bsc_token_tax",
+   "usd": 6001.46,
+   "bnb": 14.191213
+  },
+  {
+   "date": "2022-02-10",
+   "source": "bsc_token_tax",
+   "usd": 3446.52,
+   "bnb": 8.310878
+  },
+  {
+   "date": "2022-02-11",
+   "source": "bsc_token_tax",
+   "usd": 6259.51,
+   "bnb": 15.648772
+  },
+  {
+   "date": "2022-02-12",
+   "source": "bsc_token_tax",
+   "usd": 2793.96,
+   "bnb": 6.922585
+  },
+  {
+   "date": "2022-02-15",
+   "source": "bsc_token_tax",
+   "usd": 3607.39,
+   "bnb": 8.342726
+  },
+  {
+   "date": "2022-02-16",
+   "source": "bsc_token_tax",
+   "usd": 4265.14,
+   "bnb": 9.981602
+  },
+  {
+   "date": "2022-02-17",
+   "source": "bsc_token_tax",
+   "usd": 2785.26,
+   "bnb": 6.92161
+  },
+  {
+   "date": "2022-02-19",
+   "source": "bsc_token_tax",
+   "usd": 2729.75,
+   "bnb": 6.827784
+  },
+  {
+   "date": "2022-02-22",
+   "source": "bsc_token_tax",
+   "usd": 2935.67,
+   "bnb": 7.843087
+  },
+  {
+   "date": "2022-02-24",
+   "source": "bsc_token_tax",
+   "usd": 2359.74,
+   "bnb": 6.533049
+  },
+  {
+   "date": "2022-02-25",
+   "source": "bsc_token_tax",
+   "usd": 1167.6,
+   "bnb": 3.113595
+  },
+  {
+   "date": "2022-02-26",
+   "source": "bsc_token_tax",
+   "usd": 1180.61,
+   "bnb": 3.159244
+  },
+  {
+   "date": "2022-02-28",
+   "source": "bsc_token_tax",
+   "usd": 2438.17,
+   "bnb": 6.163218
+  },
+  {
+   "date": "2022-03-01",
+   "source": "bsc_token_tax",
+   "usd": 2318.1,
+   "bnb": 5.671876
+  },
+  {
+   "date": "2022-03-02",
+   "source": "bsc_token_tax",
+   "usd": 2607.12,
+   "bnb": 6.369695
+  },
+  {
+   "date": "2022-03-03",
+   "source": "bsc_token_tax",
+   "usd": 1183.16,
+   "bnb": 2.93879
+  },
+  {
+   "date": "2022-03-04",
+   "source": "bsc_token_tax",
+   "usd": 1011.67,
+   "bnb": 2.703556
+  },
+  {
+   "date": "2022-03-08",
+   "source": "bsc_token_tax",
+   "usd": 2125.18,
+   "bnb": 5.572063
+  },
+  {
+   "date": "2022-03-11",
+   "source": "bsc_token_tax",
+   "usd": 2244.49,
+   "bnb": 6.035203
+  },
+  {
+   "date": "2022-03-12",
+   "source": "bsc_token_tax",
+   "usd": 2102.12,
+   "bnb": 5.644787
+  },
+  {
+   "date": "2022-03-13",
+   "source": "bsc_token_tax",
+   "usd": 3646.66,
+   "bnb": 10.090378
+  },
+  {
+   "date": "2022-03-14",
+   "source": "bsc_token_tax",
+   "usd": 1065.94,
+   "bnb": 2.854674
+  },
+  {
+   "date": "2022-03-15",
+   "source": "bsc_token_tax",
+   "usd": 983.64,
+   "bnb": 2.646337
+  },
+  {
+   "date": "2022-03-16",
+   "source": "bsc_token_tax",
+   "usd": 1039.76,
+   "bnb": 2.697866
+  },
+  {
+   "date": "2022-03-17",
+   "source": "bsc_token_tax",
+   "usd": 5038.83,
+   "bnb": 12.860716
+  },
+  {
+   "date": "2022-03-18",
+   "source": "bsc_token_tax",
+   "usd": 4480.42,
+   "bnb": 11.280001
+  },
+  {
+   "date": "2022-03-20",
+   "source": "bsc_token_tax",
+   "usd": 2243.58,
+   "bnb": 5.741004
+  },
+  {
+   "date": "2022-03-22",
+   "source": "bsc_token_tax",
+   "usd": 1913.98,
+   "bnb": 4.734065
+  },
+  {
+   "date": "2022-03-24",
+   "source": "bsc_token_tax",
+   "usd": 2079.42,
+   "bnb": 5.020334
+  },
+  {
+   "date": "2022-03-26",
+   "source": "bsc_token_tax",
+   "usd": 1609.77,
+   "bnb": 3.871511
+  },
+  {
+   "date": "2022-03-28",
+   "source": "bsc_token_tax",
+   "usd": 1818.26,
+   "bnb": 4.22654
+  },
+  {
+   "date": "2022-03-29",
+   "source": "bsc_token_tax",
+   "usd": 1570.86,
+   "bnb": 3.61783
+  },
+  {
+   "date": "2022-03-31",
+   "source": "bsc_token_tax",
+   "usd": 2305.72,
+   "bnb": 5.375885
+  },
+  {
+   "date": "2022-04-01",
+   "source": "bsc_token_tax",
+   "usd": 3747.92,
+   "bnb": 8.371495
+  },
+  {
+   "date": "2022-04-02",
+   "source": "bsc_token_tax",
+   "usd": 706.29,
+   "bnb": 1.615495
+  },
+  {
+   "date": "2022-04-03",
+   "source": "bsc_token_tax",
+   "usd": 1530.58,
+   "bnb": 3.398259
+  },
+  {
+   "date": "2022-04-05",
+   "source": "bsc_token_tax",
+   "usd": 1540.0,
+   "bnb": 3.462998
+  },
+  {
+   "date": "2022-04-07",
+   "source": "bsc_token_tax",
+   "usd": 1749.86,
+   "bnb": 4.013449
+  },
+  {
+   "date": "2022-04-13",
+   "source": "bsc_token_tax",
+   "usd": 1509.87,
+   "bnb": 3.566051
+  },
+  {
+   "date": "2022-04-18",
+   "source": "bsc_token_tax",
+   "usd": 1321.51,
+   "bnb": 3.1706
+  },
+  {
+   "date": "2022-04-22",
+   "source": "bsc_token_tax",
+   "usd": 1341.18,
+   "bnb": 3.298513
+  },
+  {
+   "date": "2022-04-24",
+   "source": "bsc_token_tax",
+   "usd": 1378.8,
+   "bnb": 3.457365
+  },
+  {
+   "date": "2022-04-26",
+   "source": "bsc_token_tax",
+   "usd": 1309.71,
+   "bnb": 3.3939
+  },
+  {
+   "date": "2022-04-27",
+   "source": "bsc_token_tax",
+   "usd": 1333.86,
+   "bnb": 3.408798
+  },
+  {
+   "date": "2022-04-30",
+   "source": "bsc_token_tax",
+   "usd": 1363.37,
+   "bnb": 3.615411
+  },
+  {
+   "date": "2022-05-02",
+   "source": "bsc_token_tax",
+   "usd": 1474.23,
+   "bnb": 3.784937
+  },
+  {
+   "date": "2022-05-03",
+   "source": "bsc_token_tax",
+   "usd": 488.47,
+   "bnb": 1.272383
+  },
+  {
+   "date": "2022-05-05",
+   "source": "bsc_token_tax",
+   "usd": 963.03,
+   "bnb": 2.545013
+  },
+  {
+   "date": "2022-05-07",
+   "source": "bsc_token_tax",
+   "usd": 459.35,
+   "bnb": 1.256783
+  },
+  {
+   "date": "2022-05-08",
+   "source": "bsc_token_tax",
+   "usd": 425.34,
+   "bnb": 1.195121
+  },
+  {
+   "date": "2022-05-09",
+   "source": "bsc_token_tax",
+   "usd": 707.82,
+   "bnb": 2.390484
+  },
+  {
+   "date": "2022-05-10",
+   "source": "bsc_token_tax",
+   "usd": 764.59,
+   "bnb": 2.396097
+  },
+  {
+   "date": "2022-05-11",
+   "source": "bsc_token_tax",
+   "usd": 1338.95,
+   "bnb": 4.931684
+  },
+  {
+   "date": "2022-05-12",
+   "source": "bsc_token_tax",
+   "usd": 530.64,
+   "bnb": 1.97265
+  },
+  {
+   "date": "2022-05-13",
+   "source": "bsc_token_tax",
+   "usd": 847.72,
+   "bnb": 2.91714
+  },
+  {
+   "date": "2022-05-14",
+   "source": "bsc_token_tax",
+   "usd": 253.55,
+   "bnb": 0.853989
+  },
+  {
+   "date": "2022-05-15",
+   "source": "bsc_token_tax",
+   "usd": 565.68,
+   "bnb": 1.810756
+  },
+  {
+   "date": "2022-05-17",
+   "source": "bsc_token_tax",
+   "usd": 419.47,
+   "bnb": 1.36991
+  },
+  {
+   "date": "2022-05-23",
+   "source": "bsc_token_tax",
+   "usd": 537.7,
+   "bnb": 1.695143
+  },
+  {
+   "date": "2022-05-25",
+   "source": "bsc_token_tax",
+   "usd": 646.05,
+   "bnb": 1.98358
+  },
+  {
+   "date": "2022-05-26",
+   "source": "bsc_token_tax",
+   "usd": 592.61,
+   "bnb": 1.955824
+  },
+  {
+   "date": "2022-05-27",
+   "source": "bsc_token_tax",
+   "usd": 389.97,
+   "bnb": 1.292993
+  },
+  {
+   "date": "2022-05-28",
+   "source": "bsc_token_tax",
+   "usd": 1845.0,
+   "bnb": 6.0
+  },
+  {
+   "date": "2022-05-29",
+   "source": "bsc_token_tax",
+   "usd": 451.16,
+   "bnb": 1.475356
+  },
+  {
+   "date": "2022-05-31",
+   "source": "bsc_token_tax",
+   "usd": 468.99,
+   "bnb": 1.461495
+  },
+  {
+   "date": "2022-06-01",
+   "source": "bsc_token_tax",
+   "usd": 697.86,
+   "bnb": 2.323088
+  },
+  {
+   "date": "2022-06-06",
+   "source": "bsc_token_tax",
+   "usd": 426.38,
+   "bnb": 1.444882
+  },
+  {
+   "date": "2022-06-09",
+   "source": "bsc_token_tax",
+   "usd": 390.24,
+   "bnb": 1.34613
+  },
+  {
+   "date": "2022-06-12",
+   "source": "bsc_token_tax",
+   "usd": 417.09,
+   "bnb": 1.63693
+  },
+  {
+   "date": "2022-06-14",
+   "source": "bsc_token_tax",
+   "usd": 341.32,
+   "bnb": 1.530601
+  },
+  {
+   "date": "2022-06-17",
+   "source": "bsc_token_tax",
+   "usd": 147.24,
+   "bnb": 0.682316
+  },
+  {
+   "date": "2022-06-18",
+   "source": "bsc_token_tax",
+   "usd": 138.39,
+   "bnb": 0.702463
+  },
+  {
+   "date": "2022-06-20",
+   "source": "bsc_token_tax",
+   "usd": 146.58,
+   "bnb": 0.677024
+  },
+  {
+   "date": "2022-06-21",
+   "source": "bsc_token_tax",
+   "usd": 227.59,
+   "bnb": 1.034048
+  },
+  {
+   "date": "2022-06-23",
+   "source": "bsc_token_tax",
+   "usd": 240.5,
+   "bnb": 1.050686
+  },
+  {
+   "date": "2022-06-24",
+   "source": "bsc_token_tax",
+   "usd": 708.24,
+   "bnb": 2.94853
+  },
+  {
+   "date": "2022-06-27",
+   "source": "bsc_token_tax",
+   "usd": 369.9,
+   "bnb": 1.582119
+  },
+  {
+   "date": "2022-06-29",
+   "source": "bsc_token_tax",
+   "usd": 546.28,
+   "bnb": 2.486468
+  },
+  {
+   "date": "2022-06-30",
+   "source": "bsc_token_tax",
+   "usd": 492.71,
+   "bnb": 2.243653
+  },
+  {
+   "date": "2022-07-01",
+   "source": "bsc_token_tax",
+   "usd": 1341.77,
+   "bnb": 6.186135
+  },
+  {
+   "date": "2022-07-03",
+   "source": "bsc_token_tax",
+   "usd": 465.11,
+   "bnb": 2.121862
+  },
+  {
+   "date": "2022-07-05",
+   "source": "bsc_token_tax",
+   "usd": 851.52,
+   "bnb": 3.689408
+  },
+  {
+   "date": "2022-07-07",
+   "source": "bsc_token_tax",
+   "usd": 736.02,
+   "bnb": 3.048966
+  },
+  {
+   "date": "2022-07-11",
+   "source": "bsc_token_tax",
+   "usd": 500.35,
+   "bnb": 2.21788
+  },
+  {
+   "date": "2022-07-12",
+   "source": "bsc_token_tax",
+   "usd": 609.86,
+   "bnb": 2.764533
+  },
+  {
+   "date": "2022-07-18",
+   "source": "bsc_token_tax",
+   "usd": 503.81,
+   "bnb": 1.907643
+  },
+  {
+   "date": "2022-07-20",
+   "source": "bsc_token_tax",
+   "usd": 417.26,
+   "bnb": 1.616017
+  },
+  {
+   "date": "2022-07-22",
+   "source": "bsc_token_tax",
+   "usd": 475.54,
+   "bnb": 1.812276
+  },
+  {
+   "date": "2022-07-23",
+   "source": "bsc_token_tax",
+   "usd": 478.59,
+   "bnb": 1.846418
+  },
+  {
+   "date": "2022-07-27",
+   "source": "bsc_token_tax",
+   "usd": 528.56,
+   "bnb": 1.946102
+  },
+  {
+   "date": "2022-07-28",
+   "source": "bsc_token_tax",
+   "usd": 460.77,
+   "bnb": 1.662217
+  },
+  {
+   "date": "2022-07-31",
+   "source": "bsc_token_tax",
+   "usd": 457.93,
+   "bnb": 1.61585
+  },
+  {
+   "date": "2022-08-02",
+   "source": "bsc_token_tax",
+   "usd": 458.87,
+   "bnb": 1.616861
+  },
+  {
+   "date": "2022-08-05",
+   "source": "bsc_token_tax",
+   "usd": 232.4,
+   "bnb": 0.735691
+  },
+  {
+   "date": "2022-08-12",
+   "source": "bsc_token_tax",
+   "usd": 952.54,
+   "bnb": 2.904984
+  },
+  {
+   "date": "2022-08-13",
+   "source": "bsc_token_tax",
+   "usd": 267.72,
+   "bnb": 0.825533
+  },
+  {
+   "date": "2022-08-14",
+   "source": "bsc_token_tax",
+   "usd": 273.18,
+   "bnb": 0.860151
+  },
+  {
+   "date": "2022-08-18",
+   "source": "bsc_token_tax",
+   "usd": 802.74,
+   "bnb": 2.692869
+  },
+  {
+   "date": "2022-08-19",
+   "source": "bsc_token_tax",
+   "usd": 243.79,
+   "bnb": 0.873494
+  },
+  {
+   "date": "2022-08-26",
+   "source": "bsc_token_tax",
+   "usd": 315.91,
+   "bnb": 1.129868
+  },
+  {
+   "date": "2022-09-02",
+   "source": "bsc_token_tax",
+   "usd": 393.45,
+   "bnb": 1.417833
+  },
+  {
+   "date": "2023-03-18",
+   "source": "bsc_token_tax",
+   "usd": 382.17,
+   "bnb": 1.154586
+  }
+ ]
+}

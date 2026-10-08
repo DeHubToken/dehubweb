@@ -11,7 +11,10 @@
 //     bought in the app, creator-subscription fees, post quota, YouTube
 //     imports, SMS credits, card processing fees),
 //   - bills: DigitalOcean's own invoices, Stripe's paid plan invoices, and the
-//     fixed subscriptions in _shared/finance-costs.json.
+//     fixed subscriptions in _shared/finance-costs.json,
+//   - history no API can serve: _shared/finance-history.json, the BNB the
+//     original BSC token's tax paid to the operations wallets in 2021–23,
+//     traced transaction by transaction and valued on the day it arrived.
 //
 // Each source reports whether it was read. One failing takes its own line off
 // the page and says so; it never zeroes the others, and nothing is estimated
@@ -22,6 +25,7 @@ import { corsHeaders, handleCorsPreflight } from '../_shared/cors.ts';
 import { createStripeClient } from '../_shared/stripe.ts';
 import { DHB_USD_PEG } from '../_shared/ai-pricing.ts';
 import costConfig from '../_shared/finance-costs.json' with { type: 'json' };
+import history from '../_shared/finance-history.json' with { type: 'json' };
 import {
   buildSeries,
   dayKey,
@@ -313,6 +317,12 @@ async function readStripePlans(r: Reading, fx: Record<string, number>) {
   }
 }
 
+/** Already in USD at the day's price, so it is added as recorded. */
+function readHistory(r: Reading) {
+  for (const row of history.rows) push(r, 'revenue', row.source, row.date, row.usd);
+  for (const source of history.sources) r.ok.add(source.id);
+}
+
 function readFixed(r: Reading, today: string) {
   for (const item of fixedItems) {
     for (const e of spreadFixedCost(item, today)) r.entries.push({ kind: 'cost', entry: e });
@@ -331,6 +341,7 @@ async function compute() {
   const r = newReading();
 
   readFixed(r, today);
+  readHistory(r);
   await Promise.all([
     readDatabase(r, price.usd),
     readApi(r, price.usd, fx),
@@ -340,6 +351,15 @@ async function compute() {
 
   const sources: SourceMeta[] = [
     ...CATALOGUE.map((s) => ({ ...s, status: (r.ok.has(s.id) ? 'ok' : 'unavailable') as Status })),
+    ...history.sources.map((source) => ({
+      id: source.id,
+      label: source.label,
+      kind: 'revenue' as const,
+      group: source.group,
+      origin: 'chain' as const,
+      status: 'ok' as const,
+      note: `${source.note} ${source.provenance.payouts} payouts from ${source.provenance.firstDay} to ${source.provenance.lastDay}, ${source.provenance.totalBnb.toLocaleString('en-US')} BNB in all.`,
+    })),
     ...fixedItems.map((item) => ({
       id: item.id,
       label: item.label,

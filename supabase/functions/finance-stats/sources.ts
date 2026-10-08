@@ -5,7 +5,7 @@
 
 import type { FinanceKind } from './ledger.ts';
 
-export type Origin = 'database' | 'api' | 'digitalocean' | 'stripe' | 'config';
+export type Origin = 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain';
 export type Status = 'ok' | 'unavailable';
 
 export interface SourceMeta {
