@@ -6346,6 +6346,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Rivitä teksti",
+      "width": "Tekstin leveys",
+      "shrink": "Pienennä teksti sopivaksi",
+      "height": "Tekstin korkeus",
+      "captions": "Sovita tekstitysraita"
+    },
     "canvas": {
       "dropMedia": "Lisää suunnitteluusi pudottamalla",
       "dropText": "Lisää tekstiä pudottamalla",

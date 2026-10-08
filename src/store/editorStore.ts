@@ -8,6 +8,7 @@ import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
 import { appendPage, getPages, pageAt, removePage, timelineDuration } from "@/lib/editor/pages";
 import { applyTimelineOp, sliceTimelineClip } from "@/lib/editor/timelineAgent";
+import { fitCaptionTrack } from "@/lib/editor/textFit";
 import {
   DEFAULT_SETTINGS,
   type Clip,
@@ -113,6 +114,7 @@ interface EditorState extends EditableState {
   pasteFromClipboard: (opts?: { time?: number; trackId?: string }) => void;
 
   updateTextClip: (id: string, patch: Partial<TextClip>) => void;
+  fitCaptionTrack: (trackId: string) => void;
   updateMediaClip: (id: string, patch: Partial<MediaClip>) => void;
   setClipTransition: (id: string, transition: Clip["transitionOut"] | null) => void;
   updateSettings: (patch: Partial<ProjectSettings>) => void;
@@ -736,6 +738,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         c.id === id && c.kind === "text" ? ({ ...c, ...patch } as TextClip) : c,
       ),
     });
+  },
+
+  fitCaptionTrack: (trackId) => {
+    const s = get(), next = fitCaptionTrack(s, trackId);
+    if (next === s) return;
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], clips: next.clips });
   },
 
   updateMediaClip: (id, patch) => {

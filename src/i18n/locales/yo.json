@@ -6352,6 +6352,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Pín àwọn ìlà",
+      "width": "Ìbú ọ̀rọ̀",
+      "shrink": "Dín ọ̀rọ̀ kù kí ó lè wọlé",
+      "height": "Gíga ọ̀rọ̀",
+      "captions": "Mú ipa ọ̀rọ̀ abẹ́lẹ̀ bá a mu"
+    },
     "canvas": {
       "dropMedia": "Fi sílẹ̀ láti fi kún àwòrán rẹ",
       "dropText": "Fi sílẹ̀ láti fi ọ̀rọ̀ kún",

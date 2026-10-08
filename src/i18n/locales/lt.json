@@ -6457,6 +6457,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Laužyti eilutes",
+      "width": "Teksto plotis",
+      "shrink": "Sumažinti tekstą, kad tilptų",
+      "height": "Teksto aukštis",
+      "captions": "Pritaikyti subtitrų takelį"
+    },
     "canvas": {
       "dropMedia": "Numeskite, kad pridėtumėte prie savo dizaino",
       "dropText": "Numeskite, kad pridėtumėte tekstą",

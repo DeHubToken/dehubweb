@@ -6383,6 +6383,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "自动换行",
+      "width": "文字宽度",
+      "shrink": "缩小文字以适应",
+      "height": "文字高度",
+      "captions": "调整字幕轨道大小"
+    },
     "canvas": {
       "dropMedia": "拖放以添加到您的设计",
       "dropText": "拖放以添加文本",

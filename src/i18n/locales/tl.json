@@ -6506,6 +6506,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Ibalot ang mga linya",
+      "width": "Lapad ng teksto",
+      "shrink": "Paliitin ang teksto para magkasya",
+      "height": "Taas ng teksto",
+      "captions": "Iangkop ang track ng subtitle"
+    },
     "canvas": {
       "dropMedia": "I-drop para idagdag sa iyong disenyo",
       "dropText": "I-drop para magdagdag ng teksto",

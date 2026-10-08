@@ -6374,6 +6374,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Ombryd linjer",
+      "width": "Tekstbredde",
+      "shrink": "Formindsk teksten, så den passer",
+      "height": "Teksthøjde",
+      "captions": "Tilpas undertekstspor"
+    },
     "canvas": {
       "dropMedia": "Slip for at tilføje til dit design",
       "dropText": "Slip for at tilføje tekst",

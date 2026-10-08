@@ -6417,6 +6417,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Ziile umbreche",
+      "width": "Textbreiti",
+      "shrink": "Text verchliinere, bis er passt",
+      "height": "Texthöchi",
+      "captions": "Untertitelspur iipasse"
+    },
     "canvas": {
       "dropMedia": "Loh zum Ihri Gstaltig dezue tue",
       "dropText": "Loh zum Text dezue tue",

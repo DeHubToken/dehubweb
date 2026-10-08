@@ -6348,6 +6348,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Radbryt text",
+      "width": "Textbredd",
+      "shrink": "Förminska texten så att den får plats",
+      "height": "Texthöjd",
+      "captions": "Anpassa undertextspår"
+    },
     "canvas": {
       "dropMedia": "Släpp för att lägga till i din design",
       "dropText": "Släpp för att lägga till text",

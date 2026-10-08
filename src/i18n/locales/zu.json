@@ -6463,6 +6463,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Songa imigqa",
+      "width": "Ububanzi bombhalo",
+      "shrink": "Nciphisa umbhalo ukuze ulingane",
+      "height": "Ukuphakama kombhalo",
+      "captions": "Lungisa ithrekhi yemibhalo engezansi"
+    },
     "canvas": {
       "dropMedia": "Yeka ukwengeza kumklamo wakho",
       "dropText": "Yeka ukwengeza umbhalo",

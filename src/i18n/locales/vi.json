@@ -6473,6 +6473,13 @@
     }
   },
   "editor": {
+    "textFit": {
+      "wrap": "Ngắt dòng",
+      "width": "Chiều rộng văn bản",
+      "shrink": "Thu nhỏ văn bản cho vừa",
+      "height": "Chiều cao văn bản",
+      "captions": "Điều chỉnh rãnh phụ đề cho vừa"
+    },
     "canvas": {
       "dropMedia": "Thả để thêm vào thiết kế của bạn",
       "dropText": "Thả để thêm văn bản",
