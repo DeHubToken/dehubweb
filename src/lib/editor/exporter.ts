@@ -1,3 +1,4 @@
+import { exportFilename } from "./exportName";
 import { waitForVideoFrame } from "./videoFrame";
 import { assertVideoMattes } from "./videoMatte";
 /**
@@ -456,8 +457,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
   const mime = format === "mp4" ? "video/mp4" : "video/webm";
   const blob = stampEnding(new Blob([muxer.target.buffer], { type: mime }), contentDuration, format === "mp4" ? "mp4" : "webm");
-  const safeTitle = (snapshot.title || "video").replace(/[^\w-]+/g, "_");
-  const filename = `${safeTitle}.${format}`;
+  const filename = exportFilename(snapshot.title, format);
   onProgress?.(1, "Done");
   return { blob, filename };
   } finally {
@@ -523,7 +523,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
       onProgress?.(0.03 + 0.94 * (f + 1) / plan.frames, `Encoding frame ${f + 1} / ${plan.frames}`);
     }
     const buffer = await session.finish(); checkAbort(signal);
-    const filename = `${(snapshot.title || "video").replace(/[^\w-]+/g, "_")}.gif`;
+    const filename = exportFilename(snapshot.title, "gif");
     onProgress?.(1, "Done");
     return { blob: new Blob([buffer], { type: "image/gif" }), filename };
   } catch (error) { checkAbort(signal); throw error; }
@@ -605,6 +605,5 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   const blob = await new Promise<Blob>((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime, quality),
   );
-  const safeTitle = (snapshot.title || "design").replace(/[^\w-]+/g, "_");
-  return { blob, filename: `${safeTitle}.${format}` };
+  return { blob, filename: exportFilename(snapshot.title, format, "", "design") };
 }
