@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { useCloudProjects } from "@/lib/editor/useCloudProjects";
 import { projectReviewIsErased, projectReviewTime, type ProjectReviewComment, type ProjectReviewRole } from "@/lib/editor/cloudProjectReview";
 
-export function ProjectReviewPanel({ cloud, wallet, onOpenCopy }: { cloud: ReturnType<typeof useCloudProjects>; wallet: string; onOpenCopy(revision?: number, seconds?: number): void }) {
+export function ProjectReviewPanel({ cloud, wallet, onOpenCopy, onEditShared }: { cloud: ReturnType<typeof useCloudProjects>; wallet: string; onOpenCopy(revision?: number, seconds?: number): void; onEditShared(): void }) {
   const {t}=useTranslation();
   const [body,setBody]=useState(""), [time,setTime]=useState("0"), [assignee,setAssignee]=useState("");
   const [recipient,setRecipient]=useState(""), [role,setRole]=useState<ProjectReviewRole>("commenter"), [reply,setReply]=useState<ProjectReviewComment|null>(null);
@@ -18,17 +18,18 @@ export function ProjectReviewPanel({ cloud, wallet, onOpenCopy }: { cloud: Retur
   const short=(value:string)=>`${value.slice(0,6)}…${value.slice(-4)}`;
   const pending=cloud.busy || !cloud.available;
   return <div className="space-y-4">
-    <div className="flex items-center justify-between gap-2"><div className="min-w-0"><h3 className="truncate text-sm font-medium">Project review · {review.title || "Untitled"}</h3><p className="text-xs text-white/50">Version {review.revision} · {owner ? "Owner" : canComment ? "Can comment" : "Can view"}</p></div>
+    <div className="flex items-center justify-between gap-2"><div className="min-w-0"><h3 className="truncate text-sm font-medium">Project review · {review.title || "Untitled"}</h3><p className="text-xs text-white/50">Version {review.revision} · {owner ? "Owner" : review.role==="editor" ? "Can edit" : canComment ? "Can comment" : "Can view"}</p></div>
       <Button size="icon" variant="ghost" disabled={pending} aria-label="Refresh project review" onClick={()=>{void cloud.refreshReview();}}><RefreshCw className="h-4 w-4" /></Button></div>
-    <div className="flex gap-2"><Button size="sm" variant="outline" disabled={pending} onClick={()=>onOpenCopy()}>Open review copy</Button><Button size="sm" variant="ghost" disabled={pending} onClick={cloud.clearReview}>Back</Button></div>
+    <div className="flex flex-wrap gap-2">{(owner || review.role==="editor") && <Button size="sm" disabled={pending} onClick={onEditShared}>Edit shared project</Button>}<Button size="sm" variant="outline" disabled={pending} onClick={()=>onOpenCopy()}>Open review copy</Button><Button size="sm" variant="ghost" disabled={pending} onClick={cloud.clearReview}>Back</Button></div>
     <p className="text-xs text-white/50">A review opens a separate local copy of the saved version. Your current project is saved first.</p>
     {owner && <div className="space-y-2 rounded-lg border border-white/10 p-3">
       <h4 className="flex items-center gap-2 text-sm"><Users className="h-4 w-4" />Review access</h4>
-      <p className="text-xs text-white/50">Invited reviewers can download this project’s sources after accepting. Revoke access here.</p>
+      <p className="text-xs text-white/50">Invited people can download project sources after accepting. Editors can save changes to this project. Revoke access here.</p>
       <Input value={recipient} onChange={event=>setRecipient(event.target.value)} aria-label="Reviewer wallet address" placeholder="DeHub wallet address · 0x…" disabled={pending} className="border-white/15 bg-white/5 text-white placeholder:text-white/50" />
       <div className="flex gap-2"><Button size="sm" variant={role==="viewer" ? "secondary" : "outline"} aria-pressed={role==="viewer"} disabled={pending} onClick={()=>setRole("viewer")}>Can view</Button><Button size="sm" variant={role==="commenter" ? "secondary" : "outline"} aria-pressed={role==="commenter"} disabled={pending} onClick={()=>setRole("commenter")}>Can comment</Button>
+        <Button size="sm" variant={role==="editor" ? "secondary" : "outline"} aria-pressed={role==="editor"} disabled={pending} onClick={()=>setRole("editor")}>Can edit</Button>
         <Button size="sm" disabled={pending || !recipient.trim()} onClick={()=>{void cloud.shareReview(recipient,role,()=>setRecipient(""));}}>Invite</Button></div>
-      {cloud.members.filter(member=>!member.revoked).map(member=><div key={member.memberWallet} className="flex items-center justify-between gap-2 text-xs"><span className="min-w-0 truncate" title={member.memberWallet}>{short(member.memberWallet)} · {member.role==="commenter" ? "Can comment" : "Can view"} · {member.accepted ? "Accepted" : "Pending"}</span><Button size="sm" variant="ghost" disabled={pending} aria-label={`Revoke ${member.memberWallet}`} onClick={()=>{void cloud.shareReview(member.memberWallet,"none");}}>Revoke</Button></div>)}
+      {cloud.members.filter(member=>!member.revoked).map(member=><div key={member.memberWallet} className="flex items-center justify-between gap-2 text-xs"><span className="min-w-0 truncate" title={member.memberWallet}>{short(member.memberWallet)} · {member.role==="editor" ? "Can edit" : member.role==="commenter" ? "Can comment" : "Can view"} · {member.accepted ? "Accepted" : "Pending"}</span><Button size="sm" variant="ghost" disabled={pending} aria-label={`Revoke ${member.memberWallet}`} onClick={()=>{void cloud.shareReview(member.memberWallet,"none");}}>Revoke</Button></div>)}
     </div>}
     <h4 className="flex items-center gap-2 text-sm"><MessageSquare className="h-4 w-4" />Comments</h4>
     {!roots.length && <p className="text-sm text-white/50">No feedback yet.</p>}

@@ -44,8 +44,10 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-erasure-bootstrap.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20260928080000_account_erasure.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008200000_editor_cloud_project_erasure.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008210000_editor_cloud_project_editing.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-projects.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-trash.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-review.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-review-exit.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-erasure.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-editing.sql
