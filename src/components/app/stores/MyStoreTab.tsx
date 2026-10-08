@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * My Store Tab
  * =============
@@ -209,7 +210,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
                     {(() => {
                       const usd = Number(l.price);
                       const dhb = prices?.DHB && prices.DHB > 0 ? Math.ceil(usd / prices.DHB) : null;
-                      return dhb ? (<><img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5 inline" />{dhb.toLocaleString()} · ${usd.toFixed(2)}</>) : `$${usd.toFixed(2)}`;
+                      return dhb ? (<><img src={dehubCoin} alt={tokenLabel()} className="w-3.5 h-3.5 inline" />{dhb.toLocaleString()} · ${usd.toFixed(2)}</>) : `$${usd.toFixed(2)}`;
                     })()}
                      · <span className="capitalize">{l.status}</span>
                   </p>

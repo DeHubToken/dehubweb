@@ -528,7 +528,7 @@
     "stageArriving": "E dey land for Base, e no dey pass few seconds…",
     "payFailed": "Wey no dey convert {{symbol}} to DeHub tokens.",
     "stagePay": "E dey pay DeHub Pay with {{symbol}}…",
-    "dmSent": "Don send {{amount}} DHB give {{name}}!"
+    "dmSent": "Don send {{amount}} tokens give {{name}}!"
   },
   "postOptions": {
     "options": "Option Dem",
@@ -1090,10 +1090,10 @@
   },
   "dhbListing": {
     "title": "Token listing dey come soon!",
-    "body": "$DHB never start trading. Get email di moment wey e list.",
+    "body": "tokens never start trading. Get email di moment wey e list.",
     "notifyMe": "Make una tell me",
-    "privacy": "We go only use am tell you when $DHB list.",
-    "joined": "You don dey di list. We go email {{email}} di moment wey $DHB list."
+    "privacy": "We go only use am tell you when tokens list.",
+    "joined": "You don dey di list. We go email {{email}} di moment wey tokens list."
   },
   "explorePage": {
     "searchPlaceholder": "Find people, post or content...",
@@ -3188,7 +3188,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Buy and sell fraction dem for DeHub post. Post wey dem don mint na 1000 on-chain fraction — own small part for video, track, or picture and trade am for DHB.",
+    "seoDescription": "Buy and sell fraction dem for DeHub post. Post wey dem don mint na 1000 on-chain fraction — own small part for video, track, or picture and trade am for tokens.",
     "title": "Fraction dem",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -5194,7 +5194,7 @@
   },
   "docs": {
     "seoTitle": "DeHub Documentation — Guides, Token, dApps & FAQ",
-    "seoDescription": "Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more."
+    "seoDescription": "Official DeHub documentation: platform overview, dApps, tokens token economics, staking, games, roadmap, FAQ and more."
   },
   "dex": {
     "venue": "Network",
@@ -5202,7 +5202,7 @@
     "bookPrice": "{{chain}} book price · USD",
     "change24": "24h change",
     "totalLiquidity": "Total liquidity · USD",
-    "listedDhb": "Listed DHB · {{chain}}",
+    "listedDhb": "Listed tokens · {{chain}}",
     "listedUsd": "Listed USD · {{chain}}",
     "refreshMarket": "Refresh market",
     "refresh": "Refresh",
@@ -5227,20 +5227,20 @@
     "orderBook": "Order book",
     "priceGrouping": "Price grouping",
     "priceUsd": "Price (USD)",
-    "sizeDhb": "Size (DHB)",
-    "totalDhb": "Total (DHB)",
+    "sizeDhb": "Size (tokens)",
+    "totalDhb": "Total (tokens)",
     "noBids": "No bids yet",
     "useBuyPrice": "Use {{price}} as buy price",
     "useSellPrice": "Use {{price}} as sell price",
     "spread": "Spread · USD",
-    "buyTotal": "Buy {{amount}} DHB",
-    "sellTotal": "Sell {{amount}} DHB",
+    "buyTotal": "Buy {{amount}} tokens",
+    "sellTotal": "Sell {{amount}} tokens",
     "placeOrder": "Place an order",
     "lpFee": "0% LP fee",
     "lpFeeLabel": "LP fee",
     "lpFeeValue": "{{fee}}% LP fee",
-    "buy": "Buy DHB",
-    "sell": "Sell DHB",
+    "buy": "Buy tokens",
+    "sell": "Sell tokens",
     "maxBuy": "Maximum buy price",
     "minSell": "Minimum sell price",
     "spend": "Spend",
@@ -5256,7 +5256,7 @@
     "network": "Funding network",
     "useMarket": "Use market price",
     "reviewDeposit": "Deeput {{amount}} for {{token}} on {{chain}}.",
-    "reviewRange": "Range: {{min}} – {{max}} USD per DHB.",
+    "reviewRange": "Range: {{min}} – {{max}} USD per tokens.",
     "viewTransaction": "View transaction",
     "connectWallet": "Connect wallet",
     "resume": "Resume listing",
@@ -5269,7 +5269,7 @@
     "created": "Position created",
     "keepOpen": "Keep dis page open until your listing be register. Browser storage no dey work.",
     "snapshotDelayed": "Market data wey dey share now, dey delay. Showing last picture wey confirm for us.",
-    "withdrawReview": "Wah draw {{dhb}} DHB and {{usdc}} USDC from {{chain}}? Amounts go refresh before you sign; price tolerance be 0.5%.",
+    "withdrawReview": "Wah draw {{dhb}} tokens and {{usdc}} USDC from {{chain}}? Amounts go refresh before you sign; price tolerance be 0.5%.",
     "withdrawn": "Position withdrawn",
     "withdrawFailed": "Withdrawal failed",
     "withdrawing": "Withdrawing…",
@@ -6507,7 +6507,7 @@
     "topUpTitle": "Top up make you save money",
     "discount": "{{percent}}% off",
     "noDiscount": "Full price",
-    "total": "Everything na ${{usd}}, you go pay for DHB",
+    "total": "Everything na ${{usd}}, you go pay for tokens",
     "buy": "Buy credits",
     "buying": "We dey wait for the payment…",
     "bought": "Added {{count}} post credits",
@@ -6537,7 +6537,7 @@
     "skippedToast": "We skip {{platforms}}: this post no get the photo or video wey dem need.",
     "uploadFailed": "We no fit upload your media for cross-posting.",
     "creditRules": "Each post dey cost credits for each platform: {{x}} for X, {{farcaster}} for Farcaster and {{other}} for every other platform. Scheduled posts go use credits the time wey you schedule am.",
-    "payAsYouGoCredits": "Credits don finish? We go buy the ones wey remain with DHB at ${{price}} each when you post.",
+    "payAsYouGoCredits": "Credits don finish? We go buy the ones wey remain with tokens at ${{price}} each when you post.",
     "topUpCredits": "{{count}} credits",
     "perCredit": "${{price}} per credit",
     "pendingApproval": "We dey wait make you approve dehub for the Farcaster app",
@@ -6549,7 +6549,7 @@
   "dm": {
     "planRestricted": "Dis user need subscription before e fit receive message.",
     "planTypeNotAllowed": "Dis creator plan no allow dis kain message.",
-    "planMinTip": "Tip for dis creator must reach at least {{amount}} DHB."
+    "planMinTip": "Tip for dis creator must reach at least {{amount}} tokens."
   },
   "credits": {
     "earningsWorth": "E worth {{amount}}",
@@ -6652,7 +6652,7 @@
       "payTitle": "Take payments",
       "notifyTitle": "Send notifications",
       "notifyBody": "User wey go add your app, you go send notification to dem from your server use your notify key. No need for per-user token to keep.",
-      "rewardsBody": "Each month, {{pool}} DHB go share among apps by same score, calculate wey dey do every week. For an app go qualify, dem need one owner wallet go verify and at least 3 users go come back. Reward dey pay by DeHub to owner wallet.",
+      "rewardsBody": "Each month, {{pool}} tokens go share among apps by same score, calculate wey dey do every week. For an app go qualify, dem need one owner wallet go verify and at least 3 users go come back. Reward dey pay by DeHub to owner wallet.",
       "rewardsWeek": "Week of {{date}}",
       "rewardPaid": "Paid",
       "rewardPending": "Pending",
@@ -6678,8 +6678,8 @@
     },
     "pay": {
       "title": "Pay {{name}}?",
-      "body": "DHB go direct to app's wallet, {{wallet}}. Payment no go reverse.",
-      "confirm": "Pay {{amount}} DHB"
+      "body": "tokens go direct to app's wallet, {{wallet}}. Payment no go reverse.",
+      "confirm": "Pay {{amount}} tokens"
     },
     "add": {
       "title": "Add {{name}}?",

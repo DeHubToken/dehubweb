@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Make Offer Drawer
  * =================
@@ -114,7 +115,7 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
               <div className="flex justify-between text-sm">
                 <span className="text-white/60">{t('fractions.totalOfferValue')}</span>
                 <span className="text-white font-medium flex items-center gap-1.5">
-                  <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                  <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                   {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
               </div>

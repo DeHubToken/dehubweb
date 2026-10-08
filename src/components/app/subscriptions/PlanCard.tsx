@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Check, Clock, Loader2, Star, Users, Upload, Info, Pin } from 'lucide-react';
@@ -130,7 +131,7 @@ export function PlanCard({ plan, isOwner, isSubscribed, onEdit }: PlanCardProps)
       <div className="mb-4">
         <div className="flex items-baseline gap-2">
           <div className="flex items-center gap-1.5">
-            <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+            <img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />
             <span className="text-2xl font-bold text-white">{formatDhbPayment(dhbEstimate)}</span>
           </div>
           <span className="text-zinc-500">/</span>

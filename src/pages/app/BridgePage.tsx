@@ -1,7 +1,7 @@
 /**
  * Bridge Page
  * ===========
- * Bridge DHB tokens between Base and BNB Chain.
+ * Bridge DeHub tokens between Base and BNB Chain.
  * Transfers go to the bridge relay address on both chains.
  */
 
@@ -195,7 +195,7 @@ export default function BridgePage() {
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto">
-      <SEOHead title="Bridge — Transfer DHB Cross-Chain" description="Bridge your DHB tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: 'Bridge DHB tokens between Base and BNB Chain.', operatingSystem: 'Web' }} />
+      <SEOHead title="Bridge — Transfer tokens Cross-Chain" description="Bridge your DeHub tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: 'Bridge DeHub tokens between Base and BNB Chain.', operatingSystem: 'Web' }} />
       <h1 className="sr-only">DeHub Bridge — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <PageIsland
         icon="bridge"

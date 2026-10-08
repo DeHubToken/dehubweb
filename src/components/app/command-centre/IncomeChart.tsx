@@ -73,7 +73,7 @@ export function IncomeChart() {
     staleTime: 30_000,
   });
 
-  // On-chain DHB transfers
+  // On-chain Token transfers
   const { data: onchainTransfers = [], isLoading: onchainLoading } = useOnchainDHBTransfers(walletAddress);
 
   const tipRecords = tipData ?? [];

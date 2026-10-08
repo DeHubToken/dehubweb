@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useNavigate } from 'react-router-dom';
@@ -86,7 +87,7 @@ export default function WorkPostPage() {
 
   return (
     <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
-      <SEOHead title="Post a Bounty — DeHub Bounties" description="Post a bounty on DeHub: social media tasks, clipping bounties, or fixed-price contracts paid in DHB or USDC." url="https://dehub.io/work/post" />
+      <SEOHead title="Post a Bounty — DeHub Bounties" description="Post a bounty on DeHub: social media tasks, clipping bounties, or fixed-price contracts paid in tokens or USDC." url="https://dehub.io/work/post" />
       <button
         onClick={() => navigate('/work')}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"
@@ -185,7 +186,7 @@ export default function WorkPostPage() {
                     onClick={() => setCurrency(c)}
                     className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-medium ${currency === c ? 'bg-white text-black' : 'bg-white/5 text-white/70 hover:bg-white/10'}`}
                   >
-                    {c}
+                    {tokenLabel(c)}
                   </button>
                 ))}
               </div>
@@ -205,7 +206,7 @@ export default function WorkPostPage() {
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <div className="flex items-center justify-between text-sm text-white/70 mb-1">
                 <span>{t('work.integrity.totalBudget')}</span>
-                <span className="text-white font-semibold tabular-nums">{total.toLocaleString(undefined, { maximumFractionDigits: 4 })} {currency}</span>
+                <span className="text-white font-semibold tabular-nums">{total.toLocaleString(undefined, { maximumFractionDigits: 4 })} {tokenLabel(currency)}</span>
               </div>
               <div className="text-[11px] text-amber-200/80 mt-2">
                 {t('work.integrity.reputationNotice')}

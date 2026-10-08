@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Settlement Rail
  * ===============
@@ -92,7 +93,7 @@ function TradeRow({
             {t('fractions.fractionCount', { count: trade.quantity })}
           </p>
           <p className="text-xs text-white/50 flex items-center gap-1">
-            <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+            <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
             {(trade.quantity * trade.price_per_fraction).toLocaleString(undefined, {
               maximumFractionDigits: 2,
             })}

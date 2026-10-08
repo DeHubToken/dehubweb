@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Trophy, ArrowRight } from 'lucide-react';
@@ -85,7 +86,7 @@ export function GiveawayPrizeModal() {
           {/* Coin with trophy badge */}
           <div className="relative inline-flex items-center justify-center mb-4">
             <div className="absolute inset-0 rounded-full bg-amber-400/20 blur-xl" />
-            <img src={dehubCoin} alt="DHB" className="relative w-20 h-20 drop-shadow-[0_0_16px_rgba(250,204,21,0.6)]" />
+            <img src={dehubCoin} alt={tokenLabel()} className="relative w-20 h-20 drop-shadow-[0_0_16px_rgba(250,204,21,0.6)]" />
             <span className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center shadow-lg">
               <Trophy className="w-4 h-4 text-black" />
             </span>

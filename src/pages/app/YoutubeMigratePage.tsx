@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * /app/migrate-youtube — "Migrate all"
  * =====================================
@@ -179,7 +180,7 @@ function StatusBadge({ status }: { status: 'imported' | 'failed' | 'pending' }) 
 function DhbAmount({ value, className }: { value: number; className?: string }) {
   return (
     <span className={cn('inline-flex items-center gap-1 tabular-nums', className)}>
-      <img src={dehubCoin} alt="DHB" className="w-4 h-4 shrink-0" />
+      <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 shrink-0" />
       {value.toLocaleString()}
     </span>
   );

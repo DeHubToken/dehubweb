@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Live Stream Card Component
  * ==========================
@@ -1525,7 +1526,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <div className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2.5 border border-white/10">
               <span className="text-xs text-zinc-400">Your balance</span>
               <div className="flex items-center gap-1.5">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                 <span className="text-sm font-medium text-white">
                   {balanceLoading ? '...' : (dhbBalance ?? '—')}
                 </span>
@@ -1567,7 +1568,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                         </span>
                         <span className="flex items-center gap-1 text-[10px] text-zinc-400">
                           {tier.min.toLocaleString()}
-                          <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+                          <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
                         </span>
                       </span>
                     </button>
@@ -1584,7 +1585,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <div className="space-y-2">
               <label className="text-sm text-zinc-400 flex items-center gap-1.5">
                 Amount
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
               </label>
               <Input
                 type="number"

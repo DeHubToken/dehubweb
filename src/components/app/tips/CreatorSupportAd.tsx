@@ -29,7 +29,7 @@ export default function CreatorSupportAd({ postId, walletAddress }: { postId: st
       const data = await invoke('ads-serve', { supportPostId: postId, count: 1 });
       const next = data?.ads?.[0];
       if (!next?.supportSessionId || !next.mediaUrl) {
-        setMessage('No sponsor videos are available right now. You can still send a DHB tip.'); return;
+        setMessage('No sponsor videos are available right now. You can still send a token tip.'); return;
       }
       progress.current = { media: 0, at: performance.now(), played: 0, sent: 0, pending: false };
       setWatched(0); setCredited(false); setAd(next);
@@ -51,7 +51,7 @@ export default function CreatorSupportAd({ postId, walletAddress }: { postId: st
       setWatched(Number(data.watchedSeconds || 0));
       if (data.credited) {
         video.pause(); setCredited(true);
-        setMessage(`$${Number(data.creatorShareUsd).toFixed(4)} added to the creator's ad revenue. DHB settlement is pending.`);
+        setMessage(`$${Number(data.creatorShareUsd).toFixed(4)} added to the creator's ad revenue. token settlement is pending.`);
       }
     } catch (error) { p.sent = Math.max(0, p.sent - 4); video.pause(); setMessage(error instanceof Error ? error.message : 'Could not record support.'); }
     finally { p.pending = false; }

@@ -1,6 +1,6 @@
 /**
  * Quick Buy Button — shown on cashtag/ticker cards in search.
- * Opens a Uniswap swap drawer for Base tokens, or DPay for DHB.
+ * Opens a Uniswap swap drawer for Base tokens, or DPay for tokens.
  */
 
 import { useState } from 'react';
@@ -112,7 +112,7 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
         </DrawerContent>
       </Drawer>
 
-      {/* Cross-chain deposit for non-DHB tokens */}
+      {/* Cross-chain deposit for non-DeHub tokens */}
       <CrossChainDepositDrawer
         open={crossChainOpen}
         onOpenChange={setCrossChainOpen}

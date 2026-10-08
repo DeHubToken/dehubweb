@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
@@ -755,7 +756,7 @@ export default function ProfilePage() {
             </div>
             {offerDhb !== null && (
               <p className="text-[11px] text-zinc-500 flex items-center gap-1.5">
-                <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-3.5 h-3.5" />
                 {t('profile.offerWorthNow', { amount: offerDhb.toLocaleString(undefined, { maximumFractionDigits: 0 }) })}
               </p>
             )}

@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Buy Account Drawer
  * ==================
@@ -159,7 +160,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <p className="text-xs text-zinc-500 mb-1">{t('accounts.askingPrice')}</p>
               <p className="text-2xl font-bold text-white flex items-center gap-2">
-                <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-6 h-6" />
                 {(quote?.priceDhb ?? listing.priceDhb).toLocaleString()}
               </p>
               <p className="text-xs text-zinc-500 mt-1">

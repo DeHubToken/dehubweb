@@ -1485,7 +1485,7 @@ export const it = {
     features: 'Funzionalità',
     feature1: 'Targeting basato su wallet',
     feature2: 'Analisi trasparenti delle campagne',
-    feature3: 'Pagamento con token $DHB',
+    feature3: 'Pagamento con token DeHub',
     feature4: 'Pubblicità nella comunità',
     feature5: 'Metriche di performance in tempo reale',
     adFormats: 'Formati Pubblicitari',

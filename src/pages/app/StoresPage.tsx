@@ -30,7 +30,7 @@ export default function StoresPage() {
     <div className="min-h-screen">
       <SEOHead
         title="Stores | DeHub"
-        description="Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB."
+        description="Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens."
         url="https://dehub.io/app/stores"
         image="https://dehub.io/og/stores.jpg"
       />

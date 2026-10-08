@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * NewConversationModal Component
  * ==============================
@@ -125,7 +126,7 @@ function UserSearchResult({
         )}
         {!dmDisabled && !isLoading && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
-            <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+            <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
             {perMessageFee.toLocaleString()} to message
           </p>
         )}
@@ -216,7 +217,7 @@ function FeePaymentStep({
 
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
-        toast.error(dhbText(`Insufficient DHB. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
+        toast.error(dhbText(`Insufficient tokens. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
         setBalanceInfo({ checked: true, balance: balanceHuman, sufficient: false });
         setIsSending(false);
         return;
@@ -330,7 +331,7 @@ function FeePaymentStep({
           </>
         ) : (
           <>
-            <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
+            <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 mr-2" />
             Pay {fee.toLocaleString()} & Start Chat
           </>
         )}
@@ -346,7 +347,7 @@ function FeePaymentStep({
       {/* Custom higher tip */}
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
+          <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
           <Input
             type="number"
             min={fee}

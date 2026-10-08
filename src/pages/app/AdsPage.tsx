@@ -35,7 +35,7 @@ export default function AdsPage() {
     <div className="min-h-screen">
       <SEOHead
         title={t('ads.seoTitle')}
-        description="Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in DHB."
+        description="Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens."
       />
 
       <PageIsland
@@ -66,7 +66,7 @@ export default function AdsPage() {
       <PageBody className="max-w-4xl mx-auto">
         {isAuthenticated && revenue.data !== undefined ? <div data-kit-section className="rounded-xl border border-foreground/10 p-4">
           <p className="font-medium text-foreground">Your ad revenue · ${revenue.data.toFixed(4)}</p>
-          <p className="text-sm text-muted-foreground">Revenue from ads and creator support, awaiting DHB settlement.</p>
+          <p className="text-sm text-muted-foreground">Revenue from ads and creator support, awaiting token settlement.</p>
         </div> : null}
         {!isAuthenticated ? (
           <PageEmpty
