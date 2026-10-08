@@ -35,12 +35,12 @@ describe('reviewing voice generation in the editor', () => {
 
   it('shows the exact voice draft without a provider call, then imports the returned format on Generate', async () => {
     render(<GeneratePanel />);
-    expect(screen.getByRole('button', { name: 'Voice', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Voice' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByLabelText('Prompt')).toHaveValue('Keep every word, including the last sentence.');
     expect(generateAudio).not.toHaveBeenCalled();
     expect(state.generations.startImage).not.toHaveBeenCalled();
     expect(state.generations.startVideo).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: 'Generate', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Generate' }));
     await waitFor(() => expect(importOneFile).toHaveBeenCalledOnce());
     const file = vi.mocked(importOneFile).mock.calls[0][0];
     expect(file.type).toBe('audio/wav');
@@ -54,7 +54,7 @@ describe('reviewing voice generation in the editor', () => {
     if (reason === 'quota') state.quota.overQuota = true;
     if (reason === 'too long') useEditorUiStore.getState().setGeneratePrefill({ kind: 'voice', prompt: 'x'.repeat(501) });
     render(<GeneratePanel />);
-    const generate = screen.getByRole('button', { name: 'Generate', exact: true });
+    const generate = screen.getByRole('button', { name: 'Generate' });
     expect(generate).toHaveAttribute('aria-disabled', 'true');
     fireEvent.click(generate);
     expect(generateAudio).not.toHaveBeenCalled();
