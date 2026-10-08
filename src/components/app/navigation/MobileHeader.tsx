@@ -72,10 +72,10 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
   // Same hide-on-scroll-down / show-on-scroll-up behaviour as the mobile nav bars.
   const navVisible = useScrollDirection();
   const { theme } = useAppTheme();
-  // System theme: no bar at all. The island capsule (FeedIslandCapsule) is the
+  // Immersive theme: no bar at all. The island capsule (FeedIslandCapsule) is the
   // home feed's only top chrome; the header stays mounted, hidden, for its menu
   // drawer.
-  const islandBar = theme === 'system';
+  const islandBar = theme === 'immersive';
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);

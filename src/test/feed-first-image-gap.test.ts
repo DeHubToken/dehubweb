@@ -12,7 +12,7 @@ describe('first mobile photo with the real carousel wrapper', () => {
     // DOM observed on production: ImageCarousel is wrapped in data-no-swipe.
     // A direct [data-image-media] > [data-media-full] relationship never exists
     // for public images, even though it exists on some gated image branches.
-    document.documentElement.dataset.theme = 'system';
+    document.documentElement.dataset.theme = 'immersive';
     document.body.innerHTML = '<div data-feed-root><div data-feed-item data-cinematic="image" data-cinematic-first><div data-image-card><div data-card-head="plain">Author</div><div data-image-media><div data-no-swipe><div data-media-full>Photo</div></div></div><div data-card-info>Caption</div></div></div></div>';
     const first = document.querySelector('[data-feed-item]')!;
     const head = document.querySelector('[data-card-head]')!;

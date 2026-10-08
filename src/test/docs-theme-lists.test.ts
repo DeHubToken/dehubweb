@@ -30,8 +30,8 @@ describe('docs theme lists', () => {
     }
   });
 
-  it('treats every app theme other than system, light and minimal as a canvas theme', () => {
-    const expected = appThemes().filter((t) => !['system', 'light', 'minimal'].includes(t)).sort();
+  it('treats every app theme other than system, immersive, light and minimal as a canvas theme', () => {
+    const expected = appThemes().filter((t) => !['system', 'immersive', 'light', 'minimal'].includes(t)).sort();
     expect(canvas).toEqual(expected);
   });
 

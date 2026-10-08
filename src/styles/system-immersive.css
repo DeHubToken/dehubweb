@@ -1,86 +1,82 @@
-/* System theme: full immersive
-   ============================
-   No bentos on System at any width. Page sections, side panels and post cards
-   dissolve into the black canvas and are separated by full-width hairlines,
-   like the phone home feed. The glass title island, the home tab pill, the
-   bottom bar, dialogs and drawers keep their glass (nav surfaces stay liquid
-   glass). A surface that must stay boxed can opt out with [data-keep-bento].
-   The two :not(#_) lift these over the Tailwind fills and the #app-root nets. */
+/* Shared dark page chrome. Home and profiles retain their bentos in System;
+   Immersive keeps the edge-to-edge feed. Other pages and controls keep their
+   current presentation in both themes. A boxed surface can opt out with
+   [data-keep-bento]. The :not(#_) selectors beat the utility fills. */
 
-html[data-theme='system'] {
+html:is([data-theme='system'], [data-theme='immersive']) {
   --immersive-hairline: rgb(255 255 255 / 0.08);
 }
 
 /* Page bentos: no box, no radius, no glow. */
-html[data-theme='system']
-  :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-keep-bento]):not([role='dialog']):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive'])
+  :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-classic-feed-layout] *):not([data-keep-bento]):not([role='dialog']):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_) {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
-html[data-theme='system']
-  :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-keep-bento]):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_)::before,
-html[data-theme='system']
-  :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-keep-bento]):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_)::after {
+html:is([data-theme='system'], [data-theme='immersive'])
+  :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-classic-feed-layout] *):not([data-keep-bento]):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_)::before,
+html:is([data-theme='system'], [data-theme='immersive'])
+  :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-classic-feed-layout] *):not([data-keep-bento]):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_)::after {
   display: none !important;
 }
 
 /* Side panels (desktop menu column and the right rail): content straight on
    the canvas. The rail's stacked panels split with a hairline. */
-html[data-theme='system'] [data-side-panel]:not([data-search-bento]):not([data-keep-bento]):not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-side-panel]:not([data-search-bento]):not([data-keep-bento]):not(#_):not(#_) {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
-html[data-theme='system'] [data-side-panel] :is([data-side-panel-tabs], [data-side-panel-tabs] *, [data-view-all], [data-view-all] > *):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-side-panel] :is([data-side-panel-tabs], [data-side-panel-tabs] *, [data-view-all], [data-view-all] > *):not(#_) {
   background: transparent !important;
   background-image: none !important;
   box-shadow: none !important;
 }
-html[data-theme='system'] [data-search-bento] ~ * [data-side-panel]:not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-search-bento] ~ * [data-side-panel]:not(#_):not(#_) {
   border-top: 1px solid var(--immersive-hairline) !important;
 }
 
 /* The menu column's bottom fade blends into black, not the old panel grey. */
-html[data-theme='system'] [data-sidebar-fade] {
+html:is([data-theme='system'], [data-theme='immersive']) [data-sidebar-fade] {
   background: linear-gradient(to top, #000 0%, rgb(0 0 0 / 0.6) 40%, transparent 100%) !important;
 }
 
 /* Page kit: sections run edge to edge between hairlines at every width. */
-html[data-theme='system'] [data-kit-body] {
+html:is([data-theme='system'], [data-theme='immersive']) [data-kit-body] {
   padding-left: 0;
   padding-right: 0;
 }
-html[data-theme='system'] [data-kit-body] > * + * {
+html:is([data-theme='system'], [data-theme='immersive']) [data-kit-body] > * + * {
   margin-top: 0;
 }
-html[data-theme='system'] [data-kit-body] > :not([data-kit-section]):not([data-kit-flat-skip]) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-kit-body] > :not([data-kit-section]):not([data-kit-flat-skip]) {
   padding-left: 1rem;
   padding-right: 1rem;
 }
-html[data-theme='system'] [data-kit-section][data-kit-section]:not(#_):not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-kit-section][data-kit-section]:not(#_):not(#_):not(#_) {
   border-bottom: 1px solid var(--immersive-hairline) !important;
   padding: 1.125rem 1rem !important;
 }
-html[data-theme='system'] [data-kit-section] [data-page-bento]:not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-kit-section] [data-page-bento]:not(#_):not(#_) {
   border-bottom: 0 !important;
 }
 
 /* Desktop posts lose their card and split with a hairline, like the phone
    feed (phones already run the cinematic layout in index.css). */
 @media (min-width: 640px) {
-  html[data-theme='system'] [data-feed-item]:not(#_):not(#_) {
+  html[data-theme='immersive'] [data-feed-item]:not(#_):not(#_) {
     background: transparent !important;
     border: 0 !important;
     border-radius: 0 !important;
     border-bottom: 1px solid var(--immersive-hairline) !important;
     box-shadow: none !important;
   }
-  html[data-theme='system'] [data-feed-item]:last-child:not(#_):not(#_) {
+  html[data-theme='immersive'] [data-feed-item]:last-child:not(#_):not(#_) {
     border-bottom: 0 !important;
   }
 }

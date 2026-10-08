@@ -60,7 +60,7 @@ export function PageHeader({
     }
   };
 
-  if (overlay || theme === 'system') {
+  if (overlay || theme === 'system' || theme === 'immersive') {
     return (
       <div className={cn(
         'z-40 flex items-center justify-between pointer-events-none',
