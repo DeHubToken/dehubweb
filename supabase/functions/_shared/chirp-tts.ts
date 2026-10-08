@@ -21,6 +21,8 @@ export async function chirpVoices(language: string, search: string) {
       expires: Date.now() + 15 * 60 * 1000,
     };
   }
+  const requested = language.toLowerCase().replace('_', '-');
+  language = ({ zh: 'cmn-CN', 'zh-tw': 'cmn-TW', 'zh-hant': 'cmn-TW', no: 'nb-NO', iw: 'he-IL' } as Record<string, string>)[requested] || language;
   const base = language.toLowerCase().split(/[-_]/)[0];
   const exact = catalogue.voices.filter((v) => v.languageCodes.some((l) => l.toLowerCase() === language.toLowerCase()));
   const matching = exact.length ? exact : catalogue.voices.filter((v) => v.languageCodes.some((l) => l.split('-')[0] === base));
