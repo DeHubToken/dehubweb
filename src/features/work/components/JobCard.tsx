@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Eye, Users, Coins, Clock } from 'lucide-react';
@@ -36,11 +37,11 @@ export function JobCard({ job }: { job: WorkJob }) {
         </div>
         <div className="text-right">
           <div className="text-lg font-semibold text-white tabular-nums">
-            {job.total_budget.toLocaleString(undefined, { maximumFractionDigits: 2 })} {job.currency}
+            {job.total_budget.toLocaleString(undefined, { maximumFractionDigits: 2 })} {tokenLabel(job.currency)}
           </div>
           {job.job_type !== 'contract' && (
             <div className="text-[11px] text-white/50">
-              {job.price_per_unit} {job.currency}/{job.job_type === 'clipping' ? t('work.unitViews') : t('work.unitTask')}
+              {job.price_per_unit} {tokenLabel(job.currency)}/{job.job_type === 'clipping' ? t('work.unitViews') : t('work.unitTask')}
             </div>
           )}
         </div>

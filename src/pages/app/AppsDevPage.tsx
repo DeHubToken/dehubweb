@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * `/apps/dev` — build a dehub mini app.
  *
@@ -448,7 +449,7 @@ export default function AppsDevPage() {
                 <div key={row.app_id} className="flex items-center gap-2 text-xs">
                   <span className="min-w-0 flex-1 truncate text-white">{row.miniapp_apps?.name ?? row.app_id}</span>
                   <span className="tabular-nums text-zinc-400">{(Number(row.share) * 100).toFixed(1)}%</span>
-                  <span className="w-28 text-right tabular-nums text-white">{Number(row.amount_dhb).toLocaleString()} DHB</span>
+                  <span className="w-28 text-right tabular-nums text-white">{Number(row.amount_dhb).toLocaleString()} {tokenLabel()}</span>
                   <span className={row.paid_at ? 'w-16 text-right text-emerald-400' : 'w-16 text-right text-zinc-500'}>
                     {row.paid_at ? t('miniApps.dev.rewardPaid') : t('miniApps.dev.rewardPending')}
                   </span>

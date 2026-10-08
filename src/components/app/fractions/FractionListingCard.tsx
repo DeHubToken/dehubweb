@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Fraction Listing Card
  * =====================
@@ -89,7 +90,7 @@ export const FractionListingCard = memo(function FractionListingCard({
         </p>
 
         <p className="text-sm font-semibold text-white flex items-center gap-1 pt-0.5">
-          <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+          <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
           {listing.price_per_fraction.toLocaleString(undefined, { maximumFractionDigits: 4 })}
           <span className="text-[10px] font-normal text-zinc-500">{t('fractions.perFractionShort')}</span>
         </p>

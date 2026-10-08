@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Store / Listing Link Embeds
  * ============================
@@ -94,7 +95,7 @@ function ListingEmbed({ listingId, fallback }: { listingId: string; fallback?: R
         <p className="text-sm font-semibold text-white flex items-center gap-1 mt-0.5">
           {dhbPrice > 0 ? (
             <>
-              <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+              <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
               {Math.ceil(priceDhb).toLocaleString()}
             </>
           ) : (

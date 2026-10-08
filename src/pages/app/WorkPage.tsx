@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +43,7 @@ export default function WorkPage() {
 
   return (
     <div data-work-surface className="min-h-screen">
-      <SEOHead title="Bounties — Post & Hunt Paid Tasks | DeHub" description="Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in DHB or USDC." url="https://dehub.io/work" />
+      <SEOHead title="Bounties — Post & Hunt Paid Tasks | DeHub" description="Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in tokens or USDC." url="https://dehub.io/work" />
       <PageIsland
         className="max-w-6xl mx-auto"
         icon="bounties"
@@ -83,7 +84,7 @@ export default function WorkPage() {
             className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
           >
             <option value="all">{t('work.allCurrencies')}</option>
-            <option value="DHB">DHB</option>
+            <option value="DHB">{tokenLabel()}</option>
             <option value="USDC">USDC</option>
           </select>
           <select

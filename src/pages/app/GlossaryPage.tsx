@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Glossary Page
  * =============
@@ -178,7 +179,7 @@ export default function GlossaryPage() {
     {
       title: t('glossary.sections.wallet', 'Wallet & Tokens'),
       entries: [
-        { icon: <img src={dhbCoinIcon} alt="DHB" className="w-6 h-6" />, title: t('glossary.dhbToken'), description: t('glossary.dhbTokenDesc') },
+        { icon: <img src={dhbCoinIcon} alt={tokenLabel()} className="w-6 h-6" />, title: t('glossary.dhbToken'), description: t('glossary.dhbTokenDesc') },
         { icon: <Wallet size={iconSize} />, title: t('glossary.wallet', 'Wallet'), description: t('glossary.walletDesc') },
         { icon: <ArrowUpDown size={iconSize} />, title: t('glossary.swap', 'Swap'), description: t('glossary.swapDesc', 'Exchange one token for another directly within the app. Swaps happen on-chain using decentralized exchanges.') },
         { icon: <TrendingUp size={iconSize} />, title: t('glossary.staking', 'Staking'), description: t('glossary.stakingDesc') },

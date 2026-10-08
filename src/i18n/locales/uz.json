@@ -596,7 +596,7 @@
     "stageDelivering": "DeHub Pay sizning tokenlaringizni yubormoqda…",
     "payViaDpay": "DeHub Pay ga to'landi, tokenlar taxminan 30 soniyada keladi",
     "payViaBridgeDpay": "Base ga ko'chirildi va DeHub Pay ga to'landi, tokenlar taxminan bir daqiqada keladi",
-    "dmSent": "{{name}} ga {{amount}} DHB yuborildi!"
+    "dmSent": "{{name}} ga {{amount}} tokenlar yuborildi!"
   },
   "postOptions": {
     "options": "Parametrlar",
@@ -1220,10 +1220,10 @@
   },
   "dhbListing": {
     "title": "Token listingi tez kunda!",
-    "body": "$DHB hali savdoga chiqmagan. Listingga chiqishi bilan email oling.",
+    "body": "tokenlar hali savdoga chiqmagan. Listingga chiqishi bilan email oling.",
     "notifyMe": "Menga xabar bering",
-    "privacy": "Bundan faqat $DHB listingga chiqqanda sizga xabar berish uchun foydalanamiz.",
-    "joined": "Siz roʻyxatdasiz. $DHB listingga chiqishi bilan {{email}} manziliga xat yuboramiz."
+    "privacy": "Bundan faqat tokenlar listingga chiqqanda sizga xabar berish uchun foydalanamiz.",
+    "joined": "Siz roʻyxatdasiz. tokenlar listingga chiqishi bilan {{email}} manziliga xat yuboramiz."
   },
   "explorePage": {
     "searchPlaceholder": "Odamlar, postlar yoki kontent qidirish...",
@@ -1483,7 +1483,7 @@
     "otherTokens": "Boshqa tokenlar",
     "otherTokensDesc": "Kartangiz bilan Base tarmog'ida ETH yoki USDC sotib oling",
     "shareToFeed": "Mening lentamga ulashing",
-    "sharePostTemplate": "Men DeHub'dagi stack'imga {{amount}} $DHB qo'shdim. Hamjamiyat bilan birga qurmoqdamiz. #DeHub #DHB",
+    "sharePostTemplate": "Men DeHub'dagi stack'imga {{amount}} tokenlar qo'shdim. Hamjamiyat bilan birga qurmoqdamiz. #DeHub",
     "success": {
       "title": "Xarid yakunlandi!",
       "subtitle": "Tokenlar sizning hamyoningizga yetkazib berildi.",
@@ -3513,7 +3513,7 @@
     "srHeading": "DeHub ishga tushirish paneli",
     "phaseBadge": "1-bosqich · Shaxsiy ko&#39;rib chiqish",
     "heroTitle": "TOKENIZE BIZNESI",
-    "heroSubtitle": "DHB juftlikdagi bogʻlanish egri chizigʻi. Uniswapga $42 ming bozor kapitallashuvi bilan oʻtadi.",
+    "heroSubtitle": "tokenlar juftlikdagi bogʻlanish egri chizigʻi. Uniswapga $42 ming bozor kapitallashuvi bilan oʻtadi.",
     "createCoin": "Tanga yarating",
     "filterNew": "Yangi",
     "filterGraduating": "Bitiruv arafasida",
@@ -3614,7 +3614,7 @@
   },
   "fractions": {
     "seoTitle": "Kasrlar | DeHub",
-    "seoDescription": "DeHub postlarining fraksiyalarini sotib oling va soting. Mint qilingan post 1000 ta on-chain fraksiyadan iborat — video, trek yoki rasmning bir qismiga egalik qiling va uni DHB'da savdo qiling.",
+    "seoDescription": "DeHub postlarining fraksiyalarini sotib oling va soting. Mint qilingan post 1000 ta on-chain fraksiyadan iborat — video, trek yoki rasmning bir qismiga egalik qiling va uni tokenlar'da savdo qiling.",
     "title": "Ulushlar",
     "perUpload": "Har bir yuklash uchun 1000 ta",
     "tabBrowse": "Ko&#39;rib chiqish",
@@ -4468,7 +4468,7 @@
   },
   "usernames": {
     "seoTitle": "Foydalanuvchi nomi Bozor | DeHub",
-    "seoDescription": "Sotib olish va DeHub foydalanuvchi nomlarini DHB bilan sotish. Qisqa, raqamli va original handlelarni sotish uchun izlash yoki oʻziningni roʻyxatga olish — toʻlov tasdiqlanganida, transfer blokcheynda tezda amalga oshadi.",
+    "seoDescription": "Sotib olish va DeHub foydalanuvchi nomlarini tokenlar bilan sotish. Qisqa, raqamli va original handlelarni sotish uchun izlash yoki oʻziningni roʻyxatga olish — toʻlov tasdiqlanganida, transfer blokcheynda tezda amalga oshadi.",
     "title": "Foydalanuvchi nomlari",
     "subtitle": "Sotuvda tutqichlar, narxi AQSh dollarida",
     "tabBrowse": "Ko&#39;rib chiqish",
@@ -4593,7 +4593,7 @@
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",
-    "seoDescription": "DeHub hisoblarini DHB uchun sotib olish va sotish. Izlashlar, yuklab olishlar va yosh boʻyicha hisoblarni koʻring — handle, postlar, izlovchilar va belgilar huquqlari ham transfer qilinadi, toʻlov toʻgʻridan-toʻgʻri sotuvchi hisobiga keladi.",
+    "seoDescription": "DeHub hisoblarini tokenlar uchun sotib olish va sotish. Izlashlar, yuklab olishlar va yosh boʻyicha hisoblarni koʻring — handle, postlar, izlovchilar va belgilar huquqlari ham transfer qilinadi, toʻlov toʻgʻridan-toʻgʻri sotuvchi hisobiga keladi.",
     "title": "Hisoblar",
     "subtitle": "Butun akkauntlar sotuvda, narxi DeHub tokenlarida",
     "tabBrowse": "Kutib oling",
@@ -6261,17 +6261,17 @@
   },
   "docs": {
     "seoTitle": "DeHub hujjatlari — Qoʻllanmalar, token, dApps va savollar",
-    "seoDescription": "DeHub rasmiy hujjatlari: platforma sharhi, dApps, DHB token iqtisodiyoti, staking, oʻyinlar, yoʻl xaritasi, koʻp beriladigan savollar va boshqalar."
+    "seoDescription": "DeHub rasmiy hujjatlari: platforma sharhi, dApps, tokenlar token iqtisodiyoti, staking, oʻyinlar, yoʻl xaritasi, koʻp beriladigan savollar va boshqalar."
   },
   "dex": {
-    "seoTitle": "DEX — DHB ni oʻzingiz belgilagan narxda savdo qiling",
-    "seoDescription": "Base yoki BNB Chain’da Uniswap v4 limit buyurtmasi bilan DHB sotib olish yoki sotish narxini belgilang. Jonli buyurtmalar kitobi, bozor chuqurligi va bitta umumiy AQSh dollari narxi.",
+    "seoTitle": "DEX — tokenlar ni oʻzingiz belgilagan narxda savdo qiling",
+    "seoDescription": "Base yoki BNB Chain’da Uniswap v4 limit buyurtmasi bilan tokenlar sotib olish yoki sotish narxini belgilang. Jonli buyurtmalar kitobi, bozor chuqurligi va bitta umumiy AQSh dollari narxi.",
     "venue": "Tarmoq",
     "marketPrice": "Bozor narxi · USD",
     "bookPrice": "{{chain}} kitob narxi · USD",
     "change24": "24 soatlik oʻzgarish",
     "totalLiquidity": "Jami likvidlik · USD",
-    "listedDhb": "Roʻyxatdagi DHB · {{chain}}",
+    "listedDhb": "Roʻyxatdagi tokenlar · {{chain}}",
     "listedUsd": "Roʻyxatdagi USD · {{chain}}",
     "refreshMarket": "Bozorni yangilash",
     "refresh": "Yangilash",
@@ -6296,21 +6296,21 @@
     "orderBook": "Buyurtmalar kitobi",
     "priceGrouping": "Narxni guruhlash",
     "priceUsd": "Narx (USD)",
-    "sizeDhb": "Narx (DHB)",
-    "totalDhb": "Jami (DHB)",
+    "sizeDhb": "Narx (tokenlar)",
+    "totalDhb": "Jami (tokenlar)",
     "noBids": "Hali takliflar yo'q",
     "noAsks": "Hali likvidlik so'rovi yo'q",
     "useBuyPrice": "Sotib olish narxi sifatida {{price}} dan foydalaning",
     "useSellPrice": "Sotish narxi sifatida {{price}} dan foydalaning",
     "spread": "Farq · USD",
-    "buyTotal": "{{amount}} DHB sotib oling",
-    "sellTotal": "{{amount}} DHB soting",
+    "buyTotal": "{{amount}} tokenlar sotib oling",
+    "sellTotal": "{{amount}} tokenlar soting",
     "placeOrder": "Buyurtma bering",
     "lpFee": "0% LP to'lovi",
     "lpFeeLabel": "LP to'lovi",
     "lpFeeValue": "{{fee}}% LP to'lovi",
-    "buy": "DHB sotib oling",
-    "sell": "DHB sotish",
+    "buy": "tokenlar sotib oling",
+    "sell": "tokenlar sotish",
     "maxBuy": "Maksimal sotib olish narxi",
     "minSell": "Minimal sotish narxi",
     "spend": "Sarflang",
@@ -6326,7 +6326,7 @@
     "estimated": "Taxminiy to'liq konversiya",
     "network": "Moliya tarmog'i",
     "sellBelowMarket": "Ushbu sotuv bozor narxidan ${{price}} dan {{percent}}% past. Kimdir uni sotib olib, boshqa joyda darhol qayta sotishi mumkin.",
-    "buyAboveMarket": "Bu xarid ${{price}} bozor narxidan {{percent}}% yuqori. Siz boshqa joyda DHB savdolaridan ko&#39;proq pul to&#39;lagan bo&#39;lar edingiz.",
+    "buyAboveMarket": "Bu xarid ${{price}} bozor narxidan {{percent}}% yuqori. Siz boshqa joyda tokenlar savdolaridan ko&#39;proq pul to&#39;lagan bo&#39;lar edingiz.",
     "useMarket": "Bozor narxidan foydalaning",
     "balanceError": "Balans tekshiruvi muvaffaqiyatsiz tugadi. Buyurtma berishdan oldin qayta urinib ko'ring.",
     "noFunding": "{{chain}}da {{token}} mavjud emas.",
@@ -6335,7 +6335,7 @@
     "reviewYourBuy": "Xaridni ko'rib chiqing",
     "reviewYourSell": "Sotishni ko'rib chiqing",
     "reviewDeposit": "{{chain}}da {{amount}} {{token}}ni depozit qiling.",
-    "reviewRange": "Oraliq: {{min}} – {{max}} USD DHB uchun.",
+    "reviewRange": "Oraliq: {{min}} – {{max}} USD tokenlar uchun.",
     "initializes": "Bu 0% havuzni yaratadi va ishga tushiradi.",
     "pendingNote": "Sizning tranzaksiyangiz yuborildi. Boshqa depozitsiz tasdiqlashni yoki ro'yxatga olishni davom ettiring.",
     "viewTransaction": "Tranzaksiyani ko'rish",
@@ -6352,7 +6352,7 @@
     "keepOpen": "Ro'yxatga olishingiz ro'yxatga olinmaguncha ushbu sahifani ochiq qoldiring. Brauzer xotirasi mavjud emas.",
     "snapshotDelayed": "Baham ko'rilgan bozor ma'lumotlari kechiktirilgan. Oxirgi tasdiqlangan tasvir ko'rsatilgan.",
     "snapshotUnavailable": "Baham ko'rilgan bozor ma'lumotlari mavjud emas. Pozitsiyalarni yuklash uchun qayta urinib ko'ring.",
-    "withdrawReview": "{{chain}}da {{dhb}} DHB va {{usdc}} USDC ni yechib olasizmi? Miqdorlar imzolashdan oldin yangilanadi; narx toleransi 0,5%.",
+    "withdrawReview": "{{chain}}da {{dhb}} tokenlar va {{usdc}} USDC ni yechib olasizmi? Miqdorlar imzolashdan oldin yangilanadi; narx toleransi 0,5%.",
     "withdrawn": "Pozitsiya yechib olindi",
     "withdrawFailed": "Yechib olish muvaffaqiyatsiz tugadi",
     "withdrawing": "Yechib olinmoqda…",
@@ -7878,7 +7878,7 @@
   "dm": {
     "planRestricted": "Bu foydalanuvchi xabar olish uchun obuna talab qiladi.",
     "planTypeNotAllowed": "Bu ijodkorning rejasi bunday turdagi xabarga ruxsat bermaydi.",
-    "planMinTip": "Bu ijodkor uchun choychaqa kamida {{amount}} DHB bo‘lishi kerak."
+    "planMinTip": "Bu ijodkor uchun choychaqa kamida {{amount}} tokenlar bo‘lishi kerak."
   },
   "credits": {
     "earningsWorth": "{{amount}} ga arziydi",
@@ -8006,12 +8006,12 @@
       "notifyKey": "Xabar bering, so‘nggi so‘rovlar uchun kalitni o‘zgartiring.",
       "notifyKeyOnce": "Yangi xabar tugmasi {{name}} uchun. Uning nusxasini hozirda oling: u faqat bir marta ko’rsatiladi, va yana birini yaratish uni almashtiradi.",
       "payTitle": "To&#39;lovlarni qabul qilish",
-      "payBody": "pay() foydalanuvchidan sizga DHB ni to&#39;g&#39;ridan-to&#39;g&#39;ri dehub.json faylingizni imzolagan hamyonga yuborishni so&#39;raydi. Biror narsa yetkazib berishdan oldin serveringizdagi chekni tekshiring.",
+      "payBody": "pay() foydalanuvchidan sizga tokenlar ni to&#39;g&#39;ridan-to&#39;g&#39;ri dehub.json faylingizni imzolagan hamyonga yuborishni so&#39;raydi. Biror narsa yetkazib berishdan oldin serveringizdagi chekni tekshiring.",
       "notifyTitle": "Bildirishnomalarni yuborish",
       "notifyBody": "Foydalanuvchilar sizning ilanganizni qo'shganida, sizning xabar berish kalitingiz bilan serverdan xabar qilinishi mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas.",
       "rankTitle": "Do&#39;kon ilovalarni qanday reytinglaydi",
       "rankBody": "Har kecha ro&#39;yxatdagi har bir ilova ball oladi: 55% qayta foydalanuvchilardan (uni shu hafta va undan oldingi haftada ochgan odamlar), 35% haftalik foydalanuvchilardan, shuningdek, dastlabki 14 kun ichida 10% o&#39;sish. Faqat tizimga kirgan DeHub akkauntlari hisobga olinadi, shuning uchun botlar va sahifani qayta yuklash hech qanday foyda keltirmaydi.",
-      "rewardsBody": "Har oy {{pool}} DHB ilovalar o&#39;rtasida bir xil ball bo&#39;yicha taqsimlanadi va haftalik hisoblanadi. Ilovaga egalik qilish uchun tasdiqlangan egasi hamyoni va kamida 3 ta qaytayotgan foydalanuvchi kerak. Mukofotlar DeHub tomonidan egasi hamyoniga o&#39;tkaziladi.",
+      "rewardsBody": "Har oy {{pool}} tokenlar ilovalar o&#39;rtasida bir xil ball bo&#39;yicha taqsimlanadi va haftalik hisoblanadi. Ilovaga egalik qilish uchun tasdiqlangan egasi hamyoni va kamida 3 ta qaytayotgan foydalanuvchi kerak. Mukofotlar DeHub tomonidan egasi hamyoniga o&#39;tkaziladi.",
       "rewardsWeek": "{{date}} haftasi",
       "rewardPaid": "To’langan",
       "rewardPending": "Kutish jarayonida",
@@ -8037,10 +8037,10 @@
     },
     "pay": {
       "title": "To&#39;lov {{name}}?",
-      "body": "DHB toʻgʻridan-toʻgʻri ilovaning pul xazinasi (wallet) ga yetadi, {{wallet}}. Toʻlovlar qaytarib olinmaydi.",
-      "confirm": "To&#39;lov {{amount}} DHB",
+      "body": "tokenlar toʻgʻridan-toʻgʻri ilovaning pul xazinasi (wallet) ga yetadi, {{wallet}}. Toʻlovlar qaytarib olinmaydi.",
+      "confirm": "To&#39;lov {{amount}} tokenlar",
       "sending": "Joylashuvni qabul qilmoqda…",
-      "sent": "Tozalanmagan {{amount}} DHB ni {{name}}ga sotib oldim.",
+      "sent": "Tozalanmagan {{amount}} tokenlar ni {{name}}ga sotib oldim.",
       "noOwner": "Bu ilovalarda hali roʻyxatdan oʻtgan pul yuklamasi yoʻq."
     },
     "add": {

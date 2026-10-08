@@ -47,7 +47,7 @@ const faqs: { q: string; a: string; aKey?: string }[] = [
   },
   {
     q: "Do I need a DeHub account to use it?",
-    a: "No. Reading public content works without an account. You only need a DeHub account to post, tip or hold DHB.",
+    a: "No. Reading public content works without an account. You only need a DeHub account to post, tip or hold tokens.",
     aKey: "connect.claudeFaqAccount",
   },
   {

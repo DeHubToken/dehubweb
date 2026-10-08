@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Portfolio
  * =========
@@ -199,7 +200,7 @@ export function PortfolioTab() {
                     </p>
                     <p className="text-xs text-white/50 flex items-center gap-1">
                       {t('fractions.fractionCountDot', { count: available })}
-                      <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+                      <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
                       {t('fractions.priceEach', { price: listing.price_per_fraction })}
                     </p>
                   </div>
@@ -244,7 +245,7 @@ export function PortfolioTab() {
                   <p className="text-sm text-white truncate">{t('fractions.postNumber', { id: offer.token_id })}</p>
                   <p className="text-xs text-white/50 flex items-center gap-1">
                     {t('fractions.fractionCountDot', { count: offer.quantity })}
-                    <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
                     {t('fractions.priceEach', { price: offer.price_per_fraction })}
                   </p>
                 </div>
@@ -289,7 +290,7 @@ export function PortfolioTab() {
                   <p className="text-sm text-white truncate">{t('fractions.postNumber', { id: offer.token_id })}</p>
                   <p className="text-xs text-white/50 flex items-center gap-1">
                     {t('fractions.fractionCountDot', { count: offer.quantity })}
-                    <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
                     {t('fractions.priceEach', { price: offer.price_per_fraction })}
                   </p>
                 </div>

@@ -319,7 +319,7 @@ const HOME_INTRO_PRESS = ['US Weekly', 'Yahoo Finance', 'Entrepreneur', 'Investi
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left"><!--hl-body-->
 <h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
 ${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
-<p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
+<p>DeHub is a decentralised social network and mobile app, in development since 2021, where posts can be minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in tokens. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/docs">Read the docs</a></p>
 <p>Featured in ${HOME_INTRO_PRESS.join(', ')}. <a href="${APP_URL}/docs/featured-in">DeHub press coverage</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
@@ -376,11 +376,11 @@ const DOCS_PAGES = {
   'overview': { title: 'DeHub Docs — Overview', description: 'What DeHub is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure and creator monetization.' },
   'dapps': { title: "DeHub dApps — The Complete Ecosystem", description: "DeHub's decentralized apps: streaming, feed, messaging, communities, wallet and more — how they fit together in one user-owned ecosystem." },
   'games': { title: 'DeHub Games — Play & Win On-Chain', description: "DeHub's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
-  'token/overview': { title: 'DHB Currency Overview — DeHub Docs', description: 'How the $DHB currency works in-app: tipping, unlocking content, rewards, AI generation credits, profit share and the $0.001 in-app peg.' },
-  'token/economics': { title: 'DHB Token Economics — DeHub Docs', description: '$DHB tokenomics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
-  'token/stake': { title: 'Staking DHB — DeHub Docs', description: 'How DHB staking works: rewards, mechanics and what staking unlocks across DeHub.' },
+  'token/overview': { title: 'Currency Overview — DeHub Docs', description: 'How DeHub tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.' },
+  'token/economics': { title: 'DeHub tokens Economics — DeHub Docs', description: 'Token economics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
+  'token/stake': { title: 'Staking tokens — DeHub Docs', description: 'How tokens staking works: rewards, mechanics and what staking unlocks across DeHub.' },
   'roadmap': { title: 'DeHub Roadmap — DeHub Docs', description: "Where DeHub is headed: shipped milestones and what's next across the app, token and games." },
-  'faq': { title: 'DeHub FAQ — Frequently Asked Questions', description: 'Answers to the most common questions about DeHub, the DHB token, staking, governance and the platform.' },
+  'faq': { title: 'DeHub FAQ — Frequently Asked Questions', description: 'Answers to the most common questions about DeHub, DeHub tokens, staking, governance and the platform.' },
   'team': { title: 'DeHub Team — DeHub Docs', description: 'The founders and team behind DeHub: backgrounds across social media, gaming, entertainment and Web3.' },
   'contact': { title: 'Contact DeHub — DeHub Docs', description: 'How to reach the DeHub team: support, partnerships, press and community channels.' },
   'privacy': { title: 'Privacy Policy — DeHub', description: "DeHub's privacy policy: what data the platform handles and how." },
@@ -394,10 +394,10 @@ const DOCS_PAGES = {
   // has a hand-kept public/docs-content JSON mirroring its React page; the
   // description-only body in buildDocsHtml is only the fallback for a failed
   // fetch. docs-content-coverage.test.ts fails if an entry lands without one.
-  'token/utility': { title: 'DHB Token Utility & Holder Benefits — DeHub Docs', description: 'What holding $DHB unlocks: governance rights, staking rewards, moderation power and marketplace perks across DeHub.' },
-  'token/where-to-buy': { title: 'Where to Buy DHB — DeHub Docs', description: 'Where to buy the $DHB token: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
+  'token/utility': { title: 'DeHub tokens Utility & Holder Benefits — DeHub Docs', description: 'What holding tokens unlocks: governance rights, staking rewards, moderation power and marketplace perks across DeHub.' },
+  'token/where-to-buy': { title: 'Where to Buy Tokens — DeHub Docs', description: 'Where to buy DeHub tokens: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
   'token/governance': { title: 'DeHub Governance — Voting & Proposals', description: 'How DeHub governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
-  'token/bridge': { title: 'Bridge DHB Between BASE & BNB — DeHub Docs', description: 'How to move $DHB between the BASE and BNB networks with the manual DeHub bridge, and what to expect while it processes.' },
+  'token/bridge': { title: 'Bridge tokens Between BASE & BNB — DeHub Docs', description: 'How to move tokens between the BASE and BNB networks with the manual DeHub bridge, and what to expect while it processes.' },
   'featured-in': { title: 'DeHub in the Press — Featured In', description: 'Press and media coverage of DeHub, including US Weekly, Yahoo Finance, Entrepreneur and Investing.com.' },
   'brand-assets': { title: 'DeHub Brand Assets — Logos & Downloads', description: 'Official DeHub brand assets: logos, icons, graphics and marketing materials available to download.' },
   'brand-guidelines': { title: 'DeHub Brand Guidelines', description: 'How to use the DeHub brand: identity, logo usage, colour and design standards.' },
@@ -525,7 +525,7 @@ ${body}</article>
 </html>`;
 }
 
-const DOCS_INDEX_DESCRIPTION = 'Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.';
+const DOCS_INDEX_DESCRIPTION = 'Official DeHub documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more.';
 
 function buildDocsIndexHtml() {
   const canonicalUrl = `${APP_URL}/docs`;
@@ -864,7 +864,7 @@ const SECTION_PAGES = {
 </ul>
 <h2>How the feed works</h2>
 <p>Explore is the whole network in one place: every public post, in the order it was made, with no ranking layer deciding what you see. Filter it by format — video, shorts, images, audio, text — or by the hashtag a post was filed under, and follow the creators whose work you want in your own home feed.</p>
-<p>Posts can be minted on-chain when they are published, which gives the creator a permanent, portable record of the work and lets it be sold, tipped or collected in DHB. Minting is optional; a post that is not minted is still a normal post. Reactions, comments, reposts and tips all count toward a creator's standing on the network, and that standing is what unlocks badges and their perks.</p>
+<p>Posts can be minted on-chain when they are published, which gives the creator a permanent, portable record of the work and lets it be sold, tipped or collected in tokens. Minting is optional; a post that is not minted is still a normal post. Reactions, comments, reposts and tips all count toward a creator's standing on the network, and that standing is what unlocks badges and their perks.</p>
 <p>You can read all of it signed out. Signing in — with an email, a social account, a passkey or a wallet — gives you a wallet of your own with gas sponsored, so following, reacting and tipping cost nothing to start.</p>`,
   },
   videos: {
@@ -874,7 +874,7 @@ const SECTION_PAGES = {
     intro: 'Watch the newest videos from DeHub creators — long-form uploads that can be minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
     bodyHtml: `<p>DeHub’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>
 <h2>What you can do with a video here</h2>
-<p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in DHB, or unlocked only for the holders of a badge or a subscription plan — and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
+<p>Upload once and choose how it earns. A video can be free to everyone, pay-per-view in tokens, or unlocked only for the holders of a badge or a subscription plan — and the same upload can be tipped by anyone who watches it. Views, reactions and comments are counted on the post itself, and the creator keeps the record whatever happens to the platform.</p>
 <p>Videos are transcoded for playback on the web and in the Android and iOS apps, with captions and a transcript generated for the ones that have speech. Clips under a minute also appear in <a href="${APP_URL}/shorts">Shorts</a>; longer ones can be watched in picture-in-picture while you keep scrolling, or on <a href="${APP_URL}/tv">DeHub TV</a> as a continuous lean-back channel.</p>`,
   },
   shorts: {
@@ -959,27 +959,27 @@ function arcadeGameLd(art) {
 // so the two UA variants never diverge.
 const MARKETING_PAGES = {
   'dex': {
-    title: 'DEX — Trade DHB at your price',
-    description: 'Set your DHB buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.',
+    title: 'DEX — Trade tokens at your price',
+    description: 'Set your token buy or sell price with a Uniswap v4 limit order on Base or BNB Chain. Live order book, market depth and one shared USD price.',
     heading: 'DeHub DEX',
-    bodyHtml: `<p>Trade DHB at the price you choose. Place a buy or sell as a Uniswap v4 limit order on Base or BNB Chain and it fills when the market reaches it — no watching the chart, no slippage past your number.</p>
+    bodyHtml: `<p>Trade tokens at the price you choose. Place a buy or sell as a Uniswap v4 limit order on Base or BNB Chain and it fills when the market reaches it — no watching the chart, no slippage past your number.</p>
 <p>The terminal shows the live order book, market depth and one shared USD price.</p>
-<p><a href="${APP_URL}/dex">Open the DEX</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get DHB</a>.</p>`,
+<p><a href="${APP_URL}/dex">Open the DEX</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get tokens</a>.</p>`,
   },
   'ads': {
     title: 'Ads Manager | DeHub',
-    description: 'Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in DHB.',
+    description: 'Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens.',
     heading: 'DeHub Ads Manager',
-    bodyHtml: `<p>Run ad campaigns on DeHub with POVR — proof-of-view-and-rank. Campaigns target verified badge holders rather than anonymous impressions, and are paid in DHB.</p>
+    bodyHtml: `<p>Run ad campaigns on DeHub with POVR — proof-of-view-and-rank. Campaigns target verified badge holders rather than anonymous impressions, and are paid in tokens.</p>
 <p>Create a campaign, choose who it reaches and follow its results from one dashboard.</p>
 <p><a href="${APP_URL}/ads">Open Ads Manager</a> or <a href="${APP_URL}/docs/advertising">read how POVR works</a>.</p>`,
   },
   'buy': {
     title: 'Buy — Purchase Crypto on DeHub',
-    description: 'Buy DHB and other cryptocurrencies directly on DeHub with your credit card. Fast checkout, multiple chains supported.',
+    description: 'Buy tokens and other cryptocurrencies directly on DeHub with your credit card. Fast checkout, multiple chains supported.',
     heading: 'Buy Crypto on DeHub',
-    bodyHtml: `<p>Buy DHB and other cryptocurrencies directly on DeHub with a credit card, delivered straight to your wallet. Checkout supports multiple chains, so you can buy on the network you already use.</p>
-<p><a href="${APP_URL}/buy">Buy crypto</a>, <a href="${APP_URL}/dex">trade DHB at your price</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get DHB</a>.</p>`,
+    bodyHtml: `<p>Buy tokens and other cryptocurrencies directly on DeHub with a credit card, delivered straight to your wallet. Checkout supports multiple chains, so you can buy on the network you already use.</p>
+<p><a href="${APP_URL}/buy">Buy crypto</a>, <a href="${APP_URL}/dex">trade tokens at your price</a> or <a href="${APP_URL}/docs/token/where-to-buy">see where else to get tokens</a>.</p>`,
   },
   'builder': {
     title: 'Builder — Build Apps with AI on DeHub',
@@ -1002,7 +1002,7 @@ const MARKETING_PAGES = {
 <h2>Protected content stays encrypted</h2>
 <p>Protected media can be stored as encrypted segments. Node operators do not receive playback keys simply because they host data. Public content remains publicly viewable through DeHub.</p>
 <h2>Variable, revenue-funded rewards</h2>
-<p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future DHB settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p>
+<p>Verified contribution may receive a share of a platform-revenue-funded pool after an epoch closes. There is no fixed rate, minimum return, APY or guaranteed reward, and contribution records are not a promise of payment. Running a node creates electricity, bandwidth and hardware costs that may exceed any reward. Any future tokens settlement would occur on Base and remain subject to eligibility, network rules and applicable law.</p>
 <p>The node client is not available yet. DePin will launch in controlled phases, beginning with delivery and adaptive video infrastructure.</p>`,
   },
   'connect': {
@@ -1071,7 +1071,7 @@ const MARKETING_PAGES = {
     heading: 'DeHub Stages',
     bodyHtml: `<p>Stages are live audio rooms on DeHub: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
 <h2>Live, then kept</h2>
-<p>A Stage has a host, speakers and an audience. Listeners can raise a hand to be brought up to speak, the host can share a screen or play audio into the room, and anyone can tip a speaker in DHB while they talk. Rooms can be scheduled ahead of time with a reminder and a short link to share, or opened on the spot.</p>
+<p>A Stage has a host, speakers and an audience. Listeners can raise a hand to be brought up to speak, the host can share a screen or play audio into the room, and anyone can tip a speaker in tokens while they talk. Rooms can be scheduled ahead of time with a reminder and a short link to share, or opened on the spot.</p>
 <p>When a Stage ends its recording is kept at the same address, seekable, with live captions carried over as a transcript that can be read or searched. So a Stage is a conversation while it happens and a page afterwards — one that a search engine, a link preview and a listener who missed it all get the same way.</p>
 <p><a href="${APP_URL}/stages">See live and recorded Stages</a>.</p>`,
   },
@@ -1176,7 +1176,7 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>A screen-by-screen walkthrough of the DeHub app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
 <h2>What the guide covers</h2>
 <p>It starts where a new account starts: signing in with an email, a social account, a passkey or a wallet, and the wallet DeHub creates for you with gas sponsored so the first follow, reaction and tip cost nothing. From there it walks the home feed and its filters, the video, shorts and music lanes, and the post composer — including what minting a post on-chain does and why it is optional.</p>
-<p>The second half is the parts people ask about: direct messages and group chats, live audio Stages, the wallet and how DHB moves in and out of it, staking for a badge and what each badge unlocks, and the governance page where token holders vote on what gets built. Each screen is shown as it looks in the app, with the controls labelled.</p>
+<p>The second half is the parts people ask about: direct messages and group chats, live audio Stages, the wallet and how tokens moves in and out of it, staking for a badge and what each badge unlocks, and the governance page where token holders vote on what gets built. Each screen is shown as it looks in the app, with the controls labelled.</p>
 <p><a href="${APP_URL}/guide">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs">documentation</a>.</p>`,
   },
   // Direct APK download. The file itself is a GitHub release asset (~205 MB,
@@ -1256,7 +1256,7 @@ const MARKETING_PAGES = {
     title: 'DeHub Creator — Image, Video, Audio & 3D Studio',
     description: 'Create images, videos, audio and 3D assets. See the price before generating, save to your private library, and edit in your browser.',
     heading: 'DeHub Creator Studio',
-    bodyHtml: `<p>Choose image, video, audio or 3D, enter a prompt and optionally attach reference media. Paid generations show a server quote and use DHB per job. Existing unspent payment receipts are reused before requesting another transfer.</p>
+    bodyHtml: `<p>Choose image, video, audio or 3D, enter a prompt and optionally attach reference media. Paid generations show a server quote and use tokens per job. Existing unspent payment receipts are reused before requesting another transfer.</p>
 <ul>
 <li>Image generation with Nano Banana, Gemini, FLUX and other available models.</li>
 <li>Video generation with Kling, Veo, Seedance and other available models.</li>
@@ -1285,7 +1285,7 @@ const MARKETING_PAGES = {
   },
   'work': {
     title: 'Bounties — Post & Hunt Paid Tasks | DeHub',
-    description: 'Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in DHB or USDC.',
+    description: 'Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in tokens or USDC.',
     heading: 'DeHub Work — Bounties',
     bodyHtml: `<p>DeHub Work is an on-chain marketplace for creator jobs. Post a bounty with a budget and criteria, receive submissions from creators worldwide, then release payment through the DeHubWork escrow contract on Base. Disputes are handled by community moderators.</p>
 <ul>
@@ -1295,20 +1295,20 @@ const MARKETING_PAGES = {
 </ul>`,
   },
   'usernames': {
-    title: 'Username Marketplace — Buy & Sell DeHub Handles for DHB',
-    description: 'Browse DeHub usernames for sale and buy one with DHB. Short, numeric and original handles, transferred on-chain the moment payment clears — or list your own.',
+    title: 'Username Marketplace — Buy & Sell DeHub Handles for tokens',
+    description: 'Browse DeHub usernames for sale and buy one with tokens. Short, numeric and original handles, transferred on-chain the moment payment clears — or list your own.',
     heading: 'DeHub Username Marketplace',
-    bodyHtml: `<p>Every DeHub profile lives at <strong>dehub.io/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in DHB, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
+    bodyHtml: `<p>Every DeHub profile lives at <strong>dehub.io/yourname</strong>, and there is only ever one of each. The username marketplace is where those handles change hands: search what is for sale, pay the holder directly in tokens, and the name moves to your account as soon as the transfer is confirmed on-chain.</p>
 <h2>Buying a handle</h2>
 <p>The asking price is quoted by DeHub, not by the browser, and the payment goes wallet-to-wallet — DeHub takes no cut and never holds your funds. Search a name you want and DeHub also tells you whether it is simply unclaimed, in which case you can take it for free instead of buying it.</p>
 <h2>Selling yours</h2>
-<p>You can list the handle you are currently using, at any price in DHB. You choose the name you move to before listing, so the swap is instant and settled the moment a buyer pays. Your posts, followers and wallet stay exactly where they are — only the handle moves.</p>`,
+<p>You can list the handle you are currently using, at any price in tokens. You choose the name you move to before listing, so the swap is instant and settled the moment a buyer pays. Your posts, followers and wallet stay exactly where they are — only the handle moves.</p>`,
   },
   'affiliate': {
     title: 'DeHub Affiliate — Earn 20% Revenue Share',
     description: 'Refer creators to DeHub and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.',
     heading: 'DeHub Affiliate Program',
-    bodyHtml: `<p>Every DeHub user gets a personal referral link. When someone signs up through it and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of that revenue</strong> for the lifetime of the account. Second-tier invites earn another <strong>5%</strong>. Payouts are made in DHB and are visible on-chain.</p>`,
+    bodyHtml: `<p>Every DeHub user gets a personal referral link. When someone signs up through it and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of that revenue</strong> for the lifetime of the account. Second-tier invites earn another <strong>5%</strong>. Payouts are made in tokens and are visible on-chain.</p>`,
   },
   'premium': {
     title: 'DeHub Extra — Premium Membership',
@@ -1324,16 +1324,16 @@ const MARKETING_PAGES = {
   },
   'dao': {
     title: 'DAO Treasury — Fund DeHub and Earn a Say',
-    description: 'The DeHub DAO treasury: one wallet anyone can send DHB to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent.',
+    description: 'The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent.',
     heading: 'DeHub DAO Treasury',
-    bodyHtml: `<p>The DAO treasury is a single wallet that anyone can send DHB to, from inside the app or from any exchange or wallet. Its balance and every contribution are read straight from the Base and BNB chains, so nothing on this page depends on a database.</p>
+    bodyHtml: `<p>The DAO treasury is a single wallet that anyone can send tokens to, from inside the app or from any exchange or wallet. Its balance and every contribution are read straight from the Base and BNB chains, so nothing on this page depends on a database.</p>
 <p>Each contributor holds a share of the pool equal to what they put in. That share is the weight their vote carries when the DAO decides how the treasury is spent — see <a href="${APP_URL}/governance">governance</a> for the proposals.</p>`,
   },
   'governance': {
     title: 'Governance — Vote on Community Proposals',
     description: "Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future.",
     heading: 'DeHub Governance',
-    bodyHtml: `<p>DHB holders shape the DeHub roadmap. Any staker can open a proposal — new features, moderation rules, treasury spend or partnerships — and the community votes with staked DHB weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
+    bodyHtml: `<p>Token holders shape the DeHub roadmap. Any staker can open a proposal — new features, moderation rules, treasury spend or partnerships — and the community votes with staked token weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
   },
   'packs': {
     title: 'Emoji, Sticker & GIF Packs — DeHub',
@@ -1346,7 +1346,7 @@ const MARKETING_PAGES = {
     title: 'Leaderboard — Top Creators & Earners',
     description: "See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods.",
     heading: 'DeHub Leaderboard',
-    bodyHtml: `<p>The leaderboard ranks DeHub's biggest creators, tippers and DHB stakers across BNB Chain and Base. Snapshots are taken daily, and the top ranks unlock silhouette badges, profile overlays and larger platform rewards.</p>`,
+    bodyHtml: `<p>The leaderboard ranks DeHub's biggest creators, tippers and token stakers across BNB Chain and Base. Snapshots are taken daily, and the top ranks unlock silhouette badges, profile overlays and larger platform rewards.</p>`,
   },
   'top-100': {
     title: 'Top Assets — Live Prices for Stocks, Commodities & Crypto',
@@ -1358,7 +1358,7 @@ const MARKETING_PAGES = {
     title: 'Music — Listen & Discover on DeHub',
     description: 'Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform.',
     heading: 'DeHub Music',
-    bodyHtml: `<p>DeHub Music hosts songs from independent Web3 artists — stream them free, tip in DHB, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>
+    bodyHtml: `<p>DeHub Music hosts songs from independent Web3 artists — stream them free, tip in tokens, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>
 <h2>For listeners</h2>
 <p>Tracks play in a persistent player that keeps going while you browse the rest of DeHub, with a visualiser and a queue. Follow an artist to get their releases in your home feed, tip a track you like straight from the player, and add it to a playlist of your own. The radio channel plays continuously from the catalogue.</p>
 <h2>For artists</h2>
@@ -1368,10 +1368,10 @@ const MARKETING_PAGES = {
     title: 'Live TV — Free Channels From Around the World',
     description: 'Watch free live TV channels from around the world on DeHub. News, sports, entertainment and more — streamed in the browser, no subscription needed.',
     heading: 'DeHub TV',
-    bodyHtml: `<p>DeHub TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in DHB straight from the player.</p>
+    bodyHtml: `<p>DeHub TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in tokens straight from the player.</p>
 <h2>What is on</h2>
 <p>The guide is grouped by country and by genre — news, sport, film, music, kids, documentary — and every channel is a free, publicly available stream that plays in the browser with no account and no subscription. Creators who go live on DeHub appear alongside them, so a live stream from someone you follow sits in the same guide as a national broadcaster.</p>
-<p>Playback works on the web and in the apps, with the player able to detach into a corner while you read the feed. A live creator stream can be tipped in DHB from the player, and it is kept afterwards as a normal video post on the creator's profile, with the chat that ran beside it.</p>`,
+<p>Playback works on the web and in the apps, with the player able to detach into a corner while you read the feed. A live creator stream can be tipped in tokens from the player, and it is kept afterwards as a normal video post on the creator's profile, with the chat that ran beside it.</p>`,
   },
   // Title and description are copied verbatim from CinemaPage's SEOHead — see
   // the note above MARKETING_PAGES about the two UA variants never diverging.
@@ -1387,13 +1387,13 @@ const MARKETING_PAGES = {
     title: 'Glossary — Icons, Features & Web3 Terms',
     description: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
     heading: 'DeHub Glossary',
-    bodyHtml: `<p>Plain-English definitions for everything you meet on DeHub — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and the DHB token. Written for creators, not engineers.</p>`,
+    bodyHtml: `<p>Plain-English definitions for everything you meet on DeHub — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and DeHub tokens. Written for creators, not engineers.</p>`,
   },
   'bridge': {
-    title: 'Bridge — Transfer DHB Cross-Chain',
-    description: 'Bridge your DHB tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking.',
+    title: 'Bridge — Transfer tokens Cross-Chain',
+    description: 'Bridge your tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking.',
     heading: 'DeHub Bridge',
-    bodyHtml: `<p>The DeHub Bridge moves DHB between BNB Chain and Base from inside the platform wallet, with live transaction tracking. Balances round down to two decimals to match on-chain settlement, and every transfer is verified before your balance updates.</p>`,
+    bodyHtml: `<p>The DeHub Bridge moves tokens between BNB Chain and Base from inside the platform wallet, with live transaction tracking. Balances round down to two decimals to match on-chain settlement, and every transfer is verified before your balance updates.</p>`,
   },
   'agents': {
     title: 'AI Agents — Build & Manage Bots',
@@ -1406,7 +1406,7 @@ const MARKETING_PAGES = {
     title: 'AI Assistant — Chat, Generate Images & Video',
     description: "Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place.",
     heading: 'DeHub Assistant',
-    bodyHtml: `<p>The DeHub Assistant is a chat interface into the whole Creator Studio. Ask it to draft a post, generate an image or video, translate captions, search the web or explain how the DHB token works — then publish the result without leaving the conversation.</p>`,
+    bodyHtml: `<p>The DeHub Assistant is a chat interface into the whole Creator Studio. Ask it to draft a post, generate an image or video, translate captions, search the web or explain how DeHub tokens work — then publish the result without leaving the conversation.</p>`,
   },
   'creators': {
     title: 'Become a Creator',
@@ -1415,22 +1415,22 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>Apply for a creator account on DeHub and unlock uploads, monetization and the Creator Studio. Creators earn through pay-per-view, token-gated posts, tradable subscriptions, tips and ad-revenue sharing — all settled on-chain.</p>`,
   },
   'stake': {
-    title: 'Stake DHB — Earn Rewards on DeHub',
-    description: 'Stake DHB from the DeHub wallet to earn a share of a revenue-funded reward pool. Positions open and settle on-chain, with no lock-in.',
-    heading: 'Stake DHB',
-    bodyHtml: `<p>Staking puts a DHB balance to work inside DeHub. Positions are opened from the platform wallet, held on-chain, and rewards accrue from a pool funded by platform activity rather than by minting new supply.</p>
+    title: 'Stake tokens — Earn Rewards on DeHub',
+    description: 'Stake tokens from the DeHub wallet to earn a share of a revenue-funded reward pool. Positions open and settle on-chain, with no lock-in.',
+    heading: 'Stake tokens',
+    bodyHtml: `<p>Staking puts a token balance to work inside DeHub. Positions are opened from the platform wallet, held on-chain, and rewards accrue from a pool funded by platform activity rather than by minting new supply.</p>
 <h2>How staking works</h2>
 <p>Choose an amount and confirm the transaction; the position then appears in your wallet. Rewards accumulate per epoch and can be claimed at any time, and unstaking returns the principal in full once the position closes.</p>
 <h2>Rates are variable</h2>
 <p>The rate depends on total staked supply and on platform revenue for the period. There is no fixed APY, no minimum return and no guarantee, and staking carries the ordinary risks of holding a volatile asset.</p>`,
   },
   'raffle': {
-    title: 'Prize Draws — Win DHB, Hardware and NFTs on DeHub',
-    description: 'DeHub prize draws hand out DHB, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.',
+    title: 'Prize Draws — Win tokens, Hardware and NFTs on DeHub',
+    description: 'DeHub prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.',
     heading: 'DeHub Prize Draws',
     bodyHtml: `<p>Prize draws are DeHub's recurring community raffles. Each draw opens with a stated prize, a stated closing time and a stated entry route, then picks its winner from the entry list on-chain, so the result can be checked by anyone.</p>
 <h2>Earning entries</h2>
-<p>Entries come from taking part rather than from paying to play. Posting, staking DHB, playing arcade titles and joining stages all count towards a draw when it names them. Some draws also accept a DHB ticket; where they do, the ticket price and the per-wallet cap are published with the draw.</p>
+<p>Entries come from taking part rather than from paying to play. Posting, staking tokens, playing arcade titles and joining stages all count towards a draw when it names them. Some draws also accept a token ticket; where they do, the ticket price and the per-wallet cap are published with the draw.</p>
 <h2>How a winner is picked</h2>
 <p>When a draw closes the entry list is snapshotted and the winning index is drawn from an on-chain source of randomness. The transaction, the snapshot and the winning entry are published together, so nobody has to take the result on trust.</p>
 <h2>Claiming a prize</h2>
@@ -1443,7 +1443,7 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>DeHub is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
 <h2>How we work</h2>
 <p>The whole product is open source, and the team works in the open too: changes ship through public pull requests, the roadmap is voted on by token holders through <a href="${APP_URL}/governance">governance</a>, and feature requests come from the people using the app. We are remote by default, across time zones, and we hire for people who can own a problem end to end rather than for a job title.</p>
-<p>Engineering roles cover the web app, the Android and iOS apps, the API and the on-chain contracts. Design, growth and community roles work directly with creators on the network. Every role is paid, and part of the compensation can be taken in DHB for those who want it.</p>
+<p>Engineering roles cover the web app, the Android and iOS apps, the API and the on-chain contracts. Design, growth and community roles work directly with creators on the network. Every role is paid, and part of the compensation can be taken in tokens for those who want it.</p>
 <p>Looking for paid work rather than a role? See <a href="${APP_URL}/work">DeHub bounties</a> — scoped tasks with a budget attached, open to anyone, paid on delivery.</p>`,
   },
 
@@ -1508,26 +1508,26 @@ const MARKETING_PAGES = {
   },
   'accounts': {
     title: 'Account Marketplace — DeHub',
-    description: 'Buy and sell established DeHub accounts for DHB. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
+    description: 'Buy and sell established DeHub accounts for tokens. Browse accounts by followers, uploads and age — the handle, posts, followers and badge entitlements all transfer, and payment goes straight to the seller.',
     heading: 'DeHub Account Marketplace',
     bodyHtml: `<p>An established DeHub account can be sold whole. Listings are browsable by follower count, uploads and account age, and what transfers is everything the account is: the handle, the posts, the followers and the badge entitlements.</p>
 <h2>Settled on-chain</h2>
-<p>Payment is in DHB and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
+<p>Payment is in tokens and goes straight to the seller — DeHub does not hold the funds. See the <a href="${APP_URL}/usernames">username market</a> for selling a handle alone rather than a whole account.</p>`,
   },
   'fractions': {
     title: 'Fractions | DeHub',
-    description: 'Buy and sell fractions of DeHub posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in DHB.',
+    description: 'Buy and sell fractions of DeHub posts. A minted post is 1000 on-chain fractions — own a slice of a video, track, or image and trade it in tokens.',
     heading: 'DeHub Fractions',
     bodyHtml: `<p>Every DeHub upload is divisible into 1000 on-chain fractions. A creator can sell part of a post and keep the rest, and anyone else can buy a slice of a video, track or image and hold it like any other asset.</p>
 <h2>An open order book</h2>
-<p>Fractions trade in DHB against open orders, so a holder can exit without asking the creator's permission and a buyer can build a position over time.</p>
+<p>Fractions trade in tokens against open orders, so a holder can exit without asking the creator's permission and a buyer can build a position over time.</p>
 <p>Fractions are speculative and their value can fall to nothing. Nothing here is investment advice.</p>`,
   },
   'stores': {
     title: 'Stores | DeHub',
-    description: 'Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using DHB.',
+    description: 'Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens.',
     heading: 'DeHub Stores',
-    bodyHtml: `<p>Stores are creator-run shops on DeHub. Anyone can open one and list digital goods, merch, art or services, priced in DHB and paid peer to peer.</p>
+    bodyHtml: `<p>Stores are creator-run shops on DeHub. Anyone can open one and list digital goods, merch, art or services, priced in tokens and paid peer to peer.</p>
 <h2>The shop is part of the profile</h2>
 <p>A store sits beside the creator's posts rather than off on another site, so the audience that already follows the work is the audience that sees what is for sale.</p>`,
   },
@@ -2984,7 +2984,7 @@ function buildStoreHtml(store) {
   const name = store.name || 'Store';
   const title = `${name} — DeHub Stores`;
   const description = truncate(
-    store.description || `Shop ${name} on DeHub. Peer-to-peer commerce paid in DHB or USDC.`,
+    store.description || `Shop ${name} on DeHub. Peer-to-peer commerce paid in tokens or USDC.`,
     200,
   );
   const image = absolutize(store.banner_url || store.avatar_url);
@@ -3022,7 +3022,7 @@ function buildListingHtml(listing) {
   const currency = (listing.currency || 'USD').toUpperCase();
   const title = `${name} — ${storeName} on DeHub`;
   const description = truncate(
-    listing.description || `${name} from ${storeName}, on DeHub. Paid in DHB or USDC.`,
+    listing.description || `${name} from ${storeName}, on DeHub. Paid in tokens or USDC.`,
     200,
   );
   const images = Array.isArray(listing.images) ? listing.images : [];
@@ -3426,7 +3426,7 @@ ${Array.isArray(job.tags) && job.tags.length ? `<p>Tags: ${job.tags.slice(0, 10)
 ${deadline ? `<p>Closes ${escHtml(deadline)}</p>` : ''}
 <p>${Number(job.units_approved) || 0} of ${Number(job.max_units) || 0} slots filled · ${Number(job.application_count) || 0} applicants${Number(job.view_count) ? ` · ${Number(job.view_count).toLocaleString('en-US')} views` : ''}</p>
 <h2>How a DeHub bounty works</h2>
-<p>A bounty is a scoped task with a budget attached, posted by a DeHub account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(job.currency || 'DHB')} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
+<p>A bounty is a scoped task with a budget attached, posted by a DeHub account and open to anyone. The poster funds it up front and the money is held in escrow; a worker applies, does the work, submits it, and is paid in ${escHtml(!job.currency || job.currency === 'DHB' ? 'tokens' : job.currency)} on approval${Number(job.price_per_unit) > 0 ? ` — ${escHtml(Number(job.price_per_unit).toLocaleString('en-US', { maximumFractionDigits: 4 }))} ${escHtml(job.currency === 'DHB' ? 'tokens' : job.currency || '')} per completed unit, up to ${Number(job.max_units) || 0} on this one` : ''}. Disputes go to the platform, and an unfilled bounty returns its funds to the poster when it closes. The open board is at <a href="${APP_URL}/work">dehub.io/work</a>.</p>`,
   });
 }
 

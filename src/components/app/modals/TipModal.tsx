@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Tip Modal Component
  * ===================
@@ -280,7 +281,7 @@ export function TipModal({
                 >
                   <span className="inline-flex items-center gap-1">
                     {val.toLocaleString()}{' '}
-                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" style={{ marginTop: '-1px' }} />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" style={{ marginTop: '-1px' }} />
                   </span>
                 </button>
               ))}
@@ -298,7 +299,7 @@ export function TipModal({
             </div>
             <div className="relative flex items-center gap-2">
               <div className="relative flex-1">
-                <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+                <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
                 <Input
                   type="text"
                   inputMode="decimal"

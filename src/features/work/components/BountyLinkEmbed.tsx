@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Bounty Link Embed
  * =================
@@ -62,8 +63,8 @@ export function BountyLinkEmbed({ jobKey, path, fallback = null }: BountyLinkEmb
           <p className="text-sm font-semibold text-white flex items-center gap-1">
             {job.currency === 'DHB' ? (
               <>
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
-                {budget.toLocaleString(undefined, { maximumFractionDigits: 2 })} {job.currency}
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
+                {budget.toLocaleString(undefined, { maximumFractionDigits: 2 })} {tokenLabel(job.currency)}
               </>
             ) : (
               `${budget.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${job.currency}`

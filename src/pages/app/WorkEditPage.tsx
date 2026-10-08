@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -198,7 +199,7 @@ export default function WorkEditPage() {
                       onClick={() => setCurrency(c)}
                       className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-medium ${currency === c ? 'bg-white text-black' : 'bg-white/5 text-white/70 hover:bg-white/10'}`}
                     >
-                      {c}
+                      {tokenLabel(c)}
                     </button>
                   ))}
                 </div>
@@ -215,7 +216,7 @@ export default function WorkEditPage() {
                 <div className="flex items-center justify-between text-sm text-white/70">
                   <span>{t('work.totalToEscrow')}</span>
                   <span className="text-white font-semibold tabular-nums">
-                    {total.toLocaleString(undefined, { maximumFractionDigits: 4 })} {currency}
+                    {total.toLocaleString(undefined, { maximumFractionDigits: 4 })} {tokenLabel(currency)}
                   </span>
                 </div>
               </div>
@@ -225,7 +226,7 @@ export default function WorkEditPage() {
               <div className="flex items-center justify-between text-sm text-white/70 mb-1">
                 <span className="inline-flex items-center gap-1.5"><Lock className="w-3.5 h-3.5" /> {t('work.lockedTotal')}</span>
                 <span className="text-white font-semibold tabular-nums">
-                  {job.total_budget.toLocaleString(undefined, { maximumFractionDigits: 4 })} {job.currency}
+                  {job.total_budget.toLocaleString(undefined, { maximumFractionDigits: 4 })} {tokenLabel(job.currency)}
                 </span>
               </div>
               <div className="text-xs text-white/50">{t(budgetLockReasonKey(job))}</div>

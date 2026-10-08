@@ -1465,7 +1465,7 @@
     "otherTokens": "その他のトークン",
     "otherTokensDesc": "カードで Base 上の ETH または USDC を購入",
     "shareToFeed": "フィードにシェアする",
-    "sharePostTemplate": "DeHubのスタックに{{amount}} $ DHBを追加しました。 コミュニティと一緒に構築しましょう。# DeHub # DHB",
+    "sharePostTemplate": "DeHubのスタックに{{amount}} $ DHBを追加しました。 コミュニティと一緒に構築しましょう。# DeHub # トークン",
     "success": {
       "title": "購入が完了しました！",
       "subtitle": "トークンがお財布に届きました。",
@@ -6228,7 +6228,7 @@
   },
   "docs": {
     "seoTitle": "DeHub ドキュメント — ガイド、トークン、dApps、FAQ",
-    "seoDescription": "DeHub 公式ドキュメント：プラットフォーム概要、dApps、DHB トークンエコノミー、ステーキング、ゲーム、ロードマップ、FAQ など。"
+    "seoDescription": "DeHub 公式ドキュメント：プラットフォーム概要、dApps、トークン トークンエコノミー、ステーキング、ゲーム、ロードマップ、FAQ など。"
   },
   "dex": {
     "seoTitle": "DEX — あなたの価格でDHBを取引",
@@ -6263,8 +6263,8 @@
     "orderBook": "オーダーブック",
     "priceGrouping": "価格グループ化",
     "priceUsd": "価格（USD）",
-    "sizeDhb": "サイズ (DHB)",
-    "totalDhb": "合計 (DHB)",
+    "sizeDhb": "サイズ (トークン)",
+    "totalDhb": "合計 (トークン)",
     "noBids": "まだ入札がありません",
     "noAsks": "まだ売り流動性がありません",
     "useBuyPrice": "購入価格として{{price}}を使用",
@@ -6302,7 +6302,7 @@
     "reviewYourBuy": "購入内容を確認",
     "reviewYourSell": "売却内容を確認",
     "reviewDeposit": "{{chain}}で{{amount}} {{token}}を入金してください。",
-    "reviewRange": "範囲: {{min}} – {{max}} USD/DHB。",
+    "reviewRange": "範囲: {{min}} – {{max}} USD/トークン。",
     "initializes": "これにより、0%プールが作成および初期化されます。",
     "pendingNote": "トランザクションが送信されました。別の入金なしで確認またはリスト登録を再開してください。",
     "viewTransaction": "トランザクションを表示",
@@ -7843,7 +7843,7 @@
   "dm": {
     "planRestricted": "このユーザーにメッセージを送るにはサブスクリプションが必要です。",
     "planTypeNotAllowed": "このクリエイターのプランでは、この種類のメッセージは送れません。",
-    "planMinTip": "このクリエイターへのチップは {{amount}} DHB 以上にしてください。"
+    "planMinTip": "このクリエイターへのチップは {{amount}} トークン 以上にしてください。"
   },
   "credits": {
     "earningsWorth": "価値{{amount}}",
@@ -7971,7 +7971,7 @@
       "notifyKey": "通知キー",
       "notifyKeyOnce": "新しい通知キーを{{name}}にコピーしてください：表示されるのは一度だけで、もう一つ作ると置き換わります。",
       "payTitle": "支払いを受け付けます",
-      "payBody": "支払いを要求する際、ユーザーに直接あなたの署名した `dehub.json` に対応するウォレットへの DHB の送金を依頼します。サーバー上のレシートを確認してから、何かを提供してください。",
+      "payBody": "支払いを要求する際、ユーザーに直接あなたの署名した `dehub.json` に対応するウォレットへの トークン の送金を依頼します。サーバー上のレシートを確認してから、何かを提供してください。",
       "notifyTitle": "通知を送信する",
       "notifyBody": "ユーザーがあなたのアプリを追加した場合、通知キーを使ってサーバーから通知することができます。個別のユーザートークンを保存する必要はありません。",
       "rankTitle": "ストアがアプリをランク付けする方法",
@@ -8002,9 +8002,9 @@
     },
     "pay": {
       "body": "DHBはアプリのウォレットに直接振り込まれる、{{wallet}}。支払いは取り消せません。",
-      "confirm": "支払い {{amount}} DHB",
+      "confirm": "支払い {{amount}} トークン",
       "sending": "お支払いを送信中…",
-      "sent": "支払い {{amount}} DHB を {{name}} に。",
+      "sent": "支払い {{amount}} トークン を {{name}} に。",
       "noOwner": "このアプリにはまだ認証済みのウォレットで支払いができません。"
     },
     "add": {

@@ -13,7 +13,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   "": {
     title: "DeHub Documentation — Guides, Token, dApps & FAQ",
     description:
-      "Official DeHub documentation: platform overview, dApps, DHB token economics, staking, games, roadmap, FAQ and more.",
+      "Official DeHub documentation: platform overview, dApps, token economics, staking, games, roadmap, FAQ and more.",
     keywords: "DeHub, docs, documentation, web3, decentralized social",
   },
   overview: {
@@ -26,53 +26,53 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
     description:
       "Every DeHub feature in one guide: feeds, shorts, stories, the daily posting allowance, communities, stages, TV and radio, wallet, bounty hunting, stores, AI toolkits, encryption and DePIN.",
     keywords:
-      "DeHub dApp, web3 social app, decentralized social features, posting allowance, daily post limit, watch2earn, pay-per-view, live streaming, audio stages, creator wallet, DHB token, bounty hunting, end-to-end encryption, DePIN, AI toolkits",
+      "DeHub dApp, web3 social app, decentralized social features, posting allowance, daily post limit, watch2earn, pay-per-view, live streaming, audio stages, creator wallet, DeHub token, bounty hunting, end-to-end encryption, DePIN, AI toolkits",
   },
   games: {
     title: "Games — DeHub Docs",
     description: "Discover Web3 games and play-to-earn experiences on DeHub.",
   },
   token: {
-    title: "DHB Token — DeHub Docs",
+    title: "DeHub tokens — DeHub Docs",
     description:
-      "Everything about the DHB token: utility, economics, governance, staking, bridging and security.",
+      "Everything about the DeHub token: utility, economics, governance, staking, bridging and security.",
   },
   "token/overview": {
     title: "Currency Overview — DeHub Docs",
     description:
-      "How the DHB currency works in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.",
+      "How DeHub tokens work in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.",
     keywords:
-      "DHB currency, utility token, tipping, pay-per-view, AI credits, profit share, staking rewards, token peg",
+      "DeHub tokens, utility token, tipping, pay-per-view, AI credits, profit share, staking rewards, token peg",
   },
   "token/economics": {
     title: "Token Economics — DeHub Docs",
     description:
-      "DHB tokenomics: supply, distribution, emissions and economic model that powers DeHub.",
+      "Token economics: supply, distribution, emissions and economic model that powers DeHub.",
   },
   "token/utility": {
     title: "Token Utility — DeHub Docs",
     description:
-      "What holding DHB unlocks: governance, staking rewards, moderation power and marketplace perks across DeHub.",
+      "What holding tokens unlocks: governance, staking rewards, moderation power and marketplace perks across DeHub.",
   },
   "token/where-to-buy": {
-    title: "Where to Buy DHB — DeHub Docs",
+    title: "Where to Buy Tokens — DeHub Docs",
     description:
-      "Official exchanges, DEXs and on-ramps where you can buy the DHB token.",
+      "Official exchanges, DEXs and on-ramps where you can buy the DeHub token.",
   },
   "token/governance": {
     title: "Token Governance — DeHub Docs",
     description:
-      "How DHB holders shape DeHub through proposals, voting and on-chain governance.",
+      "How token holders shape DeHub through proposals, voting and on-chain governance.",
   },
   "token/stake": {
-    title: "Stake DHB — DeHub Docs",
+    title: "Stake tokens — DeHub Docs",
     description:
-      "Stake DHB to earn rewards, unlock badges and access premium DeHub features.",
+      "Stake tokens to earn rewards, unlock badges and access premium DeHub features.",
   },
   "token/bridge": {
     title: "Token Bridge — DeHub Docs",
     description:
-      "How to move DHB between BNB Chain and Base with the manual DeHub bridge, and what to expect while it processes.",
+      "How to move tokens between BNB Chain and Base with the manual DeHub bridge, and what to expect while it processes.",
   },
   // depin / e2e-encryption / ai-toolkits now redirect into /docs/dapps, so their
   // metadata is folded into the dapps entry above rather than duplicated here.
@@ -101,7 +101,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   },
   terms: {
     title: "Legal Disclaimer — DeHub Docs",
-    description: "DeHub's legal disclaimer: risk notices and terms of use for the platform and the DHB token.",
+    description: "DeHub's legal disclaimer: risk notices and terms of use for the platform and the DeHub token.",
   },
   "terms-of-service": {
     title: "Terms of Service — DeHub Docs",
@@ -149,7 +149,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   },
   faq: {
     title: "FAQ — DeHub Docs",
-    description: "Frequently asked questions about DeHub, the DHB token and the platform.",
+    description: "Frequently asked questions about DeHub, the DeHub token and the platform.",
   },
   donate: {
     title: "Donate — DeHub Docs",

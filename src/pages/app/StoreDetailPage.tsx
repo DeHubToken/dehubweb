@@ -102,7 +102,7 @@ export default function StoreDetailPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={`${store.name} — DeHub Stores`} description={(store.description || `Shop ${store.name} on DeHub. Peer-to-peer commerce paid in DHB or USDC.`).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
+      <SEOHead title={`${store.name} — DeHub Stores`} description={(store.description || `Shop ${store.name} on DeHub. Peer-to-peer commerce paid in tokens or USDC.`).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
       <PageIsland
         back
         backFallback="/app/stores"

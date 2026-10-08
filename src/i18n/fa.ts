@@ -1101,7 +1101,7 @@ export const fa = {
   },
   tokenWhereToBuy: {
     title: 'از کجا بخریم',
-    subtitle: 'DHB را در صرافی‌ها و پلتفرم‌های پشتیبانی شده پیدا کنید.',
+    subtitle: 'توکن‌ها را در صرافی‌ها و پلتفرم‌های پشتیبانی شده پیدا کنید.',
     availableOn: 'در دسترس در',
     decentralizedExchanges: 'صرافی‌های غیرمتمرکز',
     centralizedExchanges: 'صرافی‌های متمرکز',
@@ -1145,7 +1145,7 @@ export const fa = {
   },
   tokenStake: {
     title: 'استیکینگ',
-    subtitle: 'DHB خود را استیک کنید تا بازده واقعی از درآمد پروتکل کسب کنید.',
+    subtitle: 'توکن‌ها خود را استیک کنید تا بازده واقعی از درآمد پروتکل کسب کنید.',
     stakingOverview: 'نمای کلی استیکینگ',
     howToStake: 'نحوه استیک',
     rewards: 'پاداش‌ها',

@@ -35,7 +35,7 @@ import { SEOHead } from '@/components/SEOHead';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 
 const pageDescription =
-  'DeHub prize draws hand out DHB, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.';
+  'DeHub prize draws hand out tokens, hardware and NFT prizes to the community. Entries are earned by taking part, and every winner is drawn on-chain.';
 
 function Reveal({
   children,
@@ -97,10 +97,10 @@ const steps = [
 
 const entryRoutes = [
   { icon: PenLine, title: 'Post and engage', body: 'Original posts, videos and comments count towards draws that name them.' },
-  { icon: Coins, title: 'Stake DHB', titleKey: 'raffle.stakeTitle', body: 'An open staking position earns entries for the draws that weight it.', to: '/stake' },
+  { icon: Coins, title: 'Stake tokens', titleKey: 'raffle.stakeTitle', body: 'An open staking position earns entries for the draws that weight it.', to: '/stake' },
   { icon: Gamepad2, title: 'Play the arcade', body: 'Arcade sessions and leaderboard placings feed draws built around games.', to: '/arcade' },
   { icon: Mic, title: 'Join a stage', body: 'Turning up to live audio stages counts, whether you speak or listen.', to: '/stages' },
-  { icon: Ticket, title: 'Buy a ticket', body: 'Some draws also sell a DHB ticket. Where they do, the price and the per-wallet cap are published up front.', bodyKey: 'raffle.ticketBody' },
+  { icon: Ticket, title: 'Buy a ticket', body: 'Some draws also sell a token ticket. Where they do, the price and the per-wallet cap are published up front.', bodyKey: 'raffle.ticketBody' },
   { icon: Boxes, title: 'Hold a collectible', body: 'Selected NFT collections carry standing entries into draws that name them.' },
 ];
 
@@ -126,7 +126,7 @@ const faqItems = [
   {
     question: 'Do I have to buy anything to enter a DeHub prize draw?',
     answer:
-      'No. Every draw carries at least one free entry route, earned by taking part on DeHub. Some draws additionally sell a DHB ticket, but a ticket is never the only way in.',
+      'No. Every draw carries at least one free entry route, earned by taking part on DeHub. Some draws additionally sell a token ticket, but a ticket is never the only way in.',
     answerKey: 'raffle.faqPurchaseAnswer',
   },
   {
@@ -163,7 +163,7 @@ export default function RafflePage() {
   return (
     <>
       <SEOHead
-        title="Prize Draws — Win DHB, Hardware and NFTs on DeHub"
+        title="Prize Draws — Win tokens, Hardware and NFTs on DeHub"
         description={pageDescription}
         image="https://dehub.io/og/raffle.jpg"
         url="https://dehub.io/raffle"

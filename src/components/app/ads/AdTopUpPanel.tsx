@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * AdTopUpPanel
  * ============
@@ -265,7 +266,7 @@ export function AdTopUpPanel({
           ) : (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <img src={dhbCoinImage} alt="DHB" className="w-6 h-6" />
+                <img src={dhbCoinImage} alt={tokenLabel()} className="w-6 h-6" />
                 <span className="text-white font-medium">{t('ads.youSend')}</span>
               </div>
               <div className="text-right">
