@@ -1,19 +1,17 @@
 /** Shared stock speech for stages. Custom voices keep their existing route. */
 import { serviceClient } from './auth.ts';
+import { createGoogleSpeechAuth } from './google-speech-auth.ts';
 
 const ENDPOINT = 'https://texttospeech.googleapis.com/v1';
-export const chirpConfigured = () => !!Deno.env.get('GOOGLE_TTS_API_KEY');
+const googleAuth = createGoogleSpeechAuth(() => Deno.env.get('GOOGLE_TTS_SERVICE_ACCOUNT_JSON'));
+export const chirpConfigured = googleAuth.configured;
 export const isChirpVoice = (id: string) => /^[a-z]{2,3}-[A-Z]{2}-Chirp3-HD-[A-Za-z]+$/.test(id);
 type Voice = { name: string; languageCodes: string[]; ssmlGender: string };
 let catalogue: { voices: Voice[]; expires: number } | null = null;
 
-function googleHeaders() {
-  return { 'Content-Type': 'application/json', 'X-Goog-Api-Key': Deno.env.get('GOOGLE_TTS_API_KEY')! };
-}
-
 export async function chirpVoices(language: string, search: string) {
   if (!catalogue || catalogue.expires < Date.now()) {
-    const response = await fetch(`${ENDPOINT}/voices`, { headers: googleHeaders(), signal: AbortSignal.timeout(15000) });
+    const response = await fetch(`${ENDPOINT}/voices`, { headers: await googleAuth.headers(), signal: AbortSignal.timeout(15000) });
     if (!response.ok) throw new Error(`Speech voice catalogue unavailable (${response.status})`);
     const body = await response.json();
     catalogue = {
@@ -42,13 +40,20 @@ export async function synthesizeChirp(text: string, voiceId: string, cors: Recor
   });
   if (!chirpConfigured()) return fail('Stage speech is being configured. Please try again later.', 503);
   if (!isChirpVoice(voiceId) || new TextEncoder().encode(text).length > 5000) return fail('Speech text or voice is invalid.', 400);
+  let headers: Record<string, string>;
+  try {
+    headers = await googleAuth.headers();
+  } catch {
+    console.error('google-chirp3-hd authentication unavailable');
+    return fail('Stage speech is being configured. Please try again later.', 503);
+  }
   // Reserve before sending. Concurrent requests cannot exceed the shared cap;
   // failed/uncertain provider calls retain their reservation rather than retry.
   const { data: allowed, error } = await serviceClient().rpc('reserve_chirp_characters', { p_characters: Array.from(text).length });
   if (error) return fail('Speech usage check is unavailable. Please try again later.', 503);
   if (!allowed) return fail('The monthly free speech allowance has been used. It resets next month.', 429);
   const response = await fetch(`${ENDPOINT}/text:synthesize`, {
-    method: 'POST', headers: googleHeaders(), signal: AbortSignal.timeout(45000),
+    method: 'POST', headers, signal: AbortSignal.timeout(45000),
     body: JSON.stringify({ input: { text }, voice: { languageCode: voiceId.split('-').slice(0, 2).join('-'), name: voiceId }, audioConfig: { audioEncoding: 'MP3' } }),
   });
   if (!response.ok) {
