@@ -125,7 +125,7 @@ export function DmTipDialog({
       });
 
       // Show success immediately on tx submission
-      toast.success(dhbText(t('tip.dmSent', 'Sent {{amount}} DHB to {{name}}!', { amount: parsedAmount.toLocaleString(), name: recipientName })), { id: 'dm-tip' });
+      toast.success(dhbText(t('tip.dmSent', 'Sent {{amount}} tokens to {{name}}!', { amount: parsedAmount.toLocaleString(), name: recipientName })), { id: 'dm-tip' });
       setAmount('');
       onOpenChange(false);
 
