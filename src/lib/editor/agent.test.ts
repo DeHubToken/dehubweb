@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useEditorStore } from "@/store/editorStore";
 import { applyOps, askAgent, describeScene } from "./agent";
+import { useEditorUiStore } from "@/store/editorUiStore";
 
 describe("editor agent", () => {
   beforeEach(() => useEditorStore.getState().newProject());
@@ -14,6 +15,33 @@ describe("editor agent", () => {
       expect(await applyOps(result.ops)).toMatchObject({ applied: 1, failed: 0 });
       expect(useEditorStore.getState().clips.map(c => c.trimIn)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
     } finally { fetch.mockRestore(); }
+  });
+
+  it("prepares a voice draft offline without changing the project, undo history or active generator", async () => {
+    const snapshot = useEditorStore.getState().toSnapshot();
+    const past = useEditorStore.getState().past;
+    const other = { kind: "image" as const, prompt: "Existing draft" };
+    useEditorUiStore.getState().setGeneratePrefill(other);
+    const fetch = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("offline"));
+    try {
+      const result = await askAgent([{ role: "user", content: 'Create a voiceover saying "Hello, DeHub."' }]);
+      const report = await applyOps(result.ops);
+      expect(report).toMatchObject({ applied: 0, failed: 0, generate: { kind: "voice", prompt: "Hello, DeHub." } });
+      expect(fetch).not.toHaveBeenCalled();
+      expect(useEditorStore.getState().toSnapshot()).toMatchObject({ ...snapshot, updatedAt: expect.any(Number) });
+      expect(useEditorStore.getState().past).toBe(past);
+      expect(useEditorUiStore.getState().generatePrefill).toBe(other);
+      expect(await applyOps([{ op: "generate", kind: "music", prompt: "ambient" }])).toMatchObject({ applied: 0, failed: 1 });
+    } finally { fetch.mockRestore(); useEditorUiStore.getState().setGeneratePrefill(null); }
+  });
+
+  it("keeps each generation report independent while counting only real edits", async () => {
+    const first = await applyOps([{ op: "generate", kind: "image", prompt: "First image" }]);
+    const second = await applyOps([{ op: "generate", kind: "video", prompt: "Second video" }, { op: "add_text", text: "Title" }]);
+    expect(first).toMatchObject({ applied: 0, generate: { kind: "image", prompt: "First image", aspect: "16:9" } });
+    expect(second).toMatchObject({ applied: 1, failed: 0, generate: { kind: "video", prompt: "Second video" } });
+    useEditorStore.getState().undo();
+    expect(useEditorStore.getState().clips).toHaveLength(0);
   });
 
   it("applies a multi-step request as one undo step", async () => {

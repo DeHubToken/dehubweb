@@ -92,7 +92,7 @@ export function GeneratePanel() {
     setPrompt(generatePrefill.prompt);
     if (generatePrefill.aspect) {
       if (generatePrefill.kind === 'video') setVideoAspect(generatePrefill.aspect);
-      else setImageAspect(generatePrefill.aspect);
+      else if (generatePrefill.kind === 'image') setImageAspect(generatePrefill.aspect);
     }
     setGeneratePrefill(null);
   }, [generatePrefill, setGeneratePrefill]);
