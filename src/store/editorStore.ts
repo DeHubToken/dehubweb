@@ -7,7 +7,7 @@ import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
 import { appendPage, getPages, pageAt, removePage, timelineDuration } from "@/lib/editor/pages";
-import { shiftKeys } from "@/lib/editor/keyframes";
+import { applyTimelineOp, sliceTimelineClip } from "@/lib/editor/timelineAgent";
 import {
   DEFAULT_SETTINGS,
   type Clip,
@@ -105,6 +105,7 @@ interface EditorState extends EditableState {
   addShapeClip: (shape: ShapeKindAll, patch?: Partial<ShapeClip>) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
   trimClip: (id: string, edge: "in" | "out", deltaSeconds: number) => void;
+  setClipSpeed: (id: string, speed: number) => void;
   splitAtPlayhead: () => void;
   rippleDelete: (ids?: string[]) => void;
   duplicateSelected: () => void;
@@ -528,14 +529,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const clip = s.clips.find((c) => c.id === id);
     if (!clip) return;
     let { start, duration, trimIn } = clip;
-    const oldStart = start;
+    const source = clip.kind === "video" || clip.kind === "audio";
+    const speed = source ? clip.speed ?? 1 : 1;
     if (edge === "in") {
-      const newStart = Math.max(0, start + deltaSeconds);
+      const newStart = Math.max(0, start + deltaSeconds, source ? start - trimIn / speed : 0);
       const newDuration = duration - (newStart - start);
       if (newDuration < MIN_CLIP) return;
       // For media clips, also move trimIn so the source moves with the trim.
-      if (clip.kind !== "text" && clip.kind !== "image") {
-        trimIn = Math.max(0, trimIn + (newStart - start));
+      if (source) {
+        trimIn = Math.max(0, trimIn + (newStart - start) * speed);
       }
       start = newStart;
       duration = newDuration;
@@ -544,7 +546,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       if (newDuration < MIN_CLIP) return;
       if (clip.kind === "video" || clip.kind === "audio") {
         const src = clip.sourceDuration ?? Infinity;
-        if (trimIn + newDuration > src) duration = Math.max(MIN_CLIP, src - trimIn);
+        if (trimIn + newDuration * speed > src) duration = Math.max(MIN_CLIP, (src - trimIn) / speed);
         else duration = newDuration;
       } else {
         duration = newDuration;
@@ -556,9 +558,16 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       future: [],
       // Keys are clip-relative; trimming the head must not slide the motion along.
       clips: s.clips.map((c) => (c.id === id
-        ? ({ ...c, start, duration, trimIn, keyframes: shiftKeys(c.keyframes, oldStart - start) } as Clip)
+        ? sliceTimelineClip(c, start - c.start, duration, c.id, start)
         : c)),
     });
+  },
+
+  setClipSpeed: (id, speed) => {
+    const s = get();
+    const next = applyTimelineOp(s, { op: "speed", id, speed }, () => nanoid(10));
+    if (!next) return;
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], clips: next.clips, tracks: next.tracks });
   },
 
   splitAtPlayhead: () => {
@@ -572,15 +581,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       const split = toSplit.find((x) => x.id === c.id);
       if (!split) { newClips.push(c); continue; }
       const localOffset = t - c.start;
-      const left: Clip = { ...c, duration: localOffset } as Clip;
-      const right: Clip = ({
-        ...c,
-        id: nanoid(10),
-        start: t,
-        duration: c.duration - localOffset,
-        trimIn: c.kind === "text" || c.kind === "image" ? c.trimIn : c.trimIn + localOffset,
-        keyframes: shiftKeys(c.keyframes, -localOffset),
-      }) as Clip;
+      const left = sliceTimelineClip(c, 0, localOffset, c.id);
+      const right = sliceTimelineClip(c, localOffset, c.duration - localOffset, nanoid(10), t);
       newClips.push(left, right);
     }
     set({ past, future: [], clips: newClips });
@@ -743,7 +745,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       past,
       future: [],
       clips: s.clips.map((c) =>
-        c.id === id && c.kind !== "text" ? ({ ...c, ...patch } as MediaClip) : c,
+        c.id === id && c.kind !== "text" ? patchedClip(c, patch) : c,
       ),
     });
   },
@@ -818,14 +820,19 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   patchClipLive: (id, patch) =>
-    set((s) => ({ clips: s.clips.map((c) => (c.id === id ? ({ ...c, ...patch } as Clip) : c)) })),
+    set((s) => ({ clips: s.clips.map((c) => (c.id === id ? patchedClip(c, patch) : c)) })),
 
   patchClip: (id, patch) => {
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
-    set({ past, future: [], clips: s.clips.map((c) => (c.id === id ? ({ ...c, ...patch } as Clip) : c)) });
+    set({ past, future: [], clips: s.clips.map((c) => (c.id === id ? patchedClip(c, patch) : c)) });
   },
 }));
+
+/** Replacing footage restores its background; masks belong to the old source. */
+function patchedClip(c: Clip, patch: ClipPatch): Clip {
+  return { ...c, ...(c.kind === "video" && "mediaId" in patch && patch.mediaId !== undefined && patch.mediaId !== c.mediaId ? { videoMatte: null } : {}), ...patch } as Clip;
+}
 
 /** Build a MediaItem (with object URLs) from a StoredMedia row. */
 export function toMediaItem(row: StoredMedia): MediaItem {

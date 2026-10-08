@@ -12,6 +12,8 @@
  */
 import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
 import { computeClipAnimation } from "./animationPresets";
+import { videoMatteFrame } from "./videoMatte";
+import { measuredTextLayout } from "./textLayout";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -118,36 +120,19 @@ function fontFor(text: TextClip, size: number): string {
   return `${text.italic ? "italic " : ""}${text.fontWeight} ${size}px ${text.fontFamily}`;
 }
 
-function textLines(text: TextClip): string[] {
-  const raw = text.uppercase ? text.text.toUpperCase() : text.text;
-  return raw.split(/\n/);
-}
-
 function setLetterSpacing(ctx: Ctx2D, px: number) {
-  // Chromium and Firefox support ctx.letterSpacing; older engines ignore it.
   (ctx as unknown as { letterSpacing?: string }).letterSpacing = `${px}px`;
 }
 
-interface TextLayout {
-  size: number;
-  lh: number;
-  lines: string[];
-  widths: number[];
-  maxW: number;
-  pad: number;
-}
-
-function layoutText(ctx: Ctx2D, text: TextClip, H: number): TextLayout {
-  const size = (text.fontSize / 1080) * H;
-  const lh = size * (text.lineHeight ?? 1.2);
+function layoutText(ctx: Ctx2D, text: TextClip, W: number, H: number) {
   ctx.save();
-  ctx.font = fontFor(text, size);
-  setLetterSpacing(ctx, ((text.letterSpacing ?? 0) / 1080) * H);
-  const lines = textLines(text);
-  const widths = lines.map((ln) => ctx.measureText(ln).width);
+  const result = measuredTextLayout(text, W, H, (line, size, spacing) => {
+    ctx.font = fontFor(text, size);
+    setLetterSpacing(ctx, spacing);
+    return ctx.measureText(line).width;
+  });
   ctx.restore();
-  const pad = text.background ? (text.background.padding / 1080) * H : size * 0.2;
-  return { size, lh, lines, widths, maxW: Math.max(...widths, 1), pad };
+  return result;
 }
 
 /** Where a clip sits, in canvas pixels. Null while its media has not decoded yet. */
@@ -162,7 +147,7 @@ export function clipBoxForSize(
 ): ClipBox | null {
   const tr = getTransform(clip);
   if (clip.kind === "text") {
-    const l = layoutText(ctx, clip, H);
+    const l = layoutText(ctx, clip, W, H);
     const w = l.maxW + l.pad * 2;
     const h = l.lines.length * l.lh + l.pad * 2;
     const ax = clip.x * W;
@@ -251,7 +236,7 @@ export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: nu
  * Draw one clip at timeline time `t`. The caller owns transition effects
  * (translate / clip rect / alpha) and wraps this in save/restore.
  */
-export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: number, src: RenderSources) {
+export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: number, src: RenderSources, sourceTime?: number) {
   if (!isVisualClip(keyed) || keyed.hidden) return;
   // Keyframed placement is baked in first; everything below sees a plain clip.
   const clip = resolveClipAt(keyed, t);
@@ -279,9 +264,9 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
   ctx.filter = cssFilterFor(clip, anim.blurPx);
   if (clip.blend && clip.blend !== "normal") ctx.globalCompositeOperation = clip.blend;
 
-  if (clip.kind === "text") drawText(ctx, clip, box, H);
+  if (clip.kind === "text") drawText(ctx, clip, box, W, H);
   else if (clip.kind === "shape") drawShape(ctx, clip, box, H);
-  else drawMedia(ctx, clip as MediaClip, box, H, src);
+  else drawMedia(ctx, clip as MediaClip, box, H, src, sourceTime ?? ((clip as MediaClip).trimIn + (t - clip.start) * ((clip as MediaClip).speed ?? 1)));
 
   ctx.restore();
 }
@@ -350,7 +335,9 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   return { el: cvs as CanvasImageSource, w: cw, h: ch };
 }
 
-function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: RenderSources) {
+let matteCanvas: HTMLCanvasElement | null = null;
+
+function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: RenderSources, sourceTime: number) {
   const m = mediaSource(clip, src);
   if (!m) return;
   const c = cropOf(clip);
@@ -359,6 +346,22 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
   let sy = m.h * c.top;
   let sw = m.w * (1 - c.left - c.right);
   let sh = m.h * (1 - c.top - c.bottom);
+  if (clip.kind === "video" && clip.videoMatte) {
+    const frame = videoMatteFrame(clip, sourceTime), image = src.images.get(clip.videoMatte.mediaId);
+    if (!frame || !image?.naturalWidth || image.naturalWidth !== clip.videoMatte.atlasWidth || image.naturalHeight !== clip.videoMatte.atlasHeight) return;
+    matteCanvas ??= document.createElement("canvas");
+    const scale = Math.min(1, 1920 / Math.max(sw, sh));
+    const width = Math.max(1, Math.round(sw * scale)), height = Math.max(1, Math.round(sh * scale));
+    if (matteCanvas.width !== width) matteCanvas.width = width;
+    if (matteCanvas.height !== height) matteCanvas.height = height;
+    const g = matteCanvas.getContext("2d"); if (!g) return;
+    g.setTransform(1, 0, 0, 1, 0, 0); g.filter = "none"; g.globalAlpha = 1; g.globalCompositeOperation = "copy";
+    g.drawImage(el, sx, sy, sw, sh, 0, 0, width, height);
+    g.globalCompositeOperation = "destination-in";
+    g.drawImage(image, frame.x + frame.width * c.left, frame.y + frame.height * c.top, frame.width * (1 - c.left - c.right), frame.height * (1 - c.top - c.bottom), 0, 0, width, height);
+    g.globalCompositeOperation = "source-over";
+    el = matteCanvas; sx = 0; sy = 0; sw = width; sh = height;
+  }
   if (needsGrade(clip.effects)) {
     const graded = grade(el, sx, sy, sw, sh, Math.abs(box.w), Math.abs(box.h), clip.effects!);
     if (graded) {
@@ -492,10 +495,10 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   clearShadow(ctx);
 }
 
-function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, H: number) {
-  const l = layoutText(ctx, text, H);
+function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number) {
+  const l = layoutText(ctx, text, W, H);
   ctx.font = fontFor(text, l.size);
-  setLetterSpacing(ctx, ((text.letterSpacing ?? 0) / 1080) * H);
+  setLetterSpacing(ctx, l.spacing);
   ctx.textBaseline = "middle";
   ctx.textAlign = text.align === "centre" ? "center" : text.align;
   // Local frame: origin is the box centre.
@@ -517,7 +520,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, H: number) {
   }
 
   if (text.stroke && text.stroke.width > 0) {
-    ctx.lineWidth = (text.stroke.width / 1080) * H;
+    ctx.lineWidth = (text.stroke.width / 1080) * H * l.scale;
     ctx.strokeStyle = text.stroke.color;
     ctx.lineJoin = "round";
     l.lines.forEach((ln, i) => ctx.strokeText(ln, ax, startY + i * l.lh));

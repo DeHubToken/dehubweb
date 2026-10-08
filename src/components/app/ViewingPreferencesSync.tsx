@@ -24,6 +24,7 @@ import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
 import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 import {
   PUBLIC_CHAT_ALERTS_PREF_KEY,
+  PUBLIC_CHAT_DEFAULT_ENABLED,
   PUBLIC_CHAT_DEFAULT_PER_HOUR,
   PUBLIC_CHAT_RATE_PREF_KEY,
   normalisePerHour,
@@ -93,7 +94,7 @@ function usePublicChatAlertsSync() {
   const applyEnabled = useCallback((value: unknown) => {
     writePublicChatAlerts(value === true || value === 'true');
   }, []);
-  useSyncedPreference(PUBLIC_CHAT_ALERTS_PREF_KEY, enabled, applyEnabled, false);
+  useSyncedPreference(PUBLIC_CHAT_ALERTS_PREF_KEY, enabled, applyEnabled, PUBLIC_CHAT_DEFAULT_ENABLED);
 
   const applyRate = useCallback((value: unknown) => {
     writePublicChatPerHour(normalisePerHour(value));

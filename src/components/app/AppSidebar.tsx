@@ -14,6 +14,8 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useSelfBadge } from '@/hooks/use-self-badge-balance';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
+import { useTotalUnreadCount } from '@/hooks/use-messages';
+import { usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { filterNavItems, exploreSearchHref } from './navigation/nav-search';
 import { isOnLiveFeed } from '@/lib/home-path';
@@ -48,6 +50,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const notificationCount = (unreadCount?.total ?? 0) + (customUnread ?? 0);
+  const messagesUnread = useTotalUnreadCount() + usePublicChatUnreadCount();
   const isDesktop = useIsDesktopViewport();
 
   const { t } = useTranslation();
@@ -181,6 +184,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         searching={!!menuQuery.trim()}
         currentPath={location.pathname}
         notificationCount={notificationCount}
+        messageCount={messagesUnread}
         onNavigate={closeMenu}
       />
 

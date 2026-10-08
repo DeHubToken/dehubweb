@@ -13,6 +13,7 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 import { OnlineDot } from '@/components/app/chat/OnlineDot';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { usePublicChatReading, usePublicChatUnreadCount } from '@/hooks/use-public-chat-unread';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations, useCreateConversation, useUserSearchForDM, useDeleteConversation } from '@/hooks/use-messages';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -166,12 +167,12 @@ function ConversationItem({
           )}
         </div>
         {draft ? (
-          <p className="text-sm truncate text-zinc-400">
-            <span className="text-zinc-200 font-medium">Draft: </span>
+          <p className="text-sm truncate text-white">
+            <span className="font-medium">Draft: </span>
             {draft}
           </p>
         ) : (
-          <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-zinc-200' : 'text-zinc-500'}`}>
+          <p className={`text-sm truncate text-white ${conversation.unreadCount > 0 ? 'font-bold' : 'font-normal'}`}>
             {conversation.lastMessage?.type === 'image' ? '📷 Photo' :
              conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' :
              lastMessagePreview}
@@ -223,7 +224,6 @@ export default function MessagesPage() {
   // input fired 2 network requests per KEYSTROKE (each prefix a fresh cache
   // key). Debounce to one request pair per pause in typing.
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
-  const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
 
   // Subscribe to DM realtime updates only when on messages page
@@ -419,6 +419,8 @@ export default function MessagesPage() {
   const hasVirtualSelected = selectedConversation &&
     (selectedConversation.id.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(selectedConversation.id));
   const isMessagesRouteActive = location.pathname === '/app/messages';
+  const publicUnread = usePublicChatUnreadCount();
+  usePublicChatReading(isMessagesRouteActive && showPublicChat);
 
   /*
    * Back out of a chat to the conversation LIST, not out of Messages entirely.
@@ -634,6 +636,11 @@ export default function MessagesPage() {
                 <span className="font-semibold text-white truncate block">{t('publicChat.title')}</span>
                 <p className="text-zinc-500 text-sm truncate">{t('publicChat.subtitle')}</p>
               </div>
+              {publicUnread > 0 && (
+                <span data-public-chat-unread className="min-w-5 h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center leading-none">
+                  {publicUnread > 99 ? '99+' : publicUnread}
+                </span>
+              )}
             </button>
 
             {/* Loading State */}
@@ -667,9 +674,8 @@ export default function MessagesPage() {
             {!isLoading && !isError && visibleConversations.map((conv) => (
               <ConversationItem
                 key={conv.id}
-                conversation={readConvIds.has(conv.id) ? { ...conv, unreadCount: 0 } : conv}
+                conversation={conv}
                 onClick={() => {
-                  setReadConvIds(prev => new Set(prev).add(conv.id));
                   setSelectedConversation({ ...conv, unreadCount: 0 });
                 }}
                 isSelected={selectedConversation?.id === conv.id}

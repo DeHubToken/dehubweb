@@ -1,4 +1,6 @@
+import { useVideoDownload } from "@/hooks/use-video-download";
 import { cdnImageSrcSet } from '@/lib/media-url';
+import { applyVideoVolume } from '@/lib/dub-volume';
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoOutsideFeed } from '@/lib/video-background-playback';
@@ -31,6 +33,7 @@ import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 import { useIsWatchedVideo } from '@/hooks/use-watched-videos';
+import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
 import { useSkipSegments } from '@/lib/skip-segments';
 import { useVideoSegments, segmentAt } from '@/hooks/use-video-segments';
 import { SEGMENT_LABELS } from '@/lib/api/video-segments';
@@ -68,7 +71,7 @@ import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLink
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { useTranslation as useI18n } from 'react-i18next';
-import { TranscodeRetry } from './TranscodeRetry';
+const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
 import { PostAIChatLazy } from './PostAIChatLazy';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
@@ -100,6 +103,7 @@ import { getVideoPreferences, useMediaVolume, getPlaybackRateFor, setPlaybackRat
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
+import { useAutoplayPausePrompt } from '@/hooks/use-autoplay-pause-prompt';
 import { useConnectionQuality } from '@/hooks/use-connection-quality';
 /** Lazy: nine canvas painters and a decoder, ~50 KB, for a minority post type
  *  — none of it belongs in the bytes parsed before first paint. */
@@ -145,12 +149,16 @@ import type { VideoItem } from '@/types/feed.types';
 const VideoSubtitleOverlay = lazy(() =>
   import('@/components/app/video/VideoSubtitleOverlay').then((m) => ({ default: m.VideoSubtitleOverlay })),
 );
+const DubVolumeControl = lazy(() =>
+  import('@/components/app/video/DubVolumeControl').then((m) => ({ default: m.DubVolumeControl })),
+);
 // Only shown inside the options sheet; not worth a place on the boot path.
 const DubMenuItem = lazy(() =>
   import('@/components/app/video/DubMenuItem').then((m) => ({ default: m.DubMenuItem })),
 );
-import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
-import { requestVideoPlayback } from '@/lib/video-start';
+import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy';
+import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
+import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
@@ -789,6 +797,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const { data: linkCopyCount = 0 } = usePostLinkCopyCount(video.id);
   const trackLinkCopy = useTrackPostLinkCopy();
   const { autoplayEnabled, autoplayMuted } = useAutoplay();
+  const { recordPause, cancelPause } = useAutoplayPausePrompt(video.id);
+  const autoStartedRef = useRef(false);
   // Slow-network / Data-Saver mode: suppress autoplay and video preloading so a
   // metered connection isn't spent fetching 50MB clips the user hasn't asked for.
   const { liteMode } = useConnectionQuality();
@@ -835,7 +845,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // mute in the top corner, and playback actions beside fullscreen on the
   // bottom row with play and remaining time.
   const bareControls = !video.isAudio && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl;
-  /** Hovering the mute button drops a volume slider under it. */
+  const [dubAvailable, setDubAvailable] = useState(false);
   const [volumeOpen, setVolumeOpen] = useState(false);
   const [seekIndicator, setSeekIndicator] = useState<'left' | 'right' | null>(null);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
@@ -848,6 +858,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // restart the clip (lib/video-handoff).
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const transcodingStatus = useVideoProcessingStatus(video.id, video.transcodingStatus, surfaceActive && playbackAllowed, containerRef);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const scrubbingRef = useRef(false);
   const isHoveringRef = useRef(false);
@@ -930,25 +941,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     setShowQuoteModal(true);
   }, [walletAddress, openLoginModal]);
 
-  const handleDownloadVideo = useCallback(async () => {
-    if (!video.videoUrl) return;
-    toast.loading('Preparing download...', { id: 'video-download' });
-    try {
-      const response = await fetch(video.videoUrl);
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${video.title || video.id || 'video'}.mp4`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      toast.success('Download started', { id: 'video-download' });
-    } catch {
-      toast.error('Download failed', { id: 'video-download' });
-    }
-  }, [video.videoUrl, video.title, video.id]);
 
   const videoAsNFT = {
     tokenId: parseInt(video.id, 10) || 0,
@@ -967,6 +959,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Pause callback for the playback manager
   const pauseVideo = useCallback(() => {
     if (isVideoInPictureInPicture(videoRef.current) && !visualActivity.isCallBusy()) return;
+    cancelVideoPlayback(videoRef.current);
     videoRef.current?.pause();
     isPlayingRef.current = false;
     setIsPlaying(false);
@@ -975,6 +968,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Keep refs in sync for autoplay-related values
   const autoplayEnabledRef = useRef(autoplayEnabled);
   autoplayEnabledRef.current = autoplayEnabled;
+  useEffect(() => {
+    if (autoplayEnabled || !autoStartedRef.current) return;
+    pauseVideo();
+    videoPlaybackManager.stop(instanceId);
+  }, [autoplayEnabled, pauseVideo, instanceId]);
   const autoplayMutedRef = useRef(autoplayMuted);
   autoplayMutedRef.current = autoplayMuted;
   const liteModeRef = useRef(liteMode);
@@ -1049,7 +1047,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Transcode still running or dead — videoUrl is the optimistic CDN guess
   // written at upload time, and the file doesn't exist yet (or ever) until
   // this clears. Autoplay/tap-to-play must not attempt it.
-  const isVideoNotReady = video.transcodingStatus === 'pending' || video.transcodingStatus === 'on' || video.transcodingStatus === 'failed';
+  const isVideoNotReady = transcodingStatus === 'pending' || transcodingStatus === 'on' || transcodingStatus === 'failed';
 
   // Register with playback manager and setup IntersectionObserver (stable — no isPlaying dep)
   useEffect(() => {
@@ -1094,11 +1092,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
               setIsLoading(true);
-              vid.play().then(() => {
+              autoStartedRef.current = true;
+              requestVideoPlayback(vid).then(() => {
                 // Scroll-away race: if the card left the viewport while play() was
                 // pending, the pause branch above was skipped (isPlayingRef was
                 // still false), so bail here to avoid playing/holding audio off-screen.
-                if (((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
+                if ((!autoplayEnabledRef.current && autoStartedRef.current) || vid.dataset.userPaused === 'true' || ((!playbackAllowedRef.current || !visualActivity.isFeedPlaybackAllowed()) && !isVideoInPictureInPicture(vid)) || (!isIntersectingRef.current && !isVideoOutsideFeed(vid))) {
                   vid.pause();
                   videoPlaybackManager.stop(instanceId);
                   setIsLoading(false);
@@ -1207,6 +1206,26 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Folded into isContentGated so the warning gets the behaviour a locked post
   // already has: no autoplay, no controls, no poster fallback painted over it.
   const isContentGated = isPPVLocked || isBountyLocked || isHoldingsLocked || isSubGated || matureGate.isGated;
+  const downloadVideo = useVideoDownload();
+  const handleDownloadVideo = useCallback(async () => {
+    if (isContentGated || !video.videoUrl) return;
+    setShowOptionsDrawer(false);
+    if (!video.isAudio) {
+      videoRef.current?.pause();
+      await downloadVideo({ url: video.videoUrl, title: video.title || String(video.id), username: video.creatorUsername });
+      return;
+    }
+    try {
+      const response = await fetch(video.videoUrl);
+      if (!response.ok) throw new Error("Audio download failed");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = (video.title || String(video.id)) + (blob.type.includes("mpeg") ? ".mp3" : blob.type.includes("wav") ? ".wav" : blob.type.includes("ogg") ? ".ogg" : ".m4a"); a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    } catch { toast.error(t("editor.export.failed")); }
+  }, [isContentGated, video.videoUrl, video.isAudio, video.title, video.id, video.creatorUsername, downloadVideo, t]);
+
 
 
   // The corner player took an audio post's track, or gave it back with this
@@ -1249,7 +1268,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (!video.videoUrl || isContentGated || isVideoNotReady) return;
 
     if (isPlaying) {
+      if (autoStartedRef.current && !isImmersive) recordPause();
       if (videoRef.current) videoRef.current.dataset.userPaused = 'true';
+      cancelVideoPlayback(videoRef.current);
       videoRef.current?.pause();
       isPlayingRef.current = false;
       setIsPlaying(false);
@@ -1258,6 +1279,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       videoPlaybackManager.stop(instanceId);
       showControlsBriefly();
     } else {
+      cancelPause();
+      autoStartedRef.current = false;
       // A tap means this card: take the element back if another copy of
       // the post is holding it.
       if (!videoRef.current) takeVideoRef.current();
@@ -1298,7 +1321,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         videoPlaybackManager.stop(instanceId);
       });
     }
-  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady]);
+  }, [isPlaying, video.videoUrl, video.isAudio, video.id, instanceId, showControlsBriefly, isContentGated, isVideoNotReady, isImmersive, recordPause, cancelPause]);
 
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1368,7 +1391,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const setVolumeTo = useCallback((next: number) => {
     const newVolume = Math.max(0, Math.min(1, next));
     vpSetVolume(newVolume);
-    if (videoRef.current) videoRef.current.volume = newVolume;
+    if (videoRef.current) applyVideoVolume(videoRef.current, newVolume);
     const shouldMute = newVolume === 0;
     if (shouldMute !== isMuted) {
       setIsMuted(shouldMute);
@@ -1414,7 +1437,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // adjustment, so a viewer who had turned a video down got full volume back on
   // the next one. Apply it whenever this card owns the shared <video>.
   useEffect(() => {
-    if (videoRef.current) videoRef.current.volume = volume;
+    if (videoRef.current) applyVideoVolume(videoRef.current, volume);
   }, [volume, isPlaying, mediaAttached]);
 
   const seekBy = useCallback((seconds: number) => {
@@ -1470,7 +1493,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     // Ads always loop — never stop
     if ((video.isAd || isLooping) && videoRef.current) {
       videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
+      requestVideoPlayback(videoRef.current).catch(() => {});
       return;
     }
     isPlayingRef.current = false;
@@ -1515,10 +1538,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [video.creatorId]);
 
   const handleVideoError = useCallback(() => {
-    console.error('Video error:', video.videoUrl, videoRef.current?.error?.message || 'Unknown error');
-    setIsLoading(false);
-    setHasError(true);
-    setIsPlaying(false);
+    // The recovery controller owns terminal errors and the retry budget.
   }, [video.videoUrl]);
 
   // ── Sponsor / intro skipping ──────────────────────────────────────────────
@@ -1618,7 +1638,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const { attachSlot: attachVideoSlot, isActive: ownsVideoElement, takeOver: takeVideoElement } = useHandoffVideo({
     videoRef,
     handoffKey: video.id,
-    src: mediaAttached ? video.videoUrl : undefined,
+    src: mediaAttached && !isVideoNotReady ? video.videoUrl : undefined,
     poster: thumbnail || undefined,
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
@@ -1656,6 +1676,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [ownsVideoElement, instanceId]);
 
   takeVideoRef.current = takeVideoElement;
+  const playbackPhase = usePlaybackRecovery(videoRef, video.videoUrl, ownsVideoElement, {
+    component: 'VideoCard', postId: video.id,
+    allowed: () => !!videoRef.current && videoRef.current.dataset.userPaused !== 'true' &&
+      !visualActivity.isCallBusy() && ((playbackAllowedRef.current && surfaceActiveRef.current &&
+        (isIntersectingRef.current || isVideoOutsideFeed(videoRef.current)) && isRendered(containerRef.current)) || isVideoInPictureInPicture(videoRef.current)),
+  });
+  useEffect(() => {
+    setHasError(playbackPhase === 'failed');
+    setIsLoading(playbackPhase === 'loading' || playbackPhase === 'retrying');
+    if (playbackPhase === 'failed' || playbackPhase === 'blocked') {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+      videoPlaybackManager.stop(instanceId);
+    }
+  }, [playbackPhase, instanceId]);
 
   // Play state follows the element itself while this card holds it, and is
   // off while it doesn't. The element changes hands and gets paused or resumed
@@ -2063,7 +2098,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           isHoveringRef.current = false;
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
           setShowControls(false);
-          setVolumeOpen(false);
+          if (!dubAvailable) setVolumeOpen(false);
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -2267,7 +2302,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   </Suspense>
                 </div>
               </div>
-            ) : video.transcodingStatus === 'failed' ? (
+            ) : transcodingStatus === 'failed' ? (
               /* Transcode job failed server-side — videoUrl was written
                  optimistically at upload time and the file was never actually
                  produced, so a player here would just 404 forever. */
@@ -2276,10 +2311,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt="" className="w-full h-full object-cover opacity-50" loading={aboveFold ? 'eager' : 'lazy'} />
                 )}
                 <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
-                  <TranscodeRetry tokenId={video.id} isOwner={isOwnPost} />
+                  <Suspense fallback={<span className="text-white/80 text-xs">{t('videoPlayer.processingFailed')}</span>}>
+                    <TranscodeRetry tokenId={video.id} isOwner={isOwnPost} />
+                  </Suspense>
                 </div>
               </div>
-            ) : (video.transcodingStatus === 'pending' || video.transcodingStatus === 'on') ? (
+            ) : (transcodingStatus === 'pending' || transcodingStatus === 'on') ? (
               /* Still transcoding — same optimistic videoUrl, but recoverable
                  once the job finishes, unlike the 'failed' branch above. */
               <div className="absolute inset-0 overflow-hidden bg-black">
@@ -2402,6 +2439,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
               buttonVisible={controlsVisible}
               onMenuOpenChange={setSubsMenuOpen}
+              onDubAvailableChange={setDubAvailable}
             />
           </Suspense>
         )}
@@ -2418,7 +2456,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <button
             data-video-controls data-video-bare data-video-center
             data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
+            aria-label={hasError ? t('common.retry') : isPlaying ? 'Pause' : 'Play'}
             onPointerDown={(event) => event.stopPropagation()}
             onPointerUp={(event) => event.stopPropagation()}
             onTouchStart={(event) => event.stopPropagation()}
@@ -2426,7 +2464,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             onClick={(event) => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}
             className="absolute left-1/2 top-1/2 z-20 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-transparent text-white"
           >
-            <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} />
+            {hasError ? <span className="rounded-full bg-black/70 px-4 py-2 text-sm">{t('common.retry')}</span> : <MediaControlIcon icon={isPlaying ? Pause : Play} size={32} />}
           </button>
         )}
 
@@ -2447,7 +2485,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
                 travels from the button to the slider. */}
-            <div
+            {dubAvailable ? (
+              <Suspense fallback={<span className="h-8 w-8" />}>
+              <DubVolumeControl open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
+                onToggleMute={(event) => { if (volume === 0) setVolumeTo(0.8); else toggleMute(event); }}
+                onUnmute={() => { if (isMuted || volume === 0) setVolumeTo(volume || 0.8); }} />
+              </Suspense>
+            ) : <div
               className="relative"
               onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
               onPointerLeave={() => setVolumeOpen(false)}
@@ -2494,7 +2538,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   </div>
                 </div>
               )}
-            </div>
+            </div>}
 
           </div>
         )}

@@ -1,0 +1,26 @@
+/* Metadata needs the same contrast as body text on dark and glass surfaces.
+   Match complete utility tokens, so semantic colours and hover variants keep
+   their meaning. Light pages and document paper retain their own dark ink. */
+html:not([data-theme='light']) body
+  :is(
+    .text-zinc-300, .text-zinc-400, .text-zinc-500, .text-zinc-600,
+    .text-gray-300, .text-gray-400, .text-gray-500, .text-gray-600,
+    .text-neutral-300, .text-neutral-400, .text-neutral-500, .text-neutral-600,
+    .text-slate-300, .text-slate-400, .text-slate-500, .text-slate-600,
+    .text-muted-foreground,
+    [class~='text-white/30'], [class~='text-white/40'], [class~='text-white/50'],
+    [class~='text-white/60'], [class~='text-white/70']
+  ):not(:where(.docs-root *, [data-keep-white], [data-keep-white] *, [class*='hover:text-']:hover)):not(#_):not(#_) {
+  color: #fff !important;
+}
+
+html:not([data-theme='light']) body
+  :is(input, textarea):not(:where(.docs-root *, [data-keep-white] *)):not(#_):not(#_)::placeholder {
+  color: #fff !important;
+  opacity: 1;
+}
+
+/* Chart axes use SVG fill rather than CSS text colour. */
+html:not([data-theme='light']) body .recharts-cartesian-axis-tick-value {
+  fill: #fff !important;
+}

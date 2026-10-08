@@ -1,3 +1,5 @@
+import { videoMatteCommand } from "./videoMatte";
+import { generationChatRequest, generationDraft, type GenerationDraft } from "./generationDraft";
 /**
  * Editor agent — client half.
  * ===========================
@@ -158,8 +160,13 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
 export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): Promise<AgentResult> {
   const scene = describeScene();
   const last = messages[messages.length - 1];
-  const direct = last?.role === "user" ? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) : null;
+  const direct = last?.role === "user" ? generationChatRequest(last.content) ?? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) ?? videoMatteCommand(last.content, scene) : null;
   if (direct) return { reply: "", ops: [direct] };
+  return askSceneAgent(messages, scene, signal);
+}
+
+/** Use the configured text planner with an explicitly bounded scene. */
+export async function askSceneAgent(messages: AgentMessage[], scene: unknown, signal?: AbortSignal): Promise<AgentResult> {
   const res = await fetch(FN_URL, {
     method: "POST",
     headers: {
@@ -330,8 +337,8 @@ export interface ApplyReport {
   failed: number;
   /** A stock search the agent asked for that found nothing. */
   missingStock: string[];
-  /** The agent prepared a paid generation for the user to confirm. */
-  generate?: { kind: "image" | "video"; prompt: string };
+  /** Prepared for review in the Generate panel; no model has run. */
+  generate?: GenerationDraft;
 }
 
 /** Carry out the agent's operations as one undo step. */
@@ -375,7 +382,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       for (const edit of expanded) {
         try {
           const ok = await applyOne(edit);
-          if (ok) report.applied++;
+          if (ok) { if (edit.op !== "generate") report.applied++; }
           else report.failed++;
         } catch (e) {
           console.warn("[editor-agent] op failed", edit, e);
@@ -662,16 +669,13 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       }
       case "remove_background": {
         const clip = find(op.id);
-        if (!clip || clip.kind !== "image") return false;
+        if (!clip || (clip.kind !== "image" && clip.kind !== "video")) return false;
         return await useBgRemovalStore.getState().run(clip.id, ctx.wallet);
       }
       case "generate": {
-        const prompt = str(op.prompt);
-        if (!prompt) return false;
-        const kind = op.kind === "video" ? "video" : "image";
-        const aspect = s.settings.aspectPreset !== "custom" ? s.settings.aspectPreset : undefined;
-        useEditorUiStore.getState().setGeneratePrefill({ kind, prompt, aspect });
-        report.generate = { kind, prompt };
+        const draft = generationDraft(op, s.settings.aspectPreset);
+        if (!draft) return false;
+        report.generate = draft;
         return true;
       }
       default:

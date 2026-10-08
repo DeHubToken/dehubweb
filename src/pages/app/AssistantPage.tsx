@@ -1,3 +1,4 @@
+import { useVideoDownload } from "@/hooks/use-video-download";
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * AI Assistant Page
@@ -640,6 +641,7 @@ export default function AssistantPage() {
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress, user } = useAuth();
+  const downloadVideo = useVideoDownload();
   // Read once for the header badge. The drawer runs the same query, so opening
   // it costs no second request — and the badge is the point: somebody with an
   // open ticket should see that without clicking anything.
@@ -2455,11 +2457,9 @@ export default function AssistantPage() {
                           {/* Action buttons */}
                           <div className="absolute bottom-12 right-3 flex items-center gap-2">
                             {/* Download button */}
-                            <a
-                              href={message.videoUrl}
-                              download="dehub-video.mp4"
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              onClick={() => { if (message.videoUrl) void downloadVideo({ url: message.videoUrl, title: "dehub-video", username: user?.username }); }}
+                              aria-label={t("postOptions.download")}
                               className="flex items-center justify-center w-10 h-10 rounded-xl text-white transition-all duration-300 hover:scale-110 active:scale-95
                                 bg-gradient-to-br from-white/25 via-white/15 to-white/5
                                 backdrop-blur-xl border border-white/30
@@ -2468,7 +2468,7 @@ export default function AssistantPage() {
                                 hover:border-blue-400/50 hover:from-blue-500/30 hover:via-blue-400/15 hover:to-transparent"
                             >
                               <Download className="w-5 h-5" />
-                            </a>
+                            </button>
                             {/* Post button */}
                             <button
                               onClick={() => handlePostVideo(message.videoUrl!)}

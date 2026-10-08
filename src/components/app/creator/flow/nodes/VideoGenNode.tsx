@@ -1,3 +1,5 @@
+import { useVideoDownload } from "@/hooks/use-video-download";
+import { useAuth } from "@/contexts/AuthContext";
 /**
  * Creator Flow — video generator node.
  * ====================================
@@ -50,6 +52,8 @@ const handleTop = (i: number) => `calc(50% + ${(i - (IN_HANDLES.length - 1) / 2)
 
 export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>) {
   const { t } = useTranslation();
+  const downloadVideo = useVideoDownload();
+  const { user } = useAuth();
   const { runNodes, readOnly } = useFlowActions();
   const updateNodeData = useCreatorFlowStore((s) => s.updateNodeData);
   const onNodesChange = useCreatorFlowStore((s) => s.onNodesChange);
@@ -138,19 +142,7 @@ export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>
   };
 
   const download = async () => {
-    if (!shownUrl) return;
-    try {
-      const res = await fetch(shownUrl);
-      const blob = await res.blob();
-      const href = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = href;
-      a.download = `dehub-flow-${id}.mp4`;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(href), 30_000);
-    } catch {
-      window.open(shownUrl, '_blank', 'noopener');
-    }
+    if (shownUrl) await downloadVideo({ url: shownUrl, title: "dehub-flow-" + id, username: user?.username });
   };
 
   const durationOptions: number[] = cfg?.allowedDurations?.length
@@ -193,7 +185,7 @@ export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>
           <div className="flex h-full min-h-[140px] w-full flex-col items-center justify-center gap-2 text-white/35">
             {busy ? <Loader2 size={18} className="animate-spin text-white/70" /> : <Clapperboard size={18} />}
             <span className="max-w-[80%] text-center text-[11px] leading-snug">
-              {busy ? (data.pipelineQueued ? t('creatorFlow.queued') : t('creatorFlow.renderingVideo')) : shownError ?? t('creatorFlow.videoGenEmpty')}
+              {busy ? (data.pipelineQueued ? t('creatorFlow.queued') : t('creatorFlow.renderingVideo')) : shownError?.replace(/\bDHB\b/g, t('buyCoins.tokensUnit')) ?? t('creatorFlow.videoGenEmpty')}
             </span>
           </div>
         )}

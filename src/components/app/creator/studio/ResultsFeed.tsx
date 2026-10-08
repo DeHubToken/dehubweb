@@ -1,3 +1,5 @@
+import { useVideoDownload } from "@/hooks/use-video-download";
+import { useAuth } from "@/contexts/AuthContext";
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Results feed and viewer.
@@ -253,7 +255,7 @@ const ResultCard = memo(function ResultCard({ job, onOpen }: { job: GenerationJo
           {t(job.status === 'cancelled' ? 'creator.cancelled' : 'creator.failed')}
         </span>
         <span className="line-clamp-2 text-[10px] leading-snug text-white/55">
-          {job.error || t('creator.somethingWentWrong')}
+          {job.error?.replace(/\bDHB\b/g, t('buyCoins.tokensUnit')) || t('creator.somethingWentWrong')}
         </span>
       </button>
     );
@@ -362,6 +364,8 @@ function ResultViewer({
   onOpenEditor,
 }: ResultViewerProps) {
   const { t } = useTranslation();
+  const downloadVideo = useVideoDownload();
+  const { user } = useAuth();
   const remove = useGenerationStore((s) => s.remove);
   const retry = useGenerationStore((s) => s.retry);
   const [sending, setSending] = useState(false);
@@ -441,6 +445,10 @@ function ResultViewer({
       return;
     }
     if (!job.url) return;
+    if (job.kind === "video") {
+      await downloadVideo({ url: job.url, title: "dehub-video-" + job.id, username: user?.username });
+      return;
+    }
     const filename = `dehub-${job.kind}-${job.id}.${extensionFor(job)}`;
     let href = job.url;
     let objectUrl: string | null = null;
@@ -462,7 +470,7 @@ function ResultViewer({
     a.click();
     a.remove();
     if (objectUrl) setTimeout(() => URL.revokeObjectURL(objectUrl!), 30_000);
-  }, [job]);
+  }, [job, downloadVideo, user?.username]);
 
   const failed = job.status === 'failed' || job.status === 'cancelled';
 
@@ -491,7 +499,7 @@ function ResultViewer({
                 {t(job.status === 'cancelled' ? 'creator.youCancelledRun' : 'creator.runFailed')}
               </p>
               <p className="mx-auto mt-1 max-w-sm text-[13px] leading-relaxed text-white/45">
-                {job.error || t('creator.noFurtherDetail')}
+                {job.error?.replace(/\bDHB\b/g, t('buyCoins.tokensUnit')) || t('creator.noFurtherDetail')}
               </p>
             </div>
           ) : job.kind === 'video' ? (

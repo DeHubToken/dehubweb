@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { clipBoxForSize, placementPatch, pointInBox } from "./render";
+import { describe, expect, it, vi } from "vitest";
+import { videoMattePlan } from "./videoMatte";
+import { clipBoxForSize, drawClip, placementPatch, pointInBox } from "./render";
 import type { MediaClip, TextClip } from "./types";
 
 const image = (patch: Partial<MediaClip> = {}): MediaClip => ({
@@ -8,6 +9,29 @@ const image = (patch: Partial<MediaClip> = {}): MediaClip => ({
 
 // Geometry for media never touches the context, so a stub is enough.
 const ctx = {} as CanvasRenderingContext2D;
+
+it("composites the source-clock mask with the same crop as the original before grading", () => {
+  const video = { videoWidth: 640, videoHeight: 360 } as HTMLVideoElement;
+  const base: MediaClip = { id: "video", mediaId: "source", trackId: "v", kind: "video", start: 5, trimIn: 2, duration: 2, speed: 2, crop: { left: 0.25, right: 0, top: 0, bottom: 0 } };
+  const matte = { ...videoMattePlan(base, 640, 360, 10, 30), mediaId: "mask" };
+  const image = { naturalWidth: matte.atlasWidth, naturalHeight: matte.atlasHeight } as HTMLImageElement;
+  const calls: { mode: string; args: unknown[] }[] = [];
+  const maskContext = { globalCompositeOperation: "", setTransform() {}, drawImage(...args: unknown[]) { calls.push({ mode: this.globalCompositeOperation, args }); } };
+  const get = vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(maskContext as never);
+  const draw = vi.fn();
+  const target = { globalAlpha: 1, save() {}, restore() {}, translate() {}, rotate() {}, scale() {}, drawImage: draw } as unknown as CanvasRenderingContext2D;
+  try {
+    drawClip(target, 640, 360, { ...base, videoMatte: matte }, 5.5, { videos: new Map([["source", video]]), images: new Map([["mask", image]]) });
+    expect(calls[0].mode).toBe("copy"); expect(calls[0].args.slice(1, 5)).toEqual([160, 0, 480, 360]);
+    expect(calls[1].mode).toBe("destination-in");
+    const index = 30, x = (index % matte.columns) * matte.width, y = Math.floor(index / matte.columns) * matte.height;
+    expect(calls[1].args.slice(1, 5)).toEqual([x + matte.width * 0.25, y, matte.width * 0.75, matte.height]);
+    expect(draw).toHaveBeenCalledOnce();
+    draw.mockClear();
+    drawClip(target, 640, 360, { ...base, videoMatte: matte }, 5.5, { videos: new Map([["source", video]]), images: new Map() });
+    expect(draw).not.toHaveBeenCalled();
+  } finally { get.mockRestore(); }
+});
 
 describe("clipBoxForSize", () => {
   it("fits a landscape photo inside a square page by default", () => {
@@ -69,4 +93,25 @@ describe("freehand path", () => {
       transform: { x: 0.5, y: 0.5, scale: 1, rotation: 0 } } as const;
     expect(clipBoxForSize(ctx, path, 1000, 1000, null)).toMatchObject({ w: 200, h: 100 });
   });
+});
+
+it("draws the same fitted paragraph measured by selection geometry", () => {
+  const drawn: string[] = [];
+  const context = {
+    font: "", globalAlpha: 1,
+    save() {}, restore() {}, translate() {}, rotate() {}, scale() {},
+    measureText(line: string) { return { width: Array.from(line).length * Number(/([\d.]+)px/.exec(this.font)?.[1] ?? 0) * 0.56 }; },
+    fillText(line: string) { drawn.push(line); },
+  } as unknown as CanvasRenderingContext2D;
+  const clip: TextClip = { id: "caption", trackId: "t", kind: "text", trimIn: 0, start: 0, duration: 4,
+    text: "Keep one copy on a separate drive so a mistake cannot destroy your originals.",
+    fontFamily: "sans-serif", fontSize: 64, fontWeight: 800, color: "#fff", align: "centre", x: 0.5, y: 0.84, maxWidth: 0.9, maxHeight: 0.28 };
+  const box = clipBoxForSize(context, clip, 360, 640, null)!;
+  drawClip(context, 360, 640, clip, 1, { videos: new Map(), images: new Map() });
+  expect(drawn.length).toBeGreaterThan(1);
+  expect(drawn.join(" ")).toBe(clip.text);
+  expect(box.w).toBeLessThanOrEqual(324.02);
+  expect(box.h).toBeLessThanOrEqual(179.22);
+  expect(box.cx - box.w / 2).toBeGreaterThan(0);
+  expect(box.cy + box.h / 2).toBeLessThan(640);
 });

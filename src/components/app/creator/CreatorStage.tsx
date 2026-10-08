@@ -108,7 +108,7 @@ export function CreatorHeroWall() {
 /** Cheapest run of each medium, in DHB at the display peg. */
 function useStartingPrices() {
   return useMemo(() => {
-    const toDhb = (usd: number) => usd / DHB_USD_PEG;
+    const toDhb = (usd: number) => Math.ceil(usd / DHB_USD_PEG);
     const image = Math.min(...Object.values(IMAGE_MODELS).map((m) => getImageCostUsd(m)));
     const video = Math.min(...Object.values(VIDEO_MODELS).map((m) => getVideoCostUsd(m, m.minDuration)));
     const model3d = Math.min(...Object.values(MODEL3D_MODELS).map((m) => getModel3dCostUsd(m, 'none')));

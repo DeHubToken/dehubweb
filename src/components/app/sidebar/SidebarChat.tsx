@@ -16,6 +16,7 @@ import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence, type Supaba
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePublicChatReading } from '@/hooks/use-public-chat-unread';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -153,6 +154,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
   const originalSignal = 0;
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  usePublicChatReading(isActive, scrollContainerRef);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();

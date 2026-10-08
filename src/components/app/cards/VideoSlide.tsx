@@ -7,12 +7,14 @@
  * @module components/app/cards/VideoSlide
  */
 
-import { useRef, useEffect, useState, useCallback, memo } from 'react';
+import { useRef, useEffect, useState, useCallback, memo, lazy, Suspense } from 'react';
 import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
+import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
+import { requestVideoPlayback } from '@/lib/video-start';
 import { visualActivity } from '@/lib/visual-activity';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
-import { ShortsPhotoPager } from './ShortsPhotoPager';
+const ShortsPhotoPager = lazy(() => import('./ShortsPhotoPager').then(m => ({ default: m.ShortsPhotoPager })));
 import { createPortal } from 'react-dom';
 import { Play, Pause, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -22,7 +24,8 @@ import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
-import { TranscodeRetry } from '@/components/app/cards/TranscodeRetry';
+const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
+import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -95,6 +98,7 @@ export const VideoSlide = memo(function VideoSlide({
   const videoRef = useRef<HTMLVideoElement>(null);
   const inPiP = usePictureInPicture(videoRef);
   const isActive = (activeSlide && playbackAllowed) || (inPiP && !visualActivity.isCallBusy());
+  const transcodingStatus = useVideoProcessingStatus(short.id, short.transcodingStatus, isActive);
   // Native media play requests may settle after React has already advanced the
   // carousel. Keep the latest ownership state available to those callbacks so
   // a slide that has left the active position can never restart itself.
@@ -112,7 +116,10 @@ export const VideoSlide = memo(function VideoSlide({
   const thumbnail = useResolvedThumbnail(short.thumbnail);
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
   const [isVideoReady, setIsVideoReady] = useState(false);
-  const [soundtrackError, setSoundtrackError] = useState(false);
+  const playbackPhase = usePlaybackRecovery(videoRef, short.soundtrackUrl || short.videoUrl, isActive, {
+    component: 'ShortsViewer', postId: short.id,
+    allowed: () => isActiveRef.current && !visualActivity.isCallBusy(),
+  });
   const [progress, setProgress] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -185,9 +192,7 @@ export const VideoSlide = memo(function VideoSlide({
         if (video.currentTime === 0 || video.ended) {
           video.currentTime = 0;
         }
-        video.play().then(() => setSoundtrackError(false)).catch(() => {
-          if (isActiveRef.current && short.soundtrackUrl) setSoundtrackError(true);
-        });
+        void requestVideoPlayback(video).catch(() => {});
       }, 50); // 50ms delay for buttery smooth landing
       
       return () => {
@@ -199,7 +204,7 @@ export const VideoSlide = memo(function VideoSlide({
     } else {
       video.pause();
     }
-  }, [isActive]);
+  }, [isActive, transcodingStatus]);
 
   const handlePlay = useCallback(() => {
     // Safari can complete an older play() request after pause(). Treat React's
@@ -432,8 +437,12 @@ export const VideoSlide = memo(function VideoSlide({
           for centre-double-tap fullscreen; fullscreen kept its button and gave
           the gesture up, because one gesture cannot mean two things. */}
       <div className="absolute inset-0 z-[2]" {...tapGestures}>
-        {short.imageUrls?.length ? <ShortsPhotoPager images={short.imageUrls} /> : null}
-        {short.transcodingStatus === 'failed' ? (
+        {short.imageUrls?.length ? (
+          <Suspense fallback={<img src={short.imageUrls[0]} alt="" className="w-full h-full object-contain" />}>
+            <ShortsPhotoPager images={short.imageUrls} />
+          </Suspense>
+        ) : null}
+        {transcodingStatus === 'failed' ? (
           /* Transcode job failed server-side — videoUrl was written
              optimistically at upload time and the file was never actually
              produced, so a player here would just sit on a dead src. */
@@ -445,10 +454,12 @@ export const VideoSlide = memo(function VideoSlide({
               {/* Retry is offered on the post itself, not here: a slide in the
                   carousel carries no ownership, and the creator reaching their
                   own broken short does so through their profile. */}
-              <TranscodeRetry tokenId={short.id} isOwner={false} />
+              <Suspense fallback={<span className="text-white/80 text-xs">{t('videoPlayer.processingFailed')}</span>}>
+                <TranscodeRetry tokenId={short.id} isOwner={false} />
+              </Suspense>
             </div>
           </div>
-        ) : short.transcodingStatus === 'pending' || short.transcodingStatus === 'on' ? (
+        ) : transcodingStatus === 'pending' || transcodingStatus === 'on' ? (
           /* Still transcoding — same optimistic videoUrl, but recoverable
              once the job finishes, unlike the 'failed' branch above. */
           <div className="relative w-full h-full bg-zinc-900">
@@ -481,7 +492,6 @@ export const VideoSlide = memo(function VideoSlide({
             onLoadedMetadata={handleLoadedMetadata}
             onCanPlay={handleCanPlay}
             onPlay={handlePlay}
-            onError={() => { if (short.soundtrackUrl) setSoundtrackError(true); }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-zinc-900">
@@ -494,16 +504,18 @@ export const VideoSlide = memo(function VideoSlide({
         )}
       </div>
 
-      {short.soundtrackUrl && soundtrackError && isActive && <button type="button"
+      {(playbackPhase === 'failed' || playbackPhase === 'blocked') && isActive && <button type="button"
         className="absolute top-32 left-1/2 -translate-x-1/2 z-20 min-h-11 rounded-full bg-black/70 px-4 text-white"
         onPointerDown={event => event.stopPropagation()}
         onClick={event => {
           event.stopPropagation();
           const media = videoRef.current;
           if (!media) return;
-          if (media.error) media.load();
-          media.play().then(() => setSoundtrackError(false)).catch(() => setSoundtrackError(true));
-        }}>{t('explorePage.retry')} · {t('feed.music')}</button>}
+          void requestVideoPlayback(media).catch(() => {});
+        }}>{playbackPhase === 'blocked' ? t('audioPost.play') : t('explorePage.retry')}</button>}
+
+      {(playbackPhase === 'loading' || playbackPhase === 'retrying') && isActive &&
+        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none"><Loader2 className="w-8 h-8 text-white animate-spin" /></div>}
 
       {/* The fullscreen toggle used to live here, and it showed: a slide is
           translated by the carousel, so the button slid along with the video on

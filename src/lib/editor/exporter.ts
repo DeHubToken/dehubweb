@@ -1,3 +1,6 @@
+import { exportFilename } from "./exportName";
+import { waitForVideoFrame } from "./videoFrame";
+import { assertVideoMattes } from "./videoMatte";
 /**
  * Video export pipeline using WebCodecs + mp4-muxer / webm-muxer.
  * Renders each timeline frame to an OffscreenCanvas, encodes video via VideoEncoder,
@@ -5,6 +8,7 @@
  *
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
+import { stampEnding } from "./endingFile";
 import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
@@ -167,18 +171,6 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
   return { videos, images, audioBuffers };
 }
 
-/** Seek a video element to a specific time and wait for the frame to be ready. */
-function seekVideo(v: HTMLVideoElement, t: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const target = Math.max(0, Math.min(Number.isFinite(v.duration) ? v.duration - 0.001 : t, t));
-    if (Math.abs(v.currentTime - target) < 0.0005 && v.readyState >= 2) { resolve(); return; }
-    const timer = setTimeout(() => { v.removeEventListener("seeked", handler); reject(new Error("Video frame did not load")); }, 5000);
-    const handler = () => { clearTimeout(timer); v.removeEventListener("seeked", handler); resolve(); };
-    v.addEventListener("seeked", handler);
-    try { v.currentTime = target; } catch (error) { clearTimeout(timer); v.removeEventListener("seeked", handler); reject(error); }
-  });
-}
-
 /** Render the audio mixdown to a stereo AudioBuffer at 48 kHz. */
 async function renderAudioMix(
   snapshot: ProjectSnapshot,
@@ -266,11 +258,14 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const totalFrames = Math.ceil(duration * fps);
   onProgress?.(0, "Loading media…");
   const used = new Set(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden && "mediaId" in c).map(c => (c as MediaClip).mediaId));
+  for (const c of clips) if (c.kind === "video" && c.videoMatte) used.add(c.videoMatte.mediaId);
+  assertVideoMattes(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden), (id, width, height) => media.some(m => m.id === id && m.width === width && m.height === height));
   const { videos, images, audioBuffers } = await loadSources(media.filter(m => used.has(m.id)), true, signal);
   let videoEncoder: VideoEncoder | undefined;
   let audioEncoder: AudioEncoder | undefined;
   let encoderFailure: Error | undefined;
   try {
+  assertVideoMattes(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden), (id, width, height) => images.get(id)?.naturalWidth === width && images.get(id)?.naturalHeight === height);
   const artwork = await loadBrandOutroArtwork();
   const logo = artwork.logo;
   checkAbort(signal);
@@ -374,7 +369,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         if (v) {
           const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
           const localT = op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
-          await seekVideo(v, localT);
+          await waitForVideoFrame(v, localT, { signal });
         }
       }
       // Draw before seeking another cut that may share this decoder.
@@ -386,7 +381,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         ctx.clip();
       }
       ctx.globalAlpha = op.alpha;
-      drawClip(ctx, width, height, op.clip, t, { videos, images });
+      drawClip(ctx, width, height, op.clip, t, { videos, images }, op.localTimeOverride);
       ctx.restore();
     }
 
@@ -461,9 +456,8 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   muxer.finalize();
 
   const mime = format === "mp4" ? "video/mp4" : "video/webm";
-  const blob = new Blob([muxer.target.buffer], { type: mime });
-  const safeTitle = (snapshot.title || "video").replace(/[^\w-]+/g, "_");
-  const filename = `${safeTitle}.${format}`;
+  const blob = stampEnding(new Blob([muxer.target.buffer], { type: mime }), contentDuration, format === "mp4" ? "mp4" : "webm");
+  const filename = exportFilename(snapshot.title, format);
   onProgress?.(1, "Done");
   return { blob, filename };
   } finally {
@@ -488,10 +482,13 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   const visual = (id: string) => { const tr = tracks.find(t => t.id === id); return !!tr && !tr.hidden && tr.kind !== "audio"; };
   const ids = new Set(clips.filter(c => !c.hidden && visual(c.trackId) && c.kind !== "audio" && "mediaId" in c).map(c => (c as MediaClip).mediaId));
   onProgress?.(0, "Loading media…");
+  for (const c of clips) if (c.kind === "video" && c.videoMatte) ids.add(c.videoMatte.mediaId);
+  assertVideoMattes(clips.filter(c => !c.hidden && visual(c.trackId)), (id, width, height) => opts.media.some(m => m.id === id && m.width === width && m.height === height));
   const { videos, images } = await loadSources(opts.media.filter(m => ids.has(m.id)), false, signal);
   let session: ReturnType<typeof gifWorkerSession> | undefined;
   const abort = () => session?.close();
   try {
+    assertVideoMattes(clips.filter(c => !c.hidden && visual(c.trackId)), (id, width, height) => images.get(id)?.naturalWidth === width && images.get(id)?.naturalHeight === height);
     const artwork = await loadBrandOutroArtwork();
     const logo = artwork.logo;
     if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]);
@@ -513,20 +510,20 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
       for (const op of ops) {
         if (op.clip.kind === "video") {
           const video = videos.get(op.clip.mediaId);
-          if (video) await seekVideo(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1));
+          if (video) await waitForVideoFrame(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1), { signal });
         }
         ctx.save();
         if (op.translateX) ctx.translate(op.translateX, 0);
         if (op.clipRect) { ctx.beginPath(); ctx.rect(op.clipRect.x, 0, op.clipRect.w, plan.height); ctx.clip(); }
         ctx.globalAlpha = op.alpha;
-        drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }); ctx.restore();
+        drawClip(ctx, plan.width, plan.height, op.clip, time, { videos, images }, op.localTimeOverride); ctx.restore();
       }
       if (localTime >= contentDuration) drawBrandOutro(ctx, plan.width, plan.height, localTime - contentDuration, username, logo, artwork);
       await session.frame(ctx.getImageData(0, 0, plan.width, plan.height).data, gifFrameDelay(f, plan));
       onProgress?.(0.03 + 0.94 * (f + 1) / plan.frames, `Encoding frame ${f + 1} / ${plan.frames}`);
     }
     const buffer = await session.finish(); checkAbort(signal);
-    const filename = `${(snapshot.title || "video").replace(/[^\w-]+/g, "_")}.gif`;
+    const filename = exportFilename(snapshot.title, "gif");
     onProgress?.(1, "Done");
     return { blob: new Blob([buffer], { type: "image/gif" }), filename };
   } catch (error) { checkAbort(signal); throw error; }
@@ -574,8 +571,11 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   );
 
   const used = new Set(ops.map((op) => (op.clip.kind === "text" ? "" : (op.clip as MediaClip).mediaId)));
+  for (const op of ops) if (op.clip.kind === "video" && op.clip.videoMatte) used.add(op.clip.videoMatte.mediaId);
+  assertVideoMattes(ops.map(op => op.clip), (id, width, height) => media.some(m => m.id === id && m.width === width && m.height === height));
   const { videos, images } = await loadSources(media.filter((m) => used.has(m.id)), false);
 
+  assertVideoMattes(ops.map(op => op.clip), (id, w, h) => images.get(id)?.naturalWidth === w && images.get(id)?.naturalHeight === h);
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -587,7 +587,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     if (op.clip.kind === "video") {
       const mc = op.clip;
       const v = videos.get(mc.mediaId);
-      if (v) await seekVideo(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1));
+      if (v) await waitForVideoFrame(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1));
     }
     ctx.save();
     if (op.translateX) ctx.translate(op.translateX, 0);
@@ -597,7 +597,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
       ctx.clip();
     }
     ctx.globalAlpha = op.alpha;
-    drawClip(ctx, width, height, op.clip, t, { videos, images });
+    drawClip(ctx, width, height, op.clip, t, { videos, images }, op.localTimeOverride);
     ctx.restore();
   }
 
@@ -605,6 +605,5 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   const blob = await new Promise<Blob>((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime, quality),
   );
-  const safeTitle = (snapshot.title || "design").replace(/[^\w-]+/g, "_");
-  return { blob, filename: `${safeTitle}.${format}` };
+  return { blob, filename: exportFilename(snapshot.title, format, "", "design") };
 }

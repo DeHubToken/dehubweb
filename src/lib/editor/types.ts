@@ -177,11 +177,15 @@ export interface ClipAudio {
   fadeIn?: number;
   /** seconds of linear fade-out */
   fadeOut?: number;
+  /** Clip-local linear gain points, including inactive points for edge restoration; volume stays separate. */
+  envelope?: import("./audioEnvelope").AudioEnvelopePoint[];
 }
 
 export interface MediaClip extends BaseClip {
   kind: "video" | "audio" | "image";
   mediaId: string;
+  /** Source-timed subject alpha frames; null restores the original background. */
+  videoMatte?: import("./videoMatte").VideoMatte | null;
   /** Source media natural duration (seconds), if applicable. */
   sourceDuration?: number;
   /** Source-timed music beats for timeline markers and cut alignment. */
@@ -236,6 +240,10 @@ export interface TextClip extends BaseClip {
   letterSpacing?: number;
   /** Line height as a multiple of font size. Default 1.2. */
   lineHeight?: number;
+  /** Optional wrapping box as fractions of the page. Absent keeps manual line breaks. */
+  maxWidth?: number;
+  /** Fit wrapped text inside this height, keeping the requested font as an upper bound. */
+  maxHeight?: number;
 }
 
 export const SHAPE_KINDS = ["rect", "ellipse", "triangle", "star", "heart", "hexagon", "line", "arrow"] as const;

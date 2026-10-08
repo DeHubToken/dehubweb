@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { fetchPredictionPreview, parsePredictionLink, type PredictionPreview } from '../predictions';
 
 export interface LinkPreviewData {
   url: string;
@@ -6,11 +7,14 @@ export interface LinkPreviewData {
   description: string;
   image: string | null;
   siteName: string;
+  prediction?: PredictionPreview['prediction'];
 }
 
 const previewCache = new Map<string, LinkPreviewData>();
 
 export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | null> {
+  const prediction = parsePredictionLink(url);
+  if (prediction) return fetchPredictionPreview(prediction);
   // Check cache first
   if (previewCache.has(url)) {
     return previewCache.get(url)!;

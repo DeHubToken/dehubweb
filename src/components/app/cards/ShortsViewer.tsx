@@ -1,3 +1,5 @@
+import { useVideoDownload } from "@/hooks/use-video-download";
+import { useMatureGate } from "./MatureContentGate";
 /**
  * Shorts Viewer Component
  * =======================
@@ -14,7 +16,7 @@ import {
 } from '@/lib/media-session';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe, RotateCcw } from 'lucide-react';
+import { Download, X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -452,6 +454,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const voteWeight = useEngagementWeight();
 
   const currentShort = shorts[currentIndex];
+  const downloadVideo = useVideoDownload();
+  const downloadGate = useMatureGate(currentShort?.contentRating);
   const isOwnShort = !!walletAddress && currentShort?.creatorId?.toLowerCase() === walletAddress.toLowerCase();
 
   // Swiping to another creator picks up that creator's pinned rate, the same
@@ -2079,6 +2083,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           <div className="flex flex-col gap-1">
             {/* Bookmark / pin / post info — the same three the feed card's
                 menu and action bar carry. */}
+            {!!currentShort.videoUrl && !currentShort.imageUrls?.length && !downloadGate.isGated && (
+              <button onClick={() => {
+                setShareSheetOpen(false);
+                setIsPaused(true);
+                void downloadVideo({ url: currentShort.videoUrl, title: currentShort.title || "video", username: currentShort.creatorUsername || currentShort.username });
+              }} className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left">
+                <Download className="w-5 h-5" /> {t("postOptions.download")}
+              </button>
+            )}
             <PostUtilityMenuItems
               postId={currentShort.id}
               tokenId={parseInt(currentShort.id, 10) || undefined}

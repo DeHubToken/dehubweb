@@ -35,6 +35,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { useJobQuote, formatDhb, useFreeImages } from '@/hooks/use-ai-quote';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -106,7 +107,7 @@ import { PresetStrip } from './PresetStrip';
 import { GenerationExample } from './GenerationExample';
 import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
-import { CREATOR_FAL_IMAGE_MODELS } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
+import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS, creatorFalImageAspects } from '../../../../../supabase/functions/_shared/creator-fal-catalog';
 import { ResultsFeed } from './ResultsFeed';
 import { VoiceDesignDrawer } from './VoiceDesignDrawer';
 import { StudioVoicePicker } from './StudioVoicePicker';
@@ -116,7 +117,6 @@ type Resolution = string;
 type Reference = { url: string; label: string } | null;
 type ByMode<T> = Record<Mode, T>;
 
-const IMAGE_ASPECTS = ['1:1', '4:5', '16:9', '9:16', '3:2', '2:3', '21:9'] as const;
 const MAX_IMAGE_BATCH = 4;
 const MAX_REFERENCE_BYTES = 20 * 1024 * 1024;
 
@@ -562,6 +562,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const [videoPaywallOpen, setVideoPaywallOpen] = useState(false);
   const [model3dPaywallOpen, setModel3dPaywallOpen] = useState(false);
   const [attaching, setAttaching] = useState(false);
+  const [attachmentMenuOpen, setAttachmentMenuOpen] = useState(false);
+  const [referenceLibraryOpen, setReferenceLibraryOpen] = useState(false);
   /** Hosting a 3D reference in storage, before the paywall opens. */
   const [staging, setStaging] = useState(false);
   const [enhancing, setEnhancing] = useState(false);
@@ -585,6 +587,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       setModel3dPaywallOpen(false);
       setAudioPaywallOpen(false);
       setVoiceDesignOpen(false);
+      setAttachmentMenuOpen(false);
+      setReferenceLibraryOpen(false);
     }, []),
   );
   const surfaceEpoch = useSurfaceEpoch();
@@ -681,6 +685,11 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   // ── Model legality ────────────────────────────────────────────────────────
 
+  useEffect(() => {
+    const allowed = creatorFalImageAspects(imageModel);
+    setImageAspect((value) => allowed.includes(value) ? value : allowed[0]);
+  }, [imageModel, imageAspect]);
+
   /**
    * Keep duration, aspect and resolution legal whenever the video model changes.
    *
@@ -760,6 +769,10 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
    * preset and attachment, so all three can be in progress at once.
    */
   const switchMode = useCallback((next: Mode) => setMode(next), []);
+  useEffect(() => {
+    setAttachmentMenuOpen(false);
+    setReferenceLibraryOpen(false);
+  }, [mode]);
 
   const enhance = useCallback(async () => {
     const current = prompt.trim();
@@ -1023,8 +1036,14 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
+    const promptLimit = mode === 'image' ? CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxPromptLength ?? 4000
+      : mode === 'video' ? CREATOR_FAL_VIDEO_MODELS[videoModel]?.maxPromptLength : undefined;
+    if (promptLimit && resolvedPrompt.length > promptLimit) {
+      return `${t('nav.prompt')}: ${resolvedPrompt.length.toLocaleString()} / ${promptLimit.toLocaleString()}`;
+    }
     if (mode === 'image') {
       const model = IMAGE_MODELS[imageModel];
+      if (currentImages.length > (CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxReferenceImages ?? 4)) return t('creator.referenceTooMany');
       if (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) return t('creator.referenceMultiModel');
       if (model && reference && !imageModelSupportsEdit(model)) {
         return `${model.name} cannot edit an attached image. Remove it or pick another model.`;
@@ -1480,8 +1499,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             value: m.id,
             label: m.name,
             detail: m.description,
-            meta: `$${getImageCostUsd(m).toFixed(2)}`,
-            disabled: (!canEdit && !!reference) || (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[m.id]?.editUsesPlural),
+            meta: `$${(Math.ceil(getImageCostUsd(m) / 0.001) * 0.001).toFixed(3)}`,
+            disabled: (!canEdit && !!reference) || (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[m.id]?.editUsesPlural) || currentImages.length > (CREATOR_FAL_IMAGE_MODELS[m.id]?.maxReferenceImages ?? 4),
             disabledReason: t('creator.cannotEditAttached'),
           };
         })
@@ -1531,7 +1550,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     label: l.label,
   }));
 
-  const aspectOptions: ChipOption<string>[] = (mode === 'image' ? [...IMAGE_ASPECTS] : videoAspects).map(
+  const aspectOptions: ChipOption<string>[] = (mode === 'image' ? creatorFalImageAspects(imageModel) : videoAspects).map(
     (a) => ({ value: a, label: a }),
   );
 
@@ -1688,17 +1707,6 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         >
           <>
 
-              {mode === 'image' && (
-                <div className="mb-3 flex flex-wrap gap-2" aria-label="Image quality presets">
-                  {[
-                    ['Fast', 'gemini-3.1-flash-image'], ['Balanced', 'nano-banana-2'], ['Best', 'gemini-3-pro-image'],
-                  ].map(([label, model]) => (
-                    <button type="button" key={model} aria-pressed={imageModel === model} onClick={() => setImageModel(model)} title={IMAGE_MODELS[model].name} className={cn('rounded-lg border px-3 py-1.5 text-xs', imageModel === model ? 'border-white/40 bg-white/15 text-white' : 'border-white/15 text-white/60')}>
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
               {mode === 'audio' && audioFile && (
                 <div className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/40 p-2">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
@@ -1725,7 +1733,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                 </div>
               )}
 
-              {mode !== 'audio' && <ReferenceAssets assets={currentAssets} onAdd={asset => void addAsset(asset)} onRemove={removeAsset} onMention={insertAssetMention} allowVideo={mode === 'video'} singleImage={mode === '3d'} />}
+              {mode !== 'audio' && <ReferenceAssets assets={currentAssets} onAdd={asset => void addAsset(asset)} onRemove={removeAsset} onMention={insertAssetMention} allowVideo={mode === 'video'} singleImage={mode === '3d'} libraryOpen={referenceLibraryOpen} onLibraryOpenChange={setReferenceLibraryOpen} />}
               {mode === 'video' && (
                 <div className="mb-3 flex flex-wrap gap-2">
                   {(['swap', 'motion'] as const).map(workflow => <button key={workflow} type="button"
@@ -1766,7 +1774,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       }}
                       rows={audioTask === 'dialogue' && mode === 'audio' ? 4 : 2}
                       placeholder={placeholder}
-                      className="min-h-[3.25rem] min-w-0 flex-1 resize-y bg-transparent py-2 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[15px]"
+                      className="min-h-[3.25rem] min-w-0 flex-1 resize-y bg-transparent py-1 text-[16px] leading-relaxed text-white outline-none placeholder:text-white/35 sm:text-[15px]"
                     />
                   </>
                 )}
@@ -1796,21 +1804,28 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     — offering a paperclip there is a control that can only
                     produce an error. */}
                 {(mode !== 'audio' || activeAudioTask.needsMedia) && (
-                  <button
-                    type="button"
-                    onClick={() => fileRef.current?.click()}
-                    disabled={attaching}
-                    aria-label={
-                      t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
-                    }
-                    className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
-                  >
-                    {attaching ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Paperclip className="h-4 w-4" />
-                    )}
-                  </button>
+                  <DropdownMenu open={attachmentMenuOpen} onOpenChange={setAttachmentMenuOpen}>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={attaching}
+                        aria-label={
+                          t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
+                        }
+                        className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
+                      >
+                        {attaching ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Paperclip className="h-4 w-4" />
+                        )}
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      {mode !== 'audio' && <DropdownMenuItem onSelect={() => setReferenceLibraryOpen(true)}>{t('creator.referenceLibrary')}</DropdownMenuItem>}
+                      <DropdownMenuItem onSelect={() => fileRef.current?.click()}>{t('creator.referenceUpload')}</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
                 <ModeToggle mode={mode} onChange={switchMode} />
 
