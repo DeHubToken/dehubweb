@@ -167,12 +167,12 @@ function ConversationItem({
           )}
         </div>
         {draft ? (
-          <p className="text-sm truncate text-zinc-400">
-            <span className="text-zinc-200 font-medium">Draft: </span>
+          <p className="text-sm truncate text-white">
+            <span className="font-medium">Draft: </span>
             {draft}
           </p>
         ) : (
-          <p className={`text-sm truncate ${conversation.unreadCount > 0 ? 'text-zinc-200' : 'text-zinc-500'}`}>
+          <p className={`text-sm truncate text-white ${conversation.unreadCount > 0 ? 'font-bold' : 'font-normal'}`}>
             {conversation.lastMessage?.type === 'image' ? '📷 Photo' :
              conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' :
              lastMessagePreview}
@@ -224,7 +224,6 @@ export default function MessagesPage() {
   // input fired 2 network requests per KEYSTROKE (each prefix a fresh cache
   // key). Debounce to one request pair per pause in typing.
   const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
-  const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
 
   // Subscribe to DM realtime updates only when on messages page
@@ -675,9 +674,8 @@ export default function MessagesPage() {
             {!isLoading && !isError && visibleConversations.map((conv) => (
               <ConversationItem
                 key={conv.id}
-                conversation={readConvIds.has(conv.id) ? { ...conv, unreadCount: 0 } : conv}
+                conversation={conv}
                 onClick={() => {
-                  setReadConvIds(prev => new Set(prev).add(conv.id));
                   setSelectedConversation({ ...conv, unreadCount: 0 });
                 }}
                 isSelected={selectedConversation?.id === conv.id}
