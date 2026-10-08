@@ -36,6 +36,7 @@ import {
   type VideoGenerationOptions,
 } from '@/components/app/video/VideoPaywallModal';
 import { DEFAULT_VOICE_ID, generateAudio } from '@/lib/creator/generationEngine';
+import { generatedMediaFormat } from '@/lib/creator/generatedMedia';
 import { importOneFile } from '@/lib/editor/importFiles';
 import { useGenerationStore } from '@/store/generationStore';
 import { useEditorUiStore } from '@/store/editorUiStore';
@@ -92,7 +93,7 @@ export function GeneratePanel() {
     setPrompt(generatePrefill.prompt);
     if (generatePrefill.aspect) {
       if (generatePrefill.kind === 'video') setVideoAspect(generatePrefill.aspect);
-      else setImageAspect(generatePrefill.aspect);
+      else if (generatePrefill.kind === 'image') setImageAspect(generatePrefill.aspect);
     }
     setGeneratePrefill(null);
   }, [generatePrefill, setGeneratePrefill]);
@@ -134,7 +135,8 @@ export function GeneratePanel() {
     setVoiceBusy(true);
     try {
       const { blob } = await generateAudio({ text: prompt.trim(), voiceId: DEFAULT_VOICE_ID });
-      const file = new File([blob], `voiceover-${Date.now()}.mp3`, { type: 'audio/mpeg' });
+      const format = generatedMediaFormat('audio', '', blob.type);
+      const file = new File([blob], `voiceover-${Date.now()}.${format.ext}`, { type: format.mime });
       const id = await importOneFile(file, { wallet: quota.walletAddress });
       if (id) {
         await quota.refetchUsage();
