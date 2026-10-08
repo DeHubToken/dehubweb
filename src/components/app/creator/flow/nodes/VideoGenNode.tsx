@@ -185,7 +185,7 @@ export default function VideoGenNode({ id, data, selected }: NodeProps<FlowNode>
           <div className="flex h-full min-h-[140px] w-full flex-col items-center justify-center gap-2 text-white/35">
             {busy ? <Loader2 size={18} className="animate-spin text-white/70" /> : <Clapperboard size={18} />}
             <span className="max-w-[80%] text-center text-[11px] leading-snug">
-              {busy ? (data.pipelineQueued ? t('creatorFlow.queued') : t('creatorFlow.renderingVideo')) : shownError ?? t('creatorFlow.videoGenEmpty')}
+              {busy ? (data.pipelineQueued ? t('creatorFlow.queued') : t('creatorFlow.renderingVideo')) : shownError?.replace(/\bDHB\b/g, t('buyCoins.tokensUnit')) ?? t('creatorFlow.videoGenEmpty')}
             </span>
           </div>
         )}
