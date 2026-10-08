@@ -11,6 +11,7 @@ vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => k
 vi.mock('@/hooks/use-editor-quota', () => ({ useEditorQuota: () => ({ walletAddress: null }) }));
 vi.mock('@/lib/editor/agent', () => ({ askAgent: vi.fn(), applyOps: vi.fn(), askSceneAgent: vi.fn() }));
 vi.mock('@/lib/editor/projectStore', () => ({ saveProject: vi.fn(async () => {}), setLastProjectId: vi.fn() }));
+vi.mock('@/lib/scroll-freeze-watchdog', () => ({ settleAfterOverlayClose: vi.fn() }));
 vi.mock('@/lib/editor/useHighlightChat', () => ({
   useHighlightChat: () => [{ clipId: null, busy: false }, {
     state: { busy: false }, reviewing: false, matchesSource: () => true, reset: vi.fn(),
