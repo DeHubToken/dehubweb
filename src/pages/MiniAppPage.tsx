@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Mini app player
@@ -322,7 +323,7 @@ function MiniAppFrame({ app, dev }: { app: HostedApp; dev: boolean }) {
           <div className="w-full max-w-sm rounded-2xl bg-zinc-950 p-5 ring-1 ring-white/10">
             <p className="text-base font-semibold text-white">{t('miniApps.pay.title', { name: app.name })}</p>
             <p className="mt-1 font-mono text-xs text-zinc-400">{app.url.host}</p>
-            <p className="mt-4 text-3xl font-bold tabular-nums text-white">{payAsk?.amount.toLocaleString()} DHB</p>
+            <p className="mt-4 text-3xl font-bold tabular-nums text-white">{payAsk?.amount.toLocaleString()} {tokenLabel()}</p>
             {payAsk?.memo ? <p className="mt-1 text-sm text-zinc-300">{payAsk.memo}</p> : null}
             <p className="mt-3 text-xs leading-relaxed text-zinc-400">
               {t('miniApps.pay.body', { wallet: `${app.ownerWallet?.slice(0, 6)}…${app.ownerWallet?.slice(-4)}` })}

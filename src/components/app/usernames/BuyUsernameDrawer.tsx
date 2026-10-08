@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Buy Username Drawer
  * ===================
@@ -118,7 +119,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
                 ${(quote?.priceUsd ?? listing.priceUsd).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
               <p className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                 {(quote?.priceDhb ?? listing.priceDhb).toLocaleString(undefined, { maximumFractionDigits: 6 })}
                 {' · '}{t('usernames.tokensPaidToSeller', 'Paid directly to the seller')}
               </p>

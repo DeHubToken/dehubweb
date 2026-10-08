@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -132,7 +133,7 @@ export default function LaunchpadCoinPage() {
             <Row k={t('launchpad.volume24h')} v={fmtUsd(token.volume_24h)} />
             <Row k={t('launchpad.supplySold')} v={Math.floor(Number(token.supply_sold)).toLocaleString()} />
             <Row k={t('launchpad.curve')} v={t(CURVE_KEYS[(token as unknown as { curve_type?: string }).curve_type ?? 'standard'] ?? 'launchpad.curveStandard')} />
-            <Row k={t('launchpad.pair')} v="DHB" />
+            <Row k={t('launchpad.pair')} v={tokenLabel()} />
           </div>
           <FeeBreakdown />
         </div>

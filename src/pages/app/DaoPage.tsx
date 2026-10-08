@@ -1,7 +1,7 @@
 /**
  * DAO Page
  * ========
- * The treasury and who funded it. One wallet anyone can send DHB to; the page
+ * The treasury and who funded it. One wallet anyone can send tokens to; the page
  * reads its balance and every transfer into it straight off the chain, and
  * ranks contributors by how much of the pool they put in. That share is the
  * weight their voice carries when the DAO decides how the treasury is spent.
@@ -309,7 +309,7 @@ export default function DaoPage() {
     <div className="min-h-screen">
       <SEOHead
         title="DAO Treasury — Fund DeHub and Earn a Say"
-        description="The DeHub DAO treasury: one wallet anyone can send DHB to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent."
+        description="The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent."
         url="https://dehub.io/dao"
         image="https://dehub.io/og/dao.jpg"
         jsonLd={{

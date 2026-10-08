@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Username Row
  * ============
@@ -91,7 +92,7 @@ export const UsernameCard = memo(function UsernameCard({ listing, onClick, isOwn
           ${listing.priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </p>
         <p className="text-[11px] text-zinc-500 whitespace-nowrap">
-          <img src={dehubCoin} alt="DHB" className="inline w-3 h-3 mr-1" />{listing.priceDhb.toLocaleString(undefined, { maximumFractionDigits: 6 })}
+          <img src={dehubCoin} alt={tokenLabel()} className="inline w-3 h-3 mr-1" />{listing.priceDhb.toLocaleString(undefined, { maximumFractionDigits: 6 })}
         </p>
         {/* Below sm the seller drops out of the chip row, so it lands here
             instead of vanishing entirely. */}

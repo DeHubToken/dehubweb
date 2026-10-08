@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useCallback } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import qrcode from 'qrcode-generator';
@@ -322,7 +323,7 @@ export default function FullWalletPage() {
         <div className="flex items-center justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <img src={dehubCoin} alt="DHB" className="w-7 h-7" />
+              <img src={dehubCoin} alt={tokenLabel()} className="w-7 h-7" />
               <p className="text-white text-2xl font-bold">
                 {isNaN(holdings.total) ? '0' : Math.floor(holdings.total).toLocaleString()}
               </p>
@@ -512,7 +513,7 @@ export default function FullWalletPage() {
                     {chainInfo && <img src={chainInfo.icon} alt={chainInfo.name} className="w-6 h-6 rounded-md" />}
                     <div className="text-left flex-1 min-w-0">
                       <span className="text-sm font-medium text-white">{chainInfo?.name || `Chain ${token.chainId}`}</span>
-                      <p className="text-xs text-zinc-400">{fmtBal(token.formattedBalance)} {token.symbol}</p>
+                      <p className="text-xs text-zinc-400">{fmtBal(token.formattedBalance)} {tokenLabel(token.symbol)}</p>
                     </div>
                   </button>
                 );
@@ -1229,14 +1230,14 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         {token.logo ? (
-                          <img src={token.logo} alt={token.symbol} className="w-7 h-7 rounded-full" />
+                          <img src={token.logo} alt={tokenLabel(token.symbol)} className="w-7 h-7 rounded-full" />
                         ) : (
                           <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-zinc-400 font-bold">
                             {token.symbol.slice(0, 2)}
                           </div>
                         )}
                         <div className="min-w-0">
-                          <p className="text-sm text-white font-medium truncate">{token.symbol}</p>
+                          <p className="text-sm text-white font-medium truncate">{tokenLabel(token.symbol)}</p>
                           <p className="text-[11px] text-zinc-500 truncate">{token.name}</p>
                         </div>
                       </div>

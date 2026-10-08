@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 ﻿import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -3288,7 +3289,7 @@ function AssetsSettings() {
         <SettingsRow
           as="button"
           anchor="dhb-balance"
-          icon={<img src={dehubCoin} alt="DHB" />}
+          icon={<img src={dehubCoin} alt={tokenLabel()} />}
           title={balanceLoading && !coinBalance ? '—' : Math.floor(coinBalance).toLocaleString()}
           description={t('settings.dhbBalanceIncludesStaked')}
           onClick={() => setWalletDrawerOpen(true)}

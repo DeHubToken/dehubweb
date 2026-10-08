@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
@@ -42,7 +43,7 @@ function isAwaitingPayment(s: WorkSubmission): boolean {
 }
 
 function amount(n: number, currency: string): string {
-  return `${n.toLocaleString(undefined, { maximumFractionDigits: 4 })} ${currency}`;
+  return `${n.toLocaleString(undefined, { maximumFractionDigits: 4 })} ${tokenLabel(currency)}`;
 }
 
 export default function WorkJobDetailPage() {
@@ -516,7 +517,7 @@ function SubmissionCard({
           <p className="text-xs text-white/50">{t('work.integrity.clipVerify')}</p>
         </div>
       )}
-      {job.fund_tx_hash && <p className="mt-2 text-xs text-white/60">{t('work.integrity.feeNotice',{net:due,currency:job.currency,gross})}</p>}
+      {job.fund_tx_hash && <p className="mt-2 text-xs text-white/60">{t('work.integrity.feeNotice',{net:due,currency:tokenLabel(job.currency),gross})}</p>}
       {/* Poster: accept + pay */}
       {isPoster && s.approval_status === 'pending' && !rejecting && (
         <div className="flex flex-wrap gap-2 mt-3">

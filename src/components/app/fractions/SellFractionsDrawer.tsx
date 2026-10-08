@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Sell Fractions Drawer
  * =====================
@@ -203,7 +204,7 @@ export function SellFractionsDrawer({
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-16 text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-sm">
-                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                   </span>
                 </div>
               </div>
@@ -217,7 +218,7 @@ export function SellFractionsDrawer({
                 <div className="flex justify-between text-sm border-t border-white/10 pt-2">
                   <span className="text-white font-medium">{t('fractions.youReceive')}</span>
                   <span className="text-white font-bold flex items-center gap-1.5">
-                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                     {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </span>
                 </div>

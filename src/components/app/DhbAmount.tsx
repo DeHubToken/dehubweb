@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * An amount denominated in DHB, rendered with the gold coin in place of the
  * ticker text.
@@ -38,7 +39,7 @@ export function DhbAmount({ amount, currency, iconClassName, className }: DhbAmo
       {isDhb(currency) ? (
         <img
           src={dehubCoin}
-          alt="DHB"
+          alt={tokenLabel()}
           className={cn('inline-block h-4 w-4 shrink-0', iconClassName)}
           loading="lazy"
         />
@@ -54,7 +55,7 @@ export function DhbAmount({ amount, currency, iconClassName, className }: DhbAmo
  * amount is already laid out by the surrounding markup and only the ticker
  * word needs replacing.
  */
-export function DhbCoin({ className, label = 'DHB' }: { className?: string; label?: string }) {
+export function DhbCoin({ className, label = tokenLabel() }: { className?: string; label?: string }) {
   return (
     <img
       src={dehubCoin}

@@ -7,10 +7,10 @@ Every link below is a public page that renders without an account. The app's sig
 ## Start here
 
 - [DeHub home](https://dehub.io/): What DeHub is, the latest public posts and links into every section.
-- [What is DeHub?](https://dehub.io/guides/what-is-dehub): Plain-English explainer of the platform, the team and the DHB token.
+- [What is DeHub?](https://dehub.io/guides/what-is-dehub): Plain-English explainer of the platform, the team and DeHub tokens.
 - [Documentation](https://dehub.io/docs): Index of the official docs — platform, dApps, token, staking, governance, roadmap and FAQ.
 - [DeHub overview](https://dehub.io/docs/overview): How the platform fits together.
-- [FAQ](https://dehub.io/docs/faq): Answers to the most common questions about DeHub and DHB.
+- [FAQ](https://dehub.io/docs/faq): Answers to the most common questions about DeHub and tokens.
 
 ## Watch, listen and browse
 
@@ -37,13 +37,13 @@ Every link below is a public page that renders without an account. The app's sig
 
 ## Token, trading and governance
 
-- [DHB currency overview](https://dehub.io/docs/token/overview): What DHB is and which chains it runs on.
-- [DHB token economics](https://dehub.io/docs/token/economics): Supply, emissions and allocation.
-- [Where to buy DHB](https://dehub.io/docs/token/where-to-buy): Exchanges and on-ramps that list DHB.
-- [Staking DHB](https://dehub.io/docs/token/stake): How staking works and what badges it unlocks.
+- [Token overview](https://dehub.io/docs/token/overview): What DeHub tokens are and which chains it runs on.
+- [Token economics](https://dehub.io/docs/token/economics): Supply, emissions and allocation.
+- [Where to buy tokens](https://dehub.io/docs/token/where-to-buy): Exchanges and on-ramps that list tokens.
+- [Staking tokens](https://dehub.io/docs/token/stake): How staking works and what badges it unlocks.
 - [Governance](https://dehub.io/docs/token/governance): How proposals and voting work.
-- [DEX](https://dehub.io/dex): Trade DHB with limit orders on Base or BNB Chain.
-- [Bridge](https://dehub.io/bridge): Move DHB between Base and BNB Chain.
+- [DEX](https://dehub.io/dex): Trade tokens with limit orders on Base or BNB Chain.
+- [Bridge](https://dehub.io/bridge): Move tokens between Base and BNB Chain.
 
 ## Guides
 

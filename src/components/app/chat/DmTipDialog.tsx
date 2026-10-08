@@ -1,7 +1,8 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * DmTipDialog Component
  * =====================
- * Drawer for sending a DHB tip inside a DM conversation.
+ * Drawer for sending a token tip inside a DM conversation.
  * Matches the liquid glass aesthetic of TipModal.
  */
 
@@ -198,7 +199,7 @@ export function DmTipDialog({
                       : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  <span className="inline-flex items-center gap-1">{val.toLocaleString()} <img src={dehubCoin} alt="DHB" className="w-4 h-4" style={{ marginTop: '-1px' }} /></span>
+                  <span className="inline-flex items-center gap-1">{val.toLocaleString()} <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" style={{ marginTop: '-1px' }} /></span>
                 </button>
               ))}
             </div>
@@ -208,7 +209,7 @@ export function DmTipDialog({
           <div>
             <p className="text-white/60 text-xs mb-2">Or enter amount</p>
             <div className="relative">
-              <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+              <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
               <Input
                 type="number"
                 min={Math.max(1, minAmount)}

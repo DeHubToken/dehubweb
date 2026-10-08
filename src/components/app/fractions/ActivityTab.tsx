@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Activity
  * ========
@@ -71,7 +72,7 @@ function TradeRow({ trade, onOpen }: { trade: FractionTrade; onOpen: () => void 
         </div>
         <div className="text-right shrink-0">
           <p className="text-white font-semibold text-sm flex items-center gap-1 justify-end">
-            <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
+            <img src={dehubCoin} alt={tokenLabel()} className="w-3.5 h-3.5" />
             {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
           </p>
           <p className={cn('text-[10px]', status.className)}>{t(status.key)}</p>

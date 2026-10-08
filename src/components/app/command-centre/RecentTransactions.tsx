@@ -80,7 +80,7 @@ export function RecentTransactions() {
     staleTime: 60_000,
   });
 
-  // On-chain DHB transfers (Base chain)
+  // On-chain Token transfers (Base chain)
   const { data: onchainTransfers = [], isLoading: onchainLoading } = useOnchainDHBTransfers(walletAddress);
 
   const { data: ppvData, isLoading: ppvLoading, isError: ppvFailed, isFetching: ppvFetching, refetch: refetchPpv } = useQuery({
@@ -227,7 +227,7 @@ export function RecentTransactions() {
       });
     });
 
-    // Add on-chain DHB transfers (deduplicate against DPay txs and tip_records by txHash)
+    // Add on-chain Token transfers (deduplicate against DPay txs and tip_records by txHash)
     const dpayHashes = new Set(dpayTxs.map(tx => tx.txHash?.toLowerCase()).filter(Boolean));
     const tipHashes = new Set(tipRecords.map((t: any) => t.tx_hash?.toLowerCase()).filter(Boolean));
     // Collect DPay buy txHashes so we can label matching on-chain transfers as purchases

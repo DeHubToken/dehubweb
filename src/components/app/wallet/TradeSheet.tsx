@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -284,7 +285,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
             </div>
           </div>
           {balance === 0n && <p className="text-xs text-zinc-400">{t('easyTrade.noDhb')}</p>}
-          {amount && !amountOk && balance > 0n && <p className="text-xs text-red-300">{t('dex.checkAmount', { token: 'DHB' })}</p>}
+          {amount && !amountOk && balance > 0n && <p className="text-xs text-red-300">{t('dex.checkAmount', { token: tokenLabel() })}</p>}
           <button type="button" className={primary} disabled={!amountOk || busy} onClick={() => void toPrice()}>
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : t('easyTrade.next')}
           </button>
