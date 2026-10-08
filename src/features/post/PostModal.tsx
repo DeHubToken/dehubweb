@@ -282,8 +282,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         isRecording={state.isRecording}
         recordingTime={state.recordingTime}
         onStopRecording={actions.stopRecording}
-        chainId={state.chainId}
-        onChainChange={actions.setChainId}
         showTitle={state.showTitle}
         titleText={state.titleText}
         setTitleText={actions.setTitleText}
