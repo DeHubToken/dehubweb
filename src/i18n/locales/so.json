@@ -90,6 +90,7 @@
     "heading": "DeHub Gaagaaban"
   },
   "settings": {
+    "postingChain": "Blockchain-ka qoraallada",
     "showOnline": "Muuji marka aan ku jiro internetka",
     "showOnlineDesc": "Dadka aad fariin u aragto dhibic cagaaran oo ku xiga magacaaga inta aad isticmaaleyso DeHub",
     "smartReplies": "Jawaabaha la soo jeediyay",
@@ -7357,6 +7358,7 @@
         }
       },
       "settings": {
+    "postingChain": "Blockchain-ka qoraallada",
         "title": "Dejinta",
         "intro": "Habee khibradaada DeHub adigoo isticmaalaya luqadda, asturnaanta, iyo doorbidyada soo bandhigida.",
         "steps": {

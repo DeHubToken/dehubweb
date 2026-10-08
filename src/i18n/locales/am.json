@@ -90,6 +90,7 @@
     "heading": "DeHub ሾርትስ"
   },
   "settings": {
+    "postingChain": "የልጥፍ ብሎክቼይን",
     "showOnline": "በመስመር ላይ ስሆን አሳይ",
     "showOnlineDesc": "እርስዎ የሚያስተላልፉት ሰዎች DeHub በሚጠቀሙበት ጊዜ ከስምዎ አጠገብ አረንጓዴ ነጥብ ያያሉ",
     "smartReplies": "የተጠቆሙ ምላሾች",
@@ -7426,6 +7427,7 @@
         }
       },
       "settings": {
+    "postingChain": "የልጥፍ ብሎክቼይን",
         "title": "ቅንብሮች",
         "intro": "የDeHub ተሞክሮዎን በቋንቋ፣ ግላዊነት እና የማሳያ ምርጫዎች ያብጁ።",
         "steps": {

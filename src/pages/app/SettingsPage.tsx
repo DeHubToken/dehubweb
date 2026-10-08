@@ -2720,12 +2720,11 @@ function ContentSettings() {
           <SettingsRow
             anchor="posting-chain"
             icon={<Globe />}
-            title="Posting chain"
-            description="The blockchain used for your posts on this device."
+            title={t('settings.postingChain')}
             action={<SettingDrawerSelect
               value={String(chainId)}
               onValueChange={value => void setChainId(Number(value) as PostChainId)}
-              title="Posting chain"
+              title={t('settings.postingChain')}
               disabled={saving}
               options={SUPPORTED_CHAINS.map(chain => ({ value: String(chain.id), label: chain.name }))}
             />}

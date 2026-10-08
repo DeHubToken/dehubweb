@@ -90,6 +90,7 @@
     "heading": "DeHubi lühivideod"
   },
   "settings": {
+    "postingChain": "Postituste plokiahel",
     "showOnline": "Näita, kui ma olen võrgus",
     "showOnlineDesc": "Inimesed, kellele sõnumi saadad, näevad DeHubi kasutamise ajal sinu nime kõrval rohelist täppi",
     "smartReplies": "Soovitatud vastused",
@@ -7417,6 +7418,7 @@
         }
       },
       "settings": {
+    "postingChain": "Postituste plokiahel",
         "title": "Seaded",
         "intro": "Kohandage oma DeHubi kogemust keele, privaatsuse ja kuva eelistustega.",
         "steps": {

@@ -90,6 +90,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Blockchain dei post",
     "showOnline": "Mostra quando sono online",
     "showOnlineDesc": "Le persone a cui invii un messaggio vedono un punto verde accanto al tuo nome mentre utilizzi DeHub",
     "smartReplies": "Risposte suggerite",
@@ -7454,6 +7455,7 @@
         }
       },
       "settings": {
+    "postingChain": "Blockchain dei post",
         "title": "Impostazioni",
         "intro": "Personalizza la tua esperienza DeHub con preferenze di lingua, privacy e visualizzazione.",
         "steps": {

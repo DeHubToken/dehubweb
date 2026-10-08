@@ -90,6 +90,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Bejegyzések blokklánca",
     "showOnline": "Megjelenítés, amikor online vagyok",
     "showOnlineDesc": "Azok a személyek, akiknek üzenetet küldesz, egy zöld pontot látnak a neved mellett, miközben a DeHubot használod",
     "smartReplies": "Javasolt válaszok",
@@ -7339,6 +7340,7 @@
         }
       },
       "settings": {
+    "postingChain": "Bejegyzések blokklánca",
         "title": "Beállítások",
         "intro": "Testreszabhatja DeHub élményét a nyelv, az adatvédelem és a megjelenítési beállításokkal.",
         "steps": {

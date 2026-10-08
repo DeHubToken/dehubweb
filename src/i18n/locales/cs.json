@@ -90,6 +90,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Blockchain příspěvků",
     "showOnline": "Zobrazit, když jsem online",
     "showOnlineDesc": "Lidé, kterým posíláte zprávu, uvidí zelenou tečku vedle vašeho jména, když používáte službu DeHub",
     "smartReplies": "Navrhované odpovědi",
@@ -7339,6 +7340,7 @@
         }
       },
       "settings": {
+    "postingChain": "Blockchain příspěvků",
         "title": "Nastavení",
         "intro": "Přizpůsobte si svůj zážitek na DeHubu pomocí preferencí jazyka, soukromí a zobrazení.",
         "steps": {

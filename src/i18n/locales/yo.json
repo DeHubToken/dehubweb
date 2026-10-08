@@ -90,6 +90,7 @@
     "heading": "Fídíò kúkúrú DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain fún àwọn àtẹ̀jáde",
     "showOnline": "Fi hàn nígbà tí mo wà lórí ayélujára",
     "showOnlineDesc": "Àwọn ènìyàn tí o fi àtẹ̀jíṣẹ́ ránṣẹ́ rí àmì aláwọ̀ ewé lẹ́gbẹ̀ẹ́ orúkọ rẹ nígbà tí ò ń lo DeHub",
     "smartReplies": "Àwọn èsì tí a dábàá",
@@ -7339,6 +7340,7 @@
         }
       },
       "settings": {
+    "postingChain": "Blockchain fún àwọn àtẹ̀jáde",
         "title": "Àwọn Ìṣètò",
         "intro": "Ṣe àtúnṣe ìrírí DeHub rẹ pẹ̀lú èdè, àṣírí, àti àwọn ìfẹ́ ìfihàn.",
         "steps": {

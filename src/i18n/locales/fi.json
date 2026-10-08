@@ -90,6 +90,7 @@
     "heading": "DeHub Lyhyet"
   },
   "settings": {
+    "postingChain": "Julkaisujen lohkoketju",
     "showOnline": "Näytä, kun olen online-tilassa",
     "showOnlineDesc": "Viestisi näkevät vihreän pisteen nimesi vieressä, kun käytät DeHubia",
     "smartReplies": "Ehdotetut vastaukset",
@@ -7338,6 +7339,7 @@
         }
       },
       "settings": {
+    "postingChain": "Julkaisujen lohkoketju",
         "title": "Asetukset",
         "intro": "Mukauta DeHub-kokemustasi kieli-, yksityisyys- ja näyttöasetuksilla.",
         "steps": {
