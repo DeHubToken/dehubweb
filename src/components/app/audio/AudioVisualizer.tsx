@@ -1059,6 +1059,7 @@ export function AudioVisualizer({
           waveform underneath it. */}
       <div data-audio-controls className="absolute inset-x-0 bottom-0 z-20 pointer-events-none">
         <div data-audio-scrub-surface className="absolute inset-x-0 bottom-0 h-12 touch-pan-y pointer-events-auto" />
+        <div data-scrub-track className="absolute inset-x-0 bottom-0 h-3.5 touch-none pointer-events-auto" />
         {/* Video-style play/countdown and tools above the edge scrubber.
             The style picker gives up width and scrolls before buttons clip. */}
         <div
