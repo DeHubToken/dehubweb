@@ -1,5 +1,6 @@
-runpod>=1.7.0
-coqui-tts[zh,ja,ko]==0.25.3
-numpy<2.0
-soundfile>=0.12
-requests>=2.31
+chatterbox-tts @ git+https://github.com/resemble-ai/chatterbox.git@5de7a54aa4e5e2baadb0182dde554908b48b85c2
+runpod>=1.7.0,<2
+soundfile>=0.12,<1
+requests>=2.31,<3
+fastapi>=0.115,<1
+uvicorn>=0.30,<1

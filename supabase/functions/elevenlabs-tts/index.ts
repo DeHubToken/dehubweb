@@ -19,6 +19,7 @@ const corsHeaders = {
 
 import { checkRateLimit, requireDeHubAuth, serviceClient } from '../_shared/auth.ts';
 import { refuseForeignVoice } from '../_shared/voice-ownership.ts';
+import { isChirpVoice, synthesizeChirp } from '../_shared/chirp-tts.ts';
 
 /**
  * Kept in step with MAX_SPEECH_CHARS in audio-models.constants.ts.
@@ -102,6 +103,8 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    if (isChirpVoice(voiceId)) return await synthesizeChirp(text, voiceId, corsHeaders);
 
     // Authenticating the endpoint stopped strangers using it. It did not stop
     // one signed-in user naming another's cloned voice, which is the half that
