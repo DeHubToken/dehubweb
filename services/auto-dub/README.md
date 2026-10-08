@@ -12,6 +12,21 @@ play it alongside the video, with independent voice and original-volume controls
 Original volume stays constant between lines. If no suitable sample exists,
 the worker uses its stock voice. No database credentials reach the worker.
 
+## Existing server deployment
+
+The existing backend host can run the worker in `/srv/dehub-dub/app` with an
+isolated `/srv/dehub-dub/venv`. Install CPU torch/torchaudio before the pinned
+requirements, using the same versions/index as the Dockerfile. The checked-in
+systemd unit runs as a dedicated user, on loopback only, capped at one CPU and
+6 GB RAM with lower scheduling priority. Install `nginx-location.conf` as an
+include in the existing TLS server block, validate nginx, then reload it.
+
+The service reads the existing shared worker secret from `/etc/dehub-dub.env`
+(root-owned, mode 0600). Set the service-only `video_dub_worker.worker_url` to
+`https://api-legacy.dehub.io/internal/video-dubs/jobs`; the Edge Function reads
+that row when environment overrides are absent. Apply the HTTP configuration
+migration before deploying the function. Keep the sweep cron disabled.
+
 ## Hosting
 
 The Dockerfile targets CPU and serves one job at a time on port 7860. It can run
