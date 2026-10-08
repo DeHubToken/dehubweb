@@ -90,6 +90,7 @@
     "heading": "הקצרים של DeHub"
   },
   "settings": {
+    "postingChain": "בלוקצ׳יין לפרסום",
     "showOnline": "הצגה כשאני במצב מחובר",
     "showOnlineDesc": "אנשים שאתם שולחים להם הודעה רואים נקודה ירוקה ליד השם שלכם בזמן שאתם משתמשים ב - DeHub",
     "smartReplies": "תשובות מוצעות",

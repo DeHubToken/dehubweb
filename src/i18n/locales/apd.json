@@ -88,6 +88,7 @@
     "heading": "شورتس DeHub"
   },
   "settings": {
+    "postingChain": "شبكة النشر",
     "showOnline": "وريني لمن أكون أونلاين",
     "showOnlineDesc": "الناس اللي بترسل ليهم رسائل شوفوا نقطة خضرا جنب اسمك وانت بتستخدم DeHub",
     "smartReplies": "الردود المقترحة",

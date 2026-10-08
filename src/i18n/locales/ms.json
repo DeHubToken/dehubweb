@@ -90,6 +90,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Rantaian blok siaran",
     "showOnline": "Tunjukkan apabila saya berada dalam talian",
     "showOnlineDesc": "Orang yang anda mesej melihat titik hijau di sebelah nama anda semasa anda menggunakan DeHub",
     "smartReplies": "Balasan yang dicadangkan",

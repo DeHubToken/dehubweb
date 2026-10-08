@@ -90,6 +90,7 @@
     "heading": "مقاطع DeHub القصيرة"
   },
   "settings": {
+    "postingChain": "شبكة النشر",
     "showOnline": "اعرض عندما أكون متصلاً بالإنترنت",
     "showOnlineDesc": "يرى الأشخاص الذين تراسلهم نقطة خضراء بجوار اسمك أثناء استخدام DeHub",
     "smartReplies": "الردود المقترحة",

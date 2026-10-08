@@ -90,6 +90,7 @@
     "heading": "DeHub Trumpieji"
   },
   "settings": {
+    "postingChain": "Įrašų blokų grandinė",
     "showOnline": "Rodyti, kada esu prisijungęs",
     "showOnlineDesc": "Kai naudojatės „DeHub“, žmonės, kuriems rašote žinutes, šalia jūsų vardo mato žalią tašką",
     "smartReplies": "Siūlomi atsakymai",

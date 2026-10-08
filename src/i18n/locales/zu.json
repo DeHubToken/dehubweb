@@ -90,6 +90,7 @@
     "heading": "Okufushane kwe-DeHub"
   },
   "settings": {
+    "postingChain": "I-blockchain yokuthumela",
     "showOnline": "Bonisa uma ngiku-inthanethi",
     "showOnlineDesc": "Abantu obathumelela umyalezo babona ichashazi eliluhlaza eceleni kwegama lakho ngenkathi usebenzisa i-DeHub",
     "smartReplies": "Izimpendulo eziphakanyisiwe",

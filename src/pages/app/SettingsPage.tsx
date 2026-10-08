@@ -79,6 +79,8 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
+import { SUPPORTED_CHAINS, type PostChainId } from '@/components/app/ChainSelector';
+import { usePostingChain } from '@/hooks/use-posting-chain';
 import { useTipNetwork, type TipNetworkOption } from '@/hooks/use-tip-network';
 import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
 import { setCoachEnabled, useCoachEnabled } from '@/hooks/use-coach-enabled';
@@ -2699,6 +2701,7 @@ function LanguageSelector() {
 
 function ContentSettings() {
   const { t } = useTranslation();
+  const { chainId, setChainId, saving } = usePostingChain();
 
   return (
     <div className="space-y-6">
@@ -2714,6 +2717,18 @@ function ContentSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.postSettings')}</h3>
         <div className="space-y-4">
+          <SettingsRow
+            anchor="posting-chain"
+            icon={<Globe />}
+            title={t('settings.postingChain')}
+            action={<SettingDrawerSelect
+              value={String(chainId)}
+              onValueChange={value => void setChainId(Number(value) as PostChainId)}
+              title={t('settings.postingChain')}
+              disabled={saving}
+              options={SUPPORTED_CHAINS.map(chain => ({ value: String(chain.id), label: chain.name }))}
+            />}
+          />
           <SettingToggle
             icon={FileText}
             anchor="auto-save-drafts"

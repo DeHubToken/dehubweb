@@ -94,6 +94,7 @@
     "heading": "DeHub ছোট ভিডিও"
   },
   "settings": {
+    "postingChain": "পোস্টের ব্লকচেইন",
     "showOnline": "Mane kab dikhawe jab main online rahoon",
     "showOnlineDesc": "जे लोगन तूं मैसेज करे छै, वे लोगन तूंरा नाम काँटे एक ठो ग्रीन डॉट देखै छै जब तूं DeHub काँटे काम करे छै।",
     "smartReplies": "পরামর্শ দেওয়া জবাব",

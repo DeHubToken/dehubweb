@@ -90,6 +90,7 @@
     "heading": "DeHub چھوٹا ویڈیو"
   },
   "settings": {
+    "postingChain": "पोस्ट के लेल ब्लॉकचेन",
     "showOnline": "Nga u shfaq kur jam online",
     "showOnlineDesc": "Mensen die je een bericht sturen, zien een groen stipje naast je naam terwijl je DeHub gebruikt",
     "smartReplies": "تجویز کیل جواب",

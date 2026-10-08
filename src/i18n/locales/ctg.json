@@ -94,6 +94,7 @@
     "heading": "DeHub ছোডো ভিডিও"
   },
   "settings": {
+    "postingChain": "পোস্টর ব্লকচেইন",
     "showOnline": "আমার অনলাইন থাকলে দেখাও",
     "showOnlineDesc": "People you message see a green dot next to your name while you're using DeHub",
     "smartReplies": "পরামর্শ দেওয়া জবাব",

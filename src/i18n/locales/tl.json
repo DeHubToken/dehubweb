@@ -90,6 +90,7 @@
     "heading": "Shorts ng DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain para sa mga post",
     "showOnline": "Ipakita kapag ako ay online",
     "showOnlineDesc": "Nakakakita ang mga taong pinadalhan mo ng mensahe ng berdeng tuldok sa tabi ng iyong pangalan habang gumagamit ka ng DeHub",
     "smartReplies": "Mga iminungkahing sagot",
