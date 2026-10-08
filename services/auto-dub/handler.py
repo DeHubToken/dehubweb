@@ -324,10 +324,11 @@ def handler(event: dict) -> dict:
         report(job, result)
         return result
     except Exception as e:  # noqa: BLE001
-        err = f"{type(e).__name__}: {e}"
+        err = f"{type(e).__name__}: network request failed" if isinstance(e, requests.RequestException) else f"{type(e).__name__}: {e}"
         if isinstance(e, subprocess.CalledProcessError) and e.stderr:
             err += " — " + e.stderr.decode(errors="ignore")[-300:]
-        traceback.print_exc()
+        if not isinstance(e, requests.RequestException):
+            traceback.print_exc()
         report(job, {"ok": False, "error": err})
         return {"ok": False, "error": err}
 
