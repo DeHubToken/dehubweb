@@ -38,7 +38,7 @@ export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onO
         <Button size="sm" variant={cloud.viewTrash ? "outline" : "secondary"} disabled={!cloud.available || cloud.busy} aria-pressed={!cloud.viewTrash} onClick={() => { void cloud.switchView(false); }}>Projects</Button>
         <Button size="sm" variant={cloud.viewTrash ? "secondary" : "outline"} disabled={!cloud.available || cloud.busy} aria-pressed={cloud.viewTrash} onClick={() => { void cloud.switchView(true); }}><Trash2 className="mr-2 h-4 w-4" />Trash</Button>
       </div>
-      {!cloud.selected && <Input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search projects" aria-label="Search cloud projects" disabled={!cloud.available} />}
+      {!cloud.selected && <Input value={query} onChange={event => setQuery(event.target.value)} placeholder="Search projects" aria-label="Search cloud projects" disabled={!cloud.available} className="border-white/15 bg-white/5 text-white placeholder:text-white/50 disabled:opacity-60" />}
       {cloud.viewTrash && <p className="text-xs text-white/60">Versions and source media are kept. Restore a project to continue editing.</p>}
       <div className="flex items-center justify-between"><h3 className="text-sm font-medium">{cloud.selected ? "Version history" : cloud.viewTrash ? "Trash" : "Your cloud projects"}</h3>
         {cloud.selected ? <Button variant="ghost" size="sm" disabled={cloud.busy} onClick={cloud.clearHistory}>Back</Button>
