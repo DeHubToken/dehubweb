@@ -15,7 +15,7 @@ the worker uses its stock voice. No database credentials reach the worker.
 ## Hosting
 
 The Dockerfile targets CPU and serves one job at a time on port 7860. It can run
-on existing compute or a Hugging Face Docker Space using CPU Basic hardware.
+on existing compute or a Hugging Face Docker Space if the account's plan allows it.
 Copy this directory to the Space root. Set its `DUB_WORKER_SECRET` secret and
 set these backend secrets:
 
@@ -30,8 +30,9 @@ job. Only public videos enter the shared public audio cache. Callback results
 must match both the dub and the current job ID, with a separate upload path per
 attempt. Concurrent viewer requests claim a row before dispatching work.
 
-Chatterbox has no per-character licence fee. CPU hosting can be free within a
-host's allowance, but first renders can be slow and idle hosts may sleep. No
+Chatterbox has no per-character licence fee. Hosting has separate requirements;
+the current Hugging Face signup requires a paid plan for Docker Spaces. Reuse
+existing compute where possible. First renders can be slow and idle hosts may sleep. No
 latency or throughput has been established for this deployment. The first job
 downloads the weights; subsequent jobs reuse them. Device speech remains the
 fallback while a render is pending or the host is unavailable. Finished audio
