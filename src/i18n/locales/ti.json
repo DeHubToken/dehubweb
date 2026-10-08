@@ -6326,6 +6326,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "ፍሉያት ህሞታት ምስሊ",
+      "visualPrivacy": "ንትንተና ምስሊ ዝተመርጹ ፍሬማት ስደድ።"
+    },
     "review": {
       "title": "ግምገማ ፕሮጀክት",
       "shared": "ምሳኹም ዝተኻፈለ",

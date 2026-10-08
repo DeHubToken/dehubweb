@@ -5379,6 +5379,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Video better moments",
+      "visualPrivacy": "Send selected frames make we analyse wetin dey show."
+    },
     "review": {
       "title": "Check project",
       "shared": "Dem share am with you",

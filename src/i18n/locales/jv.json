@@ -6211,6 +6211,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Kirim pigura sing dipilih kanggo analisis visual."
+    },
     "review": {
       "title": "Priksa proyek",
       "shared": "Dibagi karo sampeyan",

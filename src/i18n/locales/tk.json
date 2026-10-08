@@ -6368,6 +6368,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Wizual möhüm pursatlar",
+      "visualPrivacy": "Wizual seljerme üçin saýlanan kadrlary iberiň."
+    },
     "review": {
       "title": "Taslama syny",
       "shared": "Siziň bilen paýlaşylan",

@@ -6347,6 +6347,10 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizuální zajímavosti",
+      "visualPrivacy": "Odeslat vybrané snímky k vizuální analýze."
+    },
     "review": {
       "title": "Kontrola projektu",
       "shared": "Sdíleno s vámi",
