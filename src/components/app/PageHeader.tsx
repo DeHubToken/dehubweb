@@ -64,7 +64,9 @@ export function PageHeader({
     return (
       <div className={cn(
         'z-40 flex items-center justify-between pointer-events-none',
-        overlay ? 'absolute top-2 left-2 right-2' : 'sticky top-0 px-3 py-2',
+        overlay
+          ? 'absolute top-[calc(env(safe-area-inset-top,0px)+0.5rem)] left-[calc(env(safe-area-inset-left,0px)+0.5rem)] right-[calc(env(safe-area-inset-right,0px)+0.5rem)]'
+          : 'sticky top-0 px-3 py-2',
         className,
       )}>
         {showBack ? (
