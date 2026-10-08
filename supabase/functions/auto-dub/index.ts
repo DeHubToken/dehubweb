@@ -28,7 +28,20 @@ const PROVIDER = 'chatterbox-multilingual-v3';
 const BUCKET = 'video-dubs';
 /** Without a worker nothing ever leaves `pending`, so opening rows only grows
  *  a queue nobody drains. Players speak dubs on-device in the meantime. */
-const WORKER_CONFIGURED = !!WORKER_SECRET && (WORKER_URL.startsWith('https://') || (!!RUNPOD_API_KEY && !!RUNPOD_ENDPOINT_ID));
+type WorkerConfig = { url: string; secret: string; key: string; endpoint: string; configured: boolean };
+let workerCache: { value: WorkerConfig; expires: number } | null = null;
+async function workerConfig(db: any): Promise<WorkerConfig> {
+  if (workerCache && workerCache.expires > Date.now()) return workerCache.value;
+  const { data } = await db.from('video_dub_worker').select('worker_url, secret, runpod_api_key, runpod_endpoint_id').eq('id', 1).maybeSingle();
+  const rawUrl = WORKER_URL || data?.worker_url || '';
+  const url = rawUrl.startsWith('https://') ? rawUrl : '';
+  const secret = WORKER_SECRET || data?.secret || '';
+  const key = RUNPOD_API_KEY || data?.runpod_api_key || '';
+  const endpoint = RUNPOD_ENDPOINT_ID || data?.runpod_endpoint_id || '';
+  const value = { url, secret, key, endpoint, configured: !!secret && (!!url || (!!key && !!endpoint)) };
+  workerCache = { value, expires: Date.now() + 60_000 };
+  return value;
+}
 
 /** Every language the synthesiser speaks. The picker offers more; a language
  *  outside this set can have subtitles but not a voice. */
@@ -80,8 +93,8 @@ type Submit = 'submitted' | 'waiting-translation' | 'skipped' | 'error';
  * Hand one row to the worker. Returns without spending anything when the
  * translation is not there yet — it kicks one off and the next sweep finds it.
  */
-async function submit(db: any, row: DubRow): Promise<Submit> {
-  if (!WORKER_CONFIGURED) {
+async function submit(db: any, row: DubRow, worker: WorkerConfig): Promise<Submit> {
+  if (!worker.configured) {
     console.warn('auto-dub: worker not configured');
     return 'error';
   }
@@ -138,14 +151,14 @@ async function submit(db: any, row: DubRow): Promise<Submit> {
     sourceSegments: t.segments ?? [],
     uploadUrl: signed.signedUrl,
     callbackUrl: `${SUPABASE_URL}/functions/v1/auto-dub`,
-    secret: WORKER_SECRET,
+    secret: worker.secret,
   };
 
   let res: Response;
   try {
-    res = await fetch(WORKER_URL || `https://api.runpod.ai/v2/${RUNPOD_ENDPOINT_ID}/run`, {
+    res = await fetch(worker.url || `https://api.runpod.ai/v2/${worker.endpoint}/run`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${WORKER_URL ? WORKER_SECRET : RUNPOD_API_KEY}` },
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${worker.url ? worker.secret : worker.key}` },
     body: JSON.stringify({ input }),
     signal: AbortSignal.timeout(20000),
     });
@@ -168,8 +181,8 @@ async function submit(db: any, row: DubRow): Promise<Submit> {
 
 /* ─────────────────────────────── sweep ──────────────────────────────────── */
 
-async function sweep(db: any) {
-  if (!WORKER_CONFIGURED) return { opened: 0, considered: 0, idle: 'worker not configured' };
+async function sweep(db: any, worker: WorkerConfig) {
+  if (!worker.configured) return { opened: 0, considered: 0, idle: 'worker not configured' };
 
   /* 1. open rows for recent, short, public videos in the auto languages */
   const { data: recent } = await db
@@ -213,7 +226,7 @@ async function sweep(db: any) {
     if (results.submitted >= SWEEP_BUDGET) break;
     if (!retryable(row)) continue;
     considered++;
-    const r = await submit(db, row);
+    const r = await submit(db, row, worker);
     results[r]++;
     if (r === 'error' && results.error >= 3) break; // the worker is down; stop burning attempts
   }
@@ -222,7 +235,7 @@ async function sweep(db: any) {
 
 /* ─────────────────────────────── request ────────────────────────────────── */
 
-async function request(db: any, body: any) {
+async function request(db: any, body: any, worker: WorkerConfig) {
   const lang = String(body?.lang ?? '').trim().toLowerCase().replace(/_/g, '-');
   if (!/^[a-z]{2}(-[a-z0-9]{2,8}){0,2}$/.test(lang) || lang.length > 16 || !DUB_LANGS.includes(lang.split('-')[0])) return json({ error: 'unsupported dub language' }, 400);
 
@@ -241,7 +254,7 @@ async function request(db: any, body: any) {
   if (normalizeLang(t.source_lang) === normalizeLang(lang)) return json({ ok: true, status: 'same-as-source' });
   if (Number(t.duration_seconds ?? 0) > MAX_REQUEST_SECONDS) return json({ ok: true, status: 'too-long' });
 
-  if (!WORKER_CONFIGURED) return json({ ok: true, status: 'unavailable' });
+  if (!worker.configured) return json({ ok: true, status: 'unavailable' });
   await db.from('video_dubs')
     .upsert({ transcript_id: t.id, language: lang }, { onConflict: 'transcript_id,language', ignoreDuplicates: true });
   const { data: row } = await db
@@ -255,14 +268,14 @@ async function request(db: any, body: any) {
   if (row.status === 'ready') return json({ ok: true, status: 'unavailable' });
   if (!retryable(row)) return json({ ok: true, status: row.status });
 
-  const r = await submit(db, row);
+  const r = await submit(db, row, worker);
   return json({ ok: true, status: r === 'error' ? 'failed' : r === 'waiting-translation' ? 'pending' : 'processing', submit: r });
 }
 
 /* ─────────────────────────────── complete ───────────────────────────────── */
 
-async function complete(db: any, body: any) {
-  if (!WORKER_SECRET || body?.secret !== WORKER_SECRET) return json({ error: 'forbidden' }, 403);
+async function complete(db: any, body: any, worker: WorkerConfig) {
+  if (!worker.secret || body?.secret !== worker.secret) return json({ error: 'forbidden' }, 403);
   const dubId = String(body?.dubId ?? '');
   const jobId = String(body?.jobId ?? '');
   if (!dubId || !jobId) return json({ error: 'dubId and jobId required' }, 400);
@@ -297,15 +310,16 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const db = admin();
     const action = String(body?.action ?? 'sweep');
+    if (action === 'languages') return json({ languages: DUB_LANGS, auto: AUTO_LANGS });
+    const worker = await workerConfig(db);
     if (action === 'request') {
       const limited = await rateLimitByIp(req, 'auto-dub', { limit: 60, windowMs: 60 * 60 * 1000 });
       if (limited) return limited;
-      return await request(db, body);
+      return await request(db, body, worker);
     }
-    if (action === 'complete') return await complete(db, body);
-    if (action === 'languages') return json({ languages: DUB_LANGS, auto: AUTO_LANGS });
+    if (action === 'complete') return await complete(db, body, worker);
     if (req.headers.get('authorization') !== `Bearer ${SERVICE_KEY}`) return json({ error: 'forbidden' }, 403);
-    return json({ ok: true, ...(await sweep(db)) });
+    return json({ ok: true, ...(await sweep(db, worker)) });
   } catch (e: any) {
     console.error('auto-dub error', e);
     return json({ error: String(e?.message ?? e) }, 500);
