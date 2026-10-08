@@ -20,6 +20,10 @@ import { useHighlightChat } from '@/lib/editor/useHighlightChat';
 import { transcribeClipWords } from '@/lib/editor/captions';
 import { createHighlightEdit } from '@/lib/editor/applyHighlights';
 import { shotTime } from '@/lib/editor/shots';
+import { assemblyRequest } from '@/lib/editor/assembly';
+import { useAssembly } from '@/lib/editor/useAssembly';
+import { createAssemblyEdit } from '@/lib/editor/applyAssembly';
+import AssemblyReview from '../AssemblyReview';
 
 let entrySeq = 0;
 const nextId = () => `a${Date.now().toString(36)}${(entrySeq++).toString(36)}`;
@@ -49,8 +53,15 @@ export function AgentPanel() {
     },
     create: (original, clipId, ranges, signal) => createHighlightEdit(original, clipId, ranges, t('editor.highlights.projectTitle', { title: original.title }), signal),
   });
+  const [assemblyState, assembly] = useAssembly({
+    current: () => useEditorStore.getState().toSnapshot(),
+    create: (original, plan, signal) => createAssemblyEdit(original, plan, `${original.title} — ${t('editor.video.video')}`, signal),
+  });
+  const assemblyChanged = useEditorStore(s => assemblyState.sourceId !== null && !assembly.matchesSource(s.toSnapshot()));
+  const assemblyMedia = useEditorStore(s => s.media);
+  const closeAssembly = () => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); assembly.reset(); };
   const sourceChanged = useEditorStore(s => highlightState.clipId !== null && !highlights.matchesSource(s.toSnapshot()));
-  const working = busy || highlightState.busy;
+  const working = busy || highlightState.busy || assemblyState.busy;
   const recordHighlights = useCallback((result: HighlightChatResult) => {
     if (result.status === 'cancelled') return;
     const errors = { selectVideo: 'editor.highlights.chatSelectVideo', changed: 'editor.highlights.changed', limit: 'editor.highlights.chatLimit', captionsMissing: 'editor.highlights.chatCaptionsMissing', failed: 'editor.highlights.reviewFailed' };
@@ -91,9 +102,17 @@ export function AgentPanel() {
 
   const send = useCallback(async (text: string) => {
     const prompt = text.trim();
-    if (!prompt || busy || highlights.state.busy) return;
+    if (!prompt || busy || highlights.state.busy || assembly.state.busy) return;
     setDraft('');
     push({ id: nextId(), role: 'user', content: prompt });
+    const draftRequest = assemblyRequest(prompt);
+    if (draftRequest || assembly.state.sourceId) {
+      previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
+      if (draftRequest) { highlights.reset(); assembly.start(draftRequest, useEditorStore.getState().selectedClipIds); }
+      const reviewed = draftRequest || assembly.review(prompt);
+      push({ id: nextId(), role: 'assistant', content: t(reviewed ? 'easyTrade.reviewTitle' : 'editor.agent.nothingToDo') });
+      inputRef.current?.focus(); return;
+    }
     const request = highlightChatRequest(prompt);
     if (request || highlights.reviewing) {
       previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
@@ -130,7 +149,7 @@ export function AgentPanel() {
       setBusy(false);
       inputRef.current?.focus();
     }
-  }, [busy, highlightState.busy, highlights, recordHighlights, push, setBusy, quota.walletAddress, t]);
+  }, [busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -188,6 +207,9 @@ export function AgentPanel() {
           </div>
         </section>}
 
+        <AssemblyReview state={assemblyState} session={assembly} changed={assemblyChanged} names={Object.fromEntries(assemblyMedia.map(m => [m.id, m.name]))}
+          onPreview={index => { const range = assembly.preview(index); if (!range) return; previewEnd.current = range.end; useEditorStore.getState().selectClip(range.id); useEditorStore.getState().setCurrentTime(range.start); useEditorStore.getState().setIsPlaying(true); }}
+          onCreate={() => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); void assembly.create().then(saved => { if (saved) push({ id: nextId(), role: 'assistant', content: t('common.done') }); }); }} onClose={closeAssembly} />
         {working && (
           <div className="flex items-center gap-2 px-1 text-[11px] text-white/50">
             <Loader2 className="h-3.5 w-3.5 animate-spin" /> {t('editor.agent.working')}
@@ -228,7 +250,7 @@ export function AgentPanel() {
         <div className="mt-1 flex items-center justify-between px-1 text-[10px] text-white/35">
           <span>{t('editor.agent.hint')}</span>
           {entries.length > 0 && (
-            <button type="button" onClick={() => { closeHighlights(); clear(); }} className="flex items-center gap-1 hover:text-white/70">
+            <button type="button" onClick={() => { closeHighlights(); closeAssembly(); clear(); }} className="flex items-center gap-1 hover:text-white/70">
               <Trash2 className="h-3 w-3" /> {t('editor.agent.clear')}
             </button>
           )}
