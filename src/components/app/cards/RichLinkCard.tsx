@@ -4,7 +4,7 @@ import { CalendarClock, Clock, ExternalLink, GitFork, Star, X } from 'lucide-rea
 import type { RichPreview, RichDetails } from '@/lib/rich-links';
 import { pauseMediaIn } from '@/lib/pause-media-in';
 
-const statusKeys = { open: 'support.status.open', closed: 'support.status.closed', active: 'governance.active', pending: 'work.status.pending', locked: 'filters.locked' };
+const statusKeys = { open: 'support.status.open', closed: 'support.status.closed', active: 'commandCentre.active', pending: 'events.pending', locked: 'filters.locked' };
 export function RichLinkCard({ preview, onRemove }: { preview: RichPreview; onRemove?: () => void }) {
   const { t, i18n } = useTranslation();
   const data = preview.rich;

@@ -17,7 +17,7 @@ import { fetchAppByDomain, type MiniAppListing } from '@/lib/miniapp/registry';
 import { PredictionDetails } from './PredictionDetails';
 import { parsePredictionLink } from '@/lib/predictions';
 import { parseRichLink } from '@/lib/rich-links';
-import { RichLinkCard } from './RichLinkCard';
+import { RichLinkCard } from './RichLinkCardLazy';
 
 interface FeedLinkPreviewsProps {
   text: string;
