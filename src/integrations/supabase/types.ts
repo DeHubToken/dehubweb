@@ -1620,6 +1620,24 @@ export type Database = {
           },
         ]
       }
+      chirp_speech_usage: {
+        Row: {
+          characters: number
+          month: string
+          updated_at: string
+        }
+        Insert: {
+          characters?: number
+          month: string
+          updated_at?: string
+        }
+        Update: {
+          characters?: number
+          month?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       client_error_logs: {
         Row: {
           component: string | null
@@ -6855,6 +6873,7 @@ export type Database = {
           runpod_endpoint_id: string | null
           secret: string
           updated_at: string
+          worker_url: string | null
         }
         Insert: {
           id: number
@@ -6862,6 +6881,7 @@ export type Database = {
           runpod_endpoint_id?: string | null
           secret: string
           updated_at?: string
+          worker_url?: string | null
         }
         Update: {
           id?: number
@@ -6869,6 +6889,7 @@ export type Database = {
           runpod_endpoint_id?: string | null
           secret?: string
           updated_at?: string
+          worker_url?: string | null
         }
         Relationships: []
       }
@@ -8318,6 +8339,10 @@ export type Database = {
           p_salt: string
         }
         Returns: Json
+      }
+      reserve_chirp_characters: {
+        Args: { p_characters: number }
+        Returns: boolean
       }
       reserve_fraction_listing: {
         Args: { p_listing_id: string; p_quantity: number }
