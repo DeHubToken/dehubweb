@@ -8,6 +8,9 @@ User=dehub-dub
 Group=dehub-dub
 WorkingDirectory=/srv/dehub-dub/app
 EnvironmentFile=/etc/dehub-dub.env
+Environment=HOME=/srv/dehub-dub/cache
+Environment=XDG_CACHE_HOME=/srv/dehub-dub/cache
+Environment=NUMBA_CACHE_DIR=/srv/dehub-dub/cache/numba
 Environment=HF_HOME=/srv/dehub-dub/cache
 Environment=DUB_CPU_THREADS=2
 Environment=PYTHONUNBUFFERED=1
