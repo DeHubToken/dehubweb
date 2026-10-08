@@ -6431,6 +6431,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Arotake kaupapa",
+      "shared": "I tiritiria ki a koe",
+      "time": "Wā (s)",
+      "assign": "Tautapa pūkoro"
+    },
     "textFit": {
       "wrap": "Whati ngā rārangi",
       "width": "Whānui kuputuhi",

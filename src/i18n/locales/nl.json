@@ -6615,6 +6615,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projectbeoordeling",
+      "shared": "Met jou gedeeld",
+      "time": "Tijd (s)",
+      "assign": "Wallet toewijzen"
+    },
     "textFit": {
       "wrap": "Regels afbreken",
       "width": "Tekstbreedte",

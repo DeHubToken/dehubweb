@@ -6346,6 +6346,12 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Projektin tarkistus",
+      "shared": "Jaettu kanssasi",
+      "time": "Aika (s)",
+      "assign": "Määritä lompakko"
+    },
     "textFit": {
       "wrap": "Rivitä teksti",
       "width": "Tekstin leveys",
