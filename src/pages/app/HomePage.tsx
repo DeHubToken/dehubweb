@@ -722,9 +722,13 @@ export default function HomePage() {
   const handleTouchStart = (e: React.TouchEvent) => {
     // Carousels own sideways swipes; a downward pull still belongs to the feed.
     pullHandlers.onTouchStart(e);
+    touchStartX.current = null;
+    touchStartY.current = null;
+    touchEndX.current = null;
+    touchEndY.current = null;
     const target = e.target as HTMLElement;
-    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe]');
-    if (touchInsideNoSwipe.current) return;
+    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe], input[type="range"], [role="slider"]');
+    if (touchInsideNoSwipe.current || e.touches.length !== 1) return;
 
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
@@ -735,7 +739,7 @@ export default function HomePage() {
 
   const handleTouchMove = (e: React.TouchEvent) => {
     pullHandlers.onTouchMove(e);
-    if (touchInsideNoSwipe.current) return;
+    if (touchInsideNoSwipe.current || touchStartX.current === null || e.touches.length !== 1) return;
 
     touchEndX.current = e.touches[0].clientX;
     touchEndY.current = e.touches[0].clientY;
