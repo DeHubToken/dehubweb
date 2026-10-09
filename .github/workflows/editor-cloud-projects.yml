@@ -45,9 +45,21 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20260928080000_account_erasure.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008200000_editor_cloud_project_erasure.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008210000_editor_cloud_project_editing.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008220000_editor_cloud_project_conflict_status.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008220000_editor_cloud_project_conflict_status.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-projects.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-trash.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-review.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-review-exit.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-erasure.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-editing.sql
+      - name: Conflicts return promptly through PostgREST 14
+        run: |
+          docker run --detach --name editor-cloud-http --network host \
+            --env PGRST_DB_URI=postgres://postgres:cloud-test@localhost:5432/cloud_test \
+            --env PGRST_DB_SCHEMAS=public --env PGRST_DB_ANON_ROLE=anon \
+            --env PGRST_SERVER_PORT=3000 postgrest/postgrest:v14.1
+          python3 tests/sql/editor-cloud-http-conflicts.py
+      - name: HTTP gateway diagnostics
+        if: always()
+        run: docker logs editor-cloud-http || true
