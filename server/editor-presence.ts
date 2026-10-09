@@ -27,7 +27,7 @@ export async function handleEditorPresence(request: Request, env: { EDITOR_PRESE
 export class EditorPresenceRoom {
   private queue: Promise<unknown> = Promise.resolve();
   private depth = 0;
-  constructor(private ctx: Context, _env: unknown, private fetcher: typeof fetch = fetch) {}
+  constructor(private ctx: Context, _env: unknown, private fetcher: typeof fetch = (input, init) => fetch(input, init)) {}
   async fetch(request: Request) {
     const target = presenceRoute(request);
     if (!target || request.headers.get("Upgrade")?.toLowerCase() !== "websocket") return new Response("Unavailable", { status: 404 });
