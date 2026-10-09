@@ -20,20 +20,20 @@ SELECT cloud_test_error($q$SELECT editor_cloud_load('11111111-1111-4111-8111-111
 DO $$ BEGIN IF editor_cloud_history('11111111-1111-4111-8111-111111111111')<>'[]'::jsonb THEN RAISE EXCEPTION 'Trash leaked into active history'; END IF; END $$;
 -- Committed-save recovery remains idempotent, but new writes cannot revive Trash.
 SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',current_setting('cloud.test_document')::jsonb,0,'00000000-0000-4000-8000-000000000001');
-SELECT cloud_test_error($q$SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',current_setting('cloud.test_document')::jsonb,1,'00000000-0000-4000-8000-000000000002')$q$,'40001');
+SELECT cloud_test_error($q$SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',current_setting('cloud.test_document')::jsonb,1,'00000000-0000-4000-8000-000000000002')$q$,'PT409');
 SELECT cloud_test_error($q$SELECT editor_cloud_restore('11111111-1111-4111-8111-111111111111',1,1,'00000000-0000-4000-8000-000000000003')$q$,'42501');
 SELECT cloud_test_headers('0x2222222222222222222222222222222222222222');
 DO $$ BEGIN IF editor_cloud_list_trash()<>'[]'::jsonb THEN RAISE EXCEPTION 'Another account read Trash'; END IF; END $$;
 SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,1,false)$q$,'42501');
 SELECT cloud_test_headers('0x1111111111111111111111111111111111111111');
 SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,1,false);
-SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,0,true)$q$,'40001');
+SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,0,true)$q$,'PT409');
 SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,2,true);
-SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,0,true)$q$,'40001');
-SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,1,false)$q$,'40001');
+SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,0,true)$q$,'PT409');
+SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,1,false)$q$,'PT409');
 SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,3,false);
 SELECT editor_cloud_save('11111111-1111-4111-8111-111111111111',current_setting('cloud.test_document')::jsonb,1,'00000000-0000-4000-8000-000000000002');
-SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,4,true)$q$,'40001');
+SELECT cloud_test_error($q$SELECT editor_cloud_set_trash('11111111-1111-4111-8111-111111111111',1,4,true)$q$,'PT409');
 DO $$ DECLARE p jsonb; BEGIN
   p:=editor_cloud_load('11111111-1111-4111-8111-111111111111');
   IF p->>'revision'<>'2' OR p->'document'->'snapshot'->'clips'->0->>'trimIn'<>'1' OR jsonb_array_length(editor_cloud_history('11111111-1111-4111-8111-111111111111'))<>2 OR editor_cloud_list_trash()<>'[]'::jsonb THEN RAISE EXCEPTION 'Recovery changed the timeline or history'; END IF;
