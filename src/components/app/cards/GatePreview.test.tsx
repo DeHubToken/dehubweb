@@ -17,4 +17,9 @@ describe('paywall cover', () => {
     rerender(<GatePreview src="https://example.test/next.jpg" />);
     expect(container.querySelector('img')?.getAttribute('src')).toBe('https://example.test/next.jpg');
   });
+  it('treats the feed adapter placeholder as a missing cover', () => {
+    const { container } = render(<GatePreview src="/placeholder.svg" />);
+    expect(container.querySelector('img')).toBeNull();
+    expect(container.firstElementChild?.className).toContain('bg-zinc-900');
+  });
 });
