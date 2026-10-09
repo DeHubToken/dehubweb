@@ -1,3 +1,6 @@
+import { createVideoMattePageCache, videoMatteFramesForOps } from "@/lib/editor/videoMattePageCache";
+import { loadVideoMatteImage } from "@/lib/editor/videoMatteImages";
+import { videoMatteMediaIds } from "@/lib/editor/videoMatte";
 /**
  * Canvas-based preview compositor. Composites all active clips at the playhead
  * (video frames + images + text overlays) and synchronises audio elements.
@@ -134,12 +137,21 @@ export function Compositor() {
     extraAudio.current.forEach(releaseMedia);
   }, []);
 
+  const mediaRef = useRef(media); mediaRef.current = media;
+  const mattePages = useRef<ReturnType<typeof createVideoMattePageCache> | null>(null);
+  useEffect(() => {
+    const cache = createVideoMattePageCache(imagePool.current, frame => loadVideoMatteImage(mediaRef.current, frame), image => { image.src = ""; });
+    mattePages.current = cache;
+    return () => { cache.dispose(); if (mattePages.current === cache) mattePages.current = null; };
+  }, []);
+
   // Provision elements when media changes.
   useEffect(() => {
     const vPool = videoPool.current;
     const aPool = audioPool.current;
     const iPool = imagePool.current;
-    const decoded = media.filter(m => !m.name.startsWith(".dehub-video-matte-") || clips.some(c => c.kind === "video" && c.videoMatte?.mediaId === m.id));
+    const matteIds = new Set(clips.flatMap(c => c.kind === "video" ? videoMatteMediaIds(c.videoMatte) : []));
+    const decoded = media.filter(m => !m.name.startsWith(".dehub-video-matte-") && !matteIds.has(m.id));
     const liveIds = new Set(decoded.map((m) => m.id));
 
     for (const m of decoded) {
@@ -170,7 +182,7 @@ export function Compositor() {
     // GC dropped media.
     for (const id of Array.from(vPool.keys())) if (!liveIds.has(id)) { vPool.get(id)?.pause(); vPool.delete(id); }
     for (const id of Array.from(aPool.keys())) if (!liveIds.has(id)) { aPool.get(id)?.pause(); aPool.delete(id); }
-    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id)) { const image = iPool.get(id); if (image) image.src = ""; iPool.delete(id); }
+    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id) && !matteIds.has(id)) { const image = iPool.get(id); if (image) image.src = ""; iPool.delete(id); }
   }, [media, clips]);
 
   // ── Playback clock ──
@@ -234,6 +246,7 @@ export function Compositor() {
         time,
         state.settings.width,
       );
+      try { void mattePages.current?.select(videoMatteFramesForOps(renderOps, time)).catch(() => {}); } catch { /* Missing masks stay hidden until restored. */ }
 
       // Sync video/audio media.
       const activeVideos = leaseMedia<HTMLVideoElement>(renderOps.flatMap(op => op.clip.kind === "video" ? [op.clip] : []), videoPool.current, extraVideos.current, cloneMedia, releaseMedia);
