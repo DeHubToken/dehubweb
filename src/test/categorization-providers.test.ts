@@ -1,7 +1,6 @@
 // @vitest-environment node
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
-vi.mock('../../supabase/functions/_shared/transcripts.ts', () => ({ DEHUB_CDN_BASE: 'https://cdn.example/' }));
 let env: Record<string, string>;
 let requests: Array<{ url: string; body: any }>;
 let batches: any[][];

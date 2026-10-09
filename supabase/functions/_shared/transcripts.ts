@@ -8,6 +8,8 @@
 
 // deno-lint-ignore-file no-explicit-any
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
+import { DEHUB_CDN_BASE } from './media-origins.ts';
+export { DEHUB_CDN_BASE } from './media-origins.ts';
 
 export const corsHeaders: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
@@ -38,7 +40,6 @@ export function json(body: unknown, status = 200): Response {
 export const DEHUB_API_BASE = (Deno.env.get('DEHUB_PUBLIC_API_BASE') || 'https://api.dehub.io')
   .replace(/\/+$/, '')
   .replace(/\/api$/, '');
-export const DEHUB_CDN_BASE = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com/';
 
 export type SourceKind = 'video' | 'stage' | 'live' | 'audio';
 export type TranscriptStatus = 'pending' | 'processing' | 'ready' | 'empty' | 'failed';
