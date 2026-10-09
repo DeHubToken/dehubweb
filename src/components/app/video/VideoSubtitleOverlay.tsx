@@ -211,7 +211,9 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   useEffect(() => { setDubFailed(false); }, [dubOn, dubLang]);
 
   const wantDub = dubOn && !dubFailed && isReady && !!dubLang && (hasCachedDubLanguage(dubLang) || !!dubVoice);
-  useEffect(() => { onDubAvailableChange?.(wantDub); }, [wantDub, onDubAvailableChange]);
+  // Let viewers set both levels while a selected dub is loading or muted.
+  const dubControlsAvailable = !!numericId && dubOn && (!sourceLang || !!dubLang);
+  useEffect(() => { onDubAvailableChange?.(dubControlsAvailable); }, [dubControlsAvailable, onDubAvailableChange]);
   useEffect(() => () => { onDubAvailableChange?.(false); }, [onDubAvailableChange]);
   const {
     segments: dubSegments,
