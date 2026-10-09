@@ -12,6 +12,7 @@ import { ExportDialog } from "@/components/editor/ExportDialog";
 import { PostToDeHub } from "@/components/editor/PostToDeHub";
 import { AboutDialog } from "@/components/editor/AboutDialog";
 import { AppState } from "@/components/app/AppState";
+import { LiveProjectSession } from "./LiveProjectSession";
 import { CloudProjectsDialog } from "./CloudProjectsDialog";
 
 export function EditorTopBar() {
@@ -49,6 +50,7 @@ export function EditorTopBar() {
   const surfaceEpoch = useSurfaceEpoch();
 
   return (
+    <>
     <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/60 px-4 backdrop-blur-[24px]">
       <div className="flex items-center gap-2">
         <Popover key={surfaceEpoch} open={open} onOpenChange={setOpen}>
@@ -167,5 +169,7 @@ export function EditorTopBar() {
       <AboutDialog key={`about-${surfaceEpoch}`} open={aboutOpen} onOpenChange={setAboutOpen} />
       <CloudProjectsDialog key={`cloud-${surfaceEpoch}`} open={cloudOpen} onOpenChange={setCloudOpen} />
     </header>
+    <LiveProjectSession key={`live-${surfaceEpoch}`} projectId={projectId} />
+    </>
   );
 }
