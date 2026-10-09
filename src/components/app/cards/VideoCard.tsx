@@ -1741,7 +1741,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
   }, []);
 
+  const scrubEventRef = useRef<HTMLDivElement>(null);
   const scrubZone = useVideoScrubZone({
+    mediaRef: containerRef,
+    eventRef: scrubEventRef,
     enabled: bareControls && !isContentGated && duration > 0 && Number.isFinite(duration),
     duration,
     onStart: () => {
@@ -1984,10 +1987,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Same fix, same reason, as [data-post-overlay-backdrop] in index.css.
   return (
     <div
+      ref={scrubEventRef}
       data-video-card
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
-      onPointerDownCapture={isImmersive || stage ? undefined : warmPostPage}
+      {...scrubZone}
+      onPointerDownCapture={event => {
+        scrubZone.onPointerDownCapture?.(event);
+        if (!event.isPropagationStopped() && !isImmersive && !stage) warmPostPage();
+      }}
       className={isImmersive || stage
         ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
@@ -2081,7 +2089,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
         {...tapGestures}
-        {...scrubZone}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
@@ -2549,7 +2556,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
-            {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
+            {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-20 touch-none" />}
 
             <div data-video-button-row className={cn("flex items-center gap-2", bareControls && (mediaAspect >= 1 ? "px-2" : "px-1.5"))}>
               <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
