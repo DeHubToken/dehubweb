@@ -2533,6 +2533,7 @@ function ThemeColorPicker({ theme }: { theme: string }) {
 
 const THEME_OPTIONS = [
   { value: 'system', labelKey: 'settings.system', available: true },
+  { value: 'immersive', labelKey: 'settings.immersive', available: true },
   { value: 'light', labelKey: 'settings.light', available: true },
   { value: 'minimal', labelKey: 'settings.minimal', available: true },
   { value: 'cosmic', labelKey: 'settings.cosmic', available: true },

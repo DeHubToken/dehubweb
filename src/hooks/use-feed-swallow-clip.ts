@@ -2,7 +2,7 @@ import { useContext, useEffect, type RefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 /** Themes whose sticky feed nav is a glass surface (pill or bento). */
-const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system'];
+const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
 
 /**
  * Swallow scrolled feed content at the top edge of a sticky glass nav surface.
@@ -31,7 +31,7 @@ const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war
  *                      it on the opaque/paper themes too (e.g. the docs blog
  *                      pill pins below the docs header), where content would
  *                      otherwise re-emerge above the nav
- *                      off: skip the clip entirely (the system theme's phone
+ *                      off: skip the clip entirely (the Immersive theme's phone
  *                      feed has no resting pill to cut at)
  */
 export function useFeedSwallowClip(

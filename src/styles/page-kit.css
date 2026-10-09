@@ -154,19 +154,19 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
 [data-kit-body] > * + * { margin-top: 0.75rem; }
 [data-kit-section] { border-radius: 12px; }
 
-/* System, minimal and light on phones: the home feed's full-width look.
+/* System, Immersive, minimal and light on phones: the home feed's full-width look.
    Sections lose their box and sit between full-width hairlines. */
 @media (max-width: 639px) {
-  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] {
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] {
     padding-left: 0;
     padding-right: 0;
   }
-  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > * + * { margin-top: 0; }
-  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > :not([data-kit-section]):not([data-kit-flat-skip]) {
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > * + * { margin-top: 0; }
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > :not([data-kit-section]):not([data-kit-flat-skip]) {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_) {
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_) {
     background: transparent !important;
     border-radius: 0 !important;
     box-shadow: none !important;
@@ -178,8 +178,8 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
     padding-top: 1.125rem;
     padding-bottom: 1.125rem;
   }
-  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::before,
-  html:is([data-theme='system'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::after {
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::before,
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::after {
     display: none !important;
   }
 }

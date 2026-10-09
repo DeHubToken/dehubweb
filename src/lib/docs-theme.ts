@@ -25,7 +25,7 @@ export function isDocsCanvasTheme(appTheme: string | undefined): boolean {
 
 export function getDocsForcedTheme(appTheme: string | undefined): 'dark' | 'light' | undefined {
   if (isDocsCanvasTheme(appTheme)) return 'dark';
-  if (appTheme === 'minimal') return 'dark';
+  if (appTheme === 'minimal' || appTheme === 'immersive') return 'dark';
   if (appTheme === 'light') return 'light';
   return undefined;
 }
