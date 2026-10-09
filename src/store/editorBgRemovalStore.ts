@@ -7,7 +7,7 @@ import { create } from 'zustand';
 import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { useEditorStore } from '@/store/editorStore';
-import { backgroundRemovalScope, matchesBackgroundRemovalScope, backgroundRemovalFailureMessage, type BackgroundRemovalFailure } from '@/lib/editor/backgroundRemovalFailure';
+import { backgroundRemovalScope, matchesBackgroundRemovalScope, backgroundRemovalFailureMessage, isBackgroundRemovalCancellation, type BackgroundRemovalFailure } from '@/lib/editor/backgroundRemovalFailure';
 import { removeLayerBackground, type BgRemovalProgress } from '@/lib/editor/removeBackground';
 
 interface BgRemovalState {
@@ -49,7 +49,7 @@ export const useBgRemovalStore = create<BgRemovalState>((set, get) => ({
       else fail();
       return ok;
     } catch (e) {
-      if (controller.signal.aborted || (e instanceof Error && e.name === 'AbortError')) return false;
+      if (controller.signal.aborted || isBackgroundRemovalCancellation(e)) return false;
       console.error('[editor] background removal failed', e);
       fail(e);
       return false;
