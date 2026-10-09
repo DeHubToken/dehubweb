@@ -108,7 +108,7 @@ import { useConnectionQuality } from '@/hooks/use-connection-quality';
 /** Lazy: nine canvas painters and a decoder, ~50 KB, for a minority post type
  *  — none of it belongs in the bytes parsed before first paint. */
 const AudioVisualizer = lazy(() =>
-  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
+  import('../audio/ProtectedAudioVisualizer').then((m) => ({ default: m.ProtectedAudioVisualizer }))
 );
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { warmPostPage } from '@/lib/preload-post-page';
@@ -128,6 +128,7 @@ import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useMediaAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
+import { GatePreview } from './GatePreview';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
 import {
   claimMediaSession,
@@ -2120,7 +2121,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           />
         ) : /* Combo PPV + Holdings Locked */ isComboLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover rounded-lg" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover rounded-lg" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -2153,7 +2154,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isPPVLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -2182,7 +2183,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <>
             {/* Subscriber gate — subscribe to this creator. Not the holdings
                 gate below, which anyone can satisfy by buying tokens. */}
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
@@ -2214,7 +2215,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isHoldingsLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
@@ -2240,7 +2241,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isBountyLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
@@ -2275,6 +2276,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <div className="absolute inset-0">
                   <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>
                     <AudioVisualizer
+                      tokenId={video.id}
+                      viewerKey={walletAddress}
+                      requiresAccess={!!video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || !!video.subscriberPlans?.length}
                       audioUrl={video.audioUrl}
                       isPlaying={isPlaying}
                       onPlayPause={handlePlayClick}
