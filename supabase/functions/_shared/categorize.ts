@@ -12,7 +12,7 @@
 // button keeps working exactly as it does, in the panel's own project, and
 // nothing about the manual path had to be touched to make the automatic one
 // exist. If the prompt changes, change it in both.
-import { DEHUB_CDN_BASE } from './transcripts.ts';
+import { DEHUB_CDN_BASE } from './media-origins.ts';
 import { categorizeCompletion, CategorizationUnavailable } from './categorize-completion.ts';
 export { CategorizationUnavailable } from './categorize-completion.ts';
 
