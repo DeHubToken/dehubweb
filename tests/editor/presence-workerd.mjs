@@ -5,20 +5,20 @@ import { setTimeout as delay } from "node:timers/promises";
 
 // Use the exact Workers engine and compiler already pinned by Wrangler.
 const dependency = createRequire(realpathSync(new URL("../../node_modules/wrangler/package.json", import.meta.url)));
-const { Miniflare, Response: WorkerResponse } = dependency("miniflare");
+const { Miniflare, Response: WorkerResponse, convertV4MiniflareOptions } = dependency("miniflare");
 const { build } = dependency("esbuild");
 const bundle = await build({ entryPoints: ["CLOUDFLARE_WORKER_SEO.js"], bundle: true, write: false, format: "esm", platform: "browser", external: ["cloudflare:*"], target: "es2022" });
 const owner = "0x" + "a".repeat(40), editor = "0x" + "b".repeat(40), denied = "0x" + "c".repeat(40);
 const project = "11111111-1111-4111-8111-111111111111", other = "22222222-2222-4222-8222-222222222222";
 const token = wallet => `${wallet}.${Math.floor(Date.now() / 1000) + 3600}.${"a".repeat(64)}`;
 let allowed = true, head = 3, lookups = 0;
-const mf = new Miniflare({ workers: [{ name: "editor-presence", modules: true, script: bundle.outputFiles[0].text, compatibilityDate: "2026-07-18", durableObjects: { EDITOR_PRESENCE: { className: "EditorPresenceRoom", useSQLite: true } }, outboundService: async request => {
+const mf = new Miniflare(convertV4MiniflareOptions({ modules: true, script: bundle.outputFiles[0].text, compatibilityDate: "2026-07-18", durableObjects: { EDITOR_PRESENCE: { className: "EditorPresenceRoom", useSQLite: true } }, outboundService: async request => {
   assert.equal(request.url, "https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/rpc/editor_cloud_live_access");
   const wallet = request.headers.get("x-wallet-address"), signed = request.headers.get("x-wallet-session"), target = await request.json(); lookups++;
   const parts = signed?.split(".") || [];
   const valid = parts.length === 3 && parts[0] === wallet && Number(parts[1]) > Date.now() / 1000 && parts[2] === "a".repeat(64) && target.p_owner === owner && [project, other].includes(target.p_id) && (wallet === owner || (wallet === editor && allowed && target.p_id === project));
   return new WorkerResponse(JSON.stringify(valid ? { wallet, ownerWallet: owner, projectId: target.p_id, role: wallet === owner ? "owner" : "editor", revision: target.p_id === other ? 20 : head } : { code: "42501" }), { status: valid ? 200 : 401 });
-} }] });
+} }));
 const sockets = [];
 async function connect(id = project) {
   const response = await mf.dispatchFetch(`https://dehub.io/api/editor/presence/${owner}/${id}`, { headers: { Upgrade: "websocket", Origin: "https://dehub.io" } });
