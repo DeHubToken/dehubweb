@@ -13,7 +13,9 @@ Request: `6ee38412-5013-4288-aa0d-03f07a4dea1b`.
 - The existing rollback-only SQL suite passed against production on 9 October: wrong-wallet access, instant seeking, unfinished playback, completed billing, creator attribution, duplicate retries, empty budgets and expiration. Every fixture and billing entry was rolled back.
 - There are no active sponsor campaigns and no recorded support sessions. The feature must show its empty-inventory state. Do not create paid campaigns or fake revenue for verification.
 - The implementation credits USD ad revenue, with token settlement pending. It does not promise 100 DHB per view. This limit is already disclosed in the merged implementation.
-- Remaining release evidence: verify the production tip drawer and no-inventory response, confirm mobile publication contains PR 1567, and reconcile the missing `20261004093000` migration-ledger entry against the installed schema before closing the card. Actual sponsor playback and token settlement remain unverified without an eligible campaign and a settlement route.
+- Production verification on 9 October: the Send Tip drawer exposes the sponsor option and returns "No sponsor videos are available right now. You can still send a token tip." The published mobile preview revision `279984d2f5969160f7c86c3e08d87130a6c9c105` contains PR 1567. No production-channel publication tag exists, so that channel is not established by this check.
+- The missing `20261004093000` migration-ledger entry was restored after comparing the installed function body, table constraints, RLS and grants with the merged migration. The entry contains that migration's original SQL; no schema or billing state changed.
+- Remaining release evidence: actual sponsor playback and token settlement remain unverified without an eligible campaign and a settlement route. Keep the card in Shipping until its supported settlement behavior is confirmed; the empty-inventory result alone is not proof that a creator has been paid.
 
 ### Bridge
 
