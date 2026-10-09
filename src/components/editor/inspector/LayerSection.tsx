@@ -219,7 +219,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
             : t("editor.bgRemove.action")}
         </button>
       )}
-      {mediaClip?.kind === "video" && !bgClipId && !mediaClip.videoMatte && <p className="text-[10px] leading-snug text-white/40">{t("editor.videoMatte.hint", { seconds: Math.round(600 / settings.fps) })}</p>}
+      {mediaClip?.kind === "video" && !bgClipId && !mediaClip.videoMatte && <p className="text-[10px] leading-snug text-white/40">{t("editor.videoMatte.hint", { seconds: 600 })}</p>}
       {mediaClip?.kind === "video" && bgClipId === clip.id && <button type="button" onClick={cancelBgRemoval} className="text-xs text-white/70">{t("editor.videoMatte.cancel")}</button>}
       {mediaClip?.videoMatte && <button type="button" onClick={() => patchClip(clip.id, { videoMatte: null })} className="h-8 w-full rounded-md border border-white/20 text-xs text-white">{t("editor.videoMatte.restore")}</button>}
       {mediaClip?.kind === "image" && !bgClipId && (

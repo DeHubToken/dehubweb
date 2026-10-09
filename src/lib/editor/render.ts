@@ -347,8 +347,8 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
   let sw = m.w * (1 - c.left - c.right);
   let sh = m.h * (1 - c.top - c.bottom);
   if (clip.kind === "video" && clip.videoMatte) {
-    const frame = videoMatteFrame(clip, sourceTime), image = src.images.get(clip.videoMatte.mediaId);
-    if (!frame || !image?.naturalWidth || image.naturalWidth !== clip.videoMatte.atlasWidth || image.naturalHeight !== clip.videoMatte.atlasHeight) return;
+    const frame = videoMatteFrame(clip, sourceTime), image = frame ? src.images.get(frame.mediaId) : undefined;
+    if (!frame || !image?.naturalWidth || image.naturalWidth !== frame.atlasWidth || image.naturalHeight !== frame.atlasHeight) return;
     matteCanvas ??= document.createElement("canvas");
     const scale = Math.min(1, 1920 / Math.max(sw, sh));
     const width = Math.max(1, Math.round(sw * scale)), height = Math.max(1, Math.round(sh * scale));
