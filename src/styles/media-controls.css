@@ -56,6 +56,7 @@ html[data-theme] body [data-audio-player] span[data-audio-bare] {
   [data-video-card] [data-video-controls] { transition: none; }
 }
 [data-video-card] [data-video-scrubber="line"] [data-scrubber-line] {
+  touch-action: none;
   background-size: calc(100% - 1px) 2px, 100% 3px !important;
   background-position: center calc(100% - 0.5px), center bottom !important;
 }

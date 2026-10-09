@@ -47,12 +47,18 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       if (!inZone(event.currentTarget, event.clientY)) return;
       if (args.ignoreSelector && (event.target as Element).closest(args.ignoreSelector)) return;
       const button = !!(event.target as Element).closest('button, [role="button"]');
-      gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, button, dragging: false };
+      const dedicated = !button && !!(event.target as Element).closest('[data-scrubber-line], [data-scrub-track]');
+      gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, button, dragging: dedicated };
       // Disable the range's native seek; this gesture commits only on release.
       if (!button) {
         event.currentTarget.setPointerCapture(event.pointerId);
         event.preventDefault();
         event.stopPropagation();
+      }
+      if (dedicated) {
+        swallowClick.current = true;
+        args.onStart();
+        args.onPreview(timeAt(event));
       }
     },
     onPointerMoveCapture(event) {
@@ -96,7 +102,14 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       if (bottomTouch.current) event.stopPropagation();
       bottomTouch.current = false;
     },
-    onTouchCancelCapture() { bottomTouch.current = false; },
+    onTouchMoveCapture(event) {
+      if (bottomTouch.current) event.stopPropagation();
+    },
+    onTouchCancelCapture(event) {
+      if (bottomTouch.current) event.stopPropagation();
+      bottomTouch.current = false;
+      if (gesture.current) cancel();
+    },
     onClickCapture(event) {
       // Keyboard activation has no pointer gesture and keeps working.
       if (swallowClick.current && event.detail !== 0) {
