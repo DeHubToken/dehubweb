@@ -26,7 +26,7 @@ export function CommunityTabEmptyState({ tab, isPendingApproval }: CommunityTabE
   const { theme } = useAppTheme();
   // The files share a 256px canvas, but not a common visible-art box. Normalize
   // the transparent padding so every tab sits centred at the same visual size.
-  const roomyPack = ['system', 'cosmic', 'lavalamp', 'light', 'minimal'].includes(theme);
+  const roomyPack = ['system', 'immersive', 'cosmic', 'lavalamp', 'light', 'minimal'].includes(theme);
   const scale = tab === 'events'
     ? (roomyPack ? 1.2 : 1.06)
     : tab === 'members'
