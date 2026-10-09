@@ -9,13 +9,13 @@
  * 2. TranslatableGroup - wraps multiple elements, shows single control at end
  */
 
-import { useState, useMemo, useEffect, useCallback, useRef, createContext, useContext, ReactNode, RefObject } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, useSyncExternalStore, createContext, useContext, ReactNode, RefObject } from 'react';
 import { Mail, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { autoTranslateEnabled, setAutoTranslateEnabled } from '@/lib/auto-translate-setting';
+import { autoTranslateEnabled, setAutoTranslateEnabled, subscribeAutoTranslate } from '@/lib/auto-translate-setting';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
@@ -805,15 +805,12 @@ export function useTranslation(
   publicContent = false,
 ) {
   const { language: userLang } = useUserLanguage();
+  const autoEnabled = useSyncExternalStore(subscribeAutoTranslate, autoTranslateEnabled);
   const [isTranslated, setIsTranslated] = useState(false);
   const [translatedText, setTranslatedText] = useState('');
   const [sourceLang, setSourceLang] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Use ref to always get latest userLang in async handlers (avoids stale closures in memo'd components)
-  const userLangRef = useRef(userLang);
-  useEffect(() => { userLangRef.current = userLang; }, [userLang]);
 
   // Whether a request is out, tracked in a ref rather than read off `isLoading`.
   //
@@ -825,10 +822,21 @@ export function useTranslation(
   // in the language the hook happened to start with.
   const inFlightRef = useRef(false);
 
-  // Guards a late response against a reader who has since pressed "show
-  // original" or scrolled the component away.
-  const mountedRef = useRef(true);
-  useEffect(() => () => { mountedRef.current = false; }, []);
+  // A response only belongs to the text and language that requested it.
+  // Reset the busy flag too, so a previous request cannot block the new one.
+  const generationRef = useRef(0);
+  const autoDoneRef = useRef<string | null>(null);
+  useEffect(() => {
+    generationRef.current += 1;
+    inFlightRef.current = false;
+    autoDoneRef.current = null;
+    setIsTranslated(false);
+    setTranslatedText('');
+    setSourceLang(null);
+    setIsLoading(false);
+    setError(null);
+    return () => { generationRef.current += 1; };
+  }, [text, userLang]);
 
   // Nothing worth sending to the translator
   const isTooShort = !hasTranslatableText(text);
@@ -836,7 +844,9 @@ export function useTranslation(
   const handleTranslate = useCallback(async () => {
     if (!hasTranslatableText(text) || inFlightRef.current) return;
 
-    const targetLang = userLangRef.current;
+    const generation = generationRef.current;
+    const current = () => generation === generationRef.current;
+    const targetLang = userLang;
     const cacheKey = `${text}-${targetLang}`;
 
     if (translationCache.has(cacheKey)) {
@@ -866,9 +876,9 @@ export function useTranslation(
       const data = await requestTranslation(text, targetLang, publicContent);
 
       if (!data.translatedText) {
-        if (!mountedRef.current) return;
+        if (!current()) return;
         setError('Translation unavailable');
-        setTimeout(() => setError(null), 3000);
+        setTimeout(() => { if (current()) setError(null); }, 3000);
         return;
       }
 
@@ -881,9 +891,9 @@ export function useTranslation(
       // caching — the next attempt may reach a provider that answers honestly.
       if (looksLikeTranslationGarbage(translated)) {
         console.error('[Translate] Provider returned an error message, discarding');
-        if (!mountedRef.current) return;
+        if (!current()) return;
         setError('Translation unavailable');
-        setTimeout(() => setError(null), 3000);
+        setTimeout(() => { if (current()) setError(null); }, 3000);
         return;
       }
 
@@ -899,28 +909,34 @@ export function useTranslation(
       // reader's language, which is most of them, every post looked translated
       // and none of them were.
       if (data.sameLanguage === true || isNoOpTranslation(translated, text)) {
-        if (mountedRef.current) setSourceLang(detected);
+        if (current()) setSourceLang(detected);
         return;
       }
 
-      if (!mountedRef.current) return;
+      if (!current()) return;
       setTranslatedText(translated);
       setSourceLang(detected);
       setIsTranslated(true);
     } catch (err) {
       console.error('[Translate] Translation failed:', err);
-      if (!mountedRef.current) return;
+      if (!current()) return;
       setError('Translation unavailable');
-      setTimeout(() => setError(null), 3000);
+      setTimeout(() => { if (current()) setError(null); }, 3000);
     } finally {
-      inFlightRef.current = false;
-      if (mountedRef.current) setIsLoading(false);
+      if (current()) {
+        inFlightRef.current = false;
+        setIsLoading(false);
+      }
     }
-  }, [text, publicContent]);
+  }, [text, userLang, publicContent]);
 
   const handleShowOriginal = useCallback(() => {
+    generationRef.current += 1;
+    inFlightRef.current = false;
+    autoDoneRef.current = `${text}-${userLang}`;
     setIsTranslated(false);
-  }, []);
+    setIsLoading(false);
+  }, [text, userLang]);
 
   // Auto-translate.
   //
@@ -935,8 +951,8 @@ export function useTranslation(
   //
   // Reading a post the reader cannot read is the failure this removes, so it is
   // on by default and opting out is remembered. A reader who has pressed "show
-  // original" on this text is not overridden — autoDone is set either way, and
-  // the manual controls stay exactly as they were.
+  // original" on this text is not overridden. A cancelled queue entry does not
+  // count as an attempt; it can be scheduled again when the setting changes.
   //
   // Call sites opt out with auto=false, and private content must. Translating
   // sends the body to a third party, and the free tier is MyMemory — a SHARED
@@ -944,14 +960,13 @@ export function useTranslation(
   // submitted can come back out of it. A reader choosing to translate one
   // message accepts that; doing it silently to every message they receive does
   // not, and a direct message is not ours to upload on their behalf.
-  const autoDoneRef = useRef<string | null>(null);
   const [nearScreen, setNearScreen] = useState(false);
   const translateRef = useRef(handleTranslate);
   useEffect(() => { translateRef.current = handleTranslate; }, [handleTranslate]);
 
   useEffect(() => {
     if (!auto) return;
-    if (!autoTranslateEnabled()) return;
+    if (!autoEnabled) return;
     if (isTooShort) return;
     // A word or two of Latin script cannot be told apart from the reader's own
     // language, so auto-translating it is as likely wrong as right — and it is
@@ -982,9 +997,12 @@ export function useTranslation(
     const el = nearRef?.current;
     if (el && !nearScreen) return observeNearScreen(el, () => setNearScreen(true));
 
-    autoDoneRef.current = key;
-    return queueAutoTranslate(() => translateRef.current());
-  }, [text, userLang, isTooShort, auto, nearScreen, nearRef]);
+    return queueAutoTranslate(() => {
+      if (autoDoneRef.current === key || !autoTranslateEnabled()) return Promise.resolve();
+      autoDoneRef.current = key;
+      return translateRef.current();
+    });
+  }, [text, userLang, isTooShort, auto, autoEnabled, nearScreen, nearRef]);
 
   return {
     userLang,
