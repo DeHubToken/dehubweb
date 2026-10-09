@@ -4,7 +4,8 @@
 set -e
 cd "$(dirname "$0")"
 R=../../../public
-mkdir -p a/osaka a/emoji a/icons a/bg
+mkdir -p a/emoji a/icons a/bg a/foot
+echo '' > a/foot/manifest.js
 cp $R/brand-kit/font/*.ttf a/
 cp $R/brand-kit/brand/grain.png $R/brand-kit/brand/wordmark-white.png a/
 python3 -I -c "
@@ -13,7 +14,8 @@ a = Image.open('$R/brand-kit/brand/mark-white.png').convert('RGBA')
 a.crop(a.split()[3].getbbox()).save('a/mark.png')"
 for i in clock mic sparkle sparkles-duo play camera megaphone rocket star thumbs-up coin gamepad globe gift folder-star chain shield coins-falling; do cp $R/brand-kit/icons/$i.png a/icons/; done
 for k in 01 12 13 20 25 30 40; do cp $R/brand-kit/bg/bg-$k.jpg a/bg/; done
-ffmpeg -v error -y -i $R/osaka/osaka-loop.mp4 -vf scale=1280:-2 -q:v 3 a/osaka/%03d.jpg
+mkdir -p a/osaka_hd
+ffmpeg -v error -y -i $R/osaka/osaka-loop.mp4 -q:v 2 a/osaka_hd/%03d.jpg
 mkdir -p .dl
 for c in 1f480 1f62d 1f525 1f4af 1f602 1f633 1f92f 2764_fe0f; do
   [ -f .dl/$c.webp ] || curl -sSf -o .dl/$c.webp https://fonts.gstatic.com/s/e/notoemoji/latest/$c/512.webp
