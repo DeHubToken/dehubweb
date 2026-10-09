@@ -24,6 +24,7 @@ interface FreeProvider {
   reasons?: boolean;
   /** Too small for tool use: only plain text jobs (translation, summaries). */
   textOnly?: boolean;
+  reasoningEffort?: string;
 }
 
 const env = (k: string) => Deno.env.get(k) || undefined;
@@ -81,6 +82,15 @@ const PROVIDERS: FreeProvider[] = [
   },
 ];
 
+// Opt-in image understanding; other callers keep their existing provider order.
+const VISION_PROVIDERS: FreeProvider[] = [{
+  name: 'groq/qwen3.8-27b',
+  url: () => 'https://api.groq.com/openai/v1/chat/completions',
+  key: () => env('GROQ_API_KEY'),
+  model: 'qwen/qwen3.8-27b',
+  reasoningEffort: 'none',
+}];
+
 /** The most recent free-tier refusal in this isolate, e.g. "mistral/large 401". */
 export let lastFreeFailure: string | null = null;
 
@@ -113,6 +123,23 @@ function isTextOnly(body: Record<string, unknown>): boolean {
   );
 }
 
+function isImageRequest(body: Record<string, unknown>): boolean {
+  if (body.modalities || !Array.isArray(body.messages)) return false;
+  let images = 0;
+  const supported = body.messages.every((m: { content?: unknown }) => {
+    if (m?.content == null || typeof m.content === 'string') return true;
+    return Array.isArray(m.content) && m.content.every((part: any) => {
+      if (part?.type === 'text' && typeof part.text === 'string') return true;
+      if (part?.type === 'image_url' && typeof part.image_url?.url === 'string') {
+        images++;
+        return true;
+      }
+      return false;
+    });
+  });
+  return supported && images > 0 && images <= 3;
+}
+
 /**
  * The OpenAI fields every provider here accepts. Mistral rejects unknown
  * fields outright, and `max_completion_tokens` is not one it knows.
@@ -138,6 +165,7 @@ function mistralToolIds(messages: unknown): unknown {
 function portableBody(body: Record<string, unknown>, p: FreeProvider): Record<string, unknown> {
   const messages = p.name.startsWith('mistral/') ? mistralToolIds(body.messages) : body.messages;
   const out: Record<string, unknown> = { model: p.model, messages };
+  if (p.reasoningEffort) out.reasoning_effort = p.reasoningEffort;
   const maxTokens = body.max_completion_tokens ?? body.max_tokens;
   if (p.reasons) {
     // Low effort keeps the hidden reasoning short (and inside the per-minute
@@ -155,6 +183,8 @@ function portableBody(body: Record<string, unknown>, p: FreeProvider): Record<st
 }
 
 export interface FreeOptions {
+  /** Image understanding only, never image generation or video input. */
+  allowVision?: boolean;
   /**
    * The text is already public (a feed post, a bio, a public video's
    * transcript), so a provider that trains on its input may see it. Off by
@@ -191,10 +221,12 @@ export async function tryFree(
   body: Record<string, unknown>,
   opts: FreeOptions = {},
 ): Promise<Response | null> {
-  if (!isTextOnly(body)) return null;
+  const providers = isTextOnly(body) ? PROVIDERS
+    : opts.allowVision && isImageRequest(body) ? VISION_PROVIDERS : [];
+  if (!providers.length) return null;
   const tag = opts.label ? `[${opts.label}]` : '[free]';
 
-  for (const p of PROVIDERS) {
+  for (const p of providers) {
     const key = p.key();
     const url = p.url();
     if (!key || !url) continue;

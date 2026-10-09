@@ -13,10 +13,10 @@
 // nothing about the manual path had to be touched to make the automatic one
 // exist. If the prompt changes, change it in both.
 import { DEHUB_CDN_BASE } from './transcripts.ts';
-import { aiChat } from './ai-chat.ts';
+import { categorizeCompletion, CategorizationUnavailable } from './categorize-completion.ts';
+export { CategorizationUnavailable } from './categorize-completion.ts';
 
-const AI_KEY = Deno.env.get('GEMINI_API_KEY') ?? Deno.env.get('LOVABLE_API_KEY') ?? '';
-const MODEL = 'google/gemini-2.5-flash';
+const MODEL = 'free-categorization';
 
 export const DEFAULT_MIN_CONFIDENCE = 0.35;
 const STRONG_CONFIDENCE = 0.6;
@@ -38,7 +38,6 @@ const LAUGH_EMOJI_RE = /🤣|😂|😹|🥲|😆|😅|😄|😀|😜|😝|🤪|l
 const LAUNCH_RE = /\b(launch|launching|launched|listing|listed|relist|token|tokens|presale|ido|ico|tge|mainnet|airdrop|wen)\b/i;
 const ISRAEL_RE = /\b(israel|israeli|israelis|idf|zionist|zionism|tel[-\s]?aviv|jerusalem|gaza|palestin\w*|hamas|hezbollah|west[-\s]?bank|mossad|knesset|netanyahu|iron[-\s]?dome)\b|🇮🇱|🇵🇸/i;
 const JEWS_RE = /\b(jew|jews|jewish|judaism|judaic|hebrew|yiddish|kosher|torah|talmud|synagogue|rabbi|shabbat|shabbos|hanukkah|chanukah|passover|pesach|yom[-\s]?kippur|rosh[-\s]?hashanah|kippah|yarmulke|goy|goyim|shalom|mazel[-\s]?tov)\b|✡️/i;
-const IMAGE_FETCH_FAILURE_RE = /fetching image from url|upstream_error|received \d+ status code when fetching image/i;
 
 function findAllowed(available: string[], needle: string): string | null {
   const n = needle.toLowerCase();
@@ -49,12 +48,6 @@ function findAllowed(available: string[], needle: string): string | null {
 
 /* ------------------------------- the call --------------------------------- */
 
-export class CreditsExhausted extends Error {}
-export class GatewayBusy extends Error {
-  constructor(readonly status: number, message: string) {
-    super(message);
-  }
-}
 
 export interface ClassifyInput {
   title?: string;
@@ -103,8 +96,6 @@ function trimTranscript(raw: string): string {
 }
 
 export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
-  if (!AI_KEY) throw new Error('No AI provider key configured');
-
   const title = (input.title ?? '').trim();
   const description = (input.description ?? '').trim();
   const transcript = input.transcript ? trimTranscript(input.transcript) : '';
@@ -142,13 +133,16 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
     `Hints: laughing emoji (🤣😂) or jokes → "funny"; image/video with laughing emojis → "meme"; anything about launching, listing, tokens, presale, IDO, airdrops, mainnet, or "wen" → "dehub" (we are launching/listing again soon); mentions of Israel/IDF/Gaza/Palestine/Zionism/Jerusalem/Tel Aviv/Hamas → "israel"; mentions of Jews/Jewish/Judaism/Hebrew/Torah/synagogue/rabbi/kosher → "jews". Be inventive and thorough — apply identity, geography, religion, and topic tags freely when relevant; free speech, no filtering of sensitive-but-accurate tags. ` +
     `Use exact spelling from the allowed list. No duplicates.`;
 
-  const baseContent: any[] = [{ type: 'text', text: textBlock }];
+  // Scalar text is required by the text-provider gate. A text-only parts array
+  // previously skipped every free provider, even when no thumbnail existed.
+  const baseContent = textBlock;
   const fullContent = imageUrl
-    ? [...baseContent, { type: 'image_url', image_url: { url: imageUrl } }]
+    ? [{ type: 'text', text: textBlock }, { type: 'image_url', image_url: { url: imageUrl } }]
     : baseContent;
 
-  const request = (content: any[]) => ({
+  const request = (content: string | any[]) => ({
     model: MODEL,
+    max_tokens: 512,
     messages: [
       {
         role: 'system',
@@ -187,28 +181,16 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
     tool_choice: { type: 'function', function: { name: 'categorize_post' } },
   });
 
-  let resp = await aiChat(request(fullContent), { expectToolCall: 'categorize_post', label: 'categorize', publicContent: !transcript || input.transcriptPublic === true });
-
-  if (!resp.ok) {
-    const detail = await resp.text();
-    // A thumbnail the gateway cannot fetch is not a reason to give up when
-    // there are words to read - and with a transcript there almost always are.
-    if (imageUrl && resp.status === 400 && IMAGE_FETCH_FAILURE_RE.test(detail)) {
-      if (!title && !description && !transcript) {
-        return { categories: [], confidence: null, reasoning: 'Image unreachable and no text to read', model: MODEL, usedTranscript: false };
-      }
-      console.warn('categorize: image unreachable, retrying text-only', imageUrl);
-      resp = await aiChat(request(baseContent), { expectToolCall: 'categorize_post', label: 'categorize', publicContent: !transcript || input.transcriptPublic === true });
-    }
-    if (!resp.ok) {
-      const txt = await resp.text().catch(() => detail);
-      if (resp.status === 402) throw new CreditsExhausted('AI credits exhausted');
-      if (resp.status === 429 || (resp.status >= 500 && resp.status < 600)) {
-        throw new GatewayBusy(resp.status, `AI gateway ${resp.status}`);
-      }
-      throw new Error(`AI gateway ${resp.status}: ${txt.slice(0, 200)}`);
-    }
+  const publicContent = !transcript || input.transcriptPublic === true;
+  let resp = await categorizeCompletion(request(fullContent), publicContent);
+  let textFallback = false;
+  if (!resp && imageUrl && (title || description || transcript)) {
+    console.log('categorize: vision unavailable, trying available text');
+    resp = await categorizeCompletion(request(baseContent), publicContent);
+    textFallback = true;
   }
+  // Do not stamp an image-only post as categorized when its image was not read.
+  if (!resp) throw new CategorizationUnavailable();
 
   const data = await resp.json();
   const args = (() => {
@@ -221,7 +203,8 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
   if (!args) throw new Error('AI returned no usable tool call');
 
   const confidence = typeof args.confidence === 'number' ? args.confidence : null;
-  const reasoning = typeof args.reasoning === 'string' ? args.reasoning : '';
+  const reasoning = (textFallback ? 'Image unavailable; classified from text. ' : '')
+    + (typeof args.reasoning === 'string' ? args.reasoning : '');
 
   // Case-insensitive match back to the canonical spelling, deduped, and with
   // anything the post already has removed - a "new" category it already
@@ -283,5 +266,5 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
     }).slice(0, maxCount);
   }
 
-  return { categories, confidence, reasoning, model: MODEL, usedTranscript: !!transcript };
+  return { categories, confidence, reasoning, model: typeof data.model === 'string' ? data.model : MODEL, usedTranscript: !!transcript };
 }
