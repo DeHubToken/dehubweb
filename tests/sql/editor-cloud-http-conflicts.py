@@ -60,7 +60,7 @@ assert rpc("editor_cloud_save",dict(save,p_document=head_document,p_expected_rev
 shared={**save,"p_owner":OWNER,"p_expected_revision":1,"p_request_id":str(uuid.uuid4())}
 rpc("editor_cloud_edit_save",shared,status=409,code="PT409")
 rpc("editor_cloud_restore",{"p_id":PROJECT,"p_revision":1,"p_expected_revision":0,"p_request_id":str(uuid.uuid4())},status=409,code="PT409")
-rpc("editor_cloud_set_trash",{"p_id":PROJECT,"p_expected_revision":0,"p_expected_state":0,"p_trashed":True},status=409,code="PT409")
+rpc("editor_cloud_set_trash",{"p_id":PROJECT,"p_expected_revision":1,"p_expected_state":0,"p_trashed":True},status=409,code="PT409")
 
 share={"p_id":PROJECT,"p_member":EDITOR,"p_role":"editor","p_expected_state":0}
 invitation=rpc("editor_cloud_review_share",share)
