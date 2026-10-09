@@ -55,7 +55,9 @@ save={"p_id":PROJECT,"p_document":DOCUMENT,"p_expected_revision":0,"p_request_id
 assert rpc("editor_cloud_save",save)["revision"]==1
 assert rpc("editor_cloud_save",save)["revision"]==1
 rpc("editor_cloud_save",dict(save,p_request_id=str(uuid.uuid4())),status=409,code="PT409")
-shared={**save,"p_owner":OWNER,"p_request_id":str(uuid.uuid4())}
+head_document=copy.deepcopy(DOCUMENT);head_document["snapshot"]["title"]="Current owner edit"
+assert rpc("editor_cloud_save",dict(save,p_document=head_document,p_expected_revision=1,p_request_id=str(uuid.uuid4())))["revision"]==2
+shared={**save,"p_owner":OWNER,"p_expected_revision":1,"p_request_id":str(uuid.uuid4())}
 rpc("editor_cloud_edit_save",shared,status=409,code="PT409")
 rpc("editor_cloud_restore",{"p_id":PROJECT,"p_revision":1,"p_expected_revision":0,"p_request_id":str(uuid.uuid4())},status=409,code="PT409")
 rpc("editor_cloud_set_trash",{"p_id":PROJECT,"p_expected_revision":0,"p_expected_state":0,"p_trashed":True},status=409,code="PT409")
@@ -71,17 +73,17 @@ rpc("editor_cloud_review_leave",dict(accept,p_expected_state=99),EDITOR,409,"PT4
 member=rpc("editor_cloud_review_members",{"p_id":PROJECT})[0]
 assert member==accepted,(member,accepted)
 
-thread=rpc("editor_cloud_review_comment",{"p_owner":OWNER,"p_id":PROJECT,"p_comment_id":str(uuid.uuid4()),"p_revision":1,"p_time":0,"p_body":"Keep the text"})
+thread=rpc("editor_cloud_review_comment",{"p_owner":OWNER,"p_id":PROJECT,"p_comment_id":str(uuid.uuid4()),"p_revision":2,"p_time":0,"p_body":"Keep the text"})
 rpc("editor_cloud_review_resolve",{"p_owner":OWNER,"p_id":PROJECT,"p_comment_id":thread["id"],"p_expected_state":99,"p_resolved":True},status=409,code="PT409")
 assert rpc("editor_cloud_review_comments",{"p_owner":OWNER,"p_id":PROJECT})==[thread]
 rpc("editor_cloud_edit_save",dict(shared,p_request_id=str(uuid.uuid4())),OUTSIDER,401,"42501")
-assert len(rpc("editor_cloud_history",{"p_id":PROJECT}))==1
-assert rpc("editor_cloud_load",{"p_id":PROJECT})["document"]==DOCUMENT
-
-changed=copy.deepcopy(DOCUMENT);changed["snapshot"]["title"]="Fresh shared edit"
-fresh={**shared,"p_document":changed,"p_expected_revision":1,"p_request_id":str(uuid.uuid4())}
-assert rpc("editor_cloud_edit_save",fresh,EDITOR)["revision"]==2
-assert rpc("editor_cloud_edit_save",fresh,EDITOR)["revision"]==2
 assert len(rpc("editor_cloud_history",{"p_id":PROJECT}))==2
+assert rpc("editor_cloud_load",{"p_id":PROJECT})["document"]==head_document
+
+changed=copy.deepcopy(head_document);changed["snapshot"]["title"]="Fresh shared edit"
+fresh={**shared,"p_document":changed,"p_expected_revision":2,"p_request_id":str(uuid.uuid4())}
+assert rpc("editor_cloud_edit_save",fresh,EDITOR)["revision"]==3
+assert rpc("editor_cloud_edit_save",fresh,EDITOR)["revision"]==3
+assert len(rpc("editor_cloud_history",{"p_id":PROJECT}))==3
 assert rpc("editor_cloud_load",{"p_id":PROJECT})["document"]==changed
 print("PASS: nine stale conflicts returned HTTP 409 promptly; permission denial, immutable head, member/comment state and save idempotency verified")
