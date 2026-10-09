@@ -40,6 +40,7 @@ import {
   subscriberPlanPrice,
   type SubscriberPlan,
 } from '@/lib/content-gate';
+import { GatePreview } from './GatePreview';
 import type { ContentRating } from '@/lib/api/dehub/types';
 
 const SubscriberGateDrawer = lazy(() =>
@@ -125,11 +126,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
     onOpen: () => void,
   ) => (
     <>
-      {preview ? (
-        <img src={preview} alt="" aria-hidden className="w-full h-full object-cover" loading="lazy" />
-      ) : (
-        <div className="w-full h-full bg-zinc-900" />
-      )}
+      <GatePreview src={preview} className="w-full h-full object-cover" />
       <button
         type="button"
         data-no-navigate
