@@ -1,4 +1,6 @@
 import { handleWorkReceipt } from './server/work-receipts.ts';
+import { handleEditorPresence } from './server/editor-presence.ts';
+export { EditorPresenceRoom } from './server/editor-presence.ts';
 
 /**
  * Cloudflare Worker for DeHub Dynamic SEO/SSR
@@ -5333,6 +5335,9 @@ function ssrCachePut(ctx, key, resp) {
 }
 
 async function handleRequest(request, env, ctx) {
+  if (new URL(request.url).pathname.startsWith('/api/editor/presence/')) {
+    return handleEditorPresence(request, env);
+  }
   if (new URL(request.url).pathname === '/api/work/receipt') {
     return handleWorkReceipt(request, env);
   }
