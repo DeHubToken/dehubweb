@@ -49,6 +49,9 @@ try {
   const viewer = await connect(); viewer.join(denied); await viewer.next(v => v.type === "error"); assert(!viewer.messages.some(v => v.type === "presence"));
   const forged = await connect(); forged.ws.send(JSON.stringify({ type: "join", wallet: owner, token: token(editor) })); await forged.next(v => v.type === "error"); assert(!forged.messages.some(v => v.type === "presence"));
   b.ws.close(); await a.next(v => v.type === "presence" && v.revision === 5 && v.participants[0]?.connections === 1);
+  // Closed peers can still finish their queued close-handler broadcasts.
+  // Begin the idle window after those event-driven permission checks settle.
+  await delay(300);
   const count = lookups; await delay(300); assert.equal(lookups, count, "idle presence must not poll the database");
   console.log(JSON.stringify({ engine: "workerd", productionEntryBundled: true, sqliteBinding: true, realWebSockets: true, joinsAndDuplicateConnections: true, roomIsolation: true, savedHeadBroadcast: true, revokedRecipientExcluded: true, forgedAndUnsignedDenied: true, disconnectUpdates: true, idleDatabasePolling: false, productionAccountUsed: false }));
 } finally { for (const socket of sockets) { try { socket.close(); } catch {} } await mf.dispose(); }
