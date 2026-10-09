@@ -74,7 +74,7 @@ describe('auto-translate', () => {
   it('reacts when enabled without remounting the post', async () => {
     const { setAutoTranslateEnabled } = await import('@/lib/auto-translate-setting');
     setAutoTranslateEnabled(false);
-    await renderTranslatable('El nuevo encuentro de nuestra comunidad comienza esta tarde.');
+    await renderTranslatable('The new community gathering begins later this afternoon.');
     expect(invoke).not.toHaveBeenCalled();
     act(() => setAutoTranslateEnabled(true));
     await waitFor(() => expect(screen.getByText(TRANSLATED)).toBeInTheDocument());
