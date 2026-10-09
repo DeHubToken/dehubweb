@@ -44,7 +44,7 @@ deadline=time.monotonic()+60
 while True:
     try:
         with urllib.request.urlopen(URL,timeout=2) as response:
-            assert "PostgREST/14.1" in response.headers.get("Server",""),response.headers.get("Server")
+            assert "postgrest/14.1" in response.headers.get("Server","").lower(),response.headers.get("Server")
         break
     except urllib.error.URLError:
         if time.monotonic()>deadline:raise
