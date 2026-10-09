@@ -22,7 +22,7 @@
 // reordered — the model is told what is already there and asked what is
 // missing.
 import { admin, corsHeaders, DEHUB_API_BASE, json } from '../_shared/transcripts.ts';
-import { classify, CreditsExhausted, postImageUrl } from '../_shared/categorize.ts';
+import { classify, CategorizationUnavailable, postImageUrl } from '../_shared/categorize.ts';
 
 const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 /** The same service-to-service secret the assistant tools use. One secret,
@@ -235,18 +235,17 @@ Deno.serve(async (req) => {
      */
     const ids = await candidates(Math.min(limit * 4, 100));
     const results: Outcome[] = [];
-    let creditsOut = false;
+    let providersUnavailable = false;
     let spent = 0;
 
-    for (let i = 0; i < ids.length && !creditsOut && spent < limit; i += WAVE) {
+    for (let i = 0; i < ids.length && !providersUnavailable && spent < limit; i += WAVE) {
       const wave = ids.slice(i, i + WAVE);
       const settled = await Promise.all(wave.map(async (id): Promise<Outcome> => {
         try {
           return await categorizeOne(id, available);
         } catch (e: any) {
-          // Running out of credits is the one failure worth stopping the whole
-          // run for — every remaining call would fail the same way.
-          if (e instanceof CreditsExhausted) creditsOut = true;
+          // Leave later candidates pending when the available tiers are down.
+          if (e instanceof CategorizationUnavailable) providersUnavailable = true;
           return { tokenId: id, added: [], error: String(e?.message ?? e).slice(0, 200) };
         }
       }));
@@ -260,11 +259,12 @@ Deno.serve(async (req) => {
       considered: results.length,
       tagged: results.filter((r) => r.added.length > 0).length,
       waitingOnTranscript: results.filter((r) => r.skipped === 'waiting for the transcript').length,
-      creditsExhausted: creditsOut,
+      creditsExhausted: false,
+      providersUnavailable,
       results,
     });
   } catch (e: any) {
     console.error('auto-categorize error', e);
-    return json({ error: String(e?.message ?? e) }, 500);
+    return json({ error: String(e?.message ?? e) }, e instanceof CategorizationUnavailable ? 503 : 500);
   }
 });
