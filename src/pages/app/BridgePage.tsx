@@ -26,6 +26,7 @@ import { AppState } from '@/components/app/AppState';
 import { SEOHead } from '@/components/SEOHead';
 import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
+import { formatBridgeAmount } from '@/lib/bridge-amount';
 
 const BRIDGE_ADDRESS = '0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d';
 
@@ -374,7 +375,7 @@ function shortenAddress(addr: string): string {
 const PAGE_SIZE = 10;
 
 function BridgeQueue() {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const { data: transfers, isLoading, error } = useBridgeTransfers();
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
@@ -472,7 +473,7 @@ function BridgeQueue() {
 
               {/* Amount + status + time */}
               <div className="text-right flex-shrink-0">
-                <p className="text-xs font-semibold text-white">{t.amount} <DhbCoin /></p>
+                <p className="text-xs font-semibold text-white">{formatBridgeAmount(t.amount, i18n.resolvedLanguage || 'en-US')} <DhbCoin /></p>
                 <div className="flex items-center justify-end gap-1.5 mt-0.5">
                   <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-white/5 text-white/60 border border-white/10">
                     {/* The relay only sees the deposit arrive; the payout on the
