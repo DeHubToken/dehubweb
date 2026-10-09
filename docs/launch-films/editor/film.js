@@ -49,7 +49,19 @@ function whenLoaded(i, src) {
   });
 }
 function img(src) { const i = new Image(); loads.push(whenLoaded(i, src)); i.src = src; return i; }
-const OSAKA = Array.from({ length: 72 }, (_, i) => img(`a/osaka/${String(i + 1).padStart(3, '0')}.jpg`));
+// The clip the AI cuts up. a/foot/manifest.js can set window.FOOT_CLIPS = [{ dir, n, fps }]; otherwise the Osaka loop.
+const CLIPS = (window.FOOT_CLIPS || [{ dir: 'a/osaka_hd', n: 72, fps: 24, start: 1 }]).map(c => ({ fps: c.fps, frames: Array.from({ length: c.n }, (_, i) => img(`${c.dir}/${String(i + (c.start ?? 1)).padStart(3, '0')}.jpg`)) }));
+const SRC_DUR = CLIPS.reduce((a, c) => a + c.frames.length / c.fps, 0);
+const SRC_NAME = window.FOOT_NAME || 'rave-night.mp4';
+function srcFrame(sec) {
+  let s = ((sec % SRC_DUR) + SRC_DUR) % SRC_DUR;
+  for (const c of CLIPS) { const d = c.frames.length / c.fps; if (s < d) return c.frames[Math.min(c.frames.length - 1, Math.floor(s * c.fps))]; s -= d; }
+  return CLIPS[0].frames[0];
+}
+function cover(ctx, im, w, h, zoom = 1, fx = .5, fy = .5) { // draw centred, covering w x h, panned to the focus point
+  const sc = Math.max(w / im.naturalWidth, h / im.naturalHeight) * zoom, dw = im.naturalWidth * sc, dh = im.naturalHeight * sc;
+  ctx.drawImage(im, -dw * fx, -dh * fy, dw, dh);
+}
 const EMO_META = { skull: [101, 4240], cry: [60, 1800], fire: [33, 990], hundred: [45, 2040], joy: [59, 1770], flushed: [60, 1800], blown: [83, 2610], heart: [56, 1800] };
 const EMO = {};
 for (const [n, [c]] of Object.entries(EMO_META)) EMO[n] = Array.from({ length: c }, (_, i) => img(`a/emoji/${n}_${String(i).padStart(3, '0')}.png`));
@@ -231,7 +243,7 @@ const R = {};
   mk('div', 'ghost', 'left:28px;top:17px', ed, 'Projects');
   mk('div', 'ab', 'left:104px;top:20px;width:1px;height:16px;background:rgba(255,255,255,.1)', ed);
   [['Undo2', 124, .8], ['Redo2', 164, .4], ['Info', 204, .6]].forEach(([n, x, o]) => mk('div', 'ab', `left:${x}px;top:12px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;opacity:${o}`, ed, ico(n, 16)));
-  mk('div', 'ab', 'left:656px;top:17px;width:400px;text-align:center;font-size:15px;color:rgba(255,255,255,.9)', ed, 'neon alley edit');
+  mk('div', 'ab', 'left:656px;top:17px;width:400px;text-align:center;font-size:15px;color:rgba(255,255,255,.9)', ed, 'rave night edit');
   const tb = [['Save', 'Save', 1485, 90], ['Sparkles', 'Creator', 1585, 102], ['Download', 'Export', 1697, 98], ['Share2', 'Post', 1805, 98]];
   tb.forEach(([i, l, x, w]) => { R['btn' + l] = mk('div', 'btn', `left:${x}px;top:11px;width:${w}px;transform-origin:50% 50%`, ed, ico(i, 16) + l); });
   // rail
@@ -249,7 +261,7 @@ const R = {};
   R.spin = mk('div', '', 'width:14px;height:14px', R.work, ico('Loader2', 14));
   mk('span', '', '', R.work, 'Working on it…');
   R.rbub = mk('div', 'bub', 'left:80px;top:174px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.88);transform-origin:0 0', ed,
-    'Done. Cut it into 12 one-second clips, then added punchy captions, sound effects and a gameplay split-screen in 9:16.' +
+    'Done. Cut it into 12 one-second clips, then added flashes, zoom punches, freeze frames, captions and sound effects in 9:16.' +
     `<div style="margin-top:7px;display:flex;align-items:center;gap:7px"><span style="font-size:10.5px;color:rgba(255,255,255,.45)">Edits made: 31</span><span style="display:flex;align-items:center;gap:4px;border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:1px 6px;font-size:10.5px;color:rgba(255,255,255,.75)">${ico('RotateCcw', 11)}Undo</span></div>`);
   mk('div', 'ab', 'left:80px;top:995px;width:302px;height:57px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04)', ed);
   mk('div', 'ab', 'left:93px;top:1007px;font-size:12px;color:rgba(255,255,255,.35)', ed, 'Describe what you want…');
@@ -288,7 +300,7 @@ const R = {};
   }
   // tracks
   R.rows = {};
-  const rowDef = [['v2', 'V', 'V2', 'Eye'], ['v', 'V', 'V', 'Eye'], ['a', 'A', 'A', 'Volume2'], ['a2', 'A', 'A2', 'Volume2'], ['t', 'T', 'T', 'Eye']];
+  const rowDef = [['v2', 'V', 'FX', 'Eye'], ['v', 'V', 'V', 'Eye'], ['a', 'A', 'A', 'Volume2'], ['a2', 'A', 'A2', 'Volume2'], ['t', 'T', 'T', 'Eye']];
   rowDef.forEach(([id, badge, name, ic2]) => {
     const row = mk('div', 'trow', 'overflow:hidden', ed);
     mk('div', 'ab', 'left:0;top:55px;width:1528px;height:1px;background:rgba(255,255,255,.06)', row);
@@ -308,17 +320,19 @@ const R = {};
     const lb = mk('div', 'lbl', 'font-family:DMono,monospace;font-size:10px;letter-spacing:.06em;opacity:0', c, '1.0s');
     R.chunks.push({ c, cv, lb });
   }
-  R.vLabel = mk('div', 'ab', 'left:10px;top:6px;height:44px;display:flex;align-items:center;font-size:11px;font-weight:500;text-shadow:0 1px 2px rgba(0,0,0,.7)', R.rows.v.lane, 'neon-alley.mp4');
+  R.vLabel = mk('div', 'ab', 'left:10px;top:6px;height:44px;display:flex;align-items:center;font-size:11px;font-weight:500;text-shadow:0 1px 2px rgba(0,0,0,.7)', R.rows.v.lane, SRC_NAME);
   R.cutFx = [];
   for (let k = 1; k < 12; k++) R.cutFx.push(mk('div', 'ab', `left:${80 * k - 2}px;top:-6px;width:4px;height:68px;background:#fff;border-radius:2px;box-shadow:0 0 16px 4px rgba(255,255,255,.85), 0 0 40px 10px rgba(125,211,252,.5);opacity:0`, R.rows.v.lane));
   // music clip
   R.music = mk('div', 'clip aclip', 'left:0;width:960px', R.rows.a.lane);
   R.cvWave = mk('canvas', '', 'position:absolute;left:0;top:0;width:960px;height:44px;opacity:.7', R.music); R.cvWave.width = 1920; R.cvWave.height = 88;
   mk('div', 'lbl', '', R.music, 'night-drive.mp3');
-  // gameplay clip (V2)
-  R.game = mk('div', 'clip vclip', 'left:0;width:960px', R.rows.v2.lane);
-  R.cvGame = mk('canvas', '', 'position:absolute;left:0;top:0;width:960px;height:44px;opacity:.6', R.game); R.cvGame.width = 1920; R.cvGame.height = 88;
-  mk('div', 'lbl', '', R.game, ico('Gamepad2', 12) + '&nbsp;gameplay.mp4');
+  // effects track (V2): flashes, zooms, whips, freeze frames
+  R.fx = ['flash', 'zoom in', 'flash', 'whip', 'zoom out', 'freeze', 'flash', 'zoom in', 'whip', 'freeze', 'flash', 'zoom out'].map((n, k) => {
+    const c = mk('div', 'clip vclip', `left:${80 * k + 4}px;width:64px;background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35)`, R.rows.v2.lane);
+    mk('div', 'lbl', 'left:6px;font-size:10px', c, n);
+    return c;
+  });
   // sfx clips (A2)
   R.sfx = [[0, 'boom'], [1.5, 'whoosh'], [3, 'riser'], [4.5, 'bruh'], [6, 'boom'], [7.5, 'pop'], [9, 'vine'], [10.5, 'boom']].map(([s, n]) => {
     const c = mk('div', 'clip aclip', `left:${80 * s}px;width:56px`, R.rows.a2.lane);
@@ -375,9 +389,7 @@ CAP2.forEach((c, i) => { if (c !== ' ') EVENTS.type2.push(bt(44.3 + 1.0 * i / (C
 function initEditorCanvases() {
   R.chunks.forEach(({ cv }, k) => {
     const g = cv.getContext('2d');
-    const im = OSAKA[(k * 23) % 72];
-    const sc = Math.max(160 / im.naturalWidth, 88 / im.naturalHeight);
-    g.drawImage(im, (160 - im.naturalWidth * sc) / 2, (88 - im.naturalHeight * sc) / 2, im.naturalWidth * sc, im.naturalHeight * sc);
+    g.save(); g.translate(80, 44); cover(g, srcFrame(k + .5), 160, 88); g.restore();
   });
   const g = R.cvWave.getContext('2d');
   g.fillStyle = 'rgba(167,243,208,.9)';
@@ -386,15 +398,6 @@ function initEditorCanvases() {
     const a = (.18 + .55 * kick + .25 * rnd(x * .37)) * 36;
     g.fillRect(x, 44 - a, 3, a * 2);
   }
-  const gg = R.cvGame.getContext('2d');
-  for (let k = 0; k < 12; k++) {
-    const x0 = k * 160;
-    gg.fillStyle = '#08080c'; gg.fillRect(x0, 0, 160, 88);
-    gg.save(); gg.translate(x0 + 80, 44);
-    for (let j = 0; j < 14; j++) { gg.strokeStyle = `hsla(${(k * 40 + j * 25) % 360},90%,60%,.8)`; gg.lineWidth = 1.5; gg.beginPath(); const a = rnd(k * 31 + j) * 6.28; gg.moveTo(Math.cos(a) * 34, Math.sin(a) * 34); gg.lineTo((rnd(j + k) - .5) * 30, (rnd(j * 3 + k) - .5) * 30); gg.stroke(); }
-    gg.strokeStyle = '#fff'; gg.lineWidth = 2.5; gg.beginPath(); gg.arc(0, 0, 36, 0, 6.283); gg.stroke();
-    gg.restore();
-  }
 }
 
 // ---------------------------------------------------------------- brainrot renderer (shared by preview, S3, composer, feed)
@@ -402,93 +405,94 @@ const CAPS = [[16.75, 'WAIT'], [17.25, 'WHAT'], [17.75, 'HOLD UP'], [18.5, 'BRO'
   [20, 'BRO'], [20.5, 'REALLY'], [21, 'SAID'], [21.5, 'CUT IT'], [22, 'INTO'], [22.5, '1 SECOND'], [23, 'CHUNKS'], [23.5, ''],
   [24, 'AND'], [24.5, 'THE AI'], [25, 'JUST'], [25.5, 'DID IT'], [26, ''], [26.5, 'NO'], [27, 'WAY'], [27.5, '']];
 const EMO_POPS = [[19, 'flushed', .76, .3], [23.5, 'skull', .3, .3], [26, 'cry', .72, .3], [27.5, 'fire', .5, .5]];
-const SIMS = {}, SIM_PRE = 4.5;
-function simState(key, t) {
-  const dt = 1 / 480;
-  let S = SIMS[key];
-  if (!S || t < S.t - 1e-9) S = SIMS[key] = { t: 0, px: .05, py: -.4, vx: 1.6, vy: 0, r: .07, hits: [], n: 0, times: [] };
-  while (S.t + dt <= t) {
-    S.vy += 5.2 * dt;
-    S.px += S.vx * dt; S.py += S.vy * dt;
-    const d = Math.hypot(S.px, S.py);
-    if (d + S.r > 1) {
-      const nx = S.px / d, ny = S.py / d, dot = S.vx * nx + S.vy * ny;
-      S.vx -= 2 * dot * nx; S.vy -= 2 * dot * ny;
-      S.px = nx * (1 - S.r); S.py = ny * (1 - S.r);
-      const sp = Math.hypot(S.vx, S.vy), tg = Math.max(sp * 1.008, 3.6);
-      S.vx *= tg / sp; S.vy *= tg / sp;
-      S.r = Math.min(.36, S.r * 1.012); S.n++; if (S.times) S.times.push(S.t);
-      S.hits.push([nx, ny]); if (S.hits.length > 140) S.hits.shift();
-    }
-    S.t += dt;
-  }
-  return S;
+// Edit grammar: a hard cut every half beat, each with its own move; flashes on the cuts; deep-fried freeze frames on the emoji hits.
+const BR0 = 16.5;
+const CUT_STYLE = ['punch', 'crash', 'punch', 'pull', 'whip', 'mirror', 'crash', 'slow', 'punch', 'whip', 'pull', 'crash', 'punch', 'mirror', 'whip', 'slow'];
+const FREEZE = EMO_POPS.map(([eb, n, ex, ey]) => [eb, ex, ey]);
+const INVERT = [21.75, 24.75, 26.75];
+const GRADE = ['none', 'hueM', 'pop', 'hueC', 'warm', 'hueA', 'pop', 'hueM', 'cool', 'hueG', 'none', 'hueC'];
+const HUES = { hueM: '#ff1fd2', hueC: '#00e5ff', hueA: '#9dff00', hueG: '#ffb300' };
+function grade(ctx, gr, w, h, redraw) {
+  if (gr === 'pop' || gr === 'fried') { ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = gr === 'fried' ? .9 : .5; redraw(); if (gr === 'fried') redraw(); }
+  if (gr === 'warm' || gr === 'fried') { ctx.globalCompositeOperation = 'soft-light'; ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(255,110,30,.6)'; ctx.fillRect(-w, -h, w * 2, h * 2); }
+  if (gr === 'cool') { ctx.globalCompositeOperation = 'soft-light'; ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(40,140,255,.6)'; ctx.fillRect(-w, -h, w * 2, h * 2); }
+  if (HUES[gr]) { ctx.globalCompositeOperation = 'hue'; ctx.globalAlpha = .8; ctx.fillStyle = HUES[gr]; ctx.fillRect(-w, -h, w * 2, h * 2); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .45; redraw(); }
+  if (gr === 'mag') { ctx.globalCompositeOperation = 'soft-light'; ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(255,40,200,.55)'; ctx.fillRect(-w, -h, w * 2, h * 2); }
+  ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
 }
-const GRADE = ['none', 'pop', 'none', 'mono', 'warm', 'none', 'pop'];
+function brCutAt(b) { const k = Math.max(0, Math.floor((b - BR0) * 2)); return { k, b0: BR0 + k * .5, style: CUT_STYLE[k % CUT_STYLE.length] }; }
 function drawBR(ctx, w, h, b, key, opt = {}) {
-  const u = w / 1080, hh = h / 2;
-  const tl = Math.max(0, bt(b) - bt(16.6)) + SIM_PRE;
+  const u = w / 1080;
+  const { k, b0, style } = brCutAt(b);
+  const d = Math.max(0, bt(b - b0)), p = clamp(d / bt(.5));
+  const r1 = rnd(k * 3.1 + 1), r2 = rnd(k * 5.7 + 2), r3 = rnd(k * 9.3 + 3);
+  const fz = FREEZE.find(([fb]) => b >= fb && b < fb + .5);
+  let srcT = r2 * SRC_DUR + d * (style === 'slow' ? .3 : 1), zoom = 1.08, ox = 0, rot = (r1 - .5) * .05, fx = .3 + r3 * .4, fy = .35 + r1 * .3;
+  if (style === 'punch') zoom = 1.08 + .45 * Math.exp(-d * 15);
+  if (style === 'crash') zoom = 1.05 + .7 * ic(p);
+  if (style === 'pull') zoom = 1.65 - .55 * oq(p);
+  if (style === 'whip') { ox = (1 - oq(clamp(d / .14))) * w * (k % 2 ? 1 : -1); zoom = 1.12; }
+  if (style === 'slow') zoom = 1.3 - .18 * p;
+  if (style === 'mirror') zoom = 1.25 + .2 * Math.exp(-d * 12);
+  let gr = GRADE[k % GRADE.length], shake = 0;
+  if (fz) {
+    const fd = bt(b - fz[0]);
+    srcT = rnd(fz[0] * 7) * SRC_DUR; zoom = 1.05 + 1.0 * oq(clamp(fd / bt(.35))); fx = fz[1]; fy = fz[2]; rot = 0; ox = 0; gr = 'fried'; shake = 18 * u;
+  }
+  const im = srcFrame(srcT);
+  const sx = shake * (rnd(Math.floor(bt(b) * 60) * 1.7) - .5) * 2, sy = shake * (rnd(Math.floor(bt(b) * 60) * 2.3) - .5) * 2;
   ctx.save();
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
-  // top half: jump cuts every half beat
-  const k = Math.max(0, Math.floor((b - 16.6) * 2));
-  const since = Math.max(0, bt(b - (16.6 + k * .5)));
-  const r1 = rnd(k * 3.1 + 1), r2 = rnd(k * 5.7 + 2), r3 = rnd(k * 9.3 + 3);
-  const zoom = (1.04 + r1 * .5) * (1 + .16 * Math.exp(-since * 13));
-  const im = OSAKA[(Math.floor(r2 * 72) + Math.floor(since * 24)) % 72];
-  const sc = Math.max(w / im.naturalWidth, hh / im.naturalHeight) * zoom;
-  const dw = im.naturalWidth * sc, dh = im.naturalHeight * sc;
-  ctx.save();
-  ctx.beginPath(); ctx.rect(0, 0, w, hh); ctx.clip();
-  ctx.translate(w / 2, hh / 2);
-  if (k % 3 === 1) ctx.scale(-1, 1);
-  ctx.rotate((r1 - .5) * .07);
-  const ix = -dw / 2 + (r3 - .5) * (dw - w) * .7, iy = -dh / 2 + (r1 - .5) * (dh - hh) * .5;
-  ctx.drawImage(im, ix, iy, dw, dh);
-  const gr = GRADE[k % GRADE.length];
-  if (gr === 'pop') { ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .45; ctx.drawImage(im, ix, iy, dw, dh); }
-  else if (gr === 'mono') { ctx.globalCompositeOperation = 'saturation'; ctx.fillStyle = '#808080'; ctx.fillRect(-w, -hh, w * 2, hh * 2); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .5; ctx.drawImage(im, ix, iy, dw, dh); }
-  else if (gr === 'warm') { ctx.globalCompositeOperation = 'soft-light'; ctx.fillStyle = 'rgba(255,120,40,.55)'; ctx.fillRect(-w, -hh, w * 2, hh * 2); }
-  ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  ctx.translate(w / 2 + ox + sx, h / 2 + sy);
+  ctx.rotate(rot);
+  if (k % 3 === 1 && !fz) ctx.scale(-1, 1);
+  const draw = () => cover(ctx, im, w, h, zoom, fx, fy);
+  if (style === 'whip' && Math.abs(ox) > 2) { // smear the whip
+    for (let j = 3; j >= 1; j--) { ctx.globalAlpha = .22; ctx.save(); ctx.translate(-ox * .18 * j, 0); draw(); ctx.restore(); }
+    ctx.globalAlpha = 1;
+  }
+  if (style === 'mirror' && !fz) { // two-way mirror cut
+    ctx.save(); ctx.beginPath(); ctx.rect(-w / 2, -h, w / 2, h * 2); ctx.clip(); draw(); ctx.restore();
+    ctx.save(); ctx.scale(-1, 1); ctx.beginPath(); ctx.rect(-w / 2, -h, w / 2, h * 2); ctx.clip(); draw(); ctx.restore();
+  } else draw();
+  if (style === 'slow' && !fz) { // echo trails
+    ctx.globalCompositeOperation = 'screen';
+    for (const [lag, a] of [[.12, .35], [.24, .2]]) { ctx.globalAlpha = a; cover(ctx, srcFrame(srcT - lag), w, h, zoom * (1 + lag * .3), fx, fy); }
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  }
+  const zv = style === 'crash' ? 2.1 * p * p : style === 'pull' ? 1.1 * (1 - oq(p)) : style === 'punch' ? 6 * Math.exp(-d * 15) * .1 : fz ? 1.4 * (1 - oq(clamp(bt(b - fz[0]) / bt(.35)))) : 0;
+  if (zv > .04) { // radial zoom blur
+    for (let j = 1; j <= 4; j++) { ctx.globalAlpha = .2 * (1 - j / 5); cover(ctx, im, w, h, zoom * (1 + .035 * j * zv), fx, fy); }
+    ctx.globalAlpha = 1;
+  }
+  grade(ctx, gr, w, h, draw);
   ctx.restore();
-  // bottom half: bouncing-ball sim
-  const S = simState(key, tl);
-  ctx.save();
-  ctx.beginPath(); ctx.rect(0, hh, w, hh); ctx.clip();
-  const g = ctx.createRadialGradient(w / 2, hh * 1.5, 0, w / 2, hh * 1.5, hh * .9);
-  g.addColorStop(0, '#16121f'); g.addColorStop(1, '#050507');
-  ctx.fillStyle = g; ctx.fillRect(0, hh, w, hh);
-  const cx = w / 2, cy = hh * 1.5, RR = Math.min(w, hh) * .40;
-  ctx.lineWidth = 3 * u;
-  S.hits.forEach(([hx, hy], i) => {
-    ctx.strokeStyle = `hsla(${(i * 23 + S.n * 2) % 360},95%,62%,.78)`;
-    ctx.beginPath(); ctx.moveTo(cx + hx * RR, cy + hy * RR); ctx.lineTo(cx + S.px * RR, cy + S.py * RR); ctx.stroke();
-  });
-  ctx.strokeStyle = '#fff'; ctx.lineWidth = 7 * u;
-  ctx.beginPath(); ctx.arc(cx, cy, RR, 0, Math.PI * 2); ctx.stroke();
-  ctx.fillStyle = `hsl(${(S.n * 37) % 360},95%,60%)`;
-  ctx.beginPath(); ctx.arc(cx + S.px * RR, cy + S.py * RR, S.r * RR, 0, Math.PI * 2); ctx.fill();
-  ctx.lineWidth = 4 * u; ctx.strokeStyle = '#fff'; ctx.stroke();
-  ctx.fillStyle = 'rgba(255,255,255,.75)';
-  ctx.font = `500 ${30 * u}px DMono, monospace`;
-  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-  ctx.fillText(`BOUNCES ${String(S.n).padStart(3, '0')}`, 34 * u, h - 40 * u);
-  ctx.restore();
-  // divider
-  ctx.fillStyle = '#000'; ctx.fillRect(0, hh - 3 * u, w, 6 * u);
+  // fried vignette on freeze frames
+  if (fz) {
+    const vg = ctx.createRadialGradient(w / 2, h / 2, h * .2, w / 2, h / 2, h * .75);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(60,0,0,.75)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, w, h);
+  }
+  // flashes on the cuts: white on the beat, neon on the off-beat
+  if (!fz) {
+    if (k % 2 === 0) { ctx.globalAlpha = .9 * Math.exp(-d * 26); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
+    else { ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = .7 * Math.exp(-d * 22); ctx.fillStyle = k % 4 === 1 ? '#ff2bd6' : '#22e5ff'; ctx.fillRect(0, 0, w, h); }
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  } else if (b - fz[0] < .06) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
+  if (INVERT.some(ib => b >= ib && b < ib + .125)) { ctx.globalCompositeOperation = 'difference'; ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); ctx.globalCompositeOperation = 'source-over'; }
   // caption, one word at a time
   let cap = null;
   for (const c of CAPS) if (b >= c[0]) cap = c;
   if (cap && cap[1]) {
     const ci = CAPS.indexOf(cap), dtc = bt(b - cap[0]);
-    const s = 1 + .38 * Math.exp(-dtc * 20);
+    const s = 1 + .42 * Math.exp(-dtc * 20);
     ctx.save();
-    ctx.translate(w / 2, hh);
+    ctx.translate(w / 2, h * .69);
     ctx.rotate((rnd(ci * 4.4) - .5) * .12);
     ctx.scale(s, s);
-    ctx.font = `700 ${132 * u}px Exo`;
+    ctx.font = `700 ${150 * u}px Exo`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.lineJoin = 'round'; ctx.lineWidth = 22 * u; ctx.strokeStyle = '#000';
+    ctx.lineJoin = 'round'; ctx.lineWidth = 26 * u; ctx.strokeStyle = '#000';
     ctx.strokeText(cap[1], 0, 0);
     ctx.fillStyle = ci % 2 ? '#FFE14A' : '#ffffff';
     ctx.fillText(cap[1], 0, 0);
@@ -587,8 +591,8 @@ function editorUpdate(b) {
   if (m < 1) {
     op(R.cvSrc, 1);
     const g = R.cvSrc.getContext('2d');
-    const fi = b >= 12 && b < 15.4 ? Math.floor(sec * 24) % 72 : Math.floor(t * 24) % 72;
-    g.drawImage(OSAKA[fi], 0, 0, 1816, 1022);
+    const fi = b >= 12 && b < 15.4 ? Math.floor(sec * 24) : Math.floor(t * 24);
+    g.save(); g.translate(908, 511); cover(g, srcFrame(fi / 24), 1816, 1022); g.restore();
   } else op(R.cvSrc, 0);
   op(R.cvBR, P(b, 16.6, 16.85));
   if (b >= 16.6) {
@@ -626,8 +630,7 @@ function editorUpdate(b) {
   for (const [id, h] of [['v2', hv2], ['v', 56], ['a', 56], ['a2', ha2], ['t', 56]]) {
     const rr = R.rows[id].row; rr.style.top = y + 'px'; rr.style.height = h + 'px'; y += h;
   }
-  const gd = ob(P(b, 16.3, 16.55), 1.6);
-  tf(R.game, `translateY(${(1 - gd) * -30}px)`); op(R.game, P(b, 16.3, 16.36));
+  R.fx.forEach((c, j) => { const d = 16.3 + j * .1; const p = ob(P(b, d, d + .2), 2); tf(c, `translateY(${(1 - p) * -26}px) scale(${.6 + .4 * p})`); op(c, P(b, d, d + .05)); });
   R.sfx.forEach((c, j) => { const d = 16.5 + j * .125; const p = ob(P(b, d, d + .2), 2); tf(c, `translateY(${(1 - p) * -26}px) scale(${.6 + .4 * p})`); op(c, P(b, d, d + .05)); });
   R.caps.forEach((c, j) => { const d = 16.6 + j * .125; const p = ob(P(b, d, d + .2), 2); tf(c, `translateY(${(1 - p) * -30}px) scale(${.6 + .4 * p})`); op(c, P(b, d, d + .05)); });
   // ---- S5: post flow
@@ -673,6 +676,8 @@ function editorUpdate(b) {
 // ======================================================================= S3: brainrot result
 const s3 = mk('div', 'fill', '', world);
 const s3cam = mk('div', 'fill', 'transform-origin:50% 50%', s3);
+const cvBlur = mk('canvas', '', `position:absolute;left:0;top:0;width:${W}px;height:${H}px;opacity:0`, s3cam); cvBlur.width = 32; cvBlur.height = 18;
+const blurDim = mk('div', 'fill', 'background:radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.25), rgba(0,0,0,.8))', s3cam);
 const marq = [0, 1].map(i => mk('div', 'ab nowrap', `top:${VERT ? (i ? H * .78 : H * .08) : (i ? H * .62 : H * .06)}px;font-size:${VERT ? 220 : 250}px;font-weight:700;line-height:1;color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.11);letter-spacing:-.01em`, s3cam, 'BRAINROT · BRAINROT · BRAINROT · BRAINROT · BRAINROT · BRAINROT · '));
 const frame = mk('div', 'ab', `width:${FR.w}px;height:${FR.h}px;left:${(W - FR.w) / 2}px;top:${(H - FR.h) / 2}px;overflow:hidden;${VERT ? '' : 'border-radius:34px;'}background:#000;transform-origin:50% 50%`, s3cam);
 const cvFR = mk('canvas', '', `width:${FR.w}px;height:${FR.h}px;display:block`, frame); cvFR.width = 1080; cvFR.height = 1920;
@@ -681,7 +686,7 @@ const PILLS = VERT ? [] : [
   [20.5, 'Scissors', '12 × 1-second cuts', -1, H * .30],
   [21.5, 'Type', 'auto captions', -1, H * .56],
   [22.5, 'Volume2', 'sound effects', 1, H * .40],
-  [23.5, 'Gamepad2', 'gameplay split-screen', 1, H * .66],
+  [23.5, 'Sparkles', 'flashes + zoom punches', 1, H * .66],
 ].map(([b0, i, l, side, y]) => {
   const p = mk('div', 'pill', `top:${y}px;transform-origin:${side < 0 ? '100%' : '0'} 50%`, s3cam, ico(i, 28) + `<span class="mono" style="font-size:25px;letter-spacing:.12em">${l}</span>`);
   const ln = mk('div', 'ab', `top:${y + 33}px;height:2px;background:linear-gradient(90deg,rgba(255,255,255,.55),rgba(255,255,255,.15));transform-origin:${side < 0 ? '0' : '100%'} 50%`, s3cam);
@@ -702,6 +707,7 @@ function s3Update(b) {
   const bgIn = P(b, 20, 20.5);
   marq.forEach((m, i) => { tf(m, `translateX(${(i ? -1 : 1) * ((t * 260) % 2600) - (i ? 0 : 2600)}px)`); op(m, bgIn); });
   drawBR(cvFR.getContext('2d'), 1080, 1920, b, 'fr', { emoji: false });
+  if (!VERT) { const g = cvBlur.getContext('2d'); g.drawImage(cvFR, 0, 480, 1080, 960, 0, 0, 32, 18); op(cvBlur, .75 * bgIn); }
   const beatPunch = Math.exp(-(b - Math.floor(b)) * 5) * P(b, 20, 20.2);
   const sway = Math.sin(t * 2.2) * .6;
   const zoomOut = VERT ? 1 : 1;
@@ -1089,7 +1095,8 @@ window.ready = (async () => {
   op(R.comp, 0);
   EVENTS.cut = Array.from({ length: 11 }, (_, k) => bt(12 + .25 * (k + 1)));
   EVENTS.drop = [16.3, ...R.sfx.map((_, j) => 16.5 + j * .125), ...R.caps.map((_, j) => 16.6 + j * .125)].map(bt);
-  { delete SIMS.aud; const St = simState('aud', bt(28) - bt(16.6) + SIM_PRE); EVENTS.bounce = St.times.map(x => bt(16.6) + x - SIM_PRE).filter(x => x >= bt(19.9) && x < bt(27.6)); delete SIMS.aud; }
+  EVENTS.brcut = []; for (let k = 7; ; k++) { const b0 = BR0 + k * .5; if (b0 >= 27.5) break; if (!FREEZE.some(([fb]) => Math.abs(fb - b0) < .01)) EVENTS.brcut.push([bt(b0), CUT_STYLE[k % CUT_STYLE.length], k % 2]); }
+  EVENTS.freeze = FREEZE.map(([fb]) => bt(fb));
   render(0);
   return true;
 })();

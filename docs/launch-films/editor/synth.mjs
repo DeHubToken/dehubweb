@@ -211,6 +211,27 @@ function progressTone(t0, t1, amp = .07) {
   const i0 = Math.round(t0 * SR), n = (t1 - t0) * SR; let ph = 0;
   for (let i = 0; i < n; i++) { const p = i / n; ph += 2 * Math.PI * (520 * 3 ** p) / SR; const x = Math.sin(ph) * (.5 + .5 * Math.sin(i / SR * 2 * Math.PI * 14)) * amp * Math.min(1, p * 8) * Math.min(1, (1 - p) * 20); put(FX, i0 + i, x); put(REV, i0 + i, x * .3); }
 }
+function flashHit(t0, amp = .3) { // camera-flash snap
+  const i0 = Math.round(t0 * SR), f = new SVF();
+  for (let i = 0; i < .09 * SR; i++) { const t = i / SR; const x = f.run(noise(), 6000, .2).hp * Math.exp(-t * 70) * amp; const [L, R] = pan(x, (rnd() - .5) * .6); put(FX, i0 + i, L, R); put(REV, i0 + i, x * .25); }
+}
+function thump(t0, amp = .5) {
+  const i0 = Math.round(t0 * SR); let ph = 0;
+  for (let i = 0; i < .16 * SR; i++) { const t = i / SR; ph += 2 * Math.PI * (70 + 160 * Math.exp(-t * 50)) / SR; const x = Math.tanh(Math.sin(ph) * 2) * Math.exp(-t * 22) * amp; put(FX, i0 + i, x); }
+}
+function vwoop(t0, dur, amp = .22) { // tape slow-down
+  const i0 = Math.round(t0 * SR); let ph = 0;
+  for (let i = 0; i < dur * SR; i++) { const p = i / (dur * SR); ph += 2 * Math.PI * (520 * (1 - .8 * p)) / SR; const x = Math.tanh(Math.sin(ph) * 2.5) * Math.sin(Math.PI * p) * amp; put(FX, i0 + i, x); put(REV, i0 + i, x * .3); }
+}
+function scratch(t0, amp = .45) { // record scratch: back-and-forth filtered noise with a pitch zigzag
+  const i0 = Math.round(t0 * SR), f = new SVF(); let ph = 0;
+  for (let i = 0; i < .32 * SR; i++) {
+    const t = i / SR, wob = Math.sin(2 * Math.PI * 11 * t), fc = 900 + 2600 * (.5 + .5 * wob);
+    ph += 2 * Math.PI * (180 + 260 * (.5 + .5 * wob)) / SR;
+    const x = (f.run(noise(), fc, .75).bp * 1.4 + Math.sin(ph) * .35) * Math.exp(-t * 6) * Math.min(1, t / .004) * amp;
+    put(FX, i0 + i, x * .9, x); put(REV, i0 + i, x * .2);
+  }
+}
 // the editor's own download ending sound, verbatim (sweep + resolving chime)
 function outroSoundSample(time) {
   if (!Number.isFinite(time) || time <= .12 || time >= 1.75) return 0;
@@ -296,8 +317,16 @@ whoosh(bt(19.3), bt(.7), .45, 300, 8000, .5, -.5);
 impact(bt(20), 1); boom(bt(20), .7);
 groove(20, 27.5, { hats: 16, vox: true, cowAmp: .32 });
 E.pop.filter(t => t > bt(20)).forEach(t => boom(t, .85));
-const PENTA = [65, 68, 70, 72, 75, 77, 80, 82];
-(E.bounce || []).forEach((t, i) => pluck(t, PENTA[(i * 3) % PENTA.length] + 12, .07));
+// one sound per cut, matched to its move; scratch + boom on the freeze frames
+(E.brcut || []).forEach(([t, style, odd]) => {
+  if (!odd) flashHit(t, .32);
+  if (style === 'punch') thump(t, .5);
+  if (style === 'crash') riser(t, t + B * .5, .28, 800, 12000);
+  if (style === 'pull') whoosh(t, B * .45, .4, 6000, 300, .2, -.2);
+  if (style === 'whip') whoosh(t - .03, .2, .55, 900, 7000, odd ? -.8 : .8, odd ? .8 : -.8);
+  if (style === 'slow') vwoop(t, B * .5, .22);
+});
+(E.freeze || []).filter(t => t > bt(20)).forEach(t => scratch(t, .45));
 // tape stop at 27.5 (applied after mixing), then the slams
 const TAPE = [bt(27.5), bt(28)];
 [[28, 29, 1], [28.5, 29, 1], [30, 25, .9], [30.5, 24, 1]].forEach(([b, n, a]) => { kick(bt(b), 1); b808(bt(b), bt(b === 28 ? .45 : b === 30 ? .45 : 1.0), n, 1.1 * a); impact(bt(b), .7 * a, .5); clap(bt(b), .8); });
