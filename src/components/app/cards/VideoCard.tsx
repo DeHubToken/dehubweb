@@ -2547,7 +2547,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             from the centered Play button; seeking enables once the length is
             known. Audio posts and live streams own their transport. */}
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-no-swipe data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
+          <div data-video-controls data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
 
