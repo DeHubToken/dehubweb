@@ -28,7 +28,7 @@ async function connect(id = project) {
   ws.addEventListener("message", event => { const value = JSON.parse(event.data); messages.push(value); for (const waiter of [...waiters]) if (waiter.predicate(value)) { waiters.splice(waiters.indexOf(waiter), 1); clearTimeout(waiter.timer); waiter.resolve(value); } });
   const next = predicate => {
     const saved = messages.find(predicate); if (saved) return Promise.resolve(saved);
-    return new Promise((resolve, reject) => { const waiter = { predicate, resolve, timer: setTimeout(() => reject(new Error("presence response timed out")), 6000) }; waiters.push(waiter); });
+    return new Promise((resolve, reject) => { const waiter = { predicate, resolve, timer: setTimeout(() => reject(new Error(`presence response timed out: ${JSON.stringify({ room: id, messages, lookups })}`)), 6000) }; waiters.push(waiter); });
   };
   return { ws, next, messages, join: wallet => ws.send(JSON.stringify({ type: "join", wallet, token: token(wallet) })) };
 }
