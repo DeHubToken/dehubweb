@@ -1,3 +1,4 @@
+import { useTabLongPress } from '@/hooks/use-tab-long-press';
 import { setFeedRefresh } from '@/lib/feed-refresh';
 /**
  * Home Page
@@ -558,6 +559,7 @@ export default function HomePage() {
     const handleTabReclick = (e: Event) => {
       const tab = (e as CustomEvent).detail;
       if (!tab) return;
+      const openOnly = e.type === 'home-tab-long-press';
       // Toggle filters for the active tab. The panel renders at the top of
       // the feed, so when OPENING while scrolled down, also scroll to top —
       // otherwise the panel mounts far above the viewport and the click
@@ -565,7 +567,7 @@ export default function HomePage() {
       // auto-close-on-scroll-down effect: upward deltas reset it.)
       const toggleFilters = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
         setter(prev => {
-          const next = !prev;
+          const next = openOnly || !prev;
           if (next) {
             requestAnimationFrame(() => {
               document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -590,12 +592,14 @@ export default function HomePage() {
     const handleIslandSelect = (e: Event) => { const tab = (e as CustomEvent).detail; if (tab) handleTabClick(tab); };
     window.addEventListener('home-feed-select', handleIslandSelect);
     window.addEventListener('home-tab-reclick', handleTabReclick);
+    window.addEventListener('home-tab-long-press', handleTabReclick);
     return () => {
       window.removeEventListener('home-refresh', handleHomeRefresh);
       window.removeEventListener('category-filter-changed', handleCategoryFilter);
       window.removeEventListener('switch-home-tab', handleSwitchTab);
       window.removeEventListener('home-feed-select', handleIslandSelect);
       window.removeEventListener('home-tab-reclick', handleTabReclick);
+      window.removeEventListener('home-tab-long-press', handleTabReclick);
     };
   }, [triggerRefresh, handleTabClick]);
 
@@ -854,6 +858,9 @@ export default function HomePage() {
   // DRAG-TO-SWIPE for tab indicator (must be after handleTabClick & enableHomeTransition)
   // --------------------------------------------------------------------------
 
+  const homeLongPress = useTabLongPress(activeTab, () => {
+    window.dispatchEvent(new CustomEvent('home-tab-long-press', { detail: activeTab }));
+  }, !isPostOverlayActive);
   const homeTabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
 
   const { isDragging: isHomeDragging, indicatorRef: homeIndicatorRef, handleDragStart: handleHomeDragStart, handleDragMove: handleHomeDragMove, handleDragEnd: handleHomeDragEnd } = useDragTabIndicator({
@@ -869,7 +876,7 @@ export default function HomePage() {
     isDraggingRef: homeIsDraggingRef,
     indicatorFixedHeightPx: 35,
     shrinkWidthByPercent: 5,
-    onTap: () => handleTabClick(activeTab),
+    onTap: () => { if (!homeLongPress.fired.current) handleTabClick(activeTab); },
     onDragEnd: () => {
       // Trigger spring transition after drag ends
       setEnableHomeTransition(true);
@@ -952,10 +959,12 @@ export default function HomePage() {
                   width: homeTabRect.width,
                   height: homeTabRect.height,
                 }}
-                onPointerDown={handleHomeDragStart}
-                onPointerMove={handleHomeDragMove}
-                onPointerUp={handleHomeDragEnd}
-                onPointerCancel={handleHomeDragEnd}
+                onPointerDown={(event) => { homeLongPress.begin(event); handleHomeDragStart(event); }}
+                onPointerMove={(event) => { homeLongPress.move(event); if (!homeLongPress.fired.current) handleHomeDragMove(event); }}
+                onPointerUp={() => { homeLongPress.cancel(); handleHomeDragEnd(); }}
+                onPointerCancel={() => { homeLongPress.cancel(); homeLongPress.fired.current = true; handleHomeDragEnd(); }}
+                onLostPointerCapture={homeLongPress.cancel}
+                onContextMenu={(event) => event.preventDefault()}
               />
             )}
             <div className="relative z-20 flex scrollbar-hide">
