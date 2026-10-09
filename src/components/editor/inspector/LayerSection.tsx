@@ -8,6 +8,7 @@
  */
 import { useTranslation } from "react-i18next";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
+import { matchesBackgroundRemovalScope } from "@/lib/editor/backgroundRemovalFailure";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import {
   AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical,
@@ -33,6 +34,9 @@ export function LayerSection({ clip }: { clip: Clip }) {
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const media = useEditorStore((s) => s.media);
+  const projectId = useEditorStore((s) => s.projectId);
+  const bgFailure = useBgRemovalStore((s) => s.failure);
+  const dismissBgFailure = useBgRemovalStore((s) => s.dismissFailure);
   const bgClipId = useBgRemovalStore((s) => s.clipId);
   const bgProgress = useBgRemovalStore((s) => s.progress);
   const runBgRemoval = useBgRemovalStore((s) => s.run);
@@ -218,6 +222,12 @@ export function LayerSection({ clip }: { clip: Clip }) {
                 : t("editor.bgRemove.working")
             : t("editor.bgRemove.action")}
         </button>
+      )}
+      {!bgClipId && !mediaClip?.videoMatte && matchesBackgroundRemovalScope(bgFailure, projectId, clip) && (
+        <div role="alert" className="space-y-2 rounded-md border border-white/20 p-2 text-xs text-white/80">
+          <p className="break-words">{bgFailure?.message}</p>
+          <button type="button" onClick={dismissBgFailure} className="underline">{t("common.close")}</button>
+        </div>
       )}
       {mediaClip?.kind === "video" && !bgClipId && !mediaClip.videoMatte && <p className="text-[10px] leading-snug text-white/40">{t("editor.videoMatte.hint", { seconds: 600 })}</p>}
       {mediaClip?.kind === "video" && bgClipId === clip.id && <button type="button" onClick={cancelBgRemoval} className="text-xs text-white/70">{t("editor.videoMatte.cancel")}</button>}
