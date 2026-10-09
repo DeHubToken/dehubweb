@@ -22,7 +22,7 @@
  * satisfy anybody.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, cleanup } from '@testing-library/react';
+import { render, renderHook, screen, waitFor, cleanup, act } from '@testing-library/react';
 
 const invoke = vi.fn();
 
@@ -71,6 +71,77 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('auto-translate', () => {
+  it('reacts when enabled without remounting the post', async () => {
+    const { setAutoTranslateEnabled } = await import('@/lib/auto-translate-setting');
+    setAutoTranslateEnabled(false);
+    await renderTranslatable('The new community gathering begins later this afternoon.');
+    expect(invoke).not.toHaveBeenCalled();
+    act(() => setAutoTranslateEnabled(true));
+    await waitFor(() => expect(screen.getByText(TRANSLATED)).toBeInTheDocument());
+  });
+
+  it('reschedules work cancelled before page load when re-enabled', async () => {
+    Object.defineProperty(document, 'readyState', { value: 'loading', configurable: true });
+    const { setAutoTranslateEnabled } = await import('@/lib/auto-translate-setting');
+    await renderTranslatable('Voici une nouvelle annonce pour tous les membres de notre communauté.');
+    act(() => setAutoTranslateEnabled(false));
+    act(() => setAutoTranslateEnabled(true));
+    Object.defineProperty(document, 'readyState', { value: 'complete', configurable: true });
+    act(() => window.dispatchEvent(new Event('load')));
+    await waitFor(() => expect(invoke).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.getByText(TRANSLATED)).toBeInTheDocument());
+  });
+
+  it('translates a short caption shared with the mobile regression', async () => {
+    await renderTranslatable('Buenos dias amigos');
+    await waitFor(() => expect(invoke).toHaveBeenCalledTimes(1));
+  });
+
+  it('discards an old language response without blocking the new language', async () => {
+    let answerOld!: (value: unknown) => void;
+    let answerNew!: (value: unknown) => void;
+    invoke
+      .mockImplementationOnce(() => new Promise(resolve => { answerOld = resolve; }))
+      .mockImplementationOnce(() => new Promise(resolve => { answerNew = resolve; }));
+    const { useTranslation } = await import('@/components/app/TranslatableText');
+    const { applyResolvedLanguage } = await import('@/lib/user-language-store');
+    const { result } = renderHook(() => useTranslation('The afternoon broadcast begins after the community meeting.', false));
+    act(() => { void result.current.handleTranslate(); });
+    act(() => applyResolvedLanguage('fr'));
+    act(() => { void result.current.handleTranslate(); });
+    expect(invoke).toHaveBeenCalledTimes(2);
+    await act(async () => answerOld({ data: { translatedText: 'old language' }, error: null }));
+    expect(result.current.isTranslated).toBe(false);
+    expect(result.current.isLoading).toBe(true);
+    await act(async () => answerNew({ data: { translatedText: 'new language' }, error: null }));
+    expect(result.current.translatedText).toBe('new language');
+  });
+
+  it('resets translated text when the same component receives another post', async () => {
+    const { useTranslation } = await import('@/components/app/TranslatableText');
+    const { result, rerender } = renderHook(({ text }) => useTranslation(text, false), {
+      initialProps: { text: 'The first announcement covers our plans for tomorrow evening.' },
+    });
+    await act(async () => { await result.current.handleTranslate(); });
+    expect(result.current.isTranslated).toBe(true);
+    rerender({ text: 'The second announcement covers a different event next month.' });
+    expect(result.current.isTranslated).toBe(false);
+    expect(result.current.translatedText).toBe('');
+    await act(async () => { await result.current.handleTranslate(); });
+    expect(invoke).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps show original selected when an earlier translation finishes', async () => {
+    let answer!: (value: unknown) => void;
+    invoke.mockImplementationOnce(() => new Promise(resolve => { answer = resolve; }));
+    const { useTranslation } = await import('@/components/app/TranslatableText');
+    const { result } = renderHook(() => useTranslation('The recording from yesterday is now available for everyone.', false));
+    act(() => { void result.current.handleTranslate(); });
+    act(() => result.current.handleShowOriginal());
+    await act(async () => answer({ data: { translatedText: TRANSLATED }, error: null }));
+    expect(result.current.isTranslated).toBe(false);
+  });
+
   it("asks for the reader's language, not the default, and asks once", async () => {
     const post = POSTS.readerLanguage;
     await renderTranslatable(post);
