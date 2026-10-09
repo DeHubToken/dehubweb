@@ -1,4 +1,4 @@
-import type { MediaItem } from "./types";
+import type { MediaItem } from "@/store/editorStore";
 import type { VideoMatteFrame } from "./videoMattePageCache";
 
 export function loadVideoMatteImage(media: MediaItem[], frame: VideoMatteFrame, signal?: AbortSignal): Promise<HTMLImageElement> {
