@@ -1,8 +1,15 @@
 import { expect, it } from "vitest";
-import { backgroundRemovalScope, matchesBackgroundRemovalScope, backgroundRemovalFailureMessage } from "./backgroundRemovalFailure";
+import { backgroundRemovalScope, matchesBackgroundRemovalScope, backgroundRemovalFailureMessage, isBackgroundRemovalCancellation } from "./backgroundRemovalFailure";
 import type { MediaClip } from "./types";
 
 const clip: MediaClip = { id: "clip", kind: "video", trackId: "video", mediaId: "source", start: 0, trimIn: 2, duration: 3 };
+
+it("recognizes cancellation across browser realms without requiring an Error prototype", () => {
+  expect(isBackgroundRemovalCancellation(new DOMException("Cancelled", "AbortError"))).toBe(true);
+  expect(isBackgroundRemovalCancellation({ name: "AbortError", message: "Source changed" })).toBe(true);
+  expect(isBackgroundRemovalCancellation(new Error("Cancelled"))).toBe(false);
+  expect(isBackgroundRemovalCancellation(null)).toBe(false);
+});
 
 it("shows a failure only for the original project and source range", () => {
   const scope = backgroundRemovalScope("project", clip);
