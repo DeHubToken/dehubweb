@@ -1,3 +1,4 @@
+import { useTabLongPress } from '@/hooks/use-tab-long-press';
 /**
  * Global Feed Navigation Bar
  * ==========================
@@ -66,6 +67,10 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
   const [enableTransition, setEnableTransition] = useState(false);
   const { shortsEnabled } = useShortsEnabled();
   const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
+
+  const tabLongPress = useTabLongPress(activeTab, () => {
+    window.dispatchEvent(new CustomEvent('home-tab-long-press', { detail: activeTab }));
+  }, isHomePage);
 
   // Keep a ref in sync so drag handlers avoid stale activeTab closures.
   const activeTabRef = useRef(activeTab);
@@ -256,10 +261,12 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
                   ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
               }}
-              onPointerDown={handleDragStart}
-              onPointerMove={handleDragMove}
-              onPointerUp={handleDragEnd}
-              onPointerCancel={handleDragEnd}
+              onPointerDown={(event) => { tabLongPress.begin(event); handleDragStart(event); }}
+              onPointerMove={(event) => { tabLongPress.move(event); if (!tabLongPress.fired.current) handleDragMove(event); }}
+              onPointerUp={() => { tabLongPress.cancel(); handleDragEnd(); }}
+              onPointerCancel={() => { tabLongPress.cancel(); handleDragEnd(); }}
+              onLostPointerCapture={tabLongPress.cancel}
+              onContextMenu={(event) => event.preventDefault()}
             />
           )}
           <div className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'manipulation' }}>
