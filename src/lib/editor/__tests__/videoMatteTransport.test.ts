@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { processVideoMatte } from "../processVideoMatte";
-import { videoMattePlan } from "../videoMatte";
+import { videoMattePlan, videoMattePagePlan } from "../videoMatte";
 import type { MediaClip } from "../types";
 const clip: MediaClip = { id: "v", mediaId: "source", trackId: "t", kind: "video", start: 0, trimIn: 2, duration: 1 };
 describe("video mask decoder transport", () => {
@@ -32,4 +32,25 @@ describe("video mask decoder transport", () => {
     const pending = processVideoMatte("blob:source", clip, 30, vi.fn()), failure = expect(pending).rejects.toThrow("stopped responding");
     await vi.advanceTimersByTimeAsync(200000); await failure; expect(document.querySelector("iframe")).toBeNull();
   });
+});
+
+describe("paged mask transport", () => {
+  beforeEach(() => { vi.useFakeTimers(); vi.stubGlobal("crypto", { randomUUID: () => "mask-key" }); });
+  afterEach(() => { document.querySelectorAll("iframe").forEach(frame => frame.remove()); vi.useRealTimers(); vi.unstubAllGlobals(); });
+it("acknowledges durable pages in order and refuses completion before storage", async () => {
+  const long={...clip,duration:21},plan=videoMattePlan(long,640,360,40,30);
+  const controller=new AbortController();let release!:(id:string)=>void;
+  const sink=vi.fn(()=>new Promise<string>(resolve=>{release=resolve;}));
+  const pending=processVideoMatte("blob:source",long,30,vi.fn(),controller.signal,sink);
+  const frame=document.querySelector("iframe")!,post=vi.spyOn(frame.contentWindow!,"postMessage");
+  const key="mask-key";
+  const send=(data:Record<string,unknown>)=>window.dispatchEvent(new MessageEvent("message",{source:frame.contentWindow,data:{key,...data}}));
+  send({type:"ready"});
+  send({type:"page",plan,pageIndex:0,page:{...videoMattePagePlan(plan,0),dataUrl:"data:image/png;base64,AAAA"}});
+  expect(sink).toHaveBeenCalledOnce();expect(post.mock.calls.some(([data])=>data.type==="pageSaved")).toBe(false);
+  release("page-0");await Promise.resolve();expect(post).toHaveBeenLastCalledWith({key,type:"pageSaved",pageIndex:0,mediaId:"page-0"},"*");
+  const rejected=expect(pending).rejects.toThrow("Invalid background page");
+  send({type:"page",plan,pageIndex:2,page:{...videoMattePagePlan(plan,1),dataUrl:"data:image/png;base64,AAAA"}});await rejected;
+});
+
 });
