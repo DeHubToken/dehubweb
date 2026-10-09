@@ -11,12 +11,12 @@ export function ProtectedAudioVisualizer({ requiresAccess, tokenId, viewerKey, .
     queryKey: ['audio-access', tokenId, viewerKey || 'anonymous'],
     queryFn: () => apiCall<{ url: string }>(`/api/nfts/audio/${encodeURIComponent(tokenId)}/access`, { requiresAuth: true }),
     enabled: requiresAccess,
-    staleTime: 10 * 60 * 1000,
+    staleTime: 20 * 60 * 60 * 1000,
     retry: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    refetchOnMount: false,
-    gcTime: 24 * 60 * 60 * 1000,
+    refetchOnMount: true,
+    gcTime: 20 * 60 * 60 * 1000,
   });
   if (requiresAccess && !access.data?.url) {
     return <div className="w-full h-full flex items-center justify-center" role="status">
