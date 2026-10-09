@@ -3111,6 +3111,7 @@ export type Database = {
         Row: {
           created_at: string
           document: Json
+          editor_wallet: string | null
           project_id: string
           request_id: string
           revision: number
@@ -3119,6 +3120,7 @@ export type Database = {
         Insert: {
           created_at?: string
           document: Json
+          editor_wallet?: string | null
           project_id: string
           request_id: string
           revision: number
@@ -3127,6 +3129,7 @@ export type Database = {
         Update: {
           created_at?: string
           document?: Json
+          editor_wallet?: string | null
           project_id?: string
           request_id?: string
           revision?: number
@@ -3146,22 +3149,36 @@ export type Database = {
         Row: {
           expires_at: string
           path: string
+          shared_project_id: string | null
           size_bytes: number
+          uploader_wallet: string | null
           wallet_address: string
         }
         Insert: {
           expires_at?: string
           path: string
+          shared_project_id?: string | null
           size_bytes: number
+          uploader_wallet?: string | null
           wallet_address: string
         }
         Update: {
           expires_at?: string
           path?: string
+          shared_project_id?: string | null
           size_bytes?: number
+          uploader_wallet?: string | null
           wallet_address?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_shared_upload_project"
+            columns: ["wallet_address", "shared_project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
       }
       email_send_log: {
         Row: {
@@ -8359,15 +8376,47 @@ export type Database = {
         Args: { p_max_discovered?: number }
         Returns: Json
       }
+      editor_cloud_edit_allowed: {
+        Args: { p_id: string; p_owner: string }
+        Returns: boolean
+      }
+      editor_cloud_edit_load: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_edit_save: {
+        Args: {
+          p_document: Json
+          p_expected_revision: number
+          p_id: string
+          p_owner: string
+          p_request_id: string
+        }
+        Returns: Json
+      }
       editor_cloud_history: { Args: { p_id: string }; Returns: Json }
       editor_cloud_list: { Args: never; Returns: Json }
       editor_cloud_list_trash: { Args: never; Returns: Json }
+      editor_cloud_live_access: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
       editor_cloud_load: {
         Args: { p_id: string; p_revision?: number }
         Returns: Json
       }
       editor_cloud_prepare_media: {
         Args: { p_extension: string; p_id: string; p_size: number }
+        Returns: Json
+      }
+      editor_cloud_prepare_shared_media: {
+        Args: {
+          p_extension: string
+          p_id: string
+          p_owner: string
+          p_project: string
+          p_size: number
+        }
         Returns: Json
       }
       editor_cloud_restore: {
@@ -8466,6 +8515,10 @@ export type Database = {
         }
         Returns: Json
       }
+      editor_cloud_shared_upload_allowed: {
+        Args: { p_path: string }
+        Returns: boolean
+      }
       editor_cloud_validate: {
         Args: { p_document: Json; p_project_id: string; p_wallet: string }
         Returns: undefined
@@ -8474,6 +8527,10 @@ export type Database = {
       end_inactive_stages: { Args: never; Returns: number }
       erase_account_app_data: {
         Args: { p_user_id?: string; p_wallet: string }
+        Returns: undefined
+      }
+      erase_editor_account_data: {
+        Args: { p_wallet: string }
         Returns: undefined
       }
       evict_stale_post_translations: { Args: never; Returns: number }
