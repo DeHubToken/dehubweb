@@ -127,4 +127,28 @@ describe('subtitle menu on phones', () => {
     fireEvent.pause(video);
     expect(available).toHaveBeenLastCalledWith(true);
   });
+
+  it('offers the mixer while a selected dub is waiting for the transcript on a muted card', () => {
+    fixture.dub = true;
+    fixture.appLang = 'es';
+    const video = document.createElement('video');
+    video.muted = true;
+    const available = vi.fn();
+    const { rerender } = render(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: video }} onDubAvailableChange={available} />);
+    expect(available).toHaveBeenLastCalledWith(true);
+    expect(fixture.lookup).not.toHaveBeenCalledWith(123, true);
+    expect(fixture.engine).not.toHaveBeenCalled();
+    fixture.dub = false;
+    rerender(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: video }} onDubAvailableChange={available} />);
+    expect(available).toHaveBeenLastCalledWith(false);
+  });
+
+  it('uses the normal volume control when the video already speaks the selected language', () => {
+    fixture.dub = true;
+    fixture.appLang = 'es';
+    fixture.sourceLang = 'es';
+    const available = vi.fn();
+    render(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: document.createElement('video') }} onDubAvailableChange={available} />);
+    expect(available).toHaveBeenLastCalledWith(false);
+  });
 });
