@@ -21,8 +21,8 @@ interface RoomSettingsModalProps {
 }
 
 export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomSettingsModalProps) {
-  const [roomName, setRoomName] = useState(room?.name || room?.topic || '');
-  const [roomDescription, setRoomDescription] = useState(room?.description || '');
+  const [roomName, setRoomName] = useSurfaceDraft("src/components/app/chat/RoomSettingsModal.tsx:roomName", room?.name || room?.topic || '', draftIdentity(room));
+  const [roomDescription, setRoomDescription] = useSurfaceDraft("src/components/app/chat/RoomSettingsModal.tsx:roomDescription", room?.description || '', draftIdentity(room));
   const [modAddress, setModAddress] = useSurfaceDraft("components/app/chat/RoomSettingsModal.tsx:modAddress", '', draftIdentity(room));
   const [isSaving, setIsSaving] = useState(false);
   const [isAddingMod, setIsAddingMod] = useState(false);

@@ -183,14 +183,14 @@ export function PostAccessToggles({
   const hasCommunities = userCommunities.length > 0 && !!walletAddress;
 
   // Temp states for drawer inputs
-  const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
+  const [tempPpvAmount, setTempPpvAmount] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempPpvAmount", ppvAmount, draftScope);
   const [tempPpvCurrency, setTempPpvCurrency] = useState<Currency>(ppvCurrency);
-  const [tempW2eViews, setTempW2eViews] = useState(w2eViews);
-  const [tempW2eComments, setTempW2eComments] = useState(w2eComments);
-  const [tempW2eTotal, setTempW2eTotal] = useState(w2eTotal);
-  const [tempTokenAmount, setTempTokenAmount] = useState(tokenAmount);
-  const [tempTokenSymbol, setTempTokenSymbol] = useState(tokenSymbol || 'DHB');
-  const [tempTokenContract, setTempTokenContract] = useState(tokenContract);
+  const [tempW2eViews, setTempW2eViews] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempW2eViews", w2eViews, draftScope);
+  const [tempW2eComments, setTempW2eComments] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempW2eComments", w2eComments, draftScope);
+  const [tempW2eTotal, setTempW2eTotal] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempW2eTotal", w2eTotal, draftScope);
+  const [tempTokenAmount, setTempTokenAmount] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempTokenAmount", tokenAmount, draftScope);
+  const [tempTokenSymbol, setTempTokenSymbol] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempTokenSymbol", tokenSymbol || 'DHB', draftScope);
+  const [tempTokenContract, setTempTokenContract] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempTokenContract", tokenContract, draftScope);
   const [useCustomToken, setUseCustomToken] = useState(!!tokenContract);
 
   const lockTokens = useMemo(() => getLockTokensForChain(postChainId), [postChainId]);

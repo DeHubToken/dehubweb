@@ -2052,6 +2052,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
                   {mode === 'image' && (
                     <CounterChip
+                      draftScope={`creator:batch:${imageModel}`}
                       label={t('creator.imagesUnit')}
                       singular={t('creator.imageUnit')}
                       value={batch}
@@ -2064,6 +2065,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                   {mode === 'video' && (
                     <>
                       {activeVideoModel?.requiresVideoInput ? <span className="rounded-xl border border-white/15 px-3 py-2 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
+                        draftScope={`creator:duration:${videoModel}`}
                         label={t('creator.secondsUnit')}
                         singular={t('creator.secondUnit')}
                         value={duration}

@@ -420,8 +420,8 @@ function TargetingSummary({ targeting }: { targeting: AdTargeting }) {
 function BudgetEditor({ campaign }: { campaign: { id: string; daily_budget_usd: number; total_budget_usd: number; spent_usd: number } }) {
   const { t } = useTranslation();
   const updateCampaign = useUpdateCampaign();
-  const [daily, setDaily] = useState(String(campaign.daily_budget_usd));
-  const [total, setTotal] = useState(String(campaign.total_budget_usd));
+  const [daily, setDaily] = useSurfaceDraft("src/components/app/ads/CampaignsTab.tsx:daily", String(campaign.daily_budget_usd), campaign.id);
+  const [total, setTotal] = useSurfaceDraft("src/components/app/ads/CampaignsTab.tsx:total", String(campaign.total_budget_usd), campaign.id);
   const dirty = Number(daily) !== Number(campaign.daily_budget_usd) || Number(total) !== Number(campaign.total_budget_usd);
 
   return (

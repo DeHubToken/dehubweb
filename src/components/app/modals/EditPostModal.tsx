@@ -639,7 +639,7 @@ export function EditPostModal({
         inside another root fights over the body scroll lock, and the inner
         sheet inherits the outer one's dismiss handling. */}
     <ShopSheetLazy
-      draftScope={`post:edit:${post.tokenId}`}
+      draftScope={`post:edit:${tokenId}`}
       open={shopSheetOpen}
       onOpenChange={setShopSheetOpen}
       value={{ links: shopLinks, listingIds: pickedListingIds }}

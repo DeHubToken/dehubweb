@@ -672,7 +672,7 @@ function AssistantPageForAccount() {
     const id = initialConversation.current;
     if (!id || !walletAddress) return;
     let cancelled = false;
-    void withWalletHeader(supabase.from('ai_messages').select('*').eq('conversation_id', id).order('created_at', { ascending: true }), walletAddress)
+    void Promise.resolve(withWalletHeader(supabase.from('ai_messages').select('*').eq('conversation_id', id).order('created_at', { ascending: true }), walletAddress))
       .then(({ data, error }) => {
         if (cancelled || error || visibleConversation.current !== id) return;
         setMessages(previous => previous.length ? previous : (data || []).map(message => ({ id: message.id, role: message.role as 'user' | 'assistant', content: message.content,

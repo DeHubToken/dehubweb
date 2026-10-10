@@ -211,7 +211,7 @@ const DM_ACCESS_OPTIONS = (t: TFunction) => [
 function MessageFeeControl() {
   const { t } = useTranslation();
   const { messageFee, isUpdating, updateMessageFee } = useDmSettings();
-  const [feeInput, setFeeInput] = useState('');
+  const [feeInput, setFeeInput] = useSurfaceDraft("src/pages/app/SettingsPage.tsx:feeInput", '');
   const dirty = feeInput !== '' && parseFloat(feeInput) !== messageFee;
   const commit = () => {
     const val = parseFloat(feeInput);

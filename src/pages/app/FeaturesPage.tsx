@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Feature Requests Page
  * =====================
@@ -227,8 +228,8 @@ function FeatureCard({
   const [showComments, setShowComments] = useState(defaultCommentsOpen);
   const [showMenu, setShowMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(feature.title);
-  const [editDescription, setEditDescription] = useState(feature.description);
+  const [editTitle, setEditTitle] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editTitle", feature.title, feature.id);
+  const [editDescription, setEditDescription] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editDescription", feature.description, feature.id);
   const [editCategory, setEditCategory] = useState<FeatureCategory>(feature.category);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -916,7 +917,7 @@ export default function FeaturesPage() {
   const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
   const { ref: featuresCatFadeRef, style: featuresCatFadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:searchInput", '');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);

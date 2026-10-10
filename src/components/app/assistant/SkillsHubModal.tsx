@@ -55,7 +55,7 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
   const [query, setQuery] = useSurfaceDraft("components/app/assistant/SkillsHubModal.tsx:query", '');
 
   // Create form
-  const [form, setForm] = useState({
+  const [form, setForm] = useSurfaceDraft("src/components/app/assistant/SkillsHubModal.tsx:form", {
     name: '',
     description: '',
     kind: 'chat' as 'chat' | 'image',

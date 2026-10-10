@@ -128,7 +128,7 @@ export function BookmarkFoldersPanel() {
   const [openFolderId, setOpenFolderId] = useState<string | null>(null);
   const [newFolderName, setNewFolderName] = useSurfaceDraft("components/app/bookmarks/BookmarkFoldersPanel.tsx:newFolderName", '');
   const [renamingId, setRenamingId] = useState<string | null>(null);
-  const [renameValue, setRenameValue] = useSurfaceDraft("components/app/bookmarks/BookmarkFoldersPanel.tsx:renameValue", '');
+  const [renameValue, setRenameValue] = useSurfaceDraft("components/app/bookmarks/BookmarkFoldersPanel.tsx:renameValue", folders.find(folder => folder._id === renamingId)?.name ?? '', renamingId);
   const [sort, setSort] = useState<FolderSort>('newest');
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [isMoving, setIsMoving] = useState(false);
@@ -251,8 +251,7 @@ export function BookmarkFoldersPanel() {
             onChange={(e) => setNewFolderName(e.target.value)}
             onKeyDown={(e) => {
               if (e.key !== 'Enter' || !newFolderName.trim()) return;
-              createFolder({ name: newFolderName.trim() });
-              setNewFolderName('');
+              createFolder({ name: newFolderName.trim() }, { onSuccess: () => setNewFolderName.complete(newFolderName, '') });
             }}
             maxLength={40}
             placeholder="New folder name"
@@ -262,7 +261,7 @@ export function BookmarkFoldersPanel() {
             size="sm"
             variant="ghost"
             disabled={!newFolderName.trim() || isCreating}
-            onClick={() => { createFolder({ name: newFolderName.trim() }); setNewFolderName(''); }}
+            onClick={() => { createFolder({ name: newFolderName.trim() }, { onSuccess: () => setNewFolderName.complete(newFolderName, '') }); }}
             className="h-9 shrink-0 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
           >
             {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create'}
@@ -298,8 +297,7 @@ export function BookmarkFoldersPanel() {
                     onKeyDown={(e) => {
                       if (e.key === 'Escape') setRenamingId(null);
                       if (e.key !== 'Enter' || !renameValue.trim()) return;
-                      updateFolder({ folderId: folder._id, name: renameValue.trim() });
-                      setRenamingId(null);
+                      updateFolder({ folderId: folder._id, name: renameValue.trim() }, { onSuccess: () => { if (setRenameValue.complete(renameValue, renameValue)) setRenamingId(null); } });
                     }}
                     maxLength={40}
                     className="flex-1 h-8 px-2 rounded-lg bg-zinc-800 border border-zinc-700 text-sm text-white focus:outline-none"
@@ -328,8 +326,7 @@ export function BookmarkFoldersPanel() {
                     <button
                       onClick={() => {
                         if (!renameValue.trim()) return;
-                        updateFolder({ folderId: folder._id, name: renameValue.trim() });
-                        setRenamingId(null);
+                        updateFolder({ folderId: folder._id, name: renameValue.trim() }, { onSuccess: () => { if (setRenameValue.complete(renameValue, renameValue)) setRenamingId(null); } });
                       }}
                       className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
                       aria-label="Save name"
@@ -348,7 +345,7 @@ export function BookmarkFoldersPanel() {
                   <>
                     <PublicControls folder={folder} onToggle={togglePublic} onCopyLink={copyPlaylistLink} compact />
                     <button
-                      onClick={() => { setRenamingId(folder._id); setRenameValue(folder.name); }}
+                      onClick={() => { setRenamingId(folder._id); }}
                       className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
                       aria-label={`Rename ${folder.name}`}
                     >
