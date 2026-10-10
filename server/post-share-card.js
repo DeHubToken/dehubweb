@@ -133,7 +133,11 @@ function authorIdentity(author, badges) {
   const height = 22 * .8052;
   const widths = badges.map(badge => badge.kind === 'new' ? 49 : height * (badge.bounds[2] - badge.bounds[0]) / (badge.bounds[3] - badge.bounds[1]));
   const reserved = widths.reduce((sum, width) => sum + width + 5, 0);
-  const lines = wrapPostText(author, 22, Math.max(65, 184 - reserved), 2);
+  const lastWidth = Math.max(65, 184 - reserved);
+  const fullLines = wrapPostText(author, 22, 184, 2);
+  const lines = textWidth(author, 22) <= lastWidth ? [author]
+    : fullLines.length > 1 ? [fullLines[0], ...wrapPostText(author.slice(fullLines[0].length).trim(), 22, lastWidth, 1)]
+    : wrapPostText(author, 22, lastWidth, 2);
   const baseline = 176 + (lines.length - 1) * 27;
   let x = 143 + textWidth(lines.at(-1) || '', 22) + 5;
   const artwork = badges.map((badge, i) => {
