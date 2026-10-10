@@ -1,7 +1,7 @@
 import { act, createElement } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { beforeEach, afterEach, describe, expect, it } from 'vitest';
-import { useStoredDraftState, accountDraftKey, type DraftSetter } from '../use-draft-state';
+import { useDraftState, useStoredDraftState, accountDraftKey, type DraftSetter } from '../use-draft-state';
 import { __resetDraftCacheForTests, readDraft } from '@/lib/draft-cache';
 
 let root: Root;
@@ -11,6 +11,11 @@ function Field({ account = 'alice', place = 'room:one', initial = '' }) {
   const [text, setText] = useStoredDraftState(accountDraftKey(account, place), initial);
   change = setText;
   return createElement('textarea', { value: text, onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => setText(event.target.value) });
+}
+function GuestField() {
+  const [text, setText] = useDraftState('comment:42:text', '');
+  change = setText;
+  return createElement('textarea', { value: text, readOnly: true });
 }
 function render(props = {}) { act(() => root.render(createElement(Field, props))); }
 function shown() { return node.querySelector('textarea')!.value; }
@@ -22,6 +27,15 @@ beforeEach(() => {
 afterEach(() => { act(() => root.unmount()); node.remove(); });
 
 describe('durable field lifecycle', () => {
+  it('restores a guest comment immediately after closing and a cold cache reload', () => {
+    act(() => root.render(createElement(GuestField)));
+    act(() => change('  guest reply\n '));
+    act(() => root.unmount());
+    __resetDraftCacheForTests();
+    root = createRoot(node);
+    act(() => root.render(createElement(GuestField)));
+    expect(shown()).toBe('  guest reply\n ');
+  });
   it('writes synchronously and restores exact text after a fresh storage load', () => {
     render(); act(() => change('  unfinished\n\n'));
     act(() => root.unmount()); __resetDraftCacheForTests(); root = createRoot(node);
