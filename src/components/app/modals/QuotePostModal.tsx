@@ -174,7 +174,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
         </VisuallyHidden>
 
         {/* Header */}
-        <div className="flex items-center justify-between px-4 pt-2 pb-3 border-b border-white/10">
+        <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-white/10">
           <button
             onClick={() => onOpenChange(false)}
             disabled={isSubmitting}
@@ -186,7 +186,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
             onClick={handleSubmit}
             disabled={isSubmitting || !content.trim()}
             data-primary-cta
-            className="px-4 py-1.5 rounded-full bg-white text-black font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/90 transition-colors"
+            className="px-4 py-1.5 rounded-[10px] bg-white text-black font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/90 transition-colors"
           >
             {isSubmitting ? 'Posting...' : 'Post'}
           </button>
