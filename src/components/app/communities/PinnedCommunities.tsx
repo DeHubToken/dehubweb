@@ -14,14 +14,14 @@ import { storageImage, deviceWidth } from '@/lib/media-url';
 interface PinnedCommunitiesProps {
   walletAddress: string;
   isOwnProfile: boolean;
-  /** The community the profile header wears on desktop; its card shows on phones only. */
-  desktopHiddenId?: string;
-  /** Lets the header's desktop strip open the same picker. */
+  /** The community already shown in the profile header's banner strip. */
+  featuredId?: string;
+  /** Lets the header's strip open the same picker. */
   pickerOpen?: boolean;
   onPickerOpenChange?: (open: boolean) => void;
 }
 
-export function PinnedCommunities({ walletAddress, isOwnProfile, desktopHiddenId, pickerOpen: pickerOpenProp, onPickerOpenChange }: PinnedCommunitiesProps) {
+export function PinnedCommunities({ walletAddress, isOwnProfile, featuredId, pickerOpen: pickerOpenProp, onPickerOpenChange }: PinnedCommunitiesProps) {
   const navigate = useNavigate();
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
   const [pickerOpenState, setPickerOpenState] = useState(false);
@@ -31,19 +31,17 @@ export function PinnedCommunities({ walletAddress, isOwnProfile, desktopHiddenId
 
   if (pinned.length === 0 && !isOwnProfile) return null;
 
-  // When the header wears the only pin on desktop, drop the empty gap there too.
-  const desktopEmpty = !!desktopHiddenId && pinned.length > 0 && pinned.every(p => p.community_id === desktopHiddenId);
+  const remainingPins = pinned.filter(p => p.communities && p.community_id !== featuredId);
 
   return (
-    <div className={desktopEmpty ? 'mt-3 lg:hidden' : 'mt-3'}>
+    <div className={remainingPins.length > 0 || pinned.length === 0 ? 'mt-3' : undefined}>
       <div className="space-y-2">
-        {pinned.map(pin => {
+        {remainingPins.map(pin => {
           const community = pin.communities as Community | undefined;
           if (!community) return null;
           return (
             <PinnedCommunityCard
               key={pin.id}
-              className={community.id === desktopHiddenId ? 'lg:hidden' : undefined}
               community={community}
               onClick={() => navigate(`/app/communities/${community.slug}`)}
               isOwnProfile={isOwnProfile}
