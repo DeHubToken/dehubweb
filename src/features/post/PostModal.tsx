@@ -18,6 +18,8 @@ import { cn } from '@/lib/utils';
 import { useKeyboardSafeSheet } from '@/hooks/use-keyboard-open';
 import { BannedAccountNotice } from '@/components/app/BannedAccountNotice';
 import { useBannedAccount } from '@/hooks/use-banned-account';
+import { QuotedPostEmbed } from '@/components/app/cards/QuotedPostEmbed';
+import type { DeHubNFT } from '@/lib/api/dehub/types';
 
 const CreatePlanModal = lazy(() =>
   import('@/components/app/subscriptions/CreatePlanModal').then((module) => ({
@@ -36,9 +38,15 @@ interface PostModalProps {
   initialPoll?: PollData | null;
   /** Open on the Livestream tab instead of Post. */
   initialLiveMode?: 'video';
+  /**
+   * Quote this post. Same composer — media, poll, rating, mint — minus what a
+   * quote cannot be: a livestream, stage, article, scheduled or paywalled post.
+   */
+  quotedPost?: DeHubNFT | null;
 }
 
-function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope }: PostModalProps & { draftScope: string }) {
+function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope, quotedPost }: PostModalProps & { draftScope: string }) {
+  const isQuoting = !!quotedPost;
   const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
   const { isBanned } = useBannedAccount();
   // Where a live post goes once its mint has provisioned the stream. Held here
@@ -48,7 +56,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const [articleMode, setArticleMode] = useDraftState(draftScope + ':articleMode', false);
   const [articleBody, setArticleBody] = useDraftState(draftScope + ':articleBody', '');
   const finishPost = () => { setArticleBody.complete(articleBody, ''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
-  const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope);
+  const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope, quotedPost);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
@@ -186,6 +194,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     </div>
   ) : (
     <>
+      {!isQuoting && (
       <div className="flex items-center justify-center gap-3 px-4 pt-4 pb-1 text-xs font-medium">
         <button type="button" aria-pressed={!articleMode && state.liveMode === null} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null ? 'text-white' : 'text-white/55 hover:text-white')}>Post</button>
         <span className="text-white/25" aria-hidden="true">|</span>
@@ -195,6 +204,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         <span className="text-white/25" aria-hidden="true">|</span>
         <button type="button" aria-pressed={articleMode} onClick={selectArticleMode} className={cn('transition-colors', articleMode ? 'text-white' : 'text-white/55 hover:text-white')}>Article</button>
       </div>
+      )}
 
       {articleMode ? (
         <ArticleComposer
@@ -284,7 +294,15 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         poll={state.poll}
         onPollChange={actions.setPoll}
         onMediaFullscreenChange={setMediaFullscreenOpen}
+        hideScheduleAndDrafts={isQuoting}
       />
+      {quotedPost && (
+        // Shown as it will appear under the quote. Not a link from here —
+        // tapping it mid-compose would navigate away from the draft.
+        <div className="px-4 pb-3 pointer-events-none">
+          <QuotedPostEmbed quotedPost={quotedPost} />
+        </div>
+      )}
       <PostAccessToggles
         draftScope={draftScope}
         isSubscribersOnly={state.isSubscribersOnly}
@@ -335,10 +353,12 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         mintFeeLabel={computed.mintFeeLabel}
         mintRequired={computed.mintRequired}
         onCreatePlan={() => setPlanDrawerOpen(true)}
+        quoteMode={isQuoting}
       />
 
       <PostActionBar
-        extraTool={!state.liveMode ? <CrossPostPicker onNavigateAway={handleClose} /> : undefined}
+        extraTool={!state.liveMode && !isQuoting ? <CrossPostPicker onNavigateAway={handleClose} /> : undefined}
+        hideLive={isQuoting}
         imageInputRef={refs.imageInputRef}
         videoInputRef={refs.videoInputRef}
         audioInputRef={refs.audioInputRef}
@@ -414,7 +434,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           )}
         >
           <VisuallyHidden>
-            <DrawerTitle>Create a post</DrawerTitle>
+            <DrawerTitle>{isQuoting ? 'Quote post' : 'Create a post'}</DrawerTitle>
           </VisuallyHidden>
           {modalContent}
         </DrawerContent>
