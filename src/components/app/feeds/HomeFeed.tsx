@@ -258,6 +258,7 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
         <input
           type="text"
+          data-home-category-search
           value={categorySearch}
           onChange={e => setCategorySearch(e.target.value)}
           placeholder={t('filters.searchCategories')}
