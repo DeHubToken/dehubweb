@@ -1,4 +1,5 @@
 import { apiCall, authedUpload } from './core';
+import { voiceRecordingFilename } from '@/lib/voice-recording';
 
 export interface LiveChatRoom {
   id: string;
@@ -328,7 +329,7 @@ export async function updateLiveChatRoomSettings(
 /**
  * POST /api/livechat/upload-voice — upload a voice message to the CDN
  */
-export async function uploadLiveChatVoice(audioBlob: Blob, filename = 'voice.webm'): Promise<{ url: string; duration: number }> {
+export async function uploadLiveChatVoice(audioBlob: Blob, filename = voiceRecordingFilename(audioBlob.type)): Promise<{ url: string; duration: number }> {
   const formData = new FormData();
   formData.append('audio', audioBlob, filename);
 

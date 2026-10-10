@@ -92,6 +92,7 @@ import { ReportModal } from '@/components/app/modals/ReportModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
 import { toast } from 'sonner';
+import { createVoiceRecorder, voiceRecordingBlob, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';
 import { emitCommentCreated, emitCommentsDeleted } from '@/lib/comment-count-events';
 import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
@@ -1142,7 +1143,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   }, [hasUnsentContent, onDirtyChange]);
   useEffect(() => () => onDirtyChange?.(false), [onDirtyChange]);
 
-  const MAX_VOICE_DURATION = 30;
+  const MAX_VOICE_DURATION = VOICE_RECORDING_SECONDS;
 
   /**
    * Every comment tip on this post, in one query, plus the five best-tipped
@@ -1537,7 +1538,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         stream.getTracks().forEach(track => track.stop());
         return;
       }
-      const mediaRecorder = new MediaRecorder(stream);
+      const mediaRecorder = createVoiceRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
 
@@ -1552,9 +1553,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         // Stopped by the unmount cleanup: there is no composer left to take
         // the note, and an object URL minted now would only leak.
         if (unmountedRef.current) return;
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
-        const url = URL.createObjectURL(blob);
-        setVoiceNote({ url, duration: recordingTimeRef.current });
+        const blob = voiceRecordingBlob(chunksRef.current, mediaRecorder.mimeType);
+        if (blob.size > 0) {
+          const url = URL.createObjectURL(blob);
+          setVoiceNote({ url, duration: recordingTimeRef.current });
+        }
         setIsRecording(false);
         setRecordingTime(0);
         recordingTimeRef.current = 0;
@@ -1574,7 +1577,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         }
       }, 1000);
     } catch (err) {
+      mediaRecorderRef.current?.stream.getTracks().forEach(track => track.stop());
       console.error('Failed to start recording:', err);
+      toast.error(t('stages.micUnreachable'));
     }
   };
 

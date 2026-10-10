@@ -15,6 +15,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
+import { voiceRecordingFile } from '@/lib/voice-recording';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -151,7 +152,7 @@ export function EventChat({ eventId }: EventChatProps) {
     toast.loading(t('events.uploadingVoiceNote'), { id: toastId });
     try {
       const token = getAuthToken();
-      const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+      const file = voiceRecordingFile(blob);
       const formData = new FormData();
       formData.append('file', file, file.name);
       const { data, error } = await supabase.functions.invoke('dm-upload-media', {
