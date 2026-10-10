@@ -58,7 +58,7 @@ describe('governance vote weight', () => {
   it('keeps the username overrides identical to the app', () => {
     // An override hands out a tier with no balance behind it, so the two lists
     // disagreeing means someone votes at 13x on one side and 0 on the other.
-    const app = readFileSync(resolve(__dirname, '../staking-badges.ts'), 'utf8');
+    const app = readFileSync(resolve(__dirname, '../staking-badge-rules.ts'), 'utf8');
     const names = (source: string) =>
       [...source.matchAll(/USERNAME_BADGE_OVERRIDES[^=]*=\s*\{([\s\S]*?)\};/g)]
         .flatMap((m) => [...m[1].matchAll(/["']?([A-Za-z0-9_]+)["']?\s*:\s*"([^"]+)"/g)])
