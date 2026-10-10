@@ -6,6 +6,7 @@ import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
 import { importOneFile } from "@/lib/editor/importFiles";
 import { recordStream } from "@/lib/editor/recording";
+import { startScreenCapture } from "@/lib/editor/screenCapture";
 
 const quota = vi.hoisted(() => ({ walletAddress: "first", overQuota: false, refetchUsage: vi.fn(async () => {}) }));
 vi.mock("@/hooks/use-editor-quota", () => ({ useEditorQuota: () => quota }));
@@ -13,6 +14,7 @@ vi.mock("react-i18next", () => ({ useTranslation: () => ({ t: (key: string) => k
 vi.mock("@/lib/editor/importFiles", () => ({ importOneFile: vi.fn() }));
 vi.mock("@/lib/editor/recording", async () => ({ ...await vi.importActual<typeof import("@/lib/editor/recording")>("@/lib/editor/recording"), recordStream: vi.fn() }));
 vi.mock("sonner", () => ({ toast: { error: vi.fn() } }));
+vi.mock("@/lib/editor/screenCapture", () => ({ startScreenCapture: vi.fn() }));
 
 function deferred<T>() { let resolve!: (value: T) => void; const promise = new Promise<T>(done => { resolve = done; }); return { promise, resolve }; }
 let stopTrack: ReturnType<typeof vi.fn>, acquire: ReturnType<typeof vi.fn>;
@@ -23,6 +25,7 @@ beforeEach(() => {
   stopTrack = vi.fn(); acquire = vi.fn(async () => media());
   vi.stubGlobal("MediaRecorder", class {});
   vi.stubGlobal("navigator", { mediaDevices: { getUserMedia: acquire, getDisplayMedia: acquire } });
+  vi.mocked(startScreenCapture).mockImplementation(() => ({ ready: Promise.resolve(media()), dispose: vi.fn() }));
   vi.mocked(recordStream).mockImplementation((stream, _kind, complete) => {
     return { stop: (cancel = false) => { stream.getTracks().forEach(track => track.stop()); if (!cancel) complete(new Blob(["take"], { type: "audio/webm" }), 2); } };
   });
@@ -113,5 +116,35 @@ describe("recording permission and import ownership", () => {
   it("releases editing when permission is denied", async () => {
     acquire.mockRejectedValue(new Error("denied")); const view = render(<RecordingPanel />);
     await act(async () => record(view)); expect(useEditorStore.getState().editing).toBe(false); expect(importOneFile).not.toHaveBeenCalled();
+  });
+
+  it("keeps narration optional and closes screen sources before the saved take finishes importing", async () => {
+    const dispose = vi.fn(), imported = deferred<string | null>();
+    vi.mocked(startScreenCapture).mockReturnValue({ ready: Promise.resolve(media()), dispose });
+    vi.mocked(importOneFile).mockReturnValue(imported.promise);
+    const view = render(<RecordingPanel />);
+    await act(async () => fireEvent.click(view.getByRole("button", { name: "goLive.sourceScreen" })));
+    expect(startScreenCapture).toHaveBeenCalledWith(false, expect.any(Function));
+    await act(async () => fireEvent.click(view.getByRole("button", { name: "common.save" })));
+    expect(dispose).toHaveBeenCalledTimes(1); expect(useEditorStore.getState().editing).toBe(true);
+    await act(async () => imported.resolve(null)); expect(useEditorStore.getState().editing).toBe(false);
+  });
+
+  it("includes narration only when the creator selects it", async () => {
+    const view = render(<RecordingPanel />);
+    fireEvent.click(view.getByRole("checkbox", { name: "creator.presetGroupVoiceover" }));
+    await act(async () => fireEvent.click(view.getByRole("button", { name: "goLive.sourceScreen" })));
+    expect(startScreenCapture).toHaveBeenCalledWith(true, expect.any(Function));
+  });
+
+  it("releases pending screen and microphone acquisition immediately on a scope reset", async () => {
+    const permission = deferred<MediaStream>(), dispose = vi.fn();
+    vi.mocked(startScreenCapture).mockReturnValue({ ready: permission.promise, dispose });
+    const view = render(<RecordingPanel />);
+    fireEvent.click(view.getByRole("button", { name: "goLive.sourceScreen" }));
+    act(() => useEditorStore.getState().loadSnapshot(useEditorStore.getState().toSnapshot()));
+    expect(dispose).toHaveBeenCalledTimes(1); expect(useEditorStore.getState().editing).toBe(false);
+    await act(async () => permission.resolve(media()));
+    expect(recordStream).not.toHaveBeenCalled(); expect(importOneFile).not.toHaveBeenCalled();
   });
 });
