@@ -15,11 +15,15 @@ const NAVS = [
 ] as const;
 
 describe('feed filter portal order', () => {
-  it('keeps the filter panel inside the nav pill, below the tabs', () => {
+  it('keeps other themes in flow and System behind the nav pill', () => {
     for (const { name, source } of NAVS) {
       expect(source, `${name} keeps the pill a flex column`).toContain(NAV_PILL);
     }
-    expect(HOME_FEED).toContain('portalTarget && "order-1 mt-2"');
+    expect(HOME_FEED).toContain('!behindNav && portalTarget && "order-1 mt-2"');
+    for (const { source } of NAVS) {
+      expect(source).toContain('data-home-filter-anchor');
+      expect(source).toContain('absolute inset-x-0 top-0 z-0 pointer-events-none');
+    }
   });
 
   it('keeps the active-filter chips outside the nav pill', () => {

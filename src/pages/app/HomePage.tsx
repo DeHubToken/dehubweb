@@ -332,6 +332,28 @@ export default function HomePage() {
     setShowLiveFilters(false);
   }, []);
 
+  // Match the capsule dropdown's outside-tap and Escape dismissal.
+  useEffect(() => {
+    if (theme !== 'system' || !showHomeFilters) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowHomeFilters(false);
+        const target = isCollapsed ? globalFeedNav?.filtersPortalElement : homeFiltersRef.current;
+        target?.closest('[data-home-filter-anchor]')?.querySelector<HTMLButtonElement>('button')?.focus();
+      }
+    };
+    const closeOutside = (event: PointerEvent) => {
+      if (!(event.target instanceof Element) || event.target.closest('[data-home-filter-anchor]')) return;
+      setShowHomeFilters(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    document.addEventListener('pointerdown', closeOutside, true);
+    return () => {
+      window.removeEventListener('keydown', closeOnEscape);
+      document.removeEventListener('pointerdown', closeOutside, true);
+    };
+  }, [theme, showHomeFilters, isCollapsed, globalFeedNav?.filtersPortalElement]);
+
   /**
    * Auto-close any open filter panel when the user scrolls down.
    * Keeps the sticky tab bar clean while browsing feed content.
@@ -946,7 +968,8 @@ export default function HomePage() {
           ...(islandTopBar && isMobile && !isPostOverlayActive ? { position: 'fixed', left: 0, right: 0, top: 'calc(env(safe-area-inset-top, 0px) + 3rem)' } : null),
         }}
       >
-        <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl">
+        <div data-home-filter-anchor className={theme === 'system' ? 'relative isolate' : 'contents'}>
+        <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl" style={theme === 'system' ? { position: 'relative', zIndex: 10 } : undefined}>
 
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} variant="nav" />
@@ -984,6 +1007,7 @@ export default function HomePage() {
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
                 aria-label={isPostOverlayActive ? "Back to feed" : isImagesScrollView ? "Back to grid" : "Feed settings"}
+                aria-expanded={showNavBack ? undefined : islandFiltersOpen}
               >
                 {hasActiveFilters && !showNavBack && (
                   <div className={cn(
@@ -1048,7 +1072,9 @@ export default function HomePage() {
               })}
             </div>
         </div>
-        <div ref={homeFiltersRef} className="contents" />
+        {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
+        </div>
+        {theme === 'system' && <div ref={homeFiltersRef} className="absolute inset-x-0 top-0 z-0 pointer-events-none" />}
         </div>
         {/* Active-filter chips — a sibling of the pill, not a row inside it.
             Still within the sticky chrome, so they travel with the nav. */}

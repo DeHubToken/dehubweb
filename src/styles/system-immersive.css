@@ -7,6 +7,11 @@ html:is([data-theme='system'], [data-theme='immersive']) {
   --immersive-hairline: rgb(255 255 255 / 0.08);
 }
 
+/* The home filter controls share one rounded rectangle in every state. */
+html[data-theme='system'] [data-home-filter-panel] :is([data-glass-toggle-button], [data-glass-indicator]) {
+  border-radius: 8px !important;
+}
+
 /* Page bentos: no box, no radius, no glow. */
 html:is([data-theme='system'], [data-theme='immersive'])
   :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-classic-feed-layout] *):not([data-keep-bento]):not([role='dialog']):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_) {
