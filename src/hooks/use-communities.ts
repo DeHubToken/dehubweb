@@ -503,6 +503,7 @@ export function usePinnedCommunities(walletAddress: string | null | undefined) {
     queryKey: ['communities', 'pinned', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
+      // Pins are public. The profile owner is a filter, not the authenticated viewer.
       const { data, error } = await supabase
         .from('pinned_communities')
         .select('*, communities(*)')
