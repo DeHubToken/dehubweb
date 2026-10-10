@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bridge Page
  * ===========
@@ -70,7 +71,7 @@ export default function BridgePage() {
   const { allTokens, isLoading: balancesLoading } = useAllChainsTokens();
 
   const [direction, setDirection] = useState<BridgeDirection>('bnb-to-base');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/BridgePage.tsx:amount", '');
   const [isBridging, setIsBridging] = useState(false);
 
   // Derive DHB balances per chain
@@ -89,7 +90,7 @@ export default function BridgePage() {
 
   const toggleDirection = () => {
     setDirection(d => d === 'base-to-bnb' ? 'bnb-to-base' : 'base-to-bnb');
-    setAmount('');
+    setAmount.complete(amount, '');
   };
 
   const handleBridge = async () => {
@@ -174,7 +175,7 @@ export default function BridgePage() {
         toast.success('Bridge initiated!', {
           description: t('bridge.sentDesc', { amount, from: sourceChainLabel, to: destChainLabel }),
         });
-        setAmount('');
+        setAmount.complete(amount, '');
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
         invalidateSelfBadgeBalance(queryClient);
       } else {
@@ -377,7 +378,7 @@ const PAGE_SIZE = 10;
 function BridgeQueue() {
   const { t: translate, i18n } = useTranslation();
   const { data: transfers, isLoading, error } = useBridgeTransfers();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/BridgePage.tsx:search", '');
   const [page, setPage] = useState(0);
 
   const filtered = useMemo(() => {

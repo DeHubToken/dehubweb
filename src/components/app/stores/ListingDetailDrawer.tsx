@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Listing Detail Drawer
@@ -64,7 +65,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [imgIdx, setImgIdx] = useState(0);
   const [shippingAddress, setShippingAddress] = useState('');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useSurfaceDraft("components/app/stores/ListingDetailDrawer.tsx:notes", '', draftIdentity(listing));
   const [shareOpen, setShareOpen] = useState(false);
 
   const sellerAddress = listing?.wallet_address || listing?.stores?.wallet_address;

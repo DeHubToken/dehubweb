@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Communities Page
  * =================
@@ -24,7 +25,7 @@ import communitiesTitleIcon from '@/assets/communities-title-icon.webp';
 export default function CommunitiesPage() {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const [createOpen, setCreateOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/CommunitiesPage.tsx:search", '');
   const navigate = useNavigate();
   const { t } = useTranslation();
 

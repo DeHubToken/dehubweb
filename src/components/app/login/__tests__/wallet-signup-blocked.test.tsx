@@ -16,7 +16,8 @@ vi.mock('wagmi', () => ({
 }));
 vi.mock('sonner', () => ({ toast: Object.assign(vi.fn(), { dismiss, error: vi.fn(), success: vi.fn() }) }));
 vi.mock('@/components/app/WagmiScope', () => ({ WagmiScope: ({ children }: { children: ReactNode }) => <>{children}</> }));
-vi.mock('@/contexts/AuthContext', () => ({
+vi.mock('@/contexts/AuthContext', async () => ({
+  AuthContext: (await import('react')).createContext(null),
   useAuth: () => ({ isConnecting: false, isAuthenticated: false, supabaseUserId: null, setWagmiAuthIntent }),
 }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (_key: string, fallback?: string) => fallback ?? _key }) }));

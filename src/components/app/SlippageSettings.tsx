@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Slippage Settings Component
  * ============================
@@ -22,7 +23,7 @@ interface SlippageSettingsProps {
 
 export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSettingsProps) {
   const [open, setOpen] = useState(false);
-  const [customValue, setCustomValue] = useState('');
+  const [customValue, setCustomValue] = useSurfaceDraft("components/app/SlippageSettings.tsx:customValue", '');
 
   const displayPct = (slippageBps / 100).toFixed(slippageBps % 100 === 0 ? 0 : 1);
 
@@ -45,7 +46,7 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
                 key={p.bps}
                 onClick={() => {
                   onSlippageChange(p.bps);
-                  setCustomValue('');
+                  setCustomValue.complete(customValue, '');
                 }}
                 className={`flex-1 text-xs py-1.5 rounded-lg border transition-colors ${
                   slippageBps === p.bps

@@ -1,3 +1,4 @@
+import { useDraftState } from "@/hooks/use-draft-state";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { assemblyDuration, type AssemblyState, type AssemblySession } from "@/lib/editor/assembly";
@@ -27,8 +28,8 @@ export default function AssemblyReview({ state, session, changed, names, onPrevi
           <button disabled={disabled} aria-label={`${t("common.delete")} ${index + 1}`} onClick={() => session.toggle(s.id)}>×</button>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <label className="flex items-center gap-1"><span>{t("editor.shots.preview")}</span><NumericValue value={s.offset} label={`${t("editor.shots.preview")} ${index + 1}`} disabled={disabled} commit={value => session.range(s.id, value, s.duration)} /></label>
-          <label className="flex items-center gap-1"><span>{t("filters.duration")}</span><NumericValue value={s.duration} label={`${t("filters.duration")} ${index + 1}`} disabled={disabled} commit={value => session.range(s.id, s.offset, value)} /></label>
+          <label className="flex items-center gap-1"><span>{t("editor.shots.preview")}</span><NumericValue draftScope={`assembly:${state.sourceId}:${s.id}:offset`} value={s.offset} label={`${t("editor.shots.preview")} ${index + 1}`} disabled={disabled} commit={value => session.range(s.id, value, s.duration)} /></label>
+          <label className="flex items-center gap-1"><span>{t("filters.duration")}</span><NumericValue draftScope={`assembly:${state.sourceId}:${s.id}:duration`} value={s.duration} label={`${t("filters.duration")} ${index + 1}`} disabled={disabled} commit={value => session.range(s.id, s.offset, value)} /></label>
           <button disabled={disabled || state.error === "limit"} onClick={() => onPreview(index)} className="rounded border border-white/15 px-2 py-1">{t("editor.shots.preview")} {previewRange(s.offset, s.duration)}</button>
         </div>
       </div>)}
@@ -43,9 +44,10 @@ export default function AssemblyReview({ state, session, changed, names, onPrevi
   </div>;
 }
 
-function NumericValue({ value, label, disabled, commit }: { value: number; label: string; disabled: boolean; commit: (value: number) => void }) {
-  const [text, setText] = useState(String(value));
-  useEffect(() => { if (Number.isFinite(value) && (!text.trim() || Number(text.replace(",", ".")) !== value)) setText(String(value)); }, [value]);
+function NumericValue({ draftScope, value, label, disabled, commit }: { draftScope: string; value: number; label: string; disabled: boolean; commit: (value: number) => void }) {
+  const [text, setText] = useDraftState(draftScope, String(value));
+  useEffect(() => { if (Number.isFinite(value) && (!text.trim() || Number(text.replace(",", ".")) !== value)) setText.initialize(String(value)); }, [value, setText]);
+  useEffect(() => { const next = /^\d+(?:[.,]\d*)?$/.test(text) ? Number(text.replace(",", ".")) : NaN; if (!Object.is(next, value)) commit(next); }, [draftScope]);
   return <input type="text" inputMode="decimal" aria-label={label} disabled={disabled} value={text} className="w-16 rounded border border-white/15 bg-black px-1 py-1" onChange={e => { const next = e.target.value; setText(next); commit(/^\d+(?:[.,]\d*)?$/.test(next) ? Number(next.replace(",", ".")) : NaN); }} />;
 }
 

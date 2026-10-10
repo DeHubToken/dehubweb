@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,7 @@ const CampaignCreator = () => {
   const { t } = useLanguage();
   const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
   const [campaignType, setCampaignType] = useState('');
-  const [budget, setBudget] = useState('');
+  const [budget, setBudget] = useSurfaceDraft("components/advertising/CampaignCreator.tsx:budget", '');
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [geoTargetingType, setGeoTargetingType] = useState('worldwide');
 

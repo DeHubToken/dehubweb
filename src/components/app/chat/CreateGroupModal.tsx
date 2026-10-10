@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CreateGroupModal Component
  * ==============================
@@ -89,9 +90,9 @@ export function CreateGroupModal({
 }: CreateGroupModalProps) {
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<'details' | 'members'>('details');
-  const [groupName, setGroupName] = useState('');
-  const [groupDescription, setGroupDescription] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [groupName, setGroupName] = useSurfaceDraft("components/app/chat/CreateGroupModal.tsx:groupName", '');
+  const [groupDescription, setGroupDescription] = useSurfaceDraft("components/app/chat/CreateGroupModal.tsx:groupDescription", '');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/CreateGroupModal.tsx:searchQuery", '');
   const [selectedMembers, setSelectedMembers] = useState<DeHubUser[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   
@@ -167,9 +168,9 @@ export function CreateGroupModal({
   const handleClose = () => {
     onOpenChange(false);
     setStep('details');
-    setGroupName('');
-    setGroupDescription('');
-    setSearchQuery('');
+    setGroupName.complete(groupName, '');
+    setGroupDescription.complete(groupDescription, '');
+    setSearchQuery.complete(searchQuery, '');
     setSelectedMembers([]);
   };
 
@@ -269,7 +270,7 @@ export function CreateGroupModal({
                   variant="ghost"
                   size="icon"
                   className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-400 hover:text-white"
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery.complete(searchQuery, '')}
                 >
                   <X className="w-4 h-4" />
                 </Button>

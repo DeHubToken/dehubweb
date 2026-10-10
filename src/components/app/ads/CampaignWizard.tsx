@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CampaignWizard
  * ==============
@@ -56,24 +57,24 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   const [step, setStep] = useState(0);
 
   // Step 1 — creative
-  const [name, setName] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:name", '');
   const [objective, setObjective] = useState('awareness');
   const [kind, setKind] = useState<CreativeKind>('image');
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [mediaDuration, setMediaDuration] = useState<number | null>(null);
   const [uploading, setUploading] = useState<'media' | 'thumb' | null>(null);
-  const [headline, setHeadline] = useState('');
-  const [bodyText, setBodyText] = useState('');
-  const [ctaLabel, setCtaLabel] = useState('Learn more');
-  const [ctaUrl, setCtaUrl] = useState('');
+  const [headline, setHeadline] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:headline", '');
+  const [bodyText, setBodyText] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:bodyText", '');
+  const [ctaLabel, setCtaLabel] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:ctaLabel", 'Learn more');
+  const [ctaUrl, setCtaUrl] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:ctaUrl", '');
 
   // Step 2 — targeting
   const [targeting, setTargeting] = useState<AdTargeting>({});
 
   // Step 3 — budget (defaults sized to crypto-native CPMs — $100+ per 1000)
-  const [dailyBudget, setDailyBudget] = useState(250);
-  const [totalBudget, setTotalBudget] = useState(2500);
+  const [dailyBudget, setDailyBudget] = useSurfaceDraft("src/components/app/ads/CampaignWizard.tsx:dailyBudget", 250);
+  const [totalBudget, setTotalBudget] = useSurfaceDraft("src/components/app/ads/CampaignWizard.tsx:totalBudget", 2500);
   const [durationDays, setDurationDays] = useState(14);
   const [frequencyCap, setFrequencyCap] = useState(4);
 
@@ -185,10 +186,10 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   };
 
   const reset = () => {
-    setStep(0); setName(''); setObjective('awareness'); setKind('image');
-    setMediaUrl(null); setThumbnailUrl(null); setHeadline(''); setBodyText('');
+    setStep(0); setName.complete(name, ''); setObjective('awareness'); setKind('image');
+    setMediaUrl(null); setThumbnailUrl(null); setHeadline.complete(headline, ''); setBodyText.complete(bodyText, '');
     setMediaDuration(null);
-    setCtaLabel('Learn more'); setCtaUrl(''); setTargeting({});
+    setCtaLabel('Learn more'); setCtaUrl.complete(ctaUrl, ''); setTargeting({});
     setDailyBudget(250); setTotalBudget(2500); setDurationDays(14); setFrequencyCap(4);
     setFundingCampaignId(null);
   };

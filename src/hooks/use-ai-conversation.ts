@@ -1,3 +1,4 @@
+import { useDraftConversation } from './use-draft-conversation';
 /**
  * useAIConversation Hook
  * =======================
@@ -20,11 +21,12 @@ interface Message {
 }
 
 export function useAIConversation() {
-  const [conversationId, setConversationId] = useState<string | null>(null);
+  const draftSession = useDraftConversation();
+  const conversationId = draftSession.id;
   const [isSaving, setIsSaving] = useState(false);
   const { walletAddress, isAuthenticated } = useAuth();
-  const saveQueueRef = useRef<Message[]>([]);
-  const isSavingRef = useRef(false);
+  const sessions = useRef(new Map<string, { id: string | null; tail: Promise<void> }>());
+  const savingCount = useRef(0);
   const titleGeneratedRef = useRef(false);
 
   // Reset title flag when conversation changes
@@ -63,7 +65,7 @@ export function useAIConversation() {
       }
       
       const newConversationId = data.id;
-      setConversationId(newConversationId);
+      draftSession.assign(newConversationId);
       titleGeneratedRef.current = true;
       console.log('[AI Conversation] Created new conversation:', newConversationId);
       return newConversationId;
@@ -71,7 +73,7 @@ export function useAIConversation() {
       console.error('[AI Conversation] Error creating conversation:', error);
       return null;
     }
-  }, [walletAddress, isAuthenticated]);
+  }, [walletAddress, isAuthenticated, draftSession.assign]);
 
   // Upload a data: URL to storage and return its public URL. Non-data URLs pass through.
   const persistMediaUrl = useCallback(async (
@@ -153,60 +155,39 @@ export function useAIConversation() {
     }
   }, [walletAddress, persistMediaUrl]);
 
-  // Process the save queue
-  const processSaveQueue = useCallback(async () => {
-    if (isSavingRef.current || saveQueueRef.current.length === 0) return;
-    
-    isSavingRef.current = true;
-    setIsSaving(true);
-
-    while (saveQueueRef.current.length > 0) {
-      const message = saveQueueRef.current.shift();
-      if (message && conversationId) {
-        await saveMessage(message, conversationId);
-      }
-    }
-
-    isSavingRef.current = false;
-    setIsSaving(false);
-  }, [conversationId, saveMessage]);
-
-  // Add message to save queue
+  // Each logical conversation owns its queue, including its first server id.
   const queueMessage = useCallback(async (message: Message) => {
-    if (!walletAddress || !isAuthenticated) {
-      console.log('[AI Conversation] Not authenticated, skipping message save');
-      return;
+    if (!walletAddress || !isAuthenticated) return;
+    let session = sessions.current.get(draftSession.draft);
+    if (!session) {
+      session = { id: conversationId, tail: Promise.resolve() };
+      sessions.current.set(draftSession.draft, session);
     }
-
-    // If no conversation exists yet, create one
-    if (!conversationId) {
-      const newId = await createConversation(message.content);
-      if (newId) {
-        await saveMessage(message, newId);
-      }
-      return;
-    }
-
-    // Queue the message and process
-    saveQueueRef.current.push(message);
-    processSaveQueue();
-  }, [walletAddress, isAuthenticated, conversationId, createConversation, saveMessage, processSaveQueue]);
+    const target = session;
+    savingCount.current += 1;
+    setIsSaving(true);
+    target.tail = target.tail.catch(() => {}).then(async () => {
+      target.id ??= await createConversation(message.content);
+      if (target.id) await saveMessage(message, target.id);
+    });
+    try { await target.tail; }
+    finally { savingCount.current -= 1; setIsSaving(savingCount.current > 0); }
+  }, [walletAddress, isAuthenticated, draftSession.draft, conversationId, createConversation, saveMessage]);
 
   // Start a new conversation (clears current)
   const startNewConversation = useCallback(() => {
-    setConversationId(null);
+    draftSession.start();
     titleGeneratedRef.current = false;
-    saveQueueRef.current = [];
-  }, []);
+  }, [draftSession.start]);
 
   // Load an existing conversation
   const loadConversation = useCallback((id: string) => {
-    setConversationId(id);
+    draftSession.select(id);
     titleGeneratedRef.current = true;
-    saveQueueRef.current = [];
-  }, []);
+  }, [draftSession.select]);
 
   return {
+    draftScope: draftSession.draft,
     conversationId,
     isSaving,
     queueMessage,

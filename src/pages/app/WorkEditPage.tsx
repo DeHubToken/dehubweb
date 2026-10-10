@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -43,32 +44,32 @@ export default function WorkEditPage() {
   const { data: job, isLoading } = useWorkJob(jobKey);
   const updateJob = useUpdateJob();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useSurfaceDraft("pages/app/WorkEditPage.tsx:title", '');
+  const [description, setDescription] = useSurfaceDraft("pages/app/WorkEditPage.tsx:description", '');
   const [platform, setPlatform] = useState<WorkPlatform>('x');
-  const [targetUrl, setTargetUrl] = useState('');
+  const [targetUrl, setTargetUrl] = useSurfaceDraft("pages/app/WorkEditPage.tsx:targetUrl", '');
   const [currency, setCurrency] = useState<WorkCurrency>('DHB');
-  const [pricePerUnit, setPricePerUnit] = useState('');
-  const [maxUnits, setMaxUnits] = useState('');
-  const [deadline, setDeadline] = useState('');
+  const [pricePerUnit, setPricePerUnit] = useSurfaceDraft("pages/app/WorkEditPage.tsx:pricePerUnit", '');
+  const [maxUnits, setMaxUnits] = useSurfaceDraft("pages/app/WorkEditPage.tsx:maxUnits", '');
+  const [deadline, setDeadline] = useSurfaceDraft("pages/app/WorkEditPage.tsx:deadline", '');
   // The fetched row seeds the form once. Re-running on every job change would
   // stomp what the poster is typing when the query refetches behind them.
   const [seededId, setSeededId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!job || seededId === job.id) return;
-    setTitle(job.title);
-    setDescription(job.description);
+    setTitle.initialize(job.title);
+    setDescription.initialize(job.description);
     setPlatform(job.platform ?? 'x');
-    setTargetUrl(job.target_url ?? '');
+    setTargetUrl.initialize(job.target_url ?? '');
     setCurrency(job.currency);
     // Numerics come back padded to 18 decimals — trim them so the inputs read
     // like what was typed in the first place.
-    setPricePerUnit(String(Number(job.price_per_unit) || 0));
-    setMaxUnits(String(Number(job.max_units) || 1));
-    setDeadline(job.deadline ? job.deadline.slice(0, 10) : '');
+    setPricePerUnit.initialize(String(Number(job.price_per_unit) || 0));
+    setMaxUnits.initialize(String(Number(job.max_units) || 1));
+    setDeadline.initialize(job.deadline ? job.deadline.slice(0, 10) : '');
     setSeededId(job.id);
-  }, [job, seededId]);
+  }, [job, seededId, setDeadline, setDescription, setMaxUnits, setPricePerUnit, setTargetUrl, setTitle]);
 
   if (isLoading || authLoading) {
     return <div className="max-w-2xl mx-auto px-4 py-10 text-white/60">{t('work.loading')}</div>;

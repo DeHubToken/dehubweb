@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Appeal a moderation decision.
  *
@@ -42,17 +43,17 @@ export function AppealDrawer({
   subject,
   onFiled,
 }: AppealDrawerProps) {
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useSurfaceDraft("components/app/notifications/AppealDrawer.tsx:reason", '', notificationId);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // A fresh drawer is a fresh appeal — keeping the last draft would file it
   // against whichever decision was opened next.
   useEffect(() => {
     if (!open) {
-      setReason('');
+      setReason.initialize('');
       setIsSubmitting(false);
     }
-  }, [open]);
+  }, [open, setReason]);
 
   const trimmed = reason.trim();
   const canSubmit = trimmed.length >= MIN_REASON && !isSubmitting;

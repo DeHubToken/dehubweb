@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Image Card Component
  * ====================
@@ -667,10 +668,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
-  const [pollQuestion, setPollQuestion] = useState('');
+  const [pollQuestion, setPollQuestion] = useSurfaceDraft("components/app/cards/ImageCard.tsx:pollQuestion", '', draftIdentity(post));
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [pollMultiple, setPollMultiple] = useState(false);
-  const [pollExpiry, setPollExpiry] = useState('');
+  const [pollExpiry, setPollExpiry] = useSurfaceDraft("components/app/cards/ImageCard.tsx:pollExpiry", '', draftIdentity(post));
   const createPollMutation = useCreatePoll();
   const { data: tipCount = 0 } = usePostTipCount(post.id, post.totalTips);
   const isTabletOrMobile = useIsTabletOrMobile();
@@ -1383,6 +1384,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: post.id,
           type: 'image',
           author: post.username,
           caption: post.description || post.title || post.caption,
@@ -1713,10 +1715,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                   expiresAt: pollExpiry || undefined,
                 });
                 setShowPollCreator(false);
-                setPollQuestion('');
+                setPollQuestion.complete(pollQuestion, '');
                 setPollOptions(['', '']);
                 setPollMultiple(false);
-                setPollExpiry('');
+                setPollExpiry.complete(pollExpiry, '');
                 queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
               }}
             >

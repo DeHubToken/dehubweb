@@ -303,25 +303,25 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
       shopListingIds,
     },
     (saved) => {
-      if (saved.title) setTitle(saved.title);
-      if (saved.description) setDescription(saved.description);
-      if (saved.selectedCategory) setSelectedCategory(saved.selectedCategory);
+      if (saved.title !== undefined) setTitle(saved.title);
+      if (saved.description !== undefined) setDescription(saved.description);
+      if (saved.selectedCategory !== undefined) setSelectedCategory(saved.selectedCategory);
       // Every switch is restored, but only from a truthy value: a draft saved
       // before these existed carries none of them and must not read as "off"
       // overwriting a default, nor as "on" turning a paywall on by itself.
       if (saved.shouldMint) setShouldMint(true);
       if (saved.isSubscribersOnly) setIsSubscribersOnly(true);
       if (saved.isPPV) setIsPPV(true);
-      if (saved.ppvAmount) setPpvAmount(saved.ppvAmount);
-      if (saved.ppvCurrency) setPpvCurrency(saved.ppvCurrency);
+      if (saved.ppvAmount !== undefined) setPpvAmount(saved.ppvAmount);
+      if (saved.ppvCurrency !== undefined) setPpvCurrency(saved.ppvCurrency);
       if (saved.isWatch2Earn) setIsWatch2Earn(true);
-      if (saved.w2eViews) setW2eViews(saved.w2eViews);
-      if (saved.w2eComments) setW2eComments(saved.w2eComments);
-      if (saved.w2eTotal) setW2eTotal(saved.w2eTotal);
+      if (saved.w2eViews !== undefined) setW2eViews(saved.w2eViews);
+      if (saved.w2eComments !== undefined) setW2eComments(saved.w2eComments);
+      if (saved.w2eTotal !== undefined) setW2eTotal(saved.w2eTotal);
       if (saved.isTokenGated) setIsTokenGated(true);
-      if (saved.tokenContract) setTokenContract(saved.tokenContract);
-      if (saved.tokenSymbol) setTokenSymbol(saved.tokenSymbol);
-      if (saved.tokenAmount) setTokenAmount(saved.tokenAmount);
+      if (saved.tokenContract !== undefined) setTokenContract(saved.tokenContract);
+      if (saved.tokenSymbol !== undefined) setTokenSymbol(saved.tokenSymbol);
+      if (saved.tokenAmount !== undefined) setTokenAmount(saved.tokenAmount);
       if (saved.isMature) setIsMature(true);
       // Restored on the same truthy rule, and worth more than the switches:
       // these are URLs somebody typed by hand.

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +22,7 @@ export function PoolPicker({ current }: { current: DexPool | null }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [adding, setAdding] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/dex/PoolPicker.tsx:query", '');
   const root = useRef<HTMLDivElement>(null);
   const { data: pools = [], isLoading } = usePools();
 
@@ -41,7 +42,7 @@ export function PoolPicker({ current }: { current: DexPool | null }) {
     return pools.filter((p) => p.symbol.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.token_address.toLowerCase() === q);
   }, [pools, query]);
 
-  const go = (path: string) => { setOpen(false); setQuery(''); navigate(path); };
+  const go = (path: string) => { setOpen(false); setQuery.complete(query, ''); navigate(path); };
 
   return <div className="dex-pair" ref={root}>
     <PoolAvatar pool={current} />

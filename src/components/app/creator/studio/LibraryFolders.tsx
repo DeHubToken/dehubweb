@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Folders over the generation library.
  * ====================================
@@ -22,7 +23,7 @@ export function FolderBar() {
   const renameFolder = useCreatorFolderStore((s) => s.renameFolder);
   const deleteFolder = useCreatorFolderStore((s) => s.deleteFolder);
   const [renaming, setRenaming] = useState<string | null>(null);
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useSurfaceDraft("components/app/creator/studio/LibraryFolders.tsx:draft", '');
 
   const countFor = (id: string) => Object.values(itemFolderMap).filter((ids) => ids.includes(id)).length;
 

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Everything inside the login sheet below the header.
  *
@@ -171,10 +172,10 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       : null;
   }, [isWagmiAlreadyConnected, wagmiCurrentConnector, discoveredWallets]);
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useSurfaceDraft("src/components/app/login/LoginModalBody.tsx:email", '');
   const [emailCode, setEmailCode] = useState('');
   const [emailError, setEmailError] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useSurfaceDraft("src/components/app/login/LoginModalBody.tsx:phone", '');
   const [phoneCode, setPhoneCode] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
@@ -233,7 +234,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     setPasskeyError('');
     setPasskeyUnknown(false);
     setActiveProvider(null);
-  }, [open]);
+  }, [open, setEmail, setPhone]);
 
   /**
    * Both answers, once, the moment the sheet opens — and normally already in

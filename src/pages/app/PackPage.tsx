@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * One pack — /packs/:slug
  *
@@ -69,9 +70,9 @@ export default function PackPage() {
   const isSaved = !!pack && (saved.data ?? []).some((p) => p.id === pack.id);
 
   const [busy, setBusy] = useState(false);
-  const [editingName, setEditingName] = useState<string | null>(null);
-  const [link, setLink] = useState('');
-  const [label, setLabel] = useState('');
+  const [editingName, setEditingName] = useSurfaceDraft<string | null>("src/pages/app/PackPage.tsx:editingName", null, slug);
+  const [link, setLink] = useSurfaceDraft("pages/app/PackPage.tsx:link", '');
+  const [label, setLabel] = useSurfaceDraft("pages/app/PackPage.tsx:label", '');
   const fileRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) return <DeHubPageLoader />;
@@ -146,8 +147,8 @@ export default function PackPage() {
       const { added, skipped } = await addPackItems(pack.id, entries);
       await refresh();
       toast.success(t('creatorPacks.itemsAdded', { count: added, skipped }));
-      setLink('');
-      setLabel('');
+      setLink.complete(link, '');
+      setLabel.complete(label, '');
     });
 
   const onFiles = (files: FileList | null) => {
@@ -167,7 +168,7 @@ export default function PackPage() {
       const { added, skipped } = await addPackItems(pack.id, entries);
       await refresh();
       toast.success(t('creatorPacks.itemsAdded', { count: added, skipped }));
-      setLabel('');
+      setLabel.complete(label, '');
     });
   };
 
@@ -223,7 +224,7 @@ export default function PackPage() {
         }
         actions={
           isOwner && editingName === null ? (
-            <IslandAction label={t('creatorPacks.rename')} onClick={() => setEditingName(pack.name)}>
+            <IslandAction label={t('creatorPacks.rename')} onClick={() => setEditingName.initialize(pack.name)}>
               <Pencil className="h-[18px] w-[18px]" />
             </IslandAction>
           ) : undefined
@@ -244,7 +245,7 @@ export default function PackPage() {
               onClick={() =>
                 run(async () => {
                   await renamePack(pack.id, editingName.trim());
-                  setEditingName(null);
+                  setEditingName.complete(editingName, null);
                   await refresh();
                 })
               }
@@ -252,7 +253,7 @@ export default function PackPage() {
             >
               <Check className="w-4 h-4" />
             </button>
-            <button type="button" aria-label={t('emojiPicker.back')} onClick={() => setEditingName(null)} className="p-2 rounded-md hover:bg-white/10 text-zinc-400">
+            <button type="button" aria-label={t('emojiPicker.back')} onClick={() => setEditingName.complete(editingName, null)} className="p-2 rounded-md hover:bg-white/10 text-zinc-400">
               <X className="w-4 h-4" />
             </button>
           </div>

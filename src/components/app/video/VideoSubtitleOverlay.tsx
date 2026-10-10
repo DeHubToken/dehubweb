@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { MediaControlIcon } from './MediaControlIcon';
 /**
  * VideoSubtitleOverlay
@@ -107,7 +108,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const { on: dubOn, lang: dubPick, setDub } = useDubPreference();
   const voices = useSpeechVoices();
   const [showSettings, setShowSettings] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/video/VideoSubtitleOverlay.tsx:query", '');
   const [open, setOpen] = useState(false);
   const [currentText, setCurrentText] = useState('');
 

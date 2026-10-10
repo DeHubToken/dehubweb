@@ -6,7 +6,8 @@ import type { DeHubConversation } from '@/lib/api/dehub';
 
 const source = vi.hoisted(() => ({ conversations: [] as DeHubConversation[] }));
 
-vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true, walletAddress: 'me' }) }));
+vi.mock('@/contexts/AuthContext', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@/contexts/AuthContext')>(), useAuth: () => ({ isAuthenticated: true, walletAddress: 'me' }) }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock('@/hooks/use-messages', () => ({
   useConversations: () => ({ conversations: source.conversations, isLoading: false, isError: false, refetch: vi.fn() }),

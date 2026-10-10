@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Live Stream Card Component
@@ -235,8 +236,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   }, [stream.streamId, stream.isLive, streamEnded, liveReactionWeight]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [giftAmount, setGiftAmount] = useState('');
-  const [giftMessage, setGiftMessage] = useState('');
+  const [giftAmount, setGiftAmount] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftAmount", '', draftIdentity(stream));
+  const [giftMessage, setGiftMessage] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftMessage", '', draftIdentity(stream));
   // Another token to pay the gift with; it becomes DHB on Base before the tip.
   const [giftPayWith, setGiftPayWith] = useState<TipFundingSource | null>(null);
   const [fundingGift, setFundingGift] = useState(false);
@@ -926,8 +927,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       record(1);
     },
     onSuccess: () => {
-      setGiftAmount('');
-      setGiftMessage('');
+      setGiftAmount.complete(giftAmount, '');
+      setGiftMessage.complete(giftMessage, '');
     },
   });
 
@@ -1747,6 +1748,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: stream.tokenId,
           type: 'live',
           author: stream.streamer,
           title: stream.title,

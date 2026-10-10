@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Quote Post Modal
  * =================
@@ -30,7 +31,7 @@ interface QuotePostModalProps {
 
 export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModalProps) {
   const { t } = useTranslation();
-  const [content, setContent] = useState('');
+  const [content, setContent] = useSurfaceDraft("components/app/modals/QuotePostModal.tsx:content", '', draftIdentity(quotedPost));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusText, setStatusText] = useState('');
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -151,7 +152,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
         });
       }
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-      setContent('');
+      setContent.complete(content, '');
       onOpenChange(false);
     } catch (error) {
       console.error('Quote post failed:', error);

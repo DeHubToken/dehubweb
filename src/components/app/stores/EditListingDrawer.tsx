@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Edit Listing Drawer
  * ====================
@@ -34,14 +35,14 @@ interface Props {
 
 export function EditListingDrawer({ open, onClose, listing }: Props) {
   const { t } = useTranslation();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+  const [title, setTitle] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:title", '', draftIdentity(listing));
+  const [description, setDescription] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:description", '', draftIdentity(listing));
+  const [price, setPrice] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:price", '', draftIdentity(listing));
   const [category, setCategory] = useState('other');
   const [condition, setCondition] = useState('new');
   const [isDigital, setIsDigital] = useState(false);
-  const [shippingInfo, setShippingInfo] = useState('');
-  const [stockQty, setStockQty] = useState('');
+  const [shippingInfo, setShippingInfo] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:shippingInfo", '', draftIdentity(listing));
+  const [stockQty, setStockQty] = useSurfaceDraft("components/app/stores/EditListingDrawer.tsx:stockQty", '', draftIdentity(listing));
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
 
@@ -49,17 +50,17 @@ export function EditListingDrawer({ open, onClose, listing }: Props) {
 
   useEffect(() => {
     if (listing && open) {
-      setTitle(listing.title || '');
-      setDescription(listing.description || '');
-      setPrice(String(listing.price || ''));
+      setTitle.initialize(listing.title || '');
+      setDescription.initialize(listing.description || '');
+      setPrice.initialize(String(listing.price || ''));
       setCategory(listing.category || 'other');
       setCondition(listing.condition || 'new');
       setIsDigital(listing.is_digital || false);
-      setShippingInfo(listing.shipping_info || '');
-      setStockQty(listing.stock_quantity != null ? String(listing.stock_quantity) : '');
+      setShippingInfo.initialize(listing.shipping_info || '');
+      setStockQty.initialize(listing.stock_quantity != null ? String(listing.stock_quantity) : '');
       setImages((listing.images as string[]) || []);
     }
-  }, [listing, open]);
+  }, [listing, open, setDescription, setPrice, setShippingInfo, setStockQty, setTitle]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

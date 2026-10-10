@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Community Members tab
  * ======================
@@ -90,7 +91,7 @@ function MemberRow({ member, anonymous }: { member: CommunityMember; anonymous: 
 export function CommunityMembers({ members, community, membership, onManage }: CommunityMembersProps) {
   const { t } = useTranslation();
   const abilities = useCommunityAbilities(community, membership);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/communities/CommunityMembers.tsx:query", '', draftIdentity(community));
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   // Only moderators can read the queue, so only ask for it when it will resolve.

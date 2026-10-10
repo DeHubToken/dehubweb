@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AudioLines,
@@ -175,7 +176,7 @@ function ResultsSkeleton({ audio }: { audio: boolean }) {
 
 export function FreeAssetsPanel() {
   const [kind, setKind] = useState<FreeAssetKind>("photo");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useSurfaceDraft("components/editor/panels/FreeAssetsPanel.tsx:query", "");
   const [settledQuery, setSettledQuery] = useState("");
   const [orientation, setOrientation] = useState<FreeAssetOrientation>("all");
   const [items, setItems] = useState<FreeAsset[]>([]);
@@ -288,7 +289,7 @@ export function FreeAssetsPanel() {
             className="h-9 w-full rounded-lg border border-white/12 bg-white/[0.055] pl-8 pr-8 text-[12px] text-white outline-none placeholder:text-white/30 focus:border-white/35 focus:bg-white/[0.08]"
           />
           {query ? (
-            <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-white/35 hover:bg-white/10 hover:text-white">
+            <button type="button" onClick={() => setQuery.complete(query, "")} aria-label="Clear search" className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-white/35 hover:bg-white/10 hover:text-white">
               <X className="h-3.5 w-3.5" />
             </button>
           ) : null}

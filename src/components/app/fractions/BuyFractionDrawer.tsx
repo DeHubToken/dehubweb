@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Buy Fraction Drawer
@@ -46,7 +47,7 @@ interface BuyFractionDrawerProps {
 export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: BuyFractionDrawerProps) {
   const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useSurfaceDraft("src/components/app/fractions/BuyFractionDrawer.tsx:quantity", 1, listing?.id ?? null);
   const [quote, setQuote] = useState<FractionQuote | null>(null);
   const { getQuote, buy } = useFractionPurchase();
   const { data: sellerStats } = useSellerStats(listing?.seller_address);
@@ -57,10 +58,10 @@ export function BuyFractionDrawer({ listing, open, onOpenChange, onSuccess }: Bu
 
   useEffect(() => {
     if (!open) return;
-    setQuantity(Math.min(available, Math.max(1, available)));
+    setQuantity.initialize(Math.min(available, Math.max(1, available)));
     setQuote(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, listing?.id]);
+  }, [open, listing?.id, setQuantity]);
 
   // Re-quote whenever the quantity settles. The server is the only thing that
   // may decide the amount, so the button stays disabled until it has answered.

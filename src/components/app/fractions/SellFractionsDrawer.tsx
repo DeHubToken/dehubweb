@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Sell Fractions Drawer
@@ -45,8 +46,8 @@ export function SellFractionsDrawer({
 }: SellFractionsDrawerProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [quantity, setQuantity] = useState(0);
-  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useSurfaceDraft("src/components/app/fractions/SellFractionsDrawer.tsx:quantity", 0, `${chainId}:${tokenId}`);
+  const [price, setPrice] = useSurfaceDraft("components/app/fractions/SellFractionsDrawer.tsx:price", '', `${chainId}:${tokenId}`);
   const createListing = useCreateListing();
 
   const { data: balance, isLoading: loadingBalance } = useFractionBalance(tokenId, chainId);
@@ -81,12 +82,12 @@ export function SellFractionsDrawer({
     if (!open) return;
     // Default to a tenth of what you hold — a sensible first sale that does not
     // silently dump someone's whole position because they dragged too far.
-    setQuantity(sellable > 0 ? Math.max(1, Math.floor(sellable / 10)) : 0);
-    setPrice(floorPrice ? String(floorPrice) : '');
+    setQuantity.initialize(sellable > 0 ? Math.max(1, Math.floor(sellable / 10)) : 0);
+    setPrice.initialize(floorPrice ? String(floorPrice) : '');
     // Only when the drawer opens; re-running on every balance tick would fight
     // the user's own edits.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, setPrice, setQuantity]);
 
   const prc = parseFloat(price) || 0;
   const total = quantity * prc;

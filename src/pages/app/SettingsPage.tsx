@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 ﻿import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
@@ -210,12 +211,12 @@ const DM_ACCESS_OPTIONS = (t: TFunction) => [
 function MessageFeeControl() {
   const { t } = useTranslation();
   const { messageFee, isUpdating, updateMessageFee } = useDmSettings();
-  const [feeInput, setFeeInput] = useState('');
+  const [feeInput, setFeeInput] = useSurfaceDraft("src/pages/app/SettingsPage.tsx:feeInput", '');
   const dirty = feeInput !== '' && parseFloat(feeInput) !== messageFee;
   const commit = () => {
     const val = parseFloat(feeInput);
-    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput(''));
-    else setFeeInput('');
+    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput.complete(feeInput, ''));
+    else setFeeInput.complete(feeInput, '');
   };
   return (
     <div className="flex items-center gap-2">
@@ -303,7 +304,7 @@ export default function SettingsPage() {
 
   const { t } = useTranslation();
 
-  const [settingsSearch, setSettingsSearch] = useState('');
+  const [settingsSearch, setSettingsSearch] = useSurfaceDraft("pages/app/SettingsPage.tsx:settingsSearch", '');
   const [settingsSearchFocused, setSettingsSearchFocused] = useState(false);
   const [searchCursor, setSearchCursor] = useState(0);
   const settingsSearchResults = useMemo(
@@ -318,11 +319,11 @@ export default function SettingsPage() {
   // before they render anything at all.
   const openSearchResult = useCallback((result: SettingsSearchHit) => {
     setActiveTab(result.tab);
-    setSettingsSearch('');
+    setSettingsSearch.complete(settingsSearch, '');
     setSettingsSearchFocused(false);
     setSearchCursor(0);
     revealSettingAnchor(result.anchor);
-  }, []);
+  }, [setSettingsSearch, settingsSearch]);
 
   // `?highlight=geo-blocking` opens one specific setting — the same jump
   // search makes, reusable from a toast or a support reply. The tab it lives
@@ -396,7 +397,7 @@ export default function SettingsPage() {
             onBlur={() => setTimeout(() => setSettingsSearchFocused(false), 150)}
             onKeyDown={(e) => {
               const count = settingsSearchResults.length;
-              if (e.key === 'Escape') { setSettingsSearch(''); setSettingsSearchFocused(false); return; }
+              if (e.key === 'Escape') { setSettingsSearch.complete(settingsSearch, ''); setSettingsSearchFocused(false); return; }
               if (!count) return;
               if (e.key === 'ArrowDown') { e.preventDefault(); setSearchCursor((c) => (c + 1) % count); }
               else if (e.key === 'ArrowUp') { e.preventDefault(); setSearchCursor((c) => (c - 1 + count) % count); }
@@ -525,25 +526,25 @@ function ProfileSettings() {
   }, [suppressGlobalDrop, unsuppressGlobalDrop]);
   
   // Form state declarations
-  const [displayName, setDisplayName] = useState('');
-  const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('');
-  const [twitterLink, setTwitterLink] = useState('');
-  const [discordLink, setDiscordLink] = useState('');
-  const [instagramLink, setInstagramLink] = useState('');
-  const [tiktokLink, setTiktokLink] = useState('');
-  const [youtubeLink, setYoutubeLink] = useState('');
-  const [telegramLink, setTelegramLink] = useState('');
-  const [facebookLink, setFacebookLink] = useState('');
+  const [displayName, setDisplayName] = useSurfaceDraft("pages/app/SettingsPage.tsx:displayName", '');
+  const [username, setUsername] = useSurfaceDraft("pages/app/SettingsPage.tsx:username", '');
+  const [bio, setBio] = useSurfaceDraft("pages/app/SettingsPage.tsx:bio", '');
+  const [twitterLink, setTwitterLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:twitterLink", '');
+  const [discordLink, setDiscordLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:discordLink", '');
+  const [instagramLink, setInstagramLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:instagramLink", '');
+  const [tiktokLink, setTiktokLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:tiktokLink", '');
+  const [youtubeLink, setYoutubeLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:youtubeLink", '');
+  const [telegramLink, setTelegramLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:telegramLink", '');
+  const [facebookLink, setFacebookLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:facebookLink", '');
   // Self-reported follower counts for the linked socials, feeding the profile's
   // total reach. They live in `customs`, which the API replaces wholesale, so
   // the blob is kept as loaded and resent around the counts on save.
-  const [socialFollowers, setSocialFollowers] = useState<SocialFollowerInputs>(emptySocialFollowerInputs);
+  const [socialFollowers, setSocialFollowers] = useSurfaceDraft<SocialFollowerInputs>("pages/app/SettingsPage.tsx:socialFollowers", emptySocialFollowerInputs);
   const [originalSocialFollowers, setOriginalSocialFollowers] = useState<SocialFollowerInputs>(emptySocialFollowerInputs);
   const customsRef = useRef<Record<string, unknown>>({});
   const setFollowerInput = useCallback((platform: SocialPlatform, value: string) => {
     setSocialFollowers((prev) => ({ ...prev, [platform]: sanitizeFollowerInput(value) }));
-  }, []);
+  }, [setSocialFollowers]);
 
   const [originalValues, setOriginalValues] = useState({
     displayName: '',
@@ -609,19 +610,19 @@ function ProfileSettings() {
     const loadedTelegram = (raw.telegramLink as string) || customs?.telegramLink || '';
     const loadedFacebook = (raw.facebookLink as string) || customs?.facebookLink || '';
 
-    setDisplayName(loadedDisplayName);
-    setUsername(loadedUsername);
-    setBio(loadedBio);
-    setTwitterLink(loadedTwitter);
-    setDiscordLink(loadedDiscord);
-    setInstagramLink(loadedInstagram);
-    setTiktokLink(loadedTiktok);
-    setYoutubeLink(loadedYoutube);
-    setTelegramLink(loadedTelegram);
-    setFacebookLink(loadedFacebook);
+    setDisplayName.initialize(loadedDisplayName);
+    setUsername.initialize(loadedUsername);
+    setBio.initialize(loadedBio);
+    setTwitterLink.initialize(loadedTwitter);
+    setDiscordLink.initialize(loadedDiscord);
+    setInstagramLink.initialize(loadedInstagram);
+    setTiktokLink.initialize(loadedTiktok);
+    setYoutubeLink.initialize(loadedYoutube);
+    setTelegramLink.initialize(loadedTelegram);
+    setFacebookLink.initialize(loadedFacebook);
     customsRef.current = customs && typeof customs === 'object' ? customs : {};
     const loadedFollowers = readSocialFollowerInputs(customsRef.current);
-    setSocialFollowers(loadedFollowers);
+    setSocialFollowers.initialize(loadedFollowers);
     setOriginalSocialFollowers(loadedFollowers);
 
     setOriginalValues({
@@ -643,7 +644,7 @@ function ProfileSettings() {
     // Settings renders the preview at w-20, above the default avatar size.
     setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl, deviceWidth(80)));
     setCoverPreview(buildCoverUrl(address, rawCoverUrl));
-  }, [profileData, authUser?.address]);
+  }, [profileData, authUser?.address, setBio, setDisplayName, setUsername, setDiscordLink, setFacebookLink, setInstagramLink, setSocialFollowers, setTelegramLink, setTiktokLink, setTwitterLink, setYoutubeLink]);
   
   // Check username availability
   useEffect(() => {
@@ -922,7 +923,19 @@ function ProfileSettings() {
     if (avatarFile) data.avatarImg = avatarFile;
     if (coverFile) data.coverImg = coverFile;
     
-    updateMutation.mutate(data);
+    updateMutation.mutate(data, { onSuccess: () => {
+        if (data.displayName !== undefined) setDisplayName.complete(displayName, displayName);
+        if (data.username !== undefined) setUsername.complete(username, username);
+        if (data.aboutMe !== undefined) setBio.complete(bio, bio);
+        setTwitterLink.complete(twitterLink, twitterLink);
+        setDiscordLink.complete(discordLink, discordLink);
+        setInstagramLink.complete(instagramLink, instagramLink);
+        setTiktokLink.complete(tiktokLink, tiktokLink);
+        setYoutubeLink.complete(youtubeLink, youtubeLink);
+        setTelegramLink.complete(telegramLink, telegramLink);
+        setFacebookLink.complete(facebookLink, facebookLink);
+        setSocialFollowers.complete(socialFollowers, socialFollowers);
+      } });
   };
   
   // Only block the form on the first-ever load — cached tab returns render
@@ -3684,7 +3697,7 @@ function GeoBlockingSelector() {
   const { t } = useTranslation();
   const [blockedCountries, setBlockedCountries] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/SettingsPage.tsx:search", '');
 
   const filteredCountries = COUNTRIES.filter(c => 
     c.name.toLowerCase().includes(search.toLowerCase())
@@ -3770,7 +3783,7 @@ function GeoBlockingSelector() {
               />
               {search && (
                 <button
-                  onClick={() => setSearch('')}
+                  onClick={() => setSearch.complete(search, '')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
                 >
                   <X className="w-4 h-4" />

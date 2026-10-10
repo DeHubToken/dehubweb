@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Creator Flow — the "+" menu.
  * ============================
@@ -27,7 +28,7 @@ export default function AddNodeMenu({ anchorRect, onClose }: Props) {
   const addNode = useCreatorFlowStore((s) => s.addNode);
   const menuRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/creator/flow/AddNodeMenu.tsx:query", '');
 
   useEffect(() => {
     searchRef.current?.focus();

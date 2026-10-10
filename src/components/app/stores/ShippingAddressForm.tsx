@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
@@ -31,9 +32,9 @@ export function ShippingAddressForm({ onChange }: Props) {
   const saveAddress = useSaveAddress();
   const deleteAddress = useDeleteAddress();
 
-  const [fields, setFields] = useState<AddressFields>(EMPTY);
+  const [fields, setFields] = useSurfaceDraft<AddressFields>("src/components/app/stores/ShippingAddressForm.tsx:fields", EMPTY);
   const [selectedId, setSelectedId] = useState<string>('new');
-  const [saveLabel, setSaveLabel] = useState('Home');
+  const [saveLabel, setSaveLabel] = useSurfaceDraft("components/app/stores/ShippingAddressForm.tsx:saveLabel", 'Home');
   const [wantSave, setWantSave] = useState(false);
   const [isDefault, setIsDefault] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
@@ -84,7 +85,7 @@ export function ShippingAddressForm({ onChange }: Props) {
       country: addr.country,
     });
     setWantSave(false);
-  }, []);
+  }, [setFields]);
 
   const handleSelectChange = (val: string) => {
     saveAddress.reset();

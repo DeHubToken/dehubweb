@@ -66,7 +66,7 @@ export default function PromptNode({ id, data, selected }: NodeProps<FlowNode>) 
   const commit = useCallback(
     (text: string) => {
       if (commitTimer.current) clearTimeout(commitTimer.current);
-      commitTimer.current = setTimeout(() => updateNodeData(id, { prompt: text }), 250);
+      updateNodeData(id, { prompt: text });
     },
     [id, updateNodeData],
   );

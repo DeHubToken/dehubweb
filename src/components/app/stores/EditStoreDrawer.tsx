@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Edit Store Drawer
  * ==================
@@ -28,8 +29,8 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const updateStore = useUpdateStore();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/stores/EditStoreDrawer.tsx:name", '', draftIdentity(store));
+  const [description, setDescription] = useSurfaceDraft("components/app/stores/EditStoreDrawer.tsx:description", '', draftIdentity(store));
   const [avatarUrl, setAvatarUrl] = useState('');
   const [bannerUrl, setBannerUrl] = useState('');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -39,12 +40,12 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
 
   useEffect(() => {
     if (store) {
-      setName(store.name || '');
-      setDescription(store.description || '');
+      setName.initialize(store.name || '');
+      setDescription.initialize(store.description || '');
       setAvatarUrl(store.avatar_url || '');
       setBannerUrl(store.banner_url || '');
     }
-  }, [store]);
+  }, [store, setDescription, setName]);
 
   if (!store) return null;
 

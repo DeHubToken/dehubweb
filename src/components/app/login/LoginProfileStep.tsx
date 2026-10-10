@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Profile step — the last step of signing up.
  * ===========================================
@@ -64,8 +65,8 @@ export function LoginProfileStep() {
   const { disconnect, refreshUser, setRequiresUsername, closeLoginModal } = useAuth();
   const prefs = useUserPreferences();
 
-  const [username, setUsername] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [username, setUsername] = useSurfaceDraft("src/components/app/login/LoginProfileStep.tsx:username", '');
+  const [displayName, setDisplayName] = useSurfaceDraft("src/components/app/login/LoginProfileStep.tsx:displayName", '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -481,7 +482,7 @@ function LanguageField({
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("src/components/app/login/LoginProfileStep.tsx:search", '');
 
   const current = SUPPORTED_LANGUAGES.find((l) => l.code === value);
 
@@ -505,7 +506,7 @@ function LanguageField({
         disabled={disabled}
         onClick={() => {
           setOpen((v) => !v);
-          setSearch('');
+          setSearch.complete(search, '');
         }}
         className="flex h-12 w-full items-center gap-2 rounded-xl border border-white/10 bg-white/10 px-3 text-left text-sm text-white transition-colors hover:bg-white/[0.14] disabled:opacity-50"
       >
@@ -534,7 +535,7 @@ function LanguageField({
                 aria-pressed={lang.code === value}
                 onClick={() => {
                   setOpen(false);
-                  setSearch('');
+                  setSearch.complete(search, '');
                   if (lang.code !== value) void onChange(lang.code);
                 }}
                 className={cn(

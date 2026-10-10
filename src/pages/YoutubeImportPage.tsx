@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * dehub.io/converter — import a video from another platform as a DeHub post.
  * ==========================================================================
@@ -125,7 +126,7 @@ export default function YoutubeImportPage() {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const { requireAuth } = useAuthPrompt();
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useSurfaceDraft("pages/YoutubeImportPage.tsx:url", '');
   const [ownershipConfirmed, setOwnershipConfirmed] = useState(false);
   /** What the creator picked, or null while they have not. Null means "follow
    * the link" — a SoundCloud paste should not need a click to say audio, and a
@@ -287,7 +288,7 @@ export default function YoutubeImportPage() {
             description: details?.description || undefined,
             rotation: details?.rotation,
           });
-          setUrl('');
+          setUrl.complete(url, '');
           toast.message(t('converter.toastQueued'));
           await refresh();
         } catch (err) {
@@ -297,7 +298,7 @@ export default function YoutubeImportPage() {
         }
       });
     },
-    [refresh, requireAuth, t],
+    [refresh, requireAuth, t, setUrl, url],
   );
 
   const handleSubmit = () => {

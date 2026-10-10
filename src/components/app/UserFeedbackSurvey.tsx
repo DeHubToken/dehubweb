@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * User Feedback Survey
  * ====================
@@ -82,7 +83,7 @@ export function UserFeedbackSurvey() {
   const { walletAddress, isAuthenticated } = useAuth();
   const [show, setShow] = useState(false);
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useSurfaceDraft<Record<string, string>>("src/components/app/UserFeedbackSurvey.tsx:answers", {});
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {

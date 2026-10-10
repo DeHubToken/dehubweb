@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
@@ -30,6 +31,7 @@ import { normalizeCategoryName } from '@/lib/category-names';
 import { storageImage, deviceWidth } from '@/lib/media-url';
 
 interface PostAccessTogglesProps {
+  draftScope?: string;
   /** Gate this post behind the creator's own subscription plans. */
   isSubscribersOnly: boolean;
   setIsSubscribersOnly: (value: boolean) => void;
@@ -102,6 +104,7 @@ interface PostAccessTogglesProps {
 }
 
 export function PostAccessToggles({
+  draftScope = "post:new",
   isSubscribersOnly,
   setIsSubscribersOnly,
   isPPV,
@@ -180,14 +183,14 @@ export function PostAccessToggles({
   const hasCommunities = userCommunities.length > 0 && !!walletAddress;
 
   // Temp states for drawer inputs
-  const [tempPpvAmount, setTempPpvAmount] = useState(ppvAmount);
+  const [tempPpvAmount, setTempPpvAmount] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempPpvAmount", ppvAmount, draftScope);
   const [tempPpvCurrency, setTempPpvCurrency] = useState<Currency>(ppvCurrency);
-  const [tempW2eViews, setTempW2eViews] = useState(w2eViews);
-  const [tempW2eComments, setTempW2eComments] = useState(w2eComments);
-  const [tempW2eTotal, setTempW2eTotal] = useState(w2eTotal);
-  const [tempTokenAmount, setTempTokenAmount] = useState(tokenAmount);
-  const [tempTokenSymbol, setTempTokenSymbol] = useState(tokenSymbol || 'DHB');
-  const [tempTokenContract, setTempTokenContract] = useState(tokenContract);
+  const [tempW2eViews, setTempW2eViews] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempW2eViews", w2eViews, draftScope);
+  const [tempW2eComments, setTempW2eComments] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempW2eComments", w2eComments, draftScope);
+  const [tempW2eTotal, setTempW2eTotal] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempW2eTotal", w2eTotal, draftScope);
+  const [tempTokenAmount, setTempTokenAmount] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempTokenAmount", tokenAmount, draftScope);
+  const [tempTokenSymbol, setTempTokenSymbol] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempTokenSymbol", tokenSymbol || 'DHB', draftScope);
+  const [tempTokenContract, setTempTokenContract] = useSurfaceDraft("src/features/post/components/PostAccessToggles.tsx:tempTokenContract", tokenContract, draftScope);
   const [useCustomToken, setUseCustomToken] = useState(!!tokenContract);
 
   const lockTokens = useMemo(() => getLockTokensForChain(postChainId), [postChainId]);
@@ -209,7 +212,7 @@ export function PostAccessToggles({
 
   // Category state
   const [categories, setCategories] = useState<DeHubCategory[]>([]);
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("features/post/components/PostAccessToggles.tsx:categorySearch", '');
   const [loadingCategories, setLoadingCategories] = useState(false);
 
   // Fetch categories when drawer opens
@@ -251,7 +254,7 @@ export function PostAccessToggles({
 
   const handleCategoryToggle = (checked: boolean) => {
     if (checked) {
-      setCategorySearch('');
+      setCategorySearch.complete(categorySearch, '');
       setCategoryDrawerOpen(true);
     } else {
       setSelectedCategory('');
@@ -277,7 +280,7 @@ export function PostAccessToggles({
 
   const handlePpvToggle = (checked: boolean) => {
     if (checked) {
-      setTempPpvAmount(ppvAmount);
+      setTempPpvAmount.initialize(ppvAmount);
       // Carrying DHB/USD over to a Solana post would leave the selector with
       // nothing highlighted, so fall back to the chain's first token.
       setTempPpvCurrency(
@@ -291,9 +294,9 @@ export function PostAccessToggles({
 
   const handleBountyToggle = (checked: boolean) => {
     if (checked) {
-      setTempW2eViews(w2eViews);
-      setTempW2eComments(w2eComments);
-      setTempW2eTotal(w2eTotal);
+      setTempW2eViews.initialize(w2eViews);
+      setTempW2eComments.initialize(w2eComments);
+      setTempW2eTotal.initialize(w2eTotal);
       setBountyDrawerOpen(true);
     } else {
       setIsWatch2Earn(false);
@@ -302,9 +305,9 @@ export function PostAccessToggles({
 
   const handleTokenToggle = (checked: boolean) => {
     if (checked) {
-      setTempTokenAmount(tokenAmount);
-      setTempTokenSymbol(tokenSymbol || lockTokens[0]?.symbol || 'DHB');
-      setTempTokenContract(tokenContract);
+      setTempTokenAmount.initialize(tokenAmount);
+      setTempTokenSymbol.initialize(tokenSymbol || lockTokens[0]?.symbol || 'DHB');
+      setTempTokenContract.initialize(tokenContract);
       setUseCustomToken(!!tokenContract);
       setTokenDrawerOpen(true);
     } else {
@@ -457,7 +460,7 @@ export function PostAccessToggles({
             {selectedCategoriesArray.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pl-6">
               {selectedCategoriesArray.length < MAX_CATEGORIES && (
-                <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
+                <button type="button" onClick={() => { setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -784,7 +787,7 @@ export function PostAccessToggles({
                     } else {
                       toggleCategory(categorySearch.trim());
                     }
-                    setCategorySearch('');
+                    setCategorySearch.complete(categorySearch, '');
                   }
                 }}
                 placeholder="Search categories..."
@@ -794,7 +797,7 @@ export function PostAccessToggles({
               {categorySearch && (
                 <button
                   type="button"
-                  onClick={() => setCategorySearch('')}
+                  onClick={() => setCategorySearch.complete(categorySearch, '')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
                 >
                   <X className="w-4 h-4" />
@@ -814,7 +817,7 @@ export function PostAccessToggles({
                 {categorySearch.trim().length >= 3 && !categories.some(c => c.name.toLowerCase() === normalizeCategoryName(categorySearch).toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
                   <button
                     type="button"
-                    onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch(''); }}
+                    onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch.complete(categorySearch, ''); }}
                     className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
                   >
                     <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -912,6 +915,7 @@ export function PostAccessToggles({
       {/* PPV Drawer */}
       {setShopLinks && (
         <ShopSheetLazy
+          draftScope={draftScope}
           open={shopDrawerOpen}
           onOpenChange={setShopDrawerOpen}
           value={{ links: shopLinks ?? [], listingIds: shopListingIds ?? [] }}

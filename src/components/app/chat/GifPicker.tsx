@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -29,12 +30,12 @@ interface GifPickerProps {
 
 export function GifPicker({ onGifSelect }: GifPickerProps) {
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/GifPicker.tsx:searchQuery", '');
 
   const handleGifClick = (gifUrl: string) => {
     onGifSelect(gifUrl);
     setOpen(false);
-    setSearchQuery('');
+    setSearchQuery.complete(searchQuery, '');
   };
 
   const displayGifs = searchQuery ? MOCK_GIFS : TRENDING_GIFS;

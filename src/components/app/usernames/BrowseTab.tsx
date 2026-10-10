@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Browse Tab
  * ==========
@@ -50,7 +51,7 @@ export function BrowseTab() {
   const { isAuthenticated } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   // A shared listing link lands here with the handle already in the box.
-  const [search, setSearch] = useState(() => searchParams.get('handle') || '');
+  const [search, setSearch] = useSurfaceDraft("src/components/app/usernames/BrowseTab.tsx:search", () => searchParams.get('handle') || '');
   const [sort, setSort] = useState<UsernameSort>('newest');
   const [minPriceUsd, setMinPriceUsd] = useState<number | undefined>();
   const [maxPriceUsd, setMaxPriceUsd] = useState<number | undefined>();

@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Post Card Component
  * ===================
@@ -147,10 +148,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
-  const [pollQuestion, setPollQuestion] = useState('');
+  const [pollQuestion, setPollQuestion] = useSurfaceDraft("components/app/cards/PostCard.tsx:pollQuestion", '', draftIdentity(post));
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [pollMultiple, setPollMultiple] = useState(false);
-  const [pollExpiry, setPollExpiry] = useState('');
+  const [pollExpiry, setPollExpiry] = useSurfaceDraft("components/app/cards/PostCard.tsx:pollExpiry", '', draftIdentity(post));
   const createPollMutation = useCreatePoll();
   const { data: tipCount = 0 } = usePostTipCount(post.id, post.totalTips);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
@@ -934,10 +935,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                     expiresAt: pollExpiry || undefined,
                   });
                   setShowPollCreator(false);
-                  setPollQuestion('');
+                  setPollQuestion.complete(pollQuestion, '');
                   setPollOptions(['', '']);
                   setPollMultiple(false);
-                  setPollExpiry('');
+                  setPollExpiry.complete(pollExpiry, '');
                   queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
                 } catch {}
               }}
@@ -1021,6 +1022,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: post.id,
           type: 'post',
           author: post.author.name,
           caption: post.content

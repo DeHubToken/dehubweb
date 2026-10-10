@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Volume2, Send, Loader2, Search, Play, Square, Mic, MicOff } from 'lucide-react';
@@ -22,10 +23,10 @@ interface VoiceOption {
 
 export function StageTTS() {
   const { t, i18n } = useTranslation();
-  const [text, setText] = useState('');
+  const [text, setText] = useSurfaceDraft("components/app/spaces/StageTTS.tsx:text", '');
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/spaces/StageTTS.tsx:search", '');
   const [voices, setVoices] = useState<VoiceOption[]>([]);
   const [isLoadingVoices, setIsLoadingVoices] = useState(false);
   const [previewingId, setPreviewingId] = useState<string | null>(null);
@@ -108,7 +109,7 @@ export function StageTTS() {
     recognitionRef.current = recognition;
     setIsListening(true);
     recognition.start();
-  }, [isListening]);
+  }, [isListening, setText]);
 
   const handlePreview = async (voice: VoiceOption) => {
     if (previewAudioRef.current) {
@@ -183,7 +184,7 @@ export function StageTTS() {
         caption: text.trim(),
       });
 
-      setText('');
+      setText.complete(text, '');
     } catch (err) {
       console.error('TTS error:', err);
       const msg = err instanceof Error ? err.message : t('stages.speechFailed');

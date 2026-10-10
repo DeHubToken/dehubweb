@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Feedback — the permanent testimonial hub
  * ========================================
@@ -50,8 +51,8 @@ export function FeedbackSection() {
   const { t } = useTranslation();
   const { user, walletAddress, isAuthenticated } = useAuth();
 
-  const [body, setBody] = useState('');
-  const [timeUsing, setTimeUsing] = useState('');
+  const [body, setBody] = useSurfaceDraft("components/app/stats/FeedbackSection.tsx:body", '');
+  const [timeUsing, setTimeUsing] = useSurfaceDraft("components/app/stats/FeedbackSection.tsx:timeUsing", '');
   const [allowPromo, setAllowPromo] = useState(false);
   const [allowName, setAllowName] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -103,8 +104,8 @@ export function FeedbackSection() {
       if (error) throw error;
 
       setSubmitted(true);
-      setBody('');
-      setTimeUsing('');
+      setBody.complete(body, '');
+      setTimeUsing.complete(timeUsing, '');
       toast.success(t('stats.feedback.toastSent', 'Thanks — your feedback is with us'));
     } catch (err) {
       console.error('[Feedback] Submit error:', err);
@@ -112,7 +113,7 @@ export function FeedbackSection() {
     } finally {
       setSubmitting(false);
     }
-  }, [allowName, allowPromo, canSubmit, t, timeUsing, trimmed, user?.username, walletAddress]);
+  }, [allowName, allowPromo, canSubmit, t, timeUsing, trimmed, user?.username, walletAddress, setBody, setTimeUsing, body]);
 
   return (
     <div className="flex flex-col gap-2 sm:gap-3">

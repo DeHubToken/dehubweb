@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Create Listing Drawer
  * =====================
@@ -35,19 +36,19 @@ interface Props {
 
 export function CreateListingDrawer({ open, onClose, storeId }: Props) {
   const { t } = useTranslation();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+  const [title, setTitle] = useSurfaceDraft("components/app/stores/CreateListingDrawer.tsx:title", '', storeId);
+  const [description, setDescription] = useSurfaceDraft("components/app/stores/CreateListingDrawer.tsx:description", '', storeId);
+  const [price, setPrice] = useSurfaceDraft("components/app/stores/CreateListingDrawer.tsx:price", '', storeId);
   const [category, setCategory] = useState('other');
   const [condition, setCondition] = useState('new');
   const [isDigital, setIsDigital] = useState(false);
-  const [shippingInfo, setShippingInfo] = useState('');
-  const [stockQty, setStockQty] = useState('');
+  const [shippingInfo, setShippingInfo] = useSurfaceDraft("components/app/stores/CreateListingDrawer.tsx:shippingInfo", '', storeId);
+  const [stockQty, setStockQty] = useSurfaceDraft("components/app/stores/CreateListingDrawer.tsx:stockQty", '', storeId);
   const [images, setImages] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [isPod, setIsPod] = useState(false);
-  const [podUrl, setPodUrl] = useState('');
+  const [podUrl, setPodUrl] = useSurfaceDraft("components/app/stores/CreateListingDrawer.tsx:podUrl", '', storeId);
   const [podProvider, setPodProvider] = useState<PodProvider>('other');
   const [uploadingVideo, setUploadingVideo] = useState(false);
 
@@ -126,10 +127,10 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
     }, {
       onSuccess: () => {
         onClose();
-        setTitle(''); setDescription(''); setPrice(''); setImages([]); setVideos([]);
+        setTitle.complete(title, ''); setDescription.complete(description, ''); setPrice.complete(price, ''); setImages([]); setVideos([]);
         setCategory('other'); setCondition('new'); setIsDigital(false);
-        setShippingInfo(''); setStockQty('');
-        setIsPod(false); setPodUrl(''); setPodProvider('other');
+        setShippingInfo.complete(shippingInfo, ''); setStockQty.complete(stockQty, '');
+        setIsPod(false); setPodUrl.complete(podUrl, ''); setPodProvider('other');
       },
     });
   };

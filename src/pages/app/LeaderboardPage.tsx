@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Leaderboard Page
  * ================
@@ -117,7 +118,7 @@ export default function LeaderboardPage() {
 
     return () => clearTimeout(t);
   }, []);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/LeaderboardPage.tsx:searchQuery", '');
   const [category, setCategory] = useState<CategoryType>('holdings');
   const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
   const [shimmerKey, setShimmerKey] = useState(0);

@@ -56,6 +56,7 @@ export function FeatureRequestComments({
 
   return (
     <ThreadedComments<FeatureRequestComment>
+      draftScope={`thread:featureRequestId:${featureRequestId}`}
       threads={threads}
       isLoading={isLoading}
       entityAuthorAddress={featureAuthorAddress}
@@ -73,7 +74,7 @@ export function FeatureRequestComments({
           parentAuthorAddress: parent?.wallet_address ?? null,
         })
       }
-      onEdit={(comment, content) => editComment.mutate({ commentId: comment.id, content, featureRequestId })}
+      onEdit={(comment, content) => editComment.mutateAsync({ commentId: comment.id, content, featureRequestId })}
       onDelete={(comment) => deleteComment.mutate({ commentId: comment.id, featureRequestId })}
       onReact={(comment, reaction) =>
         reactToComment.mutate({ commentId: comment.id, reaction, current: comment.myReaction, featureRequestId })

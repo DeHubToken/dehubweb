@@ -157,7 +157,7 @@ export function PostMediaPreview({
     document.addEventListener('keydown', onKeyDown, true);
     return () => document.removeEventListener('keydown', onKeyDown, true);
   }, [fullscreenPreview]);
-  const [annotator, setAnnotator] = useState<{ index: number; url: string; name: string; type: string } | null>(null);
+  const [annotator, setAnnotator] = useState<{ index: number; url: string; name: string; type: string; sourceIdentity: string } | null>(null);
 
   /**
    * The annotator draws on a flattened copy: whatever filter and crop are set
@@ -172,6 +172,7 @@ export function PostMediaPreview({
       url: URL.createObjectURL(flattened),
       name: m.file.name,
       type: m.file.type,
+      sourceIdentity: JSON.stringify([m.file.name, m.file.type, m.file.size, m.file.lastModified]),
     });
   }, []);
 
@@ -1211,6 +1212,7 @@ export function PostMediaPreview({
           imageUrl={annotator.url}
           fileName={annotator.name}
           fileType={annotator.type}
+          sourceIdentity={annotator.sourceIdentity}
           onApply={(file) => onReplaceImage?.(annotator.index, file)}
         />
       )}

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * 3D generation paywall.
  * ======================
@@ -80,7 +81,7 @@ export function Model3dPaywallModal({
   const [textureQuality, setTextureQuality] = useState<TextureQuality>('standard');
   const [faceLimit, setFaceLimit] = useState<number>(30_000);
   const [quad, setQuad] = useState(false);
-  const [seed, setSeed] = useState('');
+  const [seed, setSeed] = useSurfaceDraft("components/app/model3d/Model3dPaywallModal.tsx:seed", '');
   const [exportFormat, setExportFormat] = useState<'glb' | 'usdz' | 'fbx' | 'obj' | 'stl'>('glb');
 
   const { walletAddress } = useAuth();
@@ -98,9 +99,9 @@ export function Model3dPaywallModal({
     setTextureQuality('standard');
     setFaceLimit(30_000);
     setQuad(false);
-    setSeed('');
+    setSeed.initialize('');
     setExportFormat('glb');
-  }, [selectedModelKey]);
+  }, [selectedModelKey, setSeed]);
 
   useEffect(() => {
     if (open) void fetchDhbPrice();
