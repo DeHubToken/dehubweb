@@ -1,3 +1,4 @@
+import type { CommandCommit } from "@/lib/editor/editorCommand";
 /**
  * Auto-caption progress, shared by the inspector button and the AI agent so
  * only one transcription runs at a time and both show the same state.
@@ -11,17 +12,17 @@ import type { CaptionStyle } from '@/lib/editor/captionLayout';
 interface CaptionsState {
   clipId: string | null;
   progress: CaptionProgress | null;
-  run: (clipId: string, style?: CaptionStyle) => Promise<boolean>;
+  run: (clipId: string, style?: CaptionStyle, command?: CommandCommit) => Promise<boolean>;
 }
 
 export const useCaptionsStore = create<CaptionsState>((set, get) => ({
   clipId: null,
   progress: null,
-  run: async (clipId, style) => {
+  run: async (clipId, style, command) => {
     if (get().clipId) return false;
     set({ clipId, progress: null });
     try {
-      const count = await addAutoCaptions(clipId, (progress) => set({ progress }), style);
+      const count = await addAutoCaptions(clipId, (progress) => set({ progress }), style, command);
       if (count > 0) toast.success(i18n.t('editor.captions.done', { count }));
       else toast.message(i18n.t('editor.captions.noSpeech'));
       return count > 0;
