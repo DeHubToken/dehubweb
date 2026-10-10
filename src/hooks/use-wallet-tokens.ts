@@ -13,6 +13,7 @@ import type { ChainId } from '@/components/app/ChainSelector';
 import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { ROBINHOOD_CHAIN_ID } from '@/lib/chains/robinhood';
 import { ARC_CHAIN_ID } from '@/lib/chains/arc';
+import { readWalletBalance } from '@/lib/wallet/read-timeout';
 
 const ALL_CHAINS: ChainId[] = [BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, ROBINHOOD_CHAIN_ID, ARC_CHAIN_ID];
 
@@ -47,6 +48,7 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
     staleTime: 5 * 60_000,
     refetchInterval: isWalletSurfaceActive ? 5 * 60_000 : false,
     refetchOnWindowFocus: false,
+    retry: false,
     placeholderData: keepPreviousData,
   });
 
@@ -68,26 +70,29 @@ export function useAllChainsTokens() {
 
   const baseQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BASE_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, BASE_CHAIN_ID),
+    queryFn: () => readWalletBalance(getAllTokenBalances(walletAddress!, BASE_CHAIN_ID)),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
+    retry: false,
   });
 
   const bnbQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), BNB_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, BNB_CHAIN_ID),
+    queryFn: () => readWalletBalance(getAllTokenBalances(walletAddress!, BNB_CHAIN_ID)),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
+    retry: false,
   });
 
   const ethQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ETH_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, ETH_CHAIN_ID),
+    queryFn: () => readWalletBalance(getAllTokenBalances(walletAddress!, ETH_CHAIN_ID)),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
+    retry: false,
   });
 
   // Robinhood custom tokens use the public chain RPC and do not depend on the
@@ -95,18 +100,20 @@ export function useAllChainsTokens() {
   // contracts are rolled out separately.
   const robinhoodQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ROBINHOOD_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, ROBINHOOD_CHAIN_ID),
+    queryFn: () => readWalletBalance(getAllTokenBalances(walletAddress!, ROBINHOOD_CHAIN_ID)),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
+    retry: false,
   });
 
   const arcQuery = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), ARC_CHAIN_ID],
-    queryFn: () => getAllTokenBalances(walletAddress!, ARC_CHAIN_ID),
+    queryFn: () => readWalletBalance(getAllTokenBalances(walletAddress!, ARC_CHAIN_ID)),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
+    retry: false,
   });
 
   /**
@@ -126,6 +133,7 @@ export function useAllChainsTokens() {
     enabled: !!solanaAddress && isAuthenticated,
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
+    retry: false,
   });
 
   const allTokens = useMemo(() => [
@@ -142,5 +150,12 @@ export function useAllChainsTokens() {
   // would delay balances that are already in hand.
   const isLoading = baseQuery.isLoading || bnbQuery.isLoading || ethQuery.isLoading || robinhoodQuery.isLoading;
 
-  return { allTokens, isLoading };
+  const chains = [
+    { name: 'Base', query: baseQuery }, { name: 'BNB Chain', query: bnbQuery },
+    { name: 'Ethereum', query: ethQuery }, { name: 'Robinhood', query: robinhoodQuery },
+    { name: 'Arc', query: arcQuery }, { name: 'Solana', query: solanaQuery },
+  ];
+  const failedChains = chains.filter(({ query }) => query.isError).map(({ name }) => name);
+  const refetch = () => Promise.all(chains.filter(({ name }) => name !== 'Solana' || !!solanaAddress).map(({ query }) => query.refetch()));
+  return { allTokens: isAuthenticated && walletAddress ? allTokens : [], isLoading, failedChains, refetch };
 }
