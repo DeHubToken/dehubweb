@@ -3,6 +3,7 @@ import { waitForVideoFrame } from "./videoFrame";
 import { assertVideoMattes, videoMatteMediaIds } from "./videoMatte";
 import { createVideoMattePageCache, videoMatteFramesForOps } from "./videoMattePageCache";
 import { loadVideoMatteImage } from "./videoMatteImages";
+import { prepareGifImage, releaseGifImage } from "./gifImage";
 /**
  * Video export pipeline using WebCodecs + mp4-muxer / webm-muxer.
  * Renders each timeline frame to an OffscreenCanvas, encodes video via VideoEncoder,
@@ -145,19 +146,23 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
         } catch { /* video without audio — fine */ }
       })());
     } else if (m.kind === "image" && !matteIds.has(m.id)) {
-      tasks.push(new Promise<void>((resolve, reject) => {
+      tasks.push((async () => {
         const img = new Image();
         img.crossOrigin = "anonymous";
-        const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
-        const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
-        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
-        cancelLoads.add(cancel);
-        img.onload = () => finish();
-        img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
-        img.src = m.url;
         images.set(m.id, img);
-        if (signal?.aborted) cancel();
-      }));
+        if (m.mimeType === "image/gif") await prepareGifImage(img, m.url, signal);
+        checkAbort(signal);
+        await new Promise<void>((resolve, reject) => {
+          const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
+          const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
+          const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+          cancelLoads.add(cancel);
+          img.onload = () => finish();
+          img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
+          img.src = m.url;
+          if (signal?.aborted) cancel();
+        });
+      })());
     } else if (m.kind === "audio" && withAudio) {
       tasks.push((async () => {
         const buf = await (await fetch(m.url, { signal })).arrayBuffer();
@@ -168,7 +173,7 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
   }
 
   try { await Promise.all(tasks); }
-  catch (error) { abort(); videos.forEach(v => { v.removeAttribute("src"); v.load(); }); images.forEach(img => { img.src = ""; }); throw error; }
+  catch (error) { abort(); videos.forEach(v => { v.removeAttribute("src"); v.load(); }); images.forEach(img => { releaseGifImage(img); img.src = ""; }); throw error; }
   finally { signal?.removeEventListener("abort", abort); await audioCtx?.close().catch(() => undefined); }
   const mattePages = createVideoMattePageCache(images, frame => loadVideoMatteImage(media, frame, signal), image => { image.src = ""; });
   return { videos, images, audioBuffers, mattePages };
@@ -469,7 +474,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     if (audioEncoder && audioEncoder.state !== "closed") audioEncoder.close();
     mattePages.dispose();
     videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
-    images.forEach(img => { img.src = ""; });
+    images.forEach(img => { releaseGifImage(img); img.src = ""; });
   }
 }
 
@@ -537,7 +542,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
     signal?.removeEventListener("abort", abort); session?.close();
     mattePages.dispose();
     videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
-    images.forEach(image => { image.src = ""; });
+    images.forEach(image => { releaseGifImage(image); image.src = ""; });
   }
 }
 
@@ -617,6 +622,6 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   );
   return { blob, filename: exportFilename(snapshot.title, format, "", "design") };
   } finally {
-    mattePages.dispose(); videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); }); images.forEach(image => { image.src = ""; });
+    mattePages.dispose(); videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); }); images.forEach(image => { releaseGifImage(image); image.src = ""; });
   }
 }
