@@ -336,7 +336,9 @@ export default function FullWalletPage() {
               </button>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
-              {t('wallet.totalWalletValue')}: ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {t('wallet.totalWalletValue')}: {isLoading || !Object.keys(prices).length || (failedChains.length > 0 && totalUsd === 0)
+                ? '—'
+                : `${failedChains.length ? '≈ ' : ''}$${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             </p>
           </div>
           {hasAddressChoice ? (
