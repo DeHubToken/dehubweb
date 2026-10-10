@@ -16,6 +16,10 @@ export function EditorSlider(props: ComponentProps<typeof Slider>) {
       props.onKeyDownCapture?.(event);
     }}
     onBlur={event => { props.onBlur?.(event); gesture.finish(); }}
+    onKeyUp={event => {
+      props.onKeyUp?.(event);
+      if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End","PageUp","PageDown"].includes(event.key)) gesture.finish();
+    }}
     onValueChange={value => gesture.change(() => props.onValueChange?.(value))}
     onValueCommit={value => gesture.change(() => props.onValueCommit?.(value))}
   />;

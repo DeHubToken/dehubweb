@@ -24,13 +24,11 @@ export function useEditorControlGesture(scope: string = "") {
     const finish = () => gesture.finish();
     window.addEventListener("pointerup", finish);
     window.addEventListener("pointercancel", finish);
-    window.addEventListener("keyup", finish);
     window.addEventListener("blur", finish);
     return () => {
       gesture.finish();
       window.removeEventListener("pointerup", finish);
       window.removeEventListener("pointercancel", finish);
-      window.removeEventListener("keyup", finish);
       window.removeEventListener("blur", finish);
     };
   }, [gesture, projectId, scope, selection]);

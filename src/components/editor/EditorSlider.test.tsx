@@ -21,6 +21,12 @@ function Control() {
     onValueChange={([volume])=>useEditorStore.getState().updateMediaClip("a",{audio:{volume}})} />;
 }
 describe("real editor control readiness",()=>{
+  it("keeps a pointer adjustment active when its modifier key is released",async()=>{
+    const {result}=renderHook(()=>useEditorControlGesture());act(()=>result.current.begin());
+    fireEvent.keyUp(window,{key:"Shift"});expect(useEditorStore.getState().editing).toBe(true);
+    act(()=>result.current.change(()=>useEditorStore.getState().patchClipLive("a",{duration:8})));
+    fireEvent.pointerUp(window);await flush();expect(useEditorStore.getState().editing).toBe(false);expect(useEditorStore.getState().past).toHaveLength(1);
+  });
   it("rejects a start captured before a newer rendered project value",()=>{
     const {result}=renderHook(()=>useEditorControlGesture());
     act(()=>{useEditorStore.getState().updateMediaClip("a",{duration:8});expect(result.current.begin()).toBe(false);});
