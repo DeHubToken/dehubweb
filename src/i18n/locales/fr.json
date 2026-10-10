@@ -7258,6 +7258,19 @@
       "received": "Version {{revision}} reçue.",
       "upToDate": "Déjà à jour.",
       "protectedUndo": "D’anciennes modifications locales chevauchent les modifications partagées. L’annulation préservera les modifications partagées."
+    },
+    "live": {
+      "stopEdits": "Arrêter les modifications en direct",
+      "receiveEdits": "Recevoir les modifications en direct",
+      "shareEdits": "Partager les modifications en direct",
+      "waiting": "En attente de la fin de la modification",
+      "transferring": "Transfert des modifications",
+      "sharing": "Partage des modifications en direct",
+      "receiving": "Réception des modifications en direct",
+      "paused": "Modifications en direct suspendues",
+      "retryRecovery": "Réessayer la récupération",
+      "personalCopy": "Enregistrer une copie personnelle",
+      "privateHint": "Rejoindre ne téléverse pas vos modifications. Le partage en direct téléverse les nouvelles sources privées ; Enregistrer crée une version permanente."
     }
   },
   "jungleMood": {

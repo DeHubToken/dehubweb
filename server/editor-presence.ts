@@ -1,4 +1,4 @@
-const RPC = "https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/rpc/editor_cloud_live_access";
+const RPC = "https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/rpc/editor_cloud_live_checkpoint";
 const PUBLIC_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I";
 const OWNER = "0x[a-f0-9]{40}", ID = "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}";
 const PATH = new RegExp("^/api/editor/presence/(" + OWNER + ")/(" + ID + ")$");
@@ -57,27 +57,27 @@ export class EditorPresenceRoom {
     if (!peer.wallet || !peer.token || peer.deadline <= Date.now()) throw new Error("access");
     const response = await this.fetcher(RPC, { method: "POST", headers: { "Content-Type": "application/json", apikey: PUBLIC_KEY, Authorization: "Bearer " + PUBLIC_KEY, "x-wallet-address": peer.wallet, "x-wallet-session": peer.token }, body: JSON.stringify({ p_owner: peer.owner, p_id: peer.projectId }), signal: AbortSignal.timeout(6000) });
     if (!response.ok) throw new Error("access");
-    const value = await response.json() as { wallet?: string; ownerWallet?: string; projectId?: string; role?: string; revision?: number };
-    if (value.wallet !== peer.wallet || value.ownerWallet !== peer.owner || value.projectId !== peer.projectId || (value.role !== "owner" && value.role !== "editor") || !Number.isInteger(value.revision) || (value.revision ?? 0) < 1 || peer.deadline <= Date.now()) throw new Error("access");
-    return value.revision!;
+    const value = await response.json() as { wallet?: string; ownerWallet?: string; projectId?: string; role?: string; revision?: number; draftRevision?: number };
+    if (value.wallet !== peer.wallet || value.ownerWallet !== peer.owner || value.projectId !== peer.projectId || (value.role !== "owner" && value.role !== "editor") || !Number.isInteger(value.revision) || (value.revision ?? 0) < 1 || !Number.isInteger(value.draftRevision) || (value.draftRevision??-1)<0 || (value.draftRevision??0)>=2147483647 || peer.deadline <= Date.now()) throw new Error("access");
+    return {revision:value.revision!,draftRevision:value.draftRevision!};
   }
   /** Recheck every recipient before each private delivery, including after wakeup. */
   private async broadcast() {
-    const checked = new Map<string, Promise<number>>();
+    const checked = new Map<string, Promise<{revision:number;draftRevision:number}>>();
     const peers = await Promise.all(this.ctx.getWebSockets().map(async ws => {
       const peer = ws.deserializeAttachment(); if (!peer?.authorized) return null;
       try {
         const key = JSON.stringify([peer.owner, peer.projectId, peer.wallet, peer.token]);
         let check = checked.get(key); if (!check) { check = this.access(peer); checked.set(key, check); }
-        const revision = await check;
+        const checkpoint = await check;
         if (ws.deserializeAttachment()?.token !== peer.token) return null;
-        return { ws, peer, revision };
+        return { ws, peer, ...checkpoint };
       } catch { this.discard(ws); return null; }
     }));
     const allowed = peers.filter((p): p is NonNullable<typeof p> => p !== null);
     const participants = new Map<string, number>();
     for (const { peer } of allowed) participants.set(peer.wallet!, (participants.get(peer.wallet!) || 0) + 1);
-    const message = JSON.stringify({ type: "presence", revision: Math.max(0, ...allowed.map(p => p.revision)), participants: [...participants].sort(([a], [b]) => a.localeCompare(b)).map(([wallet, connections]) => ({ wallet, connections })) });
+    const message = JSON.stringify({ type: "presence", revision: Math.max(0, ...allowed.map(p => p.revision)), draftRevision:Math.max(0,...allowed.map(p=>p.draftRevision)), participants: [...participants].sort(([a], [b]) => a.localeCompare(b)).map(([wallet, connections]) => ({ wallet, connections })) });
     for (const { ws, peer } of allowed) { if (peer.deadline <= Date.now()) { this.discard(ws); continue; } try { ws.send(message); } catch { this.discard(ws); } }
     await this.schedule();
   }

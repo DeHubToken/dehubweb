@@ -6883,6 +6883,19 @@
       "sync": "Sincronizza i tagli",
       "none": "Nessun ritmo affidabile trovato.",
       "unchanged": "Non è stato possibile allineare i tagli."
+    },
+    "live": {
+      "stopEdits": "Interrompi le modifiche in diretta",
+      "receiveEdits": "Ricevi modifiche in diretta",
+      "shareEdits": "Condividi modifiche in diretta",
+      "waiting": "In attesa della fine della modifica",
+      "transferring": "Trasferimento delle modifiche",
+      "sharing": "Condivisione delle modifiche in diretta",
+      "receiving": "Ricezione delle modifiche in diretta",
+      "paused": "Modifiche in diretta sospese",
+      "retryRecovery": "Riprova il recupero",
+      "personalCopy": "Salva una copia personale",
+      "privateHint": "Entrare non carica le modifiche. La condivisione in diretta carica nuove fonti private; Salva crea una versione permanente."
     }
   },
   "jungleMood": {

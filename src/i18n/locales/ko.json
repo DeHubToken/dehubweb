@@ -6878,6 +6878,19 @@
       "sync": "컷 동기화",
       "none": "신뢰할 수 있는 비트를 찾지 못했습니다.",
       "unchanged": "컷을 정렬할 수 없었습니다."
+    },
+    "live": {
+      "stopEdits": "실시간 편집 중지",
+      "receiveEdits": "실시간 편집 받기",
+      "shareEdits": "편집 내용 실시간 공유",
+      "waiting": "편집이 끝날 때까지 대기 중",
+      "transferring": "편집 내용 전송 중",
+      "sharing": "편집 내용 실시간 공유 중",
+      "receiving": "실시간 편집 수신 중",
+      "paused": "실시간 편집 일시 중지",
+      "retryRecovery": "복구 다시 시도",
+      "personalCopy": "개인 사본 저장",
+      "privateHint": "참여만으로 편집 내용이 업로드되지는 않습니다. 실시간 공유는 새 비공개 소스를 업로드하며, 저장은 영구 버전을 만듭니다."
     }
   },
   "jungleMood": {

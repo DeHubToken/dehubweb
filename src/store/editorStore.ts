@@ -137,6 +137,7 @@ interface EditorState extends EditableState {
   deletePage: (index: number) => void;
 
   editing: boolean;
+  scopeVersion: number;
   isHistorySettled: () => boolean;
   holdEdits: () => ProjectEditLease;
   cancelPendingEdits: () => void;
@@ -190,6 +191,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
   const editGate: ReturnType<typeof projectEditGate> = projectEditGate(() => set({ editing: editGate.isEditing() }));
   return ({
   editing: false,
+  scopeVersion: 0,
   isHistorySettled: () => !batchedEdits && !liveGestures.size,
   holdEdits: () => editGate.hold(),
   cancelPendingEdits: () => { batchEpoch++; batchedEdits = 0; liveGestures.clear(); editGate.reset(); },
@@ -215,6 +217,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
     batchEpoch++; batchedEdits = 0; liveGestures.clear(); editGate.reset(false);
     set({
       editing: false,
+      scopeVersion: get().scopeVersion+1,
       projectId: snap.id,
       projectTitle: snap.title,
       tracks: snap.tracks,
@@ -242,6 +245,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
     batchEpoch++; batchedEdits = 0; liveGestures.clear(); editGate.reset(false);
     set({
       editing: false,
+      scopeVersion: get().scopeVersion+1,
       projectId: nanoid(10),
       projectTitle: "Untitled project",
       tracks: defaultTracks(),

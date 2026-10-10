@@ -6972,6 +6972,19 @@
       "received": "已接收版本 {{revision}}。",
       "upToDate": "已是最新版本。",
       "protectedUndo": "较早的本地编辑与共享更改重叠。撤销操作将保留共享更改。"
+    },
+    "live": {
+      "stopEdits": "停止实时编辑",
+      "receiveEdits": "接收实时编辑",
+      "shareEdits": "实时共享编辑",
+      "waiting": "等待编辑完成",
+      "transferring": "正在传输编辑内容",
+      "sharing": "正在实时共享编辑",
+      "receiving": "正在接收实时编辑",
+      "paused": "实时编辑已暂停",
+      "retryRecovery": "重试恢复",
+      "personalCopy": "保存个人副本",
+      "privateHint": "加入不会上传你的编辑内容。实时共享会上传新的私有素材；保存会创建永久版本。"
     }
   },
   "jungleMood": {
