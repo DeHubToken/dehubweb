@@ -795,6 +795,10 @@
   #boot::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
     background:repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
   #boot.off{opacity:0;pointer-events:none}
+  /* Keep layout and rendering active behind the readout, including menus
+     mounted later with a higher stacking order than the loading screen. */
+  body.booting > :not(#boot):not(noscript),
+  body.booting > :not(#boot):not(noscript) *{visibility:hidden!important;pointer-events:none!important}
   /* The glow behind the readout. A blurred disc that breathes on transform
      and opacity, so the light keeps moving even when the thread does not. */
   #bootGlow{position:absolute;left:50%;top:50%;width:520px;height:520px;
@@ -1007,6 +1011,7 @@
   .holo :focus-visible,.btn:focus-visible{outline:1px solid rgb(var(--holo));outline-offset:2px}
 </style>
 <link rel="stylesheet" href="connected.css">
+<link rel="stylesheet" href="wallets.css">
 <!-- Where the character library loads from. Blank = these folders,
      which is how it runs locally and offline. Point it at the bucket's public
      hostname to serve the models from R2 instead of shipping them in the repo:
@@ -1037,7 +1042,7 @@
   })();
 </script>
 </head>
-<body>
+<body class="booting">
 <noscript><div id="noscript-warn">CHARTOPIA needs JavaScript + WebGL.</div></noscript>
 <div id="gl"></div>
 <!-- Live web pages ride here: real iframes, pinned to their screen's projected
@@ -1333,14 +1338,14 @@
 <script>
 window.TSBoot = (function () {
   // `avatars` is the picker's first open, paid here instead of on the click.
-  var W = { engine: 34, world: 13, markets: 28, trenches: 4, paint: 4, avatars: 17 };
+  var W = { engine: 30, world: 13, markets: 28, trenches: 4, paint: 4, avatars: 13, interface: 8 };
   var LABEL = {
     engine: 'LOADING ENGINE', world: 'BUILDING THE LAIR', markets: 'LINKING MARKET FEED',
     trenches: 'SCANNING THE TRENCHES', paint: 'POWERING THE WALL',
-    avatars: 'WAKING THE TRADERS'
+    avatars: 'WAKING THE TRADERS', interface: 'PREPARING THE DESK'
   };
-  var ORDER = ['engine', 'world', 'markets', 'trenches', 'paint', 'avatars'];
-  var frac = { engine: 0, world: 0, markets: 0, trenches: 0, paint: 0, avatars: 0 };
+  var ORDER = ['engine', 'world', 'markets', 'trenches', 'paint', 'avatars', 'interface'];
+  var frac = { engine: 0, world: 0, markets: 0, trenches: 0, paint: 0, avatars: 0, interface: 0 };
   var logged = {}, t0 = Date.now(), shown = 0, dead = false;
   var pctEl, barEl, stageEl, linesEl, failEl, bootEl;
 
@@ -1433,10 +1438,14 @@ window.TSBoot = (function () {
   }
   var finished = false;
   function finish() {
-    if (finished) return; finished = true;
+    if (finished || dead || target() < 100) return; finished = true;
     pctEl.innerHTML = '100<small>%</small>'; barEl.style.width = '100%';
     if (bootEl) bootEl.classList.add('done');
-    setTimeout(function () { if (bootEl) bootEl.classList.add('off'); }, 260);
+    setTimeout(function () {
+      if (dead) return;
+      document.body.classList.remove('booting');
+      if (bootEl) bootEl.classList.add('off');
+    }, 260);
   }
 
   var api = {
@@ -1452,6 +1461,7 @@ window.TSBoot = (function () {
     },
     fail: function (title, detail) {
       if (dead) return; dead = true;
+      document.body.classList.add('booting');
       grab(); if (!bootEl) return;
       bootEl.classList.remove('off'); bootEl.classList.add('failed');
       pctEl.innerHTML = '<small style="font-size:26px;letter-spacing:.2em">FAULT</small>';
@@ -1477,18 +1487,17 @@ window.TSBoot = (function () {
   }
 
   grab();
+  // Shortcuts must not open a menu or move the camera behind the countdown.
+  window.addEventListener('keydown', function (event) {
+    if (document.body.classList.contains('booting')) event.stopImmediatePropagation();
+  }, true);
   setInterval(paint, 32);
   setInterval(pollEngine, 120);
 
-  // Never strand the loader on the last stage. If the world built and the feeds
-  // answered, the room is up whether or not the first-frame ping arrived — and
-  // a character still baking is not a reason to keep somebody out of a room
-  // that is already rendering behind the panel. The warm carries on in the
-  // background; only the stage is called done.
+  // Avatar previews are optional cache warming. Required stages must report
+  // their actual completion; elapsed time cannot make feeds or menus ready.
   setTimeout(function () {
-    if (frac.engine >= 1 && frac.world >= 1) {
-      api.stage('markets', 1); api.stage('trenches', 1); api.stage('paint', 1); api.stage('avatars', 1);
-    }
+    api.stage('avatars', 1);
   }, 10000);
 
   // The module never even started: bad vendor/ copy, or file:// with no internet
@@ -13086,13 +13095,14 @@ window.TRENCHSTAR.restoreDesk=doc=>{
   syncCustomUI();
 };
 bloom.strength=Math.min(bloom.strength,.18);
-const connectedReady=import('./connected.js').then(({mountConnected})=>mountConnected(window.TRENCHSTAR)).catch(e=>console.error('Could not load connected desk',e));
-const walletStyles=document.createElement('link');walletStyles.rel='stylesheet';walletStyles.href='./wallets.css';document.head.append(walletStyles);
+const connectedReady=import('./connected.js').then(({mountConnected})=>mountConnected(window.TRENCHSTAR));
 Promise.all([connectedReady,import('./wallets.js')]).then(([, {mountWallets}])=>mountWallets({
   chains:CHAINS,rpc:rpcPublic,isTrading:()=>td.busy,review:()=>localTradeReview,
   refresh:()=>{syncWalletUI();tdRender();},disarm:tdDisarm,
   select:next=>{localTradingWallet=next;wallet.chainId=null;walletRevision++;tdDisarm();wallet.assets=[];wallet.usd=0;wallet.pnl24=0;wallet.pnlReal=null;syncWalletUI();tdRender();renderFills();refreshWallet();}
-})).catch(()=>{const note=document.createElement('p');note.textContent='Trading wallets could not load. Reload to access your vault. Your saved trading wallet will not use the account wallet instead.';document.getElementById('wlConnRow').before(note);});
+})).then(()=>boot.stage('interface',1)).catch(()=>{
+  boot.fail('DESK CONTROLS DID NOT LOAD', 'Reload Chartopia to try again. Your saved trading wallets have not been changed.');
+});
 </script>
 </body>
 </html>
