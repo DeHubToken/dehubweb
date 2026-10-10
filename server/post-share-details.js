@@ -37,7 +37,9 @@ export function publicProfileBadges(profile, progress, price, isNew = false) {
   if (!profile) return [];
   const badges = [];
   if (profile.hideBadgeAndBalance !== true) {
-    const name = getBadgeName(profile.badgeBalance, profile.username, {
+    const balance = profile.badgeBalance || (Array.isArray(profile.balanceData)
+      ? profile.balanceData.reduce((sum, row) => sum + number(row.walletBalance) + number(row.staked), 0) : 0);
+    const name = getBadgeName(balance, profile.username, {
       scale: badgeScaleForPrice(price), lock: parseBadgeLock(profile.badgeLock),
     });
     if (name) {
@@ -63,7 +65,8 @@ export async function loadPostShareDetails(data, { rows, price } = {}) {
     price?.().catch(() => null),
   ]);
   const profile = account?.status !== false ? account?.result : null;
-  const address = typeof profile?.address === 'string' && /^0x[\da-f]{40}$/i.test(profile.address) ? profile.address.toLowerCase() : '';
+  const rawAddress = profile?.address || profile?.wallet_address;
+  const address = typeof rawAddress === 'string' && /^0x[\da-f]{40}$/i.test(rawAddress) ? rawAddress.toLowerCase() : '';
   const [progressResponse, memberRows] = address ? await Promise.all([
     publicJson(`/live/creator/${address}/progress?collection=20`),
     rows?.(`new_members?select=joined_at&wallet_address=eq.${address}&joined_at=gte.${encodeURIComponent(new Date(Date.now() - 30 * 86400000).toISOString())}&limit=1`).catch(() => null),
@@ -72,7 +75,7 @@ export async function loadPostShareDetails(data, { rows, price } = {}) {
   const complete = !!account && !!pollResponse && (!address || (!!progressResponse && Array.isArray(memberRows)));
   return {
     ...data,
-    author: plainPostText(profile?.displayName) || data.author,
+    author: plainPostText(profile?.displayName || profile?.display_name) || data.author,
     badges: publicProfileBadges(profile, progress, tokenPrice?.prices?.DHB, !!memberRows?.length),
     poll: publicPollResult(pollResponse?.status !== false ? pollResponse?.result : null, data.tokenId),
     detailsComplete: complete,

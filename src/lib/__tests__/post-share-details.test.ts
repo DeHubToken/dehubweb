@@ -36,6 +36,7 @@ describe('profile badge eligibility and order', () => {
     expect(publicProfileBadges({ username: 'maldoteth', badgeBalance: 46707 }, null, .001)[0].name).toBe('Megalodon');
     expect(publicProfileBadges({ username: 'ma255', badgeBalance: 50000000 }, null, .001)[0].name).toBe('Megalodon');
     expect(publicProfileBadges({ username: 'holder', badgeBalance: 20000, badgeLock: { tier: 'Crocodile', requirement: 15000 } }, null, .001)[0].name).toBe('Crocodile');
+    expect(publicProfileBadges({ username: 'holder', balanceData: [{ walletBalance: 10000, staked: 15000 }] }, null, .001)[0].name).toBe('Ghost Lobster');
   });
   it('respects hidden balances and only draws an earned equipped streamer badge', () => {
     const profile = { username: 'maldoteth', badgeBalance: 50000000, hideBadgeAndBalance: true };
