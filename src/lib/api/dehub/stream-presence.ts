@@ -49,12 +49,7 @@ export interface StreamReactionBroadcast {
   reactionType: LiveReactionType;
   weight: number;
   isOwnReaction: boolean;
-  /**
-   * Who reacted, lower-cased, when the gateway resolved them. A viewer plays
-   * their own thumb the moment they tap it — the same beat a tipper gets their
-   * celebration on — so the echo of their own reaction has to be droppable or
-   * they see it twice.
-   */
+  /** Who reacted, lower-cased, when the gateway resolved them. */
   address: string | null;
 }
 
@@ -84,7 +79,7 @@ export function watchStreamReactions(streamId: string, onReaction: (event: Strea
   } };
 }
 
-/** The server echo is the single source of animation, including for the sender. */
+/** Broadcast a tap; the sender already plays its animation optimistically. */
 export function sendStreamReaction(streamId: string, value: unknown): void {
   const reactionType = liveReactionType(value);
   if (!reactionType || !getAuthToken()) return;
