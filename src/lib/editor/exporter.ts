@@ -153,14 +153,14 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
         if (m.mimeType === "image/gif") await prepareGifImage(img, m.url, signal);
         checkAbort(signal);
         await new Promise<void>((resolve, reject) => {
-        const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
-        const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
-        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
-        cancelLoads.add(cancel);
-        img.onload = () => finish();
-        img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
-        img.src = m.url;
-        if (signal?.aborted) cancel();
+          const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
+          const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
+          const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+          cancelLoads.add(cancel);
+          img.onload = () => finish();
+          img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
+          img.src = m.url;
+          if (signal?.aborted) cancel();
         });
       })());
     } else if (m.kind === "audio" && withAudio) {
