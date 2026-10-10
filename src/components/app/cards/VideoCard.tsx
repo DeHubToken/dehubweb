@@ -2421,7 +2421,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             data-video-controls
             data-video-back
             data-video-bare
-            aria-label={t('common.back', 'Back')}
+            aria-label={t('common.goBack')}
             className="absolute left-2 top-1.5 z-20 h-8 w-8 text-white flex items-center justify-center"
             onClick={(event) => { event.stopPropagation(); (onBack ?? stage?.onBack)?.(); }}
           >
@@ -2908,10 +2908,10 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     <Zap className="h-5 w-5" />
                   </button>
                 )}
-                <button type="button" aria-label="Ask AI about this video" className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}>
+                <button type="button" aria-label={t('postStage.askAI')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}>
                   <Sparkles className="h-5 w-5" />
                 </button>
-                <button type="button" aria-label="Post options" className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}>
+                <button type="button" aria-label={t('postStage.more')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}>
                   <MoreVertical className="h-5 w-5" />
                 </button>
               </div>
