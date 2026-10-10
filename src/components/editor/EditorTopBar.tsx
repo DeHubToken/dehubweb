@@ -1,3 +1,4 @@
+import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import { discardEditorRecovery } from '@/lib/editor/draftRecovery';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { useEditorStore } from "@/store/editorStore";
@@ -18,6 +19,7 @@ import { LiveProjectSession } from "./LiveProjectSession";
 import { CloudProjectsDialog } from "./CloudProjectsDialog";
 
 export function EditorTopBar() {
+  const draftFocus = useEditorDraftFocus("title", false);
   const recoveryScope = useAccountDraftKey('editor:recovery') ?? 'guest|editor:recovery';
   const navigate = useNavigate();
   const title = useEditorStore((s) => s.projectTitle);
@@ -54,7 +56,7 @@ export function EditorTopBar() {
 
   return (
     <>
-    <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/60 px-4 backdrop-blur-[24px]">
+    <header {...draftFocus.props} className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/60 px-4 backdrop-blur-[24px]">
       <div className="flex items-center gap-2">
         <Popover key={surfaceEpoch} open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
