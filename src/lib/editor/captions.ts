@@ -1,3 +1,4 @@
+import { projectTask } from "./projectTask";
 /**
  * Auto captions, on the user's device.
  *
@@ -109,15 +110,19 @@ export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionPr
   const mc = clip as MediaClip;
   const media = s.media.find((m) => m.id === mc.mediaId);
   if (!media) return 0;
+  const task = projectTask(s.holdEdits());
+  try {
   const words = await transcribeClipWords(mc, media.url, onProgress);
+  if (!task!.isCurrent()) return 0;
   const result = captionLayers(mc, words, () => nanoid(), style);
   if (!result.clips.length) return 0;
   loadGoogleFont("Montserrat", [800]);
   const store = useEditorStore.getState();
   // The clip may have changed while transcription was running.
-  if (store.clips.find((c) => c.id === clipId) !== clip) return 0;
+  if (store.projectId !== s.projectId || store.clips.find((c) => c.id === clipId) !== clip) return 0;
   await store.runAsOneStep(() => {
     useEditorStore.setState((state) => ({ tracks: [...state.tracks, result.track], clips: [...state.clips, ...result.clips] }));
   });
   return result.clips.length;
+  } finally { task!.release(); }
 }

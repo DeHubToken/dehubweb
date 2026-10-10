@@ -23,6 +23,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
 
 export default function EditorPage() {
+  useEffect(() => () => useEditorStore.getState().cancelPendingEdits(), []);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
   const inspectorOpen = useEditorUiStore((s) => s.inspectorOpen);
   const setInspectorOpen = useEditorUiStore((s) => s.setInspectorOpen);

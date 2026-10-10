@@ -1,3 +1,4 @@
+import { projectTask } from "./projectTask";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { getMedia } from "./mediaStore";
@@ -9,15 +10,18 @@ export async function applyAudioTool(clipId: string, mode: AudioToolMode, ctx: I
   const before = useEditorStore.getState();
   const clip = before.clips.find(c => c.id === clipId);
   if (!clip || clip.locked || (clip.kind !== "audio" && clip.kind !== "video")) return false;
+  const task = projectTask(before.holdEdits());
+  try {
   const source = await getMedia(clip.mediaId);
+  if (!task!.isCurrent()) return false;
   if (!source) throw new Error("sound unavailable");
   const result = await processClipSound(source.blob, clip, mode, signal, onProgress);
-  if (signal?.aborted) return false;
+  if (!task!.isCurrent() || signal?.aborted) return false;
   const current = useEditorStore.getState();
   if (current.projectId !== before.projectId || current.clips.find(c => c.id === clip.id) !== clip) return false;
   const file = new File([result.wav], source.name.replace(/\.[^.]+$/, "") + "-" + mode + ".wav", { type: "audio/wav" });
   const mediaId = await importOneFile(file, { ...ctx, provenance: source.provenance });
-  if (!mediaId || signal?.aborted) return false;
+  if (!task!.isCurrent() || !mediaId || signal?.aborted) return false;
   const store = useEditorStore.getState();
   if (store.projectId !== before.projectId || store.clips.find(c => c.id === clip.id) !== clip) return false;
   const layers = audioToolLayers(clip, mediaId, () => nanoid(10), store.tracks.find(track => track.id === clip.trackId));
@@ -28,4 +32,5 @@ export async function applyAudioTool(clipId: string, mode: AudioToolMode, ctx: I
     }));
   });
   return true;
+  } finally { task!.release(); }
 }
