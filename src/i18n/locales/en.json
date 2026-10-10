@@ -7271,6 +7271,13 @@
       "retryRecovery": "Retry recovery",
       "personalCopy": "Save a personal copy",
       "privateHint": "Presence alone shares no edits. Share edits live uploads new sources privately. Save to cloud keeps a permanent version."
+    },
+    "assembly": {
+      "matchConsent": "Match clips and photos to my prompt",
+      "matchScenes": "Find matching scenes",
+      "noMatch": "No matching scenes found. Try a different topic or selection.",
+      "matchLimit": "Choose up to 10 clips or photos. Videos must be between one second and 10 minutes long.",
+      "matchDuration": "Matching footage is shorter than the requested video. Shorten the duration or choose more media."
     }
   },
   "jungleMood": {

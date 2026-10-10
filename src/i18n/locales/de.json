@@ -6979,6 +6979,13 @@
       "retryRecovery": "Wiederherstellung erneut versuchen",
       "personalCopy": "Persönliche Kopie speichern",
       "privateHint": "Beim Beitreten werden keine Änderungen hochgeladen. Live-Teilen lädt neue private Quellen hoch; Speichern erstellt eine dauerhafte Version."
+    },
+    "assembly": {
+      "matchConsent": "Clips und Fotos passend zu meiner Anfrage auswählen",
+      "matchScenes": "Passende Szenen finden",
+      "noMatch": "Keine passenden Szenen gefunden. Versuche ein anderes Thema oder eine andere Auswahl.",
+      "matchLimit": "Wähle bis zu 10 Clips oder Fotos. Videos müssen zwischen einer Sekunde und 10 Minuten lang sein.",
+      "matchDuration": "Die passenden Aufnahmen sind kürzer als das gewünschte Video. Verkürze die Dauer oder wähle weitere Medien."
     }
   },
   "jungleMood": {
