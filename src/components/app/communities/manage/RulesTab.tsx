@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * Rules tab
  * =========
@@ -53,11 +54,11 @@ export function RulesTab({ community, membership }: RulesTabProps) {
   // progress just because the array identity changed.
   const savedKey = JSON.stringify(clean(savedRules));
 
-  const [rules, setRules] = useState<string[]>(() => clean(savedRules));
+  const [rules, setRules] = useDraftState<string[]>(`form:src/components/app/communities/manage/RulesTab.tsx:rules:${community.id}`, () => clean(savedRules));
 
   useEffect(() => {
-    setRules(JSON.parse(savedKey) as string[]);
-  }, [savedKey]);
+    setRules.initialize(JSON.parse(savedKey) as string[]);
+  }, [savedKey, setRules]);
 
   const canEdit = abilities.can('change_info');
   const cleaned = clean(rules);
@@ -87,8 +88,8 @@ export function RulesTab({ community, membership }: RulesTabProps) {
     updateMutation.mutate(
       { communityId: community.id, patch: { rules: cleaned } },
       {
-        onSuccess: () =>
-          toast.success(t('communities.manage.rulesUpdated', { defaultValue: 'Rules updated' })),
+        onSuccess: () => { setRules.complete(rules, cleaned);
+          toast.success(t('communities.manage.rulesUpdated', { defaultValue: 'Rules updated' })); },
       },
     );
   };

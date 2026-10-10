@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MessageSquare, RefreshCw, Users } from "lucide-react";
@@ -8,11 +9,14 @@ import type { useCloudProjects } from "@/lib/editor/useCloudProjects";
 import { projectReviewIsErased, projectReviewTime, type ProjectReviewComment, type ProjectReviewRole } from "@/lib/editor/cloudProjectReview";
 
 export function ProjectReviewPanel({ cloud, wallet, onOpenCopy, onEditShared }: { cloud: ReturnType<typeof useCloudProjects>; wallet: string; onOpenCopy(revision?: number, seconds?: number): void; onEditShared(): void }) {
-  const {t}=useTranslation();
-  const [body,setBody]=useState(""), [time,setTime]=useState("0"), [assignee,setAssignee]=useState("");
-  const [recipient,setRecipient]=useState(""), [role,setRole]=useState<ProjectReviewRole>("commenter"), [reply,setReply]=useState<ProjectReviewComment|null>(null);
-  const review=cloud.review;
-  useEffect(()=>{setBody("");setTime("0");setAssignee("");setRecipient("");setReply(null);},[review?.ownerWallet,review?.projectId,review?.revision]);
+  const {t}=useTranslation(), review=cloud.review;
+  const scope = review ? `review:${review.ownerWallet}:${review.projectId}:${review.revision}` : null;
+  const [reply,setReply]=useDraftState<ProjectReviewComment|null>(scope ? `${scope}:reply` : null,null);
+  const [body,setBody]=useDraftState(scope ? `${scope}:${reply?.id ?? 'root'}:body` : null,"");
+  const [time,setTime]=useDraftState(scope ? `${scope}:time` : null,"0");
+  const [assignee,setAssignee]=useDraftState(scope ? `${scope}:assignee` : null,"");
+  const [recipient,setRecipient]=useDraftState(scope ? `${scope}:recipient` : null,"");
+  const [role,setRole]=useState<ProjectReviewRole>("commenter");
   if (!review) return null;
   const owner=review.ownerWallet===wallet, canComment=review.role!=="viewer", roots=cloud.comments.filter(comment=>!comment.parentId);
   const short=(value:string)=>`${value.slice(0,6)}…${value.slice(-4)}`;
@@ -28,7 +32,7 @@ export function ProjectReviewPanel({ cloud, wallet, onOpenCopy, onEditShared }: 
       <Input value={recipient} onChange={event=>setRecipient(event.target.value)} aria-label="Reviewer wallet address" placeholder="DeHub wallet address · 0x…" disabled={pending} className="border-white/15 bg-white/5 text-white placeholder:text-white/50" />
       <div className="flex gap-2"><Button size="sm" variant={role==="viewer" ? "secondary" : "outline"} aria-pressed={role==="viewer"} disabled={pending} onClick={()=>setRole("viewer")}>Can view</Button><Button size="sm" variant={role==="commenter" ? "secondary" : "outline"} aria-pressed={role==="commenter"} disabled={pending} onClick={()=>setRole("commenter")}>Can comment</Button>
         <Button size="sm" variant={role==="editor" ? "secondary" : "outline"} aria-pressed={role==="editor"} disabled={pending} onClick={()=>setRole("editor")}>Can edit</Button>
-        <Button size="sm" disabled={pending || !recipient.trim()} onClick={()=>{void cloud.shareReview(recipient,role,()=>setRecipient(""));}}>Invite</Button></div>
+        <Button size="sm" disabled={pending || !recipient.trim()} onClick={()=>{void cloud.shareReview(recipient,role,()=>setRecipient.complete(recipient,""));}}>Invite</Button></div>
       {cloud.members.filter(member=>!member.revoked).map(member=><div key={member.memberWallet} className="flex items-center justify-between gap-2 text-xs"><span className="min-w-0 truncate" title={member.memberWallet}>{short(member.memberWallet)} · {member.role==="editor" ? "Can edit" : member.role==="commenter" ? "Can comment" : "Can view"} · {member.accepted ? "Accepted" : "Pending"}</span><Button size="sm" variant="ghost" disabled={pending} aria-label={`Revoke ${member.memberWallet}`} onClick={()=>{void cloud.shareReview(member.memberWallet,"none");}}>Revoke</Button></div>)}
     </div>}
     <h4 className="flex items-center gap-2 text-sm"><MessageSquare className="h-4 w-4" />Comments</h4>
@@ -45,7 +49,7 @@ export function ProjectReviewPanel({ cloud, wallet, onOpenCopy, onEditShared }: 
       <label className="block text-xs text-white/60">Time in seconds<Input type="number" min="0" max="86400" step="0.001" value={reply ? String(reply.atSeconds) : time} onChange={event=>setTime(event.target.value)} disabled={pending || !!reply} aria-label="Comment time in seconds" className="mt-1 border-white/15 bg-white/5 text-white" /></label>
       <Textarea value={body} onChange={event=>setBody(event.target.value)} disabled={pending} aria-label="Project review comment" placeholder="Feedback on this saved frame…" className="border-white/15 bg-white/5 text-white placeholder:text-white/50" />
       {!reply && <Input value={assignee} onChange={event=>setAssignee(event.target.value)} disabled={pending} aria-label="Assign comment to wallet, optional" placeholder="Assign to wallet · optional" className="border-white/15 bg-white/5 text-white placeholder:text-white/50" />}
-      <Button size="sm" disabled={pending || !body.trim() || (!reply && !time.trim())} onClick={()=>{void cloud.addReviewComment({body,revision:reply?.revision ?? review.revision,atSeconds:reply?.atSeconds ?? Number(time),clipId:reply?.clipId,parentId:reply?.id,assigneeWallet:reply ? null : assignee || null},()=>{setBody("");setReply(null);setAssignee("");});}}>Send comment</Button>
+      <Button size="sm" disabled={pending || !body.trim() || (!reply && !time.trim())} onClick={()=>{void cloud.addReviewComment({body,revision:reply?.revision ?? review.revision,atSeconds:reply?.atSeconds ?? Number(time),clipId:reply?.clipId,parentId:reply?.id,assigneeWallet:reply ? null : assignee || null},()=>{if(setBody.complete(body,"")){setReply(null);setAssignee.complete(assignee,"");}});}}>Send comment</Button>
     </div>}
   </div>;
 }

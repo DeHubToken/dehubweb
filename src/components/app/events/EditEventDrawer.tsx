@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useTranslation } from 'react-i18next';
 /**
  * EditEventDrawer
@@ -30,28 +31,28 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
   const { t } = useTranslation();
   const updateEvent = useUpdateEvent();
 
-  const [title, setTitle] = useState(event.title);
-  const [description, setDescription] = useState(event.description || '');
-  const [location, setLocation] = useState(event.location || '');
+  const [title, setTitle] = useDraftState(`form:src/components/app/events/EditEventDrawer.tsx:title:${event.id}`, event.title);
+  const [description, setDescription] = useDraftState(`form:src/components/app/events/EditEventDrawer.tsx:description:${event.id}`, event.description || '');
+  const [location, setLocation] = useDraftState(`form:src/components/app/events/EditEventDrawer.tsx:location:${event.id}`, event.location || '');
   const [startDate, setStartDate] = useState<Date>(new Date(event.starts_at));
-  const [startTime, setStartTime] = useState(format(new Date(event.starts_at), 'HH:mm'));
+  const [startTime, setStartTime] = useDraftState(`form:src/components/app/events/EditEventDrawer.tsx:startTime:${event.id}`, format(new Date(event.starts_at), 'HH:mm'));
   const [endDate, setEndDate] = useState<Date | undefined>(
     event.ends_at ? new Date(event.ends_at) : undefined
   );
-  const [endTime, setEndTime] = useState(
+  const [endTime, setEndTime] = useDraftState(`form:src/components/app/events/EditEventDrawer.tsx:endTime:${event.id}`, 
     event.ends_at ? format(new Date(event.ends_at), 'HH:mm') : '21:00'
   );
 
   // Reset form when event changes
   useEffect(() => {
-    setTitle(event.title);
-    setDescription(event.description || '');
-    setLocation(event.location || '');
+    setTitle.initialize(event.title);
+    setDescription.initialize(event.description || '');
+    setLocation.initialize(event.location || '');
     setStartDate(new Date(event.starts_at));
-    setStartTime(format(new Date(event.starts_at), 'HH:mm'));
+    setStartTime.initialize(format(new Date(event.starts_at), 'HH:mm'));
     setEndDate(event.ends_at ? new Date(event.ends_at) : undefined);
-    setEndTime(event.ends_at ? format(new Date(event.ends_at), 'HH:mm') : '21:00');
-  }, [event]);
+    setEndTime.initialize(event.ends_at ? format(new Date(event.ends_at), 'HH:mm') : '21:00');
+  }, [event, setDescription, setEndTime, setLocation, setStartTime, setTitle]);
 
   const handleSubmit = () => {
     if (!title.trim()) return;
@@ -80,7 +81,7 @@ export function EditEventDrawer({ event, open, onOpenChange }: EditEventDrawerPr
         },
       },
       {
-        onSuccess: () => onOpenChange(false),
+        onSuccess: () => { setTitle.complete(title, title); setDescription.complete(description, description); setLocation.complete(location, location); setStartTime.complete(startTime, startTime); setEndTime.complete(endTime, endTime); onOpenChange(false); },
       }
     );
   };

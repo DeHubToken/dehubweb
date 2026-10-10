@@ -1,3 +1,5 @@
+import { useAccountDraftKey, useDraftState } from '@/hooks/use-draft-state';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useVideoDownload } from "@/hooks/use-video-download";
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
@@ -368,9 +370,19 @@ function describeTools(tools: string[]): string {
   return tools.length > 1 ? `${label} (+${tools.length - 1} more)…` : `${label}…`;
 }
 
-export default function AssistantPage() {
+function AssistantPageForAccount() {
+  // Conversation persistence hook
+  const { 
+    conversationId, draftScope, 
+    isSaving, 
+    queueMessage, 
+    startNewConversation, 
+    loadConversation 
+  } = useAIConversation();
+  
+
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useDraftState(`assistant:${draftScope}:input`, '');
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const actionBubbleClass = cn(
@@ -403,14 +415,14 @@ export default function AssistantPage() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('skill');
     if (slug) {
-      setInput((prev) => prev || `/${slug} `);
+      setInput.initialize((prev) => prev || `/${slug} `);
       // clean URL so it doesn't re-trigger
       const url = new URL(window.location.href);
       url.searchParams.delete('skill');
       window.history.replaceState({}, '', url.toString());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setInput]);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
@@ -489,13 +501,13 @@ export default function AssistantPage() {
           fileInputRef.current?.click();
           break;
         case 'image':
-          setInput(prefill || t('assistant.generateImageOf'));
+          setInput.initialize(prefill || t('assistant.generateImageOf'));
           inputRef.current?.focus();
           setInputGlow(true);
           setTimeout(() => setInputGlow(false), 2000);
           break;
         case 'video':
-          setInput(prefill || t('assistant.generateVideoOf'));
+          setInput.initialize(prefill || t('assistant.generateVideoOf'));
           inputRef.current?.focus();
           setInputGlow(true);
           setTimeout(() => setInputGlow(false), 2000);
@@ -504,7 +516,7 @@ export default function AssistantPage() {
         case 'chat':
         default:
           if (prefill) {
-            setInput(prefill);
+            setInput.initialize(prefill);
             setInputGlow(true);
             setTimeout(() => setInputGlow(false), 2000);
           }
@@ -516,7 +528,7 @@ export default function AssistantPage() {
     window.addEventListener('hashchange', applyPreset);
     return () => window.removeEventListener('hashchange', applyPreset);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setInput]);
   // AI Tools state
   const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
   const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
@@ -651,15 +663,22 @@ export default function AssistantPage() {
   const { language: userLanguage } = useUserLanguage();
   const { t } = useI18n();
   
-  // Conversation persistence hook
-  const { 
-    conversationId, 
-    isSaving, 
-    queueMessage, 
-    startNewConversation, 
-    loadConversation 
-  } = useAIConversation();
-  
+  const initialConversation = useRef(conversationId);
+  const visibleConversation = useRef(conversationId);
+  visibleConversation.current = conversationId;
+  useEffect(() => {
+    const id = initialConversation.current;
+    if (!id || !walletAddress) return;
+    let cancelled = false;
+    void withWalletHeader(supabase.from('ai_messages').select('*').eq('conversation_id', id).order('created_at', { ascending: true }), walletAddress)
+      .then(({ data, error }) => {
+        if (cancelled || error || visibleConversation.current !== id) return;
+        setMessages((data || []).map(message => ({ id: message.id, role: message.role as 'user' | 'assistant', content: message.content,
+          imageUrl: message.image_url || undefined, videoUrl: message.video_url || undefined, attachedImage: message.attached_image || undefined })));
+      });
+    return () => { cancelled = true; };
+  }, [walletAddress]);
+
   // User context for AI assistant personalization
   const userContext = useAssistantUserContext();
 
@@ -798,7 +817,6 @@ export default function AssistantPage() {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
     setAttachedImage(null);
     setIsLoading(true);
 
@@ -873,7 +891,6 @@ export default function AssistantPage() {
 
     setMessages(prev => [...prev, userMessage]);
     queueMessage(userMessage);
-    setInput('');
     setIsLoading(true);
 
     try {
@@ -1613,8 +1630,6 @@ export default function AssistantPage() {
     
     const currentInput = effectiveInput;
     const currentAttachedImage = attachedImage || skillSourceImage || characterSourceImage;
-    setInput('');
-    setAttachedImage(null);
     setIsLoading(true);
     
     // Reset textarea height to default
@@ -1638,6 +1653,7 @@ export default function AssistantPage() {
         };
         setMessages(prev => [...prev, assistantMessage]);
         queueMessage(assistantMessage);
+        if (!overrideMessage && setInput.complete(input, '')) setAttachedImage(null);
         setIsLoading(false);
         
         if (alwaysSpeakReplies) {
@@ -1778,6 +1794,7 @@ export default function AssistantPage() {
             }
           },
           onDone: () => {
+            if (!overrideMessage && setInput.complete(input, '')) setAttachedImage(null);
             setActiveTools([]);
             // Save to conversation history
             const finalMessage: Message = {
@@ -2035,8 +2052,7 @@ export default function AssistantPage() {
           onClick={() => {
             startNewConversation();
             setMessages([]);
-            setInput('');
-            setAttachedImage(null);
+                    setAttachedImage(null);
           }}
           className="flex items-center gap-3 group"
         >
@@ -2050,8 +2066,7 @@ export default function AssistantPage() {
             onClick={() => {
               startNewConversation();
               setMessages([]);
-              setInput('');
-              setAttachedImage(null);
+                        setAttachedImage(null);
             }}
             className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
             title="New chat"
@@ -3478,4 +3493,9 @@ export default function AssistantPage() {
       </AnimatePresence>
     </div>
   );
+}
+
+export default function AssistantPage() {
+  const account = useAccountDraftKey('assistant');
+  return <AssistantPageForAccount key={account ?? 'guest'} />;
 }

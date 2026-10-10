@@ -1,3 +1,4 @@
+import { useDraftConversation } from './use-draft-conversation';
 /**
  * useAIConversation Hook
  * =======================
@@ -20,7 +21,8 @@ interface Message {
 }
 
 export function useAIConversation() {
-  const [conversationId, setConversationId] = useState<string | null>(null);
+  const draftSession = useDraftConversation();
+  const conversationId = draftSession.id;
   const [isSaving, setIsSaving] = useState(false);
   const { walletAddress, isAuthenticated } = useAuth();
   const saveQueueRef = useRef<Message[]>([]);
@@ -63,7 +65,7 @@ export function useAIConversation() {
       }
       
       const newConversationId = data.id;
-      setConversationId(newConversationId);
+      draftSession.assign(newConversationId);
       titleGeneratedRef.current = true;
       console.log('[AI Conversation] Created new conversation:', newConversationId);
       return newConversationId;
@@ -71,7 +73,7 @@ export function useAIConversation() {
       console.error('[AI Conversation] Error creating conversation:', error);
       return null;
     }
-  }, [walletAddress, isAuthenticated]);
+  }, [walletAddress, isAuthenticated, draftSession.assign]);
 
   // Upload a data: URL to storage and return its public URL. Non-data URLs pass through.
   const persistMediaUrl = useCallback(async (
@@ -194,19 +196,20 @@ export function useAIConversation() {
 
   // Start a new conversation (clears current)
   const startNewConversation = useCallback(() => {
-    setConversationId(null);
+    draftSession.start();
     titleGeneratedRef.current = false;
     saveQueueRef.current = [];
-  }, []);
+  }, [draftSession.start]);
 
   // Load an existing conversation
   const loadConversation = useCallback((id: string) => {
-    setConversationId(id);
+    draftSession.select(id);
     titleGeneratedRef.current = true;
     saveQueueRef.current = [];
-  }, []);
+  }, [draftSession.select]);
 
   return {
+    draftScope: draftSession.draft,
     conversationId,
     isSaving,
     queueMessage,

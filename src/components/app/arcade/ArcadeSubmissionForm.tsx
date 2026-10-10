@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useState, type FormEvent } from 'react';
 import { Loader2, X } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,6 +8,8 @@ interface Props {
 }
 
 export function ArcadeSubmissionForm({ onClose }: Props) {
+  const emptyDraft = { title: '', email: '', playable_url: '', source_url: '', description: '' };
+  const [draft, setDraft] = useDraftState('arcade:submission', emptyDraft);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -29,6 +32,7 @@ export function ArcadeSubmissionForm({ onClose }: Props) {
         rights_confirmed: data.get('rights_confirmed') === 'on',
       });
       if (submitError) throw submitError;
+      setDraft.complete(draft, emptyDraft);
       setSubmitted(true);
     } catch {
       setError('Could not send your game. Please check the links and try again.');
@@ -57,19 +61,19 @@ export function ArcadeSubmissionForm({ onClose }: Props) {
         ) : (
           <form onSubmit={submit} className="space-y-4">
             <label className="block space-y-1 text-sm text-zinc-300">Game title
-              <input name="title" required minLength={2} maxLength={100} className={field} />
+              <input name="title" value={draft.title} onChange={event => setDraft(previous => ({ ...previous, title: event.target.value }))} required minLength={2} maxLength={100} className={field} />
             </label>
             <label className="block space-y-1 text-sm text-zinc-300">Contact email
-              <input name="email" type="email" required maxLength={254} className={field} />
+              <input name="email" value={draft.email} onChange={event => setDraft(previous => ({ ...previous, email: event.target.value }))} type="email" required maxLength={254} className={field} />
             </label>
             <label className="block space-y-1 text-sm text-zinc-300">Playable game URL
-              <input name="playable_url" type="url" required pattern="https://.*" placeholder="https://" className={field} />
+              <input name="playable_url" value={draft.playable_url} onChange={event => setDraft(previous => ({ ...previous, playable_url: event.target.value }))} type="url" required pattern="https://.*" placeholder="https://" className={field} />
             </label>
             <label className="block space-y-1 text-sm text-zinc-300">Source or project URL <span className="text-zinc-500">(optional)</span>
-              <input name="source_url" type="url" pattern="https://.*" placeholder="https://" className={field} />
+              <input name="source_url" value={draft.source_url} onChange={event => setDraft(previous => ({ ...previous, source_url: event.target.value }))} type="url" pattern="https://.*" placeholder="https://" className={field} />
             </label>
             <label className="block space-y-1 text-sm text-zinc-300">About the game
-              <textarea name="description" required minLength={20} maxLength={2000} rows={4} placeholder="What do players do? What makes your game a fit for DeHub?" className={field} />
+              <textarea name="description" value={draft.description} onChange={event => setDraft(previous => ({ ...previous, description: event.target.value }))} required minLength={20} maxLength={2000} rows={4} placeholder="What do players do? What makes your game a fit for DeHub?" className={field} />
             </label>
             <label className="flex items-start gap-2 text-sm text-zinc-300"><input name="mobile_support" type="checkbox" className="mt-1" />It plays on phones with touch controls</label>
             <label className="flex items-start gap-2 text-sm text-zinc-300"><input name="rights_confirmed" type="checkbox" required className="mt-1" />I own this game or have permission to submit it for review</label>

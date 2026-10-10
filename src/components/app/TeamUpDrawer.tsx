@@ -90,7 +90,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
   const [search, setSearch] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:search", '');
   // The private team whose request note is being written, if any.
   const [requesting, setRequesting] = useState<string | null>(null);
-  const [requestMessage, setRequestMessage] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:requestMessage", '');
+  const [requestMessage, setRequestMessage] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:requestMessage", '', requesting);
   const [editing, setEditing] = useState(false);
   const [editDescription, setEditDescription] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:editDescription", '');
   const [editPrivate, setEditPrivate] = useState(false);
@@ -478,7 +478,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
                               size="sm"
                               variant="outline"
                               disabled={busy || composing}
-                              onClick={() => { setRequesting(candidate.id); setRequestMessage(''); }}
+                              onClick={() => { setRequesting(candidate.id); }}
                             >
                               {t('superpowers.teamUp.requestToJoin')}
                             </Button>

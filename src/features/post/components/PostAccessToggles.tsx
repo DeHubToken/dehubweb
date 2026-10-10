@@ -458,7 +458,7 @@ export function PostAccessToggles({
             {selectedCategoriesArray.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pl-6">
               {selectedCategoriesArray.length < MAX_CATEGORIES && (
-                <button type="button" onClick={() => { setCategorySearch(''); setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
+                <button type="button" onClick={() => { setCategoryDrawerOpen(true); }} className="text-xs text-white/50 hover:text-white">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               )}
