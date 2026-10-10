@@ -1,3 +1,4 @@
+import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
 import { stepTimelineFrame } from "@/lib/editor/frameStep";
 import { createVideoMattePageCache, videoMatteFramesForOps } from "@/lib/editor/videoMattePageCache";
 import { loadVideoMatteImage } from "@/lib/editor/videoMatteImages";
@@ -505,10 +506,12 @@ export function Compositor() {
     setMarqueeState(m);
   }, []);
   const gestureRef = useRef<Gesture | null>(null);
+  const gestureLease = useRef<ProjectEditLease | null>(null);
+  const strokeCleanup = useRef<(() => void) | null>(null);
 
   const onGestureMove = useCallback((e: PointerEvent) => {
     const g = gestureRef.current;
-    if (!g) return;
+    if (!g || !gestureLease.current?.isCurrent()) return;
     const s = useEditorStore.getState();
     const W = s.settings.width;
     const H = s.settings.height;
@@ -599,7 +602,7 @@ export function Compositor() {
 
   const onGestureEnd = useCallback(() => {
     const g = gestureRef.current;
-    if (g?.mode === "marquee") {
+    if (g?.mode === "marquee" && gestureLease.current?.isCurrent()) {
       const m = marqueeRef.current;
       if (m && (m.w > 4 || m.h > 4)) {
         const hits = layersAt()
@@ -614,6 +617,7 @@ export function Compositor() {
       setMarquee(null);
     }
     gestureRef.current = null;
+    gestureLease.current?.release(); gestureLease.current = null;
     setGuides({ v: [], h: [] });
     window.removeEventListener("pointermove", onGestureMove);
     window.removeEventListener("pointerup", onGestureEnd);
@@ -621,16 +625,19 @@ export function Compositor() {
   }, [onGestureMove, layersAt, setMarquee]);
 
   const startGesture = useCallback((g: Gesture) => {
-    useEditorStore.getState().beginGesture();
+    onGestureEnd();
+    gestureLease.current = useEditorStore.getState().beginGesture();
     gestureRef.current = g;
     window.addEventListener("pointermove", onGestureMove);
     window.addEventListener("pointerup", onGestureEnd);
     window.addEventListener("pointercancel", onGestureEnd);
   }, [onGestureMove, onGestureEnd]);
 
-  useEffect(() => () => onGestureEnd(), [onGestureEnd]);
+  useEffect(() => () => { onGestureEnd(); strokeCleanup.current?.(); }, [onGestureEnd]);
 
   const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: { color: string; width: number }) => {
+    strokeCleanup.current?.();
+    const lease = useEditorStore.getState().holdEdits();
     const pts: [number, number][] = [];
     const push = (clientX: number, clientY: number) => {
       const p = toCanvas(clientX, clientY);
@@ -641,14 +648,21 @@ export function Compositor() {
     push(e.clientX, e.clientY);
     setStroke([...pts]);
     const onMove = (ev: PointerEvent) => {
+      if (!lease.isCurrent()) return;
       push(ev.clientX, ev.clientY);
       setStroke([...pts]);
     };
-    const onUp = () => {
+    const cleanup = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);
       setStroke(null);
+      strokeCleanup.current = null;
+    };
+    const onUp = () => {
+      cleanup();
+      if (!lease.isCurrent()) return;
+      try {
       if (!pts.length) return;
       const s = useEditorStore.getState();
       const W = s.settings.width;
@@ -671,7 +685,9 @@ export function Compositor() {
       });
       // Keep drawing: no selection box getting in the way of the next stroke.
       useEditorStore.getState().selectClip(null);
+      } finally { lease.release(); }
     };
+    strokeCleanup.current = () => { cleanup(); lease.release(); };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
@@ -689,6 +705,8 @@ export function Compositor() {
     if (!hit) {
       // Drag on empty canvas draws a selection box; a plain click clears.
       if (!e.shiftKey) selectClip(null);
+      onGestureEnd();
+      gestureLease.current = useEditorStore.getState().holdEdits();
       gestureRef.current = { mode: "marquee", x0: p.x, y0: p.y, additive: e.shiftKey };
       window.addEventListener("pointermove", onGestureMove);
       window.addEventListener("pointerup", onGestureEnd);
