@@ -4,6 +4,7 @@ import { POST_CARD_TTL, POST_CARD_VERSION, textPostCardData, renderPostCardSvg }
 
 let initialized;
 let assets;
+const RENDER_REVISION = 2;
 const bytesToUri = (bytes, type) => {
   let binary = '';
   for (let i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
@@ -22,7 +23,14 @@ async function loadAssets(env) {
 async function loadAvatar(url) {
   if (!url) return '';
   try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(3000), redirect: 'error' });
+    const source = new URL(url);
+    if (source.origin !== 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com' || !source.pathname.startsWith('/avatars/')) return '';
+    // Read the public object directly: the CDN's browser challenge can reject
+    // a server-side request even though the same avatar loads in the app.
+    source.hostname = 'dehubcdn.ams3.digitaloceanspaces.com';
+    // Workers supports manual/follow, not redirect:error. Reject redirects
+    // through response.ok so an avatar cannot move the request to another host.
+    const response = await fetch(source.href, { signal: AbortSignal.timeout(3000), redirect: 'manual' });
     if (!response.ok || Number(response.headers.get('Content-Length')) > 1_000_000) return '';
     const bytes = new Uint8Array(await response.arrayBuffer());
     if (bytes.length > 1_000_000) return '';
@@ -42,7 +50,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
     if (!record) return new Response('Post unavailable', { status: 404, headers });
     const data = textPostCardData(record);
     if (!data || data.tokenId !== tokenId) return new Response('No public text preview', { status: 404, headers });
-    const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(data)));
+    const hash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify({ revision: RENDER_REVISION, data })));
     const fingerprint = Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, '0')).join('');
     const key = new Request(`https://dehub.io/_og/post/${POST_CARD_VERSION}/${tokenId}.png?data=${fingerprint}`);
     const cache = typeof caches !== 'undefined' ? caches.default : undefined;
@@ -60,6 +68,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
       ...headers, 'Content-Type': 'image/png', 'Cache-Control': `public, max-age=60, s-maxage=${POST_CARD_TTL}`,
       'ETag': `"${POST_CARD_VERSION}-${fingerprint}"`, 'X-DeHub-Share-Card': POST_CARD_VERSION,
       'X-DeHub-Post-Counts': `${data.likes},${data.comments},${data.views}`,
+      'X-DeHub-Post-Avatar': avatar ? 'image' : 'initials',
     } });
     if (cache) ctx.waitUntil(cache.put(key, response.clone()).catch(() => {}));
     return request.method === 'HEAD' ? new Response(null, response) : response;
