@@ -1,16 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-describe('automatic dub preference', () => {
+describe('opt-in dub preference', () => {
   beforeEach(() => { localStorage.clear(); vi.resetModules(); });
 
-  it('defaults to automatic dubbing and follows the auto-translate choice', async () => {
+  it('defaults to original audio independently of auto-translate', async () => {
     const { getDubPreference } = await import('@/hooks/dub-preference');
     const { setAutoTranslateEnabled } = await import('@/lib/auto-translate-setting');
-    expect(getDubPreference().on).toBe(true);
+    expect(getDubPreference().on).toBe(false);
     setAutoTranslateEnabled(false);
     expect(getDubPreference().on).toBe(false);
     setAutoTranslateEnabled(true);
-    expect(getDubPreference().on).toBe(true);
+    expect(getDubPreference().on).toBe(false);
+  });
+
+  it('preserves a saved explicit opt-in across reloads', async () => {
+    localStorage.setItem('video-dubs:on', '1');
+    expect((await import('@/hooks/dub-preference')).getDubPreference().on).toBe(true);
+  });
+
+  it('does not turn an invalid legacy value into consent', async () => {
+    localStorage.setItem('video-dubs:on', 'true');
+    expect((await import('@/hooks/dub-preference')).getDubPreference().on).toBe(false);
   });
 
   it('keeps an explicit off choice across reloads and auto-translate changes', async () => {
