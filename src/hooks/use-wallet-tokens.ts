@@ -155,7 +155,7 @@ export function useAllChainsTokens() {
     { name: 'Ethereum', query: ethQuery }, { name: 'Robinhood', query: robinhoodQuery },
     { name: 'Arc', query: arcQuery }, { name: 'Solana', query: solanaQuery },
   ];
-  const failedChains = chains.filter(({ query }) => query.isError).map(({ name }) => name);
+  const failedChains = chains.filter(({ query }) => query.isError || query.data?.some(token => token.balanceUnavailable)).map(({ name }) => name);
   const refetch = () => Promise.all(chains.filter(({ name }) => name !== 'Solana' || !!solanaAddress).map(({ query }) => query.refetch()));
   return { allTokens: isAuthenticated && walletAddress ? allTokens : [], isLoading, failedChains, refetch };
 }
