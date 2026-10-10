@@ -131,9 +131,22 @@ describe('arcade registry', () => {
     // of the scan rather than failing it.
     for (const file of sourceFiles()) {
       const where = file.slice(repo().length + 1);
-      for (const [, value] of readFileSync(file, 'utf8').matchAll(/\bsandbox="([^"]*)"/g)) {
+      const source = readFileSync(file, 'utf8');
+      for (const [, value] of source.matchAll(/\bsandbox="([^"]*)"/g)) {
         for (const token of value.split(/\s+/).filter(Boolean)) {
           expect(SANDBOX_FLAGS, `${where}: '${token}' is not a sandbox flag`).toContain(token);
+        }
+        // The authenticated studio is served from a different, fixed DeHub
+        // origin. Keeping that origin lets it call its own private API and
+        // authenticate postMessage without granting access to the app DOM.
+        if (file === repo('src/pages/app/MaboroshiPage.tsx')) {
+          expect(source).toContain("const ORIGIN = 'https://live.dehub.io';");
+          expect(source).toContain('const STUDIO = `${ORIGIN}/maboroshi/`;');
+          expect(source).toContain('src={STUDIO}');
+          expect(source).toContain('event.origin !== ORIGIN');
+          expect(source).toContain('event.source !== frame.current?.contentWindow');
+          expect(value).toBe('allow-scripts allow-same-origin allow-forms allow-downloads');
+          continue;
         }
         expect(value, `${where} grants allow-same-origin`).not.toContain('allow-same-origin');
       }
