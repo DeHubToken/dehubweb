@@ -27,7 +27,7 @@ const count = (v) => Number.isFinite(Number(v)) ? Math.max(0, Math.floor(Number(
 
 /** Only anonymous, unrestricted text is eligible for a public raster. */
 export function textPostCardData(post) {
-  if (!post || !/^\d{1,15}$/.test(String(post.tokenId))) return null;
+  if (!post || !/^[1-9]\d{0,14}$/.test(String(post.tokenId))) return null;
   if (!['feed-simple', 'text'].includes(post.postType)) return null;
   if (['draft', 'scheduled', 'deleted'].includes(post.status)) return null;
   if (['private', 'followers', 'subscribers', 'unlisted'].includes(post.visibility)) return null;
@@ -55,7 +55,7 @@ export function textPostCardData(post) {
   return {
     tokenId: String(post.tokenId), title, body: body === title ? '' : body,
     author, handle, avatar,
-    likes: count(post.totalVotes?.for ?? post.reactionCounts?.like ?? post.like_count ?? post.likes),
+    likes: count(post.totalVotes?.for ?? (Array.isArray(post.likes) ? post.likes.length : post.likes) ?? post.like_count ?? post.reactionCounts?.like),
     comments: count(post.commentCount ?? post.comment_count ?? post.comments?.length),
     views: count(post.totalViews ?? post.views ?? post.view_count),
     createdAt: post.createdAt || post.created_at || '',
