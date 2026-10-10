@@ -1,3 +1,4 @@
+import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
 import { stepTimelineFrame } from "@/lib/editor/frameStep";
 import { createVideoMattePageCache, videoMatteFramesForOps } from "@/lib/editor/videoMattePageCache";
@@ -98,6 +99,7 @@ type Gesture =
   | { mode: "stretch"; id: string; box: ClipBox; axis: "x" | "y"; scale: number };
 
 export function Compositor() {
+  const draftFocus = useEditorDraftFocus("canvas", true);
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -758,7 +760,7 @@ export function Compositor() {
     const hit = hitTest(e.clientX, e.clientY);
     if (hit && hit.clip.kind === "text") {
       selectClip(hit.clip.id);
-      setEditingTextId(hit.clip.id);
+      if (draftFocus.begin()) setEditingTextId(hit.clip.id);
     } else if (hit) {
       selectClip(hit.clip.id);
       window.dispatchEvent(new Event("editor:open-inspector"));
@@ -886,7 +888,7 @@ export function Compositor() {
 
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
-      <div
+      <div {...draftFocus.props}
         ref={wrapRef}
         onDragOver={onSurfaceDragOver}
         onDragLeave={onSurfaceDragLeave}
@@ -924,7 +926,7 @@ export function Compositor() {
                   )}
                 />
               </ContextMenuTrigger>
-              <CanvasContextMenu clip={selectedClip} onEdit={(id) => setEditingTextId(id)} />
+              <CanvasContextMenu clip={selectedClip} onEdit={(id) => { if (draftFocus.begin()) setEditingTextId(id); }} />
             </ContextMenu>
           </div>
 
@@ -1060,7 +1062,7 @@ export function Compositor() {
               onChange={(e) => updateTextClip(editingText.id, { text: e.target.value })}
               onBlur={() => setEditingTextId(null)}
               onKeyDown={(e) => {
-                if (e.key === "Escape") { e.preventDefault(); setEditingTextId(null); }
+                if (e.key === "Escape") { e.preventDefault(); draftFocus.finish(); setEditingTextId(null); }
               }}
               style={{
                 position: "absolute",

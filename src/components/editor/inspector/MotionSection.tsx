@@ -477,7 +477,7 @@ function MotionValue({ draftScope, initialValue, onBlur, ...props }: React.Input
   const [text, setText] = useDraftState(draftScope, initialValue);
   return <input {...props} value={text} onChange={event => setText(event.target.value)} onBlur={event => {
     if (!text.trim() || !Number.isFinite(Number(text))) return;
-    onBlur?.(event);
+    if (Number(text) !== Number(initialValue)) onBlur?.(event);
     setText.complete(text, text);
   }} />;
 }
