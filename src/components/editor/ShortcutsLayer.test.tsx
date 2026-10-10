@@ -19,8 +19,11 @@ vi.mock("@/store/editorUiStore", () => ({
 vi.mock("@/lib/editor/render", () => ({ getTransform: vi.fn(), isVisualClip: vi.fn(), placementPatchAt: vi.fn() }));
 vi.mock("@/lib/editor/keyframes", () => ({ keyAllAt: vi.fn(), resolveClipAt: vi.fn() }));
 
-beforeEach(() => { vi.clearAllMocks(); state.currentTime = 0; state.selectedClipIds = []; });
-afterEach(cleanup);
+beforeEach(() => {
+  vi.stubGlobal("ResizeObserver", class { observe() {} unobserve() {} disconnect() {} });
+  vi.clearAllMocks(); state.currentTime = 0; state.selectedClipIds = [];
+});
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
 function Playhead() {
   const [time, setTime] = useState(0);
