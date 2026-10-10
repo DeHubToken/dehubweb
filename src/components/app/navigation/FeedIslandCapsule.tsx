@@ -1,6 +1,7 @@
 import { useFeedRefresh } from '@/lib/feed-refresh';
 import { ElectricLogo } from './ElectricLogo';
 import { FeedPillPullEffect } from './FeedPillPullEffect';
+import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from './feed-drawer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Bell, Check, Menu, SlidersHorizontal, LayoutGrid, Plus } from 'lucide-react';
@@ -129,10 +130,10 @@ export function FeedIslandCapsule({
           key="feed-drawer"
           data-feed-island-menu
           role="menu"
-          initial={{ height: 0, opacity: 0, y: -8 }}
-          animate={{ height: 'auto', opacity: 1, y: 0 }}
-          exit={{ height: 0, opacity: 0, y: -8, pointerEvents: 'none' }}
-          transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
+          initial={feedDrawerClosed}
+          animate={feedDrawerOpen}
+          exit={feedDrawerExit}
+          transition={feedDrawerTransition(reduceMotion)}
           data-feed-island-surface
           className="w-full overflow-hidden rounded-2xl pt-11 text-white pointer-events-auto"
         >
