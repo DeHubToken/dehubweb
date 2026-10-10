@@ -144,7 +144,7 @@ describe('chain-aware wallet actions', () => {
     mocks.base.mockResolvedValue(signer);
     mocks.receipt.mockImplementation(signer.publicClient.waitForTransactionReceipt);
     const tx = await writeContractAA(recipient, abi, 'transfer', [recipient, 12n]);
-    expect(await tx.wait()).toEqual({ status: 1, hash: '0xhash' });
+    expect(await tx.wait()).toEqual({ status: 1, hash: '0xhash', receipt: { status: 'success', transactionHash: '0xhash' } });
     expect(mocks.receipt).toHaveBeenCalledWith(expect.objectContaining({ hash: '0xhash', confirmations: 1, timeout: 60000 }));
     expect(signer.request.mock.calls.some(([request]) => request.method === 'eth_getTransactionReceipt')).toBe(false);
   });
@@ -156,7 +156,7 @@ describe('chain-aware wallet actions', () => {
     mocks.base.mockResolvedValue(signer);
     mocks.receipt.mockImplementation(signer.publicClient.waitForTransactionReceipt);
     const tx = await writeContractAA(recipient, abi, 'transfer', [recipient, 12n]);
-    expect(await tx.wait()).toEqual({ status: 0, hash: '0xhash' });
+    expect(await tx.wait()).toEqual({ status: 0, hash: '0xhash', receipt: { status: 'reverted', transactionHash: '0xhash' } });
   });
 
   it('cancellation prevents contract, native and batch sends', async () => {
