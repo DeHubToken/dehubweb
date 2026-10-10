@@ -29,7 +29,7 @@ import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
-import { Clock, ArrowLeft, Sparkles, MoreVertical, Flag, Link2, Gem, Pencil, Trash2 } from 'lucide-react';
+import { Clock, ArrowLeft, Sparkles, Flag, Link2, Gem, Pencil, Trash2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useTranslation as useI18n } from 'react-i18next';
 import { motion } from 'framer-motion';
