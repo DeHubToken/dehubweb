@@ -5,11 +5,11 @@ import { LiveFeedPreview } from '@/components/app/cards/LiveFeedPreview';
 
 vi.mock('@/components/app/cards/LiveEndedMedia', () => ({ LiveEndedMedia: () => <div>Poster</div> }));
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true, walletAddress: 'viewer' }) }));
-const presence = vi.hoisted(() => ({ join: vi.fn(), leave: vi.fn(), observe: vi.fn(() => ({ leave: vi.fn() })) }));
+const presence = vi.hoisted(() => ({ join: vi.fn(), leave: vi.fn(), observe: vi.fn(() => ({ leave: vi.fn() })), playback: vi.fn((_id: string, _callback: (paused: boolean) => void) => ({ leave: vi.fn() })) }));
 vi.mock('@/lib/api/dehub/stream-presence', () => ({
   joinStreamPresence: presence.join,
   watchStreamReactions: presence.observe,
-  watchStreamPlayback: presence.observe,
+  watchStreamPlayback: presence.playback,
 }));
 
 let visibility: IntersectionObserverCallback;
@@ -35,6 +35,15 @@ function mount(streamId?: string, isOwner = false) {
 }
 
 describe('live preview loading feedback', () => {
+  it('shows a paused broadcast over the picture and resumes on its room event', async () => {
+    mount('stream-a');
+    await waitFor(() => expect(presence.playback).toHaveBeenCalled());
+    const playback = presence.playback.mock.calls[0][1];
+    act(() => playback(true));
+    expect(screen.getByRole('status', { name: 'Live paused' })).toBeVisible();
+    act(() => playback(false));
+    expect(screen.queryByRole('status', { name: 'Live paused' })).toBeNull();
+  });
   it('joins on actual playback and leaves when paused or scrolled out of view', async () => {
     const video = mount('stream-a');
     expect(presence.join).not.toHaveBeenCalled();
