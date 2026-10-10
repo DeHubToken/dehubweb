@@ -1,3 +1,4 @@
+import { pollHasEnded, pollVotePercent, pollOptionWins } from '@/lib/poll-results';
 import { useEffect, useRef, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { Check, X } from 'lucide-react';
@@ -60,8 +61,7 @@ export function PollCard({ tokenId }: PollCardProps) {
   // A poll whose end time has passed is over even while the stored isActive
   // flag still says true — only "Close Poll" flips that flag. Treating it as
   // open showed a vote button the server then rejected as expired.
-  const isEnded = !poll.isActive || !!poll.isExpired
-    || (!!poll.expiresAt && new Date(poll.expiresAt).getTime() <= Date.now());
+  const isEnded = pollHasEnded(poll);
   const isOpen = !isEnded;
   const hasVoted = localVotedIndexes !== null || !!poll.userVote;
   // Results show once you've voted, and to everyone once the poll is over.
@@ -78,12 +78,11 @@ export function PollCard({ tokenId }: PollCardProps) {
     : poll.totalVotes;
 
   const getBarWidth = (index: number) => {
-    if (totalVotes === 0) return 0;
-    return Math.round((getCount(index) / totalVotes) * 100);
+    return pollVotePercent(getCount(index), totalVotes);
   };
 
   const topCount = Math.max(0, ...poll.options.map(o => getCount(o.index)));
-  const isWinner = (index: number) => isEnded && topCount > 0 && getCount(index) === topCount;
+  const isWinner = (index: number) => pollOptionWins(getCount(index), topCount, isEnded);
 
   const isOwner = walletAddress && poll.address.toLowerCase() === walletAddress.toLowerCase();
 

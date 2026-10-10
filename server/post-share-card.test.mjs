@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
 import { Resvg, initWasm } from '@resvg/resvg-wasm';
 import { textPostCardData, applyTextPostImage, renderPostCardSvg, plainPostText, wrapPostText } from './post-share-card.js';
 
@@ -11,6 +11,13 @@ const post = {
   minterAvatarUrl: 'avatars/mal.jpg', streamInfo: { isLockContent: false, isPayPerView: false },
   totalVotes: { for: 95 }, reactionCounts: { like: 90 }, commentCount: 4, views: 887, totalViews: 1207,
 };
+
+test('share badges keep the exact profile still artwork', () => {
+  for (const file of readdirSync(new URL('../public/brand/share-badges/', import.meta.url))) {
+    const source = file === 'killer-whale.png' ? '../src/assets/badges/Killer Whale.png' : `../src/assets/badges/hover/${file}`;
+    assert.deepEqual(readFileSync(new URL(`../public/brand/share-badges/${file}`, import.meta.url)), readFileSync(new URL(source, import.meta.url)), file);
+  }
+});
 
 test('description-only off-chain posts render their actual text and authoritative counters', () => {
   const data = textPostCardData(post);
@@ -59,6 +66,7 @@ test('text is escaped and clipped without allowing image/markup injection', () =
 test('renders real PNGs at 1200 by 630 using the deployed font and official mark', async () => {
   await initWasm(readFileSync(new URL('../node_modules/@resvg/resvg-wasm/index_bg.wasm', import.meta.url)));
   const logo = `data:image/png;base64,${readFileSync(new URL('../public/brand/mark-white.png', import.meta.url)).toString('base64')}`;
+  const chrome = `data:image/png;base64,${readFileSync(new URL('../public/brand/chrome-wave.png', import.meta.url)).toString('base64')}`;
   const font = readFileSync(new URL('../public/brand-kit/font/exo-500.ttf', import.meta.url));
   mkdirSync('post-card-checks', { recursive: true });
   for (const [name, data] of [
@@ -66,7 +74,7 @@ test('renders real PNGs at 1200 by 630 using the deployed font and official mark
     ['title-and-description', textPostCardData({ ...post, title: 'The best part of building in public?', description: 'The people who turn a small idea into something bigger.' })],
     ['long-post', textPostCardData({ ...post, title: 'A long title '.repeat(30), description: 'Longer body text, with enough words to test clipping and spacing. '.repeat(50) })],
   ]) {
-    const svg = renderPostCardSvg(data, { logo });
+    const svg = renderPostCardSvg(data, { logo, chrome });
     const renderer = new Resvg(svg, { font: { fontBuffers: [font], defaultFontFamily: 'Exo' } });
     const image = renderer.render();
     try {
