@@ -1,5 +1,12 @@
 BEGIN;
 
+DO $$ BEGIN
+  IF (SELECT md5(prosrc) FROM pg_proc WHERE oid=to_regprocedure('public.editor_cloud_edit_save(text,uuid,jsonb,integer,uuid)')) IS DISTINCT FROM '2b1554e5367eb4477b14b172eebab675'
+    OR (SELECT md5(prosrc) FROM pg_proc WHERE oid=to_regprocedure('public.erase_editor_account_data(text)')) IS DISTINCT FROM '228062882c4d12ba93f5fea324901310' THEN
+    RAISE EXCEPTION 'Reconcile changed shared save or erasure functions before adding live drafts';
+  END IF;
+END $$;
+
 CREATE TABLE public.editor_cloud_drafts (
   owner_wallet text NOT NULL,
   project_id uuid NOT NULL,
