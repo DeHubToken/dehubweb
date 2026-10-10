@@ -99,10 +99,10 @@ describe('video scrub priority', () => {
     expect(s.onCommit).not.toHaveBeenCalled();
   });
 
-  it('seeks from empty space across the bottom 80px without opening the post', () => {
+  it('seeks from empty space across the bottom 64px without opening the post', () => {
     const s = setup(), strip = s.getByTestId('strip');
-    s.pointer(strip, 'pointerdown', 160, 25);
-    s.pointer(strip, 'pointerup', 160, 25);
+    s.pointer(strip, 'pointerdown', 160, 36);
+    s.pointer(strip, 'pointerup', 160, 36);
     fireEvent.click(strip, { detail: 1 });
     expect(s.onCommit).toHaveBeenCalledWith(80);
     expect(s.openPost).not.toHaveBeenCalled();
@@ -120,8 +120,8 @@ describe('video scrub priority', () => {
 
   it('owns a near-track author touch through vertical drift, reversal and release', () => {
     const s = setup(true), author = s.getByRole('button', { name: 'Author' });
-    s.pointer(author, 'pointerdown', 20, 120);
-    fireEvent.touchStart(author, { touches: [{ clientX: 20, clientY: 120 }] });
+    s.pointer(author, 'pointerdown', 20, 124);
+    fireEvent.touchStart(author, { touches: [{ clientX: 20, clientY: 124 }] });
     expect(s.onStart).toHaveBeenCalledTimes(1);
     expect(s.onPreview).toHaveBeenLastCalledWith(10);
     expect(s.post.setPointerCapture).toHaveBeenCalledWith(1);
@@ -167,7 +167,7 @@ describe('video scrub priority', () => {
 
   it('does not claim touches beside the media or beyond the enlarged strip', () => {
     const s = setup(true), caption = s.getByTestId('caption');
-    for (const [x, y] of [[-1, 110], [201, 110], [100, 125], [100, 19]]) {
+    for (const [x, y] of [[-1, 110], [201, 110], [100, 125], [100, 35]]) {
       s.pointer(caption, 'pointerdown', x, y);
       s.pointer(caption, 'pointerup', x, y);
       fireEvent.click(caption, { detail: 1 });
