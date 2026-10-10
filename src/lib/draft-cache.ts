@@ -32,9 +32,9 @@ const STORAGE_KEY = 'dehub-drafts-v1';
 /** Older than this and the draft is forgotten — a month-old half-sentence is noise. */
 const MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 /** Newest-first cap. Well above how many threads anyone has open in a month. */
-const MAX_ENTRIES = 120;
-/** Per-draft ceiling. Longer than any composer's own maxLength, so it never truncates real input. */
-const MAX_CHARS = 20_000;
+const MAX_ENTRIES = 300;
+/** Combined character budget. Entries are evicted whole, never truncated. */
+const MAX_CHARS = 1_000_000;
 
 interface DraftEntry {
   /** The text itself. */
@@ -114,11 +114,14 @@ function load(): DraftStore {
 
 /** Newest-first trim, applied only when over the cap so the common path is free. */
 function trim(current: DraftStore): DraftStore {
-  const keys = Object.keys(current);
-  if (keys.length <= MAX_ENTRIES) return current;
   const out: DraftStore = {};
-  for (const key of keys.sort((a, b) => current[b].u - current[a].u).slice(0, MAX_ENTRIES)) {
+  let chars = 0;
+  for (const key of Object.keys(current).sort((a, b) => current[b].u - current[a].u)) {
+    if (Object.keys(out).length >= MAX_ENTRIES) break;
+    // Keep the newest draft whole even if it alone exceeds the normal budget.
+    if (chars && chars + current[key].t.length > MAX_CHARS) continue;
     out[key] = current[key];
+    chars += current[key].t.length;
   }
   return out;
 }
@@ -190,17 +193,17 @@ export function hasDraft(key: string): boolean {
 
 /**
  * Save (or, for empty text, delete) the draft for a scope.
- * Whitespace-only counts as empty — a stray newline is not a draft worth keeping.
+ * Only an empty string clears; whitespace and line endings are preserved exactly.
  */
 export function writeDraft(key: string, text: string): void {
   if (!key) return;
   const current = load();
-  if (!text.trim()) {
+  if (!text.length) {
     if (!(key in current)) return;
     delete current[key];
   } else {
     if (current[key]?.t === text) return;
-    current[key] = { t: text.slice(0, MAX_CHARS), u: stamp() };
+    current[key] = { t: text, u: stamp() };
   }
   scheduleWrite();
 }

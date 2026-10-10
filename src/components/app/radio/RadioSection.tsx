@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Radio Section Component
  * =======================
@@ -30,7 +31,7 @@ interface RadioSectionProps {
 
 export function RadioSection({ showFilters = false }: RadioSectionProps) {
   const [activeGenre, setActiveGenre] = useState<RadioGenreId>('top');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/radio/RadioSection.tsx:searchQuery", '');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
   
   const isSearching = debouncedSearch.length > 0;

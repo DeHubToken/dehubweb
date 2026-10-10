@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ChevronRight, Lightbulb, Menu, X,
@@ -250,7 +251,7 @@ const GuidePage: React.FC = () => {
   const sections = useMemo(() => buildSections(t), [t, i18n.language]);
   const [activeId, setActiveId] = useState(sectionDefs[0].id);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/GuidePage.tsx:searchQuery", "");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const debouncedQuery = useDebouncedValue(searchQuery, 200);
   const tokens = useMemo(() => tokenize(debouncedQuery), [debouncedQuery]);
@@ -278,13 +279,13 @@ const GuidePage: React.FC = () => {
         searchInputRef.current?.focus();
       }
       if (e.key === 'Escape' && document.activeElement === searchInputRef.current) {
-        setSearchQuery("");
+        setSearchQuery.initialize("");
         searchInputRef.current?.blur();
       }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, []);
+  }, [setSearchQuery]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

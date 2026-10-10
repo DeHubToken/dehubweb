@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Live Post Chat Component
  * ========================
@@ -161,7 +162,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   const [contextMenuMsg, setContextMenuMsg] = useState<SupabaseLiveChatMessage | null>(null);
   const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editDraft, setEditDraft] = useState('');
+  const [editDraft, setEditDraft] = useSurfaceDraft("components/app/cards/LivePostChat.tsx:editDraft", '', JSON.stringify([tokenId, editingId]));
 
   const mention = useMention({
     inputRef: textareaRef,
@@ -265,7 +266,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     setContextMenuMsg(null);
     setEditingId(msg.id);
     setEditDraft(msg.content || '');
-  }, []);
+  }, [setEditDraft]);
 
   const commitEdit = useCallback((msg: SupabaseLiveChatMessage) => {
     const next = editDraft.trim();

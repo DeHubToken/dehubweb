@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
@@ -83,7 +84,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // Menu search. The field is not permanent chrome: it stays out of the way
   // until the list is actually being scrolled — i.e. until the user is hunting
   // rather than clicking something they can already see.
-  const [navQuery, setNavQuery] = useState('');
+  const [navQuery, setNavQuery] = useSurfaceDraft("components/app/navigation/DesktopSidebar.tsx:navQuery", '');
   const [navScrolled, setNavScrolled] = useState(false);
   const [navAtBottom, setNavAtBottom] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
@@ -203,12 +204,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   // A route change re-renders the rail with a different active row; leaving a
   // stale filter applied would hide the page the user just landed on.
-  useEffect(() => { setNavQuery(''); }, [location.pathname]);
+  useEffect(() => { setNavQuery.initialize(''); }, [location.pathname, setNavQuery]);
 
   // Collapsing hides both the field and the hand-off row (there is no room for
   // either at 60px), so a query left behind would filter the rail down to a few
   // icons with nothing on screen explaining why.
-  useEffect(() => { setNavQuery(''); }, [isCollapsed]);
+  useEffect(() => { setNavQuery.initialize(''); }, [isCollapsed, setNavQuery]);
 
   // Preload both logo variants so collapse/expand swaps are instant
   useEffect(() => {
@@ -317,7 +318,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     setNavQuery('');
     searchInputRef.current?.blur();
     bottomSearchInputRef.current?.blur();
-  }, [navQuery, addToHistory, navigate]);
+  }, [navQuery, addToHistory, navigate, setNavQuery]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

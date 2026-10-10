@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Community Chat
  * ===============
@@ -153,11 +154,11 @@ interface CommunityChatProps {
 }
 
 export function CommunityChat({ communityId, community, membership, isMember }: CommunityChatProps) {
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:newMessage", '', communityId);
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [editText, setEditText] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:editText", '', communityId);
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:searchQuery", '', communityId);
   const [showSearch, setShowSearch] = useState(false);
   const [adminThinking, setAdminThinking] = useState(false);
   const PAGE_SIZE = 15;

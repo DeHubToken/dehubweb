@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Review one import before it posts.
  * ==================================
@@ -61,8 +62,8 @@ interface Props {
 export function ImportDetailsDialog({ open, url, mediaKind, onCancel, onConfirm }: Props) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/converter/ImportDetailsDialog.tsx:name", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/converter/ImportDetailsDialog.tsx:description", '');
   const [rotation, setRotation] = useState<0 | 90 | 180 | 270>(0);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
 
@@ -74,16 +75,16 @@ export function ImportDetailsDialog({ open, url, mediaKind, onCancel, onConfirm 
     let cancelled = false;
     setLoading(true);
     setPreview(null);
-    setName('');
-    setDescription('');
+    setName.initialize('');
+    setDescription.initialize('');
     setRotation(0);
 
     previewImport(url)
       .then(result => {
         if (cancelled) return;
         setPreview(result);
-        setName(result.title || '');
-        setDescription(result.description || '');
+        setName.initialize(result.title || '');
+        setDescription.initialize(result.description || '');
       })
       // Deliberately silent. The fields stay empty, Import still works, and a
       // toast about metadata would be noise on top of a dialog that is
@@ -96,7 +97,7 @@ export function ImportDetailsDialog({ open, url, mediaKind, onCancel, onConfirm 
     return () => {
       cancelled = true;
     };
-  }, [open, url]);
+  }, [open, url, setDescription, setName]);
 
   const kindLabel = t(`converter.kind${mediaKind[0].toUpperCase()}${mediaKind.slice(1)}`);
 

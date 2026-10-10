@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Search Filter Panel
  * ===================
@@ -83,7 +84,7 @@ interface SearchFilterPanelProps {
 
 export function SearchFilterPanel({ filters, onChange, onReset }: SearchFilterPanelProps) {
   const { t } = useTranslation();
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/search/SearchFilterPanel.tsx:categorySearch", '');
 
   // Shares the explore page's own cache entry, so opening this costs no request.
   const { data: categories = [] } = useQuery({

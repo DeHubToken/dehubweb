@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -458,7 +459,7 @@ function LabeledField({ label, count, children }: { label: string; count?: strin
  * people on the generic invite splash.
  */
 function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string, label?: string) => void }) {
-  const [target, setTarget] = useState("");
+  const [target, setTarget] = useSurfaceDraft("pages/app/AffiliatePage.tsx:target", "");
   const trimmed = target.trim();
   const path = sanitizeDeepLinkPath(trimmed);
   const invalid = trimmed.length > 0 && !path;

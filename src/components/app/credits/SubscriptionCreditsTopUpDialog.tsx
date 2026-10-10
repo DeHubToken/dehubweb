@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { lazy, Suspense, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -46,7 +47,7 @@ export default function SubscriptionCreditsTopUpDialog({ open, onOpenChange }: {
   const { walletAddress } = useAuth();
   const { data: credits } = useSubscriptionCredits();
   const [preset, setPreset] = useState<number | null>(10);
-  const [custom, setCustom] = useState('');
+  const [custom, setCustom] = useSurfaceDraft("components/app/credits/SubscriptionCreditsTopUpDialog.tsx:custom", '');
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [stage, setStage] = useState<Stage>('idle');
   // State updates land after the click that caused them, so a fast double

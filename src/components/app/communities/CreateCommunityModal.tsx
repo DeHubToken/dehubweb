@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, X, Image } from 'lucide-react';
@@ -35,8 +36,8 @@ async function resolveUniqueSlug(baseSlug: string): Promise<string> {
 export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModalProps) {
   const navigate = useNavigate();
   const createMutation = useCreateCommunity();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/communities/CreateCommunityModal.tsx:name", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/communities/CreateCommunityModal.tsx:description", '');
   const [isPrivate, setIsPrivate] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);

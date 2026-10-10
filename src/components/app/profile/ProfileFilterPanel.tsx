@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Profile Filter Panel
  * ====================
@@ -62,7 +63,7 @@ interface ProfileFilterPanelProps {
 
 export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, drawer = false }: ProfileFilterPanelProps) {
   const { t } = useTranslation();
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/profile/ProfileFilterPanel.tsx:categorySearch", '');
 
   // Shares the home feed's cache entry, so opening this after browsing Home
   // costs no request at all.

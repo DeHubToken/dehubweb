@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CreateGroupModal Component
  * ==============================
@@ -89,9 +90,9 @@ export function CreateGroupModal({
 }: CreateGroupModalProps) {
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<'details' | 'members'>('details');
-  const [groupName, setGroupName] = useState('');
-  const [groupDescription, setGroupDescription] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [groupName, setGroupName] = useSurfaceDraft("components/app/chat/CreateGroupModal.tsx:groupName", '');
+  const [groupDescription, setGroupDescription] = useSurfaceDraft("components/app/chat/CreateGroupModal.tsx:groupDescription", '');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/CreateGroupModal.tsx:searchQuery", '');
   const [selectedMembers, setSelectedMembers] = useState<DeHubUser[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   

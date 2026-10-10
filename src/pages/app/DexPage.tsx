@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { dexActionError } from '@/lib/dex/action-error';
 import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
@@ -90,7 +91,7 @@ export default function DexPage() {
   const [side, setSide] = useState<'buy' | 'sell'>('sell');
   const [chainId, setChainId] = useState<DexChainId | null>(null);
   const [balance, setBalance] = useState('0');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/DexPage.tsx:amount", '');
   const [minPrice, setMinPrice] = useState('0.001');
   const [maxPrice, setMaxPrice] = useState('0.001001');
   const priceTouched = useRef(false);

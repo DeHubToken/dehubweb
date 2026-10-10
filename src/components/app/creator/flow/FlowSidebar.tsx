@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Creator Flow — the flows list.
  * ==============================
@@ -43,7 +44,7 @@ export default function FlowSidebar({ syncStatus, lastSyncedAt, signedIn, onSign
   const deleteFlow = useCreatorFlowStore((s) => s.deleteFlow);
   const duplicateFlow = useCreatorFlowStore((s) => s.duplicateFlow);
   const [renaming, setRenaming] = useState<string | null>(null);
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useSurfaceDraft("components/app/creator/flow/FlowSidebar.tsx:draft", '');
 
   const commitRename = () => {
     if (renaming && draft.trim()) renameFlow(renaming, draft.trim().slice(0, 80));

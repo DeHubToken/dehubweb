@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { CloudUpload, History, MessageSquare, RefreshCw, RotateCcw, Trash2 } from "lucide-react";
@@ -15,7 +16,7 @@ import { toast } from "sonner";
 export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onOpenChange(value: boolean): void }) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useSurfaceDraft("components/editor/CloudProjectsDialog.tsx:query", "");
   const preserve = async () => { const snapshot = useEditorStore.getState().toSnapshot(); await saveProject(snapshot); setLastProjectId(snapshot.id); };
   const cloud = useCloudProjects(walletAddress, browserCloudProjectSession, {
     current: () => useEditorStore.getState().toSnapshot(), preserve,
@@ -24,7 +25,7 @@ export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onO
     seek: seconds => { useEditorStore.getState().setIsPlaying(false); useEditorStore.getState().setCurrentTime(seconds); },
   });
   useEffect(() => { if (open && walletAddress) void cloud.refresh(); }, [open, walletAddress]);
-  useEffect(() => { setQuery(""); }, [walletAddress]);
+  useEffect(() => { setQuery.initialize(""); }, [walletAddress, setQuery]);
   const matching = cloud.projects.filter(project => (project.title || "Untitled").toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
   const matchingShared = cloud.sharedProjects.filter(project => (project.title || "Untitled").toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
   return <Dialog open={open} onOpenChange={value => { if (value || !cloud.busy) onOpenChange(value); }}>

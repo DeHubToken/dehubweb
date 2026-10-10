@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Composer setting chips.
  * =======================
@@ -75,11 +76,11 @@ export function SelectChip<T extends string>({
   const epoch = useSurfaceEpoch();
 
   const searchRef = useRef<HTMLInputElement>(null);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/creator/studio/StudioChip.tsx:query", '');
   // A stale filter would hide the list on the next open.
   useEffect(() => {
-    if (!open) setQuery('');
-  }, [open]);
+    if (!open) setQuery.initialize('');
+  }, [open, setQuery]);
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();

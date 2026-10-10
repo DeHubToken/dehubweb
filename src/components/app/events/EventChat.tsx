@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Event Chat
  * ===========
@@ -87,10 +88,10 @@ interface EventChatProps {
 }
 
 export function EventChat({ eventId }: EventChatProps) {
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useSurfaceDraft("components/app/events/EventChat.tsx:newMessage", '', eventId);
   const [replyTo, setReplyTo] = useState<EventChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState('');
+  const [editText, setEditText] = useSurfaceDraft("components/app/events/EventChat.tsx:editText", '', eventId);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();

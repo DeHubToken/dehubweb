@@ -1,0 +1,1959 @@
+{
+  "status": "integration-in-progress",
+  "surfaces": [
+    {
+      "file": "src/components/LanguageSelector.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/CinemaPage.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/GuidePage.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/PromptLanding.tsx",
+      "fields": [
+        "text"
+      ],
+      "setters": [
+        "setText"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/YoutubeImportPage.tsx",
+      "fields": [
+        "url"
+      ],
+      "setters": [
+        "setUrl"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/advertising/CampaignCreator.tsx",
+      "fields": [
+        "budget"
+      ],
+      "setters": [
+        "setBudget"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/AppSidebar.tsx",
+      "fields": [
+        "menuQuery"
+      ],
+      "setters": [
+        "setMenuQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/CoinBalanceMenu.tsx",
+      "fields": [
+        "stakeAmount",
+        "stakeAmount"
+      ],
+      "setters": [
+        "setStakeAmount",
+        "setStakeAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/DhbListingSoonCard.tsx",
+      "fields": [
+        "email"
+      ],
+      "setters": [
+        "setEmail"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/NearIntentBuy.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/RightSidebar.tsx",
+      "fields": [
+        "searchValue"
+      ],
+      "setters": [
+        "setSearchValue"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/SlippageSettings.tsx",
+      "fields": [
+        "customValue"
+      ],
+      "setters": [
+        "setCustomValue"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/SwapToTokenDrawer.tsx",
+      "fields": [
+        "amount"
+      ],
+      "setters": [
+        "setAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/TeamUpDrawer.tsx",
+      "fields": [
+        "name",
+        "description",
+        "search",
+        "requestMessage",
+        "editDescription"
+      ],
+      "setters": [
+        "setName",
+        "setDescription",
+        "setSearch",
+        "setRequestMessage",
+        "setEditDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/WhatsHappening.tsx",
+      "fields": [
+        "countrySearch"
+      ],
+      "setters": [
+        "setCountrySearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/chat/DocsChatBot.tsx",
+      "fields": [
+        "input"
+      ],
+      "setters": [
+        "setInput"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/cinema/FilmReviews.tsx",
+      "fields": [
+        "body"
+      ],
+      "setters": [
+        "setBody"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/editor/CloudProjectsDialog.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/editor/FontPicker.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/accounts/BuyAccountDrawer.tsx",
+      "fields": [
+        "receiveAddress"
+      ],
+      "setters": [
+        "setReceiveAddress"
+      ],
+      "identity": "draftIdentity(listing)"
+    },
+    {
+      "file": "src/components/app/accounts/SellTab.tsx",
+      "fields": [
+        "priceDhb",
+        "description"
+      ],
+      "setters": [
+        "setPriceDhb",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/ads/AdTopUpPanel.tsx",
+      "fields": [
+        "customAmount"
+      ],
+      "setters": [
+        "setCustomAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/ads/BillingTab.tsx",
+      "fields": [
+        "manualHash"
+      ],
+      "setters": [
+        "setManualHash"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/ads/CampaignsTab.tsx",
+      "fields": [
+        "headline",
+        "body",
+        "ctaLabel",
+        "ctaUrl"
+      ],
+      "setters": [
+        "setHeadline",
+        "setBody",
+        "setCtaLabel",
+        "setCtaUrl"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/ads/CampaignWizard.tsx",
+      "fields": [
+        "name",
+        "headline",
+        "bodyText",
+        "ctaLabel",
+        "ctaUrl"
+      ],
+      "setters": [
+        "setName",
+        "setHeadline",
+        "setBodyText",
+        "setCtaLabel",
+        "setCtaUrl"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/ads/TargetingEditor.tsx",
+      "fields": [
+        "creatorInput",
+        "communitySearch"
+      ],
+      "setters": [
+        "setCreatorInput",
+        "setCommunitySearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/assistant/ConversationHistoryDrawer.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/assistant/MusicConfirmDialog.tsx",
+      "fields": [
+        "title",
+        "lyrics",
+        "style"
+      ],
+      "setters": [
+        "setTitle",
+        "setLyrics",
+        "setStyle"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/assistant/PosterConfigDialog.tsx",
+      "fields": [
+        "tagline",
+        "extraNotes"
+      ],
+      "setters": [
+        "setTagline",
+        "setExtraNotes"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/assistant/SkillsHubModal.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/assistant/SupportTicketDrawer.tsx",
+      "fields": [
+        "subject",
+        "description",
+        "stepsToReproduce",
+        "contactEmail"
+      ],
+      "setters": [
+        "setSubject",
+        "setDescription",
+        "setStepsToReproduce",
+        "setContactEmail"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/bookmarks/BookmarkFoldersPanel.tsx",
+      "fields": [
+        "newFolderName",
+        "renameValue"
+      ],
+      "setters": [
+        "setNewFolderName",
+        "setRenameValue"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/bookmarks/SaveToFolderDrawer.tsx",
+      "fields": [
+        "newFolderName",
+        "newFolderDesc"
+      ],
+      "setters": [
+        "setNewFolderName",
+        "setNewFolderDesc"
+      ],
+      "identity": "tokenId"
+    },
+    {
+      "file": "src/components/app/cards/CommentsSection.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "tokenId"
+    },
+    {
+      "file": "src/components/app/cards/CommonGroundSheet.tsx",
+      "fields": [
+        "otherSide",
+        "sharedGround"
+      ],
+      "setters": [
+        "setOtherSide",
+        "setSharedGround"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/cards/ImageCard.tsx",
+      "fields": [
+        "pollQuestion",
+        "pollExpiry"
+      ],
+      "setters": [
+        "setPollQuestion",
+        "setPollExpiry"
+      ],
+      "identity": "draftIdentity(post)"
+    },
+    {
+      "file": "src/components/app/cards/LivePostChat.tsx",
+      "fields": [
+        "editDraft"
+      ],
+      "setters": [
+        "setEditDraft"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/cards/LiveStreamCard.tsx",
+      "fields": [
+        "giftAmount",
+        "giftMessage"
+      ],
+      "setters": [
+        "setGiftAmount",
+        "setGiftMessage"
+      ],
+      "identity": "draftIdentity(stream)"
+    },
+    {
+      "file": "src/components/app/cards/PostCard.tsx",
+      "fields": [
+        "pollQuestion",
+        "pollExpiry"
+      ],
+      "setters": [
+        "setPollQuestion",
+        "setPollExpiry"
+      ],
+      "identity": "draftIdentity(post)"
+    },
+    {
+      "file": "src/components/app/characters/CharacterCreateModal.tsx",
+      "fields": [
+        "name",
+        "description"
+      ],
+      "setters": [
+        "setName",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/characters/CharactersLibrary.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/CreateGroupModal.tsx",
+      "fields": [
+        "groupName",
+        "groupDescription",
+        "searchQuery"
+      ],
+      "setters": [
+        "setGroupName",
+        "setGroupDescription",
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/CreateTopicRoomModal.tsx",
+      "fields": [
+        "topic",
+        "description"
+      ],
+      "setters": [
+        "setTopic",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/DirectMessageChat.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/DmTipDialog.tsx",
+      "fields": [
+        "amount"
+      ],
+      "setters": [
+        "setAmount"
+      ],
+      "identity": "recipientAddress"
+    },
+    {
+      "file": "src/components/app/chat/EmojiGifPicker.tsx",
+      "fields": [
+        "gifSearchQuery"
+      ],
+      "setters": [
+        "setGifSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/ForwardMessageDialog.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/GeneralAIChat.tsx",
+      "fields": [
+        "input"
+      ],
+      "setters": [
+        "setInput"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/GifPicker.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/GroupSettingsDrawer.tsx",
+      "fields": [
+        "editName",
+        "editDescription",
+        "memberSearch"
+      ],
+      "setters": [
+        "setEditName",
+        "setEditDescription",
+        "setMemberSearch"
+      ],
+      "identity": "groupId"
+    },
+    {
+      "file": "src/components/app/chat/NewConversationModal.tsx",
+      "fields": [
+        "messageText",
+        "customAmount",
+        "searchQuery"
+      ],
+      "setters": [
+        "setMessageText",
+        "setCustomAmount",
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/PublicChat.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/chat/RoomSettingsModal.tsx",
+      "fields": [
+        "modAddress"
+      ],
+      "setters": [
+        "setModAddress"
+      ],
+      "identity": "draftIdentity(room)"
+    },
+    {
+      "file": "src/components/app/command-centre/CrossChainDepositDrawer.tsx",
+      "fields": [
+        "amount",
+        "assetQuery",
+        "manualRefund"
+      ],
+      "setters": [
+        "setAmount",
+        "setAssetQuery",
+        "setManualRefund"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/command-centre/EarningsComparison.tsx",
+      "fields": [
+        "estimatorViews"
+      ],
+      "setters": [
+        "setEstimatorViews"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/command-centre/FundActions.tsx",
+      "fields": [
+        "withdrawTarget"
+      ],
+      "setters": [
+        "setWithdrawTarget"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/command-centre/SwapDrawer.tsx",
+      "fields": [
+        "dhbAmount"
+      ],
+      "setters": [
+        "setDhbAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/communities/CommunityActivity.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "draftIdentity(community)"
+    },
+    {
+      "file": "src/components/app/communities/CommunityChat.tsx",
+      "fields": [
+        "newMessage",
+        "editText",
+        "searchQuery"
+      ],
+      "setters": [
+        "setNewMessage",
+        "setEditText",
+        "setSearchQuery"
+      ],
+      "identity": "communityId"
+    },
+    {
+      "file": "src/components/app/communities/CommunityMembers.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "draftIdentity(community)"
+    },
+    {
+      "file": "src/components/app/communities/CommunityTickerSearch.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/communities/CreateCommunityModal.tsx",
+      "fields": [
+        "name",
+        "description"
+      ],
+      "setters": [
+        "setName",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/converter/ImportDetailsDialog.tsx",
+      "fields": [
+        "name",
+        "description"
+      ],
+      "setters": [
+        "setName",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/converter/PodcastImportSection.tsx",
+      "fields": [
+        "feedUrl"
+      ],
+      "setters": [
+        "setFeedUrl"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/credits/SubscriptionCreditsTopUpDialog.tsx",
+      "fields": [
+        "custom"
+      ],
+      "setters": [
+        "setCustom"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/dao/DaoProposals.tsx",
+      "fields": [
+        "title",
+        "description",
+        "dhbAmount",
+        "priceUsd",
+        "spendAsset",
+        "spendAmount",
+        "recipient",
+        "manualHash"
+      ],
+      "setters": [
+        "setTitle",
+        "setDescription",
+        "setDhbAmount",
+        "setPriceUsd",
+        "setSpendAsset",
+        "setSpendAmount",
+        "setRecipient",
+        "setManualHash"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/dex/AddPoolDialog.tsx",
+      "fields": [
+        "address"
+      ],
+      "setters": [
+        "setAddress"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/dex/InstantDhbTrade.tsx",
+      "fields": [
+        "amount"
+      ],
+      "setters": [
+        "setAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/dex/PoolPicker.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/emoji/AddCustomEmojiPanel.tsx",
+      "fields": [
+        "link",
+        "name",
+        "pack"
+      ],
+      "setters": [
+        "setLink",
+        "setName",
+        "setPack"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/emoji/EmojiPanel.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/events/CreateEventDrawer.tsx",
+      "fields": [
+        "title",
+        "description",
+        "location",
+        "startTime",
+        "endTime",
+        "gateFee"
+      ],
+      "setters": [
+        "setTitle",
+        "setDescription",
+        "setLocation",
+        "setStartTime",
+        "setEndTime",
+        "setGateFee"
+      ],
+      "identity": "communityId ?? \"global\""
+    },
+    {
+      "file": "src/components/app/events/EventChat.tsx",
+      "fields": [
+        "newMessage",
+        "editText"
+      ],
+      "setters": [
+        "setNewMessage",
+        "setEditText"
+      ],
+      "identity": "eventId"
+    },
+    {
+      "file": "src/components/app/feeds/HomeFeed.tsx",
+      "fields": [
+        "categorySearch"
+      ],
+      "setters": [
+        "setCategorySearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/feeds/ShortsFeed.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/feeds/VideosFeed.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/fractions/BrowseFractionsTab.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/fractions/MakeOfferDrawer.tsx",
+      "fields": [
+        "quantity",
+        "price"
+      ],
+      "setters": [
+        "setQuantity",
+        "setPrice"
+      ],
+      "identity": "`${chainId}:${tokenId}:${targetSeller ?? \"any\"}`"
+    },
+    {
+      "file": "src/components/app/fractions/SellFractionsDrawer.tsx",
+      "fields": [
+        "price"
+      ],
+      "setters": [
+        "setPrice"
+      ],
+      "identity": "`${chainId}:${tokenId}`"
+    },
+    {
+      "file": "src/components/app/launchpad/TradePanel.tsx",
+      "fields": [
+        "amount"
+      ],
+      "setters": [
+        "setAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/live/LiveGiftBuyDrawer.tsx",
+      "fields": [
+        "amountUsd"
+      ],
+      "setters": [
+        "setAmountUsd"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/live/StreamCheckoutDrawer.tsx",
+      "fields": [
+        "notes"
+      ],
+      "setters": [
+        "setNotes"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/modals/BoostModal.tsx",
+      "fields": [
+        "targetAccount"
+      ],
+      "setters": [
+        "setTargetAccount"
+      ],
+      "identity": "tokenId"
+    },
+    {
+      "file": "src/components/app/modals/EditPostModal.tsx",
+      "fields": [
+        "categoryInput"
+      ],
+      "setters": [
+        "setCategoryInput"
+      ],
+      "identity": "tokenId"
+    },
+    {
+      "file": "src/components/app/modals/QuotePostModal.tsx",
+      "fields": [
+        "content"
+      ],
+      "setters": [
+        "setContent"
+      ],
+      "identity": "draftIdentity(quotedPost)"
+    },
+    {
+      "file": "src/components/app/modals/ReportModalContent.tsx",
+      "fields": [
+        "description"
+      ],
+      "setters": [
+        "setDescription"
+      ],
+      "identity": "JSON.stringify([reportType, tokenId, userId, commentId])"
+    },
+    {
+      "file": "src/components/app/modals/ShareToDmModal.tsx",
+      "fields": [
+        "caption",
+        "searchInput"
+      ],
+      "setters": [
+        "setCaption",
+        "setSearchInput"
+      ],
+      "identity": "url"
+    },
+    {
+      "file": "src/components/app/modals/SpendPowerDrawer.tsx",
+      "fields": [
+        "query",
+        "targetAccount"
+      ],
+      "setters": [
+        "setQuery",
+        "setTargetAccount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/modals/TipModal.tsx",
+      "fields": [
+        "amount"
+      ],
+      "setters": [
+        "setAmount"
+      ],
+      "identity": "JSON.stringify([creatorAddress, tokenId, commentId])"
+    },
+    {
+      "file": "src/components/app/model3d/Model3dPaywallModal.tsx",
+      "fields": [
+        "seed"
+      ],
+      "setters": [
+        "setSeed"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/navigation/DesktopSidebar.tsx",
+      "fields": [
+        "navQuery"
+      ],
+      "setters": [
+        "setNavQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/notifications/AppealDrawer.tsx",
+      "fields": [
+        "reason"
+      ],
+      "setters": [
+        "setReason"
+      ],
+      "identity": "notificationId"
+    },
+    {
+      "file": "src/components/app/post-info/TranscriptSection.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/profile/FollowersListDrawer.tsx",
+      "fields": [
+        "searchQuery",
+        "newGroupName"
+      ],
+      "setters": [
+        "setSearchQuery",
+        "setNewGroupName"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/profile/ProfileFilterPanel.tsx",
+      "fields": [
+        "categorySearch"
+      ],
+      "setters": [
+        "setCategorySearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/radio/RadioSection.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/search/SearchFilterPanel.tsx",
+      "fields": [
+        "categorySearch"
+      ],
+      "setters": [
+        "setCategorySearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/settings/BadgeDelegationSection.tsx",
+      "fields": [
+        "recipient"
+      ],
+      "setters": [
+        "setRecipient"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/settings/EmailSignInSettings.tsx",
+      "fields": [
+        "email"
+      ],
+      "setters": [
+        "setEmail"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/settings/EnsHandleSettings.tsx",
+      "fields": [
+        "name"
+      ],
+      "setters": [
+        "setName"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/settings/SettingDrawerSelect.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/settings/SmsNotificationsDialog.tsx",
+      "fields": [
+        "phone"
+      ],
+      "setters": [
+        "setPhone"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/settings/StreamKeySettings.tsx",
+      "fields": [
+        "title"
+      ],
+      "setters": [
+        "setTitle"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/shared/ElevenLabsVoicePicker.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/shared/VoiceTrainingDrawer.tsx",
+      "fields": [
+        "voiceName"
+      ],
+      "setters": [
+        "setVoiceName"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/skills/SkillsLibrary.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/spaces/AudioSpacesModalBody.tsx",
+      "fields": [
+        "title",
+        "description"
+      ],
+      "setters": [
+        "setTitle",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/spaces/StageRadioPanel.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/spaces/StageTranscriptDrawer.tsx",
+      "fields": [
+        "search",
+        "renameValue"
+      ],
+      "setters": [
+        "setSearch",
+        "setRenameValue"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/spaces/StageTTS.tsx",
+      "fields": [
+        "text",
+        "search"
+      ],
+      "setters": [
+        "setText",
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/stats/FeedbackSection.tsx",
+      "fields": [
+        "body",
+        "timeUsing"
+      ],
+      "setters": [
+        "setBody",
+        "setTimeUsing"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/stores/BrowseTab.tsx",
+      "fields": [
+        "search",
+        "minPrice",
+        "maxPrice"
+      ],
+      "setters": [
+        "setSearch",
+        "setMinPrice",
+        "setMaxPrice"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/stores/CreateListingDrawer.tsx",
+      "fields": [
+        "title",
+        "description",
+        "price",
+        "shippingInfo",
+        "stockQty",
+        "podUrl"
+      ],
+      "setters": [
+        "setTitle",
+        "setDescription",
+        "setPrice",
+        "setShippingInfo",
+        "setStockQty",
+        "setPodUrl"
+      ],
+      "identity": "storeId"
+    },
+    {
+      "file": "src/components/app/stores/EditListingDrawer.tsx",
+      "fields": [
+        "title",
+        "description",
+        "price",
+        "shippingInfo",
+        "stockQty"
+      ],
+      "setters": [
+        "setTitle",
+        "setDescription",
+        "setPrice",
+        "setShippingInfo",
+        "setStockQty"
+      ],
+      "identity": "draftIdentity(listing)"
+    },
+    {
+      "file": "src/components/app/stores/EditStoreDrawer.tsx",
+      "fields": [
+        "name",
+        "description"
+      ],
+      "setters": [
+        "setName",
+        "setDescription"
+      ],
+      "identity": "draftIdentity(store)"
+    },
+    {
+      "file": "src/components/app/stores/ListingDetailDrawer.tsx",
+      "fields": [
+        "notes"
+      ],
+      "setters": [
+        "setNotes"
+      ],
+      "identity": "draftIdentity(listing)"
+    },
+    {
+      "file": "src/components/app/stores/ReviewSection.tsx",
+      "fields": [
+        "comment"
+      ],
+      "setters": [
+        "setComment"
+      ],
+      "identity": "listingId"
+    },
+    {
+      "file": "src/components/app/stores/SetupStoreFlow.tsx",
+      "fields": [
+        "name",
+        "description"
+      ],
+      "setters": [
+        "setName",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/stores/ShippingAddressForm.tsx",
+      "fields": [
+        "saveLabel"
+      ],
+      "setters": [
+        "setSaveLabel"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/tv/LiveTVSection.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/usernames/OffersTab.tsx",
+      "fields": [
+        "replacement"
+      ],
+      "setters": [
+        "setReplacement"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/usernames/SellTab.tsx",
+      "fields": [
+        "priceUsd",
+        "replacement",
+        "description"
+      ],
+      "setters": [
+        "setPriceUsd",
+        "setReplacement",
+        "setDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/video/VideoPaywallModal.tsx",
+      "fields": [
+        "negativePrompt",
+        "seed"
+      ],
+      "setters": [
+        "setNegativePrompt",
+        "setSeed"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/video/VideoSubtitleOverlay.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/wallet/TradeSheet.tsx",
+      "fields": [
+        "amount",
+        "price",
+        "ask"
+      ],
+      "setters": [
+        "setAmount",
+        "setPrice",
+        "setAsk"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/communities/manage/AdministratorsTab.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "draftIdentity(community)"
+    },
+    {
+      "file": "src/components/app/communities/manage/AdminRightsDialog.tsx",
+      "fields": [
+        "customTitle"
+      ],
+      "setters": [
+        "setCustomTitle"
+      ],
+      "identity": "draftIdentity([community, target])"
+    },
+    {
+      "file": "src/components/app/communities/manage/DangerZone.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "draftIdentity(community)"
+    },
+    {
+      "file": "src/components/app/communities/manage/InviteLinksTab.tsx",
+      "fields": [
+        "name"
+      ],
+      "setters": [
+        "setName"
+      ],
+      "identity": "draftIdentity(community)"
+    },
+    {
+      "file": "src/components/app/communities/manage/MembersTab.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "draftIdentity(community)"
+    },
+    {
+      "file": "src/components/app/communities/manage/RestrictionDialog.tsx",
+      "fields": [
+        "reason"
+      ],
+      "setters": [
+        "setReason"
+      ],
+      "identity": "draftIdentity([community, target])"
+    },
+    {
+      "file": "src/components/app/creator/flow/AddNodeMenu.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/flow/FlowSidebar.tsx",
+      "fields": [
+        "draft"
+      ],
+      "setters": [
+        "setDraft"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/flow/QuickAssist.tsx",
+      "fields": [
+        "input"
+      ],
+      "setters": [
+        "setInput"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/studio/LibraryFolders.tsx",
+      "fields": [
+        "draft"
+      ],
+      "setters": [
+        "setDraft"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/studio/PresetStrip.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/studio/StudioChip.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/studio/VoiceDesignDrawer.tsx",
+      "fields": [
+        "name"
+      ],
+      "setters": [
+        "setName"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/flow/nodes/ImageInputNode.tsx",
+      "fields": [
+        "urlDraft"
+      ],
+      "setters": [
+        "setUrlDraft"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/app/creator/flow/nodes/VideoInputNode.tsx",
+      "fields": [
+        "urlDraft"
+      ],
+      "setters": [
+        "setUrlDraft"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/editor/panels/AgentPanel.tsx",
+      "fields": [
+        "draft"
+      ],
+      "setters": [
+        "setDraft"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/editor/panels/FreeAssetsPanel.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/components/editor/panels/GeneratePanel.tsx",
+      "fields": [
+        "prompt"
+      ],
+      "setters": [
+        "setPrompt"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/features/post/components/PostAccessToggles.tsx",
+      "fields": [
+        "categorySearch"
+      ],
+      "setters": [
+        "setCategorySearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/features/post/components/SoundPicker.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/features/work/components/ApplicationComments.tsx",
+      "fields": [
+        "body"
+      ],
+      "setters": [
+        "setBody"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/AffiliatePage.tsx",
+      "fields": [
+        "target"
+      ],
+      "setters": [
+        "setTarget"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/AgentsPage.tsx",
+      "fields": [
+        "newAgentName",
+        "newAgentDescription"
+      ],
+      "setters": [
+        "setNewAgentName",
+        "setNewAgentDescription"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/AppsDevPage.tsx",
+      "fields": [
+        "url"
+      ],
+      "setters": [
+        "setUrl"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/AppsPage.tsx",
+      "fields": [
+        "query"
+      ],
+      "setters": [
+        "setQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/BookmarksPage.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/BridgePage.tsx",
+      "fields": [
+        "amount",
+        "search"
+      ],
+      "setters": [
+        "setAmount",
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/BuilderPage.tsx",
+      "fields": [
+        "prompt"
+      ],
+      "setters": [
+        "setPrompt"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/BuyCoinsPage.tsx",
+      "fields": [
+        "customAmount",
+        "txSearch"
+      ],
+      "setters": [
+        "setCustomAmount",
+        "setTxSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/CommunitiesPage.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/DaoPage.tsx",
+      "fields": [
+        "amount"
+      ],
+      "setters": [
+        "setAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/DexPage.tsx",
+      "fields": [
+        "amount"
+      ],
+      "setters": [
+        "setAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/DexPoolPage.tsx",
+      "fields": [
+        "amount",
+        "price"
+      ],
+      "setters": [
+        "setAmount",
+        "setPrice"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/FullWalletPage.tsx",
+      "fields": [
+        "searchQuery",
+        "amount",
+        "address"
+      ],
+      "setters": [
+        "setSearchQuery",
+        "setAmount",
+        "setAddress"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/GlossaryPage.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/GovernancePage.tsx",
+      "fields": [
+        "title",
+        "description",
+        "searchInput"
+      ],
+      "setters": [
+        "setTitle",
+        "setDescription",
+        "setSearchInput"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/LaunchpadPage.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/LeaderboardPage.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/MessagesPage.tsx",
+      "fields": [
+        "searchQuery"
+      ],
+      "setters": [
+        "setSearchQuery"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/PackPage.tsx",
+      "fields": [
+        "link",
+        "label"
+      ],
+      "setters": [
+        "setLink",
+        "setLabel"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/PacksPage.tsx",
+      "fields": [
+        "name"
+      ],
+      "setters": [
+        "setName"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/ProfilePage.tsx",
+      "fields": [
+        "offerAmount",
+        "offerMessage"
+      ],
+      "setters": [
+        "setOfferAmount",
+        "setOfferMessage"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/SettingsPage.tsx",
+      "fields": [
+        "settingsSearch",
+        "displayName",
+        "username",
+        "bio",
+        "search"
+      ],
+      "setters": [
+        "setSettingsSearch",
+        "setDisplayName",
+        "setUsername",
+        "setBio",
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/StakingPage.tsx",
+      "fields": [
+        "stakeAmount",
+        "unstakeAmount"
+      ],
+      "setters": [
+        "setStakeAmount",
+        "setUnstakeAmount"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/WorkEditPage.tsx",
+      "fields": [
+        "title",
+        "description",
+        "targetUrl",
+        "pricePerUnit",
+        "maxUnits",
+        "deadline"
+      ],
+      "setters": [
+        "setTitle",
+        "setDescription",
+        "setTargetUrl",
+        "setPricePerUnit",
+        "setMaxUnits",
+        "setDeadline"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/WorkHistoryPage.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/WorkJobDetailPage.tsx",
+      "fields": [
+        "coverLetter",
+        "proofUrl",
+        "proofText",
+        "reviewComment",
+        "disputeReason",
+        "reason",
+        "views"
+      ],
+      "setters": [
+        "setCoverLetter",
+        "setProofUrl",
+        "setProofText",
+        "setReviewComment",
+        "setDisputeReason",
+        "setReason",
+        "setViews"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/WorkPage.tsx",
+      "fields": [
+        "search"
+      ],
+      "setters": [
+        "setSearch"
+      ],
+      "identity": "route"
+    },
+    {
+      "file": "src/pages/app/YoutubeMigratePage.tsx",
+      "fields": [
+        "channelUrl"
+      ],
+      "setters": [
+        "setChannelUrl"
+      ],
+      "identity": "route"
+    }
+  ]
+}

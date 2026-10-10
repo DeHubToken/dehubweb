@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +28,7 @@ export function SkillsLibrary() {
   const { walletAddress } = useAuth();
   const navigate = useNavigate();
   const { data: skills = [], isLoading } = useUserSkills();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/skills/SkillsLibrary.tsx:query", '');
   const [filter, setFilter] = useState<Filter>('all');
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<UserSkill | null>(null);

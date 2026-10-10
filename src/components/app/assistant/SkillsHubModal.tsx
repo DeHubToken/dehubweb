@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * SkillsHubModal
  * ==============
@@ -51,7 +52,7 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
   const deleteSkill = useDeleteSkill();
 
   const [tab, setTab] = useState<Tab>('browse');
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/assistant/SkillsHubModal.tsx:query", '');
 
   // Create form
   const [form, setForm] = useState({

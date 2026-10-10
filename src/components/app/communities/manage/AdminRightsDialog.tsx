@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Admin Rights Dialog
  * ===================
@@ -86,7 +87,7 @@ function AdminRightsForm({ community, membership, target, onOpenChange }: AdminR
     }
     return seed;
   });
-  const [customTitle, setCustomTitle] = useState<string>(target.custom_title ?? '');
+  const [customTitle, setCustomTitle] = useSurfaceDraft<string>("components/app/communities/manage/AdminRightsDialog.tsx:customTitle", target.custom_title ?? '', draftIdentity([community, target]));
 
   const displayName = profile?.name || shortAddress(target.wallet_address);
   const subtitle = profile?.handle || shortAddress(target.wallet_address);

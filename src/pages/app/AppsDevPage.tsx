@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * `/apps/dev` — build a dehub mini app.
@@ -133,7 +134,7 @@ export default function AppsDevPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { walletAddress, connectionSource } = useAuth();
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useSurfaceDraft("pages/app/AppsDevPage.tsx:url", '');
   const [checking, setChecking] = useState(false);
   const [result, setResult] = useState<ManifestCheck | null>(null);
   const [signing, setSigning] = useState(false);

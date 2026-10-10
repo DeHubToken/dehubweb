@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Check, Copy, Globe, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -66,7 +67,7 @@ function EnsHandleSettingsInner() {
   const { signMessageAsync } = useSignMessage();
 
   const [link, setLink] = useState<EnsLink | null | undefined>(undefined);
-  const [name, setName] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/settings/EnsHandleSettings.tsx:name", '');
   const [preview, setPreview] = useState<EnsPreview | null>(null);
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [challenge, setChallenge] = useState<EnsChallenge | null>(null);
@@ -84,13 +85,13 @@ function EnsHandleSettingsInner() {
         // Only offer a suggestion when there is nothing to replace. Most people
         // have never set a reverse record, so this is usually null and the box
         // stays empty — it must work perfectly without one.
-        if (!current) suggestEnsName().then(s => alive && s && setName(s)).catch(() => {});
+        if (!current) suggestEnsName().then(s => alive && s && setName.initialize(s)).catch(() => {});
       })
       .catch(() => alive && setLink(null));
     return () => {
       alive = false;
     };
-  }, []);
+  }, [setName]);
 
   /** Resolve what was typed, and stop if it is not a name we can use. */
   const check = async () => {

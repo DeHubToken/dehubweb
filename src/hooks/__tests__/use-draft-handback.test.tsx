@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { act, createElement, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { useDraft } from '@/hooks/use-draft';
+import { useStoredTextDraft as useDraft } from '@/hooks/use-draft';
 import { writeDraft, readDraft, __resetDraftCacheForTests } from '@/lib/draft-cache';
 
 /**

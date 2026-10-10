@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * TargetingEditor
  * ===============
@@ -49,8 +50,8 @@ interface TargetingEditorProps {
 
 export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
   const { t } = useTranslation();
-  const [creatorInput, setCreatorInput] = useState('');
-  const [communitySearch, setCommunitySearch] = useState('');
+  const [creatorInput, setCreatorInput] = useSurfaceDraft("components/app/ads/TargetingEditor.tsx:creatorInput", '');
+  const [communitySearch, setCommunitySearch] = useSurfaceDraft("components/app/ads/TargetingEditor.tsx:communitySearch", '');
 
   const { data: estimate, isFetching: estimating } = useAudienceEstimate(value);
 

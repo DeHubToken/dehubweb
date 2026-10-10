@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useCallback } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -107,7 +108,7 @@ export default function FullWalletPage() {
   const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
   const [importChainId, setImportChainId] = useState<WalletChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/FullWalletPage.tsx:searchQuery", '');
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
   const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
@@ -828,7 +829,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 }) {
   const { t } = useTranslation();
   const [toAddress, setToAddress] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/FullWalletPage.tsx:amount", '');
   const [sending, setSending] = useState(false);
   const [usernameQuery, setUsernameQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -1076,7 +1077,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   const { walletAddress } = useAuth();
   const { solana: solanaAddress } = useWalletAddresses();
   const [chainId, setChainId] = useState<WalletChainId>(initialChainId);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useSurfaceDraft("pages/app/FullWalletPage.tsx:address", '');
   const [loading, setLoading] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<{ name: string; symbol: string; decimals: number } | null>(null);
 

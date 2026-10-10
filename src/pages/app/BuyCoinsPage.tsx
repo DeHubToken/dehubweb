@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
@@ -68,7 +69,7 @@ export default function BuyCoinsPage() {
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
-  const [customAmount, setCustomAmount] = useState('');
+  const [customAmount, setCustomAmount] = useSurfaceDraft("pages/app/BuyCoinsPage.tsx:customAmount", '');
   const [selectedToken] = useState<DPayToken | null>(null);
   const selectedChainId = BASE_CHAIN_ID;
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(() => {
@@ -85,7 +86,7 @@ export default function BuyCoinsPage() {
   // the time the purchase completes the amount picker is on its default again
   // and the on-page estimate no longer describes what was bought.
   const [purchasedTokens, setPurchasedTokens] = useState<number | null>(null);
-  const [txSearch, setTxSearch] = useState('');
+  const [txSearch, setTxSearch] = useSurfaceDraft("pages/app/BuyCoinsPage.tsx:txSearch", '');
   const { openPostModal } = useGlobalDropZone();
   const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null);
 

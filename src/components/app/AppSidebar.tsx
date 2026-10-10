@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft } from 'lucide-react';
@@ -57,7 +58,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   // Menu search. Unlike the desktop rail this field is always shown: the sheet
   // is opened deliberately and closed again straight away, so there is no
   // resting state to keep uncluttered.
-  const [menuQuery, setMenuQuery] = useState('');
+  const [menuQuery, setMenuQuery] = useSurfaceDraft("components/app/AppSidebar.tsx:menuQuery", '');
   const { addToHistory } = useSearchHistory();
   // `isKidsMode` is in the deps because `filterNavItems` reads the lock
   // directly rather than taking it as an argument — without it here the sheet
@@ -69,8 +70,8 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   );
   // Reset whenever the sheet closes, so it never reopens mid-filter.
   useEffect(() => {
-    if (!isOpen) setMenuQuery('');
-  }, [isOpen]);
+    if (!isOpen) setMenuQuery.initialize('');
+  }, [isOpen, setMenuQuery]);
 
   const runFullSearch = useCallback(() => {
     const query = menuQuery.trim();
@@ -79,7 +80,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
     navigate(exploreSearchHref(query));
     setMenuQuery('');
     closeMenu();
-  }, [menuQuery, addToHistory, navigate, closeMenu]);
+  }, [menuQuery, addToHistory, navigate, closeMenu, setMenuQuery]);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postLiveMode, setPostLiveMode] = useState<'video' | undefined>();
   // From the Live feed, the post button opens the composer on Livestream.

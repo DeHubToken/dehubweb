@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { Search, Plus, Users, Trash2, Pencil, Copy, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -14,7 +15,7 @@ export function CharactersLibrary() {
   const { walletAddress } = useAuth();
   const { data: characters = [], isLoading } = useUserCharacters();
   const del = useDeleteCharacter();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/characters/CharactersLibrary.tsx:query", '');
   const [filter, setFilter] = useState<Filter>('mine');
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<UserCharacter | null>(null);

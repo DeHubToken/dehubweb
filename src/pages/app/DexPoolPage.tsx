@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -94,8 +95,8 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
 
   const [side, setSide] = useState<Side>('buy');
   const [mode, setMode] = useState<Mode>('limit');
-  const [amount, setAmount] = useState('');
-  const [price, setPrice] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/DexPoolPage.tsx:amount", '');
+  const [price, setPrice] = useSurfaceDraft("pages/app/DexPoolPage.tsx:price", '');
   const priceTouched = useRef(false);
   const [payNative, setPayNative] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -230,8 +231,8 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
     if (priceTouched.current || marketPrice == null) return;
     const step = increment;
     const seeded = side === 'sell' ? Math.ceil(marketPrice * 1.001 / step) * step : Math.floor(marketPrice * 0.999 / step) * step;
-    setPrice(String(Number(seeded.toPrecision(8))));
-  }, [marketPrice, side, increment]);
+    setPrice.initialize(String(Number(seeded.toPrecision(8))));
+  }, [marketPrice, side, increment, setPrice]);
   useEffect(() => { setInstantQuote(null); setFormError(''); }, [side, mode, amount, payNative]);
 
   const priceNumber = Number(price), amountNumber = Number(amount);

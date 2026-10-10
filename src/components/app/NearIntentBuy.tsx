@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { sendSolanaPurchase, connectPurchaseSolanaWallet } from '@/lib/wallet/solana-purchase';
 import { usePaymentPicker } from '@/hooks/use-payment-picker';
 import { loadPaymentBalances } from '@/lib/wallet/payment-balances';
@@ -58,7 +59,7 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
   const location = useLocation();
   const queryClient = useQueryClient();
   const [visible, setVisible] = useState(document.visibilityState === 'visible');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/NearIntentBuy.tsx:search", '');
   const [agreed, setAgreed] = useState(false);
   const [connectingSolana, setConnectingSolana] = useState(false);
   const [amountText, setAmountText] = useState(String(Math.max(1, Math.floor(tokensToReceive))));

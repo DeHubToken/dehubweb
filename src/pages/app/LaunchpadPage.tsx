@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -23,7 +24,7 @@ export default function LaunchpadPage() {
   const { t } = useTranslation();
   const { walletAddress } = useAuth() as { walletAddress?: string };
   const [filter, setFilter] = useState<LaunchpadFilter>('new');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/LaunchpadPage.tsx:search", '');
   const location = useLocation();
   const navigate = useNavigate();
   const base = getLaunchpadBase(location.pathname);

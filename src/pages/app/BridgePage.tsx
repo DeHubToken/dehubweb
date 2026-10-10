@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bridge Page
  * ===========
@@ -70,7 +71,7 @@ export default function BridgePage() {
   const { allTokens, isLoading: balancesLoading } = useAllChainsTokens();
 
   const [direction, setDirection] = useState<BridgeDirection>('bnb-to-base');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/BridgePage.tsx:amount", '');
   const [isBridging, setIsBridging] = useState(false);
 
   // Derive DHB balances per chain
@@ -377,7 +378,7 @@ const PAGE_SIZE = 10;
 function BridgeQueue() {
   const { t: translate, i18n } = useTranslation();
   const { data: transfers, isLoading, error } = useBridgeTransfers();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/BridgePage.tsx:search", '');
   const [page, setPage] = useState(0);
 
   const filtered = useMemo(() => {

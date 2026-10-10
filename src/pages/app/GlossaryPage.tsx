@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Glossary Page
@@ -89,7 +90,7 @@ export default function GlossaryPage() {
   const { t } = useTranslation();
   const location = useLocation();
   const iconSize = 18;
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/GlossaryPage.tsx:searchQuery", '');
   // Tier requirements are pegged in dollars, so quote today's ladder rather
   // than the numbers the table was originally written with.
   const badgeLadder = badgeThresholds(useBadgeScale());

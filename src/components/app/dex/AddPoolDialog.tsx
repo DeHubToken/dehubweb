@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +41,7 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
   const { allTokens } = useAllChainsTokens();
   const { data: prices = {} } = useTokenPrices();
   const [chain, setChain] = useState<PoolChain>('base');
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useSurfaceDraft("components/app/dex/AddPoolDialog.tsx:address", '');
   const [check, setCheck] = useState<TokenCheck | null>(null);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState('');
@@ -52,9 +53,9 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
 
   useEffect(() => {
     if (!open) { setError(''); return; }
-    if (paid) { setChain(paid.chain); setAddress(paid.tokenAddress); }
+    if (paid) { setChain(paid.chain); setAddress.initialize(paid.tokenAddress); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, setAddress]);
 
   // Look the token up as soon as the address is well formed.
   useEffect(() => {

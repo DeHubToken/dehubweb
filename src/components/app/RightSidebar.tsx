@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -18,7 +19,7 @@ interface RightSidebarProps {
 
 // Inner search component that uses router hooks (isolates re-renders)
 function SearchBar({ compact }: { compact?: boolean }) {
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useSurfaceDraft("components/app/RightSidebar.tsx:searchValue", '');
   const navigate = useNavigate();
   const { addToHistory } = useSearchHistory();
 

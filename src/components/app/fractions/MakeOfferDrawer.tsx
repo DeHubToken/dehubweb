@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Make Offer Drawer
@@ -27,8 +28,8 @@ interface MakeOfferDrawerProps {
 
 export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenChange, onSuccess }: MakeOfferDrawerProps) {
   const { t } = useTranslation();
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useSurfaceDraft("components/app/fractions/MakeOfferDrawer.tsx:quantity", '', `${chainId}:${tokenId}:${targetSeller ?? "any"}`);
+  const [price, setPrice] = useSurfaceDraft("components/app/fractions/MakeOfferDrawer.tsx:price", '', `${chainId}:${tokenId}:${targetSeller ?? "any"}`);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { walletAddress } = useAuth();
   const createOffer = useCreateOffer();

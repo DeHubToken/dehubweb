@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { SETTINGS_CONTROL_CLASS } from '@/components/app/settings/SettingsRow';
@@ -35,7 +36,7 @@ export function SettingDrawerSelect({
   searchable = false,
 }: SettingDrawerSelectProps) {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/settings/SettingDrawerSelect.tsx:search", '');
   
   const selectedOption = options.find(opt => opt.value === value);
   const displayLabel = selectedOption?.label || 'Select...';

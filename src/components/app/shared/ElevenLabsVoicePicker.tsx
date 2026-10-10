@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Search, Play, Square, Loader2, Trash2, Mic } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -30,7 +31,7 @@ export function ElevenLabsVoicePicker({
   localPreview = true,
   className,
 }: ElevenLabsVoicePickerProps) {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/shared/ElevenLabsVoicePicker.tsx:search", '');
   const [voices, setVoices] = useState<VoiceOption[]>([]);
   const [isLoadingVoices, setIsLoadingVoices] = useState(false);
   const [previewingId, setPreviewingId] = useState<string | null>(null);

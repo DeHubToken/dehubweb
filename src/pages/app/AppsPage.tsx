@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * `/apps` — the mini app store.
  *
@@ -65,7 +66,7 @@ export default function AppsPage() {
       toast.error((error as Error).message);
     }
   };
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("pages/app/AppsPage.tsx:query", '');
   const [category, setCategory] = useState('all');
   const categories = useMemo(
     () => [...new Set((apps ?? []).map((a) => a.category).filter((c): c is string => Boolean(c)))].sort(),

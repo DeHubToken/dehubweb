@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DirectMessageChat Component
  * ===========================
@@ -22,7 +23,6 @@ import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { conversationIdentity } from '@/lib/conversation-identity';
-import { writeDraft } from '@/lib/draft-cache';
 import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
@@ -873,7 +873,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const [showGroupSettings, setShowGroupSettings] = useState(false);
   const [showTipDialog, setShowTipDialog] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/DirectMessageChat.tsx:searchQuery", '');
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [forwardMessageTarget, setForwardMessageTarget] = useState<DmMessage | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
@@ -1556,7 +1556,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     // Taken now and cleared at once, like the composer itself — the quote goes
     // out with this message only.
     const replyingTo = replyTarget;
-    setReplyTarget(null);
+
     const replyPreview: DmMessage['replyTo'] = replyingTo
       ? {
           _id: replyingTo._id,
@@ -1651,7 +1651,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             return { ...old, pages: newPages };
           });
           setIsSendingFee(false);
-          return;
+          return false;
         }
 
         console.log('[DM Fee] Paying', activeFee, 'DHB to recipient:', recipientAddress, '| chain:', chainId);
@@ -1717,7 +1717,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           return { ...old, pages: newPages };
         });
         setIsSendingFee(false);
-        return;
+        return false;
       } finally {
         setIsSendingFee(false);
       }
@@ -1736,7 +1736,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     }
 
     // Now send the actual message (with txHash so server unlocks it)
-    sendMessageMutation.mutate(
+    return new Promise<boolean>((resolve) => sendMessageMutation.mutate(
       {
         content,
         msgType: type,
@@ -1751,6 +1751,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         onSuccess: (data) => {
           // The held fee has now been spent on a message that went out.
           paidTxHashRef.current = null;
+          setReplyTarget(current => current?._id === replyingTo?._id ? null : current);
+          resolve(true);
           if (resolvedConversationId.startsWith('new_') && data.conversation) {
             setResolvedConversationId(data.conversation);
           }
@@ -1766,7 +1768,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
            * why the toast distinguishes the two cases.
            */
           const restored = content.trim();
-          if (restored) writeDraft(draftScope, restored);
+          resolve(false);
           if (feeTxHash && restored) {
             // The fee is already on-chain. Hold it against this exact message
             // so pressing Send again reuses that payment rather than charging
@@ -1783,7 +1785,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           );
         },
       }
-    );
+    ));
   };
 
   const handleDeleteConversation = () => {

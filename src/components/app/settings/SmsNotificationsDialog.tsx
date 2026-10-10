@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Unlocking text notifications: deposit, then prove the number.
  * ============================================================
@@ -67,7 +68,7 @@ export function SmsNotificationsDialog({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useSurfaceDraft("components/app/settings/SmsNotificationsDialog.tsx:phone", '');
   const [code, setCode] = useState('');
   const [stage, setStage] = useState<'idle' | 'paying' | 'confirming'>('idle');
   const cancelled = useRef(false);

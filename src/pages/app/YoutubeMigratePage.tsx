@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * /app/migrate-youtube — "Migrate all"
@@ -219,7 +220,7 @@ export default function YoutubeMigratePage() {
   const { requireAuth } = useAuthPrompt();
   const navigate = useNavigate();
   const [stage, setStage] = useState<Stage>('loading');
-  const [channelUrl, setChannelUrl] = useState('');
+  const [channelUrl, setChannelUrl] = useSurfaceDraft("pages/app/YoutubeMigratePage.tsx:channelUrl", '');
   const [ownershipConfirmed, setOwnershipConfirmed] = useState(false);
   const [videos, setVideos] = useState<ChannelVideo[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -352,7 +353,7 @@ export default function YoutubeMigratePage() {
       } catch {
         // blocked storage — the field just starts empty
       }
-      if (remembered) setChannelUrl(remembered);
+      if (remembered) setChannelUrl.initialize(remembered);
 
       try {
         const active = await getActiveMigrationCharge();
@@ -373,7 +374,7 @@ export default function YoutubeMigratePage() {
       }
       setStage('idle');
     })();
-  }, [fetchVideos, pollCharge]);
+  }, [fetchVideos, pollCharge, setChannelUrl]);
 
   useEffect(() => {
     return () => {

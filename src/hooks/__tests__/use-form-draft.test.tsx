@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { act, createElement, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { useFormDraft, type FormDraftControls } from '@/hooks/use-form-draft';
@@ -11,7 +11,8 @@ import { readDraft, writeDraft, __resetDraftCacheForTests } from '@/lib/draft-ca
  * submitted one does not.
  */
 
-const SCOPE = 'form:probe';
+vi.mock('@/hooks/use-draft-state', () => ({ useAccountDraftKey: (scope: string) => `account:viewer|${scope}` }));
+const SCOPE = 'account:viewer|form:probe';
 
 let container: HTMLDivElement;
 let root: Root;

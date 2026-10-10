@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AudioLines,
@@ -175,7 +176,7 @@ function ResultsSkeleton({ audio }: { audio: boolean }) {
 
 export function FreeAssetsPanel() {
   const [kind, setKind] = useState<FreeAssetKind>("photo");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useSurfaceDraft("components/editor/panels/FreeAssetsPanel.tsx:query", "");
   const [settledQuery, setSettledQuery] = useState("");
   const [orientation, setOrientation] = useState<FreeAssetOrientation>("all");
   const [items, setItems] = useState<FreeAsset[]>([]);

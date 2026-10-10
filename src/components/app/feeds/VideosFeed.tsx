@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Videos Feed Component
  * =====================
@@ -357,7 +358,7 @@ function CategoryFilterSection({
   isLoading?: boolean;
 }) {
   const { t } = useI18n();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/feeds/VideosFeed.tsx:search", '');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   // Hoisted for the same reason as in ContentTypeFilterSection above.
   const activeFilterClass = useActiveFilterClass();

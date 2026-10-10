@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
 import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
@@ -226,7 +227,7 @@ function SortFilterSection({
   onReset,
 }: FilterSectionProps) {
   const { t } = useI18n();
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/feeds/HomeFeed.tsx:categorySearch", '');
 
   const filteredCategories = useMemo(() => {
     let filtered = categories;

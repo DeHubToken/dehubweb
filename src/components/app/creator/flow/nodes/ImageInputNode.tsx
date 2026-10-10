@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Creator Flow — reference image node.
  * ====================================
@@ -37,7 +38,7 @@ export default function ImageInputNode({ id, data, selected }: NodeProps<FlowNod
 
   const [hosting, setHosting] = useState(false);
   const [urlOpen, setUrlOpen] = useState(false);
-  const [urlDraft, setUrlDraft] = useState('');
+  const [urlDraft, setUrlDraft] = useSurfaceDraft("components/app/creator/flow/nodes/ImageInputNode.tsx:urlDraft", '');
   const src = (data.imageUrl as string | undefined) || (data.inputImage as string | undefined);
   const sourceConnected = useHandleConnected(id, undefined, 'source');
 

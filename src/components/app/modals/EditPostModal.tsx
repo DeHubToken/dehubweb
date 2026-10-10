@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Edit Post Modal
  * ===============
@@ -96,7 +97,7 @@ export function EditPostModal({
     return () => { cancelled = true; };
   }, [open, currentArticleBody]);
   const descriptionMax = currentArticleBody !== undefined ? BASE_POST_TEXT_CHARS : tierTextMax;
-  const [categoryInput, setCategoryInput] = useState('');
+  const [categoryInput, setCategoryInput] = useSurfaceDraft("components/app/modals/EditPostModal.tsx:categoryInput", '', tokenId);
   const [categories, setCategories] = useState<string[]>(currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
   const [isMature, setIsMature] = useState(currentContentRating === 'mature');
@@ -162,10 +163,10 @@ export function EditPostModal({
       setCommentsDisabled(currentCommentsDisabled);
       setIsMature(currentContentRating === 'mature');
       setIsForKids(currentForKids === true);
-      setCategoryInput('');
+      setCategoryInput.initialize('');
       setCommonGround(null);
     }
-  }, [open, tokenId, currentTitle, currentDescription, currentArticleBody, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids]);
+  }, [open, tokenId, currentTitle, currentDescription, currentArticleBody, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids, setCategoryInput]);
 
   const handleAddCategory = () => {
     const trimmed = normalizeCategoryName(categoryInput);

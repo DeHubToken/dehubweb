@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Community Ticker Search
  * =======================
@@ -35,7 +36,7 @@ function formatCompact(n: number | null | undefined): string {
 }
 
 export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSearchProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/communities/CommunityTickerSearch.tsx:query", '');
   const [results, setResults] = useState<DexPair[]>([]);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);

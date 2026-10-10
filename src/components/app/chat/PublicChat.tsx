@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X, Languages, RotateCcw } from 'lucide-react';
@@ -87,7 +88,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/PublicChat.tsx:searchQuery", '');
 
   // Reply state
   const [replyTo, setReplyTo] = useState<Message | null>(null);
@@ -201,7 +202,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       }
       return !prev;
     });
-  }, []);
+  }, [setSearchQuery]);
 
   const handleTranslateAll = useCallback(() => {
     if (isAllTranslated) {
@@ -242,9 +243,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, []);
 
   const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string; mediaFile?: File; duration?: number }) => {
-    if (!isAuthenticated || !selectedRoomId) return;
+    if (!isAuthenticated || !selectedRoomId) return false;
     const replyToId = replyTo?.id;
-    setReplyTo(null); // Clear reply after sending
     try {
       if (args.type === 'media' && args.mediaFile) {
         const { url: imageUrl } = await uploadChatImage(args.mediaFile);
@@ -260,9 +260,12 @@ export function PublicChat({ onBack }: PublicChatProps) {
       } else {
         await send(args.content || '', 'text', undefined, replyToId);
       }
+      setReplyTo(current => current?.id === replyToId ? null : current);
+      return true;
     } catch (err) {
       console.error('[PublicChat] Send failed:', err);
       toast.error('Failed to send message');
+      return false;
     }
   };
 

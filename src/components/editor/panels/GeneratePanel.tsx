@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Generate panel.
  * ===============
@@ -65,7 +66,7 @@ export function GeneratePanel() {
   const setGeneratePrefill = useEditorUiStore((s) => s.setGeneratePrefill);
 
   const [kind, setKind] = useState<GenKind>('image');
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useSurfaceDraft("components/editor/panels/GeneratePanel.tsx:prompt", '');
   const [imageModel, setImageModel] = useState<ImageModelKey>('gemini-3-pro-image');
   const [videoModel, setVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   // Separate ratios per mode. One shared value could carry a 4:5 image ratio
@@ -90,13 +91,13 @@ export function GeneratePanel() {
   useEffect(() => {
     if (!generatePrefill) return;
     setKind(generatePrefill.kind);
-    setPrompt(generatePrefill.prompt);
+    setPrompt.initialize(generatePrefill.prompt);
     if (generatePrefill.aspect) {
       if (generatePrefill.kind === 'video') setVideoAspect(generatePrefill.aspect);
       else if (generatePrefill.kind === 'image') setImageAspect(generatePrefill.aspect);
     }
     setGeneratePrefill(null);
-  }, [generatePrefill, setGeneratePrefill]);
+  }, [generatePrefill, setGeneratePrefill, setPrompt]);
 
   // Keep the video ratio legal when the model changes.
   useEffect(() => {
@@ -150,7 +151,7 @@ export function GeneratePanel() {
     } finally {
       setVoiceBusy(false);
     }
-  }, [prompt, quota]);
+  }, [prompt, quota, setPrompt]);
 
   const run = useCallback(() => {
     if (!canRun) {

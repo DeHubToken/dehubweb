@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -115,7 +116,7 @@ export function FollowersListDrawer({
   const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('newest');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/profile/FollowersListDrawer.tsx:searchQuery", '');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [showFollowBackAll, setShowFollowBackAll] = useState(false);
   const [isFollowingBackAll, setIsFollowingBackAll] = useState(false);
@@ -140,7 +141,7 @@ export function FollowersListDrawer({
     profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
   const { groups, createGroup, toggleMember } = useFollowGroups();
   const [groupingAddress, setGroupingAddress] = useState<string | null>(null);
-  const [newGroupName, setNewGroupName] = useState('');
+  const [newGroupName, setNewGroupName] = useSurfaceDraft("components/app/profile/FollowersListDrawer.tsx:newGroupName", '');
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -366,7 +367,7 @@ export function FollowersListDrawer({
       setCurrentPage(1);
       setHasMore(false);
       setTotalCount(null);
-      setSearchQuery('');
+      setSearchQuery.initialize('');
       setDebouncedSearch('');
       setSortOption('newest');
       followBackStreakRef.current = 0;
@@ -375,7 +376,7 @@ export function FollowersListDrawer({
       setBulkFollowProgress({ completed: 0, total: 0 });
       followingSetRef.current = null;
     }
-  }, [open]);
+  }, [open, setSearchQuery]);
 
   const toggleSort = () => {
     setSortOption(prev => prev === 'newest' ? 'earliest' : 'newest');

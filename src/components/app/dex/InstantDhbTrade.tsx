@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +26,7 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
   const walletLocked = useWalletLocked();
   const [side, setSide] = useState<'buy' | 'sell' | null>(null);
   const [pay, setPay] = useState<Pay>('USDC');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/dex/InstantDhbTrade.tsx:amount", '');
   const [quote, setQuote] = useState<SwapCall | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');

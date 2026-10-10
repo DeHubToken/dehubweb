@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * NewConversationModal Component
@@ -154,8 +155,8 @@ function FeePaymentStep({
   onBack: () => void;
 }) {
   const { t } = useTranslation();
-  const [messageText, setMessageText] = useState('');
-  const [customAmount, setCustomAmount] = useState('');
+  const [messageText, setMessageText] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:messageText", '');
+  const [customAmount, setCustomAmount] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:customAmount", '');
   const [isSending, setIsSending] = useState(false);
   const [balanceInfo, setBalanceInfo] = useState<{ checked: boolean; balance: number; sufficient: boolean }>({
     checked: false, balance: 0, sufficient: false,
@@ -390,7 +391,7 @@ export function NewConversationModal({
   initialMessage,
   title,
 }: NewConversationModalProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:searchQuery", '');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
 

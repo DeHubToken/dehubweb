@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Slippage Settings Component
  * ============================
@@ -22,7 +23,7 @@ interface SlippageSettingsProps {
 
 export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSettingsProps) {
   const [open, setOpen] = useState(false);
-  const [customValue, setCustomValue] = useState('');
+  const [customValue, setCustomValue] = useSurfaceDraft("components/app/SlippageSettings.tsx:customValue", '');
 
   const displayPct = (slippageBps / 100).toFixed(slippageBps % 100 === 0 ? 0 : 1);
 

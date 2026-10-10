@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * MusicConfirmDialog
  * ==================
@@ -64,19 +65,19 @@ function detectVoiceGender(prompt: string): 'male' | 'female' | 'auto' {
 }
 
 export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }: MusicConfirmDialogProps) {
-  const [title, setTitle] = useState('');
-  const [lyrics, setLyrics] = useState('');
-  const [style, setStyle] = useState('');
+  const [title, setTitle] = useSurfaceDraft("components/app/assistant/MusicConfirmDialog.tsx:title", '');
+  const [lyrics, setLyrics] = useSurfaceDraft("components/app/assistant/MusicConfirmDialog.tsx:lyrics", '');
+  const [style, setStyle] = useSurfaceDraft("components/app/assistant/MusicConfirmDialog.tsx:style", '');
   const [voiceGender, setVoiceGender] = useState<'male' | 'female' | 'auto'>('auto');
   const [isGeneratingLyrics, setIsGeneratingLyrics] = useState(false);
 
   useEffect(() => {
     if (!open || !userPrompt) return;
-    setTitle(extractTitle(userPrompt));
-    setLyrics(extractLyrics(userPrompt));
-    setStyle(extractStyle(userPrompt));
+    setTitle.initialize(extractTitle(userPrompt));
+    setLyrics.initialize(extractLyrics(userPrompt));
+    setStyle.initialize(extractStyle(userPrompt));
     setVoiceGender(detectVoiceGender(userPrompt));
-  }, [open, userPrompt]);
+  }, [open, userPrompt, setLyrics, setStyle, setTitle]);
 
   const handleConfirm = useCallback(() => {
     onConfirm({ title, lyrics, style, voiceGender });
@@ -108,7 +109,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
     } finally {
       setIsGeneratingLyrics(false);
     }
-  }, [title, style, voiceGender, lyrics, userPrompt]);
+  }, [title, style, voiceGender, lyrics, userPrompt, setLyrics]);
 
   const genderOptions: { value: 'male' | 'female' | 'auto'; label: string; emoji: string }[] = [
     { value: 'auto', label: 'Auto', emoji: '🎤' },

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Transcript panel on a post page.
  *
@@ -210,7 +211,7 @@ interface Props {
 
 export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/post-info/TranscriptSection.tsx:query", '');
   const [overviewLoading, setOverviewLoading] = useState(false);
 
   const { transcript, status, inFlight, canRetry, start, isLoading } =

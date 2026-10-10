@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bookmark Folders Panel
  * ======================
@@ -125,9 +126,9 @@ export function BookmarkFoldersPanel() {
   } = useBookmarkFolders();
 
   const [openFolderId, setOpenFolderId] = useState<string | null>(null);
-  const [newFolderName, setNewFolderName] = useState('');
+  const [newFolderName, setNewFolderName] = useSurfaceDraft("components/app/bookmarks/BookmarkFoldersPanel.tsx:newFolderName", '');
   const [renamingId, setRenamingId] = useState<string | null>(null);
-  const [renameValue, setRenameValue] = useState('');
+  const [renameValue, setRenameValue] = useSurfaceDraft("components/app/bookmarks/BookmarkFoldersPanel.tsx:renameValue", '');
   const [sort, setSort] = useState<FolderSort>('newest');
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [isMoving, setIsMoving] = useState(false);

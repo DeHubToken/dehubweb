@@ -1,3 +1,4 @@
+import { useDraft } from '@/hooks/use-draft';
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Send, Users, Loader2, Mic, SmilePlus, Reply, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
@@ -143,7 +144,6 @@ interface SidebarChatProps {
 }
 
 export function SidebarChat({ isActive }: SidebarChatProps) {
-  const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<SupabaseLiveChatMessage | null>(null);
   // Edits happen in the row itself rather than in the composer at the foot of
   // the rail — the composer is a 169-character single line shared with the
@@ -175,6 +175,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
 
   const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
   const roomId = rooms[0]?.id || null;
+  const [newMessage, setNewMessage] = useDraft(roomId ? `room:${roomId}` : null);
   const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
 
@@ -276,7 +277,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     setReplyTo(null);
     try {
       await send(trimmed, 'text', undefined, replyToId);
-      setNewMessage('');
+      setNewMessage(current => current === newMessage ? '' : current);
     } catch (err) {
       console.error('[SidebarChat] Send failed:', err);
       toast.error('Failed to send message');

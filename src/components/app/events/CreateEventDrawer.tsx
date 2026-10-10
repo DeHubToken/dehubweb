@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -28,18 +29,18 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
   const createEvent = useCreateEvent();
   const { t } = useTranslation();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
+  const [title, setTitle] = useSurfaceDraft("components/app/events/CreateEventDrawer.tsx:title", '', communityId ?? "global");
+  const [description, setDescription] = useSurfaceDraft("components/app/events/CreateEventDrawer.tsx:description", '', communityId ?? "global");
+  const [location, setLocation] = useSurfaceDraft("components/app/events/CreateEventDrawer.tsx:location", '', communityId ?? "global");
   const [startDate, setStartDate] = useState<Date>();
-  const [startTime, setStartTime] = useState('19:00');
+  const [startTime, setStartTime] = useSurfaceDraft("components/app/events/CreateEventDrawer.tsx:startTime", '19:00', communityId ?? "global");
   const [endDate, setEndDate] = useState<Date>();
-  const [endTime, setEndTime] = useState('21:00');
+  const [endTime, setEndTime] = useSurfaceDraft("components/app/events/CreateEventDrawer.tsx:endTime", '21:00', communityId ?? "global");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [hasGateFee, setHasGateFee] = useState(false);
-  const [gateFee, setGateFee] = useState('');
+  const [gateFee, setGateFee] = useSurfaceDraft("components/app/events/CreateEventDrawer.tsx:gateFee", '', communityId ?? "global");
   const [isPrivate, setIsPrivate] = useState(false);
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {

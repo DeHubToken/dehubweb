@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Copy, Check, Loader2, Globe, ExternalLink, AlertTriangle, ChevronRight, Search } from 'lucide-react';
@@ -77,7 +78,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol,
   const [step, setStep] = useState<Step>('chains');
   const [selectedChain, setSelectedChain] = useState<ChainInfo | null>(null);
   const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null);
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/command-centre/CrossChainDepositDrawer.tsx:amount", '');
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [quote, setQuote] = useState<QuoteResponse | null>(null);
   const [quoteError, setQuoteError] = useState('');
@@ -86,8 +87,8 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol,
   const [depositStatus, setDepositStatus] = useState<StatusResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const [assetQuery, setAssetQuery] = useState('');
-  const [manualRefund, setManualRefund] = useState('');
+  const [assetQuery, setAssetQuery] = useSurfaceDraft("components/app/command-centre/CrossChainDepositDrawer.tsx:assetQuery", '');
+  const [manualRefund, setManualRefund] = useSurfaceDraft("components/app/command-centre/CrossChainDepositDrawer.tsx:manualRefund", '');
   const [walletSending, setWalletSending] = useState(false);
   const initialApplied = useRef(false);
 
@@ -135,21 +136,21 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol,
       setStep('chains');
       setSelectedChain(null);
       setSelectedToken(null);
-      setAmount('');
+      setAmount.initialize('');
       setQuote(null);
       setQuoteError('');
       setDepositStatus(null);
       setErrorMsg('');
       setCopied(false);
-      setAssetQuery('');
-      setManualRefund('');
+      setAssetQuery.initialize('');
+      setManualRefund.initialize('');
       setWalletSending(false);
       initialApplied.current = false;
     }
     return () => {
       if (pollRef.current) clearInterval(pollRef.current);
     };
-  }, [open]);
+  }, [open, setAmount, setAssetQuery, setManualRefund]);
 
   const handleSelectToken = (chain: ChainInfo, token: TokenInfo) => {
     setSelectedChain(chain);

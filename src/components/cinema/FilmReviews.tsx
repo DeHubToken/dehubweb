@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Star, Loader2, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -92,14 +93,14 @@ export function FilmReviews({
   const others = data?.reviews.filter((r) => r.address.toLowerCase() !== me) ?? [];
 
   const [rating, setRating] = useState(0);
-  const [body, setBody] = useState('');
+  const [body, setBody] = useSurfaceDraft("components/cinema/FilmReviews.tsx:body", '', justwatchId);
 
   // Seed the composer from an existing review, and re-seed when the visitor
   // moves to a different title without the component unmounting.
   useEffect(() => {
     setRating(mine?.rating ?? 0);
-    setBody(mine?.body ?? '');
-  }, [mine?.id, mine?.rating, mine?.body, justwatchId]);
+    setBody.initialize(mine?.body ?? '');
+  }, [mine?.id, mine?.rating, mine?.body, justwatchId, setBody]);
 
   // Reviews are ours, but the function that stores them is not deployed until
   // Cinema goes live. Say nothing rather than show an empty review section

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Boost Modal
  * ===========
@@ -65,7 +66,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
   const bookBoost = useBookBoost();
 
   const [chosen, setChosen] = useState<SuperPowerKey | null>(null);
-  const [targetAccount, setTargetAccount] = useState('');
+  const [targetAccount, setTargetAccount] = useSurfaceDraft("components/app/modals/BoostModal.tsx:targetAccount", '', tokenId);
   const [targetTiers, setTargetTiers] = useState<string[]>([]);
   const [buyOpen, setBuyOpen] = useState(false);
 
@@ -101,10 +102,10 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
   useEffect(() => {
     if (!open) {
       setChosen(null);
-      setTargetAccount('');
+      setTargetAccount.initialize('');
       setTargetTiers([]);
     }
-  }, [open]);
+  }, [open, setTargetAccount]);
 
   const active = powers.find(p => p.key === chosen);
   const numericTokenId = Number(tokenId);

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Creator Flow — reference video node.
  * ====================================
@@ -39,7 +40,7 @@ export default function VideoInputNode({ id, data, selected }: NodeProps<FlowNod
 
   const [busy, setBusy] = useState<'upload' | 'capture' | null>(null);
   const [urlOpen, setUrlOpen] = useState(false);
-  const [urlDraft, setUrlDraft] = useState('');
+  const [urlDraft, setUrlDraft] = useSurfaceDraft("components/app/creator/flow/nodes/VideoInputNode.tsx:urlDraft", '');
   const videoUrl = data.videoUrl as string | undefined;
   const frameUrl = data.capturedFrameUrl as string | undefined;
   const videoOut = useHandleConnected(id, 'video', 'source');
