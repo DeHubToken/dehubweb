@@ -104,7 +104,7 @@ vi.mock('@/hooks/use-custom-notifications', () => ({
   useMarkAllCustomNotificationsAsRead: () => ({ mutate: vi.fn() }),
 }));
 vi.mock('@/hooks/use-wallet-tokens', () => ({
-  useAllChainsTokens: () => ({ allTokens: [], isLoading: false }),
+  useAllChainsTokens: () => ({ allTokens: [], isLoading: false, failedChains: [], refetch: vi.fn() }),
 }));
 vi.mock('@/hooks/use-staking-data', () => ({
   useStakingStats: () => ({ data: undefined }),

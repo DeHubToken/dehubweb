@@ -114,7 +114,7 @@ export default function FullWalletPage() {
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
   const [tradeOpen, setTradeOpen] = useState(false);
 
-  const { allTokens, isLoading } = useAllChainsTokens();
+  const { allTokens, isLoading, failedChains, refetch } = useAllChainsTokens();
 
   // Wallet + staked + giveaway, defined once in the hook so this page, the
   // Settings row and the badge ladder cannot drift apart again.
@@ -443,6 +443,12 @@ export default function FullWalletPage() {
 
       {/* Token list */}
       <div className="space-y-1">
+        {failedChains.length > 0 && (
+          <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 p-3 text-sm text-zinc-400">
+            <span>{t('common.failedToLoad', 'Failed to load')}: {failedChains.join(', ')}</span>
+            <Button variant="glass" size="sm" onClick={() => { void refetch(); }}>{t('common.retry', 'Retry')}</Button>
+          </div>
+        )}
         {isLoading && allTokens.length === 0 ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
@@ -452,6 +458,9 @@ export default function FullWalletPage() {
             {withBalance.map(grouped => (
               <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
             ))}
+            {!isLoading && !withBalance.length && !failedChains.length && (
+              <p className="py-8 text-center text-sm text-zinc-400">{t(searchQuery.trim() ? 'common.noResults' : 'wallet.zeroBalance')}</p>
+            )}
             <SubscriptionTokensRow />
           </>
         )}
