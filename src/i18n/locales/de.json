@@ -6966,6 +6966,19 @@
       "received": "Version {{revision}} empfangen.",
       "upToDate": "Bereits aktuell.",
       "protectedUndo": "Ältere lokale Änderungen überschneiden sich mit geteilten Änderungen. Rückgängig bewahrt die geteilten Änderungen."
+    },
+    "live": {
+      "stopEdits": "Live-Bearbeitung stoppen",
+      "receiveEdits": "Live-Änderungen empfangen",
+      "shareEdits": "Änderungen live teilen",
+      "waiting": "Warten auf den Abschluss der Bearbeitung",
+      "transferring": "Änderungen werden übertragen",
+      "sharing": "Änderungen werden live geteilt",
+      "receiving": "Live-Änderungen werden empfangen",
+      "paused": "Live-Bearbeitung pausiert",
+      "retryRecovery": "Wiederherstellung erneut versuchen",
+      "personalCopy": "Persönliche Kopie speichern",
+      "privateHint": "Beim Beitreten werden keine Änderungen hochgeladen. Live-Teilen lädt neue private Quellen hoch; Speichern erstellt eine dauerhafte Version."
     }
   },
   "jungleMood": {
