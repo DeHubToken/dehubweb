@@ -493,7 +493,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
  */
 export interface AAWriteResult {
   hash: string;
-  wait: (confirmations?: number) => Promise<{ status: number; hash: string }>;
+  wait: (confirmations?: number) => Promise<{ status: number; hash: string; receipt?: unknown }>;
 }
 
 /**
@@ -633,7 +633,7 @@ export async function writeContractAA(
             return found;
           }),
         );
-        return { status: receipt.status === 'success' ? 1 : 0, hash: receipt.transactionHash };
+        return { status: receipt.status === 'success' ? 1 : 0, hash: receipt.transactionHash, receipt };
       },
     };
   } catch (sendError) {
