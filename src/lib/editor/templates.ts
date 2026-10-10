@@ -1,3 +1,4 @@
+import { beginEditorCommand } from "./editorCommand";
 /**
  * Starter templates.
  * ==================
@@ -10,7 +11,6 @@ import type { TFunction } from "i18next";
 import type { AspectPreset } from "./types";
 import { VIDEO_TEMPLATES, type VideoTemplateAspect } from "./videoTemplates";
 import { applyOps, type AgentOp } from "./agent";
-import { useEditorStore } from "@/store/editorStore";
 
 export interface EditorTemplate {
   id: string;
@@ -170,19 +170,22 @@ export const TEMPLATES: EditorTemplate[] = [
  * fetched from the free stock library; if that fails the template still
  * builds, just without its photo.
  */
-export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx: { wallet?: string | null; aspect?: VideoTemplateAspect } = {}) {
-  const store = useEditorStore.getState();
-  await store.runAsOneStep(async () => {
-    const all = useEditorStore.getState().clips.map((c) => c.id);
-    if (all.length) useEditorStore.getState().rippleDelete(all);
-    useEditorStore.getState().updateSettings({ pages: undefined });
-    useEditorStore.getState().setCurrentTime(0);
-    await applyOps(template.ops(t, ctx.aspect), ctx);
+export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx: { wallet?: string | null; aspect?: VideoTemplateAspect; command?: ReturnType<typeof beginEditorCommand> } = {}) {
+  const command = ctx.command ?? beginEditorCommand();
+  const ownsCommand = !ctx.command;
+  try {
+    const store = command.store();
+    const all = store.clips.map((c) => c.id);
+    if (all.length) store.rippleDelete(all);
+    store.updateSettings({ pages: undefined });
+    store.setCurrentTime(0);
+    await applyOps(template.ops(t, ctx.aspect), { ...ctx, command });
+    if (!command.isCurrent()) return;
     // Text defaults to 4s and photos to 5s; a still design should have every
     // layer on screen for the same span.
-    const s = useEditorStore.getState();
+    const s = command.store();
     const end = s.clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
     for (const c of s.clips) if (template.kind !== "video" && c.start + c.duration < end) s.patchClip(c.id, { duration: end - c.start });
-  });
-  useEditorStore.getState().selectClip(null);
+    command.store().selectClip(null);
+  } finally { if (ownsCommand) command.release(); }
 }

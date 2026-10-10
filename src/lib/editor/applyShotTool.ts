@@ -1,3 +1,4 @@
+import { commitCommand, type CommandCommit } from "./editorCommand";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { getMedia } from "./mediaStore";
@@ -14,11 +15,11 @@ export async function detectClipShots(id: string, signal?: AbortSignal, progress
   if (signal?.aborted || now.projectId !== before.projectId || now.clips !== before.clips || now.tracks !== before.tracks) throw new Error("design changed");
   return { clip, analysis };
 }
-export async function splitShotClip(clip: MediaClip, times: number[]): Promise<boolean> {
+export async function splitShotClip(clip: MediaClip, times: number[], command?: CommandCommit): Promise<boolean> {
   const now = useEditorStore.getState();
   if (now.clips.find(c => c.id === clip.id) !== clip) return false;
   const result = applyTimelineOp(now, { op: "split_points", id: clip.id, times }, () => nanoid(10));
   if (!result) return false;
-  await now.runAsOneStep(() => useEditorStore.setState({ clips: result.clips, selectedClipIds: [clip.id, ...result.created] }));
+  await commitCommand(command, () => now.runAsOneStep(() => useEditorStore.setState({ clips: result.clips, selectedClipIds: [clip.id, ...result.created] })));
   return true;
 }

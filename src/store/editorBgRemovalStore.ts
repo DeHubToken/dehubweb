@@ -1,3 +1,4 @@
+import type { CommandCommit } from "@/lib/editor/editorCommand";
 /**
  * Background-removal progress, shared by every place that can start it (the
  * inspector button, the canvas menu, the AI agent) so they all show the same
@@ -15,7 +16,7 @@ interface BgRemovalState {
   progress: BgRemovalProgress | null;
   failure: BackgroundRemovalFailure | null;
   dismissFailure: () => void;
-  run: (clipId: string, wallet?: string | null) => Promise<boolean>;
+  run: (clipId: string, wallet?: string | null, command?: CommandCommit) => Promise<boolean>;
   cancel: () => void;
 }
 
@@ -27,7 +28,7 @@ export const useBgRemovalStore = create<BgRemovalState>((set, get) => ({
   failure: null,
   dismissFailure: () => set({ failure: null }),
   cancel: () => backgroundController?.abort(),
-  run: async (clipId, wallet) => {
+  run: async (clipId, wallet, command) => {
     if (get().clipId) return false;
     const controller = new AbortController(); backgroundController = controller;
     const before = useEditorStore.getState();
@@ -42,7 +43,7 @@ export const useBgRemovalStore = create<BgRemovalState>((set, get) => ({
     set({ clipId, progress: null, failure: null });
     try {
       const ok = await removeLayerBackground(clipId, {
-        wallet, signal: controller.signal,
+        wallet, signal: controller.signal, command,
         onProgress: (progress) => set({ progress }),
       });
       if (ok) toast.success(i18n.t('editor.bgRemove.done'));

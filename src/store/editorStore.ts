@@ -857,14 +857,12 @@ export const useEditorStore = create<EditorState>((set, get) => {
     };
   },
 
-  runAsOneStep: async (fn) => {
+  runAsOneStep: (fn) => {
     const epoch = batchEpoch, lease = editGate.hold();
     batchedEdits++;
     const before = get();
     const snapshot = snapshotEditable(before);
-    try {
-      await fn();
-    } finally {
+    const finish = () => {
       if (epoch === batchEpoch) {
         batchedEdits--;
         const after = get();
@@ -876,7 +874,12 @@ export const useEditorStore = create<EditorState>((set, get) => {
         }
       }
       lease.release();
-    }
+    };
+    try {
+      const result = fn();
+      if (result) return Promise.resolve(result).finally(finish);
+      finish(); return Promise.resolve();
+    } catch (error) { finish(); return Promise.reject(error); }
   },
 
   patchClipLive: (id, patch) =>
