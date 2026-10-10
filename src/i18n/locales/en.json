@@ -3749,6 +3749,8 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "toolMaboroshi": "Maboroshi",
+    "toolMaboroshiDesc": "Replace characters and objects, review a draft, then export with your original soundtrack.",
     "editorAssetMissing": "That generation has no media to import yet.",
     "editorAssetUnsupported": "3D models cannot go on the timeline. Download the model instead.",
     "editorImportFailed": "Could not import that result into the editor.",
