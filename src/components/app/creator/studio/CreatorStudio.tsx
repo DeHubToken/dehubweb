@@ -441,7 +441,7 @@ function ModeToggle({
             onClick={() => onChange(m.id)}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-full text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
-              compact ? 'px-2 py-1.5' : 'px-2.5 py-1.5',
+              compact ? 'px-1.5 py-1.5' : 'px-2.5 py-1.5',
               active ? 'bg-white text-black' : 'text-white/60 hover:bg-white/10 hover:text-white',
             )}
           >
@@ -1536,6 +1536,9 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           };
         });
 
+  const selectedModel = mode === 'image' ? imageModel : mode === '3d' ? model3dModel : mode === 'audio' ? ttsModel : videoModel;
+  const modelDisplay = modelOptions.find(option => option.value === selectedModel)?.label.split(/\s+/)[0];
+
   /** The nine audio tools, priced where they cost anything. */
   // Named `task`, not `t` — `t` is the translator in this scope.
   const audioTaskOptions: ChipOption<string>[] = AUDIO_TASK_OPTIONS.map((task) => ({
@@ -1797,9 +1800,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                 </div>
               )}
 
-              {/* Settings rail. The mode toggle sits outside the scrolling part
-                  so it never slides out of reach on a narrow screen. */}
-              <div className="mt-1.5 flex flex-wrap items-end gap-2">
+              {/* Compact primary controls share a row; additional tools can wrap. */}
+              <div className="mt-1.5 flex flex-wrap items-center gap-1">
                 {/* Sound effects, music and voice design have nothing to attach
                     — offering a paperclip there is a control that can only
                     produce an error. */}
@@ -1812,7 +1814,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                         aria-label={
                           t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
                         }
-                        className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
+                        className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-1.5 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
                       >
                         {attaching ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -1827,9 +1829,9 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     </DropdownMenuContent>
                   </DropdownMenu>
                 )}
-                <ModeToggle mode={mode} onChange={switchMode} />
+                <ModeToggle mode={mode} onChange={switchMode} compact />
 
-                <div className="flex min-w-0 basis-full flex-wrap items-end gap-2 sm:flex-1 sm:basis-auto">
+                <div className="contents">
                   {/* Audio leads with the tool, not the engine: which of the
                       nine is running decides every other chip on the rail. */}
                   {mode === 'audio' && (
@@ -1851,6 +1853,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       width="md"
                       searchable
                       searchPlaceholder={t('creator.searchModels')}
+                      display={modelDisplay}
                       value={
                         mode === 'image'
                           ? imageModel
@@ -2068,6 +2071,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                         draftScope={`creator:duration:${videoModel}`}
                         label={t('creator.secondsUnit')}
                         singular={t('creator.secondUnit')}
+                        displayUnit="s"
                         value={duration}
                         min={activeVideoModel?.minDuration ?? 5}
                         max={activeVideoModel?.maxDuration ?? 10}
