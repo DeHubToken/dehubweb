@@ -1,3 +1,4 @@
+import { commitCommand, type CommandCommit } from "./editorCommand";
 import { projectTask } from "./projectTask";
 /**
  * Remove an image layer's background on the user's device.
@@ -94,7 +95,7 @@ export async function cutOutImage(blob: Blob, onProgress?: (p: BgRemovalProgress
  */
 export async function removeLayerBackground(
   clipId: string,
-  opts: { wallet?: string | null; onProgress?: (p: BgRemovalProgress) => void; signal?: AbortSignal } = {},
+  opts: { wallet?: string | null; onProgress?: (p: BgRemovalProgress) => void; signal?: AbortSignal; command?: CommandCommit } = {},
 ): Promise<boolean> {
   const s = useEditorStore.getState();
   const clip = s.clips.find((c) => c.id === clipId);
@@ -124,7 +125,7 @@ export async function removeLayerBackground(
         stored.push(id); return id;
       });
       if (!current() || !result.matte) return false;
-      useEditorStore.getState().patchClip(clip.id, { videoMatte: result.matte }); committed = true; return true;
+      await commitCommand(opts.command, () => { if (current()) { useEditorStore.getState().patchClip(clip.id, { videoMatte: result.matte }); committed = true; } }); return committed;
     } finally { disposed = true; if (!committed) await Promise.all(stored.map(discard)); }
   }
   const source = await (await fetch(media.url)).blob();
@@ -136,7 +137,8 @@ export async function removeLayerBackground(
   const file = new File([png], `${base}-cutout.png`, { type: "image/png" });
   const newId = await importOneFile(file, { wallet: opts.wallet });
   if (!newId || !imageCurrent()) return false;
-  useEditorStore.getState().patchClip(clipId, { mediaId: newId });
-  return true;
+  let committed = false;
+  await commitCommand(opts.command, () => { if (imageCurrent()) { useEditorStore.getState().patchClip(clipId, { mediaId: newId }); committed = true; } });
+  return committed;
   } finally { task!.release(); }
 }
