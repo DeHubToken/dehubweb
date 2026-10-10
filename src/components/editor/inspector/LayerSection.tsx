@@ -16,7 +16,7 @@ import {
   Maximize, Minimize, RotateCcw, Scissors, Loader2, Underline, CaseUpper, Frame, Eye, EyeOff, Lock, Unlock,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import { EditorSlider as Slider } from "@/components/editor/EditorSlider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
@@ -30,7 +30,6 @@ export function LayerSection({ clip }: { clip: Clip }) {
   const { t } = useTranslation();
   const patchClip = useEditorStore((s) => s.patchClip);
   const patchClipLive = useEditorStore((s) => s.patchClipLive);
-  const beginGesture = useEditorStore((s) => s.beginGesture);
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const media = useEditorStore((s) => s.media);
@@ -58,7 +57,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
     onChange: (v: number) => void) => (
     <div className="space-y-1">
       <Label className="text-[10px] uppercase tracking-wide text-white/40">{label}</Label>
-      <div onPointerDownCapture={beginGesture} onKeyDownCapture={beginGesture}>
+      <div>
         <Slider value={[value]} min={min} max={max} step={step} onValueChange={(v) => onChange(v[0] ?? value)} />
       </div>
     </div>

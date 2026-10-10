@@ -11,6 +11,7 @@ import { useDraftState } from "@/hooks/use-draft-state";
  * press Record, move the playhead, move the layer.
  */
 import { useRef } from "react";
+import { useEditorControlGesture } from "@/components/editor/useEditorControlGesture";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Diamond, Plus, Timer, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -29,7 +30,7 @@ export function MotionSection({ clip }: { clip: Clip }) {
   const settings = useEditorStore((s) => s.settings);
   const patchClip = useEditorStore((s) => s.patchClip);
   const patchClipLive = useEditorStore((s) => s.patchClipLive);
-  const beginGesture = useEditorStore((s) => s.beginGesture);
+  const gesture = useEditorControlGesture(clip.id);
   const setCurrentTime = useEditorStore((s) => s.setCurrentTime);
   const setIsPlaying = useEditorStore((s) => s.setIsPlaying);
   const recording = useEditorUiStore((s) => s.recordMotion);
@@ -92,6 +93,7 @@ export function MotionSection({ clip }: { clip: Clip }) {
   const scrub = (p: KeyframeProp) => (e: React.PointerEvent) => {
     if (e.button !== 0 || (!inside && isAnimated(clip, p))) return;
     e.preventDefault();
+    if (!gesture.begin(() => window.removeEventListener("pointermove", move))) return;
     const x0 = e.clientX;
     const v0 = propAt(clip, p, now);
     const per = p === "x" ? 1 / settings.width : p === "y" ? 1 / settings.height : p === "rotation" ? 0.5 : 0.005;
@@ -99,18 +101,14 @@ export function MotionSection({ clip }: { clip: Clip }) {
     const move = (ev: PointerEvent) => {
       const dx = ev.clientX - x0;
       if (!began && Math.abs(dx) < 2) return;
-      if (!began) { beginGesture(); began = true; }
+      if (!gesture.isCurrent()) return;
+      began = true;
       const cur = latestClip(clip.id);
       if (!cur) return;
       const v = clampValue(p, v0 + dx * per * (ev.shiftKey ? 10 : 1));
       patchClipLive(clip.id, placementPatchAt(cur, { [p]: v }, useEditorStore.getState().currentTime, { record: useEditorUiStore.getState().recordMotion }));
     };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-    };
     window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
   };
 
   const prevKey = (p: KeyframeProp) => [...keysOf(clip, p)].reverse().find((k) => k.t < local - KEY_EPSILON);
@@ -262,7 +260,6 @@ export function MotionSection({ clip }: { clip: Clip }) {
             <>
               <CurveEditor
                 ease={ease}
-                onStart={beginGesture}
                 onLive={(e) => patchClipLive(clip.id, { keyframes: setEaseAt(latestClip(clip.id) ?? clip, curveAt, e) })}
               />
               <p className="text-[10px] leading-snug text-white/40">{t("editor.motion.curveHint")}</p>
@@ -315,6 +312,7 @@ function KeyLane({ clip, prop, label, local, segment, onSeek }: {
 }) {
   const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
+  const gesture = useEditorControlGesture(clip.id);
   const dur = Math.max(0.01, clip.duration);
   const pct = (s: number) => `${Math.max(0, Math.min(1, s / dur)) * 100}%`;
   const timeAt = (clientX: number) => {
@@ -326,6 +324,7 @@ function KeyLane({ clip, prop, label, local, segment, onSeek }: {
   const onKeyDown = (kt: number) => (e: React.PointerEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    if (!gesture.begin(() => window.removeEventListener("pointermove", move))) return;
     onSeek(kt);
     const x0 = e.clientX;
     let from = kt;
@@ -333,7 +332,8 @@ function KeyLane({ clip, prop, label, local, segment, onSeek }: {
     const move = (ev: PointerEvent) => {
       if (!began && Math.abs(ev.clientX - x0) < 3) return;
       const s = useEditorStore.getState();
-      if (!began) { s.beginGesture(); began = true; }
+      if (!gesture.isCurrent()) return;
+      began = true;
       const cur = latestClip(clip.id);
       if (!cur) return;
       const to = timeAt(ev.clientX);
@@ -342,12 +342,7 @@ function KeyLane({ clip, prop, label, local, segment, onSeek }: {
       s.setCurrentTime(cur.start + to);
       from = to;
     };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-    };
     window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
   };
 
   return (
@@ -419,8 +414,9 @@ function EaseThumb({ ease }: { ease: EasePreset }) {
 }
 
 /** Cubic-bezier editor: drag the two handles to shape the curve. */
-function CurveEditor({ ease, onStart, onLive }: { ease: Ease; onStart: () => void; onLive: (e: Ease) => void }) {
+function CurveEditor({ ease, onLive }: { ease: Ease; onLive: (e: Ease) => void }) {
   const ref = useRef<SVGSVGElement>(null);
+  const gesture = useEditorControlGesture();
   const S = 200;
   const P = 14;
   const X = (x: number) => P + x * (S - P * 2);
@@ -431,9 +427,10 @@ function CurveEditor({ ease, onStart, onLive }: { ease: Ease; onStart: () => voi
     if (!b) return;
     e.preventDefault();
     e.stopPropagation();
-    onStart();
+    if (!gesture.begin(() => window.removeEventListener("pointermove", move))) return;
     const start = [...b] as [number, number, number, number];
     const move = (ev: PointerEvent) => {
+      if (!gesture.isCurrent()) return;
       const svg = ref.current;
       if (!svg) return;
       const r = svg.getBoundingClientRect();
@@ -444,12 +441,7 @@ function CurveEditor({ ease, onStart, onLive }: { ease: Ease; onStart: () => voi
       next[handle * 2 + 1] = Math.round(y * 100) / 100;
       onLive(next);
     };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-    };
     window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
   };
 
   return (

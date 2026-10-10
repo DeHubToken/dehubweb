@@ -859,7 +859,6 @@ export const useEditorStore = create<EditorState>((set, get) => {
     const epoch = batchEpoch, lease = editGate.hold();
     batchedEdits++;
     const before = get();
-    const pastLen = before.past.length;
     const snapshot = snapshotEditable(before);
     try {
       await fn();
@@ -867,8 +866,11 @@ export const useEditorStore = create<EditorState>((set, get) => {
       if (epoch === batchEpoch) {
         batchedEdits--;
         const after = get();
-        if (after.past.length !== pastLen || after.clips !== before.clips || after.tracks !== before.tracks || after.settings !== before.settings) {
+        const current = after.toSnapshot();
+        if (projectReviewSnapshotKey(current) !== projectReviewSnapshotKey({ ...current, ...snapshot })) {
           set({ past: [...before.past, snapshot].slice(-MAX_HISTORY), future: [] });
+        } else {
+          set({ past: before.past, future: before.future });
         }
       }
       lease.release();
