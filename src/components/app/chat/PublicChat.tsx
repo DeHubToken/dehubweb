@@ -533,6 +533,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
           </div>
         )}
         <ChatInput
+        voiceMaxDuration={29}
           onSendMessage={handleSendMessage}
           canSend={canSendPublic}
           allowDocuments={false}

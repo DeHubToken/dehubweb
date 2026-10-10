@@ -1,4 +1,5 @@
 import { apiCall, DEHUB_API_BASE, authedUpload } from './core';
+import { voiceRecordingFilename } from '@/lib/voice-recording';
 import type { DeHubUser } from './types';
 
 // API comment response from /api/nft/{tokenId}/comments
@@ -280,11 +281,7 @@ export async function addVoiceComment(params: {
   parentId?: string;
 }): Promise<VoiceCommentResponse> {
   const formData = new FormData();
-  // Determine extension from blob type
-  const ext = params.audioFile.type.includes('webm') ? 'webm' 
-    : params.audioFile.type.includes('mp4') || params.audioFile.type.includes('m4a') ? 'm4a'
-    : params.audioFile.type.includes('ogg') ? 'ogg' : 'webm';
-  formData.append('file', params.audioFile, `voice-${Date.now()}.${ext}`);
+  formData.append('file', params.audioFile, voiceRecordingFilename(params.audioFile.type));
 
   const url = new URL('/api/comment_audio', DEHUB_API_BASE);
   url.searchParams.set('streamTokenId', String(params.tokenId));
