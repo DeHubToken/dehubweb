@@ -1,7 +1,7 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { dexActionError } from '@/lib/dex/action-error';
-import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
+import { minuteCache, parseDehubMarket, isDehubPool, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
@@ -38,7 +38,7 @@ type CachedPosition = Omit<VerifiedPosition, 'liquidity'> & { liquidity: string 
 const readSharedMarket = minuteCache(async () => {
   const { data, error } = await readWithTimeout(Promise.resolve(supabase.rpc('get_dex_market')), 'Shared market');
   if (error) throw error;
-  return parseSharedMarket<CachedPosition>(data);
+  return parseDehubMarket<CachedPosition>(data);
 });
 /** Sweep the pools for positions opened outside the app now, rather than waiting on the next
  *  scheduled sweep. The endpoint throttles itself, so a burst of these costs nothing, and a
@@ -148,9 +148,9 @@ export default function DexPage() {
     tokenApproval: t('dex.automaticStage.tokenApproval'), permitApproval: t('dex.automaticStage.permitApproval'),
     submit: t('dex.automaticStage.submit'),
   };
-  const venuePositions = useMemo(() => positions.filter((p) => p.chain_id === venue), [positions]);
+  const venuePositions = useMemo(() => positions.filter(isDehubPool), [positions]);
   // Old BNB positions stay withdrawable, so their owners still see them under My positions.
-  const legacyMine = useMemo(() => positions.filter((p) => p.chain_id === BNB_CHAIN_ID && p.owner.toLowerCase() === walletAddress?.toLowerCase()).sort(byNewest), [positions, walletAddress]);
+  const legacyMine = useMemo(() => positions.filter((p) => !isDehubPool(p) && p.owner.toLowerCase() === walletAddress?.toLowerCase()).sort(byNewest), [positions, walletAddress]);
   const ordered = useMemo(() => [...venuePositions].sort(byNewest), [venuePositions]);
   const transactions = useMemo(() => ordered.slice(0, 8), [ordered]);
 
@@ -245,13 +245,10 @@ export default function DexPage() {
   }, [loadPositions]);
 
 
-  const externalAsks = useMemo(() => snapshot?.externalAsks ?? [], [snapshot]);
-  const { bids, asks } = useMemo(() => aggregateBook(venuePositions, increment, externalAsks),
-    [venuePositions, increment, externalAsks]);
+  const { bids, asks } = useMemo(() => aggregateBook(venuePositions, increment), [venuePositions, increment]);
   const bestAsk = snapshot?.price ?? null;
-  // Every DHB pool, weighted by its own dollar liquidity — not just this order book.
+  // Price and both liquidity sides belong to the DeHub Base pool.
   const usdPrice = snapshot?.usdPrice ?? null;
-  // Both sides of every pool: the dollar side plus the DHB side valued at the market price.
   const liquidityUsd = snapshot?.liquidityUsd != null
     ? snapshot.liquidityUsd + (snapshot.lpDhb != null && usdPrice != null ? snapshot.lpDhb * usdPrice : 0)
     : null;
@@ -261,8 +258,7 @@ export default function DexPage() {
   const bidTotal = bids.at(-1)?.cumulativeDhb || 0, askTotal = asks.at(-1)?.cumulativeDhb || 0;
   const totalUsdc = venuePositions.reduce((sum, p) => sum + p.amountUsdc, 0);
   const totalDhb = venuePositions.reduce((sum, p) => sum + p.amountDhb, 0);
-  // Pools can disagree: the 0.3% pool's ask floor sometimes sits under the 0% pool's bid ceiling,
-  // so the book overlaps and the gap goes negative. That is not a spread, so the row stays blank.
+  // A crossed or empty book has no positive spread to display.
   const gap = bids.length && asks.length ? asks[0].price - bids[0].price : null;
   const spread = gap != null && gap > 0 ? gap : null;
   const spreadShare = spread != null ? spreadPercent(bids[0].price, asks[0].price) : null;
@@ -276,8 +272,7 @@ export default function DexPage() {
     const live = venuePositions.find((p) => p.poolFee === 0 && Number.isFinite(p.marketPrice) && p.marketPrice > 0);
     return live?.marketPrice ?? null;
   }, [venuePositions]);
-  // The venue's own pool can drift a long way from where DHB trades everywhere else. Anchor
-  // the ticket on whichever of the two is safer for the trader, and never on the pool alone.
+  // Both references now describe the same DeHub pool.
   const referencePrice = useCallback((next: 'buy' | 'sell') => seedReference(next, poolPrice, usdPrice) ?? bestAsk, [poolPrice, usdPrice, bestAsk]);
   const seedPrice = useMemo(() => referencePrice(side), [referencePrice, side]);
   useEffect(() => {

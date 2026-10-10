@@ -15,6 +15,32 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  dex-dehub-pool:
+    name: DeHub pool market scope
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: public.ecr.aws/docker/library/postgres:16
+        env:
+          POSTGRES_PASSWORD: dex-test
+          POSTGRES_DB: dex_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: dex-test
+      PGDATABASE: dex_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/dex-dehub-pool-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261011001000_dex_dehub_pool_market.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/dex-dehub-pool.sql
+
   dub-discovery:
     name: Dubbing discovery claims
     runs-on: ubuntu-latest
