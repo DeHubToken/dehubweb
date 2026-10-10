@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'services/maboroshi/**'
+      - 'supabase/functions/maboroshi-provider/**'
       - '.github/workflows/maboroshi.yml'
   workflow_dispatch:
 jobs:
@@ -25,4 +26,7 @@ jobs:
           node-version: '22'
       - run: |
           node --check services/maboroshi/static/studio.js
-          node --check services/maboroshi/static/setup.js
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno test supabase/functions/maboroshi-provider/handler_test.ts
