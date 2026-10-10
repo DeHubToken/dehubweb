@@ -615,7 +615,7 @@ function ImmersiveVideoHeader({
  * Desktop creator row for a video post.
  *
  * This is deliberately the SAME markup the home feed's VideoCard renders above
- * its player — `CardHeader` plus the Sparkles/MoreVertical pair — rather than a
+ * its player — `CardHeader` — rather than a
  * second hand-rolled avatar+name block. The hand-rolled one drifted: a 40px
  * square avatar against the feed's 36px, no badge icon, no profile hover card,
  * `mb-4` where the feed uses CardHeader's own `pb-3`, and a lucide-free inline
@@ -631,8 +631,6 @@ interface DesktopCreatorInfoProps {
   creatorId?: string;
   verified?: boolean;
   badgeBalance?: number;
-  onAIClick?: () => void;
-  onMenuClick?: () => void;
 }
 
 function DesktopCreatorInfo({
@@ -642,8 +640,6 @@ function DesktopCreatorInfo({
   creatorId,
   verified = false,
   badgeBalance,
-  onAIClick,
-  onMenuClick,
 }: DesktopCreatorInfoProps) {
   if (!channel) return null;
 
@@ -660,23 +656,6 @@ function DesktopCreatorInfo({
         badgeBalance={badgeBalance}
       />
 
-      {/* Action buttons — same icons at the same 23.5px the feed card uses. */}
-      <div className="flex items-center gap-1">
-        <button
-          onClick={onAIClick}
-          className="text-zinc-400 hover:text-white transition-colors"
-          aria-label="Ask AI about this video"
-        >
-          <Sparkles className="w-[23.5px] h-[23.5px]" />
-        </button>
-        <button
-          onClick={onMenuClick}
-          className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
-          aria-label="Post options"
-        >
-          <MoreVertical className="w-[23.5px] h-[23.5px]" />
-        </button>
-      </div>
     </div>
   );
 }
@@ -1032,6 +1011,13 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     };
   }, [isFullBleedLive, isVideoPost, isImmersiveImage]);
 
+  // The loaded video owns Back; the nav pill keeps its tabs and feed settings.
+  const hasMediaBack = isVideoPost && !isAudioPost && !!post && post.status !== 'pending';
+  useEffect(() => {
+    if (hasMediaBack) document.body.classList.add('post-media-back');
+    return () => document.body.classList.remove('post-media-back');
+  }, [hasMediaBack]);
+
 
   // (The `body { pointer-events: none }` guard that used to live here is gone
   // with the sheet: vaul set it even at modal={false}, which blocked taps on the
@@ -1079,7 +1065,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
+        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
       case 'image':
         return <ImageCard post={toImagePost(post)} aboveFold postPage isImmersive={isImmersiveImage} onOpenComments={handleOpenPageComments} />;
       case 'live': {
@@ -1274,12 +1260,6 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
         {useStage ? renderStage() : isMobileView ? (
           <div data-post-page data-glass-page ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', videoChromeClearance)}>
             <div className="relative">
-              {/* Back sits on the video, YouTube-style. The mobile header and the
-                  home feed's nav pill are hidden over an immersive video (see
-                  `immersive-video-mode` in index.css), and the pill is what
-                  carried the overlay's back arrow — so the post has to bring its
-                  own, and this is the control that was built for it. */}
-              <ImmersiveVideoHeader onBack={goBack} />
               {renderContent()}
             </div>
             <div className="px-2 sm:px-3">{pageComments}</div>
@@ -1304,8 +1284,6 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
                     creatorId={videoData.creatorId}
                     verified={videoData.verified}
                     badgeBalance={videoData.creatorBadgeBalance}
-                    onAIClick={() => setShowDesktopAIChat(true)}
-                    onMenuClick={() => setShowDesktopOptionsDrawer(true)}
                   />
                   {renderContent()}
                   {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
