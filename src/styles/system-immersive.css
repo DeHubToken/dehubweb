@@ -7,6 +7,11 @@ html:is([data-theme='system'], [data-theme='immersive']) {
   --immersive-hairline: rgb(255 255 255 / 0.08);
 }
 
+/* Match the native System feed: the black page shows through each bento. */
+html[data-theme='system'] [data-feed-item] {
+  background: transparent !important;
+}
+
 /* The home filter controls share one rounded rectangle in every state. */
 html[data-theme='system'] [data-home-filter-panel] :is([data-glass-toggle-button], [data-glass-indicator]) {
   border-radius: 8px !important;
