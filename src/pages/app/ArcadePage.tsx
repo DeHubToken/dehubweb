@@ -86,7 +86,7 @@ function GameCard({ game }: { game: ArcadeGame }) {
             to={`/arcade/${game.slug}`}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
           >
-            {game.slug === 'trenchstar' ? <img src="/trenchstar-game/icons/play.svg" width={24} height={24} alt="" aria-hidden="true" /> : <Play className="h-3.5 w-3.5" />}
+            <Play className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             {game.action}
           </Link>
           {game.onlineHref ? (
