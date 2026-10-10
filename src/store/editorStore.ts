@@ -138,6 +138,7 @@ interface EditorState extends EditableState {
 
   editing: boolean;
   holdEdits: () => ProjectEditLease;
+  cancelPendingEdits: () => void;
   beginGesture: () => ProjectEditLease;
   /**
    * Run several store edits as one undo step. Used by the AI agent, whose one
@@ -188,6 +189,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
   return ({
   editing: false,
   holdEdits: () => editGate.hold(),
+  cancelPendingEdits: () => editGate.reset(),
   projectId: nanoid(10),
   projectTitle: "Untitled project",
   tracks: defaultTracks(),
