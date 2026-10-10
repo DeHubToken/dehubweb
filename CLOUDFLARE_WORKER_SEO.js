@@ -1,3 +1,4 @@
+import { localizePublicChrome, localizeStructuredData } from './server/public-page-locales.js';
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
 import { applyTextPostImage } from './server/post-share-card.js';
@@ -521,7 +522,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs">Docs</a></p>
 <article><h1>${escHtml(meta.title.replace(/ — DeHub( Docs)?$/, ''))}</h1>
-${body}</article>
+<!--hl-body-->${body}<!--/hl-body--></article>
 <nav aria-label="DeHub documentation"><h2>More documentation</h2><ul>${nav}</ul></nav>
 <p><a href="${APP_URL}/docs/blog">DeHub Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
@@ -762,7 +763,7 @@ ${ogLocaleTag()}
 <h1>${escHtml(post.title)}</h1>
 <p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — ${escHtml(published.slice(0, 10))}` : ''}</em></p>
 ${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(post.bannerImageAlt || post.title)}" style="max-width:100%">` : ''}
-${body}
+<!--hl-body-->${body}<!--/hl-body-->
 </article>
 ${manifest ? relatedPostsHtml(manifest, post.slug) : ''}
 <p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
@@ -926,7 +927,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: meta.heading, url: canonicalUrl }])}
 <p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
 <p>${escHtml(meta.intro)}</p>
-${meta.bodyHtml || ''}
+<!--hl-body-->${meta.bodyHtml || ''}<!--/hl-body-->
 ${primaryNavHtml(`/${key}`)}
 <p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on DeHub</a></p>
 </body>
@@ -2238,7 +2239,7 @@ function servedLocales(route, table) {
   return Object.keys(langs)
     .filter((l) => {
       const t = langs[l];
-      return l !== 'en' && /^[a-z]{2}$/.test(l) && t && t.title && t.body && (!en || t.title !== en.title);
+      return l !== 'en' && /^[a-z]{2}$/.test(l) && t && t.title && (t.body || t.asset) && (t.asset || !en || t.title !== en.title);
     })
     .sort();
 }
@@ -2314,7 +2315,7 @@ function localizePage(html, route, hl, table) {
   const langs = servedLocales(route, table);
   if (!langs.length || NOINDEX_META.test(html)) return html;
   const t = hl && langs.includes(hl) ? table[route][hl] : null;
-  let out = html.replace('</head>', () => `${hreflangLinks(route, table)}\n</head>`);
+  let out = html.replace(/<link rel="alternate" hreflang="[^"]*" href="[^"]*">\n?/g, '').replace('</head>', () => `${hreflangLinks(route, table)}\n</head>`);
   out = withOgLocale(out, t ? hl : 'en', ['en', ...langs]);
   if (!t) return out;
   const en = table[route].en || {};
@@ -2356,7 +2357,7 @@ function localizePage(html, route, hl, table) {
   // a translation of it as `lede`.
   if (englishHeading) out = out.split(`› ${englishHeading}</p>`).join(`› ${heading}</p>`);
   if (t.lede) out = out.replace(/(<\/h1>\s*)<p>[^<]*<\/p>/i, (m, a) => `${a}<p>${escHtml(t.lede)}</p>`);
-  return out;
+  return localizeStructuredData(localizePublicChrome(out, route, hl, table), route, hl, t);
 }
 
 const DEHUB_API = 'https://api.dehub.io/api';
@@ -3672,7 +3673,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, {
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
-<article>${article}</article>
+<article><!--hl-body-->${article}<!--/hl-body--></article>
 <p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
@@ -5369,7 +5370,24 @@ async function handleRequest(request, env, ctx) {
   const guard = async (resp) => {
     if (!isCanonicalHost) resp.headers.set('X-Robots-Tag', 'noindex');
     if (!(resp.headers.get('Content-Type') || '').includes('text/html')) return resp;
-    return new Response(stylePrerendered(await resp.text()), {
+    let html = stylePrerendered(await resp.text());
+    const route = canonicalizePath(pathname).replace(/^\/docs\/blog\//, '/guides/');
+    if (resp.status === 200 && !NOINDEX_META.test(html)) {
+      const table = await seoI18nTable(env, request.url);
+      if (table[route]) {
+        const redirect = unservedLocaleRedirect(url, route, table);
+        if (redirect) return new Response(null, { status: 301, headers: { Location: redirect } });
+        const lang = requestedLocale(url);
+        const row = lang && table[route][lang];
+        if (row?.asset) {
+          const asset = await env.ASSETS.fetch(new URL(row.asset, request.url), { headers: { Accept: 'application/json' } });
+          if (!asset.ok) return new Response('Translated page temporarily unavailable', { status: 503, headers: { 'Retry-After': '60', 'Cache-Control': 'no-store' } });
+          const page = { ...row, ...await asset.json() };
+          html = localizePage(html, route, lang, { ...table, [route]: { ...table[route], [lang]: page } });
+        } else html = localizePage(html, route, lang, table);
+      }
+    }
+    return new Response(html, {
       status: resp.status,
       headers: resp.headers,
     });
@@ -6260,12 +6278,7 @@ async function handleRequest(request, env, ctx) {
     const table = await seoI18nTable(env, request.url);
     const localeRedirect = unservedLocaleRedirect(url, '/docs', table, false);
     if (localeRedirect) return redirect301(localeRedirect);
-    const docsHtml = localizePage(
-      buildDocsIndexHtml(),
-      '/docs',
-      requestedLocale(url),
-      table,
-    );
+    const docsHtml = buildDocsIndexHtml();
     return guard(new Response(docsHtml, { status: 200, headers: blogHeaders }));
   }
   const docsMatch = cleanPath.match(/^\/docs\/(.+)$/);
@@ -6408,7 +6421,7 @@ async function handleRequest(request, env, ctx) {
     const table = await seoI18nTable(env, request.url);
     const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table, MARKETING_PAGES[sectionKey].noindex);
     if (localeRedirect) return redirect301(localeRedirect);
-    html = localizePage(html, `/${sectionKey}`, requestedLocale(url), table);
+    html = html;
     return guard(new Response(html, {
       status: 200,
       headers: MARKETING_PAGES[sectionKey].noindex
@@ -6988,7 +7001,7 @@ async function handleRequest(request, env, ctx) {
       const table = await seoI18nTable(env, request.url);
       const localeRedirect = unservedLocaleRedirect(url, '/', table, false);
       if (localeRedirect) return redirect301(localeRedirect);
-      html = localizePage(html, '/', requestedLocale(url), table);
+      html = html;
     }
 
     const rendered = await guard(new Response(html, {

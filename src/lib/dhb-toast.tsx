@@ -1,3 +1,4 @@
+import { TranslationText } from '@/components/TranslationText';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Helpers for rendering DHB amounts with the gold coin icon in toast messages.
@@ -9,7 +10,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 export const buyTokensLabel = (
   <span className="inline-flex items-center gap-1.5">
     <img src={dehubCoin} alt="" aria-hidden="true" className="h-4 w-4" />
-    <span>Buy Tokens</span>
+    <span><TranslationText name="copy.989bd871eac5" fallback={"Buy Tokens"} /></span>
   </span>
 );
 

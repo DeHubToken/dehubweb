@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Governance Page
@@ -378,6 +379,7 @@ function SubmitProposalDrawer({
 // Inline translate button for proposal cards
 // ──────────────────────────────────────────────────
 function ProposalTranslateButton() {
+  const { t: _copy } = _useCopy();
   const { isTranslated, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
 
   return (
@@ -386,7 +388,7 @@ function ProposalTranslateButton() {
       className="flex items-center gap-1 text-zinc-500 hover:text-white transition-colors text-[11px]"
     >
       {isTranslated ? <RotateCcw className="w-3 h-3" /> : <Languages className="w-3.5 h-3.5" />}
-      <span>{isTranslated ? 'Original' : 'Translate'}</span>
+      <span>{isTranslated ? _copy("copy.88d759ea02ce", { defaultValue: "Original" }) : _copy("copy.8fe147696fbf", { defaultValue: "Translate" })}</span>
     </button>
   );
 }
@@ -498,6 +500,7 @@ function VoteWeightInfo({ badgeBalance, username }: { badgeBalance: number | und
 // Main Page
 // ──────────────────────────────────────────────────
 export default function GovernancePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal, user } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('proposals');
@@ -554,10 +557,10 @@ export default function GovernancePage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Governance — Vote on Community Proposals" description="Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future." url="https://dehub.io/app/governance" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Governance', url: 'https://dehub.io/app/governance', description: 'Decentralized governance — submit and vote on proposals to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">DeHub Governance — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.d337c11fa526", { defaultValue: "Governance — Vote on Community Proposals" })} description={_copy("copy.16f2ec30029c", { defaultValue: "Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future." })} url="https://dehub.io/app/governance" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Governance', url: 'https://dehub.io/app/governance', description: _copy("copy.af3d83f09598", { defaultValue: "Decentralized governance — submit and vote on proposals to shape DeHub." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">{_copy("copy.e31ead08f6e6", { defaultValue: "DeHub Governance — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
-        icon={<BrandIcon src={governanceShieldIcon} alt="Governance" className="h-8 w-8 object-contain brightness-75" />}
+        icon={<BrandIcon src={governanceShieldIcon} alt={_copy("copy.86f8a694159b", { defaultValue: "Governance" })} className="h-8 w-8 object-contain brightness-75" />}
         title={t('governance.title')}
         subtitle={t('governance.proposalCount', { count: totalCount })}
         actions={

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageCaptions — live subtitles under a stage, in the viewer's language.
  *
@@ -120,6 +121,7 @@ interface StageCaptionsButtonProps {
 }
 
 export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: StageCaptionsButtonProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const show = useShowCaptions();
   const send = useSendCaptions();
@@ -190,9 +192,7 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
         ))}
 
         <DropdownMenuSeparator />
-        <DropdownMenuLabel className="text-xs text-muted-foreground">
-          Audio
-        </DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs text-muted-foreground">{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</DropdownMenuLabel>
 
         {/* Dubbing follows the subtitle language rather than offering its own
             picker. Reading Turkish and hearing Spanish is not a thing anyone
@@ -233,8 +233,7 @@ export function StageCaptionsButton({ isSpeaker, spaceId, wallet, className }: S
             <span className="flex-1">{t('stages.hearItIn', { language: active?.name ?? language })}</span>
             {dubQuote && (
               <span className="ml-2 text-[10px] font-mono text-muted-foreground tabular-nums">
-                {dubQuote.pricePerMinuteDhb}/min
-              </span>
+                {dubQuote.pricePerMinuteDhb}{_copy("copy.ad17a742ccdb", { defaultValue: "/min" })}</span>
             )}
           </DropdownMenuItem>
         )}

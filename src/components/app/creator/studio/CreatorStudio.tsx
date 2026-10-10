@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Creator Studio.
  * ===============
@@ -465,6 +466,7 @@ interface CreatorStudioProps {
 }
 
 export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const checkingSession = useRef(false);
@@ -1293,7 +1295,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     try {
       await apiCall('/api/auth/verify', { requiresAuth: true });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not verify your session.', error instanceof AuthenticationError ? { action: { label: 'Sign in', onClick: () => openLoginModal() } } : undefined);
+      toast.error(error instanceof Error ? error.message : 'Could not verify your session.', error instanceof AuthenticationError ? { action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() } } : undefined);
       return;
     } finally { checkingSession.current = false; }
     if (mode === 'image' || mode === 'video') {
@@ -1368,7 +1370,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     freeImageEligible,
     currentAssets,
     setReference,
-  ]);
+  , _copy]);
 
   /**
    * Called by the paywall once the DHB transfer confirms, or straight from
@@ -1615,7 +1617,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       onClick={() => void openPaywall()}
       aria-disabled={generateDisabled}
       aria-describedby={blockingIssue && !compact ? 'studio-blocking-reason' : undefined}
-      aria-label={`${t(staging ? 'creator.preparing' : 'creator.create')}, est 2-5 mins, ${priceLabel}`}
+      aria-label={_copy("copy.394df20de422", { defaultValue: "{{value1}}, est 2-5 mins, {{value2}}", value1: t(staging ? 'creator.preparing' : 'creator.create'), value2: priceLabel })}
       title={compact ? (blockingIssue ?? priceLabel) : undefined}
       data-creator-create
       className={cn(
@@ -1651,7 +1653,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           <span className="grid min-w-0 text-left leading-none">
             <span className="flex items-baseline gap-2 whitespace-nowrap">
               <span className="font-exo text-[19px] font-black tracking-tight">{t(staging ? 'creator.preparing' : 'creator.create')}</span>
-              <span className="text-[11px] font-semibold opacity-75">est 2-5 mins</span>
+              <span className="text-[11px] font-semibold opacity-75">{_copy("copy.775d7629d9b2", { defaultValue: "est 2-5 mins" })}</span>
             </span>
             <span aria-hidden className="mt-1.5 truncate text-[12px] font-semibold tabular-nums opacity-80 sm:text-[12.5px]">
               {priceLoading
@@ -1722,7 +1724,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     <p className="text-[11px] text-white/40">
                       {audioFile.seconds == null
                         ? t('creator.lengthUnreadable')
-                        : `${audioQuantityLabel}${activeAudioTask.paid ? ' — billed on this' : ''}`}
+                        : `${audioQuantityLabel}${activeAudioTask.paid ? _copy("copy.680d5e9f5113", { defaultValue: " — billed on this" }) : ''}`}
                     </p>
                   </div>
                   <button
@@ -1786,7 +1788,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
               {undoEnhance !== null && (
                 <div className="mt-1 flex items-center gap-2 px-1">
-                  <span className="text-[11px] text-white/45">Prompt expanded.</span>
+                  <span className="text-[11px] text-white/45">{_copy("copy.97886fe2bb28", { defaultValue: "Prompt expanded." })}</span>
                   <button
                     type="button"
                     onClick={() => {
@@ -1794,9 +1796,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       setBeforeEnhance((b) => ({ ...b, [mode]: null }) as ByMode<string | null>);
                     }}
                     className="rounded-full px-2 py-0.5 text-[11px] font-medium text-white/70 underline-offset-2 transition hover:bg-white/10 hover:text-white hover:underline"
-                  >
-                    Undo
-                  </button>
+                  >{_copy("copy.a8283ade3185", { defaultValue: "Undo" })}</button>
                 </div>
               )}
 
@@ -2236,14 +2236,13 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
 /** Small entry point used by the marketing rows further down /creator. */
 export function StudioJumpButton({ onClick }: { onClick: () => void }) {
+  const { t: _copy } = _useCopy();
   return (
     <button
       type="button"
       onClick={onClick}
       className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20"
     >
-      <Wand2 className="h-4 w-4" />
-      Open the composer
-    </button>
+      <Wand2 className="h-4 w-4" />{_copy("copy.9dd53ae8f5e3", { defaultValue: "Open the composer" })}</button>
   );
 }

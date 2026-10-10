@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -68,6 +69,7 @@ export function VideoPaywallModal({
   initialDuration,
   initialResolution,
 }: VideoPaywallModalProps) {
+  const { t: _copy } = _useCopy();
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -288,7 +290,7 @@ export function VideoPaywallModal({
         } catch (uploadErr) {
           console.error('[VideoPaywall] Upload failed before payment:', uploadErr);
           toast.dismiss('video-gen-payment');
-          toast.error('Could not upload your attachments. Nothing has been charged.');
+          toast.error(_copy("copy.c25c2d7af025", { defaultValue: "Could not upload your attachments. Nothing has been charged." }));
           setIsUploading(false);
           setIsPaying(false);
           return;
@@ -336,12 +338,8 @@ export function VideoPaywallModal({
       <DrawerContent column glass hideHandle={false} className="max-h-[85dvh]">
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Video className="w-5 h-5 text-purple-400" />
-            Generate Video
-          </DrawerTitle>
-          <DrawerDescription className="text-zinc-400">
-            Select a model and confirm payment
-          </DrawerDescription>
+            <Video className="w-5 h-5 text-purple-400" />{_copy("copy.2fd59b9cdec1", { defaultValue: "Generate Video" })}</DrawerTitle>
+          <DrawerDescription className="text-zinc-400">{_copy("copy.a16541cb1ea8", { defaultValue: "Select a model and confirm payment" })}</DrawerDescription>
         </DrawerHeader>
 
         <ScrollArea className="flex-1 overflow-y-auto px-4">
@@ -362,9 +360,7 @@ export function VideoPaywallModal({
                         <p className="font-medium text-white text-sm">{model.name}</p>
                         {model.hasAudio && (
                           <span className="flex items-center gap-1 px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] rounded-md">
-                            <Volume2 className="w-2.5 h-2.5" />
-                            Audio
-                          </span>
+                            <Volume2 className="w-2.5 h-2.5" />{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</span>
                         )}
                       </div>
                       <p className="text-xs text-zinc-500">{model.description}</p>
@@ -427,7 +423,7 @@ export function VideoPaywallModal({
             {model.minDuration && model.maxDuration && !model.requiresVideoInput && (
               <div className="bg-zinc-800/50 rounded-xl p-3 space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-zinc-400">Duration</span>
+                  <span className="text-zinc-400">{_copy("copy.4fc52a3c4c55", { defaultValue: "Duration" })}</span>
                   <span className="text-white font-medium">
                     {duration}s
                     {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${getVideoCostUsd(model, duration).toFixed(2)})</span>}
@@ -475,7 +471,7 @@ export function VideoPaywallModal({
             {model.supportsResolution && (
               <div className="bg-zinc-800/50 rounded-xl p-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-zinc-400">Resolution</span>
+                  <span className="text-sm text-zinc-400">{_copy("copy.d4055fafa379", { defaultValue: "Resolution" })}</span>
                   <div className="flex gap-1.5">
                     {/* Only what this model renders. Seedance 2.5 stops at
                         720p, and offering 1080p there takes payment for a
@@ -492,7 +488,7 @@ export function VideoPaywallModal({
                         }`}
                       >
                         {res}
-                        {res === '480p' && <span className="ml-0.5 text-[9px] opacity-60">fast</span>}
+                        {res === '480p' && <span className="ml-0.5 text-[9px] opacity-60">{_copy("copy.115dc3606fbf", { defaultValue: "fast" })}</span>}
                         {res === '1080p' && <span className="ml-0.5 text-[9px] opacity-60">2K</span>}
                       </button>
                     ))}
@@ -506,7 +502,7 @@ export function VideoPaywallModal({
               <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-xl p-3 border border-blue-500/10">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
-                  <span className="text-xs font-medium text-zinc-300">Tips for {model.name}</span>
+                  <span className="text-xs font-medium text-zinc-300">{_copy("copy.5336c950af39", { defaultValue: "Tips for " })}{model.name}</span>
                 </div>
                 <div className="space-y-0.5">
                   {model.tips.map((tip, idx) => (
@@ -519,11 +515,11 @@ export function VideoPaywallModal({
             {/* Negative Prompt (for supported models) */}
             {model.supportsNegativePrompt && (
               <div className="bg-zinc-800/50 rounded-xl p-3 space-y-1.5">
-                <label className="text-sm text-zinc-400">Negative Prompt <span className="text-zinc-600">(optional)</span></label>
+                <label className="text-sm text-zinc-400">{_copy("copy.9973b8991b35", { defaultValue: "Negative Prompt " })}<span className="text-zinc-600">{_copy("copy.0059798b7f70", { defaultValue: "(optional)" })}</span></label>
                 <textarea
                   value={negativePrompt}
                   onChange={(e) => setNegativePrompt(e.target.value)}
-                  placeholder="Elements to exclude, e.g. blur, watermark, low quality..."
+                  placeholder={_copy("copy.d5e3a72caf7e", { defaultValue: "Elements to exclude, e.g. blur, watermark, low quality..." })}
                   className="w-full bg-zinc-900/60 border border-zinc-700/50 rounded-lg p-2 text-sm text-white placeholder:text-zinc-600 resize-none focus:outline-none focus:border-purple-500/40"
                   rows={2}
                   maxLength={500}
@@ -538,7 +534,7 @@ export function VideoPaywallModal({
                 onClick={() => setShowAdvanced(!showAdvanced)}
                 className="w-full flex items-center justify-between text-sm text-purple-400 hover:text-purple-300 transition-colors px-1"
               >
-                <span className="font-medium">Advanced Options</span>
+                <span className="font-medium">{_copy("copy.dfa2817fb222", { defaultValue: "Advanced Options" })}</span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
               </button>
             )}
@@ -551,12 +547,8 @@ export function VideoPaywallModal({
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
-                          <Image className="w-3.5 h-3.5 text-blue-400" />
-                          Reference Images
-                        </p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">
-                          Use <code className="text-purple-400">@Image1</code>–<code className="text-purple-400">@Image9</code> in prompt
-                        </p>
+                          <Image className="w-3.5 h-3.5 text-blue-400" />{_copy("copy.1f218e788605", { defaultValue: "Reference Images" })}</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.bb33dbdb2f21", { defaultValue: "Use " })}<code className="text-purple-400">{_copy("copy.f8440db475e2", { defaultValue: "@Image1" })}</code>–<code className="text-purple-400">{_copy("copy.a1bbfae0f460", { defaultValue: "@Image9" })}</code>{_copy("copy.c37206676570", { defaultValue: " in prompt" })}</p>
                       </div>
                       {referenceImages.length < (model.maxReferenceImages || 9) && (
                         <button
@@ -580,14 +572,13 @@ export function VideoPaywallModal({
                       <div className="flex flex-wrap gap-1.5">
                         {referenceImages.map((img, idx) => (
                           <div key={idx} className="relative group w-12 h-12 rounded-lg overflow-hidden border border-zinc-600/50">
-                            <img src={img.preview} alt={`Ref ${idx + 1}`} className="w-full h-full object-cover" />
+                            <img src={img.preview} alt={_copy("copy.eb6549d50f07", { defaultValue: "Ref {{value1}}", value1: idx + 1 })} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                               <button type="button" onClick={() => handleRemoveReferenceImage(idx)} className="text-white">
                                 <X className="w-3 h-3" />
                               </button>
                             </div>
-                            <span className="absolute bottom-0 left-0 right-0 text-center text-[7px] bg-black/70 text-purple-300 py-0.5">
-                              @Image{idx + 1}
+                            <span className="absolute bottom-0 left-0 right-0 text-center text-[7px] bg-black/70 text-purple-300 py-0.5">{_copy("copy.273a81e9b289", { defaultValue: "@Image" })}{idx + 1}
                             </span>
                           </div>
                         ))}
@@ -602,10 +593,8 @@ export function VideoPaywallModal({
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
-                          <Film className="w-3.5 h-3.5 text-green-400" />
-                          End Frame
-                        </p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">AI interpolates between start & end</p>
+                          <Film className="w-3.5 h-3.5 text-green-400" />{_copy("copy.30fd40fd22fd", { defaultValue: "End Frame" })}</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.2cc3e03f4453", { defaultValue: "AI interpolates between start & end" })}</p>
                       </div>
                       {!endFrameFile && (
                         <button
@@ -626,7 +615,7 @@ export function VideoPaywallModal({
                     />
                     {endFrameFile && (
                       <div className="relative group w-16 h-12 rounded-lg overflow-hidden border border-zinc-600/50">
-                        <img src={endFrameFile.preview} alt="End frame" className="w-full h-full object-cover" />
+                        <img src={endFrameFile.preview} alt={_copy("copy.67763f91d586", { defaultValue: "End frame" })} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <button type="button" onClick={() => { URL.revokeObjectURL(endFrameFile.preview); setEndFrameFile(null); }} className="text-white">
                             <X className="w-3 h-3" />
@@ -643,10 +632,8 @@ export function VideoPaywallModal({
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
-                          <Music className="w-3.5 h-3.5 text-pink-400" />
-                          Audio Input
-                        </p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">Lip-sync / music-reactive (up to 3)</p>
+                          <Music className="w-3.5 h-3.5 text-pink-400" />{_copy("copy.44d3ad658904", { defaultValue: "Audio Input" })}</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.5152ac7a5f5b", { defaultValue: "Lip-sync / music-reactive (up to 3)" })}</p>
                       </div>
                       {audioFiles.length < 3 && (
                         <button
@@ -687,10 +674,8 @@ export function VideoPaywallModal({
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
-                          <Video className="w-3.5 h-3.5 text-orange-400" />
-                          Video Input
-                        </p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">Restyle existing video (up to 3)</p>
+                          <Video className="w-3.5 h-3.5 text-orange-400" />{_copy("copy.4116f98065fd", { defaultValue: "Video Input" })}</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.d38bd93df9c5", { defaultValue: "Restyle existing video (up to 3)" })}</p>
                       </div>
                       {videoFiles.length < 3 && (
                         <button
@@ -731,16 +716,15 @@ export function VideoPaywallModal({
                     <div className="flex items-center gap-3">
                       <div className="flex-1">
                         <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
-                          <Hash className="w-3.5 h-3.5 text-yellow-400" />
-                          Seed <span className="text-zinc-600 text-xs font-normal">(optional)</span>
+                          <Hash className="w-3.5 h-3.5 text-yellow-400" />{_copy("copy.0802bcab258d", { defaultValue: "Seed " })}<span className="text-zinc-600 text-xs font-normal">{_copy("copy.0059798b7f70", { defaultValue: "(optional)" })}</span>
                         </p>
-                        <p className="text-[10px] text-zinc-500 mt-0.5">Same seed + prompt = same result</p>
+                        <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.fefa3c8ec824", { defaultValue: "Same seed + prompt = same result" })}</p>
                       </div>
                       <input
                         type="number"
                         value={seed}
                         onChange={(e) => setSeed(e.target.value)}
-                        placeholder="Random"
+                        placeholder={_copy("copy.67bc484430fe", { defaultValue: "Random" })}
                         className="w-24 bg-zinc-900/60 border border-zinc-700/50 rounded-lg px-2 py-1.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-purple-500/40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </div>
@@ -752,19 +736,19 @@ export function VideoPaywallModal({
             {/* Cost Breakdown */}
             <div className="bg-zinc-800/50 rounded-xl p-3 space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-400">Video Cost</span>
+                <span className="text-zinc-400">{_copy("copy.2f51aac56113", { defaultValue: "Video Cost" })}</span>
                 <span className="text-zinc-300">
                   ${costUsd.toFixed(2)}
                   {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">({duration}s × ${getVideoCostUsd(model, 1).toFixed(3)}/s)</span>}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-400">Staker Discount</span>
+                <span className="text-zinc-400">{_copy("copy.6689b99d8132", { defaultValue: "Staker Discount" })}</span>
                 <span className="text-white font-bold">0%</span>
               </div>
               <div className="border-t border-zinc-700 pt-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-300 font-medium text-sm">Total</span>
+                  <span className="text-zinc-300 font-medium text-sm">{_copy("copy.c9b3c38247f7", { defaultValue: "Total" })}</span>
                   <span className="text-white font-semibold">${costUsd.toFixed(2)}</span>
                 </div>
               </div>
@@ -775,7 +759,7 @@ export function VideoPaywallModal({
               {loading || isQuoting ? (
                 <div className="flex items-center justify-center py-2">
                   <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
-                  <span className="ml-2 text-zinc-400 text-sm">Fetching live price...</span>
+                  <span className="ml-2 text-zinc-400 text-sm">{_copy("copy.3730788afedc", { defaultValue: "Fetching live price..." })}</span>
                 </div>
               ) : (
                 <>
@@ -839,9 +823,7 @@ export function VideoPaywallModal({
             className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 h-10"
             onClick={() => onOpenChange(false)}
             disabled={isGenerating || isPaying || isUploading}
-          >
-            Cancel
-          </Button>
+          >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           <Button
             variant="glass"
             className="flex-1 font-medium h-10"
@@ -850,21 +832,15 @@ export function VideoPaywallModal({
           >
             {isUploading ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Uploading...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.72cb29c90ccd", { defaultValue: "Uploading..." })}</>
             ) : isPaying ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Paying...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
             ) : isGenerating ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
             ) : (
-              'Generate'
+              _copy("copy.49e49bb4401e", { defaultValue: "Generate" })
             )}
           </Button>
         </div>

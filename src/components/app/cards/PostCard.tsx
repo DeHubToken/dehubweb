@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Post Card Component
@@ -131,6 +132,7 @@ interface PostCardProps {
 }
 
 export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComments }: PostCardProps) {
+  const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments, post.id);
@@ -329,10 +331,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'], refetchType: 'none' });
     } catch (err) {
-      toast.error('Failed to repost');
+      toast.error(_copy("copy.7527dc6722fc", { defaultValue: "Failed to repost" }));
       throw err; // let ActionBar roll back its optimistic repost state
     }
-  }, [post.id, walletAddress, openLoginModal, queryClient]);
+  }, [post.id, walletAddress, openLoginModal, queryClient, _copy]);
 
   const handleQuote = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -360,15 +362,15 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         a.download = 'dehub-post.png';
         a.click();
         URL.revokeObjectURL(a.href);
-        toast.success('Image downloaded');
+        toast.success(_copy("copy.c37f27200a86", { defaultValue: "Image downloaded" }));
       }
     } catch (err) {
       if ((err as Error)?.name !== 'AbortError') {
         console.error('[ShareAsImage]', err);
-        toast.error('Failed to share image');
+        toast.error(_copy("copy.5d00a37c220c", { defaultValue: "Failed to share image" }));
       }
     }
-  }, [post.id, post.newPostId, post.content]);
+  }, [post.id, post.newPostId, post.content, _copy]);
 
   // Build a minimal DeHubNFT for the quote modal from post data
   const postAsNFT = {
@@ -489,24 +491,20 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
-                <Repeat2 className="w-5 h-5" /> See Engagements
-              </button>
+                <Repeat2 className="w-5 h-5" />{_copy("copy.3c6161e34023", { defaultValue: " See Engagements" })}</button>
               {!isOwnPost && effectiveFollowingAuthor === false && (
                 <button
                   onClick={handleFollowFromMenu}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
-                  <UserPlus className="w-5 h-5" />
-                  Follow
-                </button>
+                  <UserPlus className="w-5 h-5" />{_copy("copy.641d1ef657bd", { defaultValue: "Follow" })}</button>
               )}
               {!isOwnPost && effectiveFollowingAuthor === true && (
                 <button
                   disabled
                   className="flex items-center gap-3 px-4 py-3 text-zinc-500 rounded-xl text-left cursor-default"
                 >
-                  <UserCheck className="w-5 h-5" /> Following
-                </button>
+                  <UserCheck className="w-5 h-5" />{_copy("copy.56a12e72f40d", { defaultValue: " Following" })}</button>
               )}
               {/* Mute sits above Block deliberately: it is the one most people
                   actually want, and it is reversible and invisible, where Block
@@ -543,8 +541,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                     onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowPollCreator(true), 300); }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
-                    <BarChart2 className="w-5 h-5" /> Create Poll
-                  </button>
+                    <BarChart2 className="w-5 h-5" />{_copy("copy.b8e082c979d9", { defaultValue: " Create Poll" })}</button>
                   <button
                     onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
@@ -574,8 +571,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                       disabled={!postTokenId || isMinting}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-40"
                     >
-                      <Coins className="w-5 h-5" /> Mint post
-                    </button>
+                      <Coins className="w-5 h-5" />{_copy("copy.e60be9da2148", { defaultValue: " Mint post" })}</button>
                   )}
                   <button
                     onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
@@ -590,12 +586,12 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                         await updateTokenVisibility(post.id, next);
                         setVisibility(next);
                         toast.success(`Post set to ${next}`);
-                      } catch { toast.error('Failed to update visibility'); }
+                      } catch { toast.error(_copy("copy.67ca6fcb8233", { defaultValue: "Failed to update visibility" })); }
                     }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
                     {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
-                    {visibility === 'public' ? 'Make Private' : 'Make Public'}
+                    {visibility === 'public' ? _copy("copy.ffab73178509", { defaultValue: "Make Private" }) : _copy("copy.24139936d627", { defaultValue: "Make Public" })}
                   </button>
                 </>
               )}
@@ -640,7 +636,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         {matureGate.isGated ? (
         <MatureContentGate
           onReveal={matureGate.reveal}
-          description="The creator marked this post as adult or graphic."
+          description={_copy("copy.5ca2fd8dd3f8", { defaultValue: "The creator marked this post as adult or graphic." })}
         />
         ) : (isLocked || isSubGated) ? (
         <>
@@ -679,11 +675,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                   >
                     <Star className="w-3.5 h-3.5" />
                     {cheapestPlanPrice !== undefined ? (
-                      <>
-                        Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                      <>{_copy("copy.c2947d66723d", { defaultValue: "Subscribe from " })}<DhbAmount amount={formatCompact(cheapestPlanPrice)} />
                       </>
                     ) : (
-                      'Subscribe to read'
+                      _copy("copy.0ad5874f8903", { defaultValue: "Subscribe to read" })
                     )}
                   </button>
                 )}
@@ -695,9 +690,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                     <Lock className="w-3.5 h-3.5" />
                     {/* Deliberately not "Subscribe" — isLockContent is "hold N
                         of this token", which is a different gate to the one
-                        above and has no subscription anywhere in it. */}
-                    Hold <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} /> to read
-                  </button>
+                        above and has no subscription anywhere in it. */}{_copy("copy.50691a64ba5a", { defaultValue: "Hold " })}<DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />{_copy("copy.dcab65256653", { defaultValue: " to read" })}</button>
                 )}
               </div>
             </div>
@@ -853,12 +846,12 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       <Drawer open={showPollCreator} onOpenChange={setShowPollCreator}>
         <DrawerContent column glass className="px-4 pb-8" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
           <DrawerHeader className="pb-2">
-            <DrawerTitle className="text-white text-lg">Create Poll</DrawerTitle>
+            <DrawerTitle className="text-white text-lg">{_copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-3 mt-1">
             <input
               className="w-full bg-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-500 text-sm outline-none focus:ring-1 focus:ring-white/20"
-              placeholder="Ask a question…"
+              placeholder={_copy("copy.d6a2035c7300", { defaultValue: "Ask a question…" })}
               value={pollQuestion}
               onChange={e => setPollQuestion(e.target.value)}
               maxLength={200}
@@ -868,7 +861,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                 <div key={i} className="flex items-center gap-2">
                   <input
                     className="flex-1 bg-white/10 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 text-sm outline-none focus:ring-1 focus:ring-white/20"
-                    placeholder={`Option ${i + 1}`}
+                    placeholder={_copy("copy.c553678c42d5", { defaultValue: "Option {{value1}}", value1: i + 1 })}
                     value={opt}
                     onChange={e => {
                       const next = [...pollOptions];
@@ -892,8 +885,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                   onClick={() => setPollOptions([...pollOptions, ''])}
                   className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors px-1"
                 >
-                  <Plus className="w-4 h-4" /> Add option
-                </button>
+                  <Plus className="w-4 h-4" />{_copy("copy.d66886c7e738", { defaultValue: " Add option" })}</button>
               )}
             </div>
             <label className="flex items-center gap-3 px-1 cursor-pointer">
@@ -903,7 +895,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                 checked={pollMultiple}
                 onChange={e => setPollMultiple(e.target.checked)}
               />
-              <span className="text-sm text-zinc-300">Allow multiple choices</span>
+              <span className="text-sm text-zinc-300">{_copy("copy.3c1cc071d396", { defaultValue: "Allow multiple choices" })}</span>
             </label>
             <input
               type="datetime-local"
@@ -934,7 +926,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
               }}
               className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
             >
-              {createPollMutation.isPending ? 'Creating…' : 'Create Poll'}
+              {createPollMutation.isPending ? _copy("copy.c79ed9492e3c", { defaultValue: "Creating…" }) : _copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}
             </button>
           </div>
         </DrawerContent>
@@ -945,7 +937,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
       {isSubGated && (
         <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
           <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
+            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>}>
               <SubscriberGateDrawer
                 creatorAddress={post.author.id}
                 creatorName={post.author.name || post.author.handle}

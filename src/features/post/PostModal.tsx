@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useAccountDraftKey, useDraftState } from '@/hooks/use-draft-state';
 import { lazy, Suspense, useEffect, useState, useCallback, useRef } from 'react';
 import { postTextLimit } from '@/lib/post-text-limit';
@@ -46,6 +47,7 @@ interface PostModalProps {
 }
 
 function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope, quotedPost }: PostModalProps & { draftScope: string }) {
+  const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
   const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
   const { isBanned } = useBannedAccount();
@@ -196,13 +198,13 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
     <>
       {!isQuoting && (
       <div className="flex items-center justify-center gap-3 px-4 pt-4 pb-1 text-xs font-medium">
-        <button type="button" aria-pressed={!articleMode && state.liveMode === null} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null ? 'text-white' : 'text-white/55 hover:text-white')}>Post</button>
+        <button type="button" aria-pressed={!articleMode && state.liveMode === null} onClick={selectPostMode} className={cn('transition-colors', !articleMode && state.liveMode === null ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.a5554622c655", { defaultValue: "Post" })}</button>
         <span className="text-white/25" aria-hidden="true">|</span>
-        <button type="button" aria-pressed={state.liveMode === 'video'} onClick={() => selectLiveMode('video')} className={cn('transition-colors', state.liveMode === 'video' ? 'text-white' : 'text-white/55 hover:text-white')}>Livestream</button>
+        <button type="button" aria-pressed={state.liveMode === 'video'} onClick={() => selectLiveMode('video')} className={cn('transition-colors', state.liveMode === 'video' ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.9d4e6fe6676d", { defaultValue: "Livestream" })}</button>
         <span className="text-white/25" aria-hidden="true">|</span>
-        <button type="button" aria-pressed={state.liveMode === 'townhall'} onClick={() => selectLiveMode('townhall')} className={cn('transition-colors', state.liveMode === 'townhall' ? 'text-white' : 'text-white/55 hover:text-white')}>Stages</button>
+        <button type="button" aria-pressed={state.liveMode === 'townhall'} onClick={() => selectLiveMode('townhall')} className={cn('transition-colors', state.liveMode === 'townhall' ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.3a17aa4e4abb", { defaultValue: "Stages" })}</button>
         <span className="text-white/25" aria-hidden="true">|</span>
-        <button type="button" aria-pressed={articleMode} onClick={selectArticleMode} className={cn('transition-colors', articleMode ? 'text-white' : 'text-white/55 hover:text-white')}>Article</button>
+        <button type="button" aria-pressed={articleMode} onClick={selectArticleMode} className={cn('transition-colors', articleMode ? 'text-white' : 'text-white/55 hover:text-white')}>{_copy("copy.29d94922512b", { defaultValue: "Article" })}</button>
       </div>
       )}
 
@@ -434,7 +436,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
           )}
         >
           <VisuallyHidden>
-            <DrawerTitle>{isQuoting ? 'Quote post' : 'Create a post'}</DrawerTitle>
+            <DrawerTitle>{isQuoting ? _copy("copy.6570c039b004", { defaultValue: "Quote post" }) : _copy("copy.2530702b87b0", { defaultValue: "Create a post" })}</DrawerTitle>
           </VisuallyHidden>
           {modalContent}
         </DrawerContent>

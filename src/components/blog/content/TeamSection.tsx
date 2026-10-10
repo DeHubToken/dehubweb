@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -62,6 +63,7 @@ interface TeamSectionProps {
 }
 
 export const TeamSection: React.FC<TeamSectionProps> = ({ content }) => {
+  const { t: _copy } = _useCopy();
   const teamMembers = parseTeamMembers(content);
   
   return (
@@ -84,7 +86,7 @@ export const TeamSection: React.FC<TeamSectionProps> = ({ content }) => {
             <p className="text-royal-blue/80 text-sm leading-relaxed">{member.bio}</p>
             {member.experience.length > 0 && (
               <div className="space-y-3 pt-4 border-t border-sky-blue/20 mt-auto">
-                <h4 className="font-bold text-royal-blue text-base">Key Experience</h4>
+                <h4 className="font-bold text-royal-blue text-base">{_copy("copy.762e8b2323fa", { defaultValue: "Key Experience" })}</h4>
                 <ul className="space-y-2">
                   {member.experience.map((exp, idx) => (
                     <li key={idx} className="text-sm text-royal-blue/70 flex leading-relaxed">

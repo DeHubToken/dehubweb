@@ -7,7 +7,7 @@ import { useEditorUiStore } from '@/store/editorUiStore';
 import { askAgent, applyOps } from '@/lib/editor/agent';
 import { saveProject } from '@/lib/editor/projectStore';
 
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }) }));
 vi.mock('@/hooks/use-editor-quota', () => ({ useEditorQuota: () => ({ walletAddress: null }) }));
 vi.mock('@/lib/editor/agent', () => ({ askAgent: vi.fn(), applyOps: vi.fn(), askSceneAgent: vi.fn() }));
 vi.mock('@/lib/editor/projectStore', () => ({ saveProject: vi.fn(async () => {}), setLastProjectId: vi.fn() }));

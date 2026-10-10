@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useState, useSyncExternalStore } from 'react';
 import { toast } from 'sonner';
 import { SUPPORTED_CHAINS, type PostChainId } from '@/components/app/ChainSelector';
@@ -28,6 +29,7 @@ function subscribe(listener: () => void) {
 
 /** Device-local, shared by Settings and every mounted post composer. */
 export function usePostingChain() {
+  const { t: _copy } = _useCopy();
   const chainId = useSyncExternalStore(subscribe, readChain, () => DEFAULT_CHAIN);
   const [saving, setSaving] = useState(false);
   const setChainId = useCallback(async (next: PostChainId) => {
@@ -45,11 +47,11 @@ export function usePostingChain() {
       localStorage.setItem(STORAGE_KEY, String(next));
       window.dispatchEvent(new Event(CHANGE_EVENT));
     } catch {
-      toast.error('Could not save posting chain. Please try again.');
+      toast.error(_copy("copy.b17c87d6ac6b", { defaultValue: "Could not save posting chain. Please try again." }));
     } finally {
       setSaving(false);
     }
-  }, []);
+  }, [_copy]);
 
   return { chainId, setChainId, saving };
 }

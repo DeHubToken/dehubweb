@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Film, Tv } from 'lucide-react';
 import type { JustWatchTitle } from '@/lib/api/justwatch';
 
@@ -10,6 +11,7 @@ export function TitleCard({
   selected: boolean;
   onSelect: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const Icon = title.objectType === 'show' ? Tv : Film;
 
   return (
@@ -40,8 +42,7 @@ export function TitleCard({
 
         {title.ranks?.weekly?.rank != null && title.ranks.weekly.rank <= 10 && (
           <span className="absolute left-2 top-2 rounded-md bg-black/80 px-1.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
-            #{title.ranks.weekly.rank} this week
-          </span>
+            #{title.ranks.weekly.rank}{_copy("copy.8dbf30828264", { defaultValue: " this week" })}</span>
         )}
       </div>
 
@@ -51,7 +52,7 @@ export function TitleCard({
         </span>
         <span className="text-xs text-zinc-500">
           {title.year ?? '—'}
-          {title.objectType === 'show' ? ' · Series' : ''}
+          {title.objectType === 'show' ? _copy("copy.6ad9d50f7fec", { defaultValue: " · Series" }) : ''}
         </span>
       </div>
     </button>

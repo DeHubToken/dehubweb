@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -64,13 +65,12 @@ const features: PressFeature[] = [
 ];
 
 const FeaturedIn = () => {
+  const { t: _copy } = _useCopy();
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <h1 className="text-4xl font-bold text-foreground">Featured In</h1>
-        <p className="text-xl text-muted-foreground leading-relaxed">
-          DeHub has been covered by some of the world's biggest and most trusted publications. Here are the articles putting a spotlight on our mission to democratise media.
-        </p>
+        <h1 className="text-4xl font-bold text-foreground">{_copy("copy.dbc2def4603a", { defaultValue: "Featured In" })}</h1>
+        <p className="text-xl text-muted-foreground leading-relaxed">{_copy("copy.ee1c1eecf1b6", { defaultValue: "DeHub has been covered by some of the world's biggest and most trusted publications. Here are the articles putting a spotlight on our mission to democratise media." })}</p>
       </div>
 
       {/* PRESS FEATURES */}
@@ -95,14 +95,12 @@ const FeaturedIn = () => {
               <div className="flex flex-col gap-2 items-start">
                 <Button asChild size="sm" className="w-full sm:w-auto self-start">
                   <a href={f.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-                    {f.archived ? 'Read the archived article' : 'Read the article'}
+                    {f.archived ? _copy("copy.3cc67cc8baef", { defaultValue: "Read the archived article" }) : _copy("copy.d70e40a0744a", { defaultValue: "Read the article" })}
                     <ExternalLink className="w-4 h-4" />
                   </a>
                 </Button>
                 {f.archived && (
-                  <span className="text-xs text-muted-foreground">
-                    The publisher has removed the original; this opens the Wayback Machine capture.
-                  </span>
+                  <span className="text-xs text-muted-foreground">{_copy("copy.6ccae4bbf68d", { defaultValue: "The publisher has removed the original; this opens the Wayback Machine capture." })}</span>
                 )}
               </div>
             </CardContent>
@@ -114,22 +112,16 @@ const FeaturedIn = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Newspaper className="w-5 h-5" />
-            Press & media enquiries
-          </CardTitle>
-          <CardDescription>
-            Writing about DeHub or looking for assets, quotes or an interview? We'd love to help.
-          </CardDescription>
+            <Newspaper className="w-5 h-5" />{_copy("copy.6cd2ed68db06", { defaultValue: "Press & media enquiries" })}</CardTitle>
+          <CardDescription>{_copy("copy.1845043a09b8", { defaultValue: "Writing about DeHub or looking for assets, quotes or an interview? We'd love to help." })}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-3 flex-wrap">
             <Button asChild>
-              <a href="mailto:marketing@dehub.net">Contact the team</a>
+              <a href="mailto:marketing@dehub.net">{_copy("copy.44635127331a", { defaultValue: "Contact the team" })}</a>
             </Button>
             <Button variant="outline" asChild>
-              <a href="/docs/brand-assets" className="flex items-center gap-2">
-                Brand assets
-              </a>
+              <a href="/docs/brand-assets" className="flex items-center gap-2">{_copy("copy.5491b0ff70a2", { defaultValue: "Brand assets" })}</a>
             </Button>
           </div>
         </CardContent>

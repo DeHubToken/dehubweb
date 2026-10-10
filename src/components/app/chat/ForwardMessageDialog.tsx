@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * ForwardMessageDialog
@@ -47,6 +48,7 @@ export function ForwardMessageDialog({
   onSelect,
   excludeConversationId,
 }: ForwardMessageDialogProps) {
+  const { t: _copy } = _useCopy();
   const { conversations, isLoading } = useConversations();
   const [search, setSearch] = useSurfaceDraft("components/app/chat/ForwardMessageDialog.tsx:search", '');
 
@@ -71,7 +73,7 @@ export function ForwardMessageDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-zinc-900 border-zinc-700 text-white max-w-sm p-0 overflow-hidden">
         <DialogHeader className="px-4 pt-4 pb-2">
-          <DialogTitle className="text-white text-base">Forward to</DialogTitle>
+          <DialogTitle className="text-white text-base">{_copy("copy.1850b44d877b", { defaultValue: "Forward to" })}</DialogTitle>
         </DialogHeader>
 
         {/* Search */}
@@ -80,7 +82,7 @@ export function ForwardMessageDialog({
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search conversations…"
+            placeholder={_copy("copy.bd2b64636d36", { defaultValue: "Search conversations…" })}
             className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 outline-none"
           />
           {search && (
@@ -93,11 +95,11 @@ export function ForwardMessageDialog({
         {/* List */}
         <div className="max-h-[50vh] overflow-y-auto pb-4">
           {isLoading ? (
-            <p className="text-center text-sm text-zinc-500 py-8">Loading…</p>
+            <p className="text-center text-sm text-zinc-500 py-8">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</p>
           ) : filtered.length === 0 ? (
             <AppState
               icon={search ? 'search' : 'messages'}
-              title={search ? 'No conversations found' : 'No conversations yet'}
+              title={search ? _copy("copy.7cd3bc2fc162", { defaultValue: "No conversations found" }) : _copy("copy.0d60084f056e", { defaultValue: "No conversations yet" })}
               kind={search ? 'search-empty' : 'empty'}
               size="drawer"
             />

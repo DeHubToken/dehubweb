@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * StageTranscriptDrawer — phase 2
@@ -278,6 +279,7 @@ function InlinePlayer({
   audioRef: React.RefObject<HTMLAudioElement>;
   currentTime: number;
 }) {
+  const { t: _copy } = _useCopy();
   const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   // This drawer keeps its own <audio> (the transcript follows its currentTime
@@ -356,8 +358,8 @@ function InlinePlayer({
       <button
         type="button"
         onClick={cycleRate}
-        title={`Playback speed ${rate}x`}
-        aria-label={`Playback speed ${rate}x`}
+        title={_copy("copy.0f4db8b5e198", { defaultValue: "Playback speed {{value1}}x", value1: rate })}
+        aria-label={_copy("copy.0f4db8b5e198", { defaultValue: "Playback speed {{value1}}x", value1: rate })}
         className={cn(
           'shrink-0 h-7 min-w-9 px-2 rounded-lg flex items-center justify-center',
           'text-[10px] font-mono font-bold leading-none transition-colors',

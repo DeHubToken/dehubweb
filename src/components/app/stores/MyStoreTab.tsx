@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * My Store Tab
@@ -36,6 +37,7 @@ interface MyStoreTabProps {
 }
 
 export function MyStoreTab({ createListingOpen = false, onCreateListingClose, createStoreOpen = false, onCreateStoreClose }: MyStoreTabProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal } = useAuth();
   const { data: stores = [], isLoading: loadingStores, isError: storesFailed, isFetching: storesFetching, refetch: refetchStores } = useMyStores();
@@ -196,7 +198,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
       {/* Content */}
       {subTab === 'listings' && (
         storeListings.length === 0 ? (
-          <AppState icon="stores" title="No listings yet" description="Create your first listing to start selling." size="section" />
+          <AppState icon="stores" title={_copy("copy.38975ad4e835", { defaultValue: "No listings yet" })} description={_copy("copy.791685ccbc92", { defaultValue: "Create your first listing to start selling." })} size="section" />
         ) : (
           <div className="space-y-2">
             {storeListings.map((l: any) => (

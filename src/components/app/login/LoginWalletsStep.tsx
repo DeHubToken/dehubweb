@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * The "Connect wallet" step — and the only thing in the login flow that needs
  * RainbowKit.
@@ -91,6 +92,7 @@ export function LoginWalletsStep({
   onDiscoveredWalletConnect,
   onWalletConnectConnect,
 }: LoginWalletsStepProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
 
   // The curated connectors are not in the boot config (lib/wagmi-wallets):
@@ -234,7 +236,7 @@ export function LoginWalletsStep({
               ) : (
                 <div className="flex-shrink-0"><PhantomIcon /></div>
               )}
-              <span className="flex-1 text-left">Phantom</span>
+              <span className="flex-1 text-left">{_copy("copy.08b6a3efc2b5", { defaultValue: "Phantom" })}</span>
               <ChevronRight className="w-4 h-4 text-white/40" />
             </Button>
           )}
@@ -253,7 +255,7 @@ export function LoginWalletsStep({
               ) : (
                 <div className="flex-shrink-0"><TrustIcon /></div>
               )}
-              <span className="flex-1 text-left">Trust Wallet</span>
+              <span className="flex-1 text-left">{_copy("copy.2ef54eee0edd", { defaultValue: "Trust Wallet" })}</span>
               <ChevronRight className="w-4 h-4 text-white/40" />
             </Button>
           )}

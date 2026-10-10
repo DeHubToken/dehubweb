@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { useState, useCallback } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -27,6 +28,7 @@ import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { dehubLinkFor } from '@/lib/dehub-links';
 
 function CreatorInfo({ event }: { event: CommunityEvent }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const avatarUrl = buildAvatarUrl(event.creator_wallet_address, event.creator_avatar);
   const displayName = event.creator_username || `${event.creator_wallet_address.slice(0, 6)}...`;
@@ -42,8 +44,7 @@ function CreatorInfo({ event }: { event: CommunityEvent }) {
         <AvatarFallback className="bg-zinc-700 text-white text-[9px]">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
       </Avatar>
       <span className="inline-flex items-baseline gap-1 shrink min-w-0">
-        <span className="text-xs text-zinc-400 group-hover:text-white transition-colors">
-          Created by <span className="font-medium text-zinc-300 group-hover:text-white">{displayName}</span>
+        <span className="text-xs text-zinc-400 group-hover:text-white transition-colors">{_copy("copy.b2742e6cae24", { defaultValue: "Created by " })}<span className="font-medium text-zinc-300 group-hover:text-white">{displayName}</span>
         </span>
         <BadgeIcon
           lookupId={handle || event.creator_wallet_address}
@@ -90,6 +91,7 @@ interface EventDetailDrawerProps {
 }
 
 export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { data: myRsvp } = useEventRsvp(event?.id);
@@ -258,7 +260,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <img src={dehubCoin} alt="Coins" className="w-5 h-5" />
+                      <img src={dehubCoin} alt={_copy("copy.7ae57d9d0e8c", { defaultValue: "Coins" })} className="w-5 h-5" />
                       <span className="text-sm font-medium text-white">
                         {t('events.entryFeeCoins', { count: event.gate_fee })}
                       </span>
@@ -267,8 +269,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                       <span className="text-xs text-zinc-500">{t('events.youAreCreator')}</span>
                     ) : hasPaid ? (
                       <span className="text-xs text-green-400 flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Paid
-                      </span>
+                        <CheckCircle2 className="w-3.5 h-3.5" />{_copy("copy.93cb6b12aa06", { defaultValue: " Paid" })}</span>
                     ) : (
                       <Button
                         size="sm"
@@ -303,8 +304,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                     </div>
                     {isApproved ? (
                       <span className="text-xs text-green-400 flex items-center gap-1">
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Approved
-                      </span>
+                        <CheckCircle2 className="w-3.5 h-3.5" />{_copy("copy.81cc1e80317c", { defaultValue: " Approved" })}</span>
                     ) : isPending ? (
                       <Button
                         size="sm"
@@ -318,8 +318,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                       </Button>
                     ) : isDenied ? (
                       <span className="text-xs text-red-400 flex items-center gap-1">
-                        <UserX className="w-3.5 h-3.5" /> Denied
-                      </span>
+                        <UserX className="w-3.5 h-3.5" />{_copy("copy.68cc8e3eaed5", { defaultValue: " Denied" })}</span>
                     ) : (
                       <Button
                         size="sm"
@@ -338,8 +337,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {isCreator && isPrivate && pendingList.length > 0 && (
                 <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-3">
                   <h3 className="text-sm font-medium text-white mb-2 flex items-center gap-1.5">
-                    <Clock className="w-4 h-4 text-amber-400" />
-                    Pending Requests ({pendingList.length})
+                    <Clock className="w-4 h-4 text-amber-400" />{_copy("copy.513ee42263bc", { defaultValue: "Pending Requests (" })}{pendingList.length})
                   </h3>
                   <div className="divide-y divide-white/[0.06]">
                     {pendingList.map((rsvp) => (

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Badge Patron Chip
  * =================
@@ -34,6 +35,7 @@ interface BadgePatronChipProps {
 }
 
 export function BadgePatronChip({ lookupId, className }: BadgePatronChipProps) {
+  const { t: _copy } = _useCopy();
   const { data } = useQuery({
     queryKey: ['badge-patron', lookupId],
     queryFn: () => fetchBadgePatron(lookupId!),
@@ -59,7 +61,7 @@ export function BadgePatronChip({ lookupId, className }: BadgePatronChipProps) {
       // you have to hover to see is not somewhere to put a click target. It
       // also gives touch and screen readers the one thing worth having here,
       // which `group-hover` alone would never reach.
-      title={`This ${tier} badge was lent by ${who}`}
+      title={_copy("copy.41fb2caed82f", { defaultValue: "This {{value1}} badge was lent by {{value2}}", value1: tier, value2: who })}
       role="note"
       className={cn(
         'pointer-events-none absolute bottom-full left-0 z-20 mb-1 flex items-center gap-1',
@@ -69,8 +71,7 @@ export function BadgePatronChip({ lookupId, className }: BadgePatronChipProps) {
         className,
       )}
     >
-      {src ? <img src={src} alt="" className="size-3 shrink-0" /> : null}
-      Lent by {who}
+      {src ? <img src={src} alt="" className="size-3 shrink-0" /> : null}{_copy("copy.407d8f7e8ded", { defaultValue: "Lent by " })}{who}
     </span>
   );
 }

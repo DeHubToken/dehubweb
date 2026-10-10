@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
@@ -8,6 +9,7 @@ import { loadGoogleFont } from "@/lib/editor/googleFonts";
 import { exportSubtitles, parseSubtitles, subtitleClips, subtitleLayers, SUBTITLE_FORMATS, type SubtitleFormat } from "@/lib/editor/subtitles";
 
 export function SubtitleFiles() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -44,14 +46,13 @@ export function SubtitleFiles() {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
   return <section className="space-y-2 border-b border-white/10 p-3">
-    <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">SRT / VTT</h3>
+    <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">{_copy("copy.00c90f4b707a", { defaultValue: "SRT / VTT" })}</h3>
     <input ref={input} type="file" accept=".srt,.vtt,text/vtt,application/x-subrip" className="hidden" onChange={event => {
       const file = event.target.files?.[0]; event.target.value = "";
       if (file) void importFile(file);
     }} />
     <Button size="sm" variant="ghost" disabled={busy} onClick={() => input.current?.click()} className="h-7 w-full border border-white/10 text-[11px]">
-      {t(busy ? "common.loading" : "editor.design.importMedia")} SRT / VTT
-    </Button>
+      {t(busy ? "common.loading" : "editor.design.importMedia")}{_copy("copy.450683b66da4", { defaultValue: " SRT / VTT" })}</Button>
     <div className="grid grid-cols-2 gap-1">
       {SUBTITLE_FORMATS.map(format => <Button key={format} size="sm" variant="ghost" disabled={!captions.length || busy} onClick={() => download(format)} className="h-7 border border-white/10 text-[11px]">
         {t("common.save")} {format.toUpperCase()}

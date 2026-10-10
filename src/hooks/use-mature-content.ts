@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Mature Content Setting Hook
  * ===========================
@@ -23,6 +24,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 
 export function useMatureContent() {
+  const { t: _copy } = _useCopy();
   const { walletAddress, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
@@ -44,7 +46,7 @@ export function useMatureContent() {
       queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
       toast.success(enabled ? 'Mature content is on' : 'Mature content is off');
     },
-    onError: () => toast.error('Could not save that. Try again.'),
+    onError: () => toast.error(_copy("copy.e0a91d4247fc", { defaultValue: "Could not save that. Try again." })),
   });
 
   const setShowMatureContent = useCallback(

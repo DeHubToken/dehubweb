@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Play, Pause, Scissors, Check, Film } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
@@ -34,6 +35,7 @@ export function VideoTrimmer({
   fileName,
   onApply,
 }: VideoTrimmerProps) {
+  const { t: _copy } = _useCopy();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [trimStart, setTrimStart] = useState(0);
@@ -253,7 +255,7 @@ export function VideoTrimmer({
   const handleApply = () => {
     onApply(trimStart, trimEnd);
     onClose();
-    toast.success('Video trimmed!');
+    toast.success(_copy("copy.817e82cace2e", { defaultValue: "Video trimmed!" }));
   };
 
   const selectionDuration = trimEnd - trimStart;
@@ -267,7 +269,7 @@ export function VideoTrimmer({
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent column hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90dvh] overflow-hidden flex flex-col">
-        <DrawerTitle className="sr-only">Trim Video</DrawerTitle>
+        <DrawerTitle className="sr-only">{_copy("copy.af6ed946e090", { defaultValue: "Trim Video" })}</DrawerTitle>
         
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
@@ -277,16 +279,14 @@ export function VideoTrimmer({
           >
             <X className="w-5 h-5 text-zinc-400" />
           </button>
-          <span className="text-white font-semibold">Trim Video</span>
+          <span className="text-white font-semibold">{_copy("copy.af6ed946e090", { defaultValue: "Trim Video" })}</span>
           <button
             onClick={handleApply}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-medium transition-all duration-300 hover:scale-105
               bg-white/10 backdrop-blur-xl border border-white/20
               hover:bg-white/20 hover:border-white/40"
           >
-            <Check className="w-4 h-4" />
-            Apply
-          </button>
+            <Check className="w-4 h-4" />{_copy("copy.31e392d1c037", { defaultValue: "Apply" })}</button>
         </div>
 
         {/* Content */}
@@ -301,7 +301,7 @@ export function VideoTrimmer({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-white text-sm font-medium truncate">{displayFileName}</p>
-                <p className="text-zinc-500 text-xs">{formatTime(duration)} total</p>
+                <p className="text-zinc-500 text-xs">{formatTime(duration)}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</p>
               </div>
             </div>
           )}
@@ -371,12 +371,9 @@ export function VideoTrimmer({
 
           {/* Info bar */}
           <div className="flex items-center justify-between mb-4 text-sm">
-            <span className="text-zinc-400">
-              Select trim range
-            </span>
+            <span className="text-zinc-400">{_copy("copy.1c0eba609c44", { defaultValue: "Select trim range" })}</span>
             <span className="font-medium px-2 py-0.5 rounded-xl text-xs bg-white/10 text-white border border-white/20">
-              {formatTime(selectionDuration)} selected
-            </span>
+              {formatTime(selectionDuration)}{_copy("copy.97a2e8815acd", { defaultValue: " selected" })}</span>
           </div>
 
           {/* Thumbnail Timeline with trim handles */}
@@ -488,9 +485,7 @@ export function VideoTrimmer({
           </div>
 
           {/* Keyboard shortcuts hint */}
-          <p className="hidden sm:block text-center text-zinc-600 text-xs mt-4">
-            Space: play/pause • Arrow keys: move window • Alt+arrows: adjust start • Ctrl+arrows: adjust end
-          </p>
+          <p className="hidden sm:block text-center text-zinc-600 text-xs mt-4">{_copy("copy.8ee640ced550", { defaultValue: "Space: play/pause • Arrow keys: move window • Alt+arrows: adjust start • Ctrl+arrows: adjust end" })}</p>
         </div>
       </DrawerContent>
     </Drawer>

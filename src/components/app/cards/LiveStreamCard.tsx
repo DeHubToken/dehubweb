@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -146,6 +147,7 @@ interface LiveStreamCardProps {
 }
 
 export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
+  const { t: _copy } = _useCopy();
   const keyboardOpen = useKeyboardOpen(immersive);
   // The chat is the post's only conversation, so on the page it starts open;
   // the comment button still folds it away. Full-bleed keeps it open either
@@ -936,15 +938,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
 
   const handleSendGift = useCallback(() => {
     if (!isAuthenticated) {
-      toast.error('Sign in to send gifts');
+      toast.error(_copy("copy.c0f1b8e87d81", { defaultValue: "Sign in to send gifts" }));
       return;
     }
     if (streamEnded) {
-      toast.info('Stream ended, tune in live to engage');
+      toast.info(_copy("copy.05f74cfe05cd", { defaultValue: "Stream ended, tune in live to engage" }));
       return;
     }
     if (!numericTokenId) {
-      toast.error('Gifting is unavailable for this stream');
+      toast.error(_copy("copy.e1d1843963c8", { defaultValue: "Gifting is unavailable for this stream" }));
       return;
     }
     const amount = parseFloat(giftAmount);
@@ -967,7 +969,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     void fundTipFromSource(giftPayWith, amount, walletAddress, t)
       .then(ready => { if (ready) return sendGiftTip(amount); })
       .finally(() => setFundingGift(false));
-  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, walletAddress, t]);
+  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, walletAddress, t, _copy]);
 
   const handleEndStream = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -978,7 +980,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     // the backend's own status only transitions once ingest stops and the
     // Livepeer idle webhook fires.
     if (!apiStreamId) {
-      toast.error('Could not end the stream from here — use the Go Live panel');
+      toast.error(_copy("copy.7318cd73d9bd", { defaultValue: "Could not end the stream from here — use the Go Live panel" }));
       return;
     }
     try {
@@ -996,12 +998,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         }).catch((e) => logger.warn('end-stream-session failed (non-blocking)', e));
       }
       setStreamEnded(true);
-      toast.success('Stream ended');
+      toast.success(_copy("copy.a5813ef6159a", { defaultValue: "Stream ended" }));
     } catch (err) {
       console.error('[LiveStream] End failed:', err);
-      toast.error('Failed to end stream');
+      toast.error(_copy("copy.567c78188a0c", { defaultValue: "Failed to end stream" }));
     }
-  }, [stream.id, apiStreamId, isAuthenticated, end, walletAddress]);
+  }, [stream.id, apiStreamId, isAuthenticated, end, walletAddress, _copy]);
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -1016,7 +1018,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const optionsMenu = (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label="Post options" className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl bg-black/20 text-white backdrop-blur-sm" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl bg-black/20 text-white backdrop-blur-sm" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
@@ -1133,7 +1135,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               className="text-zinc-400 hover:text-white transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              aria-label="Send gift"
+              aria-label={_copy("copy.9472b5b3c94a", { defaultValue: "Send gift" })}
             >
               <Gem className="w-5 h-5" />
             </motion.button>
@@ -1276,18 +1278,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               )}
               title={
                 stream.replayTruncated
-                  ? 'Only the start of this stream was kept — the replay hit the creator’s daily limit'
+                  ? _copy("copy.da42fb903b0e", { defaultValue: "Only the start of this stream was kept — the replay hit the creator’s daily limit" })
                   : undefined
               }
             >
-              {stream.replayTruncated ? 'PARTIAL REPLAY' : 'REPLAY'}
+              {stream.replayTruncated ? _copy("copy.7874ebc95c83", { defaultValue: "PARTIAL REPLAY" }) : _copy("copy.92d23f5381ea", { defaultValue: "REPLAY" })}
             </span>
           </>
         ) : streamEnded ? (
           /* Past live with nothing recorded: show the stream's cover image if
              there is one, otherwise a staticy TV screen — never an empty
              black frame. */
-          <LiveEndedMedia thumbnail={stream.thumbnail} label="Stream ended" rounded="rounded-none" hideBadge={immersive} />
+          <LiveEndedMedia thumbnail={stream.thumbnail} label={_copy("copy.a5813ef6159a", { defaultValue: "Stream ended" })} rounded="rounded-none" hideBadge={immersive} />
         ) : (
           <>
             <video
@@ -1328,7 +1330,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               <div role="status" aria-label={error || t('common.loading', 'Loading')} className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
                 <div className="flex flex-col items-center gap-2 text-center px-4">
                   {!broadcastPaused && !waitingTooLong && error !== 'Stream unavailable' && error !== 'Failed to play stream' && <ButtonLoader size={40} className="!filter-none" />}
-                  {(broadcastPaused || waitingTooLong || error) && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{broadcastPaused ? 'Live paused' : waitingTooLong ? 'Waiting for live video' : error}</p>}
+                  {(broadcastPaused || waitingTooLong || error) && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{broadcastPaused ? _copy("copy.91b75d1b48f9", { defaultValue: "Live paused" }) : waitingTooLong ? _copy("copy.510db6ad26be", { defaultValue: "Waiting for live video" }) : error}</p>}
                 </div>
               </div>
             )}
@@ -1349,10 +1351,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <div className={cn('absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent', immersive && 'hidden')}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">
-                    LIVE
-                  </span>
-                  <span className="text-white text-sm">{viewersLabel} tuned in</span>
+                  <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">{_copy("copy.35e0d0360a0a", { defaultValue: "LIVE" })}</span>
+                  <span className="text-white text-sm">{viewersLabel}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -1489,7 +1489,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             className="p-0 mb-2"
           />
           {!streamEnded && (
-            <p className="font-semibold text-white text-sm">{viewersLabel} tuned in</p>
+            <p className="font-semibold text-white text-sm">{viewersLabel}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
           )}
           <h3 className="text-white text-sm mt-1">{stream.title}</h3>
           <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
@@ -1517,14 +1517,12 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         <DrawerContent column glass className="px-4 pb-8 max-h-[85dvh]">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
-              <Gem className="w-5 h-5 text-white" />
-              Send a Gift
-            </DrawerTitle>
+              <Gem className="w-5 h-5 text-white" />{_copy("copy.2ba9ebf4b84b", { defaultValue: "Send a Gift" })}</DrawerTitle>
           </DrawerHeader>
           <div data-vaul-no-drag className="space-y-4 min-h-0 overflow-y-auto overscroll-contain">
             {/* Balance display — gifts move real DHB, so show the real balance */}
             <div className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2.5 border border-white/10">
-              <span className="text-xs text-zinc-400">Your balance</span>
+              <span className="text-xs text-zinc-400">{_copy("copy.dc8089593385", { defaultValue: "Your balance" })}</span>
               <div className="flex items-center gap-1.5">
                 <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                 <span className="text-sm font-medium text-white">
@@ -1583,22 +1581,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400 flex items-center gap-1.5">
-                Amount
-                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
+              <label className="text-sm text-zinc-400 flex items-center gap-1.5">{_copy("copy.49e96d7cdf58", { defaultValue: "Amount" })}<img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
               </label>
               <Input
                 type="number"
                 value={giftAmount}
                 onChange={(e) => setGiftAmount(e.target.value)}
-                placeholder="Enter amount"
+                placeholder={_copy("copy.2d700ab23246", { defaultValue: "Enter amount" })}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
                 min={MIN_TIP_DHB}
                 step="1"
               />
-              <p className="text-[11px] text-zinc-500">
-                Sent on-chain to the streamer's wallet and shown in the stream activity.
-              </p>
+              <p className="text-[11px] text-zinc-500">{_copy("copy.50413ca0f259", { defaultValue: "Sent on-chain to the streamer's wallet and shown in the stream activity." })}</p>
               {selectedGiftTier && (
                 <p className="text-[11px] text-zinc-300">
                   {t('liveGift.plays', 'Plays {{tier}} on the stream', {
@@ -1657,15 +1651,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 disabled={isSendingGift || fundingGift || !giftAmount}
                 className="w-full bg-white hover:bg-zinc-200 text-black py-5 font-semibold rounded-xl"
               >
-                {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}
-                Send Gift
-              </Button>
-              <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowBuyDrawer(true)}>
-                Buy tokens
-              </Button>
-              <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowGiftDrawer(false)}>
-                Cancel
-              </Button>
+                {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}{_copy("copy.1c5ccbd708df", { defaultValue: "Send Gift" })}</Button>
+              <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowBuyDrawer(true)}>{_copy("copy.1dffe3aad33c", { defaultValue: "Buy tokens" })}</Button>
+              <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowGiftDrawer(false)}>{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             </div>
           </div>
         </DrawerContent>
@@ -1687,9 +1675,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         <DrawerContent column glass className="px-4 pb-8 max-h-[70dvh]">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
-              <Activity className="w-5 h-5" />
-              Stream Activity
-            </DrawerTitle>
+              <Activity className="w-5 h-5" />{_copy("copy.5c69a7dca8ac", { defaultValue: "Stream Activity" })}</DrawerTitle>
           </DrawerHeader>
           <div className="overflow-y-auto space-y-1">
             {activitiesLoading ? (
@@ -1697,7 +1683,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
               </div>
             ) : activities.length === 0 ? (
-              <AppState icon="live" title="No activity yet" size="compact" />
+              <AppState icon="live" title={_copy("copy.0a12b92ce789", { defaultValue: "No activity yet" })} size="compact" />
             ) : (
               activities.map((activity) => (
                 <div
@@ -1712,9 +1698,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                     <span className="text-sm text-zinc-400 ml-1.5">
                       {activity.type === 'gift'
                         ? (
-                          <>
-                            sent
-                            <DhbAmount
+                          <>{_copy("copy.7afbb3347fb7", { defaultValue: "sent" })}<DhbAmount
                               amount={activity.giftAmount}
                               currency={activity.giftCurrency}
                               iconClassName="h-3.5 w-3.5"
@@ -1722,11 +1706,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                           </>
                         )
                         : activity.type === 'like'
-                        ? 'liked the stream'
+                        ? _copy("copy.a180411d503d", { defaultValue: "liked the stream" })
                         : activity.type === 'join'
-                        ? 'joined'
+                        ? _copy("copy.6b963cc1c2d7", { defaultValue: "joined" })
                         : activity.type === 'leave'
-                        ? 'left'
+                        ? _copy("copy.360f84035942", { defaultValue: "left" })
                         : activity.message || activity.type}
                     </span>
                   </div>

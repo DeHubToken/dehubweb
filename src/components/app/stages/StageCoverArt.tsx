@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageCoverArt — a stage's graphic, whole, at one ratio everywhere
  * =================================================================
@@ -31,11 +32,12 @@ export function StageCoverArt({
   title?: string | null;
   className?: string;
 }) {
+  const { t: _copy } = _useCopy();
   return (
     <div className={cn('w-full aspect-video bg-black', className)}>
       <img
         src={src}
-        alt={title ? `Cover graphic for ${title}` : ''}
+        alt={title ? _copy("copy.99ca327a47b5", { defaultValue: "Cover graphic for {{value1}}", value1: title }) : ''}
         loading="lazy"
         className="w-full h-full object-contain"
       />

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -33,6 +34,7 @@ import {
  * row grid does not wrap.
  */
 export function EmailSignInSettings() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [status, setStatus] = useState<EmailLinkStatusResponse | null>(null);
   const [email, setEmail] = useSurfaceDraft("components/app/settings/EmailSignInSettings.tsx:email", '');
@@ -204,7 +206,7 @@ export function EmailSignInSettings() {
               <Input
                 type="email"
                 autoComplete="email"
-                placeholder="you@example.com"
+                placeholder={_copy("copy.53e6cdc30765", { defaultValue: "you@example.com" })}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={`${SETTINGS_FIELD_CLASS} w-full sm:w-64`}

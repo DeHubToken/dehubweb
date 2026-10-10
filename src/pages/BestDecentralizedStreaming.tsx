@@ -1,3 +1,6 @@
+import DOMPurify from 'dompurify';
+import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 
@@ -161,7 +164,9 @@ function Figure({ src, alt }: { src: string; alt: string }) {
 }
 
 export default function BestDecentralizedStreaming() {
+  const { t: _copy } = _useCopy();
   const url = 'https://dehub.io/guides/best-decentralized-streaming-apps';
+  const localized = usePublicPageLocale('/guides/best-decentralized-streaming-apps');
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -169,7 +174,7 @@ export default function BestDecentralizedStreaming() {
         '@type': 'Article',
         headline: 'Best Decentralized Streaming Apps in 2026',
         description:
-          'The decentralized and Web3 streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius — with monetization, audience size and who each is for.',
+          _copy("copy.f8c11a767d2d", { defaultValue: "The decentralized and Web3 streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius — with monetization, audience size and who each is for." }),
         datePublished: '2026-09-13',
         dateModified: '2026-09-29',
         author: { '@type': 'Organization', name: 'DeHub' },
@@ -194,62 +199,56 @@ export default function BestDecentralizedStreaming() {
     ],
   };
 
+  if (localized.localized) {
+    return <>
+      <SEOHead title={localized.data?.title} description={localized.data?.description} url={url} type="article"
+        jsonLd={{ '@context': 'https://schema.org', '@type': 'Article', headline: localized.data?.h1, description: localized.data?.description, mainEntityOfPage: url, datePublished: '2026-09-13', dateModified: '2026-09-29', author: { '@type': 'Organization', name: 'DeHub' } }} />
+      <main data-glass-page className="min-h-screen bg-black text-white">
+        {localized.data ? <article className="prose prose-invert max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(localized.data.body) }} />
+          : <div className="max-w-3xl mx-auto p-12" role="status">{_copy('common.loading', { defaultValue: 'Loading...' })}</div>}
+      </main>
+    </>;
+  }
+
   return (
     <>
       <SEOHead
-        title="Best Decentralized Streaming Apps 2026 — DeHub Guide"
-        description="The decentralized streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared."
+        title={_copy("copy.7405f4274c2f", { defaultValue: "Best Decentralized Streaming Apps 2026 — DeHub Guide" })}
+        description={_copy("copy.76440774d600", { defaultValue: "The decentralized streaming apps you can actually watch on in 2026 — DeHub, Streamplace, Odysee, 3Speak, zap.stream and Audius. Not infrastructure, not dead platforms: real apps, compared." })}
         url={url}
         type="article"
         jsonLd={jsonLd}
       />
       <main data-glass-page className="min-h-screen bg-black text-white">
         <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-          <nav aria-label="Breadcrumb" className="text-xs text-zinc-500 mb-6">
+          <nav aria-label={_copy("copy.2bd873d6c734", { defaultValue: "Breadcrumb" })} className="text-xs text-zinc-500 mb-6">
             <Link to="/" className="hover:text-white">DeHub</Link>
             <span className="mx-2">/</span>
-            <span>Guides</span>
+            <span>{_copy("copy.572cd72feb9a", { defaultValue: "Guides" })}</span>
             <span className="mx-2">/</span>
-            <span className="text-zinc-300">Best Decentralized Streaming Apps</span>
+            <span className="text-zinc-300">{_copy("copy.c80b0b85e6aa", { defaultValue: "Best Decentralized Streaming Apps" })}</span>
           </nav>
 
           <header className="mb-10">
-            <p className="text-xs uppercase tracking-widest text-zinc-500 mb-3">Guide · Updated September 2026</p>
-            <h1 className="text-3xl sm:text-5xl font-bold leading-tight mb-4">
-              Best Decentralized Streaming Apps in 2026
-            </h1>
-            <p className="text-lg text-zinc-400">
-              Six decentralized and Web3 streaming apps you can actually watch on — compared on
-              audience, monetization and what you genuinely own. No infrastructure protocols
-              padding the list, and nothing that has already shut down.
-            </p>
+            <p className="text-xs uppercase tracking-widest text-zinc-500 mb-3">{_copy("copy.f16b04db6570", { defaultValue: "Guide · Updated September 2026" })}</p>
+            <h1 className="text-3xl sm:text-5xl font-bold leading-tight mb-4">{_copy("copy.181e94e04115", { defaultValue: "Best Decentralized Streaming Apps in 2026" })}</h1>
+            <p className="text-lg text-zinc-400">{_copy("copy.16e0c145ae0e", { defaultValue: "Six decentralized and Web3 streaming apps you can actually watch on — compared on audience, monetization and what you genuinely own. No infrastructure protocols padding the list, and nothing that has already shut down." })}</p>
           </header>
 
           <section className="prose prose-invert max-w-none mb-12">
-            <h2 className="text-2xl font-semibold mb-3">First, the thing most lists get wrong</h2>
-            <p className="text-zinc-300 leading-relaxed mb-4">
-              Search for decentralized streaming and almost every result opens with{' '}
-              <strong>Theta</strong> and <strong>Livepeer</strong>. Neither one is a streaming app.
-              They are delivery networks — the decentralized equivalent of a CDN and a transcoding
-              farm, sitting underneath other products. They matter a great deal, and several apps
-              below are built on that kind of infrastructure, but you cannot open Livepeer and
-              watch someone play Minecraft. Listing them as places to stream is like answering
-              "which video site should I use" with "fibre optics".
-            </p>
-            <p className="text-zinc-300 leading-relaxed">
-              The second tell is <strong>DLive</strong>, which appears on most of those same lists
-              and <strong>closed in April 2026</strong>. This guide covers apps with a front door,
-              an audience, and a pulse.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3">{_copy("copy.3667f1577d37", { defaultValue: "First, the thing most lists get wrong" })}</h2>
+            <p className="text-zinc-300 leading-relaxed mb-4">{_copy("copy.c8b9101006aa", { defaultValue: "Search for decentralized streaming and almost every result opens with" })}{' '}
+              <strong>{_copy("copy.e5828dae4735", { defaultValue: "Theta" })}</strong>{_copy("copy.e3ee915a8e8c", { defaultValue: " and " })}<strong>{_copy("copy.6cd06db20425", { defaultValue: "Livepeer" })}</strong>{_copy("copy.10e24f0331a0", { defaultValue: ". Neither one is a streaming app. They are delivery networks — the decentralized equivalent of a CDN and a transcoding farm, sitting underneath other products. They matter a great deal, and several apps below are built on that kind of infrastructure, but you cannot open Livepeer and watch someone play Minecraft. Listing them as places to stream is like answering \"which video site should I use\" with \"fibre optics\"." })}</p>
+            <p className="text-zinc-300 leading-relaxed">{_copy("copy.86076ae2bc85", { defaultValue: "The second tell is " })}<strong>{_copy("copy.88bd742fdae5", { defaultValue: "DLive" })}</strong>{_copy("copy.430e5d8e5d98", { defaultValue: ", which appears on most of those same lists and " })}<strong>{_copy("copy.1f456e2cbbd9", { defaultValue: "closed in April 2026" })}</strong>{_copy("copy.b4811aad79b0", { defaultValue: ". This guide covers apps with a front door, an audience, and a pulse." })}</p>
           </section>
 
           <Figure
             src="fig-streaming-rails-not-apps"
-            alt="Theta and Livepeer are delivery rails, not streaming apps with a front door"
+            alt={_copy("copy.7c811ca9bfc2", { defaultValue: "Theta and Livepeer are delivery rails, not streaming apps with a front door" })}
           />
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6">The 6 best decentralized streaming apps</h2>
+            <h2 className="text-2xl font-semibold mb-6">{_copy("copy.7998e2d87716", { defaultValue: "The 6 best decentralized streaming apps" })}</h2>
             <ol className="space-y-8">
               {platforms.map((p, i) => (
                 <li key={p.name} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
@@ -257,34 +256,34 @@ export default function BestDecentralizedStreaming() {
                     {i + 1}. {p.name}
                   </h3>
                   <p className="text-xs text-zinc-500 mb-4">
-                    {p.network} · Launched {p.launched}
+                    {p.network}{_copy("copy.03c791feaa1c", { defaultValue: " · Launched " })}{p.launched}
                   </p>
                   <dl className="grid sm:grid-cols-2 gap-4 text-sm mb-4">
                     <div>
-                      <dt className="text-zinc-500 mb-1">Model</dt>
+                      <dt className="text-zinc-500 mb-1">{_copy("copy.5e2c614c23f0", { defaultValue: "Model" })}</dt>
                       <dd className="text-zinc-200">{p.model}</dd>
                     </div>
                     <div>
-                      <dt className="text-zinc-500 mb-1">Monetization</dt>
+                      <dt className="text-zinc-500 mb-1">{_copy("copy.4d07f6012a60", { defaultValue: "Monetization" })}</dt>
                       <dd className="text-zinc-200">{p.monetization}</dd>
                     </div>
                   </dl>
                   <div className="grid sm:grid-cols-2 gap-4 text-sm mb-4">
                     <div>
-                      <p className="text-zinc-500 mb-2">Strengths</p>
+                      <p className="text-zinc-500 mb-2">{_copy("copy.b11d27f88ceb", { defaultValue: "Strengths" })}</p>
                       <ul className="list-disc pl-5 space-y-1 text-zinc-200">
                         {p.strengths.map((s) => <li key={s}>{s}</li>)}
                       </ul>
                     </div>
                     <div>
-                      <p className="text-zinc-500 mb-2">Weaknesses</p>
+                      <p className="text-zinc-500 mb-2">{_copy("copy.af393b754ae3", { defaultValue: "Weaknesses" })}</p>
                       <ul className="list-disc pl-5 space-y-1 text-zinc-200">
                         {p.weaknesses.map((s) => <li key={s}>{s}</li>)}
                       </ul>
                     </div>
                   </div>
                   <p className="text-sm text-zinc-400">
-                    <span className="text-zinc-500">Best for: </span>{p.bestFor}
+                    <span className="text-zinc-500">{_copy("copy.e4394f02488a", { defaultValue: "Best for: " })}</span>{p.bestFor}
                   </p>
                 </li>
               ))}
@@ -292,79 +291,57 @@ export default function BestDecentralizedStreaming() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-3">Which one should you pick?</h2>
+            <h2 className="text-2xl font-semibold mb-3">{_copy("copy.d940c4929cb2", { defaultValue: "Which one should you pick?" })}</h2>
             <ul className="space-y-3 text-zinc-300">
-              <li><strong className="text-white">Want to get paid from your first viewer?</strong> DeHub — real-time tips, pay-per-view and subscriptions, no follower threshold.</li>
-              <li><strong className="text-white">Want production tools without a plugin stack?</strong> DeHub — voice changers, sound effects and camera looks in the browser.</li>
-              <li><strong className="text-white">Already have a Bluesky following?</strong> Streamplace — same identity, no new account.</li>
-              <li><strong className="text-white">Want the biggest audience available?</strong> Odysee.</li>
-              <li><strong className="text-white">Want rewards paid by the chain itself?</strong> 3Speak.</li>
-              <li><strong className="text-white">Want to be paid in Bitcoin?</strong> zap.stream.</li>
-              <li><strong className="text-white">Making music rather than video?</strong> Audius.</li>
+              <li><strong className="text-white">{_copy("copy.07153496026a", { defaultValue: "Want to get paid from your first viewer?" })}</strong>{_copy("copy.7b85326af042", { defaultValue: " DeHub — real-time tips, pay-per-view and subscriptions, no follower threshold." })}</li>
+              <li><strong className="text-white">{_copy("copy.208c9499d220", { defaultValue: "Want production tools without a plugin stack?" })}</strong>{_copy("copy.f4f8e59834fb", { defaultValue: " DeHub — voice changers, sound effects and camera looks in the browser." })}</li>
+              <li><strong className="text-white">{_copy("copy.7de271a284f6", { defaultValue: "Already have a Bluesky following?" })}</strong>{_copy("copy.e4b7d3b7b2b4", { defaultValue: " Streamplace — same identity, no new account." })}</li>
+              <li><strong className="text-white">{_copy("copy.eacc9626be89", { defaultValue: "Want the biggest audience available?" })}</strong>{_copy("copy.29891741bc10", { defaultValue: " Odysee." })}</li>
+              <li><strong className="text-white">{_copy("copy.553d74bdde54", { defaultValue: "Want rewards paid by the chain itself?" })}</strong>{_copy("copy.531595a185f5", { defaultValue: " 3Speak." })}</li>
+              <li><strong className="text-white">{_copy("copy.1a02d7858567", { defaultValue: "Want to be paid in Bitcoin?" })}</strong>{_copy("copy.790583caf7d2", { defaultValue: " zap.stream." })}</li>
+              <li><strong className="text-white">{_copy("copy.4ab2357cb9bd", { defaultValue: "Making music rather than video?" })}</strong>{_copy("copy.784873441f29", { defaultValue: " Audius." })}</li>
             </ul>
           </section>
 
           <Figure
             src="fig-streaming-production-gap"
-            alt="Voice changers, sound effects and camera looks built into the browser, with no plugin stack"
+            alt={_copy("copy.f0f23dd6ea80", { defaultValue: "Voice changers, sound effects and camera looks built into the browser, with no plugin stack" })}
           />
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-3">The production gap</h2>
-            <p className="text-zinc-300 leading-relaxed mb-4">
-              Comparisons in this category usually stop at protocols and payments, which skips the
-              thing you actually feel on day one: every other app here hands you a video player and
-              a chat box, and everything else is your problem. You bring OBS, you wire up your own
-              audio chain, you find your own plugins. DeHub ships the production tools in the
-              browser:
-            </p>
+            <h2 className="text-2xl font-semibold mb-3">{_copy("copy.8f14ee3a31f7", { defaultValue: "The production gap" })}</h2>
+            <p className="text-zinc-300 leading-relaxed mb-4">{_copy("copy.59bb491feda2", { defaultValue: "Comparisons in this category usually stop at protocols and payments, which skips the thing you actually feel on day one: every other app here hands you a video player and a chat box, and everything else is your problem. You bring OBS, you wire up your own audio chain, you find your own plugins. DeHub ships the production tools in the browser:" })}</p>
             <ul className="space-y-3 text-zinc-300 mb-4">
-              <li><strong className="text-white">Voice changers</strong> — Anonymous, Robot, Chipmunk, Echo and Radio, applied to the audio you publish rather than just your own monitor. Anonymous is the one that matters if you are covering something that makes you a target.</li>
-              <li><strong className="text-white">A sound-effects board</strong> — air horn, applause, drum roll, buzzer, crickets, boo, countdown and more, on pads you can hit mid-sentence.</li>
-              <li><strong className="text-white">Camera looks</strong> — mono, noir, warm, vivid and neon, applied live to the published picture, with nine native looks on mobile.</li>
-              <li><strong className="text-white">Screen share with a camera bubble</strong> — share a game or a tab at 1080p with your face composited over it, no encoder needed.</li>
-              <li><strong className="text-white">An AI creator studio</strong> — generate images, video, music and posters for your channel without leaving the app.</li>
+              <li><strong className="text-white">{_copy("copy.9901ebc8a96c", { defaultValue: "Voice changers" })}</strong>{_copy("copy.339d6d1648e2", { defaultValue: " — Anonymous, Robot, Chipmunk, Echo and Radio, applied to the audio you publish rather than just your own monitor. Anonymous is the one that matters if you are covering something that makes you a target." })}</li>
+              <li><strong className="text-white">{_copy("copy.9f5c19108ad3", { defaultValue: "A sound-effects board" })}</strong>{_copy("copy.077d1ebc4189", { defaultValue: " — air horn, applause, drum roll, buzzer, crickets, boo, countdown and more, on pads you can hit mid-sentence." })}</li>
+              <li><strong className="text-white">{_copy("copy.a861436c9ced", { defaultValue: "Camera looks" })}</strong>{_copy("copy.fa080459f420", { defaultValue: " — mono, noir, warm, vivid and neon, applied live to the published picture, with nine native looks on mobile." })}</li>
+              <li><strong className="text-white">{_copy("copy.60970c50e2bc", { defaultValue: "Screen share with a camera bubble" })}</strong>{_copy("copy.5373bc3eed0e", { defaultValue: " — share a game or a tab at 1080p with your face composited over it, no encoder needed." })}</li>
+              <li><strong className="text-white">{_copy("copy.781cf24b06f2", { defaultValue: "An AI creator studio" })}</strong>{_copy("copy.85185622d8bf", { defaultValue: " — generate images, video, music and posters for your channel without leaving the app." })}</li>
             </ul>
-            <p className="text-zinc-300 leading-relaxed">
-              None of the other five platforms on this list ship any of it.
-            </p>
+            <p className="text-zinc-300 leading-relaxed">{_copy("copy.6fda0d2aa031", { defaultValue: "None of the other five platforms on this list ship any of it." })}</p>
           </section>
 
           <Figure
             src="fig-streaming-paid-as-it-lands"
-            alt="Tips settle on-chain as they are sent, with no payout cycle"
+            alt={_copy("copy.5b176be7069c", { defaultValue: "Tips settle on-chain as they are sent, with no payout cycle" })}
           />
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-3">What "decentralized" buys a streamer</h2>
-            <p className="text-zinc-300 leading-relaxed">
-              Three things, concretely. Your account and audience are not a platform's to delete,
-              because identity lives on a protocol rather than in a company's database. Payments
-              go directly from viewer to creator, so nothing is withheld behind a partner
-              programme or a payout threshold. And your back catalogue does not evaporate if a
-              front end disappears. DLive is the counter-example worth keeping in mind: branding
-              alone does not make a platform durable, and it is worth checking which parts of a
-              service are actually decentralized before you build a career on it.
-            </p>
+            <h2 className="text-2xl font-semibold mb-3">{_copy("copy.3b9ba345dd97", { defaultValue: "What \"decentralized\" buys a streamer" })}</h2>
+            <p className="text-zinc-300 leading-relaxed">{_copy("copy.6cc93068cea7", { defaultValue: "Three things, concretely. Your account and audience are not a platform's to delete, because identity lives on a protocol rather than in a company's database. Payments go directly from viewer to creator, so nothing is withheld behind a partner programme or a payout threshold. And your back catalogue does not evaporate if a front end disappears. DLive is the counter-example worth keeping in mind: branding alone does not make a platform durable, and it is worth checking which parts of a service are actually decentralized before you build a career on it." })}</p>
           </section>
 
           <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 mb-12">
-            <h2 className="text-xl font-semibold mb-2">Go live on DeHub</h2>
-            <p className="text-zinc-400 mb-4">
-              Stream from your browser, your phone or OBS, with voice changers, sound effects and
-              camera looks built in. Tips land in your wallet as they are sent — no follower
-              threshold, no payout cycle, and no wallet required to start.
-            </p>
+            <h2 className="text-xl font-semibold mb-2">{_copy("copy.23cc49836f60", { defaultValue: "Go live on DeHub" })}</h2>
+            <p className="text-zinc-400 mb-4">{_copy("copy.ce39b97c0f94", { defaultValue: "Stream from your browser, your phone or OBS, with voice changers, sound effects and camera looks built in. Tips land in your wallet as they are sent — no follower threshold, no payout cycle, and no wallet required to start." })}</p>
             <Link
               to="/app"
               className="inline-flex items-center justify-center rounded-2xl bg-white text-black font-semibold px-5 py-2.5 hover:bg-zinc-200 transition"
-            >
-              Open DeHub
-            </Link>
+            >{_copy("copy.efc85ecfd402", { defaultValue: "Open DeHub" })}</Link>
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-4">FAQ</h2>
+            <h2 className="text-2xl font-semibold mb-4">{_copy("copy.dbc468a14b60", { defaultValue: "FAQ" })}</h2>
             <div className="space-y-5 text-zinc-300">
               {FAQ_ITEMS.map(({ q, a }) => (
                 <div key={q}>
@@ -376,12 +353,10 @@ export default function BestDecentralizedStreaming() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">Related guides</h2>
+            <h2 className="text-2xl font-semibold mb-4">{_copy("copy.1e5b36078e37", { defaultValue: "Related guides" })}</h2>
             <ul className="space-y-2 text-zinc-300">
               <li>
-                <Link to="/guides/best-decentralised-social-media-platforms-2026" className="underline hover:text-white">
-                  Best decentralized social media platforms in 2026
-                </Link>
+                <Link to="/guides/best-decentralised-social-media-platforms-2026" className="underline hover:text-white">{_copy("copy.95f48da59b9a", { defaultValue: "Best decentralized social media platforms in 2026" })}</Link>
               </li>
             </ul>
           </section>

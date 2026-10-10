@@ -1,8 +1,10 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import googlePlayBadge from "@/assets/google-play-badge.png";
 
 export function DevelopmentNoticeModal() {
+  const { t: _copy } = _useCopy();
   // Modal disabled — no longer needed
   return null;
 
@@ -49,10 +51,8 @@ export function DevelopmentNoticeModal() {
 
         {/* Content */}
         <div className="text-center pt-2">
-          <h2 className="text-xl font-bold text-white mb-3">Almost There!</h2>
-          <p className="text-white/60 text-sm leading-relaxed mb-6">
-            App upgrade almost complete. Some users may experience downtime as we ship final developments.
-          </p>
+          <h2 className="text-xl font-bold text-white mb-3">{_copy("copy.3910b09b3783", { defaultValue: "Almost There!" })}</h2>
+          <p className="text-white/60 text-sm leading-relaxed mb-6">{_copy("copy.8f7b3c9b0830", { defaultValue: "App upgrade almost complete. Some users may experience downtime as we ship final developments." })}</p>
           
           {/* Google Play button */}
           <a
@@ -63,7 +63,7 @@ export function DevelopmentNoticeModal() {
           >
             <img
               src={googlePlayBadge}
-              alt="Get it on Google Play"
+              alt={_copy("copy.8d99d92a6c10", { defaultValue: "Get it on Google Play" })}
               className="h-12"
             />
           </a>
@@ -72,9 +72,7 @@ export function DevelopmentNoticeModal() {
           <button
             onClick={handleClose}
             className="block w-full py-3 text-sm text-white/40 hover:text-white transition-colors"
-          >
-            Continue
-          </button>
+          >{_copy("copy.31fbef162594", { defaultValue: "Continue" })}</button>
         </div>
       </div>
     </div>

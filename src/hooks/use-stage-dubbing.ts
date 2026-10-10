@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Live dubbing — the paying listener's half.
  * ==========================================
@@ -134,6 +135,7 @@ async function callDub<T>(body: Record<string, unknown>, wallet: string | null):
 }
 
 export function useStageDubbing(spaceId: string | undefined | null, wallet: string | null): StageDubbing {
+  const { t: _copy } = _useCopy();
   const language = useDubLanguage();
   const { setRoomVolume } = useStage();
 
@@ -241,15 +243,15 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
     if (error || !data?.token) {
       stop();
       toast.warning(
-        'Dubbing stopped.',
-        { description: 'Subtitles are still on.' },
+        _copy("copy.6939708bb49a", { defaultValue: "Dubbing stopped." }),
+        { description: _copy("copy.f52810806158", { defaultValue: "Subtitles are still on." }) },
       );
       return;
     }
 
     setDubToken(data.token);
     setMinutes(data.minutes);
-  }, [spaceId, wallet, stop]);
+  }, [spaceId, wallet, stop, _copy]);
 
   const start = useCallback(
     async (lang: string) => {
@@ -303,8 +305,8 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
           (backlogMs) => {
             if (backlogMs > DUB_MAX_BACKLOG_MS) {
               stop();
-              toast.warning('Dubbing fell too far behind and stopped.', {
-                description: 'You are only charged for the minutes you heard.',
+              toast.warning(_copy("copy.aa5d455f7d84", { defaultValue: "Dubbing fell too far behind and stopped." }), {
+                description: _copy("copy.ea6aa03f0143", { defaultValue: "You are only charged for the minutes you heard." }),
               });
             }
           },
@@ -317,7 +319,7 @@ export function useStageDubbing(spaceId: string | undefined | null, wallet: stri
         setStarting(false);
       }
     },
-    [spaceId, wallet, starting, quote, stop, tick],
+    [spaceId, wallet, starting, quote, stop, tick, _copy],
   );
 
   const settle = useCallback(async () => {

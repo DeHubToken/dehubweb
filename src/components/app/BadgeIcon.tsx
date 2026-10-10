@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * BadgeIcon — Reusable staking badge image with tooltip. A click opens the
  * badge showcase, flying the badge out of this spot.
@@ -77,6 +78,7 @@ function badgeNameFromAssetUrl(url: string | null): string | undefined {
 }
 
 export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, className = 'w-[1em] h-[1em]' }: BadgeIconProps) {
+  const { t: _copy } = _useCopy();
   const badgeRef = useInlineBadgeFont();
   const { url, name } = useBadgeVisual({ badgeBalance, username, lookupId, badgeLock, src });
   // Profiles already hold a resolved asset URL. Recover its tier so the same
@@ -142,7 +144,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
           className={`shrink-0 self-baseline align-baseline cursor-pointer ${className}`}
           role="button"
           tabIndex={0}
-          aria-label={visualName || 'Badge'}
+          aria-label={visualName || _copy("copy.002474e36821", { defaultValue: "Badge" })}
           data-badge-playing={playing ? 'true' : 'false'}
           onPointerEnter={(e) => {
             warmShowcase();
@@ -170,7 +172,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
             style={imageStyle}
             data-badge-icon
             src={poster}
-            alt={visualName || 'Badge'}
+            alt={visualName || _copy("copy.002474e36821", { defaultValue: "Badge" })}
             width={16}
             height={16}
             loading="lazy"
@@ -180,7 +182,7 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
         </span>
       </TooltipTrigger>
       <TooltipContent side="top" className="text-xs capitalize">
-        {visualName || 'Badge'}
+        {visualName || _copy("copy.002474e36821", { defaultValue: "Badge" })}
       </TooltipContent>
     </Tooltip>
   );

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Check, X, Loader2, UserPlus, Clock, CheckCheck, XCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,6 +26,7 @@ interface FollowRequestsDrawerProps {
 }
 
 export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawerProps) {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
@@ -49,7 +51,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
     },
     onSuccess: (_, requestId) => {
       invalidateRequests();
-      toast.success('Follow request approved');
+      toast.success(_copy("copy.761747747547", { defaultValue: "Follow request approved" }));
       setProcessingIds(prev => {
         const next = new Set(prev);
         next.delete(requestId);
@@ -57,7 +59,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
       });
     },
     onError: (_, requestId) => {
-      toast.error('Failed to approve request');
+      toast.error(_copy("copy.c97583fe9025", { defaultValue: "Failed to approve request" }));
       setProcessingIds(prev => {
         const next = new Set(prev);
         next.delete(requestId);
@@ -73,7 +75,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
     },
     onSuccess: (_, requestId) => {
       invalidateRequests();
-      toast.success('Follow request rejected');
+      toast.success(_copy("copy.962b110538f3", { defaultValue: "Follow request rejected" }));
       setProcessingIds(prev => {
         const next = new Set(prev);
         next.delete(requestId);
@@ -81,7 +83,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
       });
     },
     onError: (_, requestId) => {
-      toast.error('Failed to reject request');
+      toast.error(_copy("copy.ba4a26dec014", { defaultValue: "Failed to reject request" }));
       setProcessingIds(prev => {
         const next = new Set(prev);
         next.delete(requestId);
@@ -95,11 +97,11 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
     onMutate: () => setBulkProcessing('accept'),
     onSuccess: () => {
       invalidateRequests();
-      toast.success('All follow requests accepted');
+      toast.success(_copy("copy.d61764a4d479", { defaultValue: "All follow requests accepted" }));
       setBulkProcessing(null);
     },
     onError: () => {
-      toast.error('Failed to accept all requests');
+      toast.error(_copy("copy.ad46eff2b5c5", { defaultValue: "Failed to accept all requests" }));
       setBulkProcessing(null);
     },
   });
@@ -109,11 +111,11 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
     onMutate: () => setBulkProcessing('reject'),
     onSuccess: () => {
       invalidateRequests();
-      toast.success('All follow requests rejected');
+      toast.success(_copy("copy.e70a680fa824", { defaultValue: "All follow requests rejected" }));
       setBulkProcessing(null);
     },
     onError: () => {
-      toast.error('Failed to reject all requests');
+      toast.error(_copy("copy.b15062e529ef", { defaultValue: "Failed to reject all requests" }));
       setBulkProcessing(null);
     },
   });
@@ -133,9 +135,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
       <DrawerContent column glass className="px-4 pb-8 max-h-[85dvh]">
         <DrawerHeader className="px-0">
           <DrawerTitle className="text-white text-lg font-bold flex items-center gap-2">
-            <UserPlus className="w-5 h-5" />
-            Follow Requests
-            {requests.length > 0 && (
+            <UserPlus className="w-5 h-5" />{_copy("copy.da8adbe77105", { defaultValue: "Follow Requests" })}{requests.length > 0 && (
               <span className="px-2 py-0.5 text-xs font-medium bg-white/10 text-white rounded-lg">
                 {requests.length}
               </span>
@@ -158,7 +158,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
               ) : (
                 <CheckCheck className="w-3.5 h-3.5" />
               )}
-              <span className="text-xs">Accept All</span>
+              <span className="text-xs">{_copy("copy.3e86b1723088", { defaultValue: "Accept All" })}</span>
             </Button>
             <Button
               size="sm"
@@ -172,7 +172,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
               ) : (
                 <XCircle className="w-3.5 h-3.5" />
               )}
-              <span className="text-xs">Reject All</span>
+              <span className="text-xs">{_copy("copy.9c4f23ca0026", { defaultValue: "Reject All" })}</span>
             </Button>
           </div>
         )}
@@ -185,8 +185,8 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
           ) : requests.length === 0 ? (
             <AppState
               icon="accounts"
-              title="No pending requests"
-              description="Follow requests will appear here."
+              title={_copy("copy.883a9f47c79e", { defaultValue: "No pending requests" })}
+              description={_copy("copy.64554f876be0", { defaultValue: "Follow requests will appear here." })}
               size="drawer"
             />
           ) : (
@@ -251,7 +251,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
                       ) : (
                         <Check className="w-3.5 h-3.5" />
                       )}
-                      <span className="text-xs">Accept</span>
+                      <span className="text-xs">{_copy("copy.89713b9c9c1b", { defaultValue: "Accept" })}</span>
                     </Button>
                     <Button
                       size="sm"
@@ -261,7 +261,7 @@ export function FollowRequestsDrawer({ open, onOpenChange }: FollowRequestsDrawe
                       className="rounded-xl border-zinc-700 text-white hover:bg-zinc-800 bg-transparent h-8 px-3 gap-1"
                     >
                       <X className="w-3.5 h-3.5" />
-                      <span className="text-xs">Reject</span>
+                      <span className="text-xs">{_copy("copy.ab604a360777", { defaultValue: "Reject" })}</span>
                     </Button>
                   </div>
                 </div>

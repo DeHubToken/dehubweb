@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { sameOriginPath } from "@/lib/safe-redirect";
@@ -78,6 +79,7 @@ function decodeResult(raw: string): Record<string, unknown> | false {
  * telegram-auth edge function can check, and this page never looks inside it.
  */
 export default function TelegramAuth() {
+  const { t: _copy } = _useCopy();
   const [params] = useSearchParams();
   const [failed, setFailed] = useState(false);
   const handledRef = useRef(false);
@@ -142,11 +144,11 @@ export default function TelegramAuth() {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-[hsl(var(--paper,0_0%_100%))]">
       <div className="max-w-md w-full text-center space-y-4">
-        <h1 className="text-2xl font-semibold tracking-tight">Signing you in…</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{_copy("copy.afc99407f777", { defaultValue: "Signing you in…" })}</h1>
         <p className="text-sm text-muted-foreground">
           {failed
-            ? "You can close this tab and go back to DeHub."
-            : "One moment while we finish your Telegram login."}
+            ? _copy("copy.81009d8b514d", { defaultValue: "You can close this tab and go back to DeHub." })
+            : _copy("copy.31c53b3da353", { defaultValue: "One moment while we finish your Telegram login." })}
         </p>
       </div>
     </div>

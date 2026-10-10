@@ -1,3 +1,5 @@
+import { TranslationText } from '@/components/TranslationText';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Live Feed Component
  * ===================
@@ -64,6 +66,7 @@ interface LiveFeedProps {
 }
 
 export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeedProps) {
+  const { t: _copy } = _useCopy();
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -111,25 +114,23 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
   const EmptyState = () => (
     <div className="flex flex-col items-center justify-center py-20 text-center">
       <ThemedIcon icon="live" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
-      <h3 className="text-white font-semibold text-lg mb-2">No Live Streams</h3>
+      <h3 className="text-white font-semibold text-lg mb-2"><TranslationText name="copy.d8c1b1fc3a37" fallback={"No Live Streams"} /></h3>
       <p className="text-zinc-400 text-sm max-w-xs mb-4">
         {isError 
-          ? `Unable to load streams. ${error?.message || 'Please try again.'}`
+          ? _copy("copy.c9eebd6e986b", { defaultValue: "Unable to load streams. {{value1}}", value1: error?.message || 'Please try again.' })
           : 'No one is streaming right now. Check back later!'}
       </p>
       <button 
         onClick={() => refetch()}
         className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
-      >
-        Refresh
-      </button>
+      ><TranslationText name="copy.0e9161011702" fallback={"Refresh"} /></button>
     </div>
   );
 
   const categoryItems = useMemo(() => [
-    { key: 'all', label: 'All' },
+    { key: 'all', label: _copy("copy.a52ace420f21", { defaultValue: "All" }) },
     ...MOCK_CATEGORIES.map(c => ({ key: c.id, label: c.name })),
-  ], []);
+  ], [_copy]);
 
   // System theme on phones: who's live, top games and a grid of streams.
   if (cinematic) {
@@ -153,7 +154,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
             className="overflow-hidden"
           >
             <div data-no-swipe data-feed-filter-panel className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3">
-              <span className="text-xs text-zinc-500 uppercase tracking-wider mb-2 block">Categories</span>
+              <span className="text-xs text-zinc-500 uppercase tracking-wider mb-2 block">{_copy("copy.b8b1d894c683", { defaultValue: "Categories" })}</span>
               <GlassFilterRow
                 items={categoryItems}
                 activeKey={selectedCategory || 'all'}
@@ -172,10 +173,8 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
               <h2 className="font-bold text-white flex items-center gap-2">
-                <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                Streams
-              </h2>
-              <button className="text-red-400 text-sm hover:underline">Show All</button>
+                <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />{_copy("copy.bfd297afbf9e", { defaultValue: "Streams" })}</h2>
+              <button className="text-red-400 text-sm hover:underline">{_copy("copy.e1c32645f2f8", { defaultValue: "Show All" })}</button>
             </div>
 
             {streams.length === 0 ? (
@@ -207,9 +206,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
                 <button 
                   onClick={() => navigate('/app/tv')}
                   className="text-zinc-400 text-sm hover:text-white transition-colors flex items-center gap-1"
-                >
-                  Show All
-                  <ChevronRight className="w-4 h-4" />
+                >{_copy("copy.e1c32645f2f8", { defaultValue: "Show All" })}<ChevronRight className="w-4 h-4" />
                 </button>
               </div>
               
@@ -228,8 +225,8 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
           {/* Categories Carousel - at bottom */}
           <div className="space-y-3">
             <div className="flex items-center justify-between px-1">
-              <h2 className="font-bold text-white">Categories</h2>
-              <button className="text-red-400 text-sm hover:underline">Browse</button>
+              <h2 className="font-bold text-white">{_copy("copy.b8b1d894c683", { defaultValue: "Categories" })}</h2>
+              <button className="text-red-400 text-sm hover:underline">{_copy("copy.3227aa966625", { defaultValue: "Browse" })}</button>
             </div>
             
             <SwipeableCarousel>
@@ -281,13 +278,14 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
 // Leaving the page stops a non-popped-out recording via the corner player's
 // route gate, exactly as it does for the other surfaces.
 function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
+  const { t: _copy } = _useCopy();
   const { spaceId: loadedId, paused: playbackPaused } = useStagePlayback();
 
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 px-1">
         <span className="w-2 h-2 bg-white/40 rounded-full" />
-        <h2 className="font-bold text-white">Past Stages</h2>
+        <h2 className="font-bold text-white">{_copy("copy.154370bd2e98", { defaultValue: "Past Stages" })}</h2>
       </div>
       <div className="space-y-2">
         {stages.map(stage => {
@@ -322,11 +320,10 @@ function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
                 <div className="flex-1 min-w-0">
                   <p className="text-white font-medium text-sm truncate">{stage.title}</p>
                   <p className="text-white/50 text-xs mt-0.5">
-                    {stage.host_username || 'Anonymous'} · {stage.speaker_count || 0} speakers
-                    {stage.ended_at && ` · ${new Date(stage.ended_at).toLocaleDateString()}`}
+                    {stage.host_username || _copy("copy.e7a8aa2df7e5", { defaultValue: "Anonymous" })} · {stage.speaker_count || 0}{_copy("copy.a2010905262a", { defaultValue: " speakers" })}{stage.ended_at && ` · ${new Date(stage.ended_at).toLocaleDateString()}`}
                   </p>
                   {!stage.recording_url && (
-                    <p className="text-white/25 text-xs mt-0.5">No recording</p>
+                    <p className="text-white/25 text-xs mt-0.5">{_copy("copy.da849530a46b", { defaultValue: "No recording" })}</p>
                   )}
                 </div>
 

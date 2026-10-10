@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Shorts Enabled Context
  * ======================
@@ -49,6 +50,7 @@ function writeCache(value: boolean) {
 }
 
 export function ShortsEnabledProvider({ children }: { children: ReactNode }) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, isAuthenticated } = useAuth();
 
   const [shortsEnabled, setShortsState] = useState<boolean>(readCache);
@@ -112,7 +114,7 @@ export function ShortsEnabledProvider({ children }: { children: ReactNode }) {
         await persist(value);
       } catch (err) {
         console.error('Failed to save Shorts preference:', err);
-        toast.error('Failed to save Shorts preference');
+        toast.error(_copy("copy.4c825e9095e7", { defaultValue: "Failed to save Shorts preference" }));
         setShortsState(previous);
         writeCache(previous);
       } finally {
@@ -120,7 +122,7 @@ export function ShortsEnabledProvider({ children }: { children: ReactNode }) {
       }
     })();
     pendingRef.current = run;
-  }, [shortsEnabled, isAuthenticated, walletAddress, persist]);
+  }, [shortsEnabled, isAuthenticated, walletAddress, persist, _copy]);
 
   // Cross-tab sync of cached value.
   useEffect(() => {

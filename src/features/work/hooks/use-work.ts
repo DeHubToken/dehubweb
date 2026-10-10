@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { workRpc, settleWorkPayment } from '../work-rpc';
 import { workEscrow, workSubmission, workJob } from '../work-escrow';
 import { getWorkConfig } from '@/lib/contracts/dehub-work';
@@ -162,6 +163,7 @@ export function useMyWorkSubmissions(enabled = true) {
 
 // ── Create job ───────────────────────────────────────────────
 export function useCreateJob() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -210,7 +212,7 @@ export function useCreateJob() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
-      toast.success('Bounty published');
+      toast.success(_copy("copy.314844f99c7e", { defaultValue: "Bounty published" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to post job'),
   });
@@ -225,6 +227,7 @@ export function useCreateJob() {
  * on the card and the detail page goes stale.
  */
 export function useUpdateJob() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -281,7 +284,7 @@ export function useUpdateJob() {
       qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
-      toast.success('Bounty updated');
+      toast.success(_copy("copy.99e4e233be59", { defaultValue: "Bounty updated" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to update bounty'),
   });
@@ -327,6 +330,7 @@ export function useJobApplications(jobId: string | undefined) {
 }
 
 export function useApplyToJob() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -346,13 +350,14 @@ export function useApplyToJob() {
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-apps', v.job_id] });
-      toast.success('Application sent');
+      toast.success(_copy("copy.f4e93d19a0fc", { defaultValue: "Application sent" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to apply'),
   });
 }
 
 export function useAwardApplicant() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -365,7 +370,7 @@ export function useAwardApplicant() {
       qc.invalidateQueries({ queryKey: ['work-job'] });
       // Not "funds escrowed": with no contract deployed this awards the work and
       // nothing else. The money moves when the submission is approved and paid.
-      toast.success('Awarded — they can start work');
+      toast.success(_copy("copy.3f0abb77152a", { defaultValue: "Awarded — they can start work" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to award'),
   });
@@ -386,6 +391,7 @@ export function useJobSubmissions(jobId: string | undefined) {
 }
 
 export function useSubmitProof() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -408,7 +414,7 @@ export function useSubmitProof() {
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job'] });
-      toast.success('Proof submitted');
+      toast.success(_copy("copy.d48be1bf1414", { defaultValue: "Proof submitted" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to submit proof'),
   });
@@ -471,6 +477,7 @@ export function useApproveSubmission() {
  * unreachable from the UI and can only ever be settled off-platform.
  */
 export function usePaySubmission() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -494,7 +501,7 @@ export function usePaySubmission() {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-my-submissions'] });
-      toast.success('Payment checked — refresh the submission for its confirmed status');
+      toast.success(_copy("copy.d3381af6ba42", { defaultValue: "Payment checked — refresh the submission for its confirmed status" }));
     },
     onSettled: (_result, _error, variables) => {
       qc.invalidateQueries({ queryKey: ['work-subs', variables.job_id] });
@@ -506,6 +513,7 @@ export function usePaySubmission() {
 
 
 export function useRejectSubmission() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -516,7 +524,7 @@ export function useRejectSubmission() {
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-subs', v.job_id] });
-      toast.success('Submission rejected');
+      toast.success(_copy("copy.be61c03c480e", { defaultValue: "Submission rejected" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to reject'),
   });
@@ -549,6 +557,7 @@ export function useUserReviews(address: string | undefined) {
 }
 
 export function useLeaveReview() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -571,7 +580,7 @@ export function useLeaveReview() {
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-reviews', v.job_id] });
       qc.invalidateQueries({ queryKey: ['work-reviews-user', v.reviewee_address.toLowerCase()] });
-      toast.success('Review posted');
+      toast.success(_copy("copy.e3df893ed812", { defaultValue: "Review posted" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to leave review'),
   });
@@ -579,6 +588,7 @@ export function useLeaveReview() {
 
 // ── Dispute ──────────────────────────────────────────────────
 export function useOpenDispute() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -589,7 +599,7 @@ export function useOpenDispute() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
-      toast.success('Dispute opened — admin will review');
+      toast.success(_copy("copy.ef16819dcd3e", { defaultValue: "Dispute opened — admin will review" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to open dispute'),
   });
@@ -613,6 +623,7 @@ export function useAdminDisputes() {
 }
 
 export function useAdminResolveDispute() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -642,7 +653,7 @@ export function useAdminResolveDispute() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
-      toast.success('Dispute resolved');
+      toast.success(_copy("copy.f48586c2a5a1", { defaultValue: "Dispute resolved" }));
       qc.invalidateQueries({queryKey:['work-job']});
       qc.invalidateQueries({queryKey:['work-subs']});
       qc.invalidateQueries({queryKey:['work-jobs-browse']});
@@ -653,6 +664,7 @@ export function useAdminResolveDispute() {
 
 
 export function useMarkComplete() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -663,7 +675,7 @@ export function useMarkComplete() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-job'] });
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
-      toast.success('Job marked complete');
+      toast.success(_copy("copy.db42881e01a7", { defaultValue: "Job marked complete" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed'),
   });
@@ -673,11 +685,12 @@ export function useWorkConfig() {
  return useQuery({queryKey:['work-config'],queryFn:getWorkConfig,staleTime:60000});
 }
 export function usePublishJob() {
+  const { t: _copy } = _useCopy();
  const {walletAddress}=useAuth(); const qc=useQueryClient();
  return useMutation({mutationFn:async(jobId:string)=>{
   if(!walletAddress) throw new Error('Not authenticated');
   await workRpc(walletAddress,'work_publish',{p_job:jobId});
- },onSuccess:()=>{qc.invalidateQueries({queryKey:['work-job']});qc.invalidateQueries({queryKey:['work-my-posted']});qc.invalidateQueries({queryKey:['work-jobs-browse']});toast.success('Bounty published');},onError:(e:any)=>toast.error(e.message)});
+ },onSuccess:()=>{qc.invalidateQueries({queryKey:['work-job']});qc.invalidateQueries({queryKey:['work-my-posted']});qc.invalidateQueries({queryKey:['work-jobs-browse']});toast.success(_copy("copy.314844f99c7e", { defaultValue: "Bounty published" }));},onError:(e:any)=>toast.error(e.message)});
 }
 export function useFundJob() {
  const {walletAddress}=useAuth(); const qc=useQueryClient();

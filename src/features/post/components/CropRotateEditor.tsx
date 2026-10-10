@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { X, RotateCw, FlipHorizontal, FlipVertical, Check, Crop, ZoomIn, ZoomOut, ArrowUpDown } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -51,6 +52,7 @@ export function CropRotateEditor({
   initialSettings,
   onApply,
 }: CropRotateEditorProps) {
+  const { t: _copy } = _useCopy();
   const [settings, setSettings] = useState<CropSettings>(
     initialSettings || { ...DEFAULT_CROP_SETTINGS }
   );
@@ -410,7 +412,7 @@ export function CropRotateEditor({
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent column hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90dvh] overflow-hidden flex flex-col">
-        <DrawerTitle className="sr-only">Crop & Rotate</DrawerTitle>
+        <DrawerTitle className="sr-only">{_copy("copy.a252253dd718", { defaultValue: "Crop & Rotate" })}</DrawerTitle>
         
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
@@ -420,16 +422,14 @@ export function CropRotateEditor({
           >
             <X className="w-5 h-5 text-zinc-400" />
           </button>
-          <span className="text-white font-semibold">Crop & Rotate</span>
+          <span className="text-white font-semibold">{_copy("copy.a252253dd718", { defaultValue: "Crop & Rotate" })}</span>
           <button
             onClick={handleApply}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
               bg-white/10 backdrop-blur-xl border border-white/20
               hover:bg-white/20 hover:border-white/40"
           >
-            <Check className="w-4 h-4" />
-            Apply
-          </button>
+            <Check className="w-4 h-4" />{_copy("copy.31e392d1c037", { defaultValue: "Apply" })}</button>
         </div>
 
         {/* Preview - Container sized to match selected aspect ratio */}
@@ -465,7 +465,7 @@ export function CropRotateEditor({
             {/* Image - fills container, cropped to aspect ratio */}
             <img
               src={imageUrl}
-              alt="Preview"
+              alt={_copy("copy.324b134f57c7", { defaultValue: "Preview" })}
               className="w-full h-full object-cover transition-transform duration-200 select-none"
               style={{ 
                 transform: [
@@ -492,7 +492,7 @@ export function CropRotateEditor({
         <div className="border-t border-zinc-800 px-4 py-3">
           <div className="flex items-center gap-2 mb-3">
             <Crop className="w-4 h-4 text-zinc-400" />
-            <span className="text-sm text-zinc-400 font-medium">Aspect Ratio</span>
+            <span className="text-sm text-zinc-400 font-medium">{_copy("copy.556f85efa2be", { defaultValue: "Aspect Ratio" })}</span>
           </div>
           <div className="flex gap-2">
             {ASPECT_RATIOS.map((ratio) => (
@@ -517,7 +517,7 @@ export function CropRotateEditor({
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-zinc-400 min-w-[60px]">
                 <ZoomIn className="w-4 h-4" />
-                <span className="text-xs font-medium">Zoom</span>
+                <span className="text-xs font-medium">{_copy("copy.509c517ede79", { defaultValue: "Zoom" })}</span>
               </div>
               <Slider
                 value={[zoom]}
@@ -541,7 +541,7 @@ export function CropRotateEditor({
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 text-zinc-400 min-w-[60px]">
                 <ArrowUpDown className="w-4 h-4" />
-                <span className="text-xs font-medium">Pan</span>
+                <span className="text-xs font-medium">{_copy("copy.fd92d952db92", { defaultValue: "Pan" })}</span>
               </div>
               <Slider
                 value={[pan.y]}
@@ -590,7 +590,7 @@ export function CropRotateEditor({
               )}
             >
               <FlipHorizontal className="w-6 h-6" />
-              <span className="text-xs font-medium">Flip H</span>
+              <span className="text-xs font-medium">{_copy("copy.6f20f10fd9d4", { defaultValue: "Flip H" })}</span>
             </button>
             
             <button
@@ -603,7 +603,7 @@ export function CropRotateEditor({
               )}
             >
               <FlipVertical className="w-6 h-6" />
-              <span className="text-xs font-medium">Flip V</span>
+              <span className="text-xs font-medium">{_copy("copy.06d505972fa6", { defaultValue: "Flip V" })}</span>
             </button>
           </div>
           
@@ -617,9 +617,7 @@ export function CropRotateEditor({
                 ? "text-zinc-400 hover:text-white cursor-pointer" 
                 : "text-zinc-600 cursor-default"
             )}
-          >
-            Reset All
-          </button>
+          >{_copy("copy.e1c518097f23", { defaultValue: "Reset All" })}</button>
         </div>
       </DrawerContent>
     </Drawer>

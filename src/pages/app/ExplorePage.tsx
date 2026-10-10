@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
@@ -87,6 +88,7 @@ const UserResultCard = ({
   user: SearchCreator; 
   onProfileClick?: (handle: string) => void;
 }) => {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
@@ -167,7 +169,7 @@ const UserResultCard = ({
           }`}
         >
           {isRequested ? t('follow.requested') : isFollowing ? (
-            'Following'
+            _copy("copy.344b4271ca01", { defaultValue: "Following" })
           ) : (
             user.followsYou ? t('explorePage.followBack', 'Follow Back') : t('explorePage.follow')
           )}
@@ -233,6 +235,7 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
 });
 
 export default function ExplorePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
@@ -734,8 +737,8 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen" data-explore-page>
-      <SEOHead title={t('explore.seoTitle')} description={t('explore.seoDescription')} url={HUB_ROUTE_META.explore.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: HUB_ROUTE_META.explore.url, description: 'Discover trending content, creators and topics on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={t('explore.seoTitle')} description={t('explore.seoDescription')} url={HUB_ROUTE_META.explore.url} jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: HUB_ROUTE_META.explore.url, description: _copy("copy.68f66b1f5bba", { defaultValue: "Discover trending content, creators and topics on DeHub." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">{_copy("copy.e556e95a6b25", { defaultValue: "Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Search Header - Bento Style.
 
           `data-nav-hide="pin"` keeps this one on screen when the rest of the
@@ -844,7 +847,7 @@ export default function ExplorePage() {
                 {isResolvingContract && (
                   <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-zinc-900/80 border border-zinc-800/50 text-sm text-muted-foreground">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Resolving contract address…</span>
+                    <span>{_copy("copy.614d15e703a1", { defaultValue: "Resolving contract address…" })}</span>
                   </div>
                 )}
 
@@ -1006,9 +1009,7 @@ export default function ExplorePage() {
                             )
                           : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
                       )}
-                    >
-                      All
-                    </button>
+                    >{_copy("copy.a52ace420f21", { defaultValue: "All" })}</button>
                     {exploreCategories.map((cat) => (
                       <button
                         key={cat.id}
@@ -1053,8 +1054,8 @@ export default function ExplorePage() {
                   ) : categoryFeedItems.length === 0 ? (
                     <AppState
                       icon="search"
-                      title="No content found in this category"
-                      description="Try another category or check back later."
+                      title={_copy("copy.9b5b63048faa", { defaultValue: "No content found in this category" })}
+                      description={_copy("copy.cc4d2b473cad", { defaultValue: "Try another category or check back later." })}
                       kind="search-empty"
                       size="section"
                     />
@@ -1090,7 +1091,7 @@ export default function ExplorePage() {
                   <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                        <BrandIcon src={search3dIcon} alt="Search explore icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                        <BrandIcon src={search3dIcon} alt={_copy("copy.27392df73ae0", { defaultValue: "Search explore icon" })} className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
                         {t('explorePage.searchHistory')}
                       </h2>
                       {recentSearches.length > 0 && (

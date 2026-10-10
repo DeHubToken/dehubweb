@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
  * that tier counts for, one above the badgeless account's single count.
  */
 const BadgeFlowchart = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const badges = [
     { threshold: "10,000", usd: "$10", badge: "Crab Badge", color: "bg-muted", image: badgeImage('Crab') },
@@ -39,7 +41,7 @@ const BadgeFlowchart = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-center">Badge of Honour System</CardTitle>
+        <CardTitle className="text-center">{_copy("copy.d7d78eb92b79", { defaultValue: "Badge of Honour System" })}</CardTitle>
         <p className="text-center text-sm text-muted-foreground">
           {t('badgeLadder.intro')}
         </p>
@@ -59,21 +61,19 @@ const BadgeFlowchart = () => {
               <div className="text-right shrink-0">
                 <span className="text-sm font-mono text-foreground">{badge.usd}</span>
                 <span className="block text-xs font-mono text-muted-foreground">
-                  <DhbAmount amount={badge.threshold} iconClassName="w-3 h-3" /> · ×{index + 2} weight
-                </span>
+                  <DhbAmount amount={badge.threshold} iconClassName="w-3 h-3" /> · ×{index + 2}{_copy("copy.dcbb8c138058", { defaultValue: " weight" })}</span>
               </div>
             </div>
           ))}
           <div className="flex items-center justify-between gap-3 p-3 rounded-lg docs-glass">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-8 h-8 rounded-full bg-muted border border-border shrink-0"></div>
-              <span className="font-medium text-muted-foreground truncate">No Badge</span>
+              <span className="font-medium text-muted-foreground truncate">{_copy("copy.6883cefe9094", { defaultValue: "No Badge" })}</span>
             </div>
             <div className="text-right shrink-0">
-              <span className="text-sm font-mono text-muted-foreground">under $10</span>
+              <span className="text-sm font-mono text-muted-foreground">{_copy("copy.b93ceb710a1d", { defaultValue: "under $10" })}</span>
               <span className="block text-xs font-mono text-muted-foreground">
-                <DhbAmount amount="< 10,000" iconClassName="w-3 h-3" /> · ×1 weight
-              </span>
+                <DhbAmount amount="< 10,000" iconClassName="w-3 h-3" />{_copy("copy.40df4f441d1b", { defaultValue: " · ×1 weight" })}</span>
             </div>
           </div>
         </div>

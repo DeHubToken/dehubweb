@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Pencil, Grip, Image as ImageIcon } from 'lucide-react';
@@ -97,6 +98,7 @@ export function PostMediaPreview({
   onReplaceImage,
   onFullscreenChange,
 }: PostMediaPreviewProps) {
+  const { t: _copy } = _useCopy();
   const [recordingIndex, setRecordingIndex] = useState<number | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
@@ -336,7 +338,7 @@ export function PostMediaPreview({
     };
 
     audioEl.onerror = () => {
-      toast.error('Failed to load audio file');
+      toast.error(_copy("copy.722a1406cd0d", { defaultValue: "Failed to load audio file" }));
       URL.revokeObjectURL(audioEl.src);
     };
 
@@ -361,7 +363,7 @@ export function PostMediaPreview({
     if (!file || index === null) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error('Please select an image file');
+      toast.error(_copy("copy.024eff991771", { defaultValue: "Please select an image file" }));
       return;
     }
 
@@ -589,7 +591,7 @@ export function PostMediaPreview({
                   /* ==================== IMAGE PREVIEW ==================== */
                   <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">
                     {media.filter(item => item.type === 'image').length > 1 && (
-                      <button type="button" aria-label={`Drag to reorder photo ${index + 1}`} title="Drag to reorder photos"
+                      <button type="button" aria-label={_copy("copy.58bb510b9e80", { defaultValue: "Drag to reorder photo {{value1}}", value1: index + 1 })} title={_copy("copy.eb2b5e480faa", { defaultValue: "Drag to reorder photos" })}
                         className="absolute z-20 bottom-2 left-2 flex items-center gap-1 rounded-lg bg-black/75 px-2 py-1 text-xs text-white touch-none cursor-grab active:cursor-grabbing"
                         onPointerDown={event => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); dragIndex.current = index; setDraggingIndex(index); }}
                         onPointerMove={event => { if (dragIndex.current === null) return; const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-photo-index]'); setDropIndex(target ? Number(target.getAttribute('data-photo-index')) : null); }}
@@ -626,12 +628,12 @@ export function PostMediaPreview({
                                 className="flex items-center justify-center w-7 h-7 rounded-xl text-white transition-all duration-300 hover:scale-105
                                   bg-black/60 backdrop-blur-xl border border-white/20
                                   hover:bg-black/70 hover:border-white/40"
-                                aria-label={`Change image ${index + 1}`}
+                                aria-label={_copy("copy.1067b33ac325", { defaultValue: "Change image {{value1}}", value1: index + 1 })}
                               >
                                 <Upload className="w-3 h-3 text-white" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent>Change image</TooltipContent>
+                            <TooltipContent>{_copy("copy.87b8b0086a4c", { defaultValue: "Change image" })}</TooltipContent>
                           </Tooltip>
                         )}
                         <Tooltip>
@@ -646,7 +648,7 @@ export function PostMediaPreview({
                               <Paintbrush className="w-3 h-3 text-white" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>Edit filters</TooltipContent>
+                          <TooltipContent>{_copy("copy.4ab51caa4298", { defaultValue: "Edit filters" })}</TooltipContent>
                         </Tooltip>
                         
                         <Tooltip>
@@ -661,7 +663,7 @@ export function PostMediaPreview({
                               <Crop className="w-3 h-3 text-white" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>Crop & rotate</TooltipContent>
+                          <TooltipContent>{_copy("copy.9df738204461", { defaultValue: "Crop & rotate" })}</TooltipContent>
                         </Tooltip>
 
                         {/* A canvas draw flattens an animated GIF to one
@@ -679,7 +681,7 @@ export function PostMediaPreview({
                                 <Pencil className="w-3 h-3 text-white" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent>Draw & write</TooltipContent>
+                            <TooltipContent>{_copy("copy.151d506b10d7", { defaultValue: "Draw & write" })}</TooltipContent>
                           </Tooltip>
                         )}
 
@@ -723,7 +725,7 @@ export function PostMediaPreview({
                                   <Upload className="w-3 h-3" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent>Upload audio</TooltipContent>
+                              <TooltipContent>{_copy("copy.e38096579d58", { defaultValue: "Upload audio" })}</TooltipContent>
                             </Tooltip>
                             <Tooltip delayDuration={300}>
                               <TooltipTrigger asChild>
@@ -737,7 +739,7 @@ export function PostMediaPreview({
                                   <Mic className="w-3 h-3 text-white" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent>Record audio</TooltipContent>
+                              <TooltipContent>{_copy("copy.f9db93fda079", { defaultValue: "Record audio" })}</TooltipContent>
                             </Tooltip>
                             <Tooltip delayDuration={300}>
                               <TooltipTrigger asChild>
@@ -751,7 +753,7 @@ export function PostMediaPreview({
                                   <X className="w-3 h-3" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent>Cancel</TooltipContent>
+                              <TooltipContent>{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</TooltipContent>
                             </Tooltip>
                           </>
                         ) : (
@@ -767,7 +769,7 @@ export function PostMediaPreview({
                                 <Music className="w-3 h-3" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent>Add audio</TooltipContent>
+                            <TooltipContent>{_copy("copy.9b0092ad98bd", { defaultValue: "Add audio" })}</TooltipContent>
                           </Tooltip>
                         ))}
                       </div>
@@ -805,7 +807,7 @@ export function PostMediaPreview({
                           <div className="flex-1 min-w-0">
                             <p className="text-white font-medium text-sm truncate drop-shadow-lg">{m.file.name}</p>
                             <p className="text-white/70 text-xs drop-shadow">
-                              {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : 'Audio'}
+                              {m.duration ? `${Math.floor(m.duration / 60)}:${String(Math.floor(m.duration % 60)).padStart(2, '0')}` : _copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}
                             </p>
                           </div>
                         </div>
@@ -824,11 +826,11 @@ export function PostMediaPreview({
                         <div className="relative rounded-2xl overflow-hidden bg-zinc-800 border border-white/10">
                           <img 
                             src={m.thumbnail} 
-                            alt="Audio thumbnail" 
+                            alt={_copy("copy.f0b9be2f0d96", { defaultValue: "Audio thumbnail" })} 
                             className="w-full aspect-square object-cover"
                           />
                           <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/60 backdrop-blur-sm rounded-lg">
-                            <span className="text-white text-xs font-medium">Cover Art</span>
+                            <span className="text-white text-xs font-medium">{_copy("copy.3b35bbf626b5", { defaultValue: "Cover Art" })}</span>
                           </div>
                           <button
                             type="button"
@@ -844,9 +846,7 @@ export function PostMediaPreview({
                           onClick={() => triggerThumbnailUpload(index)}
                           className="w-full flex items-center gap-2 justify-center py-3 bg-zinc-800/60 hover:bg-zinc-800 border border-dashed border-white/10 hover:border-white/20 rounded-2xl transition-all text-zinc-400 hover:text-white text-xs"
                         >
-                          <ImageIcon className="w-3.5 h-3.5" />
-                          Add cover art
-                        </button>
+                          <ImageIcon className="w-3.5 h-3.5" />{_copy("copy.bff7683881b8", { defaultValue: "Add cover art" })}</button>
                       )}
                     </div>
                   </div>
@@ -859,7 +859,7 @@ export function PostMediaPreview({
                       {processingVideos.has(index) && (
                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 rounded-2xl">
                           <Loader2 className="w-8 h-8 text-white animate-spin mb-3" />
-                          <p className="text-white text-sm font-medium mb-2">Processing video...</p>
+                          <p className="text-white text-sm font-medium mb-2">{_copy("copy.712947f52fed", { defaultValue: "Processing video..." })}</p>
                           <div className="w-3/4 max-w-[200px]">
                             <Progress value={processingVideos.get(index) ?? 0} className="h-2" />
                           </div>
@@ -951,7 +951,7 @@ export function PostMediaPreview({
                               <Paintbrush className="w-3 h-3 text-white" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>Edit filters</TooltipContent>
+                          <TooltipContent>{_copy("copy.4ab51caa4298", { defaultValue: "Edit filters" })}</TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
@@ -966,7 +966,7 @@ export function PostMediaPreview({
                               <Crop className="w-3 h-3 text-white" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>Crop & rotate</TooltipContent>
+                          <TooltipContent>{_copy("copy.9df738204461", { defaultValue: "Crop & rotate" })}</TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
@@ -983,7 +983,7 @@ export function PostMediaPreview({
                               <Scissors className="w-3 h-3 text-white" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>Trim video</TooltipContent>
+                          <TooltipContent>{_copy("copy.8d9346258548", { defaultValue: "Trim video" })}</TooltipContent>
                         </Tooltip>
                       </div>
                       )}
@@ -992,7 +992,7 @@ export function PostMediaPreview({
                       {m.duration && (
                         <div data-keep-dark className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
                           {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
-                          {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
+                          {m.duration < 90 && <span className="ml-1 text-emerald-400">{_copy("copy.ff5d20bd706f", { defaultValue: "• Short" })}</span>}
                         </div>
                       )}
                       
@@ -1012,7 +1012,7 @@ export function PostMediaPreview({
                               <Music className="w-3 h-3" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent>Mark as music video</TooltipContent>
+                          <TooltipContent>{_copy("copy.3246187f056d", { defaultValue: "Mark as music video" })}</TooltipContent>
                         </Tooltip>
                       </div>
                       
@@ -1048,7 +1048,7 @@ export function PostMediaPreview({
                           const url = URL.createObjectURL(file);
                           onAddThumbnail?.(index, url);
                         } else if (file) {
-                          toast.error('Please drop an image file');
+                          toast.error(_copy("copy.9dea3ce2a91b", { defaultValue: "Please drop an image file" }));
                         }
                       }}
                     >
@@ -1056,7 +1056,7 @@ export function PostMediaPreview({
                         <>
                           <img 
                             src={m.thumbnail} 
-                            alt="Thumbnail"
+                            alt={_copy("copy.f3fe2c93b34f", { defaultValue: "Thumbnail" })}
                             className="w-full h-full object-contain bg-black"
                           />
                           {/* Overlay on hover */}
@@ -1075,12 +1075,12 @@ export function PostMediaPreview({
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-white/50">
                           <Upload className="w-8 h-8" />
-                          <span className="text-sm">Drop image or click</span>
+                          <span className="text-sm">{_copy("copy.7bc3101b4182", { defaultValue: "Drop image or click" })}</span>
                         </div>
                       )}
                       {/* Label */}
                       <div className="absolute bottom-2 left-2">
-                        <span data-keep-dark className="text-xs text-white/70 font-medium bg-black/60 px-2 py-1 rounded-lg">Thumbnail</span>
+                        <span data-keep-dark className="text-xs text-white/70 font-medium bg-black/60 px-2 py-1 rounded-lg">{_copy("copy.f3fe2c93b34f", { defaultValue: "Thumbnail" })}</span>
                       </div>
                     </div>
                     
@@ -1114,7 +1114,7 @@ export function PostMediaPreview({
                               : 'border-transparent hover:border-white/50'
                           }`}
                         >
-                          <img src={frameUrl} alt={`Frame ${frameIndex + 1}`} className="w-full h-full object-contain bg-black" />
+                          <img src={frameUrl} alt={_copy("copy.0238af30a6db", { defaultValue: "Frame {{value1}}", value1: frameIndex + 1 })} className="w-full h-full object-contain bg-black" />
                         </button>
                       ))}
                     </div>

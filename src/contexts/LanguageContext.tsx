@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 // static imports that used to live here made the DocsSurface chunk ~4.3 MB
 // raw / 1.7 MB gz, downloaded by every organic /guides/* visitor.
 import { en } from '@/i18n/en';
+import appI18n, { loadLanguage, preferredLanguage } from '@/i18n';
 
 export type Language = 'en' | 'ar' | 'zh' | 'zh_tw' | 'tr' | 'es' | 'de' | 'fr' | 'bn' | 'ru' | 'pt' | 'hi' | 'ja' | 'ko' | 'id' | 'it' | 'nl' | 'pl' | 'vi' | 'th' | 'uk' | 'sw' | 'ms' | 'fa' | 'ta' | 'ur' | 'tl' | 'ro' | 'cs' | 'el' | 'hu' | 'gsw' | 'hr' | 'sv' | 'no' | 'da' | 'fi' | 'he' | 'zu' | 'qu' | 'ht' | 'yo' | 'am' | 'ig' | 'ha' | 'ka' | 'uz' | 'kk' | 'om' | 'my' | 'si' | 'be' | 'km' | 'ne' | 'pa' | 'te' | 'mr' | 'sr' | 'bg' | 'sk' | 'lo' | 'cjy' | 'aec' | 'mag' | 'skr' | 'hne' | 'acm' | 'tts' | 'acw' | 'ctg' | 'dcc' | 'dyu' | 'sck' | 'wes' | 'syl' | 'ajp' | 'ayn' | 'mnp' | 'pbt' | 'rkt' | 'mn' | 'bo' | 'lv' | 'et' | 'lt' | 'mi' | 'ca' | 'az' | 'ku' | 'jv' | 'so' | 'af' | 'kn' | 'yue' | 'wuu' | 'ti' | 'bho' | 'arz' | 'apd' | 'ary' | 'pcm' | 'ceb' | 'ml' | 'sd';
 
@@ -247,13 +248,29 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('docs-language');
-    return (saved as Language) || 'en';
+    let candidate = appI18n.language === 'en' ? preferredLanguage : appI18n.language;
+    try {
+      candidate = new URLSearchParams(window.location.search).get('hl')
+        || localStorage.getItem('user-preferred-language') || candidate;
+    } catch { /* Use the active app language when storage is unavailable. */ }
+    return languages.some(option => option.code === candidate) ? candidate as Language : 'en';
   });
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('docs-language', lang);
+    try {
+      localStorage.setItem('docs-language', lang);
+      localStorage.setItem('user-preferred-language', lang);
+    } catch { /* The current visit still uses the selected language. */ }
+    void loadLanguage(lang).then(ok => { if (ok) void appI18n.changeLanguage(lang); });
+  }, []);
+
+  useEffect(() => {
+    const sync = (lang: string) => {
+      if (languages.some(option => option.code === lang)) setLanguageState(lang as Language);
+    };
+    appI18n.on('languageChanged', sync);
+    return () => { appI18n.off('languageChanged', sync); };
   }, []);
 
   // Active locale object. English (or a previously loaded locale) is available

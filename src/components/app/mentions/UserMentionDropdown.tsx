@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * UserMentionDrawer Component
  * ===========================
@@ -64,6 +65,7 @@ export function UserMentionDropdown({
   selectedIndex,
   onSelectedIndexChange,
 }: UserMentionDropdownProps) {
+  const { t: _copy } = _useCopy();
   const [users, setUsers] = useState<MentionUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(initialQuery);
@@ -209,9 +211,7 @@ export function UserMentionDropdown({
         <div className="px-4 pb-3 space-y-3">
           <div className="flex items-center gap-2">
             <AtSign className="w-4 h-4 text-white/40" />
-            <span className="text-sm font-semibold text-white/70 tracking-wide">
-              Mention a user
-            </span>
+            <span className="text-sm font-semibold text-white/70 tracking-wide">{_copy("copy.bcbaa814d3ca", { defaultValue: "Mention a user" })}</span>
           </div>
 
           {/* Search bar */}
@@ -241,7 +241,7 @@ export function UserMentionDropdown({
                   onClose();
                 }
               }}
-              placeholder="Search by username..."
+              placeholder={_copy("copy.c45e9566dc3b", { defaultValue: "Search by username..." })}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm text-white placeholder:text-white/25 outline-none focus:border-white/20 focus:bg-white/[0.08] transition-all"
               autoComplete="off"
               autoCapitalize="off"
@@ -257,12 +257,12 @@ export function UserMentionDropdown({
         <div className="overflow-y-auto px-2 pb-6" style={{ maxHeight: 'calc(70vh - 140px)' }}>
           {/* Empty state */}
           {showEmpty && (
-            <AppState icon="search" title="No users found" kind="search-empty" size="compact" className="py-10" />
+            <AppState icon="search" title={_copy("copy.bf1e104fb3c8", { defaultValue: "No users found" })} kind="search-empty" size="compact" className="py-10" />
           )}
 
           {/* Initial state */}
           {!loading && users.length === 0 && searchQuery.length < 2 && (
-            <AppState icon="usernames" title="Type to search users" size="compact" className="py-10" />
+            <AppState icon="usernames" title={_copy("copy.8f1aa08d3a21", { defaultValue: "Type to search users" })} size="compact" className="py-10" />
           )}
 
           {/* User list */}
@@ -271,7 +271,7 @@ export function UserMentionDropdown({
               <motion.button
                 key={user.id || user.username}
                 type="button"
-                aria-label={`Mention @${user.username}`}
+                aria-label={_copy("copy.6aad3f5a25b5", { defaultValue: "Mention @{{value1}}", value1: user.username })}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
@@ -326,9 +326,7 @@ export function UserMentionDropdown({
                       </span>
                     )}
                     {user.followsYou && (
-                      <span className="px-1.5 py-0.5 rounded-md bg-white/[0.08] border border-white/[0.08] text-[10px] font-medium text-white/60 leading-none flex-shrink-0">
-                        Follows you
-                      </span>
+                      <span className="px-1.5 py-0.5 rounded-md bg-white/[0.08] border border-white/[0.08] text-[10px] font-medium text-white/60 leading-none flex-shrink-0">{_copy("copy.3457098e7042", { defaultValue: "Follows you" })}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-2 text-[15px] text-white/35 truncate">
@@ -337,14 +335,13 @@ export function UserMentionDropdown({
                       <>
                         <span className="text-white/20">·</span>
                         <span className="flex-shrink-0">
-                          <span className="text-white/55 font-medium">{formatCount(user.followerCount)}</span> followers
-                        </span>
+                          <span className="text-white/55 font-medium">{formatCount(user.followerCount)}</span>{_copy("copy.916a8b871759", { defaultValue: " followers" })}</span>
                       </>
                     )}
                     {user.isFollowing && (
                       <>
                         <span className="text-white/20">·</span>
-                        <span className="flex-shrink-0 text-white/55">Following</span>
+                        <span className="flex-shrink-0 text-white/55">{_copy("copy.344b4271ca01", { defaultValue: "Following" })}</span>
                       </>
                     )}
                   </div>

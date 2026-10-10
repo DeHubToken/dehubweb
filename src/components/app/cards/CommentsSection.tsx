@@ -208,10 +208,10 @@ type SortOrder = (typeof SORT_OPTIONS)[number]['value'];
 
 /** The comment tabs, in header order, with the name each icon-only tab is read out as. */
 const COMMENT_TABS = [
-  { value: 'replies', label: 'comments.tabReplies' },
-  { value: 'quotes', label: 'comments.tabQuotes' },
-  { value: 'reposts', label: 'comments.tabReposts' },
-  { value: 'search', label: 'comments.tabSearch' },
+  { value: 'replies', label: "comments.tabReplies" },
+  { value: 'quotes', label: "comments.tabQuotes" },
+  { value: 'reposts', label: "comments.tabReposts" },
+  { value: 'search', label: "comments.tabSearch" },
 ] as const;
 
 /**
@@ -715,7 +715,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                 )}
                 aria-label={isOwnComment
                   ? i18n.t('comments.seeWhoLiked')
-                  : i18n.t('comments.holdToReact', { reaction: reactionMeta(leadReaction ?? 'like').label })}
+                  : i18n.t('comments.holdToReact', { reaction: reactionMeta(leadReaction ?? "like").label })}
                 aria-haspopup={isOwnComment ? undefined : 'menu'}
                 aria-expanded={isOwnComment ? undefined : likeTray.open}
               >

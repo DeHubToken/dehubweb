@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Setup Store Flow
@@ -23,6 +24,7 @@ interface SetupStoreFlowProps {
 }
 
 export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [name, setName] = useSurfaceDraft("components/app/stores/SetupStoreFlow.tsx:name", '');
@@ -73,8 +75,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
     <div className="flex flex-col items-center justify-center py-16 px-4 max-w-md mx-auto space-y-6">
       {onCancel && (
         <button onClick={onCancel} className="self-start flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back
-        </button>
+          <ArrowLeft className="w-4 h-4" />{_copy("copy.709d9085c264", { defaultValue: " Back" })}</button>
       )}
 
       {/* Banner upload */}

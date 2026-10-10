@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { RotateCcw } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -21,6 +22,7 @@ export function FilterSlider({
   onChange,
   unit = '',
 }: FilterSliderProps) {
+  const { t: _copy } = _useCopy();
   const isModified = value !== defaultValue;
 
   return (
@@ -41,7 +43,7 @@ export function FilterSlider({
                   <RotateCcw className="w-3 h-3 text-zinc-400" />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>Reset to default</TooltipContent>
+              <TooltipContent>{_copy("copy.bc5b45ae7b60", { defaultValue: "Reset to default" })}</TooltipContent>
             </Tooltip>
           )}
         </div>

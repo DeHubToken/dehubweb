@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
@@ -15,16 +16,17 @@ const MOCK_CONVERSATIONS = [
 ];
 
 export function MessagesScreen() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Messages" />
+      <MobileTopBar title={_copy("copy.04d7b4833927", { defaultValue: "Messages" })} />
 
       {/* Search */}
       <div className="px-4 py-3">
         <div className="flex items-center gap-2 h-9 px-3 rounded-xl bg-white/[0.06] border border-white/10">
           <Search className="w-4 h-4 text-zinc-500" />
-          <span className="text-zinc-500 text-sm">Search messages</span>
+          <span className="text-zinc-500 text-sm">{_copy("copy.ddf0602b21a7", { defaultValue: "Search messages" })}</span>
         </div>
       </div>
 

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Transcript Corrections
  * ======================
@@ -97,6 +98,7 @@ export function applyCorrections<T extends TranscriptSegment>(
 }
 
 export function useCorrectionActions(transcriptId: string | null) {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
 
   const invalidate = useCallback(() => {
@@ -108,7 +110,7 @@ export function useCorrectionActions(transcriptId: string | null) {
       submitTranscriptCorrection({ transcriptId: transcriptId!, ...input }),
     onSuccess: () => {
       invalidate();
-      toast.success('Thanks — one more viewer agreeing puts it live');
+      toast.success(_copy("copy.b3d0998cd00a", { defaultValue: "Thanks — one more viewer agreeing puts it live" }));
     },
     onError: (error: Error) => toast.error(error.message || 'Could not save that correction'),
   });
@@ -124,7 +126,7 @@ export function useCorrectionActions(transcriptId: string | null) {
     mutationFn: (correctionId: string) => removeTranscriptCorrection(correctionId),
     onSuccess: () => {
       invalidate();
-      toast.success('Removed');
+      toast.success(_copy("copy.4118fb4fed0e", { defaultValue: "Removed" }));
     },
     onError: (error: Error) => toast.error(error.message || 'Could not remove that'),
   });

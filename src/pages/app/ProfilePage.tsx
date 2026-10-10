@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
@@ -93,6 +94,7 @@ function StableHeightContainer({ activeTab, children }: { activeTab: string; chi
 }
 
 function PinnedPostItem({ pin }: { pin: any }) {
+  const { t: _copy } = _useCopy();
   // API returns post fields flat on the pin item itself (not nested in pin.post)
   const post: any = pin.post || pin;
   if (!post?.tokenId) return null;
@@ -108,7 +110,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
     <div data-page-bento className="rounded-xl bg-zinc-900 border border-white/[0.08] overflow-hidden">
       <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-1">
         <Pin className="w-3.5 h-3.5 text-zinc-400 fill-current" />
-        <span className="text-xs text-zinc-400 font-medium">Pinned post</span>
+        <span className="text-xs text-zinc-400 font-medium">{_copy("copy.79175cb0f6da", { defaultValue: "Pinned post" })}</span>
       </div>
       {(postType === 'video' || postType === 'audio' || postType === 'feed-audio') ? (
         <VideoCard video={{
@@ -188,6 +190,7 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
 }
 
 export default function ProfilePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { theme } = useAppTheme();
   // UI-only state managed in orchestrator
@@ -489,8 +492,8 @@ export default function ProfilePage() {
           and the worker's bot HTML both use it, and an @-prefixed canonical
           split the signal between two URLs for every profile. */}
       <SEOHead
-        title={(data.profile?.name || data.profile?.handle) ? `${data.profile?.name || data.profile?.handle} on DeHub — posts, videos & profile` : 'Profile on DeHub'}
-        description={data.profile?.bio || `View ${data.profile?.name || data.profile?.handle || 'this profile'} on DeHub`}
+        title={(data.profile?.name || data.profile?.handle) ? _copy("copy.d63869b9dc77", { defaultValue: "{{value1}} on DeHub — posts, videos & profile", value1: data.profile?.name || data.profile?.handle }) : _copy("copy.31169fe03ec0", { defaultValue: "Profile on DeHub" })}
+        description={data.profile?.bio || _copy("copy.11ef7a60f50a", { defaultValue: "View {{value1}} on DeHub", value1: data.profile?.name || data.profile?.handle || _copy("copy.f119e4acc42e", { defaultValue: "this profile" }) })}
         url={`https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`}
         aiScraping={data.profile ? getAiScrapingPreference(data.profile.customs) : undefined}
         jsonLd={{

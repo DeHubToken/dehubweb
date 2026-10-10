@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Gated media
  * ===========
@@ -89,6 +90,7 @@ function formatCompact(num: number): string {
 }
 
 export function GatedMedia({ gate, preview, className, children }: GatedMediaProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
@@ -164,9 +166,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
             {t('drawers.unlockFor')}
             <DhbAmount amount={formatCompact(Number(gate.ppvPrice))} currency={gate.ppvCurrency} iconClassName="h-3.5 w-3.5" />
           </>,
-          <>
-            Must be holding
-            <DhbAmount amount={formatCompact(Number(gate.lockedPrice))} currency={gate.lockedCurrency} iconClassName="h-3.5 w-3.5" />
+          <>{_copy("copy.b8d42680be12", { defaultValue: "Must be holding" })}<DhbAmount amount={formatCompact(Number(gate.lockedPrice))} currency={gate.lockedCurrency} iconClassName="h-3.5 w-3.5" />
           </>,
           () => setShowPPVDrawer(true),
         )
@@ -185,12 +185,10 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
           <Star className="h-7 w-7 text-white" />,
           'Subscribers only',
           cheapestPlanPrice !== undefined ? (
-            <>
-              Subscribe from
-              <DhbAmount amount={formatCompact(cheapestPlanPrice)} iconClassName="h-3.5 w-3.5" />
+            <>{_copy("copy.8b2ebd182d8e", { defaultValue: "Subscribe from" })}<DhbAmount amount={formatCompact(cheapestPlanPrice)} iconClassName="h-3.5 w-3.5" />
             </>
           ) : (
-            `Subscribe to ${gate.creatorName || 'this creator'}`
+            `Subscribe to ${gate.creatorName || _copy("copy.c48cabf53e9c", { defaultValue: "this creator" })}`
           ),
           () => setShowSubDrawer(true),
         )
@@ -198,9 +196,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
         panel(
           <Lock className="h-7 w-7 text-white" />,
           'Holdings Required',
-          <>
-            Must be holding
-            <DhbAmount amount={formatCompact(Number(gate.lockedPrice))} currency={gate.lockedCurrency} iconClassName="h-3.5 w-3.5" />
+          <>{_copy("copy.b8d42680be12", { defaultValue: "Must be holding" })}<DhbAmount amount={formatCompact(Number(gate.lockedPrice))} currency={gate.lockedCurrency} iconClassName="h-3.5 w-3.5" />
           </>,
           () => setShowLockedDrawer(true),
         )
@@ -276,7 +272,7 @@ export function GatedMedia({ gate, preview, className, children }: GatedMediaPro
           >
             <SubscriberGateDrawer
               creatorAddress={gate.creatorAddress || ''}
-              creatorName={gate.creatorName || 'this creator'}
+              creatorName={gate.creatorName || _copy("copy.c48cabf53e9c", { defaultValue: "this creator" })}
               previewPlans={gate.subscriberPlans}
               onSubscribed={() => {
                 setShowSubDrawer(false);

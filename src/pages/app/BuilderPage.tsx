@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DeHub Builder — the lander at dehub.io/builder.
@@ -43,12 +44,13 @@ const BLOOM_BG: React.CSSProperties = {
 const EXAMPLE_KEYS = ['builder.example1', 'builder.example2', 'builder.example3'] as const;
 
 const STEPS = [
-  { icon: Sparkles, title: 'builder.step1Title', body: 'builder.step1Body' },
-  { icon: Wand2, title: 'builder.step2Title', body: 'builder.step2Body' },
-  { icon: Share2, title: 'builder.step3Title', body: 'builder.step3Body' },
+  { icon: Sparkles, title: "builder.step1Title", body: 'builder.step1Body' },
+  { icon: Wand2, title: "builder.step2Title", body: 'builder.step2Body' },
+  { icon: Share2, title: "builder.step3Title", body: 'builder.step3Body' },
 ] as const;
 
 export default function BuilderPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { theme } = useAppTheme();
   const isLight = theme === 'light';
@@ -90,8 +92,8 @@ export default function BuilderPage() {
   return (
     <div className="relative z-[1] min-h-[100dvh] bg-[#000]" data-builder-surface data-glass-page data-theme-page-surface>
       <SEOHead
-        title="Builder — Build Apps with AI on DeHub"
-        description="Tell @assistant what you want in your DeHub messages. It builds the app, hosts it and sends you a link anyone can open."
+        title={_copy("copy.6da423db4ed2", { defaultValue: "Builder — Build Apps with AI on DeHub" })}
+        description={_copy("copy.001cab7d69a2", { defaultValue: "Tell @assistant what you want in your DeHub messages. It builds the app, hosts it and sends you a link anyone can open." })}
         url="https://dehub.io/builder"
         image="https://dehub.io/og/builder.jpg"
       />
@@ -100,7 +102,7 @@ export default function BuilderPage() {
         <header className="flex items-center justify-between p-4 sm:p-5">
           <div className="flex items-center gap-2.5">
             <img src={dehubIcon} alt="" className="w-7 h-7 object-contain" />
-            <span className={cn('text-[22px] font-extrabold tracking-tight', ink)}>Builder</span>
+            <span className={cn('text-[22px] font-extrabold tracking-tight', ink)}>{_copy("copy.090940e73258", { defaultValue: "Builder" })}</span>
           </div>
           <Button
             type="button"

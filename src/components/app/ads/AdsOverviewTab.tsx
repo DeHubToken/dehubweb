@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * AdsOverviewTab
  * ==============
@@ -41,6 +42,7 @@ interface AdsOverviewTabProps {
 }
 
 export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: AdsOverviewTabProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { data: account, isLoading: loadingAccount } = useAdAccount();
   const { data: campaigns = [], isLoading } = useAdCampaigns();
@@ -102,14 +104,11 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
               <p className="text-sm font-medium text-yellow-500">
                 {t('ads.notServingCount', { count: waitingOnMoney.length })}
               </p>
-              <p className="text-xs text-muted-foreground">
-                Ads only serve while the balance is above $0. Top up and delivery starts on the next request.
-              </p>
+              <p className="text-xs text-muted-foreground">{_copy("copy.1f74d6b9d9eb", { defaultValue: "Ads only serve while the balance is above $0. Top up and delivery starts on the next request." })}</p>
             </div>
           </div>
           <Button variant="glass" size="sm" className="w-full" onClick={() => setTopUpOpen(true)}>
-            <Plus className="w-4 h-4 mr-1.5" /> Top up
-          </Button>
+            <Plus className="w-4 h-4 mr-1.5" />{_copy("copy.dacfd4686c02", { defaultValue: " Top up" })}</Button>
         </div>
       )}
 
@@ -135,10 +134,10 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
         <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
           <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><MousePointerClick className="w-3.5 h-3.5" /> {t('ads.clicks')}</div>
           <p className="text-xl font-bold text-foreground">{formatCompact(kpis.clicks)}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">{kpis.ctr.toFixed(2)}% CTR</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{kpis.ctr.toFixed(2)}{_copy("copy.9651c19f5990", { defaultValue: "% CTR" })}</p>
         </div>
         <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.03] p-4">
-          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><TrendingUp className="w-3.5 h-3.5" /> eCPM</div>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1"><TrendingUp className="w-3.5 h-3.5" />{_copy("copy.e6eadfd6d1d8", { defaultValue: " eCPM" })}</div>
           <p className="text-xl font-bold text-foreground">{formatUsd(kpis.ecpm)}</p>
         </div>
       </div>
@@ -166,8 +165,7 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
         <div className="flex items-center justify-between mb-3">
           <p className="text-sm font-semibold text-foreground">{t('ads.campaigns')}</p>
           <Button size="sm" variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={onNewCampaign}>
-            <Plus className="w-4 h-4 mr-1" /> New
-          </Button>
+            <Plus className="w-4 h-4 mr-1" />{_copy("copy.c80638f5f901", { defaultValue: " New" })}</Button>
         </div>
         {isLoading ? (
           <p className="text-sm text-muted-foreground py-4 text-center">{t('ads.loading')}</p>
@@ -176,8 +174,7 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
             <Rocket className="w-7 h-7 text-muted-foreground mx-auto" />
             <p className="text-sm text-muted-foreground">{t('ads.noCampaignsYet')}</p>
             <Button variant="glass" size="sm" onClick={onNewCampaign}>
-              <Plus className="w-4 h-4 mr-1" /> Create campaign
-            </Button>
+              <Plus className="w-4 h-4 mr-1" />{_copy("copy.4b0bd5e5b077", { defaultValue: " Create campaign" })}</Button>
           </div>
         ) : (
           <div className="space-y-2">
@@ -191,8 +188,7 @@ export function AdsOverviewTab({ onOpenCampaign, onNewCampaign, onGoBilling }: A
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-foreground truncate">{c.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    {formatUsd(c.spent_usd)} / {formatUsd(c.total_budget_usd)} spent
-                  </p>
+                    {formatUsd(c.spent_usd)} / {formatUsd(c.total_budget_usd)}{_copy("copy.c76418035cab", { defaultValue: " spent" })}</p>
                 </div>
                 <StatusPill status={c.status} />
               </button>

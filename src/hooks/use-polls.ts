@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPoll, getPolls, POLL_BATCH_LIMIT, voteOnPoll, removePollVote, closePoll } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
@@ -146,6 +147,7 @@ export function usePoll(tokenId: number, enabled = true) {
 }
 
 export function useCreatePoll() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -156,7 +158,7 @@ export function useCreatePoll() {
       // invisible.
       forgetEmpty(variables.tokenId);
       queryClient.invalidateQueries({ queryKey: [POLLS_KEY] });
-      toast.success('Poll created');
+      toast.success(_copy("copy.05ea13855698", { defaultValue: "Poll created" }));
     },
     onError: (err: any) => toast.error(err?.message || 'Failed to create poll'),
   });
@@ -205,6 +207,7 @@ export function useVoteOnPoll() {
 }
 
 export function useRemovePollVote() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -233,21 +236,22 @@ export function useRemovePollVote() {
       if (context?.previous !== undefined) {
         queryClient.setQueryData([POLLS_KEY, tokenId], context.previous);
       }
-      toast.error('Failed to remove vote');
+      toast.error(_copy("copy.d088f437ef49", { defaultValue: "Failed to remove vote" }));
     },
   });
 }
 
 export function useClosePoll() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: closePoll,
     onSuccess: (_data, tokenId) => {
       queryClient.invalidateQueries({ queryKey: [POLLS_KEY, tokenId] });
-      toast.success('Poll closed');
+      toast.success(_copy("copy.6611b6805965", { defaultValue: "Poll closed" }));
     },
-    onError: () => toast.error('Failed to close poll'),
+    onError: () => toast.error(_copy("copy.bc3baadc3fc7", { defaultValue: "Failed to close poll" })),
   });
 }
 

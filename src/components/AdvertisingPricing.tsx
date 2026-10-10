@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +10,7 @@ import { badgeImage } from '@/lib/staking-badges';
 import { DhbAmount } from '@/components/app/DhbAmount';
 
 const AdvertisingPricing = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   // CPMs mirror the live POVR rates in src/lib/ads/povr.ts — value-scaled to
   // verified holdings, anchored at Crab $100 and Megalodon $25,000.
@@ -35,7 +37,7 @@ const AdvertisingPricing = () => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <DollarSign className="w-5 h-5 text-medium-silver" />
-            <span>POVR Advertising Pricing System</span>
+            <span>{_copy("copy.31ecade69c73", { defaultValue: "POVR Advertising Pricing System" })}</span>
           </CardTitle>
           <p className="text-gray-700">
             {t('ads.povrPricingIntro')}
@@ -46,9 +48,9 @@ const AdvertisingPricing = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Badge Tier</TableHead>
-                  <TableHead>Holdings Required</TableHead>
-                  <TableHead>CPM Rate</TableHead>
+                  <TableHead>{_copy("copy.9a54d445743a", { defaultValue: "Badge Tier" })}</TableHead>
+                  <TableHead>{_copy("copy.490f4babbf34", { defaultValue: "Holdings Required" })}</TableHead>
+                  <TableHead>{_copy("copy.88510d987879", { defaultValue: "CPM Rate" })}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -89,33 +91,29 @@ const AdvertisingPricing = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <TrendingUp className="w-5 h-5 text-medium-silver" />
-              <span>Pricing Benefits</span>
+              <span>{_copy("copy.da00129f86c3", { defaultValue: "Pricing Benefits" })}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-medium-silver mt-2"></div>
               <p className="text-sm text-gray-700">
-                <strong>Value-scaled pricing:</strong> CPMs grow with verified on-chain holdings — from $100 (Crab) to $25,000 (Megalodon)
-              </p>
+                <strong>{_copy("copy.facf83d72c52", { defaultValue: "Value-scaled pricing:" })}</strong>{_copy("copy.c7f13f4e7a7f", { defaultValue: " CPMs grow with verified on-chain holdings — from $100 (Crab) to $25,000 (Megalodon)" })}</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-medium-silver mt-2"></div>
               <p className="text-sm text-gray-700">
-                <strong>Fair pricing:</strong> Costs reflect actual audience value and purchasing power
-              </p>
+                <strong>{_copy("copy.c3b24b34919b", { defaultValue: "Fair pricing:" })}</strong>{_copy("copy.b5d810a0d270", { defaultValue: " Costs reflect actual audience value and purchasing power" })}</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-medium-silver mt-2"></div>
               <p className="text-sm text-gray-700">
-                <strong>Fraud protection:</strong> POVR verification ensures real, valuable audiences
-              </p>
+                <strong>{_copy("copy.a678c0e1debb", { defaultValue: "Fraud protection:" })}</strong>{_copy("copy.6c177a8b8818", { defaultValue: " POVR verification ensures real, valuable audiences" })}</p>
             </div>
             <div className="flex items-start space-x-3">
               <div className="w-2 h-2 rounded-full bg-medium-silver mt-2"></div>
               <p className="text-sm text-gray-700">
-                <strong>Scalable targeting:</strong> Choose specific tiers or ranges for optimal ROI
-              </p>
+                <strong>{_copy("copy.16eb7a174c92", { defaultValue: "Scalable targeting:" })}</strong>{_copy("copy.b418975fef86", { defaultValue: " Choose specific tiers or ranges for optimal ROI" })}</p>
             </div>
           </CardContent>
         </Card>
@@ -124,25 +122,25 @@ const AdvertisingPricing = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Users className="w-5 h-5 text-medium-silver" />
-              <span>Package Options</span>
+              <span>{_copy("copy.fef494276d40", { defaultValue: "Package Options" })}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="p-3 rounded-lg border bg-muted/20">
-              <h4 className="font-semibold text-sm">Multi-Tier Targeting</h4>
-              <p className="text-xs text-muted-foreground">Target multiple badge tiers with blended CPM rates</p>
+              <h4 className="font-semibold text-sm">{_copy("copy.6ad75697d792", { defaultValue: "Multi-Tier Targeting" })}</h4>
+              <p className="text-xs text-muted-foreground">{_copy("copy.1bfeb30ab593", { defaultValue: "Target multiple badge tiers with blended CPM rates" })}</p>
             </div>
             <div className="p-3 rounded-lg border bg-muted/20">
-              <h4 className="font-semibold text-sm">Volume Discounts</h4>
-              <p className="text-xs text-muted-foreground">5-15% discounts for campaigns over $10K spend</p>
+              <h4 className="font-semibold text-sm">{_copy("copy.872432219d89", { defaultValue: "Volume Discounts" })}</h4>
+              <p className="text-xs text-muted-foreground">{_copy("copy.2acba32389a4", { defaultValue: "5-15% discounts for campaigns over $10K spend" })}</p>
             </div>
             <div className="p-3 rounded-lg border bg-muted/20">
-              <h4 className="font-semibold text-sm">Premium Placement</h4>
-              <p className="text-xs text-muted-foreground">Featured positioning with 1.5x CPM premium</p>
+              <h4 className="font-semibold text-sm">{_copy("copy.2d051bbe182f", { defaultValue: "Premium Placement" })}</h4>
+              <p className="text-xs text-muted-foreground">{_copy("copy.f244929c34dc", { defaultValue: "Featured positioning with 1.5x CPM premium" })}</p>
             </div>
             <div className="p-3 rounded-lg border bg-muted/20">
-              <h4 className="font-semibold text-sm">Real-time Bidding</h4>
-              <p className="text-xs text-muted-foreground">Dynamic pricing based on competition and demand</p>
+              <h4 className="font-semibold text-sm">{_copy("copy.c842101a969b", { defaultValue: "Real-time Bidding" })}</h4>
+              <p className="text-xs text-muted-foreground">{_copy("copy.3df736236c96", { defaultValue: "Dynamic pricing based on competition and demand" })}</p>
             </div>
           </CardContent>
         </Card>

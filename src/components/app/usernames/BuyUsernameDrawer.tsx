@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Buy Username Drawer
@@ -39,6 +40,7 @@ interface Props {
 }
 
 export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { getQuote, buy, stage } = useBuyUsername();
@@ -176,7 +178,7 @@ export function BuyUsernameDrawer({ listing, open, onClose }: Props) {
               >
                 {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {stage === 'paying'
-                  ? 'Confirming'
+                  ? _copy("copy.d978a5522ce4", { defaultValue: "Confirming" })
                   : stage === 'confirming'
                     ? t('usernames.confirmingOnChain')
                     : !isAuthenticated

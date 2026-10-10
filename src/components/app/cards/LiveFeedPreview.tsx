@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Live Feed Preview
  * =================
@@ -86,6 +87,7 @@ const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
 export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute, streamId, streamStatus, creatorId, isOwner, selfReaction, onViewerCount }: LiveFeedPreviewProps) {
+  const { t: _copy } = _useCopy();
   const { pathname } = useLocation();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const inPiP = usePictureInPicture(videoRef);
@@ -313,15 +315,15 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
       />
       <LiveReactionFlow streamId={streamId} enabled={visible && !postOpen} self={selfReaction} bottom={56} />
       {visible && !postOpen && (loading || broadcastPaused || failed || (paused && playing)) && (
-        <div role="status" aria-label={broadcastPaused || (paused && playing) ? 'Live paused' : failed || waitingTooLong ? 'Waiting for live video' : 'Loading'} className="absolute inset-0 pointer-events-none flex items-center justify-center">
+        <div role="status" aria-label={broadcastPaused || (paused && playing) ? _copy("copy.91b75d1b48f9", { defaultValue: "Live paused" }) : failed || waitingTooLong ? _copy("copy.510db6ad26be", { defaultValue: "Waiting for live video" }) : _copy("copy.dc380888c4e2", { defaultValue: "Loading" })} className="absolute inset-0 pointer-events-none flex items-center justify-center">
           {broadcastPaused || (paused && playing) || waitingTooLong || failed
-            ? <span className="rounded-xl bg-black/75 px-4 py-2 text-sm text-white">{broadcastPaused || (paused && playing) ? 'Live paused' : 'Waiting for live video'}</span>
+            ? <span className="rounded-xl bg-black/75 px-4 py-2 text-sm text-white">{broadcastPaused || (paused && playing) ? _copy("copy.91b75d1b48f9", { defaultValue: "Live paused" }) : _copy("copy.510db6ad26be", { defaultValue: "Waiting for live video" })}</span>
             : <ButtonLoader size={40} className="!filter-none" />}
         </div>
       )}
       {(controlsVisible || isFullscreen) && (
         <div data-video-controls className="absolute bottom-0 inset-x-0 z-10 flex items-center gap-2 px-3 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent" onClick={(event) => event.stopPropagation()}>
-          <button type="button" aria-label={paused ? 'Play' : 'Pause'} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
+          <button type="button" aria-label={paused ? _copy("copy.436e61016e26", { defaultValue: "Play" }) : _copy("copy.858e4ba7a29f", { defaultValue: "Pause" })} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
             const el = videoRef.current;
             if (!el) return;
             if (failed) { setFailed(false); return; }
@@ -333,16 +335,16 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
           }}>
             {paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
           </button>
-          <span className="text-xs font-semibold text-white">LIVE</span>
+          <span className="text-xs font-semibold text-white">{_copy("copy.35e0d0360a0a", { defaultValue: "LIVE" })}</span>
           <div className="flex-1" />
-          {onToggleMute && <button type="button" aria-label={muted ? 'Unmute' : 'Mute'} onClick={onToggleMute} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center">
+          {onToggleMute && <button type="button" aria-label={muted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })} onClick={onToggleMute} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center">
             {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
           </button>}
-          {document.pictureInPictureEnabled && <button type="button" aria-label="Picture in picture" className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
+          {document.pictureInPictureEnabled && <button type="button" aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
             if (document.pictureInPictureElement) void document.exitPictureInPicture().catch(() => undefined);
             else void videoRef.current?.requestPictureInPicture().catch(() => undefined);
           }}><PictureInPicture2 className="h-4 w-4" /></button>}
-          <button type="button" aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'} onClick={() => toggleFullscreen()} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center">
+          <button type="button" aria-label={isFullscreen ? _copy("copy.37fd4e355ba3", { defaultValue: "Exit fullscreen" }) : _copy("copy.c461dbb2bab7", { defaultValue: "Fullscreen" })} onClick={() => toggleFullscreen()} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center">
             {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
           </button>
         </div>

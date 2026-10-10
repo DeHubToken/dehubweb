@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,7 @@ const ORIGIN = 'https://live.dehub.io';
 const STUDIO = `${ORIGIN}/maboroshi/`;
 
 export default function MaboroshiPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const frame = useRef<HTMLIFrameElement>(null);
@@ -34,7 +36,7 @@ export default function MaboroshiPage() {
 
   return (
     <main data-glass-page className="relative z-[1] flex min-h-[100dvh] flex-col bg-[#090a0b] text-white">
-      <SEOHead title="Maboroshi | DeHub Creator" description={t('creator.toolMaboroshiDesc')} url="https://dehub.io/creator/maboroshi" />
+      <SEOHead title={_copy("copy.ce42a8ab1ca9", { defaultValue: "Maboroshi | DeHub Creator" })} description={t('creator.toolMaboroshiDesc')} url="https://dehub.io/creator/maboroshi" />
       <header className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
         <Link to="/creator" className="inline-flex items-center gap-2 text-sm font-medium"><ArrowLeft className="h-4 w-4" />{t('creator.srHeading')}</Link>
         <div className="flex items-center gap-3">
@@ -42,8 +44,8 @@ export default function MaboroshiPage() {
           {!isAuthenticated && <button type="button" onClick={() => openLoginModal()} className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black">{t('creator.login', 'Login')}</button>}
         </div>
       </header>
-      {!connected && <p role="status" className="px-4 py-3 text-sm text-white/60">{t('common.loading', 'Loading…')} Maboroshi</p>}
-      <iframe key={`${walletAddress || 'guest'}:${attempt}`} ref={frame} src={STUDIO} title="Maboroshi"
+      {!connected && <p role="status" className="px-4 py-3 text-sm text-white/60">{t('common.loading', 'Loading…')}{_copy("copy.8f3a26244094", { defaultValue: " Maboroshi" })}</p>}
+      <iframe key={`${walletAddress || 'guest'}:${attempt}`} ref={frame} src={STUDIO} title={_copy("copy.c6d99d44a9f8", { defaultValue: "Maboroshi" })}
         className="w-full flex-1 border-0" style={{ minHeight: 'calc(100dvh - 65px)' }}
         allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-downloads" referrerPolicy="no-referrer" />
     </main>

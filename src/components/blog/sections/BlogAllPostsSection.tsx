@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { Calendar, X } from 'lucide-react';
@@ -17,24 +18,24 @@ export const BlogAllPostsSection: React.FC<BlogAllPostsSectionProps> = ({
   selectedTag,
   onClearFilter
 }) => {
+  const { t: _copy } = _useCopy();
   return (
     <section>
       <div className="flex items-center gap-3 mb-6 flex-wrap">
         <Calendar className="w-6 h-6 text-foreground" />
         <h2 className="text-2xl font-bold text-foreground font-exo">
-          {searchQuery || selectedTag ? (selectedTag ? `Tagged: ${selectedTag}` : 'Search Results') : 'Latest Posts'}
+          {searchQuery || selectedTag ? (selectedTag ? `Tagged: ${selectedTag}` : _copy("copy.39414102545e", { defaultValue: "Search Results" })) : _copy("copy.9fc1b0e4ec78", { defaultValue: "Latest Posts" })}
         </h2>
         {(searchQuery || selectedTag) && (
           <span className="text-muted-foreground font-exo">
-            ({filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''})
+            ({filteredPosts.length}{_copy("copy.37f42e396e80", { defaultValue: " post" })}{filteredPosts.length !== 1 ? 's' : ''})
           </span>
         )}
         {(searchQuery || selectedTag) && onClearFilter && (
           <button
             onClick={onClearFilter}
             className="inline-flex items-center gap-1 bg-muted text-foreground px-3 py-1 rounded-full text-sm font-medium hover:bg-muted/80 transition-colors duration-200 font-exo"
-          >
-            Clear <X className="w-3.5 h-3.5" />
+          >{_copy("copy.50ad5f03e532", { defaultValue: "Clear " })}<X className="w-3.5 h-3.5" />
           </button>
         )}
       </div>
@@ -47,9 +48,9 @@ export const BlogAllPostsSection: React.FC<BlogAllPostsSectionProps> = ({
         </div>
       ) : (
         <div className="text-center py-12 bg-card rounded-xl border border-border">
-          <h3 className="text-xl font-semibold text-foreground mb-2 font-exo">No Posts Found</h3>
+          <h3 className="text-xl font-semibold text-foreground mb-2 font-exo">{_copy("copy.7f30a5bc6479", { defaultValue: "No Posts Found" })}</h3>
           <p className="text-muted-foreground font-exo">
-            {searchQuery || selectedTag ? 'Try adjusting your search criteria or browse all posts.' : 'Check back soon for new content!'}
+            {searchQuery || selectedTag ? _copy("copy.3f04f1770838", { defaultValue: "Try adjusting your search criteria or browse all posts." }) : _copy("copy.329895f60ede", { defaultValue: "Check back soon for new content!" })}
           </p>
         </div>
       )}

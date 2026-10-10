@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -25,6 +26,7 @@ export interface UseCallbackRequestsReturn {
 }
 
 export function useCallbackRequests(): UseCallbackRequestsReturn {
+  const { t: _copy } = _useCopy();
   const [pendingRequests, setPendingRequests] = useState<CallbackRequest[]>([]);
   const [sentRequests, setSentRequests] = useState<CallbackRequest[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,11 +87,11 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
 
         if (error) {
           console.error('Error sending callback request:', error);
-          toast.error('Failed to send request', { description: 'Could not send callback request. Please try again.' });
+          toast.error(_copy("copy.f33fbd2e4fd9", { defaultValue: "Failed to send request" }), { description: _copy("copy.9b06d5312dc2", { defaultValue: "Could not send callback request. Please try again." }) });
           return false;
         }
 
-        toast.success('Callback request sent', {
+        toast.success(_copy("copy.b550c225bba9", { defaultValue: "Callback request sent" }), {
           description: `${callType === 'video' ? 'Video' : 'Voice'} call request sent successfully.`,
         });
 
@@ -100,7 +102,7 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
         return false;
       }
     },
-    [userAddress, fetchRequests],
+    [userAddress, fetchRequests, _copy],
   );
 
   const markAsCompleted = useCallback(async (requestId: string): Promise<boolean> => {
@@ -141,7 +143,7 @@ export function useCallbackRequests(): UseCallbackRequestsReturn {
           const newRequest = payload.new as CallbackRequest;
           setPendingRequests((prev) => [newRequest, ...prev]);
 
-          toast.info('New callback request', {
+          toast.info(_copy("copy.7bb6682e5826", { defaultValue: "New callback request" }), {
             description: `${newRequest.call_type === 'video' ? 'Video' : 'Voice'} call request from ${newRequest.requester_address.slice(0, 6)}...`,
           });
         },

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * The signed-out welcome panel's MARKUP, with no state and no browser access.
  *
@@ -34,37 +36,34 @@ export const SLIDE_MS = 5200;
  *  `sub` / `extra` are the `//snake_case` HUD row under the headline. */
 export const SLIDES = [
   {
-    title: 'Censorship resistant media for the',
-    subtitle: 'next generation',
+    get title() { return _translateCopy("copy.64ca35bb5f4f", { defaultValue: "Censorship resistant media for the" }); },
+    get subtitle() { return _translateCopy("copy.68f6e3b28a32", { defaultValue: "next generation" }); },
     artwork: 'globe',
     imageHeight: 471,
     preview: 'Instantly monetize, never get deplatformed',
     sub: 'never_deplatformed',
     extra: '99%_revenue',
-    description:
-      'Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation.',
+    get description() { return _translateCopy("copy.00d9b35a823e", { defaultValue: "Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation." }); },
   },
   {
-    title: 'No bias or',
-    subtitle: 'centralized authority',
+    get title() { return _translateCopy("copy.06d287d1588b", { defaultValue: "No bias or" }); },
+    get subtitle() { return _translateCopy("copy.64cfc8b92063", { defaultValue: "centralized authority" }); },
     artwork: 'thumb',
     imageHeight: 482,
     preview: 'No algorithms that favor one side of the argument',
     sub: 'open_source',
     extra: 'no_algorithm',
-    description:
-      'No algorithms that favor one side of the argument.\u00a0\nEveryone is amplified equally and fairly.',
+    get description() { return _translateCopy("copy.85330dcbaadd", { defaultValue: "No algorithms that favor one side of the argument. \nEveryone is amplified equally and fairly." }); },
   },
   {
-    title: 'You will own everything',
-    subtitle: 'and be happy',
+    get title() { return _translateCopy("copy.753adbd945cf", { defaultValue: "You will own everything" }); },
+    get subtitle() { return _translateCopy("copy.23a1c460ebfc", { defaultValue: "and be happy" }); },
     artwork: 'coin',
     imageHeight: 467,
     preview: 'Your data, assets and audience are yours forever',
     sub: 'ownership_economy',
     extra: 'user_owned = true',
-    description:
-      'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.',
+    get description() { return _translateCopy("copy.6c6b4f33bb99", { defaultValue: "The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you." }); },
   },
 ] as const;
 
@@ -79,10 +78,10 @@ const ENTITY_COPY =
    link into it is worth more than another sibling guide.
    Keep in sync with HOME_INTRO_LINKS in CLOUDFLARE_WORKER_SEO.js. */
 const LINKS: { to: string; label: string }[] = [
-  { to: '/docs/overview', label: 'DeHub overview' },
-  { to: '/docs/faq', label: 'Frequently asked questions' },
-  { to: '/guides/what-is-watch-to-earn', label: 'What is watch-to-earn?' },
-  { to: '/guides/tokenized-subscriptions-explained', label: 'Tokenised subscriptions' },
+  { to: '/docs/overview', get label() { return _translateCopy("copy.370aae90c548", { defaultValue: "DeHub overview" }); } },
+  { to: '/docs/faq', get label() { return _translateCopy("copy.e956a9404b46", { defaultValue: "Frequently asked questions" }); } },
+  { to: '/guides/what-is-watch-to-earn', get label() { return _translateCopy("copy.e38e06989024", { defaultValue: "What is watch-to-earn?" }); } },
+  { to: '/guides/tokenized-subscriptions-explained', get label() { return _translateCopy("copy.23373242820a", { defaultValue: "Tokenised subscriptions" }); } },
 ];
 
 /* Press strip under the entity copy. Four outlets, set as WORDMARKS rather than
@@ -179,6 +178,7 @@ export function HomeIntroPanel({
   onMouseLeave,
   onDescriptionToggle,
 }: HomeIntroPanelProps) {
+  const { t: _copy } = _useCopy();
   return (
     <section
       aria-labelledby="dehub-intro-heading"
@@ -293,12 +293,11 @@ export function HomeIntroPanel({
               className="dehub-intro-wide rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
               style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
             >
-              <span style={{ color: 'rgba(255,255,255,.38)' }}>{'// type ='}</span> &ldquo;welcome&rdquo;
-            </span>
+              <span style={{ color: 'rgba(255,255,255,.38)' }}>{_copy("copy.d3a40ca1405a", { defaultValue: "// type =" })}</span>{_copy("copy.4f4628807a9c", { defaultValue: " “welcome”" })}</span>
             <button
               type="button"
               onClick={onDismiss}
-              aria-label="Dismiss welcome"
+              aria-label={_copy("copy.3e3d1516d18f", { defaultValue: "Dismiss welcome" })}
               className="rounded-xl p-1.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400"
             >
               <X className="h-4 w-4" />
@@ -306,9 +305,7 @@ export function HomeIntroPanel({
           </div>
         </div>
 
-        <h2 id="dehub-intro-heading" className="sr-only">
-          Welcome to DeHub — the open-source, user-owned social platform
-        </h2>
+        <h2 id="dehub-intro-heading" className="sr-only">{_copy("copy.6e881ada6406", { defaultValue: "Welcome to DeHub — the open-source, user-owned social platform" })}</h2>
 
         {/* Progress pills — 47x8, white on white/25 (mobile ProgressPill). */}
         <div className="dehub-intro-pills mb-4 flex gap-1.5">
@@ -317,7 +314,7 @@ export function HomeIntroPanel({
               key={s.title}
               type="button"
               onClick={() => onGoTo(i)}
-              aria-label={`Show slide ${i + 1}: ${s.title} ${s.subtitle}`}
+              aria-label={_copy("copy.73638ce2dea2", { defaultValue: "Show slide {{value1}}: {{value2}} {{value3}}", value1: i + 1, value2: s.title, value3: s.subtitle })}
               aria-current={i === active ? 'true' : undefined}
               className="h-2 w-[47px] overflow-hidden rounded-full bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-400"
             >
@@ -374,8 +371,8 @@ export function HomeIntroPanel({
               >
                 <summary tabIndex={i === active ? 0 : -1} className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                   <span className="dehub-intro-short">{s.preview} </span>
-                  <span className="dehub-intro-more" aria-label="Open full description">...</span>
-                  <span className="dehub-intro-less">Show less</span>
+                  <span className="dehub-intro-more" aria-label={_copy("copy.30c6313cde2c", { defaultValue: "Open full description" })}>...</span>
+                  <span className="dehub-intro-less">{_copy("copy.94ea9b1d33a0", { defaultValue: "Show less" })}</span>
                 </summary>
                 <p className="mt-2">{s.description}</p>
               </details>
@@ -395,16 +392,14 @@ export function HomeIntroPanel({
             onClick={onJoin}
             onPointerDown={onWarmLogin}
             onMouseEnter={onWarmLogin}
-          >
-            Join DeHub
-          </Button>
+          >{_copy("copy.3e87484b3183", { defaultValue: "Join DeHub" })}</Button>
           {/* Secondary CTA points at the docs home, not /guide. Relabelled with
               it: a button promising a "tour" that lands on documentation is a
               broken promise, and the honest label is the cheap half of the
               change. Temporary — restoring /guide means restoring both the
               href and the label here and in CLOUDFLARE_WORKER_SEO.js. */}
           <Button asChild variant="outline" size="lg">
-            <Link to="/docs">Read the docs</Link>
+            <Link to="/docs">{_copy("copy.559b1cc46027", { defaultValue: "Read the docs" })}</Link>
           </Button>
         </div>
 
@@ -450,12 +445,10 @@ export function HomeIntroPanel({
           <span
             className="text-[11px] uppercase tracking-[0.12em] text-zinc-500"
             style={{ fontFamily: MONO }}
-          >
-            // featured_in
-          </span>
+          >{_copy("copy.fa9a1cd7ddb3", { defaultValue: "// featured_in" })}</span>
           {/* <nav>, not a div: this is a labelled set of links, and aria-label
               on a generic element is ignored by most screen readers. */}
-          <nav className="dehub-press-viewport mt-2" aria-label="DeHub in the press">
+          <nav className="dehub-press-viewport mt-2" aria-label={_copy("copy.f7a75b542419", { defaultValue: "DeHub in the press" })}>
             <div className="dehub-press-track">
               {[0, 1].map((copy) => (
                 <div
@@ -482,7 +475,7 @@ export function HomeIntroPanel({
           </nav>
         </div>
 
-        <nav aria-label="Learn more about DeHub" className="dehub-intro-links mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
+        <nav aria-label={_copy("copy.1cf9b8eabf7f", { defaultValue: "Learn more about DeHub" })} className="dehub-intro-links mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[13px]">
           {LINKS.map((l) => (
             <Link key={l.to} to={l.to} className="text-zinc-400 underline underline-offset-2 hover:text-white">
               {l.label}
@@ -496,11 +489,10 @@ export function HomeIntroPanel({
             className="rounded-xl border border-white/[0.22] bg-[rgba(10,10,12,.35)] px-3 py-1.5 text-[13px] tracking-[0.02em]"
             style={{ fontFamily: MONO, color: 'rgba(255,255,255,.66)' }}
           >
-            <span style={{ color: 'rgba(255,255,255,.5)' }}>//</span>dehub.io
-          </span>
+            <span style={{ color: 'rgba(255,255,255,.5)' }}>//</span>{_copy("copy.ca7842e53ac8", { defaultValue: "dehub.io" })}</span>
           <img
             src="/brand-kit/brand/qr-dehub-io.png"
-            alt="QR code linking to dehub.io"
+            alt={_copy("copy.5fea44f8d917", { defaultValue: "QR code linking to dehub.io" })}
             width={56}
             height={56}
             loading="lazy"

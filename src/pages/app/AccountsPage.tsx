@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Accounts Page
  * =============
@@ -20,8 +21,7 @@ const JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   name: 'DeHub Account Marketplace',
-  description:
-    'Buy and sell established DeHub accounts with tokens. Browse accounts by followers, uploads and age, or list your own — payment goes wallet-to-wallet.',
+  get description() { return _translateCopy("copy.a0e52889552f", { defaultValue: "Buy and sell established DeHub accounts with tokens. Browse accounts by followers, uploads and age, or list your own — payment goes wallet-to-wallet." }); },
   url: 'https://dehub.io/accounts',
 };
 

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Go Live Broadcaster
  * ===================
@@ -386,6 +387,7 @@ export function GoLiveBroadcaster({
   onEnd,
   onLive,
 }: GoLiveBroadcasterProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>('starting');
   const [errorMessage, setErrorMessage] = useState('');
@@ -1749,7 +1751,7 @@ export function GoLiveBroadcaster({
         {!videoOn && phase !== 'error' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-500">
             <VideoOff className="h-8 w-8" />
-            <span className="text-xs">{isScreen ? 'Screen paused' : 'Camera off'}</span>
+            <span className="text-xs">{isScreen ? _copy("copy.2d8c4ec9bd45", { defaultValue: "Screen paused" }) : _copy("copy.ce3ef7450f8e", { defaultValue: "Camera off" })}</span>
           </div>
         )}
 
@@ -1824,9 +1826,7 @@ export function GoLiveBroadcaster({
 
         {isScreen && phase !== 'error' && (
           <span className="absolute right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] text-white backdrop-blur-xl">
-            <ScreenShare className="h-3 w-3" />
-            Sharing screen
-          </span>
+            <ScreenShare className="h-3 w-3" />{_copy("copy.8a1f9acdfd25", { defaultValue: "Sharing screen" })}</span>
         )}
       </div>
 
@@ -1847,10 +1847,10 @@ export function GoLiveBroadcaster({
           disabled={phase === 'error' || !hasMic}
           label={
             !hasMic
-              ? 'No microphone available'
+              ? _copy("copy.87c132fee0b3", { defaultValue: "No microphone available" })
               : micOn
-                ? 'Mute microphone'
-                : 'Unmute microphone'
+                ? _copy("copy.2d1be6900bbe", { defaultValue: "Mute microphone" })
+                : _copy("copy.a22cb32b0734", { defaultValue: "Unmute microphone" })
           }
         >
           {micOn && hasMic ? <Mic className="h-5 w-5" /> : <MicOff className="h-5 w-5" />}
@@ -1864,11 +1864,11 @@ export function GoLiveBroadcaster({
           label={
             videoOn
               ? isScreen
-                ? 'Pause the screen share'
-                : 'Turn camera off'
+                ? _copy("copy.d49fd331d185", { defaultValue: "Pause the screen share" })
+                : _copy("copy.2050f56db225", { defaultValue: "Turn camera off" })
               : isScreen
-                ? 'Resume the screen share'
-                : 'Turn camera on'
+                ? _copy("copy.3dd6e75d3b63", { defaultValue: "Resume the screen share" })
+                : _copy("copy.95e9fb569c93", { defaultValue: "Turn camera on" })
           }
         >
           {videoOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
@@ -1880,7 +1880,7 @@ export function GoLiveBroadcaster({
             active={!isScreen}
             onClick={isScreen ? stopScreenShare : startScreenShare}
             disabled={phase === 'error'}
-            label={isScreen ? 'Stop sharing and go back to camera' : 'Share your screen'}
+            label={isScreen ? _copy("copy.1e8e2445dc09", { defaultValue: "Stop sharing and go back to camera" }) : _copy("copy.190735ff385e", { defaultValue: "Share your screen" })}
           >
             {isScreen ? (
               <ScreenShareOff className="h-5 w-5" />
@@ -1898,7 +1898,7 @@ export function GoLiveBroadcaster({
             active={!bubbleOn}
             onClick={toggleCameraBubble}
             disabled={phase === 'error'}
-            label={bubbleOn ? 'Hide your camera bubble' : 'Show your camera in the corner'}
+            label={bubbleOn ? _copy("copy.83736d7503b7", { defaultValue: "Hide your camera bubble" }) : _copy("copy.60f7f5222038", { defaultValue: "Show your camera in the corner" })}
           >
             <PictureInPicture2 className="h-5 w-5" />
           </ControlButton>
@@ -1910,7 +1910,7 @@ export function GoLiveBroadcaster({
             active
             onClick={cycleBubbleCorner}
             disabled={phase === 'error'}
-            label="Move the camera bubble to another corner"
+            label={_copy("copy.4cd408ca6d21", { defaultValue: "Move the camera bubble to another corner" })}
           >
             <Move className="h-5 w-5" />
           </ControlButton>
@@ -1922,7 +1922,7 @@ export function GoLiveBroadcaster({
             active
             onClick={flipCamera}
             disabled={phase === 'error' || !videoOn}
-            label="Switch camera"
+            label={_copy("copy.43f019ea1334", { defaultValue: "Switch camera" })}
           >
             <SwitchCamera className="h-5 w-5" />
           </ControlButton>
@@ -1947,7 +1947,7 @@ export function GoLiveBroadcaster({
           active={openPanel !== 'voice'}
           onClick={() => setOpenPanel((p) => (p === 'voice' ? 'none' : 'voice'))}
           disabled={phase === 'error' || !hasMic}
-          label={hasMic ? 'Voice effects' : 'Voice effects need a microphone'}
+          label={hasMic ? _copy("copy.0aafad250841", { defaultValue: "Voice effects" }) : _copy("copy.b2accc174e44", { defaultValue: "Voice effects need a microphone" })}
         >
           <Wand2 className="h-5 w-5" />
         </ControlButton>
@@ -1957,7 +1957,7 @@ export function GoLiveBroadcaster({
           active={openPanel !== 'sounds'}
           onClick={() => setOpenPanel((p) => (p === 'sounds' ? 'none' : 'sounds'))}
           disabled={phase === 'error' || !hasMic}
-          label={hasMic ? 'Soundboard' : 'The soundboard needs a microphone'}
+          label={hasMic ? _copy("copy.07ff885c843a", { defaultValue: "Soundboard" }) : _copy("copy.9cd12c3c2540", { defaultValue: "The soundboard needs a microphone" })}
         >
           <Music className="h-5 w-5" />
         </ControlButton>
@@ -1968,7 +1968,7 @@ export function GoLiveBroadcaster({
             active={openPanel !== 'chat'}
             onClick={() => setOpenPanel((p) => (p === 'chat' ? 'none' : 'chat'))}
             disabled={phase === 'error'}
-            label="Live chat"
+            label={_copy("copy.1c7cc7287ca8", { defaultValue: "Live chat" })}
           >
             <MessageSquare className="h-5 w-5" />
           </ControlButton>
@@ -1994,8 +1994,7 @@ export function GoLiveBroadcaster({
           {!fullBleed && (
             <span className="flex items-center gap-1.5">
               <Users className="h-3.5 w-3.5" />
-              {watching} watching
-            </span>
+              {watching}{_copy("copy.dcb8e1a4fcaa", { defaultValue: " watching" })}</span>
           )}
           <span className="flex items-center gap-1.5 leading-none">
             <Heart className="h-3.5 w-3.5 shrink-0" />
@@ -2025,8 +2024,8 @@ export function GoLiveBroadcaster({
           <SignalLow className="mt-px h-3.5 w-3.5 shrink-0" />
           <span>
             {health?.limitation === 'cpu'
-              ? 'This device cannot encode the video fast enough — viewers are seeing a frozen picture. Closing other apps will help.'
-              : 'Your upload has dropped — viewers are seeing a frozen picture even though your preview looks fine. Moving closer to the router or switching networks will help.'}
+              ? _copy("copy.4315d2b20d81", { defaultValue: "This device cannot encode the video fast enough — viewers are seeing a frozen picture. Closing other apps will help." })
+              : _copy("copy.e39f372d587a", { defaultValue: "Your upload has dropped — viewers are seeing a frozen picture even though your preview looks fine. Moving closer to the router or switching networks will help." })}
             {health ? ` (${health.fps} fps · ${health.videoKbps} kbps)` : ''}
           </span>
         </div>
@@ -2083,10 +2082,7 @@ export function GoLiveBroadcaster({
           )}
         >
           <VoiceEffectSelector activeEffect={effect} onSelect={(id) => void changeEffect(id)} />
-          <p className="mt-2 text-[11px] text-zinc-500">
-            Viewers hear the effect; your own captions and transcripts still read
-            the unprocessed microphone.
-          </p>
+          <p className="mt-2 text-[11px] text-zinc-500">{_copy("copy.73d1216aba0a", { defaultValue: "Viewers hear the effect; your own captions and transcripts still read the unprocessed microphone." })}</p>
         </div>
       )}
 
@@ -2131,7 +2127,7 @@ export function GoLiveBroadcaster({
       <button
         onClick={() => setConfirmEnd(true)}
         disabled={isEnding}
-        aria-label="End the broadcast"
+        aria-label={_copy("copy.08c35c8d1c2c", { defaultValue: "End the broadcast" })}
         className={cn(
           'flex items-center justify-center gap-2 font-medium transition-colors disabled:opacity-60',
           fullBleed
@@ -2149,7 +2145,7 @@ export function GoLiveBroadcaster({
         ) : (
           <Radio className="h-4 w-4" />
         )}
-        {fullBleed ? null : isEnding ? 'Ending…' : 'End Stream'}
+        {fullBleed ? null : isEnding ? _copy("copy.3677a36e467e", { defaultValue: "Ending…" }) : _copy("copy.ee288ef2bd85", { defaultValue: "End Stream" })}
       </button>
 
       <EndStreamConfirmDialog

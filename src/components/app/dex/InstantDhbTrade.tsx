@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
@@ -21,6 +22,7 @@ type Pay = 'USDC' | 'ETH';
 
 /** Market buy / sell of DHB on Base at the best aggregated price, beside the range-order ticket. */
 export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onDone: () => void }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, connect, requestWalletUnlock } = useAuth();
   const walletLocked = useWalletLocked();
@@ -67,8 +69,8 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
     </div>
     {side && <fieldset disabled={busy}>
       {side === 'buy' && <label className="dex-field">{t('dex.payWith')}<div className="dex-input"><select className="dex-pay-select" aria-label={t('dex.payWith')} value={pay} onChange={(e) => setPay(e.target.value as Pay)}>
-        <option value="USDC">USDC · {formatSize(Number(formatUnits(held(USDC)?.balance ?? 0n, 6)))}</option>
-        <option value="ETH">ETH · {formatSize(Number(formatUnits(held('native')?.balance ?? 0n, 18)))}</option>
+        <option value="USDC">{_copy("copy.3d6a41e54a82", { defaultValue: "USDC · " })}{formatSize(Number(formatUnits(held(USDC)?.balance ?? 0n, 6)))}</option>
+        <option value="ETH">{_copy("copy.1a64e8796b91", { defaultValue: "ETH · " })}{formatSize(Number(formatUnits(held('native')?.balance ?? 0n, 18)))}</option>
       </select></div></label>}
       <label className="dex-field">{t(side === 'buy' ? 'dex.spend' : 'dex.sellAmount')}<div className="dex-input"><input inputMode="decimal" placeholder="0.00" aria-label={t('dex.amountToken', { token: tokenLabel(spend.symbol) })} value={amount} onChange={(e) => setAmount(e.target.value.replace(',', '.').trim())} /><span>{tokenLabel(spend.symbol)}</span></div></label>
       <div className="dex-available"><span>{t('dex.available')}</span><span>{formatSize(balance)} {tokenLabel(spend.symbol)}</span></div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
@@ -21,11 +22,12 @@ const mockNotifications = (t: TFunction) => [
 const FILTER_TABS = ['All', 'Mentions', 'Likes', 'Follows'];
 
 export function NotificationsScreen() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Notifications" />
+      <MobileTopBar title={_copy("copy.788011833a5a", { defaultValue: "Notifications" })} />
 
       {/* Filter tabs */}
       <div className="flex gap-1.5 px-4 py-3">

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { TranslationText } from '@/components/TranslationText';
 /**
  * Error Boundary Component
  * =========================
@@ -170,21 +172,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
             <div className="max-w-sm">
               <p className="text-sm font-medium text-foreground">
-                {this.props.label ? `${this.props.label} hit a snag` : 'This section hit a snag'}
+                {this.props.label ? _translateCopy("copy.e00e2b3e9d84", { defaultValue: "{{value1}} hit a snag", value1: this.props.label }) : 'This section hit a snag'}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                The rest of the app is still working. Try again or head back home.
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground"><TranslationText name="copy.65824fc476fa" fallback={"The rest of the app is still working. Try again or head back home."} /></p>
             </div>
             <div className="flex gap-2">
               <Button onClick={this.handleReset} variant="glass" size="sm" className="gap-2 rounded-xl">
-                <RefreshCw className="h-3.5 w-3.5" />
-                Try again
-              </Button>
+                <RefreshCw className="h-3.5 w-3.5" /><TranslationText name="copy.d8b8392e2c54" fallback={"Try again"} /></Button>
               <Button onClick={this.handleGoHome} variant="glass" size="sm" className="gap-2 rounded-xl">
-                <Home className="h-3.5 w-3.5" />
-                Home
-              </Button>
+                <Home className="h-3.5 w-3.5" /><TranslationText name="copy.3a78695388b3" fallback={"Home"} /></Button>
             </div>
           </div>
         );
@@ -225,15 +221,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl font-semibold text-white mb-3">
-              Something went wrong
-            </h1>
+            <h1 className="text-2xl font-semibold text-white mb-3"><TranslationText name="copy.ab827e3fe17d" fallback={"Something went wrong"} /></h1>
 
             {/* Description */}
-            <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-              An unexpected error occurred. Don't worry, your data is safe. 
-              Try refreshing the page or head back to the home feed.
-            </p>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-8"><TranslationText name="copy.09bb8ce91a4a" fallback={"An unexpected error occurred. Don't worry, your data is safe. Try refreshing the page or head back to the home feed."} /></p>
 
             {/* Action buttons */}
             <div className="flex flex-col sm:flex-row gap-3 w-full">
@@ -242,26 +233,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 variant="glass"
                 className="flex-1 h-12 rounded-xl gap-2"
               >
-                <RefreshCw className="w-4 h-4" />
-                Try Again
-              </Button>
+                <RefreshCw className="w-4 h-4" /><TranslationText name="copy.df0fe9e00d35" fallback={"Try Again"} /></Button>
               <Button 
                 onClick={this.handleGoHome}
                 variant="glass"
                 className="flex-1 h-12 rounded-xl gap-2"
               >
-                <Home className="w-4 h-4" />
-                Go Home
-              </Button>
+                <Home className="w-4 h-4" /><TranslationText name="copy.82bc39f68192" fallback={"Go Home"} /></Button>
             </div>
 
             {/* Full refresh option */}
             <button 
               onClick={() => window.location.reload()}
               className="mt-4 text-zinc-500 text-xs hover:text-zinc-300 transition-colors"
-            >
-              Or refresh the entire page
-            </button>
+            ><TranslationText name="copy.be60b6a22470" fallback={"Or refresh the entire page"} /></button>
 
             {/* Error details — visible in all environments to aid mobile debugging */}
             {this.state.error && (

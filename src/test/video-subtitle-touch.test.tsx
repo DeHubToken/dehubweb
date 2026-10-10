@@ -5,7 +5,7 @@ import { useCachedVideoDub } from '@/hooks/use-cached-video-dub';
 
 const fixture = vi.hoisted(() => ({ phone: true, dub: false, appLang: 'en', sourceLang: '', corrections: new Map(), request: vi.fn(), lookup: vi.fn(), dubLookup: vi.fn(), engine: vi.fn() }));
 vi.mock('@/hooks/use-touch-device', () => ({ useIsTouchDevice: () => fixture.phone }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key, i18n: { language: fixture.appLang } }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key, i18n: { language: fixture.appLang } }) }));
 vi.mock('@/hooks/use-video-transcript', () => ({
   useVideoTranscript: (id: number, enabled: boolean) => {
     fixture.lookup(id, enabled);

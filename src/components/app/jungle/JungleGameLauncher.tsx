@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -102,6 +103,7 @@ export function JungleGameLauncher() {
 }
 
 function LauncherInner() {
+  const { t: _copy } = _useCopy();
   const [prompting, setPrompting] = useState(false);
   const [launched, setLaunched] = useState(false);
   const timerRef = useRef<number | null>(null);
@@ -189,15 +191,11 @@ function LauncherInner() {
 
   return (
     <div data-jungle-deploy-prompt role="status" aria-live="polite">
-      <p data-jungle-deploy-kicker>THE TRAIL</p>
-      <p data-jungle-deploy-title>Walk into the jungle</p>
+      <p data-jungle-deploy-kicker>{_copy("copy.89272ebc9f3e", { defaultValue: "THE TRAIL" })}</p>
+      <p data-jungle-deploy-title>{_copy("copy.11768394db4e", { defaultValue: "Walk into the jungle" })}</p>
       <div data-jungle-deploy-actions>
-        <button type="button" onClick={() => setLaunched(true)}>
-          ENTER / GO
-        </button>
-        <button type="button" onClick={() => dismiss(true)}>
-          ESC / STAY
-        </button>
+        <button type="button" onClick={() => setLaunched(true)}>{_copy("copy.9f53c8f4376f", { defaultValue: "ENTER / GO" })}</button>
+        <button type="button" onClick={() => dismiss(true)}>{_copy("copy.3f3a27ecab2a", { defaultValue: "ESC / STAY" })}</button>
       </div>
     </div>
   );
@@ -285,6 +283,7 @@ function checkCapability(): Capability {
  * engine out of the entry bundle until a player actually walks in.
  */
 function JungleGameOverlay({ onExit }: { onExit: () => void }) {
+  const { t: _copy } = _useCopy();
   // Resolved once: re-picking on a re-render would change the src and restart
   // the bake from zero.
   const [gameUrl] = useState(buildGameUrl);
@@ -429,22 +428,20 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
   useGameExitRequest('jungle-game', frameRef, onExit);
 
   return (
-    <div data-jungle-game-overlay role="dialog" aria-modal="true" aria-label="Jungle trail">
-      <button type="button" data-jungle-game-exit onClick={onExit}>
-        LEAVE / ESC
-      </button>
+    <div data-jungle-game-overlay role="dialog" aria-modal="true" aria-label={_copy("copy.6a5c980170e5", { defaultValue: "Jungle trail" })}>
+      <button type="button" data-jungle-game-exit onClick={onExit}>{_copy("copy.f236883a5e40", { defaultValue: "LEAVE / ESC" })}</button>
 
       {!cap.ok ? (
         <div data-jungle-game-missing>
           <p data-jungle-deploy-kicker>{cap.reason}</p>
-          <p data-jungle-deploy-title>Cannot walk in</p>
+          <p data-jungle-deploy-title>{_copy("copy.5f3b6eecab40", { defaultValue: "Cannot walk in" })}</p>
           <p>{cap.detail}</p>
         </div>
       ) : (
         <iframe
           ref={frameRef}
           src={gameUrl}
-          title="Jungle Trail"
+          title={_copy("copy.b4c84bb16148", { defaultValue: "Jungle Trail" })}
           data-jungle-game-frame
           /* Held at opacity 0 until the engine is up, then crossfaded over the
              live canopy behind it (900ms, in jungle-coverage.css). The frame
@@ -480,21 +477,21 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
           announced twice. */}
       {cap.ok && showBoot && (
         <div data-jungle-game-boot>
-          <p data-jungle-deploy-title>Growing the forest</p>
+          <p data-jungle-deploy-title>{_copy("copy.9d20870c23ce", { defaultValue: "Growing the forest" })}</p>
           <div
             data-jungle-game-bar
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={pct}
-            aria-label="Growing the forest"
+            aria-label={_copy("copy.9d20870c23ce", { defaultValue: "Growing the forest" })}
           >
             <span style={{ width: `${pct}%` }} />
           </div>
           <p data-jungle-game-pct aria-hidden="true">
             {pct}%
           </p>
-          {fault && <p data-jungle-game-boot-note>Fault: {fault}</p>}
+          {fault && <p data-jungle-game-boot-note>{_copy("copy.cf9b76fa8bfe", { defaultValue: "Fault: " })}{fault}</p>}
           {/* Both, and in this order. `ready` is what uncovers the frame here
               (it drives data-visible on the iframe), so hiding the readout
               without it would leave the player looking at nothing at all. */}
@@ -505,9 +502,7 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
               setReady(true);
               dismiss();
             }}
-          >
-            HIDE
-          </button>
+          >{_copy("copy.0c944fca9b62", { defaultValue: "HIDE" })}</button>
         </div>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { Loader2 } from 'lucide-react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
@@ -15,11 +16,11 @@ const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 const cardClass = "rounded-2xl p-5 bg-zinc-900 border border-zinc-800";
 
 const SOURCE_CONFIG = [
-  { key: 'tips', label: 'Tips', color: '#22c55e' },
-  { key: 'subs', label: 'Subs', color: '#3b82f6' },
-  { key: 'adRevenue', label: 'Ad Revenue', color: '#eab308' },
-  { key: 'bounties', label: 'Bounties', color: '#a855f7' },
-  { key: 'ppv', label: 'PPV Sales', color: '#ec4899' },
+  { key: 'tips', get label() { return _translateCopy("copy.3838a4d8cb8c", { defaultValue: "Tips" }); }, color: '#22c55e' },
+  { key: 'subs', get label() { return _translateCopy("copy.17371507e9f7", { defaultValue: "Subs" }); }, color: '#3b82f6' },
+  { key: 'adRevenue', get label() { return _translateCopy("copy.4268168ace02", { defaultValue: "Ad Revenue" }); }, color: '#eab308' },
+  { key: 'bounties', get label() { return _translateCopy("copy.314b92e83a11", { defaultValue: "Bounties" }); }, color: '#a855f7' },
+  { key: 'ppv', get label() { return _translateCopy("copy.0c0f9221e9fc", { defaultValue: "PPV Sales" }); }, color: '#ec4899' },
 ] as const;
 
 function getFilterStartDate(filter: string): Date | null {

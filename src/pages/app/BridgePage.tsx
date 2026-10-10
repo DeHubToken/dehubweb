@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bridge Page
@@ -66,6 +67,7 @@ function StatCard({ label, value, subtitle, delay = 0, loading = false }: { labe
 }
 
 export default function BridgePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { allTokens, isLoading: balancesLoading } = useAllChainsTokens();
@@ -96,12 +98,12 @@ export default function BridgePage() {
   const handleBridge = async () => {
     const parsedAmount = parseFloat(amount);
     if (!parsedAmount || parsedAmount <= 0) {
-      toast.error('Invalid amount', { description: 'Please enter a valid amount to bridge.' });
+      toast.error(_copy("copy.f7cda366969f", { defaultValue: "Invalid amount" }), { description: _copy("copy.47f12d71720b", { defaultValue: "Please enter a valid amount to bridge." }) });
       return;
     }
 
     if (parsedAmount > sourceBalance) {
-      toast.error('Insufficient balance', { description: t('bridge.onlyHave', { amount: formatNumber(sourceBalance, 2), chain: sourceChainLabel }) });
+      toast.error(_copy("copy.f60879d73107", { defaultValue: "Insufficient balance" }), { description: t('bridge.onlyHave', { amount: formatNumber(sourceBalance, 2), chain: sourceChainLabel }) });
       return;
     }
 
@@ -110,7 +112,7 @@ export default function BridgePage() {
     try {
       const walletAddress = await getWalletAddress();
       if (!walletAddress) {
-        toast.error('Not connected', { description: 'Please connect your wallet first.' });
+        toast.error(_copy("copy.0303e1824670", { defaultValue: "Not connected" }), { description: _copy("copy.c454eb5724c4", { defaultValue: "Please connect your wallet first." }) });
         return;
       }
 
@@ -120,14 +122,14 @@ export default function BridgePage() {
         await switchChain(sourceChainId);
       } catch (switchErr: any) {
         toast.dismiss(loadingToastId);
-        toast.error('Could not prepare your wallet', { description: switchErr?.message || `Please try again on ${sourceChainLabel}.` });
+        toast.error(_copy("copy.640f5b403765", { defaultValue: "Could not prepare your wallet" }), { description: switchErr?.message || `Please try again on ${sourceChainLabel}.` });
         return;
       }
 
       const dhbTokenAddress = CHAIN_CONFIGS[sourceChainId]?.dhbToken;
       if (!dhbTokenAddress) {
         toast.dismiss(loadingToastId);
-        toast.error('Error', { description: t('bridge.tokenNotConfigured', { chain: sourceChainLabel }) });
+        toast.error(_copy("copy.54a0e8c17ebb", { defaultValue: "Error" }), { description: t('bridge.tokenNotConfigured', { chain: sourceChainLabel }) });
         return;
       }
 
@@ -145,15 +147,15 @@ export default function BridgePage() {
             description: t('bridge.onChainBalanceTooLow', { chain: sourceChainLabel }),
           });
         } else if (msg.includes('user rejected') || msg.includes('user denied') || msg.includes('cancelled')) {
-          toast.error('Transaction cancelled', { description: 'You rejected the transaction in your wallet.' });
+          toast.error(_copy("copy.a827dc821293", { defaultValue: "Transaction cancelled" }), { description: _copy("copy.302133d06f9b", { defaultValue: "You rejected the transaction in your wallet." }) });
         } else if (msg.includes('gas') || msg.includes('aa21') || msg.includes('aa25') || msg.includes('aa31')) {
-          toast.error('Gas fee issue', {
+          toast.error(_copy("copy.5f7645a4d950", { defaultValue: "Gas fee issue" }), {
             description: `You need native tokens (${sourceChainId === BNB_CHAIN_ID ? 'BNB' : 'ETH'}) on ${sourceChainLabel} to pay for gas.`,
           });
         } else if (msg.includes('session expired') || msg.includes('log in again')) {
-          toast.error('Session expired', { description: 'Please log in again to complete this transaction.' });
+          toast.error(_copy("copy.e5ee1e7e84aa", { defaultValue: "Session expired" }), { description: _copy("copy.6fb4051edeb9", { defaultValue: "Please log in again to complete this transaction." }) });
         } else {
-          toast.error('Bridge failed', { description: sendErr?.shortMessage || sendErr?.message?.slice(0, 120) || 'Transaction could not be sent.' });
+          toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: sendErr?.shortMessage || sendErr?.message?.slice(0, 120) || 'Transaction could not be sent.' });
         }
         return;
       }
@@ -165,26 +167,26 @@ export default function BridgePage() {
         receipt = await result.wait();
       } catch (waitErr: any) {
         toast.dismiss(loadingToastId);
-        toast.error('Confirmation failed', { description: 'Transaction was sent but confirmation timed out. Check the explorer for status.' });
+        toast.error(_copy("copy.8d25914581cd", { defaultValue: "Confirmation failed" }), { description: _copy("copy.2c0f012c1c0a", { defaultValue: "Transaction was sent but confirmation timed out. Check the explorer for status." }) });
         return;
       }
 
       toast.dismiss(loadingToastId);
 
       if (receipt.status === 1) {
-        toast.success('Bridge initiated!', {
+        toast.success(_copy("copy.2e239fe384e2", { defaultValue: "Bridge initiated!" }), {
           description: t('bridge.sentDesc', { amount, from: sourceChainLabel, to: destChainLabel }),
         });
         setAmount.complete(amount, '');
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
         invalidateSelfBadgeBalance(queryClient);
       } else {
-        toast.error('Bridge failed', { description: `Transaction reverted on ${sourceChainLabel}. Your tokens were not transferred.` });
+        toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: `Transaction reverted on ${sourceChainLabel}. Your tokens were not transferred.` });
       }
     } catch (err: any) {
       console.error('[Bridge] Unexpected error:', err);
       if (loadingToastId) toast.dismiss(loadingToastId);
-      toast.error('Bridge failed', { description: err?.message?.slice(0, 120) || 'An unexpected error occurred.' });
+      toast.error(_copy("copy.d7d9932b0e5e", { defaultValue: "Bridge failed" }), { description: err?.message?.slice(0, 120) || 'An unexpected error occurred.' });
     } finally {
       setIsBridging(false);
     }
@@ -197,11 +199,11 @@ export default function BridgePage() {
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto">
-      <SEOHead title="Bridge — Transfer tokens Cross-Chain" description="Bridge your DeHub tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: 'Bridge DeHub tokens between Base and BNB Chain.', operatingSystem: 'Web' }} />
-      <h1 className="sr-only">DeHub Bridge — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.9d0539b1cde8", { defaultValue: "Bridge — Transfer tokens Cross-Chain" })} description={_copy("copy.6bba5091f244", { defaultValue: "Bridge your DeHub tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." })} url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: _copy("copy.e09bfd7e137e", { defaultValue: "Bridge DeHub tokens between Base and BNB Chain." }), operatingSystem: 'Web' }} />
+      <h1 className="sr-only">{_copy("copy.4fb54b631e6b", { defaultValue: "DeHub Bridge — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon="bridge"
-        title="Bridge"
+        title={_copy("copy.3892e10346fd", { defaultValue: "Bridge" })}
         subtitle={t('bridge.subtitle')}
         actions={
           <IslandAction label={t('dex.refresh')} onClick={handleRefresh}>
@@ -213,8 +215,8 @@ export default function BridgePage() {
       <PageBody>
       {/* Balance Stats */}
       <div className="grid grid-cols-2 gap-3">
-        <StatCard label="Base Balance" value={formatNumber(parseFloat(baseDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBase')} delay={0} loading={balancesLoading} />
-        <StatCard label="BNB Chain Balance" value={formatNumber(parseFloat(bnbDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBnb')} delay={0.05} loading={balancesLoading} />
+        <StatCard label={_copy("copy.b590dcbb640e", { defaultValue: "Base Balance" })} value={formatNumber(parseFloat(baseDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBase')} delay={0} loading={balancesLoading} />
+        <StatCard label={_copy("copy.4ecdd7f9bb60", { defaultValue: "BNB Chain Balance" })} value={formatNumber(parseFloat(bnbDHB?.formattedBalance ?? '0'), 2)} subtitle={t('bridge.tokensOnBnb')} delay={0.05} loading={balancesLoading} />
       </div>
 
       {/* Bridge Card */}
@@ -228,7 +230,7 @@ export default function BridgePage() {
         {/* Direction display */}
         <div className="flex items-center justify-center gap-3 mb-6">
           <div className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
-            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">From</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">{_copy("copy.218197693424", { defaultValue: "From" })}</p>
             <p className="text-sm font-semibold text-white">{sourceChainLabel}</p>
           </div>
 
@@ -240,14 +242,13 @@ export default function BridgePage() {
           </button>
 
           <div className="flex-1 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-center">
-            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">To</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">{_copy("copy.f4b06ef6d3c8", { defaultValue: "To" })}</p>
             <p className="text-sm font-semibold text-white">{destChainLabel}</p>
           </div>
         </div>
 
         {/* Available balance */}
-        <p className="text-xs text-white/40 mb-4">
-          Available: <span className="text-white/70 font-medium">{formatNumber(sourceBalance, 2)} <DhbCoin /></span> on {sourceChainLabel}
+        <p className="text-xs text-white/40 mb-4">{_copy("copy.333771bad487", { defaultValue: "Available: " })}<span className="text-white/70 font-medium">{formatNumber(sourceBalance, 2)} <DhbCoin /></span>{_copy("copy.0f580db40fe2", { defaultValue: " on " })}{sourceChainLabel}
         </p>
 
         {/* Input + Bridge button */}
@@ -269,13 +270,11 @@ export default function BridgePage() {
                 type="button"
                 onClick={() => setAmount(sourceBalanceRaw)}
                 className="absolute right-0 top-1/2 -translate-y-1/2 px-1 text-white/50 text-[10px] font-bold uppercase hover:text-white transition-colors"
-              >
-                MAX
-              </button>
+              >{_copy("copy.2d9c014a222d", { defaultValue: "MAX" })}</button>
             </div>
           </LiquidGlassBubble>
           <LiquidGlassBubble2
-            label="Bridge"
+            label={_copy("copy.3892e10346fd", { defaultValue: "Bridge" })}
             icon={<ArrowRight className="w-4 h-4" />}
             loading={isBridging}
             loadingLabel="Bridging..."
@@ -286,12 +285,12 @@ export default function BridgePage() {
 
         {/* Alternative manual transfer */}
         <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-white/40">
-          <span>Alternatively, send your tokens directly to</span>
+          <span>{_copy("copy.9901f888b899", { defaultValue: "Alternatively, send your tokens directly to" })}</span>
           <button
             type="button"
             onClick={() => {
               navigator.clipboard.writeText(BRIDGE_ADDRESS);
-              toast.success('Bridge address copied!');
+              toast.success(_copy("copy.ab90c7fe1380", { defaultValue: "Bridge address copied!" }));
             }}
             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-colors font-mono text-[10px]"
           >
@@ -309,7 +308,7 @@ export default function BridgePage() {
         data-kit-section
         className="border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
       >
-        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">How it works</h3>
+        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">{_copy("copy.9c870aa6e5e9", { defaultValue: "How it works" })}</h3>
         <div className="space-y-3">
           {[
             { step: '1', text: 'Select the chain you want to bridge from and enter the amount.' },
@@ -376,6 +375,7 @@ function shortenAddress(addr: string): string {
 const PAGE_SIZE = 10;
 
 function BridgeQueue() {
+  const { t: _copy } = _useCopy();
   const { t: translate, i18n } = useTranslation();
   const { data: transfers, isLoading, error } = useBridgeTransfers();
   const [search, setSearch] = useSurfaceDraft("pages/app/BridgePage.tsx:search", '');
@@ -411,8 +411,8 @@ function BridgeQueue() {
       className="border border-white/10 bg-white/[0.03] backdrop-blur-xl p-5"
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Bridges</h3>
-        <span className="text-[10px] text-white/30">{transfers?.length ?? 0} transfers</span>
+        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{_copy("copy.d982f029f5c8", { defaultValue: "Bridges" })}</h3>
+        <span className="text-[10px] text-white/30">{transfers?.length ?? 0}{_copy("copy.e87d8c4595c9", { defaultValue: " transfers" })}</span>
       </div>
 
       {/* Search */}
@@ -420,7 +420,7 @@ function BridgeQueue() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30" />
         <input
           type="text"
-          placeholder="Search by address, tx hash, chain..."
+          placeholder={_copy("copy.00b76d02e45c", { defaultValue: "Search by address, tx hash, chain..." })}
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
           className="w-full bg-white/[0.03] border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder:text-white/25 focus:outline-none focus:border-white/20 transition-colors"
@@ -433,12 +433,12 @@ function BridgeQueue() {
           <Loader2 className="w-5 h-5 text-white/30 animate-spin" />
         </div>
       ) : error ? (
-        <AppState icon="command" title="Transfers could not load" description="Try loading your bridge history again." kind="error" size="compact" />
+        <AppState icon="command" title={_copy("copy.9b5ec87d097c", { defaultValue: "Transfers could not load" })} description={_copy("copy.c0be0772cfc9", { defaultValue: "Try loading your bridge history again." })} kind="error" size="compact" />
       ) : paginated.length === 0 ? (
         <AppState
           icon={search ? 'search' : 'command'}
-          title={search ? 'No matching transfers' : 'No recent bridge transfers'}
-          description={search ? 'Try a different transaction hash or address.' : 'Transfers from the last 7 days will appear here.'}
+          title={search ? _copy("copy.21334c7b93c3", { defaultValue: "No matching transfers" }) : _copy("copy.2127df9ea924", { defaultValue: "No recent bridge transfers" })}
+          description={search ? _copy("copy.128d20cf7e50", { defaultValue: "Try a different transaction hash or address." }) : _copy("copy.b861c0e4ef4a", { defaultValue: "Transfers from the last 7 days will appear here." })}
           kind={search ? 'search-empty' : 'empty'}
           size="compact"
         />
@@ -467,14 +467,14 @@ function BridgeQueue() {
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-medium text-white truncate">{shortenAddress(t.from)}</span>
                   <ArrowRight className="w-3 h-3 text-white/20 flex-shrink-0" />
-                  <span className="text-xs text-white/40 truncate">Bridge</span>
+                  <span className="text-xs text-white/40 truncate">{_copy("copy.3892e10346fd", { defaultValue: "Bridge" })}</span>
                 </div>
                 <p className="text-[10px] text-white/25 mt-0.5 truncate">{t.txHash.slice(0, 18)}…</p>
               </div>
 
               {/* Amount + status + time */}
               <div className="text-right flex-shrink-0">
-                <p className="text-xs font-semibold text-white">{formatBridgeAmount(t.amount, i18n.resolvedLanguage || 'en-US')} <DhbCoin /></p>
+                <p className="text-xs font-semibold text-white">{formatBridgeAmount(t.amount, i18n.resolvedLanguage || "en-US")} <DhbCoin /></p>
                 <div className="flex items-center justify-end gap-1.5 mt-0.5">
                   <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-white/5 text-white/60 border border-white/10">
                     {/* The relay only sees the deposit arrive; the payout on the
@@ -498,9 +498,7 @@ function BridgeQueue() {
             onClick={() => setPage(p => Math.max(0, p - 1))}
             disabled={page === 0}
             className="px-3 py-1 rounded-lg text-[10px] font-medium bg-white/5 border border-white/10 text-white/50 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          >
-            Prev
-          </button>
+          >{_copy("copy.73912999faf4", { defaultValue: "Prev" })}</button>
           <span className="text-[10px] text-white/30">
             {page + 1} / {totalPages}
           </span>
@@ -508,9 +506,7 @@ function BridgeQueue() {
             onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
             disabled={page >= totalPages - 1}
             className="px-3 py-1 rounded-lg text-[10px] font-medium bg-white/5 border border-white/10 text-white/50 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-          >
-            Next
-          </button>
+          >{_copy("copy.1ff57a29d7c9", { defaultValue: "Next" })}</button>
         </div>
       )}
     </motion.div>

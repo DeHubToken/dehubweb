@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Video Segments
  * ==============
@@ -92,6 +93,7 @@ export function segmentAt(segments: VideoSegment[], time: number): VideoSegment 
 }
 
 export function useSegmentActions(tokenId: string | number | undefined) {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
 
   const invalidate = useCallback(() => {
@@ -103,7 +105,7 @@ export function useSegmentActions(tokenId: string | number | undefined) {
       submitVideoSegment({ tokenId: tokenId!, ...input }),
     onSuccess: () => {
       invalidate();
-      toast.success('Thanks — that section is marked for everyone');
+      toast.success(_copy("copy.f5d57264900f", { defaultValue: "Thanks — that section is marked for everyone" }));
     },
     onError: (error: Error) => toast.error(error.message || 'Could not save that section'),
   });
@@ -119,7 +121,7 @@ export function useSegmentActions(tokenId: string | number | undefined) {
     mutationFn: (segmentId: string) => removeVideoSegment(segmentId),
     onSuccess: () => {
       invalidate();
-      toast.success('Removed');
+      toast.success(_copy("copy.4118fb4fed0e", { defaultValue: "Removed" }));
     },
     onError: (error: Error) => toast.error(error.message || 'Could not remove that'),
   });

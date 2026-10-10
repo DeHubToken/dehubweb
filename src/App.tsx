@@ -1,3 +1,5 @@
+import { LanguageRouteSync } from '@/components/LanguageRouteSync';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
 import { PushBlockedToast } from "@/components/app/PushBlockedToast";
@@ -366,6 +368,7 @@ if (typeof window !== "undefined") {
  * Only mounted after user has passed the hero (or is a returning user).
  */
 function AppContent() {
+  const { t: _copy } = _useCopy();
   const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();
   usePreloadIcons();
@@ -452,7 +455,7 @@ function AppContent() {
               self-routes internally; the children below are match anchors only.
               Inner Suspense fallback={null} keeps SurfaceTransition mounted on a
               cold docs-chunk load (the persistent background shows through). */}
-          <Route element={<ErrorBoundary compact label="Docs"><Suspense fallback={null}><DocsSurface /></Suspense></ErrorBoundary>}>
+          <Route element={<ErrorBoundary compact label={_copy("copy.7af023c43013", { defaultValue: "Docs" })}><Suspense fallback={null}><DocsSurface /></Suspense></ErrorBoundary>}>
             <Route path="/docs" element={null} />
             <Route path="/docs/*" element={null} />
             <Route path="/guides/*" element={null} />
@@ -468,7 +471,7 @@ function AppContent() {
           <Route
             path="/builder"
             element={
-              <ErrorBoundary compact label="Builder">
+              <ErrorBoundary compact label={_copy("copy.090940e73258", { defaultValue: "Builder" })}>
                 <Suspense fallback={<PageLoader />}>
                   <BuilderPage />
                 </Suspense>
@@ -479,7 +482,7 @@ function AppContent() {
           <Route
             path="/builder/preview/:id"
             element={
-              <ErrorBoundary compact label="Builder preview">
+              <ErrorBoundary compact label={_copy("copy.c3d4759d35d0", { defaultValue: "Builder preview" })}>
                 <Suspense fallback={<PageLoader />}>
                   <BuilderPreviewPage />
                 </Suspense>
@@ -496,7 +499,7 @@ function AppContent() {
           <Route
             path="/app/pair"
             element={
-              <ErrorBoundary compact label="Pair test">
+              <ErrorBoundary compact label={_copy("copy.ed6e31c6f372", { defaultValue: "Pair test" })}>
                 <Suspense fallback={<PageLoader />}>
                   <PairTestPage />
                 </Suspense>
@@ -888,6 +891,7 @@ const App = () => (
           {/* Publishes the router's navigate() to lib/client-navigate, so post
               bodies can route without hand-rolling a history push. */}
           <ClientNavigateBridge />
+          <LanguageRouteSync />
           <SEOHead />
           <Sonner />
           {/* Watches /version.json for a newer deploy; renders nothing itself. */}

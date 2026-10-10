@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * New Members Carousel
  * ====================
@@ -45,6 +46,7 @@ export function NewMembersCarousel({
   showHeader = true,
   className,
 }: NewMembersCarouselProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
@@ -133,9 +135,7 @@ export function NewMembersCarousel({
             <button
               onClick={() => navigate('/app/explore')}
               className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white transition-colors"
-            >
-              See All
-              <ChevronRight className="w-3 h-3" />
+            >{_copy("copy.44c9d36485b7", { defaultValue: "See All" })}<ChevronRight className="w-3 h-3" />
             </button>
           )}
         </div>
@@ -167,8 +167,7 @@ export function NewMembersCarousel({
                   className="w-[1em] h-[1em]"
                 />
               </span>
-              <span className="text-[10px] text-zinc-500 mb-1.5 truncate max-w-full">
-                joined {joinedAgoLabel(member.joinedAt)}
+              <span className="text-[10px] text-zinc-500 mb-1.5 truncate max-w-full">{_copy("copy.dbc44a64af92", { defaultValue: "joined " })}{joinedAgoLabel(member.joinedAt)}
               </span>
               <Button
                 size="sm"
@@ -181,7 +180,7 @@ export function NewMembersCarousel({
                     : 'text-white hover:bg-zinc-800'
                 }`}
               >
-                {isRequested(member) ? 'Requested' : isFollowed(member) ? 'Following' : 'Follow'}
+                {isRequested(member) ? _copy("copy.2d9e28289fac", { defaultValue: "Requested" }) : isFollowed(member) ? _copy("copy.344b4271ca01", { defaultValue: "Following" }) : _copy("copy.641d1ef657bd", { defaultValue: "Follow" })}
               </Button>
             </div>
           </div>

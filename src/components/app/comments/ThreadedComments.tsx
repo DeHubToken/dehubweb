@@ -256,7 +256,7 @@ function CommentRow<C extends ThreadedComment>({
                   'flex items-center gap-1 transition-colors select-none touch-none disabled:opacity-60',
                   held ? 'text-white' : 'text-white/70 hover:text-white',
                 )}
-                aria-label={reactionMeta(leadReaction ?? 'like').label}
+                aria-label={reactionMeta(leadReaction ?? "like").label}
                 aria-haspopup={isOwn ? undefined : 'menu'}
                 aria-expanded={isOwn ? undefined : likeTray.open}
               >

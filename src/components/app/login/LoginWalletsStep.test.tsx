@@ -5,7 +5,7 @@ import { LoginWalletsStep } from './LoginWalletsStep';
 const mocks = vi.hoisted(() => ({ ensure: vi.fn() }));
 vi.mock('@/lib/wagmi-wallets', () => ({ ensureWalletConnectors: mocks.ensure }));
 vi.mock('@/lib/web3auth', () => ({ isMobileDevice: () => false, isWalletInAppBrowser: () => false }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (_key: string, fallback: string) => fallback || _key }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (_key: string, fallback?: string | { defaultValue?: string }) => (typeof fallback === 'string' ? fallback : fallback?.defaultValue) || _key }) }));
 vi.mock('@rainbow-me/rainbowkit', () => ({
   RainbowKitProvider: ({ children }: any) => <>{children}</>,
   darkTheme: () => ({}),

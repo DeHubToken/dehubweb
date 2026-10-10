@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, memo, useMemo } from 'react';
 import { SquareUserRound, Trophy, MessagesSquare, Star } from 'lucide-react';
 import { WhoToFollow } from '../WhoToFollow';
@@ -13,6 +14,7 @@ type TabType = 'leaderboard' | 'follow' | 'newMembers' | 'chat';
 let persistedTab: TabType = 'chat';
 
 export const TabbedSidePanel = memo(function TabbedSidePanel() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated } = useAuth();
   const publicUnread = usePublicChatUnreadCount();
   const [activeTab, setActiveTab] = useState<TabType>(persistedTab);
@@ -28,15 +30,15 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
 
   const tabs = useMemo(() => {
     const base: { id: TabType; icon: typeof SquareUserRound; label: string }[] = [
-      { id: 'leaderboard', icon: Trophy, label: 'Balance' },
+      { id: 'leaderboard', icon: Trophy, label: _copy("copy.d05e07b7c14e", { defaultValue: "Balance" }) },
     ];
     if (isAuthenticated) {
-      base.push({ id: 'follow', icon: SquareUserRound, label: 'Growing' });
+      base.push({ id: 'follow', icon: SquareUserRound, label: _copy("copy.52c8c11f7fa2", { defaultValue: "Growing" }) });
     }
-    base.push({ id: 'newMembers', icon: Star, label: 'New' });
-    base.push({ id: 'chat', icon: MessagesSquare, label: 'Chat' });
+    base.push({ id: 'newMembers', icon: Star, label: _copy("copy.18fdd549b2ed", { defaultValue: "New" }) });
+    base.push({ id: 'chat', icon: MessagesSquare, label: _copy("copy.460b3a7da007", { defaultValue: "Chat" }) });
     return base;
-  }, [isAuthenticated]);
+  }, [isAuthenticated, _copy]);
 
   // If current tab is 'follow' but user logged out, reset to leaderboard
   const effectiveTab = activeTab === 'follow' && !isAuthenticated ? 'leaderboard' : activeTab;

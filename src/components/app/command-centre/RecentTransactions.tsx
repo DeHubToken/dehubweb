@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
@@ -66,6 +67,7 @@ function formatDPayTx(tx: DPayTransaction, t: (key: string, opts?: any) => strin
 }
 
 export function RecentTransactions() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress } = useAuth();
   const [activeFilter, setActiveFilter] = useState('1m');
   const { t } = useTranslation();
@@ -306,7 +308,7 @@ export function RecentTransactions() {
         description: amountStr
           ? isDhb(noti.currency)
             ? t('commandCentre.txTipReceived', { name: `@${actorName}`, amount: amountStr })
-            : `@${actorName} tipped you ${amountStr} ${noti.currency}`
+            : _copy("copy.29beacb7d918", { defaultValue: "@{{value1}} tipped you {{value2}} {{value3}}", value1: actorName, value2: amountStr, value3: noti.currency })
           : `@${actorName} tipped you`,
         counterpartyAddress: noti.actorAddress,
         counterpartyUsername: actorName,
@@ -321,7 +323,7 @@ export function RecentTransactions() {
 
     filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return filtered.slice(0, 15);
-  }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, tipNotifications, walletAddress, activeFilter, usernameMap, t]);
+  }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, tipNotifications, walletAddress, activeFilter, usernameMap, t, _copy]);
 
   const dividerClass = "divide-y divide-zinc-800";
   const rowHoverClass = "hover:bg-zinc-800/50";
@@ -349,11 +351,10 @@ export function RecentTransactions() {
         <div className="flex items-center justify-between py-3 border-b border-zinc-800">
           <div className="flex items-center gap-2 min-w-0">
             <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-emerald-400" />
-            <p className="text-sm text-zinc-400 truncate">
-              🏆 Won {formatPrizeAmount(giveawayPrize.amount)} {giveawayPrize.token} — {giveawayPrize.campaign}
+            <p className="text-sm text-zinc-400 truncate">{_copy("copy.c0de1d71430c", { defaultValue: "🏆 Won " })}{formatPrizeAmount(giveawayPrize.amount)} {giveawayPrize.token} — {giveawayPrize.campaign}
             </p>
           </div>
-          <span className="text-zinc-500 text-sm whitespace-nowrap ml-4">Credited</span>
+          <span className="text-zinc-500 text-sm whitespace-nowrap ml-4">{_copy("copy.0a2921332bd5", { defaultValue: "Credited" })}</span>
         </div>
       )}
 

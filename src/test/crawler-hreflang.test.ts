@@ -1,3 +1,4 @@
+import { localizePublicChrome, localizeStructuredData } from '../../server/public-page-locales.js';
 /**
  * dehub.io had 110 UI locales and one indexable language: every page said
  * lang="en", nothing carried hreflang, and there was no localised URL. The
@@ -28,9 +29,9 @@ function constant(name: string): string {
   return line![0];
 }
 
-type Row = { title: string; description: string; h1?: string; body?: string; lede?: string };
+type Row = { title: string; description: string; h1?: string; body?: string; lede?: string; asset?: string };
 type Table = Record<string, Record<string, Row>>;
-const api = new Function(`
+const api = new Function('localizePublicChrome', 'localizeStructuredData', `
   ${constant('APP_URL')}
   ${constant('OG_LOCALE')}
   ${constant('OG_LOCALES')}
@@ -48,7 +49,7 @@ const api = new Function(`
   ${decl('function jsonLdText(s) {')}
   ${decl('function localizePage(html, route, hl, table) {')}
   return { requestedLocale, localizedUrl, servedLocales, hreflangLinks, unservedLocaleRedirect, localizePage };
-`)() as {
+`)(localizePublicChrome, localizeStructuredData) as {
   requestedLocale: (url: URL) => string;
   localizedUrl: (route: string, lang: string) => string;
   servedLocales: (route: string, table: Table) => string[];
@@ -281,7 +282,7 @@ describe('a translated page', () => {
 describe('wiring', () => {
   it('runs on the marketing pages, reads the table through ASSETS, and 301s unserved hl', () => {
     expect(WORKER).toContain('const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table, MARKETING_PAGES[sectionKey].noindex);');
-    expect(WORKER).toContain('html = localizePage(html, `/${sectionKey}`, requestedLocale(url), table);');
+    expect(WORKER).toContain('html = localizePage(html, route, lang,');
     expect(WORKER).toContain("env.ASSETS.fetch(new URL('/seo-i18n.json', requestUrl)");
   });
 
@@ -291,9 +292,9 @@ describe('wiring', () => {
    */
   it('runs on the homepage and the docs index too', () => {
     expect(WORKER).toContain("const localeRedirect = unservedLocaleRedirect(url, '/', table, false);");
-    expect(WORKER).toContain("html = localizePage(html, '/', requestedLocale(url), table);");
+    expect(WORKER).toContain("const route = canonicalizePath(pathname)");
     expect(WORKER).toContain("const localeRedirect = unservedLocaleRedirect(url, '/docs', table, false);");
-    expect(WORKER).toMatch(/localizePage\(\s*buildDocsIndexHtml\(\),\s*'\/docs',/);
+    expect(WORKER).toContain('const page = { ...row, ...await asset.json() };');
     expect((WORKER.match(/if \(localeRedirect\) return redirect301\(localeRedirect\);/g) || []).length).toBe(3);
   });
 
@@ -310,9 +311,9 @@ describe('wiring', () => {
     for (const route of ['/', '/docs']) {
       expect(api.servedLocales(route, table), route).toEqual(['ar', 'es', 'fr', 'nl', 'tr']);
       expect(table[route].es.title).toContain('DeHub');
-      expect(table[route].es.body).toContain('<a href="https://dehub.io/docs');
+      expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table[route].es.asset), 'utf8')).body).toContain('<a href="https://dehub.io/docs');
     }
-    expect(table['/'].es.lede).toBeTruthy();
+    expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table['/'].es.asset), 'utf8')).lede).toBeTruthy();
   });
 
   it('serves no language on the noindex hubs', () => {

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Connect-your-wallet sheet for a signed-in session with no wallet attached.
  *
@@ -27,6 +28,7 @@ const ConnectLinkedWalletBody = React.lazy(() =>
 );
 
 export function ConnectLinkedWalletModal() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress, disconnect } = useAuth();
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -57,7 +59,7 @@ export function ConnectLinkedWalletModal() {
       setOpen(false);
     } catch (err) {
       console.error('Logout failed:', err);
-      toast.error('Could not log out — please try again.');
+      toast.error(_copy("copy.a5c91991fef9", { defaultValue: "Could not log out — please try again." }));
     } finally {
       setLoggingOut(false);
     }
@@ -87,11 +89,11 @@ export function ConnectLinkedWalletModal() {
         overlayClassName="z-[2147483645]"
         className="z-[2147483646] sm:max-w-md border border-white/10 bg-black/60 backdrop-blur-[24px] saturate-[180%] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
         <DialogHeader>
-          <DialogTitle className="text-xl text-white">Connect your wallet</DialogTitle>
+          <DialogTitle className="text-xl text-white">{_copy("copy.5a05d2f89a04", { defaultValue: "Connect your wallet" })}</DialogTitle>
           <DialogDescription className="text-zinc-400">
             {viaEmail
-              ? 'You’re signed in to a wallet-based account via email. To use wallet features, connect the account’s wallet below — we’ll check it’s the right one. Or log out and sign back in with your wallet.'
-              : 'This account signs with your own wallet, and no wallet is connected right now. Reconnect it below to continue.'}
+              ? _copy("copy.04841c235810", { defaultValue: "You’re signed in to a wallet-based account via email. To use wallet features, connect the account’s wallet below — we’ll check it’s the right one. Or log out and sign back in with your wallet." })
+              : _copy("copy.d165ffd6af77", { defaultValue: "This account signs with your own wallet, and no wallet is connected right now. Reconnect it below to continue." })}
           </DialogDescription>
         </DialogHeader>
 
@@ -114,12 +116,10 @@ export function ConnectLinkedWalletModal() {
         >
           {loggingOut ? (
             <span className="inline-flex items-center justify-center gap-2">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Logging out…
-            </span>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />{_copy("copy.af3548ef59b2", { defaultValue: " Logging out…" })}</span>
           ) : (
             <span className="inline-flex items-center justify-center gap-2">
-              <LogOut className="w-3.5 h-3.5" /> Log out and use my wallet to sign in
-            </span>
+              <LogOut className="w-3.5 h-3.5" />{_copy("copy.f59dade32a4e", { defaultValue: " Log out and use my wallet to sign in" })}</span>
           )}
         </button>
       </DialogContent>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useState, useCallback, memo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
@@ -95,6 +96,7 @@ interface ChatMessageProps {
 
 /** Inline moderator badge shown next to the username */
 function ModeratorBadge({ address, moderators }: { address: string; moderators?: string[] }) {
+  const { t: _copy } = _useCopy();
   const isMod = moderators?.some(
     (mod) => mod.toLowerCase() === address.toLowerCase()
   );
@@ -103,11 +105,9 @@ function ModeratorBadge({ address, moderators }: { address: string; moderators?:
     <Tooltip>
       <TooltipTrigger asChild>
         <span className="inline-flex items-center gap-0.5 text-emerald-400 text-[10px] font-semibold bg-emerald-400/10 rounded px-1 py-0.5">
-          <ShieldCheck className="w-3 h-3" />
-          MOD
-        </span>
+          <ShieldCheck className="w-3 h-3" />{_copy("copy.a4d1abed0b2b", { defaultValue: "MOD" })}</span>
       </TooltipTrigger>
-      <TooltipContent>Moderator</TooltipContent>
+      <TooltipContent>{_copy("copy.6748ec8b7668", { defaultValue: "Moderator" })}</TooltipContent>
     </Tooltip>
   );
 }
@@ -187,6 +187,7 @@ export const ChatMessage = memo(function ChatMessage({
   onRemoveReaction,
   onReply,
 }: ChatMessageProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -322,7 +323,7 @@ export const ChatMessage = memo(function ChatMessage({
                     <Reply className="w-3.5 h-3.5" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Reply</TooltipContent>
+                <TooltipContent>{_copy("copy.c253f451bdd5", { defaultValue: "Reply" })}</TooltipContent>
               </Tooltip>
             )}
 
@@ -337,7 +338,7 @@ export const ChatMessage = memo(function ChatMessage({
                       </button>
                     </PopoverTrigger>
                   </TooltipTrigger>
-                  <TooltipContent>React</TooltipContent>
+                  <TooltipContent>{_copy("copy.01fad993ff61", { defaultValue: "React" })}</TooltipContent>
                 </Tooltip>
                 <PopoverContent
                   side="top"
@@ -382,7 +383,7 @@ export const ChatMessage = memo(function ChatMessage({
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Edit</TooltipContent>
+                <TooltipContent>{_copy("copy.464c4ffd019e", { defaultValue: "Edit" })}</TooltipContent>
               </Tooltip>
             )}
             {canDelete && !showActions && (
@@ -395,7 +396,7 @@ export const ChatMessage = memo(function ChatMessage({
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Delete</TooltipContent>
+                <TooltipContent>{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</TooltipContent>
               </Tooltip>
             )}
 
@@ -413,25 +414,19 @@ export const ChatMessage = memo(function ChatMessage({
                       onClick={() => onDelete(message.id)}
                       className="text-red-400 rounded-lg cursor-pointer focus:bg-transparent focus:text-red-300 gap-2"
                     >
-                      <Trash2 className="w-4 h-4" />
-                      Delete Message
-                    </DropdownMenuItem>
+                      <Trash2 className="w-4 h-4" />{_copy("copy.43e94c3cb95e", { defaultValue: "Delete Message" })}</DropdownMenuItem>
                   )}
                   <DropdownMenuItem
                     onClick={() => onBan?.(message.userId, message.userName)}
                     className="text-red-400 rounded-lg cursor-pointer focus:bg-transparent focus:text-red-300 gap-2"
                   >
-                    <ShieldBan className="w-4 h-4" />
-                    Ban User
-                  </DropdownMenuItem>
+                    <ShieldBan className="w-4 h-4" />{_copy("copy.b77b03efec27", { defaultValue: "Ban User" })}</DropdownMenuItem>
                   {onUnban && (
                     <DropdownMenuItem
                       onClick={() => onUnban(message.userId, message.userName)}
                       className="text-emerald-400 rounded-lg cursor-pointer focus:bg-transparent focus:text-emerald-300 gap-2"
                     >
-                      <ShieldCheck className="w-4 h-4" />
-                      Unban User
-                    </DropdownMenuItem>
+                      <ShieldCheck className="w-4 h-4" />{_copy("copy.7da3f7886c54", { defaultValue: "Unban User" })}</DropdownMenuItem>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -459,9 +454,9 @@ export const ChatMessage = memo(function ChatMessage({
               className="w-full resize-none rounded-lg border border-white/15 bg-white/[0.06] px-2 py-1.5 text-sm text-white outline-none focus:border-white/30"
             />
             <div className="mt-1 flex items-center gap-2 text-[10px] text-zinc-500">
-              <button onClick={commitEdit} className="text-white hover:underline">Save</button>
-              <button onClick={() => setIsEditing(false)} className="hover:text-zinc-300">Cancel</button>
-              <span className="hidden sm:inline">Enter to save · Esc to cancel</span>
+              <button onClick={commitEdit} className="text-white hover:underline">{_copy("copy.1509f561f241", { defaultValue: "Save" })}</button>
+              <button onClick={() => setIsEditing(false)} className="hover:text-zinc-300">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
+              <span className="hidden sm:inline">{_copy("copy.f9ddeccf9629", { defaultValue: "Enter to save · Esc to cancel" })}</span>
             </div>
           </div>
         )}
@@ -477,7 +472,7 @@ export const ChatMessage = memo(function ChatMessage({
               <AssetRefCards refs={chatAssetRefs} />
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
-                {message.isEdited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
+                {message.isEdited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
                 {!isTooShort && (
                   isTranslateLoading ? (
                     <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -502,7 +497,7 @@ export const ChatMessage = memo(function ChatMessage({
           <div className="mt-1">
             <img 
               src={message.imageUrl} 
-              alt="Shared image" 
+              alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })} 
               className="max-w-xs max-h-64 rounded-lg object-cover"
             />
             {message.content && (
@@ -512,7 +507,7 @@ export const ChatMessage = memo(function ChatMessage({
             )}
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
-                {message.isEdited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
+                {message.isEdited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
               {message.content && !isTooShort && (
                 isTranslateLoading ? (
                   <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
@@ -545,7 +540,7 @@ export const ChatMessage = memo(function ChatMessage({
             <VoiceWaveformPlayer src={message.audioUrl} />
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
-                {message.isEdited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
+                {message.isEdited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
             </div>
           </div>
         )}

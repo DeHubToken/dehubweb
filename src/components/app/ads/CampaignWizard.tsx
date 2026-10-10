@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CampaignWizard
@@ -52,6 +53,7 @@ interface CampaignWizardProps {
 const STEP_KEYS = ['ads.stepCreative', 'ads.stepAudience', 'ads.stepBudget', 'ads.stepReview'] as const;
 
 export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizardProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [step, setStep] = useState(0);
@@ -342,7 +344,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
 
               {kind !== 'text' && (
                 <div>
-                  <Label className="text-white">{kind === 'video' ? 'Video' : 'Image'}</Label>
+                  <Label className="text-white">{kind === 'video' ? _copy("copy.d534be829e32", { defaultValue: "Video" }) : _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" })}</Label>
                   <label className={cn(
                     'mt-1 flex items-center justify-center gap-2 rounded-xl border border-dashed px-3 py-6 cursor-pointer transition-colors',
                     mediaUrl ? 'border-white/30 bg-white/5' : 'border-white/15 hover:bg-white/5',
@@ -352,7 +354,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
                     ) : (
                       <>
                         <Upload className="w-4 h-4 text-zinc-400" />
-                        <span className="text-sm text-zinc-400">{mediaUrl ? t('ads.replaceFile') : `Upload ${kind}`}</span>
+                        <span className="text-sm text-zinc-400">{mediaUrl ? t('ads.replaceFile') : _copy("copy.00ec9936bf43", { defaultValue: "Upload {{value1}}", value1: kind })}</span>
                       </>
                     )}
                     <input
@@ -410,9 +412,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
               <div className="rounded-2xl border border-white/10 bg-zinc-950/60 p-4 pointer-events-none">
                 <SponsoredAdCard ad={previewAd} />
               </div>
-              <p className="text-[11px] text-zinc-500 mt-2">
-                Exactly how your ad renders between posts — labeled AD, billed per POVR impression.
-              </p>
+              <p className="text-[11px] text-zinc-500 mt-2">{_copy("copy.be629e36e175", { defaultValue: "Exactly how your ad renders between posts — labeled AD, billed per POVR impression." })}</p>
             </div>
           </div>
         )}
@@ -421,7 +421,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
         {step === 1 && (
           <div className="py-2">
             <TargetingEditor value={targeting} onChange={setTargeting} />
-            {targeting.creatorSupport && (kind !== 'video' || (mediaDuration ?? 0) < 30) ? <p role="status" className="text-sm text-white/70">Creator support needs a video of at least 30 seconds. Return to Creative to choose one.</p> : null}
+            {targeting.creatorSupport && (kind !== 'video' || (mediaDuration ?? 0) < 30) ? <p role="status" className="text-sm text-white/70">{_copy("copy.c9036a4e3dc7", { defaultValue: "Creator support needs a video of at least 30 seconds. Return to Creative to choose one." })}</p> : null}
           </div>
         )}
 
@@ -451,12 +451,12 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
             </div>
 
             <div>
-              <Label className="text-white">Duration: {durationDays} days</Label>
+              <Label className="text-white">{_copy("copy.43d4682b1f68", { defaultValue: "Duration: " })}{durationDays}{_copy("copy.b1c503166f16", { defaultValue: " days" })}</Label>
               <Slider value={[durationDays]} onValueChange={(v) => setDurationDays(v[0])} min={1} max={60} step={1} className="mt-2" />
             </div>
 
             <div>
-              <Label className="text-white">Frequency cap: {frequencyCap} views / person / day</Label>
+              <Label className="text-white">{_copy("copy.2c7c481a6765", { defaultValue: "Frequency cap: " })}{frequencyCap}{_copy("copy.e991eda6eeac", { defaultValue: " views / person / day" })}</Label>
               <Slider value={[frequencyCap]} onValueChange={(v) => setFrequencyCap(v[0])} min={1} max={10} step={1} className="mt-2" />
             </div>
 
@@ -479,9 +479,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
               </div>
             </div>
             {projections.audienceLimited && (
-              <p className="text-xs text-yellow-500">
-                Your budget exceeds what this audience can deliver at the chosen frequency cap — delivery will be audience-limited. Widen targeting or lower the daily budget.
-              </p>
+              <p className="text-xs text-yellow-500">{_copy("copy.73153533a07d", { defaultValue: "Your budget exceeds what this audience can deliver at the chosen frequency cap — delivery will be audience-limited. Widen targeting or lower the daily budget." })}</p>
             )}
           </div>
         )}
@@ -493,18 +491,15 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
               <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-2 text-sm">
                 <p className="text-white font-semibold">{name || t('ads.untitledCampaign')}</p>
                 <p className="text-zinc-400">{t('ads.reviewObjective')}<span className="text-white capitalize">{objective}</span></p>
-                <p className="text-zinc-400">{t('ads.reviewBudget')}<span className="text-white">{formatUsd(dailyBudget)}/day · {formatUsd(totalBudget)} total</span></p>
-                <p className="text-zinc-400">{t('ads.reviewDuration')}<span className="text-white">{durationDays} days</span> · Cap: <span className="text-white">{frequencyCap}/day</span></p>
-                <p className="text-zinc-400">{t('ads.reviewAudience')}<span className="text-white">{formatCompact(estimate?.audience ?? 0)} tracked wallets</span></p>
-                <p className="text-zinc-400">{t('ads.reviewTiers')}<span className="text-white">{(targeting.tiers ?? []).length ? (targeting.tiers ?? []).join(', ') : 'All'}</span></p>
-                <p className="text-zinc-400">
-                  Ads balance:{' '}
+                <p className="text-zinc-400">{t('ads.reviewBudget')}<span className="text-white">{formatUsd(dailyBudget)}{_copy("copy.09140fcc0a62", { defaultValue: "/day · " })}{formatUsd(totalBudget)}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</span></p>
+                <p className="text-zinc-400">{t('ads.reviewDuration')}<span className="text-white">{durationDays}{_copy("copy.b1c503166f16", { defaultValue: " days" })}</span>{_copy("copy.fdc25d412a87", { defaultValue: " · Cap: " })}<span className="text-white">{frequencyCap}{_copy("copy.ea30d1c554b8", { defaultValue: "/day" })}</span></p>
+                <p className="text-zinc-400">{t('ads.reviewAudience')}<span className="text-white">{formatCompact(estimate?.audience ?? 0)}{_copy("copy.1e08aa05d39d", { defaultValue: " tracked wallets" })}</span></p>
+                <p className="text-zinc-400">{t('ads.reviewTiers')}<span className="text-white">{(targeting.tiers ?? []).length ? (targeting.tiers ?? []).join(', ') : _copy("copy.a52ace420f21", { defaultValue: "All" })}</span></p>
+                <p className="text-zinc-400">{_copy("copy.9a7d4f0d2827", { defaultValue: "Ads balance:" })}{' '}
                   <span className={unfunded ? 'text-yellow-500' : 'text-white'}>{formatUsd(balanceUsd)}</span>
-                  {unfunded && <span className="text-yellow-500"> — you'll top up next</span>}
+                  {unfunded && <span className="text-yellow-500">{_copy("copy.e051887907fb", { defaultValue: " — you'll top up next" })}</span>}
                 </p>
-                <p className="text-[11px] text-zinc-500 pt-2">
-                  Ads go live after moderation approves both campaign and creative, and only while your ads balance stays funded. You pay per verified viewable impression at the viewer's tier CPM.
-                </p>
+                <p className="text-[11px] text-zinc-500 pt-2">{_copy("copy.fafb0feed28a", { defaultValue: "Ads go live after moderation approves both campaign and creative, and only while your ads balance stays funded. You pay per verified viewable impression at the viewer's tier CPM." })}</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-zinc-950/60 p-4 pointer-events-none">
                 <SponsoredAdCard ad={previewAd} />
@@ -521,16 +516,14 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
             disabled={step === 0 || submitting}
             onClick={() => setStep((s) => Math.max(0, s - 1))}
           >
-            <ChevronLeft className="w-4 h-4 mr-1" /> Back
-          </Button>
+            <ChevronLeft className="w-4 h-4 mr-1" />{_copy("copy.709d9085c264", { defaultValue: " Back" })}</Button>
 
           {step < STEP_KEYS.length - 1 ? (
             <Button
               variant="glass"
               disabled={!stepValid() || uploading !== null}
               onClick={() => setStep((s) => s + 1)}
-            >
-              Next <ChevronRight className="w-4 h-4 ml-1" />
+            >{_copy("copy.cd447acb4270", { defaultValue: "Next " })}<ChevronRight className="w-4 h-4 ml-1" />
             </Button>
           ) : (
             <div className="flex gap-2">
@@ -540,8 +533,7 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
                 disabled={submitting}
                 onClick={() => submit(true)}
               >
-                <Save className="w-4 h-4 mr-1.5" /> Save draft
-              </Button>
+                <Save className="w-4 h-4 mr-1.5" />{_copy("copy.065297892a97", { defaultValue: " Save draft" })}</Button>
               <Button variant="glass" disabled={submitting} onClick={() => submit(false)}>
                 {submitting ? <Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> : <Rocket className="w-4 h-4 mr-1.5" />}
                 {unfunded ? t('ads.fundAndSubmit') : t('ads.submitForReview')}

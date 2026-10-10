@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * CreatorEditorHost
  * =================
@@ -23,14 +24,14 @@ const CreatorPage = lazyWithRetry(() => import("@/pages/app/CreatorPage"));
 const EditorPage = lazyWithRetry(() => import("@/pages/Editor"));
 
 function PageLoader() {
+  const { t: _copy } = _useCopy();
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black text-white/60 text-sm">
-      Loading…
-    </div>
+    <div className="fixed inset-0 flex items-center justify-center bg-black text-white/60 text-sm">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>
   );
 }
 
 export default function CreatorEditorHost() {
+  const { t: _copy } = _useCopy();
   const { pathname } = useLocation();
   const { walletAddress } = useAuth() as { walletAddress: string | null };
   const isEditor = pathname.startsWith("/editor");
@@ -99,8 +100,8 @@ export default function CreatorEditorHost() {
     <>
       {isCreator ? (
         <SEOHead
-          title="DeHub Creator — AI Studio, Agents & Video Tools"
-          description="Generate images and videos, edit with AI, and publish to DeHub. A complete AI creator studio with metallic liquid glass design."
+          title={_copy("copy.266c57b5eb4e", { defaultValue: "DeHub Creator — AI Studio, Agents & Video Tools" })}
+          description={_copy("copy.34bc1a3f12ae", { defaultValue: "Generate images and videos, edit with AI, and publish to DeHub. A complete AI creator studio with metallic liquid glass design." })}
           url="https://dehub.io/creator"
           jsonLd={{
             "@context": "https://schema.org",
@@ -110,12 +111,12 @@ export default function CreatorEditorHost() {
             applicationCategory: "MultimediaApplication",
             operatingSystem: "Web",
             description:
-              "Native AI creator studio for DeHub image, video, music, posters, skills and agents.",
+              _copy("copy.644b6364b6d1", { defaultValue: "Native AI creator studio for DeHub image, video, music, posters, skills and agents." }),
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
           }}
         />
       ) : (
-        <SEOHead title="DeHub Editor — In-Browser Video Editor" description="Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to DeHub." url="https://dehub.io/editor" />
+        <SEOHead title={_copy("copy.002f6e549556", { defaultValue: "DeHub Editor — In-Browser Video Editor" })} description={_copy("copy.909dd646a63c", { defaultValue: "Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to DeHub." })} url="https://dehub.io/editor" />
       )}
       {mounted.creator && (
         <div style={isCreator ? undefined : { display: "none" }}>

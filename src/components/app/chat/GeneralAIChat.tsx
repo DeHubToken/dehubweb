@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * General AI Chat Component
@@ -98,6 +99,7 @@ interface GeneralAIChatProps {
 }
 
 export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, openLoginModal } = useAuth();
   const isMobile = useIsMobile();
   const { t } = useI18n();
@@ -341,7 +343,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                     <div className="mb-2">
                       <img 
                         src={message.attachedImage} 
-                        alt="Attached" 
+                        alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })} 
                         className="max-w-full max-h-48 rounded-lg object-contain"
                       />
                     </div>
@@ -358,7 +360,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
                         <div className="mt-2 space-y-2">
                           <img 
                             src={message.imageUrl} 
-                            alt="Generated" 
+                            alt={_copy("copy.827ec8d9f99d", { defaultValue: "Generated" })} 
                             className="max-w-full rounded-lg"
                           />
                           <Button
@@ -400,7 +402,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
           <div className="mb-2 relative inline-block">
             <img 
               src={attachedImage} 
-              alt="Attached" 
+              alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })} 
               className="max-h-24 rounded-lg object-contain"
             />
             <button

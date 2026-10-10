@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -58,6 +59,7 @@ export function DmTipDialog({
   conversationId,
   minAmount = 0,
 }: DmTipDialogProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [amount, setAmount] = useSurfaceDraft("components/app/chat/DmTipDialog.tsx:amount", '', recipientAddress);
@@ -170,24 +172,19 @@ export function DmTipDialog({
       <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-3">
           <DrawerTitle className="text-white text-lg flex items-center justify-center gap-2">
-            <Gem className="w-5 h-5 text-white" />
-            Send Tip
-          </DrawerTitle>
+            <Gem className="w-5 h-5 text-white" />{_copy("copy.f3b690653334", { defaultValue: "Send Tip" })}</DrawerTitle>
           {recipientName && (
-            <p className="text-white/60 text-sm mt-1">
-              Tip {recipientName}
+            <p className="text-white/60 text-sm mt-1">{_copy("copy.725b3269b046", { defaultValue: "Tip " })}{recipientName}
             </p>
           )}
         </DrawerHeader>
         <div className="flex flex-col gap-4">
           {recipientPrivate ? (
-            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">
-              This account has private balance mode on, so DeHub cannot send tokens or tips to it.
-            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-zinc-300">{_copy("copy.1e8349d4cb8e", { defaultValue: "This account has private balance mode on, so DeHub cannot send tokens or tips to it." })}</div>
           ) : null}
           {/* Quick amounts */}
           <div>
-            <p className="text-white/60 text-xs mb-2">Quick amounts</p>
+            <p className="text-white/60 text-xs mb-2">{_copy("copy.a5bcfef4d57a", { defaultValue: "Quick amounts" })}</p>
             <div className="flex flex-wrap gap-2">
               {QUICK_AMOUNTS.filter((val) => val >= minAmount).map((val) => (
                 <button
@@ -208,14 +205,14 @@ export function DmTipDialog({
 
           {/* Custom amount */}
           <div>
-            <p className="text-white/60 text-xs mb-2">Or enter amount</p>
+            <p className="text-white/60 text-xs mb-2">{_copy("copy.ddb09d30c5c6", { defaultValue: "Or enter amount" })}</p>
             <div className="relative">
               <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
               <Input
                 type="number"
                 min={Math.max(1, minAmount)}
                 step={0.1}
-                placeholder="Enter amount"
+                placeholder={_copy("copy.2d700ab23246", { defaultValue: "Enter amount" })}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="pl-11 bg-white/5 border-white/10 text-white placeholder:text-white/40 h-12"

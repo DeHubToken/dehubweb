@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Username offer hooks
  * ====================
@@ -111,26 +112,28 @@ export function useAcceptUsernameOffer() {
 }
 
 export function useDeclineUsernameOffer() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: declineUsernameOffer,
     onSuccess: offer => {
       applyOffer(qc, offer);
       invalidateMarket(qc);
-      toast.success('Offer declined');
+      toast.success(_copy("copy.fc8a85dc0a41", { defaultValue: "Offer declined" }));
     },
     onError: (err: Error) => toast.error(err.message),
   });
 }
 
 export function useWithdrawUsernameOffer() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: withdrawUsernameOffer,
     onSuccess: offer => {
       applyOffer(qc, offer);
       invalidateMarket(qc);
-      toast.success('Offer withdrawn');
+      toast.success(_copy("copy.5e092b95c558", { defaultValue: "Offer withdrawn" }));
     },
     onError: (err: Error) => toast.error(err.message),
   });

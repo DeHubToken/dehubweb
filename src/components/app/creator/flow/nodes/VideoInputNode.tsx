@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Creator Flow — reference video node.
@@ -29,6 +30,7 @@ async function uploadVideo(file: File): Promise<string> {
 }
 
 export default function VideoInputNode({ id, data, selected }: NodeProps<FlowNode>) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const readOnly = useReadOnly();
   const updateNodeData = useCreatorFlowStore((s) => s.updateNodeData);
@@ -209,9 +211,7 @@ export default function VideoInputNode({ id, data, selected }: NodeProps<FlowNod
               placeholder="https://….mp4"
               className="nodrag min-w-0 flex-1 bg-transparent px-2 text-[11px] text-white outline-none placeholder:text-white/30"
             />
-            <button type="button" onClick={applyUrl} className="rounded-md bg-white px-2 text-[10px] font-semibold text-black">
-              OK
-            </button>
+            <button type="button" onClick={applyUrl} className="rounded-md bg-white px-2 text-[10px] font-semibold text-black">{_copy("copy.565339bc4d33", { defaultValue: "OK" })}</button>
           </div>
         )}
       </div>

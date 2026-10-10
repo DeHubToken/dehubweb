@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo, useEffect } from 'react';
 import { X, ChevronDown, ChevronUp, RotateCcw, Check, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -55,6 +56,7 @@ export function FilterEditor({
   initialPresetId,
   onApply,
 }: FilterEditorProps) {
+  const { t: _copy } = _useCopy();
   const [settings, setSettings] = useState<FilterSettings>(
     initialSettings || getDefaultSettings()
   );
@@ -109,7 +111,7 @@ export function FilterEditor({
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent column hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90dvh] overflow-hidden flex flex-col">
-        <DrawerTitle className="sr-only">Filter Editor</DrawerTitle>
+        <DrawerTitle className="sr-only">{_copy("copy.386dc14d9056", { defaultValue: "Filter Editor" })}</DrawerTitle>
         
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
@@ -119,16 +121,14 @@ export function FilterEditor({
           >
             <X className="w-5 h-5 text-zinc-400" />
           </button>
-          <span className="text-white font-semibold">Edit Filter</span>
+          <span className="text-white font-semibold">{_copy("copy.47d552834bb7", { defaultValue: "Edit Filter" })}</span>
           <button
             onClick={handleApply}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-medium transition-all duration-300 hover:scale-105
               bg-white/10 backdrop-blur-xl border border-white/20
               hover:bg-white/20 hover:border-white/40"
           >
-            <Check className="w-4 h-4" />
-            Apply
-          </button>
+            <Check className="w-4 h-4" />{_copy("copy.31e392d1c037", { defaultValue: "Apply" })}</button>
         </div>
 
         {/* Preview - constrained to fit any image/video fully */}
@@ -153,7 +153,7 @@ export function FilterEditor({
                 >
                   <img
                     src={videoThumbnail || imageUrl}
-                    alt="Video preview"
+                    alt={_copy("copy.fc63d3e097f7", { defaultValue: "Video preview" })}
                     className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                     style={{ filter: filterCSS }}
                   />
@@ -167,7 +167,7 @@ export function FilterEditor({
             ) : (
               <img
                 src={imageUrl}
-                alt="Preview"
+                alt={_copy("copy.324b134f57c7", { defaultValue: "Preview" })}
                 className="max-w-full max-h-[30vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
                 style={{ filter: filterCSS }}
               />
@@ -199,9 +199,7 @@ export function FilterEditor({
             onClick={() => setShowAdvanced(!showAdvanced)}
             className="w-full flex items-center justify-between px-4 py-3 hover:bg-white/5 transition-colors"
           >
-            <span className="text-sm text-zinc-300 font-medium">
-              Manual Adjustments
-            </span>
+            <span className="text-sm text-zinc-300 font-medium">{_copy("copy.ae294e3ee830", { defaultValue: "Manual Adjustments" })}</span>
             <div className="flex items-center gap-2">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -215,7 +213,7 @@ export function FilterEditor({
                     <RotateCcw className="w-4 h-4 text-zinc-400" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Reset all</TooltipContent>
+                <TooltipContent>{_copy("copy.645982c52b7c", { defaultValue: "Reset all" })}</TooltipContent>
               </Tooltip>
               {showAdvanced ? (
                 <ChevronUp className="w-4 h-4 text-zinc-400" />
@@ -238,7 +236,7 @@ export function FilterEditor({
                 <ScrollArea className="h-[35vh]">
                   <div className="px-4 pb-4 space-y-3">
                     <FilterSlider
-                      label="Brightness"
+                      label={_copy("copy.ec811d30a89c", { defaultValue: "Brightness" })}
                       value={settings.brightness}
                       min={0}
                       max={200}
@@ -246,7 +244,7 @@ export function FilterEditor({
                       onChange={(v) => handleSliderChange('brightness', v)}
                     />
                     <FilterSlider
-                      label="Contrast"
+                      label={_copy("copy.08795ba031bc", { defaultValue: "Contrast" })}
                       value={settings.contrast}
                       min={0}
                       max={200}
@@ -254,7 +252,7 @@ export function FilterEditor({
                       onChange={(v) => handleSliderChange('contrast', v)}
                     />
                     <FilterSlider
-                      label="Saturation"
+                      label={_copy("copy.993f024b650e", { defaultValue: "Saturation" })}
                       value={settings.saturation}
                       min={0}
                       max={200}
@@ -262,7 +260,7 @@ export function FilterEditor({
                       onChange={(v) => handleSliderChange('saturation', v)}
                     />
                     <FilterSlider
-                      label="Warmth"
+                      label={_copy("copy.f9bab88715f8", { defaultValue: "Warmth" })}
                       value={settings.hueRotate}
                       min={-180}
                       max={180}
@@ -271,7 +269,7 @@ export function FilterEditor({
                       unit="°"
                     />
                     <FilterSlider
-                      label="Fade"
+                      label={_copy("copy.9efb597c9154", { defaultValue: "Fade" })}
                       value={settings.sepia}
                       min={0}
                       max={100}
@@ -280,7 +278,7 @@ export function FilterEditor({
                       unit="%"
                     />
                     <FilterSlider
-                      label="Grayscale"
+                      label={_copy("copy.93638ea9e0b0", { defaultValue: "Grayscale" })}
                       value={settings.grayscale}
                       min={0}
                       max={100}

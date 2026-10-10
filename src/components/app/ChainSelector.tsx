@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Check } from 'lucide-react';
 import {
@@ -100,6 +101,7 @@ export function ChainSelector({
   className = '',
   evmOnly = false,
 }: ChainSelectorProps) {
+  const { t: _copy } = _useCopy();
   const [isOpen, setIsOpen] = useState(false);
   const chains = evmOnly ? TIP_CHAINS : SUPPORTED_CHAINS;
   const selectedChain = getChainById(selectedChainId) || chains[0];
@@ -141,7 +143,7 @@ export function ChainSelector({
       </Tooltip>
       <DrawerContent column glass className="border-t border-white/10" hideHandle>
         <DrawerHeader className="border-b border-white/10">
-          <DrawerTitle className="text-white">Choose Decentralized Database</DrawerTitle>
+          <DrawerTitle className="text-white">{_copy("copy.684d9ca53616", { defaultValue: "Choose Decentralized Database" })}</DrawerTitle>
         </DrawerHeader>
         <div className="p-4 space-y-2">
           {chains.map((chain) => (

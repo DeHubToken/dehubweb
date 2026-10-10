@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
@@ -247,6 +248,7 @@ SectionCard.displayName = "SectionCard";
 /* ------------------------------------------------------------------ */
 
 const GuidePage: React.FC = () => {
+  const { t: _copy } = _useCopy();
   const { t, i18n } = useTranslation();
   const sections = useMemo(() => buildSections(t), [t, i18n.language]);
   const [activeId, setActiveId] = useState(sectionDefs[0].id);
@@ -316,8 +318,8 @@ const GuidePage: React.FC = () => {
   return (
     <>
       <SEOHead
-        title="DeHub Guide — Visual Walkthrough of the App"
-        description="A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works."
+        title={_copy("copy.7adc6b571ae2", { defaultValue: "DeHub Guide — Visual Walkthrough of the App" })}
+        description={_copy("copy.be9b0ab3584d", { defaultValue: "A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works." })}
         url="https://dehub.io/guide"
       />
     <div data-glass-page className="min-h-screen bg-black text-white">

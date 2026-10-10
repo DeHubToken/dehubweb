@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import { discardEditorRecovery } from '@/lib/editor/draftRecovery';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
@@ -19,6 +20,7 @@ import { LiveProjectSession } from "./LiveProjectSession";
 import { CloudProjectsDialog } from "./CloudProjectsDialog";
 
 export function EditorTopBar() {
+  const { t: _copy } = _useCopy();
   const draftFocus = useEditorDraftFocus("title", false);
   const recoveryScope = useAccountDraftKey('editor:recovery') ?? 'guest|editor:recovery';
   const navigate = useNavigate();
@@ -61,19 +63,16 @@ export function EditorTopBar() {
         <Popover key={surfaceEpoch} open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button size="sm" variant="ghost"
-              className="h-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
-              Projects
-            </Button>
+              className="h-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white">{_copy("copy.04e2a9728af7", { defaultValue: "Projects" })}</Button>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-72 border-white/10 bg-black/80 p-2 text-white backdrop-blur-[24px]">
             <Button size="sm" variant="ghost"
               onClick={() => { newProject(); setOpen(false); }}
               className="mb-1 w-full justify-start rounded-md text-white/90 hover:bg-white/10">
-              <FilePlus2 className="mr-1.5 h-4 w-4" /> New project
-            </Button>
+              <FilePlus2 className="mr-1.5 h-4 w-4" />{_copy("copy.f26b9b1d6597", { defaultValue: " New project" })}</Button>
             <div className="max-h-72 overflow-y-auto">
               {projects.length === 0 && (
-                <AppState icon="posts" title="No saved projects yet" size="compact" />
+                <AppState icon="posts" title={_copy("copy.0ee8ba284063", { defaultValue: "No saved projects yet" })} size="compact" />
               )}
               {projects.map((p) => (
                 <div key={p.id}
@@ -84,11 +83,11 @@ export function EditorTopBar() {
                     onClick={() => { loadSnapshot(p); setLastProjectId(p.id); setOpen(false); }}
                     className="min-w-0 flex-1 truncate text-left text-white/90"
                   >
-                    {p.title || "Untitled"}
+                    {p.title || _copy("copy.f59ab8d1331b", { defaultValue: "Untitled" })}
                   </button>
                   <button
                     onClick={async () => { await deleteProject(p.id); discardEditorRecovery(recoveryScope, p.id); setProjects((s) => s.filter((x) => x.id !== p.id)); }}
-                    aria-label="Delete project"
+                    aria-label={_copy("copy.9c0b617e79e9", { defaultValue: "Delete project" })}
                     className="rounded p-1 text-white/30 opacity-0 hover:bg-white/10 hover:text-white group-hover:opacity-100"
                   >
                     ×
@@ -101,17 +100,17 @@ export function EditorTopBar() {
 
         <div className="mx-1 h-4 w-px bg-white/10" />
         <Button size="icon" variant="ghost" onClick={undo} disabled={!past.length}
-          aria-label="Undo"
+          aria-label={_copy("copy.a8283ade3185", { defaultValue: "Undo" })}
           className="h-8 w-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-30">
           <Undo2 className="h-4 w-4" />
         </Button>
         <Button size="icon" variant="ghost" onClick={redo} disabled={!future.length}
-          aria-label="Redo"
+          aria-label={_copy("copy.74273989b096", { defaultValue: "Redo" })}
           className="h-8 w-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-30">
           <Redo2 className="h-4 w-4" />
         </Button>
         <Button size="icon" variant="ghost" onClick={() => setAboutOpen(true)}
-          aria-label="About the editor"
+          aria-label={_copy("copy.cf3ad1573bd1", { defaultValue: "About the editor" })}
           className="h-8 w-8 rounded-md text-white/60 hover:bg-white/10 hover:text-white">
           <Info className="h-4 w-4" />
         </Button>
@@ -120,28 +119,28 @@ export function EditorTopBar() {
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        aria-label="Project title"
+        aria-label={_copy("copy.aa94205ac1b4", { defaultValue: "Project title" })}
         className="mx-auto hidden w-64 max-w-[40vw] rounded-md bg-transparent px-2 py-1 text-center text-sm text-white/90 outline-none ring-1 ring-transparent transition focus:bg-white/5 focus:ring-white/20 sm:block"
       />
 
       {/* Wide screens get the labelled glass bubbles. */}
       <div className="hidden items-center gap-2 lg:flex">
         <LiquidGlassBubble2
-          label="Save"
+          label={_copy("copy.1509f561f241", { defaultValue: "Save" })}
           icon={<Save className="h-4 w-4" />}
           onClick={() => setCloudOpen(true)}
           width="92px"
           height="36px"
         />
         <LiquidGlassBubble2
-          label="Creator"
+          label={_copy("copy.88447b83090c", { defaultValue: "Creator" })}
           icon={<Sparkles className="h-4 w-4" />}
           onClick={() => navigate('/creator')}
           width="104px"
           height="36px"
         />
         <LiquidGlassBubble2
-          label="Export"
+          label={_copy("copy.3664895579f0", { defaultValue: "Export" })}
           icon={<Download className="h-4 w-4" />}
           onClick={() => setExportOpen(true)}
           width="100px"
@@ -154,17 +153,17 @@ export function EditorTopBar() {
           lived only in the phone bottom bar, which the rail replaced. */}
       <div className="flex items-center gap-0.5 lg:hidden">
         <Button size="icon" variant="ghost" onClick={() => setCloudOpen(true)}
-          aria-label="Save project"
+          aria-label={_copy("copy.08330ed07cfe", { defaultValue: "Save project" })}
           className="h-9 w-9 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
           <Save className="h-4 w-4" />
         </Button>
         <Button size="icon" variant="ghost" onClick={() => navigate('/creator')}
-          aria-label="Open the Creator studio"
+          aria-label={_copy("copy.291edf059114", { defaultValue: "Open the Creator studio" })}
           className="h-9 w-9 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
           <Sparkles className="h-4 w-4" />
         </Button>
         <Button size="icon" variant="ghost" onClick={() => setExportOpen(true)}
-          aria-label="Export"
+          aria-label={_copy("copy.3664895579f0", { defaultValue: "Export" })}
           className="h-9 w-9 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
           <Download className="h-4 w-4" />
         </Button>

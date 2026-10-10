@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * New Members Bento
  * =================
@@ -22,6 +23,7 @@ import { isWithinNewWindow, useNewMembers } from '@/hooks/use-new-members';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function NewMembersBento() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const { data, isLoading } = useNewMembers(walletAddress);
 
@@ -33,7 +35,7 @@ export function NewMembersBento() {
       <div className="flex items-center gap-2 mb-3">
         <Star className="w-5 h-5 text-zinc-400" />
         <h2 className="text-lg sm:text-xl font-bold text-white">
-          {isWithinNewWindow(first.joinedAt) ? 'New members' : 'Latest members'}
+          {isWithinNewWindow(first.joinedAt) ? _copy("copy.928d40b02992", { defaultValue: "New members" }) : _copy("copy.335e4a96e2dd", { defaultValue: "Latest members" })}
         </h2>
       </div>
       {/* The bento already says what this is, so the carousel's own header and

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Swap Any Token → Target Token Drawer
@@ -64,6 +65,7 @@ export function SwapToTokenDrawer({
   targetDecimals = 18,
   targetLogo,
 }: SwapToTokenDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const { t } = useTranslation();
   const dropZone = useOptionalGlobalDropZone();
@@ -187,11 +189,11 @@ export function SwapToTokenDrawer({
     } catch (err: any) {
       const msg = err?.shortMessage || err?.message || 'Swap failed';
       setError(msg);
-      toast.error('Swap failed', { description: msg });
+      toast.error(_copy("copy.09d8a776b907", { defaultValue: "Swap failed" }), { description: msg });
     } finally {
       setSwapping(false);
     }
-  }, [walletAddress, quoteResult, amountInWithSlippage, amount, selectedToken, targetAddress, targetSymbol, targetDecimals]);
+  }, [walletAddress, quoteResult, amountInWithSlippage, amount, selectedToken, targetAddress, targetSymbol, targetDecimals, _copy]);
 
   const handleClose = (v: boolean) => {
     if (!v) {
@@ -224,7 +226,7 @@ export function SwapToTokenDrawer({
     <Drawer open={open} onOpenChange={handleClose}>
       <DrawerContent column glass hideHandle={false}>
         <DrawerHeader>
-          <DrawerTitle className="text-white">Buy ${targetSymbol}</DrawerTitle>
+          <DrawerTitle className="text-white">{_copy("copy.8d2e3063a993", { defaultValue: "Buy $" })}{targetSymbol}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-8 space-y-4">
           {success ? (
@@ -252,7 +254,7 @@ export function SwapToTokenDrawer({
               {/* Target amount input */}
               <div className="bg-white/[0.04] border border-white/10 rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-400">You receive</span>
+                  <span className="text-xs text-zinc-400">{_copy("copy.edba66381115", { defaultValue: "You receive" })}</span>
                   {targetUsd > 0 && <span className="text-xs text-zinc-500">≈ ${targetUsd.toFixed(2)}</span>}
                 </div>
                 <div className="flex items-center gap-3">
@@ -281,7 +283,7 @@ export function SwapToTokenDrawer({
               {/* Pay token display */}
               <div className="bg-white/[0.04] border border-white/10 rounded-xl p-4 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-zinc-400">You pay (incl. 2% slippage)</span>
+                  <span className="text-xs text-zinc-400">{_copy("copy.131b0d1b1ef5", { defaultValue: "You pay (incl. 2% slippage)" })}</span>
                   {payUsd > 0 && <span className="text-xs text-zinc-500">≈ ${payUsd.toFixed(2)}</span>}
                 </div>
                 <div className="flex items-center gap-3">
@@ -310,16 +312,14 @@ export function SwapToTokenDrawer({
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>
-                    Balance: {balanceFormatted} {selectedToken.symbol}
-                    {insufficientBalance && ' (insufficient)'}
+                  <p className={`text-xs ${insufficientBalance ? 'text-red-400' : 'text-zinc-500'}`}>{_copy("copy.90dce8fe9b03", { defaultValue: "Balance: " })}{balanceFormatted} {selectedToken.symbol}
+                    {insufficientBalance && _copy("copy.fe663571b1c3", { defaultValue: " (insufficient)" })}
                   </p>
                   <button
                     onClick={() => setBuyTokenOpen(true)}
                     className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
                   >
-                    <Plus className="w-3 h-3" />
-                    Buy {selectedToken.symbol}
+                    <Plus className="w-3 h-3" />{_copy("copy.e8c84f1c82bf", { defaultValue: "Buy " })}{selectedToken.symbol}
                   </button>
                 </div>
               </div>
@@ -338,16 +338,15 @@ export function SwapToTokenDrawer({
                 className="w-full rounded-xl h-12 text-sm font-semibold"
               >
                 {swapping ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Swapping…</>
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" />{_copy("copy.35acb68b0b2f", { defaultValue: " Swapping…" })}</>
                 ) : insufficientBalance ? (
-                  `Insufficient ${selectedToken.symbol}`
+                  _copy("copy.c4097c4376ef", { defaultValue: "Insufficient {{value1}}", value1: selectedToken.symbol })
                 ) : (
-                  `Buy ${targetSymbol}`
+                  _copy("copy.9b5f8d89fc43", { defaultValue: "Buy {{value1}}", value1: targetSymbol })
                 )}
               </Button>
 
-              <p className="text-[10px] text-zinc-600 text-center">
-                Powered by Uniswap V3 on Base • Token: {targetAddress.slice(0, 6)}…{targetAddress.slice(-4)}
+              <p className="text-[10px] text-zinc-600 text-center">{_copy("copy.4634f46234d7", { defaultValue: "Powered by Uniswap V3 on Base • Token: " })}{targetAddress.slice(0, 6)}…{targetAddress.slice(-4)}
               </p>
             </>
           )}
@@ -359,7 +358,7 @@ export function SwapToTokenDrawer({
     <Drawer open={tokenPickerOpen} onOpenChange={setTokenPickerOpen}>
       <DrawerContent column glass hideHandle={false}>
         <DrawerHeader>
-          <DrawerTitle className="text-white">Select Token to Pay With</DrawerTitle>
+          <DrawerTitle className="text-white">{_copy("copy.cd2a7fc0fddf", { defaultValue: "Select Token to Pay With" })}</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-6 space-y-1 max-h-[50vh] overflow-y-auto">
           {payTokens.map(token => {
@@ -389,7 +388,7 @@ export function SwapToTokenDrawer({
                 )}
                 <div className="text-left flex-1 min-w-0">
                   <span className="text-sm font-medium text-white">{token.symbol}</span>
-                  {isSelected && <span className="text-[10px] text-emerald-400 ml-2">Selected</span>}
+                  {isSelected && <span className="text-[10px] text-emerald-400 ml-2">{_copy("copy.57fd7a0cf33f", { defaultValue: "Selected" })}</span>}
                 </div>
                 <span className={`text-sm ${hasBalance ? 'text-white' : 'text-zinc-600'}`}>
                   {/* From the raw balance, not formattedBalance: the wallet renders a
@@ -400,7 +399,7 @@ export function SwapToTokenDrawer({
             );
           })}
           {payTokens.length === 0 && (
-            <AppState icon="search" title="No tokens found on Base" kind="search-empty" size="drawer" />
+            <AppState icon="search" title={_copy("copy.12d94ad7271f", { defaultValue: "No tokens found on Base" })} kind="search-empty" size="drawer" />
           )}
         </div>
       </DrawerContent>
@@ -410,17 +409,17 @@ export function SwapToTokenDrawer({
     <Drawer open={buyTokenOpen} onOpenChange={setBuyTokenOpen}>
       <DrawerContent column glass hideHandle={false}>
         <div className="p-5 pb-8 space-y-2">
-          <h3 className="text-white font-semibold text-base mb-4">Buy {selectedToken.symbol}</h3>
+          <h3 className="text-white font-semibold text-base mb-4">{_copy("copy.e8c84f1c82bf", { defaultValue: "Buy " })}{selectedToken.symbol}</h3>
           <button
             disabled
             className="w-full flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.06] border border-white/10 opacity-50 cursor-not-allowed"
           >
             <CreditCard className="w-5 h-5 text-white/70" />
             <div className="text-left flex-1">
-              <span className="text-sm font-medium text-white">Buy with Card</span>
-              <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
+              <span className="text-sm font-medium text-white">{_copy("copy.a0027ccd58bf", { defaultValue: "Buy with Card" })}</span>
+              <p className="text-xs text-white/40">{_copy("copy.20cc4ce111fa", { defaultValue: "Purchase using Visa, Mastercard, Apple Pay" })}</p>
             </div>
-            <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
+            <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">{_copy("copy.4f7d64017689", { defaultValue: "Coming soon" })}</span>
           </button>
           <button
             onClick={() => {
@@ -431,8 +430,8 @@ export function SwapToTokenDrawer({
           >
             <Wallet className="w-5 h-5 text-white/70" />
             <div className="text-left">
-              <span className="text-sm font-medium text-white">Buy with Crypto</span>
-              <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
+              <span className="text-sm font-medium text-white">{_copy("copy.69cda82c3af5", { defaultValue: "Buy with Crypto" })}</span>
+              <p className="text-xs text-white/40">{_copy("copy.4be8f5f56303", { defaultValue: "BTC, SOL, ETH, USDC & more from any chain" })}</p>
             </div>
           </button>
         </div>

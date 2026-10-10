@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * New Member Chip
  * ===============
@@ -33,6 +34,7 @@ interface NewMemberChipProps {
 }
 
 export function NewMemberChip({ address, lookupId, className }: NewMemberChipProps) {
+  const { t: _copy } = _useCopy();
   const looked = useBadgeBalance(address ? null : lookupId);
   const resolved = address || looked.address || null;
   const { isNew, joinedAt } = useIsNewMember(resolved);
@@ -42,15 +44,13 @@ export function NewMemberChip({ address, lookupId, className }: NewMemberChipPro
   return (
     <span
       data-new-member-chip
-      title={`Joined ${joinedAgoLabel(joinedAt)} — say hello`}
+      title={_copy("copy.48409768c73d", { defaultValue: "Joined {{value1}} — say hello", value1: joinedAgoLabel(joinedAt) })}
       className={cn(
         'inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md',
         'bg-white/[0.12] text-white/75 border border-white/[0.12] text-[10px] font-semibold leading-none whitespace-nowrap flex-shrink-0',
         className,
       )}
     >
-      <Star className="w-2.5 h-2.5" />
-      New
-    </span>
+      <Star className="w-2.5 h-2.5" />{_copy("copy.18fdd549b2ed", { defaultValue: "New" })}</span>
   );
 }

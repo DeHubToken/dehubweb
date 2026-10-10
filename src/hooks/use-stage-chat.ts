@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stage Chat Hook
  * ===============
@@ -55,6 +56,7 @@ export function useStageChat(
   spaceId: string | undefined,
   options: { enabled?: boolean; hostWallet?: string | null } = {},
 ) {
+  const { t: _copy } = _useCopy();
   const { enabled = true, hostWallet } = options;
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
@@ -262,14 +264,14 @@ export function useStageChat(
         );
         if (error) {
           console.error('[StageChat] Edit error:', error);
-          toast.error('Failed to edit message');
+          toast.error(_copy("copy.da8e926af644", { defaultValue: "Failed to edit message" }));
           void queryClient.invalidateQueries({ queryKey: [QUERY_KEY, spaceId] });
           return false;
         }
         return true;
       })();
     },
-    [walletAddress, spaceId, patch, queryClient],
+    [walletAddress, spaceId, patch, queryClient, _copy],
   );
 
   const deleteMessage = useCallback(
@@ -290,12 +292,12 @@ export function useStageChat(
         const { error } = await withWalletHeader(query, walletAddress);
         if (error) {
           console.error('[StageChat] Delete error:', error);
-          toast.error('Failed to delete message');
+          toast.error(_copy("copy.5ce4aeba4357", { defaultValue: "Failed to delete message" }));
           void queryClient.invalidateQueries({ queryKey: [QUERY_KEY, spaceId] });
         }
       })();
     },
-    [walletAddress, spaceId, isHost, patch, queryClient],
+    [walletAddress, spaceId, isHost, patch, queryClient, _copy],
   );
 
   return {

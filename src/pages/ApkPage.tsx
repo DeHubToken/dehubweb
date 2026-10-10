@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -105,6 +106,7 @@ function formatDate(iso: string): string | undefined {
 }
 
 export default function ApkPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   // Seeded from this browser's last successful lookup so a returning visitor
   // paints a real version immediately, with no flash and no network. Null means
@@ -254,9 +256,7 @@ export default function ApkPage() {
 
         <div className="mt-[clamp(1rem,3.5vh,2rem)] inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur-xl">
           <span className="h-1.5 w-1.5 rounded-full bg-white" />
-          <span className="font-mono text-[10px] tracking-[0.18em] text-white/70 sm:text-[11px]">
-            //ANDROID_APK
-          </span>
+          <span className="font-mono text-[10px] tracking-[0.18em] text-white/70 sm:text-[11px]">{_copy("copy.12cd58ea291d", { defaultValue: "//ANDROID_APK" })}</span>
         </div>
 
         <h1 className="mt-[clamp(0.75rem,3vh,1.75rem)] max-w-[15ch] text-[clamp(2.25rem,min(9vw,8vh),4.5rem)] font-black italic leading-[0.95] tracking-tight">
@@ -302,9 +302,7 @@ export default function ApkPage() {
       {/* Share row. Sits on the floor of the viewport so it never pushes the
           hero into a scroll on short phones. */}
       <div className="absolute inset-x-0 bottom-5 z-20 flex items-center justify-center gap-2 sm:bottom-7 sm:gap-2.5">
-        <span className="mr-1 font-mono text-[10px] tracking-[0.16em] text-white/30 sm:text-[11px]">
-          //SHARE
-        </span>
+        <span className="mr-1 font-mono text-[10px] tracking-[0.16em] text-white/30 sm:text-[11px]">{_copy("copy.a9f80278c12b", { defaultValue: "//SHARE" })}</span>
         <button
           type="button"
           onClick={() =>

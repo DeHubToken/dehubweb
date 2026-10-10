@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Settings, Loader2, UserPlus, ShieldCheck } from 'lucide-react';
@@ -21,6 +22,7 @@ interface RoomSettingsModalProps {
 }
 
 export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomSettingsModalProps) {
+  const { t: _copy } = _useCopy();
   const [roomName, setRoomName] = useSurfaceDraft("src/components/app/chat/RoomSettingsModal.tsx:roomName", room?.name || room?.topic || '', draftIdentity(room));
   const [roomDescription, setRoomDescription] = useSurfaceDraft("src/components/app/chat/RoomSettingsModal.tsx:roomDescription", room?.description || '', draftIdentity(room));
   const [modAddress, setModAddress] = useSurfaceDraft("components/app/chat/RoomSettingsModal.tsx:modAddress", '', draftIdentity(room));
@@ -43,11 +45,11 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
         name: roomName.trim(),
         description: roomDescription.trim(),
       });
-      toast.success('Room settings updated');
+      toast.success(_copy("copy.8395ec5cfd7b", { defaultValue: "Room settings updated" }));
       onUpdated();
     } catch (err) {
       console.error('[LiveChat] Failed to update room settings:', err);
-      toast.error('Failed to update settings');
+      toast.error(_copy("copy.63f6bf5375c1", { defaultValue: "Failed to update settings" }));
     } finally {
       setIsSaving(false);
     }
@@ -55,18 +57,18 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
 
   const handleAddModerator = async () => {
     if (!room || !modAddress.trim()) {
-      toast.error('Enter a wallet address');
+      toast.error(_copy("copy.0e5b83322ba3", { defaultValue: "Enter a wallet address" }));
       return;
     }
     setIsAddingMod(true);
     try {
       await addLiveChatModerator(room.id, modAddress.trim());
-      toast.success('Moderator added');
+      toast.success(_copy("copy.35d503b975bf", { defaultValue: "Moderator added" }));
       setModAddress.complete(modAddress, '');
       onUpdated();
     } catch (err) {
       console.error('[LiveChat] Failed to add moderator:', err);
-      toast.error('Failed to add moderator');
+      toast.error(_copy("copy.7e3d41236c7a", { defaultValue: "Failed to add moderator" }));
     } finally {
       setIsAddingMod(false);
     }
@@ -77,32 +79,28 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl text-white max-w-sm">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
-            <Settings className="w-5 h-5" />
-            Room Settings
-          </DialogTitle>
-          <DialogDescription className="text-zinc-400">
-            Manage room details and moderators
-          </DialogDescription>
+            <Settings className="w-5 h-5" />{_copy("copy.1a428649f489", { defaultValue: "Room Settings" })}</DialogTitle>
+          <DialogDescription className="text-zinc-400">{_copy("copy.95ba8630cdbe", { defaultValue: "Manage room details and moderators" })}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5 mt-2">
           {/* Room settings */}
           <div className="space-y-3">
             <div className="space-y-1.5">
-              <label className="text-sm text-zinc-400">Room Name</label>
+              <label className="text-sm text-zinc-400">{_copy("copy.770af2048466", { defaultValue: "Room Name" })}</label>
               <Input
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
-                placeholder="Room name"
+                placeholder={_copy("copy.c90ad8c46274", { defaultValue: "Room name" })}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm text-zinc-400">Description</label>
+              <label className="text-sm text-zinc-400">{_copy("copy.526e0087cc3f", { defaultValue: "Description" })}</label>
               <Input
                 value={roomDescription}
                 onChange={(e) => setRoomDescription(e.target.value)}
-                placeholder="Room description"
+                placeholder={_copy("copy.3858fb70fcea", { defaultValue: "Room description" })}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500"
               />
             </div>
@@ -111,9 +109,7 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
               disabled={isSaving}
               className="w-full rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white font-medium gap-2"
             >
-              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Settings className="w-4 h-4" />}
-              Save Settings
-            </Button>
+              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Settings className="w-4 h-4" />}{_copy("copy.ec92e1dc9bb3", { defaultValue: "Save Settings" })}</Button>
           </div>
 
           {/* Divider */}
@@ -122,14 +118,12 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
           {/* Add moderator */}
           <div className="space-y-3">
             <h4 className="text-sm font-medium text-white flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              Add Moderator
-            </h4>
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />{_copy("copy.cdf0c2e4fb71", { defaultValue: "Add Moderator" })}</h4>
             <div className="flex gap-2">
               <Input
                 value={modAddress}
                 onChange={(e) => setModAddress(e.target.value)}
-                placeholder="Wallet address (0x...)"
+                placeholder={_copy("copy.9b37f756f45a", { defaultValue: "Wallet address (0x...)" })}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 flex-1 text-sm"
               />
               <Button
@@ -145,7 +139,7 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
             {/* Current moderators */}
             {room?.moderators && room.moderators.length > 0 && (
               <div className="space-y-1">
-                <p className="text-xs text-zinc-500">Current Moderators</p>
+                <p className="text-xs text-zinc-500">{_copy("copy.c06b14d45650", { defaultValue: "Current Moderators" })}</p>
                 {room.moderators.map((addr) => (
                   <div key={addr} className="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-800/50 rounded-lg px-3 py-1.5">
                     <ShieldCheck className="w-3 h-3 text-emerald-500" />

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Images Feed Component
  * =====================
@@ -198,6 +200,7 @@ interface CollageViewProps {
 }
 
 function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNextPage }: CollageViewProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   return (
@@ -263,7 +266,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
           </div>
         )}
         {!hasNextPage && posts.length > 0 && (
-          <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+          <p className="text-zinc-500 text-sm">{_copy("copy.4020afe05053", { defaultValue: "You've reached the end 🎉" })}</p>
         )}
       </div>
     </div>
@@ -285,6 +288,7 @@ function EndlessScrollView({
   hasNextPage,
   startFromId,
 }: EndlessScrollViewProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const scrollTargetRef = useRef<HTMLDivElement>(null);
 
@@ -386,7 +390,7 @@ function EndlessScrollView({
             </div>
           )}
           {!hasNextPage && posts.length > 0 && (
-            <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+            <p className="text-zinc-500 text-sm">{_copy("copy.4020afe05053", { defaultValue: "You've reached the end 🎉" })}</p>
           )}
         </div>
       )}
@@ -406,6 +410,7 @@ export function ImagesFeed({
   selectedPostId = null,
   onPostSelected,
 }: ImagesFeedProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
@@ -439,18 +444,18 @@ export function ImagesFeed({
   // Auth-guarded sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
-      toast.info('Subscribed feed coming soon!');
+      toast.info(_copy("copy.35e9cfb027f9", { defaultValue: "Subscribed feed coming soon!" }));
       return;
     }
     if (option.value === 'following' && !isAuthenticated) {
-      toast.info('Log in to see followed creators');
+      toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
       return;
     }
     // Re-tapping the active chip changes nothing, so it must not flash a loader.
     if (option.value === selectedSort.value) return;
     beginFilterTransition();
     setSelectedSort(option);
-  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition]);
+  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition, _copy]);
 
   // Every other chip row goes through these, so each one arms the loader.
   const selectUploadDate = useCallback((value: DateFilterOption) => {
@@ -576,7 +581,7 @@ export function ImagesFeed({
       description={isError ? 'Try loading the image feed again.' : 'Image posts will appear here.'}
       kind={isError ? 'error' : 'empty'}
       size="page"
-      primaryAction={isError ? { label: 'Try again', onClick: () => refetch(), icon: <RefreshCw /> } : undefined}
+      primaryAction={isError ? { get label() { return _translateCopy("copy.d8b8392e2c54", { defaultValue: "Try again" }); }, onClick: () => refetch(), icon: <RefreshCw /> } : undefined}
     />
   );
 

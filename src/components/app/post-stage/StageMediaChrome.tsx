@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * The three controls that float on the media of the phone post page: back on
  * the left, the options menu on the right (AI overview lives inside it). Glass squares with
@@ -27,6 +28,7 @@ interface StageMediaChromeProps {
 }
 
 export function StageMediaChrome({ onBack, onMenu, onBoost, children, placement = 'media' }: StageMediaChromeProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const stop = (fn: () => void) => (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -70,7 +72,7 @@ export function StageMediaChrome({ onBack, onMenu, onBoost, children, placement 
           data-on-media
           data-stage-glass-square
           onClick={stop(onMenu)}
-          aria-label="Post options"
+          aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })}
         >
           <MoreHorizontal className="h-5 w-5" />
         </button>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useMemo, useState } from 'react';
@@ -26,6 +27,7 @@ const STATUS_OPTIONS: Record<Tab, Array<WorkJobStatus | 'all'>> = {
 };
 
 export default function WorkHistoryPage() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth();
@@ -65,8 +67,8 @@ export default function WorkHistoryPage() {
           head or it inherits the title and canonical of whatever route came
           before it — see src/lib/head-meta.ts. */}
       <SEOHead
-        title="My Bounties | DeHub"
-        description="Every bounty you've posted or worked on DeHub, with their on-chain escrow and payout transactions."
+        title={_copy("copy.d329c3be85eb", { defaultValue: "My Bounties | DeHub" })}
+        description={_copy("copy.3ee01181e096", { defaultValue: "Every bounty you've posted or worked on DeHub, with their on-chain escrow and payout transactions." })}
         url="https://dehub.io/work/history"
         noindex
       />

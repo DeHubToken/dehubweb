@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Data Portability — Settings → Privacy → Your data
  * =================================================
@@ -41,6 +42,7 @@ import {
 } from '@/lib/data-portability';
 
 export function DataPortability() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { user, walletAddress, isAuthenticated } = useAuth();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -213,17 +215,14 @@ export function DataPortability() {
             <AlertDialogDescription className="text-zinc-400">
               {plan && (
                 <span className="block space-y-1">
-                  <span className="block">
-                    From {plan.data.account.username || plan.data.account.address.slice(0, 10)}
-                    {plan.data.exportedAt ? `, exported ${plan.data.exportedAt.slice(0, 10)}` : ''}.
+                  <span className="block">{_copy("copy.e484a95dcc85", { defaultValue: "From " })}{plan.data.account.username || plan.data.account.address.slice(0, 10)}
+                    {plan.data.exportedAt ? _copy("copy.9289b1a64ba0", { defaultValue: ", exported {{value1}}", value1: plan.data.exportedAt.slice(0, 10) }) : ''}.
                   </span>
-                  <span className="block">· Follow {plan.toFollow.length} accounts{plan.alreadyFollowing > 0 ? ` (${plan.alreadyFollowing} already followed)` : ''}</span>
-                  <span className="block">· Block {plan.toBlock.length} accounts</span>
-                  <span className="block">· Create {plan.foldersToCreate.length} bookmark folders, fill {plan.foldersToFill}</span>
-                  <span className="block">· Restore {plan.groups} follow groups and your playback settings</span>
-                  <span className="block pt-1 text-zinc-500">
-                    Following and blocking happen as you, on this account. Nothing is removed.
-                  </span>
+                  <span className="block">{_copy("copy.25b7f7cd02a2", { defaultValue: "· Follow " })}{plan.toFollow.length}{_copy("copy.efa83732e983", { defaultValue: " accounts" })}{plan.alreadyFollowing > 0 ? _copy("copy.d2d020a0e675", { defaultValue: " ({{value1}} already followed)", value1: plan.alreadyFollowing }) : ''}</span>
+                  <span className="block">{_copy("copy.473f53afcf1b", { defaultValue: "· Block " })}{plan.toBlock.length}{_copy("copy.efa83732e983", { defaultValue: " accounts" })}</span>
+                  <span className="block">{_copy("copy.3f646d78c3e2", { defaultValue: "· Create " })}{plan.foldersToCreate.length}{_copy("copy.b39b442f1fbc", { defaultValue: " bookmark folders, fill " })}{plan.foldersToFill}</span>
+                  <span className="block">{_copy("copy.70cf128f75cd", { defaultValue: "· Restore " })}{plan.groups}{_copy("copy.bedf102cf459", { defaultValue: " follow groups and your playback settings" })}</span>
+                  <span className="block pt-1 text-zinc-500">{_copy("copy.c3ad9fa615e4", { defaultValue: "Following and blocking happen as you, on this account. Nothing is removed." })}</span>
                 </span>
               )}
             </AlertDialogDescription>

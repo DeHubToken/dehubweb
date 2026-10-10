@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Mounted once in the app shell. Renders nothing until a badge is clicked,
  * then loads and shows the matching showcase. Living up here rather than
@@ -18,11 +19,12 @@ const BadgeShowcase = lazyWithRetry(preloadBadgeShowcase);
 const StreamerShowcase = lazyWithRetry(preloadStreamerShowcase);
 
 export function BadgeShowcaseHost() {
+  const { t: _copy } = _useCopy();
   const request = useBadgeShowcaseRequest();
   if (!request) return null;
   return (
     // A failure here costs a badge its showcase, never the page around it.
-    <ErrorBoundary label="BadgeShowcase" fallback={null} resetKey={request.id} onError={closeBadgeShowcase}>
+    <ErrorBoundary label={_copy("copy.2d1896e3b281", { defaultValue: "BadgeShowcase" })} fallback={null} resetKey={request.id} onError={closeBadgeShowcase}>
       <Suspense fallback={null}>
         {request.kind === 'streamer' ? (
           <StreamerShowcase

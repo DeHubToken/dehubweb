@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Follow Suggestions Carousel
  * ===========================
@@ -35,6 +36,7 @@ const BATCH_SIZE = 10;
 const MAX_PAGES = 10;
 
 export function MobileWhoToFollowCarousel() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
   const { handleApiError } = useReauthHandler();
@@ -135,7 +137,7 @@ export function MobileWhoToFollowCarousel() {
     e.stopPropagation();
 
     if (!isAuthenticated) {
-      toast.error('Please log in to follow users');
+      toast.error(_copy("copy.404bd6545a07", { defaultValue: "Please log in to follow users" }));
       return;
     }
 
@@ -173,10 +175,10 @@ export function MobileWhoToFollowCarousel() {
       <div data-who-to-follow className="py-4 border-y border-zinc-800/50">
         <AppState
           icon="subscriptions"
-          title="No follow suggestions yet"
-          description="New account suggestions will appear here."
+          title={_copy("copy.f45e06965f93", { defaultValue: "No follow suggestions yet" })}
+          description={_copy("copy.34f5da2599fa", { defaultValue: "New account suggestions will appear here." })}
           size="compact"
-          primaryAction={{ label: 'Refresh', onClick: () => refetch(), disabled: isFetching, loading: isFetching }}
+          primaryAction={{ label: _copy("copy.0e9161011702", { defaultValue: "Refresh" }), onClick: () => refetch(), disabled: isFetching, loading: isFetching }}
         />
       </div>
     );
@@ -188,14 +190,12 @@ export function MobileWhoToFollowCarousel() {
       <div className="flex items-center justify-between px-4 mb-3">
         <div className="flex items-center gap-2">
           <UserPlus className="w-4 h-4 text-zinc-400" />
-          <span className="text-sm font-semibold text-white">Follow Suggestions</span>
+          <span className="text-sm font-semibold text-white">{_copy("copy.bac527bf9a36", { defaultValue: "Follow Suggestions" })}</span>
         </div>
         <button 
           onClick={() => navigate('/app/explore')}
           className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white transition-colors"
-        >
-          See All
-          <ChevronRight className="w-3 h-3" />
+        >{_copy("copy.44c9d36485b7", { defaultValue: "See All" })}<ChevronRight className="w-3 h-3" />
         </button>
       </div>
 
@@ -235,9 +235,7 @@ export function MobileWhoToFollowCarousel() {
                 variant="outline"
                 onClick={(e) => handleFollow(e, user)}
                 className="w-24 h-7 text-[10px] font-semibold rounded-lg border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex items-center justify-center"
-              >
-                Follow
-              </Button>
+              >{_copy("copy.641d1ef657bd", { defaultValue: "Follow" })}</Button>
             </div>
           </div>
         ))}

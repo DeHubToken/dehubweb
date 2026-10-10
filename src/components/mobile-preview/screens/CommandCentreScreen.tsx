@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
@@ -5,29 +6,30 @@ import { MobileBottomBar } from '../MobileBottomBar';
 import { TrendingUp, DollarSign, Activity, ArrowUpRight } from 'lucide-react';
 
 export function CommandCentreScreen() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Command Centre" showAvatar={false} />
+      <MobileTopBar title={_copy("copy.a929b8776094", { defaultValue: "Command Centre" })} showAvatar={false} />
 
       {/* Balance */}
       <div className="mx-4 my-3 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
-        <p className="text-zinc-500 text-xs mb-1">Portfolio Value</p>
+        <p className="text-zinc-500 text-xs mb-1">{_copy("copy.cadeb8a37b8c", { defaultValue: "Portfolio Value" })}</p>
         <h2 className="text-white text-2xl font-bold">$3,445.00</h2>
         <div className="flex items-center gap-1 mt-1">
           <TrendingUp className="w-3 h-3 text-white" />
-          <span className="text-xs text-zinc-300">+5.2% today</span>
+          <span className="text-xs text-zinc-300">{_copy("copy.0baef5c3729b", { defaultValue: "+5.2% today" })}</span>
         </div>
       </div>
 
       {/* Quick stats grid */}
       <div className="grid grid-cols-2 gap-2 mx-4 mb-4">
         {[
-          { label: 'Income (30d)', value: '$842', icon: DollarSign, trend: '+12%' },
-          { label: 'Tips Received', value: t('mobilePreview.tokenAmount', { amount: '1,240' }), icon: ArrowUpRight, trend: '+8%' },
-          { label: 'Subscribers', value: '2,431', icon: Activity, trend: '+15%' },
-          { label: 'Content Views', value: '45.2K', icon: TrendingUp, trend: '+22%' },
+          { label: _copy("copy.6f711c190b19", { defaultValue: "Income (30d)" }), value: '$842', icon: DollarSign, trend: '+12%' },
+          { label: _copy("copy.b9c1fb1d8de8", { defaultValue: "Tips Received" }), value: t('mobilePreview.tokenAmount', { amount: '1,240' }), icon: ArrowUpRight, trend: '+8%' },
+          { label: _copy("copy.a344c89d660e", { defaultValue: "Subscribers" }), value: '2,431', icon: Activity, trend: '+15%' },
+          { label: _copy("copy.a1040fcb6f74", { defaultValue: "Content Views" }), value: '45.2K', icon: TrendingUp, trend: '+22%' },
         ].map((stat) => (
           <div key={stat.label} className="p-3 rounded-xl border border-white/[0.08] bg-white/[0.02]">
             <div className="flex items-center justify-between mb-2">
@@ -43,8 +45,8 @@ export function CommandCentreScreen() {
       {/* Mini chart placeholder */}
       <div className="mx-4 mb-4 p-4 rounded-xl border border-white/[0.08] bg-white/[0.02]">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-white text-sm font-semibold">Income Chart</h3>
-          <span className="text-zinc-500 text-xs">30 days</span>
+          <h3 className="text-white text-sm font-semibold">{_copy("copy.d84ecb62fe71", { defaultValue: "Income Chart" })}</h3>
+          <span className="text-zinc-500 text-xs">{_copy("copy.ffd7280513ce", { defaultValue: "30 days" })}</span>
         </div>
         <div className="h-32 flex items-end gap-1">
           {[40, 55, 35, 65, 50, 80, 60, 90, 70, 85, 95, 75].map((h, i) => (
@@ -59,7 +61,7 @@ export function CommandCentreScreen() {
 
       {/* Recent transactions */}
       <div className="px-4 flex-1">
-        <h3 className="text-white text-sm font-semibold mb-3">Recent Transactions</h3>
+        <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.d8d9b7dd3c9e", { defaultValue: "Recent Transactions" })}</h3>
         <div className="space-y-2">
           {[
             { type: 'Tip received', amount: t('mobilePreview.tokenAmount', { amount: '+50' }), from: 'bob_dev', time: '2h ago' },

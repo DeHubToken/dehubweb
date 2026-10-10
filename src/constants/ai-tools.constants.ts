@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * fal.ai AI Tools Configuration
  * All tools use DHB pay-per-use with 20% markup
@@ -41,7 +42,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     id: 'minimax-music',
     tool: 'minimax-music',
     name: 'MiniMax Music 2.0',
-    description: 'Full songs with lyrics & vocals',
+    get description() { return _translateCopy("copy.3356505b6f4d", { defaultValue: "Full songs with lyrics & vocals" }); },
     emoji: '🎵',
     category: 'music',
     tier: 'premium',
@@ -51,7 +52,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     id: 'ace-step',
     tool: 'ace-step',
     name: 'ACE-Step',
-    description: 'Fast music, great for instrumentals',
+    get description() { return _translateCopy("copy.fab618372ef2", { defaultValue: "Fast music, great for instrumentals" }); },
     emoji: '🎶',
     category: 'music',
     tier: 'standard',
@@ -64,7 +65,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     id: 'dia-tts',
     tool: 'dia-tts',
     name: 'Dia TTS',
-    description: 'Ultra-realistic dialogue & speech',
+    get description() { return _translateCopy("copy.1edd473d8b41", { defaultValue: "Ultra-realistic dialogue & speech" }); },
     emoji: '🗣️',
     category: 'tts',
     tier: 'premium',
@@ -76,7 +77,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     id: 'birefnet',
     tool: 'birefnet',
     name: 'BiRefNet',
-    description: 'Professional background removal',
+    get description() { return _translateCopy("copy.48e13842b229", { defaultValue: "Professional background removal" }); },
     emoji: '✂️',
     category: 'background-removal',
     tier: 'fast',
@@ -89,7 +90,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     id: 'creative-upscaler',
     tool: 'creative-upscaler',
     name: 'Creative Upscaler',
-    description: 'AI-enhanced upscaling with detail',
+    get description() { return _translateCopy("copy.1429fb35f906", { defaultValue: "AI-enhanced upscaling with detail" }); },
     emoji: '🔍',
     category: 'upscale',
     tier: 'premium',
@@ -100,7 +101,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     id: 'aura-sr',
     tool: 'aura-sr',
     name: 'AuraSR',
-    description: 'Fast 4x upscale',
+    get description() { return _translateCopy("copy.a335fa862609", { defaultValue: "Fast 4x upscale" }); },
     emoji: '⚡',
     category: 'upscale',
     tier: 'fast',
@@ -113,7 +114,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     id: 'whisper',
     tool: 'whisper',
     name: 'Whisper',
-    description: 'Speech transcription & translation',
+    get description() { return _translateCopy("copy.358036e013da", { defaultValue: "Speech transcription & translation" }); },
     emoji: '📝',
     category: 'speech-to-text',
     tier: 'standard',
@@ -128,10 +129,10 @@ export const getToolsByCategory = (category: AiToolCategory): AiToolModel[] =>
   AI_TOOL_OPTIONS.filter(t => t.category === category);
 
 export const CATEGORY_LABELS: Record<AiToolCategory, { label: string; emoji: string; color: string }> = {
-  'music': { label: 'Music Generation', emoji: '🎵', color: 'purple' },
+  'music': { get label() { return _translateCopy("copy.36d88ed6cc91", { defaultValue: "Music Generation" }); }, emoji: '🎵', color: 'purple' },
   
-  'tts': { label: 'Text-to-Speech', emoji: '🗣️', color: 'cyan' },
-  'background-removal': { label: 'Background Removal', emoji: '✂️', color: 'green' },
-  'upscale': { label: 'Image Upscaling', emoji: '🔍', color: 'amber' },
-  'speech-to-text': { label: 'Speech-to-Text', emoji: '📝', color: 'blue' },
+  'tts': { get label() { return _translateCopy("copy.06a2701c2a41", { defaultValue: "Text-to-Speech" }); }, emoji: '🗣️', color: 'cyan' },
+  'background-removal': { get label() { return _translateCopy("copy.f9d28d822e34", { defaultValue: "Background Removal" }); }, emoji: '✂️', color: 'green' },
+  'upscale': { get label() { return _translateCopy("copy.dfd86b92431f", { defaultValue: "Image Upscaling" }); }, emoji: '🔍', color: 'amber' },
+  'speech-to-text': { get label() { return _translateCopy("copy.abfe6d40e5fc", { defaultValue: "Speech-to-Text" }); }, emoji: '📝', color: 'blue' },
 };

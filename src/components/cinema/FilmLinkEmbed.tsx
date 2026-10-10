@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * The card a /cinema/<type>/<id> link turns into.
  *
@@ -29,6 +30,7 @@ export function FilmLinkEmbed({
   className?: string;
   fallback: ReactNode;
 }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const objectType = link.filmObjectType ?? 'movie';
   const { data, isPending } = useJustWatchOffers(link.filmId ?? null, detectLocale(), objectType);
@@ -77,7 +79,7 @@ export function FilmLinkEmbed({
         <p className="truncate text-sm font-medium text-white">{title.title}</p>
         <p className="mt-0.5 text-xs text-zinc-500">
           {title.year ?? '—'}
-          {objectType === 'show' ? ' · Series' : ''}
+          {objectType === 'show' ? _copy("copy.6ad9d50f7fec", { defaultValue: " · Series" }) : ''}
         </p>
         <p className="mt-1.5 truncate text-xs text-zinc-400">{summary}</p>
       </div>

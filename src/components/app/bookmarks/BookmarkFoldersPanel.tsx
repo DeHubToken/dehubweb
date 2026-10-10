@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bookmark Folders Panel
@@ -112,6 +113,7 @@ function PublicControls({
 }
 
 export function BookmarkFoldersPanel() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated, user, walletAddress } = useAuth();
@@ -212,7 +214,7 @@ export function BookmarkFoldersPanel() {
       setSelected(new Set());
       refreshFolders();
     } catch {
-      toast.error('Could not remove those');
+      toast.error(_copy("copy.59a0cf1d40db", { defaultValue: "Could not remove those" }));
     } finally {
       setIsMoving(false);
     }
@@ -232,7 +234,7 @@ export function BookmarkFoldersPanel() {
       setSelected(new Set());
       refreshFolders();
     } catch {
-      toast.error('Could not move those');
+      toast.error(_copy("copy.77399a91beff", { defaultValue: "Could not move those" }));
     } finally {
       setIsMoving(false);
     }
@@ -254,7 +256,7 @@ export function BookmarkFoldersPanel() {
               createFolder({ name: newFolderName.trim() }, { onSuccess: () => setNewFolderName.complete(newFolderName, '') });
             }}
             maxLength={40}
-            placeholder="New folder name"
+            placeholder={_copy("copy.489b9f7c7b08", { defaultValue: "New folder name" })}
             className="flex-1 h-9 px-3 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-white placeholder-zinc-500 focus:border-zinc-500 focus:outline-none"
           />
           <Button
@@ -264,7 +266,7 @@ export function BookmarkFoldersPanel() {
             onClick={() => { createFolder({ name: newFolderName.trim() }, { onSuccess: () => setNewFolderName.complete(newFolderName, '') }); }}
             className="h-9 shrink-0 rounded-xl bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
           >
-            {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create'}
+            {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : _copy("copy.4759498ac2a7", { defaultValue: "Create" })}
           </Button>
         </div>
 
@@ -277,8 +279,8 @@ export function BookmarkFoldersPanel() {
         ) : folders.length === 0 ? (
           <AppState
             icon="bookmarks"
-            title="No folders yet"
-            description="Create a folder here or file a saved post into one."
+            title={_copy("copy.8a66376ee6fc", { defaultValue: "No folders yet" })}
+            description={_copy("copy.dae053ec2a82", { defaultValue: "Create a folder here or file a saved post into one." })}
             size="section"
           />
         ) : (
@@ -316,7 +318,7 @@ export function BookmarkFoldersPanel() {
                       )}
                     </span>
                     <span className="block text-xs text-zinc-500">
-                      {folder.itemCount ?? 0} {folder.itemCount === 1 ? 'post' : 'posts'}
+                      {folder.itemCount ?? 0} {folder.itemCount === 1 ? _copy("copy.72231043bc18", { defaultValue: "post" }) : _copy("copy.a44f1b975171", { defaultValue: "posts" })}
                     </span>
                   </button>
                 )}
@@ -329,14 +331,14 @@ export function BookmarkFoldersPanel() {
                         updateFolder({ folderId: folder._id, name: renameValue.trim() }, { onSuccess: () => { if (setRenameValue.complete(renameValue, renameValue)) setRenamingId(null); } });
                       }}
                       className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
-                      aria-label="Save name"
+                      aria-label={_copy("copy.b7297226fd1f", { defaultValue: "Save name" })}
                     >
                       <Check className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setRenamingId(null)}
                       className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
-                      aria-label="Cancel"
+                      aria-label={_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -347,7 +349,7 @@ export function BookmarkFoldersPanel() {
                     <button
                       onClick={() => { setRenamingId(folder._id); }}
                       className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
-                      aria-label={`Rename ${folder.name}`}
+                      aria-label={_copy("copy.f2b9fd00aab3", { defaultValue: "Rename {{value1}}", value1: folder.name })}
                     >
                       <Pencil className="w-4 h-4" />
                     </button>
@@ -357,7 +359,7 @@ export function BookmarkFoldersPanel() {
                         deleteFolder(folder._id);
                       }}
                       className="p-2 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
-                      aria-label={`Delete ${folder.name}`}
+                      aria-label={_copy("copy.264fa40661cb", { defaultValue: "Delete {{value1}}", value1: folder.name })}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -380,13 +382,13 @@ export function BookmarkFoldersPanel() {
         <button
           onClick={closeFolder}
           className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
-          aria-label="Back to folders"
+          aria-label={_copy("copy.f3eaabf13fac", { defaultValue: "Back to folders" })}
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
         <div className="flex-1 min-w-0">
           <p className="truncate font-semibold text-white">{openFolder.name}</p>
-          <p className="text-xs text-zinc-500">{items.length} {items.length === 1 ? 'post' : 'posts'}</p>
+          <p className="text-xs text-zinc-500">{items.length} {items.length === 1 ? _copy("copy.72231043bc18", { defaultValue: "post" }) : _copy("copy.a44f1b975171", { defaultValue: "posts" })}</p>
         </div>
         <PublicControls folder={openFolder} onToggle={togglePublic} onCopyLink={copyPlaylistLink} />
         <Button
@@ -409,8 +411,8 @@ export function BookmarkFoldersPanel() {
       ) : sortedItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <Folder className="w-12 h-12 text-zinc-600 mb-3" />
-          <p className="text-zinc-400 text-lg font-medium">This folder is empty</p>
-          <p className="text-zinc-500 text-sm mt-1">Save a post and file it here from the bookmark button.</p>
+          <p className="text-zinc-400 text-lg font-medium">{_copy("copy.3043f9fa4d31", { defaultValue: "This folder is empty" })}</p>
+          <p className="text-zinc-500 text-sm mt-1">{_copy("copy.8fddbde3c81e", { defaultValue: "Save a post and file it here from the bookmark button." })}</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -430,7 +432,7 @@ export function BookmarkFoldersPanel() {
                   type="checkbox"
                   checked={isSelected}
                   onChange={() => toggleSelected(Number(item.tokenId))}
-                  aria-label={`Select ${title}`}
+                  aria-label={_copy("copy.dbe65a7d3b40", { defaultValue: "Select {{value1}}", value1: title })}
                   className="w-4 h-4 shrink-0 accent-white"
                 />
                 <button
@@ -450,7 +452,7 @@ export function BookmarkFoldersPanel() {
                   <span className="min-w-0">
                     <span className="block truncate text-sm text-white">{title}</span>
                     <span className="block truncate text-xs text-zinc-500">
-                      {itemChannel(item)} · saved {formatTimeAgo(item.createdAt)}
+                      {itemChannel(item)}{_copy("copy.9acd03de6b37", { defaultValue: " · saved " })}{formatTimeAgo(item.createdAt)}
                     </span>
                   </span>
                 </button>
@@ -464,7 +466,7 @@ export function BookmarkFoldersPanel() {
           viewport — the page's own nav already owns the bottom edge. */}
       {selected.size > 0 && (
         <div className="sticky bottom-2 flex items-center gap-2 rounded-xl border border-white/15 bg-zinc-900/95 backdrop-blur-xl p-2">
-          <span className="px-1 text-xs text-zinc-400">{selected.size} selected</span>
+          <span className="px-1 text-xs text-zinc-400">{selected.size}{_copy("copy.97a2e8815acd", { defaultValue: " selected" })}</span>
           {otherFolders.length > 0 && (
             <div className="relative flex items-center gap-1">
               <FolderInput className="w-4 h-4 text-zinc-400" />
@@ -474,7 +476,7 @@ export function BookmarkFoldersPanel() {
                 onChange={(e) => { if (e.target.value) void moveSelected(e.target.value); }}
                 className="h-8 rounded-lg bg-zinc-800 border border-zinc-700 text-xs text-white px-2 focus:outline-none"
               >
-                <option value="">Move to…</option>
+                <option value="">{_copy("copy.5af2f53c9459", { defaultValue: "Move to…" })}</option>
                 {otherFolders.map(f => (
                   <option key={f._id} value={f._id}>{f.name}</option>
                 ))}
@@ -488,17 +490,13 @@ export function BookmarkFoldersPanel() {
             onClick={removeSelected}
             className="h-8 ml-auto rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10"
           >
-            {isMoving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4 mr-1" />}
-            Remove
-          </Button>
+            {isMoving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4 mr-1" />}{_copy("copy.c3812fc4acb8", { defaultValue: "Remove" })}</Button>
           <Button
             size="sm"
             variant="ghost"
             onClick={() => setSelected(new Set())}
             className="h-8 rounded-lg text-zinc-400 hover:text-white"
-          >
-            Clear
-          </Button>
+          >{_copy("copy.83b12c2216ef", { defaultValue: "Clear" })}</Button>
         </div>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
@@ -7,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 
 export default function SkillPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [content, setContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +45,7 @@ export default function SkillPage() {
             </Button>
             <div className="flex items-center gap-2">
               <Bot className="w-6 h-6 text-white" />
-              <h1 className="text-lg font-semibold">DeHub MCP API</h1>
+              <h1 className="text-lg font-semibold">{_copy("copy.ff7a48f27df6", { defaultValue: "DeHub MCP API" })}</h1>
             </div>
           </div>
           <a 

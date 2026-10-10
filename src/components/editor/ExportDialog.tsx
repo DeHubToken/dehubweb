@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Download dialog — video (MP4/WebM via WebCodecs) or a still image (PNG/JPG)
  * of the frame under the playhead. Photo and graphic projects, which have no
@@ -44,6 +45,7 @@ type Quality = keyof typeof QUALITY_PRESETS;
 const isStill = (f: Format): f is StillFormat => f === "png" || f === "jpg";
 
 export function ExportDialog({ open, onOpenChange }: Props) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { user } = useAuth();
   const toSnapshot = useEditorStore((s) => s.toSnapshot);
@@ -303,8 +305,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
                     {(Object.keys(QUALITY_PRESETS) as Quality[]).map((k) => (
                       <SelectItem key={k} value={k}>
-                        {qualityLabels[k]} ({Math.round(QUALITY_PRESETS[k] / 1_000_000)} Mbps)
-                      </SelectItem>
+                        {qualityLabels[k]} ({Math.round(QUALITY_PRESETS[k] / 1_000_000)}{_copy("copy.cfcb306ffbd8", { defaultValue: " Mbps)" })}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>

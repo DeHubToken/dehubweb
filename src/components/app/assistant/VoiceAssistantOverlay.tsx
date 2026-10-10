@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Voice Assistant Overlay
  * =======================
@@ -70,6 +71,7 @@ export function VoiceAssistantOverlay({
   onStopSpeaking,
   remainingCredits,
 }: VoiceAssistantOverlayProps) {
+  const { t: _copy } = _useCopy();
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -105,7 +107,7 @@ export function VoiceAssistantOverlay({
             {/* Status label + duration */}
             <div className="flex flex-col items-start min-w-[80px]">
               <span className="text-xs text-white/80 font-medium">
-                {STATUS_LABELS[status] || 'Voice Mode'}
+                {STATUS_LABELS[status] || _copy("copy.d3d922fa5a39", { defaultValue: "Voice Mode" })}
               </span>
               {status === 'listening' && recordingDuration > 0 && (
                 <span className="text-[10px] text-white/40 tabular-nums">
@@ -117,8 +119,7 @@ export function VoiceAssistantOverlay({
             {/* Remaining credits */}
             {remainingCredits !== undefined && (
               <span className="text-[10px] text-cyan-400/70 font-medium tabular-nums px-1.5 py-0.5 rounded bg-white/5">
-                {remainingCredits} left
-              </span>
+                {remainingCredits}{_copy("copy.bce319cfa7b7", { defaultValue: " left" })}</span>
             )}
 
             {status === 'speaking' && (

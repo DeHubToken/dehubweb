@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Clock, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -214,6 +215,7 @@ function WheelTimePicker({
 
 
 export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, title = 'Schedule Post', minimumMinutes = 0 }: ScheduleSheetProps) {
+  const { t: _copy } = _useCopy();
   const today = startOfToday();
   const [currentMonth, setCurrentMonth] = useState(scheduledDate || today);
   const [selectedDate, setSelectedDate] = useState<Date | null>(scheduledDate);
@@ -309,15 +311,13 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
                   : "bg-white/5 text-zinc-500 border border-white/10 cursor-not-allowed"
               )}
             >
-              <Check className="w-4 h-4" />
-              Confirm
-            </button>
+              <Check className="w-4 h-4" />{_copy("copy.eebdd24a77d9", { defaultValue: "Confirm" })}</button>
           </div>
         </DrawerHeader>
 
         <div className="relative pt-3 space-y-2 sm:space-y-2">
-          {minimumMinutes > 0 && <p className="text-center text-xs text-white/60">Choose a time at least {minimumMinutes} minutes from now.</p>}
-          {selectedDate && !validTime && <p role="alert" className="text-center text-xs text-amber-400">Choose a future time{minimumMinutes > 0 ? ` at least ${minimumMinutes} minutes from now` : ''}.</p>}
+          {minimumMinutes > 0 && <p className="text-center text-xs text-white/60">{_copy("copy.b588ce2506cf", { defaultValue: "Choose a time at least " })}{minimumMinutes}{_copy("copy.b94d761b18dd", { defaultValue: " minutes from now." })}</p>}
+          {selectedDate && !validTime && <p role="alert" className="text-center text-xs text-amber-400">{_copy("copy.41d41d6474c0", { defaultValue: "Choose a future time" })}{minimumMinutes > 0 ? _copy("copy.62f3a3b868d9", { defaultValue: " at least {{value1}} minutes from now", value1: minimumMinutes }) : ''}.</p>}
           {/* Calendar Header */}
           <div className="flex items-center justify-between px-2">
             <button
@@ -396,9 +396,7 @@ export function ScheduleSheet({ isOpen, onClose, scheduledDate, onSchedule, titl
                 handleClear();
               }}
               className="w-full py-3 text-red-400 hover:text-red-300 text-sm font-medium transition-colors pointer-events-auto"
-            >
-              Remove Schedule
-            </button>
+            >{_copy("copy.990f1648e771", { defaultValue: "Remove Schedule" })}</button>
           )}
 
           {/* Safe area padding for notched devices */}

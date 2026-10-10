@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageRateButton — the playback-speed chip for stage recordings
  * =============================================================
@@ -29,6 +30,7 @@ export function StageRateButton({
 }: {
   className?: string;
 }) {
+  const { t: _copy } = _useCopy();
   const { rate } = useStagePlayback();
   const label = `${formatStageRate(rate)}x`;
 
@@ -42,8 +44,8 @@ export function StageRateButton({
     <span
       role="button"
       tabIndex={0}
-      aria-label={`Playback speed ${label}`}
-      title={`Playback speed ${label}`}
+      aria-label={_copy("copy.9bf75671f22f", { defaultValue: "Playback speed {{value1}}", value1: label })}
+      title={_copy("copy.9bf75671f22f", { defaultValue: "Playback speed {{value1}}", value1: label })}
       onClick={cycle}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') cycle(e);

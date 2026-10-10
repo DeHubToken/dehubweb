@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Profile step — the last step of signing up.
@@ -59,6 +60,7 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 export function LoginProfileStep() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -180,7 +182,7 @@ export function LoginProfileStep() {
   const handleLanguageChange = useCallback(async (lang: string) => {
     const ok = await loadLanguage(lang);
     if (!ok) {
-      toast.error('Could not load language. Please try again.');
+      toast.error(_copy("copy.51af2182291a", { defaultValue: "Could not load language. Please try again." }));
       return;
     }
     try { localStorage.setItem(LANGUAGE_STORAGE_KEY, lang); } catch { /* private mode */ }
@@ -192,7 +194,7 @@ export function LoginProfileStep() {
     // Follows the account, not just this browser. Fire and forget: the choice
     // is already applied locally and localStorage carries it either way.
     prefs?.setPref('language', lang);
-  }, [prefs]);
+  }, [prefs, _copy]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     signupLog.trace?.('profile-save-start');
@@ -286,7 +288,7 @@ export function LoginProfileStep() {
         navigate('/app');
       }
 
-      toast.success('Profile created successfully!');
+      toast.success(_copy("copy.acea197f415b", { defaultValue: "Profile created successfully!" }));
     } catch (err) {
       console.error('Failed to update profile:', err);
       signupLog.trace?.('profile-save-error', { reason: err instanceof Error ? err.message : String(err) });
@@ -366,9 +368,7 @@ export function LoginProfileStep() {
         ) : usernameAvailable === true ? (
           <p className="text-xs text-green-400">{t('profile.usernameAvailable')}</p>
         ) : (
-          <p className="text-xs text-white/40">
-            Letters, numbers, hyphens and underscores. Up to 30 characters.
-          </p>
+          <p className="text-xs text-white/40">{_copy("copy.9e9ae626652a", { defaultValue: "Letters, numbers, hyphens and underscores. Up to 30 characters." })}</p>
         )}
       </div>
 
@@ -439,9 +439,7 @@ export function LoginProfileStep() {
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />{_copy("copy.dc85af8f2b1d", { defaultValue: "Saving..." })}</>
           ) : (
             t('loginModal.continue')
           )}

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Wallet unlock flow (embedded in the LoginModal drawer).
  *
@@ -67,6 +68,7 @@ type Phase = 'unlock' | 'recover' | 'recover-new-code' | 'enroll-offer' | 'set-p
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
 export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockStepProps) {
+  const { t: _copy } = _useCopy();
   // replaceLostWallet: only for the lost-device path. That flow mints a
   // wallet, moves the account onto it and finishes the sign-in itself, so it
   // cannot go through onComplete — which expects a key for the wallet this
@@ -310,7 +312,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       await assertWalletAddress(derived.ethAddress, current.ethAddress);
       const encrypted = await encryptString(derived.secret, password);
       await saveWallet(userId, current.ethAddress, encrypted);
-      toast.success('Password backup saved — your wallet now opens on any device');
+      toast.success(_copy("copy.22f7e9ec9eec", { defaultValue: "Password backup saved — your wallet now opens on any device" }));
     } catch (err) {
       reject(err instanceof Error ? err.message : 'Could not save the password backup');
       return;
@@ -403,7 +405,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     try {
       await enrollBiometricUnlock(userId, pendingSecret);
       clearBiometricOfferDecline(userId);
-      toast.success('Biometric unlock is on — no password next time');
+      toast.success(_copy("copy.1df2dd1139a5", { defaultValue: "Biometric unlock is on — no password next time" }));
     } catch (err) {
       if (err instanceof PasskeyCancelledError) {
         setBusy(false);
@@ -510,9 +512,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           onClick={() => { setPhase('recover'); setError(null); }}
           disabled={busy || loggingOut}
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
-        >
-          Forgot password? Use recovery code
-        </button>
+        >{_copy("copy.1f7151cfa174", { defaultValue: "Forgot password? Use recovery code" })}</button>
       )}
       {wallet && !stateUnknown && !noWalletOnServer && (
         <button
@@ -520,9 +520,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           onClick={() => { setPhase('lost-device'); setError(null); setPassword(''); setNewConfirm(''); setReplacementAcknowledged(false); }}
           disabled={busy || loggingOut}
           className="w-full rounded-xl border border-white/20 px-4 py-3 text-center text-sm text-white/90 hover:bg-white/5 transition-colors disabled:opacity-50"
-        >
-          Can't unlock? Create a new wallet
-        </button>
+        >{_copy("copy.2e6d1ad93dd4", { defaultValue: "Can't unlock? Create a new wallet" })}</button>
       )}
       {onLogout && (
         <button
@@ -533,10 +531,9 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         >
           {loggingOut ? (
             <span className="inline-flex items-center justify-center gap-2">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Logging out…
-            </span>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />{_copy("copy.af3548ef59b2", { defaultValue: " Logging out…" })}</span>
           ) : (
-            'Log out'
+            _copy("copy.49616145514e", { defaultValue: "Log out" })
           )}
         </button>
       )}
@@ -550,12 +547,8 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <Fingerprint className="w-6 h-6 text-white" />
         </div>
         <div className="space-y-2 text-center">
-          <p className="text-white text-sm font-medium">Skip the password next time?</p>
-          <p className="text-white/50 text-xs leading-relaxed">
-            Unlock with your fingerprint or face on this device instead. Your wallet password keeps
-            working — it stays your backup on devices that can’t do this. You can turn this on later
-            from Settings → Account Security.
-          </p>
+          <p className="text-white text-sm font-medium">{_copy("copy.4271bbbb4014", { defaultValue: "Skip the password next time?" })}</p>
+          <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.3777e89c68c7", { defaultValue: "Unlock with your fingerprint or face on this device instead. Your wallet password keeps working — it stays your backup on devices that can’t do this. You can turn this on later from Settings → Account Security." })}</p>
         </div>
         <Button
           onClick={handleEnrollOffer}
@@ -563,17 +556,15 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {busy
-            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Setting up…</span>
-            : <span className="flex items-center gap-2"><Fingerprint className="w-4 h-4" /> Turn on biometric unlock</span>}
+            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.70b1154c072a", { defaultValue: " Setting up…" })}</span>
+            : <span className="flex items-center gap-2"><Fingerprint className="w-4 h-4" />{_copy("copy.dedbe5b582dd", { defaultValue: " Turn on biometric unlock" })}</span>}
         </Button>
         <button
           type="button"
           onClick={handleSkipEnroll}
           disabled={busy}
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
-        >
-          Not now
-        </button>
+        >{_copy("copy.a0e63d7c7125", { defaultValue: "Not now" })}</button>
       </div>
     );
   }
@@ -582,17 +573,12 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     return (
       <div className="space-y-4">
         <div className="space-y-2 text-center">
-          <p className="text-white text-sm font-medium">Start a new wallet on this device</p>
-          <p className="text-white/50 text-xs leading-relaxed">
-            Keep your username, profile, posts and followers with a new wallet.
-            Your old encrypted wallet records are kept in an archive.
-          </p>
+          <p className="text-white text-sm font-medium">{_copy("copy.95f7f7f16b35", { defaultValue: "Start a new wallet on this device" })}</p>
+          <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.c982e8fe6e52", { defaultValue: "Keep your username, profile, posts and followers with a new wallet. Your old encrypted wallet records are kept in an archive." })}</p>
         </div>
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>No funds will be moved. All tokens, NFTs and other balances stay at the old address.
-            Moving them later requires the old wallet's password, recovery phrase, private key or original device.
-            Old encrypted messages may also need that key.</p>
+          <p>{_copy("copy.e3d08e785886", { defaultValue: "No funds will be moved. All tokens, NFTs and other balances stay at the old address. Moving them later requires the old wallet's password, recovery phrase, private key or original device. Old encrypted messages may also need that key." })}</p>
         </div>
         <form
           onSubmit={(e) => { e.preventDefault(); if (password && newConfirm && replacementAcknowledged && !busy) handleReplaceLostWallet(); }}
@@ -601,7 +587,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <div className="space-y-2">
             <Input
               type="password"
-              placeholder={`New wallet password (min ${MIN_PASSWORD_LENGTH} chars)`}
+              placeholder={_copy("copy.064656b93bd0", { defaultValue: "New wallet password (min {{value1}} chars)", value1: MIN_PASSWORD_LENGTH })}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={inputClass}
@@ -611,24 +597,22 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           </div>
           <Input
             type="password"
-            placeholder="Confirm password"
+            placeholder={_copy("copy.5ac265f396a2", { defaultValue: "Confirm password" })}
             value={newConfirm}
             onChange={(e) => setNewConfirm(e.target.value)}
             className={inputClass}
           />
           {error && <p className="text-sm text-red-400">{error}</p>}
           <label className="flex items-start gap-2 text-xs text-white/70">
-            <Checkbox checked={replacementAcknowledged} onCheckedChange={(value) => setReplacementAcknowledged(value === true)} disabled={busy} />
-            I understand my old funds stay in the old wallet.
-          </label>
+            <Checkbox checked={replacementAcknowledged} onCheckedChange={(value) => setReplacementAcknowledged(value === true)} disabled={busy} />{_copy("copy.36b8a4a046b2", { defaultValue: "I understand my old funds stay in the old wallet." })}</label>
           <Button
             type="submit"
             disabled={busy || !password || !newConfirm || !replacementAcknowledged}
             className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
           >
             {busy
-              ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Setting up…</span>
-              : 'Create a new wallet'}
+              ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.70b1154c072a", { defaultValue: " Setting up…" })}</span>
+              : _copy("copy.9d922bcd6d07", { defaultValue: "Create a new wallet" })}
           </Button>
         </form>
         <button
@@ -636,9 +620,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           onClick={() => { setPhase('unlock'); setError(null); setPassword(''); setNewConfirm(''); }}
           disabled={busy}
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
-        >
-          Back
-        </button>
+        >{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</button>
       </div>
     );
   }
@@ -657,12 +639,8 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <AlertTriangle className="w-6 h-6 text-amber-400" />
         </div>
         <div className="space-y-2 text-center">
-          <p className="text-white text-sm font-medium">Your wallet has no backup</p>
-          <p className="text-white/50 text-xs leading-relaxed">
-            It only opens with biometrics on this device — lose the device and nobody, including DeHub,
-            can get you back in. A password fixes that and lets you sign in anywhere. Your fingerprint
-            keeps working here.
-          </p>
+          <p className="text-white text-sm font-medium">{_copy("copy.942e455132bc", { defaultValue: "Your wallet has no backup" })}</p>
+          <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.0daefee695b7", { defaultValue: "It only opens with biometrics on this device — lose the device and nobody, including DeHub, can get you back in. A password fixes that and lets you sign in anywhere. Your fingerprint keeps working here." })}</p>
         </div>
         <form
           onSubmit={(e) => { e.preventDefault(); if (password && newConfirm && !busy) handleSetPassword(); }}
@@ -671,7 +649,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <div className="space-y-2">
             <Input
               type="password"
-              placeholder={`Wallet password (min ${MIN_PASSWORD_LENGTH} chars)`}
+              placeholder={_copy("copy.aaf087e964d8", { defaultValue: "Wallet password (min {{value1}} chars)", value1: MIN_PASSWORD_LENGTH })}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={inputClass}
@@ -681,7 +659,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           </div>
           <Input
             type="password"
-            placeholder="Confirm password"
+            placeholder={_copy("copy.5ac265f396a2", { defaultValue: "Confirm password" })}
             value={newConfirm}
             onChange={(e) => setNewConfirm(e.target.value)}
             className={inputClass}
@@ -693,8 +671,8 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
             className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
           >
             {busy
-              ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Saving…</span>
-              : 'Save and continue'}
+              ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.7e20d23ed3ee", { defaultValue: " Saving…" })}</span>
+              : _copy("copy.6880daf172a2", { defaultValue: "Save and continue" })}
           </Button>
         </form>
         <button
@@ -702,9 +680,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           onClick={handleSkipSetPassword}
           disabled={busy}
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
-        >
-          Not now — remind me later
-        </button>
+        >{_copy("copy.90946554ac0b", { defaultValue: "Not now — remind me later" })}</button>
       </div>
     );
   }
@@ -714,28 +690,27 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       <div className="space-y-4">
         <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
-          <p>Your password was reset. This is your NEW recovery code — the old one no longer works. Save it somewhere safe.</p>
+          <p>{_copy("copy.b1604c4aad7d", { defaultValue: "Your password was reset. This is your NEW recovery code — the old one no longer works. Save it somewhere safe." })}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white break-words select-all">
           {newRecoveryCode}
         </div>
         <Button
           variant="outline"
-          onClick={async () => { await copyThenClear(newRecoveryCode); toast.success('Recovery code copied — clipboard clears in 30s'); }}
+          onClick={async () => { await copyThenClear(newRecoveryCode); toast.success(_copy("copy.941434ff423d", { defaultValue: "Recovery code copied — clipboard clears in 30s" })); }}
           className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl border-white/10"
         >
-          <Copy className="w-4 h-4 mr-2" /> Copy recovery code
-        </Button>
+          <Copy className="w-4 h-4 mr-2" />{_copy("copy.335f0daa12b6", { defaultValue: " Copy recovery code" })}</Button>
         <label className="flex items-start gap-2 text-sm text-white">
           <Checkbox checked={newCodeAck} onCheckedChange={(v) => setNewCodeAck(v === true)} className="mt-0.5" />
-          <span>I have saved my new recovery code</span>
+          <span>{_copy("copy.7ed21d89d897", { defaultValue: "I have saved my new recovery code" })}</span>
         </label>
         <Button
           disabled={!newCodeAck || busy}
           onClick={handleRecoverFinish}
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
-          {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span> : 'Finish & sign in'}
+          {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.b403bf9c1175", { defaultValue: " Signing you in…" })}</span> : _copy("copy.92763dec21db", { defaultValue: "Finish & sign in" })}
         </Button>
       </div>
     );
@@ -744,21 +719,19 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
   if (phase === 'recover') {
     return (
       <div className="space-y-4">
-        <p className="text-white/60 text-sm">
-          Enter your 24-word recovery code and choose a new wallet password.
-        </p>
+        <p className="text-white/60 text-sm">{_copy("copy.121774a2a25e", { defaultValue: "Enter your 24-word recovery code and choose a new wallet password." })}</p>
         <Textarea
           value={recoveryInput}
           onChange={(e) => setRecoveryInput(e.target.value)}
           rows={3}
-          placeholder="word word word…"
+          placeholder={_copy("copy.bdbf7162b01b", { defaultValue: "word word word…" })}
           className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
           autoFocus
         />
         <div className="space-y-2">
           <Input
             type="password"
-            placeholder={`New wallet password (min ${MIN_PASSWORD_LENGTH} chars)`}
+            placeholder={_copy("copy.064656b93bd0", { defaultValue: "New wallet password (min {{value1}} chars)", value1: MIN_PASSWORD_LENGTH })}
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             className={inputClass}
@@ -767,22 +740,20 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         </div>
         <Input
           type="password"
-          placeholder="Confirm new password"
+          placeholder={_copy("copy.bf000421aeb3", { defaultValue: "Confirm new password" })}
           value={newConfirm}
           onChange={(e) => setNewConfirm(e.target.value)}
           className={inputClass}
         />
         {error && <p className="text-sm text-red-400">{error}</p>}
         <div className="flex gap-2">
-          <Button variant="ghost" onClick={() => { setPhase('unlock'); setError(null); }} className="flex-1 h-12 text-white/60 hover:text-white rounded-xl">
-            Back
-          </Button>
+          <Button variant="ghost" onClick={() => { setPhase('unlock'); setError(null); }} className="flex-1 h-12 text-white/60 hover:text-white rounded-xl">{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</Button>
           <Button
             disabled={busy || !recoveryInput.trim() || !newPassword || !newConfirm}
             onClick={handleRecover}
             className="flex-1 h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
           >
-            {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Recovering…</span> : 'Reset password'}
+            {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.be62e7df4495", { defaultValue: " Recovering…" })}</span> : _copy("copy.e0edfeb3a71a", { defaultValue: "Reset password" })}
           </Button>
         </div>
       </div>
@@ -797,7 +768,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       <DeHubPageLoader
         size={56}
         minHeight="180px"
-        label="Checking how to unlock your wallet…"
+        label={_copy("copy.acbe73fdd49b", { defaultValue: "Checking how to unlock your wallet…" })}
         // The loader's default caption colour is tuned for page surfaces; this
         // sheet is always dark. A colour alpha, not an opacity utility — the
         // mark's fade-in animates `opacity` and would win over that.
@@ -817,19 +788,13 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       <div className="space-y-4">
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>
-            We couldn’t check how your wallet is protected on this device — the secure session
-            here has expired, or the connection dropped. Your wallet is unaffected. Try again,
-            or log out and sign back in on this device to refresh it.
-          </p>
+          <p>{_copy("copy.02d29b369089", { defaultValue: "We couldn’t check how your wallet is protected on this device — the secure session here has expired, or the connection dropped. Your wallet is unaffected. Try again, or log out and sign back in on this device to refresh it." })}</p>
         </div>
         {error && <p className="text-sm text-red-400">{error}</p>}
         <Button
           onClick={() => { setError(null); setProbeNonce((n) => n + 1); }}
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-        >
-          Try again
-        </Button>
+        >{_copy("copy.d8b8392e2c54", { defaultValue: "Try again" })}</Button>
         {recoveryAndLogoutLinks}
       </div>
     );
@@ -845,16 +810,12 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     if (isAuthenticated) {
       return (
         <div className="space-y-4">
-          <p className="text-white/60 text-sm leading-relaxed">
-            You’re signed in to a wallet-based account via email — there’s no built-in wallet to
-            unlock here. Connect the account’s wallet to use wallet features, or log out and sign
-            back in with it.
-          </p>
+          <p className="text-white/60 text-sm leading-relaxed">{_copy("copy.f48e769ecbd8", { defaultValue: "You’re signed in to a wallet-based account via email — there’s no built-in wallet to unlock here. Connect the account’s wallet to use wallet features, or log out and sign back in with it." })}</p>
           <Button
             onClick={() => { closeLoginModal(); requestSessionWalletConnect(); }}
             className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
           >
-            <span className="flex items-center gap-2"><Wallet className="w-4 h-4" /> Connect wallet</span>
+            <span className="flex items-center gap-2"><Wallet className="w-4 h-4" />{_copy("copy.34135531dce9", { defaultValue: " Connect wallet" })}</span>
           </Button>
           {recoveryAndLogoutLinks}
         </div>
@@ -862,10 +823,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     }
     return (
       <div className="space-y-4">
-        <p className="text-white/60 text-sm leading-relaxed">
-          This account signs in with its own wallet app — there’s no wallet password to enter.
-          Go back and choose Connect Wallet to sign in.
-        </p>
+        <p className="text-white/60 text-sm leading-relaxed">{_copy("copy.9175f4864d5e", { defaultValue: "This account signs in with its own wallet app — there’s no wallet password to enter. Go back and choose Connect Wallet to sign in." })}</p>
         {recoveryAndLogoutLinks}
       </div>
     );
@@ -881,10 +839,10 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
           <p>
             {seedIsPasskeyWrapped && wraps.length === 0
-              ? 'This wallet’s biometric unlock was set up in the DeHub mobile app. Open the app on that phone to use the wallet — or add a wallet password there, from its Settings, to unlock it here.'
+              ? _copy("copy.2005886825d3", { defaultValue: "This wallet’s biometric unlock was set up in the DeHub mobile app. Open the app on that phone to use the wallet — or add a wallet password there, from its Settings, to unlock it here." })
               : biometricEnrolledElsewhere
-                ? 'This wallet unlocks with biometrics, which this browser doesn’t support. Open DeHub on the device you set it up on — or add a wallet password there, from Settings → Account Security.'
-                : 'This wallet unlocks with biometrics, but none are set up on this device. Open DeHub on the device you set it up on, or add a wallet password there from Settings → Account Security.'}
+                ? _copy("copy.dfc115c3ddca", { defaultValue: "This wallet unlocks with biometrics, which this browser doesn’t support. Open DeHub on the device you set it up on — or add a wallet password there, from Settings → Account Security." })
+                : _copy("copy.7a78d69bd927", { defaultValue: "This wallet unlocks with biometrics, but none are set up on this device. Open DeHub on the device you set it up on, or add a wallet password there from Settings → Account Security." })}
           </p>
         </div>
         {error && <p className="text-sm text-red-400">{error}</p>}
@@ -920,8 +878,8 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {busy
-            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Unlocking…</span>
-            : <span className="flex items-center gap-2"><Fingerprint className="w-4 h-4" /> Unlock with biometrics</span>}
+            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.202073226951", { defaultValue: " Unlocking…" })}</span>
+            : <span className="flex items-center gap-2"><Fingerprint className="w-4 h-4" />{_copy("copy.eb07049b358e", { defaultValue: " Unlock with biometrics" })}</span>}
         </Button>
       )}
 
@@ -934,13 +892,12 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           handoff can reach it (synced passkeys and "hybrid" transports can;
           a Windows Hello credential answers only on its own machine). */}
       {canUseBiometrics && !hasPasswordWrap && wraps.some((w) => w.label) && (
-        <p className="text-white/40 text-xs text-center">
-          Your wallet's biometric unlock was set up on: {[...new Set(wraps.map((w) => w.label).filter(Boolean))].join(', ')}.{' '}
+        <p className="text-white/40 text-xs text-center">{_copy("copy.456061062df5", { defaultValue: "Your wallet's biometric unlock was set up on: " })}{[...new Set(wraps.map((w) => w.label).filter(Boolean))].join(', ')}.{' '}
           {someWrapReachableHere
-            ? 'Your passkey can answer from that device: when the passkey sheet opens, choose “use another device” and scan the QR code with it.'
+            ? _copy("copy.392e06a714e1", { defaultValue: "Your passkey can answer from that device: when the passkey sheet opens, choose “use another device” and scan the QR code with it." })
             : allWrapsDeviceBound
-              ? 'That credential only works on the device it was made on — open DeHub there, or add a wallet password from its Settings → Account Security to unlock anywhere.'
-              : 'On a different device, choose that device if your browser offers it — or open Settings → Account Security there to add a wallet password.'}
+              ? _copy("copy.5f94fde59ced", { defaultValue: "That credential only works on the device it was made on — open DeHub there, or add a wallet password from its Settings → Account Security to unlock anywhere." })
+              : _copy("copy.ab55b7d985f8", { defaultValue: "On a different device, choose that device if your browser offers it — or open Settings → Account Security there to add a wallet password." })}
         </p>
       )}
 
@@ -951,7 +908,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         >
           <Input
             type="password"
-            placeholder="Wallet password"
+            placeholder={_copy("copy.b7aaad3dc136", { defaultValue: "Wallet password" })}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={inputClass}
@@ -966,7 +923,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
                 : 'w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'
             }
           >
-            {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Unlocking…</span> : 'Unlock wallet'}
+            {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.202073226951", { defaultValue: " Unlocking…" })}</span> : _copy("copy.5cb728cf5ada", { defaultValue: "Unlock wallet" })}
           </Button>
         </form>
       )}
@@ -980,8 +937,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           onClick={() => { setShowPasswordAnyway(true); setError(null); }}
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-1.5"
         >
-          <KeyRound className="w-3.5 h-3.5" /> Use my wallet password instead
-        </button>
+          <KeyRound className="w-3.5 h-3.5" />{_copy("copy.3a1640e4729a", { defaultValue: " Use my wallet password instead" })}</button>
       )}
 
       {recoveryAndLogoutLinks}

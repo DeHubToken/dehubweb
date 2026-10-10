@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CreateGroupModal Component
@@ -88,6 +89,7 @@ export function CreateGroupModal({
   onOpenChange, 
   onGroupCreated,
 }: CreateGroupModalProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const [step, setStep] = useState<'details' | 'members'>('details');
   const [groupName, setGroupName] = useSurfaceDraft("components/app/chat/CreateGroupModal.tsx:groupName", '');
@@ -112,17 +114,17 @@ export function CreateGroupModal({
 
   const handleCreateGroup = async () => {
     if (!groupName.trim()) {
-      toast.error('Please enter a group name');
+      toast.error(_copy("copy.32aef7afae5d", { defaultValue: "Please enter a group name" }));
       return;
     }
     if (selectedMembers.length === 0) {
-      toast.error('Please select at least one member');
+      toast.error(_copy("copy.80ab90918f0c", { defaultValue: "Please select at least one member" }));
       return;
     }
 
     const token = getAuthToken();
     if (!token) {
-      toast.error('Authentication required');
+      toast.error(_copy("copy.0fcfb12dfad0", { defaultValue: "Authentication required" }));
       return;
     }
 
@@ -139,7 +141,7 @@ export function CreateGroupModal({
       }
 
       if (memberAddresses.length < 2) {
-        toast.error('Selected members have no wallet addresses. Please select users with wallet addresses.');
+        toast.error(_copy("copy.6e9e7b65b47c", { defaultValue: "Selected members have no wallet addresses. Please select users with wallet addresses." }));
         setIsCreating(false);
         return;
       }
@@ -150,7 +152,7 @@ export function CreateGroupModal({
         groupDescription.trim() || undefined
       );
       
-      toast.success('Group created!');
+      toast.success(_copy("copy.99590f6a3de5", { defaultValue: "Group created!" }));
       onGroupCreated({
         ...groupConversation,
         isGroup: true,
@@ -184,16 +186,16 @@ export function CreateGroupModal({
         <DialogHeader>
           <DialogTitle className="text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
-            {step === 'details' ? 'Create Group' : 'Add Members'}
+            {step === 'details' ? _copy("copy.1213394682bf", { defaultValue: "Create Group" }) : _copy("copy.513d02ef4e3f", { defaultValue: "Add Members" })}
           </DialogTitle>
         </DialogHeader>
 
         {step === 'details' ? (
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-zinc-400 mb-1.5 block">Group Name *</label>
+              <label className="text-sm text-zinc-400 mb-1.5 block">{_copy("copy.29bbd4b21318", { defaultValue: "Group Name *" })}</label>
               <Input
-                placeholder="Enter group name..."
+                placeholder={_copy("copy.2c78ad647cb8", { defaultValue: "Enter group name..." })}
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -202,9 +204,9 @@ export function CreateGroupModal({
             </div>
             
             <div>
-              <label className="text-sm text-zinc-400 mb-1.5 block">Description (optional)</label>
+              <label className="text-sm text-zinc-400 mb-1.5 block">{_copy("copy.f6cbe2f0c1f8", { defaultValue: "Description (optional)" })}</label>
               <Textarea
-                placeholder="What's this group about?"
+                placeholder={_copy("copy.3fa5e6a21da9", { defaultValue: "What's this group about?" })}
                 value={groupDescription}
                 onChange={(e) => setGroupDescription(e.target.value)}
                 className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl resize-none"
@@ -217,17 +219,13 @@ export function CreateGroupModal({
                 variant="glass"
                 onClick={handleClose}
                 className="flex-1"
-              >
-                Cancel
-              </Button>
+              >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
               <Button
                 variant="glass"
                 onClick={() => setStep('members')}
                 disabled={!groupName.trim()}
                 className="flex-1"
-              >
-                Next
-              </Button>
+              >{_copy("copy.1ff57a29d7c9", { defaultValue: "Next" })}</Button>
             </div>
           </div>
         ) : (
@@ -236,7 +234,7 @@ export function CreateGroupModal({
             {selectedMembers.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {selectedMembers.map((member) => {
-                  const displayName = member.displayName || member.display_name || member.username || 'User';
+                  const displayName = member.displayName || member.display_name || member.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" });
                   const userId = member.address || member._id || '';
                   return (
                     <div 
@@ -260,7 +258,7 @@ export function CreateGroupModal({
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
-                placeholder="Search users to add..."
+                placeholder={_copy("copy.da637b8d68ec", { defaultValue: "Search users to add..." })}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -282,14 +280,14 @@ export function CreateGroupModal({
               {searchQuery.length < 2 ? (
                 <div className="text-center py-6 text-zinc-500">
                   <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">Enter at least 2 characters to search</p>
+                  <p className="text-sm">{_copy("copy.66708e5f5479", { defaultValue: "Enter at least 2 characters to search" })}</p>
                 </div>
               ) : isSearching ? (
                 <div className="flex justify-center py-6">
                   <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
                 </div>
               ) : searchResults?.items?.length === 0 ? (
-                <AppState icon="search" title="No users found" description="Try a different search." kind="search-empty" size="compact" />
+                <AppState icon="search" title={_copy("copy.bf1e104fb3c8", { defaultValue: "No users found" })} description={_copy("copy.2e6d79de50dc", { defaultValue: "Try a different search." })} kind="search-empty" size="compact" />
               ) : (
                 <div className="space-y-1 px-2">
                   {searchResults?.items?.map((user) => {
@@ -314,9 +312,7 @@ export function CreateGroupModal({
                 variant="glass"
                 onClick={() => setStep('details')}
                 className="flex-1"
-              >
-                Back
-              </Button>
+              >{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</Button>
               <Button
                 variant="glass"
                 onClick={handleCreateGroup}
@@ -325,11 +321,9 @@ export function CreateGroupModal({
               >
                 {isCreating ? (
                   <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Creating...
-                  </>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.def70944c9bb", { defaultValue: "Creating..." })}</>
                 ) : (
-                  `Create (${selectedMembers.length})`
+                  _copy("copy.0a83b8428536", { defaultValue: "Create ({{value1}})", value1: selectedMembers.length })
                 )}
               </Button>
             </div>

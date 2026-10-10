@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
@@ -72,6 +73,7 @@ function formatTooltipLabel(timestamp: number): string {
 }
 
 export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframeChange, externalUrl }: TokenPriceChartProps) {
+  const { t: _copy } = _useCopy();
   const isPositive = useMemo(() => {
     if (data.length < 2) return true;
     return data[data.length - 1].price >= data[0].price;
@@ -174,9 +176,7 @@ export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframe
               <button
                 onClick={() => window.open(externalUrl, '_blank', 'noopener')}
                 className="relative z-10 px-2.5 py-1 rounded-md text-[11px] font-medium text-zinc-500 hover:text-zinc-300 flex items-center gap-0.5 transition-colors duration-200"
-              >
-                ALL
-                <ExternalLink className="w-2.5 h-2.5" />
+              >{_copy("copy.b5c7aed7cd2a", { defaultValue: "ALL" })}<ExternalLink className="w-2.5 h-2.5" />
               </button>
             )}
           </div>

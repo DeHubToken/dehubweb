@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -55,6 +56,7 @@ function toStatusPayload(value: WhoCanMessage): { status: string; action: string
 }
 
 export function useDmSettings() {
+  const { t: _copy } = _useCopy();
   const { walletAddress, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
@@ -98,11 +100,11 @@ export function useDmSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dm-user-status', walletAddress] });
-      toast.success('DM settings updated');
+      toast.success(_copy("copy.0f88edcda292", { defaultValue: "DM settings updated" }));
     },
     onError: (error) => {
       console.error('[useDmSettings] Failed to update DM settings:', error);
-      toast.error('Failed to update DM settings');
+      toast.error(_copy("copy.6191770d00b1", { defaultValue: "Failed to update DM settings" }));
     },
   });
 
@@ -119,11 +121,11 @@ export function useDmSettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dm-user-status', walletAddress] });
-      toast.success('DM settings updated');
+      toast.success(_copy("copy.0f88edcda292", { defaultValue: "DM settings updated" }));
     },
     onError: (error) => {
       console.error('[useDmSettings] Failed to update fee:', error);
-      toast.error('Failed to update message fee');
+      toast.error(_copy("copy.94dc5a91c82c", { defaultValue: "Failed to update message fee" }));
     },
   });
 
@@ -143,7 +145,7 @@ export function useDmSettings() {
     updateDoNotDisturb: (enabled: boolean) => {
       setDoNotDisturbLocal(enabled);
       try { localStorage.setItem(DND_STORAGE_KEY, String(enabled)); } catch {}
-      toast.success('DM settings updated');
+      toast.success(_copy("copy.0f88edcda292", { defaultValue: "DM settings updated" }));
     },
   };
 }

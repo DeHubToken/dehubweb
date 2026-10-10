@@ -1,9 +1,11 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, Zap, Shield, CreditCard } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const TokenWhereToBuy = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   const exchanges = [
@@ -54,14 +56,14 @@ const TokenWhereToBuy = () => {
             </a>
             <a href="https://www.mexc.com/dex/trade?pair_ca=0xebDeacaf03Ba54Eb18128FD1FD042bc747af9295&chain_id=8453&token_ca=0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c&from=search" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
               <div>
-                <h4 className="font-semibold text-foreground">MEXC</h4>
+                <h4 className="font-semibold text-foreground">{_copy("copy.755e4f22e889", { defaultValue: "MEXC" })}</h4>
                 <p className="text-muted-foreground">{t('tokenWhereToBuy.centralizedDex')}</p>
               </div>
               <ExternalLink className="w-5 h-5 text-muted-foreground" />
             </a>
             <a href="https://www.okx.com/cedefi" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-muted rounded-lg border hover:bg-muted/80 transition-colors cursor-pointer">
               <div>
-                <h4 className="font-semibold text-foreground">OKX CeDeFi</h4>
+                <h4 className="font-semibold text-foreground">{_copy("copy.b670b091884c", { defaultValue: "OKX CeDeFi" })}</h4>
                 <p className="text-muted-foreground">{t('tokenWhereToBuy.centralizedDefi')}</p>
               </div>
               <ExternalLink className="w-5 h-5 text-muted-foreground" />

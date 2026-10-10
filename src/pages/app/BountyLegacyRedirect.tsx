@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
 import { useWorkJob } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';
@@ -16,10 +17,11 @@ import { bountyPath } from '@/features/work/seo';
  * /bounty/undefined — a deleted bounty should leave you somewhere useful.
  */
 export default function BountyLegacyRedirect({ suffix = '' }: { suffix?: string }) {
+  const { t: _copy } = _useCopy();
   const { jobKey } = useParams<{ jobKey: string }>();
   const { data: job, isLoading } = useWorkJob(jobKey);
 
-  if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">Loading…</div>;
+  if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>;
   if (!job) return <Navigate to="/work" replace />;
   return <Navigate to={`${bountyPath(job)}${suffix}`} replace />;
 }

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus, HardDrive, Lock, ExternalLink, Copy } from "lucide-react";
@@ -27,6 +28,7 @@ function kindIcon(k: MediaItem["kind"]) {
 }
 
 export function MediaPanel() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const media = useEditorStore((s) => s.media).filter(m => !m.name.startsWith(".dehub-video-matte-"));
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
@@ -84,9 +86,9 @@ export function MediaPanel() {
     } catch (e) {
       console.error(e);
       const { toast } = await import("sonner");
-      toast.error("Failed to remove media");
+      toast.error(_copy("copy.1ce61f11df68", { defaultValue: "Failed to remove media" }));
     }
-  }, [removeMediaFromStore, removeCloudAsset, cloudAssets, quota.walletAddress]);
+  }, [removeMediaFromStore, removeCloudAsset, cloudAssets, quota.walletAddress, _copy]);
 
   const percentUsed = useMemo(() => {
     if (!quota.quota.bytes) return 0;
@@ -110,22 +112,21 @@ export function MediaPanel() {
     try {
       await navigator.clipboard.writeText(requiredCredits.join("\n"));
       const { toast } = await import("sonner");
-      toast.success("Asset credits copied.");
+      toast.success(_copy("copy.0735e3e74041", { defaultValue: "Asset credits copied." }));
     } catch {
       const { toast } = await import("sonner");
-      toast.error("Could not copy asset credits.");
+      toast.error(_copy("copy.cf3b403a8a1a", { defaultValue: "Could not copy asset credits." }));
     }
-  }, [requiredCredits]);
+  }, [requiredCredits, _copy]);
 
   return (
     <div className="flex h-full w-full flex-col">
       <div className="flex items-center justify-between px-3 py-2.5">
-        <h2 className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40">Your files</h2>
+        <h2 className="text-[10px] font-semibold uppercase tracking-[0.16em] text-white/40">{_copy("copy.a2b8baaa846d", { defaultValue: "Your files" })}</h2>
         <Button size="sm" variant="ghost"
           className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white"
           onClick={() => inputRef.current?.click()} disabled={busy || quota.overQuota}>
-          <Upload className="mr-1 h-3.5 w-3.5" /> Import
-        </Button>
+          <Upload className="mr-1 h-3.5 w-3.5" />{_copy("copy.5e951b6d7d39", { defaultValue: " Import" })}</Button>
         <input ref={inputRef} type="file" accept="video/*,audio/*,image/*" multiple hidden
           onChange={(e) => { if (e.target.files) void importFiles(e.target.files); e.target.value = ""; }} />
       </div>
@@ -139,7 +140,7 @@ export function MediaPanel() {
             <span className="inline-flex items-center gap-1.5">
               <HardDrive className="h-3 w-3" />
               <span className="font-medium text-white/85">{quota.quota.tierName}</span>
-              <span className="text-white/40">tier</span>
+              <span className="text-white/40">{_copy("copy.e29ccc00b2e5", { defaultValue: "tier" })}</span>
             </span>
             <span className="tabular-nums">
               {formatBytes(quota.usedBytes)} / {formatBytes(quota.quota.bytes)}
@@ -157,14 +158,12 @@ export function MediaPanel() {
           {quota.overQuota ? (
             <p className="mt-1 text-[10px] text-white/60">{t('editor.storageFullStake')}</p>
           ) : (
-            <p className="mt-1 text-[10px] text-white/40">Assets unused for 12 months auto-delete unless posted.</p>
+            <p className="mt-1 text-[10px] text-white/40">{_copy("copy.06961a97b57d", { defaultValue: "Assets unused for 12 months auto-delete unless posted." })}</p>
           )}
         </div>
       ) : (
         <div className="mx-3 mb-2 flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-[10px] text-white/60">
-          <Lock className="h-3 w-3" />
-          Sign in to store media in the cloud across devices.
-        </div>
+          <Lock className="h-3 w-3" />{_copy("copy.54489aa54a83", { defaultValue: "Sign in to store media in the cloud across devices." })}</div>
       )}
 
       <div
@@ -175,16 +174,14 @@ export function MediaPanel() {
           "mx-3 mb-2 rounded-xl border border-dashed border-white/15 px-3 py-3 text-center text-xs text-white/60 transition",
           isDragging && "border-white/40 bg-white/5 text-white",
         )}
-      >
-        Drop files here to import
-      </div>
+      >{_copy("copy.76fb78e982b5", { defaultValue: "Drop files here to import" })}</div>
 
       <div className="flex-1 overflow-y-auto px-2 pb-3">
         {media.length === 0 ? (
           hydrated ? (
-            <AppState icon="images" title="No media yet" description="Import media to get started." size="compact" />
+            <AppState icon="images" title={_copy("copy.7053c98887b7", { defaultValue: "No media yet" })} description={_copy("copy.37f99e634ca6", { defaultValue: "Import media to get started." })} size="compact" />
           ) : (
-            <p className="px-2 py-6 text-center text-xs text-white/50">Loading your media…</p>
+            <p className="px-2 py-6 text-center text-xs text-white/50">{_copy("copy.570eae1ae098", { defaultValue: "Loading your media…" })}</p>
           )
         ) : (
           <ul className="space-y-1.5">
@@ -217,7 +214,7 @@ export function MediaPanel() {
                       <p className="truncate text-xs text-white" title={m.name}>{m.name}</p>
                       <p className="text-[10px] uppercase tracking-wide text-white/40">
                         {m.kind} · {formatDuration(m.duration)}
-                        {isPreserved && <span className="ml-1.5 rounded-sm bg-white/10 px-1 py-[1px] text-[8px] uppercase tracking-wide text-white/80">Preserved</span>}
+                        {isPreserved && <span className="ml-1.5 rounded-sm bg-white/10 px-1 py-[1px] text-[8px] uppercase tracking-wide text-white/80">{_copy("copy.9d31b48bc0c0", { defaultValue: "Preserved" })}</span>}
                       </p>
                       {m.provenance ? (
                         <a
@@ -235,7 +232,7 @@ export function MediaPanel() {
                     </div>
                     <button
                       type="button"
-                      aria-label={`Add ${m.name} to timeline`}
+                      aria-label={_copy("copy.bff2afe05d86", { defaultValue: "Add {{value1}} to timeline", value1: m.name })}
                       onClick={(e) => { e.stopPropagation(); addClipFromMedia(m.id); }}
                       className="rounded-md p-1 text-white/40 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
                     >
@@ -243,7 +240,7 @@ export function MediaPanel() {
                     </button>
                     <button
                       type="button"
-                      aria-label={`Remove ${m.name}`}
+                      aria-label={_copy("copy.d2f6b9b77710", { defaultValue: "Remove {{value1}}", value1: m.name })}
                       onClick={(e) => { e.stopPropagation(); void handleRemove(m.id); }}
                       className="rounded-md p-1 text-white/40 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
                     >
@@ -258,15 +255,14 @@ export function MediaPanel() {
       </div>
 
       <div className="flex items-center gap-2 border-t border-white/10 px-3 py-2 text-[10px] text-white/40">
-        <span className="min-w-0 flex-1">Drag, double-click, or hit <kbd className="rounded bg-white/10 px-1">+</kbd> to add.</span>
+        <span className="min-w-0 flex-1">{_copy("copy.55e6c004f694", { defaultValue: "Drag, double-click, or hit " })}<kbd className="rounded bg-white/10 px-1">+</kbd>{_copy("copy.fca2e3c97275", { defaultValue: " to add." })}</span>
         {requiredCredits.length ? (
           <button
             type="button"
             onClick={() => void copyCredits()}
             className="inline-flex shrink-0 items-center gap-1 rounded-md border border-white/15 bg-white/[0.06] px-2 py-1 text-[9px] font-medium text-white/65 transition hover:bg-white/12 hover:text-white"
           >
-            <Copy className="h-3 w-3" /> Copy credits
-          </button>
+            <Copy className="h-3 w-3" />{_copy("copy.78f6e2ebacae", { defaultValue: " Copy credits" })}</button>
         ) : null}
       </div>
     </div>

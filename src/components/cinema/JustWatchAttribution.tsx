@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * JustWatch attribution.
  *
@@ -15,6 +16,7 @@
  * integration fails review.
  */
 export function JustWatchAttribution({ href, className = '' }: { href: string; className?: string }) {
+  const { t: _copy } = _useCopy();
   return (
     <a
       href={href}
@@ -22,8 +24,8 @@ export function JustWatchAttribution({ href, className = '' }: { href: string; c
       rel="noopener noreferrer"
       className={`inline-flex items-center gap-1 text-[11px] text-zinc-600 transition-colors hover:text-zinc-400 ${className}`}
     >
-      <span>via</span>
-      <span className="font-medium text-zinc-500">JustWatch</span>
+      <span>{_copy("copy.4d327af41f96", { defaultValue: "via" })}</span>
+      <span className="font-medium text-zinc-500">{_copy("copy.94b3fa810269", { defaultValue: "JustWatch" })}</span>
     </a>
   );
 }

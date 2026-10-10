@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Report Modal Component
@@ -39,32 +41,32 @@ import { useTranslation } from 'react-i18next';
  * reasons fetch already failed.
  */
 const FALLBACK_CONTENT_REASONS: ReportReason[] = [
-  { id: 'spam_misleading', label: 'Spam or misleading' },
-  { id: 'harassment_bullying', label: 'Harassment or bullying' },
-  { id: 'violent_content', label: 'Violence or dangerous content' },
-  { id: 'sexual_content', label: 'Explicit sexual content' },
-  { id: 'infringes_rights', label: 'Infringes my rights' },
-  { id: 'scam_fraud', label: 'Scam or fraud' },
-  { id: 'other', label: 'Other' },
+  { id: 'spam_misleading', get label() { return _translateCopy("copy.97ab5d0657d3", { defaultValue: "Spam or misleading" }); } },
+  { id: 'harassment_bullying', get label() { return _translateCopy("copy.56dc2b3bb2e5", { defaultValue: "Harassment or bullying" }); } },
+  { id: 'violent_content', get label() { return _translateCopy("copy.4dfa57a4c648", { defaultValue: "Violence or dangerous content" }); } },
+  { id: 'sexual_content', get label() { return _translateCopy("copy.e4610c9847a3", { defaultValue: "Explicit sexual content" }); } },
+  { id: 'infringes_rights', get label() { return _translateCopy("copy.052ec74b513d", { defaultValue: "Infringes my rights" }); } },
+  { id: 'scam_fraud', get label() { return _translateCopy("copy.5f0f908b54ed", { defaultValue: "Scam or fraud" }); } },
+  { id: 'other', get label() { return _translateCopy("copy.f97e9da0e3b8", { defaultValue: "Other" }); } },
 ];
 
 const FALLBACK_USER_REASONS: ReportReason[] = [
-  { id: 'spam', label: 'Spam account' },
-  { id: 'harassment_bullying', label: 'Harassment or bullying' },
-  { id: 'impersonation', label: 'Impersonation' },
-  { id: 'scam_fraud', label: 'Scam or fraud' },
-  { id: 'other', label: 'Other' },
+  { id: 'spam', get label() { return _translateCopy("copy.7cf990f7ab34", { defaultValue: "Spam account" }); } },
+  { id: 'harassment_bullying', get label() { return _translateCopy("copy.56dc2b3bb2e5", { defaultValue: "Harassment or bullying" }); } },
+  { id: 'impersonation', get label() { return _translateCopy("copy.059551570001", { defaultValue: "Impersonation" }); } },
+  { id: 'scam_fraud', get label() { return _translateCopy("copy.5f0f908b54ed", { defaultValue: "Scam or fraud" }); } },
+  { id: 'other', get label() { return _translateCopy("copy.f97e9da0e3b8", { defaultValue: "Other" }); } },
 ];
 
 const FALLBACK_COMMENT_REASONS: ReportReason[] = [
-  { id: 'spam', label: 'Spam' },
-  { id: 'harassment', label: 'Harassment' },
-  { id: 'hate_speech', label: 'Hate speech' },
-  { id: 'sexual_content', label: 'Sexual content' },
-  { id: 'violence', label: 'Violence' },
-  { id: 'scam_or_fraud', label: 'Scam or fraud' },
-  { id: 'misinformation', label: 'Misinformation' },
-  { id: 'other', label: 'Other' },
+  { id: 'spam', get label() { return _translateCopy("copy.94a9eac404c8", { defaultValue: "Spam" }); } },
+  { id: 'harassment', get label() { return _translateCopy("copy.98a7655d026a", { defaultValue: "Harassment" }); } },
+  { id: 'hate_speech', get label() { return _translateCopy("copy.5b1a77cb0894", { defaultValue: "Hate speech" }); } },
+  { id: 'sexual_content', get label() { return _translateCopy("copy.cedfe045ae82", { defaultValue: "Sexual content" }); } },
+  { id: 'violence', get label() { return _translateCopy("copy.16d186a18037", { defaultValue: "Violence" }); } },
+  { id: 'scam_or_fraud', get label() { return _translateCopy("copy.5f0f908b54ed", { defaultValue: "Scam or fraud" }); } },
+  { id: 'misinformation', get label() { return _translateCopy("copy.34d52e35bd31", { defaultValue: "Misinformation" }); } },
+  { id: 'other', get label() { return _translateCopy("copy.f97e9da0e3b8", { defaultValue: "Other" }); } },
 ];
 
 type ReportType = 'content' | 'user' | 'comment';
@@ -106,6 +108,7 @@ export function ReportModal({
   reportType = 'content',
   contentType = 'post',
 }: ReportModalProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [selectedReason, setSelectedReason] = useState<string>('');
@@ -135,12 +138,12 @@ export function ReportModal({
 
   const handleSubmit = async () => {
     if (!selectedReason) {
-      toast.error('Please select a reason for your report');
+      toast.error(_copy("copy.00219dda7288", { defaultValue: "Please select a reason for your report" }));
       return;
     }
 
     if (!isAuthenticated) {
-      toast.error('You must be logged in to submit a report');
+      toast.error(_copy("copy.e3ec84bb95b2", { defaultValue: "You must be logged in to submit a report" }));
       return;
     }
 
@@ -154,7 +157,7 @@ export function ReportModal({
         });
       } else if (reportType === 'comment') {
         if (commentId === undefined || commentId === null || commentId === '') {
-          toast.error('Invalid comment ID');
+          toast.error(_copy("copy.042678ea40b5", { defaultValue: "Invalid comment ID" }));
           return;
         }
         await reportComment({
@@ -165,7 +168,7 @@ export function ReportModal({
       } else if (tokenId !== undefined) {
         const numericTokenId = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId;
         if (isNaN(numericTokenId)) {
-          toast.error('Invalid content ID');
+          toast.error(_copy("copy.09d6f75f62fe", { defaultValue: "Invalid content ID" }));
           return;
         }
         await reportContent({
@@ -182,7 +185,7 @@ export function ReportModal({
       if (error.message?.includes('already reported')) {
         toast.error(reportType === 'comment' ? t('comments.reportCommentAlready') : 'You have already reported this');
       } else if (error.message?.includes('Unauthorized')) {
-        toast.error('Please log in to submit a report');
+        toast.error(_copy("copy.c5934c28976f", { defaultValue: "Please log in to submit a report" }));
       } else {
         toast.error(error.message || 'Failed to submit report');
       }
@@ -225,9 +228,7 @@ export function ReportModal({
         >
           {/* Reason Selection */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-zinc-300">
-              Why are you reporting this?
-            </Label>
+            <Label className="text-sm font-medium text-zinc-300">{_copy("copy.194c91101778", { defaultValue: "Why are you reporting this?" })}</Label>
             {isLoadingReasons ? (
               <div className="flex items-center justify-center py-6">
                 <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
@@ -267,9 +268,7 @@ export function ReportModal({
 
           {/* Additional Details */}
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium text-zinc-300">
-              Additional details (optional)
-            </Label>
+            <Label htmlFor="description" className="text-sm font-medium text-zinc-300">{_copy("copy.d3eefb6a33d1", { defaultValue: "Additional details (optional)" })}</Label>
             <Textarea
               id="description"
               value={description}
@@ -301,11 +300,9 @@ export function ReportModal({
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Submitting...
-                </>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />{_copy("copy.64115d5b9c79", { defaultValue: "Submitting..." })}</>
               ) : (
-                'Submit Report'
+                _copy("copy.e7e72948c5d5", { defaultValue: "Submit Report" })
               )}
             </Button>
           </div>

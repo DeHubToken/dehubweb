@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -87,6 +88,7 @@ function SectionBlock({ title, entries, id }: GlossarySection & { id?: string })
 }
 
 export default function GlossaryPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const location = useLocation();
   const iconSize = 18;
@@ -236,7 +238,7 @@ export default function GlossaryPage() {
               className="medal-shine-container w-6 h-6"
               style={{ '--medal-mask': `url(${medal})` } as React.CSSProperties}
             >
-              <img src={medal} alt={`Rank ${i + 1}`} className="w-6 h-6 object-contain relative" />
+              <img src={medal} alt={_copy("copy.11fe66e7be8e", { defaultValue: "Rank {{value1}}", value1: i + 1 })} className="w-6 h-6 object-contain relative" />
             </span>
           ),
           title: `#${i + 1} Trophy`,
@@ -254,7 +256,7 @@ export default function GlossaryPage() {
         { icon: <ExternalLink size={iconSize} />, title: t('glossary.viewOnExplorer', 'View on Explorer'), description: t('glossary.viewOnExplorerDesc', 'Opens the blockchain explorer (BaseScan) to view the on-chain transaction details for a post or transfer.') },
       ],
     },
-  ], [t]);
+  ], [t, _copy]);
 
   // Filter sections based on search query
   const filteredSections = useMemo(() => {
@@ -275,10 +277,10 @@ export default function GlossaryPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Glossary — Icons, Features & Web3 Terms" description="Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more." url="https://dehub.io/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'DeHub Glossary', url: 'https://dehub.io/app/glossary', description: 'Complete guide to DeHub icons, features and Web3 terms.' }} />
-      <h1 className="sr-only">DeHub Glossary — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.278632c72021", { defaultValue: "Glossary — Icons, Features & Web3 Terms" })} description={_copy("copy.f36d0d409464", { defaultValue: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more." })} url="https://dehub.io/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'DeHub Glossary', url: 'https://dehub.io/app/glossary', description: _copy("copy.0e6ebb58c64c", { defaultValue: "Complete guide to DeHub icons, features and Web3 terms." }) }} />
+      <h1 className="sr-only">{_copy("copy.0af1e8b4951c", { defaultValue: "DeHub Glossary — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
-        icon={<BrandIcon src={glossaryIcon} alt="Glossary" className="w-8 h-8 object-contain brightness-75" />}
+        icon={<BrandIcon src={glossaryIcon} alt={_copy("copy.4c4e436f9a45", { defaultValue: "Glossary" })} className="w-8 h-8 object-contain brightness-75" />}
         title={t('glossary.title', 'Glossary')}
         subtitle={t('glossary.subtitle', 'Learn what every icon and feature means')}
       >
@@ -288,7 +290,7 @@ export default function GlossaryPage() {
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search glossary..."
+            placeholder={_copy("copy.06b670994b28", { defaultValue: "Search glossary..." })}
             className="pl-9 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-zinc-500 h-9 text-sm rounded-xl"
           />
         </div>
@@ -303,8 +305,8 @@ export default function GlossaryPage() {
         ) : (
           <AppState
             icon="search"
-            title={`No results for "${searchQuery}"`}
-            description="Try a different term."
+            title={_copy("copy.71d37c72e19b", { defaultValue: "No results for \"{{value1}}\"", value1: searchQuery })}
+            description={_copy("copy.ce18e358bf01", { defaultValue: "Try a different term." })}
             kind="search-empty"
             size="section"
           />

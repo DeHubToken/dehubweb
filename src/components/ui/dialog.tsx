@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
@@ -50,6 +51,7 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   DialogContentProps
 >(({ className, children, hideCloseButton, overlayClassName, onPointerDownOutside, ...props }, ref) => {
+  const { t: _copy } = _useCopy();
   const present = React.useContext(OverlayContentPresent);
   if (!present) return null;
   return (
@@ -94,7 +96,7 @@ const DialogContent = React.forwardRef<
       {!hideCloseButton && (
         <DialogPrimitive.Close className="absolute right-4 top-4 rounded-full p-1 opacity-70 ring-offset-background transition-opacity hover:opacity-100 hover:bg-zinc-700/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none text-white/80">
           <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
+          <span className="sr-only">{_copy("copy.7d9eb7acb13e", { defaultValue: "Close" })}</span>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Content>
