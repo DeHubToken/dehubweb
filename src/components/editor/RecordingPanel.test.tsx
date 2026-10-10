@@ -70,9 +70,10 @@ describe("recording permission and import ownership", () => {
     await act(async () => fireEvent.click(view.getByRole("button", { name: "common.save" })));
     expect(useEditorStore.getState().editing).toBe(true);
     let newer!: ProjectEditLease;
-    act(() => { useEditorStore.getState().loadSnapshot(useEditorStore.getState().toSnapshot()); newer = useEditorStore.getState().holdEdits(); });
+    const reset = useEditorStore.getState().toSnapshot();
+    act(() => { useEditorStore.getState().loadSnapshot(reset); newer = useEditorStore.getState().holdEdits(); });
     await act(async () => imported.resolve("take"));
-    expect(useEditorStore.getState().tracks).toHaveLength(0); expect(useEditorStore.getState().clips).toHaveLength(0);
+    expect(useEditorStore.getState().tracks).toEqual(reset.tracks); expect(useEditorStore.getState().clips).toEqual(reset.clips);
     expect(newer.isCurrent()).toBe(true); act(() => newer.release());
   });
 
