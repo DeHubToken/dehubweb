@@ -1,4 +1,4 @@
-export const POST_CARD_VERSION = 'v1';
+export const POST_CARD_VERSION = 'v2';
 export const POST_CARD_TTL = 300;
 const ORIGIN = 'https://dehub.io';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
@@ -153,14 +153,37 @@ function authorIdentity(author, badges) {
 
 function pollLayout(poll) {
   if (!poll) return null;
-  const dense = poll.options.length >= 4;
+  const dense = poll.options.length >= 3;
   const question = wrapPostText(poll.question, 19, 698, dense ? 2 : 3);
   const rows = poll.options.map(option => {
     const lines = wrapPostText(option.text, 17, 592, dense ? 1 : 2);
     return { ...option, lines, height: lines.length > 1 ? 54 : 36 };
   });
   const height = question.length * 25 + 13 + rows.reduce((sum, row) => sum + row.height + 7, 0) + 27;
-  return { ...poll, question, rows, top: 510 - height };
+  return { ...poll, question, rows, height };
+}
+
+/** Lay out post copy and its poll as one flow, reserving room for all results. */
+export function layoutPostCardCopy(data) {
+  const poll = pollLayout(data.poll);
+  const top = 112;
+  const gap = 24;
+  const availableBottom = 510 - (poll ? poll.height + gap : 0);
+  const dense = !!poll && availableBottom - top < 130;
+  const titleSize = poll ? dense ? 28 : 32 : data.title.length > 140 ? 34 : 42;
+  const bodySize = poll ? dense ? 23 : 30 : data.title ? 28 : data.body.length > 350 ? 30 : 36;
+  const titleStep = Math.ceil(titleSize * 1.25);
+  const bodyStep = Math.ceil(bodySize * 1.35);
+  const bodyReserve = data.body ? bodyStep + gap : 0;
+  const titleLimit = Math.max(1, Math.min(data.body ? 3 : 7, Math.floor((availableBottom - top - bodyReserve) / titleStep)));
+  const titleLines = wrapPostText(data.title, titleSize, 698, titleLimit);
+  const title = { lines: titleLines, size: titleSize, step: titleStep, y: top + titleSize * .8, top, bottom: top + Math.max(0, titleLines.length - 1) * titleStep + (titleLines.length ? titleSize : 0) };
+  const bodyTop = titleLines.length ? title.bottom + gap : top;
+  const bodyLimit = Math.max(1, Math.floor((availableBottom - bodyTop) / bodyStep));
+  const bodyLines = wrapPostText(data.body, bodySize, 698, bodyLimit);
+  const body = { lines: bodyLines, size: bodySize, step: bodyStep, y: bodyTop + bodySize * .8, top: bodyTop, bottom: bodyTop + Math.max(0, bodyLines.length - 1) * bodyStep + (bodyLines.length ? bodySize : 0) };
+  const bottom = bodyLines.length ? body.bottom : title.bottom;
+  return { title, body, poll: poll ? { ...poll, top: bottom + gap } : null, bottom, gap };
 }
 
 function renderPoll(poll) {
@@ -177,16 +200,9 @@ function renderPoll(poll) {
   return `<g data-poll-state="${poll.ended ? 'closed' : 'open'}">${textLines(poll.question, 415, poll.top + 19, 19, 25, '#d9dae0')}${rows}<text x="415" y="${y + 17}" font-size="15" fill="#92959f">${escape(label)}</text></g>`;
 }
 
-/** Official store artwork, Exo, and the same badge stills as the profile. */
+/** A continuous chrome frame around the post, with the actual profile artwork. */
 export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges = [] }) {
-  const poll = pollLayout(data.poll);
-  const copyBottom = poll ? poll.top - 28 : 497;
-  const titleSize = poll ? 30 : data.title.length > 140 ? 34 : 42;
-  const titleY = poll ? 139 : 165;
-  const title = wrapPostText(data.title, titleSize, 698, poll ? 1 : data.body ? 3 : 7);
-  const bodySize = poll ? (copyBottom < 215 ? 23 : 28) : data.title ? 28 : data.body.length > 350 ? 30 : 36;
-  const bodyY = title.length ? titleY + (title.length - 1) * 52 + (poll ? 48 : 70) : poll ? 141 : 178;
-  const body = wrapPostText(data.body, bodySize, 698, Math.max(1, Math.floor((copyBottom - bodyY) / (bodySize * 1.4)) + 1));
+  const { title, body, poll } = layoutPostCardCopy(data);
   const identity = authorIdentity(data.author, badges);
   const initials = Array.from(data.author).slice(0, 2).join('').toUpperCase();
   const date = new Date(data.createdAt);
@@ -203,14 +219,14 @@ export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111214"/><stop offset=".4" stop-color="#060607"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>
-    <linearGradient id="chrome-fade" x2="0" y2="1"><stop stop-color="#000"/><stop offset=".34" stop-color="#fff"/></linearGradient>
-    <mask id="chrome-mask"><rect y="571" width="1200" height="59" fill="url(#chrome-fade)"/></mask>
+    <linearGradient id="seam" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c8c9ce"/><stop offset=".12" stop-color="#53555c"/><stop offset=".5" stop-color="#303238"/><stop offset=".88" stop-color="#53555c"/><stop offset="1" stop-color="#b5b7be"/></linearGradient>
     <clipPath id="face"><rect x="60" y="151" width="66" height="66" rx="18"/></clipPath>
     <clipPath id="copy"><rect x="410" y="109" width="708" height="408"/></clipPath>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect x="26" y="28" width="1148" height="574" rx="25" fill="none" stroke="#777982" stroke-opacity=".46"/>
-  <path d="M370 61V523M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
+  ${chrome ? `<image data-brand-artwork="integrated-chrome-edge" x="0" y="0" width="1200" height="630" xlink:href="${chrome}" opacity=".72"/>` : ''}
+  <path d="M357 38Q370 38 370 52V576Q370 589 383 589" fill="none" stroke="url(#seam)" stroke-width="1.1"/>
+  <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
   <image x="43" y="35" width="77" height="66" xlink:href="${logo}"/>
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
   ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Exo" font-size="23">${escape(initials)}</text>`}
@@ -220,14 +236,13 @@ export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges
     ${stats}
     <text x="60" y="520" font-size="17" fill="#8b8e99">${escape(dateText)}</text>
     <g clip-path="url(#copy)">
-      ${textLines(title, 415, titleY, titleSize, 52, '#f4f4f6')}
-      ${textLines(body, 415, bodyY, bodySize, bodySize * 1.4, '#c5c6ce')}
+      ${textLines(title.lines, 415, title.y, title.size, title.step, '#f4f4f6')}
+      ${textLines(body.lines, 415, body.y, body.size, body.step, '#c5c6ce')}
       ${renderPoll(poll)}
     </g>
     <text x="415" y="558" font-size="18" fill="#868993">dehub.io</text>
     <text x="1088" y="558" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post</text>
     <path d="M1100 557l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  ${chrome ? `<image data-brand-artwork="store-chrome-wave" x="0" y="-119" width="1200" height="800" xlink:href="${chrome}" opacity=".48" mask="url(#chrome-mask)"/>` : ''}
   </svg>`;
 }
