@@ -303,7 +303,10 @@ export default function StakingPage() {
   const refreshStakePosition = (wallet: string) => apiCall(`/api/staking/refresh/${wallet}`, { method: 'POST' });
 
   const clearPendingStake = (attempt: StakeAttempt) => {
-    try { localStorage.removeItem(pendingStakeKey(attempt.wallet)); } catch {}
+    try {
+      const saved = JSON.parse(localStorage.getItem(pendingStakeKey(attempt.wallet)) || 'null');
+      if (saved?.hash === attempt.hash) localStorage.removeItem(pendingStakeKey(attempt.wallet));
+    } catch {}
     setPendingStake(previous => previous?.hash === attempt.hash ? null : previous);
   };
 
