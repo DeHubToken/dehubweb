@@ -26,11 +26,12 @@ export function useTranslatedSegments(
   lang: string,
   enabled: boolean,
 ) {
-  const { translation, request, isFetching } = useTranscriptTranslation(transcriptId, lang, enabled);
+  const { translation, request, isFetching, isError } = useTranscriptTranslation(transcriptId, lang, enabled);
   return {
     segments: translation?.status === 'ready' ? translation.segments : null,
     status: translation?.status ?? null,
     isFetching,
+    isError,
     request,
   };
 }
