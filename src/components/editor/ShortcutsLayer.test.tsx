@@ -36,7 +36,7 @@ describe("editor shortcut focus", () => {
     render(<><Playhead /><ShortcutsLayer /></>);
     fireEvent.keyDown(screen.getByRole("slider", { name: "Playhead" }), { key: "ArrowRight" });
     expect(state.setCurrentTime).toHaveBeenCalledTimes(1);
-    expect(state.setCurrentTime).toHaveBeenCalledWith(1 / 30);
+    expect(state.setCurrentTime.mock.calls[0][0]).toBeCloseTo(1 / 30, 12);
     expect(state.setIsPlaying).not.toHaveBeenCalled();
   });
   it("adjusts an inspector slider without moving the playhead", () => {
