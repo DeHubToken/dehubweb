@@ -192,6 +192,21 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Render text post share cards
+        run: node --test server/post-share-card.test.mjs
+
+      - name: Validate production Worker bundle
+        run: |
+          mkdir -p dist
+          printf '<!doctype html><title>Worker bundle check</title>' > dist/index.html
+          pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/share-worker"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: post-card-checks
+          path: post-card-checks/
+          retention-days: 7
+
       - name: Trenchstar wallet encryption and signing
         run: |
           node scripts/trenchstar-wallets.test.mjs
