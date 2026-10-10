@@ -1,4 +1,5 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { useEditorStore } from '@/store/editorStore';
 /**
  * Generate panel.
  * ===============
@@ -66,7 +67,8 @@ export function GeneratePanel() {
   const setGeneratePrefill = useEditorUiStore((s) => s.setGeneratePrefill);
 
   const [kind, setKind] = useState<GenKind>('image');
-  const [prompt, setPrompt] = useSurfaceDraft("components/editor/panels/GeneratePanel.tsx:prompt", '');
+  const draftProjectId = useEditorStore(s => s.projectId);
+  const [prompt, setPrompt] = useSurfaceDraft("components/editor/panels/GeneratePanel.tsx:prompt", '', draftProjectId);
   const [imageModel, setImageModel] = useState<ImageModelKey>('gemini-3-pro-image');
   const [videoModel, setVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   // Separate ratios per mode. One shared value could carry a 4:5 image ratio

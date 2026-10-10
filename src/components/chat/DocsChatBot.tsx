@@ -178,11 +178,11 @@ export const DocsChatBot = () => {
     const userMessage: Message = { role: 'user', content: input.trim() };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
-    setInput('');
     setIsLoading(true);
 
     try {
       await streamChat(newMessages.slice(1)); // Skip the initial greeting
+      setInput.complete(input, '');
     } catch (error) {
       console.error('Chat error:', error);
       toast.error(t('nav.docsChatError'), {

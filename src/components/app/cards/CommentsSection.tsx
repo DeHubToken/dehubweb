@@ -1,3 +1,4 @@
+import { accountDraftKey } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Comments Section Component
@@ -907,7 +908,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -1003,7 +1004,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // Whatever was left unsent last time, restored whole: the text, the reply it
   // was aimed at and a GIF. Read once here rather than in each initialiser so
   // the three can't disagree.
-  const [restoredDraft] = useState(() => loadDraft(tokenId));
+  const commentDraftScope = accountDraftKey(walletAddress, `comments:${tokenId}`) ?? '';
+  const [restoredDraft] = useState(() => loadDraft(commentDraftScope));
   const [newComment, setNewComment] = useState(() => restoredDraft?.text ?? '');
   const [aiRewriting, setAiRewriting] = useState(false);
   const [aiMenu, setAiMenu] = useState<'closed' | 'open' | 'vibes'>('closed');
@@ -1126,13 +1128,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // target. One entry per post, so switching reply target carries the text
   // over instead of filing it under a key nothing reads again.
   useEffect(() => {
-    saveDraft(tokenId, {
+    saveDraft(commentDraftScope, {
       text: newComment,
       parentId: replyTo?.id,
       parentUsername: replyTo?.username,
       gifUrl: commentGifUrl ?? undefined,
     });
-  }, [newComment, tokenId, replyTo?.id, replyTo?.username, commentGifUrl]);
+  }, [newComment, tokenId, commentDraftScope, replyTo?.id, replyTo?.username, commentGifUrl]);
 
   // Something unsent in the box. The host sheet reads this to refuse to close
   // mid-sentence; an unmount reports clean so a closed sheet can't latch it on.
@@ -2142,21 +2144,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const gifUrl = commentGifUrl;
     const audioNote = voiceNote;
     const submittedText = newComment;
-    clearDraft(tokenId);
-    coachReset();
-    setReplyTo(null);
-    setNewComment('');
-    setVoiceNote(null);
-    // Not removeVoiceNote: the URL has to outlive this, to be put back if the
-    // post fails. The player built on it goes now, though.
-    releasePreviewAudio();
-    removeCommentImage();
-    removeCommentGif();
-    setIsInputExpanded(false);
-    // Reset textarea inline height set by auto-resize
-    if (inputRef.current) {
-      inputRef.current.style.height = '';
-    }
     setIsSubmitting(true);
 
     try {
@@ -2206,6 +2193,21 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         });
         await postComment(tokenId, newComment, replyTarget?.id);
       }
+      if (loadDraft(commentDraftScope)?.text === submittedText) clearDraft(commentDraftScope);
+      coachReset();
+      setReplyTo(current => current?.id === replyTarget?.id ? null : current);
+      setNewComment(current => current === submittedText ? '' : current);
+      setVoiceNote(null);
+      // Not removeVoiceNote: the URL has to outlive this, to be put back if the
+      // post fails. The player built on it goes now, though.
+      releasePreviewAudio();
+      removeCommentImage();
+      removeCommentGif();
+      setIsInputExpanded(false);
+      // Reset textarea inline height set by auto-resize
+      if (inputRef.current) {
+        inputRef.current.style.height = '';
+      }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
       emitCommentCreated(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
@@ -2217,21 +2219,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       if (mentionsAssistant(newComment)) armAssistantReply();
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
-      // Put the message back in the composer. The box was cleared the moment
-      // Post was tapped, so a refusal used to destroy what the author wrote —
-      // the one moment losing it hurts most. The image and the voice note are
-      // still in this closure, which is the only place they can come back from
-      // (an object URL means nothing to the next page load); the preview URL
-      // was revoked with the old state, so mint a fresh one.
-      setNewComment(submittedText);
-      setReplyTo(replyTarget);
-      setVoiceNote(audioNote);
-      if (gifUrl) setCommentGifUrl(gifUrl);
-      if (imageFile) {
-        setCommentImage(imageFile);
-        setCommentImagePreview(URL.createObjectURL(imageFile));
-      }
-      setIsInputExpanded(true);
+      // Text and attachments remain in the composer until the request succeeds.
       // The server's own words when it has them — a refusal explains itself
       // ("comments are turned off", a link that cannot be posted) and a
       // generic failure message would leave the author guessing.
@@ -2241,7 +2229,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       setIsSubmitting(false);
       submitInFlightRef.current = false;
     }
-  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply, coachReset, t]);
+  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, commentDraftScope, queryClient, armAssistantReply, coachReset, t]);
 
   /**
    * What every Post control calls. On a Common Ground thread the first reply
@@ -3268,4 +3256,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     </motion.div>
     </PostCreatorContext.Provider>
   );
+}
+
+export function CommentsSection(props: CommentsSectionProps) {
+  const { walletAddress } = useAuth();
+  return <CommentsSectionForAccount key={`${walletAddress?.toLowerCase() ?? 'signed-out'}:${props.tokenId}`} {...props} />;
 }

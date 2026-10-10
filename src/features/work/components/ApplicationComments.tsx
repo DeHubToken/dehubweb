@@ -13,7 +13,7 @@ export function ApplicationComments({ application, comments, canReply }: {
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [body, setBody] = useSurfaceDraft("features/work/components/ApplicationComments.tsx:body", '');
+  const [body, setBody] = useSurfaceDraft("features/work/components/ApplicationComments.tsx:body", '', application.id);
   const mutation = useCommentOnApplication();
 
   return (

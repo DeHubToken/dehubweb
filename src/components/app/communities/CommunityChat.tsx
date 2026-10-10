@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Community Chat
@@ -157,7 +158,16 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
   const [newMessage, setNewMessage] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:newMessage", '', communityId);
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:editText", '', communityId);
+  const [editInitial, setEditInitial] = useState('');
+  const [editText, setEditText] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
+  const commitDraftEdit = async (id: string) => {
+    if (!editText.trim()) return;
+    try {
+      const result = await editMessage(id, editText);
+      if (result !== false && setEditText.complete(editText, editText)) setEditingId(current => current === id ? null : current);
+    } catch { /* Keep the edit available for retry. */ }
+  };
+
   const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:searchQuery", '', communityId);
   const [showSearch, setShowSearch] = useState(false);
   const [adminThinking, setAdminThinking] = useState(false);
@@ -457,14 +467,15 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     }
   }, [deleteTarget, deleteMessage]);
 
+  const sendingRef = useRef(false);
   const handleSend = async () => {
+    if (sendingRef.current) return;
     if (!isAuthenticated) { openLoginModal(); return; }
     if (slowModeRemaining > 0) return;
     const trimmed = newMessage.trim();
     if (!trimmed) return;
     const replyToId = replyTo?.id;
-    setReplyTo(null);
-    setNewMessage('');
+    sendingRef.current = true;
 
     // Detect /admin command
     const adminMatch = trimmed.match(/^\/admin\b\s*(.*)$/i);
@@ -477,11 +488,14 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
+      if (setNewMessage.complete(newMessage, '')) setReplyTo(null);
       sent = true;
     } catch {
       // Error handled in hook
     }
-    if (sent) startSlowModeCountdown();
+    sendingRef.current = false;
+    if (!sent) return;
+    startSlowModeCountdown();
 
     if (adminMatch) {
       const prompt = (adminMatch[1] || '').trim();
@@ -835,8 +849,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                               onChange={(e) => setEditText(e.target.value)}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  editMessage(msg.id, editText);
-                                  setEditingId(null);
+                                  void commitDraftEdit(msg.id);
                                 } else if (e.key === 'Escape') {
                                   setEditingId(null);
                                 }
@@ -845,7 +858,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                               maxLength={500}
                             />
                             <button
-                              onClick={() => { editMessage(msg.id, editText); setEditingId(null); }}
+                              onClick={() => { void commitDraftEdit(msg.id); }}
                               className="p-0.5 text-emerald-400 hover:text-emerald-300"
                             >
                               <Check className="w-3.5 h-3.5" />
@@ -876,7 +889,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
-                                  onClick={() => { setEditingId(msg.id); setEditText(msg.content); }}
+                                  onClick={() => { setEditingId(msg.id); setEditInitial(msg.content); }}
                                   className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
                                   aria-label={t('communities.edit')}
                                 >

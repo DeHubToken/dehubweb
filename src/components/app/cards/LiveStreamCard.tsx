@@ -1748,6 +1748,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: stream.tokenId,
           type: 'live',
           author: stream.streamer,
           title: stream.title,

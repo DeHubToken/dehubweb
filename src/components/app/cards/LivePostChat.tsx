@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Live Post Chat Component
@@ -162,7 +163,16 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   const [contextMenuMsg, setContextMenuMsg] = useState<SupabaseLiveChatMessage | null>(null);
   const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editDraft, setEditDraft] = useSurfaceDraft("components/app/cards/LivePostChat.tsx:editDraft", '', JSON.stringify([tokenId, editingId]));
+  const [editInitial, setEditInitial] = useState('');
+  const [editDraft, setEditDraft] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
+  const commitDraftEdit = async (id: string) => {
+    if (!editDraft.trim()) return;
+    try {
+      const result = await editMessage(id, editDraft);
+      if (result !== false && setEditDraft.complete(editDraft, editDraft)) setEditingId(current => current === id ? null : current);
+    } catch { /* Keep the edit available for retry. */ }
+  };
+
 
   const mention = useMention({
     inputRef: textareaRef,
@@ -265,14 +275,12 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   const startEditing = useCallback((msg: SupabaseLiveChatMessage) => {
     setContextMenuMsg(null);
     setEditingId(msg.id);
-    setEditDraft(msg.content || '');
+    setEditInitial(msg.content || '');
   }, [setEditDraft]);
 
   const commitEdit = useCallback((msg: SupabaseLiveChatMessage) => {
-    const next = editDraft.trim();
-    setEditingId(null);
-    if (next && next !== msg.content) void editMessage(msg.id, next);
-  }, [editDraft, editMessage]);
+    void commitDraftEdit(msg.id);
+  }, [editDraft, editMessage, setEditDraft]);
 
   const handleDeleteMessage = useCallback((msg: SupabaseLiveChatMessage) => {
     setContextMenuMsg(null);
