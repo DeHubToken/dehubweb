@@ -1,4 +1,5 @@
 import { useDraftState } from '@/hooks/use-draft-state';
+import { draftIdentity } from '@/hooks/use-surface-draft';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { readCurrentDraft, readDraft, writeDraft, clearDraft, flushDrafts } from '@/lib/draft-cache';
 import { useState, useRef, useCallback, useEffect } from 'react';
@@ -43,6 +44,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+import type { DeHubNFT } from '@/lib/api/dehub/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 
@@ -299,7 +301,15 @@ export function usePostForm(
    */
   onLiveStreamReady?: (stream: LiveStreamHandoff) => void,
   draftScope = "post:new",
+  /**
+   * Set when this composer is writing a quote. The quote goes out through
+   * /quote_post with the same media, rating and mint choices as any post;
+   * what a quote cannot carry (paywalls, bounty, schedule, live, shop) is
+   * hidden by the modal and never sent.
+   */
+  quotedPost?: DeHubNFT | null,
 ): UsePostFormReturn {
+  const isQuoting = !!quotedPost;
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { addOptimisticPost } = useOptimisticPosts();
@@ -314,7 +324,11 @@ export function usePostForm(
   const d = savedDraft.current;
 
   // Form state — initialize from saved draft if available
-  const [text, setText] = useDraftState(draftScope + ":text", d?.text ?? '');
+  // Keep the previous quote text key so unfinished quotes survive the composer change.
+  const textScope = quotedPost
+    ? `field:${JSON.stringify(['components/app/modals/QuotePostModal.tsx:content', draftIdentity(quotedPost)])}`
+    : draftScope + ":text";
+  const [text, setText] = useDraftState(textScope, d?.text ?? '');
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
@@ -1465,6 +1479,12 @@ export function usePostForm(
 
       const postingOnSolana = isSolanaChain(chainId);
 
+      if (isQuoting && postingOnSolana) {
+        toast.error('Quotes post on Base — switch chain to quote this post');
+        setIsPosting(false);
+        return;
+      }
+
       if (postingOnSolana && isWatch2Earn) {
         toast.error('Bounty is not available on Solana');
         setIsPosting(false);
@@ -1870,7 +1890,8 @@ export function usePostForm(
         {
           name: submittedTitle,
           description: submittedDescription,
-          articleBody: extra?.articleBody,
+          quotedTokenId: isQuoting ? Number(quotedPost!.tokenId) : undefined,
+          articleBody: isQuoting ? undefined : extra?.articleBody,
           articleImage: extra?.articleImage,
           socialImage: extra?.socialImage,
           postType,
@@ -1881,7 +1902,7 @@ export function usePostForm(
           thumbnail,
           minterAddress,
           mintOptOut: !mintingThisPost,
-          scheduledAt: !liveMode && scheduledDate ? scheduledDate.toISOString() : undefined,
+          scheduledAt: !liveMode && !isQuoting && scheduledDate ? scheduledDate.toISOString() : undefined,
           scheduledFor: liveMode === 'video' && scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
           contentRating: isMature ? 'mature' : undefined,
@@ -1935,7 +1956,7 @@ export function usePostForm(
           });
       }
 
-      if (!mintResponse.duplicate && !liveMode) {
+      if (!mintResponse.duplicate && !liveMode && !isQuoting) {
         void crossPost({
           text: [submittedTitle, submittedDescription].filter(Boolean).join('\n\n'),
           files: files.filter((f): f is File => f instanceof File),
@@ -1956,6 +1977,14 @@ export function usePostForm(
       if (alreadyOnChain) {
         console.log('[Mint] Duplicate of an already-minted post — skipping the chain step');
         mintingThisPost = false;
+      }
+
+      // /quote_post always signs for a mint. A quote published off-chain is
+      // kept the same way a post whose wallet never answered is: marked
+      // deliberately off-chain so the expiry sweep leaves it up — and no
+      // wallet is ever asked for.
+      if (isQuoting && !mintingThisPost && !alreadyOnChain && !mintResponse.duplicate) {
+        await keepPostOffChain(mintResponse.createdTokenId);
       }
 
       const isSolanaMint = !!(mintResponse.isSolana && mintResponse.transaction && mintResponse.mintAddress);
@@ -2323,6 +2352,7 @@ export function usePostForm(
           isLiked: false,
           createdAt: new Date().toISOString(),
           isOptimistic: true,
+          ...(isQuoting ? { isQuotePost: true, quotedPost } : {}),
         };
         addOptimisticPost({ id: optimisticId, type: 'image', data: imagePost, createdAt: new Date() });
       } else {
@@ -2348,6 +2378,7 @@ export function usePostForm(
             dislikes: 0,
           },
           isOptimistic: true,
+          ...(isQuoting ? { isQuotePost: true, quotedPost } : {}),
         };
         addOptimisticPost({ id: optimisticId, type: 'post', data: textPost, createdAt: new Date() });
       }
@@ -2409,9 +2440,10 @@ export function usePostForm(
 
       onClose();
 
-      // Navigate to home to show the new post
-      navigate('/app');
-      
+      // A quote stays where it was written: the optimistic card above already
+      // shows it at the top of the feed or the creator's own profile.
+      if (isQuoting) return;
+
       // Navigate to home to show the new post
       navigate('/app');
     } catch (error) {
@@ -2562,6 +2594,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
+    isQuoting, quotedPost,
   ]);
 
   /**
