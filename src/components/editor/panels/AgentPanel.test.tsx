@@ -134,7 +134,11 @@ describe('reviewing generation drafts from editor chat', () => {
     fireEvent.change(field, { target: { value: 'Create a 6 second video from my clips with fades' } });
     fireEvent.keyDown(field, { key: 'Enter', code: 'Enter' });
     expect(screen.getByText('easyTrade.reviewTitle · editor.video.video')).toBeInTheDocument();
-    expect(screen.getAllByRole('checkbox')).toHaveLength(2); expect(askAgent).not.toHaveBeenCalled();
+    expect(screen.getByRole('checkbox', { name: 'editor.video.video' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'editor.app.photo' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'editor.assembly.matchConsent' })).not.toBeChecked();
+    expect(screen.getByRole('button', { name: 'editor.assembly.matchScenes' })).toBeDisabled();
+    expect(askAgent).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'editor.menu.bringForward 2' }));
     const length = screen.getByRole('textbox', { name: 'filters.duration 1' });
     fireEvent.change(length, { target: { value: '1.' } }); expect(length).toHaveValue('1.');
