@@ -266,7 +266,7 @@ interface UsePostFormReturn {
     deleteDraft: (id: string) => void;
     startRecording: () => void;
     stopRecording: () => void;
-    setSelectedCategory: (category: string) => void;
+    setSelectedCategory: import('@/hooks/use-draft-state').DraftSetter<string>;
     setShowTitle: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
