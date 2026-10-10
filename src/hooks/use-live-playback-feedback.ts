@@ -11,7 +11,7 @@ export function useLivePlaybackFeedback(streamId: string | undefined, loading: b
     let subscription: { leave: () => void } | undefined;
     void import('@/lib/api/dehub/stream-presence').then(({ watchStreamPlayback }) => {
       if (!cancelled) subscription = watchStreamPlayback(streamId, setBroadcastPaused);
-    });
+    }).catch(() => undefined);
     return () => { cancelled = true; subscription?.leave(); };
   }, [streamId, enabled]);
   useEffect(() => {
