@@ -63,17 +63,6 @@ interface EditorState extends EditableState {
   setProjectTitle: (t: string) => void;
   loadSnapshot: (snap: ProjectSnapshot) => void;
   applySharedSnapshot: (snap: ProjectSnapshot, expectedKey: string) => number;
-  applySharedSnapshot: (snap, expectedKey) => {
-    const s = get(), current = s.toSnapshot();
-    if (batchedEdits || current.id !== snap.id || projectReviewSnapshotKey(current) !== expectedKey) throw new Error("The current project changed during transfer");
-    const full = (editable: EditableState): ProjectSnapshot => ({ ...current, ...editable });
-    const next = rebaseProjectHistory({ current, past: s.past.map(full), future: s.future.map(full) }, snap);
-    const editable = (value: ProjectSnapshot): EditableState => ({ tracks: value.tracks, clips: value.clips, settings: value.settings });
-    const ids = new Set(snap.clips.map(clip => clip.id));
-    set({ ...editable(next.current), projectTitle: snap.title, past: next.past.map(editable), future: next.future.map(editable),
-      selectedClipIds: s.selectedClipIds.filter(id => ids.has(id)), currentTime: Math.min(s.currentTime,timelineDuration(snap.settings,snap.clips)), isPlaying: false });
-    return next.protectedPaths.length;
-  },
   newProject: () => void;
   toSnapshot: () => ProjectSnapshot;
 
@@ -222,6 +211,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       past: [],
       future: [],
     }),
+  applySharedSnapshot: (snap, expectedKey) => {
+    const s = get(), current = s.toSnapshot();
+    if (batchedEdits || current.id !== snap.id || projectReviewSnapshotKey(current) !== expectedKey) throw new Error("The current project changed during transfer");
+    const full = (editable: EditableState): ProjectSnapshot => ({ ...current, ...editable });
+    const next = rebaseProjectHistory({ current, past: s.past.map(full), future: s.future.map(full) }, snap);
+    const editable = (value: ProjectSnapshot): EditableState => ({ tracks: value.tracks, clips: value.clips, settings: value.settings });
+    const ids = new Set(snap.clips.map(clip => clip.id));
+    set({ ...editable(next.current), projectTitle: snap.title, past: next.past.map(editable), future: next.future.map(editable),
+      selectedClipIds: s.selectedClipIds.filter(id => ids.has(id)), currentTime: Math.min(s.currentTime,timelineDuration(snap.settings,snap.clips)), isPlaying: false });
+    return next.protectedPaths.length;
+  },
   newProject: () =>
     set({
       projectId: nanoid(10),
