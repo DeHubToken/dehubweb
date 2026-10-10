@@ -43,7 +43,7 @@ test('restricted content and media posts do not acquire a public text image', ()
 test('both crawler tags and structured data select the same versioned PNG', () => {
   const html = '<head><meta property="og:image" content="avatar.jpg"><meta name="twitter:image" content="avatar.jpg"><script type="application/ld+json">{"@type":"SocialMediaPosting","image":"avatar.jpg"}</script></head>';
   const result = applyTextPostImage(html, post);
-  assert.equal((result.match(/https:\/\/dehub.io\/_og\/post\/v2\/6501.png/g) || []).length, 4);
+  assert.equal((result.match(/https:\/\/dehub.io\/_og\/post\/v3\/6501.png/g) || []).length, 4);
   assert.ok(result.includes('content="1200"'));
   assert.ok(result.includes('content="630"'));
   assert.ok(result.includes('summary_large_image'));
