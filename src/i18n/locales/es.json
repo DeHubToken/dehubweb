@@ -3750,6 +3750,8 @@
     "sellYourFractions": "Vender tus fracciones ({{held}} en cartera)"
   },
   "creator": {
+    "toolMaboroshi": "Maboroshi",
+    "toolMaboroshiDesc": "Sustituye personajes y objetos, revisa un borrador y exporta con la banda sonora original.",
     "whatToCreate": "Qué crear",
     "startCreatingWith": "Empieza a crear con {{model}}",
     "studioSubtitle": "Describe una escena, un personaje, un ambiente o un estilo. Los resultados aparecen abajo y pasan directos al editor.",
