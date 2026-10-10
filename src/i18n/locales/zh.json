@@ -6498,7 +6498,10 @@
       "resetToStart": "重置到开始",
       "resize": "调整大小",
       "rotate": "旋转",
-      "toggleLoop": "切换循环"
+      "toggleLoop": "切换循环",
+      "previousFrame": "上一帧",
+      "nextFrame": "下一帧",
+      "playhead": "播放位置"
     },
     "export": {
       "scope": "下载范围",
