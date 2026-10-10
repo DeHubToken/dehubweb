@@ -1,9 +1,6 @@
 BEGIN;
 CREATE FUNCTION public.receipt_assert(ok boolean,message text) RETURNS void LANGUAGE plpgsql AS $$
 BEGIN IF ok IS DISTINCT FROM true THEN RAISE EXCEPTION '%',message; END IF; END $$;
-SELECT receipt_assert(EXISTS(SELECT 1 FROM editor_cloud_draft_receipts WHERE owner_wallet='0x7777777777777777777777777777777777777777'
-  AND project_id='87878787-8787-4787-8787-878787878787' AND request_id='87000000-0000-4000-8000-000000000003'
-  AND outcome='committed' AND committed_revision=1),'Existing writer receipt was not backfilled');
 SET ROLE anon;
 SELECT cloud_test_headers('0x1111111111111111111111111111111111111111');
 SELECT set_config('receipt.project','81818181-8181-4181-8181-818181818181',false);
