@@ -54,7 +54,7 @@ export class EditorPresenceRoom {
     this.queue = task; return task;
   }
   private async access(peer: Peer) {
-    if (!peer.wallet || !peer.token || !Number.isInteger(value.draftRevision) || (value.draftRevision??-1)<0 || (value.draftRevision??0)>=2147483647 || peer.deadline <= Date.now()) throw new Error("access");
+    if (!peer.wallet || !peer.token || peer.deadline <= Date.now()) throw new Error("access");
     const response = await this.fetcher(RPC, { method: "POST", headers: { "Content-Type": "application/json", apikey: PUBLIC_KEY, Authorization: "Bearer " + PUBLIC_KEY, "x-wallet-address": peer.wallet, "x-wallet-session": peer.token }, body: JSON.stringify({ p_owner: peer.owner, p_id: peer.projectId }), signal: AbortSignal.timeout(6000) });
     if (!response.ok) throw new Error("access");
     const value = await response.json() as { wallet?: string; ownerWallet?: string; projectId?: string; role?: string; revision?: number; draftRevision?: number };
