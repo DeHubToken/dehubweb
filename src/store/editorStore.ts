@@ -1,3 +1,4 @@
+import { projectEditGate, type ProjectEditLease } from "@/lib/editor/projectEditGate";
 /**
  * Editor state: media library, multi-track timeline, playback, project settings,
  * selection, and undo/redo history.
@@ -135,7 +136,9 @@ interface EditorState extends EditableState {
   /** Delete a page and its layers; later pages move up to close the gap. */
   deletePage: (index: number) => void;
 
-  beginGesture: () => void;
+  editing: boolean;
+  holdEdits: () => ProjectEditLease;
+  beginGesture: () => ProjectEditLease;
   /**
    * Run several store edits as one undo step. Used by the AI agent, whose one
    * request can touch a dozen layers; undo should take the whole request back.
@@ -148,6 +151,7 @@ interface EditorState extends EditableState {
 
 const MAX_HISTORY = 50;
 let batchedEdits = 0;
+let batchEpoch = 0;
 const MIN_CLIP = 0.05; // minimum clip duration (s)
 
 function snapshotEditable(s: EditorState): EditableState {
@@ -179,7 +183,11 @@ function findFreeStart(clips: Clip[], trackId: string, desired: number, duration
   return start;
 }
 
-export const useEditorStore = create<EditorState>((set, get) => ({
+export const useEditorStore = create<EditorState>((set, get) => {
+  const editGate: ReturnType<typeof projectEditGate> = projectEditGate(() => set({ editing: editGate.isEditing() }));
+  return ({
+  editing: false,
+  holdEdits: () => editGate.hold(),
   projectId: nanoid(10),
   projectTitle: "Untitled project",
   tracks: defaultTracks(),
@@ -198,8 +206,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
   // ── meta ──
   setProjectTitle: (t) => set({ projectTitle: t }),
-  loadSnapshot: (snap) =>
+  loadSnapshot: (snap) => {
+    batchEpoch++; batchedEdits = 0; editGate.reset(false);
     set({
+      editing: false,
       projectId: snap.id,
       projectTitle: snap.title,
       tracks: snap.tracks,
@@ -210,10 +220,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       isPlaying: false,
       past: [],
       future: [],
-    }),
+    });
+  },
   applySharedSnapshot: (snap, expectedKey) => {
     const s = get(), current = s.toSnapshot();
-    if (batchedEdits || current.id !== snap.id || projectReviewSnapshotKey(current) !== expectedKey) throw new Error("The current project changed during transfer");
+    if (s.editing || batchedEdits || current.id !== snap.id || projectReviewSnapshotKey(current) !== expectedKey) throw new Error("The current project changed during transfer");
     const full = (editable: EditableState): ProjectSnapshot => ({ ...current, ...editable });
     const next = rebaseProjectHistory({ current, past: s.past.map(full), future: s.future.map(full) }, snap);
     const editable = (value: ProjectSnapshot): EditableState => ({ tracks: value.tracks, clips: value.clips, settings: value.settings });
@@ -222,8 +233,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       selectedClipIds: s.selectedClipIds.filter(id => ids.has(id)), currentTime: Math.min(s.currentTime,timelineDuration(snap.settings,snap.clips)), isPlaying: false });
     return next.protectedPaths.length;
   },
-  newProject: () =>
+  newProject: () => {
+    batchEpoch++; batchedEdits = 0; editGate.reset(false);
     set({
+      editing: false,
       projectId: nanoid(10),
       projectTitle: "Untitled project",
       tracks: defaultTracks(),
@@ -234,7 +247,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       isPlaying: false,
       past: [],
       future: [],
-    }),
+    });
+  },
   toSnapshot: (): ProjectSnapshot => {
     const s = get();
     return {
@@ -824,11 +838,25 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   beginGesture: () => {
-    const s = get();
-    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [] });
+    const lease = editGate.hold();
+    const s = get(), before = snapshotEditable(s);
+    set({ past: [...s.past, before].slice(-MAX_HISTORY), future: [] });
+    return {
+      isCurrent: lease.isCurrent,
+      release: () => {
+        if (!lease.isCurrent()) return;
+        try {
+          const after = get(), current = after.toSnapshot();
+          if (after.past.at(-1) === before && projectReviewSnapshotKey(current) === projectReviewSnapshotKey({ ...current, ...before })) {
+            set({ past: s.past, future: s.future });
+          }
+        } finally { lease.release(); }
+      },
+    };
   },
 
   runAsOneStep: async (fn) => {
+    const epoch = batchEpoch, lease = editGate.hold();
     batchedEdits++;
     const before = get();
     const pastLen = before.past.length;
@@ -836,11 +864,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     try {
       await fn();
     } finally {
-      batchedEdits--;
-      const after = get();
-      if (after.past.length !== pastLen || after.clips !== before.clips || after.tracks !== before.tracks || after.settings !== before.settings) {
-        set({ past: [...before.past, snapshot].slice(-MAX_HISTORY), future: [] });
+      if (epoch === batchEpoch) {
+        batchedEdits--;
+        const after = get();
+        if (after.past.length !== pastLen || after.clips !== before.clips || after.tracks !== before.tracks || after.settings !== before.settings) {
+          set({ past: [...before.past, snapshot].slice(-MAX_HISTORY), future: [] });
+        }
       }
+      lease.release();
     }
   },
 
@@ -852,7 +883,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], clips: s.clips.map((c) => (c.id === id ? patchedClip(c, patch) : c)) });
   },
-}));
+});
+});
 
 /** Replacing footage restores its background; masks belong to the old source. */
 function patchedClip(c: Clip, patch: ClipPatch): Clip {
