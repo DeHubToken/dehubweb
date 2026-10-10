@@ -172,7 +172,8 @@ export function renderPostCardSvg(data, { logo, avatar = '' }) {
       ${textLines(body, 415, bodyY, bodySize, bodySize * 1.4, '#c5c6ce')}
     </g>
     <text x="415" y="558" font-size="18" fill="#868993">dehub.io</text>
-    <text x="1113" y="558" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post ↗</text>
+    <text x="1088" y="558" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post</text>
+    <path d="M1100 557l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   <g opacity=".52">
     <path d="M-30 572C90 655 227 568 383 593S567 638 727 595 1006 626 1230 568L1230 630H-30Z" fill="url(#silver)"/>
