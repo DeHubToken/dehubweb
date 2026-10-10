@@ -25,7 +25,7 @@ const mf = new Miniflare(convertV4MiniflareOptions({
   durableObjects: { EDITOR_PRESENCE: { className: 'EditorPresenceRoom', useSQLite: true } },
   serviceBindings: { ASSETS: request => {
     const path = decodeURIComponent(new URL(request.url).pathname);
-    assert.ok(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png', '/brand/chrome-wave.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
+    assert.ok(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png'].includes(path) || /^\/brand\/share-badges\/[a-z-]+\.png$/.test(path));
     return new WorkerResponse(readFileSync(new URL(`../public${path}`, import.meta.url)), { headers: { 'Content-Type': path.endsWith('.png') ? 'image/png' : 'font/ttf' } });
   } },
   outboundService: request => {
@@ -54,7 +54,7 @@ const mf = new Miniflare(convertV4MiniflareOptions({
 }));
 
 try {
-  const url = 'https://dehub.io/_og/post/v1/6501.png';
+  const url = 'https://dehub.io/_og/post/v2/6501.png';
   const response = await mf.dispatchFetch(url);
   assert.equal(response.status, 200, await response.clone().text());
   assert.equal(response.headers.get('Content-Type'), 'image/png');
@@ -63,7 +63,8 @@ try {
   assert.equal(response.headers.get('X-DeHub-Post-Badges'), 'Megalodon');
   assert.equal(response.headers.get('X-DeHub-Post-Poll'), 'closed');
   assert.equal(response.headers.get('X-DeHub-Poll-Votes'), '123');
-  assert.equal(response.headers.get('X-DeHub-Share-Artwork'), 'store-chrome-wave');
+  assert.equal(response.headers.get('X-DeHub-Share-Artwork'), 'integrated-chrome-edge');
+  assert.equal(response.headers.get('X-DeHub-Share-Card'), 'v2');
   const png = Buffer.from(await response.arrayBuffer());
   assert.equal(png.readUInt32BE(16), 1200);
   assert.equal(png.readUInt32BE(20), 630);
@@ -126,6 +127,10 @@ try {
   const noPoll = await mf.dispatchFetch(url);
   assert.equal(noPoll.headers.get('X-DeHub-Post-Poll'), 'none');
   assert.ok(noPoll.headers.get('Cache-Control').startsWith('public,'), 'ordinary text posts remain cacheable when the poll endpoint returns its normal 404');
+  const legacy = await mf.dispatchFetch('https://dehub.io/_og/post/v1/6501.png');
+  assert.equal(legacy.status, 200);
+  assert.equal(legacy.headers.get('X-DeHub-Share-Artwork'), 'integrated-chrome-edge');
+  assert.equal(legacy.headers.get('X-DeHub-Share-Card'), 'v2');
   failDetails = true;
   const unavailable = await mf.dispatchFetch(url);
   assert.equal(unavailable.headers.get('Cache-Control'), 'no-store');

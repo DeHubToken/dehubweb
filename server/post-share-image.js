@@ -5,7 +5,7 @@ import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js'
 
 let initialized;
 let assets;
-const RENDER_REVISION = 3;
+const RENDER_REVISION = 4;
 const bytesToUri = (bytes, type) => {
   let binary = '';
   for (let i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
@@ -13,7 +13,7 @@ const bytesToUri = (bytes, type) => {
 };
 
 async function loadAssets(env) {
-  if (!assets) assets = Promise.all(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png', '/brand/chrome-wave.png'].map(async (path) => {
+  if (!assets) assets = Promise.all(['/brand-kit/font/exo-500.ttf', '/brand/mark-white.png', '/brand/share-chrome-edge.png'].map(async (path) => {
     const response = await env.ASSETS.fetch(new Request(`https://dehub.io${path}`));
     if (!response.ok || response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Share card asset unavailable');
     return new Uint8Array(await response.arrayBuffer());
@@ -83,7 +83,7 @@ export async function handlePostShareImage(request, env, ctx, tokenId, fetchReco
       'X-DeHub-Post-Badges': data.badges.map(badge => badge.name).join(','),
       'X-DeHub-Post-Poll': data.poll ? data.poll.ended ? 'closed' : 'open' : 'none',
       'X-DeHub-Poll-Votes': data.poll?.ended ? String(data.poll.totalVotes) : '',
-      'X-DeHub-Share-Artwork': 'store-chrome-wave',
+      'X-DeHub-Share-Artwork': 'integrated-chrome-edge',
     } });
     if (cache && data.detailsComplete) ctx.waitUntil(cache.put(key, response.clone()).catch(() => {}));
     return request.method === 'HEAD' ? new Response(null, response) : response;
