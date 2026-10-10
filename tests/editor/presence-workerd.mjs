@@ -7,13 +7,13 @@ const modules = await productionWorkerModules();
 const owner = "0x" + "a".repeat(40), editor = "0x" + "b".repeat(40), denied = "0x" + "c".repeat(40);
 const project = "11111111-1111-4111-8111-111111111111", other = "22222222-2222-4222-8222-222222222222";
 const token = wallet => `${wallet}.${Math.floor(Date.now() / 1000) + 3600}.${"a".repeat(64)}`;
-let allowed = true, head = 3, lookups = 0;
+let allowed = true, head = 3, draft = 0, lookups = 0;
 const mf = new Miniflare(convertV4MiniflareOptions({ modules, compatibilityDate: "2026-07-18", durableObjects: { EDITOR_PRESENCE: { className: "EditorPresenceRoom", useSQLite: true } }, outboundService: async request => {
-  assert.equal(request.url, "https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/rpc/editor_cloud_live_access");
+  assert.equal(request.url, "https://aigxuutjaqsywioxjefr.supabase.co/rest/v1/rpc/editor_cloud_live_checkpoint");
   const wallet = request.headers.get("x-wallet-address"), signed = request.headers.get("x-wallet-session"), target = await request.json(); lookups++;
   const parts = signed?.split(".") || [];
   const valid = parts.length === 3 && parts[0] === wallet && Number(parts[1]) > Date.now() / 1000 && parts[2] === "a".repeat(64) && target.p_owner === owner && [project, other].includes(target.p_id) && (wallet === owner || (wallet === editor && allowed && target.p_id === project));
-  return new WorkerResponse(JSON.stringify(valid ? { wallet, ownerWallet: owner, projectId: target.p_id, role: wallet === owner ? "owner" : "editor", revision: target.p_id === other ? 20 : head } : { code: "42501" }), { status: valid ? 200 : 401 });
+  return new WorkerResponse(JSON.stringify(valid ? { wallet, ownerWallet: owner, projectId: target.p_id, role: wallet === owner ? "owner" : "editor", revision: target.p_id === other ? 20 : head, draftRevision: target.p_id === other ? 0 : draft } : { code: "42501" }), { status: valid ? 200 : 401 });
 } }));
 const sockets = [];
 async function connect(id = project) {
@@ -39,6 +39,7 @@ try {
   const c = await connect(); c.join(editor); const joined = await c.next(v => v.type === "presence" && v.participants.length === 2);
   assert.equal(joined.participants.find(p => p.wallet === owner).connections, 2);
   const secondRoom = await connect(other); secondRoom.join(owner); const isolated = await secondRoom.next(v => v.type === "presence"); assert.equal(isolated.revision, 20); assert.equal(isolated.participants.length, 1);
+  await delay(300); draft=7; a.ws.send('{"type":"refresh"}'); const liveCheckpoint=await c.next(v=>v.type==="presence"&&v.draftRevision===7); assert.equal(liveCheckpoint.revision,3); assert(!("document" in liveCheckpoint)); await b.next(v=>v.type==="presence"&&v.draftRevision===7);
   await delay(300); head = 4; a.ws.send('{"type":"refresh"}'); await c.next(v => v.type === "presence" && v.revision === 4); await b.next(v => v.type === "presence" && v.revision === 4);
   await delay(300); allowed = false; head = 5; a.ws.send('{"type":"refresh"}'); await c.next(v => v.type === "error"); const revoked = await b.next(v => v.type === "presence" && v.revision === 5); assert.equal(revoked.participants.length, 1); assert.equal(revoked.participants[0].wallet, owner);
   const unauthenticated = await connect(); unauthenticated.ws.send('{"type":"refresh"}'); await unauthenticated.next(v => v.type === "error");
@@ -49,5 +50,5 @@ try {
   // Begin the idle window after those event-driven permission checks settle.
   await delay(300);
   const count = lookups; await delay(300); assert.equal(lookups, count, "idle presence must not poll the database");
-  console.log(JSON.stringify({ engine: "workerd", productionEntryBundled: true, sqliteBinding: true, realWebSockets: true, joinsAndDuplicateConnections: true, roomIsolation: true, savedHeadBroadcast: true, revokedRecipientExcluded: true, forgedAndUnsignedDenied: true, disconnectUpdates: true, idleDatabasePolling: false, productionAccountUsed: false }));
+  console.log(JSON.stringify({ engine: "workerd", productionEntryBundled: true, sqliteBinding: true, realWebSockets: true, joinsAndDuplicateConnections: true, roomIsolation: true, savedHeadBroadcast: true, mutableDraftBroadcastWithoutSave: true, privateDocumentsAbsent: true, revokedRecipientExcluded: true, forgedAndUnsignedDenied: true, disconnectUpdates: true, idleDatabasePolling: false, productionAccountUsed: false }));
 } finally { for (const socket of sockets) { try { socket.close(); } catch {} } await mf.dispose(); }

@@ -6956,6 +6956,19 @@
       "received": "バージョン {{revision}} を受信しました。",
       "upToDate": "すでに最新です。",
       "protectedUndo": "以前のローカル編集と共有された変更が重なっています。元に戻す操作でも共有された変更は保持されます。"
+    },
+    "live": {
+      "stopEdits": "ライブ編集を停止",
+      "receiveEdits": "ライブ編集を受信",
+      "shareEdits": "編集をライブ共有",
+      "waiting": "編集の完了を待っています",
+      "transferring": "編集を転送中",
+      "sharing": "編集をライブ共有中",
+      "receiving": "ライブ編集を受信中",
+      "paused": "ライブ編集を一時停止",
+      "retryRecovery": "復旧を再試行",
+      "personalCopy": "個人用コピーを保存",
+      "privateHint": "参加するだけでは編集はアップロードされません。ライブ共有では新しい非公開素材がアップロードされ、保存では永続的なバージョンが作成されます。"
     }
   },
   "jungleMood": {

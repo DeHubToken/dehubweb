@@ -6971,6 +6971,19 @@
       "received": "Versão {{revision}} recebida.",
       "upToDate": "Já está atualizado.",
       "protectedUndo": "Edições locais anteriores se sobrepõem às alterações compartilhadas. Desfazer preservará as alterações compartilhadas."
+    },
+    "live": {
+      "stopEdits": "Parar edição ao vivo",
+      "receiveEdits": "Receber alterações ao vivo",
+      "shareEdits": "Compartilhar alterações ao vivo",
+      "waiting": "Aguardando o fim da edição",
+      "transferring": "Transferindo alterações",
+      "sharing": "Compartilhando alterações ao vivo",
+      "receiving": "Recebendo alterações ao vivo",
+      "paused": "Edição ao vivo pausada",
+      "retryRecovery": "Tentar recuperação novamente",
+      "personalCopy": "Salvar uma cópia pessoal",
+      "privateHint": "Entrar não envia suas alterações. Compartilhar ao vivo envia novas fontes privadas; Salvar cria uma versão permanente."
     }
   },
   "jungleMood": {
