@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Safidy",
+    "aiOverview": "MANDRAKIZAY",
     "sendTip": "Handefa fanomezana",
     "queue": "Filaharana",
     "watchList": "Lisitra hojerena",
@@ -6464,10 +6465,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Fotoana miavaka hita maso",
-      "visualPrivacy": "Alefaso ny sary voafantina hanaovana fanadihadiana hita maso."
-    },
     "review": {
       "title": "Famerenana tetikasa",
       "shared": "Nozaraina taminao",
@@ -6883,6 +6880,10 @@
       "sync": "Ampifanaraho ny tapa-dahatsary",
       "none": "Tsy nahitana gadona azo antoka.",
       "unchanged": "Tsy azo nampifanarahana ny tapa-dahatsary."
+    },
+    "highlights": {
+      "visual": "Fotoana miavaka hita maso",
+      "visualPrivacy": "Alefaso ny sary voafantina hanaovana fanadihadiana hita maso."
     }
   },
   "jungleMood": {

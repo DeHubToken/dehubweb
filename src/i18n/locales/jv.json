@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Opsi",
+    "aiOverview": "Ringkesan AI",
     "sendTip": "Kirim Hadiah",
     "queue": "Antrian",
     "watchList": "Dhaptar Tonton",
@@ -6213,10 +6214,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Sorotan visual",
-      "visualPrivacy": "Kirim pigura sing dipilih kanggo analisis visual."
-    },
     "review": {
       "title": "Priksa proyek",
       "shared": "Dibagi karo sampeyan",
@@ -6632,6 +6629,10 @@
       "sync": "Selarasake potongan",
       "none": "Ora ana ketukan sing dipercaya.",
       "unchanged": "Potongan ora bisa diselarasake."
+    },
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Kirim pigura sing dipilih kanggo analisis visual."
     }
   },
   "jungleMood": {

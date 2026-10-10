@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Valikud",
+    "aiOverview": "Tehisintellekti ülevaade",
     "sendTip": "Saada jootraha",
     "queue": "Järjekord",
     "watchList": "Jälgimisnimekiri",
@@ -6427,10 +6428,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuaalsed tipphetked",
-      "visualPrivacy": "Saada valitud kaadrid visuaalseks analüüsiks."
-    },
     "review": {
       "title": "Projekti ülevaatus",
       "shared": "Sinuga jagatud",
@@ -6846,6 +6843,10 @@
       "sync": "Sünkrooni lõiked",
       "none": "Usaldusväärset rütmi ei leitud.",
       "unchanged": "Lõike ei saanud joondada."
+    },
+    "highlights": {
+      "visual": "Visuaalsed tipphetked",
+      "visualPrivacy": "Saada valitud kaadrid visuaalseks analüüsiks."
     }
   },
   "jungleMood": {

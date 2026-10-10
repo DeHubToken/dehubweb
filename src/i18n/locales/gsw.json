@@ -601,6 +601,7 @@
   },
   "postOptions": {
     "options": "Optione",
+    "aiOverview": "KI Übersicht",
     "sendTip": "Trinkgäld schicke",
     "queue": "Warteschlange",
     "watchList": "Merklischte",
@@ -6419,10 +6420,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuelli Höchepünkt",
-      "visualPrivacy": "Usgewählti Einzelbilder für d visuelli Analyse schicke."
-    },
     "review": {
       "title": "Projektprüefig",
       "shared": "Mit dir teilt",
@@ -6838,6 +6835,10 @@
       "sync": "Schnitte synchronisieren",
       "none": "Kein zuverlässiger Takt gefunden.",
       "unchanged": "Die Schnitte konnten nicht ausgerichtet werden."
+    },
+    "highlights": {
+      "visual": "Visuelli Höchepünkt",
+      "visualPrivacy": "Usgewählti Einzelbilder für d visuelli Analyse schicke."
     }
   },
   "jungleMood": {

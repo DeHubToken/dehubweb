@@ -594,6 +594,7 @@
   },
   "postOptions": {
     "options": "ምርጫታት",
+    "aiOverview": "ሓፈሻዊ ኣመለኻኽታ AI",
     "sendTip": "ሽልማት ስደድ",
     "queue": "ሪጋ",
     "watchList": "ዝርዝር ምዕዛብ",
@@ -6328,10 +6329,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "ፍሉያት ህሞታት ምስሊ",
-      "visualPrivacy": "ንትንተና ምስሊ ዝተመርጹ ፍሬማት ስደድ።"
-    },
     "review": {
       "title": "ግምገማ ፕሮጀክት",
       "shared": "ምሳኹም ዝተኻፈለ",
@@ -6747,6 +6744,10 @@
       "sync": "ቁርጽታት ኣሰማምዕ",
       "none": "ዘተኣማምን ቅኒት ኣይተረኽበን።",
       "unchanged": "ቁርጽታት ምስራዕ ኣይተኻእለን።"
+    },
+    "highlights": {
+      "visual": "ፍሉያት ህሞታት ምስሊ",
+      "visualPrivacy": "ንትንተና ምስሊ ዝተመርጹ ፍሬማት ስደድ።"
     }
   },
   "jungleMood": {

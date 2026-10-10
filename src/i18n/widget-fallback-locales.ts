@@ -16,5 +16,5 @@
  */
 export const WIDGET_FALLBACK_LOCALES: readonly string[] = [
   'acm', 'acw', 'aec', 'ajp', 'apd', 'ayn', 'ctg', 'dcc', 'ku', 'mnp',
-  'pcm', 'rkt', 'sdr', 'skr', 'syl', 'wes', 'wuu',
+  'pcm', 'rkt', 'sdr', 'skr', 'syl', 'tts', 'wes', 'wuu',
 ];

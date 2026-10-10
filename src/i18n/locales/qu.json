@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Akllakuna",
+    "aiOverview": "AI nisqamanta qhawariy",
     "sendTip": "Propina apachiy",
     "queue": "Suyay",
     "watchList": "Qhaway lista",
@@ -6473,10 +6474,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Videopi aswan allin pachakuna",
-      "visualPrivacy": "Akllasqa videopa rikch'ayninkunata qhawarinapaq apachiy."
-    },
     "review": {
       "title": "Rurayta qhawana",
       "shared": "Qamwan rakisqa",
@@ -6892,6 +6889,10 @@
       "sync": "Kuchuykunata tupachiy",
       "none": "Mana allin ritmu tarisqachu.",
       "unchanged": "Kuchuykuna mana tupachisqachu."
+    },
+    "highlights": {
+      "visual": "Videopi aswan allin pachakuna",
+      "visualPrivacy": "Akllasqa videopa rikch'ayninkunata qhawarinapaq apachiy."
     }
   },
   "jungleMood": {

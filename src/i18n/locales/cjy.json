@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "选项",
+    "aiOverview": "AI 概览",
     "sendTip": "发打赏",
     "queue": "队列",
     "watchList": "看单",
@@ -6385,10 +6386,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "画面精彩片段",
-      "visualPrivacy": "发送选取的帧进行画面分析。"
-    },
     "review": {
       "title": "项目审阅",
       "shared": "与你共享",
@@ -6804,6 +6801,10 @@
       "sync": "同步剪辑",
       "none": "未找到可靠的节拍。",
       "unchanged": "无法对齐剪辑。"
+    },
+    "highlights": {
+      "visual": "画面精彩片段",
+      "visualPrivacy": "发送选取的帧进行画面分析。"
     }
   },
   "jungleMood": {

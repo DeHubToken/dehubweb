@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Opțiuni",
+    "aiOverview": "Prezentare generală AI",
     "sendTip": "Trimite bacșiș",
     "queue": "Coadă",
     "watchList": "Listă de vizionare",
@@ -6461,10 +6462,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Momente vizuale importante",
-      "visualPrivacy": "Trimite cadrele selectate pentru analiză vizuală."
-    },
     "review": {
       "title": "Revizuirea proiectului",
       "shared": "Partajat cu tine",
@@ -6880,6 +6877,10 @@
       "sync": "Sincronizează tăieturile",
       "none": "Nu s-a găsit un ritm sigur.",
       "unchanged": "Tăieturile nu au putut fi aliniate."
+    },
+    "highlights": {
+      "visual": "Momente vizuale importante",
+      "visualPrivacy": "Trimite cadrele selectate pentru analiză vizuală."
     }
   },
   "jungleMood": {

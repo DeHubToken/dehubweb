@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "オプション",
+    "aiOverview": "AIの概要",
     "sendTip": "チップを送る",
     "queue": "キュー",
     "watchList": "ウォッチリスト",
@@ -6455,10 +6456,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "映像のハイライト",
-      "visualPrivacy": "選んだフレームを映像分析のために送信します。"
-    },
     "review": {
       "title": "プロジェクトレビュー",
       "shared": "あなたと共有",
@@ -6877,6 +6874,10 @@
       "sync": "カットを同期",
       "none": "安定したビートが見つかりませんでした。",
       "unchanged": "カットを整列できませんでした。"
+    },
+    "highlights": {
+      "visual": "映像のハイライト",
+      "visualPrivacy": "選んだフレームを映像分析のために送信します。"
     },
     "videoTemplates": {
       "heading": "動画テンプレート",

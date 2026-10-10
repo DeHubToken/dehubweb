@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Valgmuligheder",
+    "aiOverview": "AI-overblik",
     "sendTip": "Send drikkepenge",
     "queue": "Kø",
     "watchList": "Se-liste",
@@ -6376,10 +6377,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuelle højdepunkter",
-      "visualPrivacy": "Send udvalgte billeder til visuel analyse."
-    },
     "review": {
       "title": "Projektgennemgang",
       "shared": "Delt med dig",
@@ -6795,6 +6792,10 @@
       "sync": "Synkroniser klip",
       "none": "Ingen pålidelig rytme fundet.",
       "unchanged": "Klippene kunne ikke tilpasses."
+    },
+    "highlights": {
+      "visual": "Visuelle højdepunkter",
+      "visualPrivacy": "Send udvalgte billeder til visuel analyse."
     }
   },
   "jungleMood": {

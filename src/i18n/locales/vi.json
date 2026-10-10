@@ -616,6 +616,7 @@
   },
   "postOptions": {
     "options": "Options",
+    "aiOverview": "Tổng quan về AI",
     "sendTip": "Send Tip",
     "queue": "Queue",
     "watchList": "Watch List",
@@ -6475,10 +6476,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Khoảnh khắc hình ảnh nổi bật",
-      "visualPrivacy": "Gửi các khung hình đã chọn để phân tích hình ảnh."
-    },
     "review": {
       "title": "Đánh giá dự án",
       "shared": "Được chia sẻ với bạn",
@@ -6894,6 +6891,10 @@
       "sync": "Đồng bộ các đoạn cắt",
       "none": "Không tìm thấy nhịp đáng tin cậy.",
       "unchanged": "Không thể căn chỉnh các đoạn cắt."
+    },
+    "highlights": {
+      "visual": "Khoảnh khắc hình ảnh nổi bật",
+      "visualPrivacy": "Gửi các khung hình đã chọn để phân tích hình ảnh."
     }
   },
   "jungleMood": {

@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Možnosti",
+    "aiOverview": "Přehled AI",
     "sendTip": "Poslat spropitné",
     "queue": "Fronta",
     "watchList": "Seznam sledování",
@@ -6349,10 +6350,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Vizuální zajímavosti",
-      "visualPrivacy": "Odeslat vybrané snímky k vizuální analýze."
-    },
     "review": {
       "title": "Kontrola projektu",
       "shared": "Sdíleno s vámi",
@@ -6768,6 +6765,10 @@
       "sync": "Synchronizovat střihy",
       "none": "Nebyl nalezen spolehlivý rytmus.",
       "unchanged": "Střihy se nepodařilo zarovnat."
+    },
+    "highlights": {
+      "visual": "Vizuální zajímavosti",
+      "visualPrivacy": "Odeslat vybrané snímky k vizuální analýze."
     }
   },
   "jungleMood": {

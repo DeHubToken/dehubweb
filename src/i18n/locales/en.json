@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Options",
+    "aiOverview": "AI overview",
     "sendTip": "Send Tip",
     "queue": "Queue",
     "watchList": "Watch List",

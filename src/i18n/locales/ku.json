@@ -5436,10 +5436,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Xalên girîng ên dîtbarî",
-      "visualPrivacy": "Çarçoveyên bijartî ji bo analîza dîtbarî bişînin."
-    },
     "review": {
       "title": "Vekolîna projeyê",
       "shared": "Bi te re parvekirî",
@@ -5852,6 +5848,10 @@
       "sync": "Birînan hevdem bike",
       "none": "Rîtmeke pêbawer nehat dîtin.",
       "unchanged": "Birîn nehatin lihevkirin."
+    },
+    "highlights": {
+      "visual": "Xalên girîng ên dîtbarî",
+      "visualPrivacy": "Çarçoveyên bijartî ji bo analîza dîtbarî bişînin."
     }
   },
   "jungleMood": {

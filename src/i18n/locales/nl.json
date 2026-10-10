@@ -796,6 +796,7 @@
   },
   "postOptions": {
     "options": "Opties",
+    "aiOverview": "AI-overzicht",
     "sendTip": "Fooi sturen",
     "queue": "Wachtrij",
     "watchList": "Kijklijst",
@@ -6617,10 +6618,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuele hoogtepunten",
-      "visualPrivacy": "Geselecteerde frames voor visuele analyse versturen."
-    },
     "review": {
       "title": "Projectbeoordeling",
       "shared": "Met jou gedeeld",
@@ -7036,6 +7033,10 @@
       "sync": "Cuts synchroniseren",
       "none": "Geen betrouwbare beat gevonden.",
       "unchanged": "De cuts konden niet worden uitgelijnd."
+    },
+    "highlights": {
+      "visual": "Visuele hoogtepunten",
+      "visualPrivacy": "Geselecteerde frames voor visuele analyse versturen."
     }
   },
   "jungleMood": {

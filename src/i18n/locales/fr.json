@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Options",
+    "aiOverview": "Vue d'ensemble de l'IA",
     "sendTip": "Envoyer un pourboire",
     "queue": "File d'attente",
     "watchList": "Liste de suivi",

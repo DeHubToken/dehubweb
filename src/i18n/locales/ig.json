@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Nhọrọ",
+    "aiOverview": "AI Nchịkọta",
     "sendTip": "Ziga Onyinye",
     "queue": "Ahịrị",
     "watchList": "Ndepụta nlele",
@@ -6387,10 +6388,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Oge ọhụụ pụtara ìhè",
-      "visualPrivacy": "Ziga frem ahọpụtara maka nyocha ọhụụ."
-    },
     "review": {
       "title": "Nyocha ọrụ",
       "shared": "Ekekọrịtara gị",
@@ -6806,6 +6803,10 @@
       "sync": "Mee ka mbepụ kwekọọ",
       "none": "Achọtaghị ụda a pụrụ ịtụkwasị obi.",
       "unchanged": "Enweghị ike ime ka mbepụ kwekọọ."
+    },
+    "highlights": {
+      "visual": "Oge ọhụụ pụtara ìhè",
+      "visualPrivacy": "Ziga frem ahọpụtara maka nyocha ọhụụ."
     }
   },
   "jungleMood": {
