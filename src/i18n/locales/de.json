@@ -6490,7 +6490,10 @@
       "resetToStart": "Zurück zum Anfang",
       "resize": "Größe ändern",
       "rotate": "Drehen",
-      "toggleLoop": "Schleife umschalten"
+      "toggleLoop": "Schleife umschalten",
+      "previousFrame": "Vorheriges Bild",
+      "nextFrame": "Nächstes Bild",
+      "playhead": "Abspielposition"
     },
     "export": {
       "scope": "Download-Bereich",

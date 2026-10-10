@@ -6747,7 +6747,10 @@
       "resetToStart": "Revenir au début",
       "resize": "Redimensionner",
       "rotate": "Rotation",
-      "toggleLoop": "Activer/désactiver la boucle"
+      "toggleLoop": "Activer/désactiver la boucle",
+      "previousFrame": "Image précédente",
+      "nextFrame": "Image suivante",
+      "playhead": "Tête de lecture"
     },
     "export": {
       "scope": "Gamme de téléchargement",
