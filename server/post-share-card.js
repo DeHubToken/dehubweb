@@ -219,13 +219,13 @@ export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111214"/><stop offset=".4" stop-color="#060607"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>
-    <linearGradient id="seam" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c8c9ce"/><stop offset=".12" stop-color="#53555c"/><stop offset=".5" stop-color="#303238"/><stop offset=".88" stop-color="#53555c"/><stop offset="1" stop-color="#b5b7be"/></linearGradient>
+    <linearGradient id="seam" gradientUnits="userSpaceOnUse" x1="370" y1="112" x2="370" y2="510"><stop stop-color="#c8c9ce" stop-opacity="0"/><stop offset=".12" stop-color="#71737d" stop-opacity=".12"/><stop offset=".4" stop-color="#aeb0b8" stop-opacity=".42"/><stop offset=".62" stop-color="#757781" stop-opacity=".3"/><stop offset=".88" stop-color="#53555c" stop-opacity=".12"/><stop offset="1" stop-color="#b5b7be" stop-opacity="0"/></linearGradient>
     <clipPath id="face"><rect x="60" y="151" width="66" height="66" rx="18"/></clipPath>
     <clipPath id="copy"><rect x="410" y="109" width="708" height="408"/></clipPath>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   ${chrome ? `<image data-brand-artwork="integrated-chrome-edge" x="0" y="0" width="1200" height="630" xlink:href="${chrome}" opacity=".72"/>` : ''}
-  <path d="M357 38Q370 38 370 52V576Q370 589 383 589" fill="none" stroke="url(#seam)" stroke-width="1.1"/>
+  <path d="M370 112C363 184 363 234 370 303S377 433 370 510" fill="none" stroke="url(#seam)" stroke-width="1.3" stroke-linecap="round"/>
   <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
   <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
