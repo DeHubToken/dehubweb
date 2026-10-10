@@ -113,7 +113,7 @@ BEGIN
     outcome=excluded.outcome,committed_revision=excluded.committed_revision,stored_at=excluded.stored_at,expires_at=excluded.expires_at;
   RETURN jsonb_build_object('ownerWallet',p_owner,'projectId',p_id,'draftRevision',next_revision,
     'anchorRevision',p_anchor_revision,'sequence',p_sequence,'requestId',p_request_id,'storedAt',stored);
-END $function$
+END $function$;
 
 CREATE FUNCTION public.editor_cloud_draft_resolve(p_owner text,p_id uuid,p_writer_id uuid,p_sequence integer,p_document jsonb,
   p_expected_revision integer,p_anchor_revision integer,p_request_id uuid) RETURNS jsonb
@@ -222,6 +222,6 @@ BEGIN
     state_version=state_version+1, updated_at=now()
     WHERE author_wallet=w OR assignee_wallet=w;
 END;
-$function$
+$function$;
 
 COMMIT;
