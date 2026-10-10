@@ -4,9 +4,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LiveFeedPreview } from '@/components/app/cards/LiveFeedPreview';
 
 vi.mock('@/components/app/cards/LiveEndedMedia', () => ({ LiveEndedMedia: () => <div>Poster</div> }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true, walletAddress: 'viewer' }) }));
+const presence = vi.hoisted(() => ({ join: vi.fn(), leave: vi.fn(), observe: vi.fn(() => ({ leave: vi.fn() })) }));
+vi.mock('@/lib/api/dehub/stream-presence', () => ({
+  joinStreamPresence: presence.join,
+  watchStreamReactions: presence.observe,
+  watchStreamPlayback: presence.observe,
+}));
 
 let visibility: IntersectionObserverCallback;
 beforeEach(() => {
+  vi.clearAllMocks();
+  presence.join.mockReturnValue({ leave: presence.leave });
   vi.stubGlobal('RTCPeerConnection', undefined);
   vi.stubGlobal('IntersectionObserver', class {
     constructor(callback: IntersectionObserverCallback) { visibility = callback; }
@@ -19,13 +28,32 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
-function mount() {
-  const result = render(<MemoryRouter><LiveFeedPreview urls={['https://example.com/live.m3u8']} /></MemoryRouter>);
+function mount(streamId?: string, isOwner = false) {
+  const result = render(<MemoryRouter><LiveFeedPreview streamId={streamId} isOwner={isOwner} urls={['https://example.com/live.m3u8']} /></MemoryRouter>);
   act(() => visibility([{ isIntersecting: true, intersectionRatio: 1 } as IntersectionObserverEntry], {} as IntersectionObserver));
   return result.container.querySelector('video')!;
 }
 
 describe('live preview loading feedback', () => {
+  it('joins on actual playback and leaves when paused or scrolled out of view', async () => {
+    const video = mount('stream-a');
+    expect(presence.join).not.toHaveBeenCalled();
+    fireEvent.playing(video);
+    await waitFor(() => expect(presence.join).toHaveBeenCalledWith('stream-a', expect.any(Function)));
+    fireEvent.pause(video);
+    expect(presence.leave).toHaveBeenCalledTimes(1);
+    fireEvent.playing(video);
+    await waitFor(() => expect(presence.join).toHaveBeenCalledTimes(2));
+    act(() => visibility([{ isIntersecting: false, intersectionRatio: 0 } as IntersectionObserverEntry], {} as IntersectionObserver));
+    expect(presence.leave).toHaveBeenCalledTimes(2);
+  });
+
+  it('subscribes the host to reactions without adding them to the audience', async () => {
+    const video = mount('stream-a', true);
+    fireEvent.playing(video);
+    await waitFor(() => expect(presence.observe).toHaveBeenCalledWith('stream-a', expect.any(Function)));
+    expect(presence.join).not.toHaveBeenCalled();
+  });
   it('stays visible through play intent until frames play, and returns while buffering', () => {
     const video = mount();
     expect(screen.getByRole('status')).toBeVisible();
@@ -36,7 +64,7 @@ describe('live preview loading feedback', () => {
     fireEvent.waiting(video);
     expect(screen.getByRole('status')).toBeVisible();
     fireEvent.pause(video);
-    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.getByText('Live paused')).toBeVisible();
   });
 
   it('clears feedback when autoplay is refused', async () => {

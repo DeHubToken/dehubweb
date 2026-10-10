@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mock = vi.hoisted(() => {
   const listeners = new Map<string, Set<(data?: unknown) => void>>();
   const socket = {
+    id: 'this-browser',
     connected: true,
     on: vi.fn((name: string, fn: (data?: unknown) => void) => {
       if (!listeners.has(name)) listeners.set(name, new Set());
@@ -28,7 +29,7 @@ describe('live room reaction transport', () => {
     expect(mock.socket.emit).toHaveBeenCalledWith('stream.reaction', { streamId: 'room-a', reactionType: 'HEART' });
     expect(receiveA).not.toHaveBeenCalled();
     mock.listeners.get('stream.reaction')!.forEach(fn => fn({ streamId: 'room-a', reactionType: 'HEART', weight: 14, user: { address: '0xABC' } }));
-    expect(receiveA).toHaveBeenCalledExactlyOnceWith({ reactionType: 'HEART', weight: 14, address: '0xabc' });
+    expect(receiveA).toHaveBeenCalledExactlyOnceWith({ reactionType: 'HEART', weight: 14, address: '0xabc', isOwnReaction: false });
     expect(receiveB).not.toHaveBeenCalled();
     a.leave(); b.leave();
     expect(mock.listeners.get('stream.reaction')!.size).toBe(0);
@@ -54,7 +55,18 @@ describe('live room reaction transport', () => {
     const sub = watchStreamReactions('room-a', receive);
     // A gateway that could not resolve the user still animates for the room.
     mock.listeners.get('stream.reaction')!.forEach(fn => fn({ streamId: 'room-a', reactionType: 'LIKE', weight: 1 }));
-    expect(receive).toHaveBeenCalledExactlyOnceWith({ reactionType: 'LIKE', weight: 1, address: null });
+    expect(receive).toHaveBeenCalledExactlyOnceWith({ reactionType: 'LIKE', weight: 1, address: null, isOwnReaction: false });
+    sub.leave();
+  });
+  it('only marks the sending connection as the optimistic echo, even with the same wallet', () => {
+    const receive = vi.fn();
+    const sub = watchStreamReactions('room-a', receive);
+    for (const sourceSocketId of ['apk-socket', 'this-browser']) {
+      mock.listeners.get('stream.reaction')!.forEach(fn => fn({
+        streamId: 'room-a', reactionType: 'LIKE', sourceSocketId, user: { address: '0xABC' },
+      }));
+    }
+    expect(receive.mock.calls.map(([event]) => event.isOwnReaction)).toEqual([false, true]);
     sub.leave();
   });
 });

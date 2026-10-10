@@ -674,6 +674,8 @@ export function mapApiLiveStreamToLocal(stream: ApiLiveStream, index: number): L
     thumbnail,
     tags: [],
     isLive: isStreamLive(stream),
+    liveStatus: stream.status,
+    streamId: id,
     playbackUrl: stream.playbackUrl || hlsUrl,
     // The .com host is Livepeer's deprecated CDN, kept as a second chance for
     // that provider only; a self-hosted stream is served from one host and a
