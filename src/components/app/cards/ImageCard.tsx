@@ -25,7 +25,7 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
+import { Eye, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
@@ -35,6 +35,7 @@ import { cdnImageSrcSet } from '@/lib/media-url';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
+import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
@@ -923,13 +924,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
               vaul's Root (and its window scroll listener) into every card. */}
-          <button
+          <PostHeaderOptionsButton
             onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            aria-label="Post options"
-            className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
-          >
-            <MoreVertical className="w-[23.5px] h-[23.5px]" />
-          </button>
+          />
           <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>

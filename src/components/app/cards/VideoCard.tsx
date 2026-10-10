@@ -57,6 +57,7 @@ import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
+import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
@@ -488,12 +489,10 @@ function MobileCreatorInfo({
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
             </button>}
-            {onMenuClick && <button aria-label="Post options" 
+            {onMenuClick && <PostHeaderOptionsButton
               onClick={onMenuClick}
-              className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
-            >
-              <MoreVertical className="w-[23.5px] h-[23.5px]" />
-            </button>}
+              style={{ marginTop: -4 }}
+            />}
           </div>
         </div>
       </div>
@@ -2045,9 +2044,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 The sheet itself is mounted once at the card root and shared
                 with the carousel and immersive openers further down; a second
                 <Drawer> here bound to the same state opened a duplicate. */}
-            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-head-options className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
-              <MoreVertical className="w-[23.5px] h-[23.5px]" />
-            </button>
+            <PostHeaderOptionsButton onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} data-head-options />
           </div>}
         </div>
       )}
@@ -2796,9 +2793,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 <Zap className="w-5 h-5" />
               </button>
             )}
-            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="flex h-8 w-8 items-center justify-center">
-              <MoreVertical className="w-5 h-5" />
-            </button>
+            <PostHeaderOptionsButton iconSize={20} className="text-white" onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
           </div>
         )}
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
@@ -2911,9 +2906,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 <button type="button" aria-label={t('postStage.askAI')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}>
                   <Sparkles className="h-5 w-5" />
                 </button>
-                <button type="button" aria-label={t('postStage.more')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}>
-                  <MoreVertical className="h-5 w-5" />
-                </button>
+                <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
               </div>
             )}
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}

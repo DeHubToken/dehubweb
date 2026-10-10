@@ -15,12 +15,13 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, Zap, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
+import { Sparkles, Zap, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
+import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
@@ -454,13 +455,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
               stay mounted, and each mounted Root holds a window scroll listener
               for its lifetime. Times every card in an infinite feed, that was the
               biggest cost of scrolling it. */}
-          <button
+          <PostHeaderOptionsButton
             onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            aria-label="Post options"
-            className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
-          >
-            <MoreVertical className="w-[23.5px] h-[23.5px]" />
-          </button>
+          />
           <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
