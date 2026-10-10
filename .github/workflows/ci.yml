@@ -229,7 +229,7 @@ jobs:
       - name: Render text post share cards
         run: |
           node --test server/post-share-card.test.mjs
-          node tests/post-share-workerd.mjs
+          timeout 120s node tests/post-share-workerd.mjs
 
       - name: Validate production Worker bundle
         run: |
@@ -247,6 +247,39 @@ jobs:
         run: |
           node scripts/trenchstar-wallets.test.mjs
           node scripts/trenchstar-navigation.test.mjs
+
+  editor-screen-browser:
+    name: Browser screen recording output
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/editor-system-screen-recording-web-20261010'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare the hosted capture browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/capture-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0
+          "$RUNNER_TEMP/capture-browser/node_modules/.bin/playwright" install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y pulseaudio ffmpeg
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=dehub_capture
+          pactl set-default-sink dehub_capture
+      - name: Capture real browser frames and both audio sources
+        env:
+          CAPTURE_BROWSER_ROOT: ${{ runner.temp }}/capture-browser
+        run: timeout 120s xvfb-run -a node tests/editor-screen-capture-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screen-capture-browser-output
+          path: screen-capture-browser-results/
+          if-no-files-found: ignore
+          retention-days: 14
 
   stage-remux:
     name: Stage remux

@@ -9,8 +9,9 @@ import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { importOneFile } from "@/lib/editor/importFiles";
 import { projectTask } from "@/lib/editor/projectTask";
 import { recordStream, recordingExtension, type RecordingKind } from "@/lib/editor/recording";
+import { startScreenCapture, type ScreenCapture } from "@/lib/editor/screenCapture";
 
-type Take = { task: NonNullable<ReturnType<typeof projectTask>>; recorder: ReturnType<typeof recordStream> | null };
+type Take = { task: NonNullable<ReturnType<typeof projectTask>>; recorder: ReturnType<typeof recordStream> | null; screen: ScreenCapture | null };
 
 export function RecordingPanel() {
   const { t } = useTranslation();
@@ -23,10 +24,12 @@ export function RecordingPanel() {
   const [kind, setKind] = useState<RecordingKind | null>(null);
   const [busy, setBusy] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [screenVoiceover, setScreenVoiceover] = useState(false);
   const release = (owner: Take) => {
     const current = take.current === owner;
     if (current) { take.current = null; capturedStream.current = null; if (preview.current) preview.current.srcObject = null; }
     owner.task.release(); owner.recorder?.stop(true); owner.recorder = null;
+    owner.screen?.dispose(); owner.screen = null;
     if (current && mounted.current) { setKind(null); setBusy(false); }
   };
   const discard = useRef(() => {});
@@ -50,16 +53,18 @@ export function RecordingPanel() {
     const at = anchor.currentTime, projectId = anchor.projectId, scope = anchor.scopeVersion;
     anchor.setIsPlaying(false);
     const task = projectTask(anchor.holdEdits(), () => mounted.current && wallet.current === captureWallet && useEditorStore.getState().scopeVersion === scope && useEditorStore.getState().projectId === projectId)!;
-    const owner: Take = { task, recorder: null }; take.current = owner;
+    const owner: Take = { task, recorder: null, screen: null }; take.current = owner;
     setBusy(true);
     try {
-      const stream = mode === "screen"
-        ? await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: true })
+      if (mode === "screen") owner.screen = startScreenCapture(screenVoiceover, () => task.isCurrent());
+      const stream = owner.screen
+        ? await owner.screen.ready
         : await navigator.mediaDevices.getUserMedia({ audio: true, video: mode === "camera" ? { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: 30 } : false });
       if (!task.isCurrent()) { stream.getTracks().forEach(track => track.stop()); release(owner); return; }
       capturedStream.current = stream;
       owner.recorder = recordStream(stream, mode, async (blob, duration) => {
         owner.recorder = null;
+        owner.screen?.dispose(); owner.screen = null;
         if (!task.isCurrent()) { release(owner); return; }
         capturedStream.current = null; setKind(null); setBusy(true);
         try {
@@ -98,5 +103,9 @@ export function RecordingPanel() {
         </Button>;
       })}
     </div>}
+    {!kind && typeof navigator.mediaDevices?.getDisplayMedia === "function" && <label className="flex items-center gap-2 text-[10px] text-white/70">
+      <input type="checkbox" checked={screenVoiceover} disabled={busy || typeof navigator.mediaDevices.getUserMedia !== "function"} onChange={event => setScreenVoiceover(event.target.checked)} className="accent-white" />
+      <Monitor className="h-3 w-3" /><Mic className="h-3 w-3" />{t("creator.presetGroupVoiceover")}
+    </label>}
   </div>;
 }
