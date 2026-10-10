@@ -1,3 +1,4 @@
+import { commitCommand, type CommandCommit } from "./editorCommand";
 import { projectTask } from "./projectTask";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
@@ -6,7 +7,7 @@ import { importOneFile, type ImportContext } from "./importFiles";
 import { audioToolLayers, type AudioToolMode } from "./audioTools";
 import { processClipSound } from "./processClipSound";
 
-export async function applyAudioTool(clipId: string, mode: AudioToolMode, ctx: ImportContext = {}, signal?: AbortSignal, onProgress?: (fraction: number) => void): Promise<boolean> {
+export async function applyAudioTool(clipId: string, mode: AudioToolMode, ctx: ImportContext & { command?: CommandCommit } = {}, signal?: AbortSignal, onProgress?: (fraction: number) => void): Promise<boolean> {
   const before = useEditorStore.getState();
   const clip = before.clips.find(c => c.id === clipId);
   if (!clip || clip.locked || (clip.kind !== "audio" && clip.kind !== "video")) return false;
@@ -25,12 +26,12 @@ export async function applyAudioTool(clipId: string, mode: AudioToolMode, ctx: I
   const store = useEditorStore.getState();
   if (store.projectId !== before.projectId || store.clips.find(c => c.id === clip.id) !== clip) return false;
   const layers = audioToolLayers(clip, mediaId, () => nanoid(10), store.tracks.find(track => track.id === clip.trackId));
-  await store.runAsOneStep(() => {
+  await commitCommand(ctx.command, () => store.runAsOneStep(() => {
     useEditorStore.setState(state => ({
       clips: [...state.clips.map(c => c.id === clip.id ? layers.clip : c), ...(layers.added ? [layers.added] : [])],
       tracks: layers.track ? [...state.tracks, layers.track] : state.tracks,
     }));
-  });
+  }));
   return true;
   } finally { task!.release(); }
 }
