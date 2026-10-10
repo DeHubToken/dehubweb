@@ -253,7 +253,7 @@ export function CounterChip({
         onClick={() => step(-1)}
         disabled={disabled || value <= min}
         aria-label={t('creator.decrease', { field: label.toLowerCase() })}
-        className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30"
+        className={cn('rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30', displayUnit && editable && 'max-[400px]:hidden')}
       >
         <Minus className="h-3.5 w-3.5" />
       </button>
@@ -289,7 +289,7 @@ export function CounterChip({
         onClick={() => step(1)}
         disabled={disabled || value >= max}
         aria-label={t('creator.increase', { field: label.toLowerCase() })}
-        className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30"
+        className={cn('rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30', displayUnit && editable && 'max-[400px]:hidden')}
       >
         <Plus className="h-3.5 w-3.5" />
       </button>

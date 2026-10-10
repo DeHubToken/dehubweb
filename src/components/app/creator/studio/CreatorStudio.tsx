@@ -441,7 +441,7 @@ function ModeToggle({
             onClick={() => onChange(m.id)}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-full text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
-              compact ? 'px-1.5 py-1.5' : 'px-2.5 py-1.5',
+              compact ? 'px-1 py-1.5' : 'px-2.5 py-1.5',
               active ? 'bg-white text-black' : 'text-white/60 hover:bg-white/10 hover:text-white',
             )}
           >
