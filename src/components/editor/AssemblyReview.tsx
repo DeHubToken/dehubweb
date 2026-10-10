@@ -15,7 +15,7 @@ export default function AssemblyReview({ state, session, changed, names, onPrevi
   if (!state.sourceId) return null;
   const disabled = state.busy || changed;
   const label = (id: string) => { const c = [...state.media, ...state.sounds].find(c => c.id === id); return c ? names[c.mediaId] || t(c.kind === "image" ? "editor.app.photo" : c.kind === "audio" ? "editor.video.sound" : "editor.video.video") : id; };
-  const errors = { selectMedia: "editor.video.emptyTimeline", limit: "editor.shots.hint", changed: "editor.agent.failed", failed: "common.somethingWentWrong", noMatch: "editor.assembly.noMatch", matchLimit: "editor.assembly.matchLimit", matchDuration: "editor.assembly.matchDuration", matchFailed: "common.somethingWentWrong" };
+  const errors = { selectMedia: "editor.video.emptyTimeline", limit: "editor.shots.hint", changed: "editor.agent.failed", failed: "common.somethingWentWrong", noMatch: "editor.assembly.noMatch", matchLimit: "editor.assembly.matchLimit", matchDuration: "editor.assembly.matchDuration", matchFailed: "editor.assembly.matchFailed" };
   return <div className="space-y-3 rounded-xl border border-white/15 p-3 text-[11px] text-white">
     <div className="font-semibold">{t("easyTrade.reviewTitle")} · {t("editor.video.video")}</div>
     <div className="text-white/60">{t("editor.export.duration", { value: Number.isFinite(assemblyDuration(state)) ? assemblyDuration(state).toFixed(2) : "—" })}</div>
@@ -25,6 +25,7 @@ export default function AssemblyReview({ state, session, changed, names, onPrevi
     <p className="text-white/60">{t("editor.highlights.visualPrivacy")}</p>
     <button disabled={disabled || sceneConsent !== sceneScope || (state.focus?.trim().length ?? 0) < 2 || !state.shots.length} onClick={() => { void session.match(true); }} className="rounded border border-white/15 px-2 py-1 disabled:opacity-40">{t("editor.assembly.matchScenes")}</button>
     {state.matching && <p role="status" className="text-white/60">{t("editor.highlights.ranking")} · {Math.round((state.matchProgress ?? 0) * 100)}%</p>}
+    {["noMatch", "matchLimit", "matchDuration", "matchFailed"].includes(state.error ?? "") && <button disabled={disabled} onClick={() => session.reviewManually()} className="rounded border border-white/15 px-2 py-1 disabled:opacity-40">{t("editor.assembly.reviewManually")}</button>}
     <div className="max-h-40 space-y-1 overflow-auto">
       {state.media.map(c => <label key={c.id} className="flex items-center gap-2"><input type="checkbox" checked={state.shots.some(s => s.id === c.id)} disabled={disabled} onChange={() => session.toggle(c.id)} /><span className="truncate">{label(c.id)}</span></label>)}
     </div>
