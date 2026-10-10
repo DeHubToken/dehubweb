@@ -92,7 +92,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
   const [requesting, setRequesting] = useState<string | null>(null);
   const [requestMessage, setRequestMessage] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:requestMessage", '', requesting);
   const [editing, setEditing] = useState(false);
-  const [editDescription, setEditDescription] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:editDescription", '');
+  const [editDescription, setEditDescription] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:editDescription", '', team?.id ?? null);
   const [editPrivate, setEditPrivate] = useState(false);
   const deferredSearch = useDeferredValue(search);
   const mine = useTeamUp(open);
@@ -113,7 +113,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
   const tierLabel = (tier: string | null) => tier || t('superpowers.teamUp.noBadgeYet');
 
   const startEditing = () => {
-    setEditDescription(team?.description ?? '');
+    setEditDescription.initialize(team?.description ?? '');
     setEditPrivate(team?.isPrivate ?? false);
     setEditing(true);
   };
@@ -128,7 +128,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
           toast.success(t('superpowers.teamUp.joined', { name: target.name }));
         }
         setRequesting(null);
-        setRequestMessage('');
+        setRequestMessage.complete(requestMessage, '');
       },
       onError: error => toast.error(errorMessage(
         error,

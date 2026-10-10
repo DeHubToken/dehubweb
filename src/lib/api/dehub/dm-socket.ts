@@ -378,12 +378,23 @@ export interface EditMessagePayload {
 
 /**
  * Edit an own text message (emits `editMessage`). Server-side this is
- * restricted to `msgType: 'msg'` messages the caller sent. Resolving only
- * means the payload reached a live socket — the actual edited content comes
- * back over the `editMessage` broadcast (see `onEditMessage`).
+ * restricted to `msgType: 'msg'` messages the caller sent. Wait for the matching
+ * server broadcast before allowing the composer to discard the revision.
  */
-export function emitEditMessage(payload: EditMessagePayload): Promise<void> {
-  return emitWhenConnected('editMessage', payload);
+export async function emitEditMessage(payload: EditMessagePayload): Promise<void> {
+  await waitForDmSocket();
+  const socket = getDmSocket();
+  const saved = await confirmChatDelivery({
+    listen: (event, handler) => {
+      socket.on(event, handler);
+      return () => { socket.off(event, handler); };
+    },
+    emit: () => { socket.emit('editMessage', payload); },
+    messageEvent: 'editMessage',
+    errorEvent: 'error',
+    matches: (event: EditedMessage) => event._id === payload.messageId && event.dmId === payload.dmId && event.content === payload.content,
+  });
+  if (!saved) throw new Error('The edit was not confirmed. Your text is still here.');
 }
 
 export function emitAddDmReaction(dmId: string, messageId: string, emoji: string): Promise<void> {
@@ -531,3 +542,4 @@ export function disconnectDmSocket(): void {
     console.log('[DM Socket] Disconnected and cleared');
   }
 }
+import { confirmChatDelivery } from '@/lib/chat-delivery';

@@ -298,7 +298,7 @@ export default function YoutubeImportPage() {
         }
       });
     },
-    [refresh, requireAuth, t],
+    [refresh, requireAuth, t, setUrl],
   );
 
   const handleSubmit = () => {

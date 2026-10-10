@@ -10,7 +10,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
  * the emit, so a dropped forward was reported to the user in green.
  */
 
-type Handler = () => void;
+type Handler = (payload?: unknown) => void;
 
 class FakeSocket {
   connected = false;
@@ -32,6 +32,7 @@ class FakeSocket {
     this.connected = true;
     this.handlers.get('connect')?.forEach((cb) => cb());
   }
+  receive(event: string, payload: unknown) { this.handlers.get(event)?.forEach(cb => cb(payload)); }
 }
 
 const socket = new FakeSocket();
@@ -45,18 +46,40 @@ vi.mock('@/lib/api/dehub/core', () => ({
 
 let emitForwardMessage: (p: { messageId: string; targetDmId: string }) => Promise<void>;
 let emitDeleteMessage: (dmId: string, messageId: string) => Promise<void>;
+let emitEditMessage: (p: { dmId: string; messageId: string; content: string }) => Promise<void>;
 
 beforeEach(async () => {
   vi.useFakeTimers();
   socket.connected = false;
   socket.active = false;
   socket.emitted = [];
-  ({ emitForwardMessage, emitDeleteMessage } = await import('@/lib/api/dehub/dm-socket'));
+  ({ emitForwardMessage, emitDeleteMessage, emitEditMessage } = await import('@/lib/api/dehub/dm-socket'));
 });
 
 afterEach(() => { vi.useRealTimers(); });
 
 describe('user-initiated DM emitters', () => {
+  it('does not confirm an edit until the matching revision returns', async () => {
+    socket.connected = true;
+    const finished = vi.fn();
+    const pending = emitEditMessage({ dmId: 'c1', messageId: 'm1', content: 'revised' }).then(finished);
+    await vi.advanceTimersByTimeAsync(1);
+    socket.receive('editMessage', { dmId: 'c2', _id: 'm1', content: 'revised' });
+    socket.receive('editMessage', { dmId: 'c1', _id: 'm1', content: 'old revision' });
+    expect(finished).not.toHaveBeenCalled();
+    socket.receive('editMessage', { dmId: 'c1', _id: 'm1', content: 'revised' });
+    await pending;
+    expect(finished).toHaveBeenCalledOnce();
+  });
+
+  it('retains an unconfirmed edit after a server refusal', async () => {
+    socket.connected = true;
+    const pending = emitEditMessage({ dmId: 'c1', messageId: 'm1', content: 'revised' });
+    const assertion = expect(pending).rejects.toThrow(/not confirmed/);
+    await vi.advanceTimersByTimeAsync(1);
+    socket.receive('error', { message: 'rejected' });
+    await assertion;
+  });
   it('forwards when the socket is up, with the payload intact', async () => {
     socket.connected = true;
     await emitForwardMessage({ messageId: 'm1', targetDmId: 'c9' });

@@ -111,6 +111,28 @@ describe('draft-cache', () => {
     expect(readDraft('dm:0xbbb')).toBe('to B');
   });
 
+  it('merges another tab’s unrelated field even before its storage event arrives', () => {
+    writeDraft('one', 'local'); flushDrafts();
+    const other = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    other.d.two = { t: 'other tab', u: Date.now() };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(other));
+    writeDraft('one', 'local revision'); flushDrafts();
+    __resetDraftCacheForTests();
+    expect(readDraft('two')).toBe('other tab');
+    expect(readDraft('one')).toBe('local revision');
+  });
+
+  it('does not resurrect another tab’s sent draft from an old mirror', () => {
+    writeDraft('one', 'send me'); writeDraft('two', 'still typing'); flushDrafts();
+    const other = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+    delete other.d.one;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(other));
+    writeDraft('two', 'more typing'); flushDrafts();
+    __resetDraftCacheForTests();
+    expect(readDraft('one')).toBe('');
+    expect(readDraft('two')).toBe('more typing');
+  });
+
   it('ignores an empty key rather than storing under ""', () => {
     writeDraft('', 'nowhere');
     expect(readDraft('')).toBe('');

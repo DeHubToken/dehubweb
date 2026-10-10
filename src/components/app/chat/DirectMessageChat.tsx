@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DirectMessageChat Component
@@ -211,7 +212,7 @@ const MessageBubble = memo(function MessageBubble({
   onForward?: (message: DmMessage) => void;
   onReply?: (message: DmMessage) => void;
   onEdit?: (message: DmMessage) => void;
-  onSaveEdit?: (messageId: string, content: string) => void;
+  onSaveEdit?: (messageId: string, content: string) => Promise<boolean>;
   onCancelEdit?: () => void;
   onOpenImage?: (url: string) => void;
   currentUserAddress?: string;
@@ -281,11 +282,18 @@ const MessageBubble = memo(function MessageBubble({
    * back until the send comes back with a real one.
    */
   const isUnsent = message._id.startsWith('temp-');
-  const [draftText, setDraftText] = useState(message.content || '');
+  const [draftText, setDraftText] = useDraftState(`dm:edit:${message._id}`, message.content || '');
+  const editPending = useRef(false);
+  const saveEdit = async () => {
+    if (editPending.current || !onSaveEdit) return;
+    editPending.current = true;
+    try { if (await onSaveEdit(message._id, draftText) && setDraftText.complete(draftText, '')) onCancelEdit?.(); }
+    finally { editPending.current = false; }
+  };
   const [reactionPickerOpen, setReactionPickerOpen] = useState(false);
   useEffect(() => {
-    if (isEditing) setDraftText(message.content || '');
-  }, [isEditing, message.content]);
+    if (isEditing) setDraftText.initialize(message.content || '');
+  }, [isEditing, message.content, setDraftText]);
 
   // Entity shares translate their caption (link stripped) — feeding the raw URL to the
   // translator garbles it and previously the translate control was hidden entirely.
@@ -431,7 +439,7 @@ const MessageBubble = memo(function MessageBubble({
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        onSaveEdit?.(message._id, draftText);
+                        void saveEdit();
                       } else if (e.key === 'Escape') {
                         onCancelEdit?.();
                       }
@@ -451,7 +459,7 @@ const MessageBubble = memo(function MessageBubble({
                     </button>
                     <button
                       type="button"
-                      onClick={() => onSaveEdit?.(message._id, draftText)}
+                      onClick={() => void saveEdit()}
                       className="p-1 text-white hover:text-zinc-300"
                       title="Save"
                     >
@@ -1430,10 +1438,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const handleSaveEdit = useCallback(async (messageId: string, content: string) => {
     const trimmed = content.trim();
     const original = messagesRef.current.find(m => m._id === messageId);
-    if (!trimmed || !original || trimmed === original.content) {
-      setEditingMessageId(null);
-      return;
+    if (!trimmed || !original) {
+      return false;
     }
+    if (trimmed === original.content) return true;
 
     let wire: { content: string; encrypted: boolean };
     try {
@@ -1442,7 +1450,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       await emitEditMessage({ dmId: resolvedConversationId, messageId, content: wire.content });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Could not save the edit.');
-      return;
+      return false;
     }
 
     queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
@@ -1457,7 +1465,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       }));
       return { ...old, pages };
     });
-    setEditingMessageId(null);
+    return true;
   }, [queryClient, resolvedConversationId, otherUser?.address]);
 
   const handleForwardSelect = useCallback(
