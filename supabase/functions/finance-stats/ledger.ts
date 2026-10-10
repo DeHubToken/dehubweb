@@ -184,3 +184,41 @@ export function buildSeries(
   }
   return days;
 }
+
+// ---------------------------------------------------------------------------
+// The revenue ledger
+// ---------------------------------------------------------------------------
+
+export type ProofChain = 'bsc' | 'base';
+
+/**
+ * One line of the public revenue ledger: a single payment where the source
+ * records payments one by one, or a day's total where it only reports totals.
+ */
+export interface LedgerItem {
+  date: string;
+  source: string;
+  usd: number;
+  /** What was actually paid, in the unit it was paid in. */
+  amount?: number;
+  unit?: string;
+  /** How many payments a daily total covers, for sources that only report totals. */
+  count?: number;
+  /** The on-chain transaction, for anything that has one. */
+  ref?: { chain: ProofChain; tx: string };
+  /** A short qualifier, such as "refund". */
+  note?: string;
+}
+
+/** The chains the page can link a transaction on, from however a table spells them. */
+export function proofChain(chain: string | number | null | undefined): ProofChain | null {
+  const c = String(chain ?? '').trim().toLowerCase();
+  if (c === 'base' || c === '8453') return 'base';
+  if (c === 'bnb' || c === 'bsc' || c === '56') return 'bsc';
+  return null;
+}
+
+/** Newest first; within a day, the larger amount first. */
+export function sortLedger(items: LedgerItem[]): LedgerItem[] {
+  return [...items].sort((a, b) => (a.date === b.date ? b.usd - a.usd : a.date < b.date ? 1 : -1));
+}

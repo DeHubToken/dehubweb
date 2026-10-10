@@ -31,12 +31,15 @@ import {
   dayKey,
   freeJobProviderCostUsd,
   jobProviderCostUsd,
+  proofChain,
+  sortLedger,
   spreadFixedCost,
   spreadMonthAmount,
   usageCostUsd,
   type FinanceKind,
   type FixedCostItem,
   type LedgerEntry,
+  type LedgerItem,
   type UsageRow,
 } from './ledger.ts';
 import { CATALOGUE, type SourceMeta, type Status } from './sources.ts';
@@ -46,6 +49,8 @@ const PAGE = 1000;
 const MAX_ROWS = 200_000;
 const DHB_BASE = '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c';
 const API_BASE = (Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io').replace(/\/$/, '');
+/** Where in-app DHB payments land — the same default the payment verifiers use. */
+const TREASURY = (Deno.env.get('AI_TREASURY_ADDRESS') || '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c').toLowerCase();
 
 const fixedItems = (costConfig.items as FixedCostItem[]).filter(
   (item) => item.id && item.since && Number.isFinite(item.usdMonthly),
@@ -131,13 +136,15 @@ type Collected = { kind: FinanceKind; entry: LedgerEntry }[];
 
 interface Reading {
   entries: Collected;
+  /** Every revenue payment (or daily total) behind the series, for the public ledger. */
+  ledger: LedgerItem[];
   /** Source ids that were read successfully. */
   ok: Set<string>;
   notes: string[];
 }
 
 function newReading(): Reading {
-  return { entries: [], ok: new Set(), notes: [] };
+  return { entries: [], ledger: [], ok: new Set(), notes: [] };
 }
 
 function push(r: Reading, kind: FinanceKind, source: string, date: string | null | undefined, usd: number) {
@@ -145,56 +152,105 @@ function push(r: Reading, kind: FinanceKind, source: string, date: string | null
   r.entries.push({ kind, entry: { date: dayKey(date), source, usd } });
 }
 
+/**
+ * Revenue goes through here rather than push(), so the figure on the chart and
+ * the line in the public ledger are written by the same call and cannot drift.
+ */
+function earn(
+  r: Reading,
+  source: string,
+  date: string | null | undefined,
+  usd: number,
+  detail: Omit<LedgerItem, 'date' | 'source' | 'usd'> = {},
+) {
+  if (!date || !Number.isFinite(usd) || usd === 0) return;
+  push(r, 'revenue', source, date, usd);
+  r.ledger.push({ date: dayKey(date), source, usd: Math.round(usd * 100) / 100, ...detail });
+}
+
+/** A link-able transaction, or nothing when the chain or hash is missing. */
+function proof(chain: string | number | null | undefined, tx: string | null | undefined) {
+  const c = proofChain(chain);
+  return c && tx && /^0x[0-9a-fA-F]{64}$/.test(tx) ? { ref: { chain: c, tx: tx.toLowerCase() } } : {};
+}
+
 async function readDatabase(r: Reading, dhbUsd: number) {
   const tasks: Promise<void>[] = [];
 
   tasks.push((async () => {
     const [payments, refunds, creditJobs] = await Promise.all([
-      selectAll<{ paid_dhb: number; created_at: string }>('ai_payments', 'paid_dhb, created_at'),
+      selectAll<{ paid_dhb: number; created_at: string; tx_hash: string | null; chain: string | null }>(
+        'ai_payments', 'paid_dhb, created_at, tx_hash, chain'),
       selectAll<{ dhb: number; created_at: string }>('ai_payment_refunds', 'dhb, created_at'),
       selectAll<{ price_dhb: number; created_at: string }>('ai_generation_jobs', 'price_dhb, created_at', (q) =>
         q.eq('status', 'succeeded').neq('payment_source', 'dhb'),
       ),
     ]);
-    for (const p of payments) push(r, 'revenue', 'ai_generations', p.created_at, Number(p.paid_dhb) * dhbUsd);
-    for (const f of refunds) push(r, 'revenue', 'ai_generations', f.created_at, -Number(f.dhb) * dhbUsd);
-    for (const j of creditJobs) push(r, 'revenue', 'ai_generations', j.created_at, Number(j.price_dhb) * dhbUsd);
+    for (const p of payments) {
+      earn(r, 'ai_generations', p.created_at, Number(p.paid_dhb) * dhbUsd, {
+        amount: Number(p.paid_dhb), unit: 'DHB', ...proof(p.chain, p.tx_hash),
+      });
+    }
+    for (const f of refunds) {
+      earn(r, 'ai_generations', f.created_at, -Number(f.dhb) * dhbUsd, { amount: -Number(f.dhb), unit: 'DHB', note: 'refund' });
+    }
+    for (const j of creditJobs) {
+      earn(r, 'ai_generations', j.created_at, Number(j.price_dhb) * dhbUsd, { amount: Number(j.price_dhb), unit: 'DHB', note: 'paid from credits' });
+    }
     r.ok.add('ai_generations');
   })());
 
   tasks.push((async () => {
-    const rows = await selectAll<{ usd_value: number; dhb_amount: number; created_at: string }>(
-      'ad_payments', 'usd_value, dhb_amount, created_at');
-    for (const a of rows) push(r, 'revenue', 'ads', a.created_at, Number(a.usd_value ?? Number(a.dhb_amount) * dhbUsd));
+    const rows = await selectAll<{ usd_value: number; dhb_amount: number; created_at: string; tx_hash: string | null; chain: string | null }>(
+      'ad_payments', 'usd_value, dhb_amount, created_at, tx_hash, chain');
+    for (const a of rows) {
+      earn(r, 'ads', a.created_at, Number(a.usd_value ?? Number(a.dhb_amount) * dhbUsd), {
+        amount: Number(a.dhb_amount), unit: 'DHB', ...proof(a.chain, a.tx_hash),
+      });
+    }
     r.ok.add('ads');
   })());
 
   tasks.push((async () => {
-    const rows = await selectAll<{ usd: number; dhb: number; created_at: string }>(
-      'social_credit_topups', 'usd, dhb, created_at');
-    for (const t of rows) push(r, 'revenue', 'post_credits', t.created_at, Number(t.usd ?? Number(t.dhb) * dhbUsd));
+    const rows = await selectAll<{ usd: number; dhb: number; created_at: string; tx_hash: string | null; chain: string | null }>(
+      'social_credit_topups', 'usd, dhb, created_at, tx_hash, chain');
+    for (const t of rows) {
+      earn(r, 'post_credits', t.created_at, Number(t.usd ?? Number(t.dhb) * dhbUsd), {
+        amount: Number(t.dhb), unit: 'DHB', ...proof(t.chain, t.tx_hash),
+      });
+    }
     r.ok.add('post_credits');
   })());
 
   tasks.push((async () => {
-    const rows = await selectAll<{ price_dhb: number; created_at: string }>('voice_clone_payments', 'price_dhb, created_at');
-    for (const v of rows) push(r, 'revenue', 'voice_clones', v.created_at, Number(v.price_dhb) * dhbUsd);
+    const rows = await selectAll<{ price_dhb: number; created_at: string; tx_hash: string | null; chain: string | null }>(
+      'voice_clone_payments', 'price_dhb, created_at, tx_hash, chain');
+    for (const v of rows) {
+      earn(r, 'voice_clones', v.created_at, Number(v.price_dhb) * dhbUsd, {
+        amount: Number(v.price_dhb), unit: 'DHB', ...proof(v.chain, v.tx_hash),
+      });
+    }
     r.ok.add('voice_clones');
   })());
 
   tasks.push((async () => {
     const rows = await selectAll<{ minutes: number; price_dhb_per_min: number; settled_at: string }>(
       'stage_dub_usage', 'minutes, price_dhb_per_min, settled_at', (q) => q.not('settled_at', 'is', null));
-    for (const d of rows) push(r, 'revenue', 'live_dubbing', d.settled_at, Number(d.minutes) * Number(d.price_dhb_per_min) * dhbUsd);
+    for (const d of rows) {
+      const dhb = Number(d.minutes) * Number(d.price_dhb_per_min);
+      earn(r, 'live_dubbing', d.settled_at, dhb * dhbUsd, { amount: dhb, unit: 'DHB' });
+    }
     r.ok.add('live_dubbing');
   })());
 
   tasks.push((async () => {
-    const rows = await selectAll<{ currency: string; amount: number; gross_amount: number; created_at: string }>(
-      'work_payment_intents', 'currency, amount, gross_amount, created_at', (q) => q.eq('state', 'confirmed'));
+    const rows = await selectAll<{ currency: string; amount: number; gross_amount: number; created_at: string; tx_hash: string | null; chain_id: number | null }>(
+      'work_payment_intents', 'currency, amount, gross_amount, created_at, tx_hash, chain_id', (q) => q.eq('state', 'confirmed'));
     for (const w of rows) {
       const fee = Number(w.gross_amount) - Number(w.amount);
-      push(r, 'revenue', 'work_fees', w.created_at, fee * (w.currency === 'USDC' ? 1 : dhbUsd));
+      earn(r, 'work_fees', w.created_at, fee * (w.currency === 'USDC' ? 1 : dhbUsd), {
+        amount: fee, unit: w.currency, ...proof(w.chain_id, w.tx_hash),
+      });
     }
     r.ok.add('work_fees');
   })());
@@ -235,7 +291,7 @@ async function readDatabase(r: Reading, dhbUsd: number) {
 
 interface ApiRevenue {
   ok: true;
-  rows: { date: string; source: string; kind: FinanceKind; currency: string; amount: number }[];
+  rows: { date: string; source: string; kind: FinanceKind; currency: string; amount: number; count?: number }[];
   sources: string[];
 }
 
@@ -256,7 +312,13 @@ async function readApi(r: Reading, dhbUsd: number, fx: Record<string, number>) {
         dropped += 1;
         continue;
       }
-      push(r, row.kind, row.source, row.date, Number(row.amount) * rate);
+      if (row.kind === 'revenue') {
+        earn(r, row.source, row.date, Number(row.amount) * rate, {
+          amount: Number(row.amount), unit: currency, ...(row.count ? { count: row.count } : {}),
+        });
+      } else {
+        push(r, row.kind, row.source, row.date, Number(row.amount) * rate);
+      }
     }
     if (dropped) r.notes.push(`${dropped} days of card payments were in a currency with no exchange rate today and are left out.`);
     for (const id of body.sources ?? []) r.ok.add(id);
@@ -309,7 +371,9 @@ async function readStripePlans(r: Reading, fx: Record<string, number>) {
       const rate = fx[invoice.currency.toUpperCase()];
       if (!rate) continue;
       const paidAt = invoice.status_transitions?.paid_at ?? invoice.created;
-      push(r, 'revenue', 'pro_plans', new Date(paidAt * 1000).toISOString(), (invoice.amount_paid / 100) * rate);
+      earn(r, 'pro_plans', new Date(paidAt * 1000).toISOString(), (invoice.amount_paid / 100) * rate, {
+        amount: invoice.amount_paid / 100, unit: invoice.currency.toUpperCase(),
+      });
     }
     r.ok.add('pro_plans');
   } catch (err) {
@@ -319,7 +383,12 @@ async function readStripePlans(r: Reading, fx: Record<string, number>) {
 
 /** Already in USD at the day's price, so it is added as recorded. */
 function readHistory(r: Reading) {
-  for (const row of history.rows) push(r, 'revenue', row.source, row.date, row.usd);
+  for (const e of history.entries) {
+    earn(r, e.source, e.date, e.usd, {
+      amount: e.bnb, unit: 'BNB', ref: { chain: 'bsc', tx: e.tx },
+      note: e.route === 'collateral' ? 'collateral payout' : 'tax sale',
+    });
+  }
   for (const source of history.sources) r.ok.add(source.id);
 }
 
@@ -371,7 +440,7 @@ async function compute() {
     })),
   ];
 
-  return {
+  const summary = {
     ok: true as const,
     fetchedAt: now.toISOString(),
     currency: 'USD' as const,
@@ -391,9 +460,31 @@ async function compute() {
       ],
     },
   };
+
+  // The ledger is every line behind the revenue figure, so it is served on its
+  // own (?view=ledger) rather than making every visit to /stats download it.
+  const ledger = {
+    ok: true as const,
+    fetchedAt: now.toISOString(),
+    currency: 'USD' as const,
+    dhb: summary.dhb,
+    sources: sources
+      .filter((s) => s.kind === 'revenue')
+      .map((s) => ({ id: s.id, label: s.label, status: s.status, note: s.note })),
+    explorers: { bsc: 'https://bscscan.com', base: 'https://basescan.org' },
+    addresses: [
+      { label: 'DeHub treasury (in-app DHB payments)', address: TREASURY, chains: ['base', 'bsc'] },
+      ...history.sources.flatMap((s) =>
+        s.provenance.addresses.map((a) => ({ label: a.label, address: a.address, chains: [s.chain] })),
+      ),
+    ],
+    items: sortLedger(r.ledger),
+  };
+
+  return { summary, ledger };
 }
 
-let cache: { body: string; expires: number } | null = null;
+let cache: { summary: string; ledger: string; expires: number } | null = null;
 
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);
@@ -407,9 +498,11 @@ Deno.serve(async (req) => {
 
   try {
     if (!cache || Date.now() > cache.expires) {
-      cache = { body: JSON.stringify(await compute()), expires: Date.now() + CACHE_TTL_MS };
+      const { summary, ledger } = await compute();
+      cache = { summary: JSON.stringify(summary), ledger: JSON.stringify(ledger), expires: Date.now() + CACHE_TTL_MS };
     }
-    return new Response(cache.body, {
+    const view = new URL(req.url).searchParams.get('view');
+    return new Response(view === 'ledger' ? cache.ledger : cache.summary, {
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' },
     });
   } catch (err) {

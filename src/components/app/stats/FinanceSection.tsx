@@ -24,6 +24,7 @@ import {
   type FinanceStats,
 } from '@/hooks/use-finance-stats';
 import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPieces';
+import { RevenueLedger } from '@/components/app/stats/RevenueLedger';
 import { cn } from '@/lib/utils';
 
 type Range = '24h' | '3d' | '7d' | '30d' | '1y' | 'all';
@@ -183,6 +184,8 @@ function SourceList({
   sources,
   emptyLabel,
   quietLabel,
+  onSelect,
+  selectLabel,
 }: {
   title: string;
   icon: typeof Wallet;
@@ -193,6 +196,10 @@ function SourceList({
   sources: FinanceSource[];
   emptyLabel: string;
   quietLabel: string;
+  /** Makes each line a button — used to open the revenue ledger on that source. */
+  onSelect?: (sourceId: string) => void;
+  /** Accessible name for that button, with `{{source}}` for the line's label. */
+  selectLabel?: (label: string) => string;
 }) {
   const live = sources.filter((s) => s.status === 'ok');
   const withValue = live.filter((s) => (totals.get(s.id) ?? 0) > 0.004);
@@ -219,15 +226,30 @@ function SourceList({
             <div key={group} className="mt-1">
               <div className="text-[10px] uppercase tracking-wide text-zinc-500 pt-1">{groupLabels[group] ?? group}</div>
               <div className="text-white">
-                {rows.map((s) => (
-                  <ShareRow
-                    key={s.id}
-                    label={s.label}
-                    value={totals.get(s.id) ?? 0}
-                    max={max}
-                    formatted={formatUsd(totals.get(s.id) ?? 0)}
-                  />
-                ))}
+                {rows.map((s) => {
+                  const row = (
+                    <ShareRow
+                      key={s.id}
+                      label={s.label}
+                      value={totals.get(s.id) ?? 0}
+                      max={max}
+                      formatted={formatUsd(totals.get(s.id) ?? 0)}
+                    />
+                  );
+                  return onSelect ? (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => onSelect(s.id)}
+                      aria-label={selectLabel?.(s.label)}
+                      className="block w-full text-left rounded-lg -mx-1 px-1 hover:bg-zinc-800/50 transition-colors"
+                    >
+                      {row}
+                    </button>
+                  ) : (
+                    row
+                  );
+                })}
               </div>
             </div>
           );
@@ -306,6 +328,17 @@ export function FinanceSection({ range }: { range: Range }) {
   const { t } = useTranslation();
   const { data: stats } = useFinanceStats();
   const span = windowDays(range);
+  const [ledgerOpen, setLedgerOpen] = useState(false);
+  const [ledgerSource, setLedgerSource] = useState<string | null>(null);
+
+  /** A revenue line opens the ledger on that source, and brings it into view. */
+  const showLedger = (sourceId: string) => {
+    setLedgerSource(sourceId);
+    setLedgerOpen(true);
+    requestAnimationFrame(() =>
+      document.getElementById('revenue-ledger')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+    );
+  };
 
   const view = useMemo(() => {
     if (!stats) return null;
@@ -518,6 +551,8 @@ export function FinanceSection({ range }: { range: Range }) {
           sources={revenueSources}
           emptyLabel={t('stats.money.inEmpty', 'No revenue in this window yet')}
           quietLabel={t('stats.money.inQuiet', 'Tracked, nothing yet in this window:')}
+          onSelect={showLedger}
+          selectLabel={(label) => t('stats.ledger.open', 'See every {{source}} entry', { source: label })}
         />
         <SourceList
           title={t('stats.money.outTitle', 'Where it goes')}
@@ -541,6 +576,14 @@ export function FinanceSection({ range }: { range: Range }) {
           })}
         </p>
       )}
+
+      <RevenueLedger
+        windowDays={span}
+        open={ledgerOpen}
+        onOpenChange={setLedgerOpen}
+        source={ledgerSource}
+        onSourceChange={setLedgerSource}
+      />
 
       <FinanceDefinitions stats={stats} />
     </>

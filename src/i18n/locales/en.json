@@ -2536,6 +2536,25 @@
       "definitionsSubtitle": "Every line, where it is read from, and what is left out",
       "tooltipMonth": "{{month}} · {{days}} days",
       "tooltipPerDay": "{{revenue}} / {{costs}} a day"
+    },
+    "ledger": {
+      "allTime": "all time",
+      "title": "Revenue ledger",
+      "subtitle": "Every entry behind the revenue figure, with a link to check it",
+      "error": "The ledger could not be loaded right now.",
+      "all": "All",
+      "summary": "{{entries}} entries · {{total}} · {{proven}} with an on-chain transaction · {{range}}",
+      "csv": "Download CSV",
+      "empty": "No revenue entries in this window.",
+      "payments": "{{n}} payments that day",
+      "private": "off-chain record",
+      "more": "Show more ({{left}} left)",
+      "addresses": "Addresses to check",
+      "footnote": "On-chain entries link to the transaction itself. Card payments and plan invoices have no public record, so they appear as each day’s total and how many payments made it up. Amounts in USD use the price on the day for history and today’s price for live DHB payments, as described under “What is counted”.",
+      "missing": "Not in this ledger right now because they could not be read: {{sources}}.",
+      "raw": "Raw JSON",
+      "open": "See every {{source}} entry",
+      "paymentOne": "1 payment that day"
     }
   },
   "superpowers": {

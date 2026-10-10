@@ -1,27 +1,46 @@
 {
- "note": "Historical revenue that no live API reports. Each row is a UTC day, in USD at that day's BNB/USDT close on Binance. Traced once from the chain (the token stopped trading with tax in 2022); each source's provenance says exactly how, so the figures can be re-derived independently.",
+ "note": "Historical revenue that no live API reports. Each entry is one on-chain payout, valued in USD at that day's BNB/USDT close on Binance. Traced once from the chain (the token stopped trading with tax in 2022); each source's provenance says exactly how, so every entry can be re-checked on BscScan.",
  "sources": [
   {
    "id": "bsc_token_tax",
    "label": "DeHub token tax (BSC)",
    "group": "tax",
+   "chain": "bsc",
    "note": "The share of the original DeHub token's 12% trading tax kept as BNB for operations: the 2% collateral and 2% distribution sales paid straight to the operations wallets, plus the collateral BNB the contract paid out to the owner wallet. The 4% buyback (burned), 2% liquidity, 1% reflection and the holders' claimed rewards are not counted.",
    "provenance": {
     "chain": "BNB Smart Chain",
-    "token": "0xFC206f429d55c71cb7294EfF40c6ADb20dC21508",
-    "pair": "0xE876eE0945CE80Ef821633f2C18950b33Fb85633",
-    "router": "0x340c9fe71d6cd7bee9e67041cd359877e47c6f90",
-    "wallets": [
-     "0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4",
-     "0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f",
-     "0xbf8ff255ad1f369929715a3290d1ef71d79f8954"
+    "addresses": [
+     {
+      "label": "DeHub token (v1)",
+      "address": "0xFC206f429d55c71cb7294EfF40c6ADb20dC21508"
+     },
+     {
+      "label": "PancakeSwap DeHub/BNB pair",
+      "address": "0xE876eE0945CE80Ef821633f2C18950b33Fb85633"
+     },
+     {
+      "label": "Token tax router",
+      "address": "0x340c9fe71d6cd7bee9e67041cd359877e47c6f90"
+     },
+     {
+      "label": "Operations wallet 1",
+      "address": "0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f"
+     },
+     {
+      "label": "Operations wallet 2",
+      "address": "0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4"
+     },
+     {
+      "label": "Owner wallet",
+      "address": "0xbf8ff255ad1f369929715a3290d1ef71d79f8954"
+     }
     ],
-    "method": "trace_transaction on every SoldTokensForCollateral / SoldTokensForDistribution transaction, summing the BNB the router paid to a wallet other than the token; plus every CollateralizeDone event.",
+    "method": "trace_transaction on every SoldTokensForCollateral / SoldTokensForDistribution transaction, taking the BNB the router paid to a wallet other than the token; plus every CollateralizeDone event. Day prices are the Binance BNBUSDT daily close.",
     "payouts": 609,
     "firstDay": "2021-08-30",
     "lastDay": "2023-03-18",
     "totalBnb": 3857.8669,
-    "totalUsd": 1956621.0,
+    "totalUsd": 1956620.94,
     "byWallet": {
      "0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4": 394.797,
      "0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f": 3338.4291,
@@ -30,1356 +49,615 @@
    }
   }
  ],
- "rows": [
-  {
-   "date": "2021-08-30",
-   "source": "bsc_token_tax",
-   "usd": 3620.79,
-   "bnb": 7.866162
-  },
-  {
-   "date": "2021-09-03",
-   "source": "bsc_token_tax",
-   "usd": 19464.43,
-   "bnb": 39.845303
-  },
-  {
-   "date": "2021-09-11",
-   "source": "bsc_token_tax",
-   "usd": 12366.75,
-   "bnb": 30.527641
-  },
-  {
-   "date": "2021-09-14",
-   "source": "bsc_token_tax",
-   "usd": 4637.62,
-   "bnb": 11.193875
-  },
-  {
-   "date": "2021-09-15",
-   "source": "bsc_token_tax",
-   "usd": 1417.41,
-   "bnb": 3.286367
-  },
-  {
-   "date": "2021-09-16",
-   "source": "bsc_token_tax",
-   "usd": 1318.37,
-   "bnb": 3.107155
-  },
-  {
-   "date": "2021-09-17",
-   "source": "bsc_token_tax",
-   "usd": 2588.39,
-   "bnb": 6.365946
-  },
-  {
-   "date": "2021-09-18",
-   "source": "bsc_token_tax",
-   "usd": 1221.2,
-   "bnb": 2.973466
-  },
-  {
-   "date": "2021-09-19",
-   "source": "bsc_token_tax",
-   "usd": 1945.43,
-   "bnb": 4.761211
-  },
-  {
-   "date": "2021-09-20",
-   "source": "bsc_token_tax",
-   "usd": 2894.14,
-   "bnb": 7.948748
-  },
-  {
-   "date": "2021-09-21",
-   "source": "bsc_token_tax",
-   "usd": 599.48,
-   "bnb": 1.740648
-  },
-  {
-   "date": "2021-09-22",
-   "source": "bsc_token_tax",
-   "usd": 10341.68,
-   "bnb": 27.286751
-  },
-  {
-   "date": "2021-09-23",
-   "source": "bsc_token_tax",
-   "usd": 13135.26,
-   "bnb": 34.251013
-  },
-  {
-   "date": "2021-09-24",
-   "source": "bsc_token_tax",
-   "usd": 11692.05,
-   "bnb": 32.935356
-  },
-  {
-   "date": "2021-09-25",
-   "source": "bsc_token_tax",
-   "usd": 30729.2,
-   "bnb": 87.898178
-  },
-  {
-   "date": "2021-09-26",
-   "source": "bsc_token_tax",
-   "usd": 46398.51,
-   "bnb": 134.879398
-  },
-  {
-   "date": "2021-09-27",
-   "source": "bsc_token_tax",
-   "usd": 43540.72,
-   "bnb": 129.778598
-  },
-  {
-   "date": "2021-09-28",
-   "source": "bsc_token_tax",
-   "usd": 22702.95,
-   "bnb": 68.177026
-  },
-  {
-   "date": "2021-09-29",
-   "source": "bsc_token_tax",
-   "usd": 8957.73,
-   "bnb": 24.361527
-  },
-  {
-   "date": "2021-09-30",
-   "source": "bsc_token_tax",
-   "usd": 16269.87,
-   "bnb": 41.986749
-  },
-  {
-   "date": "2021-10-01",
-   "source": "bsc_token_tax",
-   "usd": 7863.13,
-   "bnb": 18.655118
-  },
-  {
-   "date": "2021-10-02",
-   "source": "bsc_token_tax",
-   "usd": 15111.4,
-   "bnb": 35.381421
-  },
-  {
-   "date": "2021-10-04",
-   "source": "bsc_token_tax",
-   "usd": 6934.88,
-   "bnb": 16.267616
-  },
-  {
-   "date": "2021-10-05",
-   "source": "bsc_token_tax",
-   "usd": 6226.22,
-   "bnb": 14.083287
-  },
-  {
-   "date": "2021-10-06",
-   "source": "bsc_token_tax",
-   "usd": 6006.7,
-   "bnb": 13.811683
-  },
-  {
-   "date": "2021-10-08",
-   "source": "bsc_token_tax",
-   "usd": 8027.05,
-   "bnb": 19.148488
-  },
-  {
-   "date": "2021-10-09",
-   "source": "bsc_token_tax",
-   "usd": 11399.44,
-   "bnb": 27.019282
-  },
-  {
-   "date": "2021-10-11",
-   "source": "bsc_token_tax",
-   "usd": 5717.79,
-   "bnb": 13.841178
-  },
-  {
-   "date": "2021-10-12",
-   "source": "bsc_token_tax",
-   "usd": 5712.98,
-   "bnb": 12.861269
-  },
-  {
-   "date": "2021-10-13",
-   "source": "bsc_token_tax",
-   "usd": 5980.81,
-   "bnb": 12.7035
-  },
-  {
-   "date": "2021-10-14",
-   "source": "bsc_token_tax",
-   "usd": 6149.25,
-   "bnb": 13.008769
-  },
-  {
-   "date": "2021-10-16",
-   "source": "bsc_token_tax",
-   "usd": 5697.09,
-   "bnb": 12.23076
-  },
-  {
-   "date": "2021-10-18",
-   "source": "bsc_token_tax",
-   "usd": 5244.0,
-   "bnb": 10.814605
-  },
-  {
-   "date": "2021-10-20",
-   "source": "bsc_token_tax",
-   "usd": 5327.69,
-   "bnb": 10.627748
-  },
-  {
-   "date": "2021-10-21",
-   "source": "bsc_token_tax",
-   "usd": 4736.7,
-   "bnb": 10.058825
-  },
-  {
-   "date": "2021-10-22",
-   "source": "bsc_token_tax",
-   "usd": 6387.32,
-   "bnb": 13.326354
-  },
-  {
-   "date": "2021-10-25",
-   "source": "bsc_token_tax",
-   "usd": 6217.0,
-   "bnb": 12.815921
-  },
-  {
-   "date": "2021-10-26",
-   "source": "bsc_token_tax",
-   "usd": 6205.6,
-   "bnb": 12.979715
-  },
-  {
-   "date": "2021-10-28",
-   "source": "bsc_token_tax",
-   "usd": 15220.35,
-   "bnb": 30.94196
-  },
-  {
-   "date": "2021-10-29",
-   "source": "bsc_token_tax",
-   "usd": 9733.97,
-   "bnb": 18.355595
-  },
-  {
-   "date": "2021-10-30",
-   "source": "bsc_token_tax",
-   "usd": 8760.15,
-   "bnb": 16.581773
-  },
-  {
-   "date": "2021-11-01",
-   "source": "bsc_token_tax",
-   "usd": 9163.67,
-   "bnb": 16.621935
-  },
-  {
-   "date": "2021-11-02",
-   "source": "bsc_token_tax",
-   "usd": 24485.93,
-   "bnb": 44.166534
-  },
-  {
-   "date": "2021-11-03",
-   "source": "bsc_token_tax",
-   "usd": 13613.44,
-   "bnb": 23.950449
-  },
-  {
-   "date": "2021-11-05",
-   "source": "bsc_token_tax",
-   "usd": 32643.51,
-   "bnb": 53.751867
-  },
-  {
-   "date": "2021-11-06",
-   "source": "bsc_token_tax",
-   "usd": 17313.15,
-   "bnb": 27.149362
-  },
-  {
-   "date": "2021-11-07",
-   "source": "bsc_token_tax",
-   "usd": 17186.46,
-   "bnb": 26.456985
-  },
-  {
-   "date": "2021-11-08",
-   "source": "bsc_token_tax",
-   "usd": 13782.04,
-   "bnb": 21.08958
-  },
-  {
-   "date": "2021-11-09",
-   "source": "bsc_token_tax",
-   "usd": 15956.6,
-   "bnb": 25.128498
-  },
-  {
-   "date": "2021-11-10",
-   "source": "bsc_token_tax",
-   "usd": 13320.52,
-   "bnb": 21.691133
-  },
-  {
-   "date": "2021-11-11",
-   "source": "bsc_token_tax",
-   "usd": 6696.72,
-   "bnb": 10.656773
-  },
-  {
-   "date": "2021-11-12",
-   "source": "bsc_token_tax",
-   "usd": 6671.02,
-   "bnb": 10.641278
-  },
-  {
-   "date": "2021-11-13",
-   "source": "bsc_token_tax",
-   "usd": 35812.56,
-   "bnb": 55.13866
-  },
-  {
-   "date": "2021-11-14",
-   "source": "bsc_token_tax",
-   "usd": 19797.41,
-   "bnb": 30.420116
-  },
-  {
-   "date": "2021-11-15",
-   "source": "bsc_token_tax",
-   "usd": 21066.34,
-   "bnb": 33.23815
-  },
-  {
-   "date": "2021-11-16",
-   "source": "bsc_token_tax",
-   "usd": 48267.2,
-   "bnb": 81.989475
-  },
-  {
-   "date": "2021-11-17",
-   "source": "bsc_token_tax",
-   "usd": 76846.65,
-   "bnb": 132.952679
-  },
-  {
-   "date": "2021-11-18",
-   "source": "bsc_token_tax",
-   "usd": 49760.34,
-   "bnb": 93.56965
-  },
-  {
-   "date": "2021-11-19",
-   "source": "bsc_token_tax",
-   "usd": 80404.69,
-   "bnb": 138.390175
-  },
-  {
-   "date": "2021-11-20",
-   "source": "bsc_token_tax",
-   "usd": 94849.51,
-   "bnb": 156.957652
-  },
-  {
-   "date": "2021-11-21",
-   "source": "bsc_token_tax",
-   "usd": 86864.73,
-   "bnb": 148.740973
-  },
-  {
-   "date": "2021-11-22",
-   "source": "bsc_token_tax",
-   "usd": 76704.62,
-   "bnb": 137.14397
-  },
-  {
-   "date": "2021-11-23",
-   "source": "bsc_token_tax",
-   "usd": 51804.15,
-   "bnb": 87.64025
-  },
-  {
-   "date": "2021-11-24",
-   "source": "bsc_token_tax",
-   "usd": 62591.94,
-   "bnb": 106.034125
-  },
-  {
-   "date": "2021-11-25",
-   "source": "bsc_token_tax",
-   "usd": 46834.56,
-   "bnb": 73.28206
-  },
-  {
-   "date": "2021-11-26",
-   "source": "bsc_token_tax",
-   "usd": 26840.18,
-   "bnb": 45.700975
-  },
-  {
-   "date": "2021-11-27",
-   "source": "bsc_token_tax",
-   "usd": 14717.95,
-   "bnb": 24.534005
-  },
-  {
-   "date": "2021-11-28",
-   "source": "bsc_token_tax",
-   "usd": 13554.98,
-   "bnb": 22.174029
-  },
-  {
-   "date": "2021-11-29",
-   "source": "bsc_token_tax",
-   "usd": 38580.52,
-   "bnb": 61.887271
-  },
-  {
-   "date": "2021-11-30",
-   "source": "bsc_token_tax",
-   "usd": 11337.24,
-   "bnb": 18.21243
-  },
-  {
-   "date": "2021-12-01",
-   "source": "bsc_token_tax",
-   "usd": 23030.59,
-   "bnb": 36.70213
-  },
-  {
-   "date": "2021-12-02",
-   "source": "bsc_token_tax",
-   "usd": 31475.74,
-   "bnb": 50.775516
-  },
-  {
-   "date": "2021-12-03",
-   "source": "bsc_token_tax",
-   "usd": 20540.14,
-   "bnb": 34.521239
-  },
-  {
-   "date": "2021-12-04",
-   "source": "bsc_token_tax",
-   "usd": 30777.44,
-   "bnb": 54.128457
-  },
-  {
-   "date": "2021-12-05",
-   "source": "bsc_token_tax",
-   "usd": 7659.64,
-   "bnb": 13.731881
-  },
-  {
-   "date": "2021-12-06",
-   "source": "bsc_token_tax",
-   "usd": 7758.89,
-   "bnb": 13.206626
-  },
-  {
-   "date": "2021-12-07",
-   "source": "bsc_token_tax",
-   "usd": 7222.81,
-   "bnb": 12.481087
-  },
-  {
-   "date": "2021-12-08",
-   "source": "bsc_token_tax",
-   "usd": 7416.45,
-   "bnb": 12.214179
-  },
-  {
-   "date": "2021-12-09",
-   "source": "bsc_token_tax",
-   "usd": 14496.91,
-   "bnb": 25.424251
-  },
-  {
-   "date": "2021-12-10",
-   "source": "bsc_token_tax",
-   "usd": 15389.46,
-   "bnb": 27.859265
-  },
-  {
-   "date": "2021-12-11",
-   "source": "bsc_token_tax",
-   "usd": 5453.27,
-   "bnb": 9.660358
-  },
-  {
-   "date": "2021-12-12",
-   "source": "bsc_token_tax",
-   "usd": 7676.29,
-   "bnb": 13.460088
-  },
-  {
-   "date": "2021-12-13",
-   "source": "bsc_token_tax",
-   "usd": 24041.19,
-   "bnb": 46.144322
-  },
-  {
-   "date": "2021-12-14",
-   "source": "bsc_token_tax",
-   "usd": 5168.32,
-   "bnb": 9.78664
-  },
-  {
-   "date": "2021-12-15",
-   "source": "bsc_token_tax",
-   "usd": 5193.0,
-   "bnb": 9.597116
-  },
-  {
-   "date": "2021-12-16",
-   "source": "bsc_token_tax",
-   "usd": 4249.48,
-   "bnb": 8.075791
-  },
-  {
-   "date": "2021-12-17",
-   "source": "bsc_token_tax",
-   "usd": 8746.73,
-   "bnb": 16.644578
-  },
-  {
-   "date": "2021-12-19",
-   "source": "bsc_token_tax",
-   "usd": 7848.26,
-   "bnb": 14.813631
-  },
-  {
-   "date": "2021-12-21",
-   "source": "bsc_token_tax",
-   "usd": 3692.62,
-   "bnb": 6.989628
-  },
-  {
-   "date": "2021-12-22",
-   "source": "bsc_token_tax",
-   "usd": 3605.91,
-   "bnb": 6.757708
-  },
-  {
-   "date": "2021-12-23",
-   "source": "bsc_token_tax",
-   "usd": 3723.98,
-   "bnb": 6.783207
-  },
-  {
-   "date": "2021-12-24",
-   "source": "bsc_token_tax",
-   "usd": 4014.66,
-   "bnb": 7.405749
-  },
-  {
-   "date": "2021-12-25",
-   "source": "bsc_token_tax",
-   "usd": 1763.93,
-   "bnb": 3.222373
-  },
-  {
-   "date": "2021-12-26",
-   "source": "bsc_token_tax",
-   "usd": 3523.99,
-   "bnb": 6.449474
-  },
-  {
-   "date": "2021-12-27",
-   "source": "bsc_token_tax",
-   "usd": 24400.09,
-   "bnb": 43.285599
-  },
-  {
-   "date": "2021-12-28",
-   "source": "bsc_token_tax",
-   "usd": 12496.94,
-   "bnb": 23.393746
-  },
-  {
-   "date": "2021-12-30",
-   "source": "bsc_token_tax",
-   "usd": 2957.25,
-   "bnb": 5.703469
-  },
-  {
-   "date": "2022-01-01",
-   "source": "bsc_token_tax",
-   "usd": 3230.18,
-   "bnb": 6.125888
-  },
-  {
-   "date": "2022-01-03",
-   "source": "bsc_token_tax",
-   "usd": 3242.04,
-   "bnb": 6.333346
-  },
-  {
-   "date": "2022-01-05",
-   "source": "bsc_token_tax",
-   "usd": 2646.86,
-   "bnb": 5.582915
-  },
-  {
-   "date": "2022-01-07",
-   "source": "bsc_token_tax",
-   "usd": 2793.38,
-   "bnb": 6.233823
-  },
-  {
-   "date": "2022-01-09",
-   "source": "bsc_token_tax",
-   "usd": 2827.71,
-   "bnb": 6.445654
-  },
-  {
-   "date": "2022-01-11",
-   "source": "bsc_token_tax",
-   "usd": 3426.75,
-   "bnb": 7.391605
-  },
-  {
-   "date": "2022-01-13",
-   "source": "bsc_token_tax",
-   "usd": 9918.87,
-   "bnb": 20.873053
-  },
-  {
-   "date": "2022-01-14",
-   "source": "bsc_token_tax",
-   "usd": 3609.32,
-   "bnb": 7.365969
-  },
-  {
-   "date": "2022-01-15",
-   "source": "bsc_token_tax",
-   "usd": 1882.0,
-   "bnb": 3.805864
-  },
-  {
-   "date": "2022-01-16",
-   "source": "bsc_token_tax",
-   "usd": 8213.63,
-   "bnb": 16.473381
-  },
-  {
-   "date": "2022-01-17",
-   "source": "bsc_token_tax",
-   "usd": 3703.8,
-   "bnb": 7.79419
-  },
-  {
-   "date": "2022-01-19",
-   "source": "bsc_token_tax",
-   "usd": 3993.76,
-   "bnb": 8.646375
-  },
-  {
-   "date": "2022-01-20",
-   "source": "bsc_token_tax",
-   "usd": 4431.67,
-   "bnb": 10.067393
-  },
-  {
-   "date": "2022-01-21",
-   "source": "bsc_token_tax",
-   "usd": 2607.73,
-   "bnb": 6.792729
-  },
-  {
-   "date": "2022-01-22",
-   "source": "bsc_token_tax",
-   "usd": 1207.56,
-   "bnb": 3.370236
-  },
-  {
-   "date": "2022-01-25",
-   "source": "bsc_token_tax",
-   "usd": 2916.79,
-   "bnb": 7.574104
-  },
-  {
-   "date": "2022-01-27",
-   "source": "bsc_token_tax",
-   "usd": 3101.28,
-   "bnb": 7.954032
-  },
-  {
-   "date": "2022-01-29",
-   "source": "bsc_token_tax",
-   "usd": 3101.42,
-   "bnb": 7.966655
-  },
-  {
-   "date": "2022-01-31",
-   "source": "bsc_token_tax",
-   "usd": 2681.65,
-   "bnb": 7.164432
-  },
-  {
-   "date": "2022-02-01",
-   "source": "bsc_token_tax",
-   "usd": 1293.86,
-   "bnb": 3.367683
-  },
-  {
-   "date": "2022-02-02",
-   "source": "bsc_token_tax",
-   "usd": 1313.93,
-   "bnb": 3.581162
-  },
-  {
-   "date": "2022-02-03",
-   "source": "bsc_token_tax",
-   "usd": 1342.59,
-   "bnb": 3.606216
-  },
-  {
-   "date": "2022-02-04",
-   "source": "bsc_token_tax",
-   "usd": 2610.65,
-   "bnb": 6.53479
-  },
-  {
-   "date": "2022-02-06",
-   "source": "bsc_token_tax",
-   "usd": 2633.97,
-   "bnb": 6.272849
-  },
-  {
-   "date": "2022-02-07",
-   "source": "bsc_token_tax",
-   "usd": 3159.71,
-   "bnb": 7.288841
-  },
-  {
-   "date": "2022-02-08",
-   "source": "bsc_token_tax",
-   "usd": 2632.87,
-   "bnb": 6.456283
-  },
-  {
-   "date": "2022-02-09",
-   "source": "bsc_token_tax",
-   "usd": 6001.46,
-   "bnb": 14.191213
-  },
-  {
-   "date": "2022-02-10",
-   "source": "bsc_token_tax",
-   "usd": 3446.52,
-   "bnb": 8.310878
-  },
-  {
-   "date": "2022-02-11",
-   "source": "bsc_token_tax",
-   "usd": 6259.51,
-   "bnb": 15.648772
-  },
-  {
-   "date": "2022-02-12",
-   "source": "bsc_token_tax",
-   "usd": 2793.96,
-   "bnb": 6.922585
-  },
-  {
-   "date": "2022-02-15",
-   "source": "bsc_token_tax",
-   "usd": 3607.39,
-   "bnb": 8.342726
-  },
-  {
-   "date": "2022-02-16",
-   "source": "bsc_token_tax",
-   "usd": 4265.14,
-   "bnb": 9.981602
-  },
-  {
-   "date": "2022-02-17",
-   "source": "bsc_token_tax",
-   "usd": 2785.26,
-   "bnb": 6.92161
-  },
-  {
-   "date": "2022-02-19",
-   "source": "bsc_token_tax",
-   "usd": 2729.75,
-   "bnb": 6.827784
-  },
-  {
-   "date": "2022-02-22",
-   "source": "bsc_token_tax",
-   "usd": 2935.67,
-   "bnb": 7.843087
-  },
-  {
-   "date": "2022-02-24",
-   "source": "bsc_token_tax",
-   "usd": 2359.74,
-   "bnb": 6.533049
-  },
-  {
-   "date": "2022-02-25",
-   "source": "bsc_token_tax",
-   "usd": 1167.6,
-   "bnb": 3.113595
-  },
-  {
-   "date": "2022-02-26",
-   "source": "bsc_token_tax",
-   "usd": 1180.61,
-   "bnb": 3.159244
-  },
-  {
-   "date": "2022-02-28",
-   "source": "bsc_token_tax",
-   "usd": 2438.17,
-   "bnb": 6.163218
-  },
-  {
-   "date": "2022-03-01",
-   "source": "bsc_token_tax",
-   "usd": 2318.1,
-   "bnb": 5.671876
-  },
-  {
-   "date": "2022-03-02",
-   "source": "bsc_token_tax",
-   "usd": 2607.12,
-   "bnb": 6.369695
-  },
-  {
-   "date": "2022-03-03",
-   "source": "bsc_token_tax",
-   "usd": 1183.16,
-   "bnb": 2.93879
-  },
-  {
-   "date": "2022-03-04",
-   "source": "bsc_token_tax",
-   "usd": 1011.67,
-   "bnb": 2.703556
-  },
-  {
-   "date": "2022-03-08",
-   "source": "bsc_token_tax",
-   "usd": 2125.18,
-   "bnb": 5.572063
-  },
-  {
-   "date": "2022-03-11",
-   "source": "bsc_token_tax",
-   "usd": 2244.49,
-   "bnb": 6.035203
-  },
-  {
-   "date": "2022-03-12",
-   "source": "bsc_token_tax",
-   "usd": 2102.12,
-   "bnb": 5.644787
-  },
-  {
-   "date": "2022-03-13",
-   "source": "bsc_token_tax",
-   "usd": 3646.66,
-   "bnb": 10.090378
-  },
-  {
-   "date": "2022-03-14",
-   "source": "bsc_token_tax",
-   "usd": 1065.94,
-   "bnb": 2.854674
-  },
-  {
-   "date": "2022-03-15",
-   "source": "bsc_token_tax",
-   "usd": 983.64,
-   "bnb": 2.646337
-  },
-  {
-   "date": "2022-03-16",
-   "source": "bsc_token_tax",
-   "usd": 1039.76,
-   "bnb": 2.697866
-  },
-  {
-   "date": "2022-03-17",
-   "source": "bsc_token_tax",
-   "usd": 5038.83,
-   "bnb": 12.860716
-  },
-  {
-   "date": "2022-03-18",
-   "source": "bsc_token_tax",
-   "usd": 4480.42,
-   "bnb": 11.280001
-  },
-  {
-   "date": "2022-03-20",
-   "source": "bsc_token_tax",
-   "usd": 2243.58,
-   "bnb": 5.741004
-  },
-  {
-   "date": "2022-03-22",
-   "source": "bsc_token_tax",
-   "usd": 1913.98,
-   "bnb": 4.734065
-  },
-  {
-   "date": "2022-03-24",
-   "source": "bsc_token_tax",
-   "usd": 2079.42,
-   "bnb": 5.020334
-  },
-  {
-   "date": "2022-03-26",
-   "source": "bsc_token_tax",
-   "usd": 1609.77,
-   "bnb": 3.871511
-  },
-  {
-   "date": "2022-03-28",
-   "source": "bsc_token_tax",
-   "usd": 1818.26,
-   "bnb": 4.22654
-  },
-  {
-   "date": "2022-03-29",
-   "source": "bsc_token_tax",
-   "usd": 1570.86,
-   "bnb": 3.61783
-  },
-  {
-   "date": "2022-03-31",
-   "source": "bsc_token_tax",
-   "usd": 2305.72,
-   "bnb": 5.375885
-  },
-  {
-   "date": "2022-04-01",
-   "source": "bsc_token_tax",
-   "usd": 3747.92,
-   "bnb": 8.371495
-  },
-  {
-   "date": "2022-04-02",
-   "source": "bsc_token_tax",
-   "usd": 706.29,
-   "bnb": 1.615495
-  },
-  {
-   "date": "2022-04-03",
-   "source": "bsc_token_tax",
-   "usd": 1530.58,
-   "bnb": 3.398259
-  },
-  {
-   "date": "2022-04-05",
-   "source": "bsc_token_tax",
-   "usd": 1540.0,
-   "bnb": 3.462998
-  },
-  {
-   "date": "2022-04-07",
-   "source": "bsc_token_tax",
-   "usd": 1749.86,
-   "bnb": 4.013449
-  },
-  {
-   "date": "2022-04-13",
-   "source": "bsc_token_tax",
-   "usd": 1509.87,
-   "bnb": 3.566051
-  },
-  {
-   "date": "2022-04-18",
-   "source": "bsc_token_tax",
-   "usd": 1321.51,
-   "bnb": 3.1706
-  },
-  {
-   "date": "2022-04-22",
-   "source": "bsc_token_tax",
-   "usd": 1341.18,
-   "bnb": 3.298513
-  },
-  {
-   "date": "2022-04-24",
-   "source": "bsc_token_tax",
-   "usd": 1378.8,
-   "bnb": 3.457365
-  },
-  {
-   "date": "2022-04-26",
-   "source": "bsc_token_tax",
-   "usd": 1309.71,
-   "bnb": 3.3939
-  },
-  {
-   "date": "2022-04-27",
-   "source": "bsc_token_tax",
-   "usd": 1333.86,
-   "bnb": 3.408798
-  },
-  {
-   "date": "2022-04-30",
-   "source": "bsc_token_tax",
-   "usd": 1363.37,
-   "bnb": 3.615411
-  },
-  {
-   "date": "2022-05-02",
-   "source": "bsc_token_tax",
-   "usd": 1474.23,
-   "bnb": 3.784937
-  },
-  {
-   "date": "2022-05-03",
-   "source": "bsc_token_tax",
-   "usd": 488.47,
-   "bnb": 1.272383
-  },
-  {
-   "date": "2022-05-05",
-   "source": "bsc_token_tax",
-   "usd": 963.03,
-   "bnb": 2.545013
-  },
-  {
-   "date": "2022-05-07",
-   "source": "bsc_token_tax",
-   "usd": 459.35,
-   "bnb": 1.256783
-  },
-  {
-   "date": "2022-05-08",
-   "source": "bsc_token_tax",
-   "usd": 425.34,
-   "bnb": 1.195121
-  },
-  {
-   "date": "2022-05-09",
-   "source": "bsc_token_tax",
-   "usd": 707.82,
-   "bnb": 2.390484
-  },
-  {
-   "date": "2022-05-10",
-   "source": "bsc_token_tax",
-   "usd": 764.59,
-   "bnb": 2.396097
-  },
-  {
-   "date": "2022-05-11",
-   "source": "bsc_token_tax",
-   "usd": 1338.95,
-   "bnb": 4.931684
-  },
-  {
-   "date": "2022-05-12",
-   "source": "bsc_token_tax",
-   "usd": 530.64,
-   "bnb": 1.97265
-  },
-  {
-   "date": "2022-05-13",
-   "source": "bsc_token_tax",
-   "usd": 847.72,
-   "bnb": 2.91714
-  },
-  {
-   "date": "2022-05-14",
-   "source": "bsc_token_tax",
-   "usd": 253.55,
-   "bnb": 0.853989
-  },
-  {
-   "date": "2022-05-15",
-   "source": "bsc_token_tax",
-   "usd": 565.68,
-   "bnb": 1.810756
-  },
-  {
-   "date": "2022-05-17",
-   "source": "bsc_token_tax",
-   "usd": 419.47,
-   "bnb": 1.36991
-  },
-  {
-   "date": "2022-05-23",
-   "source": "bsc_token_tax",
-   "usd": 537.7,
-   "bnb": 1.695143
-  },
-  {
-   "date": "2022-05-25",
-   "source": "bsc_token_tax",
-   "usd": 646.05,
-   "bnb": 1.98358
-  },
-  {
-   "date": "2022-05-26",
-   "source": "bsc_token_tax",
-   "usd": 592.61,
-   "bnb": 1.955824
-  },
-  {
-   "date": "2022-05-27",
-   "source": "bsc_token_tax",
-   "usd": 389.97,
-   "bnb": 1.292993
-  },
-  {
-   "date": "2022-05-28",
-   "source": "bsc_token_tax",
-   "usd": 1845.0,
-   "bnb": 6.0
-  },
-  {
-   "date": "2022-05-29",
-   "source": "bsc_token_tax",
-   "usd": 451.16,
-   "bnb": 1.475356
-  },
-  {
-   "date": "2022-05-31",
-   "source": "bsc_token_tax",
-   "usd": 468.99,
-   "bnb": 1.461495
-  },
-  {
-   "date": "2022-06-01",
-   "source": "bsc_token_tax",
-   "usd": 697.86,
-   "bnb": 2.323088
-  },
-  {
-   "date": "2022-06-06",
-   "source": "bsc_token_tax",
-   "usd": 426.38,
-   "bnb": 1.444882
-  },
-  {
-   "date": "2022-06-09",
-   "source": "bsc_token_tax",
-   "usd": 390.24,
-   "bnb": 1.34613
-  },
-  {
-   "date": "2022-06-12",
-   "source": "bsc_token_tax",
-   "usd": 417.09,
-   "bnb": 1.63693
-  },
-  {
-   "date": "2022-06-14",
-   "source": "bsc_token_tax",
-   "usd": 341.32,
-   "bnb": 1.530601
-  },
-  {
-   "date": "2022-06-17",
-   "source": "bsc_token_tax",
-   "usd": 147.24,
-   "bnb": 0.682316
-  },
-  {
-   "date": "2022-06-18",
-   "source": "bsc_token_tax",
-   "usd": 138.39,
-   "bnb": 0.702463
-  },
-  {
-   "date": "2022-06-20",
-   "source": "bsc_token_tax",
-   "usd": 146.58,
-   "bnb": 0.677024
-  },
-  {
-   "date": "2022-06-21",
-   "source": "bsc_token_tax",
-   "usd": 227.59,
-   "bnb": 1.034048
-  },
-  {
-   "date": "2022-06-23",
-   "source": "bsc_token_tax",
-   "usd": 240.5,
-   "bnb": 1.050686
-  },
-  {
-   "date": "2022-06-24",
-   "source": "bsc_token_tax",
-   "usd": 708.24,
-   "bnb": 2.94853
-  },
-  {
-   "date": "2022-06-27",
-   "source": "bsc_token_tax",
-   "usd": 369.9,
-   "bnb": 1.582119
-  },
-  {
-   "date": "2022-06-29",
-   "source": "bsc_token_tax",
-   "usd": 546.28,
-   "bnb": 2.486468
-  },
-  {
-   "date": "2022-06-30",
-   "source": "bsc_token_tax",
-   "usd": 492.71,
-   "bnb": 2.243653
-  },
-  {
-   "date": "2022-07-01",
-   "source": "bsc_token_tax",
-   "usd": 1341.77,
-   "bnb": 6.186135
-  },
-  {
-   "date": "2022-07-03",
-   "source": "bsc_token_tax",
-   "usd": 465.11,
-   "bnb": 2.121862
-  },
-  {
-   "date": "2022-07-05",
-   "source": "bsc_token_tax",
-   "usd": 851.52,
-   "bnb": 3.689408
-  },
-  {
-   "date": "2022-07-07",
-   "source": "bsc_token_tax",
-   "usd": 736.02,
-   "bnb": 3.048966
-  },
-  {
-   "date": "2022-07-11",
-   "source": "bsc_token_tax",
-   "usd": 500.35,
-   "bnb": 2.21788
-  },
-  {
-   "date": "2022-07-12",
-   "source": "bsc_token_tax",
-   "usd": 609.86,
-   "bnb": 2.764533
-  },
-  {
-   "date": "2022-07-18",
-   "source": "bsc_token_tax",
-   "usd": 503.81,
-   "bnb": 1.907643
-  },
-  {
-   "date": "2022-07-20",
-   "source": "bsc_token_tax",
-   "usd": 417.26,
-   "bnb": 1.616017
-  },
-  {
-   "date": "2022-07-22",
-   "source": "bsc_token_tax",
-   "usd": 475.54,
-   "bnb": 1.812276
-  },
-  {
-   "date": "2022-07-23",
-   "source": "bsc_token_tax",
-   "usd": 478.59,
-   "bnb": 1.846418
-  },
-  {
-   "date": "2022-07-27",
-   "source": "bsc_token_tax",
-   "usd": 528.56,
-   "bnb": 1.946102
-  },
-  {
-   "date": "2022-07-28",
-   "source": "bsc_token_tax",
-   "usd": 460.77,
-   "bnb": 1.662217
-  },
-  {
-   "date": "2022-07-31",
-   "source": "bsc_token_tax",
-   "usd": 457.93,
-   "bnb": 1.61585
-  },
-  {
-   "date": "2022-08-02",
-   "source": "bsc_token_tax",
-   "usd": 458.87,
-   "bnb": 1.616861
-  },
-  {
-   "date": "2022-08-05",
-   "source": "bsc_token_tax",
-   "usd": 232.4,
-   "bnb": 0.735691
-  },
-  {
-   "date": "2022-08-12",
-   "source": "bsc_token_tax",
-   "usd": 952.54,
-   "bnb": 2.904984
-  },
-  {
-   "date": "2022-08-13",
-   "source": "bsc_token_tax",
-   "usd": 267.72,
-   "bnb": 0.825533
-  },
-  {
-   "date": "2022-08-14",
-   "source": "bsc_token_tax",
-   "usd": 273.18,
-   "bnb": 0.860151
-  },
-  {
-   "date": "2022-08-18",
-   "source": "bsc_token_tax",
-   "usd": 802.74,
-   "bnb": 2.692869
-  },
-  {
-   "date": "2022-08-19",
-   "source": "bsc_token_tax",
-   "usd": 243.79,
-   "bnb": 0.873494
-  },
-  {
-   "date": "2022-08-26",
-   "source": "bsc_token_tax",
-   "usd": 315.91,
-   "bnb": 1.129868
-  },
-  {
-   "date": "2022-09-02",
-   "source": "bsc_token_tax",
-   "usd": 393.45,
-   "bnb": 1.417833
-  },
-  {
-   "date": "2023-03-18",
-   "source": "bsc_token_tax",
-   "usd": 382.17,
-   "bnb": 1.154586
-  }
+ "entries": [
+  {"date":"2021-08-30","source":"bsc_token_tax","tx":"0xfed88721266630ddca05294fa8100ae11292d64b4b7f38cdc2464d95433f3d13","block":10464673,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":7.866162,"bnbUsd":460.3,"usd":3620.79},
+  {"date":"2021-09-03","source":"bsc_token_tax","tx":"0xf0a33eabeb5befce1091fd48cdd03c1b71de67a83aed48455bebd7e582897020","block":10596943,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":39.845303,"bnbUsd":488.5,"usd":19464.43},
+  {"date":"2021-09-11","source":"bsc_token_tax","tx":"0x258b80d2db4d820b0908fab8f111b8a6222a41ce9b1ca706798c7adc61919107","block":10820698,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":30.527641,"bnbUsd":405.1,"usd":12366.75},
+  {"date":"2021-09-14","source":"bsc_token_tax","tx":"0x96a7e1aa73b4f087ec46d76eb77fa9c75e64191598d0251fd795be4e7ff5625d","block":10909648,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":6.598951,"bnbUsd":414.3,"usd":2733.95},
+  {"date":"2021-09-14","source":"bsc_token_tax","tx":"0x57227cb4f1b3e5ea48e798d67235b80f8033b2d2fd708931eba016b0cf85e6dc","block":10916025,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.742695,"bnbUsd":414.3,"usd":722.0},
+  {"date":"2021-09-14","source":"bsc_token_tax","tx":"0x4f14ca5d1bfa861a7cc282423dd8349541ec4c26ea2675bacbf64b5cceb4875d","block":10918045,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.852229,"bnbUsd":414.3,"usd":1181.68},
+  {"date":"2021-09-15","source":"bsc_token_tax","tx":"0x9437b8eb75f8c8af68e66a3e23423aa4524b4d28417644c45c7a12efa2806d49","block":10943861,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.688875,"bnbUsd":431.3,"usd":728.41},
+  {"date":"2021-09-15","source":"bsc_token_tax","tx":"0x5f7af5c4839dce008839650688815d49b503a3124f54c1381d93fe2fd7d5917c","block":10944991,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.597492,"bnbUsd":431.3,"usd":689.0},
+  {"date":"2021-09-16","source":"bsc_token_tax","tx":"0x17c7fe13f209a63e1eeb839cca85758da280df48892654f369dbcd32f29d9c49","block":10966790,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.502424,"bnbUsd":424.3,"usd":637.48},
+  {"date":"2021-09-16","source":"bsc_token_tax","tx":"0x797ee181f8f4af94f9bd308e57571d2d3b7907264f0aebfce69b7c8b5aefd81c","block":10968312,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.604731,"bnbUsd":424.3,"usd":680.89},
+  {"date":"2021-09-17","source":"bsc_token_tax","tx":"0x57772b31523e8305991a57fd3ac16523261cf94d8a0e5698b2f7ae26fae38509","block":10987340,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.505112,"bnbUsd":406.6,"usd":611.98},
+  {"date":"2021-09-17","source":"bsc_token_tax","tx":"0xd7d4384a47ab5e64dce32b09c08adf4da49bf533bb649651f9430107b5845533","block":10990750,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.702594,"bnbUsd":406.6,"usd":692.27},
+  {"date":"2021-09-17","source":"bsc_token_tax","tx":"0x07f9b9624d00822d443c6b0975db59c8b7e1b2182c9045c49a0e2725b837a015","block":11001258,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.601392,"bnbUsd":406.6,"usd":651.13},
+  {"date":"2021-09-17","source":"bsc_token_tax","tx":"0x5781fbedff4b184f424e6f81949777a01bda7b870669ff02b1eb18324bdc6eeb","block":11004777,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.556848,"bnbUsd":406.6,"usd":633.01},
+  {"date":"2021-09-18","source":"bsc_token_tax","tx":"0x37d86d5fcdf68267b8f7006103eac779b1b00884d934c6c4712346a4b01da76f","block":11017233,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.553213,"bnbUsd":410.7,"usd":637.9},
+  {"date":"2021-09-18","source":"bsc_token_tax","tx":"0x9b7ba71655be5a259980e318ae8c31ecbf23d2f87a47084244a08fb45047c949","block":11019367,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.420253,"bnbUsd":410.7,"usd":583.3},
+  {"date":"2021-09-19","source":"bsc_token_tax","tx":"0x0f8511368ecf8eb1702ace10befd2ea29fd3205432a2a3131b51c8682b321a49","block":11047081,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.448704,"bnbUsd":408.6,"usd":591.94},
+  {"date":"2021-09-19","source":"bsc_token_tax","tx":"0x7358ab53f958e5e33caa5e8f4f1e436d488261cd8bd9c528d84103c485382813","block":11050188,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.706644,"bnbUsd":408.6,"usd":697.33},
+  {"date":"2021-09-19","source":"bsc_token_tax","tx":"0x72513df37d28e9fd848a5cc318172d72ad961065e81bacacc1c0657ad92d0272","block":11058991,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.605863,"bnbUsd":408.6,"usd":656.16},
+  {"date":"2021-09-20","source":"bsc_token_tax","tx":"0xe5585dacae743237995ecfe8845f3b4a6e3571e61f072713b91b75c31c523ebb","block":11064723,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.519427,"bnbUsd":364.1,"usd":553.22},
+  {"date":"2021-09-20","source":"bsc_token_tax","tx":"0xfe84863c67ad5cfd2d0dad0ac06062faf1713e75943dce49ae6e5883b0a5dc3b","block":11072424,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.518929,"bnbUsd":364.1,"usd":553.04},
+  {"date":"2021-09-20","source":"bsc_token_tax","tx":"0x778b27b9a678f188369a520ca14bb408d1d491af94a4dfeb126b2662a5e5b80c","block":11079181,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.543653,"bnbUsd":364.1,"usd":562.04},
+  {"date":"2021-09-20","source":"bsc_token_tax","tx":"0x84da6bc8c403db960db9e84102341af1cf66e6a5d2fe7d4470f2a2125e5d3e89","block":11084575,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.472625,"bnbUsd":364.1,"usd":536.18},
+  {"date":"2021-09-20","source":"bsc_token_tax","tx":"0x5a14d1df68e8ccae3af245a24d134861ba91ed68653cab95420b9c211fe9ec40","block":11089669,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.894114,"bnbUsd":364.1,"usd":689.65},
+  {"date":"2021-09-21","source":"bsc_token_tax","tx":"0x397f282f27eeb5206920922c9071a183bf2b931297b0593c79d98b8b393db42f","block":11108989,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.740648,"bnbUsd":344.4,"usd":599.48},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0xccccdd511eb5ed3c518eb084a8c88f30fb09485ae1c78a061a6b86382e3b97a0","block":11133707,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.629148,"bnbUsd":379.0,"usd":617.45},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x6ace8a89f23d3e14909751cb0d564794c9d97fb599b8b32f497521c96250d061","block":11136652,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.295498,"bnbUsd":379.0,"usd":869.99},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x294d219d645546dea1ce307186108bf9af45a4292691f1174e09e0a8baf2d276","block":11137413,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.888039,"bnbUsd":379.0,"usd":715.57},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x3fb7b000559884607ce993a06152bae717d7a8259aa950f88db5689dce5b5ad5","block":11140611,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":1.952125,"bnbUsd":379.0,"usd":739.86},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0xed92e9ffd9c5e0f2c551747ee8e8e1eb1dba15584b97c0eab675adcb06fef965","block":11144894,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.529418,"bnbUsd":379.0,"usd":1337.65},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x5f18078ea565958ee37d5146bae28af06b351d4b1210767443c4dd3c27d7fb11","block":11144918,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.061134,"bnbUsd":379.0,"usd":781.17},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x7c4ae491d8b9520829715e453b1b5626643955c0dcfd763a93446e473774b5cc","block":11146424,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.859416,"bnbUsd":379.0,"usd":1462.72},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x8510106b94c6b1eee17ea0cfef6bea901cce84200397a6ff1b6ad0e31750c05f","block":11146500,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.979383,"bnbUsd":379.0,"usd":1508.19},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x2ff9b1cbceccbb50e86785480406574a11560b6429c48e2fad306da6988a8934","block":11149101,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.093608,"bnbUsd":379.0,"usd":1172.48},
+  {"date":"2021-09-22","source":"bsc_token_tax","tx":"0x8d2cb6fb5b54f91f56db7c8c069dbbd56f019f9e396ff9a2f94046a30893387b","block":11149411,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.998982,"bnbUsd":379.0,"usd":1136.61},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0x0364a44e046aa5bd945a8b861656df5fc26f303b92e918fa84d74e66b69d1be9","block":11154085,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.734514,"bnbUsd":383.5,"usd":1048.69},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0xe7516b31013a2d78052a1b78a0678d98125f5a27369f1901d568550243eef726","block":11154129,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.636827,"bnbUsd":383.5,"usd":1011.22},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0x5b3abbc51bb1e90e29fc1f6ed88ddeade2cd0aa64b28f92bd1a6067136324e13","block":11160803,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.596614,"bnbUsd":383.5,"usd":995.8},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0xfa3fdcb0d1334814f3f3047e3f80b5a3f48dd69e627ce711ea7fb1368ed4e6f4","block":11160939,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.588892,"bnbUsd":383.5,"usd":992.84},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0x0772358f4211d1f2871d411bf28e84011dd5e99a4cba0c7f1cbb4e0f41577c3f","block":11166547,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.797686,"bnbUsd":383.5,"usd":1072.91},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0xbaf48d74b50955430b8cbf438688c39e0701a3ef4e6cc83ae6bc3e4455ab5109","block":11166558,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.95382,"bnbUsd":383.5,"usd":1132.79},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0xfd0de32c2bda41dca5906adb619c251b1480132f6888da35e845277392583a8e","block":11169020,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.233413,"bnbUsd":383.5,"usd":1240.01},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0xa5f2d212557a23bd048fb7a41e8de947f5828bf0607535c64adac5e39754bcdf","block":11169416,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.245404,"bnbUsd":383.5,"usd":1244.61},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0xd507ce017c638cf00f99381863a3082b6645301dffaee6a0727b5050de8ddd9b","block":11174965,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.858851,"bnbUsd":383.5,"usd":2246.87},
+  {"date":"2021-09-23","source":"bsc_token_tax","tx":"0xc23e2e377efd9205bf3e3cd44c6b4e2a401b08adaacd4a637562a8837f9595d5","block":11175050,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.604992,"bnbUsd":383.5,"usd":2149.51},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0xe9f7d9e8b62af79ccbdc01f57f02bdb3cd8108c79243b21e9aac98664db2afb6","block":11181452,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.654115,"bnbUsd":355.0,"usd":1297.21},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0x376fc9badf5c2e90fc471eaa9ee6f9839f3f5ff05d42ed1a2f4ab829ba41fd44","block":11181770,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.597808,"bnbUsd":355.0,"usd":1277.22},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0xa31b48c9a219bb584b06db41e45141297aee57be53a066682245b5638879a9ac","block":11194109,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.442888,"bnbUsd":355.0,"usd":1577.23},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0x15d2440eb622d5ca303a8f089a37b599ad0d10bb66090daaba50bdcfbae59002","block":11194357,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.515557,"bnbUsd":355.0,"usd":1603.02},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0x84fa05491ce09c29ce9217e73a3f4a234e5497ed89199572fb1b5fa27074be72","block":11196575,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.957054,"bnbUsd":355.0,"usd":1404.75},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0xb27688585908b4f5a85f7a1555f6eea1524fa35320b1411e3f81f4dce8c8e971","block":11196848,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.548963,"bnbUsd":355.0,"usd":1614.88},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0xe1905491eac34aa43c3e962fb05e5f3bf3debbd900a8546d15b14f4dbdc01351","block":11204104,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.172643,"bnbUsd":355.0,"usd":1481.29},
+  {"date":"2021-09-24","source":"bsc_token_tax","tx":"0x5e2a80c4168b4c3ee2f19e68b37e253fba58da619dcb1ac45eb4ed1d22e205b3","block":11207066,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.046328,"bnbUsd":355.0,"usd":1436.45},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x41eda55bcc7078b8ce8b61487118a889a301605296c3adeb9f58c079e4b4db22","block":11228620,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.033834,"bnbUsd":349.6,"usd":1410.23},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x0a0a10d55d56357341fbefd71bd3077ebcd7fcf3376ed913c5b711b43de122d2","block":11229271,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.699962,"bnbUsd":349.6,"usd":1643.11},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x94e3ee20d7d7d0aad1842e873e4a051a1a539a3fa8a9924b39077c5fe5efca11","block":11230842,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.739083,"bnbUsd":349.6,"usd":2705.58},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x838a3276405a752df45071e83843e3b88dda2cac46d236fe47e9664919fe4890","block":11230854,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.775244,"bnbUsd":349.6,"usd":2368.63},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x03b5839bb41a017cf8cba88bb6bacc5a7c21f2bf42cd2518fff5ee328147d782","block":11231820,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.196675,"bnbUsd":349.6,"usd":2515.96},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0xd9357565927f735f1eb57c757541670411347bbd59d8ed96d1a7fd615366ceb8","block":11231834,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.561311,"bnbUsd":349.6,"usd":2293.83},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x9be691629672abf6ad393062d39954b6e839e72141374b9f68b7ee8cd00c8879","block":11232890,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.650714,"bnbUsd":349.6,"usd":3723.49},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x73c80bbba14ee97cde907304e36a45cd63529cf8fa17565f630ebdba30b5973e","block":11232899,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.544903,"bnbUsd":349.6,"usd":3686.5},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x6e49a3ae733a6674727c157d08bacb5ee5a41585a6e747c1ab06968b41c265e4","block":11233072,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.443297,"bnbUsd":349.6,"usd":2602.18},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x89b13520a0f92dca44070e6c518f12debec1949cbbec7362e368ae41867b8331","block":11233126,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.666939,"bnbUsd":349.6,"usd":2680.36},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0xb4ec896db83d7c265bd7f958a6d697af7882d4fe4f7bc226fb21851c5309ef63","block":11234253,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.365942,"bnbUsd":349.6,"usd":2575.13},
+  {"date":"2021-09-25","source":"bsc_token_tax","tx":"0x953beb15cdac292bfa3040464e21161527aecd364fbd8fd964bd43b10657ad31","block":11234275,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.220274,"bnbUsd":349.6,"usd":2524.21},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0xa405b64b442dc10b75b0b5dbd14bf63b00438d6027d057eda0314c6e76ec1ad9","block":11238024,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.671028,"bnbUsd":344.0,"usd":2638.83},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x8940a35138ee33cec5f0717f32a1296e3750d0d69c0f94590a0e604891946132","block":11238040,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.642498,"bnbUsd":344.0,"usd":2629.02},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x9db34041b85272168b1baf3c5a4c2ec72814789440ceb1bfce7924a21fa5ffe2","block":11244117,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.624206,"bnbUsd":344.0,"usd":2966.73},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x5f8ca9e6c1cfd6ffc2ff0012a654a48d4107983d2b860e4177db29bb006e68e2","block":11244193,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.381082,"bnbUsd":344.0,"usd":2883.09},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0xe47be6f5123a788959f3e7ae01ed23924189fe64354b15c1be9a50b896a269d1","block":11250573,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.878131,"bnbUsd":344.0,"usd":3054.08},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x24f9e2cb4e72ddf604230a101bb142375a9c7f84d241ad79ec5f74f160ae9db2","block":11250618,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.798504,"bnbUsd":344.0,"usd":3026.69},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0xed251ae1d4031be28ac5e904bc7d116670cc7139e6888d5a3805f586715542ef","block":11253123,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.3588,"bnbUsd":344.0,"usd":3219.43},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0xc2819a525b0b957e9ef6e510a9b0cca4ffa954d80aebf4954e851267953100c5","block":11253212,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.256622,"bnbUsd":344.0,"usd":3184.28},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x6821e8cec7be4c3418999e21c514c51957d7cf088f3e93acca5dca3b62312dc5","block":11256738,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.258098,"bnbUsd":344.0,"usd":3528.79},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x844c91fd9d11b94cf4c8b29a2636479ce237830882284d0f1f6c17681b4831d6","block":11256785,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.162534,"bnbUsd":344.0,"usd":3495.91},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x908b0da36ec89b6ec9d3924e8de0cee82171d25d88fe2c6a34243fffe7f23d2d","block":11260069,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.941917,"bnbUsd":344.0,"usd":3764.02},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x0b901d9ccb43b3a8e094ad083165729e776b47f8a7ac0ffd50f92c08d09d3265","block":11260083,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.740963,"bnbUsd":344.0,"usd":3694.89},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x3ce985e81807b9000eaae7aeb044284e6edaab33c510fe5dff9cb7e4cf485d95","block":11262757,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.208627,"bnbUsd":344.0,"usd":4199.77},
+  {"date":"2021-09-26","source":"bsc_token_tax","tx":"0x18ef1d02e61489b3a821a3456840fa6015308ae7517ffb12fff54f58e8480bab","block":11262768,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.956388,"bnbUsd":344.0,"usd":4113.0},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x20233bb8a5add5c1adebdf3261f285c7268986c83a50bf0750278fe6d91353b3","block":11264650,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.346404,"bnbUsd":335.5,"usd":3471.22},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x774278891dc77e96fabc1201ff42fbd798db1737d696299ef24c27e1a1f2cdd4","block":11264665,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.240746,"bnbUsd":335.5,"usd":3435.77},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x607179801820ed4ded7b7e488f92b35ef257c7bc1089f88da9154eaa585b4fc7","block":11268699,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.650996,"bnbUsd":335.5,"usd":3237.91},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x93469138a81ef366f4f04346360d25bc297d2dbe42d7a9e1cc623a68bbc71d65","block":11268707,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.608823,"bnbUsd":335.5,"usd":3223.76},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x3ebf71e9340f20273e25efb8d50b7035afeb0b06c1fcceb2923f5aebbfe465c7","block":11276123,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.290887,"bnbUsd":335.5,"usd":2781.59},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x2ab01ecd7691c069431ffb94f0c24b27f44d502958f7c7d3acd5af32cd02b882","block":11276170,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.195398,"bnbUsd":335.5,"usd":2749.56},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x7f04b4629aee8c3fd742d3e0a121865d6027614f73f8fd7ea31bdf9df6a831fe","block":11285800,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.310242,"bnbUsd":335.5,"usd":4130.09},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0xca74f919a84e8a7f554b6509351c8c23190b648f2992c359e12957af6dd1ad27","block":11285813,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.085514,"bnbUsd":335.5,"usd":4054.69},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x74aa92b845c68cc367554c0e35f5540d097acd692615bfb077b02522d20ef1d1","block":11288341,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.516173,"bnbUsd":335.5,"usd":3863.68},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0xa3a36b8d03a9ff22559877bc81cbbc2ffa74e60c269417a21aaad1b0074e9ccd","block":11288385,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.396033,"bnbUsd":335.5,"usd":3823.37},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x3d163dfd026b023f49e0b5b8e0789eb3f4da11c315ee242140376a8cb2ed9cd1","block":11288968,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.13697,"bnbUsd":335.5,"usd":4407.45},
+  {"date":"2021-09-27","source":"bsc_token_tax","tx":"0x80266619921e7365fa302f95e0fec8123d68dbfe572634a3a705e505e68bb183","block":11288981,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.000412,"bnbUsd":335.5,"usd":4361.64},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0xf065c3ae2a80be520ae6776e34dbd37cb940587f4f1f38092181226cd4bd109a","block":11302146,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.075666,"bnbUsd":333.0,"usd":3688.2},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0xe2fc470dee1541ef9d3d488044cc3a70e8f01c33d64cc5898ab4418ba1d0e76d","block":11302187,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.015245,"bnbUsd":333.0,"usd":3668.08},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0xad41d5127ca6a274a5a2bd74627bbdb0f35cf20bf7d2e6b6ea5bb960e9c4c7db","block":11308569,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.765442,"bnbUsd":333.0,"usd":1253.89},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x762e7540d9a59b676d9a16cd0d0d4623ccf2c7e3e3bd4bf3fbbd141c9ca52d0b","block":11308586,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.655298,"bnbUsd":333.0,"usd":1217.21},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x40ab91166a6a7d4d67e46eeb84b424a07693bb4987718513e548c43ff867438b","block":11312207,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.079267,"bnbUsd":333.0,"usd":1025.4},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x81aaec6f7a8679c6385ce719687d32a2a81604570bd4953ffc3d883e96af5350","block":11312324,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.075396,"bnbUsd":333.0,"usd":1024.11},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x375088437e6321bfec6246a03e8bb182bfd88a89af8edd1300771c79f1e6df8c","block":11313620,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.660608,"bnbUsd":333.0,"usd":1551.98},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x3bcc3a01b560733801a332c2f4f047dec17bf731340881fce3598be3ed4cd648","block":11313637,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.764142,"bnbUsd":333.0,"usd":1586.46},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0xf2d95d6ebd332ce7375fad776d134ed4f2818a10841e92986898c39cc8ae4195","block":11317072,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.374525,"bnbUsd":333.0,"usd":1123.72},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0xd51a6808682a26212bdae208e970baea2659627f70b208b927a2f6120ee55145","block":11317183,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.383986,"bnbUsd":333.0,"usd":1126.87},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x260378c7f910c11d4ec03adc0986547dbc345c3a7f7c372a2638ad8b54d1b9e7","block":11319468,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.740433,"bnbUsd":333.0,"usd":1578.56},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x6a8e9c73e3994a1d404ac62ddec9d20d29a1ac87cec88957b9e785d688c8a58c","block":11319505,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.588635,"bnbUsd":333.0,"usd":1528.02},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0xf465604c9aae7f175eaf8b900a853a235c13f57f6f4d63a6890dea6968f8ae35","block":11320523,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.49384,"bnbUsd":333.0,"usd":1163.45},
+  {"date":"2021-09-28","source":"bsc_token_tax","tx":"0x2e1c9e8d17153c532d88d90ac01d9663dd67252604239e39b158927bf555dce5","block":11320662,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.504543,"bnbUsd":333.0,"usd":1167.01},
+  {"date":"2021-09-29","source":"bsc_token_tax","tx":"0xec29d39fff12212a5f16f1e98dd9229f121f8a58cf3f4b91acce66dff7c8aec2","block":11340662,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.232166,"bnbUsd":367.7,"usd":4497.77},
+  {"date":"2021-09-29","source":"bsc_token_tax","tx":"0xb9baf66f46bb682a729083219df60307d1d06e6f302384334d552447c2317b5c","block":11340785,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.129361,"bnbUsd":367.7,"usd":4459.97},
+  {"date":"2021-09-30","source":"bsc_token_tax","tx":"0xbc9e23cba2511fc2ccefab16bfbc3b190eb19029fb8fb4af1c16b5625969f32a","block":11359011,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.491331,"bnbUsd":387.5,"usd":4452.89},
+  {"date":"2021-09-30","source":"bsc_token_tax","tx":"0xe0651000b3afde11677a14008ef6a60a3bf05e88419c1283d74f06a9d5fce838","block":11359091,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.520141,"bnbUsd":387.5,"usd":4464.05},
+  {"date":"2021-09-30","source":"bsc_token_tax","tx":"0x6f7e6a4840d8a02defc46c7dc971f9bcaf8c18bfc606feac78fbfde78db81e80","block":11373736,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.567709,"bnbUsd":387.5,"usd":3707.49},
+  {"date":"2021-09-30","source":"bsc_token_tax","tx":"0xd2d35f8a04d7bbeff03cc628b164ef1ba59cea0ccaf349ad1a4e10d01b525b3d","block":11373935,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.407568,"bnbUsd":387.5,"usd":3645.43},
+  {"date":"2021-10-01","source":"bsc_token_tax","tx":"0xb8c25e850e51763fcefcbc0f4257de141a1a89a7ecd737a98b2b567af5ebd27f","block":11390035,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.385807,"bnbUsd":421.5,"usd":3956.12},
+  {"date":"2021-10-01","source":"bsc_token_tax","tx":"0xad7c38547eba5a30fb5931dc8f4a4553be7c44129be5735a6de06f38fecb88ee","block":11390161,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.269311,"bnbUsd":421.5,"usd":3907.01},
+  {"date":"2021-10-02","source":"bsc_token_tax","tx":"0x0291bae79672d3a592987cd9613cc8a41a468410948e1154a1ba19738ae0693d","block":11414993,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.987216,"bnbUsd":427.1,"usd":3411.34},
+  {"date":"2021-10-02","source":"bsc_token_tax","tx":"0x2683e01edc800f324ec8e1259bb8e78860a5bb14a64e5b893c890a1319cbda7d","block":11415009,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.994452,"bnbUsd":427.1,"usd":3414.43},
+  {"date":"2021-10-02","source":"bsc_token_tax","tx":"0x2d1ffb2bd8a69891f5284f7f0465aa8ef0ab207d2adcceeea705e7328946ccf1","block":11429433,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.850185,"bnbUsd":427.1,"usd":4207.01},
+  {"date":"2021-10-02","source":"bsc_token_tax","tx":"0x684bc1abbcc971838192b07af39b103fa1178e005941b0fa0ff86a6f032dab44","block":11429590,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.549568,"bnbUsd":427.1,"usd":4078.62},
+  {"date":"2021-10-04","source":"bsc_token_tax","tx":"0x6cd59cb9cd012a7c94f26f8e4a751fe6552431182aff5f111f9288689f9478b0","block":11472551,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.167791,"bnbUsd":426.3,"usd":3481.93},
+  {"date":"2021-10-04","source":"bsc_token_tax","tx":"0xf810eafcb445e710f4d00085c053fd86dd70b77d72ab7b4021e7c9f8dfbc217e","block":11472558,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.099825,"bnbUsd":426.3,"usd":3452.96},
+  {"date":"2021-10-05","source":"bsc_token_tax","tx":"0x438922c89d4958eae6f765baa98ee52b522c5844a9206a23a11faa132a82b516","block":11521082,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.052751,"bnbUsd":442.1,"usd":3118.02},
+  {"date":"2021-10-05","source":"bsc_token_tax","tx":"0x0884d53cd519b8b16a58ad7bcb5e610e870f8c254ef1afa24d70b19f6d5317aa","block":11521129,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.030536,"bnbUsd":442.1,"usd":3108.2},
+  {"date":"2021-10-06","source":"bsc_token_tax","tx":"0xea59c8611023f7253a57868fabffcd5be2707f48e4fc44633ece93d5386fc7b1","block":11546967,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.892592,"bnbUsd":434.9,"usd":2997.59},
+  {"date":"2021-10-06","source":"bsc_token_tax","tx":"0x9d169ff8beb85fdcb1ca9f6a1d9d0edb5afa5de5228aadf5482dd77f4128058e","block":11547793,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.919091,"bnbUsd":434.9,"usd":3009.11},
+  {"date":"2021-10-08","source":"bsc_token_tax","tx":"0x4aca98f7e7d6391b33d7f3df38eac4800919be8f0c3f2f1165c6fd362cf65637","block":11578921,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.220525,"bnbUsd":419.2,"usd":2607.64},
+  {"date":"2021-10-08","source":"bsc_token_tax","tx":"0x754bd5962860eac0d7c1f8b2209befae6e5f2a33c4cae6d27f3c06719aa75465","block":11579047,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.319621,"bnbUsd":419.2,"usd":2649.19},
+  {"date":"2021-10-08","source":"bsc_token_tax","tx":"0x30d1e96bdd44b1c1396facc24ef4477eca4d30ca68dbe66914793052bebf099d","block":11595432,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":6.608342,"bnbUsd":419.2,"usd":2770.22},
+  {"date":"2021-10-09","source":"bsc_token_tax","tx":"0xc341626e2d75f833f67cc49874e7d5493a32ce6dadd1dc3ca3dea768f11ff0ae","block":11611098,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.226649,"bnbUsd":421.9,"usd":2627.02},
+  {"date":"2021-10-09","source":"bsc_token_tax","tx":"0x207f066b6a2944b3554a865d0522a7e668864349a4a157b34e808fdc4923f4ea","block":11614728,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.159569,"bnbUsd":421.9,"usd":2598.72},
+  {"date":"2021-10-09","source":"bsc_token_tax","tx":"0x843b16cf61de5b44ca9b703167804d350d06ca2ecb874858364ab05bef1c79ac","block":11632694,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.407934,"bnbUsd":421.9,"usd":3125.41},
+  {"date":"2021-10-09","source":"bsc_token_tax","tx":"0xcde41f76879ee42a79f887d356f3d01c2b7c814bc06b14f08876a5467f0b50c0","block":11633661,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.22513,"bnbUsd":421.9,"usd":3048.28},
+  {"date":"2021-10-11","source":"bsc_token_tax","tx":"0x5d0eb18096a848ca19ec5c564623334d5130d75cdb21bea6ec96c3d0aa3229c0","block":11685405,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.003982,"bnbUsd":413.1,"usd":2893.34},
+  {"date":"2021-10-11","source":"bsc_token_tax","tx":"0x37f8e885a972e026c9972277313dda475f7c503f8f19db2a0bc59a7edf597e3d","block":11685429,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.837196,"bnbUsd":413.1,"usd":2824.45},
+  {"date":"2021-10-12","source":"bsc_token_tax","tx":"0x69dbc19380f85ccafb54c35ecc17ffd2744e266595a202181b8dea845d1ed97a","block":11714360,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.414776,"bnbUsd":444.2,"usd":2849.44},
+  {"date":"2021-10-12","source":"bsc_token_tax","tx":"0x3a7d3f3d7d9914a81f905099664c3d0f13026a103ab7e77b9a80d12e6a2dba84","block":11714618,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.446493,"bnbUsd":444.2,"usd":2863.53},
+  {"date":"2021-10-13","source":"bsc_token_tax","tx":"0xd4ac1a6007c7c4673eb2f4b48ee615496e1ed7200ed9c3a163dc0a2dfd99b1d2","block":11742222,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.349166,"bnbUsd":470.8,"usd":2989.19},
+  {"date":"2021-10-13","source":"bsc_token_tax","tx":"0x2ad8c9896539d728820423170eb0b6486aa57838fed1edc5c94241b5ef871429","block":11744218,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.354334,"bnbUsd":470.8,"usd":2991.62},
+  {"date":"2021-10-14","source":"bsc_token_tax","tx":"0x70f72f8cb3fa4ee778f1ad44199c70a019aaa11a6cd3e4a5535ead9363502185","block":11774377,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.517465,"bnbUsd":472.7,"usd":3080.81},
+  {"date":"2021-10-14","source":"bsc_token_tax","tx":"0x27abdeb61a8e372faf2d81d9da43c3925cdbbc96e74c1563e1ff732c7feb8b47","block":11774677,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.491304,"bnbUsd":472.7,"usd":3068.44},
+  {"date":"2021-10-16","source":"bsc_token_tax","tx":"0xcfe5d1caa081b1e8d8c3dab2f9db680a3d539e052c0242ab6692591a6e5aecff","block":11816748,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.207302,"bnbUsd":465.8,"usd":2891.36},
+  {"date":"2021-10-16","source":"bsc_token_tax","tx":"0xc7596fdefe6ebc1143334759257e9f5ed2007de5665431bde7448a3afc5dd3b0","block":11817373,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.023458,"bnbUsd":465.8,"usd":2805.73},
+  {"date":"2021-10-18","source":"bsc_token_tax","tx":"0x8553897f7fb9a7d99f544031c5f3c1cc74912ab7a1d12a8f4d5e8b61464d44d9","block":11875081,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.395763,"bnbUsd":484.9,"usd":2616.41},
+  {"date":"2021-10-18","source":"bsc_token_tax","tx":"0xc02d0f7111223d9ba14ffcb0b8f5074af789871b7acd83d489d3238b6b9cd14d","block":11876077,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.418842,"bnbUsd":484.9,"usd":2627.6},
+  {"date":"2021-10-20","source":"bsc_token_tax","tx":"0x44fb7fcf6e5c93fb8e97a41122fe4fd9b6affd1a2ecd97a09e95f41917fad14f","block":11927981,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.326825,"bnbUsd":501.3,"usd":2670.34},
+  {"date":"2021-10-20","source":"bsc_token_tax","tx":"0x848ce817d26744c8e70e7bfd4f47ed14ea3ba3579ece4279edefe24f725540fa","block":11928627,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.300923,"bnbUsd":501.3,"usd":2657.35},
+  {"date":"2021-10-21","source":"bsc_token_tax","tx":"0xaaef9318fd4bdc7fad8bfce38d16a4bd41db2e27e104afa90953dafa8c3f7f21","block":11974846,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.064501,"bnbUsd":470.9,"usd":2384.87},
+  {"date":"2021-10-21","source":"bsc_token_tax","tx":"0x5c6d4087ca75d5cd83098293f2ed2d4c798769d40fb19483fddf61e5894e5064","block":11975329,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.994324,"bnbUsd":470.9,"usd":2351.83},
+  {"date":"2021-10-22","source":"bsc_token_tax","tx":"0xfdad25e12671987b05806276d762148cc7cb72b5e177483a8387c21e1f9b18ff","block":12000088,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.684942,"bnbUsd":479.3,"usd":3204.09},
+  {"date":"2021-10-22","source":"bsc_token_tax","tx":"0x480132f5a1a4a3464c10f5670178cf252450ba0e5d206a6843e4ac4431dc6857","block":12000346,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.641412,"bnbUsd":479.3,"usd":3183.23},
+  {"date":"2021-10-25","source":"bsc_token_tax","tx":"0x9d04ce74866f4b361db0c3d5b86350e635f0a7f2ed8e0e3ca68e5723867e3159","block":12066972,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.435907,"bnbUsd":485.1,"usd":3122.06},
+  {"date":"2021-10-25","source":"bsc_token_tax","tx":"0xb5553658b6c54d5ec2abd0e314feecb38ea328860904b0d0da6410642037e669","block":12066989,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.380014,"bnbUsd":485.1,"usd":3094.94},
+  {"date":"2021-10-26","source":"bsc_token_tax","tx":"0x90ed4ccf1b7f37f3c042418afbb72c568115d1378748c2d2c0665d1efeb07701","block":12111541,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.413313,"bnbUsd":478.1,"usd":3066.2},
+  {"date":"2021-10-26","source":"bsc_token_tax","tx":"0x77396f07439609fba3e8dbec1637ad9bf5ac740b261732b81a7b587e784fae3e","block":12111671,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.566402,"bnbUsd":478.1,"usd":3139.4},
+  {"date":"2021-10-28","source":"bsc_token_tax","tx":"0x1d6e1466da202e08c8cb99d5aafd0449ed30fc9666c4082db54372b5fe4f5f4d","block":12148827,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.064591,"bnbUsd":491.9,"usd":3475.07},
+  {"date":"2021-10-28","source":"bsc_token_tax","tx":"0x1c7307f311295c610f20f2cc71a9d1a496b71818311e0c697322fa982c17d79d","block":12149459,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.267034,"bnbUsd":491.9,"usd":3574.65},
+  {"date":"2021-10-28","source":"bsc_token_tax","tx":"0x653dc3d7002b1d8edecb38df0e353fb199515552266e1ecd09481344bb71882e","block":12172956,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.224947,"bnbUsd":491.9,"usd":4045.85},
+  {"date":"2021-10-28","source":"bsc_token_tax","tx":"0x9b7ca1fa4c440edb762a5fad916df329c59b0650c75da7e99a06e8cca1ed45db","block":12173831,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.385388,"bnbUsd":491.9,"usd":4124.77},
+  {"date":"2021-10-29","source":"bsc_token_tax","tx":"0x6684a197f18f6c199d65b78bab468f4a123b8ae4f77da6c3bfbef90850118219","block":12202750,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.252463,"bnbUsd":530.3,"usd":4906.58},
+  {"date":"2021-10-29","source":"bsc_token_tax","tx":"0x9fd2db82c8970e61304a5a6b0ffe82d8ac64a5ac32b734088036ecb2bd05e4d8","block":12203834,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.103132,"bnbUsd":530.3,"usd":4827.39},
+  {"date":"2021-10-30","source":"bsc_token_tax","tx":"0x064d044c974cecf3ff7f549d7e8439508e4804acf1839481cd4188d35c8c7811","block":12228989,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.268112,"bnbUsd":528.3,"usd":4368.04},
+  {"date":"2021-10-30","source":"bsc_token_tax","tx":"0x8af7e7c92d26b68763192a033190c7f99758a66f8377f4f31da87ccbb03a908f","block":12229428,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.313661,"bnbUsd":528.3,"usd":4392.11},
+  {"date":"2021-11-01","source":"bsc_token_tax","tx":"0x2c93abfa6326f7aefb3422815912feb81fffccd52c6ee6a4899795a415bbe849","block":12270567,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.231843,"bnbUsd":551.3,"usd":4538.22},
+  {"date":"2021-11-01","source":"bsc_token_tax","tx":"0xfe29671cbcecebe7df17bf1c589d451e81dd6e521c6f20de411f8191df9e703e","block":12273098,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.390092,"bnbUsd":551.3,"usd":4625.46},
+  {"date":"2021-11-02","source":"bsc_token_tax","tx":"0x8229ceac57764a73053ca69300785a3edfffe152e92516078ea3788590a2d59e","block":12297900,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.844124,"bnbUsd":554.4,"usd":5457.58},
+  {"date":"2021-11-02","source":"bsc_token_tax","tx":"0xf71d85cf9f288fb755d012e2734213b68e9148f2e4b8e4c663cd8dc6806224fb","block":12301460,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.90462,"bnbUsd":554.4,"usd":5491.12},
+  {"date":"2021-11-02","source":"bsc_token_tax","tx":"0xa5d5ce817dcf2357ddf34383de541169b3b998761568f7b0e1462c348c138d22","block":12314542,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.258983,"bnbUsd":554.4,"usd":6796.38},
+  {"date":"2021-11-02","source":"bsc_token_tax","tx":"0x94fbf86e6d0090cb6e553851920fa15715fb16376365f5e8d1227e10c9660ade","block":12315149,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.158807,"bnbUsd":554.4,"usd":6740.84},
+  {"date":"2021-11-03","source":"bsc_token_tax","tx":"0xeb8cbe7d28e9e04ab9fccb6c553827f9475961781c1b9c3db53c0bfd731c90be","block":12337214,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.155079,"bnbUsd":568.4,"usd":6908.95},
+  {"date":"2021-11-03","source":"bsc_token_tax","tx":"0xb7a0f9a0ffab0380804ebcb95a3ee30f88e5eea2cafe557a2284c09c74cc5082","block":12340536,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.79537,"bnbUsd":568.4,"usd":6704.49},
+  {"date":"2021-11-05","source":"bsc_token_tax","tx":"0x2f45cd48cf4d5f85e7739412fd735016658253a1db22960d9c96e9bd9ee6651f","block":12380723,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.797826,"bnbUsd":607.3,"usd":8379.42},
+  {"date":"2021-11-05","source":"bsc_token_tax","tx":"0x2f45cd48cf4d5f85e7739412fd735016658253a1db22960d9c96e9bd9ee6651f","block":12380723,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.850025,"bnbUsd":607.3,"usd":7803.82},
+  {"date":"2021-11-05","source":"bsc_token_tax","tx":"0x9078aaea61461f1881ffaad877c822fc2738e5248146c8b311673ba97bdb2e0e","block":12392228,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.616253,"bnbUsd":607.3,"usd":8269.15},
+  {"date":"2021-11-05","source":"bsc_token_tax","tx":"0xc366cb2e2df2e46061a7975cf7ea6d122d014a42bce7128e60662ac60f7e8d12","block":12392254,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.487763,"bnbUsd":607.3,"usd":8191.12},
+  {"date":"2021-11-06","source":"bsc_token_tax","tx":"0x48d3e29afc191967e70bc0b4ba78cb2b0512e0ac360795963c57608ac28d13ed","block":12410274,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.648838,"bnbUsd":637.7,"usd":8703.86},
+  {"date":"2021-11-06","source":"bsc_token_tax","tx":"0x48d3e29afc191967e70bc0b4ba78cb2b0512e0ac360795963c57608ac28d13ed","block":12410274,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.500524,"bnbUsd":637.7,"usd":8609.28},
+  {"date":"2021-11-07","source":"bsc_token_tax","tx":"0xd74cb367bd648690bb7ca0ba34d3803fc762c6b6475c46607cc354f1314eb00c","block":12441723,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.26466,"bnbUsd":649.6,"usd":8616.72},
+  {"date":"2021-11-07","source":"bsc_token_tax","tx":"0xe646ad7f534f3db868493a8791341fdb09e6e752ee1c268023fe90e2a34e995f","block":12441986,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.192325,"bnbUsd":649.6,"usd":8569.73},
+  {"date":"2021-11-08","source":"bsc_token_tax","tx":"0xc1087987d577d43852d4d45acf56217a9865954665598ef6741b938fb8ab728d","block":12460178,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.636164,"bnbUsd":653.5,"usd":6950.73},
+  {"date":"2021-11-08","source":"bsc_token_tax","tx":"0xf11a3650a135dd510984cdc2aca37032cc418fbec85fcf13f33ef7570316bd9d","block":12460219,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.453416,"bnbUsd":653.5,"usd":6831.31},
+  {"date":"2021-11-09","source":"bsc_token_tax","tx":"0x489723c19135aec3aefde2cb38981aa4b3d2a76f961fee2d2b77d6f1f429941b","block":12492160,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.098637,"bnbUsd":635.0,"usd":7682.63},
+  {"date":"2021-11-09","source":"bsc_token_tax","tx":"0x9ac40d277812c7ff2ed0dfe3e3bf072c8e4ee4977adf9ba1b72774f1652492c8","block":12492314,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.029861,"bnbUsd":635.0,"usd":8273.96},
+  {"date":"2021-11-10","source":"bsc_token_tax","tx":"0xe82aa307c29330522f124a9b5338c76de6032be0909ce9cf51249fa51c1af104","block":12530645,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.949765,"bnbUsd":614.1,"usd":6724.25},
+  {"date":"2021-11-10","source":"bsc_token_tax","tx":"0x23ed0f63abfbb35619f45d2bd2c93f6ea55d15ca6d1b9cdf178933b595dd4b80","block":12533564,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.741368,"bnbUsd":614.1,"usd":6596.27},
+  {"date":"2021-11-11","source":"bsc_token_tax","tx":"0x361985995b3c61bd92c74bb924f6bbb13c908b2491baf78c6c17f850b9798a47","block":12569660,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.656773,"bnbUsd":628.4,"usd":6696.72},
+  {"date":"2021-11-12","source":"bsc_token_tax","tx":"0x47d446bd24eec0f12ef050897ba599648ca9a3f2c84a04052445060501b06fd7","block":12572622,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.641278,"bnbUsd":626.9,"usd":6671.02},
+  {"date":"2021-11-13","source":"bsc_token_tax","tx":"0xff49715eb7df42b254dfcfff0629f2c3530308706c117027cb8e193281b7e974","block":12605425,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.545655,"bnbUsd":649.5,"usd":8797.9},
+  {"date":"2021-11-13","source":"bsc_token_tax","tx":"0x3815b405007e1c9412c8c727817bbface9bf30aefa721c74343f5b3294c2a633","block":12606710,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.505055,"bnbUsd":649.5,"usd":8771.53},
+  {"date":"2021-11-13","source":"bsc_token_tax","tx":"0xa05fd34bd5844bd8bb570f5f18758944ec1ad9a354773c7967f9779dff86e7c6","block":12621636,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":14.176985,"bnbUsd":649.5,"usd":9207.95},
+  {"date":"2021-11-13","source":"bsc_token_tax","tx":"0x803d8ccd70b4a88ff0b8172f0d12f3f4c6a757e3005785cb8ddd7e46a9fed0d6","block":12622865,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.910965,"bnbUsd":649.5,"usd":9035.17},
+  {"date":"2021-11-14","source":"bsc_token_tax","tx":"0x2b8d4a6b368f88e1ce86d17d18b6cd871219ad9f92937fada69cb5c8d02dceeb","block":12646849,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":15.129661,"bnbUsd":650.8,"usd":9846.38},
+  {"date":"2021-11-14","source":"bsc_token_tax","tx":"0xffce35ca2af494ec115867e77c03a87bf0c7058ba113579c4b7587ada537275f","block":12648383,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":15.290455,"bnbUsd":650.8,"usd":9951.03},
+  {"date":"2021-11-15","source":"bsc_token_tax","tx":"0xf8f791e5ee6b20c73de66466e2dc7d459cb01d6da749a53e290be96b4199da6f","block":12669028,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":16.478124,"bnbUsd":633.8,"usd":10443.83},
+  {"date":"2021-11-15","source":"bsc_token_tax","tx":"0xb13adee525a22f05c73159864b61e8c4e11d85b88a9e50069b9646c7d7cabe96","block":12669204,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":16.760026,"bnbUsd":633.8,"usd":10622.5},
+  {"date":"2021-11-16","source":"bsc_token_tax","tx":"0x26696288938f1a7a227cd3daff7bc8b6be670fc8a53200b9efcaf62451244ec8","block":12684544,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":20.29539,"bnbUsd":588.7,"usd":11947.9},
+  {"date":"2021-11-16","source":"bsc_token_tax","tx":"0x4674c5bbbfd734dbadf12212ce91f53cdb5f70227d8bbb8b4abb82ea208a747d","block":12684673,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":20.796782,"bnbUsd":588.7,"usd":12243.07},
+  {"date":"2021-11-16","source":"bsc_token_tax","tx":"0x270517107a6643f66c5ef3b6a928be61b87a32718aa432bed532545a8bed304f","block":12699164,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":20.436306,"bnbUsd":588.7,"usd":12030.85},
+  {"date":"2021-11-16","source":"bsc_token_tax","tx":"0x7f45950cac17f4a61370736d738602c48e6017c2c9d977f4c14ecddb06f5eca7","block":12700650,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":20.460997,"bnbUsd":588.7,"usd":12045.39},
+  {"date":"2021-11-17","source":"bsc_token_tax","tx":"0x531e0189e8c8ec4093db5b47d913492d54af7cb83dffec81ce5cbf4ff83e795b","block":12709650,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":25.680208,"bnbUsd":578.0,"usd":14843.16},
+  {"date":"2021-11-17","source":"bsc_token_tax","tx":"0x41cea930aafbf16077655e8f60e02f115fdce79a088418d2cd2fcc46dd070778","block":12710344,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":25.864712,"bnbUsd":578.0,"usd":14949.8},
+  {"date":"2021-11-17","source":"bsc_token_tax","tx":"0x646fea91ea6d3e4e3c2ec914a04fc6374a14ea10b89e9c7417978a5c2ad3dae6","block":12723144,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":25.580586,"bnbUsd":578.0,"usd":14785.58},
+  {"date":"2021-11-17","source":"bsc_token_tax","tx":"0x3e1ee23240d05a62465783dd826a16ba4edba46493ca1fa3c8f7e7d6d7a14e5f","block":12725342,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":25.656094,"bnbUsd":578.0,"usd":14829.22},
+  {"date":"2021-11-17","source":"bsc_token_tax","tx":"0xb4359547f4df09d9a285077fd9879770561937daddde418f045128bcdb7c5c6e","block":12736121,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":30.171079,"bnbUsd":578.0,"usd":17438.88},
+  {"date":"2021-11-18","source":"bsc_token_tax","tx":"0x78662a3fa9cac9c8965c2108360306efb6c554e58b0b19955ef8746d871f8faf","block":12738236,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":29.968725,"bnbUsd":531.8,"usd":15937.37},
+  {"date":"2021-11-18","source":"bsc_token_tax","tx":"0x4653ea9134b18b7027445825c064cd99f0c6b2c2adbd4bd24ff7660301651f67","block":12747491,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":32.183322,"bnbUsd":531.8,"usd":17115.09},
+  {"date":"2021-11-18","source":"bsc_token_tax","tx":"0x6b3a103af18c7850167e70a7afb534646ac4f52ce7e7f5b532996c206b50223d","block":12748012,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":31.417603,"bnbUsd":531.8,"usd":16707.88},
+  {"date":"2021-11-19","source":"bsc_token_tax","tx":"0xeebdfa2fe0c20aa815d8b066bea952044749e81c86ed55e2f4d3f7432d014803","block":12766235,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":30.466266,"bnbUsd":581.0,"usd":17700.9},
+  {"date":"2021-11-19","source":"bsc_token_tax","tx":"0x4dcf7995b661facfa971b4091692c628d4b695087ef699a9aac464f449bab686","block":12768792,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":29.612766,"bnbUsd":581.0,"usd":17205.02},
+  {"date":"2021-11-19","source":"bsc_token_tax","tx":"0xaa6fa7c87342003bf7c3f89358f207fa0f5fc3ae3085a53ad685d5525d9202f0","block":12787771,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":39.302625,"bnbUsd":581.0,"usd":22834.83},
+  {"date":"2021-11-19","source":"bsc_token_tax","tx":"0x2c8968f8be68aa645cc676e2dd96677ff1c0abde5f53bcdfcbecdce9fda561db","block":12788208,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":39.008518,"bnbUsd":581.0,"usd":22663.95},
+  {"date":"2021-11-20","source":"bsc_token_tax","tx":"0x8e0c10b6e5dad0ae08849f4593a440567f064eabdda657c662c4e052e45de6f8","block":12795712,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":39.744363,"bnbUsd":604.3,"usd":24017.52},
+  {"date":"2021-11-20","source":"bsc_token_tax","tx":"0x2838e043f24fe02e401310aa3c0a8f72f144317c58fdc298445199fa67f86620","block":12797041,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":39.561267,"bnbUsd":604.3,"usd":23906.87},
+  {"date":"2021-11-20","source":"bsc_token_tax","tx":"0x470f040b6476ce982daacee7d88d253509c4c0552dd3aadbd8692b7a02dbd2c9","block":12813224,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":39.375491,"bnbUsd":604.3,"usd":23794.61},
+  {"date":"2021-11-20","source":"bsc_token_tax","tx":"0x6416c60dc9c049696f3c2ddc6061e9f2a6e6ffa0d8f627a93405fa1d2f6cdf66","block":12814229,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":38.276531,"bnbUsd":604.3,"usd":23130.51},
+  {"date":"2021-11-21","source":"bsc_token_tax","tx":"0xc7e3d8819707a2b6f3486d1bf88fcf933a70933f509f37fc50e38565097c3643","block":12832585,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":40.645157,"bnbUsd":584.0,"usd":23736.77},
+  {"date":"2021-11-21","source":"bsc_token_tax","tx":"0x3609d3b2646098076b7c7ebbaf272ebf96a20d630969ea6dfc7f6452eff58588","block":12833562,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":40.165145,"bnbUsd":584.0,"usd":23456.44},
+  {"date":"2021-11-21","source":"bsc_token_tax","tx":"0x98c84bcf4fed4941698fd9705da0745fdda6e56376a98ea11f0c98f531700cd6","block":12845410,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":33.629431,"bnbUsd":584.0,"usd":19639.59},
+  {"date":"2021-11-21","source":"bsc_token_tax","tx":"0x87e51ba20d28cf217733b961b1f50a8e9d66cb39bf7663a8957616d71ef06fb9","block":12846090,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":34.30124,"bnbUsd":584.0,"usd":20031.92},
+  {"date":"2021-11-22","source":"bsc_token_tax","tx":"0xa220353a57e3a0ab7eb1c87af617113beee04d61e0634277a7edd6bd41314138","block":12856045,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":37.466474,"bnbUsd":559.3,"usd":20955.0},
+  {"date":"2021-11-22","source":"bsc_token_tax","tx":"0x667a02e94f956172c87d70fc54b8c2b85af00c449d6cc28c366db51b2f659df5","block":12856423,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":37.470537,"bnbUsd":559.3,"usd":20957.27},
+  {"date":"2021-11-22","source":"bsc_token_tax","tx":"0x75040c1a9e1e163463c26986dc3bd65f9b2e20c1300db0c851295870c8a87aac","block":12859993,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":31.670805,"bnbUsd":559.3,"usd":17713.48},
+  {"date":"2021-11-22","source":"bsc_token_tax","tx":"0x24a76fb3b4473865384bd68e9048a320f5ffcac6107d6448a0e5e7ea5a036ad1","block":12860670,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":30.536154,"bnbUsd":559.3,"usd":17078.87},
+  {"date":"2021-11-23","source":"bsc_token_tax","tx":"0xe669926f794109da01878d96a47b40fb234a43da9dc7ea70f328c006482789d8","block":12881194,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":30.646009,"bnbUsd":591.1,"usd":18114.86},
+  {"date":"2021-11-23","source":"bsc_token_tax","tx":"0xb55c6867ceb35375b616ecfe12219776856090cb894f21a59afb049d04f79d07","block":12881286,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":29.814882,"bnbUsd":591.1,"usd":17623.58},
+  {"date":"2021-11-23","source":"bsc_token_tax","tx":"0x169ef2ab8946fa7b92a96cdb394d748a0a714b2130161920cb7f35beb197bbf9","block":12896023,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.633816,"bnbUsd":591.1,"usd":8058.95},
+  {"date":"2021-11-23","source":"bsc_token_tax","tx":"0x7f9f33d6389f393bf955ec102812ae0ed3fd911dd0eb19159cbb5ce50bccedc0","block":12896073,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.545543,"bnbUsd":591.1,"usd":8006.77},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0xf018bcb149441742b15ba02392a579f027e4f095902d88c15c4e0acd058b07a6","block":12908410,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.148699,"bnbUsd":590.3,"usd":7761.68},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0xf8e62b78097278ba16fea9d3b33ab7b9698044cd48ad6b225e3cf277bda2eaec","block":12908428,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":13.086932,"bnbUsd":590.3,"usd":7725.22},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0xcfff08b066ada2af1cc9247ebf4e49fbd5f92cbf424eb6d7f0b301299578b985","block":12915294,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.178719,"bnbUsd":590.3,"usd":6008.5},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0xed32dec24e3c295476681e9dfc8ca670656f2fdb74560c4e63d1bf271be5b0bb","block":12915341,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.310842,"bnbUsd":590.3,"usd":6086.49},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0x6f86623b56b3b8ab3180e1dc4554a9aaa8c8f210887d160026b2757932201619","block":12919551,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.018353,"bnbUsd":590.3,"usd":5913.83},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0x892b7bd0bea85c10f4a6575c69d559582c8fbac26a62baf46478653fbbd096fe","block":12919637,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.893372,"bnbUsd":590.3,"usd":5840.06},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0x861830d6c7cf7e639e8d9f38adb7ec45fa0fddf3eedd40b51f04b430b0d3446b","block":12923356,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.798398,"bnbUsd":590.3,"usd":5193.69},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0x861830d6c7cf7e639e8d9f38adb7ec45fa0fddf3eedd40b51f04b430b0d3446b","block":12923356,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.692979,"bnbUsd":590.3,"usd":5131.47},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0x2c6588864e9e6ed8026e132af25f0d0bdf6fcdc68067be0790896be34e385f9f","block":12927811,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.980786,"bnbUsd":590.3,"usd":6481.96},
+  {"date":"2021-11-24","source":"bsc_token_tax","tx":"0xc27167df455ce194a3aaffea01c083784c4abb5ce4a8467050958187816e5025","block":12927827,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.925045,"bnbUsd":590.3,"usd":6449.05},
+  {"date":"2021-11-25","source":"bsc_token_tax","tx":"0x171880ccb1696d7e70315b3e22abea14f16a92cd1acd60d67a9e8203f9a3b9a0","block":12935251,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.141083,"bnbUsd":639.1,"usd":7759.37},
+  {"date":"2021-11-25","source":"bsc_token_tax","tx":"0xbc3301dccbbff313982ffb9c9e53553027241fa57ee707df7da6adb34b5c3d54","block":12935521,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.118836,"bnbUsd":639.1,"usd":7745.15},
+  {"date":"2021-11-25","source":"bsc_token_tax","tx":"0x86f5226a7384023fc96f68bf33ed477df8bfbe8a425b51b588d5d81b17d99cad","block":12945120,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.493119,"bnbUsd":639.1,"usd":7984.35},
+  {"date":"2021-11-25","source":"bsc_token_tax","tx":"0x10e201e5b955195a6ddcb91c0c17172a9d66f0be220e1bb06c1c2c7e78672ac3","block":12945138,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.453735,"bnbUsd":639.1,"usd":7959.18},
+  {"date":"2021-11-25","source":"bsc_token_tax","tx":"0xec4d8e1176569b9a7ee3fd4d2cbd33cc8eeef275919852ea8ff57aa5a528d938","block":12951993,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.104781,"bnbUsd":639.1,"usd":7736.17},
+  {"date":"2021-11-25","source":"bsc_token_tax","tx":"0x18536a050d9331b01972349a82244c05f467757c482abf12cdd34a00ec3bec9c","block":12952064,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.970506,"bnbUsd":639.1,"usd":7650.35},
+  {"date":"2021-11-26","source":"bsc_token_tax","tx":"0x95e8b2467cffc47c2ac82e419e34851ce8736f26d23ca35c275e059a71fe429c","block":12967392,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.086984,"bnbUsd":587.3,"usd":6511.39},
+  {"date":"2021-11-26","source":"bsc_token_tax","tx":"0xd4fcabf452670105a3f3dd88e462c072569237c1d6215a0b830b2418b6371cf9","block":12967621,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.133863,"bnbUsd":587.3,"usd":6538.92},
+  {"date":"2021-11-26","source":"bsc_token_tax","tx":"0x68ff8c480069f522b6e8a6e078353547c5149c3c3e5d6b86d0e23cc8a2d16898","block":12979137,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.806475,"bnbUsd":587.3,"usd":6933.94},
+  {"date":"2021-11-26","source":"bsc_token_tax","tx":"0xb6caa0ceb2f48d9288342b2fd4aab9ac5e40ac0f36e50d8604305c1bbb85d91c","block":12979243,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.673653,"bnbUsd":587.3,"usd":6855.94},
+  {"date":"2021-11-27","source":"bsc_token_tax","tx":"0x885cee4caef53534086ffc85447d37018d8565c28ded3c753a770e816f4e6c2d","block":13005798,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.347864,"bnbUsd":599.9,"usd":7407.48},
+  {"date":"2021-11-27","source":"bsc_token_tax","tx":"0x6e98264f6f5ef6152e2169c5fb9011fcda5182abdb254af63da888deb98a2321","block":13005827,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":12.186141,"bnbUsd":599.9,"usd":7310.47},
+  {"date":"2021-11-28","source":"bsc_token_tax","tx":"0xf7a376399df3fa85ae4b8b3c27d4a94eb4c4c148c25c09da6045290858e13361","block":13024528,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.120132,"bnbUsd":611.3,"usd":6797.74},
+  {"date":"2021-11-28","source":"bsc_token_tax","tx":"0xe9aa77689a9d5962cb31191e7d7b11a8423c7b300431a3a994e5233950775e02","block":13024533,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.053897,"bnbUsd":611.3,"usd":6757.25},
+  {"date":"2021-11-29","source":"bsc_token_tax","tx":"0xe306e7844c6128c8da219512ded12cec86d53d1de1f2467e5adb00be7270bfa7","block":13039980,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.096075,"bnbUsd":623.4,"usd":6293.89},
+  {"date":"2021-11-29","source":"bsc_token_tax","tx":"0x6214199e329b9bf58f1b3c40b42a4afa77ec283357e9a995d99833a07ef2b420","block":13040098,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.067706,"bnbUsd":623.4,"usd":6276.21},
+  {"date":"2021-11-29","source":"bsc_token_tax","tx":"0xdc9e0c8dcf80a621aa5973ca92a4d33e1f57eafa45fd5d1d07cc044c6566d59e","block":13051930,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.612922,"bnbUsd":623.4,"usd":5992.7},
+  {"date":"2021-11-29","source":"bsc_token_tax","tx":"0xcb134e944096aabfcf8a5c8e3052cdb9919b112972f73745e72862a5684378ec","block":13051958,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.537518,"bnbUsd":623.4,"usd":5945.69},
+  {"date":"2021-11-29","source":"bsc_token_tax","tx":"0xaa9fa3375635b003f1a6f7c634fd49d28463f0dd05e559ace034326859fe6980","block":13059457,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.303269,"bnbUsd":623.4,"usd":7046.46},
+  {"date":"2021-11-29","source":"bsc_token_tax","tx":"0xa2e036831a8a682852be46da70085bb793299f747ccbf31ba893193f21868bdf","block":13059524,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":11.269781,"bnbUsd":623.4,"usd":7025.58},
+  {"date":"2021-11-30","source":"bsc_token_tax","tx":"0x15f51397bfde5bd5c5eddde34715478049502656d63a14c78cacbf37aa3622e8","block":13079053,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.131572,"bnbUsd":622.5,"usd":5684.4},
+  {"date":"2021-11-30","source":"bsc_token_tax","tx":"0x64252c990f7288dd6710f57e81dd8ab8a9f05e1ce18e19d92ce96dc33dbef2f5","block":13079112,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.080858,"bnbUsd":622.5,"usd":5652.83},
+  {"date":"2021-12-01","source":"bsc_token_tax","tx":"0xa4d474a8648aa1104f44bd125fe285f3ed7b82f0491c645c62e6cf51856bb836","block":13091871,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.080501,"bnbUsd":627.5,"usd":6325.51},
+  {"date":"2021-12-01","source":"bsc_token_tax","tx":"0xa4d474a8648aa1104f44bd125fe285f3ed7b82f0491c645c62e6cf51856bb836","block":13091871,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":10.002143,"bnbUsd":627.5,"usd":6276.34},
+  {"date":"2021-12-01","source":"bsc_token_tax","tx":"0x519739d18b3ea63172e818f4acbb0d0e89b6f39a5dfeda36c360104e76723732","block":13106999,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.330411,"bnbUsd":627.5,"usd":5227.33},
+  {"date":"2021-12-01","source":"bsc_token_tax","tx":"0x519739d18b3ea63172e818f4acbb0d0e89b6f39a5dfeda36c360104e76723732","block":13106999,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.289075,"bnbUsd":627.5,"usd":5201.39},
+  {"date":"2021-12-02","source":"bsc_token_tax","tx":"0x4d5c9ddebb5abd02b422a01caa8ca2e94d927e165bfff4060f912940581177f8","block":13121349,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.86615,"bnbUsd":619.9,"usd":4876.23},
+  {"date":"2021-12-02","source":"bsc_token_tax","tx":"0x4d5c9ddebb5abd02b422a01caa8ca2e94d927e165bfff4060f912940581177f8","block":13121349,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.828394,"bnbUsd":619.9,"usd":4852.82},
+  {"date":"2021-12-02","source":"bsc_token_tax","tx":"0x0f199200b6146a9546c8d18d0d6c36ef3168d0cfadf687ff801c1a0db0a5a93c","block":13134383,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.490999,"bnbUsd":619.9,"usd":5263.57},
+  {"date":"2021-12-02","source":"bsc_token_tax","tx":"0xbb5aee9bf6d0d45ed5e29110e5199e82da180c7329a158b1f1f0f2640d4d671c","block":13134403,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.447886,"bnbUsd":619.9,"usd":5236.84},
+  {"date":"2021-12-02","source":"bsc_token_tax","tx":"0x1a28ec25e72b27b1fc1363e242a201243a58f71f0126399f1ba54640f7838e2a","block":13136706,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.097004,"bnbUsd":619.9,"usd":5639.23},
+  {"date":"2021-12-02","source":"bsc_token_tax","tx":"0xe77ab3fc97a8ec6eab4698cffa515976667b228b6f3047602b4edd041b53a454","block":13136713,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.045083,"bnbUsd":619.9,"usd":5607.05},
+  {"date":"2021-12-03","source":"bsc_token_tax","tx":"0x90a1696522c25f71e6b6e83d817470bb69e65a7adc337f9b1c36048b5ed54311","block":13165010,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.908266,"bnbUsd":595.0,"usd":5300.42},
+  {"date":"2021-12-03","source":"bsc_token_tax","tx":"0x4ed68e40739df48fd765ff9bb4075cdcf8d320a5406b5dfa64be2d45cb0154ec","block":13165067,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.999737,"bnbUsd":595.0,"usd":5354.84},
+  {"date":"2021-12-03","source":"bsc_token_tax","tx":"0x45e35e49cbb0ec988a3a8bf9cf746f177037219abe6243d51d8d50caccccce73","block":13168577,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.384819,"bnbUsd":595.0,"usd":4988.97},
+  {"date":"2021-12-03","source":"bsc_token_tax","tx":"0x9089b9246ae7fcb7d1fa684c95b5ffd574e2220912ffc587a544b59c86bac59b","block":13168597,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":8.228417,"bnbUsd":595.0,"usd":4895.91},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0xa397401ffdbc740ab7faa3a99b2becd036c78d30708a93ff938416a1596de539","block":13173581,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.439933,"bnbUsd":568.6,"usd":4230.35},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0xa397401ffdbc740ab7faa3a99b2becd036c78d30708a93ff938416a1596de539","block":13173581,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.404255,"bnbUsd":568.6,"usd":4210.06},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0xe16d6780edecfe9a0c00ce410e186a72cb8deb9b4fc557416898a12d1d90e3c0","block":13179429,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.252272,"bnbUsd":568.6,"usd":4123.64},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0xf2819ddfebbecf1e81fd26b5514d929c320d9e696655c1fbe2fa4226b187a27b","block":13179510,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":7.245487,"bnbUsd":568.6,"usd":4119.78},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0x91a2aa95d50b1bd11b105baaaa343ab87cffd48fd032e9d88caa30535f548808","block":13188431,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.127192,"bnbUsd":568.6,"usd":3483.92},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0x91a2aa95d50b1bd11b105baaaa343ab87cffd48fd032e9d88caa30535f548808","block":13188431,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.060081,"bnbUsd":568.6,"usd":3445.76},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0x886d687c6e2781f40e9861e847e3de685354f71d422b12dcdfe8f1777587ad61","block":13193503,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.299781,"bnbUsd":568.6,"usd":3582.06},
+  {"date":"2021-12-04","source":"bsc_token_tax","tx":"0x0f77e7b0cf317bdb40f57de56bcaca6bc2f5da9ffe7eacf8454cd4bc3d4a0121","block":13193626,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.299456,"bnbUsd":568.6,"usd":3581.87},
+  {"date":"2021-12-05","source":"bsc_token_tax","tx":"0xf8690bfcbaa737b291024933b93664007b1d54c0ea8d75e9c77d00d1bac91cc5","block":13206241,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.883906,"bnbUsd":557.8,"usd":3839.84},
+  {"date":"2021-12-05","source":"bsc_token_tax","tx":"0x293848f381dd13f7bc029acebf9e04c14fac3925a371611c081dab2478cfbffe","block":13206330,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.847975,"bnbUsd":557.8,"usd":3819.8},
+  {"date":"2021-12-06","source":"bsc_token_tax","tx":"0x6ffeffcf7c4dddeb51d8c3566b29808c4d30c18edb40f4d06414b9b290745105","block":13233158,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.617764,"bnbUsd":587.5,"usd":3887.94},
+  {"date":"2021-12-06","source":"bsc_token_tax","tx":"0xbc081d897ddc9db2397407b5c0f10049d1ea7279079867532d8c3e52b5b0fb16","block":13233242,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.588862,"bnbUsd":587.5,"usd":3870.96},
+  {"date":"2021-12-07","source":"bsc_token_tax","tx":"0x0ff8b492e651b26a5fc7ef3188091287aefa2b665520064a98d0018112004760","block":13259201,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.263835,"bnbUsd":578.7,"usd":3624.88},
+  {"date":"2021-12-07","source":"bsc_token_tax","tx":"0x5262287e2b7c1819cf1ba4cd6f9525d9525426f640ae892fa6cb10d014cc0ad4","block":13259306,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.217252,"bnbUsd":578.7,"usd":3597.92},
+  {"date":"2021-12-08","source":"bsc_token_tax","tx":"0x7166d4ee5c928e355220da21bd783e13487da67d3e51a2767410bf51536747d7","block":13285504,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.094779,"bnbUsd":607.2,"usd":3700.75},
+  {"date":"2021-12-08","source":"bsc_token_tax","tx":"0xd2c212670438c4b31b34747ffab01c324b05c77e3e1f171b4bde8de20c75ee53","block":13285504,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.1194,"bnbUsd":607.2,"usd":3715.7},
+  {"date":"2021-12-09","source":"bsc_token_tax","tx":"0xe329eff738d8552b1ad455bb2776808c002f678d3ef8d39a6b641dd68e1e91c7","block":13321587,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.747828,"bnbUsd":570.2,"usd":3277.41},
+  {"date":"2021-12-09","source":"bsc_token_tax","tx":"0x96fc85c5d32783394ad23d214311b251a37c4b289bffec51e004f36ab9bdfd5f","block":13321647,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.724271,"bnbUsd":570.2,"usd":3263.98},
+  {"date":"2021-12-09","source":"bsc_token_tax","tx":"0x00a794e112e649a79e5fd6b37c0865e347779b91885bd04dfe1525a6ac0e3576","block":13328412,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.992103,"bnbUsd":570.2,"usd":3986.9},
+  {"date":"2021-12-09","source":"bsc_token_tax","tx":"0xd5af3f19ef940b514b2bd46e406e4a3d3ec5e56a7ea98ee4f3ea7379920bacee","block":13328499,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.960049,"bnbUsd":570.2,"usd":3968.62},
+  {"date":"2021-12-10","source":"bsc_token_tax","tx":"0xdb62c59c0dab88d2ea0280172986740e411949418e899dfbbed770cad05594ce","block":13350814,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.005318,"bnbUsd":552.4,"usd":2764.94},
+  {"date":"2021-12-10","source":"bsc_token_tax","tx":"0xd7986add2e375ae4830a2be25b66730d80c98d508590eba37ce543e7855d83f5","block":13350852,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.393417,"bnbUsd":552.4,"usd":2979.32},
+  {"date":"2021-12-10","source":"bsc_token_tax","tx":"0xf4968355e741d0f8b2ed9403c4399652acc87726eac4d4ffee3eca99dc46a295","block":13353755,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.402291,"bnbUsd":552.4,"usd":2431.83},
+  {"date":"2021-12-10","source":"bsc_token_tax","tx":"0x4e68b638384e1e1258e00f8c74713518e9b5bfe18cc9463a74230379da21dd83","block":13353768,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.386703,"bnbUsd":552.4,"usd":2423.21},
+  {"date":"2021-12-10","source":"bsc_token_tax","tx":"0xb4d51e70a043ce8b84b9c28ad84633ecf6fd01510c30f224c3cbd85b73abb382","block":13359202,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.331311,"bnbUsd":552.4,"usd":2392.62},
+  {"date":"2021-12-10","source":"bsc_token_tax","tx":"0xae0c2725e5b1c3165c1ce661e33c5719b3e87a11352242dc6e6857b0c29c446f","block":13364040,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.340225,"bnbUsd":552.4,"usd":2397.54},
+  {"date":"2021-12-11","source":"bsc_token_tax","tx":"0xb1b47e56cc7b24ac0aa9acee1313243362f964d180ceee0306288c948be6cdcb","block":13383151,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.348365,"bnbUsd":564.5,"usd":2454.65},
+  {"date":"2021-12-11","source":"bsc_token_tax","tx":"0xc94b2d40994588d416677ae81474f81c25170386e4d4c9954019966bc75a096c","block":13386314,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.311993,"bnbUsd":564.5,"usd":2998.62},
+  {"date":"2021-12-12","source":"bsc_token_tax","tx":"0x2a2a7ded192e2ec8c6c08802a726a039b0b6b72608227cd449ff68344a70c462","block":13408886,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.569226,"bnbUsd":570.3,"usd":2605.83},
+  {"date":"2021-12-12","source":"bsc_token_tax","tx":"0x10033791d0b8625826cf8eac160584027454b7897cdfd9ac4be322b9cda70825","block":13411254,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.508833,"bnbUsd":570.3,"usd":2571.39},
+  {"date":"2021-12-12","source":"bsc_token_tax","tx":"0x0503fee6530f1c9bcc31bf6722dd0bdbddbbbd3cd556a335c3eae7559bb1d711","block":13422812,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.382029,"bnbUsd":570.3,"usd":2499.07},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0xb44371c61ef2f637aa5fbb3efc33ae2dc4e624fb64adbe3527ff476e8f8d22a2","block":13428895,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":9.274041,"bnbUsd":521.0,"usd":4831.78},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0xc6c745286bf71fd9a164fc02ae6446857c0c726a84369923c6991aa0da7dd6c9","block":13429091,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":6.543594,"bnbUsd":521.0,"usd":3409.21},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0x0ca44fdb2edac18f77c88095405f9f555c63de79388cc74fbc522f443f432872","block":13429655,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.802789,"bnbUsd":521.0,"usd":2502.25},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0x1183ccade78203dd38cde50b4890de5ed82bf0676f06f017226b70b43e3e80ab","block":13429847,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.992155,"bnbUsd":521.0,"usd":2600.91},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0x60dbbe85ba79bd9e7f7c15dceaeee1895b2a396bf58dece9bfdfe0cce008a25c","block":13441939,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.336036,"bnbUsd":521.0,"usd":2259.07},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0x456077dc85ba1dfaf5a8d4cd27d78552565166e93f59ee2172f94ab36f579146","block":13443851,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.286419,"bnbUsd":521.0,"usd":2233.22},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0x44ca52f7264abdfe4ed9dd829d8de91e76cd864fb4f61189071d98c416171774","block":13444212,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.950015,"bnbUsd":521.0,"usd":2057.96},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0xe73310d7d0a9c9ebf09960fa981191b772e886ff0b656f6d15afe9326d9d980f","block":13444843,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.043568,"bnbUsd":521.0,"usd":2106.7},
+  {"date":"2021-12-13","source":"bsc_token_tax","tx":"0x4959085814355695324bd68f2321ce28f8f8a9f7e762dcc95ab14c74ada33ec3","block":13452140,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.915705,"bnbUsd":521.0,"usd":2040.08},
+  {"date":"2021-12-14","source":"bsc_token_tax","tx":"0xaa2d7ba3b53ba73cb6ffc7036b493efa7f5ee60c58bca417de125c2859e6db6d","block":13461724,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.924244,"bnbUsd":528.1,"usd":3128.59},
+  {"date":"2021-12-14","source":"bsc_token_tax","tx":"0x77b761f68119075637ec1119e4baf6770037d8dcd55196ed513983945c58a2f2","block":13462221,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.862396,"bnbUsd":528.1,"usd":2039.73},
+  {"date":"2021-12-15","source":"bsc_token_tax","tx":"0xdebe66f6e2544a7b98cc76b1f72c7311d89667197ba670d421fb606a78a905b2","block":13482068,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.995557,"bnbUsd":541.1,"usd":2703.1},
+  {"date":"2021-12-15","source":"bsc_token_tax","tx":"0xe41e4a057cbc7d49ef8c31e8a20e8a687f62d2797a4f89b4b35680251332c8c2","block":13482209,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.601559,"bnbUsd":541.1,"usd":2489.9},
+  {"date":"2021-12-16","source":"bsc_token_tax","tx":"0xa1b60114eca1232146d65af7e55da47e650782a22ed89a544f38180c432ba76f","block":13523033,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.048344,"bnbUsd":526.2,"usd":2130.24},
+  {"date":"2021-12-16","source":"bsc_token_tax","tx":"0x7cc1ef7a9895487e1f58ccda9f20ef0b2516a0a12624b672d24d88671eb9d9c7","block":13523173,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.027447,"bnbUsd":526.2,"usd":2119.24},
+  {"date":"2021-12-17","source":"bsc_token_tax","tx":"0x1ecabe40ca4f5dc70a4437feffc76a35c84fc113f973a4c5dfa32cd711f865d0","block":13551460,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.073587,"bnbUsd":525.5,"usd":2140.67},
+  {"date":"2021-12-17","source":"bsc_token_tax","tx":"0x9fcdd7ce09492a9d0c73d4a2c409cd92b06de7f290994f6fafda54ebb1bd587e","block":13551474,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.360773,"bnbUsd":525.5,"usd":2291.59},
+  {"date":"2021-12-17","source":"bsc_token_tax","tx":"0x9637c0f781a1caa2d0a804cd83afb3cf236f13da0a26e0f08dbf9b709f0966fc","block":13559322,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.294345,"bnbUsd":525.5,"usd":2256.68},
+  {"date":"2021-12-17","source":"bsc_token_tax","tx":"0x78e6627117d287c1e6ee0276f988e337eec4805d0073998449b2626952af4207","block":13559690,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.915873,"bnbUsd":525.5,"usd":2057.79},
+  {"date":"2021-12-19","source":"bsc_token_tax","tx":"0x0caea5ff7a06c498936345c80ae047adfa0867d11764c5c2db90024e2eed251d","block":13599694,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.808831,"bnbUsd":529.8,"usd":2017.92},
+  {"date":"2021-12-19","source":"bsc_token_tax","tx":"0x2ed919af0cb52a38abce0fc63eeb2b601fbbf6e3878b9ae9c4536c64625222e3","block":13600755,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.798878,"bnbUsd":529.8,"usd":2012.65},
+  {"date":"2021-12-19","source":"bsc_token_tax","tx":"0xcc27dab71af981f8e015f49d62b8c2f5cbf774cbd1db070cd5147f1c0c8a933d","block":13623425,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.603024,"bnbUsd":529.8,"usd":1908.88},
+  {"date":"2021-12-19","source":"bsc_token_tax","tx":"0x8ede2f55d5a2225d684fb4c1f4ed1f166c44201d9025f02ef7a484438b551be4","block":13623585,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.602898,"bnbUsd":529.8,"usd":1908.82},
+  {"date":"2021-12-21","source":"bsc_token_tax","tx":"0xbb73b1f61d341db3db58205a74e340b7ba40cd74dfe5a44d88141458a2d309ab","block":13663779,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.507521,"bnbUsd":528.3,"usd":1853.02},
+  {"date":"2021-12-21","source":"bsc_token_tax","tx":"0xbb73b1f61d341db3db58205a74e340b7ba40cd74dfe5a44d88141458a2d309ab","block":13663779,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.482107,"bnbUsd":528.3,"usd":1839.6},
+  {"date":"2021-12-22","source":"bsc_token_tax","tx":"0x2da914a30006b150ae9a9ec5a6cc23ce97ce9a616a1e89e2357e9d1a6bf4c31b","block":13699468,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.327176,"bnbUsd":533.6,"usd":1775.38},
+  {"date":"2021-12-22","source":"bsc_token_tax","tx":"0x65ee83596ef4d3f912ded00e20620157b7c7474bb0e6e0ffbd6b27cb7308dccc","block":13699524,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.430532,"bnbUsd":533.6,"usd":1830.53},
+  {"date":"2021-12-23","source":"bsc_token_tax","tx":"0xc07d180ebebccb3b14e0385bece5a64806195d73ab15952c7efdacf053b2c715","block":13733794,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.322115,"bnbUsd":549.0,"usd":1823.84},
+  {"date":"2021-12-23","source":"bsc_token_tax","tx":"0x6ec2bed9812e0e69f1cc4b3677cccd7f63b771ee36040f09ec6c1669609c8266","block":13735551,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.461092,"bnbUsd":549.0,"usd":1900.14},
+  {"date":"2021-12-24","source":"bsc_token_tax","tx":"0x392563290746c09fa670d37524eed9f4e36c4462e58353b5df3556074f14f2b0","block":13758626,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.438818,"bnbUsd":542.1,"usd":1864.18},
+  {"date":"2021-12-24","source":"bsc_token_tax","tx":"0xccc77cafb5b79a44a53ac302ceb2cd518166f6dbd2a0db7d73ff0bc1585be564","block":13758665,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.966931,"bnbUsd":542.1,"usd":2150.47},
+  {"date":"2021-12-25","source":"bsc_token_tax","tx":"0x3a4209fdb169c716339562e9b74a7dc78c1302815461ac40249012d1c603cced","block":13786185,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.222373,"bnbUsd":547.4,"usd":1763.93},
+  {"date":"2021-12-26","source":"bsc_token_tax","tx":"0xa41835a6f2f2d7c35df663f0bb8e2ba8910af0caa5a7832915ec7db6e5da77e1","block":13808160,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.364192,"bnbUsd":546.4,"usd":1838.19},
+  {"date":"2021-12-26","source":"bsc_token_tax","tx":"0x4cd908a5b05e7acc973a732ae3700501b44c8256a45ff9c3316da17514065496","block":13816253,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.085282,"bnbUsd":546.4,"usd":1685.8},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x7aed7dedf07b69aeb7efd47c3cd2a1c860b78fbc788a91f7ea7c796f22487176","block":13832785,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.068207,"bnbUsd":563.7,"usd":1729.55},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x5b7a0d7e10c051519f2a616518f1d276b74b465d1dd28ece2018a17591724335","block":13835920,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.533798,"bnbUsd":563.7,"usd":1992.0},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x650214a5d5560048e57f2258719a85ca1271f13a348f37806a46d60f2f61d7df","block":13835935,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.190311,"bnbUsd":563.7,"usd":1798.38},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x1db1331c05f694183653c8cce087daf01054e8b56a297164fdd698779c804edc","block":13836047,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.942262,"bnbUsd":563.7,"usd":1658.55},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0xac816db4558073f8e50af111a2799cd52df7f2ea794ef764602d390c4126fc16","block":13836060,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.909602,"bnbUsd":563.7,"usd":1640.14},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x4530e52198e53456afa9ef31da8279bd9e4d9e7ac9ecc0e2db1043e03730a582","block":13836197,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.769935,"bnbUsd":563.7,"usd":1561.41},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x83d3640e7279390b68bc0840af641fe4335e2be7eb50b878d103a3d7efb49d2b","block":13836205,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.873209,"bnbUsd":563.7,"usd":1619.63},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0xd89db82e40b6cd3141882f406b4081fc396b74ec0b1cf5e830d3595380727462","block":13837156,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.889859,"bnbUsd":563.7,"usd":1629.01},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0xd8c1a96bda5bfc9295ee20c6a82754c86c180b8353501967944dc87e0699ace4","block":13837179,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.530353,"bnbUsd":563.7,"usd":1426.36},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0xd23c71a38bccf20a86343ff2529168c659e84cacf32830c57280ca9600d61e87","block":13838671,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.386006,"bnbUsd":563.7,"usd":1344.99},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0xbd43cf9d13f6fc5f310b2aaa649542f9455320082bd0151fe1670334ffa51e2f","block":13839707,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.094407,"bnbUsd":563.7,"usd":1744.32},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0xcc3722ed3ae82005a8c86e9f897f286e66e5e37ec07d24d9af7108cd941c62c1","block":13841020,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.031574,"bnbUsd":563.7,"usd":1708.9},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x8212d84d37a7f3f825e211e1aaa23cc9fe3d7d6529502a5bda06a6a05f06f072","block":13841981,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.825229,"bnbUsd":563.7,"usd":1592.58},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x09959b44f985087d584397e60a93f9443b44601e3b0a27cf9b221313146ca307","block":13845891,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.607742,"bnbUsd":563.7,"usd":1469.98},
+  {"date":"2021-12-27","source":"bsc_token_tax","tx":"0x61aa3206dd1d076eb23ef0fcfcdc88a502162d966e2c7a4c79d1c7926f130f23","block":13850218,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.633105,"bnbUsd":563.7,"usd":1484.28},
+  {"date":"2021-12-28","source":"bsc_token_tax","tx":"0x24592880d163454ffd8724ae8b487a2fad8256e27a1c0e4293fd81e217e73ba0","block":13858145,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.737528,"bnbUsd":534.2,"usd":3064.99},
+  {"date":"2021-12-28","source":"bsc_token_tax","tx":"0xc7aade2aad8b7d82974a9a69ece241cbcf15ceb8bf92d498f9c78520c3db3506","block":13858154,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.114305,"bnbUsd":534.2,"usd":2732.06},
+  {"date":"2021-12-28","source":"bsc_token_tax","tx":"0x3239c901c4ba4b903d0c3cc546a7f5068ba500b9492e7e889daadb4d296b8308","block":13862169,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.91106,"bnbUsd":534.2,"usd":1555.09},
+  {"date":"2021-12-28","source":"bsc_token_tax","tx":"0x4ecbafd36ef33add8ccf527857008aa7dfa6c2817c66a99fa9bd9627e2335169","block":13865566,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.935333,"bnbUsd":534.2,"usd":1568.05},
+  {"date":"2021-12-28","source":"bsc_token_tax","tx":"0x93d4aed1e6dd0204fdbe681ce298ae2cc377eec701ce8dff9b15f5a96a45159e","block":13872776,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.514193,"bnbUsd":534.2,"usd":1877.28},
+  {"date":"2021-12-28","source":"bsc_token_tax","tx":"0xaef4828bc6c043bcff5c8ed9dbefc5e381a98f674d229e379beae4fc1ccd4d12","block":13872870,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.181327,"bnbUsd":534.2,"usd":1699.46},
+  {"date":"2021-12-30","source":"bsc_token_tax","tx":"0x0fbec967ad51d863bdb59351f5cc79de80187140763623fe3663b2ecb3d4d4c7","block":13916499,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.840048,"bnbUsd":518.5,"usd":1472.56},
+  {"date":"2021-12-30","source":"bsc_token_tax","tx":"0x98d062a4d37951c0e50dc688a18ccd285b96ae83280fc77b6757e0c196f158c7","block":13917533,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.863421,"bnbUsd":518.5,"usd":1484.68},
+  {"date":"2022-01-01","source":"bsc_token_tax","tx":"0x241e436c151506e6aa7e07794dd36bf8609bf61d3ac1c7c159e4b326d304111c","block":13971619,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.089415,"bnbUsd":527.3,"usd":1629.05},
+  {"date":"2022-01-01","source":"bsc_token_tax","tx":"0x3d3183d21386e026832e9248d9fdfe9fb4e858ea51f7c4ff2a5494549d8635e0","block":13973037,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.036473,"bnbUsd":527.3,"usd":1601.13},
+  {"date":"2022-01-03","source":"bsc_token_tax","tx":"0xd4898dfa8145f8331f524186d39f817719cc8495b72007eff6d22028dd546d10","block":14028914,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.172267,"bnbUsd":511.9,"usd":1623.88},
+  {"date":"2022-01-03","source":"bsc_token_tax","tx":"0xc4e8905732977175e43b2ab511371f30ab687a30a3de78b26e027a63eba275ea","block":14028999,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.161079,"bnbUsd":511.9,"usd":1618.16},
+  {"date":"2022-01-05","source":"bsc_token_tax","tx":"0xb762899a416582a7a0a4541e17904a9dd1f87c43e74705789b437fca2962f844","block":14100078,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.789139,"bnbUsd":474.1,"usd":1322.33},
+  {"date":"2022-01-05","source":"bsc_token_tax","tx":"0xf8668c03b63ee0c1483f04f3a7304daa1c15077cc829622ee4603ecb0ab17598","block":14100200,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":2.793776,"bnbUsd":474.1,"usd":1324.53},
+  {"date":"2022-01-07","source":"bsc_token_tax","tx":"0x53a715678fc1f416fe74abf25691deaf5bfe6162fa4fd6b1dc63cdb5fdf3167d","block":14162436,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.127882,"bnbUsd":448.1,"usd":1401.6},
+  {"date":"2022-01-07","source":"bsc_token_tax","tx":"0xf39ec6d3eac80022b2c599d0abdcbbb15207adcef5677f262fd1aaef27d68951","block":14162687,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.105941,"bnbUsd":448.1,"usd":1391.77},
+  {"date":"2022-01-09","source":"bsc_token_tax","tx":"0xee6ec40f5ab4ceb800ca89e18b0688754e9b23780a473a3b0db98d9635f68335","block":14204560,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.222245,"bnbUsd":438.7,"usd":1413.6},
+  {"date":"2022-01-09","source":"bsc_token_tax","tx":"0xcb1e06cd406df8e9b9efeecd719422b2d420203a0a57d82a0bf6688fcd9906ee","block":14204887,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.223409,"bnbUsd":438.7,"usd":1414.11},
+  {"date":"2022-01-11","source":"bsc_token_tax","tx":"0x43feff0b9300ace7c7ea2ff99f38aca390bbcce37e8c77bdfc5e178c89159582","block":14263768,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.703988,"bnbUsd":463.6,"usd":1717.17},
+  {"date":"2022-01-11","source":"bsc_token_tax","tx":"0x74c76c4d8d6214bf00fd45bf5692c3c7ff1128c38fb709c96a15e0173f371a91","block":14263890,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.687617,"bnbUsd":463.6,"usd":1709.58},
+  {"date":"2022-01-13","source":"bsc_token_tax","tx":"0x8d4d30e1d7983d7a2ab767222b4112085d6aa8ab42ddb15f2775efce9547b644","block":14317479,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":10.0,"bnbUsd":475.2,"usd":4752.0},
+  {"date":"2022-01-13","source":"bsc_token_tax","tx":"0xc33c1bac5058ab35f863fa4c83efc043d68065234aea779ba7164b1d1c0f02f2","block":14319413,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.081949,"bnbUsd":475.2,"usd":2414.94},
+  {"date":"2022-01-13","source":"bsc_token_tax","tx":"0xbd5dd45383abd8b3dfc8b4dbf1e482f2e97e5dd8a3a16236df05870a43845705","block":14319451,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.791104,"bnbUsd":475.2,"usd":2751.93},
+  {"date":"2022-01-14","source":"bsc_token_tax","tx":"0x159703d681d1077f6d717452fb923c4065dd757e6e8e28b8c0fc53055656d28c","block":14354417,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.97042,"bnbUsd":490.0,"usd":1945.51},
+  {"date":"2022-01-14","source":"bsc_token_tax","tx":"0x45ba343088b31aee82bec92b2507de016667ad3e216d42f1439968013eea69c3","block":14362566,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.395549,"bnbUsd":490.0,"usd":1663.82},
+  {"date":"2022-01-15","source":"bsc_token_tax","tx":"0x2c12e8d2a962ce328492f76c5017d41d5c687c0f0f1374a277240d35f7c187e2","block":14397483,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.805864,"bnbUsd":494.5,"usd":1882.0},
+  {"date":"2022-01-16","source":"bsc_token_tax","tx":"0x5266acf2d43558841f02879034dcedff383545442df0731105e151cce5159392","block":14400826,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.804381,"bnbUsd":498.6,"usd":1896.86},
+  {"date":"2022-01-16","source":"bsc_token_tax","tx":"0x047e8132a475ab3de6e9806e20107e43998ea78e527ca2a83d8caa673b1fe892","block":14406668,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":4.269,"bnbUsd":498.6,"usd":2128.52},
+  {"date":"2022-01-16","source":"bsc_token_tax","tx":"0xb87d10ef36624bdba2bd645cb12bcb8b9c7922026c5a3587fbe4de2b69fa307e","block":14406681,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":4.2,"bnbUsd":498.6,"usd":2094.12},
+  {"date":"2022-01-16","source":"bsc_token_tax","tx":"0xe1d9448c1c314e0f05d1c0d6d62530e490e6a875f0485b17b3139b17b63cf7ec","block":14406685,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":4.2,"bnbUsd":498.6,"usd":2094.12},
+  {"date":"2022-01-17","source":"bsc_token_tax","tx":"0x48db13c7e7c933295e94bd8ac0c1951f02bd1352adc083ff69c83d4d27651f94","block":14429262,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.915173,"bnbUsd":475.2,"usd":1860.49},
+  {"date":"2022-01-17","source":"bsc_token_tax","tx":"0xf6b701c277af0959050454ea141541309465e4f82dec20a68953fbc6f01b34d0","block":14431068,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.879017,"bnbUsd":475.2,"usd":1843.31},
+  {"date":"2022-01-19","source":"bsc_token_tax","tx":"0x71bd98efba39b152d78557aa9e00857af5b17ae2d3bbf1e5c347983041efa99e","block":14502320,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.775928,"bnbUsd":461.9,"usd":1744.1},
+  {"date":"2022-01-19","source":"bsc_token_tax","tx":"0x3022868fd37bb4b4876630bd9d917ce33d5d1473a4b1adfb6c7a8f0ee06f09f2","block":14504475,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.870447,"bnbUsd":461.9,"usd":2249.66},
+  {"date":"2022-01-20","source":"bsc_token_tax","tx":"0xc001e03ad95d56773d6d4f55dfee67f8de39eb6b59dcf754ae0b0be9e7c627c5","block":14533237,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.105618,"bnbUsd":440.2,"usd":1807.29},
+  {"date":"2022-01-20","source":"bsc_token_tax","tx":"0x177aeeaa75a2ea49f6c371524d457a523e930b36ae5a97ac1f15ae37b05e1d28","block":14536206,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":5.961775,"bnbUsd":440.2,"usd":2624.37},
+  {"date":"2022-01-21","source":"bsc_token_tax","tx":"0xa2ecd9d272fe4558e941ad2ca000e449e985ae870e629f9d23b97ce77e6e1178","block":14544024,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.44818,"bnbUsd":383.9,"usd":1323.76},
+  {"date":"2022-01-21","source":"bsc_token_tax","tx":"0xb1d007cc6f13f5bf31ff694707b9bf90f7caa53dd0116855eb092c87f978b406","block":14572008,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.344549,"bnbUsd":383.9,"usd":1283.97},
+  {"date":"2022-01-22","source":"bsc_token_tax","tx":"0x2dda38f3e8e1344c142833d8f1e7a535ae50e61e9e816ed685a0f251bca4e86e","block":14581020,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.370236,"bnbUsd":358.3,"usd":1207.56},
+  {"date":"2022-01-25","source":"bsc_token_tax","tx":"0x0032bcfdb84a09c56a141270e86cec9f9ce2a2c80789784a3fd6978097ee864c","block":14661490,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.071273,"bnbUsd":385.1,"usd":1567.85},
+  {"date":"2022-01-25","source":"bsc_token_tax","tx":"0x1efc551f8e96a0e8a58f66ad6db0bbb42c5aea6f47b8309ee972003b0c3cb9b7","block":14667556,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.502831,"bnbUsd":385.1,"usd":1348.94},
+  {"date":"2022-01-27","source":"bsc_token_tax","tx":"0xe1355aacc88dc3bb950c3e6ee6fa246fc8330675f498b9f9bd8b84e6b190cc4d","block":14724579,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.607168,"bnbUsd":389.9,"usd":1406.43},
+  {"date":"2022-01-27","source":"bsc_token_tax","tx":"0x6228b6a2b40e98c85ab337ca1daa637ed4e97eb51d7ce83395d770f071da98fe","block":14725047,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.346864,"bnbUsd":389.9,"usd":1694.84},
+  {"date":"2022-01-29","source":"bsc_token_tax","tx":"0xc775d7ecce25ae44d7ea4f44ee6ae04ad022b61314519ecf43c96fc9f19411f6","block":14783424,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.468496,"bnbUsd":389.3,"usd":1350.29},
+  {"date":"2022-01-29","source":"bsc_token_tax","tx":"0xc611ff1a8a28fb1269b036b0379e6f11a80c001ef43b8fed35abc365cb6d9c3f","block":14794786,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":4.498159,"bnbUsd":389.3,"usd":1751.13},
+  {"date":"2022-01-31","source":"bsc_token_tax","tx":"0x9256708fc24f911e8cc53647d143f8a93708ac2745194b46b11cb319e02df172","block":14841958,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.358778,"bnbUsd":374.3,"usd":1257.19},
+  {"date":"2022-01-31","source":"bsc_token_tax","tx":"0xeb9b86b587abe0d105f13a789ba928f474584eb03db0b5daa77b9dae108f9152","block":14849026,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.805654,"bnbUsd":374.3,"usd":1424.46},
+  {"date":"2022-02-01","source":"bsc_token_tax","tx":"0x1bd24ce91e2add7031980add128c71ffb7482985486963292281d002d5e1defe","block":14870563,"wallet":"0x5700579d1a9f4e77f14775ac0ff696f1e2525d4f","route":"router","bnb":3.367683,"bnbUsd":384.2,"usd":1293.86},
+  {"date":"2022-02-02","source":"bsc_token_tax","tx":"0x27c434d8ba9d1d6e27d9c32797dcc92c12df71ddc5ff38e409cedc964272c94b","block":14908458,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.581162,"bnbUsd":366.9,"usd":1313.93},
+  {"date":"2022-02-03","source":"bsc_token_tax","tx":"0xbe791d5dc6381325a8bae1876767c04b7930c72576d41a46e69fb4aa60a11b21","block":14939650,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.606216,"bnbUsd":372.3,"usd":1342.59},
+  {"date":"2022-02-04","source":"bsc_token_tax","tx":"0x6892d89af8585e9e4153e776451d41b4f8be32380e087e1c5dc20d8c97f23327","block":14953227,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.287446,"bnbUsd":399.5,"usd":1313.33},
+  {"date":"2022-02-04","source":"bsc_token_tax","tx":"0x48dc13a9bf15eea05cdbce868ea1776e6834c8bd506c4d2105e317c43892b0dd","block":14964233,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.247344,"bnbUsd":399.5,"usd":1297.31},
+  {"date":"2022-02-06","source":"bsc_token_tax","tx":"0x41493298619716c1a67e42fe59aea90352efbbc87e3591670cb1126e29e87722","block":15010753,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.243529,"bnbUsd":419.9,"usd":1361.96},
+  {"date":"2022-02-06","source":"bsc_token_tax","tx":"0xab6aa1486165eac24d51008df6c9fb3c340f8e8edd027d34484d0721b5849b36","block":15028908,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.02932,"bnbUsd":419.9,"usd":1272.01},
+  {"date":"2022-02-07","source":"bsc_token_tax","tx":"0x097bc3fc1a5d66314304fc23e528cfb3d51fa88f70cafb115491e7bf25e65f99","block":15057524,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.728823,"bnbUsd":433.5,"usd":1616.44},
+  {"date":"2022-02-07","source":"bsc_token_tax","tx":"0x6f5187953c93ebb8186d89c9824f2aa2ea2751e904caca83cef96d3e5871f1f9","block":15057547,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.560018,"bnbUsd":433.5,"usd":1543.27},
+  {"date":"2022-02-08","source":"bsc_token_tax","tx":"0x29b453d2b0e6f5b92cd06a615c8f2ab165466447a3c6de6f2aa50dc8de86474b","block":15076345,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.203027,"bnbUsd":407.8,"usd":1306.19},
+  {"date":"2022-02-08","source":"bsc_token_tax","tx":"0xfae9d8b584eb07de67281b4a54f3ed19186d5e02267717ac9245bbb420227dd5","block":15078448,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.253256,"bnbUsd":407.8,"usd":1326.68},
+  {"date":"2022-02-09","source":"bsc_token_tax","tx":"0xb4d0d9260a1d16d3422594fa54abaca9b0c3671c57216f251a1daf9600c70d53","block":15105152,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.122104,"bnbUsd":422.9,"usd":1320.34},
+  {"date":"2022-02-09","source":"bsc_token_tax","tx":"0x25545b05f42265014821d67c48c695e2534806b2f16867b67ec941cbb42fad80","block":15108265,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.367644,"bnbUsd":422.9,"usd":1424.18},
+  {"date":"2022-02-09","source":"bsc_token_tax","tx":"0x10050a353bc1584ca4cbf99ec41b0b535e40ff1d0c1d64496c444614b870f7b9","block":15114872,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":4.281922,"bnbUsd":422.9,"usd":1810.82},
+  {"date":"2022-02-09","source":"bsc_token_tax","tx":"0x917094066e6eadf513bdc5ddee870eea9fe57f61da0d077158614cc78b8049a1","block":15115060,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.419543,"bnbUsd":422.9,"usd":1446.12},
+  {"date":"2022-02-10","source":"bsc_token_tax","tx":"0xcc0fe4a28710ad762e61d07341072f014b1ca830bd7e972243cf7ec14929c3aa","block":15133683,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.976816,"bnbUsd":414.7,"usd":1649.19},
+  {"date":"2022-02-10","source":"bsc_token_tax","tx":"0xfe61cb523660ed287410efd38447602eb53768820581fdccb183db7dedae796c","block":15133894,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":4.334062,"bnbUsd":414.7,"usd":1797.34},
+  {"date":"2022-02-11","source":"bsc_token_tax","tx":"0x0087e9cb38224e288f7aa6e225f13e08649ae951671cd745ee26704734f1de7e","block":15153444,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":4.509812,"bnbUsd":400.0,"usd":1803.92},
+  {"date":"2022-02-11","source":"bsc_token_tax","tx":"0xb59d8a935cfda398f443eee57b3cb4d3c88cc37398b3e14008cb15c44da4440c","block":15153717,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":4.084888,"bnbUsd":400.0,"usd":1633.96},
+  {"date":"2022-02-11","source":"bsc_token_tax","tx":"0x5c32aa5173080a9cd12f6937dbd746b96c2e98cd6bc1cceafd03d70cc273073a","block":15172625,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.523123,"bnbUsd":400.0,"usd":1409.25},
+  {"date":"2022-02-11","source":"bsc_token_tax","tx":"0xcbc46c6223660e8508f76273d1a130bef04c68d9bb8eed73e03f68c7f595369b","block":15172742,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.530949,"bnbUsd":400.0,"usd":1412.38},
+  {"date":"2022-02-12","source":"bsc_token_tax","tx":"0xbc41a7fc91106d37364c6bcd8f9212614ee7645cb42154166e00e6f64a6cf19a","block":15200208,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.467528,"bnbUsd":403.6,"usd":1399.49},
+  {"date":"2022-02-12","source":"bsc_token_tax","tx":"0xc4ecfcee1aa9fa891922d0e08b5f9a353d4ee086ae20debcd76834878fc52891","block":15201638,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.455057,"bnbUsd":403.6,"usd":1394.46},
+  {"date":"2022-02-15","source":"bsc_token_tax","tx":"0xfd6935e85c6d42258c5703cbe3c2a1061a8acddd4e087d3d28843a4165ebd41e","block":15274988,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.944883,"bnbUsd":432.4,"usd":1705.77},
+  {"date":"2022-02-15","source":"bsc_token_tax","tx":"0x226a6eab687cf494d1ef2caeb769e6e162bc1eccb411a3e0a2e562314c683fa3","block":15275118,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":4.397843,"bnbUsd":432.4,"usd":1901.63},
+  {"date":"2022-02-16","source":"bsc_token_tax","tx":"0x1ea7c72126e6646f5eac855db972a3279cc0415ce0b74b81b13961611ff4fcc6","block":15304461,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":5.260122,"bnbUsd":427.3,"usd":2247.65},
+  {"date":"2022-02-16","source":"bsc_token_tax","tx":"0x0d4aef94802fb4ec057397975dcda6ec302e8d3234e50f2d69cf451357fc704c","block":15304516,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":4.72148,"bnbUsd":427.3,"usd":2017.49},
+  {"date":"2022-02-17","source":"bsc_token_tax","tx":"0xa7522b123134a2c0f5b7125ef1f8a32d68b4dc0bf5035acb4c60516183c34a7c","block":15329787,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.46536,"bnbUsd":402.4,"usd":1394.46},
+  {"date":"2022-02-17","source":"bsc_token_tax","tx":"0xf383388e9666d183d79086da37a6085190a3d1862417ab338480b1bd8fa37ffc","block":15330216,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.45625,"bnbUsd":402.4,"usd":1390.79},
+  {"date":"2022-02-19","source":"bsc_token_tax","tx":"0x1fd3914903af7a41475bc8cb67d4fdbfa265af08aba7ac3c454c7ef5fb521a4e","block":15394308,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.421508,"bnbUsd":399.8,"usd":1367.92},
+  {"date":"2022-02-19","source":"bsc_token_tax","tx":"0xc623eb6a6c2af2eb8dc9e11e4c1ca48983485d9775297029cbb96501034ff1e8","block":15394463,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.406276,"bnbUsd":399.8,"usd":1361.83},
+  {"date":"2022-02-22","source":"bsc_token_tax","tx":"0xb0900f627888b1151b96d33b68654a8b780fe64f1e7012a000e86627d34d26dd","block":15478834,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.78065,"bnbUsd":374.3,"usd":1415.1},
+  {"date":"2022-02-22","source":"bsc_token_tax","tx":"0x0de4500f4e7bf70e6dc06004c881c9e16dea6bee4beea44c259bdd9407646adc","block":15479811,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":4.062437,"bnbUsd":374.3,"usd":1520.57},
+  {"date":"2022-02-24","source":"bsc_token_tax","tx":"0x6a26ccb1043e00ff36a81c01a076725a542b95ba41316ef6bca5ef9193dda24c","block":15525383,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.248747,"bnbUsd":361.2,"usd":1173.45},
+  {"date":"2022-02-24","source":"bsc_token_tax","tx":"0x8e6532ddd5fadaf0b1674ef6ca51564681b650ae105413abb01d662bf291286f","block":15526642,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.284302,"bnbUsd":361.2,"usd":1186.29},
+  {"date":"2022-02-25","source":"bsc_token_tax","tx":"0x6a100d6bec09ef253eda22c065f047561e77ed55fdfb95c76e2e40c1732d055a","block":15562332,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.113595,"bnbUsd":375.0,"usd":1167.6},
+  {"date":"2022-02-26","source":"bsc_token_tax","tx":"0x0ba632512a0be0f19eff5a379da4731d937a73068900540e5dac7d110f1c45b6","block":15584048,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.159244,"bnbUsd":373.7,"usd":1180.61},
+  {"date":"2022-02-28","source":"bsc_token_tax","tx":"0xc110ac0f5a6f1f0753e83261f5eb4b0dc0e1c641285727778bde3426c9057640","block":15644093,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.999334,"bnbUsd":395.6,"usd":1186.54},
+  {"date":"2022-02-28","source":"bsc_token_tax","tx":"0x68e1ca3ae6a5b1073280335d51d8a59e325c60b2953f1933b2b4b106b851eef5","block":15649810,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.163884,"bnbUsd":395.6,"usd":1251.63},
+  {"date":"2022-03-01","source":"bsc_token_tax","tx":"0xe0b5b06541b96abba0d55510d0cb2a03f0af8774f6dcf8652978e5ae6bdac14a","block":15673344,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.822851,"bnbUsd":408.7,"usd":1153.7},
+  {"date":"2022-03-01","source":"bsc_token_tax","tx":"0x5368c20292273ae5397675e68e592e3a75d5a28673559ebd0415cdb1738c141c","block":15686296,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.849025,"bnbUsd":408.7,"usd":1164.4},
+  {"date":"2022-03-02","source":"bsc_token_tax","tx":"0xc81edce48aeb5805b08be25f13070042547a54561c62ebab4a87b84d66fea5e0","block":15705689,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.287466,"bnbUsd":409.3,"usd":1345.56},
+  {"date":"2022-03-02","source":"bsc_token_tax","tx":"0x31aed4dfb924babe60fb805cf7b41e73c98ab22e1cdea4f7322e5b5923f38ea1","block":15705857,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.082229,"bnbUsd":409.3,"usd":1261.56},
+  {"date":"2022-03-03","source":"bsc_token_tax","tx":"0x03ed083ed9cf336e510ae4d0dd2a8ae1945ed5cb36bb89cc5cdb807534eddd04","block":15743785,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.93879,"bnbUsd":402.6,"usd":1183.16},
+  {"date":"2022-03-04","source":"bsc_token_tax","tx":"0xcfd8d8c7dd92a01a4ec3df353deb9481b26cedcf6ec6459c271f7b331f35e0b1","block":15762314,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.703556,"bnbUsd":374.2,"usd":1011.67},
+  {"date":"2022-03-08","source":"bsc_token_tax","tx":"0xe389390b99e5ce1a356624e8a0903a3f89d57129c5a74cab08f006c6beb8108e","block":15881118,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.715039,"bnbUsd":381.4,"usd":1035.52},
+  {"date":"2022-03-08","source":"bsc_token_tax","tx":"0xbc671963679bd0bab3dd316df90f6870752dddfe9581a0c10b1673108bfbe36d","block":15882402,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.857024,"bnbUsd":381.4,"usd":1089.67},
+  {"date":"2022-03-11","source":"bsc_token_tax","tx":"0x5efb046eb622e55974b33cf2f1ae23e76b31a45fe7b76f12a54a82d367f80d19","block":15954676,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.944117,"bnbUsd":371.9,"usd":1094.92},
+  {"date":"2022-03-11","source":"bsc_token_tax","tx":"0xfc8a26613d100507b495816fd188ad543ec6caed5e6e7fee654979676b238e33","block":15963166,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.091086,"bnbUsd":371.9,"usd":1149.57},
+  {"date":"2022-03-12","source":"bsc_token_tax","tx":"0xf528666c835a6ee9508ae794740dfb84b817cbc1e456db523bd1987c32200c53","block":16005569,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.537955,"bnbUsd":372.4,"usd":945.13},
+  {"date":"2022-03-12","source":"bsc_token_tax","tx":"0xf0cf429b1f6bd6a46dea7bee69033716dc7f8609d2051b05d147812c9f7321b7","block":16006482,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.106832,"bnbUsd":372.4,"usd":1156.98},
+  {"date":"2022-03-13","source":"bsc_token_tax","tx":"0x40ca564ff2d491fef7209dedd3afddbb17818402f81b3f4da13a5b7c24473617","block":16013277,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.258917,"bnbUsd":361.4,"usd":1177.77},
+  {"date":"2022-03-13","source":"bsc_token_tax","tx":"0x4248dd5dde655cbe46997df4ed458ce7b37df692b13409ce1046b111bb96390c","block":16027978,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.524604,"bnbUsd":361.4,"usd":1273.79},
+  {"date":"2022-03-13","source":"bsc_token_tax","tx":"0xa2d831614616e85ee6fe50fcb14a309b5c8c749dda1607ee88e25d05be9f1f21","block":16030353,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.306857,"bnbUsd":361.4,"usd":1195.1},
+  {"date":"2022-03-14","source":"bsc_token_tax","tx":"0x1227ca1c99e18312c004159c0d172ce026212cbaee812c3f7c25117fe17af7e5","block":16046540,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.854674,"bnbUsd":373.4,"usd":1065.94},
+  {"date":"2022-03-15","source":"bsc_token_tax","tx":"0x9d7a4e02a27464b274f1ea7af28c5470681aebb07d8f0133a96e2b3cba57b10c","block":16068469,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.646337,"bnbUsd":371.7,"usd":983.64},
+  {"date":"2022-03-16","source":"bsc_token_tax","tx":"0xd45d5bedf3d420dafa2be358b874ab5648a329f4543b8d020efdf9f03a1f44cb","block":16109270,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.697866,"bnbUsd":385.4,"usd":1039.76},
+  {"date":"2022-03-17","source":"bsc_token_tax","tx":"0x0dcddaab4ffd0d5d6b46ba5ef3991fb56ffcb8828fcbafa9cc58a7d3028767af","block":16133496,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.130227,"bnbUsd":391.8,"usd":1226.42},
+  {"date":"2022-03-17","source":"bsc_token_tax","tx":"0xa0dca66727caea355e3199f7cd5431e8eabbe2187e85450bb5cb77f9e727c4f5","block":16138663,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.65101,"bnbUsd":391.8,"usd":1038.67},
+  {"date":"2022-03-17","source":"bsc_token_tax","tx":"0xdc2067ab7b4336f0fc4fc1730197c7dd6683197dfcbfbb1287f203ba2a47b962","block":16140469,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.954412,"bnbUsd":391.8,"usd":1549.34},
+  {"date":"2022-03-17","source":"bsc_token_tax","tx":"0x5d65c785b3707d7a94e265b6e31e85e7760e2c57810acf7d2b2979dc908150cf","block":16140480,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.125067,"bnbUsd":391.8,"usd":1224.4},
+  {"date":"2022-03-18","source":"bsc_token_tax","tx":"0x825e80b9eb35aa82155a0f26369fc585e9b2c6345b2ab136ab526821713bc495","block":16151661,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.082952,"bnbUsd":397.2,"usd":1224.55},
+  {"date":"2022-03-18","source":"bsc_token_tax","tx":"0x64b876de994fc7287088812dc241637405666c08473910ff4985ebc345be48b2","block":16152894,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":3.07244,"bnbUsd":397.2,"usd":1220.37},
+  {"date":"2022-03-18","source":"bsc_token_tax","tx":"0x1ccca558c4d711e02fcd7b84bace3e7529990f10fd6fb323db7b8d5ba6feaa9f","block":16174806,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.566151,"bnbUsd":397.2,"usd":1019.28},
+  {"date":"2022-03-18","source":"bsc_token_tax","tx":"0x3288dab9246c512a929ba183879091e6ec3bc6d24e0482c1e79289a1d2705c18","block":16175235,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.558458,"bnbUsd":397.2,"usd":1016.22},
+  {"date":"2022-03-20","source":"bsc_token_tax","tx":"0x9e8a32f254bf714d5b44a32d5d45e1e8df40b681b6f2f743a77d875ac7b93c61","block":16219676,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.867733,"bnbUsd":390.8,"usd":1120.71},
+  {"date":"2022-03-20","source":"bsc_token_tax","tx":"0x72c7f74676447a431d52590ea4b6ccae60a85ffc8fa802a3f576bfff4f86f01c","block":16219962,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.873271,"bnbUsd":390.8,"usd":1122.87},
+  {"date":"2022-03-22","source":"bsc_token_tax","tx":"0xa36883c7ccf342c14c8c2e9359158d0112e45e9c2f8120a3432b9678962f705d","block":16290889,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.377047,"bnbUsd":404.3,"usd":961.04},
+  {"date":"2022-03-22","source":"bsc_token_tax","tx":"0x2e760de46effd4ba707894ae7f1646317191a9bbd0d15cf7d6e80d06a0f9eeee","block":16290911,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.357018,"bnbUsd":404.3,"usd":952.94},
+  {"date":"2022-03-24","source":"bsc_token_tax","tx":"0xbbbce2612620bfe63e46bb5c2b0c2aa78d978a11c3f99bc1d7bd7cffbc284f44","block":16333365,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.514674,"bnbUsd":414.2,"usd":1041.58},
+  {"date":"2022-03-24","source":"bsc_token_tax","tx":"0x0c37292cbe0a4fca1cbbbe2de2e0edc38f46b75fdd5460390196967f9582c98e","block":16333750,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.50566,"bnbUsd":414.2,"usd":1037.84},
+  {"date":"2022-03-26","source":"bsc_token_tax","tx":"0xc6e9978769c788f1f6716603960b68c63acdf45e676f97c66d35e9c2932e013a","block":16381717,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.938182,"bnbUsd":415.8,"usd":805.9},
+  {"date":"2022-03-26","source":"bsc_token_tax","tx":"0x63fbd163a6647656a0acc435adee83031f190b4a961e692ddc224959434dcd38","block":16384045,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.933329,"bnbUsd":415.8,"usd":803.88},
+  {"date":"2022-03-28","source":"bsc_token_tax","tx":"0x30a423e669f82e730d8510ab2f774e8532dc46c137e89eba8de857f8911f5e8a","block":16442662,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.822431,"bnbUsd":430.2,"usd":784.01},
+  {"date":"2022-03-28","source":"bsc_token_tax","tx":"0x0f9b3f744b9328bd0c5bba7174c7f19a9df173194a8d125033abed6c5ebeb0c4","block":16444659,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.404109,"bnbUsd":430.2,"usd":1034.25},
+  {"date":"2022-03-29","source":"bsc_token_tax","tx":"0x5b6750c3d8201b1eaa1c72186d6e6f7caf34958171bd9656d5e7daf91d3cd5e2","block":16473204,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.720799,"bnbUsd":434.2,"usd":747.17},
+  {"date":"2022-03-29","source":"bsc_token_tax","tx":"0x10cd411b262da88ea77dc048947c3dfbbdf28f739dad5032655a4e1b3340e3e7","block":16475123,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.897031,"bnbUsd":434.2,"usd":823.69},
+  {"date":"2022-03-31","source":"bsc_token_tax","tx":"0x919b625bf5ebb5813c6273be167ff8c3ea864b0a54d147e9df15f02e54bd150b","block":16537942,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.059502,"bnbUsd":428.9,"usd":883.32},
+  {"date":"2022-03-31","source":"bsc_token_tax","tx":"0xef27adc5521be817673e14189e04bb69169aa92816dcc42e3f3ce1c04b8f892b","block":16546791,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.774517,"bnbUsd":428.9,"usd":761.09},
+  {"date":"2022-03-31","source":"bsc_token_tax","tx":"0x06cb4a86908608eccf0576ac1d2c2c591bb5743218817c53ef6034d0de292241","block":16550060,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.541866,"bnbUsd":428.9,"usd":661.31},
+  {"date":"2022-04-01","source":"bsc_token_tax","tx":"0x324a5480653dc694e7e1a047ecbaf678eea06f337a2ed51016d6fbf2c17f2238","block":16553438,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":0.01,"bnbUsd":447.7,"usd":4.48},
+  {"date":"2022-04-01","source":"bsc_token_tax","tx":"0xf0fcbec3d49b20a1575357cbaf94129b8f3b1eec7219dc65cd6ea77a0e99c3b3","block":16553529,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":0.01,"bnbUsd":447.7,"usd":4.48},
+  {"date":"2022-04-01","source":"bsc_token_tax","tx":"0xc0c88572905077ce87bb7ad4096d8d0edaf1902c4f35be0ef9939b7d9f7a331e","block":16559465,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.500805,"bnbUsd":447.7,"usd":671.91},
+  {"date":"2022-04-01","source":"bsc_token_tax","tx":"0x3de89c5a3b9c7d43bda5730625a53b74c335b8c4da05598e690565217b9125a7","block":16566799,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.522584,"bnbUsd":447.7,"usd":681.66},
+  {"date":"2022-04-01","source":"bsc_token_tax","tx":"0x53ec9d8bfd37d008cc1975cf6d0d2b2f167cd32f1ced76c515a8ebe22032d738","block":16568902,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.967089,"bnbUsd":447.7,"usd":880.67},
+  {"date":"2022-04-01","source":"bsc_token_tax","tx":"0xebc8bc906fe3b0a7b66d263d59b7b22543bf4f4b1dbb7b59ffb5c169838a5fac","block":16570262,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.626973,"bnbUsd":447.7,"usd":728.4},
+  {"date":"2022-04-01","source":"bsc_token_tax","tx":"0x374d611df8d287637ae8a5e9e92cd5102eadbbb44ffec165d0d8d20372766874","block":16577931,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.734044,"bnbUsd":447.7,"usd":776.33},
+  {"date":"2022-04-02","source":"bsc_token_tax","tx":"0x3b6fb873d9887ae85ad3aa78954b04829826c3c0c2c39a18c905ce29c755755b","block":16590549,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.615495,"bnbUsd":437.2,"usd":706.29},
+  {"date":"2022-04-03","source":"bsc_token_tax","tx":"0x634bb79cb128fc325b5ff1b83c6227c2d34cf03567d10691ebc4a308f2ac0222","block":16631163,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.728984,"bnbUsd":450.4,"usd":778.73},
+  {"date":"2022-04-03","source":"bsc_token_tax","tx":"0x50e1735e1998ba9ff1c25b7164c3e6efbc80263b21d486fbdc25f6ea3abbccdb","block":16634297,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.669275,"bnbUsd":450.4,"usd":751.84},
+  {"date":"2022-04-05","source":"bsc_token_tax","tx":"0xa1927224cef621a27eb3188beeacfe4e10da6df750e09a9d7fc09b0ec7d4ebf6","block":16677980,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.722947,"bnbUsd":444.7,"usd":766.19},
+  {"date":"2022-04-05","source":"bsc_token_tax","tx":"0xb8e94ea1863a09c2ed493c85fae66ed82ce03c7873c21c4efbf78cfbcc3b8030","block":16687666,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.740051,"bnbUsd":444.7,"usd":773.8},
+  {"date":"2022-04-07","source":"bsc_token_tax","tx":"0x50dc3b3d075d1e23b3310c09bee2921a4e1615d491b6977391f5e77c3b47a2e6","block":16746818,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.194925,"bnbUsd":436.0,"usd":956.99},
+  {"date":"2022-04-07","source":"bsc_token_tax","tx":"0x274fa637687f1e334cef98163dea14f904e9f6bfe438a4fbcc9fcffed15891a0","block":16747133,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.818524,"bnbUsd":436.0,"usd":792.88},
+  {"date":"2022-04-13","source":"bsc_token_tax","tx":"0x133b289457b78341ca2a30db3d92a0e8c27f714a31a91dcedd95d97729184056","block":16907963,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.78895,"bnbUsd":423.4,"usd":757.44},
+  {"date":"2022-04-13","source":"bsc_token_tax","tx":"0xb5a5f97f49c58d9e7bf84aad194e72a09b65ba9df5a1b071e87cff1ef067b0fa","block":16909146,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.777101,"bnbUsd":423.4,"usd":752.42},
+  {"date":"2022-04-18","source":"bsc_token_tax","tx":"0x17ea5453eccb60ec04e5d6f1903f15c273a1b03c00ddc51d23af60fa8835d2ec","block":17047648,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.56928,"bnbUsd":416.8,"usd":654.08},
+  {"date":"2022-04-18","source":"bsc_token_tax","tx":"0x48485e6b747637a9fc179ba4fc6aed2058107d73ffe184d80f34359520d23989","block":17050934,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.60132,"bnbUsd":416.8,"usd":667.43},
+  {"date":"2022-04-22","source":"bsc_token_tax","tx":"0x7118ffef44b22b75828529e32c54c06a8355e31ece6028d7c845328fc36d8ef4","block":17166829,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.646421,"bnbUsd":406.6,"usd":669.43},
+  {"date":"2022-04-22","source":"bsc_token_tax","tx":"0xec9cc99fc994fe912a2e3686334ccfb1e8dc5af913c94f35e8ec47034388df03","block":17171908,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.652092,"bnbUsd":406.6,"usd":671.74},
+  {"date":"2022-04-24","source":"bsc_token_tax","tx":"0xcd1f92be7e396c7ddaabe2a2dd06c56433c960c4ad1b45747c8cfb28e5d29fa6","block":17214833,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.759067,"bnbUsd":398.8,"usd":701.52},
+  {"date":"2022-04-24","source":"bsc_token_tax","tx":"0x709e5972a31e24679c1a8c8913b486a00d7b5ef30ce719f984a10192fcd8d21f","block":17218859,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.698298,"bnbUsd":398.8,"usd":677.28},
+  {"date":"2022-04-26","source":"bsc_token_tax","tx":"0xa8f246d43bd448def84a337bfed823c35a3cc0c9c72e1d0d53b29e99a4a2c2d8","block":17274196,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.687857,"bnbUsd":385.9,"usd":651.34},
+  {"date":"2022-04-26","source":"bsc_token_tax","tx":"0xddedf160ed946ea6cf706d9d3d189ed593fe1a71f3b566c41eeab3dfbf41abdc","block":17275850,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.706043,"bnbUsd":385.9,"usd":658.36},
+  {"date":"2022-04-27","source":"bsc_token_tax","tx":"0x67cc753a48eecb7c0028064cd4020b78dc60c6e7cf98ae9d7c555d3f1e9f0227","block":17310727,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.686922,"bnbUsd":391.3,"usd":660.09},
+  {"date":"2022-04-27","source":"bsc_token_tax","tx":"0x4fb4789cfe186d44afb54a5c4ec86b08f72f31f75e1573e3bbd0ee0b1f7a4d22","block":17311909,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.721876,"bnbUsd":391.3,"usd":673.77},
+  {"date":"2022-04-30","source":"bsc_token_tax","tx":"0x09bb75358650fad12fcca28cbc1f062e08e579f874684003a6447c1f2d210392","block":17403624,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.774619,"bnbUsd":377.1,"usd":669.21},
+  {"date":"2022-04-30","source":"bsc_token_tax","tx":"0x985bb73252894f02fbf7109f963f9874c17bc6f41a5d5ff87cf3faf8404862f7","block":17406916,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.840792,"bnbUsd":377.1,"usd":694.16},
+  {"date":"2022-05-02","source":"bsc_token_tax","tx":"0x8cc16a6c1721e86ae23fe9102a9a9280f4a5b22662dac122fbac41c41f836f3e","block":17443819,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.481945,"bnbUsd":389.5,"usd":577.22},
+  {"date":"2022-05-02","source":"bsc_token_tax","tx":"0xa3767c5951421c60ead0a00df244500b47b84381b1b398649584753113c7377b","block":17447781,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":2.302992,"bnbUsd":389.5,"usd":897.02},
+  {"date":"2022-05-03","source":"bsc_token_tax","tx":"0xa170cdc20c92d9f71e9dff1a6e4cf778adb9fff90fa434327b28b8c5b65f19a5","block":17483110,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.272383,"bnbUsd":383.9,"usd":488.47},
+  {"date":"2022-05-05","source":"bsc_token_tax","tx":"0xd2677a37b2db2e94f7b55670ef300824493b6f5c029c422b0a506567b53b54da","block":17537171,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.257098,"bnbUsd":378.4,"usd":475.69},
+  {"date":"2022-05-05","source":"bsc_token_tax","tx":"0x0f3a27c3962b49cc030d092c2cc39921d3fde4628995abd490fd14828f1b5553","block":17544341,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.287915,"bnbUsd":378.4,"usd":487.35},
+  {"date":"2022-05-07","source":"bsc_token_tax","tx":"0xa8ab9c0b02e14e24db054984f230b2646db168e70ad4e124bcd05550e4b2ac23","block":17601397,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.256783,"bnbUsd":365.5,"usd":459.35},
+  {"date":"2022-05-08","source":"bsc_token_tax","tx":"0x838c42a0aab19e853ebf997055ecee2e82dba1c7ee91671eac78e9cb2c62de5a","block":17623822,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.195121,"bnbUsd":355.9,"usd":425.34},
+  {"date":"2022-05-09","source":"bsc_token_tax","tx":"0x8517f74b61722be7a6f88f4af47eb819a7f3fb7171f0c1373d91cf013495b22e","block":17657362,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.19897,"bnbUsd":296.1,"usd":355.02},
+  {"date":"2022-05-09","source":"bsc_token_tax","tx":"0xa968d7129a4236ab2bebb478fd927c1d42fa79a1ee173a493d0a2471f72a4729","block":17659164,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.191514,"bnbUsd":296.1,"usd":352.81},
+  {"date":"2022-05-10","source":"bsc_token_tax","tx":"0xd49c47adb179c8ba4343ee9416db2d33df8b40f2d9987b66bf15e4877b030b7b","block":17687089,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.225468,"bnbUsd":319.1,"usd":391.05},
+  {"date":"2022-05-10","source":"bsc_token_tax","tx":"0x80b2c4ecad8956beda547b77094063157db69045bdc01a055fa17cad83835995","block":17695621,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.170629,"bnbUsd":319.1,"usd":373.55},
+  {"date":"2022-05-11","source":"bsc_token_tax","tx":"0x2aeed9546ff543ae2bf5974c175689bda2d0bfb6a296b84ee044dfc140097d1b","block":17714031,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.17419,"bnbUsd":271.5,"usd":318.79},
+  {"date":"2022-05-11","source":"bsc_token_tax","tx":"0xae81177c18b20eea85a3fdaaf92217324fd471002efac1ffba2829e1f7595f24","block":17714210,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.038523,"bnbUsd":271.5,"usd":281.96},
+  {"date":"2022-05-11","source":"bsc_token_tax","tx":"0xa053af417d1bf53155d2e85ac6b45ce873a379594a3ca2e1c1f65caa242a999c","block":17720667,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.278354,"bnbUsd":271.5,"usd":347.07},
+  {"date":"2022-05-11","source":"bsc_token_tax","tx":"0x9b844dca5d24ee3459e9717961d48fd3b9a683005b5309461b681878238de192","block":17720721,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.440617,"bnbUsd":271.5,"usd":391.13},
+  {"date":"2022-05-12","source":"bsc_token_tax","tx":"0xa6a940eea9bdf2fe74f72ee08a4733ff298903d1842634b33d413e7660064118","block":17731016,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.993752,"bnbUsd":269.0,"usd":267.32},
+  {"date":"2022-05-12","source":"bsc_token_tax","tx":"0x3fe11df9f17b824b6019cd5177830fa8af43df8b0b6091320a2b006e0566fce8","block":17736424,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.978898,"bnbUsd":269.0,"usd":263.32},
+  {"date":"2022-05-13","source":"bsc_token_tax","tx":"0x82d7349ddfa61340b08120d6bf9f4564a29239ac2a7329d58a2631ae8a4ad7f9","block":17756655,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.908695,"bnbUsd":290.6,"usd":264.07},
+  {"date":"2022-05-13","source":"bsc_token_tax","tx":"0x0b179e5e9c45bd6d92f69c30323e4a0ddb8aa529fdf0e7d7f990c20df956821f","block":17766571,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.062152,"bnbUsd":290.6,"usd":308.66},
+  {"date":"2022-05-13","source":"bsc_token_tax","tx":"0x16a9cfb70694bf22a3582932cc85f3b4078e0e1d839f4420f1d42589efcdee20","block":17778213,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.946293,"bnbUsd":290.6,"usd":274.99},
+  {"date":"2022-05-14","source":"bsc_token_tax","tx":"0xdeb4801a4a99051e39ff226955c41fde22871054fc29b74e8c886597b1bfc24c","block":17794333,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.853989,"bnbUsd":296.9,"usd":253.55},
+  {"date":"2022-05-15","source":"bsc_token_tax","tx":"0x60c94ab661836f04497ae95bc1b23777313c9e0b8610e57cf8f9cd590850c24c","block":17834319,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.03942,"bnbUsd":312.4,"usd":324.71},
+  {"date":"2022-05-15","source":"bsc_token_tax","tx":"0x0a936d501a82d7c22ddac15553ac98db44e989fe7fc1338da1626c63c7522b29","block":17836437,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.771336,"bnbUsd":312.4,"usd":240.97},
+  {"date":"2022-05-17","source":"bsc_token_tax","tx":"0xc431f5dea7922c278ef1d7daa36cf4a196ac8c6e65dceb6efe64e6224fb0d9d5","block":17873154,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.685541,"bnbUsd":306.2,"usd":209.91},
+  {"date":"2022-05-17","source":"bsc_token_tax","tx":"0x6a92a3f1627beca782877e8f3ad6c4652125a275b5e75c170899db5fba7b71ca","block":17873162,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.684369,"bnbUsd":306.2,"usd":209.55},
+  {"date":"2022-05-23","source":"bsc_token_tax","tx":"0xc1d265533a9ec75e27229599a8507bc1c5a6539700ec3ff43a461c6c61304e47","block":18045172,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.849905,"bnbUsd":317.2,"usd":269.59},
+  {"date":"2022-05-23","source":"bsc_token_tax","tx":"0x6aeae60116139bf05d877e587310d5642e9370242ef77b4c7c3f5ae05acf2414","block":18045197,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.845238,"bnbUsd":317.2,"usd":268.11},
+  {"date":"2022-05-25","source":"bsc_token_tax","tx":"0x025a47470ac7a40cca80569f93a76a6d70aac3f23c770f25d53093bed959805f","block":18102719,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.980341,"bnbUsd":325.7,"usd":319.3},
+  {"date":"2022-05-25","source":"bsc_token_tax","tx":"0xa1c2b8503730e8006800d76fd22be89c1d713dce1cadac6e595ee955d914fc00","block":18111427,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.003239,"bnbUsd":325.7,"usd":326.75},
+  {"date":"2022-05-26","source":"bsc_token_tax","tx":"0x18b0d0bd40289e5276b66c00765d9fb05e2d0ada179faf9a753f403dbbf093d4","block":18126098,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.990707,"bnbUsd":303.0,"usd":300.18},
+  {"date":"2022-05-26","source":"bsc_token_tax","tx":"0x18b0d0bd40289e5276b66c00765d9fb05e2d0ada179faf9a753f403dbbf093d4","block":18126098,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.965117,"bnbUsd":303.0,"usd":292.43},
+  {"date":"2022-05-27","source":"bsc_token_tax","tx":"0xa172004101d9f79398f29ecd9930f81e6b85b5a2278c69acefc1a41d77567365","block":18168697,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.646011,"bnbUsd":301.6,"usd":194.84},
+  {"date":"2022-05-27","source":"bsc_token_tax","tx":"0x78fa3aca137bb6812b8ba2ccd3399699400ddcef1a7620437c90f92d118d6b32","block":18170250,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.646982,"bnbUsd":301.6,"usd":195.13},
+  {"date":"2022-05-28","source":"bsc_token_tax","tx":"0xef95f090594e61721dc7d48b059e8e8a58cadee49431410a310396f0d42e38d2","block":18203510,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":6.0,"bnbUsd":307.5,"usd":1845.0},
+  {"date":"2022-05-29","source":"bsc_token_tax","tx":"0x76684d5cc7f5900d0d598379f2844d6ffadd596f44fe313d7cc8107d6007e6c7","block":18228902,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.715655,"bnbUsd":305.8,"usd":218.85},
+  {"date":"2022-05-29","source":"bsc_token_tax","tx":"0xb85389a79fc810eb1ca05ce1cbe737cd3bf0918ee0b5ac28b97268b0b006378f","block":18235332,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.759701,"bnbUsd":305.8,"usd":232.32},
+  {"date":"2022-05-31","source":"bsc_token_tax","tx":"0xbfa426ade377a0255eb14d9bc352d16d8d6da3360e8c995f55caf2b6c5474641","block":18283360,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.753903,"bnbUsd":320.9,"usd":241.93},
+  {"date":"2022-05-31","source":"bsc_token_tax","tx":"0x60712a299939f95f41f97e6c0f182ed2f29719f0a43f85edfd90b971ea57a3d3","block":18284844,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.707592,"bnbUsd":320.9,"usd":227.07},
+  {"date":"2022-06-01","source":"bsc_token_tax","tx":"0xd7ce0a2833b0eb6ca57dd18211b6d898754f03948c41a5e822a17a3cec40403f","block":18315719,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.161902,"bnbUsd":300.4,"usd":349.04},
+  {"date":"2022-06-01","source":"bsc_token_tax","tx":"0xfdea34953831106e60d55ac80aa3b49b2d9e41d1b8f50b209a0551a6412aa333","block":18318445,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.161186,"bnbUsd":300.4,"usd":348.82},
+  {"date":"2022-06-06","source":"bsc_token_tax","tx":"0xbac0fed26b56ba256d26eefdaeaed21544d203446ea8291acb0e2967398bdd5a","block":18462213,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.721592,"bnbUsd":295.1,"usd":212.94},
+  {"date":"2022-06-06","source":"bsc_token_tax","tx":"0x3cea2ff3d629b04fdbf3228ff7df703496e511cf1d8e4fa7e8eaef334ae17968","block":18463005,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.72329,"bnbUsd":295.1,"usd":213.44},
+  {"date":"2022-06-09","source":"bsc_token_tax","tx":"0x6a46a07eca5dceff95e22903af33452f4a5cc4d626bf1b19d2eb2f2757b9c4c4","block":18530529,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.675685,"bnbUsd":289.9,"usd":195.88},
+  {"date":"2022-06-09","source":"bsc_token_tax","tx":"0xafd3fa6b12ea67c2b4a9dcc6d65cade6288327aa61db25051f831e3d877a8faa","block":18530529,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.670445,"bnbUsd":289.9,"usd":194.36},
+  {"date":"2022-06-12","source":"bsc_token_tax","tx":"0xf7f678c9f3d079031abb1dcb93c3f9f6a22b54f0a94d025909cdc02f7a4553f1","block":18616662,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.817104,"bnbUsd":254.8,"usd":208.2},
+  {"date":"2022-06-12","source":"bsc_token_tax","tx":"0x76295a3a1ccf508ff4f7302384ec1a602bae8a54e3146d6a77d59ba9a2ab9c51","block":18616817,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.819826,"bnbUsd":254.8,"usd":208.89},
+  {"date":"2022-06-14","source":"bsc_token_tax","tx":"0x88c9901b2ef3aea3bd7f8f6113c9f324ef894cb8dae45d6fd652e1e5b2918bd6","block":18669331,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.758838,"bnbUsd":223.0,"usd":169.22},
+  {"date":"2022-06-14","source":"bsc_token_tax","tx":"0x95770d8b3fed5326e5791cf63ec84484542be9c51797505e5164e0b45e081315","block":18672108,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.771763,"bnbUsd":223.0,"usd":172.1},
+  {"date":"2022-06-17","source":"bsc_token_tax","tx":"0x551b401cbf5344ff0473728a52532698a6801c198f71cebf69833c659e11f962","block":18764272,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.682316,"bnbUsd":215.8,"usd":147.24},
+  {"date":"2022-06-18","source":"bsc_token_tax","tx":"0xb6dc8bd7092e844678043c2550bcbc26e223776850c30d2e9bc69ab8a1e38916","block":18784149,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.702463,"bnbUsd":197.0,"usd":138.39},
+  {"date":"2022-06-20","source":"bsc_token_tax","tx":"0x3e894c9d17880f6843273129757800f7598197226a0cc404623b4e9282da0b79","block":18858745,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.677024,"bnbUsd":216.5,"usd":146.58},
+  {"date":"2022-06-21","source":"bsc_token_tax","tx":"0x0193bee6be4da789763229f208b627916c349208cd7f3d9d32bbd4b83ed85826","block":18876162,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.034048,"bnbUsd":220.1,"usd":227.59},
+  {"date":"2022-06-23","source":"bsc_token_tax","tx":"0x398cb7bb896a55062d7c4bbbb2b7cefc0b62e5a3215cc0f4a7c67e0862497d49","block":18944304,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.050686,"bnbUsd":228.9,"usd":240.5},
+  {"date":"2022-06-24","source":"bsc_token_tax","tx":"0x8be198f53beee6888713e8fe7af72ddae87a9f5e4cce20521dea65e670ae6c0c","block":18956319,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.772367,"bnbUsd":240.2,"usd":185.52},
+  {"date":"2022-06-24","source":"bsc_token_tax","tx":"0xb3ea1ac909f0e10ff25f4f17559bddbae43327d5d48f16571633500ec6ba05a4","block":18963426,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.164387,"bnbUsd":240.2,"usd":279.69},
+  {"date":"2022-06-24","source":"bsc_token_tax","tx":"0xefa66a4fb4b0823af62da3e68f67d2c345f1b46fe6c77a108aa0b4b1fb646e6e","block":18963541,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.011776,"bnbUsd":240.2,"usd":243.03},
+  {"date":"2022-06-27","source":"bsc_token_tax","tx":"0x2cdf283af9a08eb6a3103ca3c60ffe67b744858e0004f8c13729d6ead12e0ca0","block":19054457,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.790633,"bnbUsd":233.8,"usd":184.85},
+  {"date":"2022-06-27","source":"bsc_token_tax","tx":"0x376fb1402fa51d7f66db785969dd0a8dd47a56432fd6f4e9bd3dff13e81376d2","block":19056704,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.791486,"bnbUsd":233.8,"usd":185.05},
+  {"date":"2022-06-29","source":"bsc_token_tax","tx":"0x3b791fbe052124efc2f18a19ea7589d1f231731ce5652f304f7e52c6b94a8e9d","block":19119828,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.240984,"bnbUsd":219.7,"usd":272.64},
+  {"date":"2022-06-29","source":"bsc_token_tax","tx":"0x9ca284bfbf3eb156678d3ea01ea0c764acfc200ce87e1908fc11890c02a9ee9c","block":19119837,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.245484,"bnbUsd":219.7,"usd":273.63},
+  {"date":"2022-06-30","source":"bsc_token_tax","tx":"0xa3f23026f039e4c7a294ba21aaf845c28db0f4af8387ee67bf1001ee62af5ab5","block":19141699,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.122969,"bnbUsd":219.6,"usd":246.6},
+  {"date":"2022-06-30","source":"bsc_token_tax","tx":"0xd91266eba0bca3fb7dbc57f66e4ed23e5452860dc59de268f5d05fd436005298","block":19141979,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.120684,"bnbUsd":219.6,"usd":246.1},
+  {"date":"2022-07-01","source":"bsc_token_tax","tx":"0xc47f312723154c71f17b12c79e60d0443d8b2c7b111e8620f9a3493b85000e8d","block":19160185,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.922362,"bnbUsd":216.9,"usd":416.96},
+  {"date":"2022-07-01","source":"bsc_token_tax","tx":"0x8e686568d18d691251c0decf4aaa001b02692c3e6ef296c1254412662e7958c4","block":19161078,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.91624,"bnbUsd":216.9,"usd":415.63},
+  {"date":"2022-07-01","source":"bsc_token_tax","tx":"0xdd270e504bf3bc2254076dc94aa5d0587f44f2e470793216bf49b412cb630de5","block":19169862,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.173101,"bnbUsd":216.9,"usd":254.45},
+  {"date":"2022-07-01","source":"bsc_token_tax","tx":"0x3ea0d02d2ba4fab1c428d11fb9c79231cb10a2b25fcf8cea06bfa5393bc42120","block":19170903,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.174432,"bnbUsd":216.9,"usd":254.73},
+  {"date":"2022-07-03","source":"bsc_token_tax","tx":"0xebe482cfd9d13e297ebbdbc2d6b1e325e3d4e69f50aa36de8fbdffe1b3e43f81","block":19226764,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.063557,"bnbUsd":219.2,"usd":233.13},
+  {"date":"2022-07-03","source":"bsc_token_tax","tx":"0x3bdbab306136c8b22e7961ac984a56d24e91e11e9bb6bf97061284b26b5d0eaf","block":19226766,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.058305,"bnbUsd":219.2,"usd":231.98},
+  {"date":"2022-07-05","source":"bsc_token_tax","tx":"0x1101f1adb80afa2abfd3266d15d9b301b49d6b127b0f3f243e15362bd9cb1a7c","block":19279798,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.847545,"bnbUsd":230.8,"usd":426.41},
+  {"date":"2022-07-05","source":"bsc_token_tax","tx":"0x31dbdaa30fd8002cfb35686bb353fca73067e4441d3320adf299b069550bee76","block":19280226,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.841863,"bnbUsd":230.8,"usd":425.1},
+  {"date":"2022-07-07","source":"bsc_token_tax","tx":"0xb55e440e2c3d129ceaeebff394bbc15a5bbe7972cf3b84e42edf7f508208dfad","block":19345371,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.526476,"bnbUsd":241.4,"usd":368.49},
+  {"date":"2022-07-07","source":"bsc_token_tax","tx":"0x28153114a01aa9168cb769d4ad39eca1f8fa57d2ab93339170dfdd9de44d7016","block":19345430,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.52249,"bnbUsd":241.4,"usd":367.53},
+  {"date":"2022-07-11","source":"bsc_token_tax","tx":"0xbd52c434888738fbc2fbe2f523422bdd724c0d8d0ec1c6121717b818893997fe","block":19455997,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.107482,"bnbUsd":225.6,"usd":249.85},
+  {"date":"2022-07-11","source":"bsc_token_tax","tx":"0x1a9078d4916ad59edaace99b96c3949b0e12b9b8fb9acc7b9b05b71075148d60","block":19457098,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.110398,"bnbUsd":225.6,"usd":250.51},
+  {"date":"2022-07-12","source":"bsc_token_tax","tx":"0x6b0e3a174e5d1f7b44ca5c023fc071bcb97883d3f419a0034b4e6bce54a27770","block":19484498,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.385841,"bnbUsd":220.6,"usd":305.72},
+  {"date":"2022-07-12","source":"bsc_token_tax","tx":"0x2cdde2444dc2d9b8264c52a124113fcabf18c143dfb172e277d4dcacab6f6236","block":19484569,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.378692,"bnbUsd":220.6,"usd":304.14},
+  {"date":"2022-07-18","source":"bsc_token_tax","tx":"0x975355f637998330640b57ab02b73084a0b4b7bbdc294bf18afb1b3b6901ddb4","block":19646394,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.954513,"bnbUsd":264.1,"usd":252.09},
+  {"date":"2022-07-18","source":"bsc_token_tax","tx":"0x4b52f70a96e2fba5949da17674922084d2bef09a6b4edd4f2568892239aa0099","block":19651656,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.95313,"bnbUsd":264.1,"usd":251.72},
+  {"date":"2022-07-20","source":"bsc_token_tax","tx":"0x9936ba7d6828e8a194a356939e752c9faea3018cc45014c3266162a5bfe4638b","block":19715654,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.809318,"bnbUsd":258.2,"usd":208.97},
+  {"date":"2022-07-20","source":"bsc_token_tax","tx":"0x1d91260e3cae81355fcda762dd93b17d16301b693375815d81892e1958041543","block":19716909,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.806699,"bnbUsd":258.2,"usd":208.29},
+  {"date":"2022-07-22","source":"bsc_token_tax","tx":"0x7e5254fdbf928b0ae79b5bf508b9877ad178d5c17afb784be18a3d9334c8d1b7","block":19778040,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.908743,"bnbUsd":262.4,"usd":238.45},
+  {"date":"2022-07-22","source":"bsc_token_tax","tx":"0xe1d93fd84232e64de79149dceb7383d86a64fe4b4b6ee24fce907b2bc502c6d4","block":19781290,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.903533,"bnbUsd":262.4,"usd":237.09},
+  {"date":"2022-07-23","source":"bsc_token_tax","tx":"0x67f9dae1f4c493bb63250cf27a9a069ba2a5428599eb769bf188bb4c2d96a4c4","block":19808424,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.922454,"bnbUsd":259.2,"usd":239.1},
+  {"date":"2022-07-23","source":"bsc_token_tax","tx":"0xa10676914a02b2cbb36ed22bfaba59b0ff496e30786d405f8d2e0e768b858d25","block":19809424,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.923964,"bnbUsd":259.2,"usd":239.49},
+  {"date":"2022-07-27","source":"bsc_token_tax","tx":"0x94bad41165b8f71c06e6963511e6f6745e93fb0d9534ce7d4d426ba58032d745","block":19927406,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.961151,"bnbUsd":271.6,"usd":261.05},
+  {"date":"2022-07-27","source":"bsc_token_tax","tx":"0x2c6f3472bd5c998470444188dcf9e0b6b4b289df3449ef904906802a8fc8b592","block":19927563,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.984951,"bnbUsd":271.6,"usd":267.51},
+  {"date":"2022-07-28","source":"bsc_token_tax","tx":"0xa1d45f489bd647ab4a4284d0da75cc2f0a4d2a1e594cfdab6ff6f7935e54c237","block":19954227,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.842403,"bnbUsd":277.2,"usd":233.51},
+  {"date":"2022-07-28","source":"bsc_token_tax","tx":"0x4275820add9f8f01f04a284b5c6e2e4dcdec38e5c3b2af62b6fc417b48aa9dcb","block":19957149,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.819814,"bnbUsd":277.2,"usd":227.25},
+  {"date":"2022-07-31","source":"bsc_token_tax","tx":"0xec0c7e233e7f16942c07f043bcef7f73f05614c37b96833f7aa07750df1ac2e0","block":20030354,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.747563,"bnbUsd":283.4,"usd":211.86},
+  {"date":"2022-07-31","source":"bsc_token_tax","tx":"0x9d749e03475cdb5b0fc873eabd143156ac250c81a86ec9e833277fa9f7d06938","block":20033187,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.868287,"bnbUsd":283.4,"usd":246.07},
+  {"date":"2022-08-02","source":"bsc_token_tax","tx":"0xacf373c776e96c1fefdce93ec3bbba337ecea9a72b05649263354bcf63744289","block":20087180,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.756375,"bnbUsd":283.8,"usd":214.66},
+  {"date":"2022-08-02","source":"bsc_token_tax","tx":"0x257f9efa8189a47dd0859ccc0741d796dfe0bcf8969c34bc21cc6d0428e19f2f","block":20091890,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.860486,"bnbUsd":283.8,"usd":244.21},
+  {"date":"2022-08-05","source":"bsc_token_tax","tx":"0xeac1cebb39e8c6f83debcedd4e0ea6590774cdd4f1060ce775537ba93af1667c","block":20172881,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.735691,"bnbUsd":315.9,"usd":232.4},
+  {"date":"2022-08-12","source":"bsc_token_tax","tx":"0x0d2b469e6fce21b94a17b2bd23b4099389327a63cd41d8b633e5595fbd2cb87f","block":20376157,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.712684,"bnbUsd":327.9,"usd":233.69},
+  {"date":"2022-08-12","source":"bsc_token_tax","tx":"0x7474a8c934289ae367cb97690c6edb538b323c489fe8ff5967252cc134786eb5","block":20376934,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.356028,"bnbUsd":327.9,"usd":444.64},
+  {"date":"2022-08-12","source":"bsc_token_tax","tx":"0x807311fbb07dd170789e57d31445b47a066f648636c4f214e9dc9159890cb9a3","block":20380095,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.836272,"bnbUsd":327.9,"usd":274.21},
+  {"date":"2022-08-13","source":"bsc_token_tax","tx":"0x2b0d403d7095de045d412c5f10572257ddf0137ebf228a0f8efa25f1ea3570ea","block":20408864,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.825533,"bnbUsd":324.3,"usd":267.72},
+  {"date":"2022-08-14","source":"bsc_token_tax","tx":"0xa51ee2fe41e6a9af6d2c26ac23e217684b90f6617b2d02ad069df4415b3802b0","block":20429277,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.860151,"bnbUsd":317.6,"usd":273.18},
+  {"date":"2022-08-18","source":"bsc_token_tax","tx":"0x4e9dd3bcde91f444d01c30dd0976b2c7f74e05b7d0a8407245a35d6a862ffffc","block":20550363,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":1.933008,"bnbUsd":298.1,"usd":576.23},
+  {"date":"2022-08-18","source":"bsc_token_tax","tx":"0xa9f2618a8956f20a902b0f822981a4439c4cd9c019c3587c5bde594e9723308a","block":20557170,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.759861,"bnbUsd":298.1,"usd":226.51},
+  {"date":"2022-08-19","source":"bsc_token_tax","tx":"0xc3cce25a7c1717a56e5834dcdb6959d51bcb4b0d2d9ad27d54e5539875843550","block":20568079,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":0.873494,"bnbUsd":279.1,"usd":243.79},
+  {"date":"2022-08-26","source":"bsc_token_tax","tx":"0xad8736b8028ef7388e57e8db7684785b4b6e08e0707dad5511ee10b5b33e4ee8","block":20766940,"wallet":"0x4fe9b55e56fe0927b9d9732cecf9c994379a5bf4","route":"router","bnb":1.129868,"bnbUsd":279.6,"usd":315.91},
+  {"date":"2022-09-02","source":"bsc_token_tax","tx":"0xde1fb9ebee43a1c1a0bf1f71e803d160f6c6b395abb461c094ca3bd690b2391a","block":20983333,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":1.417833,"bnbUsd":277.5,"usd":393.45},
+  {"date":"2023-03-18","source":"bsc_token_tax","tx":"0x83a206b6ff979a405811cf7ad66ec06d73eaf11886559fdf56270e40ef380de3","block":26559423,"wallet":"0xbf8ff255ad1f369929715a3290d1ef71d79f8954","route":"collateral","bnb":1.154586,"bnbUsd":331.0,"usd":382.17}
  ]
 }

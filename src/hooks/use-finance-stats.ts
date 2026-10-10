@@ -74,3 +74,59 @@ export function useFinanceStats() {
     retry: 1,
   });
 }
+
+// ---------------------------------------------------------------------------
+// The revenue ledger
+// ---------------------------------------------------------------------------
+
+export type ProofChain = 'bsc' | 'base';
+
+/**
+ * One line of the public revenue ledger: a single payment where the source
+ * records payments one by one, or a day's total (with `count`) where it only
+ * reports totals. `ref` is the on-chain transaction, when there is one.
+ */
+export interface LedgerItem {
+  date: string;
+  source: string;
+  usd: number;
+  amount?: number;
+  unit?: string;
+  count?: number;
+  ref?: { chain: ProofChain; tx: string };
+  note?: string;
+}
+
+export interface FinanceLedger {
+  ok: true;
+  fetchedAt: string;
+  currency: 'USD';
+  sources: { id: string; label: string; status: 'ok' | 'unavailable'; note: string }[];
+  explorers: Record<ProofChain, string>;
+  addresses: { label: string; address: string; chains: ProofChain[] }[];
+  /** Newest first. */
+  items: LedgerItem[];
+}
+
+export const FINANCE_LEDGER_ENDPOINT = `${FINANCE_STATS_ENDPOINT}?view=ledger`;
+
+async function fetchFinanceLedger(): Promise<FinanceLedger> {
+  const res = await fetch(FINANCE_LEDGER_ENDPOINT, { headers: { Accept: 'application/json' } });
+  if (!res.ok) throw new Error(`finance ledger endpoint returned ${res.status}`);
+  const body = (await res.json()) as FinanceLedger;
+  if (!body || body.ok !== true || !Array.isArray(body.items)) {
+    throw new Error('finance ledger endpoint returned an unexpected shape');
+  }
+  return body;
+}
+
+/** Only fetched once someone opens the ledger — it is every line behind the totals. */
+export function useFinanceLedger(enabled: boolean) {
+  return useQuery({
+    queryKey: ['finance-ledger'],
+    queryFn: fetchFinanceLedger,
+    enabled,
+    staleTime: 4 * 60_000,
+    retry: 1,
+  });
+}
