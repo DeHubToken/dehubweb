@@ -6019,7 +6019,7 @@ async function handleRequest(request, env, ctx) {
   // Share-card sources for the image transform (see shareCardImage). Ahead of
   // the `/_` static-asset skip below, which would hand these to ASSETS.
   // Older installed apps and already-shared URLs continue to receive the current card.
-  const textPostCard = pathname.match(/^\/_og\/post\/v(?:1|2)\/([1-9]\d{0,14})\.png$/);
+  const textPostCard = pathname.match(/^\/_og\/post\/v(?:1|2|3)\/([1-9]\d{0,14})\.png$/);
   if (textPostCard) {
     const { handlePostShareImage } = await import('./server/post-share-image.js');
     return handlePostShareImage(request, env, ctx, textPostCard[1], fetchPostRecord, {
