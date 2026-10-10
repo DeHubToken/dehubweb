@@ -591,6 +591,7 @@
   },
   "postOptions": {
     "options": "Kɔrɔbɔ",
+    "aiOverview": "A filɛ, a ye min fɔ",
     "sendTip": "Kɔrɔbɔ",
     "queue": "Kɔrɔbɔ",
     "watchList": "Kɔrɔbɔ",
@@ -6253,10 +6254,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Filimu jaa yɔrɔbaaw",
-      "visualPrivacy": "Filimu jaa sugandilenw ci ka u sɛgɛsɛgɛ."
-    },
     "review": {
       "title": "Porozɛ lajɛ",
       "shared": "I fɛ tila",
@@ -6672,6 +6669,10 @@
       "sync": "Klipuw bɛnkɛ",
       "none": "Fɔli dafalen ma sɔrɔ.",
       "unchanged": "Klipuw ma se ka bɛnkɛ."
+    },
+    "highlights": {
+      "visual": "Filimu jaa yɔrɔbaaw",
+      "visualPrivacy": "Filimu jaa sugandilenw ci ka u sɛgɛsɛgɛ."
     }
   },
   "jungleMood": {

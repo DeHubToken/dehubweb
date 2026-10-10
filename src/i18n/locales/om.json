@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Filannoowwan",
+    "aiOverview": "Haala waliigalaa AI",
     "sendTip": "Tiippii Ergi",
     "queue": "Tartiiba",
     "watchList": "Tarree Ilaalchaa",
@@ -6412,10 +6413,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Yeroowwan mul'ataa addaa",
-      "visualPrivacy": "Fureemota filataman xiinxala mul'ataaf ergi."
-    },
     "review": {
       "title": "Sakatta'iinsa pirojektii",
       "shared": "Si waliin qoodame",
@@ -6831,6 +6828,10 @@
       "sync": "Kutaa walsimsiisi",
       "none": "Rukutaan amanamaan hin argamne.",
       "unchanged": "Kutaan walsimuun hin danda'amne."
+    },
+    "highlights": {
+      "visual": "Yeroowwan mul'ataa addaa",
+      "visualPrivacy": "Fureemota filataman xiinxala mul'ataaf ergi."
     }
   },
   "jungleMood": {

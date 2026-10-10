@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Opsionet",
+    "aiOverview": "Përmbledhje e AI",
     "sendTip": "Dërgo Bakshish",
     "queue": "Radhë",
     "watchList": "Lista e Shikimit",
@@ -6451,10 +6452,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Momentet pamore kryesore",
-      "visualPrivacy": "Dërgo kuadrot e zgjedhura për analizë pamore."
-    },
     "review": {
       "title": "Shqyrtimi i projektit",
       "shared": "Ndarë me ju",
@@ -6870,6 +6867,10 @@
       "sync": "Sinkronizo prerjet",
       "none": "Nuk u gjet ritëm i besueshëm.",
       "unchanged": "Prerjet nuk mund të rreshtoheshin."
+    },
+    "highlights": {
+      "visual": "Momentet pamore kryesore",
+      "visualPrivacy": "Dërgo kuadrot e zgjedhura për analizë pamore."
     }
   },
   "jungleMood": {

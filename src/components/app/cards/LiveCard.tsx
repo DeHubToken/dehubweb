@@ -11,7 +11,6 @@
 
 import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { cdnImage } from '@/lib/media-url';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, Bookmark, Info } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -99,15 +98,6 @@ export function LiveCard({ stream }: LiveCardProps) {
           badgeBalance={stream.creatorBadgeBalance}
         />
         <div className="flex items-center gap-2">
-          <motion.button
-            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            className="text-zinc-400 hover:text-white transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Ask AI about this stream"
-          >
-            <Sparkles className="w-[23.5px] h-[23.5px]" />
-          </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
@@ -118,6 +108,12 @@ export function LiveCard({ stream }: LiveCardProps) {
               {/* Bookmark / Post info. Also on the action bar as icons on desktop —
                   the menu carries them at every width so there is one
                   reliable place to look. */}
+              <DropdownMenuItem
+                onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
+                <Sparkles className="w-4 h-4" /> {t("postOptions.aiOverview", "AI overview")}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => toggleBookmark()}
                 disabled={isBookmarkLoading}

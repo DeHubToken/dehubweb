@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Chaguzi",
+    "aiOverview": "Muhtasari wa AI",
     "sendTip": "Tuma Kidokezo",
     "queue": "Foleni",
     "watchList": "Orodha ya Kutazama",
@@ -6441,10 +6442,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Matukio bora ya picha",
-      "visualPrivacy": "Tuma fremu zilizochaguliwa kwa uchambuzi wa picha."
-    },
     "review": {
       "title": "Ukaguzi wa mradi",
       "shared": "Umeshirikiwa",
@@ -6860,6 +6857,10 @@
       "sync": "Sawazisha mikato",
       "none": "Hakuna mdundo wa kuaminika uliopatikana.",
       "unchanged": "Mikato haikuweza kulinganishwa."
+    },
+    "highlights": {
+      "visual": "Matukio bora ya picha",
+      "visualPrivacy": "Tuma fremu zilizochaguliwa kwa uchambuzi wa picha."
     }
   },
   "jungleMood": {

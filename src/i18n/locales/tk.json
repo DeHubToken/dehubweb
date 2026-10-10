@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Saýlawlar",
+    "aiOverview": "Görüş",
     "sendTip": "Sylag iber",
     "queue": "Nobat",
     "watchList": "Tomaşa sanawy",
@@ -6370,10 +6371,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Wizual möhüm pursatlar",
-      "visualPrivacy": "Wizual seljerme üçin saýlanan kadrlary iberiň."
-    },
     "review": {
       "title": "Taslama syny",
       "shared": "Siziň bilen paýlaşylan",
@@ -6789,6 +6786,10 @@
       "sync": "Kesimleri sazlaşdyr",
       "none": "Ygtybarly ritm tapylmady.",
       "unchanged": "Kesimleri deňleşdirip bolmady."
+    },
+    "highlights": {
+      "visual": "Wizual möhüm pursatlar",
+      "visualPrivacy": "Wizual seljerme üçin saýlanan kadrlary iberiň."
     }
   },
   "jungleMood": {

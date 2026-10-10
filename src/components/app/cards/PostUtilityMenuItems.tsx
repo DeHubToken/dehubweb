@@ -1,7 +1,8 @@
 /**
  * Post Utility Menu Items
  * =======================
- * Bookmark, pin (own posts) and post info as three-dot-menu rows.
+ * AI overview, bookmark, pin (own posts) and post info as three-dot-menu rows.
+ * AI overview has no action-bar twin: the menu is its only home.
  *
  * The same three actions render as icon buttons in the card's action bar via
  * `PostUtilityButtons`. That cluster is desktop-only, and these rows used to be
@@ -14,7 +15,7 @@
  * so a row and the icon button for the same post always agree.
  */
 
-import { Bookmark, Pin, Info } from 'lucide-react';
+import { Bookmark, Pin, Info, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -32,6 +33,8 @@ interface PostUtilityMenuItemsProps {
    * close themselves so the info page is not left underneath one.
    */
   onBeforeNavigate?: () => void;
+  /** Opens the post's AI chat. The host closes its menu and gates sign-in. */
+  onAskAI?: () => void;
 }
 
 const ROW =
@@ -42,6 +45,7 @@ export function PostUtilityMenuItems({
   tokenId,
   isOwnPost = false,
   onBeforeNavigate,
+  onAskAI,
 }: PostUtilityMenuItemsProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -51,6 +55,12 @@ export function PostUtilityMenuItems({
 
   return (
     <>
+      {onAskAI && (
+        <button onClick={onAskAI} className={cn(ROW, 'text-white')}>
+          <Sparkles className="w-5 h-5" /> {t('postOptions.aiOverview', 'AI overview')}
+        </button>
+      )}
+
       <button
         onClick={() => toggleBookmark()}
         disabled={isBookmarkLoading}

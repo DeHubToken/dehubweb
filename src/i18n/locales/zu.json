@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Izinketho",
+    "aiOverview": "Isifinyezo se-AI",
     "sendTip": "Thumela Ithiphu",
     "queue": "Umugqa",
     "watchList": "Uhlu Lokubuka",
@@ -6465,10 +6466,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Izikhathi ezigqamile ezibonwayo",
-      "visualPrivacy": "Thumela amafreyimu akhethiwe ukuze kuhlaziywe izithombe."
-    },
     "review": {
       "title": "Ukubuyekezwa kwephrojekthi",
       "shared": "Kwabelwane nawe",
@@ -6884,6 +6881,10 @@
       "sync": "Vumelanisa ukusika",
       "none": "Asikho isigqi esithembekile esitholakele.",
       "unchanged": "Ukusika akukwazanga ukuvumelaniswa."
+    },
+    "highlights": {
+      "visual": "Izikhathi ezigqamile ezibonwayo",
+      "visualPrivacy": "Thumela amafreyimu akhethiwe ukuze kuhlaziywe izithombe."
     }
   },
   "jungleMood": {
