@@ -1,3 +1,4 @@
+import { projectTask } from "./projectTask";
 import { videoMatteCommand } from "./videoMatte";
 import { generationChatRequest, generationDraft, type GenerationDraft } from "./generationDraft";
 /**
@@ -301,6 +302,8 @@ async function fitTextToPage(id: string) {
   const clip = s.clips.find((c) => c.id === id);
   if (!clip || clip.kind !== "text" || typeof document === "undefined") return;
   if (Number.isFinite(clip.maxWidth) && clip.maxWidth! > 0) return;
+  const task = projectTask(s.holdEdits());
+  try {
   const family = clip.fontFamily.split(",")[0].replace(/['"]/g, "").trim();
   try {
     await Promise.race([
@@ -310,6 +313,7 @@ async function fitTextToPage(id: string) {
   } catch {
     /* measure with whatever is loaded */
   }
+  if (!task!.isCurrent() || useEditorStore.getState().clips.find(c => c.id === id) !== clip || useEditorStore.getState().settings !== s.settings) return;
   const ctx = document.createElement("canvas").getContext("2d");
   if (!ctx) return;
   const W = s.settings.width;
@@ -318,6 +322,7 @@ async function fitTextToPage(id: string) {
   if (box && box.w > max) {
     useEditorStore.getState().patchClip(id, { fontSize: Math.max(12, Math.floor(clip.fontSize * (max / box.w))) });
   }
+  } finally { task!.release(); }
 }
 
 const NOT_A_PHOTO = /illustrat|clip ?art|vector|drawing|cartoon|icon|logo|diagram|sketch|svg/i;
@@ -352,7 +357,11 @@ export interface ApplyReport {
 export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<ApplyReport> {
   const report: ApplyReport = { applied: 0, failed: 0, missingStock: [] };
   const created: string[] = [];
-  const store = () => useEditorStore.getState();
+  const task = projectTask(useEditorStore.getState().holdEdits());
+  const store = () => {
+    if (!task!.isCurrent()) throw new Error("project changed during processing");
+    return useEditorStore.getState();
+  };
   const resolve = (id: unknown): string | undefined => {
     if (typeof id !== "string") return undefined;
     const m = /^new:(\d+)$/.exec(id);
@@ -382,11 +391,14 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
     if (Object.keys(out).length) store().patchClip(clip.id, out);
   };
 
+  try {
   await store().runAsOneStep(async () => {
     for (const op of ops) {
+      if (!task!.isCurrent()) return;
       const expanded = op.op === "batch" ? expandBatch(op) : [op];
       if (!expanded) { report.failed++; continue; }
       for (const edit of expanded) {
+        if (!task!.isCurrent()) return;
         try {
           const ok = await applyOne(edit);
           if (ok) { if (edit.op !== "generate") report.applied++; }
@@ -399,6 +411,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
     }
   });
   return report;
+  } finally { task!.release(); }
 
   async function applyOne(op: AgentOp): Promise<boolean> {
     const s = store();

@@ -1,3 +1,4 @@
+import { projectTask } from "./projectTask";
 /**
  * Remove an image layer's background on the user's device.
  *
@@ -101,13 +102,15 @@ export async function removeLayerBackground(
   const media = s.media.find((m) => m.id === clip.mediaId);
   if (!media) return false;
 
+  const task = projectTask(s.holdEdits());
+  try {
   const projectId = s.projectId;
   if (clip.kind === "video") {
     videoMattePlan(clip, media.width ?? 1, media.height ?? 1, media.duration ?? clip.sourceDuration ?? 0, s.settings.fps);
     const stored: string[] = []; let disposed = false, committed = false;
     const current = () => {
       const now = useEditorStore.getState(), target = now.clips.find(c => c.id === clip.id);
-      return !disposed && !opts.signal?.aborted && now.projectId === projectId && target?.kind === "video" && !target.locked && target.mediaId === clip.mediaId && target.trimIn === clip.trimIn && target.duration === clip.duration && (target.speed ?? 1) === (clip.speed ?? 1);
+      return task!.isCurrent() && !disposed && !opts.signal?.aborted && now.projectId === projectId && target?.kind === "video" && !target.locked && target.mediaId === clip.mediaId && target.trimIn === clip.trimIn && target.duration === clip.duration && (target.speed ?? 1) === (clip.speed ?? 1);
     };
     const discard = async (id: string) => { useEditorStore.getState().removeMedia(id); await deleteMedia(id); };
     try {
@@ -125,11 +128,15 @@ export async function removeLayerBackground(
     } finally { disposed = true; if (!committed) await Promise.all(stored.map(discard)); }
   }
   const source = await (await fetch(media.url)).blob();
+  if (!task!.isCurrent()) return false;
   const png = await cutOutImage(source, opts.onProgress);
+  const imageCurrent = () => task!.isCurrent() && !opts.signal?.aborted && useEditorStore.getState().clips.find(c => c.id === clipId) === clip;
+  if (!imageCurrent()) return false;
   const base = media.name.replace(/\.[a-z0-9]+$/i, "");
   const file = new File([png], `${base}-cutout.png`, { type: "image/png" });
   const newId = await importOneFile(file, { wallet: opts.wallet });
-  if (!newId) return false;
+  if (!newId || !imageCurrent()) return false;
   useEditorStore.getState().patchClip(clipId, { mediaId: newId });
   return true;
+  } finally { task!.release(); }
 }
