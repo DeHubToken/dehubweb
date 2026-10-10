@@ -1,3 +1,4 @@
+import { stepTimelineFrame } from "@/lib/editor/frameStep";
 import { createVideoMattePageCache, videoMatteFramesForOps } from "@/lib/editor/videoMattePageCache";
 import { loadVideoMatteImage } from "@/lib/editor/videoMatteImages";
 import { videoMatteMediaIds } from "@/lib/editor/videoMatte";
@@ -15,7 +16,7 @@ import { videoMatteMediaIds } from "@/lib/editor/videoMatte";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Play, Pause, Repeat, Type, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown,
+  Play, Pause, Repeat, Type, ChevronLeft, ChevronRight, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown,
   Copy, Trash2, Pencil, Scissors, FlipHorizontal2, FlipVertical2, Maximize, Minimize, Crosshair, PanelBottomClose, PanelBottomOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -66,7 +67,7 @@ function fmtTime(t: number, fps: number) {
   const total = Math.floor(t);
   const m = Math.floor(total / 60);
   const s = total % 60;
-  const f = Math.floor((t - total) * fps);
+  const f = Math.min(Math.ceil(fps) - 1, Math.floor((t - total) * fps + 1e-7));
   return `${m}:${s.toString().padStart(2, "0")}.${f.toString().padStart(2, "0")}`;
 }
 
@@ -1077,7 +1078,7 @@ export function Compositor() {
 
       <PagesStrip sources={sources} />
 
-      <div className="flex min-w-0 items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
+      <div className="flex min-w-0 items-center gap-1 border-t border-white/10 bg-black/60 px-2 py-2.5 backdrop-blur-[24px] sm:gap-3 sm:px-4">
         <Button
           size="icon"
           variant="ghost"
@@ -1092,6 +1093,16 @@ export function Compositor() {
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </Button>
+        {([-1, 1] as const).map(direction => (
+          <Button key={direction} size="icon" variant="ghost"
+            onClick={() => { const state = useEditorStore.getState(); setIsPlaying(false); setCurrentTime(stepTimelineFrame(state.currentTime, direction, state.settings.fps, selectTimelineDuration(state))); }}
+            className="h-8 w-8 shrink-0 rounded-md text-white/80 hover:bg-white/10"
+            aria-label={direction === -1 ? t("editor.canvas.previousFrame") : t("editor.canvas.nextFrame")}
+            title={direction === -1 ? t("editor.canvas.previousFrame") : t("editor.canvas.nextFrame")}
+            disabled={duration <= 0 || (direction === -1 ? currentTime <= 0 : currentTime >= duration)}>
+            {direction === -1 ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+        ))}
         <Button
           size="icon"
           variant="ghost"
@@ -1118,6 +1129,7 @@ export function Compositor() {
           {fmtTime(currentTime, settings.fps)} / {fmtTime(duration, settings.fps)}
         </span>
         <Slider
+          aria-label={t("editor.canvas.playhead")}
           value={[Math.min(currentTime, duration || 0)]}
           min={0}
           max={Math.max(duration, 0.01)}

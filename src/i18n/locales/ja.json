@@ -6482,7 +6482,10 @@
       "resetToStart": "最初に戻す",
       "resize": "サイズ変更",
       "rotate": "回転",
-      "toggleLoop": "ループ切り替え"
+      "toggleLoop": "ループ切り替え",
+      "previousFrame": "前のフレーム",
+      "nextFrame": "次のフレーム",
+      "playhead": "再生位置"
     },
     "export": {
       "scope": "ダウンロード範囲",

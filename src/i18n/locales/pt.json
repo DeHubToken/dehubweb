@@ -6497,7 +6497,10 @@
       "resetToStart": "Voltar ao início",
       "resize": "Redimensionar",
       "rotate": "Girar",
-      "toggleLoop": "Alternar loop"
+      "toggleLoop": "Alternar loop",
+      "previousFrame": "Quadro anterior",
+      "nextFrame": "Próximo quadro",
+      "playhead": "Posição de reprodução"
     },
     "export": {
       "scope": "Intervalo de transferências",
