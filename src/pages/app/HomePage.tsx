@@ -998,6 +998,7 @@ export default function HomePage() {
                   a back button so the top nav bar feels seamless: the user never
                   "leaves" the feed. */}
               <button
+                data-post-nav-back={isPostOverlayActive || undefined}
                 onClick={showNavBack
                   ? handleNavBack
                   : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
