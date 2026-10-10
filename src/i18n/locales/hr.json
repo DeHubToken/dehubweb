@@ -90,6 +90,7 @@
     "heading": "DeHub kratki videozapisi"
   },
   "settings": {
+    "postingChain": "Blockchain za objave",
     "showOnline": "Prikaži kad sam na mreži",
     "showOnlineDesc": "Osobe kojima pošaljete poruku vide zelenu točku pored vašeg imena dok koristite DeHub",
     "smartReplies": "Predloženi odgovori",
@@ -259,6 +260,7 @@
     "light": "Svijetlo",
     "dark": "Tamno",
     "system": "Sustav",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Maglovite noći",
     "swarms": "Rojevi",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay šalje vaše tokene…",
     "payViaDpay": "Plaćeno DeHub Payu, tokeni stižu za oko 30s",
     "payViaBridgeDpay": "Premješteno na Base i plaćeno DeHub Payu, tokeni stižu za otprilike minutu",
-    "dmSent": "Poslano {{amount}} DHB korisniku {{name}}!"
+    "dmSent": "Poslano {{amount}} tokena korisniku {{name}}!"
   },
   "postOptions": {
     "options": "Mogućnosti",
@@ -1199,10 +1201,10 @@
   },
   "dhbListing": {
     "title": "Uvrštavanje tokena uskoro!",
-    "body": "$DHB se još ne trguje. Primite e-poruku čim bude uvršten.",
+    "body": "tokena se još ne trguje. Primite e-poruku čim bude uvršten.",
     "notifyMe": "Obavijesti me",
-    "privacy": "Koristit ćemo ovo samo da vas obavijestimo kada $DHB bude uvršten.",
-    "joined": "Na popisu ste. Poslat ćemo e-poruku na {{email}} čim $DHB bude uvršten."
+    "privacy": "Koristit ćemo ovo samo da vas obavijestimo kada tokena bude uvršten.",
+    "joined": "Na popisu ste. Poslat ćemo e-poruku na {{email}} čim tokena bude uvršten."
   },
   "explorePage": {
     "searchPlaceholder": "Pretraži ljude, objave ili sadržaj...",
@@ -1462,7 +1464,7 @@
     "otherTokens": "Ostali tokeni",
     "otherTokensDesc": "Kupite ETH ili USDC na Baseu svojom karticom",
     "shareToFeed": "Podijeli na moj feed",
-    "sharePostTemplate": "Upravo sam dodao {{amount}} $DHB na svoj stog na DeHubu. Gradimo zajedno sa zajednicom. #DeHub #DHB",
+    "sharePostTemplate": "Upravo sam dodao {{amount}} tokena na svoj stog na DeHubu. Gradimo zajedno sa zajednicom. #DeHub",
     "success": {
       "title": "Kupnja je dovršena!",
       "subtitle": "Tokeni su dostavljeni u tvoj novčanik.",
@@ -3445,7 +3447,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Faza 1 · Privatni pregled",
     "heroTitle": "TOKENIZIRA POSLOVANJE",
-    "heroSubtitle": "DHB-uparena krivulja vezanja. Diplomira na Uniswap pri tržišnoj kapitalizaciji od $42K.",
+    "heroSubtitle": "tokena-uparena krivulja vezanja. Diplomira na Uniswap pri tržišnoj kapitalizaciji od $42K.",
     "createCoin": "Kreiraj kovanicu",
     "filterNew": "Novo",
     "filterGraduating": "Uskoro će diplomirati",
@@ -3546,7 +3548,7 @@
   },
   "fractions": {
     "seoTitle": "Frakcije | DeHub",
-    "seoDescription": "Kupuj i prodavaj frakcije DeHub objava. Iskovana objava je 1000 frakcija na blockchainu — posjeduj dio videa, pjesme ili slike i trguj njime u DHB-u.",
+    "seoDescription": "Kupuj i prodavaj frakcije DeHub objava. Iskovana objava je 1000 frakcija na blockchainu — posjeduj dio videa, pjesme ili slike i trguj njime u tokena-u.",
     "title": "Frakcije",
     "perUpload": "1000 po uploadu",
     "tabBrowse": "Pregledaj",
@@ -4397,7 +4399,7 @@
   },
   "usernames": {
     "seoTitle": "Tržište korisničkih imena | DeHub",
-    "seoDescription": "Kupujte i prodavajte DeHub korisnička imena s DHB-om. Pretražite kratke, numeričke i originalne ručke za prodaju ili navedite svoje — prijenos se odvija na lancu u trenutku kada se plaćanje izbriše.",
+    "seoDescription": "Kupujte i prodavajte DeHub korisnička imena s tokena-om. Pretražite kratke, numeričke i originalne ručke za prodaju ili navedite svoje — prijenos se odvija na lancu u trenutku kada se plaćanje izbriše.",
     "title": "Korisnička imena",
     "subtitle": "Ručice za prodaju, cijenjene u USD",
     "tabBrowse": "Pregledaj",
@@ -4516,7 +4518,7 @@
   },
   "accounts": {
     "seoTitle": "Tržište računa — DeHub",
-    "seoDescription": "Kupujte i prodavajte uspostavljene DeHub račune za DHB. Pregledavajte račune prema pratiteljima, učitavanjima i dobi — ručica, objave, pratitelji i znakovi ovlaštenja se svi prenose, a plaćanje ide izravno prodavatelju.",
+    "seoDescription": "Kupujte i prodavajte uspostavljene DeHub račune za tokena. Pregledavajte račune prema pratiteljima, učitavanjima i dobi — ručica, objave, pratitelji i znakovi ovlaštenja se svi prenose, a plaćanje ide izravno prodavatelju.",
     "title": "Računi",
     "subtitle": "Cijeli računi na prodaju, cijene u DeHub tokenima",
     "tabBrowse": "Pregledaj",
@@ -6125,17 +6127,17 @@
   },
   "docs": {
     "seoTitle": "DeHub dokumentacija — Vodiči, token, dApps i FAQ",
-    "seoDescription": "Službena DeHub dokumentacija: pregled platforme, dApps, ekonomija DHB tokena, staking, igre, plan razvoja, česta pitanja i više."
+    "seoDescription": "Službena DeHub dokumentacija: pregled platforme, dApps, ekonomija tokena tokena, staking, igre, plan razvoja, česta pitanja i više."
   },
   "dex": {
-    "seoTitle": "DEX — Trgujte DHB po svojoj cijeni",
-    "seoDescription": "Postavite svoju DHB cijenu za kupnju ili prodaju s Uniswap v4 limit narudžbom na Base ili BNB Chainu. Knjiga narudžbi uživo, dubina tržišta i jedna zajednička USD cijena.",
+    "seoTitle": "DEX — Trgujte tokena po svojoj cijeni",
+    "seoDescription": "Postavite svoju tokena cijenu za kupnju ili prodaju s Uniswap v4 limit narudžbom na Base ili BNB Chainu. Knjiga narudžbi uživo, dubina tržišta i jedna zajednička USD cijena.",
     "venue": "Mreža",
     "marketPrice": "Tržišna cijena · USD",
     "bookPrice": "{{chain}} cijena rezervacije · USD",
     "change24": "Promjena u 24h",
     "totalLiquidity": "Ukupna likvidnost · USD",
-    "listedDhb": "Navedeni DHB · {{chain}}",
+    "listedDhb": "Navedeni tokena · {{chain}}",
     "listedUsd": "Navedeni USD · {{chain}}",
     "refreshMarket": "Osvježi tržište",
     "refresh": "Osvježi",
@@ -6160,21 +6162,21 @@
     "orderBook": "Knjiga narudžbi",
     "priceGrouping": "Grupisanje cijena",
     "priceUsd": "Cijena (USD)",
-    "sizeDhb": "Veličina (DHB)",
-    "totalDhb": "Ukupno (DHB)",
+    "sizeDhb": "Veličina (tokena)",
+    "totalDhb": "Ukupno (tokena)",
     "noBids": "Još nema ponuda",
     "noAsks": "Još nema likvidnosti za prodaju",
     "useBuyPrice": "Koristite {{price}} kao cijenu kupnje",
     "useSellPrice": "Koristite {{price}} kao cijenu prodaje",
     "spread": "Raspon · USD",
-    "buyTotal": "Kupi {{amount}} DHB",
-    "sellTotal": "Prodaj {{amount}} DHB",
+    "buyTotal": "Kupi {{amount}} tokena",
+    "sellTotal": "Prodaj {{amount}} tokena",
     "placeOrder": "Postavite narudžbu",
     "lpFee": "0% naknada za LP",
     "lpFeeLabel": "Naknada za LP",
     "lpFeeValue": "{{fee}}% naknada za LP",
-    "buy": "Kupi DHB",
-    "sell": "Prodaj DHB",
+    "buy": "Kupi tokena",
+    "sell": "Prodaj tokena",
     "maxBuy": "Maksimalna cijena kupnje",
     "minSell": "Minimalna cijena prodaje",
     "spend": "Potrošiti",
@@ -6190,7 +6192,7 @@
     "estimated": "Procijenjena puna konverzija",
     "network": "Mreža za financiranje",
     "sellBelowMarket": "Ova prodaja je {{percent}}% ispod tržišne cijene od ${{price}}. Netko je može odmah kupiti i preprodati drugdje.",
-    "buyAboveMarket": "Ova kupnja je {{percent}}% iznad tržišne cijene od ${{price}}. Drugdje biste platili više nego što DHB trguje.",
+    "buyAboveMarket": "Ova kupnja je {{percent}}% iznad tržišne cijene od ${{price}}. Drugdje biste platili više nego što tokena trguje.",
     "useMarket": "Koristite tržišnu cijenu",
     "balanceError": "Provjera stanja nije uspjela. Pokušajte ponovno prije postavljanja narudžbe.",
     "noFunding": "Nema {{token}} dostupno na {{chain}}.",
@@ -6199,7 +6201,7 @@
     "reviewYourBuy": "Pregledajte svoju kupnju",
     "reviewYourSell": "Pregledajte svoju prodaju",
     "reviewDeposit": "Polog {{amount}} {{token}} na {{chain}}.",
-    "reviewRange": "Raspon: {{min}} – {{max}} USD po DHB-u.",
+    "reviewRange": "Raspon: {{min}} – {{max}} USD po tokena-u.",
     "initializes": "Ovo stvara i inicijalizira pool od 0%.",
     "pendingNote": "Vaša transakcija je poslana. Nastavite s potvrdom ili registracijom liste bez dodatnog pologa.",
     "viewTransaction": "Prikaži transakciju",
@@ -6216,7 +6218,7 @@
     "keepOpen": "Ovu stranicu držite otvorenom dok se vaša lista ne registrira. Pohrana preglednika nije dostupna.",
     "snapshotDelayed": "Podaci o zajedničkom tržištu kasne. Prikazuje se posljednji provjereni snimak.",
     "snapshotUnavailable": "Podaci o zajedničkom tržištu nisu dostupni. Pokušajte ponovno učitati pozicije.",
-    "withdrawReview": "Povucite {{dhb}} DHB i {{usdc}} USDC na {{chain}}? Iznosi se osvježavaju prije potpisivanja; tolerancija cijene je 0,5%.",
+    "withdrawReview": "Povucite {{dhb}} tokena i {{usdc}} USDC na {{chain}}? Iznosi se osvježavaju prije potpisivanja; tolerancija cijene je 0,5%.",
     "withdrawn": "Pozicija povučena",
     "withdrawFailed": "Povlačenje nije uspjelo",
     "withdrawing": "Povlačenje…",
@@ -6350,6 +6352,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizualni vrhunci",
+      "visualPrivacy": "Pošaljite odabrane kadrove za vizualnu analizu."
+    },
+    "review": {
+      "title": "Pregled projekta",
+      "shared": "Podijeljeno s vama",
+      "time": "Vrijeme (s)",
+      "assign": "Dodijeli novčanik"
+    },
+    "textFit": {
+      "wrap": "Prelamanje redaka",
+      "width": "Širina teksta",
+      "shrink": "Smanji tekst da stane",
+      "height": "Visina teksta",
+      "captions": "Prilagodi zapis titlova"
+    },
     "canvas": {
       "dropMedia": "Spusti za dodavanje u svoj dizajn",
       "dropText": "Spusti za dodavanje teksta",
@@ -7699,7 +7718,7 @@
     "topUpTitle": "Nadopuni i uštedi",
     "discount": "{{percent}}% popusta",
     "noDiscount": "Puna cijena",
-    "total": "Ukupno ${{usd}}, plaćeno u DHB-u",
+    "total": "Ukupno ${{usd}}, plaćeno u tokena-u",
     "buy": "Kupi kredite",
     "buying": "Čeka se plaćanje…",
     "bought": "Dodano {{count}} kredita za objave",
@@ -7729,7 +7748,7 @@
     "skippedToast": "Preskočeno {{platforms}}: ova objava nema potrebnu fotografiju ili videozapis.",
     "uploadFailed": "Nismo mogli prenijeti vaš medij za unakrsno objavljivanje.",
     "creditRules": "Svaka objava košta kredite po platformi: {{x}} za X, {{farcaster}} za Farcaster i {{other}} za svaku drugu platformu. Zakazane objave koriste kredite kada ih zakažete.",
-    "payAsYouGoCredits": "Ponestalo? Krediti koji nedostaju kupuju se u DHB-u po cijeni od ${{price}} svaki put kad objavite oglas.",
+    "payAsYouGoCredits": "Ponestalo? Krediti koji nedostaju kupuju se u tokena-u po cijeni od ${{price}} svaki put kad objavite oglas.",
     "topUpCredits": "Krediti: {{count}}",
     "perCredit": "${{price}} po kreditu",
     "pendingApproval": "Čeka se da odobriš dehub u aplikaciji Farcaster",
@@ -7741,7 +7760,7 @@
   "dm": {
     "planRestricted": "Ovaj korisnik zahtijeva pretplatu za primanje poruka.",
     "planTypeNotAllowed": "Plan ovog kreatora ne dopušta ovu vrstu poruke.",
-    "planMinTip": "Napojnica za ovog kreatora mora biti najmanje {{amount}} DHB."
+    "planMinTip": "Napojnica za ovog kreatora mora biti najmanje {{amount}} tokena."
   },
   "credits": {
     "earningsWorth": "Vrijedi {{amount}}",
@@ -7869,12 +7888,12 @@
       "notifyKey": "Ključ za obavijest",
       "notifyKeyOnce": "Novi ključ za obavijest za {{name}}. Kopirajte ga sada: prikazat će se samo jednom, a napraviti drugi zamjenjuje ga.",
       "payTitle": "Primite plaćanja",
-      "payBody": "`pay()` traži od korisnika da vam pošalje DHB, direktno u novčanik koji je potpisao vaš dehub.json. Provjerite potvrdu na vašem serveru prije nego što isporučite nešto.",
+      "payBody": "`pay()` traži od korisnika da vam pošalje tokena, direktno u novčanik koji je potpisao vaš dehub.json. Provjerite potvrdu na vašem serveru prije nego što isporučite nešto.",
       "notifyTitle": "Pošaljite obavijesti",
       "notifyBody": "Korisnici koji dodaju vašu aplikaciju mogu biti obaviješteni s vašeg servera pomoću vašeg ključa za obavijest. Nema potrebe za čuvanjem pojedinačnih ključeva po korisniku.",
       "rankTitle": "Kako trgovina rangira aplikacije",
       "rankBody": "Svake noći svaka navedena aplikacija dobiva ocjenu: 55% od korisnika koji se vraćaju (ljudi koji su je otvorili ovaj tjedan i tjedan prije), 35% od tjednih korisnika i povećanje od 10% u prvih 14 dana. Računaju se samo prijavljeni DeHub računi, tako da botovi i ponovna učitavanja stranice ne zarađuju ništa.",
-      "rewardsBody": "Svaki mjesec {{pool}} DHB dijeli se između aplikacija istim rezultatom, izračunatim tjedno. Da bi aplikacija ispunjavala uvjete, potreban joj je verificirani novčanik vlasnika i najmanje 3 korisnika koji se vraćaju. Nagrade DeHub isplaćuje vlasniku novčanika.",
+      "rewardsBody": "Svaki mjesec {{pool}} tokena dijeli se između aplikacija istim rezultatom, izračunatim tjedno. Da bi aplikacija ispunjavala uvjete, potreban joj je verificirani novčanik vlasnika i najmanje 3 korisnika koji se vraćaju. Nagrade DeHub isplaćuje vlasniku novčanika.",
       "rewardsWeek": "Tjedan {{date}}",
       "rewardPaid": "Plaćeno",
       "rewardPending": "Planirano",
@@ -7900,10 +7919,10 @@
     },
     "pay": {
       "title": "Plati {{name}}?",
-      "body": "DHB ide direktno u novčanik aplikacije, {{wallet}}. Plaćanja se ne mogu poništiti.",
-      "confirm": "Plati {{amount}} DHB",
+      "body": "tokena ide direktno u novčanik aplikacije, {{wallet}}. Plaćanja se ne mogu poništiti.",
+      "confirm": "Plati {{amount}} tokena",
       "sending": "Pošaljete plaćanje…",
-      "sent": "Uplaćeno {{amount}} DHB na {{name}}.",
+      "sent": "Uplaćeno {{amount}} tokena na {{name}}.",
       "noOwner": "Ova aplikacija još nema potvrđeni novčanik za plaćanja."
     },
     "add": {

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * General AI Chat Component
  * =========================
@@ -101,7 +102,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
   const isMobile = useIsMobile();
   const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useSurfaceDraft("components/app/chat/GeneralAIChat.tsx:input", '');
   const [isLoading, setIsLoading] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [postModalOpen, setPostModalOpen] = useState(false);
@@ -161,8 +162,6 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
     setMessages(prev => [...prev, userMessage]);
     const currentInput = input.trim();
     const currentAttachedImage = attachedImage;
-    setInput('');
-    setAttachedImage(null);
     setIsLoading(true);
 
     try {
@@ -180,6 +179,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
           imageUrl: dehubLogo
         };
         setMessages(prev => [...prev, assistantMessage]);
+        if (setInput.complete(input, '')) setAttachedImage(null);
         setIsLoading(false);
         return;
       }
@@ -240,6 +240,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         };
 
         setMessages(prev => [...prev, assistantMessage]);
+        if (setInput.complete(input, '')) setAttachedImage(null);
       } else {
         const { data, error } = await supabase.functions.invoke('general-ai-chat', {
           body: {
@@ -265,6 +266,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         };
 
         setMessages(prev => [...prev, assistantMessage]);
+        if (setInput.complete(input, '')) setAttachedImage(null);
       }
     } catch (error) {
       console.error('AI chat error:', error);
@@ -292,7 +294,6 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
 
   const handleClose = () => {
     setMessages([]);
-    setInput('');
     setAttachedImage(null);
     onClose();
   };

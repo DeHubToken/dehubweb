@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -64,7 +65,7 @@ export default function AffiliatePage() {
     return "1";
   });
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [landing, setLanding] = useState<AffiliateLandingCustomization>(DEFAULT_AFFILIATE_LANDING);
+  const [landing, setLanding] = useSurfaceDraft<AffiliateLandingCustomization>("src/pages/app/AffiliatePage.tsx:landing", DEFAULT_AFFILIATE_LANDING);
   const [savingLanding, setSavingLanding] = useState(false);
 
   // Bump this whenever the share-image renderer changes so all users pick up the new look.
@@ -108,7 +109,7 @@ export default function AffiliatePage() {
     } finally {
       setLoading(false);
     }
-  }, [displayName, t, wallet]);
+  }, [displayName, t, wallet, setLanding]);
 
   useEffect(() => { void load(); }, [load]);
 
@@ -458,7 +459,7 @@ function LabeledField({ label, count, children }: { label: string; count?: strin
  * people on the generic invite splash.
  */
 function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string, label?: string) => void }) {
-  const [target, setTarget] = useState("");
+  const [target, setTarget] = useSurfaceDraft("pages/app/AffiliatePage.tsx:target", "");
   const trimmed = target.trim();
   const path = sanitizeDeepLinkPath(trimmed);
   const invalid = trimmed.length > 0 && !path;

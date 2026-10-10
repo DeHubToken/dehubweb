@@ -6,10 +6,11 @@
 
 import { Interface, formatUnits } from 'ethers';
 import { readContract } from '@/lib/contracts/aa-utils';
-import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, initChainRpcUrls } from '@/lib/contracts/dhb-token';
+import { BASE_CHAIN_ID, BNB_CHAIN_ID, ETH_CHAIN_ID, initChainRpcUrls } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { SOLANA_MAINNET_CHAIN_ID } from '@/lib/chains/solana';
 import { ARC_CHAIN_ID } from '@/lib/chains/arc';
+import { walletRpc } from './rpc';
 
 /**
  * A chain a balance can be held on. Wider than `ChainId` because Solana is
@@ -32,6 +33,8 @@ export interface WalletToken {
   logo?: string;
   isNative?: boolean;
   isCustom?: boolean;
+  /** A failed read is unknown, even when the numeric placeholder is zero. */
+  balanceUnavailable?: boolean;
   chainId: WalletChainId;
 }
 
@@ -46,10 +49,12 @@ export const DEFAULT_TOKENS: Record<number, { address: string; symbol: string; n
   [BNB_CHAIN_ID]: [
     { address: '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D', symbol: 'DHB', name: 'DeHub', decimals: 18 },
     { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT', name: 'Tether', decimals: 18 },
+    { address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', symbol: 'USDC', name: 'USD Coin', decimals: 18 },
     { address: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', symbol: 'BTC', name: 'Bitcoin', decimals: 18, displaySymbol: 'BTC' },
   ],
   [ETH_CHAIN_ID]: [
     { address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', symbol: 'USDT', name: 'Tether', decimals: 6 },
+    { address: '0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', symbol: 'USDC', name: 'USD Coin', decimals: 6 },
     { address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', symbol: 'BTC', name: 'Bitcoin', decimals: 8, displaySymbol: 'BTC' },
   ],
 };
@@ -76,32 +81,17 @@ const erc20MetadataInterface = new Interface([
  * Get native token balance via public RPC
  */
 export async function getNativeBalance(address: string, chainId: ChainId = BASE_CHAIN_ID): Promise<bigint> {
-  await initChainRpcUrls();
-  const config = CHAIN_CONFIGS[chainId];
-  if (!config) return BigInt(0);
-
-  const res = await fetch(config.rpcUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      jsonrpc: '2.0', id: 1,
-      method: 'eth_getBalance',
-      params: [address, 'latest'],
-    }),
-  });
-  const json = await res.json();
-  return json.result ? BigInt(json.result) : BigInt(0);
+  return BigInt(await walletRpc(chainId, 'eth_getBalance', [address, 'latest']));
 }
 
 /**
  * Fetch ERC20 balance
  */
 export async function getERC20TokenBalance(tokenAddress: string, ownerAddress: string, chainId?: ChainId): Promise<bigint> {
-  try {
-    return await readContract<bigint>(tokenAddress, erc20MetadataInterface, 'balanceOf', [ownerAddress], chainId);
-  } catch {
-    return BigInt(0);
-  }
+  const raw = await walletRpc(chainId ?? BASE_CHAIN_ID, 'eth_call', [{
+    to: tokenAddress, data: erc20MetadataInterface.encodeFunctionData('balanceOf', [ownerAddress]),
+  }, 'latest']);
+  return erc20MetadataInterface.decodeFunctionResult('balanceOf', raw)[0] as bigint;
 }
 
 /**
@@ -144,25 +134,33 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
   const customTokens = getCustomTokens(chainId);
   const allErc20 = [...defaultTokens, ...customTokens];
 
-  const [nativeBalance, ...erc20Balances] = await Promise.all([
+  const [nativeRead, ...erc20Reads] = await Promise.allSettled([
     getNativeBalance(walletAddress, chainId),
     ...allErc20.map(t => getERC20TokenBalance(t.address, walletAddress, chainId)),
   ]);
+  if ([nativeRead, ...erc20Reads].every(read => read.status === 'rejected')) {
+    throw new Error('Balance unavailable');
+  }
+  const nativeBalance = nativeRead.status === 'fulfilled' ? nativeRead.value : 0n;
 
   const tokens: WalletToken[] = [];
 
   // Build known ERC20 token list
-  const erc20Tokens: WalletToken[] = allErc20.map((token, i) => ({
-    address: token.address,
-    symbol: token.symbol,
-    name: token.name,
-    decimals: token.decimals,
-    balance: erc20Balances[i],
-    formattedBalance: formatBalance(erc20Balances[i], token.decimals),
-    logo: token.logo,
-    isCustom: !!(token as any).isCustom,
-    chainId,
-  }));
+  const erc20Tokens: WalletToken[] = allErc20.map((token, i) => {
+    const read = erc20Reads[i];
+    return {
+      address: token.address,
+      symbol: token.symbol,
+      name: token.name,
+      decimals: token.decimals,
+      balance: read.status === 'fulfilled' ? read.value : 0n,
+      formattedBalance: read.status === 'fulfilled' ? formatBalance(read.value, token.decimals) : '—',
+      balanceUnavailable: read.status === 'rejected',
+      logo: token.logo,
+      isCustom: !!(token as any).isCustom,
+      chainId,
+    };
+  });
 
   // On Base and BNB, put DHB first (above native token)
   const dhbToken = erc20Tokens.find(t => t.symbol === 'DHB');
@@ -179,7 +177,8 @@ export async function getAllTokenBalances(walletAddress: string, chainId: ChainI
     name: nativeInfo.name,
     decimals: nativeInfo.decimals,
     balance: nativeBalance,
-    formattedBalance: formatBalance(nativeBalance, nativeInfo.decimals),
+    formattedBalance: nativeRead.status === 'fulfilled' ? formatBalance(nativeBalance, nativeInfo.decimals) : '—',
+    balanceUnavailable: nativeRead.status === 'rejected',
     isNative: true,
     chainId,
   });

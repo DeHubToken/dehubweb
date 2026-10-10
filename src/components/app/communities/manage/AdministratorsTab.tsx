@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Administrators Tab
  * ==================
@@ -186,7 +187,7 @@ export function AdministratorsTab({ community, membership }: AdministratorsTabPr
   const abilities = useCommunityAbilities(community, membership);
   const { data: members = [], isLoading } = useCommunityMembers(community.id);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/communities/manage/AdministratorsTab.tsx:search", '', draftIdentity(community));
   const debouncedSearch = useDebouncedValue(search, 300);
   const [target, setTarget] = useState<CommunityMember | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);

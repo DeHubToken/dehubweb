@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
 import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
@@ -28,6 +29,8 @@ import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { useFeedIslandPortal } from '@/lib/feed-island-portal';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from '@/components/app/navigation/feed-drawer-motion';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -224,7 +227,7 @@ function SortFilterSection({
   onReset,
 }: FilterSectionProps) {
   const { t } = useI18n();
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/feeds/HomeFeed.tsx:categorySearch", '');
 
   const filteredCategories = useMemo(() => {
     let filtered = categories;
@@ -256,6 +259,7 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
         <input
           type="text"
+          data-home-category-search
           value={categorySearch}
           onChange={e => setCategorySearch(e.target.value)}
           placeholder={t('filters.searchCategories')}
@@ -274,7 +278,7 @@ function SortFilterSection({
               } else {
                 onCategoryToggle(key);
               }
-              setCategorySearch('');
+              setCategorySearch.complete(categorySearch, '');
             }}
             borderRadius="0.75rem"
             buttonClassName="px-3 py-2 rounded-xl text-sm"
@@ -330,7 +334,7 @@ function SortFilterSection({
       {/* Reset filters - bottom right. z-50 keeps it above the scroll rows
           (z-40), which overlap it and otherwise swallow the tap. */}
       <button
-        onClick={() => { setCategorySearch(''); onReset(); }}
+        onClick={() => { setCategorySearch.complete(categorySearch, ''); onReset(); }}
         className="absolute z-50 bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
         aria-label={t('filters.resetFilters')}
       >
@@ -519,6 +523,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const portalTarget = resolvePortalTarget(filtersPortalRef);
+  const { theme } = useAppTheme();
+  const behindNav = theme === 'system' && !!portalTarget;
   const islandPortal = useFeedIslandPortal();
   const isIslandViewport = useMediaQuery('(max-width: 1023px)');
   const newPostsTarget = isIslandViewport ? islandPortal : null;
@@ -1930,19 +1936,23 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       {(() => {
         const filterPanel = (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className={cn("overflow-y-clip overflow-x-visible", portalTarget && "order-1 mt-2")}
+            initial={behindNav ? feedDrawerClosed : { opacity: 0, height: 0 }}
+            animate={behindNav ? feedDrawerOpen : { opacity: 1, height: 'auto' }}
+            exit={behindNav ? feedDrawerExit : { opacity: 0, height: 0 }}
+            transition={behindNav ? feedDrawerTransition(reduceMotion) : { duration: 0.25, ease: 'easeOut' }}
+            data-home-filter-drawer={behindNav ? '' : undefined}
+            data-feed-island-surface={behindNav ? '' : undefined}
+            className={cn(behindNav ? "w-full overflow-hidden rounded-xl pt-9 pointer-events-auto" : "overflow-y-clip overflow-x-visible", !behindNav && portalTarget && "order-1 mt-2")}
           >
             <div
               ref={bentoRef}
               data-no-swipe
               data-feed-filter-panel
+              data-home-filter-panel
               className={cn(
                 "rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4",
-                portalTarget && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"
+                portalTarget && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide",
+                behindNav && "border-0 bg-transparent backdrop-blur-none"
               )}
             >
               <SortFilterSection
@@ -1983,8 +1993,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         );
 
         if (portalTarget) {
-          return showFilters ? createPortal(
-            <AnimatePresence mode="wait">{filterPanel}</AnimatePresence>,
+          return behindNav || showFilters ? createPortal(
+            <AnimatePresence mode="wait">{showFilters && filterPanel}</AnimatePresence>,
             portalTarget
           ) : null;
         }

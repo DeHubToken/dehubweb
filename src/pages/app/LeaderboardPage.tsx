@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Leaderboard Page
  * ================
@@ -117,7 +118,7 @@ export default function LeaderboardPage() {
 
     return () => clearTimeout(t);
   }, []);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/LeaderboardPage.tsx:searchQuery", '');
   const [category, setCategory] = useState<CategoryType>('holdings');
   const [timePeriod, setTimePeriod] = useState<LeaderboardPeriod>('all');
   const [shimmerKey, setShimmerKey] = useState(0);
@@ -362,7 +363,7 @@ export default function LeaderboardPage() {
         description="See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods."
         url="https://dehub.io/app/leaderboard"
         image="https://dehub.io/og/leaderboard.jpg"
-        jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://dehub.io/app/leaderboard', description: 'Track top DHB holders, tippers and creators on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }}
+        jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://dehub.io/app/leaderboard', description: 'Track top token holders, tippers and creators on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }}
       />
       <h1 className="sr-only">DeHub Leaderboard — Decentralised Social Media, Censorship Resistant &amp; Freedom of Speech</h1>
       <PageIsland

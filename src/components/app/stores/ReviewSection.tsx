@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * ReviewSection — Full review system for store listings
  * Shows average rating, review list, and write-review form for buyers.
@@ -28,7 +29,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
 
   const [showForm, setShowForm] = useState(false);
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useSurfaceDraft("components/app/stores/ReviewSection.tsx:comment", '', listingId);
   const [expanded, setExpanded] = useState(true);
 
   const isSeller = walletAddress?.toLowerCase() === sellerAddress?.toLowerCase();
@@ -52,7 +53,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
     await createReview.mutateAsync({ listing_id: listingId, rating, comment: comment.trim() });
     setShowForm(false);
     setRating(0);
-    setComment('');
+    setComment.complete(comment, '');
   };
 
   return (
@@ -135,7 +136,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                   <div className="flex gap-2">
                     <LiquidGlassBubble2
                       label={t('stores.cancel')}
-                      onClick={() => { setShowForm(false); setRating(0); setComment(''); }}
+                      onClick={() => { setShowForm(false); setRating(0); setComment.complete(comment, ''); }}
                       width="80px"
                       height="36px"
                     />

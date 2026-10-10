@@ -90,6 +90,7 @@
     "heading": "DeHub Īsvideo"
   },
   "settings": {
+    "postingChain": "Ierakstu blokķēde",
     "showOnline": "Rādīt, kad esmu tiešsaistē",
     "showOnlineDesc": "Kamēr izmantojat DeHub, personas, kurām sūtāt ziņojumus, blakus jūsu vārdam redz zaļu punktu",
     "smartReplies": "Ieteiktās atbildes",
@@ -259,6 +260,7 @@
     "light": "Gaišs",
     "dark": "Tumšs",
     "system": "Sistēma",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Miglainās naktis",
     "swarms": "Spieti",
@@ -582,7 +584,7 @@
     "stageDelivering": "DeHub Pay nosūta jūsu žetonus…",
     "payViaDpay": "Samaksāts DeHub Pay, žetoni ieradīsies apmēram 30s",
     "payViaBridgeDpay": "Pārvietots uz Base un samaksāts DeHub Pay, žetoni ieradīsies apmēram minūtes laikā",
-    "dmSent": "{{name}} nosūtīti {{amount}} DHB!"
+    "dmSent": "{{name}} nosūtīti {{amount}} žetoni!"
   },
   "postOptions": {
     "options": "Opcijas",
@@ -1187,10 +1189,10 @@
   },
   "dhbListing": {
     "title": "Tokena listings drīzumā!",
-    "body": "$DHB vēl netiek tirgots. Saņem e-pastu, tiklīdz tas tiks iekļauts biržā.",
+    "body": "žetoni vēl netiek tirgots. Saņem e-pastu, tiklīdz tas tiks iekļauts biržā.",
     "notifyMe": "Paziņot man",
-    "privacy": "Mēs to izmantosim tikai, lai paziņotu, kad $DHB tiks iekļauts biržā.",
-    "joined": "Tu esi sarakstā. Tiklīdz $DHB tiks iekļauts biržā, mēs rakstīsim uz {{email}}."
+    "privacy": "Mēs to izmantosim tikai, lai paziņotu, kad žetoni tiks iekļauts biržā.",
+    "joined": "Tu esi sarakstā. Tiklīdz žetoni tiks iekļauts biržā, mēs rakstīsim uz {{email}}."
   },
   "explorePage": {
     "searchPlaceholder": "Meklēt cilvēkus, ierakstus vai saturu...",
@@ -1450,7 +1452,7 @@
     "otherTokens": "Citi tokeni",
     "otherTokensDesc": "Pērciet ETH vai USDC tīklā Base ar savu karti",
     "shareToFeed": "Kopīgot manā plūsmā",
-    "sharePostTemplate": "Tikko pievienoju {{amount}} $DHB savam DeHub salikumam. Veidošana kopā ar kopienu. #DeHub #DHB",
+    "sharePostTemplate": "Tikko pievienoju {{amount}} žetoni savam DeHub salikumam. Veidošana kopā ar kopienu. #DeHub",
     "success": {
       "title": "Pirkums pabeigts!",
       "subtitle": "Žetoni ir piegādāti uz jūsu maku.",
@@ -3481,7 +3483,7 @@
     "srHeading": "DeHub palaišanas platforma",
     "phaseBadge": "1. fāze · Privāts priekšskatījums",
     "heroTitle": "TOKENIZĒT UZŅĒMUMU",
-    "heroSubtitle": "DHB savienotā saistību līkne. Pāriet uz Uniswap ar 42 000 USD tirgus kapitalizāciju.",
+    "heroSubtitle": "žetoni savienotā saistību līkne. Pāriet uz Uniswap ar 42 000 USD tirgus kapitalizāciju.",
     "createCoin": "Izveidot monētu",
     "filterNew": "Jauns",
     "filterGraduating": "Gatavojas pāriet",
@@ -3582,7 +3584,7 @@
   },
   "fractions": {
     "seoTitle": "Frakcijas | DeHub",
-    "seoDescription": "Pērciet un pārdodiet DeHub ierakstu daļas. Izkalts ieraksts ir 1000 ķēdes daļu — iegūstiet īpašumā daļu no video, dziesmas vai attēla un tirgojiet to par DHB.",
+    "seoDescription": "Pērciet un pārdodiet DeHub ierakstu daļas. Izkalts ieraksts ir 1000 ķēdes daļu — iegūstiet īpašumā daļu no video, dziesmas vai attēla un tirgojiet to par žetoni.",
     "title": "Frakcijas",
     "perUpload": "1000 par augšupielādi",
     "tabBrowse": "Pārlūkot",
@@ -4434,9 +4436,9 @@
   },
   "usernames": {
     "seoTitle": "Lietotājvārda tirgotava | DeHub",
-    "seoDescription": "Pērciet un pārdodiet DeHub lietotājvārdus ar DHB. Pārdošanā meklējiet īsus, skaitliskus un oriģinālus rokturus vai norādiet savu â ÂĀ pārskaitījums notiek ķēdē brīdī, kad maksājums tiek dzēsts.",
+    "seoDescription": "Pērciet un pārdodiet DeHub lietotājvārdus ar žetoni. Pārdošanā meklējiet īsus, skaitliskus un oriģinālus rokturus vai norādiet savu â ÂĀ pārskaitījums notiek ķēdē brīdī, kad maksājums tiek dzēsts.",
     "title": "Lietotājvārdi",
-    "subtitle": "Rokturi pārdošanai, cena norādīta DHB",
+    "subtitle": "Rokturi pārdošanai, cena norādīta žetoni",
     "tabBrowse": "Pārlūkot",
     "tabSell": "Pārdot",
     "searchPlaceholder": "Meklēt rokturiÃ¢ÂĀ¦",
@@ -4553,7 +4555,7 @@
   },
   "accounts": {
     "seoTitle": "Konta tirgus – DeHub",
-    "seoDescription": "Pērc un pārdod esošos DeHub kontus par DHB. Pārlūko kontus pēc sekotājiem, augšupielādēm un vecuma – vārds, ieraksti, sekotāji un emblēmu tiesības tiek pārsūtītas, un maksājums nonāk tieši pie pārdevēja.",
+    "seoDescription": "Pērc un pārdod esošos DeHub kontus par žetoni. Pārlūko kontus pēc sekotājiem, augšupielādēm un vecuma – vārds, ieraksti, sekotāji un emblēmu tiesības tiek pārsūtītas, un maksājums nonāk tieši pie pārdevēja.",
     "title": "Konti",
     "subtitle": "Tiek pārdoti veseli konti, cenas norādītas DeHub žetonos",
     "tabBrowse": "Pārlūkot",
@@ -6213,17 +6215,17 @@
   },
   "docs": {
     "seoTitle": "DeHub dokumentācija — Ceļveži, tokens, dApps un BUJ",
-    "seoDescription": "Oficiālā DeHub dokumentācija: platformas pārskats, dApps, DHB tokena ekonomika, staking, spēles, ceļvedis, bieži uzdotie jautājumi un vairāk."
+    "seoDescription": "Oficiālā DeHub dokumentācija: platformas pārskats, dApps, žetoni tokena ekonomika, staking, spēles, ceļvedis, bieži uzdotie jautājumi un vairāk."
   },
   "dex": {
-    "seoTitle": "DEX — Tirdziniet DHB par savu cenu",
-    "seoDescription": "Nosakiet savu DHB pirkšanas vai pārdošanas cenu ar Uniswap v4 limituzdevumu uz Base vai BNB Chain. Tiešsaistes uzdevumu grāmata, tirgus dziļums un viena kopēja USD cena.",
+    "seoTitle": "DEX — Tirdziniet žetoni par savu cenu",
+    "seoDescription": "Nosakiet savu žetoni pirkšanas vai pārdošanas cenu ar Uniswap v4 limituzdevumu uz Base vai BNB Chain. Tiešsaistes uzdevumu grāmata, tirgus dziļums un viena kopēja USD cena.",
     "venue": "Tīkls",
     "marketPrice": "Tirgus cena · USD",
     "bookPrice": "{{chain}} grāmatas cena · USD",
     "change24": "24h izmaiņas",
     "totalLiquidity": "Kopējā likviditāte · USD",
-    "listedDhb": "Norādītais DHB · {{chain}}",
+    "listedDhb": "Norādītais žetoni · {{chain}}",
     "listedUsd": "Norādītais USD · {{chain}}",
     "refreshMarket": "Atsvaidzināt tirgu",
     "refresh": "Atsvaidzināt",
@@ -6248,21 +6250,21 @@
     "orderBook": "Uzdevumu grāmata",
     "priceGrouping": "Cenu grupēšana",
     "priceUsd": "Cena (USD)",
-    "sizeDhb": "Izmērs (DHB)",
-    "totalDhb": "Kopā (DHB)",
+    "sizeDhb": "Izmērs (žetoni)",
+    "totalDhb": "Kopā (žetoni)",
     "noBids": "Vēl nav piedāvājumu",
     "noAsks": "Vēl nav pieprasījuma likviditātes",
     "useBuyPrice": "Izmantojiet {{price}} kā pirkšanas cenu",
     "useSellPrice": "Izmantojiet {{price}} kā pārdošanas cenu",
     "spread": "Starpība · USD",
-    "buyTotal": "Pērciet {{amount}} DHB",
-    "sellTotal": "Pārdodiet {{amount}} DHB",
+    "buyTotal": "Pērciet {{amount}} žetoni",
+    "sellTotal": "Pārdodiet {{amount}} žetoni",
     "placeOrder": "Veikt pasūtījumu",
     "lpFee": "0% LP maksa",
     "lpFeeLabel": "LP maksa",
     "lpFeeValue": "{{fee}}% LP maksa",
-    "buy": "Pērciet DHB",
-    "sell": "Pārdodiet DHB",
+    "buy": "Pērciet žetoni",
+    "sell": "Pārdodiet žetoni",
     "maxBuy": "Maksimālā pirkšanas cena",
     "minSell": "Minimālā pārdošanas cena",
     "spend": "Tērēt",
@@ -6278,7 +6280,7 @@
     "estimated": "Paredzamā pilna konversija",
     "network": "Finansēšanas tīkls",
     "sellBelowMarket": "Šī pārdošana ir {{percent}}% zem tirgus cenas ${{price}}. Kāds to var nopirkt un nekavējoties pārdot citur.",
-    "buyAboveMarket": "Šis pirkums ir {{percent}}% virs tirgus cenas ${{price}}. Jūs maksātu vairāk nekā DHB tirgojas citur.",
+    "buyAboveMarket": "Šis pirkums ir {{percent}}% virs tirgus cenas ${{price}}. Jūs maksātu vairāk nekā žetoni tirgojas citur.",
     "useMarket": "Izmantot tirgus cenu",
     "balanceError": "Bilances pārbaude neizdevās. Mēģiniet vēlreiz pirms pasūtījuma veikšanas.",
     "noFunding": "Nav pieejams {{token}} uz {{chain}}.",
@@ -6287,7 +6289,7 @@
     "reviewYourBuy": "Pārskatiet savu pirkumu",
     "reviewYourSell": "Pārskatiet savu pārdošanu",
     "reviewDeposit": "Noguldiet {{amount}} {{token}} uz {{chain}}.",
-    "reviewRange": "Diapazons: {{min}} – {{max}} USD par DHB.",
+    "reviewRange": "Diapazons: {{min}} – {{max}} USD par žetoni.",
     "initializes": "Tas izveido un inicializē 0% kopu.",
     "pendingNote": "Jūsu darījums ir iesniegts. Turpiniet apstiprināšanu vai saraksta reģistrāciju bez papildu iemaksas.",
     "viewTransaction": "Skatīt darījumu",
@@ -6304,7 +6306,7 @@
     "keepOpen": "Saglabājiet šo lapu atvērtu, līdz jūsu saraksts ir reģistrēts. pārlūkprogrammas krātuve nav pieejama.",
     "snapshotDelayed": "Kopīgotie tirgus dati tiek aizkavēti. Tiek rādīts pēdējais verificētais momentuzņēmums.",
     "snapshotUnavailable": "Kopīgotie tirgus dati nav pieejami. Mēģiniet vēlreiz, lai ielādētu pozīcijas.",
-    "withdrawReview": "Izņemt {{dhb}} DHB un {{usdc}} USDC uz {{chain}}? Summas tiek atsvaidzinātas pirms parakstīšanas; cenas pielaide ir 0,5%.",
+    "withdrawReview": "Izņemt {{dhb}} žetoni un {{usdc}} USDC uz {{chain}}? Summas tiek atsvaidzinātas pirms parakstīšanas; cenas pielaide ir 0,5%.",
     "withdrawn": "Pozīcija izņemta",
     "withdrawFailed": "Izņemšana neizdevās",
     "withdrawing": "Tiek izņemts…",
@@ -6438,6 +6440,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizuāli spilgtākie mirkļi",
+      "visualPrivacy": "Nosūtīt atlasītos kadrus vizuālai analīzei."
+    },
+    "review": {
+      "title": "Projekta pārskatīšana",
+      "shared": "Kopīgots ar jums",
+      "time": "Laiks (s)",
+      "assign": "Piešķirt maku"
+    },
+    "textFit": {
+      "wrap": "Aplauzt rindas",
+      "width": "Teksta platums",
+      "shrink": "Samazināt tekstu, lai tas ietilptu",
+      "height": "Teksta augstums",
+      "captions": "Pielāgot subtitru celiņu"
+    },
     "canvas": {
       "dropMedia": "Nomet, lai pievienotu savam dizainam",
       "dropText": "Nomet, lai pievienotu tekstu",
@@ -7787,7 +7806,7 @@
     "topUpTitle": "Papildiniet un ietaupiet",
     "discount": "{{percent}}% atlaide",
     "noDiscount": "Pilna cena",
-    "total": "Kopā ${{usd}}, maksāts DHB",
+    "total": "Kopā ${{usd}}, maksāts žetoni",
     "buy": "Pērciet kredītus",
     "buying": "Gaida maksājumu…",
     "bought": "Pievienoti {{count}} publicēšanas kredīti",
@@ -7817,7 +7836,7 @@
     "skippedToast": "Izlaists {{platforms}}: šai ziņai nav nepieciešamā fotoattēla vai videoklipa.",
     "uploadFailed": "Neizdevās augšupielādēt multividi savstarpējai publicēšanai.",
     "creditRules": "Katra ziņa maksā kredītus par platformu: {{x}} X, {{farcaster}} Farcaster un {{other}} katrai citai platformai. Ieplānotās ziņas izmanto bonuspunktus, kad tās ieplāno.",
-    "payAsYouGoCredits": "Vai beidzies termiņš? Trūkstošie kredīti tiek iegādāti DHB par ${{price}} katru reizi, kad publicējat ziņu.",
+    "payAsYouGoCredits": "Vai beidzies termiņš? Trūkstošie kredīti tiek iegādāti žetoni par ${{price}} katru reizi, kad publicējat ziņu.",
     "topUpCredits": "{{count}} kredītpunkti",
     "perCredit": "${{price}} par kredītu",
     "pendingApproval": "Gaida, kad apstiprināsi atrunu Farcaster lietotnē",
@@ -7829,7 +7848,7 @@
   "dm": {
     "planRestricted": "Šim lietotājam ziņu saņemšanai nepieciešams abonements.",
     "planTypeNotAllowed": "Šī autora plāns neatļauj šāda veida ziņu.",
-    "planMinTip": "Dzeramnaudai šim autoram jābūt vismaz {{amount}} DHB."
+    "planMinTip": "Dzeramnaudai šim autoram jābūt vismaz {{amount}} žetoni."
   },
   "credits": {
     "earningsWorth": "Vērts {{amount}}",
@@ -7957,12 +7976,12 @@
       "notifyKey": "Paziņojumu atslēgs",
       "notifyKeyOnce": "Jauns paziņojumu atslēgs {{name}}. Kopējiet to šim brīdim: tas parādās vienu reizi, un jaunais aizstāj to.",
       "payTitle": "Saņemt maksas",
-      "payBody": "pay() pieprasa lietotāju sūtīt Jums DHB, tiesīgi uz portmonēju, kas parakstīja Jūsu dehub.json. Pārbaudiet kvitanci uz Jūsu serverī, pirms nododāt ko jebko.",
+      "payBody": "pay() pieprasa lietotāju sūtīt Jums žetoni, tiesīgi uz portmonēju, kas parakstīja Jūsu dehub.json. Pārbaudiet kvitanci uz Jūsu serverī, pirms nododāt ko jebko.",
       "notifyTitle": "Sūtīt paziņojumus",
       "notifyBody": "Lietotāji, kas pievieno Jūsu programmu, var Jums paziņot no Jūsu servera ar Jūsu paziņojumu atslēgu. Nav jāglabā atsevišķi lietotāju tokeni.",
       "rankTitle": "Kā veikals ierindo lietotnes",
       "rankBody": "Katru nakti katra norādītā lietotne saņem rezultātu: 55% no atkārtotiem lietotājiem (cilvēkiem, kuri to atvēra šonedēļ un nedēļu iepriekš), 35% no iknedēļas lietotājiem, kā arī 10% pieaugums pirmajās 14 dienās. Skaitās tikai pierakstījušies DeHub konti, tāpēc roboti un lapu atkārtota ielāde neko nenopelnīs.",
-      "rewardsBody": "Katru mēnesi {{pool}} DHB tiek kopīgots starp lietotnēm pēc viena un tā paša rezultāta, kas tiek aprēķināts katru nedēļu. Lai atbilstu prasībām, lietotnei ir nepieciešams verificēts īpašnieka maks un vismaz trīs lietotāji, kas atgriežas. Atlīdzības DeHub izmaksā īpašnieka makā.",
+      "rewardsBody": "Katru mēnesi {{pool}} žetoni tiek kopīgots starp lietotnēm pēc viena un tā paša rezultāta, kas tiek aprēķināts katru nedēļu. Lai atbilstu prasībām, lietotnei ir nepieciešams verificēts īpašnieka maks un vismaz trīs lietotāji, kas atgriežas. Atlīdzības DeHub izmaksā īpašnieka makā.",
       "rewardsWeek": "Nedēļa no {{date}}",
       "rewardPaid": "Izmaksāts",
       "rewardPending": "Gaida",
@@ -7988,10 +8007,10 @@
     },
     "pay": {
       "title": "Maksāt {{name}}?",
-      "body": "DHB tieši nonāk programmas portmonējā, {{wallet}}. Maksas nevar atcelgt.",
-      "confirm": "Maksāt {{amount}} DHB",
+      "body": "žetoni tieši nonāk programmas portmonējā, {{wallet}}. Maksas nevar atcelgt.",
+      "confirm": "Maksāt {{amount}} žetoni",
       "sending": "Sūtīts Jūsu maksājumā…",
-      "sent": "Maksājums {{amount}} DHB sūtīts uz {{name}}.",
+      "sent": "Maksājums {{amount}} žetoni sūtīts uz {{name}}.",
       "noOwner": "Šī programma nav vēl apstiprinātu portmonēju, kurā varētu maksāt."
     },
     "add": {

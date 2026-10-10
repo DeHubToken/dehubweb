@@ -28,6 +28,11 @@ const MAX_AGE_MS = 30 * 24 * 60 * 60 * 1000;
  *  is written on every keystroke and must not grow without bound. */
 const MAX_DRAFTS = 100;
 
+export function commentDraftKey(account: string | null | undefined, tokenId: string | number): string {
+  const owner = account ? `account:${account.toLowerCase()}` : 'guest';
+  return `${owner}|comments:${tokenId}`;
+}
+
 export interface CommentDraft {
   text: string;
   /** Comment being replied to, so the sheet reopens still pointed at it. */
@@ -126,7 +131,7 @@ function persist(store: DraftStore): void {
 
 /** Is there anything in here worth keeping? */
 export function draftHasContent(draft: Pick<CommentDraft, 'text' | 'gifUrl'>): boolean {
-  return Boolean(draft.text.trim() || draft.gifUrl);
+  return Boolean(draft.text.length || draft.gifUrl);
 }
 
 /**

@@ -1,3 +1,5 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Live Stream Card Component
  * ==========================
@@ -69,6 +71,7 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { GatedMedia } from './GatedMedia';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useStreamPresence } from '@/hooks/use-stream-presence';
+import { useLivePlaybackFeedback } from '@/hooks/use-live-playback-feedback';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
@@ -217,6 +220,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const playbackRequestedRef = useRef(true);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!liveNow);
+  const { broadcastPaused, waitingTooLong } = useLivePlaybackFeedback(stream.streamId, isBuffering, liveNow && !streamEnded, stream.liveStatus);
   // The viewer's own thumb, played on tap rather than on the echo — see
   // LiveReactionFlow's `self`. The room still gets theirs off the broadcast.
   const [selfReaction, setSelfReaction] = useState<SelfReaction | null>(null);
@@ -234,8 +238,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   }, [stream.streamId, stream.isLive, streamEnded, liveReactionWeight]);
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [giftAmount, setGiftAmount] = useState('');
-  const [giftMessage, setGiftMessage] = useState('');
+  const [giftAmount, setGiftAmount] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftAmount", '', draftIdentity(stream));
+  const [giftMessage, setGiftMessage] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftMessage", '', draftIdentity(stream));
   // Another token to pay the gift with; it becomes DHB on Base before the tip.
   const [giftPayWith, setGiftPayWith] = useState<TipFundingSource | null>(null);
   const [fundingGift, setFundingGift] = useState(false);
@@ -321,7 +325,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    */
   const livePresence = useStreamPresence(
     stream.streamId,
-    !!stream.isLive && !isOwnStream
+    !!stream.isLive && !streamEnded && isPlaying && !isOwnStream
   );
   const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
 
@@ -925,8 +929,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       record(1);
     },
     onSuccess: () => {
-      setGiftAmount('');
-      setGiftMessage('');
+      setGiftAmount.complete(giftAmount, '');
+      setGiftMessage.complete(giftMessage, '');
     },
   });
 
@@ -1323,11 +1327,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               </button>
             )}
             {/* Playback feedback stays visible even when the controls are hidden. */}
-            {(isBuffering || error) && (
+            {(isBuffering || error || broadcastPaused) && (
               <div role="status" aria-label={error || t('common.loading', 'Loading')} className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
                 <div className="flex flex-col items-center gap-2 text-center px-4">
-                  {error !== 'Stream unavailable' && error !== 'Failed to play stream' && <ButtonLoader size={40} className="!filter-none" />}
-                  {error && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{error}</p>}
+                  {!broadcastPaused && !waitingTooLong && error !== 'Stream unavailable' && error !== 'Failed to play stream' && <ButtonLoader size={40} className="!filter-none" />}
+                  {(broadcastPaused || waitingTooLong || error) && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{broadcastPaused ? 'Live paused' : waitingTooLong ? 'Waiting for live video' : error}</p>}
                 </div>
               </div>
             )}
@@ -1525,7 +1529,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <div className="flex items-center justify-between bg-white/5 rounded-xl px-3 py-2.5 border border-white/10">
               <span className="text-xs text-zinc-400">Your balance</span>
               <div className="flex items-center gap-1.5">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                 <span className="text-sm font-medium text-white">
                   {balanceLoading ? '...' : (dhbBalance ?? '—')}
                 </span>
@@ -1567,7 +1571,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                         </span>
                         <span className="flex items-center gap-1 text-[10px] text-zinc-400">
                           {tier.min.toLocaleString()}
-                          <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+                          <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
                         </span>
                       </span>
                     </button>
@@ -1584,7 +1588,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             <div className="space-y-2">
               <label className="text-sm text-zinc-400 flex items-center gap-1.5">
                 Amount
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
               </label>
               <Input
                 type="number"
@@ -1746,6 +1750,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: stream.tokenId,
           type: 'live',
           author: stream.streamer,
           title: stream.title,

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { Globe, Search, Check } from "lucide-react";
 import { useState } from "react";
 import {
@@ -12,7 +13,7 @@ import { useLanguage, languages } from "@/contexts/LanguageContext";
 export function LanguageSelector() {
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useSurfaceDraft("components/LanguageSelector.tsx:search", "");
   const current = languages.find(l => l.code === language);
 
   const filtered = languages.filter(
@@ -62,7 +63,7 @@ export function LanguageSelector() {
                 onClick={() => {
                   setLanguage(lang.code as any);
                   setOpen(false);
-                  setSearch("");
+                  setSearch.complete(search, "");
                 }}
                 className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all ${
                   lang.code === language

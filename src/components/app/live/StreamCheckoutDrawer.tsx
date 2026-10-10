@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Stream Checkout Drawer
  * ======================
@@ -38,7 +40,7 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
   const [quote, setQuote] = useState<ProductQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [shippingAddress, setShippingAddress] = useState('');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useSurfaceDraft("components/app/live/StreamCheckoutDrawer.tsx:notes", '');
 
   const listing = product.store_listings;
   const image = listing?.images?.[0];
@@ -109,7 +111,7 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
               {quote ? (
                 <>
                   <div className="flex items-center gap-1.5 text-xl font-bold text-white">
-                    <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />
                     {quote.dhbAmount.toLocaleString()}
                   </div>
                   <p className="text-xs text-zinc-500">

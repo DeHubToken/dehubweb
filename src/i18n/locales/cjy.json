@@ -90,6 +90,7 @@
     "heading": "DeHub 短视频"
   },
   "settings": {
+    "postingChain": "发帖区块链",
     "showOnline": "显示我在线时",
     "showOnlineDesc": "当你使用 DeHub 时，你的联系人会在你的名字旁看到一个绿色点",
     "smartReplies": "建议回复",
@@ -259,6 +260,7 @@
     "light": "亮色",
     "dark": "暗色",
     "system": "系统",
+    "immersive": "Immersive",
     "cosmic": "宇宙像素",
     "hazy": "朦胧夜",
     "swarms": "蜂群",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay 正在发送您的代币…",
     "payViaDpay": "已支付给 DeHub Pay，代币约 30 秒后到账",
     "payViaBridgeDpay": "已移至 Base 并支付给 DeHub Pay，代币约一分钟后到账",
-    "dmSent": "给 {{name}} 发了 {{amount}} DHB！"
+    "dmSent": "给 {{name}} 发了 {{amount}} 代币！"
   },
   "postOptions": {
     "options": "选项",
@@ -1463,7 +1465,7 @@
     "otherTokens": "其它代币",
     "otherTokensDesc": "用你嘞卡在 Base 上买 ETH 或 USDC",
     "shareToFeed": "分享到我的动态",
-    "sharePostTemplate": "我刚刚在 DeHub 上添加了 {{amount}} $DHB 到我的堆栈。与社区一起建设。#DeHub #DHB",
+    "sharePostTemplate": "我刚刚在 DeHub 上添加了 {{amount}} 代币 到我的堆栈。与社区一起建设。#DeHub",
     "success": {
       "title": "购买完成！",
       "subtitle": "代币已发送到您的钱包。",
@@ -3577,7 +3579,7 @@
   },
   "fractions": {
     "seoTitle": "分数 | DeHub",
-    "seoDescription": "买卖 DeHub 帖子嘞碎片。一个铸造过嘞帖子就是 1000 份链上碎片 — 拥有一段视频、音轨或图片嘞一部分，用 DHB 交易。",
+    "seoDescription": "买卖 DeHub 帖子嘞碎片。一个铸造过嘞帖子就是 1000 份链上碎片 — 拥有一段视频、音轨或图片嘞一部分，用 代币 交易。",
     "title": "碎片",
     "perUpload": "1000每次上传",
     "tabBrowse": "浏览",
@@ -4404,7 +4406,7 @@
   },
   "usernames": {
     "seoTitle": "用户名市场 | DeHub",
-    "seoDescription": "买卖 DeHub 用户名，使用 DHB 进行交易。搜索短号、数字号和原创号码出售，或者发布你自己的——支付清算后，转移立即在链上完成。",
+    "seoDescription": "买卖 DeHub 用户名，使用 代币 进行交易。搜索短号、数字号和原创号码出售，或者发布你自己的——支付清算后，转移立即在链上完成。",
     "title": "用户名",
     "subtitle": "手柄出售，价格以美元计价",
     "tabBrowse": "浏览",
@@ -4526,7 +4528,7 @@
   },
   "accounts": {
     "seoTitle": "账号市场 — DeHub",
-    "seoDescription": "在 DeHub 上买卖 DHB 认证账号。按粉丝数、上传量和年龄浏览账号 — 处理、帖子、粉丝和徽章资格均可转让，支付直接给卖家。",
+    "seoDescription": "在 DeHub 上买卖 代币 认证账号。按粉丝数、上传量和年龄浏览账号 — 处理、帖子、粉丝和徽章资格均可转让，支付直接给卖家。",
     "title": "账号",
     "subtitle": "整个账户出售，以 DeHub 代币定价",
     "tabBrowse": "浏览",
@@ -6158,17 +6160,17 @@
   },
   "docs": {
     "seoTitle": "DeHub 文档 — 指南、代币、dApp 与常见问题",
-    "seoDescription": "DeHub 官方文档：平台概览、dApp、DHB 代币经济、质押、游戏、路线图、常见问题等。"
+    "seoDescription": "DeHub 官方文档：平台概览、dApp、代币 代币经济、质押、游戏、路线图、常见问题等。"
   },
   "dex": {
-    "seoTitle": "DEX — 以您的价格交易 DHB",
-    "seoDescription": "在 Base 或 BNB Chain 上使用 Uniswap v4 限价单设置您的 DHB 买入或卖出价格。实时订单簿、市场深度和统一的美元价格。",
+    "seoTitle": "DEX — 以您的价格交易 代币",
+    "seoDescription": "在 Base 或 BNB Chain 上使用 Uniswap v4 限价单设置您的 代币 买入或卖出价格。实时订单簿、市场深度和统一的美元价格。",
     "venue": "网络",
     "marketPrice": "市场价格 · 美元",
     "bookPrice": "{{chain}} 订单簿价格 · 美元",
     "change24": "24小时变化",
     "totalLiquidity": "总流动性 · 美元",
-    "listedDhb": "已列出 DHB · {{chain}}",
+    "listedDhb": "已列出 代币 · {{chain}}",
     "listedUsd": "已列出 美元 · {{chain}}",
     "refreshMarket": "刷新市场",
     "refresh": "刷新",
@@ -6193,21 +6195,21 @@
     "orderBook": "订单簿",
     "priceGrouping": "价格分组",
     "priceUsd": "价格 (美元)",
-    "sizeDhb": "大小 (DHB)",
-    "totalDhb": "总计 (DHB)",
+    "sizeDhb": "大小 (代币)",
+    "totalDhb": "总计 (代币)",
     "noBids": "暂无出价",
     "noAsks": "暂无卖出流动性",
     "useBuyPrice": "使用 {{price}} 作为买入价",
     "useSellPrice": "使用 {{price}} 作为卖出价",
     "spread": "价差 · 美元",
-    "buyTotal": "买入 {{amount}} DHB",
-    "sellTotal": "卖出 {{amount}} DHB",
+    "buyTotal": "买入 {{amount}} 代币",
+    "sellTotal": "卖出 {{amount}} 代币",
     "placeOrder": "下单",
     "lpFee": "0% LP 手续费",
     "lpFeeLabel": "LP 手续费",
     "lpFeeValue": "{{fee}}% LP 手续费",
-    "buy": "买入 DHB",
-    "sell": "卖出 DHB",
+    "buy": "买入 代币",
+    "sell": "卖出 代币",
     "maxBuy": "最高买入价",
     "minSell": "最低卖出价",
     "spend": "花费",
@@ -6223,7 +6225,7 @@
     "estimated": "预计完全兑换",
     "network": "资金网络",
     "sellBelowMarket": "此卖单比市场价 ${{price}} 低 {{percent}}%。有人可以立即买入并在其他地方转售。",
-    "buyAboveMarket": "本次购买价格高于市场价 ${{price}} 的 {{percent}}%。您支付的价格将高于在其他地方交易 DHB 的价格。",
+    "buyAboveMarket": "本次购买价格高于市场价 ${{price}} 的 {{percent}}%。您支付的价格将高于在其他地方交易 代币 的价格。",
     "useMarket": "使用市价",
     "balanceError": "余额检查失败。请在下单前重试。",
     "noFunding": "{{chain}} 上没有 {{token}}。",
@@ -6232,7 +6234,7 @@
     "reviewYourBuy": "查看您的买入",
     "reviewYourSell": "查看您的卖出",
     "reviewDeposit": "在 {{chain}} 上存入 {{amount}} {{token}}。",
-    "reviewRange": "范围：每 DHB {{min}} – {{max}} 美元。",
+    "reviewRange": "范围：每 代币 {{min}} – {{max}} 美元。",
     "initializes": "这将创建并初始化 0% 的资金池。",
     "pendingNote": "您的交易已提交。无需再次存款即可继续确认或挂牌注册。",
     "viewTransaction": "查看交易",
@@ -6249,7 +6251,7 @@
     "keepOpen": "在您的挂牌注册完成之前，请保持此页面打开。浏览器存储不可用。",
     "snapshotDelayed": "共享市场数据已延迟。显示最后验证的快照。",
     "snapshotUnavailable": "共享市场数据不可用。重试加载仓位。",
-    "withdrawReview": "在 {{chain}} 上提取 {{dhb}} DHB 和 {{usdc}} USDC？金额在签名之前刷新；价格容差为 0.5%。",
+    "withdrawReview": "在 {{chain}} 上提取 {{dhb}} 代币 和 {{usdc}} USDC？金额在签名之前刷新；价格容差为 0.5%。",
     "withdrawn": "仓位已提取",
     "withdrawFailed": "提取失败",
     "withdrawing": "正在提取…",
@@ -6383,6 +6385,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "画面精彩片段",
+      "visualPrivacy": "发送选取的帧进行画面分析。"
+    },
+    "review": {
+      "title": "项目审阅",
+      "shared": "与你共享",
+      "time": "时间 (s)",
+      "assign": "分配钱包"
+    },
+    "textFit": {
+      "wrap": "自动换行",
+      "width": "文字宽度",
+      "shrink": "缩小文字以适应",
+      "height": "文字高度",
+      "captions": "调整字幕轨道大小"
+    },
     "canvas": {
       "dropMedia": "拖放以添加到您的设计",
       "dropText": "拖放以添加文本",
@@ -7732,7 +7751,7 @@
     "topUpTitle": "充值并节省",
     "discount": "{{percent}}% 折扣",
     "noDiscount": "全价",
-    "total": "总计 {{usd}} 美元，以 DHB 支付",
+    "total": "总计 {{usd}} 美元，以 代币 支付",
     "buy": "购买积分",
     "buying": "等待付款…",
     "bought": "已添加 {{count}} 个发布积分",
@@ -7774,7 +7793,7 @@
   "dm": {
     "planRestricted": "这个用户要订阅才能收消息。",
     "planTypeNotAllowed": "这个创作者的方案不允许这类消息。",
-    "planMinTip": "给这个创作者的打赏至少要 {{amount}} DHB。"
+    "planMinTip": "给这个创作者的打赏至少要 {{amount}} 代币。"
   },
   "credits": {
     "earningsWorth": "价值 {{amount}}",
@@ -7902,12 +7921,12 @@
       "notifyKey": "通知密钥",
       "notifyKeyOnce": "{{name}} 的新通知密钥。现在复制它：它只显示一次，再次生成会替换它。",
       "payTitle": "接收付款",
-      "payBody": "pay() 会要求用户向您发送 DHB，直接发送到签署您的 dehub.json 的钱包。在服务器上检查收据后再交付任何东西。",
+      "payBody": "pay() 会要求用户向您发送 代币，直接发送到签署您的 dehub.json 的钱包。在服务器上检查收据后再交付任何东西。",
       "notifyTitle": "发送通知",
       "notifyBody": "添加您应用的用户可以通过您的服务器和通知密钥进行通知。无需为每个用户存储令牌。",
       "rankTitle": "如何商店对应用程序进行排序？",
       "rankBody": "每晚，每个列出的应用都会获得一个分数：55%来自回头用户（本周和上周都打开过该应用的人），35%来自周用户，加上前14天的10%提升。只有登录了DeHub账号的用户才会计入，因此机器人和页面刷新不会获得任何分数。",
-      "rewardsBody": "每个月 {{pool}} DHB 将根据每周计算的相同得分在应用之间分配。要获得资格，一个应用需要拥有验证的所有者钱包，并且至少有 3 名回头客用户。奖励将由 DeHub 支付给所有者钱包。",
+      "rewardsBody": "每个月 {{pool}} 代币 将根据每周计算的相同得分在应用之间分配。要获得资格，一个应用需要拥有验证的所有者钱包，并且至少有 3 名回头客用户。奖励将由 DeHub 支付给所有者钱包。",
       "rewardsWeek": "这周的 {{date}}",
       "rewardPaid": "付费了",
       "rewardPending": "待处理",
@@ -7933,10 +7952,10 @@
     },
     "pay": {
       "title": "付款 {{name}}？",
-      "body": "DHB 将直接发送到应用的钱包 {{wallet}}。付款无法撤销。",
-      "confirm": "付款 {{amount}} DHB",
+      "body": "代币 将直接发送到应用的钱包 {{wallet}}。付款无法撤销。",
+      "confirm": "付款 {{amount}} 代币",
       "sending": "正在发送您的付款…",
-      "sent": "已向 {{name}} 支付 {{amount}} DHB。",
+      "sent": "已向 {{name}} 支付 {{amount}} 代币。",
       "noOwner": "此应用尚未设置可验证的付款钱包。"
     },
     "add": {

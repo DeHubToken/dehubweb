@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Community Activity
  * ==================
@@ -123,7 +124,7 @@ interface CommunityActivityProps {
 export function CommunityActivity({ community, notifications }: CommunityActivityProps) {
   const { t } = useTranslation();
   const markRead = useMarkCommunityNotificationsRead();
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/communities/CommunityActivity.tsx:query", '', draftIdentity(community));
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const unreadCount = notifications.filter((n) => !n.read).length;

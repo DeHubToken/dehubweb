@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useRef, useState, useCallback } from 'react';
 import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock, Send, Settings2 } from 'lucide-react';
 import { NewConversationModal } from '@/components/app/chat/NewConversationModal';
@@ -62,8 +63,8 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
   const [showTickerInput, setShowTickerInput] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [editingDesc, setEditingDesc] = useState(false);
-  const [nameInput, setNameInput] = useState(community.name);
-  const [descInput, setDescInput] = useState(community.description || '');
+  const [nameInput, setNameInput] = useSurfaceDraft("src/components/app/communities/CommunityHeader.tsx:nameInput", community.name, community.id);
+  const [descInput, setDescInput] = useSurfaceDraft("src/components/app/communities/CommunityHeader.tsx:descInput", community.description || '', community.id);
   const [inviteOpen, setInviteOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -275,13 +276,13 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               autoFocus
               onKeyDown={e => {
                 if (e.key === 'Enter' && nameInput.trim()) {
-                  updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => setEditingName(false) });
+                  updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => { setNameInput.complete(nameInput, nameInput); setEditingName(false); } });
                 }
                 if (e.key === 'Escape') { setNameInput(community.name); setEditingName(false); }
               }}
             />
             <button onClick={() => {
-              if (nameInput.trim()) updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => setEditingName(false) });
+              if (nameInput.trim()) updateMutation.mutate({ id: community.id, name: nameInput.trim() } as any, { onSuccess: () => { setNameInput.complete(nameInput, nameInput); setEditingName(false); } });
             }} className="text-white hover:text-green-400"><Check className="w-4 h-4" /></button>
             <button onClick={() => { setNameInput(community.name); setEditingName(false); }} className="text-zinc-500 hover:text-white"><X className="w-3.5 h-3.5" /></button>
           </div>
@@ -360,7 +361,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             autoFocus
           />
           <button onClick={() => {
-            updateMutation.mutate({ id: community.id, description: descInput.trim() || null } as any, { onSuccess: () => setEditingDesc(false) });
+            updateMutation.mutate({ id: community.id, description: descInput.trim() || null } as any, { onSuccess: () => { setDescInput.complete(descInput, descInput); setEditingDesc(false); } });
           }} className="text-white hover:text-green-400 mt-1"><Check className="w-4 h-4" /></button>
           <button onClick={() => { setDescInput(community.description || ''); setEditingDesc(false); }} className="text-zinc-500 hover:text-white mt-1"><X className="w-3.5 h-3.5" /></button>
         </div>

@@ -45,7 +45,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
+import { ArrowLeft, Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
@@ -57,9 +57,11 @@ import ppvTicketIcon from '@/assets/ppv-ticket-icon.png';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
+import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
+import { useLiveReaction } from '@/hooks/use-live-reaction';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
@@ -108,7 +110,7 @@ import { useConnectionQuality } from '@/hooks/use-connection-quality';
 /** Lazy: nine canvas painters and a decoder, ~50 KB, for a minority post type
  *  — none of it belongs in the bytes parsed before first paint. */
 const AudioVisualizer = lazy(() =>
-  import('../audio/AudioVisualizer').then((m) => ({ default: m.AudioVisualizer }))
+  import('../audio/ProtectedAudioVisualizer').then((m) => ({ default: m.ProtectedAudioVisualizer }))
 );
 import { cacheVideoForNavigation } from '@/lib/post-cache';
 import { warmPostPage } from '@/lib/preload-post-page';
@@ -128,6 +130,7 @@ import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useMediaAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
+import { GatePreview } from './GatePreview';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
 import {
   claimMediaSession,
@@ -160,7 +163,6 @@ import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy'
 import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
-import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 /**
@@ -278,7 +280,7 @@ interface MobileCreatorInfoProps {
   onUnlocked?: () => void;
   /**
    * Phone post page: the Stage creator row (followers + Follow). Ask AI and
-   * the menu are on the media there, so they are not drawn here.
+   * the menu are in the post panel, so they are not drawn here.
    */
   stage?: boolean;
 }
@@ -481,19 +483,17 @@ function MobileCreatorInfo({
                 <Zap className="w-[23.5px] h-[23.5px]" />
               </button>
             )}
-            <button
+            {onAIClick && <button
               onClick={onAIClick}
               className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
               aria-label="Ask AI about this video"
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
-            </button>
-            <button aria-label="Post options" 
+            </button>}
+            {onMenuClick && <PostHeaderOptionsButton
               onClick={onMenuClick}
-              className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
-            >
-              <MoreVertical className="w-[23.5px] h-[23.5px]" />
-            </button>
+              style={{ marginTop: -4 }}
+            />}
           </div>
         </div>
       </div>
@@ -717,6 +717,9 @@ function ExpandableDescription({ description: rawDescription, isImmersive, clamp
 
 interface VideoCardProps {
   video: VideoItem;
+  /** Dedicated post: navigation stays on the player and utilities below it. */
+  postPage?: boolean;
+  onBack?: () => void;
   /** Dedicated pages own one shared comments window below the post card. */
   onOpenComments?: (tab?: 'replies' | 'quotes' | 'reposts' | 'search') => void;
   /** When true, renders full-width without rounded corners or header for immersive view */
@@ -731,7 +734,7 @@ interface VideoCardProps {
   firstFeedPost?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const playbackAllowed = useFeedPlaybackAllowed();
   const playbackAllowedRef = useRef(playbackAllowed);
   playbackAllowedRef.current = playbackAllowed;
@@ -783,6 +786,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  const { selfReaction, sendLiveReaction } = useLiveReaction(video.liveStreamId, !!video.isLivePost && !!video.isLiveNow);
   // Deep Current is the one power spent on somebody ELSE's post, so it is
   // the one row that belongs in this half of the menu. `status.powers` is
   // the authority for whether this account has it — the badge the client
@@ -1741,7 +1745,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
   }, []);
 
+  const scrubEventRef = useRef<HTMLDivElement>(null);
   const scrubZone = useVideoScrubZone({
+    mediaRef: containerRef,
+    eventRef: scrubEventRef,
     enabled: bareControls && !isContentGated && duration > 0 && Number.isFinite(duration),
     duration,
     onStart: () => {
@@ -1984,10 +1991,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Same fix, same reason, as [data-post-overlay-backdrop] in index.css.
   return (
     <div
+      ref={scrubEventRef}
       data-video-card
       data-video-header-above={headerAboveMedia ? '' : undefined}
       onClick={isImmersive || stage ? undefined : handleCardClick}
-      onPointerDownCapture={isImmersive || stage ? undefined : warmPostPage}
+      {...scrubZone}
+      onPointerDownCapture={event => {
+        scrubZone.onPointerDownCapture?.(event);
+        if (!event.isPropagationStopped() && !isImmersive && !stage) warmPostPage();
+      }}
       className={isImmersive || stage
         ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
@@ -2006,7 +2018,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             creatorUsername={video.creatorUsername}
             badgeBalance={video.creatorBadgeBalance}
           />
-          <div className="flex items-center gap-1">
+          {!postPage && <div className="flex items-center gap-1">
             {isOwnPost && (
               <motion.button
                 data-head-boost
@@ -2034,10 +2046,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 The sheet itself is mounted once at the card root and shared
                 with the carousel and immersive openers further down; a second
                 <Drawer> here bound to the same state opened a duplicate. */}
-            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-head-options className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
-              <MoreVertical className="w-[23.5px] h-[23.5px]" />
-            </button>
-          </div>
+            <PostHeaderOptionsButton onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} data-head-options />
+          </div>}
         </div>
       )}
 
@@ -2081,7 +2091,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
         {...tapGestures}
-        {...scrubZone}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
@@ -2113,7 +2122,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           />
         ) : /* Combo PPV + Holdings Locked */ isComboLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover rounded-lg" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover rounded-lg" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -2146,7 +2155,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isPPVLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
@@ -2175,7 +2184,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           <>
             {/* Subscriber gate — subscribe to this creator. Not the holdings
                 gate below, which anyone can satisfy by buying tokens. */}
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowSubDrawer(true); }}
@@ -2207,7 +2216,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isHoldingsLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
@@ -2233,7 +2242,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </>
         ) : isBountyLocked ? (
           <>
-            <img src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async" alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <GatePreview src={thumbnail} className="w-full h-full object-cover" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
@@ -2268,6 +2277,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 <div className="absolute inset-0">
                   <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>
                     <AudioVisualizer
+                      tokenId={video.id}
+                      viewerKey={walletAddress}
+                      requiresAccess={!!video.isPPV || isHoldGated(video.isLocked, video.lockedPrice) || !!video.subscriberPlans?.length}
                       audioUrl={video.audioUrl}
                       isPlaying={isPlaying}
                       onPlayPause={handlePlayClick}
@@ -2356,6 +2368,11 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                  read as a dead card until you opened it. */
               <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
                 <LiveFeedPreview
+                  streamId={video.liveStreamId}
+                  streamStatus={video.liveStatus}
+                  creatorId={video.creatorId}
+                  isOwner={video.isOwner}
+                  selfReaction={selfReaction}
                   urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
                   thumbnail={thumbnail}
                   fallbackLabel={t('feed.live')}
@@ -2402,20 +2419,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         
-        {stage && !isFullscreen && (
-          <StageMediaChrome
-            onBack={stage.onBack}
-            onAskAI={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            onBoost={isOwnPost ? () => setShowBoostModal(true) : undefined}
-          />
+        {(onBack || stage) && !video.isAudio && !isFullscreen && (controlsVisible || isContentGated) && (
+          <button
+            type="button"
+            data-video-controls
+            data-video-back
+            data-video-bare
+            aria-label={t('common.goBack')}
+            className="absolute left-2 top-1.5 z-20 h-8 w-8 text-white flex items-center justify-center"
+            onClick={(event) => { event.stopPropagation(); (onBack ?? stage?.onBack)?.(); }}
+          >
+            <MediaControlIcon icon={ArrowLeft} />
+          </button>
         )}
 
         {video.isW2E && !stage && (
           <button
             type="button"
             aria-label={t('drawers.bountyTitle')}
-            className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+            className={cn("absolute left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors", onBack ? "top-11" : "top-2")}
             onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
           >
             <Gift className="w-3 h-3 text-white" />
@@ -2480,7 +2502,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             that already carries its own transport. */}
 
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 flex items-center z-10", stage && !isFullscreen ? "top-[58px]" : "top-1.5", bareControls ? "gap-1" : "gap-2")}>
+          <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 top-1.5 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
@@ -2547,9 +2569,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             from the centered Play button; seeking enables once the length is
             known. Audio posts and live streams own their transport. */}
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
+          <div data-video-controls data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
-            {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-12 touch-pan-y" />}
+            {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-none" />}
 
             <div data-video-button-row className={cn("flex items-center gap-2", bareControls && (mediaAspect >= 1 ? "px-2" : "px-1.5"))}>
               <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
@@ -2771,16 +2793,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       <div data-card-info className={`pt-3${isImmersive || stage ? ' px-3 lg:px-0' : ''}`}>
         {/* System theme phone feed only (index.css): the options button sits
             here, top right of the caption, instead of on the media. */}
-        {!isImmersive && !hideActions && (
+        {!isImmersive && !postPage && !stage && !hideActions && (
           <div data-caption-options data-video-caption-actions className="hidden">
             {isOwnPost && (
               <button data-caption-boost onClick={() => setShowBoostModal(true)} aria-label={t('postOptions.boostPost')} className="flex h-8 w-8 items-center justify-center">
                 <Zap className="w-5 h-5" />
               </button>
             )}
-            <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" className="flex h-8 w-8 items-center justify-center">
-              <MoreVertical className="w-5 h-5" />
-            </button>
+            <PostHeaderOptionsButton iconSize={20} className="text-white" onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
           </div>
         )}
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
@@ -2794,9 +2814,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             creatorId={video.creatorId}
             badgeBalance={video.creatorBadgeBalance}
             verified={video.verified}
-            onAIClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            onBoostClick={isOwnPost ? () => setShowBoostModal(true) : undefined}
-            onMenuClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+            onAIClick={postPage || stage ? undefined : () => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+            onBoostClick={!postPage && !stage && isOwnPost ? () => setShowBoostModal(true) : undefined}
+            onMenuClick={postPage || stage ? undefined : () => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             isPPV={isPPVLocked ? video.isPPV : false}
             tokenId={video.id}
             ppvPrice={video.ppvPrice}
@@ -2883,6 +2903,19 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </div>
         {!hideActions && (
           <>
+            {(postPage || stage) && (
+              <div data-post-panel-actions className="flex items-center justify-end gap-1 mb-2">
+                {isOwnPost && (
+                  <button type="button" aria-label={t('postOptions.boostPost')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); setShowBoostModal(true); }}>
+                    <Zap className="h-5 w-5" />
+                  </button>
+                )}
+                <button type="button" aria-label={t('postStage.askAI')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}>
+                  <Sparkles className="h-5 w-5" />
+                </button>
+                <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
+              </div>
+            )}
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
             {/* The creator's Shop board. Inline rather than over the player:
                 this card runs an immersive mode that reflows the video, and an
@@ -2890,6 +2923,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 the overlay, where not leaving the stream is the point. */}
             <ShopBoardLazy tokenId={video.id} links={video.shopLinks} listingCount={video.shopListingCount} variant="inline" />
             <ActionBar
+              onLiveReaction={video.isLivePost && video.isLiveNow ? sendLiveReaction : undefined}
               postId={video.id}
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}
@@ -2968,6 +3002,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: video.id,
           type: 'video',
           author: video.channel,
           title: video.title,

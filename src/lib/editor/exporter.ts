@@ -1,6 +1,9 @@
 import { exportFilename } from "./exportName";
 import { waitForVideoFrame } from "./videoFrame";
-import { assertVideoMattes } from "./videoMatte";
+import { assertVideoMattes, videoMatteMediaIds } from "./videoMatte";
+import { createVideoMattePageCache, videoMatteFramesForOps } from "./videoMattePageCache";
+import { loadVideoMatteImage } from "./videoMatteImages";
+import { prepareGifImage, releaseGifImage } from "./gifImage";
 /**
  * Video export pipeline using WebCodecs + mp4-muxer / webm-muxer.
  * Renders each timeline frame to an OffscreenCanvas, encodes video via VideoEncoder,
@@ -104,7 +107,7 @@ function checkAbort(signal?: AbortSignal) {
 }
 
 /** Pre-load all source media into seekable HTMLVideoElement / Image / AudioBuffer. */
-async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortSignal) {
+async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortSignal, matteIds: ReadonlySet<string> = new Set()) {
   const videos = new Map<string, HTMLVideoElement>();
   const images = new Map<string, HTMLImageElement>();
   const audioBuffers = new Map<string, AudioBuffer>();
@@ -142,20 +145,24 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
           audioBuffers.set(m.id, audio);
         } catch { /* video without audio — fine */ }
       })());
-    } else if (m.kind === "image") {
-      tasks.push(new Promise<void>((resolve, reject) => {
+    } else if (m.kind === "image" && !matteIds.has(m.id)) {
+      tasks.push((async () => {
         const img = new Image();
         img.crossOrigin = "anonymous";
-        const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
-        const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
-        const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
-        cancelLoads.add(cancel);
-        img.onload = () => finish();
-        img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
-        img.src = m.url;
         images.set(m.id, img);
-        if (signal?.aborted) cancel();
-      }));
+        if (m.mimeType === "image/gif") await prepareGifImage(img, m.url, signal);
+        checkAbort(signal);
+        await new Promise<void>((resolve, reject) => {
+          const finish = (error?: Error) => { clearTimeout(timer); cancelLoads.delete(cancel); img.onload = null; img.onerror = null; error ? reject(error) : resolve(); };
+          const cancel = () => finish(new DOMException("Export cancelled", "AbortError"));
+          const timer = setTimeout(() => finish(new Error(`Failed to load ${m.name}`)), 20000);
+          cancelLoads.add(cancel);
+          img.onload = () => finish();
+          img.onerror = () => finish(new Error(`Failed to load ${m.name}`));
+          img.src = m.url;
+          if (signal?.aborted) cancel();
+        });
+      })());
     } else if (m.kind === "audio" && withAudio) {
       tasks.push((async () => {
         const buf = await (await fetch(m.url, { signal })).arrayBuffer();
@@ -166,9 +173,10 @@ async function loadSources(media: MediaItem[], withAudio = true, signal?: AbortS
   }
 
   try { await Promise.all(tasks); }
-  catch (error) { abort(); videos.forEach(v => { v.removeAttribute("src"); v.load(); }); images.forEach(img => { img.src = ""; }); throw error; }
+  catch (error) { abort(); videos.forEach(v => { v.removeAttribute("src"); v.load(); }); images.forEach(img => { releaseGifImage(img); img.src = ""; }); throw error; }
   finally { signal?.removeEventListener("abort", abort); await audioCtx?.close().catch(() => undefined); }
-  return { videos, images, audioBuffers };
+  const mattePages = createVideoMattePageCache(images, frame => loadVideoMatteImage(media, frame, signal), image => { image.src = ""; });
+  return { videos, images, audioBuffers, mattePages };
 }
 
 /** Render the audio mixdown to a stereo AudioBuffer at 48 kHz. */
@@ -258,14 +266,14 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const totalFrames = Math.ceil(duration * fps);
   onProgress?.(0, "Loading media…");
   const used = new Set(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden && "mediaId" in c).map(c => (c as MediaClip).mediaId));
-  for (const c of clips) if (c.kind === "video" && c.videoMatte) used.add(c.videoMatte.mediaId);
+  const matteIds = new Set(clips.flatMap(c => c.kind === "video" ? videoMatteMediaIds(c.videoMatte) : []));
+  for (const id of matteIds) used.add(id);
   assertVideoMattes(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden), (id, width, height) => media.some(m => m.id === id && m.width === width && m.height === height));
-  const { videos, images, audioBuffers } = await loadSources(media.filter(m => used.has(m.id)), true, signal);
+  const { videos, images, audioBuffers, mattePages } = await loadSources(media.filter(m => used.has(m.id)), true, signal, matteIds);
   let videoEncoder: VideoEncoder | undefined;
   let audioEncoder: AudioEncoder | undefined;
   let encoderFailure: Error | undefined;
   try {
-  assertVideoMattes(clips.filter(c => !c.hidden && !tracks.find(tr => tr.id === c.trackId)?.hidden), (id, width, height) => images.get(id)?.naturalWidth === width && images.get(id)?.naturalHeight === height);
   const artwork = await loadBrandOutroArtwork();
   const logo = artwork.logo;
   checkAbort(signal);
@@ -362,6 +370,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
     );
 
+    await mattePages.select(videoMatteFramesForOps(ops, t));
     for (const op of ops) {
       if (op.clip.kind === "video") {
         const mc = op.clip;
@@ -369,7 +378,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         if (v) {
           const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
           const localT = op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
-          await waitForVideoFrame(v, localT, { signal });
+          await waitForVideoFrame(v, localT, { signal, forCanvasRead: true });
         }
       }
       // Draw before seeking another cut that may share this decoder.
@@ -463,8 +472,9 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   } finally {
     if (videoEncoder && videoEncoder.state !== "closed") videoEncoder.close();
     if (audioEncoder && audioEncoder.state !== "closed") audioEncoder.close();
+    mattePages.dispose();
     videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
-    images.forEach(img => { img.src = ""; });
+    images.forEach(img => { releaseGifImage(img); img.src = ""; });
   }
 }
 
@@ -482,13 +492,13 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   const visual = (id: string) => { const tr = tracks.find(t => t.id === id); return !!tr && !tr.hidden && tr.kind !== "audio"; };
   const ids = new Set(clips.filter(c => !c.hidden && visual(c.trackId) && c.kind !== "audio" && "mediaId" in c).map(c => (c as MediaClip).mediaId));
   onProgress?.(0, "Loading media…");
-  for (const c of clips) if (c.kind === "video" && c.videoMatte) ids.add(c.videoMatte.mediaId);
+  const matteIds = new Set(clips.flatMap(c => c.kind === "video" ? videoMatteMediaIds(c.videoMatte) : []));
+  for (const id of matteIds) ids.add(id);
   assertVideoMattes(clips.filter(c => !c.hidden && visual(c.trackId)), (id, width, height) => opts.media.some(m => m.id === id && m.width === width && m.height === height));
-  const { videos, images } = await loadSources(opts.media.filter(m => ids.has(m.id)), false, signal);
+  const { videos, images, mattePages } = await loadSources(opts.media.filter(m => ids.has(m.id)), false, signal, matteIds);
   let session: ReturnType<typeof gifWorkerSession> | undefined;
   const abort = () => session?.close();
   try {
-    assertVideoMattes(clips.filter(c => !c.hidden && visual(c.trackId)), (id, width, height) => images.get(id)?.naturalWidth === width && images.get(id)?.naturalHeight === height);
     const artwork = await loadBrandOutroArtwork();
     const logo = artwork.logo;
     if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 3000))]);
@@ -507,10 +517,11 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
       ctx.clearRect(0, 0, plan.width, plan.height);
       ctx.fillStyle = settings.background; ctx.fillRect(0, 0, plan.width, plan.height);
       const ops = (localTime < contentDuration ? computeRenderOps(clips, visual, time, plan.width) : []).sort((a, b) => tracks.findIndex(t => t.id === a.clip.trackId) - tracks.findIndex(t => t.id === b.clip.trackId));
+      await mattePages.select(videoMatteFramesForOps(ops, time));
       for (const op of ops) {
         if (op.clip.kind === "video") {
           const video = videos.get(op.clip.mediaId);
-          if (video) await waitForVideoFrame(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1), { signal });
+          if (video) await waitForVideoFrame(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1), { signal, forCanvasRead: true });
         }
         ctx.save();
         if (op.translateX) ctx.translate(op.translateX, 0);
@@ -529,7 +540,9 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   } catch (error) { checkAbort(signal); throw error; }
   finally {
     signal?.removeEventListener("abort", abort); session?.close();
+    mattePages.dispose();
     videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); });
+    images.forEach(image => { releaseGifImage(image); image.src = ""; });
   }
 }
 
@@ -571,11 +584,12 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   );
 
   const used = new Set(ops.map((op) => (op.clip.kind === "text" ? "" : (op.clip as MediaClip).mediaId)));
-  for (const op of ops) if (op.clip.kind === "video" && op.clip.videoMatte) used.add(op.clip.videoMatte.mediaId);
+  const matteIds = new Set(ops.flatMap(op => op.clip.kind === "video" ? videoMatteMediaIds(op.clip.videoMatte) : []));
+  for (const id of matteIds) used.add(id);
   assertVideoMattes(ops.map(op => op.clip), (id, width, height) => media.some(m => m.id === id && m.width === width && m.height === height));
-  const { videos, images } = await loadSources(media.filter((m) => used.has(m.id)), false);
+  const { videos, images, mattePages } = await loadSources(media.filter((m) => used.has(m.id)), false, undefined, matteIds);
+  try {
 
-  assertVideoMattes(ops.map(op => op.clip), (id, w, h) => images.get(id)?.naturalWidth === w && images.get(id)?.naturalHeight === h);
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
@@ -583,11 +597,12 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   if (!ctx) throw new Error("Could not acquire canvas context");
   ctx.fillStyle = settings.background;
   ctx.fillRect(0, 0, width, height);
+  await mattePages.select(videoMatteFramesForOps(ops, t));
   for (const op of ops) {
     if (op.clip.kind === "video") {
       const mc = op.clip;
       const v = videos.get(mc.mediaId);
-      if (v) await waitForVideoFrame(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1));
+      if (v) await waitForVideoFrame(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1), { forCanvasRead: true });
     }
     ctx.save();
     if (op.translateX) ctx.translate(op.translateX, 0);
@@ -606,4 +621,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime, quality),
   );
   return { blob, filename: exportFilename(snapshot.title, format, "", "design") };
+  } finally {
+    mattePages.dispose(); videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); }); images.forEach(image => { releaseGifImage(image); image.src = ""; });
+  }
 }

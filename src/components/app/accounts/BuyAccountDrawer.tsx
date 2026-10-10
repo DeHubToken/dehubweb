@@ -1,3 +1,5 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Buy Account Drawer
  * ==================
@@ -53,7 +55,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [deliverToSelf, setDeliverToSelf] = useState(false);
-  const [receiveAddress, setReceiveAddress] = useState('');
+  const [receiveAddress, setReceiveAddress] = useSurfaceDraft("components/app/accounts/BuyAccountDrawer.tsx:receiveAddress", '', draftIdentity(listing));
   const [check, setCheck] = useState<ReceiveCheck | null>(null);
   const payChain = usePayChain(quote?.priceDhb, quote?.chains.map(c => c.chainId));
 
@@ -69,7 +71,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
     let cancelled = false;
     setQuote(null);
     setQuoteError(null);
-    setReceiveAddress('');
+    setReceiveAddress.initialize('');
     setCheck(null);
     getQuote
       .mutateAsync(listingId!)
@@ -86,7 +88,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
     // getQuote is a fresh mutation object each render; keying on the listing is
     // what stops this re-firing forever.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canQuote, listingId]);
+  }, [canQuote, listingId, setReceiveAddress]);
 
   // Live validation of the delivery wallet, debounced so we do not hit the
   // server on every keystroke of a pasted-then-corrected address.
@@ -159,7 +161,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
             <div className="rounded-xl bg-white/5 border border-white/10 p-4">
               <p className="text-xs text-zinc-500 mb-1">{t('accounts.askingPrice')}</p>
               <p className="text-2xl font-bold text-white flex items-center gap-2">
-                <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-6 h-6" />
                 {(quote?.priceDhb ?? listing.priceDhb).toLocaleString()}
               </p>
               <p className="text-xs text-zinc-500 mt-1">

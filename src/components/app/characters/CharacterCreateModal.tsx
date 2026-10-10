@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -25,8 +26,8 @@ const MAX_REFS = 6;
 export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
   const create = useCreateCharacter();
   const update = useUpdateCharacter();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/characters/CharacterCreateModal.tsx:name", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/characters/CharacterCreateModal.tsx:description", '');
   const [visibility, setVisibility] = useState<'private' | 'public'>('private');
   const [refs, setRefs] = useState<string[]>([]);
   const [primaryUrl, setPrimaryUrl] = useState<string | null>(null);
@@ -34,13 +35,13 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
 
   useEffect(() => {
     if (open) {
-      setName(editing?.name ?? '');
-      setDescription(editing?.description ?? '');
+      setName.initialize(editing?.name ?? '');
+      setDescription.initialize(editing?.description ?? '');
       setVisibility(editing?.visibility ?? 'private');
       setRefs(editing?.reference_image_urls ?? []);
       setPrimaryUrl(editing?.primary_image_url ?? editing?.reference_image_urls?.[0] ?? null);
     }
-  }, [open, editing]);
+  }, [open, editing, setDescription, setName]);
 
   const slugPreview = name ? slugifyCharacter(name) : '';
 

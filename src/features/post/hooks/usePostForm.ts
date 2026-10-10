@@ -1,3 +1,7 @@
+import { useDraftState } from '@/hooks/use-draft-state';
+import { draftIdentity } from '@/hooks/use-surface-draft';
+import { useAccountDraftKey } from '@/hooks/use-draft-state';
+import { readCurrentDraft, readDraft, writeDraft, clearDraft, flushDrafts } from '@/lib/draft-cache';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -24,11 +28,11 @@ import { getPostImageBytesForBadge, getPostImageLimitForBadge, MAX_IMAGE_UPLOAD_
 // handlePost to keep the wallet stack out of the entry bundle
 // (scripts/check-entry-bundle.mjs fails the build otherwise). Only the light
 // chain-config constants are imported statically.
-import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { usePostingChain } from '@/hooks/use-posting-chain';
 import { isSolanaChain } from '@/lib/chains/constants';
 import { connectSolanaWallet } from '@/lib/solana/wallet';
 import { broadcastSolanaMint } from '@/lib/solana/mint';
-import { confirmEvmMint, getSolanaStatus } from '@/lib/api/dehub/solana';
+import { confirmEvmMint } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,6 +44,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+import type { DeHubNFT } from '@/lib/api/dehub/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
 
@@ -106,26 +111,26 @@ interface ActiveDraft {
   scheduledDate?: string | null;
 }
 
-function loadActiveDraft(): ActiveDraft | null {
+function loadActiveDraft(key: string | null): ActiveDraft | null {
   try {
-    const stored = localStorage.getItem(ACTIVE_DRAFT_KEY);
+    const stored = key ? readDraft(key) : null;
     if (stored) return JSON.parse(stored);
   } catch {}
   return null;
 }
 
-function saveActiveDraft(draft: ActiveDraft): void {
-  try { localStorage.setItem(ACTIVE_DRAFT_KEY, JSON.stringify(draft)); } catch {}
+function saveActiveDraft(key: string | null, draft: ActiveDraft): void {
+  try { if (key) { writeDraft(key, JSON.stringify(draft)); flushDrafts(); } } catch {}
 }
 
-function clearActiveDraft(): void {
-  try { localStorage.removeItem(ACTIVE_DRAFT_KEY); } catch {}
+function clearActiveDraft(key: string | null): void {
+  try { if (key) { clearDraft(key); flushDrafts(); } } catch {}
 }
 
 // Load drafts from localStorage (sync fallback for initial render)
-const loadDraftsLocal = (): Draft[] => {
+const loadDraftsLocal = (key: string | null): Draft[] => {
   try {
-    const stored = localStorage.getItem(DRAFTS_STORAGE_KEY);
+    const stored = key ? localStorage.getItem(key) : null;
     if (stored) {
       const drafts = JSON.parse(stored);
       return drafts.map((d: any) => ({ ...d, createdAt: new Date(d.createdAt) }));
@@ -137,9 +142,9 @@ const loadDraftsLocal = (): Draft[] => {
 };
 
 // Save drafts to localStorage (backup)
-const saveDraftsLocal = (drafts: Draft[]) => {
+const saveDraftsLocal = (key: string | null, drafts: Draft[]) => {
   try {
-    localStorage.setItem(DRAFTS_STORAGE_KEY, JSON.stringify(drafts));
+    if (key) localStorage.setItem(key, JSON.stringify(drafts));
   } catch (e) {
     console.error('Failed to save drafts:', e);
   }
@@ -263,8 +268,7 @@ interface UsePostFormReturn {
     deleteDraft: (id: string) => void;
     startRecording: () => void;
     stopRecording: () => void;
-    setChainId: (chainId: PostChainId) => void;
-    setSelectedCategory: (category: string) => void;
+    setSelectedCategory: import('@/hooks/use-draft-state').DraftSetter<string>;
     setShowTitle: (show: boolean) => void;
     setShouldMint: (value: boolean) => void;
     setIsMature: (value: boolean) => void;
@@ -296,7 +300,16 @@ export function usePostForm(
    * over it — going live is one form now, not two.
    */
   onLiveStreamReady?: (stream: LiveStreamHandoff) => void,
+  draftScope = "post:new",
+  /**
+   * Set when this composer is writing a quote. The quote goes out through
+   * /quote_post with the same media, rating and mint choices as any post;
+   * what a quote cannot carry (paywalls, bounty, schedule, live, shop) is
+   * hidden by the modal and never sent.
+   */
+  quotedPost?: DeHubNFT | null,
 ): UsePostFormReturn {
+  const isQuoting = !!quotedPost;
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { addOptimisticPost } = useOptimisticPosts();
@@ -305,29 +318,35 @@ export function usePostForm(
   const { planIds: myPlanIds } = useCreatorPlansLite(user?.address);
 
   // Restore active draft from localStorage
-  const savedDraft = useRef(loadActiveDraft());
+  const activeKey = useAccountDraftKey(`${ACTIVE_DRAFT_KEY}:${draftScope}`);
+  const draftsKey = useAccountDraftKey(DRAFTS_STORAGE_KEY);
+  const savedDraft = useRef(loadActiveDraft(activeKey));
   const d = savedDraft.current;
 
   // Form state — initialize from saved draft if available
-  const [text, setText] = useState(d?.text ?? '');
+  // Keep the previous quote text key so unfinished quotes survive the composer change.
+  const textScope = quotedPost
+    ? `field:${JSON.stringify(['components/app/modals/QuotePostModal.tsx:content', draftIdentity(quotedPost)])}`
+    : draftScope + ":text";
+  const [text, setText] = useDraftState(textScope, d?.text ?? '');
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
-  const [ppvAmount, setPpvAmount] = useState(d?.ppvAmount ?? '');
+  const [ppvAmount, setPpvAmount] = useDraftState(draftScope + ":ppvAmount", d?.ppvAmount ?? '');
   // DHB, not USD: a USD-priced PPV ships with no contract address, and both
   // clients' unlock flows refuse it — a paywall nobody can pay through.
   const [ppvCurrency, setPpvCurrency] = useState<Currency>(d?.ppvCurrency ?? 'DHB');
   const [isWatch2Earn, setIsWatch2Earn] = useState(d?.isWatch2Earn ?? false);
-  const [w2eViews, setW2eViews] = useState(d?.w2eViews ?? '');
-  const [w2eComments, setW2eComments] = useState(d?.w2eComments ?? '');
-  const [w2eTotal, setW2eTotal] = useState(d?.w2eTotal ?? '');
+  const [w2eViews, setW2eViews] = useDraftState(draftScope + ":w2eViews", d?.w2eViews ?? '');
+  const [w2eComments, setW2eComments] = useDraftState(draftScope + ":w2eComments", d?.w2eComments ?? '');
+  const [w2eTotal, setW2eTotal] = useDraftState(draftScope + ":w2eTotal", d?.w2eTotal ?? '');
   const [w2eCurrency, setW2eCurrency] = useState<Currency>(d?.w2eCurrency ?? 'USD');
   const [isTokenGated, setIsTokenGated] = useState(d?.isTokenGated ?? false);
-  const [tokenContract, setTokenContract] = useState(d?.tokenContract ?? '');
-  const [tokenSymbol, setTokenSymbol] = useState(d?.tokenSymbol ?? 'DHB');
-  const [tokenAmount, setTokenAmount] = useState(d?.tokenAmount ?? '');
+  const [tokenContract, setTokenContract] = useDraftState(draftScope + ":tokenContract", d?.tokenContract ?? '');
+  const [tokenSymbol, setTokenSymbol] = useDraftState(draftScope + ":tokenSymbol", d?.tokenSymbol ?? 'DHB');
+  const [tokenAmount, setTokenAmount] = useDraftState(draftScope + ":tokenAmount", d?.tokenAmount ?? '');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
-  const [poll, setPoll] = useState<PollData | null>(d?.poll ?? null);
+  const [poll, setPoll] = useDraftState<PollData | null>(draftScope + ":poll", d?.poll ?? null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -359,31 +378,11 @@ export function usePostForm(
     // A restored schedule in the past would have the post rejected on send.
     return Number.isNaN(when.getTime()) || when.getTime() <= Date.now() ? null : when;
   });
-  const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
+  const [drafts, setDrafts] = useState<Draft[]>(() => loadDraftsLocal(draftsKey));
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [chainId, setChainIdState] = useState<PostChainId>(BASE_CHAIN_ID as PostChainId);
-
-  /**
-   * Selecting Solana asks the backend whether it can mint there before the
-   * chain is committed. Without this the user only found out at mint time —
-   * after the media had already been uploaded — via "Solana minting is not
-   * enabled on the server". A status endpoint that is down or slow must not
-   * block the choice, so failures fall through to the old behaviour.
-   */
-  const setChainId = useCallback((next: PostChainId) => {
-    setChainIdState(next);
-    if (!isSolanaChain(next)) return;
-    getSolanaStatus()
-      .then((status) => {
-        if (status.mintingEnabled === false) {
-          toast.error(status.message || 'Solana posting is temporarily unavailable. Try Base or BNB instead.');
-          setChainIdState(BASE_CHAIN_ID as PostChainId);
-        }
-      })
-      .catch(() => {});
-  }, []);
-  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+  const { chainId } = usePostingChain();
+  const [selectedCategory, setSelectedCategory] = useDraftState<string>(draftScope + ":selectedCategory", () => {
     // Active draft category takes priority, then saved defaults
     if (d?.selectedCategory) return d.selectedCategory;
     try { return localStorage.getItem('post_default_categories') || ''; } catch { return ''; }
@@ -393,7 +392,7 @@ export function usePostForm(
     if (d?.showTitle != null) return d.showTitle;
     try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
   });
-  const [titleText, setTitleText] = useState(d?.titleText ?? '');
+  const [titleText, setTitleText] = useDraftState(draftScope + ":titleText", d?.titleText ?? '');
 
   // Persist title toggle preference
   const handleSetShowTitle = useCallback((value: boolean) => {
@@ -462,7 +461,7 @@ export function usePostForm(
    * typed by hand, and losing three of them to a reload is exactly what a
    * draft exists to prevent.
    */
-  const [shopLinks, setShopLinks] = useState<ShopLink[]>(
+  const [shopLinks, setShopLinks] = useDraftState<ShopLink[]>(draftScope + ":shopLinks",
     Array.isArray(d?.shopLinks) ? d.shopLinks : [],
   );
 
@@ -549,6 +548,15 @@ export function usePostForm(
   // keystroke costs main-thread time exactly while the user is typing. An
   // unmount-only flush (below) persists the tail of what was typed so a
   // hard navigation within the 500ms window can't lose it.
+  const activeSnapshotJson = JSON.stringify({
+    text, titleText, showTitle, isMature, isForKids, shopLinks, shopListingIds,
+    selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+    isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount,
+    poll, scheduledDate: scheduledDate ? scheduledDate.toISOString() : null,
+  });
+  const latestActiveSnapshot = useRef(activeSnapshotJson);
+  latestActiveSnapshot.current = activeSnapshotJson;
   const persistDraftRef = useRef<(() => void) | null>(null);
   useEffect(() => {
     const persistDraft = () => {
@@ -561,13 +569,13 @@ export function usePostForm(
         scheduledDate: scheduledDate ? scheduledDate.toISOString() : null,
       };
       // Only save if there's meaningful content
-      const hasContent = text.trim() || titleText.trim() ||
+      const hasContent = text.length || titleText.length ||
         selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly ||
         shopLinks.length > 0 || shopListingIds.length > 0 || poll || scheduledDate;
       if (hasContent) {
-        saveActiveDraft(draft);
+        saveActiveDraft(activeKey, draft);
       } else {
-        clearActiveDraft();
+        clearActiveDraft(activeKey);
       }
     };
     persistDraftRef.current = persistDraft;
@@ -581,8 +589,14 @@ export function usePostForm(
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, poll, scheduledDate]);
 
-  // Flush the latest pending draft exactly once, at unmount.
-  useEffect(() => () => { persistDraftRef.current?.(); }, []);
+  // Page exits do not always unmount React before the browser stops work.
+  useEffect(() => {
+    const flush = () => persistDraftRef.current?.();
+    const hide = () => { if (document.visibilityState === 'hidden') flush(); };
+    window.addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', hide);
+    return () => { flush(); window.removeEventListener('pagehide', flush); document.removeEventListener('visibilitychange', hide); };
+  }, []);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -806,7 +820,7 @@ export function usePostForm(
     } finally {
       setIsGeneratingThumbnail(false);
     }
-  }, [hasImage, hasVideo, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier]);
+  }, [hasImage, hasVideo, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier, setText, setTitleText]);
 
   const removeMedia = useCallback((index: number) => {
     setMedia(prev => {
@@ -862,7 +876,7 @@ export function usePostForm(
         toast.success('Audio uploaded');
       }
     };
-  }, [hasImage, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier]);
+  }, [hasImage, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier, setText, setTitleText]);
 
   const handleFileDrop = useCallback((files: FileList) => {
     const fileArray = Array.from(files);
@@ -1054,7 +1068,7 @@ export function usePostForm(
     } finally {
       setIsEnhancing(false);
     }
-  }, [text]);
+  }, [text, setText]);
 
   const insertFormatting = useCallback((format: 'bold' | 'italic' | 'mention') => {
     const editor = editorRef.current;
@@ -1079,7 +1093,7 @@ export function usePostForm(
     // Update the text state with plain text
     const plainText = editor.innerText;
     setText(plainText);
-  }, []);
+  }, [setText]);
 
   const insertEmoji = useCallback((emoji: string) => {
     const editor = editorRef.current;
@@ -1096,7 +1110,7 @@ export function usePostForm(
     // Update the text state
     const plainText = editor.innerText;
     setText(plainText);
-  }, []);
+  }, [setText]);
 
   const insertGif = useCallback((gifUrl: string) => {
     // For now, GIFs can be added as media attachments
@@ -1133,34 +1147,35 @@ export function usePostForm(
   }, [processImageFiles]);
 
   const resetForm = useCallback(() => {
+    // A completed request must not reset a newer composition made while it ran.
+    if (latestActiveSnapshot.current !== activeSnapshotJson) return;
     // Belt and braces — the signature check in handlePost already refuses to
     // reuse this key for different content, but the post is out, so there is
     // nothing left for it to deduplicate against.
     postAttemptRef.current = null;
-    setText('');
+    setText.complete(text, '');
     setMedia([]);
     setIsSubscribersOnly(false);
     setIsPPV(false);
-    setPpvAmount('');
+    setPpvAmount.complete(ppvAmount, '');
     setPpvCurrency('USD');
     setIsWatch2Earn(false);
-    setW2eViews('');
-    setW2eComments('');
-    setW2eTotal('');
+    setW2eViews.complete(w2eViews, '');
+    setW2eComments.complete(w2eComments, '');
+    setW2eTotal.complete(w2eTotal, '');
     setW2eCurrency('USD');
     setIsTokenGated(false);
-    setTokenContract('');
-    setTokenSymbol('DHB');
-    setTokenAmount('');
+    setTokenContract.complete(tokenContract, '');
+    setTokenSymbol.complete(tokenSymbol, 'DHB');
+    setTokenAmount.complete(tokenAmount, '');
     setLiveMode(null);
-    setPoll(null);
+    setPoll.complete(poll, null);
     setScheduledDate(null);
-    setChainId(BASE_CHAIN_ID as PostChainId);
-    setTitleText('');
+    setTitleText.complete(titleText, '');
     // Cleared per post, deliberately. A board is usually specific to what was
     // just posted, and one that quietly carries over ends up on content it has
     // nothing to do with.
-    setShopLinks([]);
+    setShopLinks.complete(shopLinks, []);
     setShopListingIds([]);
     // Same reasoning, and it matters more here: this decides whether the post
     // is shown at all. The composer is mounted behind a one-way latch, so hook
@@ -1173,13 +1188,14 @@ export function usePostForm(
     setIsForKids(false);
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
-      setSelectedCategory('');
+      setSelectedCategory.complete(selectedCategory, '');
       try { localStorage.removeItem('post_default_categories'); } catch {}
     }
     categorySavedRef.current = false;
-    // Clear persisted active draft
-    clearActiveDraft();
-  }, []);
+    persistDraftRef.current = null;
+    // Compare fresh disk state as another tab may have continued this draft.
+    if (activeKey && readCurrentDraft(activeKey) === activeSnapshotJson) clearActiveDraft(activeKey);
+  }, [activeSnapshotJson, activeKey, setPoll, setPpvAmount, setSelectedCategory, setShopLinks, setText, setTitleText, setTokenAmount, setTokenContract, setTokenSymbol, setW2eComments, setW2eTotal, setW2eViews, poll, ppvAmount, selectedCategory, text, titleText, tokenAmount, tokenContract, w2eComments, w2eTotal, w2eViews, shopLinks, tokenSymbol]);
 
   // Load drafts from DB on mount
   useEffect(() => {
@@ -1194,7 +1210,7 @@ export function usePostForm(
         const merged = [...dbDrafts, ...local.filter((d) => !seen.has(d.id))]
           .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
           .slice(0, 10);
-        saveDraftsLocal(merged);
+        saveDraftsLocal(draftsKey, merged);
         return merged;
       });
     });
@@ -1227,7 +1243,7 @@ export function usePostForm(
     };
     const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
     setDrafts(updatedDrafts);
-    saveDraftsLocal(updatedDrafts);
+    saveDraftsLocal(draftsKey, updatedDrafts);
     // Persist to DB
     if (user?.address) {
       saveDraftToDb(user.address, newDraft).then((dbId) => {
@@ -1273,7 +1289,6 @@ export function usePostForm(
     if (p.tokenSymbol !== undefined) setTokenSymbol(p.tokenSymbol);
     if (p.tokenAmount !== undefined) setTokenAmount(p.tokenAmount);
     if (p.poll !== undefined) setPoll(p.poll ?? null);
-    if (p.chainId !== undefined) setChainIdState(p.chainId as PostChainId);
     if (p.shopLinks !== undefined) setShopLinks(p.shopLinks as ShopLink[]);
     if (p.shopListingIds !== undefined) setShopListingIds(p.shopListingIds);
     if (p.scheduledDate !== undefined) {
@@ -1282,12 +1297,12 @@ export function usePostForm(
       const when = p.scheduledDate ? new Date(p.scheduledDate) : null;
       setScheduledDate(when && !Number.isNaN(when.getTime()) && when.getTime() > Date.now() ? when : null);
     }
-  }, []);
+  }, [setPoll, setPpvAmount, setSelectedCategory, setShopLinks, setText, setTitleText, setTokenAmount, setTokenContract, setTokenSymbol, setW2eComments, setW2eTotal, setW2eViews]);
 
   const deleteDraft = useCallback((id: string) => {
     const updatedDrafts = drafts.filter(d => d.id !== id);
     setDrafts(updatedDrafts);
-    saveDraftsLocal(updatedDrafts);
+    saveDraftsLocal(draftsKey, updatedDrafts);
     if (user?.address) deleteDraftFromDb(id, user.address); // Remove from DB
   }, [drafts, user?.address]);
 
@@ -1463,6 +1478,12 @@ export function usePostForm(
       }
 
       const postingOnSolana = isSolanaChain(chainId);
+
+      if (isQuoting && postingOnSolana) {
+        toast.error('Quotes post on Base — switch chain to quote this post');
+        setIsPosting(false);
+        return;
+      }
 
       if (postingOnSolana && isWatch2Earn) {
         toast.error('Bounty is not available on Solana');
@@ -1869,7 +1890,8 @@ export function usePostForm(
         {
           name: submittedTitle,
           description: submittedDescription,
-          articleBody: extra?.articleBody,
+          quotedTokenId: isQuoting ? Number(quotedPost!.tokenId) : undefined,
+          articleBody: isQuoting ? undefined : extra?.articleBody,
           articleImage: extra?.articleImage,
           socialImage: extra?.socialImage,
           postType,
@@ -1880,7 +1902,7 @@ export function usePostForm(
           thumbnail,
           minterAddress,
           mintOptOut: !mintingThisPost,
-          scheduledAt: !liveMode && scheduledDate ? scheduledDate.toISOString() : undefined,
+          scheduledAt: !liveMode && !isQuoting && scheduledDate ? scheduledDate.toISOString() : undefined,
           scheduledFor: liveMode === 'video' && scheduledDate ? scheduledDate.toISOString() : undefined,
           idempotencyKey: postAttemptRef.current.key,
           contentRating: isMature ? 'mature' : undefined,
@@ -1934,7 +1956,7 @@ export function usePostForm(
           });
       }
 
-      if (!mintResponse.duplicate && !liveMode) {
+      if (!mintResponse.duplicate && !liveMode && !isQuoting) {
         void crossPost({
           text: [submittedTitle, submittedDescription].filter(Boolean).join('\n\n'),
           files: files.filter((f): f is File => f instanceof File),
@@ -1955,6 +1977,14 @@ export function usePostForm(
       if (alreadyOnChain) {
         console.log('[Mint] Duplicate of an already-minted post — skipping the chain step');
         mintingThisPost = false;
+      }
+
+      // /quote_post always signs for a mint. A quote published off-chain is
+      // kept the same way a post whose wallet never answered is: marked
+      // deliberately off-chain so the expiry sweep leaves it up — and no
+      // wallet is ever asked for.
+      if (isQuoting && !mintingThisPost && !alreadyOnChain && !mintResponse.duplicate) {
+        await keepPostOffChain(mintResponse.createdTokenId);
       }
 
       const isSolanaMint = !!(mintResponse.isSolana && mintResponse.transaction && mintResponse.mintAddress);
@@ -2322,6 +2352,7 @@ export function usePostForm(
           isLiked: false,
           createdAt: new Date().toISOString(),
           isOptimistic: true,
+          ...(isQuoting ? { isQuotePost: true, quotedPost } : {}),
         };
         addOptimisticPost({ id: optimisticId, type: 'image', data: imagePost, createdAt: new Date() });
       } else {
@@ -2347,6 +2378,7 @@ export function usePostForm(
             dislikes: 0,
           },
           isOptimistic: true,
+          ...(isQuoting ? { isQuotePost: true, quotedPost } : {}),
         };
         addOptimisticPost({ id: optimisticId, type: 'post', data: textPost, createdAt: new Date() });
       }
@@ -2408,9 +2440,10 @@ export function usePostForm(
 
       onClose();
 
-      // Navigate to home to show the new post
-      navigate('/app');
-      
+      // A quote stays where it was written: the optimistic card above already
+      // shows it at the top of the feed or the creator's own profile.
+      if (isQuoting) return;
+
       // Navigate to home to show the new post
       navigate('/app');
     } catch (error) {
@@ -2561,6 +2594,7 @@ export function usePostForm(
     effectiveShouldMint, mintFee, isMature, isForKids,
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
+    isQuoting, quotedPost,
   ]);
 
   /**
@@ -2658,7 +2692,6 @@ export function usePostForm(
       deleteDraft,
       startRecording,
       stopRecording,
-      setChainId,
       setSelectedCategory,
       markCategorySaved: () => { categorySavedRef.current = true; },
       setShowTitle: handleSetShowTitle,

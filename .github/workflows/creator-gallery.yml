@@ -1,0 +1,36 @@
+name: Creator gallery privacy
+on:
+  pull_request:
+    paths: ['supabase/migrations/*free_poster_creator_gallery.sql', 'tests/sql/creator-gallery.sql', '.github/workflows/creator-gallery.yml']
+  push:
+    branches: [main]
+    paths: ['supabase/migrations/*free_poster_creator_gallery.sql', 'tests/sql/creator-gallery.sql', '.github/workflows/creator-gallery.yml']
+jobs:
+  privacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: gallery-test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: gallery-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify public gallery isolation
+        run: |
+          psql -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE anon;
+          CREATE ROLE authenticated;
+          CREATE ROLE service_role BYPASSRLS;
+          CREATE SCHEMA storage;
+          CREATE TABLE storage.buckets (id text PRIMARY KEY, name text, public boolean, file_size_limit bigint, allowed_mime_types text[]);
+          CREATE TABLE public.ai_messages (id uuid, role text, image_url text, video_url text, created_at timestamptz);
+          SQL
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261010183000_free_poster_creator_gallery.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/creator-gallery.sql

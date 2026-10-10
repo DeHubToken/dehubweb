@@ -415,3 +415,6 @@ project_id = "aigxuutjaqsywioxjefr"
   # Caller identity is verified against the DeHub API token.
   [functions.ads-creator-support]
     verify_jwt = false
+
+[functions.editor-visual-highlights]
+verify_jwt = false

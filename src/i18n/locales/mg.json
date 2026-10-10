@@ -90,6 +90,7 @@
     "heading": "DeHub Fohy"
   },
   "settings": {
+    "postingChain": "Blockchain ho an’ny lahatsoratra",
     "showOnline": "Asehoy rehefa an-tserasera aho",
     "showOnlineDesc": "Ny olona izay alefanao dia mahita teboka maitso eo akaikin'ny anaranao raha mampiasa DeHub ianao",
     "smartReplies": "Valiny atolotra",
@@ -259,6 +260,7 @@
     "light": "Mazava",
     "dark": "Maizina",
     "system": "Rafitra",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Alina Manjavozavo",
     "swarms": "Swarms",
@@ -596,7 +598,7 @@
     "stageDelivering": "Ny DeHub Pay dia mandefa ny mari-tsoratrao…",
     "payViaDpay": "Nalefa tamin'ny DeHub Pay, tonga ny mari-tsoratra ao anatin'ny 30 segondra eo ho eo",
     "payViaBridgeDpay": "Nifindra tany Base ary nalefa tamin'ny DeHub Pay, tonga ny mari-tsoratra ao anatin'ny iray minitra eo ho eo",
-    "dmSent": "Nandefa {{amount}} DHB ho an'i {{name}}!"
+    "dmSent": "Nandefa {{amount}} tokens ho an'i {{name}}!"
   },
   "postOptions": {
     "options": "Safidy",
@@ -1225,10 +1227,10 @@
   },
   "dhbListing": {
     "title": "Ho avy tsy ho ela ny fisoratana ny token!",
-    "body": "Tsy mbola amidy ny $DHB. Mahazoa mailaka raha vao voasoratra izy.",
+    "body": "Tsy mbola amidy ny tokens. Mahazoa mailaka raha vao voasoratra izy.",
     "notifyMe": "Ampahafantaro ahy",
-    "privacy": "Hampiasainay ihany ity hampahafantarana anao rehefa voasoratra ny $DHB.",
-    "joined": "Ao amin'ny lisitra ianao. Handefa mailaka any amin'ny {{email}} izahay raha vao voasoratra ny $DHB."
+    "privacy": "Hampiasainay ihany ity hampahafantarana anao rehefa voasoratra ny tokens.",
+    "joined": "Ao amin'ny lisitra ianao. Handefa mailaka any amin'ny {{email}} izahay raha vao voasoratra ny tokens."
   },
   "explorePage": {
     "searchPlaceholder": "Hikaroka olona, lahatsoratra na atiny...",
@@ -1488,7 +1490,7 @@
     "otherTokens": "Tokena hafa",
     "otherTokensDesc": "Mividiana ETH na USDC ao amin'ny Base amin'ny karatrao",
     "shareToFeed": "Zarao amin'ny fahana aho",
-    "sharePostTemplate": "Vao avy nanampy ny {{amount}} $DHB tao amin'ny kitapoko tao amin'ny DeHub. Miditra sy miaraka amin'ny fokonolona. #DeHub #DHB",
+    "sharePostTemplate": "Vao avy nanampy ny {{amount}} tokens tao amin'ny kitapoko tao amin'ny DeHub. Miditra sy miaraka amin'ny fokonolona. #DeHub",
     "success": {
       "title": "Définition malgache!",
       "subtitle": "Ny karana dia natolotra tao amin'ny kitaponao.",
@@ -3511,7 +3513,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Dingana 1",
     "heroTitle": "TOKENISE raharaham-barotra",
-    "heroSubtitle": "DHB-panorenana firaiketam-po curve. Mpianatry ny oniversite Uniswap amin'ny $ 42K tsena Cap.",
+    "heroSubtitle": "tokens-panorenana firaiketam-po curve. Mpianatry ny oniversite Uniswap amin'ny $ 42K tsena Cap.",
     "createCoin": "Mamoròna vola madinika",
     "filterNew": "Vaovao",
     "filterGraduating": "Momba ny vatsim-pianarana",
@@ -3610,7 +3612,7 @@
   },
   "fractions": {
     "seoTitle": "Fandrosoana | DeHub",
-    "seoDescription": "Mividiana sy mivarotra ampahany amin'ny lahatsoratra DeHub. Ny lahatsoratra efa voa-mint dia ampahany on-chain 1000 — manàna ampahany amin'ny horonan-tsary, hira, na sary ary varotra amin'ny DHB izany.",
+    "seoDescription": "Mividiana sy mivarotra ampahany amin'ny lahatsoratra DeHub. Ny lahatsoratra efa voa-mint dia ampahany on-chain 1000 — manàna ampahany amin'ny horonan-tsary, hira, na sary ary varotra amin'ny tokens izany.",
     "title": "Amboaram-peon-kira",
     "perUpload": "1000 isaky ny fampidirana",
     "tabBrowse": "Zahavo",
@@ -4458,9 +4460,9 @@
   },
   "usernames": {
     "seoTitle": "Tsenan'ny mpampiasa | DeHub",
-    "seoDescription": "Mividiana sy mivarotra DeHub usernames amin'ny DHB. Search fohy, numeric sy tany am-boalohany famohana amidy, na mitanisa ny anao manokana â ny famindrana mitranga amin'ny-Chain ny fotoana fandoavam-bola clears.",
+    "seoDescription": "Mividiana sy mivarotra DeHub usernames amin'ny tokens. Search fohy, numeric sy tany am-boalohany famohana amidy, na mitanisa ny anao manokana â ny famindrana mitranga amin'ny-Chain ny fotoana fandoavam-bola clears.",
     "title": "Anaram-pampiasa",
-    "subtitle": "Famohana amidy, priced in DHB",
+    "subtitle": "Famohana amidy, priced in tokens",
     "tabBrowse": "Zahavo",
     "tabSell": "Kemananan",
     "searchPlaceholder": "Hitady nyhandleÃ ¢",
@@ -4583,7 +4585,7 @@
   },
   "accounts": {
     "seoTitle": "Momba ny kaonty ¢ Wondershare",
-    "seoDescription": "Mividiana sy mivarotra ny kaonty DeHub napetraka ho an'ny DHB. Browse kaonty amin'ny mpanaraka, Uploads sy ny taona âny tahony, Lahatsoratra, mpanara-dia sy ny badge anaram-boninahitra rehetra famindrana, sy ny fandoavam-bola avy hatrany mankany amin'ny mpivarotra.",
+    "seoDescription": "Mividiana sy mivarotra ny kaonty DeHub napetraka ho an'ny tokens. Browse kaonty amin'ny mpanaraka, Uploads sy ny taona âny tahony, Lahatsoratra, mpanara-dia sy ny badge anaram-boninahitra rehetra famindrana, sy ny fandoavam-bola avy hatrany mankany amin'ny mpivarotra.",
     "title": "Kaonty",
     "subtitle": "Kaonty manontolo amidy, vidiny amin'ny token DeHub",
     "tabBrowse": "Zahavo",
@@ -6238,17 +6240,17 @@
   },
   "docs": {
     "seoTitle": "Antontan-taratasy DeHub — Torolalana, token, dApps sy FAQ",
-    "seoDescription": "Antontan-taratasy ofisialin’ny DeHub: topi-maso ny sehatra, dApps, toekarena token DHB, staking, lalao, drafitra, FAQ sy ny maro hafa."
+    "seoDescription": "Antontan-taratasy ofisialin’ny DeHub: topi-maso ny sehatra, dApps, toekarena token tokens, staking, lalao, drafitra, FAQ sy ny maro hafa."
   },
   "dex": {
-    "seoTitle": "DEX — Varotra DHB amin'ny vidiny tianao",
-    "seoDescription": "Mametraha ny vidin'ny fividianana na fivarotana DHB miaraka amin'ny famandrihana fetra Uniswap v4 ao amin'ny Base na BNB Chain. Boky famandrihana mivantana, halaliny ny tsoka ary vidiny USD iray iombonana.",
+    "seoTitle": "DEX — Varotra tokens amin'ny vidiny tianao",
+    "seoDescription": "Mametraha ny vidin'ny fividianana na fivarotana tokens miaraka amin'ny famandrihana fetra Uniswap v4 ao amin'ny Base na BNB Chain. Boky famandrihana mivantana, halaliny ny tsoka ary vidiny USD iray iombonana.",
     "venue": "Tambajotra",
     "marketPrice": "Vidin'ny tsena · USD",
     "bookPrice": "{{chain}} vidin'ny boky · USD",
     "change24": "Fiovana tao anatin'ny 24ora",
     "totalLiquidity": "Totaly ny rano-tsakafo · USD",
-    "listedDhb": "DHB voatanisa · {{chain}}",
+    "listedDhb": "tokens voatanisa · {{chain}}",
     "listedUsd": "USD voatanisa · {{chain}}",
     "refreshMarket": "Havaozina ny tsena",
     "refresh": "Havaozina",
@@ -6273,21 +6275,21 @@
     "orderBook": "Boky famandrihana",
     "priceGrouping": "Fizarana vidiny",
     "priceUsd": "Vidiny (USD)",
-    "sizeDhb": "Habe (DHB)",
-    "totalDhb": "Tontaly (DHB)",
+    "sizeDhb": "Habe (tokens)",
+    "totalDhb": "Tontaly (tokens)",
     "noBids": "Mbola tsy misy tolo-bidy",
     "noAsks": "Mbola tsy misy famatsiam-bola fangatahana",
     "useBuyPrice": "Ampiasao ny {{price}} ho vidin'ny fividianana",
     "useSellPrice": "Ampiasao ny {{price}} ho vidin'ny fivarotana",
     "spread": "Fahasamihafana · USD",
-    "buyTotal": "Mividiana {{amount}} DHB",
-    "sellTotal": "Mivarotra {{amount}} DHB",
+    "buyTotal": "Mividiana {{amount}} tokens",
+    "sellTotal": "Mivarotra {{amount}} tokens",
     "placeOrder": "Manaova baiko",
     "lpFee": "0% sarany LP",
     "lpFeeLabel": "Sarany LP",
     "lpFeeValue": "{{fee}}% sarany LP",
-    "buy": "Mividiana DHB",
-    "sell": "Mivarotra DHB",
+    "buy": "Mividiana tokens",
+    "sell": "Mivarotra tokens",
     "maxBuy": "Vidiny ambony indrindra hividianana",
     "minSell": "Vidiny ambany indrindra hivarotana",
     "spend": "Mandany",
@@ -6303,7 +6305,7 @@
     "estimated": "Tombanana ny fiovam-bola feno",
     "network": "Tambajotra famatsiam-bola",
     "sellBelowMarket": "Ity fivarotana ity dia {{percent}}% ambany noho ny vidin'ny tsena ${{price}}. Misy afaka mividy izany ary mivarotra izany any an-toerana hafa avy hatrany.",
-    "buyAboveMarket": "Ity fividianana ity dia {{percent}}% mihoatra noho ny vidin'ny tsena amin'ny ${{price}}. Handoa vola mihoatra noho ny vidin'ny DHB any an-toerana hafa ianao.",
+    "buyAboveMarket": "Ity fividianana ity dia {{percent}}% mihoatra noho ny vidin'ny tsena amin'ny ${{price}}. Handoa vola mihoatra noho ny vidin'ny tokens any an-toerana hafa ianao.",
     "useMarket": "Ampiasao ny vidin'ny tsena",
     "balanceError": "Tsy nahomby ny fanamarinana ny fifandanjana. Avereno indray alohan'ny fametrahana baiko.",
     "noFunding": "Tsy misy {{token}} azo amin'ny {{chain}}.",
@@ -6312,7 +6314,7 @@
     "reviewYourBuy": "Jereo ny fividiananao",
     "reviewYourSell": "Jereo ny fivarotanao",
     "reviewDeposit": "Mametraha {{amount}} {{token}} amin'ny {{chain}}.",
-    "reviewRange": "Salan'isa: {{min}} – {{max}} USD isaky ny DHB.",
+    "reviewRange": "Salan'isa: {{min}} – {{max}} USD isaky ny tokens.",
     "initializes": "Izany dia mamorona sy manomboka ny 0% pool.",
     "pendingNote": "Nampandrenesina ny fifanakalozanao. Avereno ny fanamafisana na ny fisoratana anarana amin'ny lisitra raha tsy mametraka indray.",
     "viewTransaction": "Jereo ny fifanakalozana",
@@ -6329,7 +6331,7 @@
     "keepOpen": "Avelao hisokatra ity pejy ity mandra-pisoratan'ny lisitrao. Tsy azo ampiasaina ny fitehirizana ny navigateur.",
     "snapshotDelayed": "Ny angon-drakitra momba ny tsena ifampizarana dia tara. Aseho ny sary farany nohamafisin'ny fanamarinana.",
     "snapshotUnavailable": "Tsy azo ampiasaina ny angon-drakitra momba ny tsena ifampizarana. Avereno indray mba hampidirana ny toerana.",
-    "withdrawReview": "Esory ny {{dhb}} DHB sy {{usdc}} USDC amin'ny {{chain}}? Ny vola dia havaozina alohan'ny sonia; ny fandeferana amin'ny vidiny dia 0.5%.",
+    "withdrawReview": "Esory ny {{dhb}} tokens sy {{usdc}} USDC amin'ny {{chain}}? Ny vola dia havaozina alohan'ny sonia; ny fandeferana amin'ny vidiny dia 0.5%.",
     "withdrawn": "Nisy toerana nesorina",
     "withdrawFailed": "Tsy nahomby ny fanesorana",
     "withdrawing": "Manala…",
@@ -6462,6 +6464,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Fotoana miavaka hita maso",
+      "visualPrivacy": "Alefaso ny sary voafantina hanaovana fanadihadiana hita maso."
+    },
+    "review": {
+      "title": "Famerenana tetikasa",
+      "shared": "Nozaraina taminao",
+      "time": "Fotoana (s)",
+      "assign": "Manendry kitapom-bola"
+    },
+    "textFit": {
+      "wrap": "Zarao ny andalana",
+      "width": "Sakan'ny lahatsoratra",
+      "shrink": "Ahena ny lahatsoratra mba hifanaraka",
+      "height": "Haavon'ny lahatsoratra",
+      "captions": "Ampifanaraho ny lalan'ny dikanteny"
+    },
     "canvas": {
       "dropMedia": "Alatsaho mba hampidirina amin'ny famolavolanao",
       "dropText": "Alatsaho mba hampidirana lahatsoratra",
@@ -7811,7 +7830,7 @@
     "topUpTitle": "Top up ary vonjy",
     "discount": "{{percent}}% fihenam-bidy",
     "noDiscount": "Vidiny feno",
-    "total": "Total ${{usd}}, aloa amin'ny DHB",
+    "total": "Total ${{usd}}, aloa amin'ny tokens",
     "buy": "Mividiana crédits",
     "buying": "Miandry ny fandoavam-bola…",
     "bought": "Nampiana {{count}} crédits fandefasana",
@@ -7841,7 +7860,7 @@
     "skippedToast": "Voaravaka {{platforms}}: tsy manana sary na lahatsary ilainy ity lahatsoratra ity.",
     "uploadFailed": "Tsy afaka nampakatra ny haino aman-jery noho ny cross-posting.",
     "creditRules": "{{x}} for X, {{farcaster}} for Farcaster sy {{other}} isaky ny sehatra hafa rehetra ny fandefasana tsirairay. Ny lahatsoratra voalamina dia mampiasa ny carte de crédit rehefa mandamina azy ireo ianao.",
-    "payAsYouGoCredits": "Vonoy? Nividy tao amin'ny DHB amin'ny ${{price}} each when you post ny findramam-bola tsy hita.",
+    "payAsYouGoCredits": "Vonoy? Nividy tao amin'ny tokens amin'ny ${{price}} each when you post ny findramam-bola tsy hita.",
     "topUpCredits": "{{count}} credits",
     "perCredit": "${{price}} per credit",
     "pendingApproval": "Miandry anao mba hanaiky dehub ao amin'ny Farcaster App",
@@ -7853,7 +7872,7 @@
   "dm": {
     "planRestricted": "Mila famandrihana ity mpampiasa ity vao mahazo hafatra.",
     "planTypeNotAllowed": "Tsy mamela an'io karazana hafatra io ny drafitr'ity mpamorona ity.",
-    "planMinTip": "Tokony ho {{amount}} DHB farafahakeliny ny tip ho an'ity mpamorona ity."
+    "planMinTip": "Tokony ho {{amount}} tokens farafahakeliny ny tip ho an'ity mpamorona ity."
   },
   "credits": {
     "earningsWorth": "Mitentina {{amount}}",
@@ -7979,12 +7998,12 @@
       "copyLink": "Adikao ny rohy",
       "notifyKey": "Fanamarihana fanalahidy",
       "payTitle": "Mampiasa fitoviana",
-      "payBody": "mandoa() mangataka ny mpampiasa mba handefa anao DHB, mivantana any amin'ny kitapom-batsy izay nanao sonia ny dehub.json. Jereo ny fandraisana eo amin'ny lohamilina alohan'ny hanafaka na inona na inona.",
+      "payBody": "mandoa() mangataka ny mpampiasa mba handefa anao tokens, mivantana any amin'ny kitapom-batsy izay nanao sonia ny dehub.json. Jereo ny fandraisana eo amin'ny lohamilina alohan'ny hanafaka na inona na inona.",
       "notifyTitle": "Hery ny fampandrosoana",
       "notifyBody": "Mpanao fitahian-dalana anie ny olona miankina amin'ny appo anao dia azo anondroan'ny servero anao amin'ny fahalalana anao (notify key). Tsy misy fahalalana miovaova amin'ny olona ho an'ny fahalalana.",
       "rankTitle": "Ny fomba laharan'ny fivarotana apps",
       "rankBody": "Ny am-pahatratra mihary ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’ny antoka voalohany mifanitsy amin’",
-      "rewardsBody": "Isam-bolana {{pool}} DHB dia ifampizarana amin'ny alalan'ny isa mitovy, kajy isankerinandro. Mba hahafeno fepetra, ny fampiharana mila voamarina tompony kitapom-batsy sy raha kely indrindra 3 niverina mpampiasa. Ny valisoa dia omen'ny DeHub amin'ny tompona kitapom-bola.",
+      "rewardsBody": "Isam-bolana {{pool}} tokens dia ifampizarana amin'ny alalan'ny isa mitovy, kajy isankerinandro. Mba hahafeno fepetra, ny fampiharana mila voamarina tompony kitapom-batsy sy raha kely indrindra 3 niverina mpampiasa. Ny valisoa dia omen'ny DeHub amin'ny tompona kitapom-bola.",
       "rewardPaid": "Vidiana",
       "rewardPending": "Namidy",
       "rewardsNone": "Tsy mbola misy ny mari-pankasitrahana. Raha izany ny herinandro voalohany dia ny Alatsinainy."
@@ -8008,10 +8027,10 @@
       "art-creativity": "Zavakanto sy famoronana"
     },
     "pay": {
-      "body": "Ny DHB dia manana fahefana mifanitsy amin'ny wallet ny mpampianatra ao amin'ny applikasyona, {{wallet}}. Tsy azo ampiasaina ny fampiasana ny fampianarana.",
-      "confirm": "Pay {{amount}} DHB",
+      "body": "Ny tokens dia manana fahefana mifanitsy amin'ny wallet ny mpampianatra ao amin'ny applikasyona, {{wallet}}. Tsy azo ampiasaina ny fampiasana ny fampianarana.",
+      "confirm": "Pay {{amount}} tokens",
       "sending": "Mandefa ny fandoavanao…",
-      "sent": "Mampanodina ny {{amount}} DHB ho {{name}}.",
+      "sent": "Mampanodina ny {{amount}} tokens ho {{name}}.",
       "noOwner": "Mbola tsy afaka mividy kitapom-batsy io fangatahana io aloha hatreto."
     },
     "add": {
@@ -8162,12 +8181,12 @@
     "action": "Hetsika",
     "viewTx": "Jereo tx",
     "loadingSubscriptions": "Mampiditra soratra...",
-    "txPurchased": "Nividy {{amount}} DHB ianao",
-    "txSold": "Nivarotra {{amount}} DHB ianao",
-    "txTransfer": "Famindrana {{amount}} DHB",
-    "txPpvUnlock": "Fanokafana PPV — {{amount}} DHB",
-    "txPpvSale": "Fivarotana PPV — {{amount}} DHB",
-    "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} DHB",
-    "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} DHB"
+    "txPurchased": "Nividy {{amount}} tokens ianao",
+    "txSold": "Nivarotra {{amount}} tokens ianao",
+    "txTransfer": "Famindrana {{amount}} tokens",
+    "txPpvUnlock": "Fanokafana PPV — {{amount}} tokens",
+    "txPpvSale": "Fivarotana PPV — {{amount}} tokens",
+    "txTipSent": "Fanomezana ho an'i {{name}} — {{amount}} tokens",
+    "txTipReceived": "{{name}} nanome fanomezana anao — {{amount}} tokens"
   }
 }

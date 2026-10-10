@@ -90,6 +90,7 @@
     "heading": "DeHub Gaagaaban"
   },
   "settings": {
+    "postingChain": "Blockchain-ka qoraallada",
     "showOnline": "Muuji marka aan ku jiro internetka",
     "showOnlineDesc": "Dadka aad fariin u aragto dhibic cagaaran oo ku xiga magacaaga inta aad isticmaaleyso DeHub",
     "smartReplies": "Jawaabaha la soo jeediyay",
@@ -259,6 +260,7 @@
     "light": "Iftiinka",
     "dark": "Mugdiga",
     "system": "Nidaamka",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Habeenno Ciiryaan ah",
     "swarms": "Raxan",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay wuxuu soo dirayaa calaamadaada…",
     "payViaDpay": "Waxaa lagu bixiyay DeHub Pay, calaamadaha waxay yimaadaan qiyaastii 30 ilbiriqsi",
     "payViaBridgeDpay": "Waxaa loo guuray Base waxaana lagu bixiyay DeHub Pay, calaamadaha waxay yimaadaan qiyaastii hal daqiiqo",
-    "dmSent": "{{amount}} DHB ayaa loo diray {{name}}!"
+    "dmSent": "{{amount}} tokens ayaa loo diray {{name}}!"
   },
   "postOptions": {
     "options": "Ikhtiyaarada",
@@ -1203,10 +1205,10 @@
   },
   "dhbListing": {
     "title": "Liiska token-ka dhawaan!",
-    "body": "$DHB weli lagama ganacsado. Hel iimayl isla marka la liis-gareeyo.",
+    "body": "tokens weli lagama ganacsado. Hel iimayl isla marka la liis-gareeyo.",
     "notifyMe": "I ogeysii",
-    "privacy": "Waxaan u isticmaali doonnaa oo keliya inaan kuu sheegno marka $DHB la liis-gareeyo.",
-    "joined": "Waxaad ku jirtaa liiska. Waxaan iimayl u diri doonnaa {{email}} isla marka $DHB la liis-gareeyo."
+    "privacy": "Waxaan u isticmaali doonnaa oo keliya inaan kuu sheegno marka tokens la liis-gareeyo.",
+    "joined": "Waxaad ku jirtaa liiska. Waxaan iimayl u diri doonnaa {{email}} isla marka tokens la liis-gareeyo."
   },
   "explorePage": {
     "searchPlaceholder": "Raadi dadka, qoraallada, ama nuxurka...",
@@ -1465,7 +1467,7 @@
     "otherTokens": "Tokenno kale",
     "otherTokensDesc": "Kaarkaaga ku iibso ETH ama USDC Base",
     "shareToFeed": "La wadaag quudintayda",
-    "sharePostTemplate": "Just added {{amount}} $DHB in my stack on DeHub. Dhisida bulshada. #DeHub #DHB",
+    "sharePostTemplate": "Just added {{amount}} tokens in my stack on DeHub. Dhisida bulshada. #DeHub",
     "success": {
       "title": "Iibso Dhamaystiran!",
       "subtitle": "Calaamadaha ayaa la gaarsiiyay boorsadaada.",
@@ -3461,7 +3463,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Wajiga 1aad · Horudhaca Gaarka ah",
     "heroTitle": "Ganacsiga TOKENISE",
-    "heroSubtitle": "Qalooca isku xirka DHB. Qalin jabiyay Uniswap at $ 42K daboolka suuqa.",
+    "heroSubtitle": "Qalooca isku xirka tokens. Qalin jabiyay Uniswap at $ 42K daboolka suuqa.",
     "createCoin": "Samee qadaadiic",
     "filterNew": "Cusub",
     "filterGraduating": "Ku saabsan qalinjabinta",
@@ -3561,7 +3563,7 @@
   },
   "fractions": {
     "seoTitle": "Qaybo ka mid ah | DeHub",
-    "seoDescription": "Iibso oo iibi qaybaha qoraallada DeHub. Qoraal la mint-gareeyay waa 1000 qaybood oo on-chain ah — lahaanso qayb ka mid ah muuqaal, hees ama sawir oo ku ganacsado DHB.",
+    "seoDescription": "Iibso oo iibi qaybaha qoraallada DeHub. Qoraal la mint-gareeyay waa 1000 qaybood oo on-chain ah — lahaanso qayb ka mid ah muuqaal, hees ama sawir oo ku ganacsado tokens.",
     "title": "Saamiyo",
     "perUpload": "1000 halkii upload",
     "tabBrowse": "Browse",
@@ -4387,7 +4389,7 @@
   },
   "usernames": {
     "seoTitle": "Magaca Isticmaalaha Suuqa | DeHub",
-    "seoDescription": "Iibso oo iibso DeHub usernames oo leh DHB. Raadi gacmo gaaban, tiro iyo asal ahaan iibka, ama liiskaaga — wareejinta waxay dhacdaa on-chain marka lacag bixinta la caddeeyo.",
+    "seoDescription": "Iibso oo iibso DeHub usernames oo leh tokens. Raadi gacmo gaaban, tiro iyo asal ahaan iibka, ama liiskaaga — wareejinta waxay dhacdaa on-chain marka lacag bixinta la caddeeyo.",
     "title": "Magacyada Isticmaalaha",
     "subtitle": "Gacan ku haynta iibka, qiimaha USD",
     "tabSell": "Iibso",
@@ -4502,7 +4504,7 @@
   },
   "accounts": {
     "seoTitle": "Suuqa Koontada — DeHub",
-    "seoDescription": "Iibso oo iibso koontada DeHub ee la aasaasay ee DHB. Browse xisaabaadka by kuwa raacsan, uploads iyo da 'da — gacanta, posts, kuwa raacsan iyo xuquuqda calaamadda dhammaan wareejinta, iyo lacag bixinta si toos ah u tagaan iibiyaha.",
+    "seoDescription": "Iibso oo iibso koontada DeHub ee la aasaasay ee tokens. Browse xisaabaadka by kuwa raacsan, uploads iyo da 'da — gacanta, posts, kuwa raacsan iyo xuquuqda calaamadda dhammaan wareejinta, iyo lacag bixinta si toos ah u tagaan iibiyaha.",
     "title": "Xisaabaadka",
     "subtitle": "Xisaabaadka oo dhan ayaa la iibiyaa, qiimaha lagu bixiyo DeHub token",
     "tabSell": "Iibso",
@@ -6141,17 +6143,17 @@
   },
   "docs": {
     "seoTitle": "Dukumentiga DeHub — Hagayaal, token, dApps iyo su’aalo",
-    "seoDescription": "Dukumentiga rasmiga ah ee DeHub: guud ahaan barxadda, dApps, dhaqaalaha token-ka DHB, staking, ciyaaro, qorshaha mustaqbalka, su’aalaha badanaa la weydiiyo iyo wax kale."
+    "seoDescription": "Dukumentiga rasmiga ah ee DeHub: guud ahaan barxadda, dApps, dhaqaalaha token-ka tokens, staking, ciyaaro, qorshaha mustaqbalka, su’aalaha badanaa la weydiiyo iyo wax kale."
   },
   "dex": {
-    "seoTitle": "DEX — Ku ganacsada DHB qiimahaaga",
-    "seoDescription": "U deji qiimahaaga iibka ama iibinta DHB adoo isticmaalaya Uniswap v4 limit order oo ku taal Base ama BNB Chain. Live order book, market depth iyo hal qiimo oo USD ah.",
+    "seoTitle": "DEX — Ku ganacsada tokens qiimahaaga",
+    "seoDescription": "U deji qiimahaaga iibka ama iibinta tokens adoo isticmaalaya Uniswap v4 limit order oo ku taal Base ama BNB Chain. Live order book, market depth iyo hal qiimo oo USD ah.",
     "venue": "Network",
     "marketPrice": "Qiimaha suuqa · USD",
     "bookPrice": "{{chain}} qiimaha buugga · USD",
     "change24": "Isbeddelka 24h",
     "totalLiquidity": "Wadarta likidiga · USD",
-    "listedDhb": "DHB la qoray · {{chain}}",
+    "listedDhb": "tokens la qoray · {{chain}}",
     "listedUsd": "USD la qoray · {{chain}}",
     "refreshMarket": "Cusbooneysii suuqa",
     "refresh": "Cusbooneysii",
@@ -6176,21 +6178,21 @@
     "orderBook": "Order book",
     "priceGrouping": "Kooxaynta qiimaha",
     "priceUsd": "Qiimaha (USD)",
-    "sizeDhb": "Cabbirka (DHB)",
-    "totalDhb": "Wadarta (DHB)",
+    "sizeDhb": "Cabbirka (tokens)",
+    "totalDhb": "Wadarta (tokens)",
     "noBids": "Ma jiraan dalabyo weli",
     "noAsks": "Ma jirto dareere weydiiso weli",
     "useBuyPrice": "Isticmaal {{price}} qiimaha wax lagu iibsanayo",
     "useSellPrice": "Isticmaal {{price}} qiimaha wax lagu iibiyo",
     "spread": "Fogaanta · USD",
-    "buyTotal": "Iibso {{amount}} DHB",
-    "sellTotal": "Iibso {{amount}} DHB",
+    "buyTotal": "Iibso {{amount}} tokens",
+    "sellTotal": "Iibso {{amount}} tokens",
     "placeOrder": "Samee dalab",
     "lpFee": "0% khidmad LP",
     "lpFeeLabel": "Khidmad LP",
     "lpFeeValue": "{{fee}}% khidmad LP",
-    "buy": "Iibso DHB",
-    "sell": "Iibso DHB",
+    "buy": "Iibso tokens",
+    "sell": "Iibso tokens",
     "maxBuy": "Qiimaha ugu sarreeya ee wax lagu iibsanayo",
     "minSell": "Qiimaha ugu hooseeya ee wax lagu iibsanayo",
     "spend": "Bixi",
@@ -6206,7 +6208,7 @@
     "estimated": "Qiyaasta beddelka oo dhamaystiran",
     "network": "Shabakada maalgelinta",
     "sellBelowMarket": "Iibkan wuxuu {{percent}}% ka hooseeyaa qiimaha suuqa ee ${{price}}. Qof baa iibsan kara oo isla markiiba meel kale ku iibin kara.",
-    "buyAboveMarket": "Iibsashadani waa {{percent}}% ka sareysaa qiimaha suuqa ee ${{price}}. Waxaad bixin lahayd lacag ka badan tan DHB-ga lagu ganacsado meelo kale.",
+    "buyAboveMarket": "Iibsashadani waa {{percent}}% ka sareysaa qiimaha suuqa ee ${{price}}. Waxaad bixin lahayd lacag ka badan tan tokens-ga lagu ganacsado meelo kale.",
     "useMarket": "Isticmaal qiimaha suuqa",
     "balanceError": "Baadhitaanka dheelitirka wuu fashilmay. Isku day mar kale ka hor intaadan dalban.",
     "noFunding": "Ma jirto {{token}} oo laga heli karo {{chain}}.",
@@ -6215,7 +6217,7 @@
     "reviewYourBuy": "Dib u eeg iibsashadaada",
     "reviewYourSell": "Dib u eeg iibkaaga",
     "reviewDeposit": "Dhiga {{amount}} {{token}} oo ku taal {{chain}}.",
-    "reviewRange": "Baaxadda: {{min}} – {{max}} USD halkii DHB.",
+    "reviewRange": "Baaxadda: {{min}} – {{max}} USD halkii tokens.",
     "initializes": "Tani waxay abuuraysaa oo bilawdaa barkada 0%.",
     "pendingNote": "Macamilkaaga waa la soo gudbiyay. Sii wad xaqiijinta ama diiwaangelinta liiska adigoon dhigin lacag kale.",
     "viewTransaction": "Eeg macamilka",
@@ -6232,7 +6234,7 @@
     "keepOpen": "Ku hay boggan ilaa liiskaaga la diiwaangeliyo. Kaydinta biraawsarka ma shaqayso.",
     "snapshotDelayed": "Xogta suuqa ee la wadaago waa dib loo dhigay. Muujinaysa sawirka ugu dambeeyay ee la xaqiijiyay.",
     "snapshotUnavailable": "Xogta suuqa ee la wadaago ma shaqayso. Isku day mar kale si aad u soo dejiso boosas.",
-    "withdrawReview": "Kala-bax {{dhb}} DHB iyo {{usdc}} USDC oo ku taal {{chain}}? Qaddarada waxaa cusbooneysiiyay ka hor saxiixa; dulqaadka qiimaha waa 0.5%.",
+    "withdrawReview": "Kala-bax {{dhb}} tokens iyo {{usdc}} USDC oo ku taal {{chain}}? Qaddarada waxaa cusbooneysiiyay ka hor saxiixa; dulqaadka qiimaha waa 0.5%.",
     "withdrawn": "Booska waa la kala-baxay",
     "withdrawFailed": "Kala-baxa wuu fashilmay",
     "withdrawing": "Kala-baxaya…",
@@ -6365,6 +6367,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Daqiiqadaha muuqaalka ugu fiican",
+      "visualPrivacy": "Dir xargaha la doortay si muuqaalka loo falanqeeyo."
+    },
+    "review": {
+      "title": "Dib u eegista mashruuca",
+      "shared": "Lala wadaagay adiga",
+      "time": "Waqti (s)",
+      "assign": "U qoondee boorsada"
+    },
+    "textFit": {
+      "wrap": "Kala jab sadaradaha",
+      "width": "Ballaca qoraalka",
+      "shrink": "Yaree qoraalka si uu u galo",
+      "height": "Dhererka qoraalka",
+      "captions": "Hagaaji jidka qoraalka hoose"
+    },
     "canvas": {
       "dropMedia": "Halkan ku sii daa si aad ugu darto naqshadaada",
       "dropText": "Halkan ku sii daa si aad qoraal ugu darto",
@@ -7714,7 +7733,7 @@
     "topUpTitle": "Ku soo kabo oo keydi",
     "discount": "{{percent}}% ka dhinac",
     "noDiscount": "Qiimaha buuxa",
-    "total": "Wadarta ${{usd}}, oo lagu bixiyay DHB",
+    "total": "Wadarta ${{usd}}, oo lagu bixiyay tokens",
     "buy": "Iibso dhibcaha",
     "buying": "Sugida lacag bixinta…",
     "bought": "Waxaa lagu daray {{count}} dhibcaha boostka",
@@ -7744,7 +7763,7 @@
     "skippedToast": "Skipped {{platforms}}: qoraalkani ma laha sawirka ama fiidiyowga ay u baahan yihiin.",
     "uploadFailed": "Ma soo dejin karo warbaahintaada si aad u gudbiso boostada iskutallaabta.",
     "creditRules": "Boostada kasta waxay ku kacdaa dhibcaha boostada: {{x}} for X, {{farcaster}} for Farcaster iyo {{other}} madal kasta oo kale. Qoraallada la qorsheeyay waxay isticmaalaan amaahda marka aad jadwal u sameysid.",
-    "payAsYouGoCredits": "Run out? credits maqan waxaa laga iibsadaa DHB at ${{price}} mid kasta marka aad boostada.",
+    "payAsYouGoCredits": "Run out? credits maqan waxaa laga iibsadaa tokens at ${{price}} mid kasta marka aad boostada.",
     "topUpCredits": "{{count}} credits",
     "perCredit": "${{price}} per credit",
     "pendingApproval": "Waxaan sugeynaa inaad ogolaato dehub ee barnaamijka Farcaster",
@@ -7756,7 +7775,7 @@
   "dm": {
     "planRestricted": "Isticmaalahan wuxuu u baahan yahay rukumid si uu fariimo u helo.",
     "planTypeNotAllowed": "Qorshaha abuurahan ma oggola nooca fariintan.",
-    "planMinTip": "Tip-ka abuurahan waa inuu ahaadaa ugu yaraan {{amount}} DHB."
+    "planMinTip": "Tip-ka abuurahan waa inuu ahaadaa ugu yaraan {{amount}} tokens."
   },
   "credits": {
     "earningsWorth": "Qiimihiisu waa {{amount}}",
@@ -7884,12 +7903,12 @@
       "notifyKey": "Waayey ku yaal",
       "notifyKeyOnce": "Wacooqay inaan ka soo galay {{name}}. Qaadka ayaa ka soo qoray: inaan ka mid ka mid, waa inaan ka midka ayaa qaadka ayaa u dhigay.",
       "payTitle": "Xiriiraadka",
-      "payBody": "pay() wuxuu weydiiyaa isticmaalaha inuu kuu soo diro DHB, si toos ah boorsada saxeexday dehub.json-kaaga. Hubi rasiidka serverkaaga ka hor intaadan waxba bixin.",
+      "payBody": "pay() wuxuu weydiiyaa isticmaalaha inuu kuu soo diro tokens, si toos ah boorsada saxeexday dehub.json-kaaga. Hubi rasiidka serverkaaga ka hor intaadan waxba bixin.",
       "notifyTitle": "Xiriiraadka",
       "notifyBody": "Isticmaalayaasha ku dara abkaaga waxaa lagu ogeysiin karaa serverkaaga furahaaga ogeysiinta. Ma jiraan wax calaamado isticmaale ah oo la kaydinayo.",
       "rankTitle": "Sida dukaanku u qiimeeyo barnaamijyada",
       "rankBody": "Habeen kasta barnaamij kasta oo ku qoran wuxuu helaa dhibco: 55% ka soo noqoshada isticmaaleyaasha (dadka furay toddobaadkan iyo usbuuca ka hor), 35% isticmaaleyaasha toddobaadlaha ah, oo lagu daray 10% kor u qaadida 14 maalmood ee ugu horreeya. Kaliya xisaabaadka DeHub ee la saxiixay ayaa tiriya, sidaa darteed bots iyo dib u soo celinta bogga waxba ma kasbadaan.",
-      "rewardsBody": "Bil kasta {{pool}} DHB waxaa lagu wadaagaa barnaamijyada isla dhibcaha, oo loo xisaabiyaa toddobaad kasta. Si aad u qalanto, app wuxuu u baahan yahay boorsada milkiilaha la xaqiijiyay iyo ugu yaraan 3 isticmaaleyaal soo noqnoqda. Abaalmarinta waxaa bixiya DeHub boorsada milkiilaha.",
+      "rewardsBody": "Bil kasta {{pool}} tokens waxaa lagu wadaagaa barnaamijyada isla dhibcaha, oo loo xisaabiyaa toddobaad kasta. Si aad u qalanto, app wuxuu u baahan yahay boorsada milkiilaha la xaqiijiyay iyo ugu yaraan 3 isticmaaleyaal soo noqnoqda. Abaalmarinta waxaa bixiya DeHub boorsada milkiilaha.",
       "rewardsWeek": "Todobaadka {{date}}",
       "rewardPaid": "Mushahar",
       "rewardPending": "Sugitaanka"
@@ -7914,9 +7933,9 @@
     },
     "pay": {
       "title": "Pay {{name}}?",
-      "confirm": "Pay {{amount}} DHB",
+      "confirm": "Pay {{amount}} tokens",
       "sending": "Siyad ka bixiyey inaan ku saabsan...",
-      "sent": "Baadidaa {{amount}} DHB ka soo badbaad {{name}}.",
+      "sent": "Baadidaa {{amount}} tokens ka soo badbaad {{name}}.",
       "noOwner": "Waa inay ku saabsan appa ka soo saarayaa inuu ka soo dhaafayay inay ku saabsan walidka ayaa uu ka soo dhaafayay."
     },
     "add": {

@@ -1050,6 +1050,10 @@ body.immersive-live-mode main {
 }
 
 
+body.post-media-back [data-post-nav-back] {
+  display: none;
+}
+
 body.immersive-video-mode main {
   padding-top: 0 !important;
 }
@@ -1808,7 +1812,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    glass surface, and the feed is swallowed at the pill's top edge (clip logic
    in HomePage). Posts sliding behind the pill bleed through the blur exactly
    as they do on cosmic/hazy/swarms. */
-html[data-theme="system"] [data-feed-nav-outer] {
+html:is([data-theme="system"], [data-theme="immersive"]) [data-feed-nav-outer] {
   background-color: transparent !important;
 }
 /* Lag-free leak guard (system only). The swallow-clip is set on the main
@@ -1824,7 +1828,7 @@ html[data-theme="system"] [data-feed-nav-outer] {
    pill instead of at its top edge. Its height is the wrapper's top padding —
    pt-1 below lg, lg:pt-2 above — and a wrapper with a different gap sets
    --feed-nav-gap. Scoped to system — no other theme is affected. */
-html[data-theme="system"] [data-feed-nav-outer]::before {
+html:is([data-theme="system"], [data-theme="immersive"]) [data-feed-nav-outer]::before {
   content: '';
   position: absolute;
   top: 0;
@@ -1836,7 +1840,7 @@ html[data-theme="system"] [data-feed-nav-outer]::before {
   pointer-events: none;
 }
 @media (min-width: 1024px) {
-  html[data-theme="system"] [data-feed-nav-outer]::before {
+  html:is([data-theme="system"], [data-theme="immersive"]) [data-feed-nav-outer]::before {
     height: var(--feed-nav-gap, 0.5rem);
   }
 }
@@ -1867,7 +1871,7 @@ html[data-docs-open]:not([data-theme="cosmic"]):not([data-theme="hazy"]):not([da
   z-index: -1;
   pointer-events: none;
 }
-html[data-theme="system"] [data-feed-nav] {
+html:is([data-theme="system"], [data-theme="immersive"]) [data-feed-nav] {
   background: rgb(9 9 11 / 0.40) !important;
   backdrop-filter: blur(20px) saturate(160%) !important;
   box-shadow:
@@ -1913,8 +1917,8 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    Scoped to the six themes that inherit the raw component tint. Osaka,
    jungle and war are excluded on purpose: each already paints both
    surfaces at 0.72–0.9 in its own sheet, and those load after this file. */
-html:is([data-theme="system"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-bottom-nav] > nav,
-html:is([data-theme="system"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-sonner-toaster] [data-sonner-toast] {
+html:is([data-theme="system"], [data-theme="immersive"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-bottom-nav] > nav,
+html:is([data-theme="system"], [data-theme="immersive"], [data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-sonner-toaster] [data-sonner-toast] {
   /* `system` never joins the canvas-theme block that defines --glass-tint,
      so the fallback is what actually paints there. Both resolve to zinc-950. */
   background: rgb(var(--glass-tint, 9 9 11) / 0.55) !important;
@@ -2200,7 +2204,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
     background: rgb(24 24 27 / 0.94) !important;
   }
-  html[data-theme="system"] :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+  html:is([data-theme="system"], [data-theme="immersive"]) :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
     background: rgb(24 24 27 / 0.94) !important;
   }
 }
@@ -2211,7 +2215,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
     background: rgb(24 24 27) !important;
     backdrop-filter: none !important;
   }
-  html[data-theme="system"] :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+  html:is([data-theme="system"], [data-theme="immersive"]) :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
     background: rgb(24 24 27) !important;
     backdrop-filter: none !important;
   }
@@ -4852,8 +4856,8 @@ specificity animation declarations above.
 html[data-theme="light"] :is(.art-plate, .art-halo) { display: block; }
 html[data-theme="light"] .medal-shine-container::before { content: ''; }
 @media (prefers-color-scheme: light) {
-  html[data-theme="system"] :is(.art-plate, .art-halo) { display: block; }
-  html[data-theme="system"] .medal-shine-container::before { content: ''; }
+  html:is([data-theme="system"], [data-theme="immersive"]) :is(.art-plate, .art-halo) { display: block; }
+  html:is([data-theme="system"], [data-theme="immersive"]) .medal-shine-container::before { content: ''; }
 }
 
 /* The same rescue for badge artwork drawn as a bare <img>, where there is no
@@ -4864,7 +4868,7 @@ html[data-theme="light"] .art-rim {
           drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
 }
 @media (prefers-color-scheme: light) {
-  html[data-theme="system"] .art-rim {
+  html:is([data-theme="system"], [data-theme="immersive"]) .art-rim {
     filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
             drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
   }
@@ -4910,7 +4914,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
 }
 
 /* ==========================================================================
-   System theme, phones: cinematic feed.
+   Immersive theme, phones: cinematic feed.
    The main feeds (home, videos, images) drop the bento on phones. Photos and
    videos run the full screen width. On videos the avatar and name sit straight
    on the top of the media with the AI, tools and options buttons as glass
@@ -4925,7 +4929,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
    ========================================================================== */
 @media (max-width: 639px) {
   /* Profile phone layouts share Home's full-width feed and text insets. */
-  html[data-theme="system"] [data-profile-header] {
+  html[data-theme="immersive"] [data-profile-header] {
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -4933,30 +4937,30 @@ html[data-theme="light"] [data-creator-page] .text-white {
     -webkit-backdrop-filter: none;
   }
 
-  html[data-theme="system"] [data-profile-skeleton] {
+  html[data-theme="immersive"] [data-profile-skeleton] {
     padding-top: 0;
   }
 
-  html[data-theme="system"] [data-profile-skeleton] > [data-profile-header] {
+  html[data-theme="immersive"] [data-profile-skeleton] > [data-profile-header] {
     margin-inline: -0.5rem;
   }
 
   /* Expand the swallow mask with the media, retaining the toolbar's inset. */
-  html[data-theme="system"] [data-profile-content] {
+  html[data-theme="immersive"] [data-profile-content] {
     margin-inline: -0.5rem;
     padding-inline: 0.5rem;
   }
 
-  html[data-theme="system"] [data-profile-image-grid] {
+  html[data-theme="immersive"] [data-profile-image-grid] {
     margin-inline: -0.5rem;
     border-radius: 0;
   }
 
-  html[data-theme="system"] [data-profile-image-grid] img {
+  html[data-theme="immersive"] [data-profile-image-grid] img {
     border-radius: 0;
   }
 
-  html[data-theme="system"] [data-feed-root] [data-profile-reply] {
+  html[data-theme="immersive"] [data-feed-root] [data-profile-reply] {
     width: auto;
     margin-inline: -0.5rem;
     border: 0;
@@ -4965,7 +4969,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
     padding: 1.375rem 0.875rem;
   }
 
-  html[data-theme="system"] [data-feed-root] [data-cinematic] {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic] {
     margin-left: -0.5rem !important;
     margin-right: -0.5rem !important;
     padding: 0 !important;
@@ -4978,7 +4982,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
   /* Air between posts now there is no box to separate them. */
   /* Posts are separated the way X does it: a little air above and below
      each one and a thin full-width hairline between them. */
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic] {
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic] {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
     padding-top: 1.375rem !important;
@@ -4987,10 +4991,10 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   /* No line above the follow carousel (neither its own nor the post
      above's); one full-width line under it. */
-  html[data-theme="system"] [data-feed-root] :has(+ * [data-who-to-follow]) [data-feed-item][data-cinematic]:not(:has(~ [data-feed-item])) {
+  html[data-theme="immersive"] [data-feed-root] :has(+ * [data-who-to-follow]) [data-feed-item][data-cinematic]:not(:has(~ [data-feed-item])) {
     border-bottom: 0 !important;
   }
-  html[data-theme="system"] [data-feed-root] [data-who-to-follow] {
+  html[data-theme="immersive"] [data-feed-root] [data-who-to-follow] {
     border-top: 0;
     border-bottom: 1px solid rgb(255 255 255 / 0.12);
     margin-left: -0.5rem;
@@ -4998,22 +5002,22 @@ html[data-theme="light"] [data-creator-page] .text-white {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-video-card] > [data-card-head]:not([data-card-head="plain"])) {
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first]:has(> [data-video-card] > [data-card-head]:not([data-card-head="plain"])) {
     padding-top: 0 !important;
   }
   /* No band above the feed: the first post starts at the top of the screen
      under the floating capsule. A video runs its picture up behind it and
      drops its author row below it; anything else starts below it. */
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first]:not(:has(> [data-video-card] > [data-card-head]:not([data-card-head="plain"]))) {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first]:not(:has(> [data-video-card] > [data-card-head]:not([data-card-head="plain"]))) {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem + var(--landing-image-gap, 0px)) !important;
   }
   /* Give only the landing image an extra 3px below the floating capsule. */
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] {
     --landing-image-gap: 3px;
   }
   /* Only the landing photo on phones shares the video's flush media start.
      Keep access warnings above the fold until they reveal actual media. */
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] [data-media-full]) {
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] [data-media-full]) {
     padding-top: 0 !important;
     --landing-image-gap: 0px;
     display: flex;
@@ -5021,43 +5025,43 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   /* A queued boost label belongs below this leading photo card, so it
      cannot create a strip above the picture. */
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] [data-media-full]) > button {
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] [data-media-full]) > button {
     order: 2;
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-image-media] {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-image-media] {
     grid-row: 1;
     grid-column: 1;
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-card-head="plain"] {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-card-head="plain"] {
     grid-row: 2;
     grid-column: 1;
     padding-top: 0.625rem;
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-card-info] {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-card-info] {
     grid-row: 3;
     grid-column: 1;
   }
 
   /* Keep existing photo gate/bounty badges clear of the floating capsule. */
-  html[data-theme="system"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) [data-image-media] :is(.absolute.top-2, .absolute.top-3) {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) [data-image-media] :is(.absolute.top-2, .absolute.top-3) {
     top: calc(env(safe-area-inset-top, 0px) + 3.75rem + 0.5rem);
   }
 
   /* The first video uses explicit grid rows for picture then identity;
      the caption auto-places after them. */
-  html[data-theme="system"] [data-cinematic-first] [data-video-card]:has(> [data-card-head]:not([data-card-head="plain"])) {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card]:has(> [data-card-head]:not([data-card-head="plain"])) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > :is([data-card-head], [data-media-full]) {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > :is([data-card-head], [data-media-full]) {
     grid-row: 1;
     grid-column: 1;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
     position: relative;
     top: auto;
     left: auto;
@@ -5067,20 +5071,20 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
   /* Its buttons are bare icons with a soft shadow, sitting level with the
      bottom of the name in the bottom-right corner. */
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
     align-items: flex-end;
     /* Reserve player-bar clearance even while controls are hidden. */
     margin: 0 0.375rem 2.75rem 0.75rem;
   }
   /* Options (⋮) leave the media for the top right of the caption, inset like
      the left edge; the caption text stops just short of it. */
-  html[data-theme="system"] [data-cinematic] [data-card-head] [data-head-options] {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head] [data-head-options] {
     display: none !important;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-info]:has(> [data-caption-options]) {
+  html[data-theme="immersive"] [data-cinematic] [data-card-info]:has(> [data-caption-options]) {
     position: relative;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-info] > [data-caption-options] {
+  html[data-theme="immersive"] [data-cinematic] [data-card-info] > [data-caption-options] {
     position: absolute;
     top: 0.375rem;
     right: 0;
@@ -5092,13 +5096,13 @@ html[data-theme="light"] [data-creator-page] .text-white {
     justify-content: center;
     color: #fff;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-info] > [data-caption-options] + .relative {
+  html[data-theme="immersive"] [data-cinematic] [data-card-info] > [data-caption-options] + .relative {
     padding-right: 1.75rem;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child {
     gap: 0.125rem;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
     width: 2rem;
     height: 2rem;
     background: none !important;
@@ -5106,37 +5110,37 @@ html[data-theme="light"] [data-creator-page] .text-white {
     -webkit-backdrop-filter: none !important;
     box-shadow: none !important;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child > button svg {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) > :last-child > button svg {
     width: 1.375rem;
     height: 1.375rem;
     filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.7)) drop-shadow(0 0 6px rgb(0 0 0 / 0.4));
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic]:is([data-cinematic="post"], [data-cinematic="ad"]) {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic]:is([data-cinematic="post"], [data-cinematic="ad"]) {
     padding-left: 0.875rem !important;
     padding-right: 0.875rem !important;
   }
-  html[data-theme="system"] [data-feed-root] [data-cinematic] > * {
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic] > * {
     position: relative;
   }
 
   /* Media: edge to edge, square corners, post page height cap. */
-  html[data-theme="system"] [data-cinematic] [data-media-full],
-  html[data-theme="system"] [data-cinematic] [data-media-full] img {
+  html[data-theme="immersive"] [data-cinematic] [data-media-full],
+  html[data-theme="immersive"] [data-cinematic] [data-media-full] img {
     border-radius: 0 !important;
   }
   /* Layers that fill the media (live and ended-stream screens, the audio
      visualiser, gates, the player) lose their own rounded frame too, or they
      draw a curved outline inside the full-width picture. */
-  html[data-theme="system"] [data-cinematic] [data-media-full] :is(.absolute.inset-0, .w-full.h-full, video, canvas) {
+  html[data-theme="immersive"] [data-cinematic] [data-media-full] :is(.absolute.inset-0, .w-full.h-full, video, canvas) {
     border-radius: 0 !important;
     border-width: 0 !important;
   }
-  html[data-theme="system"] [data-cinematic] [data-video-card] > [data-media-full] {
+  html[data-theme="immersive"] [data-cinematic] [data-video-card] > [data-media-full] {
     width: 100% !important;
     max-width: none !important;
     max-height: var(--post-media-max-h, 80dvh) !important;
   }
-  html[data-theme="system"] [data-cinematic="image"] [data-media-full] img:not(.blur-lg) {
+  html[data-theme="immersive"] [data-cinematic="image"] [data-media-full] img:not(.blur-lg) {
     width: 100% !important;
     max-width: none !important;
     max-height: var(--post-media-max-h, 80dvh) !important;
@@ -5144,12 +5148,12 @@ html[data-theme="light"] [data-creator-page] .text-white {
   }
 
   /* Photos keep a plain author row above the picture, Instagram style. */
-  html[data-theme="system"] [data-cinematic] [data-card-head="plain"] {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head="plain"] {
     padding: 0 0.875rem 0.625rem;
   }
 
   /* Videos, audio and live: author chip and buttons over the media. */
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) {
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
@@ -5158,37 +5162,37 @@ html[data-theme="light"] [data-creator-page] .text-white {
     align-items: center;
     pointer-events: none;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > * {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > * {
     pointer-events: auto;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
     flex: 0 1 auto;
     gap: 0.5rem;
     margin-right: 0.5rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .w-9 {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .w-9 {
     width: 1.875rem;
     height: 1.875rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img, .w-9 > span) {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img, .w-9 > span) {
     border-radius: 0.5rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
     font-size: 0.875rem;
     line-height: 17px;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base > .leading-5 {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base > .leading-5 {
     line-height: inherit;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.text-sm, .text-\[13px\]) {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.text-sm, .text-\[13px\]) {
     font-size: 0.75rem;
     line-height: 1rem;
     color: rgb(228 228 231 / 0.85);
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child {
     gap: 0.5rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button {
     width: 2.25rem;
     height: 2.25rem;
     margin: 0;
@@ -5198,17 +5202,17 @@ html[data-theme="light"] [data-creator-page] .text-white {
     border-radius: 0.625rem;
     color: #fff;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button svg {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button svg {
     width: 1.25rem;
     height: 1.25rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
     padding: 0;
     color: #fff;
     text-shadow: 0 1px 2px rgb(0 0 0 / 0.75), 0 0 8px rgb(0 0 0 / 0.45);
   }
   /* The New pill beside the name reads on a bright frame too. */
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) [data-new-member-chip] {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) [data-new-member-chip] {
     background: rgb(0 0 0 / 0.38);
     color: #fff;
     border-color: rgb(255 255 255 / 0.22);
@@ -5216,17 +5220,17 @@ html[data-theme="light"] [data-creator-page] .text-white {
     box-shadow: 0 1px 6px rgb(0 0 0 / 0.35);
     text-shadow: none;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child .text-base {
     color: #fff !important;
   }
   /* Shadow only the avatar; transparent badges must not gain a square box. */
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img) {
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child :is(.w-9, .w-9 img) {
     box-shadow: 0 1px 4px rgb(0 0 0 / 0.45);
   }
   /* The buttons on the media and the tools menu are the same lit glass as the
      nav pills (glass-surfaces.css): the theme colour over a thin base with a
      top sheen and a bright rim, so they read light rather than as dark slabs. */
-  html[data-theme="system"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button,
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :last-child > button,
   html[data-theme]:not([data-theme="light"]):not([data-theme="minimal"]) [data-video-tools] {
     background: linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.02)), linear-gradient(var(--nav-glass), var(--nav-glass)), rgb(var(--glass-tint, 9 9 11) / 0.12) !important;
     backdrop-filter: var(--nav-glass-blur) !important;
@@ -5234,7 +5238,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
     border-color: transparent !important;
   }
   /* Glass buttons and chips on the phone Music and Live pages. */
-  html[data-theme="system"] [data-cinematic-glass] {
+  html[data-theme="immersive"] [data-cinematic-glass] {
     background: linear-gradient(rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.02)), linear-gradient(var(--nav-glass), var(--nav-glass)), rgb(var(--glass-tint, 9 9 11) / 0.12);
     backdrop-filter: var(--nav-glass-blur);
     -webkit-backdrop-filter: var(--nav-glass-blur);
@@ -5245,37 +5249,37 @@ html[data-theme="light"] [data-creator-page] .text-white {
     background: linear-gradient(rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.02)), linear-gradient(var(--nav-glass), var(--nav-glass)), rgb(var(--glass-tint, 9 9 11) / 0.55) !important;
   }
   /* Badges and player buttons that sat in the media's top corners move below the chip. */
-  html[data-theme="system"] [data-cinematic] [data-video-card] [data-media-full] > .absolute.top-2 {
+  html[data-theme="immersive"] [data-cinematic] [data-video-card] [data-media-full] > .absolute.top-2 {
     top: 3.75rem;
   }
   /* Keep mute pinned to the media's top-right corner. */
-  html[data-theme="system"] [data-cinematic] [data-video-card] [data-media-full] > [data-video-topbar] {
+  html[data-theme="immersive"] [data-cinematic] [data-video-card] [data-media-full] > [data-video-topbar] {
     top: 0.375rem;
     right: 0.5rem;
   }
   /* On the first post, video overlays clear the floating capsule. */
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2 {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2 {
     top: calc(env(safe-area-inset-top, 0px) + 4.25rem);
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2[data-video-tools] {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] [data-media-full] > .absolute.top-2[data-video-tools] {
     top: calc(env(safe-area-inset-top, 0px) + 4.25rem);
     bottom: auto;
   }
   /* The author row already clears the capsule for square and wide videos. */
-  html[data-theme="system"] [data-cinematic-first] [data-video-card][data-video-header-above] [data-media-full] > .absolute.top-2 {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card][data-video-header-above] [data-media-full] > .absolute.top-2 {
     top: 0.5rem;
   }
 
   /* Caption, then the meta row, under the media. */
-  html[data-theme="system"] [data-cinematic] [data-card-info] {
+  html[data-theme="immersive"] [data-cinematic] [data-card-info] {
     padding-top: 0.625rem;
     padding-left: 0.875rem;
     padding-right: 0.875rem;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-info]:has([data-card-caption]) .\!mt-3 {
+  html[data-theme="immersive"] [data-cinematic] [data-card-info]:has([data-card-caption]) .\!mt-3 {
     margin-top: 0.375rem !important;
   }
-  html[data-theme="system"] [data-cinematic] [data-card-info] > .mb-3 {
+  html[data-theme="immersive"] [data-cinematic] [data-card-info] > .mb-3 {
     margin-bottom: 0.5rem;
   }
 }
@@ -5283,7 +5287,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
 /* Feed player: outlined glyphs instead of glass buttons
    (VideoCard bareControls). Speed, loop, PiP and subtitles sit top right with
    mute in the corner; the scrubber row keeps one counter and fullscreen. */
-[data-video-topbar="bare"] :is(button, [role="button"]) {
+[data-video-topbar="bare"] :is(button, [role="button"]),
+[data-video-back] {
   width: 2rem !important;
   min-width: 2rem !important;
   height: 2rem !important;
@@ -5294,7 +5299,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
   -webkit-backdrop-filter: none !important;
   color: #fff !important;
 }
-[data-video-topbar="bare"] :is(button, [role="button"]) svg {
+[data-video-topbar="bare"] :is(button, [role="button"]) svg,
+[data-video-back] svg {
   width: 1.125rem;
   height: 1.125rem;
 }
@@ -5348,7 +5354,7 @@ html[data-theme="light"] [data-creator-page] .text-white {
 
 /* The island uses the shared bottom-nav glass in glass-surfaces.css.
    Filter panels keep their denser backing for the longer text. */
-html[data-theme="system"] [data-feed-filter-panel] {
+html[data-theme="immersive"] [data-feed-filter-panel] {
   background: rgb(10 10 12 / 0.45);
   backdrop-filter: blur(20px) saturate(160%);
   box-shadow:
@@ -5393,7 +5399,7 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
    crawlable copy is unchanged. On System the island capsule floats over the
    top of the feed, so the card starts below it. */
 @media (max-width: 1023px) {
-  html[data-theme="system"] .dehub-intro {
+  html[data-theme="immersive"] .dehub-intro {
     margin-top: calc(env(safe-area-inset-top, 0px) + 3.5rem);
   }
 }
@@ -5469,13 +5475,13 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
 }
 
 /* Centre the smaller video avatar against its two-line identity. */
-html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:not([data-card-head="plain"]) > :first-child { align-items: center; }
+html[data-theme="immersive"] [data-cinematic] [data-video-card] [data-card-head]:not([data-card-head="plain"]) > :first-child { align-items: center; }
 
 /* The capsule floats over tablet feeds too, while their cards keep the
    author above the content. Reserve its full height before the first card's
    contents, including text posts and their quoted media. */
 @media (min-width: 640px) and (max-width: 1023px) {
-  html[data-theme="system"] [data-feed-root] [data-feed-item][data-cinematic-first] {
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first] {
     padding-top: calc(env(safe-area-inset-top, 0px) + 3.75rem) !important;
   }
 }
@@ -5483,11 +5489,11 @@ html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:no
 /* Keep the landing video's identity below its picture; other videos retain
    their overlay with a soft, non-interactive contrast scrim. */
 @media (max-width: 767px) {
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
     grid-row: 2;
     margin: 0.625rem 0.875rem 0;
   }
-  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] > [data-media-full]::after {
+  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] > [data-media-full]::after {
     content: "";
     position: absolute;
     inset: 0 0 auto;
@@ -5496,23 +5502,23 @@ html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-head]:no
     pointer-events: none;
     z-index: 1;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-media-full] > [data-video-topbar="bare"] {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] [data-media-full] > [data-video-topbar="bare"] {
     top: 0.75rem;
   }
 }
 
 @media (max-width: 767px) {
   /* The landing video's identity and post actions form one row below media. */
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] > [data-card-head]:not([data-card-head="plain"]) {
     align-items: center;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-card-head] [data-head-options] {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] [data-card-head] [data-head-options] {
     display: flex !important;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-card-info] > [data-caption-options] {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] [data-card-info] > [data-caption-options] {
     display: none;
   }
-  html[data-theme="system"] [data-cinematic-first] [data-video-card] [data-card-info] > [data-caption-options] + .relative {
+  html[data-theme="immersive"] [data-cinematic-first] [data-video-card] [data-card-info] > [data-caption-options] + .relative {
     padding-right: 0;
   }
 }
@@ -5537,9 +5543,9 @@ html body [data-video-card] [data-video-inline-tools] button {
 }
 
 @media (max-width: 767px) {
-  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-head-boost] { display: none; }
-  html[data-theme="system"] [data-cinematic] [data-video-card] [data-card-info] > [data-video-caption-actions] { width: auto; }
-  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-video-caption-actions]:has([data-caption-boost]) + .relative { padding-right: 4rem; }
+  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-head-boost] { display: none; }
+  html[data-theme="immersive"] [data-cinematic] [data-video-card] [data-card-info] > [data-video-caption-actions] { width: auto; }
+  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-video-caption-actions]:has([data-caption-boost]) + .relative { padding-right: 4rem; }
 }
 
 /* Keep only the narrow seek input interactive when playback chrome fades. */
@@ -5549,7 +5555,7 @@ html body [data-video-card] [data-video-inline-tools] button {
 /* Let video identities use the available width, reserving the mute target. */
 [data-video-card] [data-card-head] .truncate { max-width: 100%; }
 @media (max-width: 767px) {
-  html[data-theme="system"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-card-head]:not([data-card-head="plain"]) { right: 3.5rem; }
+  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-card-head]:not([data-card-head="plain"]) { right: 3.5rem; }
 }
 
 /* Suppress theme glass frames while preserving keyboard focus outlines. */
@@ -5559,13 +5565,13 @@ html body [data-video-card] [data-video-inline-tools] button::after {
 }
 
 /* Filters use the capsule material and clear its fixed controls on phones. */
-html[data-theme="system"] [data-feed-filter-panel] {
+html[data-theme="immersive"] [data-feed-filter-panel] {
   border: 0;
   border-radius: 15px;
 }
 @media (max-width: 1023px) {
-  html[data-theme="system"] [data-feed-root] [data-feed-filter-panel],
-  html[data-theme="system"] [data-cinematic-music] > [data-feed-filter-panel] {
+  html[data-theme="immersive"] [data-feed-root] [data-feed-filter-panel],
+  html[data-theme="immersive"] [data-cinematic-music] > [data-feed-filter-panel] {
     margin-top: calc(env(safe-area-inset-top, 0px) + 5.75rem);
   }
 }
@@ -5640,7 +5646,7 @@ html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] :is([data
   border-top: 0 !important;
 }
 @media (max-width: 639px) {
-  html[data-theme="system"] [data-feed-root] :is([data-feed-item][data-feed-before-shorts], [data-feed-before-shorts] > [data-feed-item]:last-child)[data-cinematic] {
+  html[data-theme="immersive"] [data-feed-root] :is([data-feed-item][data-feed-before-shorts], [data-feed-before-shorts] > [data-feed-item]:last-child)[data-cinematic] {
     border-bottom: 0 !important;
   }
 }

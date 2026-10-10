@@ -1,3 +1,5 @@
+import { beginEditorCommand } from "./editorCommand";
+import { projectTask } from "./projectTask";
 import { videoMatteCommand } from "./videoMatte";
 import { generationChatRequest, generationDraft, type GenerationDraft } from "./generationDraft";
 /**
@@ -9,7 +11,7 @@ import { generationChatRequest, generationDraft, type GenerationDraft } from "./
  * actions. The server never renders, downloads or stores anything, which is
  * what keeps a request at a fraction of a cent.
  *
- * One request is one undo step (runAsOneStep), however many layers it touched.
+ * Captured command writes share one undo step, preserving independent edits during waits.
  */
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
@@ -29,6 +31,7 @@ import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { nanoid } from "nanoid";
 import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
 import { preciseCommand } from "./preciseCommands";
+import { videoTemplateAspect, videoTemplateCommand } from "./videoTemplates";
 import { stockSearchPlan } from "./stockSearchPlan";
 import { applyAudioTool } from "./applyAudioTool";
 import { AUDIO_TOOL_MODES, audioToolCommand, type AudioToolMode } from "./audioTools";
@@ -160,7 +163,7 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
 export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): Promise<AgentResult> {
   const scene = describeScene();
   const last = messages[messages.length - 1];
-  const direct = last?.role === "user" ? generationChatRequest(last.content) ?? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) ?? videoMatteCommand(last.content, scene) : null;
+  const direct = last?.role === "user" ? generationChatRequest(last.content) ?? preciseCommand(last.content, scene) ?? videoTemplateCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) ?? videoMatteCommand(last.content, scene) : null;
   if (direct) return { reply: "", ops: [direct] };
   return askSceneAgent(messages, scene, signal);
 }
@@ -229,6 +232,11 @@ function textPatch(op: AgentOp): Partial<TextClip> {
   if (ls !== undefined) p.letterSpacing = clamp(ls, -20, 200);
   const lh = num(op.lineHeight);
   if (lh !== undefined) p.lineHeight = clamp(lh, 0.6, 4);
+  for (const key of ["maxWidth", "maxHeight"] as const) {
+    const value = num(op[key]);
+    if (op[key] === null) p[key] = undefined;
+    else if (value !== undefined) p[key] = clamp(value, 0.05, 1);
+  }
   const bg = colour(op.bgColor);
   if (bg) p.background = { color: bg, opacity: clamp(num(op.bgOpacity) ?? 0.6, 0, 1), padding: 24, radius: 16 };
   const stroke = colour(op.strokeColor);
@@ -290,10 +298,13 @@ function nearestAspect(ratio: number): AspectPreset {
  * for 170px "SUMMER SALE" on a square page, which runs off both edges (seen on
  * staging). Waits briefly for the font so the measurement is the real one.
  */
-async function fitTextToPage(id: string) {
+async function fitTextToPage(id: string, command: ReturnType<typeof beginEditorCommand>) {
   const s = useEditorStore.getState();
   const clip = s.clips.find((c) => c.id === id);
   if (!clip || clip.kind !== "text" || typeof document === "undefined") return;
+  if (Number.isFinite(clip.maxWidth) && clip.maxWidth! > 0) return;
+  const task = projectTask(s.holdEdits());
+  try {
   const family = clip.fontFamily.split(",")[0].replace(/['"]/g, "").trim();
   try {
     await Promise.race([
@@ -303,14 +314,17 @@ async function fitTextToPage(id: string) {
   } catch {
     /* measure with whatever is loaded */
   }
+  await command.ready();
+  if (!command.isCurrent() || !task!.isCurrent() || useEditorStore.getState().clips.find(c => c.id === id) !== clip || useEditorStore.getState().settings !== s.settings) return;
   const ctx = document.createElement("canvas").getContext("2d");
   if (!ctx) return;
   const W = s.settings.width;
   const box = clipBox(ctx, clip, W, s.settings.height, { videos: new Map(), images: new Map() });
   const max = W * 0.9;
   if (box && box.w > max) {
-    useEditorStore.getState().patchClip(id, { fontSize: Math.max(12, Math.floor(clip.fontSize * (max / box.w))) });
+    command.store().patchClip(id, { fontSize: Math.max(12, Math.floor(clip.fontSize * (max / box.w))) });
   }
+  } finally { task!.release(); }
 }
 
 const NOT_A_PHOTO = /illustrat|clip ?art|vector|drawing|cartoon|icon|logo|diagram|sketch|svg/i;
@@ -329,6 +343,7 @@ function pickStock<T extends { title: string; width?: number; mimeType: string }
 
 export interface ApplyContext {
   wallet?: string | null;
+  command?: ReturnType<typeof beginEditorCommand>;
 }
 
 /** What happened, for the chat log. */
@@ -345,7 +360,10 @@ export interface ApplyReport {
 export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<ApplyReport> {
   const report: ApplyReport = { applied: 0, failed: 0, missingStock: [] };
   const created: string[] = [];
-  const store = () => useEditorStore.getState();
+  const ownsCommand = !ctx.command;
+  const task = ctx.command ?? beginEditorCommand();
+  ctx = { ...ctx, command: task };
+  const store = task.store;
   const resolve = (id: unknown): string | undefined => {
     if (typeof id !== "string") return undefined;
     const m = /^new:(\d+)$/.exec(id);
@@ -375,12 +393,16 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
     if (Object.keys(out).length) store().patchClip(clip.id, out);
   };
 
-  await store().runAsOneStep(async () => {
+  try {
+  {
     for (const op of ops) {
+      if (!task.isCurrent()) { report.failed++; return report; }
       const expanded = op.op === "batch" ? expandBatch(op) : [op];
       if (!expanded) { report.failed++; continue; }
       for (const edit of expanded) {
+        if (!task.isCurrent()) { report.failed++; return report; }
         try {
+          await task.ready();
           const ok = await applyOne(edit);
           if (ok) { if (edit.op !== "generate") report.applied++; }
           else report.failed++;
@@ -390,8 +412,9 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         }
       }
     }
-  });
+  }
   return report;
+  } finally { if (ownsCommand) task.release(); }
 
   async function applyOne(op: AgentOp): Promise<boolean> {
     const s = store();
@@ -407,9 +430,9 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       const next = applyTimelineOp(store(), { ...op, id: resolve(op.id), ids: Array.isArray(op.ids) ? op.ids.map(resolve) : op.ids }, () => nanoid(10));
       if (!next) return false;
       created.push(...next.created);
-      useEditorStore.setState({ clips: next.clips, tracks: next.tracks,
+      task.commit(() => useEditorStore.setState({ clips: next.clips, tracks: next.tracks,
         selectedClipIds: store().selectedClipIds.filter((id) => next.clips.some((c) => c.id === id)),
-      });
+      }));
       return true;
     }
     switch (op.op) {
@@ -444,7 +467,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         s.patchClip(id, patch);
         const clip = store().clips.find((c) => c.id === id);
         if (clip && (num(op.rotation) !== undefined || num(op.opacity) !== undefined)) place(clip, { op: "place", rotation: op.rotation, opacity: op.opacity });
-        await fitTextToPage(id);
+        await fitTextToPage(id, task);
         return true;
       }
       case "add_shape": {
@@ -460,7 +483,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         if (!clip) return false;
         if (clip.kind === "text") {
           s.patchClip(clip.id, textPatch(op));
-          if (op.text !== undefined || op.fontSize !== undefined || op.fontFamily !== undefined) await fitTextToPage(clip.id);
+          if (op.text !== undefined || op.fontSize !== undefined || op.fontFamily !== undefined) await fitTextToPage(clip.id, task);
         }
         if (clip.kind === "shape") s.patchClip(clip.id, shapePatch(op));
         const shared = layerPatch(op);
@@ -589,6 +612,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
           } catch {
             asset = undefined;
           }
+          if (!task.isCurrent()) return false;
           if (asset) break;
         }
         if (!asset) {
@@ -596,8 +620,10 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
           return false;
         }
         const file = await downloadFreeAsset(asset);
+        if (!task.isCurrent()) return false;
         const mediaId = await importOneFile(file, { wallet: ctx.wallet, provenance: provenanceForAsset(asset) });
-        if (!mediaId) return false;
+        if (!task.isCurrent() || !mediaId) return false;
+        await task.ready();
         const id = store().addClipFromMedia(mediaId, undefined, undefined, { layer: kind === "photo" });
         if (!id) return false;
         created.push(id);
@@ -607,10 +633,10 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       }
       case "apply_brand": {
         if (!hasBrand(useBrandStore.getState().kit)) return false;
-        return (await applyBrand()) > 0;
+        return (await applyBrand(undefined, task)) > 0;
       }
       case "add_logo": {
-        return !!addBrandLogo();
+        return !!task.capture(() => addBrandLogo());
       }
       case "add_page": {
         s.addPage({ duplicate: bool(op.duplicate) === true });
@@ -636,30 +662,31 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         const tpl = TEMPLATES.find((x) => x.id === op.template);
         if (!tpl) return false;
         const { default: i18n } = await import("@/i18n");
+        await task.ready();
         const all = store().clips.map((c) => c.id);
         if (all.length) store().rippleDelete(all);
         store().updateSettings({ pages: undefined });
         store().setCurrentTime(0);
         // Nested ops run inside this request's undo step; their new layers
         // are not addressable as new:N from the outer list.
-        const inner = await applyOps(tpl.ops(i18n.t.bind(i18n)), ctx);
+        const inner = await applyOps(tpl.ops(i18n.t.bind(i18n), videoTemplateAspect(op.aspect)), ctx);
         return inner.applied > 0;
       }
       case "captions": {
         const clip = find(op.id) ?? store().clips.find((c) => c.kind === "video" || c.kind === "audio");
         if (!clip || clip.locked || (clip.kind !== "video" && clip.kind !== "audio")) return false;
-        return await useCaptionsStore.getState().run(clip.id, op.style === "boxed" || op.style === "bold" ? op.style : "classic");
+        return await useCaptionsStore.getState().run(clip.id, op.style === "boxed" || op.style === "bold" ? op.style : "classic", task);
       }
       case "detect_shots": {
         const clip = find(op.id);
         if (!clip || clip.kind !== "video") return false;
         const result = await detectClipShots(clip.id);
-        return result.analysis.times.length > 0 && await splitShotClip(result.clip, result.analysis.times);
+        return result.analysis.times.length > 0 && await splitShotClip(result.clip, result.analysis.times, task);
       }
       case "beat_sync": {
         const clip = find(op.id);
         if (!clip) return false;
-        const result = await applyBeatTool(clip.id, op.align === true);
+        const result = await applyBeatTool(clip.id, op.align === true, undefined, undefined, task);
         return !!result?.beats && (op.align !== true || result.changed > 0);
       }
       case "process_audio": {
@@ -670,7 +697,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       case "remove_background": {
         const clip = find(op.id);
         if (!clip || (clip.kind !== "image" && clip.kind !== "video")) return false;
-        return await useBgRemovalStore.getState().run(clip.id, ctx.wallet);
+        return await useBgRemovalStore.getState().run(clip.id, ctx.wallet, task);
       }
       case "generate": {
         const draft = generationDraft(op, s.settings.aspectPreset);

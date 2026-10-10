@@ -1,3 +1,5 @@
+import { commitCommand, type CommandCommit } from "./editorCommand";
+import { projectTask } from "./projectTask";
 /**
  * Remove an image layer's background on the user's device.
  *
@@ -10,6 +12,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { importOneFile } from "./importFiles";
 import { processVideoMatte } from "./processVideoMatte";
 import { VIDEO_MATTE_ASSET_PREFIX, videoMattePlan } from "./videoMatte";
+import { deleteMedia } from "./mediaStore";
 
 export type BgRemovalProgress =
   | { stage: "download"; loaded: number; total: number }
@@ -92,7 +95,7 @@ export async function cutOutImage(blob: Blob, onProgress?: (p: BgRemovalProgress
  */
 export async function removeLayerBackground(
   clipId: string,
-  opts: { wallet?: string | null; onProgress?: (p: BgRemovalProgress) => void; signal?: AbortSignal } = {},
+  opts: { wallet?: string | null; onProgress?: (p: BgRemovalProgress) => void; signal?: AbortSignal; command?: CommandCommit } = {},
 ): Promise<boolean> {
   const s = useEditorStore.getState();
   const clip = s.clips.find((c) => c.id === clipId);
@@ -100,27 +103,42 @@ export async function removeLayerBackground(
   const media = s.media.find((m) => m.id === clip.mediaId);
   if (!media) return false;
 
+  const task = projectTask(s.holdEdits());
+  try {
   const projectId = s.projectId;
   if (clip.kind === "video") {
     videoMattePlan(clip, media.width ?? 1, media.height ?? 1, media.duration ?? clip.sourceDuration ?? 0, s.settings.fps);
-    const result = await processVideoMatte(media.url, clip, s.settings.fps, p => opts.onProgress?.(p.stage === "download" ? { stage: "download", loaded: p.fraction * 100, total: 100 } : p.stage === "frames" ? { stage: "frames", completed: p.completed, total: p.total } : { stage: "fallback" }), opts.signal);
-    const now = useEditorStore.getState();
-    const current = now.clips.find(c => c.id === clip.id);
-    if (opts.signal?.aborted || now.projectId !== projectId || current?.kind !== "video" || current.locked || current.mediaId !== clip.mediaId || current.trimIn !== clip.trimIn || current.duration !== clip.duration || (current.speed ?? 1) !== (clip.speed ?? 1)) return false;
-    const png = await (await fetch(result.dataUrl)).blob();
-    const id = await importOneFile(new File([png], `${VIDEO_MATTE_ASSET_PREFIX}${crypto.randomUUID()}.png`, { type: "image/png" }), { wallet: opts.wallet });
-    const latest = useEditorStore.getState();
-    const target = latest.clips.find(c => c.id === clip.id);
-    if (!id || opts.signal?.aborted || latest.projectId !== projectId || target?.kind !== "video" || target.locked || target.mediaId !== clip.mediaId || target.trimIn !== clip.trimIn || target.duration !== clip.duration || (target.speed ?? 1) !== (clip.speed ?? 1)) return false;
-    latest.patchClip(clip.id, { videoMatte: { ...result.plan, mediaId: id } });
-    return true;
+    const stored: string[] = []; let disposed = false, committed = false;
+    const current = () => {
+      const now = useEditorStore.getState(), target = now.clips.find(c => c.id === clip.id);
+      return task!.isCurrent() && !disposed && !opts.signal?.aborted && now.projectId === projectId && target?.kind === "video" && !target.locked && target.mediaId === clip.mediaId && target.trimIn === clip.trimIn && target.duration === clip.duration && (target.speed ?? 1) === (clip.speed ?? 1);
+    };
+    const discard = async (id: string) => { useEditorStore.getState().removeMedia(id); await deleteMedia(id); };
+    try {
+      const result = await processVideoMatte(media.url, clip, s.settings.fps, p => opts.onProgress?.(p.stage === "download" ? { stage: "download", loaded: p.fraction * 100, total: 100 } : p.stage === "frames" ? { stage: "frames", completed: p.completed, total: p.total } : { stage: "fallback" }), opts.signal, async page => {
+        if (!current()) throw new DOMException("Background removal cancelled", "AbortError");
+        const png = await (await fetch(page.dataUrl)).blob();
+        // Auxiliary pages upload with the private project manifest after completion.
+        const id = await importOneFile(new File([png], `${VIDEO_MATTE_ASSET_PREFIX}${crypto.randomUUID()}.png`, { type: "image/png" }));
+        if (!id) throw new Error("Background page could not be stored");
+        if (!current()) { await discard(id); throw new DOMException("Background removal cancelled", "AbortError"); }
+        stored.push(id); return id;
+      });
+      if (!current() || !result.matte) return false;
+      await commitCommand(opts.command, () => { if (current()) { useEditorStore.getState().patchClip(clip.id, { videoMatte: result.matte }); committed = true; } }); return committed;
+    } finally { disposed = true; if (!committed) await Promise.all(stored.map(discard)); }
   }
   const source = await (await fetch(media.url)).blob();
+  if (!task!.isCurrent()) return false;
   const png = await cutOutImage(source, opts.onProgress);
+  const imageCurrent = () => task!.isCurrent() && !opts.signal?.aborted && useEditorStore.getState().clips.find(c => c.id === clipId) === clip;
+  if (!imageCurrent()) return false;
   const base = media.name.replace(/\.[a-z0-9]+$/i, "");
   const file = new File([png], `${base}-cutout.png`, { type: "image/png" });
   const newId = await importOneFile(file, { wallet: opts.wallet });
-  if (!newId) return false;
-  useEditorStore.getState().patchClip(clipId, { mediaId: newId });
-  return true;
+  if (!newId || !imageCurrent()) return false;
+  let committed = false;
+  await commitCommand(opts.command, () => { if (imageCurrent()) { useEditorStore.getState().patchClip(clipId, { mediaId: newId }); committed = true; } });
+  return committed;
+  } finally { task!.release(); }
 }

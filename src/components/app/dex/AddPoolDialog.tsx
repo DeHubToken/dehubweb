@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatUnits } from 'ethers';
@@ -39,7 +41,7 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
   const { allTokens } = useAllChainsTokens();
   const { data: prices = {} } = useTokenPrices();
   const [chain, setChain] = useState<PoolChain>('base');
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useSurfaceDraft("components/app/dex/AddPoolDialog.tsx:address", '');
   const [check, setCheck] = useState<TokenCheck | null>(null);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState('');
@@ -51,9 +53,9 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
 
   useEffect(() => {
     if (!open) { setError(''); return; }
-    if (paid) { setChain(paid.chain); setAddress(paid.tokenAddress); }
+    if (paid) { setChain(paid.chain); setAddress.initialize(paid.tokenAddress); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, setAddress]);
 
   // Look the token up as soon as the address is well formed.
   useEffect(() => {
@@ -115,7 +117,7 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
       writePaid(null);
       await queryClient.invalidateQueries({ queryKey: ['dex-pools'] });
       toast.success(t('dex.pools.created', { symbol: pool.symbol }));
-      onOpenChange(false); setAddress(''); setImage(null); setCheck(null);
+      onOpenChange(false); setAddress.complete(address, ''); setImage(null); setCheck(null);
       onCreated(pool);
     } catch (e) {
       setError(dexActionError(e, t('dex.pools.createFailed')));
@@ -146,10 +148,10 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
           <div><b>{check.token.name}</b><small>{check.token.symbol} · {POOL_CHAIN_INFO[chain].name}{check.token.priceUsd ? ` · $${check.token.priceUsd.toPrecision(4)}` : ''}</small><small>{t('dex.pools.imageHint')}</small></div>
         </div>
         <div className="dex-fee">
-          <img src={dhbCoinImage} alt="DHB" width={30} height={30} />
+          <img src={dhbCoinImage} alt={tokenLabel()} width={30} height={30} />
           <div><b>${POOL_FEE_USD}</b><small>{feeDhb ? t('dex.pools.feeDhb', { amount: formatSize(feeDhb) }) : t('dex.pools.priceUnavailable')}</small></div>
           {!paid && <label className="dex-fee-pay">{t('dex.payWith')}<select value={selected} onChange={(e) => setPayWith(e.target.value as FeeAssetSymbol)} aria-label={t('dex.payWith')}>
-            {balances.map((b) => <option key={b.asset.symbol} value={b.asset.symbol}>{b.asset.symbol} · ${b.usd.toLocaleString('en-US', { maximumFractionDigits: 2 })}</option>)}
+            {balances.map((b) => <option key={b.asset.symbol} value={b.asset.symbol}>{tokenLabel(b.asset.symbol)} · ${b.usd.toLocaleString('en-US', { maximumFractionDigits: 2 })}</option>)}
           </select></label>}
         </div>
         {!paid && selected !== 'DHB' && <p className="dex-help">{t('dex.pools.swapNote', { symbol: selected })}</p>}
@@ -159,7 +161,7 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
       <button type="button" className="dex-submit" disabled={!!busy || !check?.token || !!check?.exists || (!!walletAddress && !paid && !covers)} onClick={() => void submit()}>
         {busy ? busyLabel : !walletAddress ? t('dex.connectWallet') : paid ? t('dex.pools.finish') : !covers && check?.token ? t('dex.pools.notEnough') : t('dex.pools.payAndOpen', { amount: POOL_FEE_USD })}
       </button>
-      {paid && !busy && <button type="button" className="dex-link-button" onClick={() => { writePaid(null); setAddress(''); onOpenChange(false); }}>{t('dex.pools.discardPaid')}</button>}
+      {paid && !busy && <button type="button" className="dex-link-button" onClick={() => { writePaid(null); setAddress.complete(address, ''); onOpenChange(false); }}>{t('dex.pools.discardPaid')}</button>}
     </DialogContent>
   </Dialog>;
 }

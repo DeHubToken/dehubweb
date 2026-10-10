@@ -1,3 +1,5 @@
+import { commitCommand, type CommandCommit } from "./editorCommand";
+import { projectTask } from "./projectTask";
 /**
  * Auto captions, on the user's device.
  *
@@ -102,22 +104,29 @@ export async function transcribeClipWords(clip: MediaClip, url: string, onProgre
   return transcribe(audio, onProgress, signal);
 }
 
-export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionProgress) => void, style: CaptionStyle = "classic"): Promise<number> {
+export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionProgress) => void, style: CaptionStyle = "classic", command?: CommandCommit): Promise<number> {
   const s = useEditorStore.getState();
   const clip = s.clips.find((c) => c.id === clipId);
   if (!clip || (clip.kind !== "video" && clip.kind !== "audio")) return 0;
   const mc = clip as MediaClip;
   const media = s.media.find((m) => m.id === mc.mediaId);
   if (!media) return 0;
+  const task = projectTask(s.holdEdits());
+  try {
   const words = await transcribeClipWords(mc, media.url, onProgress);
+  if (!task!.isCurrent()) return 0;
   const result = captionLayers(mc, words, () => nanoid(), style);
   if (!result.clips.length) return 0;
   loadGoogleFont("Montserrat", [800]);
   const store = useEditorStore.getState();
   // The clip may have changed while transcription was running.
-  if (store.clips.find((c) => c.id === clipId) !== clip) return 0;
-  await store.runAsOneStep(() => {
+  if (store.projectId !== s.projectId || store.clips.find((c) => c.id === clipId) !== clip) return 0;
+  let committed = false;
+  await commitCommand(command, () => store.runAsOneStep(() => {
+    if (!task!.isCurrent() || useEditorStore.getState().clips.find(c => c.id === clipId) !== clip) return;
     useEditorStore.setState((state) => ({ tracks: [...state.tracks, result.track], clips: [...state.clips, ...result.clips] }));
-  });
-  return result.clips.length;
+    committed = true;
+  }));
+  return committed ? result.clips.length : 0;
+  } finally { task!.release(); }
 }

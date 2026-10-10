@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Live TV Section Component
  * =========================
@@ -30,7 +31,7 @@ interface LiveTVSectionProps {
 export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
   const { t } = useTranslation();
   const [activeCountry, setActiveCountry] = useState<TVCountryFilter>('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/tv/LiveTVSection.tsx:searchQuery", '');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
   
   const isSearching = debouncedSearch.length > 0;

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { IslandAction, PageIsland } from '@/components/app/page-kit/PageKit';
@@ -213,13 +214,15 @@ export default function MessagesPage() {
   const keyboardStyle: CSSProperties | undefined = keyboardOpen && vvHeight
     ? vvOffsetTop > 1
       ? { position: 'fixed', top: vvOffsetTop, left: 0, right: 0, height: vvHeight, zIndex: 40, background: '#000' }
-      : { height: vvHeight - 44 }
+      // The chat starts under the top bar, which is 0 on a phone now: taking a
+      // fixed 44px off left a dead band between the composer and the keys.
+      : { height: `calc(${vvHeight}px - var(--app-top-bar))` }
     : undefined;
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/MessagesPage.tsx:searchQuery", '');
   // Both search-backed queries key on the query string — passing the raw
   // input fired 2 network requests per KEYSTROKE (each prefix a fresh cache
   // key). Debounce to one request pair per pause in typing.
@@ -304,7 +307,7 @@ export default function MessagesPage() {
       recipientUser: user,
     }).then(conv => {
       setSelectedConversation(conv);
-      setSearchQuery('');
+      setSearchQuery.complete(searchQuery, '');
     }).catch(() => {});
   };
 

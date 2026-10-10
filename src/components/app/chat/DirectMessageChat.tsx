@@ -1,3 +1,5 @@
+import { useDraftState } from '@/hooks/use-draft-state';
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DirectMessageChat Component
  * ===========================
@@ -22,7 +24,6 @@ import { DehubLinkEmbed } from '@/components/app/cards/DehubLinkEmbed';
 import { AssetRefCards, useAssetRefsInText } from '@/components/app/cards/AssetRefCards';
 import { findDehubLinks, stripDehubLinkMatches } from '@/lib/dehub-links';
 import { conversationIdentity } from '@/lib/conversation-identity';
-import { writeDraft } from '@/lib/draft-cache';
 import { useTranslation, renderChatTextWithLinks } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl, peerAddressForConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
@@ -211,7 +212,7 @@ const MessageBubble = memo(function MessageBubble({
   onForward?: (message: DmMessage) => void;
   onReply?: (message: DmMessage) => void;
   onEdit?: (message: DmMessage) => void;
-  onSaveEdit?: (messageId: string, content: string) => void;
+  onSaveEdit?: (messageId: string, content: string) => Promise<boolean>;
   onCancelEdit?: () => void;
   onOpenImage?: (url: string) => void;
   currentUserAddress?: string;
@@ -281,11 +282,18 @@ const MessageBubble = memo(function MessageBubble({
    * back until the send comes back with a real one.
    */
   const isUnsent = message._id.startsWith('temp-');
-  const [draftText, setDraftText] = useState(message.content || '');
+  const [draftText, setDraftText] = useDraftState(`dm:edit:${message._id}`, message.content || '');
+  const editPending = useRef(false);
+  const saveEdit = async () => {
+    if (editPending.current || !onSaveEdit) return;
+    editPending.current = true;
+    try { if (await onSaveEdit(message._id, draftText) && setDraftText.complete(draftText, '')) onCancelEdit?.(); }
+    finally { editPending.current = false; }
+  };
   const [reactionPickerOpen, setReactionPickerOpen] = useState(false);
   useEffect(() => {
-    if (isEditing) setDraftText(message.content || '');
-  }, [isEditing, message.content]);
+    if (isEditing) setDraftText.initialize(message.content || '');
+  }, [isEditing, message.content, setDraftText]);
 
   // Entity shares translate their caption (link stripped) — feeding the raw URL to the
   // translator garbles it and previously the translate control was hidden entirely.
@@ -431,7 +439,7 @@ const MessageBubble = memo(function MessageBubble({
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        onSaveEdit?.(message._id, draftText);
+                        void saveEdit();
                       } else if (e.key === 'Escape') {
                         onCancelEdit?.();
                       }
@@ -451,7 +459,7 @@ const MessageBubble = memo(function MessageBubble({
                     </button>
                     <button
                       type="button"
-                      onClick={() => onSaveEdit?.(message._id, draftText)}
+                      onClick={() => void saveEdit()}
                       className="p-1 text-white hover:text-zinc-300"
                       title="Save"
                     >
@@ -873,11 +881,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const [showGroupSettings, setShowGroupSettings] = useState(false);
   const [showTipDialog, setShowTipDialog] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/DirectMessageChat.tsx:searchQuery", '');
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [forwardMessageTarget, setForwardMessageTarget] = useState<DmMessage | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [replyTarget, setReplyTarget] = useState<DmMessage | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
@@ -889,6 +896,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
    * orphaned key per person you ever messaged.
    */
   const draftScope = conversationIdentity(conversation);
+  const [replyTarget, setReplyTarget] = useDraftState<DmMessage | null>(`${draftScope}:reply`, null);
   const dmFeeCacheKey = `dehub-dm-fee-${draftScope}`;
   const [dmFee, setDmFeeRaw] = useState<DmFee | null>(() => {
     // A fee the other side has since changed must not be believed forever —
@@ -1390,12 +1398,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
   const handleReply = useCallback((message: DmMessage) => {
     setReplyTarget(message);
-  }, []);
+  }, [setReplyTarget]);
 
   // A quote left open in one thread must not ride along into the next.
   useEffect(() => {
-    setReplyTarget(null);
-  }, [draftScope]);
+    setReplyTarget.complete(replyTarget, null);
+  }, [draftScope, replyTarget, setReplyTarget]);
 
   /*
    * The composer is shared with Public Chat and speaks its Message shape, so
@@ -1430,10 +1438,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const handleSaveEdit = useCallback(async (messageId: string, content: string) => {
     const trimmed = content.trim();
     const original = messagesRef.current.find(m => m._id === messageId);
-    if (!trimmed || !original || trimmed === original.content) {
-      setEditingMessageId(null);
-      return;
+    if (!trimmed || !original) {
+      return false;
     }
+    if (trimmed === original.content) return true;
 
     let wire: { content: string; encrypted: boolean };
     try {
@@ -1442,7 +1450,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       await emitEditMessage({ dmId: resolvedConversationId, messageId, content: wire.content });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Could not save the edit.');
-      return;
+      return false;
     }
 
     queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
@@ -1457,7 +1465,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       }));
       return { ...old, pages };
     });
-    setEditingMessageId(null);
+    return true;
   }, [queryClient, resolvedConversationId, otherUser?.address]);
 
   const handleForwardSelect = useCallback(
@@ -1556,7 +1564,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     // Taken now and cleared at once, like the composer itself — the quote goes
     // out with this message only.
     const replyingTo = replyTarget;
-    setReplyTarget(null);
+
     const replyPreview: DmMessage['replyTo'] = replyingTo
       ? {
           _id: replyingTo._id,
@@ -1651,7 +1659,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             return { ...old, pages: newPages };
           });
           setIsSendingFee(false);
-          return;
+          return false;
         }
 
         console.log('[DM Fee] Paying', activeFee, 'DHB to recipient:', recipientAddress, '| chain:', chainId);
@@ -1717,7 +1725,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           return { ...old, pages: newPages };
         });
         setIsSendingFee(false);
-        return;
+        return false;
       } finally {
         setIsSendingFee(false);
       }
@@ -1736,7 +1744,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
     }
 
     // Now send the actual message (with txHash so server unlocks it)
-    sendMessageMutation.mutate(
+    return new Promise<boolean>((resolve) => sendMessageMutation.mutate(
       {
         content,
         msgType: type,
@@ -1751,6 +1759,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         onSuccess: (data) => {
           // The held fee has now been spent on a message that went out.
           paidTxHashRef.current = null;
+          setReplyTarget(current => current?._id === replyingTo?._id ? null : current);
+          resolve(true);
           if (resolvedConversationId.startsWith('new_') && data.conversation) {
             setResolvedConversationId(data.conversation);
           }
@@ -1766,7 +1776,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
            * why the toast distinguishes the two cases.
            */
           const restored = content.trim();
-          if (restored) writeDraft(draftScope, restored);
+          resolve(false);
           if (feeTxHash && restored) {
             // The fee is already on-chain. Hold it against this exact message
             // so pressing Send again reuses that payment rather than charging
@@ -1783,7 +1793,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           );
         },
       }
-    );
+    ));
   };
 
   const handleDeleteConversation = () => {
@@ -1915,7 +1925,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 if (!showSearchBar) {
                   setTimeout(() => searchInputRef.current?.focus(), 100);
                 } else {
-                  setSearchQuery('');
+                  setSearchQuery.complete(searchQuery, '');
                 }
               }}
             >
@@ -1999,7 +2009,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             className="flex-1 bg-transparent text-base md:text-sm text-white placeholder:text-zinc-500 outline-none"
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="text-zinc-500 hover:text-white">
+            <button onClick={() => setSearchQuery.complete(searchQuery, '')} className="text-zinc-500 hover:text-white">
               <X className="w-4 h-4" />
             </button>
           )}
@@ -2214,7 +2224,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         peerName={displayName}
         onSendMessage={handleSendMessage}
         replyTo={composerReplyTo}
-        onCancelReply={() => setReplyTarget(null)}
+        onCancelReply={() => setReplyTarget.complete(replyTarget, null)}
         onTipClick={feeRequired ? undefined : openTipDialog}
         canSend={planAllowsSend}
         sendDisabled={accountBanned || !!feeSendDisabled || (initError && isVirtualConv)}

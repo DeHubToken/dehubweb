@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Post Info Page
  * ==============
@@ -758,7 +759,7 @@ export default function PostInfoPage() {
 
               {/* Tips on this Post */}
               <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />
                 <div>
                   <p className="text-lg font-bold text-white">{postTipTotal.toLocaleString()}</p>
                   <p className="text-xs text-white/60">{t('postInfo.tipsOnPost')}</p>
@@ -767,7 +768,7 @@ export default function PostInfoPage() {
 
               {/* Total Tips */}
               <div className="col-span-2 bg-white/5 rounded-lg p-3 flex items-center gap-3">
-                <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />
                 <div>
                   <p className="text-lg font-bold text-white">{totalTips.toLocaleString()}</p>
                   <p className="text-xs text-white/60">{t('postInfo.totalTipsCreator')}</p>
@@ -799,7 +800,7 @@ export default function PostInfoPage() {
                 )}
                 {ppvPrice && (
                   <div className="col-span-2 bg-primary/10 rounded-lg p-3 flex items-center gap-3 border border-primary/20">
-                    <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-6 h-6" />
                     <div>
                       <p className="text-lg font-bold text-white">
                         <DhbAmount amount={((ppvPurchaseCount ?? 0) * Number(ppvPrice)).toLocaleString()} currency={ppvCurrency} />

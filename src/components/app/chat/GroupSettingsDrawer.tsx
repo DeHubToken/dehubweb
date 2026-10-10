@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * GroupSettingsDrawer Component
  * ==============================
@@ -46,14 +47,14 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
   const [info, setInfo] = useState<GroupInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState('');
-  const [editDescription, setEditDescription] = useState('');
+  const [editName, setEditName] = useSurfaceDraft("components/app/chat/GroupSettingsDrawer.tsx:editName", '', groupId);
+  const [editDescription, setEditDescription] = useSurfaceDraft("components/app/chat/GroupSettingsDrawer.tsx:editDescription", '', groupId);
   const [isSaving, setIsSaving] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [showLeaveConfirm, setShowLeaveConfirm] = useState(false);
   const [blockingUser, setBlockingUser] = useState<string | null>(null);
   const [showAddMember, setShowAddMember] = useState(false);
-  const [memberSearch, setMemberSearch] = useState('');
+  const [memberSearch, setMemberSearch] = useSurfaceDraft("components/app/chat/GroupSettingsDrawer.tsx:memberSearch", '', groupId);
   const debouncedSearch = useDebouncedValue(memberSearch, 300);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -79,7 +80,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
       await joinGroup(groupId);
       toast.success('Member added');
       setShowAddMember(false);
-      setMemberSearch('');
+      setMemberSearch.complete(memberSearch, '');
       setSearchResults([]);
       fetchInfo();
       onUpdated();
@@ -105,7 +106,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
     } finally {
       setIsLoading(false);
     }
-  }, [groupId]);
+  }, [groupId, setEditDescription, setEditName]);
 
   useEffect(() => {
     if (open) fetchInfo();

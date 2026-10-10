@@ -90,6 +90,7 @@
     "heading": "DeHub چھوٹا ویڈیو"
   },
   "settings": {
+    "postingChain": "पोस्ट के लेल ब्लॉकचेन",
     "showOnline": "Nga u shfaq kur jam online",
     "showOnlineDesc": "Mensen die je een bericht sturen, zien een groen stipje naast je naam terwijl je DeHub gebruikt",
     "smartReplies": "تجویز کیل جواب",
@@ -255,6 +256,7 @@
     "light": "اُجالا",
     "dark": "اندھیرا",
     "system": "سسٹم",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
@@ -567,7 +569,7 @@
     "stageDelivering": "DeHub Pay aapke tokens bhej raha hai…",
     "payViaDpay": "DeHub Pay ko bhugtan kiya gaya, tokens lagbhag 30s mein aa jayenge",
     "payViaBridgeDpay": "Base par move kiya gaya aur DeHub Pay ko bhugtan kiya gaya, tokens lagbhag ek minute mein aa jayenge",
-    "dmSent": "{{name}} کو {{amount}} DHB بھیج دیل!"
+    "dmSent": "{{name}} کو {{amount}} دراو بھیج دیل!"
   },
   "postOptions": {
     "options": "آپشن",
@@ -1165,10 +1167,10 @@
   },
   "dhbListing": {
     "title": "ٹوکن لسٹنگ جلد آ رہا ہے!",
-    "body": "$DHB ابھی ٹریڈ نہیں ہوت ہے۔ لسٹ ہوتے ہی ای میل پاؤ۔",
+    "body": "دراو ابھی ٹریڈ نہیں ہوت ہے۔ لسٹ ہوتے ہی ای میل پاؤ۔",
     "notifyMe": "ہمکے بتاؤ",
-    "privacy": "ہمرے ایکے بس $DHB لسٹ ہوئے پر توہرے کے بتائے لے استعمال کربو۔",
-    "joined": "توہرے لسٹ میں ہا۔ $DHB لسٹ ہوتے ہی ہمرے {{email}} پر ای میل بھیجبو۔"
+    "privacy": "ہمرے ایکے بس دراو لسٹ ہوئے پر توہرے کے بتائے لے استعمال کربو۔",
+    "joined": "توہرے لسٹ میں ہا۔ دراو لسٹ ہوتے ہی ہمرے {{email}} پر ای میل بھیجبو۔"
   },
   "explorePage": {
     "searchPlaceholder": "لوگ، پوسٹ، یا مواد کھوجو...",
@@ -1433,7 +1435,7 @@
     "otherTokens": "تۆکنەگەلی تر",
     "otherTokensDesc": "بە کارتەکەت لەسەر Base ئێتیهەچ یان USDC بکڕە",
     "shareToFeed": "خپل فیډ ته شریک کړئ",
-    "sharePostTemplate": "یوازې په DeHub کې زما په سټیک کې {{amount}} $DHB اضافه کړ. له ټولنې سره جوړول. #DeHub #DHB",
+    "sharePostTemplate": "یوازې په DeHub کې زما په سټیک کې {{amount}} دراو اضافه کړ. له ټولنې سره جوړول. #DeHub",
     "success": {
       "title": "پیرود بشپړ شو!",
       "subtitle": "توکن ستاسو والټ ته سپارل شوي دي.",
@@ -3452,7 +3454,7 @@
   },
   "fractions": {
     "seoTitle": "شواهد | DeHub",
-    "seoDescription": "DeHub پوسٹوں کے فریکشن خریدو اور بیچو۔ مِنٹ کی گئی پوسٹ 1000 on-chain فریکشن ہوتی ہے — کسی ویڈیو، ٹریک یا تصویر کا ایک حصہ اپنا بناؤ اور DHB میں ٹریڈ کرو۔",
+    "seoDescription": "DeHub پوسٹوں کے فریکشن خریدو اور بیچو۔ مِنٹ کی گئی پوسٹ 1000 on-chain فریکشن ہوتی ہے — کسی ویڈیو، ٹریک یا تصویر کا ایک حصہ اپنا بناؤ اور دراو میں ٹریڈ کرو۔",
     "title": "फ़्रैक्शन",
     "perUpload": "۱۰۰۰ برای هر بارگذاری",
     "tabBrowse": "بrowse",
@@ -4135,7 +4137,7 @@
     "docsSeoDescription": "مرجع مستندات برای مهارت‌های دستیار هوش مصنوعی و کتابخانه عبارات DeHub"
   },
   "usernames": {
-    "seoDescription": "خرید و فروش نام کاربری DeHub با DHB. جستجو برای نام‌های کوتاه، عددی و اصیل برای فروش یا ثبت نام خود — انتقال در زنجیره بلوک در همان لحظه که پرداخت تأیید می‌شود انجام می‌شود.",
+    "seoDescription": "خرید و فروش نام کاربری DeHub با دراو. جستجو برای نام‌های کوتاه، عددی و اصیل برای فروش یا ثبت نام خود — انتقال در زنجیره بلوک در همان لحظه که پرداخت تأیید می‌شود انجام می‌شود.",
     "title": "ناوی بەکارھێنەران",
     "tabSell": "فروش کن",
     "searchPlaceholder": "جستجو برهنه…",
@@ -5744,17 +5746,17 @@
   },
   "docs": {
     "seoTitle": "Belgeyên DeHub — Rênîşander, token, dApps û FAQ",
-    "seoDescription": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena DHB, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
+    "seoDescription": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena دراو, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
   },
   "dex": {
-    "seoTitle": "DEX — DHB په خپل نرخ سوداګري وکړئ",
-    "seoDescription": "په Base یا BNB Chain کې د Uniswap v4 محدودیت آرډر سره خپل DHB پیرود یا پلور نرخ تنظیم کړئ. ژوندی آرډر کتاب، د بازار ژوروالی او یو شریک USD نرخ.",
+    "seoTitle": "DEX — دراو په خپل نرخ سوداګري وکړئ",
+    "seoDescription": "په Base یا BNB Chain کې د Uniswap v4 محدودیت آرډر سره خپل دراو پیرود یا پلور نرخ تنظیم کړئ. ژوندی آرډر کتاب، د بازار ژوروالی او یو شریک USD نرخ.",
     "venue": "شبکه",
     "marketPrice": "د بازار نرخ · USD",
     "bookPrice": "{{chain}} د کتاب نرخ · USD",
     "change24": "د 24 ساعتونو بدلون",
     "totalLiquidity": "ټوله مایعیت · USD",
-    "listedDhb": "لیست شوي DHB · {{chain}}",
+    "listedDhb": "لیست شوي دراو · {{chain}}",
     "listedUsd": "لیست شوي USD · {{chain}}",
     "refreshMarket": "بازار تازه کړئ",
     "refresh": "تازه کړئ",
@@ -5779,21 +5781,21 @@
     "orderBook": "د آرډر کتاب",
     "priceGrouping": "د نرخ ګروپینګ",
     "priceUsd": "نرخ (USD)",
-    "sizeDhb": "اندازه (DHB)",
-    "totalDhb": "کل (DHB)",
+    "sizeDhb": "اندازه (دراو)",
+    "totalDhb": "کل (دراو)",
     "noBids": "هنوز هیچ پیشنهادی وجود ندارد",
     "noAsks": "هنوز نقدینگی درخواستی وجود ندارد",
     "useBuyPrice": "از {{price}} به عنوان قیمت خرید استفاده کنید",
     "useSellPrice": "از {{price}} به عنوان قیمت فروش استفاده کنید",
     "spread": "اسپرد · USD",
-    "buyTotal": "{{amount}} DHB بخرید",
-    "sellTotal": "{{amount}} DHB بفروشید",
+    "buyTotal": "{{amount}} دراو بخرید",
+    "sellTotal": "{{amount}} دراو بفروشید",
     "placeOrder": "سفارش ثبت کنید",
     "lpFee": "۰٪ کارمزد LP",
     "lpFeeLabel": "کارمزد LP",
     "lpFeeValue": "{{fee}}٪ کارمزد LP",
-    "buy": "DHB بخرید",
-    "sell": "DHB بفروشید",
+    "buy": "دراو بخرید",
+    "sell": "دراو بفروشید",
     "maxBuy": "حداکثر قیمت خرید",
     "minSell": "حداقل قیمت فروش",
     "spend": "خرج کنید",
@@ -5809,7 +5811,7 @@
     "estimated": "تبدیل کامل تخمینی",
     "network": "شبکه تامین مالی",
     "sellBelowMarket": "این فروش {{percent}}٪ پایین‌تر از قیمت بازار ${{price}} است. کسی می‌تواند آن را بخرد و بلافاصله در جای دیگری بفروشد.",
-    "buyAboveMarket": "دا پیرود د بازار له نرخ څخه {{percent}}% پورته دی چې ${{price}} دی. تاسو به د DHB په پرتله ډیر تادیه وکړئ چې په بل ځای کې سوداګري کیږي.",
+    "buyAboveMarket": "دا پیرود د بازار له نرخ څخه {{percent}}% پورته دی چې ${{price}} دی. تاسو به د دراو په پرتله ډیر تادیه وکړئ چې په بل ځای کې سوداګري کیږي.",
     "useMarket": "د بازار نرخ وکاروئ",
     "balanceError": "د توازن چک پاتې شو. امر کولو دمخه بیا هڅه وکړئ.",
     "noFunding": "په {{chain}} کې {{token}} شتون نلري.",
@@ -5818,7 +5820,7 @@
     "reviewYourBuy": "خپل پیرود بیاکتنه وکړئ",
     "reviewYourSell": "خپل پلور بیاکتنه وکړئ",
     "reviewDeposit": "په {{chain}} کې {{amount}} {{token}} زیرمه کړئ.",
-    "reviewRange": "حد: {{min}} – {{max}} USD فی DHB.",
+    "reviewRange": "حد: {{min}} – {{max}} USD فی دراو.",
     "initializes": "دا 0% پول رامینځته کوي او پیل کوي.",
     "pendingNote": "ستاسو معامله سپارل شوې. د بل زیرمې پرته د تایید یا لیست کولو راجسټریشن بیا پیل کړئ.",
     "viewTransaction": "معامله وګورئ",
@@ -5835,7 +5837,7 @@
     "keepOpen": "تر هغه وخته چې ستاسو لیست ثبت شي دا پاڼه پرانیستې وساتئ. د براوزر ذخیره کول شتون نلري.",
     "snapshotDelayed": "شریک شوي بازار معلومات ځنډول شوي. وروستی تایید شوی سنیپ شاټ ښیې.",
     "snapshotUnavailable": "شریک شوي بازار معلومات شتون نلري. د موقعیتونو بارولو لپاره بیا هڅه وکړئ.",
-    "withdrawReview": "په {{chain}} کې {{dhb}} DHB او {{usdc}} USDC بیرته واخلئ؟ مقدارونه لاسلیک کولو دمخه تازه کیږي؛ د نرخ زغم 0.5٪ دی.",
+    "withdrawReview": "په {{chain}} کې {{dhb}} دراو او {{usdc}} USDC بیرته واخلئ؟ مقدارونه لاسلیک کولو دمخه تازه کیږي؛ د نرخ زغم 0.5٪ دی.",
     "withdrawn": "موقعیت بیرته واخیستل شو",
     "withdrawFailed": "د بیرته اخیستلو پاتې شو",
     "withdrawing": "بیرته اخیستل کیږي…",
@@ -5966,6 +5968,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "वीडियो कर खास पल",
+      "visualPrivacy": "देख के विश्लेषण करे ले चुनल फ्रेम भेजू।"
+    },
+    "review": {
+      "title": "प्रोजेक्ट समीक्षा",
+      "shared": "आपके साथ साझा किया गया",
+      "time": "समय (s)",
+      "assign": "वॉलेट सौंपें"
+    },
+    "textFit": {
+      "wrap": "पंक्तियाँ लपेटें",
+      "width": "टेक्स्ट की चौड़ाई",
+      "shrink": "फिट करने के लिए टेक्स्ट छोटा करें",
+      "height": "टेक्स्ट की ऊँचाई",
+      "captions": "उपशीर्षक ट्रैक फिट करें"
+    },
     "canvas": {
       "dropMedia": "اپنا ڈیزائن میں جوڑے کے واسطے چھوڑو",
       "dropText": "ٹیکسٹ جوڑے کے واسطے چھوڑو",
@@ -7295,7 +7314,7 @@
     "topUpTitle": "टॉप अप करा आउर बचावा",
     "discount": "{{percent}}% off",
     "noDiscount": "Full price",
-    "total": "कुल ${{usd}}, DHB में देल गेल",
+    "total": "कुल ${{usd}}, دراو में देल गेल",
     "buy": "Buy credits",
     "buying": "पेमेंट कर इंतजार होवत हे…",
     "bought": "Added {{count}} post credits",
@@ -7325,7 +7344,7 @@
     "skippedToast": "Skipped {{platforms}}: is post mein unhe zaroori photo ya video nahi hai.",
     "uploadFailed": "Cross-posting ke liye aapka media upload nahi ho paaya.",
     "creditRules": "हर पोस्ट के लागत प्लेटफ़ॉर्म के हिसाब से क्रेडिट में होथे: X बर {{x}}, Farcaster बर {{farcaster}} अउ बाकी सब प्लेटफ़ॉर्म बर {{other}}. शेड्यूल्ड पोस्ट जब आप शेड्यूल करथो, तब क्रेडिट खपत होथे.",
-    "payAsYouGoCredits": "क्रेडिट खतम होगे? गुम होए क्रेडिट DHB में ${{price}} पर खरीदे जाथे जब आप पोस्ट करथो.",
+    "payAsYouGoCredits": "क्रेडिट खतम होगे? गुम होए क्रेडिट دراو में ${{price}} पर खरीदे जाथे जब आप पोस्ट करथो.",
     "topUpCredits": "{{count}} credits",
     "perCredit": "${{price}} per credit",
     "pendingApproval": "Farcaster ऐप में dehub के मंजूरी के इंतजार में हवन",
@@ -7337,7 +7356,7 @@
   "dm": {
     "planRestricted": "ई यूजर के मैसेज पाएक ले सब्सक्रिप्शन लागी।",
     "planTypeNotAllowed": "ई क्रिएटर कर प्लान में अइसन मैसेज कर अनुमति नखे।",
-    "planMinTip": "ई क्रिएटर ले टिप कम से कम {{amount}} DHB होवेक चाही।"
+    "planMinTip": "ई क्रिएटर ले टिप कम से कम {{amount}} دراو होवेक चाही।"
   },
   "credits": {
     "earningsWorth": "कीमत {{amount}}",
@@ -7462,7 +7481,7 @@
       "notifyTitle": "Send notifications",
       "notifyBody": "کاربران که اپلیکیشن شما را اضافه می‌کنند، می‌توانند از طریق کلید `notify` سرور شما، از طریق پیام‌رسانی مطلع شوند. نیازی به ذخیره‌سازی توکن‌های شخصی برای هر کاربر نیست.",
       "rankBody": "هر شب هر اپلیکیشن لیست شده امتیاز می‌گیرد: ۵۵٪ از کاربران بازگشت‌دار (کسی که این هفته و هفته قبل آن را باز کرده)، ۳۵٪ از کاربران هفتگی، علاوه بر یک افزایش ۱۰٪ در ۱۴ روز اولش. فقط حساب‌های DeHub ثبت‌نام‌شده حساب می‌شوند، بنابراین ربات‌ها و بارگذاری مجدد صفحه هیچ امتیازی نمی‌گیرند.",
-      "rewardsBody": "هر ماهی {{pool}} DHB میان اپلیکیشن‌ها به صورت برابر بر اساس امتیاز محاسبه شده هفتگی تقسیم می‌شود. برای کسب امتیاز، اپلیکیشن باید دارنده کیف پول تأیید شده داشته باشد و حداقل ۳ کاربر بازگشت‌دار داشته باشد. پاداش‌ها توسط DeHub به کیف پول مالک پرداخت می‌شوند.",
+      "rewardsBody": "هر ماهی {{pool}} دراو میان اپلیکیشن‌ها به صورت برابر بر اساس امتیاز محاسبه شده هفتگی تقسیم می‌شود. برای کسب امتیاز، اپلیکیشن باید دارنده کیف پول تأیید شده داشته باشد و حداقل ۳ کاربر بازگشت‌دار داشته باشد. پاداش‌ها توسط DeHub به کیف پول مالک پرداخت می‌شوند.",
       "rewardsWeek": "هفتهٔ {{date}}",
       "rewardsNone": "نفرمایید تا اینک هیچ جایزه‌ای محاسبه نشده‌است. هفتهٔ نخست در یکشنبه به پایان می‌رسد."
     },
@@ -7487,7 +7506,7 @@
     "pay": {
       "title": "Pay {{name}}?",
       "confirm": "پای {{amount}} دی‌اچ‌بی",
-      "sent": "پیدا کردن {{amount}} DHB برای {{name}}.",
+      "sent": "پیدا کردن {{amount}} دراو برای {{name}}.",
       "noOwner": "این اپلیکیشن هنوز کیف پول تأیید شده‌ای برای پرداخت ندارد."
     },
     "add": {

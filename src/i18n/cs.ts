@@ -1102,7 +1102,7 @@ export const cs = {
     quadraticVoting: 'Kvadratické Hlasování',
     quadraticDesc: 'Pro snížení dominance velryb: hlasovací síla = √(stakované tokeny). Stakování 100 tokenů = 10 hlasů, 10 000 tokenů = 100 hlasů.',
     burnToVote: 'Spálení pro Hlasování',
-    burnToVoteDesc: 'Každé hlasování stojí 50 DHB. To odrazuje špatné aktéry a zajišťuje smysluplnou účast.',
+    burnToVoteDesc: 'Každé hlasování stojí 50 tokenů. To odrazuje špatné aktéry a zajišťuje smysluplnou účast.',
     daoProposals: 'Návrhy DAO',
     daoProposalsDesc: 'Tvůrci obsahu se mohou odvolat proti moderačním rozhodnutím prostřednictvím návrhů DAO. Držitelé tokenů hlasují s kvadratickou logikou.',
     disclaimer: 'Upozornění',
@@ -1119,7 +1119,7 @@ export const cs = {
   tokenStake: {
     title: 'Staking',
     subtitle: 'Stakujte pro zabezpečení sítě a vydělávejte odměny',
-    stakingDesc: 'Stakujte své $DHB tokeny pro zabezpečení sítě a získávejte reálný výnos z příjmů protokolu. Staking také poskytuje vylepšená práva v ekosystému.',
+    stakingDesc: 'Stakujte své DeHub tokeny pro zabezpečení sítě a získávejte reálný výnos z příjmů protokolu. Staking také poskytuje vylepšená práva v ekosystému.',
     stakingBenefits: 'Výhody Stakingu',
     benefit1: 'Reálný výnos z příjmů protokolu',
     benefit2: 'Zabezpečení sítě a validace',
@@ -1193,7 +1193,7 @@ export const cs = {
   tokenBridge: {
     title: 'Token Most',
     subtitle: 'Přemostění tokenů mezi sítěmi BASE a BNB.',
-    bridgeDesc: 'Přemostěte své $DHB tokeny mezi BASE a BNB řetězci.',
+    bridgeDesc: 'Přemostěte své DeHub tokeny mezi BASE a BNB řetězci.',
     bridgeSteps: 'Kroky Přemostění',
     step1: 'Zkopírujte příslušnou adresu mostu',
     step2: 'Pošlete tokeny na adresu mostu',

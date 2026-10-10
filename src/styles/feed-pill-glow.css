@@ -1,0 +1,68 @@
+/* Pull-to-refresh glow under the feed tab pill (FeedPillGlow).
+
+   A lit rim along the pill's bottom edge and a soft halo spilling into the gap
+   where the spinner appears. --pull-glow (0 to 1) follows the pull; while the
+   feed refreshes, --pill-glow-breath keeps a slow, quiet pulse until the new
+   posts land. Each theme lights it in its own colour (--tint-accent). */
+@property --pill-glow-breath {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+html {
+  --pill-glow-color: color-mix(in srgb, var(--tint-accent) 60%, rgb(240 246 255));
+  --pill-glow-gain: 1;
+}
+html[data-theme='system'] { --pill-glow-color: rgb(228 240 255); }
+html[data-theme='minimal'] { --pill-glow-color: rgb(255 255 255); --pill-glow-gain: 0.6; }
+/* White light vanishes on a light page, so Light gets a blue glow. */
+html[data-theme='light'] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain: 0.85; }
+
+[data-feed-pill-glow] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), var(--pill-glow-breath)));
+}
+[data-feed-pill-glow][data-refreshing] {
+  animation: feed-pill-glow-breath 1.8s ease-in-out infinite alternate;
+}
+@keyframes feed-pill-glow-breath {
+  from { --pill-glow-breath: 0.3; }
+  to { --pill-glow-breath: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-feed-pill-glow][data-refreshing] {
+    animation: none;
+    --pill-glow-breath: 0.32;
+  }
+}
+
+[data-feed-pill-glow-rim] {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: -1.5px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--pill-glow-color) 22%, var(--pill-glow-color) 78%, transparent);
+  box-shadow: 0 1px 8px color-mix(in srgb, var(--pill-glow-color) 70%, transparent);
+}
+
+[data-feed-pill-glow-halo] {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 0;
+  height: 34px;
+  filter: blur(6px);
+  background: radial-gradient(60% 100% at 50% 0%,
+    color-mix(in srgb, var(--pill-glow-color) 42%, transparent),
+    color-mix(in srgb, var(--pill-glow-color) 12%, transparent) 50%,
+    transparent 78%);
+}
+html[data-theme='light'] [data-feed-pill-glow-halo] {
+  box-shadow: 0 -6px 18px -8px rgb(60 80 140 / 0.35);
+}

@@ -8,6 +8,7 @@
  */
 import { useTranslation } from "react-i18next";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
+import { matchesBackgroundRemovalScope } from "@/lib/editor/backgroundRemovalFailure";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import {
   AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical,
@@ -15,7 +16,7 @@ import {
   Maximize, Minimize, RotateCcw, Scissors, Loader2, Underline, CaseUpper, Frame, Eye, EyeOff, Lock, Unlock,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import { EditorSlider as Slider } from "@/components/editor/EditorSlider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
@@ -29,10 +30,12 @@ export function LayerSection({ clip }: { clip: Clip }) {
   const { t } = useTranslation();
   const patchClip = useEditorStore((s) => s.patchClip);
   const patchClipLive = useEditorStore((s) => s.patchClipLive);
-  const beginGesture = useEditorStore((s) => s.beginGesture);
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const media = useEditorStore((s) => s.media);
+  const projectId = useEditorStore((s) => s.projectId);
+  const bgFailure = useBgRemovalStore((s) => s.failure);
+  const dismissBgFailure = useBgRemovalStore((s) => s.dismissFailure);
   const bgClipId = useBgRemovalStore((s) => s.clipId);
   const bgProgress = useBgRemovalStore((s) => s.progress);
   const runBgRemoval = useBgRemovalStore((s) => s.run);
@@ -54,7 +57,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
     onChange: (v: number) => void) => (
     <div className="space-y-1">
       <Label className="text-[10px] uppercase tracking-wide text-white/40">{label}</Label>
-      <div onPointerDownCapture={beginGesture} onKeyDownCapture={beginGesture}>
+      <div>
         <Slider value={[value]} min={min} max={max} step={step} onValueChange={(v) => onChange(v[0] ?? value)} />
       </div>
     </div>
@@ -219,7 +222,13 @@ export function LayerSection({ clip }: { clip: Clip }) {
             : t("editor.bgRemove.action")}
         </button>
       )}
-      {mediaClip?.kind === "video" && !bgClipId && !mediaClip.videoMatte && <p className="text-[10px] leading-snug text-white/40">{t("editor.videoMatte.hint", { seconds: Math.round(600 / settings.fps) })}</p>}
+      {!bgClipId && !mediaClip?.videoMatte && matchesBackgroundRemovalScope(bgFailure, projectId, clip) && (
+        <div role="alert" className="space-y-2 rounded-md border border-white/20 p-2 text-xs text-white/80">
+          <p className="break-words">{bgFailure?.message}</p>
+          <button type="button" onClick={dismissBgFailure} className="underline">{t("common.close")}</button>
+        </div>
+      )}
+      {mediaClip?.kind === "video" && !bgClipId && !mediaClip.videoMatte && <p className="text-[10px] leading-snug text-white/40">{t("editor.videoMatte.hint", { seconds: 600 })}</p>}
       {mediaClip?.kind === "video" && bgClipId === clip.id && <button type="button" onClick={cancelBgRemoval} className="text-xs text-white/70">{t("editor.videoMatte.cancel")}</button>}
       {mediaClip?.videoMatte && <button type="button" onClick={() => patchClip(clip.id, { videoMatte: null })} className="h-8 w-full rounded-md border border-white/20 text-xs text-white">{t("editor.videoMatte.restore")}</button>}
       {mediaClip?.kind === "image" && !bgClipId && (

@@ -61,8 +61,10 @@ deployment. Do not enable the disabled sweep cron for this rollout.
 ## Stage speech
 
 Stage voice pickers request Google Chirp 3 HD through the existing speech
-endpoints. Set backend secret `GOOGLE_TTS_API_KEY` to a server-only Google Cloud
-key restricted to the enabled Text-to-Speech API. Deploy `elevenlabs-voices`
+endpoints. Set backend secret `GOOGLE_TTS_SERVICE_ACCOUNT_JSON` to the JSON key
+of a dedicated Google Cloud service account allowed to use Text-to-Speech.
+The backend exchanges signed assertions for short-lived OAuth tokens and caches
+them until shortly before expiry. Credentials remain in backend secrets. Deploy `elevenlabs-voices`
 and `elevenlabs-tts` after applying `20261008140000_chirp_speech_budget.sql`.
 Existing custom voices retain their ownership checks and original provider.
 

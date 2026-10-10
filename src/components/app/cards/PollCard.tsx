@@ -1,6 +1,7 @@
+import { pollHasEnded, pollVotePercent, pollOptionWins } from '@/lib/poll-results';
 import { useEffect, useRef, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePoll, useVoteOnPoll, useRemovePollVote, useClosePoll } from '@/hooks/use-polls';
 import { useAuth } from '@/contexts/AuthContext';
@@ -57,7 +58,14 @@ export function PollCard({ tokenId }: PollCardProps) {
   // phantom gap to every poll-less post — while staying intersectable.
   if (isLoading || !poll) return <div ref={observerRef} className="absolute" aria-hidden="true" />;
 
+  // A poll whose end time has passed is over even while the stored isActive
+  // flag still says true — only "Close Poll" flips that flag. Treating it as
+  // open showed a vote button the server then rejected as expired.
+  const isEnded = pollHasEnded(poll);
+  const isOpen = !isEnded;
   const hasVoted = localVotedIndexes !== null || !!poll.userVote;
+  // Results show once you've voted, and to everyone once the poll is over.
+  const showResults = hasVoted || isEnded;
   const votedIndexes = localVotedIndexes ?? poll.userVote?.optionIndexes ?? [];
 
   // Merge local optimistic counts with server counts
@@ -70,9 +78,11 @@ export function PollCard({ tokenId }: PollCardProps) {
     : poll.totalVotes;
 
   const getBarWidth = (index: number) => {
-    if (totalVotes === 0) return 0;
-    return Math.round((getCount(index) / totalVotes) * 100);
+    return pollVotePercent(getCount(index), totalVotes);
   };
+
+  const topCount = Math.max(0, ...poll.options.map(o => getCount(o.index)));
+  const isWinner = (index: number) => pollOptionWins(getCount(index), topCount, isEnded);
 
   const isOwner = walletAddress && poll.address.toLowerCase() === walletAddress.toLowerCase();
 
@@ -86,7 +96,7 @@ export function PollCard({ tokenId }: PollCardProps) {
   };
 
   const handleOptionClick = (idx: number) => {
-    if (hasVoted || !poll.isActive || voteMutation.isPending) return;
+    if (hasVoted || isEnded || voteMutation.isPending) return;
     if (poll.isMultipleChoice) {
       setSelectedIndexes(prev =>
         prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
@@ -120,9 +130,9 @@ export function PollCard({ tokenId }: PollCardProps) {
       <div className="flex items-start justify-between gap-2">
         <p className="text-white font-medium text-sm leading-snug">
           {poll.question}
-          {!poll.isActive && <span className="ml-2 text-zinc-500 text-xs font-normal">(Closed)</span>}
+          {isEnded && <span className="ml-2 text-zinc-500 text-xs font-normal">(Closed)</span>}
         </p>
-        {isOwner && poll.isActive && (
+        {isOwner && isOpen && (
           <button
             onClick={() => closePollMutation.mutate(tokenId)}
             disabled={closePollMutation.isPending}
@@ -138,7 +148,8 @@ export function PollCard({ tokenId }: PollCardProps) {
           const pct = getBarWidth(option.index);
           const isVoted = votedIndexes.includes(option.index);
           const isSelected = selectedIndexes.includes(option.index);
-          const canClick = !hasVoted && poll.isActive && !voteMutation.isPending;
+          const won = isWinner(option.index);
+          const canClick = !hasVoted && isOpen && !voteMutation.isPending;
 
           return (
             <button
@@ -152,7 +163,7 @@ export function PollCard({ tokenId }: PollCardProps) {
             >
               <div className="relative z-10 flex items-center justify-between px-3 py-2">
                 <div className="flex items-center gap-2 min-w-0">
-                  {poll.isMultipleChoice && !hasVoted && poll.isActive && (
+                  {poll.isMultipleChoice && !hasVoted && isOpen && (
                     <span className={cn(
                       'w-4 h-4 shrink-0 rounded border flex items-center justify-center',
                       isSelected ? 'bg-white border-white' : 'border-white/30',
@@ -160,7 +171,7 @@ export function PollCard({ tokenId }: PollCardProps) {
                       {isSelected && <span data-keep-dark data-keep-square className="block w-2 h-2 rounded-sm bg-black" />}
                     </span>
                   )}
-                  {!poll.isMultipleChoice && !hasVoted && poll.isActive && (
+                  {!poll.isMultipleChoice && !hasVoted && isOpen && (
                     <span className={cn(
                       'w-4 h-4 shrink-0 rounded-full border flex items-center justify-center',
                       'border-white/30',
@@ -168,20 +179,21 @@ export function PollCard({ tokenId }: PollCardProps) {
                       <span className="block w-2 h-2 rounded-full bg-transparent" />
                     </span>
                   )}
-                  <span className={cn('text-sm truncate', isVoted ? 'text-white font-medium' : 'text-zinc-300')}>
+                  <span className={cn('text-sm truncate', isVoted || won ? 'text-white font-medium' : 'text-zinc-300')}>
                     {option.text}
                   </span>
+                  {won && <Check className="w-3.5 h-3.5 shrink-0 text-white" aria-label="Winner" />}
                 </div>
-                {hasVoted && (
-                  <span className="text-xs text-zinc-400 shrink-0 ml-2">{pct}%</span>
+                {showResults && (
+                  <span className={cn('text-xs shrink-0 ml-2', won ? 'text-white font-medium' : 'text-zinc-400')}>{pct}%</span>
                 )}
               </div>
               <div className="absolute inset-0 rounded-lg bg-white/10" />
-              {hasVoted && (
+              {showResults && (
                 <div
                   className={cn(
                     'absolute inset-y-0 left-0 rounded-lg transition-all duration-500',
-                    isVoted ? 'bg-white/40' : 'bg-white/20',
+                    isVoted || won ? 'bg-white/40' : 'bg-white/20',
                   )}
                   style={{ width: `${pct}%` }}
                 />
@@ -191,7 +203,7 @@ export function PollCard({ tokenId }: PollCardProps) {
         })}
       </div>
 
-      {poll.isMultipleChoice && !hasVoted && poll.isActive && selectedIndexes.length > 0 && (
+      {poll.isMultipleChoice && !hasVoted && isOpen && selectedIndexes.length > 0 && (
         <button
           onClick={handleMultipleChoiceVote}
           disabled={voteMutation.isPending}
@@ -206,12 +218,12 @@ export function PollCard({ tokenId }: PollCardProps) {
         <div className="flex items-center gap-3">
           {poll.expiresAt && (
             <span>
-              {poll.isActive
+              {isOpen
                 ? `Ends ${formatDistanceToNow(new Date(poll.expiresAt), { addSuffix: true })}`
                 : `Ended ${formatDistanceToNow(new Date(poll.expiresAt), { addSuffix: true })}`}
             </span>
           )}
-          {hasVoted && poll.isActive && (
+          {hasVoted && isOpen && (
             <button
               onClick={handleRemoveVote}
               disabled={removeVoteMutation.isPending}

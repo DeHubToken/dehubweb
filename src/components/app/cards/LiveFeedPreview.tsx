@@ -40,8 +40,18 @@ import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } 
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
+import { useStreamPresence } from '@/hooks/use-stream-presence';
+import { LiveReactionFlow, type SelfReaction } from '@/components/app/live/LiveReactionFlow';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLivePlaybackFeedback } from '@/hooks/use-live-playback-feedback';
 
 interface LiveFeedPreviewProps {
+  streamId?: string;
+  streamStatus?: string;
+  creatorId?: string;
+  isOwner?: boolean;
+  selfReaction?: SelfReaction | null;
+  onViewerCount?: (count: number) => void;
   /** HLS ladder for the stream. First playable URL wins. */
   urls: (string | undefined)[];
   /** Poster frame, shown until the first video frame lands. */
@@ -75,7 +85,7 @@ const WHEP_START_TIMEOUT_MS = 6000;
 const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
-export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute }: LiveFeedPreviewProps) {
+export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute, streamId, streamStatus, creatorId, isOwner, selfReaction, onViewerCount }: LiveFeedPreviewProps) {
   const { pathname } = useLocation();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const inPiP = usePictureInPicture(videoRef);
@@ -97,6 +107,19 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { broadcastPaused, waitingTooLong } = useLivePlaybackFeedback(streamId, loading, visible && !postOpen, streamStatus);
+  const wasBroadcastPaused = useRef(broadcastPaused);
+  useEffect(() => {
+    if (wasBroadcastPaused.current && !broadcastPaused) setFailed(false);
+    wasBroadcastPaused.current = broadcastPaused;
+  }, [broadcastPaused]);
+  const { walletAddress } = useAuth();
+  const ownStream = isOwner || (!!walletAddress && walletAddress.toLowerCase() === creatorId?.toLowerCase());
+  const watching = visible && !postOpen && !failed && playing && !paused;
+  const viewerCount = useStreamPresence(streamId, watching && !ownStream);
+  useEffect(() => {
+    if (viewerCount != null) onViewerCount?.(viewerCount);
+  }, [viewerCount, onViewerCount]);
 
   const src = urls.find((u): u is string => !!u && u.includes('.m3u8'));
   const source = useMemo(() => liveSourceFromHlsUrl(src), [src]);
@@ -248,13 +271,13 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
     };
   }, [transport, src, visible, postOpen, failed, selfHosted]);
 
-  if (!src || failed) {
+  if (!src) {
     return <LiveEndedMedia thumbnail={thumbnail} label={fallbackLabel} />;
   }
 
   return (
     <div ref={containerRef} className={isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen bg-black' : className ?? 'absolute inset-0 w-full h-full'}>
-      {!playing &&
+      {(!playing || failed) &&
         (thumbnail ? (
           <img
             src={thumbnail}
@@ -286,10 +309,14 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         }}
         onWaiting={() => setLoading(true)}
         onPause={() => { setPaused(true); setLoading(false); }}
+        onEnded={() => { setPaused(true); setPlaying(false); setLoading(false); }}
       />
-      {visible && !postOpen && loading && (
-        <div role="status" aria-label="Loading" className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          <ButtonLoader size={40} className="!filter-none" />
+      <LiveReactionFlow streamId={streamId} enabled={visible && !postOpen} self={selfReaction} bottom={56} />
+      {visible && !postOpen && (loading || broadcastPaused || failed || (paused && playing)) && (
+        <div role="status" aria-label={broadcastPaused || (paused && playing) ? 'Live paused' : failed || waitingTooLong ? 'Waiting for live video' : 'Loading'} className="absolute inset-0 pointer-events-none flex items-center justify-center">
+          {broadcastPaused || (paused && playing) || waitingTooLong || failed
+            ? <span className="rounded-xl bg-black/75 px-4 py-2 text-sm text-white">{broadcastPaused || (paused && playing) ? 'Live paused' : 'Waiting for live video'}</span>
+            : <ButtonLoader size={40} className="!filter-none" />}
         </div>
       )}
       {(controlsVisible || isFullscreen) && (
@@ -297,6 +324,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
           <button type="button" aria-label={paused ? 'Play' : 'Pause'} className="h-8 w-8 rounded-xl bg-black/40 border border-white/10 text-white flex items-center justify-center" onClick={() => {
             const el = videoRef.current;
             if (!el) return;
+            if (failed) { setFailed(false); return; }
             if (el.paused) {
               setLoading(true);
               void el.play().catch(() => { setPaused(true); setLoading(false); });

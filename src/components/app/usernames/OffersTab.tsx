@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Offers Tab
  * ==========
@@ -9,7 +10,7 @@
  * Accepting one takes no money and moves no handle — it holds your name for
  * one buyer until they pay, and you can take that back. Every state here that
  * looks like a completed trade is actually a promise, and a reader who thinks
- * otherwise will either spend a name they still own or wait for DHB that was
+ * otherwise will either spend a name they still own or wait for tokens that was
  * never sent.
  *
  * Paying for an accepted offer reuses the ordinary buy drawer. An accepted
@@ -163,7 +164,7 @@ function IncomingRow({ offer }: { offer: UsernameOffer }) {
   const decline = useDeclineUsernameOffer();
 
   const [answering, setAnswering] = useState(false);
-  const [replacement, setReplacement] = useState('');
+  const [replacement, setReplacement] = useSurfaceDraft("components/app/usernames/OffersTab.tsx:replacement", '', draftIdentity(offer));
 
   const replacementValid =
     /^[a-z0-9_-]{1,30}$/.test(replacement.trim().toLowerCase()) &&

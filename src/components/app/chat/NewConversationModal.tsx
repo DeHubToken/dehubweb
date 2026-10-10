@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * NewConversationModal Component
  * ==============================
@@ -125,7 +127,7 @@ function UserSearchResult({
         )}
         {!dmDisabled && !isLoading && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
-            <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
+            <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
             {perMessageFee.toLocaleString()} to message
           </p>
         )}
@@ -153,8 +155,8 @@ function FeePaymentStep({
   onBack: () => void;
 }) {
   const { t } = useTranslation();
-  const [messageText, setMessageText] = useState('');
-  const [customAmount, setCustomAmount] = useState('');
+  const [messageText, setMessageText] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:messageText", '');
+  const [customAmount, setCustomAmount] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:customAmount", '');
   const [isSending, setIsSending] = useState(false);
   const [balanceInfo, setBalanceInfo] = useState<{ checked: boolean; balance: number; sufficient: boolean }>({
     checked: false, balance: 0, sufficient: false,
@@ -216,7 +218,7 @@ function FeePaymentStep({
 
       if (balance < amountWei) {
         const balanceHuman = Number(balance) / 1e18;
-        toast.error(dhbText(`Insufficient DHB. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
+        toast.error(dhbText(`Insufficient tokens. Need ${amount.toLocaleString()} but have ${balanceHuman.toFixed(2)}`));
         setBalanceInfo({ checked: true, balance: balanceHuman, sufficient: false });
         setIsSending(false);
         return;
@@ -330,7 +332,7 @@ function FeePaymentStep({
           </>
         ) : (
           <>
-            <img src={dehubCoin} alt="DHB" className="w-4 h-4 mr-2" />
+            <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 mr-2" />
             Pay {fee.toLocaleString()} & Start Chat
           </>
         )}
@@ -346,7 +348,7 @@ function FeePaymentStep({
       {/* Custom higher tip */}
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
+          <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
           <Input
             type="number"
             min={fee}
@@ -389,7 +391,7 @@ export function NewConversationModal({
   initialMessage,
   title,
 }: NewConversationModalProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:searchQuery", '');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
 
@@ -425,7 +427,7 @@ export function NewConversationModal({
         }
         onConversationCreated(conversation);
         onOpenChange(false);
-        setSearchQuery('');
+        setSearchQuery.complete(searchQuery, '');
         setFeeUser(null);
         return;
       }
@@ -448,7 +450,7 @@ export function NewConversationModal({
 
       onConversationCreated(conversation);
       onOpenChange(false);
-      setSearchQuery('');
+      setSearchQuery.complete(searchQuery, '');
       setFeeUser(null);
     } catch (error: any) {
       toast.error(error.message || 'Failed to start conversation');
@@ -469,7 +471,6 @@ export function NewConversationModal({
 
   const handleClose = () => {
     onOpenChange(false);
-    setSearchQuery('');
     setSelectedUserId(null);
     setFeeUser(null);
   };
@@ -501,7 +502,7 @@ export function NewConversationModal({
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery.complete(searchQuery, '')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[10px] font-medium text-white/70 bg-white/10 hover:bg-white/20 border border-white/10 rounded-md transition-colors"
                 >
                   Clear

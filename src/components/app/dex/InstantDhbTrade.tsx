@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatUnits, parseUnits } from 'ethers';
@@ -24,7 +26,7 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
   const walletLocked = useWalletLocked();
   const [side, setSide] = useState<'buy' | 'sell' | null>(null);
   const [pay, setPay] = useState<Pay>('USDC');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/dex/InstantDhbTrade.tsx:amount", '');
   const [quote, setQuote] = useState<SwapCall | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -43,7 +45,7 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
     setBusy(true); setError('');
     try {
       const value = Number(amount);
-      if (!(value > 0) || value > balance) throw new Error(t('dex.checkAmount', { token: spend.symbol }));
+      if (!(value > 0) || value > balance) throw new Error(t('dex.checkAmount', { token: tokenLabel(spend.symbol) }));
       if (!quote) {
         const [whole, fraction = ''] = amount.split('.');
         const units = parseUnits(fraction ? `${whole}.${fraction.slice(0, spend.decimals)}` : whole, spend.decimals);
@@ -51,8 +53,8 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
         return;
       }
       await runSwap(quote, walletAddress);
-      toast.success(t(side === 'buy' ? 'dex.pool.bought' : 'dex.pool.sold', { amount: formatSize(side === 'buy' ? Number(formatUnits(quote.amountOut, 18)) : value), symbol: 'DHB' }));
-      setAmount(''); setQuote(null); onDone();
+      toast.success(t(side === 'buy' ? 'dex.pool.bought' : 'dex.pool.sold', { amount: formatSize(side === 'buy' ? Number(formatUnits(quote.amountOut, 18)) : value), symbol: tokenLabel() }));
+      setAmount.complete(amount, ''); setQuote(null); onDone();
     } catch (e) { setError(dexActionError(e, t('dex.prepareFailed'))); }
     finally { setBusy(false); }
   }
@@ -68,8 +70,8 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
         <option value="USDC">USDC · {formatSize(Number(formatUnits(held(USDC)?.balance ?? 0n, 6)))}</option>
         <option value="ETH">ETH · {formatSize(Number(formatUnits(held('native')?.balance ?? 0n, 18)))}</option>
       </select></div></label>}
-      <label className="dex-field">{t(side === 'buy' ? 'dex.spend' : 'dex.sellAmount')}<div className="dex-input"><input inputMode="decimal" placeholder="0.00" aria-label={t('dex.amountToken', { token: spend.symbol })} value={amount} onChange={(e) => setAmount(e.target.value.replace(',', '.').trim())} /><span>{spend.symbol}</span></div></label>
-      <div className="dex-available"><span>{t('dex.available')}</span><span>{formatSize(balance)} {spend.symbol}</span></div>
+      <label className="dex-field">{t(side === 'buy' ? 'dex.spend' : 'dex.sellAmount')}<div className="dex-input"><input inputMode="decimal" placeholder="0.00" aria-label={t('dex.amountToken', { token: tokenLabel(spend.symbol) })} value={amount} onChange={(e) => setAmount(e.target.value.replace(',', '.').trim())} /><span>{tokenLabel(spend.symbol)}</span></div></label>
+      <div className="dex-available"><span>{t('dex.available')}</span><span>{formatSize(balance)} {tokenLabel(spend.symbol)}</span></div>
       <dl><dt>{t('dex.pool.youReceive')}</dt><dd>{out != null ? <DhbAmount amount={formatSize(out)} currency={side === 'buy' ? 'DHB' : 'USDC'} /> : '—'}</dd></dl>
       {error && <div role="alert" className="dex-alert dex-error">{error}</div>}
       <button type="button" className={`dex-submit ${side === 'sell' ? 'sell' : ''}`} disabled={busy || !(Number(amount) > 0)} onClick={() => void submit()}>

@@ -6,6 +6,7 @@ import {
 } from '../_shared/dehub-brand-composite.ts';
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
 import { recordGeneration } from '../_shared/generation-jobs.ts';
+import { publishFreePoster } from '../_shared/creator-gallery.ts';
 import { chargeForJob } from '../_shared/ai-payment-guard.ts';
 import { aiChat } from '../_shared/ai-chat.ts';
 import { CREATOR_FAL_IMAGE_MODELS } from '../_shared/creator-fal-catalog.ts';
@@ -1035,6 +1036,9 @@ serve(async (req) => {
   if (!charged.ok) return charged.response;
 
   const response = await handleGenerateImage(req);
+  if (isFreeTemplateRequest(peek) && charged.priceDhb === 0) {
+    await publishFreePoster(peek, charged.priceDhb, charged.jobId, response);
+  }
   // Anything short of a success hands the credit back — a refusal or a provider
   // outage must not be billable.
   if (!response.ok) await charged.refund();

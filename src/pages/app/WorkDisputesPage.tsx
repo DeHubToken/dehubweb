@@ -1,3 +1,5 @@
+import { useDraftState } from '@/hooks/use-draft-state';
+import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +27,7 @@ export default function WorkDisputesPage() {
   const { walletAddress } = useAuth();
   const { data: disputes = [], isLoading } = useAdminDisputes();
   const resolve = useAdminResolveDispute();
-  const [draft, setDraft] = useState<Record<string, { worker: number; poster: number; notes: string; workerAddr: string; pay: boolean }>>({});
+  const [draft, setDraft] = useDraftState<Record<string, { worker: number; poster: number; notes: string; workerAddr: string; pay: boolean }>>(`form:src/pages/app/WorkDisputesPage.tsx:draft:${'disputes'}`, {});
 
   // With no escrow contract deployed there is nothing held to split, so a
   // resolution is a written decision plus — if the arbiter chooses — a transfer
@@ -93,7 +95,7 @@ export default function WorkDisputesPage() {
               </div>
               {j && (
                 <div className="text-right text-xs text-white/60 shrink-0">
-                  <div>{t('work.unreleased', { amount: remaining.toLocaleString(undefined, { maximumFractionDigits: 4 }), currency: j.currency })}</div>
+                  <div>{t('work.unreleased', { amount: remaining.toLocaleString(undefined, { maximumFractionDigits: 4 }), currency: tokenLabel(j.currency) })}</div>
                   <div className="text-[11px] text-white/40">{escrowed ? t('work.onchainId', { id: j.onchain_job_id ?? '—' }) : t('work.notEscrowed')}</div>
                 </div>
               )}

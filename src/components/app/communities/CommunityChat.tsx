@@ -1,3 +1,5 @@
+import { useDraftState } from '@/hooks/use-draft-state';
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Community Chat
  * ===============
@@ -14,6 +16,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2, ArrowDown, Pin, PinOff, MicOff, Ban } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
+import { voiceRecordingFile } from '@/lib/voice-recording';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
@@ -152,11 +155,20 @@ interface CommunityChatProps {
 }
 
 export function CommunityChat({ communityId, community, membership, isMember }: CommunityChatProps) {
-  const [newMessage, setNewMessage] = useState('');
-  const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
+  const [newMessage, setNewMessage] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:newMessage", '', communityId);
+  const [replyTo, setReplyTo] = useDraftState<CommunityChatMessage | null>(`community:${communityId}:reply`, null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [editInitial, setEditInitial] = useState('');
+  const [editText, setEditText] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
+  const commitDraftEdit = async (id: string) => {
+    if (!editText.trim()) return;
+    try {
+      const result = await editMessage(id, editText);
+      if (result !== false && setEditText.complete(editText, editText)) setEditingId(current => current === id ? null : current);
+    } catch { /* Keep the edit available for retry. */ }
+  };
+
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:searchQuery", '', communityId);
   const [showSearch, setShowSearch] = useState(false);
   const [adminThinking, setAdminThinking] = useState(false);
   const PAGE_SIZE = 15;
@@ -455,14 +467,15 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     }
   }, [deleteTarget, deleteMessage]);
 
+  const sendingRef = useRef(false);
   const handleSend = async () => {
+    if (sendingRef.current) return;
     if (!isAuthenticated) { openLoginModal(); return; }
     if (slowModeRemaining > 0) return;
     const trimmed = newMessage.trim();
     if (!trimmed) return;
     const replyToId = replyTo?.id;
-    setReplyTo(null);
-    setNewMessage('');
+    sendingRef.current = true;
 
     // Detect /admin command
     const adminMatch = trimmed.match(/^\/admin\b\s*(.*)$/i);
@@ -475,11 +488,14 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
+      if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
       sent = true;
     } catch {
       // Error handled in hook
     }
-    if (sent) startSlowModeCountdown();
+    sendingRef.current = false;
+    if (!sent) return;
+    startSlowModeCountdown();
 
     if (adminMatch) {
       const prompt = (adminMatch[1] || '').trim();
@@ -515,7 +531,6 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     if (!isAuthenticated) { openLoginModal(); return; }
     if (slowModeRemaining > 0) return;
     const replyToId = replyTo?.id;
-    setReplyTo(null);
     try {
       // image_url carries the picture; the body stays empty so a client that
       // renders the text does not print the URL under the GIF as a link.
@@ -537,7 +552,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     toast.loading('Uploading voice note...', { id: toastId });
     try {
       const token = getAuthToken();
-      const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+      const file = voiceRecordingFile(blob);
       const formData = new FormData();
       formData.append('file', file, file.name);
       const { data, error } = await supabase.functions.invoke('dm-upload-media', {
@@ -556,14 +571,14 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-      setReplyTo(null);
+      setReplyTo.complete(replyTo, null);
       startSlowModeCountdown();
       toast.success('Voice note sent!', { id: toastId });
     } catch (err: any) {
       console.error('[CommunityChat] Voice upload failed:', err);
       toast.error(err?.message || 'Failed to send voice note', { id: toastId });
     }
-  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown]);
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown, setReplyTo]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (mention.isOpen) {
@@ -631,7 +646,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                 className="flex-1 bg-transparent border-none outline-none text-xs text-white placeholder:text-zinc-500"
               />
               <button
-                onClick={() => { setSearchQuery(''); setShowSearch(false); }}
+                onClick={() => { setSearchQuery.complete(searchQuery, ''); setShowSearch(false); }}
                 className="p-0.5 text-zinc-500 hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
@@ -833,8 +848,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                               onChange={(e) => setEditText(e.target.value)}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  editMessage(msg.id, editText);
-                                  setEditingId(null);
+                                  void commitDraftEdit(msg.id);
                                 } else if (e.key === 'Escape') {
                                   setEditingId(null);
                                 }
@@ -843,7 +857,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                               maxLength={500}
                             />
                             <button
-                              onClick={() => { editMessage(msg.id, editText); setEditingId(null); }}
+                              onClick={() => { void commitDraftEdit(msg.id); }}
                               className="p-0.5 text-emerald-400 hover:text-emerald-300"
                             >
                               <Check className="w-3.5 h-3.5" />
@@ -874,7 +888,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
-                                  onClick={() => { setEditingId(msg.id); setEditText(msg.content); }}
+                                  onClick={() => { setEditingId(msg.id); setEditInitial(msg.content); }}
                                   className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
                                   aria-label={t('communities.edit')}
                                 >
@@ -1037,7 +1051,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
             </span>
             <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
           </div>
-          <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
+          <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Share To DM Modal
  * =================
@@ -58,8 +59,8 @@ function perMessageFeeOf(user: DeHubUser | undefined): number {
 type RowStatus = 'idle' | 'sending' | 'sent';
 
 export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps) {
-  const [caption, setCaption] = useState('');
-  const [searchInput, setSearchInput] = useState('');
+  const [caption, setCaption] = useSurfaceDraft("components/app/modals/ShareToDmModal.tsx:caption", '', url);
+  const [searchInput, setSearchInput] = useSurfaceDraft("components/app/modals/ShareToDmModal.tsx:searchInput", '', url);
   const search = useDebouncedValue(searchInput, 300);
   const [rowStatus, setRowStatus] = useState<Record<string, RowStatus>>({});
 
@@ -69,11 +70,11 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
   // Reset transient state whenever the modal opens.
   useEffect(() => {
     if (open) {
-      setCaption('');
-      setSearchInput('');
+      setCaption.initialize('');
+      setSearchInput.initialize('');
       setRowStatus({});
     }
-  }, [open]);
+  }, [open, setCaption, setSearchInput]);
 
   const sharedLink = useMemo(() => parseDehubLink(url), [url]);
   // Capitalised for the toast: "Item sent to Ana", "Community sent to Ana".

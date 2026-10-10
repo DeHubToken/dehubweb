@@ -1,3 +1,5 @@
+import { useDraftState } from '@/hooks/use-draft-state';
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Comments Section Component
  * ==========================
@@ -12,7 +14,7 @@
 
 import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense, memo } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { saveDraft, loadDraft, clearDraft, type CommentDraft } from '@/lib/comment-draft-cache';
+import { commentDraftKey, saveDraft, loadDraft, clearDraft, type CommentDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -92,6 +94,7 @@ import { ReportModal } from '@/components/app/modals/ReportModal';
 import { CommentLikersDrawer } from './CommentLikersDrawer';
 import { FullscreenImageViewerLazy } from './FullscreenImageViewerLazy';
 import { toast } from 'sonner';
+import { createVoiceRecorder, voiceRecordingBlob, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';
 import { emitCommentCreated, emitCommentsDeleted } from '@/lib/comment-count-events';
 import { useMention } from '@/hooks/use-mention';
 import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
@@ -284,7 +287,7 @@ interface CommentItemProps {
   onReact: (id: string, reaction: PostReaction) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
-  onEdit: (id: string, newContent: string) => void;
+  onEdit: (id: string, newContent: string) => Promise<boolean>;
   /** Ask to delete. The section confirms first — see its delete dialog. */
   onDelete: (id: string) => void;
   onTip: (id: string) => void;
@@ -415,7 +418,15 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
     const key = commentTipKey(comment.id);
     return subscribePostTipped((id) => { if (id === key) setTipBurst((n) => n + 1); });
   }, [comment.id]);
-  const [editText, setEditText] = useState(comment.text);
+  const [editText, setEditText] = useDraftState(`comment:${tokenId}:edit:${comment.id}`, comment.text);
+  const editPending = useRef(false);
+  const saveEdit = async () => {
+    if (editPending.current) return;
+    editPending.current = true;
+    try { if (await onEdit(comment.id, editText) && setEditText.complete(editText, editText)) setIsEditing(false); }
+    finally { editPending.current = false; }
+  };
+  useEffect(() => { if (isEditing) setEditText.initialize(comment.text); }, [isEditing, comment.text, setEditText]);
   const [imageFullscreen, setImageFullscreen] = useState(false);
   const avatarUrl = isAssistantAddress(comment.address) ? ASSISTANT_AVATAR : comment.avatar;
   const i18n = useI18n();
@@ -601,23 +612,22 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                 // is the composition ending, not the edit being saved — Safari
                 // reports it as keyCode 229 with isComposing already false.
                 if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) {
-                  onEdit(comment.id, editText);
-                  setIsEditing(false);
+                  void saveEdit();
                 } else if (e.key === 'Escape') {
-                  setEditText(comment.text);
+                  setEditText(comment.text); setEditText.clear();
                   setIsEditing(false);
                 }
               }}
             />
             <button
-              onClick={() => { onEdit(comment.id, editText); setIsEditing(false); }}
+              onClick={() => { void saveEdit(); }}
               className="text-green-400 hover:text-green-300 transition-colors"
               aria-label={i18n.t('common.save')}
             >
               <Check className="w-4 h-4" />
             </button>
             <button
-              onClick={() => { setEditText(comment.text); setIsEditing(false); }}
+              onClick={() => { setEditText(comment.text); setEditText.clear(); setIsEditing(false); }}
               className="text-zinc-400 hover:text-white transition-colors"
               aria-label={i18n.t('common.cancel')}
             >
@@ -905,7 +915,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -995,14 +1005,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   }, [initialTab]);
   const commentsIsDraggingRef = useRef(false);
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/cards/CommentsSection.tsx:searchQuery", '', tokenId);
   const [sortBy, setSortBy] = useState<SortOrder>('recent');
   const sortOption = SORT_OPTIONS.find(option => option.value === sortBy) ?? SORT_OPTIONS[0];
   // Whatever was left unsent last time, restored whole: the text, the reply it
   // was aimed at and a GIF. Read once here rather than in each initialiser so
   // the three can't disagree.
-  const [restoredDraft] = useState(() => loadDraft(tokenId));
-  const [newComment, setNewComment] = useState(() => restoredDraft?.text ?? '');
+  const commentDraftScope = commentDraftKey(walletAddress, tokenId);
+  const [restoredDraft] = useState(() => loadDraft(commentDraftScope));
+  const [newComment, setNewComment] = useDraftState(`comment:${tokenId}:text`, restoredDraft?.text ?? '');
   const [aiRewriting, setAiRewriting] = useState(false);
   const [aiMenu, setAiMenu] = useState<'closed' | 'open' | 'vibes'>('closed');
   const aiRewrite = async (mode: 'grammar' | 'style', style?: string) => {
@@ -1124,13 +1135,13 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   // target. One entry per post, so switching reply target carries the text
   // over instead of filing it under a key nothing reads again.
   useEffect(() => {
-    saveDraft(tokenId, {
+    saveDraft(commentDraftScope, {
       text: newComment,
       parentId: replyTo?.id,
       parentUsername: replyTo?.username,
       gifUrl: commentGifUrl ?? undefined,
     });
-  }, [newComment, tokenId, replyTo?.id, replyTo?.username, commentGifUrl]);
+  }, [newComment, tokenId, commentDraftScope, replyTo?.id, replyTo?.username, commentGifUrl]);
 
   // Something unsent in the box. The host sheet reads this to refuse to close
   // mid-sentence; an unmount reports clean so a closed sheet can't latch it on.
@@ -1142,7 +1153,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   }, [hasUnsentContent, onDirtyChange]);
   useEffect(() => () => onDirtyChange?.(false), [onDirtyChange]);
 
-  const MAX_VOICE_DURATION = 30;
+  const MAX_VOICE_DURATION = VOICE_RECORDING_SECONDS;
 
   /**
    * Every comment tip on this post, in one query, plus the five best-tipped
@@ -1537,7 +1548,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         stream.getTracks().forEach(track => track.stop());
         return;
       }
-      const mediaRecorder = new MediaRecorder(stream);
+      const mediaRecorder = createVoiceRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
 
@@ -1552,9 +1563,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         // Stopped by the unmount cleanup: there is no composer left to take
         // the note, and an object URL minted now would only leak.
         if (unmountedRef.current) return;
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
-        const url = URL.createObjectURL(blob);
-        setVoiceNote({ url, duration: recordingTimeRef.current });
+        const blob = voiceRecordingBlob(chunksRef.current, mediaRecorder.mimeType);
+        if (blob.size > 0) {
+          const url = URL.createObjectURL(blob);
+          setVoiceNote({ url, duration: recordingTimeRef.current });
+        }
         setIsRecording(false);
         setRecordingTime(0);
         recordingTimeRef.current = 0;
@@ -1574,7 +1587,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         }
       }, 1000);
     } catch (err) {
+      mediaRecorderRef.current?.stream.getTracks().forEach(track => track.stop());
       console.error('Failed to start recording:', err);
+      toast.error(t('stages.micUnreachable'));
     }
   };
 
@@ -2070,7 +2085,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   };
 
   const handleEditComment = useStableCallback(async (commentId: string, newContent: string) => {
-    if (!newContent.trim()) return;
+    if (!newContent.trim()) return false;
     // Optimistic: swap the text instantly, revert if the server refuses.
     setEditOverrides(prev =>
       new Map(prev).set(commentId, { text: newContent, base: apiRowsById.get(commentId) }),
@@ -2078,6 +2093,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     try {
       await editComment({ commentId, content: newContent });
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+      return true;
     } catch (err) {
       setEditOverrides(prev => {
         const next = new Map(prev);
@@ -2086,6 +2102,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       });
       console.error('Edit comment error:', err);
       toast.error(t('comments.editFailed'));
+      return false;
     }
   });
 
@@ -2136,21 +2153,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     const gifUrl = commentGifUrl;
     const audioNote = voiceNote;
     const submittedText = newComment;
-    clearDraft(tokenId);
-    coachReset();
-    setReplyTo(null);
-    setNewComment('');
-    setVoiceNote(null);
-    // Not removeVoiceNote: the URL has to outlive this, to be put back if the
-    // post fails. The player built on it goes now, though.
-    releasePreviewAudio();
-    removeCommentImage();
-    removeCommentGif();
-    setIsInputExpanded(false);
-    // Reset textarea inline height set by auto-resize
-    if (inputRef.current) {
-      inputRef.current.style.height = '';
-    }
     setIsSubmitting(true);
 
     try {
@@ -2200,6 +2202,21 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         });
         await postComment(tokenId, newComment, replyTarget?.id);
       }
+      if (loadDraft(commentDraftScope)?.text === submittedText) clearDraft(commentDraftScope);
+      coachReset();
+      setReplyTo(current => current?.id === replyTarget?.id ? null : current);
+      setNewComment.complete(submittedText, '');
+      setVoiceNote(null);
+      // Not removeVoiceNote: the URL has to outlive this, to be put back if the
+      // post fails. The player built on it goes now, though.
+      releasePreviewAudio();
+      removeCommentImage();
+      removeCommentGif();
+      setIsInputExpanded(false);
+      // Reset textarea inline height set by auto-resize
+      if (inputRef.current) {
+        inputRef.current.style.height = '';
+      }
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
       emitCommentCreated(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
@@ -2211,21 +2228,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       if (mentionsAssistant(newComment)) armAssistantReply();
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
-      // Put the message back in the composer. The box was cleared the moment
-      // Post was tapped, so a refusal used to destroy what the author wrote —
-      // the one moment losing it hurts most. The image and the voice note are
-      // still in this closure, which is the only place they can come back from
-      // (an object URL means nothing to the next page load); the preview URL
-      // was revoked with the old state, so mint a fresh one.
-      setNewComment(submittedText);
-      setReplyTo(replyTarget);
-      setVoiceNote(audioNote);
-      if (gifUrl) setCommentGifUrl(gifUrl);
-      if (imageFile) {
-        setCommentImage(imageFile);
-        setCommentImagePreview(URL.createObjectURL(imageFile));
-      }
-      setIsInputExpanded(true);
+      // Text and attachments remain in the composer until the request succeeds.
       // The server's own words when it has them — a refusal explains itself
       // ("comments are turned off", a link that cannot be posted) and a
       // generic failure message would leave the author guessing.
@@ -2235,7 +2238,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       setIsSubmitting(false);
       submitInFlightRef.current = false;
     }
-  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply, coachReset, t]);
+  }, [newComment, voiceNote, commentImage, commentGifUrl, isSubmitting, isAuthenticated, user, replyTo, tokenId, commentDraftScope, queryClient, armAssistantReply, coachReset, t]);
 
   /**
    * What every Post control calls. On a Common Ground thread the first reply
@@ -2963,10 +2966,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                    under every other theme. See war-comments.css section 2. */
                 data-war-cut="sm"
                 className={cn(
-                  "w-full flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
+                  "w-full min-w-0 backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
-                    ? "items-stretch flex-col px-3 pb-2"
-                    : "items-center flex-row px-3 pr-1 gap-1.5",
+                    ? "grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[1fr_auto] gap-x-2 items-stretch px-3 pb-2"
+                    : "flex items-center flex-row px-3 pr-1 gap-1.5",
                   isMobile
                     ? "bg-zinc-800/80 border-zinc-700"
                     : "bg-white/[0.08] border-white/[0.12]",
@@ -3041,16 +3044,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   onSelect={mention.handleSelect}
                   onClose={mention.handleClose}
                 />
-                {/* Inline when collapsed; a row under the text when expanded.
-                    Deliberately in flow rather than absolutely positioned over
-                    the field: floating it meant the text only cleared it by way
-                    of a matching `pb-12`, which a scrolled textarea does not
-                    honour on every engine, and the line being typed ended up
-                    behind the buttons. */}
+                {/* Tools stay below the editable area; AI and Send occupy the adjacent column. */}
                 <div className={cn(
                   "flex items-center gap-1.5",
                   isInputExpanded
-                    ? "shrink-0 justify-end mt-auto pt-1"
+                    ? "col-start-1 row-start-2 min-w-0 flex-wrap shrink-0 justify-start mt-auto pt-1"
                     : "shrink-0 ml-1"
                 )}>
                   <button
@@ -3067,22 +3065,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     triggerClassName="bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
                     iconClassName="w-4 h-4"
                   />
-                  {/* One AI button: tone check, a vibe rewrite (the AI Assistant
-                      styles) and a spelling/grammar pass. Icon-only while the
-                      field is a single line, so the row stays put. */}
-                  {newComment.trim().length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setAiMenu('open')}
-                      disabled={coachStatus === 'loading' || aiRewriting}
-                      data-comment-tool="ai"
-                      aria-label={t('conversation.coach.aiMenu')}
-                      title={t('conversation.coach.aiMenu')}
-                      className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
-                    >
-                      {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                    </button>
-                  )}
                   <Drawer open={aiMenu !== 'closed'} onOpenChange={(open) => { if (!open) setAiMenu('closed'); }}>
                     <DrawerContent column glass className="border-t border-white/10 max-h-[90dvh]">
                       <DrawerHeader className="border-b border-white/10">
@@ -3162,6 +3144,22 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                       <Mic className="w-4 h-4" />
                     </button>
                   )}
+
+                </div>
+                <div data-comment-actions className={cn("shrink-0 flex items-center", isInputExpanded ? "col-start-2 row-start-1 row-span-2 flex-col self-end gap-1 pb-0.5" : "ml-1")}>
+                  {newComment.trim().length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAiMenu('open')}
+                      disabled={coachStatus === 'loading' || aiRewriting}
+                      data-comment-tool="ai"
+                      aria-label={t('conversation.coach.aiMenu')}
+                      title={t('conversation.coach.aiMenu')}
+                      className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
+                    >
+                      {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                    </button>
+                  )}
                   <button
                     type="button"
                     onPointerDown={(event) => {
@@ -3182,7 +3180,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     // word is swapped for a spinner and the button has no text.
                     aria-label={t('comments.post')}
                     data-comment-send
-                    className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+                    className="h-9 min-w-9 px-2 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
                     {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : t('comments.post')}
                   </button>
@@ -3262,4 +3260,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     </motion.div>
     </PostCreatorContext.Provider>
   );
+}
+
+export function CommentsSection(props: CommentsSectionProps) {
+  const { walletAddress } = useAuth();
+  return <CommentsSectionForAccount key={`${walletAddress?.toLowerCase() ?? 'signed-out'}:${props.tokenId}`} {...props} />;
 }

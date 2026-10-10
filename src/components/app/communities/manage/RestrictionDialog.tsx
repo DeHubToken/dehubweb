@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * RestrictionDialog
  * =================
@@ -48,7 +49,7 @@ export function RestrictionDialog({ community, membership, target, mode, open, o
   const purgeMutation = usePurgeMemberMessages();
 
   const [durationIndex, setDurationIndex] = useState(0);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useSurfaceDraft("components/app/communities/manage/RestrictionDialog.tsx:reason", '', draftIdentity([community, target]));
   const [alsoPurge, setAlsoPurge] = useState(false);
 
   const wallet = target?.wallet_address ?? '';
@@ -58,10 +59,10 @@ export function RestrictionDialog({ community, membership, target, mode, open, o
   useEffect(() => {
     if (open) {
       setDurationIndex(0);
-      setReason('');
+      setReason.initialize('');
       setAlsoPurge(false);
     }
-  }, [open, mode, wallet]);
+  }, [open, mode, wallet, setReason]);
 
   const displayName =
     profile?.name || (wallet ? `${wallet.slice(0, 6)}...${wallet.slice(-4)}` : '');

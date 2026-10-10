@@ -1,3 +1,4 @@
+import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 /**
  * Right-hand inspector: project canvas settings + selected-clip properties (text).
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
@@ -7,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import { EditorSlider as Slider } from "@/components/editor/EditorSlider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
@@ -20,12 +21,14 @@ import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googl
 import { LayerSection } from "@/components/editor/inspector/LayerSection";
 import { MultiSelectSection } from "@/components/editor/inspector/MultiSelectSection";
 import { MotionSection } from "@/components/editor/inspector/MotionSection";
-import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
+import { applyAutoEnhance } from "@/lib/editor/applyAutoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { SubtitleFiles } from "@/components/editor/SubtitleFiles";
 import { ShotTools } from "@/components/editor/ShotTools";
 import { HighlightTools } from "@/components/editor/HighlightTools";
 import { AudioTools } from "@/components/editor/AudioTools";
+import { TextFitControls } from "@/components/editor/TextFitControls";
+import { fitCaptionTrack } from "@/lib/editor/textFit";
 import { Captions, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,11 +41,13 @@ const ASPECTS: { value: AspectPreset; label: string }[] = [
 ];
 
 export function Inspector() {
+  const draftFocus = useEditorDraftFocus("inspector", true);
   const { t } = useTranslation();
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
   const clips = useEditorStore((s) => s.clips);
+  const tracks = useEditorStore((s) => s.tracks);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const updateMediaClip = useEditorStore((s) => s.updateMediaClip);
   const setClipSpeed = useEditorStore((s) => s.setClipSpeed);
@@ -92,7 +97,7 @@ export function Inspector() {
 
 
   return (
-    <aside className="flex h-full w-full flex-col overflow-y-auto border-l border-white/10 bg-black/60 backdrop-blur-[24px]">
+    <aside {...draftFocus.props} className="flex h-full w-full flex-col overflow-y-auto border-l border-white/10 bg-black/60 backdrop-blur-[24px]">
       <header className="sticky top-0 z-10 border-b border-white/10 bg-black/80 px-3 py-2 backdrop-blur-[24px]">
         {tabbed ? (
           <div role="tablist" className="grid grid-cols-2 gap-0.5 rounded-lg bg-white/5 p-0.5">
@@ -237,7 +242,7 @@ export function Inspector() {
                   const m = useEditorStore.getState().media.find((x) => x.id === visualMedia.mediaId);
                   if (!m) return;
                   try {
-                    updateMediaClip(visualMedia.id, { effects: await autoEnhanceEffects(m.url, visualMedia.effects) });
+                    await applyAutoEnhance(visualMedia.id);
                   } catch {
                     toast.error(t("editor.adjust.autoFailed"));
                   }
@@ -369,8 +374,9 @@ export function Inspector() {
                 ))}
               </select>
             </Field>
-
-
+            <TextFitControls clip={text} onChange={patch => updateTextClip(text.id, patch)}
+              onFitCaptions={tracks.some(track => track.id === text.trackId && track.role === "captions") ? () => useEditorStore.getState().fitCaptionTrack(text.trackId) : undefined}
+              captionsFitted={fitCaptionTrack({ tracks, clips }, text.trackId).clips === clips} />
             <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
               <label className="flex items-center justify-between text-[11px] text-white/70">
                 <span className="font-medium">Background pill</span>

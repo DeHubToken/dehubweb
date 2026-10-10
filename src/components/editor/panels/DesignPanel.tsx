@@ -11,6 +11,7 @@ import { Film, Instagram, Loader2, Monitor, Smartphone, Square } from 'lucide-re
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { TEMPLATES, applyTemplate, type EditorTemplate } from '@/lib/editor/templates';
 import { loadGoogleFont } from '@/lib/editor/googleFonts';
+import { VIDEO_TEMPLATE_FORMATS, type VideoTemplateAspect } from '@/lib/editor/videoTemplates';
 import { BrandSection } from './BrandSection';
 import {
   AlertDialog,
@@ -51,14 +52,14 @@ const TILE_BOX: Record<string, string> = {
   '4:5': 'aspect-[4/5]',
 };
 
-function TemplateTile({ template, busy, onPick }: { template: EditorTemplate; busy: boolean; onPick: () => void }) {
+function TemplateTile({ template, aspect = template.aspect, busy, disabled, onPick }: { template: EditorTemplate; aspect?: AspectPreset; busy: boolean; disabled: boolean; onPick: () => void }) {
   const { t } = useTranslation();
   const title = t(template.titleKey);
   return (
     <button
       type="button"
       onClick={onPick}
-      disabled={busy}
+      disabled={disabled}
       onMouseEnter={() => loadGoogleFont(template.preview.font, [400, 700, 900])}
       aria-label={t('editor.templates.use', { name: title })}
       title={title}
@@ -67,7 +68,7 @@ function TemplateTile({ template, busy, onPick }: { template: EditorTemplate; bu
       <span
         className={cn(
           'relative flex w-full items-center justify-center overflow-hidden rounded-lg border border-white/10 p-2 transition group-hover:border-white/40',
-          TILE_BOX[template.aspect] ?? 'aspect-square',
+          TILE_BOX[aspect] ?? 'aspect-square',
         )}
         style={{ background: template.preview.bg }}
       >
@@ -83,7 +84,7 @@ function TemplateTile({ template, busy, onPick }: { template: EditorTemplate; bu
           </span>
         )}
       </span>
-      <span className="truncate px-0.5 text-[10px] text-white/45">{template.aspect}</span>
+      <span className="truncate px-0.5 text-[10px] text-white/45">{aspect}{template.duration ? ` · ${t("editor.videoTemplates.duration", { seconds: template.duration })}` : ""}</span>
     </button>
   );
 }
@@ -92,7 +93,8 @@ export function DesignPanel() {
   const { t } = useTranslation();
   const quota = useEditorQuota();
   const [applyingId, setApplyingId] = useState<string | null>(null);
-  const [pending, setPending] = useState<EditorTemplate | null>(null);
+  const [pending, setPending] = useState<{ template: EditorTemplate; aspect?: VideoTemplateAspect } | null>(null);
+  const [videoAspect, setVideoAspect] = useState<VideoTemplateAspect>("9:16");
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
   const clips = useEditorStore((s) => s.clips);
@@ -108,15 +110,16 @@ export function DesignPanel() {
 
   const pickTemplate = (template: EditorTemplate) => {
     if (applyingId) return;
-    if (useEditorStore.getState().clips.length > 0) setPending(template);
-    else void runTemplate(template);
+    const aspect = template.kind === "video" ? videoAspect : undefined;
+    if (useEditorStore.getState().clips.length > 0) setPending({ template, aspect });
+    else void runTemplate(template, aspect);
   };
 
-  const runTemplate = async (template: EditorTemplate) => {
+  const runTemplate = async (template: EditorTemplate, aspect?: VideoTemplateAspect) => {
     setPending(null);
     setApplyingId(template.id);
     try {
-      await applyTemplate(template, t, { wallet: quota.walletAddress });
+      await applyTemplate(template, t, { wallet: quota.walletAddress, aspect });
     } finally {
       setApplyingId(null);
     }
@@ -124,10 +127,24 @@ export function DesignPanel() {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto p-3">
-      <PanelHeading>{t('editor.templates.heading')}</PanelHeading>
+      <PanelHeading>{t('editor.videoTemplates.heading')}</PanelHeading>
+      <div className="mb-3 flex flex-wrap gap-1" aria-label={t('editor.videoTemplates.format')}>
+        {VIDEO_TEMPLATE_FORMATS.map(aspect => <button key={aspect} type="button" disabled={!!applyingId}
+          aria-label={t('editor.videoTemplates.useFormat', { aspect })} aria-pressed={videoAspect === aspect}
+          onClick={() => setVideoAspect(aspect)} className={cn('rounded-md border px-2 py-1 text-[11px] tabular-nums', videoAspect === aspect ? 'border-white bg-white text-black' : 'border-white/15 text-white/60')}>
+          {aspect}
+        </button>)}
+      </div>
       <div className="grid grid-cols-2 items-end gap-2">
-        {TEMPLATES.map((tpl) => (
-          <TemplateTile key={tpl.id} template={tpl} busy={applyingId === tpl.id} onPick={() => pickTemplate(tpl)} />
+        {TEMPLATES.filter(tpl => tpl.kind === 'video').map(tpl => (
+          <TemplateTile key={tpl.id} template={tpl} aspect={videoAspect} busy={applyingId === tpl.id} disabled={!!applyingId} onPick={() => pickTemplate(tpl)} />
+        ))}
+      </div>
+      <p className="mt-2 px-0.5 text-[10px] leading-relaxed text-white/40">{t('editor.videoTemplates.hint')}</p>
+      <PanelHeading className="mt-5">{t('editor.templates.heading')}</PanelHeading>
+      <div className="grid grid-cols-2 items-end gap-2">
+        {TEMPLATES.filter(tpl => tpl.kind !== 'video').map(tpl => (
+          <TemplateTile key={tpl.id} template={tpl} busy={applyingId === tpl.id} disabled={!!applyingId} onPick={() => pickTemplate(tpl)} />
         ))}
       </div>
       <p className="mt-2 px-0.5 text-[10px] leading-relaxed text-white/40">{t('editor.templates.hint')}</p>
@@ -142,7 +159,7 @@ export function DesignPanel() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel className="border-white/15 bg-transparent text-white hover:bg-white/10">{t('editor.export.cancel')}</AlertDialogCancel>
-            <AlertDialogAction className="bg-white text-black hover:bg-white/90" onClick={() => pending && void runTemplate(pending)}>
+            <AlertDialogAction className="bg-white text-black hover:bg-white/90" onClick={() => pending && void runTemplate(pending.template, pending.aspect)}>
               {t('editor.templates.replace')}
             </AlertDialogAction>
           </AlertDialogFooter>

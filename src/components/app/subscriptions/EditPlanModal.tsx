@@ -1,3 +1,5 @@
+import { useDraftState } from '@/hooks/use-draft-state';
+import { tokenLabel } from '@/lib/token-label';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { Plus, X, Loader2, Star, Clock, FileText, Gift } from 'lucide-react';
@@ -57,14 +59,14 @@ function dollarPrice(plan: SubscriptionPlan): number | undefined {
 
 export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) {
   const { t } = useTranslation();
-  const [name, setName] = useState(plan.name);
-  const [description, setDescription] = useState(plan.description || '');
+  const [name, setName] = useDraftState(`form:src/components/app/subscriptions/EditPlanModal.tsx:name:${plan.id ?? plan._id}`, plan.name);
+  const [description, setDescription] = useDraftState(`form:src/components/app/subscriptions/EditPlanModal.tsx:description:${plan.id ?? plan._id}`, plan.description || '');
   // `plan.price` is only populated for plans the API has flattened; the price
   // otherwise lives inside `chains`. `String(undefined)` put the literal text
   // "undefined" in the price box.
-  const [price, setPrice] = useState(String(dollarPrice(plan) ?? ''));
+  const [price, setPrice] = useDraftState(`form:src/components/app/subscriptions/EditPlanModal.tsx:price:${plan.id ?? plan._id}`, String(dollarPrice(plan) ?? ''));
   const [duration, setDuration] = useState(toPresetMonths(plan.duration));
-  const [benefits, setBenefits] = useState<string[]>(plan.benefits?.length ? plan.benefits : ['']);
+  const [benefits, setBenefits] = useDraftState<string[]>(`form:src/components/app/subscriptions/EditPlanModal.tsx:benefits:${plan.id ?? plan._id}`, plan.benefits?.length ? plan.benefits : ['']);
 
   const updatePlanMutation = useUpdatePlan();
   const planId = plan.id || plan._id || '';
@@ -77,12 +79,12 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
 
   // Sync form when plan prop changes
   useEffect(() => {
-    setName(plan.name);
-    setDescription(plan.description || '');
-    setPrice(String(dollarPrice(plan) ?? ''));
+    setName.initialize(plan.name);
+    setDescription.initialize(plan.description || '');
+    setPrice.initialize(String(dollarPrice(plan) ?? ''));
     setDuration(toPresetMonths(plan.duration));
-    setBenefits(plan.benefits?.length ? plan.benefits : ['']);
-  }, [plan]);
+    setBenefits.initialize(plan.benefits?.length ? plan.benefits : ['']);
+  }, [plan, setBenefits, setDescription, setName, setPrice]);
 
   const priceChanged = parseFloat(price) !== dollarPrice(plan);
   const durationChanged = duration !== toPresetMonths(plan.duration);
@@ -133,6 +135,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
       },
     });
 
+    setName.complete(name, name); setDescription.complete(description, description); setPrice.complete(price, price); setBenefits.complete(benefits, benefits);
     onOpenChange(false);
   };
 
@@ -207,7 +210,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
                 className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 pr-40"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 text-xs text-zinc-400 pointer-events-none">
-                <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                 <span>{price ? formatDhbPayment(dhbEstimate) : null}</span>
               </div>
             </div>

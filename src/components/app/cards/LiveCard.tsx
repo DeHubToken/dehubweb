@@ -34,7 +34,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useStreamPresence } from '@/hooks/use-stream-presence';
+import { useLiveReaction } from '@/hooks/use-live-reaction';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useBlockAuthor } from '@/hooks/use-block-author';
@@ -54,7 +54,8 @@ export function LiveCard({ stream }: LiveCardProps) {
   // Who is watching right now, from the stream socket — the same figure the
   // post page shows. `stream.viewers` is the post's view total, which read
   // "15 tuned in" on the card while the room said 2.
-  const livePresence = useStreamPresence(stream.streamId, !!stream.isLive);
+  const [livePresence, setLivePresence] = useState<number | null>(null);
+  const { selfReaction, sendLiveReaction } = useLiveReaction(stream.streamId, !!stream.isLive);
   // Bookmark state for the three-dot menu. The same action is an icon in the
   // ActionBar's left-anchored utility cluster on desktop; both read this one
   // shared query, so they cannot disagree.
@@ -184,6 +185,12 @@ export function LiveCard({ stream }: LiveCardProps) {
           /* On air: the carousel card plays the stream, not a still of it. */
           <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
             <LiveFeedPreview
+              streamId={stream.streamId}
+              streamStatus={stream.liveStatus}
+              creatorId={stream.creatorId}
+              isOwner={stream.isOwner}
+              selfReaction={selfReaction}
+              onViewerCount={setLivePresence}
               urls={[stream.playbackUrl, ...(stream.playbackUrls || [])]}
               thumbnail={stream.thumbnail ? cdnImage(stream.thumbnail, { width: 720 }) : undefined}
               fallbackLabel={t('feed.live')}
@@ -215,6 +222,7 @@ export function LiveCard({ stream }: LiveCardProps) {
       {/* Info & Actions */}
       <div className="pt-3">
         <ActionBar
+          onLiveReaction={sendLiveReaction}
           postId={stream.id}
           tokenId={parseInt(stream.id, 10) || undefined}
           utilityDesktopAnchor
@@ -248,6 +256,7 @@ export function LiveCard({ stream }: LiveCardProps) {
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: stream.id,
           type: 'live',
           author: stream.streamer,
           title: stream.title,

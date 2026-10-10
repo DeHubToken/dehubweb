@@ -4,7 +4,7 @@ import { AgentPanel } from './AgentPanel';
 import { useEditorAgentStore } from '@/store/editorAgentStore';
 import { useEditorStore } from '@/store/editorStore';
 import { useEditorUiStore } from '@/store/editorUiStore';
-import { askAgent } from '@/lib/editor/agent';
+import { askAgent, applyOps } from '@/lib/editor/agent';
 import { saveProject } from '@/lib/editor/projectStore';
 
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
@@ -134,7 +134,11 @@ describe('reviewing generation drafts from editor chat', () => {
     fireEvent.change(field, { target: { value: 'Create a 6 second video from my clips with fades' } });
     fireEvent.keyDown(field, { key: 'Enter', code: 'Enter' });
     expect(screen.getByText('easyTrade.reviewTitle · editor.video.video')).toBeInTheDocument();
-    expect(screen.getAllByRole('checkbox')).toHaveLength(2); expect(askAgent).not.toHaveBeenCalled();
+    expect(screen.getByRole('checkbox', { name: 'editor.video.video' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'editor.app.photo' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'editor.assembly.matchConsent' })).not.toBeChecked();
+    expect(screen.getByRole('button', { name: 'editor.assembly.matchScenes' })).toBeDisabled();
+    expect(askAgent).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'editor.menu.bringForward 2' }));
     const length = screen.getByRole('textbox', { name: 'filters.duration 1' });
     fireEvent.change(length, { target: { value: '1.' } }); expect(length).toHaveValue('1.');
@@ -152,4 +156,36 @@ describe('reviewing generation drafts from editor chat', () => {
     expect(vi.mocked(saveProject).mock.calls.map(args => args[0].id)).toEqual([original.id, copy.id]);
     act(() => useEditorStore.getState().undo()); expect(useEditorStore.getState().projectId).toBe(copy.id); expect(useEditorStore.getState().clips).toEqual(original.clips);
   });
+
+  it('discards a delayed reply after a same-ID project reset', async () => {
+    let finish!: (reply: Awaited<ReturnType<typeof askAgent>>) => void;
+    vi.mocked(askAgent).mockImplementation(() => new Promise(resolve => { finish = resolve; }));
+    const original = useEditorStore.getState().toSnapshot();
+    render(<AgentPanel />);
+    const field = screen.getByRole('textbox', { name: 'editor.agent.placeholder' });
+    fireEvent.change(field, { target: { value: 'Change the background to white' } });
+    fireEvent.keyDown(field, { key: 'Enter', code: 'Enter' });
+    expect(useEditorStore.getState().editing).toBe(true);
+    act(() => useEditorStore.getState().loadSnapshot(original));
+    await act(async () => finish({ reply: 'Done', ops: [{ op: 'set_canvas', background: '#ffffff' }] }));
+    expect(applyOps).not.toHaveBeenCalled();
+    expect(useEditorStore.getState().settings.background).toBe(original.settings.background);
+    expect(useEditorAgentStore.getState().busy).toBe(false);
+  });
+
+  it('preserves an edit made while a delayed chat reply is pending', async () => {
+    let finish!: (reply: Awaited<ReturnType<typeof askAgent>>) => void;
+    vi.mocked(askAgent).mockImplementation(() => new Promise(resolve => { finish = resolve; }));
+    render(<AgentPanel />);
+    const field = screen.getByRole('textbox', { name: 'editor.agent.placeholder' });
+    fireEvent.change(field, { target: { value: 'Change the background to white' } });
+    fireEvent.keyDown(field, { key: 'Enter', code: 'Enter' });
+    act(() => useEditorStore.getState().updateSettings({ background: '#123456' }));
+    await act(async () => finish({ reply: 'Done', ops: [{ op: 'set_canvas', background: '#ffffff' }] }));
+    expect(applyOps).not.toHaveBeenCalled();
+    expect(useEditorStore.getState().settings.background).toBe('#123456');
+    expect(useEditorStore.getState().past).toHaveLength(1);
+    expect(useEditorStore.getState().editing).toBe(false);
+  });
+
 });

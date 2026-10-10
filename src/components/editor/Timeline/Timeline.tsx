@@ -1,3 +1,4 @@
+import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
 /**
  * Multi-track timeline. Ruler + draggable playhead + tracks lanes with clips.
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
@@ -6,7 +7,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Plus, Minus, Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, X, ArrowLeftRight, Film, Music, Type, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, GripVertical, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Slider } from "@/components/ui/slider";
+import { EditorSlider as Slider } from "@/components/editor/EditorSlider";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -530,6 +531,9 @@ interface ClipBlockProps {
 }
 
 function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTrim, scrollRef, snapToTime, setIsPlaying, store }: ClipBlockProps) {
+  const projectId = useEditorStore(state => state.projectId);
+  const cleanupRef = useRef<(() => void) | null>(null);
+  useEffect(() => () => cleanupRef.current?.(), [projectId]);
   const left = clip.start * zoom;
   const width = Math.max(2, clip.duration * zoom);
 
@@ -550,20 +554,28 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
     startTime: number;
     startTrackId: string;
     moved: boolean;
+    lease: ProjectEditLease;
+    finish: () => void;
   } | null>(null);
 
   const onPointerDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).dataset.handle) return; // skip if handle
     e.stopPropagation();
+    cleanupRef.current?.();
+    const lease = useEditorStore.getState().holdEdits();
+    let finish!: () => void;
+    void useEditorStore.getState().runAsOneStep(() => new Promise<void>(resolve => { finish = resolve; }));
     onSelect(e.shiftKey);
     setIsPlaying(false);
-    dragRef.current = { startX: e.clientX, startTime: clip.start, startTrackId: clip.trackId, moved: false };
+    dragRef.current = { startX: e.clientX, startTime: clip.start, startTrackId: clip.trackId, moved: false, lease, finish };
+    cleanupRef.current = onPointerUp;
     window.addEventListener("pointermove", onPointerMove);
     window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
   };
   const onPointerMove = (e: PointerEvent) => {
     const d = dragRef.current;
-    if (!d) return;
+    if (!d || !d.lease.isCurrent()) return;
     const deltaX = e.clientX - d.startX;
     if (Math.abs(deltaX) < 3 && !d.moved) return;
     d.moved = true;
@@ -589,9 +601,13 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
     onMove(snapped - clip.start, targetTrackId);
   };
   const onPointerUp = () => {
+    const previous = dragRef.current;
     dragRef.current = null;
+    previous?.finish(); previous?.lease.release();
+    cleanupRef.current = null;
     window.removeEventListener("pointermove", onPointerMove);
     window.removeEventListener("pointerup", onPointerUp);
+    window.removeEventListener("pointercancel", onPointerUp);
   };
 
   // ── Trim handles ──
@@ -599,9 +615,14 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
     e.stopPropagation();
     e.preventDefault();
     setIsPlaying(false);
+    cleanupRef.current?.();
+    const lease = useEditorStore.getState().holdEdits();
+    let finish!: () => void;
+    void useEditorStore.getState().runAsOneStep(() => new Promise<void>(resolve => { finish = resolve; }));
     const startX = e.clientX;
     let lastDelta = 0;
     const move = (ev: PointerEvent) => {
+      if (!lease.isCurrent()) return;
       const dx = ev.clientX - startX;
       const sec = dx / zoom;
       const delta = sec - lastDelta;
@@ -610,11 +631,15 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
       lastDelta = sec;
     };
     const up = () => {
+      finish(); lease.release(); cleanupRef.current = null;
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
     };
+    cleanupRef.current = up;
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
   };
 
   // Colour per track kind.
@@ -682,12 +707,18 @@ function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onS
   const times = keyTimes(clip).filter((k) => k >= 0 && k <= clip.duration + 0.001);
   // Index of the key under the playhead, so it can be lit; a number keeps re-renders to real changes.
   const hereIdx = useEditorStore((s) => times.findIndex((k) => Math.abs(s.currentTime - clip.start - k) < 1 / 60));
+  const cleanupRef = useRef<(() => void) | null>(null);
+  const projectId = useEditorStore(state => state.projectId);
+  useEffect(() => () => cleanupRef.current?.(), [projectId]);
   if (!times.length) return null;
 
   const onDown = (kt: number) => (e: React.PointerEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    cleanupRef.current?.();
     const s = useEditorStore.getState();
+    const lease = s.holdEdits();
+    let historyLease: ProjectEditLease | null = null;
     onSelect();
     s.setIsPlaying(false);
     s.setCurrentTime(clip.start + kt);
@@ -698,9 +729,10 @@ function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onS
     let from = kt;
     let began = false;
     const move = (ev: PointerEvent) => {
+      if (!lease.isCurrent()) return;
       if (!began && Math.abs(ev.clientX - x0) < 3) return;
       const st = useEditorStore.getState();
-      if (!began) { st.beginGesture(); began = true; }
+      if (!began) { historyLease = st.beginGesture(); began = true; }
       const cur = st.clips.find((c) => c.id === clip.id);
       if (!cur) return;
       const to = Math.round(Math.max(0, Math.min(cur.duration, kt + (ev.clientX - x0) / zoom)) * 100) / 100;
@@ -710,11 +742,15 @@ function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onS
       from = to;
     };
     const up = () => {
+      historyLease?.release(); lease.release(); cleanupRef.current = null;
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
     };
+    cleanupRef.current = up;
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
   };
 
   const onDelete = (kt: number) => (e: React.MouseEvent) => {

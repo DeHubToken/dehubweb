@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * StageRadioPanel — the host's deck: radio stations, or their own clips
  * =====================================================================
@@ -166,7 +167,7 @@ export function StageRadioPanel() {
   const { isPlaying: pageRadioPlaying, pause: pausePageRadio } = useRadioPlayer();
 
   const [tab, setTab] = useState<'stations' | 'music'>('stations');
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/spaces/StageRadioPanel.tsx:query", '');
   const debouncedQuery = useDebouncedValue(query, 300);
   const [genre, setGenre] = useState<RadioGenreId>('top');
   const [browseOpen, setBrowseOpen] = useState(true);

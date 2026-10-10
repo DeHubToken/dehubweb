@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -59,9 +61,9 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
   const walletLocked = useWalletLocked();
 
   const [step, setStep] = useState<Step>('choose');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/wallet/TradeSheet.tsx:amount", '');
   const [mode, setMode] = useState<Mode>('market');
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useSurfaceDraft("components/app/wallet/TradeSheet.tsx:price", '');
   const [quote, setQuote] = useState<SwapCall | null>(null);
   const [quotedAt, setQuotedAt] = useState(0);
   const [route, setRoute] = useState<Route>('instant');
@@ -69,7 +71,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
   const [busy, setBusy] = useState(false);
   const [stage, setStage] = useState('');
   const [error, setError] = useState('');
-  const [ask, setAsk] = useState('');
+  const [ask, setAsk] = useSurfaceDraft("components/app/wallet/TradeSheet.tsx:ask", '');
   const [asking, setAsking] = useState(false);
   const [aiReply, setAiReply] = useState('');
   const [result, setResult] = useState<{ route: Route; amount: string; usdc: number; price: number } | null>(null);
@@ -77,11 +79,11 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
   useEffect(() => {
     if (open) return;
     const timer = setTimeout(() => {
-      setStep('choose'); setAmount(''); setMode('market'); setPrice(''); setQuote(null); setAsk(''); setAiReply('');
+      setStep('choose'); setAmount.initialize(''); setMode('market'); setPrice.initialize(''); setQuote(null); setAsk.initialize(''); setAiReply('');
       setNotice(''); setError(''); setStage(''); setResult(null);
     }, 250);
     return () => clearTimeout(timer);
-  }, [open]);
+  }, [open, setAmount, setAsk, setPrice]);
 
   const dhb = tokens.find((tk) => tk.chainId === BASE_CHAIN_ID && tk.address.toLowerCase() === DHB.toLowerCase());
   const balance = dhb?.balance ?? 0n;
@@ -284,7 +286,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
             </div>
           </div>
           {balance === 0n && <p className="text-xs text-zinc-400">{t('easyTrade.noDhb')}</p>}
-          {amount && !amountOk && balance > 0n && <p className="text-xs text-red-300">{t('dex.checkAmount', { token: 'DHB' })}</p>}
+          {amount && !amountOk && balance > 0n && <p className="text-xs text-red-300">{t('dex.checkAmount', { token: tokenLabel() })}</p>}
           <button type="button" className={primary} disabled={!amountOk || busy} onClick={() => void toPrice()}>
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : t('easyTrade.next')}
           </button>

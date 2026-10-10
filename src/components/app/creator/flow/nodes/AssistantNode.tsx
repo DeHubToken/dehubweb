@@ -115,7 +115,7 @@ export default function AssistantNode({ id, data, selected }: NodeProps<FlowNode
               <textarea
                 value={local}
                 readOnly={readOnly}
-                onChange={(e) => setLocal(e.target.value)}
+                onChange={(e) => { setLocal(e.target.value); updateNodeData(id, { localPrompt: e.target.value }); }}
                 onBlur={() => updateNodeData(id, { localPrompt: local })}
                 placeholder={t('creatorFlow.assistantNodePlaceholder')}
                 className="cflow-textarea nodrag"

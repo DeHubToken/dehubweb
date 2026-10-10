@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { MediaControlIcon } from './MediaControlIcon';
 /**
  * VideoSubtitleOverlay
@@ -36,6 +37,8 @@ import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useMediaVolume } from '@/lib/video-preferences';
 import { useDubPreference, useSpeechVoices, pickVoice, primeSpeech } from '@/hooks/dub-preference';
 import { hasCachedDubLanguage } from '@/lib/cached-dub-languages';
+import { useCachedVideoDub } from '@/hooks/use-cached-video-dub';
+import { useDubDiscovery } from '@/hooks/use-dub-discovery';
 
 // The speech engine only matters once a dub is playing; keep it off the boot path.
 const VoiceDubEngine = lazy(() => import('./VoiceDubEngine'));
@@ -105,11 +108,11 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const { on: dubOn, lang: dubPick, setDub } = useDubPreference();
   const voices = useSpeechVoices();
   const [showSettings, setShowSettings] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/video/VideoSubtitleOverlay.tsx:query", '');
   const [open, setOpen] = useState(false);
   const [currentText, setCurrentText] = useState('');
 
-  // Automatic dubbing only looks up the video the viewer is listening to.
+  // Preparation only looks up the video the viewer is listening to.
   const [audible, setAudible] = useState(false);
   const masterVolume = useMediaVolume();
   useEffect(() => {
@@ -129,9 +132,9 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
 
   useEffect(() => { onMenuOpenChange?.(open); }, [open, onMenuOpenChange]);
 
-  // Only fetch transcript once user has shown intent (open popover, enabled
-  // subs, or asked for dubbed audio — a dub is keyed on the transcript too).
-  const wantTranscript = enabled || open || (dubOn && audible);
+  // Listening prepares a dub without playing it. Opening captions also reads
+  // the transcript; automatic preparation never starts a missing transcript.
+  const wantTranscript = enabled || open || audible;
 
   const { transcript, status: rowStatus, inFlight, canRetry, start, isLoading: transcriptLoading } =
     useVideoTranscript(numericId || null, !!numericId && wantTranscript);
@@ -211,30 +214,43 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   useEffect(() => { setDubFailed(false); }, [dubOn, dubLang]);
 
   const wantDub = dubOn && !dubFailed && isReady && !!dubLang && (hasCachedDubLanguage(dubLang) || !!dubVoice);
-  useEffect(() => { onDubAvailableChange?.(wantDub); }, [wantDub, onDubAvailableChange]);
+  const prepareDub = audible && isReady && !!dubLang && (hasCachedDubLanguage(dubLang) || !!dubVoice);
+  // Let viewers set both levels while a selected dub is loading or muted.
+  const dubControlsAvailable = !!numericId && dubOn && (!sourceLang || !!dubLang);
+  useEffect(() => { onDubAvailableChange?.(dubControlsAvailable); }, [dubControlsAvailable, onDubAvailableChange]);
   useEffect(() => () => { onDubAvailableChange?.(false); }, [onDubAvailableChange]);
   const {
     segments: dubSegments,
     status: dubTranslationStatus,
     isFetching: dubLookupPending,
+    isError: dubLookupFailed,
     request: requestDubTranslation,
-  } = useTranslatedSegments(transcript?.id ?? null, dubLang ?? 'original', !!numericId && wantDub && audible);
+  } = useTranslatedSegments(transcript?.id ?? null, dubLang ?? 'original', !!numericId && prepareDub);
 
   // Same shared translation cache as the captions. When the captions are
   // already asking for this language, leave the request to them.
   const askedDubRef = useRef<string | null>(null);
   useEffect(() => {
-    if (!wantDub || !audible || !transcript?.id || !dubLang) return;
+    if (!prepareDub || !transcript?.id || !dubLang) return;
     if (enabled && dubLang === normalizedLang) return;
     if (dubTranslationStatus === 'ready' || dubTranslationStatus === 'processing') return;
     // Status is empty until the stored translation has been looked up; asking
     // before then calls translate-transcript for rows that already exist.
-    if (dubLookupPending || dubTranslationStatus === 'failed') return;
+    if (dubLookupPending || dubLookupFailed || dubTranslationStatus === 'failed') return;
     const token = `${transcript.id}:${dubLang}`;
     if (askedDubRef.current === token) return;
     askedDubRef.current = token;
     requestDubTranslation().catch(() => undefined);
-  }, [wantDub, audible, transcript?.id, dubLang, enabled, normalizedLang, dubTranslationStatus, dubLookupPending, requestDubTranslation]);
+  }, [prepareDub, transcript?.id, dubLang, enabled, normalizedLang, dubTranslationStatus, dubLookupPending, dubLookupFailed, requestDubTranslation]);
+
+  // Prepare/cache audio independently of the playback switch. Mounting a
+  // playback engine still requires the viewer's explicit opt-in.
+  const cachedDub = useCachedVideoDub(transcript?.id ?? null, dubLang, prepareDub && dubTranslationStatus === 'ready');
+  const preferredLanguage = i18n?.resolvedLanguage || i18n?.language;
+  const tipVoice = pickVoice(voices, preferredLanguage ?? null);
+  useDubDiscovery(videoRef, numericId, sourceLang, preferredLanguage,
+    isReady && (hasCachedDubLanguage(preferredLanguage) || !!tipVoice), dubOn,
+    () => { setShowSettings(true); setOpen(true); });
 
 
   const dubHint: 'preparing' | 'unavailable' | null =
@@ -457,6 +473,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
             transcriptId={transcript?.id ?? null}
             language={dubLang}
             audible={audible}
+            cached={cachedDub}
             onFailed={() => setDubFailed(true)}
           />
         </Suspense>

@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * /app/migrate-youtube — "Migrate all"
  * =====================================
@@ -179,7 +181,7 @@ function StatusBadge({ status }: { status: 'imported' | 'failed' | 'pending' }) 
 function DhbAmount({ value, className }: { value: number; className?: string }) {
   return (
     <span className={cn('inline-flex items-center gap-1 tabular-nums', className)}>
-      <img src={dehubCoin} alt="DHB" className="w-4 h-4 shrink-0" />
+      <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 shrink-0" />
       {value.toLocaleString()}
     </span>
   );
@@ -218,7 +220,7 @@ export default function YoutubeMigratePage() {
   const { requireAuth } = useAuthPrompt();
   const navigate = useNavigate();
   const [stage, setStage] = useState<Stage>('loading');
-  const [channelUrl, setChannelUrl] = useState('');
+  const [channelUrl, setChannelUrl] = useSurfaceDraft("pages/app/YoutubeMigratePage.tsx:channelUrl", '');
   const [ownershipConfirmed, setOwnershipConfirmed] = useState(false);
   const [videos, setVideos] = useState<ChannelVideo[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -351,7 +353,7 @@ export default function YoutubeMigratePage() {
       } catch {
         // blocked storage — the field just starts empty
       }
-      if (remembered) setChannelUrl(remembered);
+      if (remembered) setChannelUrl.initialize(remembered);
 
       try {
         const active = await getActiveMigrationCharge();
@@ -372,7 +374,7 @@ export default function YoutubeMigratePage() {
       }
       setStage('idle');
     })();
-  }, [fetchVideos, pollCharge]);
+  }, [fetchVideos, pollCharge, setChannelUrl]);
 
   useEffect(() => {
     return () => {

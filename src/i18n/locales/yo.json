@@ -90,6 +90,7 @@
     "heading": "Fídíò kúkúrú DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain fún àwọn àtẹ̀jáde",
     "showOnline": "Fi hàn nígbà tí mo wà lórí ayélujára",
     "showOnlineDesc": "Àwọn ènìyàn tí o fi àtẹ̀jíṣẹ́ ránṣẹ́ rí àmì aláwọ̀ ewé lẹ́gbẹ̀ẹ́ orúkọ rẹ nígbà tí ò ń lo DeHub",
     "smartReplies": "Àwọn èsì tí a dábàá",
@@ -259,6 +260,7 @@
     "light": "Ìmọ́lẹ̀",
     "dark": "Òkùnkùn",
     "system": "Ètò ẹ̀rọ",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Òru Kùrukùru",
     "swarms": "Swarms",
@@ -594,7 +596,7 @@
     "stageDelivering": "DeHub Pay ń rán àwọn tokens rẹ…",
     "payViaDpay": "A ti sanwo fún DeHub Pay, àwọn tokens yóò dé ní ìṣẹ́jú bí 30",
     "payViaBridgeDpay": "A ti gbé lọ sí Base, a sì ti sanwo fún DeHub Pay, àwọn tokens yóò dé ní ìṣẹ́jú bí ìkan",
-    "dmSent": "A ti fi {{amount}} DHB ránṣẹ́ sí {{name}}!"
+    "dmSent": "A ti fi {{amount}} àmì ránṣẹ́ sí {{name}}!"
   },
   "postOptions": {
     "options": "Àwọn àṣàyàn",
@@ -1199,10 +1201,10 @@
   },
   "dhbListing": {
     "title": "Àkọsílẹ̀ token ń bọ̀ láìpẹ́!",
-    "body": "A kò tíì máa ṣòwò $DHB. Gba ímeèlì ní kété tí a bá kọ ọ́ sílẹ̀.",
+    "body": "A kò tíì máa ṣòwò àmì. Gba ímeèlì ní kété tí a bá kọ ọ́ sílẹ̀.",
     "notifyMe": "Fi tó mi létí",
-    "privacy": "A ó lò ó nìkan láti sọ fún ọ nígbà tí a bá kọ $DHB sílẹ̀.",
-    "joined": "O wà nínú àkójọ. A ó fi ímeèlì ránṣẹ́ sí {{email}} ní kété tí a bá kọ $DHB sílẹ̀."
+    "privacy": "A ó lò ó nìkan láti sọ fún ọ nígbà tí a bá kọ àmì sílẹ̀.",
+    "joined": "O wà nínú àkójọ. A ó fi ímeèlì ránṣẹ́ sí {{email}} ní kété tí a bá kọ àmì sílẹ̀."
   },
   "explorePage": {
     "searchPlaceholder": "Wá àwọn ènìyàn, àròkọ tàbí àkóónú...",
@@ -1462,7 +1464,7 @@
     "otherTokens": "Àwọn tóòkẹ̀nì mìíràn",
     "otherTokensDesc": "Fi káàdì rẹ ra ETH tàbí USDC lórí Base",
     "shareToFeed": "Pin si ifunni mi",
-    "sharePostTemplate": "Kàn fi {{amount}} $DHB kún àkójọpọ̀ mi lórí DeHub. Ilé pẹ̀lú àwùjọ. #DeHub #DHB",
+    "sharePostTemplate": "Kàn fi {{amount}} àmì kún àkójọpọ̀ mi lórí DeHub. Ilé pẹ̀lú àwùjọ. #DeHub",
     "success": {
       "title": "Ra Pípé!",
       "subtitle": "Wọ́n ti fi àwọn àkóónú ránṣẹ́ sí àpamọ́ rẹ.",
@@ -3460,7 +3462,7 @@
     "seoDescription": "Ṣàfihàn òwò kan lórí DeHub launchpad: ṣe àwárí owó ìyè tàbí kí o ṣẹ̀dá tìrẹ.",
     "phaseBadge": "Igbesẹ 1 · Awotẹlẹ ikọkọ",
     "heroTitle": "Iṣowo TOKENISE",
-    "heroSubtitle": "DHB-paired bonding curve. Àwọn tó kẹ́kọ̀ọ́ yege sí Uniswap ní $ 42K orí ọjà.",
+    "heroSubtitle": "àmì-paired bonding curve. Àwọn tó kẹ́kọ̀ọ́ yege sí Uniswap ní $ 42K orí ọjà.",
     "createCoin": "Ṣẹ̀dá owó",
     "filterNew": "Titun",
     "filterGraduated": "Àwọn tí ó ti kẹ́kọ̀ọ́ yege",
@@ -3553,7 +3555,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions_DeHub",
-    "seoDescription": "Ra kí o sì ta àwọn ìpín ìfìwéránṣẹ́ DeHub. Ìfìwéránṣẹ́ tí a ti mint jẹ́ ìpín 1000 lórí chain — ní apá kan fídíò, orin, tàbí àwòrán kí o sì ṣòwò rẹ̀ ní DHB.",
+    "seoDescription": "Ra kí o sì ta àwọn ìpín ìfìwéránṣẹ́ DeHub. Ìfìwéránṣẹ́ tí a ti mint jẹ́ ìpín 1000 lórí chain — ní apá kan fídíò, orin, tàbí àwòrán kí o sì ṣòwò rẹ̀ ní àmì.",
     "title": "Ìpín",
     "perUpload": "1000 fún gbígbé",
     "tabBrowse": "Ṣàwárí",
@@ -4370,7 +4372,7 @@
   },
   "usernames": {
     "seoTitle": "Orukọ Olumulo_DeHub",
-    "seoDescription": "Ra àti ta àwọn orúkọ oníṣe DeHub pẹ̀lú DHB. Ṣàwárí ní ṣókí, ní nọ́mbà àti àwọn ọwọ́ ìpilẹ̀ṣẹ̀ fún ìta, tàbí kí o ṣe àkójọ àwọn tìrẹ — ìfowópamọ́ náà máa ń ṣẹlẹ̀ ní pópó nígbà tí ìsanwó bá ti mọ́.",
+    "seoDescription": "Ra àti ta àwọn orúkọ oníṣe DeHub pẹ̀lú àmì. Ṣàwárí ní ṣókí, ní nọ́mbà àti àwọn ọwọ́ ìpilẹ̀ṣẹ̀ fún ìta, tàbí kí o ṣe àkójọ àwọn tìrẹ — ìfowópamọ́ náà máa ń ṣẹlẹ̀ ní pópó nígbà tí ìsanwó bá ti mọ́.",
     "title": "Àwọn Orúkọ Olùmúlò",
     "subtitle": "Ọwọ fun tita, ti a san ni USD",
     "tabBrowse": "Ṣàwárí",
@@ -4490,7 +4492,7 @@
   },
   "accounts": {
     "seoTitle": "Ọjà Àkáǹtì — DeHub",
-    "seoDescription": "Ra àti ta àkọsílẹ̀ DeHub tí ó ti fìdí múlẹ̀ fún DHB. Kiri awọn akọọlẹ nipasẹ awọn ọmọlẹyin, awọn ikojọpọ ati ọjọ ori — ọwọ, awọn ifiweranṣẹ, awọn ọmọlẹyin ati awọn iwe-ẹri ni ẹtọ gbogbo gbigbe, ati isanwo lọ taara si olutaja.",
+    "seoDescription": "Ra àti ta àkọsílẹ̀ DeHub tí ó ti fìdí múlẹ̀ fún àmì. Kiri awọn akọọlẹ nipasẹ awọn ọmọlẹyin, awọn ikojọpọ ati ọjọ ori — ọwọ, awọn ifiweranṣẹ, awọn ọmọlẹyin ati awọn iwe-ẹri ni ẹtọ gbogbo gbigbe, ati isanwo lọ taara si olutaja.",
     "title": "Àwọn Àkọọ́lẹ̀",
     "subtitle": "Awọn iroyin gbogbo fun tita, ti a fi ami DeHub ṣe iye wọn",
     "tabBrowse": "Ṣàwárí",
@@ -6127,17 +6129,17 @@
   },
   "docs": {
     "seoTitle": "Ìwé DeHub — Ìtọ́sọ́nà, tòkénì, dApps àti ìbéèrè",
-    "seoDescription": "Ìwé ìṣàkóso DeHub: àkópọ̀ pẹpẹ, dApps, ètò ọrọ̀-ajé tòkénì DHB, staking, eré, àwòrán ọ̀nà, àwọn ìbéèrè tí a sábà béèrè àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
+    "seoDescription": "Ìwé ìṣàkóso DeHub: àkópọ̀ pẹpẹ, dApps, ètò ọrọ̀-ajé tòkénì àmì, staking, eré, àwòrán ọ̀nà, àwọn ìbéèrè tí a sábà béèrè àti bẹ́ẹ̀ bẹ́ẹ̀ lọ."
   },
   "dex": {
-    "seoTitle": "DEX — Ṣowo DHB ni idiyele rẹ",
-    "seoDescription": "Ṣeto idiyele rira tabi tita DHB rẹ pẹlu aṣẹ opin Uniswap v4 lori Base tabi BNB Chain. Iwe aṣẹ ti nṣiṣe lọwọ, ijinle ọja ati idiyele USD ti o pin pin.",
+    "seoTitle": "DEX — Ṣowo àmì ni idiyele rẹ",
+    "seoDescription": "Ṣeto idiyele rira tabi tita àmì rẹ pẹlu aṣẹ opin Uniswap v4 lori Base tabi BNB Chain. Iwe aṣẹ ti nṣiṣe lọwọ, ijinle ọja ati idiyele USD ti o pin pin.",
     "venue": "Nẹtiwọọki",
     "marketPrice": "Iye ọja · USD",
     "bookPrice": "{{chain}} iye owo iwe · USD",
     "change24": "24h ayipada",
     "totalLiquidity": "Lapapọ omi-omi · USD",
-    "listedDhb": "DHB ti a ṣe atokọ · {{chain}}",
+    "listedDhb": "àmì ti a ṣe atokọ · {{chain}}",
     "listedUsd": "USD ti a ṣe atokọ · {{chain}}",
     "refreshMarket": "Tun ọja pada",
     "refresh": "Tun pada",
@@ -6162,21 +6164,21 @@
     "orderBook": "Iwe aṣẹ",
     "priceGrouping": "Ẹgbẹ idiyele",
     "priceUsd": "Iye (USD)",
-    "sizeDhb": "Iwọn (DHB)",
-    "totalDhb": "Lapapọ (DHB)",
+    "sizeDhb": "Iwọn (àmì)",
+    "totalDhb": "Lapapọ (àmì)",
     "noBids": "Kò sí ìtàkò tí ó wà títí",
     "noAsks": "Kò sí ìgbìyànjú owó tí ó wà títí",
     "useBuyPrice": "Lo {{price}} gẹ́gẹ́ bí iye tí a ó ti ra",
     "useSellPrice": "Lo {{price}} gẹ́gẹ́ bí iye tí a ó ti tà",
     "spread": "Ìyàtọ̀ · USD",
-    "buyTotal": "Ra {{amount}} DHB",
-    "sellTotal": "Tà {{amount}} DHB",
+    "buyTotal": "Ra {{amount}} àmì",
+    "sellTotal": "Tà {{amount}} àmì",
     "placeOrder": "Fi àṣẹ sílẹ̀",
     "lpFee": "0% LP owó",
     "lpFeeLabel": "LP owó",
     "lpFeeValue": "{{fee}}% LP owó",
-    "buy": "Ra DHB",
-    "sell": "Tà DHB",
+    "buy": "Ra àmì",
+    "sell": "Tà àmì",
     "maxBuy": "Iye tí ó ga jù lọ láti ra",
     "minSell": "Iye tí ó kéré jù lọ láti tà",
     "spend": "Ná",
@@ -6192,7 +6194,7 @@
     "estimated": "Ìṣírò ìdáná gbogbo",
     "network": "Nẹtiwọki ìfowó",
     "sellBelowMarket": "Títà yìí ti kọjá iye ọjà ${{price}} ní {{percent}}%. Ẹnì kan lè ra rẹ̀ kí ó sì tà á ní ibòmíì lẹ́sẹ̀kẹ̀ẹ́.",
-    "buyAboveMarket": "Ra yìí ni {{percent}}% ju iye ọjà ${{price}} lọ. O máa san ju iṣẹ́ DHB lọ ní ibòmíràn.",
+    "buyAboveMarket": "Ra yìí ni {{percent}}% ju iye ọjà ${{price}} lọ. O máa san ju iṣẹ́ àmì lọ ní ibòmíràn.",
     "useMarket": "Lo ìwọ̀n owó tí ọjà wà",
     "balanceError": "Ìwòye àkàntí kò jàre. Gbìyànjú lẹ́ẹ̀kan sí i kí o tó fi àṣẹ sílẹ̀.",
     "noFunding": "Kò sí {{token}} tí ó wà lórí {{chain}}.",
@@ -6201,7 +6203,7 @@
     "reviewYourBuy": "Ṣàtúnyẹ̀wò ìnáwó rẹ",
     "reviewYourSell": "Ṣàtúnyẹ̀wò títà rẹ",
     "reviewDeposit": "Fi {{amount}} {{token}} sílẹ̀ lórí {{chain}}.",
-    "reviewRange": "Ìwọ̀n: {{min}} – {{max}} USD fún DHB.",
+    "reviewRange": "Ìwọ̀n: {{min}} – {{max}} USD fún àmì.",
     "initializes": "Èyí dá àti fi ìwọ̀n 0% títa pamọ́.",
     "pendingNote": "Ìṣòwò rẹ ti lọ sílẹ̀. Tẹ̀ síwájú ìfọ̀ríkọ́ tàbí ìkójáde ìkọ̀wé láì fi owó sílẹ̀ mọ́.",
     "viewTransaction": "Wo ìṣòwò",
@@ -6218,7 +6220,7 @@
     "keepOpen": "Jẹ́ kí ojú-ìwé yìí ṣí sílẹ̀ títí tí ìkọ̀wé rẹ yóò fi wà. Kò sí ibi tí a lè fi ohun pamọ́ sí nínú àwọn àwòrán tí a fi ń ṣàfihàn.",
     "snapshotDelayed": "Àwọn ìsọ̀rí tí a pín tí ọjà jẹ́ aláìlégbèé. A ń fi àwòrán tí a fọ̀ríkọ́ sílẹ̀ tí ó gbẹ̀yìn hàn.",
     "snapshotUnavailable": "Àwọn ìsọ̀rí tí a pín tí ọjà kò sí. Gbìyànjú láti fi àwọn ipò tí ó gbẹ̀yìn hàn.",
-    "withdrawReview": "Yọ {{dhb}} DHB àti {{usdc}} USDC kúrò lórí {{chain}}? Àwọn iye yóò yí padà kí o tó fọ̀ríkọ́; ìwọ̀n ìyípadà owó jẹ́ 0.5%.",
+    "withdrawReview": "Yọ {{dhb}} àmì àti {{usdc}} USDC kúrò lórí {{chain}}? Àwọn iye yóò yí padà kí o tó fọ̀ríkọ́; ìwọ̀n ìyípadà owó jẹ́ 0.5%.",
     "withdrawn": "Ìyọ̀ kúrò tí a yọ kúrò",
     "withdrawFailed": "Ìyọ̀ kúrò kò jàre",
     "withdrawing": "Ìyọ̀ kúrò…",
@@ -6352,6 +6354,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Àwọn ìṣẹ̀lẹ̀ àwòrán pàtàkì",
+      "visualPrivacy": "Fi àwọn férémù tí a yàn ránṣẹ́ fún ìtúpalẹ̀ àwòrán."
+    },
+    "review": {
+      "title": "Àyẹ̀wò iṣẹ́",
+      "shared": "Pín pẹ̀lú rẹ",
+      "time": "Àkókò (s)",
+      "assign": "Yan àpò owó"
+    },
+    "textFit": {
+      "wrap": "Pín àwọn ìlà",
+      "width": "Ìbú ọ̀rọ̀",
+      "shrink": "Dín ọ̀rọ̀ kù kí ó lè wọlé",
+      "height": "Gíga ọ̀rọ̀",
+      "captions": "Mú ipa ọ̀rọ̀ abẹ́lẹ̀ bá a mu"
+    },
     "canvas": {
       "dropMedia": "Fi sílẹ̀ láti fi kún àwòrán rẹ",
       "dropText": "Fi sílẹ̀ láti fi ọ̀rọ̀ kún",
@@ -7694,7 +7713,7 @@
     "topUpTitle": "Tún pọ̀ síi kí o sì fipamọ́",
     "discount": "{{percent}}% dinku",
     "noDiscount": "Ìye gangan",
-    "total": "Lapapọ ${{usd}}, san ní DHB",
+    "total": "Lapapọ ${{usd}}, san ní àmì",
     "buy": "Ra ìyọrisi",
     "buying": "N dúró de ìsanwo…",
     "bought": "Àfikún {{count}} ìyọrisi ranṣẹ",
@@ -7724,7 +7743,7 @@
     "skippedToast": "Skipped {{platforms}}: ìkànnì yìí kò ní àwòrán tàbí fídíò tí wọ́n nílò.",
     "uploadFailed": "Mi ò lè gbé ẹ̀rọ-ayárabíàsá rẹ sókè fún pípèsè àgbélébùú.",
     "creditRules": "Kọọkan ifiweranṣẹ owo gbese fun iru ẹrọ: {{x}} fun X, {{farcaster}} fun Farcaster ati {{other}} fun gbogbo iru ẹrọ miiran. Àwọn iṣẹ́ tí a ṣètò máa ń lo owó ìfowówópamọ́ nígbà tí o bá ṣe ètò wọn.",
-    "payAsYouGoCredits": "Máa jáde? Wọ́n máa ń ra àwọn ìwé ìfowópamọ́ tí kò sí ní DHB ní ${{price}} ẹnìkọ̀ọ̀kan nígbà tí o bá fi í ránṣẹ́.",
+    "payAsYouGoCredits": "Máa jáde? Wọ́n máa ń ra àwọn ìwé ìfowópamọ́ tí kò sí ní àmì ní ${{price}} ẹnìkọ̀ọ̀kan nígbà tí o bá fi í ránṣẹ́.",
     "topUpCredits": "{{count}} awọn kirediti",
     "perCredit": "${{price}} fun kirẹditi",
     "pendingApproval": "Nduro fun ọ lati fọwọsi dehub ninu ohun elo Farcaster.",
@@ -7736,7 +7755,7 @@
   "dm": {
     "planRestricted": "Olùmúlò yìí nílò ìforúkọsílẹ̀ láti gba àwọn ìfiránṣẹ́.",
     "planTypeNotAllowed": "Ètò olùdá yìí kò gba irú ìfiránṣẹ́ yìí láàyè.",
-    "planMinTip": "Owó ìmoore fún olùdá yìí gbọ́dọ̀ jẹ́ ó kéré tán {{amount}} DHB."
+    "planMinTip": "Owó ìmoore fún olùdá yìí gbọ́dọ̀ jẹ́ ó kéré tán {{amount}} àmì."
   },
   "credits": {
     "earningsWorth": "Iye {{amount}}",
@@ -7868,7 +7887,7 @@
       "notifyBody": "Àwọn olùṣàmúlò tí ó fi ohun-èlò rẹ kún un lè jẹ́ kí wọ́n mọ̀ láti ọ̀dọ̀ aṣàmúlò rẹ pẹ̀lú kọ́kọ́rọ́ ìkìlọ̀ rẹ. Kò sí àmì oníṣe láti fi pamọ́.",
       "rankTitle": "Bí ilé-ìtajà ṣe ń ṣètò àwọn ohun èlò",
       "rankBody": "Ní alẹ́ gbogbo ohun èlò tí a ṣe àkọsílẹ̀ máa ń gba àmì: 55% láti ọ̀dọ̀ àwọn oníṣe tí wọ́n padà (àwọn tí wọ́n ṣí i lọ́sẹ̀ yìí àti lọ́sẹ̀ tó ṣáájú), 35% láti ọ̀dọ̀ àwọn oníṣe ọ̀sọ̀ọ̀sẹ̀, pẹ̀lú ìlọsíwájú 10% ní ọjọ́ 14 àkọ́kọ́ rẹ̀. Àwọn àkáǹtì DeHub tí wọ́n fọwọ́ sí nìkan ni wọ́n kà, nítorí náà àwọn bot àti àwọn àtúntò ojú-ìwé kò rí nǹkan kan.",
-      "rewardsBody": "Oṣù kọ̀ọ̀kan {{pool}}DHB ni a pín láàrin àwọn ohun-èlò pẹ̀lú àmì kan náà, tí a kà lọ́sọ̀ọ̀sẹ̀. Láti tóótun, ohun-èlò nílò apamọwọ onílé tí a ti fìdí múlẹ̀ àti ó kéré tán àwọn oníṣe 3 tí wọ́n ń padà. Èrè ni DeHub máa ń san fún àpò-ìfowópamọ́ onílé.",
+      "rewardsBody": "Oṣù kọ̀ọ̀kan {{pool}}àmì ni a pín láàrin àwọn ohun-èlò pẹ̀lú àmì kan náà, tí a kà lọ́sọ̀ọ̀sẹ̀. Láti tóótun, ohun-èlò nílò apamọwọ onílé tí a ti fìdí múlẹ̀ àti ó kéré tán àwọn oníṣe 3 tí wọ́n ń padà. Èrè ni DeHub máa ń san fún àpò-ìfowópamọ́ onílé.",
       "rewardsWeek": "Ọ̀sẹ̀ {{date}}",
       "rewardPaid": "Ti sanwo",
       "rewardPending": "Ndúró",
@@ -7894,9 +7913,9 @@
     },
     "pay": {
       "title": "Páàwón {{name}}?",
-      "confirm": "San {{amount}} DHB",
+      "confirm": "San {{amount}} àmì",
       "sending": "Fífi owó rẹ ránṣẹ́...",
-      "sent": "San {{amount}} DHB sí {{name}}.",
+      "sent": "San {{amount}} àmì sí {{name}}.",
       "noOwner": "Ohun-èlò yìí kò ní àpò-ìfowópamọ́ tí a ti fìdí múlẹ̀ láti san."
     },
     "add": {

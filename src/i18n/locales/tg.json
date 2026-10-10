@@ -90,6 +90,7 @@
     "heading": "Кӯтоҳҳои DeHub"
   },
   "settings": {
+    "postingChain": "Блокчейни нашрҳо",
     "showOnline": "Ipakita kapag ako online",
     "showOnlineDesc": "Ang mga tao na iyong mensahe ay makita ng isang green dot sa tabi ng iyong pangalan habang gumagamit",
     "smartReplies": "Ҷавобҳои пешниҳодшуда",
@@ -115,7 +116,7 @@
     "profileRemove": "Профилро хориҷ кардан",
     "profilesUsed": "{{used}} аз {{max}} истифода шуд",
     "profilesNextTier": "Сатҳи {{tier}} {{count}}-ро нигоҳ медорад",
-    "profilesFullTier": "Барои гирифтани нишони {{tier}} DHB-ро ба амонат гузоред, то {{count}} профилро нигоҳ доред",
+    "profilesFullTier": "Барои гирифтани нишони {{tier}} нишонаҳо-ро ба амонат гузоред, то {{count}} профилро нигоҳ доред",
     "profilesFull": "Барои илова кардани ҳисоби дигар, профиле хориҷ кунед",
     "saveChanges": "Сабт кардани тағйирот",
     "profilePicture": "Акси профил",
@@ -259,6 +260,7 @@
     "light": "Равшан",
     "dark": "Торик",
     "system": "Система",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Шабҳои туманӣ",
     "swarms": "Тӯдаҳо",
@@ -595,7 +597,7 @@
     "stageDelivering": "DeHub Pay токенҳои шуморо мефиристад…",
     "payViaDpay": "Ба DeHub Pay пардохт шуд, токенҳо тақрибан дар 30 сония меоянд",
     "payViaBridgeDpay": "Ба Base интиқол дода шуд ва ба DeHub Pay пардохт шуд, токенҳо тақрибан дар як дақиқа меоянд",
-    "dmSent": "{{amount}} DHB ба {{name}} фиристода шуд!"
+    "dmSent": "{{amount}} нишонаҳо ба {{name}} фиристода шуд!"
   },
   "postOptions": {
     "options": "Имконот",
@@ -1193,10 +1195,10 @@
   },
   "dhbListing": {
     "title": "Листинги токен ба наздикӣ!",
-    "body": "$DHB ҳоло савдо намешавад. Ҳамин ки рӯйхат шавад, мактуб гиред.",
+    "body": "нишонаҳо ҳоло савдо намешавад. Ҳамин ки рӯйхат шавад, мактуб гиред.",
     "notifyMe": "Ба ман хабар диҳед",
-    "privacy": "Мо инро танҳо барои хабар додан дар бораи листинги $DHB истифода мебарем.",
-    "joined": "Шумо дар рӯйхат ҳастед. Ҳамин ки $DHB рӯйхат шавад, ба {{email}} мактуб мефиристем."
+    "privacy": "Мо инро танҳо барои хабар додан дар бораи листинги нишонаҳо истифода мебарем.",
+    "joined": "Шумо дар рӯйхат ҳастед. Ҳамин ки нишонаҳо рӯйхат шавад, ба {{email}} мактуб мефиристем."
   },
   "explorePage": {
     "searchPlaceholder": "Ҷустуҷӯи одамон, нашрҳо ё мундариҷа...",
@@ -1455,7 +1457,7 @@
     "otherTokens": "Токенҳои дигар",
     "otherTokensDesc": "Бо корти худ дар Base ETH ё USDC харед",
     "shareToFeed": "Ibahagi sa aking feed",
-    "sharePostTemplate": "{{amount}} $DHB sa aking stack sa DeHub. Бунёд бо ҷомеа. #DeHub #DHB",
+    "sharePostTemplate": "{{amount}} нишонаҳо sa aking stack sa DeHub. Бунёд бо ҷомеа. #DeHub",
     "success": {
       "title": "Kumpleto ng bumili!",
       "subtitle": "Аломатҳо ба ҳамёни шумо супорида шуданд.",
@@ -3458,7 +3460,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Марҳилаи 1 · Пешнамоиши хусусӣ",
     "heroTitle": "Тиҷорати TOKENISE",
-    "heroSubtitle": "Ќўрѓонтеппа bonding DHB-сабаб. Хатмкунандагон ба Uniswap дар $ 42K cap бозори.",
+    "heroSubtitle": "Ќўрѓонтеппа bonding нишонаҳо-сабаб. Хатмкунандагон ба Uniswap дар $ 42K cap бозори.",
     "createCoin": "Эҷод кардани танга",
     "filterNew": "Нав",
     "filterGraduating": "Дар бораи хатм",
@@ -3559,7 +3561,7 @@
   },
   "fractions": {
     "seoTitle": "Фраксияҳо | DeHub",
-    "seoDescription": "Ҳиссаҳои постҳои DeHub-ро харед ва фурӯшед. Пости минтшуда 1000 ҳиссаи on-chain аст — соҳиби як қисми видео, трек ё тасвир шавед ва онро бо DHB савдо кунед.",
+    "seoDescription": "Ҳиссаҳои постҳои DeHub-ро харед ва фурӯшед. Пости минтшуда 1000 ҳиссаи on-chain аст — соҳиби як қисми видео, трек ё тасвир шавед ва онро бо нишонаҳо савдо кунед.",
     "title": "Ҳиссаҳо",
     "perUpload": "1000 ng bawat pag-upload",
     "tabBrowse": "Тамошо кардан",
@@ -4402,7 +4404,7 @@
   },
   "usernames": {
     "seoTitle": "Бозори номи корбар | DeHub",
-    "seoDescription": "Харид ва фурӯши номҳои корбарии DeHub бо DHB. Ҷустуҷӯи кӯтоҳ, ададӣ ва аслӣ барои фурӯш, ё рӯйхати худ — интиқол дар занҷираи лаҳзае, ки пардохт тоза мешавад, рух медиҳад.",
+    "seoDescription": "Харид ва фурӯши номҳои корбарии DeHub бо нишонаҳо. Ҷустуҷӯи кӯтоҳ, ададӣ ва аслӣ барои фурӯш, ё рӯйхати худ — интиқол дар занҷираи лаҳзае, ки пардохт тоза мешавад, рух медиҳад.",
     "title": "Номҳои корбарӣ",
     "subtitle": "Дастакҳо барои фурӯш, нархгузорӣ дар доллари ИМА",
     "tabBrowse": "Тамошо кардан",
@@ -4527,7 +4529,7 @@
   },
   "accounts": {
     "seoTitle": "Бозори ҳисоб — DeHub",
-    "seoDescription": "Харид ва фурӯши ҳисобҳои DeHub таъсисёфта барои DHB. Browse account by followers, uploads and age — the handle, posts, followers and badge rightsments all transfer, and payment goes straight to the seller.",
+    "seoDescription": "Харид ва фурӯши ҳисобҳои DeHub таъсисёфта барои нишонаҳо. Browse account by followers, uploads and age — the handle, posts, followers and badge rightsments all transfer, and payment goes straight to the seller.",
     "title": "Ҳисобҳо",
     "subtitle": "Ҳисобҳои пурра барои фурӯш, нархгузорӣ дар токенҳои DeHub",
     "tabBrowse": "Тамошо кардан",
@@ -6170,17 +6172,17 @@
   },
   "docs": {
     "seoTitle": "Ҳуҷҷатҳои DeHub — Дастурҳо, токен, dApps ва FAQ",
-    "seoDescription": "Ҳуҷҷатҳои расмии DeHub: шарҳи платформа, dApps, иқтисоди токени DHB, стейкинг, бозиҳо, нақшаи роҳ, саволҳои маъмул ва ғайра."
+    "seoDescription": "Ҳуҷҷатҳои расмии DeHub: шарҳи платформа, dApps, иқтисоди токени нишонаҳо, стейкинг, бозиҳо, нақшаи роҳ, саволҳои маъмул ва ғайра."
   },
   "dex": {
-    "seoTitle": "DEX — DHB-ро бо нархи худ савдо кунед",
-    "seoDescription": "Бо фармоиши маҳдуди Uniswap v4 дар Base ё BNB Chain нархи харид ё фурӯши DHB-и худро муқаррар кунед. Китоби фармоишии зинда, умқи бозор ва як нархи муштараки долларӣ.",
+    "seoTitle": "DEX — нишонаҳо-ро бо нархи худ савдо кунед",
+    "seoDescription": "Бо фармоиши маҳдуди Uniswap v4 дар Base ё BNB Chain нархи харид ё фурӯши нишонаҳо-и худро муқаррар кунед. Китоби фармоишии зинда, умқи бозор ва як нархи муштараки долларӣ.",
     "venue": "Шабака",
     "marketPrice": "Нархи бозор · USD",
     "bookPrice": "{{chain}}info: whatsthis",
     "change24": "Тағйироти 24-соата",
     "totalLiquidity": "Умумии ликвидӣ · USD",
-    "listedDhb": "DHB-и номбаршуда · {{chain}}",
+    "listedDhb": "нишонаҳо-и номбаршуда · {{chain}}",
     "listedUsd": "USD-и номбаршуда · {{chain}}",
     "refreshMarket": "Бозорро навсозӣ кунед",
     "refresh": "Навсозӣ",
@@ -6205,21 +6207,21 @@
     "orderBook": "Китоби фармоиш",
     "priceGrouping": "Гуруҳбандии нарх",
     "priceUsd": "Нарх (USD)",
-    "sizeDhb": "Андоза (DHB)",
-    "totalDhb": "Умумӣ (DHB)",
+    "sizeDhb": "Андоза (нишонаҳо)",
+    "totalDhb": "Умумӣ (нишонаҳо)",
     "noBids": "Ҳанӯз дархостҳо вуҷуд надоранд",
     "noAsks": "Ҳанӯз ликвидности дархост вуҷуд надорад",
     "useBuyPrice": "Барои нархи харид {{price}} -ро истифода баред",
     "useSellPrice": "Барои нархи фурӯш {{price}} -ро истифода баред",
     "spread": "Фарқият · USD",
-    "buyTotal": "{{amount}} DHB харед",
-    "sellTotal": "{{amount}} DHB фурӯшед",
+    "buyTotal": "{{amount}} нишонаҳо харед",
+    "sellTotal": "{{amount}} нишонаҳо фурӯшед",
     "placeOrder": "Фармоиш диҳед",
     "lpFee": "0% пардохти LP",
     "lpFeeLabel": "Пардохти LP",
     "lpFeeValue": "{{fee}}% пардохти LP",
-    "buy": "DHB харед",
-    "sell": "DHB фурӯшед",
+    "buy": "нишонаҳо харед",
+    "sell": "нишонаҳо фурӯшед",
     "maxBuy": "Максималии нархи харид",
     "minSell": "Минималии нархи фурӯш",
     "spend": "Сарф кунед",
@@ -6235,7 +6237,7 @@
     "estimated": "Тахминан пурра табдилдиҳӣ",
     "network": "Шабакаи маблағгузорӣ",
     "sellBelowMarket": "Ин фурӯш {{percent}}% аз нархи бозории ${{price}} пасттар аст. Касе метавонад онро харида, фавран дар ҷои дигар фурӯшад.",
-    "buyAboveMarket": "Ин харид {{percent}}% аз нархи бозор {{price}} доллар баландтар аст. Шумо аз он чизе, ки DHB дар ҷойҳои дигар фурӯхта мешавад, бештар пардохт мекунед.",
+    "buyAboveMarket": "Ин харид {{percent}}% аз нархи бозор {{price}} доллар баландтар аст. Шумо аз он чизе, ки нишонаҳо дар ҷойҳои дигар фурӯхта мешавад, бештар пардохт мекунед.",
     "useMarket": "Нархи бозорро истифода баред",
     "balanceError": "Санҷиши мувозинатӣ ноком шуд. Пеш аз гузоштани фармоиш, аз нав кӯшиш кунед.",
     "noFunding": "{{token}} дар {{chain}} мавҷуд нест.",
@@ -6244,7 +6246,7 @@
     "reviewYourBuy": "Хариди худро аз назар гузаронед",
     "reviewYourSell": "Фурӯши худро аз назар гузаронед",
     "reviewDeposit": "{{amount}} {{token}} дар {{chain}} ворид кунед.",
-    "reviewRange": "Диапазон: {{min}} – {{max}} доллар барои ҳар як DHB.",
+    "reviewRange": "Диапазон: {{min}} – {{max}} доллар барои ҳар як нишонаҳо.",
     "initializes": "Ин ба истифодаи 0% пулро эҷод ва initialize мекунад.",
     "pendingNote": "Транзаксияи шумо пешниҳод шудааст. Тасдиқ ё бақайдгирии рӯйхатро бидуни пасандози дигар идома диҳед.",
     "viewTransaction": "Транзаксияро тамошо кунед",
@@ -6261,7 +6263,7 @@
     "keepOpen": "Ин саҳифаро то бақайдгирии рӯйхати шумо кушода нигоҳ доред. Нигоҳдории браузер дастрас нест.",
     "snapshotDelayed": "Маълумоти бозори муштарак таъхир шудааст. Акси охирини тасдиқшуда нишон дода мешавад.",
     "snapshotUnavailable": "Маълумоти бозори муштарак дастрас нест. Барои бор кардани мавқеъҳо аз нав кӯшиш кунед.",
-    "withdrawReview": "{{dhb}} DHB ва {{usdc}} USDC дар {{chain}} берун кашед? Маблағҳо пеш аз имзо навсозӣ мешаванд; иҷозаи нарх 0,5% аст.",
+    "withdrawReview": "{{dhb}} нишонаҳо ва {{usdc}} USDC дар {{chain}} берун кашед? Маблағҳо пеш аз имзо навсозӣ мешаванд; иҷозаи нарх 0,5% аст.",
     "withdrawn": "Мавқеъ берун кашида шуд",
     "withdrawFailed": "Баровардан ноком шуд",
     "withdrawing": "Берун кашидан…",
@@ -6390,6 +6392,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Лаҳзаҳои муҳими тасвирӣ",
+      "visualPrivacy": "Кадрҳои интихобшударо барои таҳлили тасвирӣ фиристед."
+    },
+    "review": {
+      "title": "Баррасии лоиҳа",
+      "shared": "Бо шумо мубодила шудааст",
+      "time": "Вақт (s)",
+      "assign": "Ҳамён таъин кунед"
+    },
+    "textFit": {
+      "wrap": "Сатрҳоро гузаронед",
+      "width": "Паҳнои матн",
+      "shrink": "Матнро барои ҷойгиршавӣ хурд кунед",
+      "height": "Баландии матн",
+      "captions": "Роҳи зернависро мувофиқ кунед"
+    },
     "canvas": {
       "dropMedia": "Барои илова кардан ба тарроҳии худ партоед",
       "dropText": "Барои илова кардани матн партоед",
@@ -7738,7 +7757,7 @@
     "topUpTitle": "Тасвири баланд кунед ва захира кунед",
     "discount": "{{percent}}% камшиканӣ",
     "noDiscount": "Нарх пурра",
-    "total": "Ҳамагӣ ${{usd}}, бо DHB пардохт шудааст",
+    "total": "Ҳамагӣ ${{usd}}, бо нишонаҳо пардохт шудааст",
     "buy": "Кредитҳоро харид кунед",
     "buying": "Дар интизории пардохт…",
     "bought": "Кредитҳои пост {{count}} илова шудааст",
@@ -7768,7 +7787,7 @@
     "skippedToast": "{{platforms}}: this post has not have the photo or video they need.",
     "uploadFailed": "Hindi mai-upload ang iyong media para sa cross-post.",
     "creditRules": "Хароҷоти ҳар як платформа: {{x}} барои X, {{farcaster}} барои Farcaster ва {{other}} барои ҳар як платформаи дигар. Ang mga naka-iskedyul na post ay gumagamit ng mga kredit kapag naka-iskedyul mo ang mga ito.",
-    "payAsYouGoCredits": "Кредит тамом шуд? Ҳангоми нашр кредитҳои нарасида бо DHB ҳар кадом ба ${{price}} харида мешаванд.",
+    "payAsYouGoCredits": "Кредит тамом шуд? Ҳангоми нашр кредитҳои нарасида бо нишонаҳо ҳар кадом ба ${{price}} харида мешаванд.",
     "topUpCredits": "{{count}} creditits",
     "perCredit": "${{price}} ҳар як кредит",
     "pendingApproval": "Интизори шумо барои тасдиқи dehub дар барномаи Farcaster",
@@ -7780,7 +7799,7 @@
   "dm": {
     "planRestricted": "Ин корбар барои гирифтани паёмҳо обуна талаб мекунад.",
     "planTypeNotAllowed": "Нақшаи ин эҷодкор ин навъи паёмро иҷозат намедиҳад.",
-    "planMinTip": "Чойпулӣ барои ин эҷодкор бояд на камтар аз {{amount}} DHB бошад."
+    "planMinTip": "Чойпулӣ барои ин эҷодкор бояд на камтар аз {{amount}} нишонаҳо бошад."
   },
   "credits": {
     "earningsWorth": "Арзиш {{amount}}",
@@ -7908,12 +7927,12 @@
       "notifyKey": "Xabar kaliti",
       "notifyKeyOnce": "Yangi xabar kaliti uchun {{name}}. Ushbu kalitni hozir kopirovka qiling: u faqat bir marta koʻrinadi va yana birini yaratish uni almashtiradi.",
       "payTitle": "Toʻlovlarni qabul qilish",
-      "payBody": "pay() foydalanuvchidan sizga DHB yuborishni soʻraydi, toʻgʻridan-toʻgʻri dehub.json bilan imzolangan portfelingizga. Toʻlov kvitansiingizni serverda tekshiring, keyin faqatgina narsani yuboring.",
+      "payBody": "pay() foydalanuvchidan sizga нишонаҳо yuborishni soʻraydi, toʻgʻridan-toʻgʻri dehub.json bilan imzolangan portfelingizga. Toʻlov kvitansiingizni serverda tekshiring, keyin faqatgina narsani yuboring.",
       "notifyTitle": "Xabarlarni yuborish",
       "notifyBody": "Sizning ilovangizni qoʻshgan foydalanuvchilar sizning serveringizdan xabar kalitingiz bilan xabar yuborishlari mumkin. Har bir foydalanuvchi uchun tokenlarni saqlash kerak emas.",
       "rankTitle": "Чӣ тавр мағоза барномаҳои рейтинги",
       "rankBody": "Ҳар шаб ҳар як барномаи номбаршуда хол мегирад: 55% аз корбарони баргашта (одамоне, ки ин ҳафта ва ҳафта пеш аз он кушодаанд), 35% аз корбарони ҳафта, илова бар 10% афзоиш дар 14 рӯзи аввали он. Ang lamang na naka-sign-in na mga account sa DeHub, kaya ang mga bots at reload ng pahina ay hindi makakuha.",
-      "rewardsBody": "Ҳар моҳ {{pool}} DHB is shared between apps by the same score, њисоб ҳафта. Upang makatanggap, kailangan ng isang app ng isang verified na wallet ng may-ari at hindi bababa sa 3 mga gumagamit na bumalik Мукофотҳо аз ҷониби DeHub ба ҳамёни соҳиб пардохт карда мешаванд.",
+      "rewardsBody": "Ҳар моҳ {{pool}} нишонаҳо is shared between apps by the same score, њисоб ҳафта. Upang makatanggap, kailangan ng isang app ng isang verified na wallet ng may-ari at hindi bababa sa 3 mga gumagamit na bumalik Мукофотҳо аз ҷониби DeHub ба ҳамёни соҳиб пардохт карда мешаванд.",
       "rewardsWeek": "Ҳафтаи {{date}}",
       "rewardPaid": "Пардохтшуда",
       "rewardPending": "No preview available",
@@ -7939,7 +7958,7 @@
     },
     "pay": {
       "title": "{{name}}ga toʻlov qiling?",
-      "body": "DHB toʻgʻridan-toʻgʻri {{wallet}} ilovaning portfeliga boradi. Toʻlovlarni bekor qilish mumkin emas.",
+      "body": "нишонаҳо toʻgʻridan-toʻgʻri {{wallet}} ilovaning portfeliga boradi. Toʻlovlarni bekor qilish mumkin emas.",
       "confirm": "{{amount}} DHBga toʻlov qiling",
       "sending": "Toʻlovingiz yuborilmoqda…",
       "sent": "{{amount}} DHBni {{name}}ga toʻlov qilingan.",

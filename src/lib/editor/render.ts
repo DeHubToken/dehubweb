@@ -13,6 +13,7 @@
 import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
 import { computeClipAnimation } from "./animationPresets";
 import { videoMatteFrame } from "./videoMatte";
+import { gifImageFrame } from "./gifImage";
 import { measuredTextLayout } from "./textLayout";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
@@ -94,14 +95,14 @@ export function isVisualClip(clip: Clip): boolean {
   return clip.kind === "video" || clip.kind === "image" || clip.kind === "text" || clip.kind === "shape";
 }
 
-function mediaSource(clip: MediaClip, src: RenderSources): { el: CanvasImageSource; w: number; h: number } | null {
+function mediaSource(clip: MediaClip, src: RenderSources, sourceTime?: number): { el: CanvasImageSource; w: number; h: number } | null {
   if (clip.kind === "video") {
     const v = src.videosByClip?.get(clip.id) ?? src.videos.get(clip.mediaId);
     return v && v.videoWidth ? { el: v, w: v.videoWidth, h: v.videoHeight } : null;
   }
   if (clip.kind === "image") {
     const img = src.images.get(clip.mediaId);
-    return img && img.naturalWidth ? { el: img, w: img.naturalWidth, h: img.naturalHeight } : null;
+    return img && img.naturalWidth ? { el: sourceTime === undefined ? img : gifImageFrame(img, sourceTime), w: img.naturalWidth, h: img.naturalHeight } : null;
   }
   return null;
 }
@@ -338,7 +339,7 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
 let matteCanvas: HTMLCanvasElement | null = null;
 
 function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: RenderSources, sourceTime: number) {
-  const m = mediaSource(clip, src);
+  const m = mediaSource(clip, src, sourceTime);
   if (!m) return;
   const c = cropOf(clip);
   let el = m.el;
@@ -347,8 +348,8 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
   let sw = m.w * (1 - c.left - c.right);
   let sh = m.h * (1 - c.top - c.bottom);
   if (clip.kind === "video" && clip.videoMatte) {
-    const frame = videoMatteFrame(clip, sourceTime), image = src.images.get(clip.videoMatte.mediaId);
-    if (!frame || !image?.naturalWidth || image.naturalWidth !== clip.videoMatte.atlasWidth || image.naturalHeight !== clip.videoMatte.atlasHeight) return;
+    const frame = videoMatteFrame(clip, sourceTime), image = frame ? src.images.get(frame.mediaId) : undefined;
+    if (!frame || !image?.naturalWidth || image.naturalWidth !== frame.atlasWidth || image.naturalHeight !== frame.atlasHeight) return;
     matteCanvas ??= document.createElement("canvas");
     const scale = Math.min(1, 1920 / Math.max(sw, sh));
     const width = Math.max(1, Math.round(sw * scale)), height = Math.max(1, Math.round(sh * scale));

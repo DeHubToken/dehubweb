@@ -6,9 +6,10 @@
  */
 
 import { memo } from 'react';
+import { usePoll } from '@/hooks/use-polls';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CheckCircle, Play, Images, Ticket, Lock } from 'lucide-react';
+import { CheckCircle, Play, Images, Ticket, Lock, BarChart2 } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildAvatarUrl, extractAvatarPath, buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
 import { isHoldGated, isSubscriberGated } from '@/lib/content-gate';
@@ -67,7 +68,10 @@ export function resolveQuotedPostMedia(post: DeHubNFT) {
 /** The media block of an embedded post — thumbnail, play glyph, image count, gate. */
 export function QuotedPostMedia({ post, className }: { post: DeHubNFT; className?: string }) {
   const { hasVideo, hasImage, thumbnailUrl, imageCount, gated, isPPV } = resolveQuotedPostMedia(post);
-  if (!hasImage && !hasVideo) return null;
+  // Only draw the media box when there is something to put in it. Text and
+  // poll posts can still come back typed as "image" with no image URL, which
+  // used to leave an empty grey block above the quoted text.
+  if (!thumbnailUrl && !hasVideo) return null;
   return (
     <div className={`relative w-full aspect-video max-h-[200px] sm:max-h-[240px] bg-zinc-900 overflow-hidden ${className || ''}`}>
       {thumbnailUrl && (
@@ -101,6 +105,46 @@ export function QuotedPostMedia({ post, className }: { post: DeHubNFT; className
           <span className="text-xs text-white font-medium">{imageCount}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+/**
+ * Read-only poll preview for a quoted post. Tapping the embed opens the post,
+ * where the full poll can be voted on.
+ */
+function QuotedPollPreview({ tokenId }: { tokenId: number }) {
+  const { data: poll } = usePoll(tokenId, !!tokenId);
+  if (!poll || !poll.options?.length) return null;
+
+  const isEnded = !poll.isActive || !!poll.isExpired
+    || (!!poll.expiresAt && new Date(poll.expiresAt).getTime() <= Date.now());
+  const showResults = isEnded || !!poll.userVote;
+  const total = poll.totalVotes || 0;
+
+  return (
+    <div className="mt-2 space-y-1.5">
+      {poll.question && poll.question.trim() !== '' && (
+        <p className="text-[14px] leading-5 font-medium text-white">{poll.question}</p>
+      )}
+      {poll.options.map((opt) => {
+        const pct = total > 0 ? Math.round((opt.voteCount / total) * 100) : 0;
+        return (
+          <div key={opt.index} className="relative overflow-hidden rounded-lg border border-white/10 px-3 py-1.5">
+            {showResults && (
+              <div className="absolute inset-y-0 left-0 bg-white/10" style={{ width: `${pct}%` }} />
+            )}
+            <div className="relative flex items-center justify-between gap-2 text-[13px] text-zinc-200">
+              <span className="truncate">{opt.text}</span>
+              {showResults && <span className="shrink-0 text-zinc-400">{pct}%</span>}
+            </div>
+          </div>
+        );
+      })}
+      <div className="flex items-center gap-1 text-[12px] text-zinc-500">
+        <BarChart2 className="w-3.5 h-3.5" />
+        <span>{total} {total === 1 ? 'vote' : 'votes'}{isEnded ? ' · Final results' : ''}</span>
+      </div>
     </div>
   );
 }
@@ -186,6 +230,9 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
         {content && (
           <p className="text-[15px] leading-[22px] text-zinc-300 whitespace-pre-wrap">{content}</p>
         )}
+
+        {/* Poll attached to the quoted post */}
+        <QuotedPollPreview tokenId={Number(quotedPost.tokenId) || 0} />
       </div>
     </div>
   );

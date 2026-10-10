@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Schedule Stage Panel
  * ====================
@@ -57,7 +58,7 @@ export function ScheduleStagePanel({
 
   // Default to the next round half-hour an hour out — far enough ahead to be
   // plausible, close enough that most hosts only adjust the time.
-  const [when, setWhen] = useState(() => {
+  const [when, setWhen] = useSurfaceDraft("src/components/app/stages/ScheduleStagePanel.tsx:when", () => {
     const d = new Date(Date.now() + 60 * 60 * 1000);
     d.setMinutes(d.getMinutes() > 30 ? 60 : 30, 0, 0);
     return toLocalInputValue(d);

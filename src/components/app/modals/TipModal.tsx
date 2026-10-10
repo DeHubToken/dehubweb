@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Tip Modal Component
  * ===================
@@ -83,7 +85,7 @@ export function TipModal({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/modals/TipModal.tsx:amount", '', JSON.stringify([creatorAddress, tokenId, commentId]));
   const [balances, setBalances] = useState<Record<number, number> | null>(null);
   const lastTipAmount = useRef(0);
   const [recipientPrivate, setRecipientPrivate] = useState(false);
@@ -121,7 +123,7 @@ export function TipModal({
       }
       if (commentId) emitPostTipped(commentTipKey(commentId));
       else if (resolvedTokenId) emitPostTipped(resolvedTokenId);
-      setAmount('');
+      setAmount.complete(amount, '');
       onOpenChange(false);
     },
     onConfirmed: () => {
@@ -280,7 +282,7 @@ export function TipModal({
                 >
                   <span className="inline-flex items-center gap-1">
                     {val.toLocaleString()}{' '}
-                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" style={{ marginTop: '-1px' }} />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" style={{ marginTop: '-1px' }} />
                   </span>
                 </button>
               ))}
@@ -298,7 +300,7 @@ export function TipModal({
             </div>
             <div className="relative flex items-center gap-2">
               <div className="relative flex-1">
-                <img src={dehubCoin} alt="DHB" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+                <img src={dehubCoin} alt={tokenLabel()} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
                 <Input
                   type="text"
                   inputMode="decimal"

@@ -51,7 +51,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
 
   useEffect(() => {
     let cancelled = false;
-    // Funding lands DHB on Base; a post that settles elsewhere needs DHB there.
+    // Funding lands DHB on Base; a post that settles elsewhere needs tokens there.
     if (!shortfall.canTopUpInApp || shortfall.chainId !== BASE_CHAIN_ID) {
       setPhase('offchain');
       return;
@@ -95,7 +95,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
       >
         <CreditCard className="w-5 h-5 text-white/70" />
         <div className="text-left flex-1">
-          <span className="text-sm font-medium text-white">{t('ppvTopUp.buyCard', 'Buy DHB with card')}</span>
+          <span className="text-sm font-medium text-white">{t('ppvTopUp.buyCard', 'Buy tokens with card')}</span>
           <p className="text-xs text-white/40">{t('ppvTopUp.buyCardHint', 'Visa, Mastercard, Apple Pay')}</p>
         </div>
       </button>
@@ -144,7 +144,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
       {(phase === 'ready' || phase === 'funding') && (
         <>
           <p className="text-center text-xs text-zinc-400 px-2">
-            {t('ppvTopUp.payHint', 'Pay with anything in your wallet. It becomes DHB and unlocks straight away.')}
+            {t('ppvTopUp.payHint', 'Pay with anything in your wallet. It becomes tokens and unlocks straight away.')}
           </p>
           {walletAddress ? (
             <Suspense fallback={null}>
@@ -182,7 +182,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
         <>
           <div className="flex items-start gap-2 rounded-xl border border-amber-500/20 bg-amber-500/10 px-3 py-2.5 text-xs text-amber-200">
             <AlertCircle className="w-4 h-4 shrink-0 mt-px" />
-            <span>{t('ppvTopUp.paused', "DHB transfers are paused on-chain right now, so this unlock can't go through yet. Try again shortly.")}</span>
+            <span>{t('ppvTopUp.paused', "Token transfers are paused on-chain right now, so this unlock can't go through yet. Try again shortly.")}</span>
           </div>
           <Button variant="glass" className="w-full" onClick={onCancel}>
             {t('common.close')}
@@ -193,7 +193,7 @@ export function PPVTopUpStep({ shortfall, formatCompact, onFunded, onCancel, onC
       {phase === 'offchain' && (
         <>
           <p className="text-center text-xs text-zinc-400 px-2">
-            {t('ppvTopUp.otherChain', 'This post settles on another chain, so it needs DHB in your wallet there.')}
+            {t('ppvTopUp.otherChain', 'This post settles on another chain, so it needs tokens in your wallet there.')}
           </p>
           {fundingRoutes}
           <Button variant="glass" className="w-full" onClick={onCancel}>

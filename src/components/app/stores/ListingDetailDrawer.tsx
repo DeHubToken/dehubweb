@@ -1,3 +1,5 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Listing Detail Drawer
  * =====================
@@ -63,7 +65,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [imgIdx, setImgIdx] = useState(0);
   const [shippingAddress, setShippingAddress] = useState('');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useSurfaceDraft("components/app/stores/ListingDetailDrawer.tsx:notes", '', draftIdentity(listing));
   const [shareOpen, setShareOpen] = useState(false);
 
   const sellerAddress = listing?.wallet_address || listing?.stores?.wallet_address;
@@ -175,7 +177,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                   USD price — which is a display value and not something the
                   wallet can be asked to send. */}
               <span className="text-xl font-bold flex items-center gap-1.5 text-primary-foreground">
-                {quote ? (<><img src={dehubCoin} alt="DHB" className="w-5 h-5" />{quote.dhbAmount.toLocaleString()}</>) : `$${priceUsd.toLocaleString()}`}
+                {quote ? (<><img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />{quote.dhbAmount.toLocaleString()}</>) : `$${priceUsd.toLocaleString()}`}
               </span>
               <p className="text-xs text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</p>
             </div>

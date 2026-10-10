@@ -94,6 +94,7 @@
     "heading": "Krátke videá DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain príspevkov",
     "showOnline": "Zobraziť, keď som online",
     "showOnlineDesc": "Ľudia, ktorým napíšete správu, uvidia zelenú bodku vedľa vášho mena počas používania služby DeHub",
     "smartReplies": "Navrhované odpovede",
@@ -263,6 +264,7 @@
     "light": "Svetlá",
     "dark": "Tmavá",
     "system": "Systém",
+    "immersive": "Immersive",
     "cosmic": "Vesmírne pixely",
     "hazy": "Hmlisté noci",
     "swarms": "Roje",
@@ -622,7 +624,7 @@
     "stageDelivering": "DeHub Pay posiela vaše tokeny…",
     "payViaDpay": "Zaplatené na DeHub Pay, tokeny dorazia približne za 30s",
     "payViaBridgeDpay": "Presunuté na Base a zaplatené na DeHub Pay, tokeny dorazia približne za minútu",
-    "dmSent": "Odoslané {{amount}} DHB používateľovi {{name}}!"
+    "dmSent": "Odoslané {{amount}} tokenov používateľovi {{name}}!"
   },
   "postOptions": {
     "options": "Možnosti",
@@ -1265,10 +1267,10 @@
   },
   "dhbListing": {
     "title": "Listing tokenu už čoskoro!",
-    "body": "$DHB sa zatiaľ neobchoduje. Dostaňte e-mail hneď, ako bude listovaný.",
+    "body": "tokenov sa zatiaľ neobchoduje. Dostaňte e-mail hneď, ako bude listovaný.",
     "notifyMe": "Upozorniť ma",
-    "privacy": "Použijeme to len na to, aby sme vám dali vedieť, keď bude $DHB listovaný.",
-    "joined": "Ste na zozname. Hneď ako bude $DHB listovaný, napíšeme na {{email}}."
+    "privacy": "Použijeme to len na to, aby sme vám dali vedieť, keď bude tokenov listovaný.",
+    "joined": "Ste na zozname. Hneď ako bude tokenov listovaný, napíšeme na {{email}}."
   },
   "explorePage": {
     "searchPlaceholder": "Hľadať ľudí, príspevky alebo obsah...",
@@ -1552,7 +1554,7 @@
     "otherTokens": "Ďalšie tokeny",
     "otherTokensDesc": "Kúpte ETH alebo USDC v sieti Base svojou kartou",
     "shareToFeed": "Zdieľať v mojom informačnom kanáli",
-    "sharePostTemplate": "Práve som pridal {{amount}} $DHB do môjho zásobníka na DeHub. Budovanie s komunitou. #DeHub #DHB",
+    "sharePostTemplate": "Práve som pridal {{amount}} tokenov do môjho zásobníka na DeHub. Budovanie s komunitou. #DeHub",
     "success": {
       "title": "Nákup dokončený!",
       "subtitle": "Žetóny boli doručené do vašej peňaženky.",
@@ -3611,7 +3613,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Fáza 1 · Špeciálna prehliadka",
     "heroTitle": "TOKENIZOVAT FIRMU",
-    "heroSubtitle": "DHB-párovaná krivka vázania. Postupuje na Uniswap pri tržnej hodnote $42K.",
+    "heroSubtitle": "tokenov-párovaná krivka vázania. Postupuje na Uniswap pri tržnej hodnote $42K.",
     "createCoin": "Vytvoriť mincu",
     "filterNew": "Nové",
     "filterGraduating": "Chystá sa absolvovať",
@@ -3712,7 +3714,7 @@
   },
   "fractions": {
     "seoTitle": "Zlomky | DeHub",
-    "seoDescription": "Kupujte a predávajte podiely príspevkov DeHub. Vyrazený príspevok tvorí 1000 on-chain podielov — vlastnite časť videa, skladby alebo obrázka a obchodujte s ňou v DHB.",
+    "seoDescription": "Kupujte a predávajte podiely príspevkov DeHub. Vyrazený príspevok tvorí 1000 on-chain podielov — vlastnite časť videa, skladby alebo obrázka a obchodujte s ňou v tokenov.",
     "title": "Podiely",
     "perUpload": "1000 na nahratie",
     "tabBrowse": "Prehliadať",
@@ -4565,7 +4567,7 @@
   },
   "usernames": {
     "seoTitle": "Trh s používateľským menom | DeHub",
-    "seoDescription": "Nakupujte a predávajte používateľské mená DeHub s DHB. Vyhľadávajte krátke, číselné a originálne rukoväte na predaj alebo uveďte svoje vlastné — prevod sa uskutoční na reťazci v okamihu, keď sa platba vymaže.",
+    "seoDescription": "Nakupujte a predávajte používateľské mená DeHub s tokenov. Vyhľadávajte krátke, číselné a originálne rukoväte na predaj alebo uveďte svoje vlastné — prevod sa uskutoční na reťazci v okamihu, keď sa platba vymaže.",
     "title": "Používateľské mená",
     "subtitle": "Kľučky na predaj, cena v USD",
     "tabBrowse": "Prehliadať",
@@ -4690,7 +4692,7 @@
   },
   "accounts": {
     "seoTitle": "Účet Marketplace — DeHub",
-    "seoDescription": "Kúpajte a predávajte zriadené účty na DeHub za DHB. Prehľadávejte účty podľa followersov, uploadov a veku — handle, posty, followers a práva na odznaky sa prenášajú a platba ide priamo predajcovi.",
+    "seoDescription": "Kúpajte a predávajte zriadené účty na DeHub za tokenov. Prehľadávejte účty podľa followersov, uploadov a veku — handle, posty, followers a práva na odznaky sa prenášajú a platba ide priamo predajcovi.",
     "title": "Účty",
     "subtitle": "Celé účty na predaj, ocenené v DeHub tokenoch",
     "tabBrowse": "Prehľadať",
@@ -6353,17 +6355,17 @@
   },
   "docs": {
     "seoTitle": "Dokumentácia DeHub — Návody, token, dApps a FAQ",
-    "seoDescription": "Oficiálna dokumentácia DeHub: prehľad platformy, dApps, ekonomika tokenu DHB, staking, hry, plán rozvoja, FAQ a ďalšie."
+    "seoDescription": "Oficiálna dokumentácia DeHub: prehľad platformy, dApps, ekonomika tokenu tokenov, staking, hry, plán rozvoja, FAQ a ďalšie."
   },
   "dex": {
-    "seoTitle": "DEX — Obchodujte DHB za vašu cenu",
-    "seoDescription": "Nastavte si cenu nákupu alebo predaja DHB pomocou limitnej objednávky Uniswap v4 na Base alebo BNB Chain. Živý kniha objednávok, hĺbka trhu a jedna zdieľaná cena v USD.",
+    "seoTitle": "DEX — Obchodujte tokenov za vašu cenu",
+    "seoDescription": "Nastavte si cenu nákupu alebo predaja tokenov pomocou limitnej objednávky Uniswap v4 na Base alebo BNB Chain. Živý kniha objednávok, hĺbka trhu a jedna zdieľaná cena v USD.",
     "venue": "Sieť",
     "marketPrice": "Trhová cena · USD",
     "bookPrice": "{{chain}} cena rezervácie · USD",
     "change24": "24h zmena",
     "totalLiquidity": "Celková likvidita · USD",
-    "listedDhb": "Zaradené DHB · {{chain}}",
+    "listedDhb": "Zaradené tokenov · {{chain}}",
     "listedUsd": "Zaradené USD · {{chain}}",
     "refreshMarket": "Obnoviť trh",
     "refresh": "Obnoviť",
@@ -6388,21 +6390,21 @@
     "orderBook": "Kniha objednávok",
     "priceGrouping": "Zoskupenie cien",
     "priceUsd": "Cena (USD)",
-    "sizeDhb": "Veľkosť (DHB)",
-    "totalDhb": "Celkom (DHB)",
+    "sizeDhb": "Veľkosť (tokenov)",
+    "totalDhb": "Celkom (tokenov)",
     "noBids": "Zatiaľ žiadne ponuky",
     "noAsks": "Zatiaľ žiadna likvidita na predaj",
     "useBuyPrice": "Použite {{price}} ako nákupnú cenu",
     "useSellPrice": "Použite {{price}} ako predajnú cenu",
     "spread": "Rozdiel · USD",
-    "buyTotal": "Kúpiť {{amount}} DHB",
-    "sellTotal": "Predať {{amount}} DHB",
+    "buyTotal": "Kúpiť {{amount}} tokenov",
+    "sellTotal": "Predať {{amount}} tokenov",
     "placeOrder": "Zadať objednávku",
     "lpFee": "0% poplatok za LP",
     "lpFeeLabel": "Poplatok za LP",
     "lpFeeValue": "{{fee}}% poplatok za LP",
-    "buy": "Kúpiť DHB",
-    "sell": "Predať DHB",
+    "buy": "Kúpiť tokenov",
+    "sell": "Predať tokenov",
     "maxBuy": "Maximálna nákupná cena",
     "minSell": "Minimálna predajná cena",
     "spend": "Minúť",
@@ -6418,7 +6420,7 @@
     "estimated": "Odhadovaná plná konverzia",
     "network": "Sieť financovania",
     "sellBelowMarket": "Tento predaj je {{percent}}% pod trhovou cenou ${{price}}. Niekto si ho môže kúpiť a okamžite predať inde.",
-    "buyAboveMarket": "Tento nákup je {{percent}}% nad trhovou cenou ${{price}}. Zaplatili by ste viac, ako sa DHB obchoduje inde.",
+    "buyAboveMarket": "Tento nákup je {{percent}}% nad trhovou cenou ${{price}}. Zaplatili by ste viac, ako sa tokenov obchoduje inde.",
     "useMarket": "Použiť trhovú cenu",
     "balanceError": "Kontrola zostatku zlyhala. Skúste to znova pred zadaním objednávky.",
     "noFunding": "Nie je k dispozícii žiadne {{token}} na {{chain}}.",
@@ -6427,7 +6429,7 @@
     "reviewYourBuy": "Skontrolovať nákup",
     "reviewYourSell": "Skontrolovať predaj",
     "reviewDeposit": "Vložte {{amount}} {{token}} na {{chain}}.",
-    "reviewRange": "Rozsah: {{min}} – {{max}} USD za DHB.",
+    "reviewRange": "Rozsah: {{min}} – {{max}} USD za tokenov.",
     "initializes": "Toto vytvorí a inicializuje 0% fond.",
     "pendingNote": "Vaša transakcia bola odoslaná. Pokračujte v potvrdení alebo registrácii záznamu bez ďalšieho vkladu.",
     "viewTransaction": "Zobraziť transakciu",
@@ -6444,7 +6446,7 @@
     "keepOpen": "Nechajte túto stránku otvorenú, kým nebude vaša registrácia zaregistrovaná. Úložisko prehliadača nie je k dispozícii.",
     "snapshotDelayed": "Zdieľané trhové údaje sú oneskorené. Zobrazuje sa posledný overený snímok.",
     "snapshotUnavailable": "Zdieľané trhové údaje nie sú k dispozícii. Skúste načítať pozície znova.",
-    "withdrawReview": "Vybrať {{dhb}} DHB a {{usdc}} USDC na {{chain}}? Sumy sa pred podpisom obnovia; tolerancia ceny je 0,5 %.",
+    "withdrawReview": "Vybrať {{dhb}} tokenov a {{usdc}} USDC na {{chain}}? Sumy sa pred podpisom obnovia; tolerancia ceny je 0,5 %.",
     "withdrawn": "Pozícia stiahnutá",
     "withdrawFailed": "Stiahnutie zlyhalo",
     "withdrawing": "Sťahovanie…",
@@ -6578,6 +6580,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizuálne zaujímavosti",
+      "visualPrivacy": "Odoslať vybrané snímky na vizuálnu analýzu."
+    },
+    "review": {
+      "title": "Kontrola projektu",
+      "shared": "Zdieľané s vami",
+      "time": "Čas (s)",
+      "assign": "Priradiť peňaženku"
+    },
+    "textFit": {
+      "wrap": "Zalamovať riadky",
+      "width": "Šírka textu",
+      "shrink": "Zmenšiť text, aby sa zmestil",
+      "height": "Výška textu",
+      "captions": "Prispôsobiť stopu titulkov"
+    },
     "canvas": {
       "dropMedia": "Pustiť na pridanie do vášho dizajnu",
       "dropText": "Pustiť na pridanie textu",
@@ -7927,7 +7946,7 @@
     "topUpTitle": "Doplniť a ušetriť",
     "discount": "{{percent}}% off",
     "noDiscount": "Plná cena",
-    "total": "Celkom ${{usd}}, zaplatené v DHB",
+    "total": "Celkom ${{usd}}, zaplatené v tokenov",
     "buy": "Kúpiť kredity",
     "buying": "Čaká sa na platbu…",
     "bought": "Pridané {{count}} post credits",
@@ -7957,7 +7976,7 @@
     "skippedToast": "Preskočené {{platforms}}: v tomto príspevku nie je fotka ani video, ktoré potrebujú.",
     "uploadFailed": "Nepodarilo sa nahrať vaše médium na krížové uverejňovanie.",
     "creditRules": "Každý príspevok stojí kredity na platformu: {{x}} pre X, {{farcaster}} pre Farcaster a {{other}} pre každú inú platformu. Naplánované príspevky používajú kredity, keď ich naplánujete.",
-    "payAsYouGoCredits": "Došli? Chýbajúce kredity sa kupujú v DHB za ${{price}} pri každom zverejnení.",
+    "payAsYouGoCredits": "Došli? Chýbajúce kredity sa kupujú v tokenov za ${{price}} pri každom zverejnení.",
     "topUpCredits": "{{count}} kreditov",
     "perCredit": "${{price}} za kredit",
     "pendingApproval": "Čaká sa na schválenie dehubu v aplikácii Farcaster",
@@ -7969,7 +7988,7 @@
   "dm": {
     "planRestricted": "Tento používateľ vyžaduje predplatné na prijímanie správ.",
     "planTypeNotAllowed": "Plán tohto tvorcu nepovoľuje tento typ správy.",
-    "planMinTip": "Prepitné pre tohto tvorcu musí byť aspoň {{amount}} DHB."
+    "planMinTip": "Prepitné pre tohto tvorcu musí byť aspoň {{amount}} tokenov."
   },
   "credits": {
     "earningsWorth": "V hodnote {{amount}}",
@@ -8097,12 +8116,12 @@
       "notifyKey": "Oznámiť klávesu",
       "notifyKeyOnce": "Nový klávesový zoznam pre {{name}}. Skopíruj ho teraz: zobrazí sa len raz a vytvorenie ďalšieho ho nahradí.",
       "payTitle": "Prijímate platby",
-      "payBody": "Platiť() požaduje od používateľa odoslanie DHB priamo na peňaženku, ktorá podpísala váš súbor dehub.json. Skontrolujte potvrdenie na svojom serveri pred dodaním niečoho.",
+      "payBody": "Platiť() požaduje od používateľa odoslanie tokenov priamo na peňaženku, ktorá podpísala váš súbor dehub.json. Skontrolujte potvrdenie na svojom serveri pred dodaním niečoho.",
       "notifyTitle": "Poslať upozornenia",
       "notifyBody": "Užívatelia, ktorí pridajú vašu aplikáciu, môžu byť informovaní z vašej serverovej strany pomocou vašeho klúča `notify`. Nepotrebujete ukladáť osobné tokeny pre každého užívateľa.",
       "rankTitle": "Ako obchod hodnotí aplikácie",
       "rankBody": "Každú noc získava každá uvedená aplikácia skóre: 55% od vracajúcich sa používateľov (ľudí, ktorí ju otvorili tento týždeň a týždeň predtým), 35% od týždenných používateľov a 10% navýšenie za prvých 14 dní. Počítajú sa len prihlásené účty DeHub, takže roboty a opätovné načítanie stránok nezarábajú nič.",
-      "rewardsBody": "Každý mesiac {{pool}} DHB je zdieľaný medzi aplikáciami podľa rovnakého skóre, vypočítaného týždenne. Na splnenie podmienok potrebuje aplikácia overenú peňaženku vlastníka a najmenej 3 vracajúcich sa používateľov. Odmeny vypláca spoločnosť DeHub do peňaženky majiteľa.",
+      "rewardsBody": "Každý mesiac {{pool}} tokenov je zdieľaný medzi aplikáciami podľa rovnakého skóre, vypočítaného týždenne. Na splnenie podmienok potrebuje aplikácia overenú peňaženku vlastníka a najmenej 3 vracajúcich sa používateľov. Odmeny vypláca spoločnosť DeHub do peňaženky majiteľa.",
       "rewardsWeek": "Týždeň {{date}}",
       "rewardPaid": "Zaplatené",
       "rewardPending": "Čakajúce",
@@ -8128,10 +8147,10 @@
     },
     "pay": {
       "title": "Platiť {{name}}?",
-      "body": "DHB priamo odchádza do penenice aplikácie, {{wallet}}. Platby sa nedajú vrátiť.",
-      "confirm": "Platiť {{amount}} DHB",
+      "body": "tokenov priamo odchádza do penenice aplikácie, {{wallet}}. Platby sa nedajú vrátiť.",
+      "confirm": "Platiť {{amount}} tokenov",
       "sending": "Posielate Vašu platbu…",
-      "sent": "Platba {{amount}} DHB na {{name}}.",
+      "sent": "Platba {{amount}} tokenov na {{name}}.",
       "noOwner": "Tento aplikácia ešte nemá overený portemiel na platby."
     },
     "add": {

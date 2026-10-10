@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * $DHB listing-soon card
  * ======================
@@ -34,7 +36,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
   const { user, walletAddress } = useAuth();
   const [joinedEmail, setJoinedEmail] = useState<string | null>(() => readJoinedEmail());
   const [step, setStep] = useState<Step>(() => (joinedEmail ? 'joined' : 'idle'));
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useSurfaceDraft("components/app/DhbListingSoonCard.tsx:email", '');
   const [busy, setBusy] = useState(false);
 
   const submit = async (address: string) => {
@@ -49,7 +51,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
       rememberJoinedEmail(address);
       setJoinedEmail(address.trim().toLowerCase());
       setStep('joined');
-      toast.success(t('dhbListing.joined', "You're on the list. We'll email {{email}} the moment $DHB lists.", { email: address.trim().toLowerCase() }));
+      toast.success(t('dhbListing.joined', "You're on the list. We'll email {{email}} when token trading opens.", { email: address.trim().toLowerCase() }));
     } catch {
       toast.error(t('careers.applicationFailed', 'Failed to submit. Please try again.'));
     } finally {
@@ -83,10 +85,10 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
       className="bg-zinc-800/60 border border-zinc-700/50 rounded-2xl p-4 sm:p-5 mb-4"
     >
       <div className="flex items-center gap-3">
-        <img src={dhbCoinIcon} alt="DHB" className="w-11 h-11 rounded-full flex-shrink-0" />
+        <img src={dhbCoinIcon} alt={tokenLabel()} className="w-11 h-11 rounded-full flex-shrink-0" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-white font-semibold">$DHB</span>
+            <span className="text-white font-semibold">{tokenLabel()}</span>
             <span className="text-zinc-400 text-sm">Dehub</span>
             <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
               {t('hero.comingSoon', 'Coming Soon')}
@@ -102,13 +104,13 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
         <div className="mt-4 flex items-start gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/25 px-3 py-2.5">
           <Check className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
           <p className="text-sm text-zinc-200 break-words min-w-0">
-            {t('dhbListing.joined', "You're on the list. We'll email {{email}} the moment $DHB lists.", { email: joinedEmail ?? '' })}
+            {t('dhbListing.joined', "You're on the list. We'll email {{email}} when token trading opens.", { email: joinedEmail ?? '' })}
           </p>
         </div>
       ) : (
         <>
           <p className="text-sm text-zinc-400 mt-3">
-            {t('dhbListing.body', "$DHB isn't trading yet. Get an email the moment it lists.")}
+            {t('dhbListing.body', "DeHub tokens aren't trading yet. Get an email the moment it lists.")}
           </p>
 
           {step === 'ask' ? (

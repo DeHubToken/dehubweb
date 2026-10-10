@@ -90,6 +90,7 @@
     "heading": "DeHub Qısalar"
   },
   "settings": {
+    "postingChain": "Paylaşım blokçeyni",
     "showOnline": "Onlayn olduğum vaxtı göstərin",
     "showOnlineDesc": "Mesaj göndərdiyiniz insanlar DeHub-dan istifadə edərkən adınızın yanında yaşıl nöqtə görür",
     "smartReplies": "Təklif olunan cavablar",
@@ -259,6 +260,7 @@
     "light": "İşıqlı",
     "dark": "Qaranlıq",
     "system": "Sistem",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Dumanlı gecələr",
     "swarms": "Swarms",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay tokenlərinizi göndərir…",
     "payViaDpay": "DeHub Pay-ə ödənildi, tokenlər təxminən 30 saniyəyə gələcək",
     "payViaBridgeDpay": "Base-ə köçürüldü və DeHub Pay-ə ödənildi, tokenlər təxminən bir dəqiqəyə gələcək",
-    "dmSent": "{{amount}} DHB {{name}} üçün göndərildi!"
+    "dmSent": "{{amount}} tokenlər {{name}} üçün göndərildi!"
   },
   "postOptions": {
     "options": "Seçimlər",
@@ -1197,10 +1199,10 @@
   },
   "dhbListing": {
     "title": "Token listinqi tezliklə!",
-    "body": "$DHB hələ ticarətdə deyil. Listinqə çıxan kimi e-poçt alın.",
+    "body": "tokenlər hələ ticarətdə deyil. Listinqə çıxan kimi e-poçt alın.",
     "notifyMe": "Mənə xəbər ver",
-    "privacy": "Bunu yalnız $DHB listinqə çıxanda sizə xəbər vermək üçün istifadə edəcəyik.",
-    "joined": "Siyahıdasınız. $DHB listinqə çıxan kimi {{email}} ünvanına e-poçt göndərəcəyik."
+    "privacy": "Bunu yalnız tokenlər listinqə çıxanda sizə xəbər vermək üçün istifadə edəcəyik.",
+    "joined": "Siyahıdasınız. tokenlər listinqə çıxan kimi {{email}} ünvanına e-poçt göndərəcəyik."
   },
   "explorePage": {
     "searchPlaceholder": "İnsanlar, paylaşımlar və ya məzmun axtar...",
@@ -1460,7 +1462,7 @@
     "otherTokens": "Digər tokenlər",
     "otherTokensDesc": "Kartınızla Base şəbəkəsində ETH və ya USDC alın",
     "shareToFeed": "Yemimlə paylaşın",
-    "sharePostTemplate": "İndicə {{amount}} $ DHB-ni DeHub-dakı stekimə əlavə etdim. İcma ilə qurmaq. #DeHub #DHB",
+    "sharePostTemplate": "İndicə {{amount}} $ tokenlər-ni DeHub-dakı stekimə əlavə etdim. İcma ilə qurmaq. #DeHub",
     "success": {
       "title": "Satınalma tamamlandı!",
       "subtitle": "Toyuqlar cüzdanınıza çatdırıldı.",
@@ -3426,7 +3428,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Faza 1 · Xüsusi önizləmə",
     "heroTitle": "BİZNESİ TOKENLƏŞDƏR",
-    "heroSubtitle": "DHB-cütləşdirilmiş bağlama əyrisi. $42K bazar dəyərində Uniswap-a keçir.",
+    "heroSubtitle": "tokenlər-cütləşdirilmiş bağlama əyrisi. $42K bazar dəyərində Uniswap-a keçir.",
     "createCoin": "Sikkə yaradın",
     "filterNew": "Yeni",
     "filterGraduating": "Məzun olmaq haqqında",
@@ -3518,7 +3520,7 @@
   },
   "fractions": {
     "seoTitle": "Fraksiyalar | DeHub",
-    "seoDescription": "DeHub postlarının fraksiyalarını alıb satın. Zərb edilmiş post 1000 zəncir üzərində fraksiyadır — videonun, trekin və ya şəklin bir hissəsinə sahib olun və onu DHB ilə ticarət edin.",
+    "seoDescription": "DeHub postlarının fraksiyalarını alıb satın. Zərb edilmiş post 1000 zəncir üzərində fraksiyadır — videonun, trekin və ya şəklin bir hissəsinə sahib olun və onu tokenlər ilə ticarət edin.",
     "title": "Fraksiyalar",
     "perUpload": "Hər yükləmə üçün 1000",
     "tabBrowse": "Baxış",
@@ -4363,7 +4365,7 @@
   },
   "usernames": {
     "seoTitle": "İstifadəçi adı bazarı | DeHub",
-    "seoDescription": "DHB ilə DeHub istifadəçi adlarını alın və satın. Satış üçün qısa, rəqəmli və orijinal tutacaqlar axtarın və ya öz elanınızı yerləşdirin — ödəniş təmizləndiyi an köçürmə aktiv olur.",
+    "seoDescription": "tokenlər ilə DeHub istifadəçi adlarını alın və satın. Satış üçün qısa, rəqəmli və orijinal tutacaqlar axtarın və ya öz elanınızı yerləşdirin — ödəniş təmizləndiyi an köçürmə aktiv olur.",
     "title": "İstifadəçi adları",
     "subtitle": "Satışa çıxarılan tutaçlar, USD-də qiymətləndirilir",
     "tabBrowse": "Baxış",
@@ -4482,7 +4484,7 @@
   },
   "accounts": {
     "seoTitle": "Hesab Bazarı — DeHub",
-    "seoDescription": "DeHub hesablarını DHB üçün satın alın və satın. Hesabları izləyicilərin sayına, yükləmələrə və yaşına görə baxın — dəstə, yazılar, izləyicilər və nişan hüquqları hamısı ötürülür və ödəniş birbaşa satıcıya gedir.",
+    "seoDescription": "DeHub hesablarını tokenlər üçün satın alın və satın. Hesabları izləyicilərin sayına, yükləmələrə və yaşına görə baxın — dəstə, yazılar, izləyicilər və nişan hüquqları hamısı ötürülür və ödəniş birbaşa satıcıya gedir.",
     "title": "Hesablar",
     "subtitle": "Bütün hesablar satılır, qiymətlər DeHub jetonları ilə",
     "tabBrowse": "Baxış",
@@ -6082,17 +6084,17 @@
   },
   "docs": {
     "seoTitle": "DeHub sənədləri — Bələdçilər, token, dApps və FAQ",
-    "seoDescription": "Rəsmi DeHub sənədləri: platformaya baxış, dApps, DHB token iqtisadiyyatı, steykinq, oyunlar, yol xəritəsi, FAQ və daha çoxu."
+    "seoDescription": "Rəsmi DeHub sənədləri: platformaya baxış, dApps, tokenlər token iqtisadiyyatı, steykinq, oyunlar, yol xəritəsi, FAQ və daha çoxu."
   },
   "dex": {
-    "seoTitle": "DEX — DHB-ni öz qiymətinizlə ticarət edin",
-    "seoDescription": "Base və ya BNB Chain-də Uniswap v4 limit sifarişi ilə DHB alış və ya satış qiymətinizi təyin edin. Canlı sifariş kitabı, bazar dərinliyi və vahid ortaq USD qiyməti.",
+    "seoTitle": "DEX — tokenlər-ni öz qiymətinizlə ticarət edin",
+    "seoDescription": "Base və ya BNB Chain-də Uniswap v4 limit sifarişi ilə tokenlər alış və ya satış qiymətinizi təyin edin. Canlı sifariş kitabı, bazar dərinliyi və vahid ortaq USD qiyməti.",
     "venue": "Şəbəkə",
     "marketPrice": "Bazar qiyməti · USD",
     "bookPrice": "{{chain}} kitab qiyməti · USD",
     "change24": "24 saatlıq dəyişiklik",
     "totalLiquidity": "Ümumi likvidlik · USD",
-    "listedDhb": "Siyahıda olan DHB · {{chain}}",
+    "listedDhb": "Siyahıda olan tokenlər · {{chain}}",
     "listedUsd": "Siyahıda olan USD · {{chain}}",
     "refreshMarket": "Bazarı yeniləyin",
     "refresh": "Yenilə",
@@ -6117,21 +6119,21 @@
     "orderBook": "Sifariş kitabı",
     "priceGrouping": "Qiymət qruplaşdırması",
     "priceUsd": "Qiymət (USD)",
-    "sizeDhb": "Siz (DHB)",
-    "totalDhb": "Ümumi (DHB)",
+    "sizeDhb": "Siz (tokenlər)",
+    "totalDhb": "Ümumi (tokenlər)",
     "noBids": "Hələ heç bir təklif yoxdur",
     "noAsks": "Hələ sorğu likvidliyi yoxdur",
     "useBuyPrice": "Alış qiyməti kimi {{price}} istifadə edin",
     "useSellPrice": "Satış qiyməti kimi {{price}} istifadə edin",
     "spread": "Spread · USD",
-    "buyTotal": "{{amount}} DHB alın",
-    "sellTotal": "{{amount}} DHB satın",
+    "buyTotal": "{{amount}} tokenlər alın",
+    "sellTotal": "{{amount}} tokenlər satın",
     "placeOrder": "Sifariş verin",
     "lpFee": "0% LP rüsumu",
     "lpFeeLabel": "LP rüsumu",
     "lpFeeValue": "{{fee}}% LP rüsumu",
-    "buy": "DHB alın",
-    "sell": "DHB satın",
+    "buy": "tokenlər alın",
+    "sell": "tokenlər satın",
     "maxBuy": "Maksimum alış qiyməti",
     "minSell": "Minimum satış qiyməti",
     "spend": "Xərcləyin",
@@ -6147,7 +6149,7 @@
     "estimated": "Təxmin edilən tam çevrilmə",
     "network": "Fon şəbəkəsi",
     "sellBelowMarket": "Bu satış bazar qiymətindən {{percent}}% aşağıdır, bazar qiyməti isə ${{price}}-dir. Kimsə bunu alıb dərhal başqa yerdə sata bilər.",
-    "buyAboveMarket": "Bu alış bazar qiymətindən {{percent}}% yuxarıdır, bazar qiyməti isə ${{price}}-dir. Siz DHB-nin başqa yerdə satdığından daha çox ödəyəcəksiniz.",
+    "buyAboveMarket": "Bu alış bazar qiymətindən {{percent}}% yuxarıdır, bazar qiyməti isə ${{price}}-dir. Siz tokenlər-nin başqa yerdə satdığından daha çox ödəyəcəksiniz.",
     "useMarket": "Bazar qiymətindən istifadə edin",
     "balanceError": "Balans yoxlanışı uğursuz oldu. Sifariş verməzdən əvvəl yenidən cəhd edin.",
     "noFunding": "{{chain}}-də {{token}} mövcud deyil.",
@@ -6156,7 +6158,7 @@
     "reviewYourBuy": "Alışınızı nəzərdən keçirin",
     "reviewYourSell": "Satışınızı nəzərdən keçirin",
     "reviewDeposit": "{{chain}}-də {{amount}} {{token}} əmanət qoyun.",
-    "reviewRange": "Aralıq: {{min}} – {{max}} USD DHB üçün.",
+    "reviewRange": "Aralıq: {{min}} – {{max}} USD tokenlər üçün.",
     "initializes": "Bu, 0% hovuzu yaradır və ilkin vəziyyətə gətirir.",
     "pendingNote": "Əməliyyatınız təqdim edildi. Başqa əmanət qoymadan təsdiqləməni və ya siyahıya qeydiyyatı davam etdirin.",
     "viewTransaction": "Əməliyyata bax",
@@ -6173,7 +6175,7 @@
     "keepOpen": "Siyahınız qeydiyyatdan keçənə qədər bu səhifəni açıq saxlayın. Brauzer yaddaşı mövcud deyil.",
     "snapshotDelayed": "Paylaşılan bazar məlumatları gecikir. Son təsdiqlənmiş anlıq görüntünü göstərir.",
     "snapshotUnavailable": "Paylaşılan bazar məlumatları mövcud deyil. Vəziyyətləri yükləmək üçün yenidən cəhd edin.",
-    "withdrawReview": "{{chain}}-də {{dhb}} DHB və {{usdc}} USDC geri çəkin? Məbləğlər imzalamaqdan əvvəl yenilənir; qiymət tolerantlığı 0,5%-dir.",
+    "withdrawReview": "{{chain}}-də {{dhb}} tokenlər və {{usdc}} USDC geri çəkin? Məbləğlər imzalamaqdan əvvəl yenilənir; qiymət tolerantlığı 0,5%-dir.",
     "withdrawn": "Vəziyyət geri çəkildi",
     "withdrawFailed": "Geri çəkilmə uğursuz oldu",
     "withdrawing": "Geri çəkilir…",
@@ -6307,6 +6309,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Vizual məqamlar",
+      "visualPrivacy": "Vizual təhlil üçün seçilmiş kadrları göndərin."
+    },
+    "review": {
+      "title": "Layihə baxışı",
+      "shared": "Sizinlə paylaşılanlar",
+      "time": "Vaxt (s)",
+      "assign": "Pul kisəsi təyin et"
+    },
+    "textFit": {
+      "wrap": "Sətirləri bük",
+      "width": "Mətn eni",
+      "shrink": "Mətni sığacaq qədər kiçilt",
+      "height": "Mətn hündürlüyü",
+      "captions": "Altyazı yolunu uyğunlaşdır"
+    },
     "canvas": {
       "dropMedia": "Dizaynınıza əlavə etmək üçün buraxın",
       "dropText": "Mətn əlavə etmək üçün buraxın",
@@ -7655,7 +7674,7 @@
     "topUpTitle": "Yuxarı doldurun və qənaət edin",
     "discount": "{{percent}}% endirim",
     "noDiscount": "Tam qiymət",
-    "total": "Ümumi ${{usd}}, DHB-də ödənilib",
+    "total": "Ümumi ${{usd}}, tokenlər-də ödənilib",
     "buy": "Kredit alın",
     "buying": "Ödəniş gözlənilir…",
     "bought": "{{count}} göndəriş krediti əlavə edildi",
@@ -7685,7 +7704,7 @@
     "skippedToast": "{{platforms}} ötürülüb: bu yazıda onlara lazım olan foto və ya video yoxdur.",
     "uploadFailed": "Çarpaz reklam üçün medianızı yükləmək mümkün olmadı.",
     "creditRules": "Hər bir yazı platforması üzrə kreditlər: X üçün {{x}}, Farcaster üçün {{farcaster}} və hər digər platforma üçün {{other}}. Planlaşdırılmış postlar planlaşdırdığınız zaman kreditlərdən istifadə edin.",
-    "payAsYouGoCredits": "Kredit bitib? Çatışmayan kreditlər göndərəndə hər biri ${{price}} qiymətinə DHB ilə alınır.",
+    "payAsYouGoCredits": "Kredit bitib? Çatışmayan kreditlər göndərəndə hər biri ${{price}} qiymətinə tokenlər ilə alınır.",
     "topUpCredits": "{{count}} kreditlər",
     "perCredit": "Hər kredit ${{price}}",
     "pendingApproval": "Farcaster tətbiqində dehub-u təsdiq etməyiniz gözlənilir",
@@ -7697,7 +7716,7 @@
   "dm": {
     "planRestricted": "Bu istifadəçi mesaj almaq üçün abunəlik tələb edir.",
     "planTypeNotAllowed": "Bu yaradıcının planı bu növ mesaja icazə vermir.",
-    "planMinTip": "Bu yaradıcı üçün bəxşiş ən azı {{amount}} DHB olmalıdır."
+    "planMinTip": "Bu yaradıcı üçün bəxşiş ən azı {{amount}} tokenlər olmalıdır."
   },
   "credits": {
     "earningsWorth": "Dəyər {{amount}}",
@@ -7825,12 +7844,12 @@
       "notifyKey": "Bildirim anahtarı",
       "notifyKeyOnce": "{{name}} üçün yeni bildirim anahtarı. Artıq göstərməyəcək, yenisi əvəzləyəcək.",
       "payTitle": "Ödənişlər",
-      "payBody": "pay() istifadəçini sizin dehub.json-u imzalayan cibxaranıza DHB göndərməyə dəvət edir. Ödənişinizi serverdə təsdiq edin, sonra heç bir şeyi göndərməyin.",
+      "payBody": "pay() istifadəçini sizin dehub.json-u imzalayan cibxaranıza tokenlər göndərməyə dəvət edir. Ödənişinizi serverdə təsdiq edin, sonra heç bir şeyi göndərməyin.",
       "notifyTitle": "Bildirimlər göndər",
       "notifyBody": "Sizin applarınızı əlavə edən istifadəçilərinizi serverdan bildirim anahtarı ilə bildirə bilərsiniz. Her istifadəçi üçün token saxlamaya ehtiyac yoxdur.",
       "rankTitle": "Mağaza tətbiqləri necə sıralayır",
       "rankBody": "Hər gecə elanı yerləşdirilmiş tətbiqdən bir xal əldə edilir: geri qayıdan istifadəçilərdən (bu həftə və bir həftə əvvəl açılmış şəxslər) 55%, həftəlik istifadəçilərdən 35% və üstəgəl ilk 14 gündə 10% artım. Yalnız imzalanmış DeHub hesabları nəzərə alınır, buna görə də botlar və səhifənin yenidən yüklənməsi heç bir şey qazanmır.",
-      "rewardsBody": "Hər ay {{pool}} DHB tətbiqlər arasında həftəlik hesablanan eyni hesabla paylaşılır. Uyğun olmaq üçün tətbiqin təsdiqlənmiş sahib cüzdanına və ən azı 3 geri qayıdan istifadəçiyə ehtiyacı var. Mükafatlar sahibinin cüzdanına DeHub tərəfindən ödənilir.",
+      "rewardsBody": "Hər ay {{pool}} tokenlər tətbiqlər arasında həftəlik hesablanan eyni hesabla paylaşılır. Uyğun olmaq üçün tətbiqin təsdiqlənmiş sahib cüzdanına və ən azı 3 geri qayıdan istifadəçiyə ehtiyacı var. Mükafatlar sahibinin cüzdanına DeHub tərəfindən ödənilir.",
       "rewardsWeek": "{{date}} həftəsi",
       "rewardPaid": "Ödənilib",
       "rewardPending": "Gözləmədədir"
@@ -7855,10 +7874,10 @@
     },
     "pay": {
       "title": "{{name}}-ni ödə?",
-      "body": "DHB doğrudan appların cibxaranına gedir, {{wallet}}. Ödənişlər geri qaytarıla bilməz.",
-      "confirm": "{{amount}} DHB ödə",
+      "body": "tokenlər doğrudan appların cibxaranına gedir, {{wallet}}. Ödənişlər geri qaytarıla bilməz.",
+      "confirm": "{{amount}} tokenlər ödə",
       "sending": "Ödənişiniz göndərilir…",
-      "sent": "{{amount}} DHB-ni {{name}}-ə ödədiniz.",
+      "sent": "{{amount}} tokenlər-ni {{name}}-ə ödədiniz.",
       "noOwner": "Bu app hələ də təsdiqlənmiş bir cibxara ödəmək üçün yoxdur."
     },
     "add": {

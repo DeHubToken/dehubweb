@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Sell Fractions Drawer
  * =====================
@@ -44,8 +46,8 @@ export function SellFractionsDrawer({
 }: SellFractionsDrawerProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [quantity, setQuantity] = useState(0);
-  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useSurfaceDraft("src/components/app/fractions/SellFractionsDrawer.tsx:quantity", 0, `${chainId}:${tokenId}`);
+  const [price, setPrice] = useSurfaceDraft("components/app/fractions/SellFractionsDrawer.tsx:price", '', `${chainId}:${tokenId}`);
   const createListing = useCreateListing();
 
   const { data: balance, isLoading: loadingBalance } = useFractionBalance(tokenId, chainId);
@@ -80,12 +82,12 @@ export function SellFractionsDrawer({
     if (!open) return;
     // Default to a tenth of what you hold — a sensible first sale that does not
     // silently dump someone's whole position because they dragged too far.
-    setQuantity(sellable > 0 ? Math.max(1, Math.floor(sellable / 10)) : 0);
-    setPrice(floorPrice ? String(floorPrice) : '');
+    setQuantity.initialize(sellable > 0 ? Math.max(1, Math.floor(sellable / 10)) : 0);
+    setPrice.initialize(floorPrice ? String(floorPrice) : '');
     // Only when the drawer opens; re-running on every balance tick would fight
     // the user's own edits.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, setPrice, setQuantity]);
 
   const prc = parseFloat(price) || 0;
   const total = quantity * prc;
@@ -203,7 +205,7 @@ export function SellFractionsDrawer({
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pr-16 text-white placeholder:text-white/30 outline-none focus:border-white/30 transition-colors [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-sm">
-                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                   </span>
                 </div>
               </div>
@@ -217,7 +219,7 @@ export function SellFractionsDrawer({
                 <div className="flex justify-between text-sm border-t border-white/10 pt-2">
                   <span className="text-white font-medium">{t('fractions.youReceive')}</span>
                   <span className="text-white font-bold flex items-center gap-1.5">
-                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                    <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                     {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </span>
                 </div>

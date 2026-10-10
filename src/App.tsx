@@ -212,6 +212,7 @@ const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 // only worth downloading once someone opens the canvas, not with /creator.
 const CreatorFlowPage = React.lazy(() => import("./pages/app/CreatorFlowPage"));
 const CreatorFlowPublicPage = React.lazy(() => import("./pages/app/CreatorFlowPublicPage"));
+const MaboroshiPage = React.lazy(() => import("./pages/app/MaboroshiPage"));
 // Eager import — the referral lander is a new user's first touch of DeHub and
 // must paint instantly; it renders outside WalletProviders (see App below) so
 // it never waits on the ~1.5 MB wallet chunk either.
@@ -524,6 +525,7 @@ function AppContent() {
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator/flow" element={<Suspense fallback={<PageLoader />}><CreatorFlowPage /></Suspense>} />
+          <Route path="/creator/maboroshi" element={<Suspense fallback={<PageLoader />}><MaboroshiPage /></Suspense>} />
           <Route path="/creator/flow/:id" element={<Suspense fallback={<PageLoader />}><CreatorFlowPublicPage /></Suspense>} />
           {/* /r/:code renders in the top-level Routes (outside WalletProviders) — see App below */}
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />

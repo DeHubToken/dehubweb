@@ -90,6 +90,7 @@
     "heading": "DeHub Video surunw"
   },
   "settings": {
+    "postingChain": "Blokisɛn min bɛ kɛ postiw la",
     "showOnline": "N'i be n' ka site web kan, i ka n' ka site web yira",
     "showOnlineDesc": "Mɔgɔ minw be kuma, olu be yɔrɔ dɔ ye i tɔgɔ gɛrɛfɛ n'i be DeHub ta",
     "smartReplies": "Jaabi fɔlenw",
@@ -258,6 +259,7 @@
     "light": "Kɔrɔbɔ",
     "dark": "Kɔrɔbɔ",
     "system": "Kɔrɔbɔ",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Su fiɲɛmanw",
     "swarms": "Jama caman",
@@ -585,7 +587,7 @@
     "stageDelivering": "O kɔ, a ye wari di a ma.",
     "payViaDpay": "DeHub ka wari sara, tagamasiyɛnw be se ka kɛ saan 30 ɲɔgɔn kɔnɔ",
     "payViaBridgeDpay": "O kɔ, a ye wari di a ma. A ye wari di a ma.",
-    "dmSent": "{{amount}} DHB cira {{name}} ma!"
+    "dmSent": "{{amount}} o ye koo ɲuman ye. cira {{name}} ma!"
   },
   "postOptions": {
     "options": "Kɔrɔbɔ",
@@ -1175,10 +1177,10 @@
   },
   "dhbListing": {
     "title": "Tokɛn bɛna sɔrɔ sɔɔni!",
-    "body": "$DHB ma san ni feere daminɛ fɔlɔ. I bɛna email sɔrɔ a bɔli waati la.",
+    "body": "o ye koo ɲuman ye. ma san ni feere daminɛ fɔlɔ. I bɛna email sɔrɔ a bɔli waati la.",
     "notifyMe": "N kibaro",
-    "privacy": "An bɛna nin kɛ dɔrɔn ka i kibaro $DHB bɔli la.",
-    "joined": "I bɛ lisi kɔnɔ. An bɛna email ci {{email}} ma $DHB bɔli waati la."
+    "privacy": "An bɛna nin kɛ dɔrɔn ka i kibaro o ye koo ɲuman ye. bɔli la.",
+    "joined": "I bɛ lisi kɔnɔ. An bɛna email ci {{email}} ma o ye koo ɲuman ye. bɔli waati la."
   },
   "explorePage": {
     "searchPlaceholder": "Dɔ, kɔrɔbɔw, fɔlɔw fɛɛrɛ...",
@@ -3419,7 +3421,7 @@
     "srHeading": "Fanga be mɔgɔ minw na, olu ka kan ka kɛ ten.",
     "phaseBadge": "Fɔɔ ka taga se a daminɛ na, a ka ɲi ka kɛ ni miiriya ɲuman ye",
     "heroTitle": "Ka baara kɛ ni mɔgɔ ye",
-    "heroSubtitle": "DHB ka bonding kurukuru. Uniswap ka diplomu sɔrɔ $ 42K ka jago la.",
+    "heroSubtitle": "o ye koo ɲuman ye. ka bonding kurukuru. Uniswap ka diplomu sɔrɔ $ 42K ka jago la.",
     "createCoin": "Ka wari yɛlɛma",
     "filterNew": "O ye koo kura ye.",
     "filterGraduating": "A ye kalan kɛ ka ban",
@@ -3514,7 +3516,7 @@
   },
   "fractions": {
     "seoTitle": "Fanga be mɔgɔ minw na, olu ka kan ka kɛ ten.",
-    "seoDescription": "DeHub post tilaw san ani k'u feere. Post min mintilen don, o ye tilaw 1000 ye blockchain kan — video, mizikikan walima ja dɔ yɔrɔ dɔ ta ka jago kɛ n'a ye DHB la.",
+    "seoDescription": "DeHub post tilaw san ani k'u feere. Post min mintilen don, o ye tilaw 1000 ye blockchain kan — video, mizikikan walima ja dɔ yɔrɔ dɔ ta ka jago kɛ n'a ye o ye koo ɲuman ye. la.",
     "title": "Tilaw",
     "perUpload": "10000 ka baara kɛ ɲɔgɔn fɛ",
     "tabPortfolio": "Fanga min be sɔrɔ o la",
@@ -4319,7 +4321,7 @@
   },
   "usernames": {
     "seoTitle": "Fɛɛn min be se ka kɛ a ka baara la",
-    "seoDescription": "I ka DeHub tɔgɔw san ani k'u feere DHB fɛ. I be se ka sɛbɛ dɔw ɲini minw be se ka feere, wala i yɛrɛ ka sɛbɛ dɔw ɲini minw be se ka feere.",
+    "seoDescription": "I ka DeHub tɔgɔw san ani k'u feere o ye koo ɲuman ye. fɛ. I be se ka sɛbɛ dɔw ɲini minw be se ka feere, wala i yɛrɛ ka sɛbɛ dɔw ɲini minw be se ka feere.",
     "title": "Tɔgɔw",
     "subtitle": "An ka wari be se ka kɛ wari ye min be se ka kɛ wari ye.",
     "tabSell": "Fɛɛn min be feere",
@@ -6037,17 +6039,17 @@
   },
   "docs": {
     "seoTitle": "Documentation DeHub — Guides, token, dApps et FAQ",
-    "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token DHB, staking, jeux, feuille de route, FAQ et plus encore."
+    "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token o ye koo ɲuman ye., staking, jeux, feuille de route, FAQ et plus encore."
   },
   "dex": {
-    "seoTitle": "Dddd — Trade DHB at your price",
-    "seoDescription": "I ka DHB san walima ka feere ni Uniswap v4 hakɛ dɔ ye min be sɔrɔ BNB ka jɔrɔkɔ kan. O la, an bena a ye ko an ye wari min sɔrɔ, o ye wari min ye, o ye wari min ye.",
+    "seoTitle": "Dddd — Trade o ye koo ɲuman ye. at your price",
+    "seoDescription": "I ka o ye koo ɲuman ye. san walima ka feere ni Uniswap v4 hakɛ dɔ ye min be sɔrɔ BNB ka jɔrɔkɔ kan. O la, an bena a ye ko an ye wari min sɔrɔ, o ye wari min ye, o ye wari min ye.",
     "venue": "Network",
     "marketPrice": "Market price · USD",
     "bookPrice": "{{chain}} book price · USD",
     "change24": "24h change",
     "totalLiquidity": "Total liquidity · USD",
-    "listedDhb": "Listed DHB · {{chain}}",
+    "listedDhb": "Listed o ye koo ɲuman ye. · {{chain}}",
     "listedUsd": "Listed USD · {{chain}}",
     "refreshMarket": "Refresh market",
     "refresh": "Refresh",
@@ -6072,21 +6074,21 @@
     "orderBook": "Order book",
     "priceGrouping": "Price grouping",
     "priceUsd": "Price (USD)",
-    "sizeDhb": "Size (DHB)",
-    "totalDhb": "Total (DHB)",
+    "sizeDhb": "Size (o ye koo ɲuman ye.)",
+    "totalDhb": "Total (o ye koo ɲuman ye.)",
     "noBids": "No bids yet",
     "noAsks": "Ne ma deli ka wari sɔrɔ fɔlɔ",
     "useBuyPrice": "Use {{price}} as buy price",
     "useSellPrice": "Use {{price}} as sell price",
     "spread": "Spread · USD",
-    "buyTotal": "Buy {{amount}} DHB",
-    "sellTotal": "Sell {{amount}} DHB",
+    "buyTotal": "Buy {{amount}} o ye koo ɲuman ye.",
+    "sellTotal": "Sell {{amount}} o ye koo ɲuman ye.",
     "placeOrder": "Place an order",
     "lpFee": "0% LP fee",
     "lpFeeLabel": "LP fee",
     "lpFeeValue": "{{fee}}% LP fee",
-    "buy": "Buy DHB",
-    "sell": "Sell DHB",
+    "buy": "Buy o ye koo ɲuman ye.",
+    "sell": "Sell o ye koo ɲuman ye.",
     "maxBuy": "Maximum buy price",
     "minSell": "Minimum sell price",
     "spend": "Spend",
@@ -6102,14 +6104,14 @@
     "estimated": "Estimated full conversion",
     "network": "Funding network",
     "sellBelowMarket": "O ye {{percent}}% ye ka tɛmɛ ${{price}} kan. Mɔgɔ dɔ be se k'a san ani k'a feere yɔrɔ wɛrɛ joona joona.",
-    "buyAboveMarket": "O san ye {{percent}}% ye ka tɛmɛ ${{price}} kan. I bena wari caaman sara ka tɛmɛ DHB ka jagokow kan yɔrɔ wɛrɛw la.",
+    "buyAboveMarket": "O san ye {{percent}}% ye ka tɛmɛ ${{price}} kan. I bena wari caaman sara ka tɛmɛ o ye koo ɲuman ye. ka jagokow kan yɔrɔ wɛrɛw la.",
     "useMarket": "Fɛɛn minw be se k'an dɛmɛ ka baara kɛ ni duniɲa",
     "balanceError": "O la, a tun be se ka kɛ ko a tun ye mɔgɔ dɔ ye min tun ye mɔgɔ dɔ ye.",
     "noFunding": "No {{token}} on {{chain}}",
     "prepareFailed": "A tun tɛ se ka lɔyɔrɔ labɛn",
     "reviewYourBuy": "Ka taga a san",
     "reviewYourSell": "Ka taga bɔ i ka soo",
-    "reviewRange": "Range: {{min}} – {{max}} USD per DHB.",
+    "reviewRange": "Range: {{min}} – {{max}} USD per o ye koo ɲuman ye..",
     "initializes": "O be se ka kɛ ni 0% ye.",
     "pendingNote": "I ka baara kɛra. N'i ye mɔgɔ dɔ weele ka na i ka soo, i ka kan k'a fɔ ko i ye mɔgɔ dɔ weele ka na i ka soo",
     "viewTransaction": "Ka baara kɛ ni mɔgɔ dɔ ye",
@@ -6251,6 +6253,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Filimu jaa yɔrɔbaaw",
+      "visualPrivacy": "Filimu jaa sugandilenw ci ka u sɛgɛsɛgɛ."
+    },
+    "review": {
+      "title": "Porozɛ lajɛ",
+      "shared": "I fɛ tila",
+      "time": "Waati (s)",
+      "assign": "Warimarayɔrɔ sugandi"
+    },
+    "textFit": {
+      "wrap": "Sɛbɛnni tɔgɔw tilan",
+      "width": "Sɛbɛnni bonya",
+      "shrink": "Sɛbɛnni dɔgɔya ka a bɛn",
+      "height": "Sɛbɛnni janya",
+      "captions": "Sɛbɛnni sira bɛn"
+    },
     "canvas": {
       "dropMedia": "A bila yan ka a fara i ka desɛn kan",
       "dropText": "A bila yan ka sɛbɛn fara a kan",
@@ -7580,7 +7599,7 @@
     "topUpTitle": "Kredi fara a kan ka wari mara",
     "discount": "{{percent}}% off",
     "noDiscount": "Full price",
-    "total": "A bɛɛ lajɛlen ye ${{usd}} ye, a sara DHB la",
+    "total": "A bɛɛ lajɛlen ye ${{usd}} ye, a sara o ye koo ɲuman ye. la",
     "buy": "Buy credits",
     "buying": "Sara makɔnɔni…",
     "bought": "Added {{count}} post credits",
@@ -7610,7 +7629,7 @@
     "skippedToast": "Skipped {{platforms}}: o kunnafoni tɛ ni foto wala videwo ye u mako be min na.",
     "uploadFailed": "Ne tun tɛ se ka n ka kunnafoniw bila a kan ka tɛmɛ a kan.",
     "creditRules": "O baara kelen kelen bɛɛ be wari di mɔgɔ ma: {{x}} for X, {{farcaster}} for Farcaster ani {{other}} for each other platform. O la, a ka ɲi ka kɛ ni juruw ye.",
-    "payAsYouGoCredits": "N'i ye wari min sɔrɔ, i be se k'o san DHB kɔnɔ ${{price}} kelen kelen bɛɛ n'i ye kunnafoni dɔ ci.",
+    "payAsYouGoCredits": "N'i ye wari min sɔrɔ, i be se k'o san o ye koo ɲuman ye. kɔnɔ ${{price}} kelen kelen bɛɛ n'i ye kunnafoni dɔ ci.",
     "topUpCredits": "{{count}} credits",
     "perCredit": "${{price}} per credit",
     "pendingApproval": "I be kɔnɔni kɛra ka dehub labato Farcaster ka porogramu kɔnɔ",
@@ -7622,7 +7641,7 @@
   "dm": {
     "planRestricted": "Nin baarakɛla mago bɛ abɔnman na walasa ka cikanw sɔrɔ.",
     "planTypeNotAllowed": "Nin dabɔbaga ka labɛn tɛ nin cikan suguya sɔn.",
-    "planMinTip": "Nin dabɔbaga ye, tɛpu ka kan ka kɛ {{amount}} DHB ye a dɔgɔyali la."
+    "planMinTip": "Nin dabɔbaga ye, tɛpu ka kan ka kɛ {{amount}} o ye koo ɲuman ye. ye a dɔgɔyali la."
   },
   "credits": {
     "earningsWorth": "A sɔngɔ ye {{amount}} ye",
@@ -7750,12 +7769,12 @@
       "notifyKey": "Notify key",
       "notifyKeyOnce": "O ye kunnafoni kura ye min be se k'an dɛmɛ ka {{name}} I ka sɛbɛ nin kopi sisan: a yirala siɲɛ kelen, ka dɔ wɛrɛ ta k'a nɔɔ ta.",
       "payTitle": "Take payments",
-      "payBody": "pay() k'a ɲini a fɛ a ka DHB ci i ma, ka taga a fɔ a ye ko a ye dehub.json sɛbɛn. I ka baara kɛyɔrɔ lajɛ ka sɔrɔ ka fɛɛn dɔ ci.",
+      "payBody": "pay() k'a ɲini a fɛ a ka o ye koo ɲuman ye. ci i ma, ka taga a fɔ a ye ko a ye dehub.json sɛbɛn. I ka baara kɛyɔrɔ lajɛ ka sɔrɔ ka fɛɛn dɔ ci.",
       "notifyTitle": "Send notifications",
       "notifyBody": "Mɔgɔ minw b'i ka porogramu dɔ fara a kan, olu be se ka kunnafoni sɔrɔ i ka baarada fɛ i ka kunnafoni jɔnjɔn fɛ. O kama, a tun man kan ka to ka taga n'a ye.",
       "rankTitle": "I be se ka baara kɛ cogo di ni layisenw ye?",
       "rankBody": "Lɔgɔkun o lɔgɔkun, mɔgɔ 55 lo be segin ka na a ka baara la (mɔgɔ minw y'a yɛlɛ lɔgɔkun nin na ani lɔgɔkun tɛmɛnin na), mɔgɔ 35 lo be na a ka baara la lɔgɔkun o lɔgɔkun, ani mɔgɔ 10 lo be fara a ka baara kan tile 14 kɔnɔ. DeHub ka ladɛrɛsiw dɔrɔn lo be jati, o la, botw ni ɲɛɛw ka ladɛrɛsiw tɛ foyi sɔrɔ.",
-      "rewardsBody": "Kalo o kalo, {{pool}} DHB be tilan ɲɔgɔn cɛ ka kɛɲɛ ni a ka hakɛ ye, min be jati lɔgɔkun o lɔgɔkun. Walisa ka se ka baara kɛ, a ka ɲi ka kɛ ni sɛbɛ dɔ ye min be se ka kɛ a tigi ka sɛbɛ ye ani a ka ɲi ka kɛ ni mɔgɔ 3 ye minw be segi ka na. DeHub ye wari min di a tigi ma, a b'o di a tigi ma.",
+      "rewardsBody": "Kalo o kalo, {{pool}} o ye koo ɲuman ye. be tilan ɲɔgɔn cɛ ka kɛɲɛ ni a ka hakɛ ye, min be jati lɔgɔkun o lɔgɔkun. Walisa ka se ka baara kɛ, a ka ɲi ka kɛ ni sɛbɛ dɔ ye min be se ka kɛ a tigi ka sɛbɛ ye ani a ka ɲi ka kɛ ni mɔgɔ 3 ye minw be segi ka na. DeHub ye wari min di a tigi ma, a b'o di a tigi ma.",
       "rewardsWeek": "Dɔgɔkun hakilila-nyuma: {{date}}",
       "rewardPaid": "A sara",
       "rewardPending": "Ka kɔnɔni kɛ",
@@ -7781,10 +7800,10 @@
     },
     "pay": {
       "title": "Pay {{name}}?",
-      "body": "DHB be taga a ka baara kɛyɔrɔ la, {{wallet}}. O kama, wari tɛ sɔrɔ o baaraw la.",
-      "confirm": "Pay {{amount}} DHB",
+      "body": "o ye koo ɲuman ye. be taga a ka baara kɛyɔrɔ la, {{wallet}}. O kama, wari tɛ sɔrɔ o baaraw la.",
+      "confirm": "Pay {{amount}} o ye koo ɲuman ye.",
       "sending": "An wolola walisa ka wari sara.",
-      "sent": "Ddddd {{amount}}DHB to {{name}}.",
+      "sent": "Ddddd {{amount}}o ye koo ɲuman ye. to {{name}}.",
       "noOwner": "O app ma wari sɔrɔ fɔlɔ."
     },
     "add": {

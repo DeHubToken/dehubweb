@@ -1,24 +1,47 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Mic, Square, Loader2 } from 'lucide-react';
+import { Mic, Square } from 'lucide-react';
 import { toast } from 'sonner';
+import { createVoiceRecorder, voiceRecordingBlob, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';
 
 interface VoiceRecorderProps {
   onRecordingComplete: (audioBlob: Blob, duration: number) => void;
   disabled?: boolean;
+  maxDuration?: number;
 }
 
-export function VoiceRecorder({ onRecordingComplete, disabled }: VoiceRecorderProps) {
+export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOICE_RECORDING_SECONDS }: VoiceRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const startingRef = useRef(false);
+  const mountedRef = useRef(false);
+  const completeRef = useRef(onRecordingComplete);
+  completeRef.current = onRecordingComplete;
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (timerRef.current) clearInterval(timerRef.current);
+      const recorder = mediaRecorderRef.current;
+      if (recorder) {
+        recorder.onstop = null;
+        if (recorder.state !== 'inactive') recorder.stop();
+        recorder.stream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
 
   const startRecording = useCallback(async () => {
+    if (startingRef.current || mediaRecorderRef.current?.state === 'recording') return;
+    startingRef.current = true;
+    let stream: MediaStream | undefined;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
+      stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
@@ -26,11 +49,8 @@ export function VoiceRecorder({ onRecordingComplete, disabled }: VoiceRecorderPr
         } 
       });
       
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') 
-          ? 'audio/webm;codecs=opus' 
-          : 'audio/webm'
-      });
+      if (!mountedRef.current) { stream.getTracks().forEach(track => track.stop()); return; }
+      const mediaRecorder = createVoiceRecorder(stream);
       
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
@@ -43,14 +63,15 @@ export function VoiceRecorder({ onRecordingComplete, disabled }: VoiceRecorderPr
       };
       
       mediaRecorder.onstop = () => {
-        const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const duration = (Date.now() - startTimeRef.current) / 1000;
+        const blob = voiceRecordingBlob(chunksRef.current, mediaRecorder.mimeType);
         
         // Stop all tracks
-        stream.getTracks().forEach(track => track.stop());
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        mediaRecorderRef.current = null;
         
-        if (blob.size > 0 && duration > 0) {
-          onRecordingComplete(blob, duration);
+        if (blob.size > 0 && duration > 0.5 && mountedRef.current) {
+          completeRef.current(blob, Math.round(duration * 10) / 10);
         }
         
         // Clear timer
@@ -60,6 +81,18 @@ export function VoiceRecorder({ onRecordingComplete, disabled }: VoiceRecorderPr
         }
         
         setRecordingDuration(0);
+        setIsRecording(false);
+      };
+
+      mediaRecorder.onerror = () => {
+        mediaRecorder.onstop = null;
+        mediaRecorder.stream.getTracks().forEach(track => track.stop());
+        mediaRecorderRef.current = null;
+        if (timerRef.current) clearInterval(timerRef.current);
+        if (mountedRef.current) {
+          setIsRecording(false);
+          toast.error('Could not access microphone');
+        }
       };
       
       mediaRecorder.start(100); // Collect data every 100ms
@@ -67,19 +100,24 @@ export function VoiceRecorder({ onRecordingComplete, disabled }: VoiceRecorderPr
       
       // Start duration timer
       timerRef.current = setInterval(() => {
-        setRecordingDuration(Math.floor((Date.now() - startTimeRef.current) / 1000));
-      }, 1000);
+        const elapsed = (Date.now() - startTimeRef.current) / 1000;
+        setRecordingDuration(Math.floor(elapsed));
+        if (elapsed >= maxDuration && mediaRecorder.state === 'recording') mediaRecorder.stop();
+      }, 100);
       
     } catch (error) {
+      stream?.getTracks().forEach(track => track.stop());
+      mediaRecorderRef.current = null;
       console.error('Error accessing microphone:', error);
       toast.error('Could not access microphone');
+    } finally {
+      startingRef.current = false;
     }
-  }, [onRecordingComplete]);
+  }, [maxDuration]);
 
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
-      setIsRecording(false);
     }
   }, []);
 

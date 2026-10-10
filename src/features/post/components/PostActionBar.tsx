@@ -59,6 +59,8 @@ interface PostActionBarProps {
   hasPoll?: boolean;
   /** One more toolbar control after the emoji picker — the cross-post icon. */
   extraTool?: React.ReactNode;
+  /** No Go Live control — a quote cannot be a livestream. */
+  hideLive?: boolean;
 }
 
 export function PostActionBar({
@@ -97,6 +99,7 @@ export function PostActionBar({
   onTogglePoll,
   hasPoll,
   extraTool,
+  hideLive = false,
 }: PostActionBarProps) {
   const { t } = useTranslation();
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
@@ -459,7 +462,7 @@ export function PostActionBar({
         {/* Always present. Hiding it once an image was attached left live mode
             with no way back off it, now that a cover is a normal thing to
             attach to a stream. */}
-        {(
+        {!hideLive && (
           <Popover open={livePopoverOpen} onOpenChange={setLivePopoverOpen} modal={true}>
             <PopoverTrigger asChild>
               <button 

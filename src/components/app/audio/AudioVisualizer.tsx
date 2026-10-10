@@ -1058,7 +1058,7 @@ export function AudioVisualizer({
           invisible-but-clickable box swallowed every press aimed at the
           waveform underneath it. */}
       <div data-audio-controls className="absolute inset-x-0 bottom-0 z-20 pointer-events-none">
-        <div data-audio-scrub-surface className="absolute inset-x-0 bottom-0 h-12 touch-pan-y pointer-events-auto" />
+        <div data-audio-scrub-surface className="absolute inset-x-0 bottom-0 h-16 touch-none pointer-events-auto" />
         {/* Video-style play/countdown and tools above the edge scrubber.
             The style picker gives up width and scrolls before buttons clip. */}
         <div
@@ -1181,6 +1181,7 @@ export function AudioVisualizer({
         )}
         </div>
           <div
+            data-scrub-track
             role="slider"
             tabIndex={0}
             aria-label="Seek"
@@ -1188,8 +1189,8 @@ export function AudioVisualizer({
             aria-valuemax={Math.max(0, Math.round(duration))}
             aria-valuenow={Math.max(0, Math.round(displayTime))}
             aria-valuetext={`${formatTime(displayTime)} of ${formatTime(duration)}`}
-            className="absolute inset-x-0 bottom-0 h-[3px] cursor-pointer outline-none pointer-events-auto focus-visible:ring-2 focus-visible:ring-white"
-            style={{ touchAction: 'pan-y' }}
+            className="absolute inset-x-0 bottom-0 h-3.5 cursor-pointer outline-none pointer-events-auto focus-visible:ring-2 focus-visible:ring-white"
+            style={{ touchAction: 'none' }}
             onKeyDown={handleSeekKeyDown}
           >
             <div className="absolute inset-x-0 bottom-0 h-[3px] border-[0.5px] border-black/65 bg-white/30" />

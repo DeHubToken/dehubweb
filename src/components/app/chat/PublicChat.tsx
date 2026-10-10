@@ -1,3 +1,5 @@
+import { useDraftState } from "@/hooks/use-draft-state";
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X, Languages, RotateCcw } from 'lucide-react';
@@ -87,10 +89,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   // Search state
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/PublicChat.tsx:searchQuery", '');
 
   // Reply state
-  const [replyTo, setReplyTo] = useState<Message | null>(null);
 
   // Translation state
   const [translateSignal, setTranslateSignal] = useState(0);
@@ -100,6 +101,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Fetch rooms, use the first available room
   const { rooms, isLoading: roomsLoading, error: roomsError, refetch: refetchRooms } = useLiveChatRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [replyTo, setReplyTo] = useDraftState<Message | null>(selectedRoomId ? `room:${selectedRoomId}:reply` : null, null);
   const [createRoomOpen, setCreateRoomOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -197,11 +199,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
       if (!prev) {
         setTimeout(() => searchInputRef.current?.focus(), 100);
       } else {
-        setSearchQuery('');
+        setSearchQuery.complete(searchQuery, '');
       }
       return !prev;
     });
-  }, []);
+  }, [setSearchQuery, searchQuery]);
 
   const handleTranslateAll = useCallback(() => {
     if (isAllTranslated) {
@@ -222,11 +224,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
-  }, []);
+  }, [setReplyTo]);
 
   const handleCancelReply = useCallback(() => {
-    setReplyTo(null);
-  }, []);
+    setReplyTo.complete(replyTo, null);
+  }, [replyTo, setReplyTo]);
 
   // Runs before the composer lets go of anything, so a refused attachment
   // leaves the text and the file in place with the reason on screen instead
@@ -242,9 +244,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, []);
 
   const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string; mediaFile?: File; duration?: number }) => {
-    if (!isAuthenticated || !selectedRoomId) return;
+    if (!isAuthenticated || !selectedRoomId) return false;
     const replyToId = replyTo?.id;
-    setReplyTo(null); // Clear reply after sending
     try {
       if (args.type === 'media' && args.mediaFile) {
         const { url: imageUrl } = await uploadChatImage(args.mediaFile);
@@ -260,9 +261,12 @@ export function PublicChat({ onBack }: PublicChatProps) {
       } else {
         await send(args.content || '', 'text', undefined, replyToId);
       }
+      setReplyTo(current => current?.id === replyToId ? null : current);
+      return true;
     } catch (err) {
       console.error('[PublicChat] Send failed:', err);
       toast.error('Failed to send message');
+      return false;
     }
   };
 
@@ -533,6 +537,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
           </div>
         )}
         <ChatInput
+        voiceMaxDuration={29}
           onSendMessage={handleSendMessage}
           canSend={canSendPublic}
           allowDocuments={false}

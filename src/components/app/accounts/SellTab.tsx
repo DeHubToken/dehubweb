@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Sell Tab
  * ========
@@ -44,8 +46,8 @@ export function SellTab() {
   const createListing = useCreateAccountListing();
   const cancelListing = useCancelAccountListing();
 
-  const [priceDhb, setPriceDhb] = useState('');
-  const [description, setDescription] = useState('');
+  const [priceDhb, setPriceDhb] = useSurfaceDraft("components/app/accounts/SellTab.tsx:priceDhb", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/accounts/SellTab.tsx:description", '');
 
   const active = mine?.listings.find(l => l.status === 'active');
   const history = (mine?.listings || []).filter(l => l.status !== 'active');
@@ -53,11 +55,11 @@ export function SellTab() {
   // Seed the form from an existing listing so "list" doubles as "edit".
   useEffect(() => {
     if (!active) return;
-    setPriceDhb(String(active.priceDhb));
-    setDescription(active.description || '');
+    setPriceDhb.initialize(String(active.priceDhb));
+    setDescription.initialize(active.description || '');
     // Keyed on the listing id: re-seeding on every refetch would eat edits.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active?.id]);
+  }, [active?.id, setDescription, setPriceDhb]);
 
   if (!isAuthenticated) {
     return (
@@ -220,7 +222,7 @@ function SaleRow({ sale, kind }: { sale: AccountSale; kind: 'sold' | 'bought' })
           </p>
         </div>
         <p className="text-sm font-semibold text-white flex items-center gap-1.5 shrink-0">
-          <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+          <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
           {sale.paidDhb.toLocaleString()}
         </p>
       </div>

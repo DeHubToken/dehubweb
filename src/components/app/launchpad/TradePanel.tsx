@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,7 +13,7 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
   const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth() as { walletAddress?: string; openLoginModal: () => void };
   const [side, setSide] = useState<'buy' | 'sell'>('buy');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/launchpad/TradePanel.tsx:amount", '');
   const [busy, setBusy] = useState(false);
   const disabled = token.status !== 'bonding';
 
@@ -22,7 +24,7 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
     setBusy(true);
     try {
       await mockTrade({ tokenId: token.id, side, amount: n, traderAddress: walletAddress });
-      setAmount('');
+      setAmount.complete(amount, '');
       toast.success(t(side === 'buy' ? 'launchpad.boughtMock' : 'launchpad.soldMock', { symbol: token.symbol }));
     } catch (e) {
       toast.error((e as Error)?.message ?? t('launchpad.tradeFailed'));
@@ -49,7 +51,7 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
         ))}
       </div>
       <div>
-        <label className="text-[11px] uppercase text-white/50">{t('launchpad.amountIn', { symbol: side === 'buy' ? 'DHB' : token.symbol })}</label>
+        <label className="text-[11px] uppercase text-white/50">{t('launchpad.amountIn', { symbol: side === 'buy' ? tokenLabel() : token.symbol })}</label>
         <input value={amount} onChange={e => setAmount(e.target.value.replace(/,/g, '.').replace(/[^0-9.]/g, ''))}
           inputMode="decimal" placeholder="0.00"
           className="mt-1 w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2.5 text-white text-lg font-semibold focus:outline-none focus:border-white/30" />

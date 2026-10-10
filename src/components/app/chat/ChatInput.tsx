@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
+import { voiceRecordingFile } from '@/lib/voice-recording';
 import { SmartReplyRail } from './SmartReplyRail';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
@@ -33,7 +34,7 @@ export interface ChatInputSendArgs {
 }
 
 interface ChatInputProps {
-  onSendMessage: (args: ChatInputSendArgs) => void;
+  onSendMessage: (args: ChatInputSendArgs) => Promise<boolean>;
   onTipClick?: () => void;
   /** Externally disable the send button (e.g. insufficient fee balance) */
   sendDisabled?: boolean;
@@ -88,9 +89,10 @@ interface ChatInputProps {
    * pass false rather than offer a file that will be refused on send.
    */
   allowDocuments?: boolean;
+  voiceMaxDuration?: number;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
@@ -239,8 +241,9 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     if (ta) ta.style.height = 'auto';
   };
 
+  const sendInFlight = useRef(false);
   const handleSend = async () => {
-    if (sendDisabled || isSendingFee) return;
+    if (sendDisabled || isSendingFee || sendInFlight.current) return;
     const pendingFile = imageFile || docFile || undefined;
     const pendingType: ChatInputSendArgs['type'] = audioPreview ? 'voice' : pendingFile ? 'media' : 'msg';
     if (pendingType === 'msg' && !message.trim()) return;
@@ -250,47 +253,53 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     // where it did, so it goes down with the send and comes back up on the
     // next tail — as follow-ups, since the user now holds the last word.
     setRailDismissed(true);
+    sendInFlight.current = true;
+    try {
     if (audioPreview) {
-      onSendMessage({
+      const sent = await onSendMessage({
         content: '',
         type: 'voice',
         mediaFile: audioPreview.file,
         duration: audioPreview.duration,
       });
+      if (!sent) return;
       setAudioPreview(null);
-      setMessage('');
+      setMessage.complete(message, '');
       resetComposerHeight();
       return;
     }
 
     if (imageFile) {
-      onSendMessage({
+      const sent = await onSendMessage({
         content: message.trim(),
         type: 'media',
         mediaFile: imageFile,
       });
+      if (!sent) return;
       clearImage();
-      setMessage('');
+      setMessage.complete(message, '');
       resetComposerHeight();
       return;
     }
 
     if (docFile) {
-      onSendMessage({
+      const sent = await onSendMessage({
         content: message.trim(),
         type: 'media',
         mediaFile: docFile,
       });
+      if (!sent) return;
       clearDoc();
-      setMessage('');
+      setMessage.complete(message, '');
       resetComposerHeight();
       return;
     }
 
     if (!message.trim()) return;
-    onSendMessage({ content: message.trim(), type: 'msg' });
-    setMessage('');
+    if (!(await onSendMessage({ content: message.trim(), type: 'msg' }))) return;
+    setMessage.complete(message, '');
     resetComposerHeight();
+    } finally { sendInFlight.current = false; }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -379,7 +388,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   };
 
   const handleVoiceRecordingComplete = (blob: Blob, duration: number) => {
-    const file = new File([blob], `voice-${Date.now()}.webm`, { type: blob.type || 'audio/webm' });
+    const file = voiceRecordingFile(blob);
     setAudioPreview({ file, blob, duration });
     clearImage();
     toast.success(`Recording saved (${duration}s)`);
@@ -689,6 +698,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           )}
 
           <VoiceRecorder
+            maxDuration={voiceMaxDuration}
             onRecordingComplete={handleVoiceRecordingComplete}
             disabled={sendDisabled}
           />

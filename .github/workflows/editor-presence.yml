@@ -1,0 +1,28 @@
+name: Editor live presence
+on:
+  pull_request:
+    paths: ['server/editor-presence.ts', 'tests/editor/presence*', '.github/workflows/editor-presence.yml', 'CLOUDFLARE_WORKER_SEO.js', 'wrangler.jsonc']
+  push:
+    branches: [main]
+    paths: ['server/editor-presence.ts', 'tests/editor/presence*', '.github/workflows/editor-presence.yml', 'CLOUDFLARE_WORKER_SEO.js', 'wrangler.jsonc']
+permissions:
+  contents: read
+jobs:
+  transport:
+    name: Private editor WebSockets
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.32.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - name: Typecheck presence transport
+        run: pnpm exec tsc --noEmit --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --types node server/editor-presence.ts
+      - name: Real Workers engine, SQLite room and authenticated WebSockets
+        run: node tests/editor/presence-workerd.mjs

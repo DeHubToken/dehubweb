@@ -90,6 +90,7 @@
     "heading": "DeHub Uchuy videokuna"
   },
   "settings": {
+    "postingChain": "Qillqakunapaq blockchain",
     "showOnline": "Internetpi kachkaptiy qawachiy",
     "showOnlineDesc": "Runakuna willakuyniyki huk verde ch&#39;ikuta sutiykip ladunpi rikunku DeHub llamk&#39;achkanki",
     "smartReplies": "Ñisqa kutichiykuna",
@@ -259,6 +260,7 @@
     "light": "K'anchay",
     "dark": "Yana",
     "system": "Sistema",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Phuyu Tutakuna",
     "swarms": "Swarms",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay kachachkan tokennikunata…",
     "payViaDpay": "DeHub Payman pagasqa, tokenkuna jamun 30 segundokunapi hina",
     "payViaBridgeDpay": "Base ladoman pasasqa chaynataq DeHub Payman pagasqa, tokenkuna jamun huk minutopi hina",
-    "dmSent": "{{amount}} DHB {{name}}-man apachisqa!"
+    "dmSent": "{{amount}} fichas nisqakuna {{name}}-man apachisqa!"
   },
   "postOptions": {
     "options": "Akllakuna",
@@ -1204,10 +1206,10 @@
   },
   "dhbListing": {
     "title": "Token qillqakuyqa qayllapiña!",
-    "body": "$DHB manaraq rantinakunchu. Qillqakusqan pachallapi email chaskiy.",
+    "body": "fichas nisqakuna manaraq rantinakunchu. Qillqakusqan pachallapi email chaskiy.",
     "notifyMe": "Willaway",
-    "privacy": "Kayta $DHB qillqakuptin willanaykipaqlla llamk'achisaqku.",
-    "joined": "Listapiñam kanki. $DHB qillqakusqan pachallapi {{email}} nisqaman email apachisaqku."
+    "privacy": "Kayta fichas nisqakuna qillqakuptin willanaykipaqlla llamk'achisaqku.",
+    "joined": "Listapiñam kanki. fichas nisqakuna qillqakusqan pachallapi {{email}} nisqaman email apachisaqku."
   },
   "explorePage": {
     "searchPlaceholder": "Runata, churasqata icha willakuyta maskay...",
@@ -1467,7 +1469,7 @@
     "otherTokens": "Huk tokenkuna",
     "otherTokensDesc": "Base nisqapi ETH icha USDC rantiy tarjetaykiwan",
     "shareToFeed": "Mikhuyman rakinakuy",
-    "sharePostTemplate": "Chayraqmi {{amount}} $DHBta DeHub nisqapi pilayman yapasqa. Ayllu llaqtawan wasichakuy. #DeHub #DHB nisqa",
+    "sharePostTemplate": "Chayraqmi {{amount}} $DHBta DeHub nisqapi pilayman yapasqa. Ayllu llaqtawan wasichakuy. #DeHub nisqa",
     "success": {
       "title": "Compra Completo!",
       "subtitle": "Fichas nisqakunam billeteraykiman chayasqaña.",
@@ -1787,7 +1789,7 @@
     "descriptionMinLength": "Sut'inchay 20 sanampamanta aswan kanan",
     "successSubmitted": "Yuyaychay apachisqa!",
     "errorSubmitting": "Mana apachisqachu",
-    "errorVoting": "Voto mana allinchu. DHB token kanan.",
+    "errorVoting": "Voto mana allinchu. fichas nisqakuna token kanan.",
     "comments": "Rimay",
     "postComment": "Apachiy",
     "posting": "Apachispa...",
@@ -3521,7 +3523,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Phase 1 · Private preview",
     "heroTitle": "TOKENISE BUSINESS",
-    "heroSubtitle": "DHB-pariado kurva de unión. Uniswapman tukun $42K qhatu kapuyninwan.",
+    "heroSubtitle": "fichas nisqakuna-pariado kurva de unión. Uniswapman tukun $42K qhatu kapuyninwan.",
     "createCoin": "Create coin",
     "filterNew": "New",
     "filterGraduating": "About to graduate",
@@ -3619,7 +3621,7 @@
   },
   "fractions": {
     "seoTitle": "Fracciones nisqakuna | DeHub sutiyuq runa",
-    "seoDescription": "DeHub willakuykunap rakinkunata rantiy hinaspa rantikuy. Mintisqa willakuyqa 1000 on-chain rakikunam — huk video, taki utaq siq'ip huk t'aqanta kapuchikuy hinaspa DHB-pi rantinakuy.",
+    "seoDescription": "DeHub willakuykunap rakinkunata rantiy hinaspa rantikuy. Mintisqa willakuyqa 1000 on-chain rakikunam — huk video, taki utaq siq'ip huk t'aqanta kapuchikuy hinaspa fichas nisqakuna-pi rantinakuy.",
     "title": "Rakikuna",
     "perUpload": "1000 sapa cargamanta",
     "tabBrowse": "Navegar",
@@ -4465,7 +4467,7 @@
   },
   "usernames": {
     "seoTitle": "Ruraqpa sutin Qhatu | DeHub sutiyuq runa",
-    "seoDescription": "DeHub sutiyuq runap sutinkunata DHB nisqawan rantiy hinaspa rantiy. Maskay pisi, yupay chaymanta original hapinakuna rantiypaq, utaq lista kikiyki — transferencia cadena kaqpi ruwakun chay pacha qullqi quy ch&#39;uyanchasqa.",
+    "seoDescription": "DeHub sutiyuq runap sutinkunata fichas nisqakuna nisqawan rantiy hinaspa rantiy. Maskay pisi, yupay chaymanta original hapinakuna rantiypaq, utaq lista kikiyki — transferencia cadena kaqpi ruwakun chay pacha qullqi quy ch&#39;uyanchasqa.",
     "title": "Ruraqpa sutinkuna",
     "subtitle": "Asas rantikunapaq, USD nisqapi chanin",
     "tabBrowse": "Navegar",
@@ -4589,7 +4591,7 @@
   },
   "accounts": {
     "seoTitle": "Yupay qhatu wasi — DeHub",
-    "seoDescription": "DHB kaqpaq DeHub yupaykunata takyasqa rantiy chaymanta rantiy. Qatiqninkuna, kargakuna chaymanta edad kaqwan yupaykunata maskay — hapina, qillqakuna, qatiqninkuna chaymanta insignia derechokuna tukuy t&#39;inkisqa, chaymanta qullqi quy chiqan ranqhaqman rin.",
+    "seoDescription": "fichas nisqakuna kaqpaq DeHub yupaykunata takyasqa rantiy chaymanta rantiy. Qatiqninkuna, kargakuna chaymanta edad kaqwan yupaykunata maskay — hapina, qillqakuna, qatiqninkuna chaymanta insignia derechokuna tukuy t&#39;inkisqa, chaymanta qullqi quy chiqan ranqhaqman rin.",
     "title": "Kuentakuna",
     "subtitle": "Sumaq kaqkuna salt'asqa, DeHub tokenkunapi k'anchasqa",
     "tabBrowse": "Navegar",
@@ -6246,17 +6248,17 @@
   },
   "docs": {
     "seoTitle": "DeHub qillqakuna — Yachachikuykuna, token, dApps, tapukuykuna",
-    "seoDescription": "DeHub qillqa ofisial: plataforma qhawariy, dApps, DHB token qullqi kamay, staking, pukllaykuna, ñan kamay, tapukuykuna, aswan."
+    "seoDescription": "DeHub qillqa ofisial: plataforma qhawariy, dApps, fichas nisqakuna token qullqi kamay, staking, pukllaykuna, ñan kamay, tapukuykuna, aswan."
   },
   "dex": {
     "seoTitle": "DEX — DHBta munashkayki k'anchanpi ruway",
-    "seoDescription": "Base ichaqa BNB Chainpi Uniswap v4 limit orderwan DHB rantiy/rantiyta munashkayki k'anchanpi churay. Kawsay order book, merkado kachkaynin, hukllachasqa USD k'anchan.",
+    "seoDescription": "Base ichaqa BNB Chainpi Uniswap v4 limit orderwan fichas nisqakuna rantiy/rantiyta munashkayki k'anchanpi churay. Kawsay order book, merkado kachkaynin, hukllachasqa USD k'anchan.",
     "venue": "Network",
     "marketPrice": "Merkado k'anchan · USD",
     "bookPrice": "{{chain}} book k'anchan · USD",
     "change24": "24hta tikray",
     "totalLiquidity": "Total liquidity · USD",
-    "listedDhb": "Tariyta wañuchisqa DHB · {{chain}}",
+    "listedDhb": "Tariyta wañuchisqa fichas nisqakuna · {{chain}}",
     "listedUsd": "Tariyta wañuchisqa USD · {{chain}}",
     "refreshMarket": "Merkota musuqyachiy",
     "refresh": "Musuqyachiy",
@@ -6281,8 +6283,8 @@
     "orderBook": "Order book",
     "priceGrouping": "K'anchan tantiy",
     "priceUsd": "K'anchan (USD)",
-    "sizeDhb": "Chikchaynin (DHB)",
-    "totalDhb": "Sapaqnin (DHB)",
+    "sizeDhb": "Chikchaynin (fichas nisqakuna)",
+    "totalDhb": "Sapaqnin (fichas nisqakuna)",
     "noBids": "Manañataqmi urqurqankuchu",
     "noAsks": "Manañataqmi urqurqankuchu",
     "useBuyPrice": "{{price}}ta rantiytaqnin kasqan",
@@ -6311,7 +6313,7 @@
     "estimated": "Tukuyta tukuchiyta yachachiy",
     "network": "Qullqi churana",
     "sellBelowMarket": "Kay rantiyqa ${{price}} kasqan urquriytaqa {{percent}}% pisiy. Pipas rantiytaqmi chayta, chaynataqmi hukpi rantiytaqmi.",
-    "buyAboveMarket": "Kay rantiyqa {{percent}}% qhatu chaninmanta aswan hatunmi ${{price}}. Huklawkunapi DHB rantikuykunamanta aswan achkata pagawaq.",
+    "buyAboveMarket": "Kay rantiyqa {{percent}}% qhatu chaninmanta aswan hatunmi ${{price}}. Huklawkunapi fichas nisqakuna rantikuykunamanta aswan achkata pagawaq.",
     "useMarket": "Qhatuypa chaninninta llamk’achiy",
     "balanceError": "Saldo qhawayqa manan allinchu karqan. Manaraq pedido ruwachkaspa hukmanta kallpanchakuy.",
     "noFunding": "Mana {{token}} {{chain}} nisqapi tarikunchu.",
@@ -6320,7 +6322,7 @@
     "reviewYourBuy": "Rantisqaykita qhaway",
     "reviewYourSell": "Qhatusqaykita qhaway",
     "reviewDeposit": "{{amount}} {{token}} {{chain}} nisqapi churay.",
-    "reviewRange": "Rango: {{min}} – {{max}} USD sapa DHB.",
+    "reviewRange": "Rango: {{min}} – {{max}} USD sapa fichas nisqakuna.",
     "initializes": "Kayqa 0% quchata paqarichispa qallarichin.",
     "pendingNote": "Transacciónniykiqa apachisqañam. Kutichiy takyachiyta utaq listado registro ruwayta mana huk qullqi churaywan.",
     "viewTransaction": "Transacción nisqa qhaway",
@@ -6337,7 +6339,7 @@
     "keepOpen": "Kay p&#39;anqata kichasqata waqaychay listayki registrasqa kanankama. Navegador waqaychasqa mana kanchu.",
     "snapshotDelayed": "Qhatumanta rakisqa willakuykunaqa tardakunmi. Qhipa chiqaqchasqa instantánea rikuchispa.",
     "snapshotUnavailable": "Qhatumanta rakisqa willakuykunaqa manam kanchu. Carga posiciónkunata yapamanta kallpachakuy.",
-    "withdrawReview": "{{dhb}} DHB hinaspa {{usdc}} USDC {{chain}} nisqapi hurquy? Qullqikuna manaraq firmachkaspa musuqyachiy; chanin tolerancia nisqa 0,5% nisqa.",
+    "withdrawReview": "{{dhb}} fichas nisqakuna hinaspa {{usdc}} USDC {{chain}} nisqapi hurquy? Qullqikuna manaraq firmachkaspa musuqyachiy; chanin tolerancia nisqa 0,5% nisqa.",
     "withdrawn": "Cargo retirado",
     "withdrawFailed": "Retiro mana atirqachu",
     "withdrawing": "Retiro...",
@@ -6471,6 +6473,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Videopi aswan allin pachakuna",
+      "visualPrivacy": "Akllasqa videopa rikch'ayninkunata qhawarinapaq apachiy."
+    },
+    "review": {
+      "title": "Rurayta qhawana",
+      "shared": "Qamwan rakisqa",
+      "time": "Pacha (s)",
+      "assign": "Billeterata akllay"
+    },
+    "textFit": {
+      "wrap": "Siq'ikunata t'aqay",
+      "width": "Qillqap kinraynin",
+      "shrink": "Qillqata huch'uyachiy haykunanpaq",
+      "height": "Qillqap sayaynin",
+      "captions": "Uray qillqa ñanta tupachiy"
+    },
     "canvas": {
       "dropMedia": "Diseñoykiman yapanaykipaq urmachiy",
       "dropText": "Qillqata yapanaykipaq urmachiy",
@@ -7822,7 +7841,7 @@
     "topUpTitle": "Kuska apamuy yuyay",
     "discount": "{{percent}}% chinkay",
     "noDiscount": "Llapan precio",
-    "total": "Total ${{usd}}, DHB-ninmi chaskasqa",
+    "total": "Total ${{usd}}, fichas nisqakuna-ninmi chaskasqa",
     "buy": "Creditokunata muaq",
     "buying": "Pago-manta suyay…",
     "bought": "{{count}} post creditokuna yapasqa",
@@ -7852,7 +7871,7 @@
     "skippedToast": "Saltasqa {{platforms}}: kay qillqasqaqa manam necesitasqanku fotota nitaq videota tarinchu.",
     "uploadFailed": "Mana atirqanchu willay mast&#39;ariqniykikunata chimpapuray qillqanapaq churayta.",
     "creditRules": "Sapa qillqa sapa plataformapaq créditos qullqita qun: {{x}} X kaqpaq, {{farcaster}} Farcaster kaqpaq chaymanta {{other}} sapa wak plataformapaq. Programasqa qillqakunaqa créditos nisqakunatam llamk&#39;achinku, chayta programaptiyki.",
-    "payAsYouGoCredits": "¿Tukusqachu? Chinkasqa créditos rantisqa kanku DHB kaqpi ${{price}} sapa juk mayk’aqchus qillqanki.",
+    "payAsYouGoCredits": "¿Tukusqachu? Chinkasqa créditos rantisqa kanku fichas nisqakuna kaqpi ${{price}} sapa juk mayk’aqchus qillqanki.",
     "topUpCredits": "{{count}} créditos nisqa",
     "perCredit": "${{price}} sapa qullqi quypaq",
     "pendingApproval": "Suyachkanki dehub nisqa Farcaster app nisqapi aprobanaykita",
@@ -7864,7 +7883,7 @@
   "dm": {
     "planRestricted": "Kay runaqa suscripciónta mañan willakuykunata chaskinanpaq.",
     "planTypeNotAllowed": "Kay ruraqpa planninqa manam kay hina willakuyta saqinchu.",
-    "planMinTip": "Kay ruraqpaq propinaqa aswan pisillaqa {{amount}} DHB kanan."
+    "planMinTip": "Kay ruraqpaq propinaqa aswan pisillaqa {{amount}} fichas nisqakuna kanan."
   },
   "credits": {
     "earningsWorth": "Valor {{amount}} nisqa.",
@@ -7992,11 +8011,11 @@
       "notifyKey": "Willakuy kiy",
       "notifyKeyOnce": "Sut'in willakuy kiy {{name}}-paq. Kunan qillqaykuy: huk kutillam rikuchisqa, hukta ruwaspaqa chaytaqa ancha.",
       "payTitle": "Qullqiyta chaskiy",
-      "payBody": "pay() mañakusunki DHB apamunata, hunt'asqayki dehub.json-man chayanankama. Serviyki ukhupi rikuy imaymana apamusqayta, imatapas qullusqayki ñawpaqta.",
+      "payBody": "pay() mañakusunki fichas nisqakuna apamunata, hunt'asqayki dehub.json-man chayanankama. Serviyki ukhupi rikuy imaymana apamusqayta, imatapas qullusqayki ñawpaqta.",
       "notifyTitle": "Willakuykunata apay",
       "notifyBody": "Runa masikikuna apuyta atisqanku, serviykimanta willakuyta atikunki willakuy kiykimwan. Mana runa masikikunapaq qullqiykikunata waqaychaychu.",
       "rankTitle": "Imaynatachus tienda apps nisqakunata rankikun",
-      "rewardsBody": "Sapa killa {{pool}} DHB appkunapura kikin puntuación kaqwan rakisqa, sapa semana yupasqa. Calificarpaq, huk app huk chiqaqchasqa dueño billetera chaymanta 3 kutimuq usuariokunallapas necesitan. Premiokuna DeHub kaqwan qun dueño billetera kaqman.",
+      "rewardsBody": "Sapa killa {{pool}} fichas nisqakuna appkunapura kikin puntuación kaqwan rakisqa, sapa semana yupasqa. Calificarpaq, huk app huk chiqaqchasqa dueño billetera chaymanta 3 kutimuq usuariokunallapas necesitan. Premiokuna DeHub kaqwan qun dueño billetera kaqman.",
       "rewardsWeek": "{{date}} nisqa semana.",
       "rewardPaid": "Huntachisqa",
       "rewardPending": "Kaqraq",

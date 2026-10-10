@@ -22,7 +22,7 @@ const JSON_LD = {
   '@type': 'WebPage',
   name: 'DeHub Username Marketplace',
   description:
-    'Buy and sell DeHub usernames with DHB. Search handles for sale, list your own, and transfer instantly on-chain.',
+    'Buy and sell DeHub usernames with tokens. Search handles for sale, list your own, and transfer instantly on-chain.',
   url: 'https://dehub.io/usernames',
 };
 

@@ -5,7 +5,6 @@
 import type { TranscriptSegment } from '@/hooks/use-transcript';
 import { useVoiceDub } from '@/hooks/use-voice-dub';
 import { useEffect, useState } from 'react';
-import { useCachedVideoDub } from '@/hooks/use-cached-video-dub';
 import { useCachedDubAudio } from '@/hooks/use-cached-dub-audio';
 
 interface Props {
@@ -16,10 +15,10 @@ interface Props {
   transcriptId: string | null;
   language: string | null;
   audible: boolean;
+  cached: { status: string; audioUrl?: string } | undefined;
 }
 
-export default function VoiceDubEngine({ videoRef, segments, voice, onFailed, transcriptId, language, audible }: Props) {
-  const cached = useCachedVideoDub(transcriptId, language, audible && !!segments?.length);
+export default function VoiceDubEngine({ videoRef, segments, voice, onFailed, transcriptId, language, cached }: Props) {
   const [audioFailed, setAudioFailed] = useState(false);
   const [deviceFailed, setDeviceFailed] = useState(false);
   useEffect(() => { setAudioFailed(false); setDeviceFailed(false); }, [transcriptId, language]);

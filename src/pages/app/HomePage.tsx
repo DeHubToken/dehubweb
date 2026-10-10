@@ -1,3 +1,4 @@
+import { useTabLongPress } from '@/hooks/use-tab-long-press';
 import { setFeedRefresh } from '@/lib/feed-refresh';
 /**
  * Home Page
@@ -22,6 +23,8 @@ import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { FeedFilterAnchor } from '@/components/app/navigation/FeedFilterAnchor';
+import { FeedPillGlow } from '@/components/app/navigation/FeedPillGlow';
 import { setFeedTabsOpen } from '@/lib/feed-tabs-reveal';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -119,9 +122,9 @@ export default function HomePage() {
   const { isCollapsed } = useSidebarCollapse();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
-  // System theme on phones: the tab pill rests hidden and the island capsule
+  // Immersive theme on phones: the tab pill rests hidden and the island capsule
   // (FeedIslandCapsule) opens it.
-  const islandTopBar = theme === 'system';
+  const islandTopBar = theme === 'immersive';
   const navVisible = useScrollDirection();
   // While any overlay (share/options drawers, dialogs — bottom sheets on
   // mobile — side sheets, story viewer, …) is open, the tab bar must get out
@@ -331,6 +334,28 @@ export default function HomePage() {
     setShowLiveFilters(false);
   }, []);
 
+  // Match the capsule dropdown's outside-tap and Escape dismissal.
+  useEffect(() => {
+    if (theme !== 'system' || !showHomeFilters) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowHomeFilters(false);
+        const target = isCollapsed ? globalFeedNav?.filtersPortalElement : homeFiltersRef.current;
+        target?.closest('[data-home-filter-anchor]')?.querySelector<HTMLButtonElement>('button')?.focus();
+      }
+    };
+    const closeOutside = (event: PointerEvent) => {
+      if (!(event.target instanceof Element) || event.target.closest('[data-home-filter-anchor]')) return;
+      setShowHomeFilters(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    document.addEventListener('pointerdown', closeOutside, true);
+    return () => {
+      window.removeEventListener('keydown', closeOnEscape);
+      document.removeEventListener('pointerdown', closeOutside, true);
+    };
+  }, [theme, showHomeFilters, isCollapsed, globalFeedNav?.filtersPortalElement]);
+
   /**
    * Auto-close any open filter panel when the user scrolls down.
    * Keeps the sticky tab bar clean while browsing feed content.
@@ -504,7 +529,7 @@ export default function HomePage() {
 
   const handleTabClick = useCallback((tabValue: string) => {
     // Island mode: picking a feed closes the capsule's dropdown.
-    if (document.documentElement.dataset.theme === 'system') setTimeout(() => setFeedTabsOpen(false), 350);
+    if (document.documentElement.dataset.theme === 'immersive') setTimeout(() => setFeedTabsOpen(false), 350);
     // If a post overlay is currently covering the feed, tapping any tab should
     // dismiss the overlay and take the user back to the feed on that tab —
     // otherwise the tab change happens underneath the overlay and looks broken.
@@ -558,6 +583,7 @@ export default function HomePage() {
     const handleTabReclick = (e: Event) => {
       const tab = (e as CustomEvent).detail;
       if (!tab) return;
+      const openOnly = e.type === 'home-tab-long-press';
       // Toggle filters for the active tab. The panel renders at the top of
       // the feed, so when OPENING while scrolled down, also scroll to top —
       // otherwise the panel mounts far above the viewport and the click
@@ -565,7 +591,7 @@ export default function HomePage() {
       // auto-close-on-scroll-down effect: upward deltas reset it.)
       const toggleFilters = (setter: React.Dispatch<React.SetStateAction<boolean>>) => {
         setter(prev => {
-          const next = !prev;
+          const next = openOnly || !prev;
           if (next) {
             requestAnimationFrame(() => {
               document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -590,12 +616,14 @@ export default function HomePage() {
     const handleIslandSelect = (e: Event) => { const tab = (e as CustomEvent).detail; if (tab) handleTabClick(tab); };
     window.addEventListener('home-feed-select', handleIslandSelect);
     window.addEventListener('home-tab-reclick', handleTabReclick);
+    window.addEventListener('home-tab-long-press', handleTabReclick);
     return () => {
       window.removeEventListener('home-refresh', handleHomeRefresh);
       window.removeEventListener('category-filter-changed', handleCategoryFilter);
       window.removeEventListener('switch-home-tab', handleSwitchTab);
       window.removeEventListener('home-feed-select', handleIslandSelect);
       window.removeEventListener('home-tab-reclick', handleTabReclick);
+      window.removeEventListener('home-tab-long-press', handleTabReclick);
     };
   }, [triggerRefresh, handleTabClick]);
 
@@ -722,9 +750,13 @@ export default function HomePage() {
   const handleTouchStart = (e: React.TouchEvent) => {
     // Carousels own sideways swipes; a downward pull still belongs to the feed.
     pullHandlers.onTouchStart(e);
+    touchStartX.current = null;
+    touchStartY.current = null;
+    touchEndX.current = null;
+    touchEndY.current = null;
     const target = e.target as HTMLElement;
-    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe]');
-    if (touchInsideNoSwipe.current) return;
+    touchInsideNoSwipe.current = !!target.closest('[data-no-swipe], input[type="range"], [role="slider"]');
+    if (touchInsideNoSwipe.current || e.touches.length !== 1) return;
 
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
@@ -735,7 +767,7 @@ export default function HomePage() {
 
   const handleTouchMove = (e: React.TouchEvent) => {
     pullHandlers.onTouchMove(e);
-    if (touchInsideNoSwipe.current) return;
+    if (touchInsideNoSwipe.current || touchStartX.current === null || e.touches.length !== 1) return;
 
     touchEndX.current = e.touches[0].clientX;
     touchEndY.current = e.touches[0].clientY;
@@ -850,6 +882,9 @@ export default function HomePage() {
   // DRAG-TO-SWIPE for tab indicator (must be after handleTabClick & enableHomeTransition)
   // --------------------------------------------------------------------------
 
+  const homeLongPress = useTabLongPress(activeTab, () => {
+    window.dispatchEvent(new CustomEvent('home-tab-long-press', { detail: activeTab }));
+  }, !isPostOverlayActive);
   const homeTabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
 
   const { isDragging: isHomeDragging, indicatorRef: homeIndicatorRef, handleDragStart: handleHomeDragStart, handleDragMove: handleHomeDragMove, handleDragEnd: handleHomeDragEnd } = useDragTabIndicator({
@@ -865,7 +900,7 @@ export default function HomePage() {
     isDraggingRef: homeIsDraggingRef,
     indicatorFixedHeightPx: 35,
     shrinkWidthByPercent: 5,
-    onTap: () => handleTabClick(activeTab),
+    onTap: () => { if (!homeLongPress.fired.current) handleTabClick(activeTab); },
     onDragEnd: () => {
       // Trigger spring transition after drag ends
       setEnableHomeTransition(true);
@@ -895,7 +930,7 @@ export default function HomePage() {
   // --------------------------------------------------------------------------
 
   return (
-    <div>
+    <div data-classic-feed-layout={theme === 'system' ? '' : undefined}>
       {/* One cached instance serves /, /app, /videos and /shorts — meta must
           follow the URL (not tab state: a sessionStorage-restored tab on "/"
           would otherwise declare /videos canonical for the root) or three
@@ -935,7 +970,8 @@ export default function HomePage() {
           ...(islandTopBar && isMobile && !isPostOverlayActive ? { position: 'fixed', left: 0, right: 0, top: 'calc(env(safe-area-inset-top, 0px) + 3rem)' } : null),
         }}
       >
-        <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl">
+        <FeedFilterAnchor behindNav={theme === 'system'}>
+        <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl" style={theme === 'system' ? { position: 'relative', zIndex: 10 } : undefined}>
 
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} variant="nav" />
@@ -948,10 +984,12 @@ export default function HomePage() {
                   width: homeTabRect.width,
                   height: homeTabRect.height,
                 }}
-                onPointerDown={handleHomeDragStart}
-                onPointerMove={handleHomeDragMove}
-                onPointerUp={handleHomeDragEnd}
-                onPointerCancel={handleHomeDragEnd}
+                onPointerDown={(event) => { homeLongPress.begin(event); handleHomeDragStart(event); }}
+                onPointerMove={(event) => { homeLongPress.move(event); if (!homeLongPress.fired.current) handleHomeDragMove(event); }}
+                onPointerUp={() => { homeLongPress.cancel(); handleHomeDragEnd(); }}
+                onPointerCancel={() => { homeLongPress.cancel(); homeLongPress.fired.current = true; handleHomeDragEnd(); }}
+                onLostPointerCapture={homeLongPress.cancel}
+                onContextMenu={(event) => event.preventDefault()}
               />
             )}
             <div className="relative z-20 flex scrollbar-hide">
@@ -961,6 +999,7 @@ export default function HomePage() {
                   a back button so the top nav bar feels seamless: the user never
                   "leaves" the feed. */}
               <button
+                data-post-nav-back={isPostOverlayActive || undefined}
                 onClick={showNavBack
                   ? handleNavBack
                   : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
@@ -971,6 +1010,7 @@ export default function HomePage() {
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
                 aria-label={isPostOverlayActive ? "Back to feed" : isImagesScrollView ? "Back to grid" : "Feed settings"}
+                aria-expanded={showNavBack ? undefined : islandFiltersOpen}
               >
                 {hasActiveFilters && !showNavBack && (
                   <div className={cn(
@@ -1035,8 +1075,11 @@ export default function HomePage() {
               })}
             </div>
         </div>
-        <div ref={homeFiltersRef} className="contents" />
+        {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
+        {!islandTopBar && <FeedPillGlow />}
         </div>
+        {theme === 'system' && <div ref={homeFiltersRef} className="absolute inset-x-0 top-0 z-0 pointer-events-none" />}
+        </FeedFilterAnchor>
         {/* Active-filter chips — a sibling of the pill, not a row inside it.
             Still within the sticky chrome, so they travel with the nav. */}
         <div ref={homeChipsRef} className="contents" />

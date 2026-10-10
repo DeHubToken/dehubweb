@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Image Card Component
  * ====================
@@ -24,7 +25,7 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Eye, MoreVertical, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
+import { Eye, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
@@ -34,6 +35,7 @@ import { cdnImageSrcSet } from '@/lib/media-url';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
+import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
@@ -667,10 +669,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
-  const [pollQuestion, setPollQuestion] = useState('');
+  const [pollQuestion, setPollQuestion] = useSurfaceDraft("components/app/cards/ImageCard.tsx:pollQuestion", '', draftIdentity(post));
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [pollMultiple, setPollMultiple] = useState(false);
-  const [pollExpiry, setPollExpiry] = useState('');
+  const [pollExpiry, setPollExpiry] = useSurfaceDraft("components/app/cards/ImageCard.tsx:pollExpiry", '', draftIdentity(post));
   const createPollMutation = useCreatePoll();
   const { data: tipCount = 0 } = usePostTipCount(post.id, post.totalTips);
   const isTabletOrMobile = useIsTabletOrMobile();
@@ -922,13 +924,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
               vaul's Root (and its window scroll listener) into every card. */}
-          <button
+          <PostHeaderOptionsButton
             onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            aria-label="Post options"
-            className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
-          >
-            <MoreVertical className="w-[23.5px] h-[23.5px]" />
-          </button>
+          />
           <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
@@ -1383,6 +1381,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: post.id,
           type: 'image',
           author: post.username,
           caption: post.description || post.title || post.caption,
@@ -1713,10 +1712,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                   expiresAt: pollExpiry || undefined,
                 });
                 setShowPollCreator(false);
-                setPollQuestion('');
+                setPollQuestion.complete(pollQuestion, '');
                 setPollOptions(['', '']);
                 setPollMultiple(false);
-                setPollExpiry('');
+                setPollExpiry.complete(pollExpiry, '');
                 queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
               }}
             >

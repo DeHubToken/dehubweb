@@ -90,6 +90,7 @@
     "heading": "DeHub 쇼츠"
   },
   "settings": {
+    "postingChain": "게시물 블록체인",
     "showOnline": "온라인 상태일 때 표시",
     "showOnlineDesc": "DeHub를 사용하는 동안 내가 메시지를 보내는 사람들에게 내 이름 옆에 초록색 점이 표시됩니다.",
     "smartReplies": "추천 답장",
@@ -259,6 +260,7 @@
     "light": "라이트",
     "dark": "다크",
     "system": "시스템",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "헤이지 나이트",
     "swarms": "스웜",
@@ -1206,7 +1208,7 @@
     "title": "토큰 상장이 곧 시작됩니다!",
     "body": "$DHB는 아직 거래되지 않습니다. 상장되는 즉시 이메일로 알려드릴게요.",
     "notifyMe": "알림 받기",
-    "privacy": "$DHB 상장 소식을 알려드리는 데에만 사용합니다.",
+    "privacy": "토큰 상장 소식을 알려드리는 데에만 사용합니다.",
     "joined": "명단에 등록되었습니다. $DHB가 상장되면 바로 {{email}}(으)로 이메일을 보내드릴게요."
   },
   "explorePage": {
@@ -1466,7 +1468,7 @@
     "otherTokens": "기타 토큰",
     "otherTokensDesc": "카드로 Base에서 ETH 또는 USDC 구매",
     "shareToFeed": "내 피드에 공유",
-    "sharePostTemplate": "방금 DeHub의 스택에 {{amount}} $ DHB를 추가했습니다. 커뮤니티와 함께 만들기. # DeHub # DHB",
+    "sharePostTemplate": "방금 DeHub의 스택에 {{amount}} $ DHB를 추가했습니다. 커뮤니티와 함께 만들기. # DeHub # 토큰",
     "success": {
       "title": "구매 완료!",
       "subtitle": "토큰이 지갑으로 전달되었습니다.",
@@ -3499,7 +3501,7 @@
     "srHeading": "DeHub 런치패드",
     "phaseBadge": "Phase 1 · 비공개 미리보기",
     "heroTitle": "비즈니스 토큰화",
-    "heroSubtitle": "DHB 페어링 본딩 커브. $42K 시가총액에서 Uniswap으로 졸업합니다.",
+    "heroSubtitle": "토큰 페어링 본딩 커브. $42K 시가총액에서 Uniswap으로 졸업합니다.",
     "createCoin": "코인 생성",
     "filterNew": "새로운",
     "filterGraduating": "졸업 예정",
@@ -6232,17 +6234,17 @@
   },
   "docs": {
     "seoTitle": "DeHub 문서 — 가이드, 토큰, dApp 및 FAQ",
-    "seoDescription": "DeHub 공식 문서: 플랫폼 개요, dApp, DHB 토큰 이코노미, 스테이킹, 게임, 로드맵, FAQ 등."
+    "seoDescription": "DeHub 공식 문서: 플랫폼 개요, dApp, 토큰 토큰 이코노미, 스테이킹, 게임, 로드맵, FAQ 등."
   },
   "dex": {
     "seoTitle": "DEX — DHB를 원하는 가격에 거래하세요",
-    "seoDescription": "Base 또는 BNB Chain에서 Uniswap v4 지정가 주문으로 DHB 매수 또는 매도 가격을 설정하세요. 실시간 주문 장부, 시장 깊이, 하나의 통합 USD 가격을 제공합니다.",
+    "seoDescription": "Base 또는 BNB Chain에서 Uniswap v4 지정가 주문으로 토큰 매수 또는 매도 가격을 설정하세요. 실시간 주문 장부, 시장 깊이, 하나의 통합 USD 가격을 제공합니다.",
     "venue": "네트워크",
     "marketPrice": "시장 가격 · USD",
     "bookPrice": "{{chain}} 주문 장부 가격 · USD",
     "change24": "24시간 변화",
     "totalLiquidity": "총 유동성 · USD",
-    "listedDhb": "상장된 DHB · {{chain}}",
+    "listedDhb": "상장된 토큰 · {{chain}}",
     "listedUsd": "상장된 USD · {{chain}}",
     "refreshMarket": "시장 새로고침",
     "refresh": "새로고침",
@@ -6267,21 +6269,21 @@
     "orderBook": "주문 장부",
     "priceGrouping": "가격 그룹화",
     "priceUsd": "가격 (USD)",
-    "sizeDhb": "크기 (DHB)",
-    "totalDhb": "총계 (DHB)",
+    "sizeDhb": "크기 (토큰)",
+    "totalDhb": "총계 (토큰)",
     "noBids": "아직 입찰 없음",
     "noAsks": "아직 요청 유동성 없음",
     "useBuyPrice": "{{price}}를 구매 가격으로 사용",
     "useSellPrice": "{{price}}를 판매 가격으로 사용",
     "spread": "스프레드 · USD",
-    "buyTotal": "{{amount}} DHB 구매",
-    "sellTotal": "{{amount}} DHB 판매",
+    "buyTotal": "{{amount}} 토큰 구매",
+    "sellTotal": "{{amount}} 토큰 판매",
     "placeOrder": "주문하기",
     "lpFee": "0% LP 수수료",
     "lpFeeLabel": "LP 수수료",
     "lpFeeValue": "{{fee}}% LP 수수료",
-    "buy": "DHB 구매",
-    "sell": "DHB 판매",
+    "buy": "토큰 구매",
+    "sell": "토큰 판매",
     "maxBuy": "최대 구매 가격",
     "minSell": "최소 판매 가격",
     "spend": "소비",
@@ -6323,7 +6325,7 @@
     "keepOpen": "등록이 완료될 때까지 이 페이지를 열어 두세요. 브라우저 스토리지를 사용할 수 없습니다.",
     "snapshotDelayed": "공유된 시장 데이터는 지연되었습니다. 마지막으로 확인된 스냅샷을 표시합니다.",
     "snapshotUnavailable": "공유된 시장 데이터를 사용할 수 없습니다. 포지션을 로드하려면 다시 시도하세요.",
-    "withdrawReview": "{{chain}}에서 {{dhb}} DHB 및 {{usdc}} USDC를 출금하시겠습니까? 금액은 서명 전에 새로 고쳐지며, 가격 허용 오차는 0.5%입니다.",
+    "withdrawReview": "{{chain}}에서 {{dhb}} 토큰 및 {{usdc}} USDC를 출금하시겠습니까? 금액은 서명 전에 새로 고쳐지며, 가격 허용 오차는 0.5%입니다.",
     "withdrawn": "포지션 출금됨",
     "withdrawFailed": "출금 실패",
     "withdrawing": "출금 중…",
@@ -6457,6 +6459,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "영상 하이라이트",
+      "visualPrivacy": "영상 분석을 위해 선택한 프레임을 전송합니다."
+    },
+    "review": {
+      "title": "프로젝트 검토",
+      "shared": "나와 공유됨",
+      "time": "시간 (s)",
+      "assign": "지갑 지정"
+    },
+    "textFit": {
+      "wrap": "줄 바꿈",
+      "width": "텍스트 너비",
+      "shrink": "텍스트를 맞게 축소",
+      "height": "텍스트 높이",
+      "captions": "자막 트랙 맞추기"
+    },
     "canvas": {
       "dropMedia": "디자인에 추가하려면 드롭하세요",
       "dropText": "텍스트를 추가하려면 드롭하세요",
@@ -6859,6 +6878,19 @@
       "sync": "컷 동기화",
       "none": "신뢰할 수 있는 비트를 찾지 못했습니다.",
       "unchanged": "컷을 정렬할 수 없었습니다."
+    },
+    "live": {
+      "stopEdits": "실시간 편집 중지",
+      "receiveEdits": "실시간 편집 받기",
+      "shareEdits": "편집 내용 실시간 공유",
+      "waiting": "편집이 끝날 때까지 대기 중",
+      "transferring": "편집 내용 전송 중",
+      "sharing": "편집 내용 실시간 공유 중",
+      "receiving": "실시간 편집 수신 중",
+      "paused": "실시간 편집 일시 중지",
+      "retryRecovery": "복구 다시 시도",
+      "personalCopy": "개인 사본 저장",
+      "privateHint": "참여만으로 편집 내용이 업로드되지는 않습니다. 실시간 공유는 새 비공개 소스를 업로드하며, 저장은 영구 버전을 만듭니다."
     }
   },
   "jungleMood": {
@@ -8008,7 +8040,7 @@
     "pay": {
       "title": "{{name}}로 지불?",
       "body": "DHB는 바로 앱의 지갑으로 직행합니다. {{wallet}}. 결제는 취소할 수 없습니다.",
-      "confirm": "지불 {{amount}} DHB",
+      "confirm": "지불 {{amount}} 토큰",
       "sending": "지불 중…",
       "sent": "지불된 {{amount}} DHB를 {{name}}로 이체했습니다.",
       "noOwner": "이 앱은 아직 인증된 지갑으로 결제를 할 수 없습니다."

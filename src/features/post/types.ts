@@ -103,7 +103,7 @@ export interface PostFormActions {
   setTokenSymbol: (value: string) => void;
   setTokenAmount: (value: string) => void;
   setLiveMode: (value: LiveMode) => void;
-  setPoll: (poll: PollData | null) => void;
+  setPoll: import('@/hooks/use-draft-state').DraftSetter<PollData | null>;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;

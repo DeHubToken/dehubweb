@@ -23,6 +23,7 @@
 
 :root,
 html[data-theme='system'],
+html[data-theme='immersive'],
 html[data-theme='cosmic'] {
   --stage-ink: #f4f4f5;
   --stage-muted: #9a9aa2;
@@ -392,24 +393,24 @@ html [data-stage-face]:not(#_) {
   box-shadow: 0 0 0 2px var(--stage-solid);
 }
 
-/* --- System: full immersive, no bento boxes -------------------------------
-   System drops boxed cards entirely. The five tiles become bare icons on the
+/* --- Shared dark post controls -------------------------------------------
+   The five tiles remain bare icons on the
    page with hairlines above and below the bar, and the sheet's tiles and lists
    lose their boxes too (rows keep their hairline dividers). */
-html[data-theme='system'] [data-stage-bar]:not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-stage-bar]:not(#_):not(#_) {
   border-block: 1px solid var(--stage-border);
   padding-block: 2px;
 }
-html[data-theme='system'] [data-stage-tile]:not(#_):not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-stage-tile]:not(#_):not(#_):not(#_) {
   background: transparent;
   border-color: transparent;
   backdrop-filter: none;
 }
-html[data-theme='system'] [data-stage-sheet] :is([data-stage-sheet-tile], [data-stage-sheet-list]):not(#_):not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-stage-sheet] :is([data-stage-sheet-tile], [data-stage-sheet-list]):not(#_):not(#_):not(#_) {
   background: transparent;
   border-color: transparent;
 }
-html[data-theme='system'] [data-stage-sheet] [data-stage-sheet-list]:not(#_):not(#_):not(#_) {
+html:is([data-theme='system'], [data-theme='immersive']) [data-stage-sheet] [data-stage-sheet-list]:not(#_):not(#_):not(#_) {
   border-block: 1px solid var(--stage-border);
   border-radius: 0;
 }

@@ -1102,7 +1102,7 @@ export const fi = {
   },
   tokenWhereToBuy: {
     title: 'Mistä ostaa DeHub',
-    subtitle: 'Löydä DHB tuetuista pörsseistä ja alustoista.',
+    subtitle: 'Löydä tokenia tuetuista pörsseistä ja alustoista.',
     availableOn: 'Saatavilla',
     decentralizedExchanges: 'Hajautetut pörssit',
     centralizedExchanges: 'Keskitetyt pörssit',
@@ -1146,7 +1146,7 @@ export const fi = {
   },
   tokenStake: {
     title: 'Staking',
-    subtitle: 'Steikkaa DHB:si ansaitaksesi todellista tuottoa protokollan tuloista.',
+    subtitle: 'Steikkaa tokenia:si ansaitaksesi todellista tuottoa protokollan tuloista.',
     stakingOverview: 'Staking-yleiskatsaus',
     howToStake: 'Miten steikata',
     rewards: 'Palkkiot',

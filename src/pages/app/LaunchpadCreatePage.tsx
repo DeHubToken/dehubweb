@@ -1,3 +1,4 @@
+import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFormDraft } from '@/hooks/use-form-draft';
@@ -42,16 +43,16 @@ export default function LaunchpadCreatePage() {
     'launchpad-create',
     { step, name, symbol, description, imageUrl, website, twitter, telegram, chainId, curveType },
     (saved) => {
-      if (saved.step) setStep(saved.step);
-      if (saved.name) setName(saved.name);
-      if (saved.symbol) setSymbol(saved.symbol);
-      if (saved.description) setDescription(saved.description);
-      if (saved.imageUrl) setImageUrl(saved.imageUrl);
-      if (saved.website) setWebsite(saved.website);
-      if (saved.twitter) setTwitter(saved.twitter);
-      if (saved.telegram) setTelegram(saved.telegram);
-      if (saved.chainId) setChainId(saved.chainId);
-      if (saved.curveType) setCurveType(saved.curveType);
+      if (saved.step !== undefined) setStep(saved.step);
+      if (saved.name !== undefined) setName(saved.name);
+      if (saved.symbol !== undefined) setSymbol(saved.symbol);
+      if (saved.description !== undefined) setDescription(saved.description);
+      if (saved.imageUrl !== undefined) setImageUrl(saved.imageUrl);
+      if (saved.website !== undefined) setWebsite(saved.website);
+      if (saved.twitter !== undefined) setTwitter(saved.twitter);
+      if (saved.telegram !== undefined) setTelegram(saved.telegram);
+      if (saved.chainId !== undefined) setChainId(saved.chainId);
+      if (saved.curveType !== undefined) setCurveType(saved.curveType);
     },
   );
 
@@ -216,7 +217,7 @@ export default function LaunchpadCreatePage() {
                   </div>
                 </Field>
                 <div className="rounded-xl bg-white/5 border border-white/10 p-3 text-xs text-white/60 space-y-1">
-                  <div>{t('launchpad.basePair')} <span className="text-white">DHB</span></div>
+                  <div>{t('launchpad.basePair')} <span className="text-white">{tokenLabel()}</span></div>
                   <div>{t('launchpad.graduationTarget')} <span className="text-white">{t('launchpad.graduationTargetValue')}</span></div>
                   <div>{t('launchpad.fee')} <span className="text-white">{t('launchpad.feePerTrade')}</span> {t('launchpad.feeSplitInline')}</div>
                 </div>
@@ -230,7 +231,7 @@ export default function LaunchpadCreatePage() {
                   <Row k={t('launchpad.fieldTicker')} v={`$${symbol}`} />
                   <Row k={t('launchpad.fieldChain')} v={chainId === 8453 ? 'Base' : 'BNB'} />
                   <Row k={t('launchpad.fieldCurve')} v={t(CURVE_KEYS[curveType])} />
-                  <Row k={t('launchpad.pair')} v="DHB" />
+                  <Row k={t('launchpad.pair')} v={tokenLabel()} />
                   <Row k={t('launchpad.graduatesAt')} v={t('launchpad.graduatesAtValue')} />
                 </div>
                 <p className="text-[11px] text-white/40">{t('launchpad.mockNote')}</p>

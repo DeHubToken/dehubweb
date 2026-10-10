@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Governance Page
  * ===============
@@ -272,8 +273,8 @@ function SubmitProposalDrawer({
   onOpenChange: (open: boolean) => void;
 }) {
   const { t } = useTranslation();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useSurfaceDraft("pages/app/GovernancePage.tsx:title", '');
+  const [description, setDescription] = useSurfaceDraft("pages/app/GovernancePage.tsx:description", '');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const submitMutation = useSubmitGovernanceProposal();
@@ -298,8 +299,8 @@ function SubmitProposalDrawer({
       { title: result.data.title, description: result.data.description },
       {
         onSuccess: () => {
-          setTitle('');
-          setDescription('');
+          setTitle.complete(title, '');
+          setDescription.complete(description, '');
           onOpenChange(false);
         },
       }
@@ -501,7 +502,7 @@ export default function GovernancePage() {
   const { isAuthenticated, openLoginModal, user } = useAuth();
   const [activeTab, setActiveTab] = useState<PageTab>('proposals');
   const [sort, setSort] = useState<GovernanceSort>('most_voted');
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useSurfaceDraft("pages/app/GovernancePage.tsx:searchInput", '');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
 

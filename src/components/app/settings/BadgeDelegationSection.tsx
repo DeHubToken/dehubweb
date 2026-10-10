@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Badge delegation — lending your tier to other accounts
  * ======================================================
@@ -92,7 +93,7 @@ export function BadgeDelegationSection() {
   const grant = useGrantDelegation();
   const revoke = useRevokeDelegation();
   const acceptance = useSetDelegationAcceptance();
-  const [recipient, setRecipient] = useState('');
+  const [recipient, setRecipient] = useSurfaceDraft("components/app/settings/BadgeDelegationSection.tsx:recipient", '');
   // Which unlocked badge to lend. Null until the summary arrives, and reset to
   // the grantor's own tier whenever the ceiling moves (a chain read can
   // re-tier them mid-session), so the picker never holds a tier they no
@@ -127,7 +128,7 @@ export function BadgeDelegationSection() {
     const to = recipient.trim();
     if (!to || grant.isPending) return;
     const chosen = tier && grantableTiers.includes(tier) ? tier : null;
-    grant.mutate({ to, tier: chosen }, { onSuccess: () => setRecipient('') });
+    grant.mutate({ to, tier: chosen }, { onSuccess: () => setRecipient.complete(recipient, '') });
   };
 
   return (

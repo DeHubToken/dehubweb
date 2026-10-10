@@ -1,3 +1,6 @@
+import { projectTask } from "@/lib/editor/projectTask";
+import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * AI panel — describe the edit, the agent does it.
  *
@@ -15,12 +18,16 @@ import { useEditorUiStore } from '@/store/editorUiStore';
 import { useEditorAgentStore, type AgentChatEntry } from '@/store/editorAgentStore';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { applyOps, askAgent, askSceneAgent, type AgentMessage } from '@/lib/editor/agent';
-import { highlightChatRequest, type HighlightChatResult } from '@/lib/editor/highlightChat';
+import { highlightChatRequest, highlightVisualScope, type HighlightChatResult } from '@/lib/editor/highlightChat';
 import { useHighlightChat } from '@/lib/editor/useHighlightChat';
+import { getMedia } from '@/lib/editor/mediaStore';
+import { processVisualFrames } from '@/lib/editor/processVisualFrames';
+import { analyseVisualHighlights } from '@/lib/editor/visualHighlightApi';
 import { transcribeClipWords } from '@/lib/editor/captions';
 import { createHighlightEdit } from '@/lib/editor/applyHighlights';
 import { shotTime } from '@/lib/editor/shots';
 import { assemblyRequest } from '@/lib/editor/assembly';
+import { findAssemblyScenes } from '@/lib/editor/assemblyScenes';
 import { useAssembly } from '@/lib/editor/useAssembly';
 import { createAssemblyEdit } from '@/lib/editor/applyAssembly';
 import AssemblyReview from '../AssemblyReview';
@@ -40,13 +47,29 @@ export function AgentPanel() {
   const undo = useEditorStore((s) => s.undo);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const quota = useEditorQuota();
-  const [draft, setDraft] = useState('');
+  const draftProjectId = useEditorStore(s => s.projectId);
+  const [draft, setDraft] = useSurfaceDraft("components/editor/panels/AgentPanel.tsx:draft", '', draftProjectId);
+  const [visualConsent, setVisualConsent] = useState<string | null>(null);
+  const visualScope = useEditorStore(s => highlightVisualScope(s.toSnapshot(), s.selectedClipIds));
+  const useVisual = visualConsent === visualScope;
+  useEffect(() => { setVisualConsent(null); }, [visualScope]);
+  const pendingTask = useRef<ReturnType<typeof projectTask>>(null);
+  useEffect(() => () => { pendingTask.current?.release(); pendingTask.current = null; setBusy(false); }, [draftProjectId, setBusy]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const previewEnd = useRef<number | null>(null);
   const [highlightState, highlights] = useHighlightChat({
     current: () => useEditorStore.getState().toSnapshot(),
     plan: askSceneAgent,
+    visual: {
+      sample: async (clip, windows, signal, progress) => {
+        useEditorStore.getState().setIsPlaying(false);
+        const stored = await getMedia(clip.mediaId);
+        if (!stored) throw new Error('media unavailable');
+        return processVisualFrames(stored.blob, clip, windows, signal, progress);
+      },
+      analyse: analyseVisualHighlights,
+    },
     transcribe: async (clip, progress, signal) => {
       const media = useEditorStore.getState().media.find(m => m.id === clip.mediaId);
       if (!media) throw new Error('media unavailable');
@@ -59,6 +82,12 @@ export function AgentPanel() {
   const [assemblyState, assembly] = useAssembly({
     current: () => useEditorStore.getState().toSnapshot(),
     library: () => useEditorStore.getState().media.filter(media => !!media.url),
+    match: (clips, focus, signal, progress) => findAssemblyScenes(clips, focus, { optIn: true }, async (clip, windows, abort, sampled) => {
+      useEditorStore.getState().setIsPlaying(false);
+      const stored = await getMedia(clip.mediaId);
+      if (!stored) throw new Error('media unavailable');
+      return processVisualFrames(stored.blob, clip, windows, abort, sampled);
+    }, analyseVisualHighlights, signal, progress),
     create: (original, plan, signal, library) => createAssemblyEdit(original, plan, `${original.title} — ${t('editor.video.video')}`, signal, library),
   });
   const assemblyChanged = useEditorStore(s => assemblyState.sourceId !== null && !assembly.matchesSource(s.toSnapshot()));
@@ -70,9 +99,9 @@ export function AgentPanel() {
   const recordHighlights = useCallback((result: HighlightChatResult) => {
     if (result.status === 'cancelled') return;
     const errors = { selectVideo: 'editor.highlights.chatSelectVideo', changed: 'editor.highlights.changed', limit: 'editor.highlights.chatLimit', captionsMissing: 'editor.highlights.chatCaptionsMissing', failed: 'editor.highlights.reviewFailed' };
-    const content = result.status === 'error' ? t(errors[result.error]) : result.status === 'created' ? t('editor.highlights.created') : result.status === 'reviewed' ? t('editor.highlights.reviewResult', result) : result.count ? t('editor.highlights.chatFound', result) : t('editor.highlights.none');
+    const content = result.status === 'error' ? t(errors[result.error]) : result.status === 'created' ? t('editor.highlights.created') : result.status === 'reviewed' ? t('editor.highlights.reviewResult', result) : result.count ? t('editor.highlights.chatFound', result) : t(highlights.state.visual ? 'follow.noResults' : 'editor.highlights.none');
     push({ id: nextId(), role: 'assistant', content, error: result.status === 'error' });
-  }, [push, t]);
+  }, [highlights, push, t]);
   const closeHighlights = () => { previewEnd.current = null; useEditorStore.getState().setIsPlaying(false); highlights.reset(); };
   useEffect(() => {
     const unsubscribe = useEditorStore.subscribe(state => {
@@ -108,7 +137,6 @@ export function AgentPanel() {
   const send = useCallback(async (text: string) => {
     const prompt = text.trim();
     if (!prompt || busy || highlights.state.busy || assembly.state.busy) return;
-    setDraft('');
     push({ id: nextId(), role: 'user', content: prompt });
     const draftRequest = assemblyRequest(prompt);
     if (draftRequest || assembly.state.sourceId) {
@@ -116,15 +144,22 @@ export function AgentPanel() {
       if (draftRequest) { highlights.reset(); assembly.start(draftRequest, useEditorStore.getState().selectedClipIds, useEditorStore.getState().media.filter(media => !!media.url)); }
       const reviewed = draftRequest || assembly.review(prompt);
       push({ id: nextId(), role: 'assistant', content: t(reviewed ? 'easyTrade.reviewTitle' : 'editor.agent.nothingToDo') });
+      if (reviewed) setDraft.complete(text, '');
       inputRef.current?.focus(); return;
     }
     const request = highlightChatRequest(prompt);
     if (request || highlights.reviewing) {
       previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
-      recordHighlights(request ? await highlights.start(request, useEditorStore.getState().selectedClipIds) : await highlights.review(prompt));
+      const result = request ? await highlights.start({ ...request, useVisual, visualScope, focus: request.focus || (useVisual ? prompt.slice(0, 240) : "") }, useEditorStore.getState().selectedClipIds) : await highlights.review(prompt);
+      recordHighlights(result);
+      if (result.status !== "error") setDraft.complete(text, "");
       inputRef.current?.focus();
       return;
     }
+    const source = useEditorStore.getState();
+    const sourceKey = projectReviewSnapshotKey(source.toSnapshot());
+    const task = projectTask(source.holdEdits());
+    pendingTask.current = task;
     setBusy(true);
     try {
       const history: AgentMessage[] = [
@@ -133,7 +168,10 @@ export function AgentPanel() {
           .map(({ role, content }) => ({ role, content })),
       ];
       const { reply, ops } = await askAgent(history);
+      if (!task!.isCurrent()) return;
+      if (projectReviewSnapshotKey(useEditorStore.getState().toSnapshot()) !== sourceKey) throw new Error('project changed');
       const report = ops.length ? await applyOps(ops, { wallet: quota.walletAddress }) : undefined;
+      if (!task!.isCurrent()) return;
       let content = reply || (ops.length ? t('editor.agent.done') : t('editor.agent.nothingToDo'));
       if (!ops.length) content = t('editor.agent.nothingToDo');
       if (report?.generate && !report.applied && !reply) content = t('editor.agent.openGenerator');
@@ -141,8 +179,10 @@ export function AgentPanel() {
       if (report?.missingStock.length) {
         content += ` ${t('editor.agent.noStock', { query: report.missingStock.join(', ') })}`;
       }
+      if (!report?.failed) setDraft.complete(text, '');
       push({ id: nextId(), role: 'assistant', content, report });
     } catch (e) {
+      if (!task!.isCurrent()) return;
       const code = e instanceof Error ? e.message : '';
       push({
         id: nextId(),
@@ -151,10 +191,12 @@ export function AgentPanel() {
         content: code === 'rate_limited' ? t('editor.agent.rateLimited') : t('editor.agent.failed'),
       });
     } finally {
-      setBusy(false);
-      inputRef.current?.focus();
+      task!.release();
+      if (pendingTask.current === task) {
+        pendingTask.current = null; setBusy(false); inputRef.current?.focus();
+      }
     }
-  }, [busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t]);
+  }, [useVisual, visualScope, busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t, setDraft]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
@@ -227,6 +269,11 @@ export function AgentPanel() {
         className="shrink-0 border-t border-white/10 p-2"
         onSubmit={(e) => { e.preventDefault(); void send(draft); }}
       >
+        {!highlights.reviewing && !assemblyState.sourceId && <fieldset className="mb-2 space-y-1 px-1" disabled={working}>
+          <legend className="text-[10px] text-white/50">{t('editor.highlights.title')}</legend>
+          <label className="flex items-center gap-2 text-[11px] text-white/75"><input type="checkbox" checked={useVisual} onChange={event => setVisualConsent(event.target.checked ? visualScope : null)} />{t('editor.highlights.visual')}</label>
+          {useVisual && <p className="text-[10px] leading-relaxed text-white/50">{t('editor.highlights.visualPrivacy')}</p>}
+        </fieldset>}
         <div className="flex items-end gap-1.5 rounded-xl border border-white/15 bg-white/[0.04] p-1.5 focus-within:border-white/30">
           <textarea
             ref={inputRef}
@@ -256,7 +303,7 @@ export function AgentPanel() {
         <div className="mt-1 flex items-center justify-between px-1 text-[10px] text-white/35">
           <span>{t('editor.agent.hint')}</span>
           {entries.length > 0 && (
-            <button type="button" onClick={() => { closeHighlights(); closeAssembly(); clear(); }} className="flex items-center gap-1 hover:text-white/70">
+            <button type="button" onClick={() => { closeHighlights(); closeAssembly(); setVisualConsent(null); clear(); }} className="flex items-center gap-1 hover:text-white/70">
               <Trash2 className="h-3 w-3" /> {t('editor.agent.clear')}
             </button>
           )}

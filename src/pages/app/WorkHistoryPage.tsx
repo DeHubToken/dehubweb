@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +31,7 @@ export default function WorkHistoryPage() {
   const { walletAddress, openLoginModal } = useAuth();
   const [tab, setTab] = useState<Tab>('posted');
   const [status, setStatus] = useState<WorkJobStatus | 'all'>('all');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/WorkHistoryPage.tsx:search", '');
 
   // Only the visible tab's query runs — opening the page shouldn't cost two
   // round-trips when one of them is behind a tab the user may never press.
@@ -140,7 +142,7 @@ export default function WorkHistoryPage() {
               action={<KitButton variant="quiet" onClick={() => refetch()}>{t('work.tryAgain')}</KitButton>}
             />
           ) : isEmpty ? (
-            <EmptyState tab={tab} hasFilters={hasFilters} onClear={() => { setStatus('all'); setSearch(''); }} />
+            <EmptyState tab={tab} hasFilters={hasFilters} onClear={() => { setStatus('all'); setSearch.complete(search, ''); }} />
           ) : tab === 'posted' ? (
             <div className="space-y-3">
               {filteredPosted.map((job) => <PostedRow key={job.id} job={job} />)}
@@ -198,7 +200,7 @@ function PostedRow({ job }: { job: WorkJob }) {
         <span className={`text-[11px] px-2 py-0.5 rounded-md whitespace-nowrap ${statusBadgeClass(job.status)}`}>{t(statusLabelKey(job.status))}</span>
       </div>
       <div className="text-xs text-white/50">
-        {job.total_budget.toLocaleString('en-US', { maximumFractionDigits: 4 })} {job.currency} · {new Date(job.created_at).toLocaleDateString()}
+        {job.total_budget.toLocaleString('en-US', { maximumFractionDigits: 4 })} {tokenLabel(job.currency)} · {new Date(job.created_at).toLocaleDateString()}
       </div>
       {/* Until the escrow contract is deployed nothing ever writes a hash, so
           the "no tx" note would be the most-repeated line on the page. */}
@@ -243,7 +245,7 @@ function SubmissionRow({ submission: s }: { submission: WorkSubmission & { job: 
       </div>
       <div className="text-xs text-white/50">
         {new Date(s.created_at).toLocaleDateString()}
-        {(paid || awaitingPayment) && due > 0 && job && ` · ${due.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${job.currency}`}
+        {(paid || awaitingPayment) && due > 0 && job && ` · ${due.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${tokenLabel(job.currency)}`}
       </div>
       {s.payout_tx_hash ? (
         <div className="mt-2"><TxLink label={t('work.payoutTx')} txHash={s.payout_tx_hash} chain={s.payout_chain_id ?? 8453} /></div>

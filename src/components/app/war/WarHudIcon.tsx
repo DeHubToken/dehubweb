@@ -315,7 +315,7 @@ export function resolveThemeIconAsset(src: string, requestedTheme: string): stri
   if (!key) return null;
   const extension = TRANSPARENT_PNG_KEYS.has(key) ? 'png' : 'webp';
   if (FULL_RASTER_THEMES.has(theme)) return `/theme-icons/${theme}/${key}.${extension}`;
-  if (theme === 'system' && SYSTEM_REFRESHED_KEYS.has(key)) {
+  if ((theme === 'system' || theme === 'immersive') && SYSTEM_REFRESHED_KEYS.has(key)) {
     return `/theme-icons/system/${key}.${extension}`;
   }
   return null;

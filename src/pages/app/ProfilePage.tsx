@@ -1,10 +1,11 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useTranslation } from 'react-i18next';
 
-import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -188,16 +189,14 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
 
 export default function ProfilePage() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const location = useLocation();
   const { theme } = useAppTheme();
   // UI-only state managed in orchestrator
   const [activeTab, setActiveTab] = useState<TabValue>('home');
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
-  const [offerAmount, setOfferAmount] = useState('');
-  const [offerMessage, setOfferMessage] = useState('');
+  const [offerAmount, setOfferAmount] = useSurfaceDraft("pages/app/ProfilePage.tsx:offerAmount", '');
+  const [offerMessage, setOfferMessage] = useSurfaceDraft("pages/app/ProfilePage.tsx:offerMessage", '');
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
@@ -393,8 +392,8 @@ export default function ProfilePage() {
       {
         onSuccess: () => {
           setOfferDrawerOpen(false);
-          setOfferAmount('');
-          setOfferMessage('');
+          setOfferAmount.complete(offerAmount, '');
+          setOfferMessage.complete(offerMessage, '');
         },
       },
     );
@@ -405,12 +404,12 @@ export default function ProfilePage() {
   // Also show skeleton if profile errored but auth is still loading or profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
-    return <ProfileSkeleton />;
+    return <div className="relative"><PageHeader overlay /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <AuthGate description={t('profile.loginDescription')} />;
+    return <div className="relative"><PageHeader overlay /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found
@@ -419,7 +418,8 @@ export default function ProfilePage() {
     const displayUsername = data.routeUsername || '';
     
     const notFoundContent = (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
+      <div className="relative min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
+        <PageHeader overlay />
         {/* Any unknown top-level path lands here (/:username is the catch-all),
             so this is the SPA's real 404: without its own head it kept the
             home title, index,follow and a self canonical. */}
@@ -475,6 +475,7 @@ export default function ProfilePage() {
   const profileContent = (
     <div 
       ref={data.profileContainerRef}
+      data-classic-feed-layout={theme === 'system' ? '' : undefined}
       className="min-h-screen"
       onTouchStart={data.pullHandlers.onTouchStart}
       onTouchMove={data.pullHandlers.onTouchMove}
@@ -539,25 +540,10 @@ export default function ProfilePage() {
         </div>
       )}
       
-      <div className={cn('p-2 sm:p-3 space-y-3', theme === 'system' && 'max-sm:pt-0')}>
-        {/* Back button */}
-        {theme !== 'system' && location.key !== 'default' && (
-          <div className="flex items-center gap-2 mb-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate(-1)}
-              className="rounded-xl text-white hover:bg-white/10 gap-2 px-3"
-            >
-              <ChevronLeft className="w-5 h-5" />
-              <span>{t('profile.back')}</span>
-            </Button>
-          </div>
-        )}
-        
+      <div className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
-        <div className={cn('relative', theme === 'system' && 'max-sm:-mx-2')}>
-        {theme === 'system' && <PageHeader overlay />}
+        <div className={cn('relative', theme === 'immersive' && 'max-sm:-mx-2')}>
+        <PageHeader overlay />
         <ProfileHeader
           profile={data.profile}
           apiProfile={data.apiProfile}
@@ -755,7 +741,7 @@ export default function ProfilePage() {
             </div>
             {offerDhb !== null && (
               <p className="text-[11px] text-zinc-500 flex items-center gap-1.5">
-                <img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5" />
+                <img src={dehubCoin} alt={tokenLabel()} className="w-3.5 h-3.5" />
                 {t('profile.offerWorthNow', { amount: offerDhb.toLocaleString(undefined, { maximumFractionDigits: 0 }) })}
               </p>
             )}

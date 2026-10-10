@@ -90,6 +90,7 @@
     "heading": "ሓጺርቲ DeHub"
   },
   "settings": {
+    "postingChain": "ናይ ልጥፋት ብሎክቸይን",
     "showOnline": "ኣብ ኢንተርነት ከለኹ ኣርኢ",
     "showOnlineDesc": "እቶም እትልእኮም ሰባት DeHub ክትጥቀም ከለኻ ኣብ ጥቓ ስምካ ዘሎ ሕጫውቲ ነጥቢ ይርእዩ",
     "smartReplies": "ዝተጠቕሱ መልስታት",
@@ -259,6 +260,7 @@
     "light": "ብሩህ",
     "dark": "ጸልማት",
     "system": "ስርዓት",
+    "immersive": "Immersive",
     "cosmic": "ኮስሚክ ፒክስል",
     "hazy": "ግመ ለይትታት",
     "swarms": "መንጋታት",
@@ -588,7 +590,7 @@
     "stageDelivering": "እዚ ድማ ነቲ ምልክታታትካ ይልእኽ...",
     "payViaDpay": "ን DeHub Pay ዝተኸፍለ ፡ ምልክታት ኣብ ከባቢ 30ታት ይኣትዉ",
     "payViaBridgeDpay": "ናብ መሰረታ ብምስጓምን ን DeHub Pay ብምኽፋል ፡ ምልክታት ኣብ ውሽጢ ሓደ ደቒቕ ይመጽእ",
-    "dmSent": "{{amount}} DHB ን{{name}} ተሰዲዱ!"
+    "dmSent": "{{amount}} ምልክታት ን{{name}} ተሰዲዱ!"
   },
   "postOptions": {
     "options": "ምርጫታት",
@@ -1175,10 +1177,10 @@
   },
   "dhbListing": {
     "title": "ቶከን ብቐረባ ክምዝገብ እዩ!",
-    "body": "$DHB ገና ኣይተሸጠን። ምስ ተመዝገበ ብቕጽበት ኢመይል ተቐበል።",
+    "body": "ምልክታት ገና ኣይተሸጠን። ምስ ተመዝገበ ብቕጽበት ኢመይል ተቐበል።",
     "notifyMe": "ኣፍልጠኒ",
-    "privacy": "እዚ $DHB ምስ ተመዝገበ ንምሕባርካ ጥራይ ኢና ንጥቀመሉ።",
-    "joined": "ኣብ ዝርዝር ኣለኻ። $DHB ምስ ተመዝገበ ብቕጽበት ናብ {{email}} ኢመይል ክንሰድድ ኢና።"
+    "privacy": "እዚ ምልክታት ምስ ተመዝገበ ንምሕባርካ ጥራይ ኢና ንጥቀመሉ።",
+    "joined": "ኣብ ዝርዝር ኣለኻ። ምልክታት ምስ ተመዝገበ ብቕጽበት ናብ {{email}} ኢመይል ክንሰድድ ኢና።"
   },
   "explorePage": {
     "searchPlaceholder": "ሰባት፣ ጽሑፋት፣ ወይ ትሕዝቶ ድለ...",
@@ -1435,7 +1437,7 @@
     "otherTokens": "ካልኦት ቶከናት",
     "otherTokensDesc": "ብካርድኻ ኣብ Base ETH ወይ USDC ግዛእ",
     "shareToFeed": "ኣብ መብልዕተይ ክካፈል እየ",
-    "sharePostTemplate": "{{amount}} $ DHB ኣብ DeHub ኣብ ዝርከብ መደቀሲይ ኣክሊልካ ። ምስ ማሕበረሰብ ተዘራረብ ። #ደሆብ #DHB",
+    "sharePostTemplate": "{{amount}} $ ምልክታት ኣብ DeHub ኣብ ዝርከብ መደቀሲይ ኣክሊልካ ። ምስ ማሕበረሰብ ተዘራረብ ። #ደሆብ",
     "success": {
       "title": "ምሉእ መግዛእቲ!",
       "subtitle": "ምልክታት ናብ ቦርሳኻ ተላኢኹ ኣሎ ።",
@@ -3436,7 +3438,7 @@
     "srHeading": "ደህብ ላውንችፓድ",
     "phaseBadge": "ምዕራፍ 1 · ናይ ውልቀ-መግቢ ቅድመ-መግቢ",
     "heroTitle": "ንግዲ TOKENISE",
-    "heroSubtitle": "DHB ዝተኸፈለ ናይ ምትእስሳር ኩርባ ። ናብ Uniswap ኣብ $ 42K ናይ ዕዳጋ ካፕ ተመሪቑ ።",
+    "heroSubtitle": "ምልክታት ዝተኸፈለ ናይ ምትእስሳር ኩርባ ። ናብ Uniswap ኣብ $ 42K ናይ ዕዳጋ ካፕ ተመሪቑ ።",
     "createCoin": "ሳንቲም ፍጠር",
     "filterNew": "ሓድሽ",
     "filterGraduating": "ምረቓ",
@@ -4352,7 +4354,7 @@
   },
   "usernames": {
     "seoTitle": "ናይ ተጠቃሚ ስም ዕዳጋ",
-    "seoDescription": "DeHub Usernames ምስ DHB ግዛትን ሸይጥን ። ሓጺር ፡ ቁጽሪን ኦሪጅናልን ናይ መሸጣ ኢድ ድለዩ ፡ ወይ ድማ ናይ ገዛእ ርእስኹም ዝርዝር — እቲ ዝውውር ኣብ እዋን ክፍሊት ይፍጸም ።",
+    "seoDescription": "DeHub Usernames ምስ ምልክታት ግዛትን ሸይጥን ። ሓጺር ፡ ቁጽሪን ኦሪጅናልን ናይ መሸጣ ኢድ ድለዩ ፡ ወይ ድማ ናይ ገዛእ ርእስኹም ዝርዝር — እቲ ዝውውር ኣብ እዋን ክፍሊት ይፍጸም ።",
     "title": "ስማት ተጠቃሚ",
     "subtitle": "ኣብ ኣሜሪካ ዝንቀሳቐስ ገንዘብ ፡ ኣብ ኣሜሪካ ዝንቀሳቐስ ገንዘብ",
     "tabBrowse": "ኣሰላስል",
@@ -4468,7 +4470,7 @@
   },
   "accounts": {
     "seoTitle": "ዕዳጋ ሕሳብ — DeHub",
-    "seoDescription": "ን DHB ዝቖመ DeHub መለያታት ግዛትን ሸይጥን ። መለያታት ተኸታተልቲ ፡ ኣሰላስልትን ዕድመን ኣሰላስል — ናይ ኩሉ ዝውውር ኣሰላስል ፡ ቦታታት ፡ ተኸታተልቲ ፡ ከምኡውን ናይ ባጅ መሰል ፡ ክፍሊት ድማ ብቐጥታ ናብ ሸያጭ ይኸይድ ።",
+    "seoDescription": "ን ምልክታት ዝቖመ DeHub መለያታት ግዛትን ሸይጥን ። መለያታት ተኸታተልቲ ፡ ኣሰላስልትን ዕድመን ኣሰላስል — ናይ ኩሉ ዝውውር ኣሰላስል ፡ ቦታታት ፡ ተኸታተልቲ ፡ ከምኡውን ናይ ባጅ መሰል ፡ ክፍሊት ድማ ብቐጥታ ናብ ሸያጭ ይኸይድ ።",
     "title": "ሕሳባት",
     "subtitle": "ምሉእ ሕሳብ ንሽያጭ ፡ ዋጋ ኣብ DeHub Tkens",
     "tabBrowse": "ኣሰላስል",
@@ -6107,16 +6109,16 @@
   },
   "docs": {
     "seoTitle": "ሰነዳት DeHub — መምርሒታት፡ ቶከን፡ dApps ከምኡ’ውን ሕቶታት",
-    "seoDescription": "ወግዓዊ ሰነዳት DeHub፦ ሓፈሻዊ ትሕዝቶ መድረኽ፡ dApps፡ ቁጠባ ቶከን DHB፡ ስቴኪንግ፡ ጸወታታት፡ መንገዲ ካርታ፡ ተደጋጋሚ ሕቶታትን ካልእን።"
+    "seoDescription": "ወግዓዊ ሰነዳት DeHub፦ ሓፈሻዊ ትሕዝቶ መድረኽ፡ dApps፡ ቁጠባ ቶከን ምልክታት፡ ስቴኪንግ፡ ጸወታታት፡ መንገዲ ካርታ፡ ተደጋጋሚ ሕቶታትን ካልእን።"
   },
   "dex": {
-    "seoTitle": "DEX — ኣብ ዋጋኻ DHB ንግዲ",
+    "seoTitle": "DEX — ኣብ ዋጋኻ ምልክታት ንግዲ",
     "seoDescription": "ዋጋ DHBኻ ብ Uniswap v4 ገደብ ትእዛዝ ኣብ Base ወይ BnB Chain ኣዳሉ ወይ ሸይጥ ። ህያው መጽሓፍ ቅደም ተከተል ፡ ጥልቀት ዕዳጋን ሓደ ናይ ሓባር USD ዋጋን ።",
     "venue": "ኔትወርክ",
     "marketPrice": "ዋጋ ዕዳጋ · ዶላር",
     "change24": "24 ሰዓት ለውጢ",
     "totalLiquidity": "ሓፈሻዊ ፍሰት · USD",
-    "listedDhb": "ዝርዝር DHB · {{chain}}",
+    "listedDhb": "ዝርዝር ምልክታት · {{chain}}",
     "listedUsd": "ዝተዘርገሐ ዶላር · {{chain}}",
     "refreshMarket": "ዕዳጋ ህዳሰ",
     "refresh": "ተሐድሶ",
@@ -6141,21 +6143,21 @@
     "orderBook": "መጽሓፍ ኣዘዝ",
     "priceGrouping": "ናይ ዋጋ ጉጅለ",
     "priceUsd": "ዋጋ (USD)",
-    "sizeDhb": "መጠን (DHB)",
-    "totalDhb": "ድምር (DHB)",
+    "sizeDhb": "መጠን (ምልክታት)",
+    "totalDhb": "ድምር (ምልክታት)",
     "noBids": "ሎሚ ኣይተገበረን",
     "noAsks": "ሎሚ ኣይተገበረን",
     "useBuyPrice": "{{price}} ከም ዋጋ ግዛእ ተጠቀመ",
     "useSellPrice": "{{price}} ከም ዋጋ ሸየጥ ተጠቀመ",
     "spread": "ፍልልይ · ዶላር",
-    "buyTotal": "{{amount}} DHB ግዛእ",
-    "sellTotal": "{{amount}} DHB ሽየጥ",
+    "buyTotal": "{{amount}} ምልክታት ግዛእ",
+    "sellTotal": "{{amount}} ምልክታት ሽየጥ",
     "placeOrder": "ትእዛዝ ኣቕርብ",
     "lpFee": "0% LP ክፍሊት",
     "lpFeeLabel": "LP ክፍሊት",
     "lpFeeValue": "{{fee}}% LP ክፍሊት",
-    "buy": "DHB ግዛእ",
-    "sell": "DHB ሽየጥ",
+    "buy": "ምልክታት ግዛእ",
+    "sell": "ምልክታት ሽየጥ",
     "maxBuy": "ከቢብ ዋጋ ግዛእ",
     "minSell": "ከቢብ ዋጋ ሽየጥ",
     "spend": "ኣውጽእ",
@@ -6171,7 +6173,7 @@
     "estimated": "ዝተገመተ ምልኣት",
     "network": "መሰረተ ልቓሕ",
     "sellBelowMarket": "እዚ ሽየጥ ብ ${{price}} ካብ ገበያ ዋጋ ብ {{percent}}% ንዒቕ እዩ። ሓደ ሰብ ክገዝኦን ብኻልእ ቦታ ብሓደ ግዜ ክሸይጦን ይኽእል።",
-    "buyAboveMarket": "እዚ ሸመትቲ ብ {{percent}}% ካብቲ ብገበያ ዝወጸ ዋጋ ${{price}} ንላዕሊ እዩ። ካልእ ቦታ ካብ ዝነበረሉ ንላዕሊ ን DHB ክትከፍል ኢኻ።",
+    "buyAboveMarket": "እዚ ሸመትቲ ብ {{percent}}% ካብቲ ብገበያ ዝወጸ ዋጋ ${{price}} ንላዕሊ እዩ። ካልእ ቦታ ካብ ዝነበረሉ ንላዕሊ ን ምልክታት ክትከፍል ኢኻ።",
     "useMarket": "ብገበያ ዋጋ ተጠቀመ",
     "balanceError": "ምርሳዕ ሂሳብ ኣይጸሓፈን። ቅድሚ ትእዛዝ ምግባር ዳግማይ ፈትን።",
     "noFunding": "ኣብ {{chain}} ፡ {{token}} የለን።",
@@ -6180,7 +6182,7 @@
     "reviewYourBuy": "ንገዛእታታትካ ሪአዮ",
     "reviewYourSell": "ንመሸጥካ ሪአዮ",
     "reviewDeposit": "ኣብ {{chain}} ፡ {{amount}} {{token}} ኣእትው።",
-    "reviewRange": "Range: {{min}} – {{max}} USD ን DHB።",
+    "reviewRange": "Range: {{min}} – {{max}} USD ን ምልክታት።",
     "initializes": "እዚ 0% pool ይፈጥርን ይጅምርን።",
     "pendingNote": "ናይ ሓደስቲ ትእዛዛትካ ተሰሚሩ። ከይተረፈ ምፍታን ወይ ምዝገባ ምዝገባ ብዘይ ካልእ ተቀማጢ።",
     "viewTransaction": "ትእዛዝ ርአ",
@@ -6197,7 +6199,7 @@
     "keepOpen": "ናይ ሓደስቲ ትእዛዛትካ ምዝገባ ክሳብ ዝውዳእ እዚ ገጽ ክፍቲት ግበራ። Browser storage ኣይሰርሕን።",
     "snapshotDelayed": "ናይ ሓባር ዕዳጋ ሓበሬታ ይድንጒ ። ናይ መወዳእታ ዝተረጋገጸ ናይ ምስሊ መግለጺ",
     "snapshotUnavailable": "ናይ ሓባር ዕዳጋ ሓበሬታ ኣይርከብን እዩ ። ናብ ቦታታት ምምላስ ።",
-    "withdrawReview": "ኣብ {{chain}} ፡ {{dhb}} DHB ን {{usdc}} USDC ን ኣውጽእ? መጠናት ቅድሚ ፊርማ ይሕደሱ፤ price tolerance 0.5% እዩ።",
+    "withdrawReview": "ኣብ {{chain}} ፡ {{dhb}} ምልክታት ን {{usdc}} USDC ን ኣውጽእ? መጠናት ቅድሚ ፊርማ ይሕደሱ፤ price tolerance 0.5% እዩ።",
     "withdrawn": "Position ተኣውሰ",
     "withdrawFailed": "Withdrawal ኣይጸሓፈን",
     "withdrawing": "ኣውጽእ ኣሎ",
@@ -6326,6 +6328,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "ፍሉያት ህሞታት ምስሊ",
+      "visualPrivacy": "ንትንተና ምስሊ ዝተመርጹ ፍሬማት ስደድ።"
+    },
+    "review": {
+      "title": "ግምገማ ፕሮጀክት",
+      "shared": "ምሳኹም ዝተኻፈለ",
+      "time": "ግዜ (s)",
+      "assign": "ቦርሳ ገንዘብ መድብ"
+    },
+    "textFit": {
+      "wrap": "መስመራት ብኣውቶማቲክ ምክፋል",
+      "width": "ስፍሓት ጽሑፍ",
+      "shrink": "ጽሑፍ ንኽኣቱ ኣንእስ",
+      "height": "ቁመት ጽሑፍ",
+      "captions": "መስመር ንኡስ ኣርእስቲ ኣመዓራሪ"
+    },
     "canvas": {
       "dropMedia": "ንድፍካ ንምውሳኽ ኣብዚ ግደፎ",
       "dropText": "ጽሑፍ ንምውሳኽ ኣብዚ ግደፎ",
@@ -7659,7 +7678,7 @@
     "topUpTitle": "ናብ ላዕሊን ናብ ላዕሊን",
     "discount": "{{percent}}% ቅናሽ",
     "noDiscount": "ምሉእ ዋጋ",
-    "total": "ሓፈሻዊ ${{usd}}, ኣብ DHB ዝተኸፍለ",
+    "total": "ሓፈሻዊ ${{usd}}, ኣብ ምልክታት ዝተኸፍለ",
     "buy": "ክሬዲት ግዛ",
     "buying": "ነቲ ክፍሊት ክንጽበዮ ኢና...",
     "bought": "{{count}} ናይ ፖስት ክሬዲት ተወሲኹ",
@@ -7689,7 +7708,7 @@
     "skippedToast": "ስኪፕ {{platforms}}: እዚ ጽሑፍ እዚ ነቲ ዘድልዮም ስእሊ ወይ ቪድዮ የብሎምን ።",
     "uploadFailed": "ንመስቀል-ፖስታ ሚድያኻ ክትለኣኽ ኣይትኽእልን ኢኻ ።",
     "creditRules": "ነፍሲ ወከፍ ፖስት ንነፍሲ ወከፍ መድረኽ ክሬዲት የኽፍል ፦ {{x}} X, {{farcaster}} ንፋርካስተር ከምኡ'ውን {{other}} ንነፍሲ ወከፍ ካልእ መድረኽ ። እቲ ዝተመደበ ልኡኻት ኣብ ግዜ ኣጀንዳኦም ክሬዲት ይጥቀሙ እዮም ።",
-    "payAsYouGoCredits": "ኣብ DHB ዝጠፍኡ ክሬዲት ኣብ ${{price}} ነፍሲ ወከፍ ኣብ እትለኣኽሉ እዋን ይዕድጉ ።",
+    "payAsYouGoCredits": "ኣብ ምልክታት ዝጠፍኡ ክሬዲት ኣብ ${{price}} ነፍሲ ወከፍ ኣብ እትለኣኽሉ እዋን ይዕድጉ ።",
     "topUpCredits": "{{count}} ክሬዲት",
     "perCredit": "${{price}} ብክሬዲት",
     "pendingApproval": "ኣብ Farcaster App dehub ክትጽድቕ ትጽበዮ",
@@ -7701,7 +7720,7 @@
   "dm": {
     "planRestricted": "እዚ ተጠቃሚ መልእኽትታት ንምቕባል ምዝገባ የድልዮ።",
     "planTypeNotAllowed": "ውጥን እዚ ፈጣሪ ከምዚ ዓይነት መልእኽቲ ኣይፈቅድን።",
-    "planMinTip": "ን'ዚ ፈጣሪ ቲፕ እንተነኣሰ {{amount}} DHB ክኸውን ኣለዎ።"
+    "planMinTip": "ን'ዚ ፈጣሪ ቲፕ እንተነኣሰ {{amount}} ምልክታት ክኸውን ኣለዎ።"
   },
   "credits": {
     "earningsWorth": "ዋጋ {{amount}}",
@@ -7834,7 +7853,7 @@
       "notifyBody": "እቶም ነቲ መተግበሪኻ ዝውስኹ ተጠቀምቲ ምስ ቁልፊ ኣፍልጦኻ ካብ ኣገልጋሊኻ ክሕበሩ ይኽእሉ እዮም ። ናይ ነፍሲ ወከፍ ተጠቃሚ ምልክታት ኣይእከብን እዩ ።",
       "rankTitle": "እቲ መደበር ኣፕሊኬሽናት ብኸመይ ከም ዝቑጸር",
       "rankBody": "ኣብ ነፍሲ ወከፍ ምሸት ፡ ነፍሲ ወከፍ ዝተመዝገበ መተግበሪ ነጥቢ ይረክብ ፡ 55% ካብ ተመሊሶም ዝርከቡ ተጠቀምቲ (ኣብዚ ሰሙን'ዚን ኣብ ዝሓለፈ ሰሙን ዝኸፍቱ ሰባት) ፡ 35% ካብ ሳምንታዊ ተጠቀምቲ ፡ 10% ድማ ኣብተን ቀዳሞት 14 መዓልታት ይውስኽ ። ኣብ DeHub መለያታት ዝተፈረመ ጥራይ እዩ ዝቑጸር ፣ ስለዚ ቦትታትን ናይ ገጽ ተሃድሶታትን ዋላ ሓንቲ ኣይረኽቡን ።",
-      "rewardsBody": "ኣብ ነፍሲ ወከፍ ወርሒ {{pool}} DHB ኣብ መንጎ መተግበሪታት ብተመሳሳሊ ነጥቢ ይካፈል ፡ ኣብ ሰሙን ይቑጸር ። ብቑዕ ንምዃን ፡ ሓደ መተግበሪ ዝተረጋገጸ ናይ ገዛውቲ ቦርሳታትን ብውሑዱ 3 ናይ ምምላስ ተጠቀምትን የድልዮ እዩ ። እቲ ሽልማት ካብ DeHub ናብ ናይ ገዛኢ ቦርሳ ይኽፈል ።",
+      "rewardsBody": "ኣብ ነፍሲ ወከፍ ወርሒ {{pool}} ምልክታት ኣብ መንጎ መተግበሪታት ብተመሳሳሊ ነጥቢ ይካፈል ፡ ኣብ ሰሙን ይቑጸር ። ብቑዕ ንምዃን ፡ ሓደ መተግበሪ ዝተረጋገጸ ናይ ገዛውቲ ቦርሳታትን ብውሑዱ 3 ናይ ምምላስ ተጠቀምትን የድልዮ እዩ ። እቲ ሽልማት ካብ DeHub ናብ ናይ ገዛኢ ቦርሳ ይኽፈል ።",
       "rewardsWeek": "ሰሙን {{date}}",
       "rewardPaid": "ተኸፊሉ",
       "rewardPending": "ኣብ ምፅባይ",
@@ -7860,10 +7879,10 @@
     },
     "pay": {
       "title": "ክፍሊት {{name}}?",
-      "body": "እቲ DHB ብቐጥታ ናብ ናይ መተግበሪ ቦርሳ ይኸይድ ፡ {{wallet}}. እቲ ክፍሊት ክምለስ ኣይክእልን እዩ ።",
-      "confirm": "ክፍሊት {{amount}} DHB",
+      "body": "እቲ ምልክታት ብቐጥታ ናብ ናይ መተግበሪ ቦርሳ ይኸይድ ፡ {{wallet}}. እቲ ክፍሊት ክምለስ ኣይክእልን እዩ ።",
+      "confirm": "ክፍሊት {{amount}} ምልክታት",
       "sending": "ክፍሊት ይስደድ ኣሎ…",
-      "sent": "ክፍሊት {{amount}}DHB ናብ {{name}}.",
+      "sent": "ክፍሊት {{amount}}ምልክታት ናብ {{name}}.",
       "noOwner": "እዚ app ገና ዝተረጋገጸ wallet የብሉን።"
     },
     "add": {

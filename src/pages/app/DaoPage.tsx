@@ -1,7 +1,8 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DAO Page
  * ========
- * The treasury and who funded it. One wallet anyone can send DHB to; the page
+ * The treasury and who funded it. One wallet anyone can send tokens to; the page
  * reads its balance and every transfer into it straight off the chain, and
  * ranks contributors by how much of the pool they put in. That share is the
  * weight their voice carries when the DAO decides how the treasury is spent.
@@ -108,7 +109,7 @@ function RecentRow({ item }: { item: DaoContribution }) {
 function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { t } = useTranslation();
   const { isAuthenticated, isLoginModalOpen, requestWalletUnlock } = useAuth();
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/DaoPage.tsx:amount", '');
   const [pendingAfterUnlock, setPendingAfterUnlock] = useState<number | null>(null);
   const [unlockSheetSeen, setUnlockSheetSeen] = useState(false);
   const { mutate: contribute, isPending } = useContributeToDao();
@@ -145,7 +146,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
             onClick: () => window.open(daoTxUrl(result.chainId, result.txHash), '_blank', 'noopener'),
           },
         });
-        setAmount('');
+        setAmount.complete(amount, '');
         onOpenChange(false);
         // The transfer is out. Only a revert is still worth saying, and it
         // arrives long after the drawer has closed.
@@ -169,7 +170,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
         sendingRef.current = false;
       },
     });
-  }, [contribute, onOpenChange, queueAfterUnlock, t]);
+  }, [contribute, onOpenChange, queueAfterUnlock, t, setAmount, amount]);
 
   // The password/biometric sheet is controlled by AuthProvider. Once it has
   // visibly opened and then closed, either resume the exact transfer that led
@@ -309,7 +310,7 @@ export default function DaoPage() {
     <div className="min-h-screen">
       <SEOHead
         title="DAO Treasury — Fund DeHub and Earn a Say"
-        description="The DeHub DAO treasury: one wallet anyone can send DHB to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent."
+        description="The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent."
         url="https://dehub.io/dao"
         image="https://dehub.io/og/dao.jpg"
         jsonLd={{

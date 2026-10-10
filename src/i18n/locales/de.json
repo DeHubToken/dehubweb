@@ -90,6 +90,7 @@
     "heading": "DeHub Kurzvideos"
   },
   "settings": {
+    "postingChain": "Blockchain für Beiträge",
     "showOnline": "Anzeigen, wenn ich online bin",
     "showOnlineDesc": "Personen, denen Sie eine Nachricht senden, sehen einen grünen Punkt neben Ihrem Namen, während Sie DeHub verwenden",
     "smartReplies": "Antwortvorschläge",
@@ -259,6 +260,7 @@
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Dunstige Nächte",
     "swarms": "Swarms",
@@ -597,7 +599,7 @@
     "stageDelivering": "DeHub Pay sendet Ihre Token…",
     "payViaDpay": "An DeHub Pay bezahlt, Token kommen in ca. 30s an",
     "payViaBridgeDpay": "Auf Base verschoben und an DeHub Pay bezahlt, Token kommen in ca. einer Minute an",
-    "dmSent": "{{amount}} DHB an {{name}} gesendet!"
+    "dmSent": "{{amount}} Tokens an {{name}} gesendet!"
   },
   "postOptions": {
     "options": "Optionen",
@@ -1205,10 +1207,10 @@
   },
   "dhbListing": {
     "title": "Token-Listing kommt bald!",
-    "body": "$DHB wird noch nicht gehandelt. Erhalte eine E-Mail, sobald es gelistet wird.",
+    "body": "Tokens wird noch nicht gehandelt. Erhalte eine E-Mail, sobald es gelistet wird.",
     "notifyMe": "Benachrichtige mich",
-    "privacy": "Wir nutzen das nur, um dir Bescheid zu geben, wenn $DHB gelistet wird.",
-    "joined": "Du stehst auf der Liste. Wir schreiben an {{email}}, sobald $DHB gelistet wird."
+    "privacy": "Wir nutzen das nur, um dir Bescheid zu geben, wenn Tokens gelistet wird.",
+    "joined": "Du stehst auf der Liste. Wir schreiben an {{email}}, sobald Tokens gelistet wird."
   },
   "explorePage": {
     "searchPlaceholder": "Personen, Beiträge oder Inhalte suchen...",
@@ -1472,7 +1474,7 @@
     "otherTokens": "Andere Token",
     "otherTokensDesc": "ETH oder USDC auf Base mit deiner Karte kaufen",
     "shareToFeed": "In meinem Feed teilen",
-    "sharePostTemplate": "Habe gerade {{amount}} $DHB zu meinem Stack auf DeHub hinzugefügt. Bauen Sie mit der Gemeinschaft. #DeHub #DHB",
+    "sharePostTemplate": "Habe gerade {{amount}} Tokens zu meinem Stack auf DeHub hinzugefügt. Bauen Sie mit der Gemeinschaft. #DeHub",
     "success": {
       "title": "Kauf abgeschlossen!",
       "subtitle": "Token wurden in Ihre Brieftasche geliefert.",
@@ -3504,7 +3506,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Phase 1 · Private Vorschau",
     "heroTitle": "UNTERNEHMEN TOKENISIEREN",
-    "heroSubtitle": "DHB-gekoppelte Bonding Curve. Wechselt zu Uniswap bei $42K Marktkapitalisierung.",
+    "heroSubtitle": "Tokens-gekoppelte Bonding Curve. Wechselt zu Uniswap bei $42K Marktkapitalisierung.",
     "createCoin": "Coin erstellen",
     "filterNew": "Neu",
     "filterGraduating": "Kurz vor Abschluss",
@@ -3605,7 +3607,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Kaufen und verkaufen Sie Bruchteile von DeHub-Beiträgen. Ein geprägter Beitrag besteht aus 1000 On-Chain-Bruchteilen — besitzen Sie einen Anteil an einem Video, Track oder Bild und handeln Sie damit in DHB.",
+    "seoDescription": "Kaufen und verkaufen Sie Bruchteile von DeHub-Beiträgen. Ein geprägter Beitrag besteht aus 1000 On-Chain-Bruchteilen — besitzen Sie einen Anteil an einem Video, Track oder Bild und handeln Sie damit in Tokens.",
     "title": "Anteile",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -3748,6 +3750,8 @@
     "sellYourFractions": "Verkaufe deine Anteile ({{held}} gehalten)"
   },
   "creator": {
+    "toolMaboroshi": "Maboroshi",
+    "toolMaboroshiDesc": "Ersetze Figuren und Objekte, prüfe einen Entwurf und exportiere mit der ursprünglichen Tonspur.",
     "whatToCreate": "Was du erstellen möchtest",
     "startCreatingWith": "Beginne zu erstellen mit {{model}}",
     "studioSubtitle": "Beschreibe eine Szene, einen Charakter, eine Stimmung oder einen Stil. Ergebnisse erscheinen unten und gehen direkt in den Editor.",
@@ -4451,7 +4455,7 @@
   },
   "usernames": {
     "seoTitle": "Benutzername Marketplace | DeHub",
-    "seoDescription": "Kaufe und verkaufe DeHub-Benutzernamen bei DHB. Suchen Sie nach kurzen, numerischen und originalen Griffen zum Verkauf oder listen Sie Ihre eigenen auf — die Übertragung erfolgt in der Kette, sobald die Zahlung abgeschlossen ist.",
+    "seoDescription": "Kaufe und verkaufe DeHub-Benutzernamen bei Tokens. Suchen Sie nach kurzen, numerischen und originalen Griffen zum Verkauf oder listen Sie Ihre eigenen auf — die Übertragung erfolgt in der Kette, sobald die Zahlung abgeschlossen ist.",
     "title": "Benutzernamen",
     "subtitle": "Griffe zum Verkauf, preislich in USD",
     "tabBrowse": "Durchsuchen",
@@ -4575,7 +4579,7 @@
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",
-    "seoDescription": "Kaufe und verkaufe etablierte DeHub-Konten für DHB. Durchsuche Konten nach Followern, Uploads und Alter — das Handle, die Beiträge, Follower und Badge-Ansprüche werden alle übertragen, und die Zahlung geht direkt an den Verkäufer.",
+    "seoDescription": "Kaufe und verkaufe etablierte DeHub-Konten für Tokens. Durchsuche Konten nach Followern, Uploads und Alter — das Handle, die Beiträge, Follower und Badge-Ansprüche werden alle übertragen, und die Zahlung geht direkt an den Verkäufer.",
     "title": "Konten",
     "subtitle": "Ganze Konten zu verkaufen, bepreist in DeHub-Token",
     "tabBrowse": "Durchsuchen",
@@ -6236,17 +6240,17 @@
   },
   "docs": {
     "seoTitle": "DeHub Dokumentation — Anleitungen, Token, dApps & FAQ",
-    "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, DHB-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
+    "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, Tokens-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
   },
   "dex": {
-    "seoTitle": "DEX — DHB zu Ihrem Preis handeln",
-    "seoDescription": "Legen Sie Ihren DHB-Kauf- oder Verkaufspreis mit einer Uniswap v4 Limit Order auf Base oder BNB Chain fest. Live Orderbuch, Markttiefe und ein gemeinsamer USD-Preis.",
+    "seoTitle": "DEX — Tokens zu Ihrem Preis handeln",
+    "seoDescription": "Legen Sie Ihren Tokens-Kauf- oder Verkaufspreis mit einer Uniswap v4 Limit Order auf Base oder BNB Chain fest. Live Orderbuch, Markttiefe und ein gemeinsamer USD-Preis.",
     "venue": "Netzwerk",
     "marketPrice": "Marktpreis · USD",
     "bookPrice": "{{chain}} Buchpreis · USD",
     "change24": "24h Veränderung",
     "totalLiquidity": "Gesamtliquidität · USD",
-    "listedDhb": "Gelistete DHB · {{chain}}",
+    "listedDhb": "Gelistete Tokens · {{chain}}",
     "listedUsd": "Gelistete USD · {{chain}}",
     "refreshMarket": "Markt aktualisieren",
     "refresh": "Aktualisieren",
@@ -6271,21 +6275,21 @@
     "orderBook": "Orderbuch",
     "priceGrouping": "Preisgruppierung",
     "priceUsd": "Preis (USD)",
-    "sizeDhb": "Größe (DHB)",
-    "totalDhb": "Gesamt (DHB)",
+    "sizeDhb": "Größe (Tokens)",
+    "totalDhb": "Gesamt (Tokens)",
     "noBids": "Noch keine Gebote",
     "noAsks": "Noch keine Liquidität",
     "useBuyPrice": "Verwende {{price}} als Kaufpreis",
     "useSellPrice": "Verwende {{price}} als Verkaufspreis",
     "spread": "Spread · USD",
-    "buyTotal": "Kaufe {{amount}} DHB",
-    "sellTotal": "Verkaufe {{amount}} DHB",
+    "buyTotal": "Kaufe {{amount}} Tokens",
+    "sellTotal": "Verkaufe {{amount}} Tokens",
     "placeOrder": "Order aufgeben",
     "lpFee": "0% LP-Gebühr",
     "lpFeeLabel": "LP-Gebühr",
     "lpFeeValue": "{{fee}}% LP-Gebühr",
-    "buy": "DHB kaufen",
-    "sell": "DHB verkaufen",
+    "buy": "Tokens kaufen",
+    "sell": "Tokens verkaufen",
     "maxBuy": "Maximaler Kaufpreis",
     "minSell": "Minimaler Verkaufspreis",
     "spend": "Ausgeben",
@@ -6301,7 +6305,7 @@
     "estimated": "Geschätzte vollständige Umwandlung",
     "network": "Finanzierungsnetzwerk",
     "sellBelowMarket": "Dieser Verkauf liegt {{percent}}% unter dem Marktpreis von ${{price}}. Jemand kann ihn kaufen und sofort woanders weiterverkaufen.",
-    "buyAboveMarket": "Dieser Kauf liegt {{percent}}% über dem Marktpreis von ${{price}}. Sie würden mehr bezahlen, als DHB anderswo gehandelt wird.",
+    "buyAboveMarket": "Dieser Kauf liegt {{percent}}% über dem Marktpreis von ${{price}}. Sie würden mehr bezahlen, als Tokens anderswo gehandelt wird.",
     "useMarket": "Marktpreis verwenden",
     "balanceError": "Guthabenprüfung fehlgeschlagen. Versuchen Sie es erneut, bevor Sie eine Order platzieren.",
     "noFunding": "Kein {{token}} verfügbar auf {{chain}}.",
@@ -6310,7 +6314,7 @@
     "reviewYourBuy": "Kauf überprüfen",
     "reviewYourSell": "Verkauf überprüfen",
     "reviewDeposit": "Zahlen Sie {{amount}} {{token}} auf {{chain}} ein.",
-    "reviewRange": "Bereich: {{min}} – {{max}} USD pro DHB.",
+    "reviewRange": "Bereich: {{min}} – {{max}} USD pro Tokens.",
     "initializes": "Dies erstellt und initialisiert den 0%-Pool.",
     "pendingNote": "Ihre Transaktion wurde übermittelt. Setzen Sie die Bestätigung oder die Registrierung der Notierung ohne weitere Einzahlung fort.",
     "viewTransaction": "Transaktion anzeigen",
@@ -6327,7 +6331,7 @@
     "keepOpen": "Halten Sie diese Seite offen, bis Ihre Notierung registriert ist. Browser-Speicher ist nicht verfügbar.",
     "snapshotDelayed": "Gemeinsame Marktdaten sind verzögert. Zeigt den letzten verifizierten Schnappschuss an.",
     "snapshotUnavailable": "Gemeinsame Marktdaten sind nicht verfügbar. Versuchen Sie erneut, Positionen zu laden.",
-    "withdrawReview": "Ziehen Sie {{dhb}} DHB und {{usdc}} USDC auf {{chain}} ab? Beträge werden vor der Unterzeichnung aktualisiert; Preistoleranz beträgt 0,5 %.",
+    "withdrawReview": "Ziehen Sie {{dhb}} Tokens und {{usdc}} USDC auf {{chain}} ab? Beträge werden vor der Unterzeichnung aktualisiert; Preistoleranz beträgt 0,5 %.",
     "withdrawn": "Position abgezogen",
     "withdrawFailed": "Abhebung fehlgeschlagen",
     "withdrawing": "Abheben…",
@@ -6461,6 +6465,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuelle Höhepunkte",
+      "visualPrivacy": "Ausgewählte Einzelbilder zur visuellen Analyse senden."
+    },
+    "review": {
+      "title": "Projektprüfung",
+      "shared": "Mit dir geteilt",
+      "time": "Zeit (s)",
+      "assign": "Wallet zuweisen"
+    },
+    "textFit": {
+      "wrap": "Zeilen umbrechen",
+      "width": "Textbreite",
+      "shrink": "Text verkleinern, bis er passt",
+      "height": "Texthöhe",
+      "captions": "Untertitelspur einpassen"
+    },
     "canvas": {
       "dropMedia": "Ablegen, um es zu Ihrem Design hinzuzufügen",
       "dropText": "Ablegen, um Text hinzuzufügen",
@@ -6471,7 +6492,10 @@
       "resetToStart": "Zurück zum Anfang",
       "resize": "Größe ändern",
       "rotate": "Drehen",
-      "toggleLoop": "Schleife umschalten"
+      "toggleLoop": "Schleife umschalten",
+      "previousFrame": "Vorheriges Bild",
+      "nextFrame": "Nächstes Bild",
+      "playhead": "Abspielposition"
     },
     "export": {
       "scope": "Download-Bereich",
@@ -6863,6 +6887,107 @@
       "sync": "Schnitte synchronisieren",
       "none": "Kein zuverlässiger Takt gefunden.",
       "unchanged": "Die Schnitte konnten nicht ausgerichtet werden."
+    },
+    "videoTemplates": {
+      "heading": "Videovorlagen",
+      "format": "Videoformat",
+      "useFormat": "Videoformat {{aspect}} verwenden",
+      "duration": "{{seconds}} s",
+      "hint": "Wähle ein Format, bearbeite den Text und füge deine Clips hinzu.",
+      "names": {
+        "question": "Einstiegsfrage",
+        "beforeAfter": "Vorher und nachher",
+        "tips": "Drei Tipps",
+        "tutorial": "Kurzes Tutorial",
+        "countdown": "Countdown",
+        "mythFact": "Mythos und Fakt",
+        "product": "Produktvorstellung",
+        "announcement": "Ankündigung",
+        "story": "Geschichte",
+        "quote": "Zitatvideo"
+      },
+      "copy": {
+        "question": "Deine große Frage",
+        "answer": "Hier ist die Antwort",
+        "tryIt": "Probier es heute",
+        "smallChange": "Eine kleine Änderung",
+        "before": "Vorher",
+        "after": "Nachher",
+        "difference": "Sieh den Unterschied",
+        "threeTips": "Drei nützliche Tipps",
+        "tipOne": "Dein erster Tipp",
+        "tipTwo": "Dein zweiter Tipp",
+        "tipThree": "Dein dritter Tipp",
+        "tryOne": "Probier heute einen aus",
+        "threeSteps": "In drei Schritten",
+        "getReady": "Mach dich bereit",
+        "mainStep": "Der wichtigste Schritt",
+        "checkResult": "Prüfe das Ergebnis",
+        "yourTurn": "Du bist dran",
+        "topFive": "Die besten fünf",
+        "fifthPick": "Dein fünfter Favorit",
+        "fourthPick": "Dein vierter Favorit",
+        "thirdPick": "Dein dritter Favorit",
+        "secondPick": "Dein zweiter Favorit",
+        "bestPick": "Deine Nummer eins",
+        "favourite": "Was ist dein Favorit?",
+        "myth": "Der verbreitete Mythos",
+        "fact": "Die hilfreiche Wahrheit",
+        "newFavourite": "Dein neuer Favorit",
+        "productName": "Dein Produktname",
+        "lookCloser": "Schau genauer hin",
+        "comingSoon": "Etwas Neues kommt",
+        "announcement": "Deine große Ankündigung",
+        "bePart": "Sei dabei",
+        "atFirst": "Am Anfang...",
+        "thenChanged": "Dann änderte sich alles",
+        "whatHappened": "Das ist passiert",
+        "yourQuote": "Sag etwas, das im Gedächtnis bleibt.",
+        "passItOn": "Gib es weiter",
+        "questionHint": "Stelle eine klare Frage.",
+        "answerHint": "Erkläre es in einem klaren Satz.",
+        "nextHint": "Zeige einen einfachen nächsten Schritt.",
+        "hookHint": "Mach den Einstieg sehenswert.",
+        "beforeHint": "Zeige den Ausgangspunkt.",
+        "afterHint": "Zeige das Ergebnis.",
+        "saveHint": "Gib einen Grund zum Speichern.",
+        "tipHint": "Ergänze ein hilfreiches Detail.",
+        "pickHint": "Erkläre, warum dieser Favorit seinen Platz verdient.",
+        "mythHint": "Nenne die Annahme, die du hinterfragen möchtest.",
+        "productHint": "Zeige einen guten Grund dafür.",
+        "announcementHint": "Ergänze den Namen, das Datum oder ein Detail.",
+        "turnHint": "Zeige den Moment der Veränderung.",
+        "authorHint": "Dein Name"
+      }
+    },
+    "sharedTimeline": {
+      "receive": "Änderungen empfangen",
+      "hint": "Übernimm die zuletzt gespeicherten Änderungen. Lokale Änderungen und Rückgängig bleiben erhalten.",
+      "received": "Version {{revision}} empfangen.",
+      "upToDate": "Bereits aktuell.",
+      "protectedUndo": "Ältere lokale Änderungen überschneiden sich mit geteilten Änderungen. Rückgängig bewahrt die geteilten Änderungen."
+    },
+    "live": {
+      "stopEdits": "Live-Bearbeitung stoppen",
+      "receiveEdits": "Live-Änderungen empfangen",
+      "shareEdits": "Änderungen live teilen",
+      "waiting": "Warten auf den Abschluss der Bearbeitung",
+      "transferring": "Änderungen werden übertragen",
+      "sharing": "Änderungen werden live geteilt",
+      "receiving": "Live-Änderungen werden empfangen",
+      "paused": "Live-Bearbeitung pausiert",
+      "retryRecovery": "Wiederherstellung erneut versuchen",
+      "personalCopy": "Persönliche Kopie speichern",
+      "privateHint": "Beim Beitreten werden keine Änderungen hochgeladen. Live-Teilen lädt neue private Quellen hoch; Speichern erstellt eine dauerhafte Version."
+    },
+    "assembly": {
+      "matchConsent": "Clips und Fotos passend zu meiner Anfrage auswählen",
+      "matchScenes": "Passende Szenen finden",
+      "noMatch": "Keine passenden Szenen gefunden. Versuche ein anderes Thema oder eine andere Auswahl.",
+      "matchLimit": "Wähle bis zu 10 Clips oder Fotos. Videos müssen zwischen einer Sekunde und 10 Minuten lang sein.",
+      "matchDuration": "Die passenden Aufnahmen sind kürzer als das gewünschte Video. Verkürze die Dauer oder wähle weitere Medien.",
+      "matchFailed": "Die Szenensuche ist nicht verfügbar. Deine ausgewählten Clips und Zeiten bleiben unverändert. Du kannst sie manuell prüfen.",
+      "reviewManually": "Clips manuell prüfen"
     }
   },
   "jungleMood": {
@@ -7810,7 +7935,7 @@
     "topUpTitle": "Aufladen und sparen",
     "discount": "{{percent}}% Rabatt",
     "noDiscount": "Voller Preis",
-    "total": "Gesamt ${{usd}}, bezahlt in DHB",
+    "total": "Gesamt ${{usd}}, bezahlt in Tokens",
     "buy": "Credits kaufen",
     "buying": "Warte auf Zahlung…",
     "bought": "{{count}} Post-Credits hinzugefügt",
@@ -7840,7 +7965,7 @@
     "skippedToast": "{{platforms}} übersprungen: Dieser Beitrag enthält nicht das Foto oder Video, das sie benötigen.",
     "uploadFailed": "Ihre Medien konnten nicht für Cross-Posting hochgeladen werden.",
     "creditRules": "Jeder Beitrag kostet Credits pro Plattform: {{x}} für X, {{farcaster}} für Farcaster und {{other}} für jede andere Plattform. Geplante Posts verwenden Credits, wenn du sie planst.",
-    "payAsYouGoCredits": "Fehlendes Guthaben wird in DHB zu jeweils ${{price}} gekauft, wenn du postest.",
+    "payAsYouGoCredits": "Fehlendes Guthaben wird in Tokens zu jeweils ${{price}} gekauft, wenn du postest.",
     "topUpCredits": "{{count}} Credits",
     "perCredit": "${{price}} pro Guthaben",
     "pendingApproval": "Warten darauf, dass Sie dehub in der Farcaster-App genehmigen",
@@ -7852,7 +7977,7 @@
   "dm": {
     "planRestricted": "Dieser Nutzer setzt ein Abo voraus, um Nachrichten zu erhalten.",
     "planTypeNotAllowed": "Der Plan dieses Creators erlaubt diese Art von Nachricht nicht.",
-    "planMinTip": "Das Trinkgeld für diesen Creator muss mindestens {{amount}} DHB betragen."
+    "planMinTip": "Das Trinkgeld für diesen Creator muss mindestens {{amount}} Tokens betragen."
   },
   "credits": {
     "earningsWorth": "Wert {{amount}}",
@@ -7980,12 +8105,12 @@
       "notifyKey": "Benachrichtigungsschlüssel",
       "notifyKeyOnce": "Neuer Benachrichtigungsschlüssel für {{name}}. Kopiere ihn jetzt: Er wird nur einmal angezeigt, und ein neuer ersetzt ihn.",
       "payTitle": "Zahlungen erhalten",
-      "payBody": "`pay()` fragt den Nutzer auf, dir DHB zu senden, direkt in die Wallet, die deine `dehub.json` unterschrieben hat. Prüfe den Beleg auf deinem Server, bevor du etwas lieferst.",
+      "payBody": "`pay()` fragt den Nutzer auf, dir Tokens zu senden, direkt in die Wallet, die deine `dehub.json` unterschrieben hat. Prüfe den Beleg auf deinem Server, bevor du etwas lieferst.",
       "notifyTitle": "Benachrichtigungen senden",
       "notifyBody": "Nutzer, die deine App hinzufügen, können von deinem Server mit deinem Benachrichtigungsschlüssel benachrichtigt werden. Keine individuellen Tokens, die du speichern musst.",
       "rankTitle": "Wie der Store Apps einstuft",
       "rankBody": "Jede Nacht erhält jede aufgelistete App eine Punktzahl: 55 % von wiederkehrenden Nutzern (Personen, die sie diese Woche und die Woche zuvor geöffnet haben), 35 % von wöchentlichen Nutzern sowie 10 % mehr in den ersten 14 Tagen. Nur angemeldete DeHub-Konten zählen, sodass Bots und das erneute Laden von Seiten nichts einbringen.",
-      "rewardsBody": "Jeden Monat wird {{pool}} DHB zwischen Apps mit derselben Punktzahl geteilt, die wöchentlich berechnet wird. Um sich zu qualifizieren, benötigt eine App ein verifiziertes Inhaber-Wallet und mindestens 3 wiederkehrende Nutzer. Belohnungen werden von DeHub an das Wallet des Eigentümers ausgezahlt.",
+      "rewardsBody": "Jeden Monat wird {{pool}} Tokens zwischen Apps mit derselben Punktzahl geteilt, die wöchentlich berechnet wird. Um sich zu qualifizieren, benötigt eine App ein verifiziertes Inhaber-Wallet und mindestens 3 wiederkehrende Nutzer. Belohnungen werden von DeHub an das Wallet des Eigentümers ausgezahlt.",
       "rewardsWeek": "Woche von {{date}}",
       "rewardPaid": "Bezahlt .",
       "rewardPending": "Ausstehend",
@@ -8011,10 +8136,10 @@
     },
     "pay": {
       "title": "{{name}} bezahlen?",
-      "body": "Das DHB geht direkt auf das Wallet der App, {{wallet}}. Zahlungen können nicht rückgängig gemacht werden.",
-      "confirm": "{{amount}} DHB bezahlen",
+      "body": "Das Tokens geht direkt auf das Wallet der App, {{wallet}}. Zahlungen können nicht rückgängig gemacht werden.",
+      "confirm": "{{amount}} Tokens bezahlen",
       "sending": "Deine Zahlung wird gesendet…",
-      "sent": "{{amount}} DHB an {{name}} bezahlt.",
+      "sent": "{{amount}} Tokens an {{name}} bezahlt.",
       "noOwner": "Diese App hat noch kein verifiziertes Wallet zum Bezahlen."
     },
     "add": {

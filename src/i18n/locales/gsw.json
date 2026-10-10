@@ -90,6 +90,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Blockchain für Biiträg",
     "showOnline": "Zeig, wenn i online bi.",
     "showOnlineDesc": "Mensch, wo du schicksch, gseht e grün Punkt neben dinem Name, wänn du DeHub nutzt.",
     "smartReplies": "Antwortvorschläg",
@@ -259,6 +260,7 @@
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
@@ -595,7 +597,7 @@
     "stageDelivering": "DeHub Pay schickt dini Tokens…",
     "payViaDpay": "A DeHub Pay bezahlt, Tokens chummet i ca. 30s",
     "payViaBridgeDpay": "A Base g'schobe und a DeHub Pay bezahlt, Tokens chummet i ca. e Minute",
-    "dmSent": "{{amount}} DHB a {{name}} gschickt!"
+    "dmSent": "{{amount}} Tokens a {{name}} gschickt!"
   },
   "postOptions": {
     "options": "Optione",
@@ -1202,10 +1204,10 @@
   },
   "dhbListing": {
     "title": "Token-Listing chunnt bald!",
-    "body": "$DHB wird no nöd ghandlet. Überchum e E-Mail, sobald es glistet isch.",
+    "body": "Tokens wird no nöd ghandlet. Überchum e E-Mail, sobald es glistet isch.",
     "notifyMe": "Säg mer Bscheid",
-    "privacy": "Mir bruuched das nur, zum dir Bscheid gäh, wenn $DHB glistet wird.",
-    "joined": "Du bisch uf de Lischte. Mir schriibed a {{email}}, sobald $DHB glistet isch."
+    "privacy": "Mir bruuched das nur, zum dir Bscheid gäh, wenn Tokens glistet wird.",
+    "joined": "Du bisch uf de Lischte. Mir schriibed a {{email}}, sobald Tokens glistet isch."
   },
   "explorePage": {
     "searchPlaceholder": "Such nach Lüt, Biträg oder Inhalt...",
@@ -1465,7 +1467,7 @@
     "otherTokens": "Anderi Token",
     "otherTokensDesc": "Chauf ETH oder USDC uf Base mit dinere Charte",
     "shareToFeed": "Teile uf min Feed",
-    "sharePostTemplate": "Grad {{amount}} $DHB zu minere Stäcke uf DeHub dezue tue. Baue mit de Community. #DeHub #DHB",
+    "sharePostTemplate": "Grad {{amount}} Tokens zu minere Stäcke uf DeHub dezue tue. Baue mit de Community. #DeHub",
     "success": {
       "title": "Chauf abgschlosse!",
       "subtitle": "Tokens sind i dim Wallet aaliferet worde.",
@@ -1784,7 +1786,7 @@
     "descriptionMinLength": "Beschriibig muess mindestens 20 Zeiche haa",
     "successSubmitted": "Vorschlag iigereicht!",
     "errorSubmitting": "Vorschlag iireiche fehlgschlage",
-    "errorVoting": "Abstimmig fehlgschlage. Du muesch DHB Token haa.",
+    "errorVoting": "Abstimmig fehlgschlage. Du muesch Tokens Token haa.",
     "comments": "Kommentär",
     "postComment": "Poste",
     "posting": "Wird postet...",
@@ -3524,7 +3526,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Phase 1 · Privatvorschau",
     "heroTitle": "TOKENISE BUSINESS",
-    "heroSubtitle": "DHB-paired Bonding Curve. Übergeht zu Uniswap bei $42K Marktkapitalisierung.",
+    "heroSubtitle": "Tokens-paired Bonding Curve. Übergeht zu Uniswap bei $42K Marktkapitalisierung.",
     "filterGraduating": "Gäbe gleich abschliessä.",
     "filterTrending": "Trending",
     "searchPlaceholder": "Suche Ticker, Name, Erschaffer",
@@ -3612,7 +3614,7 @@
   },
   "fractions": {
     "seoTitle": "Fraktione | DeHub",
-    "seoDescription": "Chauf und verchauf Fraktione vo DeHub-Biiträg. En prägte Biitrag isch 1000 On-Chain-Fraktione — bsitz es Stuck vomne Video, Track oder Bild und handle das in DHB.",
+    "seoDescription": "Chauf und verchauf Fraktione vo DeHub-Biiträg. En prägte Biitrag isch 1000 On-Chain-Fraktione — bsitz es Stuck vomne Video, Track oder Bild und handle das in Tokens.",
     "title": "Aateil",
     "perUpload": "1000 pro Upload",
     "tabPortfolio": "Portfolio",
@@ -4441,7 +4443,7 @@
   },
   "usernames": {
     "seoTitle": "Benutzername-Marktplatz | DeHub",
-    "seoDescription": "Kaufe und verkaufe DeHub-Benutzernamen mit DHB. Suche nach kurzen, numerischen und originellen Handles zum Verkauf oder liste deine eigenen auf — die Übertragung erfolgt on-chain, sobald die Zahlung geklärt ist.",
+    "seoDescription": "Kaufe und verkaufe DeHub-Benutzernamen mit Tokens. Suche nach kurzen, numerischen und originellen Handles zum Verkauf oder liste deine eigenen auf — die Übertragung erfolgt on-chain, sobald die Zahlung geklärt ist.",
     "title": "Benutzernäme",
     "subtitle": "Handles zum Verkauf, in USD gepreist",
     "tabBrowse": "Browse",
@@ -4566,7 +4568,7 @@
   },
   "accounts": {
     "seoTitle": "Konto Markt — DeHub",
-    "seoDescription": "Kauf- und Verkauf von etablierten DeHub-Konten für DHB. Durchsuche Konten nach Follower, Uploads und Alter — der Handle, Posts, Follower und Abzeichenberechtigungen werden übertragen, und die Zahlung geht direkt an den Verkäufer.",
+    "seoDescription": "Kauf- und Verkauf von etablierten DeHub-Konten für Tokens. Durchsuche Konten nach Follower, Uploads und Alter — der Handle, Posts, Follower und Abzeichenberechtigungen werden übertragen, und die Zahlung geht direkt an den Verkäufer.",
     "title": "Konte",
     "subtitle": "Ganz Kontä z'verchoufe, Priis i DeHub-Token",
     "tabBrowse": "Durchsuche",
@@ -6192,17 +6194,17 @@
   },
   "docs": {
     "seoTitle": "DeHub Dokumentation — Anleitungen, Token, dApps & FAQ",
-    "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, DHB-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
+    "seoDescription": "Offizielle DeHub-Dokumentation: Plattformüberblick, dApps, Tokens-Tokenökonomie, Staking, Spiele, Roadmap, FAQ und mehr."
   },
   "dex": {
-    "seoTitle": "DEX — DHB zu dim Preis handle",
-    "seoDescription": "Setz dim DHB Kauf- oder Verchaufspreis mit ere Uniswap v4 Limit Order uf Base oder BNB Chain. Live Orderbook, Markt-Tiefe und eini gmeinsami USD-Preis.",
+    "seoTitle": "DEX — Tokens zu dim Preis handle",
+    "seoDescription": "Setz dim Tokens Kauf- oder Verchaufspreis mit ere Uniswap v4 Limit Order uf Base oder BNB Chain. Live Orderbook, Markt-Tiefe und eini gmeinsami USD-Preis.",
     "venue": "Netzwerk",
     "marketPrice": "Marktpreis · USD",
     "bookPrice": "{{chain}} Buchpreis · USD",
     "change24": "24h Veränderig",
     "totalLiquidity": "Gesamtliquidität · USD",
-    "listedDhb": "Gelistets DHB · {{chain}}",
+    "listedDhb": "Gelistets Tokens · {{chain}}",
     "listedUsd": "Gelistets USD · {{chain}}",
     "refreshMarket": "Markt aktualisiere",
     "refresh": "Aktualisiere",
@@ -6227,21 +6229,21 @@
     "orderBook": "Orderbook",
     "priceGrouping": "Preisgruppierig",
     "priceUsd": "Preis (USD)",
-    "sizeDhb": "Gröössi (DHB)",
-    "totalDhb": "Gsammt (DHB)",
+    "sizeDhb": "Gröössi (Tokens)",
+    "totalDhb": "Gsammt (Tokens)",
     "noBids": "No Gebot",
     "noAsks": "No Frog-Liquidität",
     "useBuyPrice": "Bruuch {{price}} als Chaufpries",
     "useSellPrice": "Bruuch {{price}} als Verchaufpries",
     "spread": "Spreed · USD",
-    "buyTotal": "Chouf {{amount}} DHB",
-    "sellTotal": "Verchouf {{amount}} DHB",
+    "buyTotal": "Chouf {{amount}} Tokens",
+    "sellTotal": "Verchouf {{amount}} Tokens",
     "placeOrder": "Uufgeh",
     "lpFee": "0% LP-Gebühr",
     "lpFeeLabel": "LP-Gebühr",
     "lpFeeValue": "{{fee}}% LP-Gebühr",
-    "buy": "DHB choufe",
-    "sell": "DHB verchoufe",
+    "buy": "Tokens choufe",
+    "sell": "Tokens verchoufe",
     "maxBuy": "Maximaler Chaufpries",
     "minSell": "Minimaler Verchaufpries",
     "spend": "Usgä",
@@ -6257,7 +6259,7 @@
     "estimated": "Gschätzti volli Umwandlig",
     "network": "Finanziärigs Netzwerk",
     "sellBelowMarket": "Dä Verchouf isch {{percent}}% unter em Marktpries vo ${{price}}. Jemand chan en choufe und glichzitig wo anders wieder verchoufe.",
-    "buyAboveMarket": "Das isch {{percent}}% über em Marktpris vo ${{price}}. Du würsch meh zahle, als DHB anderswo handelt.",
+    "buyAboveMarket": "Das isch {{percent}}% über em Marktpris vo ${{price}}. Du würsch meh zahle, als Tokens anderswo handelt.",
     "useMarket": "Marktpris bruche",
     "balanceError": "Bilanz-Check fehlgeschlage. Nochmal versuche, bevor en Uftrag gsetzt wird.",
     "noFunding": "Kein {{token}} verfügbar uf {{chain}}.",
@@ -6266,7 +6268,7 @@
     "reviewYourBuy": "Kauf überprüfe",
     "reviewYourSell": "Verchauf überprüfe",
     "reviewDeposit": "{{amount}} {{token}} uf {{chain}} deponiere.",
-    "reviewRange": "Spanne: {{min}} – {{max}} USD pro DHB.",
+    "reviewRange": "Spanne: {{min}} – {{max}} USD pro Tokens.",
     "initializes": "Das erstellt und initialisiert de 0% Pool.",
     "pendingNote": "Dini Transaktion isch übermittlet worde. Mach mit de Bestätigung oder de Listigsregistrierig wiiter ohni no en Uszahlige.",
     "viewTransaction": "Transaktion aaluege",
@@ -6283,7 +6285,7 @@
     "keepOpen": "Halte die Site offe, bis din Listig registriert isch. Browser-Speicher isch nöd verfügbar.",
     "snapshotDelayed": "Gmeinsami Marktdatä sind verzögert. Zeigt de letscht verifizierte Schnappschuss.",
     "snapshotUnavailable": "Gmeinsami Marktdatä sind nöd verfügbar. Versuche, Positone z'lade.",
-    "withdrawReview": "{{dhb}} DHB und {{usdc}} USDC uf {{chain}} abhebe? Beträg werded vor em Unterschriebe aktualisiert; Preis-Toleranz isch 0.5%.",
+    "withdrawReview": "{{dhb}} Tokens und {{usdc}} USDC uf {{chain}} abhebe? Beträg werded vor em Unterschriebe aktualisiert; Preis-Toleranz isch 0.5%.",
     "withdrawn": "Position abghobe",
     "withdrawFailed": "Abhebe fehlgeschlage",
     "withdrawing": "Am abhebe…",
@@ -6417,6 +6419,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Visuelli Höchepünkt",
+      "visualPrivacy": "Usgewählti Einzelbilder für d visuelli Analyse schicke."
+    },
+    "review": {
+      "title": "Projektprüefig",
+      "shared": "Mit dir teilt",
+      "time": "Ziit (s)",
+      "assign": "Wallet zuewiise"
+    },
+    "textFit": {
+      "wrap": "Ziile umbreche",
+      "width": "Textbreiti",
+      "shrink": "Text verchliinere, bis er passt",
+      "height": "Texthöchi",
+      "captions": "Untertitelspur iipasse"
+    },
     "canvas": {
       "dropMedia": "Loh zum Ihri Gstaltig dezue tue",
       "dropText": "Loh zum Text dezue tue",
@@ -7765,7 +7784,7 @@
     "topUpTitle": "Auflade und spare",
     "discount": "{{percent}}% Rabatt",
     "noDiscount": "Voll-Priis",
-    "total": "Total ${{usd}}, bezahlt in DHB",
+    "total": "Total ${{usd}}, bezahlt in Tokens",
     "buy": "Credits choufe",
     "buying": "Warte uf Zahlig…",
     "bought": "{{count}} Post-Credits dezoucho",
@@ -7795,7 +7814,7 @@
     "skippedToast": "Übersprunge {{platforms}}: das Post hät nöd s Foto oder Video, wo sie bruuched.",
     "uploadFailed": "Mediä für Cross-Posting chont nöd hochglade wärde.",
     "creditRules": "Jeder Beitrag kostet Credits pro Plattform: {{x}} für X, {{farcaster}} für Farcaster und {{other}} für jede andere Plattform. Geplante Beiträge verbrauchen Credits, wenn du sie planisch.",
-    "payAsYouGoCredits": "Läuft dir das aus? Fehlendi Credits chasch i DHB für ${{price}} pro Stück chöife, wenn du poste.",
+    "payAsYouGoCredits": "Läuft dir das aus? Fehlendi Credits chasch i Tokens für ${{price}} pro Stück chöife, wenn du poste.",
     "topUpCredits": "{{count}} Credits",
     "perCredit": "${{price}} pro Credit",
     "pendingApproval": "Warte, dass du dehub i de Farcaster-App bestätigsch",
@@ -7807,7 +7826,7 @@
   "dm": {
     "planRestricted": "Dä Benutzer bruucht es Abo, zum Nachrichte übercho.",
     "planTypeNotAllowed": "Dä Plan vo dem Creator erlaubt die Art vo Nachricht nöd.",
-    "planMinTip": "S Trinkgäld für dä Creator mues mindestens {{amount}} DHB sii."
+    "planMinTip": "S Trinkgäld für dä Creator mues mindestens {{amount}} Tokens sii."
   },
   "credits": {
     "earningsWorth": "Wert {{amount}}",
@@ -7934,11 +7953,11 @@
       "notifyKey": "Benachrichtigungsschlüssel",
       "notifyKeyOnce": "Neuer Benachrichtigungsschlüssel für {{name}}. Kopiere ihn jetzt: Er wird nur einmal angezeigt, und ein neuer ersetzt ihn.",
       "payTitle": "Zahlungen empfangen",
-      "payBody": "`pay()` fragt den Benutzer, dir DHB direkt in die Wallet zu schicken, die deine `dehub.json` unterschrieben hat. Prüfe den Beleg auf deinem Server, bevor du etwas lieferst.",
+      "payBody": "`pay()` fragt den Benutzer, dir Tokens direkt in die Wallet zu schicken, die deine `dehub.json` unterschrieben hat. Prüfe den Beleg auf deinem Server, bevor du etwas lieferst.",
       "notifyTitle": "Benachrichtigungen senden",
       "notifyBody": "Benutzer, die deine App hinzufügen, können von deinem Server mit deinem Benachrichtigungsschlüssel benachrichtigt werden. Keine Benutzer-Tokens, die du speichern musst.",
       "rankTitle": "Wie der Store Apps bewertet",
-      "rewardsBody": "Jedern Monat wird der {{pool}} DHB unter den Apps nach demselben Score aufgeteilt, der wöchentlich berechnet wird. Um zu qualifizieren, braucht eine App ein verifiziertes Owner-Wallet und mindestens 3 wiederkehrende Nutzer. Die Belohnungen werden von DeHub an das Owner-Wallet ausgezahlt.",
+      "rewardsBody": "Jedern Monat wird der {{pool}} Tokens unter den Apps nach demselben Score aufgeteilt, der wöchentlich berechnet wird. Um zu qualifizieren, braucht eine App ein verifiziertes Owner-Wallet und mindestens 3 wiederkehrende Nutzer. Die Belohnungen werden von DeHub an das Owner-Wallet ausgezahlt.",
       "rewardsWeek": "Woche vo {{date}}",
       "rewardsNone": "No Belohnungen wurden bis anhin berechnet. Die erste Woche schliessst am Montag ab."
     },
@@ -7962,10 +7981,10 @@
     },
     "pay": {
       "title": "{{name}} bezahlen?",
-      "body": "Das DHB geht direkt in die Wallet der App, {{wallet}}. Zahlungen können nicht rückgängig gemacht werden.",
-      "confirm": "{{amount}} DHB bezahlen",
+      "body": "Das Tokens geht direkt in die Wallet der App, {{wallet}}. Zahlungen können nicht rückgängig gemacht werden.",
+      "confirm": "{{amount}} Tokens bezahlen",
       "sending": "Zahlung wird gesendet…",
-      "sent": "{{amount}} DHB an {{name}} bezahlt.",
+      "sent": "{{amount}} Tokens an {{name}} bezahlt.",
       "noOwner": "Diese App hat noch keine bestätigte Wallet zum Bezahlen."
     },
     "add": {

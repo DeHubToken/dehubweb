@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useCallback } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import qrcode from 'qrcode-generator';
@@ -106,13 +108,13 @@ export default function FullWalletPage() {
   const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
   const [importChainId, setImportChainId] = useState<WalletChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/FullWalletPage.tsx:searchQuery", '');
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
   const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
   const [tradeOpen, setTradeOpen] = useState(false);
 
-  const { allTokens, isLoading } = useAllChainsTokens();
+  const { allTokens, isLoading, failedChains, refetch } = useAllChainsTokens();
 
   // Wallet + staked + giveaway, defined once in the hook so this page, the
   // Settings row and the badge ladder cannot drift apart again.
@@ -322,7 +324,7 @@ export default function FullWalletPage() {
         <div className="flex items-center justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <img src={dehubCoin} alt="DHB" className="w-7 h-7" />
+              <img src={dehubCoin} alt={tokenLabel()} className="w-7 h-7" />
               <p className="text-white text-2xl font-bold">
                 {isNaN(holdings.total) ? '0' : Math.floor(holdings.total).toLocaleString()}
               </p>
@@ -334,7 +336,9 @@ export default function FullWalletPage() {
               </button>
             </div>
             <p className="text-zinc-500 text-xs mt-1">
-              {t('wallet.totalWalletValue')}: ${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              {t('wallet.totalWalletValue')}: {isLoading || !Object.keys(prices).length || (failedChains.length > 0 && totalUsd === 0)
+                ? '—'
+                : `${failedChains.length ? '≈ ' : ''}$${totalUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
             </p>
           </div>
           {hasAddressChoice ? (
@@ -441,6 +445,12 @@ export default function FullWalletPage() {
 
       {/* Token list */}
       <div className="space-y-1">
+        {failedChains.length > 0 && (
+          <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 p-3 text-sm text-zinc-400">
+            <span>{t('common.failedToLoad', 'Failed to load')}: {failedChains.join(', ')}</span>
+            <Button variant="glass" size="sm" onClick={() => { void refetch(); }}>{t('common.retry', 'Retry')}</Button>
+          </div>
+        )}
         {isLoading && allTokens.length === 0 ? (
           <div className="flex items-center justify-center py-16">
             <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
@@ -450,6 +460,9 @@ export default function FullWalletPage() {
             {withBalance.map(grouped => (
               <GroupedTokenRow key={grouped.symbol} grouped={grouped} onClick={() => handleGroupedTokenClick(grouped)} price={prices[grouped.symbol]} />
             ))}
+            {!isLoading && !withBalance.length && !failedChains.length && (
+              <p className="py-8 text-center text-sm text-zinc-400">{t(searchQuery.trim() ? 'common.noResults' : 'wallet.zeroBalance')}</p>
+            )}
             <SubscriptionTokensRow />
           </>
         )}
@@ -512,7 +525,7 @@ export default function FullWalletPage() {
                     {chainInfo && <img src={chainInfo.icon} alt={chainInfo.name} className="w-6 h-6 rounded-md" />}
                     <div className="text-left flex-1 min-w-0">
                       <span className="text-sm font-medium text-white">{chainInfo?.name || `Chain ${token.chainId}`}</span>
-                      <p className="text-xs text-zinc-400">{fmtBal(token.formattedBalance)} {token.symbol}</p>
+                      <p className="text-xs text-zinc-400">{fmtBal(token.formattedBalance)} {tokenLabel(token.symbol)}</p>
                     </div>
                   </button>
                 );
@@ -827,9 +840,9 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 }) {
   const { t } = useTranslation();
   const [toAddress, setToAddress] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/FullWalletPage.tsx:amount", '');
   const [sending, setSending] = useState(false);
-  const [usernameQuery, setUsernameQuery] = useState('');
+  const [usernameQuery, setUsernameQuery] = useSurfaceDraft("src/pages/app/FullWalletPage.tsx:usernameQuery", '');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [resolvedUser, setResolvedUser] = useState<{ username: string; avatar?: string; address: string } | null>(null);
@@ -852,7 +865,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     } finally {
       setSearching(false);
     }
-  }, []);
+  }, [setUsernameQuery]);
 
   const selectUser = (user: any) => {
     const addr = user.address || user.wallet_address || '';
@@ -860,7 +873,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     const avatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url || '';
     setToAddress(addr);
     setResolvedUser({ username: name, avatar, address: addr });
-    setUsernameQuery('');
+    setUsernameQuery.complete(usernameQuery, '');
     setSearchResults([]);
   };
 
@@ -909,7 +922,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
         },
       });
       setToAddress('');
-      setAmount('');
+      setAmount.complete(amount, '');
       setResolvedUser(null);
       onSuccess();
     } catch (err: any) {
@@ -986,7 +999,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
                     const val = e.target.value;
                     if (val.startsWith('0x')) {
                       setToAddress(val);
-                      setUsernameQuery('');
+                      setUsernameQuery.complete(usernameQuery, '');
                       setSearchResults([]);
                     } else {
                       setToAddress('');
@@ -1075,7 +1088,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   const { walletAddress } = useAuth();
   const { solana: solanaAddress } = useWalletAddresses();
   const [chainId, setChainId] = useState<WalletChainId>(initialChainId);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useSurfaceDraft("pages/app/FullWalletPage.tsx:address", '');
   const [loading, setLoading] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<{ name: string; symbol: string; decimals: number } | null>(null);
 
@@ -1134,7 +1147,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
     if (!tokenInfo) return;
     saveCustomToken(chainId, { address: address.trim(), ...tokenInfo });
     toast.success(t('wallet.imported', { symbol: tokenInfo.symbol }));
-    setAddress('');
+    setAddress.complete(address, '');
     setTokenInfo(null);
     onImported();
   };
@@ -1151,7 +1164,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   };
 
   return (
-    <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
+    <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setTokenInfo(null); } }}>
       <DrawerContent column glass hideHandle={false} data-wallet-page>
         <div className="p-5 pb-8 max-h-[85vh] overflow-y-auto">
           <DrawerHeader className="p-0 mb-4">
@@ -1229,14 +1242,14 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         {token.logo ? (
-                          <img src={token.logo} alt={token.symbol} className="w-7 h-7 rounded-full" />
+                          <img src={token.logo} alt={tokenLabel(token.symbol)} className="w-7 h-7 rounded-full" />
                         ) : (
                           <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-zinc-400 font-bold">
                             {token.symbol.slice(0, 2)}
                           </div>
                         )}
                         <div className="min-w-0">
-                          <p className="text-sm text-white font-medium truncate">{token.symbol}</p>
+                          <p className="text-sm text-white font-medium truncate">{tokenLabel(token.symbol)}</p>
                           <p className="text-[11px] text-zinc-500 truncate">{token.name}</p>
                         </div>
                       </div>

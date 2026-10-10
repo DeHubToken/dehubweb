@@ -1,0 +1,29 @@
+[Unit]
+Description=DeHub Maboroshi
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=dehub-maboroshi
+Group=dehub-maboroshi
+WorkingDirectory=/srv/dehub-maboroshi/current
+EnvironmentFile=/etc/dehub-maboroshi.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=OMP_NUM_THREADS=1
+Environment=OPENBLAS_NUM_THREADS=1
+ExecStart=/srv/dehub-maboroshi/venv/bin/uvicorn server:app --host 127.0.0.1 --port 7861 --workers 1 --no-access-log
+Restart=on-failure
+RestartSec=10
+StateDirectory=dehub-maboroshi
+UMask=0077
+CPUQuota=100%
+MemoryMax=3G
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/dehub-maboroshi
+
+[Install]
+WantedBy=multi-user.target

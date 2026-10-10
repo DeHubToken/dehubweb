@@ -1,3 +1,4 @@
+import { commitCommand, type CommandCommit } from "./editorCommand";
 /**
  * Apply the brand kit to the whole design in one undo step: headings (text of
  * 100px and up) take the heading font, other text the body font, and shapes
@@ -31,7 +32,7 @@ function ensureFont(css: string | null) {
   else loadGoogleFont(primaryFamily(css), [400, 700, 900]);
 }
 
-export async function applyBrand(kit: BrandKit = useBrandStore.getState().kit): Promise<number> {
+export async function applyBrand(kit: BrandKit = useBrandStore.getState().kit, command?: CommandCommit): Promise<number> {
   const store = useEditorStore.getState();
   ensureFont(kit.headingFont);
   ensureFont(kit.bodyFont);
@@ -42,7 +43,7 @@ export async function applyBrand(kit: BrandKit = useBrandStore.getState().kit): 
   let changed = 0;
   let shapeIdx = 0;
   let textIdx = 0;
-  await store.runAsOneStep(() => {
+  await commitCommand(command, () => store.runAsOneStep(() => {
     for (const c of useEditorStore.getState().clips) {
       if (c.kind === "text") {
         const heading = c.fontSize >= 100;
@@ -66,7 +67,7 @@ export async function applyBrand(kit: BrandKit = useBrandStore.getState().kit): 
         }
       }
     }
-  });
+  }));
   return changed;
 }
 

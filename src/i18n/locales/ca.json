@@ -90,6 +90,7 @@
     "heading": "Curts de DeHub"
   },
   "settings": {
+    "postingChain": "Cadena de blocs de les publicacions",
     "showOnline": "Mostra quan estic en línia",
     "showOnlineDesc": "Les persones a les quals enviïs missatges veuen un punt verd al costat del teu nom mentre utilitzes DeHub",
     "smartReplies": "Respostes suggerides",
@@ -259,6 +260,7 @@
     "light": "Clar",
     "dark": "Fosc",
     "system": "Sistema",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Nits Boiroses",
     "swarms": "Eixams",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay està enviant les teves fitxes…",
     "payViaDpay": "Pagat a DeHub Pay, les fitxes arriben en uns 30s",
     "payViaBridgeDpay": "Mogut a Base i pagat a DeHub Pay, les fitxes arriben en aproximadament un minut",
-    "dmSent": "S'han enviat {{amount}} DHB a {{name}}!"
+    "dmSent": "S'han enviat {{amount}} fitxes a {{name}}!"
   },
   "postOptions": {
     "options": "Opcions",
@@ -1199,10 +1201,10 @@
   },
   "dhbListing": {
     "title": "El token es llistarà aviat!",
-    "body": "$DHB encara no cotitza. Rep un correu electrònic tan bon punt es llisti.",
+    "body": "fitxes encara no cotitza. Rep un correu electrònic tan bon punt es llisti.",
     "notifyMe": "Avisa'm",
-    "privacy": "Només ho farem servir per avisar-te quan $DHB es llisti.",
-    "joined": "Ja ets a la llista. Enviarem un correu a {{email}} tan bon punt $DHB es llisti."
+    "privacy": "Només ho farem servir per avisar-te quan fitxes es llisti.",
+    "joined": "Ja ets a la llista. Enviarem un correu a {{email}} tan bon punt fitxes es llisti."
   },
   "explorePage": {
     "searchPlaceholder": "Cercar persones, publicacions o contingut...",
@@ -1462,7 +1464,7 @@
     "otherTokens": "Altres tokens",
     "otherTokensDesc": "Compra ETH o USDC a Base amb la teva targeta",
     "shareToFeed": "Comparteix al meu canal",
-    "sharePostTemplate": "Acabo d'afegir {{amount}} $DHB a la meva pila a DeHub. Construir amb la comunitat. #DeHub #DHB",
+    "sharePostTemplate": "Acabo d'afegir {{amount}} fitxes a la meva pila a DeHub. Construir amb la comunitat. #DeHub",
     "success": {
       "title": "Compra finalitzada!",
       "subtitle": "S'han lliurat fitxes al vostre moneder.",
@@ -3444,7 +3446,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Fase 1 · Previsualització privada",
     "heroTitle": "TOKENITZA NEGOCI",
-    "heroSubtitle": "Corba de vinculació emparellada amb DHB. Es gradua a Uniswap a $42K de capitalització de mercat.",
+    "heroSubtitle": "Corba de vinculació emparellada amb fitxes. Es gradua a Uniswap a $42K de capitalització de mercat.",
     "createCoin": "Crea una moneda",
     "filterNew": "Nou",
     "filterGraduating": "A punt de graduar-te",
@@ -3544,7 +3546,7 @@
   },
   "fractions": {
     "seoTitle": "Fraccions | DeHub",
-    "seoDescription": "Compra i ven fraccions de publicacions de DeHub. Una publicació encunyada són 1000 fraccions en cadena — posseeix una part d'un vídeo, una pista o una imatge i comercia-la en DHB.",
+    "seoDescription": "Compra i ven fraccions de publicacions de DeHub. Una publicació encunyada són 1000 fraccions en cadena — posseeix una part d'un vídeo, una pista o una imatge i comercia-la en fitxes.",
     "title": "Fraccions",
     "perUpload": "1000 per pujada",
     "tabBrowse": "Explorar",
@@ -4392,7 +4394,7 @@
   },
   "usernames": {
     "seoTitle": "Mercat de noms d'usuari | DeHub",
-    "seoDescription": "Compra i ven els noms d'usuari de DeHub amb DHB. Cerqueu nanses curtes, numèriques i originals per a la venda, o publiqueu les vostres pròpies: la transferència es produeix en la cadena en el moment en què s'esborra el pagament.",
+    "seoDescription": "Compra i ven els noms d'usuari de DeHub amb fitxes. Cerqueu nanses curtes, numèriques i originals per a la venda, o publiqueu les vostres pròpies: la transferència es produeix en la cadena en el moment en què s'esborra el pagament.",
     "title": "Noms d'usuari",
     "subtitle": "Identificadors a la venda, preuats en USD",
     "tabBrowse": "Explorar",
@@ -4511,7 +4513,7 @@
   },
   "accounts": {
     "seoTitle": "Mercat de comptes — DeHub",
-    "seoDescription": "Compra i venda de comptes DeHub establerts per DHB. Explora comptes per seguidors, pujades i antiguitat — el handle, les publicacions, els seguidors i els drets de distintiu es transfereixen tots, i el pagament va directament al venedor.",
+    "seoDescription": "Compra i venda de comptes DeHub establerts per fitxes. Explora comptes per seguidors, pujades i antiguitat — el handle, les publicacions, els seguidors i els drets de distintiu es transfereixen tots, i el pagament va directament al venedor.",
     "title": "Comptes",
     "subtitle": "Comptes sencers a la venda, preu en tokens de DeHub",
     "tabBrowse": "Explora",
@@ -6120,17 +6122,17 @@
   },
   "docs": {
     "seoTitle": "Documentació de DeHub — Guies, token, dApps i PMF",
-    "seoDescription": "Documentació oficial de DeHub: visió general de la plataforma, dApps, economia del token DHB, staking, jocs, full de ruta, preguntes freqüents i més."
+    "seoDescription": "Documentació oficial de DeHub: visió general de la plataforma, dApps, economia del token fitxes, staking, jocs, full de ruta, preguntes freqüents i més."
   },
   "dex": {
-    "seoTitle": "DEX — Intercanvia DHB al teu preu",
-    "seoDescription": "Estableix el teu preu de compra o venda de DHB amb una ordre límit de Uniswap v4 a Base o BNB Chain. Llibre d'ordres en directe, profunditat de mercat i un preu compartit en USD.",
+    "seoTitle": "DEX — Intercanvia fitxes al teu preu",
+    "seoDescription": "Estableix el teu preu de compra o venda de fitxes amb una ordre límit de Uniswap v4 a Base o BNB Chain. Llibre d'ordres en directe, profunditat de mercat i un preu compartit en USD.",
     "venue": "Xarxa",
     "marketPrice": "Preu de mercat · USD",
     "bookPrice": "Preu del llibre: {{chain}} USD",
     "change24": "Canvi 24h",
     "totalLiquidity": "Liquidesa total · USD",
-    "listedDhb": "DHB cotitzats · {{chain}}",
+    "listedDhb": "fitxes cotitzats · {{chain}}",
     "listedUsd": "USD cotitzats · {{chain}}",
     "refreshMarket": "Actualitza el mercat",
     "refresh": "Actualitza",
@@ -6155,21 +6157,21 @@
     "orderBook": "Llibre d'ordres",
     "priceGrouping": "Agrupació de preus",
     "priceUsd": "Preu (USD)",
-    "sizeDhb": "Mida (DHB)",
-    "totalDhb": "Total (DHB)",
+    "sizeDhb": "Mida (fitxes)",
+    "totalDhb": "Total (fitxes)",
     "noBids": "Encara no hi ha ofertes",
     "noAsks": "Encara no hi ha liquiditat de venda",
     "useBuyPrice": "Utilitza {{price}} com a preu de compra",
     "useSellPrice": "Utilitza {{price}} com a preu de venda",
     "spread": "Spread · USD",
-    "buyTotal": "Compra {{amount}} DHB",
-    "sellTotal": "Venda {{amount}} DHB",
+    "buyTotal": "Compra {{amount}} fitxes",
+    "sellTotal": "Venda {{amount}} fitxes",
     "placeOrder": "Realitza una comanda",
     "lpFee": "0% de comissió LP",
     "lpFeeLabel": "Comissió LP",
     "lpFeeValue": "{{fee}}% de comissió LP",
-    "buy": "Comprar DHB",
-    "sell": "Vendre DHB",
+    "buy": "Comprar fitxes",
+    "sell": "Vendre fitxes",
     "maxBuy": "Preu màxim de compra",
     "minSell": "Preu mínim de venda",
     "spend": "Gastar",
@@ -6185,7 +6187,7 @@
     "estimated": "Conversió completa estimada",
     "network": "Xarxa de finançament",
     "sellBelowMarket": "Aquesta venda està un {{percent}}% per sota del preu de mercat de ${{price}}. Algú pot comprar-la i revendre-la en un altre lloc immediatament.",
-    "buyAboveMarket": "Aquesta compra és {{percent}}% superior al preu de mercat de ${{price}}. Pagaries més del que es cotitza DHB en altres llocs.",
+    "buyAboveMarket": "Aquesta compra és {{percent}}% superior al preu de mercat de ${{price}}. Pagaries més del que es cotitza fitxes en altres llocs.",
     "useMarket": "Utilitza el preu de mercat",
     "balanceError": "La comprovació del saldo ha fallat. Torna a intentar-ho abans de fer una comanda.",
     "noFunding": "No hi ha {{token}} disponibles a {{chain}}.",
@@ -6194,7 +6196,7 @@
     "reviewYourBuy": "Revisa la teva compra",
     "reviewYourSell": "Revisa la teva venda",
     "reviewDeposit": "Diposita {{amount}} {{token}} a {{chain}}.",
-    "reviewRange": "Rang: {{min}} – {{max}} USD per DHB.",
+    "reviewRange": "Rang: {{min}} – {{max}} USD per fitxes.",
     "initializes": "Això crea i inicialitza el pool del 0%.",
     "pendingNote": "La teva transacció s'ha enviat. Reprèn la confirmació o el registre de la llista sense un altre dipòsit.",
     "viewTransaction": "Veure transacció",
@@ -6211,7 +6213,7 @@
     "keepOpen": "Mantén aquesta pàgina oberta fins que es registri la teva llista. L'emmagatzematge del navegador no està disponible.",
     "snapshotDelayed": "Les dades del mercat compartides tenen un retard. Es mostra la darrera instantània verificada.",
     "snapshotUnavailable": "Les dades del mercat compartides no estan disponibles. Torna a intentar carregar les posicions.",
-    "withdrawReview": "Retirar {{dhb}} DHB i {{usdc}} USDC a {{chain}}? Les quantitats es refresquen abans de signar; la tolerància al preu és del 0,5%.",
+    "withdrawReview": "Retirar {{dhb}} fitxes i {{usdc}} USDC a {{chain}}? Les quantitats es refresquen abans de signar; la tolerància al preu és del 0,5%.",
     "withdrawn": "Posició retirada",
     "withdrawFailed": "La retirada ha fallat",
     "withdrawing": "Retirant…",
@@ -6345,6 +6347,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Moments visuals destacats",
+      "visualPrivacy": "Envia fotogrames seleccionats per a l'anàlisi visual."
+    },
+    "review": {
+      "title": "Revisió del projecte",
+      "shared": "Compartit amb tu",
+      "time": "Temps (s)",
+      "assign": "Assigna una cartera"
+    },
+    "textFit": {
+      "wrap": "Ajusta les línies",
+      "width": "Amplada del text",
+      "shrink": "Redueix el text perquè hi càpiga",
+      "height": "Alçada del text",
+      "captions": "Ajusta la pista de subtítols"
+    },
     "canvas": {
       "dropMedia": "Deixa caure per afegir al teu disseny",
       "dropText": "Deixa caure per afegir text",
@@ -7694,7 +7713,7 @@
     "topUpTitle": "Recarrega i estalvia",
     "discount": "{{percent}}% de descompte",
     "noDiscount": "Preu complet",
-    "total": "Total ${{usd}}, pagat en DHB",
+    "total": "Total ${{usd}}, pagat en fitxes",
     "buy": "Comprar crèdits",
     "buying": "Esperant pagament…",
     "bought": "S'han afegit {{count}} crèdits de publicació",
@@ -7724,7 +7743,7 @@
     "skippedToast": "S'ha saltat {{platforms}}: aquesta publicació no té la foto ni el vídeo que necessiten.",
     "uploadFailed": "No s'ha pogut pujar el suport per a la publicació creuada.",
     "creditRules": "Cada publicació costa crèdits per plataforma: {{x}} per a X, {{farcaster}} per a Farcaster i {{other}} per a qualsevol altra plataforma. Les publicacions programades utilitzen crèdits quan les programes.",
-    "payAsYouGoCredits": "S'ha acabat? Els crèdits que falten es compren a DHB a ${{price}} cadascun quan publiques.",
+    "payAsYouGoCredits": "S'ha acabat? Els crèdits que falten es compren a fitxes a ${{price}} cadascun quan publiques.",
     "topUpCredits": "{{count}} crèdits",
     "perCredit": "${{price}} per crèdit",
     "pendingApproval": "S'està esperant que aprovi el deshub a l'aplicació Farcaster",
@@ -7736,7 +7755,7 @@
   "dm": {
     "planRestricted": "Aquest usuari requereix una subscripció per rebre missatges.",
     "planTypeNotAllowed": "El pla d'aquest creador no permet aquest tipus de missatge.",
-    "planMinTip": "La propina ha de ser d'almenys {{amount}} DHB per a aquest creador."
+    "planMinTip": "La propina ha de ser d'almenys {{amount}} fitxes per a aquest creador."
   },
   "credits": {
     "earningsWorth": "Val {{amount}}",
@@ -7864,12 +7883,12 @@
       "notifyKey": "Clau de notificació",
       "notifyKeyOnce": "Nova clau de notificació per a {{name}}. Copia-la ara: només es mostra una vegada, i fer-ne una altra la substitueix.",
       "payTitle": "Rebre pagaments",
-      "payBody": "`pay()` demana a l'usuari que et enviï DHB, directament a la cartera que va signar el teu `dehub.json`. Verifica el recepté al teu servidor abans de lliurar res.",
+      "payBody": "`pay()` demana a l'usuari que et enviï fitxes, directament a la cartera que va signar el teu `dehub.json`. Verifica el recepté al teu servidor abans de lliurar res.",
       "notifyTitle": "Enviar notificacions",
       "notifyBody": "Els usuaris que afegis la teva app poden ser notificats des del teu servidor amb la teva clau de notificació. No cal emmagatzemar tokens per usuari.",
       "rankTitle": "Com classifica la botiga les aplicacions",
       "rankBody": "Cada nit, cada aplicació de la llista obté una puntuació: el 55% dels usuaris que tornen (persones que la van obrir aquesta setmana i la setmana anterior), el 35% dels usuaris setmanals i un 10% més en els primers 14 dies. Només compten els comptes DeHub iniciats, de manera que els bots i les recarregues de pàgines no guanyen res.",
-      "rewardsBody": "Cada mes, {{pool}} DHB es reparteix entre les aplicacions amb la mateixa puntuació, calculada setmanalment. Per complir els requisits, una aplicació necessita un moneder de propietari verificat i almenys 3 usuaris recurrents. DeHub paga les recompenses al moneder del propietari.",
+      "rewardsBody": "Cada mes, {{pool}} fitxes es reparteix entre les aplicacions amb la mateixa puntuació, calculada setmanalment. Per complir els requisits, una aplicació necessita un moneder de propietari verificat i almenys 3 usuaris recurrents. DeHub paga les recompenses al moneder del propietari.",
       "rewardsWeek": "Setmana de {{date}}",
       "rewardPaid": "Pagament",
       "rewardPending": "En tràmit",
@@ -7895,10 +7914,10 @@
     },
     "pay": {
       "title": "Pagar {{name}}?",
-      "body": "El DHB va directament a la cartera de l'app, {{wallet}}. Els pagaments no es poden desfer.",
-      "confirm": "Pagar {{amount}} DHB",
+      "body": "El fitxes va directament a la cartera de l'app, {{wallet}}. Els pagaments no es poden desfer.",
+      "confirm": "Pagar {{amount}} fitxes",
       "sending": "Enviant el teu pagament…",
-      "sent": "Pagat {{amount}} DHB a {{name}}.",
+      "sent": "Pagat {{amount}} fitxes a {{name}}.",
       "noOwner": "Aquesta app no té encara una cartera verificada per rebre pagaments."
     },
     "add": {

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * PosterConfigDialog
  * ==================
@@ -104,12 +105,12 @@ const FEATURE_GROUPS: { group: string; items: { value: string; label: string; bl
   {
     group: 'Token & DeFi',
     items: [
-      { value: 'dhb-staking', label: '💎 DHB Staking (Base)', blurb: 'Stake DHB, earn rewards' },
+      { value: 'dhb-staking', label: '💎 Token Staking (Base)', blurb: 'Stake tokens, earn rewards' },
       { value: 'lp-farming', label: '🌾 LP Farming', blurb: 'Provide liquidity, earn yield' },
       { value: 'token-bridge', label: '🌉 Token Bridge', blurb: 'BNB ↔ Base cross-chain' },
       { value: 'governance', label: '🗳️ Governance', blurb: 'On-chain proposals & voting' },
-      { value: 'token-utility', label: '🪙 DHB Utility', blurb: 'Fees, boosts, gating, tipping' },
-      { value: 'fiat-onramp', label: '💳 Fiat On-Ramp', blurb: 'Card → USDC → DHB' },
+      { value: 'token-utility', label: '🪙 Token Utility', blurb: 'Fees, boosts, gating, tipping' },
+      { value: 'fiat-onramp', label: '💳 Fiat On-Ramp', blurb: 'Card → USDC → tokens' },
       { value: 'fiat-offramp', label: '💵 Fiat Off-Ramp', blurb: 'Token-to-cash conversion' },
       { value: 'uniswap-swap', label: '🔄 In-App Swap', blurb: 'Uniswap V3, one click' },
       { value: 'wallet', label: '👛 Cross-Chain Wallet', blurb: 'BNB + Base aggregated' },
@@ -118,7 +119,7 @@ const FEATURE_GROUPS: { group: string; items: { value: string; label: string; bl
   {
     group: 'Marketplace & Commerce',
     items: [
-      { value: 'stores', label: '🛍️ DeHub Stores', blurb: 'P2P commerce on Base DHB' },
+      { value: 'stores', label: '🛍️ DeHub Stores', blurb: 'P2P commerce in tokens on Base' },
       { value: 'fractions', label: '🧩 Fractions', blurb: 'Fractional NFT marketplace' },
       { value: 'work', label: '🧑‍💻 DeHub Bounties', blurb: 'Escrow bounties: social, clips, contracts' },
       { value: 'tipping', label: '💸 Tipping', blurb: 'Reward creators on any post' },
@@ -273,10 +274,10 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
   const [dimension, setDimension] = useState<PosterConfig['dimension']>('portrait');
   const [style, setStyle] = useState('dehub-template');
   const [features, setFeatures] = useState<string[]>([]);
-  const [tagline, setTagline] = useState('');
+  const [tagline, setTagline] = useSurfaceDraft("components/app/assistant/PosterConfigDialog.tsx:tagline", '');
   const [includeSocials, setIncludeSocials] = useState(false);
   const [includeWebsite, setIncludeWebsite] = useState(false);
-  const [extraNotes, setExtraNotes] = useState('');
+  const [extraNotes, setExtraNotes] = useSurfaceDraft("components/app/assistant/PosterConfigDialog.tsx:extraNotes", '');
   const [logoVariant, setLogoVariant] = useState<LogoVariant>('primary');
 
   useEffect(() => {
@@ -284,15 +285,15 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
     setDimension(detectDimension(userPrompt));
     setStyle(detectStyle(userPrompt));
     setFeatures(detectFeatures(userPrompt));
-    setTagline(detectTagline(userPrompt));
+    setTagline.initialize(detectTagline(userPrompt));
     setIncludeSocials(detectSocials(userPrompt));
     setIncludeWebsite(detectWebsite(userPrompt));
-    setExtraNotes('');
+    setExtraNotes.initialize('');
     const lower = userPrompt.toLowerCase();
     if (/\bicon|symbol|mark|d-mark|small logo\b/.test(lower)) setLogoVariant('icon');
     else if (/\bboth logos?|lockup|icon\s*\+\s*wordmark|wordmark\s*\+\s*icon\b/.test(lower)) setLogoVariant('both');
     else setLogoVariant('primary');
-  }, [open, userPrompt]);
+  }, [open, userPrompt, setExtraNotes, setTagline]);
 
   const toggleFeature = useCallback((value: string) => {
     setFeatures(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);

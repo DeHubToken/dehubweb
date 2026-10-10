@@ -90,6 +90,7 @@
     "heading": "DeHub Kısa Videolar"
   },
   "settings": {
+    "postingChain": "Gönderi blokzinciri",
     "showOnline": "Çevrimiçi olduğumda göster",
     "showOnlineDesc": "Mesaj gönderdiğiniz kişiler, DeHub'ı kullanırken adınızın yanında yeşil bir nokta görür",
     "smartReplies": "Önerilen yanıtlar",
@@ -259,6 +260,7 @@
     "light": "Açık",
     "dark": "Koyu",
     "system": "Sistem",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Puslu Geceler",
     "swarms": "Sürüler",
@@ -597,7 +599,7 @@
     "stageDelivering": "DeHub Pay tokenlarınızı gönderiyor…",
     "payViaDpay": "DeHub Pay'e ödendi, tokenlar yaklaşık 30 saniye içinde gelir",
     "payViaBridgeDpay": "Base'e taşındı ve DeHub Pay'e ödendi, tokenlar yaklaşık bir dakika içinde gelir",
-    "dmSent": "{{name}} adlı kişiye {{amount}} DHB gönderildi!"
+    "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!"
   },
   "postOptions": {
     "options": "Seçenekler",
@@ -1205,10 +1207,10 @@
   },
   "dhbListing": {
     "title": "Token listelemesi yakında!",
-    "body": "$DHB henüz işlem görmüyor. Listelendiği anda e-posta al.",
+    "body": "jeton henüz işlem görmüyor. Listelendiği anda e-posta al.",
     "notifyMe": "Bana haber ver",
-    "privacy": "Bunu yalnızca $DHB listelendiğinde sana haber vermek için kullanacağız.",
-    "joined": "Listedesin. $DHB listelendiği anda {{email}} adresine e-posta göndereceğiz."
+    "privacy": "Bunu yalnızca jeton listelendiğinde sana haber vermek için kullanacağız.",
+    "joined": "Listedesin. jeton listelendiği anda {{email}} adresine e-posta göndereceğiz."
   },
   "explorePage": {
     "searchPlaceholder": "Kişi, gönderi veya içerik ara...",
@@ -1468,7 +1470,7 @@
     "otherTokens": "Diğer tokenlar",
     "otherTokensDesc": "Kartınızla Base ağında ETH veya USDC satın alın",
     "shareToFeed": "Akışımda paylaş",
-    "sharePostTemplate": "Az önce DeHub'daki yığınıma {{amount}} $DHB'yi ekledim. Toplulukla birlikte inşa etmek. #DeHub #DHB",
+    "sharePostTemplate": "Az önce DeHub'daki yığınıma {{amount}} jeton'yi ekledim. Toplulukla birlikte inşa etmek. #DeHub",
     "success": {
       "title": "Satın Alma Tamamlandı!",
       "subtitle": "Jetonlar cüzdanınıza teslim edildi.",
@@ -3500,7 +3502,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Aşama 1 · Özel önizleme",
     "heroTitle": "İŞİNİ TOKENLAŞTIR",
-    "heroSubtitle": "DHB eşleşmeli bonding curve. 42 bin $ piyasa değerinde Uniswap'e mezun olur.",
+    "heroSubtitle": "jeton eşleşmeli bonding curve. 42 bin $ piyasa değerinde Uniswap'e mezun olur.",
     "createCoin": "Coin oluştur",
     "filterNew": "Yeni",
     "filterGraduating": "Mezun olmak üzere",
@@ -3601,7 +3603,7 @@
   },
   "fractions": {
     "seoTitle": "Paylar | DeHub",
-    "seoDescription": "DeHub gönderilerinin paylarını alıp satın. Basılmış bir gönderi 1000 zincir üstü paydır — bir videonun, parçanın ya da görselin bir dilimine sahip olun ve DHB ile takas edin.",
+    "seoDescription": "DeHub gönderilerinin paylarını alıp satın. Basılmış bir gönderi 1000 zincir üstü paydır — bir videonun, parçanın ya da görselin bir dilimine sahip olun ve jeton ile takas edin.",
     "title": "Paylar",
     "perUpload": "Yükleme başına 1000",
     "tabBrowse": "Keşfet",
@@ -4456,7 +4458,7 @@
   },
   "usernames": {
     "seoTitle": "Kullanıcı Adı Pazarı | DeHub",
-    "seoDescription": "DeHub kullanıcı adlarını DHB ile alıp satın. Satıştaki kısa, sayısal ve özgün kullanıcı adlarını arayın ya da kendinizinkini listeleyin — ödeme onaylandığı anda devir zincir üstünde gerçekleşir.",
+    "seoDescription": "DeHub kullanıcı adlarını jeton ile alıp satın. Satıştaki kısa, sayısal ve özgün kullanıcı adlarını arayın ya da kendinizinkini listeleyin — ödeme onaylandığı anda devir zincir üstünde gerçekleşir.",
     "title": "Kullanıcı adları",
     "subtitle": "Satıştaki kullanıcı adları, USD cinsinden",
     "tabBrowse": "Keşfet",
@@ -4581,7 +4583,7 @@
   },
   "accounts": {
     "seoTitle": "Hesap Pazarı — DeHub",
-    "seoDescription": "Yerleşik DeHub hesaplarını DHB ile alıp satın. Hesapları takipçi, yükleme ve yaş ölçütlerine göre inceleyin — kullanıcı adı, gönderiler, takipçiler ve rozet hakları birlikte devrolur ve ödeme doğrudan satıcıya gider.",
+    "seoDescription": "Yerleşik DeHub hesaplarını jeton ile alıp satın. Hesapları takipçi, yükleme ve yaş ölçütlerine göre inceleyin — kullanıcı adı, gönderiler, takipçiler ve rozet hakları birlikte devrolur ve ödeme doğrudan satıcıya gider.",
     "title": "Hesaplar",
     "subtitle": "Tüm hesaplar satılık, DeHub jetonlarıyla fiyatlandırıldı",
     "tabBrowse": "Keşfet",
@@ -6242,17 +6244,17 @@
   },
   "docs": {
     "seoTitle": "DeHub Dokümantasyonu — Rehberler, token, dApp ve SSS",
-    "seoDescription": "Resmî DeHub dokümantasyonu: platforma genel bakış, dApp’ler, DHB token ekonomisi, staking, oyunlar, yol haritası, SSS ve daha fazlası."
+    "seoDescription": "Resmî DeHub dokümantasyonu: platforma genel bakış, dApp’ler, jeton token ekonomisi, staking, oyunlar, yol haritası, SSS ve daha fazlası."
   },
   "dex": {
-    "seoTitle": "DEX — DHB'yi kendi fiyatınızla takas edin",
-    "seoDescription": "Base veya BNB Chain'de Uniswap v4 limit emriyle DHB alım veya satım fiyatınızı belirleyin. Canlı emir defteri, piyasa derinliği ve tek bir paylaşılan USD fiyatı.",
+    "seoTitle": "DEX — jeton'yi kendi fiyatınızla takas edin",
+    "seoDescription": "Base veya BNB Chain'de Uniswap v4 limit emriyle jeton alım veya satım fiyatınızı belirleyin. Canlı emir defteri, piyasa derinliği ve tek bir paylaşılan USD fiyatı.",
     "venue": "Ağ",
     "marketPrice": "Piyasa fiyatı · USD",
     "bookPrice": "{{chain}} emir defteri fiyatı · USD",
     "change24": "24 saatlik değişim",
     "totalLiquidity": "Toplam likidite · USD",
-    "listedDhb": "Listelenen DHB · {{chain}}",
+    "listedDhb": "Listelenen jeton · {{chain}}",
     "listedUsd": "Listelenen USD · {{chain}}",
     "refreshMarket": "Piyasayı yenile",
     "refresh": "Yenile",
@@ -6277,21 +6279,21 @@
     "orderBook": "Emir defteri",
     "priceGrouping": "Fiyat gruplama",
     "priceUsd": "Fiyat (USD)",
-    "sizeDhb": "Size (DHB)",
-    "totalDhb": "Toplam (DHB)",
+    "sizeDhb": "Size (jeton)",
+    "totalDhb": "Toplam (jeton)",
     "noBids": "Henüz teklif yok",
     "noAsks": "Henüz sorulan likidite yok",
     "useBuyPrice": "Satın alma fiyatı olarak {{price}} kullanın",
     "useSellPrice": "Satış fiyatı olarak {{price}} kullanın",
     "spread": "Spread · USD",
-    "buyTotal": "{{amount}} DHB Al",
-    "sellTotal": "{{amount}} DHB Sat",
+    "buyTotal": "{{amount}} jeton Al",
+    "sellTotal": "{{amount}} jeton Sat",
     "placeOrder": "Sipariş ver",
     "lpFee": "%0 LP ücreti",
     "lpFeeLabel": "LP ücreti",
     "lpFeeValue": "{{fee}}% LP ücreti",
-    "buy": "DHB Al",
-    "sell": "DHB Sat",
+    "buy": "jeton Al",
+    "sell": "jeton Sat",
     "maxBuy": "Maksimum alış fiyatı",
     "minSell": "Minimum satış fiyatı",
     "spend": "Harcama",
@@ -6307,7 +6309,7 @@
     "estimated": "Tahmini tam dönüşüm",
     "network": "Finansman ağı",
     "sellBelowMarket": "Bu satış piyasa fiyatının ${{price}} altında %{{percent}}. Birisi onu alıp başka bir yerde anında yeniden satabilir.",
-    "buyAboveMarket": "Bu alım, piyasa fiyatı olan ${{price}}'ın {{percent}}% üzerindedir. Başka yerlerde DHB'nin alım satımından daha fazla ödeme yaparsınız.",
+    "buyAboveMarket": "Bu alım, piyasa fiyatı olan ${{price}}'ın {{percent}}% üzerindedir. Başka yerlerde jeton'nin alım satımından daha fazla ödeme yaparsınız.",
     "useMarket": "Piyasa fiyatını kullan",
     "balanceError": "Bakiye kontrolü başarısız oldu. Bir emir vermeden önce tekrar deneyin.",
     "noFunding": "{{chain}} üzerinde {{token}} mevcut değil.",
@@ -6316,7 +6318,7 @@
     "reviewYourBuy": "Alımınızı gözden geçirin",
     "reviewYourSell": "Satışınızı gözden geçirin",
     "reviewDeposit": "{{chain}} üzerinde {{amount}} {{token}} yatırın.",
-    "reviewRange": "Aralık: DHB başına {{min}} – {{max}} USD.",
+    "reviewRange": "Aralık: jeton başına {{min}} – {{max}} USD.",
     "initializes": "Bu, %0 havuzunu oluşturur ve başlatır.",
     "pendingNote": "İşleminiz gönderildi. Başka bir depozito olmadan onay veya listeleme kaydına devam edin.",
     "viewTransaction": "İşlemi görüntüle",
@@ -6333,7 +6335,7 @@
     "keepOpen": "Listelemeniz kaydedilene kadar bu sayfayı açık tutun. Tarayıcı depolama kullanılamıyor.",
     "snapshotDelayed": "Paylaşılan piyasa verileri gecikmeli. Son doğrulanmış anlık görüntüyü gösteriyor.",
     "snapshotUnavailable": "Paylaşılan piyasa verileri kullanılamıyor. Pozisyonları yüklemek için tekrar deneyin.",
-    "withdrawReview": "{{chain}} üzerinde {{dhb}} DHB ve {{usdc}} USDC çekin? Miktarlar imzalamadan önce yenilenir; fiyat toleransı %0,5'tir.",
+    "withdrawReview": "{{chain}} üzerinde {{dhb}} jeton ve {{usdc}} USDC çekin? Miktarlar imzalamadan önce yenilenir; fiyat toleransı %0,5'tir.",
     "withdrawn": "Pozisyon çekildi",
     "withdrawFailed": "Çekme işlemi başarısız oldu",
     "withdrawing": "Çekiliyor…",
@@ -6467,6 +6469,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Görsel önemli anlar",
+      "visualPrivacy": "Görsel analiz için seçilen kareleri gönderin."
+    },
+    "review": {
+      "title": "Proje incelemesi",
+      "shared": "Sizinle paylaşılan",
+      "time": "Zaman (s)",
+      "assign": "Cüzdan ata"
+    },
+    "textFit": {
+      "wrap": "Satırları kaydır",
+      "width": "Metin genişliği",
+      "shrink": "Metni sığacak kadar küçült",
+      "height": "Metin yüksekliği",
+      "captions": "Altyazı izini sığdır"
+    },
     "canvas": {
       "dropMedia": "Tasarımınıza eklemek için bırakın",
       "dropText": "Metin eklemek için bırakın",
@@ -6869,6 +6888,15 @@
       "sync": "Kesimleri eşitle",
       "none": "Güvenilir ritim bulunamadı.",
       "unchanged": "Kesimler hizalanamadı."
+    },
+    "assembly": {
+      "matchConsent": "Klipleri ve fotoğrafları isteğime göre seç",
+      "matchScenes": "İlgili sahneleri bul",
+      "noMatch": "İlgili sahne bulunamadı. Başka bir konu veya seçim deneyin.",
+      "matchLimit": "En fazla 10 klip veya fotoğraf seçin. Videolar bir saniye ile 10 dakika arasında olmalıdır.",
+      "matchDuration": "İlgili görüntüler istenen videodan daha kısa. Süreyi kısaltın veya daha fazla medya seçin.",
+      "matchFailed": "Sahne eşleştirme kullanılamıyor. Seçtiğiniz klipler ve süreleri değişmedi. Bunları elle inceleyebilirsiniz.",
+      "reviewManually": "Klipleri elle incele"
     }
   },
   "jungleMood": {
@@ -7816,7 +7844,7 @@
     "topUpTitle": "Yükleyin ve tasarruf edin",
     "discount": "{{percent}}% indirim",
     "noDiscount": "Tam fiyat",
-    "total": "Toplam ${{usd}}, DHB olarak ödenir",
+    "total": "Toplam ${{usd}}, jeton olarak ödenir",
     "buy": "Kredi satın al",
     "buying": "Ödeme bekleniyor…",
     "bought": "{{count}} gönderi kredisi eklendi",
@@ -7846,7 +7874,7 @@
     "skippedToast": "{{platforms}} atlandı: Bu gönderide ihtiyaç duydukları fotoğraf veya video yok.",
     "uploadFailed": "Çapraz gönderim için medyanız yüklenemedi.",
     "creditRules": "Her gönderi platform başına krediye mal olur: X için {{x}}, Farcaster için {{farcaster}} ve diğer tüm platformlar için {{other}}. Zamanlanmış gönderiler, zamanladığınızda kredileri kullanır.",
-    "payAsYouGoCredits": "Eksik krediler DHB'de her gönderide ${{price}}' dan satın alınır.",
+    "payAsYouGoCredits": "Eksik krediler jeton'de her gönderide ${{price}}' dan satın alınır.",
     "topUpCredits": "{{count}} kredi",
     "perCredit": "Kredi başına ${{price}}",
     "pendingApproval": "Farcaster uygulamasında hata giderme işlemini onaylamanızı bekliyoruz",
@@ -7858,7 +7886,7 @@
   "dm": {
     "planRestricted": "Bu kullanıcı mesaj almak için abonelik gerektiriyor.",
     "planTypeNotAllowed": "Bu içerik üreticisinin planı bu tür mesaja izin vermiyor.",
-    "planMinTip": "Bu içerik üreticisi için bahşiş en az {{amount}} DHB olmalı."
+    "planMinTip": "Bu içerik üreticisi için bahşiş en az {{amount}} jeton olmalı."
   },
   "credits": {
     "earningsWorth": "{{amount}} değerinde",
@@ -7986,12 +8014,12 @@
       "notifyKey": "Bildirim anahtarı",
       "notifyKeyOnce": "Yeni bildirim anahtarı için {{name}}. Şimdi kopyalayın: sadece bir kez gösterilir ve bir başkası yapıldığında yerini alır.",
       "payTitle": "Ödemeleri alın",
-      "payBody": "`pay()` kullanıcının size doğrudan imzaladığınız `dehub.json` cüzdanına DHB göndermesini ister. Sunucunuzdaki fatura/ödemenin onayını kontrol edin önce herhangi bir şey teslim edin.",
+      "payBody": "`pay()` kullanıcının size doğrudan imzaladığınız `dehub.json` cüzdanına jeton göndermesini ister. Sunucunuzdaki fatura/ödemenin onayını kontrol edin önce herhangi bir şey teslim edin.",
       "notifyTitle": "Bildirim gönder",
       "notifyBody": "Kullanıcılarınızın uygulamanıza eklediği kullanıcılar, bildirim anahtarı (notify key) ile sunucunuzdan bildirim alabilir. Her kullanıcı için ayrı token saklamanız gerekmez.",
       "rankTitle": "Mağaza uygulamaları nasıl sıralıyor?",
       "rankBody": "Listelenen her uygulama her gece bir puan alır: geri dönen kullanıcılardan (bu hafta ve bir hafta önce açanlar) % 55, haftalık kullanıcılardan % 35 ve ilk 14 gününde % 10 artış. Yalnızca oturum açmış DeHub hesapları sayılır, bu nedenle botlar ve sayfa yeniden yüklemeleri hiçbir şey kazandırmaz.",
-      "rewardsBody": "Her ay {{pool}} DHB, uygulamalar arasında haftalık olarak hesaplanan aynı puanla paylaşılır. Hak kazanmak için bir uygulamanın doğrulanmış bir sahip cüzdanına ve en az 3 geri dönen kullanıcıya ihtiyacı vardır. Ödüller DeHub tarafından cüzdan sahibine ödenir.",
+      "rewardsBody": "Her ay {{pool}} jeton, uygulamalar arasında haftalık olarak hesaplanan aynı puanla paylaşılır. Hak kazanmak için bir uygulamanın doğrulanmış bir sahip cüzdanına ve en az 3 geri dönen kullanıcıya ihtiyacı vardır. Ödüller DeHub tarafından cüzdan sahibine ödenir.",
       "rewardsWeek": "{{date}} haftası",
       "rewardPaid": "Ödendi",
       "rewardPending": "Bekleyen",
@@ -8016,10 +8044,10 @@
       "art-creativity": "Sanat ve yaratıcılık"
     },
     "pay": {
-      "body": "DHB doğrudan uygulamanın cüzdanına gider, {{wallet}}. Ödemeler iptal edilemez.",
-      "confirm": "Pay {{amount}} DHB",
+      "body": "jeton doğrudan uygulamanın cüzdanına gider, {{wallet}}. Ödemeler iptal edilemez.",
+      "confirm": "Pay {{amount}} jeton",
       "sending": "Ödeme gönderiliyor...",
-      "sent": "Ödenmiş {{amount}} DHB'yi {{name}}.",
+      "sent": "Ödenmiş {{amount}} jeton'yi {{name}}.",
       "noOwner": "Bu uygulamanın henüz ödenecek doğrulanmış bir cüzdanı yok."
     },
     "add": {

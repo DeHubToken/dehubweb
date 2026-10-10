@@ -90,6 +90,7 @@
     "heading": "Video Fupi za DeHub"
   },
   "settings": {
+    "postingChain": "Mnyororo wa bloku wa machapisho",
     "showOnline": "Onyesha wakati niko mtandaoni",
     "showOnlineDesc": "Watu unaotuma ujumbe wanaona nukta ya kijani karibu na jina lako unapotumia DeHub",
     "smartReplies": "Majibu yanayopendekezwa",
@@ -259,6 +260,7 @@
     "light": "Mwanga",
     "dark": "Giza",
     "system": "Mfumo",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Usiku wa Ukungu",
     "swarms": "Makundi",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay inatuma tokeni zako…",
     "payViaDpay": "Zililipwa kwa DeHub Pay, tokeni zitafika baada ya kama sekunde 30",
     "payViaBridgeDpay": "Zilihamishwa kwenda Base na kulipwa kwa DeHub Pay, tokeni zitafika baada ya kama dakika moja",
-    "dmSent": "Umetuma {{amount}} DHB kwa {{name}}!"
+    "dmSent": "Umetuma {{amount}} tokeni kwa {{name}}!"
   },
   "postOptions": {
     "options": "Chaguzi",
@@ -1204,10 +1206,10 @@
   },
   "dhbListing": {
     "title": "Uorodheshaji wa tokeni unakuja hivi karibuni!",
-    "body": "$DHB bado haiuzwi. Pata barua pepe mara tu itakapoorodheshwa.",
+    "body": "tokeni bado haiuzwi. Pata barua pepe mara tu itakapoorodheshwa.",
     "notifyMe": "Nijulishe",
-    "privacy": "Tutatumia hii tu kukujulisha $DHB itakapoorodheshwa.",
-    "joined": "Uko kwenye orodha. Tutatuma barua pepe kwa {{email}} mara tu $DHB itakapoorodheshwa."
+    "privacy": "Tutatumia hii tu kukujulisha tokeni itakapoorodheshwa.",
+    "joined": "Uko kwenye orodha. Tutatuma barua pepe kwa {{email}} mara tu tokeni itakapoorodheshwa."
   },
   "explorePage": {
     "searchPlaceholder": "Tafuta watu, machapisho au maudhui...",
@@ -1467,7 +1469,7 @@
     "otherTokens": "Tokeni nyingine",
     "otherTokensDesc": "Nunua ETH au USDC kwenye Base kwa kadi yako",
     "shareToFeed": "Shiriki kwenye mpasho wangu",
-    "sharePostTemplate": "Nimeweka {{amount}} $DHB kwenye stakabadhi yangu kwenye DeHub. Kujenga na jumuiya. #DeHub #DHB",
+    "sharePostTemplate": "Nimeweka {{amount}} tokeni kwenye stakabadhi yangu kwenye DeHub. Kujenga na jumuiya. #DeHub",
     "success": {
       "title": "Ununuzi Umekamilika!",
       "subtitle": "Tokeni zimefikishwa kwenye pochi yako.",
@@ -3498,7 +3500,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Awamu ya 1 · Muhtasari wa kibinafsi",
     "heroTitle": "TOKENIZE BIASHARA",
-    "heroSubtitle": "DHB-paired bonding curve. Inakamilika kwenye Uniswap kwa $42K market cap.",
+    "heroSubtitle": "tokeni-paired bonding curve. Inakamilika kwenye Uniswap kwa $42K market cap.",
     "createCoin": "Tengeneza sarafu",
     "filterNew": "Mpya",
     "filterGraduating": "Karibu kumaliza",
@@ -3599,7 +3601,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Nunua na uuze sehemu za machapisho ya DeHub. Chapisho lililofuliwa ni sehemu 1000 zilizo kwenye mnyororo — miliki kipande cha video, wimbo au picha na ukifanyie biashara kwa DHB.",
+    "seoDescription": "Nunua na uuze sehemu za machapisho ya DeHub. Chapisho lililofuliwa ni sehemu 1000 zilizo kwenye mnyororo — miliki kipande cha video, wimbo au picha na ukifanyie biashara kwa tokeni.",
     "title": "Hisa",
     "perUpload": "1000 per upload",
     "tabBrowse": "Browse",
@@ -4452,7 +4454,7 @@
   },
   "usernames": {
     "seoTitle": "Soko la Jina la Mtumiaji | DeHub",
-    "seoDescription": "Nunua na uuze majina ya watumiaji ya DeHub kwa kutumia DHB. Tafuta vipini vifupi, vya nambari na vya awali kwa ajili ya kuuza, au orodhesha vyako mwenyewe — uhamisho hufanyika kwenye mnyororo wakati malipo yanapoondolewa.",
+    "seoDescription": "Nunua na uuze majina ya watumiaji ya DeHub kwa kutumia tokeni. Tafuta vipini vifupi, vya nambari na vya awali kwa ajili ya kuuza, au orodhesha vyako mwenyewe — uhamisho hufanyika kwenye mnyororo wakati malipo yanapoondolewa.",
     "title": "Majina ya watumiaji",
     "subtitle": "Hushughulikia zinazouzwa, kwa bei ya USD",
     "tabBrowse": "vinjari",
@@ -4574,7 +4576,7 @@
   },
   "accounts": {
     "seoTitle": "Soko la Akaunti — DeHub",
-    "seoDescription": "Nunua na uza akaunti za DeHub zilizoimarishwa kwa DHB. Vinjari akaunti kwa wafuasi, upakiaji na umri — kinini, machapisho, wafuasi na haki za badge zote huhamia, na malipo huenda moja kwa moja kwa muuzaji.",
+    "seoDescription": "Nunua na uza akaunti za DeHub zilizoimarishwa kwa tokeni. Vinjari akaunti kwa wafuasi, upakiaji na umri — kinini, machapisho, wafuasi na haki za badge zote huhamia, na malipo huenda moja kwa moja kwa muuzaji.",
     "title": "Akaunti",
     "subtitle": "Akaunti nzima zinauzwa, kwa bei ya tokeni za DeHub",
     "tabBrowse": "Vinjari",
@@ -6214,17 +6216,17 @@
   },
   "docs": {
     "seoTitle": "Nyaraka za DeHub — Miongozo, tokeni, dApps na maswali",
-    "seoDescription": "Nyaraka rasmi za DeHub: muhtasari wa jukwaa, dApps, uchumi wa tokeni ya DHB, staking, michezo, ramani ya safari, maswali yanayoulizwa mara kwa mara na zaidi."
+    "seoDescription": "Nyaraka rasmi za DeHub: muhtasari wa jukwaa, dApps, uchumi wa tokeni ya tokeni, staking, michezo, ramani ya safari, maswali yanayoulizwa mara kwa mara na zaidi."
   },
   "dex": {
-    "seoTitle": "DEX — Biashara DHB kwa bei yako",
-    "seoDescription": "Weka bei yako ya kununua au kuuza DHB ukitumia agizo la kikomo la Uniswap v4 kwenye Base au BNB Chain. Kitabu cha maagizo kinachoishi, kina cha soko na bei moja ya pamoja ya USD.",
+    "seoTitle": "DEX — Biashara tokeni kwa bei yako",
+    "seoDescription": "Weka bei yako ya kununua au kuuza tokeni ukitumia agizo la kikomo la Uniswap v4 kwenye Base au BNB Chain. Kitabu cha maagizo kinachoishi, kina cha soko na bei moja ya pamoja ya USD.",
     "venue": "Mtandao",
     "marketPrice": "Bei ya soko · USD",
     "bookPrice": "{{chain}} bei ya kitabu · USD",
     "change24": "Mabadiliko ya saa 24",
     "totalLiquidity": "Uwezo wa jumla · USD",
-    "listedDhb": "DHB Iliyoorodheshwa · {{chain}}",
+    "listedDhb": "tokeni Iliyoorodheshwa · {{chain}}",
     "listedUsd": "USD Iliyoorodheshwa · {{chain}}",
     "refreshMarket": "Sasisha soko",
     "refresh": "Sasisha",
@@ -6249,21 +6251,21 @@
     "orderBook": "Kitabu cha maagizo",
     "priceGrouping": "Kupanga kwa bei",
     "priceUsd": "Bei (USD)",
-    "sizeDhb": "Ukubwa (DHB)",
-    "totalDhb": "Jumla (DHB)",
+    "sizeDhb": "Ukubwa (tokeni)",
+    "totalDhb": "Jumla (tokeni)",
     "noBids": "Hakuna zabuni bado",
     "noAsks": "Hakuna ukwasi wa ombi bado",
     "useBuyPrice": "Tumia {{price}} kama bei ya kununua",
     "useSellPrice": "Tumia {{price}} kama bei ya kuuza",
     "spread": "Tofauti · USD",
-    "buyTotal": "Nunua {{amount}} DHB",
-    "sellTotal": "Uza {{amount}} DHB",
+    "buyTotal": "Nunua {{amount}} tokeni",
+    "sellTotal": "Uza {{amount}} tokeni",
     "placeOrder": "Weka agizo",
     "lpFee": "0% ada ya LP",
     "lpFeeLabel": "Ada ya LP",
     "lpFeeValue": "{{fee}}% ada ya LP",
-    "buy": "Nunua DHB",
-    "sell": "Uza DHB",
+    "buy": "Nunua tokeni",
+    "sell": "Uza tokeni",
     "maxBuy": "Bei ya juu zaidi ya kununua",
     "minSell": "Bei ya chini kabisa ya kuuza",
     "spend": "Tumia",
@@ -6279,7 +6281,7 @@
     "estimated": "Ubadilishaji kamili wa makadirio",
     "network": "Mtandao wa ufadhili",
     "sellBelowMarket": "Uuzaji huu ni {{percent}}% chini ya bei ya soko ya ${{price}}. Mtu anaweza kuunua na kuiuza tena mahali pengine mara moja.",
-    "buyAboveMarket": "Ununuzi huu uko juu ya bei ya soko ya ${{price}} kwa {{percent}}%. Ungependa kulipa zaidi kuliko DHB inavyouzwa mahali pengine.",
+    "buyAboveMarket": "Ununuzi huu uko juu ya bei ya soko ya ${{price}} kwa {{percent}}%. Ungependa kulipa zaidi kuliko tokeni inavyouzwa mahali pengine.",
     "useMarket": "Tumia bei ya soko",
     "balanceError": "Uhakiki wa salio umeshindwa. Jaribu tena kabla ya kuweka agizo.",
     "noFunding": "Hakuna {{token}} inayopatikana kwenye {{chain}}.",
@@ -6288,7 +6290,7 @@
     "reviewYourBuy": "Kagua ununuzi wako",
     "reviewYourSell": "Kagua uuzaji wako",
     "reviewDeposit": "Weka {{amount}} {{token}} kwenye {{chain}}.",
-    "reviewRange": "Kiwango: {{min}} – {{max}} USD kwa kila DHB.",
+    "reviewRange": "Kiwango: {{min}} – {{max}} USD kwa kila tokeni.",
     "initializes": "Hii huunda na kuweka awali 0% ya kidimbwi.",
     "pendingNote": "Muamala wako umetumwa. Endelea na uthibitisho au usajili wa tangazo bila amana nyingine.",
     "viewTransaction": "Tazama muamala",
@@ -6305,7 +6307,7 @@
     "keepOpen": "Weka ukurasa huu wazi hadi tangazo lako lisajiliwe. Hifadhi ya kivinjari haipatikani.",
     "snapshotDelayed": "Data ya soko iliyoshirikiwa imecheleweshwa. Inaonyesha picha ya mwisho iliyothibitishwa.",
     "snapshotUnavailable": "Data ya soko iliyoshirikiwa haipatikani. Jaribu tena kupakia nafasi.",
-    "withdrawReview": "Toa {{dhb}} DHB na {{usdc}} USDC kwenye {{chain}}? Kiasi kinasasishwa kabla ya kusaini; uvumilivu wa bei ni 0.5%.",
+    "withdrawReview": "Toa {{dhb}} tokeni na {{usdc}} USDC kwenye {{chain}}? Kiasi kinasasishwa kabla ya kusaini; uvumilivu wa bei ni 0.5%.",
     "withdrawn": "Nafasi imetolewa",
     "withdrawFailed": "Utoaji umeshindwa",
     "withdrawing": "Inatolewa…",
@@ -6439,6 +6441,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Matukio bora ya picha",
+      "visualPrivacy": "Tuma fremu zilizochaguliwa kwa uchambuzi wa picha."
+    },
+    "review": {
+      "title": "Ukaguzi wa mradi",
+      "shared": "Umeshirikiwa",
+      "time": "Muda (s)",
+      "assign": "Kabidhi pochi"
+    },
+    "textFit": {
+      "wrap": "Vunja mistari",
+      "width": "Upana wa maandishi",
+      "shrink": "Punguza maandishi yatoshee",
+      "height": "Urefu wa maandishi",
+      "captions": "Rekebisha wimbo wa manukuu"
+    },
     "canvas": {
       "dropMedia": "Dondosha ili kuongeza kwenye muundo wako",
       "dropText": "Dondosha ili kuongeza maandishi",
@@ -7787,7 +7806,7 @@
     "topUpTitle": "Ongeza na uhifadhi",
     "discount": "{{percent}}% punguzo",
     "noDiscount": "Bei kamili",
-    "total": "Jumla ya ${{usd}}, imelipwa katika DHB",
+    "total": "Jumla ya ${{usd}}, imelipwa katika tokeni",
     "buy": "Nunua mikopo",
     "buying": "Inasubiri malipo…",
     "bought": "Imeongezwa {{count}} mikopo ya chapisho",
@@ -7817,7 +7836,7 @@
     "skippedToast": "Imeruka {{platforms}}: chapisho hili halina picha au video wanayohitaji.",
     "uploadFailed": "Haikuweza kupakia vyombo vyako vya habari kwa ajili ya kuchapisha.",
     "creditRules": "Kila chapisho hugharimu vocha kwa kila tovuti: {{x}} kwa X, {{farcaster}} kwa Farcaster na {{other}} kwa kila tovuti nyingine. Machapisho yaliyoratibiwa hutumia miamana unapoyapanga.",
-    "payAsYouGoCredits": "Umekwisha? Vocha zinazokosekana zinanunuliwa kwa DHB kwa ${{price}} kila moja unapochapisha.",
+    "payAsYouGoCredits": "Umekwisha? Vocha zinazokosekana zinanunuliwa kwa tokeni kwa ${{price}} kila moja unapochapisha.",
     "topUpCredits": "{{count}} miamana",
     "perCredit": "${{price}} kwa kila muamana",
     "pendingApproval": "Inakusubiri uidhinishe dehub kwenye programu ya Farcaster",
@@ -7829,7 +7848,7 @@
   "dm": {
     "planRestricted": "Mtumiaji huyu anahitaji usajili ili kupokea ujumbe.",
     "planTypeNotAllowed": "Mpango wa mtayarishi huyu hauruhusu aina hii ya ujumbe.",
-    "planMinTip": "Bakshishi kwa mtayarishi huyu lazima iwe angalau {{amount}} DHB."
+    "planMinTip": "Bakshishi kwa mtayarishi huyu lazima iwe angalau {{amount}} tokeni."
   },
   "credits": {
     "earningsWorth": "Thamani {{amount}}",
@@ -7962,7 +7981,7 @@
       "notifyBody": "Watu wa kuongeza app yako wanapokabiliwa na kwenye server yako kwa kuhusu notify key yako. Hakuna token za kila mtu kuweka.",
       "rankTitle": "Jinsi duka linavyoorodhesha programu",
       "rankBody": "Kila usiku kila programu iliyotangazwa inapata alama: asilimia 55 kutoka kwa watumiaji wanaorudi (watu walioifungua wiki hii na wiki iliyopita), asilimia 35 kutoka kwa watumiaji wa kila wiki, pamoja na ongezeko la asilimia 10 katika siku 14 za kwanza. Akaunti za DeHub zilizoingia tu ndizo zinahesabu, kwa hivyo roboti na upakiaji wa ukurasa haupati chochote.",
-      "rewardsBody": "Kila mwezi {{pool}} DHB inashirikiwa kati ya programu kwa alama sawa, inayohesabiwa kila wiki. Ili kustahiki, programu inahitaji mkoba wa mmiliki uliothibitishwa na angalau watumiaji 3 wanaorudi. Zawadi hulipwa na DeHub kwenye mkoba wa mmiliki.",
+      "rewardsBody": "Kila mwezi {{pool}} tokeni inashirikiwa kati ya programu kwa alama sawa, inayohesabiwa kila wiki. Ili kustahiki, programu inahitaji mkoba wa mmiliki uliothibitishwa na angalau watumiaji 3 wanaorudi. Zawadi hulipwa na DeHub kwenye mkoba wa mmiliki.",
       "rewardsWeek": "Wiki ya {{date}}",
       "rewardPaid": "Iliyolipwa",
       "rewardPending": "Inashuhulikiwa",
@@ -7988,10 +8007,10 @@
     },
     "pay": {
       "title": "Lipa {{name}}?",
-      "body": "DHB inatoka nyuma kwenda gharama za akiba ya appi, {{wallet}}. Malipo hayasahibiwa.",
-      "confirm": "Baada ya kufikia {{amount}} DHB",
+      "body": "tokeni inatoka nyuma kwenda gharama za akiba ya appi, {{wallet}}. Malipo hayasahibiwa.",
+      "confirm": "Baada ya kufikia {{amount}} tokeni",
       "sending": "Tunaondoa malipo yako…",
-      "sent": "Bajaji {{amount}} DHB kwa {{name}}.",
+      "sent": "Bajaji {{amount}} tokeni kwa {{name}}.",
       "noOwner": "Hivi app haina waleti mwelekeo wa kurejea kufikia kiasi cha kuzalisha malipo bado."
     },
     "add": {

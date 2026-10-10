@@ -89,6 +89,7 @@
     "heading": "DeHub Kurt"
   },
   "settings": {
+    "postingChain": "Blokzincîra weşanê",
     "showOnline": "Dema ku ez serhêl im nîşan bide",
     "showOnlineDesc": "Kesên ku hûn peyamên wan dişînin dema ku hûn DeHub bikar tînin li kêleka navê we xalek kesk dibînin.",
     "smartReplies": "Bersivên pêşniyarkirî",
@@ -249,6 +250,7 @@
     "light": "Ronahî",
     "dark": "Tarî",
     "system": "Pergal",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Şevên Mijî",
     "swarms": "Swarms",
@@ -477,7 +479,7 @@
     "stageDelivering": "DeHub Pay توکێنەکانت دەنێرێت…",
     "payViaDpay": "بۆ DeHub Pay درا، توکێنەکان نزیکەی ٣٠ چرکەدا دەگەن",
     "payViaBridgeDpay": "بۆ Base گواسترایەوە و درا بە DeHub Pay، توکێنەکان نزیکەی یەک خولەکدا دەگەن",
-    "dmSent": "{{amount}} DHB ji {{name}} re hat şandin!"
+    "dmSent": "{{amount}} توکن ji {{name}} re hat şandin!"
   },
   "postOptions": {
     "options": "Vebijêrk",
@@ -1035,10 +1037,10 @@
   },
   "dhbListing": {
     "title": "Lîstekirina tokenê nêzîk e!",
-    "body": "$DHB hîn nayê bazirganîkirin. Gava ku lîste bibe e-nameyekê bistîne.",
+    "body": "توکن hîn nayê bazirganîkirin. Gava ku lîste bibe e-nameyekê bistîne.",
     "notifyMe": "Min agahdar bike",
-    "privacy": "Em ê vê tenê bikar bînin da ku gava $DHB lîste bibe te agahdar bikin.",
-    "joined": "Tu di lîsteyê de yî. Gava ku $DHB lîste bibe em ê e-nameyekê ji {{email}} re bişînin."
+    "privacy": "Em ê vê tenê bikar bînin da ku gava توکن lîste bibe te agahdar bikin.",
+    "joined": "Tu di lîsteyê de yî. Gava ku توکن lîste bibe em ê e-nameyekê ji {{email}} re bişînin."
   },
   "explorePage": {
     "searchPlaceholder": "Li kes, şandin, an naverokê bigerin...",
@@ -1292,7 +1294,7 @@
     "otherTokens": "Tokenên din",
     "otherTokensDesc": "Bi karta xwe li ser Base ETH an USDC bikire",
     "shareToFeed": "هاوبەشی بکە لەگەڵ فیدەکەم",
-    "sharePostTemplate": "تازە {{amount}} $DHB بۆ کۆکراوەکەم لە DeHub زیاد کرد. دروستکردن لەگەڵ کۆمەڵگە. #DeHub #DHB",
+    "sharePostTemplate": "تازە {{amount}} توکن بۆ کۆکراوەکەم لە DeHub زیاد کرد. دروستکردن لەگەڵ کۆمەڵگە. #DeHub",
     "success": {
       "title": "کڕین تەواو بوو!",
       "subtitle": "توکنەکان گەیشتنە جانتاکەت.",
@@ -3097,7 +3099,7 @@
     "seoDescription": "وەرگرتنی بزنس لەسەر پلتفۆرمی DeHub: بازرگانی بە دراوە زیندووەکان بکە یان دراوی خۆت دروست بکە.",
     "phaseBadge": "قۆناغی ١ · پێداچوونەوەی تایبەت",
     "heroTitle": "بزنس وەرگرە",
-    "heroSubtitle": "DHB-paired bonding curve. دەگوازرێتەوە بۆ Uniswap بە بازاڕی ٤٢ هەزار دۆلاری.",
+    "heroSubtitle": "توکن-paired bonding curve. دەگوازرێتەوە بۆ Uniswap بە بازاڕی ٤٢ هەزار دۆلاری.",
     "createCoin": "دروستکردنی دراو",
     "filterNew": "نوێ",
     "filterGraduating": "لە ئامادەباشیدایە بۆ گواستنەوە",
@@ -3135,7 +3137,7 @@
   },
   "fractions": {
     "seoTitle": "پارچەکان | DeHub",
-    "seoDescription": "پارچەکانی پۆستەکانی DeHub بکڕە و بفرۆشە. پۆستێکی مینتکراو ١٠٠٠ پارچەی on-chainە - خاوەنی پارچەیەک لە ڤیدیۆ، تراک، یان وێنەیەک بە و لە DHB بازرگانی پێوە بکە.",
+    "seoDescription": "پارچەکانی پۆستەکانی DeHub بکڕە و بفرۆشە. پۆستێکی مینتکراو ١٠٠٠ پارچەی on-chainە - خاوەنی پارچەیەک لە ڤیدیۆ، تراک، یان وێنەیەک بە و لە توکن بازرگانی پێوە بکە.",
     "title": "پارچەکان",
     "perUpload": "١٠٠٠ بۆ هەموو بارکردنێک",
     "tabBrowse": "گەڕان",
@@ -3844,7 +3846,7 @@
   },
   "accounts": {
     "seoTitle": "بازاڕی هەژمار - DeHub",
-    "seoDescription": "هەژمارە دامەزراوەکانی DeHub بە DHB بکڕە و بفرۆشە. هەژمارەکان بەپێی شوێنکەوتووان، بارکردن و تەمەن بگەڕێ - ناونیشانەکە، پۆستەکان، شوێنکەوتووان و مافەکانی نیشانە هەموویان دەگوازرێنەوە، و پارەکە ڕاستەوخۆ بۆ فرۆشیارەکە دەڕوات.",
+    "seoDescription": "هەژمارە دامەزراوەکانی DeHub بە توکن بکڕە و بفرۆشە. هەژمارەکان بەپێی شوێنکەوتووان، بارکردن و تەمەن بگەڕێ - ناونیشانەکە، پۆستەکان، شوێنکەوتووان و مافەکانی نیشانە هەموویان دەگوازرێنەوە، و پارەکە ڕاستەوخۆ بۆ فرۆشیارەکە دەڕوات.",
     "title": "هەژمارەکان",
     "subtitle": "حیسابە تەواوەکان بۆ فرۆشتن، بە توکنی DeHub نرخاندراون",
     "tabBrowse": "سه‌یر بكه‌",
@@ -5242,11 +5244,11 @@
   },
   "docs": {
     "seoTitle": "Belgeyên DeHub — Rênîşander, token, dApps û FAQ",
-    "seoDescription": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena DHB, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
+    "seoDescription": "Belgeyên fermî yên DeHub: nêrîna giştî ya platformê, dApps, aboriya tokena توکن, staking, lîstik, nexşerê, pirsên pir tên kirin û bêtir."
   },
   "dex": {
-    "seoTitle": "DEX — بازرگانی DHB بە نرخی خۆت بکە",
-    "seoDescription": "نرخی کڕین یان فرۆشتنی DHB خۆت دابنێ بە فەرمانی سنووردارکردنی Uniswap v4 لەسەر Base یان BNB Chain. کتێبی فەرمانی زیندوو، قووڵایی بازاڕ و یەک نرخی هاوبەشی دۆلاری.",
+    "seoTitle": "DEX — بازرگانی توکن بە نرخی خۆت بکە",
+    "seoDescription": "نرخی کڕین یان فرۆشتنی توکن خۆت دابنێ بە فەرمانی سنووردارکردنی Uniswap v4 لەسەر Base یان BNB Chain. کتێبی فەرمانی زیندوو، قووڵایی بازاڕ و یەک نرخی هاوبەشی دۆلاری.",
     "venue": "ڕاژە",
     "marketPrice": "نرخی بازاڕ · دۆلار",
     "bookPrice": "کتێبی فەرمانی {{chain}} · دۆلار",
@@ -5275,21 +5277,21 @@
     "orderBook": "کتێبی فەرمان",
     "priceGrouping": "کۆمەڵکردنی نرخ",
     "priceUsd": "نرخ (دۆلار)",
-    "sizeDhb": "قەبارە (DHB)",
-    "totalDhb": "کۆی گشتی (DHB)",
+    "sizeDhb": "قەبارە (توکن)",
+    "totalDhb": "کۆی گشتی (توکن)",
     "noBids": "هێشتا هیچ داوڵەتیك نییە",
     "noAsks": "هێشتا هیچ داوڵەتیك نییە",
     "useBuyPrice": "بەکارهێنانی {{price}} وەک نرخی کڕین",
     "useSellPrice": "بەکارهێنانی {{price}} وەک نرخی فرۆشتن",
     "spread": "جیاوازی نرخ · دۆلار",
-    "buyTotal": "کڕینی {{amount}} DHB",
-    "sellTotal": "فرۆشتنی {{amount}} DHB",
+    "buyTotal": "کڕینی {{amount}} توکن",
+    "sellTotal": "فرۆشتنی {{amount}} توکن",
     "placeOrder": "دانانی داوڵەتیك",
     "lpFee": "٠٪ باجی LP",
     "lpFeeLabel": "باجی LP",
     "lpFeeValue": "{{fee}}٪ باجی LP",
-    "buy": "کڕینی DHB",
-    "sell": "فرۆشتنی DHB",
+    "buy": "کڕینی توکن",
+    "sell": "فرۆشتنی توکن",
     "maxBuy": "نرخی کڕینی زۆرترین",
     "minSell": "نرخی فرۆشتنی کەمترین",
     "spend": "خەرجکردن",
@@ -5434,6 +5436,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Xalên girîng ên dîtbarî",
+      "visualPrivacy": "Çarçoveyên bijartî ji bo analîza dîtbarî bişînin."
+    },
+    "review": {
+      "title": "Vekolîna projeyê",
+      "shared": "Bi te re parvekirî",
+      "time": "Dem (s)",
+      "assign": "Cuzdan diyar bike"
+    },
+    "textFit": {
+      "wrap": "Rêzan bibire",
+      "width": "Firehiya nivîsê",
+      "shrink": "Nivîsê biçûk bike da ku bicîh bibe",
+      "height": "Bilindahiya nivîsê",
+      "captions": "Rêya binnivîsê lihev bîne"
+    },
     "canvas": {
       "dropMedia": "دایبنێ بۆ زیادکردن بۆ دیزاینەکەت",
       "dropText": "دایبنێ بۆ زیادکردنی دەق",
@@ -6707,7 +6726,7 @@
     "topUpTitle": "زیاتر پڕ بکەرەوە و پاشەکەوت بکە",
     "discount": "{{percent}}% کەمکردنەوە",
     "noDiscount": "نرخی تەواو",
-    "total": "Bi tevahî ${{usd}}, bi DHB tê dayîn",
+    "total": "Bi tevahî ${{usd}}, bi توکن tê dayîn",
     "buy": "قەرز بکڕە",
     "buying": "چاوەڕوانی پارەدان...",
     "bought": "{{count}} قەرزی پۆستی زیادکرا",
@@ -6737,7 +6756,7 @@
     "skippedToast": "{{platforms}} hat derbaskirin: di vê postê de wêne an vîdyoya ku ew dixwazin tune.",
     "uploadFailed": "Medyaya te ji bo weşana hevdem nehat barkirin.",
     "creditRules": "هەر پۆستێک بۆ هەر پلاتفۆرمێک قەرزی دەوێت: {{x}} بۆ X، {{farcaster}} بۆ Farcaster و {{other}} بۆ هەر پلاتفۆرمێکی تر. پۆستە خشتەکراوەکان لە کاتی خشتەکردندا قەرز بەکاردەهێنن.",
-    "payAsYouGoCredits": "قەرزت نەما؟ قەرزی کەم لە کاتی پۆستکردندا بە DHB دەکڕدرێت، هەر یەکێک بە ${{price}}.",
+    "payAsYouGoCredits": "قەرزت نەما؟ قەرزی کەم لە کاتی پۆستکردندا بە توکن دەکڕدرێت، هەر یەکێک بە ${{price}}.",
     "topUpCredits": "{{count}} قەرز",
     "perCredit": "${{price}} بۆ هەر قەرزێک",
     "pendingApproval": "چاوەڕێی ئەوەین dehub لە ئەپی Farcaster پەسەند بکەیت",
@@ -6749,7 +6768,7 @@
   "dm": {
     "planRestricted": "Ev bikarhêner ji bo wergirtina peyaman abonetiyê dixwaze.",
     "planTypeNotAllowed": "Plana vî afirîner vî cureyê peyamê qebûl nake.",
-    "planMinTip": "Ji bo vî afirîner bexşîş divê herî kêm {{amount}} DHB be."
+    "planMinTip": "Ji bo vî afirîner bexşîş divê herî kêm {{amount}} توکن be."
   },
   "credits": {
     "earningsWorth": "بەها {{amount}}",
@@ -6807,7 +6826,7 @@
       "manifestBody": "ئەمە لە /.well-known/dehub.json لەسەر دۆمەینی appەکەت دابین بکە. پێشتر farcaster.jsonت هەیە؟ ئێمە ئەوەش دەخوێنینەوە.",
       "submit": "ڕەوانەکردن بۆ DeHub",
       "notifyKey": "سەرنجی کلیل",
-      "payBody": "pay() داوا لە بەکارهێنەر دەکات DHB بنێرێت، ڕاستەوخۆ بۆ walletێک کە dehub.jsonەکەت واژۆ کردووە. پێش ئەوەی هیچ شتێک ڕادەست بکەیت، لەسەر serverەکەتدا وەرگرتنەکە بپشکینە.",
+      "payBody": "pay() داوا لە بەکارهێنەر دەکات توکن بنێرێت، ڕاستەوخۆ بۆ walletێک کە dehub.jsonەکەت واژۆ کردووە. پێش ئەوەی هیچ شتێک ڕادەست بکەیت، لەسەر serverەکەتدا وەرگرتنەکە بپشکینە.",
       "notifyTitle": "ناردنی ئاگادارکردنەوەکان",
       "notifyBody": "بەکارهێنەرانی appەکەت دەتوانن لە serverەکەتەوە بە کلیلە ئاگادارکەرەوەکەت ئاگادار بکرێنەوە. پێویست بە tokenی تاک بە تاک ناکات بۆ هەڵگرتن.",
       "rankTitle": "چۆن فرۆشگاکە appەکان ڕیزبەندی دەکات",
@@ -6819,7 +6838,7 @@
       "music": "مۆسیقا"
     },
     "pay": {
-      "body": "DHB ڕاستەوخۆ دەچێت بۆ walletی appەکە، {{wallet}}. پارەدانەکان ناتوانرێت بگێڕدرێتەوە.",
+      "body": "توکن ڕاستەوخۆ دەچێت بۆ walletی appەکە، {{wallet}}. پارەدانەکان ناتوانرێت بگێڕدرێتەوە.",
       "sending": "ناردنی پارەدانی تۆ…",
       "noOwner": "ئەم appە هێشتا walletێکی پشتڕاستکراوی نییە بۆ پارەدان."
     },

@@ -90,6 +90,7 @@
     "heading": "DeHub Cekak"
   },
   "settings": {
+    "postingChain": "Blockchain kanggo kiriman",
     "showOnline": "Tampilake kapan aku lagi online",
     "showOnlineDesc": "Wong sing kok peseni bakal weruh titik ijo ing sandinge jenengmu nalika lagi nggunakake DeHub",
     "smartReplies": "Wangsulan sing disaranake",
@@ -259,6 +260,7 @@
     "light": "Padhang",
     "dark": "Peteng",
     "system": "Sistem",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay ngirim token sampeyan…",
     "payViaDpay": "Dibayar menyang DeHub Pay, token teka kira-kira 30 detik",
     "payViaBridgeDpay": "Dipindhah menyang Base lan dibayar menyang DeHub Pay, token teka kira-kira sak menit",
-    "dmSent": "Ngirim {{amount}} DHB menyang {{name}}!"
+    "dmSent": "Ngirim {{amount}} token menyang {{name}}!"
   },
   "postOptions": {
     "options": "Opsi",
@@ -1203,10 +1205,10 @@
   },
   "dhbListing": {
     "title": "Listing token enggal teka!",
-    "body": "$DHB durung didol-tuku. Entuk email sanalika wis kadaftar.",
+    "body": "token durung didol-tuku. Entuk email sanalika wis kadaftar.",
     "notifyMe": "Kabari aku",
-    "privacy": "Iki mung bakal digunakake kanggo ngabari sampeyan nalika $DHB kadaftar.",
-    "joined": "Sampeyan wis ana ing dhaptar. Kita bakal ngirim email menyang {{email}} sanalika $DHB kadaftar."
+    "privacy": "Iki mung bakal digunakake kanggo ngabari sampeyan nalika token kadaftar.",
+    "joined": "Sampeyan wis ana ing dhaptar. Kita bakal ngirim email menyang {{email}} sanalika token kadaftar."
   },
   "explorePage": {
     "searchPlaceholder": "Goleki wong, kiriman, utawa konten...",
@@ -1466,7 +1468,7 @@
     "otherTokens": "Token liyane",
     "otherTokensDesc": "Tuku ETH utawa USDC ing Base nganggo kartumu",
     "shareToFeed": "Bagikan menyang feedku",
-    "sharePostTemplate": "Nembe nambahake {{amount}} $DHB menyang tumpukan ing DeHub. Mbangun karo komunitas. #DeHub #DHB",
+    "sharePostTemplate": "Nembe nambahake {{amount}} token menyang tumpukan ing DeHub. Mbangun karo komunitas. #DeHub",
     "success": {
       "title": "Tuku Rampung!",
       "subtitle": "Token wis dikirim menyang dompetmu.",
@@ -3433,7 +3435,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Fase 1 · Pratinjau privat",
     "heroTitle": "TOKENISASI BISNIS",
-    "heroSubtitle": "DHB-paired bonding curve. Lulus ke Uniswap di $42K market cap.",
+    "heroSubtitle": "token-paired bonding curve. Lulus ke Uniswap di $42K market cap.",
     "createCoin": "Buat koin",
     "filterNew": "Baru",
     "filterGraduating": "Sedang akan lulus",
@@ -3530,7 +3532,7 @@
   },
   "fractions": {
     "seoTitle": "Fraksi | DeHub",
-    "seoDescription": "Tuku lan adol bagean saka postingan DeHub. Postingan sing wis di-mint iku 1000 bagean on-chain — duwènana sapérangan saka video, lagu, utawa gambar lan dagangna nganggo DHB.",
+    "seoDescription": "Tuku lan adol bagean saka postingan DeHub. Postingan sing wis di-mint iku 1000 bagean on-chain — duwènana sapérangan saka video, lagu, utawa gambar lan dagangna nganggo token.",
     "title": "Bagean",
     "perUpload": "Seribu per ngunggah",
     "tabBrowse": "Browes",
@@ -4288,7 +4290,7 @@
     "raw": "Mentah"
   },
   "usernames": {
-    "seoDescription": "Koyo beli dan jual username DeHub nganti DHB. Caro singkat, angka, dan handle asli kudu, kudu dijual, atau ngarani sendiri — transferan ngandhok di rantai blok kanggo waktu pembayaran ngelaku.",
+    "seoDescription": "Koyo beli dan jual username DeHub nganti token. Caro singkat, angka, dan handle asli kudu, kudu dijual, atau ngarani sendiri — transferan ngandhok di rantai blok kanggo waktu pembayaran ngelaku.",
     "title": "Jeneng Panganggo",
     "tabSell": "Jual",
     "searchPlaceholder": "Cari handle…",
@@ -4400,7 +4402,7 @@
   },
   "accounts": {
     "seoTitle": "Account Marketplace — DeHub",
-    "seoDescription": "Beli dan jualin akun DeHub yang sudah ada untuk DHB. Kelilingin akun oleh pengikut, upload, dan umur — handle, postingan, pengikut, dan hak badge semua transfer, dan pembayaran langsung ke penjual",
+    "seoDescription": "Beli dan jualin akun DeHub yang sudah ada untuk token. Kelilingin akun oleh pengikut, upload, dan umur — handle, postingan, pengikut, dan hak badge semua transfer, dan pembayaran langsung ke penjual",
     "title": "Akun",
     "subtitle": "Akun kabeh kanggo didol, regane ing token DeHub",
     "tabBrowse": "Browse",
@@ -5986,17 +5988,17 @@
   },
   "docs": {
     "seoTitle": "Dokumentasi DeHub — Pandhuan, token, dApps lan FAQ",
-    "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, game, peta dalan, FAQ lan liya-liyane."
+    "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token token, staking, game, peta dalan, FAQ lan liya-liyane."
   },
   "dex": {
-    "seoTitle": "DEX — Ngalih DHB ing rega sampeyan",
-    "seoDescription": "Setel rega tuku utawa adol DHB nganggo pesen wates Uniswap v4 ing Base utawa BNB Chain. Buku pesen langsung, jerone pasar lan siji rega USD sing padha.",
+    "seoTitle": "DEX — Ngalih token ing rega sampeyan",
+    "seoDescription": "Setel rega tuku utawa adol token nganggo pesen wates Uniswap v4 ing Base utawa BNB Chain. Buku pesen langsung, jerone pasar lan siji rega USD sing padha.",
     "venue": "Jaringan",
     "marketPrice": "Rega pasar · USD",
     "bookPrice": "Buku pesen {{chain}} · USD",
     "change24": "Owahan 24 jam",
     "totalLiquidity": "Total likuiditas · USD",
-    "listedDhb": "DHB sing kadhaptar · {{chain}}",
+    "listedDhb": "token sing kadhaptar · {{chain}}",
     "listedUsd": "USD sing kadhaptar · {{chain}}",
     "refreshMarket": "Segerake pasar",
     "refresh": "Segerake",
@@ -6021,21 +6023,21 @@
     "orderBook": "Buku pesen",
     "priceGrouping": "Rempukan rega",
     "priceUsd": "Rega (USD)",
-    "sizeDhb": "Ukuran (DHB)",
-    "totalDhb": "Total (DHB)",
+    "sizeDhb": "Ukuran (token)",
+    "totalDhb": "Total (token)",
     "noBids": "Durung ana tawaran",
     "noAsks": "Durung ana likuiditas takon",
     "useBuyPrice": "Gunakake {{price}} minangka rega tuku",
     "useSellPrice": "Gunakake {{price}} minangka rega adol",
     "spread": "Rata-rata · USD",
-    "buyTotal": "Tuku {{amount}} DHB",
-    "sellTotal": "Adol {{amount}} DHB",
+    "buyTotal": "Tuku {{amount}} token",
+    "sellTotal": "Adol {{amount}} token",
     "placeOrder": "Pasang pesenan",
     "lpFee": "0% ragad LP",
     "lpFeeLabel": "Ragad LP",
     "lpFeeValue": "{{fee}}% ragad LP",
-    "buy": "Tuku DHB",
-    "sell": "Adol DHB",
+    "buy": "Tuku token",
+    "sell": "Adol token",
     "maxBuy": "Rega tuku maksimal",
     "minSell": "Rega adol minimal",
     "spend": "Mubal",
@@ -6051,7 +6053,7 @@
     "estimated": "Perkiraan konversi lengkap",
     "network": "Jaringan pendanaan",
     "sellBelowMarket": "Adol iki {{percent}}% luwih murah tinimbang rega pasar ${{price}}. Sapa wae bisa tuku lan adol maneh ing papan liya sanalika.",
-    "buyAboveMarket": "Tuku iki {{percent}}% ing ndhuwur rega pasar ${{price}}. Sampeyan bakal mbayar luwih saka DHB sing didagangake ing papan liya.",
+    "buyAboveMarket": "Tuku iki {{percent}}% ing ndhuwur rega pasar ${{price}}. Sampeyan bakal mbayar luwih saka token sing didagangake ing papan liya.",
     "useMarket": "Gunakake rega pasar",
     "balanceError": "Pemeriksaan saldo gagal. Coba maneh sadurunge nggawe pesenan.",
     "noFunding": "Ora ana {{token}} sing kasedhiya ing {{chain}}.",
@@ -6060,7 +6062,7 @@
     "reviewYourBuy": "Tinjau tuku sampeyan",
     "reviewYourSell": "Tinjau adol sampeyan",
     "reviewDeposit": "Setor {{amount}} {{token}} ing {{chain}}.",
-    "reviewRange": "Rentang: {{min}} – {{max}} USD saben DHB.",
+    "reviewRange": "Rentang: {{min}} – {{max}} USD saben token.",
     "initializes": "Iki nggawe lan nginisialisasi pool 0%.",
     "pendingNote": "Transaksi sampeyan wis dikirim. Nerusake konfirmasi utawa registrasi listing tanpa simpenan liyane.",
     "viewTransaction": "Deleng transaksi",
@@ -6077,7 +6079,7 @@
     "keepOpen": "Jaga kaca iki tetep mbukak nganti listing sampeyan kadhaptar. Panyimpenan browser ora kasedhiya.",
     "snapshotDelayed": "Data pasar sing dibagikan ditundha. Nampilake gambar pungkasan sing diverifikasi.",
     "snapshotUnavailable": "Data pasar sing dibagikan ora kasedhiya. Coba maneh kanggo mbukak posisi.",
-    "withdrawReview": "Mundur {{dhb}} DHB lan {{usdc}} USDC ing {{chain}}? Jumlah dianyari sadurunge mlebu; toleransi rega 0,5%.",
+    "withdrawReview": "Mundur {{dhb}} token lan {{usdc}} USDC ing {{chain}}? Jumlah dianyari sadurunge mlebu; toleransi rega 0,5%.",
     "withdrawn": "Posisi ditarik",
     "withdrawFailed": "Penarikan gagal",
     "withdrawing": "Mundur…",
@@ -6211,6 +6213,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Kirim pigura sing dipilih kanggo analisis visual."
+    },
+    "review": {
+      "title": "Priksa proyek",
+      "shared": "Dibagi karo sampeyan",
+      "time": "Wektu (s)",
+      "assign": "Temtokake dompet"
+    },
+    "textFit": {
+      "wrap": "Bungkus larik",
+      "width": "Ambane teks",
+      "shrink": "Cilikake teks supaya pas",
+      "height": "Dhuwure teks",
+      "captions": "Pasake trek subtitle"
+    },
     "canvas": {
       "dropMedia": "Suntakake kanggo nambahake ing desainmu",
       "dropText": "Suntakake kanggo nambahake teks",
@@ -7560,7 +7579,7 @@
     "topUpTitle": "Top up lan ngirit",
     "discount": "{{percent}}% diskon",
     "noDiscount": "Rega lengkap",
-    "total": "Total ${{usd}}, dibayar ing DHB",
+    "total": "Total ${{usd}}, dibayar ing token",
     "buy": "Tuku kredit",
     "buying": "Ngenteni pembayaran…",
     "bought": "Ditambahake {{count}} kredit kiriman",
@@ -7590,7 +7609,7 @@
     "skippedToast": "Dilompati {{platforms}}: kiriman iki ora duwe foto utawa video sing dibutuhake.",
     "uploadFailed": "Ora bisa ngunggah media sampeyan kanggo lintas-kirim.",
     "creditRules": "Saben kiriman mbutuhake kredit saben platform: {{x}} kanggo X, {{farcaster}} kanggo Farcaster lan {{other}} kanggo saben platform liyane. Kiriman sing dijadwalake nggunakake kredit nalika sampeyan njadwalake.",
-    "payAsYouGoCredits": "Kehabisan? Kredit sing kurang dituku ing DHB kanthi ${{price}} saben nalika sampeyan kirim.",
+    "payAsYouGoCredits": "Kehabisan? Kredit sing kurang dituku ing token kanthi ${{price}} saben nalika sampeyan kirim.",
     "topUpCredits": "{{count}} kredit",
     "perCredit": "${{price}} saben kredit",
     "pendingApproval": "Nunggu sampeyan nyetujui dehub ing aplikasi Farcaster",
@@ -7602,7 +7621,7 @@
   "dm": {
     "planRestricted": "Pangguna iki mbutuhake langganan kanggo nampa pesen.",
     "planTypeNotAllowed": "Paket kreator iki ora ngidini jinis pesen iki.",
-    "planMinTip": "Tip kanggo kreator iki paling sithik {{amount}} DHB."
+    "planMinTip": "Tip kanggo kreator iki paling sithik {{amount}} token."
   },
   "credits": {
     "earningsWorth": "Nilai {{amount}}",
@@ -7730,12 +7749,12 @@
       "notifyKey": "Kénggo nyuwun kuncé.",
       "notifyKeyOnce": "Kunci notifikasi baru buat {{name}}. Salin aja dewe, ngarani kudu. Nyatanya, kalau ngelakuin lagi, yang lama bakal diganti.",
       "payTitle": "Ngepang bayar",
-      "payBody": "pay() njaluk pangguna ngirim DHB marang sampeyan, langsung menyang dompet sing mlebu dehub.json-mu. Priksa kuitansi ing server sadurunge ngirim apa wae.",
+      "payBody": "pay() njaluk pangguna ngirim token marang sampeyan, langsung menyang dompet sing mlebu dehub.json-mu. Priksa kuitansi ing server sadurunge ngirim apa wae.",
       "notifyTitle": "Kirim notifikasi",
       "notifyBody": "Pengguna yang tambah aplikasimu bisa dibubuhi pemberitahuan dari servermu guna kunci notify. Gak usah simpen token per-pengguna.",
       "rankTitle": "Carane toko ngurutake aplikasi",
       "rankBody": "Kanggo tiwuh nganti ngabeh, tiwuh app ing listane kaweh ngilang skor: 55% nganti penguna lanjar (wong kanggo buka ing app ing minggu ingkang nganti, lan ing minggu lanjar), 35% nganti penguna mingguane, lan plus 10% boost ing 14 harine ingkang nganti. Cuma akun DeHub ingkang udah singel (dadi penguna ingkang nyuwun) kanggo ngilang skor, jadi bot lan reload halaman kanggo tiwuh ngilang skor.",
-      "rewardsBody": "Kanggo tiwuh bulanan {{pool}} DHB diwisbahake nganti apps siji skor, dicacah tiwuh. Guna iku app butuh owner wallet dhuwit verifikasi lan setidha 3 pengguna pulang. Imbalan diwisbahake nganti DeHub kanggo owner wallet iku.",
+      "rewardsBody": "Kanggo tiwuh bulanan {{pool}} token diwisbahake nganti apps siji skor, dicacah tiwuh. Guna iku app butuh owner wallet dhuwit verifikasi lan setidha 3 pengguna pulang. Imbalan diwisbahake nganti DeHub kanggo owner wallet iku.",
       "rewardPaid": "Bayar",
       "rewardsNone": "Gak ada imbalan yang udah dihitung nggak. Minggu pertama tutup pikeun Senin."
     },
@@ -7759,10 +7778,10 @@
     },
     "pay": {
       "title": "Bayar {{name}}?",
-      "body": "DHB langsung ke dompet aplikasi, {{wallet}}. Pembayaran ga bisa dibatalkan.",
-      "confirm": "Bayar {{amount}} DHB",
+      "body": "token langsung ke dompet aplikasi, {{wallet}}. Pembayaran ga bisa dibatalkan.",
+      "confirm": "Bayar {{amount}} token",
       "sending": "Kirim pembayaranmu…",
-      "sent": "Bayar ke {{amount}} DHB untuk {{name}}.",
+      "sent": "Bayar ke {{amount}} token untuk {{name}}.",
       "noOwner": "Goyang app ingkang gak punya dompet terverifikasi buat bayar dhuwur."
     },
     "add": {

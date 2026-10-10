@@ -15,6 +15,40 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  dub-discovery:
+    name: Dubbing discovery claims
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: public.ecr.aws/docker/library/postgres:16
+        env:
+          POSTGRES_PASSWORD: dub-test
+          POSTGRES_DB: dub_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: dub-test
+      PGDATABASE: dub_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify signed identity and durable claims
+        run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/video-dub-tip-bootstrap.sql
+          sed '/CREATE OR REPLACE FUNCTION public.get_my_agents/,$d' supabase/migrations/20260929093849_7f219ea4-80f1-4f9f-8809-1e8e709b55a9.sql | psql -v ON_ERROR_STOP=1
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261010180000_video_dub_tip.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/video-dub-tip.sql
+      - name: Verify concurrent clients have exactly one winner
+        run: |
+          for client in $(seq 1 12); do
+            psql -v ON_ERROR_STOP=1 -Atc "SET ROLE anon; SELECT public.test_dub_session('0x3333333333333333333333333333333333333333'); SELECT public.claim_video_dub_tip();" > "/tmp/dub-claim-$client" &
+          done
+          wait
+          test "$(cat /tmp/dub-claim-* | grep -c '^t$')" -eq 1
   deployment-credentials:
     name: Deployment credential parsing
     runs-on: ubuntu-latest
@@ -32,7 +66,7 @@ jobs:
     timeout-minutes: 5
     services:
       postgres:
-        image: postgres:16
+        image: public.ecr.aws/docker/library/postgres:16
         env:
           POSTGRES_PASSWORD: wallet-test
           POSTGRES_DB: wallet_test
@@ -177,7 +211,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: pnpm
 
       # --no-frozen-lockfile for the same reason the typecheck job uses it:
@@ -192,10 +226,60 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Render text post share cards
+        run: |
+          node --test server/post-share-card.test.mjs
+          timeout 120s node tests/post-share-workerd.mjs
+
+      - name: Validate production Worker bundle
+        run: |
+          mkdir -p dist
+          printf '<!doctype html><title>Worker bundle check</title>' > dist/index.html
+          pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/share-worker"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: post-card-checks
+          path: post-card-checks/
+          retention-days: 7
+
       - name: Trenchstar wallet encryption and signing
         run: |
           node scripts/trenchstar-wallets.test.mjs
           node scripts/trenchstar-navigation.test.mjs
+
+  editor-screen-browser:
+    name: Browser screen recording output
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/editor-system-screen-recording-web-20261010'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare the hosted capture browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/capture-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0
+          "$RUNNER_TEMP/capture-browser/node_modules/.bin/playwright" install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y pulseaudio ffmpeg
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=dehub_capture
+          pactl set-default-sink dehub_capture
+      - name: Capture real browser frames and both audio sources
+        env:
+          CAPTURE_BROWSER_ROOT: ${{ runner.temp }}/capture-browser
+        run: timeout 120s xvfb-run -a node tests/editor-screen-capture-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screen-capture-browser-output
+          path: screen-capture-browser-results/
+          if-no-files-found: ignore
+          retention-days: 14
 
   stage-remux:
     name: Stage remux
@@ -226,6 +310,9 @@ jobs:
 
       - name: Empty transcription fallback
         run: node --experimental-strip-types --test supabase/functions/_shared/transcription-fallback.test.ts
+
+      - name: Bounded visual highlight requests
+        run: node --experimental-strip-types --test supabase/functions/editor-visual-highlights/handler.test.ts
 
       - name: Complete editor scene descriptions
         run: node --experimental-strip-types --test supabase/functions/editor-agent/scene.test.ts supabase/functions/editor-agent/answer.test.ts

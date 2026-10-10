@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isShortsPhoto, interleaveShorts } from '@/lib/shorts-photos';
 import { mapToShortVideo } from '@/lib/short-video';
 /**
@@ -154,7 +155,7 @@ function CategoryFilterSection({
   isLoading?: boolean;
 }) {
   const { t } = useI18n();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/feeds/ShortsFeed.tsx:search", '');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   // A hook, so it is called once here rather than inside the branches and the
   // .map below — a per-item, per-condition hook call is a render-count crash
@@ -206,7 +207,7 @@ function CategoryFilterSection({
             <button
               data-feed-filter-button
               data-active="true"
-              onClick={() => { onSelect(null); setSearch(''); }}
+              onClick={() => { onSelect(null); setSearch.complete(search, ''); }}
               className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", activeFilterClass)}
             >
               {selectedObj.name}
@@ -216,7 +217,7 @@ function CategoryFilterSection({
           <button
             data-feed-filter-button
             data-active={selectedCategory === null ? 'true' : undefined}
-            onClick={() => { onSelect(null); setSearch(''); }}
+            onClick={() => { onSelect(null); setSearch.complete(search, ''); }}
             className={cn(
               'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
               selectedCategory === null ? activeFilterClass : INACTIVE_FILTER_CLASS
@@ -229,7 +230,7 @@ function CategoryFilterSection({
               key={cat.id}
               data-feed-filter-button
               data-active={selectedCategory === cat.id ? 'true' : undefined}
-              onClick={() => { onSelect(cat.id); setSearch(''); }}
+              onClick={() => { onSelect(cat.id); setSearch.complete(search, ''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                 selectedCategory === cat.id ? activeFilterClass : INACTIVE_FILTER_CLASS

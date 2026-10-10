@@ -1,3 +1,5 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
+import { tokenLabel } from '@/lib/token-label';
 /**
  * Make Offer Drawer
  * =================
@@ -26,8 +28,8 @@ interface MakeOfferDrawerProps {
 
 export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenChange, onSuccess }: MakeOfferDrawerProps) {
   const { t } = useTranslation();
-  const [quantity, setQuantity] = useState('');
-  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useSurfaceDraft("components/app/fractions/MakeOfferDrawer.tsx:quantity", '', `${chainId}:${tokenId}:${targetSeller ?? "any"}`);
+  const [price, setPrice] = useSurfaceDraft("components/app/fractions/MakeOfferDrawer.tsx:price", '', `${chainId}:${tokenId}:${targetSeller ?? "any"}`);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { walletAddress } = useAuth();
   const createOffer = useCreateOffer();
@@ -59,8 +61,8 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
       });
       toast.success(t('fractions.offerSubmitted', { count: qty, price: prc }));
       onOpenChange(false);
-      setQuantity('');
-      setPrice('');
+      setQuantity.complete(quantity, '');
+      setPrice.complete(price, '');
       onSuccess?.();
     } catch (err) {
       console.error('Make offer error:', err);
@@ -114,7 +116,7 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
               <div className="flex justify-between text-sm">
                 <span className="text-white/60">{t('fractions.totalOfferValue')}</span>
                 <span className="text-white font-medium flex items-center gap-1.5">
-                  <img src={dehubCoin} alt="DHB" className="w-4 h-4" />
+                  <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
                   {total.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
               </div>

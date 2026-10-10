@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * MembersTab
  * ==========
@@ -276,7 +277,7 @@ export function MembersTab({ community, membership }: MembersTabProps) {
   const { data: pending = [] } = usePendingCommunityMembers(canRestrict ? community.id : undefined);
   const { data: banned = [] } = useBannedCommunityMembers(canRestrict ? community.id : undefined);
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/communities/manage/MembersTab.tsx:search", '', draftIdentity(community));
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [requestsOpen, setRequestsOpen] = useState(true);
   const [membersOpen, setMembersOpen] = useState(true);

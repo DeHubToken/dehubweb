@@ -90,6 +90,7 @@
     "heading": "Vidio dị mkpụmkpụ DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain maka mbipụta",
     "showOnline": "Gosi mgbe m nọ n 'ịntanetị",
     "showOnlineDesc": "Ndị mmadụ ị na-eziga ozi na-ahụ ntụpọ akwụkwọ ndụ akwụkwọ ndụ n 'akụkụ aha gị mgbe ị na-eji DeHub",
     "smartReplies": "Nzaghachi atụrụ aro",
@@ -259,6 +260,7 @@
     "light": "Ìhè",
     "dark": "Ọchịchịrị",
     "system": "Sistemu",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay na-ezigara akara gị…",
     "payViaDpay": "Akwụgoro DeHub Pay, akara na-abịa na ihe dị ka 30s",
     "payViaBridgeDpay": "Ebugharịrị na Base ma kwụọ DeHub Pay, akara na-abịa na ihe dị ka otu nkeji",
-    "dmSent": "E zigara {{name}} {{amount}} DHB!"
+    "dmSent": "E zigara {{name}} {{amount}} tokens!"
   },
   "postOptions": {
     "options": "Nhọrọ",
@@ -1199,10 +1201,10 @@
   },
   "dhbListing": {
     "title": "Ndepụta token na-abịa n'oge na-adịghị anya!",
-    "body": "Amalitebeghị ịzụ ahịa $DHB. Nweta email ozugbo e depụtara ya.",
+    "body": "Amalitebeghị ịzụ ahịa tokens. Nweta email ozugbo e depụtara ya.",
     "notifyMe": "Gwa m",
-    "privacy": "Anyị ga-eji ya naanị gwa gị mgbe e depụtara $DHB.",
-    "joined": "Ị nọ na ndepụta. Anyị ga-eziga email na {{email}} ozugbo e depụtara $DHB."
+    "privacy": "Anyị ga-eji ya naanị gwa gị mgbe e depụtara tokens.",
+    "joined": "Ị nọ na ndepụta. Anyị ga-eziga email na {{email}} ozugbo e depụtara tokens."
   },
   "explorePage": {
     "searchPlaceholder": "Chọọ ndị mmadụ, ozi ma ọ bụ ọdịnaya...",
@@ -1461,7 +1463,7 @@
     "otherTokens": "Token ndị ọzọ",
     "otherTokensDesc": "Jiri kaadị gị zụta ETH ma ọ bụ USDC na Base",
     "shareToFeed": "Kekọrịta na ndepụta m",
-    "sharePostTemplate": "Naanị tinye {{amount}} $DHB na nchịkọta m na DeHub. Iwulite na obodo. #DeHub #DHB",
+    "sharePostTemplate": "Naanị tinye {{amount}} tokens na nchịkọta m na DeHub. Iwulite na obodo. #DeHub",
     "success": {
       "title": "Ịzụta Complete!",
       "subtitle": "E bubatala tokens n 'ime akpa gị.",
@@ -3482,7 +3484,7 @@
     "seoDescription": "Tokenise a azụmahịa na DeHub launchingpad: na-agagharị ndụ mkpụrụ ego ma ọ bụ ike gị onwe gị.",
     "phaseBadge": "Adọ 1 · Private preview",
     "heroTitle": "TOKENISE Azụmaahịa",
-    "heroSubtitle": "DHB-paired bonding curve. Ndị gụsịrị akwụkwọ na Uniswap na $ 42K ahịa okpu.",
+    "heroSubtitle": "tokens-paired bonding curve. Ndị gụsịrị akwụkwọ na Uniswap na $ 42K ahịa okpu.",
     "createCoin": "Mepụta mkpụrụ ego",
     "filterNew": "Ọhụrụ",
     "filterGraduating": "Banyere gụsịrị akwụkwọ",
@@ -3582,7 +3584,7 @@
   },
   "fractions": {
     "seoTitle": "N 'ihi ya, ọ",
-    "seoDescription": "Zụta ma ree òkè nke post DeHub. Post a mintịrị bụ òkè 1000 na on-chain — nwee otu akụkụ nke vidiyo, egwu, ma ọ bụ onyonyo ma zụọ ahịa ya na DHB.",
+    "seoDescription": "Zụta ma ree òkè nke post DeHub. Post a mintịrị bụ òkè 1000 na on-chain — nwee otu akụkụ nke vidiyo, egwu, ma ọ bụ onyonyo ma zụọ ahịa ya na tokens.",
     "title": "Òkè",
     "perUpload": "1000 kwa bulite",
     "tabBrowse": "Chọgharịa",
@@ -4396,7 +4398,7 @@
   },
   "usernames": {
     "seoTitle": "Aha njirimara Marketplace | DeHub",
-    "seoDescription": "Zụta ma ree aha njirimara DeHub na DHB. Search short, numeric and original handles for sale, ma ọ bụ depụta nke gị — nyefe na-eme na-yinye oge ugwo clears.",
+    "seoDescription": "Zụta ma ree aha njirimara DeHub na tokens. Search short, numeric and original handles for sale, ma ọ bụ depụta nke gị — nyefe na-eme na-yinye oge ugwo clears.",
     "title": "Aha Njirimara",
     "subtitle": "Nlekọta maka ire ere, ọnụahịa na USD",
     "tabBrowse": "Chọgharịa",
@@ -4519,7 +4521,7 @@
   },
   "accounts": {
     "seoTitle": "Ahịa Akaụntụ — DeHub",
-    "seoDescription": "Zụta ma ree akaụntụ DeHub guzosiri ike maka DHB. Chọgharịa akaụntụ site na-eso ụzọ, uploads na afọ — na handle, posts, na-eso ụzọ na baajị ikike niile nyefe, na ugwo na-aga ozugbo na-ere ákwà.",
+    "seoDescription": "Zụta ma ree akaụntụ DeHub guzosiri ike maka tokens. Chọgharịa akaụntụ site na-eso ụzọ, uploads na afọ — na handle, posts, na-eso ụzọ na baajị ikike niile nyefe, na ugwo na-aga ozugbo na-ere ákwà.",
     "title": "Akaụntụ",
     "subtitle": "A na-ere akaụntụ niile, na-egosipụta na akara DeHub",
     "tabBrowse": "Chọgharịa",
@@ -6160,17 +6162,17 @@
   },
   "docs": {
     "seoTitle": "Akwụkwọ DeHub — Ntuziaka, token, dApps na ajụjụ",
-    "seoDescription": "Akwụkwọ gọọmentị nke DeHub: nchịkọta ikpo okwu, dApps, akụnụba token DHB, staking, egwuregwu, map okporo ụzọ, ajụjụ ndị a na-ajụkarị na ndị ọzọ."
+    "seoDescription": "Akwụkwọ gọọmentị nke DeHub: nchịkọta ikpo okwu, dApps, akụnụba token tokens, staking, egwuregwu, map okporo ụzọ, ajụjụ ndị a na-ajụkarị na ndị ọzọ."
   },
   "dex": {
-    "seoTitle": "DEX — Zụọ ma ree DHB n'ọnụ ahịa gị",
-    "seoDescription": "Tọọ ọnụ ahịa ị ga-eji zụta ma ọ bụ ree DHB site n'iji usoro iwu nwere oke nke Uniswap v4 na Base ma ọ bụ BNB Chain. Akwụkwọ iwu dị ndụ, omimi ahịa na otu ọnụ ahịa USD a na-ekerịta.",
+    "seoTitle": "DEX — Zụọ ma ree tokens n'ọnụ ahịa gị",
+    "seoDescription": "Tọọ ọnụ ahịa ị ga-eji zụta ma ọ bụ ree tokens site n'iji usoro iwu nwere oke nke Uniswap v4 na Base ma ọ bụ BNB Chain. Akwụkwọ iwu dị ndụ, omimi ahịa na otu ọnụ ahịa USD a na-ekerịta.",
     "venue": "Netwọk",
     "marketPrice": "Ọnụ ahịa ahịa · USD",
     "bookPrice": "{{chain}} ọnụ ahịa akwụkwọ iwu · USD",
     "change24": "Mgbanwe nke 24h",
     "totalLiquidity": "Mkpokọta mmiri ego · USD",
-    "listedDhb": "DHB edepụtara · {{chain}}",
+    "listedDhb": "tokens edepụtara · {{chain}}",
     "listedUsd": "USD edepụtara · {{chain}}",
     "refreshMarket": "Megharia ahịa",
     "refresh": "Megharia",
@@ -6195,21 +6197,21 @@
     "orderBook": "Akwụkwọ iwu",
     "priceGrouping": "Nchịkọta ọnụ ahịa",
     "priceUsd": "Ọnụ ahịa (USD)",
-    "sizeDhb": "Oke (DHB)",
-    "totalDhb": "Ngụ ọtụtụ (DHB)",
+    "sizeDhb": "Oke (tokens)",
+    "totalDhb": "Ngụ ọtụtụ (tokens)",
     "noBids": "Enweghị ọnụ ọnụ ugbu a",
     "noAsks": "Enweghị ego a jụrụ ugbu a",
     "useBuyPrice": "Jiri {{price}} dị ka ọnụ ahịa ịzụrụ",
     "useSellPrice": "Jiri {{price}} dị ka ọnụ ahịa ire ere",
     "spread": "Nkewa · USD",
-    "buyTotal": "Zụta {{amount}} DHB",
-    "sellTotal": "Ree {{amount}} DHB",
+    "buyTotal": "Zụta {{amount}} tokens",
+    "sellTotal": "Ree {{amount}} tokens",
     "placeOrder": "Tinye iwu",
     "lpFee": "0% ego LP",
     "lpFeeLabel": "Ego LP",
     "lpFeeValue": "{{fee}}% ego LP",
-    "buy": "Zụta DHB",
-    "sell": "Ree DHB",
+    "buy": "Zụta tokens",
+    "sell": "Ree tokens",
     "maxBuy": "Oke ọnụ ahịa ịzụrụ",
     "minSell": "Oke ọnụ ahịa ire ere",
     "spend": "Mee ka ego ghọọ",
@@ -6225,7 +6227,7 @@
     "estimated": "Echere ka ejupụta zuru oke",
     "network": "Netwọk nkwado",
     "sellBelowMarket": "Nke a ire ere dị {{percent}}% n'okpuru ọnụ ahịa ahịa nke ${{price}}. Onye ọ bụla nwere ike ịzụta ya ma ree ya ọzọ ebe ọzọ ozugbo.",
-    "buyAboveMarket": "Azụmahịa a dị {{percent}}% karịa ọnụahịa ahịa nke ${{price}}. Ị ga-akwụ ụgwọ karịa ka DHB na-ere n'ebe ndị ọzọ.",
+    "buyAboveMarket": "Azụmahịa a dị {{percent}}% karịa ọnụahịa ahịa nke ${{price}}. Ị ga-akwụ ụgwọ karịa ka tokens na-ere n'ebe ndị ọzọ.",
     "useMarket": "Jiri ọnụahịa ahịa",
     "balanceError": "Nyocha nguzo adabaghị. Nwaa ọzọ tupu itinye iwu.",
     "noFunding": "Enweghị {{token}} dị na {{chain}}.",
@@ -6234,7 +6236,7 @@
     "reviewYourBuy": "Nyochaa azụmahịa gị",
     "reviewYourSell": "Nyochaa ire ere gị",
     "reviewDeposit": "Tinye {{amount}} {{token}} na {{chain}}.",
-    "reviewRange": "Oke: {{min}} – {{max}} USD kwa DHB.",
+    "reviewRange": "Oke: {{min}} – {{max}} USD kwa tokens.",
     "initializes": "Nke a na-eke ma na-amalite ọdọ mmiri 0%.",
     "pendingNote": "E zigara azụmahịa gị. Nọgide na nkwado ma ọ bụ ndebanye aha ndepụta na-enweghị ntinye ọzọ.",
     "viewTransaction": "Lelee azụmahịa",
@@ -6251,7 +6253,7 @@
     "keepOpen": "Dozie peeji a ruo mgbe edepụtara ndepụta gị. E nweghị ike iji nchekwa ihe nchọgharị.",
     "snapshotDelayed": "E jiri nwayọọ data ahịa ahịa. Na-egosi nseta ihuenyo ikpeazụ enwetara.",
     "snapshotUnavailable": "E nweghị ike iji data ahịa ahịa. Nwaa ọzọ iji buo ọnọdụ.",
-    "withdrawReview": "Wepụ {{dhb}} DHB na {{usdc}} USDC na {{chain}}? Ego na-agbanwe tupu ịbanye aka; oke ọnụahịa bụ 0.5%.",
+    "withdrawReview": "Wepụ {{dhb}} tokens na {{usdc}} USDC na {{chain}}? Ego na-agbanwe tupu ịbanye aka; oke ọnụahịa bụ 0.5%.",
     "withdrawn": "E wepụrụ ọnọdụ",
     "withdrawFailed": "Mwepụ adabaghị",
     "withdrawing": "Na-ewepụ…",
@@ -6385,6 +6387,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Oge ọhụụ pụtara ìhè",
+      "visualPrivacy": "Ziga frem ahọpụtara maka nyocha ọhụụ."
+    },
+    "review": {
+      "title": "Nyocha ọrụ",
+      "shared": "Ekekọrịtara gị",
+      "time": "Oge (s)",
+      "assign": "Kenye waleti"
+    },
+    "textFit": {
+      "wrap": "Kewaa ahịrị",
+      "width": "Obosara ederede",
+      "shrink": "Belata ederede ka ọ dabara",
+      "height": "Ogologo ederede",
+      "captions": "Hazie egwu ndepụta okwu"
+    },
     "canvas": {
       "dropMedia": "Dàlị iji tinye na imewe gị",
       "dropText": "Dàlị iji tinye ederede",
@@ -7731,7 +7750,7 @@
     "topUpTitle": "Mee ka elu ma chekwaa",
     "discount": "{{percent}}% kwụ",
     "noDiscount": "Ọnụahịa zuru oke",
-    "total": "Mkpokọta ${{usd}}, akwụgoro na DHB",
+    "total": "Mkpokọta ${{usd}}, akwụgoro na tokens",
     "buy": "Zụta kredit",
     "buying": "Na-eche maka ịkwụ ụgwọ…",
     "bought": "Agbakwunyere {{count}} ebe nzipu",
@@ -7761,7 +7780,7 @@
     "skippedToast": "Wepụ {{platforms}}: post a enweghị foto ma ọ bụ vidiyo ha chọrọ.",
     "uploadFailed": "Enweghi ike ibugo mgbasa ozi gị maka izipu ozi.",
     "creditRules": "Onye ọ bụla post efu Ebe e si nweta kwa n 'elu ikpo okwu: {{x}} maka X, {{farcaster}} maka Farcaster na {{other}} maka ọ bụla ọzọ n' elu ikpo okwu. Ihe ndị a haziri ahazi na-eji kredit eme ihe mgbe ị na-ahazi ha.",
-    "payAsYouGoCredits": "A na-azụta kredit na-efu efu na DHB na ${{price}} nke ọ bụla mgbe ị biputere.",
+    "payAsYouGoCredits": "A na-azụta kredit na-efu efu na tokens na ${{price}} nke ọ bụla mgbe ị biputere.",
     "topUpCredits": "{{count}} Ebe e si nweta",
     "perCredit": "${{price}} kwa akwụmụgwọ",
     "pendingApproval": "Na-echere gị ka ị kwado dehub na ngwa Farcaster",
@@ -7773,7 +7792,7 @@
   "dm": {
     "planRestricted": "Onye ọrụ a chọrọ ndenye aha iji nata ozi.",
     "planTypeNotAllowed": "Atụmatụ onye okike a anaghị ekwe ụdị ozi a.",
-    "planMinTip": "Tip ga-abụrịrị opekata mpe {{amount}} DHB maka onye okike a."
+    "planMinTip": "Tip ga-abụrịrị opekata mpe {{amount}} tokens maka onye okike a."
   },
   "credits": {
     "earningsWorth": "Ogo {{amount}}",

@@ -90,6 +90,7 @@
     "heading": "Courts DeHub"
   },
   "settings": {
+    "postingChain": "Blockchain des publications",
     "showOnline": "Montrer quand je suis en ligne",
     "showOnlineDesc": "Les personnes que vous envoyez un message voient un point vert à côté de votre nom lorsque vous utilisez DeHub",
     "smartReplies": "Réponses suggérées",
@@ -259,6 +260,7 @@
     "light": "Clair",
     "dark": "Sombre",
     "system": "Système",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Nuits Brumeuses",
     "swarms": "Essaims",
@@ -597,7 +599,7 @@
     "stageDelivering": "DeHub Pay envoie vos jetons…",
     "payViaDpay": "Payé à DeHub Pay, les jetons arrivent dans environ 30s",
     "payViaBridgeDpay": "Déplacé vers Base et payé à DeHub Pay, les jetons arrivent dans environ une minute",
-    "dmSent": "{{amount}} DHB envoyés à {{name}} !"
+    "dmSent": "{{amount}} jetons envoyés à {{name}} !"
   },
   "postOptions": {
     "options": "Options",
@@ -1205,10 +1207,10 @@
   },
   "dhbListing": {
     "title": "Cotation du token bientôt !",
-    "body": "$DHB n'est pas encore échangé. Recevez un e-mail dès sa cotation.",
+    "body": "jetons n'est pas encore échangé. Recevez un e-mail dès sa cotation.",
     "notifyMe": "Me prévenir",
-    "privacy": "Nous l'utiliserons uniquement pour vous prévenir de la cotation de $DHB.",
-    "joined": "Vous êtes sur la liste. Nous écrirons à {{email}} dès que $DHB sera coté."
+    "privacy": "Nous l'utiliserons uniquement pour vous prévenir de la cotation de jetons.",
+    "joined": "Vous êtes sur la liste. Nous écrirons à {{email}} dès que jetons sera coté."
   },
   "explorePage": {
     "searchPlaceholder": "Rechercher des personnes, publications ou contenus...",
@@ -1472,7 +1474,7 @@
     "otherTokens": "Autres jetons",
     "otherTokensDesc": "Achetez de l'ETH ou de l'USDC sur Base avec votre carte",
     "shareToFeed": "Partager sur mon flux",
-    "sharePostTemplate": "Je viens d'ajouter {{amount}} $DHB à ma pile sur DeHub. Construire avec la communauté. #DeHub #DHB",
+    "sharePostTemplate": "Je viens d'ajouter {{amount}} jetons à ma pile sur DeHub. Construire avec la communauté. #DeHub",
     "success": {
       "title": "Achat terminé !",
       "subtitle": "Les jetons ont été livrés dans votre portefeuille.",
@@ -3508,7 +3510,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Phase 1 · Aperçu privé",
     "heroTitle": "TOKENISER UNE ENTREPRISE",
-    "heroSubtitle": "Courbe de liaison appairée DHB. Diplômée sur Uniswap à 42K de capitalisation boursière.",
+    "heroSubtitle": "Courbe de liaison appairée jetons. Diplômée sur Uniswap à 42K de capitalisation boursière.",
     "createCoin": "Créer une pièce",
     "filterNew": "Nouveau",
     "filterGraduating": "Sur le point de diplômer",
@@ -3609,7 +3611,7 @@
   },
   "fractions": {
     "seoTitle": "Fractions | DeHub",
-    "seoDescription": "Achetez et vendez des fractions de publications DeHub. Une publication frappée représente 1000 fractions on-chain — possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en DHB.",
+    "seoDescription": "Achetez et vendez des fractions de publications DeHub. Une publication frappée représente 1000 fractions on-chain — possédez une part d'une vidéo, d'une piste ou d'une image et échangez-la en jetons.",
     "title": "Fractions",
     "perUpload": "1000 par téléchargement",
     "tabBrowse": "Parcourir",
@@ -3752,6 +3754,8 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
+    "toolMaboroshi": "Maboroshi",
+    "toolMaboroshiDesc": "Remplacez des personnages et des objets, vérifiez un brouillon, puis exportez avec votre bande-son originale.",
     "editorAssetMissing": "Cette génération n’a pas encore de média à importer.",
     "editorAssetUnsupported": "Les modèles 3D ne peuvent pas être placés dans la timeline. Téléchargez le modèle.",
     "editorImportFailed": "Impossible d’importer ce résultat dans l’éditeur.",
@@ -4712,7 +4716,7 @@
   },
   "usernames": {
     "seoTitle": "Nom d'utilisateur Marketplace | DeHub",
-    "seoDescription": "Achetez et vendez des noms d'utilisateur DeHub avec DHB. Recherchez des poignées courtes, numériques et originales à vendre, ou répertoriez les vôtres — le transfert se fait en chaîne au moment où le paiement est effacé.",
+    "seoDescription": "Achetez et vendez des noms d'utilisateur DeHub avec jetons. Recherchez des poignées courtes, numériques et originales à vendre, ou répertoriez les vôtres — le transfert se fait en chaîne au moment où le paiement est effacé.",
     "title": "Noms d’utilisateurs",
     "subtitle": "Poignées à vendre, prix en USD",
     "tabBrowse": "Parcourir",
@@ -4836,7 +4840,7 @@
   },
   "accounts": {
     "seoTitle": "Marché des comptes — DeHub",
-    "seoDescription": "Achetez et vendez des comptes DeHub établis pour DHB. Parcourez les comptes par nombre d'abonnés, téléchargements et ancienneté — l'identifiant, les publications, les abonnés et les droits de badge se transfèrent tous, et le paiement va directement au vendeur.",
+    "seoDescription": "Achetez et vendez des comptes DeHub établis pour jetons. Parcourez les comptes par nombre d'abonnés, téléchargements et ancienneté — l'identifiant, les publications, les abonnés et les droits de badge se transfèrent tous, et le paiement va directement au vendeur.",
     "title": "Comptes",
     "subtitle": "Comptes entiers à vendre, prix en tokens DeHub",
     "tabBrowse": "Parcourir",
@@ -6497,17 +6501,17 @@
   },
   "docs": {
     "seoTitle": "Documentation DeHub — Guides, token, dApps et FAQ",
-    "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token DHB, staking, jeux, feuille de route, FAQ et plus encore."
+    "seoDescription": "Documentation officielle de DeHub : présentation de la plateforme, dApps, économie du token jetons, staking, jeux, feuille de route, FAQ et plus encore."
   },
   "dex": {
-    "seoTitle": "DEX — Échangez du DHB à votre prix",
-    "seoDescription": "Définissez votre prix d'achat ou de vente de DHB avec un ordre limite Uniswap v4 sur Base ou BNB Chain. Carnet d'ordres en direct, profondeur du marché et un prix USD partagé.",
+    "seoTitle": "DEX — Échangez du jetons à votre prix",
+    "seoDescription": "Définissez votre prix d'achat ou de vente de jetons avec un ordre limite Uniswap v4 sur Base ou BNB Chain. Carnet d'ordres en direct, profondeur du marché et un prix USD partagé.",
     "venue": "Réseau",
     "marketPrice": "Prix du marché · USD",
     "bookPrice": "{{chain}} prix du livre · USD",
     "change24": "Variation 24h",
     "totalLiquidity": "Liquidité totale · USD",
-    "listedDhb": "DHB listés · {{chain}}",
+    "listedDhb": "jetons listés · {{chain}}",
     "listedUsd": "USD listés · {{chain}}",
     "refreshMarket": "Actualiser le marché",
     "refresh": "Actualiser",
@@ -6532,21 +6536,21 @@
     "orderBook": "Carnet d'ordres",
     "priceGrouping": "Regroupement des prix",
     "priceUsd": "Prix (USD)",
-    "sizeDhb": "Taille (DHB)",
-    "totalDhb": "Total (DHB)",
+    "sizeDhb": "Taille (jetons)",
+    "totalDhb": "Total (jetons)",
     "noBids": "Aucune offre pour le moment",
     "noAsks": "Aucune liquidité demandée pour le moment",
     "useBuyPrice": "Utiliser {{price}} comme prix d'achat",
     "useSellPrice": "Utiliser {{price}} comme prix de vente",
     "spread": "Écart · USD",
-    "buyTotal": "Acheter {{amount}} DHB",
-    "sellTotal": "Vendre {{amount}} DHB",
+    "buyTotal": "Acheter {{amount}} jetons",
+    "sellTotal": "Vendre {{amount}} jetons",
     "placeOrder": "Passer un ordre",
     "lpFee": "0% de frais LP",
     "lpFeeLabel": "Frais LP",
     "lpFeeValue": "{{fee}}% de frais LP",
-    "buy": "Acheter DHB",
-    "sell": "Vendre DHB",
+    "buy": "Acheter jetons",
+    "sell": "Vendre jetons",
     "maxBuy": "Prix d'achat maximum",
     "minSell": "Prix de vente minimum",
     "spend": "Dépenser",
@@ -6562,7 +6566,7 @@
     "estimated": "Conversion complète estimée",
     "network": "Réseau de financement",
     "sellBelowMarket": "Cette vente est {{percent}}% en dessous du prix du marché de ${{price}}. Quelqu'un peut l'acheter et la revendre ailleurs immédiatement.",
-    "buyAboveMarket": "Cet achat est supérieur de {{percent}} % au prix du marché de {{price}} $. Vous paieriez plus cher que ce que DHB se négocie ailleurs.",
+    "buyAboveMarket": "Cet achat est supérieur de {{percent}} % au prix du marché de {{price}} $. Vous paieriez plus cher que ce que jetons se négocie ailleurs.",
     "useMarket": "Utiliser le prix du marché",
     "balanceError": "Vérification du solde échouée. Réessayez avant de passer un ordre.",
     "noFunding": "Aucun {{token}} disponible sur {{chain}}.",
@@ -6571,7 +6575,7 @@
     "reviewYourBuy": "Vérifier votre achat",
     "reviewYourSell": "Vérifier votre vente",
     "reviewDeposit": "Déposer {{amount}} {{token}} sur {{chain}}.",
-    "reviewRange": "Plage : {{min}} – {{max}} USD par DHB.",
+    "reviewRange": "Plage : {{min}} – {{max}} USD par jetons.",
     "initializes": "Ceci crée et initialise le pool de 0 %.",
     "pendingNote": "Votre transaction a été soumise. Reprenez la confirmation ou l'enregistrement de la liste sans autre dépôt.",
     "viewTransaction": "Voir la transaction",
@@ -6588,7 +6592,7 @@
     "keepOpen": "Gardez cette page ouverte jusqu'à ce que votre liste soit enregistrée. Le stockage du navigateur n'est pas disponible.",
     "snapshotDelayed": "Les données du marché partagées sont retardées. Affichage du dernier instantané vérifié.",
     "snapshotUnavailable": "Les données du marché partagées ne sont pas disponibles. Réessayez pour charger les positions.",
-    "withdrawReview": "Retirer {{dhb}} DHB et {{usdc}} USDC sur {{chain}} ? Les montants sont actualisés avant la signature ; la tolérance de prix est de 0,5 %.",
+    "withdrawReview": "Retirer {{dhb}} jetons et {{usdc}} USDC sur {{chain}} ? Les montants sont actualisés avant la signature ; la tolérance de prix est de 0,5 %.",
     "withdrawn": "Position retirée",
     "withdrawFailed": "Retrait échoué",
     "withdrawing": "Retrait en cours…",
@@ -6722,6 +6726,19 @@
     }
   },
   "editor": {
+    "review": {
+      "title": "Révision du projet",
+      "shared": "Partagé avec vous",
+      "time": "Temps (s)",
+      "assign": "Attribuer un portefeuille"
+    },
+    "textFit": {
+      "wrap": "Retour à la ligne",
+      "width": "Largeur du texte",
+      "shrink": "Réduire le texte pour l’ajuster",
+      "height": "Hauteur du texte",
+      "captions": "Ajuster la piste de sous-titres"
+    },
     "canvas": {
       "dropMedia": "Glisser pour ajouter à votre design",
       "dropText": "Glisser pour ajouter du texte",
@@ -6732,7 +6749,10 @@
       "resetToStart": "Revenir au début",
       "resize": "Redimensionner",
       "rotate": "Rotation",
-      "toggleLoop": "Activer/désactiver la boucle"
+      "toggleLoop": "Activer/désactiver la boucle",
+      "previousFrame": "Image précédente",
+      "nextFrame": "Image suivante",
+      "playhead": "Tête de lecture"
     },
     "export": {
       "scope": "Gamme de téléchargement",
@@ -7126,6 +7146,8 @@
       "unchanged": "Les coupes n'ont pas pu être alignées."
     },
     "highlights": {
+      "visual": "Moments visuels forts",
+      "visualPrivacy": "Envoyer des images sélectionnées pour l'analyse visuelle.",
       "chatSuggest": "Trouve les meilleurs moments de cette vidéo",
       "chatFound": "{{count}} moments trouvés. Prévisualisez-les, affinez la sélection, puis créez un montage séparé.",
       "chatHint": "Sélection des moments forts. Indiquez quoi garder ou retirer, ou revenez au montage.",
@@ -7157,6 +7179,107 @@
       "hint": "Traitement sur cet appareil. Limitez d’abord la source à {{seconds}} secondes ; le modèle se télécharge au premier usage.",
       "restore": "Rétablir le fond",
       "cancel": "Annuler"
+    },
+    "videoTemplates": {
+      "heading": "Modèles vidéo",
+      "format": "Format vidéo",
+      "useFormat": "Utiliser le format vidéo {{aspect}}",
+      "duration": "{{seconds}} s",
+      "hint": "Choisissez un format, modifiez le texte et ajoutez vos clips.",
+      "names": {
+        "question": "Question d’accroche",
+        "beforeAfter": "Avant et après",
+        "tips": "Trois conseils",
+        "tutorial": "Tutoriel rapide",
+        "countdown": "Compte à rebours",
+        "mythFact": "Mythe et réalité",
+        "product": "Présentation produit",
+        "announcement": "Annonce",
+        "story": "Histoire en trois actes",
+        "quote": "Vidéo citation"
+      },
+      "copy": {
+        "question": "Votre grande question",
+        "answer": "Voici la réponse",
+        "tryIt": "Essayez aujourd’hui",
+        "smallChange": "Un petit changement",
+        "before": "Avant",
+        "after": "Après",
+        "difference": "Voyez la différence",
+        "threeTips": "Trois conseils utiles",
+        "tipOne": "Votre premier conseil",
+        "tipTwo": "Votre deuxième conseil",
+        "tipThree": "Votre troisième conseil",
+        "tryOne": "Essayez-en un aujourd’hui",
+        "threeSteps": "En trois étapes",
+        "getReady": "Préparez-vous",
+        "mainStep": "Passez à l’action",
+        "checkResult": "Vérifiez le résultat",
+        "yourTurn": "À vous de jouer",
+        "topFive": "Le top cinq",
+        "fifthPick": "Votre cinquième choix",
+        "fourthPick": "Votre quatrième choix",
+        "thirdPick": "Votre troisième choix",
+        "secondPick": "Votre deuxième choix",
+        "bestPick": "Votre numéro un",
+        "favourite": "Quel est votre préféré ?",
+        "myth": "Le mythe courant",
+        "fact": "La vérité utile",
+        "newFavourite": "Votre nouveau favori",
+        "productName": "Le nom de votre produit",
+        "lookCloser": "Regardez de plus près",
+        "comingSoon": "Du nouveau arrive",
+        "announcement": "Votre grande annonce",
+        "bePart": "Participez",
+        "atFirst": "Au début...",
+        "thenChanged": "Puis tout a changé",
+        "whatHappened": "Voici ce qui s’est passé",
+        "yourQuote": "Dites quelque chose de mémorable.",
+        "passItOn": "Faites passer le message",
+        "questionHint": "Posez une question claire.",
+        "answerHint": "Expliquez en une phrase claire.",
+        "nextHint": "Proposez une prochaine étape simple.",
+        "hookHint": "Donnez envie de regarder la suite.",
+        "beforeHint": "Montrez votre point de départ.",
+        "afterHint": "Montrez le résultat.",
+        "saveHint": "Donnez une raison d’enregistrer.",
+        "tipHint": "Ajoutez un détail utile.",
+        "pickHint": "Expliquez pourquoi ce choix mérite sa place.",
+        "mythHint": "Écrivez l’idée à remettre en question.",
+        "productHint": "Mettez en avant un atout.",
+        "announcementHint": "Ajoutez le nom, la date ou un détail.",
+        "turnHint": "Montrez le moment du changement.",
+        "authorHint": "Votre nom"
+      }
+    },
+    "sharedTimeline": {
+      "receive": "Recevoir les modifications",
+      "hint": "Appliquez les dernières modifications enregistrées. Vos modifications locales et l’annulation sont conservées.",
+      "received": "Version {{revision}} reçue.",
+      "upToDate": "Déjà à jour.",
+      "protectedUndo": "D’anciennes modifications locales chevauchent les modifications partagées. L’annulation préservera les modifications partagées."
+    },
+    "live": {
+      "stopEdits": "Arrêter les modifications en direct",
+      "receiveEdits": "Recevoir les modifications en direct",
+      "shareEdits": "Partager les modifications en direct",
+      "waiting": "En attente de la fin de la modification",
+      "transferring": "Transfert des modifications",
+      "sharing": "Partage des modifications en direct",
+      "receiving": "Réception des modifications en direct",
+      "paused": "Modifications en direct suspendues",
+      "retryRecovery": "Réessayer la récupération",
+      "personalCopy": "Enregistrer une copie personnelle",
+      "privateHint": "Rejoindre ne téléverse pas vos modifications. Le partage en direct téléverse les nouvelles sources privées ; Enregistrer crée une version permanente."
+    },
+    "assembly": {
+      "matchConsent": "Adapter les clips et les photos à ma demande",
+      "matchScenes": "Trouver des scènes correspondantes",
+      "noMatch": "Aucune scène correspondante trouvée. Essayez un autre sujet ou une autre sélection.",
+      "matchLimit": "Choisissez jusqu’à 10 clips ou photos. Les vidéos doivent durer entre une seconde et 10 minutes.",
+      "matchDuration": "Les séquences correspondantes sont plus courtes que la vidéo demandée. Réduisez la durée ou choisissez davantage de médias.",
+      "matchFailed": "La recherche de scènes est indisponible. Vos clips et leurs durées restent inchangés. Vous pouvez les vérifier manuellement.",
+      "reviewManually": "Vérifier les clips manuellement"
     }
   },
   "jungleMood": {
@@ -8104,7 +8227,7 @@
     "topUpTitle": "Rechargez et économisez",
     "discount": "{{percent}} % de réduction",
     "noDiscount": "Prix fort",
-    "total": "Total {{usd}} $, payé en DHB",
+    "total": "Total {{usd}} $, payé en jetons",
     "buy": "Acheter des crédits",
     "buying": "En attente de paiement…",
     "bought": "Ajouté {{count}} crédits de publication",
@@ -8134,7 +8257,7 @@
     "skippedToast": "Ignoré {{platforms}} : cette publication n'a pas la photo ou la vidéo dont ils ont besoin.",
     "uploadFailed": "Impossible de télécharger votre média pour la publication croisée.",
     "creditRules": "Chaque publication coûte des crédits par plateforme : {{x}} pour X, {{farcaster}} pour Farcaster et {{other}} pour toutes les autres plateformes. Les publications planifiées utilisent des crédits lorsque vous les planifiez.",
-    "payAsYouGoCredits": "Vous n'avez plus de crédits ? Les crédits manquants sont achetés dans DHB à ${{price}} chacun lorsque vous publiez.",
+    "payAsYouGoCredits": "Vous n'avez plus de crédits ? Les crédits manquants sont achetés dans jetons à ${{price}} chacun lorsque vous publiez.",
     "topUpCredits": "{{count}} crédits",
     "perCredit": "${{price}} par crédit",
     "pendingApproval": "En attente de votre approbation de dehub dans l'application Farcaster",
@@ -8146,7 +8269,7 @@
   "dm": {
     "planRestricted": "Cet utilisateur exige un abonnement pour recevoir des messages.",
     "planTypeNotAllowed": "L'offre de ce créateur n'autorise pas ce type de message.",
-    "planMinTip": "Le pourboire doit être d'au moins {{amount}} DHB pour ce créateur."
+    "planMinTip": "Le pourboire doit être d'au moins {{amount}} jetons pour ce créateur."
   },
   "credits": {
     "earningsWorth": "Valeur {{amount}}",
@@ -8274,12 +8397,12 @@
       "notifyKey": "Notifier la touche",
       "notifyKeyOnce": "Nouvelle clé de notification pour {{name}}. Copiez-la maintenant : elle n’apparaît qu’une seule fois, et en en créant une autre, elle la remplace.",
       "payTitle": "Prenez les paiements",
-      "payBody": "pay() demande à l'utilisateur d'envoyer des DHB directement dans le portefeuille qui a signé votre fichier dehub.json. Vérifiez le reçu sur votre serveur avant de livrer quoi que ce soit.",
+      "payBody": "pay() demande à l'utilisateur d'envoyer des jetons directement dans le portefeuille qui a signé votre fichier dehub.json. Vérifiez le reçu sur votre serveur avant de livrer quoi que ce soit.",
       "notifyTitle": "Envoyer des notifications",
       "notifyBody": "Les utilisateurs qui ajoutent votre application peuvent être notifiés depuis votre serveur avec votre clé `notify`. Pas besoin de conserver de jetons par utilisateur.",
       "rankTitle": "Comment le magasin classe les applications",
       "rankBody": "Chaque nuit, chaque application répertoriée obtient un score : 55 % des utilisateurs récurrents (personnes qui l'ont ouverte cette semaine et la semaine précédente), 35 % des utilisateurs hebdomadaires, plus une augmentation de 10 % au cours de ses 14 premiers jours. Seuls les comptes DeHub connectés comptent, donc les robots et les rechargements de page ne gagnent rien.",
-      "rewardsBody": "Chaque mois, {{pool}} DHB est partagé entre les applications par le même score, calculé chaque semaine. Pour être admissible, une app a besoin d'un portefeuille de propriétaire vérifié et d'au moins 3 utilisateurs récurrents. Les récompenses sont payées par DeHub au portefeuille du propriétaire.",
+      "rewardsBody": "Chaque mois, {{pool}} jetons est partagé entre les applications par le même score, calculé chaque semaine. Pour être admissible, une app a besoin d'un portefeuille de propriétaire vérifié et d'au moins 3 utilisateurs récurrents. Les récompenses sont payées par DeHub au portefeuille du propriétaire.",
       "rewardsWeek": "Semaine du {{date}}",
       "rewardPaid": "Payant",
       "rewardPending": "En attente",
@@ -8305,10 +8428,10 @@
     },
     "pay": {
       "title": "Payez {{name}} ?",
-      "body": "Le DHB va directement dans le portefeuille de l'application, {{wallet}}. Les paiements ne peuvent pas être annulés.",
-      "confirm": "Payez {{amount}} DHB",
+      "body": "Le jetons va directement dans le portefeuille de l'application, {{wallet}}. Les paiements ne peuvent pas être annulés.",
+      "confirm": "Payez {{amount}} jetons",
       "sending": "Envoyez votre paiement…",
-      "sent": "Paiement {{amount}} DHB à {{name}}.",
+      "sent": "Paiement {{amount}} jetons à {{name}}.",
       "noOwner": "Cette application n'a pas encore de portefeuille vérifié pour payer."
     },
     "add": {

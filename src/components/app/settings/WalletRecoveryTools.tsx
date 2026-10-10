@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Wallet recovery tools (Settings → Account Security):
  *  - Back up wallet: after a fresh unlock, the wallet's 12 words (when it was
@@ -189,7 +190,7 @@ const OLD_LOGIN_LABELS: Record<string, string> = {
 function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { switchActiveWallet, walletAddress } = useAuth();
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
-  const [migrateEmail, setMigrateEmail] = useState('');
+  const [migrateEmail, setMigrateEmail] = useSurfaceDraft("src/components/app/settings/WalletRecoveryTools.tsx:migrateEmail", '');
   const [migrateBusy, setMigrateBusy] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -219,7 +220,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
       if (!cancelled) setKnownAccountsChecked(true);
     });
     return () => { cancelled = true; };
-  }, [open]);
+  }, [open, setMigrateEmail]);
 
   const accountFor = (provider: string) => {
     const matches = legacyAccountsForProvider(knownAccounts, provider);

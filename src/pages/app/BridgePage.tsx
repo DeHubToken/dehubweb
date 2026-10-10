@@ -1,7 +1,8 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bridge Page
  * ===========
- * Bridge DHB tokens between Base and BNB Chain.
+ * Bridge DeHub tokens between Base and BNB Chain.
  * Transfers go to the bridge relay address on both chains.
  */
 
@@ -26,6 +27,7 @@ import { AppState } from '@/components/app/AppState';
 import { SEOHead } from '@/components/SEOHead';
 import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
+import { formatBridgeAmount } from '@/lib/bridge-amount';
 
 const BRIDGE_ADDRESS = '0x11D79aE9a0F8a8f9Fcf5BE71e403ed203EC2394d';
 
@@ -69,7 +71,7 @@ export default function BridgePage() {
   const { allTokens, isLoading: balancesLoading } = useAllChainsTokens();
 
   const [direction, setDirection] = useState<BridgeDirection>('bnb-to-base');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/BridgePage.tsx:amount", '');
   const [isBridging, setIsBridging] = useState(false);
 
   // Derive DHB balances per chain
@@ -88,7 +90,7 @@ export default function BridgePage() {
 
   const toggleDirection = () => {
     setDirection(d => d === 'base-to-bnb' ? 'bnb-to-base' : 'base-to-bnb');
-    setAmount('');
+    setAmount.complete(amount, '');
   };
 
   const handleBridge = async () => {
@@ -173,7 +175,7 @@ export default function BridgePage() {
         toast.success('Bridge initiated!', {
           description: t('bridge.sentDesc', { amount, from: sourceChainLabel, to: destChainLabel }),
         });
-        setAmount('');
+        setAmount.complete(amount, '');
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
         invalidateSelfBadgeBalance(queryClient);
       } else {
@@ -195,7 +197,7 @@ export default function BridgePage() {
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto">
-      <SEOHead title="Bridge — Transfer DHB Cross-Chain" description="Bridge your DHB tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: 'Bridge DHB tokens between Base and BNB Chain.', operatingSystem: 'Web' }} />
+      <SEOHead title="Bridge — Transfer tokens Cross-Chain" description="Bridge your DeHub tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking." url="https://dehub.io/app/bridge" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Token Bridge', url: 'https://dehub.io/app/bridge', applicationCategory: 'FinanceApplication', description: 'Bridge DeHub tokens between Base and BNB Chain.', operatingSystem: 'Web' }} />
       <h1 className="sr-only">DeHub Bridge — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <PageIsland
         icon="bridge"
@@ -374,9 +376,9 @@ function shortenAddress(addr: string): string {
 const PAGE_SIZE = 10;
 
 function BridgeQueue() {
-  const { t: translate } = useTranslation();
+  const { t: translate, i18n } = useTranslation();
   const { data: transfers, isLoading, error } = useBridgeTransfers();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/BridgePage.tsx:search", '');
   const [page, setPage] = useState(0);
 
   const filtered = useMemo(() => {
@@ -472,7 +474,7 @@ function BridgeQueue() {
 
               {/* Amount + status + time */}
               <div className="text-right flex-shrink-0">
-                <p className="text-xs font-semibold text-white">{t.amount} <DhbCoin /></p>
+                <p className="text-xs font-semibold text-white">{formatBridgeAmount(t.amount, i18n.resolvedLanguage || 'en-US')} <DhbCoin /></p>
                 <div className="flex items-center justify-end gap-1.5 mt-0.5">
                   <span className="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-white/5 text-white/60 border border-white/10">
                     {/* The relay only sees the deposit arrive; the payout on the

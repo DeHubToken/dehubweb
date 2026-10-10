@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Post Card Component
  * ===================
@@ -14,12 +15,13 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, Zap, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
+import { Sparkles, Zap, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';
+import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { ActionBar } from './ActionBar';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
@@ -147,10 +149,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
-  const [pollQuestion, setPollQuestion] = useState('');
+  const [pollQuestion, setPollQuestion] = useSurfaceDraft("components/app/cards/PostCard.tsx:pollQuestion", '', draftIdentity(post));
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [pollMultiple, setPollMultiple] = useState(false);
-  const [pollExpiry, setPollExpiry] = useState('');
+  const [pollExpiry, setPollExpiry] = useSurfaceDraft("components/app/cards/PostCard.tsx:pollExpiry", '', draftIdentity(post));
   const createPollMutation = useCreatePoll();
   const { data: tipCount = 0 } = usePostTipCount(post.id, post.totalTips);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
@@ -340,17 +342,11 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   const handleShareAsImage = useCallback(async () => {
     try {
       const blob = await buildPostShareImage({
-        authorName: post.author.name,
-        authorHandle: post.author.handle,
-        authorAvatarUrl: post.author.avatarSeed?.startsWith('http') ? post.author.avatarSeed : undefined,
-        title: post.title,
-        content: post.content,
         postId: post.id,
-        likes: post.stats.likes,
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
-      const postUrl = `${window.location.origin}/app/post/${post.id}`;
+      const postUrl = `https://dehub.io${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`;
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
@@ -372,7 +368,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         toast.error('Failed to share image');
       }
     }
-  }, [post.id, post.content, post.title, post.author]);
+  }, [post.id, post.newPostId, post.content]);
 
   // Build a minimal DeHubNFT for the quote modal from post data
   const postAsNFT = {
@@ -459,13 +455,9 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
               stay mounted, and each mounted Root holds a window scroll listener
               for its lifetime. Times every card in an infinite feed, that was the
               biggest cost of scrolling it. */}
-          <button
+          <PostHeaderOptionsButton
             onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            aria-label="Post options"
-            className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
-          >
-            <MoreVertical className="w-[23.5px] h-[23.5px]" />
-          </button>
+          />
           <DrawerContent scrollable column glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
@@ -940,10 +932,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                     expiresAt: pollExpiry || undefined,
                   });
                   setShowPollCreator(false);
-                  setPollQuestion('');
+                  setPollQuestion.complete(pollQuestion, '');
                   setPollOptions(['', '']);
                   setPollMultiple(false);
-                  setPollExpiry('');
+                  setPollExpiry.complete(pollExpiry, '');
                   queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
                 } catch {}
               }}
@@ -1027,6 +1019,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: post.id,
           type: 'post',
           author: post.author.name,
           caption: post.content

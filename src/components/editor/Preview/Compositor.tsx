@@ -1,3 +1,10 @@
+import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
+import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
+import { stepTimelineFrame } from "@/lib/editor/frameStep";
+import { createVideoMattePageCache, videoMatteFramesForOps } from "@/lib/editor/videoMattePageCache";
+import { loadVideoMatteImage } from "@/lib/editor/videoMatteImages";
+import { videoMatteMediaIds } from "@/lib/editor/videoMatte";
+import { prepareGifImage, releaseGifImage } from "@/lib/editor/gifImage";
 /**
  * Canvas-based preview compositor. Composites all active clips at the playhead
  * (video frames + images + text overlays) and synchronises audio elements.
@@ -12,7 +19,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Play, Pause, Repeat, Type, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown,
+  Play, Pause, Repeat, Type, ChevronLeft, ChevronRight, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown,
   Copy, Trash2, Pencil, Scissors, FlipHorizontal2, FlipVertical2, Maximize, Minimize, Crosshair, PanelBottomClose, PanelBottomOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,7 +70,7 @@ function fmtTime(t: number, fps: number) {
   const total = Math.floor(t);
   const m = Math.floor(total / 60);
   const s = total % 60;
-  const f = Math.floor((t - total) * fps);
+  const f = Math.min(Math.ceil(fps) - 1, Math.floor((t - total) * fps + 1e-7));
   return `${m}:${s.toString().padStart(2, "0")}.${f.toString().padStart(2, "0")}`;
 }
 
@@ -93,6 +100,7 @@ type Gesture =
   | { mode: "stretch"; id: string; box: ClipBox; axis: "x" | "y"; scale: number };
 
 export function Compositor() {
+  const draftFocus = useEditorDraftFocus("canvas", true);
   const { t } = useTranslation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -128,18 +136,36 @@ export function Compositor() {
   const extraVideos = useRef<Map<string, HTMLVideoElement>>(new Map());
   const extraAudio = useRef<Map<string, HTMLAudioElement>>(new Map());
   const imagePool = useRef<Map<string, HTMLImageElement>>(new Map());
+  const gifLoads = useRef(new Map<string, AbortController>());
   const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current, videosByClip: new Map<string, HTMLVideoElement>() }), []);
   useEffect(() => () => {
     extraVideos.current.forEach(releaseMedia);
     extraAudio.current.forEach(releaseMedia);
+    gifLoads.current.forEach(controller => controller.abort());
+    gifLoads.current.clear();
+    imagePool.current.forEach(image => { releaseGifImage(image); image.src = ""; });
+    imagePool.current.clear();
   }, []);
+
+  const mediaRef = useRef(media); mediaRef.current = media;
+  const mattePages = useRef<ReturnType<typeof createVideoMattePageCache> | null>(null);
+  useEffect(() => {
+    const cache = createVideoMattePageCache(imagePool.current, frame => loadVideoMatteImage(mediaRef.current, frame), image => { image.src = ""; });
+    mattePages.current = cache;
+    return () => { cache.dispose(); if (mattePages.current === cache) mattePages.current = null; };
+  }, []);
+
+  // A reopened project can deliver its clips before the stored mask pages.
+  // Retry a failed page only when the actual source list changes.
+  useEffect(() => { mattePages.current?.refreshSources(); }, [media]);
 
   // Provision elements when media changes.
   useEffect(() => {
     const vPool = videoPool.current;
     const aPool = audioPool.current;
     const iPool = imagePool.current;
-    const decoded = media.filter(m => !m.name.startsWith(".dehub-video-matte-") || clips.some(c => c.kind === "video" && c.videoMatte?.mediaId === m.id));
+    const matteIds = new Set(clips.flatMap(c => c.kind === "video" ? videoMatteMediaIds(c.videoMatte) : []));
+    const decoded = media.filter(m => !m.name.startsWith(".dehub-video-matte-") && !matteIds.has(m.id));
     const liveIds = new Set(decoded.map((m) => m.id));
 
     for (const m of decoded) {
@@ -163,14 +189,27 @@ export function Compositor() {
       if (m.kind === "image" && !iPool.has(m.id)) {
         const img = new Image();
         if (!m.url.startsWith("blob:")) img.crossOrigin = "anonymous";
-        img.src = m.url;
         iPool.set(m.id, img);
+        if (m.mimeType === "image/gif") {
+          const controller = new AbortController();
+          gifLoads.current.set(m.id, controller);
+          void prepareGifImage(img, m.url, controller.signal).then(() => {
+            if (!controller.signal.aborted && iPool.get(m.id) === img) img.src = m.url;
+          }).catch(() => {
+            if (iPool.get(m.id) === img) { releaseGifImage(img); iPool.delete(m.id); img.src = ""; }
+          }).finally(() => {
+            if (gifLoads.current.get(m.id) === controller) gifLoads.current.delete(m.id);
+          });
+        } else img.src = m.url;
       }
     }
     // GC dropped media.
     for (const id of Array.from(vPool.keys())) if (!liveIds.has(id)) { vPool.get(id)?.pause(); vPool.delete(id); }
     for (const id of Array.from(aPool.keys())) if (!liveIds.has(id)) { aPool.get(id)?.pause(); aPool.delete(id); }
-    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id)) { const image = iPool.get(id); if (image) image.src = ""; iPool.delete(id); }
+    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id) && !matteIds.has(id)) {
+      gifLoads.current.get(id)?.abort(); gifLoads.current.delete(id);
+      const image = iPool.get(id); if (image) { releaseGifImage(image); image.src = ""; } iPool.delete(id);
+    }
   }, [media, clips]);
 
   // ── Playback clock ──
@@ -234,6 +273,7 @@ export function Compositor() {
         time,
         state.settings.width,
       );
+      try { void mattePages.current?.select(videoMatteFramesForOps(renderOps, time)).catch(() => {}); } catch { /* Missing masks stay hidden until restored. */ }
 
       // Sync video/audio media.
       const activeVideos = leaseMedia<HTMLVideoElement>(renderOps.flatMap(op => op.clip.kind === "video" ? [op.clip] : []), videoPool.current, extraVideos.current, cloneMedia, releaseMedia);
@@ -487,10 +527,12 @@ export function Compositor() {
     setMarqueeState(m);
   }, []);
   const gestureRef = useRef<Gesture | null>(null);
+  const gestureLease = useRef<ProjectEditLease | null>(null);
+  const strokeCleanup = useRef<(() => void) | null>(null);
 
   const onGestureMove = useCallback((e: PointerEvent) => {
     const g = gestureRef.current;
-    if (!g) return;
+    if (!g || !gestureLease.current?.isCurrent()) return;
     const s = useEditorStore.getState();
     const W = s.settings.width;
     const H = s.settings.height;
@@ -581,7 +623,7 @@ export function Compositor() {
 
   const onGestureEnd = useCallback(() => {
     const g = gestureRef.current;
-    if (g?.mode === "marquee") {
+    if (g?.mode === "marquee" && gestureLease.current?.isCurrent()) {
       const m = marqueeRef.current;
       if (m && (m.w > 4 || m.h > 4)) {
         const hits = layersAt()
@@ -596,6 +638,7 @@ export function Compositor() {
       setMarquee(null);
     }
     gestureRef.current = null;
+    gestureLease.current?.release(); gestureLease.current = null;
     setGuides({ v: [], h: [] });
     window.removeEventListener("pointermove", onGestureMove);
     window.removeEventListener("pointerup", onGestureEnd);
@@ -603,16 +646,19 @@ export function Compositor() {
   }, [onGestureMove, layersAt, setMarquee]);
 
   const startGesture = useCallback((g: Gesture) => {
-    useEditorStore.getState().beginGesture();
+    onGestureEnd();
+    gestureLease.current = useEditorStore.getState().beginGesture();
     gestureRef.current = g;
     window.addEventListener("pointermove", onGestureMove);
     window.addEventListener("pointerup", onGestureEnd);
     window.addEventListener("pointercancel", onGestureEnd);
   }, [onGestureMove, onGestureEnd]);
 
-  useEffect(() => () => onGestureEnd(), [onGestureEnd]);
+  useEffect(() => () => { onGestureEnd(); strokeCleanup.current?.(); }, [onGestureEnd]);
 
   const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: { color: string; width: number }) => {
+    strokeCleanup.current?.();
+    const lease = useEditorStore.getState().holdEdits();
     const pts: [number, number][] = [];
     const push = (clientX: number, clientY: number) => {
       const p = toCanvas(clientX, clientY);
@@ -623,14 +669,21 @@ export function Compositor() {
     push(e.clientX, e.clientY);
     setStroke([...pts]);
     const onMove = (ev: PointerEvent) => {
+      if (!lease.isCurrent()) return;
       push(ev.clientX, ev.clientY);
       setStroke([...pts]);
     };
-    const onUp = () => {
+    const cleanup = () => {
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
       window.removeEventListener("pointercancel", onUp);
       setStroke(null);
+      strokeCleanup.current = null;
+    };
+    const onUp = () => {
+      cleanup();
+      if (!lease.isCurrent()) return;
+      try {
       if (!pts.length) return;
       const s = useEditorStore.getState();
       const W = s.settings.width;
@@ -653,7 +706,9 @@ export function Compositor() {
       });
       // Keep drawing: no selection box getting in the way of the next stroke.
       useEditorStore.getState().selectClip(null);
+      } finally { lease.release(); }
     };
+    strokeCleanup.current = () => { cleanup(); lease.release(); };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp);
     window.addEventListener("pointercancel", onUp);
@@ -671,6 +726,8 @@ export function Compositor() {
     if (!hit) {
       // Drag on empty canvas draws a selection box; a plain click clears.
       if (!e.shiftKey) selectClip(null);
+      onGestureEnd();
+      gestureLease.current = useEditorStore.getState().holdEdits();
       gestureRef.current = { mode: "marquee", x0: p.x, y0: p.y, additive: e.shiftKey };
       window.addEventListener("pointermove", onGestureMove);
       window.addEventListener("pointerup", onGestureEnd);
@@ -722,7 +779,7 @@ export function Compositor() {
     const hit = hitTest(e.clientX, e.clientY);
     if (hit && hit.clip.kind === "text") {
       selectClip(hit.clip.id);
-      setEditingTextId(hit.clip.id);
+      if (draftFocus.begin()) setEditingTextId(hit.clip.id);
     } else if (hit) {
       selectClip(hit.clip.id);
       window.dispatchEvent(new Event("editor:open-inspector"));
@@ -850,7 +907,7 @@ export function Compositor() {
 
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
-      <div
+      <div {...draftFocus.props}
         ref={wrapRef}
         onDragOver={onSurfaceDragOver}
         onDragLeave={onSurfaceDragLeave}
@@ -888,7 +945,7 @@ export function Compositor() {
                   )}
                 />
               </ContextMenuTrigger>
-              <CanvasContextMenu clip={selectedClip} onEdit={(id) => setEditingTextId(id)} />
+              <CanvasContextMenu clip={selectedClip} onEdit={(id) => { if (draftFocus.begin()) setEditingTextId(id); }} />
             </ContextMenu>
           </div>
 
@@ -1024,7 +1081,7 @@ export function Compositor() {
               onChange={(e) => updateTextClip(editingText.id, { text: e.target.value })}
               onBlur={() => setEditingTextId(null)}
               onKeyDown={(e) => {
-                if (e.key === "Escape") { e.preventDefault(); setEditingTextId(null); }
+                if (e.key === "Escape") { e.preventDefault(); draftFocus.finish(); setEditingTextId(null); }
               }}
               style={{
                 position: "absolute",
@@ -1060,7 +1117,7 @@ export function Compositor() {
 
       <PagesStrip sources={sources} />
 
-      <div className="flex min-w-0 items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
+      <div className="flex min-w-0 items-center gap-1 border-t border-white/10 bg-black/60 px-2 py-2.5 backdrop-blur-[24px] sm:gap-3 sm:px-4">
         <Button
           size="icon"
           variant="ghost"
@@ -1075,6 +1132,16 @@ export function Compositor() {
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </Button>
+        {([-1, 1] as const).map(direction => (
+          <Button key={direction} size="icon" variant="ghost"
+            onClick={() => { const state = useEditorStore.getState(); setIsPlaying(false); setCurrentTime(stepTimelineFrame(state.currentTime, direction, state.settings.fps, selectTimelineDuration(state))); }}
+            className="h-8 w-8 shrink-0 rounded-md text-white/80 hover:bg-white/10"
+            aria-label={direction === -1 ? t("editor.canvas.previousFrame") : t("editor.canvas.nextFrame")}
+            title={direction === -1 ? t("editor.canvas.previousFrame") : t("editor.canvas.nextFrame")}
+            disabled={duration <= 0 || (direction === -1 ? currentTime <= 0 : currentTime >= duration)}>
+            {direction === -1 ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+          </Button>
+        ))}
         <Button
           size="icon"
           variant="ghost"
@@ -1101,6 +1168,7 @@ export function Compositor() {
           {fmtTime(currentTime, settings.fps)} / {fmtTime(duration, settings.fps)}
         </span>
         <Slider
+          aria-label={t("editor.canvas.playhead")}
           value={[Math.min(currentTime, duration || 0)]}
           min={0}
           max={Math.max(duration, 0.01)}

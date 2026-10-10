@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Composer setting chips.
  * =======================
@@ -18,7 +19,7 @@ import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-sw
 // Matches the liquid-glass button spec at the top of src/index.css:
 // bg-white/10 + backdrop-blur-xl + border-white/20, hover to /20 and /40.
 const CHIP_BASE =
-  'inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[13px] font-medium text-white/85 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-40';
+  'inline-flex shrink-0 items-center gap-1 rounded-full border border-white/20 bg-white/10 px-2 py-1.5 text-[12px] font-medium text-white/85 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-40';
 
 export interface ChipOption<T extends string> {
   value: T;
@@ -75,11 +76,11 @@ export function SelectChip<T extends string>({
   const epoch = useSurfaceEpoch();
 
   const searchRef = useRef<HTMLInputElement>(null);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/creator/studio/StudioChip.tsx:query", '', JSON.stringify(options.map(option => option.value)));
   // A stale filter would hide the list on the next open.
   useEffect(() => {
-    if (!open) setQuery('');
-  }, [open]);
+    if (!open) setQuery.initialize('');
+  }, [open, setQuery]);
 
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -93,9 +94,9 @@ export function SelectChip<T extends string>({
   return (
     <Popover key={epoch} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button type="button" className={CHIP_BASE} disabled={disabled} aria-label={`${label}: ${current?.label ?? value}`}>
-          <span className="max-w-[9rem] truncate">{display ?? current?.label ?? value}</span>
-          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-white/50" />
+        <button type="button" className={CHIP_BASE} disabled={disabled} title={current?.label ?? value} aria-label={`${label}: ${current?.label ?? value}`}>
+          <span className="max-w-[7rem] truncate">{display ?? current?.label ?? value}</span>
+          <ChevronDown className="h-3 w-3 shrink-0 text-white/50" />
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -183,10 +184,13 @@ export function SelectChip<T extends string>({
 }
 
 interface CounterChipProps {
+  draftScope: string;
   /** Plural unit shown beside the number, e.g. "images". */
   label: string;
   /** Singular form, used when the value is 1. Defaults to `label`. */
   singular?: string;
+  /** Compact visible unit; the full label remains available to assistive technology. */
+  displayUnit?: string;
   value: number;
   min: number;
   max: number;
@@ -197,8 +201,10 @@ interface CounterChipProps {
 }
 
 export function CounterChip({
+  draftScope,
   label,
   singular,
+  displayUnit,
   value,
   min,
   max,
@@ -208,8 +214,8 @@ export function CounterChip({
   disabled,
 }: CounterChipProps) {
   const { t } = useTranslation();
-  const [draft, setDraft] = useState(String(value));
-  useEffect(() => setDraft(String(value)), [value, min, max, allowedValues]);
+  const [draft, setDraft] = useSurfaceDraft("creator:counter", String(value), draftScope);
+  useEffect(() => setDraft.initialize(String(value)), [value, min, max, allowedValues, setDraft]);
   const normalize = (next: number) => {
     const clamped = Math.min(max, Math.max(min, Math.round(next)));
     if (!allowedValues?.length) return clamped;
@@ -220,6 +226,7 @@ export function CounterChip({
     const next = draft.trim() && Number.isFinite(Number(draft)) ? normalize(Number(draft)) : value;
     setDraft(String(next));
     onChange(next);
+    setDraft.clear();
   };
   const step = (delta: number) => {
     const options = allowedValues?.filter((option) => delta > 0 ? option > value : option < value);
@@ -228,6 +235,7 @@ export function CounterChip({
       : normalize(value + delta);
     setDraft(String(next));
     onChange(next);
+    setDraft.clear();
   };
   const unit = value === 1 ? (singular ?? label) : label;
 
@@ -245,11 +253,11 @@ export function CounterChip({
         onClick={() => step(-1)}
         disabled={disabled || value <= min}
         aria-label={t('creator.decrease', { field: label.toLowerCase() })}
-        className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30"
+        className={cn('rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30', displayUnit && editable && 'max-[400px]:hidden')}
       >
         <Minus className="h-3.5 w-3.5" />
       </button>
-      <span className="min-w-[3.75rem] select-none text-center text-[13px] font-medium tabular-nums text-white/85">
+      <span className={cn('select-none text-center text-[12px] font-medium tabular-nums text-white/85', displayUnit ? 'min-w-7' : 'min-w-[3.75rem]')}>
         {editable ? (
           <input
             type="text"
@@ -271,17 +279,17 @@ export function CounterChip({
                 e.preventDefault();
               }
             }}
-            className="w-9 rounded bg-transparent text-center text-[16px] tabular-nums text-white outline-none focus-visible:ring-1 focus-visible:ring-white/50 sm:text-[13px]"
+            className={cn('rounded bg-transparent text-center text-[16px] tabular-nums text-white outline-none focus-visible:ring-1 focus-visible:ring-white/50 sm:text-[13px]', displayUnit ? 'w-5' : 'w-9')}
           />
         ) : value}
-        <span className="ml-1 text-[11px] text-white/40">{unit}</span>
+        <span className={cn('text-[11px] text-white/40', !displayUnit && 'ml-1')}>{displayUnit ?? unit}</span>
       </span>
       <button
         type="button"
         onClick={() => step(1)}
         disabled={disabled || value >= max}
         aria-label={t('creator.increase', { field: label.toLowerCase() })}
-        className="rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30"
+        className={cn('rounded-full p-1.5 text-white/70 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 disabled:cursor-not-allowed disabled:opacity-30', displayUnit && editable && 'max-[400px]:hidden')}
       >
         <Plus className="h-3.5 w-3.5" />
       </button>

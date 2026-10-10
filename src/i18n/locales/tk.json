@@ -90,6 +90,7 @@
     "heading": "DeHub gysga wideolary"
   },
   "settings": {
+    "postingChain": "Ýazgylaryň blokçeýni",
     "showOnline": "Men onlayn bolanymda görkeziň",
     "showOnlineDesc": "Adamlar DeHub ulanýan wagtyň özünde adyňyň ýanynda ýaşyl dot görýärler.",
     "smartReplies": "Teklip edilýän jogaplar",
@@ -259,6 +260,7 @@
     "light": "Ýagty",
     "dark": "Garaňky",
     "system": "Ulgam",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Dumanly gijeler",
     "swarms": "Sürüler",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay siziň tokenleriňizi iberýär…",
     "payViaDpay": "DeHub Pay-e töleg, tokenler 30 sekunt töweregi geler",
     "payViaBridgeDpay": "Base-e geçirildi we DeHub Pay-e töleg, tokenler bir minut töweregi geler",
-    "dmSent": "{{name}}-a {{amount}} DHB iberildi!"
+    "dmSent": "{{name}}-a {{amount}} tokenler iberildi!"
   },
   "postOptions": {
     "options": "Saýlawlar",
@@ -1192,10 +1194,10 @@
   },
   "dhbListing": {
     "title": "Token listingi ýakynda!",
-    "body": "$DHB entek söwda edilmeýär. Listinge çykan badyna e-poçta alyň.",
+    "body": "tokenler entek söwda edilmeýär. Listinge çykan badyna e-poçta alyň.",
     "notifyMe": "Maňa habar ber",
-    "privacy": "Muny diňe $DHB listinge çykanda size habar bermek üçin ulanarys.",
-    "joined": "Siz sanawda. $DHB listinge çykan badyna {{email}} salgysyna hat ibereris."
+    "privacy": "Muny diňe tokenler listinge çykanda size habar bermek üçin ulanarys.",
+    "joined": "Siz sanawda. tokenler listinge çykan badyna {{email}} salgysyna hat ibereris."
   },
   "explorePage": {
     "searchPlaceholder": "Adam, ýazgy ýa-da mazmun gözle...",
@@ -1452,7 +1454,7 @@
     "otherTokens": "Beýleki tokenler",
     "otherTokensDesc": "Kartyňyz bilen Base-de ETH ýa-da USDC satyn alyň",
     "shareToFeed": "Meniň iýmitimi paýlaň",
-    "sharePostTemplate": "Men diňe {{amount}} $ DHB-i DeHub-da ýerleşýän ýerime goşdum. Halkara ynsan hukuk jemgyýeti bilen baglanyşykly. #Güýçli #Güýçli",
+    "sharePostTemplate": "Men diňe {{amount}} $ tokenler-i DeHub-da ýerleşýän ýerime goşdum. Halkara ynsan hukuk jemgyýeti bilen baglanyşykly. #Güýçli #Güýçli",
     "success": {
       "title": "Ähli zat satylýar!",
       "subtitle": "Siziň çuwallaryňyza toýunlar iberildi.",
@@ -3464,7 +3466,7 @@
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "1 - nji aşamada Şahsy Öwrenme",
     "heroTitle": "TOKENISE Biznesi",
-    "heroSubtitle": "DHB-de baglanyşykly egri. Uniswap-da gutaranlar $ 42K bazar kap.",
+    "heroSubtitle": "tokenler-de baglanyşykly egri. Uniswap-da gutaranlar $ 42K bazar kap.",
     "createCoin": "Pul ýarat",
     "filterNew": "Täze",
     "filterGraduating": "Mugallymlyk mekdebiniň",
@@ -3561,7 +3563,7 @@
   },
   "fractions": {
     "seoTitle": "Şablon: DeHub",
-    "seoDescription": "DeHub ýazgylarynyň paýlaryny satyn alyň we satyň. Mint edilen ýazgy blokçeýndäki 1000 paýdyr — wideonyň, trekiň ýa-da suratyň bir bölegine eýe boluň we ony DHB bilen söwda ediň.",
+    "seoDescription": "DeHub ýazgylarynyň paýlaryny satyn alyň we satyň. Mint edilen ýazgy blokçeýndäki 1000 paýdyr — wideonyň, trekiň ýa-da suratyň bir bölegine eýe boluň we ony tokenler bilen söwda ediň.",
     "title": "Paýlar",
     "perUpload": "1000-iň artmagy",
     "tabBrowse": "Browse",
@@ -4384,7 +4386,7 @@
   },
   "usernames": {
     "seoTitle": "Ulyjaň ady: DeHub",
-    "seoDescription": "DHB bilen DeHub usernames satyn alyň we satyň. Gysga, sanly we asly satylýan esbaplary gözläň ýa-da özüňizi agtaryň — pul tölenýänçä, köçürme serişdesinde bolýar.",
+    "seoDescription": "tokenler bilen DeHub usernames satyn alyň we satyň. Gysga, sanly we asly satylýan esbaplary gözläň ýa-da özüňizi agtaryň — pul tölenýänçä, köçürme serişdesinde bolýar.",
     "title": "Ulanyjy atlary",
     "subtitle": "ABŞ dollary bilen satylýan esbaplar",
     "tabSell": "Sat",
@@ -6145,17 +6147,17 @@
   },
   "docs": {
     "seoTitle": "DeHub resminamalary — Gollanmalar, token, dApps we soraglar",
-    "seoDescription": "DeHub-yň resmi resminamalary: platforma synlary, dApps, DHB token ykdysadyýeti, staking, oýunlar, ýol kartasy, ýygy soralýan soraglar we başgalar."
+    "seoDescription": "DeHub-yň resmi resminamalary: platforma synlary, dApps, tokenler token ykdysadyýeti, staking, oýunlar, ýol kartasy, ýygy soralýan soraglar we başgalar."
   },
   "dex": {
-    "seoTitle": "DEX — DHB söwdasy öz bahasyňyzda",
-    "seoDescription": "Base ýa-da BNB Chain-däki Uniswap v4 çäklendirilen buýrugy bilen DHB satyn almak ýa-da satmak bahasyňyzy belläň. Hakyky buýurmalar kitaby, bazaryň çuňlugy we bir umumy ABŞ dollary bahasy.",
+    "seoTitle": "DEX — tokenler söwdasy öz bahasyňyzda",
+    "seoDescription": "Base ýa-da BNB Chain-däki Uniswap v4 çäklendirilen buýrugy bilen tokenler satyn almak ýa-da satmak bahasyňyzy belläň. Hakyky buýurmalar kitaby, bazaryň çuňlugy we bir umumy ABŞ dollary bahasy.",
     "venue": "Tor",
     "marketPrice": "Bazaryň bahasy · ABŞ",
     "bookPrice": "{{chain}} kitabyň bahasy · ABŞ",
     "change24": "24 sagat üýtgeşiklik",
     "totalLiquidity": "Jemi likwidasiýa · ABŞ",
-    "listedDhb": "Sanawly DHB · {{chain}}",
+    "listedDhb": "Sanawly tokenler · {{chain}}",
     "listedUsd": "Sanawly ABŞ · {{chain}}",
     "refreshMarket": "Bazary täzeläň",
     "refresh": "Täzeläň",
@@ -6180,21 +6182,21 @@
     "orderBook": "Buýurmalar kitaby",
     "priceGrouping": "Bahany toparlamak",
     "priceUsd": "Bahasy (ABŞ)",
-    "sizeDhb": "Siz (DHB)",
-    "totalDhb": "Jemi (DHB)",
+    "sizeDhb": "Siz (tokenler)",
+    "totalDhb": "Jemi (tokenler)",
     "noBids": "Heniz teklipler ýok",
     "noAsks": "Heniz sorag likwidasy ýok",
     "useBuyPrice": "Satyn alyş bahasy hökmünde {{price}}-dan peýdalan",
     "useSellPrice": "Satuw bahasy hökmünde {{price}}-dan peýdalan",
     "spread": "Aratapawut · USD",
-    "buyTotal": "{{amount}} DHB satyn alyň",
-    "sellTotal": "{{amount}} DHB ediň",
+    "buyTotal": "{{amount}} tokenler satyn alyň",
+    "sellTotal": "{{amount}} tokenler ediň",
     "placeOrder": "Sargyt beriň",
     "lpFee": "0% LP tölegi",
     "lpFeeLabel": "LP tölegi",
     "lpFeeValue": "{{fee}}% LP tölegi",
-    "buy": "DHB satyn alyň",
-    "sell": "DHB ediň",
+    "buy": "tokenler satyn alyň",
+    "sell": "tokenler ediň",
     "maxBuy": "Iň ýokary satyn alyş bahasy",
     "minSell": "Iň pes satuw bahasy",
     "spend": "Sarp et",
@@ -6210,7 +6212,7 @@
     "estimated": "Estimasiýa boýunça doly öwrülişik",
     "network": "Maliýeleşdirme toruny",
     "sellBelowMarket": "Bu satyş {{percent}}% ${{price}} bazar bahasyndanaşak. Kimdir biri ony satyn alyp, başga ýere satyp biler.",
-    "buyAboveMarket": "Bu satyn alyş {{percent}}% ${{price}} bazar bahasyndan ýokary. Siz başga ýerlerde DHB işlemelerinden hem köp tölärsiňiz.",
+    "buyAboveMarket": "Bu satyn alyş {{percent}}% ${{price}} bazar bahasyndan ýokary. Siz başga ýerlerde tokenler işlemelerinden hem köp tölärsiňiz.",
     "useMarket": "Bazaryň bahasyndan peýdalanmak",
     "balanceError": "Balans barlagy başa düşmedi. Sarga goýmazdan ozal täzeden synanyşyň.",
     "noFunding": "{{chain}}-de {{token}} ýok.",
@@ -6219,7 +6221,7 @@
     "reviewYourBuy": "Satyn almagyňyzy gözden geçiriň",
     "reviewYourSell": "Satmagyňyzy gözden geçiriň",
     "reviewDeposit": "{{chain}}-de {{amount}} {{token}} goýuň.",
-    "reviewRange": "Ulgam: {{min}} – {{max}} USD DHB üçin.",
+    "reviewRange": "Ulgam: {{min}} – {{max}} USD tokenler üçin.",
     "initializes": "Bu 0% howuzyny döredýär we başlangyç berýär.",
     "pendingNote": "Siziň amalyňyz tabşyryldy. Goşmaça goýum goýmazdan tassyklaýyşy ýa-da sanawnama bellige almagy dowam ediň.",
     "viewTransaction": "Amaly görmek",
@@ -6236,7 +6238,7 @@
     "keepOpen": "Sanawnamaňyz bellige alynançak bu sahypany açyk goýuň. Brauzer ammary elýeterli däl.",
     "snapshotDelayed": "Paýlaşylan bazaryň maglumatlary gijikdirilýär. Soňky tassyklanan görnüşi görkezýär.",
     "snapshotUnavailable": "Paýlaşylan bazaryň maglumatlary elýeterli däl. Pozisiýalary ýüklemek üçin täzeden synanyşyň.",
-    "withdrawReview": "{{chain}}-de {{dhb}} DHB we {{usdc}} USDC çykaryň? Mukdarlar gol çekmezden ozal täzelenýär; bahanyň tolerantlygy 0,5%.",
+    "withdrawReview": "{{chain}}-de {{dhb}} tokenler we {{usdc}} USDC çykaryň? Mukdarlar gol çekmezden ozal täzelenýär; bahanyň tolerantlygy 0,5%.",
     "withdrawn": "Pozisiýa çykaryldy",
     "withdrawFailed": "Çykarmak başa düşmedi",
     "withdrawing": "Çykarylýar…",
@@ -6368,6 +6370,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Wizual möhüm pursatlar",
+      "visualPrivacy": "Wizual seljerme üçin saýlanan kadrlary iberiň."
+    },
+    "review": {
+      "title": "Taslama syny",
+      "shared": "Siziň bilen paýlaşylan",
+      "time": "Wagt (s)",
+      "assign": "Gapjyk belle"
+    },
+    "textFit": {
+      "wrap": "Setirleri böl",
+      "width": "Tekstiň ini",
+      "shrink": "Teksti sygjak ýaly kiçelt",
+      "height": "Tekstiň beýikligi",
+      "captions": "Subtitr ýoluny sazla"
+    },
     "canvas": {
       "dropMedia": "Dizýaňyza goşmak üçin taşlaň",
       "dropText": "Tekst goşmak üçin taşlaň",
@@ -7714,7 +7733,7 @@
     "topUpTitle": "Kredit goşuň we tygşytlaň",
     "discount": "{{percent}}% off",
     "noDiscount": "Doly baha",
-    "total": "Jemi ${{usd}}, DHB bilen tölenildi",
+    "total": "Jemi ${{usd}}, tokenler bilen tölenildi",
     "buy": "Kredit satyn al",
     "buying": "Töleg garaşylýar…",
     "bought": "{{count}} poçta krediti goşuldy",
@@ -7744,7 +7763,7 @@
     "skippedToast": "{{platforms}}: bu postda gerekli surat ýa-da video ýok.",
     "uploadFailed": "Siz öz habar beriş serişdesini çap edip bilmersiňiz.",
     "creditRules": "Her bir post her bir platform üçin kredit töleýär: {{x}} X üçin, {{farcaster}} Farcaster üçin we {{other}} her bir başga platform üçin. Siz olary düzende, planlaşdyrylýan postlar kreditleri ulanýar.",
-    "payAsYouGoCredits": "Ýitiren kreditler DHB-de ${{price}} her birinde satyn alynýar.",
+    "payAsYouGoCredits": "Ýitiren kreditler tokenler-de ${{price}} her birinde satyn alynýar.",
     "topUpCredits": "{{count}} kreditler",
     "perCredit": "${{price}} her bir kredit üçin",
     "pendingApproval": "Farcaster App-da dehuby kabul etmek üçin garaşyň",
@@ -7756,7 +7775,7 @@
   "dm": {
     "planRestricted": "Bu ulanyjy habar almak üçin abuna talap edýär.",
     "planTypeNotAllowed": "Bu awtoryň meýilnamasy bu görnüşli habara rugsat bermeýär.",
-    "planMinTip": "Bu awtor üçin çaýpul iň azyndan {{amount}} DHB bolmaly."
+    "planMinTip": "Bu awtor üçin çaýpul iň azyndan {{amount}} tokenler bolmaly."
   },
   "credits": {
     "earningsWorth": "Öňki {{amount}}",
@@ -7889,7 +7908,7 @@
       "notifyBody": "Kullanýçylar sizniň appýnýzý ekleýerlerde, sizniň notify anahtaryňyzla sizniň serverýnýzdan haberdar edile bilerler. Her bir kullanýçylyk tokenlar saklamak gerekmez.",
       "rankTitle": "Kalkülýutorlary nädip ulanmaly",
       "rankBody": "Her gije her bir agzalýan ulag bir dereje alýar: 55% gaýdyp gelen ulaglar (bu hepde we öňki hepde açylýan adamlar), 35% hepdelik ulaglar, şol sanda ilkinji 14 günüň içinde 10% artyş. DeHub-da diňe bir ýazylan hasabatlar hasaplanýar, şonuň üçin botlar we sahypa gaýtargylary hiç zat gazanmaýar.",
-      "rewardsBody": "Her aý {{pool}} DHB birmeňzeş derejede, hepdede hasaplanýar. Maýdaly bolmak üçin, bir ulagda tassyklanan eýesi we iň az 3 yzyna dolanan ulagçy gerek. Öwrenmeler DeHub-dan eýesi pulçusyna tölenýär.",
+      "rewardsBody": "Her aý {{pool}} tokenler birmeňzeş derejede, hepdede hasaplanýar. Maýdaly bolmak üçin, bir ulagda tassyklanan eýesi we iň az 3 yzyna dolanan ulagçy gerek. Öwrenmeler DeHub-dan eýesi pulçusyna tölenýär.",
       "rewardsWeek": "{{date}}hepdesi",
       "rewardPaid": "Ödeme",
       "rewardPending": "Garaşmak",
@@ -7915,10 +7934,10 @@
     },
     "pay": {
       "title": "Pay {{name}}?",
-      "body": "\"DHB\" direkt appýň pul gýzýna gider, {{wallet}}. Öýünler geri alýňmaz.",
-      "confirm": "Pay {{amount}} DHB",
+      "body": "\"tokenler\" direkt appýň pul gýzýna gider, {{wallet}}. Öýünler geri alýňmaz.",
+      "confirm": "Pay {{amount}} tokenler",
       "sending": "Göndergiň ödenekini yollayýar...",
-      "sent": "{{amount}} DHB {{name}} üçin tölenýär.",
+      "sent": "{{amount}} tokenler {{name}} üçin tölenýär.",
       "noOwner": "Bu ulagda henizem tölemek üçin tassyklanan pul puly ýok."
     },
     "add": {

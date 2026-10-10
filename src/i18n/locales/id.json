@@ -90,6 +90,7 @@
     "heading": "DeHub Shorts"
   },
   "settings": {
+    "postingChain": "Blockchain postingan",
     "showOnline": "Tampilkan saat saya online",
     "showOnlineDesc": "Orang yang Anda kirimi pesan melihat titik hijau di samping nama Anda saat Anda menggunakan DeHub",
     "smartReplies": "Balasan yang disarankan",
@@ -259,6 +260,7 @@
     "light": "Terang",
     "dark": "Gelap",
     "system": "Sistem",
+    "immersive": "Immersive",
     "cosmic": "Cosmic Pixels",
     "hazy": "Hazy Nights",
     "swarms": "Swarms",
@@ -596,7 +598,7 @@
     "stageDelivering": "DeHub Pay sedang mengirim token Anda…",
     "payViaDpay": "Dibayar ke DeHub Pay, token tiba dalam waktu sekitar 30 detik",
     "payViaBridgeDpay": "Dipindahkan ke Base dan dibayar ke DeHub Pay, token tiba dalam waktu sekitar satu menit",
-    "dmSent": "Terkirim {{amount}} DHB ke {{name}}!"
+    "dmSent": "Terkirim {{amount}} token ke {{name}}!"
   },
   "postOptions": {
     "options": "Opsi",
@@ -1204,10 +1206,10 @@
   },
   "dhbListing": {
     "title": "Listing token segera hadir!",
-    "body": "$DHB belum diperdagangkan. Dapatkan email begitu terdaftar.",
+    "body": "token belum diperdagangkan. Dapatkan email begitu terdaftar.",
     "notifyMe": "Beri tahu saya",
-    "privacy": "Kami hanya akan menggunakannya untuk memberi tahu Anda saat $DHB terdaftar.",
-    "joined": "Anda sudah masuk daftar. Kami akan mengirim email ke {{email}} begitu $DHB terdaftar."
+    "privacy": "Kami hanya akan menggunakannya untuk memberi tahu Anda saat token terdaftar.",
+    "joined": "Anda sudah masuk daftar. Kami akan mengirim email ke {{email}} begitu token terdaftar."
   },
   "explorePage": {
     "searchPlaceholder": "Cari orang, postingan, atau konten...",
@@ -1467,7 +1469,7 @@
     "otherTokens": "Token lainnya",
     "otherTokensDesc": "Beli ETH atau USDC di Base dengan kartu Anda",
     "shareToFeed": "Bagikan ke feed saya",
-    "sharePostTemplate": "Baru saja menambahkan {{amount}} $DHB ke tumpukan saya di DeHub. Membangun bersama masyarakat. #DeHub #DHB",
+    "sharePostTemplate": "Baru saja menambahkan {{amount}} token ke tumpukan saya di DeHub. Membangun bersama masyarakat. #DeHub",
     "success": {
       "title": "Pembelian Selesai!",
       "subtitle": "Token telah dikirimkan ke dompet Anda.",
@@ -3499,7 +3501,7 @@
     "srHeading": "Launchpad DeHub",
     "phaseBadge": "Fase 1 · Pratinjau privat",
     "heroTitle": "TOKENISASI BISNIS",
-    "heroSubtitle": "Bonding curve berpasangan DHB. Lulus ke Uniswap pada kapitalisasi pasar $42rb.",
+    "heroSubtitle": "Bonding curve berpasangan token. Lulus ke Uniswap pada kapitalisasi pasar $42rb.",
     "createCoin": "Buat koin",
     "filterNew": "Baru",
     "filterGraduating": "Hampir lulus",
@@ -3600,7 +3602,7 @@
   },
   "fractions": {
     "seoTitle": "Fraksi | DeHub",
-    "seoDescription": "Beli dan jual fraksi dari kiriman DeHub. Kiriman yang dicetak terdiri dari 1000 fraksi on-chain — miliki sebagian video, lagu, atau gambar dan perdagangkan dengan DHB.",
+    "seoDescription": "Beli dan jual fraksi dari kiriman DeHub. Kiriman yang dicetak terdiri dari 1000 fraksi on-chain — miliki sebagian video, lagu, atau gambar dan perdagangkan dengan token.",
     "title": "Fraksi",
     "perUpload": "1000 per unggahan",
     "tabBrowse": "Jelajahi",
@@ -4454,7 +4456,7 @@
   },
   "usernames": {
     "seoTitle": "Pasar Nama Pengguna | DeHub",
-    "seoDescription": "Beli dan jual nama pengguna DeHub dengan DHB. Cari handle pendek, numerik, dan orisinal yang dijual, atau pasang milik Anda — transfernya terjadi on-chain begitu pembayaran masuk.",
+    "seoDescription": "Beli dan jual nama pengguna DeHub dengan token. Cari handle pendek, numerik, dan orisinal yang dijual, atau pasang milik Anda — transfernya terjadi on-chain begitu pembayaran masuk.",
     "title": "Nama pengguna",
     "subtitle": "Handle yang dijual, dihargai dalam USD",
     "tabBrowse": "Jelajahi",
@@ -4579,7 +4581,7 @@
   },
   "accounts": {
     "seoTitle": "Pasar Akun — DeHub",
-    "seoDescription": "Beli dan jual akun DeHub yang sudah mapan dengan DHB. Telusuri akun berdasarkan pengikut, unggahan, dan usia — handle, kiriman, pengikut, dan hak lencana semuanya ikut pindah, dan pembayaran langsung ke penjual.",
+    "seoDescription": "Beli dan jual akun DeHub yang sudah mapan dengan token. Telusuri akun berdasarkan pengikut, unggahan, dan usia — handle, kiriman, pengikut, dan hak lencana semuanya ikut pindah, dan pembayaran langsung ke penjual.",
     "title": "Akun",
     "subtitle": "Seluruh akun dijual, dihargai dalam token DeHub",
     "tabBrowse": "Jelajahi",
@@ -6240,17 +6242,17 @@
   },
   "docs": {
     "seoTitle": "Dokumentasi DeHub — Panduan, token, dApps & FAQ",
-    "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token DHB, staking, gim, peta jalan, FAQ, dan lainnya."
+    "seoDescription": "Dokumentasi resmi DeHub: gambaran platform, dApps, ekonomi token token, staking, gim, peta jalan, FAQ, dan lainnya."
   },
   "dex": {
-    "seoTitle": "DEX — Perdagangkan DHB dengan harga Anda",
-    "seoDescription": "Tetapkan harga beli atau jual DHB Anda dengan pesanan batas Uniswap v4 di Base atau BNB Chain. Buku pesanan langsung, kedalaman pasar, dan satu harga USD bersama.",
+    "seoTitle": "DEX — Perdagangkan token dengan harga Anda",
+    "seoDescription": "Tetapkan harga beli atau jual token Anda dengan pesanan batas Uniswap v4 di Base atau BNB Chain. Buku pesanan langsung, kedalaman pasar, dan satu harga USD bersama.",
     "venue": "Jaringan",
     "marketPrice": "Harga pasar · USD",
     "bookPrice": "{{chain}} harga buku · USD",
     "change24": "Perubahan 24 jam",
     "totalLiquidity": "Total likuiditas · USD",
-    "listedDhb": "DHB terdaftar · {{chain}}",
+    "listedDhb": "token terdaftar · {{chain}}",
     "listedUsd": "USD terdaftar · {{chain}}",
     "refreshMarket": "Segarkan pasar",
     "refresh": "Segarkan",
@@ -6275,21 +6277,21 @@
     "orderBook": "Buku pesanan",
     "priceGrouping": "Pengelompokan harga",
     "priceUsd": "Harga (USD)",
-    "sizeDhb": "Ukuran (DHB)",
-    "totalDhb": "Total (DHB)",
+    "sizeDhb": "Ukuran (token)",
+    "totalDhb": "Total (token)",
     "noBids": "Belum ada tawaran",
     "noAsks": "Belum ada likuiditas permintaan",
     "useBuyPrice": "Gunakan {{price}} sebagai harga beli",
     "useSellPrice": "Gunakan {{price}} sebagai harga jual",
     "spread": "Selisih · USD",
-    "buyTotal": "Beli {{amount}} DHB",
-    "sellTotal": "Jual {{amount}} DHB",
+    "buyTotal": "Beli {{amount}} token",
+    "sellTotal": "Jual {{amount}} token",
     "placeOrder": "Tempatkan pesanan",
     "lpFee": "Biaya LP 0%",
     "lpFeeLabel": "Biaya LP",
     "lpFeeValue": "Biaya LP {{fee}}%",
-    "buy": "Beli DHB",
-    "sell": "Jual DHB",
+    "buy": "Beli token",
+    "sell": "Jual token",
     "maxBuy": "Harga beli maksimum",
     "minSell": "Harga jual minimum",
     "spend": "Habiskan",
@@ -6305,7 +6307,7 @@
     "estimated": "Perkiraan konversi penuh",
     "network": "Jaringan pendanaan",
     "sellBelowMarket": "Penjualan ini {{percent}}% di bawah harga pasar ${{price}}. Seseorang dapat membelinya dan menjualnya kembali di tempat lain sekaligus.",
-    "buyAboveMarket": "Pembelian ini {{percent}}% di atas harga pasar sebesar ${{price}}. Anda akan membayar lebih dari harga DHB di tempat lain.",
+    "buyAboveMarket": "Pembelian ini {{percent}}% di atas harga pasar sebesar ${{price}}. Anda akan membayar lebih dari harga token di tempat lain.",
     "useMarket": "Gunakan harga pasar",
     "balanceError": "Pemeriksaan saldo gagal. Coba lagi sebelum melakukan pesanan.",
     "noFunding": "Tidak ada {{token}} yang tersedia di {{chain}}.",
@@ -6314,7 +6316,7 @@
     "reviewYourBuy": "Tinjau pembelian Anda",
     "reviewYourSell": "Tinjau penjualan Anda",
     "reviewDeposit": "Setor {{amount}} {{token}} di {{chain}}.",
-    "reviewRange": "Rentang: {{min}} – {{max}} USD per DHB.",
+    "reviewRange": "Rentang: {{min}} – {{max}} USD per token.",
     "initializes": "Ini membuat dan menginisialisasi pool 0%.",
     "pendingNote": "Transaksi Anda telah dikirim. Lanjutkan konfirmasi atau pendaftaran listing tanpa deposit tambahan.",
     "viewTransaction": "Lihat transaksi",
@@ -6331,7 +6333,7 @@
     "keepOpen": "Biarkan halaman ini terbuka sampai listing Anda terdaftar. Penyimpanan browser tidak tersedia.",
     "snapshotDelayed": "Data pasar bersama tertunda. Menampilkan snapshot terakhir yang terverifikasi.",
     "snapshotUnavailable": "Data pasar bersama tidak tersedia. Coba lagi untuk memuat posisi.",
-    "withdrawReview": "Tarik {{dhb}} DHB dan {{usdc}} USDC di {{chain}}? Jumlah diperbarui sebelum penandatanganan; toleransi harga adalah 0,5%.",
+    "withdrawReview": "Tarik {{dhb}} token dan {{usdc}} USDC di {{chain}}? Jumlah diperbarui sebelum penandatanganan; toleransi harga adalah 0,5%.",
     "withdrawn": "Posisi ditarik",
     "withdrawFailed": "Penarikan gagal",
     "withdrawing": "Menarik…",
@@ -6465,6 +6467,23 @@
     }
   },
   "editor": {
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Kirim bingkai terpilih untuk analisis visual."
+    },
+    "review": {
+      "title": "Tinjauan proyek",
+      "shared": "Dibagikan kepada Anda",
+      "time": "Waktu (s)",
+      "assign": "Tetapkan dompet"
+    },
+    "textFit": {
+      "wrap": "Bungkus baris",
+      "width": "Lebar teks",
+      "shrink": "Perkecil teks agar pas",
+      "height": "Tinggi teks",
+      "captions": "Sesuaikan trek takarir"
+    },
     "canvas": {
       "dropMedia": "Jatuhkan untuk ditambahkan ke desain Anda",
       "dropText": "Jatuhkan untuk menambahkan teks",
@@ -7814,7 +7833,7 @@
     "topUpTitle": "Isi ulang dan hemat",
     "discount": "{{percent}}% diskon",
     "noDiscount": "Harga penuh",
-    "total": "Total ${{usd}}, dibayar dalam DHB",
+    "total": "Total ${{usd}}, dibayar dalam token",
     "buy": "Beli kredit",
     "buying": "Menunggu pembayaran…",
     "bought": "Menambahkan {{count}} kredit postingan",
@@ -7844,7 +7863,7 @@
     "skippedToast": "Dilewatkan {{platforms}}: postingan ini tidak memiliki foto atau video yang mereka butuhkan.",
     "uploadFailed": "Tidak dapat mengunggah media Anda untuk pengiriman silang.",
     "creditRules": "Setiap postingan dikenakan biaya kredit per platform: {{x}} untuk X, {{farcaster}} untuk Farcaster, dan {{other}} untuk platform lainnya. Postingan terjadwal menggunakan kredit saat Anda menjadwalkannya.",
-    "payAsYouGoCredits": "Habis? Kredit yang hilang dibeli di DHB masing - masing seharga ${{price}} saat Anda memposting.",
+    "payAsYouGoCredits": "Habis? Kredit yang hilang dibeli di token masing - masing seharga ${{price}} saat Anda memposting.",
     "topUpCredits": "Kredit {{count}}",
     "perCredit": "${{price}} per kredit",
     "pendingApproval": "Menunggu Anda menyetujui dehub di aplikasi Farcaster",
@@ -7856,7 +7875,7 @@
   "dm": {
     "planRestricted": "Pengguna ini memerlukan langganan untuk menerima pesan.",
     "planTypeNotAllowed": "Paket kreator ini tidak mengizinkan jenis pesan ini.",
-    "planMinTip": "Tip untuk kreator ini minimal {{amount}} DHB."
+    "planMinTip": "Tip untuk kreator ini minimal {{amount}} token."
   },
   "credits": {
     "earningsWorth": "Layak {{amount}}",
@@ -7989,7 +8008,7 @@
       "notifyBody": "Kirim notifikasi",
       "rankTitle": "Cara toko memberi peringkat aplikasi",
       "rankBody": "Setiap malam setiap aplikasi yang terdaftar mendapat skor: 55% dari pengguna yang kembali (orang yang membukanya minggu ini dan minggu sebelumnya), 35% dari pengguna mingguan, ditambah peningkatan 10% dalam 14 hari pertama. Hanya akun DeHub yang masuk yang dihitung, jadi bot dan pemuatan ulang halaman tidak menghasilkan apa - apa.",
-      "rewardsBody": "Setiap bulan {{pool}} DHB dibagi antara aplikasi dengan skor yang sama, dihitung mingguan. Untuk memenuai syarat, sebuah aplikasi perlu memiliki dompet pemilik yang diverifikasi dan setidaknya 3 pengguna yang kembali. Reward dibayarkan oleh DeHub ke dompet pemilik.",
+      "rewardsBody": "Setiap bulan {{pool}} token dibagi antara aplikasi dengan skor yang sama, dihitung mingguan. Untuk memenuai syarat, sebuah aplikasi perlu memiliki dompet pemilik yang diverifikasi dan setidaknya 3 pengguna yang kembali. Reward dibayarkan oleh DeHub ke dompet pemilik.",
       "rewardsWeek": "Minggu {{date}}",
       "rewardPaid": "Dibayar",
       "rewardPending": "Tertunda",
@@ -8016,9 +8035,9 @@
     "pay": {
       "title": "Bayar {{name}}?",
       "body": "Bayar {{wallet}}?",
-      "confirm": "DHB langsung pergi ke dompet aplikasi, {{amount}}. Pembayaran tidak dapat dibatalkan.",
+      "confirm": "token langsung pergi ke dompet aplikasi, {{amount}}. Pembayaran tidak dapat dibatalkan.",
       "sending": "Mengirim pembayaran Anda…",
-      "sent": "Bayar {{amount}} DHB ke {{name}}.",
+      "sent": "Bayar {{amount}} token ke {{name}}.",
       "noOwner": "Aplikasi ini belum memiliki dompet terverifikasi untuk pembayaran."
     },
     "add": {

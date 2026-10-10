@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -1151,7 +1152,7 @@ function CommentCard({ comment, parentPost, parentPostFailed, isOwnComment, onCl
 }) {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(comment.content);
+  const [editText, setEditText] = useSurfaceDraft("src/components/app/profile/ProfileTabContent.tsx:editText", comment.content, comment.id);
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
