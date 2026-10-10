@@ -5,7 +5,7 @@ import { loadPostShareDetails, streamerShareSvg } from './post-share-details.js'
 
 let initialized;
 let assets;
-const RENDER_REVISION = 4;
+const RENDER_REVISION = 5;
 const bytesToUri = (bytes, type) => {
   let binary = '';
   for (let i = 0; i < bytes.length; i += 8192) binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
