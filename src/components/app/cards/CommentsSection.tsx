@@ -2967,10 +2967,10 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                    under every other theme. See war-comments.css section 2. */
                 data-war-cut="sm"
                 className={cn(
-                  "w-full flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
+                  "w-full min-w-0 backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
-                    ? "items-stretch flex-col px-3 pb-2"
-                    : "items-center flex-row px-3 pr-1 gap-1.5",
+                    ? "grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[1fr_auto] gap-x-2 items-stretch px-3 pb-2"
+                    : "flex items-center flex-row px-3 pr-1 gap-1.5",
                   isMobile
                     ? "bg-zinc-800/80 border-zinc-700"
                     : "bg-white/[0.08] border-white/[0.12]",
@@ -3045,16 +3045,11 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                   onSelect={mention.handleSelect}
                   onClose={mention.handleClose}
                 />
-                {/* Inline when collapsed; a row under the text when expanded.
-                    Deliberately in flow rather than absolutely positioned over
-                    the field: floating it meant the text only cleared it by way
-                    of a matching `pb-12`, which a scrolled textarea does not
-                    honour on every engine, and the line being typed ended up
-                    behind the buttons. */}
+                {/* Tools stay below the editable area; AI and Send occupy the adjacent column. */}
                 <div className={cn(
                   "flex items-center gap-1.5",
                   isInputExpanded
-                    ? "shrink-0 justify-end mt-auto pt-1"
+                    ? "col-start-1 row-start-2 min-w-0 flex-wrap shrink-0 justify-start mt-auto pt-1"
                     : "shrink-0 ml-1"
                 )}>
                   <button
@@ -3071,22 +3066,6 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                     triggerClassName="bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
                     iconClassName="w-4 h-4"
                   />
-                  {/* One AI button: tone check, a vibe rewrite (the AI Assistant
-                      styles) and a spelling/grammar pass. Icon-only while the
-                      field is a single line, so the row stays put. */}
-                  {newComment.trim().length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setAiMenu('open')}
-                      disabled={coachStatus === 'loading' || aiRewriting}
-                      data-comment-tool="ai"
-                      aria-label={t('conversation.coach.aiMenu')}
-                      title={t('conversation.coach.aiMenu')}
-                      className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
-                    >
-                      {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                    </button>
-                  )}
                   <Drawer open={aiMenu !== 'closed'} onOpenChange={(open) => { if (!open) setAiMenu('closed'); }}>
                     <DrawerContent column glass className="border-t border-white/10 max-h-[90dvh]">
                       <DrawerHeader className="border-b border-white/10">
@@ -3166,6 +3145,22 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                       <Mic className="w-4 h-4" />
                     </button>
                   )}
+
+                </div>
+                <div data-comment-actions className={cn("shrink-0 flex items-center", isInputExpanded ? "col-start-2 row-start-1 row-span-2 flex-col self-end gap-1 pb-0.5" : "ml-1")}>
+                  {newComment.trim().length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setAiMenu('open')}
+                      disabled={coachStatus === 'loading' || aiRewriting}
+                      data-comment-tool="ai"
+                      aria-label={t('conversation.coach.aiMenu')}
+                      title={t('conversation.coach.aiMenu')}
+                      className="w-7 h-7 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors disabled:opacity-60"
+                    >
+                      {aiRewriting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                    </button>
+                  )}
                   <button
                     type="button"
                     onPointerDown={(event) => {
@@ -3186,7 +3181,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                     // word is swapped for a spinner and the button has no text.
                     aria-label={t('comments.post')}
                     data-comment-send
-                    className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
+                    className="h-9 min-w-9 px-2 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
                     {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : t('comments.post')}
                   </button>

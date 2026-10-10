@@ -207,9 +207,11 @@ export function MotionSection({ clip }: { clip: Clip }) {
                 "ml-0.5 flex w-[68px] shrink-0 items-center rounded border bg-white/5 pr-1.5 focus-within:ring-1 focus-within:ring-white/30",
                 here ? "border-sky-300/40" : "border-white/10",
               )}>
-                <input
-                  type="number"
-                  key={`${p}:${display(p, propAt(clip, p, now))}`}
+                <MotionValue
+                  type="text"
+                  inputMode="decimal"
+                  draftScope={`editor:motion:${clip.id}:${p}:${local}`}
+                  key={`${clip.id}:${p}:${local}:${display(p, propAt(clip, p, now))}`}
                   initialValue={String(display(p, propAt(clip, p, now)))}
                   disabled={on && !inside}
                   onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}

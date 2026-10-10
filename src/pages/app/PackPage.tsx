@@ -224,7 +224,7 @@ export default function PackPage() {
         }
         actions={
           isOwner && editingName === null ? (
-            <IslandAction label={t('creatorPacks.rename')} onClick={() => setEditingName(pack.name)}>
+            <IslandAction label={t('creatorPacks.rename')} onClick={() => setEditingName.initialize(pack.name)}>
               <Pencil className="h-[18px] w-[18px]" />
             </IslandAction>
           ) : undefined
