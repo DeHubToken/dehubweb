@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DAO Page
  * ========
@@ -108,7 +109,7 @@ function RecentRow({ item }: { item: DaoContribution }) {
 function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { t } = useTranslation();
   const { isAuthenticated, isLoginModalOpen, requestWalletUnlock } = useAuth();
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/DaoPage.tsx:amount", '');
   const [pendingAfterUnlock, setPendingAfterUnlock] = useState<number | null>(null);
   const [unlockSheetSeen, setUnlockSheetSeen] = useState(false);
   const { mutate: contribute, isPending } = useContributeToDao();
@@ -169,7 +170,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
         sendingRef.current = false;
       },
     });
-  }, [contribute, onOpenChange, queueAfterUnlock, t]);
+  }, [contribute, onOpenChange, queueAfterUnlock, t, setAmount]);
 
   // The password/biometric sheet is controlled by AuthProvider. Once it has
   // visibly opened and then closed, either resume the exact transfer that led

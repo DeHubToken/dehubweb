@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useState } from 'react';
@@ -73,13 +74,13 @@ export default function WorkJobDetailPage() {
   const publishMutation=usePublishJob();
   const releaseMutation=useReleasePayment();
 
-  const [coverLetter, setCoverLetter] = useState('');
-  const [proofUrl, setProofUrl] = useState('');
-  const [proofText, setProofText] = useState('');
+  const [coverLetter, setCoverLetter] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:coverLetter", '');
+  const [proofUrl, setProofUrl] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:proofUrl", '');
+  const [proofText, setProofText] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:proofText", '');
   const [rating, setRating] = useState(5);
-  const [reviewComment, setReviewComment] = useState('');
+  const [reviewComment, setReviewComment] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:reviewComment", '');
   const [reviewTarget,setReviewTarget]=useState('');
-  const [disputeReason, setDisputeReason] = useState('');
+  const [disputeReason, setDisputeReason] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:disputeReason", '');
   const [showDispute, setShowDispute] = useState(false);
 
   if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">{t('work.loading')}</div>;
@@ -449,8 +450,8 @@ function SubmissionCard({
 }) {
   const { t } = useTranslation();
   const [rejecting, setRejecting] = useState(false);
-  const [reason, setReason] = useState('');
-  const [views, setViews] = useState('');
+  const [reason, setReason] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:reason", '');
+  const [views, setViews] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:views", '');
   const [viewEvidence, setViewEvidence] = useState(s.proof_url);
   const [recoveryHash, setRecoveryHash] = useState('');
 

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Add custom emoji, inside the picker.
  *
@@ -42,12 +43,12 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [mode, setMode] = useState<'single' | 'pack'>('single');
-  const [link, setLink] = useState('');
+  const [link, setLink] = useSurfaceDraft("components/app/emoji/AddCustomEmojiPanel.tsx:link", '');
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [source, setSource] = useState<EmojiSource | null>(null);
-  const [name, setName] = useState('');
-  const [pack, setPack] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/emoji/AddCustomEmojiPanel.tsx:name", '');
+  const [pack, setPack] = useSurfaceDraft("components/app/emoji/AddCustomEmojiPanel.tsx:pack", '');
   const [busy, setBusy] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const target = usePackTarget(walletAddress, 'emoji');

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * One pack — /packs/:slug
  *
@@ -70,8 +71,8 @@ export default function PackPage() {
 
   const [busy, setBusy] = useState(false);
   const [editingName, setEditingName] = useState<string | null>(null);
-  const [link, setLink] = useState('');
-  const [label, setLabel] = useState('');
+  const [link, setLink] = useSurfaceDraft("pages/app/PackPage.tsx:link", '');
+  const [label, setLabel] = useSurfaceDraft("pages/app/PackPage.tsx:label", '');
   const fileRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) return <DeHubPageLoader />;

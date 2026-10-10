@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Save to Folder Drawer
  * =====================
@@ -46,8 +47,8 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
   const { data: containment, isLoading: isLoadingContainment } = useFolderContainment(tokenId, open);
 
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
-  const [newFolderDesc, setNewFolderDesc] = useState('');
+  const [newFolderName, setNewFolderName] = useSurfaceDraft("components/app/bookmarks/SaveToFolderDrawer.tsx:newFolderName", '', tokenId);
+  const [newFolderDesc, setNewFolderDesc] = useSurfaceDraft("components/app/bookmarks/SaveToFolderDrawer.tsx:newFolderDesc", '', tokenId);
   // A public folder is a playlist on the owner's profile. Off by default: a
   // folder made from the save button is private until the owner says otherwise.
   const [newFolderPublic, setNewFolderPublic] = useState(false);
@@ -67,13 +68,13 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
   useEffect(() => {
     if (open) {
       setShowCreateForm(false);
-      setNewFolderName('');
-      setNewFolderDesc('');
+      setNewFolderName.initialize('');
+      setNewFolderDesc.initialize('');
       setNewFolderPublic(false);
       setPending({});
       setNotice(null);
     }
-  }, [open]);
+  }, [open, setNewFolderDesc, setNewFolderName]);
 
   const isChecked = (folderId: string) => pending[folderId] ?? containment?.[folderId] ?? false;
 

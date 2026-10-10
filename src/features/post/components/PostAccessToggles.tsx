@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
@@ -209,7 +210,7 @@ export function PostAccessToggles({
 
   // Category state
   const [categories, setCategories] = useState<DeHubCategory[]>([]);
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("features/post/components/PostAccessToggles.tsx:categorySearch", '');
   const [loadingCategories, setLoadingCategories] = useState(false);
 
   // Fetch categories when drawer opens

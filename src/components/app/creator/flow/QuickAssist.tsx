@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Creator Flow — the ⌘K prompt assistant.
  * ========================================
@@ -29,7 +30,7 @@ export default function QuickAssist({ onUsePrompt }: { onUsePrompt?: (text: stri
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useSurfaceDraft("components/app/creator/flow/QuickAssist.tsx:input", '');
   const [streaming, setStreaming] = useState(false);
   const [model, setModel] = useState<AssistantModelId>(loadModel);
   const [modelOpen, setModelOpen] = useState(false);

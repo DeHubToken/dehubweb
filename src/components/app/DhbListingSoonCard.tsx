@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * $DHB listing-soon card
@@ -35,7 +36,7 @@ export function DhbListingSoonCard({ source = 'explore' }: { source?: string }) 
   const { user, walletAddress } = useAuth();
   const [joinedEmail, setJoinedEmail] = useState<string | null>(() => readJoinedEmail());
   const [step, setStep] = useState<Step>(() => (joinedEmail ? 'joined' : 'idle'));
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useSurfaceDraft("components/app/DhbListingSoonCard.tsx:email", '');
   const [busy, setBusy] = useState(false);
 
   const submit = async (address: string) => {

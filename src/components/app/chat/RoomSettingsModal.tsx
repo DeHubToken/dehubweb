@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Settings, Loader2, UserPlus, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -22,7 +23,7 @@ interface RoomSettingsModalProps {
 export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomSettingsModalProps) {
   const [roomName, setRoomName] = useState(room?.name || room?.topic || '');
   const [roomDescription, setRoomDescription] = useState(room?.description || '');
-  const [modAddress, setModAddress] = useState('');
+  const [modAddress, setModAddress] = useSurfaceDraft("components/app/chat/RoomSettingsModal.tsx:modAddress", '', draftIdentity(room));
   const [isSaving, setIsSaving] = useState(false);
   const [isAddingMod, setIsAddingMod] = useState(false);
 

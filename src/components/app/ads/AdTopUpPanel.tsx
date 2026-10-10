@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * AdTopUpPanel
@@ -95,7 +96,7 @@ export function AdTopUpPanel({
     if (!suggestedUsd) return 100;
     return Math.max(25, Math.ceil(suggestedUsd));
   });
-  const [customAmount, setCustomAmount] = useState('');
+  const [customAmount, setCustomAmount] = useSurfaceDraft("components/app/ads/AdTopUpPanel.tsx:customAmount", '');
   const [isPaying, setIsPaying] = useState(false);
   const [phase, setPhase] = useState<'idle' | 'transfer' | 'verify'>('idle');
   const [funding, setFunding] = useState<{ needDhb: number; haveDhb: number } | null>(null);

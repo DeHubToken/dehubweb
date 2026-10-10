@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Common Ground sheet
  * ===================
@@ -51,8 +52,8 @@ export function CommonGroundSheet({ open, onOpenChange, draft, onConfirm }: Comm
   const coach = useConversationCoach();
 
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [otherSide, setOtherSide] = useState('');
-  const [sharedGround, setSharedGround] = useState('');
+  const [otherSide, setOtherSide] = useSurfaceDraft("components/app/cards/CommonGroundSheet.tsx:otherSide", '');
+  const [sharedGround, setSharedGround] = useSurfaceDraft("components/app/cards/CommonGroundSheet.tsx:sharedGround", '');
   const firstFieldRef = useRef<HTMLTextAreaElement>(null);
 
   // A fresh set of steps every time the sheet opens — the answers are
@@ -60,14 +61,14 @@ export function CommonGroundSheet({ open, onOpenChange, draft, onConfirm }: Comm
   useEffect(() => {
     if (!open) return;
     setStep(1);
-    setOtherSide('');
-    setSharedGround('');
+    setOtherSide.initialize('');
+    setSharedGround.initialize('');
     coach.reset();
     const id = window.setTimeout(() => firstFieldRef.current?.focus(), 80);
     return () => window.clearTimeout(id);
     // coach.reset is stable
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, setOtherSide, setSharedGround]);
 
   // The last step runs the coach on the draft. When the reader has switched
   // coaching off there is nothing to wait for and the Post button is there

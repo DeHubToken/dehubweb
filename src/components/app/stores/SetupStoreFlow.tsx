@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Setup Store Flow
  * ================
@@ -24,8 +25,8 @@ interface SetupStoreFlowProps {
 export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/stores/SetupStoreFlow.tsx:name", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/stores/SetupStoreFlow.tsx:description", '');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [bannerUrl, setBannerUrl] = useState('');
   const [uploading, setUploading] = useState(false);

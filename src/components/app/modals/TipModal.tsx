@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Tip Modal Component
@@ -84,7 +85,7 @@ export function TipModal({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/modals/TipModal.tsx:amount", '', JSON.stringify([creatorAddress, tokenId, commentId]));
   const [balances, setBalances] = useState<Record<number, number> | null>(null);
   const lastTipAmount = useRef(0);
   const [recipientPrivate, setRecipientPrivate] = useState(false);

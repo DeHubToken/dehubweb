@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Comments Section Component
  * ==========================
@@ -996,7 +997,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   }, [initialTab]);
   const commentsIsDraggingRef = useRef(false);
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/cards/CommentsSection.tsx:searchQuery", '', tokenId);
   const [sortBy, setSortBy] = useState<SortOrder>('recent');
   const sortOption = SORT_OPTIONS.find(option => option.value === sortBy) ?? SORT_OPTIONS[0];
   // Whatever was left unsent last time, restored whole: the text, the reply it

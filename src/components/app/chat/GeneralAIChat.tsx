@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * General AI Chat Component
  * =========================
@@ -101,7 +102,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
   const isMobile = useIsMobile();
   const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useSurfaceDraft("components/app/chat/GeneralAIChat.tsx:input", '');
   const [isLoading, setIsLoading] = useState(false);
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [postModalOpen, setPostModalOpen] = useState(false);

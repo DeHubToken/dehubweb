@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 ﻿import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
@@ -303,7 +304,7 @@ export default function SettingsPage() {
 
   const { t } = useTranslation();
 
-  const [settingsSearch, setSettingsSearch] = useState('');
+  const [settingsSearch, setSettingsSearch] = useSurfaceDraft("pages/app/SettingsPage.tsx:settingsSearch", '');
   const [settingsSearchFocused, setSettingsSearchFocused] = useState(false);
   const [searchCursor, setSearchCursor] = useState(0);
   const settingsSearchResults = useMemo(
@@ -322,7 +323,7 @@ export default function SettingsPage() {
     setSettingsSearchFocused(false);
     setSearchCursor(0);
     revealSettingAnchor(result.anchor);
-  }, []);
+  }, [setSettingsSearch]);
 
   // `?highlight=geo-blocking` opens one specific setting — the same jump
   // search makes, reusable from a toast or a support reply. The tab it lives
@@ -525,9 +526,9 @@ function ProfileSettings() {
   }, [suppressGlobalDrop, unsuppressGlobalDrop]);
   
   // Form state declarations
-  const [displayName, setDisplayName] = useState('');
-  const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('');
+  const [displayName, setDisplayName] = useSurfaceDraft("pages/app/SettingsPage.tsx:displayName", '');
+  const [username, setUsername] = useSurfaceDraft("pages/app/SettingsPage.tsx:username", '');
+  const [bio, setBio] = useSurfaceDraft("pages/app/SettingsPage.tsx:bio", '');
   const [twitterLink, setTwitterLink] = useState('');
   const [discordLink, setDiscordLink] = useState('');
   const [instagramLink, setInstagramLink] = useState('');
@@ -609,9 +610,9 @@ function ProfileSettings() {
     const loadedTelegram = (raw.telegramLink as string) || customs?.telegramLink || '';
     const loadedFacebook = (raw.facebookLink as string) || customs?.facebookLink || '';
 
-    setDisplayName(loadedDisplayName);
-    setUsername(loadedUsername);
-    setBio(loadedBio);
+    setDisplayName.initialize(loadedDisplayName);
+    setUsername.initialize(loadedUsername);
+    setBio.initialize(loadedBio);
     setTwitterLink(loadedTwitter);
     setDiscordLink(loadedDiscord);
     setInstagramLink(loadedInstagram);
@@ -643,7 +644,7 @@ function ProfileSettings() {
     // Settings renders the preview at w-20, above the default avatar size.
     setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl, deviceWidth(80)));
     setCoverPreview(buildCoverUrl(address, rawCoverUrl));
-  }, [profileData, authUser?.address]);
+  }, [profileData, authUser?.address, setBio, setDisplayName, setUsername]);
   
   // Check username availability
   useEffect(() => {
@@ -3684,7 +3685,7 @@ function GeoBlockingSelector() {
   const { t } = useTranslation();
   const [blockedCountries, setBlockedCountries] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/SettingsPage.tsx:search", '');
 
   const filteredCountries = COUNTRIES.filter(c => 
     c.name.toLowerCase().includes(search.toLowerCase())

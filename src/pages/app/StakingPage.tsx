@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Staking Page
  * ============
@@ -151,8 +152,8 @@ export default function StakingPage() {
   const checkingStake = useRef(false);
   const receiptDiagnostics = useRef(new Set<string>());
   const sendingStake = useRef(false);
-  const [stakeAmount, setStakeAmount] = useState('');
-  const [unstakeAmount, setUnstakeAmount] = useState('');
+  const [stakeAmount, setStakeAmount] = useSurfaceDraft("pages/app/StakingPage.tsx:stakeAmount", '');
+  const [unstakeAmount, setUnstakeAmount] = useSurfaceDraft("pages/app/StakingPage.tsx:unstakeAmount", '');
   const [isApproving, setIsApproving] = useState(false);
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);

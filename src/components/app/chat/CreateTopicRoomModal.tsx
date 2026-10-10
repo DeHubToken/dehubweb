@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { MessageSquarePlus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,8 +21,8 @@ interface CreateTopicRoomModalProps {
 }
 
 export function CreateTopicRoomModal({ open, onOpenChange, onCreated }: CreateTopicRoomModalProps) {
-  const [topic, setTopic] = useState('');
-  const [description, setDescription] = useState('');
+  const [topic, setTopic] = useSurfaceDraft("components/app/chat/CreateTopicRoomModal.tsx:topic", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/chat/CreateTopicRoomModal.tsx:description", '');
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreate = async () => {

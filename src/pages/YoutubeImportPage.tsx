@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * dehub.io/converter — import a video from another platform as a DeHub post.
  * ==========================================================================
@@ -125,7 +126,7 @@ export default function YoutubeImportPage() {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const { requireAuth } = useAuthPrompt();
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useSurfaceDraft("pages/YoutubeImportPage.tsx:url", '');
   const [ownershipConfirmed, setOwnershipConfirmed] = useState(false);
   /** What the creator picked, or null while they have not. Null means "follow
    * the link" — a SoundCloud paste should not need a click to say audio, and a

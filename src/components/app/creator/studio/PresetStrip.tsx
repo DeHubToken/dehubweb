@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Preset strip.
  * =============
@@ -55,8 +56,8 @@ const GROUP_KEYS: Record<string, string> = {
 
 export const PresetStrip = memo(function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripProps) {
   const { t } = useTranslation();
-  const [query, setQuery] = useState('');
-  useEffect(() => setQuery(''), [kind, audioTask]);
+  const [query, setQuery] = useSurfaceDraft("components/app/creator/studio/PresetStrip.tsx:query", '');
+  useEffect(() => setQuery.initialize(''), [kind, audioTask, setQuery]);
   const presets = useMemo(() => {
     const all = presetsFor(kind);
     if (kind !== 'audio') return all;

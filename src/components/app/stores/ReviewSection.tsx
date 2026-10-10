@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * ReviewSection — Full review system for store listings
  * Shows average rating, review list, and write-review form for buyers.
@@ -28,7 +29,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
 
   const [showForm, setShowForm] = useState(false);
   const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useSurfaceDraft("components/app/stores/ReviewSection.tsx:comment", '', listingId);
   const [expanded, setExpanded] = useState(true);
 
   const isSeller = walletAddress?.toLowerCase() === sellerAddress?.toLowerCase();

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Reply } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,7 @@ export function ApplicationComments({ application, comments, canReply }: {
 }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
-  const [body, setBody] = useState('');
+  const [body, setBody] = useSurfaceDraft("features/work/components/ApplicationComments.tsx:body", '');
   const mutation = useCommentOnApplication();
 
   return (

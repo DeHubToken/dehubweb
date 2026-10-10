@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +25,7 @@ export default function WorkPage() {
   const [tab, setTab] = useState<WorkJobType | 'all'>('all');
   const [currency, setCurrency] = useState<WorkCurrency | 'all'>('all');
   const [sort, setSort] = useState<'newest' | 'highest_pay' | 'ending_soon'>('newest');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/WorkPage.tsx:search", '');
 
   const { data: jobs = [], isLoading } = useBrowseJobs({
     job_type: tab,

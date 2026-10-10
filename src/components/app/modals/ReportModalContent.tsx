@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Report Modal Component
  * ======================
@@ -108,7 +109,7 @@ export function ReportModal({
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [selectedReason, setSelectedReason] = useState<string>('');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useSurfaceDraft("components/app/modals/ReportModalContent.tsx:description", '', JSON.stringify([reportType, tokenId, userId, commentId]));
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reasons, setReasons] = useState<ReportReason[]>([]);
   const [isLoadingReasons, setIsLoadingReasons] = useState(false);

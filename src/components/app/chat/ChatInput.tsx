@@ -34,7 +34,7 @@ export interface ChatInputSendArgs {
 }
 
 interface ChatInputProps {
-  onSendMessage: (args: ChatInputSendArgs) => void;
+  onSendMessage: (args: ChatInputSendArgs) => Promise<boolean>;
   onTipClick?: () => void;
   /** Externally disable the send button (e.g. insufficient fee balance) */
   sendDisabled?: boolean;
@@ -241,8 +241,9 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     if (ta) ta.style.height = 'auto';
   };
 
+  const sendInFlight = useRef(false);
   const handleSend = async () => {
-    if (sendDisabled || isSendingFee) return;
+    if (sendDisabled || isSendingFee || sendInFlight.current) return;
     const pendingFile = imageFile || docFile || undefined;
     const pendingType: ChatInputSendArgs['type'] = audioPreview ? 'voice' : pendingFile ? 'media' : 'msg';
     if (pendingType === 'msg' && !message.trim()) return;
@@ -252,47 +253,53 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     // where it did, so it goes down with the send and comes back up on the
     // next tail — as follow-ups, since the user now holds the last word.
     setRailDismissed(true);
+    sendInFlight.current = true;
+    try {
     if (audioPreview) {
-      onSendMessage({
+      const sent = await onSendMessage({
         content: '',
         type: 'voice',
         mediaFile: audioPreview.file,
         duration: audioPreview.duration,
       });
+      if (!sent) return;
       setAudioPreview(null);
-      setMessage('');
+      setMessage(current => current === message ? '' : current);
       resetComposerHeight();
       return;
     }
 
     if (imageFile) {
-      onSendMessage({
+      const sent = await onSendMessage({
         content: message.trim(),
         type: 'media',
         mediaFile: imageFile,
       });
+      if (!sent) return;
       clearImage();
-      setMessage('');
+      setMessage(current => current === message ? '' : current);
       resetComposerHeight();
       return;
     }
 
     if (docFile) {
-      onSendMessage({
+      const sent = await onSendMessage({
         content: message.trim(),
         type: 'media',
         mediaFile: docFile,
       });
+      if (!sent) return;
       clearDoc();
-      setMessage('');
+      setMessage(current => current === message ? '' : current);
       resetComposerHeight();
       return;
     }
 
     if (!message.trim()) return;
-    onSendMessage({ content: message.trim(), type: 'msg' });
-    setMessage('');
+    if (!(await onSendMessage({ content: message.trim(), type: 'msg' }))) return;
+    setMessage(current => current === message ? '' : current);
     resetComposerHeight();
+    } finally { sendInFlight.current = false; }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CampaignWizard
  * ==============
@@ -56,17 +57,17 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   const [step, setStep] = useState(0);
 
   // Step 1 — creative
-  const [name, setName] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:name", '');
   const [objective, setObjective] = useState('awareness');
   const [kind, setKind] = useState<CreativeKind>('image');
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
   const [mediaDuration, setMediaDuration] = useState<number | null>(null);
   const [uploading, setUploading] = useState<'media' | 'thumb' | null>(null);
-  const [headline, setHeadline] = useState('');
-  const [bodyText, setBodyText] = useState('');
-  const [ctaLabel, setCtaLabel] = useState('Learn more');
-  const [ctaUrl, setCtaUrl] = useState('');
+  const [headline, setHeadline] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:headline", '');
+  const [bodyText, setBodyText] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:bodyText", '');
+  const [ctaLabel, setCtaLabel] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:ctaLabel", 'Learn more');
+  const [ctaUrl, setCtaUrl] = useSurfaceDraft("components/app/ads/CampaignWizard.tsx:ctaUrl", '');
 
   // Step 2 — targeting
   const [targeting, setTargeting] = useState<AdTargeting>({});

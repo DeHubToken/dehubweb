@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Browse Tab
  * ===========
@@ -44,10 +45,10 @@ export function BrowseTab() {
   const { t } = useTranslation();
   const [category, setCategory] = useState('all');
   const [sort, setSort] = useState('newest');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/stores/BrowseTab.tsx:search", '');
   const [selectedListing, setSelectedListing] = useState<any>(null);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+  const [minPrice, setMinPrice] = useSurfaceDraft("components/app/stores/BrowseTab.tsx:minPrice", '');
+  const [maxPrice, setMaxPrice] = useSurfaceDraft("components/app/stores/BrowseTab.tsx:maxPrice", '');
   const [filterOpen, setFilterOpen] = useState(false);
 
   const { data: listings = [], isLoading } = useBrowseListings(category, sort, search);

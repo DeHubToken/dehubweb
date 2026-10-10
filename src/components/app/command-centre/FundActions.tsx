@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Copy, CreditCard, Send, ArrowDownToLine, ArrowUpFromLine, Check, Wallet, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +25,7 @@ export function FundActions() {
   const [pickingNetwork, setPickingNetwork] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
-  const [withdrawTarget, setWithdrawTarget] = useState('');
+  const [withdrawTarget, setWithdrawTarget] = useSurfaceDraft("components/app/command-centre/FundActions.tsx:withdrawTarget", '');
   const [swapOpen, setSwapOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
 

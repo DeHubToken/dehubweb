@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isShortsPhoto, interleaveShorts } from '@/lib/shorts-photos';
 import { mapToShortVideo } from '@/lib/short-video';
 /**
@@ -154,7 +155,7 @@ function CategoryFilterSection({
   isLoading?: boolean;
 }) {
   const { t } = useI18n();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/feeds/ShortsFeed.tsx:search", '');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   // A hook, so it is called once here rather than inside the branches and the
   // .map below — a per-item, per-condition hook call is a render-count crash

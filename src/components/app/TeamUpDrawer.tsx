@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useDeferredValue, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Lock, Search, Users, X } from 'lucide-react';
@@ -83,15 +84,15 @@ function PrivacyToggle({
 export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:name", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:description", '');
   const [isPrivate, setIsPrivate] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:search", '');
   // The private team whose request note is being written, if any.
   const [requesting, setRequesting] = useState<string | null>(null);
-  const [requestMessage, setRequestMessage] = useState('');
+  const [requestMessage, setRequestMessage] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:requestMessage", '');
   const [editing, setEditing] = useState(false);
-  const [editDescription, setEditDescription] = useState('');
+  const [editDescription, setEditDescription] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:editDescription", '');
   const [editPrivate, setEditPrivate] = useState(false);
   const deferredSearch = useDeferredValue(search);
   const mine = useTeamUp(open);

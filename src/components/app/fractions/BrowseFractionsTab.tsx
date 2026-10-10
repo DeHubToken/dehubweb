@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Browse Fractions
  * ================
@@ -29,7 +30,7 @@ const SORTS: { value: MarketSort; labelKey: string }[] = [
 export function BrowseFractionsTab() {
   const { t } = useTranslation();
   const [sort, setSort] = useState<MarketSort>('newest');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/fractions/BrowseFractionsTab.tsx:search", '');
   const [selected, setSelected] = useState<FractionListing | null>(null);
   const { walletAddress } = useAuth();
 

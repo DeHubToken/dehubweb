@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -30,7 +31,7 @@ export default function WorkHistoryPage() {
   const { walletAddress, openLoginModal } = useAuth();
   const [tab, setTab] = useState<Tab>('posted');
   const [status, setStatus] = useState<WorkJobStatus | 'all'>('all');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("pages/app/WorkHistoryPage.tsx:search", '');
 
   // Only the visible tab's query runs — opening the page shouldn't cost two
   // round-trips when one of them is behind a tab the user may never press.

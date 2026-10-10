@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -29,7 +30,7 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
   const { t } = useTranslation();
   const dropZone = useOptionalGlobalDropZone();
 
-  const [dhbAmount, setDhbAmount] = useState('');
+  const [dhbAmount, setDhbAmount] = useSurfaceDraft("components/app/command-centre/SwapDrawer.tsx:dhbAmount", '');
   const [ethBalance, setEthBalance] = useState<bigint | null>(null);
   const [quoteEth, setQuoteEth] = useState<bigint | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
@@ -42,13 +43,13 @@ export function SwapDrawer({ open, onOpenChange }: SwapDrawerProps) {
   useEffect(() => {
     if (!open || !walletAddress) return;
     setStep('input');
-    setDhbAmount('');
+    setDhbAmount.initialize('');
     setQuoteEth(null);
     setTxHash(null);
     setErrorMsg('');
 
     getNativeBalance(walletAddress).then(setEthBalance).catch(() => setEthBalance(null));
-  }, [open, walletAddress]);
+  }, [open, walletAddress, setDhbAmount]);
 
   // Debounced quote fetching
   useEffect(() => {

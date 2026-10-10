@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * ForwardMessageDialog
  * ====================
@@ -47,7 +48,7 @@ export function ForwardMessageDialog({
   excludeConversationId,
 }: ForwardMessageDialogProps) {
   const { conversations, isLoading } = useConversations();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/chat/ForwardMessageDialog.tsx:search", '');
 
   const filtered = useMemo(() => {
     const list = conversations.filter(

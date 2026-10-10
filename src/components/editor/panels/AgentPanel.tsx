@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * AI panel — describe the edit, the agent does it.
  *
@@ -43,7 +44,7 @@ export function AgentPanel() {
   const undo = useEditorStore((s) => s.undo);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const quota = useEditorQuota();
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useSurfaceDraft("components/editor/panels/AgentPanel.tsx:draft", '');
   const [visualConsent, setVisualConsent] = useState<string | null>(null);
   const visualScope = useEditorStore(s => highlightVisualScope(s.toSnapshot(), s.selectedClipIds));
   const useVisual = visualConsent === visualScope;
@@ -170,7 +171,7 @@ export function AgentPanel() {
       setBusy(false);
       inputRef.current?.focus();
     }
-  }, [useVisual, visualScope, busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t]);
+  }, [useVisual, visualScope, busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t, setDraft]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { Suspense, memo, useState, useRef, useCallback, useEffect } from 'react';
 // Lazy: GoLiveModal imports minting/wallet contract code, and WhatsHappening
 // is eager via RightSidebar/AppLayout — a static import here would pull the
@@ -148,7 +149,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const tickerDirRef = useRef(0);
   const [isTickerAutoRotating, setIsTickerAutoRotating] = useState(true);
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
-  const [countrySearch, setCountrySearch] = useState('');
+  const [countrySearch, setCountrySearch] = useSurfaceDraft("components/app/WhatsHappening.tsx:countrySearch", '');
   const countryDropdownRef = useRef<HTMLDivElement>(null);
   const [showGoLive, setShowGoLive] = useState(false);
   // Mount on first open, keep mounted afterwards (close animation).
@@ -177,7 +178,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     if (code !== 'global') {
       toast.info(t('sidebar.comingSoon'));
     }
-  }, [t]);
+  }, [t, setCountrySearch]);
 
   const filteredCountries = countrySearch.trim()
     ? COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()))

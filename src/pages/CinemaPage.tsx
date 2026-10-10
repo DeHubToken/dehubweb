@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Search, Loader2, Clapperboard, Share2, ArrowLeft } from 'lucide-react';
@@ -60,7 +61,7 @@ export default function CinemaPage() {
   // same title gets indexed twice under two URLs.
   const canonicalFilmType = openObjectType === 'show' ? 'series' : 'film';
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("pages/CinemaPage.tsx:query", '');
   const [searchType, setSearchType] = useState<ObjectType>('movie');
   const [locale, setLocale] = useState(() => detectLocale());
   const [shareOpen, setShareOpen] = useState(false);

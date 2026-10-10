@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CampaignsTab
  * ============
@@ -519,10 +520,10 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
   const [kind, setKind] = useState<CreativeKind>('image');
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [headline, setHeadline] = useState('');
-  const [body, setBody] = useState('');
-  const [ctaLabel, setCtaLabel] = useState('Learn more');
-  const [ctaUrl, setCtaUrl] = useState('');
+  const [headline, setHeadline] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:headline", '');
+  const [body, setBody] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:body", '');
+  const [ctaLabel, setCtaLabel] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:ctaLabel", 'Learn more');
+  const [ctaUrl, setCtaUrl] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:ctaUrl", '');
 
   const valid = headline.trim() && (kind === 'text' || mediaUrl);
 

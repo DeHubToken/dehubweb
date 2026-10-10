@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * BillingTab
  * ==========
@@ -27,7 +28,7 @@ export function BillingTab() {
   const { data: payments = [], isLoading } = useAdPayments();
   const topUp = useTopUpCredit();
   const [topUpOpen, setTopUpOpen] = useState(false);
-  const [manualHash, setManualHash] = useState('');
+  const [manualHash, setManualHash] = useSurfaceDraft("components/app/ads/BillingTab.tsx:manualHash", '');
 
   return (
     <div className="space-y-4">

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * StageTranscriptDrawer — phase 2
  * ---------------------------------
@@ -380,11 +381,11 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const [requesting, setRequesting] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/spaces/StageTranscriptDrawer.tsx:search", '');
   const [language, setLanguage] = useState<string>('original');
   const [currentTime, setCurrentTime] = useState(0);
   const [renamingFor, setRenamingFor] = useState<string | null>(null);
-  const [renameValue, setRenameValue] = useState('');
+  const [renameValue, setRenameValue] = useSurfaceDraft("components/app/spaces/StageTranscriptDrawer.tsx:renameValue", '');
   const [quoteFor, setQuoteFor] = useState<{ seg: Segment; text: string } | null>(null);
 
   const stageId = space?.id;
@@ -530,13 +531,13 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   useEffect(() => {
     if (!open) {
       setRequesting(false);
-      setSearch('');
+      setSearch.initialize('');
       setLanguage('original');
       setCurrentTime(0);
       setQuoteFor(null);
       audioRef.current?.pause();
     }
-  }, [open]);
+  }, [open, setSearch]);
 
   /* ────── derived data ────── */
   const status = transcript?.status;

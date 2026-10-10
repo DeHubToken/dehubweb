@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Voice design.
  * =============
@@ -60,7 +61,7 @@ export function VoiceDesignDrawer({
   const [saving, setSaving] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
-  const [name, setName] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/creator/studio/VoiceDesignDrawer.tsx:name", '');
   const { t } = useTranslation();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { walletAddress } = useAuth();
@@ -90,8 +91,8 @@ export function VoiceDesignDrawer({
       return [];
     });
     setSelected(null);
-    setName('');
-  }, [open, releasePreviews]);
+    setName.initialize('');
+  }, [open, releasePreviews, setName]);
 
   // Unmounting mid-audition must not leak the three blobs either.
   useEffect(

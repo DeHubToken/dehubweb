@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -109,7 +110,7 @@ export const DocsChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: t('nav.docsChatGreeting') }
   ]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useSurfaceDraft("components/chat/DocsChatBot.tsx:input", '');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);

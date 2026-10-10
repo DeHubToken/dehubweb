@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Searchable Google Font picker with in-line previews.
  * Fonts are lazily loaded on hover/selection so the initial menu is cheap.
@@ -29,7 +30,7 @@ interface Props {
 export function FontPicker({ value, onChange }: Props) {
   const currentName = primaryFamily(value);
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useSurfaceDraft("components/editor/FontPicker.tsx:query", "");
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("all");
   const listRef = useRef<HTMLDivElement>(null);
 

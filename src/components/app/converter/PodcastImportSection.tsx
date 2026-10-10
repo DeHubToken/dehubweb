@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * The Podcast tab of the importer page.
  * =====================================
@@ -39,7 +40,7 @@ export function PodcastImportSection() {
   const { t } = useTranslation();
   const { requireAuth } = useAuthPrompt();
 
-  const [feedUrl, setFeedUrl] = useState('');
+  const [feedUrl, setFeedUrl] = useSurfaceDraft("components/app/converter/PodcastImportSection.tsx:feedUrl", '');
   const [fetching, setFetching] = useState(false);
   const [preview, setPreview] = useState<PodcastPreview | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
