@@ -50,6 +50,9 @@ type DraftStore = Record<string, DraftEntry>;
  * correct even though the localStorage write is still queued.
  */
 let store: DraftStore | null = null;
+// Only these keys may replace the latest disk snapshot. Other tabs can update
+// unrelated fields between our last storage event and the next keystroke.
+const dirty = new Set<string>();
 
 /**
  * Monotonic stamp. Several drafts can be written inside one millisecond, and
@@ -134,14 +137,21 @@ function serialize(entries: DraftStore): string {
 
 function writeNow(): void {
   writeQueued = false;
-  if (typeof window === 'undefined' || !store) return;
+  if (typeof window === 'undefined' || !store || !dirty.size) return;
   try {
-    store = trim(store);
+    const latest = parse(localStorage.getItem(STORAGE_KEY)).entries;
+    for (const key of dirty) {
+      if (store[key]) latest[key] = store[key];
+      else delete latest[key];
+    }
+    store = trim(latest);
     if (Object.keys(store).length === 0) {
       localStorage.removeItem(STORAGE_KEY);
+      dirty.clear();
       return;
     }
     localStorage.setItem(STORAGE_KEY, serialize(store));
+    dirty.clear();
   } catch {
     // Quota exceeded — drop the oldest half and try once. Losing an old draft
     // beats losing the one being typed right now.
@@ -152,6 +162,7 @@ function writeNow(): void {
       for (const key of keys.slice(0, Math.ceil(keys.length / 2))) kept[key] = snapshot[key];
       store = kept;
       localStorage.setItem(STORAGE_KEY, serialize(kept));
+      dirty.clear();
     } catch {
       // Storage unusable (private mode, disabled). The in-memory mirror still
       // carries the draft for this page's lifetime — never throw at a keystroke.
@@ -205,6 +216,7 @@ export function writeDraft(key: string, text: string): void {
     if (current[key]?.t === text) return;
     current[key] = { t: text, u: stamp() };
   }
+  dirty.add(key);
   scheduleWrite();
 }
 
@@ -214,6 +226,7 @@ export function clearDraft(key: string): void {
   const current = load();
   if (!(key in current)) return;
   delete current[key];
+  dirty.add(key);
   scheduleWrite();
 }
 
@@ -223,6 +236,7 @@ export function __resetDraftCacheForTests(): void {
   writeQueued = false;
   lastStamp = 0;
   listeners.clear();
+  dirty.clear();
 }
 
 if (typeof window !== 'undefined') {
@@ -231,30 +245,20 @@ if (typeof window !== 'undefined') {
   });
   window.addEventListener('pagehide', flushDrafts);
 
-  /**
-   * Two tabs each hold a full copy of the store, so a blind write from one
-   * would resurrect drafts the other just sent, and a blind read would delete
-   * drafts the other is still typing. Merge on entry timestamp, and use the
-   * blob's own write time to tell "they cleared it" from "they never saw it".
-   */
+  /** Refresh from disk, retaining only our own still-unflushed changes. */
   window.addEventListener('storage', (event) => {
     if (event.key !== STORAGE_KEY) return;
-    const { entries: incoming, writtenAt } = parse(event.newValue);
-    const current = load();
-    let changed = false;
-    for (const [key, entry] of Object.entries(incoming)) {
-      if (!current[key] || current[key].u < entry.u) {
-        current[key] = entry;
-        changed = true;
+    try {
+      // An earlier event can arrive after our own newer write.
+      const incoming = parse(localStorage.getItem(STORAGE_KEY)).entries;
+      const current = load();
+      for (const key of dirty) {
+        if (current[key]) incoming[key] = current[key];
+        else delete incoming[key];
       }
-    }
-    for (const key of Object.keys(current)) {
-      // Absent from their snapshot and older than it — they sent or cleared it.
-      if (!(key in incoming) && current[key].u <= writtenAt) {
-        delete current[key];
-        changed = true;
-      }
-    }
-    if (changed) emit();
+      store = incoming;
+      for (const entry of Object.values(incoming)) lastStamp = Math.max(lastStamp, entry.u);
+      if (JSON.stringify(current) !== JSON.stringify(incoming)) emit();
+    } catch { /* Keep the current page's drafts if storage becomes unavailable. */ }
   });
 }

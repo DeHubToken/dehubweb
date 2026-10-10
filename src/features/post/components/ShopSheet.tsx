@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * Shop editor
  * ===========
@@ -47,6 +48,7 @@ export interface ShopBoardDraft {
 }
 
 interface ShopSheetProps {
+  draftScope: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   value: ShopBoardDraft;
@@ -80,10 +82,10 @@ export function looksLikeUrl(value: string): boolean {
   }
 }
 
-export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier }: ShopSheetProps) {
+export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, draftScope }: ShopSheetProps) {
   const { t } = useTranslation();
-  const [rows, setRows] = useState<ShopLink[]>(value.links);
-  const [listingIds, setListingIds] = useState<string[]>(value.listingIds);
+  const [rows, setRows] = useDraftState<ShopLink[]>(`${draftScope}:shop:rows`, value.links);
+  const [listingIds, setListingIds] = useDraftState<string[]>(`${draftScope}:shop:listings`, value.listingIds);
 
   // `any` matches how the rest of the stores surfaces type listing rows: the
   // generated Row types `images` as Json, which fights every consumer.
@@ -98,9 +100,9 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier }
   // somebody is halfway through typing.
   useEffect(() => {
     if (!open) return;
-    setRows(value.links);
-    setListingIds(value.listingIds);
-  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+    setRows.initialize(value.links);
+    setListingIds.initialize(value.listingIds);
+  }, [open, setListingIds, setRows]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const update = (index: number, patch: Partial<ShopLink>) =>
     setRows(current => current.map((row, i) => (i === index ? { ...row, ...patch } : row)));
@@ -282,6 +284,7 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier }
             disabled={!canSave}
             onClick={() => {
               onSave({ links: cleanedLinks, listingIds });
+            setRows.complete(rows, cleanedLinks); setListingIds.complete(listingIds, listingIds);
               onOpenChange(false);
             }}
             className="flex-1 rounded-xl min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"

@@ -125,7 +125,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
       actions.setLiveMode(null);
       liveModeFromOpenerRef.current = false;
     }
-  }, [isOpen, initialLiveMode]);
+  }, [isOpen, initialLiveMode, setArticleMode]);
 
   // Set initial category when modal opens
   useEffect(() => {
@@ -286,6 +286,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
         onMediaFullscreenChange={setMediaFullscreenOpen}
       />
       <PostAccessToggles
+        draftScope={draftScope}
         isSubscribersOnly={state.isSubscribersOnly}
         setIsSubscribersOnly={actions.setIsSubscribersOnly}
         isPPV={state.isPPV}

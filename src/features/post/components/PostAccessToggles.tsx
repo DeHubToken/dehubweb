@@ -31,6 +31,7 @@ import { normalizeCategoryName } from '@/lib/category-names';
 import { storageImage, deviceWidth } from '@/lib/media-url';
 
 interface PostAccessTogglesProps {
+  draftScope?: string;
   /** Gate this post behind the creator's own subscription plans. */
   isSubscribersOnly: boolean;
   setIsSubscribersOnly: (value: boolean) => void;
@@ -103,6 +104,7 @@ interface PostAccessTogglesProps {
 }
 
 export function PostAccessToggles({
+  draftScope = "post:new",
   isSubscribersOnly,
   setIsSubscribersOnly,
   isPPV,
@@ -913,6 +915,7 @@ export function PostAccessToggles({
       {/* PPV Drawer */}
       {setShopLinks && (
         <ShopSheetLazy
+          draftScope={draftScope}
           open={shopDrawerOpen}
           onOpenChange={setShopDrawerOpen}
           value={{ links: shopLinks ?? [], listingIds: shopListingIds ?? [] }}

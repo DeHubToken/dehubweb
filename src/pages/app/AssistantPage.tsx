@@ -663,6 +663,8 @@ function AssistantPageForAccount() {
   const { language: userLanguage } = useUserLanguage();
   const { t } = useI18n();
   
+  const [restoringConversation, setRestoringConversation] = useState(!!conversationId);
+  const pendingDraftCompletion = useRef<() => void>(() => {});
   const initialConversation = useRef(conversationId);
   const visibleConversation = useRef(conversationId);
   visibleConversation.current = conversationId;
@@ -673,9 +675,9 @@ function AssistantPageForAccount() {
     void withWalletHeader(supabase.from('ai_messages').select('*').eq('conversation_id', id).order('created_at', { ascending: true }), walletAddress)
       .then(({ data, error }) => {
         if (cancelled || error || visibleConversation.current !== id) return;
-        setMessages((data || []).map(message => ({ id: message.id, role: message.role as 'user' | 'assistant', content: message.content,
+        setMessages(previous => previous.length ? previous : (data || []).map(message => ({ id: message.id, role: message.role as 'user' | 'assistant', content: message.content,
           imageUrl: message.image_url || undefined, videoUrl: message.video_url || undefined, attachedImage: message.attached_image || undefined })));
-      });
+      }).finally(() => { if (!cancelled) setRestoringConversation(false); });
     return () => { cancelled = true; };
   }, [walletAddress]);
 
@@ -1206,6 +1208,7 @@ function AssistantPageForAccount() {
 
   // Handle video generation after payment confirmation
   const handleVideoGenerationConfirm = async (options: VideoGenerationOptions | undefined, txHash: string) => {
+    const finishDraft = pendingDraftCompletion.current;
     if (!pendingVideoRequest) return;
 
     const { prompt, model, sourceImage } = pendingVideoRequest;
@@ -1277,6 +1280,7 @@ function AssistantPageForAccount() {
         content: `🎬 Generating video with **${videoModel.name}**...\n\n_This may take 1-3 minutes_`,
       });
 
+      finishDraft();
       toast.success(t('assistant.paymentSuccessGenerating'));
     } catch (err) {
       console.error('Video generation error:', err);
@@ -1312,6 +1316,7 @@ function AssistantPageForAccount() {
 
   // Handle image generation after payment confirmation
   const handleImageGenerationConfirm = async (txHash: string, override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string; headline?: string; bannerRenderer?: 'template' | 'scene'; bannerFormat?: 'landscape' | 'square' | 'portrait' }) => {
+    const finishDraft = pendingDraftCompletion.current;
     const req = override ?? pendingImageRequest;
     // Reaching here with nothing to generate used to return in silence — but
     // the paywall has already signed the transfer by then, so that was money
@@ -1392,6 +1397,7 @@ function AssistantPageForAccount() {
 
       setMessages(prev => [...prev, assistantMessage]);
       queueMessage(assistantMessage);
+      if (data.imageUrl) finishDraft();
       toast.success(t('assistant.imageGenerated'));
     } catch (err) {
       console.error('Image generation error:', err);
@@ -1477,6 +1483,7 @@ function AssistantPageForAccount() {
   }, [pollVideoStatus, clearPendingTool, clearPendingVideo, savePendingVideo, queueMessage]);
 
   const handleAiToolConfirm = async (txHash: string) => {
+    const finishDraft = pendingDraftCompletion.current;
     if (!pendingAiToolRequest) return;
 
     const { prompt, tool, category, sourceImage } = pendingAiToolRequest;
@@ -1524,6 +1531,7 @@ function AssistantPageForAccount() {
         }
         setMessages(prev => [...prev, assistantMessage]);
         queueMessage(assistantMessage);
+        finishDraft();
         setIsAiToolProcessing(false);
         toast.success(`${toolModel.name} completed!`);
       } else {
@@ -1551,6 +1559,7 @@ function AssistantPageForAccount() {
           content: assistantMessage.content,
         });
 
+        if (data.requestId) finishDraft();
         startBoundedPoll(
           data.requestId,
           () => pollAiToolStatus(data.requestId, data.appId, messageId, tool, data.statusUrl, data.responseUrl),
@@ -1575,7 +1584,8 @@ function AssistantPageForAccount() {
 
   const handleSend = async (overrideMessage?: string) => {
     const messageToSend = overrideMessage || input.trim();
-    if (!messageToSend || isLoading) return;
+    if (!messageToSend || isLoading || restoringConversation) return;
+    pendingDraftCompletion.current = () => { if (!overrideMessage) setInput.complete(input, ""); };
 
     // ── Skill matching: slash command wins, otherwise auto-trigger ──
     const slash = extractSlashSkill(messageToSend, userSkills);
@@ -2912,7 +2922,7 @@ function AssistantPageForAccount() {
                         <button
                           type="button"
                           onClick={isRecording ? stopRecording : startRecording}
-                          disabled={isLoading || voiceAssistant.isVoiceMode}
+                          disabled={isLoading || restoringConversation || voiceAssistant.isVoiceMode}
                           className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
                             isRecording 
                               ? 'text-red-500' 
@@ -3088,7 +3098,7 @@ function AssistantPageForAccount() {
                     <button
                       type="button"
                       onClick={isRecording ? stopRecording : startRecording}
-                      disabled={isLoading || voiceAssistant.isVoiceMode}
+                      disabled={isLoading || restoringConversation || voiceAssistant.isVoiceMode}
                       className={`transition-colors p-1 disabled:opacity-30 ${
                         isRecording ? 'text-red-500' : 'text-white/60 hover:text-white'
                       }`}

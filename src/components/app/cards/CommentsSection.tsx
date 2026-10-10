@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { accountDraftKey } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -287,7 +288,7 @@ interface CommentItemProps {
   onReact: (id: string, reaction: PostReaction) => void;
   onReply: (id: string) => void;
   onShare: (id: string) => void;
-  onEdit: (id: string, newContent: string) => void;
+  onEdit: (id: string, newContent: string) => Promise<boolean>;
   /** Ask to delete. The section confirms first — see its delete dialog. */
   onDelete: (id: string) => void;
   onTip: (id: string) => void;
@@ -418,7 +419,15 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
     const key = commentTipKey(comment.id);
     return subscribePostTipped((id) => { if (id === key) setTipBurst((n) => n + 1); });
   }, [comment.id]);
-  const [editText, setEditText] = useState(comment.text);
+  const [editText, setEditText] = useDraftState(`comment:${tokenId}:edit:${comment.id}`, comment.text);
+  const editPending = useRef(false);
+  const saveEdit = async () => {
+    if (editPending.current) return;
+    editPending.current = true;
+    try { if (await onEdit(comment.id, editText) && setEditText.complete(editText, editText)) setIsEditing(false); }
+    finally { editPending.current = false; }
+  };
+  useEffect(() => { if (isEditing) setEditText.initialize(comment.text); }, [isEditing, comment.text, setEditText]);
   const [imageFullscreen, setImageFullscreen] = useState(false);
   const avatarUrl = isAssistantAddress(comment.address) ? ASSISTANT_AVATAR : comment.avatar;
   const i18n = useI18n();
@@ -604,23 +613,22 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                 // is the composition ending, not the edit being saved — Safari
                 // reports it as keyCode 229 with isComposing already false.
                 if (e.key === 'Enter' && !e.nativeEvent.isComposing && e.keyCode !== 229) {
-                  onEdit(comment.id, editText);
-                  setIsEditing(false);
+                  void saveEdit();
                 } else if (e.key === 'Escape') {
-                  setEditText(comment.text);
+                  setEditText(comment.text); setEditText.clear();
                   setIsEditing(false);
                 }
               }}
             />
             <button
-              onClick={() => { onEdit(comment.id, editText); setIsEditing(false); }}
+              onClick={() => { void saveEdit(); }}
               className="text-green-400 hover:text-green-300 transition-colors"
               aria-label={i18n.t('common.save')}
             >
               <Check className="w-4 h-4" />
             </button>
             <button
-              onClick={() => { setEditText(comment.text); setIsEditing(false); }}
+              onClick={() => { setEditText(comment.text); setEditText.clear(); setIsEditing(false); }}
               className="text-zinc-400 hover:text-white transition-colors"
               aria-label={i18n.t('common.cancel')}
             >
@@ -2078,7 +2086,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   };
 
   const handleEditComment = useStableCallback(async (commentId: string, newContent: string) => {
-    if (!newContent.trim()) return;
+    if (!newContent.trim()) return false;
     // Optimistic: swap the text instantly, revert if the server refuses.
     setEditOverrides(prev =>
       new Map(prev).set(commentId, { text: newContent, base: apiRowsById.get(commentId) }),
@@ -2086,6 +2094,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
     try {
       await editComment({ commentId, content: newContent });
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
+      return true;
     } catch (err) {
       setEditOverrides(prev => {
         const next = new Map(prev);
@@ -2094,6 +2103,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       });
       console.error('Edit comment error:', err);
       toast.error(t('comments.editFailed'));
+      return false;
     }
   });
 
