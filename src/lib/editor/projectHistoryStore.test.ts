@@ -42,3 +42,61 @@ describe("applying shared changes to the actual web editor history",()=>{
     useEditorStore.getState().undo();expect(useEditorStore.getState().clips[0].duration).toBe(6);expect((useEditorStore.getState().clips[0] as MediaClip).audio).toBeUndefined();
   });
 });
+
+
+describe("scoped gesture readiness in the actual web history", () => {
+  it("blocks receiving before the first frame without inventing an Undo step", () => {
+    const store = useEditorStore.getState(), before = store.toSnapshot(), lease = store.holdEdits();
+    expect(useEditorStore.getState().editing).toBe(true);
+    expect(() => store.applySharedSnapshot(before, projectReviewSnapshotKey(before))).toThrow("project changed");
+    expect(useEditorStore.getState().past).toHaveLength(0);
+    lease.release(); expect(useEditorStore.getState().editing).toBe(false);
+    expect(() => store.applySharedSnapshot(before, projectReviewSnapshotKey(before))).not.toThrow();
+  });
+  it("keeps receiving blocked until every overlapping gesture releases ownership", () => {
+    const store = useEditorStore.getState(), before = store.toSnapshot(), first = store.holdEdits(), second = store.holdEdits();
+    first.release(); first.release(); expect(second.isCurrent()).toBe(true);
+    expect(() => store.applySharedSnapshot(before, projectReviewSnapshotKey(before))).toThrow("project changed");
+    second.release(); expect(useEditorStore.getState().editing).toBe(false);
+  });
+  it("invalidates old same-project holds without releasing a new hold after reset", () => {
+    const store = useEditorStore.getState(), old = store.holdEdits(); store.loadSnapshot(fixture()); const fresh = store.holdEdits();
+    expect(old.isCurrent()).toBe(false); old.release(); expect(fresh.isCurrent()).toBe(true);
+    expect(() => store.applySharedSnapshot(fixture(), projectReviewSnapshotKey(fixture()))).toThrow("project changed");
+    fresh.release(); expect(useEditorStore.getState().editing).toBe(false);
+  });
+  it("keeps one real canvas drag in Undo and preserves a later received edit", () => {
+    const store = useEditorStore.getState(), lease = store.beginGesture(); store.patchClipLive("a", {start:1}); store.patchClipLive("a", {start:2}); lease.release();
+    expect(useEditorStore.getState().past).toHaveLength(1);
+    const before = store.toSnapshot(), incoming = clone(before); incoming.clips[1].duration = 4;
+    store.applySharedSnapshot(incoming, projectReviewSnapshotKey(before)); store.undo();
+    expect(useEditorStore.getState().clips[0].start).toBe(0); expect(useEditorStore.getState().clips[1].duration).toBe(4);
+  });
+  it("drops a return-to-origin drag and restores existing Redo", () => {
+    const store = useEditorStore.getState(); store.updateMediaClip("a", {audio:{volume:.5}}); store.undo(); const lease = store.beginGesture();
+    store.patchClipLive("a", {start:1}); store.patchClipLive("a", {start:0}); lease.release();
+    expect(useEditorStore.getState().past).toHaveLength(0); expect(useEditorStore.getState().future).toHaveLength(1); expect(useEditorStore.getState().editing).toBe(false);
+    store.redo(); expect((useEditorStore.getState().clips[0] as MediaClip).audio?.volume).toBe(.5);
+  });
+  it("collapses repeated timeline frames only after its asynchronous edit batch settles", async () => {
+    const store = useEditorStore.getState(), lease = store.holdEdits(); let finish!: () => void;
+    const operation = store.runAsOneStep(() => new Promise<void>(resolve => {finish=resolve;}));
+    store.updateMediaClip("a", {start:1}); store.updateMediaClip("a", {start:2}); lease.release();
+    const before = store.toSnapshot(); expect(() => store.applySharedSnapshot(before, projectReviewSnapshotKey(before))).toThrow("project changed");
+    finish(); await operation; expect(useEditorStore.getState().past).toHaveLength(1); expect(useEditorStore.getState().editing).toBe(false);
+    store.undo(); expect(useEditorStore.getState().clips[0].start).toBe(0);
+  });
+  it("does not swallow an old batch failure or replace newer reset history", async () => {
+    const store = useEditorStore.getState(); let reject!: (reason: Error) => void;
+    const operation = store.runAsOneStep(() => new Promise<void>((_resolve,no) => {reject=no;}));
+    store.loadSnapshot(fixture()); store.updateMediaClip("a", {start:3}); const fresh = store.holdEdits();
+    reject(new Error("old operation failed")); await expect(operation).rejects.toThrow("old operation failed");
+    expect(useEditorStore.getState().past).toHaveLength(1); expect(useEditorStore.getState().clips[0].start).toBe(3); expect(fresh.isCurrent()).toBe(true);
+    fresh.release(); expect(useEditorStore.getState().editing).toBe(false);
+  });
+  it("starts a new project with no stale ownership and ignores its old release", () => {
+    const store = useEditorStore.getState(), old = store.beginGesture(); store.newProject(); const fresh = store.holdEdits(); old.release();
+    expect(old.isCurrent()).toBe(false); expect(fresh.isCurrent()).toBe(true); expect(useEditorStore.getState().past).toHaveLength(0);
+    fresh.release(); const before = store.toSnapshot(); expect(() => store.applySharedSnapshot(before, projectReviewSnapshotKey(before))).not.toThrow();
+  });
+});
