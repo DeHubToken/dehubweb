@@ -61,6 +61,7 @@ import { PostHeaderOptionsButton } from './PostHeaderOptionsButton';
 import { MatureContentGate, useMatureGate } from './MatureContentGate';
 import { BadgedName } from '@/components/app/BadgedName';
 import { ActionBar } from './ActionBar';
+import { useLiveReaction } from '@/hooks/use-live-reaction';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
@@ -785,6 +786,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  const { selfReaction, sendLiveReaction } = useLiveReaction(video.liveStreamId, !!video.isLivePost && !!video.isLiveNow);
   // Deep Current is the one power spent on somebody ELSE's post, so it is
   // the one row that belongs in this half of the menu. `status.powers` is
   // the authority for whether this account has it — the badge the client
@@ -2366,6 +2368,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                  read as a dead card until you opened it. */
               <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
                 <LiveFeedPreview
+                  streamId={video.liveStreamId}
+                  streamStatus={video.liveStatus}
+                  creatorId={video.creatorId}
+                  isOwner={video.isOwner}
+                  selfReaction={selfReaction}
                   urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
                   thumbnail={thumbnail}
                   fallbackLabel={t('feed.live')}
@@ -2916,6 +2923,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 the overlay, where not leaving the stream is the point. */}
             <ShopBoardLazy tokenId={video.id} links={video.shopLinks} listingCount={video.shopListingCount} variant="inline" />
             <ActionBar
+              onLiveReaction={video.isLivePost && video.isLiveNow ? sendLiveReaction : undefined}
               postId={video.id}
               newPostSlug={video.status === 'signed' ? video.newPostId ?? null : null}
               tokenId={parseInt(video.id, 10) || undefined}

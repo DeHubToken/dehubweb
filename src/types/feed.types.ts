@@ -372,6 +372,7 @@ export interface ImagePost extends BaseFeedItem {
  * Live stream content
  */
 export interface LiveStream extends BaseFeedItem {
+  liveStatus?: string;
   type: 'live';
   streamer: string;
   avatar: string;

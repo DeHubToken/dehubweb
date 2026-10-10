@@ -6,9 +6,11 @@
  * whole transport on the boot path (scripts/check-entry-bundle.mjs).
  */
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function useStreamPresence(streamId: string | undefined, isLive: boolean): number | null {
   const [viewerCount, setViewerCount] = useState<number | null>(null);
+  const { isAuthenticated, walletAddress } = useAuth();
 
   useEffect(() => {
     if (!streamId || !isLive) {
@@ -35,7 +37,7 @@ export function useStreamPresence(streamId: string | undefined, isLive: boolean)
       cancelled = true;
       presence?.leave();
     };
-  }, [streamId, isLive]);
+  }, [streamId, isLive, isAuthenticated, walletAddress]);
 
   return viewerCount;
 }

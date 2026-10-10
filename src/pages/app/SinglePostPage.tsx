@@ -446,6 +446,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '',
     tags: [],
     isLive: deriveIsLive(nft),
+    liveStatus: streamObj?.status,
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
     creatorBadgeBalance: (nft as any).minterUser?.hideBadgeAndBalance ? 0 : ((nft as any).minterUser?.badgeBalance ?? (nft as any).badgeBalance),
