@@ -197,6 +197,8 @@ export function useVoteOnPoll() {
       if (context?.previous !== undefined) {
         queryClient.setQueryData([POLLS_KEY, variables.tokenId], context.previous);
       }
+      // Usually "Poll has expired" — refetch so the card flips to final results.
+      queryClient.invalidateQueries({ queryKey: [POLLS_KEY, variables.tokenId] });
       toast.error(err?.message || 'Failed to vote');
     },
   });
