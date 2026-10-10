@@ -101,6 +101,11 @@ interface PostAccessTogglesProps {
   mintRequired?: boolean;
   /** Open plan setup above the composer without abandoning the post draft. */
   onCreatePlan?: () => void;
+  /**
+   * Writing a quote: the server refuses paywalls, bounty, subscriber gating
+   * and a shop board on quotes, so those rows are not offered.
+   */
+  quoteMode?: boolean;
 }
 
 export function PostAccessToggles({
@@ -151,6 +156,7 @@ export function PostAccessToggles({
   setShouldMint,
   mintFeeLabel,
   mintRequired = false,
+  quoteMode = false,
   onCreatePlan,
 }: PostAccessTogglesProps) {
   const { t } = useI18n();
@@ -488,7 +494,7 @@ export function PostAccessToggles({
         </div>
 
         {/* Community */}
-        {hasCommunities && (
+        {hasCommunities && !quoteMode && (
           <div className="space-y-1.5">
             <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => { if (!selectedCommunitySlug) setCommunityDrawerOpen(true); }}>
               <div className="flex items-center gap-2 shrink-0">
@@ -581,7 +587,7 @@ export function PostAccessToggles({
             Disabled with no plans, on purpose. The switch used to write a DHB
             lock with no amount when there was nothing real to write, and that
             shipped posts gated against nothing. No plans, no gate. */}
-        {!solanaChain && (
+        {!solanaChain && !quoteMode && (
         <label
           className={cn(
             'flex items-center justify-between py-0.5',
@@ -626,6 +632,7 @@ export function PostAccessToggles({
         )}
 
         {/* PPV */}
+        {!quoteMode && (
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handlePpvToggle(!isPPV)}>
           <div className="flex items-center gap-2">
             <Ticket className="w-4 h-4 text-white" />
@@ -636,9 +643,10 @@ export function PostAccessToggles({
           </div>
           <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
+        )}
 
         {/* Bounty — EVM only */}
-        {!solanaChain && (
+        {!solanaChain && !quoteMode && (
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleBountyToggle(!isWatch2Earn)}>
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-white" />
@@ -652,6 +660,7 @@ export function PostAccessToggles({
         )}
 
         {/* Token Gated */}
+        {!quoteMode && (
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleTokenToggle(!isTokenGated)}>
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-white" />
@@ -662,11 +671,12 @@ export function PostAccessToggles({
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
+        )}
 
         {/* Shop — the creator's own listings and affiliate links. Tapping the row
             anywhere opens the editor, including when it is already on, so
             "add another link" is one tap rather than off-then-on. */}
-        {setShopLinks && (
+        {setShopLinks && !quoteMode && (
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => setShopDrawerOpen(true)}>
           <div className="flex items-center gap-2 min-w-0">
             <ShoppingBag className="w-4 h-4 text-white shrink-0" />

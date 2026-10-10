@@ -56,6 +56,8 @@ interface PostContentAreaProps {
   onLoadDraft: (draft: Draft) => void;
   onDeleteDraft: (id: string) => void;
   canSaveDraft: boolean;
+  /** Quotes publish now and are not saved as drafts — hide both controls. */
+  hideScheduleAndDrafts?: boolean;
   // Recording props
   isRecording?: boolean;
   recordingTime?: number;
@@ -139,6 +141,7 @@ export function PostContentArea({
   onLoadDraft,
   onDeleteDraft,
   canSaveDraft,
+  hideScheduleAndDrafts = false,
   isRecording,
   recordingTime,
   onStopRecording,
@@ -583,6 +586,7 @@ export function PostContentArea({
           </Avatar>
 
           {/* Schedule/Drafts buttons - top right corner */}
+          {!hideScheduleAndDrafts && (
           <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
           {/* Schedule indicator */}
           {scheduledDate && (
@@ -650,6 +654,7 @@ export function PostContentArea({
             <TooltipContent>Drafts</TooltipContent>
           </Tooltip>
           </div>
+          )}
         </div>
 
         {/* Drag overlay */}
