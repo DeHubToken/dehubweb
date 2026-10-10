@@ -6,6 +6,7 @@ const original = {
   tokenId: 6501, postType: 'feed-simple', name: ' ',
   description: 'Mobile users - did you prefer the original UIX or the new one? For home theme.',
   minterDisplayName: 'mal', mintername: 'maldoteth', createdAt: '2026-10-08T19:30:05.787Z',
+  minterAvatarUrl: 'avatars/mal.jpg',
   totalVotes: { for: 95 }, commentCount: 4, totalViews: 1207,
 };
 let post = { ...original }, requests = 0;
@@ -18,6 +19,11 @@ const mf = new Miniflare(convertV4MiniflareOptions({
     return new WorkerResponse(readFileSync(new URL(`../public${path}`, import.meta.url)), { headers: { 'Content-Type': path.endsWith('.png') ? 'image/png' : 'font/ttf' } });
   } },
   outboundService: request => {
+    if (new URL(request.url).pathname.startsWith('/avatars/')) {
+      assert.equal(new URL(request.url).origin, 'https://dehubcdn.ams3.digitaloceanspaces.com');
+      if (request.url.endsWith('/missing.jpg')) return new WorkerResponse('Missing avatar', { status: 404 });
+      return new WorkerResponse(readFileSync(new URL('../public/brand/mark-white.png', import.meta.url)), { headers: { 'Content-Type': 'image/png' } });
+    }
     assert.equal(request.url, 'https://api.dehub.io/api/nft_info/6501');
     assert.equal(request.headers.get('authorization'), null);
     requests++;
@@ -31,6 +37,7 @@ try {
   assert.equal(response.status, 200, await response.clone().text());
   assert.equal(response.headers.get('Content-Type'), 'image/png');
   assert.equal(response.headers.get('X-DeHub-Post-Counts'), '95,4,1207');
+  assert.equal(response.headers.get('X-DeHub-Post-Avatar'), 'image');
   const png = Buffer.from(await response.arrayBuffer());
   assert.equal(png.readUInt32BE(16), 1200);
   assert.equal(png.readUInt32BE(20), 630);
@@ -51,5 +58,10 @@ try {
   assert.equal(restricted.status, 404);
   assert.equal(restricted.headers.get('Cache-Control'), 'no-store');
   assert.equal(requests, 4);
+  post = { ...original, minterAvatarUrl: 'avatars/missing.jpg' };
+  const missingAvatar = await mf.dispatchFetch(url);
+  assert.equal(missingAvatar.status, 200);
+  assert.equal(missingAvatar.headers.get('X-DeHub-Post-Avatar'), 'initials');
+  assert.notDeepEqual(Buffer.from(await missingAvatar.arrayBuffer()), png);
   console.log('Production Worker renders PNGs, refreshes counters, serves HEAD and rejects newly hidden posts.');
 } finally { await mf.dispose(); }
