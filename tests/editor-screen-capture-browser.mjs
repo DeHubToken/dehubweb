@@ -82,7 +82,9 @@ try {
   const captured = await page.evaluate(() => window.recording);
   assert.equal(captured.video, 1); assert.equal(captured.audio, 1); assert.equal(captured.originalAudio, 2);
   assert.equal(captured.settings.displaySurface, 'browser');
-  await page.evaluate(() => new Promise(done => setTimeout(done, 2600)));
+  // Hosted audio devices can take time to deliver their first PCM buffer.
+  // Record long enough to measure sustained audio, preserving startup offsets in the probe.
+  await page.evaluate(() => new Promise(done => setTimeout(done, 6000)));
   await page.getByRole('button', { name: 'Save recording' }).click();
   const saved = await page.evaluate(async () => ({ bytes: [...new Uint8Array(await (await window.saved).arrayBuffer())], tracks: [...window.originalTracks, ...window.output.getTracks()].map(track => ({ kind: track.kind, state: track.readyState })) }));
   assert(saved.tracks.every(track => track.state === 'ended'), 'All real capture and mixer tracks must be released');
@@ -97,9 +99,9 @@ try {
   const clocks = packetInfo.packets.map(packet => ({ start: Number(packet.pts_time), duration: Number(packet.duration_time ?? 0) }));
   assert(clocks.length > 0 && clocks.every(clock => Number.isFinite(clock.start) && Number.isFinite(clock.duration) && clock.duration >= 0));
   const duration = Math.max(...clocks.map(clock => clock.start + clock.duration)) - Math.min(...clocks.map(clock => clock.start));
-  assert(duration >= 2.3, `Saved packet clocks contain only ${duration} seconds`);
+  assert(duration >= 5.6, `Saved packet clocks contain only ${duration} seconds`);
   const pixels = execFileSync('ffmpeg', ['-v', 'error', '-i', movie, '-an', '-vf', 'scale=8:8', '-pix_fmt', 'rgb24', '-f', 'rawvideo', '-']);
-  const frames = pixels.length / (8 * 8 * 3); assert(Number.isInteger(frames) && frames >= 30);
+  const frames = pixels.length / (8 * 8 * 3); assert(Number.isInteger(frames) && frames >= 150);
   let red = false, blue = false;
   for (let frame = 0; frame < frames; frame++) {
     const offset = frame * 8 * 8 * 3;
@@ -108,7 +110,9 @@ try {
   }
   assert(red && blue, 'The saved recording must contain changing source frames');
   const pcm = execFileSync('ffmpeg', ['-v', 'error', '-i', movie, '-vn', '-ac', '1', '-ar', String(rate), '-f', 'f32le', '-']);
-  const count = pcm.length / 4; assert(count >= rate * 2);
+  const count = pcm.length / 4;
+  await writeFile(resolve(directory, 'decoded-audio-duration.json'), JSON.stringify({ samples: count, seconds: count / rate }, null, 2));
+  assert(count >= rate * 3, `The recording contains only ${count / rate} seconds of decoded audio`);
   function amplitude(frequency) {
     let real = 0, imaginary = 0;
     for (let index = 0; index < count; index++) {
@@ -125,6 +129,8 @@ try {
   const proof = { browser: browser.version(), sourceSha256: createHash('sha256').update(productionSource).digest('hex'), captured,
     sourceAPIReplacedWithSyntheticStreams: false, controlledMicrophoneDevice: true, physicalMicrophoneQualityVerified: false,
     savedAudioTracks: 1, savedVideoTracks: 1, duration, durationMeasuredFromSavedPacketClocks: true, frames, bothSourceColorsDecoded: true,
+    firstAudioPacketPTS: Math.min(...packetInfo.packets.filter(packet => packet.stream_index === metadata.streams.find(stream => stream.codec_type === 'audio').index).map(packet => Number(packet.pts_time))),
+    decodedAudioSeconds: count / rate, initialAudioLatencyVerifiedOnPhysicalDevices: false,
     sharedAudioAmplitude: sharedAudio, voiceoverAmplitude: voiceover, allCaptureAndMixerTracksEnded: true };
   await writeFile(resolve(directory, 'verification.json'), JSON.stringify(proof, null, 2));
   console.log(JSON.stringify(proof));
