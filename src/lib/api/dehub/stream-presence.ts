@@ -48,6 +48,7 @@ const EVENT = {
 export interface StreamReactionBroadcast {
   reactionType: LiveReactionType;
   weight: number;
+  isOwnReaction: boolean;
   /**
    * Who reacted, lower-cased, when the gateway resolved them. A viewer plays
    * their own thumb the moment they tap it — the same beat a tipper gets their
@@ -62,13 +63,14 @@ export function watchStreamReactions(streamId: string, onReaction: (event: Strea
   const socket = conn.socket;
   let left = false;
   const join = () => { if (!left) socket.emit(EVENT.joinRoom, { streamId }); };
-  const receive = (data: { streamId?: string; reactionType?: unknown; weight?: number; user?: { address?: unknown } }) => {
+  const receive = (data: { streamId?: string; sourceSocketId?: string; reactionType?: unknown; weight?: number; user?: { address?: unknown } }) => {
     // One connection can watch several cards. Never leak applause into another room.
     if (data?.streamId !== streamId) return;
     const reactionType = liveReactionType(data.reactionType);
     const raw = data.user?.address;
     const address = typeof raw === 'string' && raw ? raw.toLowerCase() : null;
-    if (reactionType) onReaction({ reactionType, weight: data.weight ?? 1, address });
+    if (reactionType) onReaction({ reactionType, weight: data.weight ?? 1, address,
+      isOwnReaction: !!data.sourceSocketId && data.sourceSocketId === socket.id });
   };
   socket.on('connect', join);
   socket.on(EVENT.reaction, receive);
@@ -98,6 +100,7 @@ interface StreamConnection {
   token: string | null;
   /** How many presences are still holding it. */
   refs: number;
+  viewers: Map<string, { refs: number; join: () => void }>;
 }
 
 /** The connection new presences are handed. Retired ones are not tracked here. */
@@ -129,6 +132,7 @@ function acquireStreamSocket(): StreamConnection {
     active = {
       token,
       refs: 0,
+      viewers: new Map(),
       socket: io(DEHUB_API_BASE, {
         auth: token ? { token } : {},
         query: token ? { token } : {},
@@ -244,9 +248,13 @@ export function joinStreamPresence(
   const s = conn.socket;
   let left = false;
 
-  const join = () => {
-    if (!left) s.emit(joinEvent, { streamId });
-  };
+  let viewer = conn.viewers.get(streamId);
+  if (!viewer) {
+    viewer = { refs: 0, join: () => s.emit(joinEvent, { streamId }) };
+    conn.viewers.set(streamId, viewer);
+    s.on('connect', viewer.join);
+  }
+  viewer.refs += 1;
 
   const handleCount = (data: { viewerCount?: number; streamId?: string }) => {
     if (!isForStream(data, streamId)) return;
@@ -257,23 +265,26 @@ export function joinStreamPresence(
   // socket id server-side, and the viewer row was dropped when the old one
   // disconnected. That is doubly true anonymously, where the socket id IS the
   // identity — the old one counts for nothing the moment it drops.
-  s.on('connect', join);
   s.on(EVENT.viewCountUpdate, handleCount);
   s.on(EVENT.joinStream, handleCount);
   s.on(EVENT.leaveStream, handleCount);
-  if (s.connected) join();
+  if (s.connected && viewer.refs === 1) viewer.join();
 
   return {
     leave: () => {
       if (left) return;
       left = true;
-      s.off('connect', join);
       s.off(EVENT.viewCountUpdate, handleCount);
       s.off(EVENT.joinStream, handleCount);
       s.off(EVENT.leaveStream, handleCount);
       // Best-effort: if the socket is already gone the server has dropped this
       // viewer on disconnect anyway, which is the case this design leans on.
-      if (s.connected) s.emit(leaveEvent, { streamId });
+      viewer.refs -= 1;
+      if (viewer.refs === 0) {
+        conn.viewers.delete(streamId);
+        s.off('connect', viewer.join);
+        if (s.connected) s.emit(leaveEvent, { streamId });
+      }
       releaseStreamSocket(conn);
     },
   };

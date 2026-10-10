@@ -35,11 +35,6 @@ export function LiveReactionFlow({ streamId, enabled, bottom = 24, self }: {
   const { reactions, addReaction, clearReactions } = useReactionFlow();
   const reducedMotion = useReducedMotion();
   const { isAuthenticated, walletAddress } = useAuth();
-  const me = walletAddress ? walletAddress.toLowerCase() : null;
-  // Read through a ref: the subscription below must not tear down and rebuild
-  // every time the viewer reacts.
-  const meRef = useRef(me);
-  useEffect(() => { meRef.current = me; }, [me]);
   useEffect(() => {
     clearReactions();
     if (!streamId || !enabled) return;
@@ -49,7 +44,7 @@ export function LiveReactionFlow({ streamId, enabled, bottom = 24, self }: {
       if (!cancelled) subscription = watchStreamReactions(streamId, event => {
         // Already played locally on tap — this is the same reaction coming
         // back round, not a second one.
-        if (event.address && meRef.current && event.address === meRef.current) return;
+        if (event.isOwnReaction) return;
         addReaction(event.reactionType, event.weight);
       });
     }).catch(() => undefined);
