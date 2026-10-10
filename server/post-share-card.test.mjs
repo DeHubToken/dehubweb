@@ -43,7 +43,7 @@ test('restricted content and media posts do not acquire a public text image', ()
 test('both crawler tags and structured data select the same versioned PNG', () => {
   const html = '<head><meta property="og:image" content="avatar.jpg"><meta name="twitter:image" content="avatar.jpg"><script type="application/ld+json">{"@type":"SocialMediaPosting","image":"avatar.jpg"}</script></head>';
   const result = applyTextPostImage(html, post);
-  assert.equal((result.match(/https:\/\/dehub.io\/_og\/post\/v3\/6501.png/g) || []).length, 4);
+  assert.equal((result.match(/https:\/\/dehub.io\/_og\/post\/v4\/6501.png/g) || []).length, 4);
   assert.ok(result.includes('content="1200"'));
   assert.ok(result.includes('content="630"'));
   assert.ok(result.includes('summary_large_image'));
@@ -79,7 +79,7 @@ test('post text and polls flow together without a bottom-anchored gap or overlap
         const layout = layoutPostCardCopy({ title, body, poll: { ...closedPoll, question: 'Long poll question '.repeat(12), options } });
         assert.equal(layout.poll.top - layout.body.bottom, 24);
         if (title) assert.equal(layout.body.top - layout.title.bottom, 24);
-        assert.ok(layout.poll.top + layout.poll.height <= 510, `results overflow for ${title.length}/${body.length}/${options.length}`);
+        assert.ok(layout.poll.top + layout.poll.height <= 488, `results enter the footer space for ${title.length}/${body.length}/${options.length}`);
       }
     }
   }

@@ -3,7 +3,7 @@ import { DEHUB_API_BASE } from './core';
 /** Text cards are served by the production worker, shared with mobile. */
 export function getTextPostShareImageUrl(tokenId: string | number): string {
   if (!/^[1-9]\d{0,14}$/.test(String(tokenId))) throw new Error('Invalid post id');
-  return `https://dehub.io/_og/post/v3/${tokenId}.png`;
+  return `https://dehub.io/_og/post/v4/${tokenId}.png`;
 }
 
 /**
