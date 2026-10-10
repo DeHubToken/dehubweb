@@ -14,7 +14,7 @@
   ],
   "verificationLimit": "This is a source ownership inventory, not a claim that every field has been exercised on a physical device.",
   "inputFileCount": 235,
-  "persistedFieldCount": 417,
+  "persistedFieldCount": 418,
   "inputs": [
     {
       "file": "src/components/LanguageSelector.tsx",
@@ -4630,6 +4630,14 @@
       "setter": "setSearchQuery",
       "owner": "useSurfaceDraft",
       "declaration": "const [searchQuery, setSearchQuery] = useSurfaceDraft(\"components/app/cards/CommentsSection.tsx:searchQuery\", '', tokenId);"
+    },
+    {
+      "file": "src/components/app/cards/CommentsSection.tsx",
+      "line": 1016,
+      "field": "newComment",
+      "setter": "setNewComment",
+      "owner": "useDraftState",
+      "declaration": "const [newComment, setNewComment] = useDraftState(`comment:${tokenId}:text`, restoredDraft?.text ?? '');"
     },
     {
       "file": "src/components/app/cards/CommonGroundSheet.tsx",
