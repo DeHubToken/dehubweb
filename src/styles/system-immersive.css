@@ -12,6 +12,15 @@ html[data-theme='system'] [data-home-filter-panel] :is([data-glass-toggle-button
   border-radius: 8px !important;
 }
 
+html[data-theme='system'] [data-home-category-search] {
+  background: transparent;
+  border-color: rgb(255 255 255 / 0.18);
+}
+
+html[data-theme='system'] [data-home-category-search]:focus {
+  border-color: rgb(255 255 255 / 0.4);
+}
+
 /* Page bentos: no box, no radius, no glow. */
 html:is([data-theme='system'], [data-theme='immersive'])
   :is([data-page-bento], [data-kit-section]):not([data-feed-nav-outer] > *):not([data-classic-feed-layout] *):not([data-keep-bento]):not([role='dialog']):not([role='dialog'] *):not([data-vaul-drawer] *):not(#_):not(#_) {
