@@ -1,10 +1,9 @@
 /**
- * A pinned community worn by the profile header on desktop: the community's
+ * A pinned community worn by the profile header: the community's
  * art as a soft colour wash behind the profile details, closed off by a thin
  * sharp strip of the same art with its logo, name and a way in.
  *
- * Desktop only (lg and up). Phones keep the pinned community card, which the
- * header hides at lg for the community shown here.
+ * The featured community uses the same wash and strip at every screen size.
  */
 
 import { Pin, Users } from 'lucide-react';
@@ -24,7 +23,7 @@ export function featuredPinnedCommunity(pins: Array<{ communities?: Community | 
 export function PinnedCommunityWash({ community }: { community: Community }) {
   if (!community.banner_url) return null;
   return (
-    <div data-pinned-wash aria-hidden className="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden lg:block">
+    <div data-pinned-wash aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
       {/* A small image is plenty: the blur throws away every detail. */}
       <div
         className="absolute -inset-16 bg-cover bg-center"
@@ -47,7 +46,7 @@ export function PinnedCommunityStrip({
   const { t } = useTranslation();
   if (!community.banner_url) return null;
   return (
-    <div data-pinned-strip className="relative hidden h-[72px] items-center gap-3 overflow-hidden border-t border-white/[0.14] px-6 lg:flex">
+    <div data-pinned-strip className="relative flex h-[72px] items-center gap-3 overflow-hidden border-t border-white/[0.14] px-4 sm:px-6">
       <div
         aria-hidden
         className="absolute inset-0 bg-cover"
@@ -69,8 +68,8 @@ export function PinnedCommunityStrip({
         <span className="min-w-0">
           <span className="block truncate text-sm font-semibold text-white">{community.name}</span>
           <span className="flex items-center gap-1 text-xs text-white opacity-80">
-            <Pin className="h-3 w-3" />
-            {t('comments.pinnedBadge')} · {community.member_count.toLocaleString()} {t('communities.members')}
+            <Pin className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{t('comments.pinnedBadge')} · {community.member_count.toLocaleString()} {t('communities.members')}</span>
           </span>
         </span>
       </button>
@@ -80,7 +79,7 @@ export function PinnedCommunityStrip({
           data-keep-dark
           onClick={onManagePins}
           aria-label={t('communities.pinToProfile')}
-          className="relative flex h-8 w-8 items-center justify-center rounded-[10px] border border-white/20 bg-black/30 text-white/80 backdrop-blur-md transition-colors hover:bg-white/15 hover:text-white"
+          className="relative flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[10px] border border-white/20 bg-black/30 text-white/80 backdrop-blur-md transition-colors hover:bg-white/15 hover:text-white"
         >
           <Pin className="h-3.5 w-3.5" />
         </button>
