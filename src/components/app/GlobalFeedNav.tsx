@@ -18,6 +18,7 @@ import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { FeedFilterAnchor } from '@/components/app/navigation/FeedFilterAnchor';
 import { cn } from '@/lib/utils';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -246,7 +247,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
       (!navVisible || anyOverlayOpen) && "-translate-y-full lg:translate-y-0",
       anyOverlayOpen && "z-[40]"
     )}>
-      <div data-home-filter-anchor className={theme === 'system' ? 'relative isolate' : 'contents'}>
+      <FeedFilterAnchor behindNav={theme === 'system'}>
       <div data-feed-nav className="flex flex-col bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px', ...(theme === 'system' ? { position: 'relative', zIndex: 10 } as const : {}) }}>
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} variant="nav" />
@@ -325,7 +326,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
         {theme !== 'system' && <div ref={setFiltersPortalElement} className="contents" data-global-feed-filters-portal />}
       </div>
       {theme === 'system' && <div ref={setFiltersPortalElement} className="absolute inset-x-0 top-0 z-0 pointer-events-none" data-global-feed-filters-portal />}
-      </div>
+      </FeedFilterAnchor>
       {/* Active-filter chips — outside the pill, so they read as a line about
           the feed sitting under the bar rather than as another row of the bar. */}
       <div ref={setChipsPortalElement} className="contents" data-global-feed-chips-portal />

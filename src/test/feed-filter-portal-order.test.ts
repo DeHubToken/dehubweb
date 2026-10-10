@@ -21,7 +21,7 @@ describe('feed filter portal order', () => {
     }
     expect(HOME_FEED).toContain('!behindNav && portalTarget && "order-1 mt-2"');
     for (const { source } of NAVS) {
-      expect(source).toContain('data-home-filter-anchor');
+      expect(source).toContain("<FeedFilterAnchor behindNav={theme === 'system'}>");
       expect(source).toContain('absolute inset-x-0 top-0 z-0 pointer-events-none');
     }
   });
