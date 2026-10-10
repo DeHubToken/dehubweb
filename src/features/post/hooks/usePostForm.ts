@@ -1,4 +1,5 @@
 import { useDraftState } from '@/hooks/use-draft-state';
+import { draftIdentity } from '@/hooks/use-surface-draft';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { readCurrentDraft, readDraft, writeDraft, clearDraft, flushDrafts } from '@/lib/draft-cache';
 import { useState, useRef, useCallback, useEffect } from 'react';
@@ -323,7 +324,11 @@ export function usePostForm(
   const d = savedDraft.current;
 
   // Form state — initialize from saved draft if available
-  const [text, setText] = useDraftState(draftScope + ":text", d?.text ?? '');
+  // Keep the previous quote text key so unfinished quotes survive the composer change.
+  const textScope = quotedPost
+    ? `field:${JSON.stringify(['components/app/modals/QuotePostModal.tsx:content', draftIdentity(quotedPost)])}`
+    : draftScope + ":text";
+  const [text, setText] = useDraftState(textScope, d?.text ?? '');
   const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
@@ -555,7 +560,6 @@ export function usePostForm(
   const persistDraftRef = useRef<(() => void) | null>(null);
   useEffect(() => {
     const persistDraft = () => {
-      if (isQuoting) return;
       const draft: ActiveDraft = {
         text, titleText, showTitle, isMature, isForKids, shopLinks, shopListingIds,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,

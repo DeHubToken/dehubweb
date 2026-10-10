@@ -468,7 +468,9 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
 }
 
 export function PostModal(props: PostModalProps) {
-  const draftScope = props.initialText ? `post:share:${props.initialText}` : 'post:new';
+  const draftScope = props.quotedPost
+    ? `post:quote:${props.quotedPost.tokenId}`
+    : props.initialText ? `post:share:${props.initialText}` : 'post:new';
   const accountKey = useAccountDraftKey(draftScope);
   return <PostModalForAccount key={accountKey ?? 'guest'} {...props} draftScope={draftScope} />;
 }
