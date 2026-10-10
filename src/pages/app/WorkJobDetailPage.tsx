@@ -314,7 +314,7 @@ export default function WorkJobDetailPage() {
               onRelease={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) releaseMutation.mutate(s.id);}}
               onReject={(reason) => rejectMutation.mutateAsync({ submission_id: s.id, job_id: job.id, reason })}
               budgetLeft={budgetLeft}
-              busy={approveMutation.isPending || payMutation.isPending || rejectMutation.isPending}
+              busy={approveMutation.isPending || payMutation.isPending || rejectMutation.isPending || releaseMutation.isPending}
             />
           ))}
         </Section>
@@ -552,12 +552,13 @@ function SubmissionCard({
       )}
 
       {/* Poster: settle something already accepted. */}
+      {isPoster && s.payout_state === 'signing' && <p className="mt-3 text-xs text-amber-200/80">{t('work.integrity.releaseConfirm')}</p>}
       {isPoster && s.payout_state === 'signing' && (
         <label className="block mt-3 text-xs text-white/60">{t('work.integrity.recoverTx')}
           <input value={recoveryHash} onChange={e => setRecoveryHash(e.target.value.trim())} placeholder={t('work.integrity.hashPlaceholder')} className={inputCls} />
         </label>
       )}
-      {isPoster && s.payout_state==='signing' && <button disabled={busy} onClick={onRelease} className="mt-2 text-xs text-white/60">{t('work.integrity.releaseSignature')}</button>}
+      {isPoster && s.payout_state==='signing' && <button disabled={busy || !!recoveryHash} onClick={onRelease} className="mt-2 px-3 py-2 rounded-lg border border-white/20 text-xs text-white/80 disabled:opacity-40">{t('work.integrity.releaseSignature')}</button>}
       {s.payout_state === 'broadcast' && <p className="mt-2 text-xs text-white/60">{t('work.integrity.paymentPending')}</p>}
       {isPoster && job.status==='disputed' && awaiting && s.payout_state==='unpaid' && <button onClick={()=>setRejecting(true)} className="mt-2 text-xs text-red-300">{t('work.reject')}</button>}
       {isPoster && canPay && awaiting && (
