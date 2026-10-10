@@ -15,7 +15,7 @@ type ScrubArgs = {
   eventRef?: RefObject<HTMLDivElement>;
 };
 
-/** Invisible target: 80px above the rail, plus 24px below inside its post. */
+/** Invisible target: 64px above the rail, plus 24px below inside its post. */
 export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElement> {
   const gesture = useRef<{
     id: number; x: number; y: number; button: boolean; dragging: boolean;
@@ -29,7 +29,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
   };
   const inZone = (element: HTMLDivElement, x: number, y: number) => {
     const { left, right, top, bottom } = rectAt(element);
-    return args.enabled && x >= left && x <= right && y >= Math.max(top, bottom - 80)
+    return args.enabled && x >= left && x <= right && y >= Math.max(top, bottom - 64)
       && y <= bottom + (args.mediaRef ? 24 : 0);
   };
   useEffect(() => {
