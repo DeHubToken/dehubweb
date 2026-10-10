@@ -7,9 +7,10 @@ import { plainPostText } from './post-share-card.js';
 const API = 'https://api.dehub.io/api';
 const number = value => Number.isFinite(Number(value)) ? Math.max(0, Math.floor(Number(value))) : 0;
 
-async function publicJson(path) {
+async function publicJson(path, missingIsEmpty = false) {
   try {
     const response = await fetch(`${API}${path}`, { signal: AbortSignal.timeout(3000), redirect: 'manual', headers: { Accept: 'application/json' } });
+    if (response.status === 404 && missingIsEmpty) return { status: false, result: null };
     return response.ok ? await response.json() : null;
   } catch { return null; }
 }
@@ -58,7 +59,7 @@ export function publicProfileBadges(profile, progress, price, isNew = false) {
 export async function loadPostShareDetails(data, { rows, price } = {}) {
   const [account, pollResponse, tokenPrice] = await Promise.all([
     data.handle ? publicJson(`/account_info/${encodeURIComponent(data.handle)}`) : null,
-    publicJson(`/poll/${data.tokenId}`),
+    publicJson(`/poll/${data.tokenId}`, true),
     price?.().catch(() => null),
   ]);
   const profile = account?.status !== false ? account?.result : null;
