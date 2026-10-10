@@ -1153,7 +1153,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   };
 
   return (
-    <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
+    <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setTokenInfo(null); } }}>
       <DrawerContent column glass hideHandle={false} data-wallet-page>
         <div className="p-5 pb-8 max-h-[85vh] overflow-y-auto">
           <DrawerHeader className="p-0 mb-4">

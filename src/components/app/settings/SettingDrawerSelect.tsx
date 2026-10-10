@@ -56,7 +56,7 @@ export function SettingDrawerSelect({
   };
 
   return (
-    <Drawer open={open} onOpenChange={(v) => { setOpen(v); if (!v) setSearch(''); }}>
+    <Drawer open={open} onOpenChange={(v) => { setOpen(v); }}>
       <DrawerTrigger asChild disabled={disabled}>
         <button
           type="button"

@@ -44,6 +44,9 @@ describe('comment draft cache', () => {
     expect(loadDraft('42')?.gifUrl).toBe('https://giphy.test/a.gif');
 
     saveDraft('42', { text: '   ' });
+    expect(loadDraft('42')?.text).toBe('   ');
+
+    saveDraft('42', { text: '' });
     expect(loadDraft('42')).toBeNull();
   });
 

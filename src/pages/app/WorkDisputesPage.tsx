@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -26,7 +27,7 @@ export default function WorkDisputesPage() {
   const { walletAddress } = useAuth();
   const { data: disputes = [], isLoading } = useAdminDisputes();
   const resolve = useAdminResolveDispute();
-  const [draft, setDraft] = useState<Record<string, { worker: number; poster: number; notes: string; workerAddr: string; pay: boolean }>>({});
+  const [draft, setDraft] = useDraftState<Record<string, { worker: number; poster: number; notes: string; workerAddr: string; pay: boolean }>>(`form:src/pages/app/WorkDisputesPage.tsx:draft:${'disputes'}`, {});
 
   // With no escrow contract deployed there is nothing held to split, so a
   // resolution is a written decision plus — if the arbiter chooses — a transfer

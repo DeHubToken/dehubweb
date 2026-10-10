@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { tokenLabel } from '@/lib/token-label';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
@@ -64,56 +65,23 @@ const CHAIN_OPTIONS: { chainId: number; label: string; icon: string }[] = [
   { chainId: SOLANA_MAINNET_CHAIN_ID, label: 'Solana', icon: solanaLogo },
 ];
 
-const CACHE_KEY = 'create_plan_draft';
-
-interface PlanDraft {
-  name: string;
-  description: string;
-  price: string;
-  duration: number;
-  tier: number;
-  chainId: number;
-  benefits: string[];
-}
-
-function loadDraft(): PlanDraft | null {
-  try {
-    const raw = sessionStorage.getItem(CACHE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
-
-function saveDraft(draft: PlanDraft) {
-  sessionStorage.setItem(CACHE_KEY, JSON.stringify(draft));
-}
-
-function clearDraft() {
-  sessionStorage.removeItem(CACHE_KEY);
-}
-
 export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanModalProps) {
   const { t } = useTranslation();
-  const draft = loadDraft();
-  const [name, setName] = useState(draft?.name ?? '');
-  const [description, setDescription] = useState(draft?.description ?? '');
-  const [price, setPrice] = useState(draft?.price ?? '');
-  const [duration, setDuration] = useState(draft?.duration ?? 1);
-  const [tier, setTier] = useState(draft?.tier ?? 1);
-  const savedChainId = Number(draft?.chainId);
-  const [chainId, setChainId] = useState<number>(
-    isSubscriptionChain(savedChainId) ? savedChainId : BASE_CHAIN_ID,
+  const [name, setName] = useDraftState(`form:src/components/app/subscriptions/CreatePlanModal.tsx:name:${'new'}`, '');
+  const [description, setDescription] = useDraftState(`form:src/components/app/subscriptions/CreatePlanModal.tsx:description:${'new'}`, '');
+  const [price, setPrice] = useDraftState(`form:src/components/app/subscriptions/CreatePlanModal.tsx:price:${'new'}`, '');
+  const [duration, setDuration] = useDraftState(`form:src/components/app/subscriptions/CreatePlanModal.tsx:duration:${'new'}`, 1);
+  const [tier, setTier] = useDraftState(`form:src/components/app/subscriptions/CreatePlanModal.tsx:tier:${'new'}`, 1);
+  const [chainId, setChainId] = useDraftState<number>(`form:src/components/app/subscriptions/CreatePlanModal.tsx:chainId:${'new'}`, 
+    BASE_CHAIN_ID,
   );
-  const [benefits, setBenefits] = useState<string[]>(draft?.benefits ?? ['']);
+  const [benefits, setBenefits] = useDraftState<string[]>(`form:src/components/app/subscriptions/CreatePlanModal.tsx:benefits:${'new'}`, ['']);
 
   const createPlanMutation = useCreatePlan();
   const numericPrice = Number(price);
   const dhbEstimate = dhbForUsd(numericPrice, DHB_PRELISTING_USD);
   const selectedChain = CHAIN_OPTIONS.find((option) => option.chainId === chainId) || CHAIN_OPTIONS[0];
 
-  // Auto-save draft on changes
-  useEffect(() => {
-    saveDraft({ name, description, price, duration, tier, chainId, benefits });
-  }, [name, description, price, duration, tier, chainId, benefits]);
 
   const handleAddBenefit = () => {
     setBenefits([...benefits, '']);
@@ -157,7 +125,7 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
       });
 
       // Reset form and clear draft
-      clearDraft();
+      setName.clear(); setDescription.clear(); setPrice.clear(); setBenefits.clear(); setDuration.clear(); setTier.clear(); setChainId.clear();
       setName('');
       setDescription('');
       setPrice('');

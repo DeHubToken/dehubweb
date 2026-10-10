@@ -195,7 +195,6 @@ export function SwapToTokenDrawer({
 
   const handleClose = (v: boolean) => {
     if (!v) {
-      setAmount('');
       setQuoteResult(null);
       setSuccess(false);
       setError('');

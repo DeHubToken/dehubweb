@@ -109,7 +109,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     toast.success(`Staked ${stakeAmount} coins`);
     setIsOpen(false);
     setMenuView('main');
-    setStakeAmount('');
   };
 
   const handleStakeAll = () => {
@@ -122,7 +121,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const resetMenu = () => {
     setMenuView('main');
-    setStakeAmount('');
   };
 
   const coinButton = (
