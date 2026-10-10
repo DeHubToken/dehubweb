@@ -1,4 +1,4 @@
-export const POST_CARD_VERSION = 'v2';
+export const POST_CARD_VERSION = 'v3';
 export const POST_CARD_TTL = 300;
 const ORIGIN = 'https://dehub.io';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
@@ -227,7 +227,7 @@ export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges
   ${chrome ? `<image data-brand-artwork="integrated-chrome-edge" x="0" y="0" width="1200" height="630" xlink:href="${chrome}" opacity=".72"/>` : ''}
   <path d="M357 38Q370 38 370 52V576Q370 589 383 589" fill="none" stroke="url(#seam)" stroke-width="1.1"/>
   <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
-  <image x="43" y="35" width="77" height="66" xlink:href="${logo}"/>
+  <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
   ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Exo" font-size="23">${escape(initials)}</text>`}
   <g font-family="Exo" font-weight="500">
