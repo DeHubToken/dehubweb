@@ -3,6 +3,8 @@
  * selection, and undo/redo history.
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
+import { rebaseProjectHistory } from "@/lib/editor/projectHistory";
+import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
@@ -60,6 +62,7 @@ interface EditorState extends EditableState {
   // --- meta actions ---
   setProjectTitle: (t: string) => void;
   loadSnapshot: (snap: ProjectSnapshot) => void;
+  applySharedSnapshot: (snap: ProjectSnapshot, expectedKey: string) => number;
   newProject: () => void;
   toSnapshot: () => ProjectSnapshot;
 
@@ -144,6 +147,7 @@ interface EditorState extends EditableState {
 }
 
 const MAX_HISTORY = 50;
+let batchedEdits = 0;
 const MIN_CLIP = 0.05; // minimum clip duration (s)
 
 function snapshotEditable(s: EditorState): EditableState {
@@ -207,6 +211,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       past: [],
       future: [],
     }),
+  applySharedSnapshot: (snap, expectedKey) => {
+    const s = get(), current = s.toSnapshot();
+    if (batchedEdits || current.id !== snap.id || projectReviewSnapshotKey(current) !== expectedKey) throw new Error("The current project changed during transfer");
+    const full = (editable: EditableState): ProjectSnapshot => ({ ...current, ...editable });
+    const next = rebaseProjectHistory({ current, past: s.past.map(full), future: s.future.map(full) }, snap);
+    const editable = (value: ProjectSnapshot): EditableState => ({ tracks: value.tracks, clips: value.clips, settings: value.settings });
+    const ids = new Set(snap.clips.map(clip => clip.id));
+    set({ ...editable(next.current), projectTitle: snap.title, past: next.past.map(editable), future: next.future.map(editable),
+      selectedClipIds: s.selectedClipIds.filter(id => ids.has(id)), currentTime: Math.min(s.currentTime,timelineDuration(snap.settings,snap.clips)), isPlaying: false });
+    return next.protectedPaths.length;
+  },
   newProject: () =>
     set({
       projectId: nanoid(10),
@@ -814,12 +829,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   },
 
   runAsOneStep: async (fn) => {
+    batchedEdits++;
     const before = get();
     const pastLen = before.past.length;
     const snapshot = snapshotEditable(before);
     try {
       await fn();
     } finally {
+      batchedEdits--;
       const after = get();
       if (after.past.length !== pastLen || after.clips !== before.clips || after.tracks !== before.tracks || after.settings !== before.settings) {
         set({ past: [...before.past, snapshot].slice(-MAX_HISTORY), future: [] });
