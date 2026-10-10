@@ -471,7 +471,7 @@ export function ProfileHeader({
             <PinnedCommunities
               walletAddress={profile.walletAddress}
               isOwnProfile={!!isViewingOwnProfile}
-              desktopHiddenId={featuredCommunity?.id}
+            featuredId={featuredCommunity?.id}
               pickerOpen={pinPickerOpen}
               onPickerOpenChange={setPinPickerOpen}
             />
