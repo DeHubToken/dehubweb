@@ -6989,6 +6989,13 @@
       "retryRecovery": "Reintentar recuperación",
       "personalCopy": "Guardar una copia personal",
       "privateHint": "Unirse no sube tus cambios. Compartir en vivo sube las nuevas fuentes privadas; Guardar crea una versión permanente."
+    },
+    "assembly": {
+      "matchConsent": "Elegir clips y fotos que coincidan con mi petición",
+      "matchScenes": "Encontrar escenas relacionadas",
+      "noMatch": "No se encontraron escenas relacionadas. Prueba otro tema o selección.",
+      "matchLimit": "Elige hasta 10 clips o fotos. Los vídeos deben durar entre un segundo y 10 minutos.",
+      "matchDuration": "Las escenas relacionadas son más cortas que el vídeo solicitado. Reduce la duración o elige más contenido."
     }
   },
   "jungleMood": {

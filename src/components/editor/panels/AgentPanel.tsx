@@ -27,6 +27,7 @@ import { transcribeClipWords } from '@/lib/editor/captions';
 import { createHighlightEdit } from '@/lib/editor/applyHighlights';
 import { shotTime } from '@/lib/editor/shots';
 import { assemblyRequest } from '@/lib/editor/assembly';
+import { findAssemblyScenes } from '@/lib/editor/assemblyScenes';
 import { useAssembly } from '@/lib/editor/useAssembly';
 import { createAssemblyEdit } from '@/lib/editor/applyAssembly';
 import AssemblyReview from '../AssemblyReview';
@@ -81,6 +82,12 @@ export function AgentPanel() {
   const [assemblyState, assembly] = useAssembly({
     current: () => useEditorStore.getState().toSnapshot(),
     library: () => useEditorStore.getState().media.filter(media => !!media.url),
+    match: (clips, focus, signal, progress) => findAssemblyScenes(clips, focus, { optIn: true }, async (clip, windows, abort, sampled) => {
+      useEditorStore.getState().setIsPlaying(false);
+      const stored = await getMedia(clip.mediaId);
+      if (!stored) throw new Error('media unavailable');
+      return processVisualFrames(stored.blob, clip, windows, abort, sampled);
+    }, analyseVisualHighlights, signal, progress),
     create: (original, plan, signal, library) => createAssemblyEdit(original, plan, `${original.title} — ${t('editor.video.video')}`, signal, library),
   });
   const assemblyChanged = useEditorStore(s => assemblyState.sourceId !== null && !assembly.matchesSource(s.toSnapshot()));
