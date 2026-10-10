@@ -44,7 +44,8 @@ export function AgentPanel() {
   const undo = useEditorStore((s) => s.undo);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const quota = useEditorQuota();
-  const [draft, setDraft] = useSurfaceDraft("components/editor/panels/AgentPanel.tsx:draft", '');
+  const draftProjectId = useEditorStore(s => s.projectId);
+  const [draft, setDraft] = useSurfaceDraft("components/editor/panels/AgentPanel.tsx:draft", '', draftProjectId);
   const [visualConsent, setVisualConsent] = useState<string | null>(null);
   const visualScope = useEditorStore(s => highlightVisualScope(s.toSnapshot(), s.selectedClipIds));
   const useVisual = visualConsent === visualScope;
@@ -125,7 +126,6 @@ export function AgentPanel() {
   const send = useCallback(async (text: string) => {
     const prompt = text.trim();
     if (!prompt || busy || highlights.state.busy || assembly.state.busy) return;
-    setDraft('');
     push({ id: nextId(), role: 'user', content: prompt });
     const draftRequest = assemblyRequest(prompt);
     if (draftRequest || assembly.state.sourceId) {
@@ -133,12 +133,15 @@ export function AgentPanel() {
       if (draftRequest) { highlights.reset(); assembly.start(draftRequest, useEditorStore.getState().selectedClipIds, useEditorStore.getState().media.filter(media => !!media.url)); }
       const reviewed = draftRequest || assembly.review(prompt);
       push({ id: nextId(), role: 'assistant', content: t(reviewed ? 'easyTrade.reviewTitle' : 'editor.agent.nothingToDo') });
+      if (reviewed) setDraft.complete(text, '');
       inputRef.current?.focus(); return;
     }
     const request = highlightChatRequest(prompt);
     if (request || highlights.reviewing) {
       previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
-      recordHighlights(request ? await highlights.start({ ...request, useVisual, visualScope, focus: request.focus || (useVisual ? prompt.slice(0, 240) : "") }, useEditorStore.getState().selectedClipIds) : await highlights.review(prompt));
+      const result = request ? await highlights.start({ ...request, useVisual, visualScope, focus: request.focus || (useVisual ? prompt.slice(0, 240) : "") }, useEditorStore.getState().selectedClipIds) : await highlights.review(prompt);
+      recordHighlights(result);
+      if (result.status !== "error") setDraft.complete(text, "");
       inputRef.current?.focus();
       return;
     }
@@ -158,6 +161,7 @@ export function AgentPanel() {
       if (report?.missingStock.length) {
         content += ` ${t('editor.agent.noStock', { query: report.missingStock.join(', ') })}`;
       }
+      if (!report?.failed) setDraft.complete(text, '');
       push({ id: nextId(), role: 'assistant', content, report });
     } catch (e) {
       const code = e instanceof Error ? e.message : '';

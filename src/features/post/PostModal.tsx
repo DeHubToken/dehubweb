@@ -1,3 +1,4 @@
+import { useAccountDraftKey, useDraftState } from '@/hooks/use-draft-state';
 import { lazy, Suspense, useEffect, useState, useCallback, useRef } from 'react';
 import { postTextLimit } from '@/lib/post-text-limit';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
@@ -37,25 +38,26 @@ interface PostModalProps {
   initialLiveMode?: 'video';
 }
 
-export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode }: PostModalProps) {
+function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll, initialLiveMode, draftScope }: PostModalProps & { draftScope: string }) {
   const { style: keyboardStyle } = useKeyboardSafeSheet(isOpen);
   const { isBanned } = useBannedAccount();
   // Where a live post goes once its mint has provisioned the stream. Held here
   // rather than in the action bar so it survives the bar's own re-renders, and
   // cleared on close so reopening the composer never reopens a dead broadcast.
   const [liveStream, setLiveStream] = useState<LiveStreamHandoff | null>(null);
-  const { state, actions, computed, refs } = usePostForm(onClose, setLiveStream);
+  const [articleMode, setArticleMode] = useDraftState(draftScope + ':articleMode', false);
+  const [articleBody, setArticleBody] = useDraftState(draftScope + ':articleBody', '');
+  const finishPost = () => { setArticleBody(''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
+  const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
   const [planDrawerOpen, setPlanDrawerOpen] = useState(false);
   const [mediaFullscreenOpen, setMediaFullscreenOpen] = useState(false);
-  const [articleMode, setArticleMode] = useState(false);
-  const [articleBody, setArticleBody] = useState('');
   const [articleImage, setArticleImage] = useState<File | null>(null);
   const [articleImagePreview, setArticleImagePreview] = useState('');
   const saveArticleDraft = () => {
-    const done = () => { actions.resetForm(); handleClose(); };
+    const done = () => { actions.resetForm(); finishPost(); };
     draftImageData(articleImage)
       .then(imageData => actions.saveDraft({ body: articleBody, title: state.titleText, imageData, socialData: imageData }))
       .catch(() => actions.saveDraft({ body: articleBody, title: state.titleText }))
@@ -105,11 +107,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
   // When opening from share (initialText provided), reset form first for a fresh start
   useEffect(() => {
     if (isOpen && initialText) {
-      actions.resetForm();
-      // Small delay to let reset take effect, then set the text
-      setTimeout(() => {
-        actions.setText(initialText);
-      }, 0);
+      if (!state.text) actions.setText(initialText);
     }
   }, [isOpen, initialText]);
 
@@ -156,9 +154,6 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
     // composer is opened.
     setLiveStream(null);
     setPlanDrawerOpen(false);
-    setArticleMode(false);
-    setArticleBody('');
-    setArticleImage(null);
     onClose();
   };
 
@@ -449,4 +444,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       )}
     </>
   );
+}
+
+export function PostModal(props: PostModalProps) {
+  const draftScope = props.initialText ? `post:share:${props.initialText}` : 'post:new';
+  const accountKey = useAccountDraftKey(draftScope);
+  return <PostModalForAccount key={accountKey ?? 'guest'} {...props} draftScope={draftScope} />;
 }

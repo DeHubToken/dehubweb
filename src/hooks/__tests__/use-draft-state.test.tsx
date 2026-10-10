@@ -59,6 +59,17 @@ describe('durable field lifecycle', () => {
     expect(shown()).toBe('new');
     expect(JSON.parse(readDraft(accountDraftKey('alice', 'room:two')!)).value).toBe('new');
   });
+  it('successful submission cannot discard newer typing', () => {
+    render(); act(() => change('first message'));
+    const submitted = shown();
+    act(() => change('next message'));
+    act(() => change.complete(submitted, ''));
+    expect(shown()).toBe('next message');
+    expect(JSON.parse(readDraft(accountDraftKey('alice', 'room:one')!)).value).toBe('next message');
+    act(() => change.complete('next message', ''));
+    expect(shown()).toBe('');
+    expect(readDraft(accountDraftKey('alice', 'room:one')!)).toBe('');
+  });
   it('does not persist without an account', () => {
     render({ account: '' }); act(() => change('temporary'));
     expect(localStorage.length).toBe(0);

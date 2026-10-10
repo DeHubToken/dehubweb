@@ -946,10 +946,20 @@
     {
       "file": "src/components/app/modals/EditPostModal.tsx",
       "fields": [
-        "categoryInput"
+        "categoryInput",
+        "name",
+        "description",
+        "articleBody",
+        "categories",
+        "shopLinks"
       ],
       "setters": [
-        "setCategoryInput"
+        "setCategoryInput",
+        "setName",
+        "setDescription",
+        "setArticleBody",
+        "setCategories",
+        "setShopLinks"
       ],
       "identity": "tokenId"
     },
@@ -1954,6 +1964,38 @@
         "setChannelUrl"
       ],
       "identity": "route"
+    },
+    {
+      "file": "src/features/post/hooks/usePostForm.ts",
+      "fields": [
+        "text",
+        "titleText",
+        "ppvAmount",
+        "w2eViews",
+        "w2eComments",
+        "w2eTotal",
+        "tokenContract",
+        "tokenSymbol",
+        "tokenAmount",
+        "poll",
+        "shopLinks",
+        "selectedCategory"
+      ],
+      "setters": [
+        "setText",
+        "setTitleText",
+        "setPpvAmount",
+        "setW2eViews",
+        "setW2eComments",
+        "setW2eTotal",
+        "setTokenContract",
+        "setTokenSymbol",
+        "setTokenAmount",
+        "setPoll",
+        "setShopLinks",
+        "setSelectedCategory"
+      ],
+      "identity": "draftScope"
     }
   ]
 }

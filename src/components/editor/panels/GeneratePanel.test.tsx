@@ -11,7 +11,8 @@ const state = vi.hoisted(() => ({
   generations: { startImage: vi.fn(), startVideo: vi.fn() },
 }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
-vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => state.auth }));
+vi.mock('@/contexts/AuthContext', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@/contexts/AuthContext')>(), useAuth: () => state.auth }));
 vi.mock('@/hooks/use-editor-quota', () => ({ useEditorQuota: () => state.quota }));
 vi.mock('@/store/generationStore', () => ({ useGenerationStore: (select: (s: typeof state.generations) => unknown) => select(state.generations) }));
 vi.mock('@/lib/creator/generationEngine', () => ({ DEFAULT_VOICE_ID: 'voice', generateAudio: vi.fn() }));

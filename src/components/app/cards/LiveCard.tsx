@@ -248,6 +248,7 @@ export function LiveCard({ stream }: LiveCardProps) {
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: stream.id,
           type: 'live',
           author: stream.streamer,
           title: stream.title,

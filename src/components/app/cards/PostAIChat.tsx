@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * Post AI Chat Component
  * ======================
@@ -33,6 +34,7 @@ interface Message {
 }
 
 interface PostContext {
+  tokenId?: string | number;
   type: 'image' | 'video' | 'live' | 'post';
   author?: string;
   caption?: string;
@@ -67,7 +69,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   const { t } = useI18n();
   const { language: userLanguage } = useUserLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useDraftState(postContext.tokenId != null ? `post:${postContext.tokenId}:chat` : null, '');
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -212,7 +214,6 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
     setIsLoading(true);
     
     // Reset textarea height
@@ -242,6 +243,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      setInput.complete(input, '');
     } catch (error) {
       console.error('AI chat error:', error);
       setMessages(prev => [...prev, {
@@ -265,7 +267,6 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
     setIsLoading(true);
 
     try {
@@ -312,7 +313,6 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
 
   const handleClose = () => {
     setMessages([]);
-    setInput('');
     removeChat(chatId);
     onClose();
   };

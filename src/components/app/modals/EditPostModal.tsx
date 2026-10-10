@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Edit Post Modal
@@ -84,9 +85,9 @@ export function EditPostModal({
   // still hardcoded English and wiring it is its own change, but a new string
   // should not add to that pile.
   const { t } = useTranslation();
-  const [name, setName] = useState(currentTitle);
-  const [description, setDescription] = useState(currentDescription);
-  const [articleBody, setArticleBody] = useState(currentArticleBody ?? '');
+  const [name, setName] = useDraftState(`post:edit:${tokenId}` + ":name", currentTitle);
+  const [description, setDescription] = useDraftState(`post:edit:${tokenId}` + ":description", currentDescription);
+  const [articleBody, setArticleBody] = useDraftState(`post:edit:${tokenId}` + ":articleBody", currentArticleBody ?? '');
   // Text cap scales with the badge tier; only read once the modal opens,
   // because every feed card mounts this component.
   const [tierTextMax, setTierTextMax] = useState(BASE_POST_TEXT_CHARS);
@@ -98,11 +99,11 @@ export function EditPostModal({
   }, [open, currentArticleBody]);
   const descriptionMax = currentArticleBody !== undefined ? BASE_POST_TEXT_CHARS : tierTextMax;
   const [categoryInput, setCategoryInput] = useSurfaceDraft("components/app/modals/EditPostModal.tsx:categoryInput", '', tokenId);
-  const [categories, setCategories] = useState<string[]>(currentCategories);
+  const [categories, setCategories] = useDraftState<string[]>(`post:edit:${tokenId}` + ":categories", currentCategories);
   const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
   const [isMature, setIsMature] = useState(currentContentRating === 'mature');
   const [isForKids, setIsForKids] = useState(currentForKids === true);
-  const [shopLinks, setShopLinks] = useState<ShopLink[]>(currentShopLinks ?? []);
+  const [shopLinks, setShopLinks] = useDraftState<ShopLink[]>(`post:edit:${tokenId}` + ":shopLinks", currentShopLinks ?? []);
   const [shopSheetOpen, setShopSheetOpen] = useState(false);
   const shopAllowance = useShopLinkAllowance();
   /**
@@ -156,17 +157,17 @@ export function EditPostModal({
     if (!open) { editingTokenRef.current = null; return; }
     if (editingTokenRef.current !== String(tokenId)) {
       editingTokenRef.current = String(tokenId);
-      setName(currentTitle);
-      setDescription(currentDescription);
-      setArticleBody(currentArticleBody ?? '');
-      setCategories(currentCategories);
+      setName.initialize(currentTitle);
+      setDescription.initialize(currentDescription);
+      setArticleBody.initialize(currentArticleBody ?? '');
+      setCategories.initialize(currentCategories);
       setCommentsDisabled(currentCommentsDisabled);
       setIsMature(currentContentRating === 'mature');
       setIsForKids(currentForKids === true);
       setCategoryInput.initialize('');
       setCommonGround(null);
     }
-  }, [open, tokenId, currentTitle, currentDescription, currentArticleBody, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids, setCategoryInput]);
+  }, [open, tokenId, currentTitle, currentDescription, currentArticleBody, currentCategories, currentCommentsDisabled, currentContentRating, currentForKids, setCategoryInput, setArticleBody, setCategories, setDescription, setName]);
 
   const handleAddCategory = () => {
     const trimmed = normalizeCategoryName(categoryInput);
@@ -256,7 +257,12 @@ export function EditPostModal({
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length });
+        setName.complete(name, name);
+      setDescription.complete(description, description);
+      setArticleBody.complete(articleBody, articleBody);
+      setCategories.complete(categories, categories);
+      setShopLinks.complete(shopLinks, shopLinks);
+      onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');

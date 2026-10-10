@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useState, useCallback, memo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, Pencil, X } from 'lucide-react';
@@ -86,7 +87,7 @@ interface ChatMessageProps {
   onUnban?: (userId: string, userName: string) => void;
   onDelete?: (messageId: string) => void;
   /** Save a rewritten body. Only offered on your own text messages. */
-  onEdit?: (messageId: string, content: string) => void;
+  onEdit?: (messageId: string, content: string) => void | Promise<void | boolean>;
   onReact?: (messageId: string, emoji: string) => void;
   onRemoveReaction?: (messageId: string, emoji: string) => void;
   onReply?: (message: Message) => void;
@@ -189,7 +190,7 @@ export const ChatMessage = memo(function ChatMessage({
   const navigate = useNavigate();
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(message.content);
+  const [draft, setDraft] = useDraftState(`chat:edit:${message.id}`, message.content);
 
   const isMine = !!currentUserAddress && message.userId.toLowerCase() === currentUserAddress.toLowerCase();
   // Only the words are editable. A caption swap under an image or a voice note
@@ -198,16 +199,18 @@ export const ChatMessage = memo(function ChatMessage({
   const canDelete = isMine && !!onDelete;
 
   const startEditing = useCallback(() => {
-    setDraft(message.content);
+    setDraft.initialize(message.content);
     setIsEditing(true);
-  }, [message.content]);
+  }, [message.content, setDraft]);
 
-  const commitEdit = useCallback(() => {
+  const commitEdit = useCallback(async () => {
     const next = draft.trim();
-    setIsEditing(false);
-    if (!next || next === message.content) return;
-    onEdit?.(message.id, next);
-  }, [draft, message.content, message.id, onEdit]);
+    if (!next) return;
+    try {
+      const result = next === message.content ? true : await onEdit?.(message.id, next);
+      if (result !== false && setDraft.complete(draft, draft)) setIsEditing(false);
+    } catch { /* Keep the edit available for retry. */ }
+  }, [draft, message.content, message.id, onEdit, setDraft]);
   const {
     isTranslated,
     translatedText,

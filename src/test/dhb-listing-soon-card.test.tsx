@@ -8,7 +8,8 @@ const listing = vi.hoisted(() => ({
   rememberJoinedEmail: vi.fn(),
 }));
 
-vi.mock('@/contexts/AuthContext', () => ({
+vi.mock('@/contexts/AuthContext', async (importOriginal) => ({
+  ...await importOriginal<typeof import('@/contexts/AuthContext')>(),
   useAuth: () => ({ user: { username: 'mal' }, walletAddress: '0xabc' }),
 }));
 vi.mock('react-i18next', () => ({

@@ -230,7 +230,7 @@ export function useCommunityChat(
     replyToId?: string,
     userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number }
   ) => {
-    if (!communityId || !walletAddress) return;
+    if (!communityId || !walletAddress) throw new Error('Sign in to send a message');
 
     const msg = {
       community_id: communityId,
@@ -344,9 +344,9 @@ export function useCommunityChat(
 
   // Edit message
   const editMessage = useCallback(async (messageId: string, newContent: string) => {
-    if (!walletAddress || !communityId) return;
+    if (!walletAddress || !communityId) return false;
     const trimmed = newContent.trim();
-    if (!trimmed) return;
+    if (!trimmed) return false;
 
     // Optimistic update
     queryClient.setQueryData<CommunityChatMessage[]>(
@@ -367,7 +367,9 @@ export function useCommunityChat(
       console.error('[CommunityChat] Edit error:', error);
       toast.error('Failed to edit message');
       queryClient.invalidateQueries({ queryKey: messagesKey });
+      return false;
     }
+    return true;
   }, [walletAddress, communityId, queryClient]);
 
   // Delete message (own message, or a moderator deleting anyone's). Goes through

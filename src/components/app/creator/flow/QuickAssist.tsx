@@ -85,7 +85,6 @@ export default function QuickAssist({ onUsePrompt }: { onUsePrompt?: (text: stri
       if (!trimmed || streaming) return;
       const next: Message[] = [...messages, { role: 'user', content: trimmed }];
       setMessages([...next, { role: 'assistant', content: '', streaming: true }]);
-      setInput('');
       setStreaming(true);
       const idx = next.length;
       const abort = new AbortController();
@@ -98,6 +97,7 @@ export default function QuickAssist({ onUsePrompt }: { onUsePrompt?: (text: stri
           signal: abort.signal,
           onDelta: (_d, acc) => setMessages((prev) => prev.map((m, i) => (i === idx ? { ...m, content: acc } : m))),
         });
+        setInput.complete(text, '');
         setMessages((prev) => prev.map((m, i) => (i === idx ? { ...m, streaming: false } : m)));
       } catch (err) {
         if ((err as Error)?.name !== 'AbortError') {
@@ -108,7 +108,7 @@ export default function QuickAssist({ onUsePrompt }: { onUsePrompt?: (text: stri
         setStreaming(false);
       }
     },
-    [messages, streaming, model, t],
+    [messages, streaming, model, t, setInput],
   );
 
   const isEmpty = messages.length === 0;

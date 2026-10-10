@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useDraft } from '@/hooks/use-draft';
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
@@ -149,7 +150,16 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
   // the rail — the composer is a 169-character single line shared with the
   // mention picker, and hijacking it would strand a half-typed message.
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editDraft, setEditDraft] = useState('');
+  const [editInitial, setEditInitial] = useState('');
+  const [editDraft, setEditDraft] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
+  const commitDraftEdit = async (id: string) => {
+    if (!editDraft.trim()) return;
+    try {
+      const result = await editMessage(id, editDraft);
+      if (result !== false && setEditDraft.complete(editDraft, editDraft)) setEditingId(current => current === id ? null : current);
+    } catch { /* Keep the edit available for retry. */ }
+  };
+
   const translateSignal = 0;
   const originalSignal = 0;
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -158,6 +168,10 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
+
+  const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
+  const roomId = rooms[0]?.id || null;
+  const [newMessage, setNewMessage] = useDraft(roomId ? `room:${roomId}` : null);
 
   const mention = useMention({
     inputRef: textareaRef,
@@ -173,9 +187,6 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     }
   }, [newMessage]);
 
-  const { rooms, isLoading: roomsLoading } = useLiveChatRooms();
-  const roomId = rooms[0]?.id || null;
-  const [newMessage, setNewMessage] = useDraft(roomId ? `room:${roomId}` : null);
   const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction, editMessage, deleteMessage } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
 
@@ -482,9 +493,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
-                                const next = editDraft.trim();
-                                setEditingId(null);
-                                if (next && next !== msg.content) void editMessage(msg.id, next);
+                                void commitDraftEdit(msg.id);
                               } else if (e.key === 'Escape') {
                                 e.preventDefault();
                                 setEditingId(null);
@@ -497,9 +506,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           <div className="mt-0.5 flex items-center gap-2 text-[10px] text-zinc-500">
                             <button
                               onClick={() => {
-                                const next = editDraft.trim();
-                                setEditingId(null);
-                                if (next && next !== msg.content) void editMessage(msg.id, next);
+                                void commitDraftEdit(msg.id);
                               }}
                               className="text-white hover:underline"
                             >
@@ -552,7 +559,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <button
-                                    onClick={() => { setEditingId(msg.id); setEditDraft(msg.content || ''); }}
+                                    onClick={() => { setEditingId(msg.id); setEditInitial(msg.content || ''); }}
                                     className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
                                   >
                                     <Pencil className="w-3 h-3" />

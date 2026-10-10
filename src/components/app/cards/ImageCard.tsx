@@ -1384,6 +1384,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: post.id,
           type: 'image',
           author: post.username,
           caption: post.description || post.title || post.caption,

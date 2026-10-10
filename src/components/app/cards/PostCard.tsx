@@ -1022,6 +1022,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: post.id,
           type: 'post',
           author: post.author.name,
           caption: post.content
