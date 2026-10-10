@@ -1,25 +1,16 @@
-import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Quote Post Modal
  * =================
- * Liquid glass drawer for quoting a post with your own commentary.
- * Handles full 2-step flow: API signature + on-chain mint.
+ * Quoting is posting: this opens the standard composer with the quoted post
+ * attached, so a quote gets the same media, poll, rating and mint choices as
+ * any other post — and, like any other post, publishes off-chain without a
+ * wallet unless "Mint post" is on.
+ *
+ * Kept as its own component (and lazily loaded through QuotePostModalLazy) so
+ * feed cards keep their existing `open` / `onOpenChange` / `quotedPost` API.
  */
 
-import { useState, useRef, useCallback } from 'react';
-import { X } from 'lucide-react';
-import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
-import { useQueryClient } from '@tanstack/react-query';
-import { quotePost } from '@/lib/api/dehub';
-// NOTE: stream-collection reaches wallet/contract code (wagmi + web3auth) and
-// this modal is statically imported by eager feed cards — mintOnChain is
-// dynamically imported at call time to keep the wallet stack out of the
-// entry bundle (scripts/check-entry-bundle.mjs fails the build otherwise).
-import { QuotedPostEmbed } from '../cards/QuotedPostEmbed';
-import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
-import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { PostModal } from '@/features/post';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 
 interface QuotePostModalProps {
@@ -30,216 +21,11 @@ interface QuotePostModalProps {
 }
 
 export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModalProps) {
-  const { t } = useTranslation();
-  const [content, setContent] = useSurfaceDraft("components/app/modals/QuotePostModal.tsx:content", '', draftIdentity(quotedPost));
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [statusText, setStatusText] = useState('');
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const creepIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  /**
-   * Idempotency key for the quote being written, kept next to the text it
-   * belongs to. Retrying the same quote re-sends the same key and the server
-   * hands back the quote the earlier attempt already created instead of
-   * posting it twice; editing the text first mints a new key, so a retry can
-   * never be answered with a quote the creator has since rewritten.
-   */
-  const attemptRef = useRef<{ signature: string; key: string } | null>(null);
-  const queryClient = useQueryClient();
-  const maxLength = 500;
-
-  const clearCreepInterval = useCallback(() => {
-    if (creepIntervalRef.current) {
-      clearInterval(creepIntervalRef.current);
-      creepIntervalRef.current = null;
-    }
-  }, []);
-
-  const startCreepProgress = useCallback(() => {
-    clearCreepInterval();
-    setUploadProgress(69);
-    creepIntervalRef.current = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 99) {
-          clearCreepInterval();
-          return 99;
-        }
-        const remaining = 99 - prev;
-        const increment = Math.max(0.3, remaining * 0.08);
-        return Math.min(99, prev + increment);
-      });
-    }, 1200);
-  }, [clearCreepInterval]);
-
-  const handleSubmit = async () => {
-    if (!content.trim()) {
-      toast.error('Add some text to your quote');
-      return;
-    }
-
-    const attemptSignature = `${quotedPost.tokenId}|${content.trim()}`;
-    if (attemptRef.current?.signature !== attemptSignature) {
-      attemptRef.current = {
-        signature: attemptSignature,
-        key:
-          typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-            ? crypto.randomUUID()
-            // Older Safari / non-secure contexts have no randomUUID.
-            : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`,
-      };
-    }
-
-    setIsSubmitting(true);
-    setUploadProgress(0);
-    try {
-      // Step 1: Call API to get mint signature
-      setStatusText('Preparing quote...');
-      setUploadProgress(30);
-      const mintSig = await quotePost({
-        quotedTokenId: quotedPost.tokenId,
-        content: content.trim(),
-        idempotencyKey: attemptRef.current.key,
-      });
-
-      console.log('[QuotePost] Mint signature received:', {
-        createdTokenId: mintSig.createdTokenId,
-        v: mintSig.v,
-      });
-
-      // Step 2: Execute on-chain mint transaction.
-      //
-      // Skipped when this send was a repeat of one that already minted: the
-      // response carries no signature because that token cannot be minted a
-      // second time, and the quote is already live.
-      if (!mintSig.alreadyMinted) {
-        setUploadProgress(65);
-        startCreepProgress();
-        toast.loading('Publishing quote...', { id: 'quote-mint', duration: Infinity });
-
-        const { mintOnChain } = await import('@/lib/contracts/stream-collection');
-        const mintResult = await mintOnChain({
-          tokenId: mintSig.createdTokenId,
-          timestamp: mintSig.timestamp,
-          v: mintSig.v,
-          r: mintSig.r,
-          s: mintSig.s,
-          uri: mintSig.uri,
-          chainId: 8453,
-        });
-
-        const txHash = mintResult.hash;
-        console.log('[QuotePost] Tx submitted:', txHash);
-
-        // Background confirmation — don't block UI
-        // Best-effort: the indexer picks the quote up from the chain regardless, so a
-        // timed-out confirmation must NOT surface a user-facing error after the quote
-        // already landed and "Quote posted!" was shown.
-        mintResult.confirmed.catch((err) => {
-          console.warn('[QuotePost] Background confirmation failed (quote still lands):', err);
-        });
-      }
-
-      // The quote is out; the next one this modal writes is a new quote.
-      attemptRef.current = null;
-      clearCreepInterval();
-      setUploadProgress(100);
-      toast.dismiss('quote-mint');
-      toast.success('Quote posted!');
-      if (mintSig.homeFeedRestricted) {
-        toast.warning('Home feed limit reached', {
-          description:
-            t('quote.homeFeedLimitDesc'),
-          duration: 12000,
-        });
-      }
-      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-      setContent.complete(content, '');
-      onOpenChange(false);
-    } catch (error) {
-      console.error('Quote post failed:', error);
-      clearCreepInterval();
-      setUploadProgress(0);
-      toast.dismiss('quote-mint');
-      const message = error instanceof Error ? error.message : 'Failed to post quote';
-      toast.error(message);
-    } finally {
-      setIsSubmitting(false);
-      setStatusText('');
-    }
-  };
-
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent column glass className="max-h-[85dvh]">
-        <VisuallyHidden>
-          <DrawerTitle>Quote Post</DrawerTitle>
-        </VisuallyHidden>
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-white/10">
-          <button
-            onClick={() => onOpenChange(false)}
-            disabled={isSubmitting}
-            className="text-white/50 hover:text-white transition-colors disabled:opacity-30"
-          >
-            <X className="w-5 h-5" />
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={isSubmitting || !content.trim()}
-            data-primary-cta
-            className="px-4 py-1.5 rounded-[10px] bg-white text-black font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/90 transition-colors"
-          >
-            {isSubmitting ? 'Posting...' : 'Post'}
-          </button>
-        </div>
-
-        {/* Compose area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value.slice(0, maxLength))}
-            placeholder="Add a comment..."
-            className="w-full bg-transparent text-white placeholder-white/30 text-base resize-none outline-none min-h-[80px]"
-            autoFocus
-            disabled={isSubmitting}
-            rows={3}
-          />
-
-          {/* Quoted post preview */}
-          <QuotedPostEmbed quotedPost={quotedPost} />
-
-          {/* Progress bar */}
-          {isSubmitting && uploadProgress > 0 && (
-            <LiquidGlassBubble shimmer noBorder className="mt-2">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-white/70 font-medium">
-                    Publishing...
-                  </span>
-                  <span className="text-xs text-white/50 tabular-nums">
-                    {Math.round(uploadProgress)}%
-                  </span>
-                </div>
-                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-white/40 via-white/60 to-white/40 transition-all duration-500 ease-out relative"
-                    style={{ width: `${uploadProgress}%` }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
-                  </div>
-                </div>
-              </div>
-            </LiquidGlassBubble>
-          )}
-
-          {/* Character count */}
-          <div className="flex justify-end">
-            <span className={`text-xs ${content.length > maxLength * 0.9 ? 'text-amber-400' : 'text-white/40'}`}>
-              {content.length}/{maxLength}
-            </span>
-          </div>
-        </div>
-      </DrawerContent>
-    </Drawer>
+    <PostModal
+      isOpen={open}
+      onClose={() => onOpenChange(false)}
+      quotedPost={quotedPost}
+    />
   );
 }

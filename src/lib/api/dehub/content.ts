@@ -21,6 +21,11 @@ export interface StreamInfo {
 }
 
 export interface MintPostParams {
+  /**
+   * Publish this post as a quote of another token. Same upload, sent to
+   * /quote_post instead of /user_mint.
+   */
+  quotedTokenId?: number;
   name: string;
   description: string;
   articleBody?: string;
@@ -254,7 +259,11 @@ export async function mintPost(
     if (params.socialImage) formData.append('file', params.socialImage);
   }
 
-  return authedUpload<MintResponse>('/api/user_mint', formData, {
+  if (params.quotedTokenId) {
+    formData.append('quotedTokenId', String(params.quotedTokenId));
+  }
+
+  return authedUpload<MintResponse>(params.quotedTokenId ? '/api/quote_post' : '/api/user_mint', formData, {
     onProgress,
     // 8-minute timeout for large video files on slow mobile connections
     timeoutMs: 8 * 60 * 1000,
