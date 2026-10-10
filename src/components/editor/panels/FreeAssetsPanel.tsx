@@ -252,7 +252,7 @@ export function FreeAssetsPanel() {
     const at = anchor.currentTime, projectId = anchor.projectId, scope = anchor.scopeVersion, capturedWallet = wallet.current;
     const task = projectTask(anchor.holdEdits(), () => mounted.current && wallet.current === capturedWallet && useEditorStore.getState().scopeVersion === scope && useEditorStore.getState().projectId === projectId)!;
     const owner = { task, controller: new AbortController() }; importing.current = owner;
-    anchor.setPlaying(false);
+    anchor.setIsPlaying(false);
     setAddingId(asset.id);
     try {
       const file = await downloadFreeAsset(asset, owner.controller.signal);
