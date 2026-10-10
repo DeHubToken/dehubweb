@@ -52,7 +52,7 @@ export function SettingDrawerSelect({
   const handleSelect = (optionValue: string) => {
     onValueChange(optionValue);
     setOpen(false);
-    setSearch('');
+    setSearch.complete(search, '');
   };
 
   return (

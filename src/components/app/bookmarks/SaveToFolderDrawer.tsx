@@ -111,8 +111,8 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
       const created = res.result;
       if (!created) return;
 
-      setNewFolderName('');
-      setNewFolderDesc('');
+      setNewFolderName.complete(newFolderName, '');
+      setNewFolderDesc.complete(newFolderDesc, '');
       setNewFolderPublic(false);
       setShowCreateForm(false);
 

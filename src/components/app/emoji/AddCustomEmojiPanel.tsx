@@ -67,7 +67,7 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
     if (!EMOJI_UPLOAD_TYPES.includes(f.type)) return toast.error(t('emojiPicker.errors.fileType'));
     if (f.size > MAX_EMOJI_UPLOAD_BYTES) return toast.error(t('emojiPicker.errors.fileSize'));
     setFile(f);
-    setLink('');
+    setLink.complete(link, '');
     setSource(null);
     setPreview(URL.createObjectURL(f));
     if (!name) setName(normaliseShortcode(f.name.replace(/\.\w+$/, '')));

@@ -40,7 +40,7 @@ export default function WorkPage() {
   const hasFilters = tab !== 'all' || currency !== 'all' || search.trim().length > 0;
   const showCompletedFallback = !isLoading && jobs.length === 0 && !hasFilters;
   const { data: completedJobs = [] } = useRecentCompletedJobs(showCompletedFallback);
-  const clearFilters = () => { setTab('all'); setCurrency('all'); setSearch(''); };
+  const clearFilters = () => { setTab('all'); setCurrency('all'); setSearch.complete(search, ''); };
 
   return (
     <div data-work-surface className="min-h-screen">

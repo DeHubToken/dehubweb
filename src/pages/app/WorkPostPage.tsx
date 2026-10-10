@@ -46,16 +46,16 @@ export default function WorkPostPage() {
     'work-post',
     { step, jobType, title, description, platform, targetUrl, currency, pricePerUnit, maxUnits, deadline },
     (saved) => {
-      if (saved.step) setStep(saved.step);
-      if (saved.jobType) setJobType(saved.jobType);
-      if (saved.title) setTitle(saved.title);
-      if (saved.description) setDescription(saved.description);
-      if (saved.platform) setPlatform(saved.platform);
-      if (saved.targetUrl) setTargetUrl(saved.targetUrl);
-      if (saved.currency) setCurrency(saved.currency);
-      if (saved.pricePerUnit) setPricePerUnit(saved.pricePerUnit);
-      if (saved.maxUnits) setMaxUnits(saved.maxUnits);
-      if (saved.deadline) setDeadline(saved.deadline);
+      if (saved.step !== undefined) setStep(saved.step);
+      if (saved.jobType !== undefined) setJobType(saved.jobType);
+      if (saved.title !== undefined) setTitle(saved.title);
+      if (saved.description !== undefined) setDescription(saved.description);
+      if (saved.platform !== undefined) setPlatform(saved.platform);
+      if (saved.targetUrl !== undefined) setTargetUrl(saved.targetUrl);
+      if (saved.currency !== undefined) setCurrency(saved.currency);
+      if (saved.pricePerUnit !== undefined) setPricePerUnit(saved.pricePerUnit);
+      if (saved.maxUnits !== undefined) setMaxUnits(saved.maxUnits);
+      if (saved.deadline !== undefined) setDeadline(saved.deadline);
     },
   );
 

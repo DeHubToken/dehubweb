@@ -72,8 +72,8 @@ export function BrowseTab() {
   };
 
   const clearPrice = () => {
-    setMinPrice('');
-    setMaxPrice('');
+    setMinPrice.complete(minPrice, '');
+    setMaxPrice.complete(maxPrice, '');
   };
 
   const clearAll = () => {

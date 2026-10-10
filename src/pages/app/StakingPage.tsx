@@ -455,7 +455,7 @@ export default function StakingPage() {
       pool: STAKING_ADDRESS, amount: String(amount), amountHex: `0x${parseUnits(String(amount), 18).toString(16)}`,
     };
     setPendingStake(attempt);
-    setStakeAmount('');
+    setStakeAmount.complete(stakeAmount, '');
     try { localStorage.setItem(pendingStakeKey(walletAddress), JSON.stringify(attempt)); }
     catch (error) { void stakeLog.warn('Pending stake storage unavailable', { hash: attempt.hash, error: String(error) }); }
     recordStakeEvent('Stake submitted; awaiting receipt', attempt);
@@ -561,7 +561,7 @@ export default function StakingPage() {
       toast.success(t('toasts.unstaked_successfully'), {
         description: t('toasts.dhb_unstaked_on_chain', { amount: unstakeAmount, chain: 'BNB Chain' }),
       });
-      setUnstakeAmount('');
+      setUnstakeAmount.complete(unstakeAmount, '');
       refetchStats();
       refetchUser();
       refetchQueue();

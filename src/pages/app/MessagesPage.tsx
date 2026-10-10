@@ -305,7 +305,7 @@ export default function MessagesPage() {
       recipientUser: user,
     }).then(conv => {
       setSelectedConversation(conv);
-      setSearchQuery('');
+      setSearchQuery.complete(searchQuery, '');
     }).catch(() => {});
   };
 

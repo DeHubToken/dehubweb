@@ -364,7 +364,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
                 {query && (
                   <button
                     type="button"
-                    onClick={() => setQuery('')}
+                    onClick={() => setQuery.complete(query, '')}
                     className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-white/50 hover:text-white"
                   >
                     <X className="w-3.5 h-3.5" />

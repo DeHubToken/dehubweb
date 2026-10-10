@@ -38,8 +38,8 @@ export function CreateTopicRoomModal({ open, onOpenChange, onCreated }: CreateTo
       });
       toast.success('Chat room created!');
       onCreated(room);
-      setTopic('');
-      setDescription('');
+      setTopic.complete(topic, '');
+      setDescription.complete(description, '');
       onOpenChange(false);
     } catch (err) {
       console.error('[LiveChat] Failed to create room:', err);

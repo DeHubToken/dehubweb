@@ -80,7 +80,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
       await joinGroup(groupId);
       toast.success('Member added');
       setShowAddMember(false);
-      setMemberSearch('');
+      setMemberSearch.complete(memberSearch, '');
       setSearchResults([]);
       fetchInfo();
       onUpdated();

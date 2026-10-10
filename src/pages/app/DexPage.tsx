@@ -300,7 +300,7 @@ export default function DexPage() {
   }
   function changeSide(next: 'buy' | 'sell') {
     if (busyRef.current || pending) return;
-    setAmount(''); priceTouched.current = false;
+    setAmount.complete(amount, ''); priceTouched.current = false;
     choosePrice(Number(defaultOrderPrice(next, referencePrice(next))), next);
   }
   async function register(saved: Pending) {
@@ -315,7 +315,7 @@ export default function DexPage() {
       min_usdc_per_dhb: Number(input.minPrice), max_usdc_per_dhb: Number(input.maxPrice),
     }, { onConflict: 'chain_id,token_id', ignoreDuplicates: true }), input.walletAddress)), 'Listing registration');
     if (error) throw new Error(t('dex.registrationFailed'));
-    savePending(null); setAmount(''); setReview(null); setFundingQuote(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
+    savePending(null); setAmount.complete(amount, ''); setReview(null); setFundingQuote(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
     priceTouched.current = false;
     toast.success(t('dex.created')); await loadPositions();
   }

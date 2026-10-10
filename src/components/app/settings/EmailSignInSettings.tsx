@@ -75,7 +75,7 @@ export function EmailSignInSettings() {
       const result = await confirmEmailLink(email.trim(), code.trim());
       setAwaitingCode(false);
       setCode('');
-      setEmail('');
+      setEmail.complete(email, '');
       setStatus({
         status: true,
         linked: true,
@@ -96,7 +96,7 @@ export function EmailSignInSettings() {
     try {
       await unlinkEmailLogin();
       setStatus({ status: true, linked: false, email: null, canLink: true, source: null });
-      setEmail('');
+      setEmail.complete(email, '');
       setCode('');
       setAwaitingCode(false);
       toast.success(

@@ -27,7 +27,7 @@ function SearchBar({ compact }: { compact?: boolean }) {
     if (e.key === 'Enter' && searchValue.trim()) {
       addToHistory(searchValue.trim());
       navigate(`/app/explore?q=${encodeURIComponent(searchValue.trim())}`);
-      setSearchValue('');
+      setSearchValue.complete(searchValue, '');
     }
   };
 

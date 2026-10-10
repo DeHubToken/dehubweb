@@ -123,7 +123,7 @@ export function TipModal({
       }
       if (commentId) emitPostTipped(commentTipKey(commentId));
       else if (resolvedTokenId) emitPostTipped(resolvedTokenId);
-      setAmount('');
+      setAmount.complete(amount, '');
       onOpenChange(false);
     },
     onConfirmed: () => {

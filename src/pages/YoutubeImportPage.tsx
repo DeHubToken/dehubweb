@@ -288,7 +288,7 @@ export default function YoutubeImportPage() {
             description: details?.description || undefined,
             rotation: details?.rotation,
           });
-          setUrl('');
+          setUrl.complete(url, '');
           toast.message(t('converter.toastQueued'));
           await refresh();
         } catch (err) {
@@ -298,7 +298,7 @@ export default function YoutubeImportPage() {
         }
       });
     },
-    [refresh, requireAuth, t, setUrl],
+    [refresh, requireAuth, t, setUrl, url],
   );
 
   const handleSubmit = () => {

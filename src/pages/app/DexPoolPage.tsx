@@ -283,7 +283,7 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
     } as never), walletAddress);
     if (error) toast.error(t('dex.registrationFailed'));
     toast.success(t('dex.created'));
-    setAmount(''); priceTouched.current = false; setMine(true);
+    setAmount.complete(amount, ''); priceTouched.current = false; setMine(true);
   }
 
   async function quoteInstant(): Promise<InstantQuote | null> {
@@ -325,7 +325,7 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
       } as never), walletAddress);
     }
     toast.success(t(side === 'buy' ? 'dex.pool.bought' : 'dex.pool.sold', { amount: formatSize(tokenAmount), symbol }));
-    setAmount(''); setInstantQuote(null);
+    setAmount.complete(amount, ''); setInstantQuote(null);
   }
 
   async function submit() {
@@ -426,7 +426,7 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
             <button type="button" className="dex-instant dex-instant-buy" onClick={() => { setMode('instant'); setSide('buy'); }}><Zap size={13} />{t('dex.pool.instantBuy')}</button>
             <button type="button" className="dex-instant dex-instant-sell" onClick={() => { setMode('instant'); setSide('sell'); }}><Zap size={13} />{t('dex.pool.instantSell')}</button>
           </div>
-          <div className="dex-side">{(['buy', 'sell'] as const).map((value) => <button type="button" key={value} className={side === value ? `active-${value}` : ''} onClick={() => { setSide(value); setAmount(''); priceTouched.current = false; }}>{t(value === 'buy' ? 'dex.buy' : 'dex.sell')}</button>)}</div>
+          <div className="dex-side">{(['buy', 'sell'] as const).map((value) => <button type="button" key={value} className={side === value ? `active-${value}` : ''} onClick={() => { setSide(value); setAmount.complete(amount, ''); priceTouched.current = false; }}>{t(value === 'buy' ? 'dex.buy' : 'dex.sell')}</button>)}</div>
           {mode === 'limit' && <label className="dex-field">{t(side === 'buy' ? 'dex.pool.buyAt' : 'dex.pool.sellAt')}<div className="dex-input"><input aria-label={t(side === 'buy' ? 'dex.pool.buyAt' : 'dex.pool.sellAt')} inputMode="decimal" value={price} onChange={(e) => { priceTouched.current = true; setPrice(decimalInput(e.target.value)); }} /><span>USD</span></div></label>}
           {side === 'buy' && mode === 'instant' && <label className="dex-field">{t('dex.payWith')}<div className="dex-input"><select className="dex-pay-select" aria-label={t('dex.payWith')} value={payNative ? 'native' : 'usdc'} onChange={(e) => setPayNative(e.target.value === 'native')}>
             <option value="usdc">USDC · {balances ? formatSize(balances.usdc) : '—'}</option>

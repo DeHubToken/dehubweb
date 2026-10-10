@@ -42,7 +42,7 @@ export function PoolPicker({ current }: { current: DexPool | null }) {
     return pools.filter((p) => p.symbol.toLowerCase().includes(q) || p.name.toLowerCase().includes(q) || p.token_address.toLowerCase() === q);
   }, [pools, query]);
 
-  const go = (path: string) => { setOpen(false); setQuery(''); navigate(path); };
+  const go = (path: string) => { setOpen(false); setQuery.complete(query, ''); navigate(path); };
 
   return <div className="dex-pair" ref={root}>
     <PoolAvatar pool={current} />

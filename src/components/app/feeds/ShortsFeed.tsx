@@ -207,7 +207,7 @@ function CategoryFilterSection({
             <button
               data-feed-filter-button
               data-active="true"
-              onClick={() => { onSelect(null); setSearch(''); }}
+              onClick={() => { onSelect(null); setSearch.complete(search, ''); }}
               className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", activeFilterClass)}
             >
               {selectedObj.name}
@@ -217,7 +217,7 @@ function CategoryFilterSection({
           <button
             data-feed-filter-button
             data-active={selectedCategory === null ? 'true' : undefined}
-            onClick={() => { onSelect(null); setSearch(''); }}
+            onClick={() => { onSelect(null); setSearch.complete(search, ''); }}
             className={cn(
               'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
               selectedCategory === null ? activeFilterClass : INACTIVE_FILTER_CLASS
@@ -230,7 +230,7 @@ function CategoryFilterSection({
               key={cat.id}
               data-feed-filter-button
               data-active={selectedCategory === cat.id ? 'true' : undefined}
-              onClick={() => { onSelect(cat.id); setSearch(''); }}
+              onClick={() => { onSelect(cat.id); setSearch.complete(search, ''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                 selectedCategory === cat.id ? activeFilterClass : INACTIVE_FILTER_CLASS

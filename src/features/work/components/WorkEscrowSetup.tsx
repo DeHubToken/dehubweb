@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { AbiCoder,concat,getCreate2Address,Interface,keccak256,toUtf8Bytes } from 'ethers';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +17,7 @@ async function codeAt(address:string) {
 }
 export function WorkEscrowSetup() {
  const {t}=useTranslation(); const {walletAddress}=useAuth(); const {data:config}=useWorkConfig(); const qc=useQueryClient();
- const [busy,setBusy]=useState(false); const [message,setMessage]=useState(''); const [hash,setHash]=useState(()=>localStorage.getItem('work-escrow-deployment') || '');
+ const [busy,setBusy]=useState(false); const [message,setMessage]=useState(''); const [hash,setHash]=useSurfaceDraft("src/features/work/components/WorkEscrowSetup.tsx:hash", '');
  if(!config || walletAddress?.toLowerCase()!==config.owner_address) return null;
  async function deploy() {
   setBusy(true); setMessage('');
@@ -39,7 +40,7 @@ export function WorkEscrowSetup() {
    if(!txHash) throw new Error('Enter the deployment transaction hash to activate the existing contract');
    const proof=await workReceipt('00000000-0000-4000-8000-000000000001',txHash,8453,address);
    if(!proof) {setMessage(t('work.integrity.fundingPending'));return;}
-   if(JSON.parse(proof.payload).status==='failed') {localStorage.removeItem('work-escrow-deployment');setHash('');throw new Error('Deployment reverted. Check your wallet gas balance before retrying.');}
+   if(JSON.parse(proof.payload).status==='failed') {localStorage.removeItem('work-escrow-deployment');setHash.complete(hash, '');throw new Error('Deployment reverted. Check your wallet gas balance before retrying.');}
    await workRpc(walletAddress!,'work_activate_escrow',{p_payload:proof.payload,p_signature:proof.signature});
    await qc.invalidateQueries({queryKey:['work-config']});setMessage(t('work.integrity.escrowActive'));
   } catch(error:any) {setMessage(error.message || 'Escrow setup failed');} finally {setBusy(false);}
@@ -49,7 +50,7 @@ export function WorkEscrowSetup() {
   {config.escrow_address?<a className="text-xs break-all" href={'https://basescan.org/address/'+config.escrow_address} target="_blank" rel="noreferrer">{t('work.integrity.escrowActive')}: {config.escrow_address}</a>:<>
    <p className="text-xs text-white/70">{t('work.integrity.deployNotice')}</p>
    <p className="text-xs break-all">Owner: {config.owner_address}<br/>Fee recipient: {config.fee_recipient}<br/>Tokens: DHB, USDC · Base</p>
-   <input aria-label={t('work.integrity.recoverTx')} value={hash} onChange={e=>setHash(e.target.value.trim())} placeholder={t('work.integrity.hashPlaceholder')} className="w-full rounded-lg bg-white/5 border border-white/20 px-3 py-2 text-xs" />
+   <input aria-label={t('work.integrity.recoverTx')} value={hash} onChange={e=>setHash(e.target.value)} placeholder={t('work.integrity.hashPlaceholder')} className="w-full rounded-lg bg-white/5 border border-white/20 px-3 py-2 text-xs" />
    <button onClick={deploy} disabled={busy || !config.expected_code_hash} className="px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold disabled:opacity-40">{t(busy?'work.integrity.deploying':hash?'work.integrity.activateEscrow':'work.integrity.deployEscrow')}</button>
   </>}
   {message && <p role="status" className="text-xs text-amber-200">{message}</p>}

@@ -160,7 +160,7 @@ export function FundActions() {
               onClick={() => {
                 toast.info(t('toasts.transfer_feature_coming_soon'));
                 setTransferOpen(false);
-                setWithdrawTarget('');
+                setWithdrawTarget.complete(withdrawTarget, '');
               }}
             >
               <Send className="w-4 h-4 mr-2" />

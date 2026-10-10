@@ -186,10 +186,10 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   };
 
   const reset = () => {
-    setStep(0); setName(''); setObjective('awareness'); setKind('image');
-    setMediaUrl(null); setThumbnailUrl(null); setHeadline(''); setBodyText('');
+    setStep(0); setName.complete(name, ''); setObjective('awareness'); setKind('image');
+    setMediaUrl(null); setThumbnailUrl(null); setHeadline.complete(headline, ''); setBodyText.complete(bodyText, '');
     setMediaDuration(null);
-    setCtaLabel('Learn more'); setCtaUrl(''); setTargeting({});
+    setCtaLabel('Learn more'); setCtaUrl.complete(ctaUrl, ''); setTargeting({});
     setDailyBudget(250); setTotalBudget(2500); setDurationDays(14); setFrequencyCap(4);
     setFundingCampaignId(null);
   };

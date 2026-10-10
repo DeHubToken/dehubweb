@@ -862,7 +862,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     const avatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url || '';
     setToAddress(addr);
     setResolvedUser({ username: name, avatar, address: addr });
-    setUsernameQuery('');
+    setUsernameQuery.complete(usernameQuery, '');
     setSearchResults([]);
   };
 
@@ -911,7 +911,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
         },
       });
       setToAddress('');
-      setAmount('');
+      setAmount.complete(amount, '');
       setResolvedUser(null);
       onSuccess();
     } catch (err: any) {
@@ -988,7 +988,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
                     const val = e.target.value;
                     if (val.startsWith('0x')) {
                       setToAddress(val);
-                      setUsernameQuery('');
+                      setUsernameQuery.complete(usernameQuery, '');
                       setSearchResults([]);
                     } else {
                       setToAddress('');
@@ -1136,7 +1136,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
     if (!tokenInfo) return;
     saveCustomToken(chainId, { address: address.trim(), ...tokenInfo });
     toast.success(t('wallet.imported', { symbol: tokenInfo.symbol }));
-    setAddress('');
+    setAddress.complete(address, '');
     setTokenInfo(null);
     onImported();
   };

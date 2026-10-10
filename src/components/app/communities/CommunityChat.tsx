@@ -156,7 +156,7 @@ interface CommunityChatProps {
 
 export function CommunityChat({ communityId, community, membership, isMember }: CommunityChatProps) {
   const [newMessage, setNewMessage] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:newMessage", '', communityId);
-  const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
+  const [replyTo, setReplyTo] = useDraftState<CommunityChatMessage | null>(`community:${communityId}:reply`, null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editInitial, setEditInitial] = useState('');
   const [editText, setEditText] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
@@ -488,7 +488,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-      if (setNewMessage.complete(newMessage, '')) setReplyTo(null);
+      if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
       sent = true;
     } catch {
       // Error handled in hook
@@ -531,7 +531,6 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     if (!isAuthenticated) { openLoginModal(); return; }
     if (slowModeRemaining > 0) return;
     const replyToId = replyTo?.id;
-    setReplyTo(null);
     try {
       // image_url carries the picture; the body stays empty so a client that
       // renders the text does not print the URL under the GIF as a link.
@@ -572,14 +571,14 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-      setReplyTo(null);
+      setReplyTo.complete(replyTo, null);
       startSlowModeCountdown();
       toast.success('Voice note sent!', { id: toastId });
     } catch (err: any) {
       console.error('[CommunityChat] Voice upload failed:', err);
       toast.error(err?.message || 'Failed to send voice note', { id: toastId });
     }
-  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown]);
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown, setReplyTo]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (mention.isOpen) {
@@ -647,7 +646,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                 className="flex-1 bg-transparent border-none outline-none text-xs text-white placeholder:text-zinc-500"
               />
               <button
-                onClick={() => { setSearchQuery(''); setShowSearch(false); }}
+                onClick={() => { setSearchQuery.complete(searchQuery, ''); setShowSearch(false); }}
                 className="p-0.5 text-zinc-500 hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
@@ -1052,7 +1051,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
             </span>
             <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
           </div>
-          <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
+          <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>

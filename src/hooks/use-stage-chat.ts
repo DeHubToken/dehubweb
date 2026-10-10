@@ -244,14 +244,14 @@ export function useStageChat(
   );
 
   const editMessage = useCallback(
-    (messageId: string, newContent: string) => {
-      if (!walletAddress || !spaceId) return;
+    async (messageId: string, newContent: string) => {
+      if (!walletAddress || !spaceId) return false;
       const trimmed = newContent.trim();
-      if (!trimmed) return;
+      if (!trimmed) return false;
 
       patch((old) => old.map((m) => (m.id === messageId ? { ...m, content: trimmed } : m)));
 
-      void (async () => {
+      return (async () => {
         const { error } = await withWalletHeader(
           supabase
             .from(TABLE as never)
@@ -264,7 +264,9 @@ export function useStageChat(
           console.error('[StageChat] Edit error:', error);
           toast.error('Failed to edit message');
           void queryClient.invalidateQueries({ queryKey: [QUERY_KEY, spaceId] });
+          return false;
         }
+        return true;
       })();
     },
     [walletAddress, spaceId, patch, queryClient],

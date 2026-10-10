@@ -81,8 +81,8 @@ export function CreateCommunityModal({ open, onOpenChange }: CreateCommunityModa
       });
 
       onOpenChange(false);
-      setName('');
-      setDescription('');
+      setName.complete(name, '');
+      setDescription.complete(description, '');
       setIsPrivate(false);
       setAvatarFile(null);
       setAvatarPreview(null);

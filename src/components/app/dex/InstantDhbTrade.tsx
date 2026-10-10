@@ -54,7 +54,7 @@ export function InstantDhbTrade({ tokens, onDone }: { tokens: WalletToken[]; onD
       }
       await runSwap(quote, walletAddress);
       toast.success(t(side === 'buy' ? 'dex.pool.bought' : 'dex.pool.sold', { amount: formatSize(side === 'buy' ? Number(formatUnits(quote.amountOut, 18)) : value), symbol: tokenLabel() }));
-      setAmount(''); setQuote(null); onDone();
+      setAmount.complete(amount, ''); setQuote(null); onDone();
     } catch (e) { setError(dexActionError(e, t('dex.prepareFailed'))); }
     finally { setBusy(false); }
   }

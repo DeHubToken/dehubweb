@@ -74,4 +74,25 @@ describe('durable field lifecycle', () => {
     render({ account: '' }); act(() => change('temporary'));
     expect(localStorage.length).toBe(0);
   });
+  it('does not clear newer typing from another tab before its storage event arrives', () => {
+    render(); act(() => change('submitted'));
+    const key = accountDraftKey('alice', 'room:one')!;
+    const disk = JSON.parse(localStorage.getItem('dehub-drafts-v1')!);
+    disk.d[key] = { t: JSON.stringify({ value: 'written in another tab' }), u: Date.now() + 1 };
+    localStorage.setItem('dehub-drafts-v1', JSON.stringify(disk));
+    act(() => expect(change.complete('submitted', '')).toBe(false));
+    expect(JSON.parse(readDraft(key)).value).toBe('written in another tab');
+  });
+  it.each(['dm:peer', 'room:sidebar', 'comment:post:reply', 'post:new:article', 'assistant:conversation', 'editor:project:clip', 'community:form', 'work:job:proof', 'store:listing:title'])(
+    'restores %s separately from its neighbouring entity and account', (place) => {
+      render({ place }); act(() => change('  unfinished\n '));
+      const completeOld = change;
+      render({ place: `${place}:other` }); act(() => change('neighbour'));
+      act(() => completeOld.complete('  unfinished\n ', ''));
+      expect(shown()).toBe('neighbour');
+      render({ place, account: 'bob' }); expect(shown()).toBe('');
+      render({ place }); expect(shown()).toBe('');
+      render({ place: `${place}:other` }); expect(shown()).toBe('neighbour');
+    },
+  );
 });

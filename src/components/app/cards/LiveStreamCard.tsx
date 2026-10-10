@@ -927,8 +927,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       record(1);
     },
     onSuccess: () => {
-      setGiftAmount('');
-      setGiftMessage('');
+      setGiftAmount.complete(giftAmount, '');
+      setGiftMessage.complete(giftMessage, '');
     },
   });
 

@@ -119,7 +119,7 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
       if (dbError) throw dbError;
 
       toast.success('Voice cloned successfully!');
-      setVoiceName('');
+      setVoiceName.complete(voiceName, '');
       setAudioFile(null);
       onSuccess();
       onOpenChange(false);

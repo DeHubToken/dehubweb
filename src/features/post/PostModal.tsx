@@ -47,7 +47,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   const [liveStream, setLiveStream] = useState<LiveStreamHandoff | null>(null);
   const [articleMode, setArticleMode] = useDraftState(draftScope + ':articleMode', false);
   const [articleBody, setArticleBody] = useDraftState(draftScope + ':articleBody', '');
-  const finishPost = () => { setArticleBody(''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
+  const finishPost = () => { setArticleBody.complete(articleBody, ''); setArticleBody.clear(); setArticleMode(false); setArticleMode.clear(); onClose(); };
   const { state, actions, computed, refs } = usePostForm(finishPost, setLiveStream, draftScope);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
@@ -268,7 +268,7 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
             // Loading a plain draft while the article editor is open used to
             // leave the article's body and cover sitting under the new text.
             setArticleMode(false);
-            setArticleBody('');
+            setArticleBody.complete(articleBody, '');
             setArticleImage(null);
           }
         }}

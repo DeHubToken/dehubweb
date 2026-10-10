@@ -61,8 +61,8 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
       });
       toast.success(t('fractions.offerSubmitted', { count: qty, price: prc }));
       onOpenChange(false);
-      setQuantity('');
-      setPrice('');
+      setQuantity.complete(quantity, '');
+      setPrice.complete(price, '');
       onSuccess?.();
     } catch (err) {
       console.error('Make offer error:', err);

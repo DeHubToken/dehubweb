@@ -90,7 +90,7 @@ interface EventChatProps {
 
 export function EventChat({ eventId }: EventChatProps) {
   const [newMessage, setNewMessage] = useSurfaceDraft("components/app/events/EventChat.tsx:newMessage", '', eventId);
-  const [replyTo, setReplyTo] = useState<EventChatMessage | null>(null);
+  const [replyTo, setReplyTo] = useDraftState<EventChatMessage | null>(`event:${eventId}:reply`, null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editInitial, setEditInitial] = useState('');
   const [editText, setEditText] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
@@ -139,7 +139,7 @@ export function EventChat({ eventId }: EventChatProps) {
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-      if (setNewMessage.complete(newMessage, '')) setReplyTo(null);
+      if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
     } catch { /* handled */ } finally { sendingRef.current = false; }
   };
 
@@ -148,7 +148,6 @@ export function EventChat({ eventId }: EventChatProps) {
   const handleGifSelect = async (gifUrl: string) => {
     if (!isAuthenticated) { openLoginModal(); return; }
     const replyToId = replyTo?.id;
-    setReplyTo(null);
     try {
       await sendMessage(gifUrl, 'gif', gifUrl, replyToId, {
         username: profileData?.handle || undefined,
@@ -184,13 +183,13 @@ export function EventChat({ eventId }: EventChatProps) {
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-      setReplyTo(null);
+      setReplyTo.complete(replyTo, null);
       toast.success(t('events.voiceNoteSent'), { id: toastId });
     } catch (err: any) {
       console.error('[EventChat] Voice upload failed:', err);
       toast.error(err?.message || t('events.voiceNoteFailed'), { id: toastId });
     }
-  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal]);
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, setReplyTo]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
@@ -351,7 +350,7 @@ export function EventChat({ eventId }: EventChatProps) {
             <span className="text-[10px] font-medium text-white">{replyTo.display_name || replyTo.username || 'User'}</span>
             <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
           </div>
-          <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
+          <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>

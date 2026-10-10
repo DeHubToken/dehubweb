@@ -650,7 +650,7 @@ export function FollowersListDrawer({
             />
             {searchQuery && (
               <button
-                onClick={() => setSearchQuery('')}
+                onClick={() => setSearchQuery.complete(searchQuery, '')}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
@@ -809,7 +809,7 @@ export function FollowersListDrawer({
                       onClick={(e) => {
                         e.stopPropagation();
                         setGroupingAddress(prev => (prev === user.address ? null : user.address));
-                        setNewGroupName('');
+                        setNewGroupName.complete(newGroupName, '');
                       }}
                       onKeyDown={(e) => {
                         if (e.key !== 'Enter' && e.key !== ' ') return;
@@ -897,7 +897,7 @@ export function FollowersListDrawer({
                         onChange={(e) => setNewGroupName(e.target.value)}
                         onKeyDown={(e) => {
                           if (e.key !== 'Enter') return;
-                          if (createGroup(newGroupName, user.address)) setNewGroupName('');
+                          if (createGroup(newGroupName, user.address)) setNewGroupName.complete(newGroupName, '');
                         }}
                         maxLength={MAX_GROUP_NAME}
                         placeholder={groups.length >= MAX_GROUPS ? t('follow.groupLimitReached') : t('follow.newGroupName')}
@@ -908,7 +908,7 @@ export function FollowersListDrawer({
                         size="sm"
                         variant="ghost"
                         disabled={!newGroupName.trim() || groups.length >= MAX_GROUPS}
-                        onClick={() => { if (createGroup(newGroupName, user.address)) setNewGroupName(''); }}
+                        onClick={() => { if (createGroup(newGroupName, user.address)) setNewGroupName.complete(newGroupName, ''); }}
                         className="h-8 shrink-0 rounded-lg bg-white/10 text-white hover:bg-white/20 disabled:opacity-40"
                       >
                         {t('follow.createGroup')}

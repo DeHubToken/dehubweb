@@ -197,9 +197,9 @@ export function useTVChat(channelId: string | undefined, enabled = true) {
   }, [rawMessages, walletAddress, channelId, queryClient]);
 
   const editMessage = useCallback(async (messageId: string, newContent: string) => {
-    if (!walletAddress || !channelId) return;
+    if (!walletAddress || !channelId) return false;
     const trimmed = newContent.trim();
-    if (!trimmed) return;
+    if (!trimmed) return false;
 
     queryClient.setQueryData<TVChatMessage[]>(
       [QUERY_KEY, channelId],
@@ -214,7 +214,9 @@ export function useTVChat(channelId: string | undefined, enabled = true) {
       console.error('[TVChat] Edit error:', error);
       toast.error('Failed to edit message');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, channelId] });
+      return false;
     }
+    return true;
   }, [walletAddress, channelId, queryClient]);
 
   const deleteMessage = useCallback(async (messageId: string) => {

@@ -143,9 +143,9 @@ export function SupportTicketDrawer({ open, onOpenChange, enabled = true }: Supp
   }, [data]);
 
   const resetForm = () => {
-    setSubject('');
-    setDescription('');
-    setStepsToReproduce('');
+    setSubject.complete(subject, '');
+    setDescription.complete(description, '');
+    setStepsToReproduce.complete(stepsToReproduce, '');
     setCategory('bug');
     setSeverity('normal');
   };

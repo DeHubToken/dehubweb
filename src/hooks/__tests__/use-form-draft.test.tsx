@@ -123,4 +123,12 @@ describe('useFormDraft', () => {
     expect(readDraft('probe')).toBe('');
     expect(readDraft(SCOPE)).not.toBe('');
   });
+  it('does not let an earlier successful submission remove newer form fields', async () => {
+    await mount();
+    act(() => setFields('submitted', 'body'));
+    const submitted = controls;
+    act(() => setFields('new title', 'new body'));
+    act(() => expect(submitted.clear()).toBe(false));
+    expect(JSON.parse(readDraft(SCOPE))).toEqual({ title: 'new title', body: 'new body' });
+  });
 });

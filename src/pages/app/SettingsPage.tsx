@@ -215,8 +215,8 @@ function MessageFeeControl() {
   const dirty = feeInput !== '' && parseFloat(feeInput) !== messageFee;
   const commit = () => {
     const val = parseFloat(feeInput);
-    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput(''));
-    else setFeeInput('');
+    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput.complete(feeInput, ''));
+    else setFeeInput.complete(feeInput, '');
   };
   return (
     <div className="flex items-center gap-2">
@@ -319,11 +319,11 @@ export default function SettingsPage() {
   // before they render anything at all.
   const openSearchResult = useCallback((result: SettingsSearchHit) => {
     setActiveTab(result.tab);
-    setSettingsSearch('');
+    setSettingsSearch.complete(settingsSearch, '');
     setSettingsSearchFocused(false);
     setSearchCursor(0);
     revealSettingAnchor(result.anchor);
-  }, [setSettingsSearch]);
+  }, [setSettingsSearch, settingsSearch]);
 
   // `?highlight=geo-blocking` opens one specific setting — the same jump
   // search makes, reusable from a toast or a support reply. The tab it lives
@@ -397,7 +397,7 @@ export default function SettingsPage() {
             onBlur={() => setTimeout(() => setSettingsSearchFocused(false), 150)}
             onKeyDown={(e) => {
               const count = settingsSearchResults.length;
-              if (e.key === 'Escape') { setSettingsSearch(''); setSettingsSearchFocused(false); return; }
+              if (e.key === 'Escape') { setSettingsSearch.complete(settingsSearch, ''); setSettingsSearchFocused(false); return; }
               if (!count) return;
               if (e.key === 'ArrowDown') { e.preventDefault(); setSearchCursor((c) => (c + 1) % count); }
               else if (e.key === 'ArrowUp') { e.preventDefault(); setSearchCursor((c) => (c - 1 + count) % count); }
@@ -3771,7 +3771,7 @@ function GeoBlockingSelector() {
               />
               {search && (
                 <button
-                  onClick={() => setSearch('')}
+                  onClick={() => setSearch.complete(search, '')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
                 >
                   <X className="w-4 h-4" />

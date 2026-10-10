@@ -46,7 +46,7 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
                 key={p.bps}
                 onClick={() => {
                   onSlippageChange(p.bps);
-                  setCustomValue('');
+                  setCustomValue.complete(customValue, '');
                 }}
                 className={`flex-1 text-xs py-1.5 rounded-lg border transition-colors ${
                   slippageBps === p.bps

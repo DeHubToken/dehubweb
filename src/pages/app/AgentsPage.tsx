@@ -116,8 +116,8 @@ export default function AgentsPage() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['ai-agents'] });
       setIsCreating(false);
-      setNewAgentName('');
-      setNewAgentDescription('');
+      setNewAgentName.complete(newAgentName, '');
+      setNewAgentDescription.complete(newAgentDescription, '');
       toast.success(t('agents.agentCreated'), {
         description: t('agents.saveApiKey'),
       });

@@ -1,3 +1,4 @@
+import { useDraftState } from "@/hooks/use-draft-state";
 /**
  * Motion: keyframes for a layer's position, size, rotation and transparency,
  * and the curve each keyframe eases out with. Lives in its own inspector tab.
@@ -209,7 +210,7 @@ export function MotionSection({ clip }: { clip: Clip }) {
                 <input
                   type="number"
                   key={`${p}:${display(p, propAt(clip, p, now))}`}
-                  defaultValue={display(p, propAt(clip, p, now))}
+                  initialValue={String(display(p, propAt(clip, p, now)))}
                   disabled={on && !inside}
                   onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
                   onBlur={(e) => {
@@ -476,4 +477,13 @@ function CurveEditor({ ease, onStart, onLive }: { ease: Ease; onStart: () => voi
       )}
     </div>
   );
+}
+
+function MotionValue({ draftScope, initialValue, onBlur, ...props }: React.InputHTMLAttributes<HTMLInputElement> & { draftScope: string; initialValue: string }) {
+  const [text, setText] = useDraftState(draftScope, initialValue);
+  return <input {...props} value={text} onChange={event => setText(event.target.value)} onBlur={event => {
+    if (!text.trim() || !Number.isFinite(Number(text))) return;
+    onBlur?.(event);
+    setText.complete(text, text);
+  }} />;
 }

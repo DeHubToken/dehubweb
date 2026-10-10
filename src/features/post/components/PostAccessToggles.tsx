@@ -254,7 +254,7 @@ export function PostAccessToggles({
 
   const handleCategoryToggle = (checked: boolean) => {
     if (checked) {
-      setCategorySearch('');
+      setCategorySearch.complete(categorySearch, '');
       setCategoryDrawerOpen(true);
     } else {
       setSelectedCategory('');
@@ -280,7 +280,7 @@ export function PostAccessToggles({
 
   const handlePpvToggle = (checked: boolean) => {
     if (checked) {
-      setTempPpvAmount(ppvAmount);
+      setTempPpvAmount.initialize(ppvAmount);
       // Carrying DHB/USD over to a Solana post would leave the selector with
       // nothing highlighted, so fall back to the chain's first token.
       setTempPpvCurrency(
@@ -294,9 +294,9 @@ export function PostAccessToggles({
 
   const handleBountyToggle = (checked: boolean) => {
     if (checked) {
-      setTempW2eViews(w2eViews);
-      setTempW2eComments(w2eComments);
-      setTempW2eTotal(w2eTotal);
+      setTempW2eViews.initialize(w2eViews);
+      setTempW2eComments.initialize(w2eComments);
+      setTempW2eTotal.initialize(w2eTotal);
       setBountyDrawerOpen(true);
     } else {
       setIsWatch2Earn(false);
@@ -305,9 +305,9 @@ export function PostAccessToggles({
 
   const handleTokenToggle = (checked: boolean) => {
     if (checked) {
-      setTempTokenAmount(tokenAmount);
-      setTempTokenSymbol(tokenSymbol || lockTokens[0]?.symbol || 'DHB');
-      setTempTokenContract(tokenContract);
+      setTempTokenAmount.initialize(tokenAmount);
+      setTempTokenSymbol.initialize(tokenSymbol || lockTokens[0]?.symbol || 'DHB');
+      setTempTokenContract.initialize(tokenContract);
       setUseCustomToken(!!tokenContract);
       setTokenDrawerOpen(true);
     } else {
@@ -787,7 +787,7 @@ export function PostAccessToggles({
                     } else {
                       toggleCategory(categorySearch.trim());
                     }
-                    setCategorySearch('');
+                    setCategorySearch.complete(categorySearch, '');
                   }
                 }}
                 placeholder="Search categories..."
@@ -797,7 +797,7 @@ export function PostAccessToggles({
               {categorySearch && (
                 <button
                   type="button"
-                  onClick={() => setCategorySearch('')}
+                  onClick={() => setCategorySearch.complete(categorySearch, '')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white"
                 >
                   <X className="w-4 h-4" />
@@ -817,7 +817,7 @@ export function PostAccessToggles({
                 {categorySearch.trim().length >= 3 && !categories.some(c => c.name.toLowerCase() === normalizeCategoryName(categorySearch).toLowerCase()) && selectedCategoriesArray.length < MAX_CATEGORIES && (
                   <button
                     type="button"
-                    onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch(''); }}
+                    onClick={() => { toggleCategory(categorySearch.trim()); setCategorySearch.complete(categorySearch, ''); }}
                     className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
                   >
                     <Plus className="w-4 h-4 text-emerald-400 shrink-0" />

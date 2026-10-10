@@ -544,9 +544,9 @@ function SubmitFeatureDrawer({
     'feature-request',
     { title, description, deviceDetails },
     (saved) => {
-      if (saved.title) setTitle(saved.title);
-      if (saved.description) setDescription(saved.description);
-      if (saved.deviceDetails) setDeviceDetails(saved.deviceDetails);
+      if (saved.title !== undefined) setTitle(saved.title);
+      if (saved.description !== undefined) setDescription(saved.description);
+      if (saved.deviceDetails !== undefined) setDeviceDetails(saved.deviceDetails);
     },
   );
 
@@ -630,13 +630,13 @@ function SubmitFeatureDrawer({
       },
       {
         onSuccess: () => {
+          if (!draft.clear()) return;
           setTitle('');
           setDescription('');
           setDeviceDetails('');
           setCategory('new_feature');
           clearAttachments();
           // Filed — the draft of it must not reopen pre-filled and get sent twice.
-          draft.clear();
           onOpenChange(false);
         },
       }

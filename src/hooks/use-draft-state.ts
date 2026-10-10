@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '@/contexts/AuthContext';
-import { clearDraft, flushDrafts, readDraft, writeDraft } from '@/lib/draft-cache';
+import { clearDraft, flushDrafts, readDraft, readCurrentDraft, writeDraft } from '@/lib/draft-cache';
 
 export function accountDraftKey(account: string | null | undefined, scope: string | null | undefined): string | null {
   return account && scope ? `account:${account.toLowerCase()}|${scope}` : null;
@@ -23,7 +23,8 @@ export type DraftSetter<T> = ((next: Update<T>) => void) & {
 
 /** Persist only deliberately selected, non-secret state at an explicit logical identity. */
 export function useDraftState<T>(scope: string | null | undefined, initial: T | (() => T)): [T, DraftSetter<T>] {
-  return useStoredDraftState(useAccountDraftKey(scope), initial);
+  const accountKey = useAccountDraftKey(scope);
+  return useStoredDraftState(accountKey ?? (scope ? `guest|${scope}` : null), initial);
 }
 
 export function useStoredDraftState<T>(key: string | null, initial: T | (() => T)): [T, DraftSetter<T>] {
@@ -67,7 +68,7 @@ export function useStoredDraftState<T>(key: string | null, initial: T | (() => T
   };
   setter.clear = () => { if (key) { clearDraft(key); flushDrafts(); } };
   setter.complete = (submitted, replacement) => {
-    const raw = key ? readDraft(key) : '';
+    const raw = key ? readCurrentDraft(key) : '';
     const expected = JSON.stringify({ value: submitted });
     if (raw ? raw !== expected : liveKey.current !== key || JSON.stringify(current.current) !== JSON.stringify(submitted)) return false;
     setter(replacement);

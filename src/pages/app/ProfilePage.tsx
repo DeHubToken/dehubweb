@@ -392,8 +392,8 @@ export default function ProfilePage() {
       {
         onSuccess: () => {
           setOfferDrawerOpen(false);
-          setOfferAmount('');
-          setOfferMessage('');
+          setOfferAmount.complete(offerAmount, '');
+          setOfferMessage.complete(offerMessage, '');
         },
       },
     );

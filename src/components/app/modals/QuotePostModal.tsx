@@ -152,7 +152,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
         });
       }
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-      setContent('');
+      setContent.complete(content, '');
       onOpenChange(false);
     } catch (error) {
       console.error('Quote post failed:', error);

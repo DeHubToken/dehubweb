@@ -66,7 +66,7 @@ export function BillingTab() {
           <Button
             variant="glass"
             disabled={!/^0x[a-fA-F0-9]{64}$/.test(manualHash.trim()) || topUp.isPending}
-            onClick={() => topUp.mutate(manualHash.trim(), { onSuccess: () => setManualHash('') })}
+            onClick={() => topUp.mutate(manualHash.trim(), { onSuccess: () => setManualHash.complete(manualHash, '') })}
           >
             {topUp.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowDownToLine className="w-4 h-4" />}
           </Button>

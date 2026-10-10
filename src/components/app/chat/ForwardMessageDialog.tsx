@@ -64,7 +64,7 @@ export function ForwardMessageDialog({
     if (!id) return;
     onSelect(id);
     onOpenChange(false);
-    setSearch('');
+    setSearch.complete(search, '');
   };
 
   return (
@@ -84,7 +84,7 @@ export function ForwardMessageDialog({
             className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 outline-none"
           />
           {search && (
-            <button onClick={() => setSearch('')} className="text-zinc-500 hover:text-white">
+            <button onClick={() => setSearch.complete(search, '')} className="text-zinc-500 hover:text-white">
               <X className="w-4 h-4" />
             </button>
           )}

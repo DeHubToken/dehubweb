@@ -103,7 +103,7 @@ export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSea
             className="flex-1 bg-transparent text-xs text-white placeholder:text-zinc-600 outline-none"
           />
           {query && (
-            <button onClick={() => { setQuery(''); setResults([]); }} className="text-zinc-500 hover:text-white">
+            <button onClick={() => { setQuery.complete(query, ''); setResults([]); }} className="text-zinc-500 hover:text-white">
               <X className="w-3 h-3" />
             </button>
           )}

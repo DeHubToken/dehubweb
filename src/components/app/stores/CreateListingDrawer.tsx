@@ -127,10 +127,10 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
     }, {
       onSuccess: () => {
         onClose();
-        setTitle(''); setDescription(''); setPrice(''); setImages([]); setVideos([]);
+        setTitle.complete(title, ''); setDescription.complete(description, ''); setPrice.complete(price, ''); setImages([]); setVideos([]);
         setCategory('other'); setCondition('new'); setIsDigital(false);
-        setShippingInfo(''); setStockQty('');
-        setIsPod(false); setPodUrl(''); setPodProvider('other');
+        setShippingInfo.complete(shippingInfo, ''); setStockQty.complete(stockQty, '');
+        setIsPod(false); setPodUrl.complete(podUrl, ''); setPodProvider('other');
       },
     });
   };

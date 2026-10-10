@@ -193,7 +193,7 @@ export function ReportModal({
 
   const handleClose = () => {
     setSelectedReason('');
-    setDescription('');
+    setDescription.complete(description, '');
     onOpenChange(false);
   };
 

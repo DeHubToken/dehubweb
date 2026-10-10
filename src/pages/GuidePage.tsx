@@ -344,7 +344,7 @@ const GuidePage: React.FC = () => {
               />
               {searchQuery ? (
                 <button
-                  onClick={() => { setSearchQuery(""); searchInputRef.current?.focus(); }}
+                  onClick={() => { setSearchQuery.complete(searchQuery, ""); searchInputRef.current?.focus(); }}
                   aria-label={t("guide.clearSearch")}
                   className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-md bg-white/10 hover:bg-white/20 transition-colors"
                 >
@@ -440,7 +440,7 @@ const GuidePage: React.FC = () => {
                 }
               </span>
               <button
-                onClick={() => setSearchQuery("")}
+                onClick={() => setSearchQuery.complete(searchQuery, "")}
                 className="ml-auto text-white/30 hover:text-white/60 underline underline-offset-2 text-xs"
               >
                 {t("guide.clearSearch")}

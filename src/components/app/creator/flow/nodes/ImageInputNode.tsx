@@ -113,7 +113,7 @@ export default function ImageInputNode({ id, data, selected }: NodeProps<FlowNod
     updateNodeData(id, { imageUrl: url, inputImage: undefined, status: 'idle' });
     measure(url);
     setUrlOpen(false);
-    setUrlDraft('');
+    setUrlDraft.complete(urlDraft, '');
   };
 
   return (

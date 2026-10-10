@@ -130,7 +130,7 @@ export function FilmReviews({
     try {
       await remove.mutateAsync();
       setRating(0);
-      setBody('');
+      setBody.complete(body, '');
       toast.success('Review removed');
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Could not remove your review');

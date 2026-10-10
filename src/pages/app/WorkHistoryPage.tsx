@@ -142,7 +142,7 @@ export default function WorkHistoryPage() {
               action={<KitButton variant="quiet" onClick={() => refetch()}>{t('work.tryAgain')}</KitButton>}
             />
           ) : isEmpty ? (
-            <EmptyState tab={tab} hasFilters={hasFilters} onClear={() => { setStatus('all'); setSearch(''); }} />
+            <EmptyState tab={tab} hasFilters={hasFilters} onClear={() => { setStatus('all'); setSearch.complete(search, ''); }} />
           ) : tab === 'posted' ? (
             <div className="space-y-3">
               {filteredPosted.map((job) => <PostedRow key={job.id} job={job} />)}

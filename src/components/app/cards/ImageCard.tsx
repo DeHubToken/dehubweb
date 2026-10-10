@@ -1715,10 +1715,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                   expiresAt: pollExpiry || undefined,
                 });
                 setShowPollCreator(false);
-                setPollQuestion('');
+                setPollQuestion.complete(pollQuestion, '');
                 setPollOptions(['', '']);
                 setPollMultiple(false);
-                setPollExpiry('');
+                setPollExpiry.complete(pollExpiry, '');
                 queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
               }}
             >

@@ -144,7 +144,7 @@ export default function VideoInputNode({ id, data, selected }: NodeProps<FlowNod
     }
     void setVideo(url);
     setUrlOpen(false);
-    setUrlDraft('');
+    setUrlDraft.complete(urlDraft, '');
   };
 
   return (

@@ -109,6 +109,7 @@ function load(): DraftStore {
   }
   try {
     store = parse(localStorage.getItem(STORAGE_KEY)).entries;
+    for (const entry of Object.values(store)) lastStamp = Math.max(lastStamp, entry.u);
   } catch {
     store = {};
   }
@@ -195,6 +196,19 @@ export function flushDrafts(): void {
 export function readDraft(key: string): string {
   if (!key) return '';
   return load()[key]?.t ?? '';
+}
+
+/** Refresh a field before completing an async request, even if its storage event is delayed. */
+export function readCurrentDraft(key: string): string {
+  const current = load();
+  if (!dirty.has(key) && typeof window !== 'undefined') {
+    try {
+      const latest = parse(localStorage.getItem(STORAGE_KEY)).entries[key];
+      if (latest) current[key] = latest;
+      else delete current[key];
+    } catch { /* Use the in-memory draft if storage is unavailable. */ }
+  }
+  return current[key]?.t ?? '';
 }
 
 /** True when a scope currently holds a draft. */

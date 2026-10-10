@@ -104,8 +104,8 @@ export function FeedbackSection() {
       if (error) throw error;
 
       setSubmitted(true);
-      setBody('');
-      setTimeUsing('');
+      setBody.complete(body, '');
+      setTimeUsing.complete(timeUsing, '');
       toast.success(t('stats.feedback.toastSent', 'Thanks — your feedback is with us'));
     } catch (err) {
       console.error('[Feedback] Submit error:', err);
@@ -113,7 +113,7 @@ export function FeedbackSection() {
     } finally {
       setSubmitting(false);
     }
-  }, [allowName, allowPromo, canSubmit, t, timeUsing, trimmed, user?.username, walletAddress, setBody, setTimeUsing]);
+  }, [allowName, allowPromo, canSubmit, t, timeUsing, trimmed, user?.username, walletAddress, setBody, setTimeUsing, body]);
 
   return (
     <div className="flex flex-col gap-2 sm:gap-3">
