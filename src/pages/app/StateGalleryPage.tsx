@@ -28,6 +28,9 @@ import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/strea
 import { LinkPreviews } from '@/features/post/components/LinkPreviews';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
+import { useQueryClient } from '@tanstack/react-query';
+import { PollCard } from '@/components/app/cards/PollCard';
+import type { DeHubPoll } from '@/lib/api/dehub';
 
 function PredictionGallery() {
   const [text, setText] = useState('https://polymarket.com/event/will-the-us-confirm-that-aliens-exist-before-2027');
@@ -235,6 +238,8 @@ export default function StateGalleryPage() {
 
         <StreamerArtworkGallery />
 
+        <PollGallery />
+
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">Badge animations</h2>
           <div className="flex flex-wrap items-center gap-3">
@@ -391,6 +396,42 @@ export default function StateGalleryPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+// Ids far above any real post, so the seeded answers never collide with one.
+const GALLERY_POLLS: Array<{ label: string; poll: DeHubPoll }> = (() => {
+  const day = 24 * 60 * 60 * 1000;
+  const base = {
+    _id: 'gallery', address: '0x0000000000000000000000000000000000000000',
+    question: 'Which feature should ship next?', isMultipleChoice: false, createdAt: new Date(Date.now() - 3 * day).toISOString(),
+  };
+  const options = (counts: number[]) => ['Live co-streams', 'Creator tips', 'Music charts'].map((text, index) => ({ index, text, voteCount: counts[index] }));
+  return [
+    { label: 'Open', poll: { ...base, tokenId: 990000001, options: options([12, 30, 8]), totalVotes: 50, isActive: true, expiresAt: new Date(Date.now() + day).toISOString() } },
+    { label: 'Ended', poll: { ...base, tokenId: 990000002, options: options([12, 30, 8]), totalVotes: 50, isActive: true, isExpired: true, expiresAt: new Date(Date.now() - day).toISOString() } },
+    { label: 'Ended, you voted', poll: { ...base, tokenId: 990000003, options: options([12, 30, 8]), totalVotes: 50, isActive: false, expiresAt: new Date(Date.now() - day).toISOString(), userVote: { optionIndexes: [0], votedAt: base.createdAt } } },
+  ];
+})();
+
+function PollGallery() {
+  const queryClient = useQueryClient();
+  // Seed before the cards mount so they render the sample polls, never fetch.
+  useState(() => GALLERY_POLLS.forEach(({ poll }) => queryClient.setQueryData(['polls', poll.tokenId], poll)));
+  return (
+    <section data-page-bento data-poll-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Polls</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div className="grid gap-4 md:grid-cols-3">
+          {GALLERY_POLLS.map(({ label, poll }) => (
+            <div key={poll.tokenId}>
+              <p className="mb-1 text-xs text-zinc-500">{label}</p>
+              <PollCard tokenId={poll.tokenId} />
+            </div>
+          ))}
+        </div>
+      </AuthContext.Provider>
+    </section>
   );
 }
 
