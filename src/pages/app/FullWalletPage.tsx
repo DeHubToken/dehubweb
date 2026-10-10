@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useCallback } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -107,7 +108,7 @@ export default function FullWalletPage() {
   const [crossChainDestSymbol, setCrossChainDestSymbol] = useState<string>('ETH');
   const [importChainId, setImportChainId] = useState<WalletChainId>(BASE_CHAIN_ID);
   const [selectedToken, setSelectedToken] = useState<WalletToken | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/FullWalletPage.tsx:searchQuery", '');
   const [actionGrouped, setActionGrouped] = useState<GroupedToken | null>(null);
   const [sendChainPickerGrouped, setSendChainPickerGrouped] = useState<GroupedToken | null>(null);
   const [showBalanceBreakdown, setShowBalanceBreakdown] = useState(false);
@@ -828,9 +829,9 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
 }) {
   const { t } = useTranslation();
   const [toAddress, setToAddress] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/FullWalletPage.tsx:amount", '');
   const [sending, setSending] = useState(false);
-  const [usernameQuery, setUsernameQuery] = useState('');
+  const [usernameQuery, setUsernameQuery] = useSurfaceDraft("src/pages/app/FullWalletPage.tsx:usernameQuery", '');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [resolvedUser, setResolvedUser] = useState<{ username: string; avatar?: string; address: string } | null>(null);
@@ -853,7 +854,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     } finally {
       setSearching(false);
     }
-  }, []);
+  }, [setUsernameQuery]);
 
   const selectUser = (user: any) => {
     const addr = user.address || user.wallet_address || '';
@@ -861,7 +862,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     const avatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url || '';
     setToAddress(addr);
     setResolvedUser({ username: name, avatar, address: addr });
-    setUsernameQuery('');
+    setUsernameQuery.complete(usernameQuery, '');
     setSearchResults([]);
   };
 
@@ -910,7 +911,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
         },
       });
       setToAddress('');
-      setAmount('');
+      setAmount.complete(amount, '');
       setResolvedUser(null);
       onSuccess();
     } catch (err: any) {
@@ -987,7 +988,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
                     const val = e.target.value;
                     if (val.startsWith('0x')) {
                       setToAddress(val);
-                      setUsernameQuery('');
+                      setUsernameQuery.complete(usernameQuery, '');
                       setSearchResults([]);
                     } else {
                       setToAddress('');
@@ -1076,7 +1077,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   const { walletAddress } = useAuth();
   const { solana: solanaAddress } = useWalletAddresses();
   const [chainId, setChainId] = useState<WalletChainId>(initialChainId);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useSurfaceDraft("pages/app/FullWalletPage.tsx:address", '');
   const [loading, setLoading] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<{ name: string; symbol: string; decimals: number } | null>(null);
 
@@ -1135,7 +1136,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
     if (!tokenInfo) return;
     saveCustomToken(chainId, { address: address.trim(), ...tokenInfo });
     toast.success(t('wallet.imported', { symbol: tokenInfo.symbol }));
-    setAddress('');
+    setAddress.complete(address, '');
     setTokenInfo(null);
     onImported();
   };
@@ -1152,7 +1153,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   };
 
   return (
-    <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setAddress(''); setTokenInfo(null); } }}>
+    <Drawer open={open} onOpenChange={v => { onOpenChange(v); if (!v) { setTokenInfo(null); } }}>
       <DrawerContent column glass hideHandle={false} data-wallet-page>
         <div className="p-5 pb-8 max-h-[85vh] overflow-y-auto">
           <DrawerHeader className="p-0 mb-4">

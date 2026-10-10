@@ -1,3 +1,5 @@
+import { useDraftState } from '@/hooks/use-draft-state';
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Event Chat
  * ===========
@@ -87,10 +89,19 @@ interface EventChatProps {
 }
 
 export function EventChat({ eventId }: EventChatProps) {
-  const [newMessage, setNewMessage] = useState('');
-  const [replyTo, setReplyTo] = useState<EventChatMessage | null>(null);
+  const [newMessage, setNewMessage] = useSurfaceDraft("components/app/events/EventChat.tsx:newMessage", '', eventId);
+  const [replyTo, setReplyTo] = useDraftState<EventChatMessage | null>(`event:${eventId}:reply`, null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState('');
+  const [editInitial, setEditInitial] = useState('');
+  const [editText, setEditText] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
+  const commitDraftEdit = async (id: string) => {
+    if (!editText.trim()) return;
+    try {
+      const result = await editMessage(id, editText);
+      if (result !== false && setEditText.complete(editText, editText)) setEditingId(current => current === id ? null : current);
+    } catch { /* Keep the edit available for retry. */ }
+  };
+
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
@@ -113,13 +124,14 @@ export function EventChat({ eventId }: EventChatProps) {
     }
   }, [messages.length]);
 
+  const sendingRef = useRef(false);
   const handleSend = async () => {
+    if (sendingRef.current) return;
     if (!isAuthenticated) { openLoginModal(); return; }
     const trimmed = newMessage.trim();
     if (!trimmed) return;
     const replyToId = replyTo?.id;
-    setReplyTo(null);
-    setNewMessage('');
+    sendingRef.current = true;
     try {
       await sendMessage(trimmed, 'text', undefined, replyToId, {
         username: profileData?.handle || undefined,
@@ -127,7 +139,8 @@ export function EventChat({ eventId }: EventChatProps) {
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-    } catch { /* handled */ }
+      if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
+    } catch { /* handled */ } finally { sendingRef.current = false; }
   };
 
   const handleEmojiSelect = (emoji: string) => setNewMessage(prev => (prev + emoji).slice(0, 500));
@@ -135,7 +148,6 @@ export function EventChat({ eventId }: EventChatProps) {
   const handleGifSelect = async (gifUrl: string) => {
     if (!isAuthenticated) { openLoginModal(); return; }
     const replyToId = replyTo?.id;
-    setReplyTo(null);
     try {
       await sendMessage(gifUrl, 'gif', gifUrl, replyToId, {
         username: profileData?.handle || undefined,
@@ -171,13 +183,13 @@ export function EventChat({ eventId }: EventChatProps) {
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
-      setReplyTo(null);
+      setReplyTo.complete(replyTo, null);
       toast.success(t('events.voiceNoteSent'), { id: toastId });
     } catch (err: any) {
       console.error('[EventChat] Voice upload failed:', err);
       toast.error(err?.message || t('events.voiceNoteFailed'), { id: toastId });
     }
-  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal]);
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, setReplyTo]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
@@ -253,12 +265,12 @@ export function EventChat({ eventId }: EventChatProps) {
                           <div className="flex items-center gap-1 mt-0.5">
                             <input autoFocus value={editText} onChange={(e) => setEditText(e.target.value)}
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter') { editMessage(msg.id, editText); setEditingId(null); }
+                                if (e.key === 'Enter') { void commitDraftEdit(msg.id); }
                                 else if (e.key === 'Escape') setEditingId(null);
                               }}
                               className="flex-1 text-xs text-white bg-white/5 border border-white/10 rounded px-1.5 py-0.5 outline-none focus:border-white/20" maxLength={500}
                             />
-                            <button onClick={() => { editMessage(msg.id, editText); setEditingId(null); }} className="p-0.5 text-emerald-400 hover:text-emerald-300"><Check className="w-3.5 h-3.5" /></button>
+                            <button onClick={() => { void commitDraftEdit(msg.id); }} className="p-0.5 text-emerald-400 hover:text-emerald-300"><Check className="w-3.5 h-3.5" /></button>
                             <button onClick={() => setEditingId(null)} className="p-0.5 text-zinc-500 hover:text-white"><X className="w-3.5 h-3.5" /></button>
                           </div>
                         ) : (
@@ -273,7 +285,7 @@ export function EventChat({ eventId }: EventChatProps) {
                           {walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase() && msg.message_type !== 'gif' && (
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <button onClick={() => { setEditingId(msg.id); setEditText(msg.content); }} className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded">
+                                <button onClick={() => { setEditingId(msg.id); setEditInitial(msg.content); }} className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
                               </TooltipTrigger>
@@ -338,7 +350,7 @@ export function EventChat({ eventId }: EventChatProps) {
             <span className="text-[10px] font-medium text-white">{replyTo.display_name || replyTo.username || 'User'}</span>
             <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
           </div>
-          <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
+          <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { isWorkAdmin } from '@/constants/app.constants';
 import { useState } from 'react';
@@ -73,13 +74,13 @@ export default function WorkJobDetailPage() {
   const publishMutation=usePublishJob();
   const releaseMutation=useReleasePayment();
 
-  const [coverLetter, setCoverLetter] = useState('');
-  const [proofUrl, setProofUrl] = useState('');
-  const [proofText, setProofText] = useState('');
+  const [coverLetter, setCoverLetter] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:coverLetter", '');
+  const [proofUrl, setProofUrl] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:proofUrl", '');
+  const [proofText, setProofText] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:proofText", '');
   const [rating, setRating] = useState(5);
-  const [reviewComment, setReviewComment] = useState('');
   const [reviewTarget,setReviewTarget]=useState('');
-  const [disputeReason, setDisputeReason] = useState('');
+  const [reviewComment, setReviewComment] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:reviewComment", '', `${job?.id ?? ""}:${reviewTarget || "default"}`);
+  const [disputeReason, setDisputeReason] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:disputeReason", '');
   const [showDispute, setShowDispute] = useState(false);
 
   if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-10 text-white/60">{t('work.loading')}</div>;
@@ -222,7 +223,7 @@ export default function WorkJobDetailPage() {
               />
               <button
                 disabled={!coverLetter.trim() || applyMutation.isPending}
-                onClick={() => { if (!requireAuth()) return; applyMutation.mutate({ job_id: job.id, cover_letter: coverLetter.trim() }, { onSuccess: () => setCoverLetter('') }); }}
+                onClick={() => { if (!requireAuth()) return; applyMutation.mutate({ job_id: job.id, cover_letter: coverLetter.trim() }, { onSuccess: () => setCoverLetter.complete(coverLetter, '') }); }}
                 className="px-4 py-2 rounded-xl bg-white text-black font-semibold disabled:opacity-40"
               >
                 {t('work.apply')}
@@ -269,7 +270,7 @@ export default function WorkJobDetailPage() {
                 onClick={() => {
                   if (!requireAuth()) return;
                   submitMutation.mutate({ job_id: job.id, proof_url: proofUrl.trim(), proof_text: proofText.trim(), platform: job.platform ?? undefined }, {
-                    onSuccess: () => { setProofUrl(''); setProofText(''); }
+                    onSuccess: () => { setProofUrl.complete(proofUrl, ''); setProofText.complete(proofText, ''); }
                   });
                 }}
                 className="px-4 py-2 rounded-xl bg-white text-black font-semibold disabled:opacity-40"
@@ -311,7 +312,7 @@ export default function WorkJobDetailPage() {
                 recovery_hash: recoveryHash,
               })}
               onRelease={()=>{if(window.confirm(t('work.integrity.releaseConfirm'))) releaseMutation.mutate(s.id);}}
-              onReject={(reason) => rejectMutation.mutate({ submission_id: s.id, job_id: job.id, reason })}
+              onReject={(reason) => rejectMutation.mutateAsync({ submission_id: s.id, job_id: job.id, reason })}
               budgetLeft={budgetLeft}
               busy={approveMutation.isPending || payMutation.isPending || rejectMutation.isPending}
             />
@@ -344,7 +345,7 @@ export default function WorkJobDetailPage() {
                   reviewer_role: isPoster ? 'poster' : 'worker',
                   rating,
                   comment: reviewComment.trim(),
-                }, { onSuccess: () => setReviewComment('') });
+                }, { onSuccess: () => setReviewComment.complete(reviewComment, '') });
               }}
               disabled={reviewMutation.isPending} className="px-4 py-2 rounded-xl bg-white text-black font-semibold disabled:opacity-40"
             >
@@ -401,7 +402,7 @@ export default function WorkJobDetailPage() {
           <textarea value={disputeReason} onChange={(e) => setDisputeReason(e.target.value)} rows={3} placeholder={t('work.disputePlaceholder')} className={inputCls} />
           <button
             disabled={!disputeReason.trim()}
-            onClick={() => { disputeMutation.mutate({ job_id: job.id, onchain_job_id: job.onchain_job_id, reason: disputeReason.trim() }); setShowDispute(false); setDisputeReason(''); }}
+            onClick={() => { disputeMutation.mutate({ job_id: job.id, onchain_job_id: job.onchain_job_id, reason: disputeReason.trim() }, { onSuccess: () => { if (setDisputeReason.complete(disputeReason, '')) setShowDispute(false); } }); }}
             className="px-4 py-2 rounded-xl bg-red-500/30 text-red-100 text-sm font-semibold"
           >
             {t('work.submitDispute')}
@@ -442,17 +443,17 @@ function SubmissionCard({
   canPay:boolean;
   onApprove: (pay: boolean, views?: number, evidence?: string) => void;
   onPay: (recoveryHash?: string) => void;
-  onReject: (reason: string) => void;
+  onReject: (reason: string) => Promise<unknown>;
   onRelease:()=>void;
   busy: boolean;
   budgetLeft: number;
 }) {
   const { t } = useTranslation();
   const [rejecting, setRejecting] = useState(false);
-  const [reason, setReason] = useState('');
-  const [views, setViews] = useState('');
-  const [viewEvidence, setViewEvidence] = useState(s.proof_url);
-  const [recoveryHash, setRecoveryHash] = useState('');
+  const [reason, setReason] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:reason", '', s.id);
+  const [views, setViews] = useSurfaceDraft("pages/app/WorkJobDetailPage.tsx:views", '', s.id);
+  const [viewEvidence, setViewEvidence] = useSurfaceDraft("work:submission:evidence", s.proof_url, s.id);
+  const [recoveryHash, setRecoveryHash] = useSurfaceDraft('work:submission:recoveryHash', '', s.id);
 
   const paid = isPaid(s);
   const awaiting = isAwaitingPayment(s);
@@ -584,14 +585,14 @@ function SubmissionCard({
           />
           <div className="flex gap-2">
             <button
-              onClick={() => { onReject(reason.trim()); setRejecting(false); setReason(''); }}
+              onClick={async () => { try { await onReject(reason.trim()); if (setReason.complete(reason, '')) setRejecting(false); } catch { /* The mutation reports its error; retain the revision. */ } }}
               disabled={!reason.trim() || busy}
               className="px-3 py-1.5 rounded-lg bg-red-500/30 text-red-100 text-xs font-semibold disabled:opacity-40"
             >
               {t('work.confirmRejection')}
             </button>
             <button
-              onClick={() => { setRejecting(false); setReason(''); }}
+              onClick={() => { setRejecting(false); }}
               className="px-3 py-1.5 rounded-lg bg-white/10 text-white/70 text-xs font-medium"
             >
               {t('work.cancel')}

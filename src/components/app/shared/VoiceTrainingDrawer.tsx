@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useCallback } from 'react';
 import { Mic, Upload, Loader2, X, Square, Key } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -19,7 +20,7 @@ interface VoiceTrainingDrawerProps {
 
 export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKey }: VoiceTrainingDrawerProps) {
   const { walletAddress } = useAuth();
-  const [voiceName, setVoiceName] = useState('');
+  const [voiceName, setVoiceName] = useSurfaceDraft("components/app/shared/VoiceTrainingDrawer.tsx:voiceName", '');
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -118,7 +119,7 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
       if (dbError) throw dbError;
 
       toast.success('Voice cloned successfully!');
-      setVoiceName('');
+      setVoiceName.complete(voiceName, '');
       setAudioFile(null);
       onSuccess();
       onOpenChange(false);

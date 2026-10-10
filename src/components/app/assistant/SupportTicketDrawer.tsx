@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Support Ticket Drawer
  * =====================
@@ -118,10 +119,10 @@ export function SupportTicketDrawer({ open, onOpenChange, enabled = true }: Supp
 
   const [category, setCategory] = useState<SupportCategory>('bug');
   const [severity, setSeverity] = useState<SupportSeverity>('normal');
-  const [subject, setSubject] = useState('');
-  const [description, setDescription] = useState('');
-  const [stepsToReproduce, setStepsToReproduce] = useState('');
-  const [contactEmail, setContactEmail] = useState('');
+  const [subject, setSubject] = useSurfaceDraft("components/app/assistant/SupportTicketDrawer.tsx:subject", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/assistant/SupportTicketDrawer.tsx:description", '');
+  const [stepsToReproduce, setStepsToReproduce] = useSurfaceDraft("components/app/assistant/SupportTicketDrawer.tsx:stepsToReproduce", '');
+  const [contactEmail, setContactEmail] = useSurfaceDraft("components/app/assistant/SupportTicketDrawer.tsx:contactEmail", '');
 
   // Only fetch while the drawer is actually open; the header badge runs the
   // same query and the two share one cache entry.
@@ -142,9 +143,9 @@ export function SupportTicketDrawer({ open, onOpenChange, enabled = true }: Supp
   }, [data]);
 
   const resetForm = () => {
-    setSubject('');
-    setDescription('');
-    setStepsToReproduce('');
+    setSubject.complete(subject, '');
+    setDescription.complete(description, '');
+    setStepsToReproduce.complete(stepsToReproduce, '');
     setCategory('bug');
     setSeverity('normal');
   };

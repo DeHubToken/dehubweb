@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Profile Filter Panel
  * ====================
@@ -62,7 +63,7 @@ interface ProfileFilterPanelProps {
 
 export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, drawer = false }: ProfileFilterPanelProps) {
   const { t } = useTranslation();
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/profile/ProfileFilterPanel.tsx:categorySearch", '');
 
   // Shares the home feed's cache entry, so opening this after browsing Home
   // costs no request at all.
@@ -109,7 +110,7 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, d
               activeKey={filters.category ?? 'all'}
               onSelect={(key) => {
                 onChange({ ...filters, category: key === 'all' ? null : key });
-                setCategorySearch('');
+                setCategorySearch.complete(categorySearch, '');
               }}
               borderRadius="0.75rem"
               buttonClassName="px-3 py-2 rounded-xl text-sm text-white"
@@ -172,7 +173,7 @@ export function ProfileFilterPanel({ filters, onChange, onReset, showPostType, d
           corner and would otherwise swallow the tap. */}
       <button
         type="button"
-        onClick={() => { setCategorySearch(''); onReset(); }}
+        onClick={() => { setCategorySearch.complete(categorySearch, ''); onReset(); }}
         className="absolute z-50 bottom-0 right-0 p-1.5 rounded-lg text-white hover:bg-zinc-800 transition-colors"
         aria-label={t('filters.resetFilters')}
       >

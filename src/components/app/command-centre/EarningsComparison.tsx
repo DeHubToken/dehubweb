@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Earnings Comparison
  * ===================
@@ -94,10 +95,9 @@ const compact = (n: number) => {
 export function EarningsComparison() {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [rpms, setRpms] = useState<Record<string, number>>(() =>
-    Object.fromEntries(PLATFORMS.map((p) => [p.key, p.defaultRpm]))
-  );
-  const [estimatorViews, setEstimatorViews] = useState('');
+  const [rpms, setRpms] = useSurfaceDraft<Record<string, number>>("src/components/app/command-centre/EarningsComparison.tsx:rpms", () =>
+    Object.fromEntries(PLATFORMS.map((p) => [p.key, p.defaultRpm])));
+  const [estimatorViews, setEstimatorViews] = useSurfaceDraft("components/app/command-centre/EarningsComparison.tsx:estimatorViews", '');
 
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ['account-info', walletAddress],

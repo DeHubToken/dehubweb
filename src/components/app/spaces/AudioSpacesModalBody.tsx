@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * AudioSpacesModal body — Twitter Spaces-like audio rooms (Stages)
  *
@@ -116,8 +117,8 @@ export function AudioSpacesModalBody() {
   const volumeLevel = useStageVolumeLevel();
 
   const [view, setView] = useState<View>(initialModalView);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useSurfaceDraft("components/app/spaces/AudioSpacesModalBody.tsx:title", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/spaces/AudioSpacesModalBody.tsx:description", '');
   const [createMode, setCreateMode] = useState<'now' | 'later'>('now');
   // Off until they ask for it, and asking for it means going through the
   // voice setup step — recording a sample and paying for the clone. This is
@@ -227,8 +228,8 @@ export function AudioSpacesModalBody() {
     if (!title.trim()) return;
     const space = await createSpace(title.trim(), description.trim() || undefined);
     if (space) {
-      setTitle('');
-      setDescription('');
+      setTitle.complete(title, '');
+      setDescription.complete(description, '');
     }
   };
 
@@ -674,8 +675,8 @@ export function AudioSpacesModalBody() {
                     description={description}
                     setDescription={setDescription}
                     onDone={() => {
-                      setTitle('');
-                      setDescription('');
+                      setTitle.complete(title, '');
+                      setDescription.complete(description, '');
                       setCreateMode('now');
                       setView('browse');
                       closeModal();

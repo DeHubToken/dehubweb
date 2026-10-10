@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft } from 'lucide-react';
@@ -57,7 +58,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   // Menu search. Unlike the desktop rail this field is always shown: the sheet
   // is opened deliberately and closed again straight away, so there is no
   // resting state to keep uncluttered.
-  const [menuQuery, setMenuQuery] = useState('');
+  const [menuQuery, setMenuQuery] = useSurfaceDraft("components/app/AppSidebar.tsx:menuQuery", '');
   const { addToHistory } = useSearchHistory();
   // `isKidsMode` is in the deps because `filterNavItems` reads the lock
   // directly rather than taking it as an argument — without it here the sheet
@@ -69,17 +70,17 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   );
   // Reset whenever the sheet closes, so it never reopens mid-filter.
   useEffect(() => {
-    if (!isOpen) setMenuQuery('');
-  }, [isOpen]);
+    if (!isOpen) setMenuQuery.initialize('');
+  }, [isOpen, setMenuQuery]);
 
   const runFullSearch = useCallback(() => {
     const query = menuQuery.trim();
     if (!query) return;
     addToHistory(query);
     navigate(exploreSearchHref(query));
-    setMenuQuery('');
+    setMenuQuery.complete(menuQuery, '');
     closeMenu();
-  }, [menuQuery, addToHistory, navigate, closeMenu]);
+  }, [menuQuery, addToHistory, navigate, closeMenu, setMenuQuery]);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [postLiveMode, setPostLiveMode] = useState<'video' | undefined>();
   // From the Live feed, the post button opens the composer on Livestream.
@@ -153,7 +154,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
           onChange={(e) => setMenuQuery(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') { e.preventDefault(); runFullSearch(); }
-            if (e.key === 'Escape') { e.preventDefault(); setMenuQuery(''); }
+            if (e.key === 'Escape') { e.preventDefault(); setMenuQuery.complete(menuQuery, ''); }
           }}
           placeholder={t('sidebar.searchMenu')}
           aria-label={t('sidebar.searchMenu')}
@@ -163,7 +164,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         {menuQuery && (
           <button
             type="button"
-            onClick={() => setMenuQuery('')}
+            onClick={() => setMenuQuery.complete(menuQuery, '')}
             aria-label={t('sidebar.clearSearch')}
             className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
           >

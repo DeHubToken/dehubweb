@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Staking Page
  * ============
@@ -151,8 +152,8 @@ export default function StakingPage() {
   const checkingStake = useRef(false);
   const receiptDiagnostics = useRef(new Set<string>());
   const sendingStake = useRef(false);
-  const [stakeAmount, setStakeAmount] = useState('');
-  const [unstakeAmount, setUnstakeAmount] = useState('');
+  const [stakeAmount, setStakeAmount] = useSurfaceDraft("pages/app/StakingPage.tsx:stakeAmount", '');
+  const [unstakeAmount, setUnstakeAmount] = useSurfaceDraft("pages/app/StakingPage.tsx:unstakeAmount", '');
   const [isApproving, setIsApproving] = useState(false);
   const [isStaking, setIsStaking] = useState(false);
   const [isUnstaking, setIsUnstaking] = useState(false);
@@ -454,7 +455,7 @@ export default function StakingPage() {
       pool: STAKING_ADDRESS, amount: String(amount), amountHex: `0x${parseUnits(String(amount), 18).toString(16)}`,
     };
     setPendingStake(attempt);
-    setStakeAmount('');
+    setStakeAmount.complete(stakeAmount, '');
     try { localStorage.setItem(pendingStakeKey(walletAddress), JSON.stringify(attempt)); }
     catch (error) { void stakeLog.warn('Pending stake storage unavailable', { hash: attempt.hash, error: String(error) }); }
     recordStakeEvent('Stake submitted; awaiting receipt', attempt);
@@ -560,7 +561,7 @@ export default function StakingPage() {
       toast.success(t('toasts.unstaked_successfully'), {
         description: t('toasts.dhb_unstaked_on_chain', { amount: unstakeAmount, chain: 'BNB Chain' }),
       });
-      setUnstakeAmount('');
+      setUnstakeAmount.complete(unstakeAmount, '');
       refetchStats();
       refetchUser();
       refetchQueue();

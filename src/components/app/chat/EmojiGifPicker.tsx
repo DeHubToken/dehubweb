@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
@@ -62,7 +63,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
   // Kids Mode: creator packs are unreviewed uploads, the same reason custom
   // emoji are hidden there — no Stickers tab and no GIF packs, GIPHY only.
   const kids = useKidsModeLock();
-  const [gifSearchQuery, setGifSearchQuery] = useState('');
+  const [gifSearchQuery, setGifSearchQuery] = useSurfaceDraft("components/app/chat/EmojiGifPicker.tsx:gifSearchQuery", '');
   const [gifs, setGifs] = useState<string[]>([]);
   const [loadingGifs, setLoadingGifs] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -112,16 +113,16 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
   const handleGifClick = (gifUrl: string) => {
     onGifSelect(gifUrl);
     setOpen(false);
-    setGifSearchQuery('');
+    setGifSearchQuery.complete(gifSearchQuery, '');
   };
 
   // Reset on close
   useEffect(() => {
     if (!open) {
-      setGifSearchQuery('');
+      setGifSearchQuery.initialize('');
       setGifs([]);
     }
-  }, [open]);
+  }, [open, setGifSearchQuery]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

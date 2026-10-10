@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Stream Checkout Drawer
@@ -39,7 +40,7 @@ export function StreamCheckoutDrawer({ tokenId, product, open, onClose }: Props)
   const [quote, setQuote] = useState<ProductQuote | null>(null);
   const [quoteError, setQuoteError] = useState<string | null>(null);
   const [shippingAddress, setShippingAddress] = useState('');
-  const [notes, setNotes] = useState('');
+  const [notes, setNotes] = useSurfaceDraft("components/app/live/StreamCheckoutDrawer.tsx:notes", '');
 
   const listing = product.store_listings;
   const image = listing?.images?.[0];

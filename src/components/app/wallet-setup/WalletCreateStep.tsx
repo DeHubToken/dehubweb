@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Wallet creation flow (embedded in the LoginModal drawer).
  * protect → persist → optional 12-word backup → signed in. The backup is one
@@ -113,8 +114,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
   // which is NOT always the one the user meant to reach (e.g. someone else's
   // real account, if a shared login was used). Resets on every new retrieval.
   const [addressConfirmed, setAddressConfirmed] = useState(false);
-  const [migrateEmail, setMigrateEmail] = useState('');
-  const [migratePhone, setMigratePhone] = useState('');
+  const [migrateEmail, setMigrateEmail] = useSurfaceDraft("src/components/app/wallet-setup/WalletCreateStep.tsx:migrateEmail", '');
+  const [migratePhone, setMigratePhone] = useSurfaceDraft("src/components/app/wallet-setup/WalletCreateStep.tsx:migratePhone", '');
   const [migrateBusy, setMigrateBusy] = useState<string | null>(null);
   // Which OLD login method was actually used for the retrieval in progress.
   // This — not the derived address — is how we identify which legacy account
@@ -224,7 +225,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       }
     });
     return () => { cancelled = true; };
-  }, []);
+  }, [setMigrateEmail]);
 
   // Resume the mobile/redirect leg of a legacy migration. Flags are checked
   // BEFORE importing the legacy module so the ~1 MB Web3Auth chunk only loads

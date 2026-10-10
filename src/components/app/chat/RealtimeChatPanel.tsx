@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * RealtimeChatPanel
  * =================
@@ -74,7 +75,7 @@ export interface RealtimeChatPanelProps {
   messages: RealtimeChatMessage[];
   isLoading: boolean;
   onSend: (content: string, replyToId: string | undefined, profile: ChatSenderProfile) => Promise<void>;
-  onEdit: (id: string, content: string) => void;
+  onEdit: (id: string, content: string) => void | Promise<void | boolean>;
   onDelete: (id: string) => void;
   onReact: (id: string, emoji: string) => void;
   onRemoveReaction: (id: string, emoji: string) => void;
@@ -200,9 +201,18 @@ export function RealtimeChatPanel({
   draftKey,
 }: RealtimeChatPanelProps) {
   const [newMessage, setNewMessage] = useDraft(draftKey);
-  const [replyTo, setReplyTo] = useState<RealtimeChatMessage | null>(null);
+  const [replyTo, setReplyTo] = useDraftState<RealtimeChatMessage | null>(draftKey ? `${draftKey}:reply` : null, null);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState('');
+  const [editInitial, setEditInitial] = useState('');
+  const [editText, setEditText] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
+  const commitDraftEdit = async (id: string) => {
+    if (!editText.trim()) return;
+    try {
+      const result = await onEdit(id, editText);
+      if (result !== false && setEditText.complete(editText, editText)) setEditingId(current => current === id ? null : current);
+    } catch { /* Keep the edit available for retry. */ }
+  };
+
   const [isSending, setIsSending] = useState(false);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
 
@@ -254,8 +264,7 @@ export function RealtimeChatPanel({
         avatarUrl: user?.avatarImageUrl || undefined,
         badgeBalance: user?.badgeBalance ?? undefined,
       });
-      setNewMessage('');
-      setReplyTo(null);
+      if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
       atBottomRef.current = true;
       scrollToBottom();
     } catch {
@@ -263,7 +272,7 @@ export function RealtimeChatPanel({
     } finally {
       setIsSending(false);
     }
-  }, [newMessage, isSending, isAuthenticated, walletAddress, openLoginModal, onSend, replyTo, user, scrollToBottom]);
+  }, [newMessage, isSending, isAuthenticated, walletAddress, openLoginModal, onSend, replyTo, user, scrollToBottom, setReplyTo]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -372,8 +381,7 @@ export function RealtimeChatPanel({
                               onChange={(e) => setEditText(e.target.value)}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                  onEdit(msg.id, editText);
-                                  setEditingId(null);
+                                  void commitDraftEdit(msg.id);
                                 } else if (e.key === 'Escape') {
                                   setEditingId(null);
                                 }
@@ -382,7 +390,7 @@ export function RealtimeChatPanel({
                               maxLength={maxLength}
                             />
                             <button
-                              onClick={() => { onEdit(msg.id, editText); setEditingId(null); }}
+                              onClick={() => { void commitDraftEdit(msg.id); }}
                               className="p-0.5 text-emerald-400 hover:text-emerald-300"
                             >
                               <Check className="w-3.5 h-3.5" />
@@ -413,7 +421,7 @@ export function RealtimeChatPanel({
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
-                                  onClick={() => { setEditingId(msg.id); setEditText(msg.content); }}
+                                  onClick={() => { setEditingId(msg.id); setEditInitial(msg.content); }}
                                   className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
                                 >
                                   <Pencil className="w-3.5 h-3.5" />
@@ -519,7 +527,7 @@ export function RealtimeChatPanel({
             </span>
             <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
           </div>
-          <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
+          <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -196,13 +197,13 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
 function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { t } = useTranslation();
   const [kind, setKind] = useState<DaoProposalKind>('buy');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dhbAmount, setDhbAmount] = useState('');
-  const [priceUsd, setPriceUsd] = useState('');
-  const [spendAsset, setSpendAsset] = useState('USDC');
-  const [spendAmount, setSpendAmount] = useState('');
-  const [recipient, setRecipient] = useState('');
+  const [title, setTitle] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:title", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:description", '');
+  const [dhbAmount, setDhbAmount] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:dhbAmount", '');
+  const [priceUsd, setPriceUsd] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:priceUsd", '');
+  const [spendAsset, setSpendAsset] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:spendAsset", 'USDC');
+  const [spendAmount, setSpendAmount] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:spendAmount", '');
+  const [recipient, setRecipient] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:recipient", '');
   const create = useCreateDaoProposal();
   const total = Number(dhbAmount) * Number(priceUsd);
   const buyValid = Number(dhbAmount) > 0 && Number(priceUsd) > 0;
@@ -221,12 +222,12 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
     }, {
       onSuccess: () => {
         toast.success('Proposal opened for seven days');
-        setTitle('');
-        setDescription('');
-        setDhbAmount('');
-        setPriceUsd('');
-        setSpendAmount('');
-        setRecipient('');
+        setTitle.complete(title, '');
+        setDescription.complete(description, '');
+        setDhbAmount.complete(dhbAmount, '');
+        setPriceUsd.complete(priceUsd, '');
+        setSpendAmount.complete(spendAmount, '');
+        setRecipient.complete(recipient, '');
         onOpenChange(false);
       },
       onError: (error) => toast.error(error instanceof Error ? error.message : 'Could not create proposal'),
@@ -320,8 +321,8 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
 function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | null; onOpenChange: (open: boolean) => void }) {
   const { isLoginModalOpen, requestWalletUnlock } = useAuth();
   const [selectedKey, setSelectedKey] = useState('8453:USDC');
-  const [manualHash, setManualHash] = useState('');
-  const [manualAmount, setManualAmount] = useState('');
+  const [manualHash, setManualHash] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:manualHash", '', proposal?.id ?? null);
+  const [manualAmount, setManualAmount] = useSurfaceDraft("src/components/app/dao/DaoProposals.tsx:manualAmount", '', proposal?.id ?? null);
   const [sending, setSending] = useState(false);
   const [hiddenForUnlock, setHiddenForUnlock] = useState(false);
   const [pendingAfterUnlock, setPendingAfterUnlock] = useState(false);
@@ -414,7 +415,7 @@ function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | nul
 
             <div>
               <label className="mb-1.5 block text-xs text-zinc-400">Pay with</label>
-              <select value={selectedKey} onChange={(event) => { setSelectedKey(event.target.value); setManualAmount(''); }} className="h-10 w-full rounded-lg border border-white/10 bg-zinc-900 px-3 text-sm text-white">
+              <select value={selectedKey} onChange={(event) => { setSelectedKey(event.target.value); setManualAmount.complete(manualAmount, ''); }} className="h-10 w-full rounded-lg border border-white/10 bg-zinc-900 px-3 text-sm text-white">
                 {DAO_PAYMENT_OPTIONS.map((item) => (
                   <option key={`${item.chainId}:${item.symbol}`} value={`${item.chainId}:${item.symbol}`} disabled={!item.enabled}>
                     {item.symbol} · {item.chain}{item.enabled ? '' : ' · awaiting treasury setup'}

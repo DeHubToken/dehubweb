@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -76,14 +77,14 @@ export function VideoPaywallModal({
   // Basic Seedance 2.0 options
   const [duration, setDuration] = useState(initialDuration ?? model.defaultDuration ?? 5);
   const [resolution, setResolution] = useState<string>(initialResolution ?? '720p');
-  const [negativePrompt, setNegativePrompt] = useState('');
+  const [negativePrompt, setNegativePrompt] = useSurfaceDraft("components/app/video/VideoPaywallModal.tsx:negativePrompt", '');
 
   // Advanced Seedance 2.0 options
   const [referenceImages, setReferenceImages] = useState<{ file: File; preview: string }[]>([]);
   const [endFrameFile, setEndFrameFile] = useState<{ file: File; preview: string } | null>(null);
   const [audioFiles, setAudioFiles] = useState<File[]>([]);
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
-  const [seed, setSeed] = useState<string>('');
+  const [seed, setSeed] = useSurfaceDraft<string>("components/app/video/VideoPaywallModal.tsx:seed", '');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -121,7 +122,7 @@ export function VideoPaywallModal({
     setDuration(snapVideoDuration(model, seeded));
     const resolutions = getVideoResolutions(model);
     setResolution(initialResolution && resolutions.includes(initialResolution) ? initialResolution : resolutions.includes('720p') ? '720p' : resolutions[0]);
-    setNegativePrompt('');
+    setNegativePrompt.initialize('');
     // Release the preview URLs before dropping the items, otherwise every
     // model switch pins another set of image blobs for the page's lifetime.
     setReferenceImages((prev) => {
@@ -138,10 +139,10 @@ export function VideoPaywallModal({
     });
     setAudioFiles([]);
     setVideoFiles([]);
-    setSeed('');
+    setSeed.initialize('');
     setShowAdvanced(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedModelKey, initialDuration, initialResolution]);
+  }, [selectedModelKey, initialDuration, initialResolution, setNegativePrompt, setSeed]);
 
   // Same on unmount: the modal can close with attachments still staged.
   useEffect(() => {

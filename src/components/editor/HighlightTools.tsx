@@ -1,3 +1,4 @@
+import { useDraftState } from "@/hooks/use-draft-state";
 import { findVisualHighlights } from "@/lib/editor/visualHighlights";
 import { analyseVisualHighlights } from "@/lib/editor/visualHighlightApi";
 import { reviewHighlights } from "@/lib/editor/highlightReview";
@@ -19,13 +20,14 @@ export function HighlightTools({ clip }: { clip: MediaClip }) {
   const { t } = useTranslation();
   const controller = useRef<AbortController | null>(null), source = useRef<ProjectSnapshot | null>(null);
   const previewEnd = useRef<number | null>(null);
-  const [seconds, setSeconds] = useState(30), [focus, setFocus] = useState("");
+  const draftScope = `highlights:${useEditorStore(s => s.projectId)}:${clip.id}`;
+  const [seconds, setSeconds] = useState(30), [focus, setFocus] = useDraftState(`${draftScope}:focus`, "");
   const [useVisual, setUseVisual] = useState(false);
   const [useCaptions, setUseCaptions] = useState(false), [progress, setProgress] = useState<string | null>(null);
   const [ranges, setRanges] = useState<HighlightRange[] | null>(null), [chosen, setChosen] = useState<number[]>([]), [applying, setApplying] = useState(false);
-  const [reviewDraft, setReviewDraft] = useState(""), [reviewEntries, setReviewEntries] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
+  const [reviewDraft, setReviewDraft] = useDraftState(`${draftScope}:review`, ""), [reviewEntries, setReviewEntries] = useState<{ role: "user" | "assistant"; content: string }[]>([]);
   const [reviewUndo, setReviewUndo] = useState<number[] | null>(null);
-  useEffect(() => { setReviewDraft(""); setReviewEntries([]); setReviewUndo(null); }, [ranges]);
+  useEffect(() => { setReviewEntries([]); setReviewUndo(null); }, [ranges]);
   const hasCaptions = useEditorStore(s => highlightCaptionWords(s.toSnapshot(), clip).length > 0);
   useEffect(() => { setRanges(null); setChosen([]); source.current = null; return () => controller.current?.abort(); }, [clip, seconds, focus, useCaptions, useVisual]);
   useEffect(() => {
@@ -74,12 +76,13 @@ export function HighlightTools({ clip }: { clip: MediaClip }) {
     if (!prompt || !original || !ranges?.length || controller.current || applying) return;
     if (!sameHighlightSource(original, useEditorStore.getState().toSnapshot())) { toast.error(t("editor.highlights.changed")); return; }
     const abort = new AbortController(); controller.current = abort;
-    const previous = [...chosen]; setReviewDraft(""); setProgress(t("editor.highlights.ranking"));
+    const previous = [...chosen]; setProgress(t("editor.highlights.ranking"));
     setReviewEntries(old => [...old, { role: "user" as const, content: prompt }].slice(-8));
     previewEnd.current = null; useEditorStore.getState().setIsPlaying(false);
     try {
       const selection = await reviewHighlights(ranges, chosen, prompt, askSceneAgent, abort.signal);
       if (!abort.signal.aborted && sameHighlightSource(original, useEditorStore.getState().toSnapshot())) {
+        setReviewDraft.complete(reviewDraft, "");
         setReviewUndo(previous); setChosen(selection);
         setReviewEntries(old => [...old, { role: "assistant" as const, content: t("editor.highlights.reviewResult", { count: selection.length, total: ranges.length }) }].slice(-8));
       } else if (!abort.signal.aborted) toast.error(t("editor.highlights.changed"));

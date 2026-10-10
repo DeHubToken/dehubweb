@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Copy, ArrowLeft, CreditCard, Bitcoin, Check, Lock, Minus } from 'lucide-react';
@@ -70,7 +71,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     if (!open) resetMenu();
   };
   const [menuView, setMenuView] = useState<MenuView>('main');
-  const [stakeAmount, setStakeAmount] = useState('');
+  const [stakeAmount, setStakeAmount] = useSurfaceDraft("components/app/CoinBalanceMenu.tsx:stakeAmount:0", '');
   const [copied, setCopied] = useState(false);
   const { hasChoice: hasAddressChoice } = useWalletAddresses();
 
@@ -108,7 +109,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     toast.success(`Staked ${stakeAmount} coins`);
     setIsOpen(false);
     setMenuView('main');
-    setStakeAmount('');
   };
 
   const handleStakeAll = () => {
@@ -121,7 +121,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const resetMenu = () => {
     setMenuView('main');
-    setStakeAmount('');
   };
 
   const coinButton = (
@@ -335,7 +334,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
   const walletLocked = useWalletLocked();
   const navigate = useNavigate();
   const [menuView, setMenuView] = useState<MenuView>('main');
-  const [stakeAmount, setStakeAmount] = useState('');
+  const [stakeAmount, setStakeAmount] = useSurfaceDraft("components/app/CoinBalanceMenu.tsx:stakeAmount:1", '');
   const [copied, setCopied] = useState(false);
   const { hasChoice: hasAddressChoice } = useWalletAddresses();
 

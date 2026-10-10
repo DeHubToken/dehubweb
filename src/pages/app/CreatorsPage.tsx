@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +24,7 @@ function CreatorsPageInner() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useSurfaceDraft("src/pages/app/CreatorsPage.tsx:formData", {
     x_username: '',
     youtube_username: '',
     twitch_username: '',

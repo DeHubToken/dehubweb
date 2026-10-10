@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket, Trash2, FolderOpen } from 'lucide-react';
@@ -69,7 +70,7 @@ export default function BookmarksPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
   const clearHistory = useClearWatchHistory();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("pages/app/BookmarksPage.tsx:searchQuery", '');
   const { isAuthenticated } = useAuth();
   const { 
     bookmarks, 

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +22,7 @@ const SUGGESTION_KEYS = [
 
 
 export default function PromptLanding() {
-  const [text, setText] = useState('');
+  const [text, setText] = useSurfaceDraft("pages/PromptLanding.tsx:text", '');
   const [recording, setRecording] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();

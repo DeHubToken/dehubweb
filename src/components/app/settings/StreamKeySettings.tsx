@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Check, Copy, Eye, EyeOff, Loader2, RefreshCw, Radio } from 'lucide-react';
 import { toast } from 'sonner';
@@ -42,7 +43,7 @@ export function StreamKeySettings() {
   const { t } = useTranslation();
 
   const [credentials, setCredentials] = useState<EncoderCredentials | null>(null);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useSurfaceDraft("components/app/settings/StreamKeySettings.tsx:title", '');
   const [revealed, setRevealed] = useState(false);
   const [copied, setCopied] = useState<'server' | 'key' | null>(null);
   const [rotating, setRotating] = useState(false);
@@ -54,13 +55,13 @@ export function StreamKeySettings() {
       .then(next => {
         if (!alive) return;
         setCredentials(next);
-        setTitle(next.defaultTitle);
+        setTitle.initialize(next.defaultTitle);
       })
       .catch(() => alive && setCredentials(null));
     return () => {
       alive = false;
     };
-  }, []);
+  }, [setTitle]);
 
   const copy = async (value: string, which: 'server' | 'key') => {
     if (!value) return;

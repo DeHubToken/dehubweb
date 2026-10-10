@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { dexActionError } from '@/lib/dex/action-error';
 import { minuteCache, parseSharedMarket, CANDLE_INTERVALS, type SharedMarket, type CandleInterval } from '@/lib/dex/live-market';
@@ -90,7 +91,7 @@ export default function DexPage() {
   const [side, setSide] = useState<'buy' | 'sell'>('sell');
   const [chainId, setChainId] = useState<DexChainId | null>(null);
   const [balance, setBalance] = useState('0');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("pages/app/DexPage.tsx:amount", '');
   const [minPrice, setMinPrice] = useState('0.001');
   const [maxPrice, setMaxPrice] = useState('0.001001');
   const priceTouched = useRef(false);
@@ -299,7 +300,7 @@ export default function DexPage() {
   }
   function changeSide(next: 'buy' | 'sell') {
     if (busyRef.current || pending) return;
-    setAmount(''); priceTouched.current = false;
+    setAmount.complete(amount, ''); priceTouched.current = false;
     choosePrice(Number(defaultOrderPrice(next, referencePrice(next))), next);
   }
   async function register(saved: Pending) {
@@ -314,7 +315,7 @@ export default function DexPage() {
       min_usdc_per_dhb: Number(input.minPrice), max_usdc_per_dhb: Number(input.maxPrice),
     }, { onConflict: 'chain_id,token_id', ignoreDuplicates: true }), input.walletAddress)), 'Listing registration');
     if (error) throw new Error(t('dex.registrationFailed'));
-    savePending(null); setAmount(''); setReview(null); setFundingQuote(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
+    savePending(null); setAmount.complete(amount, ''); setReview(null); setFundingQuote(null); setMine(true); setPage(0); setBalanceRevision((n) => n + 1);
     priceTouched.current = false;
     toast.success(t('dex.created')); await loadPositions();
   }

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
@@ -194,8 +195,8 @@ export default function ProfilePage() {
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [createPlanModalOpen, setCreatePlanModalOpen] = useState(false);
   const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
-  const [offerAmount, setOfferAmount] = useState('');
-  const [offerMessage, setOfferMessage] = useState('');
+  const [offerAmount, setOfferAmount] = useSurfaceDraft("pages/app/ProfilePage.tsx:offerAmount", '');
+  const [offerMessage, setOfferMessage] = useSurfaceDraft("pages/app/ProfilePage.tsx:offerMessage", '');
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [followListDrawerOpen, setFollowListDrawerOpen] = useState(false);
   const [followListType, setFollowListType] = useState<'followers' | 'following'>('followers');
@@ -391,8 +392,8 @@ export default function ProfilePage() {
       {
         onSuccess: () => {
           setOfferDrawerOpen(false);
-          setOfferAmount('');
-          setOfferMessage('');
+          setOfferAmount.complete(offerAmount, '');
+          setOfferMessage.complete(offerMessage, '');
         },
       },
     );

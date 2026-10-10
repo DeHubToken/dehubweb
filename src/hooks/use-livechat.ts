@@ -1,3 +1,4 @@
+import { confirmChatDelivery, roomMessageMatches } from '@/lib/chat-delivery';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import {
@@ -564,10 +565,10 @@ export function useLiveChatMessages(roomId: string | null) {
       audioUrl?: string,
       audioDuration?: number
     ) => {
-      if (!roomId || !isAuthenticated || !walletAddress) return;
+      if (!roomId || !isAuthenticated || !walletAddress) throw new Error('Sign in to send a message');
       if (isBanned) {
         toast.error('You are banned from chat');
-        return;
+        throw new Error('You are banned from chat');
       }
       setIsSending(true);
 
@@ -618,7 +619,13 @@ export function useLiveChatMessages(roomId: string | null) {
         }
 
         const apiType = type === 'image' ? 'media' : type;
-        emitSendMessage({
+        const confirmed = await confirmChatDelivery({
+          listen: (event, handler) => {
+            if (event === 'message') return onLiveChatMessage(roomId, handler);
+            if (event === 'error') return onLiveChatError(roomId, handler);
+            socket.on(event, handler); return () => { socket.off(event, handler); };
+          },
+          emit: () => { emitSendMessage({
           roomId,
           content,
           messageType: apiType,
@@ -626,7 +633,11 @@ export function useLiveChatMessages(roomId: string | null) {
           audioUrl,
           audioDuration,
           replyTo: replyToId
+        }); },
+          messageEvent: 'message', errorEvent: 'error',
+          matches: message => roomMessageMatches(message, { account: walletAddress, content, room: roomId, attachment: imageUrl || audioUrl }),
         });
+        if (!confirmed) throw new Error('Message was not confirmed. Your draft has been kept.');
 
         /*
          * No refetch here.
@@ -675,25 +686,40 @@ export function useLiveChatMessages(roomId: string | null) {
    */
   const editMessage = useCallback(async (messageId: string, content: string) => {
     const trimmed = content.trim();
-    if (!trimmed || !walletAddress) return;
+    if (!trimmed || !walletAddress) return false;
     const target = messagesRef.current.find((m) => m.id === messageId);
-    if (!target) return;
+    if (!target) return false;
     if (target.sender_address?.toLowerCase() !== walletAddress.toLowerCase()) {
       toast.error('You can only edit your own messages');
-      return;
+      return false;
     }
     if (messageId.startsWith('temp-')) {
       toast.error('Message is still sending');
-      return;
+      return false;
     }
-    if (trimmed === target.content) return;
+    if (trimmed === target.content) return true;
 
     setMessages((prev) => {
       const next = prev.map((m) => (m.id === messageId ? { ...m, content: trimmed, is_edited: true } : m));
       if (roomId) cacheRoomMessages(roomId, next);
       return next;
     });
-    emitEditMessage(roomId ?? undefined, messageId, trimmed);
+    const socket = getSocket(roomId ?? undefined);
+    const confirmed = await confirmChatDelivery({
+      listen: (event, handler) => {
+        if (event === 'message') return onMessageEdited(roomId ?? undefined, handler);
+        if (event === 'error') return onLiveChatError(roomId ?? undefined, handler);
+        socket.on(event, handler); return () => { socket.off(event, handler); };
+      },
+      emit: () => emitEditMessage(roomId ?? undefined, messageId, trimmed),
+      messageEvent: 'message', errorEvent: 'error',
+      matches: message => roomMessageMatches(message, { account: walletAddress, content: trimmed, messageId }),
+    });
+    if (!confirmed) {
+      setMessages(previous => previous.map(message => message.id === messageId && message.content === trimmed ? target : message));
+      toast.error('Edit was not confirmed. Your draft has been kept.');
+    }
+    return confirmed;
   }, [walletAddress, roomId]);
 
   /** Remove a message — your own, or anyone's if you moderate the room. */

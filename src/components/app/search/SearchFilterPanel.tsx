@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Search Filter Panel
  * ===================
@@ -83,7 +84,7 @@ interface SearchFilterPanelProps {
 
 export function SearchFilterPanel({ filters, onChange, onReset }: SearchFilterPanelProps) {
   const { t } = useTranslation();
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/search/SearchFilterPanel.tsx:categorySearch", '');
 
   // Shares the explore page's own cache entry, so opening this costs no request.
   const { data: categories = [] } = useQuery({
@@ -139,7 +140,7 @@ export function SearchFilterPanel({ filters, onChange, onReset }: SearchFilterPa
               activeKey={filters.category ?? 'all'}
               onSelect={(key) => {
                 onChange({ ...filters, category: key === 'all' ? null : key });
-                setCategorySearch('');
+                setCategorySearch.complete(categorySearch, '');
               }}
               borderRadius="0.75rem"
               buttonClassName="px-3 py-2 rounded-xl text-sm capitalize"
@@ -186,7 +187,7 @@ export function SearchFilterPanel({ filters, onChange, onReset }: SearchFilterPa
           corner and would otherwise swallow the tap. */}
       <button
         type="button"
-        onClick={() => { setCategorySearch(''); onReset(); }}
+        onClick={() => { setCategorySearch.complete(categorySearch, ''); onReset(); }}
         className="absolute z-50 bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
         aria-label={t('filters.resetFilters')}
       >

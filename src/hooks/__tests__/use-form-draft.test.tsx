@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { act, createElement, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { useFormDraft, type FormDraftControls } from '@/hooks/use-form-draft';
@@ -11,7 +11,8 @@ import { readDraft, writeDraft, __resetDraftCacheForTests } from '@/lib/draft-ca
  * submitted one does not.
  */
 
-const SCOPE = 'form:probe';
+vi.mock('@/hooks/use-draft-state', () => ({ useAccountDraftKey: (scope: string) => `account:viewer|${scope}` }));
+const SCOPE = 'account:viewer|form:probe';
 
 let container: HTMLDivElement;
 let root: Root;
@@ -121,5 +122,13 @@ describe('useFormDraft', () => {
     act(() => setFields('x', 'y'));
     expect(readDraft('probe')).toBe('');
     expect(readDraft(SCOPE)).not.toBe('');
+  });
+  it('does not let an earlier successful submission remove newer form fields', async () => {
+    await mount();
+    act(() => setFields('submitted', 'body'));
+    const submitted = controls;
+    act(() => setFields('new title', 'new body'));
+    act(() => expect(submitted.clear()).toBe(false));
+    expect(JSON.parse(readDraft(SCOPE))).toEqual({ title: 'new title', body: 'new body' });
   });
 });

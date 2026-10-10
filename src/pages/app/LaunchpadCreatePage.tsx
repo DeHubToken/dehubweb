@@ -43,16 +43,16 @@ export default function LaunchpadCreatePage() {
     'launchpad-create',
     { step, name, symbol, description, imageUrl, website, twitter, telegram, chainId, curveType },
     (saved) => {
-      if (saved.step) setStep(saved.step);
-      if (saved.name) setName(saved.name);
-      if (saved.symbol) setSymbol(saved.symbol);
-      if (saved.description) setDescription(saved.description);
-      if (saved.imageUrl) setImageUrl(saved.imageUrl);
-      if (saved.website) setWebsite(saved.website);
-      if (saved.twitter) setTwitter(saved.twitter);
-      if (saved.telegram) setTelegram(saved.telegram);
-      if (saved.chainId) setChainId(saved.chainId);
-      if (saved.curveType) setCurveType(saved.curveType);
+      if (saved.step !== undefined) setStep(saved.step);
+      if (saved.name !== undefined) setName(saved.name);
+      if (saved.symbol !== undefined) setSymbol(saved.symbol);
+      if (saved.description !== undefined) setDescription(saved.description);
+      if (saved.imageUrl !== undefined) setImageUrl(saved.imageUrl);
+      if (saved.website !== undefined) setWebsite(saved.website);
+      if (saved.twitter !== undefined) setTwitter(saved.twitter);
+      if (saved.telegram !== undefined) setTelegram(saved.telegram);
+      if (saved.chainId !== undefined) setChainId(saved.chainId);
+      if (saved.curveType !== undefined) setCurveType(saved.curveType);
     },
   );
 

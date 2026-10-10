@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Sell Tab
  * ========
@@ -50,9 +51,9 @@ export function SellTab({ username: selectedUsername, onUsernameChange }: Props 
   const createListing = useCreateUsernameListing();
   const cancelListing = useCancelUsernameListing();
 
-  const [priceUsd, setPriceUsd] = useState('');
-  const [replacement, setReplacement] = useState('');
-  const [description, setDescription] = useState('');
+  const [priceUsd, setPriceUsd] = useSurfaceDraft("components/app/usernames/SellTab.tsx:priceUsd", '');
+  const [replacement, setReplacement] = useSurfaceDraft("components/app/usernames/SellTab.tsx:replacement", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/usernames/SellTab.tsx:description", '');
 
   // Which of their names is on the form. The caller's choice wins; otherwise
   // the handle they are wearing, which is what this screen used to assume was
@@ -70,10 +71,10 @@ export function SellTab({ username: selectedUsername, onUsernameChange }: Props 
   // clear it when switching to a name that has none — otherwise the previous
   // name's price sits in the box looking like this one's.
   useEffect(() => {
-    setPriceUsd(active ? String(active.priceUsd) : '');
-    setReplacement(active?.replacementUsername || '');
-    setDescription(active?.description || '');
-  }, [active?.id, sellingUsername]);
+    setPriceUsd.initialize(active ? String(active.priceUsd) : '');
+    setReplacement.initialize(active?.replacementUsername || '');
+    setDescription.initialize(active?.description || '');
+  }, [active?.id, sellingUsername, setDescription, setPriceUsd, setReplacement]);
 
   if (!isAuthenticated) {
     return (

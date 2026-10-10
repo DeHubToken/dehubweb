@@ -60,6 +60,7 @@ export function ProposalDiscussion({
 
   return (
     <ThreadedComments<ProposalComment>
+      draftScope={`thread:proposalId:${proposalId}`}
       threads={threads}
       isLoading={isLoading}
       entityAuthorAddress={proposalAuthorAddress}
@@ -71,7 +72,7 @@ export function ProposalDiscussion({
       onSubmit={({ content, parent }) =>
         submitComment.mutateAsync({ proposalId, content, parentId: parent?.id ?? null })
       }
-      onEdit={(comment, content) => editComment.mutate({ commentId: comment.id, content, proposalId })}
+      onEdit={(comment, content) => editComment.mutateAsync({ commentId: comment.id, content, proposalId })}
       onDelete={(comment) => deleteComment.mutate({ commentId: comment.id, proposalId })}
       onReact={(comment, reaction) =>
         reactToComment.mutate({ commentId: comment.id, reaction, current: comment.myReaction, proposalId })

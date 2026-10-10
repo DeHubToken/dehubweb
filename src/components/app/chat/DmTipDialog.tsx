@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * DmTipDialog Component
@@ -59,7 +60,7 @@ export function DmTipDialog({
 }: DmTipDialogProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/chat/DmTipDialog.tsx:amount", '', recipientAddress);
   const [isSending, setIsSending] = useState(false);
   // Another token to pay with; it becomes DHB on Base before the tip.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
@@ -126,7 +127,7 @@ export function DmTipDialog({
 
       // Show success immediately on tx submission
       toast.success(dhbText(t('tip.dmSent', 'Sent {{amount}} tokens to {{name}}!', { amount: parsedAmount.toLocaleString(), name: recipientName })), { id: 'dm-tip' });
-      setAmount('');
+      setAmount.complete(amount, '');
       onOpenChange(false);
 
       // Background: notify backend after confirmation

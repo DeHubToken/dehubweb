@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
 import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
@@ -226,7 +227,7 @@ function SortFilterSection({
   onReset,
 }: FilterSectionProps) {
   const { t } = useI18n();
-  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySearch, setCategorySearch] = useSurfaceDraft("components/app/feeds/HomeFeed.tsx:categorySearch", '');
 
   const filteredCategories = useMemo(() => {
     let filtered = categories;
@@ -277,7 +278,7 @@ function SortFilterSection({
               } else {
                 onCategoryToggle(key);
               }
-              setCategorySearch('');
+              setCategorySearch.complete(categorySearch, '');
             }}
             borderRadius="0.75rem"
             buttonClassName="px-3 py-2 rounded-xl text-sm"
@@ -333,7 +334,7 @@ function SortFilterSection({
       {/* Reset filters - bottom right. z-50 keeps it above the scroll rows
           (z-40), which overlap it and otherwise swallow the tap. */}
       <button
-        onClick={() => { setCategorySearch(''); onReset(); }}
+        onClick={() => { setCategorySearch.complete(categorySearch, ''); onReset(); }}
         className="absolute z-50 bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
         aria-label={t('filters.resetFilters')}
       >

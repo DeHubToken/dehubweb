@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -19,10 +20,10 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
   const { t } = useTranslation();
   const create = useCreateSkill();
   const update = useUpdateSkill();
-  const [name, setName] = useState(editing?.name ?? '');
-  const [description, setDescription] = useState(editing?.description ?? '');
-  const [phrasesText, setPhrasesText] = useState((editing?.trigger_phrases ?? []).join(', '));
-  const [systemPrompt, setSystemPrompt] = useState(editing?.system_prompt ?? '');
+  const [name, setName] = useDraftState(`form:src/components/app/skills/SkillCreateModal.tsx:name:${editing?.id ?? 'new'}`, editing?.name ?? '');
+  const [description, setDescription] = useDraftState(`form:src/components/app/skills/SkillCreateModal.tsx:description:${editing?.id ?? 'new'}`, editing?.description ?? '');
+  const [phrasesText, setPhrasesText] = useDraftState(`form:src/components/app/skills/SkillCreateModal.tsx:phrasesText:${editing?.id ?? 'new'}`, (editing?.trigger_phrases ?? []).join(', '));
+  const [systemPrompt, setSystemPrompt] = useDraftState(`form:src/components/app/skills/SkillCreateModal.tsx:systemPrompt:${editing?.id ?? 'new'}`, editing?.system_prompt ?? '');
   const [kind, setKind] = useState<'image' | 'chat'>(editing?.kind ?? 'image');
   const [assets, setAssets] = useState<string[]>(editing?.asset_urls ?? []);
   const [uploading, setUploading] = useState(false);
@@ -70,6 +71,7 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
         await create.mutateAsync(payload);
         toast.success(t('skills.skillCreated'));
       }
+      setName.complete(name, ''); setDescription.complete(description, ''); setPhrasesText.complete(phrasesText, ''); setSystemPrompt.complete(systemPrompt, '');
       onOpenChange(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : t('skills.failedToSave'));

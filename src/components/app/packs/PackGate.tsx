@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * The badge gate and pack chooser shared by every "add to a pack" form.
  *
@@ -74,7 +75,7 @@ export function usePackTarget(wallet: string | null | undefined, kind: PackKind)
   const invalidate = useInvalidatePacks();
   const packs = (owned.data ?? []).filter((p) => p.kind === kind);
   const [choice, setChoice] = useState<string | null>(null);
-  const [newName, setNewName] = useState('');
+  const [newName, setNewName] = useSurfaceDraft("src/components/app/packs/PackGate.tsx:newName", '');
 
   const limits = status.data?.limits;
   const canCreate = !!limits && packs.length < limits.packs;
@@ -86,7 +87,7 @@ export function usePackTarget(wallet: string | null | undefined, kind: PackKind)
     if (selected) return selected;
     const pack = await createPack(kind, newName.trim());
     setChoice(pack.id);
-    setNewName('');
+    setNewName.complete(newName, '');
     await invalidate();
     return pack;
   };

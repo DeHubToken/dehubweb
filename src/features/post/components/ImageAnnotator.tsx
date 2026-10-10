@@ -1,3 +1,4 @@
+import { useDraftState } from "@/hooks/use-draft-state";
 /**
  * Image Annotator
  * ===============
@@ -52,6 +53,7 @@ interface ImageAnnotatorProps {
   imageUrl: string;
   fileName: string;
   fileType: string;
+  sourceIdentity: string;
   onApply: (file: File) => void;
 }
 
@@ -110,12 +112,13 @@ function paintAnnotations(ctx: CanvasRenderingContext2D, items: Annotation[], w:
   }
 }
 
-export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, onApply }: ImageAnnotatorProps) {
+export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, sourceIdentity, onApply }: ImageAnnotatorProps) {
   const [tool, setTool] = useState<Tool>('draw');
   const [color, setColor] = useState(COLORS[2]);
   const [sizeStep, setSizeStep] = useState(1);
-  const [items, setItems] = useState<Annotation[]>([]);
-  const [pendingText, setPendingText] = useState<{ at: Point; value: string } | null>(null);
+  const annotationScope = sourceIdentity;
+  const [items, setItems] = useDraftState<Annotation[]>(`annotation:${annotationScope}:items`, []);
+  const [pendingText, setPendingText] = useDraftState<{ at: Point; value: string } | null>(`annotation:${annotationScope}:text`, null);
   const [isSaving, setIsSaving] = useState(false);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -127,10 +130,10 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
   // Reopening on a different image must not inherit the last one's marks.
   useEffect(() => {
     if (!isOpen) return;
-    setItems([]);
-    setPendingText(null);
+    setItems.initialize([]);
+    setPendingText.initialize(null);
     setTool('draw');
-  }, [isOpen, imageUrl]);
+  }, [isOpen, imageUrl, setItems]);
 
   // Load the source image once per open.
   useEffect(() => {
@@ -283,6 +286,8 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, outType, 0.92));
       if (!blob) throw new Error('toBlob returned nothing');
       onApply(new File([blob], fileName, { type: blob.type }));
+      setItems.complete(items, []);
+      setPendingText.complete(pendingText, null);
       onClose();
     } catch (err) {
       console.warn('[Annotate] Could not bake the drawing:', err);

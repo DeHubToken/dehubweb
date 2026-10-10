@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, memo, startTransition, type CSSProperties } from 'react';
@@ -191,17 +192,17 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
   onChange: (next: string) => void;
   placeholder: string;
 }) {
-  const [local, setLocal] = useState(value);
+  const [local, setLocal] = useSurfaceDraft("src/pages/app/ExplorePage.tsx:local", value);
   const lastPushedRef = useRef(value);
 
   // Adopt external changes (URL ?q= init, programmatic clears) without
   // fighting our own in-flight transition pushes.
   useEffect(() => {
     if (value !== lastPushedRef.current) {
-      setLocal(value);
+      setLocal.initialize(value);
       lastPushedRef.current = value;
     }
-  }, [value]);
+  }, [value, setLocal]);
 
   const push = (next: string) => {
     setLocal(next);

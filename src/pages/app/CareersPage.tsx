@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * Careers Page (In-App)
  * =====================
@@ -88,7 +89,7 @@ export default function CareersPage() {
   const { t } = useTranslation();
   const [bdmFormOpen, setBdmFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<BDMFormData>(initialBDMForm);
+  const [formData, setFormData] = useDraftState<BDMFormData>(`form:src/pages/app/CareersPage.tsx:formData:${'application'}`, initialBDMForm);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -117,7 +118,7 @@ export default function CareersPage() {
       });
       if (error) throw error;
       toast.success(t('careers.applicationSuccess'));
-      setFormData(initialBDMForm);
+      setFormData.complete(formData, initialBDMForm);
       setBdmFormOpen(false);
     } catch (error) {
       console.error('Error submitting application:', error);

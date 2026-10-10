@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * NewConversationModal Component
@@ -154,8 +155,8 @@ function FeePaymentStep({
   onBack: () => void;
 }) {
   const { t } = useTranslation();
-  const [messageText, setMessageText] = useState('');
-  const [customAmount, setCustomAmount] = useState('');
+  const [messageText, setMessageText] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:messageText", '');
+  const [customAmount, setCustomAmount] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:customAmount", '');
   const [isSending, setIsSending] = useState(false);
   const [balanceInfo, setBalanceInfo] = useState<{ checked: boolean; balance: number; sufficient: boolean }>({
     checked: false, balance: 0, sufficient: false,
@@ -390,7 +391,7 @@ export function NewConversationModal({
   initialMessage,
   title,
 }: NewConversationModalProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:searchQuery", '');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
 
@@ -426,7 +427,7 @@ export function NewConversationModal({
         }
         onConversationCreated(conversation);
         onOpenChange(false);
-        setSearchQuery('');
+        setSearchQuery.complete(searchQuery, '');
         setFeeUser(null);
         return;
       }
@@ -449,7 +450,7 @@ export function NewConversationModal({
 
       onConversationCreated(conversation);
       onOpenChange(false);
-      setSearchQuery('');
+      setSearchQuery.complete(searchQuery, '');
       setFeeUser(null);
     } catch (error: any) {
       toast.error(error.message || 'Failed to start conversation');
@@ -470,7 +471,6 @@ export function NewConversationModal({
 
   const handleClose = () => {
     onOpenChange(false);
-    setSearchQuery('');
     setSelectedUserId(null);
     setFeeUser(null);
   };
@@ -502,7 +502,7 @@ export function NewConversationModal({
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery.complete(searchQuery, '')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[10px] font-medium text-white/70 bg-white/10 hover:bg-white/20 border border-white/10 rounded-md transition-colors"
                 >
                   Clear

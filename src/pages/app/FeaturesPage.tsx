@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Feature Requests Page
  * =====================
@@ -227,8 +228,8 @@ function FeatureCard({
   const [showComments, setShowComments] = useState(defaultCommentsOpen);
   const [showMenu, setShowMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(feature.title);
-  const [editDescription, setEditDescription] = useState(feature.description);
+  const [editTitle, setEditTitle] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editTitle", feature.title, feature.id);
+  const [editDescription, setEditDescription] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:editDescription", feature.description, feature.id);
   const [editCategory, setEditCategory] = useState<FeatureCategory>(feature.category);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -543,9 +544,9 @@ function SubmitFeatureDrawer({
     'feature-request',
     { title, description, deviceDetails },
     (saved) => {
-      if (saved.title) setTitle(saved.title);
-      if (saved.description) setDescription(saved.description);
-      if (saved.deviceDetails) setDeviceDetails(saved.deviceDetails);
+      if (saved.title !== undefined) setTitle(saved.title);
+      if (saved.description !== undefined) setDescription(saved.description);
+      if (saved.deviceDetails !== undefined) setDeviceDetails(saved.deviceDetails);
     },
   );
 
@@ -629,13 +630,13 @@ function SubmitFeatureDrawer({
       },
       {
         onSuccess: () => {
+          if (!draft.clear()) return;
           setTitle('');
           setDescription('');
           setDeviceDetails('');
           setCategory('new_feature');
           clearAttachments();
           // Filed — the draft of it must not reopen pre-filled and get sent twice.
-          draft.clear();
           onOpenChange(false);
         },
       }
@@ -916,7 +917,7 @@ export default function FeaturesPage() {
   const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
   const { ref: featuresCatFadeRef, style: featuresCatFadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useSurfaceDraft("src/pages/app/FeaturesPage.tsx:searchInput", '');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);

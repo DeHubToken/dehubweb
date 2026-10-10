@@ -1,106 +1,58 @@
-/**
- * useFormDraft
- * ============
- * Keeps a multi-field form's in-progress values in the shared draft store, so
- * a half-filled form survives navigating away, a reload, or the tab closing —
- * the same guarantee the chat composers got, applied to the forms that take
- * real effort to fill in.
- *
- * These are the pages where losing it hurts most: bounty posting, launching a
- * coin, going live. All of them are plain lazy routes rather than cached pages,
- * so they unmount the moment the user goes to check something and come back
- * blank.
- *
- * Deliberately NOT a state container. The form keeps its own useStates and
- * passes a snapshot in, which means:
- *   - no page has to be restructured to adopt this,
- *   - what is saved is legible at the call site rather than implied, and
- *   - fields the form does not list simply are not persisted (a file input, an
- *     `isSubmitting` flag) instead of being persisted by accident.
- *
- * @module hooks/use-form-draft
- */
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import { flushDrafts, readDraft, readCurrentDraft, writeDraft, clearDraft } from '@/lib/draft-cache';
+import { useAccountDraftKey } from './use-draft-state';
 
-import { useEffect, useRef } from 'react';
-import { flushDrafts, readDraft, writeDraft, clearDraft } from '@/lib/draft-cache';
+export interface FormDraftControls { clear: () => boolean; }
 
-/** Namespaced so a form draft can never collide with a chat scope. */
-const formScope = (key: string) => `form:${key}`;
-
-export interface FormDraftControls {
-  /** Drop the saved draft. Call once the form has actually been submitted. */
-  clear: () => void;
-}
-
-/**
- * @param key    Stable name for this form, e.g. `work-post`.
- * @param values Snapshot of the current field values, rebuilt each render.
- * @param apply  Called at most once, on mount, with a previously saved snapshot.
- *               Read defensively: a draft saved by an older build will be
- *               missing fields added since.
- */
+/** Explicit multi-field snapshots; only the listed, non-secret fields are stored. */
 export function useFormDraft<T extends Record<string, unknown>>(
   key: string,
   values: T,
   apply: (saved: Partial<T>) => void,
 ): FormDraftControls {
-  const scope = formScope(key);
-  const restoredRef = useRef(false);
-  const clearedSnapshotRef = useRef<string | null>(null);
-  const snapshot = JSON.stringify(values);
-
-  // `apply` is almost always an inline arrow, so depending on it would re-run
-  // the restore on every render. The mount pass is the only one that matters.
+  const accountScope = useAccountDraftKey(`form:${key}`);
+  const scope = accountScope ?? `guest|form:${key}`;
+  const initial = useRef(values);
   const applyRef = useRef(apply);
   applyRef.current = apply;
+  const skipFirstWrite = useRef(true);
+  const cleared = useRef<string | null>(null);
+  const snapshot = JSON.stringify(values);
 
-  if (!restoredRef.current) {
-    // During the first render rather than in an effect: an effect restores a
-    // tick later, which is long enough to see the empty form paint first.
-    restoredRef.current = true;
-    const raw = readDraft(scope);
+  useLayoutEffect(() => {
+    skipFirstWrite.current = true;
+    cleared.current = null;
+    const raw = scope ? readDraft(scope) : '';
     if (raw) {
       try {
-        const saved = JSON.parse(raw) as Partial<T>;
-        if (saved && typeof saved === 'object') {
-          // Queued, not called inline — applying during render would set state
-          // on a component mid-render. A microtask still lands before paint.
-          queueMicrotask(() => applyRef.current(saved));
+        const saved = JSON.parse(raw);
+        if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+          applyRef.current(saved);
+          return;
         }
-      } catch {
-        // Unparseable draft: drop it rather than wedge the form on every load.
-        clearDraft(scope);
-      }
+      } catch { /* Malformed data must not break the form. */ }
+      if (scope) clearDraft(scope);
     }
-  }
+    applyRef.current(initial.current);
+  }, [scope]);
 
-  // The store already coalesces its own writes onto idle, so serialising per
-  // keystroke costs a JSON.stringify and no I/O.
   useEffect(() => {
-    // Submission state can render once more before navigation unmounts the
-    // form. Keep its submitted values cleared until the user edits a field.
-    if (clearedSnapshotRef.current === snapshot) return;
-    clearedSnapshotRef.current = null;
-    const isEmpty = Object.values(values).every(
-      (v) => v === '' || v === null || v === undefined ||
-        (Array.isArray(v) && v.length === 0),
-    );
-    if (isEmpty) {
-      // Two cases collapse here. An untouched form must not write a draft, or
-      // merely opening the page would leave an entry behind. And a form the
-      // user deliberately emptied must not keep the old one, or clearing a
-      // field would appear to work and then undo itself on the next visit.
-      clearDraft(scope);
-      return;
-    }
-    writeDraft(scope, snapshot);
-  });
-
-  // A form left by navigation may never see the store's idle callback fire.
+    // Restore runs before paint; the mount's empty snapshot must never erase it.
+    if (skipFirstWrite.current) { skipFirstWrite.current = false; return; }
+    if (!scope || cleared.current === snapshot) return;
+    cleared.current = null;
+    const empty = Object.values(values).every(v => v === '' || v == null || (Array.isArray(v) && !v.length));
+    if (empty) clearDraft(scope);
+    else writeDraft(scope, snapshot);
+    flushDrafts();
+  }, [scope, snapshot]);
   useEffect(() => flushDrafts, []);
-
   return { clear: () => {
-    clearedSnapshotRef.current = snapshot;
-    clearDraft(scope);
+    // This closure belongs to the submitted snapshot, not later typing.
+    const stored = scope ? readCurrentDraft(scope) : '';
+    if (stored && stored !== snapshot) return false;
+    cleared.current = snapshot;
+    if (scope) { clearDraft(scope); flushDrafts(); }
+    return true;
   } };
 }

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * PosterConfigDialog
  * ==================
@@ -273,10 +274,10 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
   const [dimension, setDimension] = useState<PosterConfig['dimension']>('portrait');
   const [style, setStyle] = useState('dehub-template');
   const [features, setFeatures] = useState<string[]>([]);
-  const [tagline, setTagline] = useState('');
+  const [tagline, setTagline] = useSurfaceDraft("components/app/assistant/PosterConfigDialog.tsx:tagline", '');
   const [includeSocials, setIncludeSocials] = useState(false);
   const [includeWebsite, setIncludeWebsite] = useState(false);
-  const [extraNotes, setExtraNotes] = useState('');
+  const [extraNotes, setExtraNotes] = useSurfaceDraft("components/app/assistant/PosterConfigDialog.tsx:extraNotes", '');
   const [logoVariant, setLogoVariant] = useState<LogoVariant>('primary');
 
   useEffect(() => {
@@ -284,15 +285,15 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
     setDimension(detectDimension(userPrompt));
     setStyle(detectStyle(userPrompt));
     setFeatures(detectFeatures(userPrompt));
-    setTagline(detectTagline(userPrompt));
+    setTagline.initialize(detectTagline(userPrompt));
     setIncludeSocials(detectSocials(userPrompt));
     setIncludeWebsite(detectWebsite(userPrompt));
-    setExtraNotes('');
+    setExtraNotes.initialize('');
     const lower = userPrompt.toLowerCase();
     if (/\bicon|symbol|mark|d-mark|small logo\b/.test(lower)) setLogoVariant('icon');
     else if (/\bboth logos?|lockup|icon\s*\+\s*wordmark|wordmark\s*\+\s*icon\b/.test(lower)) setLogoVariant('both');
     else setLogoVariant('primary');
-  }, [open, userPrompt]);
+  }, [open, userPrompt, setExtraNotes, setTagline]);
 
   const toggleFeature = useCallback((value: string) => {
     setFeatures(prev => prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]);

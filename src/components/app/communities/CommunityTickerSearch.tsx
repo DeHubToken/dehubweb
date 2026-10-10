@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Community Ticker Search
  * =======================
@@ -35,7 +36,7 @@ function formatCompact(n: number | null | undefined): string {
 }
 
 export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSearchProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useSurfaceDraft("components/app/communities/CommunityTickerSearch.tsx:query", '');
   const [results, setResults] = useState<DexPair[]>([]);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -102,7 +103,7 @@ export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSea
             className="flex-1 bg-transparent text-xs text-white placeholder:text-zinc-600 outline-none"
           />
           {query && (
-            <button onClick={() => { setQuery(''); setResults([]); }} className="text-zinc-500 hover:text-white">
+            <button onClick={() => { setQuery.complete(query, ''); setResults([]); }} className="text-zinc-500 hover:text-white">
               <X className="w-3 h-3" />
             </button>
           )}

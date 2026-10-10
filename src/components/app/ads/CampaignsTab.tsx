@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CampaignsTab
  * ============
@@ -419,8 +420,8 @@ function TargetingSummary({ targeting }: { targeting: AdTargeting }) {
 function BudgetEditor({ campaign }: { campaign: { id: string; daily_budget_usd: number; total_budget_usd: number; spent_usd: number } }) {
   const { t } = useTranslation();
   const updateCampaign = useUpdateCampaign();
-  const [daily, setDaily] = useState(String(campaign.daily_budget_usd));
-  const [total, setTotal] = useState(String(campaign.total_budget_usd));
+  const [daily, setDaily] = useSurfaceDraft("src/components/app/ads/CampaignsTab.tsx:daily", String(campaign.daily_budget_usd), campaign.id);
+  const [total, setTotal] = useSurfaceDraft("src/components/app/ads/CampaignsTab.tsx:total", String(campaign.total_budget_usd), campaign.id);
   const dirty = Number(daily) !== Number(campaign.daily_budget_usd) || Number(total) !== Number(campaign.total_budget_usd);
 
   return (
@@ -519,10 +520,10 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
   const [kind, setKind] = useState<CreativeKind>('image');
   const [mediaUrl, setMediaUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [headline, setHeadline] = useState('');
-  const [body, setBody] = useState('');
-  const [ctaLabel, setCtaLabel] = useState('Learn more');
-  const [ctaUrl, setCtaUrl] = useState('');
+  const [headline, setHeadline] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:headline", '');
+  const [body, setBody] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:body", '');
+  const [ctaLabel, setCtaLabel] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:ctaLabel", 'Learn more');
+  const [ctaUrl, setCtaUrl] = useSurfaceDraft("components/app/ads/CampaignsTab.tsx:ctaUrl", '');
 
   const valid = headline.trim() && (kind === 'text' || mediaUrl);
 

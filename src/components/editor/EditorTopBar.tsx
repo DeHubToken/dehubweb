@@ -1,3 +1,5 @@
+import { discardEditorRecovery } from '@/lib/editor/draftRecovery';
+import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { useEditorStore } from "@/store/editorStore";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,7 @@ import { LiveProjectSession } from "./LiveProjectSession";
 import { CloudProjectsDialog } from "./CloudProjectsDialog";
 
 export function EditorTopBar() {
+  const recoveryScope = useAccountDraftKey('editor:recovery') ?? 'guest|editor:recovery';
   const navigate = useNavigate();
   const title = useEditorStore((s) => s.projectTitle);
   const setTitle = useEditorStore((s) => s.setProjectTitle);
@@ -82,7 +85,7 @@ export function EditorTopBar() {
                     {p.title || "Untitled"}
                   </button>
                   <button
-                    onClick={async () => { await deleteProject(p.id); setProjects((s) => s.filter((x) => x.id !== p.id)); }}
+                    onClick={async () => { await deleteProject(p.id); discardEditorRecovery(recoveryScope, p.id); setProjects((s) => s.filter((x) => x.id !== p.id)); }}
                     aria-label="Delete project"
                     className="rounded p-1 text-white/30 opacity-0 hover:bg-white/10 hover:text-white group-hover:opacity-100"
                   >

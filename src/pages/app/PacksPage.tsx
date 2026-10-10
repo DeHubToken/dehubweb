@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Packs hub — /packs
  *
@@ -121,7 +122,7 @@ export default function PacksPage() {
   const navigate = useNavigate();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const [kind, setKind] = useState<PackKind>('emoji');
-  const [name, setName] = useState('');
+  const [name, setName] = useSurfaceDraft("pages/app/PacksPage.tsx:name", '');
   const [busy, setBusy] = useState(false);
   const status = usePackStatus(walletAddress);
   const owned = useOwnedPacks(walletAddress);
@@ -140,7 +141,7 @@ export default function PacksPage() {
     try {
       const pack = await createPack(kind, name.trim());
       await invalidate();
-      setName('');
+      setName.complete(name, '');
       navigate(`/packs/${pack.slug}`);
     } catch (err) {
       toast.error(packErrorMessage(err, t, kind));

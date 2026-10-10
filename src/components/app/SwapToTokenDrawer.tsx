@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Swap Any Token → Target Token Drawer
  * =====================================
@@ -69,7 +70,7 @@ export function SwapToTokenDrawer({
   const { data: prices = {} } = useTokenPrices();
   const { allTokens } = useAllChainsTokens();
 
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useSurfaceDraft("components/app/SwapToTokenDrawer.tsx:amount", '');
   const [quoteResult, setQuoteResult] = useState<{ amountIn: bigint; feeTier: number } | null>(null);
   const [quoting, setQuoting] = useState(false);
   const [swapping, setSwapping] = useState(false);
@@ -194,7 +195,6 @@ export function SwapToTokenDrawer({
 
   const handleClose = (v: boolean) => {
     if (!v) {
-      setAmount('');
       setQuoteResult(null);
       setSuccess(false);
       setError('');

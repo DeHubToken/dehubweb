@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useDeferredValue, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Lock, Search, Users, X } from 'lucide-react';
@@ -83,15 +84,14 @@ function PrivacyToggle({
 export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:name", '');
+  const [description, setDescription] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:description", '');
   const [isPrivate, setIsPrivate] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:search", '');
   // The private team whose request note is being written, if any.
   const [requesting, setRequesting] = useState<string | null>(null);
-  const [requestMessage, setRequestMessage] = useState('');
+  const [requestMessage, setRequestMessage] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:requestMessage", '', requesting);
   const [editing, setEditing] = useState(false);
-  const [editDescription, setEditDescription] = useState('');
   const [editPrivate, setEditPrivate] = useState(false);
   const deferredSearch = useDeferredValue(search);
   const mine = useTeamUp(open);
@@ -108,11 +108,12 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
     || approve.isPending || deny.isPending || leave.isPending || remove.isPending;
   const myAddress = walletAddress?.toLowerCase() ?? '';
   const team = mine.data;
+  const [editDescription, setEditDescription] = useSurfaceDraft("components/app/TeamUpDrawer.tsx:editDescription", '', team?.id ?? null);
   const isOwner = !!team && team.ownerAddress.toLowerCase() === myAddress;
   const tierLabel = (tier: string | null) => tier || t('superpowers.teamUp.noBadgeYet');
 
   const startEditing = () => {
-    setEditDescription(team?.description ?? '');
+    setEditDescription.initialize(team?.description ?? '');
     setEditPrivate(team?.isPrivate ?? false);
     setEditing(true);
   };
@@ -127,7 +128,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
           toast.success(t('superpowers.teamUp.joined', { name: target.name }));
         }
         setRequesting(null);
-        setRequestMessage('');
+        setRequestMessage.complete(requestMessage, '');
       },
       onError: error => toast.error(errorMessage(
         error,
@@ -400,8 +401,8 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
                   { name, description, isPrivate },
                   {
                     onSuccess: () => {
-                      setName('');
-                      setDescription('');
+                      setName.complete(name, '');
+                      setDescription.complete(description, '');
                       setIsPrivate(false);
                       toast.success(t('superpowers.teamUp.created'));
                     },
@@ -477,7 +478,7 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
                               size="sm"
                               variant="outline"
                               disabled={busy || composing}
-                              onClick={() => { setRequesting(candidate.id); setRequestMessage(''); }}
+                              onClick={() => { setRequesting(candidate.id); }}
                             >
                               {t('superpowers.teamUp.requestToJoin')}
                             </Button>

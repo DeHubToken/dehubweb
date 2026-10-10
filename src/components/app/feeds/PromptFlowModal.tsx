@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -109,7 +110,7 @@ function scorePromptAgainstCategories(prompt: string, categories: DeHubCategory[
 export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt = '', onSave }: Props) {
   const { t } = useTranslation();
   const [stage, setStage] = useState<Stage>('input');
-  const [prompt, setPrompt] = useState(initialPrompt);
+  const [prompt, setPrompt] = useSurfaceDraft("src/components/app/feeds/PromptFlowModal.tsx:prompt", initialPrompt);
   const [weights, setWeights] = useState<CategoryWeight[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -118,11 +119,11 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
   useEffect(() => {
     if (open) {
       setStage('input');
-      setPrompt(initialPrompt);
+      setPrompt.initialize(initialPrompt);
       setWeights([]);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
-  }, [open, initialPrompt]);
+  }, [open, initialPrompt, setPrompt]);
 
   // Keep latest categories in a ref so deferred timers always score against fresh data.
   const categoriesRef = useRef(categories);

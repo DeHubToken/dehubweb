@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Sound Picker
  * =============
@@ -27,7 +28,7 @@ interface SoundPickerProps {
 
 export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPickerProps) {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("features/post/components/SoundPicker.tsx:search", '');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [playingId, setPlayingId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);

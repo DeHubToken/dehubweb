@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DeHub Builder — the lander at dehub.io/builder.
  *
@@ -59,7 +60,7 @@ export default function BuilderPage() {
     isAuthenticated: boolean;
     openLoginModal: () => void;
   };
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useSurfaceDraft("pages/app/BuilderPage.tsx:prompt", '');
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   /** Open the @assistant thread, sending `body` into it when there is one. */

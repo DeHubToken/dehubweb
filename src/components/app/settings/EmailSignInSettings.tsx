@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -34,7 +35,7 @@ import {
 export function EmailSignInSettings() {
   const { t } = useTranslation();
   const [status, setStatus] = useState<EmailLinkStatusResponse | null>(null);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useSurfaceDraft("components/app/settings/EmailSignInSettings.tsx:email", '');
   const [code, setCode] = useState('');
   const [awaitingCode, setAwaitingCode] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -74,7 +75,7 @@ export function EmailSignInSettings() {
       const result = await confirmEmailLink(email.trim(), code.trim());
       setAwaitingCode(false);
       setCode('');
-      setEmail('');
+      setEmail.complete(email, '');
       setStatus({
         status: true,
         linked: true,
@@ -95,7 +96,7 @@ export function EmailSignInSettings() {
     try {
       await unlinkEmailLogin();
       setStatus({ status: true, linked: false, email: null, canLink: true, source: null });
-      setEmail('');
+      setEmail.complete(email, '');
       setCode('');
       setAwaitingCode(false);
       toast.success(

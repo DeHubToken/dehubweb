@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
@@ -83,7 +84,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // Menu search. The field is not permanent chrome: it stays out of the way
   // until the list is actually being scrolled — i.e. until the user is hunting
   // rather than clicking something they can already see.
-  const [navQuery, setNavQuery] = useState('');
+  const [navQuery, setNavQuery] = useSurfaceDraft("components/app/navigation/DesktopSidebar.tsx:navQuery", '');
   const [navScrolled, setNavScrolled] = useState(false);
   const [navAtBottom, setNavAtBottom] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
@@ -203,12 +204,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   // A route change re-renders the rail with a different active row; leaving a
   // stale filter applied would hide the page the user just landed on.
-  useEffect(() => { setNavQuery(''); }, [location.pathname]);
+  useEffect(() => { setNavQuery.initialize(''); }, [location.pathname, setNavQuery]);
 
   // Collapsing hides both the field and the hand-off row (there is no room for
   // either at 60px), so a query left behind would filter the rail down to a few
   // icons with nothing on screen explaining why.
-  useEffect(() => { setNavQuery(''); }, [isCollapsed]);
+  useEffect(() => { setNavQuery.initialize(''); }, [isCollapsed, setNavQuery]);
 
   // Preload both logo variants so collapse/expand swaps are instant
   useEffect(() => {
@@ -314,10 +315,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     if (!query) return;
     addToHistory(query);
     navigate(exploreSearchHref(query));
-    setNavQuery('');
+    setNavQuery.complete(navQuery, '');
     searchInputRef.current?.blur();
     bottomSearchInputRef.current?.blur();
-  }, [navQuery, addToHistory, navigate]);
+  }, [navQuery, addToHistory, navigate, setNavQuery]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -327,7 +328,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     }
     if (e.key === 'Escape') {
       e.preventDefault();
-      if (navQuery) setNavQuery('');
+      if (navQuery) setNavQuery.complete(navQuery, '');
       else (e.currentTarget as HTMLInputElement).blur();
     }
   };
@@ -510,7 +511,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     {navQuery && (
                       <button
                         type="button"
-                        onClick={() => { setNavQuery(''); searchInputRef.current?.focus(); }}
+                        onClick={() => { setNavQuery.complete(navQuery, ''); searchInputRef.current?.focus(); }}
                         aria-label={t('sidebar.clearSearch')}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
                       >
@@ -754,7 +755,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     {navQuery && (
                       <button
                         type="button"
-                        onClick={() => { setNavQuery(''); bottomSearchInputRef.current?.focus(); }}
+                        onClick={() => { setNavQuery.complete(navQuery, ''); bottomSearchInputRef.current?.focus(); }}
                         aria-label={t('sidebar.clearSearch')}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
                       >

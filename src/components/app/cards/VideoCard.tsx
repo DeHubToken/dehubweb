@@ -2979,6 +2979,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         isOpen={showAIChat}
         onClose={() => setShowAIChat(false)}
         postContext={{
+          tokenId: video.id,
           type: 'video',
           author: video.channel,
           title: video.title,

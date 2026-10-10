@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart, Pin, ListVideo } from 'lucide-react';
@@ -115,7 +116,7 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // the pages already downloaded would put the oldest *loaded* post first
   // rather than the creator's actual first upload.
   const [contentSort, setContentSort] = useState<ProfileSortMode>('newest');
-  const [contentSearch, setContentSearch] = useState('');
+  const [contentSearch, setContentSearch] = useSurfaceDraft("src/hooks/use-profile-page.ts:contentSearch", '', lookupUsername || lookupUserId);
   const debouncedContentSearch = useDebouncedValue(contentSearch, 350);
 
   // The home feed's filter panel, scoped to this channel. Server-side too, for
@@ -146,10 +147,10 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   // category the next creator never posts in.
   useEffect(() => {
     setContentSort('newest');
-    setContentSearch('');
+    setContentSearch.complete(contentSearch, '');
     setContentFilters(EMPTY_PROFILE_FILTERS);
     setContentFiltersOpen(false);
-  }, [routeUsername, userId]);
+  }, [routeUsername, userId, contentSearch, setContentSearch]);
 
   // Fetch user content — small first page for fast initial paint, then auto-fetch rest
   const {

@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Stream Shop Manager
  * ===================
@@ -53,7 +54,7 @@ function AddProductSheet({ tokenId, attachedIds }: { tokenId: string | null; att
   const { data: listings = [], isLoading } = useMyListings();
   const { attach } = useStreamProductActions(tokenId);
   const [open, setOpen] = useState(false);
-  const [livePrices, setLivePrices] = useState<Record<string, string>>({});
+  const [livePrices, setLivePrices] = useSurfaceDraft<Record<string, string>>("src/components/app/live/StreamShopManager.tsx:livePrices", {}, tokenId);
   const navigate = useNavigate();
 
   // `any` matches how the rest of the stores surface types listing rows: the

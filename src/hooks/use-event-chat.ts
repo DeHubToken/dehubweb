@@ -120,7 +120,7 @@ export function useEventChat(eventId: string | undefined) {
     replyToId?: string,
     userProfile?: { username?: string; displayName?: string; avatarUrl?: string; badgeBalance?: number }
   ) => {
-    if (!eventId || !walletAddress) return;
+    if (!eventId || !walletAddress) throw new Error('Sign in to send a message');
     const msg = {
       event_id: eventId,
       wallet_address: walletAddress.toLowerCase(),
@@ -187,9 +187,9 @@ export function useEventChat(eventId: string | undefined) {
   }, [rawMessages, walletAddress, eventId, queryClient]);
 
   const editMessage = useCallback(async (messageId: string, newContent: string) => {
-    if (!walletAddress || !eventId) return;
+    if (!walletAddress || !eventId) return false;
     const trimmed = newContent.trim();
-    if (!trimmed) return;
+    if (!trimmed) return false;
 
     queryClient.setQueryData<EventChatMessage[]>(
       [QUERY_KEY, eventId],
@@ -204,7 +204,9 @@ export function useEventChat(eventId: string | undefined) {
       console.error('[EventChat] Edit error:', error);
       toast.error('Failed to edit message');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, eventId] });
+      return false;
     }
+    return true;
   }, [walletAddress, eventId, queryClient]);
 
   return { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction };

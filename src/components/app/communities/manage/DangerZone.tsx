@@ -1,3 +1,4 @@
+import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Danger zone
  * ===========
@@ -109,7 +110,7 @@ export function DangerZone({ community, membership, onClosePanel }: DangerZonePr
   const transferMutation = useTransferOwnership();
   const deleteMutation = useDeleteCommunity();
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useSurfaceDraft("components/app/communities/manage/DangerZone.tsx:search", '', draftIdentity(community));
   const [candidate, setCandidate] = useState<TransferCandidate | null>(null);
   const [transferConfirm, setTransferConfirm] = useState('');
   const [deleteOpen, setDeleteOpen] = useState(false);

@@ -1,3 +1,4 @@
+import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Conversation History Drawer
  * ============================
@@ -164,7 +165,7 @@ export function ConversationHistoryDrawer({
   const [isClearingAll, setIsClearingAll] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/assistant/ConversationHistoryDrawer.tsx:searchQuery", '');
   const [searchResults, setSearchResults] = useState<Conversation[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -182,12 +183,12 @@ export function ConversationHistoryDrawer({
   // Reset search when drawer closes
   useEffect(() => {
     if (!open) {
-      setSearchQuery('');
+      setSearchQuery.initialize('');
       setSearchResults(null);
       setActiveTab('chats');
       setShowClearConfirm(false);
     }
-  }, [open]);
+  }, [open, setSearchQuery]);
 
   // Debounced search through conversation messages
   useEffect(() => {
@@ -502,7 +503,7 @@ export function ConversationHistoryDrawer({
                 />
                 {searchQuery && (
                   <button
-                    onClick={() => setSearchQuery('')}
+                    onClick={() => setSearchQuery.complete(searchQuery, '')}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
                   >
                     <X className="w-4 h-4" />
