@@ -34,7 +34,7 @@ export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onO
         <Button variant="outline" disabled={!cloud.available || cloud.busy || cloud.linkPending} onClick={() => { void cloud.save(true); }}>Save a copy</Button>
       </div>
       {cloud.sharedOwner && <div className="rounded-lg border border-white/15 bg-white/5 p-3 text-xs text-white/75"><p>Editing a shared project. Save updates its cloud version; Save a copy makes your own project.</p><p className="mt-1 break-all">Owner: {cloud.sharedOwner}</p></div>}
-      {cloud.mergeCopy && <div className="space-y-2 rounded-lg border border-white/15 p-3 text-xs text-white/75"><p>Combined shared version {cloud.mergeCopy.revision} is ready. Your newer local edits were kept on this device.</p><Button size="sm" variant="outline" disabled={cloud.busy} onClick={()=>{void cloud.openMergeCopy();}}>Open combined copy</Button></div>}
+      {cloud.mergeCopy && <div className="space-y-2 rounded-lg border border-white/15 p-3 text-xs text-white/75"><p>Combined cloud version {cloud.mergeCopy.revision} is ready. Your newer local edits were kept on this device.</p><Button size="sm" variant="outline" disabled={cloud.busy} onClick={()=>{void cloud.openMergeCopy();}}>Open combined copy</Button></div>}
       {!cloud.available && <p className="text-sm text-white/60">Sign in to use cloud projects.</p>}
       {cloud.busy && <p role="status" className="text-sm text-white/60">Transferring project…</p>}
       {cloud.error && <p role="alert" className="text-sm text-red-300">{cloud.error}</p>}
