@@ -31,6 +31,13 @@ import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
 import { PollCard } from '@/components/app/cards/PollCard';
 import type { DeHubPoll } from '@/lib/api/dehub';
+import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
+import type { ProfileData } from '@/hooks/use-dehub-profile';
+import type { Community, PinnedCommunity } from '@/hooks/use-communities';
+import galleryCover from '@/assets/banners/agent-marco_v.png';
+import galleryAvatar from '@/assets/avatars/marco_v.png';
+import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
+import galleryCommunityLogo from '@/assets/avatars/vrgl.png';
 
 function PredictionGallery() {
   const [text, setText] = useState('https://polymarket.com/event/will-the-us-confirm-that-aliens-exist-before-2027');
@@ -238,6 +245,8 @@ export default function StateGalleryPage() {
 
         <StreamerArtworkGallery />
 
+        <PinnedProfileGallery />
+
         <PollGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
@@ -396,6 +405,66 @@ export default function StateGalleryPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+// A made-up wallet, so the seeded pin never collides with a real profile.
+const GALLERY_PROFILE_WALLET = '0x00000000000000000000000000000000000000aa';
+const GALLERY_PROFILE = {
+  id: 'gallery-profile', name: 'Marco V', handle: '@marco_v', verified: false,
+  bio: 'Night photographer chasing neon and rain. Shooting the city after midnight, one street at a time.',
+  avatarUrl: galleryAvatar, coverUrl: galleryCover, joinedDate: 'March 2024',
+  following: 312, followers: 18700, postsCount: 120, walletAddress: GALLERY_PROFILE_WALLET,
+} as ProfileData;
+const GALLERY_COMMUNITY = {
+  id: 'gallery-community', name: 'Synthwave City', slug: 'synthwave-city',
+  description: 'Neon nights, retro drives and late-night beats.',
+  avatar_url: galleryCommunityLogo, banner_url: galleryCommunityArt,
+  creator_wallet_address: GALLERY_PROFILE_WALLET, is_private: false, member_count: 12421,
+} as Community;
+const noop = () => {};
+
+/** The desktop profile header wearing a pinned community (lg and up; phones keep the card). */
+function PinnedProfileGallery() {
+  const queryClient = useQueryClient();
+  useState(() => queryClient.setQueryData(['communities', 'pinned', GALLERY_PROFILE_WALLET], [
+    { id: 'gallery-pin', community_id: GALLERY_COMMUNITY.id, display_order: 0, communities: GALLERY_COMMUNITY } as unknown as PinnedCommunity,
+  ]));
+  return (
+    <section data-page-bento data-pinned-profile-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">Profile with a pinned community</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div className="max-w-[680px]">
+          <ProfileHeader
+            profile={GALLERY_PROFILE}
+            apiProfile={GALLERY_PROFILE}
+            isViewingOwnProfile={false}
+            isAuthenticated={false}
+            badgeUrl={null}
+            isFollowing
+            isPending={false}
+            isTargetPrivate={false}
+            isFollowLoading={false}
+            handleFollow={noop}
+            handleUnfollow={noop}
+            isSubscribed={false}
+            hasPlans={false}
+            setFullscreenImage={noop}
+            setActiveTab={noop}
+            shareSheetOpen={false}
+            setShareSheetOpen={noop}
+            setLoginModalOpen={noop}
+            ShareOptions={() => null}
+            showFollowersFollowing
+            hideFollowerCounts={false}
+            setFollowListType={noop}
+            setFollowListDrawerOpen={noop}
+            translatedBio={null}
+            setTranslatedBio={noop}
+          />
+        </div>
+      </AuthContext.Provider>
+    </section>
   );
 }
 
