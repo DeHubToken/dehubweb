@@ -33,22 +33,36 @@ The root-owned `/etc/dehub-maboroshi.env` needs these variables:
 - `MABOROSHI_HD_MICROS_PER_SECOND`: price per billable final second.
 - `MABOROSHI_MESH_PYTHON`: isolated mesh interpreter.
 
-Initial retail tariffs are $1 per preparation, $0.50 per billable draft second
-and $1 per billable final second. These are DeHub retail prices, not claims
-about provider costs. Billable seconds include the source (minimum four
-seconds) and any video identity reference, rounded up. Every stage requires
+Retail tariffs are $1 per preparation, $0.16 per billable draft second
+and $0.85 per billable final second. Billable seconds include all input video
+durations plus the output (source duration rounded up, minimum four seconds),
+rounded up. Every stage requires
 the displayed quote to match the server's current quote before credit debit.
 Review actual provider costs before changing these configurable prices.
 
-Connect `REPLICATE_API_TOKEN` and `ENHANCOR_API_KEY` through environment secrets
-or the one-use `/maboroshi/setup#TOKEN` form. To provision that form, create a
-random `MABOROSHI_SETUP_TOKEN` and a short Unix-time `MABOROSHI_SETUP_EXPIRES`.
-The browser strips the fragment immediately, submits it only in a header,
-and stores the keys in a mode-0600 server file. The setup capability is consumed
-after one successful submission. No credentials go into the repository or apps.
+The private `maboroshi-provider` Edge Function uses the existing `FAL_KEY` and
+`REPLICATE_API_KEY` shared by Creator. Deploy that function from the merged
+revision before updating the worker. Its only caller is the worker, authenticated
+with the existing `INTERNAL_SERVICE_SECRET`. Credentials remain in the managed
+Edge environment. There is no key-entry or provider subscription journey.
+The retired setup URL redirects to Creator; its configuration endpoint is gone.
 
-The service refuses processing until provider keys, media signing and pricing
-are configured. Its unauthenticated health endpoint reports configuration
+Preparation is limited to Demucs, depth and SAM. Drafts use fal Seedance 2.5
+reference-to-video with editing or reference mode, and `draft: true`. HD uses
+the returned **draft ID**, not the queue request ID, through draft/complete.
+Queue URLs are restricted to that model and request, and inputs must be signed
+DeHub media links. HD approval expires after six days, before fal's seven-day
+draft expiry. The original approved input and complete original audio remain.
+
+The 2026-10-10 fal rates are approximately $0.2205/s at 480p and $1.164/s at
+1080p, multiplied by 0.6 for video references and charged on input plus output
+duration. Retail rates round upward to include processing overhead. Sources:
+[reference API](https://fal.ai/models/bytedance/seedance-2.5/reference-to-video/api)
+and [HD pricing](https://fal.ai/models/bytedance/seedance-2.5/draft/complete).
+
+The service refuses processing until shared services, media signing and pricing
+are configured. Readiness is cached for 60 seconds and uses no paid generation.
+Its unauthenticated health endpoint reports configuration
 readiness only; it does not claim a paid render has been verified.
 
 ## Recovery and privacy
@@ -57,7 +71,7 @@ Ten source uploads per wallet per day; up to four pending jobs, with one
 processing at a time. Uploads are capped at 100 MB per file and 30 seconds.
 Media stays on DeHub, with expiring signed links for previews and provider
 inputs. The temporary public upload hosts in the upstream package are removed.
-Replicate and Enhancor receive the media required to process the requested job.
+Replicate and fal receive the media required to process the requested job.
 
 Payments have an idempotent key per job and stage. Completed submissions are
 collected on restart using their saved provider IDs; paid preparation is never
@@ -80,4 +94,4 @@ The Maboroshi GitHub workflow runs source audio packet preservation, composite
 alignment, review invalidation, signed-file isolation, account ownership,
 duplicate payment/submission protection, and the hosted endpoints with synthetic
 fixtures. It performs no paid inference. Verify a real complete preparation,
-draft and approved HD export on production after connecting funded providers.
+draft and approved HD export on production using the shared services.
