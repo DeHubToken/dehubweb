@@ -84,6 +84,7 @@ try {
   const restricted = await mf.dispatchFetch(url);
   assert.equal(restricted.status, 404);
   assert.equal(restricted.headers.get('Cache-Control'), 'no-store');
+  await restricted.arrayBuffer();
   assert.equal(requests, 4);
   post = { ...original, minterAvatarUrl: 'avatars/missing.jpg' };
   const missingAvatar = await mf.dispatchFetch(url);
@@ -100,6 +101,7 @@ try {
   const hiddenBadge = await mf.dispatchFetch(url);
   assert.equal(hiddenBadge.headers.get('X-DeHub-Post-Badges'), '');
   assert.notEqual(hiddenBadge.headers.get('ETag'), response.headers.get('ETag'));
+  await hiddenBadge.arrayBuffer();
   profile = { ...profile, hideBadgeAndBalance: false, displayName: 'Alexandria Montgomery-Wellington' };
   progress = { totalStreams: 1, selectedBadgeId: 'first-light', cards: [{ id: 'first-light', earnedAt: '2026-10-01' }] };
   newMember = true;
@@ -127,13 +129,20 @@ try {
   const noPoll = await mf.dispatchFetch(url);
   assert.equal(noPoll.headers.get('X-DeHub-Post-Poll'), 'none');
   assert.ok(noPoll.headers.get('Cache-Control').startsWith('public,'), 'ordinary text posts remain cacheable when the poll endpoint returns its normal 404');
+  await noPoll.arrayBuffer();
   const legacy = await mf.dispatchFetch('https://dehub.io/_og/post/v1/6501.png');
   assert.equal(legacy.status, 200);
   assert.equal(legacy.headers.get('X-DeHub-Share-Artwork'), 'integrated-chrome-edge');
   assert.equal(legacy.headers.get('X-DeHub-Share-Card'), 'v2');
+  await legacy.arrayBuffer();
   failDetails = true;
   const unavailable = await mf.dispatchFetch(url);
   assert.equal(unavailable.headers.get('Cache-Control'), 'no-store');
   assert.equal(unavailable.headers.get('X-DeHub-Post-Badges'), '');
+  await unavailable.arrayBuffer();
   console.log('Production Worker preserves public gating and avatars; refreshes badges, poll closure and counts; renders long names, four choices, ties and empty polls.');
-} finally { await mf.dispose(); }
+} finally {
+  console.log('Closing production Worker resources.');
+  await mf.dispose();
+  console.log('Production Worker resources closed.');
+}
