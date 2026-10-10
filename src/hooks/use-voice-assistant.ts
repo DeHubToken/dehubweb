@@ -104,13 +104,13 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
   // Upload audio blob to Supabase storage and return a public URL
   const uploadAudio = useCallback(async (blob: Blob): Promise<string> => {
-    const fileName = voiceRecordingFilename(audioBlob.type);
+    const fileName = voiceRecordingFilename(blob.type);
     const filePath = `voice-assistant/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from('chat-media')
       .upload(filePath, blob, {
-        contentType: audioBlob.type,
+        contentType: blob.type,
         upsert: false,
       });
 
