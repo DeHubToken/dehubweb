@@ -20,6 +20,7 @@ import "./index.css";
 import "./styles/theme-controls.css";
 import "./styles/media-controls.css";
 import "./styles/glass-surfaces.css";
+import "./styles/feed-pill-glow.css";
 import "./styles/page-kit.css";
 import "./styles/post-stage.css";
 import "./styles/system-immersive.css";
