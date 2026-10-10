@@ -1,0 +1,33 @@
+/* Pinned community worn by the desktop profile header
+   (components/app/profile/PinnedCommunityStage.tsx). */
+
+/* The wash keeps the art's colours and none of its detail, and eases in
+   under the cover rather than starting at a hard edge. */
+[data-pinned-wash] {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
+}
+[data-pinned-wash] > div {
+  filter: blur(40px) saturate(1.4);
+  opacity: 0.5;
+}
+
+/* Fades the strip's art from dark behind the text to clear on the right. */
+[data-pinned-strip-shade] {
+  background: linear-gradient(90deg, rgb(6 4 18 / 0.86) 0%, rgb(6 4 18 / 0.5) 45%, rgb(6 4 18 / 0.12) 100%);
+}
+
+/* Light surfaces: a lighter wash so dark text stays readable. The strip keeps
+   its own dark shade, so its white text works on every theme. */
+html:is([data-theme="light"], [data-theme="minimal"]) [data-pinned-wash] > div {
+  opacity: 0.3;
+}
+
+/* The strip always sits on dark art, so its text stays white even where a
+   light theme inverts white text to ink. */
+html[data-theme] [data-pinned-strip] .text-white {
+  color: #fff !important;
+}
+html[data-theme] [data-pinned-strip] [class*="text-white/"] {
+  color: rgb(255 255 255 / 0.82) !important;
+}

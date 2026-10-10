@@ -17,6 +17,8 @@ import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
 import { StreamerLevelCard } from '@/components/app/live/StreamerLevelCard';
 import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 import { PinnedCommunities } from '@/components/app/communities/PinnedCommunities';
+import { PinnedCommunityStrip, PinnedCommunityWash, featuredPinnedCommunity } from './PinnedCommunityStage';
+import { usePinnedCommunities } from '@/hooks/use-communities';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -176,6 +178,11 @@ export function ProfileHeader({
   const nameHead = nameSplit > 0 ? profile.name.slice(0, nameSplit + 1) : '';
   const nameTail = nameSplit > 0 ? profile.name.slice(nameSplit + 1) : profile.name;
   const cdnFallbackUrl = buildAvatarCdnFallbackUrl(profile.walletAddress || '', profile.avatarUrl);
+  // On desktop the first pinned community with art dresses the header
+  // instead of sitting in it as a card.
+  const { data: pinnedCommunities = [] } = usePinnedCommunities(profile.walletAddress);
+  const featuredCommunity = featuredPinnedCommunity(pinnedCommunities);
+  const [pinPickerOpen, setPinPickerOpen] = useState(false);
 
   return (
     <div data-profile-header className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
@@ -201,7 +208,8 @@ export function ProfileHeader({
       )}
       
       {/* Profile Content */}
-      <div className="px-4 sm:px-6 pb-4">
+      <div className="relative isolate flow-root px-4 sm:px-6 pb-4">
+        {featuredCommunity && <PinnedCommunityWash community={featuredCommunity} />}
         {/* Avatar */}
         <div className="relative -mt-12 sm:-mt-14 mb-1.5 flex items-end justify-between">
           <div className="relative">
@@ -462,6 +470,9 @@ export function ProfileHeader({
             <PinnedCommunities
               walletAddress={profile.walletAddress}
               isOwnProfile={!!isViewingOwnProfile}
+              desktopHiddenId={featuredCommunity?.id}
+              pickerOpen={pinPickerOpen}
+              onPickerOpenChange={setPinPickerOpen}
             />
           )}
           
@@ -553,6 +564,14 @@ export function ProfileHeader({
           )}
         </div>
       </div>
+
+      {featuredCommunity && (
+        <PinnedCommunityStrip
+          community={featuredCommunity}
+          onOpen={() => navigate(`/app/communities/${featuredCommunity.slug}`)}
+          onManagePins={isViewingOwnProfile ? () => setPinPickerOpen(true) : undefined}
+        />
+      )}
 
       {/* Unfollow confirmation */}
       <AlertDialog open={showUnfollowConfirm} onOpenChange={setShowUnfollowConfirm}>
