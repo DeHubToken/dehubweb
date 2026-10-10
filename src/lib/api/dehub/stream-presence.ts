@@ -53,6 +53,32 @@ export interface StreamReactionBroadcast {
   address: string | null;
 }
 
+export function watchStreamPlayback(streamId: string, onPaused: (paused: boolean) => void): StreamPresence {
+  const conn = acquireStreamSocket();
+  const socket = conn.socket;
+  const join = () => socket.emit(EVENT.joinRoom, { streamId });
+  const update = (paused: boolean) => (data: { streamId?: string }) => {
+    if (data?.streamId === streamId) onPaused(paused);
+  };
+  const pause = update(true);
+  const resume = update(false);
+  socket.on('connect', join);
+  socket.on('stream.paused', pause);
+  socket.on('stream.resumed', resume);
+  socket.on('stream.start', resume);
+  if (socket.connected) join();
+  let left = false;
+  return { leave: () => {
+    if (left) return;
+    left = true;
+    socket.off('connect', join);
+    socket.off('stream.paused', pause);
+    socket.off('stream.resumed', resume);
+    socket.off('stream.start', resume);
+    releaseStreamSocket(conn);
+  } };
+}
+
 export function watchStreamReactions(streamId: string, onReaction: (event: StreamReactionBroadcast) => void): StreamPresence {
   const conn = acquireStreamSocket();
   const socket = conn.socket;

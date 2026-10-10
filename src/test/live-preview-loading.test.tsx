@@ -9,6 +9,7 @@ const presence = vi.hoisted(() => ({ join: vi.fn(), leave: vi.fn(), observe: vi.
 vi.mock('@/lib/api/dehub/stream-presence', () => ({
   joinStreamPresence: presence.join,
   watchStreamReactions: presence.observe,
+  watchStreamPlayback: presence.observe,
 }));
 
 let visibility: IntersectionObserverCallback;
@@ -63,7 +64,7 @@ describe('live preview loading feedback', () => {
     fireEvent.waiting(video);
     expect(screen.getByRole('status')).toBeVisible();
     fireEvent.pause(video);
-    expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.getByText('Live paused')).toBeVisible();
   });
 
   it('clears feedback when autoplay is refused', async () => {

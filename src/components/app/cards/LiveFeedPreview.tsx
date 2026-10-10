@@ -43,9 +43,11 @@ import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/p
 import { useStreamPresence } from '@/hooks/use-stream-presence';
 import { LiveReactionFlow, type SelfReaction } from '@/components/app/live/LiveReactionFlow';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLivePlaybackFeedback } from '@/hooks/use-live-playback-feedback';
 
 interface LiveFeedPreviewProps {
   streamId?: string;
+  streamStatus?: string;
   creatorId?: string;
   isOwner?: boolean;
   selfReaction?: SelfReaction | null;
@@ -83,7 +85,7 @@ const WHEP_START_TIMEOUT_MS = 6000;
 const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
-export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute, streamId, creatorId, isOwner, selfReaction, onViewerCount }: LiveFeedPreviewProps) {
+export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute, streamId, streamStatus, creatorId, isOwner, selfReaction, onViewerCount }: LiveFeedPreviewProps) {
   const { pathname } = useLocation();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const inPiP = usePictureInPicture(videoRef);
@@ -105,6 +107,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { broadcastPaused, waitingTooLong } = useLivePlaybackFeedback(streamId, loading, visible && !postOpen, streamStatus);
   const { walletAddress } = useAuth();
   const ownStream = isOwner || (!!walletAddress && walletAddress.toLowerCase() === creatorId?.toLowerCase());
   const watching = visible && !postOpen && !failed && playing && !paused;
@@ -304,9 +307,11 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         onEnded={() => { setPaused(true); setPlaying(false); setLoading(false); }}
       />
       <LiveReactionFlow streamId={streamId} enabled={visible && !postOpen} self={selfReaction} bottom={56} />
-      {visible && !postOpen && loading && (
+      {visible && !postOpen && (loading || broadcastPaused || (paused && playing)) && (
         <div role="status" aria-label="Loading" className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          <ButtonLoader size={40} className="!filter-none" />
+          {broadcastPaused || (paused && playing) || waitingTooLong
+            ? <span className="rounded-xl bg-black/75 px-4 py-2 text-sm text-white">{broadcastPaused || (paused && playing) ? 'Live paused' : 'Waiting for live video'}</span>
+            : <ButtonLoader size={40} className="!filter-none" />}
         </div>
       )}
       {(controlsVisible || isFullscreen) && (

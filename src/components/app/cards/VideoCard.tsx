@@ -2369,6 +2369,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
                 <LiveFeedPreview
                   streamId={video.liveStreamId}
+                  streamStatus={video.liveStatus}
                   creatorId={video.creatorId}
                   isOwner={video.isOwner}
                   selfReaction={selfReaction}
