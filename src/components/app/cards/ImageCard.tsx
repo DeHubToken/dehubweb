@@ -24,8 +24,7 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { Eye, Download, Flag, Ban, VolumeX, EyeOff, Sparkles, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
+import { Eye, Download, Flag, Ban, VolumeX, EyeOff, Zap, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Pencil, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
@@ -663,7 +662,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
-  const isPhone = useIsMobile();
   // The phone post page ("Stage"). Null in every feed.
   const stage = usePostStage();
   const [showTipModal, setShowTipModal] = useState(false);
@@ -911,16 +909,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             <Zap className="w-[23.5px] h-[23.5px]" />
           </button>
         )}
-        {/* On phones Ask AI lives in the options menu instead. */}
-        {!isPhone && (
-          <button
-            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            className="text-zinc-400 hover:text-white hover:scale-110 active:scale-95 transition-all"
-            aria-label="Ask AI about this post"
-          >
-            <Sparkles className="w-[23.5px] h-[23.5px]" />
-          </button>
-        )}
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* State-driven, not DrawerTrigger — see PostCard: a trigger pins
               vaul's Root (and its window scroll listener) into every card. */}
@@ -935,13 +923,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
               {/* Bookmark / pin / post info. Also on the action bar as icons
                   on desktop — both surfaces read the same state, so the menu
                   is a reliable place to find them at every width. */}
-              <button
-                onClick={() => { setShowOptionsDrawer(false); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-                className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-              >
-                <Sparkles className="w-5 h-5" /> {t('postOptions.askAI', 'Ask AI')}
-              </button>
               <PostUtilityMenuItems
+                onAskAI={() => { setShowOptionsDrawer(false); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
                 postId={post.id}
                 tokenId={postTokenId}
                 isOwnPost={isOwnPost}
@@ -1075,7 +1058,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         {stage && (
           <StageMediaChrome
             onBack={stage.onBack}
-            onAskAI={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             onBoost={isOwnPost && postTokenId ? () => setShowBoostModal(true) : undefined}
           />

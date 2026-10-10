@@ -15,7 +15,7 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, Zap, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
+import { Zap, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, VolumeX, Pencil, Coins, Gift, Lock, Star } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { toast } from 'sonner';
@@ -394,13 +394,12 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
     >
       <div className={stage ? 'contents' : 'flex items-start min-w-0'}>
       {stage ? (
-        /* Phone post page: no media to float on, so back / Ask AI / options
+        /* Phone post page: no media to float on, so back / options
            sit in a row of their own above the creator row. */
         <>
           <StageMediaChrome
             placement="inline"
             onBack={stage.onBack}
-            onAskAI={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             onBoost={isOwnPost && postTokenId ? () => setShowBoostModal(true) : undefined}
           />
@@ -442,13 +441,6 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
             <Zap className="w-[23.5px] h-[23.5px]" />
           </button>
         )}
-        <button
-          onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-          className="text-zinc-400 hover:text-white transition-colors active:scale-95"
-          aria-label="Ask AI about this post"
-        >
-          <Sparkles className="w-[23.5px] h-[23.5px]" />
-        </button>
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           {/* Opens via state, not DrawerTrigger: a trigger forces vaul's Root to
@@ -467,6 +459,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                   on desktop — both surfaces read the same state, so the menu is
                   a reliable place to find them at every width. */}
               <PostUtilityMenuItems
+                onAskAI={() => { setShowOptionsDrawer(false); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
                 postId={post.id}
                 tokenId={postTokenId}
                 isOwnPost={isOwnPost}

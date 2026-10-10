@@ -45,8 +45,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { ArrowLeft, Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -260,7 +259,6 @@ interface MobileCreatorInfoProps {
   badgeBalance?: number;
   tokenId?: string;
   verified?: boolean;
-  onAIClick?: () => void;
   onBoostClick?: () => void;
   onMenuClick?: () => void;
   isPPV?: boolean;
@@ -279,8 +277,8 @@ interface MobileCreatorInfoProps {
   chainId?: number;
   onUnlocked?: () => void;
   /**
-   * Phone post page: the Stage creator row (followers + Follow). Ask AI and
-   * the menu are in the post panel, so they are not drawn here.
+   * Phone post page: the Stage creator row (followers + Follow). The menu is
+   * in the post panel, so it is not drawn here.
    */
   stage?: boolean;
 }
@@ -293,7 +291,6 @@ function MobileCreatorInfo({
   badgeBalance,
   tokenId,
   verified = false,
-  onAIClick,
   onBoostClick,
   onMenuClick,
   isPPV,
@@ -483,13 +480,6 @@ function MobileCreatorInfo({
                 <Zap className="w-[23.5px] h-[23.5px]" />
               </button>
             )}
-            {onAIClick && <button
-              onClick={onAIClick}
-              className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
-              aria-label="Ask AI about this video"
-            >
-              <Sparkles className="w-[23.5px] h-[23.5px]" />
-            </button>}
             {onMenuClick && <PostHeaderOptionsButton
               onClick={onMenuClick}
               style={{ marginTop: -4 }}
@@ -839,10 +829,6 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const [ccSlot, setCcSlot] = useState<HTMLDivElement | null>(null);
   /** The subtitle language menu holds the controls up while it is open. */
   const [subsMenuOpen, setSubsMenuOpen] = useState(false);
-  // Phones, in a feed: the player's speed, loop, PiP, sound, subtitles and
-  // fullscreen buttons fold into one tools button beside AI and the options
-  // menu, and drop down from there. The post page has the room and keeps the row.
-  const isPhone = useIsMobile();
   // The phone post page ("Stage"). Null in every feed.
   const stage = usePostStage();
   // Video posts use the same bare glyph controls at every viewport size,
@@ -2031,16 +2017,6 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 <Zap className="w-[23.5px] h-[23.5px]" />
               </motion.button>
             )}
-            {/* On phones Ask AI lives in the options menu instead. */}
-            {!isPhone && <motion.button
-              onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-              className="text-zinc-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Ask AI about this video"
-            >
-              <Sparkles className="w-[23.5px] h-[23.5px]" />
-            </motion.button>}
             {/* Plain button, not DrawerTrigger — see PostCard: a trigger pins
                 vaul's Root (and its window scroll listener) into every card.
                 The sheet itself is mounted once at the card root and shared
@@ -2764,15 +2740,6 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 <Zap className="w-4 h-4" />
               </motion.button>
             )}
-            <motion.button
-              onClick={(e) => { e.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-              className="text-zinc-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label="Ask AI about this video"
-            >
-              <Sparkles className="w-4 h-4" />
-            </motion.button>
             <button 
               onClick={(e) => { e.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
               className="text-zinc-400 hover:text-white transition-colors"
@@ -2814,7 +2781,6 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             creatorId={video.creatorId}
             badgeBalance={video.creatorBadgeBalance}
             verified={video.verified}
-            onAIClick={postPage || stage ? undefined : () => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             onBoostClick={!postPage && !stage && isOwnPost ? () => setShowBoostModal(true) : undefined}
             onMenuClick={postPage || stage ? undefined : () => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             isPPV={isPPVLocked ? video.isPPV : false}
@@ -2910,9 +2876,6 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     <Zap className="h-5 w-5" />
                   </button>
                 )}
-                <button type="button" aria-label={t('postStage.askAI')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}>
-                  <Sparkles className="h-5 w-5" />
-                </button>
                 <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
               </div>
             )}
@@ -3048,13 +3011,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             {/* Bookmark / pin / post info. Also on the action bar as icons on
                 desktop — both surfaces read the same state, so the menu is a
                 reliable place to find them at every width. */}
-            <button
-              onClick={() => { setShowOptionsDrawer(false); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-              className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
-            >
-              <Sparkles className="w-5 h-5" /> {t('postOptions.askAI', 'Ask AI')}
-            </button>
             <PostUtilityMenuItems
+              onAskAI={() => { setShowOptionsDrawer(false); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
               postId={video.id}
               tokenId={videoTokenId}
               isOwnPost={!!isOwnPost}
