@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { minuteCache, parseSharedMarket, CANDLE_INTERVALS } from './live-market';
+import { minuteCache, parseSharedMarket, parseDehubMarket, isDehubPool, CANDLE_INTERVALS } from './live-market';
 
 describe('shared minute market', () => {
   const candle = { time: 120, open: 2, high: 3, low: 1, close: 2, observedAt: 150 };
@@ -11,6 +11,14 @@ describe('shared minute market', () => {
   });
   it('accepts an empty sell book without inventing a price', () => {
     expect(parseSharedMarket({ ...snapshot, price: null }).price).toBeNull();
+  });
+  it('requires the DeHub pool scope before displaying prices or candles', () => {
+    expect(() => parseDehubMarket(snapshot)).toThrow('DeHub pool snapshot');
+    expect(parseDehubMarket({ ...snapshot, marketScope: 'base-dhb-usdc-0-1' }).price).toBe(2);
+  });
+  it('excludes other fee tiers and chains from the public book', () => {
+    const own = { chain_id: 8453, poolFee: 0, tickSpacing: 1 };
+    expect([own, { ...own, poolFee: 3000, tickSpacing: 60 }, { ...own, chain_id: 56 }, { ...own, tickSpacing: 10 }].filter(isDehubPool)).toEqual([own]);
   });
   it('rejects missing and malformed snapshots', () => {
     for (const value of [null, {}, { ...snapshot, price: NaN }, { ...snapshot, candles: {} },
