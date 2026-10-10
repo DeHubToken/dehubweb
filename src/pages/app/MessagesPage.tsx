@@ -214,7 +214,9 @@ export default function MessagesPage() {
   const keyboardStyle: CSSProperties | undefined = keyboardOpen && vvHeight
     ? vvOffsetTop > 1
       ? { position: 'fixed', top: vvOffsetTop, left: 0, right: 0, height: vvHeight, zIndex: 40, background: '#000' }
-      : { height: vvHeight - 44 }
+      // The chat starts under the top bar, which is 0 on a phone now: taking a
+      // fixed 44px off left a dead band between the composer and the keys.
+      : { height: `calc(${vvHeight}px - var(--app-top-bar))` }
     : undefined;
   const [showMessageSelector, setShowMessageSelector] = useState(false);
   const [showNewConversation, setShowNewConversation] = useState(false);
