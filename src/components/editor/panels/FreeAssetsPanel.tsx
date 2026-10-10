@@ -7,7 +7,6 @@ import {
   Film,
   Image as ImageIcon,
   Loader2,
-  Pause,
   Play,
   Plus,
   Search,
@@ -21,6 +20,9 @@ import { AppState } from "@/components/app/AppState";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
 import { importOneFile } from "@/lib/editor/importFiles";
+import { projectTask } from "@/lib/editor/projectTask";
+import { appendStockResults, createStockSearchSession } from "@/lib/editor/stockBrowser";
+import { FreeAssetPreview } from "@/components/editor/FreeAssetPreview";
 import {
   downloadFreeAsset,
   provenanceForAsset,
@@ -62,7 +64,7 @@ function formatDuration(value?: number) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
-function VisualAssetCard({ asset, adding, onAdd }: { asset: FreeAsset; adding: boolean; onAdd: () => void }) {
+function VisualAssetCard({ asset, adding, onAdd, onPreview }: { asset: FreeAsset; adding: boolean; onAdd: () => void; onPreview: () => void }) {
   return (
     <article className="group min-w-0 overflow-hidden rounded-xl border border-white/10 bg-white/[0.035] transition hover:border-white/25 hover:bg-white/[0.07]">
       <div className="relative aspect-[4/3] overflow-hidden bg-white/[0.04]">
@@ -77,6 +79,7 @@ function VisualAssetCard({ asset, adding, onAdd }: { asset: FreeAsset; adding: b
         ) : (
           <div className="flex h-full items-center justify-center"><ImageIcon className="h-5 w-5 text-white/25" /></div>
         )}
+        <button type="button" onClick={onPreview} aria-label={`Preview ${asset.title}`} className="absolute right-1.5 top-1.5 rounded-lg border border-white/25 bg-black/75 p-1.5 text-white hover:bg-white hover:text-black"><Play className="h-3.5 w-3.5" /></button>
         {asset.duration ? (
           <span className="absolute bottom-1.5 right-1.5 rounded bg-black/75 px-1.5 py-0.5 text-[9px] font-medium tabular-nums text-white">
             {formatDuration(asset.duration)}
@@ -138,10 +141,10 @@ function AudioAssetCard({
       <button
         type="button"
         onClick={onToggle}
-        aria-label={`${playing ? "Pause" : "Preview"} ${asset.title}`}
+        aria-label={`${playing ? "Close preview" : "Preview"} ${asset.title}`}
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white transition hover:bg-white hover:text-black active:scale-[0.98]"
       >
-        {playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 fill-current" />}
+        {playing ? <X className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 fill-current" />}
       </button>
       <div className="min-w-0 flex-1">
         <p className="truncate text-[11px] font-medium text-white/90" title={asset.title}>{asset.title}</p>
@@ -186,10 +189,24 @@ export function FreeAssetsPanel() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [addingId, setAddingId] = useState<string | null>(null);
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [preview, setPreview] = useState<FreeAsset | null>(null);
+  const session = useRef(createStockSearchSession());
+  const mounted = useRef(true);
+  const importing = useRef<{ task: NonNullable<ReturnType<typeof projectTask>>; controller: AbortController } | null>(null);
   const quota = useEditorQuota();
-  const addClipFromMedia = useEditorStore((state) => state.addClipFromMedia);
+  const wallet = useRef(quota.walletAddress); wallet.current = quota.walletAddress;
+  const cancelImport = useCallback(() => {
+    const owner = importing.current;
+    if (!owner) return;
+    importing.current = null; owner.controller.abort(); owner.task.release();
+    if (mounted.current) setAddingId(null);
+  }, []);
+  useEffect(() => {
+    mounted.current = true;
+    const unsubscribe = useEditorStore.subscribe(() => { if (importing.current && !importing.current.task.isCurrent()) cancelImport(); });
+    return () => { mounted.current = false; session.current.cancel(); unsubscribe(); cancelImport(); };
+  }, [cancelImport]);
+  useEffect(() => { if (importing.current && !importing.current.task.isCurrent()) cancelImport(); }, [quota.walletAddress, cancelImport]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setSettledQuery(query.trim()), 350);
@@ -197,27 +214,27 @@ export function FreeAssetsPanel() {
   }, [query]);
 
   useEffect(() => {
-    setOrientation("all");
-    setPlayingId(null);
-    audioRef.current?.pause();
+    setPreview(null);
   }, [kind]);
 
-  const load = useCallback(async (nextPage: number, append: boolean, signal?: AbortSignal) => {
+  const load = useCallback(async (nextPage: number, append: boolean) => {
+    const ticket = session.current.begin();
     if (append) setLoadingMore(true);
     else setLoading(true);
     setError(null);
     try {
-      const result = await searchFreeAssets({ kind, query: settledQuery, page: nextPage, orientation, signal });
-      setItems((current) => append ? [...current, ...result.items.filter((asset) => !current.some((item) => item.id === asset.id))] : result.items);
+      const result = await searchFreeAssets({ kind, query: settledQuery, page: nextPage, orientation, signal: ticket.signal });
+      if (!ticket.current()) return;
+      setItems((current) => appendStockResults(append ? current : [], result.items));
       setPage(nextPage);
       setHasMore(result.hasMore);
     } catch (cause) {
-      if (signal?.aborted) return;
+      if (!ticket.current()) return;
       console.error("[editor] free asset search failed", cause);
       setError("The free library could not load. Check your connection and try again.");
       if (!append) setItems([]);
     } finally {
-      if (!signal?.aborted) {
+      if (ticket.current()) {
         setLoading(false);
         setLoadingMore(false);
       }
@@ -225,52 +242,43 @@ export function FreeAssetsPanel() {
   }, [kind, settledQuery, orientation]);
 
   useEffect(() => {
-    const controller = new AbortController();
-    void load(1, false, controller.signal);
-    return () => controller.abort();
+    void load(1, false);
+    return () => session.current.cancel();
   }, [load]);
 
   const addAsset = useCallback(async (asset: FreeAsset) => {
-    if (addingId) return;
+    if (importing.current) return;
+    const anchor = useEditorStore.getState();
+    const at = anchor.currentTime, projectId = anchor.projectId, scope = anchor.scopeVersion, capturedWallet = wallet.current;
+    const task = projectTask(anchor.holdEdits(), () => mounted.current && wallet.current === capturedWallet && useEditorStore.getState().scopeVersion === scope && useEditorStore.getState().projectId === projectId)!;
+    const owner = { task, controller: new AbortController() }; importing.current = owner;
+    anchor.setPlaying(false);
     setAddingId(asset.id);
     try {
-      const file = await downloadFreeAsset(asset);
+      const file = await downloadFreeAsset(asset, owner.controller.signal);
+      if (!task.isCurrent()) return;
       const id = await importOneFile(file, {
-        wallet: quota.walletAddress,
+        wallet: capturedWallet,
         provenance: provenanceForAsset(asset),
       });
-      if (!id) return;
-      addClipFromMedia(id);
+      if (!id || !task.isCurrent()) return;
+      useEditorStore.getState().addClipFromMedia(id, undefined, at);
       await quota.refetchUsage();
-      toast.success(`${asset.title} added to the timeline.`);
+      if (task.isCurrent()) toast.success(`${asset.title} added to the timeline.`);
     } catch (cause) {
-      console.error("[editor] free asset import failed", cause);
-      toast.error("This asset could not be downloaded. Try another result.");
+      if (task.isCurrent()) {
+        console.error("[editor] free asset import failed", cause);
+        toast.error("This asset could not be downloaded. Try another result.");
+      }
     } finally {
-      setAddingId(null);
+      task.release();
+      if (importing.current === owner) { importing.current = null; if (mounted.current) setAddingId(null); }
     }
-  }, [addingId, addClipFromMedia, quota]);
+  }, [quota]);
 
   const toggleAudio = useCallback((asset: FreeAsset) => {
-    if (playingId === asset.id) {
-      audioRef.current?.pause();
-      setPlayingId(null);
-      return;
-    }
-    audioRef.current?.pause();
-    const audio = new Audio(asset.previewUrl || asset.downloadUrl);
-    audio.preload = "none";
-    audio.onended = () => setPlayingId(null);
-    audio.onerror = () => {
-      setPlayingId(null);
-      toast.error("Audio preview is unavailable for this result.");
-    };
-    audioRef.current = audio;
-    setPlayingId(asset.id);
-    void audio.play().catch(() => setPlayingId(null));
-  }, [playingId]);
-
-  useEffect(() => () => audioRef.current?.pause(), []);
+    setPreview(current => current?.id === asset.id ? null : asset);
+  }, []);
 
   const activeKind = useMemo(() => KINDS.find((item) => item.id === kind), [kind]);
   const isAudio = kind === "audio";
@@ -283,13 +291,13 @@ export function FreeAssetsPanel() {
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/35" />
           <input
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => { if (event.target.value !== query) { session.current.cancel(); setPreview(null); setQuery(event.target.value); } }}
             placeholder={placeholder}
             aria-label={placeholder}
             className="h-9 w-full rounded-lg border border-white/12 bg-white/[0.055] pl-8 pr-8 text-[12px] text-white outline-none placeholder:text-white/30 focus:border-white/35 focus:bg-white/[0.08]"
           />
           {query ? (
-            <button type="button" onClick={() => setQuery.complete(query, "")} aria-label="Clear search" className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-white/35 hover:bg-white/10 hover:text-white">
+            <button type="button" onClick={() => { session.current.cancel(); setPreview(null); setQuery.complete(query, ""); }} aria-label="Clear search" className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-white/35 hover:bg-white/10 hover:text-white">
               <X className="h-3.5 w-3.5" />
             </button>
           ) : null}
@@ -305,7 +313,7 @@ export function FreeAssetsPanel() {
                 type="button"
                 role="tab"
                 aria-selected={active}
-                onClick={() => setKind(item.id)}
+                onClick={() => { if (item.id !== kind) { session.current.cancel(); setPreview(null); setOrientation("all"); setKind(item.id); } }}
                 className={cn(
                   "flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-[10px] font-medium transition active:scale-[0.98]",
                   active ? "bg-white text-black" : "text-white/50 hover:bg-white/10 hover:text-white",
@@ -323,7 +331,7 @@ export function FreeAssetsPanel() {
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setOrientation(item.id)}
+                onClick={() => { if (item.id !== orientation) { session.current.cancel(); setPreview(null); setOrientation(item.id); } }}
                 aria-pressed={orientation === item.id}
                 className={cn(
                   "rounded-md px-2 py-1 text-[9px] font-medium transition",
@@ -338,13 +346,14 @@ export function FreeAssetsPanel() {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+        {preview && <FreeAssetPreview key={preview.id} asset={preview} onClose={() => setPreview(null)} />}
         {!settledQuery && !loading ? (
           <div className="mb-3 flex flex-wrap gap-1.5">
             {SUGGESTIONS[kind].map((suggestion) => (
               <button
                 key={suggestion}
                 type="button"
-                onClick={() => setQuery(suggestion)}
+                onClick={() => { if (suggestion !== query) { session.current.cancel(); setPreview(null); setQuery(suggestion); } }}
                 className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] text-white/55 transition hover:border-white/25 hover:bg-white/10 hover:text-white"
               >
                 {suggestion}
@@ -377,7 +386,7 @@ export function FreeAssetsPanel() {
                 key={asset.id}
                 asset={asset}
                 adding={addingId === asset.id}
-                playing={playingId === asset.id}
+                playing={preview?.id === asset.id}
                 onToggle={() => toggleAudio(asset)}
                 onAdd={() => void addAsset(asset)}
               />
@@ -386,7 +395,7 @@ export function FreeAssetsPanel() {
         ) : (
           <div className="grid grid-cols-2 gap-2">
             {items.map((asset) => (
-              <VisualAssetCard key={asset.id} asset={asset} adding={addingId === asset.id} onAdd={() => void addAsset(asset)} />
+              <VisualAssetCard key={asset.id} asset={asset} adding={addingId === asset.id} onAdd={() => void addAsset(asset)} onPreview={() => setPreview(current => current?.id === asset.id ? null : asset)} />
             ))}
           </div>
         )}
