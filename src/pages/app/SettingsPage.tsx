@@ -924,9 +924,9 @@ function ProfileSettings() {
     if (coverFile) data.coverImg = coverFile;
     
     updateMutation.mutate(data, { onSuccess: () => {
-        setDisplayName.complete(displayName, displayName);
-        setUsername.complete(username, username);
-        setBio.complete(bio, bio);
+        if (data.displayName !== undefined) setDisplayName.complete(displayName, displayName);
+        if (data.username !== undefined) setUsername.complete(username, username);
+        if (data.aboutMe !== undefined) setBio.complete(bio, bio);
         setTwitterLink.complete(twitterLink, twitterLink);
         setDiscordLink.complete(discordLink, discordLink);
         setInstagramLink.complete(instagramLink, instagramLink);
