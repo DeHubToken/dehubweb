@@ -28,7 +28,9 @@ async function loadAvatar(url) {
     // Read the public object directly: the CDN's browser challenge can reject
     // a server-side request even though the same avatar loads in the app.
     source.hostname = 'dehubcdn.ams3.digitaloceanspaces.com';
-    const response = await fetch(source.href, { signal: AbortSignal.timeout(3000), redirect: 'error' });
+    // Workers supports manual/follow, not redirect:error. Reject redirects
+    // through response.ok so an avatar cannot move the request to another host.
+    const response = await fetch(source.href, { signal: AbortSignal.timeout(3000), redirect: 'manual' });
     if (!response.ok || Number(response.headers.get('Content-Length')) > 1_000_000) return '';
     const bytes = new Uint8Array(await response.arrayBuffer());
     if (bytes.length > 1_000_000) return '';

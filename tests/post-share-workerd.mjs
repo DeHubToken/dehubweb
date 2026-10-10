@@ -10,6 +10,7 @@ const original = {
   totalVotes: { for: 95 }, commentCount: 4, totalViews: 1207,
 };
 let post = { ...original }, requests = 0;
+const outboundUrls = [];
 const mf = new Miniflare(convertV4MiniflareOptions({
   modules: await productionWorkerModules(), compatibilityDate: '2026-07-18',
   durableObjects: { EDITOR_PRESENCE: { className: 'EditorPresenceRoom', useSQLite: true } },
@@ -19,9 +20,11 @@ const mf = new Miniflare(convertV4MiniflareOptions({
     return new WorkerResponse(readFileSync(new URL(`../public${path}`, import.meta.url)), { headers: { 'Content-Type': path.endsWith('.png') ? 'image/png' : 'font/ttf' } });
   } },
   outboundService: request => {
+    outboundUrls.push(request.url);
     if (new URL(request.url).pathname.startsWith('/avatars/')) {
       assert.equal(new URL(request.url).origin, 'https://dehubcdn.ams3.digitaloceanspaces.com');
       if (request.url.endsWith('/missing.jpg')) return new WorkerResponse('Missing avatar', { status: 404 });
+      if (request.url.endsWith('/redirect.jpg')) return new WorkerResponse(null, { status: 302, headers: { Location: 'https://example.com/private-avatar' } });
       return new WorkerResponse(readFileSync(new URL('../public/brand/mark-white.png', import.meta.url)), { headers: { 'Content-Type': 'image/png' } });
     }
     assert.equal(request.url, 'https://api.dehub.io/api/nft_info/6501');
@@ -63,5 +66,10 @@ try {
   assert.equal(missingAvatar.status, 200);
   assert.equal(missingAvatar.headers.get('X-DeHub-Post-Avatar'), 'initials');
   assert.notDeepEqual(Buffer.from(await missingAvatar.arrayBuffer()), png);
+  post = { ...original, minterAvatarUrl: 'avatars/redirect.jpg' };
+  const redirectedAvatar = await mf.dispatchFetch(url);
+  assert.equal(redirectedAvatar.status, 200);
+  assert.equal(redirectedAvatar.headers.get('X-DeHub-Post-Avatar'), 'initials');
+  assert.ok(!outboundUrls.includes('https://example.com/private-avatar'), 'avatar redirects must not be followed');
   console.log('Production Worker renders PNGs, refreshes counters, serves HEAD and rejects newly hidden posts.');
 } finally { await mf.dispose(); }
