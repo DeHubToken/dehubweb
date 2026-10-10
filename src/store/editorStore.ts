@@ -137,6 +137,7 @@ interface EditorState extends EditableState {
   deletePage: (index: number) => void;
 
   editing: boolean;
+  isHistorySettled: () => boolean;
   holdEdits: () => ProjectEditLease;
   cancelPendingEdits: () => void;
   beginGesture: () => ProjectEditLease;
@@ -153,6 +154,7 @@ interface EditorState extends EditableState {
 const MAX_HISTORY = 50;
 let batchedEdits = 0;
 let batchEpoch = 0;
+const liveGestures = new Set<symbol>();
 const MIN_CLIP = 0.05; // minimum clip duration (s)
 
 function snapshotEditable(s: EditorState): EditableState {
@@ -188,8 +190,9 @@ export const useEditorStore = create<EditorState>((set, get) => {
   const editGate: ReturnType<typeof projectEditGate> = projectEditGate(() => set({ editing: editGate.isEditing() }));
   return ({
   editing: false,
+  isHistorySettled: () => !batchedEdits && !liveGestures.size,
   holdEdits: () => editGate.hold(),
-  cancelPendingEdits: () => editGate.reset(),
+  cancelPendingEdits: () => { batchEpoch++; batchedEdits = 0; liveGestures.clear(); editGate.reset(); },
   projectId: nanoid(10),
   projectTitle: "Untitled project",
   tracks: defaultTracks(),
@@ -209,7 +212,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
   // ── meta ──
   setProjectTitle: (t) => set({ projectTitle: t }),
   loadSnapshot: (snap) => {
-    batchEpoch++; batchedEdits = 0; editGate.reset(false);
+    batchEpoch++; batchedEdits = 0; liveGestures.clear(); editGate.reset(false);
     set({
       editing: false,
       projectId: snap.id,
@@ -236,7 +239,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
     return next.protectedPaths.length;
   },
   newProject: () => {
-    batchEpoch++; batchedEdits = 0; editGate.reset(false);
+    batchEpoch++; batchedEdits = 0; liveGestures.clear(); editGate.reset(false);
     set({
       editing: false,
       projectId: nanoid(10),
@@ -840,12 +843,14 @@ export const useEditorStore = create<EditorState>((set, get) => {
   },
 
   beginGesture: () => {
+    const gesture = Symbol(); liveGestures.add(gesture);
     const lease = editGate.hold();
     const s = get(), before = snapshotEditable(s);
     set({ past: [...s.past, before].slice(-MAX_HISTORY), future: [] });
     return {
       isCurrent: lease.isCurrent,
       release: () => {
+        liveGestures.delete(gesture);
         if (!lease.isCurrent()) return;
         try {
           const after = get(), current = after.toSnapshot();

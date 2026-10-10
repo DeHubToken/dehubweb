@@ -121,9 +121,12 @@ export async function addAutoCaptions(clipId: string, onProgress?: (p: CaptionPr
   const store = useEditorStore.getState();
   // The clip may have changed while transcription was running.
   if (store.projectId !== s.projectId || store.clips.find((c) => c.id === clipId) !== clip) return 0;
+  let committed = false;
   await commitCommand(command, () => store.runAsOneStep(() => {
+    if (!task!.isCurrent() || useEditorStore.getState().clips.find(c => c.id === clipId) !== clip) return;
     useEditorStore.setState((state) => ({ tracks: [...state.tracks, result.track], clips: [...state.clips, ...result.clips] }));
+    committed = true;
   }));
-  return result.clips.length;
+  return committed ? result.clips.length : 0;
   } finally { task!.release(); }
 }

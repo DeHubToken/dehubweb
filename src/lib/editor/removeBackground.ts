@@ -125,7 +125,7 @@ export async function removeLayerBackground(
         stored.push(id); return id;
       });
       if (!current() || !result.matte) return false;
-      commitCommand(opts.command, () => useEditorStore.getState().patchClip(clip.id, { videoMatte: result.matte })); committed = true; return true;
+      await commitCommand(opts.command, () => { if (current()) { useEditorStore.getState().patchClip(clip.id, { videoMatte: result.matte }); committed = true; } }); return committed;
     } finally { disposed = true; if (!committed) await Promise.all(stored.map(discard)); }
   }
   const source = await (await fetch(media.url)).blob();
@@ -137,7 +137,8 @@ export async function removeLayerBackground(
   const file = new File([png], `${base}-cutout.png`, { type: "image/png" });
   const newId = await importOneFile(file, { wallet: opts.wallet });
   if (!newId || !imageCurrent()) return false;
-  commitCommand(opts.command, () => useEditorStore.getState().patchClip(clipId, { mediaId: newId }));
-  return true;
+  let committed = false;
+  await commitCommand(opts.command, () => { if (imageCurrent()) { useEditorStore.getState().patchClip(clipId, { mediaId: newId }); committed = true; } });
+  return committed;
   } finally { task!.release(); }
 }

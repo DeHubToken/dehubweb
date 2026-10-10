@@ -314,6 +314,7 @@ async function fitTextToPage(id: string, command: ReturnType<typeof beginEditorC
   } catch {
     /* measure with whatever is loaded */
   }
+  await command.ready();
   if (!command.isCurrent() || !task!.isCurrent() || useEditorStore.getState().clips.find(c => c.id === id) !== clip || useEditorStore.getState().settings !== s.settings) return;
   const ctx = document.createElement("canvas").getContext("2d");
   if (!ctx) return;
@@ -401,6 +402,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
       for (const edit of expanded) {
         if (!task.isCurrent()) { report.failed++; return report; }
         try {
+          await task.ready();
           const ok = await applyOne(edit);
           if (ok) { if (edit.op !== "generate") report.applied++; }
           else report.failed++;
@@ -621,6 +623,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         if (!task.isCurrent()) return false;
         const mediaId = await importOneFile(file, { wallet: ctx.wallet, provenance: provenanceForAsset(asset) });
         if (!task.isCurrent() || !mediaId) return false;
+        await task.ready();
         const id = store().addClipFromMedia(mediaId, undefined, undefined, { layer: kind === "photo" });
         if (!id) return false;
         created.push(id);
@@ -659,6 +662,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         const tpl = TEMPLATES.find((x) => x.id === op.template);
         if (!tpl) return false;
         const { default: i18n } = await import("@/i18n");
+        await task.ready();
         const all = store().clips.map((c) => c.id);
         if (all.length) store().rippleDelete(all);
         store().updateSettings({ pages: undefined });
