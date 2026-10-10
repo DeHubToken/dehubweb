@@ -23,6 +23,7 @@ import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { FeedFilterAnchor } from '@/components/app/navigation/FeedFilterAnchor';
 import { setFeedTabsOpen } from '@/lib/feed-tabs-reveal';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -968,7 +969,7 @@ export default function HomePage() {
           ...(islandTopBar && isMobile && !isPostOverlayActive ? { position: 'fixed', left: 0, right: 0, top: 'calc(env(safe-area-inset-top, 0px) + 3rem)' } : null),
         }}
       >
-        <div data-home-filter-anchor className={theme === 'system' ? 'relative isolate' : 'contents'}>
+        <FeedFilterAnchor behindNav={theme === 'system'}>
         <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl" style={theme === 'system' ? { position: 'relative', zIndex: 10 } : undefined}>
 
           <div ref={homeTabLayerRef} className="relative overflow-visible">
@@ -1075,7 +1076,7 @@ export default function HomePage() {
         {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
         </div>
         {theme === 'system' && <div ref={homeFiltersRef} className="absolute inset-x-0 top-0 z-0 pointer-events-none" />}
-        </div>
+        </FeedFilterAnchor>
         {/* Active-filter chips — a sibling of the pill, not a row inside it.
             Still within the sticky chrome, so they travel with the nav. */}
         <div ref={homeChipsRef} className="contents" />
