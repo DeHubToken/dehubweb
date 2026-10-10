@@ -24,9 +24,10 @@ export function useDubDiscovery(videoRef: React.RefObject<HTMLVideoElement>, vid
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !eligible || !wallet) return;
+    let active = true;
     const replay = replayFor(`${wallet}:${videoId}:${source}:${target}`);
     const audible = () => !video.paused && !video.muted && video.volume > 0 && !video.seeking && video.readyState >= 2;
-    const current = () => latest.current.eligible && latest.current.wallet === wallet && !getDubPreference().on && audible();
+    const current = () => active && latest.current.eligible && latest.current.wallet === wallet && !getDubPreference().on && audible();
     const sample = () => {
       if (!replay.sample(video.currentTime, video.duration, audible(), Date.now(), video.playbackRate)) return;
       void showTip(wallet, () => {
@@ -34,7 +35,7 @@ export function useDubDiscovery(videoRef: React.RefObject<HTMLVideoElement>, vid
         toast.info(t('stages.hearItIn', { language }), {
           duration: 8000,
           action: { label: t('dub.dubbed'), onClick: () => {
-            if (latest.current.eligible && latest.current.wallet === wallet) latest.current.openSettings();
+            if (active && latest.current.eligible && latest.current.wallet === wallet) latest.current.openSettings();
           } },
         });
       }, current);
@@ -45,6 +46,7 @@ export function useDubDiscovery(videoRef: React.RefObject<HTMLVideoElement>, vid
     events.forEach(event => video.addEventListener(event, sample));
     video.addEventListener('seeked', seek);
     return () => {
+      active = false;
       events.forEach(event => video.removeEventListener(event, sample));
       video.removeEventListener('seeked', seek);
       replay.detach();

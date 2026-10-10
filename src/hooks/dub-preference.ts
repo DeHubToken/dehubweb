@@ -7,8 +7,8 @@
  *
  * The transcript stack already produces the words in the viewer's language
  * (`transcript_translations`); the browser's speech synthesiser reads them out
- * in step with the <video>. Nothing is rendered or stored server-side, so a
- * dub costs nothing and is available the moment the translation is.
+ * in step with the <video> while shared cached audio is being prepared.
+ * Playback is opt-in; preparation is independent of the playback switch.
  *
  * Two halves:
  * - `useDubPreference` is the one switch. The CC menu's Audio toggle and the

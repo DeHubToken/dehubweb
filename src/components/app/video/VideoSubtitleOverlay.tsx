@@ -131,8 +131,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
 
   useEffect(() => { onMenuOpenChange?.(open); }, [open, onMenuOpenChange]);
 
-  // Only fetch transcript once user has shown intent (open popover, enabled
-  // subs, or asked for dubbed audio — a dub is keyed on the transcript too).
+  // Listening prepares a dub without playing it. Opening captions also reads
+  // the transcript; automatic preparation never starts a missing transcript.
   const wantTranscript = enabled || open || audible;
 
   const { transcript, status: rowStatus, inFlight, canRetry, start, isLoading: transcriptLoading } =
