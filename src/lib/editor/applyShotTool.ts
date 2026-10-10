@@ -18,8 +18,13 @@ export async function detectClipShots(id: string, signal?: AbortSignal, progress
 export async function splitShotClip(clip: MediaClip, times: number[], command?: CommandCommit): Promise<boolean> {
   const now = useEditorStore.getState();
   if (now.clips.find(c => c.id === clip.id) !== clip) return false;
-  const result = applyTimelineOp(now, { op: "split_points", id: clip.id, times }, () => nanoid(10));
-  if (!result) return false;
-  await commitCommand(command, () => now.runAsOneStep(() => useEditorStore.setState({ clips: result.clips, selectedClipIds: [clip.id, ...result.created] })));
-  return true;
+  let committed = false;
+  await commitCommand(command, () => now.runAsOneStep(() => {
+    const latest = useEditorStore.getState();
+    if (latest.clips.find(c => c.id === clip.id) !== clip) return;
+    const result = applyTimelineOp(latest, { op: "split_points", id: clip.id, times }, () => nanoid(10));
+    if (!result) return;
+    useEditorStore.setState({ clips: result.clips, selectedClipIds: [clip.id, ...result.created] }); committed = true;
+  }));
+  return committed;
 }

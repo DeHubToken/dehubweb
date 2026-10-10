@@ -174,12 +174,14 @@ export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx:
   const command = ctx.command ?? beginEditorCommand();
   const ownsCommand = !ctx.command;
   try {
+    await command.ready();
     const store = command.store();
     const all = store.clips.map((c) => c.id);
     if (all.length) store.rippleDelete(all);
     store.updateSettings({ pages: undefined });
     store.setCurrentTime(0);
     await applyOps(template.ops(t, ctx.aspect), { ...ctx, command });
+    await command.ready();
     if (!command.isCurrent()) return;
     // Text defaults to 4s and photos to 5s; a still design should have every
     // layer on screen for the same span.

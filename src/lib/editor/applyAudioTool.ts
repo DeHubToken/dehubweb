@@ -26,12 +26,15 @@ export async function applyAudioTool(clipId: string, mode: AudioToolMode, ctx: I
   const store = useEditorStore.getState();
   if (store.projectId !== before.projectId || store.clips.find(c => c.id === clip.id) !== clip) return false;
   const layers = audioToolLayers(clip, mediaId, () => nanoid(10), store.tracks.find(track => track.id === clip.trackId));
+  let committed = false;
   await commitCommand(ctx.command, () => store.runAsOneStep(() => {
+    if (!task!.isCurrent() || useEditorStore.getState().clips.find(c => c.id === clip.id) !== clip) return;
     useEditorStore.setState(state => ({
       clips: [...state.clips.map(c => c.id === clip.id ? layers.clip : c), ...(layers.added ? [layers.added] : [])],
       tracks: layers.track ? [...state.tracks, layers.track] : state.tracks,
     }));
+    committed = true;
   }));
-  return true;
+  return committed;
   } finally { task!.release(); }
 }

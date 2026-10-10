@@ -21,7 +21,13 @@ export async function applyBeatTool(id: string, align: boolean, signal?: AbortSi
   if (!beats.sourceTimes.length) return { beats: 0, changed: 0 };
   const clips = now.clips.map(c => c.id === id ? marked : c);
   const synced = align ? alignBeatCuts(clips, now.tracks, clipBeatTimes(marked)) : { clips, changed: 0 };
-  await commitCommand(command, () => now.runAsOneStep(() => { useEditorStore.setState({ clips: synced.clips }); }));
+  let committed = false;
+  await commitCommand(command, () => now.runAsOneStep(() => {
+    const latest = useEditorStore.getState();
+    if (!task!.isCurrent() || latest.clips !== now.clips || latest.tracks !== now.tracks) return;
+    useEditorStore.setState({ clips: synced.clips }); committed = true;
+  }));
+  if (!committed) return null;
   return { beats: beats.sourceTimes.length, changed: synced.changed };
   } finally { task!.release(); }
 }
