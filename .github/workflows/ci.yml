@@ -15,6 +15,40 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  dub-discovery:
+    name: Dubbing discovery claims
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: public.ecr.aws/docker/library/postgres:16
+        env:
+          POSTGRES_PASSWORD: dub-test
+          POSTGRES_DB: dub_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: dub-test
+      PGDATABASE: dub_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify signed identity and durable claims
+        run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/video-dub-tip-bootstrap.sql
+          sed '/CREATE OR REPLACE FUNCTION public.get_my_agents/,$d' supabase/migrations/20260929093849_7f219ea4-80f1-4f9f-8809-1e8e709b55a9.sql | psql -v ON_ERROR_STOP=1
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261010180000_video_dub_tip.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/video-dub-tip.sql
+      - name: Verify concurrent clients have exactly one winner
+        run: |
+          for client in $(seq 1 12); do
+            psql -v ON_ERROR_STOP=1 -Atc "SET ROLE anon; SELECT public.test_dub_session('0x3333333333333333333333333333333333333333'); SELECT public.claim_video_dub_tip();" > "/tmp/dub-claim-$client" &
+          done
+          wait
+          test "$(cat /tmp/dub-claim-* | grep -c '^t$')" -eq 1
   deployment-credentials:
     name: Deployment credential parsing
     runs-on: ubuntu-latest

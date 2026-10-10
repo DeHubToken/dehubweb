@@ -17,7 +17,6 @@
  *   video keeps owning play/pause/mute/seek; the engine only follows.
  */
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { autoTranslateEnabled, subscribeAutoTranslate } from '@/lib/auto-translate-setting';
 
 const LS_ON = 'video-dubs:on';
 const LS_LANG = 'video-dubs:lang';
@@ -35,9 +34,10 @@ interface DubPreference {
 function readPreference(): DubPreference {
   try {
     const saved = localStorage.getItem(LS_ON);
-    return { on: saved !== '0', automatic: saved === null, lang: localStorage.getItem(LS_LANG) || null };
+    // Automatic playback never wrote this key. Only a deliberate on survives.
+    return { on: saved === '1', automatic: false, lang: localStorage.getItem(LS_LANG) || null };
   } catch {
-    return { on: true, automatic: true, lang: null };
+    return { on: false, automatic: false, lang: null };
   }
 }
 
@@ -56,13 +56,10 @@ export function setDubPreference(on: boolean, lang: string | null = null) {
 
 function subscribe(l: () => void) {
   listeners.add(l);
-  const unsubscribeAuto = subscribeAutoTranslate(l);
-  return () => { listeners.delete(l); unsubscribeAuto(); };
+  return () => { listeners.delete(l); };
 }
 
 export function getDubPreference(): DubPreference {
-  const on = preference.automatic ? autoTranslateEnabled() : preference.on;
-  if (on !== preference.on) preference = { ...preference, on };
   return preference;
 }
 

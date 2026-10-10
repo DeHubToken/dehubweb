@@ -8151,6 +8151,7 @@ export type Database = {
       }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
       claim_reaction_tip: { Args: never; Returns: boolean }
+      claim_video_dub_tip: { Args: never; Returns: boolean }
       claim_xl_cashback_slot: {
         Args: { p_subscription_id: string; p_xl_price_id: string }
         Returns: boolean

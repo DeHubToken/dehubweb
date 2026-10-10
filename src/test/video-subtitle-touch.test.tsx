@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, cleanup, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
+import { useCachedVideoDub } from '@/hooks/use-cached-video-dub';
 
 const fixture = vi.hoisted(() => ({ phone: true, dub: false, appLang: 'en', sourceLang: '', corrections: new Map(), request: vi.fn(), lookup: vi.fn(), dubLookup: vi.fn(), engine: vi.fn() }));
 vi.mock('@/hooks/use-touch-device', () => ({ useIsTouchDevice: () => fixture.phone }));
@@ -12,7 +13,7 @@ vi.mock('@/hooks/use-video-transcript', () => ({
   },
   useTranslatedSegments: (id: string, lang: string, enabled: boolean) => {
     fixture.dubLookup(id, lang, enabled);
-    return { segments: null, status: 'ready', request: fixture.request };
+    return { segments: [{ start: 0, end: 2, text: 'Hola' }], status: 'ready', request: fixture.request };
   },
 }));
 vi.mock('@/hooks/use-transcript-corrections', () => ({
@@ -24,6 +25,8 @@ vi.mock('@/hooks/dub-preference', () => ({
   useSpeechVoices: () => [], pickVoice: (_voices: unknown, lang: string | null) => lang ? { lang } : null, primeSpeech: vi.fn(),
 }));
 vi.mock('@/components/app/video/VoiceDubEngine', () => ({ default: () => { fixture.engine(); return null; } }));
+vi.mock('@/hooks/use-cached-video-dub', () => ({ useCachedVideoDub: vi.fn(() => undefined) }));
+vi.mock('@/hooks/use-dub-discovery', () => ({ useDubDiscovery: vi.fn() }));
 vi.mock('@/lib/wallet-unlock-flow', () => ({ useWalletUnlockPrompt: () => false }));
 vi.mock('@/lib/scroll-freeze-watchdog', () => ({ settleAfterOverlayClose: vi.fn() }));
 vi.mock('@/lib/overlay-open', () => ({ OverlayOpenTracker: () => null }));
@@ -88,7 +91,7 @@ describe('subtitle menu on phones', () => {
     expect(localStorage.getItem('video-subs:enabled')).toBe('1');
   });
 
-  it('automatically dubs audible foreign-language video into the app language without enabling captions', async () => {
+  it('plays an explicitly selected dub with captions off', async () => {
     fixture.dub = true;
     fixture.appLang = 'es';
     fixture.sourceLang = 'en';
@@ -98,6 +101,17 @@ describe('subtitle menu on phones', () => {
     await waitFor(() => expect(fixture.engine).toHaveBeenCalled());
     expect(fixture.dubLookup).toHaveBeenCalledWith('transcript', 'es', true);
     expect(localStorage.getItem('video-subs:enabled')).toBe('0');
+  });
+
+  it('prepares foreign-language translation and audio without playing a dub', () => {
+    fixture.appLang = 'es'; fixture.sourceLang = 'en';
+    const video = document.createElement('video');
+    Object.defineProperty(video, 'paused', { value: false });
+    render(<VideoSubtitleOverlay tokenId={123} videoRef={{ current: video }} />);
+    expect(fixture.lookup).toHaveBeenCalledWith(123, true);
+    expect(fixture.dubLookup).toHaveBeenCalledWith('transcript', 'es', true);
+    expect(useCachedVideoDub).toHaveBeenLastCalledWith('transcript', 'es', true);
+    expect(fixture.engine).not.toHaveBeenCalled();
   });
 
   it('does not fetch a transcript or translation for a muted card', () => {
