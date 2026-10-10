@@ -301,6 +301,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         }}
         onWaiting={() => setLoading(true)}
         onPause={() => { setPaused(true); setLoading(false); }}
+        onEnded={() => { setPaused(true); setPlaying(false); setLoading(false); }}
       />
       <LiveReactionFlow streamId={streamId} enabled={visible && !postOpen} self={selfReaction} bottom={56} />
       {visible && !postOpen && loading && (

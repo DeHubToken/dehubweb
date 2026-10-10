@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { LiveFeedPreview } from '@/components/app/cards/LiveFeedPreview';
 
 vi.mock('react-router-dom', () => ({ useLocation: () => ({ pathname: '/app' }) }));
+vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({ isAuthenticated: true, walletAddress: 'viewer' }) }));
 vi.mock('@/hooks/use-video-fullscreen', () => ({
   useVideoFullscreen: () => ({ isFullscreen: false, toggleFullscreen: vi.fn() }),
 }));
