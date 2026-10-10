@@ -6,7 +6,8 @@
  */
 
 import { useRef, useEffect, useState, useCallback, useId } from 'react';
-import { X, Volume2, VolumeX, GripHorizontal } from 'lucide-react';
+import { X, Volume2, VolumeX, GripHorizontal, Maximize2, Minimize2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';
 import type { PiPChannel } from '@/contexts/PiPContext';
@@ -25,8 +26,10 @@ interface FloatingPiPPlayerProps {
 const PLAYER_WIDTH = 280;
 const PLAYER_HEIGHT = 158; // 16:9
 const MARGIN = 12;
+const CONTROLS_HEIGHT = 44;
 
 export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayerProps) {
+  const { t } = useTranslation();
   const instanceId = useId();
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
@@ -35,11 +38,29 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
   const [isMuted, setIsMuted] = useState(true); // Start muted for autoplay compatibility
   const workerRetried = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const width = Math.max(1, Math.min(expanded ? 420 : PLAYER_WIDTH, viewport.width - MARGIN * 2,
+    (viewport.height - CONTROLS_HEIGHT - MARGIN * 2) * 16 / 9));
+  const videoHeight = width * 9 / 16;
+  const height = videoHeight + CONTROLS_HEIGHT;
   const [position, setPosition] = useState({ 
     x: window.innerWidth - PLAYER_WIDTH - MARGIN, 
     y: MARGIN + index * (PLAYER_HEIGHT + MARGIN + 8) 
   });
   const dragOffset = useRef({ x: 0, y: 0 });
+  const dragPointer = useRef<number | null>(null);
+
+  useEffect(() => {
+    const resize = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener('resize', resize);
+    return () => window.removeEventListener('resize', resize);
+  }, []);
+
+  const boundedPosition = {
+    x: Math.max(0, Math.min(viewport.width - width, position.x)),
+    y: Math.max(0, Math.min(viewport.height - height, position.y)),
+  };
 
   // Muted-first play strategy: start muted, then try unmuting
   const playWithUnmuteAttempt = useCallback((video: HTMLVideoElement) => {
@@ -164,24 +185,29 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
 
   // Dragging
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (dragPointer.current !== null || e.button !== 0) return;
     e.preventDefault();
+    dragPointer.current = e.pointerId;
     setIsDragging(true);
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect) {
       dragOffset.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     }
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    e.currentTarget.setPointerCapture(e.pointerId);
   }, []);
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    if (!isDragging) return;
-    const newX = Math.max(0, Math.min(window.innerWidth - PLAYER_WIDTH, e.clientX - dragOffset.current.x));
-    const newY = Math.max(0, Math.min(window.innerHeight - PLAYER_HEIGHT, e.clientY - dragOffset.current.y));
+    if (dragPointer.current !== e.pointerId) return;
+    const newX = Math.max(0, Math.min(window.innerWidth - width, e.clientX - dragOffset.current.x));
+    const newY = Math.max(0, Math.min(window.innerHeight - height, e.clientY - dragOffset.current.y));
     setPosition({ x: newX, y: newY });
-  }, [isDragging]);
+  }, [width, height]);
 
-  const handlePointerUp = useCallback(() => {
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    if (dragPointer.current !== e.pointerId) return;
+    dragPointer.current = null;
     setIsDragging(false);
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
   }, []);
 
   return (
@@ -194,18 +220,22 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
         'transition-shadow hover:shadow-[0_0_30px_rgba(0,0,0,0.8)]'
       )}
       style={{
-        width: PLAYER_WIDTH,
-        height: PLAYER_HEIGHT + 36, // extra for controls bar
-        left: position.x,
-        top: position.y,
+        width,
+        height,
+        left: boundedPosition.x,
+        top: boundedPosition.y,
       }}
     >
       {/* Drag handle */}
       <div
-        className="absolute top-0 left-0 right-0 h-7 flex items-center justify-center cursor-grab active:cursor-grabbing z-10 bg-gradient-to-b from-black/60 to-transparent"
+        className="absolute top-0 left-0 right-0 h-11 flex items-center justify-center cursor-grab active:cursor-grabbing z-10 bg-gradient-to-b from-black/60 to-transparent"
+        style={{ touchAction: 'none', userSelect: 'none' }}
+        data-pip-drag-handle
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onLostPointerCapture={handlePointerUp}
       >
         <GripHorizontal className="w-4 h-4 text-white/40" />
       </div>
@@ -218,11 +248,11 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
         {...{"webkit-playsinline": ""}}
         autoPlay
         className="w-full object-cover"
-        style={{ height: PLAYER_HEIGHT }}
+        style={{ height: videoHeight }}
       />
 
       {/* Bottom bar */}
-      <div className="h-9 flex items-center justify-between px-2 bg-black/80">
+      <div className="h-11 flex items-center justify-between pl-2 bg-black/80">
         <div className="flex items-center gap-1.5 min-w-0 flex-1">
           {channel.logo && (
             <img 
@@ -236,8 +266,10 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
         </div>
         <div className="flex items-center gap-1">
           <button
+            type="button"
+            aria-label={t(isMuted ? 'calls.unmute' : 'calls.mute')}
             onClick={() => setIsMuted(!isMuted)}
-            className="w-7 h-7 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="w-11 h-11 rounded-lg hover:bg-white/20 flex items-center justify-center transition-colors"
           >
             {isMuted ? (
               <VolumeX className="w-3.5 h-3.5 text-white" />
@@ -246,8 +278,18 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
             )}
           </button>
           <button
+            type="button"
+            aria-label={t(expanded ? 'calls.minimize' : 'calls.expand')}
+            onClick={() => { setPosition(boundedPosition); setExpanded(value => !value); }}
+            className="w-11 h-11 rounded-lg hover:bg-white/20 flex items-center justify-center transition-colors"
+          >
+            {expanded ? <Minimize2 className="w-3.5 h-3.5 text-white" /> : <Maximize2 className="w-3.5 h-3.5 text-white" />}
+          </button>
+          <button
+            type="button"
+            aria-label={t('common.close')}
             onClick={() => onClose(channel.id)}
-            className="w-7 h-7 rounded-lg bg-white/10 hover:bg-red-500/60 flex items-center justify-center transition-colors"
+            className="w-11 h-11 rounded-lg hover:bg-red-500/60 flex items-center justify-center transition-colors"
           >
             <X className="w-3.5 h-3.5 text-white" />
           </button>
