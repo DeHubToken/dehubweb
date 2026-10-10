@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { CloudUpload, History, MessageSquare, RefreshCw, RotateCcw, Trash2 } from "lucide-react";
 import { ProjectReviewPanel } from "./ProjectReviewPanel";
@@ -12,12 +13,14 @@ import { saveProject, setLastProjectId } from "@/lib/editor/projectStore";
 import { toast } from "sonner";
 
 export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onOpenChange(value: boolean): void }) {
+  const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [query, setQuery] = useState("");
   const preserve = async () => { const snapshot = useEditorStore.getState().toSnapshot(); await saveProject(snapshot); setLastProjectId(snapshot.id); };
   const cloud = useCloudProjects(walletAddress, browserCloudProjectSession, {
     current: () => useEditorStore.getState().toSnapshot(), preserve,
     open: snapshot => { useEditorStore.getState().loadSnapshot(snapshot); setLastProjectId(snapshot.id); },
+    receive: (snapshot,key) => useEditorStore.getState().applySharedSnapshot(snapshot,key),
     seek: seconds => { useEditorStore.getState().setIsPlaying(false); useEditorStore.getState().setCurrentTime(seconds); },
   });
   useEffect(() => { if (open && walletAddress) void cloud.refresh(); }, [open, walletAddress]);
@@ -32,7 +35,11 @@ export function CloudProjectsDialog({ open, onOpenChange }: { open: boolean; onO
         <Button variant="outline" disabled={cloud.busy} onClick={() => { void preserve().then(() => toast.success("Saved on this device.")).catch(() => toast.error("Could not save this project.")); }}>Save on device</Button>
         <Button disabled={!cloud.available || cloud.busy || cloud.linkPending} onClick={() => { void cloud.save(); }}>Save to cloud</Button>
         <Button variant="outline" disabled={!cloud.available || cloud.busy || cloud.linkPending} onClick={() => { void cloud.save(true); }}>Save a copy</Button>
+        <Button variant="outline" disabled={!cloud.canReceive || cloud.busy} onClick={() => { void cloud.receiveChanges(); }}><RefreshCw className="mr-2 h-4 w-4" />{t("editor.sharedTimeline.receive")}</Button>
       </div>
+      <p className="text-xs text-white/60">{t("editor.sharedTimeline.hint")}</p>
+      {cloud.received && <p role="status" className="text-sm text-white/80">{t(cloud.received.changed ? "editor.sharedTimeline.received" : "editor.sharedTimeline.upToDate", {revision:cloud.received.revision})}</p>}
+      {!!cloud.received?.protectedUndo && <p className="text-xs text-white/60">{t("editor.sharedTimeline.protectedUndo")}</p>}
       {cloud.sharedOwner && <div className="rounded-lg border border-white/15 bg-white/5 p-3 text-xs text-white/75"><p>Editing a shared project. Save updates its cloud version; Save a copy makes your own project.</p><p className="mt-1 break-all">Owner: {cloud.sharedOwner}</p></div>}
       {cloud.mergeCopy && <div className="space-y-2 rounded-lg border border-white/15 p-3 text-xs text-white/75"><p>Combined cloud version {cloud.mergeCopy.revision} is ready. Your newer local edits were kept on this device.</p><Button size="sm" variant="outline" disabled={cloud.busy} onClick={()=>{void cloud.openMergeCopy();}}>Open combined copy</Button></div>}
       {!cloud.available && <p className="text-sm text-white/60">Sign in to use cloud projects.</p>}
