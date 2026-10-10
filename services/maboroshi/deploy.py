@@ -55,17 +55,21 @@ def install(revision):
         values = {
             'INTERNAL_SERVICE_SECRET': internal,
             'MABOROSHI_MEDIA_SECRET': secrets.token_hex(32),
-            'MABOROSHI_SETUP_TOKEN': secrets.token_urlsafe(32),
-            'MABOROSHI_SETUP_EXPIRES': str(int(time.time()) + 86400),
             'MABOROSHI_MESH_PYTHON': str(base / 'mesh-venv/bin/python'),
             'MABOROSHI_PREPARE_MICROS': '1000000',
-            'MABOROSHI_DRAFT_MICROS_PER_SECOND': '500000',
-            'MABOROSHI_HD_MICROS_PER_SECOND': '1000000',
+            'MABOROSHI_DRAFT_MICROS_PER_SECOND': '160000',
+            'MABOROSHI_HD_MICROS_PER_SECOND': '850000',
         }
         fd = os.open(config, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(fd, 'w') as output:
             for key, value in values.items():
                 output.write(f'{key}="{value}"\n')
+    # Retire the one-use credential form and migrate its initial retail tariff.
+    lines = [line for line in config.read_text().splitlines() if not line.startswith(('MABOROSHI_SETUP_', 'REPLICATE_', 'ENHANCOR_'))]
+    tariffs = {'MABOROSHI_DRAFT_MICROS_PER_SECOND': '160000', 'MABOROSHI_HD_MICROS_PER_SECOND': '850000'}
+    lines = [f'{key}="{tariffs[key]}"' if (key := line.partition('=')[0]) in tariffs else line for line in lines]
+    config.write_text('\n'.join(lines) + '\n')
+    config.chmod(0o600)
     shutil.copy2(release / 'dehub-maboroshi.service', '/etc/systemd/system/dehub-maboroshi.service')
     shutil.copy2(release / 'nginx-location.conf', '/etc/nginx/snippets/dehub-maboroshi.conf')
     nginx = Path('/etc/nginx/conf.d/live.dehub.io.conf')

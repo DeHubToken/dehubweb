@@ -53,20 +53,8 @@ def depth_hf(src,dst):
     shutil.copy(file_path(result[1]),dst)
 
 def depth_replicate(src,dst,model_name="lucataco/depth-anything-video"):
-    token=os.getenv('REPLICATE_API_TOKEN')
-    if not token:raise ValueError('Replicate fallback requires REPLICATE_API_TOKEN in the server environment.')
-    # Resolve live model schema instead of assuming an input field.
-    headers={'Authorization':f'Bearer {token}'}
-    r=requests.get('https://api.replicate.com/v1/models/'+model_name,headers=headers,timeout=30);r.raise_for_status();model=r.json();v=model['latest_version'];props=v['openapi_schema']['components']['schemas']['Input']['properties']
-    key=next((k for k in props if 'video' in k and props[k].get('format')=='uri'),None)
-    if not key:raise ValueError('Unable to identify Replicate video input in schema.')
-    with open(src,'rb') as f:r=requests.post('https://api.replicate.com/v1/files',headers=headers,files={'content':f},timeout=120)
-    r.raise_for_status();url=r.json()['urls']['get']
-    r=requests.post('https://api.replicate.com/v1/predictions',headers=headers,json={'version':v['id'],'input':{key:url}},timeout=60);r.raise_for_status();j=r.json()
-    for _ in range(180):
-        if j['status'] in ['succeeded','failed','canceled']:break
-        time.sleep(5);r=requests.get(j['urls']['get'],headers=headers,timeout=30);r.raise_for_status();j=r.json()
-    if j['status']!='succeeded':raise RuntimeError(str(j.get('error') or j['status']))
+    from providers import prediction
+    j=prediction('depth',src,Path(dst).parent)
     output=j['output'];url=output if isinstance(output,str) else output[0] if isinstance(output,list) else next(v for k,v in output.items() if 'depth' in k)
     r=requests.get(url,timeout=120);r.raise_for_status();Path(dst).write_bytes(r.content)
 
