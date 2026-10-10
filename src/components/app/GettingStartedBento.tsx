@@ -61,6 +61,9 @@ const ICONS = {
 
 /** Same chrome as the panels either side of it in the rail. */
 const BENTO_CLASS = 'bg-zinc-900 rounded-2xl p-4';
+const TOUR_CTA_CLASS = 'rounded-xl border border-white bg-white bg-none font-semibold text-zinc-950 hover:bg-zinc-100';
+const TOUR_CTA_STYLE = { background: '#fff', color: '#09090b' };
+const TOUR_ICON = '/theme-icons/system/guide.webp';
 
 export function GettingStartedBento() {
   const { t } = useTranslation();
@@ -89,10 +92,11 @@ export function GettingStartedBento() {
   if (shouldOffer) {
     return (
       <div data-side-panel className={BENTO_CLASS}>
+        <img src={TOUR_ICON} alt="" aria-hidden="true" className="mb-2 h-12 w-12 object-contain" />
         <h2 className="text-base font-bold text-white">{t('onboarding.optIn.title')}</h2>
         <p className="mt-1 text-sm leading-5 text-zinc-400">{t('onboarding.optIn.body')}</p>
         <div className="mt-3 flex items-center gap-2">
-          <Button size="sm" className="rounded-xl" onClick={onboarding.start}>
+          <Button size="sm" data-keep-white className={TOUR_CTA_CLASS} style={TOUR_CTA_STYLE} onClick={onboarding.start}>
             {t('onboarding.optIn.yes')}
           </Button>
           <Button
@@ -147,7 +151,10 @@ export function GettingStartedBento() {
     <div data-side-panel className={BENTO_CLASS}>
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h2 className="text-base font-bold text-white">{t('onboarding.checklist.title')}</h2>
+          <div className="flex items-center gap-2">
+            <img src={TOUR_ICON} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
+            <h2 className="text-base font-bold text-white">{t('onboarding.checklist.title')}</h2>
+          </div>
           <p className="text-xs text-zinc-500">{t('onboarding.checklist.subtitle')}</p>
         </div>
         <button
@@ -204,7 +211,9 @@ export function GettingStartedBento() {
                     <div className="mt-2 flex flex-wrap items-center gap-2">
                       <Button
                         size="sm"
-                        className="h-7 rounded-lg px-2.5 text-xs"
+                        data-keep-white
+                        className={cn(TOUR_CTA_CLASS, 'h-7 rounded-lg px-2.5 text-xs')}
+                        style={TOUR_CTA_STYLE}
                         onClick={() => go(step)}
                       >
                         {t('onboarding.checklist.go')}
