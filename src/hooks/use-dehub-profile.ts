@@ -8,6 +8,7 @@
 
 import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { mergeLiveCounts } from '@/lib/live-counts';
+import { shouldRetryProfile } from '@/lib/profile-retry';
 import { useMemo, useEffect } from 'react';
 import i18n from 'i18next';
 import { parseBadgeLock, type BadgeLock } from '@/lib/staking-badges';
@@ -241,12 +242,7 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
     },
     enabled: enabled && !!(userId || username),
     staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: (failureCount, error) => {
-      // Retry up to 4 times for "not found" (transient empty-shell responses)
-      // and up to 3 times for network errors
-      if (error?.message === 'Profile not found') return failureCount < 4;
-      return failureCount < 3;
-    },
+    retry: shouldRetryProfile,
     retryDelay: (attemptIndex) => Math.min(800 * 2 ** attemptIndex, 5000),
     // Show localStorage cache instantly, then keep previous data on address change
     placeholderData: cachedProfile ?? keepPreviousData,
