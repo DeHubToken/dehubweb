@@ -145,6 +145,10 @@ export function Compositor() {
     return () => { cache.dispose(); if (mattePages.current === cache) mattePages.current = null; };
   }, []);
 
+  // A reopened project can deliver its clips before the stored mask pages.
+  // Retry a failed page only when the actual source list changes.
+  useEffect(() => { mattePages.current?.refreshSources(); }, [media]);
+
   // Provision elements when media changes.
   useEffect(() => {
     const vPool = videoPool.current;

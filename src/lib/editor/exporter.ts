@@ -373,7 +373,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         if (v) {
           const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
           const localT = op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
-          await waitForVideoFrame(v, localT, { signal });
+          await waitForVideoFrame(v, localT, { signal, forCanvasRead: true });
         }
       }
       // Draw before seeking another cut that may share this decoder.
@@ -516,7 +516,7 @@ async function exportGif(opts: ExportOptions): Promise<ExportResult> {
       for (const op of ops) {
         if (op.clip.kind === "video") {
           const video = videos.get(op.clip.mediaId);
-          if (video) await waitForVideoFrame(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1), { signal });
+          if (video) await waitForVideoFrame(video, op.localTimeOverride ?? op.clip.trimIn + (time - op.clip.start) * (op.clip.speed || 1), { signal, forCanvasRead: true });
         }
         ctx.save();
         if (op.translateX) ctx.translate(op.translateX, 0);
@@ -597,7 +597,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     if (op.clip.kind === "video") {
       const mc = op.clip;
       const v = videos.get(mc.mediaId);
-      if (v) await waitForVideoFrame(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1));
+      if (v) await waitForVideoFrame(v, op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * (mc.speed || 1), { forCanvasRead: true });
     }
     ctx.save();
     if (op.translateX) ctx.translate(op.translateX, 0);
