@@ -20,7 +20,7 @@ import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googl
 import { LayerSection } from "@/components/editor/inspector/LayerSection";
 import { MultiSelectSection } from "@/components/editor/inspector/MultiSelectSection";
 import { MotionSection } from "@/components/editor/inspector/MotionSection";
-import { autoEnhanceEffects } from "@/lib/editor/autoEnhance";
+import { applyAutoEnhance } from "@/lib/editor/applyAutoEnhance";
 import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { SubtitleFiles } from "@/components/editor/SubtitleFiles";
 import { ShotTools } from "@/components/editor/ShotTools";
@@ -240,7 +240,7 @@ export function Inspector() {
                   const m = useEditorStore.getState().media.find((x) => x.id === visualMedia.mediaId);
                   if (!m) return;
                   try {
-                    updateMediaClip(visualMedia.id, { effects: await autoEnhanceEffects(m.url, visualMedia.effects) });
+                    await applyAutoEnhance(visualMedia.id);
                   } catch {
                     toast.error(t("editor.adjust.autoFailed"));
                   }

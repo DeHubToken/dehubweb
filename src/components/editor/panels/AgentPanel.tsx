@@ -1,3 +1,5 @@
+import { projectTask } from "@/lib/editor/projectTask";
+import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * AI panel — describe the edit, the agent does it.
@@ -50,6 +52,8 @@ export function AgentPanel() {
   const visualScope = useEditorStore(s => highlightVisualScope(s.toSnapshot(), s.selectedClipIds));
   const useVisual = visualConsent === visualScope;
   useEffect(() => { setVisualConsent(null); }, [visualScope]);
+  const pendingTask = useRef<ReturnType<typeof projectTask>>(null);
+  useEffect(() => () => { pendingTask.current?.release(); pendingTask.current = null; setBusy(false); }, [draftProjectId, setBusy]);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const previewEnd = useRef<number | null>(null);
@@ -145,6 +149,10 @@ export function AgentPanel() {
       inputRef.current?.focus();
       return;
     }
+    const source = useEditorStore.getState();
+    const sourceKey = projectReviewSnapshotKey(source.toSnapshot());
+    const task = projectTask(source.holdEdits());
+    pendingTask.current = task;
     setBusy(true);
     try {
       const history: AgentMessage[] = [
@@ -153,7 +161,10 @@ export function AgentPanel() {
           .map(({ role, content }) => ({ role, content })),
       ];
       const { reply, ops } = await askAgent(history);
+      if (!task!.isCurrent()) return;
+      if (projectReviewSnapshotKey(useEditorStore.getState().toSnapshot()) !== sourceKey) throw new Error('project changed');
       const report = ops.length ? await applyOps(ops, { wallet: quota.walletAddress }) : undefined;
+      if (!task!.isCurrent()) return;
       let content = reply || (ops.length ? t('editor.agent.done') : t('editor.agent.nothingToDo'));
       if (!ops.length) content = t('editor.agent.nothingToDo');
       if (report?.generate && !report.applied && !reply) content = t('editor.agent.openGenerator');
@@ -164,6 +175,7 @@ export function AgentPanel() {
       if (!report?.failed) setDraft.complete(text, '');
       push({ id: nextId(), role: 'assistant', content, report });
     } catch (e) {
+      if (!task!.isCurrent()) return;
       const code = e instanceof Error ? e.message : '';
       push({
         id: nextId(),
@@ -172,8 +184,10 @@ export function AgentPanel() {
         content: code === 'rate_limited' ? t('editor.agent.rateLimited') : t('editor.agent.failed'),
       });
     } finally {
-      setBusy(false);
-      inputRef.current?.focus();
+      task!.release();
+      if (pendingTask.current === task) {
+        pendingTask.current = null; setBusy(false); inputRef.current?.focus();
+      }
     }
   }, [useVisual, visualScope, busy, highlightState.busy, assemblyState.busy, assembly, highlights, recordHighlights, push, setBusy, quota.walletAddress, t, setDraft]);
 
