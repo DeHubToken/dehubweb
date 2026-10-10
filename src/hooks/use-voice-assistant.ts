@@ -11,6 +11,7 @@ import { invokeAi, isPaymentRequired } from '@/lib/ai-invoke';
 import { payForVoiceSession, VOICE_EXCHANGE_DHB, VOICE_SESSION_EXCHANGES } from '@/lib/ai-payment';
 import { toast } from 'sonner';
 import i18n from 'i18next';
+import { createVoiceRecorder, voiceRecordingBlob, voiceRecordingFilename } from '@/lib/voice-recording';
 
 interface UseVoiceAssistantOptions {
   /** Called when Whisper returns a transcript */
@@ -103,13 +104,13 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
   // Upload audio blob to Supabase storage and return a public URL
   const uploadAudio = useCallback(async (blob: Blob): Promise<string> => {
-    const fileName = `voice-${Date.now()}.webm`;
+    const fileName = voiceRecordingFilename(blob.type);
     const filePath = `voice-assistant/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from('chat-media')
       .upload(filePath, blob, {
-        contentType: 'audio/webm',
+        contentType: blob.type,
         upsert: false,
       });
 
@@ -238,11 +239,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
       source.connect(analyser);
       analyserRef.current = analyser;
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-          ? 'audio/webm;codecs=opus'
-          : 'audio/webm',
-      });
+      const mediaRecorder = createVoiceRecorder(stream);
 
       mediaRecorderRef.current = mediaRecorder;
 
@@ -308,7 +305,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
     return new Promise<void>((resolve) => {
       recorder.onstop = async () => {
-        const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+        const blob = voiceRecordingBlob(chunksRef.current, recorder.mimeType);
         const duration = Math.floor((Date.now() - startTimeRef.current) / 1000);
 
         if (blob.size < 1000 || duration < 1) {
