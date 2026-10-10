@@ -29,6 +29,7 @@ import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { nanoid } from "nanoid";
 import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
 import { preciseCommand } from "./preciseCommands";
+import { videoTemplateAspect, videoTemplateCommand } from "./videoTemplates";
 import { stockSearchPlan } from "./stockSearchPlan";
 import { applyAudioTool } from "./applyAudioTool";
 import { AUDIO_TOOL_MODES, audioToolCommand, type AudioToolMode } from "./audioTools";
@@ -160,7 +161,7 @@ function describeClip(c: Clip, media: { id: string; name: string }[], hidden: bo
 export async function askAgent(messages: AgentMessage[], signal?: AbortSignal): Promise<AgentResult> {
   const scene = describeScene();
   const last = messages[messages.length - 1];
-  const direct = last?.role === "user" ? generationChatRequest(last.content) ?? preciseCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) ?? videoMatteCommand(last.content, scene) : null;
+  const direct = last?.role === "user" ? generationChatRequest(last.content) ?? preciseCommand(last.content, scene) ?? videoTemplateCommand(last.content, scene) ?? audioToolCommand(last.content, scene) ?? beatCommand(last.content, scene) ?? shotCommand(last.content, scene) ?? videoMatteCommand(last.content, scene) : null;
   if (direct) return { reply: "", ops: [direct] };
   return askSceneAgent(messages, scene, signal);
 }
@@ -229,6 +230,11 @@ function textPatch(op: AgentOp): Partial<TextClip> {
   if (ls !== undefined) p.letterSpacing = clamp(ls, -20, 200);
   const lh = num(op.lineHeight);
   if (lh !== undefined) p.lineHeight = clamp(lh, 0.6, 4);
+  for (const key of ["maxWidth", "maxHeight"] as const) {
+    const value = num(op[key]);
+    if (op[key] === null) p[key] = undefined;
+    else if (value !== undefined) p[key] = clamp(value, 0.05, 1);
+  }
   const bg = colour(op.bgColor);
   if (bg) p.background = { color: bg, opacity: clamp(num(op.bgOpacity) ?? 0.6, 0, 1), padding: 24, radius: 16 };
   const stroke = colour(op.strokeColor);
@@ -294,6 +300,7 @@ async function fitTextToPage(id: string) {
   const s = useEditorStore.getState();
   const clip = s.clips.find((c) => c.id === id);
   if (!clip || clip.kind !== "text" || typeof document === "undefined") return;
+  if (Number.isFinite(clip.maxWidth) && clip.maxWidth! > 0) return;
   const family = clip.fontFamily.split(",")[0].replace(/['"]/g, "").trim();
   try {
     await Promise.race([
@@ -642,7 +649,7 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         store().setCurrentTime(0);
         // Nested ops run inside this request's undo step; their new layers
         // are not addressable as new:N from the outer list.
-        const inner = await applyOps(tpl.ops(i18n.t.bind(i18n)), ctx);
+        const inner = await applyOps(tpl.ops(i18n.t.bind(i18n), videoTemplateAspect(op.aspect)), ctx);
         return inner.applied > 0;
       }
       case "captions": {
