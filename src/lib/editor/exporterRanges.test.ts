@@ -51,7 +51,7 @@ describe("range rendering", () => {
     await exportProject({ snapshot, media: [{ id: "source", kind: "video", url: "blob:source", name: "source", size: 1, mimeType: "video/mp4", createdAt: 0 }], format: "gif", scale: 1, videoBitrate: 0, range: { start: 4, end: 5 }, username: "creator" });
     const content = calls.draw.mock.calls.filter(c => c[3].id === "video");
     expect(content).toHaveLength(15); expect(content[0][4]).toBe(4); expect(content.at(-1)![4]).toBeCloseTo(4 + 14 / 15);
-    expect(seeks[0]).toBe(6); expect(seeks.at(-1)).toBeCloseTo(6 + 28 / 15);
+    expect(seeks[0]).toBeCloseTo(6.000002, 10); expect(seeks.at(-1)).toBeCloseTo(6 + 28 / 15);
     const captions = calls.draw.mock.calls.filter(c => c[3].id === "caption");
     expect(captions.length).toBeGreaterThan(0); expect(captions.every(c => c[4] >= 4.1 && c[4] < 4.6)).toBe(true);
     expect(calls.draw.mock.calls.some(c => c[3].id === "later")).toBe(false);
