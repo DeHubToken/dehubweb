@@ -177,7 +177,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '22'
           cache: pnpm
 
       # --no-frozen-lockfile for the same reason the typecheck job uses it:
@@ -193,7 +193,9 @@ jobs:
         run: pnpm test
 
       - name: Render text post share cards
-        run: node --test server/post-share-card.test.mjs
+        run: |
+          node --test server/post-share-card.test.mjs
+          node tests/post-share-workerd.mjs
 
       - name: Validate production Worker bundle
         run: |
