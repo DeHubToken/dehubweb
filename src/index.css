@@ -1050,6 +1050,10 @@ body.immersive-live-mode main {
 }
 
 
+body.post-media-back [data-post-nav-back] {
+  display: none;
+}
+
 body.immersive-video-mode main {
   padding-top: 0 !important;
 }
@@ -5283,7 +5287,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
 /* Feed player: outlined glyphs instead of glass buttons
    (VideoCard bareControls). Speed, loop, PiP and subtitles sit top right with
    mute in the corner; the scrubber row keeps one counter and fullscreen. */
-[data-video-topbar="bare"] :is(button, [role="button"]) {
+[data-video-topbar="bare"] :is(button, [role="button"]),
+[data-video-back] {
   width: 2rem !important;
   min-width: 2rem !important;
   height: 2rem !important;
@@ -5294,7 +5299,8 @@ html[data-theme="light"] [data-creator-page] .text-white {
   -webkit-backdrop-filter: none !important;
   color: #fff !important;
 }
-[data-video-topbar="bare"] :is(button, [role="button"]) svg {
+[data-video-topbar="bare"] :is(button, [role="button"]) svg,
+[data-video-back] svg {
   width: 1.125rem;
   height: 1.125rem;
 }

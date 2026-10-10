@@ -45,7 +45,7 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
+import { ArrowLeft, Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Zap, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Trash2, Gem, Repeat, Music, X, Pencil, Star, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';
@@ -161,7 +161,6 @@ import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoaderLazy'
 import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
-import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 /**
@@ -279,7 +278,7 @@ interface MobileCreatorInfoProps {
   onUnlocked?: () => void;
   /**
    * Phone post page: the Stage creator row (followers + Follow). Ask AI and
-   * the menu are on the media there, so they are not drawn here.
+   * the menu are in the post panel, so they are not drawn here.
    */
   stage?: boolean;
 }
@@ -482,19 +481,19 @@ function MobileCreatorInfo({
                 <Zap className="w-[23.5px] h-[23.5px]" />
               </button>
             )}
-            <button
+            {onAIClick && <button
               onClick={onAIClick}
               className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
               aria-label="Ask AI about this video"
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
-            </button>
-            <button aria-label="Post options" 
+            </button>}
+            {onMenuClick && <button aria-label="Post options" 
               onClick={onMenuClick}
               className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
             >
               <MoreVertical className="w-[23.5px] h-[23.5px]" />
-            </button>
+            </button>}
           </div>
         </div>
       </div>
@@ -718,6 +717,9 @@ function ExpandableDescription({ description: rawDescription, isImmersive, clamp
 
 interface VideoCardProps {
   video: VideoItem;
+  /** Dedicated post: navigation stays on the player and utilities below it. */
+  postPage?: boolean;
+  onBack?: () => void;
   /** Dedicated pages own one shared comments window below the post card. */
   onOpenComments?: (tab?: 'replies' | 'quotes' | 'reposts' | 'search') => void;
   /** When true, renders full-width without rounded corners or header for immersive view */
@@ -732,7 +734,7 @@ interface VideoCardProps {
   firstFeedPost?: boolean;
 }
 
-export const VideoCard = memo(function VideoCard({ video, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
+export const VideoCard = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
   const playbackAllowed = useFeedPlaybackAllowed();
   const playbackAllowedRef = useRef(playbackAllowed);
   playbackAllowedRef.current = playbackAllowed;
@@ -2015,7 +2017,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             creatorUsername={video.creatorUsername}
             badgeBalance={video.creatorBadgeBalance}
           />
-          <div className="flex items-center gap-1">
+          {!postPage && <div className="flex items-center gap-1">
             {isOwnPost && (
               <motion.button
                 data-head-boost
@@ -2046,7 +2048,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <button onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} aria-label="Post options" data-head-options className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
               <MoreVertical className="w-[23.5px] h-[23.5px]" />
             </button>
-          </div>
+          </div>}
         </div>
       )}
 
@@ -2413,20 +2415,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         
-        {stage && !isFullscreen && (
-          <StageMediaChrome
-            onBack={stage.onBack}
-            onAskAI={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            onBoost={isOwnPost ? () => setShowBoostModal(true) : undefined}
-          />
+        {(onBack || stage) && !video.isAudio && !isFullscreen && (controlsVisible || isContentGated) && (
+          <button
+            type="button"
+            data-video-controls
+            data-video-back
+            data-video-bare
+            aria-label={t('common.goBack')}
+            className="absolute left-2 top-1.5 z-20 h-8 w-8 text-white flex items-center justify-center"
+            onClick={(event) => { event.stopPropagation(); (onBack ?? stage?.onBack)?.(); }}
+          >
+            <MediaControlIcon icon={ArrowLeft} />
+          </button>
         )}
 
         {video.isW2E && !stage && (
           <button
             type="button"
             aria-label={t('drawers.bountyTitle')}
-            className="absolute top-2 left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
+            className={cn("absolute left-2 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors", onBack ? "top-11" : "top-2")}
             onClick={(e) => { e.stopPropagation(); setShowBountyDrawer(true); }}
           >
             <Gift className="w-3 h-3 text-white" />
@@ -2491,7 +2498,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             that already carries its own transport. */}
 
         {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 flex items-center z-10", stage && !isFullscreen ? "top-[58px]" : "top-1.5", bareControls ? "gap-1" : "gap-2")}>
+          <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 top-1.5 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
                 mixer. The wrapper keeps the pointer inside while the cursor
@@ -2782,7 +2789,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       <div data-card-info className={`pt-3${isImmersive || stage ? ' px-3 lg:px-0' : ''}`}>
         {/* System theme phone feed only (index.css): the options button sits
             here, top right of the caption, instead of on the media. */}
-        {!isImmersive && !hideActions && (
+        {!isImmersive && !postPage && !stage && !hideActions && (
           <div data-caption-options data-video-caption-actions className="hidden">
             {isOwnPost && (
               <button data-caption-boost onClick={() => setShowBoostModal(true)} aria-label={t('postOptions.boostPost')} className="flex h-8 w-8 items-center justify-center">
@@ -2805,9 +2812,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             creatorId={video.creatorId}
             badgeBalance={video.creatorBadgeBalance}
             verified={video.verified}
-            onAIClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            onBoostClick={isOwnPost ? () => setShowBoostModal(true) : undefined}
-            onMenuClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+            onAIClick={postPage || stage ? undefined : () => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+            onBoostClick={!postPage && !stage && isOwnPost ? () => setShowBoostModal(true) : undefined}
+            onMenuClick={postPage || stage ? undefined : () => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             isPPV={isPPVLocked ? video.isPPV : false}
             tokenId={video.id}
             ppvPrice={video.ppvPrice}
@@ -2894,6 +2901,21 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </div>
         {!hideActions && (
           <>
+            {(postPage || stage) && (
+              <div data-post-panel-actions className="flex items-center justify-end gap-1 mb-2">
+                {isOwnPost && (
+                  <button type="button" aria-label={t('postOptions.boostPost')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); setShowBoostModal(true); }}>
+                    <Zap className="h-5 w-5" />
+                  </button>
+                )}
+                <button type="button" aria-label={t('postStage.askAI')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}>
+                  <Sparkles className="h-5 w-5" />
+                </button>
+                <button type="button" aria-label={t('postStage.more')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}>
+                  <MoreVertical className="h-5 w-5" />
+                </button>
+              </div>
+            )}
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
             {/* The creator's Shop board. Inline rather than over the player:
                 this card runs an immersive mode that reflows the video, and an
