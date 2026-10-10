@@ -186,6 +186,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
             <LiveFeedPreview
               streamId={stream.streamId}
+              streamStatus={stream.liveStatus}
               creatorId={stream.creatorId}
               isOwner={stream.isOwner}
               selfReaction={selfReaction}

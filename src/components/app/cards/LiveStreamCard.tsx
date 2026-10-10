@@ -71,6 +71,7 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { GatedMedia } from './GatedMedia';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { useStreamPresence } from '@/hooks/use-stream-presence';
+import { useLivePlaybackFeedback } from '@/hooks/use-live-playback-feedback';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
@@ -219,6 +220,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const playbackRequestedRef = useRef(true);
   // If stream.isLive is false, treat as ended immediately — don't try to play a dead HLS URL
   const [streamEnded, setStreamEnded] = useState(!liveNow);
+  const { broadcastPaused, waitingTooLong } = useLivePlaybackFeedback(stream.streamId, isBuffering, liveNow && !streamEnded, stream.liveStatus);
   // The viewer's own thumb, played on tap rather than on the echo — see
   // LiveReactionFlow's `self`. The room still gets theirs off the broadcast.
   const [selfReaction, setSelfReaction] = useState<SelfReaction | null>(null);
@@ -1325,11 +1327,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               </button>
             )}
             {/* Playback feedback stays visible even when the controls are hidden. */}
-            {(isBuffering || error) && (
+            {(isBuffering || error || broadcastPaused) && (
               <div role="status" aria-label={error || t('common.loading', 'Loading')} className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center">
                 <div className="flex flex-col items-center gap-2 text-center px-4">
-                  {error !== 'Stream unavailable' && error !== 'Failed to play stream' && <ButtonLoader size={40} className="!filter-none" />}
-                  {error && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{error}</p>}
+                  {!broadcastPaused && !waitingTooLong && error !== 'Stream unavailable' && error !== 'Failed to play stream' && <ButtonLoader size={40} className="!filter-none" />}
+                  {(broadcastPaused || waitingTooLong || error) && <p className="text-white/80 text-sm bg-black/60 rounded px-2 py-1">{broadcastPaused ? 'Live paused' : waitingTooLong ? 'Waiting for live video' : error}</p>}
                 </div>
               </div>
             )}
