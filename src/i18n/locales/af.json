@@ -604,6 +604,7 @@
   },
   "postOptions": {
     "options": "Opsies",
+    "aiOverview": "AI-oorsig",
     "sendTip": "Stuur fooi",
     "queue": "Wagtou",
     "watchList": "Kyklys",
@@ -6525,10 +6526,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuele hoogtepunte",
-      "visualPrivacy": "Stuur gekose rame vir visuele ontleding."
-    },
     "review": {
       "title": "Projekhersiening",
       "shared": "Met jou gedeel",
@@ -6944,6 +6941,10 @@
       "sync": "Sinkroniseer snitte",
       "none": "Geen betroubare maatslae gevind nie.",
       "unchanged": "Geen snitte kon belyn word nie."
+    },
+    "highlights": {
+      "visual": "Visuele hoogtepunte",
+      "visualPrivacy": "Stuur gekose rame vir visuele ontleding."
     }
   },
   "jungleMood": {

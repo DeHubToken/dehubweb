@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Mogućnosti",
+    "aiOverview": "AI pregled",
     "sendTip": "Pošalji napojnicu",
     "queue": "Red čekanja",
     "watchList": "Lista za gledanje",
@@ -6352,10 +6353,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Vizualni vrhunci",
-      "visualPrivacy": "Pošaljite odabrane kadrove za vizualnu analizu."
-    },
     "review": {
       "title": "Pregled projekta",
       "shared": "Podijeljeno s vama",
@@ -6771,6 +6768,10 @@
       "sync": "Sinkroniziraj rezove",
       "none": "Nije pronađen pouzdan ritam.",
       "unchanged": "Rezove nije bilo moguće poravnati."
+    },
+    "highlights": {
+      "visual": "Vizualni vrhunci",
+      "visualPrivacy": "Pošaljite odabrane kadrove za vizualnu analizu."
     }
   },
   "jungleMood": {

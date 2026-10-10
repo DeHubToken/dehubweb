@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Alternativ",
+    "aiOverview": "AI-översikt",
     "sendTip": "Skicka dricks",
     "queue": "Kö",
     "watchList": "Bevakningslista",
@@ -6350,10 +6351,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuella höjdpunkter",
-      "visualPrivacy": "Skicka utvalda bildrutor för visuell analys."
-    },
     "review": {
       "title": "Projektgranskning",
       "shared": "Delat med dig",
@@ -6769,6 +6766,10 @@
       "sync": "Synkronisera klipp",
       "none": "Ingen tillförlitlig rytm hittades.",
       "unchanged": "Klippen kunde inte justeras."
+    },
+    "highlights": {
+      "visual": "Visuella höjdpunkter",
+      "visualPrivacy": "Skicka utvalda bildrutor för visuell analys."
     }
   },
   "jungleMood": {

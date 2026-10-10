@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Vaihtoehdot",
+    "aiOverview": "Tekoälyn yleiskatsa",
     "sendTip": "Lähetä tippi",
     "queue": "Jono",
     "watchList": "Seurantalista",
@@ -6348,10 +6349,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuaaliset kohokohdat",
-      "visualPrivacy": "Lähetä valitut ruudut visuaalista analyysia varten."
-    },
     "review": {
       "title": "Projektin tarkistus",
       "shared": "Jaettu kanssasi",
@@ -6767,6 +6764,10 @@
       "sync": "Synkronoi leikkaukset",
       "none": "Luotettavaa rytmiä ei löytynyt.",
       "unchanged": "Leikkauksia ei voitu kohdistaa."
+    },
+    "highlights": {
+      "visual": "Visuaaliset kohokohdat",
+      "visualPrivacy": "Lähetä valitut ruudut visuaalista analyysia varten."
     }
   },
   "jungleMood": {

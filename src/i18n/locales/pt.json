@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Opções",
+    "aiOverview": "AI overview",
     "sendTip": "Enviar gorjeta",
     "queue": "Fila",
     "watchList": "Lista de observação",
@@ -6470,10 +6471,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Momentos visuais de destaque",
-      "visualPrivacy": "Enviar fotogramas selecionados para análise visual."
-    },
     "review": {
       "title": "Revisão do projeto",
       "shared": "Partilhado consigo",
@@ -6892,6 +6889,10 @@
       "sync": "Sincronizar cortes",
       "none": "Nenhum ritmo confiável encontrado.",
       "unchanged": "Não foi possível alinhar os cortes."
+    },
+    "highlights": {
+      "visual": "Momentos visuais de destaque",
+      "visualPrivacy": "Enviar fotogramas selecionados para análise visual."
     },
     "videoTemplates": {
       "heading": "Modelos de vídeo",

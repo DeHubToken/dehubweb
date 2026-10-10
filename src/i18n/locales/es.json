@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Opciones",
+    "aiOverview": "Descripción general de la IA",
     "sendTip": "Enviar propina",
     "queue": "Cola",
     "watchList": "Lista de seguimiento",
@@ -6475,10 +6476,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Momentos visuales destacados",
-      "visualPrivacy": "Enviar fotogramas seleccionados para el análisis visual."
-    },
     "review": {
       "title": "Revisión del proyecto",
       "shared": "Compartido contigo",
@@ -6897,6 +6894,10 @@
       "sync": "Sincronizar cortes",
       "none": "No se encontró un ritmo fiable.",
       "unchanged": "No se pudieron alinear los cortes."
+    },
+    "highlights": {
+      "visual": "Momentos visuales destacados",
+      "visualPrivacy": "Enviar fotogramas seleccionados para el análisis visual."
     },
     "videoTemplates": {
       "heading": "Plantillas de vídeo",

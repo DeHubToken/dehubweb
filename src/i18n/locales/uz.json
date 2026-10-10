@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Parametrlar",
+    "aiOverview": "Sun&#39;iy intellektga umumiy nuqtai nazar",
     "sendTip": "Tip yuborish",
     "queue": "Navbat",
     "watchList": "Koʻrish roʻyxati",
@@ -6488,10 +6489,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Vizual muhim lahzalar",
-      "visualPrivacy": "Vizual tahlil uchun tanlangan kadrlarni yuboring."
-    },
     "review": {
       "title": "Loyihani ko‘rib chiqish",
       "shared": "Siz bilan ulashilgan",
@@ -6907,6 +6904,10 @@
       "sync": "Kesimlarni sinxronlash",
       "none": "Ishonchli ritm topilmadi.",
       "unchanged": "Kesimlarni tekislab bo‘lmadi."
+    },
+    "highlights": {
+      "visual": "Vizual muhim lahzalar",
+      "visualPrivacy": "Vizual tahlil uchun tanlangan kadrlarni yuboring."
     }
   },
   "jungleMood": {

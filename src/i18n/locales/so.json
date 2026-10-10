@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Ikhtiyaarada",
+    "aiOverview": "Aragtida guud ee AI",
     "sendTip": "Dir Bakhshiish",
     "queue": "Safka",
     "watchList": "Liiska Daawashada",
@@ -6367,10 +6368,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Daqiiqadaha muuqaalka ugu fiican",
-      "visualPrivacy": "Dir xargaha la doortay si muuqaalka loo falanqeeyo."
-    },
     "review": {
       "title": "Dib u eegista mashruuca",
       "shared": "Lala wadaagay adiga",
@@ -6786,6 +6783,10 @@
       "sync": "Isku waafaji goynta",
       "none": "Garaac lagu kalsoon yahay lama helin.",
       "unchanged": "Goynta lama waafajin karin."
+    },
+    "highlights": {
+      "visual": "Daqiiqadaha muuqaalka ugu fiican",
+      "visualPrivacy": "Dir xargaha la doortay si muuqaalka loo falanqeeyo."
     }
   },
   "jungleMood": {
