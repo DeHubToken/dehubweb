@@ -403,15 +403,6 @@ export default function CreatorPage() {
         {/* The hero's wall of community work sits behind the studio's headline and composer. */}
         <CreatorHeroWall />
         <CreatorStudio onOpenEditor={openEditor} stickyTop={headerHeight} />
-        <div className="relative z-[1] px-3 pb-6 sm:px-4">
-          <button type="button" onClick={() => navigate('/creator/maboroshi')}
-            className="flex w-full items-center gap-4 rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-4 text-left transition-colors hover:bg-white/[0.08]">
-            <Wand2 className="h-6 w-6 shrink-0 text-white/80" />
-            <span className="flex-1"><span className="block text-base font-bold text-white">{t('creator.toolMaboroshi')}</span>
-              <span className="mt-1 block text-sm text-white/60">{t('creator.toolMaboroshiDesc')}</span></span>
-            <ArrowUpRight className="h-5 w-5 shrink-0 text-white/60" />
-          </button>
-        </div>
         <div>
         <MediumDoors />
 
