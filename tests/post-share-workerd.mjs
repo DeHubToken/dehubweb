@@ -38,7 +38,7 @@ const mf = new Miniflare(convertV4MiniflareOptions({
       return json(newMember ? [{ joined_at: new Date().toISOString() }] : []);
     }
     if (pathname === '/api/account_info/maldoteth') return failDetails ? new WorkerResponse('Unavailable', { status: 503 }) : json({ status: true, result: profile });
-    if (pathname === '/api/poll/6501') return json({ status: true, result: poll });
+    if (pathname === '/api/poll/6501') return poll ? json({ status: true, result: poll }) : new WorkerResponse('Poll not found', { status: 404 });
     if (pathname.startsWith('/api/live/creator/')) return json(progress);
     if (new URL(request.url).pathname.startsWith('/avatars/')) {
       assert.equal(new URL(request.url).origin, 'https://dehubcdn.ams3.digitaloceanspaces.com');
@@ -122,6 +122,10 @@ try {
   poll = { ...initialPoll, totalVotes: 2, options: initialPoll.options.map(o => ({ ...o, voteCount: 1 })) };
   const tied = await mf.dispatchFetch(url);
   writeFileSync('post-card-checks/tied-poll.png', Buffer.from(await tied.arrayBuffer()));
+  poll = null;
+  const noPoll = await mf.dispatchFetch(url);
+  assert.equal(noPoll.headers.get('X-DeHub-Post-Poll'), 'none');
+  assert.ok(noPoll.headers.get('Cache-Control').startsWith('public,'), 'ordinary text posts remain cacheable when the poll endpoint returns its normal 404');
   failDetails = true;
   const unavailable = await mf.dispatchFetch(url);
   assert.equal(unavailable.headers.get('Cache-Control'), 'no-store');
