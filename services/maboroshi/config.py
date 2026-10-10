@@ -10,4 +10,3 @@ def load_env():
             if not line.strip() or line.lstrip().startswith('#'):continue
             key,sep,value=line.partition('=')
             if sep:os.environ.setdefault(key.strip(),value.strip().strip('\"').strip("'"))
-
