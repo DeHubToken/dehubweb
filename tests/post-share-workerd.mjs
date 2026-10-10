@@ -53,9 +53,16 @@ const mf = new Miniflare(convertV4MiniflareOptions({
   },
 }));
 
+const responses = [];
+async function dispatch(...args) {
+  const response = await mf.dispatchFetch(...args);
+  responses.push(response);
+  return response;
+}
+
 try {
   const url = 'https://dehub.io/_og/post/v4/6501.png';
-  const response = await mf.dispatchFetch(url);
+  const response = await dispatch(url);
   assert.equal(response.status, 200, await response.clone().text());
   assert.equal(response.headers.get('Content-Type'), 'image/png');
   assert.equal(response.headers.get('X-DeHub-Post-Counts'), '95,4,1207');
@@ -70,35 +77,35 @@ try {
   assert.equal(png.readUInt32BE(20), 630);
   mkdirSync('post-card-checks', { recursive: true });
   writeFileSync('post-card-checks/worker-post.png', png);
-  const head = await mf.dispatchFetch(url, { method: 'HEAD' });
+  const head = await dispatch(url, { method: 'HEAD' });
   assert.equal(head.status, 200);
   assert.equal((await head.arrayBuffer()).byteLength, 0);
   assert.equal(requests, 2, 'even cached cards recheck the public record');
   post = { ...post, totalVotes: { for: 96 }, commentCount: 5, totalViews: 1210 };
-  const changed = await mf.dispatchFetch(url);
+  const changed = await dispatch(url);
   assert.equal(changed.status, 200);
   assert.equal(changed.headers.get('X-DeHub-Post-Counts'), '96,5,1210');
   assert.notEqual(changed.headers.get('ETag'), response.headers.get('ETag'));
   assert.notDeepEqual(Buffer.from(await changed.arrayBuffer()), png);
   post = { ...post, isHidden: true };
-  const restricted = await mf.dispatchFetch(url);
+  const restricted = await dispatch(url);
   assert.equal(restricted.status, 404);
   assert.equal(restricted.headers.get('Cache-Control'), 'no-store');
   await restricted.arrayBuffer();
   assert.equal(requests, 4);
   post = { ...original, minterAvatarUrl: 'avatars/missing.jpg' };
-  const missingAvatar = await mf.dispatchFetch(url);
+  const missingAvatar = await dispatch(url);
   assert.equal(missingAvatar.status, 200);
   assert.equal(missingAvatar.headers.get('X-DeHub-Post-Avatar'), 'initials');
   assert.notDeepEqual(Buffer.from(await missingAvatar.arrayBuffer()), png);
   post = { ...original, minterAvatarUrl: 'avatars/redirect.jpg' };
-  const redirectedAvatar = await mf.dispatchFetch(url);
+  const redirectedAvatar = await dispatch(url);
   assert.equal(redirectedAvatar.status, 200);
   assert.equal(redirectedAvatar.headers.get('X-DeHub-Post-Avatar'), 'initials');
   assert.ok(!outboundUrls.includes('https://example.com/private-avatar'), 'avatar redirects must not be followed');
   post = { ...original };
   profile = { ...profile, hideBadgeAndBalance: true };
-  const hiddenBadge = await mf.dispatchFetch(url);
+  const hiddenBadge = await dispatch(url);
   assert.equal(hiddenBadge.headers.get('X-DeHub-Post-Badges'), '');
   assert.notEqual(hiddenBadge.headers.get('ETag'), response.headers.get('ETag'));
   await hiddenBadge.arrayBuffer();
@@ -106,7 +113,7 @@ try {
   progress = { totalStreams: 1, selectedBadgeId: 'first-light', cards: [{ id: 'first-light', earnedAt: '2026-10-01' }] };
   newMember = true;
   poll = { ...initialPoll, question: 'Which way should we take the next version of the home feed? Tell us what matters most.', options: Array.from({ length: 4 }, (_, i) => ({ index: i, text: 'A longer option for the home feed with room for all four votes', voteCount: i + 1 })), totalVotes: 10 };
-  const longIdentity = await mf.dispatchFetch(url);
+  const longIdentity = await dispatch(url);
   assert.equal(longIdentity.status, 200);
   assert.equal(longIdentity.headers.get('X-DeHub-Post-Badges'), 'Megalodon,first-light,New');
   writeFileSync('post-card-checks/long-name-multiple-badges-four-options.png', Buffer.from(await longIdentity.arrayBuffer()));
@@ -114,19 +121,19 @@ try {
   newMember = false;
   progress = { totalStreams: 0, selectedBadgeId: null, cards: [] };
   poll = { ...initialPoll, isExpired: false, expiresAt: '2099-01-01' };
-  const open = await mf.dispatchFetch(url);
+  const open = await dispatch(url);
   assert.equal(open.headers.get('X-DeHub-Post-Poll'), 'open');
   assert.equal(open.headers.get('X-DeHub-Poll-Votes'), '');
   writeFileSync('post-card-checks/open-poll.png', Buffer.from(await open.arrayBuffer()));
   poll = { ...initialPoll, isActive: false, totalVotes: 0, options: initialPoll.options.map(o => ({ ...o, voteCount: 0 })) };
-  const empty = await mf.dispatchFetch(url);
+  const empty = await dispatch(url);
   assert.equal(empty.headers.get('X-DeHub-Poll-Votes'), '0');
   writeFileSync('post-card-checks/zero-vote-poll.png', Buffer.from(await empty.arrayBuffer()));
   poll = { ...initialPoll, totalVotes: 2, options: initialPoll.options.map(o => ({ ...o, voteCount: 1 })) };
-  const tied = await mf.dispatchFetch(url);
+  const tied = await dispatch(url);
   writeFileSync('post-card-checks/tied-poll.png', Buffer.from(await tied.arrayBuffer()));
   poll = null;
-  const noPoll = await mf.dispatchFetch(url);
+  const noPoll = await dispatch(url);
   assert.equal(noPoll.headers.get('X-DeHub-Post-Poll'), 'none');
   assert.ok(noPoll.headers.get('Cache-Control').startsWith('public,'), 'ordinary text posts remain cacheable when the poll endpoint returns its normal 404');
   await noPoll.arrayBuffer();
@@ -138,13 +145,16 @@ try {
     await legacy.arrayBuffer();
   }
   failDetails = true;
-  const unavailable = await mf.dispatchFetch(url);
+  const unavailable = await dispatch(url);
   assert.equal(unavailable.headers.get('Cache-Control'), 'no-store');
   assert.equal(unavailable.headers.get('X-DeHub-Post-Badges'), '');
   await unavailable.arrayBuffer();
   console.log('Production Worker preserves public gating and avatars; refreshes badges, poll closure and counts; renders long names, four choices, ties and empty polls.');
 } finally {
   console.log('Closing production Worker resources.');
+  // Header-only assertions still leave PNG streams open. Close them before
+  // Miniflare drains its HTTP connections during disposal.
+  await Promise.allSettled(responses.filter(response => !response.bodyUsed).map(response => response.body?.cancel()));
   await mf.dispose();
   console.log('Production Worker resources closed.');
 }
