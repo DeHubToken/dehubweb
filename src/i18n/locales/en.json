@@ -7258,6 +7258,19 @@
       "received": "Received version {{revision}}.",
       "upToDate": "Already up to date.",
       "protectedUndo": "Older local edits overlap shared changes. Undo will preserve the shared changes."
+    },
+    "live": {
+      "stopEdits": "Stop live edits",
+      "receiveEdits": "Receive live edits",
+      "shareEdits": "Share edits live",
+      "waiting": "Waiting for your edit to finish",
+      "transferring": "Transferring live edits…",
+      "sharing": "Sharing live edits",
+      "receiving": "Receiving live edits",
+      "paused": "Live edits paused",
+      "retryRecovery": "Retry recovery",
+      "personalCopy": "Save a personal copy",
+      "privateHint": "Presence alone shares no edits. Share edits live uploads new sources privately. Save to cloud keeps a permanent version."
     }
   },
   "jungleMood": {
