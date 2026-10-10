@@ -14,18 +14,28 @@ import { storageImage, deviceWidth } from '@/lib/media-url';
 interface PinnedCommunitiesProps {
   walletAddress: string;
   isOwnProfile: boolean;
+  /** The community the profile header wears on desktop; its card shows on phones only. */
+  desktopHiddenId?: string;
+  /** Lets the header's desktop strip open the same picker. */
+  pickerOpen?: boolean;
+  onPickerOpenChange?: (open: boolean) => void;
 }
 
-export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommunitiesProps) {
+export function PinnedCommunities({ walletAddress, isOwnProfile, desktopHiddenId, pickerOpen: pickerOpenProp, onPickerOpenChange }: PinnedCommunitiesProps) {
   const navigate = useNavigate();
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
-  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerOpenState, setPickerOpenState] = useState(false);
+  const pickerOpen = pickerOpenProp ?? pickerOpenState;
+  const setPickerOpen = onPickerOpenChange ?? setPickerOpenState;
   const { t } = useTranslation();
 
   if (pinned.length === 0 && !isOwnProfile) return null;
 
+  // When the header wears the only pin on desktop, drop the empty gap there too.
+  const desktopEmpty = !!desktopHiddenId && pinned.length > 0 && pinned.every(p => p.community_id === desktopHiddenId);
+
   return (
-    <div className="mt-3">
+    <div className={desktopEmpty ? 'mt-3 lg:hidden' : 'mt-3'}>
       <div className="space-y-2">
         {pinned.map(pin => {
           const community = pin.communities as Community | undefined;
@@ -33,6 +43,7 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
           return (
             <PinnedCommunityCard
               key={pin.id}
+              className={community.id === desktopHiddenId ? 'lg:hidden' : undefined}
               community={community}
               onClick={() => navigate(`/app/communities/${community.slug}`)}
               isOwnProfile={isOwnProfile}
@@ -63,11 +74,11 @@ export function PinnedCommunities({ walletAddress, isOwnProfile }: PinnedCommuni
   );
 }
 
-function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void }) {
+function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins, className }: { community: Community; onClick: () => void; isOwnProfile?: boolean; onManagePins?: () => void; className?: string }) {
   const { t } = useTranslation();
 
   return (
-    <div className="relative">
+    <div className={className ? `relative ${className}` : 'relative'}>
       <button
         onClick={onClick}
         className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.07] transition-colors text-left relative overflow-hidden"
