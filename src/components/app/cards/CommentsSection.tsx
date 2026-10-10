@@ -1,5 +1,4 @@
 import { useDraftState } from '@/hooks/use-draft-state';
-import { accountDraftKey } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Comments Section Component
@@ -15,7 +14,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useMemo, useRef, useEffect, useLayoutEffect, useCallback, createContext, useContext, lazy, Suspense, memo } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
-import { saveDraft, loadDraft, clearDraft, type CommentDraft } from '@/lib/comment-draft-cache';
+import { commentDraftKey, saveDraft, loadDraft, clearDraft, type CommentDraft } from '@/lib/comment-draft-cache';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -1012,9 +1011,9 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
   // Whatever was left unsent last time, restored whole: the text, the reply it
   // was aimed at and a GIF. Read once here rather than in each initialiser so
   // the three can't disagree.
-  const commentDraftScope = accountDraftKey(walletAddress, `comments:${tokenId}`) ?? '';
+  const commentDraftScope = commentDraftKey(walletAddress, tokenId);
   const [restoredDraft] = useState(() => loadDraft(commentDraftScope));
-  const [newComment, setNewComment] = useState(() => restoredDraft?.text ?? '');
+  const [newComment, setNewComment] = useDraftState(`comment:${tokenId}:text`, restoredDraft?.text ?? '');
   const [aiRewriting, setAiRewriting] = useState(false);
   const [aiMenu, setAiMenu] = useState<'closed' | 'open' | 'vibes'>('closed');
   const aiRewrite = async (mode: 'grammar' | 'style', style?: string) => {
@@ -2206,7 +2205,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
       if (loadDraft(commentDraftScope)?.text === submittedText) clearDraft(commentDraftScope);
       coachReset();
       setReplyTo(current => current?.id === replyTarget?.id ? null : current);
-      setNewComment(current => current === submittedText ? '' : current);
+      setNewComment.complete(submittedText, '');
       setVoiceNote(null);
       // Not removeVoiceNote: the URL has to outlive this, to be put back if the
       // post fails. The player built on it goes now, though.

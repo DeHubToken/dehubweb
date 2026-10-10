@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import {
   __resetDraftCacheForTests,
   clearDraft,
+  commentDraftKey,
   loadDraft,
   saveDraft,
 } from '@/lib/comment-draft-cache';
@@ -17,6 +18,19 @@ describe('comment draft cache', () => {
   beforeEach(() => {
     localStorage.clear();
     __resetDraftCacheForTests();
+  });
+
+  it('restores guest replies after reload without mixing posts or signed-in accounts', () => {
+    const guest = commentDraftKey(undefined, '42');
+    const account = commentDraftKey('ALICE', '42');
+    saveDraft(guest, { text: '  guest reply\n', parentId: 'c1', parentUsername: 'ada' });
+    saveDraft(account, { text: 'account reply' });
+    __resetDraftCacheForTests();
+
+    expect(loadDraft(commentDraftKey(null, '42'))).toMatchObject({ text: '  guest reply\n', parentId: 'c1' });
+    expect(loadDraft(commentDraftKey('alice', '42'))?.text).toBe('account reply');
+    expect(loadDraft(commentDraftKey(undefined, '43'))).toBeNull();
+    expect(loadDraft(commentDraftKey('bob', '42'))).toBeNull();
   });
 
   it('gives a reply draft back on the next open, reply target and all', () => {
