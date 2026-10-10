@@ -191,7 +191,7 @@ export function ProfileHeader({
         <Skeleton className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
       ) : (
         <button 
-          className="aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
+          className="block aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
           onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
         >
           {/* The cover is the profile's LCP element. It was always fetched at
@@ -214,7 +214,8 @@ export function ProfileHeader({
         <div className="relative -mt-12 sm:-mt-14 mb-1.5 flex items-end justify-between">
           <div className="relative">
               <button 
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 p-1 cursor-pointer disabled:cursor-default"
+                data-keep-dark
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 backdrop-blur-none p-1 cursor-pointer disabled:cursor-default"
                 onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
                 disabled={!profile.avatarUrl}
               >
