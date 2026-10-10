@@ -1,3 +1,4 @@
+import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 /**
  * Right-hand inspector: project canvas settings + selected-clip properties (text).
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
@@ -40,6 +41,7 @@ const ASPECTS: { value: AspectPreset; label: string }[] = [
 ];
 
 export function Inspector() {
+  const draftFocus = useEditorDraftFocus("inspector", true);
   const { t } = useTranslation();
   const settings = useEditorStore((s) => s.settings);
   const updateSettings = useEditorStore((s) => s.updateSettings);
@@ -95,7 +97,7 @@ export function Inspector() {
 
 
   return (
-    <aside className="flex h-full w-full flex-col overflow-y-auto border-l border-white/10 bg-black/60 backdrop-blur-[24px]">
+    <aside {...draftFocus.props} className="flex h-full w-full flex-col overflow-y-auto border-l border-white/10 bg-black/60 backdrop-blur-[24px]">
       <header className="sticky top-0 z-10 border-b border-white/10 bg-black/80 px-3 py-2 backdrop-blur-[24px]">
         {tabbed ? (
           <div role="tablist" className="grid grid-cols-2 gap-0.5 rounded-lg bg-white/5 p-0.5">
