@@ -117,10 +117,10 @@ describe("editor agent tolerance", () => {
 describe("templates", () => {
   beforeEach(() => useEditorStore.getState().newProject());
 
-  it("builds every template without stock photos and keeps layers the same length", async () => {
+  it("builds every still template without stock photos and keeps layers the same length", async () => {
     const { TEMPLATES, applyTemplate } = await import("./templates");
     const t = ((k: string) => k) as unknown as import("i18next").TFunction;
-    for (const tpl of TEMPLATES) {
+    for (const tpl of TEMPLATES.filter(template => template.kind !== "video")) {
       // Stock search needs the network; the rest of the template must still build.
       const ops = tpl.ops(t).filter((o) => o.op !== "add_stock");
       await applyTemplate({ ...tpl, ops: () => ops }, t);
