@@ -279,6 +279,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
                 button). On the home feed this slot toggles the tab's filters. */}
             {postPage ? (
               <button
+                data-post-nav-back
                 onClick={handleBack}
                 className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
                 aria-label="Back"
