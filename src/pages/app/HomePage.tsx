@@ -24,6 +24,7 @@ import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { FeedFilterAnchor } from '@/components/app/navigation/FeedFilterAnchor';
+import { FeedPillGlow } from '@/components/app/navigation/FeedPillGlow';
 import { setFeedTabsOpen } from '@/lib/feed-tabs-reveal';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -1075,6 +1076,7 @@ export default function HomePage() {
             </div>
         </div>
         {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
+        {!islandTopBar && <FeedPillGlow />}
         </div>
         {theme === 'system' && <div ref={homeFiltersRef} className="absolute inset-x-0 top-0 z-0 pointer-events-none" />}
         </FeedFilterAnchor>
