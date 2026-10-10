@@ -129,13 +129,61 @@ function textLines(lines, x, y, size, lineHeight, color, weight = 500) {
   return `<text x="${x}" y="${y}" font-size="${size}" font-weight="${weight}" fill="${color}">${lines.map((line, i) => `<tspan x="${x}" dy="${i ? lineHeight : 0}">${escape(line)}</tspan>`).join('')}</text>`;
 }
 
-/** Satin frame: the official mark, Exo, a left author rail and quiet silver waves. */
-export function renderPostCardSvg(data, { logo, avatar = '' }) {
-  const titleSize = data.title.length > 140 ? 34 : 42;
-  const title = wrapPostText(data.title, titleSize, 698, data.body ? 3 : 7);
-  const bodySize = data.title ? 28 : data.body.length > 350 ? 30 : 36;
-  const bodyY = title.length ? 165 + (title.length - 1) * 52 + 70 : 178;
-  const body = wrapPostText(data.body, bodySize, 698, Math.max(1, Math.floor((497 - bodyY) / (bodySize * 1.4)) + 1));
+function authorIdentity(author, badges) {
+  const height = 22 * .8052;
+  const widths = badges.map(badge => badge.kind === 'new' ? 49 : height * (badge.bounds[2] - badge.bounds[0]) / (badge.bounds[3] - badge.bounds[1]));
+  const reserved = widths.reduce((sum, width) => sum + width + 5, 0);
+  const lines = wrapPostText(author, 22, Math.max(65, 184 - reserved), 2);
+  const baseline = 176 + (lines.length - 1) * 27;
+  let x = 143 + textWidth(lines.at(-1) || '', 22) + 5;
+  const artwork = badges.map((badge, i) => {
+    const width = widths[i];
+    const left = x;
+    x += width + 5;
+    if (badge.kind === 'new') return `<g data-profile-badge="New"><rect x="${left}" y="${baseline - 18}" width="49" height="20" rx="5" fill="#222328" stroke="#42434a"/><path transform="translate(${left + 5} ${baseline - 13}) scale(.45)" d="m10 1 3 6 6 1-4.5 4.5 1 6-5.5-3-5.5 3 1-6L1 8l6-1Z" fill="none" stroke="#bbbcc3" stroke-width="1.5"/><text x="${left + 20}" y="${baseline - 3}" font-size="12" fill="#bbbcc3">New</text></g>`;
+    const [l, t, r, b] = badge.bounds;
+    return `<svg data-profile-badge="${escape(badge.name)}" x="${left}" y="${baseline - height}" width="${width}" height="${height}" viewBox="${l} ${t} ${r - l} ${b - t}" overflow="visible"><image width="${badge.canvas}" height="${badge.canvas}" xlink:href="${badge.uri}"/></svg>`;
+  }).join('');
+  return { svg: textLines(lines, 143, 176, 22, 27, '#eeeef2') + artwork, handleY: baseline + 31 };
+}
+
+function pollLayout(poll) {
+  if (!poll) return null;
+  const dense = poll.options.length >= 4;
+  const question = wrapPostText(poll.question, 19, 698, dense ? 2 : 3);
+  const rows = poll.options.map(option => {
+    const lines = wrapPostText(option.text, 17, 592, dense ? 1 : 2);
+    return { ...option, lines, height: lines.length > 1 ? 54 : 36 };
+  });
+  const height = question.length * 25 + 13 + rows.reduce((sum, row) => sum + row.height + 7, 0) + 27;
+  return { ...poll, question, rows, top: 510 - height };
+}
+
+function renderPoll(poll) {
+  if (!poll) return '';
+  let y = poll.top + poll.question.length * 25 + 13;
+  const rows = poll.rows.map((row, index) => {
+    const top = y;
+    y += row.height + 7;
+    const barWidth = poll.ended ? Math.max(0, Math.min(698, 698 * row.percent / 100)) : 0;
+    const check = row.winner ? `<path d="m0 5 4 4 8-8" transform="translate(428 ${top + 12})" fill="none" stroke="#f1f1f4" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>` : '';
+    return `<g data-poll-option="${row.index}" data-winner="${row.winner}"><defs><clipPath id="poll-${index}"><rect x="415" y="${top}" width="698" height="${row.height}" rx="7"/></clipPath></defs><rect x="415" y="${top}" width="698" height="${row.height}" rx="7" fill="#15161a" stroke="#2a2b31"/>${barWidth ? `<rect x="415" y="${top}" width="${barWidth}" height="${row.height}" fill="${row.winner ? '#5f6066' : '#34353c'}" clip-path="url(#poll-${index})"/>` : ''}${check}${textLines(row.lines, row.winner ? 451 : 430, top + 24, 17, 21, '#e4e4e9')}${poll.ended ? `<text x="1099" y="${top + 24}" text-anchor="end" font-size="17" fill="#e4e4e9">${row.percent}%</text>` : ''}</g>`;
+  }).join('');
+  const label = poll.ended ? `Closed · ${poll.totalVotes} ${poll.totalVotes === 1 ? 'vote' : 'votes'}` : 'Poll open · Vote on DeHub';
+  return `<g data-poll-state="${poll.ended ? 'closed' : 'open'}">${textLines(poll.question, 415, poll.top + 19, 19, 25, '#d9dae0')}${rows}<text x="415" y="${y + 17}" font-size="15" fill="#92959f">${escape(label)}</text></g>`;
+}
+
+/** Official store artwork, Exo, and the same badge stills as the profile. */
+export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges = [] }) {
+  const poll = pollLayout(data.poll);
+  const copyBottom = poll ? poll.top - 28 : 497;
+  const titleSize = poll ? 30 : data.title.length > 140 ? 34 : 42;
+  const titleY = poll ? 139 : 165;
+  const title = wrapPostText(data.title, titleSize, 698, poll ? 1 : data.body ? 3 : 7);
+  const bodySize = poll ? (copyBottom < 215 ? 23 : 28) : data.title ? 28 : data.body.length > 350 ? 30 : 36;
+  const bodyY = title.length ? titleY + (title.length - 1) * 52 + (poll ? 48 : 70) : poll ? 141 : 178;
+  const body = wrapPostText(data.body, bodySize, 698, Math.max(1, Math.floor((copyBottom - bodyY) / (bodySize * 1.4)) + 1));
+  const identity = authorIdentity(data.author, badges);
   const initials = Array.from(data.author).slice(0, 2).join('').toUpperCase();
   const date = new Date(data.createdAt);
   const dateText = Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
@@ -151,8 +199,8 @@ export function renderPostCardSvg(data, { logo, avatar = '' }) {
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111214"/><stop offset=".4" stop-color="#060607"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>
-    <linearGradient id="silver" x2="0" y2="1"><stop stop-color="#090a0d"/><stop offset=".2" stop-color="#6b6e79"/><stop offset=".28" stop-color="#d5d5de"/><stop offset=".35" stop-color="#222329"/><stop offset=".56" stop-color="#08090b"/><stop offset=".78" stop-color="#9d9faa"/><stop offset=".86" stop-color="#292a31"/><stop offset="1" stop-color="#08090a"/></linearGradient>
-    <linearGradient id="glint"><stop stop-color="#8f769c"/><stop offset=".38" stop-color="#96949d"/><stop offset=".65" stop-color="#7dabb4"/><stop offset=".86" stop-color="#b39272"/><stop offset="1" stop-color="#73737e"/></linearGradient>
+    <linearGradient id="chrome-fade" x2="0" y2="1"><stop stop-color="#000"/><stop offset=".34" stop-color="#fff"/></linearGradient>
+    <mask id="chrome-mask"><rect y="571" width="1200" height="59" fill="url(#chrome-fade)"/></mask>
     <clipPath id="face"><rect x="60" y="151" width="66" height="66" rx="18"/></clipPath>
     <clipPath id="copy"><rect x="410" y="109" width="708" height="408"/></clipPath>
   </defs>
@@ -163,22 +211,19 @@ export function renderPostCardSvg(data, { logo, avatar = '' }) {
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
   ${avatar ? `<image x="60" y="151" width="66" height="66" preserveAspectRatio="xMidYMid slice" clip-path="url(#face)" xlink:href="${avatar}"/>` : `<text x="93" y="193" text-anchor="middle" fill="#dedee3" font-family="Exo" font-size="23">${escape(initials)}</text>`}
   <g font-family="Exo" font-weight="500">
-    ${textLines(wrapPostText(data.author, 22, 184, 2), 143, 176, 22, 27, '#eeeef2')}
-    <text x="143" y="${data.author.length > 14 ? 229 : 207}" font-size="17" fill="#9698a3">${escape(wrapPostText(data.handle ? `@${data.handle}` : '', 17, 184, 1)[0] || '')}</text>
+    ${identity.svg}
+    <text x="143" y="${identity.handleY}" font-size="17" fill="#9698a3">${escape(wrapPostText(data.handle ? `@${data.handle}` : '', 17, 184, 1)[0] || '')}</text>
     ${stats}
     <text x="60" y="520" font-size="17" fill="#8b8e99">${escape(dateText)}</text>
     <g clip-path="url(#copy)">
-      ${textLines(title, 415, 165, titleSize, 52, '#f4f4f6')}
+      ${textLines(title, 415, titleY, titleSize, 52, '#f4f4f6')}
       ${textLines(body, 415, bodyY, bodySize, bodySize * 1.4, '#c5c6ce')}
+      ${renderPoll(poll)}
     </g>
     <text x="415" y="558" font-size="18" fill="#868993">dehub.io</text>
     <text x="1088" y="558" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post</text>
     <path d="M1100 557l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <g opacity=".52">
-    <path d="M-30 572C90 655 227 568 383 593S567 638 727 595 1006 626 1230 568L1230 630H-30Z" fill="url(#silver)"/>
-    <path d="M-30 574C90 657 227 570 383 595S567 640 727 597 1006 628 1230 570" fill="none" stroke="url(#glint)" stroke-width="1.4"/>
-    <path d="M-30 586C130 662 235 583 379 604S580 645 735 609 1043 650 1230 582" fill="none" stroke="#9799a3" stroke-width="1" opacity=".6"/>
-  </g>
+  ${chrome ? `<image data-brand-artwork="store-chrome-wave" x="0" y="-119" width="1200" height="800" xlink:href="${chrome}" opacity=".48" mask="url(#chrome-mask)"/>` : ''}
   </svg>`;
 }

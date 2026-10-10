@@ -1,0 +1,15 @@
+export const badgePosterBounds: Record<string, [number, number, number, number]> = {
+  'Crab': [12, 21, 119, 117],
+  'Ghost Lobster': [9, 13, 121, 118],
+  'Piranha': [8, 16, 121, 124],
+  'Giant Tortoise': [11, 17, 122, 112],
+  'King Cobra': [16, 8, 117, 124],
+  'Octopus': [12, 15, 122, 124],
+  'Crocodile': [8, 17, 119, 123],
+  'Dolphin': [19, 9, 120, 122],
+  'Tiger Shark': [7, 13, 121, 121],
+  'Great White Shark': [5, 15, 120, 121],
+  'Killer Whale': [19, 11, 93, 98],
+  'Blue Whale': [16, 24, 122, 126],
+  'Megalodon': [5, 19, 124, 126],
+};

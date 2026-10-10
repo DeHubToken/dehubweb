@@ -1630,6 +1630,18 @@ const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I';
 
 /** Every row of a PostgREST select, or null. Never throws. */
+let shareBadgePrice;
+async function fetchShareBadgePrice() {
+  if (shareBadgePrice && shareBadgePrice.expires > Date.now()) return shareBadgePrice.value;
+  const response = await fetch(`${SUPABASE_FN_BASE}/get-dhb-price`, {
+    signal: AbortSignal.timeout(3000), redirect: 'manual', headers: { apikey: SUPABASE_ANON_KEY },
+  });
+  if (!response.ok) return null;
+  const value = await response.json();
+  shareBadgePrice = { value, expires: Date.now() + 300000 };
+  return value;
+}
+
 async function supabaseRows(query) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 6000);
@@ -6009,7 +6021,10 @@ async function handleRequest(request, env, ctx) {
   const textPostCard = pathname.match(/^\/_og\/post\/v1\/([1-9]\d{0,14})\.png$/);
   if (textPostCard) {
     const { handlePostShareImage } = await import('./server/post-share-image.js');
-    return handlePostShareImage(request, env, ctx, textPostCard[1], fetchPostRecord);
+    return handlePostShareImage(request, env, ctx, textPostCard[1], fetchPostRecord, {
+      rows: supabaseRows,
+      price: fetchShareBadgePrice,
+    });
   }
   if (pathname.startsWith(OG_SOURCE_PREFIX)) return ogSourceResponse(request, env, pathname);
 
