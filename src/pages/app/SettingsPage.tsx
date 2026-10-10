@@ -529,22 +529,22 @@ function ProfileSettings() {
   const [displayName, setDisplayName] = useSurfaceDraft("pages/app/SettingsPage.tsx:displayName", '');
   const [username, setUsername] = useSurfaceDraft("pages/app/SettingsPage.tsx:username", '');
   const [bio, setBio] = useSurfaceDraft("pages/app/SettingsPage.tsx:bio", '');
-  const [twitterLink, setTwitterLink] = useState('');
-  const [discordLink, setDiscordLink] = useState('');
-  const [instagramLink, setInstagramLink] = useState('');
-  const [tiktokLink, setTiktokLink] = useState('');
-  const [youtubeLink, setYoutubeLink] = useState('');
-  const [telegramLink, setTelegramLink] = useState('');
-  const [facebookLink, setFacebookLink] = useState('');
+  const [twitterLink, setTwitterLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:twitterLink", '');
+  const [discordLink, setDiscordLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:discordLink", '');
+  const [instagramLink, setInstagramLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:instagramLink", '');
+  const [tiktokLink, setTiktokLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:tiktokLink", '');
+  const [youtubeLink, setYoutubeLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:youtubeLink", '');
+  const [telegramLink, setTelegramLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:telegramLink", '');
+  const [facebookLink, setFacebookLink] = useSurfaceDraft("pages/app/SettingsPage.tsx:facebookLink", '');
   // Self-reported follower counts for the linked socials, feeding the profile's
   // total reach. They live in `customs`, which the API replaces wholesale, so
   // the blob is kept as loaded and resent around the counts on save.
-  const [socialFollowers, setSocialFollowers] = useState<SocialFollowerInputs>(emptySocialFollowerInputs);
+  const [socialFollowers, setSocialFollowers] = useSurfaceDraft<SocialFollowerInputs>("pages/app/SettingsPage.tsx:socialFollowers", emptySocialFollowerInputs);
   const [originalSocialFollowers, setOriginalSocialFollowers] = useState<SocialFollowerInputs>(emptySocialFollowerInputs);
   const customsRef = useRef<Record<string, unknown>>({});
   const setFollowerInput = useCallback((platform: SocialPlatform, value: string) => {
     setSocialFollowers((prev) => ({ ...prev, [platform]: sanitizeFollowerInput(value) }));
-  }, []);
+  }, [setSocialFollowers]);
 
   const [originalValues, setOriginalValues] = useState({
     displayName: '',
@@ -613,16 +613,16 @@ function ProfileSettings() {
     setDisplayName.initialize(loadedDisplayName);
     setUsername.initialize(loadedUsername);
     setBio.initialize(loadedBio);
-    setTwitterLink(loadedTwitter);
-    setDiscordLink(loadedDiscord);
-    setInstagramLink(loadedInstagram);
-    setTiktokLink(loadedTiktok);
-    setYoutubeLink(loadedYoutube);
-    setTelegramLink(loadedTelegram);
-    setFacebookLink(loadedFacebook);
+    setTwitterLink.initialize(loadedTwitter);
+    setDiscordLink.initialize(loadedDiscord);
+    setInstagramLink.initialize(loadedInstagram);
+    setTiktokLink.initialize(loadedTiktok);
+    setYoutubeLink.initialize(loadedYoutube);
+    setTelegramLink.initialize(loadedTelegram);
+    setFacebookLink.initialize(loadedFacebook);
     customsRef.current = customs && typeof customs === 'object' ? customs : {};
     const loadedFollowers = readSocialFollowerInputs(customsRef.current);
-    setSocialFollowers(loadedFollowers);
+    setSocialFollowers.initialize(loadedFollowers);
     setOriginalSocialFollowers(loadedFollowers);
 
     setOriginalValues({
@@ -644,7 +644,7 @@ function ProfileSettings() {
     // Settings renders the preview at w-20, above the default avatar size.
     setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl, deviceWidth(80)));
     setCoverPreview(buildCoverUrl(address, rawCoverUrl));
-  }, [profileData, authUser?.address, setBio, setDisplayName, setUsername]);
+  }, [profileData, authUser?.address, setBio, setDisplayName, setUsername, setDiscordLink, setFacebookLink, setInstagramLink, setSocialFollowers, setTelegramLink, setTiktokLink, setTwitterLink, setYoutubeLink]);
   
   // Check username availability
   useEffect(() => {
@@ -923,7 +923,19 @@ function ProfileSettings() {
     if (avatarFile) data.avatarImg = avatarFile;
     if (coverFile) data.coverImg = coverFile;
     
-    updateMutation.mutate(data);
+    updateMutation.mutate(data, { onSuccess: () => {
+        setDisplayName.complete(displayName, displayName);
+        setUsername.complete(username, username);
+        setBio.complete(bio, bio);
+        setTwitterLink.complete(twitterLink, twitterLink);
+        setDiscordLink.complete(discordLink, discordLink);
+        setInstagramLink.complete(instagramLink, instagramLink);
+        setTiktokLink.complete(tiktokLink, tiktokLink);
+        setYoutubeLink.complete(youtubeLink, youtubeLink);
+        setTelegramLink.complete(telegramLink, telegramLink);
+        setFacebookLink.complete(facebookLink, facebookLink);
+        setSocialFollowers.complete(socialFollowers, socialFollowers);
+      } });
   };
   
   // Only block the form on the first-ever load — cached tab returns render

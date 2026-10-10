@@ -130,14 +130,14 @@ function PostModalForAccount({ isOpen, onClose, initialFiles, onFilesProcessed, 
   // Set initial category when modal opens
   useEffect(() => {
     if (isOpen && initialCategory) {
-      actions.setSelectedCategory(initialCategory);
+      actions.setSelectedCategory.initialize(initialCategory);
     }
   }, [isOpen, initialCategory]);
 
   // Pre-initialize poll when opened with initialPoll
   useEffect(() => {
     if (isOpen && initialPoll) {
-      actions.setPoll(initialPoll);
+      actions.setPoll.initialize(initialPoll);
     }
   }, [isOpen, initialPoll]);
 

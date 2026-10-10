@@ -1,6 +1,6 @@
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
-import { readDraft, writeDraft, clearDraft, flushDrafts } from '@/lib/draft-cache';
+import { readCurrentDraft, readDraft, writeDraft, clearDraft, flushDrafts } from '@/lib/draft-cache';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -534,6 +534,15 @@ export function usePostForm(
   // keystroke costs main-thread time exactly while the user is typing. An
   // unmount-only flush (below) persists the tail of what was typed so a
   // hard navigation within the 500ms window can't lose it.
+  const activeSnapshotJson = JSON.stringify({
+    text, titleText, showTitle, isMature, isForKids, shopLinks, shopListingIds,
+    selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+    isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount,
+    poll, scheduledDate: scheduledDate ? scheduledDate.toISOString() : null,
+  });
+  const latestActiveSnapshot = useRef(activeSnapshotJson);
+  latestActiveSnapshot.current = activeSnapshotJson;
   const persistDraftRef = useRef<(() => void) | null>(null);
   useEffect(() => {
     const persistDraft = () => {
@@ -1124,6 +1133,8 @@ export function usePostForm(
   }, [processImageFiles]);
 
   const resetForm = useCallback(() => {
+    // A completed request must not reset a newer composition made while it ran.
+    if (latestActiveSnapshot.current !== activeSnapshotJson) return;
     // Belt and braces — the signature check in handlePost already refuses to
     // reuse this key for different content, but the post is out, so there is
     // nothing left for it to deduplicate against.
@@ -1168,9 +1179,9 @@ export function usePostForm(
     }
     categorySavedRef.current = false;
     persistDraftRef.current = null;
-    // Clear persisted active draft
-    clearActiveDraft(activeKey);
-  }, [setPoll, setPpvAmount, setSelectedCategory, setShopLinks, setText, setTitleText, setTokenAmount, setTokenContract, setTokenSymbol, setW2eComments, setW2eTotal, setW2eViews, poll, ppvAmount, selectedCategory, text, titleText, tokenAmount, tokenContract, w2eComments, w2eTotal, w2eViews, shopLinks, tokenSymbol]);
+    // Compare fresh disk state as another tab may have continued this draft.
+    if (activeKey && readCurrentDraft(activeKey) === activeSnapshotJson) clearActiveDraft(activeKey);
+  }, [activeSnapshotJson, activeKey, setPoll, setPpvAmount, setSelectedCategory, setShopLinks, setText, setTitleText, setTokenAmount, setTokenContract, setTokenSymbol, setW2eComments, setW2eTotal, setW2eViews, poll, ppvAmount, selectedCategory, text, titleText, tokenAmount, tokenContract, w2eComments, w2eTotal, w2eViews, shopLinks, tokenSymbol]);
 
   // Load drafts from DB on mount
   useEffect(() => {

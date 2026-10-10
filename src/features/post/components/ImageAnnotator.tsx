@@ -53,6 +53,7 @@ interface ImageAnnotatorProps {
   imageUrl: string;
   fileName: string;
   fileType: string;
+  sourceIdentity: string;
   onApply: (file: File) => void;
 }
 
@@ -111,11 +112,11 @@ function paintAnnotations(ctx: CanvasRenderingContext2D, items: Annotation[], w:
   }
 }
 
-export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, onApply }: ImageAnnotatorProps) {
+export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, sourceIdentity, onApply }: ImageAnnotatorProps) {
   const [tool, setTool] = useState<Tool>('draw');
   const [color, setColor] = useState(COLORS[2]);
   const [sizeStep, setSizeStep] = useState(1);
-  const annotationScope = `${imageUrl.startsWith("blob:") ? fileName + ":" + fileType : imageUrl}`;
+  const annotationScope = sourceIdentity;
   const [items, setItems] = useDraftState<Annotation[]>(`annotation:${annotationScope}:items`, []);
   const [pendingText, setPendingText] = useDraftState<{ at: Point; value: string } | null>(`annotation:${annotationScope}:text`, null);
   const [isSaving, setIsSaving] = useState(false);
