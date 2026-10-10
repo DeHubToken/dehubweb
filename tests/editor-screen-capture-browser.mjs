@@ -89,9 +89,15 @@ try {
   assert.deepEqual(errors, []);
   const movie = resolve(directory, 'screen-and-voiceover.webm'); await writeFile(movie, Buffer.from(saved.bytes));
   const metadata = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', movie], { encoding: 'utf8' }));
+  const packetInfo = JSON.parse(execFileSync('ffprobe', ['-v', 'error', '-show_packets', '-show_entries', 'packet=pts_time,duration_time,stream_index', '-of', 'json', movie], { encoding: 'utf8' }));
+  await writeFile(resolve(directory, 'media-probe.json'), JSON.stringify({ metadata, packetInfo, captured, tracks: saved.tracks }, null, 2));
   assert.equal(metadata.streams.filter(stream => stream.codec_type === 'audio').length, 1);
   assert.equal(metadata.streams.filter(stream => stream.codec_type === 'video').length, 1);
-  assert(Number(metadata.format.duration) >= 2.3);
+  // MediaRecorder's streaming WebM can omit the container duration. Measure saved packet clocks.
+  const clocks = packetInfo.packets.map(packet => ({ start: Number(packet.pts_time), duration: Number(packet.duration_time ?? 0) }));
+  assert(clocks.length > 0 && clocks.every(clock => Number.isFinite(clock.start) && Number.isFinite(clock.duration) && clock.duration >= 0));
+  const duration = Math.max(...clocks.map(clock => clock.start + clock.duration)) - Math.min(...clocks.map(clock => clock.start));
+  assert(duration >= 2.3, `Saved packet clocks contain only ${duration} seconds`);
   const pixels = execFileSync('ffmpeg', ['-v', 'error', '-i', movie, '-an', '-vf', 'scale=8:8', '-pix_fmt', 'rgb24', '-f', 'rawvideo', '-']);
   const frames = pixels.length / (8 * 8 * 3); assert(Number.isInteger(frames) && frames >= 30);
   let red = false, blue = false;
@@ -113,11 +119,12 @@ try {
     return 2 * Math.hypot(real, imaginary) / count;
   }
   const sharedAudio = amplitude(440), voiceover = amplitude(880);
+  await writeFile(resolve(directory, 'decoded-media.json'), JSON.stringify({ frames, red, blue, audioSamples: count, audioSeconds: count / rate, sharedAudio, voiceover }, null, 2));
   assert(sharedAudio > .03, `Shared audio is missing from the saved recording: ${sharedAudio}`);
   assert(voiceover > .01, `Voiceover is missing from the saved recording: ${voiceover}`);
   const proof = { browser: browser.version(), sourceSha256: createHash('sha256').update(productionSource).digest('hex'), captured,
     sourceAPIReplacedWithSyntheticStreams: false, controlledMicrophoneDevice: true, physicalMicrophoneQualityVerified: false,
-    savedAudioTracks: 1, savedVideoTracks: 1, duration: Number(metadata.format.duration), frames, bothSourceColorsDecoded: true,
+    savedAudioTracks: 1, savedVideoTracks: 1, duration, durationMeasuredFromSavedPacketClocks: true, frames, bothSourceColorsDecoded: true,
     sharedAudioAmplitude: sharedAudio, voiceoverAmplitude: voiceover, allCaptureAndMixerTracksEnded: true };
   await writeFile(resolve(directory, 'verification.json'), JSON.stringify(proof, null, 2));
   console.log(JSON.stringify(proof));
