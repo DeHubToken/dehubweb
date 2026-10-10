@@ -885,7 +885,6 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [forwardMessageTarget, setForwardMessageTarget] = useState<DmMessage | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-  const [replyTarget, setReplyTarget] = useState<DmMessage | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
@@ -897,6 +896,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
    * orphaned key per person you ever messaged.
    */
   const draftScope = conversationIdentity(conversation);
+  const [replyTarget, setReplyTarget] = useDraftState<DmMessage | null>(`${draftScope}:reply`, null);
   const dmFeeCacheKey = `dehub-dm-fee-${draftScope}`;
   const [dmFee, setDmFeeRaw] = useState<DmFee | null>(() => {
     // A fee the other side has since changed must not be believed forever —
@@ -1398,12 +1398,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
   const handleReply = useCallback((message: DmMessage) => {
     setReplyTarget(message);
-  }, []);
+  }, [setReplyTarget]);
 
   // A quote left open in one thread must not ride along into the next.
   useEffect(() => {
-    setReplyTarget(null);
-  }, [draftScope]);
+    setReplyTarget.complete(replyTarget, null);
+  }, [draftScope, replyTarget, setReplyTarget]);
 
   /*
    * The composer is shared with Public Chat and speaks its Message shape, so
@@ -1925,7 +1925,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 if (!showSearchBar) {
                   setTimeout(() => searchInputRef.current?.focus(), 100);
                 } else {
-                  setSearchQuery('');
+                  setSearchQuery.complete(searchQuery, '');
                 }
               }}
             >
@@ -2009,7 +2009,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             className="flex-1 bg-transparent text-base md:text-sm text-white placeholder:text-zinc-500 outline-none"
           />
           {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="text-zinc-500 hover:text-white">
+            <button onClick={() => setSearchQuery.complete(searchQuery, '')} className="text-zinc-500 hover:text-white">
               <X className="w-4 h-4" />
             </button>
           )}
@@ -2224,7 +2224,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         peerName={displayName}
         onSendMessage={handleSendMessage}
         replyTo={composerReplyTo}
-        onCancelReply={() => setReplyTarget(null)}
+        onCancelReply={() => setReplyTarget.complete(replyTarget, null)}
         onTipClick={feeRequired ? undefined : openTipDialog}
         canSend={planAllowsSend}
         sendDisabled={accountBanned || !!feeSendDisabled || (initError && isVirtualConv)}

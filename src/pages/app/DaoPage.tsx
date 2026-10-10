@@ -146,7 +146,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
             onClick: () => window.open(daoTxUrl(result.chainId, result.txHash), '_blank', 'noopener'),
           },
         });
-        setAmount('');
+        setAmount.complete(amount, '');
         onOpenChange(false);
         // The transfer is out. Only a revert is still worth saying, and it
         // arrives long after the drawer has closed.
@@ -170,7 +170,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
         sendingRef.current = false;
       },
     });
-  }, [contribute, onOpenChange, queueAfterUnlock, t, setAmount]);
+  }, [contribute, onOpenChange, queueAfterUnlock, t, setAmount, amount]);
 
   // The password/biometric sheet is controlled by AuthProvider. Once it has
   // visibly opened and then closed, either resume the exact transfer that led

@@ -35,7 +35,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
   const handleGifClick = (gifUrl: string) => {
     onGifSelect(gifUrl);
     setOpen(false);
-    setSearchQuery('');
+    setSearchQuery.complete(searchQuery, '');
   };
 
   const displayGifs = searchQuery ? MOCK_GIFS : TRENDING_GIFS;

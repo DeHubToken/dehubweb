@@ -152,7 +152,7 @@ export default function SubscriptionCreditsTopUpDialog({ open, onOpenChange }: {
               disabled={busy}
               onClick={() => {
                 setPreset(value);
-                setCustom('');
+                setCustom.complete(custom, '');
               }}
               className={cn(
                 'rounded-xl border py-2 text-sm font-semibold transition-colors',

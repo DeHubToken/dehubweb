@@ -75,7 +75,7 @@ export default function QuickAssist({ onUsePrompt }: { onUsePrompt?: (text: stri
   function reset() {
     abortRef.current?.abort();
     setMessages([]);
-    setInput('');
+    setInput.complete(input, '');
     setStreaming(false);
   }
 

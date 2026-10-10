@@ -53,7 +53,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
     await createReview.mutateAsync({ listing_id: listingId, rating, comment: comment.trim() });
     setShowForm(false);
     setRating(0);
-    setComment('');
+    setComment.complete(comment, '');
   };
 
   return (
@@ -136,7 +136,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                   <div className="flex gap-2">
                     <LiquidGlassBubble2
                       label={t('stores.cancel')}
-                      onClick={() => { setShowForm(false); setRating(0); setComment(''); }}
+                      onClick={() => { setShowForm(false); setRating(0); setComment.complete(comment, ''); }}
                       width="80px"
                       height="36px"
                     />

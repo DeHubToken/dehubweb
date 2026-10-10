@@ -401,8 +401,8 @@ export function TeamUpDrawer({ open, onOpenChange }: { open: boolean; onOpenChan
                   { name, description, isPrivate },
                   {
                     onSuccess: () => {
-                      setName('');
-                      setDescription('');
+                      setName.complete(name, '');
+                      setDescription.complete(description, '');
                       setIsPrivate(false);
                       toast.success(t('superpowers.teamUp.created'));
                     },

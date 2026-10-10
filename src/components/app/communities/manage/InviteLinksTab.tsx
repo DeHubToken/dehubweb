@@ -273,7 +273,7 @@ export function InviteLinksTab({ community, membership }: InviteLinksTabProps) {
       },
       {
         onSuccess: () => {
-          setName('');
+          setName.complete(name, '');
           setExpiry('never');
           setLimit('none');
           setRequiresApproval(false);

@@ -492,7 +492,7 @@ export function ThreadedComments<C extends ThreadedComment>({
             </span>
             <button
               type="button"
-              onClick={() => setReplyTo(null)}
+              onClick={() => setReplyTo.complete(replyTo, null)}
               className="text-zinc-500 hover:text-white transition-colors"
               aria-label={t('common.cancel')}
             >

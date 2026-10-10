@@ -173,7 +173,7 @@ export function EditPostModal({
     const trimmed = normalizeCategoryName(categoryInput);
     if (trimmed && !categories.some(c => c.toLowerCase() === trimmed.toLowerCase()) && categories.length < 5) {
       setCategories(prev => [...prev, trimmed]);
-      setCategoryInput('');
+      setCategoryInput.complete(categoryInput, '');
     }
   };
 

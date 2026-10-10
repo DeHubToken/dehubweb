@@ -935,10 +935,10 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
                     expiresAt: pollExpiry || undefined,
                   });
                   setShowPollCreator(false);
-                  setPollQuestion('');
+                  setPollQuestion.complete(pollQuestion, '');
                   setPollOptions(['', '']);
                   setPollMultiple(false);
-                  setPollExpiry('');
+                  setPollExpiry.complete(pollExpiry, '');
                   queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
                 } catch {}
               }}

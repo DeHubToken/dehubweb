@@ -224,7 +224,7 @@ export function AdTopUpPanel({
               <button
                 key={amt}
                 type="button"
-                onClick={() => { setUsdAmount(amt); setCustomAmount(''); }}
+                onClick={() => { setUsdAmount(amt); setCustomAmount.complete(customAmount, ''); }}
                 className={cn(
                   'rounded-xl border px-3 py-3 text-center transition-colors',
                   selected ? 'border-white/50 bg-white/10' : 'border-white/10 hover:bg-white/5',

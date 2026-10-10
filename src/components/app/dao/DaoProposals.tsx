@@ -222,12 +222,12 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
     }, {
       onSuccess: () => {
         toast.success('Proposal opened for seven days');
-        setTitle('');
-        setDescription('');
-        setDhbAmount('');
-        setPriceUsd('');
-        setSpendAmount('');
-        setRecipient('');
+        setTitle.complete(title, '');
+        setDescription.complete(description, '');
+        setDhbAmount.complete(dhbAmount, '');
+        setPriceUsd.complete(priceUsd, '');
+        setSpendAmount.complete(spendAmount, '');
+        setRecipient.complete(recipient, '');
         onOpenChange(false);
       },
       onError: (error) => toast.error(error instanceof Error ? error.message : 'Could not create proposal'),
@@ -415,7 +415,7 @@ function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | nul
 
             <div>
               <label className="mb-1.5 block text-xs text-zinc-400">Pay with</label>
-              <select value={selectedKey} onChange={(event) => { setSelectedKey(event.target.value); setManualAmount(''); }} className="h-10 w-full rounded-lg border border-white/10 bg-zinc-900 px-3 text-sm text-white">
+              <select value={selectedKey} onChange={(event) => { setSelectedKey(event.target.value); setManualAmount.complete(manualAmount, ''); }} className="h-10 w-full rounded-lg border border-white/10 bg-zinc-900 px-3 text-sm text-white">
                 {DAO_PAYMENT_OPTIONS.map((item) => (
                   <option key={`${item.chainId}:${item.symbol}`} value={`${item.chainId}:${item.symbol}`} disabled={!item.enabled}>
                     {item.symbol} · {item.chain}{item.enabled ? '' : ' · awaiting treasury setup'}

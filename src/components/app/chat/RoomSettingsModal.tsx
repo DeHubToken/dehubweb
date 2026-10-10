@@ -62,7 +62,7 @@ export function RoomSettingsModal({ open, onOpenChange, room, onUpdated }: RoomS
     try {
       await addLiveChatModerator(room.id, modAddress.trim());
       toast.success('Moderator added');
-      setModAddress('');
+      setModAddress.complete(modAddress, '');
       onUpdated();
     } catch (err) {
       console.error('[LiveChat] Failed to add moderator:', err);

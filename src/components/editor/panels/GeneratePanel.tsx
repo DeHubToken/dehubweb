@@ -145,7 +145,7 @@ export function GeneratePanel() {
         await quota.refetchUsage();
         window.dispatchEvent(new CustomEvent('editor:storage-usage-changed'));
         toast.success('Voiceover added to Media.');
-        setPrompt('');
+        setPrompt.complete(prompt, '');
       }
     } catch (e) {
       console.error('[editor] voiceover failed', e);

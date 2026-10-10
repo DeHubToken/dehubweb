@@ -113,7 +113,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
   const handleGifClick = (gifUrl: string) => {
     onGifSelect(gifUrl);
     setOpen(false);
-    setGifSearchQuery('');
+    setGifSearchQuery.complete(gifSearchQuery, '');
   };
 
   // Reset on close

@@ -264,7 +264,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       });
       if (!sent) return;
       setAudioPreview(null);
-      setMessage(current => current === message ? '' : current);
+      setMessage.complete(message, '');
       resetComposerHeight();
       return;
     }
@@ -277,7 +277,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       });
       if (!sent) return;
       clearImage();
-      setMessage(current => current === message ? '' : current);
+      setMessage.complete(message, '');
       resetComposerHeight();
       return;
     }
@@ -290,14 +290,14 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       });
       if (!sent) return;
       clearDoc();
-      setMessage(current => current === message ? '' : current);
+      setMessage.complete(message, '');
       resetComposerHeight();
       return;
     }
 
     if (!message.trim()) return;
     if (!(await onSendMessage({ content: message.trim(), type: 'msg' }))) return;
-    setMessage(current => current === message ? '' : current);
+    setMessage.complete(message, '');
     resetComposerHeight();
     } finally { sendInFlight.current = false; }
   };

@@ -78,7 +78,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
     if (!query) return;
     addToHistory(query);
     navigate(exploreSearchHref(query));
-    setMenuQuery('');
+    setMenuQuery.complete(menuQuery, '');
     closeMenu();
   }, [menuQuery, addToHistory, navigate, closeMenu, setMenuQuery]);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
@@ -154,7 +154,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
           onChange={(e) => setMenuQuery(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') { e.preventDefault(); runFullSearch(); }
-            if (e.key === 'Escape') { e.preventDefault(); setMenuQuery(''); }
+            if (e.key === 'Escape') { e.preventDefault(); setMenuQuery.complete(menuQuery, ''); }
           }}
           placeholder={t('sidebar.searchMenu')}
           aria-label={t('sidebar.searchMenu')}
@@ -164,7 +164,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
         {menuQuery && (
           <button
             type="button"
-            onClick={() => setMenuQuery('')}
+            onClick={() => setMenuQuery.complete(menuQuery, '')}
             aria-label={t('sidebar.clearSearch')}
             className="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md flex items-center justify-center text-zinc-500 hover:text-white transition-colors"
           >

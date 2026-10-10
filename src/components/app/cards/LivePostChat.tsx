@@ -320,7 +320,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     }
     try {
       await send(newMessage.trim());
-      setNewMessage('');
+      setNewMessage.complete(newMessage, '');
     } catch {
       toast.error('Failed to send message');
     }

@@ -126,9 +126,9 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
 
       // Reset form and clear draft
       setName.clear(); setDescription.clear(); setPrice.clear(); setBenefits.clear(); setDuration.clear(); setTier.clear(); setChainId.clear();
-      setName('');
-      setDescription('');
-      setPrice('');
+      setName.complete(name, '');
+      setDescription.complete(description, '');
+      setPrice.complete(price, '');
       setDuration(1);
       setTier(1);
       setBenefits(['']);

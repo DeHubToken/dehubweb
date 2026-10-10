@@ -43,7 +43,7 @@ export function ApplicationComments({ application, comments, canReply }: {
           event.preventDefault();
           if (!body.trim() || mutation.isPending) return;
           mutation.mutate({ job_id: application.job_id, application_id: application.id, body }, {
-            onSuccess: () => { setBody(''); setOpen(false); },
+            onSuccess: () => { setBody.complete(body, ''); setOpen(false); },
           });
         }}>
           <textarea autoFocus aria-label={t('messages.reply')} placeholder={t('comments.composerPlaceholder')}

@@ -24,7 +24,7 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
     setBusy(true);
     try {
       await mockTrade({ tokenId: token.id, side, amount: n, traderAddress: walletAddress });
-      setAmount('');
+      setAmount.complete(amount, '');
       toast.success(t(side === 'buy' ? 'launchpad.boughtMock' : 'launchpad.soldMock', { symbol: token.symbol }));
     } catch (e) {
       toast.error((e as Error)?.message ?? t('launchpad.tradeFailed'));

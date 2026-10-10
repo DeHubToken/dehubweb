@@ -315,7 +315,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     if (!query) return;
     addToHistory(query);
     navigate(exploreSearchHref(query));
-    setNavQuery('');
+    setNavQuery.complete(navQuery, '');
     searchInputRef.current?.blur();
     bottomSearchInputRef.current?.blur();
   }, [navQuery, addToHistory, navigate, setNavQuery]);
@@ -328,7 +328,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     }
     if (e.key === 'Escape') {
       e.preventDefault();
-      if (navQuery) setNavQuery('');
+      if (navQuery) setNavQuery.complete(navQuery, '');
       else (e.currentTarget as HTMLInputElement).blur();
     }
   };
@@ -511,7 +511,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     {navQuery && (
                       <button
                         type="button"
-                        onClick={() => { setNavQuery(''); searchInputRef.current?.focus(); }}
+                        onClick={() => { setNavQuery.complete(navQuery, ''); searchInputRef.current?.focus(); }}
                         aria-label={t('sidebar.clearSearch')}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
                       >
@@ -755,7 +755,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     {navQuery && (
                       <button
                         type="button"
-                        onClick={() => { setNavQuery(''); bottomSearchInputRef.current?.focus(); }}
+                        onClick={() => { setNavQuery.complete(navQuery, ''); bottomSearchInputRef.current?.focus(); }}
                         aria-label={t('sidebar.clearSearch')}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-md flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors"
                       >

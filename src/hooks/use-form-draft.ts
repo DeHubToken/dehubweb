@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
-import { flushDrafts, readDraft, writeDraft, clearDraft } from '@/lib/draft-cache';
+import { flushDrafts, readDraft, readCurrentDraft, writeDraft, clearDraft } from '@/lib/draft-cache';
 import { useAccountDraftKey } from './use-draft-state';
 
-export interface FormDraftControls { clear: () => void; }
+export interface FormDraftControls { clear: () => boolean; }
 
 /** Explicit multi-field snapshots; only the listed, non-secret fields are stored. */
 export function useFormDraft<T extends Record<string, unknown>>(
@@ -10,7 +10,8 @@ export function useFormDraft<T extends Record<string, unknown>>(
   values: T,
   apply: (saved: Partial<T>) => void,
 ): FormDraftControls {
-  const scope = useAccountDraftKey(`form:${key}`);
+  const accountScope = useAccountDraftKey(`form:${key}`);
+  const scope = accountScope ?? `guest|form:${key}`;
   const initial = useRef(values);
   const applyRef = useRef(apply);
   applyRef.current = apply;
@@ -47,7 +48,11 @@ export function useFormDraft<T extends Record<string, unknown>>(
   }, [scope, snapshot]);
   useEffect(() => flushDrafts, []);
   return { clear: () => {
+    // This closure belongs to the submitted snapshot, not later typing.
+    const stored = scope ? readCurrentDraft(scope) : '';
+    if (stored && stored !== snapshot) return false;
     cleared.current = snapshot;
     if (scope) { clearDraft(scope); flushDrafts(); }
+    return true;
   } };
 }

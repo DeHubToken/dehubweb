@@ -210,7 +210,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
   );
 
   const jumpTo = (key: SectionKey) => {
-    setQuery('');
+    setQuery.complete(query, '');
     setAdding(false);
     setActive(key);
     requestAnimationFrame(() => {
@@ -336,7 +336,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
             <button
               type="button"
               onClick={() => {
-                setQuery('');
+                setQuery.complete(query, '');
                 searchRef.current?.focus();
               }}
               className="absolute right-1.5 top-1/2 -translate-y-1/2 p-0.5 text-zinc-500 hover:text-white"

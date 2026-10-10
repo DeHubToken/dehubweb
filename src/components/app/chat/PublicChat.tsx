@@ -1,3 +1,4 @@
+import { useDraftState } from "@/hooks/use-draft-state";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
@@ -91,7 +92,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
   const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/PublicChat.tsx:searchQuery", '');
 
   // Reply state
-  const [replyTo, setReplyTo] = useState<Message | null>(null);
 
   // Translation state
   const [translateSignal, setTranslateSignal] = useState(0);
@@ -101,6 +101,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Fetch rooms, use the first available room
   const { rooms, isLoading: roomsLoading, error: roomsError, refetch: refetchRooms } = useLiveChatRooms();
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+  const [replyTo, setReplyTo] = useDraftState<Message | null>(selectedRoomId ? `room:${selectedRoomId}:reply` : null, null);
   const [createRoomOpen, setCreateRoomOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -198,11 +199,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
       if (!prev) {
         setTimeout(() => searchInputRef.current?.focus(), 100);
       } else {
-        setSearchQuery('');
+        setSearchQuery.complete(searchQuery, '');
       }
       return !prev;
     });
-  }, [setSearchQuery]);
+  }, [setSearchQuery, searchQuery]);
 
   const handleTranslateAll = useCallback(() => {
     if (isAllTranslated) {
@@ -223,11 +224,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
-  }, []);
+  }, [setReplyTo]);
 
   const handleCancelReply = useCallback(() => {
-    setReplyTo(null);
-  }, []);
+    setReplyTo.complete(replyTo, null);
+  }, [replyTo, setReplyTo]);
 
   // Runs before the composer lets go of anything, so a refused attachment
   // leaves the text and the file in place with the reason on screen instead

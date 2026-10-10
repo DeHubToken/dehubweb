@@ -90,7 +90,7 @@ export default function BridgePage() {
 
   const toggleDirection = () => {
     setDirection(d => d === 'base-to-bnb' ? 'bnb-to-base' : 'base-to-bnb');
-    setAmount('');
+    setAmount.complete(amount, '');
   };
 
   const handleBridge = async () => {
@@ -175,7 +175,7 @@ export default function BridgePage() {
         toast.success('Bridge initiated!', {
           description: t('bridge.sentDesc', { amount, from: sourceChainLabel, to: destChainLabel }),
         });
-        setAmount('');
+        setAmount.complete(amount, '');
         queryClient.invalidateQueries({ queryKey: ['wallet-tokens'] });
         invalidateSelfBadgeBalance(queryClient);
       } else {

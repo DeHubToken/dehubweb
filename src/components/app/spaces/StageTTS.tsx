@@ -184,7 +184,7 @@ export function StageTTS() {
         caption: text.trim(),
       });
 
-      setText('');
+      setText.complete(text, '');
     } catch (err) {
       console.error('TTS error:', err);
       const msg = err instanceof Error ? err.message : t('stages.speechFailed');

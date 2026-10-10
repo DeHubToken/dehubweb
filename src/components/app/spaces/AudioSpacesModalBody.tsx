@@ -228,8 +228,8 @@ export function AudioSpacesModalBody() {
     if (!title.trim()) return;
     const space = await createSpace(title.trim(), description.trim() || undefined);
     if (space) {
-      setTitle('');
-      setDescription('');
+      setTitle.complete(title, '');
+      setDescription.complete(description, '');
     }
   };
 
@@ -675,8 +675,8 @@ export function AudioSpacesModalBody() {
                     description={description}
                     setDescription={setDescription}
                     onDone={() => {
-                      setTitle('');
-                      setDescription('');
+                      setTitle.complete(title, '');
+                      setDescription.complete(description, '');
                       setCreateMode('now');
                       setView('browse');
                       closeModal();

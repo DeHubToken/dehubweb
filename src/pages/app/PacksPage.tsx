@@ -141,7 +141,7 @@ export default function PacksPage() {
     try {
       const pack = await createPack(kind, name.trim());
       await invalidate();
-      setName('');
+      setName.complete(name, '');
       navigate(`/packs/${pack.slug}`);
     } catch (err) {
       toast.error(packErrorMessage(err, t, kind));

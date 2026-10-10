@@ -427,7 +427,7 @@ export function NewConversationModal({
         }
         onConversationCreated(conversation);
         onOpenChange(false);
-        setSearchQuery('');
+        setSearchQuery.complete(searchQuery, '');
         setFeeUser(null);
         return;
       }
@@ -450,7 +450,7 @@ export function NewConversationModal({
 
       onConversationCreated(conversation);
       onOpenChange(false);
-      setSearchQuery('');
+      setSearchQuery.complete(searchQuery, '');
       setFeeUser(null);
     } catch (error: any) {
       toast.error(error.message || 'Failed to start conversation');
@@ -471,7 +471,6 @@ export function NewConversationModal({
 
   const handleClose = () => {
     onOpenChange(false);
-    setSearchQuery('');
     setSelectedUserId(null);
     setFeeUser(null);
   };
@@ -503,7 +502,7 @@ export function NewConversationModal({
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery.complete(searchQuery, '')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[10px] font-medium text-white/70 bg-white/10 hover:bg-white/20 border border-white/10 rounded-md transition-colors"
                 >
                   Clear

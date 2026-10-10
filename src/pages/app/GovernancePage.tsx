@@ -299,8 +299,8 @@ function SubmitProposalDrawer({
       { title: result.data.title, description: result.data.description },
       {
         onSuccess: () => {
-          setTitle('');
-          setDescription('');
+          setTitle.complete(title, '');
+          setDescription.complete(description, '');
           onOpenChange(false);
         },
       }

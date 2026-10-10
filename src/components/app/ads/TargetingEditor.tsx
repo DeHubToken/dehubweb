@@ -105,7 +105,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
     if (!/^0x[a-f0-9]{40}$/.test(wallet)) return;
     const current = value.followedCreators ?? [];
     if (!current.includes(wallet)) patch({ followedCreators: [...current, wallet] });
-    setCreatorInput('');
+    setCreatorInput.complete(creatorInput, '');
   };
 
   const filteredCommunities = useMemo(() => {

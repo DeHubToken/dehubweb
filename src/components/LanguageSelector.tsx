@@ -63,7 +63,7 @@ export function LanguageSelector() {
                 onClick={() => {
                   setLanguage(lang.code as any);
                   setOpen(false);
-                  setSearch("");
+                  setSearch.complete(search, "");
                 }}
                 className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all ${
                   lang.code === language

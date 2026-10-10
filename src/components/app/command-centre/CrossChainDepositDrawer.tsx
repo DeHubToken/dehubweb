@@ -156,7 +156,7 @@ export function CrossChainDepositDrawer({ open, onOpenChange, destinationSymbol,
     setSelectedChain(chain);
     setSelectedToken(token);
     setStep('amount');
-    setAmount('');
+    setAmount.complete(amount, '');
     setQuote(null);
     setQuoteError('');
   };

@@ -1128,29 +1128,29 @@ export function usePostForm(
     // reuse this key for different content, but the post is out, so there is
     // nothing left for it to deduplicate against.
     postAttemptRef.current = null;
-    setText('');
+    setText.complete(text, '');
     setMedia([]);
     setIsSubscribersOnly(false);
     setIsPPV(false);
-    setPpvAmount('');
+    setPpvAmount.complete(ppvAmount, '');
     setPpvCurrency('USD');
     setIsWatch2Earn(false);
-    setW2eViews('');
-    setW2eComments('');
-    setW2eTotal('');
+    setW2eViews.complete(w2eViews, '');
+    setW2eComments.complete(w2eComments, '');
+    setW2eTotal.complete(w2eTotal, '');
     setW2eCurrency('USD');
     setIsTokenGated(false);
-    setTokenContract('');
-    setTokenSymbol('DHB');
-    setTokenAmount('');
+    setTokenContract.complete(tokenContract, '');
+    setTokenSymbol.complete(tokenSymbol, 'DHB');
+    setTokenAmount.complete(tokenAmount, '');
     setLiveMode(null);
-    setPoll(null);
+    setPoll.complete(poll, null);
     setScheduledDate(null);
-    setTitleText('');
+    setTitleText.complete(titleText, '');
     // Cleared per post, deliberately. A board is usually specific to what was
     // just posted, and one that quietly carries over ends up on content it has
     // nothing to do with.
-    setShopLinks([]);
+    setShopLinks.complete(shopLinks, []);
     setShopListingIds([]);
     // Same reasoning, and it matters more here: this decides whether the post
     // is shown at all. The composer is mounted behind a one-way latch, so hook
@@ -1163,14 +1163,14 @@ export function usePostForm(
     setIsForKids(false);
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
-      setSelectedCategory('');
+      setSelectedCategory.complete(selectedCategory, '');
       try { localStorage.removeItem('post_default_categories'); } catch {}
     }
     categorySavedRef.current = false;
     persistDraftRef.current = null;
     // Clear persisted active draft
     clearActiveDraft(activeKey);
-  }, [setPoll, setPpvAmount, setSelectedCategory, setShopLinks, setText, setTitleText, setTokenAmount, setTokenContract, setTokenSymbol, setW2eComments, setW2eTotal, setW2eViews]);
+  }, [setPoll, setPpvAmount, setSelectedCategory, setShopLinks, setText, setTitleText, setTokenAmount, setTokenContract, setTokenSymbol, setW2eComments, setW2eTotal, setW2eViews, poll, ppvAmount, selectedCategory, text, titleText, tokenAmount, tokenContract, w2eComments, w2eTotal, w2eViews, shopLinks, tokenSymbol]);
 
   // Load drafts from DB on mount
   useEffect(() => {

@@ -174,11 +174,11 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
   const handleCountrySelect = useCallback((code: string) => {
     setShowCountryDropdown(false);
-    setCountrySearch('');
+    setCountrySearch.complete(countrySearch, '');
     if (code !== 'global') {
       toast.info(t('sidebar.comingSoon'));
     }
-  }, [t, setCountrySearch]);
+  }, [t, setCountrySearch, countrySearch]);
 
   const filteredCountries = countrySearch.trim()
     ? COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()))

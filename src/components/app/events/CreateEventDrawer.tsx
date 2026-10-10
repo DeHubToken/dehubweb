@@ -100,15 +100,15 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
       {
         onSuccess: () => {
           onOpenChange(false);
-          setTitle('');
-          setDescription('');
-          setLocation('');
+          setTitle.complete(title, '');
+          setDescription.complete(description, '');
+          setLocation.complete(location, '');
           setStartDate(undefined);
           setEndDate(undefined);
           setCoverFile(null);
           setCoverPreview(null);
           setHasGateFee(false);
-          setGateFee('');
+          setGateFee.complete(gateFee, '');
           setIsPrivate(false);
         },
       }

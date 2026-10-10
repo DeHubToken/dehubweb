@@ -201,7 +201,7 @@ export function RealtimeChatPanel({
   draftKey,
 }: RealtimeChatPanelProps) {
   const [newMessage, setNewMessage] = useDraft(draftKey);
-  const [replyTo, setReplyTo] = useState<RealtimeChatMessage | null>(null);
+  const [replyTo, setReplyTo] = useDraftState<RealtimeChatMessage | null>(draftKey ? `${draftKey}:reply` : null, null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editInitial, setEditInitial] = useState('');
   const [editText, setEditText] = useDraftState(editingId ? `chat:edit:${editingId}` : null, editInitial);
@@ -264,8 +264,7 @@ export function RealtimeChatPanel({
         avatarUrl: user?.avatarImageUrl || undefined,
         badgeBalance: user?.badgeBalance ?? undefined,
       });
-      setNewMessage('');
-      setReplyTo(null);
+      if (setNewMessage.complete(newMessage, '')) setReplyTo.complete(replyTo, null);
       atBottomRef.current = true;
       scrollToBottom();
     } catch {
@@ -273,7 +272,7 @@ export function RealtimeChatPanel({
     } finally {
       setIsSending(false);
     }
-  }, [newMessage, isSending, isAuthenticated, walletAddress, openLoginModal, onSend, replyTo, user, scrollToBottom]);
+  }, [newMessage, isSending, isAuthenticated, walletAddress, openLoginModal, onSend, replyTo, user, scrollToBottom, setReplyTo]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -528,7 +527,7 @@ export function RealtimeChatPanel({
             </span>
             <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
           </div>
-          <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
+          <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>

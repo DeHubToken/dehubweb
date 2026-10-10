@@ -117,7 +117,7 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
       writePaid(null);
       await queryClient.invalidateQueries({ queryKey: ['dex-pools'] });
       toast.success(t('dex.pools.created', { symbol: pool.symbol }));
-      onOpenChange(false); setAddress(''); setImage(null); setCheck(null);
+      onOpenChange(false); setAddress.complete(address, ''); setImage(null); setCheck(null);
       onCreated(pool);
     } catch (e) {
       setError(dexActionError(e, t('dex.pools.createFailed')));
@@ -161,7 +161,7 @@ export function AddPoolDialog({ open, onOpenChange, onCreated }: { open: boolean
       <button type="button" className="dex-submit" disabled={!!busy || !check?.token || !!check?.exists || (!!walletAddress && !paid && !covers)} onClick={() => void submit()}>
         {busy ? busyLabel : !walletAddress ? t('dex.connectWallet') : paid ? t('dex.pools.finish') : !covers && check?.token ? t('dex.pools.notEnough') : t('dex.pools.payAndOpen', { amount: POOL_FEE_USD })}
       </button>
-      {paid && !busy && <button type="button" className="dex-link-button" onClick={() => { writePaid(null); setAddress(''); onOpenChange(false); }}>{t('dex.pools.discardPaid')}</button>}
+      {paid && !busy && <button type="button" className="dex-link-button" onClick={() => { writePaid(null); setAddress.complete(address, ''); onOpenChange(false); }}>{t('dex.pools.discardPaid')}</button>}
     </DialogContent>
   </Dialog>;
 }
