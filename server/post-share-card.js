@@ -1,4 +1,4 @@
-export const POST_CARD_VERSION = 'v3';
+export const POST_CARD_VERSION = 'v4';
 export const POST_CARD_TTL = 300;
 const ORIGIN = 'https://dehub.io';
 const CDN = 'https://dehubcdn.ams3.cdn.digitaloceanspaces.com';
@@ -168,7 +168,7 @@ export function layoutPostCardCopy(data) {
   const poll = pollLayout(data.poll);
   const top = 112;
   const gap = 24;
-  const availableBottom = 510 - (poll ? poll.height + gap : 0);
+  const availableBottom = 488 - (poll ? poll.height + gap : 0);
   const dense = !!poll && availableBottom - top < 130;
   const titleSize = poll ? dense ? 28 : 32 : data.title.length > 140 ? 34 : 42;
   const bodySize = poll ? dense ? 23 : 30 : data.title ? 28 : data.body.length > 350 ? 30 : 36;
@@ -219,13 +219,13 @@ export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
     <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#111214"/><stop offset=".4" stop-color="#060607"/><stop offset="1" stop-color="#0b0c0e"/></linearGradient>
-    <linearGradient id="seam" gradientUnits="userSpaceOnUse" x1="370" y1="112" x2="370" y2="510"><stop stop-color="#c8c9ce" stop-opacity="0"/><stop offset=".12" stop-color="#71737d" stop-opacity=".12"/><stop offset=".4" stop-color="#aeb0b8" stop-opacity=".42"/><stop offset=".62" stop-color="#757781" stop-opacity=".3"/><stop offset=".88" stop-color="#53555c" stop-opacity=".12"/><stop offset="1" stop-color="#b5b7be" stop-opacity="0"/></linearGradient>
     <clipPath id="face"><rect x="60" y="151" width="66" height="66" rx="18"/></clipPath>
-    <clipPath id="copy"><rect x="410" y="109" width="708" height="408"/></clipPath>
+    <clipPath id="copy"><rect x="410" y="109" width="708" height="385"/></clipPath>
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
   ${chrome ? `<image data-brand-artwork="integrated-chrome-edge" x="0" y="0" width="1200" height="630" xlink:href="${chrome}" opacity=".72"/>` : ''}
-  <path d="M370 112C363 184 363 234 370 303S377 433 370 510" fill="none" stroke="url(#seam)" stroke-width="1.3" stroke-linecap="round"/>
+  <rect x="48" y="132" width="306" height="412" rx="22" fill="#111215" stroke="#292b31"/>
+  <rect x="390" y="84" width="742" height="460" rx="22" fill="#0b0c0f" stroke="#22242a"/>
   <path d="M60 263H332M60 487H332" fill="none" stroke="#33353b"/>
   <image x="43" y="59" width="77" height="66" xlink:href="${logo}"/>
   <rect x="60" y="151" width="66" height="66" rx="18" fill="#25262c" stroke="#5d5f69"/>
@@ -240,9 +240,9 @@ export function renderPostCardSvg(data, { logo, avatar = '', chrome = '', badges
       ${textLines(body.lines, 415, body.y, body.size, body.step, '#c5c6ce')}
       ${renderPoll(poll)}
     </g>
-    <text x="415" y="558" font-size="18" fill="#868993">dehub.io</text>
-    <text x="1088" y="558" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post</text>
-    <path d="M1100 557l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="415" y="524" font-size="18" fill="#9699a3">dehub.io</text>
+    <text x="1064" y="524" text-anchor="end" font-size="18" fill="#bfc1c9">Read the post</text>
+    <path d="M1076 523l12-12m-12 0h12v12" fill="none" stroke="#bfc1c9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
   </svg>`;
 }
