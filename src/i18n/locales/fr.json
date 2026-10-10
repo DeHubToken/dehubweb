@@ -3754,6 +3754,8 @@
     "sellYourFractions": "Vendez vos fractions ({{held}} détenus)"
   },
   "creator": {
+    "toolMaboroshi": "Maboroshi",
+    "toolMaboroshiDesc": "Remplacez des personnages et des objets, vérifiez un brouillon, puis exportez avec votre bande-son originale.",
     "editorAssetMissing": "Cette génération n’a pas encore de média à importer.",
     "editorAssetUnsupported": "Les modèles 3D ne peuvent pas être placés dans la timeline. Téléchargez le modèle.",
     "editorImportFailed": "Impossible d’importer ce résultat dans l’éditeur.",

@@ -79,6 +79,16 @@ const NAV_KEYS: Record<string, string> = {
 
 const tools: Tool[] = [
   {
+    id: 'maboroshi',
+    nameKey: 'creator.toolMaboroshi',
+    labelKey: 'creator.navVideo',
+    descriptionKey: 'creator.toolMaboroshiDesc',
+    icon: Wand2,
+    category: 'Video',
+    badge: 'NEW',
+    action: { kind: 'navigate', to: '/creator/maboroshi' },
+  },
+  {
     id: 'builder',
     nameKey: 'creator.toolBuilder',
     labelKey: 'creator.navApps',

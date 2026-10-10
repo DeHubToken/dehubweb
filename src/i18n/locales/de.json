@@ -3750,6 +3750,8 @@
     "sellYourFractions": "Verkaufe deine Anteile ({{held}} gehalten)"
   },
   "creator": {
+    "toolMaboroshi": "Maboroshi",
+    "toolMaboroshiDesc": "Ersetze Figuren und Objekte, prüfe einen Entwurf und exportiere mit der ursprünglichen Tonspur.",
     "whatToCreate": "Was du erstellen möchtest",
     "startCreatingWith": "Beginne zu erstellen mit {{model}}",
     "studioSubtitle": "Beschreibe eine Szene, einen Charakter, eine Stimmung oder einen Stil. Ergebnisse erscheinen unten und gehen direkt in den Editor.",
