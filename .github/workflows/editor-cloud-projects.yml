@@ -48,6 +48,7 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008220000_editor_cloud_project_conflict_status.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261008220000_editor_cloud_project_conflict_status.sql
           psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261009160000_editor_cloud_project_presence.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261010160000_editor_cloud_project_drafts.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-presence.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-projects.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-trash.sql
@@ -55,6 +56,7 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-review-exit.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-erasure.sql
           psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-editing.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/editor-cloud-drafts.sql
       - name: Conflicts return promptly through PostgREST 14
         run: |
           docker run --detach --name editor-cloud-http --network host \
