@@ -309,6 +309,7 @@ export const NAV_KEYWORDS: Record<string, string[]> = {
   ],
   Glossary: ['terms', 'definitions', 'dictionary', 'jargon', 'meaning', 'what is', 'acronyms'],
   Guide: ['getting started', 'how to', 'tutorial', 'onboarding', 'walkthrough', 'learn', 'help', 'new here'],
+  Feedback: ['feedback', 'experience', 'give feedback', 'testimonial'],
   Stats: ['analytics', 'metrics', 'live stats', 'charts', 'numbers', 'price', 'supply', 'holders', 'volume'],
   Docs: ['documentation', 'help', 'api', 'whitepaper', 'developers', 'sdk', 'reference', 'brand', 'advertising'],
   Blog: ['news', 'articles', 'updates', 'announcements', 'press', 'releases'],
