@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Message } from './ChatMessage';
 import { VoiceRecorder } from './VoiceRecorder';
+import { voiceRecordingFile } from '@/lib/voice-recording';
 import { SmartReplyRail } from './SmartReplyRail';
 import { useSmartReplies, type SmartReplyTurn } from '@/hooks/use-smart-replies';
 import { setSmartRepliesEnabled, useSmartRepliesEnabled } from '@/hooks/use-smart-replies-enabled';
@@ -88,9 +89,10 @@ interface ChatInputProps {
    * pass false rather than offer a file that will be refused on send.
    */
   allowDocuments?: boolean;
+  voiceMaxDuration?: number;
 }
 
-export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true }: ChatInputProps) {
+export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
@@ -379,7 +381,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
   };
 
   const handleVoiceRecordingComplete = (blob: Blob, duration: number) => {
-    const file = new File([blob], `voice-${Date.now()}.webm`, { type: blob.type || 'audio/webm' });
+    const file = voiceRecordingFile(blob);
     setAudioPreview({ file, blob, duration });
     clearImage();
     toast.success(`Recording saved (${duration}s)`);
@@ -689,6 +691,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           )}
 
           <VoiceRecorder
+            maxDuration={voiceMaxDuration}
             onRecordingComplete={handleVoiceRecordingComplete}
             disabled={sendDisabled}
           />

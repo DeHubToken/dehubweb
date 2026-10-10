@@ -14,6 +14,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2, ArrowDown, Pin, PinOff, MicOff, Ban } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
+import { voiceRecordingFile } from '@/lib/voice-recording';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
 import { getAuthToken } from '@/lib/api/dehub';
@@ -537,7 +538,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     toast.loading('Uploading voice note...', { id: toastId });
     try {
       const token = getAuthToken();
-      const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+      const file = voiceRecordingFile(blob);
       const formData = new FormData();
       formData.append('file', file, file.name);
       const { data, error } = await supabase.functions.invoke('dm-upload-media', {
