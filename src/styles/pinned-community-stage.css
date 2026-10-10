@@ -1,12 +1,8 @@
 /* Pinned community worn by the desktop profile header
    (components/app/profile/PinnedCommunityStage.tsx). */
 
-/* The wash keeps the art's colours and none of its detail, and eases in
-   under the cover rather than starting at a hard edge. */
-[data-pinned-wash] {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 56px);
-}
+/* Carry the wash all the way to the cover. Fading it out at the top exposes
+   the page underneath as a dark band across the profile details. */
 [data-pinned-wash] > div {
   filter: blur(40px) saturate(1.4);
   opacity: 0.5;
