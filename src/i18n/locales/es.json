@@ -6500,7 +6500,10 @@
       "resetToStart": "Reiniciar al principio",
       "resize": "Redimensionar",
       "rotate": "Rotar",
-      "toggleLoop": "Alternar bucle"
+      "toggleLoop": "Alternar bucle",
+      "previousFrame": "Fotograma anterior",
+      "nextFrame": "Fotograma siguiente",
+      "playhead": "Cabezal de reproducción"
     },
     "export": {
       "scope": "Rango de descargas",

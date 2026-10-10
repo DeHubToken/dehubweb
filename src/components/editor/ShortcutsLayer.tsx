@@ -3,23 +3,24 @@
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { useEffect } from "react";
+import { stepTimelineFrame } from "@/lib/editor/frameStep";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
 import { getTransform, isVisualClip, placementPatchAt } from "@/lib/editor/render";
 import { keyAllAt, resolveClipAt } from "@/lib/editor/keyframes";
 
-function isTextInput(el: EventTarget | null): boolean {
-  if (!(el instanceof HTMLElement)) return false;
-  const tag = el.tagName;
-  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return true;
-  if (el.isContentEditable) return true;
-  return false;
+function isControlKey(event: KeyboardEvent): boolean {
+  if (event.defaultPrevented || event.isComposing) return true;
+  const target = event.target;
+  if (!(target instanceof Element)) return false;
+  if (target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="slider"], [role="spinbutton"], [role="combobox"], [role="listbox"], [role="menu"]')) return true;
+  return (event.key === " " || event.key === "Enter") && !!target.closest('button, [role="button"], a[href]');
 }
 
 export function ShortcutsLayer() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (isTextInput(e.target)) return;
+      if (isControlKey(e)) return;
       const s = useEditorStore.getState();
       const fps = s.settings.fps || 30;
       const dur = selectTimelineDuration(s);
@@ -133,16 +134,14 @@ export function ShortcutsLayer() {
         }
         case "ArrowLeft": {
           e.preventDefault();
-          const step = e.shiftKey ? 1 / fps : 0.5;
           s.setIsPlaying(false);
-          s.setCurrentTime(Math.max(0, s.currentTime - step));
+          s.setCurrentTime(e.shiftKey ? stepTimelineFrame(s.currentTime, -1, fps, dur) : Math.max(0, s.currentTime - 0.5));
           return;
         }
         case "ArrowRight": {
           e.preventDefault();
-          const step = e.shiftKey ? 1 / fps : 0.5;
           s.setIsPlaying(false);
-          s.setCurrentTime(Math.min(dur || s.currentTime + step, s.currentTime + step));
+          s.setCurrentTime(e.shiftKey ? stepTimelineFrame(s.currentTime, 1, fps, dur) : Math.min(dur || s.currentTime + 0.5, s.currentTime + 0.5));
           return;
         }
       }
