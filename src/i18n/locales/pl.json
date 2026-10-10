@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Opcje",
+    "aiOverview": "Przegląd sztucznej inteligencji",
     "sendTip": "Wyślij napiwek",
     "queue": "Kolejka",
     "watchList": "Lista obserwowanych",
@@ -6421,10 +6422,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Wizualne najważniejsze momenty",
-      "visualPrivacy": "Wyślij wybrane klatki do analizy wizualnej."
-    },
     "review": {
       "title": "Przegląd projektu",
       "shared": "Udostępnione tobie",
@@ -6840,6 +6837,10 @@
       "sync": "Synchronizuj cięcia",
       "none": "Nie znaleziono wiarygodnego rytmu.",
       "unchanged": "Nie udało się wyrównać cięć."
+    },
+    "highlights": {
+      "visual": "Wizualne najważniejsze momenty",
+      "visualPrivacy": "Wyślij wybrane klatki do analizy wizualnej."
     }
   },
   "jungleMood": {

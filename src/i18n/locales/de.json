@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Optionen",
+    "aiOverview": "KI-Übersicht",
     "sendTip": "Trinkgeld senden",
     "queue": "Warteschlange",
     "watchList": "Merkliste",
@@ -6465,10 +6466,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Visuelle Höhepunkte",
-      "visualPrivacy": "Ausgewählte Einzelbilder zur visuellen Analyse senden."
-    },
     "review": {
       "title": "Projektprüfung",
       "shared": "Mit dir geteilt",
@@ -6887,6 +6884,10 @@
       "sync": "Schnitte synchronisieren",
       "none": "Kein zuverlässiger Takt gefunden.",
       "unchanged": "Die Schnitte konnten nicht ausgerichtet werden."
+    },
+    "highlights": {
+      "visual": "Visuelle Höhepunkte",
+      "visualPrivacy": "Ausgewählte Einzelbilder zur visuellen Analyse senden."
     },
     "videoTemplates": {
       "heading": "Videovorlagen",

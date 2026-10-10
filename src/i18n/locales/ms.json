@@ -867,6 +867,7 @@
   },
   "postOptions": {
     "options": "Pilihan",
+    "aiOverview": "Gambaran keseluruhan AI",
     "sendTip": "Hantar Tip",
     "queue": "Baris Gilir",
     "watchList": "Senarai Tontonan",
@@ -6702,10 +6703,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Sorotan visual",
-      "visualPrivacy": "Hantar bingkai terpilih untuk analisis visual."
-    },
     "review": {
       "title": "Semakan projek",
       "shared": "Dikongsi dengan anda",
@@ -7121,6 +7118,10 @@
       "sync": "Segerakkan potongan",
       "none": "Tiada rentak yang boleh dipercayai ditemui.",
       "unchanged": "Potongan tidak dapat dijajarkan."
+    },
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Hantar bingkai terpilih untuk analisis visual."
     }
   },
   "jungleMood": {

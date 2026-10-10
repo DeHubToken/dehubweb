@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Seçimlər",
+    "aiOverview": "AI icmalı",
     "sendTip": "Bəxşiş Göndər",
     "queue": "Növbə",
     "watchList": "İzləmə Siyahısı",
@@ -6309,10 +6310,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Vizual məqamlar",
-      "visualPrivacy": "Vizual təhlil üçün seçilmiş kadrları göndərin."
-    },
     "review": {
       "title": "Layihə baxışı",
       "shared": "Sizinlə paylaşılanlar",
@@ -6728,6 +6725,10 @@
       "sync": "Kəsikləri sinxronlaşdır",
       "none": "Etibarlı ritm tapılmadı.",
       "unchanged": "Kəsikləri uyğunlaşdırmaq mümkün olmadı."
+    },
+    "highlights": {
+      "visual": "Vizual məqamlar",
+      "visualPrivacy": "Vizual təhlil üçün seçilmiş kadrları göndərin."
     }
   },
   "jungleMood": {

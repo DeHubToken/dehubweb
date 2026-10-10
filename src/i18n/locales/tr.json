@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Seçenekler",
+    "aiOverview": "Yapay zekaya genel bakış",
     "sendTip": "Bahşiş Gönder",
     "queue": "Sıra",
     "watchList": "İzleme Listesi",
@@ -6469,10 +6470,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Görsel önemli anlar",
-      "visualPrivacy": "Görsel analiz için seçilen kareleri gönderin."
-    },
     "review": {
       "title": "Proje incelemesi",
       "shared": "Sizinle paylaşılan",
@@ -6888,6 +6885,10 @@
       "sync": "Kesimleri eşitle",
       "none": "Güvenilir ritim bulunamadı.",
       "unchanged": "Kesimler hizalanamadı."
+    },
+    "highlights": {
+      "visual": "Görsel önemli anlar",
+      "visualPrivacy": "Görsel analiz için seçilen kareleri gönderin."
     },
     "assembly": {
       "matchConsent": "Klipleri ve fotoğrafları isteğime göre seç",

@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "አማራጮች",
+    "aiOverview": "የአይአይ አጠቃላይ እይታ",
     "sendTip": "ጥቆማ ላክ",
     "queue": "ወረፋ",
     "watchList": "የእይታ ዝርዝር",
@@ -6444,10 +6445,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "የምስል ድምቀቶች",
-      "visualPrivacy": "የተመረጡ ፍሬሞችን ለምስል ትንተና ላክ።"
-    },
     "review": {
       "title": "የፕሮጀክት ግምገማ",
       "shared": "ለእርስዎ የተጋሩ",
@@ -6863,6 +6860,10 @@
       "sync": "ቁርጥራጮችን አመሳስል",
       "none": "አስተማማኝ ምቶች አልተገኙም።",
       "unchanged": "ቁርጥራጮችን ማሰለፍ አልተቻለም።"
+    },
+    "highlights": {
+      "visual": "የምስል ድምቀቶች",
+      "visualPrivacy": "የተመረጡ ፍሬሞችን ለምስል ትንተና ላክ።"
     }
   },
   "jungleMood": {

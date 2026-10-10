@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Lehetőségek",
+    "aiOverview": "AI áttekintés",
     "sendTip": "Borravaló küldése",
     "queue": "Várólista",
     "watchList": "Figyelőlista",
@@ -6349,10 +6350,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Vizuális csúcspontok",
-      "visualPrivacy": "Kiválasztott képkockák küldése vizuális elemzéshez."
-    },
     "review": {
       "title": "Projekt áttekintése",
       "shared": "Veled megosztva",
@@ -6768,6 +6765,10 @@
       "sync": "Vágások szinkronizálása",
       "none": "Nem található megbízható ütem.",
       "unchanged": "A vágásokat nem sikerült igazítani."
+    },
+    "highlights": {
+      "visual": "Vizuális csúcspontok",
+      "visualPrivacy": "Kiválasztott képkockák küldése vizuális elemzéshez."
     }
   },
   "jungleMood": {

@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "옵션",
+    "aiOverview": "AI 개요",
     "sendTip": "팁 보내기",
     "queue": "대기열",
     "watchList": "관심 목록",
@@ -6459,10 +6460,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "영상 하이라이트",
-      "visualPrivacy": "영상 분석을 위해 선택한 프레임을 전송합니다."
-    },
     "review": {
       "title": "프로젝트 검토",
       "shared": "나와 공유됨",
@@ -6878,6 +6875,10 @@
       "sync": "컷 동기화",
       "none": "신뢰할 수 있는 비트를 찾지 못했습니다.",
       "unchanged": "컷을 정렬할 수 없었습니다."
+    },
+    "highlights": {
+      "visual": "영상 하이라이트",
+      "visualPrivacy": "영상 분석을 위해 선택한 프레임을 전송합니다."
     },
     "live": {
       "stopEdits": "실시간 편집 중지",

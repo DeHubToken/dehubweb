@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Entrankhner",
+    "aiOverview": "ԱԻ ընդհանուր նկարագրություն",
     "sendTip": "Ougharkuhr tsoug",
     "queue": "Hert",
     "watchList": "Ditoghakan tsank",
@@ -6458,10 +6459,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Տեսողական կարևոր պահեր",
-      "visualPrivacy": "Ուղարկել ընտրված կադրերը տեսողական վերլուծության համար։"
-    },
     "review": {
       "title": "Նախագծի վերանայում",
       "shared": "Ձեզ հետ համօգտագործված",
@@ -6877,6 +6874,10 @@
       "sync": "Համաժամացնել կտրվածքները",
       "none": "Հուսալի ռիթմ չի գտնվել։",
       "unchanged": "Կտրվածքները հնարավոր չեղավ հավասարեցնել։"
+    },
+    "highlights": {
+      "visual": "Տեսողական կարևոր պահեր",
+      "visualPrivacy": "Ուղարկել ընտրված կադրերը տեսողական վերլուծության համար։"
     }
   },
   "jungleMood": {

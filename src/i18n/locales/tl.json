@@ -647,6 +647,7 @@
   },
   "postOptions": {
     "options": "Mga Opsyon",
+    "aiOverview": "Pangkalahatang - ideya ng AI",
     "sendTip": "Magpadala ng Tip",
     "queue": "Queue",
     "watchList": "Watch List",
@@ -6508,10 +6509,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Mga tampok na biswal",
-      "visualPrivacy": "Ipadala ang napiling mga frame para sa biswal na pagsusuri."
-    },
     "review": {
       "title": "Pagsusuri ng proyekto",
       "shared": "Ibinahagi sa iyo",
@@ -6927,6 +6924,10 @@
       "sync": "Isabay ang mga putol",
       "none": "Walang maaasahang kumpas na nakita.",
       "unchanged": "Hindi maitugma ang mga putol."
+    },
+    "highlights": {
+      "visual": "Mga tampok na biswal",
+      "visualPrivacy": "Ipadala ang napiling mga frame para sa biswal na pagsusuri."
     }
   },
   "jungleMood": {

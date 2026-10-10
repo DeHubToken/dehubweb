@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Opsi",
+    "aiOverview": "Ikhtisar AI",
     "sendTip": "Kirim Tip",
     "queue": "Antrian",
     "watchList": "Daftar Tonton",
@@ -6467,10 +6468,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Sorotan visual",
-      "visualPrivacy": "Kirim bingkai terpilih untuk analisis visual."
-    },
     "review": {
       "title": "Tinjauan proyek",
       "shared": "Dibagikan kepada Anda",
@@ -6886,6 +6883,10 @@
       "sync": "Sinkronkan potongan",
       "none": "Ketukan yang andal tidak ditemukan.",
       "unchanged": "Potongan tidak dapat disejajarkan."
+    },
+    "highlights": {
+      "visual": "Sorotan visual",
+      "visualPrivacy": "Kirim bingkai terpilih untuk analisis visual."
     }
   },
   "jungleMood": {

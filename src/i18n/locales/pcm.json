@@ -534,6 +534,7 @@
   },
   "postOptions": {
     "options": "Option Dem",
+    "aiOverview": "AI overview",
     "sendTip": "Send Tip",
     "queue": "Queue",
     "watchList": "Watch List",
@@ -5381,10 +5382,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Video better moments",
-      "visualPrivacy": "Send selected frames make we analyse wetin dey show."
-    },
     "review": {
       "title": "Check project",
       "shared": "Dem share am with you",
@@ -5797,6 +5794,10 @@
       "sync": "Make cuts match",
       "none": "We no find beat we fit trust.",
       "unchanged": "We no fit make cuts match."
+    },
+    "highlights": {
+      "visual": "Video better moments",
+      "visualPrivacy": "Send selected frames make we analyse wetin dey show."
     }
   },
   "jungleMood": {
