@@ -8,7 +8,7 @@ export function accountDraftKey(account: string | null | undefined, scope: strin
 
 export function useAccountDraftKey(scope: string | null | undefined): string | null {
   const auth = useContext(AuthContext);
-  return accountDraftKey(auth?.walletAddress, scope);
+  return accountDraftKey(auth?.walletAddress, scope) ?? (scope ? `guest|${scope}` : null);
 }
 
 type Update<T> = T | ((previous: T) => T);
