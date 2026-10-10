@@ -323,7 +323,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    */
   const livePresence = useStreamPresence(
     stream.streamId,
-    !!stream.isLive && !isOwnStream
+    !!stream.isLive && !streamEnded && isPlaying && !isOwnStream
   );
   const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
 

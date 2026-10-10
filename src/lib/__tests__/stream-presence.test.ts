@@ -93,9 +93,12 @@ describe('stream presence socket', () => {
 
     a.leave();
     expect(sockets[0].disconnected).toBe(false);
+    expect(sockets[0].emitted.filter(e => e.event === 'stream.join')).toHaveLength(1);
+    expect(sockets[0].emitted.filter(e => e.event === 'stream.left')).toHaveLength(0);
 
     b.leave();
     expect(sockets[0].disconnected).toBe(true);
+    expect(sockets[0].emitted.filter(e => e.event === 'stream.left')).toHaveLength(1);
   });
 
   it('ignores a count that belongs to another stream', async () => {

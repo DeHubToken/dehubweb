@@ -40,8 +40,16 @@ import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } 
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
+import { useStreamPresence } from '@/hooks/use-stream-presence';
+import { LiveReactionFlow, type SelfReaction } from '@/components/app/live/LiveReactionFlow';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface LiveFeedPreviewProps {
+  streamId?: string;
+  creatorId?: string;
+  isOwner?: boolean;
+  selfReaction?: SelfReaction | null;
+  onViewerCount?: (count: number) => void;
   /** HLS ladder for the stream. First playable URL wins. */
   urls: (string | undefined)[];
   /** Poster frame, shown until the first video frame lands. */
@@ -75,7 +83,7 @@ const WHEP_START_TIMEOUT_MS = 6000;
 const MAX_CONCURRENT_WHEP = 2;
 let whepSessionsOpen = 0;
 
-export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute }: LiveFeedPreviewProps) {
+export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'Live ended', muted = true, controlsVisible = false, onToggleMute, streamId, creatorId, isOwner, selfReaction, onViewerCount }: LiveFeedPreviewProps) {
   const { pathname } = useLocation();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const inPiP = usePictureInPicture(videoRef);
@@ -97,6 +105,13 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { walletAddress } = useAuth();
+  const ownStream = isOwner || (!!walletAddress && walletAddress.toLowerCase() === creatorId?.toLowerCase());
+  const watching = visible && !postOpen && !failed && playing && !paused;
+  const viewerCount = useStreamPresence(streamId, watching && !ownStream);
+  useEffect(() => {
+    if (viewerCount != null) onViewerCount?.(viewerCount);
+  }, [viewerCount, onViewerCount]);
 
   const src = urls.find((u): u is string => !!u && u.includes('.m3u8'));
   const source = useMemo(() => liveSourceFromHlsUrl(src), [src]);
@@ -287,6 +302,7 @@ export function LiveFeedPreview({ urls, thumbnail, className, fallbackLabel = 'L
         onWaiting={() => setLoading(true)}
         onPause={() => { setPaused(true); setLoading(false); }}
       />
+      <LiveReactionFlow streamId={streamId} enabled={visible && !postOpen} self={selfReaction} bottom={56} />
       {visible && !postOpen && loading && (
         <div role="status" aria-label="Loading" className="absolute inset-0 pointer-events-none flex items-center justify-center">
           <ButtonLoader size={40} className="!filter-none" />
