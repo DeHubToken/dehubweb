@@ -4,6 +4,7 @@ import { stepTimelineFrame } from "@/lib/editor/frameStep";
 import { createVideoMattePageCache, videoMatteFramesForOps } from "@/lib/editor/videoMattePageCache";
 import { loadVideoMatteImage } from "@/lib/editor/videoMatteImages";
 import { videoMatteMediaIds } from "@/lib/editor/videoMatte";
+import { prepareGifImage, releaseGifImage } from "@/lib/editor/gifImage";
 /**
  * Canvas-based preview compositor. Composites all active clips at the playhead
  * (video frames + images + text overlays) and synchronises audio elements.
@@ -135,10 +136,15 @@ export function Compositor() {
   const extraVideos = useRef<Map<string, HTMLVideoElement>>(new Map());
   const extraAudio = useRef<Map<string, HTMLAudioElement>>(new Map());
   const imagePool = useRef<Map<string, HTMLImageElement>>(new Map());
+  const gifLoads = useRef(new Map<string, AbortController>());
   const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current, videosByClip: new Map<string, HTMLVideoElement>() }), []);
   useEffect(() => () => {
     extraVideos.current.forEach(releaseMedia);
     extraAudio.current.forEach(releaseMedia);
+    gifLoads.current.forEach(controller => controller.abort());
+    gifLoads.current.clear();
+    imagePool.current.forEach(image => { releaseGifImage(image); image.src = ""; });
+    imagePool.current.clear();
   }, []);
 
   const mediaRef = useRef(media); mediaRef.current = media;
@@ -183,14 +189,27 @@ export function Compositor() {
       if (m.kind === "image" && !iPool.has(m.id)) {
         const img = new Image();
         if (!m.url.startsWith("blob:")) img.crossOrigin = "anonymous";
-        img.src = m.url;
         iPool.set(m.id, img);
+        if (m.mimeType === "image/gif") {
+          const controller = new AbortController();
+          gifLoads.current.set(m.id, controller);
+          void prepareGifImage(img, m.url, controller.signal).then(() => {
+            if (!controller.signal.aborted && iPool.get(m.id) === img) img.src = m.url;
+          }).catch(() => {
+            if (iPool.get(m.id) === img) { releaseGifImage(img); iPool.delete(m.id); img.src = ""; }
+          }).finally(() => {
+            if (gifLoads.current.get(m.id) === controller) gifLoads.current.delete(m.id);
+          });
+        } else img.src = m.url;
       }
     }
     // GC dropped media.
     for (const id of Array.from(vPool.keys())) if (!liveIds.has(id)) { vPool.get(id)?.pause(); vPool.delete(id); }
     for (const id of Array.from(aPool.keys())) if (!liveIds.has(id)) { aPool.get(id)?.pause(); aPool.delete(id); }
-    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id) && !matteIds.has(id)) { const image = iPool.get(id); if (image) image.src = ""; iPool.delete(id); }
+    for (const id of Array.from(iPool.keys())) if (!liveIds.has(id) && !matteIds.has(id)) {
+      gifLoads.current.get(id)?.abort(); gifLoads.current.delete(id);
+      const image = iPool.get(id); if (image) { releaseGifImage(image); image.src = ""; } iPool.delete(id);
+    }
   }, [media, clips]);
 
   // ── Playback clock ──

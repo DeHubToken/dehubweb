@@ -13,6 +13,7 @@
 import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
 import { computeClipAnimation } from "./animationPresets";
 import { videoMatteFrame } from "./videoMatte";
+import { gifImageFrame } from "./gifImage";
 import { measuredTextLayout } from "./textLayout";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
@@ -94,14 +95,14 @@ export function isVisualClip(clip: Clip): boolean {
   return clip.kind === "video" || clip.kind === "image" || clip.kind === "text" || clip.kind === "shape";
 }
 
-function mediaSource(clip: MediaClip, src: RenderSources): { el: CanvasImageSource; w: number; h: number } | null {
+function mediaSource(clip: MediaClip, src: RenderSources, sourceTime?: number): { el: CanvasImageSource; w: number; h: number } | null {
   if (clip.kind === "video") {
     const v = src.videosByClip?.get(clip.id) ?? src.videos.get(clip.mediaId);
     return v && v.videoWidth ? { el: v, w: v.videoWidth, h: v.videoHeight } : null;
   }
   if (clip.kind === "image") {
     const img = src.images.get(clip.mediaId);
-    return img && img.naturalWidth ? { el: img, w: img.naturalWidth, h: img.naturalHeight } : null;
+    return img && img.naturalWidth ? { el: sourceTime === undefined ? img : gifImageFrame(img, sourceTime), w: img.naturalWidth, h: img.naturalHeight } : null;
   }
   return null;
 }
@@ -338,7 +339,7 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
 let matteCanvas: HTMLCanvasElement | null = null;
 
 function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: RenderSources, sourceTime: number) {
-  const m = mediaSource(clip, src);
+  const m = mediaSource(clip, src, sourceTime);
   if (!m) return;
   const c = cropOf(clip);
   let el = m.el;
