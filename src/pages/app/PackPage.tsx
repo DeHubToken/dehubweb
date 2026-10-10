@@ -70,7 +70,7 @@ export default function PackPage() {
   const isSaved = !!pack && (saved.data ?? []).some((p) => p.id === pack.id);
 
   const [busy, setBusy] = useState(false);
-  const [editingName, setEditingName] = useState<string | null>(null);
+  const [editingName, setEditingName] = useSurfaceDraft<string | null>("src/pages/app/PackPage.tsx:editingName", null, slug);
   const [link, setLink] = useSurfaceDraft("pages/app/PackPage.tsx:link", '');
   const [label, setLabel] = useSurfaceDraft("pages/app/PackPage.tsx:label", '');
   const fileRef = useRef<HTMLInputElement>(null);

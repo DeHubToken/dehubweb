@@ -76,7 +76,7 @@ export function SelectChip<T extends string>({
   const epoch = useSurfaceEpoch();
 
   const searchRef = useRef<HTMLInputElement>(null);
-  const [query, setQuery] = useSurfaceDraft("components/app/creator/studio/StudioChip.tsx:query", '');
+  const [query, setQuery] = useSurfaceDraft("components/app/creator/studio/StudioChip.tsx:query", '', JSON.stringify(options.map(option => option.value)));
   // A stale filter would hide the list on the next open.
   useEffect(() => {
     if (!open) setQuery.initialize('');
@@ -184,6 +184,7 @@ export function SelectChip<T extends string>({
 }
 
 interface CounterChipProps {
+  draftScope: string;
   /** Plural unit shown beside the number, e.g. "images". */
   label: string;
   /** Singular form, used when the value is 1. Defaults to `label`. */
@@ -198,6 +199,7 @@ interface CounterChipProps {
 }
 
 export function CounterChip({
+  draftScope,
   label,
   singular,
   value,
@@ -209,8 +211,8 @@ export function CounterChip({
   disabled,
 }: CounterChipProps) {
   const { t } = useTranslation();
-  const [draft, setDraft] = useState(String(value));
-  useEffect(() => setDraft(String(value)), [value, min, max, allowedValues]);
+  const [draft, setDraft] = useSurfaceDraft("creator:counter", String(value), draftScope);
+  useEffect(() => setDraft.initialize(String(value)), [value, min, max, allowedValues, setDraft]);
   const normalize = (next: number) => {
     const clamped = Math.min(max, Math.max(min, Math.round(next)));
     if (!allowedValues?.length) return clamped;
@@ -221,6 +223,7 @@ export function CounterChip({
     const next = draft.trim() && Number.isFinite(Number(draft)) ? normalize(Number(draft)) : value;
     setDraft(String(next));
     onChange(next);
+    setDraft.clear();
   };
   const step = (delta: number) => {
     const options = allowedValues?.filter((option) => delta > 0 ? option > value : option < value);
@@ -229,6 +232,7 @@ export function CounterChip({
       : normalize(value + delta);
     setDraft(String(next));
     onChange(next);
+    setDraft.clear();
   };
   const unit = value === 1 ? (singular ?? label) : label;
 

@@ -27,7 +27,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
   const [method, setMethod] = useState<'card' | 'crypto'>('card');
   const [amountUsd, setAmountUsd] = useSurfaceDraft("components/app/live/LiveGiftBuyDrawer.tsx:amountUsd", '10');
   const [tokenPrice, setTokenPrice] = useState(0);
-  const [cryptoAmount, setCryptoAmount] = useState(() => String(Math.max(1, Math.ceil(neededDhb))));
+  const [cryptoAmount, setCryptoAmount] = useSurfaceDraft("src/components/app/live/LiveGiftBuyDrawer.tsx:cryptoAmount", () => String(Math.max(1, Math.ceil(neededDhb))));
   const [clientSecret, setClientSecret] = useState('');
   const [sessionId, setSessionId] = useState('');
   const [busy, setBusy] = useState(false);

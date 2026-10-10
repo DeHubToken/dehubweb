@@ -1,3 +1,4 @@
+import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * Threaded Comments
  * =================
@@ -82,6 +83,7 @@ export interface ThreadedCommentsLabels {
 }
 
 interface RowProps<C extends ThreadedComment> {
+  draftScope: string;
   comment: C;
   isOwn: boolean;
   isEntityAuthor: boolean;
@@ -92,11 +94,12 @@ interface RowProps<C extends ThreadedComment> {
   busy: boolean;
   onReply: (comment: C) => void;
   onReact: (comment: C, reaction: PostReaction) => void;
-  onEdit: (comment: C, content: string) => void;
+  onEdit: (comment: C, content: string) => Promise<unknown>;
   onDelete: (comment: C) => void;
 }
 
 function CommentRow<C extends ThreadedComment>({
+  draftScope,
   comment,
   isOwn,
   isEntityAuthor,
@@ -113,7 +116,18 @@ function CommentRow<C extends ThreadedComment>({
   const { t } = useI18n();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(comment.content);
+  const [editText, setEditText] = useDraftState(`${draftScope}:edit:${comment.id}`, comment.content);
+  const [saving, setSaving] = useState(false);
+  const saveEdit = async () => {
+    if (saving || !editText.trim()) return;
+    setSaving(true);
+    try {
+      await onEdit(comment, editText);
+      if (setEditText.complete(editText, editText)) setIsEditing(false);
+    } catch { /* The mutation reports failure; keep the unfinished edit. */ }
+    finally { setSaving(false); }
+  };
+  const cancelEdit = () => { setEditText.clear(); setEditText.initialize(comment.content); setIsEditing(false); };
 
   // No tray on your own comment: every reaction it could cast is one you are
   // not allowed to cast on yourself, so the button would open onto refusals.
@@ -190,17 +204,16 @@ function CommentRow<C extends ThreadedComment>({
               className="flex-1 bg-zinc-800 text-white text-sm rounded-lg h-8 border-zinc-700"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
-                  onEdit(comment, editText);
-                  setIsEditing(false);
+                  void saveEdit();
                 } else if (e.key === 'Escape') {
-                  setEditText(comment.content);
-                  setIsEditing(false);
+                  cancelEdit();
                 }
               }}
             />
             <button
               type="button"
-              onClick={() => { onEdit(comment, editText); setIsEditing(false); }}
+              disabled={saving}
+              onClick={() => void saveEdit()}
               className="text-white/80 hover:text-white transition-colors"
               aria-label={t('common.save')}
             >
@@ -208,7 +221,7 @@ function CommentRow<C extends ThreadedComment>({
             </button>
             <button
               type="button"
-              onClick={() => { setEditText(comment.content); setIsEditing(false); }}
+              onClick={cancelEdit}
               className="text-zinc-400 hover:text-white transition-colors"
               aria-label={t('common.cancel')}
             >
@@ -295,6 +308,7 @@ function CommentRow<C extends ThreadedComment>({
 }
 
 export interface ThreadedCommentsProps<C extends ThreadedComment> {
+  draftScope: string;
   threads: CommentThread<C>[] | undefined;
   isLoading: boolean;
   /** Whose thing this thread hangs off — their rows get the author chip. */
@@ -311,7 +325,7 @@ export interface ThreadedCommentsProps<C extends ThreadedComment> {
    * in place — the hook has already said why.
    */
   onSubmit: (input: { content: string; parent: C | null }) => Promise<unknown>;
-  onEdit: (comment: C, content: string) => void;
+  onEdit: (comment: C, content: string) => Promise<unknown>;
   onDelete: (comment: C) => void;
   onReact: (comment: C, reaction: PostReaction) => void;
   /** Tailwind cap on the list before it scrolls; the card variant is shorter. */
@@ -319,6 +333,7 @@ export interface ThreadedCommentsProps<C extends ThreadedComment> {
 }
 
 export function ThreadedComments<C extends ThreadedComment>({
+  draftScope,
   threads,
   isLoading,
   entityAuthorAddress,
@@ -337,8 +352,8 @@ export function ThreadedComments<C extends ThreadedComment>({
   const viewer = walletAddress?.toLowerCase() ?? null;
   const entityAuthor = entityAuthorAddress.toLowerCase();
 
-  const [text, setText] = useState('');
-  const [replyTo, setReplyTo] = useState<C | null>(null);
+  const [text, setText] = useDraftState(`${draftScope}:text`, '');
+  const [replyTo, setReplyTo] = useDraftState<C | null>(`${draftScope}:reply`, null);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [pendingDelete, setPendingDelete] = useState<C | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -372,7 +387,7 @@ export function ThreadedComments<C extends ThreadedComment>({
     const prefix = comment.username ? `@${comment.username} ` : '';
     setText((current) => (current.startsWith(prefix) ? current : prefix + current));
     requestAnimationFrame(() => inputRef.current?.focus());
-  }, [isAuthenticated, openLoginModal]);
+  }, [isAuthenticated, openLoginModal, setReplyTo, setText]);
 
   const handleReact = useCallback((comment: C, reaction: PostReaction) => {
     if (!isAuthenticated) { openLoginModal(); return; }
@@ -393,8 +408,7 @@ export function ThreadedComments<C extends ThreadedComment>({
     onSubmit({ content: text, parent })
       .then(() => {
         if (parent) setExpanded((prev) => new Set(prev).add(parent.parent_id ?? parent.id));
-        setText('');
-        setReplyTo(null);
+        if (setText.complete(text, '')) setReplyTo.complete(parent, null);
       })
       .catch(() => {
         // The hook toasts; the draft stays so nothing typed is lost.
@@ -406,6 +420,7 @@ export function ThreadedComments<C extends ThreadedComment>({
   const rowFor = (comment: C, extra: Partial<RowProps<C>>) => (
     <CommentRow
       key={comment.id}
+      draftScope={draftScope}
       comment={comment}
       isOwn={comment.wallet_address.toLowerCase() === viewer}
       isEntityAuthor={comment.wallet_address.toLowerCase() === entityAuthor}

@@ -77,11 +77,11 @@ function TranscriptLine({
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { submit, vote, remove } = useCorrectionActions(transcriptId);
   const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(segment.text);
+  const [draft, setDraft] = useSurfaceDraft("src/components/app/post-info/TranscriptSection.tsx:draft", segment.text, `${transcriptId}:${index}`);
 
   const startEditing = () => {
     if (!isAuthenticated) return openLoginModal();
-    setDraft(segment.text);
+    setDraft.initialize(segment.text);
     setIsEditing(true);
   };
 
@@ -111,7 +111,7 @@ function TranscriptLine({
                 if (e.key !== 'Enter' || !draft.trim()) return;
                 submit.mutate(
                   { segmentIndex: index, text: draft.trim(), originalText: segment.text },
-                  { onSuccess: () => setIsEditing(false) },
+                  { onSuccess: () => { setDraft.complete(draft, draft); setIsEditing(false); } },
                 );
               }}
               maxLength={500}
@@ -122,7 +122,7 @@ function TranscriptLine({
               disabled={!draft.trim() || submit.isPending}
               onClick={() => submit.mutate(
                 { segmentIndex: index, text: draft.trim(), originalText: segment.text },
-                { onSuccess: () => setIsEditing(false) },
+                { onSuccess: () => { setDraft.complete(draft, draft); setIsEditing(false); } },
               )}
               className="shrink-0 p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-40"
               aria-label="Submit correction"

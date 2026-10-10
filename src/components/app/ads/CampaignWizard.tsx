@@ -73,8 +73,8 @@ export function CampaignWizard({ open, onOpenChange, onCreated }: CampaignWizard
   const [targeting, setTargeting] = useState<AdTargeting>({});
 
   // Step 3 — budget (defaults sized to crypto-native CPMs — $100+ per 1000)
-  const [dailyBudget, setDailyBudget] = useState(250);
-  const [totalBudget, setTotalBudget] = useState(2500);
+  const [dailyBudget, setDailyBudget] = useSurfaceDraft("src/components/app/ads/CampaignWizard.tsx:dailyBudget", 250);
+  const [totalBudget, setTotalBudget] = useSurfaceDraft("src/components/app/ads/CampaignWizard.tsx:totalBudget", 2500);
   const [durationDays, setDurationDays] = useState(14);
   const [frequencyCap, setFrequencyCap] = useState(4);
 

@@ -321,8 +321,8 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
 function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | null; onOpenChange: (open: boolean) => void }) {
   const { isLoginModalOpen, requestWalletUnlock } = useAuth();
   const [selectedKey, setSelectedKey] = useState('8453:USDC');
-  const [manualHash, setManualHash] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:manualHash", '');
-  const [manualAmount, setManualAmount] = useState('');
+  const [manualHash, setManualHash] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:manualHash", '', proposal?.id ?? null);
+  const [manualAmount, setManualAmount] = useSurfaceDraft("src/components/app/dao/DaoProposals.tsx:manualAmount", '', proposal?.id ?? null);
   const [sending, setSending] = useState(false);
   const [hiddenForUnlock, setHiddenForUnlock] = useState(false);
   const [pendingAfterUnlock, setPendingAfterUnlock] = useState(false);

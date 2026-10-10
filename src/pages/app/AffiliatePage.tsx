@@ -65,7 +65,7 @@ export default function AffiliatePage() {
     return "1";
   });
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [landing, setLanding] = useState<AffiliateLandingCustomization>(DEFAULT_AFFILIATE_LANDING);
+  const [landing, setLanding] = useSurfaceDraft<AffiliateLandingCustomization>("src/pages/app/AffiliatePage.tsx:landing", DEFAULT_AFFILIATE_LANDING);
   const [savingLanding, setSavingLanding] = useState(false);
 
   // Bump this whenever the share-image renderer changes so all users pick up the new look.
@@ -109,7 +109,7 @@ export default function AffiliatePage() {
     } finally {
       setLoading(false);
     }
-  }, [displayName, t, wallet]);
+  }, [displayName, t, wallet, setLanding]);
 
   useEffect(() => { void load(); }, [load]);
 

@@ -831,7 +831,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useSurfaceDraft("pages/app/FullWalletPage.tsx:amount", '');
   const [sending, setSending] = useState(false);
-  const [usernameQuery, setUsernameQuery] = useState('');
+  const [usernameQuery, setUsernameQuery] = useSurfaceDraft("src/pages/app/FullWalletPage.tsx:usernameQuery", '');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [resolvedUser, setResolvedUser] = useState<{ username: string; avatar?: string; address: string } | null>(null);
@@ -854,7 +854,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
     } finally {
       setSearching(false);
     }
-  }, []);
+  }, [setUsernameQuery]);
 
   const selectUser = (user: any) => {
     const addr = user.address || user.wallet_address || '';

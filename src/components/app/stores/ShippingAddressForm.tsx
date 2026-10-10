@@ -32,7 +32,7 @@ export function ShippingAddressForm({ onChange }: Props) {
   const saveAddress = useSaveAddress();
   const deleteAddress = useDeleteAddress();
 
-  const [fields, setFields] = useState<AddressFields>(EMPTY);
+  const [fields, setFields] = useSurfaceDraft<AddressFields>("src/components/app/stores/ShippingAddressForm.tsx:fields", EMPTY);
   const [selectedId, setSelectedId] = useState<string>('new');
   const [saveLabel, setSaveLabel] = useSurfaceDraft("components/app/stores/ShippingAddressForm.tsx:saveLabel", 'Home');
   const [wantSave, setWantSave] = useState(false);
@@ -85,7 +85,7 @@ export function ShippingAddressForm({ onChange }: Props) {
       country: addr.country,
     });
     setWantSave(false);
-  }, []);
+  }, [setFields]);
 
   const handleSelectChange = (val: string) => {
     saveAddress.reset();
