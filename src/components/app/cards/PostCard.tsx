@@ -340,17 +340,11 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   const handleShareAsImage = useCallback(async () => {
     try {
       const blob = await buildPostShareImage({
-        authorName: post.author.name,
-        authorHandle: post.author.handle,
-        authorAvatarUrl: post.author.avatarSeed?.startsWith('http') ? post.author.avatarSeed : undefined,
-        title: post.title,
-        content: post.content,
         postId: post.id,
-        likes: post.stats.likes,
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
-      const postUrl = `${window.location.origin}/app/post/${post.id}`;
+      const postUrl = `https://dehub.io${post.newPostId ? `/newpost/${post.newPostId}` : `/app/post/${post.id}`}`;
 
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
@@ -372,7 +366,7 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
         toast.error('Failed to share image');
       }
     }
-  }, [post.id, post.content, post.title, post.author]);
+  }, [post.id, post.newPostId, post.content]);
 
   // Build a minimal DeHubNFT for the quote modal from post data
   const postAsNFT = {

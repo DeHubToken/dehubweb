@@ -1,5 +1,6 @@
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
+import { applyTextPostImage } from './server/post-share-card.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
 /**
@@ -6005,6 +6006,11 @@ async function handleRequest(request, env, ctx) {
 
   // Share-card sources for the image transform (see shareCardImage). Ahead of
   // the `/_` static-asset skip below, which would hand these to ASSETS.
+  const textPostCard = pathname.match(/^\/_og\/post\/v1\/([1-9]\d{0,14})\.png$/);
+  if (textPostCard) {
+    const { handlePostShareImage } = await import('./server/post-share-image.js');
+    return handlePostShareImage(request, env, ctx, textPostCard[1], fetchPostRecord);
+  }
   if (pathname.startsWith(OG_SOURCE_PREFIX)) return ogSourceResponse(request, env, pathname);
 
   // Skip static assets immediately.
@@ -6748,6 +6754,7 @@ async function handleRequest(request, env, ctx) {
       proxiedSegments.length === 1 && couldBeProfileSegment(firstSegmentOf(cleanPath), SYSTEM_ROUTES)
         ? ((html.match(/<link rel="canonical" href="https:\/\/dehub\.io\/([^"/?#]+)">/) || [])[1] || proxiedSegments[0])
         : '';
+    let postShareRecord = null;
     if (proxiedPostId) {
       // Every post, not just a bodyless one: the title work in enrichPostMeta
       // has to reach the posts that DO have body text, because those are
@@ -6762,6 +6769,7 @@ async function handleRequest(request, env, ctx) {
       // conversation left on the API. One bounded read, five-second cap, and
       // a miss costs the sections, not the page.
       const record = await fetchPostRecord(proxiedPostId);
+      postShareRecord = record;
       html = enrichPostMeta(html, proxiedPostId, record);
       // The VideoObject is repaired first, while it is still its own node;
       // socialPostingLd then nests it under the post as it stands.
@@ -6830,7 +6838,7 @@ async function handleRequest(request, env, ctx) {
     // Organization, and post/community images as true 1200x630 cards.
     const proxiedCommunity = !proxiedPostId && /^\/app\/communities\/[^/?#]+/.test(ssrPath);
     if (proxiedPostId) {
-      html = dropTwitterPlayer(cardProxiedImage(html));
+      html = applyTextPostImage(dropTwitterPlayer(cardProxiedImage(html)), postShareRecord);
     } else if (proxiedHandle) {
       html = rewriteJsonLd(html, (ld) => profilePageLd(ld, proxiedHandle));
     } else if (proxiedCommunity) {
