@@ -9,7 +9,7 @@ import { payForJob, forgetPayment } from '@/lib/ai-payment';
 import { getWalletAddress } from '@/lib/contracts/aa-utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { completeMaboroshiPayment, getMaboroshiQuote, isMaboroshiPaymentRequest, type MaboroshiQuote } from '@/lib/maboroshi-payment';
+import { completeMaboroshiPayment, getMaboroshiQuote, isMaboroshiPaymentRequest, maboroshiStageLabel, type MaboroshiQuote } from '@/lib/maboroshi-payment';
 
 const ORIGIN = 'https://live.dehub.io';
 const STUDIO = `${ORIGIN}/maboroshi/`;
@@ -71,9 +71,9 @@ export default function MaboroshiPage() {
     <main data-glass-page className="relative z-[1] flex min-h-[100dvh] flex-col bg-[#090a0b] text-white">
       <SEOHead title="Maboroshi | DeHub Creator" description={t('creator.toolMaboroshiDesc')} url="https://dehub.io/creator/maboroshi" />
       <header className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
-        <Link to="/creator" className="inline-flex items-center gap-2 text-sm font-medium"><ArrowLeft className="h-4 w-4" />{t('creator.srHeading')}</Link>
+        <Link to="/creator" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium"><ArrowLeft className="h-4 w-4" />{t('creator.srHeading')}</Link>
         <div className="flex items-center gap-3">
-          <button type="button" disabled={!!quote || paying} onClick={() => { setConnected(false); setAttempt(value => value + 1); }} aria-label={t('common.refresh', 'Refresh')} className="rounded-lg p-2 hover:bg-white/10"><RefreshCw className="h-4 w-4" /></button>
+          <button type="button" disabled={!!quote || paying} onClick={() => { setConnected(false); setAttempt(value => value + 1); }} aria-label={t('common.refresh', 'Refresh')} className="flex h-11 w-11 items-center justify-center rounded-lg hover:bg-white/10"><RefreshCw className="h-4 w-4" /></button>
           {!isAuthenticated && <button type="button" onClick={() => openLoginModal()} className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black">{t('creator.login', 'Login')}</button>}
         </div>
       </header>
@@ -86,9 +86,10 @@ export default function MaboroshiPage() {
       }}>
         <DialogContent onInteractOutside={event => { if (paying) event.preventDefault(); }}>
           <DialogHeader><DialogTitle>{t('creator.toolMaboroshi')}</DialogTitle>
-            <DialogDescription>{quote?.stage} · {quote && (quote.price_micros / 1000).toLocaleString()} DHB · {quote && new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(quote.price_micros / 1e6)}</DialogDescription>
+            <DialogDescription>{quote && maboroshiStageLabel(quote.stage)} · {quote && (quote.price_micros / 1000).toLocaleString()} DHB · {quote && new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(quote.price_micros / 1e6)}</DialogDescription>
           </DialogHeader>
           <Button disabled={paying} onClick={() => void confirm()}>{paying ? t('common.loading', 'Loading…') : t('common.confirm', 'Confirm')}</Button>
+          <Button variant="outline" disabled={paying} onClick={() => { if (quote) reply(quote.requestId, 'Payment cancelled.'); pending.current = null; setQuote(null); }}>{t('common.cancel')}</Button>
         </DialogContent>
       </Dialog>
     </main>

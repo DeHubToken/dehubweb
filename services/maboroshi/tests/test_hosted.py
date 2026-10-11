@@ -1,4 +1,5 @@
 import os
+import io
 import tempfile
 import time
 import unittest
@@ -6,6 +7,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 import requests
 from fastapi.testclient import TestClient
+from PIL import Image
 import access
 import mask_review
 import seedance_bridge
@@ -85,6 +87,29 @@ class HostedTests(unittest.TestCase):
         row = access.job(IDENT)
         row['reference_seconds'] = 3.2
         self.assertEqual(access.price(row, 'draft'), 7000000)
+
+    def test_character_can_be_saved_before_preparation_without_starting_or_charging(self):
+        image = io.BytesIO()
+        Image.new('RGB', (32, 32), 'blue').save(image, format='PNG')
+        with patch('access.debit') as debit, patch.object(server.executor, 'submit') as submit:
+            response = self.client.post(f'/jobs/{IDENT}/references', data={'prompt': 'Use this character'},
+                files={'reference': ('character.png', image.getvalue(), 'image/png')})
+            self.assertEqual(response.status_code, 200)
+            data = response.json()
+            self.assertEqual(data['state'], 'uploaded')
+            self.assertTrue(data['hasReference'])
+            self.assertEqual(data['references']['reference']['kind'], 'image')
+            self.assertIn('signature=', data['references']['reference']['url'])
+            self.assertEqual(self.client.get(data['references']['reference']['url'].replace(access.PUBLIC, '')).status_code, 200)
+            debit.assert_not_called(); submit.assert_not_called()
+        server.app.dependency_overrides[server.owner] = lambda: OTHER
+        self.assertEqual(self.client.get(f'/jobs/{IDENT}').status_code, 404)
+
+    def test_processing_references_cannot_be_replaced_and_failures_keep_source(self):
+        access.update(IDENT, state='running', stage='prepare')
+        self.assertEqual(self.client.post(f'/jobs/{IDENT}/references', data={'prompt': 'Changed'}).status_code, 409)
+        access.update(IDENT, state='failed')
+        self.assertIn('upload.mp4', self.client.get(f'/jobs/{IDENT}').json()['files'])
 
     def test_verified_session_identity_is_required(self):
         server.app.dependency_overrides.clear()
