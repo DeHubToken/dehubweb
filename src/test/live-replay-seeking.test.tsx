@@ -8,13 +8,14 @@ vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, fall
 vi.mock('@/contexts/AuthContext', () => ({ useAuth: () => ({}) }));
 vi.mock('@/hooks/use-dehub-profile', () => ({ useDeHubProfile: () => ({}) }));
 vi.mock('@/hooks/use-follow', () => ({ useFollowOverrides: () => new Map(), toggleFollowFor: vi.fn() }));
+vi.mock('@/hooks/use-live-audience', () => ({ useLiveAudience: () => ({ data: undefined, isLoading: false }) }));
 vi.mock('@/components/app/BadgeIcon', () => ({ BadgeIcon: () => null }));
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 function mount(progress = 0.5) {
   const onSeek = vi.fn();
   render(<ImmersiveLiveChrome streamerName="Creator" title="Replay" isLive={false} isEnded viewers={0}
-    isMuted onToggleMute={() => {}} hidden={false} onToggleHidden={() => {}} progress={progress} onSeek={onSeek} />);
+    isMuted onToggleMute={() => {}} hidden={false} progress={progress} onSeek={onSeek} />);
   return { onSeek, slider: screen.getByRole('slider', { name: 'Replay' }) };
 }
 
