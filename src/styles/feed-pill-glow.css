@@ -1,7 +1,7 @@
 /* Pull-to-refresh glow under the feed tab pill (FeedPillGlow).
 
    A lit rim along the pill's bottom edge and a soft halo spilling into the gap
-   where the spinner appears. --pull-glow (0 to 1) follows the pull; while the
+   opened by the pull. --pull-glow (0 to 1) follows the pull; while the
    feed refreshes, opacity keeps a slow, quiet pulse until the new posts land.
    Each theme lights it in its own colour (--tint-accent). */
 
@@ -21,19 +21,25 @@ html[data-theme='light'] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain:
   z-index: 1;
   opacity: calc(var(--pill-glow-gain) * var(--pull-glow, 0));
   will-change: opacity;
+  transition: opacity 420ms ease-out;
 }
-[data-feed-pill-glow][data-refreshing] {
+[data-feed-pill-glow][data-pulling] { transition: none; }
+[data-feed-pill-glow-light] {
+  position: absolute;
+  inset: 0;
   animation: feed-pill-glow-breath 1.8s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+[data-feed-pill-glow][data-refreshing] [data-feed-pill-glow-light] {
+  animation-play-state: running;
 }
 @keyframes feed-pill-glow-breath {
-  from { opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), 0.3)); }
-  to { opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), 0.45)); }
+  from { opacity: 1; }
+  to { opacity: .78; }
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-feed-pill-glow][data-refreshing] {
-    animation: none;
-    opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), 0.32));
-  }
+  [data-feed-pill-glow] { transition: none; }
+  [data-feed-pill-glow-light] { animation: none; }
 }
 
 [data-feed-pill-glow-rim] {
@@ -61,4 +67,23 @@ html[data-theme='light'] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain:
 }
 html[data-theme='light'] [data-feed-pill-glow-halo] {
   box-shadow: 0 -6px 18px -8px rgb(60 80 140 / 0.35);
+}
+
+[data-feed-pull-rim] {
+  will-change: opacity;
+  transition: opacity 420ms ease-out;
+}
+[data-feed-pull-rim][data-pulling] { transition: none; }
+[data-feed-pull-echo] {
+  animation: feed-pull-echo 3571ms linear infinite;
+  animation-play-state: paused;
+}
+[data-feed-pull-echo][data-active] { animation-play-state: running; }
+@keyframes feed-pull-echo {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(var(--pull-echo-offset, 0px)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-feed-pull-rim] { transition: none; }
+  [data-feed-pull-echo] { animation: none; }
 }
