@@ -405,18 +405,19 @@ export function useLiveChatMessages(roomId: string | null) {
     const socket = getSocket(roomId);
     setIsConnected(socket.connected);
 
-    const onConnect = () => {
-      setIsConnected(true);
-      joinRoom(roomId);
-    };
+    // Counted once per mounted chat, whatever the connection is doing. It used
+    // to be counted on every connect: a chat that mounted before the socket
+    // connected was not counted yet, so another chat for the same room
+    // unmounting in that window closed the socket under it. Its sends then went
+    // out on a fresh connection that never joined the room, landed in the
+    // platform chat, and never echoed back, so the box kept the sent text.
+    // The socket re-joins by itself on every (re)connect.
+    joinRoom(roomId);
+    const onConnect = () => setIsConnected(true);
     const onDisconnect = () => setIsConnected(false);
 
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-
-    if (socket.connected) {
-      joinRoom(roomId);
-    }
 
     const unsubJoined = onRoomJoined(roomId, (data) => {
       console.log('[LiveChat] Room joined, banned:', data.isBanned);

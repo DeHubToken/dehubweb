@@ -298,8 +298,13 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     }
 
     if (!message.trim()) return;
-    if (!(await onSendMessage({ content: message.trim(), type: 'msg' }))) return;
-    setMessage.complete(message, '');
+    // Clear at once, like every chat app; a failed send puts the words back
+    // unless something new has been typed since.
+    const sent = message;
+    setMessage('');
+    if (!(await onSendMessage({ content: sent.trim(), type: 'msg' }))) {
+      setMessage(current => (current.trim() ? current : sent));
+    }
     resetComposerHeight();
     } finally { sendInFlight.current = false; }
   };
