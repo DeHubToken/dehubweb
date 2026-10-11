@@ -14,6 +14,22 @@ export interface LinkPreviewData {
 
 const previewCache = new Map<string, LinkPreviewData>();
 
+export function getLinkPreviewFavicon(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    if (!/^https?:$/.test(parsed.protocol)) return null;
+    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(parsed.hostname)}&sz=64`;
+  } catch {
+    return null;
+  }
+}
+
+function compactPreview(url: string): LinkPreviewData {
+  let domain = url;
+  try { domain = new URL(url).hostname.replace(/^www\./, ''); } catch { /* keep the supplied link */ }
+  return { url, title: domain, description: '', image: null, siteName: domain };
+}
+
 export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | null> {
   const prediction = parsePredictionLink(url);
   if (prediction) return fetchPredictionPreview(prediction);
@@ -29,19 +45,19 @@ export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | n
       body: { url },
     });
 
-    if (error) {
+    if (error || !data || data.error) {
       console.error('Error fetching link preview:', error);
-      return null;
+      return compactPreview(url);
     }
 
     const preview: LinkPreviewData = {
-      url: data.url,
-      title: data.title,
-      description: data.description,
+      url,
+      title: data.title || compactPreview(url).title,
+      description: data.description || '',
       // The preview endpoint can return an HTML-escaped OG URL. Its query
       // parameters must be decoded before the image renderer receives them.
       image: typeof data.image === 'string' ? data.image.replace(/&amp;/gi, '&') : null,
-      siteName: data.siteName,
+      siteName: data.siteName || compactPreview(url).siteName,
     };
 
     // Cache the result
@@ -50,7 +66,7 @@ export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | n
     return preview;
   } catch (error) {
     console.error('Error fetching link preview:', error);
-    return null;
+    return compactPreview(url);
   }
 }
 
