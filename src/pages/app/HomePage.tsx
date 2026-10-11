@@ -37,6 +37,7 @@ import { setTabSwitchTime } from '@/lib/gesture-state';
 import { getLiteMode } from '@/hooks/use-connection-quality';
 import { clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { useSystemFeedHeaderMotion } from '@/hooks/use-system-feed-header-motion';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
 import { SEOHead } from '@/components/SEOHead';
@@ -495,7 +496,7 @@ export default function HomePage() {
 
   // Clip the feed at the visible nav pill's top edge under the glass themes.
   // Two variants match: this page's pill and the collapsed GlobalFeedNav's.
-  // Not on system phones: the pill only drops in on demand under the capsule,
+  // Not on Immersive phones: the pill only drops in on demand under the capsule,
   // and posts run under it to the top of the screen.
   useFeedSwallowClip(feedContainerRef, '[data-feed-nav]', [], { off: islandTopBar && isMobile });
 
@@ -528,6 +529,11 @@ export default function HomePage() {
   // Island mode keeps the tab pill out of sight; the capsule's dropdown picks
   // the feed. The pill only comes down to hold an open filter panel.
   const islandFiltersOpen = ({ home: showHomeFilters, live: showLiveFilters, shorts: showShortsFilters, images: showImagesFilters, videos: showVideosFilters, music: showMusicFilters } as Record<string, boolean>)[activeTab] ?? false;
+
+  const homeNavRef = useRef<HTMLDivElement>(null);
+  const hideHomeNav = isMobile && (anyOverlayOpen || ((islandTopBar ? !islandFiltersOpen : !navVisible) && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')));
+  const linkedSystemHeader = theme === 'system' && isMobile;
+  useSystemFeedHeaderMotion(homeNavRef, linkedSystemHeader && pageActive, hideHomeNav);
 
   const handleTabClick = useCallback((tabValue: string) => {
     // Island mode: picking a feed closes the capsule's dropdown.
@@ -960,11 +966,12 @@ export default function HomePage() {
       )}
       {/* Tab Navigation */}
       <div
+        ref={homeNavRef}
         data-feed-nav-outer
         data-home-tabs
         className={cn("sticky top-11 lg:top-0 bg-black px-2 sm:px-3 pt-1 pb-3 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", anyOverlayOpen ? "z-[40]" : "z-[110]", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
         style={{
-          transform: (isMobile && (anyOverlayOpen || ((islandTopBar ? !islandFiltersOpen : !navVisible) && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)',
+          transform: linkedSystemHeader ? 'translateY(var(--system-feed-header-offset, 0px))' : hideHomeNav ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)',
           willChange: 'transform',
           // Island mode: the pill drops in under the capsule rather than at the very top.
           // Fixed, not sticky, so it takes no room in the page: posts run to
