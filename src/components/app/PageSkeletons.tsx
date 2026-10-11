@@ -239,7 +239,7 @@ export function ProfileSkeleton() {
   return (
     <div className="p-2 sm:p-3 space-y-2 sm:space-y-3">
       {/* Profile Card Bento */}
-      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <div className="max-sm:-mx-2 bg-zinc-900 rounded-2xl overflow-hidden">
         <Skeleton className={`aspect-[3/1] w-full ${SK}`} />
         <div className="px-4 sm:px-6 pb-4">
           <div className="flex items-end justify-between -mt-12 sm:-mt-14 mb-4">
