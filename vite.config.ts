@@ -54,6 +54,9 @@ function blogManifestPlugin() {
       } catch (e) {
         console.warn('[guide-content] generation failed', e);
       }
+      // The blog generator replaces guide and docs sitemap rows. Restore the
+      // translated variants and reciprocal links before Vite copies public/.
+      execSync('node scripts/build-seo-i18n.mjs', { stdio: 'inherit' });
     },
   };
 }
