@@ -32,7 +32,6 @@ import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } fr
 import { useTrenchstarHost } from '@/lib/trenchstar-host';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AlertTriangle, Gamepad2, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -45,6 +44,7 @@ import { ArcadeLeaderboard } from '@/components/app/arcade/ArcadeLeaderboard';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { ARCADE_SANDBOX, getArcadeGame } from '@/config/arcade-games';
 import { getAuthToken } from '@/lib/api/dehub';
+import { parsePresenceRequest } from '@/lib/map-presence';
 
 const MAP_PRESENCE_ENDPOINT = `${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1/map-presence`;
 
@@ -103,29 +103,44 @@ export default function ArcadeGamePage() {
 
   useEffect(() => {
     if (!game?.socialPresence) return;
+    const lifetime = new AbortController();
+    let busy = false;
     const onMessage = async (event: MessageEvent) => {
       if (event.source !== frameRef.current?.contentWindow) return;
-      const message = event.data as { source?: string; type?: string } | null;
-      if (message?.source !== 'gods-eye-view' || message.type !== 'presence-place-requested') return;
+      const message = parsePresenceRequest(event.data);
+      if (!message || busy) return;
+      const target = frameRef.current?.contentWindow;
+      const reply = (result: { error?: string; removed?: boolean }) => {
+        if (lifetime.signal.aborted || target !== frameRef.current?.contentWindow) return;
+        target?.postMessage({ source: 'social-presence-host', type: 'presence-result', requestId: message.requestId, ...result }, '*');
+      };
       const token = getAuthToken();
       if (!token || !wallet) {
-        toast.error(_copy("copy.6e3e8fecb404", { defaultValue: "Sign in to place yourself on the globe." }));
+        reply({ error: _copy("copy.6e3e8fecb404", { defaultValue: "Sign in to place yourself on the globe." }) });
         return;
       }
-      if (!navigator.geolocation) {
-        toast.error(_copy("copy.7d8fbc624b73", { defaultValue: "Location is not available in this browser." }));
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(async ({ coords }) => {
-        try {
+      busy = true;
+      try {
+          const removing = message.type === 'presence-remove-requested';
+          let coords = { latitude: message.latitude, longitude: message.longitude };
+          if (!removing && message.latitude === undefined) {
+            if (!navigator.geolocation) throw new Error(_copy("copy.7d8fbc624b73", { defaultValue: "Location is not available in this browser." }));
+            coords = await new Promise<GeolocationCoordinates>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(({ coords: position }) => resolve(position),
+                () => reject(new Error(_copy("copy.5c07dbf054bd", { defaultValue: "Location permission was not granted." }))),
+                { enableHighAccuracy: false, timeout: 15_000, maximumAge: 300_000 });
+            });
+          }
+          if (lifetime.signal.aborted) return;
           const response = await fetch(MAP_PRESENCE_ENDPOINT, {
-            method: 'POST',
+            method: removing ? 'DELETE' : 'POST',
+            signal: AbortSignal.any([lifetime.signal, AbortSignal.timeout(15_000)]),
             headers: {
               'Content-Type': 'application/json',
               'x-dehub-token': token,
               'x-wallet-address': wallet,
             },
-            body: JSON.stringify({
+            body: removing ? undefined : JSON.stringify({
               latitude: coords.latitude,
               longitude: coords.longitude,
               precisionKm: 25,
@@ -134,20 +149,15 @@ export default function ArcadeGamePage() {
             }),
           });
           if (!response.ok) throw new Error('save failed');
-          frameRef.current?.contentWindow?.postMessage({
-            source: 'social-presence-host', type: 'refresh',
-          }, '*');
-          toast.success(_copy("copy.d195c2f3c00e", { defaultValue: "You are on the globe — shown within an approximate 25 km area." }));
-        } catch {
-          toast.error(_copy("copy.971acf3159e1", { defaultValue: "Could not place you on the globe." }));
-        }
-      }, () => toast.error(_copy("copy.5c07dbf054bd", { defaultValue: "Location permission was not granted." })), {
-        enableHighAccuracy: false, timeout: 15_000, maximumAge: 300_000,
-      });
+          reply({ removed: removing });
+      } catch (error) {
+          reply({ error: error instanceof Error && error.message !== 'save failed' && error.name === 'Error'
+            ? error.message : _copy("copy.971acf3159e1", { defaultValue: "Could not place you on the globe." }) });
+      } finally { busy = false; }
     };
     window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
-  }, [game?.socialPresence, user, wallet]);
+    return () => { lifetime.abort(); window.removeEventListener('message', onMessage); };
+  }, [game?.socialPresence, user, wallet, _copy]);
 
   // Resolved once per game. Re-running buildUrl on a render would change the
   // iframe's src and restart a boot that can take the better part of a minute.
@@ -321,13 +331,14 @@ export default function ArcadeGamePage() {
       )}
 
       {game.socialPresence ? (
-        <div className="pointer-events-none absolute bottom-4 right-4 z-20 w-[min(24rem,calc(100%-2rem))] rounded-xl border border-amber-400/25 bg-black/80 p-3 text-xs leading-relaxed text-zinc-300 backdrop-blur-xl">
+        <details className="absolute bottom-4 right-4 z-20 max-w-[min(24rem,calc(100%-2rem))] rounded-xl border border-amber-400/25 bg-black/80 p-3 text-xs leading-relaxed text-zinc-300 backdrop-blur-xl">
+          <summary className="cursor-pointer">{_copy("copy.592314529223", { defaultValue: "Change privacy settings" })}</summary>
           <div className="flex items-start gap-2">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
             <p>{_copy("copy.3a0d0a6ad5c4", { defaultValue: "If you hold a large amount of tokens or live in an insecure area, hide your badge and balance before using this feature. On-chain transactions still reveal your address." })}{' '}<Link className="pointer-events-auto font-medium text-white underline underline-offset-2" to="/app/settings?tab=privacy#private-balance">{_copy("copy.592314529223", { defaultValue: "Change privacy settings" })}</Link>
             </p>
           </div>
-        </div>
+        </details>
       ) : null}
 
       {/* Boot readout. A percentage and a bar, nothing else: the only question
