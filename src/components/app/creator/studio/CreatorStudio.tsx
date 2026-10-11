@@ -1048,7 +1048,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       if (currentImages.length > (CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxReferenceImages ?? 4)) return t('creator.referenceTooMany');
       if (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) return t('creator.referenceMultiModel');
       if (model && reference && !imageModelSupportsEdit(model)) {
-        return `${model.name} cannot edit an attached image. Remove it or pick another model.`;
+        return t('creator.validation.cannotEditImage', { model: model.name, defaultValue: '{{model}} cannot edit an attached image. Remove it or pick another model.' });
       }
     }
     if (mode === 'video') {
@@ -1059,17 +1059,17 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       if (currentImages.length > (model.maxReferenceImages ?? 1)) return t('creator.referenceTooMany');
       if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxDuration ?? 15)) return t('creator.referenceClipLength');
       if (!model.supports.includes('image-to-video') && reference) {
-        return `${model.name} cannot use a reference image. Remove it or pick another model.`;
+        return t('creator.validation.cannotUseReference', { model: model.name, defaultValue: '{{model}} cannot use a reference image. Remove it or pick another model.' });
       }
       if (!model.supports.includes('text-to-video') && !reference) {
-        return `${model.name} needs an image to animate. Attach one first.`;
+        return t('creator.validation.needsImageToAnimate', { model: model.name, defaultValue: '{{model}} needs an image to animate. Attach one first.' });
       }
     }
     if (mode === '3d') {
       const model = MODEL3D_MODELS[model3dModel];
       if (!model) return t('creator.pick3dModel');
       if (!model.supports.includes('text-to-3d') && !reference) {
-        return `${model.name} needs an image to work from. Attach one first.`;
+        return t('creator.validation.needsImageToWork', { model: model.name, defaultValue: '{{model}} needs an image to work from. Attach one first.' });
       }
     }
     if (mode === 'audio') {
@@ -1081,7 +1081,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       // charged for before the call, so an over-length script must fail while
       // it is still free to say no.
       if (activeAudioTask.promptRole !== 'none' && resolvedPrompt.length > MAX_SPEECH_CHARS) {
-        return `That is ${resolvedPrompt.length.toLocaleString()} characters. The limit is ${MAX_SPEECH_CHARS.toLocaleString()}.`;
+        return t('creator.validation.speechLimit', { count: resolvedPrompt.length.toLocaleString(i18n.language), limit: MAX_SPEECH_CHARS.toLocaleString(i18n.language), defaultValue: 'That is {{count}} characters. The limit is {{limit}}.' });
       }
       if (audioTask === 'dialogue' && !parseDialogue(resolvedPrompt, voiceId).length) {
         return t('creator.dialogueFormat');
@@ -1150,13 +1150,13 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     : `${t('creator.priceTokensUsd', { amount: formatDhb(generationQuote.priceDhb), usd: usdText })}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
 
   const audioQuantityLabel = useMemo(() => {
-    if (audioTask === 'music') return `${musicSeconds}s track`;
+    if (audioTask === 'music') return t('creator.validation.musicTrackLength', { count: musicSeconds, defaultValue: '{{count}}s track' });
     const seconds = audioFile?.seconds;
     if (seconds == null) return t('creator.lengthUnknown');
     const mins = Math.floor(seconds / 60);
     const rest = Math.round(seconds % 60);
     return mins ? `${mins}m ${rest}s` : `${rest}s`;
-  }, [audioTask, musicSeconds, audioFile]);
+  }, [audioTask, musicSeconds, audioFile, t]);
 
   /**
    * Queue the chosen audio task.

@@ -1,4 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import i18n from '@/i18n';
+import { formatRelativeTime } from '@/i18n/date-locale';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Bridge Page
@@ -361,11 +363,7 @@ function useBridgeTransfers() {
 }
 
 function timeAgo(unix: number): string {
-  const diff = Math.floor(Date.now() / 1000) - unix;
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
+  return formatRelativeTime(unix * 1000, i18n.language, 'short');
 }
 
 function shortenAddress(addr: string): string {

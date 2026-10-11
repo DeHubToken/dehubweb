@@ -3,6 +3,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import { Check, Clock3, Loader2, Send, ShoppingCart, ThumbsDown, ThumbsUp, WalletCards } from 'lucide-react';
 import { toast } from 'sonner';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
@@ -32,22 +33,23 @@ import { shortAddress } from '@/lib/dao-treasury';
 import { CHAIN_CONFIGS } from '@/lib/contracts/dhb-token';
 import { isWalletLockedError } from '@/lib/contracts/aa-utils';
 
-const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-const number = new Intl.NumberFormat('en-US', { maximumFractionDigits: 4 });
+const money = { format: (value: number) => new Intl.NumberFormat(i18n.language, { style: 'currency', currency: 'USD' }).format(value) };
+const number = { format: (value: number) => new Intl.NumberFormat(i18n.language, { maximumFractionDigits: 4 }).format(value) };
 
 function deadlineLabel(iso: string): string {
   const ms = Date.parse(iso) - Date.now();
-  if (ms <= 0) return 'Voting closed';
+  if (ms <= 0) return i18n.t('dao.votingClosed', { defaultValue: 'Voting closed' });
   const hours = Math.ceil(ms / 3_600_000);
-  if (hours < 48) return `${hours}h left`;
-  return `${Math.ceil(hours / 24)}d left`;
+  const unit = hours < 48 ? 'hour' : 'day';
+  const count = unit === 'hour' ? hours : Math.ceil(hours / 24);
+  return new Intl.RelativeTimeFormat(i18n.language, { numeric: 'always', style: 'short' }).format(count, unit);
 }
 
 function statusLabel(proposal: DaoProposal): string {
   const status = effectiveDaoProposalStatus(proposal);
-  if (status === 'payment_submitted') return 'Payment under review';
-  if (status === 'accepted' && proposal.kind === 'buy') return 'Accepted · awaiting payment';
-  return status.charAt(0).toUpperCase() + status.slice(1);
+  if (status === 'payment_submitted') return i18n.t('dao.paymentUnderReview', { defaultValue: 'Payment under review' });
+  if (status === 'accepted' && proposal.kind === 'buy') return i18n.t('dao.acceptedAwaitingPayment', { defaultValue: 'Accepted · awaiting payment' });
+  return i18n.t(`dao.status.${status}`, { defaultValue: status.charAt(0).toUpperCase() + status.slice(1) });
 }
 
 function statusClass(proposal: DaoProposal): string {
@@ -78,8 +80,8 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
   const castVote = (voteType: 1 | -1) => {
     if (!isAuthenticated) { openLoginModal(); return; }
     vote.mutate({ proposalId: proposal.id, voteType }, {
-      onSuccess: (result) => toast.success(result.action === 'removed' ? 'Vote withdrawn' : 'Vote recorded'),
-      onError: (error) => toast.error(error instanceof Error ? error.message : 'Could not record vote'),
+      onSuccess: (result) => toast.success(result.action === 'removed' ? i18n.t('dao.voteWithdrawn', { defaultValue: 'Vote withdrawn' }) : i18n.t('dao.voteRecorded', { defaultValue: 'Vote recorded' })),
+      onError: (error) => toast.error(error instanceof Error ? error.message : i18n.t('dao.voteFailed', { defaultValue: 'Could not record vote' })),
     });
   };
 
@@ -277,7 +279,7 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
                 </div>
                 <div className="rounded-xl bg-white/[0.05] p-4">
                   <div className="text-xs text-zinc-500">{_copy("copy.700f18a93687", { defaultValue: "Offer value" })}</div>
-                  <div className="mt-1 text-2xl font-semibold text-white">{Number.isFinite(total) ? money.format(total) : '$0.00'}</div>
+                  <div className="mt-1 text-2xl font-semibold text-white">{Number.isFinite(total) ? money.format(total) : money.format(0)}</div>
                   <p className="mt-1 text-xs text-zinc-500">{_copy("copy.4be2a5e0d00a", { defaultValue: "No escrow. If accepted, you have 72 hours to transfer payment for manual DAO verification." })}</p>
                 </div>
               </>

@@ -1,4 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import i18n from '@/i18n';
+import { formatRelativeTime } from '@/i18n/date-locale';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * AudioSpacesModal body — Twitter Spaces-like audio rooms (Stages)
@@ -490,16 +492,7 @@ export function AudioSpacesModalBody() {
                               </span>
                               {space.ended_at && (
                                 <span>
-                                  {(() => {
-                                    const diff = Date.now() - new Date(space.ended_at).getTime();
-                                    const mins = Math.floor(diff / 60000);
-                                    const hrs = Math.floor(mins / 60);
-                                    const days = Math.floor(hrs / 24);
-                                    if (days > 0) return `${days}d ago`;
-                                    if (hrs > 0) return `${hrs}h ago`;
-                                    if (mins > 0) return `${mins}m ago`;
-                                    return 'just now';
-                                  })()}
+                                  {formatRelativeTime(space.ended_at, i18n.language, 'short')}
                                 </span>
                               )}
                               <span className="flex items-center gap-1">

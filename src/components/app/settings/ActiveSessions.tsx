@@ -7,6 +7,8 @@
  * other devices at all.
  */
 import { useCallback, useEffect, useState } from 'react';
+import i18n from '@/i18n';
+import { formatRelativeTime as localizedRelativeTime } from '@/i18n/date-locale';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Smartphone, Globe, Clock, LogOut, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
@@ -25,15 +27,7 @@ import { fetchSessions, revokeSession, revokeOtherSessions, type Session } from 
 import { AppState } from '@/components/app/AppState';
 
 function formatRelativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60_000);
-  if (mins < 1) return 'Just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  return `${Math.floor(days / 30)}mo ago`;
+  return localizedRelativeTime(iso, i18n.language, 'short');
 }
 
 function getDeviceLabel(session: Session): string {

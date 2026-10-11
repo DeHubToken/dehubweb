@@ -1,4 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import i18n from '@/i18n';
+import { formatRelativeTime } from '@/i18n/date-locale';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Feature Requests Page
@@ -194,16 +196,7 @@ function StatusBadge({ status }: { status: FeatureStatus }) {
 }
 
 function formatTimeAgo(dateStr: string): string {
-  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-  if (seconds < 60) return 'just now';
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  const months = Math.floor(days / 30);
-  return `${months}mo ago`;
+  return formatRelativeTime(dateStr, i18n.language, 'short');
 }
 
 // ──────────────────────────────────────────────────

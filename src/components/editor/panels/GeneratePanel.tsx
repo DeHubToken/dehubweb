@@ -125,12 +125,12 @@ export function GeneratePanel() {
     // Voice is not charged in DHB; it is metered by the storage quota instead.
     // That quota only exists for a signed-in wallet, so anonymous voiceover
     // would be an unmetered, unlimited call straight through to ElevenLabs.
-    if (!isAuthenticated) return 'Sign in to generate.';
+    if (!isAuthenticated) return t('editor.signInToGenerate', { defaultValue: 'Sign in to generate.' });
     if (kind === 'voice' && prompt.length > MAX_VOICE_CHARS) {
-      return `Voiceover is capped at ${MAX_VOICE_CHARS} characters.`;
+      return t('editor.voiceoverLimit', { count: MAX_VOICE_CHARS, defaultValue: 'Voiceover is capped at {{count}} characters.' });
     }
     if (kind === 'video' && activeVideoModel && !activeVideoModel.supports.includes('text-to-video')) {
-      return `${activeVideoModel.name} needs a starting image. Generate from the Creator studio instead.`;
+      return t('editor.videoNeedsImage', { model: activeVideoModel.name, defaultValue: '{{model}} needs a starting image. Generate from the Creator studio instead.' });
     }
     return null;
   }, [prompt, quota.overQuota, kind, isAuthenticated, activeVideoModel, t]);
