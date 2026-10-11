@@ -329,14 +329,15 @@ def start_stage(ident: str, stage: str, price_micros: int = Form(...), tx_hash: 
     with lock:
         row = access.job(ident, wallet)
         if row['stage'] == stage and row['state'] in ('queued', 'running', 'draft', 'complete'):
-            return snapshot(row)
+            payment = access.payment_reference(row, stage)
+            return {**snapshot(row), 'payment_ref': payment['tx_hash'] if payment else 'credits'}
         row, amount = stage_quote(ident, stage, wallet)
         if amount != price_micros:
             raise HTTPException(409, 'The price changed. Refresh and review the new quote.')
         access.debit(row, stage, amount, tx_hash)
         access.update(ident, state='queued', stage=stage, price=amount, status='Queued for processing. You can return to this job later.')
         executor.submit(run_stage, ident, stage)
-    return snapshot(access.job(ident, wallet))
+    return {**snapshot(access.job(ident, wallet)), 'payment_ref': tx_hash.lower()}
 
 
 @app.get('/media/{relative:path}')
