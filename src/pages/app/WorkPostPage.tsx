@@ -166,7 +166,7 @@ export default function WorkPostPage() {
               </>
             )}
             <div className="flex gap-2">
-              <button onClick={() => setStep(1)} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white">{t('work.back')}</button>
+              <button data-swipe-back onClick={() => setStep(1)} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white">{t('work.back')}</button>
               <button
                 onClick={() => setStep(3)}
                 disabled={!title.trim() || !description.trim()}
@@ -216,7 +216,7 @@ export default function WorkPostPage() {
             </div>
 
             <div className="flex gap-2">
-              <button onClick={() => setStep(2)} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white">{t('work.back')}</button>
+              <button data-swipe-back onClick={() => setStep(2)} className="flex-1 px-4 py-3 rounded-xl bg-white/10 text-white">{t('work.back')}</button>
               <button
                 onClick={handleSubmit}
                 disabled={createJob.isPending || total <= 0}

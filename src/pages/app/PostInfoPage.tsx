@@ -244,7 +244,7 @@ export default function PostInfoPage() {
         <div className="sticky top-11 lg:top-0 z-50 px-4 pt-1 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
           <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
             <button
-              onClick={() => navigate(-1)}
+              data-swipe-back onClick={() => navigate(-1)}
               className="p-2 rounded-xl hover:bg-white/10 transition-colors"
               aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
             >
@@ -276,7 +276,7 @@ export default function PostInfoPage() {
           </p>
           
           <button
-            onClick={() => navigate(-1)}
+            data-swipe-back onClick={() => navigate(-1)}
             className="mt-8 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors"
           >
             {t('postInfo.goBack')}
@@ -306,7 +306,7 @@ export default function PostInfoPage() {
         <div className="sticky top-11 lg:top-0 z-50 px-4 pt-1 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
           <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
             <button
-              onClick={() => navigate(-1)}
+              data-swipe-back onClick={() => navigate(-1)}
               className="p-2 rounded-xl hover:bg-white/10 transition-colors"
               aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
             >
@@ -319,7 +319,7 @@ export default function PostInfoPage() {
           <ThemedIcon icon="posts" alt="" className="w-16 h-16 object-contain mb-4 opacity-75" />
           <p className="text-white/60 mb-4">{error?.message || t('postInfo.notFound')}</p>
           <button
-            onClick={() => navigate(-1)}
+            data-swipe-back onClick={() => navigate(-1)}
             className="text-white hover:underline"
           >
             {t('postInfo.goBack')}
@@ -352,7 +352,7 @@ export default function PostInfoPage() {
       <div className="sticky top-0 z-50 px-4 pt-0 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
         <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
           <button
-            onClick={() => navigate(-1)}
+            data-swipe-back onClick={() => navigate(-1)}
             className="p-2 rounded-xl hover:bg-white/10 transition-colors"
             aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
           >

@@ -1883,6 +1883,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               variant="ghost"
               size="icon"
               onClick={onBack}
+              data-swipe-back
               className="text-white hover:bg-zinc-800"
             >
               <ArrowLeft className="w-5 h-5" />
