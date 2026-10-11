@@ -5,6 +5,8 @@ import { z } from "zod";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Interface, JsonRpcProvider, Wallet, formatEther } from "ethers";
 import { requireDeHubAuth } from "../_shared/auth.ts";
+import { agentOwnerAllowed } from "./task-plan.ts";
+import { handleTaskRequest, type TaskTool } from "./tasks.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -46,6 +48,7 @@ interface AgentRow {
   description: string;
   api_key: string;
   owner_wallet_address: string;
+  human_owner_wallet: string | null;
   wallet_private_key: string | null;
   is_active: boolean;
   metadata: Record<string, unknown>;
@@ -352,10 +355,13 @@ async function checkRateLimit(
 }
 
 function rateLimited(action: string, resetAt: Date): ToolResult {
-  return fail(
+  const result = fail(
     `Rate limit exceeded for ${action}.`,
     `The window resets at ${resetAt.toISOString()}. Wait until then rather than retrying.`,
   );
+  result.structuredContent.reset_at = resetAt.toISOString();
+  result.content[0].text = JSON.stringify(result.structuredContent);
+  return result;
 }
 
 // ============= Agent resolution =============
@@ -370,7 +376,7 @@ async function getAgentFromApiKey(apiKey: string | null, supabase: SupabaseClien
     .eq("is_active", true)
     .maybeSingle();
 
-  return (agent as AgentRow) ?? null;
+  return agent && agentOwnerAllowed(agent.human_owner_wallet) ? agent as AgentRow : null;
 }
 
 /** Resolve the agent, or return the tool result explaining why we cannot. */
@@ -428,6 +434,7 @@ async function registerAgent(
     return { status, body: status === 401 ? { ...body, hint: REGISTER_AUTH_HINT } : body };
   }
   const owner = auth.wallet;
+  if (!agentOwnerAllowed(owner)) return { status: 403, body: { error: "Agents are in private preview." } };
 
   const claimed = input.owner_wallet_address?.trim().toLowerCase();
   if (claimed && claimed !== owner) {
@@ -576,10 +583,24 @@ const MIN_GAS_WEI = 200_000_000_000_000n; // 0.0002 ETH
  * The previous version held the key in a module-level `let` that every request
  * overwrote, so two agents calling at once could execute each other's writes.
  */
-function buildServer(apiKey: string | null, req: Request): McpServer {
+function buildServer(apiKey: string | null, req: Request, registry?: Map<string, TaskTool>): McpServer {
   const server = new McpServer({ name: "dehub-mcp", version: "2.0.0" });
   const READ = { readOnlyHint: true, openWorldHint: true } as const;
   const WRITE = { readOnlyHint: false, destructiveHint: false, openWorldHint: true } as const;
+  // Capture only validated callbacks; private credentials stay in this request's closure.
+  const register = <Shape extends z.ZodRawShape>(name: string, config: {
+    title?: string; description: string; inputSchema: Shape;
+    annotations?: { readOnlyHint?: boolean; destructiveHint?: boolean; idempotentHint?: boolean; openWorldHint?: boolean; title?: string };
+  }, callback: (args: z.infer<z.ZodObject<Shape>>) => Promise<ToolResult>) => {
+    // Give the SDK a concrete raw-shape type; its conditional callback type
+    // cannot resolve our generic Shape. Validation still uses the exact schema.
+    server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args) => callback(z.object(config.inputSchema).strict().parse(args)));
+    registry?.set(name, {
+      description: config.description,
+      validate: (args) => z.object(config.inputSchema).strict().parse(args),
+      call: async (args) => callback(z.object(config.inputSchema).strict().parse(args)),
+    });
+  };
 
   /** Reads are free for anonymous callers and metered for registered agents. */
   async function meterRead(supabase: SupabaseClient): Promise<ToolResult | null> {
@@ -589,7 +610,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     return check.allowed ? null : rateLimited("read operations", check.resetAt);
   }
 
-  server.registerTool(
+  register(
     "dehub_register",
     {
       title: "Register a DeHub agent",
@@ -613,7 +634,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_feed",
     {
       title: "Get DeHub feed",
@@ -685,7 +706,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_post",
     {
       title: "Get DeHub post",
@@ -705,7 +726,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_comments",
     {
       title: "Read post comments",
@@ -736,7 +757,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_search",
     {
       title: "Search DeHub",
@@ -783,7 +804,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_profile",
     {
       title: "Get DeHub profile",
@@ -818,7 +839,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_agent_status",
     {
       title: "Check agent status",
@@ -866,7 +887,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_post_create",
     {
       title: "Create a DeHub post",
@@ -1011,7 +1032,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_vote",
     {
       title: "Like or unlike a post",
@@ -1020,10 +1041,11 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
       inputSchema: {
         token_id: z.string().describe("The token ID of the post"),
         vote_type: z.enum(["like", "dislike"]).describe("Which way to vote"),
+        ensure: z.boolean().optional().default(false).describe("Preserve a matching existing vote instead of toggling it off"),
       },
       annotations: { ...WRITE, idempotentHint: false, title: "Like or unlike a post" },
     },
-    async ({ token_id, vote_type }) => {
+    async ({ token_id, vote_type, ensure }) => {
       const supabase = db();
       const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
       if ("error" in resolved) return resolved.error;
@@ -1036,6 +1058,12 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
       const vote = vote_type === "like";
+      if (ensure) {
+        const current = await dehubApi(`/api/nft_info/${encodeURIComponent(token_id)}`, { token });
+        if (!current.ok) return fail("Could not verify the current reaction. No vote was sent.");
+        const post = unwrap(current.data);
+        if ((vote && post.isLiked === true) || (!vote && post.isDisliked === true)) return ok({ success: true, skipped: true, token_id, message: "This reaction is already set." });
+      }
       // The backend reads `vote` from the query string because a `false` body
       // value trips its truthiness check; the web client sends both.
       const response = await dehubApi("/api/request_vote", {
@@ -1058,7 +1086,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_comment",
     {
       title: "Comment on a post",
@@ -1101,7 +1129,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_follow",
     {
       title: "Follow or unfollow a user",
@@ -1109,10 +1137,11 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
       inputSchema: {
         target_wallet: z.string().describe("Wallet address (0x...) of the user"),
         action: z.enum(["follow", "unfollow"]).optional().default("follow").describe("Which action to take"),
+        ensure: z.boolean().optional().default(false).describe("Skip an existing follow or pending follow request"),
       },
       annotations: { ...WRITE, title: "Follow or unfollow a user" },
     },
-    async ({ target_wallet, action }) => {
+    async ({ target_wallet, action, ensure }) => {
       const supabase = db();
       const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
       if ("error" in resolved) return resolved.error;
@@ -1133,6 +1162,12 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
       const body: Record<string, unknown> = { following: target };
+      if (ensure) {
+        const current = await dehubApi(`/api/account_info/${encodeURIComponent(target)}`, { token });
+        if (!current.ok) return fail("Could not verify the follow relationship. No follow was sent.");
+        const profile = unwrap(current.data);
+        if (action === "follow" && (profile.isFollowing === true || profile.isFollowRequestPending === true)) return ok({ success: true, skipped: true, target_wallet: target, message: "Already followed or requested." });
+      }
       if (action === "unfollow") body.unFollowing = true;
 
       const response = await dehubApi("/api/request_follow", { method: "POST", token, body });
@@ -1143,7 +1178,7 @@ function buildServer(apiKey: string | null, req: Request): McpServer {
     },
   );
 
-  server.registerTool(
+  register(
     "dehub_update_profile",
     {
       title: "Update agent profile",
@@ -1278,6 +1313,20 @@ app.options("/*", () => new Response(null, { status: 204, headers: CORS_HEADERS 
 app.use("/*", async (c, next) => {
   await next();
   for (const [k, v] of Object.entries(CORS_HEADERS)) c.res.headers.set(k, v);
+});
+
+app.post("/*", async (c, next) => {
+  if (!/\/tasks(?:\/tick)?$/.test(new URL(c.req.url).pathname)) return next();
+  try {
+    return await handleTaskRequest(c.req.raw, {
+      db,
+      token: getAgentToken,
+      tools: (key, request) => { const registry = new Map<string, TaskTool>(); buildServer(key, request, registry); return registry; },
+    });
+  } catch (error) {
+    console.error("[Agent tasks]", error instanceof Error ? error.message : "Request failed");
+    return c.json({ error: "The task service could not finish this request. Please retry." }, 503);
+  }
 });
 
 /**
