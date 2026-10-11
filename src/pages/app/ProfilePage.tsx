@@ -247,10 +247,12 @@ export default function ProfilePage() {
   useEffect(() => {
     const tabs = profileTabsRef.current;
     if (!tabs) return;
-    const observer = new ResizeObserver(() => setProfileTabsHeight(tabs.offsetHeight));
+    const measure = () => setProfileTabsHeight(tabs.getBoundingClientRect().height);
+    measure();
+    const observer = new ResizeObserver(measure);
     observer.observe(tabs);
     return () => observer.disconnect();
-  }, []);
+  }, [!!data.profile]);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
