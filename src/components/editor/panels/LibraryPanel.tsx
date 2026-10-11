@@ -190,7 +190,7 @@ function JobTile({ job, sending, onSend, onCancelImport, onCancel, onRetry }: Jo
           aria-label={_copy("copy.be0c54989fce", { defaultValue: "View 3D model \"{{value1}}\" on Creator", value1: job.prompt })}
           className={cn(
             'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
-            'opacity-0 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',
+            'opacity-100 sm:opacity-0 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',
           )}
         >
           <span className="rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">{_copy("copy.0916231e7bfb", { defaultValue: "View on Creator" })}</span>
@@ -202,7 +202,7 @@ function JobTile({ job, sending, onSend, onCancelImport, onCancel, onRetry }: Jo
           title={sending ? _copy('common.cancel') : _copy("copy.62c1c73d0370", { defaultValue: "Add \"{{value1}}\" to the timeline", value1: job.prompt })}
           className={cn(
             'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
-            sending ? 'opacity-100' : 'opacity-0 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',
+            sending ? 'opacity-100' : 'opacity-100 sm:opacity-0 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',
           )}
         >
           <span className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">

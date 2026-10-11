@@ -43,7 +43,7 @@ export async function assetToFile(url: string, filename: string, mime: string, o
         stop();
         throw new Error('Generated media is too large');
       }
-      chunks.push(value.slice().buffer as ArrayBuffer);
+      chunks.push(new Blob([value.slice().buffer as ArrayBuffer]));
     }
     return new File(chunks, filename, { type });
   } catch (error) {
