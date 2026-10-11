@@ -1078,7 +1078,7 @@ export default function HomePage() {
             </div>
         </div>
         {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
-        {!islandTopBar && <FeedPillGlow />}
+        {!islandTopBar && <FeedPillGlow distance={pullDistance} refreshing={isRefreshing} />}
         </div>
         {theme === 'system' && <div ref={homeFiltersRef} className="absolute inset-x-0 top-0 z-0 pointer-events-none" />}
         </FeedFilterAnchor>
@@ -1112,13 +1112,17 @@ export default function HomePage() {
         onMouseUp={pullHandlers.onMouseUp}
         onMouseLeave={pullHandlers.onMouseLeave}
         data-feed-pull-content
-        style={islandTopBar && isMobile ? { transform: `translate3d(0, ${pullDistance}px, 0)`, willChange: pullDistance > 0 ? 'transform' : undefined } : undefined}
       >
+        {/* Keep the swallow clip stationary while the feed moves beneath it. */}
+        <div
+          data-feed-pull-motion
+          style={isMobile && pullDistance > 0 ? { position: 'relative', transform: `translate3d(0, ${pullDistance}px, 0)`, willChange: 'transform' } : undefined}
+        >
         {/* Pull-to-refresh indicator with hold progress */}
         {pullDistance > 0 && !(islandTopBar && isMobile) && (
           <div 
-            className="flex items-center justify-center transition-all duration-150"
-            style={{ height: pullDistance, minHeight: pullDistance > 0 ? 20 : 0 }}
+            className="absolute inset-x-0 -top-4 h-8 flex items-center justify-center pointer-events-none"
+            style={{ transform: `translate3d(0, ${-pullDistance / 2}px, 0)` }}
           >
             <div className="relative">
               {/* Background circle (track) */}
@@ -1142,7 +1146,6 @@ export default function HomePage() {
                   strokeLinecap="round"
                   strokeDasharray={2 * Math.PI * 14}
                   strokeDashoffset={2 * Math.PI * 14 * (1 - (isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1)))}
-                  className="transition-all duration-75"
                 />
               </svg>
               {/* Center dot that appears when holding */}
@@ -1242,6 +1245,7 @@ export default function HomePage() {
           </div>
         )}
         {/* end feed tabs */}
+        </div>
       </div>
 
     </div>
