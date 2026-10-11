@@ -8,7 +8,7 @@ vi.mock('@/integrations/supabase/client', () => ({ supabase: { rpc: fixture.rpc 
 vi.mock('@/lib/supabase-wallet-client', () => ({ withWalletHeader: (query: unknown) => query }));
 vi.mock('@/hooks/dub-preference', () => ({ getDubPreference: () => ({ on: fixture.on }) }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
-vi.mock('sonner', () => ({ toast: { info: fixture.toast } }));
+vi.mock('sonner', () => ({ toast: { message: fixture.toast } }));
 
 function Harness({ video, wallet, source = 'es', open }: { video: HTMLVideoElement; wallet: string | null; source?: string; open: () => void }) {
   return <AuthContext.Provider value={{ isAuthenticated: !!wallet, walletAddress: wallet } as any}>

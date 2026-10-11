@@ -32,9 +32,12 @@ export function useDubDiscovery(videoRef: React.RefObject<HTMLVideoElement>, vid
       if (!replay.sample(video.currentTime, video.duration, audible(), Date.now(), video.playbackRate)) return;
       void showTip(wallet, () => {
         const language = SUBTITLE_LANGUAGES.find(l => l.code === target)?.name ?? target;
-        toast.info(t('stages.hearItIn', { language }), {
+        toast.message(t('dub.dubbed'), {
+          description: t('stages.hearItIn', { language }),
           duration: 8000,
-          action: { label: t('dub.dubbed'), onClick: () => {
+          closeButton: true,
+          position: 'bottom-right',
+          action: { label: t('nav.settings'), onClick: () => {
             if (active && latest.current.eligible && latest.current.wallet === wallet) latest.current.openSettings();
           } },
         });
