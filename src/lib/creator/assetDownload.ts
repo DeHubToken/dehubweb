@@ -8,9 +8,15 @@ export function throwIfAssetAborted(signal?: AbortSignal): void {
 
 /** Download a finished asset without buffering an oversized response. */
 export async function assetToFile(url: string, filename: string, mime: string, options: AssetDownloadOptions = {}): Promise<File> {
-  const { signal, maxBytes = MAX_EDITOR_MEDIA_BYTES } = options;
+  const { signal } = options;
   throwIfAssetAborted(signal);
   const res = await fetch(url, { signal });
+  return responseToFile(res, filename, mime, options);
+}
+
+export async function responseToFile(res: Response, filename: string, mime: string, options: AssetDownloadOptions = {}): Promise<File> {
+  const { signal, maxBytes = MAX_EDITOR_MEDIA_BYTES } = options;
+  throwIfAssetAborted(signal);
   if (!res.ok) {
     await res.body?.cancel().catch(() => {});
     throw new Error(`Could not download the asset (${res.status})`);

@@ -343,6 +343,8 @@ function pickStock<T extends { title: string; width?: number; mimeType: string }
 
 export interface ApplyContext {
   wallet?: string | null;
+  badgeBalance?: number | null;
+  username?: string | null;
   command?: ReturnType<typeof beginEditorCommand>;
 }
 
@@ -621,7 +623,8 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         }
         const file = await downloadFreeAsset(asset);
         if (!task.isCurrent()) return false;
-        const mediaId = await importOneFile(file, { wallet: ctx.wallet, provenance: provenanceForAsset(asset) });
+        const mediaId = await importOneFile(file, { wallet: ctx.wallet,
+          badgeBalance: ctx.badgeBalance, username: ctx.username, provenance: provenanceForAsset(asset) });
         if (!task.isCurrent() || !mediaId) return false;
         await task.ready();
         const id = store().addClipFromMedia(mediaId, undefined, undefined, { layer: kind === "photo" });

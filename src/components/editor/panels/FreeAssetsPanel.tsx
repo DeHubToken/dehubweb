@@ -199,6 +199,7 @@ export function FreeAssetsPanel() {
   const mounted = useRef(true);
   const importing = useRef<{ task: NonNullable<ReturnType<typeof projectTask>>; controller: AbortController } | null>(null);
   const quota = useEditorQuota();
+  const latestQuota = useRef(quota); latestQuota.current = quota;
   const wallet = useRef(quota.walletAddress); wallet.current = quota.walletAddress;
   const cancelImport = useCallback(() => {
     const owner = importing.current;
@@ -264,6 +265,9 @@ export function FreeAssetsPanel() {
       if (!task.isCurrent()) return;
       const id = await importOneFile(file, {
         wallet: capturedWallet,
+        badgeBalance: latestQuota.current.badgeBalance,
+        username: latestQuota.current.username,
+        signal: owner.controller.signal,
         provenance: provenanceForAsset(asset),
       });
       if (!id || !task.isCurrent()) return;
@@ -351,6 +355,9 @@ export function FreeAssetsPanel() {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
+        {addingId && <button type="button" onClick={cancelImport} className="mb-3 rounded-lg border border-white/20 px-3 py-2 text-xs text-white">
+          {_copy('common.cancel')}
+        </button>}
         {preview && <FreeAssetPreview key={preview.id} asset={preview} onClose={() => setPreview(null)} />}
         {!settledQuery && !loading ? (
           <div className="mb-3 flex flex-wrap gap-1.5">

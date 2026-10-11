@@ -47,6 +47,7 @@ export function AgentPanel() {
   const undo = useEditorStore((s) => s.undo);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const quota = useEditorQuota();
+  const latestQuota = useRef(quota); latestQuota.current = quota;
   const draftProjectId = useEditorStore(s => s.projectId);
   const [draft, setDraft] = useSurfaceDraft("components/editor/panels/AgentPanel.tsx:draft", '', draftProjectId);
   const [visualConsent, setVisualConsent] = useState<string | null>(null);
@@ -170,7 +171,8 @@ export function AgentPanel() {
       const { reply, ops } = await askAgent(history);
       if (!task!.isCurrent()) return;
       if (projectReviewSnapshotKey(useEditorStore.getState().toSnapshot()) !== sourceKey) throw new Error('project changed');
-      const report = ops.length ? await applyOps(ops, { wallet: quota.walletAddress }) : undefined;
+      const report = ops.length ? await applyOps(ops, { wallet: quota.walletAddress,
+        badgeBalance: latestQuota.current.badgeBalance, username: latestQuota.current.username }) : undefined;
       if (!task!.isCurrent()) return;
       let content = reply || (ops.length ? t('editor.agent.done') : t('editor.agent.nothingToDo'));
       if (!ops.length) content = t('editor.agent.nothingToDo');

@@ -119,7 +119,7 @@ export function DesignPanel() {
     setPending(null);
     setApplyingId(template.id);
     try {
-      await applyTemplate(template, t, { wallet: quota.walletAddress, aspect });
+      await applyTemplate(template, t, { wallet: quota.walletAddress, badgeBalance: quota.badgeBalance, username: quota.username, aspect });
     } finally {
       setApplyingId(null);
     }
