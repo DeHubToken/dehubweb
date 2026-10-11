@@ -7,6 +7,7 @@ import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { createDubTipClaim, foreignDubLanguage, replayFor } from '@/lib/dub-discovery';
 import { getDubPreference } from './dub-preference';
 import { SUBTITLE_LANGUAGES } from '@/lib/subtitle-languages';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const showTip = createDubTipClaim(async wallet => {
   const { data, error } = await withWalletHeader(supabase.rpc('claim_video_dub_tip'), wallet);
@@ -18,6 +19,7 @@ export function useDubDiscovery(videoRef: React.RefObject<HTMLVideoElement>, vid
   const auth = useContext(AuthContext);
   const wallet = auth?.isAuthenticated ? auth.walletAddress?.toLowerCase() : null;
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
   const eligible = !!wallet && !!videoId && available && !dubOn && foreignDubLanguage(source, target);
   const latest = useRef({ eligible, wallet, openSettings });
   latest.current = { eligible, wallet, openSettings };
@@ -32,9 +34,12 @@ export function useDubDiscovery(videoRef: React.RefObject<HTMLVideoElement>, vid
       if (!replay.sample(video.currentTime, video.duration, audible(), Date.now(), video.playbackRate)) return;
       void showTip(wallet, () => {
         const language = SUBTITLE_LANGUAGES.find(l => l.code === target)?.name ?? target;
-        toast.info(t('stages.hearItIn', { language }), {
+        toast.message(t('dub.dubbed'), {
+          description: t('stages.hearItIn', { language }),
           duration: 8000,
-          action: { label: t('dub.dubbed'), onClick: () => {
+          closeButton: true,
+          position: isMobile ? undefined : 'bottom-right',
+          action: { label: t('nav.settings'), onClick: () => {
             if (active && latest.current.eligible && latest.current.wallet === wallet) latest.current.openSettings();
           } },
         });
@@ -51,5 +56,5 @@ export function useDubDiscovery(videoRef: React.RefObject<HTMLVideoElement>, vid
       video.removeEventListener('seeked', seek);
       replay.detach();
     };
-  }, [videoRef, videoId, source, target, eligible, wallet, t]);
+  }, [videoRef, videoId, source, target, eligible, wallet, t, isMobile]);
 }
