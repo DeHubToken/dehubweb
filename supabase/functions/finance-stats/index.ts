@@ -437,7 +437,7 @@ async function compute() {
       group: source.group,
       origin: 'chain' as const,
       status: 'ok' as const,
-      note: `${source.note} ${source.provenance.payouts} payouts from ${source.provenance.firstDay} to ${source.provenance.lastDay}: ${source.provenance.grossBnb.toLocaleString('en-US')} BNB received, ${source.provenance.passedOnBnb.toLocaleString('en-US')} BNB passed on to holders, ${source.provenance.totalBnb.toLocaleString('en-US')} BNB kept.`,
+      note: `${source.note} ${source.provenance.payouts} payouts from ${source.provenance.firstDay} to ${source.provenance.lastDay}: ${source.provenance.grossBnb.toLocaleString('en-US')} BNB received, ${source.provenance.passedOnBnb.toLocaleString('en-US')} BNB passed on to holders, ${source.provenance.totalBnb.toLocaleString('en-US')} BNB to DeHub operations.`,
     })),
     ...fixedItems.map((item) => ({
       id: item.id,

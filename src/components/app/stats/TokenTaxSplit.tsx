@@ -2,7 +2,7 @@
  * Where the token tax went
  * ========================
  * The original DeHub token (BSC, 2021–23) taxed every trade. This card splits
- * that tax three ways — kept by DeHub, bought back and burned, paid to holders
+ * that tax three ways — DeHub operations, bought back and burned, paid to holders
  * and stakers — each in USD at the BNB price on the day it happened, so a
  * burn in November 2021 is worth what it cost then, not what BNB is worth now.
  *
@@ -45,7 +45,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
   const parts = [
     {
       id: 'bsc_token_tax',
-      label: t('stats.taxSplit.team', 'Kept by DeHub'),
+      label: t('stats.taxSplit.team', 'DeHub operations'),
       usd: split.team.usd,
       bnb: split.team.bnb,
       detail: t('stats.taxSplit.teamDetail', '{{gross}} came in; {{passed}} of it was passed on to holders', {
@@ -91,7 +91,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       <p className="text-xs text-zinc-500 leading-relaxed mb-3">
         {t(
           'stats.taxSplit.intro',
-          'The original DeHub token charged a tax on every trade until 2023. This is where it went, valued at the BNB price on the day each payment happened.',
+          'The original DeHub token took 12% of every trade until 2023. In BNB, 4% bought DeHub back and burned it, 2% went to DeHub operations and 2% to holders and stakers, so the burn was always twice either of the other two. This is where that BNB went, valued at the BNB price on the day each payment happened.',
         )}
       </p>
 
@@ -135,7 +135,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       <p className="text-[11px] text-zinc-500 leading-relaxed mt-3 pt-3 border-t border-zinc-800">
         {t(
           'stats.taxSplit.footnote',
-          'Only the kept part counts as revenue above. The rest of the tax went back into the trading pool as liquidity, or to holders as token reflections, so it is in none of the three. Holders also claimed {{early}} straight from the token in its first two weeks, before the rewards contract existed.',
+          'Only the DeHub operations part counts as revenue above. The other 4% is in none of the three: 2% was added to the trading pool as liquidity, and 1% each went to holders and operations as tokens. Holders also claimed {{early}} straight from the token in its first two weeks, before the rewards contract existed.',
           { early: '1.40 BNB' },
         )}
       </p>

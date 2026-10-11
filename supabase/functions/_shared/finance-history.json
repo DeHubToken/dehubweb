@@ -6,7 +6,7 @@
    "label": "DeHub token tax (BSC)",
    "group": "tax",
    "chain": "bsc",
-   "note": "The share of the original DeHub token's 12% trading tax DeHub kept as BNB: the 2% collateral and 2% distribution sales the tax router paid to the operations wallets, plus the collateral BNB the contract paid the owner wallet, less the BNB those operations wallets passed on to the holders' rewards contract \u2014 that part belonged to holders and stakers, so it is subtracted here and shown as shared instead. The 4% buyback (burned), 2% liquidity and 1% reflection are not counted.",
+   "note": "The share of the original DeHub token's 12% trading tax that went to DeHub operations as BNB: the 2% collateral and 2% distribution sales the tax router paid to the operations wallets, plus the collateral BNB the contract paid the owner wallet, less the BNB those operations wallets passed on to the holders' rewards contract \u2014 that part belonged to holders and stakers, so it is subtracted here and shown as shared instead. The 4% buyback (burned), 2% liquidity and 1% reflection are not counted.",
    "provenance": {
     "chain": "BNB Smart Chain",
     "addresses": [

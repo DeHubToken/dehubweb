@@ -3010,8 +3010,8 @@
     },
     "taxSplit": {
       "title": "Where the token tax went",
-      "intro": "The original DeHub token charged a tax on every trade until 2023. This is where it went, valued at the BNB price on the day each payment happened.",
-      "team": "Kept by DeHub",
+      "intro": "The original DeHub token took 12% of every trade until 2023. In BNB, 4% bought DeHub back and burned it, 2% went to DeHub operations and 2% to holders and stakers, so the burn was always twice either of the other two. This is where that BNB went, valued at the BNB price on the day each payment happened.",
+      "team": "DeHub operations",
       "teamDetail": "{{gross}} came in; {{passed}} of it was passed on to holders",
       "burned": "Bought back and burned",
       "burnedDetail": "{{tokens}} DeHub burned in {{n}} buybacks",
@@ -3019,11 +3019,11 @@
       "sharedDetail": "{{claims}} claims by {{wallets}} wallets",
       "open": "See every {{part}} line",
       "see": "See every line",
-      "footnote": "Only the kept part counts as revenue above. The rest of the tax went back into the trading pool as liquidity, or to holders as token reflections, so it is in none of the three. Holders also claimed {{early}} straight from the token in its first two weeks, before the rewards contract existed."
+      "footnote": "Only the DeHub operations part counts as revenue above. The other 4% is in none of the three: 2% was added to the trading pool as liquidity, and 1% each went to holders and operations as tokens. Holders also claimed {{early}} straight from the token in its first two weeks, before the rewards contract existed."
     },
     "taxLedger": {
       "title": "Token tax ledger",
-      "subtitle": "Every burn, holder payout and kept payout from 2021–23, with a link to check it",
+      "subtitle": "Every burn, holder payout and operations payout from 2021–23, with a link to check it",
       "summary": "{{entries}} lines · {{total}} at the BNB price on each day · every line checkable on BscScan",
       "empty": "Nothing to show here.",
       "contractProof": "Every claim that day is in this contract’s event log: {{address}}"

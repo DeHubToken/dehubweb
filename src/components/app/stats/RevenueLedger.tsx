@@ -15,7 +15,7 @@
  * downloads as CSV.
  *
  * The same list, as `kind="tax"`, proves where the original token's trading
- * tax went: every burn, every day of holder claims, every payout kept. That
+ * tax went: every burn, every day of holder claims, every operations payout. That
  * one is fixed 2021–23 history, so it ignores the page's range.
  */
 
@@ -143,7 +143,7 @@ export function RevenueLedger({
       .filter((s) => counts.has(s.id))
       .map((s) => ({ id: s.id, label: s.label, ...counts.get(s.id)! }));
     // Revenue sources rank by size. The token-tax lines keep the server's
-    // order — kept, burned, shared — and have no "All": adding a burn to a
+    // order — operations, burned, shared — and have no "All": adding a burn to a
     // payout to a claim makes a number that means nothing.
     if (!tax) chips.sort((a, b) => b.usd - a.usd);
     const active = tax ? source ?? chips[0]?.id ?? null : source;
@@ -186,7 +186,7 @@ export function RevenueLedger({
           </div>
           <div className="text-xs text-zinc-500">
             {tax
-              ? t('stats.taxLedger.subtitle', 'Every burn, holder payout and kept payout from 2021–23, with a link to check it')
+              ? t('stats.taxLedger.subtitle', 'Every burn, holder payout and operations payout from 2021–23, with a link to check it')
               : t('stats.ledger.subtitle', 'Every entry behind the revenue figure, with a link to check it')}
           </div>
         </div>
