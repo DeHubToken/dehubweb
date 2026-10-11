@@ -16,7 +16,10 @@ export async function assetToFile(url: string, filename: string, mime: string, o
 
 export async function responseToFile(res: Response, filename: string, mime: string, options: AssetDownloadOptions = {}): Promise<File> {
   const { signal, maxBytes = MAX_EDITOR_MEDIA_BYTES } = options;
-  throwIfAssetAborted(signal);
+  if (signal?.aborted) {
+    await res.body?.cancel().catch(() => {});
+    throwIfAssetAborted(signal);
+  }
   if (!res.ok) {
     await res.body?.cancel().catch(() => {});
     throw new Error(`Could not download the asset (${res.status})`);
