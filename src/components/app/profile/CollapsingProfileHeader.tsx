@@ -1,13 +1,13 @@
 import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { ReactNode } from 'react';
 import './profile-collapse.css';
 
 /** The cover, name and actions leave independently, as on a native profile. */
-export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, followAction }: {
+export function CollapsingProfileHeader({ headerRef, tabsRef, name, handle, coverUrl, followAction }: {
   headerRef: RefObject<HTMLDivElement>;
+  tabsRef: RefObject<HTMLDivElement>;
   name: string;
   handle: string;
   coverUrl?: string;
@@ -15,10 +15,7 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
 }) {
   const active = useContext(CachedPageActiveContext);
   const barRef = useRef<HTMLDivElement>(null);
-  const [identityVisible, setIdentityVisible] = useState(false);
-  const [actionsVisible, setActionsVisible] = useState(false);
   const [surfaceVisible, setSurfaceVisible] = useState(false);
-  useFeedSwallowClip(headerRef, '[data-profile-collapse][data-collapsed="true"]', [surfaceVisible], { allThemes: true });
 
   useEffect(() => {
     const header = headerRef.current;
@@ -28,12 +25,8 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
     const update = () => {
       frame = 0;
       const bottom = bar.getBoundingClientRect().bottom;
-      const cover = header.querySelector('[data-profile-cover]');
-      const identity = header.querySelector('[data-profile-identity]');
-      const actions = header.querySelector('[data-profile-actions]');
-      setIdentityVisible(!!identity && identity.getBoundingClientRect().bottom <= bottom);
-      setActionsVisible(!!actions && actions.getBoundingClientRect().bottom <= bottom);
-      setSurfaceVisible(!!cover && cover.getBoundingClientRect().bottom <= bottom);
+      const tabs = tabsRef.current;
+      setSurfaceVisible(!!tabs && tabs.getBoundingClientRect().top <= bottom + 4);
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     const resize = new ResizeObserver(schedule);
@@ -47,7 +40,7 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
       window.removeEventListener('resize', schedule);
       cancelAnimationFrame(frame);
     };
-  }, [active, headerRef, name, handle]);
+  }, [active, headerRef, tabsRef, name, handle]);
 
   return (
     <div className="profile-collapse-anchor">
@@ -60,11 +53,11 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
         </div>
         <PageHeader overlay className="!top-2 !left-2 !right-auto" />
         <div className="profile-collapse-content">
-          <div className="profile-collapse-identity" data-visible={identityVisible} aria-hidden={!identityVisible}>
+          <div className="profile-collapse-identity" data-visible={surfaceVisible} aria-hidden={!surfaceVisible}>
             <p className="truncate text-sm sm:text-base font-bold text-white">{name}</p>
             <p className="truncate text-xs text-zinc-400">{handle}</p>
           </div>
-          {actionsVisible && followAction && <div className="shrink-0">{followAction}</div>}
+          {surfaceVisible && followAction && <div className="shrink-0">{followAction}</div>}
         </div>
       </div>
     </div>
