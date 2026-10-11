@@ -258,6 +258,8 @@
     "language": "ენა",
     "languageDesc": "აირჩიეთ სასურველი ენა",
     "light": "ღია",
+    "minimal": "მინიმალური",
+    "minimalLight": "მინიმალური ღია",
     "dark": "მუქი",
     "system": "სისტემა",
     "immersive": "Immersive",

@@ -258,6 +258,8 @@
     "language": "Språk",
     "languageDesc": "Välj ditt föredragna språk",
     "light": "Ljust",
+    "minimal": "Minimal",
+    "minimalLight": "Minimal Ljust",
     "dark": "Mörkt",
     "system": "System",
     "immersive": "Immersive",

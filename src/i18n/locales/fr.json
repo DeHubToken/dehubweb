@@ -259,6 +259,8 @@
     "language": "Langue",
     "languageDesc": "Choisissez votre langue préférée",
     "light": "Clair",
+    "minimal": "Minimal",
+    "minimalLight": "Minimal Clair",
     "dark": "Sombre",
     "system": "Système",
     "immersive": "Immersif",

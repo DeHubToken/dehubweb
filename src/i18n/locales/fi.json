@@ -258,6 +258,8 @@
     "language": "Kieli",
     "languageDesc": "Valitse haluamasi kieli",
     "light": "Vaalea",
+    "minimal": "Minimalistinen",
+    "minimalLight": "Minimalistinen Vaalea",
     "dark": "Tumma",
     "system": "Järjestelmä",
     "immersive": "Immersive",

@@ -258,6 +258,8 @@
     "language": "Dil",
     "languageDesc": "Tercih etdiyiniz dili seçin",
     "light": "İşıqlı",
+    "minimal": "Minimal",
+    "minimalLight": "Minimal İşıqlı",
     "dark": "Qaranlıq",
     "system": "Sistem",
     "immersive": "Immersive",

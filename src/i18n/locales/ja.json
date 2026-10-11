@@ -257,6 +257,8 @@
     "language": "言語",
     "languageDesc": "お好みの言語を選択",
     "light": "ライト",
+    "minimal": "ミニマル",
+    "minimalLight": "ミニマル ライト",
     "dark": "ダーク",
     "system": "システム",
     "immersive": "Immersive",

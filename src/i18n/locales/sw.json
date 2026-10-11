@@ -258,6 +258,8 @@
     "language": "Lugha",
     "languageDesc": "Chagua lugha unayopendelea",
     "light": "Mwanga",
+    "minimal": "Rahisi",
+    "minimalLight": "Rahisi Mwanga",
     "dark": "Giza",
     "system": "Mfumo",
     "immersive": "Immersive",

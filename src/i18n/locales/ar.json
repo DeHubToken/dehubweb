@@ -259,6 +259,8 @@
     "language": "اللغة",
     "languageDesc": "اختر لغتك المفضلة",
     "light": "فاتح",
+    "minimal": "بسيط",
+    "minimalLight": "بسيط فاتح",
     "dark": "داكن",
     "system": "النظام",
     "immersive": "مُغَطًّى به",

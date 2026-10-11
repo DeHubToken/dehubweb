@@ -263,6 +263,8 @@
     "language": "ภาษา",
     "languageDesc": "เลือกภาษาที่คุณต้องการ",
     "light": "สว่าง",
+    "minimal": "มินิมอล",
+    "minimalLight": "มินิมอล สว่าง",
     "dark": "มืด",
     "system": "ตามระบบ",
     "immersive": "Immersive",
