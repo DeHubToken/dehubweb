@@ -17,6 +17,7 @@ Deno.test('bulk actions preserve an explicit time window and cannot expand into 
 Deno.test('posting schedules respect the action budget and skip missed slots without a burst', () => {
   const step = { tool: 'dehub_post_create', arguments: {}, audience: 'single', topic: 'Music', from: null, to: null };
   assert(taskPlanSchema.safeParse({ summary: 'Three music posts per day', interval_minutes: 480, steps: [step] }).success);
+  assert(taskPlanSchema.safeParse({ summary: 'Seven music posts per day', interval_minutes: 1440 / 7, steps: [step] }).success);
   assert(!taskPlanSchema.safeParse({ summary: 'Too many posts', interval_minutes: 30, steps: [step, step] }).success);
   assert(nextScheduledRun('2026-10-10T00:00:00Z', 480, Date.parse('2026-10-11T03:00:00Z')) === '2026-10-11T08:00:00.000Z');
 });

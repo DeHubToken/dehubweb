@@ -410,7 +410,7 @@ export function filterNavItems(items: NavItem[], query: string, t: TranslateFn, 
   // — and doing it before the query is applied means the hidden destinations
   // below (SEARCH_ONLY_ITEMS) cannot be typed back into view either, which is
   // exactly the hole a filter applied afterwards would leave.
-  const rolloutItems = agentsAllowed ? items : items.filter(item => item.path !== '/app/agents');
+  const rolloutItems = agentsAllowed || !items.some(item => item.path === '/app/agents') ? items : items.filter(item => item.path !== '/app/agents');
   const allowed = isKidsModeLocked() ? rolloutItems.filter(item => isKidsModePath(item.path)) : rolloutItems;
 
   const folded = fold(query);

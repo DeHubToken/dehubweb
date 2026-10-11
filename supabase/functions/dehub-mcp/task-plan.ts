@@ -16,7 +16,7 @@ export const taskStepSchema = z.object({
 export const taskPlanSchema = z.object({
   summary: z.string().min(1).max(1000),
   steps: z.array(taskStepSchema).min(1).max(12),
-  interval_minutes: z.number().int().min(30).max(525600).nullable(),
+  interval_minutes: z.number().finite().min(30).max(525600).nullable(),
 }).strict().superRefine((plan, ctx) => {
   plan.steps.forEach((step, index) => {
     const invalid = (message: string) => ctx.addIssue({ code: "custom", message, path: ["steps", index] });
@@ -52,7 +52,7 @@ export const PLAN_TOOL = {
           type: "object",
           properties: {
             summary: { type: "string" },
-            interval_minutes: { type: ["integer", "null"], description: "Null for once. For N posts/day use 1440/N, minimum 30. Each run executes every step." },
+            interval_minutes: { type: ["number", "null"], description: "Null for once. For N posts/day use 1440/N, minimum 30. Each run executes every step." },
             steps: { type: "array", items: {
               type: "object",
               properties: {
