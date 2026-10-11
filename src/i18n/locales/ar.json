@@ -13362,6 +13362,8 @@
     "mostActive": "الأكثر نشاطًا",
     "hereNow": "هنا الآن",
     "joinedAgo": "انضم {{time}}",
-    "nobodyYet": "لا أحد بعد"
+    "nobodyYet": "لا أحد بعد",
+    "rotate": "تدوير الشاشة",
+    "showControls": "إظهار عناصر التحكم"
   }
 }

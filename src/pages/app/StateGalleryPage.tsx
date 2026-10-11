@@ -32,6 +32,7 @@ import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
 import { PollCard } from '@/components/app/cards/PollCard';
+import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
 import type { LiveAudience } from '@/lib/api/dehub/livestream';
 import type { DeHubPoll } from '@/lib/api/dehub';
@@ -479,6 +480,29 @@ function LiveViewerGallery() {
             hidden={false}
             streamId={GALLERY_STREAM_ID}
           />
+        </div>
+        <div
+          data-live-viewer-cleared-frame
+          className="relative mx-auto mt-4 h-[720px] w-[390px] max-w-full overflow-hidden rounded-[28px] bg-black"
+          style={{ background: 'radial-gradient(60% 30% at 50% 26%, rgba(255,170,90,.55), transparent 70%), radial-gradient(40% 25% at 20% 10%, rgba(255,60,160,.5), transparent 70%), radial-gradient(40% 25% at 85% 12%, rgba(80,120,255,.55), transparent 70%), linear-gradient(180deg, #2a1240 0%, #3b1d4f 40%, #120a1c 100%)' }}
+        >
+          <ImmersiveLiveChrome
+            streamerName="Marco"
+            creatorUsername="marco_v"
+            creatorId="0x00000000000000000000000000000000000000a1"
+            avatar={galleryAvatar}
+            title="Friday night set, requests open"
+            isLive
+            isEnded={false}
+            viewers={216}
+            giftTotal={3100}
+            startedAt={minutesAgo(24)}
+            isMuted
+            onToggleMute={noop}
+            hidden
+            streamId={GALLERY_STREAM_ID}
+          />
+          <LiveClearedLayer onRestore={noop} onRotate={noop} />
         </div>
       </AuthContext.Provider>
     </section>
