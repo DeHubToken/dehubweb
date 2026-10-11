@@ -415,22 +415,26 @@ export const VideoSlide = memo(function VideoSlide({
   // wrapper rather than the viewport.
   return (
     <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
-      {/* Liquid glass fill behind letterboxed / non-portrait videos */}
+      {/* Liquid glass fill behind letterboxed / non-portrait videos.
+          One filtered layer plus a plain tint. It used to be a blurred layer
+          with a second backdrop-blur pass stacked on it — blurring what was
+          already a blur, on every slide in the window — and both were redrawn
+          on every frame the player resized (comments opening/closing) or
+          moved, which is where those transitions lost frames. The two blur
+          and saturate passes are folded into the one filter. */}
       {fitWhole && thumbnail && (
         <>
-          {/* Blurred thumbnail background */}
-          <div 
+          <div
             className="absolute inset-0 z-0"
             style={{
               backgroundImage: `url(${thumbnail})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              filter: 'blur(40px) saturate(150%)',
+              filter: 'blur(48px) saturate(270%)',
               transform: 'scale(1.1)',
             }}
           />
-          {/* Liquid glass overlay */}
-          <div className="absolute inset-0 z-[1] bg-black/40 backdrop-blur-[24px] saturate-[180%]" />
+          <div className="absolute inset-0 z-[1] bg-black/40" />
         </>
       )}
 
