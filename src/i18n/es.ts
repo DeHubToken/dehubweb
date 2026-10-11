@@ -998,6 +998,8 @@ export const es = {
     moreB7Desc: 'Abrir puestos en el equipo de DeHub, enumerados en la aplicación en lugar de en un sitio de carreras separado.',
     moreB8: 'Sorteos:',
     moreB8Desc: 'DeHub ha realizado sorteos de premios desde el sorteo local de $ 1,000,000 en 2022; los actuales se encuentran en dehub.io/raffle.',
+
+    "aiSuiteTitle": "Suite de IA"
   },
   games: {
     title: 'Juegos',

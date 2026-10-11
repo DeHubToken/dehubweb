@@ -48,6 +48,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
       : timestamp
   ) : undefined;
 
+  const displayedCount = typeof viewCount === 'string' ? viewCount.replace(/\s+views?$/i, '') : viewCount;
   const hasViews = viewCount !== undefined && viewCount !== null;
   const hasMetadata = formattedTimestamp || hasViews;
 
@@ -118,7 +119,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
       {hasViews && (
         <span className="flex items-center gap-1">
           {isAudio ? <Headphones className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-          <span>{viewCount}{watched ? watchedLabel(i18n.resolvedLanguage ?? i18n.language) : ''}</span>
+          <span>{displayedCount}{watched ? watchedLabel(i18n.resolvedLanguage ?? i18n.language) : ''}</span>
         </span>
       )}
       {hasMetadata && translateControl && <span>•</span>}

@@ -1107,6 +1107,8 @@ export const nl = {
     secureGatewayDesc: 'Alle betalingsgegevens worden gecodeerd en veilig verwerkt door Stripe, we hebben geen toegang tot je gevoelige informatie of kaartgegevens en kunnen deze niet opslaan. Dit geeft je ultieme gemoedsrust.',
     disclaimer: 'Disclaimer',
     disclaimerText: 'DeHub-tokens zijn strikt voor nutsdoeleinden op dezelfde manier als in-game of in-app digitale tokens of valuta\'s en zijn strikt geen investering. Aangezien onze token on-chain leeft, kunnen we extra hulpprogramma\'s en ongekende niveaus van verifieerbare transparantie bieden. De bovenstaande gegevens worden uitsluitend verzameld voor transparantie, educatieve en informatieve doeleinden. DeHub en alle gelieerde ondernemingen zijn niet aansprakelijk voor financiële verliezen die voortvloeien uit de aankoop van tokens of NFT\'s die we vrijgeven. Markten zijn zeer volatiel. U kunt ook al uw geld verliezen als gevolg van onvoorziene fouten zoals competentiestoringen, technische fouten, hacks enzovoort. Daarom moet je alleen uitgeven wat je je kunt veroorloven om te verliezen.',
+
+    "direct": "Direct"
   },
   tokenGovernance: {
     title: 'Bestuur',
@@ -2081,6 +2083,8 @@ export const nl = {
     needHelpDesc: 'Word lid van onze community voor realtime ondersteuning en discussies.',
     joinTelegram: 'Deelnemen aan Telegram',
     joinDiscord: 'Word lid van Discord',
+
+    "hindi": "Hindi"
   },
   faq: {
     title: 'Veelgestelde vragen',
@@ -2290,6 +2294,8 @@ export const nl = {
     notFound: 'Niet gevonden',
     rateLimited: 'Tarief Beperkt',
     serverError: 'Serverfout',
+
+    "type": "Type"
   },
   advertiserDashboard: {
     title: 'Adverteerdersdashboard',
@@ -2304,6 +2310,8 @@ export const nl = {
     analytics: 'Analyse',
     budgetCalculator: 'Budgetcalculator',
     activeCampaigns: 'Actieve campagnes',
+
+    "status": "Status"
   },
   adTools: {
     budgetCalculatorTitle: 'Campagnebudgetcalculator',

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { loadLanguage, SUPPORTED_LANGUAGES } from '@/i18n';
@@ -9,6 +9,11 @@ export function LanguageRouteSync() {
   const location = useLocation();
   const navigate = useNavigate();
   const { i18n } = useTranslation();
+  const subscribeLanguage = useCallback((changed: () => void) => {
+    i18n.on('languageChanged', changed);
+    return () => { i18n.off('languageChanged', changed); };
+  }, [i18n]);
+  const language = useSyncExternalStore(subscribeLanguage, () => i18n.language || 'en', () => 'en');
   const pendingUrlLanguage = useRef<string | null>(null);
   const languageAtRequest = useRef(i18n.language);
   useEffect(() => {
@@ -28,7 +33,7 @@ export function LanguageRouteSync() {
   }, [location.key, location.search, i18n]);
 
   useEffect(() => {
-    const lang = i18n.language || 'en';
+    const lang = language;
     const languages = publicPageLanguages(location.pathname);
     if (!languages.length) return;
     const params = new URLSearchParams(location.search);
@@ -44,6 +49,6 @@ export function LanguageRouteSync() {
       else params.delete('hl');
       navigate({ pathname: location.pathname, search: params.toString(), hash: location.hash }, { replace: true });
     }
-  }, [i18n.language, location.pathname, location.search, location.hash, navigate]);
+  }, [language, location.pathname, location.search, location.hash, navigate]);
   return null;
 }

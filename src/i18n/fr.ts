@@ -991,6 +991,11 @@ export const fr = {
     moreB7Desc: 'Ouvrez des postes dans l\'équipe DeHub, répertoriés dans l\'application plutôt que sur un site de carrières distinct.',
     moreB8: 'Tirages au sort :',
     moreB8Desc: 'DeHub a organisé des tirages au sort depuis le tirage au sort de 1 000 000 $ en 2022 ; les tirages au sort actuels sont disponibles sur dehub.io/raffle.',
+
+    "spNameBoost": "Booster",
+    "tocArcade": "Arcade",
+    "notificationsTitle": "Notifications",
+    "arcadeTitle": "Arcade"
   },
   games: {
     title: 'Jeux',
@@ -1842,6 +1847,8 @@ export const fr = {
     paragraph9: 'Tous les destinataires de DeHub sont responsables de la mise en œuvre de mesures raisonnables pour sécuriser leur propre portefeuille, coffre-fort ou autre mécanisme de stockage utilisé pour recevoir et conserver les jetons DeHub, y compris toute (s) clé(s) privée (s) requise (s) ou autres informations d\'identification nécessaires pour accéder à ce (s) mécanisme(s) de stockage. En cas de perte de clé(s) privée (s) ou d\'autres identifiants d\'accès, le titulaire peut perdre l\'accès à ses Jetons DeHub. DeHub n\'est pas responsable des pertes, coûts ou dépenses liés aux informations d\'identification d\'accès perdues. DeHub n\'aura aucune obligation sous quelque forme que ce soit envers vous en ce qui concerne la gestion des jetons DeHub. Il est de l\'entière responsabilité du détenteur du jeton de retenir, de collecter, de déclarer et de verser les taxes correctes aux autorités fiscales compétentes concernant tout jeton DeHub reçu. DeHub n\'aura jamais la garde des fonds ou de votre phrase de départ et nous ou toute personne associée à DeHub ne vous demanderons jamais ces informations en aucune circonstance.',
     importantNotice: 'Avis important',
     disclaimer: 'Clause de non-responsabilité :',
+
+    "disclaimerText": "Les tokens DeHub sont strictement à des fins utilitaires et pas un investissement. Les marchés sont très volatils. Vous ne devriez dépenser que ce que vous pouvez vous permettre de perdre."
   },
   termsOfService: {
     title: 'Conditions d\'utilisation',
@@ -2380,6 +2387,8 @@ export const fr = {
     pegDesc2: 'Le jeton se négocie sur des bourses décentralisées, avec des pools de liquidités ensemencés à partir du même prix de base de 0,001 sur plusieurs chaînes. Sur le marché libre, le prix est fixé par la négociation — et non par DeHub — ce qui signifie que les jetons DeHub peuvent se négocier au-dessus ou en dessous de l\'index intégré à l\'application à tout moment. DeHub sème sa liquidité officielle sur les DEX afin que chaque transaction reste publiquement vérifiable sur la chaîne.',
     disclaimer: 'Clause de non-responsabilité',
     disclaimerNoApy: 'Important : bien que détenir des jetons DeHub confère la propriété du réseau DeHub et donne droit à une part des bénéfices du protocole, il n\'y a pas d\'APY fixe, pas de taux de rendement garanti et aucune attente de profit d\'aucune sorte. Toutes les distributions dépendent entièrement des performances du réseau et des revenus que le protocole génère réellement au cours d\'une période donnée. Les récompenses peuvent être inférieures à celles de toute période précédente et peuvent être nulles. Rien sur cette page n\'est une promesse, une projection ou une offre de rendement, et rien ici n\'est un conseil financier.',
+
+    "disclaimerText": "Les tokens DeHub sont strictement à des fins utilitaires et pas un investissement. Les marchés sont très volatils. Vous ne devriez dépenser que ce que vous pouvez vous permettre de perdre."
   },
   communityGuidelines: {
     title: 'Charte de la communauté',
@@ -2414,6 +2423,8 @@ export const fr = {
     appeals: 'Appels',
     appealsText: 'Si vous pensez qu\'une décision de modération était erronée, elle peut faire l\'objet d\'un appel par le biais de la gouvernance communautaire. La gouvernance définit les politiques que les modérateurs appliquent et peut examiner ou annuler les décisions individuelles. L\'application, cependant, est immédiate — le contenu reste bas pendant qu\'un appel est examiné.',
     contactText: 'Les questions concernant ces directives ou les rapports nécessitant une attention urgente peuvent être envoyés à dev@dehub.io.',
+
+    "contact": "Contact"
   },
   adTools: {
     budgetCalculatorTitle: 'Calculateur de budget de campagne',
