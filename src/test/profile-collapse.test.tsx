@@ -7,7 +7,7 @@ let frame: FrameRequestCallback | undefined;
 const rect = (bottom: number) => ({ bottom } as DOMRect);
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
-it('keeps the header surface present, transfers each control at its boundary, and reverses', () => {
+it('keeps only Back visible until the original actions leave view, then reverses', () => {
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { frame = cb; return 1; });
   vi.stubGlobal('cancelAnimationFrame', vi.fn());
@@ -18,25 +18,34 @@ it('keeps the header surface present, transfers each control at its boundary, an
   header.children[0].getBoundingClientRect = () => rect(coverBottom);
   header.children[1].getBoundingClientRect = () => rect(actionBottom);
   header.children[2].getBoundingClientRect = () => rect(nameBottom);
-  const { container } = render(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
+  const { container, rerender } = render(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
   const bar = container.querySelector<HTMLElement>('[data-profile-collapse]')!;
-  bar.getBoundingClientRect = () => rect(56);
+  bar.getBoundingClientRect = () => ({ top: 4, bottom: 56 } as DOMRect);
   const scroll = () => act(() => { fireEvent.scroll(window); frame?.(0); });
   scroll();
   expect(screen.getByText('Back')).toBeVisible();
-  expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
+  expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
   expect(screen.queryByText('Follow')).toBeNull();
   coverBottom = 56;
   actionBottom = 55;
   scroll();
+  expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
+  expect(screen.queryByText('Follow')).toBeNull();
+  actionBottom = 0;
+  scroll();
   expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
+  expect(container.querySelector('.profile-collapse-gap-guard')).toBeVisible();
   expect(screen.getByText('Follow')).toBeVisible();
-  expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'true');
+  expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
+  rerender(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" tabsPinned tabsHeight={56} followAction={<button>Follow</button>} />);
+  expect(bar).toHaveAttribute('data-joined', 'true');
+  expect(container.querySelector('.profile-collapse-surface')).toHaveStyle({ bottom: '-60px' });
   nameBottom = 55;
   scroll();
   expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
   coverBottom = 140; actionBottom = 180; nameBottom = 230;
   scroll();
   expect(screen.queryByText('Follow')).toBeNull();
-  expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
+  expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
+  expect(container.querySelector('.profile-collapse-gap-guard')).not.toBeVisible();
 });
