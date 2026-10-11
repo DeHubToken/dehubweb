@@ -13358,6 +13358,8 @@
     "mostActive": "En aktifler",
     "hereNow": "Şu an burada",
     "joinedAgo": "{{time}} katıldı",
-    "nobodyYet": "Henüz kimse yok"
+    "nobodyYet": "Henüz kimse yok",
+    "rotate": "Ekranı döndür",
+    "showControls": "Kontrolleri göster"
   }
 }

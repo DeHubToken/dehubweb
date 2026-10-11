@@ -13358,6 +13358,8 @@
     "mostActive": "Más activos",
     "hereNow": "Aquí ahora",
     "joinedAgo": "se unió {{time}}",
-    "nobodyYet": "Aún no hay nadie"
+    "nobodyYet": "Aún no hay nadie",
+    "rotate": "Girar pantalla",
+    "showControls": "Mostrar controles"
   }
 }
