@@ -366,7 +366,7 @@ if (typeof window !== "undefined") {
  * Only mounted after user has passed the hero (or is a returning user).
  */
 function AppContent() {
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();
   usePreloadIcons();
   // Views are recorded by <PageViewTracker /> above <Routes>; this only
@@ -408,9 +408,9 @@ function AppContent() {
 
   // When a wallet signs in, self-attribute any pending cookie referral.
   useEffect(() => {
-    if (!wallet) return;
+    if (!wallet || !isAuthenticated || requiresUsername || isConnecting || isProcessingRedirect) return;
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
-  }, [wallet]);
+  }, [wallet, isAuthenticated, requiresUsername, isConnecting, isProcessingRedirect]);
 
   return (
     <>
