@@ -33,7 +33,7 @@ AS $function$
          OR (status = 'banned' AND banned_until IS NOT NULL AND banned_until <= now())
        )
   ) AND coalesce(_wallet, '') <> '';
-$function$
+$function$;
 
 CREATE OR REPLACE FUNCTION public.community_permission(_community_id uuid, _wallet text, _perm text)
  RETURNS boolean
@@ -100,4 +100,4 @@ BEGIN
   -- defaults blob) fail open to any active member.
   RETURN coalesce(raw = 'true', false);
 END;
-$function$
+$function$;
