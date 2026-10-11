@@ -13,6 +13,10 @@
  * It loads only when opened: the ledger is hundreds of lines, and most visits
  * to /stats never need them. The whole ledger, or any filtered slice of it,
  * downloads as CSV.
+ *
+ * The same list, as `kind="tax"`, proves where the original token's trading
+ * tax went: every burn, every day of holder claims, every payout kept. That
+ * one is fixed 2021–23 history, so it ignores the page's range.
  */
 
 import { useMemo, useState } from 'react';
@@ -20,7 +24,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronDown, Download, ExternalLink, Loader2, ReceiptText } from 'lucide-react';
 
 import {
-  FINANCE_LEDGER_ENDPOINT,
+  financeLedgerEndpoint,
   useFinanceLedger,
   type FinanceLedger,
   type LedgerItem,
@@ -56,8 +60,13 @@ function rangeStart(days: number | null): string | null {
   return start.toISOString().slice(0, 10);
 }
 
-function txUrl(ledger: FinanceLedger, item: LedgerItem): string | null {
-  return item.ref ? `${ledger.explorers[item.ref.chain]}/tx/${item.ref.tx}` : null;
+/** The transaction, or for a day's total, the contract whose event log holds every event in it. */
+function proofUrl(ledger: FinanceLedger, item: LedgerItem): string | null {
+  const ref = item.ref;
+  if (!ref) return null;
+  if (ref.tx) return `${ledger.explorers[ref.chain]}/tx/${ref.tx}`;
+  if (ref.address) return `${ledger.explorers[ref.chain]}/address/${ref.address}#events`;
+  return null;
 }
 
 function csvCell(value: string | number | undefined | null): string {
@@ -76,8 +85,8 @@ function downloadCsv(ledger: FinanceLedger, items: LedgerItem[], labels: Map<str
       item.unit,
       item.count,
       item.ref?.chain,
-      item.ref?.tx,
-      txUrl(ledger, item),
+      item.ref?.tx ?? item.ref?.address,
+      proofUrl(ledger, item),
       item.note,
     ]
       .map(csvCell)
@@ -95,13 +104,16 @@ function downloadCsv(ledger: FinanceLedger, items: LedgerItem[], labels: Map<str
 }
 
 export function RevenueLedger({
+  kind = 'revenue',
   windowDays,
   open,
   onOpenChange,
   source,
   onSourceChange,
 }: {
-  /** The page's range in days; null is all time. */
+  /** `revenue`: every line behind revenue. `tax`: every line behind the token-tax split. */
+  kind?: 'revenue' | 'tax';
+  /** The page's range in days; null is all time. Ignored for `tax`, which is fixed history. */
   windowDays: number | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -110,10 +122,12 @@ export function RevenueLedger({
   onSourceChange: (source: string | null) => void;
 }) {
   const { t } = useTranslation();
-  const { data: ledger, isLoading, isError } = useFinanceLedger(open);
+  const tax = kind === 'tax';
+  const endpoint = financeLedgerEndpoint(tax ? 'tax' : 'ledger');
+  const { data: ledger, isLoading, isError } = useFinanceLedger(open, tax ? 'tax' : 'ledger');
   const [shown, setShown] = useState(PAGE);
 
-  const start = rangeStart(windowDays);
+  const start = tax ? null : rangeStart(windowDays);
   const view = useMemo(() => {
     if (!ledger) return null;
     const labels = new Map(ledger.sources.map((s) => [s.id, s.label]));
@@ -125,29 +139,40 @@ export function RevenueLedger({
       c.usd += item.usd;
       counts.set(item.source, c);
     }
-    const items = source ? inRange.filter((i) => i.source === source) : inRange;
+    const chips = ledger.sources
+      .filter((s) => counts.has(s.id))
+      .map((s) => ({ id: s.id, label: s.label, ...counts.get(s.id)! }));
+    // Revenue sources rank by size. The token-tax lines keep the server's
+    // order — kept, burned, shared — and have no "All": adding a burn to a
+    // payout to a claim makes a number that means nothing.
+    if (!tax) chips.sort((a, b) => b.usd - a.usd);
+    const active = tax ? source ?? chips[0]?.id ?? null : source;
+    const items = active ? inRange.filter((i) => i.source === active) : inRange;
     return {
       labels,
       items,
-      chips: ledger.sources
-        .filter((s) => counts.has(s.id))
-        .map((s) => ({ id: s.id, label: s.label, ...counts.get(s.id)! }))
-        .sort((a, b) => b.usd - a.usd),
+      active,
+      chips,
       total: items.reduce((a, i) => a + i.usd, 0),
       proven: items.filter((i) => i.ref).length,
       unavailable: ledger.sources.filter((s) => s.status === 'unavailable'),
     };
-  }, [ledger, start, source]);
+  }, [ledger, start, source, tax]);
 
   const rangeLabel =
-    windowDays == null
+    tax || windowDays == null
       ? t('stats.ledger.allTime', 'all time')
       : windowDays === 1
         ? t('stats.money.today', 'today so far, UTC')
         : t('stats.countries.window', 'last {{days}} days', { days: windowDays });
 
   return (
-    <div id="revenue-ledger" data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 scroll-mt-24">
+    <div
+      id={tax ? 'tax-ledger' : 'revenue-ledger'}
+      data-page-bento
+      data-kit-section
+      className="bg-zinc-900 border border-zinc-800 scroll-mt-24"
+    >
       <button
         type="button"
         onClick={() => onOpenChange(!open)}
@@ -156,9 +181,13 @@ export function RevenueLedger({
       >
         <ReceiptText className="w-4 h-4 text-zinc-400 shrink-0" />
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-white">{t('stats.ledger.title', 'Revenue ledger')}</div>
+          <div className="text-sm font-semibold text-white">
+            {tax ? t('stats.taxLedger.title', 'Token tax ledger') : t('stats.ledger.title', 'Revenue ledger')}
+          </div>
           <div className="text-xs text-zinc-500">
-            {t('stats.ledger.subtitle', 'Every entry behind the revenue figure, with a link to check it')}
+            {tax
+              ? t('stats.taxLedger.subtitle', 'Every burn, holder payout and kept payout from 2021–23, with a link to check it')
+              : t('stats.ledger.subtitle', 'Every entry behind the revenue figure, with a link to check it')}
           </div>
         </div>
         <ChevronDown className={cn('w-4 h-4 text-zinc-500 transition-transform shrink-0', open && 'rotate-180')} />
@@ -182,21 +211,23 @@ export function RevenueLedger({
             <>
               {/* Source filter. Counts and totals follow the page's range. */}
               <div className="flex flex-wrap gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => {
-                    onSourceChange(null);
-                    setShown(PAGE);
-                  }}
-                  className={cn(
-                    'text-xs rounded-full px-2.5 py-1 border transition-colors',
-                    source == null
-                      ? 'bg-white text-black border-white'
-                      : 'text-zinc-300 border-zinc-700 hover:border-zinc-500',
-                  )}
-                >
-                  {t('stats.ledger.all', 'All')}
-                </button>
+                {!tax && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onSourceChange(null);
+                      setShown(PAGE);
+                    }}
+                    className={cn(
+                      'text-xs rounded-full px-2.5 py-1 border transition-colors',
+                      source == null
+                        ? 'bg-white text-black border-white'
+                        : 'text-zinc-300 border-zinc-700 hover:border-zinc-500',
+                    )}
+                  >
+                    {t('stats.ledger.all', 'All')}
+                  </button>
+                )}
                 {view.chips.map((chip) => (
                   <button
                     key={chip.id}
@@ -207,7 +238,7 @@ export function RevenueLedger({
                     }}
                     className={cn(
                       'text-xs rounded-full px-2.5 py-1 border transition-colors tabular-nums',
-                      source === chip.id
+                      view.active === chip.id
                         ? 'bg-white text-black border-white'
                         : 'text-zinc-300 border-zinc-700 hover:border-zinc-500',
                     )}
@@ -219,12 +250,17 @@ export function RevenueLedger({
 
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="text-xs text-zinc-400 tabular-nums">
-                  {t('stats.ledger.summary', '{{entries}} entries · {{total}} · {{proven}} with an on-chain transaction · {{range}}', {
-                    entries: view.items.length.toLocaleString('en-US'),
-                    total: formatUsd(view.total),
-                    proven: view.proven.toLocaleString('en-US'),
-                    range: rangeLabel,
-                  })}
+                  {tax
+                    ? t('stats.taxLedger.summary', '{{entries}} lines · {{total}} at the BNB price on each day · every line checkable on BscScan', {
+                        entries: view.items.length.toLocaleString('en-US'),
+                        total: formatUsd(view.total),
+                      })
+                    : t('stats.ledger.summary', '{{entries}} entries · {{total}} · {{proven}} with an on-chain transaction · {{range}}', {
+                        entries: view.items.length.toLocaleString('en-US'),
+                        total: formatUsd(view.total),
+                        proven: view.proven.toLocaleString('en-US'),
+                        range: rangeLabel,
+                      })}
                 </div>
                 <button
                   type="button"
@@ -233,7 +269,9 @@ export function RevenueLedger({
                       ledger,
                       view.items,
                       view.labels,
-                      `dehub-revenue-${source ?? 'all'}-${windowDays == null ? 'all-time' : `${windowDays}d`}.csv`,
+                      tax
+                        ? `dehub-token-tax-${view.active ?? 'all'}.csv`
+                        : `dehub-revenue-${source ?? 'all'}-${windowDays == null ? 'all-time' : `${windowDays}d`}.csv`,
                     )
                   }
                   disabled={view.items.length === 0}
@@ -245,11 +283,16 @@ export function RevenueLedger({
               </div>
 
               {view.items.length === 0 ? (
-                <p className="text-sm text-zinc-500 py-4">{t('stats.ledger.empty', 'No revenue entries in this window.')}</p>
+                <p className="text-sm text-zinc-500 py-4">
+                  {tax
+                    ? t('stats.taxLedger.empty', 'Nothing to show here.')
+                    : t('stats.ledger.empty', 'No revenue entries in this window.')}
+                </p>
               ) : (
                 <ol className="divide-y divide-zinc-800 border-y border-zinc-800">
                   {view.items.slice(0, shown).map((item, i) => {
-                    const url = txUrl(ledger, item);
+                    const url = proofUrl(ledger, item);
+                    const proofId = item.ref?.tx ?? item.ref?.address;
                     // The USD column already says it; repeating "40 USD" beside "$40.00" is noise.
                     const amount = item.unit === 'USD' ? null : formatAmount(item);
                     const details = [
@@ -264,7 +307,7 @@ export function RevenueLedger({
                       .filter(Boolean)
                       .join(' · ');
                     return (
-                      <li key={`${item.date}-${item.source}-${item.ref?.tx ?? i}-${i}`} className="py-2">
+                      <li key={`${item.date}-${item.source}-${proofId ?? i}-${i}`} className="py-2">
                         {/* Two lines on every width, so a phone never has to truncate
                             the source name to make room for the proof link. */}
                         <div className="flex items-baseline gap-3">
@@ -277,21 +320,27 @@ export function RevenueLedger({
                           <span className="text-sm text-white tabular-nums shrink-0">{formatUsd(item.usd)}</span>
                         </div>
                         <div className="flex items-baseline gap-3 sm:pl-[5.5rem]">
-                          <span className="flex-1 min-w-0 text-[11px] text-zinc-500 truncate">
+                          <span className="flex-1 min-w-0 text-[11px] text-zinc-500 leading-snug">
                             <span className="sm:hidden tabular-nums">{item.date}</span>
                             <span className="sm:hidden">{details ? ' · ' : ''}</span>
                             {details}
                           </span>
-                          {url ? (
+                          {url && proofId ? (
                             <a
                               href={url}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-[11px] text-zinc-400 hover:text-white transition-colors shrink-0"
-                              title={item.ref!.tx}
+                              title={
+                                item.ref!.tx
+                                  ? proofId
+                                  : t('stats.taxLedger.contractProof', 'Every claim that day is in this contract’s event log: {{address}}', {
+                                      address: proofId,
+                                    })
+                              }
                             >
                               {item.ref!.chain === 'bsc' ? 'BscScan' : 'BaseScan'}
-                              <span className="hidden sm:inline font-mono">{shortHash(item.ref!.tx)}</span>
+                              <span className="hidden sm:inline font-mono">{shortHash(proofId)}</span>
                               <ExternalLink className="w-3 h-3" />
                             </a>
                           ) : (
@@ -346,8 +395,16 @@ export function RevenueLedger({
                 </ul>
               </div>
 
+              {tax && ledger.notes && ledger.notes.length > 0 && (
+                <ul className="space-y-1 text-[11px] text-zinc-500 leading-relaxed">
+                  {ledger.notes.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              )}
+
               <p className="text-[11px] text-zinc-500 leading-relaxed">
-                {t(
+                {!tax && t(
                   'stats.ledger.footnote',
                   'On-chain entries link to the transaction itself. Card payments and plan invoices have no public record, so they appear as each day’s total and how many payments made it up. Amounts in USD use the price on the day for history and today’s price for live DHB payments, as described under “What is counted”.',
                 )}{' '}
@@ -356,7 +413,7 @@ export function RevenueLedger({
                     sources: view.unavailable.map((s) => s.label).join(', '),
                   })}{' '}
                 <a
-                  href={FINANCE_LEDGER_ENDPOINT}
+                  href={endpoint}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-zinc-400 hover:text-white underline underline-offset-2"

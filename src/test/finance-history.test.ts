@@ -13,9 +13,14 @@ describe('finance history', () => {
   it('adds up to the totals it publishes', () => {
     for (const source of history.sources) {
       const entries = history.entries.filter((e) => e.source === source.id);
+      const received = entries.filter((e) => e.route !== 'to_holders');
+      const passedOn = entries.filter((e) => e.route === 'to_holders');
       const bnb = entries.reduce((a, e) => a + e.bnb, 0);
       const usd = entries.reduce((a, e) => a + e.usd, 0);
-      expect(entries.length).toBe(source.provenance.payouts);
+      expect(received.length).toBe(source.provenance.payouts);
+      expect(passedOn.length).toBe(source.provenance.passedOn);
+      expect(received.reduce((a, e) => a + e.bnb, 0)).toBeCloseTo(source.provenance.grossBnb, 2);
+      expect(-passedOn.reduce((a, e) => a + e.bnb, 0)).toBeCloseTo(source.provenance.passedOnBnb, 2);
       expect(bnb).toBeCloseTo(source.provenance.totalBnb, 2);
       expect(usd).toBeCloseTo(source.provenance.totalUsd, 0);
       expect(entries[0].date).toBe(source.provenance.firstDay);
@@ -35,7 +40,9 @@ describe('finance history', () => {
       expect(wallets.has(e.wallet)).toBe(true);
       expect(new Date(`${e.date}T00:00:00Z`).toISOString().slice(0, 10)).toBe(e.date);
       expect(e.block).toBeGreaterThanOrEqual(previous);
-      expect(e.bnb).toBeGreaterThan(0);
+      // BNB passed on to the holders' rewards contract is subtracted; everything else arrived.
+      if (e.route === 'to_holders') expect(e.bnb).toBeLessThan(0);
+      else expect(e.bnb).toBeGreaterThan(0);
       // A day's BNB price has to be one BNB actually traded at, and the USD is that price times the BNB.
       expect(e.bnbUsd).toBeGreaterThan(150);
       expect(e.bnbUsd).toBeLessThan(800);

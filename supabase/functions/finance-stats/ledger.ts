@@ -204,8 +204,11 @@ export interface LedgerItem {
   unit?: string;
   /** How many payments a daily total covers, for sources that only report totals. */
   count?: number;
-  /** The on-chain transaction, for anything that has one. */
-  ref?: { chain: ProofChain; tx: string };
+  /**
+   * The on-chain evidence: the transaction itself, or — for a day's total of
+   * many on-chain events — the contract whose event log holds every one.
+   */
+  ref?: { chain: ProofChain; tx?: string; address?: string };
   /** A short qualifier, such as "refund". */
   note?: string;
 }

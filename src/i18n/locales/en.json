@@ -3007,6 +3007,26 @@
       "raw": "Raw JSON",
       "open": "See every {{source}} entry",
       "paymentOne": "1 payment that day"
+    },
+    "taxSplit": {
+      "title": "Where the token tax went",
+      "intro": "The original DeHub token charged a tax on every trade until 2023. This is where it went, valued at the BNB price on the day each payment happened.",
+      "team": "Kept by DeHub",
+      "teamDetail": "{{gross}} came in; {{passed}} of it was passed on to holders",
+      "burned": "Bought back and burned",
+      "burnedDetail": "{{tokens}} DeHub burned in {{n}} buybacks",
+      "shared": "Paid to holders and stakers",
+      "sharedDetail": "{{claims}} claims by {{wallets}} wallets",
+      "open": "See every {{part}} line",
+      "see": "See every line",
+      "footnote": "Only the kept part counts as revenue above. The rest of the tax went back into the trading pool as liquidity, or to holders as token reflections, so it is in none of the three. Holders also claimed {{early}} straight from the token in its first two weeks, before the rewards contract existed."
+    },
+    "taxLedger": {
+      "title": "Token tax ledger",
+      "subtitle": "Every burn, holder payout and kept payout from 2021–23, with a link to check it",
+      "summary": "{{entries}} lines · {{total}} at the BNB price on each day · every line checkable on BscScan",
+      "empty": "Nothing to show here.",
+      "contractProof": "Every claim that day is in this contract’s event log: {{address}}"
     }
   },
   "superpowers": {

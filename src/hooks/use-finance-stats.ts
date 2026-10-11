@@ -44,11 +44,37 @@ export interface FinanceStats {
   days: FinanceDay[];
   /** Plain-language caveats about this particular read, e.g. unpriced models. */
   notes: string[];
+  /**
+   * Where the original token's trading tax went in 2021–22. Fixed history, so
+   * it does not follow the page's range. Absent from older deploys.
+   */
+  taxSplit?: TaxSplit;
   provenance: {
     endpoint: string;
     timezone: 'UTC';
     conversion: string;
     excluded: string[];
+  };
+}
+
+/** All amounts in BNB as paid, and in USD at that day's BNB price. */
+export interface TaxSplit {
+  period: { from: string; to: string };
+  /** The tax BNB DeHub kept: what reached the operations wallets, less what they passed on to holders. */
+  team: { bnb: number; usd: number; grossBnb: number; passedOnBnb: number; payouts: number };
+  /** BNB spent buying DeHub back from the pool and sending it to the burn address. */
+  burned: { bnb: number; usd: number; tokens: number; buybacks: number; firstDay: string; lastDay: string };
+  /** BNB holders and stakers claimed from the rewards contract. */
+  shared: {
+    bnb: number;
+    usd: number;
+    holderBnb: number;
+    stakerBnb: number;
+    holderClaims: number;
+    stakerClaims: number;
+    wallets: number;
+    firstDay: string;
+    lastDay: string;
   };
 }
 
@@ -93,7 +119,8 @@ export interface LedgerItem {
   amount?: number;
   unit?: string;
   count?: number;
-  ref?: { chain: ProofChain; tx: string };
+  /** The transaction, or for a day's total of many events, the contract that logged them. */
+  ref?: { chain: ProofChain; tx?: string; address?: string };
   note?: string;
 }
 
@@ -104,14 +131,23 @@ export interface FinanceLedger {
   sources: { id: string; label: string; status: 'ok' | 'unavailable'; note: string }[];
   explorers: Record<ProofChain, string>;
   addresses: { label: string; address: string; chains: ProofChain[] }[];
+  /** Plain-language notes on how the lines were traced (token-tax ledger only). */
+  notes?: string[];
   /** Newest first. */
   items: LedgerItem[];
 }
 
-export const FINANCE_LEDGER_ENDPOINT = `${FINANCE_STATS_ENDPOINT}?view=ledger`;
+/** `ledger`: every line behind revenue. `tax`: every line behind the token-tax split. */
+export type LedgerView = 'ledger' | 'tax';
 
-async function fetchFinanceLedger(): Promise<FinanceLedger> {
-  const res = await fetch(FINANCE_LEDGER_ENDPOINT, { headers: { Accept: 'application/json' } });
+export function financeLedgerEndpoint(view: LedgerView): string {
+  return `${FINANCE_STATS_ENDPOINT}?view=${view}`;
+}
+
+export const FINANCE_LEDGER_ENDPOINT = financeLedgerEndpoint('ledger');
+
+async function fetchFinanceLedger(view: LedgerView): Promise<FinanceLedger> {
+  const res = await fetch(financeLedgerEndpoint(view), { headers: { Accept: 'application/json' } });
   if (!res.ok) throw new Error(`finance ledger endpoint returned ${res.status}`);
   const body = (await res.json()) as FinanceLedger;
   if (!body || body.ok !== true || !Array.isArray(body.items)) {
@@ -121,10 +157,10 @@ async function fetchFinanceLedger(): Promise<FinanceLedger> {
 }
 
 /** Only fetched once someone opens the ledger — it is every line behind the totals. */
-export function useFinanceLedger(enabled: boolean) {
+export function useFinanceLedger(enabled: boolean, view: LedgerView = 'ledger') {
   return useQuery({
-    queryKey: ['finance-ledger'],
-    queryFn: fetchFinanceLedger,
+    queryKey: ['finance-ledger', view],
+    queryFn: () => fetchFinanceLedger(view),
     enabled,
     staleTime: 4 * 60_000,
     retry: 1,

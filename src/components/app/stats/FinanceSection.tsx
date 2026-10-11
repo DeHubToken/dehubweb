@@ -25,6 +25,7 @@ import {
 } from '@/hooks/use-finance-stats';
 import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPieces';
 import { RevenueLedger } from '@/components/app/stats/RevenueLedger';
+import { TokenTaxSplit } from '@/components/app/stats/TokenTaxSplit';
 import { cn } from '@/lib/utils';
 
 type Range = '24h' | '3d' | '7d' | '30d' | '1y' | 'all';
@@ -330,6 +331,8 @@ export function FinanceSection({ range }: { range: Range }) {
   const span = windowDays(range);
   const [ledgerOpen, setLedgerOpen] = useState(false);
   const [ledgerSource, setLedgerSource] = useState<string | null>(null);
+  const [taxOpen, setTaxOpen] = useState(false);
+  const [taxSource, setTaxSource] = useState<string | null>(null);
 
   /** A revenue line opens the ledger on that source, and brings it into view. */
   const showLedger = (sourceId: string) => {
@@ -337,6 +340,15 @@ export function FinanceSection({ range }: { range: Range }) {
     setLedgerOpen(true);
     requestAnimationFrame(() =>
       document.getElementById('revenue-ledger')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+    );
+  };
+
+  /** Same for a part of the token-tax split, in its own ledger. */
+  const showTaxLedger = (sourceId: string) => {
+    setTaxSource(sourceId);
+    setTaxOpen(true);
+    requestAnimationFrame(() =>
+      document.getElementById('tax-ledger')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
     );
   };
 
@@ -584,6 +596,20 @@ export function FinanceSection({ range }: { range: Range }) {
         source={ledgerSource}
         onSourceChange={setLedgerSource}
       />
+
+      {stats.taxSplit && (
+        <>
+          <TokenTaxSplit split={stats.taxSplit} onOpen={showTaxLedger} />
+          <RevenueLedger
+            kind="tax"
+            windowDays={null}
+            open={taxOpen}
+            onOpenChange={setTaxOpen}
+            source={taxSource}
+            onSourceChange={setTaxSource}
+          />
+        </>
+      )}
 
       <FinanceDefinitions stats={stats} />
     </>

@@ -13,8 +13,10 @@
 //   - bills: DigitalOcean's own invoices, Stripe's paid plan invoices, and the
 //     fixed subscriptions in _shared/finance-costs.json,
 //   - history no API can serve: _shared/finance-history.json, the BNB the
-//     original BSC token's tax paid to the operations wallets in 2021–23,
-//     traced transaction by transaction and valued on the day it arrived.
+//     original BSC token's tax paid to the operations wallets in 2021–23 (less
+//     what they passed on to holders), traced transaction by transaction and
+//     valued on the day it arrived; and _shared/finance-tax-split.json, where
+//     the rest of that tax went — burned, or paid out to holders and stakers.
 //
 // Each source reports whether it was read. One failing takes its own line off
 // the page and says so; it never zeroes the others, and nothing is estimated
@@ -26,6 +28,7 @@ import { createStripeClient } from '../_shared/stripe.ts';
 import { DHB_USD_PEG } from '../_shared/ai-pricing.ts';
 import costConfig from '../_shared/finance-costs.json' with { type: 'json' };
 import history from '../_shared/finance-history.json' with { type: 'json' };
+import taxSplit from '../_shared/finance-tax-split.json' with { type: 'json' };
 import {
   buildSeries,
   dayKey,
@@ -43,6 +46,13 @@ import {
   type UsageRow,
 } from './ledger.ts';
 import { CATALOGUE, type SourceMeta, type Status } from './sources.ts';
+import {
+  historyNote,
+  TAX_LEDGER_SOURCES,
+  taxLedgerItems,
+  taxSplitSummary,
+  type TaxSplitData,
+} from './tax-split.ts';
 
 const CACHE_TTL_MS = 5 * 60_000;
 const PAGE = 1000;
@@ -386,7 +396,7 @@ function readHistory(r: Reading) {
   for (const e of history.entries) {
     earn(r, e.source, e.date, e.usd, {
       amount: e.bnb, unit: 'BNB', ref: { chain: 'bsc', tx: e.tx },
-      note: e.route === 'collateral' ? 'collateral payout' : 'tax sale',
+      note: historyNote(e.route),
     });
   }
   for (const source of history.sources) r.ok.add(source.id);
@@ -427,7 +437,7 @@ async function compute() {
       group: source.group,
       origin: 'chain' as const,
       status: 'ok' as const,
-      note: `${source.note} ${source.provenance.payouts} payouts from ${source.provenance.firstDay} to ${source.provenance.lastDay}, ${source.provenance.totalBnb.toLocaleString('en-US')} BNB in all.`,
+      note: `${source.note} ${source.provenance.payouts} payouts from ${source.provenance.firstDay} to ${source.provenance.lastDay}: ${source.provenance.grossBnb.toLocaleString('en-US')} BNB received, ${source.provenance.passedOnBnb.toLocaleString('en-US')} BNB passed on to holders, ${source.provenance.totalBnb.toLocaleString('en-US')} BNB kept.`,
     })),
     ...fixedItems.map((item) => ({
       id: item.id,
@@ -448,6 +458,8 @@ async function compute() {
     sources,
     days: buildSeries(r.entries, today),
     notes: r.notes,
+    /** Where the original token's trading tax went — a closed 2021–22 record, not tied to the page's range. */
+    taxSplit: taxSplitSummary(split),
     provenance: {
       endpoint: 'finance-stats',
       timezone: 'UTC' as const,
@@ -484,6 +496,28 @@ async function compute() {
   return { summary, ledger };
 }
 
+const split = taxSplit as TaxSplitData;
+
+/**
+ * Every line behind the token-tax split. It is history that no longer changes,
+ * so it is built once per instance rather than on every read.
+ */
+const taxLedger = JSON.stringify({
+  ok: true,
+  fetchedAt: new Date().toISOString(),
+  currency: 'USD',
+  sources: TAX_LEDGER_SOURCES.map((s) => ({ ...s, status: 'ok', note: '' })),
+  explorers: { bsc: 'https://bscscan.com', base: 'https://basescan.org' },
+  addresses: [
+    ...split.addresses,
+    ...history.sources.flatMap((s) => s.provenance.addresses),
+  ]
+    .filter((a, i, all) => all.findIndex((b) => b.address.toLowerCase() === a.address.toLowerCase()) === i)
+    .map((a) => ({ label: a.label, address: a.address, chains: ['bsc'] })),
+  notes: [split.note, split.buckets.burned.method, split.buckets.shared.method],
+  items: sortLedger(taxLedgerItems(split, history.entries)),
+});
+
 let cache: { summary: string; ledger: string; expires: number } | null = null;
 
 Deno.serve(async (req) => {
@@ -496,12 +530,19 @@ Deno.serve(async (req) => {
     });
   }
 
+  const view = new URL(req.url).searchParams.get('view');
+  // The token-tax ledger is fixed history: no live source is read for it.
+  if (view === 'tax') {
+    return new Response(taxLedger, {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=3600' },
+    });
+  }
+
   try {
     if (!cache || Date.now() > cache.expires) {
       const { summary, ledger } = await compute();
       cache = { summary: JSON.stringify(summary), ledger: JSON.stringify(ledger), expires: Date.now() + CACHE_TTL_MS };
     }
-    const view = new URL(req.url).searchParams.get('view');
     return new Response(view === 'ledger' ? cache.ledger : cache.summary, {
       headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'public, max-age=300' },
     });
