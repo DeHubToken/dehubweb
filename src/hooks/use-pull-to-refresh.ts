@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type RefObject, type TouchEvent, type MouseEvent } from 'react';
-import { PULL_RETURN_MS, pullForDrag, pullSpringProgress } from '@/lib/pill-pull-motion';
+import { PULL_CANCEL_MS, PULL_RETURN_MS, pullForDrag, pullSpringProgress } from '@/lib/pill-pull-motion';
 
 interface UsePullToRefreshOptions {
   /** Opt in on the phone feed; other surfaces retain their existing behaviour. */
@@ -8,43 +8,69 @@ interface UsePullToRefreshOptions {
   onRefresh: () => void;
   isRefreshing: boolean;
   containerRef?: RefObject<HTMLElement>;
+  /** Isolate feed motion from the page's React render and data refresh work. */
+  motionRef?: RefObject<HTMLElement>;
+  onMotion?: (distance: number, pulling: boolean) => void;
 }
 
-export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefresh, isRefreshing, containerRef }: UsePullToRefreshOptions) {
+export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefresh, isRefreshing, containerRef, motionRef, onMotion }: UsePullToRefreshOptions) {
   const [pullDistance, setPullDistance] = useState(0);
   const [isPulling, setIsPulling] = useState(false);
   const start = useRef<{ x: number; y: number } | null>(null);
   const distance = useRef(0);
   const frame = useRef(0);
   const returning = useRef(false);
+  const animation = useRef<Animation | null>(null);
+  const motion = useRef({ motionRef, onMotion });
+  motion.current = { motionRef, onMotion };
+  const publish = useCallback((value: number, pulling: boolean) => {
+    const node = motion.current.motionRef?.current;
+    if (node && !animation.current) {
+      node.style.transform = value > 0 ? `translate3d(0, ${value}px, 0)` : '';
+      node.style.willChange = value > 0 ? 'transform' : '';
+    }
+    if (motion.current.onMotion) motion.current.onMotion(value, pulling);
+    else setPullDistance(value);
+  }, []);
   const reset = useCallback(() => {
     cancelAnimationFrame(frame.current);
+    animation.current?.cancel(); animation.current = null;
     returning.current = false;
     start.current = null; distance.current = 0;
-    setIsPulling(false); setPullDistance(0);
-  }, []);
+    setIsPulling(false); publish(0, false);
+  }, [publish]);
   const springBack = useCallback((duration = PULL_RETURN_MS) => {
     start.current = null; setIsPulling(false);
     cancelAnimationFrame(frame.current);
     const from = distance.current;
     if (from <= 0 || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { reset(); return; }
     returning.current = true;
+    const node = motion.current.motionRef?.current;
+    // The compositor can finish the return even when fresh cards occupy JS.
+    if (node?.animate) {
+      animation.current?.cancel();
+      node.style.transform = '';
+      animation.current = node.animate(Array.from({ length: 61 }, (_, i) => ({
+        transform: `translate3d(0, ${from * (1 - pullSpringProgress(i / 60))}px, 0)`,
+        offset: i / 60,
+      })), { duration, easing: 'linear' });
+    }
     const began = performance.now();
     const tick = (now: number) => {
       const p = Math.min(1, (now - began) / duration);
       distance.current = from * (1 - pullSpringProgress(p));
       // Finish the invisible tail instead of repainting subpixel movement.
       if (distance.current < 0.5 || p === 1) { reset(); return; }
-      setPullDistance(distance.current);
+      publish(distance.current, false);
       frame.current = requestAnimationFrame(tick);
     };
     frame.current = requestAnimationFrame(tick);
-  }, [reset]);
+  }, [reset, publish]);
   useEffect(() => {
     if (!enabled) reset();
     else if (isRefreshing && start.current) springBack();
   }, [enabled, isRefreshing, reset, springBack]);
-  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+  useEffect(() => () => { cancelAnimationFrame(frame.current); animation.current?.cancel(); }, []);
   const begin = useCallback((x: number, y: number, target: EventTarget | null) => {
     if (!enabled || isRefreshing || returning.current || !(target instanceof Element)) return;
     if (target.closest('button, a, input, textarea, select, [role="slider"], [data-no-pull], [data-feed-filter-panel]')) return;
@@ -55,23 +81,24 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
     while (node) { if (node.scrollTop > 0) return; node = node.parentElement; }
     if (containerRef?.current && !containerRef.current.contains(target)) return;
     start.current = { x, y };
-    setIsPulling(true);
-  }, [enabled, isRefreshing, containerRef]);
+    if (!motion.current.onMotion) setIsPulling(true);
+    publish(0, true);
+  }, [enabled, isRefreshing, containerRef, publish]);
   const move = useCallback((x: number, y: number) => {
     const origin = start.current;
     if (!origin) return;
     const dx = x - origin.x, dy = y - origin.y;
     if (Math.abs(dx) > Math.max(12, Math.abs(dy))) { reset(); return; }
     distance.current = pullForDrag(dy);
-    setPullDistance(distance.current);
-  }, [reset]);
+    publish(distance.current, true);
+  }, [reset, publish]);
   const finish = useCallback(() => {
     if (!start.current) return;
     const refresh = start.current !== null && distance.current >= pullThreshold;
-    springBack(refresh ? PULL_RETURN_MS : 1000);
+    springBack(refresh ? PULL_RETURN_MS : PULL_CANCEL_MS);
     if (refresh && !isRefreshing) onRefresh();
   }, [springBack, pullThreshold, isRefreshing, onRefresh]);
-  const cancel = useCallback(() => { if (start.current) springBack(1000); }, [springBack]);
+  const cancel = useCallback(() => { if (start.current) springBack(PULL_CANCEL_MS); }, [springBack]);
   useEffect(() => {
     const container = containerRef?.current;
     if (!enabled || !container) return;
