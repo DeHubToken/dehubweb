@@ -26,6 +26,7 @@ import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
 import { AppLayout } from "./components/app/AppLayout";
+import { QuickActionsHost } from "./components/app/QuickActionsHost";
 import { LoginModal } from "@/components/app/LoginModal";
 import React, { Suspense, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -420,6 +421,7 @@ function AppContent() {
   return (
     <>
       <SelfBadgeSync />
+      <QuickActionsHost />
       <BadgeShowcaseHost />
       <ViewingPreferencesSync />
       <GiveawayPrizeModal />
