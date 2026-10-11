@@ -1,3 +1,4 @@
+import { waitForEncoderCapacity } from "./encoderQueue";
 import { exportFilename } from "./exportName";
 import { waitForVideoFrame } from "./videoFrame";
 import { assertVideoMattes, videoMatteMediaIds } from "./videoMatte";
@@ -336,6 +337,11 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     };
   }
 
+  const checkEncoding = () => {
+    checkAbort(signal);
+    if (encoderFailure) throw encoderFailure;
+  };
+
   // ── Video encoder ──
   videoEncoder = new VideoEncoder({
     output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
@@ -398,12 +404,8 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
     const frame = new VideoFrame(canvas, { timestamp: Math.round((f / fps) * 1_000_000) });
     const keyFrame = f % Math.max(1, Math.round(fps * 2)) === 0;
-    videoEncoder.encode(frame, { keyFrame });
-    frame.close();
-
-    if (videoEncoder.encodeQueueSize > 8) {
-      await new Promise((r) => setTimeout(r, 0));
-    }
+    try { videoEncoder.encode(frame, { keyFrame }); } finally { frame.close(); }
+    await waitForEncoderCapacity(videoEncoder, 8, checkEncoding);
 
     if (f % 5 === 0) {
       const p = 0.05 + (f / totalFrames) * 0.85;
@@ -453,8 +455,8 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         timestamp: Math.round((i / sampleRate) * 1_000_000),
         data: data.buffer as ArrayBuffer,
       });
-      audioEncoder.encode(ad);
-      ad.close();
+      try { audioEncoder.encode(ad); } finally { ad.close(); }
+      await waitForEncoderCapacity(audioEncoder, 8, checkEncoding);
     }
     await audioEncoder.flush();
     if (encoderFailure) throw encoderFailure;
