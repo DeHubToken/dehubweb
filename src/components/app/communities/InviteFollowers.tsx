@@ -17,7 +17,8 @@ export function InviteFollowers({open,onOpenChange,communityId,slug,wallet}:{ope
   const [failed,setFailed]=useState(false);
   const active=useRef(false);
   const running=useRef(false);
-  useEffect(()=>{active.current=open;return()=>{active.current=false;};},[open,wallet,communityId]);
+  const generation=useRef(0);
+  useEffect(()=>{active.current=open;generation.current++;return()=>{active.current=false;generation.current++;};},[open,wallet,communityId]);
   useEffect(()=>{setSelected([]);setResults({});setFailed(false);},[page,wallet,communityId,open]);
   const followers=useQuery({queryKey:['community-invite-followers',wallet,page],enabled:open,
     queryFn:()=>getFollowList(wallet,'followers',{page,limit:50,sortBy:'createdAt',sortOrder:'asc'})});
@@ -25,9 +26,10 @@ export function InviteFollowers({open,onOpenChange,communityId,slug,wallet}:{ope
   const send=async()=>{
     if(running.current||!selected.length)return;
     running.current=true;setBusy(true);setFailed(false);
-    try { const outcome=await inviteCommunityFollowers(communityId,wallet,dehubLinkFor.community(slug),selected,()=>active.current);
-      setResults(outcome);setSelected(selected.filter(address=>outcome[address.toLowerCase()]==='failed'));
-    } catch {setFailed(true);} finally {running.current=false;setBusy(false);}
+    const batch=generation.current;
+    try { const outcome=await inviteCommunityFollowers(communityId,wallet,dehubLinkFor.community(slug),selected,()=>active.current&&generation.current===batch);
+      if(generation.current===batch){setResults(outcome);setSelected(selected.filter(address=>outcome[address.toLowerCase()]==='failed'));}
+    } catch {if(generation.current===batch)setFailed(true);} finally {running.current=false;setBusy(false);}
   };
   return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent className="max-w-md">
     <DialogHeader><DialogTitle>{t('communities.followerInvites.title')}</DialogTitle></DialogHeader>
