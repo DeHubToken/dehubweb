@@ -8,7 +8,7 @@ import { importOneFile } from '@/lib/editor/importFiles';
 const state = vi.hoisted(() => ({
   auth: { isAuthenticated: true },
   quota: { overQuota: false, walletAddress: 'wallet', badgeBalance: 12000000, username: 'maldoteth', refetchUsage: vi.fn().mockResolvedValue(undefined) },
-  generations: { startImage: vi.fn(), startVideo: vi.fn() },
+  generations: { startImage: vi.fn(), startVideo: vi.fn(), startAudio: vi.fn() },
 }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }) }));
 vi.mock('@/contexts/AuthContext', async (importOriginal) => ({
@@ -19,7 +19,11 @@ vi.mock('@/lib/creator/generationEngine', () => ({ DEFAULT_VOICE_ID: 'voice', ge
 vi.mock('@/lib/editor/importFiles', () => ({ importOneFile: vi.fn() }));
 vi.mock('@/components/app/image/ImagePaywallModal', () => ({ ImagePaywallModal: () => null }));
 vi.mock('@/components/app/video/VideoPaywallModal', () => ({ VideoPaywallModal: () => null }));
-vi.mock('@/components/app/creator/studio/StudioChip', () => ({ SelectChip: () => null }));
+vi.mock('@/components/app/audio/AudioPaywallModal', () => ({ AudioPaywallModal: ({ open, units, quantityLabel, onConfirm, onOpenChange }: { open: boolean; units: number; quantityLabel: string; onConfirm: (hash: string) => void; onOpenChange: (open: boolean) => void }) => open ? <div><output aria-label="Music quote">{units}:{quantityLabel}</output><button onClick={() => onConfirm('paid-music')}>Pay for music</button><button onClick={() => onOpenChange(false)}>Cancel music</button></div> : null }));
+vi.mock('@/components/app/creator/studio/StudioChip', () => ({ SelectChip: () => null,
+  CounterChip: ({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) => <input aria-label={label} type="number" value={value} onChange={event => onChange(Number(event.target.value))} />,
+  ToggleChip: ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => <button aria-pressed={active} onClick={onClick}>{label}</button>,
+}));
 vi.mock('@/hooks/use-surface-switch', () => ({ useCloseOnSurfaceSwitch: () => {}, useSurfaceEpoch: () => 0 }));
 vi.mock('./DesignPanel', () => ({ PanelHeading: () => null }));
 
@@ -61,5 +65,38 @@ describe('reviewing voice generation in the editor', () => {
     fireEvent.click(generate);
     expect(generateAudio).not.toHaveBeenCalled();
     expect(importOneFile).not.toHaveBeenCalled();
+  });
+
+  it('prepares music without a provider call and submits the exact track that was quoted', () => {
+    useEditorUiStore.getState().setGeneratePrefill({ kind: 'music', prompt: 'Quiet piano and warm bass' });
+    render(<GeneratePanel />);
+    expect(screen.getByRole('button', { name: 'Music' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByLabelText('Prompt')).toHaveValue('Quiet piano and warm bass');
+    expect(state.generations.startAudio).not.toHaveBeenCalled(); expect(generateAudio).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText('creator.length'), { target: { value: '21' } });
+    fireEvent.click(screen.getByRole('button', { name: 'creator.instrumental' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Generate' }));
+    expect(screen.getByLabelText('Music quote')).toHaveTextContent('3:21s'); expect(state.generations.startAudio).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText('Prompt'), { target: { value: 'A different prompt' } });
+    fireEvent.change(screen.getByLabelText('creator.length'), { target: { value: '100' } });
+    expect(screen.getByLabelText('Music quote')).toHaveTextContent('3:21s');
+    fireEvent.click(screen.getByRole('button', { name: 'Pay for music' }));
+    expect(state.generations.startAudio).toHaveBeenCalledOnce();
+    expect(state.generations.startAudio).toHaveBeenCalledWith({ task: 'music', prompt: 'Quiet piano and warm bass', lengthSeconds: 21, instrumental: false, txHash: 'paid-music' }, expect.objectContaining({ prompt: 'Quiet piano and warm bass', resolvedPrompt: 'Quiet piano and warm bass', aspect: '1:1' }));
+    expect(useEditorUiStore.getState().panel).toBe('library');
+  });
+
+  it('closes an unpaid music draft without starting or discarding its prompt', () => {
+    useEditorUiStore.getState().setGeneratePrefill({ kind: 'music', prompt: 'Quiet piano' }); render(<GeneratePanel />);
+    fireEvent.click(screen.getByRole('button', { name: 'Generate' })); fireEvent.click(screen.getByRole('button', { name: 'Cancel music' }));
+    expect(state.generations.startAudio).not.toHaveBeenCalled(); expect(screen.getByLabelText('Prompt')).toHaveValue('Quiet piano');
+    expect(screen.queryByRole('button', { name: 'Pay for music' })).toBeNull();
+  });
+
+  it.each(['signed out', 'quota', 'too long'])('blocks invalid music before payment: %s', reason => {
+    state.auth.isAuthenticated = reason !== 'signed out'; state.quota.overQuota = reason === 'quota';
+    useEditorUiStore.getState().setGeneratePrefill({ kind: 'music', prompt: reason === 'too long' ? 'x'.repeat(2001) : 'Quiet piano' }); render(<GeneratePanel />);
+    expect(screen.getByRole('button', { name: 'Generate' })).toHaveAttribute('aria-disabled', 'true');
+    fireEvent.click(screen.getByRole('button', { name: 'Generate' })); expect(screen.queryByRole('button', { name: 'Pay for music' })).toBeNull(); expect(state.generations.startAudio).not.toHaveBeenCalled();
   });
 });
