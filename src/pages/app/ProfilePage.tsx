@@ -242,7 +242,6 @@ export default function ProfilePage() {
   // Swallow the tab content at the sticky tabs bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const profileHeaderRef = useRef<HTMLDivElement>(null);
-  const profileTabsRef = useRef<HTMLDivElement>(null);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
@@ -518,7 +517,6 @@ export default function ProfilePage() {
       />
       <CollapsingProfileHeader
         headerRef={profileHeaderRef}
-        tabsRef={profileTabsRef}
         name={data.profile.name}
         handle={data.profile.handle}
         coverUrl={data.profile.coverUrl || getDefaultBanner(data.profile.walletAddress)}
@@ -596,7 +594,6 @@ export default function ProfilePage() {
         <div
           data-feed-nav-outer
           data-profile-tabs
-          ref={profileTabsRef}
           data-nav-hide="off"
           className="sticky bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
         >
