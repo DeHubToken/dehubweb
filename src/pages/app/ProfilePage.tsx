@@ -52,7 +52,9 @@ import type { SubscriptionPlan } from '@/lib/api/dehub';
 import { useCreateUsernameOffer } from '@/hooks/use-username-offers';
 import { useUsernameMarketConfig } from '@/hooks/use-username-market';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
 import { PageHeader } from '@/components/app/PageHeader';
+import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButton';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
@@ -239,6 +241,7 @@ export default function ProfilePage() {
 
   // Swallow the tab content at the sticky tabs bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
+  const profileHeaderRef = useRef<HTMLDivElement>(null);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
@@ -259,11 +262,11 @@ export default function ProfilePage() {
     // off the home feed (index.css, data-no-top-bar).
     const obs = new IntersectionObserver(
       ([entry]) => setIsTabsStuck(!entry.isIntersecting),
-      { rootMargin: '-1px 0px 0px 0px', threshold: 0 }
+      { rootMargin: '-64px 0px 0px 0px', threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, []);
+  }, [!!data.profile]);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab);
   // Still dropped while stuck, matching the painted strip this replaced. The
@@ -511,6 +514,12 @@ export default function ProfilePage() {
           }),
         }}
       />
+      <CollapsingProfileHeader
+        headerRef={profileHeaderRef}
+        name={data.profile.name}
+        handle={data.profile.handle}
+        followAction={<ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />}
+      />
       {/* Pull-to-refresh indicator */}
       {data.pullDistance > 0 && (
         <div 
@@ -545,8 +554,7 @@ export default function ProfilePage() {
       
       <div className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
-        <div className="relative max-sm:-mx-2">
-        <PageHeader overlay />
+        <div ref={profileHeaderRef} className="relative max-sm:-mx-2">
         <ProfileHeader
           profile={data.profile}
           apiProfile={data.apiProfile}
@@ -579,34 +587,13 @@ export default function ProfilePage() {
         />
         </div>
 
-        {/* Profile Tabs Bento — sticky wrapper mirrors the home feed nav pill
-            (same top offset, background swallow, and mobile hide-on-scroll).
-            Negative x/bottom margins cancel the parent's p-* / space-y-* so the
-            in-flow layout is unchanged; the padding recreates it inside the
-            wrapper so the bg covers the gap while stuck. */}
-        {/* Zero-height sentinel just above the sticky wrapper; when it scrolls
-            past the sticky top line the IntersectionObserver flags the pill as
-            stuck. */}
+        {/* Tabs stay below the profile bar while content scrolls behind them. */}
         <div ref={stuckSentinelRef} aria-hidden className="h-0" />
-        {/* Anchor the tabs pill above the feed at every breakpoint: sticky at
-            the top (below the fixed mobile header on mobile/tablet, top-0 on
-            desktop), and on mobile riding away with the rest of the chrome on a
-            scroll-down like every other page's pill.
-
-            `data-nav-hide` is the gate that makes that safe here. This pill is
-            the only one in the app that starts BELOW something — the profile
-            header — so it spends the first screenful in normal flow. An earlier
-            attempt translated it unconditionally and yanked it up over that
-            header while it was still mid-flow, so it jumped and vanished
-            erratically. Opting out until the stuck sentinel fires means the
-            transform only ever applies to a pill already pinned to the top
-            line, which is the state every other page's pill is in from the
-            first pixel of scroll. Unstuck, it stays put and the swallow clip
-            keeps cutting content continuously at its top edge. */}
         <div
           data-feed-nav-outer
-          data-nav-hide={isTabsStuck ? undefined : 'off'}
-          className="sticky top-11 lg:top-0 bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
+          data-profile-tabs
+          data-nav-hide="off"
+          className="sticky bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
         >
         <div data-page-bento className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
