@@ -9,7 +9,13 @@ describe('bounded generated asset transfers', () => {
     mockResponse(new Response(new Uint8Array([1, 2, 3]), { headers: { 'Content-Type': 'audio/wav' } }));
     const file = await assetToFile('https://media.example/voice.mp3', 'voice.mp3', 'audio/mpeg');
     expect(file.type).toBe('audio/wav'); expect(file.size).toBe(3);
-    expect(Array.from(new Uint8Array(await file.arrayBuffer()))).toEqual([1, 2, 3]);
+    const bytes = await new Promise<ArrayBuffer>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as ArrayBuffer);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsArrayBuffer(file);
+    });
+    expect(Array.from(new Uint8Array(bytes))).toEqual([1, 2, 3]);
   });
   it('rejects an oversized header without reading the body', async () => {
     const cancel = vi.fn();
