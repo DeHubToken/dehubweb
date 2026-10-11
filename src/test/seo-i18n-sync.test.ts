@@ -79,9 +79,11 @@ describe('seo-i18n.json', () => {
     }
   });
 
-  it('serves no language on a noindex route', () => {
-    expect(Object.keys(committed['/events'])).toEqual(['en']);
-    expect(Object.keys(committed['/launchpad'])).toEqual(['en']);
+  it('keeps the noindex hubs out of the sitemap', () => {
+    for (const route of ['/events', '/launchpad']) {
+      expect(Object.keys(committed[route]).sort()).toEqual(['ar', 'en', 'es', 'fr', 'nl', 'tr']);
+      expect(sitemap).not.toContain(`<loc>https://dehub.io${route}</loc>`);
+    }
   });
 });
 
@@ -92,6 +94,7 @@ describe('sitemap-static.xml alternates', () => {
 
   it('give every translated route a full, reciprocal set in the sitemap', () => {
     for (const [route, langs] of Object.entries(committed)) {
+      if (route === '/events' || route === '/launchpad') continue;
       const served = Object.keys(langs).filter((l) => l !== 'en');
       if (!served.length) continue;
       const bare = `https://dehub.io${route}`;

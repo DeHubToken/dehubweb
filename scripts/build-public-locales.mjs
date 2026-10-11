@@ -112,7 +112,7 @@ export function collectPublicSources(root) {
   out['/docs'] = { title: en.docs.seoTitle, description: en.docs.seoDescription, h1: 'DeHub Documentation', body: '<ul>' + Object.entries(docs).map(([slug, page]) => `<li><a href="https://dehub.io/docs/${slug}">${escapeHtml(page.title.replace(/ — DeHub( Docs)?$/, ''))}</a><br><small>${escapeHtml(page.description)}</small></li>`).join('') + '</ul>' };
   out['/docs/blog'] = { title: 'DeHub Blog — News, Guides & Product Updates', description: 'News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.', h1: 'DeHub Blog', body: '<ul>' + manifest.map(post => `<li><a href="https://dehub.io/guides/${post.slug}">${escapeHtml(post.title)}</a><br><small>${escapeHtml(post.excerpt || '')}</small></li>`).join('') + '</ul>' };
   for (const route of routes) if (!out[route]?.body) throw new Error(`Public route has no source body: ${route}`);
-  return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a.localeCompare(b)));
+  return Object.fromEntries(Object.entries(out).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));
 }
 
 export function pageSegments(page) {

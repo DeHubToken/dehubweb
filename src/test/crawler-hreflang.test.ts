@@ -321,10 +321,12 @@ describe('wiring', () => {
     }
   });
 
-  it('serves no language on the noindex hubs', () => {
+  it('keeps noindex hubs out of the language cluster', () => {
     const table = JSON.parse(readFileSync(resolve(ROOT, 'public/seo-i18n.json'), 'utf8')) as Table;
-    expect(api.servedLocales('/events', table)).toEqual([]);
-    expect(api.servedLocales('/launchpad', table)).toEqual([]);
+    for (const route of ['/events', '/launchpad']) {
+      expect(api.servedLocales(route, table)).toEqual(['ar', 'es', 'fr', 'nl', 'tr']);
+      expect(api.unservedLocaleRedirect(new URL(`https://dehub.io${route}?hl=es`), route, table, true)).toBe(`https://dehub.io${route}`);
+    }
   });
 
   it('the app honours ?hl= on arrival and keeps it', () => {
