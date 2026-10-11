@@ -3,21 +3,21 @@ INSERT INTO public.affiliate_codes(code,owner_address) VALUES
  ('PARENT','0x1111111111111111111111111111111111111111'),
  ('OTHER','0x2222222222222222222222222222222222222222');
 SET ROLE anon;
-SELECT set_config('test.wallet','0x3333333333333333333333333333333333333333',true);
+SELECT public.test_wallet('0x3333333333333333333333333333333333333333');
 SELECT public.attribute_affiliate_referral('PARENT','john');
 SELECT public.attribute_affiliate_referral('OTHER','changed');
-SELECT set_config('test.wallet','0x4444444444444444444444444444444444444444',true);
+SELECT public.test_wallet('0x4444444444444444444444444444444444444444');
 SELECT public.attribute_affiliate_referral('PARENT','sarah');
-SELECT set_config('test.wallet','0x5555555555555555555555555555555555555555',true);
+SELECT public.test_wallet('0x5555555555555555555555555555555555555555');
 SELECT public.attribute_affiliate_referral('PARENT',repeat('x',65));
 DO $$ BEGIN
  IF EXISTS (SELECT FROM public.get_affiliate_sub_referrals()) THEN RAISE EXCEPTION 'Recipient can see outreach tags'; END IF;
 END $$;
-SELECT set_config('test.wallet','0x2222222222222222222222222222222222222222',true);
+SELECT public.test_wallet('0x2222222222222222222222222222222222222222');
 DO $$ BEGIN
  IF EXISTS (SELECT FROM public.get_affiliate_sub_referrals()) THEN RAISE EXCEPTION 'Other affiliate can see outreach tags'; END IF;
 END $$;
-SELECT set_config('test.wallet','0x1111111111111111111111111111111111111111',true);
+SELECT public.test_wallet('0x1111111111111111111111111111111111111111');
 SELECT public.attribute_affiliate_referral('PARENT','self');
 DO $$ BEGIN
  IF (SELECT count(*) FROM public.get_affiliate_sub_referrals()) <> 2 THEN RAISE EXCEPTION 'Missing owner tags'; END IF;
@@ -25,7 +25,19 @@ DO $$ BEGIN
  IF NOT EXISTS (SELECT FROM public.get_affiliate_sub_referrals() WHERE sub_id='sarah') THEN RAISE EXCEPTION 'Second outreach tag missing'; END IF;
  IF (SELECT count(*) FROM public.affiliate_sub_referrals) <> 2 THEN RAISE EXCEPTION 'RLS mismatch'; END IF;
 END $$;
-SELECT set_config('test.wallet','',true);
+SELECT public.test_wallet('0x1111111111111111111111111111111111111111',extract(epoch FROM now())::bigint-1);
+DO $$ BEGIN
+ IF EXISTS (SELECT FROM public.get_affiliate_sub_referrals()) THEN RAISE EXCEPTION 'Expired session leaked tags'; END IF;
+END $$;
+SELECT public.test_wallet('0x1111111111111111111111111111111111111111');
+SELECT set_config('request.headers',jsonb_set(current_setting('request.headers')::jsonb,'{x-wallet-address}','"0x2222222222222222222222222222222222222222"')::text,true);
+DO $$ BEGIN
+ IF EXISTS (SELECT FROM public.get_affiliate_sub_referrals()) THEN RAISE EXCEPTION 'Mismatched wallet session leaked tags'; END IF;
+END $$;
+SELECT set_config('request.headers',jsonb_build_object('x-wallet-session','0x1111111111111111111111111111111111111111.'||(extract(epoch FROM now())::bigint+3600)||'.'||repeat('0',64))::text,true);
+DO $$ BEGIN
+ IF EXISTS (SELECT FROM public.get_affiliate_sub_referrals()) THEN RAISE EXCEPTION 'Forged signature leaked tags'; END IF;
+END $$;
 SELECT set_config('request.headers','{"x-wallet-address":"0x1111111111111111111111111111111111111111"}',true);
 DO $$ BEGIN
  IF EXISTS (SELECT FROM public.get_affiliate_sub_referrals()) THEN RAISE EXCEPTION 'Unsigned owner header leaked tags'; END IF;
