@@ -15,6 +15,7 @@ import av
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 
 import access
@@ -94,6 +95,8 @@ async def lifespan(app):
 
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
+app.add_middleware(CORSMiddleware, allow_origins=['https://dehub.io'],
+                   allow_methods=['GET', 'POST'], allow_headers=['x-dehub-token', 'content-type'])
 
 
 @app.middleware('http')
@@ -128,6 +131,11 @@ def snapshot(row):
     result['review'] = review_state(folder)
     result['hasReference'] = bool(row['reference'])
     result['referenceKind'] = 'video' if row['reference_seconds'] else 'image'
+    result['references'] = {}
+    for name, column in (('reference', 'reference'), ('second', 'second_reference')):
+        if row[column] and (folder / row[column]).is_file():
+            result['references'][name] = {'url': access.media_url(folder / row[column]),
+                'kind': result['referenceKind'] if name == 'reference' else 'image', 'key': row[column]}
     from seedance_bridge import resolved_prompt
     result['resolvedPrompt'] = resolved_prompt(folder, row['prompt'], bool(row['reference_seconds']), bool(row['second_reference'])) if row['reference'] else ''
     result['quotes'] = {stage: access.price(row, stage) for stage in ('prepare', 'draft', 'hd')} if access.readiness() else {}
@@ -139,8 +147,13 @@ def snapshot(row):
 @app.get('/jobs')
 def list_jobs(wallet=Depends(owner)):
     with access.database() as db:
-        rows = db.execute('SELECT id,created,state,status,mode FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 30', (wallet,)).fetchall()
+        rows = db.execute('SELECT id,created,state,status,mode,subject FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 30', (wallet,)).fetchall()
     return {'jobs': [dict(row) for row in rows]}
+
+
+@app.get('/session')
+def session(wallet=Depends(owner)):
+    return {'wallet': wallet}
 
 
 @app.get('/jobs/{ident}')
@@ -209,8 +222,8 @@ def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject
 def references(ident: str, prompt: str = Form(...), reference: UploadFile | None = File(None), second: UploadFile | None = File(None), wallet=Depends(owner)):
     with lock:
         row = access.job(ident, wallet)
-        if row['state'] != 'prepared' or not 1 <= len(prompt.strip()) <= 6000:
-            raise HTTPException(409, 'Prepare the clip first, then enter a prompt of up to 6,000 characters.')
+        if row['state'] not in ('uploaded', 'prepared') or not 1 <= len(prompt.strip()) <= 6000:
+            raise HTTPException(409, 'Character references can be changed before preparation or after the clip is ready for review. Use a prompt of up to 6,000 characters.')
         folder = access.folder(ident)
         saved = []
         seconds = row['reference_seconds']
@@ -275,43 +288,61 @@ def save_review(ident: str, approved: bool = Form(...), fingerprint: str = Form(
     return snapshot(access.job(ident, wallet))
 
 
-@app.post('/jobs/{ident}/{stage}')
-def start_stage(ident: str, stage: str, price_micros: int = Form(...), wallet=Depends(owner)):
+def stage_quote(ident, stage, wallet):
     if stage not in ('prepare', 'draft', 'hd'):
         raise HTTPException(404)
+    row = access.job(ident, wallet)
+    expected = {'prepare': 'uploaded', 'draft': 'prepared', 'hd': 'draft'}[stage]
+    if row['state'] != expected:
+        raise HTTPException(409, 'This step has already started or its earlier step is incomplete.')
+    if not access.readiness():
+        raise HTTPException(503, 'Processing is temporarily unavailable. Your source is saved; nothing has been charged.')
+    amount = access.price(row, stage)
+    if stage in ('draft', 'hd'):
+        try:
+            require_approved(access.folder(ident))
+        except ValueError as error:
+            raise HTTPException(409, str(error))
+    if stage == 'draft' and not row['reference']:
+        raise HTTPException(400, 'Save a character reference and prompt first.')
+    if stage == 'hd':
+        from seedance_bridge import require_draft
+        try:
+            require_draft(access.folder(ident))
+        except (ValueError, OSError, KeyError) as error:
+            raise HTTPException(409, str(error) if isinstance(error, ValueError) else 'The completed draft is unavailable.')
+    with access.database() as db:
+        active = db.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')").fetchone()[0]
+    if active >= 4:
+        raise HTTPException(503, 'Maboroshi is busy. Try again when a current job finishes; nothing has been charged.')
+    return row, amount
+
+
+@app.get('/jobs/{ident}/checkout/{stage}')
+def checkout(ident: str, stage: str, wallet=Depends(owner)):
+    with lock:
+        row, amount = stage_quote(ident, stage, wallet)
+        payment = access.payment_reference(row, stage)
+        if payment and payment['amount'] != amount:
+            raise HTTPException(409, 'The saved payment quote needs review.')
+        return {'id': ident, 'stage': stage, 'wallet': wallet, 'price_micros': amount,
+                'payment_ref': payment['tx_hash'] if payment else None}
+
+
+@app.post('/jobs/{ident}/{stage}')
+def start_stage(ident: str, stage: str, price_micros: int = Form(...), tx_hash: str = Form('credits'), wallet=Depends(owner)):
     with lock:
         row = access.job(ident, wallet)
         if row['stage'] == stage and row['state'] in ('queued', 'running', 'draft', 'complete'):
-            return snapshot(row)
-        expected = {'prepare': 'uploaded', 'draft': 'prepared', 'hd': 'draft'}[stage]
-        if row['state'] != expected:
-            raise HTTPException(409, 'This step has already started or its earlier step is incomplete.')
-        if not access.readiness():
-            raise HTTPException(503, 'Processing is temporarily unavailable. Your source is saved; nothing has been charged.')
-        amount = access.price(row, stage)
+            payment = access.payment_reference(row, stage)
+            return {**snapshot(row), 'payment_ref': payment['tx_hash'] if payment else 'credits'}
+        row, amount = stage_quote(ident, stage, wallet)
         if amount != price_micros:
             raise HTTPException(409, 'The price changed. Refresh and review the new quote.')
-        if stage in ('draft', 'hd'):
-            try:
-                require_approved(access.folder(ident))
-            except ValueError as error:
-                raise HTTPException(409, str(error))
-        if stage == 'draft' and not row['reference']:
-            raise HTTPException(400, 'Save a character reference and prompt first.')
-        if stage == 'hd':
-            from seedance_bridge import require_draft
-            try:
-                require_draft(access.folder(ident))
-            except (ValueError, OSError, KeyError) as error:
-                raise HTTPException(409, str(error) if isinstance(error, ValueError) else 'The completed draft is unavailable.')
-        with access.database() as db:
-            active = db.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')").fetchone()[0]
-        if active >= 4:
-            raise HTTPException(503, 'Maboroshi is busy. Try again when a current job finishes; nothing has been charged.')
-        access.debit(row, stage, amount)
+        access.debit(row, stage, amount, tx_hash)
         access.update(ident, state='queued', stage=stage, price=amount, status='Queued for processing. You can return to this job later.')
         executor.submit(run_stage, ident, stage)
-    return snapshot(access.job(ident, wallet))
+    return {**snapshot(access.job(ident, wallet)), 'payment_ref': tx_hash.lower()}
 
 
 @app.get('/media/{relative:path}')

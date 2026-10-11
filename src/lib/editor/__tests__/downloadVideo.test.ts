@@ -40,6 +40,8 @@ describe("feed export integration", () => {
     });
     mocks.render.mock.calls[0][0].onProgress(0.5);
     expect(progress).toHaveBeenCalledWith(0.5);
+    mocks.render.mock.calls[0][0].onProgress(0.75, "Encoding frame 440 / 970");
+    expect(progress).toHaveBeenCalledWith(0.75, "Encoding frame 440 / 970");
     expect(revoke).toHaveBeenCalledWith("blob:source"); expect(pause).toHaveBeenCalled();
   });
   it("replaces tagged and visually recognised endings without extending the content", async () => {

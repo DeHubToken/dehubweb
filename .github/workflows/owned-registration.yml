@@ -1,0 +1,52 @@
+name: Owned account registration
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261011170000_owned_account_registration.sql'
+      - 'tests/sql/owned-registration*.sql'
+      - '.github/workflows/owned-registration.yml'
+      - 'supabase/functions/dehub-mcp/**'
+jobs:
+  edge:
+    name: Registration Edge Function check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts
+  database:
+    name: Registration reservation and permissions
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: public.ecr.aws/docker/library/postgres:16
+        env:
+          POSTGRES_PASSWORD: registration-test
+          POSTGRES_DB: registration_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: registration-test
+      PGDATABASE: registration_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/community-posts-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261011160000_community_existing_posts.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/owned-registration-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261011170000_owned_account_registration.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/owned-registration.sql
+      - name: Verify concurrent requests keep the owner limit
+        run: |
+          for client in $(seq 1 12); do
+            psql -Atc "SET ROLE service_role; SELECT (public.reserve_agent_registration('0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','concurrent_$client','test','0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','0x'||repeat('a',64),'dehub_'||lpad('$client',64,'0'))->>'id');" > "/tmp/registration-$client" 2>&1 &
+          done
+          wait
+          count=$(psql -Atc "SELECT count(*) FROM public.ai_agents WHERE human_owner_wallet='0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'")
+          test "$count" -eq 5

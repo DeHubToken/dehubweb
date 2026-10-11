@@ -1,10 +1,13 @@
 import os
+import io
 import tempfile
 import time
 import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
+import requests
 from fastapi.testclient import TestClient
+from PIL import Image
 import access
 import mask_review
 import seedance_bridge
@@ -85,6 +88,29 @@ class HostedTests(unittest.TestCase):
         row['reference_seconds'] = 3.2
         self.assertEqual(access.price(row, 'draft'), 7000000)
 
+    def test_character_can_be_saved_before_preparation_without_starting_or_charging(self):
+        image = io.BytesIO()
+        Image.new('RGB', (32, 32), 'blue').save(image, format='PNG')
+        with patch('access.debit') as debit, patch.object(server.executor, 'submit') as submit:
+            response = self.client.post(f'/jobs/{IDENT}/references', data={'prompt': 'Use this character'},
+                files={'reference': ('character.png', image.getvalue(), 'image/png')})
+            self.assertEqual(response.status_code, 200)
+            data = response.json()
+            self.assertEqual(data['state'], 'uploaded')
+            self.assertTrue(data['hasReference'])
+            self.assertEqual(data['references']['reference']['kind'], 'image')
+            self.assertIn('signature=', data['references']['reference']['url'])
+            self.assertEqual(self.client.get(data['references']['reference']['url'].replace(access.PUBLIC, '')).status_code, 200)
+            debit.assert_not_called(); submit.assert_not_called()
+        server.app.dependency_overrides[server.owner] = lambda: OTHER
+        self.assertEqual(self.client.get(f'/jobs/{IDENT}').status_code, 404)
+
+    def test_processing_references_cannot_be_replaced_and_failures_keep_source(self):
+        access.update(IDENT, state='running', stage='prepare')
+        self.assertEqual(self.client.post(f'/jobs/{IDENT}/references', data={'prompt': 'Changed'}).status_code, 409)
+        access.update(IDENT, state='failed')
+        self.assertIn('upload.mp4', self.client.get(f'/jobs/{IDENT}').json()['files'])
+
     def test_verified_session_identity_is_required(self):
         server.app.dependency_overrides.clear()
         self.assertEqual(self.client.get('/jobs').status_code, 401)
@@ -108,6 +134,52 @@ class HostedTests(unittest.TestCase):
         self.assertEqual(result.headers['location'], 'https://dehub.io/creator/maboroshi')
         self.assertEqual(self.client.post('/configure', data={'replicate': 'test'}).status_code, 404)
         self.assertEqual(self.client.get('/static/setup.html').status_code, 404)
+
+    def test_checkout_identifies_the_authenticated_wallet_without_charging(self):
+        with patch('access.debit') as debit:
+            self.assertEqual(self.client.get('/session').json(), {'wallet': WALLET})
+            quote = self.client.get(f'/jobs/{IDENT}/checkout/prepare').json()
+            self.assertEqual(quote['wallet'], WALLET)
+            self.assertEqual(quote['price_micros'], 1000000)
+            self.assertIsNone(quote['payment_ref'])
+            debit.assert_not_called()
+
+    def test_transfer_payment_retries_keep_the_same_receipt_and_never_debit_credits(self):
+        tx_hash = '0x' + '4' * 64
+        row = access.job(IDENT)
+        with patch('access.requests.post', side_effect=requests.Timeout) as post:
+            with self.assertRaises(Exception): access.debit(row, 'prepare', 1000000, tx_hash)
+            self.assertIn('maboroshi-provider', post.call_args.args[0])
+        self.assertEqual(self.client.get(f'/jobs/{IDENT}/checkout/prepare').json()['payment_ref'], tx_hash)
+        with patch('access.requests.post') as post:
+            with self.assertRaises(Exception): access.debit(row, 'prepare', 1000000, 'credits')
+            post.assert_not_called()
+        confirmed = Mock(status_code=200)
+        confirmed.json.return_value = {'debited': True}
+        with patch('access.requests.post', return_value=confirmed) as post:
+            access.debit(row, 'prepare', 1000000, tx_hash)
+            self.assertEqual(post.call_args.kwargs['json']['key'], f'maboroshi:{IDENT}:prepare')
+            self.assertEqual(post.call_args.kwargs['json']['wallet'], WALLET)
+
+    def test_rejected_payment_can_choose_another_source_and_refund_uses_its_actual_ledger(self):
+        row = access.job(IDENT)
+        with patch('access.requests.post', return_value=Mock(status_code=402)):
+            with self.assertRaises(Exception): access.debit(row, 'prepare', 1000000, 'credits')
+        self.assertIsNone(access.payment_reference(row, 'prepare'))
+        reply = Mock(status_code=200)
+        reply.json.return_value = {'debited': True, 'refunded': True}
+        with patch('access.requests.post', return_value=reply) as post:
+            access.debit(row, 'prepare', 1000000, '0x' + '4' * 64)
+            self.assertTrue(access.refund(IDENT, 'prepare'))
+            self.assertEqual(post.call_args.kwargs['json']['operation'], 'payment_refund')
+
+    def test_only_production_web_origin_can_read_checkout_with_session_header(self):
+        allowed = self.client.options(f'/jobs/{IDENT}/checkout/prepare', headers={
+            'Origin': 'https://dehub.io', 'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'x-dehub-token'})
+        self.assertEqual(allowed.headers.get('access-control-allow-origin'), 'https://dehub.io')
+        denied = self.client.options(f'/jobs/{IDENT}/checkout/prepare', headers={
+            'Origin': 'https://evil.test', 'Access-Control-Request-Method': 'GET'})
+        self.assertNotIn('access-control-allow-origin', denied.headers)
 
 
 if __name__ == '__main__':
