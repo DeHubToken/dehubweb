@@ -1,0 +1,40 @@
+name: Community follower invitations
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261011180000_community_follower_invites.sql'
+      - 'tests/sql/community-invites.sql'
+      - '.github/workflows/community-invites.yml'
+jobs:
+  database:
+    name: Invitation receipts and privacy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: public.ecr.aws/docker/library/postgres:16
+        env:
+          POSTGRES_PASSWORD: invite-test
+          POSTGRES_DB: invite_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: invite-test
+      PGDATABASE: invite_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/community-posts-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261011160000_community_existing_posts.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261011180000_community_follower_invites.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/community-invites.sql
+      - name: Verify only one client can claim the same invitation
+        run: |
+          psql -v ON_ERROR_STOP=1 -c "INSERT INTO public.communities(id) VALUES('00000000-0000-0000-0000-000000000021'); INSERT INTO public.community_members(community_id,wallet_address,role) VALUES('00000000-0000-0000-0000-000000000021','0x1111111111111111111111111111111111111111','owner');"
+          for client in $(seq 1 12); do
+            psql -v ON_ERROR_STOP=1 -Atc "SET ROLE anon; SELECT public.test_wallet('0x1111111111111111111111111111111111111111'); SELECT public.community_claim_invite('00000000-0000-0000-0000-000000000021','0x2222222222222222222222222222222222222222');" > "/tmp/invite-$client" &
+          done
+          wait
+          test "$(cat /tmp/invite-* | grep -c '^claimed$')" -eq 1
