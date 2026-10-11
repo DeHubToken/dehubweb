@@ -258,6 +258,8 @@
     "language": "Reo",
     "languageDesc": "Kōwhiria tō reo hiahia",
     "light": "Mārama",
+    "minimal": "Iti noa",
+    "minimalLight": "Iti noa Mārama",
     "dark": "Pōuri",
     "system": "Pūnaha",
     "immersive": "Immersive",

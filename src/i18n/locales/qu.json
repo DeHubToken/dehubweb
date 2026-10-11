@@ -258,6 +258,8 @@
     "language": "Simi",
     "languageDesc": "Munasqa simiykita akllay",
     "light": "K'anchay",
+    "minimal": "Ch'uqchay",
+    "minimalLight": "Ch'uqchay K'anchay",
     "dark": "Yana",
     "system": "Sistema",
     "immersive": "Immersive",

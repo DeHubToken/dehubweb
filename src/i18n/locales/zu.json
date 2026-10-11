@@ -258,6 +258,8 @@
     "language": "Ulimi",
     "languageDesc": "Khetha ulimi oluncamelayo",
     "light": "Ukukhanya",
+    "minimal": "Elula",
+    "minimalLight": "Elula Ukukhanya",
     "dark": "Ubumnyama",
     "system": "Isistimu",
     "immersive": "Immersive",

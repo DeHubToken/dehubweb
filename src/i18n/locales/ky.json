@@ -258,6 +258,8 @@
     "language": "Тил",
     "languageDesc": "Каалаган тилиңизди тандаңыз",
     "light": "Жарык",
+    "minimal": "Минималдуу",
+    "minimalLight": "Минималдуу Жарык",
     "dark": "Караңгы",
     "system": "Тутум",
     "immersive": "Immersive",

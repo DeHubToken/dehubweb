@@ -259,6 +259,8 @@
     "language": "Dil",
     "languageDesc": "Tercih ettiğiniz dili seçin",
     "light": "Açık",
+    "minimal": "Minimum",
+    "minimalLight": "Minimum Açık",
     "dark": "Koyu",
     "system": "Sistem",
     "immersive": "Göğüsleyici",

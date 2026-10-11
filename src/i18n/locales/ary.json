@@ -258,6 +258,8 @@
     "language": "اللغة",
     "languageDesc": "اختار اللغة المفضلة ديالك",
     "light": "فاتح",
+    "minimal": "بسيط",
+    "minimalLight": "بسيط فاتح",
     "dark": "غامق",
     "system": "النظام",
     "immersive": "Immersive",

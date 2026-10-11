@@ -257,6 +257,8 @@
     "language": "Language",
     "languageDesc": "Choose the language wey you prefer",
     "light": "Light",
+    "minimal": "Simpul",
+    "minimalLight": "Simpul Light",
     "dark": "Dark",
     "system": "System",
     "immersive": "Immersive",
