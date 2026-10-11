@@ -1,0 +1,29 @@
+BEGIN;
+INSERT INTO public.communities(id,is_private) VALUES('00000000-0000-0000-0000-000000000011',false);
+INSERT INTO public.community_members(community_id,wallet_address,role) VALUES('00000000-0000-0000-0000-000000000011','0x1111111111111111111111111111111111111111','owner');
+SET ROLE anon;
+SELECT public.test_wallet('0x1111111111111111111111111111111111111111');
+DO $$ BEGIN
+ IF public.community_claim_invite('00000000-0000-0000-0000-000000000011','0x2222222222222222222222222222222222222222')<>'claimed' THEN RAISE EXCEPTION 'First attempt not claimed'; END IF;
+ IF public.community_claim_invite('00000000-0000-0000-0000-000000000011','0x2222222222222222222222222222222222222222')<>'pending' THEN RAISE EXCEPTION 'Ambiguous attempt could repeat'; END IF;
+ PERFORM public.community_confirm_invite('00000000-0000-0000-0000-000000000011','0x2222222222222222222222222222222222222222');
+ IF public.community_claim_invite('00000000-0000-0000-0000-000000000011','0x2222222222222222222222222222222222222222')<>'sent' THEN RAISE EXCEPTION 'Confirmed attempt could repeat'; END IF;
+END $$;
+SELECT set_config('request.headers','{"x-wallet-address":"0x1111111111111111111111111111111111111111"}',true);
+DO $$ BEGIN
+ IF EXISTS(SELECT FROM public.community_invite_attempts) THEN RAISE EXCEPTION 'Unsigned header read invitation history'; END IF;
+ BEGIN
+  PERFORM public.community_claim_invite('00000000-0000-0000-0000-000000000011','0x3333333333333333333333333333333333333333');
+  RAISE EXCEPTION 'Unsigned header claimed invitation';
+ EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+END $$;
+SELECT public.test_wallet('0x2222222222222222222222222222222222222222');
+DO $$ BEGIN
+ IF EXISTS(SELECT FROM public.community_invite_attempts) THEN RAISE EXCEPTION 'Other wallet read invitation history'; END IF;
+ BEGIN
+  PERFORM public.community_confirm_invite('00000000-0000-0000-0000-000000000011','0x2222222222222222222222222222222222222222');
+  RAISE EXCEPTION 'Other wallet confirmed invitation';
+ EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+END $$;
+RESET ROLE;
+ROLLBACK;
