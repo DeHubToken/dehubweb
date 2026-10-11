@@ -21,7 +21,7 @@ export function LinkPreviewContent({ preview, chat = false, composer = false }: 
       <img
         src={preview.image!}
         alt={preview.title}
-        className="relative w-full h-full object-contain"
+        className={`relative w-full h-full ${chat ? 'object-contain' : 'object-cover'}`}
         loading="lazy"
         onError={() => setFailedImage(preview.image)}
       />
