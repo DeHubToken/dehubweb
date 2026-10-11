@@ -29,11 +29,15 @@ import dehubMark from '@/assets/dehub-logo-compact.png';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { FeedIslandCapsule } from './FeedIslandCapsule';
 
-const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
+const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenticated }: {
+  onClick: (e: React.MouseEvent) => void;
+  onPointerDown: () => void;
+  isAuthenticated: boolean;
+}) {
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} className="block cursor-pointer" aria-label={_copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" })}>
+    <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <ElectricLogo>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
@@ -89,12 +93,16 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
 
   const handleLogoClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
     if (isHomePath(pathnameRef.current)) {
       scrollDocumentToSmooth();
     } else {
       navigate('/app');
     }
-  }, [navigate]);
+  }, [isAuthenticated, openLoginModal, navigate]);
 
   const isNotificationsActive = location.pathname === '/app/notifications' || location.pathname === '/notifications';
   // With or without the /app prefix — both spellings reach the same page.
@@ -115,15 +123,8 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     document.documentElement.toggleAttribute('data-no-top-bar', !showBar || islandBar);
   }, [showBar, islandBar]);
 
-  const handleMenuClick = useCallback(() => {
-    if (!isAuthenticated) {
-      openLoginModal();
-    }
-  }, [isAuthenticated, openLoginModal]);
-
-  // This button IS the login entry when signed out (rendered only then), so
-  // touch-start warms the login sheet — first-open mount dance and body chunk
-  // land before the tap completes, and the drawer swings up on the same frame.
+  // The centre logo opens the login drawer for guests. Warm it on touch-start
+  // so the sheet is ready before the tap completes.
   const warmSheetForLogin = useCallback(() => {
     if (!isAuthenticated) warmLoginSheet();
   }, [isAuthenticated]);
@@ -183,23 +184,14 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
               </div>
             </DrawerContent>
           </Drawer>
-        ) : (
-          <button
-            onClick={handleMenuClick}
-            onPointerDown={warmSheetForLogin}
-            className="p-2 rounded-lg transition-colors -ml-2"
-            aria-label={_copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
-          >
-            <Menu className="w-[31px] h-[31px] text-white" />
-          </button>
-        )}
+        ) : null}
       </div>
 
       {/* dehub mark — centred on the bar itself, not between the side slots, so
           it stays put whether or not the notification bell is rendered (it is
           signed-in only) and whichever left control is showing. */}
       <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
-        <HeaderLogo onClick={handleLogoClick} />
+        <HeaderLogo onClick={handleLogoClick} onPointerDown={warmSheetForLogin} isAuthenticated={isAuthenticated} />
       </div>
 
       {/* Notifications — right slot, only visible when logged in.
@@ -223,6 +215,8 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     </header>
     {islandBar && showBar && (
       <FeedIslandCapsule
+        isAuthenticated={isAuthenticated}
+        onLogoPointerDown={warmSheetForLogin}
         visible={navVisible && !isOpen && !anyOverlayOpen && !isPostPage}
         avatar={isAuthenticated && user ? (
           <Avatar className="w-[28px] h-[28px] rounded-lg">
