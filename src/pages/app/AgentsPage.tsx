@@ -17,6 +17,8 @@ import { toast } from 'sonner';
 import { Bot, Plus, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from 'lucide-react';
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { SEOHead } from '@/components/SEOHead';
+import { canManageAgents } from '@/lib/agent-access';
+import { AgentTasksPanel } from './AgentTasksPanel';
 
 interface AIAgent {
   id: string;
@@ -44,6 +46,7 @@ export default function AgentsPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, refreshSession, openLoginModal } = useAuth();
+  const allowed = canManageAgents(walletAddress);
   const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [newAgentName, setNewAgentName] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentName", '');
@@ -55,6 +58,7 @@ export default function AgentsPage() {
     queryKey: ['ai-agents', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
+      if (!allowed || !await ensureWalletSession(walletAddress)) throw new AuthenticationError();
 
       // Not a table read. api_key is not selectable by client roles — with
       // agents publicly listable so the home-feed stories can resolve them, a
@@ -72,7 +76,7 @@ export default function AgentsPage() {
       if (error) throw error;
       return (data ?? []) as AIAgent[];
     },
-    enabled: !!walletAddress,
+    enabled: allowed,
   });
 
   // Keys registration just handed back. The list only carries a key for a
@@ -227,12 +231,12 @@ export default function AgentsPage() {
   const maskConnectorUrl = (apiKey: string) =>
     `${MCP_BASE}/k/${apiKey.substring(0, 10)}${'•'.repeat(16)}`;
 
-  if (!walletAddress) {
+  if (!walletAddress || !allowed) {
     return (
       <div className="min-h-screen">
         <PageIsland back icon="assistant" title={t('agents.title')} />
         <PageBody>
-          <PageEmpty icon="assistant" title={t('agents.connectToManage')} body={t('agents.signInToCreate')} />
+          <PageEmpty icon="assistant" title="Agents are in private preview" body="This feature is currently available to @maldoteth." />
         </PageBody>
       </div>
     );
@@ -268,6 +272,8 @@ export default function AgentsPage() {
             </a>
           </div>
         </div>
+
+        <AgentTasksPanel wallet={walletAddress} agents={listedAgents ?? []} />
 
         {/* Create new agent */}
         {isCreating ? (

@@ -403,14 +403,15 @@ interface Ranked {
  * untouched and by identity, so the resting menu is not re-created on every
  * render of a surface that is not searching.
  */
-export function filterNavItems(items: NavItem[], query: string, t: TranslateFn): NavItem[] {
+export function filterNavItems(items: NavItem[], query: string, t: TranslateFn, agentsAllowed = false): NavItem[] {
   // Kids Mode first, before the search does anything at all.
   //
   // Both sidebars go through here, so this is the one place that has to know
   // — and doing it before the query is applied means the hidden destinations
   // below (SEARCH_ONLY_ITEMS) cannot be typed back into view either, which is
   // exactly the hole a filter applied afterwards would leave.
-  const allowed = isKidsModeLocked() ? items.filter(item => isKidsModePath(item.path)) : items;
+  const rolloutItems = agentsAllowed ? items : items.filter(item => item.path !== '/app/agents');
+  const allowed = isKidsModeLocked() ? rolloutItems.filter(item => isKidsModePath(item.path)) : rolloutItems;
 
   const folded = fold(query);
   const tokens = folded.split(' ').filter(Boolean);
@@ -436,6 +437,7 @@ export function filterNavItems(items: NavItem[], query: string, t: TranslateFn):
   if (folded.length >= 2) {
     const onMenu = new Set(items.flatMap((item) => [item.path, item.label]));
     SEARCH_ONLY_ITEMS.forEach((item, index) => {
+      if (item.path === '/app/agents' && !agentsAllowed) return;
       if (!onMenu.has(item.path) && !onMenu.has(item.label)) {
         pool.push({ item, order: 1000 + index });
       }
