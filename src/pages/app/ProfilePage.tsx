@@ -542,7 +542,7 @@ export default function ProfilePage() {
       
       <div className={cn('p-2 sm:p-3 space-y-3', (theme === 'system' || theme === 'immersive') && 'max-sm:pt-0')}>
         {/* Profile Card Bento */}
-        <div className={cn('relative', theme === 'immersive' && 'max-sm:-mx-2')}>
+        <div className="relative max-sm:-mx-2">
         <PageHeader overlay />
         <ProfileHeader
           profile={data.profile}

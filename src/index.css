@@ -4941,10 +4941,6 @@ html[data-theme="light"] [data-creator-page] .text-white {
     padding-top: 0;
   }
 
-  html[data-theme="immersive"] [data-profile-skeleton] > [data-profile-header] {
-    margin-inline: -0.5rem;
-  }
-
   /* Expand the swallow mask with the media, retaining the toolbar's inset. */
   html[data-theme="immersive"] [data-profile-content] {
     margin-inline: -0.5rem;
