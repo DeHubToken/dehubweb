@@ -23,6 +23,7 @@ import "./styles/glass-surfaces.css";
 import "./styles/feed-pill-glow.css";
 import "./styles/page-kit.css";
 import "./styles/post-stage.css";
+import "./styles/live-audience.css";
 import "./styles/system-immersive.css";
 import "./styles/text-readability.css";
 import "./styles/pinned-community-stage.css";
