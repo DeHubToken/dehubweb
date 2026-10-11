@@ -259,6 +259,8 @@
     "language": "Taal",
     "languageDesc": "Kies je voorkeurstaal",
     "light": "Licht",
+    "minimal": "Minimaal",
+    "minimalLight": "Minimaal Licht",
     "dark": "Donker",
     "system": "Systeem",
     "immersive": "Meeslepend",

@@ -258,6 +258,8 @@
     "language": "Język",
     "languageDesc": "Wybierz preferowany język",
     "light": "Jasny",
+    "minimal": "Minimalistyczny",
+    "minimalLight": "Minimalistyczny Jasny",
     "dark": "Ciemny",
     "system": "Systemowy",
     "immersive": "Immersive",

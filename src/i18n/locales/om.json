@@ -258,6 +258,8 @@
     "language": "Afaan",
     "languageDesc": "Afaan filannoo kee filadhu",
     "light": "Ifaa",
+    "minimal": "Salphaa",
+    "minimalLight": "Salphaa Ifaa",
     "dark": "Dukkana",
     "system": "Sirna",
     "immersive": "Immersive",

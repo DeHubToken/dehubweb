@@ -258,6 +258,8 @@
     "language": "Язык",
     "languageDesc": "Выберите предпочитаемый язык",
     "light": "Светлая",
+    "minimal": "Минимальная",
+    "minimalLight": "Минимальная Светлая",
     "dark": "Тёмная",
     "system": "Системная",
     "immersive": "Immersive",

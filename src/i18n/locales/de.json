@@ -258,6 +258,8 @@
     "language": "Sprache",
     "languageDesc": "Wähle deine bevorzugte Sprache",
     "light": "Hell",
+    "minimal": "Minimal",
+    "minimalLight": "Minimal Hell",
     "dark": "Dunkel",
     "system": "System",
     "immersive": "Immersive",

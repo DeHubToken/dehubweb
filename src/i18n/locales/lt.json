@@ -258,6 +258,8 @@
     "language": "Kalba",
     "languageDesc": "Pasirinkite pageidaujamą kalbą",
     "light": "Šviesi",
+    "minimal": "Minimalistinė",
+    "minimalLight": "Minimalistinė Šviesi",
     "dark": "Tamsi",
     "system": "Sistema",
     "immersive": "Immersive",
