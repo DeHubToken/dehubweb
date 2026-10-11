@@ -42,7 +42,7 @@ dehub_comment: {token_id: string, content: string, reply_to_comment_id?: string}
 dehub_update_profile: {bio?:string,display_name?:string,avatar_url?:string,banner_url?:string}.
 dehub_post_create: {content:string,title?:string,category?:string,media_url?:string,media_type?:text|image|video}. If the user asks for posts ABOUT a topic, set topic to the writing instructions; a new original post is written on each run. Literal text uses content and null topic. No image/video generation capability.
 Use audience single unless bulk is explicitly requested. A request to follow every user is all_users, not ten users. A request to follow people who posted today uses post_authors, from local midnight to now. Convert relative windows with the timezone above. Never extend the window into the future. All dates must be ISO UTC with Z.
-For N posts/day use ONE generated-post step and interval_minutes 1440/N; for once use null. Fractional-minute schedules are not supported: clarify instead of rounding. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
+For N posts/day use ONE generated-post step and interval_minutes 1440/N (fractional minutes are allowed); for once use null. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
 No registration, transfers, tips, purchases, private messages, admin actions or tools outside this catalog. Return only plan_agent_task. Keep the summary explicit about agent actions, time window and cadence.` },
     { role: "user", content: prompt },
   ], true);
@@ -105,7 +105,7 @@ async function loadTargets(step: TaskStep, task: any, token: string): Promise<vo
   cursor.index = 0;
 }
 
-async function runTask(context: Context, req: Request, task: any) {
+export async function runTask(context: Context, req: Request, task: any) {
   const db = context.db();
   const agent = checked(await db.from("ai_agents").select("*").eq("id", task.agent_id).single());
   if (!agentOwnerAllowed(agent.human_owner_wallet) || agent.human_owner_wallet !== task.owner_wallet || !agent.is_active) throw new Error("Agent access is unavailable.");
