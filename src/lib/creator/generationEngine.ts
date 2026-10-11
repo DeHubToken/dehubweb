@@ -1123,9 +1123,4 @@ export async function enhancePrompt(
  * Fetch a generated asset as a File so it can be imported into the editor.
  * Handles both remote URLs and data URLs.
  */
-export async function assetToFile(url: string, filename: string, mime: string): Promise<File> {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Could not download the asset (${res.status})`);
-  const blob = await res.blob();
-  return new File([blob], filename, { type: blob.type || mime });
-}
+export { assetToFile } from './assetDownload';

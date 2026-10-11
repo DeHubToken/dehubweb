@@ -5,12 +5,7 @@ import {
   serviceClient,
 } from '../_shared/auth.ts';
 
-const MAX_ROWS = 5000;
-
-function coarsen(value: number, precisionKm: number): number {
-  const degrees = Math.max(0.01, precisionKm / 111);
-  return Math.round(value / degrees) * degrees;
-}
+import { readAllPresence, coarsenCoordinate } from './presence.ts';
 
 Deno.serve(async (req) => {
   const preflight = handleCorsPreflight(req);
@@ -18,10 +13,18 @@ Deno.serve(async (req) => {
 
   const db = serviceClient();
   if (req.method === 'GET') {
-    const { data, error } = await db.from('arcade_map_presence')
-      .select('public_id,latitude,longitude,username,avatar_url,updated_at')
-      .order('updated_at', { ascending: false }).limit(MAX_ROWS);
-    if (error) return jsonResponse({ error: 'Could not load the community map.' }, 500);
+    let data;
+    try {
+      data = await readAllPresence(async (offset, size) => {
+        const { data, error } = await db.from('arcade_map_presence')
+          .select('public_id,latitude,longitude,username,avatar_url,updated_at')
+          .order('public_id', { ascending: true }).range(offset, offset + size - 1);
+        if (error) throw error;
+        return data || [];
+      });
+    } catch {
+      return jsonResponse({ error: 'Could not load the community map.' }, 500);
+    }
     return jsonResponse({ people: (data || []).map((row) => ({
       id: row.public_id,
       name: row.username || 'Community member',
@@ -43,8 +46,8 @@ Deno.serve(async (req) => {
   const auth = await requireDeHubAuth(req);
   if (!auth.ok) return auth.response;
   const body = await req.json().catch(() => null);
-  const latitude = Number(body?.latitude);
-  const longitude = Number(body?.longitude);
+  const latitude = body?.latitude;
+  const longitude = body?.longitude;
   const precisionKm = Math.round(Math.min(100, Math.max(1, Number(body?.precisionKm) || 25)));
   if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90 ||
       !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
@@ -55,8 +58,8 @@ Deno.serve(async (req) => {
     ? body.avatarUrl.slice(0, 1000) : null;
   const { error } = await db.from('arcade_map_presence').upsert({
     wallet_address: auth.wallet,
-    latitude: coarsen(latitude, precisionKm),
-    longitude: coarsen(longitude, precisionKm),
+    latitude: coarsenCoordinate(latitude, precisionKm, 90),
+    longitude: coarsenCoordinate(longitude, precisionKm, 180),
     precision_km: precisionKm,
     username,
     avatar_url: avatarUrl,

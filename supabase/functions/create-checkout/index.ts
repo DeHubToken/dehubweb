@@ -173,7 +173,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const planMeta = AI_PLANS[priceId]
+    const planMeta: Record<string, string> = AI_PLANS[priceId]
       ? { ai_plan_policy: AI_PLAN_POLICY_VERSION } : {};
 
     const customerId = await resolveOrCreateCustomer(stripe, {

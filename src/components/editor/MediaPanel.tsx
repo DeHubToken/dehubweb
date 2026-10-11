@@ -55,8 +55,8 @@ export function MediaPanel() {
     try {
       await importFilesShared(list, {
         wallet: quota.walletAddress,
-        badgeBalance: undefined, // quota check inside importFiles uses its own lookup
-        username: null,
+        badgeBalance: quota.badgeBalance,
+        username: quota.username,
       });
       await quota.refetchUsage();
     } finally {
@@ -234,7 +234,7 @@ export function MediaPanel() {
                       type="button"
                       aria-label={_copy("copy.bff2afe05d86", { defaultValue: "Add {{value1}} to timeline", value1: m.name })}
                       onClick={(e) => { e.stopPropagation(); addClipFromMedia(m.id); }}
-                      className="rounded-md p-1 text-white/40 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/60"
                     >
                       <Plus className="h-3.5 w-3.5" />
                     </button>
@@ -242,7 +242,7 @@ export function MediaPanel() {
                       type="button"
                       aria-label={_copy("copy.d2f6b9b77710", { defaultValue: "Remove {{value1}}", value1: m.name })}
                       onClick={(e) => { e.stopPropagation(); void handleRemove(m.id); }}
-                      className="rounded-md p-1 text-white/40 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-white/60 transition hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/60"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>

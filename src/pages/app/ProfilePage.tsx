@@ -242,11 +242,23 @@ export default function ProfilePage() {
   // Swallow the tab content at the sticky tabs bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const profileHeaderRef = useRef<HTMLDivElement>(null);
+  const profileTabsRef = useRef<HTMLDivElement>(null);
+  const [profileTabsHeight, setProfileTabsHeight] = useState(56);
+  useEffect(() => {
+    const tabs = profileTabsRef.current;
+    if (!tabs) return;
+    const measure = () => setProfileTabsHeight(tabs.getBoundingClientRect().height);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(tabs);
+    return () => observer.disconnect();
+  }, [!!data.profile]);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
     '[data-feed-nav-outer] > [data-page-bento]',
     [!!data.profile, data.isAuthenticated],
+    { allThemes: true },
   );
 
   // Detect when the tabs pill is anchored to the top. Once stuck there's no
@@ -261,8 +273,8 @@ export default function ProfilePage() {
     // The pill pins at the very top at every width: phones have no top bar
     // off the home feed (index.css, data-no-top-bar).
     const obs = new IntersectionObserver(
-      ([entry]) => setIsTabsStuck(!entry.isIntersecting),
-      { rootMargin: '-64px 0px 0px 0px', threshold: 0 }
+      ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 60)),
+      { rootMargin: '-60px 0px 0px 0px', threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -410,12 +422,12 @@ export default function ProfilePage() {
   // Also show skeleton if profile errored but auth is still loading or profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
-    return <div className="relative"><PageHeader overlay /><ProfileSkeleton /></div>;
+    return <div className="relative"><PageHeader overlay plainBack /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <div className="relative"><PageHeader overlay /><AuthGate description={t('profile.loginDescription')} /></div>;
+    return <div className="relative"><PageHeader overlay plainBack /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found
@@ -425,7 +437,7 @@ export default function ProfilePage() {
     
     const notFoundContent = (
       <div className="relative min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
-        <PageHeader overlay />
+        <PageHeader overlay plainBack />
         {/* Any unknown top-level path lands here (/:username is the catch-all),
             so this is the SPA's real 404: without its own head it kept the
             home title, index,follow and a self canonical. */}
@@ -516,6 +528,8 @@ export default function ProfilePage() {
       />
       <CollapsingProfileHeader
         headerRef={profileHeaderRef}
+        tabsPinned={isTabsStuck}
+        tabsHeight={profileTabsHeight}
         name={data.profile.name}
         handle={data.profile.handle}
         coverUrl={data.profile.coverUrl || getDefaultBanner(data.profile.walletAddress)}
@@ -593,6 +607,8 @@ export default function ProfilePage() {
         <div
           data-feed-nav-outer
           data-profile-tabs
+          ref={profileTabsRef}
+          data-joined={isTabsStuck}
           data-nav-hide="off"
           className="sticky bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
         >

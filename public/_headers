@@ -217,6 +217,10 @@
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=0, must-revalidate
 
+/gods-eye-game/
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=0, must-revalidate
+
 # The Vite assets are content-addressed and safe to keep immutable.
 /gods-eye-game/assets/*
   Access-Control-Allow-Origin: *

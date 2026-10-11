@@ -8,6 +8,7 @@ import { NativeTitleTooltips } from "@/components/app/NativeTitleTooltips";
 import { MutationCache, QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { AuthenticationError } from "@/lib/api/dehub";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useSwipeBack } from '@/hooks/use-swipe-back';
 import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // Direct import (not the modals barrel) so the barrel's other modals stay out
 // of the entry bundle.
@@ -368,6 +369,7 @@ if (typeof window !== "undefined") {
  * Only mounted after user has passed the hero (or is a returning user).
  */
 function AppContent() {
+  useSwipeBack();
   const { t: _copy } = _useCopy();
   const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();

@@ -228,7 +228,7 @@ export function ProfileHeader({
                 )}
               </button>
           </div>
-          <div data-profile-actions className="-mr-1 flex items-center gap-2">
+          <div data-profile-actions className="-mr-1 sm:-mr-3 mt-[60px] sm:mt-[68px] self-start flex items-center gap-2">
               {isViewingOwnProfile ? (
                 <Button
                   variant="glass"
@@ -301,6 +301,8 @@ export function ProfileHeader({
                     size="icon" 
                     className="rounded-xl h-9 w-9"
                     aria-label={t('profile.options')}
+                    title={t('profile.options')}
+                    data-profile-options
                   >
                     <Plus className="w-4 h-4" />
                   </Button>

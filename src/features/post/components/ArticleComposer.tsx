@@ -111,7 +111,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
     return (
       <div data-article className="flex min-h-0 flex-1 flex-col">
         <div className="flex items-center gap-2 px-4 py-3">
-          <button type="button" onClick={() => setStep('write')} className="article-tool" aria-label={t('articles.backToWriting', 'Back to writing')}><ArrowLeft /></button>
+          <button type="button" data-swipe-back onClick={() => setStep('write')} className="article-tool" aria-label={t('articles.backToWriting', 'Back to writing')}><ArrowLeft /></button>
           <h2 className="article-ink text-base font-semibold">{t('articles.readyTitle', 'Ready to publish')}</h2>
         </div>
         <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-4 pb-4">
