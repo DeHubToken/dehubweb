@@ -331,13 +331,14 @@ export default function ArcadeGamePage() {
       )}
 
       {game.socialPresence ? (
-        <div className="pointer-events-none absolute bottom-4 right-4 z-20 w-[min(24rem,calc(100%-2rem))] rounded-xl border border-amber-400/25 bg-black/80 p-3 text-xs leading-relaxed text-zinc-300 backdrop-blur-xl">
+        <details className="absolute bottom-4 right-4 z-20 max-w-[min(24rem,calc(100%-2rem))] rounded-xl border border-amber-400/25 bg-black/80 p-3 text-xs leading-relaxed text-zinc-300 backdrop-blur-xl">
+          <summary className="cursor-pointer">{_copy("copy.592314529223", { defaultValue: "Change privacy settings" })}</summary>
           <div className="flex items-start gap-2">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
             <p>{_copy("copy.3a0d0a6ad5c4", { defaultValue: "If you hold a large amount of tokens or live in an insecure area, hide your badge and balance before using this feature. On-chain transactions still reveal your address." })}{' '}<Link className="pointer-events-auto font-medium text-white underline underline-offset-2" to="/app/settings?tab=privacy#private-balance">{_copy("copy.592314529223", { defaultValue: "Change privacy settings" })}</Link>
             </p>
           </div>
-        </div>
+        </details>
       ) : null}
 
       {/* Boot readout. A percentage and a bar, nothing else: the only question
