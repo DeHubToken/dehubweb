@@ -1,4 +1,4 @@
-"""Private job storage, short-lived file links and keyed DeHub credit charges."""
+"""Private job storage, short-lived file links and keyed Creator payments."""
 import hashlib
 import hmac
 import json
@@ -123,14 +123,54 @@ def price(row, stage):
         raise HTTPException(503, 'Maboroshi pricing is being configured. Nothing has been charged.')
 
 
-def debit(row, stage, amount):
+def payment_reference(row, stage):
+    path = folder(row['id']) / f'payment-{stage}.json'
+    if not path.exists():
+        return None
+    record = json.loads(path.read_text())
+    if record.get('wallet') != row['wallet'] or record.get('stage') != stage:
+        raise HTTPException(409, 'Saved payment needs review.')
+    return record
+
+
+def save_payment(row, stage, record):
+    path = folder(row['id']) / f'payment-{stage}.json'
+    temporary = path.with_suffix('.tmp')
+    with temporary.open('w') as output:
+        json.dump(record, output)
+        output.flush()
+        os.fsync(output.fileno())
+    temporary.replace(path)
+
+
+def debit(row, stage, amount, tx_hash='credits'):
     key = f'maboroshi:{row["id"]}:{stage}'
+    tx_hash = tx_hash.lower()
+    if tx_hash != 'credits' and not re.fullmatch(r'0x[a-f0-9]{64}', tx_hash):
+        raise HTTPException(402, 'Review payment in DeHub before starting this step.')
+    previous = payment_reference(row, stage)
+    record = {'wallet': row['wallet'], 'stage': stage, 'amount': amount, 'tx_hash': tx_hash}
+    if previous and previous != record:
+        raise HTTPException(409, 'Retry this step with its saved payment reference.')
+    # Save before contacting either ledger. A timeout must reuse the exact
+    # source and key, never fall through to a second payment method.
+    if not previous:
+        save_payment(row, stage, record)
     try:
-        response = requests.post('https://api.dehub.io/api/internal/credits/debit',
-            headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']},
-            json={'address': row['wallet'], 'usdMicros': amount, 'key': key, 'purpose': 'ai'}, timeout=15)
-        if response.status_code == 402:
-            raise HTTPException(402, 'Insufficient DeHub credit. Top up, then try again.')
+        if tx_hash == 'credits':
+            url = 'https://api.dehub.io/api/internal/credits/debit'
+            body = {'address': row['wallet'], 'usdMicros': amount, 'key': key, 'purpose': 'ai'}
+        else:
+            from providers import BRIDGE
+            url = BRIDGE
+            body = {'operation': 'payment_charge', 'wallet': row['wallet'], 'amount_micros': amount, 'key': key, 'tx_hash': tx_hash}
+        response = requests.post(url, headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']}, json=body, timeout=45)
+        if response.status_code in (402, 403):
+            # Both ledgers definitively refused this source without a charge.
+            (folder(row['id']) / f'payment-{stage}.json').unlink(missing_ok=True)
+            raise HTTPException(response.status_code, 'This payment is unavailable. Review payment again in DeHub.')
+        if response.status_code == 409:
+            raise HTTPException(409, 'This step has a saved or reversed payment that needs review.')
         response.raise_for_status()
         if response.json().get('debited') is not True:
             raise ValueError('Debit unconfirmed')
@@ -140,9 +180,18 @@ def debit(row, stage, amount):
 
 def refund(ident, stage):
     try:
+        row = job(ident)
+        payment = payment_reference(row, stage)
+        key = f'maboroshi:{ident}:{stage}'
+        if payment and payment['tx_hash'] != 'credits':
+            from providers import BRIDGE
+            response = requests.post(BRIDGE,
+                headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']},
+                json={'operation': 'payment_refund', 'key': key}, timeout=45)
+            return response.status_code == 200 and response.json().get('refunded') is True
         response = requests.post('https://api.dehub.io/api/internal/credits/refund',
             headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']},
-            json={'key': f'maboroshi:{ident}:{stage}'}, timeout=15)
+            json={'key': key}, timeout=15)
         return response.status_code in (200, 404)
-    except (requests.RequestException, KeyError):
+    except (requests.RequestException, KeyError, ValueError, OSError):
         return False
