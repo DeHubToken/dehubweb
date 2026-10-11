@@ -18,7 +18,7 @@ export function QuickActionsHost() {
     );
     window.addEventListener(OPEN_BUG_REPORT, report);
     return () => { cleanup(); window.removeEventListener(OPEN_BUG_REPORT, report); };
-  }, []);
+  }, [location.pathname]);
   useEffect(() => { setSession(null); }, [location.pathname]);
   return session ? <Suspense fallback={null}><QuickActionsDrawer context={session.context} initialReport={session.report} onClose={() => setSession(null)} /></Suspense> : null;
 }
