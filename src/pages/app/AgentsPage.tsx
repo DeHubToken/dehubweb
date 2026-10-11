@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import { retryWalletSession } from '@/lib/wallet-session';
+import { ensureWalletSession, retryWalletSession } from '@/lib/wallet-session';
 import { AuthenticationError, ensureFreshToken } from '@/lib/api/dehub/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -146,6 +146,7 @@ export default function AgentsPage() {
   const deleteAgentMutation = useMutation({
     mutationFn: async (agentId: string) => {
       if (!walletAddress) throw new Error('Not connected');
+      if (!await ensureWalletSession(walletAddress)) throw new AuthenticationError();
       
       const query = supabase
         .from('ai_agents')

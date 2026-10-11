@@ -108,7 +108,7 @@ function buildAuthMessage(address: string, timestamp: number): string {
   return `Welcome to DeHub!\n\nClick to sign in for authentication.\nSignatures are valid for 24 hours.\nYour wallet address is ${address}.\nIt is ${displayedDate.toUTCString()}.`;
 }
 
-async function authenticateWithDeHub(privateKey: string): Promise<string | null> {
+async function authenticateWithDeHub(privateKey: string, ownedRegistration?: { ownerToken: string; registrationId: string }): Promise<string | null> {
   try {
     const wallet = new Wallet(privateKey);
     const address = wallet.address.toLowerCase();
@@ -119,7 +119,7 @@ async function authenticateWithDeHub(privateKey: string): Promise<string | null>
     const response = await fetch(`${DEHUB_API_BASE}/api/web/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address, sig, timestamp, chainId: CHAIN_ID }),
+      body: JSON.stringify({ address, sig, timestamp, chainId: CHAIN_ID, ownedRegistration }),
     });
 
     if (!response.ok) {
@@ -453,68 +453,47 @@ async function registerAgent(
     };
   }
 
-  const { count } = await supabase
-    .from("ai_agents")
-    .select("id", { count: "exact", head: true })
-    .eq("human_owner_wallet", owner);
-
-  if ((count ?? 0) >= MAX_AGENTS_PER_OWNER) {
-    return {
-      status: 429,
-      body: { error: `Wallet ${owner} already owns ${MAX_AGENTS_PER_OWNER} agents, which is the limit.` },
-    };
-  }
-
-  const { data: existing } = await supabase.from("ai_agents").select("id").eq("name", name).maybeSingle();
-  if (existing) return { status: 409, body: { error: `Agent name "${name}" is already taken` } };
-
-  // Step 1: generate the agent's own Ethereum wallet
+  // Reserve before authentication so retries never create orphaned accounts or keys.
   const wallet = Wallet.createRandom();
-  const walletAddress = wallet.address.toLowerCase();
-  const privateKey = wallet.privateKey;
+  const bio = input.description?.trim() || `AI agent: ${name}`;
+  const { data: reserved, error: reserveError } = await supabase.rpc('reserve_agent_registration', {
+    _owner: owner, _name: name, _description: bio, _wallet: wallet.address.toLowerCase(),
+    _private_key: wallet.privateKey, _api_key: generateApiKey(),
+  });
+  if (reserveError || !reserved) {
+    if (reserveError?.code === '23505') return { status: 409, body: { error: `Agent name "${name}" is already taken` } };
+    if (reserveError?.message === 'AGENT_OWNER_LIMIT') return { status: 429, body: { error: `You already own ${MAX_AGENTS_PER_OWNER} agents, which is the limit.` } };
+    return { status: 503, body: { error: 'Account registration is temporarily unavailable. Try again.' } };
+  }
+  const registration = reserved as AgentRow;
+  const walletAddress = registration.owner_wallet_address;
+  const privateKey = registration.wallet_private_key!;
+  const apiKey = registration.api_key;
 
-  // Step 2: authenticating creates the DeHub account
-  const authToken = await authenticateWithDeHub(privateKey);
+  const authToken = await authenticateWithDeHub(privateKey, { ownerToken: auth.token, registrationId: registration.id });
   if (!authToken) {
-    return { status: 502, body: { error: "Failed to create DeHub account. The API may be unavailable." } };
+    return { status: 502, body: { error: `Account setup could not finish. Retry with the same name "${name}" to continue the reserved registration.` } };
   }
 
-  // Step 3: claim the username and bio
-  const bio = input.description?.trim() || `AI agent: ${name}`;
   const profile = await dehubApi("/api/update_profile", {
     method: "POST",
     token: authToken,
-    body: { username: name, aboutMe: bio },
+    body: { username: name, aboutMe: registration.description },
   });
   if (!profile.ok) console.warn(`[Register] Profile update failed for "${name}": ${profile.message}`);
 
-  const apiKey = generateApiKey();
-
   const { data, error } = await supabase
     .from("ai_agents")
-    .insert({
-      name,
-      description: bio,
-      api_key: apiKey,
-      // owner_wallet_address is the agent's own wallet — it signs as the agent
-      // and pays the agent's gas. Ownership is human_owner_wallet, which is
-      // what the RLS policies and /app/agents match on.
-      owner_wallet_address: walletAddress,
-      human_owner_wallet: owner,
-      wallet_private_key: privateKey,
+    .update({
       is_active: true,
-      metadata: {
-        human_owner: owner,
-        registered_at: new Date().toISOString(),
-        chain_id: CHAIN_ID,
-      },
+      metadata: { ...registration.metadata, registration_pending: false },
     })
+    .eq('id', registration.id)
     .select("id, name, owner_wallet_address, created_at")
     .single();
 
   if (error) {
-    console.error("[Register] DB insert error:", error);
-    return { status: 500, body: { error: "Failed to save agent registration" } };
+    return { status: 503, body: { error: 'Account activation could not finish. Retry with the same name.' } };
   }
 
   return {
