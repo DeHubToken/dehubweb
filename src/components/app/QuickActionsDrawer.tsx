@@ -63,7 +63,7 @@ export default function QuickActionsDrawer({ context, initialReport, onClose }: 
         <button className={row} onClick={() => setView('profiles')}><Users size={20} />{t('settings.switchAccount')}</button>
         <button className={row} disabled={!isAuthenticated || busy} onClick={async () => { setBusy(true); try { await disconnect(); onClose(); } catch { setError(true); setBusy(false); } }}><LogOut size={20} />{t('quickActions.logout')}</button>
       </div>}
-      {view === 'profiles' && <div className="max-h-[65dvh] overflow-y-auto"><ProfilesSection /></div>}
+      {view === 'profiles' && <div className="max-h-[65dvh] overflow-y-auto"><ProfilesSection onSelect={onClose} /></div>}
       {view === 'report' && <div className="space-y-3 overflow-y-auto">
         <textarea aria-label={t('quickActions.question')} placeholder={t('quickActions.placeholder')} value={message} onChange={e => setMessage(e.target.value)} maxLength={1500} rows={4} className="w-full resize-none rounded-xl border border-border bg-muted p-3 text-sm" />
         <p className="break-all text-xs text-muted-foreground">{context.page}</p>

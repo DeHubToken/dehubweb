@@ -33,7 +33,7 @@ function profileLabel(profile: StoredProfile): string {
   return profile.name || profile.username || shortAddress(profile.address);
 }
 
-export function ProfilesSection() {
+export function ProfilesSection({ onSelect }: { onSelect?: () => void } = {}) {
   const { t } = useTranslation();
   const { switchToProfile, openLoginModal } = useAuth();
   const { balance: liveBadgeBalance } = useSelfBadge();
@@ -68,6 +68,7 @@ export function ProfilesSection() {
   };
 
   const handleSwitch = async (id: string) => {
+    onSelect?.();
     if (id === activeId || switchingId) return;
     setSwitchingId(id);
     try {
@@ -181,7 +182,7 @@ export function ProfilesSection() {
       {/* Full width under the grid rather than a cell inside it: it is the
           action for the whole section, not another account in the list. */}
       <button
-        onClick={() => openLoginModal({ intent: 'add-profile' })}
+        onClick={() => { onSelect?.(); openLoginModal({ intent: 'add-profile' }); }}
         disabled={!!switchingId || isFull}
         title={
           isFull
