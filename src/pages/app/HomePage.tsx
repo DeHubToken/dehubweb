@@ -504,17 +504,27 @@ export default function HomePage() {
   // PULL-TO-REFRESH HOOK
   // --------------------------------------------------------------------------
 
-  const { pullDistance, isPulling, isHoldingAtThreshold, holdProgress, handlers: pullHandlers } = usePullToRefresh({
+  const pullMotionRef = useRef<HTMLDivElement>(null);
+  const pullStateRef = useRef({ distance: 0, pulling: false });
+  const refreshingRef = useRef(isRefreshing);
+  refreshingRef.current = isRefreshing;
+  const publishPullMotion = useCallback((distance: number, pulling: boolean) => {
+    pullStateRef.current = { distance, pulling };
+    setFeedRefresh({ refreshing: refreshingRef.current, progress: Math.min(distance / PULL_THRESHOLD, 1), distance, pulling });
+  }, []);
+  const { handlers: pullHandlers } = usePullToRefresh({
     enabled: isMobile,
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
     containerRef: feedContainerRef,
+    motionRef: pullMotionRef,
+    onMotion: publishPullMotion,
   });
 
   useLayoutEffect(() => {
-    setFeedRefresh({ refreshing: isRefreshing, progress: isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1), distance: pullDistance, pulling: isPulling });
-  }, [isRefreshing, isHoldingAtThreshold, holdProgress, pullDistance, isPulling]);
+    publishPullMotion(pullStateRef.current.distance, pullStateRef.current.pulling);
+  }, [isRefreshing, publishPullMotion]);
   useEffect(() => () => setFeedRefresh({ refreshing: false, progress: 0 }), []);
 
   // --------------------------------------------------------------------------
@@ -1086,7 +1096,7 @@ export default function HomePage() {
             </div>
         </div>
         {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
-        {!islandTopBar && <FeedPillGlow distance={pullDistance} refreshing={isRefreshing} />}
+        {!islandTopBar && <FeedPillGlow refreshing={isRefreshing} />}
         </div>
         {theme === 'system' && <div ref={homeFiltersRef} className="absolute inset-x-0 top-0 z-0 pointer-events-none" />}
         </FeedFilterAnchor>
@@ -1123,8 +1133,9 @@ export default function HomePage() {
       >
         {/* Keep the swallow clip stationary while the feed moves beneath it. */}
         <div
+          ref={pullMotionRef}
           data-feed-pull-motion
-          style={isMobile && pullDistance > 0 ? { position: 'relative', transform: `translate3d(0, ${pullDistance}px, 0)`, willChange: 'transform' } : undefined}
+          style={{ position: 'relative' }}
         >
         {/* Feeds mount lazily on first tab visit, then stay alive (CSS display toggle).
             Memo wrappers prevent re-renders during drag — feeds only update when

@@ -41,7 +41,7 @@ it('does not refresh after a short or cancelled pull', () => {
 it('ends the subpixel return tail and accepts the next pull', () => {
   pull(0, 200);
   act(() => hook.handlers.onTouchEnd());
-  act(() => vi.advanceTimersByTime(1400));
+  act(() => vi.advanceTimersByTime(650));
   expect(hook.pullDistance).toBe(0);
   expect(vi.getTimerCount()).toBe(0);
   pull(0, 80);
@@ -50,6 +50,34 @@ it('ends the subpixel return tail and accepts the next pull', () => {
 it('preserves horizontal feed swipes', () => {
   pull(180, 30); act(() => hook.handlers.onTouchEnd());
   expect(refresh).not.toHaveBeenCalled(); expect(hook.pullDistance).toBe(0);
+});
+it('moves the feed without rendering its cards and gives release to the compositor', () => {
+  let renders = 0;
+  const onMotion = vi.fn();
+  const cancel = vi.fn();
+  const animate = vi.fn(() => ({ cancel }));
+  function CompositedFeed() {
+    renders++;
+    const motionRef = React.useRef<HTMLDivElement>(null);
+    hook = usePullToRefresh({ enabled: true, isRefreshing: false, onRefresh: refresh, motionRef, onMotion });
+    return <div ref={motionRef} data-motion />;
+  }
+  act(() => root.render(<CompositedFeed />));
+  const content = node.querySelector<HTMLElement>('[data-motion]')!;
+  content.animate = animate as unknown as typeof content.animate;
+  const before = renders;
+  pull(0, 200, content);
+  expect(content.style.transform).toContain('translate3d');
+  act(() => hook.handlers.onTouchEnd());
+  act(() => vi.advanceTimersByTime(320));
+  expect(animate).toHaveBeenCalledTimes(1);
+  expect(onMotion.mock.lastCall![0]).toBeGreaterThan(0);
+  expect(renders).toBe(before);
+  settle();
+  expect(cancel).toHaveBeenCalled();
+  expect(content.style.transform).toBe('');
+  expect(content.style.willChange).toBe('');
+  expect(onMotion.mock.lastCall).toEqual([0, false]);
 });
 it('allows downward refresh from a carousel that owns horizontal swipes', () => {
   const panel = node.querySelector('[data-panel]')!;
