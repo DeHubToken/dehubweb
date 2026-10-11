@@ -244,7 +244,7 @@ export function ProfileSkeleton() {
         <div className="px-4 sm:px-6 pb-4">
           <div className="flex items-end justify-between -mt-12 sm:-mt-14 mb-4">
             <Skeleton className={`w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-4 border-zinc-900 ${SK}`} />
-            <Skeleton className={`h-9 w-24 rounded-xl ${SK}`} />
+            <Skeleton className={`-mr-1 h-9 w-24 rounded-xl ${SK}`} />
           </div>
           <div className="space-y-2">
             <Skeleton className={`h-5 w-40 ${SK}`} />
