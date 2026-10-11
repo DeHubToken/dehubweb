@@ -162,7 +162,7 @@ describe('arcade registry', () => {
 
   it("versions God's Eye's unhashed entry URL with its current bundle", () => {
     const game = ARCADE_GAMES.find(({ slug }) => slug === 'gods-eye');
-    expect(game?.buildUrl()).toBe('/gods-eye-game/index.html?v=BlKrG43g');
+    expect(game?.buildUrl()).toBe('/gods-eye-game/index.html?v=yPIb7IAb');
   });
 
   it('gives every game the copy the cards and SEO read', () => {
