@@ -2,6 +2,11 @@ name: Priority translations
 
 on:
   workflow_dispatch:
+    inputs:
+      locale:
+        description: Optional single locale to translate
+        required: false
+        type: string
   push:
     branches: [fix/priority-languages-seo-20261011]
     paths:
@@ -17,13 +22,15 @@ concurrency:
 jobs:
   translate:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - name: Translate the reviewed source request
+        env:
+          TRANSLATION_LOCALE: ${{ inputs.locale }}
         run: node scripts/translate-priority-locales.mjs
       - uses: actions/upload-artifact@v4
         if: always()
