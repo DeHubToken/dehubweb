@@ -7,7 +7,7 @@ let frame: FrameRequestCallback | undefined;
 const rect = (bottom: number) => ({ bottom } as DOMRect);
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
-it('forms the header as the cover leaves, transfers each control at its boundary, and reverses', () => {
+it('keeps the header surface present, transfers each control at its boundary, and reverses', () => {
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { frame = cb; return 1; });
   vi.stubGlobal('cancelAnimationFrame', vi.fn());
@@ -24,12 +24,12 @@ it('forms the header as the cover leaves, transfers each control at its boundary
   const scroll = () => act(() => { fireEvent.scroll(window); frame?.(0); });
   scroll();
   expect(screen.getByText('Back')).toBeVisible();
-  expect(bar.style.getPropertyValue('--profile-frost')).toBe('0');
+  expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
   expect(screen.queryByText('Follow')).toBeNull();
   coverBottom = 56;
   actionBottom = 55;
   scroll();
-  expect(bar.style.getPropertyValue('--profile-frost')).toBe('1');
+  expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
   expect(screen.getByText('Follow')).toBeVisible();
   expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'true');
   nameBottom = 55;
@@ -38,5 +38,5 @@ it('forms the header as the cover leaves, transfers each control at its boundary
   coverBottom = 140; actionBottom = 180; nameBottom = 230;
   scroll();
   expect(screen.queryByText('Follow')).toBeNull();
-  expect(bar.style.getPropertyValue('--profile-frost')).toBe('0');
+  expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
 });
