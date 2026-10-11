@@ -6,30 +6,26 @@
   pointer-events: none;
 }
 .profile-collapse-bar {
-  --profile-frost: 0;
   position: relative;
   height: 52px;
   margin: 0 8px;
   top: 4px;
 }
-.profile-collapse-frost {
+.profile-collapse-surface {
   position: absolute;
   inset: 0;
   border-radius: 15px;
-  background: rgba(16, 16, 20, .72);
+  background: #18181b;
   border: 1px solid rgba(255, 255, 255, .16);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  opacity: var(--profile-frost);
   overflow: hidden;
 }
 .profile-collapse-cover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(18px);
-  transform: scale(1.12);
-  opacity: .28;
+  filter: blur(40px);
+  transform: scale(1.5);
+  opacity: .6;
 }
 .profile-collapse-content {
   position: relative;
