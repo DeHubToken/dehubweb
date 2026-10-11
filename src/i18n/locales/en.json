@@ -13285,5 +13285,17 @@
     "bodyPlaceholder": "Tell your story. Select text and use the bar above for headings, bold, quotes and lists.",
     "bodyLabel": "Article body",
     "wordCount": "{{count}} words"
+  },
+  "liveAudience": {
+    "whosHere": "Who's here",
+    "watchingCount": "{{formatted}} watching",
+    "hereCount": "{{formatted}} here",
+    "startedAgo": "Started {{time}}",
+    "host": "Host",
+    "topTippers": "Top tippers",
+    "mostActive": "Most active",
+    "hereNow": "Here now",
+    "joinedAgo": "joined {{time}}",
+    "nobodyYet": "No one yet"
   }
 }
