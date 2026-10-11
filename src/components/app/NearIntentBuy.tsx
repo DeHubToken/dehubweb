@@ -2,6 +2,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { sendSolanaPurchase, connectPurchaseSolanaWallet } from '@/lib/wallet/solana-purchase';
 import { usePaymentPicker } from '@/hooks/use-payment-picker';
 import { loadPaymentBalances } from '@/lib/wallet/payment-balances';
+import { walletRpc } from '@/lib/wallet/rpc';
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { isBuyRoute } from '@/lib/buy-route';
@@ -19,7 +20,7 @@ import { sendNativeToken, sendERC20Token } from '@/lib/wallet/send';
 import type { Purchase } from '@/lib/crypto-purchase';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { Interface, formatUnits, parseUnits } from 'ethers';
-import { ensureSignerOnChain, getActiveProvider, isSelfFundedGasInsufficientError, rpcRequest, writeBatchAA, type AABatchCall } from '@/lib/contracts/aa-utils';
+import { ensureSignerOnChain, getActiveProvider, isSelfFundedGasInsufficientError, writeBatchAA, type AABatchCall } from '@/lib/contracts/aa-utils';
 import { getAccount } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
 import { ArrowDown } from 'lucide-react';
@@ -87,7 +88,7 @@ export function NearIntentBuy({ tokensToReceive, active, onDelivered }: { tokens
     if (receipt.expiresAt * 1000 <= Date.now()) throw new Error(t('nearBuy.phase_expired'));
     if (!receipt.paymentTokenAddress || receipt.wrapNativePayment) {
       const required = parseUnits(receipt.amountInFormatted, receipt.paymentDecimals);
-      const balance = BigInt(await rpcRequest<string>('eth_getBalance', [sender, 'latest'], chain));
+      const balance = BigInt(await walletRpc(chain, 'eth_getBalance', [sender, 'latest']));
       if (balance < required) {
         const symbol = receipt.originSymbol || 'native token';
         throw new Error(`Insufficient ${symbol} on ${paymentChainName(receipt.originBlockchain || '')}. Your wallet has ${formatPaymentAmount(formatUnits(balance, receipt.paymentDecimals))} ${symbol}; this payment needs ${formatPaymentAmount(receipt.amountInFormatted)} ${symbol}. Choose another currency or a smaller amount.`);
