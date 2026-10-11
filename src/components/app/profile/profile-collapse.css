@@ -25,6 +25,11 @@ html[data-theme='system'] .profile-collapse-gap-guard {
   clip-path: none;
 }
 html[data-theme='system'] .profile-collapse-gap-guard img { display: none; }
+/* Once the bar and tabs join into one card the seam sits inside it, so the
+   lower band would only poke out past the card's sides. */
+.profile-collapse-bar[data-joined='true'] .profile-collapse-gap-guard {
+  clip-path: polygon(0 0, 100% 0, 100% 4px, 0 4px);
+}
 .profile-collapse-surface {
   position: absolute;
   inset: 0;
@@ -70,8 +75,10 @@ html[data-theme='system'] .profile-collapse-gap-guard img { display: none; }
 [data-profile-tabs] { top: calc(env(safe-area-inset-top, 0px) + 60px); padding-top: 0; }
 html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_) {
   z-index: 70;
-  padding-left: 8px;
-  padding-right: 8px;
+  /* 4px inside the card's sides, matching the gap under the tabs, so the
+     active pill clears the card's rounded corners. */
+  padding-left: 12px;
+  padding-right: 12px;
   background: transparent !important;
 }
 html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_)::before { display: none; }
