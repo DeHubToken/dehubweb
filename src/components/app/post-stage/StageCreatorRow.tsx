@@ -16,6 +16,8 @@ import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { toggleFollowFor, useFollowOverrides } from '@/hooks/use-follow';
 import { BadgedName } from '@/components/app/BadgedName';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { MoreHorizontal } from 'lucide-react';
+import { usePostStage } from './post-stage-context';
 
 interface StageCreatorRowProps {
   name: string;
@@ -38,6 +40,7 @@ function formatFollowers(n: number): string {
 
 export function StageCreatorRow({ name, avatar, handle, creatorId, badgeBalance, verified, trailing }: StageCreatorRowProps) {
   const { t } = useTranslation();
+  const onOptions = usePostStage()?.openOptions;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
@@ -123,6 +126,18 @@ export function StageCreatorRow({ name, avatar, handle, creatorId, badgeBalance,
           className="h-[34px] shrink-0 rounded-[10px] px-3.5 text-sm font-bold"
         >
           {isFollowing ? t('follow.following') : t('follow.follow')}
+        </button>
+      )}
+      {onOptions && (
+        <button
+          type="button"
+          data-stage-chip
+          data-stage-options
+          onClick={(event) => { event.stopPropagation(); onOptions(); }}
+          aria-label={t('postOptions.options')}
+          className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-[10px]"
+        >
+          <MoreHorizontal className="h-5 w-5" />
         </button>
       )}
     </div>

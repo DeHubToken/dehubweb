@@ -60,7 +60,6 @@ interface CommentsWrapperProps {
   /** Phone post page ("Stage") — see CommentsSection `stage`. Inline only. */
   stage?: boolean;
   stageCount?: number;
-  onStageOptions?: () => void;
   onStageTabChange?: (tab: 'replies' | 'quotes' | 'reposts' | 'search') => void;
 }
 
@@ -287,7 +286,7 @@ function DiscardGuard({ onKeepWriting, onDiscard }: { onKeepWriting: () => void;
   );
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, forKids = false, postAuthorAddress, forceInline = false, stage = false, stageCount, onStageOptions, onStageTabChange }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false, forKids = false, postAuthorAddress, forceInline = false, stage = false, stageCount, onStageTabChange }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const isPhone = useIsPhone();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
@@ -479,7 +478,6 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
             page
             stage={stage}
             stageCount={stageCount}
-            onStageOptions={onStageOptions}
             onStageTabChange={onStageTabChange}
           />
         </Suspense>
