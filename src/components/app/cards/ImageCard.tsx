@@ -665,16 +665,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   // The phone post page ("Stage"). Null in every feed.
   const stage = usePostStage();
-  const registerOptions = stage?.registerOptions;
-  const openPostOptions = useCallback(() => {
-    if (!walletAddress) { openLoginModal(); return; }
-    setShowOptionsDrawer(true);
-  }, [walletAddress, openLoginModal]);
-  useEffect(() => {
-    if (!registerOptions) return;
-    registerOptions(openPostOptions);
-    return () => registerOptions(null);
-  }, [registerOptions, openPostOptions]);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
@@ -688,6 +678,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  const registerOptions = stage?.registerOptions;
+  const openPostOptions = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowOptionsDrawer(true);
+  }, [walletAddress, openLoginModal]);
+  useEffect(() => {
+    if (!registerOptions) return;
+    registerOptions(openPostOptions);
+    return () => registerOptions(null);
+  }, [registerOptions, openPostOptions]);
   // Deep Current is the one power spent on somebody ELSE's post, so it is
   // the one row that belongs in this half of the menu. `status.powers` is
   // the authority for whether this account has it — the badge the client
