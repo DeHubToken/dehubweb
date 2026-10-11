@@ -230,6 +230,16 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
   const postTokenId = parseInt(post.id, 10) || undefined;
   // The phone post page ("Stage"). Null in every feed.
   const stage = usePostStage();
+  const registerOptions = stage?.registerOptions;
+  const openPostOptions = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowOptionsDrawer(true);
+  }, [walletAddress, openLoginModal]);
+  useEffect(() => {
+    if (!registerOptions) return;
+    registerOptions(openPostOptions);
+    return () => registerOptions(null);
+  }, [registerOptions, openPostOptions]);
 
   // Follow state for the post author — shared override wins over the lazy check
   const [isFollowingAuthor, setIsFollowingAuthor] = useState<boolean | null>(null);
@@ -396,13 +406,12 @@ export const PostCard = memo(function PostCard({ post, threadSlot, onOpenComment
     >
       <div className={stage ? 'contents' : 'flex items-start min-w-0'}>
       {stage ? (
-        /* Phone post page: no media to float on, so back / options
+        /* Phone post page: no media to float on, so back / boost
            sit in a row of their own above the creator row. */
         <>
           <StageMediaChrome
             placement="inline"
             onBack={stage.onBack}
-            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
             onBoost={isOwnPost && postTokenId ? () => setShowBoostModal(true) : undefined}
           />
           <div className="mb-3">
