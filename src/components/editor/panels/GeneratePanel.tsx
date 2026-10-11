@@ -333,8 +333,8 @@ export function GeneratePanel() {
         </p>
       ) : kind === 'sfx' ? (
         <div className="mt-2 flex flex-wrap gap-1.5">
-          <SelectChip label={t('creator.length')} value={sfxSeconds} display={sfxSeconds ? `${sfxSeconds}s` : t('creator.auto')}
-            options={[0, 0.5, 1, 2, 5, 10, 22, 30].map(value => ({ value, label: value ? `${value}s` : t('creator.auto') }))} onChange={setSfxSeconds} />
+          <SelectChip label={t('creator.length')} value={String(sfxSeconds)} display={sfxSeconds ? `${sfxSeconds}s` : t('creator.auto')}
+            options={[0, 0.5, 1, 2, 5, 10, 22, 30].map(value => ({ value: String(value), label: value ? `${value}s` : t('creator.auto') }))} onChange={value => setSfxSeconds(Number(value))} />
           <ToggleChip label={t('creator.loop')} active={sfxLoop} onClick={() => setSfxLoop(value => !value)} />
           <p className="w-full text-right text-[11px] tabular-nums text-white/40">{prompt.trim().length} / {SFX_MAX_PROMPT_CHARS}</p>
         </div>
