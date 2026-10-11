@@ -68,6 +68,19 @@ html[data-theme='system'] .profile-collapse-gap-guard img { display: none; }
 }
 .profile-collapse-identity[data-visible='true'] { opacity: 1; transform: none; }
 [data-profile-tabs] { top: calc(env(safe-area-inset-top, 0px) + 60px); padding-top: 0; }
+html[data-theme] [data-profile-tabs][data-joined='true'] {
+  z-index: 70;
+  padding-left: 8px;
+  padding-right: 8px;
+  background: transparent !important;
+}
+html[data-theme] [data-profile-tabs][data-joined='true']::before { display: none; }
+html[data-theme] [data-profile-tabs][data-joined='true'] > [data-page-bento] {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
 @media (prefers-reduced-motion: reduce) {
   .profile-collapse-identity { transition: none; }
 }
