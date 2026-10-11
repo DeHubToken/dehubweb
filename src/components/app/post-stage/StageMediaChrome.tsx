@@ -15,7 +15,7 @@ import type { ReactNode } from 'react';
 
 interface StageMediaChromeProps {
   onBack: () => void;
-  onMenu: () => void;
+  onMenu?: () => void;
   /** Own posts only: the boost shortcut the creator row used to carry. */
   onBoost?: () => void;
   /** Extra squares (PPV / bounty / gate badges) placed before the menu. */
@@ -68,7 +68,7 @@ export function StageMediaChrome({ onBack, onMenu, onBoost, children, placement 
             <Zap className="h-5 w-5" />
           </button>
         )}
-        <button
+        {onMenu && <button
           type="button"
           data-on-media
           data-stage-glass-square
@@ -76,7 +76,7 @@ export function StageMediaChrome({ onBack, onMenu, onBoost, children, placement 
           aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })}
         >
           <MoreHorizontal className="h-5 w-5" />
-        </button>
+        </button>}
       </div>
     </div>
   );
