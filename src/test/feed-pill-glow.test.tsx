@@ -13,8 +13,8 @@ beforeEach(() => {
 });
 afterEach(() => { act(() => root.unmount()); node.remove(); });
 
-it('stays out of the page until the feed is pulled', () => {
-  expect(glow()).toBeNull();
+it('keeps an invisible layer ready to fade without mounting during a pull', () => {
+  expect(glow()!.style.getPropertyValue('--pull-glow')).toBe('0.000');
 });
 
 it('brightens with the pull and caps at the refresh point', () => {
@@ -29,6 +29,9 @@ it('brightens with the pull and caps at the refresh point', () => {
 it('keeps breathing while the feed refreshes after the pull has settled', () => {
   renderGlow(0, true);
   expect(glow()!.hasAttribute('data-refreshing')).toBe(true);
+  const refreshingGlow = glow();
   renderGlow();
-  expect(glow()).toBeNull();
+  expect(glow()).toBe(refreshingGlow);
+  expect(glow()!.style.getPropertyValue('--pull-glow')).toBe('0.000');
+  expect(glow()!.hasAttribute('data-refreshing')).toBe(false);
 });
