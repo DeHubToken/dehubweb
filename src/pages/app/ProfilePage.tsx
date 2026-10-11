@@ -422,12 +422,12 @@ export default function ProfilePage() {
   // Also show skeleton if profile errored but auth is still loading or profile is refetching
   // (race condition: private profiles return empty shell before auth token is available).
   if (!data.profile && (data.isAuthLoading || data.isLoadingProfile || data.isFetchingProfile)) {
-    return <div className="relative"><PageHeader overlay /><ProfileSkeleton /></div>;
+    return <div className="relative"><PageHeader overlay plainBack /><ProfileSkeleton /></div>;
   }
 
   // Auth gate for own profile
   if (data.isOwnProfile && !data.isAuthenticated) {
-    return <div className="relative"><PageHeader overlay /><AuthGate description={t('profile.loginDescription')} /></div>;
+    return <div className="relative"><PageHeader overlay plainBack /><AuthGate description={t('profile.loginDescription')} /></div>;
   }
 
   // No profile found
@@ -437,7 +437,7 @@ export default function ProfilePage() {
     
     const notFoundContent = (
       <div className="relative min-h-screen flex flex-col items-center justify-center gap-6 p-4 text-center">
-        <PageHeader overlay />
+        <PageHeader overlay plainBack />
         {/* Any unknown top-level path lands here (/:username is the catch-all),
             so this is the SPA's real 404: without its own head it kept the
             home title, index,follow and a self canonical. */}
