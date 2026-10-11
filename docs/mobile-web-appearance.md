@@ -26,3 +26,7 @@ Shared-component tests should exercise ordinary header visibility across every n
 Source coverage across all native screen files is distinct from device verification. After Android publication, check a flat theme and a canvas theme on the installed app, including settings/search, a keyboard-open conversation, attachments, recording controls, and representative dialogs. Opening a media or profile route must retain its intended cover treatment. Do not count an unpublished bundle or a merged PR as a verified installed update.
 
 Presentation parity does not require sending a message, placing a call, making a payment, or invoking a paid generation during a visual check. Data-dependent and private states need their own suitable fixtures or device evidence before they are marked verified.
+
+## Page header ownership
+
+Native ScreenHeader follows web PageIsland: page tabs share the title material, with one gutter and a bounded horizontal strip. Work, WorkHistory, and Communities keep search and filters inside their header. Apps categories, billing cadence, Affiliate tiers, wallet and TV section controls remain in the body. Collapsible headers measure the full content so list padding and refresh offsets clear every control.
