@@ -5,9 +5,11 @@
 // Once the user signs in with a wallet we self-attribute via `affiliate_referrals`.
 
 import { readLastSession } from "@/lib/connection-source";
+import { normalizeSubReferral } from './affiliate-subref';
 
 const COOKIE_NAME = "dehub_aff_ref";
 const COOKIE_DAYS = 90;
+const SUB_COOKIE_NAME = 'dehub_aff_sub';
 const VALID = /^[A-Za-z0-9_-]{3,40}$/;
 
 const setCookie = (value: string) => {
@@ -115,6 +117,15 @@ export const recordAffiliateCtaClick = (code: string, destination: string, viewe
 
 export const getAffiliateRef = (): string | null => readCookie();
 
+export const getAffiliateSubRef = (): string | null => {
+  try {
+    const row = document.cookie.split('; ').find(value => value.startsWith(`${SUB_COOKIE_NAME}=`));
+    if (!row) return null;
+    const [code, sub] = decodeURIComponent(row.slice(SUB_COOKIE_NAME.length + 1)).split(':');
+    return code === readCookie() ? normalizeSubReferral(sub) : null;
+  } catch { return null; }
+};
+
 export const captureAffiliateRefFromUrl = (viewerAddress?: string | null) => {
   try {
     const existingRef = readCookie();
@@ -131,7 +142,7 @@ export const captureAffiliateRefFromUrl = (viewerAddress?: string | null) => {
     const code = raw.trim().toUpperCase();
     if (!VALID.test(code)) return;
     if (readCookie()) return; // first-touch wins
-    setCookie(code);
+    setAffiliateRef(code, params.get('sub'));
     // Count the arrival only on first touch. /r/CODE records its own view and
     // then sends people on to /app?ref=CODE, so recording unconditionally here
     // would bill that one visitor twice.
@@ -139,11 +150,17 @@ export const captureAffiliateRefFromUrl = (viewerAddress?: string | null) => {
   } catch { /* ignore */ }
 };
 
-export const setAffiliateRef = (code: string) => {
+export const setAffiliateRef = (code: string, subId?: string | null) => {
   const upper = code.trim().toUpperCase();
   if (!VALID.test(upper)) return;
   if (readCookie()) return;
   setCookie(upper);
+  try {
+    const sub = normalizeSubReferral(subId);
+    const expires = new Date(Date.now() + COOKIE_DAYS * 86400_000).toUTCString();
+    const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = `${SUB_COOKIE_NAME}=${sub ? encodeURIComponent(`${upper}:${sub}`) : ''}; expires=${sub ? expires : new Date(0).toUTCString()}; path=/; SameSite=Lax${secure}`;
+  } catch { /* attribution still works without an optional outreach tag */ }
 };
 
 export const isValidAffiliateCode = (raw: string) => VALID.test(raw);
