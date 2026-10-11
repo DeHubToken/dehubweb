@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useFeedRefresh } from '@/lib/feed-refresh';
 import { ElectricLogo } from './ElectricLogo';
+import { FeedRefreshLogo } from './FeedRefreshLogo';
 import { FeedPillPullEffect } from './FeedPillPullEffect';
 import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from './feed-drawer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -105,16 +106,10 @@ export function FeedIslandCapsule({
           aria-label={isAuthenticated ? _copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
           className="flex shrink-0 items-center justify-center px-5"
         >
-          <span className="relative inline-flex translate-y-[1.5px] scale-[1.15]" data-feed-refresh-logo aria-busy={refresh.refreshing}>
-            <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
-            {(refresh.refreshing || refresh.progress > 0) && (
-              <svg data-feed-refresh-ring aria-hidden="true" width="36" height="36" viewBox="0 0 36 36" className="absolute left-1/2 top-1/2 pointer-events-none" style={{ transform: 'translate(-50%, -50%)' }}>
-                <g className={refresh.refreshing ? 'animate-spin motion-reduce:animate-none' : undefined} style={{ transformOrigin: '18px 18px' }}>
-                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="1.5" />
-                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="100.531" strokeDashoffset={100.531 * (1 - (refresh.refreshing ? 0.72 : refresh.progress))} transform="rotate(-90 18 18)" />
-                </g>
-              </svg>
-            )}
+          <span className="inline-flex translate-y-[2.5px] scale-[1.15]">
+            <FeedRefreshLogo>
+              <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
+            </FeedRefreshLogo>
           </span>
         </button>
         <div className="flex min-w-[28px] items-center justify-end">

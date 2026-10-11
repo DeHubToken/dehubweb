@@ -38,6 +38,15 @@ it('does not refresh after a short or cancelled pull', () => {
   settle();
   expect(refresh).not.toHaveBeenCalled(); expect(hook.pullDistance).toBe(0);
 });
+it('ends the subpixel return tail and accepts the next pull', () => {
+  pull(0, 200);
+  act(() => hook.handlers.onTouchEnd());
+  act(() => vi.advanceTimersByTime(1400));
+  expect(hook.pullDistance).toBe(0);
+  expect(vi.getTimerCount()).toBe(0);
+  pull(0, 80);
+  expect(hook.pullDistance).toBe(pullForDrag(80));
+});
 it('preserves horizontal feed swipes', () => {
   pull(180, 30); act(() => hook.handlers.onTouchEnd());
   expect(refresh).not.toHaveBeenCalled(); expect(hook.pullDistance).toBe(0);

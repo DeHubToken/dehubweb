@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { ElectricLogo } from './ElectricLogo';
+import { FeedRefreshLogo } from './FeedRefreshLogo';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -37,7 +38,8 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer translate-y-[1.5px] scale-[1.15]" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+    <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer translate-y-[2.5px] scale-[1.15]" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+      <FeedRefreshLogo>
       <ElectricLogo>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
@@ -54,6 +56,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
           height={28}
         />
       )}</ElectricLogo>
+      </FeedRefreshLogo>
     </button>
   );
 });
