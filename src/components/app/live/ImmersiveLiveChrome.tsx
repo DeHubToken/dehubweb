@@ -25,7 +25,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChevronUp, Clock, Eye, Heart, Plus, Volume2, VolumeX, X } from 'lucide-react';
+import { ChevronRight, Users, Volume2, VolumeX, X } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +35,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLiveAudience } from '@/hooks/use-live-audience';
+import { LiveAudienceSheet, audienceAvatar, audienceName } from './LiveAudienceSheet';
 
 const compact = (n: number) => {
   try {
@@ -65,10 +68,10 @@ const elapsedLabel = (ms: number) => {
  * viewer does with TEXT_SHADOW.
  */
 const CIRCLE =
-  'w-10 h-10 rounded-xl bg-black/20 backdrop-blur-sm flex items-center justify-center text-white shrink-0 drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]';
+  'w-10 h-10 rounded-xl bg-black/30 border border-white/15 backdrop-blur-md flex items-center justify-center text-white shrink-0';
 
 const PILL =
-  'h-[26px] shrink-0 rounded-lg bg-black/20 backdrop-blur-sm px-2.5 flex items-center gap-1.5 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]';
+  'h-7 shrink-0 rounded-[10px] bg-black/30 border border-white/15 backdrop-blur-md px-2.5 flex items-center gap-1.5 text-white';
 
 export interface ImmersiveLiveChromeProps {
   streamerName: string;
@@ -93,9 +96,10 @@ export interface ImmersiveLiveChromeProps {
   /** 0..1 of the replay. Undefined for a stream that is genuinely on air. */
   progress?: number;
   onSeek?: (ratio: number) => void;
-  /** Chrome hidden by the chevron; the caller dims its own overlays to match. */
+  /** Chrome cleared by a swipe down; the caller dims its own overlays to match. */
   hidden: boolean;
-  onToggleHidden: () => void;
+  /** For the Who's here sheet and the faces on its pill. */
+  streamId?: string;
 }
 
 export function ImmersiveLiveChrome({
@@ -109,7 +113,6 @@ export function ImmersiveLiveChrome({
   isEnded,
   viewers,
   giftTotal,
-  likeCount,
   startedAt,
   isMuted,
   onToggleMute,
@@ -117,7 +120,7 @@ export function ImmersiveLiveChrome({
   progress,
   onSeek,
   hidden,
-  onToggleHidden,
+  streamId,
 }: ImmersiveLiveChromeProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -184,6 +187,24 @@ export function ImmersiveLiveChrome({
   }, [running]);
 
 
+  const [audienceOpen, setAudienceOpen] = useState(false);
+  const { data: audience, isLoading: audienceLoading } = useLiveAudience(streamId, {
+    open: audienceOpen,
+    enabled: !hidden || audienceOpen,
+  });
+  const watching = Math.max(typeof viewers === 'number' ? viewers : Number(viewers) || 0, audience?.watching ?? 0);
+  const faces = (audience?.here ?? []).slice(0, 3);
+  // Re-read every minute so "Started 3 minutes ago" moves on.
+  const [, setMinute] = useState(0);
+  useEffect(() => {
+    if (startedMs == null) return;
+    const id = window.setInterval(() => setMinute((n) => n + 1), 60_000);
+    return () => window.clearInterval(id);
+  }, [startedMs]);
+  const startedLabel = startedMs != null
+    ? t('liveAudience.startedAgo', { time: formatDistanceToNow(startedMs, { addSuffix: true }), defaultValue: 'Started {{time}}' })
+    : null;
+
   /* ── the scrub line ───────────────────────────────────────────────────
      Same bar the shorts viewer draws: 1px at rest, 2px under a finger, a
      white/20 track and a white/80 fill. Live has nothing to scrub — the
@@ -247,92 +268,43 @@ export function ImmersiveLiveChrome({
             do. Without `flex-1` this shrank to min-content and the name,
             which truncates, rendered at zero width — a capsule with an
             avatar and nothing beside it. */}
-        <div className="flex min-w-0 flex-1 items-center gap-1">
-          <button
-            type="button"
-            onClick={openCreatorProfile}
-            /* `flex-1` plus a text box that can take the slack: without both,
-               the capsule sized to its content and the name — which truncates,
-               so it will happily be zero wide — rendered as an avatar with a
-               blank space beside it. And min-h rather than a fixed h-10,
-               because two lines of type plus the padding came to more than
-               40px, and the follower line was cut in half by the bottom edge.
-               48 now, so the numbers are not pressed against the rounded
-               corner they sit in. */
-            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-xl bg-black/20 py-1 pl-1 pr-2.5 backdrop-blur-sm drop-shadow-[0_1px_4px_rgba(0,0,0,0.65)]"
-          >
-            <Avatar className="h-[34px] w-[34px] rounded-lg">
-              <AvatarImage src={avatar} alt={streamerName} className="rounded-lg" />
-              <AvatarFallback className="rounded-lg bg-zinc-700 text-[11px] font-medium text-white">
-                {streamerName?.[0]?.toUpperCase() || '?'}
-              </AvatarFallback>
-            </Avatar>
-            <span className="min-w-0 flex-1 text-left">
-              {/* The badge rides the name, as it does on the feed card, in the
-                  chat and on the profile. The one surface in the app showing a
-                  creator without it was this one. */}
-              {/* `items-baseline` and a 1em badge — the arrangement CardHeader
-                  uses, and the reason the badge sits where the eye expects it.
-                  Centred against a 13px line it hung low enough to read as a
-                  different element. */}
-              <span className="flex min-w-0 items-baseline gap-1 text-[13px] font-bold leading-tight text-white">
+        {/* One capsule for who started this: face with a live ring, name
+            and badge, when they went live, and Follow inside it. */}
+        <div className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-[14px] border border-white/15 bg-black/30 py-1 pl-1 pr-1.5 backdrop-blur-md">
+          <button type="button" onClick={openCreatorProfile} className="flex min-w-0 flex-1 items-center gap-2 text-left">
+            <span className={cn('rounded-full p-[1px] ring-2', isLive && !isEnded ? 'ring-red-500' : 'ring-transparent')}>
+              <Avatar className="h-8 w-8">
+                <AvatarImage src={avatar} alt={streamerName} />
+                <AvatarFallback className="bg-zinc-700 text-[11px] font-medium text-white">
+                  {streamerName?.[0]?.toUpperCase() || '?'}
+                </AvatarFallback>
+              </Avatar>
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex min-w-0 items-baseline gap-1 text-[14px] font-extrabold leading-tight text-white">
                 <span className="truncate">{streamerName}</span>
-                <BadgeIcon
-                  badgeBalance={badgeBalance}
-                  username={creatorUsername}
-                  /* 11px, with the heart and the eye under it. At 1em it was
-                     the tallest thing on the line and read as a sticker. */
-                  className="h-[11px] w-[11px] shrink-0"
-                />
+                <BadgeIcon badgeBalance={badgeBalance} username={creatorUsername} className="h-[11px] w-[11px] shrink-0" />
               </span>
-              {/* Followers, watching, gifts — the three numbers that say
-                  what this stream is, on one line under the name where a
-                  glance already is. They were a heart in the capsule and a
-                  chip out on the pill row, which read as two unrelated
-                  facts about two different things. */}
-              <span className="flex items-center gap-2 text-[11px] font-semibold leading-tight text-white/70">
-                <span className="flex items-center gap-1">
-                  <Heart className="h-[9px] w-[9px] fill-current" />
-                  {compact(likeCount ?? 0)}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Eye className="h-[10px] w-[10px]" />
-                  {typeof viewers === 'number' ? compact(viewers) : viewers}
-                </span>
-                {/* Always drawn, zero included: a stream with no gifts yet is
-                    a fact about it, and a counter that appears only once it
-                    is non-zero reads as one that is broken. */}
-                <span className="flex items-center gap-1">
-                  <img src={dehubCoin} alt="" className="h-[11px] w-[11px]" />
-                  {compact(giftTotal ?? 0)}
-                </span>
-              </span>
-
+              {startedLabel ? (
+                <span className="block truncate text-[11px] font-semibold leading-tight text-white/75">{startedLabel}</span>
+              ) : null}
             </span>
           </button>
-          {optionsSlot}
-
-          {/* The one filled control on the frame, and it leaves once it has
-              been used — an already-followed creator does not need a button
-              parked on their own stream. */}
+          {/* Gone once following: an already-followed creator does not need a
+              button parked on their own stream. */}
           {!isSelf && !isFollowing && creatorId ? (
-            /* A square, like the rest of the row. The word cost ~60px on a
-               375px line and the creator capsule paid it — the name came out
-               as "ni…" with the numbers squeezed under it. A filled plus on
-               a creator's own stream is not ambiguous, and the label stays
-               for the screen reader. */
             <button
               type="button"
               onClick={handleFollow}
-              aria-label={t('follow.follow', 'Follow')}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-zinc-950"
+              data-live-follow
+              className="h-[30px] shrink-0 rounded-[9px] px-3 text-[12.5px] font-extrabold"
             >
-              <Plus className="h-5 w-5" strokeWidth={2.5} />
+              {t('follow.follow', 'Follow')}
             </button>
           ) : null}
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5">
           <button
             type="button"
             onClick={onToggleMute}
@@ -341,7 +313,7 @@ export function ImmersiveLiveChrome({
           >
             {isMuted ? <VolumeX className="h-[18px] w-[18px]" /> : <Volume2 className="h-[18px] w-[18px]" />}
           </button>
-
+          {optionsSlot}
           <button
             type="button"
             onClick={goBack}
@@ -361,37 +333,56 @@ export function ImmersiveLiveChrome({
           hidden && 'invisible pointer-events-none opacity-0'
         )}
       >
-        {/* No state pill. Whether a stream is live or over is on the card
-            you pressed to get here, and on the profile before that; saying
-            it a third time over the picture tells nobody anything. */}
-
-        {running && startedMs != null ? (
+        {/* Live and how long, in one tag: red is the only hue on the frame. */}
+        {isLive && !isEnded ? (
           <span className={PILL}>
-            <Clock className="h-[11px] w-[11px] text-white/75" />
-            <span className="text-[11px] font-semibold text-white/90">
-              {elapsedLabel(now - startedMs)}
+            <span className="rounded-[5px] bg-red-500 px-1.5 py-px text-[9.5px] font-black tracking-wider text-white">
+              {t('stages.live', 'LIVE')}
             </span>
+            {running && startedMs != null ? (
+              <span className="text-[11px] font-semibold text-white/90">{elapsedLabel(now - startedMs)}</span>
+            ) : null}
           </span>
         ) : null}
+
+        {/* Who's here: newest faces and the head count. Tap for the sheet. */}
+        {streamId ? (
+          <button
+            type="button"
+            onClick={() => setAudienceOpen(true)}
+            aria-label={t('liveAudience.whosHere', "Who's here")}
+            className={PILL}
+          >
+            {faces.length ? (
+              <span className="-ml-1 flex">
+                {faces.map((f, i) => (
+                  <Avatar key={f.address} className={cn('h-[18px] w-[18px] border-[1.5px] border-black/55', i > 0 && '-ml-1.5')}>
+                    <AvatarImage src={audienceAvatar(f)} alt="" />
+                    <AvatarFallback className="bg-zinc-700 text-[8px] text-white">{audienceName(f)[0]?.toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                ))}
+              </span>
+            ) : (
+              <Users className="h-3 w-3 text-white/85" />
+            )}
+            <span className="text-[11px] font-semibold text-white/90">
+              {t('liveAudience.hereCount', { formatted: compact(watching), defaultValue: '{{formatted}} here' })}
+            </span>
+            <ChevronRight className="h-3 w-3 text-white/60" />
+          </button>
+        ) : null}
+
+        <span className={PILL}>
+          <img src={dehubCoin} alt="" className="h-[11px] w-[11px]" />
+          <span className="text-[11px] font-semibold text-white/90">{compact(giftTotal ?? 0)}</span>
+        </span>
+
         {title ? (
           <span className={cn(PILL, 'max-w-[220px]')}>
             <span className="truncate text-[11px] font-semibold text-white/85">{title}</span>
           </span>
         ) : null}
       </div>
-
-      {/* The way back when the chrome is down. Nothing else is on screen, so
-          it cannot be the chevron in a header that is no longer drawn. */}
-      {hidden ? (
-        <button
-          type="button"
-          onClick={onToggleHidden}
-          aria-label={t('stages.exitFullscreen', 'Exit fullscreen')}
-          className={cn(CIRCLE, 'absolute right-4 top-4 z-20')}
-        >
-          <ChevronUp className="h-5 w-5" />
-        </button>
-      ) : null}
 
       {/* The timeline. Only a replay has one — a broadcast on air has nothing
           behind the live edge to move to. */}
@@ -436,6 +427,8 @@ export function ImmersiveLiveChrome({
           </div>
         </div>
       ) : null}
+
+      <LiveAudienceSheet open={audienceOpen} onOpenChange={setAudienceOpen} audience={audience} loading={audienceLoading} />
     </>
   );
 }

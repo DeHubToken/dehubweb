@@ -261,10 +261,25 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   useEffect(() => {
     if (!playbackAllowed && (!isVideoInPictureInPicture(videoRef.current) || visualActivity.isCallBusy())) videoRef.current?.pause();
   }, [playbackAllowed]);
-  // Full-bleed only. The chevron drops the chrome and leaves the picture;
-  // it means nothing in the card, where the chrome IS the card.
+  // Full-bleed only. A swipe down over the lower half clears the chrome and
+  // leaves the picture, as the shorts viewer does; a tap or a swipe up brings
+  // it back. Nothing is drawn while it is cleared, not even a way-back button.
   const [chromeHidden, setChromeHidden] = useState(false);
-  const toggleChrome = useCallback(() => setChromeHidden((v) => !v), []);
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const onSwipeStart = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length !== 1) { swipeStart.current = null; return; }
+    swipeStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, []);
+  const onSwipeEnd = useCallback((e: React.TouchEvent, direction: 'down' | 'up') => {
+    const start = swipeStart.current;
+    swipeStart.current = null;
+    const touch = e.changedTouches[0];
+    if (!start || !touch) return;
+    const dy = touch.clientY - start.y;
+    const dx = Math.abs(touch.clientX - start.x);
+    if (direction === 'down' && dy > 40 && dy > dx) setChromeHidden(true);
+    if (direction === 'up' && -dy > 40 && -dy > dx) setChromeHidden(false);
+  }, []);
   /**
    * The replay timeline, for the scrub line the chrome draws.
    *
@@ -1027,7 +1042,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const optionsMenu = (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl bg-black/20 text-white backdrop-blur-sm" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-black/30 text-white backdrop-blur-md" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
@@ -1410,6 +1425,33 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         {/* Full-bleed chrome. Inside the media container so it travels with
             the picture, and after the overlays so nothing is drawn on top
             of the close button. */}
+        {/* Swipe down here to clear the chrome: the lower half of the
+            picture, under the chrome, so the chat and buttons keep their own
+            touches. Once cleared, the whole frame takes a tap or a swipe up
+            to bring it all back. */}
+        {immersive && !chromeHidden && (
+          <div
+            aria-hidden
+            data-live-swipe-zone
+            className="absolute inset-x-0 bottom-0 top-[45%] z-[15] touch-pan-x"
+            onTouchStart={onSwipeStart}
+            onTouchEnd={(e) => onSwipeEnd(e, 'down')}
+          />
+        )}
+        {immersive && chromeHidden && (
+          <div
+            data-no-navigate
+            data-live-restore
+            role="button"
+            tabIndex={0}
+            aria-label={t('stages.exitFullscreen', 'Exit fullscreen')}
+            className="absolute inset-0 z-40"
+            onTouchStart={onSwipeStart}
+            onTouchEnd={(e) => onSwipeEnd(e, 'up')}
+            onClick={(e) => { e.stopPropagation(); setChromeHidden(false); }}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') setChromeHidden(false); }}
+          />
+        )}
         {immersive && (
           <ImmersiveLiveChrome
             streamerName={stream.streamer}
@@ -1430,7 +1472,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
             onSeek={streamEnded && stream.replayUrl ? seekReplay : undefined}
             hidden={chromeHidden}
-            onToggleHidden={toggleChrome}
+            streamId={stream.streamId}
           />
         )}
       </div>
