@@ -131,6 +131,39 @@ html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_) {
   backdrop-filter: none !important;
 }
 
+/* Keep the frost in a stationary layer behind the controls. Repainting a
+   moving selection or an island action must not invalidate the backdrop
+   texture on the same surface; that can leave a vertical seam in Chromium.
+   War keeps its chamfered ::before plate. Light and Minimal keep their flat
+   material. The controls remain unclipped, including floating filter rows. */
+[data-nav-glass-backdrop] {
+  display: none;
+}
+html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  :is([data-feed-nav], [data-kit-island]):has(> [data-nav-glass-backdrop]):not(#_):not(#_) {
+  position: relative;
+  isolation: isolate;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  :is([data-feed-nav], [data-kit-island]) > [data-nav-glass-backdrop] {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translateZ(0);
+  background: linear-gradient(rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.025) 45%, rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 1.5px 0 rgb(255 255 255 / 0.4);
+  -webkit-backdrop-filter: var(--nav-glass-blur);
+  backdrop-filter: var(--nav-glass-blur);
+}
+
 /* Keep the capsule's fill and decorative layers inside its rounded rim.
    Its controls stay unclipped so notification badges can extend outside. */
 html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_) {
