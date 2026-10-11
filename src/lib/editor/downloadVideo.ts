@@ -5,7 +5,7 @@ import { legacyEndingBoundary } from "./endingVisual";
 import { loadBrandOutroArtwork } from "./brandOutroArtwork";
 import { drawBrandOutro } from "./brandOutro";
 
-export async function renderVideoDownload(request: VideoDownloadRequest, signal: AbortSignal, onProgress?: (fraction: number) => void) {
+export async function renderVideoDownload(request: VideoDownloadRequest, signal: AbortSignal, onProgress?: (fraction: number, label?: string) => void) {
   const { exportProject, isExportSupported } = await import("./exporter");
   if (!isExportSupported()) throw new Error("Video export is unavailable in this browser");
   signal.throwIfAborted();
@@ -42,7 +42,7 @@ export async function renderVideoDownload(request: VideoDownloadRequest, signal:
     return await exportProject({
       snapshot, media: [{ id: "download-source", name: request.title || "video", kind: "video", url, mimeType: blob.type || "video/mp4", size: blob.size, duration, createdAt: Date.now() }],
       format: "mp4", scale: 1, videoBitrate: 8_000_000, username: request.username, signal,
-      onProgress: (p) => onProgress?.(p),
+      onProgress: (p, label) => onProgress?.(p, label),
     });
   } finally { video.pause(); video.removeAttribute("src"); video.load(); URL.revokeObjectURL(url); }
 }
