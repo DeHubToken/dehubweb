@@ -1,4 +1,22 @@
 {
+  "quickActions": {
+    "title": "Options de la page",
+    "hint": "Maintenez le doigt sur une zone sans autre action d’appui long pour ouvrir ces options.",
+    "question": "Quel est le problème sur cette page ?",
+    "placeholder": "Décrivez le problème en quelques mots…",
+    "refresh": "Actualiser la page",
+    "logout": "Se déconnecter",
+    "publicNotice": "Votre signalement et toute capture apparaîtront sur le tableau public des bugs. Vérifiez la capture avant l’envoi.",
+    "deviceNotice": "La page, l’appareil, le modèle si disponible et les détails de l’application ou du navigateur sont ajoutés automatiquement.",
+    "capturing": "Capture de cette page…",
+    "screenshot": "Aperçu de la capture",
+    "removeScreenshot": "Retirer la capture",
+    "noScreenshot": "La capture automatique est indisponible. Vous pouvez quand même envoyer votre signalement.",
+    "attachScreenshot": "Joindre une capture",
+    "send": "Envoyer le signalement",
+    "signIn": "Connectez-vous pour envoyer",
+    "failed": "Une erreur est survenue. Votre message est enregistré ; réessayez."
+  },
   "errors": {
     "sponsorshipUnavailable": "Les transactions gratuites sont suspendues de notre côté, pas sur votre portefeuille. Réessayez dans un instant.",
     "gasSponsorshipFailed": "Cette transaction n'a pas pu être prise en charge. Réessayez dans un instant."

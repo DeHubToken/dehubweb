@@ -1305,7 +1305,7 @@ function SupportSettings() {
           icon={<Bug />}
           title={t('settings.reportBug', 'Report a Bug')}
           description={t('settings.reportBugDesc', 'Help us fix issues by reporting bugs')}
-          onClick={() => navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`)}
+          onClick={() => window.dispatchEvent(new Event('dehub:report-page-bug'))}
           action={arrow}
         />
         <SettingsRow

@@ -267,6 +267,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
                   ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   : 'none',
               }}
+              data-no-quick-actions
               onPointerDown={(event) => { tabLongPress.begin(event); handleDragStart(event); }}
               onPointerMove={(event) => { tabLongPress.move(event); if (!tabLongPress.fired.current) handleDragMove(event); }}
               onPointerUp={() => { tabLongPress.cancel(); handleDragEnd(); }}
