@@ -162,7 +162,7 @@ describe('arcade registry', () => {
 
   it("versions God's Eye's unhashed entry URL with its current bundle", () => {
     const game = ARCADE_GAMES.find(({ slug }) => slug === 'gods-eye');
-    expect(game?.buildUrl()).toBe('/gods-eye-game/index.html?v=D1_67NVT');
+    expect(game?.buildUrl()).toBe('/gods-eye-game/index.html?v=BlKrG43g');
   });
 
   it('gives every game the copy the cards and SEO read', () => {
@@ -587,14 +587,14 @@ describe('arcade headers', () => {
     }
   });
 
-  it("keeps God's Eye's entry revalidating after Cloudflare combines static rules", async () => {
+  it.each(['/gods-eye-game/index.html', '/gods-eye-game/'])("keeps God's Eye entry %s revalidating", async (path) => {
     const fetch = vi.fn().mockResolvedValue(
       new Response('<!doctype html>', {
         headers: { 'Cache-Control': 'public, max-age=31536000, immutable' },
       }),
     );
     const response = await worker.fetch(
-      new Request('https://dehub.io/gods-eye-game/index.html?v=D1_67NVT'),
+      new Request(`https://dehub.io${path}?v=community-20261011`),
       { ASSETS: { fetch } },
     );
 
