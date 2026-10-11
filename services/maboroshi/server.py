@@ -131,6 +131,11 @@ def snapshot(row):
     result['review'] = review_state(folder)
     result['hasReference'] = bool(row['reference'])
     result['referenceKind'] = 'video' if row['reference_seconds'] else 'image'
+    result['references'] = {}
+    for name, column in (('reference', 'reference'), ('second', 'second_reference')):
+        if row[column] and (folder / row[column]).is_file():
+            result['references'][name] = {'url': access.media_url(folder / row[column]),
+                'kind': result['referenceKind'] if name == 'reference' else 'image', 'key': row[column]}
     from seedance_bridge import resolved_prompt
     result['resolvedPrompt'] = resolved_prompt(folder, row['prompt'], bool(row['reference_seconds']), bool(row['second_reference'])) if row['reference'] else ''
     result['quotes'] = {stage: access.price(row, stage) for stage in ('prepare', 'draft', 'hd')} if access.readiness() else {}
@@ -142,7 +147,7 @@ def snapshot(row):
 @app.get('/jobs')
 def list_jobs(wallet=Depends(owner)):
     with access.database() as db:
-        rows = db.execute('SELECT id,created,state,status,mode FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 30', (wallet,)).fetchall()
+        rows = db.execute('SELECT id,created,state,status,mode,subject FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 30', (wallet,)).fetchall()
     return {'jobs': [dict(row) for row in rows]}
 
 
@@ -217,8 +222,8 @@ def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject
 def references(ident: str, prompt: str = Form(...), reference: UploadFile | None = File(None), second: UploadFile | None = File(None), wallet=Depends(owner)):
     with lock:
         row = access.job(ident, wallet)
-        if row['state'] != 'prepared' or not 1 <= len(prompt.strip()) <= 6000:
-            raise HTTPException(409, 'Prepare the clip first, then enter a prompt of up to 6,000 characters.')
+        if row['state'] not in ('uploaded', 'prepared') or not 1 <= len(prompt.strip()) <= 6000:
+            raise HTTPException(409, 'Character references can be changed before preparation or after the clip is ready for review. Use a prompt of up to 6,000 characters.')
         folder = access.folder(ident)
         saved = []
         seconds = row['reference_seconds']

@@ -10,58 +10,71 @@
 </head>
 <body>
 <main>
-  <header><div><p class="eyebrow">DEHUB CREATOR</p><h1>Maboroshi</h1><p>Keep the scene. Change who is in it.</p></div><span class="mark" aria-hidden="true">幻</span></header>
-  <p class="intro">Replace characters and objects using depth, masks and face tracking. Review a draft, then export in 1080p with your original soundtrack.</p>
-  <div id="connection" role="status">Connecting to DeHub…</div>
-  <p id="error" role="alert" hidden></p>
-  <section class="library"><label for="jobs">Your Maboroshi projects</label><div class="row"><select id="jobs"><option value="">New project</option></select><button id="refresh" class="secondary" type="button">Refresh</button></div></section>
-  <section id="source-section">
-    <h2><span>1</span> Your source</h2>
-    <form id="source-form">
-      <label class="upload" for="source">Original video <small>2–30 seconds, up to 100 MB. Include an audio track.</small><input id="source" name="video" type="file" accept="video/mp4,video/quicktime,video/webm" required></label>
-      <div class="columns"><label for="mode">Preparation<select id="mode" name="mode"><option value="depth">Depth + subject mask</option><option value="face_mesh">Face mesh (one speaker)</option><option value="depth_mesh">Depth + mask + face mesh</option></select></label><label for="subject">Subject to replace<input id="subject" name="subject" maxlength="200" value="person" required></label></div>
-      <p class="hint">Depth keeps the background and isolates your subject. Face mesh follows one centred speaker; check every frame for tracking gaps.</p>
-      <button id="upload" disabled>Save source</button>
-    </form>
-  </section>
-  <div id="project" hidden>
-    <div class="progress"><strong id="project-status" role="status" aria-live="polite"></strong><p class="hint">Your work is saved to your DeHub account. Return to this project on web or mobile.</p></div>
-    <section id="prepare-section" hidden><h2><span>2</span> Prepare the clip</h2><p>Separate the vocals, preserve the motion and build the input for replacement.</p><p class="hint">Use your DeHub credits. Each step shows its price before you start.</p><button id="prepare" disabled>Prepare</button></section>
-    <section id="review-section" hidden>
-      <h2><span>2</span> Review the full input</h2>
-      <div class="tabs" id="preview-tabs" role="group" aria-label="Input preview"></div>
-      <video id="preview" controls playsinline preload="metadata"></video>
-      <a id="preview-download" download>Download input</a>
-      <p class="hint">Play the entire clip. Check edges, hair, hands, background spill and face alignment through every cut. Listen to the pitched vocals.</p>
-      <label class="check"><input id="reviewed" type="checkbox">I reviewed the whole prepared clip and its alignment is correct.</label>
-      <div class="row"><button id="approve" disabled>Approve input</button><button id="reject" class="secondary">Needs correction</button></div>
-      <p id="review-status" class="hint"></p>
-    </section>
-    <section id="draft-section" hidden>
-      <h2><span>3</span> Replace the subject</h2>
-      <form id="references-form">
-        <div class="columns"><label class="upload" for="reference">Character reference<small>Image or video. A video guides appearance, not audio.</small><input id="reference" name="reference" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm" required></label><label class="upload" for="second">Second character (optional)<small>Use an image for a second subject.</small><input id="second" name="second" type="file" accept="image/png,image/jpeg,image/webp"></label></div>
-        <label for="prompt">Replacement prompt<textarea id="prompt" name="prompt" rows="5" maxlength="6000" required>Replace the complete selected subject with the character reference in every frame, including hair, hands, clothing and footwear. Preserve the background, camera, lighting, motion and timing. Match the embedded speech without adding dialogue.</textarea></label>
-        <p class="hint">For two characters, identify which subject each reference replaces. Images can be up to 30 MB. Source and reference videos must total 30 seconds or less.</p>
-        <button class="secondary" id="save-references">Save references and prompt</button>
+  <header><div class="identity"><span class="mark" aria-hidden="true">幻</span><div><p class="eyebrow">DEHUB CREATOR</p><h1>Maboroshi</h1></div></div><p>Keep the scene.<br>Change who is in it.</p></header>
+  <div class="library"><label class="sr-only" for="jobs">Your Maboroshi projects</label><select id="jobs"><option value="">New project</option></select><button id="new-project" class="secondary" type="button">New project</button><button id="refresh" class="icon-button secondary" type="button" aria-label="Refresh project">↻</button></div>
+  <p id="connection" role="status">Connecting to DeHub…</p>
+  <p id="error" role="alert" tabindex="-1" hidden></p>
+  <ol class="steps" aria-label="Project progress"><li id="step-choose" aria-current="step"><span>1</span>Clip &amp; character</li><li id="step-prepare"><span>2</span>Prepare &amp; review</li><li id="step-export"><span>3</span>Preview &amp; export</li></ol>
+  <div id="progress" class="progress" hidden><strong id="project-status" role="status" aria-live="polite"></strong><p id="next-step" class="hint"></p></div>
+  <div class="creative-grid">
+    <section id="source-section" class="panel">
+      <p class="eyebrow">THE SCENE</p><h2>Start with your video</h2>
+      <p class="hint">Your motion, camera and soundtrack carry into the result.</p>
+      <form id="source-form">
+        <label class="upload" for="source">Choose a video<small>2–30 seconds · up to 100 MB · include audio</small><input id="source" name="video" type="file" accept="video/mp4,video/quicktime,video/webm" required></label>
+        <div id="source-local" class="media-preview" hidden></div>
+        <label for="subject">Who or what are you replacing?<input id="subject" name="subject" maxlength="200" value="person" required></label>
+        <details><summary>Advanced preparation</summary><label for="mode">Motion guide<select id="mode" name="mode"><option value="depth">Depth + subject mask (recommended)</option><option value="face_mesh">Face mesh (one speaker)</option><option value="depth_mesh">Depth + mask + face mesh</option></select></label><p class="hint">Depth separates your subject from the scene. Face mesh follows one centred speaker; review tracking through every cut.</p></details>
+        <div class="action"><button id="upload" disabled>Save project</button><span class="hint">No charge to save.</span></div>
       </form>
-      <p id="reference-status" class="hint"></p>
-      <details id="resolved" hidden><summary>Review the exact generation prompt</summary><p id="resolved-prompt"></p></details>
-      <p class="hint">The draft uses your DeHub credits. Review it before choosing a separate HD export.</p>
-      <button id="draft" disabled>Create draft</button>
     </section>
-    <section id="export-section" hidden>
-      <h2><span>4</span> Review and export</h2>
-      <div class="tabs" id="result-tabs" role="group" aria-label="Result preview"></div>
-      <video id="result" controls playsinline preload="metadata"></video>
-      <a id="result-download" download>Download video</a>
-      <p>Your full original soundtrack is restored. Approve HD within six days; your saved draft remains available to download.</p>
-      <p id="duration-note" class="hint" hidden></p>
-      <label class="check" id="hd-review"><input id="draft-reviewed" type="checkbox">I approve this draft and want to purchase the 1080p version.</label>
-      <button id="hd" disabled>Approve and generate 1080p</button>
+    <section id="source-preview-section" class="panel" hidden>
+      <p class="eyebrow">YOUR SCENE</p><h2>Original video</h2><p id="source-meta" class="hint"></p>
+      <video id="source-preview" controls playsinline preload="metadata"></video>
+      <a id="source-download" download>Download original</a>
+      <p class="hint">Your original stays saved, including its soundtrack.</p>
+    </section>
+    <section id="references-section" class="panel">
+      <p class="eyebrow">THE CHARACTER</p><h2>Choose the new look</h2>
+      <p class="hint">Use your own character image or video as the reference.</p>
+      <form id="references-form"><fieldset id="reference-fields">
+        <label class="upload" for="reference">Character reference<small>Image up to 30 MB, or video up to 100 MB</small><input id="reference" name="reference" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm"></label>
+        <div id="reference-preview" class="media-preview" hidden></div>
+        <details id="character-options"><summary>Direction &amp; a second character</summary>
+          <label class="upload" for="second">Second character (optional)<small>Use an image for another subject, up to 30 MB.</small><input id="second" name="second" type="file" accept="image/png,image/jpeg,image/webp"></label>
+          <div id="second-preview" class="media-preview" hidden></div>
+          <label for="prompt">How should the character change?<textarea id="prompt" name="prompt" rows="5" maxlength="6000" required>Replace the complete selected subject with the character reference in every frame, including hair, hands, clothing and footwear. Preserve the background, camera, lighting, motion and timing. Match the embedded speech without adding dialogue.</textarea></label>
+          <p class="hint">For two characters, say which subject each reference replaces. A reference video guides appearance, not audio. Source and reference videos must total 30 seconds or less.</p>
+        </details>
+        <button class="secondary" id="save-references" hidden>Save character changes</button>
+      </fieldset></form>
+      <p id="reference-status" class="hint" role="status">Choose a reference now, or add one before generating your preview.</p>
     </section>
   </div>
-  <footer>Original motion. New identity. Your soundtrack. Processing uses DeHub's Replicate and fal services.</footer>
+  <div id="project" hidden>
+    <section id="prepare-section" class="stage-panel" hidden><div><p class="eyebrow">NEXT · PREPARE</p><h2>Make the clip ready</h2><p>Separate the vocals and preserve the motion. You will review the prepared clip before replacing your character.</p><p class="hint">Each paid step opens DeHub’s usual payment confirmation. Saving a character costs nothing.</p></div><div class="action"><button id="prepare" disabled>Prepare clip</button></div></section>
+    <section id="review-section" class="stage-panel" hidden>
+      <p class="eyebrow">REVIEW THE MOTION</p><h2>Check the whole clip</h2>
+      <div class="tabs" id="preview-tabs" role="group" aria-label="Input preview"></div>
+      <video id="preview" controls playsinline preload="metadata"></video><a id="preview-download" download>Download prepared input</a>
+      <p class="hint">Check edges, hair, hands, background spill and face alignment through every cut. Listen to the pitched vocals.</p>
+      <div id="input-review-actions"><label class="check"><input id="reviewed" type="checkbox">I reviewed the whole prepared clip and its alignment is correct.</label><div class="row"><button id="approve" disabled>Approve clip</button><button id="reject" class="secondary">Needs correction</button></div></div>
+      <p id="review-status" class="hint" role="status"></p>
+    </section>
+    <section id="draft-section" class="stage-panel" hidden>
+      <p class="eyebrow">BRING THE CHARACTER IN</p><h2>Create your preview</h2><p id="draft-guidance">Approve the prepared clip and choose a character to continue.</p>
+      <details id="resolved" hidden><summary>Exact generation prompt</summary><p id="resolved-prompt"></p></details>
+      <div class="action"><button id="draft" disabled>Generate preview</button><span class="hint">HD is a separate choice after you watch the preview.</span></div>
+    </section>
+    <section id="export-section" class="stage-panel" hidden>
+      <p class="eyebrow">YOUR RESULT</p><h2>Watch it. Make it yours.</h2>
+      <div class="tabs" id="result-tabs" role="group" aria-label="Result preview"></div><video id="result" controls playsinline preload="metadata"></video><a id="result-download" download>Download video</a>
+      <p>Your full original soundtrack is restored. You can download the preview as it is, or approve HD within six days.</p><p id="duration-note" class="hint" hidden></p>
+      <label class="check" id="hd-review"><input id="draft-reviewed" type="checkbox">I approve this preview and want to purchase the 1080p version.</label><button id="hd" disabled>Generate 1080p</button>
+    </section>
+  </div>
+  <dialog id="discard-dialog" aria-labelledby="discard-title"><h2 id="discard-title">Leave these changes?</h2><p>Your selected files or character changes have not been saved.</p><div class="row"><button id="keep-editing" type="button">Keep editing</button><button id="discard-changes" class="secondary" type="button">Leave without saving</button></div></dialog>
+  <footer>Saved to your DeHub account. Continue on web or mobile.<br>Processing uses DeHub’s Replicate and fal services.</footer>
 </main>
 </body>
 </html>
