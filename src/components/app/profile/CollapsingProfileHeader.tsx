@@ -5,10 +5,11 @@ import type { ReactNode } from 'react';
 import './profile-collapse.css';
 
 /** The cover, name and actions leave independently, as on a native profile. */
-export function CollapsingProfileHeader({ headerRef, name, handle, followAction }: {
+export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, followAction }: {
   headerRef: RefObject<HTMLDivElement>;
   name: string;
   handle: string;
+  coverUrl?: string;
   followAction?: ReactNode;
 }) {
   const active = useContext(CachedPageActiveContext);
@@ -49,7 +50,9 @@ export function CollapsingProfileHeader({ headerRef, name, handle, followAction 
   return (
     <div className="profile-collapse-anchor">
       <div ref={barRef} data-profile-collapse className="profile-collapse-bar">
-        <div data-page-bento className="profile-collapse-frost" aria-hidden />
+        <div data-page-bento data-keep-bento className="profile-collapse-frost" aria-hidden>
+          {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
+        </div>
         <PageHeader overlay className="!top-2 !left-2 !right-auto" />
         <div className="profile-collapse-content">
           <div className="profile-collapse-identity" data-visible={identityVisible} aria-hidden={!identityVisible}>
