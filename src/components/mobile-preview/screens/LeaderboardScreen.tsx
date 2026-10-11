@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
@@ -20,10 +21,11 @@ const MOCK_LEADERBOARD = [
 const PERIOD_TABS = ['Daily', 'Weekly', 'Monthly', 'All Time'];
 
 export function LeaderboardScreen() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Leaderboard" />
+      <MobileTopBar title={_copy("copy.31b471215872", { defaultValue: "Leaderboard" })} />
 
       {/* Period tabs */}
       <div className="flex gap-1.5 px-4 py-3">

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Music Feed Component
  * ====================
@@ -51,12 +53,12 @@ import type { VideoItem } from '@/types/feed.types';
 type MusicSubTab = 'all' | 'tracks' | 'videos' | 'podcasts' | 'radio' | 'stages';
 
 const MUSIC_SUB_TABS: { icon?: typeof Music; customIcon?: string; label: string; value: MusicSubTab }[] = [
-  { icon: Music, label: 'All', value: 'all' },
-  { icon: Disc3, label: 'Tracks', value: 'tracks' },
-  { icon: Play, label: 'Videos', value: 'videos' },
-  { icon: Mic2, label: 'Podcasts', value: 'podcasts' },
-  { icon: Radio, label: 'Radio', value: 'radio' },
-  { customIcon: stagesMicIcon, label: 'Stages', value: 'stages' },
+  { icon: Music, get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); }, value: 'all' },
+  { icon: Disc3, get label() { return _translateCopy("copy.88980154513d", { defaultValue: "Tracks" }); }, value: 'tracks' },
+  { icon: Play, get label() { return _translateCopy("copy.c9a9639463c2", { defaultValue: "Videos" }); }, value: 'videos' },
+  { icon: Mic2, get label() { return _translateCopy("copy.6ac749b31f9a", { defaultValue: "Podcasts" }); }, value: 'podcasts' },
+  { icon: Radio, get label() { return _translateCopy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" }); }, value: 'radio' },
+  { customIcon: stagesMicIcon, get label() { return _translateCopy("copy.3a17aa4e4abb", { defaultValue: "Stages" }); }, value: 'stages' },
 ];
 
 const CAROUSEL_INITIAL_VISIBLE = 6; // Initial visible items in carousel
@@ -76,11 +78,12 @@ const CAROUSEL_PAGE_SIZE = 12;
 // ============================================================================
 
 function EmptyState({ type }: { type: string }) {
+  const { t: _copy } = _useCopy();
   return (
     <AppState
       icon="audio"
-      title={`No ${type} yet`}
-      description="Music content will appear here once creators start uploading."
+      title={_copy("copy.a97a4b610ce0", { defaultValue: "No {{value1}} yet", value1: type })}
+      description={_copy("copy.b5d53e302645", { defaultValue: "Music content will appear here once creators start uploading." })}
       size="section"
     />
   );
@@ -92,6 +95,7 @@ function SectionHeader({ icon: Icon, title, count, onSeeAll }: {
   count?: number;
   onSeeAll?: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   return (
     <div className="flex items-center justify-between mb-3">
       <h3 className="font-bold text-white flex items-center gap-2">
@@ -105,8 +109,7 @@ function SectionHeader({ icon: Icon, title, count, onSeeAll }: {
         <button 
           onClick={onSeeAll}
           className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
-        >
-          See all <ChevronRight className="w-4 h-4" />
+        >{_copy("copy.14c21c5e3ffe", { defaultValue: "See all " })}<ChevronRight className="w-4 h-4" />
         </button>
       )}
     </div>
@@ -114,18 +117,19 @@ function SectionHeader({ icon: Icon, title, count, onSeeAll }: {
 }
 
 function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSeeAll: () => void }) {
+  const { t: _copy } = _useCopy();
   if (stations.length === 0) {
     return (
       <div>
-        <SectionHeader icon={Radio} title="Radio Stations" />
-        <p className="text-zinc-500 text-sm">Loading stations...</p>
+        <SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} />
+        <p className="text-zinc-500 text-sm">{_copy("copy.7c14e8607c11", { defaultValue: "Loading stations..." })}</p>
       </div>
     );
   }
 
   return (
     <div>
-      <SectionHeader icon={Radio} title="Radio Stations" onSeeAll={onSeeAll} />
+      <SectionHeader icon={Radio} title={_copy("copy.42ee912bff23", { defaultValue: "Radio Stations" })} onSeeAll={onSeeAll} />
       <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
         {stations.slice(0, 10).map((station) => (
           <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
@@ -351,6 +355,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
   isLoading: boolean; 
   onSeeAll: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
   const scrollRef = useRef<HTMLDivElement>(null);
   
@@ -370,7 +375,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
   
   return (
     <div>
-      <SectionHeader icon={Play} title="Music Videos" onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
+      <SectionHeader icon={Play} title={_copy("copy.ab4d6796dbbe", { defaultValue: "Music Videos" })} onSeeAll={videos.length > 0 ? onSeeAll : undefined} />
       {isLoading ? (
         <div className="flex gap-3 overflow-hidden pr-8">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -380,7 +385,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
           ))}
         </div>
       ) : videos.length === 0 ? (
-        <AppState icon="videos" title="No music videos yet" size="compact" />
+        <AppState icon="videos" title={_copy("copy.26be785e21b7", { defaultValue: "No music videos yet" })} size="compact" />
       ) : (
         <div className="relative">
           <SwipeableCarousel
@@ -405,6 +410,7 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
 }
 
 function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem[]; isLoading: boolean }) {
+  const { t: _copy } = _useCopy();
   const [visibleCount, setVisibleCount] = useState(CAROUSEL_INITIAL_VISIBLE);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -421,7 +427,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
 
   return (
     <div>
-      <SectionHeader icon={Disc3} title="Audio Uploads" count={audioItems.length} />
+      <SectionHeader icon={Disc3} title={_copy("copy.302b4ce5c73d", { defaultValue: "Audio Uploads" })} count={audioItems.length} />
       {isLoading ? (
         <div className="flex gap-3 overflow-hidden pr-8">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -433,7 +439,7 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
           ))}
         </div>
       ) : audioItems.length === 0 ? (
-        <AppState icon="audio" title="No audio uploads yet" size="compact" />
+        <AppState icon="audio" title={_copy("copy.cccec0619e2d", { defaultValue: "No audio uploads yet" })} size="compact" />
       ) : (
         <div className="relative">
           <SwipeableCarousel
@@ -460,19 +466,21 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
 }
 
 function TracksCarousel() {
+  const { t: _copy } = _useCopy();
   return (
     <div>
-      <SectionHeader icon={Disc3} title="Tracks" />
-      <AppState icon="audio" title="No tracks yet" size="compact" />
+      <SectionHeader icon={Disc3} title={_copy("copy.88980154513d", { defaultValue: "Tracks" })} />
+      <AppState icon="audio" title={_copy("copy.367c65fc9b46", { defaultValue: "No tracks yet" })} size="compact" />
     </div>
   );
 }
 
 function PodcastsCarousel() {
+  const { t: _copy } = _useCopy();
   return (
     <div>
-      <SectionHeader icon={Mic2} title="Podcasts" />
-      <AppState icon="stages" title="No podcasts yet" size="compact" />
+      <SectionHeader icon={Mic2} title={_copy("copy.6ac749b31f9a", { defaultValue: "Podcasts" })} />
+      <AppState icon="stages" title={_copy("copy.729584c56940", { defaultValue: "No podcasts yet" })} size="compact" />
     </div>
   );
 }

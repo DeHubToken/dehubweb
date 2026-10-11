@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageDeepLinkPage - Handles /stage/:id and /stages/:n invite links
  *
@@ -75,6 +76,7 @@ import { RelatedPostsFeed } from '@/components/app/feeds/RelatedPostsFeed';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
 export default function StageDeepLinkPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -237,10 +239,10 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={`${stage.title} — Upcoming Stage on DeHub`}
+          title={_copy("copy.11dfcc380023", { defaultValue: "{{value1}} — Upcoming Stage on DeHub", value1: stage.title })}
           description={
             stage.description ||
-            'An upcoming live audio Stage on DeHub — the decentralized, open source social platform.'
+            _copy("copy.ca52fb25484b", { defaultValue: "An upcoming live audio Stage on DeHub — the decentralized, open source social platform." })
           }
           noindex
         />
@@ -253,7 +255,7 @@ export default function StageDeepLinkPage() {
             <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10 mb-3">
               <CalendarDays className="w-3 h-3 text-zinc-300" />
               <span className="text-zinc-300 text-[11px] font-medium">
-                {isOverdue ? 'STARTING SOON' : 'UPCOMING STAGE'}
+                {isOverdue ? _copy("copy.c1c8f6c1d828", { defaultValue: "STARTING SOON" }) : _copy("copy.2f7e24392d9c", { defaultValue: "UPCOMING STAGE" })}
               </span>
             </div>
 
@@ -264,7 +266,7 @@ export default function StageDeepLinkPage() {
                 <CalendarDays className="w-4 h-4 shrink-0" />
                 {format(startsAt, 'EEEE, d MMMM · h:mm a')}
                 {!isOverdue && (
-                  <span className="text-zinc-500">· in {formatDistanceToNowStrict(startsAt)}</span>
+                  <span className="text-zinc-500">{_copy("copy.1345f685c721", { defaultValue: "· in " })}{formatDistanceToNowStrict(startsAt)}</span>
                 )}
               </p>
             )}
@@ -285,8 +287,7 @@ export default function StageDeepLinkPage() {
                 <BadgedName
                   lookupId={stage.host_username || stage.host_wallet_address}
                   className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
-                >
-                  Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+                >{_copy("copy.ea6c575a126d", { defaultValue: "Hosted by @" })}{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
                 </BadgedName>
               </StageHostLink>
             </div>
@@ -311,9 +312,7 @@ export default function StageDeepLinkPage() {
                   disabled={starting}
                   className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-sm font-medium transition-colors disabled:opacity-60"
                 >
-                  {starting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radio className="w-4 h-4" />}
-                  Start now
-                </button>
+                  {starting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Radio className="w-4 h-4" />}{_copy("copy.9ff3a615582e", { defaultValue: "Start now" })}</button>
               ) : isAuthenticated ? (
                 <Button
                   onClick={toggleReminder}
@@ -396,10 +395,10 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={`${stage.title} — Stage on DeHub`}
+          title={_copy("copy.52b73dabadb9", { defaultValue: "{{value1}} — Stage on DeHub", value1: stage.title })}
           description={
             stage.description ||
-            'A past live audio Stage on DeHub — listen back to the recording.'
+            _copy("copy.470e681ef727", { defaultValue: "A past live audio Stage on DeHub — listen back to the recording." })
           }
           noindex
         />
@@ -417,9 +416,8 @@ export default function StageDeepLinkPage() {
             <h1 className="text-white text-xl font-semibold">{stage.title}</h1>
 
             {endedAt && (
-              <p className="text-zinc-400 text-sm mt-2">
-                Aired {format(endedAt, 'EEEE, d MMMM · h:mm a')}
-                <span className="text-zinc-500"> · {formatDistanceToNowStrict(endedAt)} ago</span>
+              <p className="text-zinc-400 text-sm mt-2">{_copy("copy.28348a7f1d16", { defaultValue: "Aired " })}{format(endedAt, 'EEEE, d MMMM · h:mm a')}
+                <span className="text-zinc-500"> · {formatDistanceToNowStrict(endedAt)}{_copy("copy.eb04b4470ed5", { defaultValue: " ago" })}</span>
               </p>
             )}
 
@@ -433,17 +431,14 @@ export default function StageDeepLinkPage() {
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-4 text-sm text-zinc-400">
               <span className="flex items-center gap-1.5">
                 <Users className="w-4 h-4 text-zinc-500" />
-                <span className="text-white font-medium">{attended}</span> attended
-              </span>
+                <span className="text-white font-medium">{attended}</span>{_copy("copy.d7188df04bc9", { defaultValue: " attended" })}</span>
               <span className="flex items-center gap-1.5">
                 <Headphones className="w-4 h-4 text-zinc-500" />
-                <span className="text-white font-medium">{stage.total_listens ?? 0}</span> listened
-              </span>
+                <span className="text-white font-medium">{stage.total_listens ?? 0}</span>{_copy("copy.4ffa377bb7e7", { defaultValue: " listened" })}</span>
               {ranFor !== null && (
                 <span className="flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-zinc-500" />
-                  <span className="text-white font-medium">{ranFor}</span> min
-                </span>
+                  <span className="text-white font-medium">{ranFor}</span>{_copy("copy.2e75737a6b58", { defaultValue: " min" })}</span>
               )}
             </div>
 
@@ -459,8 +454,7 @@ export default function StageDeepLinkPage() {
                 <BadgedName
                   lookupId={stage.host_username || stage.host_wallet_address}
                   className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
-                >
-                  Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+                >{_copy("copy.ea6c575a126d", { defaultValue: "Hosted by @" })}{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
                 </BadgedName>
               </StageHostLink>
             </div>
@@ -529,9 +523,7 @@ export default function StageDeepLinkPage() {
                     onClick={() => setTranscriptOpen(true)}
                     className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
                   >
-                    <FileText className="w-4 h-4" />
-                    Transcript
-                  </button>
+                    <FileText className="w-4 h-4" />{_copy("copy.721164f0dc70", { defaultValue: "Transcript" })}</button>
                   <button
                     onClick={() => setShareOpen(true)}
                     title={t('stages.shareStage')}
@@ -547,9 +539,7 @@ export default function StageDeepLinkPage() {
                 {/* A stage can end without a recording — the host blocked the
                     mic prompt, or the upload failed. Say so rather than
                     offering a play button that cannot play. */}
-                <p className="flex-1 self-center text-zinc-500 text-sm">
-                  This stage wasn't recorded.
-                </p>
+                <p className="flex-1 self-center text-zinc-500 text-sm">{_copy("copy.95d7e57df30a", { defaultValue: "This stage wasn't recorded." })}</p>
                 <button
                   onClick={() => setShareOpen(true)}
                   title={t('stages.shareStage')}
@@ -594,10 +584,10 @@ export default function StageDeepLinkPage() {
     return (
       <div data-glass-page className="min-h-screen bg-black p-4">
         <SEOHead
-          title={`${stage.title} — Live on DeHub`}
+          title={_copy("copy.82d0da87f78c", { defaultValue: "{{value1}} — Live on DeHub", value1: stage.title })}
           description={
             stage.description ||
-            'A live audio Stage on DeHub — listen in now, no account needed.'
+            _copy("copy.b7276aae76db", { defaultValue: "A live audio Stage on DeHub — listen in now, no account needed." })
           }
           noindex
         />
@@ -663,8 +653,7 @@ export default function StageDeepLinkPage() {
                 <BadgedName
                   lookupId={stage.host_username || stage.host_wallet_address}
                   className="text-sm text-zinc-400 group-hover/host:text-white transition-colors"
-                >
-                  Hosted by @{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
+                >{_copy("copy.ea6c575a126d", { defaultValue: "Hosted by @" })}{stage.host_username || stage.host_wallet_address?.slice(0, 6)}
                 </BadgedName>
               </StageHostLink>
             </div>
@@ -709,17 +698,13 @@ export default function StageDeepLinkPage() {
             </div>
 
             {listening && (
-              <p className="text-zinc-500 text-xs mt-3" role="status">
-                You're listening as a guest.
-              </p>
+              <p className="text-zinc-500 text-xs mt-3" role="status">{_copy("copy.de18a7cc78e7", { defaultValue: "You're listening as a guest." })}</p>
             )}
 
             <button
               onClick={() => navigate('/app')}
               className="w-full mt-3 px-4 py-2 rounded-xl text-zinc-400 hover:text-white text-xs transition-colors"
-            >
-              Log in to take the mic
-            </button>
+            >{_copy("copy.206245cb4b8e", { defaultValue: "Log in to take the mic" })}</button>
           </div>
         </div>
 
@@ -755,7 +740,7 @@ export default function StageDeepLinkPage() {
           signal). */}
       <SEOHead
         title={t('stages.joinSeoTitle')}
-        description="You've been invited to a live audio Stage on DeHub. Join the room, listen in and take the mic on the decentralized social platform."
+        description={_copy("copy.b4cd7935e5a8", { defaultValue: "You've been invited to a live audio Stage on DeHub. Join the room, listen in and take the mic on the decentralized social platform." })}
         noindex
       />
       <BrandIcon src={stagesMicIcon} alt="" className="w-16 h-16 object-contain opacity-80" />

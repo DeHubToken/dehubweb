@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -105,6 +106,7 @@ export function FollowersListDrawer({
   newCount = 0,
   newUsernames,
 }: FollowersListDrawerProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress: currentUserAddress, isAuthenticated } = useAuth();
@@ -756,7 +758,7 @@ export function FollowersListDrawer({
                 >
                   <Avatar className="w-[4.25rem] h-[4.25rem] rounded-xl shrink-0 self-start">
                     {user.avatarUrl ? (
-                      <AvatarImage src={user.avatarUrl} alt={user.displayName || 'User'} />
+                      <AvatarImage src={user.avatarUrl} alt={user.displayName || _copy("copy.b512d97e7cbf", { defaultValue: "User" })} />
                     ) : null}
                     <AvatarFallback className="bg-zinc-800 text-white rounded-xl text-lg">
                       {(user.displayName || user.username || '?')[0].toUpperCase()}

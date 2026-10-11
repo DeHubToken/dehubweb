@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Fraction Market Panel
@@ -46,6 +47,7 @@ interface FractionMarketPanelProps {
 }
 
 export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionMarketPanelProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [sellOpen, setSellOpen] = useState(false);
@@ -255,9 +257,7 @@ export function FractionMarketPanel({ tokenId, chainId = 8453, post }: FractionM
                           {isBuyer && <span className="text-primary ml-1">{t('fractions.you')}</span>}
                         </span>
                         {offer.target_seller && (
-                          <span className="px-2 py-0.5 text-[10px] rounded-full bg-white/10 text-white/50">
-                            Directed
-                          </span>
+                          <span className="px-2 py-0.5 text-[10px] rounded-full bg-white/10 text-white/50">{_copy("copy.855ffa7d1809", { defaultValue: "Directed" })}</span>
                         )}
                       </div>
                       <div className="flex items-center justify-between gap-3">

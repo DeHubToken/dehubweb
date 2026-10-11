@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Video Slide Component
  * =====================
@@ -93,6 +94,7 @@ export const VideoSlide = memo(function VideoSlide({
   isFullscreen = false,
   progressLayer = null,
 }: VideoSlideProps) {
+  const { t: _copy } = _useCopy();
   const playbackAllowed = useFeedPlaybackAllowed();
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -497,7 +499,7 @@ export const VideoSlide = memo(function VideoSlide({
           <div className="w-full h-full flex items-center justify-center bg-zinc-900">
             <img 
               src={thumbnail} 
-              alt={short.description || 'Short video'}
+              alt={short.description || _copy("copy.e8faa500e9f4", { defaultValue: "Short video" })}
               className="w-full h-full object-cover"
             />
           </div>

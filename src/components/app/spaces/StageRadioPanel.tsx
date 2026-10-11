@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * StageRadioPanel — the host's deck: radio stations, or their own clips
@@ -148,6 +149,7 @@ function SourceArt({
 }
 
 export function StageRadioPanel() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const {
@@ -319,9 +321,7 @@ export function StageRadioPanel() {
     <div className="space-y-3 p-3 bg-white/5 rounded-xl border border-white/10 animate-in slide-in-from-bottom-2 duration-200">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-white flex items-center gap-2">
-          <Radio className="w-4 h-4" />
-          Radio
-        </h3>
+          <Radio className="w-4 h-4" />{_copy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" })}</h3>
         <div className="flex items-center gap-1.5">
           {onAir && (
             <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white/10 border border-white/20">
@@ -368,7 +368,7 @@ export function StageRadioPanel() {
                 {radioStatus === 'idle' && t('stages.stopped')}
                 {radioStatus === 'live' &&
                   (onAirIsTrack
-                    ? `Playing to the room${canSkip ? ` · ${positionInSet + 1} of ${radioQueue.length}` : ''}`
+                    ? _copy("copy.334bc5180bf8", { defaultValue: "Playing to the room{{value1}}", value1: canSkip ? ` · ${positionInSet + 1} of ${radioQueue.length}` : '' })
                     : [
                         getCountryFlag(radioStation.countrycode || ''),
                         describe(radioStation.tags, radioStation.bitrate) || t('stages.playingToRoom'),
@@ -442,9 +442,7 @@ export function StageRadioPanel() {
           </div>
 
           <div className="flex items-center justify-between gap-2">
-            <p className="text-[10px] text-white/40 leading-tight">
-              The room hears this whether your mic is open or muted.
-            </p>
+            <p className="text-[10px] text-white/40 leading-tight">{_copy("copy.f59156e4c105", { defaultValue: "The room hears this whether your mic is open or muted." })}</p>
             <button
               type="button"
               onClick={() => setRadioMonitor(!radioMonitor)}
@@ -517,7 +515,7 @@ export function StageRadioPanel() {
                 <p className="text-[11px] text-white/40">
                   {parsed.name ? `“${parsed.name}”` : t('stages.allStations')}
                   {parsed.countryName && ` in ${parsed.countryName}`}
-                  {!isLoadingStations && ` · ${stations.length} found`}
+                  {!isLoadingStations && _copy("copy.7cb1d7585a38", { defaultValue: " · {{value1}} found", value1: stations.length })}
                 </p>
               )}
             </>
@@ -617,7 +615,7 @@ export function StageRadioPanel() {
                         type="button"
                         onClick={() => void handleDelete(source as MusicClip)}
                         className="w-7 h-7 rounded-lg flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 transition-colors shrink-0"
-                        title={`Delete ${source.name}`}
+                        title={_copy("copy.264fa40661cb", { defaultValue: "Delete {{value1}}", value1: source.name })}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>

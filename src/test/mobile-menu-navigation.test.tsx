@@ -9,7 +9,7 @@ import { NAV_LABEL_KEYS } from '@/components/app/navigation/SidebarNavItem';
 const { openStage, disconnect, counts } = vi.hoisted(() => ({
   openStage: vi.fn(), disconnect: vi.fn(), counts: { dm: 0, publicChat: 0 },
 }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }) }));
 vi.mock('@/contexts/AuthContext', async (importOriginal) => ({
   ...await importOriginal<typeof import('@/contexts/AuthContext')>(), useAuth: () => ({ isAuthenticated: true, disconnect }) }));
 vi.mock('@/contexts/StageContext', () => ({ openStageModal: openStage }));

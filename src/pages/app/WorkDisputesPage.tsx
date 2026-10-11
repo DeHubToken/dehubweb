@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
@@ -23,6 +24,7 @@ type DisputeRow = {
 };
 
 export default function WorkDisputesPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data: disputes = [], isLoading } = useAdminDisputes();
@@ -46,8 +48,8 @@ export default function WorkDisputesPage() {
             body={
               <>
                 {t('work.adminsOnlyBody')}{' '}
-                <code className="text-white/80">WORK_ADMIN_ARBITERS</code>{' '}
-                <code className="text-white/80">src/constants/app.constants.ts</code>
+                <code className="text-white/80">{_copy("copy.bf4151fc970f", { defaultValue: "WORK_ADMIN_ARBITERS" })}</code>{' '}
+                <code className="text-white/80">{_copy("copy.aaa197c64e1f", { defaultValue: "src/constants/app.constants.ts" })}</code>
               </>
             }
           />

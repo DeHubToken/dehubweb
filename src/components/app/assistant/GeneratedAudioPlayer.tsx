@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Download, Loader2, Pause, Play, Share } from 'lucide-react';
 import { decodeAudioWaveform } from '@/components/app/audio/visualizer-styles';
@@ -14,6 +15,7 @@ interface GeneratedAudioPlayerProps {
 const WAVEFORM_BAR_COUNT = 64;
 
 export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlayerProps) {
+  const { t: _copy } = _useCopy();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   /** The panel below — the only part of this player that is in the document. */
   const containerRef = useRef<HTMLDivElement>(null);
@@ -116,7 +118,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
           type="button"
           onClick={togglePlayback}
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white transition-transform hover:scale-105 active:scale-95"
-          aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+          aria-label={isPlaying ? _copy("copy.4b5a6403c9db", { defaultValue: "Pause audio" }) : _copy("copy.33b31bc65885", { defaultValue: "Play audio" })}
         >
           {isPlaying ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current ml-0.5" />}
         </button>
@@ -127,7 +129,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
             type="button"
             onClick={handleWaveformSeek}
             className="relative h-10 w-full text-left"
-            aria-label="Seek through audio waveform"
+            aria-label={_copy("copy.ca9fda1c17a9", { defaultValue: "Seek through audio waveform" })}
           >
             <div className="flex h-full items-center gap-[2px]">
               {displayPeaks.map((peak, index) => {
@@ -179,8 +181,8 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
               }
             }}
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition-colors hover:text-white hover:bg-white/10 disabled:opacity-50"
-            aria-label="Post audio"
-            title="Post to feed"
+            aria-label={_copy("copy.b387e2a92e46", { defaultValue: "Post audio" })}
+            title={_copy("copy.b68e266223e6", { defaultValue: "Post to feed" })}
           >
             {isSharing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Share className="h-3.5 w-3.5" />}
           </button>
@@ -190,7 +192,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition-colors hover:text-white hover:bg-white/10"
-            aria-label="Download audio"
+            aria-label={_copy("copy.23a715d0aece", { defaultValue: "Download audio" })}
           >
             <Download className="h-3.5 w-3.5" />
           </a>

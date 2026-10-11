@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * "Repost & share" — the sheet behind the repost tile of the phone post page.
  *
@@ -77,6 +78,7 @@ export function RepostShareSheet({
   onViewQuotes,
   onViewReposts,
 }: RepostShareSheetProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const enabled = open && !!tokenId && /^\d+$/.test(tokenId);
 
@@ -131,7 +133,7 @@ export function RepostShareSheet({
     { key: 'copy', label: t('postStage.copyLink', 'Copy link'), icon: <Link2 className="h-[18px] w-[18px]" />, onClick: onCopyLink },
     { key: 'x', label: 'X', icon: <XGlyph />, onClick: () => openExternal(`https://x.com/intent/post?url=${encoded}&text=${text}`) },
     { key: 'telegram', label: 'Telegram', icon: <Send className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://t.me/share/url?url=${encoded}&text=${text}`) },
-    { key: 'whatsapp', label: 'WhatsApp', icon: <MessageCircle className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://wa.me/?text=${text}${text ? '%20' : ''}${encoded}`) },
+    { key: 'whatsapp', label: _copy("copy.6a40edf1fc87", { defaultValue: "WhatsApp" }), icon: <MessageCircle className="h-[18px] w-[18px]" />, onClick: () => openExternal(`https://wa.me/?text=${text}${text ? '%20' : ''}${encoded}`) },
     { key: 'more', label: t('postStage.more', 'More'), icon: <MoreHorizontal className="h-[18px] w-[18px]" />, onClick: () => { void nativeShare(); } },
   ];
 

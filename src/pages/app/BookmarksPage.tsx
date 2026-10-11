@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -67,6 +68,7 @@ function BookmarksSkeleton() {
 }
 
 export default function BookmarksPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
   const clearHistory = useClearWatchHistory();
@@ -122,8 +124,8 @@ export default function BookmarksPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Bookmarks — Your Saved Content" description="Access your saved posts, liked content, watch history and pay-per-view purchases all in one place on DeHub. Never lose track of content you love." url="https://dehub.io/app/bookmarks" />
-      <h1 className="sr-only">DeHub Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.cbcd913ec117", { defaultValue: "Bookmarks — Your Saved Content" })} description={_copy("copy.db7e42a2da74", { defaultValue: "Access your saved posts, liked content, watch history and pay-per-view purchases all in one place on DeHub. Never lose track of content you love." })} url="https://dehub.io/app/bookmarks" />
+      <h1 className="sr-only">{_copy("copy.bfa085c123ed", { defaultValue: "DeHub Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={bookmark3dIcon} alt={t('nav.bookmarks')} className="h-8 w-8 object-contain" />}
         title={t('bookmarks.title')}
@@ -132,7 +134,7 @@ export default function BookmarksPage() {
           <>
             {activeTab === 'history' && (
               <IslandAction
-                label="Clear history"
+                label={_copy("copy.496121494e4a", { defaultValue: "Clear history" })}
                 onClick={() => {
                   if (confirm('Clear all watch history?')) clearHistory.mutate();
                 }}

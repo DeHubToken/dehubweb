@@ -1,3 +1,5 @@
+import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
+import { localizedPageUrl } from '@/lib/seo/public-locales';
 
 import React, { useLayoutEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
@@ -37,11 +39,16 @@ const BlogPost = () => {
   const location = useLocation();
   const { allPosts } = useBlogData();
   const { t } = useLanguage();
+  const translatedPage = usePublicPageLocale(`/guides/${slug || ''}`);
 
   let post = slug ? getNewPostBySlug(slug) || getPostBySlug(slug) : null;
 
   if (post && excludedTitles.includes(post.title)) {
     post = null;
+  }
+
+  if (post && translatedPage.data) {
+    post = { ...post, title: translatedPage.data.h1, seoTitle: translatedPage.data.title, seoDescription: translatedPage.data.description, bannerImageAlt: translatedPage.data.h1 };
   }
 
   useLayoutEffect(() => {
@@ -56,11 +63,11 @@ const BlogPost = () => {
   // SEO pipelines consume.
   const {
     data: fetchedBody,
-    isError: bodyFailed,
-    refetch: refetchBody,
+    isError: englishBodyFailed,
+    refetch: refetchEnglishBody,
   } = useQuery({
     queryKey: ['blog-body', slug],
-    enabled: !!post,
+    enabled: !!post && !translatedPage.localized,
     staleTime: Infinity,
     queryFn: async () => {
       const res = await fetch(`/blog-content/${encodeURIComponent(post!.slug)}.json`);
@@ -70,6 +77,9 @@ const BlogPost = () => {
       return json.md as string;
     },
   });
+
+  const bodyFailed = translatedPage.localized ? translatedPage.isError : englishBodyFailed;
+  const refetchBody = translatedPage.localized ? translatedPage.refetch : refetchEnglishBody;
 
   if (!post) {
     return (
@@ -88,13 +98,13 @@ const BlogPost = () => {
   }
 
   const bannerImage = post.bannerImage;
-  const content = fetchedBody;
+  const content = translatedPage.localized ? translatedPage.data?.md : fetchedBody;
 
   // Canonical URL for a blog post is now `/guides/<slug>`. The legacy
   // `/docs/blog/<slug>` route still resolves the same content for
   // backward-compat, but share links + og:url + canonical all point at
   // the new top-level URL so SEO consolidates there.
-  const shareUrl = `https://dehub.io/guides/${post.slug}`;
+  const shareUrl = localizedPageUrl(`/guides/${post.slug}`, translatedPage.language);
   const fullImageUrl = bannerImage ? (bannerImage.startsWith('http') ? bannerImage : `${window.location.origin}${bannerImage}`) : null;
   const shareImage = getBlogShareImageUrl({
     slug: post.slug,

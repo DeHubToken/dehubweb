@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Feature Requests Page
@@ -116,12 +117,13 @@ const STATUS_BADGE_STYLES: Partial<Record<FeatureStatus, string>> = {
  * page as attachments arrive.
  */
 function LazyAttachmentImage({ url }: { url: string }) {
+  const { t: _copy } = _useCopy();
   const [loaded, setLoaded] = useState(false);
   return (
     <div className={cn('relative w-full', !loaded && 'h-64 animate-pulse bg-white/[0.04]')}>
       <img
         src={url}
-        alt="Attachment"
+        alt={_copy("copy.040d2b3689dd", { defaultValue: "Attachment" })}
         loading="lazy"
         onLoad={() => setLoaded(true)}
         // Errors must not strand the skeleton pulsing forever — settle the box
@@ -137,6 +139,7 @@ function LazyAttachmentImage({ url }: { url: string }) {
 }
 
 function FeatureAttachments({ feature }: { feature: FeatureRequest }) {
+  const { t: _copy } = _useCopy();
   const urls = featureAttachments(feature);
   if (urls.length === 0) return null;
 
@@ -163,7 +166,7 @@ function FeatureAttachments({ feature }: { feature: FeatureRequest }) {
             <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
               <img
                 src={url}
-                alt={`Attachment ${index + 1} of ${urls.length}`}
+                alt={_copy("copy.9010b5b17d48", { defaultValue: "Attachment {{value1}} of {{value2}}", value1: index + 1, value2: urls.length })}
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -223,6 +226,7 @@ function FeatureCard({
   /** The comment that deep link was about, ringed once the thread is open. */
   focusCommentId?: string | null;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
   const [showComments, setShowComments] = useState(defaultCommentsOpen);
@@ -337,17 +341,13 @@ function FeatureCard({
                   onClick={handleEdit}
                   className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
                 >
-                  <Pencil className="w-3.5 h-3.5" />
-                  Edit
-                </button>
+                  <Pencil className="w-3.5 h-3.5" />{_copy("copy.464c4ffd019e", { defaultValue: "Edit" })}</button>
                 <button
                   type="button"
                   onClick={handleDelete}
                   className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Delete
-                </button>
+                  <Trash2 className="w-3.5 h-3.5" />{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</button>
               </div>
             )}
           </div>
@@ -357,7 +357,7 @@ function FeatureCard({
       {/* Delete confirmation */}
       {showDeleteConfirm && (
         <div className="mb-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
-          <p className="text-sm text-zinc-300 mb-2">Are you sure you want to delete this feature request?</p>
+          <p className="text-sm text-zinc-300 mb-2">{_copy("copy.bc9f6ccb582d", { defaultValue: "Are you sure you want to delete this feature request?" })}</p>
           <div className="flex gap-2">
             <Button
               size="sm"
@@ -366,16 +366,14 @@ function FeatureCard({
               disabled={deleteMutation.isPending}
               className="rounded-lg text-xs"
             >
-              {deleteMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Delete'}
+              {deleteMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : _copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}
             </Button>
             <Button
               size="sm"
               variant="ghost"
               onClick={() => setShowDeleteConfirm(false)}
               className="rounded-lg text-xs text-zinc-400"
-            >
-              Cancel
-            </Button>
+            >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           </div>
         </div>
       )}
@@ -385,7 +383,7 @@ function FeatureCard({
         {isEditing ? (
           <div className="space-y-3">
             <div>
-              <label className="text-zinc-500 text-xs mb-1 block">Title</label>
+              <label className="text-zinc-500 text-xs mb-1 block">{_copy("copy.7e8cd2056da7", { defaultValue: "Title" })}</label>
               <Input
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
@@ -394,7 +392,7 @@ function FeatureCard({
               />
             </div>
             <div>
-              <label className="text-zinc-500 text-xs mb-1 block">Description</label>
+              <label className="text-zinc-500 text-xs mb-1 block">{_copy("copy.526e0087cc3f", { defaultValue: "Description" })}</label>
               <textarea
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
@@ -404,7 +402,7 @@ function FeatureCard({
               />
             </div>
             <div>
-              <label className="text-zinc-500 text-xs mb-1 block">Category</label>
+              <label className="text-zinc-500 text-xs mb-1 block">{_copy("copy.292c06f0045a", { defaultValue: "Category" })}</label>
               <select
                 value={editCategory}
                 onChange={(e) => setEditCategory(e.target.value as FeatureCategory)}
@@ -423,16 +421,14 @@ function FeatureCard({
                 disabled={editMutation.isPending || !editTitle.trim() || !editDescription.trim()}
                 className="rounded-lg text-xs"
               >
-                {editMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
+                {editMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : _copy("copy.1509f561f241", { defaultValue: "Save" })}
               </Button>
               <Button
                 size="sm"
                 variant="ghost"
                 onClick={() => setIsEditing(false)}
                 className="rounded-lg text-xs text-zinc-400"
-              >
-                Cancel
-              </Button>
+              >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             </div>
           </div>
         ) : (
@@ -517,6 +513,7 @@ function SubmitFeatureDrawer({
   onOpenChange: (open: boolean) => void;
   initialCategory?: FeatureCategory;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -693,7 +690,7 @@ function SubmitFeatureDrawer({
 
           {/* Device & OS Details */}
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">Device & OS Details (optional)</label>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{_copy("copy.72a478ec65bf", { defaultValue: "Device & OS Details (optional)" })}</label>
             <textarea
               value={deviceDetails}
               onChange={(e) => setDeviceDetails(e.target.value)}
@@ -730,9 +727,7 @@ function SubmitFeatureDrawer({
 
           {/* Media Upload */}
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">
-              Attach Images or Videos (optional)
-              <span className="text-zinc-600 font-normal"> — up to {MAX_FEATURE_ATTACHMENTS}</span>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{_copy("copy.cbf32246775e", { defaultValue: "Attach Images or Videos (optional)" })}<span className="text-zinc-600 font-normal">{_copy("copy.ea3a3da9b73e", { defaultValue: " — up to " })}{MAX_FEATURE_ATTACHMENTS}</span>
             </label>
             <input
               ref={fileInputRef}
@@ -752,12 +747,12 @@ function SubmitFeatureDrawer({
                     {attachment.file.type.startsWith('video/') ? (
                       <video src={attachment.preview} className="w-full h-full object-cover" muted />
                     ) : (
-                      <img src={attachment.preview} alt={`Attachment ${index + 1}`} className="w-full h-full object-cover" />
+                      <img src={attachment.preview} alt={_copy("copy.1b9bd763f963", { defaultValue: "Attachment {{value1}}", value1: index + 1 })} className="w-full h-full object-cover" />
                     )}
                     <button
                       type="button"
                       onClick={() => removeAttachment(index)}
-                      aria-label={`Remove attachment ${index + 1}`}
+                      aria-label={_copy("copy.58e271dd9ad8", { defaultValue: "Remove attachment {{value1}}", value1: index + 1 })}
                       className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-lg bg-black/70 text-white hover:bg-black/90 transition-colors"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -774,7 +769,7 @@ function SubmitFeatureDrawer({
               >
                 <ImagePlus className="w-5 h-5" />
                 <span className="text-xs">
-                  {attachments.length === 0 ? 'Click to upload' : 'Add another'}
+                  {attachments.length === 0 ? _copy("copy.fd274232d93a", { defaultValue: "Click to upload" }) : _copy("copy.d7246da527c1", { defaultValue: "Add another" })}
                 </span>
               </button>
             )}
@@ -906,6 +901,7 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 // Main Page
 // ──────────────────────────────────────────────────
 export default function FeaturesPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
   const { theme } = useAppTheme();
@@ -1046,8 +1042,8 @@ export default function FeaturesPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Feature Requests & Bug Reporting — DeHub" description="Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap.", isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">DeHub Features — Feature Requests, Bug Reporting & Community Roadmap</h1>
+      <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting — DeHub" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." })} url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "DeHub Features — Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
       {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
           mobile; `data-nav-hide-desktop` opts this one into the same thing on
           desktop too. Because this header is a full bento — title, search,
@@ -1058,7 +1054,7 @@ export default function FeaturesPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <BrandIcon src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
+            <BrandIcon src={featuresLightbulb} alt={_copy("copy.5697d03daef4", { defaultValue: "Features" })} className="w-12 h-12 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
               <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
@@ -1267,7 +1263,7 @@ export default function FeaturesPage() {
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <BrandIcon src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
+                <BrandIcon src={featuresLightbulb} alt={_copy("copy.c46c50e9cf58", { defaultValue: "No features yet" })} className="w-16 h-16 object-contain opacity-40" />
               </div>
               <h3 className="text-white font-semibold mb-1">{t('features.noRequestsYet')}</h3>
               <p className="text-zinc-500 text-sm mb-4">{t('features.beFirstIdea')}</p>

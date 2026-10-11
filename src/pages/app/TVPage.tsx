@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * TV Page
  * =======
@@ -14,6 +15,7 @@ import { LiveTVSection } from '@/components/app/tv';
 import { scrollDocumentTo } from '@/lib/document-scroll';
 
 export default function TVPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   useLayoutEffect(() => {
     scrollDocumentTo(0);
@@ -21,7 +23,7 @@ export default function TVPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={t('tv.seoTitle')} description={t('tv.seoDescription')} url="https://dehub.io/app/tv" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Live TV', url: 'https://dehub.io/app/tv', applicationCategory: 'EntertainmentApplication', description: 'Watch free live TV channels from around the world.', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, operatingSystem: 'Web' }} />
+      <SEOHead title={t('tv.seoTitle')} description={t('tv.seoDescription')} url="https://dehub.io/app/tv" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'DeHub Live TV', url: 'https://dehub.io/app/tv', applicationCategory: 'EntertainmentApplication', description: _copy("copy.38db75210b51", { defaultValue: "Watch free live TV channels from around the world." }), offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }, operatingSystem: 'Web' }} />
       <h1 className="sr-only">{t('tv.srHeading')}</h1>
       <PageIsland back icon="tv" title={t('tv.title')} />
       <PageBody>

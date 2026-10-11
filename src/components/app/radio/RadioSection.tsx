@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Radio Section Component
@@ -30,6 +31,7 @@ interface RadioSectionProps {
 }
 
 export function RadioSection({ showFilters = false }: RadioSectionProps) {
+  const { t: _copy } = _useCopy();
   const [activeGenre, setActiveGenre] = useState<RadioGenreId>('top');
   const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/radio/RadioSection.tsx:searchQuery", '');
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
@@ -83,7 +85,7 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
             type="text"
-            placeholder="Search 50,000+ radio stations..."
+            placeholder={_copy("copy.fa98312bf4cb", { defaultValue: "Search 50,000+ radio stations..." })}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-zinc-900 border-zinc-800 rounded-xl h-11"
@@ -101,11 +103,10 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         {/* Search Results Header */}
         {isSearching && (
           <div className="flex items-center gap-2 text-sm text-zinc-400">
-            <span>
-              Results for {parsedQuery.name ? `"${parsedQuery.name}"` : 'all stations'}
+            <span>{_copy("copy.c218b3f4b9c9", { defaultValue: "Results for " })}{parsedQuery.name ? `"${parsedQuery.name}"` : _copy("copy.76acefd37961", { defaultValue: "all stations" })}
               {parsedQuery.countryName && ` in ${parsedQuery.countryName}`}
             </span>
-            {!isLoading && <span>({stations.length} stations)</span>}
+            {!isLoading && <span>({stations.length}{_copy("copy.0830f7934855", { defaultValue: " stations)" })}</span>}
           </div>
         )}
       </div>
@@ -130,15 +131,15 @@ export function RadioSection({ showFilters = false }: RadioSectionProps) {
         
         {/* Error State */}
         {error && !isLoading && (
-          <AppState icon="audio" title="Stations could not load" description="Check your connection and try again." kind="error" size="section" />
+          <AppState icon="audio" title={_copy("copy.834ef62ce430", { defaultValue: "Stations could not load" })} description={_copy("copy.481859b689b0", { defaultValue: "Check your connection and try again." })} kind="error" size="section" />
         )}
         
         {/* Empty State */}
         {!isLoading && !error && stations.length === 0 && (
           <AppState
             icon={isSearching ? 'search' : 'audio'}
-            title={isSearching ? 'No stations found' : 'No stations available'}
-            description={isSearching ? 'Try a different search term.' : 'Try selecting a different genre.'}
+            title={isSearching ? _copy("copy.e24b2ca5b6c2", { defaultValue: "No stations found" }) : _copy("copy.a2dbdf6b214a", { defaultValue: "No stations available" })}
+            description={isSearching ? _copy("copy.36b89662c2f6", { defaultValue: "Try a different search term." }) : _copy("copy.8e859a0daaec", { defaultValue: "Try selecting a different genre." })}
             kind={isSearching ? 'search-empty' : 'empty'}
             size="section"
           />

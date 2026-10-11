@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
@@ -24,6 +25,7 @@ export function useProfileFollow({
   setShareSheetOpen,
   setLoginModalOpen,
 }: UseProfileFollowParams) {
+  const { t: _copy } = _useCopy();
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -50,7 +52,7 @@ export function useProfileFollow({
     }
 
     if (!profile?.walletAddress) {
-      toast.error('Cannot follow: user wallet address not found');
+      toast.error(_copy("copy.be766d1bed3c", { defaultValue: "Cannot follow: user wallet address not found" }));
       return;
     }
 
@@ -92,12 +94,12 @@ export function useProfileFollow({
 
   const handleUnfollow = async () => {
     if (!isAuthenticated) {
-      toast.error('Please log in first');
+      toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" }));
       return;
     }
 
     if (!profile?.walletAddress) {
-      toast.error('Cannot unfollow: user wallet address not found');
+      toast.error(_copy("copy.05b600d51200", { defaultValue: "Cannot unfollow: user wallet address not found" }));
       return;
     }
 

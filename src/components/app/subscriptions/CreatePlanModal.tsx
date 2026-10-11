@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { tokenLabel } from '@/lib/token-label';
 import { useTranslation } from 'react-i18next';
@@ -61,11 +63,12 @@ const DURATION_PRESETS = [
 const CHAIN_OPTIONS: { chainId: number; label: string; icon: string }[] = [
   { chainId: BASE_CHAIN_ID, label: 'Base', icon: baseLogo },
   { chainId: BNB_CHAIN_ID, label: 'BNB', icon: bnbLogo },
-  { chainId: ROBINHOOD_CHAIN_ID, label: 'Robinhood', icon: robinhoodLogo },
+  { chainId: ROBINHOOD_CHAIN_ID, get label() { return _translateCopy("copy.99ad9b72b564", { defaultValue: "Robinhood" }); }, icon: robinhoodLogo },
   { chainId: SOLANA_MAINNET_CHAIN_ID, label: 'Solana', icon: solanaLogo },
 ];
 
 export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanModalProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [name, setName] = useDraftState(`form:src/components/app/subscriptions/CreatePlanModal.tsx:name:${'new'}`, '');
   const [description, setDescription] = useDraftState(`form:src/components/app/subscriptions/CreatePlanModal.tsx:description:${'new'}`, '');
@@ -163,7 +166,7 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    aria-label={`Subscription network: ${selectedChain.label}`}
+                    aria-label={_copy("copy.c7eaf9df3524", { defaultValue: "Subscription network: {{value1}}", value1: selectedChain.label })}
                     className="relative p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
                   >
                     <Settings2 className="w-5 h-5" />
@@ -175,7 +178,7 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-60 bg-zinc-950/95 border-white/10 text-white backdrop-blur-xl">
-                  <DropdownMenuLabel>Subscription network</DropdownMenuLabel>
+                  <DropdownMenuLabel>{_copy("copy.8835fb41f314", { defaultValue: "Subscription network" })}</DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-white/10" />
                   {CHAIN_OPTIONS.map((option) => {
                     const available = isSubscriptionChain(option.chainId);
@@ -191,7 +194,7 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
                         {available ? (
                           option.chainId === chainId && <Check className="w-4 h-4" />
                         ) : (
-                          <span className="text-[10px] uppercase tracking-wide text-zinc-500">Soon</span>
+                          <span className="text-[10px] uppercase tracking-wide text-zinc-500">{_copy("copy.cf0ee3547a4e", { defaultValue: "Soon" })}</span>
                         )}
                       </DropdownMenuItem>
                     );
@@ -239,8 +242,7 @@ export function CreatePlanModal({ open, onOpenChange, onCreated }: CreatePlanMod
           {/* Price */}
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block">
-              {t('subscriptions.price')} (USD)
-            </label>
+              {t('subscriptions.price')}{_copy("copy.9c9784982542", { defaultValue: " (USD)" })}</label>
             <div className="relative">
               <Input
                 type="number"

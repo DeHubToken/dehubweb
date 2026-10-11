@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * AdTopUpModal
  * ============
@@ -23,6 +24,7 @@ interface AdTopUpModalProps {
 }
 
 export function AdTopUpModal({ open, onOpenChange, suggestedUsd, onCredited }: AdTopUpModalProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
 
@@ -31,9 +33,7 @@ export function AdTopUpModal({ open, onOpenChange, suggestedUsd, onCredited }: A
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
-            <Wallet className="w-5 h-5" />
-            Top up ads balance
-          </DialogTitle>
+            <Wallet className="w-5 h-5" />{_copy("copy.3c582d9835b7", { defaultValue: "Top up ads balance" })}</DialogTitle>
           <DialogDescription className="text-zinc-400">
             {t('ads.payInTokensCreditedUsd')}
           </DialogDescription>

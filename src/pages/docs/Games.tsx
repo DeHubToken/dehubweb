@@ -1,9 +1,11 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Games = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   return (
@@ -36,9 +38,7 @@ const Games = () => {
                 <p className="text-foreground/90">{t('games.lcsDesc')}</p>
                 <div className="mt-4">
                   <span className="font-semibold text-foreground">{t('games.website')}: </span>
-                  <a href="https://lastchadstanding.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 underline">
-                    lastchadstanding.com
-                  </a>
+                  <a href="https://lastchadstanding.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 underline">{_copy("copy.c44e2f745b9a", { defaultValue: "lastchadstanding.com" })}</a>
                 </div>
               </div>
             </div>

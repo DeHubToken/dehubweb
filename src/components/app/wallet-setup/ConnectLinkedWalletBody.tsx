@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Connect-and-verify body for ConnectLinkedWalletModal — lazy-loaded because
  * it pulls the same RainbowKit chunk as the login sheet's wallet step.
@@ -45,6 +46,7 @@ export function ConnectLinkedWalletBody(props: ConnectLinkedWalletBodyProps) {
 }
 
 function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectLinkedWalletBodyProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { connectAsync } = useConnect();
   const { disconnectAsync } = useDisconnect();
@@ -147,10 +149,7 @@ function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectL
         onWalletConnectConnect={handleWalletConnectConnect}
       />
       {error && <p className="text-sm text-red-400">{error}</p>}
-      <p className="text-white/40 text-xs text-center">
-        This account’s wallet: {shortenAddress(expectedAddress)}. Connecting a different one won’t
-        affect your session — we’ll just ask you to switch.
-      </p>
+      <p className="text-white/40 text-xs text-center">{_copy("copy.8121de8a51c5", { defaultValue: "This account’s wallet: " })}{shortenAddress(expectedAddress)}{_copy("copy.df417b8a7c3a", { defaultValue: ". Connecting a different one won’t affect your session — we’ll just ask you to switch." })}</p>
     </div>
   );
 }

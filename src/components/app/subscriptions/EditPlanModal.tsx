@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { tokenLabel } from '@/lib/token-label';
 import { useTranslation } from 'react-i18next';
@@ -58,6 +59,7 @@ function dollarPrice(plan: SubscriptionPlan): number | undefined {
 }
 
 export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [name, setName] = useDraftState(`form:src/components/app/subscriptions/EditPlanModal.tsx:name:${plan.id ?? plan._id}`, plan.name);
   const [description, setDescription] = useDraftState(`form:src/components/app/subscriptions/EditPlanModal.tsx:description:${plan.id ?? plan._id}`, plan.description || '');
@@ -197,8 +199,7 @@ export function EditPlanModal({ open, onOpenChange, plan }: EditPlanModalProps) 
           {/* Price */}
           <div>
             <label className="text-sm text-zinc-400 mb-1.5 block">
-              {t('subscriptions.price')} (USD)
-            </label>
+              {t('subscriptions.price')}{_copy("copy.9c9784982542", { defaultValue: " (USD)" })}</label>
             <div className="relative">
               <Input
                 type="number"

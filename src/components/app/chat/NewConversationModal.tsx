@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -80,6 +81,7 @@ function UserSearchResult({
   onSelect: () => void;
   isLoading: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const avatarPath = extractAvatarPath(user);
   const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
   const rawDisplayName = user.displayName || user.display_name;
@@ -123,19 +125,16 @@ function UserSearchResult({
           <p className="text-xs text-zinc-500 truncate">@{user.username}</p>
         )}
         {dmDisabled && (
-          <p className="text-xs text-zinc-500 mt-1">DMs disabled</p>
+          <p className="text-xs text-zinc-500 mt-1">{_copy("copy.c20ed70dd868", { defaultValue: "DMs disabled" })}</p>
         )}
         {!dmDisabled && !isLoading && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
             <img src={dehubCoin} alt={tokenLabel()} className="w-3 h-3" />
-            {perMessageFee.toLocaleString()} to message
-          </p>
+            {perMessageFee.toLocaleString()}{_copy("copy.cf92bc9b461f", { defaultValue: " to message" })}</p>
         )}
         {isLoading && (
           <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
-            <Loader2 className="w-3 h-3 animate-spin" />
-            Sending invite...
-          </p>
+            <Loader2 className="w-3 h-3 animate-spin" />{_copy("copy.36387a86fa81", { defaultValue: "Sending invite..." })}</p>
         )}
       </div>
     </button>
@@ -154,6 +153,7 @@ function FeePaymentStep({
   onPaid: (firstMessage?: string, feeTxHash?: string) => void;
   onBack: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [messageText, setMessageText] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:messageText", '');
   const [customAmount, setCustomAmount] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:customAmount", '');
@@ -203,7 +203,7 @@ function FeePaymentStep({
       return;
     }
     if (!messageText.trim()) {
-      toast.error('Please enter a message');
+      toast.error(_copy("copy.bcc015afda01", { defaultValue: "Please enter a message" }));
       return;
     }
 
@@ -254,9 +254,7 @@ function FeePaymentStep({
         onClick={onBack}
         className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
       >
-        <ArrowLeft className="w-4 h-4" />
-        Back to search
-      </button>
+        <ArrowLeft className="w-4 h-4" />{_copy("copy.22252a139c6a", { defaultValue: "Back to search" })}</button>
 
       {/* User info */}
       <div className="flex items-center gap-3 p-3 rounded-xl bg-zinc-800/50">
@@ -275,14 +273,13 @@ function FeePaymentStep({
       {/* Fee info */}
       <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
         <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-          <BrandIcon src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
+          <BrandIcon src={padlockImg} alt={_copy("copy.db44b8db4f05", { defaultValue: "Lock" })} className="w-8 h-8 object-contain" />
         </div>
         <div>
-          <h3 className="text-white font-semibold text-sm">Tip to Message</h3>
+          <h3 className="text-white font-semibold text-sm">{_copy("copy.467f1b07dbab", { defaultValue: "Tip to Message" })}</h3>
           <p className="text-zinc-400 text-xs leading-relaxed">
-            {displayName} requires a minimum tip of{' '}
-            <span className="text-white font-medium">{fee.toLocaleString()} <DhbCoin /></span> to start a conversation.
-          </p>
+            {displayName}{_copy("copy.9905f07aff07", { defaultValue: " requires a minimum tip of" })}{' '}
+            <span className="text-white font-medium">{fee.toLocaleString()} <DhbCoin /></span>{_copy("copy.90a646a30f4b", { defaultValue: " to start a conversation." })}</p>
         </div>
       </div>
 
@@ -295,22 +292,20 @@ function FeePaymentStep({
       ) : balanceInfo.checked && !balanceInfo.sufficient ? (
         <div className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10">
           <AlertCircle className="w-4 h-4 text-zinc-400 flex-shrink-0" />
-          <p className="text-xs text-zinc-300">
-            Insufficient balance. You have {Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin /> but need {fee.toLocaleString()} <DhbCoin />.
+          <p className="text-xs text-zinc-300">{_copy("copy.8174682f8ac4", { defaultValue: "Insufficient balance. You have " })}{Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin />{_copy("copy.fd707532efb1", { defaultValue: " but need " })}{fee.toLocaleString()} <DhbCoin />.
           </p>
         </div>
       ) : balanceInfo.checked ? (
-        <p className="text-xs text-zinc-500 text-center">
-          Your balance: {Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin />
+        <p className="text-xs text-zinc-500 text-center">{_copy("copy.13d779df5bcd", { defaultValue: "Your balance: " })}{Math.floor(balanceInfo.balance).toLocaleString()} <DhbCoin />
         </p>
       ) : null}
 
       {/* Message input */}
       <div>
-        <p className="text-white/60 text-xs mb-1.5">Your message</p>
+        <p className="text-white/60 text-xs mb-1.5">{_copy("copy.7a057bd996a3", { defaultValue: "Your message" })}</p>
         <Input
           type="text"
-          placeholder="Type your first message..."
+          placeholder={_copy("copy.75e4e6c299c4", { defaultValue: "Type your first message..." })}
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
           disabled={isSending}
@@ -327,21 +322,17 @@ function FeePaymentStep({
       >
         {isSending && !customAmount ? (
           <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-            Processing...
-          </>
+            <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.f40a853e58a1", { defaultValue: "Processing..." })}</>
         ) : (
           <>
-            <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 mr-2" />
-            Pay {fee.toLocaleString()} & Start Chat
-          </>
+            <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4 mr-2" />{_copy("copy.761d0751f5d4", { defaultValue: "Pay " })}{fee.toLocaleString()}{_copy("copy.25a4b563d8f7", { defaultValue: " & Start Chat" })}</>
         )}
       </Button>
 
       {/* Divider */}
       <div className="flex items-center gap-3">
         <div className="flex-1 h-px bg-white/10" />
-        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">or tip more to rank higher</span>
+        <span className="text-[10px] text-zinc-500 uppercase tracking-wider">{_copy("copy.20064a284635", { defaultValue: "or tip more to rank higher" })}</span>
         <div className="flex-1 h-px bg-white/10" />
       </div>
 
@@ -353,7 +344,7 @@ function FeePaymentStep({
             type="number"
             min={fee}
             step={1}
-            placeholder={`Enter amount (min ${fee.toLocaleString()})`}
+            placeholder={_copy("copy.c9b91c503231", { defaultValue: "Enter amount (min {{value1}})", value1: fee.toLocaleString() })}
             value={customAmount}
             onChange={(e) => setCustomAmount(e.target.value)}
             disabled={isSending}
@@ -369,15 +360,13 @@ function FeePaymentStep({
           {isSending && customAmount ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
-            'Send'
+            _copy("copy.f6f4688ff23d", { defaultValue: "Send" })
           )}
         </Button>
       </div>
 
       {customAmount && isValidAmount && tipAmount > fee && (
-        <p className="text-[10px] text-zinc-400 text-center">
-          🔥 Tipping {tipAmount.toLocaleString()} <DhbCoin /> will rank you higher in {displayName}'s inbox
-        </p>
+        <p className="text-[10px] text-zinc-400 text-center">{_copy("copy.5269efbb02b6", { defaultValue: "🔥 Tipping " })}{tipAmount.toLocaleString()} <DhbCoin />{_copy("copy.fb56ded4ed2c", { defaultValue: " will rank you higher in " })}{displayName}{_copy("copy.8e35393fe469", { defaultValue: "'s inbox" })}</p>
       )}
     </div>
   );
@@ -391,6 +380,7 @@ export function NewConversationModal({
   initialMessage,
   title,
 }: NewConversationModalProps) {
+  const { t: _copy } = _useCopy();
   const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/NewConversationModal.tsx:searchQuery", '');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
@@ -409,7 +399,7 @@ export function NewConversationModal({
     const userAddress = user.address || user._id;
     const userSocketId = user._id || user.id;
     if (!userAddress) {
-      toast.error('Unable to start conversation with this user');
+      toast.error(_copy("copy.3c53e332cf13", { defaultValue: "Unable to start conversation with this user" }));
       return;
     }
 
@@ -479,7 +469,7 @@ export function NewConversationModal({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">{title || 'New Message'}</DialogTitle>
+          <DialogTitle className="text-white">{title || _copy("copy.8e51a80a4d7d", { defaultValue: "New Message" })}</DialogTitle>
         </DialogHeader>
 
         {feeUser ? (
@@ -494,7 +484,7 @@ export function NewConversationModal({
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <Input
-                placeholder="Search by username..."
+                placeholder={_copy("copy.c45e9566dc3b", { defaultValue: "Search by username..." })}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
@@ -504,9 +494,7 @@ export function NewConversationModal({
                 <button
                   onClick={() => setSearchQuery.complete(searchQuery, '')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[10px] font-medium text-white/70 bg-white/10 hover:bg-white/20 border border-white/10 rounded-md transition-colors"
-                >
-                  Clear
-                </button>
+                >{_copy("copy.83b12c2216ef", { defaultValue: "Clear" })}</button>
               )}
             </div>
 
@@ -514,14 +502,14 @@ export function NewConversationModal({
               {searchQuery.length < 2 ? (
                 <div className="text-center py-8 text-zinc-500">
                   <Search className="w-10 h-10 mx-auto mb-3 opacity-50" />
-                  <p>Enter at least 2 characters to search</p>
+                  <p>{_copy("copy.66708e5f5479", { defaultValue: "Enter at least 2 characters to search" })}</p>
                 </div>
               ) : isSearching ? (
                 <div className="flex justify-center py-8">
                   <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
                 </div>
               ) : searchResults?.items?.length === 0 ? (
-                <AppState icon="search" title="No users found" description="Try a different search term." kind="search-empty" size="compact" />
+                <AppState icon="search" title={_copy("copy.bf1e104fb3c8", { defaultValue: "No users found" })} description={_copy("copy.36b89662c2f6", { defaultValue: "Try a different search term." })} kind="search-empty" size="compact" />
               ) : (
                 <div className="space-y-1 px-2">
                   {searchResults?.items?.map((user) => (

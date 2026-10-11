@@ -998,6 +998,12 @@ export const es = {
     moreB7Desc: 'Abrir puestos en el equipo de DeHub, enumerados en la aplicación en lugar de en un sitio de carreras separado.',
     moreB8: 'Sorteos:',
     moreB8Desc: 'DeHub ha realizado sorteos de premios desde el sorteo local de $ 1,000,000 en 2022; los actuales se encuentran en dehub.io/raffle.',
+
+    "aiSuiteTitle": "Suite de IA",
+    "spNameTimelineBomber": "Bombardeador de Línea de Tiempo",
+    "feedsHome": "Feed Principal:",
+    "tvRadioB3": "Radio:",
+    "aiSuiteB3": "Constructor de IA:",
   },
   games: {
     title: 'Juegos',
@@ -1487,7 +1493,7 @@ export const es = {
     experience: 'Experiencia',
     malName: 'Mal Jan',
     malRole: 'Cofundador',
-    malBio: "Full stack web and blockchain developer, building AI business solutions at Pixcellor, former senior consultant at Randstad, scaled DeHub to a £250m market cap peak with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow and builder of entire regions at the UK's largest construction agency, ITS.",
+    malBio: "Desarrollador full stack web y blockchain, creando soluciones empresariales de IA en Pixcellor, ex consultor senior en Randstad, escaló DeHub a un pico de capitalización de mercado de £250 m con un pool de liquidez cercano a $10 m y $2 m de ingresos en el primer año. Anteriormente fue el consultor con mayor facturación anual en la mayor agencia del Reino Unido, Blue Arrow, y constructor de regiones completas en la mayor agencia de construcción del Reino Unido, ITS.",
     malExp1: 'Guide Dogs: Recaudó >$1M como gerente de recaudación de fondos',
     malExp2: 'Randstad: Consultor senior en empresa con capitalización de mercado de $8 mil millones',
     malExp3: 'Blue Arrow: Mayor facturador y consultor premiado en la agencia más grande del Reino Unido',
@@ -1880,6 +1886,7 @@ export const es = {
     thirdPartyItem6Prefix: 'Transmisión en vivo & Salas:',
     thirdPartyItem7Prefix: 'Entrega:',
     thirdPartyItem7: 'Cloudflare sirve y almacena en caché el sitio y sus medios',
+    "thirdPartyItem8Prefix": "IA & Traducción:",
   },
   contact: {
     title: 'Contáctanos',

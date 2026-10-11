@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Shield, Calendar, Lock, Globe, Loader2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +18,7 @@ interface CommunityAboutProps {
 }
 
 export function CommunityAbout({ community, canManageSettings: canEdit = false }: CommunityAboutProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const rules = Array.isArray(community.rules) ? community.rules : [];
   const updateMutation = useUpdateCommunity();
@@ -52,12 +54,12 @@ export function CommunityAbout({ community, canManageSettings: canEdit = false }
               )}
               <div className="min-w-0">
                 <div className="text-white text-sm font-medium">
-                  {community.is_private ? 'Private' : 'Public'}
+                  {community.is_private ? _copy("copy.c63eb6720c6e", { defaultValue: "Private" }) : _copy("copy.591935b15b1c", { defaultValue: "Public" })}
                 </div>
                 <div className="text-zinc-500 text-xs">
                   {community.is_private
-                    ? 'New members must be approved to join.'
-                    : 'Anyone can join instantly.'}
+                    ? _copy("copy.feca5a4a9d1f", { defaultValue: "New members must be approved to join." })
+                    : _copy("copy.3abbf3c472a7", { defaultValue: "Anyone can join instantly." })}
                 </div>
               </div>
             </div>
@@ -75,25 +77,19 @@ export function CommunityAbout({ community, canManageSettings: canEdit = false }
 
           {confirmPrivate && !community.is_private && (
             <div className="rounded-lg border border-white/10 bg-black/40 p-3 space-y-2">
-              <p className="text-xs text-zinc-300">
-                Make this community private? Existing members stay; new joiners will need approval.
-              </p>
+              <p className="text-xs text-zinc-300">{_copy("copy.7fe81b27eb29", { defaultValue: "Make this community private? Existing members stay; new joiners will need approval." })}</p>
               <div className="flex justify-end gap-2">
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={() => setConfirmPrivate(false)}
                   className="h-7 px-3 text-xs rounded-lg"
-                >
-                  Cancel
-                </Button>
+                >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
                 <Button
                   size="sm"
                   onClick={() => handleToggle(true)}
                   className="h-7 px-3 text-xs rounded-lg bg-white text-black hover:bg-white/90"
-                >
-                  Make Private
-                </Button>
+                >{_copy("copy.ffab73178509", { defaultValue: "Make Private" })}</Button>
               </div>
             </div>
           )}

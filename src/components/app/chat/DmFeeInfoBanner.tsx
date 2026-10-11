@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * DmFeeInfoBanner
@@ -33,6 +34,7 @@ export function DmFeeInfoBanner({
   balanceBnb,
   balanceLoading,
 }: DmFeeInfoBannerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const totalBalance = (balanceBase ?? 0) + (balanceBnb ?? 0);
   const totalAvailable = balanceBase !== null || balanceBnb !== null ? totalBalance : null;
@@ -47,15 +49,13 @@ export function DmFeeInfoBanner({
       <div className="bg-zinc-800/60 border border-white/10 rounded-2xl p-4">
         <div className="flex items-start gap-3 mb-3">
           <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-            <BrandIcon src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
+            <BrandIcon src={padlockImg} alt={_copy("copy.db44b8db4f05", { defaultValue: "Lock" })} className="w-8 h-8 object-contain" />
           </div>
           <div className="flex-1">
-            <h3 className="text-white font-semibold text-sm mb-1">Tip to Message</h3>
+            <h3 className="text-white font-semibold text-sm mb-1">{_copy("copy.467f1b07dbab", { defaultValue: "Tip to Message" })}</h3>
             <p className="text-zinc-400 text-xs leading-relaxed">
-              {recipientName} requires a minimum tip of{' '}
-              <span className="text-white font-semibold">{fee.toLocaleString()} <DhbCoin /></span>{' '}
-              per message. Each message you send will deduct this amount.
-            </p>
+              {recipientName}{_copy("copy.9905f07aff07", { defaultValue: " requires a minimum tip of" })}{' '}
+              <span className="text-white font-semibold">{fee.toLocaleString()} <DhbCoin /></span>{' '}{_copy("copy.202623ca8581", { defaultValue: "per message. Each message you send will deduct this amount." })}</p>
           </div>
         </div>
 
@@ -64,21 +64,21 @@ export function DmFeeInfoBanner({
           {balanceLoading ? (
             <div className="flex items-center gap-2">
               <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
-              <span className="text-xs text-zinc-500">Loading balance...</span>
+              <span className="text-xs text-zinc-500">{_copy("copy.8d9b0f1eaf4a", { defaultValue: "Loading balance..." })}</span>
             </div>
           ) : (
             <div className="flex items-center gap-2">
               <img src={dehubCoin} alt={tokenLabel()} className="w-4 h-4" />
-              <span className="text-xs text-zinc-400">Your balance:</span>
+              <span className="text-xs text-zinc-400">{_copy("copy.f214cbc07715", { defaultValue: "Your balance:" })}</span>
               {totalBalance !== null ? (
                 <span className={`text-xs font-medium ${hasSufficientBalance ? 'text-white' : 'text-zinc-400'}`}>
                   {totalBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })} <DhbCoin />
                 </span>
               ) : (
-                <span className="text-xs text-zinc-500">Unavailable</span>
+                <span className="text-xs text-zinc-500">{_copy("copy.ca1844969742", { defaultValue: "Unavailable" })}</span>
               )}
               {!hasSufficientBalance && totalBalance !== null && (
-                <span className="text-xs text-zinc-400 ml-auto">Insufficient</span>
+                <span className="text-xs text-zinc-400 ml-auto">{_copy("copy.ca57f7a4da7e", { defaultValue: "Insufficient" })}</span>
               )}
             </div>
           )}
@@ -89,9 +89,7 @@ export function DmFeeInfoBanner({
       <div className="bg-zinc-800/40 border border-white/5 rounded-2xl p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="flex-1 h-px bg-white/10" />
-          <span className="text-[10px] text-zinc-500 uppercase tracking-wider whitespace-nowrap">
-            Tip more to rank higher in their inbox
-          </span>
+          <span className="text-[10px] text-zinc-500 uppercase tracking-wider whitespace-nowrap">{_copy("copy.0a6beb027c2f", { defaultValue: "Tip more to rank higher in their inbox" })}</span>
           <div className="flex-1 h-px bg-white/10" />
         </div>
 
@@ -109,14 +107,10 @@ export function DmFeeInfoBanner({
         </div>
 
         {isAboveMinimum && hasCustomSufficient && (
-          <p className="text-[10px] text-zinc-400 text-center mt-2">
-            🔥 Tipping {tipAmount.toLocaleString()} <DhbCoin /> per message will rank you higher in {recipientName}'s inbox
-          </p>
+          <p className="text-[10px] text-zinc-400 text-center mt-2">{_copy("copy.5269efbb02b6", { defaultValue: "🔥 Tipping " })}{tipAmount.toLocaleString()} <DhbCoin />{_copy("copy.d93b445ac1b2", { defaultValue: " per message will rank you higher in " })}{recipientName}{_copy("copy.8e35393fe469", { defaultValue: "'s inbox" })}</p>
         )}
         {isAboveMinimum && !hasCustomSufficient && (
-          <p className="text-[10px] text-zinc-500 text-center mt-2">
-            Insufficient balance for {tipAmount.toLocaleString()} <DhbCoin /> tip
-          </p>
+          <p className="text-[10px] text-zinc-500 text-center mt-2">{_copy("copy.fe20acd5b775", { defaultValue: "Insufficient balance for " })}{tipAmount.toLocaleString()} <DhbCoin />{_copy("copy.aa39569a26c1", { defaultValue: " tip" })}</p>
         )}
       </div>
     </div>

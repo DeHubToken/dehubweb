@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Creator Flow — the ⌘K prompt assistant.
@@ -27,6 +28,7 @@ function loadModel(): AssistantModelId {
 }
 
 export default function QuickAssist({ onUsePrompt }: { onUsePrompt?: (text: string) => void }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -262,7 +264,7 @@ export default function QuickAssist({ onUsePrompt }: { onUsePrompt?: (text: stri
               <span className="flex items-center gap-2 text-[10px] tracking-wide text-white/25">
                 <kbd className="rounded border border-white/10 bg-white/5 px-1 text-white/40">↵</kbd> {t('creatorFlow.send')}
                 <span>·</span>
-                <kbd className="rounded border border-white/10 bg-white/5 px-1 text-white/40">ESC</kbd> {t('creatorFlow.close')}
+                <kbd className="rounded border border-white/10 bg-white/5 px-1 text-white/40">{_copy("copy.c5b7d0ec4f69", { defaultValue: "ESC" })}</kbd> {t('creatorFlow.close')}
               </span>
             </div>
           </div>

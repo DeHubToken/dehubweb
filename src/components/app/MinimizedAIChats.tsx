@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Minimized Chats Component
  * =========================
@@ -15,6 +16,7 @@ interface MinimizedAIChatsProps {
 }
 
 export function MinimizedAIChats({ onRestore }: MinimizedAIChatsProps) {
+  const { t: _copy } = _useCopy();
   const { chats, removeChat } = useMinimizedChats();
 
   if (chats.length === 0) return null;
@@ -42,7 +44,7 @@ export function MinimizedAIChats({ onRestore }: MinimizedAIChatsProps) {
             />
             {/* Tooltip on hover */}
             <div className="absolute right-14 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-w-[150px] truncate">
-              {chat.title || `${chat.type} chat`}
+              {chat.title || _copy("copy.4390ee6449c2", { defaultValue: "{{value1}} chat", value1: chat.type })}
             </div>
           </motion.button>
         ))}

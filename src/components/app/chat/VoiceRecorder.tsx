@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mic, Square } from 'lucide-react';
@@ -11,6 +12,7 @@ interface VoiceRecorderProps {
 }
 
 export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOICE_RECORDING_SECONDS }: VoiceRecorderProps) {
+  const { t: _copy } = _useCopy();
   const [isRecording, setIsRecording] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -91,7 +93,7 @@ export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOI
         if (timerRef.current) clearInterval(timerRef.current);
         if (mountedRef.current) {
           setIsRecording(false);
-          toast.error('Could not access microphone');
+          toast.error(_copy("copy.a754a5c36acf", { defaultValue: "Could not access microphone" }));
         }
       };
       
@@ -109,11 +111,11 @@ export function VoiceRecorder({ onRecordingComplete, disabled, maxDuration = VOI
       stream?.getTracks().forEach(track => track.stop());
       mediaRecorderRef.current = null;
       console.error('Error accessing microphone:', error);
-      toast.error('Could not access microphone');
+      toast.error(_copy("copy.a754a5c36acf", { defaultValue: "Could not access microphone" }));
     } finally {
       startingRef.current = false;
     }
-  }, [maxDuration]);
+  }, [maxDuration, _copy]);
 
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {

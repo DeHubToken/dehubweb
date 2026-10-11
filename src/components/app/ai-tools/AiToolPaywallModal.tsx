@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -36,6 +37,7 @@ export function AiToolPaywallModal({
   isProcessing = false,
   category,
 }: AiToolPaywallModalProps) {
+  const { t: _copy } = _useCopy();
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -137,9 +139,7 @@ export function AiToolPaywallModal({
             <span className="text-xl">{categoryInfo.emoji}</span>
             {categoryInfo.label}
           </DialogTitle>
-          <DialogDescription className="text-zinc-400">
-            Select a model and confirm payment
-          </DialogDescription>
+          <DialogDescription className="text-zinc-400">{_copy("copy.a16541cb1ea8", { defaultValue: "Select a model and confirm payment" })}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -215,16 +215,16 @@ export function AiToolPaywallModal({
           {/* Cost Breakdown */}
           <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-400">{categoryInfo.label} Cost</span>
+              <span className="text-zinc-400">{categoryInfo.label}{_copy("copy.233fd94f9c91", { defaultValue: " Cost" })}</span>
               <span className="text-zinc-300">${costUsd.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-400">Staker Discount</span>
+              <span className="text-zinc-400">{_copy("copy.6689b99d8132", { defaultValue: "Staker Discount" })}</span>
               <span className="text-white font-bold">0%</span>
             </div>
             <div className="border-t border-zinc-700 pt-3">
               <div className="flex items-center justify-between">
-                <span className="text-zinc-300 font-medium">Total</span>
+                <span className="text-zinc-300 font-medium">{_copy("copy.c9b3c38247f7", { defaultValue: "Total" })}</span>
                 <span className="text-white font-semibold">${costUsd.toFixed(2)}</span>
               </div>
             </div>
@@ -235,7 +235,7 @@ export function AiToolPaywallModal({
             {loading || isQuoting ? (
               <div className="flex items-center justify-center py-2">
                 <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
-                <span className="ml-2 text-zinc-400">Fetching live price...</span>
+                <span className="ml-2 text-zinc-400">{_copy("copy.3730788afedc", { defaultValue: "Fetching live price..." })}</span>
               </div>
             ) : (
               <>
@@ -298,9 +298,7 @@ export function AiToolPaywallModal({
             className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700"
             onClick={() => onOpenChange(false)}
             disabled={isProcessing}
-          >
-            Cancel
-          </Button>
+          >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           <Button
             variant="glass"
             className="flex-1 font-medium"
@@ -309,16 +307,12 @@ export function AiToolPaywallModal({
           >
             {isPaying ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Paying...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
             ) : isProcessing ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Processing...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.f40a853e58a1", { defaultValue: "Processing..." })}</>
             ) : (
-              'Confirm & Pay'
+              _copy("copy.f47bd0deae98", { defaultValue: "Confirm & Pay" })
             )}
           </Button>
         </div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +32,7 @@ function fmtUsd(n: number) {
 }
 
 export default function LaunchpadCoinPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { mintId } = useParams<{ mintId: string }>();
   const location = useLocation();
@@ -60,7 +62,7 @@ export default function LaunchpadCoinPage() {
   return (
     <div className="min-h-screen px-4 md:px-6 py-6 max-w-6xl mx-auto">
       <SEOHead
-        title={`$${token.symbol} ${token.name} — Launchpad`}
+        title={_copy("copy.504ef1fa2003", { defaultValue: "${{value1}} {{value2}} — Launchpad", value1: token.symbol, value2: token.name })}
         description={t('launchpad.coinSeoDescription', { symbol: token.symbol })}
         noindex
       />

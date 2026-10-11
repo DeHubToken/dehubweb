@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * /creator/flow — Creator Flow, the node-based generation canvas.
  * ===============================================================
@@ -26,6 +27,7 @@ import { useGenerationStore } from '@/store/generationStore';
 const SIDEBAR_KEY = 'dehub-creator-flow-sidebar';
 
 export default function CreatorFlowPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth() as {
     walletAddress: string | null;
@@ -87,8 +89,8 @@ export default function CreatorFlowPage() {
   return (
     <div className="fixed inset-0 flex flex-col bg-[#090a0b] text-white">
       <SEOHead
-        title="DeHub Creator Flow — Visual AI Pipelines"
-        description="Chain prompts, references, image and video models on an infinite canvas. Build reusable generation flows, run them in one payment and share them with a link."
+        title={_copy("copy.87f6885f02a4", { defaultValue: "DeHub Creator Flow — Visual AI Pipelines" })}
+        description={_copy("copy.88f1cc09ba80", { defaultValue: "Chain prompts, references, image and video models on an infinite canvas. Build reusable generation flows, run them in one payment and share them with a link." })}
         url="https://dehub.io/creator/flow"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -97,7 +99,7 @@ export default function CreatorFlowPage() {
           url: 'https://dehub.io/creator/flow',
           applicationCategory: 'MultimediaApplication',
           operatingSystem: 'Web',
-          description: 'Node-based canvas for building AI image and video generation pipelines on DeHub.',
+          description: _copy("copy.4214eb3d2a70", { defaultValue: "Node-based canvas for building AI image and video generation pipelines on DeHub." }),
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }}
       />

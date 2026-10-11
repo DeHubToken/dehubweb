@@ -1,8 +1,10 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useState } from 'react';
 import { Code, Copy, CheckCircle, Globe, Lock, Zap } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const ApiEndpoints = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
   const [copiedCode, setCopiedCode] = useState<string>('');
 
@@ -14,32 +16,32 @@ const ApiEndpoints = () => {
 
   const endpoints = [
     {
-      method: 'GET', path: '/api/v1/users', description: 'Retrieve a list of users', auth: true,
+      method: 'GET', path: '/api/v1/users', description: _copy("copy.8d418ef694e8", { defaultValue: "Retrieve a list of users" }), auth: true,
       parameters: [
-        { name: 'page', type: 'integer', required: false, description: 'Page number for pagination' },
-        { name: 'limit', type: 'integer', required: false, description: 'Number of items per page (max 100)' },
-        { name: 'filter', type: 'string', required: false, description: 'Filter users by status' }
+        { name: 'page', type: 'integer', required: false, description: _copy("copy.f6889ee3bdc7", { defaultValue: "Page number for pagination" }) },
+        { name: 'limit', type: 'integer', required: false, description: _copy("copy.70d8ec6b7604", { defaultValue: "Number of items per page (max 100)" }) },
+        { name: 'filter', type: 'string', required: false, description: _copy("copy.548fbd49acee", { defaultValue: "Filter users by status" }) }
       ],
       response: `{\n  "data": [\n    {\n      "id": "user_123",\n      "email": "user@example.com",\n      "name": "John Doe",\n      "status": "active",\n      "created_at": "2024-01-15T10:30:00Z"\n    }\n  ],\n  "pagination": {\n    "page": 1,\n    "limit": 10,\n    "total": 150,\n    "has_more": true\n  }\n}`,
       example: `curl -X GET "https://api.yourplatform.com/v1/users?page=1&limit=10" \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json"`
     },
     {
-      method: 'POST', path: '/api/v1/users', description: 'Create a new user', auth: true,
+      method: 'POST', path: '/api/v1/users', description: _copy("copy.6f27dd8ce2f2", { defaultValue: "Create a new user" }), auth: true,
       parameters: [
-        { name: 'email', type: 'string', required: true, description: 'User email address' },
-        { name: 'name', type: 'string', required: true, description: 'User full name' },
-        { name: 'role', type: 'string', required: false, description: 'User role (default: user)' }
+        { name: 'email', type: 'string', required: true, description: _copy("copy.a9b706f129f1", { defaultValue: "User email address" }) },
+        { name: 'name', type: 'string', required: true, description: _copy("copy.0d8dc2b3a4c9", { defaultValue: "User full name" }) },
+        { name: 'role', type: 'string', required: false, description: _copy("copy.257f92781d61", { defaultValue: "User role (default: user)" }) }
       ],
       response: `{\n  "data": {\n    "id": "user_124",\n    "email": "newuser@example.com",\n    "name": "Jane Smith",\n    "role": "user",\n    "status": "active",\n    "created_at": "2024-01-15T11:00:00Z"\n  }\n}`,
       example: `curl -X POST "https://api.yourplatform.com/v1/users" \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "email": "newuser@example.com",\n    "name": "Jane Smith",\n    "role": "user"\n  }'`
     },
     {
-      method: 'GET', path: '/api/v1/data', description: 'Retrieve data with filters', auth: true,
+      method: 'GET', path: '/api/v1/data', description: _copy("copy.591a92a25eff", { defaultValue: "Retrieve data with filters" }), auth: true,
       parameters: [
-        { name: 'type', type: 'string', required: false, description: 'Data type filter' },
-        { name: 'status', type: 'string', required: false, description: 'Status filter (active, inactive)' },
-        { name: 'date_from', type: 'string', required: false, description: 'Start date filter (ISO 8601)' },
-        { name: 'date_to', type: 'string', required: false, description: 'End date filter (ISO 8601)' }
+        { name: 'type', type: 'string', required: false, description: _copy("copy.81d0d522c186", { defaultValue: "Data type filter" }) },
+        { name: 'status', type: 'string', required: false, description: _copy("copy.c80ea6394712", { defaultValue: "Status filter (active, inactive)" }) },
+        { name: 'date_from', type: 'string', required: false, description: _copy("copy.5554cdafbad4", { defaultValue: "Start date filter (ISO 8601)" }) },
+        { name: 'date_to', type: 'string', required: false, description: _copy("copy.d9be4916dd78", { defaultValue: "End date filter (ISO 8601)" }) }
       ],
       response: `{\n  "data": [\n    {\n      "id": "data_123",\n      "type": "analytics",\n      "value": 12500,\n      "status": "active",\n      "timestamp": "2024-01-15T10:30:00Z"\n    }\n  ],\n  "meta": {\n    "total_records": 45,\n    "filtered_records": 12,\n    "processing_time_ms": 156\n  }\n}`,
       example: `curl -X GET "https://api.yourplatform.com/v1/data?type=analytics&status=active" \\\n  -H "Authorization: Bearer YOUR_API_KEY" \\\n  -H "Content-Type: application/json"`
@@ -87,7 +89,7 @@ const ApiEndpoints = () => {
         </div>
         <p className="text-muted-foreground mb-3">{t('apiEndpoints.authDesc')}</p>
         <div className="bg-muted rounded p-3">
-          <code className="text-foreground font-mono text-sm">Authorization: Bearer YOUR_API_KEY</code>
+          <code className="text-foreground font-mono text-sm">{_copy("copy.6e23030be226", { defaultValue: "Authorization: Bearer YOUR_API_KEY" })}</code>
         </div>
       </div>
 
@@ -154,11 +156,11 @@ const ApiEndpoints = () => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
                       <Code className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-foreground text-sm">cURL</span>
+                      <span className="text-foreground text-sm">{_copy("copy.addc90cfd45b", { defaultValue: "cURL" })}</span>
                     </div>
                     <button onClick={() => copyToClipboard(endpoint.example, `example-${index}`)} className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors">
                       {copiedCode === `example-${index}` ? <CheckCircle className="w-4 h-4 text-foreground" /> : <Copy className="w-4 h-4" />}
-                      <span className="text-sm">Copy</span>
+                      <span className="text-sm">{_copy("copy.e21f935f11d7", { defaultValue: "Copy" })}</span>
                     </button>
                   </div>
                   <pre className="text-foreground font-mono text-sm overflow-x-auto"><code>{endpoint.example}</code></pre>
@@ -172,7 +174,7 @@ const ApiEndpoints = () => {
                     <span className="text-foreground text-sm">JSON</span>
                     <button onClick={() => copyToClipboard(endpoint.response, `response-${index}`)} className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors">
                       {copiedCode === `response-${index}` ? <CheckCircle className="w-4 h-4 text-foreground" /> : <Copy className="w-4 h-4" />}
-                      <span className="text-sm">Copy</span>
+                      <span className="text-sm">{_copy("copy.e21f935f11d7", { defaultValue: "Copy" })}</span>
                     </button>
                   </div>
                   <pre className="text-foreground font-mono text-sm overflow-x-auto"><code>{endpoint.response}</code></pre>

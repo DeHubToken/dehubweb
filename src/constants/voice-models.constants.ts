@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Voice Preferences Configuration
  * Maps to browser's Web Speech API voices
@@ -17,7 +18,7 @@ export const VOICE_PREFERENCES: Record<string, VoicePreference> = {
   female: {
     id: 'female',
     name: 'Female',
-    description: 'Samantha, Zira',  
+    get description() { return _translateCopy("copy.b85e20c546ad", { defaultValue: "Samantha, Zira" }); },  
     emoji: '👩',
     preferredVoiceNames: [
       'Samantha',
@@ -28,7 +29,7 @@ export const VOICE_PREFERENCES: Record<string, VoicePreference> = {
   male: {
     id: 'male',
     name: 'Male',
-    description: 'Alex, Daniel',
+    get description() { return _translateCopy("copy.554a0eb5f3de", { defaultValue: "Alex, Daniel" }); },
     emoji: '👨',
     preferredVoiceNames: [
       'Alex',
@@ -40,7 +41,7 @@ export const VOICE_PREFERENCES: Record<string, VoicePreference> = {
   neutral: {
     id: 'neutral',
     name: 'Neutral',
-    description: 'System default voice',
+    get description() { return _translateCopy("copy.eaf77b782bcb", { defaultValue: "System default voice" }); },
     emoji: '🤖',
     preferredVoiceNames: [],
     preferFemale: false,

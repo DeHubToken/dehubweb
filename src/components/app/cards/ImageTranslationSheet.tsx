@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Image Translation Sheet Component
  * ==================================
@@ -37,6 +38,7 @@ export function ImageTranslationSheet({
   error,
   result,
 }: ImageTranslationSheetProps) {
+  const { t: _copy } = _useCopy();
   const [showOriginal, setShowOriginal] = useState(false);
 
   const sourceLangName = result?.sourceLang 
@@ -49,9 +51,7 @@ export function ImageTranslationSheet({
         <DrawerHeader className="border-b border-white/10 pb-3">
           <div className="flex items-center justify-between">
             <DrawerTitle className="text-white font-semibold flex items-center gap-2">
-              <Languages className="w-5 h-5 text-white" />
-              Image Translation
-            </DrawerTitle>
+              <Languages className="w-5 h-5 text-white" />{_copy("copy.374c72f1af45", { defaultValue: "Image Translation" })}</DrawerTitle>
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
@@ -66,7 +66,7 @@ export function ImageTranslationSheet({
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-12 gap-3">
               <Loader2 className="w-8 h-8 text-white animate-spin" />
-              <p className="text-zinc-400 text-sm">Extracting and translating text...</p>
+              <p className="text-zinc-400 text-sm">{_copy("copy.698275f4f03b", { defaultValue: "Extracting and translating text..." })}</p>
             </div>
           )}
 
@@ -82,7 +82,7 @@ export function ImageTranslationSheet({
 
           {/* No Text Found */}
           {result && !result.hasText && !isLoading && !error && (
-            <AppState icon="posts" title="No text found in this image" size="drawer" />
+            <AppState icon="posts" title={_copy("copy.3912eeeb7329", { defaultValue: "No text found in this image" })} size="drawer" />
           )}
 
           {/* Translation Result */}
@@ -90,8 +90,7 @@ export function ImageTranslationSheet({
             <>
               {/* Source Language Badge */}
               <div className="flex items-center gap-2">
-                <span className="px-2 py-1 rounded-lg bg-zinc-800 text-white text-xs">
-                  Translated from {sourceLangName}
+                <span className="px-2 py-1 rounded-lg bg-zinc-800 text-white text-xs">{_copy("copy.c83851d5858f", { defaultValue: "Translated from " })}{sourceLangName}
                 </span>
               </div>
 
@@ -113,9 +112,7 @@ export function ImageTranslationSheet({
                   }}
                   className="flex items-center gap-2 text-zinc-500 hover:text-zinc-400 transition-colors"
                 >
-                  <span className="text-xs font-medium uppercase tracking-wide">
-                    Original Text
-                  </span>
+                  <span className="text-xs font-medium uppercase tracking-wide">{_copy("copy.ba0d098ebfc0", { defaultValue: "Original Text" })}</span>
                   {showOriginal ? (
                     <ChevronUp className="w-4 h-4" />
                   ) : (

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -81,6 +82,7 @@ export function EditPostModal({
   canReplaceVideo = false,
   onSuccess,
 }: EditPostModalProps) {
+  const { t: _copy } = _useCopy();
   // Only the Kids Mode rows below go through t() — the rest of this modal is
   // still hardcoded English and wiring it is its own change, but a new string
   // should not add to that pile.
@@ -140,7 +142,7 @@ export function EditPostModal({
     setReplaceProgress(0);
     try {
       await replaceVideoFile(tokenId, file, { onProgress: setReplaceProgress });
-      toast.success('New file uploaded — it will swap in once it finishes processing');
+      toast.success(_copy("copy.1971808ff075", { defaultValue: "New file uploaded — it will swap in once it finishes processing" }));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Could not replace that file';
       toast.error(message);
@@ -222,7 +224,7 @@ export function EditPostModal({
       setIsSubmitting(true);
       try {
         await setCommonGroundMutation.mutateAsync(commonGround === true);
-        toast.success('Post updated successfully');
+        toast.success(_copy("copy.0aa8226f0657", { defaultValue: "Post updated successfully" }));
         onOpenChange(false);
       } catch (error: any) {
         console.error('[EditPostModal] Discussion settings error:', error);
@@ -234,7 +236,7 @@ export function EditPostModal({
     }
 
     if (params.name && (params.name as string).length > 140) {
-      toast.error('Title must be 140 characters or less');
+      toast.error(_copy("copy.5019d50e0ac9", { defaultValue: "Title must be 140 characters or less" }));
       return;
     }
     if (params.description && (params.description as string).length > descriptionMax) {
@@ -242,7 +244,7 @@ export function EditPostModal({
       return;
     }
     if (currentArticleBody !== undefined && articleBody.trim().length < 100) {
-      toast.error('Article body must be at least 100 characters');
+      toast.error(_copy("copy.1106c76020fa", { defaultValue: "Article body must be at least 100 characters" }));
       return;
     }
 
@@ -256,7 +258,7 @@ export function EditPostModal({
 
       const result = await editPost(tokenId, params as any);
       if (result.result) {
-        toast.success('Post updated successfully');
+        toast.success(_copy("copy.0aa8226f0657", { defaultValue: "Post updated successfully" }));
         setName.complete(name, name);
       setDescription.complete(description, description);
       setArticleBody.complete(articleBody, articleBody);
@@ -265,7 +267,7 @@ export function EditPostModal({
       onSuccess?.({ name: name.trim(), description: description.trim(), articleBody: currentArticleBody !== undefined ? articleBody.trim() : undefined, categories, commentsDisabled, contentRating: nextRating, forKids: isForKids, shopLinks, shopListingCount: pickedListingIds.length });
         onOpenChange(false);
       } else {
-        toast.error('Failed to update post');
+        toast.error(_copy("copy.3cd8b962fe5d", { defaultValue: "Failed to update post" }));
       }
     } catch (error: any) {
       console.error('[EditPostModal] Submit error:', error);
@@ -281,12 +283,8 @@ export function EditPostModal({
       <DrawerContent column glass className="max-h-[90dvh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Pencil className="w-5 h-5" />
-            Edit Post
-          </DrawerTitle>
-          <DrawerDescription className="text-zinc-400">
-            Update your post details
-          </DrawerDescription>
+            <Pencil className="w-5 h-5" />{_copy("copy.cc54b50c5162", { defaultValue: "Edit Post" })}</DrawerTitle>
+          <DrawerDescription className="text-zinc-400">{_copy("copy.39d69f92a679", { defaultValue: "Update your post details" })}</DrawerDescription>
         </DrawerHeader>
 
         <div
@@ -298,54 +296,48 @@ export function EditPostModal({
           {open && canReplaceVideo && <EditPostCover tokenId={tokenId} disabled={isSubmitting || isReplacing} onBusyChange={setIsReplacing} />}
           {/* Title */}
           <div className="space-y-2">
-            <Label htmlFor="edit-title" className="text-sm font-medium text-zinc-300">
-              Title
-            </Label>
+            <Label htmlFor="edit-title" className="text-sm font-medium text-zinc-300">{_copy("copy.7e8cd2056da7", { defaultValue: "Title" })}</Label>
             <Input
               id="edit-title"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="bg-white/5 border-white/10 text-white rounded-xl"
               maxLength={140}
-              placeholder="Post title"
+              placeholder={_copy("copy.c45dcb7f09b3", { defaultValue: "Post title" })}
             />
             <p className="text-xs text-zinc-500 text-right">{name.length}/140</p>
           </div>
 
           {/* Description */}
           {currentArticleBody !== undefined && <div className="space-y-2">
-            <Label htmlFor="edit-article-body">Article body</Label>
+            <Label htmlFor="edit-article-body">{_copy("copy.91090fa36a44", { defaultValue: "Article body" })}</Label>
             <Textarea id="edit-article-body" value={articleBody} onChange={e => setArticleBody(e.target.value)}
               maxLength={20000} className="min-h-64 bg-white/5 border-white/10 text-white" />
             <p className="text-xs text-zinc-500 text-right">{articleBody.length}/20,000</p>
           </div>}
           <div className="space-y-2">
-            <Label htmlFor="edit-description" className="text-sm font-medium text-zinc-300">
-              Description
-            </Label>
+            <Label htmlFor="edit-description" className="text-sm font-medium text-zinc-300">{_copy("copy.526e0087cc3f", { defaultValue: "Description" })}</Label>
             <Textarea
               id="edit-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="bg-white/5 border-white/10 text-white min-h-[100px] rounded-xl resize-none"
               maxLength={descriptionMax}
-              placeholder="Post description"
+              placeholder={_copy("copy.7881e4a3da46", { defaultValue: "Post description" })}
             />
             <p className="text-xs text-zinc-500 text-right">{description.length.toLocaleString('en-US')}/{descriptionMax.toLocaleString('en-US')}</p>
           </div>
 
           {/* Categories */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-zinc-300">
-              Categories
-            </Label>
+            <Label className="text-sm font-medium text-zinc-300">{_copy("copy.b8b1d894c683", { defaultValue: "Categories" })}</Label>
             <div className="flex gap-2">
               <Input
                 value={categoryInput}
                 onChange={(e) => setCategoryInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCategory())}
                 className="bg-white/5 border-white/10 text-white rounded-xl flex-1"
-                placeholder="Add category"
+                placeholder={_copy("copy.aafdf428fd02", { defaultValue: "Add category" })}
                 maxLength={30}
               />
               <Button
@@ -354,9 +346,7 @@ export function EditPostModal({
                 disabled={!categoryInput.trim() || categories.length >= 5}
                 className="bg-white/10 text-white hover:bg-white/20 rounded-xl"
                 size="sm"
-              >
-                Add
-              </Button>
+              >{_copy("copy.9fd728c66c9a", { defaultValue: "Add" })}</Button>
             </div>
             {categories.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
@@ -423,7 +413,7 @@ export function EditPostModal({
 
           {/* Comments */}
           <div>
-            <label className="text-zinc-400 text-sm mb-2 block">Comments</label>
+            <label className="text-zinc-400 text-sm mb-2 block">{_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}</label>
             <button
               type="button"
               role="switch"
@@ -433,12 +423,12 @@ export function EditPostModal({
             >
               <span className="min-w-0">
                 <span className="block text-white text-sm font-medium">
-                  {commentsDisabled ? 'Comments are off' : 'Allow comments'}
+                  {commentsDisabled ? _copy("copy.8a1b3113df1a", { defaultValue: "Comments are off" }) : _copy("copy.ad3aa40a2679", { defaultValue: "Allow comments" })}
                 </span>
                 <span className="block text-zinc-500 text-xs mt-0.5">
                   {commentsDisabled
-                    ? 'Replies already posted stay visible — turning this back on restores them.'
-                    : 'Anyone who can see this post can reply to it.'}
+                    ? _copy("copy.64225504d713", { defaultValue: "Replies already posted stay visible — turning this back on restores them." })
+                    : _copy("copy.e436cb4715b8", { defaultValue: "Anyone who can see this post can reply to it." })}
                 </span>
               </span>
               <span
@@ -499,7 +489,7 @@ export function EditPostModal({
 
           {/* Shop board — the creator's own listings and affiliate links */}
           <div>
-            <label className="text-zinc-400 text-sm mb-2 block">Shop</label>
+            <label className="text-zinc-400 text-sm mb-2 block">{_copy("copy.d00aae6b7fbf", { defaultValue: "Shop" })}</label>
             <button
               type="button"
               onClick={() => setShopSheetOpen(true)}
@@ -508,12 +498,10 @@ export function EditPostModal({
               <span className="min-w-0">
                 <span className="block text-white text-sm font-medium">
                   {shopLinks.length + pickedListingIds.length
-                    ? `${shopLinks.length + pickedListingIds.length} on the Shop board`
-                    : 'Add to the Shop board'}
+                    ? _copy("copy.89fb9227db8c", { defaultValue: "{{value1}} on the Shop board", value1: shopLinks.length + pickedListingIds.length })
+                    : _copy("copy.9b6b30cafe48", { defaultValue: "Add to the Shop board" })}
                 </span>
-                <span className="block text-zinc-500 text-xs mt-0.5">
-                  Your shop listings and affiliate links, opened from the Shop button. You can
-                  add {shopAllowance.allowance}.
+                <span className="block text-zinc-500 text-xs mt-0.5">{_copy("copy.0a85e2393dd7", { defaultValue: "Your shop listings and affiliate links, opened from the Shop button. You can add " })}{shopAllowance.allowance}.
                 </span>
               </span>
               <ShoppingBag className="w-4 h-4 text-zinc-400 shrink-0" />
@@ -522,7 +510,7 @@ export function EditPostModal({
 
           {/* Mature content */}
           <div>
-            <label className="text-zinc-400 text-sm mb-2 block">Content rating</label>
+            <label className="text-zinc-400 text-sm mb-2 block">{_copy("copy.8c76be60512c", { defaultValue: "Content rating" })}</label>
             <button
               type="button"
               role="switch"
@@ -540,12 +528,12 @@ export function EditPostModal({
             >
               <span className="min-w-0">
                 <span className="block text-white text-sm font-medium">
-                  {isMature ? 'Marked mature' : 'Mark as mature'}
+                  {isMature ? _copy("copy.5d6958f97e31", { defaultValue: "Marked mature" }) : _copy("copy.95d00e2ce0a8", { defaultValue: "Mark as mature" })}
                 </span>
                 <span className="block text-zinc-500 text-xs mt-0.5">
                   {isMature
-                    ? 'Kept off the public feed. Followers, your profile and the link still work.'
-                    : 'For adult or graphic posts. Turning this on takes it off the public feed.'}
+                    ? _copy("copy.9302b6a47b34", { defaultValue: "Kept off the public feed. Followers, your profile and the link still work." })
+                    : _copy("copy.c8c4a3a895f2", { defaultValue: "For adult or graphic posts. Turning this on takes it off the public feed." })}
                 </span>
               </span>
               <span
@@ -569,7 +557,7 @@ export function EditPostModal({
               post has nothing to swap, and the server refuses those anyway. */}
           {canReplaceVideo && (
             <div className="space-y-2">
-              <Label className="text-sm font-medium text-zinc-300">Video file</Label>
+              <Label className="text-sm font-medium text-zinc-300">{_copy("copy.74d5e1a5adca", { defaultValue: "Video file" })}</Label>
               <input
                 ref={videoInputRef}
                 type="file"
@@ -589,12 +577,9 @@ export function EditPostModal({
               >
                 <span className="min-w-0">
                   <span className="block text-white text-sm font-medium">
-                    {isReplacing ? `Uploading… ${replaceProgress}%` : 'Replace video file'}
+                    {isReplacing ? `Uploading… ${replaceProgress}%` : _copy("copy.d2a55fac5489", { defaultValue: "Replace video file" })}
                   </span>
-                  <span className="block text-zinc-500 text-xs mt-0.5">
-                    Keeps this post's link, views and comments. The old file plays until the new
-                    one finishes processing.
-                  </span>
+                  <span className="block text-zinc-500 text-xs mt-0.5">{_copy("copy.60a265f0d4de", { defaultValue: "Keeps this post's link, views and comments. The old file plays until the new one finishes processing." })}</span>
                 </span>
                 {isReplacing ? (
                   <Loader2 className="w-5 h-5 shrink-0 text-zinc-400 animate-spin" />
@@ -612,9 +597,7 @@ export function EditPostModal({
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting || isReplacing}
               className="flex-1 text-zinc-400 hover:text-white hover:bg-white/10"
-            >
-              Cancel
-            </Button>
+            >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             <Button
               onClick={handleSubmit}
               disabled={isSubmitting || isReplacing}
@@ -623,11 +606,9 @@ export function EditPostModal({
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Saving...
-                </>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />{_copy("copy.dc85af8f2b1d", { defaultValue: "Saving..." })}</>
               ) : (
-                'Save Changes'
+                _copy("copy.35322b5bb5a2", { defaultValue: "Save Changes" })
               )}
             </Button>
           </div>

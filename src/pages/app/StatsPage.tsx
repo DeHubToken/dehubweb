@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stats Page
  * ==========
@@ -65,12 +67,12 @@ type Range = '24h' | '3d' | '7d' | '30d' | '1y' | 'all';
  * `days: null` means all time: every day Cloudflare still retains.
  */
 const RANGES: { key: Range; label: string; hourly: boolean; hours?: number; days?: number | null }[] = [
-  { key: '24h', label: '24 hours', hourly: true, hours: 24 },
-  { key: '3d', label: '3 days', hourly: true, hours: 72 },
-  { key: '7d', label: '7 days', hourly: false, days: 7 },
-  { key: '30d', label: '30 days', hourly: false, days: 30 },
-  { key: '1y', label: '1 year', hourly: false, days: 365 },
-  { key: 'all', label: 'All time', hourly: false, days: null },
+  { key: '24h', get label() { return _translateCopy("copy.f0514e8df841", { defaultValue: "24 hours" }); }, hourly: true, hours: 24 },
+  { key: '3d', get label() { return _translateCopy("copy.360719440e92", { defaultValue: "3 days" }); }, hourly: true, hours: 72 },
+  { key: '7d', get label() { return _translateCopy("copy.7f920bb639c9", { defaultValue: "7 days" }); }, hourly: false, days: 7 },
+  { key: '30d', get label() { return _translateCopy("copy.ffd7280513ce", { defaultValue: "30 days" }); }, hourly: false, days: 30 },
+  { key: '1y', get label() { return _translateCopy("copy.91647badc37b", { defaultValue: "1 year" }); }, hourly: false, days: 365 },
+  { key: 'all', get label() { return _translateCopy("copy.9755c8d7d44a", { defaultValue: "All time" }); }, hourly: false, days: null },
 ];
 
 function isUnavailable(res: SiteStatsResponse | undefined): res is SiteStatsUnavailable {
@@ -529,6 +531,7 @@ function GroupHeading({
   actionHref?: string;
   actionLabel?: string;
 }) {
+  const { t: _copy } = _useCopy();
   return (
     // The page stacks its children on a uniform space-y-3. Left alone a heading
     // would sit as far from its own tiles as from the block above it; the extra
@@ -555,9 +558,7 @@ function GroupHeading({
           target="_blank"
           rel="noopener noreferrer"
           className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors ml-auto shrink-0"
-        >
-          /api/stats/users
-        </a>
+        >{_copy("copy.616685a138d8", { defaultValue: "/api/stats/users" })}</a>
       )}
       {actionHref && actionLabel && (
         <Link
@@ -890,6 +891,7 @@ function CommunitySection({ range }: { range: Range }) {
 // ---------------------------------------------------------------------------
 
 export default function StatsPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [range, setRange] = useState<Range>('30d');
 
@@ -965,21 +967,21 @@ export default function StatsPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Live Site Stats — DeHub Visitors and Members in Real Time"
-        description="Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database."
+        title={_copy("copy.1340eb7a333e", { defaultValue: "Live Site Stats — DeHub Visitors and Members in Real Time" })}
+        description={_copy("copy.e1110847f32e", { defaultValue: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database." })}
         url="https://dehub.io/stats"
         image="https://dehub.io/og/stats.jpg"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Dataset',
           name: 'DeHub live site statistics',
-          description: 'Edge-measured visitor statistics for dehub.io alongside the platform’s own community figures — members, active users, signups and growth — published live.',
+          description: _copy("copy.67ae514e929e", { defaultValue: "Edge-measured visitor statistics for dehub.io alongside the platform’s own community figures — members, active users, signups and growth — published live." }),
           url: 'https://dehub.io/stats',
           creator: { '@type': 'Organization', name: 'DeHub' },
           isAccessibleForFree: true,
         }}
       />
-      <h1 className="sr-only">DeHub Live Site Statistics — Visitors, Page Views, Members and Active Users</h1>
+      <h1 className="sr-only">{_copy("copy.2baf411ba3c5", { defaultValue: "DeHub Live Site Statistics — Visitors, Page Views, Members and Active Users" })}</h1>
 
       <PageIsland
         icon="stats"

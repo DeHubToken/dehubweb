@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import BudgetCalculator from '@/components/advertising/BudgetCalculator';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Advertising = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   return (
@@ -23,7 +25,7 @@ const Advertising = () => {
       <Card className="border-foreground/15 bg-foreground/[0.04]">
         <CardContent className="py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h3 className="font-semibold text-foreground">POVR Ads Manager is live</h3>
+            <h3 className="font-semibold text-foreground">{_copy("copy.bd22e7a24198", { defaultValue: "POVR Ads Manager is live" })}</h3>
             <p className="text-sm text-muted-foreground">
               {t('advertising.adsManagerLiveDesc')}
             </p>
@@ -31,9 +33,7 @@ const Advertising = () => {
           <Link
             to="/app/ads"
             className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-medium bg-foreground/10 hover:bg-foreground/15 text-foreground border border-foreground/10 transition-colors shrink-0"
-          >
-            Open Ads Manager →
-          </Link>
+          >{_copy("copy.f6c44bbdae3a", { defaultValue: "Open Ads Manager →" })}</Link>
         </CardContent>
       </Card>
 

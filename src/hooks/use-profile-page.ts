@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
@@ -38,6 +39,7 @@ interface UseProfilePageOptions {
 }
 
 export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {}) {
+  const { t: _copy } = _useCopy();
   const [searchParams] = useSearchParams();
   const { username: routeUsername } = useParams<{ username: string }>();
   const navigate = useNavigate();
@@ -353,22 +355,22 @@ export function useProfilePage({ activeTab = 'home' }: UseProfilePageOptions = {
   const contentTotal = (userContentData?.pages?.[0] as { total?: number } | undefined)?.total ?? 0;
 
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
-    const homeTab = { icon: Home, label: 'All', value: 'home' as TabValue, count: Math.max(contentTotal, ALL_CONTENT.length) };
+    const homeTab = { icon: Home, label: _copy("copy.a52ace420f21", { defaultValue: "All" }), value: 'home' as TabValue, count: Math.max(contentTotal, ALL_CONTENT.length) };
     const restTabs = [
-      { icon: MessageSquare, label: 'Posts', value: 'posts' as TabValue, count: PROFILE_POSTS.length + commentCount },
-      { icon: Image, label: 'Images', value: 'images' as TabValue, count: PROFILE_IMAGES.length },
-      { icon: Film, label: 'Videos', value: 'videos' as TabValue, count: ALL_PROFILE_VIDEOS.length },
-      { icon: Star, label: 'Subs', value: 'subscribers' as TabValue, count: 0 },
-      { icon: Play, label: 'Audio', value: 'songs' as TabValue, count: 0 },
-      { icon: Radio, label: 'Live', value: 'live' as TabValue, count: PROFILE_LIVE.length },
-      { icon: PieChart, label: 'Fractions', value: 'fractions' as TabValue, count: 0 },
-      { icon: Pin, label: 'Pinned', value: 'pinned' as TabValue, count: pinnedCount },
+      { icon: MessageSquare, label: _copy("copy.a80811cf6889", { defaultValue: "Posts" }), value: 'posts' as TabValue, count: PROFILE_POSTS.length + commentCount },
+      { icon: Image, label: _copy("copy.be7e2f201293", { defaultValue: "Images" }), value: 'images' as TabValue, count: PROFILE_IMAGES.length },
+      { icon: Film, label: _copy("copy.c9a9639463c2", { defaultValue: "Videos" }), value: 'videos' as TabValue, count: ALL_PROFILE_VIDEOS.length },
+      { icon: Star, label: _copy("copy.17371507e9f7", { defaultValue: "Subs" }), value: 'subscribers' as TabValue, count: 0 },
+      { icon: Play, label: _copy("copy.bc1b88907d3b", { defaultValue: "Audio" }), value: 'songs' as TabValue, count: 0 },
+      { icon: Radio, label: _copy("copy.b64ac05f17e6", { defaultValue: "Live" }), value: 'live' as TabValue, count: PROFILE_LIVE.length },
+      { icon: PieChart, label: _copy("copy.487aaa977933", { defaultValue: "Fractions" }), value: 'fractions' as TabValue, count: 0 },
+      { icon: Pin, label: _copy("copy.f20c87946555", { defaultValue: "Pinned" }), value: 'pinned' as TabValue, count: pinnedCount },
       ...(playlistCount > 0
-        ? [{ icon: ListVideo, label: 'Playlists', value: 'playlists' as TabValue, count: playlistCount }]
+        ? [{ icon: ListVideo, label: _copy("copy.dcd0a4d2c65a", { defaultValue: "Playlists" }), value: 'playlists' as TabValue, count: playlistCount }]
         : []),
     ].sort((a, b) => b.count - a.count);
     return [homeTab, ...restTabs];
-  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, pinnedCount, playlistCount]);
+  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, PROFILE_LIVE.length, commentCount, pinnedCount, playlistCount, _copy]);
 
   // Subscriptions — deferred slightly so profile + first content page win the
   // wire on the (slow) API; the header Subscribe button pops in right after.

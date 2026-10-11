@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 /**
  * Right-hand inspector: project canvas settings + selected-clip properties (text).
@@ -41,6 +42,7 @@ const ASPECTS: { value: AspectPreset; label: string }[] = [
 ];
 
 export function Inspector() {
+  const { t: _copy } = _useCopy();
   const draftFocus = useEditorDraftFocus("inspector", true);
   const { t } = useTranslation();
   const settings = useEditorStore((s) => s.settings);
@@ -131,7 +133,7 @@ export function Inspector() {
       <>
 
       <section className="space-y-2 border-b border-white/10 p-3">
-        <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">Canvas</h3>
+        <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">{_copy("copy.3824a9f4dafe", { defaultValue: "Canvas" })}</h3>
         <div className="grid grid-cols-4 gap-1">
           {ASPECTS.map((a) => (
             <Button
@@ -151,12 +153,12 @@ export function Inspector() {
           ))}
         </div>
         <div className="grid grid-cols-2 gap-2 pt-1">
-          <Field label="Width">
+          <Field label={_copy("copy.3019947b6daf", { defaultValue: "Width" })}>
             <Input type="number" value={settings.width}
               onChange={(e) => updateSettings({ width: Math.max(64, Number(e.target.value) || 0), aspectPreset: "custom" })}
               className="h-7 bg-white/5 text-xs" />
           </Field>
-          <Field label="Height">
+          <Field label={_copy("copy.bfe2eca40179", { defaultValue: "Height" })}>
             <Input type="number" value={settings.height}
               onChange={(e) => updateSettings({ height: Math.max(64, Number(e.target.value) || 0), aspectPreset: "custom" })}
               className="h-7 bg-white/5 text-xs" />
@@ -166,7 +168,7 @@ export function Inspector() {
               onChange={(e) => updateSettings({ fps: Math.max(1, Math.min(120, Number(e.target.value) || 30)) })}
               className="h-7 bg-white/5 text-xs" />
           </Field>
-          <Field label="Background">
+          <Field label={_copy("copy.ea2b8a878841", { defaultValue: "Background" })}>
             <input type="color" value={settings.background}
               onChange={(e) => updateSettings({ background: e.target.value })}
               className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
@@ -187,7 +189,7 @@ export function Inspector() {
 
         {visualMedia && (
           <div className="space-y-3">
-            <p className="text-[10px] uppercase tracking-wide text-white/40">Vibes</p>
+            <p className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.ba4e64037fff", { defaultValue: "Vibes" })}</p>
             <div className="grid grid-cols-4 gap-1">
               {FILTER_PRESETS.map((p) => {
                 const active = presetMatches(visualMedia.effects, p.effects);
@@ -209,22 +211,22 @@ export function Inspector() {
               })}
             </div>
 
-            <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">Effects</p>
-            <EffectSlider label="Brightness" value={visualMedia.effects?.brightness ?? 1} min={0} max={2} step={0.01}
+            <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.358511c8c098", { defaultValue: "Effects" })}</p>
+            <EffectSlider label={_copy("copy.ec811d30a89c", { defaultValue: "Brightness" })} value={visualMedia.effects?.brightness ?? 1} min={0} max={2} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, brightness: v } })} />
-            <EffectSlider label="Contrast" value={visualMedia.effects?.contrast ?? 1} min={0} max={2} step={0.01}
+            <EffectSlider label={_copy("copy.08795ba031bc", { defaultValue: "Contrast" })} value={visualMedia.effects?.contrast ?? 1} min={0} max={2} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, contrast: v } })} />
-            <EffectSlider label="Saturation" value={visualMedia.effects?.saturation ?? 1} min={0} max={2} step={0.01}
+            <EffectSlider label={_copy("copy.993f024b650e", { defaultValue: "Saturation" })} value={visualMedia.effects?.saturation ?? 1} min={0} max={2} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, saturation: v } })} />
-            <EffectSlider label="Blur (px)" value={visualMedia.effects?.blur ?? 0} min={0} max={20} step={0.5}
+            <EffectSlider label={_copy("copy.f861c684aef1", { defaultValue: "Blur (px)" })} value={visualMedia.effects?.blur ?? 0} min={0} max={20} step={0.5}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, blur: v } })} />
-            <EffectSlider label={`Hue ${Math.round(visualMedia.effects?.hueRotate ?? 0)}°`}
+            <EffectSlider label={_copy("copy.ca76a418f18f", { defaultValue: "Hue {{value1}}°", value1: Math.round(visualMedia.effects?.hueRotate ?? 0) })}
               value={visualMedia.effects?.hueRotate ?? 0} min={0} max={360} step={1}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, hueRotate: v } })} />
-            <EffectSlider label={`Grayscale ${Math.round((visualMedia.effects?.grayscale ?? 0) * 100)}%`}
+            <EffectSlider label={_copy("copy.2f8029f54a3d", { defaultValue: "Grayscale {{value1}}%", value1: Math.round((visualMedia.effects?.grayscale ?? 0) * 100) })}
               value={visualMedia.effects?.grayscale ?? 0} min={0} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, grayscale: v } })} />
-            <EffectSlider label={`Sepia ${Math.round((visualMedia.effects?.sepia ?? 0) * 100)}%`}
+            <EffectSlider label={_copy("copy.2db0df1472cb", { defaultValue: "Sepia {{value1}}%", value1: Math.round((visualMedia.effects?.sepia ?? 0) * 100) })}
               value={visualMedia.effects?.sepia ?? 0} min={0} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, sepia: v } })} />
             <EffectSlider label={t("editor.adjust.warmth", { value: Math.round((visualMedia.effects?.warmth ?? 0) * 100) })}
@@ -253,16 +255,14 @@ export function Inspector() {
             )}
             <Button size="sm" variant="ghost"
               onClick={() => updateMediaClip(visualMedia.id, { effects: undefined })}
-              className="h-7 w-full rounded-md border border-white/10 text-[11px] text-white/70 hover:bg-white/5 hover:text-white">
-              Reset effects
-            </Button>
+              className="h-7 w-full rounded-md border border-white/10 text-[11px] text-white/70 hover:bg-white/5 hover:text-white">{_copy("copy.2d18275e7595", { defaultValue: "Reset effects" })}</Button>
           </div>
         )}
 
 
         {mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") && (
           <div className="space-y-3 pt-2">
-            <p className="text-[10px] uppercase tracking-wide text-white/40">Speed</p>
+            <p className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.c372fee9b456", { defaultValue: "Speed" })}</p>
             <EffectSlider label={`${(mediaClip.speed ?? 1).toFixed(2)}×`}
               value={mediaClip.speed ?? 1} min={0.25} max={4} step={0.05}
               onChange={(v) => setClipSpeed(mediaClip.id, Math.max(0.25, Math.min(4, v)))} />
@@ -299,14 +299,14 @@ export function Inspector() {
 
         {hasAudio && (
           <div className="space-y-3 pt-2">
-            <p className="text-[10px] uppercase tracking-wide text-white/40">Audio</p>
-            <EffectSlider label={`Volume ${Math.round(((hasAudio.audio?.volume ?? 1) * 100))}%`}
+            <p className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</p>
+            <EffectSlider label={_copy("copy.fffcac029bff", { defaultValue: "Volume {{value1}}%", value1: Math.round(((hasAudio.audio?.volume ?? 1) * 100)) })}
               value={hasAudio.audio?.volume ?? 1} min={0} max={2} step={0.01}
               onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, volume: v } })} />
-            <EffectSlider label={`Fade in ${(hasAudio.audio?.fadeIn ?? 0).toFixed(2)}s`}
+            <EffectSlider label={_copy("copy.63cc68230dfe", { defaultValue: "Fade in {{value1}}s", value1: (hasAudio.audio?.fadeIn ?? 0).toFixed(2) })}
               value={hasAudio.audio?.fadeIn ?? 0} min={0} max={Math.max(0.1, hasAudio.duration)} step={0.05}
               onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeIn: v, envelope: undefined } })} />
-            <EffectSlider label={`Fade out ${(hasAudio.audio?.fadeOut ?? 0).toFixed(2)}s`}
+            <EffectSlider label={_copy("copy.9fd1e95743eb", { defaultValue: "Fade out {{value1}}s", value1: (hasAudio.audio?.fadeOut ?? 0).toFixed(2) })}
               value={hasAudio.audio?.fadeOut ?? 0} min={0} max={Math.max(0.1, hasAudio.duration)} step={0.05}
               onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeOut: v, envelope: undefined } })} />
             <AudioTools key={hasAudio.id} clip={hasAudio} />
@@ -321,7 +321,7 @@ export function Inspector() {
 
         {text && (
           <div className="space-y-2">
-            <Field label="Text">
+            <Field label={_copy("copy.71988c4d8e08", { defaultValue: "Text" })}>
               <textarea
                 value={text.text}
                 onChange={(e) => updateTextClip(text.id, { text: e.target.value })}
@@ -330,29 +330,29 @@ export function Inspector() {
               />
             </Field>
             <div className="grid grid-cols-2 gap-2">
-              <Field label="Font size">
+              <Field label={_copy("copy.6d784d95c638", { defaultValue: "Font size" })}>
                 <Input type="number" value={text.fontSize} min={8} max={400}
                   onChange={(e) => updateTextClip(text.id, { fontSize: Number(e.target.value) || 72 })}
                   className="h-7 bg-white/5 text-xs" />
               </Field>
-              <Field label="Colour">
+              <Field label={_copy("copy.3a9dfa58df63", { defaultValue: "Colour" })}>
                 <input type="color" value={text.color}
                   onChange={(e) => updateTextClip(text.id, { color: e.target.value })}
                   className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
               </Field>
-              <Field label="Align">
+              <Field label={_copy("copy.b1b1b4e5e8d7", { defaultValue: "Align" })}>
                 <select
                   value={text.align}
                   onChange={(e) => updateTextClip(text.id, { align: e.target.value as TextClip["align"] })}
                   className="h-7 w-full rounded-md border border-white/10 bg-white/5 px-2 text-xs text-white"
                 >
-                  <option value="left" className="bg-black">Left</option>
-                  <option value="centre" className="bg-black">Centre</option>
-                  <option value="right" className="bg-black">Right</option>
+                  <option value="left" className="bg-black">{_copy("copy.58eb9032e3bb", { defaultValue: "Left" })}</option>
+                  <option value="centre" className="bg-black">{_copy("copy.45c19322f7b9", { defaultValue: "Centre" })}</option>
+                  <option value="right" className="bg-black">{_copy("copy.883361d5d682", { defaultValue: "Right" })}</option>
                 </select>
               </Field>
             </div>
-            <Field label="Font family">
+            <Field label={_copy("copy.119ef3fa607e", { defaultValue: "Font family" })}>
               <FontPicker
                 value={text.fontFamily}
                 onChange={(css, weights) => {
@@ -363,7 +363,7 @@ export function Inspector() {
                 }}
               />
             </Field>
-            <Field label="Weight (available)">
+            <Field label={_copy("copy.c15caf416c7d", { defaultValue: "Weight (available)" })}>
               <select
                 value={text.fontWeight}
                 onChange={(e) => updateTextClip(text.id, { fontWeight: Number(e.target.value) })}
@@ -379,7 +379,7 @@ export function Inspector() {
               captionsFitted={fitCaptionTrack({ tracks, clips }, text.trackId).clips === clips} />
             <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
               <label className="flex items-center justify-between text-[11px] text-white/70">
-                <span className="font-medium">Background pill</span>
+                <span className="font-medium">{_copy("copy.77c5f9036208", { defaultValue: "Background pill" })}</span>
                 <input
                   type="checkbox"
                   checked={!!text.background}
@@ -396,14 +396,14 @@ export function Inspector() {
               {text.background && (
                 <div className="mt-2 space-y-2">
                   <div className="grid grid-cols-2 gap-2">
-                    <Field label="Colour">
+                    <Field label={_copy("copy.3a9dfa58df63", { defaultValue: "Colour" })}>
                       <input type="color" value={text.background.color}
                         onChange={(e) => updateTextClip(text.id, {
                           background: { ...text.background!, color: e.target.value },
                         })}
                         className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
                     </Field>
-                    <Field label={`Opacity ${Math.round(text.background.opacity * 100)}%`}>
+                    <Field label={_copy("copy.98232ace0229", { defaultValue: "Opacity {{value1}}%", value1: Math.round(text.background.opacity * 100) })}>
                       <Slider value={[text.background.opacity]} min={0} max={1} step={0.05}
                         onValueChange={(v) => updateTextClip(text.id, {
                           background: { ...text.background!, opacity: v[0] ?? 0.5 },
@@ -411,13 +411,13 @@ export function Inspector() {
                     </Field>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <Field label={`Padding ${Math.round(text.background.padding)}`}>
+                    <Field label={_copy("copy.23786872368a", { defaultValue: "Padding {{value1}}", value1: Math.round(text.background.padding) })}>
                       <Slider value={[text.background.padding]} min={0} max={80} step={1}
                         onValueChange={(v) => updateTextClip(text.id, {
                           background: { ...text.background!, padding: v[0] ?? 18 },
                         })} />
                     </Field>
-                    <Field label={`Radius ${Math.round(text.background.radius)}`}>
+                    <Field label={_copy("copy.a12b00cbadc8", { defaultValue: "Radius {{value1}}", value1: Math.round(text.background.radius) })}>
                       <Slider value={[text.background.radius]} min={0} max={80} step={1}
                         onValueChange={(v) => updateTextClip(text.id, {
                           background: { ...text.background!, radius: v[0] ?? 12 },
@@ -430,7 +430,7 @@ export function Inspector() {
 
             <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
               <label className="flex items-center justify-between text-[11px] text-white/70">
-                <span className="font-medium">Outline</span>
+                <span className="font-medium">{_copy("copy.eabbf3abaf8d", { defaultValue: "Outline" })}</span>
                 <input
                   type="checkbox"
                   checked={!!text.stroke}
@@ -446,14 +446,14 @@ export function Inspector() {
               </label>
               {text.stroke && (
                 <div className="mt-2 grid grid-cols-2 gap-2">
-                  <Field label="Colour">
+                  <Field label={_copy("copy.3a9dfa58df63", { defaultValue: "Colour" })}>
                     <input type="color" value={text.stroke.color}
                       onChange={(e) => updateTextClip(text.id, {
                         stroke: { ...text.stroke!, color: e.target.value },
                       })}
                       className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
                   </Field>
-                  <Field label={`Width ${Math.round(text.stroke.width)}`}>
+                  <Field label={_copy("copy.08c3848f97b5", { defaultValue: "Width {{value1}}", value1: Math.round(text.stroke.width) })}>
                     <Slider value={[text.stroke.width]} min={0} max={20} step={0.5}
                       onValueChange={(v) => updateTextClip(text.id, {
                         stroke: { ...text.stroke!, width: v[0] ?? 4 },
@@ -513,6 +513,7 @@ function presetMatches(current: MediaClip["effects"], preset: MediaClip["effects
 }
 
 function AnimationSection({ clip }: { clip: Clip }) {
+  const { t: _copy } = _useCopy();
   const updateClipAnimation = (patch: Partial<Pick<Clip, "animateIn" | "animateOut">>) => {
     const s = useEditorStore.getState();
     if (clip.kind === "text") s.updateTextClip(clip.id, patch as Partial<TextClip>);
@@ -522,7 +523,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
   const outA = clip.animateOut;
   return (
     <div className="space-y-3 pt-2">
-      <p className="text-[10px] uppercase tracking-wide text-white/40">Animation in</p>
+      <p className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.3be9d16e3178", { defaultValue: "Animation in" })}</p>
       <div className="grid grid-cols-3 gap-1">
         <button
           onClick={() => updateClipAnimation({ animateIn: undefined })}
@@ -530,9 +531,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
             "rounded-md border px-1 py-1 text-[10px] transition",
             !inA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
           )}
-        >
-          None
-        </button>
+        >{_copy("copy.dc937b598926", { defaultValue: "None" })}</button>
         {ANIMATION_PRESETS.map((p) => {
           const active = inA?.kind === p.kind;
           return (
@@ -551,8 +550,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
       </div>
       {inA && (
         <div className="space-y-1">
-          <Label className="text-[10px] uppercase tracking-wide text-white/40">
-            Duration {inA.duration.toFixed(2)}s
+          <Label className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.a525c184e757", { defaultValue: "Duration " })}{inA.duration.toFixed(2)}s
           </Label>
           <Slider
             value={[inA.duration]}
@@ -564,7 +562,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
         </div>
       )}
 
-      <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">Animation out</p>
+      <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.104b6614f58d", { defaultValue: "Animation out" })}</p>
       <div className="grid grid-cols-3 gap-1">
         <button
           onClick={() => updateClipAnimation({ animateOut: undefined })}
@@ -572,9 +570,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
             "rounded-md border px-1 py-1 text-[10px] transition",
             !outA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
           )}
-        >
-          None
-        </button>
+        >{_copy("copy.dc937b598926", { defaultValue: "None" })}</button>
         {ANIMATION_PRESETS.map((p) => {
           const active = outA?.kind === p.kind;
           return (
@@ -593,8 +589,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
       </div>
       {outA && (
         <div className="space-y-1">
-          <Label className="text-[10px] uppercase tracking-wide text-white/40">
-            Duration {outA.duration.toFixed(2)}s
+          <Label className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.a525c184e757", { defaultValue: "Duration " })}{outA.duration.toFixed(2)}s
           </Label>
           <Slider
             value={[outA.duration]}

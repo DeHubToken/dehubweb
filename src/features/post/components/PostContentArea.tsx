@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { BASE_POST_TEXT_CHARS } from '@/lib/post-text-limit';
 import { cn } from '@/lib/utils';
@@ -153,6 +154,7 @@ export function PostContentArea({
   onPollChange,
   onMediaFullscreenChange,
 }: PostContentAreaProps) {
+  const { t: _copy } = _useCopy();
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
   const linkDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -603,7 +605,7 @@ export function PostContentArea({
           {/* Drafts count badge */}
           {drafts.length > 0 && (
             <span className="text-xs text-zinc-500">
-              {drafts.length} draft{drafts.length !== 1 ? 's' : ''}
+              {drafts.length}{_copy("copy.feff3be66408", { defaultValue: " draft" })}{drafts.length !== 1 ? 's' : ''}
             </span>
           )}
 
@@ -612,7 +614,7 @@ export function PostContentArea({
             <TooltipTrigger asChild>
               <motion.button
                 onClick={() => setShowSchedule(true)}
-                aria-label={scheduledDate ? 'Edit schedule' : liveMode === 'townhall' ? 'Schedule stage' : liveMode === 'video' ? 'Schedule livestream' : 'Schedule post'}
+                aria-label={scheduledDate ? _copy("copy.559b3708d9b1", { defaultValue: "Edit schedule" }) : liveMode === 'townhall' ? _copy("copy.e6c671395de3", { defaultValue: "Schedule stage" }) : liveMode === 'video' ? _copy("copy.e8b72dfec3eb", { defaultValue: "Schedule livestream" }) : _copy("copy.f88c723a216b", { defaultValue: "Schedule post" })}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
@@ -626,7 +628,7 @@ export function PostContentArea({
               </motion.button>
             </TooltipTrigger>
             <TooltipContent>
-              {scheduledDate ? 'Edit schedule' : liveMode === 'townhall' ? 'Schedule stage' : liveMode === 'video' ? 'Schedule livestream' : 'Schedule post'}
+              {scheduledDate ? _copy("copy.559b3708d9b1", { defaultValue: "Edit schedule" }) : liveMode === 'townhall' ? _copy("copy.e6c671395de3", { defaultValue: "Schedule stage" }) : liveMode === 'video' ? _copy("copy.e8b72dfec3eb", { defaultValue: "Schedule livestream" }) : _copy("copy.f88c723a216b", { defaultValue: "Schedule post" })}
             </TooltipContent>
           </Tooltip>
 
@@ -651,7 +653,7 @@ export function PostContentArea({
                 )}
               </motion.button>
             </TooltipTrigger>
-            <TooltipContent>Drafts</TooltipContent>
+            <TooltipContent>{_copy("copy.f592e6a4db3c", { defaultValue: "Drafts" })}</TooltipContent>
           </Tooltip>
           </div>
           )}
@@ -667,9 +669,9 @@ export function PostContentArea({
               className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-primary/10 backdrop-blur-sm border-2 border-dashed border-white rounded-xl"
             >
               <Upload className="w-10 h-10 text-white mb-2" />
-              <p className="text-white font-medium">Drop files here</p>
+              <p className="text-white font-medium">{_copy("copy.37fcbf3020fb", { defaultValue: "Drop files here" })}</p>
               <p className="text-white/60 text-sm mt-1">
-                {hasVideo ? 'Images not allowed with video' : hasImage ? 'Videos not allowed with images' : 'Images, videos, or audio'}
+                {hasVideo ? _copy("copy.3b528b3e550d", { defaultValue: "Images not allowed with video" }) : hasImage ? _copy("copy.f918146e58c9", { defaultValue: "Videos not allowed with images" }) : _copy("copy.1aad167491f4", { defaultValue: "Images, videos, or audio" })}
               </p>
             </motion.div>
           )}
@@ -692,7 +694,7 @@ export function PostContentArea({
                 <Mic className="w-5 h-5 text-white" />
               </motion.div>
               <div className="flex flex-col items-start">
-                <p className="text-white font-medium text-sm">Recording</p>
+                <p className="text-white font-medium text-sm">{_copy("copy.80e8dd1a5a05", { defaultValue: "Recording" })}</p>
                 <p className="text-white/80 text-lg font-mono">
                   {Math.floor((recordingTime || 0) / 60).toString().padStart(2, '0')}:
                   {((recordingTime || 0) % 60).toString().padStart(2, '0')}
@@ -705,9 +707,7 @@ export function PostContentArea({
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10 text-sm font-medium transition-colors ml-auto"
               >
-                <Square className="w-3 h-3 fill-current" />
-                Stop
-              </motion.button>
+                <Square className="w-3 h-3 fill-current" />{_copy("copy.cae7d57bc067", { defaultValue: "Stop" })}</motion.button>
             </motion.div>
           )}
         </AnimatePresence>
@@ -719,7 +719,7 @@ export function PostContentArea({
                 type="text"
                 value={titleText}
                 onChange={(e) => setTitleText(e.target.value)}
-                placeholder="Title"
+                placeholder={_copy("copy.7e8cd2056da7", { defaultValue: "Title" })}
                 maxLength={140}
                 className="w-full bg-transparent text-white text-lg sm:text-xl font-medium resize-none outline-none mb-1 placeholder:text-white/50 sm:placeholder:text-white/70 caret-white"
               />
@@ -782,13 +782,11 @@ export function PostContentArea({
         </div>
 
         {isLive && (
-          <div className="mt-3 flex flex-wrap gap-2" aria-label="Broadcast timing">
-            <button type="button" aria-pressed={!scheduledDate} onClick={() => onSchedule(null)} className={cn('rounded-xl border px-3 py-2 text-xs', !scheduledDate ? 'border-white/40 bg-white/15 text-white' : 'border-white/15 text-white/60')}>
-              Go live now
-            </button>
+          <div className="mt-3 flex flex-wrap gap-2" aria-label={_copy("copy.39f3c85e7452", { defaultValue: "Broadcast timing" })}>
+            <button type="button" aria-pressed={!scheduledDate} onClick={() => onSchedule(null)} className={cn('rounded-xl border px-3 py-2 text-xs', !scheduledDate ? 'border-white/40 bg-white/15 text-white' : 'border-white/15 text-white/60')}>{_copy("copy.d1ebd650ec05", { defaultValue: "Go live now" })}</button>
             <button type="button" aria-pressed={!!scheduledDate} onClick={() => setShowSchedule(true)} className={cn('flex items-center gap-2 rounded-xl border px-3 py-2 text-xs', scheduledDate ? 'border-amber-500/40 bg-amber-500/20 text-amber-400' : 'border-white/15 text-white/60')}>
               <Calendar className="h-4 w-4" />
-              {liveMode === 'townhall' ? 'Schedule stage' : 'Schedule livestream'}
+              {liveMode === 'townhall' ? _copy("copy.e6c671395de3", { defaultValue: "Schedule stage" }) : _copy("copy.e8b72dfec3eb", { defaultValue: "Schedule livestream" })}
             </button>
           </div>
         )}
@@ -813,7 +811,7 @@ export function PostContentArea({
               >
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-red-400 text-sm font-medium">
-                  {scheduledDate ? `${liveMode === 'video' ? 'Livestream' : 'Stage'} will be scheduled` : `${liveMode === 'video' ? 'Live Video' : 'Stages'} stream will be created`}
+                  {scheduledDate ? _copy("copy.4b0528e1523d", { defaultValue: "{{value1}} will be scheduled", value1: liveMode === 'video' ? _copy("copy.9d4e6fe6676d", { defaultValue: "Livestream" }) : _copy("copy.de838855e4a6", { defaultValue: "Stage" }) }) : _copy("copy.d4e44dac1ed0", { defaultValue: "{{value1}} stream will be created", value1: liveMode === 'video' ? _copy("copy.8413551d20ff", { defaultValue: "Live Video" }) : _copy("copy.3a17aa4e4abb", { defaultValue: "Stages" }) })}
                 </span>
               </motion.div>
             )}
@@ -825,7 +823,7 @@ export function PostContentArea({
               "flex items-center gap-1.5 flex-wrap transition-opacity duration-200",
               canPost ? "opacity-100" : "opacity-0"
             )}>
-              <span className="text-xs text-zinc-500">In:</span>
+              <span className="text-xs text-zinc-500">{_copy("copy.76d6aad1a2a0", { defaultValue: "In:" })}</span>
               {destinations.map(dest => (
                 <span
                   key={dest}
@@ -866,7 +864,7 @@ export function PostContentArea({
         onClose={() => setShowSchedule(false)}
         scheduledDate={scheduledDate}
         onSchedule={onSchedule}
-        title={liveMode === 'townhall' ? 'Schedule stage' : liveMode === 'video' ? 'Schedule livestream' : 'Schedule Post'}
+        title={liveMode === 'townhall' ? _copy("copy.e6c671395de3", { defaultValue: "Schedule stage" }) : liveMode === 'video' ? _copy("copy.e8b72dfec3eb", { defaultValue: "Schedule livestream" }) : _copy("copy.765608de66a0", { defaultValue: "Schedule Post" })}
         minimumMinutes={liveMode === 'video' ? 30 : 0}
       />
 

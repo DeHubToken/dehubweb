@@ -1,9 +1,11 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Lock, Shield, Key, CheckCircle, XCircle, AlertTriangle, Clock, QrCode, Smartphone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const E2EEncryption = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   return (
@@ -45,9 +47,9 @@ const E2EEncryption = () => {
             <h3 className="text-xl font-semibold text-foreground mb-3">{t('e2ee.zeroTrust')}</h3>
             <p className="text-muted-foreground mb-3">{t('e2ee.zeroTrustDesc')}</p>
             <ul className="space-y-2 ml-4">
-              <li className="text-muted-foreground"><code className="bg-muted px-2 py-1 rounded text-sm">@noble/ciphers</code> - {t('e2ee.nobleCiphers')}</li>
-              <li className="text-muted-foreground"><code className="bg-muted px-2 py-1 rounded text-sm">@noble/curves</code> - {t('e2ee.nobleCurves')}</li>
-              <li className="text-muted-foreground"><code className="bg-muted px-2 py-1 rounded text-sm">@noble/hashes</code> - {t('e2ee.nobleHashes')}</li>
+              <li className="text-muted-foreground"><code className="bg-muted px-2 py-1 rounded text-sm">{_copy("copy.97f2d908b7dc", { defaultValue: "@noble/ciphers" })}</code> - {t('e2ee.nobleCiphers')}</li>
+              <li className="text-muted-foreground"><code className="bg-muted px-2 py-1 rounded text-sm">{_copy("copy.8731790030df", { defaultValue: "@noble/curves" })}</code> - {t('e2ee.nobleCurves')}</li>
+              <li className="text-muted-foreground"><code className="bg-muted px-2 py-1 rounded text-sm">{_copy("copy.e745d68f7240", { defaultValue: "@noble/hashes" })}</code> - {t('e2ee.nobleHashes')}</li>
             </ul>
           </div>
 

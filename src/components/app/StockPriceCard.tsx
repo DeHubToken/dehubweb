@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, lazy, Suspense } from 'react';
 import type { StockQuote } from '@/hooks/use-stock-quote';
 // Lazy: keeps recharts out of the eager feed path (see CashtagPriceCard).
@@ -53,6 +54,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 }
 
 export function StockPriceCard({ data }: StockPriceCardProps) {
+  const { t: _copy } = _useCopy();
   const [expanded, setExpanded] = useState(false);
   const isPositive = data.percentChange24h != null && data.percentChange24h >= 0;
   const yahooUrl = `https://finance.yahoo.com/quote/${encodeURIComponent(data.symbol)}`;
@@ -84,7 +86,7 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
                 {data.exchangeShort || data.exchange}
               </span>
               <span className="text-emerald-400 text-xs bg-emerald-400/10 px-1.5 py-0.5 rounded font-medium">
-                {data.instrumentType === 'ETF' ? 'ETF' : 'Stock'}
+                {data.instrumentType === 'ETF' ? _copy("copy.f80cac6f6a85", { defaultValue: "ETF" }) : _copy("copy.d5cade7ef319", { defaultValue: "Stock" })}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -103,7 +105,7 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
               "text-zinc-400 hover:text-white transition-all p-1.5 rounded-lg",
               expanded && "bg-zinc-700/50 text-white"
             )}
-            title="More info"
+            title={_copy("copy.7dd4d97d9aae", { defaultValue: "More info" })}
           >
             <ChevronDown className={cn("w-4 h-4 transition-transform", expanded && "rotate-180")} />
           </button>
@@ -131,8 +133,7 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
       {(data.preMarketPrice || data.postMarketPrice) && (
         <div className="px-4 pb-2 flex items-center gap-3 text-xs">
           {data.postMarketPrice != null && (
-            <span className="text-zinc-400">
-              After hours: <span className="text-white font-medium">{formatPrice(data.postMarketPrice, data.currency)}</span>
+            <span className="text-zinc-400">{_copy("copy.7dbef8d0c1ba", { defaultValue: "After hours: " })}<span className="text-white font-medium">{formatPrice(data.postMarketPrice, data.currency)}</span>
               {data.postMarketChangePercent != null && (
                 <span className={cn("ml-1", data.postMarketChangePercent >= 0 ? "text-emerald-400" : "text-red-400")}>
                   {formatPercent(data.postMarketChangePercent)}
@@ -141,8 +142,7 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
             </span>
           )}
           {data.preMarketPrice != null && !data.postMarketPrice && (
-            <span className="text-zinc-400">
-              Pre-market: <span className="text-white font-medium">{formatPrice(data.preMarketPrice, data.currency)}</span>
+            <span className="text-zinc-400">{_copy("copy.8fd9ae2eea2d", { defaultValue: "Pre-market: " })}<span className="text-white font-medium">{formatPrice(data.preMarketPrice, data.currency)}</span>
               {data.preMarketChangePercent != null && (
                 <span className={cn("ml-1", data.preMarketChangePercent >= 0 ? "text-emerald-400" : "text-red-400")}>
                   {formatPercent(data.preMarketChangePercent)}
@@ -162,19 +162,19 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
         {data.marketCap && (
           <div>
-            <span className="text-zinc-500">Market Cap</span>
+            <span className="text-zinc-500">{_copy("copy.fb25999766b1", { defaultValue: "Market Cap" })}</span>
             <p className="text-white font-medium">{formatCompact(data.marketCap, data.currency)}</p>
           </div>
         )}
         {data.volume24h && (
           <div>
-            <span className="text-zinc-500">Volume</span>
+            <span className="text-zinc-500">{_copy("copy.b10fb966d720", { defaultValue: "Volume" })}</span>
             <p className="text-white font-medium">{formatCompact(data.volume24h, data.currency)}</p>
           </div>
         )}
         {data.dayHigh != null && data.dayLow != null && (
           <div>
-            <span className="text-zinc-500">Day Range</span>
+            <span className="text-zinc-500">{_copy("copy.de596950e758", { defaultValue: "Day Range" })}</span>
             <p className="text-white font-medium">
               {formatPrice(data.dayLow, data.currency)} – {formatPrice(data.dayHigh, data.currency)}
             </p>
@@ -202,11 +202,11 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
               {/* 52-Week Range */}
               {(data.fiftyTwoWeekHigh != null || data.fiftyTwoWeekLow != null) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>52-Week Range</SectionTitle>
+                  <SectionTitle>{_copy("copy.c4ffe5737502", { defaultValue: "52-Week Range" })}</SectionTitle>
                   {data.fiftyTwoWeekLow != null && data.fiftyTwoWeekHigh != null && (
                     <>
-                      <StatRow label="52W Low" value={formatPrice(data.fiftyTwoWeekLow, data.currency)} />
-                      <StatRow label="52W High" value={formatPrice(data.fiftyTwoWeekHigh, data.currency)} />
+                      <StatRow label={_copy("copy.736e32671628", { defaultValue: "52W Low" })} value={formatPrice(data.fiftyTwoWeekLow, data.currency)} />
+                      <StatRow label={_copy("copy.bf370792fe48", { defaultValue: "52W High" })} value={formatPrice(data.fiftyTwoWeekHigh, data.currency)} />
                       {data.price != null && (
                         <div className="mt-2">
                           <div className="w-full h-1.5 rounded-full bg-zinc-700/50 overflow-hidden relative">
@@ -231,30 +231,30 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
               {/* Valuation */}
               {(data.trailingPE != null || data.forwardPE != null || data.epsTrailingTwelveMonths != null || data.priceToBook != null) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>Valuation</SectionTitle>
-                  {data.trailingPE != null && <StatRow label="P/E (TTM)" value={data.trailingPE.toFixed(2)} />}
-                  {data.forwardPE != null && <StatRow label="P/E (Forward)" value={data.forwardPE.toFixed(2)} />}
-                  {data.epsTrailingTwelveMonths != null && <StatRow label="EPS (TTM)" value={formatPrice(data.epsTrailingTwelveMonths, data.currency)} />}
-                  {data.epsForward != null && <StatRow label="EPS (Forward)" value={formatPrice(data.epsForward, data.currency)} />}
-                  {data.epsCurrentYear != null && <StatRow label="EPS (Current Year)" value={formatPrice(data.epsCurrentYear, data.currency)} />}
-                  {data.priceToBook != null && <StatRow label="Price/Book" value={data.priceToBook.toFixed(2)} />}
-                  {data.bookValue != null && <StatRow label="Book Value" value={formatPrice(data.bookValue, data.currency)} />}
+                  <SectionTitle>{_copy("copy.c49d9c4f4572", { defaultValue: "Valuation" })}</SectionTitle>
+                  {data.trailingPE != null && <StatRow label={_copy("copy.46f50f3107ee", { defaultValue: "P/E (TTM)" })} value={data.trailingPE.toFixed(2)} />}
+                  {data.forwardPE != null && <StatRow label={_copy("copy.0a5d0f8bb70a", { defaultValue: "P/E (Forward)" })} value={data.forwardPE.toFixed(2)} />}
+                  {data.epsTrailingTwelveMonths != null && <StatRow label={_copy("copy.c0d4c5406f01", { defaultValue: "EPS (TTM)" })} value={formatPrice(data.epsTrailingTwelveMonths, data.currency)} />}
+                  {data.epsForward != null && <StatRow label={_copy("copy.48a2d44bf2c8", { defaultValue: "EPS (Forward)" })} value={formatPrice(data.epsForward, data.currency)} />}
+                  {data.epsCurrentYear != null && <StatRow label={_copy("copy.b92727206967", { defaultValue: "EPS (Current Year)" })} value={formatPrice(data.epsCurrentYear, data.currency)} />}
+                  {data.priceToBook != null && <StatRow label={_copy("copy.9675a5615bbe", { defaultValue: "Price/Book" })} value={data.priceToBook.toFixed(2)} />}
+                  {data.bookValue != null && <StatRow label={_copy("copy.80bff5300130", { defaultValue: "Book Value" })} value={formatPrice(data.bookValue, data.currency)} />}
                 </div>
               )}
 
               {/* Moving Averages */}
               {(data.fiftyDayAverage != null || data.twoHundredDayAverage != null) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>Moving Averages</SectionTitle>
+                  <SectionTitle>{_copy("copy.50710864a072", { defaultValue: "Moving Averages" })}</SectionTitle>
                   {data.fiftyDayAverage != null && (
                     <StatRow
-                      label="50-Day MA"
+                      label={_copy("copy.e6163204f9b0", { defaultValue: "50-Day MA" })}
                       value={`${formatPrice(data.fiftyDayAverage, data.currency)}${data.fiftyDayAverageChangePercent != null ? ` (${formatPercent(data.fiftyDayAverageChangePercent * 100)})` : ''}`}
                     />
                   )}
                   {data.twoHundredDayAverage != null && (
                     <StatRow
-                      label="200-Day MA"
+                      label={_copy("copy.0548fa7bdba8", { defaultValue: "200-Day MA" })}
                       value={`${formatPrice(data.twoHundredDayAverage, data.currency)}${data.twoHundredDayAverageChangePercent != null ? ` (${formatPercent(data.twoHundredDayAverageChangePercent * 100)})` : ''}`}
                     />
                   )}
@@ -264,11 +264,11 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
               {/* Dividends */}
               {(data.dividendRate != null || data.dividendYield != null) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>Dividends</SectionTitle>
-                  {data.dividendRate != null && <StatRow label="Annual Dividend" value={formatPrice(data.dividendRate, data.currency)} />}
-                  {data.dividendYield != null && <StatRow label="Dividend Yield" value={`${(data.dividendYield * 100).toFixed(2)}%`} />}
+                  <SectionTitle>{_copy("copy.6e0b22a7cbc0", { defaultValue: "Dividends" })}</SectionTitle>
+                  {data.dividendRate != null && <StatRow label={_copy("copy.9031bdeee7ac", { defaultValue: "Annual Dividend" })} value={formatPrice(data.dividendRate, data.currency)} />}
+                  {data.dividendYield != null && <StatRow label={_copy("copy.b43b86317a9e", { defaultValue: "Dividend Yield" })} value={`${(data.dividendYield * 100).toFixed(2)}%`} />}
                   {data.exDividendDate != null && (
-                    <StatRow label="Ex-Dividend Date" value={new Date(data.exDividendDate * 1000).toLocaleDateString()} />
+                    <StatRow label={_copy("copy.0e3909f00cbc", { defaultValue: "Ex-Dividend Date" })} value={new Date(data.exDividendDate * 1000).toLocaleDateString()} />
                   )}
                 </div>
               )}
@@ -276,90 +276,89 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
               {/* Analyst Ratings */}
               {(data.targetMeanPrice != null || recommendationLabel) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>Analyst Consensus</SectionTitle>
+                  <SectionTitle>{_copy("copy.1d35f42dc8cc", { defaultValue: "Analyst Consensus" })}</SectionTitle>
                   {recommendationLabel && (
-                    <StatRow label="Rating" value={recommendationLabel} color={recommendationColor} />
+                    <StatRow label={_copy("copy.9f29530464f7", { defaultValue: "Rating" })} value={recommendationLabel} color={recommendationColor} />
                   )}
                   {data.recommendationMean != null && (
-                    <StatRow label="Mean Score" value={`${data.recommendationMean.toFixed(1)} / 5`} />
+                    <StatRow label={_copy("copy.8c3a7bb39f68", { defaultValue: "Mean Score" })} value={`${data.recommendationMean.toFixed(1)} / 5`} />
                   )}
                   {data.numberOfAnalystOpinions != null && (
-                    <StatRow label="# Analysts" value={data.numberOfAnalystOpinions.toString()} />
+                    <StatRow label={_copy("copy.08bdc351bbbe", { defaultValue: "# Analysts" })} value={data.numberOfAnalystOpinions.toString()} />
                   )}
-                  {data.targetMeanPrice != null && <StatRow label="Target (Mean)" value={formatPrice(data.targetMeanPrice, data.currency)} />}
-                  {data.targetHighPrice != null && <StatRow label="Target (High)" value={formatPrice(data.targetHighPrice, data.currency)} />}
-                  {data.targetLowPrice != null && <StatRow label="Target (Low)" value={formatPrice(data.targetLowPrice, data.currency)} />}
+                  {data.targetMeanPrice != null && <StatRow label={_copy("copy.82d4f829bf92", { defaultValue: "Target (Mean)" })} value={formatPrice(data.targetMeanPrice, data.currency)} />}
+                  {data.targetHighPrice != null && <StatRow label={_copy("copy.4d27a5eacc4f", { defaultValue: "Target (High)" })} value={formatPrice(data.targetHighPrice, data.currency)} />}
+                  {data.targetLowPrice != null && <StatRow label={_copy("copy.a8a5dae56867", { defaultValue: "Target (Low)" })} value={formatPrice(data.targetLowPrice, data.currency)} />}
                 </div>
               )}
 
               {/* Shares & Short Interest */}
               {(data.sharesOutstanding != null || data.floatShares != null || data.shortRatio != null) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>Shares</SectionTitle>
-                  {data.sharesOutstanding != null && <StatRow label="Shares Outstanding" value={formatNumber(data.sharesOutstanding)} />}
-                  {data.floatShares != null && <StatRow label="Float" value={formatNumber(data.floatShares)} />}
-                  {data.shortRatio != null && <StatRow label="Short Ratio" value={data.shortRatio.toFixed(2)} />}
-                  {data.shortPercentOfFloat != null && <StatRow label="Short % of Float" value={`${(data.shortPercentOfFloat * 100).toFixed(2)}%`} />}
+                  <SectionTitle>{_copy("copy.d4ea333d8b1f", { defaultValue: "Shares" })}</SectionTitle>
+                  {data.sharesOutstanding != null && <StatRow label={_copy("copy.186b466bdd3b", { defaultValue: "Shares Outstanding" })} value={formatNumber(data.sharesOutstanding)} />}
+                  {data.floatShares != null && <StatRow label={_copy("copy.1a693c00c40c", { defaultValue: "Float" })} value={formatNumber(data.floatShares)} />}
+                  {data.shortRatio != null && <StatRow label={_copy("copy.8d6091fdfacb", { defaultValue: "Short Ratio" })} value={data.shortRatio.toFixed(2)} />}
+                  {data.shortPercentOfFloat != null && <StatRow label={_copy("copy.be39cd4d55e6", { defaultValue: "Short % of Float" })} value={`${(data.shortPercentOfFloat * 100).toFixed(2)}%`} />}
                 </div>
               )}
 
               {/* Trading */}
               <div className="px-4 py-3 border-b border-zinc-700/30">
-                <SectionTitle>Trading</SectionTitle>
-                <StatRow label="Previous Close" value={data.previousClose != null ? formatPrice(data.previousClose, data.currency) : '—'} />
+                <SectionTitle>{_copy("copy.fde20a1b4621", { defaultValue: "Trading" })}</SectionTitle>
+                <StatRow label={_copy("copy.a9688779c0b8", { defaultValue: "Previous Close" })} value={data.previousClose != null ? formatPrice(data.previousClose, data.currency) : '—'} />
                 {data.change24h != null && (
                   <StatRow
-                    label="Change (Absolute)"
+                    label={_copy("copy.406474c2483b", { defaultValue: "Change (Absolute)" })}
                     value={`${data.change24h >= 0 ? '+' : ''}${formatPrice(data.change24h, data.currency)}`}
                     color={data.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}
                   />
                 )}
                 {data.bid != null && data.ask != null && (
-                  <StatRow label="Bid / Ask" value={`${formatPrice(data.bid, data.currency)} × ${data.bidSize ?? '—'} / ${formatPrice(data.ask, data.currency)} × ${data.askSize ?? '—'}`} />
+                  <StatRow label={_copy("copy.694bd43602c6", { defaultValue: "Bid / Ask" })} value={`${formatPrice(data.bid, data.currency)} × ${data.bidSize ?? '—'} / ${formatPrice(data.ask, data.currency)} × ${data.askSize ?? '—'}`} />
                 )}
                 {data.averageDailyVolume10Day != null && (
-                  <StatRow label="Avg Volume (10d)" value={formatNumber(data.averageDailyVolume10Day)} />
+                  <StatRow label={_copy("copy.4d8a4057771f", { defaultValue: "Avg Volume (10d)" })} value={formatNumber(data.averageDailyVolume10Day)} />
                 )}
                 {data.averageDailyVolume3Month != null && (
-                  <StatRow label="Avg Volume (3m)" value={formatNumber(data.averageDailyVolume3Month)} />
+                  <StatRow label={_copy("copy.c44b14bd3c76", { defaultValue: "Avg Volume (3m)" })} value={formatNumber(data.averageDailyVolume3Month)} />
                 )}
               </div>
 
               {/* Financials */}
               {(data.enterpriseValue != null || data.profitMargins != null) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>Financials</SectionTitle>
-                  {data.enterpriseValue != null && <StatRow label="Enterprise Value" value={formatCompact(data.enterpriseValue, data.currency)} />}
-                  {data.revenue != null && <StatRow label="Revenue" value={formatCompact(data.revenue, data.currency)} />}
-                  {data.revenuePerShare != null && <StatRow label="Revenue/Share" value={formatPrice(data.revenuePerShare, data.currency)} />}
-                  {data.profitMargins != null && <StatRow label="Profit Margin" value={`${(data.profitMargins * 100).toFixed(2)}%`} />}
+                  <SectionTitle>{_copy("copy.4e4f1565fb7c", { defaultValue: "Financials" })}</SectionTitle>
+                  {data.enterpriseValue != null && <StatRow label={_copy("copy.9eb0a50a94cc", { defaultValue: "Enterprise Value" })} value={formatCompact(data.enterpriseValue, data.currency)} />}
+                  {data.revenue != null && <StatRow label={_copy("copy.c4b7330bd91e", { defaultValue: "Revenue" })} value={formatCompact(data.revenue, data.currency)} />}
+                  {data.revenuePerShare != null && <StatRow label={_copy("copy.ef223f92946e", { defaultValue: "Revenue/Share" })} value={formatPrice(data.revenuePerShare, data.currency)} />}
+                  {data.profitMargins != null && <StatRow label={_copy("copy.30242b1819ad", { defaultValue: "Profit Margin" })} value={`${(data.profitMargins * 100).toFixed(2)}%`} />}
                 </div>
               )}
 
               {/* Earnings */}
               {data.earningsTimestamp != null && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <SectionTitle>Earnings</SectionTitle>
-                  <StatRow label="Next Earnings" value={new Date(data.earningsTimestamp * 1000).toLocaleDateString()} />
+                  <SectionTitle>{_copy("copy.81920761dd55", { defaultValue: "Earnings" })}</SectionTitle>
+                  <StatRow label={_copy("copy.47446c03c79b", { defaultValue: "Next Earnings" })} value={new Date(data.earningsTimestamp * 1000).toLocaleDateString()} />
                 </div>
               )}
 
               {/* Company Info */}
               <div className="px-4 py-3 border-b border-zinc-700/30">
-                <SectionTitle>Company Info</SectionTitle>
-                <StatRow label="Exchange" value={data.exchange} />
-                <StatRow label="Type" value={data.instrumentType} />
-                <StatRow label="Currency" value={data.currency} />
-                {data.sector && <StatRow label="Sector" value={data.sector} />}
-                {data.industry && <StatRow label="Industry" value={data.industry} />}
+                <SectionTitle>{_copy("copy.cd82232bedf1", { defaultValue: "Company Info" })}</SectionTitle>
+                <StatRow label={_copy("copy.d60a318dd8a0", { defaultValue: "Exchange" })} value={data.exchange} />
+                <StatRow label={_copy("copy.baaddf70fb5d", { defaultValue: "Type" })} value={data.instrumentType} />
+                <StatRow label={_copy("copy.3ac1a9ec4fa7", { defaultValue: "Currency" })} value={data.currency} />
+                {data.sector && <StatRow label={_copy("copy.31a231c06e6d", { defaultValue: "Sector" })} value={data.sector} />}
+                {data.industry && <StatRow label={_copy("copy.b44484a0fa28", { defaultValue: "Industry" })} value={data.industry} />}
               </div>
 
               {/* Links */}
               <div className="px-4 py-3">
                 <a href={yahooUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors w-fit">
-                  <ExternalLink className="w-3.5 h-3.5" /> Yahoo Finance
-                </a>
+                  <ExternalLink className="w-3.5 h-3.5" />{_copy("copy.396228de7a9c", { defaultValue: " Yahoo Finance" })}</a>
               </div>
             </div>
           </motion.div>

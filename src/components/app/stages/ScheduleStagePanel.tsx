@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Schedule Stage Panel
@@ -52,6 +53,7 @@ export function ScheduleStagePanel({
   setDescription: (v: string) => void;
   onDone: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { scheduleSpace, isLoading } = useStage();
   const { openPostModal } = useGlobalDropZone();
@@ -155,10 +157,7 @@ export function ScheduleStagePanel({
               <span className="text-white/40"> · {stageUtcClock(at)}</span>
             </p>
           )}
-          <p className="text-xs text-white/40 max-w-[280px]">
-            It's on the Upcoming shelf now. Share the link and it opens as a card
-            wherever you paste it.
-          </p>
+          <p className="text-xs text-white/40 max-w-[280px]">{_copy("copy.a03a5a2f0a5c", { defaultValue: "It's on the Upcoming shelf now. Share the link and it opens as a card wherever you paste it." })}</p>
         </div>
 
         <Button
@@ -173,9 +172,7 @@ export function ScheduleStagePanel({
           }}
           className="w-full bg-white text-black hover:bg-white/90 border-0 rounded-xl"
         >
-          <Send className="w-4 h-4 mr-2" />
-          Post about it
-        </Button>
+          <Send className="w-4 h-4 mr-2" />{_copy("copy.497e20adc443", { defaultValue: "Post about it" })}</Button>
 
         <Button
           variant="ghost"
@@ -187,17 +184,13 @@ export function ScheduleStagePanel({
           }}
           className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
         >
-          <Copy className="w-4 h-4 mr-2" />
-          Copy link
-        </Button>
+          <Copy className="w-4 h-4 mr-2" />{_copy("copy.dbf362d4f210", { defaultValue: "Copy link" })}</Button>
 
         <Button
           variant="ghost"
           onClick={onDone}
           className="w-full text-white/40 hover:text-white hover:bg-white/10 rounded-xl"
-        >
-          Done
-        </Button>
+        >{_copy("copy.11a6767d5674", { defaultValue: "Done" })}</Button>
       </div>
     );
   }
@@ -231,9 +224,7 @@ export function ScheduleStagePanel({
 
       <div className="space-y-2">
         <label className="text-sm text-white/60 flex items-center gap-1.5">
-          <Calendar className="w-3.5 h-3.5" />
-          Starts at *
-        </label>
+          <Calendar className="w-3.5 h-3.5" />{_copy("copy.bdb2527c8a90", { defaultValue: "Starts at *" })}</label>
         <Input
           type="datetime-local"
           value={when}
@@ -247,8 +238,7 @@ export function ScheduleStagePanel({
         {/* The input is in the host's own timezone with nothing saying so —
             echo the UTC the audience will be told, while it can still be changed. */}
         {when && isValidTime && (
-          <p className="text-xs text-white/40">
-            Announced as {stageUtcClock(new Date(when))}
+          <p className="text-xs text-white/40">{_copy("copy.b1122c068ae9", { defaultValue: "Announced as " })}{stageUtcClock(new Date(when))}
           </p>
         )}
       </div>
@@ -258,7 +248,7 @@ export function ScheduleStagePanel({
         <label className="text-sm text-white/60">{t('stages.coverGraphic')}</label>
         {coverPreview ? (
           <div className="relative rounded-xl overflow-hidden border border-white/10">
-            <img src={coverPreview} alt="Stage cover preview" className="w-full h-28 object-cover" />
+            <img src={coverPreview} alt={_copy("copy.23c6e123513a", { defaultValue: "Stage cover preview" })} className="w-full h-28 object-cover" />
             {/* The same scrim the card and the live room use, so what the host
                 sees here is what the graphic will actually look like in use. */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/50" />

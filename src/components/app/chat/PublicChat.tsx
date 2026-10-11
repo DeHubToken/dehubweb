@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from "@/hooks/use-draft-state";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
@@ -81,6 +82,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
 const ROOM_MANAGEMENT_ENABLED = false;
 
 export function PublicChat({ onBack }: PublicChatProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -265,14 +267,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
       return true;
     } catch (err) {
       console.error('[PublicChat] Send failed:', err);
-      toast.error('Failed to send message');
+      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
       return false;
     }
   };
 
   const handleBanUser = useCallback(async (userId: string, userName: string) => {
     if (!isAuthenticated) {
-      toast.error('Sign in to moderate');
+      toast.error(_copy("copy.7a523e7dc8a3", { defaultValue: "Sign in to moderate" }));
       return;
     }
     try {
@@ -284,11 +286,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
       console.error('[PublicChat] Ban failed:', err);
       toast.error(err instanceof Error ? err.message : 'Failed to ban user');
     }
-  }, [selectedRoomId, isAuthenticated, refetch]);
+  }, [selectedRoomId, isAuthenticated, refetch, _copy]);
 
   const handleUnbanUser = useCallback(async (userId: string, userName: string) => {
     if (!isAuthenticated) {
-      toast.error('Sign in to moderate');
+      toast.error(_copy("copy.7a523e7dc8a3", { defaultValue: "Sign in to moderate" }));
       return;
     }
     try {
@@ -300,7 +302,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       console.error('[PublicChat] Unban failed:', err);
       toast.error(err instanceof Error ? err.message : 'Failed to unban user');
     }
-  }, [selectedRoomId, isAuthenticated, refetch]);
+  }, [selectedRoomId, isAuthenticated, refetch, _copy]);
 
   /**
    * Remove a message.
@@ -357,8 +359,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
             ) : rooms.length > 0 ? (
               <span className="text-zinc-500 text-xs flex items-center gap-1">
                 <Users className="w-3 h-3" />
-                {onlineCount} online
-              </span>
+                {onlineCount}{_copy("copy.35105b29f706", { defaultValue: " online" })}</span>
             ) : null}
           </div>
         </div>
@@ -376,7 +377,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 {isAllTranslated ? <RotateCcw className="w-4 h-4" /> : <Languages className="w-4 h-4" />}
               </Button>
             </TooltipTrigger>
-            <TooltipContent>{isAllTranslated ? 'Show original' : 'Translate all'}</TooltipContent>
+            <TooltipContent>{isAllTranslated ? _copy("copy.16194a69c43d", { defaultValue: "Show original" }) : _copy("copy.29a7e1c24c92", { defaultValue: "Translate all" })}</TooltipContent>
           </Tooltip>
           {/* Search toggle */}
           <Tooltip>
@@ -404,7 +405,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                   <MessageSquarePlus className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Create new room</TooltipContent>
+              <TooltipContent>{_copy("copy.af8be239071a", { defaultValue: "Create new room" })}</TooltipContent>
             </Tooltip>
           )}
           {ROOM_MANAGEMENT_ENABLED && isRoomModerator && (
@@ -419,7 +420,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                   <Settings className="w-4 h-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Room settings</TooltipContent>
+              <TooltipContent>{_copy("copy.eb8482c5ca05", { defaultValue: "Room settings" })}</TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -462,15 +463,15 @@ export function PublicChat({ onBack }: PublicChatProps) {
           {roomsError ? (
             <AppState
               icon="messages"
-              title="Chat could not load"
+              title={_copy("copy.a802859daeb1", { defaultValue: "Chat could not load" })}
               description={roomsError}
               kind="error"
               size="section"
               className="h-full"
-              primaryAction={{ label: 'Try again', onClick: () => refetchRooms(), icon: <RefreshCw /> }}
+              primaryAction={{ label: _copy("copy.d8b8392e2c54", { defaultValue: "Try again" }), onClick: () => refetchRooms(), icon: <RefreshCw /> }}
             />
           ) : !roomsLoading && rooms.length === 0 ? (
-            <AppState icon="messages" title="No chat rooms available" description="Check back later or create a room." size="section" className="h-full" />
+            <AppState icon="messages" title={_copy("copy.979975195132", { defaultValue: "No chat rooms available" })} description={_copy("copy.4449e5c90870", { defaultValue: "Check back later or create a room." })} size="section" className="h-full" />
           ) : isLoading ? (
             <>
               {[...Array(5)].map((_, i) => (
@@ -484,9 +485,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
               ))}
             </>
           ) : messages.length === 0 ? (
-            <AppState icon="messages" title="No messages yet" description="Be the first to say something." size="section" className="h-full" />
+            <AppState icon="messages" title={_copy("copy.f42e0f66017d", { defaultValue: "No messages yet" })} description={_copy("copy.39e31bf6b245", { defaultValue: "Be the first to say something." })} size="section" className="h-full" />
           ) : filteredMessages.length === 0 && searchQuery ? (
-            <AppState icon="search" title={t('publicChat.noResults')} description="Try a different search." kind="search-empty" size="compact" className="h-full" />
+            <AppState icon="search" title={t('publicChat.noResults')} description={_copy("copy.2e6d79de50dc", { defaultValue: "Try a different search." })} kind="search-empty" size="compact" className="h-full" />
           ) : (
             filteredMessages.map((message) => (
               message.id.startsWith('buy-alert-') ? (
@@ -532,9 +533,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       <div className="relative">
         {isSending && (
           <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex items-center gap-2 text-xs text-zinc-400 bg-zinc-800/90 rounded-full px-3 py-1">
-            <Loader2 className="w-3 h-3 animate-spin" />
-            Sending...
-          </div>
+            <Loader2 className="w-3 h-3 animate-spin" />{_copy("copy.286a3af7348e", { defaultValue: "Sending..." })}</div>
         )}
         <ChatInput
         voiceMaxDuration={29}

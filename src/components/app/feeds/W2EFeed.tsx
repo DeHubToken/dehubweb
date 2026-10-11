@@ -1,16 +1,16 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Eye, MessageCircle, Coins } from 'lucide-react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export function W2EFeed() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <ThemedIcon icon="bounties" alt="" className="w-16 h-16 object-contain mb-4" />
-        <h3 className="text-xl font-semibold text-white mb-2">Bounty</h3>
-        <p className="text-zinc-400 max-w-md">
-          Earn rewards by watching content and engaging with creators.
-        </p>
+        <h3 className="text-xl font-semibold text-white mb-2">{_copy("copy.0abbc4ecb2b0", { defaultValue: "Bounty" })}</h3>
+        <p className="text-zinc-400 max-w-md">{_copy("copy.c0449d4a08d3", { defaultValue: "Earn rewards by watching content and engaging with creators." })}</p>
       </div>
       
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -31,8 +31,8 @@ export function W2EFeed() {
               </div>
             </div>
             <div className="p-3">
-              <h4 className="text-white font-medium truncate">Earn by Watching #{i}</h4>
-              <p className="text-zinc-400 text-sm">Watch to earn rewards</p>
+              <h4 className="text-white font-medium truncate">{_copy("copy.1cf705c930fa", { defaultValue: "Earn by Watching #" })}{i}</h4>
+              <p className="text-zinc-400 text-sm">{_copy("copy.8db30c32d66b", { defaultValue: "Watch to earn rewards" })}</p>
             </div>
           </div>
         ))}

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Creator Flow — text node.
  * =========================
@@ -40,6 +41,7 @@ function jsonErrorPos(text: string): number | null {
 }
 
 export default function PromptNode({ id, data, selected }: NodeProps<FlowNode>) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const readOnly = useReadOnly();
   const updateNodeData = useCreatorFlowStore((s) => s.updateNodeData);
@@ -152,7 +154,7 @@ export default function PromptNode({ id, data, selected }: NodeProps<FlowNode>) 
           title={t('creatorFlow.jsonModeHint')}
         >
           <Braces size={11} />
-          {mode === 'yaml' ? 'YAML' : 'JSON'}
+          {mode === 'yaml' ? _copy("copy.9b6e8abe425e", { defaultValue: "YAML" }) : 'JSON'}
         </button>
         {mode === 'json' && errorPos !== null && (
           <span className="text-[10px] text-white/60">{t('creatorFlow.invalidJsonAt', { pos: errorPos })}</span>
@@ -208,7 +210,7 @@ export default function PromptNode({ id, data, selected }: NodeProps<FlowNode>) 
                   }
                 : undefined
             }
-            placeholder={mode === 'text' ? t('creatorFlow.promptPlaceholder') : mode === 'json' ? '{\n  "subject": "…"\n}' : 'subject: …'}
+            placeholder={mode === 'text' ? t('creatorFlow.promptPlaceholder') : mode === 'json' ? _copy("copy.9759193089b8", { defaultValue: "{\n  \"subject\": \"…\"\n}" }) : _copy("copy.d8e81e5597b0", { defaultValue: "subject: …" })}
             className={cn('cflow-textarea nodrag', mode !== 'text' && 'is-code', errorPos !== null && 'cflow-json-error')}
           />
         </div>

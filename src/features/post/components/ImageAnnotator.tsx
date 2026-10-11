@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from "@/hooks/use-draft-state";
 /**
  * Image Annotator
@@ -113,6 +114,7 @@ function paintAnnotations(ctx: CanvasRenderingContext2D, items: Annotation[], w:
 }
 
 export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, sourceIdentity, onApply }: ImageAnnotatorProps) {
+  const { t: _copy } = _useCopy();
   const [tool, setTool] = useState<Tool>('draw');
   const [color, setColor] = useState(COLORS[2]);
   const [sizeStep, setSizeStep] = useState(1);
@@ -302,7 +304,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent column hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90dvh] overflow-hidden flex flex-col">
-        <DrawerTitle className="sr-only">Draw on image</DrawerTitle>
+        <DrawerTitle className="sr-only">{_copy("copy.9af4d93b3807", { defaultValue: "Draw on image" })}</DrawerTitle>
 
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
@@ -312,7 +314,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
           >
             <X className="w-5 h-5 text-zinc-400" />
           </button>
-          <span className="text-white font-semibold">Draw & write</span>
+          <span className="text-white font-semibold">{_copy("copy.151d506b10d7", { defaultValue: "Draw & write" })}</span>
           <button
             onClick={handleApply}
             disabled={isSaving}
@@ -320,9 +322,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
               bg-white/10 backdrop-blur-xl border border-white/20
               hover:bg-white/20 hover:border-white/40"
           >
-            <Check className="w-4 h-4" />
-            Apply
-          </button>
+            <Check className="w-4 h-4" />{_copy("copy.31e392d1c037", { defaultValue: "Apply" })}</button>
         </div>
 
         {/* Canvas */}
@@ -360,7 +360,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
                   e.stopPropagation();
                 }}
                 onBlur={commitText}
-                placeholder="Type…"
+                placeholder={_copy("copy.71cbad2cda40", { defaultValue: "Type…" })}
                 maxLength={120}
                 className="absolute -translate-y-1/2 min-w-[120px] max-w-[80%] bg-black/70 backdrop-blur-xl border border-white/30 rounded-lg px-2 py-1 text-sm outline-none"
                 style={{
@@ -380,7 +380,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
               <button
                 type="button"
                 onClick={() => { setPendingText(null); setTool('draw'); }}
-                aria-label="Draw"
+                aria-label={_copy("copy.61517c08b3bf", { defaultValue: "Draw" })}
                 className={cn(
                   'flex items-center justify-center w-9 h-9 rounded-xl border transition-colors',
                   tool === 'draw'
@@ -393,7 +393,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
               <button
                 type="button"
                 onClick={() => setTool('text')}
-                aria-label="Add text"
+                aria-label={_copy("copy.1b4d10038c32", { defaultValue: "Add text" })}
                 className={cn(
                   'flex items-center justify-center w-9 h-9 rounded-xl border transition-colors',
                   tool === 'text'
@@ -411,7 +411,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
                   key={i}
                   type="button"
                   onClick={() => setSizeStep(i)}
-                  aria-label={`Size ${i + 1}`}
+                  aria-label={_copy("copy.354c7f4b2dfa", { defaultValue: "Size {{value1}}", value1: i + 1 })}
                   className={cn(
                     'flex items-center justify-center w-9 h-9 rounded-xl border transition-colors',
                     sizeStep === i
@@ -432,7 +432,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
                 type="button"
                 onClick={undo}
                 disabled={!hasWork}
-                aria-label="Undo"
+                aria-label={_copy("copy.a8283ade3185", { defaultValue: "Undo" })}
                 className="flex items-center justify-center w-9 h-9 rounded-xl border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10 disabled:opacity-40 transition-colors"
               >
                 <Undo2 className="w-4 h-4" />
@@ -441,7 +441,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
                 type="button"
                 onClick={clearAll}
                 disabled={!hasWork}
-                aria-label="Clear"
+                aria-label={_copy("copy.83b12c2216ef", { defaultValue: "Clear" })}
                 className="flex items-center justify-center w-9 h-9 rounded-xl border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10 disabled:opacity-40 transition-colors"
               >
                 <Trash2 className="w-4 h-4" />
@@ -455,7 +455,7 @@ export function ImageAnnotator({ isOpen, onClose, imageUrl, fileName, fileType, 
                 key={c}
                 type="button"
                 onClick={() => setColor(c)}
-                aria-label={`Colour ${c}`}
+                aria-label={_copy("copy.17b433022c57", { defaultValue: "Colour {{value1}}", value1: c })}
                 className={cn(
                   'w-7 h-7 shrink-0 rounded-full border-2 transition-transform',
                   color === c ? 'border-white scale-110' : 'border-white/20 hover:scale-105',

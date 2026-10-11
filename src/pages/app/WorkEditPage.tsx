@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
@@ -36,6 +37,7 @@ function budgetLockReasonKey(job: WorkJob): string {
 }
 
 export default function WorkEditPage() {
+  const { t: _copy } = _useCopy();
   // /bounty/<n> or the legacy /work/<uuid> — useWorkJob resolves either.
   const { jobKey } = useParams<{ jobKey: string }>();
   const navigate = useNavigate();
@@ -146,8 +148,8 @@ export default function WorkEditPage() {
   return (
     <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
       <SEOHead
-        title={`Edit ${job.title} — DeHub Bounties`}
-        description="Edit a bounty you posted on DeHub."
+        title={_copy("copy.5fb924a4a79f", { defaultValue: "Edit {{value1}} — DeHub Bounties", value1: job.title })}
+        description={_copy("copy.dbf990b4954b", { defaultValue: "Edit a bounty you posted on DeHub." })}
         url={`${bountyUrl(job)}/edit`}
         noindex
       />

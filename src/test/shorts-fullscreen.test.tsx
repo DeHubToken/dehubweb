@@ -213,7 +213,7 @@ describe('the two players share one fullscreen implementation', () => {
     // The whole point of the change: there was no fullscreen anything. It is
     // drawn by the viewer rather than the slide — see the corner-controls block
     // below for why.
-    expect(VIEWER).toMatch(/aria-label=\{isFullscreen \? 'Exit fullscreen' : 'Enter fullscreen'\}/);
+    expect(VIEWER).toMatch(/aria-label=\{isFullscreen \? _copy\([^\n]+defaultValue: "Exit fullscreen"[^\n]+defaultValue: "Enter fullscreen"/);
   });
 
   it('routes both players through the shared hook', () => {
@@ -241,7 +241,7 @@ describe('the two players share one fullscreen implementation', () => {
     // …and the chrome is inside that same container, below its opening tag and
     // above its close.
     const container = VIEWER.slice(VIEWER.indexOf('ref={attachVideoContainer}'));
-    expect(container.indexOf("aria-label={isMuted ? 'Unmute' : 'Mute'}")).toBeGreaterThan(-1);
+    expect(container).toMatch(/aria-label=\{isMuted \? _copy\([^\n]+defaultValue: "Unmute"[^\n]+defaultValue: "Mute"/);
     expect(container.indexOf('{/* Creator + description, fullscreen only.')).toBeGreaterThan(-1);
   });
 
@@ -272,7 +272,7 @@ describe('the two players share one fullscreen implementation', () => {
     // The viewer is `fixed inset-0` on mobile, so a short already fills the
     // screen there — a fullscreen button would visibly do nothing.
     const desktopOnly = VIEWER.slice(VIEWER.indexOf('{!isMobile && (\n            <>'));
-    expect(desktopOnly).toContain("aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}");
+    expect(desktopOnly).toMatch(/aria-label=\{isFullscreen \? _copy\([^\n]+defaultValue: "Exit fullscreen"[^\n]+defaultValue: "Enter fullscreen"/);
   });
 
   it('leaves the slide with no say in fullscreen but the fit', () => {

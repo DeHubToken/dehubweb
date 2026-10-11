@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import type { ButtonHTMLAttributes } from 'react';
 import { MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -13,11 +14,12 @@ export function PostHeaderOptionsButton({
   style,
   ...props
 }: PostHeaderOptionsButtonProps) {
+  const { t: _copy } = _useCopy();
   const padding = (44 - iconSize) / 2;
   return (
     <button
       type="button"
-      aria-label="Post options"
+      aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })}
       {...props}
       className={cn('relative flex h-11 w-11 shrink-0 items-center justify-center text-zinc-400 hover:text-white transition-colors', className)}
       style={{ margin: -padding, ...style }}

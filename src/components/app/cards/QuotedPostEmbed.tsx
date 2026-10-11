@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Quoted Post Embed Component
  * ============================
@@ -67,6 +68,7 @@ export function resolveQuotedPostMedia(post: DeHubNFT) {
 
 /** The media block of an embedded post — thumbnail, play glyph, image count, gate. */
 export function QuotedPostMedia({ post, className }: { post: DeHubNFT; className?: string }) {
+  const { t: _copy } = _useCopy();
   const { hasVideo, hasImage, thumbnailUrl, imageCount, gated, isPPV } = resolveQuotedPostMedia(post);
   // Only draw the media box when there is something to put in it. Text and
   // poll posts can still come back typed as "image" with no image URL, which
@@ -88,7 +90,7 @@ export function QuotedPostMedia({ post, className }: { post: DeHubNFT; className
             {isPPV ? <Ticket className="w-5 h-5 text-white" /> : <Lock className="w-5 h-5 text-white" />}
           </div>
           <p className="text-white font-semibold text-xs">
-            {isPPV ? 'Pay-Per-View Content' : 'Locked Content'}
+            {isPPV ? _copy("copy.48e072480fc5", { defaultValue: "Pay-Per-View Content" }) : _copy("copy.e8315b2fde86", { defaultValue: "Locked Content" })}
           </p>
         </div>
       )}
@@ -114,6 +116,7 @@ export function QuotedPostMedia({ post, className }: { post: DeHubNFT; className
  * where the full poll can be voted on.
  */
 function QuotedPollPreview({ tokenId }: { tokenId: number }) {
+  const { t: _copy } = _useCopy();
   const { data: poll } = usePoll(tokenId, !!tokenId);
   if (!poll || !poll.options?.length) return null;
 
@@ -143,7 +146,7 @@ function QuotedPollPreview({ tokenId }: { tokenId: number }) {
       })}
       <div className="flex items-center gap-1 text-[12px] text-zinc-500">
         <BarChart2 className="w-3.5 h-3.5" />
-        <span>{total} {total === 1 ? 'vote' : 'votes'}{isEnded ? ' · Final results' : ''}</span>
+        <span>{total} {total === 1 ? _copy("copy.ab274474a6aa", { defaultValue: "vote" }) : _copy("copy.9df609548dde", { defaultValue: "votes" })}{isEnded ? _copy("copy.c7383371a694", { defaultValue: " · Final results" }) : ''}</span>
       </div>
     </div>
   );
@@ -155,6 +158,7 @@ interface QuotedPostEmbedProps {
 }
 
 export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, className }: QuotedPostEmbedProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
 
   // Avatars must go through buildAvatarUrl, not getMediaUrl. getMediaUrl just
@@ -225,7 +229,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
         </div>
 
         {/* Text content */}
-        {quotedPost.articleBody && <span className="mb-1 block text-xs font-semibold uppercase tracking-widest text-white/60">Article</span>}
+        {quotedPost.articleBody && <span className="mb-1 block text-xs font-semibold uppercase tracking-widest text-white/60">{_copy("copy.29d94922512b", { defaultValue: "Article" })}</span>}
         {quotedPost.articleBody && quotedPost.name?.trim() && <h3 className="text-lg font-semibold text-white">{quotedPost.name}</h3>}
         {content && (
           <p className="text-[15px] leading-[22px] text-zinc-300 whitespace-pre-wrap">{content}</p>

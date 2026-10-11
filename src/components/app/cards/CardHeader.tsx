@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Card Header Component
  * =====================
@@ -65,11 +66,11 @@ interface CardHeaderProps {
  * Badge configuration for each content type
  */
 const CONTENT_BADGES: Record<ContentType, { label: string; className: string }> = {
-  post: { label: 'Post', className: 'bg-zinc-500/20 text-zinc-400' },
-  video: { label: 'Video', className: 'bg-zinc-500/20 text-zinc-300' },
-  image: { label: 'Image', className: 'bg-purple-500/20 text-purple-400' },
-  live: { label: 'LIVE', className: 'bg-red-500 text-white' },
-  short: { label: 'Short', className: 'bg-pink-500/20 text-pink-400' },
+  post: { get label() { return _translateCopy("copy.a5554622c655", { defaultValue: "Post" }); }, className: 'bg-zinc-500/20 text-zinc-400' },
+  video: { get label() { return _translateCopy("copy.d534be829e32", { defaultValue: "Video" }); }, className: 'bg-zinc-500/20 text-zinc-300' },
+  image: { get label() { return _translateCopy("copy.1aa4cb0bcca7", { defaultValue: "Image" }); }, className: 'bg-purple-500/20 text-purple-400' },
+  live: { get label() { return _translateCopy("copy.35e0d0360a0a", { defaultValue: "LIVE" }); }, className: 'bg-red-500 text-white' },
+  short: { get label() { return _translateCopy("copy.f5d61ead3eef", { defaultValue: "Short" }); }, className: 'bg-pink-500/20 text-pink-400' },
 };
 
 export function CardHeader({ 

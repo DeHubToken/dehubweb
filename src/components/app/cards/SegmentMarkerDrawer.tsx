@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Segment Marker Drawer
  * =====================
@@ -40,6 +41,7 @@ interface SegmentMarkerDrawerProps {
 }
 
 export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTime }: SegmentMarkerDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   // Always fetched while the drawer is open, whatever the skip preference —
   // this is the screen where the marks are the point.
@@ -80,13 +82,10 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
           underneath while marking where the sponsor read ends. */}
       <DrawerContent scrollable column glass className="px-4 pb-6">
         <DrawerHeader className="pb-2">
-          <DrawerTitle className="text-white text-lg">Skippable sections</DrawerTitle>
+          <DrawerTitle className="text-white text-lg">{_copy("copy.30f4d96b8d72", { defaultValue: "Skippable sections" })}</DrawerTitle>
         </DrawerHeader>
 
-        <p className="text-xs text-zinc-500 mb-3">
-          Mark a sponsor read or intro and everyone with skipping on jumps past it. Let the video
-          run — tap Start when it begins and End when it stops.
-        </p>
+        <p className="text-xs text-zinc-500 mb-3">{_copy("copy.b5f85f952b0b", { defaultValue: "Mark a sponsor read or intro and everyone with skipping on jumps past it. Let the video run — tap Start when it begins and End when it stops." })}</p>
 
         {/* Mark */}
         <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 space-y-3">
@@ -97,7 +96,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
               onClick={() => { const t = getCurrentTime(); setStart(t); if (end !== null && end <= t) setEnd(null); }}
               className="flex-1 h-9 rounded-lg bg-zinc-800 text-white hover:bg-zinc-700"
             >
-              {start === null ? 'Start' : `Start ${clock(start)}`}
+              {start === null ? _copy("copy.e4bb9f1ece9a", { defaultValue: "Start" }) : _copy("copy.5e2495b60820", { defaultValue: "Start {{value1}}", value1: clock(start) })}
             </Button>
             <Button
               size="sm"
@@ -106,7 +105,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
               onClick={() => setEnd(getCurrentTime())}
               className="flex-1 h-9 rounded-lg bg-zinc-800 text-white hover:bg-zinc-700 disabled:opacity-40"
             >
-              {end === null ? 'End' : `End ${clock(end)}`}
+              {end === null ? _copy("copy.f4db1e48476f", { defaultValue: "End" }) : _copy("copy.78de1ed22dcb", { defaultValue: "End {{value1}}", value1: clock(end) })}
             </Button>
           </div>
 
@@ -134,7 +133,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
             className="w-full h-9 rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 disabled:opacity-40"
           >
             {submit.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : (
-              start !== null && end !== null ? `Submit ${clock(start)} – ${clock(end)}` : 'Submit'
+              start !== null && end !== null ? _copy("copy.5218ce9ed7ab", { defaultValue: "Submit {{value1}} – {{value2}}", value1: clock(start), value2: clock(end) }) : _copy("copy.155f816c0407", { defaultValue: "Submit" })
             )}
           </Button>
         </div>
@@ -144,7 +143,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
           {isLoading ? (
             <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-zinc-500" /></div>
           ) : segments.length === 0 ? (
-            <AppState icon="videos" title="Nothing marked on this video yet" size="compact" />
+            <AppState icon="videos" title={_copy("copy.e5f6facf9cbe", { defaultValue: "Nothing marked on this video yet" })} size="compact" />
           ) : (
             segments.map((segment) => {
               const isMine = !!walletAddress && segment.address.toLowerCase() === walletAddress.toLowerCase();
@@ -156,13 +155,13 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
                       <span className="text-zinc-500"> · {clock(segment.start_seconds)} – {clock(segment.end_seconds)}</span>
                     </p>
                     <p className="text-[11px] text-zinc-500">
-                      {segment.votes_up} agree{segment.votes_down > 0 ? ` · ${segment.votes_down} disagree` : ''}
+                      {segment.votes_up}{_copy("copy.72915d37182e", { defaultValue: " agree" })}{segment.votes_down > 0 ? _copy("copy.2f41333ad013", { defaultValue: " · {{value1}} disagree", value1: segment.votes_down }) : ''}
                     </p>
                   </div>
                   {isMine ? (
                     <button
                       onClick={() => remove.mutate(segment.id)}
-                      aria-label="Remove your mark"
+                      aria-label={_copy("copy.77f3aefe8b8b", { defaultValue: "Remove your mark" })}
                       className="p-2 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-red-500/10"
                     >
                       {remove.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
@@ -171,14 +170,14 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
                     <>
                       <button
                         onClick={() => isAuthenticated ? vote.mutate({ segmentId: segment.id, value: 1 }) : openLoginModal()}
-                        aria-label="This section is right"
+                        aria-label={_copy("copy.dc469bffc7c0", { defaultValue: "This section is right" })}
                         className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
                       >
                         <ThumbsUp className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => isAuthenticated ? vote.mutate({ segmentId: segment.id, value: -1 }) : openLoginModal()}
-                        aria-label="This section is wrong"
+                        aria-label={_copy("copy.58db9997b230", { defaultValue: "This section is wrong" })}
                         className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
                       >
                         <ThumbsDown className="w-4 h-4" />
@@ -192,7 +191,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
         </div>
 
         {!isAuthenticated && (
-          <p className="mt-3 text-xs text-zinc-500 text-center">Sign in to mark or vote. Skipping works either way.</p>
+          <p className="mt-3 text-xs text-zinc-500 text-center">{_copy("copy.3c42f559d757", { defaultValue: "Sign in to mark or vote. Skipping works either way." })}</p>
         )}
 
         <Button
@@ -200,8 +199,7 @@ export function SegmentMarkerDrawer({ open, onOpenChange, tokenId, getCurrentTim
           onClick={() => onOpenChange(false)}
           className="mt-3 w-full h-9 rounded-lg text-zinc-400 hover:text-white"
         >
-          <Check className="w-4 h-4 mr-1" /> Done
-        </Button>
+          <Check className="w-4 h-4 mr-1" />{_copy("copy.12e9a0c0cda7", { defaultValue: " Done" })}</Button>
       </DrawerContent>
     </Drawer>
   );

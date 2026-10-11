@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { X, Plus, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PollData, PollOption } from '../types';
@@ -15,6 +16,7 @@ const DURATION_OPTIONS = [
 ];
 
 export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
+  const { t: _copy } = _useCopy();
   const updateOption = (id: string, text: string) => {
     onChange({
       ...poll,
@@ -38,7 +40,7 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
     <div className="mt-3 mb-1 rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-white/10">
-        <span className="text-xs font-semibold text-white/70 uppercase tracking-wider">Poll</span>
+        <span className="text-xs font-semibold text-white/70 uppercase tracking-wider">{_copy("copy.d54f7d124c7d", { defaultValue: "Poll" })}</span>
         <button
           type="button"
           onClick={onRemove}
@@ -54,7 +56,7 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
           type="text"
           value={poll.question}
           onChange={e => onChange({ ...poll, question: e.target.value })}
-          placeholder="Ask a question..."
+          placeholder={_copy("copy.cbc976c32215", { defaultValue: "Ask a question..." })}
           maxLength={200}
           className="w-full bg-white/[0.06] border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/30 outline-none mb-2"
         />
@@ -70,7 +72,7 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
                 type="text"
                 value={option.text}
                 onChange={e => updateOption(option.id, e.target.value)}
-                placeholder={`Option ${idx + 1}`}
+                placeholder={_copy("copy.c553678c42d5", { defaultValue: "Option {{value1}}", value1: idx + 1 })}
                 maxLength={60}
                 className="flex-1 bg-transparent text-sm text-white placeholder:text-white/30 outline-none"
               />
@@ -93,9 +95,7 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
             onClick={addOption}
             className="flex items-center gap-2 px-3 py-2 rounded-xl border border-dashed border-white/15 text-xs text-white/40 hover:text-white/60 hover:border-white/25 transition-colors"
           >
-            <Plus className="w-3.5 h-3.5" />
-            Add option
-          </button>
+            <Plus className="w-3.5 h-3.5" />{_copy("copy.ffbcabd155ad", { defaultValue: "Add option" })}</button>
         )}
       </div>
 
@@ -111,14 +111,12 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
             poll.isMultipleChoice ? 'bg-blue-500 border-blue-500' : 'border-white/30'
           )}>
             {poll.isMultipleChoice && <Check className="w-2.5 h-2.5 text-white" />}
-          </span>
-          Allow multiple answers
-        </button>
+          </span>{_copy("copy.2f68e65b4ded", { defaultValue: "Allow multiple answers" })}</button>
       </div>
 
       {/* Duration */}
       <div className="px-3 pb-3 flex items-center gap-2">
-        <span className="text-xs text-white/40 shrink-0">Duration:</span>
+        <span className="text-xs text-white/40 shrink-0">{_copy("copy.298d6c7549e4", { defaultValue: "Duration:" })}</span>
         <div className="flex gap-1.5">
           {DURATION_OPTIONS.map(opt => (
             <button

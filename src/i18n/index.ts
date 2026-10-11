@@ -1,3 +1,4 @@
+import { applyDateLocale } from './date-locale';
 import manifest from './locale-manifest.json';
 /**
  * i18n Configuration
@@ -164,8 +165,11 @@ export const RTL_LANGUAGES = new Set([
 ]);
 
 export function applyDocumentDirection(lang: string): void {
+  document.documentElement.lang = lang.replace('_', '-');
   document.documentElement.dir = RTL_LANGUAGES.has(lang) ? 'rtl' : 'ltr';
 }
+
+export const preferredLanguage = defaultLang;
 
 const packOrigin = '';
 const readPackCache = async (key: string) => { try { return localStorage.getItem(`locale-pack:${key}`); } catch { return null; } };
@@ -222,8 +226,12 @@ i18n.use({
   },
 });
 export async function loadLanguage(lang: string): Promise<boolean> {
-  const results = await Promise.all([...requestedGroups].map(group => loadPack(lang, group)));
-  return results.every(Boolean);
+  const groups = ['ar', 'es', 'fr', 'nl', 'tr'].includes(lang)
+    ? [...new Set(Object.values(manifest.groups))]
+    : [...requestedGroups];
+  const results = await Promise.all(groups.map(group => loadPack(lang, group)));
+  // Optional feature packs must not prevent an offline reader using cached core copy.
+  return results[groups.indexOf('core')] ?? false;
 }
 i18n.use(initReactI18next).init({
   resources: {
@@ -236,6 +244,9 @@ i18n.use(initReactI18next).init({
   parseMissingKeyHandler: humanizeTranslationKey,
   interpolation: { escapeValue: false },
 });
+
+applyDateLocale(i18n.language || 'en');
+i18n.on('languageChanged', applyDateLocale);
 
 // English needs one pass too: governance.proposalCount and postInfo.owner ship
 // only an _other, so t(key, { count: 1 }) resolved to nothing and rendered the

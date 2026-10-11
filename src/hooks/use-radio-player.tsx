@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Radio Player Hook
  * =================
@@ -65,6 +66,7 @@ interface RadioPlayerProviderProps {
 }
 
 export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
+  const { t: _copy } = _useCopy();
   const [state, setState] = useState<RadioPlayerState>({
     currentStation: null,
     isPlaying: false,
@@ -170,8 +172,8 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
         isLoading: false,
         error: 'Stream unavailable'
       }));
-      toast.error('Stream Error', {
-        description: 'Unable to play this station. Try another one.',
+      toast.error(_copy("copy.fb89f39a0240", { defaultValue: "Stream Error" }), {
+        description: _copy("copy.86e07faffa39", { defaultValue: "Unable to play this station. Try another one." }),
       });
     };
     
@@ -210,8 +212,8 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     const streamUrl = station.url_resolved || station.url;
     
     if (!streamUrl) {
-      toast.error('No Stream URL', {
-        description: 'This station does not have a valid stream.',
+      toast.error(_copy("copy.7ca25367f903", { defaultValue: "No Stream URL" }), {
+        description: _copy("copy.f9f8908630ad", { defaultValue: "This station does not have a valid stream." }),
       });
       return;
     }
@@ -237,7 +239,7 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
 
     // Register click for station analytics
     registerStationClick(station.stationuuid);
-  }, [setupAnalyser, resumeAudioContext]);
+  }, [setupAnalyser, resumeAudioContext, _copy]);
 
   const pause = useCallback(() => {
     audioRef.current?.pause();

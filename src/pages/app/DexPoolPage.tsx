@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useParams } from 'react-router-dom';
@@ -84,6 +85,7 @@ export default function DexPoolPage() {
 }
 
 function PoolTerminal({ pool }: { pool: DexPool }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { walletAddress, connect, requestWalletUnlock } = useAuth();
@@ -429,7 +431,7 @@ function PoolTerminal({ pool }: { pool: DexPool }) {
           <div className="dex-side">{(['buy', 'sell'] as const).map((value) => <button type="button" key={value} className={side === value ? `active-${value}` : ''} onClick={() => { setSide(value); setAmount.complete(amount, ''); priceTouched.current = false; }}>{t(value === 'buy' ? 'dex.buy' : 'dex.sell')}</button>)}</div>
           {mode === 'limit' && <label className="dex-field">{t(side === 'buy' ? 'dex.pool.buyAt' : 'dex.pool.sellAt')}<div className="dex-input"><input aria-label={t(side === 'buy' ? 'dex.pool.buyAt' : 'dex.pool.sellAt')} inputMode="decimal" value={price} onChange={(e) => { priceTouched.current = true; setPrice(decimalInput(e.target.value)); }} /><span>USD</span></div></label>}
           {side === 'buy' && mode === 'instant' && <label className="dex-field">{t('dex.payWith')}<div className="dex-input"><select className="dex-pay-select" aria-label={t('dex.payWith')} value={payNative ? 'native' : 'usdc'} onChange={(e) => setPayNative(e.target.value === 'native')}>
-            <option value="usdc">USDC · {balances ? formatSize(balances.usdc) : '—'}</option>
+            <option value="usdc">{_copy("copy.3d6a41e54a82", { defaultValue: "USDC · " })}{balances ? formatSize(balances.usdc) : '—'}</option>
             <option value="native">{nativeSymbol} · {balances ? formatSize(balances.native) : '—'}</option>
           </select></div></label>}
           <label className="dex-field">{t(side === 'buy' ? 'dex.spend' : 'dex.sellAmount')}<div className="dex-input"><input aria-label={t('dex.amountToken', { token: spendSymbol })} inputMode="decimal" placeholder="0.00" value={amount} onChange={(e) => setAmount(decimalInput(e.target.value))} /><span>{spendSymbol}</span></div></label>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Asset Picker Dropdown
  * =====================
@@ -46,6 +47,7 @@ export function AssetPickerDropdown({
   onSelectedIndexChange,
   onSelect,
 }: AssetPickerDropdownProps) {
+  const { t: _copy } = _useCopy();
   if (!isOpen) return null;
   if (!loading && results.length === 0) return null;
 
@@ -70,9 +72,7 @@ export function AssetPickerDropdown({
       onPointerDown={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-white/40">
-          Tokens &amp; stocks
-        </span>
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-white/40">{_copy("copy.3ba95d6dc03b", { defaultValue: "Tokens & stocks" })}</span>
         {loading && <Loader2 className="h-3.5 w-3.5 animate-spin text-white/30" />}
       </div>
 
@@ -114,7 +114,7 @@ export function AssetPickerDropdown({
               <div className="flex items-center gap-1.5">
                 <span className="text-sm font-semibold text-white">${item.symbol}</span>
                 <span className="shrink-0 rounded px-1 py-0.5 text-[9px] font-medium uppercase tracking-wide text-white/45 ring-1 ring-white/10">
-                  {item.assetClass === 'stock' ? item.exchange || 'Stock' : item.chainId || 'Crypto'}
+                  {item.assetClass === 'stock' ? item.exchange || _copy("copy.d5cade7ef319", { defaultValue: "Stock" }) : item.chainId || _copy("copy.df12b8f89b61", { defaultValue: "Crypto" })}
                 </span>
               </div>
               <p className="truncate text-[11px] text-white/45">{item.name}</p>

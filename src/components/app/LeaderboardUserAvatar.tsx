@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, memo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
@@ -28,6 +29,7 @@ export const LeaderboardUserAvatar = memo(function LeaderboardUserAvatar({
   size = 'md',
   className,
 }: LeaderboardUserAvatarProps) {
+  const { t: _copy } = _useCopy();
   const [imageError, setImageError] = useState(false);
   
   // Only use the avatarUrl if it exists and hasn't errored
@@ -38,7 +40,7 @@ export const LeaderboardUserAvatar = memo(function LeaderboardUserAvatar({
       {showImage && (
         <AvatarImage 
           src={avatarUrl} 
-          alt={`${displayName}'s avatar`}
+          alt={_copy("copy.f66ca816cb1e", { defaultValue: "{{value1}}'s avatar", value1: displayName })}
           onError={() => setImageError(true)}
         />
       )}

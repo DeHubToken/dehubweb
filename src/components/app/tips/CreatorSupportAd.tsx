@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { ensureFreshToken, getAuthToken } from '@/lib/api/dehub/core';
@@ -7,6 +8,7 @@ import { shouldSendSupportProgress, supportedWatchDelta } from '@/lib/ads/suppor
 interface SupportAd { supportSessionId: string; mediaUrl: string; headline: string; advertiser: string; creatorShareUsd: number }
 
 export default function CreatorSupportAd({ postId, walletAddress }: { postId: string; walletAddress: string }) {
+  const { t: _copy } = _useCopy();
   const [ad, setAd] = useState<SupportAd | null>(null);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -58,14 +60,14 @@ export default function CreatorSupportAd({ postId, walletAddress }: { postId: st
   };
   return <div className="space-y-2 rounded-xl border border-white/10 p-3">
     <Button variant="glass" className="w-full" disabled={loading || (!!ad && !credited)} onClick={start}>
-      {loading ? 'Finding a sponsor…' : 'Watch an ad to support this creator'}
+      {loading ? _copy("copy.ddb635c51e27", { defaultValue: "Finding a sponsor…" }) : _copy("copy.44a9502a6691", { defaultValue: "Watch an ad to support this creator" })}
     </Button>
-    <p className="text-xs text-white/60">Watch 30 seconds. The sponsor funds the creator's revenue share; you pay nothing.</p>
+    <p className="text-xs text-white/60">{_copy("copy.7ca71250e224", { defaultValue: "Watch 30 seconds. The sponsor funds the creator's revenue share; you pay nothing." })}</p>
     {ad && !credited ? <div className="space-y-2">
-      <p className="text-sm text-white">Sponsored by {ad.advertiser} · {ad.headline}</p>
+      <p className="text-sm text-white">{_copy("copy.9d30ec3ee603", { defaultValue: "Sponsored by " })}{ad.advertiser} · {ad.headline}</p>
       <video src={ad.mediaUrl} autoPlay loop muted playsInline controls onTimeUpdate={e => void tick(e.currentTarget)} className="max-h-64 w-full rounded-lg" />
-      <p className="text-xs text-white/70">{Math.floor(watched)} / 30 seconds verified · Creator share ${ad.creatorShareUsd.toFixed(4)}</p>
-      <Button variant="glass" onClick={() => { setAd(null); setMessage('Ad closed.'); }}>Cancel ad</Button>
+      <p className="text-xs text-white/70">{Math.floor(watched)}{_copy("copy.1b7660d74f2c", { defaultValue: " / 30 seconds verified · Creator share $" })}{ad.creatorShareUsd.toFixed(4)}</p>
+      <Button variant="glass" onClick={() => { setAd(null); setMessage('Ad closed.'); }}>{_copy("copy.95193e92b3fb", { defaultValue: "Cancel ad" })}</Button>
     </div> : null}
     {message ? <p role="status" className="text-sm text-white/80">{message}</p> : null}
   </div>;

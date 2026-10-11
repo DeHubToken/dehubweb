@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Save to Folder Drawer
@@ -35,6 +36,7 @@ interface DrawerNotice {
 }
 
 export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolderDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const {
     folders,
@@ -93,7 +95,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
       }
     } catch {
       setPending((prev) => ({ ...prev, [folderId]: !adding }));
-      setNotice({ message: 'Failed to update folder', tone: 'error' });
+      setNotice({ message: _copy("copy.819e1b7af3c5", { defaultValue: "Failed to update folder" }), tone: 'error' });
     }
   };
 
@@ -124,10 +126,10 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
         setNotice({ message: `Saved to ${created.name}`, tone: 'success' });
       } catch {
         setPending((prev) => ({ ...prev, [created._id]: false }));
-        setNotice({ message: "Folder created, but the post wasn't added", tone: 'error' });
+        setNotice({ message: _copy("copy.c5abcffd4c32", { defaultValue: "Folder created, but the post wasn't added" }), tone: 'error' });
       }
     } catch {
-      setNotice({ message: 'Failed to create folder', tone: 'error' });
+      setNotice({ message: _copy("copy.6e99e5419d22", { defaultValue: "Failed to create folder" }), tone: 'error' });
     }
   };
 
@@ -137,15 +139,13 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column className="h-[calc(100dvh_-_env(safe-area-inset-top)_-_0.75rem)] max-h-none overflow-hidden rounded-t-[24px] border-white/10 bg-black/80 backdrop-blur-[24px] md:h-[min(85dvh,640px)]">
         <DrawerHeader className="relative shrink-0 border-b border-white/10 px-5 pb-4 pt-5 text-left">
-          <DrawerTitle className="text-white text-lg font-bold">Save to folder</DrawerTitle>
-          <p className="mt-1 pr-12 text-xs leading-5 text-zinc-400">
-            Choose where you want to keep this post.
-          </p>
+          <DrawerTitle className="text-white text-lg font-bold">{_copy("copy.fb96ba383ceb", { defaultValue: "Save to folder" })}</DrawerTitle>
+          <p className="mt-1 pr-12 text-xs leading-5 text-zinc-400">{_copy("copy.ce5481a058d1", { defaultValue: "Choose where you want to keep this post." })}</p>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
             className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-xl bg-white/[0.06] text-zinc-400 transition-colors hover:bg-white/10 hover:text-white active:scale-[0.98]"
-            aria-label="Close folder picker"
+            aria-label={_copy("copy.2db6d3ccf0e7", { defaultValue: "Close folder picker" })}
           >
             <X className="w-4 h-4" />
           </button>
@@ -212,7 +212,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
               })}
             </div>
           ) : (
-            <AppState icon="bookmarks" title="No folders yet" description="Create one below to organize this post." size="drawer" />
+            <AppState icon="bookmarks" title={_copy("copy.8a66376ee6fc", { defaultValue: "No folders yet" })} description={_copy("copy.40952f27a655", { defaultValue: "Create one below to organize this post." })} size="drawer" />
           )}
         </div>
 
@@ -220,7 +220,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
           {showCreateForm ? (
             <div className="space-y-2.5">
               <label className="block space-y-1.5">
-                <span className="text-xs font-semibold text-zinc-300">Folder name</span>
+                <span className="text-xs font-semibold text-zinc-300">{_copy("copy.14d34edf50ef", { defaultValue: "Folder name" })}</span>
                 <Input
                   autoFocus
                   value={newFolderName}
@@ -231,13 +231,12 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                 />
               </label>
               <label className="block space-y-1.5">
-                <span className="text-xs font-semibold text-zinc-300">
-                  Description <span className="font-normal text-zinc-500">(optional)</span>
+                <span className="text-xs font-semibold text-zinc-300">{_copy("copy.2a2cc42f3f7e", { defaultValue: "Description " })}<span className="font-normal text-zinc-500">{_copy("copy.0059798b7f70", { defaultValue: "(optional)" })}</span>
                 </span>
                 <Input
                   value={newFolderDesc}
                   onChange={(e) => setNewFolderDesc(e.target.value)}
-                  placeholder="What belongs in this folder?"
+                  placeholder={_copy("copy.5e1e78e77bc9", { defaultValue: "What belongs in this folder?" })}
                   maxLength={200}
                   className="h-12 rounded-xl border-white/10 bg-white/[0.06] text-white placeholder:text-zinc-500 focus-visible:ring-white/30"
                 />
@@ -262,15 +261,13 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
                   variant="ghost"
                   onClick={() => setShowCreateForm(false)}
                   className="h-12 flex-1 rounded-xl bg-white/[0.05] text-zinc-300 hover:bg-white/10 hover:text-white"
-                >
-                  Cancel
-                </Button>
+                >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
                 <Button
                   onClick={handleCreateFolder}
                   disabled={!newFolderName.trim() || isCreating}
                   className="h-12 flex-1 rounded-xl bg-zinc-100 font-semibold text-zinc-950 hover:bg-white active:scale-[0.98]"
                 >
-                  {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Create & save'}
+                  {isCreating ? <Loader2 className="w-4 h-4 animate-spin" /> : _copy("copy.d6510650eea7", { defaultValue: "Create & save" })}
                 </Button>
               </div>
             </div>
@@ -279,9 +276,7 @@ export function SaveToFolderDrawer({ open, onOpenChange, tokenId }: SaveToFolder
               onClick={() => setShowCreateForm(true)}
               className="h-12 w-full rounded-xl bg-zinc-100 font-semibold text-zinc-950 hover:bg-white active:scale-[0.98]"
             >
-              <FolderPlus className="w-4 h-4" />
-              Create new folder
-            </Button>
+              <FolderPlus className="w-4 h-4" />{_copy("copy.f747344cdf17", { defaultValue: "Create new folder" })}</Button>
           )}
         </div>
       </DrawerContent>

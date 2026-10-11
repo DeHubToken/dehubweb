@@ -1,21 +1,24 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { Play, SkipBack, SkipForward, Shuffle, Repeat, Heart, ListMusic, Radio } from 'lucide-react';
 
 const MOCK_TRACKS = [
-  { title: 'Digital Dreams', artist: 'CryptoBeats', duration: '3:42' },
-  { title: 'Decentralized', artist: 'Web3 Sound', duration: '4:15' },
-  { title: 'Chain Reaction', artist: 'BlockTune', duration: '2:58' },
-  { title: 'Token Flow', artist: 'DAOrhythm', duration: '5:01' },
-  { title: 'Smart Contract', artist: 'EthWave', duration: '3:33' },
+  { get title() { return _translateCopy("copy.b29ae9358c04", { defaultValue: "Digital Dreams" }); }, artist: 'CryptoBeats', duration: '3:42' },
+  { get title() { return _translateCopy("copy.e0c10c2dbafd", { defaultValue: "Decentralized" }); }, artist: 'Web3 Sound', duration: '4:15' },
+  { get title() { return _translateCopy("copy.fee822a775ca", { defaultValue: "Chain Reaction" }); }, artist: 'BlockTune', duration: '2:58' },
+  { get title() { return _translateCopy("copy.3d7523adae5e", { defaultValue: "Token Flow" }); }, artist: 'DAOrhythm', duration: '5:01' },
+  { get title() { return _translateCopy("copy.4adda863ca49", { defaultValue: "Smart Contract" }); }, artist: 'EthWave', duration: '3:33' },
 ];
 
 export function MusicScreen() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Music" />
+      <MobileTopBar title={_copy("copy.6eb00b4b2614", { defaultValue: "Music" })} />
 
       {/* Category pills */}
       <div className="flex gap-2 px-4 py-3.5 overflow-x-auto scrollbar-hide">
@@ -35,7 +38,7 @@ export function MusicScreen() {
       <div className="mx-4 mb-5 p-4 rounded-2xl border border-white/[0.1] bg-white/[0.03]">
         <div className="flex items-center gap-2 mb-4">
           <Radio className="w-3.5 h-3.5 text-white" />
-          <span className="text-[10px] text-zinc-400 uppercase tracking-wider">Now Playing</span>
+          <span className="text-[10px] text-zinc-400 uppercase tracking-wider">{_copy("copy.8b2ae991573c", { defaultValue: "Now Playing" })}</span>
         </div>
         <div className="aspect-square rounded-xl bg-zinc-900 mb-4 flex items-center justify-center">
           <div className="w-16 h-16 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center">
@@ -43,8 +46,8 @@ export function MusicScreen() {
           </div>
         </div>
         <div className="text-center mb-3">
-          <h3 className="text-white text-base font-semibold">Digital Dreams</h3>
-          <p className="text-zinc-500 text-sm">CryptoBeats</p>
+          <h3 className="text-white text-base font-semibold">{_copy("copy.b29ae9358c04", { defaultValue: "Digital Dreams" })}</h3>
+          <p className="text-zinc-500 text-sm">{_copy("copy.af86ba804639", { defaultValue: "CryptoBeats" })}</p>
         </div>
 
         {/* Progress bar */}
@@ -73,7 +76,7 @@ export function MusicScreen() {
       {/* Up next */}
       <div className="px-4 flex-1">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-white text-sm font-semibold">Up Next</h3>
+          <h3 className="text-white text-sm font-semibold">{_copy("copy.f9730ea7776a", { defaultValue: "Up Next" })}</h3>
           <ListMusic className="w-4 h-4 text-zinc-500" />
         </div>
         <div className="space-y-2">

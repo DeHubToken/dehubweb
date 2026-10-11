@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * New Members List
  * ================
@@ -37,6 +38,7 @@ interface NewMembersListProps {
 }
 
 export function NewMembersList({ listClassName }: NewMembersListProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
@@ -121,8 +123,8 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
     return (
       <AppState
         icon="subscriptions"
-        title={error ? 'Members could not load' : 'No members to show yet'}
-        description={error ? 'Try loading the member list again.' : 'New members will appear here.'}
+        title={error ? _copy("copy.009f444f1657", { defaultValue: "Members could not load" }) : _copy("copy.7768be414be4", { defaultValue: "No members to show yet" })}
+        description={error ? _copy("copy.0f09e9f0e845", { defaultValue: "Try loading the member list again." }) : _copy("copy.04cd3d93501d", { defaultValue: "New members will appear here." })}
         kind={error ? 'error' : 'empty'}
         size="section"
       />
@@ -172,7 +174,7 @@ export function NewMembersList({ listClassName }: NewMembersListProps) {
                   : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
               }`}
             >
-              {isRequested(member) ? 'Requested' : isFollowed(member) ? 'Following' : 'Follow'}
+              {isRequested(member) ? _copy("copy.2d9e28289fac", { defaultValue: "Requested" }) : isFollowed(member) ? _copy("copy.344b4271ca01", { defaultValue: "Following" }) : _copy("copy.641d1ef657bd", { defaultValue: "Follow" })}
             </button>
           </div>
         ))}

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { TranslationText } from '@/components/TranslationText';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -71,11 +73,8 @@ const AllowanceFootnote = () => {
 const PostingAllowanceChart = () => (
   <Card className="w-full">
     <CardHeader>
-      <CardTitle className="text-center font-exo">Daily posting allowance by badge</CardTitle>
-      <p className="text-center text-sm text-muted-foreground font-exo">
-        Free every day. The bar is the data allowance; the price on the right is what anything past
-        it costs.
-      </p>
+      <CardTitle className="text-center font-exo"><TranslationText name="copy.bfec166eea05" fallback={"Daily posting allowance by badge"} /></CardTitle>
+      <p className="text-center text-sm text-muted-foreground font-exo"><TranslationText name="copy.23c4bdbfc9f8" fallback={"Free every day. The bar is the data allowance; the price on the right is what anything past it costs."} /></p>
     </CardHeader>
     <CardContent>
       <div className="grid gap-2">
@@ -108,7 +107,7 @@ const PostingAllowanceChart = () => (
                 <div
                   className="mt-2 h-2 w-full rounded-full bg-muted overflow-hidden"
                   role="img"
-                  aria-label={`${gbLabel(tier.gbPerDay)} of media and ${tier.postsPerDay} text posts free per day`}
+                  aria-label={_translateCopy("copy.d300f01abdea", { defaultValue: "{{value1}} of media and {{value2}} text posts free per day", value1: gbLabel(tier.gbPerDay), value2: tier.postsPerDay })}
                 >
                   <div
                     className="h-full rounded-full bg-foreground/70"
@@ -119,14 +118,13 @@ const PostingAllowanceChart = () => (
                 <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                   <span className="text-sm text-foreground font-exo">
                     <strong className="font-semibold">{gbLabel(tier.gbPerDay)}</strong>
-                    <span className="text-muted-foreground"> media</span>
+                    <span className="text-muted-foreground"><TranslationText name="copy.fe2026f79566" fallback={" media"} /></span>
                     <span className="text-muted-foreground"> · </span>
                     <strong className="font-semibold">{tier.postsPerDay}</strong>
-                    <span className="text-muted-foreground"> text posts</span>
+                    <span className="text-muted-foreground"><TranslationText name="copy.a092b4b19981" fallback={" text posts"} /></span>
                   </span>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    then {tier.dhbPerGb.toLocaleString()} <DhbCoin />/GB ({usd(tier.dhbPerGb)}) ·{' '}
-                    {tier.dhbPerTextPost} <DhbCoin />/post ({usd(tier.dhbPerTextPost)})
+                  <span className="text-xs text-muted-foreground font-mono"><TranslationText name="copy.ce580a215203" fallback={"then "} />{tier.dhbPerGb.toLocaleString()} <DhbCoin />/GB ({usd(tier.dhbPerGb)}) ·{' '}
+                    {tier.dhbPerTextPost} <DhbCoin /><TranslationText name="copy.8a1719815fd8" fallback={"/post ("} />{usd(tier.dhbPerTextPost)})
                   </span>
                 </div>
               </div>

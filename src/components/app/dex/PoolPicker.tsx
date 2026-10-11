@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -18,6 +19,7 @@ export function PoolAvatar({ pool, size = 38 }: { pool: Pick<DexPool, 'image_url
 
 /** The pair title. Opens the list of every pool and the button to add one. */
 export function PoolPicker({ current }: { current: DexPool | null }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -54,10 +56,10 @@ export function PoolPicker({ current }: { current: DexPool | null }) {
       <label className="dex-pool-search"><Search size={13} /><input autoFocus placeholder={t('dex.pools.search')} aria-label={t('dex.pools.search')} value={query} onChange={(e) => setQuery(e.target.value)} /></label>
       <div className="dex-pool-list">
         {(!query || `dhb dehub tokens ${tokenLabel()}`.toLowerCase().includes(query.trim().toLowerCase())) && <button type="button" role="option" aria-selected={!current} className="dex-pool-item" onClick={() => go('/dex')}>
-          <PoolAvatar pool={null} size={26} /><span><b>{tokenLabel()} / USD</b><small>DeHub · Base</small></span>
+          <PoolAvatar pool={null} size={26} /><span><b>{tokenLabel()}{_copy("copy.3d1d43659027", { defaultValue: " / USD" })}</b><small>{_copy("copy.21ff98f704a6", { defaultValue: "DeHub · Base" })}</small></span>
         </button>}
         {filtered.map((pool) => <button type="button" role="option" key={pool.id} aria-selected={current?.id === pool.id} className="dex-pool-item" onClick={() => go(poolPath(pool))}>
-          <PoolAvatar pool={pool} size={26} /><span><b>{pool.symbol} / USD</b><small>{pool.name} · {POOL_CHAIN_INFO[pool.chain].name}</small></span>
+          <PoolAvatar pool={pool} size={26} /><span><b>{pool.symbol}{_copy("copy.3d1d43659027", { defaultValue: " / USD" })}</b><small>{pool.name} · {POOL_CHAIN_INFO[pool.chain].name}</small></span>
         </button>)}
         {isLoading && <div className="dex-pool-note">{t('dex.pools.loading')}</div>}
         {!isLoading && query && !filtered.length && <div className="dex-pool-note">{t('dex.pools.noMatch')}</div>}

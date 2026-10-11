@@ -17,6 +17,7 @@ import BestDecentralizedStreaming from '@/pages/BestDecentralizedStreaming';
 
 // SEOHead writes <head> tags in an effect, which a static render never runs.
 vi.mock('@/components/SEOHead', () => ({ SEOHead: () => null }));
+vi.mock('@/hooks/usePublicPageLocale', () => ({ usePublicPageLocale: () => ({ localized: false }) }));
 
 const ROOT = resolve(__dirname, '../..');
 const PAGES: Record<string, ComponentType> = {

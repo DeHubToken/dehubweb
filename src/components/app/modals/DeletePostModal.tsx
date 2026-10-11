@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Delete Post Modal
  * =================
@@ -33,6 +34,7 @@ export function DeletePostModal({
   tokenId,
   onSuccess,
 }: DeletePostModalProps) {
+  const { t: _copy } = _useCopy();
   const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
@@ -44,11 +46,11 @@ export function DeletePostModal({
         markPostDeleted(tokenId);
         queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
         queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
-        toast.success('Post deleted');
+        toast.success(_copy("copy.4352dab43457", { defaultValue: "Post deleted" }));
         onSuccess?.();
         onOpenChange(false);
       } else {
-        toast.error('Failed to delete post');
+        toast.error(_copy("copy.95ff1729b2c2", { defaultValue: "Failed to delete post" }));
       }
     } catch (error: any) {
       console.error('[DeletePostModal] Error:', error);
@@ -63,12 +65,8 @@ export function DeletePostModal({
       <DrawerContent column glass className="max-h-[50dvh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Trash2 className="w-5 h-5 text-red-500" />
-            Delete Post
-          </DrawerTitle>
-          <DrawerDescription className="text-zinc-400">
-            This action cannot be undone. Your post will be permanently removed.
-          </DrawerDescription>
+            <Trash2 className="w-5 h-5 text-red-500" />{_copy("copy.e139251e4f5b", { defaultValue: "Delete Post" })}</DrawerTitle>
+          <DrawerDescription className="text-zinc-400">{_copy("copy.b3661ad568df", { defaultValue: "This action cannot be undone. Your post will be permanently removed." })}</DrawerDescription>
         </DrawerHeader>
 
         <div className="px-4 pb-6 space-y-4">
@@ -78,9 +76,7 @@ export function DeletePostModal({
               onClick={() => onOpenChange(false)}
               disabled={isDeleting}
               className="flex-1 text-zinc-400 hover:text-white hover:bg-white/10"
-            >
-              Cancel
-            </Button>
+            >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             <Button
               onClick={handleDelete}
               disabled={isDeleting}
@@ -88,11 +84,9 @@ export function DeletePostModal({
             >
               {isDeleting ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  Deleting...
-                </>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />{_copy("copy.685ecb984ac2", { defaultValue: "Deleting..." })}</>
               ) : (
-                'Delete Post'
+                _copy("copy.e139251e4f5b", { defaultValue: "Delete Post" })
               )}
             </Button>
           </div>

@@ -1,9 +1,11 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Bug } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const TokenSecurity = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   return (
@@ -24,9 +26,7 @@ const TokenSecurity = () => {
               <div>
                 <h4 className="font-semibold text-foreground mb-1">{t('tokenSecurity.audit')}</h4>
                 <p className="text-muted-foreground">
-                  <a href="https://skynet.certik.com/projects/dehub?__cf_chl_rt_tk=N_M44mFcDWKtLmLVGNEC1rDps5hWVdQyhr3m1jLOTNM-1748707726-1.0.1.1-dfgolPAmeQ8KnvRDO3y0pFse0jC2Q1ro5bKRvE5WJPo" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 underline">
-                    Certik
-                  </a>
+                  <a href="https://skynet.certik.com/projects/dehub?__cf_chl_rt_tk=N_M44mFcDWKtLmLVGNEC1rDps5hWVdQyhr3m1jLOTNM-1748707726-1.0.1.1-dfgolPAmeQ8KnvRDO3y0pFse0jC2Q1ro5bKRvE5WJPo" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 underline">{_copy("copy.d31dc978d07c", { defaultValue: "Certik" })}</a>
                 </p>
               </div>
             </div>
@@ -36,9 +36,7 @@ const TokenSecurity = () => {
               <div>
                 <h4 className="font-semibold text-foreground mb-1">{t('tokenSecurity.bugBounty')}</h4>
                 <p className="text-muted-foreground">
-                  <a href="mailto:tech@dehub.net" className="text-primary hover:text-primary/80 underline">
-                    tech@dehub.net
-                  </a>
+                  <a href="mailto:tech@dehub.net" className="text-primary hover:text-primary/80 underline">{_copy("copy.886e533d7364", { defaultValue: "tech@dehub.net" })}</a>
                 </p>
               </div>
             </div>

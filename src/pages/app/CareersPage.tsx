@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * Careers Page (In-App)
@@ -85,6 +86,7 @@ const initialBDMForm: BDMFormData = {
 };
 
 export default function CareersPage() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [bdmFormOpen, setBdmFormOpen] = useState(false);
@@ -133,8 +135,8 @@ export default function CareersPage() {
       {/* Canonical is /jobs — the route this page actually serves (and the one
           in the sitemap). /app/careers was never a route: it canonicalized a
           sitemapped page onto a 404. */}
-      <SEOHead title="Careers — Join the DeHub Team" description="Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social." url="https://dehub.io/jobs" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Careers at DeHub', url: 'https://dehub.io/jobs', description: 'Open positions at DeHub — building the future of decentralized media.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">DeHub Careers — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.90f2963ac688", { defaultValue: "Careers — Join the DeHub Team" })} description={_copy("copy.55075065cfc5", { defaultValue: "Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social." })} url="https://dehub.io/jobs" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Careers at DeHub', url: 'https://dehub.io/jobs', description: _copy("copy.668281a1d0d0", { defaultValue: "Open positions at DeHub — building the future of decentralized media." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">{_copy("copy.0ec80d3905a0", { defaultValue: "DeHub Careers — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={careersBriefcase} alt={t('careers.title')} className="w-8 h-8 object-contain" />}
         title={t('careers.title')}
@@ -219,23 +221,23 @@ export default function CareersPage() {
               <h3 className="text-white font-semibold text-sm mb-1">{t('careers.yourApplication')}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField label={t('careers.fullName')} required>
-                  <Input name="name" placeholder="Jane Smith" value={formData.name} onChange={handleChange} required maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
+                  <Input name="name" placeholder={_copy("copy.a2dd3acadb1c", { defaultValue: "Jane Smith" })} value={formData.name} onChange={handleChange} required maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
                 <FormField label={t('careers.email')} required>
-                  <Input name="email" type="email" placeholder="you@example.com" value={formData.email} onChange={handleChange} required maxLength={255} className="bg-white/5 border-white/10 text-white rounded-xl" />
+                  <Input name="email" type="email" placeholder={_copy("copy.53e6cdc30765", { defaultValue: "you@example.com" })} value={formData.email} onChange={handleChange} required maxLength={255} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField label={t('careers.telegram')}>
-                  <Input name="telegram" placeholder="@username" value={formData.telegram} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
+                  <Input name="telegram" placeholder={_copy("copy.93100fc44c0a", { defaultValue: "@username" })} value={formData.telegram} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
                 <FormField label={t('careers.xTwitter')}>
-                  <Input name="twitter" placeholder="@username" value={formData.twitter} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
+                  <Input name="twitter" placeholder={_copy("copy.93100fc44c0a", { defaultValue: "@username" })} value={formData.twitter} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField label={t('careers.instagram')}>
-                  <Input name="instagram" placeholder="@username" value={formData.instagram} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
+                  <Input name="instagram" placeholder={_copy("copy.93100fc44c0a", { defaultValue: "@username" })} value={formData.instagram} onChange={handleChange} maxLength={100} className="bg-white/5 border-white/10 text-white rounded-xl" />
                 </FormField>
                 <FormField label={t('careers.linkedin')}>
                   <Input name="linkedin" placeholder="linkedin.com/in/you" value={formData.linkedin} onChange={handleChange} maxLength={255} className="bg-white/5 border-white/10 text-white rounded-xl" />
@@ -324,9 +326,7 @@ export default function CareersPage() {
       <div className="!mt-8 text-center">
         <p className="text-zinc-500 text-xs">
           {t('careers.footerText')}{' '}
-          <a href="mailto:dev@dehub.io" className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors">
-            dev@dehub.io
-          </a>
+          <a href="mailto:dev@dehub.io" className="text-zinc-300 underline underline-offset-2 hover:text-white transition-colors">{_copy("copy.4001b1e9d20e", { defaultValue: "dev@dehub.io" })}</a>
         </p>
       </div>
       </PageBody>

@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * User Feedback Survey
@@ -57,13 +59,13 @@ const QUESTIONS: SurveyQuestion[] = [
     key: 'join_reason',
     question: 'What made you join DeHub?',
     type: 'text',
-    placeholder: 'In your own words…',
+    get placeholder() { return _translateCopy("copy.2c82d66bf91b", { defaultValue: "In your own words…" }); },
   },
   {
     key: 'favourite_thing',
     question: 'What do you like most about DeHub?',
     type: 'text',
-    placeholder: 'In your own words…',
+    get placeholder() { return _translateCopy("copy.2c82d66bf91b", { defaultValue: "In your own words…" }); },
   },
   {
     key: 'consent_share',
@@ -80,6 +82,7 @@ const QUESTIONS: SurveyQuestion[] = [
 ];
 
 export function UserFeedbackSurvey() {
+  const { t: _copy } = _useCopy();
   const { walletAddress, isAuthenticated } = useAuth();
   const [show, setShow] = useState(false);
   const [step, setStep] = useState(0);
@@ -165,11 +168,11 @@ export function UserFeedbackSurvey() {
       if (error) throw error;
 
       localStorage.setItem(SURVEY_DISMISSED_KEY, 'true');
-      toast.success('Thanks for your feedback!');
+      toast.success(_copy("copy.f2082eaee365", { defaultValue: "Thanks for your feedback!" }));
       setShow(false);
     } catch (err) {
       console.error('[Survey] Submit error:', err);
-      toast.error('Failed to submit, try again');
+      toast.error(_copy("copy.1f293aa8b15c", { defaultValue: "Failed to submit, try again" }));
     } finally {
       setSubmitting(false);
     }
@@ -203,9 +206,8 @@ export function UserFeedbackSurvey() {
           {/* Header */}
           <div className="flex items-center justify-between px-5 pt-5 pb-2">
             <div>
-              <h2 className="text-white font-bold text-lg">Quick Feedback</h2>
-              <p className="text-zinc-500 text-xs mt-0.5">
-                Question {step + 1} of {QUESTIONS.length}
+              <h2 className="text-white font-bold text-lg">{_copy("copy.b1bfab35b286", { defaultValue: "Quick Feedback" })}</h2>
+              <p className="text-zinc-500 text-xs mt-0.5">{_copy("copy.39821a754d34", { defaultValue: "Question " })}{step + 1}{_copy("copy.a4282e4b2298", { defaultValue: " of " })}{QUESTIONS.length}
               </p>
             </div>
             <button
@@ -280,9 +282,7 @@ export function UserFeedbackSurvey() {
             <button
               onClick={handleDismiss}
               className="text-zinc-500 text-sm hover:text-white transition-colors"
-            >
-              Skip
-            </button>
+            >{_copy("copy.28d03596d24e", { defaultValue: "Skip" })}</button>
             <button
               onClick={handleNext}
               disabled={!hasAnswer || submitting}
@@ -294,14 +294,12 @@ export function UserFeedbackSurvey() {
               )}
             >
               {submitting ? (
-                'Submitting...'
+                _copy("copy.64115d5b9c79", { defaultValue: "Submitting..." })
               ) : isLastStep ? (
-                <>
-                  Submit <Check className="w-4 h-4" />
+                <>{_copy("copy.1d5c2a48642c", { defaultValue: "Submit " })}<Check className="w-4 h-4" />
                 </>
               ) : (
-                <>
-                  Next <ChevronRight className="w-4 h-4" />
+                <>{_copy("copy.cd447acb4270", { defaultValue: "Next " })}<ChevronRight className="w-4 h-4" />
                 </>
               )}
             </button>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { Globe, Search, Check } from "lucide-react";
 import { useState } from "react";
@@ -11,6 +12,7 @@ import {
 import { useLanguage, languages } from "@/contexts/LanguageContext";
 
 export function LanguageSelector() {
+  const { t: _copy } = _useCopy();
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useSurfaceDraft("components/LanguageSelector.tsx:search", "");
@@ -40,12 +42,12 @@ export function LanguageSelector() {
         }}
       >
         <DrawerHeader className="pb-2">
-          <DrawerTitle className="text-white text-lg">Select Language</DrawerTitle>
+          <DrawerTitle className="text-white text-lg">{_copy("copy.2d8f9954cb33", { defaultValue: "Select Language" })}</DrawerTitle>
           <div className="relative mt-3">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
             <input
               type="text"
-              placeholder="Search languages..."
+              placeholder={_copy("copy.7858b9baa709", { defaultValue: "Search languages..." })}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-white placeholder:text-white/40 border border-white/15 focus:outline-none focus:border-white/30 transition-colors"

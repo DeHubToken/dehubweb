@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Event Chat Hook
  * ================
@@ -36,6 +37,7 @@ export interface EventChatMessage {
 const QUERY_KEY = 'event-chat-messages';
 
 export function useEventChat(eventId: string | undefined) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
@@ -141,10 +143,10 @@ export function useEventChat(eventId: string | undefined) {
     );
     if (error) {
       console.error('[EventChat] Send error:', error);
-      toast.error('Failed to send message');
+      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
       throw error;
     }
-  }, [eventId, walletAddress]);
+  }, [eventId, walletAddress, _copy]);
 
   const addReaction = useCallback(async (messageId: string, emoji: string) => {
     if (!walletAddress || !eventId) return;
@@ -202,12 +204,12 @@ export function useEventChat(eventId: string | undefined) {
     );
     if (error) {
       console.error('[EventChat] Edit error:', error);
-      toast.error('Failed to edit message');
+      toast.error(_copy("copy.da8e926af644", { defaultValue: "Failed to edit message" }));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, eventId] });
       return false;
     }
     return true;
-  }, [walletAddress, eventId, queryClient]);
+  }, [walletAddress, eventId, queryClient, _copy]);
 
   return { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction };
 }

@@ -26,6 +26,6 @@ describe('feature language packs', () => {
     const { default: i18n, loadLanguage } = await import('./index');
     expect(await loadLanguage('fr')).toBe(true);
     expect(i18n.getResource('fr', 'translation', 'common.offlineProbe')).toBe('Hors ligne');
-    expect(fetchPack).not.toHaveBeenCalled();
+    expect(fetchPack.mock.calls.every(([url]) => !String(url).endsWith('/core.json'))).toBe(true);
   });
 });

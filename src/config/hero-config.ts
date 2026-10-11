@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 // Hero configuration - centralized config for buzzwords, colors, and timings
 
 export const BUZZWORDS = [
@@ -60,7 +61,7 @@ export const SOCIAL_LINKS = [
   { icon: "music", url: "https://tiktok.com/@dehub_official", label: "TikTok" },
   { icon: "instagram", url: "https://instagram.com/dehub_official", label: "Instagram" },
   { icon: "twitter", url: "https://x.com/dehub_official", label: "Twitter" },
-  { icon: "scroll", url: "https://dehub.io/docs", label: "Documentation" },
+  { icon: "scroll", url: "https://dehub.io/docs", get label() { return _translateCopy("copy.c205924de0fe", { defaultValue: "Documentation" }); } },
 ];
 
 // Animation timings

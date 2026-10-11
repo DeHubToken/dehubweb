@@ -22,6 +22,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildPublicLocales, writePublicLocales } from './build-public-locales.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const APP_URL = 'https://dehub.io';
@@ -87,6 +88,7 @@ export function buildSeoI18n(localesDir, copyDir = join(HERE, 'seo-i18n-copy')) 
       out[route][lang] = { title, description, h1, body, ...(page.lede ? { lede: clean(page.lede) } : {}) };
     }
   }
+  Object.assign(out, buildPublicLocales(resolve(localesDir, '../../..')).table);
   return Object.fromEntries(
     Object.keys(out)
       .sort()
@@ -134,6 +136,7 @@ export function withSitemapAlternates(xml, table) {
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const root = resolve(HERE, '..');
+  writePublicLocales(root);
   const table = buildSeoI18n(join(root, 'src/i18n/locales'));
   writeFileSync(join(root, 'public/seo-i18n.json'), `${JSON.stringify(table, null, 2)}\n`);
   const sitemapPath = join(root, 'public/sitemap-static.xml');

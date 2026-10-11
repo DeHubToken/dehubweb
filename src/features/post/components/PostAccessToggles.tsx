@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useEffect, useMemo } from 'react';
@@ -159,6 +160,7 @@ export function PostAccessToggles({
   quoteMode = false,
   onCreatePlan,
 }: PostAccessTogglesProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { walletAddress } = useAuth();
   const navigate = useNavigate();
@@ -347,13 +349,13 @@ export function PostAccessToggles({
 
   const confirmToken = () => {
     if (!tempTokenAmount.trim() || parseFloat(tempTokenAmount) <= 0) {
-      toast.error('Enter a valid minimum token amount');
+      toast.error(_copy("copy.6871d495c634", { defaultValue: "Enter a valid minimum token amount" }));
       return;
     }
     if (useCustomToken) {
       const addr = tempTokenContract.trim();
       if (!addr) {
-        toast.error('Enter a token contract address');
+        toast.error(_copy("copy.5052f9293e6b", { defaultValue: "Enter a token contract address" }));
         return;
       }
       if (solanaChain ? !isValidSolanaAddress(addr) : !isValidEvmAddress(addr)) {
@@ -365,7 +367,7 @@ export function PostAccessToggles({
     } else {
       const picked = lockTokens.find((t) => t.symbol === tempTokenSymbol);
       if (!picked) {
-        toast.error('Select a token');
+        toast.error(_copy("copy.3a4c088bcce4", { defaultValue: "Select a token" }));
         return;
       }
       setTokenContract(picked.address);
@@ -427,12 +429,12 @@ export function PostAccessToggles({
         >
           <div className="flex items-center gap-2 min-w-0">
             <Coins className="w-4 h-4 text-white shrink-0" />
-            <span className="text-sm text-white">Mint post</span>
+            <span className="text-sm text-white">{_copy("copy.8059f6bc8ca0", { defaultValue: "Mint post" })}</span>
             {shouldMint && mintFeeLabel && (
               <span className="text-xs text-white/50 truncate">({mintFeeLabel})</span>
             )}
             {mintRequired && (
-              <span className="text-xs text-white/50 truncate">(required for bounty)</span>
+              <span className="text-xs text-white/50 truncate">{_copy("copy.3bd09b121466", { defaultValue: "(required for bounty)" })}</span>
             )}
           </div>
           <Switch
@@ -448,7 +450,7 @@ export function PostAccessToggles({
           <label className="flex items-center justify-between py-0.5 cursor-pointer">
             <div className="flex items-center gap-2 shrink-0">
               <Type className="w-4 h-4 text-white" />
-              <span className="text-sm text-white">Title</span>
+              <span className="text-sm text-white">{_copy("copy.7e8cd2056da7", { defaultValue: "Title" })}</span>
             </div>
             <Switch checked={showTitle} onCheckedChange={setShowTitle} className="data-[state=checked]:bg-white scale-75" />
           </label>
@@ -459,7 +461,7 @@ export function PostAccessToggles({
           <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleCategoryToggle(selectedCategoriesArray.length === 0)}>
             <div className="flex items-center gap-2 shrink-0">
               <Hash className="w-4 h-4 text-white" />
-              <span className="text-sm text-white">Category</span>
+              <span className="text-sm text-white">{_copy("copy.292c06f0045a", { defaultValue: "Category" })}</span>
             </div>
             <Switch checked={selectedCategoriesArray.length > 0} onCheckedChange={handleCategoryToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
           </label>
@@ -483,7 +485,7 @@ export function PostAccessToggles({
                 onClick={() => {
                   localStorage.setItem('post_default_categories', selectedCategory);
                   markCategorySaved?.();
-                  toast.success('Default categories saved');
+                  toast.success(_copy("copy.879083ad80be", { defaultValue: "Default categories saved" }));
                 }}
                 className="text-xs text-white/50 hover:text-white"
               >
@@ -499,7 +501,7 @@ export function PostAccessToggles({
             <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => { if (!selectedCommunitySlug) setCommunityDrawerOpen(true); }}>
               <div className="flex items-center gap-2 shrink-0">
                 <Users className="w-4 h-4 text-white" />
-                <span className="text-sm text-white">Community</span>
+                <span className="text-sm text-white">{_copy("copy.bb501d7877eb", { defaultValue: "Community" })}</span>
               </div>
               <Switch
                 checked={!!selectedCommunitySlug}
@@ -533,7 +535,7 @@ export function PostAccessToggles({
                   onClick={() => {
                     localStorage.setItem('post_default_categories', selectedCategory);
                     markCategorySaved?.();
-                    toast.success('Default community saved');
+                    toast.success(_copy("copy.71757eb61199", { defaultValue: "Default community saved" }));
                   }}
                   className="text-xs text-white/50 hover:text-white"
                 >
@@ -596,9 +598,7 @@ export function PostAccessToggles({
         >
           <div className="flex items-center gap-2">
             <Star className="w-4 h-4 text-white" />
-            <span className={cn('text-sm', hasPlans ? 'text-white' : 'text-white/40')}>
-              Subscribers
-            </span>
+            <span className={cn('text-sm', hasPlans ? 'text-white' : 'text-white/40')}>{_copy("copy.a344c89d660e", { defaultValue: "Subscribers" })}</span>
             {/* Two different reasons the switch can be dead, and they need
                 different instructions: no plan at all, or a plan still sitting
                 as a draft. Showing "Create a plan first" to someone who has
@@ -618,7 +618,7 @@ export function PostAccessToggles({
                 }}
                 className="text-xs text-white/50 underline underline-offset-2 hover:text-white"
               >
-                {hasAnyPlan ? 'Publish your plan first' : 'Create a plan first'}
+                {hasAnyPlan ? _copy("copy.6d489e3c231f", { defaultValue: "Publish your plan first" }) : _copy("copy.9976aee18383", { defaultValue: "Create a plan first" })}
               </button>
             )}
           </div>
@@ -636,7 +636,7 @@ export function PostAccessToggles({
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handlePpvToggle(!isPPV)}>
           <div className="flex items-center gap-2">
             <Ticket className="w-4 h-4 text-white" />
-            <span className="text-sm text-white">PPV</span>
+            <span className="text-sm text-white">{_copy("copy.bd9e3879bc60", { defaultValue: "PPV" })}</span>
             {isPPV && ppvAmount && (
               <span className="text-xs text-white/50">({ppvAmount} {ppvCurrency})</span>
             )}
@@ -650,7 +650,7 @@ export function PostAccessToggles({
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleBountyToggle(!isWatch2Earn)}>
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-white" />
-            <span className="text-sm text-white">Bounty</span>
+            <span className="text-sm text-white">{_copy("copy.0abbc4ecb2b0", { defaultValue: "Bounty" })}</span>
             {isWatch2Earn && w2eTotal && (
               <span className="text-xs text-white/50">({w2eTotal} <DhbCoin />)</span>
             )}
@@ -664,7 +664,7 @@ export function PostAccessToggles({
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleTokenToggle(!isTokenGated)}>
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-white" />
-            <span className="text-sm text-white">Token Gated</span>
+            <span className="text-sm text-white">{_copy("copy.b0c1d4150deb", { defaultValue: "Token Gated" })}</span>
             {isTokenGated && tokenAmount && (
               <span className="text-xs text-white/50">(<DhbAmount amount={tokenAmount} currency={tokenSymbol} />)</span>
             )}
@@ -680,10 +680,10 @@ export function PostAccessToggles({
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => setShopDrawerOpen(true)}>
           <div className="flex items-center gap-2 min-w-0">
             <ShoppingBag className="w-4 h-4 text-white shrink-0" />
-            <span className="text-sm text-white">Shop</span>
+            <span className="text-sm text-white">{_copy("copy.d00aae6b7fbf", { defaultValue: "Shop" })}</span>
             {shopEnabled && (
               <span className="text-xs text-white/50 truncate">
-                ({shopRows} of {shopAllowance.allowance})
+                ({shopRows}{_copy("copy.a4282e4b2298", { defaultValue: " of " })}{shopAllowance.allowance})
               </span>
             )}
           </div>
@@ -707,9 +707,9 @@ export function PostAccessToggles({
         <label className="flex items-center justify-between py-0.5 cursor-pointer">
           <div className="flex items-center gap-2 min-w-0">
             <EyeOff className="w-4 h-4 text-white shrink-0" />
-            <span className="text-sm text-white">Mature content</span>
+            <span className="text-sm text-white">{_copy("copy.9b8b53102e77", { defaultValue: "Mature content" })}</span>
             {isMature && (
-              <span className="text-xs text-white/50 truncate">(not shown on the public feed)</span>
+              <span className="text-xs text-white/50 truncate">{_copy("copy.214371ade41e", { defaultValue: "(not shown on the public feed)" })}</span>
             )}
           </div>
           <Switch checked={isMature} onCheckedChange={setIsMature} className="data-[state=checked]:bg-white scale-75" />
@@ -760,12 +760,8 @@ export function PostAccessToggles({
         <DrawerContent column glass hideHandle className="max-h-[90dvh]">
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
-              <Hash className="w-5 h-5" />
-              Select Categories
-            </div>
-            <button type="button" onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
-              Done
-            </button>
+              <Hash className="w-5 h-5" />{_copy("copy.aed360004d43", { defaultValue: "Select Categories" })}</div>
+            <button type="button" onClick={() => setCategoryDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">{_copy("copy.11a6767d5674", { defaultValue: "Done" })}</button>
           </div>
           <div className="px-4 pb-4 space-y-3">
             {/* Selected chips */}
@@ -800,7 +796,7 @@ export function PostAccessToggles({
                     setCategorySearch.complete(categorySearch, '');
                   }
                 }}
-                placeholder="Search categories..."
+                placeholder={_copy("copy.8a800ebbdaca", { defaultValue: "Search categories..." })}
                 className={cn(inputClass, "pl-10")}
                 autoFocus
               />
@@ -831,11 +827,11 @@ export function PostAccessToggles({
                     className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm transition-colors text-white bg-white/10 hover:bg-white/15 border border-dashed border-white/20 mb-1"
                   >
                     <Plus className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Create "<span className="font-medium">{normalizeCategoryName(categorySearch)}</span>"</span>
+                    <span>{_copy("copy.dc242335e75c", { defaultValue: "Create \"" })}<span className="font-medium">{normalizeCategoryName(categorySearch)}</span>"</span>
                   </button>
                 )}
                 {filteredCategories.length === 0 && !categorySearch.trim() ? (
-                  <AppState icon="search" title="No categories found" description="Try a different search." kind="search-empty" size="compact" />
+                  <AppState icon="search" title={_copy("copy.8b22abcaae1f", { defaultValue: "No categories found" })} description={_copy("copy.2e6d79de50dc", { defaultValue: "Try a different search." })} kind="search-empty" size="compact" />
                 ) : (
                 filteredCategories.map((cat) => (
                   <button
@@ -871,12 +867,8 @@ export function PostAccessToggles({
         <DrawerContent column glass hideHandle className="max-h-[90dvh]">
           <div className="flex items-center justify-between px-4 pt-4 pb-2">
             <div className="flex items-center gap-2 text-white font-medium">
-              <Users className="w-5 h-5" />
-              Select Community
-            </div>
-            <button type="button" onClick={() => setCommunityDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">
-              Done
-            </button>
+              <Users className="w-5 h-5" />{_copy("copy.3b707a701159", { defaultValue: "Select Community" })}</div>
+            <button type="button" onClick={() => setCommunityDrawerOpen(false)} className="text-sm text-white/60 hover:text-white transition-colors">{_copy("copy.11a6767d5674", { defaultValue: "Done" })}</button>
           </div>
           <div className="px-4 pb-6 space-y-1 max-h-[50vh] overflow-y-auto">
             {userCommunities.map(membership => {
@@ -1093,14 +1085,13 @@ export function PostAccessToggles({
           <div className="px-4 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0 overscroll-contain">
             <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
               <Info className="w-4 h-4 text-white/50 shrink-0" />
-              <span className="text-xs text-white/50">
-                Viewers need the minimum balance of the selected token on {chainLabel}.
+              <span className="text-xs text-white/50">{_copy("copy.c39e7a48904a", { defaultValue: "Viewers need the minimum balance of the selected token on " })}{chainLabel}.
               </span>
             </div>
 
             {!useCustomToken && (
               <div className="space-y-2">
-                <label className="text-sm text-white/70">Token</label>
+                <label className="text-sm text-white/70">{_copy("copy.d2089be67295", { defaultValue: "Token" })}</label>
                 <div className="flex flex-wrap gap-2">
                   {lockTokens.map((tok) => (
                     <button
@@ -1122,7 +1113,7 @@ export function PostAccessToggles({
             )}
 
             <label className="flex items-center justify-between gap-3 cursor-pointer">
-              <span className="text-sm text-white/70">Custom token contract</span>
+              <span className="text-sm text-white/70">{_copy("copy.f26de98645b0", { defaultValue: "Custom token contract" })}</span>
               <Switch
                 checked={useCustomToken}
                 onCheckedChange={setUseCustomToken}
@@ -1132,19 +1123,19 @@ export function PostAccessToggles({
 
             {useCustomToken && (
               <div className="space-y-2">
-                <label className="text-sm text-white/70">Contract / mint address</label>
+                <label className="text-sm text-white/70">{_copy("copy.144a52b2b93a", { defaultValue: "Contract / mint address" })}</label>
                 <input
                   type="text"
                   value={tempTokenContract}
                   onChange={(e) => setTempTokenContract(e.target.value)}
-                  placeholder={solanaChain ? 'Solana mint address' : '0x...'}
+                  placeholder={solanaChain ? _copy("copy.0aeda7534815", { defaultValue: "Solana mint address" }) : '0x...'}
                   className={cn(inputClass, 'text-sm font-mono')}
                 />
                 <input
                   type="text"
                   value={tempTokenSymbol}
                   onChange={(e) => setTempTokenSymbol(e.target.value.toUpperCase())}
-                  placeholder="Symbol (e.g. PEPE)"
+                  placeholder={_copy("copy.b60c5092c120", { defaultValue: "Symbol (e.g. PEPE)" })}
                   className={inputClass}
                 />
               </div>

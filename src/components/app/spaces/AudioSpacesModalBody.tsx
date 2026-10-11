@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * AudioSpacesModal body — Twitter Spaces-like audio rooms (Stages)
@@ -78,6 +79,7 @@ import { formatDistanceToNow } from 'date-fns';
 type View = 'browse' | 'create' | 'live' | 'voice';
 
 export function AudioSpacesModalBody() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
@@ -341,9 +343,7 @@ export function AudioSpacesModalBody() {
             <div className="flex items-center justify-between">
               <DrawerTitle className="text-white flex items-center gap-2">
                 <>
-                  <BrandIcon src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
-                  Stages
-                </>
+                  <BrandIcon src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />{_copy("copy.3a17aa4e4abb", { defaultValue: "Stages" })}</>
               </DrawerTitle>
               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="icon" onClick={handleClose} className="rounded-xl text-white hover:bg-white/10">
@@ -771,9 +771,7 @@ export function AudioSpacesModalBody() {
                 onClick={() => setView('browse')}
                 className="w-full text-white/60 hover:text-white hover:bg-white/10 rounded-xl"
               >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                Back
-              </Button>
+                <ChevronLeft className="w-4 h-4 mr-1" />{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</Button>
               </>
               )}
             </div>
@@ -875,8 +873,7 @@ export function AudioSpacesModalBody() {
               {/* Speakers Section */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
-                  <Volume2 className="w-4 h-4" />
-                  Speakers ({speakers.length})
+                  <Volume2 className="w-4 h-4" />{_copy("copy.dfbfe41a7290", { defaultValue: "Speakers (" })}{speakers.length})
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {speakers.map((speaker) => (
@@ -896,8 +893,7 @@ export function AudioSpacesModalBody() {
               {myRole === 'host' && handRequests.length > 0 && (
                 <div className="space-y-2 p-3 bg-white/5 rounded-xl border border-white/10">
                   <h3 className="text-sm font-medium text-white flex items-center gap-2">
-                    <Hand className="w-4 h-4" />
-                    Requests to Speak ({handRequests.length})
+                    <Hand className="w-4 h-4" />{_copy("copy.5cb7c3d33d8c", { defaultValue: "Requests to Speak (" })}{handRequests.length})
                   </h3>
                   <div className="space-y-2">
                     {handRequests.map((request) => (
@@ -919,18 +915,16 @@ export function AudioSpacesModalBody() {
               {(listeners.length > 0 || waitingTotal > 0) && (
                 <div className="space-y-2">
                   <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    Listeners ({listeners.length})
+                    <Users className="w-4 h-4" />{_copy("copy.a47c3cada20b", { defaultValue: "Listeners (" })}{listeners.length})
                     {waitingTotal > 0 && (
                       <span
                         className="text-[10px] text-white/40"
-                        title={`${waitingTotal} set a reminder and ${waitingTotal === 1 ? 'is' : 'are'} expected`}
+                        title={_copy("copy.dd3013799d07", { defaultValue: "Expected listeners who set a reminder: {{value1}}", value1: waitingTotal, value2: waitingTotal === 1 ? _copy("copy.fa51fd49abf6", { defaultValue: "is" }) : _copy("copy.ba78973ddcf9", { defaultValue: "are" }) })}
                       >
-                        · {waitingTotal} going
-                      </span>
+                        · {waitingTotal}{_copy("copy.7a3c51cf5102", { defaultValue: " going" })}</span>
                     )}
                     {myRole === 'host' && (
-                      <span className="text-[10px] text-white/30 ml-1">(tap + to invite as speaker)</span>
+                      <span className="text-[10px] text-white/30 ml-1">{_copy("copy.6bf856426149", { defaultValue: "(tap + to invite as speaker)" })}</span>
                     )}
                   </h3>
                   <div className="flex flex-wrap gap-3">
@@ -957,7 +951,7 @@ export function AudioSpacesModalBody() {
                       <div className="flex flex-col items-center gap-1">
                         <div
                           className="w-8 h-8 rounded-lg bg-white/[0.06] flex items-center justify-center text-xs text-white/40"
-                          title={`${overflow} more set a reminder`}
+                          title={_copy("copy.909c3c953757", { defaultValue: "{{value1}} more set a reminder", value1: overflow })}
                         >
                           +{overflow}
                         </div>
@@ -1224,6 +1218,7 @@ function ParticipantAvatar({
   onRemove: () => void;
   reactionEmoji?: string;
 }) {
+  const { t: _copy } = _useCopy();
   const [imgFailed, setImgFailed] = useState(false);
   const resolvedAvatar = resolveParticipantAvatar(participant);
   const cdnFallback = buildAvatarCdnFallbackUrl(participant.wallet_address, participant.avatar ?? undefined);
@@ -1267,7 +1262,7 @@ function ParticipantAvatar({
         )}
       </div>
       <span className="text-xs text-white/60 truncate max-w-full">
-        @{participant.username || 'anon'}
+        @{participant.username || _copy("copy.5430eeed859c", { defaultValue: "anon" })}
       </span>
       {canRemove && (
         <button
@@ -1292,6 +1287,7 @@ function ListenerItem({
   onInvite: () => void;
   reactionEmoji?: string;
 }) {
+  const { t: _copy } = _useCopy();
   const [imgFailed, setImgFailed] = useState(false);
   const resolvedAvatar = resolveParticipantAvatar(participant);
   const cdnFallback = buildAvatarCdnFallbackUrl(participant.wallet_address, participant.avatar ?? undefined);
@@ -1322,7 +1318,7 @@ function ListenerItem({
         {canInvite && (
           <button
             onClick={onInvite}
-            title={`Invite ${participant.username || 'listener'} as speaker`}
+            title={_copy("copy.6b3c0ea54711", { defaultValue: "Invite {{value1}} as speaker", value1: participant.username || _copy("copy.c4c05d40a8c3", { defaultValue: "listener" }) })}
             className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded items-center justify-center hidden group-hover:flex"
           >
             <UserPlus className="w-2.5 h-2.5 text-white" />
@@ -1330,7 +1326,7 @@ function ListenerItem({
         )}
       </div>
       <span className="text-[10px] text-white/40 truncate max-w-[60px]">
-        @{participant.username || 'anon'}
+        @{participant.username || _copy("copy.5430eeed859c", { defaultValue: "anon" })}
       </span>
     </div>
   );
@@ -1345,6 +1341,7 @@ function ListenerItem({
  * mic, because there is no Agora connection behind this face.
  */
 function PreAudienceItem({ face }: { face: StageReminderFace }) {
+  const { t: _copy } = _useCopy();
   const [imgFailed, setImgFailed] = useState(false);
   const cdnFallback = buildAvatarCdnFallbackUrl(face.address);
   const resolved = buildAvatarUrl(face.address, face.avatarUrl) || cdnFallback;
@@ -1353,7 +1350,7 @@ function PreAudienceItem({ face }: { face: StageReminderFace }) {
   return (
     <div
       className="relative flex flex-col items-center gap-1 opacity-40"
-      title={`@${face.username || 'anon'} said they're coming — not in the room yet`}
+      title={_copy("copy.b287fad7b3cd", { defaultValue: "@{{value1}} said they're coming — not in the room yet", value1: face.username || _copy("copy.5430eeed859c", { defaultValue: "anon" }) })}
     >
       <div className="relative">
         <Avatar className="w-8 h-8">
@@ -1367,7 +1364,7 @@ function PreAudienceItem({ face }: { face: StageReminderFace }) {
         </div>
       </div>
       <span className="text-[10px] text-white/40 truncate max-w-[60px]">
-        @{face.username || 'anon'}
+        @{face.username || _copy("copy.5430eeed859c", { defaultValue: "anon" })}
       </span>
     </div>
   );
@@ -1380,6 +1377,7 @@ function HandRequestItem({
   request: RaiseHandRequest;
   onApprove: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-between gap-2 p-2 bg-white/5 rounded-xl">
@@ -1392,9 +1390,7 @@ function HandRequestItem({
         </Avatar>
         <span className="text-sm text-white">{request.username || t('stages.anonymous')}</span>
       </div>
-      <Button onClick={onApprove} size="sm" className="bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl">
-        Approve
-      </Button>
+      <Button onClick={onApprove} size="sm" className="bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl">{_copy("copy.6007acbe30b2", { defaultValue: "Approve" })}</Button>
     </div>
   );
 }

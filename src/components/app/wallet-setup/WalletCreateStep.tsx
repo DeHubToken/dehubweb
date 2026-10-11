@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Wallet creation flow (embedded in the LoginModal drawer).
@@ -96,6 +97,7 @@ function legacyMigrationInFlight(): boolean {
 }
 
 export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCreateStepProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>(intent ?? 'new');
   const [password, setPassword] = useState('');
@@ -249,7 +251,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           setAddressConfirmed(false);
           setMigrateProvider(resumedProvider);
           setMigratedKey(key);
-          toast.success('Old wallet retrieved. Matching it to your profile...');
+          toast.success(_copy("copy.0b88365361e9", { defaultValue: "Old wallet retrieved. Matching it to your profile..." }));
         }
       })
       .catch((e) => {
@@ -329,7 +331,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       setAddressConfirmed(false);
       setMigrateProvider(provider);
       setMigratedKey(key);
-      toast.success('Old wallet retrieved. Matching it to your profile...');
+      toast.success(_copy("copy.0b88365361e9", { defaultValue: "Old wallet retrieved. Matching it to your profile..." }));
     } catch (e) {
       console.error('[Migrate] Legacy login failed:', e);
       setError(e instanceof Error ? e.message : 'Could not retrieve your old wallet. Please try again.');
@@ -565,7 +567,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       }`}
     >
       {migrateBusy === provider ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-      {known?.username ? `${label} for @${known.username}` : isOldLogin ? `Continue with ${label}` : `Try ${label}`}
+      {known?.username ? _copy("copy.61d964ed9f7f", { defaultValue: "{{value1}} for @{{value2}}", value1: label, value2: known.username }) : isOldLogin ? _copy("copy.8e0bf69428e3", { defaultValue: "Continue with {{value1}}", value1: label }) : _copy("copy.1476d70d1ec7", { defaultValue: "Try {{value1}}", value1: label })}
     </Button>
     );
   };
@@ -656,22 +658,19 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
         <div className="rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white space-y-2">
           <div className="flex items-start gap-2">
             <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
-            <p>
-              We found <span className="font-semibold">{foundAccounts.length} older profiles</span> linked to this email.
-              Different sign-ins could create separate profiles before login methods were linked.
-            </p>
+            <p>{_copy("copy.cb75c6f3c889", { defaultValue: "We found " })}<span className="font-semibold">{foundAccounts.length}{_copy("copy.cd0daccd08be", { defaultValue: " older profiles" })}</span>{_copy("copy.f31abdb86129", { defaultValue: " linked to this email. Different sign-ins could create separate profiles before login methods were linked." })}</p>
           </div>
           <div className="space-y-1 pl-6">
             {foundAccounts.map((a, i) => (
               <div key={a.ethAddress || i} className="flex items-center justify-between gap-3 text-xs text-white/70 bg-black/20 rounded-lg px-2.5 py-2">
                 <span className="min-w-0">
                   <span className="block truncate font-medium text-white">
-                    {a.username ? `@${a.username}` : `Older profile ${i + 1}`}
+                    {a.username ? `@${a.username}` : _copy("copy.63b6ac6dd6db", { defaultValue: "Older profile {{value1}}", value1: i + 1 })}
                   </span>
                   <span className="block text-white/50">
                     {a.signupMethod
-                      ? `Original sign-in: ${OLD_LOGIN_LABELS[a.signupMethod] ?? a.signupMethod}`
-                      : 'Original sign-in was not recorded'}
+                      ? _copy("copy.9a63b218711e", { defaultValue: "Original sign-in: {{value1}}", value1: OLD_LOGIN_LABELS[a.signupMethod] ?? a.signupMethod })
+                      : _copy("copy.fd89fc8921b3", { defaultValue: "Original sign-in was not recorded" })}
                   </span>
                 </span>
                 {typeof a.badgeBalance === 'number' && (
@@ -680,9 +679,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
               </div>
             ))}
           </div>
-          <p className="pl-6 text-xs text-white/60">
-            Use the original sign-in for the profile you want. We verify the recovered wallet before anything changes.
-          </p>
+          <p className="pl-6 text-xs text-white/60">{_copy("copy.2e2371f0178c", { defaultValue: "Use the original sign-in for the profile you want. We verify the recovered wallet before anything changes." })}</p>
         </div>
       )}
       {!migratedKey && !hasMultipleOldAccounts && backendHint?.exists === true && foundAccounts[0] && (
@@ -725,7 +722,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       {!migratedKey && backendHint?.exists == null && residueDetected && (
         <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
           <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>Looks like this browser has signed in to DeHub before. If that was you, sign in with your old login below so you keep your old wallet and balance.</p>
+          <p>{_copy("copy.6718e3e6e6a6", { defaultValue: "Looks like this browser has signed in to DeHub before. If that was you, sign in with your old login below so you keep your old wallet and balance." })}</p>
         </div>
       )}
 
@@ -745,19 +742,15 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
             </p>
           </div>
         ) : (
-          <p className="text-white/60 text-sm">
-            Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.
-          </p>
+          <p className="text-white/60 text-sm">{_copy("copy.07b6b72fb21a", { defaultValue: "Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile." })}</p>
         )
       ) : (
         <div className="space-y-1.5">
-          <p className="text-white/60 text-sm">
-            To ensure only you can post or transact in the app using this account, set a password or biometrics.
-          </p>
+          <p className="text-white/60 text-sm">{_copy("copy.296ee8873ba8", { defaultValue: "To ensure only you can post or transact in the app using this account, set a password or biometrics." })}</p>
           <p className="text-white/40 text-xs">
             {protection === 'biometric'
-              ? 'Encrypted on this device before anything leaves it, and unlocked with your fingerprint or face — nothing to remember. You can back up your wallet any time from Settings.'
-              : 'Encrypted on this device before anything leaves it. You can back up your wallet any time from Settings.'}
+              ? _copy("copy.e37273e12fd4", { defaultValue: "Encrypted on this device before anything leaves it, and unlocked with your fingerprint or face — nothing to remember. You can back up your wallet any time from Settings." })
+              : _copy("copy.ef33c9296dc4", { defaultValue: "Encrypted on this device before anything leaves it. You can back up your wallet any time from Settings." })}
           </p>
         </div>
       )}
@@ -791,7 +784,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           value={importPhrase}
           onChange={(e) => setImportPhrase(e.target.value)}
           rows={3}
-          placeholder="Recovery phrase (12/24 words) or 0x private key"
+          placeholder={_copy("copy.0dce083ca6f1", { defaultValue: "Recovery phrase (12/24 words) or 0x private key" })}
           className="bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl"
         />
       )}
@@ -809,8 +802,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
         <div className="space-y-2">
           {migrateBusy === 'resume' ? (
             <p className="text-white/60 text-sm flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" /> Retrieving your old wallet…
-            </p>
+              <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.ee42456bfe81", { defaultValue: " Retrieving your old wallet…" })}</p>
           ) : (
             <>
               {migrateProviderButton('google', 'Google')}
@@ -819,7 +811,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
               {migrateProviderButton('discord', 'Discord')}
               <div className="space-y-1.5">
                 <p className={`text-xs px-1 ${hasOldSmsLogin ? 'text-green-300' : 'text-white/50'}`}>
-                  {knownSmsAccount?.username ? `Phone for @${knownSmsAccount.username}` : 'Old account phone'}
+                  {knownSmsAccount?.username ? _copy("copy.d9bc7691fa55", { defaultValue: "Phone for @{{value1}}", value1: knownSmsAccount.username }) : _copy("copy.d65a934b6ca6", { defaultValue: "Old account phone" })}
                 </p>
                 <div className="flex gap-2">
                   <Input
@@ -842,19 +834,17 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
                   </Button>
                 </div>
                 {hasOldSmsLogin && (
-                  <p className="text-[11px] text-white/40 px-1">
-                    Include the country code. It must be the same number used to create the old profile.
-                  </p>
+                  <p className="text-[11px] text-white/40 px-1">{_copy("copy.262ce5ec0785", { defaultValue: "Include the country code. It must be the same number used to create the old profile." })}</p>
                 )}
               </div>
               <div className="space-y-1.5">
                 <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
-                  {knownEmailAccount?.username ? `Email for @${knownEmailAccount.username}` : 'Old account email'}
+                  {knownEmailAccount?.username ? _copy("copy.2a4c72c809a7", { defaultValue: "Email for @{{value1}}", value1: knownEmailAccount.username }) : _copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
                 </p>
                 <div className="flex gap-2">
                   <Input
                     type="email"
-                    placeholder="Old account email"
+                    placeholder={_copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
                     value={migrateEmail}
                     onChange={(e) => setMigrateEmail(e.target.value)}
                     className={`${inputClass} h-11 flex-1 ${hasOldEmailLogin ? 'ring-1 ring-green-400/50' : ''}`}
@@ -871,9 +861,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
                   </Button>
                 </div>
               </div>
-              <p className="text-white/40 text-xs">
-                A one-time sign-in retrieves your wallet key securely in this browser — it never touches our servers.
-              </p>
+              <p className="text-white/40 text-xs">{_copy("copy.9d632ebc6307", { defaultValue: "A one-time sign-in retrieves your wallet key securely in this browser — it never touches our servers." })}</p>
               <button
                 type="button"
                 disabled={!!migrateBusy}
@@ -897,16 +885,13 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
             variant="ghost"
             onClick={() => { setMigratedKey(null); setAddressConfirmed(false); setMigrateProvider(null); setShowMigratedAddress(false); }}
             className="w-full"
-          >
-            Try a different login
-          </Button>
+          >{_copy("copy.25b4eebad209", { defaultValue: "Try a different login" })}</Button>
         </div>
       )}
 
       {mode === 'migrate' && migratedKey && !migratedKeyError && (!safeAddressChecked || backendHint === null) && (
         <p className="text-white/60 text-sm flex items-center gap-2">
-          <Loader2 className="w-4 h-4 animate-spin" /> Matching this wallet to your DeHub profile...
-        </p>
+          <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.40d4cc8bff03", { defaultValue: " Matching this wallet to your DeHub profile..." })}</p>
       )}
 
       {mode === 'migrate' && migratedKey && safeAddressChecked && backendHint !== null && !addressConfirmed && migratedAddress && (() => {
@@ -924,13 +909,13 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
               <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${isBlockingMismatch ? 'text-red-400' : 'text-amber-400'}`} />
               <p>
                 {cannotVerifyProfile
-                  ? 'This login recovered a different wallet from the profiles shown above. Nothing changed. Try the original sign-in for the profile you want.'
+                  ? _copy("copy.b687690d1c4a", { defaultValue: "This login recovered a different wallet from the profiles shown above. Nothing changed. Try the original sign-in for the profile you want." })
                   : looksLikeDuplicate
                     ? t(
                       'loginModal.migrateUnmatchedWarning',
                       'This login has no DeHub account on record. Continuing does not recover anything — it creates a SECOND account with a new username, and leaves the one you already have behind.',
                     )
-                    : "We matched this wallet to your DeHub profile. Confirm the username before continuing."}
+                    : _copy("copy.3f3cb527b96b", { defaultValue: "We matched this wallet to your DeHub profile. Confirm the username before continuing." })}
               </p>
             </div>
             <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white space-y-2">
@@ -944,12 +929,12 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
                   </Avatar>
                   <div className="min-w-0">
                     <p className="truncate font-semibold">
-                      {matched.username ? `@${matched.username}` : 'Your old DeHub account'}
+                      {matched.username ? `@${matched.username}` : _copy("copy.e42dc55613ae", { defaultValue: "Your old DeHub account" })}
                     </p>
                     <p className="text-xs text-white/50">
                       {matched.signupMethod && OLD_LOGIN_LABELS[matched.signupMethod]
-                        ? `Original sign-in: ${OLD_LOGIN_LABELS[matched.signupMethod]}`
-                        : 'Original sign-in was not recorded'}
+                        ? _copy("copy.9a63b218711e", { defaultValue: "Original sign-in: {{value1}}", value1: OLD_LOGIN_LABELS[matched.signupMethod] })
+                        : _copy("copy.fd89fc8921b3", { defaultValue: "Original sign-in was not recorded" })}
                       {typeof matched.badgeBalance === 'number' && (
                         <>, <DhbAmount amount={matched.badgeBalance.toLocaleString()} iconClassName="h-3 w-3" /></>
                       )}
@@ -963,7 +948,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
                         'loginModal.migrateUnmatchedDetail',
                         'No profile exists at this wallet address. If you were signing back in, go back and use the login you signed up with instead.',
                       )
-                    : "We could not match this wallet to a profile on record. Nothing has been changed."}
+                    : _copy("copy.f613dc3d03bf", { defaultValue: "We could not match this wallet to a profile on record. Nothing has been changed." })}
                 </p>
               )}
               {matched && recoveredProfileAddress ? (
@@ -973,7 +958,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
                     onClick={() => setShowMigratedAddress((v) => !v)}
                     className="text-[11px] text-white/40 hover:text-white/70 transition-colors"
                   >
-                    {showMigratedAddress ? 'Hide DeHub wallet' : 'Show DeHub wallet'}
+                    {showMigratedAddress ? _copy("copy.aeaabbc3753b", { defaultValue: "Hide DeHub wallet" }) : _copy("copy.9b93cfb9c8d2", { defaultValue: "Show DeHub wallet" })}
                   </button>
                   {showMigratedAddress && (
                     <p className="break-all text-[11px] text-white/50">{recoveredProfileAddress}</p>
@@ -992,7 +977,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
               >
                 {looksLikeDuplicate
                   ? t('loginModal.migrateGoBack', 'Go back')
-                  : 'Try a different login'}
+                  : _copy("copy.25b4eebad209", { defaultValue: "Try a different login" })}
               </Button>
               {!cannotVerifyProfile && (
                 <Button
@@ -1005,7 +990,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
                 >
                   {looksLikeDuplicate
                     ? t('loginModal.migrateContinueAnyway', 'Create a new account anyway')
-                    : 'Yes, recover this profile'}
+                    : _copy("copy.a3c7b46af7a9", { defaultValue: "Yes, recover this profile" })}
                 </Button>
               )}
             </div>
@@ -1017,26 +1002,22 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
         <p className="text-sm text-green-400 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
           {protection === 'biometric'
-            ? 'Confirmed. Finish with your fingerprint or face.'
-            : 'Confirmed. Set a password to finish the migration.'}
+            ? _copy("copy.d8e07d0ce739", { defaultValue: "Confirmed. Finish with your fingerprint or face." })
+            : _copy("copy.4d6edf480a9b", { defaultValue: "Confirmed. Set a password to finish the migration." })}
         </p>
       )}
 
       {showProtectionStep && biometricAvailable === null && (
         <p className="text-white/50 text-sm flex items-center gap-2">
-          <Loader2 className="w-4 h-4 animate-spin shrink-0" /> Checking what this device supports…
-        </p>
+          <Loader2 className="w-4 h-4 animate-spin shrink-0" />{_copy("copy.4ee11d195b8e", { defaultValue: " Checking what this device supports…" })}</p>
       )}
 
       {showBiometricStep && (
         <div className="rounded-xl border border-white/10 bg-white/5 p-3 flex items-start gap-3">
           <Fingerprint className="w-5 h-5 mt-0.5 text-white shrink-0" />
           <div className="space-y-1">
-            <p className="text-white text-sm font-medium">Unlock with your fingerprint or face</p>
-            <p className="text-white/50 text-xs leading-relaxed">
-              Your device holds the key that unlocks this account. Nothing to type now or later —
-              and DeHub never sees it.
-            </p>
+            <p className="text-white text-sm font-medium">{_copy("copy.cf3847db61fe", { defaultValue: "Unlock with your fingerprint or face" })}</p>
+            <p className="text-white/50 text-xs leading-relaxed">{_copy("copy.8fd82319e2ef", { defaultValue: "Your device holds the key that unlocks this account. Nothing to type now or later — and DeHub never sees it." })}</p>
           </div>
         </div>
       )}
@@ -1046,7 +1027,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           <div className="space-y-2">
             <Input
               type="password"
-              placeholder={`Password (min ${MIN_PASSWORD_LENGTH} chars)`}
+              placeholder={_copy("copy.2de6c884353b", { defaultValue: "Password (min {{value1}} chars)", value1: MIN_PASSWORD_LENGTH })}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={inputClass}
@@ -1056,7 +1037,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           </div>
           <Input
             type="password"
-            placeholder="Confirm password"
+            placeholder={_copy("copy.5ac265f396a2", { defaultValue: "Confirm password" })}
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             className={inputClass}
@@ -1072,11 +1053,11 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {busy
-            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span>
+            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.b403bf9c1175", { defaultValue: " Signing you in…" })}</span>
             : (
               <span className="flex items-center gap-2">
                 <Fingerprint className="w-4 h-4" />
-                {mode === 'new' ? 'Secure account' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
+                {mode === 'new' ? _copy("copy.4b1d0adb1163", { defaultValue: "Secure account" }) : mode === 'migrate' ? _copy("copy.448808ea2e57", { defaultValue: "Finish migration" }) : _copy("copy.a865110e919b", { defaultValue: "Import wallet" })}
               </span>
             )}
         </Button>
@@ -1093,8 +1074,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {busy
-            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span>
-            : mode === 'new' ? 'Secure account' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
+            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.b403bf9c1175", { defaultValue: " Signing you in…" })}</span>
+            : mode === 'new' ? _copy("copy.4b1d0adb1163", { defaultValue: "Secure account" }) : mode === 'migrate' ? _copy("copy.448808ea2e57", { defaultValue: "Finish migration" }) : _copy("copy.a865110e919b", { defaultValue: "Import wallet" })}
         </Button>
       )}
 
@@ -1109,15 +1090,13 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-1.5"
         >
           {protection === 'biometric'
-            ? <><KeyRound className="w-3.5 h-3.5" /> Use a password instead</>
-            : <><Fingerprint className="w-3.5 h-3.5" /> Use fingerprint or face instead</>}
+            ? <><KeyRound className="w-3.5 h-3.5" />{_copy("copy.e0356dec4330", { defaultValue: " Use a password instead" })}</>
+            : <><Fingerprint className="w-3.5 h-3.5" />{_copy("copy.8f9890053152", { defaultValue: " Use fingerprint or face instead" })}</>}
         </button>
       )}
 
       {showPasswordFields && biometricAvailable === false && (
-        <p className="text-white/40 text-xs text-center">
-          This device can’t use biometrics. You can add them later from Settings on a device that can.
-        </p>
+        <p className="text-white/40 text-xs text-center">{_copy("copy.2b7f2e71aee4", { defaultValue: "This device can’t use biometrics. You can add them later from Settings on a device that can." })}</p>
       )}
     </div>
   );

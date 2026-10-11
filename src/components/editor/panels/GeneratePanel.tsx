@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEditorStore } from '@/store/editorStore';
 /**
@@ -49,14 +51,15 @@ import { PanelHeading } from './DesignPanel';
 type GenKind = 'image' | 'video' | 'voice';
 
 const KINDS: { id: GenKind; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 'image', label: 'Image', icon: ImageIcon },
-  { id: 'video', label: 'Video', icon: Film },
-  { id: 'voice', label: 'Voice', icon: Mic },
+  { id: 'image', get label() { return _translateCopy("copy.1aa4cb0bcca7", { defaultValue: "Image" }); }, icon: ImageIcon },
+  { id: 'video', get label() { return _translateCopy("copy.d534be829e32", { defaultValue: "Video" }); }, icon: Film },
+  { id: 'voice', get label() { return _translateCopy("copy.87bf2bc08589", { defaultValue: "Voice" }); }, icon: Mic },
 ];
 
 const MAX_VOICE_CHARS = 500;
 
 export function GeneratePanel() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const quota = useEditorQuota();
   const { isAuthenticated } = useAuth() as { isAuthenticated: boolean };
@@ -144,7 +147,7 @@ export function GeneratePanel() {
       if (id) {
         await quota.refetchUsage();
         window.dispatchEvent(new CustomEvent('editor:storage-usage-changed'));
-        toast.success('Voiceover added to Media.');
+        toast.success(_copy("copy.54e2adfa97fe", { defaultValue: "Voiceover added to Media." }));
         setPrompt.complete(prompt, '');
       }
     } catch (e) {
@@ -153,7 +156,7 @@ export function GeneratePanel() {
     } finally {
       setVoiceBusy(false);
     }
-  }, [prompt, quota, setPrompt]);
+  }, [prompt, quota, setPrompt, _copy]);
 
   const run = useCallback(() => {
     if (!canRun) {
@@ -177,8 +180,8 @@ export function GeneratePanel() {
       },
     );
     setPanel('library');
-    toast.success('Generating. It lands in the Generations tab.');
-  }, [prompt, imageModel, imageAspect, startImage, setPanel]);
+    toast.success(_copy("copy.241a018b66a8", { defaultValue: "Generating. It lands in the Generations tab." }));
+  }, [prompt, imageModel, imageAspect, startImage, setPanel, _copy]);
 
   const runVideoJob = useCallback(
     (options: VideoGenerationOptions | undefined, txHash: string) => {
@@ -206,9 +209,9 @@ export function GeneratePanel() {
         },
       );
       setPanel('library');
-      toast.success('Render queued. It lands in the Generations tab.');
+      toast.success(_copy("copy.8510df0bd421", { defaultValue: "Render queued. It lands in the Generations tab." }));
     },
-    [prompt, videoModel, videoAspect, startVideo, setPanel],
+    [prompt, videoModel, videoAspect, startVideo, setPanel, _copy],
   );
 
   const modelOptions: ChipOption<string>[] =
@@ -230,12 +233,12 @@ export function GeneratePanel() {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto p-3">
-      <PanelHeading>Generate</PanelHeading>
+      <PanelHeading>{_copy("copy.49e49bb4401e", { defaultValue: "Generate" })}</PanelHeading>
 
       {/* Toggle buttons, not ARIA tabs: no tabpanel, no arrow-key navigation. */}
       <div
         role="group"
-        aria-label="What to generate"
+        aria-label={_copy("copy.e98872cc5520", { defaultValue: "What to generate" })}
         className="mb-3 inline-flex w-full items-center gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1"
       >
         {KINDS.map((k) => {
@@ -259,9 +262,7 @@ export function GeneratePanel() {
         })}
       </div>
 
-      <label htmlFor="editor-generate-prompt" className="sr-only">
-        Prompt
-      </label>
+      <label htmlFor="editor-generate-prompt" className="sr-only">{_copy("copy.5c39123805ff", { defaultValue: "Prompt" })}</label>
       <textarea
         id="editor-generate-prompt"
         value={prompt}
@@ -276,10 +277,10 @@ export function GeneratePanel() {
         disabled={voiceBusy}
         placeholder={
           kind === 'voice'
-            ? 'Type what the voice should say'
+            ? _copy("copy.24accbdc740c", { defaultValue: "Type what the voice should say" })
             : kind === 'video'
-              ? 'Describe the shot you want'
-              : 'Describe the image you want'
+              ? _copy("copy.a931594a03cd", { defaultValue: "Describe the shot you want" })
+              : _copy("copy.f0c4005c1962", { defaultValue: "Describe the image you want" })
         }
         className="w-full resize-y rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-[13px] leading-relaxed text-white outline-none transition placeholder:text-white/35 focus:border-white/30"
       />
@@ -291,7 +292,7 @@ export function GeneratePanel() {
       ) : (
         <div className="mt-2 flex flex-wrap gap-1.5">
           <SelectChip
-            label="Model"
+            label={_copy("copy.5e2c614c23f0", { defaultValue: "Model" })}
             width="md"
             value={kind === 'image' ? imageModel : videoModel}
             options={modelOptions}
@@ -300,7 +301,7 @@ export function GeneratePanel() {
             }
           />
           <SelectChip
-            label="Aspect ratio"
+            label={_copy("copy.d7ad336f35e1", { defaultValue: "Aspect ratio" })}
             value={aspect}
             options={(kind === 'image'
               ? ['1:1', '4:5', '16:9', '9:16']
@@ -326,7 +327,7 @@ export function GeneratePanel() {
         )}
       >
         {voiceBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-        {voiceBusy ? 'Synthesising' : 'Generate'}
+        {voiceBusy ? _copy("copy.714c707e35bd", { defaultValue: "Synthesising" }) : _copy("copy.49e49bb4401e", { defaultValue: "Generate" })}
       </button>
 
       {blockingIssue && (
@@ -337,8 +338,8 @@ export function GeneratePanel() {
 
       <p className="mt-3 px-0.5 text-[11px] leading-relaxed text-white/40">
         {kind === 'voice'
-          ? 'Voiceovers use your storage quota and land straight in Media.'
-          : 'Renders keep running while you edit. Finished results appear in the Generations tab, ready to drop on the timeline.'}
+          ? _copy("copy.b57c54362f70", { defaultValue: "Voiceovers use your storage quota and land straight in Media." })
+          : _copy("copy.eb9f691bb8c2", { defaultValue: "Renders keep running while you edit. Finished results appear in the Generations tab, ready to drop on the timeline." })}
       </p>
 
       {activeImageModel && (

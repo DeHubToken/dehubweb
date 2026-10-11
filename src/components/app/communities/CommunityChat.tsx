@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -155,6 +156,7 @@ interface CommunityChatProps {
 }
 
 export function CommunityChat({ communityId, community, membership, isMember }: CommunityChatProps) {
+  const { t: _copy } = _useCopy();
   const [newMessage, setNewMessage] = useSurfaceDraft("components/app/communities/CommunityChat.tsx:newMessage", '', communityId);
   const [replyTo, setReplyTo] = useDraftState<CommunityChatMessage | null>(`community:${communityId}:reply`, null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -500,7 +502,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
     if (adminMatch) {
       const prompt = (adminMatch[1] || '').trim();
       if (!prompt) {
-        toast.info('Try: /admin <your question>');
+        toast.info(_copy("copy.2c7bc98141ec", { defaultValue: "Try: /admin <your question>" }));
         return;
       }
       setAdminThinking(true);
@@ -573,12 +575,12 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
       });
       setReplyTo.complete(replyTo, null);
       startSlowModeCountdown();
-      toast.success('Voice note sent!', { id: toastId });
+      toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[CommunityChat] Voice upload failed:', err);
       toast.error(err?.message || 'Failed to send voice note', { id: toastId });
     }
-  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown, setReplyTo]);
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown, setReplyTo, _copy]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (mention.isOpen) {
@@ -721,8 +723,8 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
             ) : displayedMessages.length === 0 ? (
               <AppState
                 icon="search"
-                title="No matching messages"
-                description={`No messages match "${searchQuery}".`}
+                title={_copy("copy.bf3cda441288", { defaultValue: "No matching messages" })}
+                description={_copy("copy.c3de7ea4ce48", { defaultValue: "No messages match \"{{value1}}\".", value1: searchQuery })}
                 kind="search-empty"
                 size="compact"
                 className="h-full"
@@ -738,9 +740,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                         setVisibleCount((c) => c + PAGE_SIZE);
                       }}
                       className="text-[11px] text-zinc-500 hover:text-white px-2 py-1 rounded-md hover:bg-white/[0.04] transition-colors"
-                    >
-                      Load older messages
-                    </button>
+                    >{_copy("copy.f17671d83db0", { defaultValue: "Load older messages" })}</button>
                   </div>
                 )}
                 {displayedMessages.map((msg) => {
@@ -769,15 +769,14 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                     >
                       <img
                         src={assistantAvatar}
-                        alt="AI Admin"
+                        alt={_copy("copy.d544dcff425e", { defaultValue: "AI Admin" })}
                         className="w-7 h-7 rounded-lg shrink-0 mt-0.5"
                       />
                       <div className="min-w-0 flex-1">
                         <span className="inline-flex items-baseline gap-1.5">
-                          <span className="text-xs font-semibold text-white">AI Admin</span>
+                          <span className="text-xs font-semibold text-white">{_copy("copy.d544dcff425e", { defaultValue: "AI Admin" })}</span>
                           <span className="inline-flex items-center gap-0.5 text-[9px] uppercase tracking-wide text-white/70 px-1.5 py-[1px] rounded-md bg-white/10 border border-white/15">
-                            <Sparkles className="w-2.5 h-2.5" /> bot
-                          </span>
+                            <Sparkles className="w-2.5 h-2.5" />{_copy("copy.4603c6da1d5a", { defaultValue: " bot" })}</span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
                         </span>
                         <div className="mt-1 rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-3 py-2 text-white">
@@ -791,7 +790,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
 
 
                 const avatarUrl = buildAvatarUrl(msg.wallet_address, msg.avatar_url);
-                const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || 'Anon';
+                const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || _copy("copy.90395d452a30", { defaultValue: "Anon" });
                 const handle = msg.username;
                 const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
                 const isMine = !!walletAddress && msg.wallet_address?.toLowerCase() === walletAddress.toLowerCase();
@@ -1011,7 +1010,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-start gap-2 px-3"
               >
-                <img src={assistantAvatar} alt="AI Admin" className="w-7 h-7 rounded-lg shrink-0 mt-0.5" />
+                <img src={assistantAvatar} alt={_copy("copy.d544dcff425e", { defaultValue: "AI Admin" })} className="w-7 h-7 rounded-lg shrink-0 mt-0.5" />
                 <div className="mt-1 rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-3 py-2 inline-flex items-center gap-1.5 text-white/80 text-xs">
                   <Sparkles className="w-3 h-3 animate-pulse" />
                   <span className="inline-flex gap-0.5">
@@ -1034,8 +1033,8 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
             >
               <ArrowDown className="w-3.5 h-3.5" />
               {newMessageCount > 0
-                ? `${formatUnreadCount(newMessageCount)} new message${newMessageCount > 1 ? 's' : ''}`
-                : 'Jump to latest'}
+                ? _copy("copy.72dede4d0387", { defaultValue: "New messages: {{value1}}", value1: formatUnreadCount(newMessageCount), value2: newMessageCount > 1 ? 's' : '' })
+                : _copy("copy.867524581f01", { defaultValue: "Jump to latest" })}
             </button>
           )}
         </div>
@@ -1047,9 +1046,9 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
           <Reply className="w-3.5 h-3.5 text-white flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-[10px] font-medium text-white">
-              {replyTo.display_name || replyTo.username || 'User'}
+              {replyTo.display_name || replyTo.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" })}
             </span>
-            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
+            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || _copy("copy.d357175cfe89", { defaultValue: "Media" })}</p>
           </div>
           <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />
@@ -1134,8 +1133,8 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                     requestAnimationFrame(() => textareaRef.current?.focus());
                   }}
                   className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
-                  title="Ask AI Admin (/admin)"
-                  aria-label="Ask AI Admin"
+                  title={_copy("copy.aeec090ec6e7", { defaultValue: "Ask AI Admin (/admin)" })}
+                  aria-label={_copy("copy.5a5c6c721e7a", { defaultValue: "Ask AI Admin" })}
                 >
                   <Sparkles className="w-5 h-5" />
                 </Button>

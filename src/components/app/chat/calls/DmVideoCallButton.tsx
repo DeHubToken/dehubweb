@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ interface DmVideoCallButtonProps {
 }
 
 export const DmVideoCallButton: React.FC<DmVideoCallButtonProps> = ({ recipientAddress, className }) => {
+  const { t: _copy } = _useCopy();
   const { startCall, isCallActive, isConnecting } = useCall();
   const { walletAddress } = useAuth();
 
@@ -31,7 +33,7 @@ export const DmVideoCallButton: React.FC<DmVideoCallButtonProps> = ({ recipientA
       variant="ghost"
       size="icon"
       className={className}
-      title="Video call"
+      title={_copy("copy.7b79b4f67293", { defaultValue: "Video call" })}
     >
       <Video className="h-5 w-5" />
     </Button>

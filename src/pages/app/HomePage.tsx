@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTabLongPress } from '@/hooks/use-tab-long-press';
 import { setFeedRefresh } from '@/lib/feed-refresh';
 /**
@@ -115,6 +116,7 @@ const tabFromPathname = (pathname: string): string | null => FEED_ROUTE_TO_TAB[p
 const feedRouteForTab = (tab: string): string => TAB_TO_FEED_ROUTE[tab] ?? '/app';
 
 export default function HomePage() {
+  const { t: _copy } = _useCopy();
   const pageActive = useContext(CachedPageActiveContext);
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -1009,7 +1011,7 @@ export default function HomePage() {
                     ? "text-white"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
-                aria-label={isPostOverlayActive ? "Back to feed" : isImagesScrollView ? "Back to grid" : "Feed settings"}
+                aria-label={isPostOverlayActive ? _copy("copy.34c445f7d739", { defaultValue: "Back to feed" }) : isImagesScrollView ? _copy("copy.68f5b97c66d9", { defaultValue: "Back to grid" }) : _copy("copy.2ffafd1aa697", { defaultValue: "Feed settings" })}
                 aria-expanded={showNavBack ? undefined : islandFiltersOpen}
               >
                 {hasActiveFilters && !showNavBack && (

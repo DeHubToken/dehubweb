@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
@@ -20,6 +21,7 @@ const TYPE_OPTIONS: Array<{ id: WorkJobType; labelKey: string; descKey: string; 
 const PLATFORMS: WorkPlatform[] = ['x', 'youtube', 'instagram', 'tiktok', 'facebook', 'reddit', 'other'];
 
 export default function WorkPostPage() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress, openLoginModal } = useAuth();
@@ -87,7 +89,7 @@ export default function WorkPostPage() {
 
   return (
     <div data-work-surface className="max-w-2xl mx-auto px-4 py-6">
-      <SEOHead title="Post a Bounty — DeHub Bounties" description="Post a bounty on DeHub: social media tasks, clipping bounties, or fixed-price contracts paid in tokens or USDC." url="https://dehub.io/work/post" />
+      <SEOHead title={_copy("copy.c7be7197af61", { defaultValue: "Post a Bounty — DeHub Bounties" })} description={_copy("copy.69cdce44d541", { defaultValue: "Post a bounty on DeHub: social media tasks, clipping bounties, or fixed-price contracts paid in tokens or USDC." })} url="https://dehub.io/work/post" />
       <button
         onClick={() => navigate('/work')}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"

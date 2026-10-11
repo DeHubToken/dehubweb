@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -64,6 +65,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
   ownVote?: 1 | -1;
   ownWeight: number;
 }) {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const vote = useVoteDaoProposal();
   const effectiveStatus = effectiveDaoProposalStatus(proposal);
@@ -96,7 +98,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className="text-[11px] uppercase tracking-wide text-zinc-400">
-              {proposal.kind === 'buy' ? 'Buy offer' : 'Spend request'}
+              {proposal.kind === 'buy' ? _copy("copy.07070fb32c93", { defaultValue: "Buy offer" }) : _copy("copy.52a9fac889f1", { defaultValue: "Spend request" })}
             </span>
             <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${statusClass(proposal)}`}>
               {statusLabel(proposal)}
@@ -108,8 +110,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
             )}
           </div>
           <h3 className="font-semibold text-white leading-snug">{proposal.title}</h3>
-          <p className="mt-1 text-xs text-zinc-500">
-            by {proposal.proposer_username ? `@${proposal.proposer_username}` : shortAddress(proposal.proposer_address)}
+          <p className="mt-1 text-xs text-zinc-500">{_copy("copy.9155f2107df0", { defaultValue: "by " })}{proposal.proposer_username ? `@${proposal.proposer_username}` : shortAddress(proposal.proposer_address)}
           </p>
         </div>
         <div className="shrink-0 text-right">
@@ -123,7 +124,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
           ) : (
             <>
               <div className="font-semibold text-white">{number.format(proposal.spend_amount ?? 0)} {proposal.spend_asset}</div>
-              <div className="text-xs text-zinc-500">to {shortAddress(proposal.recipient_address ?? '')}</div>
+              <div className="text-xs text-zinc-500">{_copy("copy.4b00b1b86bfd", { defaultValue: "to " })}{shortAddress(proposal.recipient_address ?? '')}</div>
             </>
           )}
         </div>
@@ -136,12 +137,11 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
           <div className="h-full bg-emerald-400 transition-[width]" style={{ width: `${acceptPct}%` }} />
         </div>
         <div className="mt-2 flex items-center justify-between text-xs">
-          <span className="text-emerald-300">Accept <DhbAmount amount={number.format(proposal.accept_dhb)} /></span>
-          <span className="text-rose-300">Reject <DhbAmount amount={number.format(proposal.reject_dhb)} /></span>
+          <span className="text-emerald-300">{_copy("copy.e1245cea2208", { defaultValue: "Accept " })}<DhbAmount amount={number.format(proposal.accept_dhb)} /></span>
+          <span className="text-rose-300">{_copy("copy.02b24c18771c", { defaultValue: "Reject " })}<DhbAmount amount={number.format(proposal.reject_dhb)} /></span>
         </div>
         <p className="mt-1 text-[11px] text-zinc-500">
-          {number.format(quorumPct)}% participation · 10% quorum · contribution-weighted snapshot
-        </p>
+          {number.format(quorumPct)}{_copy("copy.895bc4b96601", { defaultValue: "% participation · 10% quorum · contribution-weighted snapshot" })}</p>
       </div>
 
       {isOpen && (
@@ -153,8 +153,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
             disabled={vote.isPending || (isAuthenticated && ownWeight <= 0)}
             onClick={() => castVote(1)}
           >
-            <ThumbsUp className="w-4 h-4" /> Accept
-          </Button>
+            <ThumbsUp className="w-4 h-4" />{_copy("copy.b50104341b2b", { defaultValue: " Accept" })}</Button>
           <Button
             size="sm"
             variant={ownVote === -1 ? 'destructive' : 'outline'}
@@ -162,32 +161,30 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
             disabled={vote.isPending || (isAuthenticated && ownWeight <= 0)}
             onClick={() => castVote(-1)}
           >
-            <ThumbsDown className="w-4 h-4" /> Reject
-          </Button>
+            <ThumbsDown className="w-4 h-4" />{_copy("copy.90cdcff9db62", { defaultValue: " Reject" })}</Button>
           {isAuthenticated && ownWeight > 0 && (
-            <span className="ml-auto text-xs text-zinc-500">Your weight: <DhbAmount amount={number.format(ownWeight)} /></span>
+            <span className="ml-auto text-xs text-zinc-500">{_copy("copy.c4c2179c3053", { defaultValue: "Your weight: " })}<DhbAmount amount={number.format(ownWeight)} /></span>
           )}
         </div>
       )}
 
       {isOpen && isAuthenticated && ownWeight <= 0 && (
-        <p className="mt-3 text-xs text-zinc-500">Only contributors captured when this proposal opened can vote.</p>
+        <p className="mt-3 text-xs text-zinc-500">{_copy("copy.f3c6dcdb78a4", { defaultValue: "Only contributors captured when this proposal opened can vote." })}</p>
       )}
 
       {proposal.status === 'accepted' && proposal.kind === 'buy' && isBuyer && (
         <Button size="sm" className="mt-4 rounded-xl" onClick={() => onPay(proposal)}>
-          <WalletCards className="w-4 h-4" /> Transfer payment
-        </Button>
+          <WalletCards className="w-4 h-4" />{_copy("copy.a4f6b2e41037", { defaultValue: " Transfer payment" })}</Button>
       )}
 
       {proposal.status === 'open' && effectiveStatus === 'accepted' && proposal.kind === 'buy' && isBuyer && (
-        <p className="mt-4 text-xs text-zinc-500">The result is being finalised. Payment will open automatically after confirmation.</p>
+        <p className="mt-4 text-xs text-zinc-500">{_copy("copy.f3e610afdea3", { defaultValue: "The result is being finalised. Payment will open automatically after confirmation." })}</p>
       )}
 
       {proposal.payment_tx_hash && (
         <div className="mt-4 rounded-xl bg-sky-400/[0.07] p-3 text-xs text-sky-100">
-          <div className="flex items-center gap-2 font-medium"><Check className="w-4 h-4" /> Payment proof submitted for manual DAO verification</div>
-          {explorer && <a href={explorer} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-sky-300 hover:underline">View transaction</a>}
+          <div className="flex items-center gap-2 font-medium"><Check className="w-4 h-4" />{_copy("copy.4c6c7de71386", { defaultValue: " Payment proof submitted for manual DAO verification" })}</div>
+          {explorer && <a href={explorer} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block text-sky-300 hover:underline">{_copy("copy.5e377bdb4e78", { defaultValue: "View transaction" })}</a>}
         </div>
       )}
     </article>
@@ -195,6 +192,7 @@ function ProposalCard({ proposal, focused, onPay, ownVote, ownWeight }: {
 }
 
 function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [kind, setKind] = useState<DaoProposalKind>('buy');
   const [title, setTitle] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:title", '');
@@ -221,7 +219,7 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
         : { spendAsset, spendAmount: Number(spendAmount), recipientAddress: recipient }),
     }, {
       onSuccess: () => {
-        toast.success('Proposal opened for seven days');
+        toast.success(_copy("copy.ebf6fba25211", { defaultValue: "Proposal opened for seven days" }));
         setTitle.complete(title, '');
         setDescription.complete(description, '');
         setDhbAmount.complete(dhbAmount, '');
@@ -239,30 +237,30 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
       <DrawerContent column glass hideHandle={false}>
         <div className="mx-auto w-full max-w-lg overflow-y-auto p-5 pb-8 max-h-[88vh]">
           <DrawerHeader className="p-0 mb-4">
-            <DrawerTitle className="text-white">Propose to the DAO</DrawerTitle>
+            <DrawerTitle className="text-white">{_copy("copy.3d08de9152fe", { defaultValue: "Propose to the DAO" })}</DrawerTitle>
           </DrawerHeader>
 
           <div className="grid grid-cols-2 gap-2 mb-5">
             <button type="button" onClick={() => setKind('buy')} className={`rounded-xl border p-3 text-left ${kind === 'buy' ? 'border-white/30 bg-white/10' : 'border-white/10 bg-white/[0.03]'}`}>
               <ShoppingCart className="w-4 h-4 mb-2 text-zinc-300" />
               <div className="text-sm font-medium text-white">{t('dao.offerToBuyTokens')}</div>
-              <div className="text-xs text-zinc-500">Name your quantity and price</div>
+              <div className="text-xs text-zinc-500">{_copy("copy.6cf2865295e4", { defaultValue: "Name your quantity and price" })}</div>
             </button>
             <button type="button" onClick={() => setKind('spend')} className={`rounded-xl border p-3 text-left ${kind === 'spend' ? 'border-white/30 bg-white/10' : 'border-white/10 bg-white/[0.03]'}`}>
               <Send className="w-4 h-4 mb-2 text-zinc-300" />
-              <div className="text-sm font-medium text-white">Request a spend</div>
-              <div className="text-xs text-zinc-500">Ask the DAO to send an asset</div>
+              <div className="text-sm font-medium text-white">{_copy("copy.7ba3d14233b1", { defaultValue: "Request a spend" })}</div>
+              <div className="text-xs text-zinc-500">{_copy("copy.52c6b1284570", { defaultValue: "Ask the DAO to send an asset" })}</div>
             </button>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-xs text-zinc-400">Title</label>
-              <Input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={160} placeholder="What are contributors deciding?" className="bg-white/5 border-white/10 text-white" />
+              <label className="mb-1.5 block text-xs text-zinc-400">{_copy("copy.7e8cd2056da7", { defaultValue: "Title" })}</label>
+              <Input value={title} onChange={(event) => setTitle(event.target.value)} maxLength={160} placeholder={_copy("copy.69013bafaace", { defaultValue: "What are contributors deciding?" })} className="bg-white/5 border-white/10 text-white" />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs text-zinc-400">Details</label>
-              <Textarea value={description} onChange={(event) => setDescription(event.target.value)} maxLength={4000} rows={4} placeholder="Explain the terms and why the DAO should accept." className="bg-white/5 border-white/10 text-white" />
+              <label className="mb-1.5 block text-xs text-zinc-400">{_copy("copy.45989de49fb7", { defaultValue: "Details" })}</label>
+              <Textarea value={description} onChange={(event) => setDescription(event.target.value)} maxLength={4000} rows={4} placeholder={_copy("copy.9c7eca1df4f3", { defaultValue: "Explain the terms and why the DAO should accept." })} className="bg-white/5 border-white/10 text-white" />
             </div>
 
             {kind === 'buy' ? (
@@ -278,28 +276,28 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
                   </div>
                 </div>
                 <div className="rounded-xl bg-white/[0.05] p-4">
-                  <div className="text-xs text-zinc-500">Offer value</div>
+                  <div className="text-xs text-zinc-500">{_copy("copy.700f18a93687", { defaultValue: "Offer value" })}</div>
                   <div className="mt-1 text-2xl font-semibold text-white">{Number.isFinite(total) ? money.format(total) : '$0.00'}</div>
-                  <p className="mt-1 text-xs text-zinc-500">No escrow. If accepted, you have 72 hours to transfer payment for manual DAO verification.</p>
+                  <p className="mt-1 text-xs text-zinc-500">{_copy("copy.4be2a5e0d00a", { defaultValue: "No escrow. If accepted, you have 72 hours to transfer payment for manual DAO verification." })}</p>
                 </div>
               </>
             ) : (
               <>
                 <div className="grid grid-cols-[1fr_2fr] gap-3">
                   <div>
-                    <label className="mb-1.5 block text-xs text-zinc-400">Asset</label>
+                    <label className="mb-1.5 block text-xs text-zinc-400">{_copy("copy.80d298c9f240", { defaultValue: "Asset" })}</label>
                     <Input value={spendAsset} onChange={(event) => setSpendAsset(event.target.value.toUpperCase())} maxLength={16} placeholder="USDC" className="bg-white/5 border-white/10 text-white" />
                   </div>
                   <div>
-                    <label className="mb-1.5 block text-xs text-zinc-400">Amount</label>
+                    <label className="mb-1.5 block text-xs text-zinc-400">{_copy("copy.49e96d7cdf58", { defaultValue: "Amount" })}</label>
                     <Input type="number" min="0" step="any" value={spendAmount} onChange={(event) => setSpendAmount(event.target.value)} placeholder="5,000" className="bg-white/5 border-white/10 text-white" />
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-xs text-zinc-400">Recipient address</label>
-                  <Input value={recipient} onChange={(event) => setRecipient(event.target.value)} placeholder="0x… or Solana address" className="bg-white/5 border-white/10 text-white font-mono" />
+                  <label className="mb-1.5 block text-xs text-zinc-400">{_copy("copy.454d03911271", { defaultValue: "Recipient address" })}</label>
+                  <Input value={recipient} onChange={(event) => setRecipient(event.target.value)} placeholder={_copy("copy.9e6d88cbe11c", { defaultValue: "0x… or Solana address" })} className="bg-white/5 border-white/10 text-white font-mono" />
                 </div>
-                <p className="text-xs text-zinc-500">An accepted spend is queued for manual DAO or multisig execution. This proposal never moves funds itself.</p>
+                <p className="text-xs text-zinc-500">{_copy("copy.b8cfe281c012", { defaultValue: "An accepted spend is queued for manual DAO or multisig execution. This proposal never moves funds itself." })}</p>
               </>
             )}
 
@@ -309,7 +307,7 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
 
             <Button className="w-full rounded-xl" disabled={!valid || create.isPending} onClick={submit}>
               {create.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              {create.isPending ? 'Opening proposal…' : 'Open proposal'}
+              {create.isPending ? _copy("copy.d0be237244fa", { defaultValue: "Opening proposal…" }) : _copy("copy.61cbb6454002", { defaultValue: "Open proposal" })}
             </Button>
           </div>
         </div>
@@ -319,6 +317,7 @@ function ProposeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o
 }
 
 function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | null; onOpenChange: (open: boolean) => void }) {
+  const { t: _copy } = _useCopy();
   const { isLoginModalOpen, requestWalletUnlock } = useAuth();
   const [selectedKey, setSelectedKey] = useState('8453:USDC');
   const [manualHash, setManualHash] = useSurfaceDraft("components/app/dao/DaoProposals.tsx:manualHash", '', proposal?.id ?? null);
@@ -343,12 +342,12 @@ function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | nul
     if (!proposal) return;
     submitPayment({ proposalId: proposal.id, chainId: option.chainId, asset: option.symbol, amount: paidAmount, txHash }, {
       onSuccess: () => {
-        toast.success('Payment submitted for manual DAO verification');
+        toast.success(_copy("copy.63f37bd5edd0", { defaultValue: "Payment submitted for manual DAO verification" }));
         onOpenChange(false);
       },
       onError: (error) => toast.error(error instanceof Error ? error.message : 'Could not record payment proof'),
     });
-  }, [onOpenChange, option.chainId, option.symbol, proposal, submitPayment]);
+  }, [onOpenChange, option.chainId, option.symbol, proposal, submitPayment, _copy]);
 
   const queueUnlock = useCallback(() => {
     setPendingAfterUnlock(true);
@@ -405,49 +404,46 @@ function PaymentDrawer({ proposal, onOpenChange }: { proposal: DaoProposal | nul
     <Drawer open={!!proposal && !hiddenForUnlock} onOpenChange={(open) => { if (!sending && !submitting) onOpenChange(open); }}>
       <DrawerContent column glass hideHandle={false}>
         <div className="mx-auto w-full max-w-lg overflow-y-auto p-5 pb-8 max-h-[88vh]">
-          <DrawerHeader className="p-0 mb-4"><DrawerTitle className="text-white">Pay accepted buy offer</DrawerTitle></DrawerHeader>
+          <DrawerHeader className="p-0 mb-4"><DrawerTitle className="text-white">{_copy("copy.2e9242e6ef08", { defaultValue: "Pay accepted buy offer" })}</DrawerTitle></DrawerHeader>
           <div className="space-y-4">
             <div className="rounded-xl bg-white/[0.05] p-4">
-              <div className="text-xs text-zinc-500">Agreed value</div>
+              <div className="text-xs text-zinc-500">{_copy("copy.455d86c3047b", { defaultValue: "Agreed value" })}</div>
               <div className="text-2xl font-semibold text-white">{money.format(totalUsd)}</div>
-              <div className="text-xs text-zinc-400">for <DhbAmount amount={number.format(proposal?.dhb_amount ?? 0)} /></div>
+              <div className="text-xs text-zinc-400">{_copy("copy.21f4c696f93f", { defaultValue: "for " })}<DhbAmount amount={number.format(proposal?.dhb_amount ?? 0)} /></div>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs text-zinc-400">Pay with</label>
+              <label className="mb-1.5 block text-xs text-zinc-400">{_copy("copy.fbccc2394f7f", { defaultValue: "Pay with" })}</label>
               <select value={selectedKey} onChange={(event) => { setSelectedKey(event.target.value); setManualAmount.complete(manualAmount, ''); }} className="h-10 w-full rounded-lg border border-white/10 bg-zinc-900 px-3 text-sm text-white">
                 {DAO_PAYMENT_OPTIONS.map((item) => (
                   <option key={`${item.chainId}:${item.symbol}`} value={`${item.chainId}:${item.symbol}`} disabled={!item.enabled}>
-                    {item.symbol} · {item.chain}{item.enabled ? '' : ' · awaiting treasury setup'}
+                    {item.symbol} · {item.chain}{item.enabled ? '' : _copy("copy.3455b0b36e9e", { defaultValue: " · awaiting treasury setup" })}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs text-zinc-400">Amount</label>
+              <label className="mb-1.5 block text-xs text-zinc-400">{_copy("copy.49e96d7cdf58", { defaultValue: "Amount" })}</label>
               <Input type="number" min="0" step="any" value={manualAmount || (calculatedAmount ? String(Number(calculatedAmount.toPrecision(8))) : '')} onChange={(event) => setManualAmount(event.target.value)} className="bg-white/5 border-white/10 text-white" />
-              <p className="mt-1 text-xs text-zinc-500">Live-price estimate. The DAO manually checks the USD value at payment time.</p>
+              <p className="mt-1 text-xs text-zinc-500">{_copy("copy.54f8a0ff8d67", { defaultValue: "Live-price estimate. The DAO manually checks the USD value at payment time." })}</p>
             </div>
 
-            <div className="rounded-xl border border-white/10 p-3 text-xs text-zinc-400">
-              Direct to DAO · no escrow<br />
+            <div className="rounded-xl border border-white/10 p-3 text-xs text-zinc-400">{_copy("copy.1a29582cbc85", { defaultValue: "Direct to DAO · no escrow" })}<br />
               <span className="font-mono break-all text-zinc-300">{recipient ?? option.unavailableReason}</span>
             </div>
 
             <Button className="w-full rounded-xl" disabled={!option.enabled || !amount || sending || submitting} onClick={transfer}>
               {sending || submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <WalletCards className="w-4 h-4" />}
-              {sending ? 'Waiting for wallet…' : submitting ? 'Recording payment…' : `Transfer ${option.symbol}`}
+              {sending ? _copy("copy.983f76c31920", { defaultValue: "Waiting for wallet…" }) : submitting ? _copy("copy.2784e618bce7", { defaultValue: "Recording payment…" }) : _copy("copy.3e6f1a9ba7e5", { defaultValue: "Transfer {{value1}}", value1: option.symbol })}
             </Button>
 
             <div className="border-t border-white/10 pt-4">
-              <div className="text-xs font-medium text-zinc-300">Already transferred?</div>
-              <p className="mt-1 text-xs text-zinc-500">Paste the transaction hash to send it for the same manual review.</p>
+              <div className="text-xs font-medium text-zinc-300">{_copy("copy.755d1f5b8f6d", { defaultValue: "Already transferred?" })}</div>
+              <p className="mt-1 text-xs text-zinc-500">{_copy("copy.bd323c362903", { defaultValue: "Paste the transaction hash to send it for the same manual review." })}</p>
               <div className="mt-3 space-y-2">
-                <Input value={manualHash} onChange={(event) => setManualHash(event.target.value)} placeholder="Transaction hash" className="bg-white/5 border-white/10 text-white font-mono" />
-                <Button variant="outline" className="w-full rounded-xl" disabled={!manualHash.trim() || !amount || submitting} onClick={() => record(manualHash.trim(), amount)}>
-                  Submit payment proof
-                </Button>
+                <Input value={manualHash} onChange={(event) => setManualHash(event.target.value)} placeholder={_copy("copy.a876093b4a78", { defaultValue: "Transaction hash" })} className="bg-white/5 border-white/10 text-white font-mono" />
+                <Button variant="outline" className="w-full rounded-xl" disabled={!manualHash.trim() || !amount || submitting} onClick={() => record(manualHash.trim(), amount)}>{_copy("copy.5ff972f864a2", { defaultValue: "Submit payment proof" })}</Button>
               </div>
             </div>
           </div>
@@ -461,6 +457,7 @@ export function DaoProposalExperience({ proposeOpen, onProposeOpenChange }: {
   proposeOpen: boolean;
   onProposeOpenChange: (open: boolean) => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { proposals, myVotes, myEligibility, isLoading, isError } = useDaoProposals();
   const [searchParams] = useSearchParams();
   const focusedId = searchParams.get('proposal');
@@ -474,20 +471,20 @@ export function DaoProposalExperience({ proposeOpen, onProposeOpenChange }: {
       <section data-kit-section className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-end justify-between gap-3 mb-4">
           <div>
-            <h2 className="text-lg font-semibold text-white">DAO proposals</h2>
-            <p className="text-xs text-zinc-500">Anyone can propose. Contributors accept or reject with their recorded contribution weight.</p>
+            <h2 className="text-lg font-semibold text-white">{_copy("copy.554f86eedd6d", { defaultValue: "DAO proposals" })}</h2>
+            <p className="text-xs text-zinc-500">{_copy("copy.37bd766fa812", { defaultValue: "Anyone can propose. Contributors accept or reject with their recorded contribution weight." })}</p>
           </div>
-          <span className="text-xs text-zinc-500">{proposals.length} total</span>
+          <span className="text-xs text-zinc-500">{proposals.length}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</span>
         </div>
         {isLoading ? (
           <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-zinc-500" /></div>
         ) : isError ? (
-          <p className="py-8 text-center text-sm text-rose-300">Could not load DAO proposals.</p>
+          <p className="py-8 text-center text-sm text-rose-300">{_copy("copy.794c8cef5f67", { defaultValue: "Could not load DAO proposals." })}</p>
         ) : ordered.length === 0 ? (
           <div className="py-10 text-center">
             <ShoppingCart className="mx-auto h-6 w-6 text-zinc-600" />
-            <p className="mt-2 text-sm text-zinc-400">No proposals yet</p>
-            <p className="text-xs text-zinc-600">Open the first buy offer or spending request.</p>
+            <p className="mt-2 text-sm text-zinc-400">{_copy("copy.1f5440e72187", { defaultValue: "No proposals yet" })}</p>
+            <p className="text-xs text-zinc-600">{_copy("copy.7d524ee72c64", { defaultValue: "Open the first buy offer or spending request." })}</p>
           </div>
         ) : (
           <div className="space-y-3">

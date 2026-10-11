@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
@@ -54,6 +55,7 @@ const generateExcerpt = (content: string, fallback: string) => {
 };
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
+  const { t: _copy } = _useCopy();
   const excerpt = generateExcerpt(post.content, post.excerpt);
 
   const displayDate =
@@ -100,9 +102,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
             className={`w-full object-cover object-bottom transition-transform duration-200 group-hover:scale-105 ${featured ? 'h-48' : 'h-40'}`}
           />
           {post.featured && (
-          <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
-            Featured
-          </span>
+          <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">{_copy("copy.c533cafab69e", { defaultValue: "Featured" })}</span>
           )}
         </div>
 
@@ -114,7 +114,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              <span>{post.readingTime} min read</span>
+              <span>{post.readingTime}{_copy("copy.121d7143a052", { defaultValue: " min read" })}</span>
             </div>
           </div>
 
@@ -144,8 +144,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
           ))}
           {post.tags.length > 3 && (
             <span className="text-muted-foreground text-sm self-center">
-              +{post.tags.length - 3} more
-            </span>
+              +{post.tags.length - 3}{_copy("copy.226ba18bbcdb", { defaultValue: " more" })}</span>
           )}
         </div>
 
@@ -153,9 +152,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
           to={`/guides/${post.slug}`}
           onClick={handleLinkClick}
           className="inline-flex items-center text-foreground hover:text-muted-foreground transition-colors duration-200 font-semibold"
-        >
-          Read More
-          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+        >{_copy("copy.c29602f47757", { defaultValue: "Read More" })}<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
         </Link>
       </div>
     </article>

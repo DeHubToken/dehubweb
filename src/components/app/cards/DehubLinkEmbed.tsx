@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * DeHub Link Embed
  * ================
@@ -57,6 +58,7 @@ const BountyLinkEmbed = lazy(() =>
  * clickable, still in-app.
  */
 export function DehubLinkFallback({ link }: { link: DehubLinkMatch }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
 
   return (
@@ -73,10 +75,9 @@ export function DehubLinkFallback({ link }: { link: DehubLinkMatch }) {
         <Link2 className="w-4 h-4 text-zinc-500" />
       </div>
       <div className="min-w-0">
-        <p className="text-sm font-medium text-white truncate">
-          View {dehubLinkLabel(link.kind)}
+        <p className="text-sm font-medium text-white truncate">{_copy("copy.9a92a27a2688", { defaultValue: "View " })}{dehubLinkLabel(link.kind)}
         </p>
-        <p className="text-xs text-zinc-500 truncate">dehub.io{link.path}</p>
+        <p className="text-xs text-zinc-500 truncate">{_copy("copy.ca7842e53ac8", { defaultValue: "dehub.io" })}{link.path}</p>
       </div>
     </button>
   );

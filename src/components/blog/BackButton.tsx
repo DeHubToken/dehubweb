@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -5,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const BackButton: React.FC = () => {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -18,9 +20,7 @@ const BackButton: React.FC = () => {
       onClick={handleBack}
       className="mb-6 text-jet-black hover:text-gray-600 hover:bg-gray-100 transition-colors duration-200 font-exo"
     >
-      <ArrowLeft className="w-4 h-4 mr-2" />
-      Back to Blog
-    </Button>
+      <ArrowLeft className="w-4 h-4 mr-2" />{_copy("copy.c8ca272aa637", { defaultValue: "Back to Blog" })}</Button>
   );
 };
 

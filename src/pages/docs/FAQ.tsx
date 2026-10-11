@@ -1,9 +1,11 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const FAQ = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   const faqKeys = Array.from({ length: 30 }, (_, i) => i + 1);
@@ -52,10 +54,10 @@ const FAQ = () => {
             </p>
             <div className="space-y-2">
               <p className="text-muted-foreground">
-                <strong>{t('faq.techSupport')}:</strong> <a href="mailto:tech@dehub.net" className="underline text-primary hover:text-primary/80">tech@dehub.net</a>
+                <strong>{t('faq.techSupport')}:</strong> <a href="mailto:tech@dehub.net" className="underline text-primary hover:text-primary/80">{_copy("copy.886e533d7364", { defaultValue: "tech@dehub.net" })}</a>
               </p>
               <p className="text-muted-foreground">
-                <strong>{t('faq.followUs')}:</strong> <a href="https://x.com/dehub_official" target="_blank" rel="noopener noreferrer" className="underline text-primary hover:text-primary/80">@dehub_official</a>
+                <strong>{t('faq.followUs')}:</strong> <a href="https://x.com/dehub_official" target="_blank" rel="noopener noreferrer" className="underline text-primary hover:text-primary/80">{_copy("copy.e8921bdee214", { defaultValue: "@dehub_official" })}</a>
               </p>
             </div>
           </CardContent>

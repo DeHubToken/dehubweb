@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -117,6 +118,7 @@ function VoiceMessagePlayer({
   duration?: number | null;
   isPending: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -159,7 +161,7 @@ function VoiceMessagePlayer({
     return (
       <div className="flex items-center gap-2 min-w-[120px] py-2 px-3 rounded-lg bg-zinc-700/50">
         <Loader2 className="w-4 h-4 animate-spin text-zinc-400 flex-shrink-0" />
-        <span className="text-sm text-zinc-400">Uploading voice...</span>
+        <span className="text-sm text-zinc-400">{_copy("copy.1d6631af3074", { defaultValue: "Uploading voice..." })}</span>
       </div>
     );
   }
@@ -173,7 +175,7 @@ function VoiceMessagePlayer({
         className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-700/50 hover:bg-zinc-600/50 transition-colors text-sm"
       >
         {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-        <span>🎤 Voice</span>
+        <span>{_copy("copy.e7d42aa1a046", { defaultValue: "🎤 Voice" })}</span>
         {duration != null && <span className="text-xs text-zinc-400">{duration}s</span>}
       </button>
     </div>
@@ -219,6 +221,7 @@ const MessageBubble = memo(function MessageBubble({
   onReact?: (messageId: string, emoji: string) => void;
   onRemoveReaction?: (messageId: string, emoji: string) => void;
 }) {
+  const { t: _copy } = _useCopy();
   // Payment-pending spinner: memo means no incidental re-renders, so the 90s
   // "give up waiting" fallback schedules its own re-render at the boundary
   // instead of relying on unrelated parent state changes to sweep it away.
@@ -365,7 +368,7 @@ const MessageBubble = memo(function MessageBubble({
           <Link
             to={senderProfilePath}
             className="flex-shrink-0 self-start"
-            aria-label={`View ${displayName}'s profile`}
+            aria-label={_copy("copy.648c99c43631", { defaultValue: "View {{value1}}'s profile", value1: displayName })}
             onClick={(e) => e.stopPropagation()}
           >
             {avatar}
@@ -392,8 +395,8 @@ const MessageBubble = memo(function MessageBubble({
               className="mb-1 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/60 hover:bg-zinc-700/60 text-xs text-zinc-400 max-w-full transition-colors"
             >
               <Reply className="w-3 h-3 flex-shrink-0" />
-              <span className="text-zinc-300 font-medium flex-shrink-0">{message.replyTo.sender?.displayName || message.replyTo.sender?.username || 'User'}</span>
-              <span className="truncate">{message.replyTo.content || '📎 Media'}</span>
+              <span className="text-zinc-300 font-medium flex-shrink-0">{message.replyTo.sender?.displayName || message.replyTo.sender?.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" })}</span>
+              <span className="truncate">{message.replyTo.content || _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" })}</span>
             </button>
           </div>
         )}
@@ -404,8 +407,7 @@ const MessageBubble = memo(function MessageBubble({
         {message.msgType === 'tip' && (
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.16] text-zinc-200 text-sm">
             <TipGemIcon tipped burstKey={isFreshTip(message.createdAt) ? 1 : 0} className="w-4 h-4" />
-            <span>
-              Tip: <DhbAmount amount={message.tipAmount} currency={message.tipSymbol} />
+            <span>{_copy("copy.b74733d38668", { defaultValue: "Tip: " })}<DhbAmount amount={message.tipAmount} currency={message.tipSymbol} />
             </span>
           </div>
         )}
@@ -453,7 +455,7 @@ const MessageBubble = memo(function MessageBubble({
                       type="button"
                       onClick={() => onCancelEdit?.()}
                       className="p-1 text-zinc-400 hover:text-white"
-                      title="Cancel"
+                      title={_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -461,7 +463,7 @@ const MessageBubble = memo(function MessageBubble({
                       type="button"
                       onClick={() => void saveEdit()}
                       className="p-1 text-white hover:text-zinc-300"
-                      title="Save"
+                      title={_copy("copy.1509f561f241", { defaultValue: "Save" })}
                     >
                       <Check className="w-3.5 h-3.5" />
                     </button>
@@ -524,7 +526,7 @@ const MessageBubble = memo(function MessageBubble({
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm text-white" title={primaryMedia?.name}>
-                          {primaryMedia?.name || 'Attachment'}
+                          {primaryMedia?.name || _copy("copy.040d2b3689dd", { defaultValue: "Attachment" })}
                         </span>
                         <span className="block text-xs text-white/50">
                           {getAttachmentLabel(primaryMedia?.name || '')}
@@ -543,7 +545,7 @@ const MessageBubble = memo(function MessageBubble({
                   <>
                     <img
                       src={getMediaUrl(primaryMediaUrl)!}
-                      alt="Shared image"
+                      alt={_copy("copy.f9c984552075", { defaultValue: "Shared image" })}
                       className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
                       onClick={() => onOpenImage?.(getMediaUrl(primaryMediaUrl)!)}
                     />
@@ -564,7 +566,7 @@ const MessageBubble = memo(function MessageBubble({
                   <div className="flex items-center gap-2 min-w-[120px] py-4 px-3 rounded-lg bg-zinc-700/50">
                     <Loader2 className="w-5 h-5 animate-spin text-zinc-400 flex-shrink-0" />
                     <span className="text-sm text-zinc-400">
-                      {isFileMedia ? 'Uploading file...' : 'Uploading image...'}
+                      {isFileMedia ? _copy("copy.c62cd2cb247c", { defaultValue: "Uploading file..." }) : _copy("copy.1b7dbc58638c", { defaultValue: "Uploading image..." })}
                     </span>
                   </div>
                 )}
@@ -602,9 +604,7 @@ const MessageBubble = memo(function MessageBubble({
 
         {/* Deleted message */}
         {message.isDeleted && (
-          <div className={`inline-block rounded-xl px-4 py-2 border border-white/[0.10] text-zinc-500 text-sm italic ${isOwnMessage ? 'rounded-br-sm' : 'rounded-bl-sm'}`}>
-            Message deleted
-          </div>
+          <div className={`inline-block rounded-xl px-4 py-2 border border-white/[0.10] text-zinc-500 text-sm italic ${isOwnMessage ? 'rounded-br-sm' : 'rounded-bl-sm'}`}>{_copy("copy.7e94d4b9a46b", { defaultValue: "Message deleted" })}</div>
         )}
 
         {/* Encrypted on another device's key — never show the envelope */}
@@ -721,9 +721,7 @@ const MessageBubble = memo(function MessageBubble({
 
         {/* Forwarded label */}
         {message.isForwarded && (
-          <div className={`text-xs text-zinc-500 mb-0.5 ${isOwnMessage ? 'text-right' : ''}`}>
-            ↪ Forwarded
-          </div>
+          <div className={`text-xs text-zinc-500 mb-0.5 ${isOwnMessage ? 'text-right' : ''}`}>{_copy("copy.2345d3702d65", { defaultValue: "↪ Forwarded" })}</div>
         )}
 
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
@@ -738,7 +736,7 @@ const MessageBubble = memo(function MessageBubble({
               onClick={isTranslated ? handleShowOriginal : handleTranslate}
               disabled={isTranslating}
               className="inline-flex items-center gap-0.5 p-1.5 -m-1 text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50"
-              title={isTranslated ? 'Show original' : 'Translate'}
+              title={isTranslated ? _copy("copy.16194a69c43d", { defaultValue: "Show original" }) : _copy("copy.8fe147696fbf", { defaultValue: "Translate" })}
             >
               {isTranslating ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -749,7 +747,7 @@ const MessageBubble = memo(function MessageBubble({
               )}
             </button>
           )}
-          {message.isEdited && <span className="text-zinc-600">· edited</span>}
+          {message.isEdited && <span className="text-zinc-600">{_copy("copy.0d79ff168b4a", { defaultValue: "· edited" })}</span>}
           {message.encrypted && (
             <Lock className="w-3 h-3 text-zinc-600" aria-label={tr('messages.encrypted')} />
           )}
@@ -863,6 +861,7 @@ function useDmPin(conversationId: string, address: string | undefined, conversat
 }
 
 export function DirectMessageChat({ conversation, onBack, initialComposerText, dock = false, headerActions }: DirectMessageChatProps) {
+  const { t: _copy } = _useCopy();
   const { user, walletAddress, openLoginModal } = useAuth();
   const { isBanned: accountBanned } = useBannedAccount();
   const { setCallMessageHandler } = useCallActions();
@@ -1350,7 +1349,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
     const unsub = onConversationDeleted(({ dmId }) => {
       if (dmId === convId) {
-        toast.info('Conversation was deleted');
+        toast.info(_copy("copy.9b54f2919256", { defaultValue: "Conversation was deleted" }));
         onBack();
       }
     });
@@ -1510,10 +1509,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         toast.error(err instanceof Error ? err.message : 'Could not forward the message.');
         return;
       }
-      toast.success('Message forwarded');
+      toast.success(_copy("copy.4b0ad27c8ac8", { defaultValue: "Message forwarded" }));
       setForwardMessageTarget(null);
     },
-    [forwardMessageTarget, queryClient, walletAddress, tr],
+    [forwardMessageTarget, queryClient, walletAddress, tr, _copy],
   );
 
   // Handle scroll
@@ -1648,7 +1647,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
 
         const recipientAddress = otherUser?.address || '';
         if (!recipientAddress) {
-          toast.error('Cannot process payment: recipient address unknown');
+          toast.error(_copy("copy.ddd7593448a8", { defaultValue: "Cannot process payment: recipient address unknown" }));
           // Remove optimistic message
           queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
             if (!old?.pages) return old;
@@ -1699,10 +1698,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         const isSTF = errStr.includes('stf') || errStr.includes('535446') || errStr.includes('safetransfer') || errStr.includes('token transfer failed');
 
         if (isSessionExpired) {
-          toast.error('Session expired', {
+          toast.error(_copy("copy.e5ee1e7e84aa", { defaultValue: "Session expired" }), {
             id: 'dm-fee-send',
-            description: 'Please sign in again to send this message',
-            action: { label: 'Sign in', onClick: () => openLoginModal() },
+            description: _copy("copy.b216dbf4649b", { defaultValue: "Please sign in again to send this message" }),
+            action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() },
             duration: 10000,
           });
         } else if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
@@ -1799,11 +1798,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
   const handleDeleteConversation = () => {
     deleteConversationMutation.mutate(conversation.id, {
       onSuccess: () => {
-        toast.success('Conversation deleted');
+        toast.success(_copy("copy.09d6990a101a", { defaultValue: "Conversation deleted" }));
         onBack();
       },
       onError: () => {
-        toast.error('Failed to delete conversation');
+        toast.error(_copy("copy.d14b3e7b0776", { defaultValue: "Failed to delete conversation" }));
       },
     });
     setShowDeleteDialog(false);
@@ -1815,11 +1814,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       if (isBlocked) {
         await unblockConversation(conversation.id);
         setIsBlocked(false);
-        toast.success('User unblocked');
+        toast.success(_copy("copy.b4749dd2f6be", { defaultValue: "User unblocked" }));
       } else {
         await blockConversation(conversation.id);
         setIsBlocked(true);
-        toast.success('User blocked');
+        toast.success(_copy("copy.2b7bd96d731a", { defaultValue: "User blocked" }));
       }
     } catch (err) {
       console.error('Block/unblock error:', err);
@@ -1836,15 +1835,15 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       if (isFreeAccessGranted) {
         await revokeFreeDmAccess(targetAddress);
         setIsFreeAccessGranted(false);
-        toast.success('Free DM access revoked');
+        toast.success(_copy("copy.1a6b16b2717a", { defaultValue: "Free DM access revoked" }));
       } else {
         await grantFreeDmAccess(targetAddress);
         setIsFreeAccessGranted(true);
-        toast.success('Free DM access granted');
+        toast.success(_copy("copy.84e427af920f", { defaultValue: "Free DM access granted" }));
       }
     } catch (err) {
       console.error('Free access toggle error:', err);
-      toast.error('Failed to update free access');
+      toast.error(_copy("copy.90e384e43793", { defaultValue: "Failed to update free access" }));
     } finally {
       setIsFreeAccessProcessing(false);
     }
@@ -1958,9 +1957,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
                 onClick={() => setShowGroupSettings(true)}
               >
-                <Settings className="w-4 h-4 mr-2" />
-                Group Settings
-              </DropdownMenuItem>
+                <Settings className="w-4 h-4 mr-2" />{_copy("copy.8e4622c03c80", { defaultValue: "Group Settings" })}</DropdownMenuItem>
             )}
             <DropdownMenuItem
               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
@@ -1968,9 +1965,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               disabled={isBlockProcessing}
             >
               {isBlocked ? (
-                <><ShieldCheck className="w-4 h-4 mr-2" />Unblock User</>
+                <><ShieldCheck className="w-4 h-4 mr-2" />{_copy("copy.fba7f50dd3a0", { defaultValue: "Unblock User" })}</>
               ) : (
-                <><ShieldBan className="w-4 h-4 mr-2" />Block User</>
+                <><ShieldBan className="w-4 h-4 mr-2" />{_copy("copy.e761ae1549da", { defaultValue: "Block User" })}</>
               )}
             </DropdownMenuItem>
             {myMessageFee > 0 && (
@@ -1980,16 +1977,14 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 disabled={isFreeAccessProcessing}
               >
                 <Gift className="w-4 h-4 mr-2" />
-                {isFreeAccessGranted ? 'Revoke Free Access' : 'Grant Free Access'}
+                {isFreeAccessGranted ? _copy("copy.f9c2e63a6dd5", { defaultValue: "Revoke Free Access" }) : _copy("copy.52f749af5cc6", { defaultValue: "Grant Free Access" })}
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
               className="text-zinc-300 focus:text-white focus:bg-zinc-700 cursor-pointer"
               onClick={() => setShowDeleteDialog(true)}
             >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Delete Conversation
-            </DropdownMenuItem>
+              <Trash2 className="w-4 h-4 mr-2" />{_copy("copy.9ccd1fb969eb", { defaultValue: "Delete Conversation" })}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         {headerActions}
@@ -2005,7 +2000,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Search messages..."
+            placeholder={_copy("copy.764a5aa003f8", { defaultValue: "Search messages..." })}
             className="flex-1 bg-transparent text-base md:text-sm text-white placeholder:text-zinc-500 outline-none"
           />
           {searchQuery && (
@@ -2031,8 +2026,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         >
           <Pin className="w-3.5 h-3.5 text-white/80 flex-shrink-0 fill-current" />
           <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-zinc-300 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">Pinned Message</span>
-            <span className="text-zinc-400 text-xs truncate">{pinnedMessage.content || '📎 Media'}</span>
+            <span className="text-zinc-300 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">{_copy("copy.2aa60e3c77ee", { defaultValue: "Pinned Message" })}</span>
+            <span className="text-zinc-400 text-xs truncate">{pinnedMessage.content || _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" })}</span>
           </div>
           <X
             onClick={(e) => { e.stopPropagation(); handleUnpinMessage(); }}
@@ -2044,9 +2039,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       {/* DM Fee banner - simple for free access */}
       {dmFee?.required && dmFee.hasFreeAccess && (
         <div className="px-4 py-2 text-xs flex items-center gap-2 bg-white/5 text-zinc-300 border-b border-white/10">
-          <Gem className="w-3 h-3 flex-shrink-0 text-current" />
-          You have free access to message this user
-        </div>
+          <Gem className="w-3 h-3 flex-shrink-0 text-current" />{_copy("copy.c809c8a735a9", { defaultValue: "You have free access to message this user" })}</div>
       )}
 
       {/* No key on this device. Says so, instead of quietly sending in the
@@ -2082,11 +2075,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       ) : messagesError ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
           <AlertCircle className="w-12 h-12 text-zinc-500 mb-3" />
-          <p className="text-zinc-300 mb-2">Failed to load messages</p>
+          <p className="text-zinc-300 mb-2">{_copy("copy.eeaaa7b4d5d7", { defaultValue: "Failed to load messages" })}</p>
           <Button variant="glass" size="sm" onClick={() => refetchMessages()}>
-            <RefreshCw className="w-3 h-3 mr-2" />
-            Try Again
-          </Button>
+            <RefreshCw className="w-3 h-3 mr-2" />{_copy("copy.df0fe9e00d35", { defaultValue: "Try Again" })}</Button>
         </div>
       ) : (
         <div
@@ -2115,7 +2106,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           )}
 
           {messages.length === 0 && !feeRequired && (
-            <AppState icon="messages" title="No messages yet" description="Say hello to start the conversation." size="section" className="h-full" />
+            <AppState icon="messages" title={_copy("copy.f42e0f66017d", { defaultValue: "No messages yet" })} description={_copy("copy.e65ae0cd6a5a", { defaultValue: "Say hello to start the conversation." })} size="section" className="h-full" />
           )}
 
           {(() => {
@@ -2128,8 +2119,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               return (
                 <AppState
                   icon="search"
-                  title="No matching messages"
-                  description={`No messages match "${searchQuery}".`}
+                  title={_copy("copy.bf3cda441288", { defaultValue: "No matching messages" })}
+                  description={_copy("copy.c3de7ea4ce48", { defaultValue: "No messages match \"{{value1}}\".", value1: searchQuery })}
                   kind="search-empty"
                   size="compact"
                   className="h-full"
@@ -2166,8 +2157,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 onCancelEdit={handleCancelEdit}
                 onOpenImage={setFullscreenImage}
                 currentUserAddress={walletAddress || undefined}
-                onReact={(messageId, emoji) => { void addReaction(messageId, emoji).catch(() => toast.error('Could not add reaction.')); }}
-                onRemoveReaction={(messageId, emoji) => { void removeReaction(messageId, emoji).catch(() => toast.error('Could not remove reaction.')); }}
+                onReact={(messageId, emoji) => { void addReaction(messageId, emoji).catch(() => toast.error(_copy("copy.1344ec522f09", { defaultValue: "Could not add reaction." }))); }}
+                onRemoveReaction={(messageId, emoji) => { void removeReaction(messageId, emoji).catch(() => toast.error(_copy("copy.b5145e1c11a3", { defaultValue: "Could not remove reaction." }))); }}
               />
             )});
           })()}
@@ -2186,8 +2177,8 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
           >
             <ArrowDown className="w-4 h-4 mr-1" />
             {newMessageCount > 0
-              ? `${formatUnreadCount(newMessageCount)} new message${newMessageCount > 1 ? 's' : ''}`
-              : 'Jump to latest'}
+              ? _copy("copy.72dede4d0387", { defaultValue: "New messages: {{value1}}", value1: formatUnreadCount(newMessageCount), value2: newMessageCount > 1 ? 's' : '' })
+              : _copy("copy.867524581f01", { defaultValue: "Jump to latest" })}
           </Button>
         </div>
       )}
@@ -2197,7 +2188,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         <div className="px-4 py-2.5 bg-white/5 border-t border-white/10 flex flex-col items-stretch gap-2">
           <div className="flex items-center gap-2 text-zinc-300 text-xs">
             <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            <span>Could not connect — server didn't respond</span>
+            <span>{_copy("copy.ae9a8e3ea1b6", { defaultValue: "Could not connect — server didn't respond" })}</span>
           </div>
           <Button
             variant="ghost"
@@ -2210,9 +2201,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
               <Loader2 className="w-3 h-3 animate-spin mr-1" />
             ) : (
               <RefreshCw className="w-3 h-3 mr-1" />
-            )}
-            Retry
-          </Button>
+            )}{_copy("copy.942087cc2d41", { defaultValue: "Retry" })}</Button>
         </div>
       )}
 
@@ -2246,18 +2235,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Delete Conversation?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
-              This will permanently delete this conversation and all its messages. This action cannot be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle className="text-white">{_copy("copy.c1a5a2073bed", { defaultValue: "Delete Conversation?" })}</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">{_copy("copy.7e2cc56d23d2", { defaultValue: "This will permanently delete this conversation and all its messages. This action cannot be undone." })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConversation}>
-              Delete
-            </AlertDialogAction>
+            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConversation}>{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -2267,19 +2250,12 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white">{tr('messages.feeWarningTitle')}</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
-              The messages you send to {displayName} are paid and will cost{' '}
-              <span className="text-white font-semibold">{activeFee.toLocaleString()} <DhbCoin /></span> each.
-              Are you sure you want to continue?
-            </AlertDialogDescription>
+            <AlertDialogDescription className="text-zinc-400">{_copy("copy.ad27ba3bd0f2", { defaultValue: "The messages you send to " })}{displayName}{_copy("copy.af4f82f3bb35", { defaultValue: " are paid and will cost" })}{' '}
+              <span className="text-white font-semibold">{activeFee.toLocaleString()} <DhbCoin /></span>{_copy("copy.a9599402ff8f", { defaultValue: " each. Are you sure you want to continue?" })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleFeeWarningConfirm}>
-              Continue
-            </AlertDialogAction>
+            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>
+            <AlertDialogAction onClick={handleFeeWarningConfirm}>{_copy("copy.31fbef162594", { defaultValue: "Continue" })}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

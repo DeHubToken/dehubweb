@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { apiCall, getAuthToken } from '@/lib/api/dehub/core';
@@ -34,6 +35,7 @@ type CallMedia = { client: any; audio: any; video: any; remoteVideo: any; remote
 const callChecksVisible = () => document.visibilityState !== 'hidden';
 
 export const useCall = (): UseCallReturn => {
+  const { t: _copy } = _useCopy();
   const [isCallActive, setIsCallActive] = useState(false);
   const [isIncoming, setIsIncoming] = useState(false);
   const [currentCall, setCurrentCall] = useState<CallSession | null>(null);
@@ -190,11 +192,11 @@ export const useCall = (): UseCallReturn => {
       if (current()) {
         console.warn('Call connection failed', error);
         setCallFailureReason('technical_error');
-        toast.error('Could not connect to call');
+        toast.error(_copy("copy.8786057edfc1", { defaultValue: "Could not connect to call" }));
       }
       return false;
     }
-  }, [userAddress, disposeMedia, publishCall, endCall]);
+  }, [userAddress, disposeMedia, publishCall, endCall, _copy]);
 
   const startCall = useCallback(async (recipientAddress: string, callType: 'audio' | 'video' = 'audio') => {
     if (!userAddress || currentCallRef.current) return;

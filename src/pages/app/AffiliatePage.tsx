@@ -1,7 +1,9 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import i18n from '@/i18n';
 import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy, Plus, X } from "lucide-react";
 import { AppState } from '@/components/app/AppState';
 import { toast } from "sonner";
@@ -26,13 +28,14 @@ const SITE = typeof window !== "undefined" ? window.location.origin : "https://d
 
 function formatMoney(cents: number, currency = "USD") {
   try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(cents / 100);
+    return new Intl.NumberFormat(i18n.language || 'en', { style: "currency", currency }).format(cents / 100);
   } catch {
     return `$${(cents / 100).toFixed(2)}`;
   }
 }
 
 export default function AffiliatePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { user } = useAuth();
   const wallet = (user as { walletAddress?: string | null; address?: string | null } | null)
@@ -129,7 +132,7 @@ export default function AffiliatePage() {
 
   const copy = async (txt: string, label = "Copied") => {
     try { await navigator.clipboard.writeText(txt); toast.success(label); }
-    catch { toast.error("Copy failed"); }
+    catch { toast.error(_copy("copy.5b50e7a693fe", { defaultValue: "Copy failed" })); }
   };
 
   const nativeShare = () => {
@@ -164,11 +167,11 @@ export default function AffiliatePage() {
   return (
     <>
       <SEOHead
-        title="DeHub Affiliate — Earn 20% + 5% Recurring"
-        description={`Invite anyone to DeHub and earn ${AFFILIATE_L1_COMMISSION_PCT}% of all revenue they generate, plus ${AFFILIATE_L2_COMMISSION_PCT}% from everyone they invite. Forever.`}
+        title={_copy("copy.661f23a8550b", { defaultValue: "DeHub Affiliate — Earn 20% + 5% Recurring" })}
+        description={_copy("copy.5a56acf53e8e", { defaultValue: "Invite anyone to DeHub and earn {{value1}}% of all revenue they generate, plus {{value2}}% from everyone they invite. Forever.", value1: AFFILIATE_L1_COMMISSION_PCT, value2: AFFILIATE_L2_COMMISSION_PCT })}
       />
       {!wallet ? (
-        <AuthGate description="You need a DeHub account to access the affiliate programme." />
+        <AuthGate description={_copy("copy.ac2b28aec04a", { defaultValue: "You need a DeHub account to access the affiliate programme." })} />
       ) : (
         <PageBody className="mx-auto max-w-5xl pt-6 md:pt-10">
           {/* Custom per-user share image */}
@@ -176,7 +179,7 @@ export default function AffiliatePage() {
             {stats?.code ? (
               <img
                 src={shareImageUrl}
-                alt={`${displayName || ""} invited you to DeHub`}
+                alt={_copy("copy.ef5523101c85", { defaultValue: "{{value1}} invited you to DeHub", value1: displayName || "" })}
                 width={1200}
                 height={630}
                 loading="eager"
@@ -209,12 +212,8 @@ export default function AffiliatePage() {
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-2xl md:text-4xl font-bold text-white">
-                Earn {AFFILIATE_L1_COMMISSION_PCT}% from everyone you invite — and {AFFILIATE_L2_COMMISSION_PCT}% from everyone <em>they</em> invite.
-              </h1>
-              <p className="mt-2 text-sm md:text-base text-white/60 max-w-3xl">
-                Every time someone uses any DeHub revenue-generating feature, you earn residually and perpetually.
-              </p>
+              <h1 className="text-2xl md:text-4xl font-bold text-white">{_copy("copy.37bc605898f7", { defaultValue: "Earn " })}{AFFILIATE_L1_COMMISSION_PCT}{_copy("copy.077cc6af06f4", { defaultValue: "% from everyone you invite — and " })}{AFFILIATE_L2_COMMISSION_PCT}{_copy("copy.ffaa95c939fc", { defaultValue: "% from everyone " })}<em>{_copy("copy.151e58a83130", { defaultValue: "they" })}</em>{_copy("copy.d82b694585c4", { defaultValue: " invite." })}</h1>
+              <p className="mt-2 text-sm md:text-base text-white/60 max-w-3xl">{_copy("copy.5d677d55b064", { defaultValue: "Every time someone uses any DeHub revenue-generating feature, you earn residually and perpetually." })}</p>
             </div>
           </div>
 
@@ -236,27 +235,27 @@ export default function AffiliatePage() {
             />
             <StatCard
               icon={<Users className="w-4 h-4" />}
-              label="Direct"
+              label={_copy("copy.002c7c68468b", { defaultValue: "Direct" })}
               value={loading ? null : stats ? String(stats.referrals ?? 0) : "—"}
               hint={`${AFFILIATE_L1_COMMISSION_PCT}%`}
             />
             <StatCard
               icon={<Users className="w-4 h-4" />}
-              label="Secondary"
+              label={_copy("copy.62f2ccfffcc5", { defaultValue: "Secondary" })}
               value={loading ? null : stats ? String(stats.l2Referrals ?? 0) : "—"}
               hint={`${AFFILIATE_L2_COMMISSION_PCT}%`}
             />
             <StatCard
               icon={<Wallet className="w-4 h-4" />}
-              label="Total earned"
+              label={_copy("copy.bd9d153c3d65", { defaultValue: "Total earned" })}
               value={loading ? null : stats ? formatMoney(stats.totalEarnedCents ?? 0, stats.currency || "USD") : "—"}
               hint={loading || !stats ? undefined : `T1 ${formatMoney(stats.l1EarnedCents, stats.currency || "USD")} · T2 ${formatMoney(stats.l2EarnedCents, stats.currency || "USD")}`}
             />
             <StatCard
               icon={<Sparkles className="w-4 h-4" />}
-              label="Commission"
+              label={_copy("copy.3d41e1a66a7d", { defaultValue: "Commission" })}
               value={`${AFFILIATE_L1_COMMISSION_PCT}% + ${AFFILIATE_L2_COMMISSION_PCT}%`}
-              hint="residual · perpetual"
+              hint={t('referral.stats.commissionPersistence')}
             />
             <p className="col-span-2 md:col-span-3 text-[11px] text-white/40">
               {t('referral.stats.selfVisitsExcluded')}
@@ -292,7 +291,7 @@ export default function AffiliatePage() {
                       <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.ctaLabel} maxLength={32} onChange={(e) => setLanding((v) => ({ ...v, ctaLabel: e.target.value }))} />
                     </LabeledField>
                     <LabeledField label={t('affiliateLanding.destination')}>
-                      <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.destination} maxLength={200} onChange={(e) => setLanding((v) => ({ ...v, destination: e.target.value }))} placeholder="/app" />
+                      <Input className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={landing.destination} maxLength={200} onChange={(e) => setLanding((v) => ({ ...v, destination: e.target.value }))} placeholder={_copy("copy.f53b52ad6d21", { defaultValue: "/app" })} />
                     </LabeledField>
                   </div>
                   <div className="space-y-3 rounded-xl border border-white/10 p-3">
@@ -303,7 +302,7 @@ export default function AffiliatePage() {
                     {landingCtas.map((cta, i) => (
                       <div key={i} className="grid grid-cols-[1fr_1fr_auto] gap-2">
                         <Input aria-label={t('affiliateLanding.extraLabel')} className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={cta.label} maxLength={32} placeholder={t('affiliateLanding.extraLabel')} onChange={(e) => updateCta(i, { label: e.target.value })} />
-                        <Input aria-label={t('affiliateLanding.destination')} className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={cta.destination} maxLength={200} placeholder="/editor" onChange={(e) => updateCta(i, { destination: e.target.value })} />
+                        <Input aria-label={t('affiliateLanding.destination')} className="border-white/15 !bg-black/50 !text-white placeholder:text-white/45" value={cta.destination} maxLength={200} placeholder={_copy("copy.ae16d3d53b5c", { defaultValue: "/editor" })} onChange={(e) => updateCta(i, { destination: e.target.value })} />
                         <Button variant="ghost" size="icon" aria-label={t('affiliateLanding.removeButton')} onClick={() => setLanding((v) => ({ ...v, ctas: (v.ctas ?? []).filter((_, j) => j !== i) }))}>
                           <X className="h-4 w-4" />
                         </Button>
@@ -364,10 +363,8 @@ export default function AffiliatePage() {
             <CardContent className="p-5 md:p-6 space-y-5">
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Your invite link</h2>
-                  <p className="text-sm text-white/60">
-                    Share anywhere. You earn {AFFILIATE_L1_COMMISSION_PCT}% of every dollar your invites ever spend on DeHub, plus {AFFILIATE_L2_COMMISSION_PCT}% from everyone <em>they</em> invite.
-                  </p>
+                  <h2 className="text-lg font-semibold text-white">{_copy("copy.1ed61b786730", { defaultValue: "Your invite link" })}</h2>
+                  <p className="text-sm text-white/60">{_copy("copy.c0ac0f73ce8d", { defaultValue: "Share anywhere. You earn " })}{AFFILIATE_L1_COMMISSION_PCT}{_copy("copy.29c0b3cf5ea2", { defaultValue: "% of every dollar your invites ever spend on DeHub, plus " })}{AFFILIATE_L2_COMMISSION_PCT}{_copy("copy.ffaa95c939fc", { defaultValue: "% from everyone " })}<em>{_copy("copy.151e58a83130", { defaultValue: "they" })}</em>{_copy("copy.d82b694585c4", { defaultValue: " invite." })}</p>
                 </div>
               </div>
 
@@ -392,11 +389,10 @@ export default function AffiliatePage() {
                       }}
                       disabled={loading || refreshing}
                     >
-                      <RefreshCw className={`w-4 h-4 mr-2 ${loading || refreshing ? "animate-spin" : ""}`} /> Refresh
-                    </Button>
+                      <RefreshCw className={`w-4 h-4 mr-2 ${loading || refreshing ? "animate-spin" : ""}`} />{_copy("copy.7ce64141b163", { defaultValue: " Refresh" })}</Button>
                   </div>
                   <LiquidGlassBubble2
-                    label="Share"
+                    label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
                     icon={<Share2 className="w-4 h-4" />}
                     width="140px"
                     onClick={nativeShare}
@@ -404,7 +400,7 @@ export default function AffiliatePage() {
                 </div>
 
               ) : (
-                <p className="text-sm text-white/60">Could not generate a code. Try refreshing.</p>
+                <p className="text-sm text-white/60">{_copy("copy.7b639a3b9005", { defaultValue: "Could not generate a code. Try refreshing." })}</p>
               )}
 
               {stats?.code && (
@@ -416,17 +412,17 @@ export default function AffiliatePage() {
           {/* How it works */}
           <Card data-kit-section className="border-white/10 bg-white/[0.03]">
             <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Step n={1} title="Share your link" body="Drop your invite link into Discord, X, YouTube, your stream — anywhere." />
-              <Step n={2} title="They join DeHub" body="Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." />
-              <Step n={3} title={`Earn ${AFFILIATE_L1_COMMISSION_PCT}% direct`} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on DeHub.`} />
-              <Step n={4} title={`Earn ${AFFILIATE_L2_COMMISSION_PCT}% secondary`} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />
+              <Step n={1} title={_copy("copy.486b75f1e0e1", { defaultValue: "Share your link" })} body="Drop your invite link into Discord, X, YouTube, your stream — anywhere." />
+              <Step n={2} title={_copy("copy.65683c287b13", { defaultValue: "They join DeHub" })} body="Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." />
+              <Step n={3} title={_copy("copy.7e44b080227f", { defaultValue: "Earn {{value1}}% direct", value1: AFFILIATE_L1_COMMISSION_PCT })} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on DeHub.`} />
+              <Step n={4} title={_copy("copy.2ed16d4204db", { defaultValue: "Earn {{value1}}% secondary", value1: AFFILIATE_L2_COMMISSION_PCT })} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />
             </CardContent>
           </Card>
 
 
           {wallet && (
             <p className="text-xs text-white/40 inline-flex items-center gap-1.5 flex-wrap">
-              <span>Affiliate wallet:&nbsp;</span>
+              <span>{_copy("copy.5601cb6b373b", { defaultValue: "Affiliate wallet: " })}</span>
               <code className="font-mono">{wallet.slice(0, 6)}…{wallet.slice(-4)}</code>
               {displayName ? (
                 <span className="inline-flex items-center gap-1.5">
@@ -459,6 +455,7 @@ function LabeledField({ label, count, children }: { label: string; count?: strin
  * people on the generic invite splash.
  */
 function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string, label?: string) => void }) {
+  const { t: _copy } = _useCopy();
   const [target, setTarget] = useSurfaceDraft("pages/app/AffiliatePage.tsx:target", "");
   const trimmed = target.trim();
   const path = sanitizeDeepLinkPath(trimmed);
@@ -468,17 +465,15 @@ function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string
   return (
     <div className="mt-5 pt-5 border-t border-white/10 space-y-3">
       <div>
-        <h3 className="text-sm font-semibold text-white">Link to a specific page</h3>
-        <p className="text-xs text-white/60">
-          Paste any DeHub page — a docs section, a bounty, your profile. The link below still attributes the visit to you, then takes them straight there.
-        </p>
+        <h3 className="text-sm font-semibold text-white">{_copy("copy.fc036ea0e9f0", { defaultValue: "Link to a specific page" })}</h3>
+        <p className="text-xs text-white/60">{_copy("copy.ae4410aa9943", { defaultValue: "Paste any DeHub page — a docs section, a bounty, your profile. The link below still attributes the visit to you, then takes them straight there." })}</p>
       </div>
       <div className="flex flex-col sm:flex-row gap-2">
         <Input
           value={target}
           onChange={(e) => setTarget(e.target.value)}
-          placeholder="/docs/getting-started"
-          aria-label="Destination page"
+          placeholder={_copy("copy.12a7c0529934", { defaultValue: "/docs/getting-started" })}
+          aria-label={_copy("copy.9b44fb81d89e", { defaultValue: "Destination page" })}
           aria-invalid={invalid}
           className="font-mono text-sm bg-white/[0.04] border-white/10"
         />
@@ -488,11 +483,10 @@ function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string
           disabled={invalid}
           className="shrink-0"
         >
-          <Copy className="w-4 h-4 mr-2" /> Copy link
-        </Button>
+          <Copy className="w-4 h-4 mr-2" />{_copy("copy.085cd98e8e2e", { defaultValue: " Copy link" })}</Button>
       </div>
       <p className={`text-xs font-mono break-all ${invalid ? "text-red-400" : "text-white/50"}`}>
-        {invalid ? "That has to be a page on dehub.io." : link}
+        {invalid ? _copy("copy.c184b8c9592f", { defaultValue: "That has to be a page on dehub.io." }) : link}
       </p>
     </div>
   );
@@ -561,6 +555,7 @@ function AffiliatesList({
   viewerWallet: string | null;
   loading: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const [tab, setTab] = useState<"direct" | "secondary">("direct");
   const [visible, setVisible] = useState(AFFILIATES_PAGE_SIZE);
   const hasSecondary = l2.length > 0 || l2Count > 0;
@@ -580,9 +575,8 @@ function AffiliatesList({
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div>
             <h2 className="text-lg font-semibold text-white inline-flex items-center gap-2">
-              <Users className="w-4 h-4" /> Your affiliates
-            </h2>
-            <p className="text-sm text-white/60">The accounts you’ve referred to DeHub.</p>
+              <Users className="w-4 h-4" />{_copy("copy.5887fc189c1b", { defaultValue: " Your affiliates" })}</h2>
+            <p className="text-sm text-white/60">{_copy("copy.efaf600adacf", { defaultValue: "The accounts you’ve referred to DeHub." })}</p>
           </div>
           {hasSecondary && (
             <div className="inline-flex rounded-full bg-white/[0.06] p-0.5 text-sm">
@@ -590,15 +584,13 @@ function AffiliatesList({
                 type="button"
                 onClick={() => setTab("direct")}
                 className={`px-3 py-1.5 rounded-full transition-colors ${tab === "direct" ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
-              >
-                Direct ({l1Count})
+              >{_copy("copy.08a2457a57cf", { defaultValue: "Direct (" })}{l1Count})
               </button>
               <button
                 type="button"
                 onClick={() => setTab("secondary")}
                 className={`px-3 py-1.5 rounded-full transition-colors ${tab === "secondary" ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
-              >
-                Secondary ({l2Count})
+              >{_copy("copy.4b124ce647be", { defaultValue: "Secondary (" })}{l2Count})
               </button>
             </div>
           )}
@@ -619,10 +611,10 @@ function AffiliatesList({
         ) : list.length === 0 ? (
           <AppState
             icon="subscriptions"
-            title={tab === "direct" ? "No affiliates yet" : "No secondary affiliates yet"}
+            title={tab === "direct" ? _copy("copy.5e7068385659", { defaultValue: "No affiliates yet" }) : _copy("copy.0013fee41d62", { defaultValue: "No secondary affiliates yet" })}
             description={tab === "direct"
-              ? "Share your invite link and new affiliates will appear here."
-              : "Friends invited by your affiliates will appear here."}
+              ? _copy("copy.2a869fe7a3a0", { defaultValue: "Share your invite link and new affiliates will appear here." })
+              : _copy("copy.47fb925824ba", { defaultValue: "Friends invited by your affiliates will appear here." })}
             size="section"
           />
         ) : (
@@ -636,8 +628,7 @@ function AffiliatesList({
                 size="sm"
                 className="w-full text-white/70 hover:text-white"
                 onClick={() => setVisible((v) => v + AFFILIATES_PAGE_SIZE)}
-              >
-                Show more ({list.length - visible})
+              >{_copy("copy.1ce7c57ea800", { defaultValue: "Show more (" })}{list.length - visible})
               </Button>
             )}
           </div>
@@ -648,6 +639,7 @@ function AffiliatesList({
 }
 
 function AffiliateRow({ entry, viewerWallet }: { entry: AffiliateReferralEntry; viewerWallet: string | null }) {
+  const { t: _copy } = _useCopy();
   const { data: profile, isLoading } = useDeHubProfile({
     userId: entry.address,
     address: viewerWallet || undefined,
@@ -684,7 +676,7 @@ function AffiliateRow({ entry, viewerWallet }: { entry: AffiliateReferralEntry; 
         </div>
         <div className="text-xs text-white/45 truncate">
           {username ? `@${username}` : truncateAddress(entry.address)}
-          {joined ? <span className="text-white/30"> · joined {joined}</span> : null}
+          {joined ? <span className="text-white/30">{_copy("copy.80739712cd97", { defaultValue: " · joined " })}{joined}</span> : null}
         </div>
       </div>
 

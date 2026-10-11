@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ interface DmVoiceCallButtonProps {
 }
 
 export const DmVoiceCallButton: React.FC<DmVoiceCallButtonProps> = ({ recipientAddress, className }) => {
+  const { t: _copy } = _useCopy();
   const { startCall, isCallActive, isConnecting } = useCall();
   const { walletAddress } = useAuth();
 
@@ -31,7 +33,7 @@ export const DmVoiceCallButton: React.FC<DmVoiceCallButtonProps> = ({ recipientA
       variant="ghost"
       size="icon"
       className={className}
-      title="Voice call"
+      title={_copy("copy.8b968cce31a0", { defaultValue: "Voice call" })}
     >
       <Phone className="h-5 w-5" />
     </Button>

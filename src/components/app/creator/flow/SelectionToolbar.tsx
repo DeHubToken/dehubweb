@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Creator Flow — floating actions over a multi-selection.
  * =======================================================
@@ -33,6 +34,7 @@ function bounds(nodes: Node[]) {
 }
 
 export default function SelectionToolbar() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { flowToScreenPosition } = useReactFlow();
   const nodes = useCreatorFlowStore((s) => s.nodes);
@@ -74,14 +76,14 @@ export default function SelectionToolbar() {
       type: 'groupNode',
       position: { x: bb.x - GROUP_PADDING, y: bb.y - GROUP_PADDING },
       style: { width: bb.width + GROUP_PADDING * 2, height: bb.height + GROUP_PADDING * 2, zIndex: -1 },
-      data: { label: `GROUP #${count}`, locked: false, memberIds: sel.map((n) => n.id) } as NodeData,
+      data: { label: _copy("copy.72a80932cd7e", { defaultValue: "GROUP #{{value1}}", value1: count }), locked: false, memberIds: sel.map((n) => n.id) } as NodeData,
       selected: true,
       zIndex: -1,
     };
     // Group first so it paints behind its members; members keep absolute positions.
     replaceNodes([group, ...state.nodes.map((n) => ({ ...n, selected: false }))]);
     useCreatorFlowStore.setState((s) => ({ nodeCounters: { ...s.nodeCounters, groupNode: count } }));
-  }, [replaceNodes]);
+  }, [replaceNodes, _copy]);
 
   const handleDelete = useCallback(() => {
     const ids = useCreatorFlowStore.getState().nodes.filter((n) => n.selected && n.type !== 'groupNode').map((n) => n.id);

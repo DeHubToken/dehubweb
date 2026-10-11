@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { Search, Plus, Users, Trash2, Pencil, Copy, Check } from 'lucide-react';
@@ -12,6 +13,7 @@ import { AppState } from '@/components/app/AppState';
 type Filter = 'mine' | 'public';
 
 export function CharactersLibrary() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const { data: characters = [], isLoading } = useUserCharacters();
   const del = useDeleteCharacter();
@@ -51,7 +53,7 @@ export function CharactersLibrary() {
     if (!confirm(`Delete character "${c.name}"?`)) return;
     try {
       await del.mutateAsync(c.id);
-      toast.success('Character deleted');
+      toast.success(_copy("copy.05ac5243905f", { defaultValue: "Character deleted" }));
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to delete');
     }
@@ -62,17 +64,15 @@ export function CharactersLibrary() {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Users className="w-4 h-4" /> Characters
-          </h2>
-          <p className="text-xs text-zinc-500">
-            Save people, mascots, or styles with reference photos. Use them in any image or video prompt with{' '}
-            <span className="text-white">@name</span>.
+            <Users className="w-4 h-4" />{_copy("copy.d53c62edb14a", { defaultValue: " Characters" })}</h2>
+          <p className="text-xs text-zinc-500">{_copy("copy.79cdf0fb778e", { defaultValue: "Save people, mascots, or styles with reference photos. Use them in any image or video prompt with" })}{' '}
+            <span className="text-white">{_copy("copy.ef32a73d0f93", { defaultValue: "@name" })}</span>.
           </p>
         </div>
         <LiquidGlassBubble2
           onClick={() => { setEditing(null); setCreateOpen(true); }}
           disabled={!walletAddress}
-          label="New character"
+          label={_copy("copy.4708d98a07eb", { defaultValue: "New character" })}
           icon={<Plus className="w-4 h-4" />}
           width="170px"
         />
@@ -84,7 +84,7 @@ export function CharactersLibrary() {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search characters…"
+            placeholder={_copy("copy.ca569b663bd7", { defaultValue: "Search characters…" })}
             className="pl-9 bg-white/5 border-white/10"
           />
         </div>
@@ -97,7 +97,7 @@ export function CharactersLibrary() {
                 filter === f ? 'bg-white/15 border-white/30 text-white' : 'bg-white/5 border-white/10 text-zinc-400'
               }`}
             >
-              {f === 'mine' ? 'My characters' : 'Public'}
+              {f === 'mine' ? _copy("copy.5688d8c6e5d9", { defaultValue: "My characters" }) : _copy("copy.591935b15b1c", { defaultValue: "Public" })}
             </button>
           ))}
         </div>
@@ -113,12 +113,12 @@ export function CharactersLibrary() {
         <AppState
           icon={query ? 'search' : 'profile'}
           title={query
-            ? 'No characters match your search'
-            : filter === 'mine' ? 'No characters yet' : 'No public characters yet'}
-          description={query ? 'Try a different name or description.' : filter === 'mine' ? 'Create a character to get started.' : undefined}
+            ? _copy("copy.5ce6ec90ac07", { defaultValue: "No characters match your search" })
+            : filter === 'mine' ? _copy("copy.cc52c8c41b88", { defaultValue: "No characters yet" }) : _copy("copy.4572ea7d20e3", { defaultValue: "No public characters yet" })}
+          description={query ? _copy("copy.aae7b50a919a", { defaultValue: "Try a different name or description." }) : filter === 'mine' ? _copy("copy.d9a8544a6162", { defaultValue: "Create a character to get started." }) : undefined}
           kind={query ? 'search-empty' : 'empty'}
           size="section"
-          primaryAction={filter === 'mine' && !query ? { label: 'New character', onClick: () => setCreateOpen(true) } : undefined}
+          primaryAction={filter === 'mine' && !query ? { label: _copy("copy.4708d98a07eb", { defaultValue: "New character" }), onClick: () => setCreateOpen(true) } : undefined}
         />
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -168,9 +168,7 @@ export function CharactersLibrary() {
                   )}
                 </div>
                 {c.visibility === 'public' && (
-                  <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-white/15 backdrop-blur-md border border-white/20 text-[10px] text-white">
-                    Public
-                  </div>
+                  <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-white/15 backdrop-blur-md border border-white/20 text-[10px] text-white">{_copy("copy.591935b15b1c", { defaultValue: "Public" })}</div>
                 )}
               </div>
             );

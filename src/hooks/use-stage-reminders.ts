@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stage reminders
  * ===============
@@ -31,6 +32,7 @@ const stageReminderKeys = {
 };
 
 export function useStageReminder(spaceId: string | undefined) {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
@@ -76,10 +78,10 @@ export function useStageReminder(spaceId: string | undefined) {
     },
     onSuccess: (nowSet) => {
       void queryClient.invalidateQueries({ queryKey: stageReminderKeys.all });
-      if (nowSet === true) toast.success("Reminder set — you'll be notified when it starts");
-      if (nowSet === false) toast.success('Reminder removed');
+      if (nowSet === true) toast.success(_copy("copy.918c4c717571", { defaultValue: "Reminder set — you'll be notified when it starts" }));
+      if (nowSet === false) toast.success(_copy("copy.b2afd441461d", { defaultValue: "Reminder removed" }));
     },
-    onError: () => toast.error('Could not update the reminder'),
+    onError: () => toast.error(_copy("copy.e7a148aa735e", { defaultValue: "Could not update the reminder" })),
   });
 
   return {

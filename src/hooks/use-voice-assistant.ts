@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Voice Assistant Hook
  * ====================
@@ -58,6 +59,7 @@ interface UseVoiceAssistantReturn {
 }
 
 export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAssistantReturn {
+  const { t: _copy } = _useCopy();
   const { onTranscript, onSpeakStart, onSpeakEnd, onStatusChange, isChatLoading, onPaymentRequired } = options;
 
   const [isVoiceMode, setIsVoiceMode] = useState(false);
@@ -289,10 +291,10 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
     } catch (err) {
       console.error('[VoiceAssistant] Mic error:', err);
-      toast.error('Could not access microphone');
+      toast.error(_copy("copy.a754a5c36acf", { defaultValue: "Could not access microphone" }));
       updateStatus('error');
     }
-  }, [updateStatus]);
+  }, [updateStatus, _copy]);
 
   const stopListeningAndProcess = useCallback(async () => {
     // Clear timers
@@ -343,7 +345,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
             resolve();
             return;
           }
-          toast.error('Transcription failed');
+          toast.error(_copy("copy.ccb684944295", { defaultValue: "Transcription failed" }));
           if (voiceModeRef.current) {
             startListening();
           }
@@ -353,7 +355,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
       recorder.stop();
     });
-  }, [uploadAudio, transcribeAudio, updateStatus, startListening]);
+  }, [uploadAudio, transcribeAudio, updateStatus, startListening, _copy]);
 
   // Speak response and then restart listening
   const speakResponse = useCallback(async (text: string) => {
@@ -383,7 +385,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
       stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     } catch (err) {
       console.error('[VoiceAssistant] Permission denied:', err);
-      toast.error('Microphone access required for voice mode');
+      toast.error(_copy("copy.3dd8c4dd8ee7", { defaultValue: "Microphone access required for voice mode" }));
       return;
     }
 
@@ -420,7 +422,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     voiceModeRef.current = true;
     setIsVoiceMode(true);
     startListening();
-  }, [startListening]);
+  }, [startListening, _copy]);
 
   // Stop voice mode
   const stopVoiceMode = useCallback(() => {

@@ -1,0 +1,45 @@
+name: Priority translations
+
+on:
+  workflow_dispatch:
+    inputs:
+      locale:
+        description: Optional single locale to translate
+        required: false
+        type: string
+      request:
+        description: Versioned translation request file
+        required: false
+        type: string
+  push:
+    branches: [fix/priority-languages-seo-20261011]
+    paths:
+      - scripts/priority-translation-request.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: priority-translations-${{ github.ref }}-${{ inputs.locale || 'all' }}
+  cancel-in-progress: false
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Translate the reviewed source request
+        env:
+          TRANSLATION_REQUEST: ${{ inputs.request || 'scripts/priority-translation-request.json' }}
+          TRANSLATION_LOCALE: ${{ inputs.locale }}
+        run: node scripts/translate-priority-locales.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: priority-translations
+          path: translation-output/
+          retention-days: 14

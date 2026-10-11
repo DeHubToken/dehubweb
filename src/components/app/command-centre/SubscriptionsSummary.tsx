@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { TrendingUp, Loader2, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ const cardClass = "rounded-2xl p-5 max-h-[420px] overflow-y-auto bg-zinc-900 bor
 const statBoxClass = "rounded-xl bg-zinc-800/50 p-3";
 
 export function SubscriptionsSummary() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress } = useAuth();
   const { t } = useTranslation();
   const { subscriptions, isLoading: subsLoading } = useMySubscriptions();
@@ -56,7 +58,7 @@ export function SubscriptionsSummary() {
               <p className="text-white text-xl font-bold">{subscriptions.length}</p>
             </div>
             <div data-page-bento className={statBoxClass}>
-              <span className="text-zinc-500 text-xs">Plans</span>
+              <span className="text-zinc-500 text-xs">{_copy("copy.dfe8b2f0de26", { defaultValue: "Plans" })}</span>
               <p className="text-white text-xl font-bold">{plans.length}</p>
             </div>
           </div>
@@ -68,8 +70,7 @@ export function SubscriptionsSummary() {
               {activeSubscriptions.length > 0 && (
                 <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
-                  {activeSubscriptions.length} active
-                </span>
+                  {activeSubscriptions.length}{_copy("copy.2a222bd79b1a", { defaultValue: " active" })}</span>
               )}
             </div>
             <div className="flex items-baseline gap-2">

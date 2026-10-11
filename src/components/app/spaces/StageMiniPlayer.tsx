@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageMiniPlayer - Floating mini player for active Stages
  * =========================================================
@@ -14,6 +15,7 @@ import { useStage } from '@/contexts/StageContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.webp';
 
 export function StageMiniPlayer() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const {
     currentSpace,
@@ -112,8 +114,8 @@ export function StageMiniPlayer() {
               className="flex items-center gap-1 text-white/70"
               title={
                 screenShare.isLocal
-                  ? "You're sharing your screen"
-                  : 'A screen is being shared — expand to watch'
+                  ? _copy("copy.f1513000c91e", { defaultValue: "You're sharing your screen" })
+                  : _copy("copy.3e7ecd406fb4", { defaultValue: "A screen is being shared — expand to watch" })
               }
             >
               <ScreenShare className="w-3 h-3" />
@@ -124,7 +126,7 @@ export function StageMiniPlayer() {
           {radioStation && (
             <span
               className="flex items-center gap-1 text-white/70 min-w-0"
-              title={`On air: ${radioStation.name}`}
+              title={_copy("copy.0f7562ea4ecc", { defaultValue: "On air: {{value1}}", value1: radioStation.name })}
             >
               <Radio className="w-3 h-3 shrink-0" />
               <span className="truncate max-w-[70px]">{radioStation.name}</span>

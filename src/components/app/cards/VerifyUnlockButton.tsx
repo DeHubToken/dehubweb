@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Verify & Unlock Button for hold-gated content drawers.
  * =====================================================
@@ -44,6 +45,7 @@ export function VerifyUnlockButton({
   chainId = BASE_CHAIN_ID,
   onUnlocked,
 }: VerifyUnlockButtonProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, openLoginModal } = useAuth();
   const [isChecking, setIsChecking] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -94,7 +96,7 @@ export function VerifyUnlockButton({
       }
 
       if (balance >= requiredAmount) {
-        toast.success('Content unlocked! 🎉');
+        toast.success(_copy("copy.3aefdd5f5915", { defaultValue: "Content unlocked! 🎉" }));
         onUnlocked();
         return;
       }
@@ -121,7 +123,7 @@ export function VerifyUnlockButton({
     } finally {
       setIsChecking(false);
     }
-  }, [walletAddress, openLoginModal, tokenAddress, chainId, requiredAmount, currency, onUnlocked]);
+  }, [walletAddress, openLoginModal, tokenAddress, chainId, requiredAmount, currency, onUnlocked, _copy]);
 
   if (shortfall) {
     return (
@@ -145,7 +147,7 @@ export function VerifyUnlockButton({
       >
         <span className="flex items-center justify-center gap-2 text-white text-sm font-medium">
           {isChecking ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
-          {isChecking ? 'Checking your balance…' : 'Verify & Unlock'}
+          {isChecking ? _copy("copy.48201f5584e2", { defaultValue: "Checking your balance…" }) : _copy("copy.ff701a069af2", { defaultValue: "Verify & Unlock" })}
         </span>
       </LiquidGlassBubble>
       {message && (

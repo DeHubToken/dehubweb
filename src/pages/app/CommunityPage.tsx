@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Single Community Page
  * ======================
@@ -29,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 type Tab = CommunityTab;
 
 export default function CommunityPage() {
+  const { t: _copy } = _useCopy();
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
@@ -75,7 +77,7 @@ export default function CommunityPage() {
   if (!community && isError) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-4">
-        <SEOHead title={`${t('common.failedToLoad')} - DeHub Community`} description={t('common.somethingWentWrong')} noindex />
+        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: t('common.failedToLoad') })} description={t('common.somethingWentWrong')} noindex />
         <AppState
           kind="error"
           title={t('common.failedToLoad')}
@@ -89,7 +91,7 @@ export default function CommunityPage() {
   if (!community) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-12 text-center">
-        <SEOHead title={`${t('communities.communityNotFound')} - DeHub Community`} description={t('communities.communityNotFound')} noindex />
+        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: t('communities.communityNotFound') })} description={t('communities.communityNotFound')} noindex />
         <p className="text-zinc-500">{t('communities.communityNotFound')}</p>
         <Button variant="outline" size="sm" className="mt-3 rounded-xl border-white/10 text-white" onClick={() => navigate('/app/communities')}>
           {t('communities.backButton')}
@@ -120,8 +122,8 @@ export default function CommunityPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <SEOHead
-        title={`${community.name} - DeHub Community`}
-        description={community.description || `Join ${community.name} on DeHub`}
+        title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: community.name })}
+        description={community.description || _copy("copy.2dc2e3027208", { defaultValue: "Join {{value1}} on DeHub", value1: community.name })}
       />
 
       <button
@@ -159,7 +161,7 @@ export default function CommunityPage() {
         {([
           { key: 'posts' as Tab, label: t('communities.posts') },
           { key: 'chat' as Tab, label: t('communities.chat') },
-          { key: 'events' as Tab, label: 'Events' },
+          { key: 'events' as Tab, label: _copy("copy.8d14f6e72de8", { defaultValue: "Events" }) },
           { key: 'members' as Tab, label: t('communities.membersLabel') },
           { key: 'about' as Tab, label: t('communities.about') },
         ]).map(tItem => (

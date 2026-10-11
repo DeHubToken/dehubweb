@@ -965,6 +965,12 @@ export const tr = {
     spTierPiranha: "Pirana",
     superPowersDescV2: "SuperPowers, staking rozetini harcayabileceğiniz bir erişime dönüştürür. Rozetiniz her iki haftada bir artış sağlar ve bir tanesini harcamak, ana akışın üstündeki yuvaya bir gönderi koyar. Team up herkese açıktır ve en fazla sekiz hesabın cüzdan gücünü birleştirerek her üyeye toplam kilit açma rozetini verir. Slot döner: birkaç güçlendirme çalışırken, izleyicilere rozet kademesine göre ağırlıklandırılmış bir tane dağıtılır, böylece daha yüksek bir kademe daha sık gösterilir ve herkes hala kendilerine verilen pencereyi alır.",
     superPowersMoreV2: "On iki gücün tümü canlıdır ve uygulamada listelenir. Yorum çapası, yorumunuzu başka birinin ileti dizisinin en üstünde tutar. Signal Flare, sizi takip eden her hesaba bir bildirim gönderir. Uçaksavar Ceketi, çalışırken bir gönderiyi olumsuz oy gömülmesine karşı bağışıklı hale getirir. Ekip oluşturma, sekiz kadar hesabın cüzdan gücünü birleştirmesine izin verir, böylece her üye havuzdaki bakiyesinin kilidini açtığı rozeti takar. Front Row, ev sahipliği yaptığınız Stage'i stage rayının en üstüne yerleştirir. Derin Akım, desteklerinden birini başka birinin görevine verir.",
+
+    "spNameSecondWind": "İkinci Rüzgâr",
+    "tocExchange": "Borsa",
+    "exchangeTitle": "Borsa",
+    "tocDao": "DAO Hazinesi",
+    "daoTitle": "DAO Hazinesi"
   },
   games: {
     title: "Oyunlar",
@@ -1030,6 +1036,8 @@ export const tr = {
     disclaimerNoApy: "Önemli: DeHub tokenlerini elinde bulundurmak DeHub ağında sahiplik sağlarken ve paydaşlara protokol karlarından pay alma hakkı verirken, belirlenmiş bir APY, garantili bir getiri oranı ve herhangi bir kar beklentisi yoktur. Tüm dağıtımlar tamamen ağ performansına ve protokolün belirli bir dönemde fiilen elde ettiği gelire bağlıdır. Ödüller önceki dönemlerden daha düşük olabilir ve sıfır olabilir. Bu sayfadaki hiçbir şey bir vaat, projeksiyon veya iade teklifi değildir ve buradaki hiçbir şey finansal tavsiye değildir.",
     disclaimerText: "DeHub tokenleri, herhangi bir oyun içi ya da uygulama içi dijital token ya da para birimi gibi kesinlikle fayda amaçlıdır ve kesinlikle bir yatırım değildir. Tokenimiz zincir üstünde yaşadığı için ek fayda ve eşi görülmemiş düzeyde doğrulanabilir şeffaflık sunabiliyoruz. Yukarıdaki veriler yalnızca şeffaflık, eğitim ve bilgilendirme amacıyla derlenmiştir. DeHub ve tüm iştirakleri, yayınladığımız token ya da NFT'lerin satın alınmasından doğan finansal kayıplardan sorumlu değildir. Piyasalar son derece dalgalıdır. Ayrıca yetkinlik hataları, teknik hata, saldırı gibi öngörülemeyen nedenlerle tüm paranızı kaybedebilirsiniz. Bu nedenle yalnızca kaybetmeyi göze alabileceğiniz kadarını harcamalısınız.",
     useAiDesc: "Araç başına ayrı bir abonelik tutmak yerine, her iş çalıştırılmadan önce teklif edilen bir fiyatla DeHub token'larında Creator Studio'da (görüntü, video, ses ve 3D) yapay zeka üretimi için ödeme yapın.",
+
+    "useAiTitle": "Yapay zekâ üretimi"
   },
   tokenEconomics: {
     title: "Ekonomi ve Emisyonlar",
@@ -1696,6 +1704,9 @@ export const tr = {
     swatchSurfaceRaised: "Yüzey +1",
     swatchLightGrey: "Aydınlık Gri",
     swatchOffWhite: "Kırık Beyaz",
+
+    "swatchBlack": "Siyah",
+    "swatchWhite": "Beyaz"
   },
   legalDisclaimer: {
     title: "Yasal Sorumluluk Reddi",
@@ -2103,6 +2114,8 @@ export const tr = {
     postNotFoundDesc: "Aradığınız blog yazısı mevcut değil.",
     backToBlog: "Bloga Dön",
     loadFailed: "Yükleme yapılamadı bu makale.",
+
+    "retry": "Tekrar dene"
   },
   installation: {
     title: "Kurulum",
@@ -2179,6 +2192,8 @@ export const tr = {
     nextStakeDesc: "Yüksek bir nişan ve ödüller için DeHub tokenlarınızı yatırın.",
     nextFaqTitle: "SSS",
     nextFaqDesc: "En sık sorulan soruların cevapları",
+
+    "nextStakeTitle": "Stake"
   },
   apiEndpoints: {
     title: "API Uç Noktaları",
@@ -2330,5 +2345,9 @@ export const tr = {
     keyboardHint: "↑↓ tuşlarını kullanarak gezin, ↵ tuşunu kullanarak seçin, ⎋ tuşunu kullanarak kapatın.",
     resultOne: "1 sonuç",
     resultMany: "{count} sonuçları",
+
+    "popularStaking": "Staking",
+    "popularDepin": "DePIN",
+    "popularGovernance": "Yönetişim"
   },
 };

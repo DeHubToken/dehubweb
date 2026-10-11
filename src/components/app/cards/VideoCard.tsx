@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useVideoDownload } from "@/hooks/use-video-download";
 import { cdnImageSrcSet } from '@/lib/media-url';
 import { applyVideoVolume } from '@/lib/dub-volume';
@@ -310,6 +311,7 @@ function MobileCreatorInfo({
   onUnlocked,
   stage = false,
 }: MobileCreatorInfoProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useI18n();
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
@@ -450,7 +452,7 @@ function MobileCreatorInfo({
                   <span className="text-white text-xs font-medium">
                     {bountyAmount && bountyAmount > 0 
                       ? <DhbAmount amount={formatCompact(bountyAmount)} currency={bountyCurrency} />
-                      : 'Bounty'}
+                      : _copy("copy.0abbc4ecb2b0", { defaultValue: "Bounty" })}
                   </span>
                 </button>
               )}
@@ -623,6 +625,7 @@ interface ExpandableDescriptionProps {
 const CLAMP_CLASS = { 2: 'line-clamp-2', 3: 'line-clamp-3', 4: 'line-clamp-4' } as const;
 
 function ExpandableDescription({ description: rawDescription, isImmersive, clampLines = 4 }: ExpandableDescriptionProps) {
+  const { t: _copy } = _useCopy();
   // Normalize line breaks: unify \r\n → \n, then cap consecutive blank lines to max 1 (i.e. max 2 newlines)
   const normalized = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
   // DeHub links render as cards below, so the URLs come out of the copy
@@ -690,16 +693,14 @@ function ExpandableDescription({ description: rawDescription, isImmersive, clamp
           data-stage-more={clampLines < 4 || undefined}
           className={clampLines < 4 ? 'mt-0.5 text-sm font-bold' : 'text-zinc-300 text-sm font-medium mt-1 hover:text-white transition-colors'}
         >
-          {clampLines < 4 ? 'more' : 'See more'}
+          {clampLines < 4 ? _copy("copy.187897ce0afc", { defaultValue: "more" }) : _copy("copy.bab37d624729", { defaultValue: "See more" })}
         </button>
       )}
       {isExpanded && (
         <button
           onClick={() => setIsExpanded(false)}
           className="text-zinc-300 text-sm font-medium mt-1 hover:text-white transition-colors"
-        >
-          Show less
-        </button>
+        >{_copy("copy.94ea9b1d33a0", { defaultValue: "Show less" })}</button>
       )}
     </div>
   );
@@ -725,6 +726,7 @@ interface VideoCardProps {
 }
 
 export const VideoCard = memo(function VideoCard({ video, postPage = false, onBack, isImmersive = false, disableAutoplay = false, hideActions = false, aboveFold = false, firstFeedPost = false, onOpenComments }: VideoCardProps) {
+  const { t: _copy } = _useCopy();
   const playbackAllowed = useFeedPlaybackAllowed();
   const playbackAllowedRef = useRef(playbackAllowed);
   playbackAllowedRef.current = playbackAllowed;
@@ -921,10 +923,10 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'], refetchType: 'none' });
     } catch (err) {
-      toast.error('Failed to repost');
+      toast.error(_copy("copy.7527dc6722fc", { defaultValue: "Failed to repost" }));
       throw err; // let ActionBar roll back its optimistic repost state
     }
-  }, [video.id, walletAddress, openLoginModal, queryClient]);
+  }, [video.id, walletAddress, openLoginModal, queryClient, _copy]);
 
   const handleQuote = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -1368,10 +1370,10 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       document.exitPictureInPicture().catch(() => {});
     } else if (videoRef.current) {
       videoRef.current.requestPictureInPicture().catch(() => {
-        toast.error('Picture-in-picture not supported in this browser');
+        toast.error(_copy("copy.8e2efd43f448", { defaultValue: "Picture-in-picture not supported in this browser" }));
       });
     }
-  }, []);
+  }, [_copy]);
 
   /**
    * Per-video volume. Dragging off zero also unmutes and claims audio, or the
@@ -1565,14 +1567,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
     toast(`${SEGMENT_LABELS[segment.category]} skipped`, {
       action: {
-        label: 'Undo',
+        label: _copy("copy.a8283ade3185", { defaultValue: "Undo" }),
         onClick: () => {
           if (videoRef.current) videoRef.current.currentTime = resumeAt;
         },
       },
       duration: 4000,
     });
-  }, [skipSegmentsOn, skipSegments]);
+  }, [skipSegmentsOn, skipSegments, _copy]);
 
   const handleTimeUpdate = useCallback(() => {
     if (videoRef.current) {
@@ -2124,8 +2126,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               <p className="text-white font-semibold text-sm mb-1">
                 {t('drawers.unlockFor')} <DhbAmount amount={formatCompact(Number(video.ppvPrice))} currency={video.ppvCurrency} />
               </p>
-              <p className="text-white/70 text-xs">
-                Must be holding <DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
+              <p className="text-white/70 text-xs">{_copy("copy.5ec168a82232", { defaultValue: "Must be holding " })}<DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
               </p>
             </div>
           </>
@@ -2178,14 +2179,13 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Star className="h-7 w-7 text-white" />
               </div>
-              <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
+              <p className="text-white font-semibold text-sm mb-1">{_copy("copy.109ddfc1cc4a", { defaultValue: "Subscribers only" })}</p>
               <p className="text-white/70 text-xs">
                 {cheapestPlanPrice !== undefined ? (
-                  <>
-                    Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                  <>{_copy("copy.c2947d66723d", { defaultValue: "Subscribe from " })}<DhbAmount amount={formatCompact(cheapestPlanPrice)} />
                   </>
                 ) : (
-                  `Subscribe to ${video.channel}`
+                  _copy("copy.855f365abafc", { defaultValue: "Subscribe to {{value1}}", value1: video.channel })
                 )}
               </p>
             </div>
@@ -2210,9 +2210,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                 <Lock className="h-7 w-7 text-white" />
               </div>
-              <p className="text-white font-semibold text-sm mb-1">Holdings Required</p>
-              <p className="text-white/70 text-xs">
-                Must be holding <DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
+              <p className="text-white font-semibold text-sm mb-1">{_copy("copy.490f4babbf34", { defaultValue: "Holdings Required" })}</p>
+              <p className="text-white/70 text-xs">{_copy("copy.5ec168a82232", { defaultValue: "Must be holding " })}<DhbAmount amount={formatCompact(Number(video.lockedPrice))} currency={video.lockedCurrency} />
               </p>
             </div>
           </>
@@ -2363,7 +2362,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                  Never an empty black box. */
               <LiveEndedMedia
                 thumbnail={thumbnail}
-                label={video.isLivePost ? 'Live ended' : 'Unavailable'}
+                label={video.isLivePost ? _copy("copy.b8b7b20faac9", { defaultValue: "Live ended" }) : _copy("copy.ca1844969742", { defaultValue: "Unavailable" })}
               />
             )}
            </>
@@ -2454,7 +2453,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
           <button
             data-video-controls data-video-bare data-video-center
             data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
-            aria-label={hasError ? t('common.retry') : isPlaying ? 'Pause' : 'Play'}
+            aria-label={hasError ? t('common.retry') : isPlaying ? _copy("copy.858e4ba7a29f", { defaultValue: "Pause" }) : _copy("copy.436e61016e26", { defaultValue: "Play" })}
             onPointerDown={(event) => event.stopPropagation()}
             onPointerUp={(event) => event.stopPropagation()}
             onTouchStart={(event) => event.stopPropagation()}
@@ -2585,7 +2584,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 onLostPointerCapture={bareControls ? undefined : finishScrubbing}
                 onClick={(e) => e.stopPropagation()}
                 disabled={duration <= 0}
-                aria-label="Video progress"
+                aria-label={_copy("copy.fbf43b093f92", { defaultValue: "Video progress" })}
                 data-scrubber-line={bareControls ? '' : undefined}
                 className="flex-1 h-6 bg-transparent rounded-full appearance-none cursor-pointer touch-pan-y
                   [&::-webkit-slider-thumb]:appearance-none 
@@ -2616,7 +2615,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               className="h-8 w-[52px] text-white flex items-center justify-center  text-xs font-medium"
               onClick={cyclePlaybackRate}
               style={{ touchAction: 'manipulation' }}
-              aria-label="Playback speed"
+              aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
               {formatRate(playbackRate)}x
             </button>
@@ -2628,13 +2627,13 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     "h-8 w-8 text-white flex items-center justify-center ",
                   )}
                   onClick={toggleLoop}
-                  aria-label={isLooping ? 'Disable loop' : 'Enable loop'}
+                  aria-label={isLooping ? _copy("copy.5178a4089a25", { defaultValue: "Disable loop" }) : _copy("copy.833dcdfad12f", { defaultValue: "Enable loop" })}
                   aria-pressed={isLooping}
                 >
                   <MediaControlIcon icon={Repeat} active={isLooping} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent>{isLooping ? 'Loop on' : 'Loop off'}</TooltipContent>
+              <TooltipContent>{isLooping ? _copy("copy.2e68f91aef20", { defaultValue: "Loop on" }) : _copy("copy.daee48e3d2b7", { defaultValue: "Loop off" })}</TooltipContent>
             </Tooltip>
             {document.pictureInPictureEnabled && (
               <Tooltip>
@@ -2643,12 +2642,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               data-on-media
                     className="h-8 w-8 text-white flex items-center justify-center "
                     onClick={handlePictureInPicture}
-                    aria-label="Picture in picture"
+                    aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
                   >
                     <MediaControlIcon icon={PictureInPicture2} />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Picture in Picture (P)</TooltipContent>
+                <TooltipContent>{_copy("copy.bc8805b92ad0", { defaultValue: "Picture in Picture (P)" })}</TooltipContent>
               </Tooltip>
             )}
             {!bareControls && (
@@ -3297,7 +3296,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       {isSubGated && (
         <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
           <DrawerContent scrollable column glass className="px-4 pb-6">
-            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
+            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>}>
               <SubscriberGateDrawer
                 creatorAddress={video.creatorId || ""}
                 creatorName={video.channel}

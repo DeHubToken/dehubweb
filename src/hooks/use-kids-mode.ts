@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Kids Mode Hook
  * ==============
@@ -61,6 +62,7 @@ const KIDS_SENSITIVE_QUERIES = [
 ];
 
 export function useKidsMode() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
@@ -101,7 +103,7 @@ export function useKidsMode() {
     onSuccess: () => {
       setKidsModeLocked(true);
       refetchFiltered();
-      toast.success('Kids Mode is on');
+      toast.success(_copy("copy.58dbb846fe02", { defaultValue: "Kids Mode is on" }));
     },
   });
 
@@ -110,7 +112,7 @@ export function useKidsMode() {
     onSuccess: () => {
       setKidsModeLocked(false);
       refetchFiltered();
-      toast.success('Kids Mode is off');
+      toast.success(_copy("copy.34d5389f4dd7", { defaultValue: "Kids Mode is off" }));
     },
   });
 

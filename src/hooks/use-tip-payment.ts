@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Tip Payment Hook
  * ================
@@ -94,6 +95,7 @@ export function useTipPayment({
   onSubmitted,
   onConfirmed,
 }: UseTipPaymentOptions) {
+  const { t: _copy } = _useCopy();
   const [isTipping, setIsTipping] = useState(false);
   // State alone does not stop a double tap: two taps in the same frame both
   // read isTipping=false before React re-renders the disabled button, and
@@ -111,12 +113,12 @@ export function useTipPayment({
       }
 
       if (!creatorAddress) {
-        toast.error('Creator address not available');
+        toast.error(_copy("copy.401979c70f39", { defaultValue: "Creator address not available" }));
         return;
       }
 
       if (walletAddress.toLowerCase() === creatorAddress.toLowerCase()) {
-        toast.error("You can't tip yourself!");
+        toast.error(_copy("copy.af1a11355de9", { defaultValue: "You can't tip yourself!" }));
         return;
       }
 
@@ -218,7 +220,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, tokenId, commentId, openLoginModal, onSuccess, onSubmitted, onConfirmed]
+    [walletAddress, creatorAddress, chainId, tokenId, commentId, openLoginModal, onSuccess, onSubmitted, onConfirmed, _copy]
   );
 
   return { tip, isTipping };

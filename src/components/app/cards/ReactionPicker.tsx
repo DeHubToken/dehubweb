@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Reaction Picker
  * ===============
@@ -116,6 +117,7 @@ export function ReactionPicker({
   onShowInfo,
   polarity = 'all',
 }: ReactionPickerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const positives = polarity === 'negative' ? [] : POSITIVE_REACTION_LIST;
   const negatives = polarity === 'positive' ? [] : NEGATIVE_REACTION_LIST;
@@ -442,7 +444,7 @@ export function ReactionPicker({
         >
         <motion.div
           role="menu"
-          aria-label={polarity === 'negative' ? 'Pick a downvote reaction' : 'Pick a reaction'}
+          aria-label={polarity === 'negative' ? _copy("copy.2700f90ccf62", { defaultValue: "Pick a downvote reaction" }) : _copy("copy.f32a1950ff2f", { defaultValue: "Pick a reaction" })}
           data-with-counts={counts ? 'true' : undefined}
           initial={reduceMotion ? false : { opacity: 0, y: 6, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}

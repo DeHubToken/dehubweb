@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Music Page
  * ==========
@@ -32,7 +34,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     type: 'video',
     thumbnail: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800',
     duration: '4:32',
-    title: 'Midnight Dreams - Official Music Video',
+    get title() { return _translateCopy("copy.9296394a262b", { defaultValue: "Midnight Dreams - Official Music Video" }); },
     channel: 'Luna Eclipse',
     channelAvatar: '',
     verified: true,
@@ -44,7 +46,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     type: 'video',
     thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800',
     duration: '3:45',
-    title: 'Electric Soul (Live Performance)',
+    get title() { return _translateCopy("copy.c7e0489ecaaf", { defaultValue: "Electric Soul (Live Performance)" }); },
     channel: 'The Voltage',
     channelAvatar: '',
     verified: true,
@@ -56,7 +58,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     type: 'video',
     thumbnail: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800',
     duration: '5:12',
-    title: 'Neon Nights - Visualizer',
+    get title() { return _translateCopy("copy.0bdb3e5571c8", { defaultValue: "Neon Nights - Visualizer" }); },
     channel: 'SynthWave Collective',
     channelAvatar: '',
     verified: false,
@@ -68,7 +70,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     type: 'video',
     thumbnail: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800',
     duration: '3:28',
-    title: 'Summer Vibes - Beach Sessions',
+    get title() { return _translateCopy("copy.1202d20ddea6", { defaultValue: "Summer Vibes - Beach Sessions" }); },
     channel: 'Coastal Beats',
     channelAvatar: '',
     verified: true,
@@ -80,7 +82,7 @@ const MUSIC_VIDEOS: VideoItem[] = [
     type: 'video',
     thumbnail: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800',
     duration: '4:15',
-    title: 'Underground Sessions Vol. 3',
+    get title() { return _translateCopy("copy.c7dd1e98fb0b", { defaultValue: "Underground Sessions Vol. 3" }); },
     channel: 'DJ Phantom',
     channelAvatar: '',
     verified: true,
@@ -104,7 +106,7 @@ interface AudioTrack {
 const AUDIO_TRACKS: AudioTrack[] = [
   {
     id: 'audio-1',
-    title: 'Lost in the Echo',
+    get title() { return _translateCopy("copy.1b4d7b9046cb", { defaultValue: "Lost in the Echo" }); },
     artist: 'Nova Pulse',
     artistHandle: '@novapulse',
     verified: true,
@@ -115,7 +117,7 @@ const AUDIO_TRACKS: AudioTrack[] = [
   },
   {
     id: 'audio-2',
-    title: 'Digital Dreams',
+    get title() { return _translateCopy("copy.b29ae9358c04", { defaultValue: "Digital Dreams" }); },
     artist: 'Cyber Wave',
     artistHandle: '@cyberwave',
     verified: false,
@@ -126,7 +128,7 @@ const AUDIO_TRACKS: AudioTrack[] = [
   },
   {
     id: 'audio-3',
-    title: 'Midnight Runner',
+    get title() { return _translateCopy("copy.132dd8763452", { defaultValue: "Midnight Runner" }); },
     artist: 'The Neon Kings',
     artistHandle: '@neonkings',
     verified: true,
@@ -137,7 +139,7 @@ const AUDIO_TRACKS: AudioTrack[] = [
   },
   {
     id: 'audio-4',
-    title: 'Starlight Serenade',
+    get title() { return _translateCopy("copy.ae68f56a2dae", { defaultValue: "Starlight Serenade" }); },
     artist: 'Aurora Sound',
     artistHandle: '@aurorasound',
     verified: true,
@@ -148,7 +150,7 @@ const AUDIO_TRACKS: AudioTrack[] = [
   },
   {
     id: 'audio-5',
-    title: 'Bass Drop',
+    get title() { return _translateCopy("copy.2a723990eaee", { defaultValue: "Bass Drop" }); },
     artist: 'Heavy Frequency',
     artistHandle: '@heavyfreq',
     verified: false,
@@ -159,7 +161,7 @@ const AUDIO_TRACKS: AudioTrack[] = [
   },
   {
     id: 'audio-6',
-    title: 'Ocean Breeze',
+    get title() { return _translateCopy("copy.04998e4249a5", { defaultValue: "Ocean Breeze" }); },
     artist: 'Chill Masters',
     artistHandle: '@chillmasters',
     verified: true,
@@ -170,7 +172,7 @@ const AUDIO_TRACKS: AudioTrack[] = [
   },
   {
     id: 'audio-7',
-    title: 'Urban Jungle',
+    get title() { return _translateCopy("copy.58b4a98af77f", { defaultValue: "Urban Jungle" }); },
     artist: 'Street Beats',
     artistHandle: '@streetbeats',
     verified: false,
@@ -181,7 +183,7 @@ const AUDIO_TRACKS: AudioTrack[] = [
   },
   {
     id: 'audio-8',
-    title: 'Sunset Boulevard',
+    get title() { return _translateCopy("copy.67fd3b2b288f", { defaultValue: "Sunset Boulevard" }); },
     artist: 'Golden Hour',
     artistHandle: '@goldenhour',
     verified: true,
@@ -250,6 +252,7 @@ function AudioTrackCard({ track }: { track: AudioTrack }) {
 // ============================================================================
 
 export default function MusicPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   // Home's radio carousel links straight to this tab, so honour ?tab= on first
@@ -373,8 +376,8 @@ export default function MusicPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Music — Listen & Discover on DeHub" description="Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform." url="https://dehub.io/music" jsonLd={{ '@context': 'https://schema.org', '@type': 'MusicPlaylist', name: 'DeHub Music', url: 'https://dehub.io/music', description: 'Stream music, discover artists and listen to radio on DeHub.' }} />
-      <h1 className="sr-only">DeHub Music — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.19760ad09dcb", { defaultValue: "Music — Listen & Discover on DeHub" })} description={_copy("copy.26458fb449be", { defaultValue: "Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform." })} url="https://dehub.io/music" jsonLd={{ '@context': 'https://schema.org', '@type': 'MusicPlaylist', name: 'DeHub Music', url: 'https://dehub.io/music', description: _copy("copy.ad1dab0c852d", { defaultValue: "Stream music, discover artists and listen to radio on DeHub." }) }} />
+      <h1 className="sr-only">{_copy("copy.cc474c95c93b", { defaultValue: "DeHub Music — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Tab Navigation */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-2 overflow-visible">

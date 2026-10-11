@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * SuperPowers
  * ===========
@@ -51,6 +52,7 @@ function formatMinutes(total: number): string {
 }
 
 export default function SuperPowersPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { data: status, isLoading: loadingStatus, isError, refetch: refetchStatus } = useSuperpowers();
   const { data: ladder, isLoading: loadingLadder } = useSuperpowerLadder();
@@ -83,8 +85,8 @@ export default function SuperPowersPage() {
   return (
     <>
       <SEOHead
-        title="SuperPowers — Spend Your DeHub Badge on Reach"
-        description="Use badge-powered boosts, or Team up with as many as seven others to unlock a higher shared badge."
+        title={_copy("copy.f57d7f82c107", { defaultValue: "SuperPowers — Spend Your DeHub Badge on Reach" })}
+        description={_copy("copy.eb510e32623c", { defaultValue: "Use badge-powered boosts, or Team up with as many as seven others to unlock a higher shared badge." })}
         url="https://dehub.io/app/superpowers"
         image="https://dehub.io/og/superpowers.jpg"
         jsonLd={{
@@ -92,7 +94,7 @@ export default function SuperPowersPage() {
           '@type': 'WebPage',
           name: 'DeHub SuperPowers',
           description:
-            'DeHub SuperPowers include badge-powered boosts and Team up, which combines wallet power for a higher shared badge.',
+            _copy("copy.91c129f862f5", { defaultValue: "DeHub SuperPowers include badge-powered boosts and Team up, which combines wallet power for a higher shared badge." }),
           url: 'https://dehub.io/app/superpowers',
           isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
         }}
@@ -198,9 +200,7 @@ export default function SuperPowersPage() {
                     </div>
                     <p className="text-[13px] text-zinc-500 leading-snug">{power.summary}</p>
                     {!isTeamUp && unlockBadge && (
-                      <span className="inline-flex items-center gap-1.5 self-start text-[10px] text-zinc-400">
-                        Unlocks at
-                        <img
+                      <span className="inline-flex items-center gap-1.5 self-start text-[10px] text-zinc-400">{_copy("copy.9de0a0e9ac06", { defaultValue: "Unlocks at" })}<img
                           src={unlockBadge}
                           alt=""
                           aria-hidden="true"
@@ -218,12 +218,12 @@ export default function SuperPowersPage() {
                       )}
                     >
                       {isTeamUp && unlocked
-                        ? 'Open to everyone'
+                        ? _copy("copy.9a4e2cc5cbdc", { defaultValue: "Open to everyone" })
                         : usable && allowance !== undefined
-                        ? `${allowance} ${allowance === 1 ? 'use' : 'uses'} left`
+                        ? _copy("copy.ff1e56a487ea", { defaultValue: "Remaining uses: {{value1}}", value1: allowance, value2: allowance === 1 ? _copy("copy.a3b142af6e97", { defaultValue: "use" }) : _copy("copy.f480ffb2979d", { defaultValue: "uses" }) })
                         : !power.available
                           ? t('superpowers.comingSoon')
-                          : 'Locked'}
+                          : _copy("copy.a424e33d9093", { defaultValue: "Locked" })}
                     </span>
                     {!isTeamUp && <button
                       type="button"
@@ -233,9 +233,7 @@ export default function SuperPowersPage() {
                       }}
                       disabled={!status?.tier}
                       className="group inline-flex items-center gap-1 text-[12px] text-zinc-400 hover:text-white active:text-white transition-colors disabled:opacity-35 disabled:pointer-events-none"
-                    >
-                      Past usage
-                      <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    >{_copy("copy.504282c0611d", { defaultValue: "Past usage" })}<ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
                     </button>}
                   </div>
                 </article>
@@ -313,11 +311,8 @@ export default function SuperPowersPage() {
                 {historyPower && (
                   <SuperPowerIcon power={historyPower.key} alt="" className="w-8 h-8 shrink-0 object-contain" />
                 )}
-                {historyPower?.label} usage
-              </DrawerTitle>
-              <p className="text-[12px] text-zinc-500 mt-1">
-                This cycle and anything still active.
-              </p>
+                {historyPower?.label}{_copy("copy.54ead07b0a79", { defaultValue: " usage" })}</DrawerTitle>
+              <p className="text-[12px] text-zinc-500 mt-1">{_copy("copy.90c3fd22b403", { defaultValue: "This cycle and anything still active." })}</p>
             </div>
             <button
               type="button"
@@ -333,7 +328,7 @@ export default function SuperPowersPage() {
             {historyBookings.length === 0 ? (
               <div className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-8 flex flex-col items-center text-center gap-2">
                 <History className="w-6 h-6 text-zinc-500" aria-hidden="true" />
-                <p className="text-sm text-zinc-300">No past usage for this power yet.</p>
+                <p className="text-sm text-zinc-300">{_copy("copy.a7a3e94141c9", { defaultValue: "No past usage for this power yet." })}</p>
               </div>
             ) : (
               historyBookings.map(booking => {
@@ -342,8 +337,8 @@ export default function SuperPowersPage() {
                   ? booking.signalDeliveryStatus === 'sent'
                     ? `${booking.signalRecipients ?? 0} notified`
                     : booking.signalDeliveryStatus === 'failed'
-                      ? 'Delivery retrying'
-                      : booking.power === 'harpoon' ? 'Notifying badge holders' : 'Notifying followers'
+                      ? _copy("copy.ed2c694616cc", { defaultValue: "Delivery retrying" })
+                      : booking.power === 'harpoon' ? _copy("copy.9cae0c163a3b", { defaultValue: "Notifying badge holders" }) : _copy("copy.67bd3636b2de", { defaultValue: "Notifying followers" })
                   : t('superpowers.seenCount', {
                       count: booking.served,
                       defaultValue: `${booking.served} seen`,
@@ -380,10 +375,10 @@ export default function SuperPowersPage() {
                       {!notificationPower && (
                         <p className="text-[10px] text-zinc-500 mt-0.5">
                           {booking.live
-                            ? 'Live'
+                            ? _copy("copy.b64ac05f17e6", { defaultValue: "Live" })
                             : booking.status === 'active'
                               ? t('superpowers.queued')
-                              : 'Finished'}
+                              : _copy("copy.7804f7a79a9e", { defaultValue: "Finished" })}
                         </p>
                       )}
                     </div>

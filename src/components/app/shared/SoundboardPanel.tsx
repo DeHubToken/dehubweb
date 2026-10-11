@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * SoundboardPanel — the pads, the uploads and the volume slider, with no
  * opinion about where the sound goes.
@@ -35,22 +37,22 @@ interface BuiltInEffect {
 }
 
 const BUILT_IN_EFFECTS: BuiltInEffect[] = [
-  { id: 'airhorn', label: 'Air Horn', icon: <Megaphone className="w-4 h-4" />, frequency: 600, type: 'sawtooth', duration: 800 },
-  { id: 'applause', label: 'Applause', icon: <PartyPopper className="w-4 h-4" />, frequency: 0, type: 'sawtooth', duration: 2000 },
-  { id: 'drumroll', label: 'Drum Roll', icon: <Drum className="w-4 h-4" />, frequency: 150, type: 'triangle', duration: 1500 },
-  { id: 'buzzer', label: 'Buzzer', icon: <AlertTriangle className="w-4 h-4" />, frequency: 200, type: 'square', duration: 500 },
-  { id: 'ding', label: 'Ding', icon: <ThumbsUp className="w-4 h-4" />, frequency: 880, type: 'sine', duration: 300 },
-  { id: 'boo', label: 'Boo', icon: <ThumbsDown className="w-4 h-4" />, frequency: 100, type: 'sawtooth', duration: 600 },
-  { id: 'cricket', label: 'Crickets', icon: <Bug className="w-4 h-4" />, frequency: 4000, type: 'sine', duration: 2000 },
-  { id: 'countdown', label: 'Countdown', icon: <Timer className="w-4 h-4" />, frequency: 440, type: 'sine', duration: 3000 },
-  { id: 'lol', label: 'LOL', icon: <Laugh className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
-  { id: 'ooh-ahh', label: 'Ooh Ahh', icon: <Sparkles className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 3000 },
-  { id: 'ooh-man', label: 'Ooh (Man)', icon: <User className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 1000 },
-  { id: 'ohh-girl', label: 'Ohh (Girl)', icon: <User className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 1500 },
-  { id: 'ba-dum-tish', label: 'Ba Dum Tish', icon: <Drum className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
-  { id: 'spooky', label: 'Spooky', icon: <Ghost className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
-  { id: 'magic-spell', label: 'Magic Spell', icon: <Wand2 className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
-  { id: 'shhh', label: 'Shhh', icon: <Hand className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
+  { id: 'airhorn', get label() { return _translateCopy("copy.f54b39e033b3", { defaultValue: "Air Horn" }); }, icon: <Megaphone className="w-4 h-4" />, frequency: 600, type: 'sawtooth', duration: 800 },
+  { id: 'applause', get label() { return _translateCopy("copy.fea1eae3041c", { defaultValue: "Applause" }); }, icon: <PartyPopper className="w-4 h-4" />, frequency: 0, type: 'sawtooth', duration: 2000 },
+  { id: 'drumroll', get label() { return _translateCopy("copy.6d63c3b074d5", { defaultValue: "Drum Roll" }); }, icon: <Drum className="w-4 h-4" />, frequency: 150, type: 'triangle', duration: 1500 },
+  { id: 'buzzer', get label() { return _translateCopy("copy.f4f65ad617fc", { defaultValue: "Buzzer" }); }, icon: <AlertTriangle className="w-4 h-4" />, frequency: 200, type: 'square', duration: 500 },
+  { id: 'ding', get label() { return _translateCopy("copy.df786320d86f", { defaultValue: "Ding" }); }, icon: <ThumbsUp className="w-4 h-4" />, frequency: 880, type: 'sine', duration: 300 },
+  { id: 'boo', get label() { return _translateCopy("copy.bf66f3e41e47", { defaultValue: "Boo" }); }, icon: <ThumbsDown className="w-4 h-4" />, frequency: 100, type: 'sawtooth', duration: 600 },
+  { id: 'cricket', get label() { return _translateCopy("copy.511a943d6125", { defaultValue: "Crickets" }); }, icon: <Bug className="w-4 h-4" />, frequency: 4000, type: 'sine', duration: 2000 },
+  { id: 'countdown', get label() { return _translateCopy("copy.a9b7f3f14fe3", { defaultValue: "Countdown" }); }, icon: <Timer className="w-4 h-4" />, frequency: 440, type: 'sine', duration: 3000 },
+  { id: 'lol', get label() { return _translateCopy("copy.6e0290d62f6d", { defaultValue: "LOL" }); }, icon: <Laugh className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
+  { id: 'ooh-ahh', get label() { return _translateCopy("copy.021aaa052282", { defaultValue: "Ooh Ahh" }); }, icon: <Sparkles className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 3000 },
+  { id: 'ooh-man', get label() { return _translateCopy("copy.f3404466f096", { defaultValue: "Ooh (Man)" }); }, icon: <User className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 1000 },
+  { id: 'ohh-girl', get label() { return _translateCopy("copy.ab7b9519e1a2", { defaultValue: "Ohh (Girl)" }); }, icon: <User className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 1500 },
+  { id: 'ba-dum-tish', get label() { return _translateCopy("copy.d65768d34aa0", { defaultValue: "Ba Dum Tish" }); }, icon: <Drum className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
+  { id: 'spooky', get label() { return _translateCopy("copy.07339b14c9a0", { defaultValue: "Spooky" }); }, icon: <Ghost className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
+  { id: 'magic-spell', get label() { return _translateCopy("copy.d9bdbfaed8c9", { defaultValue: "Magic Spell" }); }, icon: <Wand2 className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
+  { id: 'shhh', get label() { return _translateCopy("copy.f334cda47039", { defaultValue: "Shhh" }); }, icon: <Hand className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
 ];
 
 const AUDIO_FILE_EFFECTS: Record<string, string> = {
@@ -99,6 +101,7 @@ export function SoundboardPanel({
   stopClip,
   errorMessage = 'Could not play that sound',
 }: SoundboardPanelProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const [volume, setVolume] = useState(70);
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -143,7 +146,7 @@ export function SoundboardPanel({
     if (fileInputRef.current) fileInputRef.current.value = '';
 
     if (!ACCEPTED_AUDIO_TYPES.includes(file.type)) {
-      toast.error('Only audio files (MP3, WAV, OGG, M4A) are supported');
+      toast.error(_copy("copy.dfdabf593cb3", { defaultValue: "Only audio files (MP3, WAV, OGG, M4A) are supported" }));
       return;
     }
 
@@ -169,11 +172,11 @@ export function SoundboardPanel({
     setIsUploading(false);
 
     if (error) {
-      toast.error('Upload failed');
+      toast.error(_copy("copy.6efc5d27f30b", { defaultValue: "Upload failed" }));
       return;
     }
 
-    toast.success('Sound uploaded!');
+    toast.success(_copy("copy.776713aa2680", { defaultValue: "Sound uploaded!" }));
     await loadCustomSounds();
   };
 
@@ -186,7 +189,7 @@ export function SoundboardPanel({
       .remove([sound.path]);
 
     if (error) {
-      toast.error('Failed to delete');
+      toast.error(_copy("copy.f625b14e1b2c", { defaultValue: "Failed to delete" }));
       return;
     }
 
@@ -225,7 +228,7 @@ export function SoundboardPanel({
         await playBlob(await res.blob(), effect.id, effect.label);
       } catch {
         setPlayingId((cur) => (cur === effect.id ? null : cur));
-        toast.error('Sound file not found');
+        toast.error(_copy("copy.d31e3e3d7010", { defaultValue: "Sound file not found" }));
       }
       return;
     }
@@ -237,8 +240,8 @@ export function SoundboardPanel({
     }
 
     setPlayingId((cur) => (cur === effect.id ? null : cur));
-    toast.error('Sound not available');
-  }, [playBlob, volume]);
+    toast.error(_copy("copy.095b8cb02d69", { defaultValue: "Sound not available" }));
+  }, [playBlob, volume, _copy]);
 
   const playCustomSound = useCallback(async (sound: CustomSound) => {
     const soundId = `custom-${sound.path}`;
@@ -249,9 +252,9 @@ export function SoundboardPanel({
       await playBlob(await res.blob(), soundId, sound.name);
     } catch {
       setPlayingId((cur) => (cur === soundId ? null : cur));
-      toast.error('Failed to load sound');
+      toast.error(_copy("copy.b36b7ab19ada", { defaultValue: "Failed to load sound" }));
     }
-  }, [playBlob]);
+  }, [playBlob, _copy]);
 
   if (!isVisible) return null;
 
@@ -259,9 +262,7 @@ export function SoundboardPanel({
     <div className="space-y-3 p-3 bg-white/5 rounded-xl border border-white/10 animate-in slide-in-from-bottom-2 duration-200">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-white flex items-center gap-2">
-          <Music className="w-4 h-4" />
-          Soundboard
-        </h3>
+          <Music className="w-4 h-4" />{_copy("copy.07ff885c843a", { defaultValue: "Soundboard" })}</h3>
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
@@ -274,7 +275,7 @@ export function SoundboardPanel({
                 : 'text-white/50 hover:text-white hover:bg-white/10'
             )}
           >
-            {showCustom ? 'Built-in' : 'My Sounds'}
+            {showCustom ? _copy("copy.1f43948106d1", { defaultValue: "Built-in" }) : _copy("copy.fb57e7863d72", { defaultValue: "My Sounds" })}
           </Button>
           <Button
             variant="ghost"
@@ -327,7 +328,7 @@ export function SoundboardPanel({
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); stopSound(); }}
-                    aria-label={`Stop ${effect.label}`}
+                    aria-label={_copy("copy.774442f41e85", { defaultValue: "Stop {{value1}}", value1: effect.label })}
                     className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-md flex items-center justify-center shadow-lg ring-2 ring-black/30"
                   >
                     <X className="w-3 h-3 text-white" />
@@ -364,15 +365,15 @@ export function SoundboardPanel({
               <Upload className="w-4 h-4" />
             )}
             <span className="text-xs">
-              {isUploading ? 'Uploading...' : `Upload Sound (${customSounds.length}/${MAX_CUSTOM_SOUNDS})`}
+              {isUploading ? _copy("copy.72cb29c90ccd", { defaultValue: "Uploading..." }) : _copy("copy.1cae8c565861", { defaultValue: "Upload Sound ({{value1}}/{{value2}})", value1: customSounds.length, value2: MAX_CUSTOM_SOUNDS })}
             </span>
           </button>
 
           {customSounds.length === 0 ? (
             <AppState
               icon="audio"
-              title="No custom sounds yet"
-              description={`Upload MP3, WAV, or OGG files up to ${MAX_FILE_SIZE_MB}MB.`}
+              title={_copy("copy.8a1543aa7550", { defaultValue: "No custom sounds yet" })}
+              description={_copy("copy.af1f0acbd565", { defaultValue: "Upload MP3, WAV, or OGG files up to {{value1}}MB.", value1: MAX_FILE_SIZE_MB })}
               size="compact"
             />
           ) : (
@@ -404,7 +405,7 @@ export function SoundboardPanel({
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); stopSound(); }}
-                        aria-label={`Stop ${sound.name}`}
+                        aria-label={_copy("copy.774442f41e85", { defaultValue: "Stop {{value1}}", value1: sound.name })}
                         className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-md flex items-center justify-center shadow-lg ring-2 ring-black/30"
                       >
                         <X className="w-3 h-3 text-white" />
@@ -413,7 +414,7 @@ export function SoundboardPanel({
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); handleDelete(sound); }}
-                        aria-label={`Delete ${sound.name}`}
+                        aria-label={_copy("copy.264fa40661cb", { defaultValue: "Delete {{value1}}", value1: sound.name })}
                         className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded items-center justify-center hidden group-hover:flex"
                       >
                         <Trash2 className="w-2.5 h-2.5 text-white" />

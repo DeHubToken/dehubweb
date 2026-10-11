@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Mature Content Gate
  * ===================
@@ -58,6 +59,7 @@ export function MatureContentGate({
   description = 'The creator marked this post as adult or graphic.',
   className,
 }: MatureContentGateProps) {
+  const { t: _copy } = _useCopy();
   return (
     <div data-media-full className={cn('relative rounded-2xl overflow-hidden', className)}>
       {preview ? (
@@ -75,7 +77,7 @@ export function MatureContentGate({
         <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
           <EyeOff className="h-7 w-7 text-white" />
         </div>
-        <p className="text-white font-semibold text-sm mb-1">Mature content</p>
+        <p className="text-white font-semibold text-sm mb-1">{_copy("copy.9b8b53102e77", { defaultValue: "Mature content" })}</p>
         <p className="text-white/70 text-xs mb-3 max-w-xs">{description}</p>
         <button
           type="button"
@@ -86,9 +88,7 @@ export function MatureContentGate({
             onReveal();
           }}
           className="px-4 py-1.5 rounded-full text-xs font-medium text-white bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
-        >
-          View anyway
-        </button>
+        >{_copy("copy.7bc2840ca04d", { defaultValue: "View anyway" })}</button>
       </div>
     </div>
   );

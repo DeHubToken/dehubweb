@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Leaderboard Page
@@ -96,6 +97,7 @@ const getRankStyle = (rank: number) => {
 const FOCUS_RING = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/50';
 
 export default function LeaderboardPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   useLayoutEffect(() => {
     // Force scroll to top immediately and repeatedly to override any residual scroll position
@@ -359,13 +361,13 @@ export default function LeaderboardPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Leaderboard — Top Creators & Earners"
-        description="See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods."
+        title={_copy("copy.ae9fd67eae76", { defaultValue: "Leaderboard — Top Creators & Earners" })}
+        description={_copy("copy.476be3b6b085", { defaultValue: "See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." })}
         url="https://dehub.io/app/leaderboard"
         image="https://dehub.io/og/leaderboard.jpg"
-        jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://dehub.io/app/leaderboard', description: 'Track top token holders, tippers and creators on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }}
+        jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://dehub.io/app/leaderboard', description: _copy("copy.a9868171ff61", { defaultValue: "Track top token holders, tippers and creators on DeHub." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }}
       />
-      <h1 className="sr-only">DeHub Leaderboard — Decentralised Social Media, Censorship Resistant &amp; Freedom of Speech</h1>
+      <h1 className="sr-only">{_copy("copy.f7a1332ec093", { defaultValue: "DeHub Leaderboard — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon={<BrandIcon src={trophyIcon} alt="" className="h-8 w-8 object-contain" />}
         title={t('leaderboard.title')}
@@ -376,7 +378,7 @@ export default function LeaderboardPage() {
             onChange={(key) => { if (key === 'assets') { navigate('/app/top-100'); return; } setCategory(key); setSortDirection('desc'); }}
             tabs={[
               ...categories.map((cat) => ({ id: cat.id, label: t(cat.labelKey), icon: <cat.icon className="h-4 w-4" /> })),
-              { id: 'assets' as const, label: 'Assets', icon: <TrendingUp className="h-4 w-4" /> },
+              { id: 'assets' as const, label: _copy("copy.bd12731d7bc9", { defaultValue: "Assets" }), icon: <TrendingUp className="h-4 w-4" /> },
             ]}
           />
         }
@@ -476,7 +478,7 @@ export default function LeaderboardPage() {
               const displayName = getDisplayName(entry);
               const rowClass = cn(
                 "grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 transition-colors items-center",
-                profileHref && 'cursor-pointer',
+                profileHref && "cursor-pointer",
                 profileHref && (isLightTheme ? "hover:bg-zinc-100" : "hover:bg-zinc-800/50"),
                 FOCUS_RING,
               );

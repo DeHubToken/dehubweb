@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Community Ticker Search
@@ -36,6 +37,7 @@ function formatCompact(n: number | null | undefined): string {
 }
 
 export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSearchProps) {
+  const { t: _copy } = _useCopy();
   const [query, setQuery] = useSurfaceDraft("components/app/communities/CommunityTickerSearch.tsx:query", '');
   const [results, setResults] = useState<DexPair[]>([]);
   const [loading, setLoading] = useState(false);
@@ -99,7 +101,7 @@ export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSea
             ref={inputRef}
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Search token symbol or contract address..."
+            placeholder={_copy("copy.38259cf62a37", { defaultValue: "Search token symbol or contract address..." })}
             className="flex-1 bg-transparent text-xs text-white placeholder:text-zinc-600 outline-none"
           />
           {query && (
@@ -108,15 +110,13 @@ export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSea
             </button>
           )}
         </div>
-        <button onClick={onCancel} className="text-zinc-500 hover:text-white text-xs">
-          Cancel
-        </button>
+        <button onClick={onCancel} className="text-zinc-500 hover:text-white text-xs">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
       </div>
 
       {loading && (
         <div className="flex items-center gap-2 py-3 justify-center">
           <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-          <span className="text-xs text-zinc-500">Searching...</span>
+          <span className="text-xs text-zinc-500">{_copy("copy.78c9d9f6ace0", { defaultValue: "Searching..." })}</span>
         </div>
       )}
 
@@ -155,7 +155,7 @@ export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSea
                         {isPos ? '+' : ''}{change24h.toFixed(2)}%
                       </p>
                     )}
-                    <p className="text-zinc-600 text-[9px]">Vol: {formatCompact(pair.volume?.h24)}</p>
+                    <p className="text-zinc-600 text-[9px]">{_copy("copy.1b8bd41c66cf", { defaultValue: "Vol: " })}{formatCompact(pair.volume?.h24)}</p>
                   </div>
                 </button>
               );
@@ -165,7 +165,7 @@ export function CommunityTickerSearch({ onSelect, onCancel }: CommunityTickerSea
       </AnimatePresence>
 
       {!loading && query.length >= 2 && results.length === 0 && (
-        <AppState icon="search" title="No tokens found" description={`No tokens match "${query}".`} kind="search-empty" size="compact" />
+        <AppState icon="search" title={_copy("copy.6cd980a3f9e2", { defaultValue: "No tokens found" })} description={_copy("copy.b8c0275bd491", { defaultValue: "No tokens match \"{{value1}}\".", value1: query })} kind="search-empty" size="compact" />
       )}
     </div>
   );

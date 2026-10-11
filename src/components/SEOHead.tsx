@@ -1,3 +1,7 @@
+import { localizePageJsonLd } from '../../server/public-page-locales.js';
+import { useLocation } from 'react-router-dom';
+import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
+import { localizedPageUrl, writeLanguageAlternates } from '@/lib/seo/public-locales';
 import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
@@ -42,22 +46,27 @@ export function SEOHead({
   aiScraping,
 }: SEOHeadProps) {
   const { t } = useTranslation();
+  const location = useLocation();
+  const page = usePublicPageLocale(location.pathname);
   // Hidden cached pages stay mounted; if they kept rendering Helmet, whichever
   // page happened to render last would own the tab title for every route.
   const isActivePage = useContext(CachedPageActiveContext);
   // Defaults are the homepage's — the same strings the worker serves for "/".
-  const fullTitle = title || t(HUB_ROUTE_META.home.titleKey);
-  const desc = description ?? t(HUB_ROUTE_META.home.descriptionKey);
+  const fullTitle = page.data?.title || title || t(HUB_ROUTE_META.home.titleKey);
+  const desc = page.data?.description ?? description ?? t(HUB_ROUTE_META.home.descriptionKey);
   // Canonical self-references the route but always on the canonical host with
   // no query/hash: preview mirror hosts and ?param variants must
   // consolidate to the clean dehub.io URL, never self-canonicalize. Explicit
   // URLs go through the same rules (lib/seo/route-meta), so a page naming its
   // /app twin still declares the URL the worker declares for it.
   const currentUrl = typeof window !== 'undefined' ? `${SITE_URL}${window.location.pathname}` : '';
-  const canonicalUrl = toCanonicalUrl(url || currentUrl || SITE_URL);
+  const canonicalUrl = page.localized && !noindex
+    ? localizedPageUrl(page.route, page.language)
+    : toCanonicalUrl(url || currentUrl || SITE_URL);
   // A top-level JSON-LD `url` names the same page, so it follows the canonical.
   const ld =
-    jsonLd && typeof jsonLd.url === 'string' ? { ...jsonLd, url: toCanonicalUrl(jsonLd.url) } : jsonLd;
+    jsonLd && page.data ? localizePageJsonLd(jsonLd, page.route, page.language, page.data)
+      : jsonLd ? { ...jsonLd, inLanguage: page.language, ...(typeof jsonLd.url === 'string' ? { url: canonicalUrl } : {}) } : jsonLd;
 
   // react-helmet-async (v3) renders nothing in this app: every route was left
   // on the static index.html title, so tabs and bookmarks were all identical.
@@ -70,6 +79,7 @@ export function SEOHead({
   useEffect(() => {
     if (!isActivePage) return;
     document.title = fullTitle;
+    writeLanguageAlternates(page.route, page.language, !noindex && !noCanonical);
     if (noCanonical) removeCanonical();
     else upsertCanonical(canonicalUrl);
     upsertMeta('name', 'description', desc);
@@ -77,7 +87,7 @@ export function SEOHead({
     setRobots(noindex, aiScraping === 'deny' ? 'noai, noimageai' : undefined);
     setTdmReservation(aiScraping === undefined ? null : aiScraping === 'deny' ? '1' : '0');
     setJsonLd(jsonLdString);
-  }, [isActivePage, fullTitle, canonicalUrl, noCanonical, desc, image, type, noindex, jsonLdString, aiScraping]);
+  }, [isActivePage, fullTitle, canonicalUrl, noCanonical, desc, image, type, noindex, jsonLdString, aiScraping, page.route, page.language]);
 
   if (!isActivePage) return null;
 

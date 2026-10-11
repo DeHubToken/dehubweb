@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Slippage Settings Component
@@ -22,6 +23,7 @@ interface SlippageSettingsProps {
 }
 
 export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSettingsProps) {
+  const { t: _copy } = _useCopy();
   const [open, setOpen] = useState(false);
   const [customValue, setCustomValue] = useSurfaceDraft("components/app/SlippageSettings.tsx:customValue", '');
 
@@ -34,12 +36,12 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
         className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-200 transition-colors"
       >
         <Settings2 className="w-3.5 h-3.5" />
-        <span>{displayPct}% slippage</span>
+        <span>{displayPct}{_copy("copy.6b1037924516", { defaultValue: "% slippage" })}</span>
       </button>
 
       {open && (
         <div className="absolute right-0 top-full mt-2 z-50 bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-xl p-3 space-y-2.5 min-w-[200px] shadow-xl">
-          <p className="text-[11px] text-zinc-400 font-medium">Slippage Tolerance</p>
+          <p className="text-[11px] text-zinc-400 font-medium">{_copy("copy.e50f1f5e6029", { defaultValue: "Slippage Tolerance" })}</p>
           <div className="flex gap-1.5">
             {PRESETS.map(p => (
               <button
@@ -64,7 +66,7 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
               min="0.1"
               max="50"
               step="0.1"
-              placeholder="Custom %"
+              placeholder={_copy("copy.8450ee5cde76", { defaultValue: "Custom %" })}
               value={customValue}
               onChange={e => {
                 const val = e.target.value;
@@ -81,12 +83,12 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
           {slippageBps > 500 && (
             <p className="text-[10px] text-amber-400/80 text-center">
               <AlertTriangle className="w-2.5 h-2.5 inline-block align-[-.1em] mr-1" />
-              <span>HIGH SLIPPAGE - RISK OF LOSS</span>
+              <span>{_copy("copy.c6631765f885", { defaultValue: "HIGH SLIPPAGE - RISK OF LOSS" })}</span>
               <AlertTriangle className="w-2.5 h-2.5 inline-block align-[-.1em] ml-1" />
             </p>
           )}
           {slippageBps < 50 && (
-            <p className="text-[10px] text-amber-400/80">⚠ Low slippage — transaction may fail</p>
+            <p className="text-[10px] text-amber-400/80">{_copy("copy.d4cf65e66b62", { defaultValue: "⚠ Low slippage — transaction may fail" })}</p>
           )}
         </div>
       )}

@@ -60,6 +60,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthPrompt } from '@/components/app/AuthPrompt';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -200,19 +201,15 @@ function formatDuration(totalSeconds?: number): string | null {
   return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
 }
 
-const viewsFormatter = new Intl.NumberFormat('en', { notation: 'compact' });
-
 function formatViews(count?: number): string | null {
   if (count === undefined) return null;
-  return `${viewsFormatter.format(count)} view${count === 1 ? '' : 's'}`;
+  return i18n.t('comments.viewCount', { count });
 }
-
-const publishedDateFormatter = new Intl.DateTimeFormat('en', { year: 'numeric', month: 'short', day: 'numeric' });
 
 function formatPublishedAt(iso?: string): string | null {
   if (!iso) return null;
   const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? null : publishedDateFormatter.format(date);
+  return Number.isNaN(date.getTime()) ? null : new Intl.DateTimeFormat(i18n.language || 'en', { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
 }
 
 export default function YoutubeMigratePage() {
@@ -939,7 +936,7 @@ export default function YoutubeMigratePage() {
                   // The creator's own title wins over the source's, so the
                   // grid reads as what they paid to publish.
                   const label = nameByKey.get(key) || titleById.get(key) || key;
-                  const Tile = href ? 'a' : 'div';
+                  const Tile = href ? 'a' : "div";
                   return (
                     <Tile
                       key={key}

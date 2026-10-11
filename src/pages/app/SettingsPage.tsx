@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 ﻿import { ThemedIcon } from '@/components/app/war/WarHudIcon';
@@ -250,17 +252,17 @@ function MessageFeeControl() {
 }
 
 const tabs = [
-  { icon: User, value: 'profile', label: 'settings.profile' },
-  { icon: Palette, value: 'appearance', label: 'settings.appearance' },
-  { icon: Bell, value: 'notifications', label: 'settings.notifications' },
-  { icon: Shield, value: 'privacy', label: 'settings.privacy' },
-  { icon: Eye, value: 'content', label: 'settings.content' },
-  { icon: MessageSquare, value: 'messages', label: 'settings.messages' },
-  { icon: Wallet, value: 'assets', label: 'settings.assets' },
-  { icon: Share2, value: 'multipost', label: 'multiPost.tab' },
-  { icon: Sparkles, value: 'skills', label: 'settings.skills' },
-  { icon: Users, value: 'characters', label: 'settings.characters' },
-  { icon: LifeBuoy, value: 'support', label: 'settings.support' },
+  { icon: User, value: 'profile', label: "settings.profile" },
+  { icon: Palette, value: 'appearance', label: "settings.appearance" },
+  { icon: Bell, value: 'notifications', label: "settings.notifications" },
+  { icon: Shield, value: 'privacy', label: "settings.privacy" },
+  { icon: Eye, value: 'content', label: "settings.content" },
+  { icon: MessageSquare, value: 'messages', label: "settings.messages" },
+  { icon: Wallet, value: 'assets', label: "settings.assets" },
+  { icon: Share2, value: 'multipost', label: "multiPost.tab" },
+  { icon: Sparkles, value: 'skills', get label() { return _translateCopy("copy.626facc50d5a", { defaultValue: "settings.skills" }); } },
+  { icon: Users, value: 'characters', get label() { return _translateCopy("copy.0b202be8ae82", { defaultValue: "settings.characters" }); } },
+  { icon: LifeBuoy, value: 'support', label: "settings.support" },
 ];
 
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
@@ -283,6 +285,7 @@ import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ThemePreviewCard } from '@/components/app/settings/ThemePreviewCard';
 
 export default function SettingsPage() {
+  const { t: _copy } = _useCopy();
   // `?tab=privacy` deep-links a tab. Anything pointing someone at one specific
   // setting — the new-member notice toast, a support reply — otherwise lands
   // them on Profile and leaves them hunting for it.
@@ -370,8 +373,8 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Settings — Manage Your Account" description="Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." url="https://dehub.io/app/settings" />
-      <h1 className="sr-only">DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.5171c5a15461", { defaultValue: "Settings — Manage Your Account" })} description={_copy("copy.6f1213e68e58", { defaultValue: "Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." })} url="https://dehub.io/app/settings" />
+      <h1 className="sr-only">{_copy("copy.4761c6b1cd64", { defaultValue: "DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Header + tab nav — anchored (sticky) so it stays pinned while the
           settings content scrolls under it and is swallowed at its top edge. */}
       <PageIsland
@@ -514,6 +517,7 @@ export default function SettingsPage() {
 }
 
 function ProfileSettings() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { user: authUser, refreshUser, patchUser } = useAuthContext();
   const queryClient = useQueryClient();
@@ -882,11 +886,11 @@ function ProfileSettings() {
       return;
     }
     if (isCheckingUsername) {
-      toast.error('Please wait, checking username availability...');
+      toast.error(_copy("copy.524bd0bb22d8", { defaultValue: "Please wait, checking username availability..." }));
       return;
     }
     if (usernameChanged && isReservedUsername(username)) {
-      toast.error('This username is reserved');
+      toast.error(_copy("copy.71bfd7fdb453", { defaultValue: "This username is reserved" }));
       return;
     }
     const data: UpdateProfileData = {};
@@ -990,7 +994,7 @@ function ProfileSettings() {
         }}
       >
         {coverPreview && (
-          <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
+          <img src={coverPreview} alt={_copy("copy.fa8d84566676", { defaultValue: "Cover" })} className="w-full h-full object-cover" />
         )}
         {/* The cover used to sit under a permanent 30% black wash; now it is
             shown as uploaded and only dims on hover, with the camera in its
@@ -1091,13 +1095,13 @@ function ProfileSettings() {
             {isCheckingUsername && (
               <>
                 <Loader2 className="w-3 h-3 text-zinc-400 animate-spin" />
-                <span className="text-zinc-400 text-xs">Checking...</span>
+                <span className="text-zinc-400 text-xs">{_copy("copy.2e5f79bb94a8", { defaultValue: "Checking..." })}</span>
               </>
             )}
             {!isCheckingUsername && usernameAvailable === true && username !== originalValues.username && (
               <>
                 <Check className="w-3 h-3 text-green-500" />
-                <span className="text-green-500 text-xs">Available</span>
+                <span className="text-green-500 text-xs">{_copy("copy.e674447337e8", { defaultValue: "Available" })}</span>
               </>
             )}
             {!isCheckingUsername && usernameAvailable === false && (
@@ -1105,8 +1109,8 @@ function ProfileSettings() {
                 <X className="w-3 h-3 text-red-500" />
                 <span className="text-red-500 text-xs">
                   {isReservedUsername(username)
-                    ? 'This username is reserved'
-                    : 'Username is already taken'}
+                    ? _copy("copy.71bfd7fdb453", { defaultValue: "This username is reserved" })
+                    : _copy("copy.34141f3f22aa", { defaultValue: "Username is already taken" })}
                 </span>
               </>
             )}
@@ -1140,7 +1144,7 @@ function ProfileSettings() {
           <p className="-mt-2 mb-4 text-xs text-zinc-500">{t('settings.socialFollowersHint')}</p>
           <CollapsibleStack>
             <SocialLinkInput 
-              label="X (Twitter)" 
+              label={_copy("copy.89c9b65356e3", { defaultValue: "X (Twitter)" })} 
               placeholder="https://x.com/username"
               value={twitterLink}
               onChange={setTwitterLink}
@@ -1193,7 +1197,7 @@ function ProfileSettings() {
             />
             <SocialLinkInput 
               label="Discord" 
-              placeholder="discord_username"
+              placeholder={_copy("copy.dcd932e65e57", { defaultValue: "discord_username" })}
               value={discordLink}
               onChange={setDiscordLink}
               followers={socialFollowers.discord}
@@ -1335,6 +1339,7 @@ function SupportSettings() {
 }
 
 function NotificationSettings() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress } = useAuthContext();
 
@@ -1461,8 +1466,8 @@ function NotificationSettings() {
           <SettingToggle
             icon={MessageSquare}
             anchor="notify-comment-replies"
-            title="Comment Replies"
-            description="When someone replies to your comment"
+            title={_copy("copy.68be60ea70c8", { defaultValue: "Comment Replies" })}
+            description={_copy("copy.e58201630b42", { defaultValue: "When someone replies to your comment" })}
             defaultChecked={getInAppPref(notifPrefs, 'commentReplies')}
             onCheckedChange={handleToggle('commentReplies')}
             disabled={isDisabled}
@@ -1470,8 +1475,8 @@ function NotificationSettings() {
           <SettingToggle
             icon={AtSign}
             anchor="notify-mentions"
-            title="Mentions"
-            description="When someone mentions you in a post or comment"
+            title={_copy("copy.6f32e692ede0", { defaultValue: "Mentions" })}
+            description={_copy("copy.9d301c77ae49", { defaultValue: "When someone mentions you in a post or comment" })}
             defaultChecked={getInAppPref(notifPrefs, 'mentions')}
             onCheckedChange={handleToggle('mentions')}
             disabled={isDisabled}
@@ -1481,12 +1486,12 @@ function NotificationSettings() {
 
       {/* Monetization */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Monetization</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{_copy("copy.4d07f6012a60", { defaultValue: "Monetization" })}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Coins}
             anchor="notify-tips"
-            title="Tips Received"
+            title={_copy("copy.b9c1fb1d8de8", { defaultValue: "Tips Received" })}
             description={t('settings.notifyTipsDesc')}
             defaultChecked={getInAppPref(notifPrefs, 'tips')}
             onCheckedChange={handleToggle('tips')}
@@ -1495,8 +1500,8 @@ function NotificationSettings() {
           <SettingToggle
             icon={Handshake}
             anchor="notify-subscribers"
-            title="New Subscribers"
-            description="When someone subscribes to your plan"
+            title={_copy("copy.a0ce07fbc726", { defaultValue: "New Subscribers" })}
+            description={_copy("copy.bdfdedebdafa", { defaultValue: "When someone subscribes to your plan" })}
             defaultChecked={getInAppPref(notifPrefs, 'subscriptions')}
             onCheckedChange={handleToggle('subscriptions')}
             disabled={isDisabled}
@@ -1504,8 +1509,8 @@ function NotificationSettings() {
           <SettingToggle
             icon={Coins}
             anchor="notify-ppv"
-            title="PPV Purchases"
-            description="When someone purchases your pay-per-view content"
+            title={_copy("copy.dbc6e9280cb5", { defaultValue: "PPV Purchases" })}
+            description={_copy("copy.12874f91ea76", { defaultValue: "When someone purchases your pay-per-view content" })}
             defaultChecked={getInAppPref(notifPrefs, 'ppvPurchases')}
             onCheckedChange={handleToggle('ppvPurchases')}
             disabled={isDisabled}
@@ -1515,13 +1520,13 @@ function NotificationSettings() {
 
       {/* Content & Platform */}
       <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Content & Platform</h3>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">{_copy("copy.d56c1dff8692", { defaultValue: "Content & Platform" })}</h3>
         <div className="space-y-4">
           <SettingToggle
             icon={Play}
             anchor="notify-livestream"
-            title="Livestream Start"
-            description="When someone you follow starts a livestream"
+            title={_copy("copy.36389cced6a5", { defaultValue: "Livestream Start" })}
+            description={_copy("copy.73bcd1190b63", { defaultValue: "When someone you follow starts a livestream" })}
             defaultChecked={getInAppPref(notifPrefs, 'livestreamStart')}
             onCheckedChange={handleToggle('livestreamStart')}
             disabled={isDisabled}
@@ -1529,8 +1534,8 @@ function NotificationSettings() {
           <SettingToggle
             icon={Sparkles}
             anchor="notify-milestones"
-            title="Milestones"
-            description="When you reach a follower or engagement milestone"
+            title={_copy("copy.39c33dc2375f", { defaultValue: "Milestones" })}
+            description={_copy("copy.236a62b1e534", { defaultValue: "When you reach a follower or engagement milestone" })}
             defaultChecked={getInAppPref(notifPrefs, 'milestones')}
             onCheckedChange={handleToggle('milestones')}
             disabled={isDisabled}
@@ -1539,8 +1544,8 @@ function NotificationSettings() {
           <SettingToggle
             icon={Shield}
             anchor="notify-account-alerts"
-            title="Account Alerts"
-            description="Security and account activity you should know about"
+            title={_copy("copy.1d3358ba19cc", { defaultValue: "Account Alerts" })}
+            description={_copy("copy.9fe70131f0db", { defaultValue: "Security and account activity you should know about" })}
             defaultChecked={getInAppPref(notifPrefs, 'accountAlerts')}
             onCheckedChange={handleToggle('accountAlerts')}
             disabled={isDisabled}
@@ -1548,8 +1553,8 @@ function NotificationSettings() {
           <SettingToggle
             icon={Bell}
             anchor="notify-announcements"
-            title="Announcements"
-            description="Platform updates and important announcements"
+            title={_copy("copy.fe02680f2479", { defaultValue: "Announcements" })}
+            description={_copy("copy.b71d244c89db", { defaultValue: "Platform updates and important announcements" })}
             defaultChecked={getInAppPref(notifPrefs, 'announcements')}
             onCheckedChange={handleToggle('announcements')}
             disabled={isDisabled}
@@ -1579,6 +1584,7 @@ const fmtHour = (h: number) => `${String(h).padStart(2, '0')}:00`;
 const HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => ({ value: String(i), label: fmtHour(i) }));
 
 function QuietHoursSection() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   // Reads/writes go through @/lib/quiet-hours so this control and the delivery
   // check in use-browser-notifications can never drift apart on key names.
@@ -1615,31 +1621,29 @@ function QuietHoursSection() {
           className="cursor-pointer"
           icon={<Clock />}
           title={t('settings.enableQuietHours')}
-          description={enabled ? `Silenced ${fmt(start)} → ${fmt(end)}` : t('settings.quietHoursDesc')}
+          description={enabled ? _copy("copy.a0c199c85b21", { defaultValue: "Silenced {{value1}} → {{value2}}", value1: fmt(start), value2: fmt(end) }) : t('settings.quietHoursDesc')}
           action={<Switch checked={enabled} onCheckedChange={handleToggle} />}
         />
 
         {enabled && (
           <div className="pl-8">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              <span className="text-sm text-zinc-400">From</span>
+              <span className="text-sm text-zinc-400">{_copy("copy.218197693424", { defaultValue: "From" })}</span>
               <SettingDrawerSelect
                 value={String(start)}
                 onValueChange={(v) => handleStartChange(Number(v))}
-                title="From"
+                title={_copy("copy.218197693424", { defaultValue: "From" })}
                 options={HOUR_OPTIONS}
               />
-              <span className="text-sm text-zinc-400">To</span>
+              <span className="text-sm text-zinc-400">{_copy("copy.f4b06ef6d3c8", { defaultValue: "To" })}</span>
               <SettingDrawerSelect
                 value={String(end)}
                 onValueChange={(v) => handleEndChange(Number(v))}
-                title="To"
+                title={_copy("copy.f4b06ef6d3c8", { defaultValue: "To" })}
                 options={HOUR_OPTIONS}
               />
             </div>
-            <p className="mt-2 text-xs text-zinc-500">
-              Push notifications will be silenced during these hours.
-            </p>
+            <p className="mt-2 text-xs text-zinc-500">{_copy("copy.07ab6f23cc93", { defaultValue: "Push notifications will be silenced during these hours." })}</p>
           </div>
         )}
       </div>
@@ -1648,6 +1652,7 @@ function QuietHoursSection() {
 }
 
 function PrivacySettings() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, hideBadgeAndBalance, defaultPostVisibility, aiScraping, showOnline, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const { whoCanMessage, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateDoNotDisturb } = useDmSettings();
@@ -1671,9 +1676,9 @@ function PrivacySettings() {
       await setNewMemberOptedOut(!checked);
       toast.success(checked ? 'Showing as a new member' : 'Hidden from new members');
     } catch {
-      toast.error('Failed to update');
+      toast.error(_copy("copy.8eb4917bbe54", { defaultValue: "Failed to update" }));
     }
-  }, [setNewMemberOptedOut]);
+  }, [setNewMemberOptedOut, _copy]);
 
   const handlePrivateToggle = useCallback(async (checked: boolean) => {
     if (!checked && isPrivate) {
@@ -1700,13 +1705,13 @@ function PrivacySettings() {
       await acceptAllFollowRequests();
       updateSettings({ is_private: false });
       setGoPublicModalOpen(false);
-      toast.success('All requests accepted. Account is now public.');
+      toast.success(_copy("copy.b7380bf75280", { defaultValue: "All requests accepted. Account is now public." }));
     } catch {
-      toast.error('Failed to accept requests');
+      toast.error(_copy("copy.6064f2a6586f", { defaultValue: "Failed to accept requests" }));
     } finally {
       setGoPublicBusy(false);
     }
-  }, [updateSettings]);
+  }, [updateSettings, _copy]);
 
   const handleDeclineAllAndGoPublic = useCallback(async () => {
     setGoPublicBusy(true);
@@ -1715,13 +1720,13 @@ function PrivacySettings() {
       await rejectAllFollowRequests();
       updateSettings({ is_private: false });
       setGoPublicModalOpen(false);
-      toast.success('All requests declined. Account is now public.');
+      toast.success(_copy("copy.dd2a6b92f9c0", { defaultValue: "All requests declined. Account is now public." }));
     } catch {
-      toast.error('Failed to decline requests');
+      toast.error(_copy("copy.05a9b84aa310", { defaultValue: "Failed to decline requests" }));
     } finally {
       setGoPublicBusy(false);
     }
-  }, [updateSettings]);
+  }, [updateSettings, _copy]);
   
   const handlePostVisibilityChange = async (newVisibility: 'public' | 'private') => {
     if (!user?.address) {
@@ -1789,15 +1794,13 @@ function PrivacySettings() {
           <SettingToggle
             icon={EyeOff}
             anchor="private-balance"
-            title="Hide badge and balance"
-            description="Hides your badge, token balances, and tip history from public view. DeHub will also disable sends and tips to you."
+            title={_copy("copy.e3043f1c05b3", { defaultValue: "Hide badge and balance" })}
+            description={_copy("copy.72bb78fb365d", { defaultValue: "Hides your badge, token balances, and tip history from public view. DeHub will also disable sends and tips to you." })}
             defaultChecked={hideBadgeAndBalance}
             onCheckedChange={(checked) => updateSettings({ hide_badge_and_balance: checked })}
             disabled={isUpdating || isLoading}
           />
-          <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-100/80">
-            On-chain transactions are public. Sending tokens or tips can reveal your wallet address, including transactions made before private balance mode was enabled.
-          </div>
+          <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-4 text-xs leading-relaxed text-amber-100/80">{_copy("copy.660711e7d4af", { defaultValue: "On-chain transactions are public. Sending tokens or tips can reveal your wallet address, including transactions made before private balance mode was enabled." })}</div>
           {isPrivate && (
             <div className="pl-8">
               <Button
@@ -2044,37 +2047,28 @@ function PrivacySettings() {
             <div className="mx-auto flex size-14 items-center justify-center rounded-full border border-white/10 bg-white/10">
               <Users className="size-7 text-white" />
             </div>
-            <h3 id="go-public-title" className="text-white font-bold text-lg text-center">Switch to Public?</h3>
-            <p className="text-zinc-300 text-sm text-center">
-              You have <span className="text-white font-semibold">{pendingRequestCount}</span> pending follow {pendingRequestCount === 1 ? 'request' : 'requests'}.
-              What would you like to do before going public?
-            </p>
+            <h3 id="go-public-title" className="text-white font-bold text-lg text-center">{_copy("copy.e186aeeede46", { defaultValue: "Switch to Public?" })}</h3>
+            <p className="text-zinc-300 text-sm text-center">{_copy("copy.1bd68dc16f30", { defaultValue: "You have " })}<span className="text-white font-semibold">{pendingRequestCount}</span>{_copy("copy.8342c8fd8b8e", { defaultValue: " pending follow " })}{pendingRequestCount === 1 ? _copy("copy.1f58b9145b24", { defaultValue: "request" }) : _copy("copy.ec72420df5df", { defaultValue: "requests" })}{_copy("copy.942059c59c39", { defaultValue: ". What would you like to do before going public?" })}</p>
             <div className="space-y-2 pt-1">
               <Button
                 type="button"
                 onClick={handleAcceptAllAndGoPublic}
                 loading={goPublicBusy}
                 className="h-11 w-full font-semibold"
-              >
-                Accept All & Go Public
-              </Button>
+              >{_copy("copy.49a212b67b4d", { defaultValue: "Accept All & Go Public" })}</Button>
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleDeclineAllAndGoPublic}
                 loading={goPublicBusy}
                 className={cn(SETTINGS_CONTROL_CLASS, 'h-11 w-full font-semibold')}
-              >
-                Decline All & Go Public
-              </Button>
+              >{_copy("copy.4be2a1270a46", { defaultValue: "Decline All & Go Public" })}</Button>
               <button
                 type="button"
                 onClick={() => setGoPublicModalOpen(false)}
                 disabled={goPublicBusy}
                 className="w-full py-3 rounded-xl text-zinc-400 hover:text-white text-sm transition-colors"
-              >
-                Cancel
-              </button>
+              >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
             </div>
           </div>
         </div>
@@ -2084,6 +2078,7 @@ function PrivacySettings() {
 }
 
 function BlockedUsersSection() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuthContext();
@@ -2107,7 +2102,7 @@ function BlockedUsersSection() {
       queryClient.invalidateQueries({ queryKey: ['block-list-settings'] });
       queryClient.invalidateQueries({ queryKey: ['block-list'] });
     } catch {
-      toast.error('Failed to unblock user');
+      toast.error(_copy("copy.91509428edaa", { defaultValue: "Failed to unblock user" }));
     } finally {
       setUnblockingId(null);
     }
@@ -2116,16 +2111,12 @@ function BlockedUsersSection() {
   return (
     <div>
       <h3 className={SETTINGS_HEADING_CLASS}>
-        <Ban className="size-4" />
-        Blocked Users
-      </h3>
+        <Ban className="size-4" />{_copy("copy.34e1447eb1e2", { defaultValue: "Blocked Users" })}</h3>
       {isLoading ? (
         <div className="flex items-center gap-2 text-zinc-500 text-sm py-4">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Loading...
-        </div>
+          <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.47d2a515ef2f", { defaultValue: "Loading..." })}</div>
       ) : items.length === 0 ? (
-        <p className="text-zinc-500 text-sm py-2">You haven't blocked anyone.</p>
+        <p className="text-zinc-500 text-sm py-2">{_copy("copy.3aac05abe9c2", { defaultValue: "You haven't blocked anyone." })}</p>
       ) : (
         <div className="space-y-2">
           {items.map((user) => (
@@ -2156,15 +2147,11 @@ function BlockedUsersSection() {
                 className={cn(SETTINGS_CONTROL_CLASS, 'shrink-0')}
                 onClick={() => handleUnblock(user)}
                 loading={unblockingId === user.address}
-              >
-                Unblock
-              </Button>
+              >{_copy("copy.712da63171e0", { defaultValue: "Unblock" })}</Button>
             </div>
           ))}
           {blockData && blockData.total > items.length && (
-            <p className="text-zinc-500 text-xs text-center pt-2">
-              Showing {items.length} of {blockData.total} blocked users
-            </p>
+            <p className="text-zinc-500 text-xs text-center pt-2">{_copy("copy.7282e1fbb2c6", { defaultValue: "Showing " })}{items.length}{_copy("copy.a4282e4b2298", { defaultValue: " of " })}{blockData.total}{_copy("copy.87d3d0e14422", { defaultValue: " blocked users" })}</p>
           )}
         </div>
       )}
@@ -2366,6 +2353,7 @@ function brandGradient(colors: string[]): string {
 }
 
 function ThemeColorPicker({ theme }: { theme: string }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { themeHues, setThemeHue, brandColors, setBrandColors } = useAppTheme();
   const { user } = useAuth();
@@ -2529,7 +2517,7 @@ function ThemeColorPicker({ theme }: { theme: string }) {
           maxLength={7}
           spellCheck={false}
           placeholder={special && specialLabelKey ? t(`settings.themeColor${specialLabelKey}`) : undefined}
-          aria-label="Hex color code"
+          aria-label={_copy("copy.b295d3fadc18", { defaultValue: "Hex color code" })}
           onChange={(e) => {
             const next = e.target.value;
             setHexDraft(next);
@@ -2786,6 +2774,7 @@ function ContentSettings() {
 }
 
 function FreeAccessListSection() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthContext();
   const queryClient = useQueryClient();
@@ -2811,9 +2800,9 @@ function FreeAccessListSection() {
       queryClient.setQueryData<typeof freeAccessUsers>(['free-dm-access'], prev =>
         (prev ?? []).filter(u => u.address !== address)
       );
-      toast.success('Free access revoked');
+      toast.success(_copy("copy.dbadc4f1e698", { defaultValue: "Free access revoked" }));
     } catch {
-      toast.error('Failed to revoke access');
+      toast.error(_copy("copy.d461cbfcf242", { defaultValue: "Failed to revoke access" }));
     } finally {
       setRevokingAddress(null);
     }
@@ -3187,12 +3176,13 @@ function AdLoadRow() {
 }
 
 function BuyBotToggle() {
+  const { t: _copy } = _useCopy();
   const { isHidden, hide, show } = useBuyBotHidden();
   return (
     <SettingToggle
       icon={Bot}
-      title="Buy Bot Alerts"
-      description="Show buy bot transaction alerts in chat"
+      title={_copy("copy.62bdeec861d8", { defaultValue: "Buy Bot Alerts" })}
+      description={_copy("copy.654e331e74b2", { defaultValue: "Show buy bot transaction alerts in chat" })}
       defaultChecked={!isHidden}
       onCheckedChange={(checked) => (checked ? show() : hide())}
     />
@@ -3264,6 +3254,7 @@ function SocialLinkInput({
 }
 
 function AssetsSettings() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, connectionSource } = useAuthContext();
   const navigate = useNavigate();
@@ -3345,7 +3336,7 @@ function AssetsSettings() {
           as="button"
           anchor="wallet"
           icon={<Wallet />}
-          title="Wallet"
+          title={_copy("copy.d1c9a01d57e9", { defaultValue: "Wallet" })}
           onClick={() => navigate('/app/wallet')}
           action={<ExternalLink className="size-5 text-zinc-500" />}
         />
@@ -3354,15 +3345,15 @@ function AssetsSettings() {
         <SettingsRow
           anchor="gas-fees"
           icon={<Coins />}
-          title="Gas Fees"
+          title={_copy("copy.70f5f804b634", { defaultValue: "Gas Fees" })}
           description={isGasSponsored
-            ? 'Transaction gas fees are sponsored'
-            : 'You pay gas fees via your external wallet'}
+            ? _copy("copy.ec917e978281", { defaultValue: "Transaction gas fees are sponsored" })
+            : _copy("copy.4a367cdb8047", { defaultValue: "You pay gas fees via your external wallet" })}
           action={<span className={cn(
             'rounded-full px-2.5 py-1 text-xs font-semibold',
             isGasSponsored ? 'border border-white/20 bg-white/10 text-white' : 'border border-zinc-700 bg-zinc-800 text-zinc-400',
           )}>
-            {isGasSponsored ? 'Sponsored' : 'Self-paid'}
+            {isGasSponsored ? _copy("copy.c01d19506818", { defaultValue: "Sponsored" }) : _copy("copy.8fd493e5689e", { defaultValue: "Self-paid" })}
           </span>}
         />
 
@@ -3377,16 +3368,16 @@ function AssetsSettings() {
         <SettingsRow
           anchor="tip-network"
           icon={<Gem />}
-          title="Tip network"
-          description="Which chain your tips are paid from. Automatic uses whichever holds enough, Base first."
+          title={_copy("copy.39ea78d27b31", { defaultValue: "Tip network" })}
+          description={_copy("copy.faa60ebb3539", { defaultValue: "Which chain your tips are paid from. Automatic uses whichever holds enough, Base first." })}
           action={<SettingDrawerSelect
             value={tipNetwork}
             onValueChange={value => setTipNetwork(value as TipNetworkOption)}
-            title="Tip network"
+            title={_copy("copy.39ea78d27b31", { defaultValue: "Tip network" })}
             options={[
-              { value: 'auto', label: 'Automatic', description: 'Base if it covers the tip, otherwise BNB' },
-              { value: 'base', label: 'Always Base' },
-              { value: 'bnb', label: 'Always BNB' },
+              { value: 'auto', label: _copy("copy.d461a493a375", { defaultValue: "Automatic" }), description: _copy("copy.bcefe590e7f0", { defaultValue: "Base if it covers the tip, otherwise BNB" }) },
+              { value: 'base', label: _copy("copy.19e519a44d7f", { defaultValue: "Always Base" }) },
+              { value: 'bnb', label: _copy("copy.13a6b6ae9a0b", { defaultValue: "Always BNB" }) },
             ]}
           />}
         />
@@ -3408,7 +3399,7 @@ function AssetsSettings() {
       <Drawer open={walletDrawerOpen} onOpenChange={setWalletDrawerOpen}>
         <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
           <DrawerHeader className="sr-only">
-            <DrawerTitle>Wallet</DrawerTitle>
+            <DrawerTitle>{_copy("copy.d1c9a01d57e9", { defaultValue: "Wallet" })}</DrawerTitle>
           </DrawerHeader>
           <WalletMenuContent balance={coinBalance} onClose={() => setWalletDrawerOpen(false)} />
         </DrawerContent>
@@ -3587,7 +3578,7 @@ function MessagesSettings() {
             anchor="e2e-encryption"
             title={t('settings.e2eEncryption')}
             description={t('settings.e2eEncryptionDesc')}
-            action={<span className="text-sm font-medium text-zinc-300">{t('settings.automatic', 'Automatic')}</span>}
+            action={<span className="text-sm font-medium text-zinc-300">{t('settings.automatic', "Automatic")}</span>}
           />
           <SettingToggle
             icon={Filter}

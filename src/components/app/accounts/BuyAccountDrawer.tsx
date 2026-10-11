@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -47,6 +48,7 @@ interface Props {
 const ADDRESS_SHAPE = /^0x[0-9a-fA-F]{40}$/;
 
 export function BuyAccountDrawer({ listing, open, onClose }: Props) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const { getQuote, buy, stage } = useBuyAccount();
@@ -254,7 +256,7 @@ export function BuyAccountDrawer({ listing, open, onClose }: Props) {
               >
                 {busy && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {stage === 'paying'
-                  ? 'Confirming'
+                  ? _copy("copy.d978a5522ce4", { defaultValue: "Confirming" })
                   : stage === 'confirming'
                     ? t('accounts.transferringAccount')
                     : !isAuthenticated

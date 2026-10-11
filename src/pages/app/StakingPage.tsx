@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Staking Page
@@ -47,6 +48,7 @@ const UNSTAKE_COOLDOWN_DAYS = 12;
 const UNSTAKE_COOLDOWN_MS = UNSTAKE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
 
 function UnstakeCountdown({ timestamp }: { timestamp: number }) {
+  const { t: _copy } = _useCopy();
   const [now, setNow] = useState(Date.now());
   // This page lives in PersistentPageCache — without the route gate every
   // unstake row would tick a 1s re-render for the whole session while hidden.
@@ -65,9 +67,7 @@ function UnstakeCountdown({ timestamp }: { timestamp: number }) {
 
   if (remaining <= 0) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-400">
-        Ready
-      </span>
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-400">{_copy("copy.5fa7aac5375c", { defaultValue: "Ready" })}</span>
     );
   }
 
@@ -144,6 +144,7 @@ function StatCard({
 }
 
 export default function StakingPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const isStakeRouteActive = useIsStakeRouteActive();
@@ -351,7 +352,7 @@ export default function StakingPage() {
           ])).catch(() => {});
         }, 60_000);
       } else {
-        toast.error(t('toasts.transaction_reverted'), { description: 'The blockchain confirmed this transaction reverted.' });
+        toast.error(t('toasts.transaction_reverted'), { description: _copy("copy.6e39c3cc12e5", { defaultValue: "The blockchain confirmed this transaction reverted." }) });
       }
     } finally { checkingStake.current = false; }
   };
@@ -435,7 +436,7 @@ export default function StakingPage() {
       // Locked wallet: the unlock sheet and its toast are already up, and
       // nothing failed — this would just tell them to stop.
       if (!isWalletLockedError(err)) {
-        toast.info('Could not confirm the stake request', { description: 'Check your wallet activity before trying again. No failed transfer has been confirmed.' });
+        toast.info(_copy("copy.258c7d9af228", { defaultValue: "Could not confirm the stake request" }), { description: _copy("copy.f14adc6d4e07", { defaultValue: "Check your wallet activity before trying again. No failed transfer has been confirmed." }) });
       }
     } finally {
       sendingStake.current = false;
@@ -661,8 +662,8 @@ export default function StakingPage() {
 
   return (
     <div className="min-h-screen max-w-5xl mx-auto">
-      <SEOHead title="Stake tokens — Earn Rewards & Unlock Badges" description="Stake your DeHub tokens on DeHub to earn staking rewards, unlock staking badges and gain governance voting weight, with rewards funded by platform fees." url="https://dehub.io/stake" image="https://dehub.io/og/stake.jpg" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Token Staking', url: 'https://dehub.io/stake', description: 'Stake DeHub tokens to earn staking rewards and unlock badges on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">DeHub Staking — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.5095e609c2ed", { defaultValue: "Stake tokens — Earn Rewards & Unlock Badges" })} description={_copy("copy.6b104af6acd4", { defaultValue: "Stake your DeHub tokens on DeHub to earn staking rewards, unlock staking badges and gain governance voting weight, with rewards funded by platform fees." })} url="https://dehub.io/stake" image="https://dehub.io/og/stake.jpg" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Token Staking', url: 'https://dehub.io/stake', description: _copy("copy.b424c707e52c", { defaultValue: "Stake DeHub tokens to earn staking rewards and unlock badges on DeHub." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">{_copy("copy.710c2213de98", { defaultValue: "DeHub Staking — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland
         icon="staking"
         title={t('staking.title')}
@@ -733,8 +734,8 @@ export default function StakingPage() {
           {!isStaking && pendingStake && pendingStake.wallet.toLowerCase() === currentWallet?.toLowerCase() && (
             <div role="status" className="mb-4 rounded-xl border border-white/15 p-3 text-sm text-white/80">
               <p>{pendingStake.confirmed ? t('staking.pendingConfirmed', { amount: pendingStake.amount }) : t('staking.pendingSubmitted', { amount: pendingStake.amount })}</p>
-              <a className="underline" href={getExplorerUrl(pendingStake.hash, pendingStake.chainId === 56 ? 'BNB' : 'Base')} target="_blank" rel="noopener noreferrer">View transaction</a>
-              <button className="ml-4 underline" onClick={() => { void checkPendingStake(pendingStake); }}>Check again</button>
+              <a className="underline" href={getExplorerUrl(pendingStake.hash, pendingStake.chainId === 56 ? 'BNB' : 'Base')} target="_blank" rel="noopener noreferrer">{_copy("copy.5e377bdb4e78", { defaultValue: "View transaction" })}</a>
+              <button className="ml-4 underline" onClick={() => { void checkPendingStake(pendingStake); }}>{_copy("copy.fb7099ad8e81", { defaultValue: "Check again" })}</button>
               <button className="ml-4 underline" onClick={() => {
                 recordStakeEvent('Stake tracking dismissed by user', pendingStake);
                 clearPendingStake(pendingStake);
@@ -782,12 +783,12 @@ export default function StakingPage() {
 
           {/* Alternative manual deposit */}
           <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-white/40">
-            <span>Alternatively, send your tokens directly to</span>
+            <span>{_copy("copy.9901f888b899", { defaultValue: "Alternatively, send your tokens directly to" })}</span>
             <button
               type="button"
               onClick={() => {
                 navigator.clipboard.writeText(STAKING_ADDRESS);
-                toast.success('Deposit address copied!');
+                toast.success(_copy("copy.ced3de4ff643", { defaultValue: "Deposit address copied!" }));
               }}
               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-colors font-mono text-[10px]"
             >
@@ -853,7 +854,7 @@ export default function StakingPage() {
               <div className="flex items-center justify-between text-[11px]">
                 <span className="text-white/40">{t('staking.withdrawableNow')}</span>
                 <span className="text-white/70 font-medium">
-                  {formatNumber(userWithdrawable, 2)} <DhbCoin /> <span className="text-white/40">· BNB</span>
+                  {formatNumber(userWithdrawable, 2)} <DhbCoin /> <span className="text-white/40">{_copy("copy.ad9f9dcc4cd7", { defaultValue: "· BNB" })}</span>
                 </span>
               </div>
               {poolOnlyStake > 0 && (
@@ -878,7 +879,7 @@ export default function StakingPage() {
             className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 cursor-pointer hover:bg-white/[0.06] transition-colors relative"
             onClick={() => { setShowDeposits(!showDeposits); if (!showDeposits) fetchDeposits(); }}
           >
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">Deposits</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">{_copy("copy.1b34932b1eb9", { defaultValue: "Deposits" })}</p>
             <p className="text-sm font-bold text-white truncate">{formatNumber(userStaked)}</p>
             
           </div>
@@ -886,7 +887,7 @@ export default function StakingPage() {
             className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 cursor-pointer hover:bg-white/[0.06] transition-colors"
             onClick={() => { setShowWithdrawals(!showWithdrawals); if (!showWithdrawals) fetchWithdrawals(); }}
           >
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">Withdrawals</p>
+            <p className="text-[10px] text-white/40 uppercase tracking-wider">{_copy("copy.9a88b49480e7", { defaultValue: "Withdrawals" })}</p>
             <p className="text-sm font-bold text-white truncate">{formatNumber(userData?.totalUnstakeQueued ?? 0)}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 sm:p-4">
@@ -922,8 +923,8 @@ export default function StakingPage() {
           <div className="p-4 border-b border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div>
-                <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Your Deposits</h2>
-                <p className="text-xs text-white/30 mt-0.5">All your stake transactions</p>
+                <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{_copy("copy.a3b7dbe57071", { defaultValue: "Your Deposits" })}</h2>
+                <p className="text-xs text-white/30 mt-0.5">{_copy("copy.701ef1840612", { defaultValue: "All your stake transactions" })}</p>
               </div>
               <button
                 onClick={async (e) => {
@@ -939,17 +940,17 @@ export default function StakingPage() {
                       toast.success(`Found ${data.newRecords} new deposit${data.newRecords > 1 ? 's' : ''} on-chain`);
                       await fetchDeposits();
                     } else {
-                      toast.success('Deposits are up to date');
+                      toast.success(_copy("copy.7082f2b3815d", { defaultValue: "Deposits are up to date" }));
                     }
                   } catch (err) {
                     console.error('[Staking] Sync failed:', err);
-                    toast.error('Failed to sync deposits');
+                    toast.error(_copy("copy.2d240e231566", { defaultValue: "Failed to sync deposits" }));
                   }
                   setSyncingDeposits(false);
                 }}
                 disabled={syncingDeposits}
                 className="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-colors disabled:opacity-50"
-                title="Scan on-chain for missing deposits"
+                title={_copy("copy.5b5a9671e539", { defaultValue: "Scan on-chain for missing deposits" })}
               >
                 <RefreshCw className={cn("w-3.5 h-3.5", syncingDeposits && "animate-spin")} />
               </button>
@@ -961,17 +962,17 @@ export default function StakingPage() {
           {depositsLoading ? (
             <div className="p-8 text-center">
               <RefreshCw className="w-5 h-5 text-white/30 animate-spin mx-auto mb-2" />
-              <p className="text-xs text-white/30">Loading deposits…</p>
+              <p className="text-xs text-white/30">{_copy("copy.d5f1653b59aa", { defaultValue: "Loading deposits…" })}</p>
             </div>
           ) : !depositRecords.length ? (
-            <AppState icon="command" title="No deposits yet" description="Completed staking deposits will appear here." size="drawer" />
+            <AppState icon="command" title={_copy("copy.4574472bb474", { defaultValue: "No deposits yet" })} description={_copy("copy.cbfc01a6c13a", { defaultValue: "Completed staking deposits will appear here." })} size="drawer" />
           ) : (
             <div className="divide-y divide-white/5">
               <div className="hidden sm:grid grid-cols-4 gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
-                <span>Amount</span>
-                <span>Chain</span>
-                <span>Date</span>
-                <span className="text-right">Tx</span>
+                <span>{_copy("copy.49e96d7cdf58", { defaultValue: "Amount" })}</span>
+                <span>{_copy("copy.dae0896cbc2c", { defaultValue: "Chain" })}</span>
+                <span>{_copy("copy.99c40ab40592", { defaultValue: "Date" })}</span>
+                <span className="text-right">{_copy("copy.5b9e8d7c728d", { defaultValue: "Tx" })}</span>
               </div>
               {depositRecords.map((rec, idx) => {
                 const explorer = rec.chain === 'BNB'
@@ -1010,8 +1011,8 @@ export default function StakingPage() {
         >
           <div className="p-4 border-b border-white/5 flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">Your Withdrawals</h2>
-              <p className="text-xs text-white/30 mt-0.5">All your withdrawal transactions</p>
+              <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">{_copy("copy.a7b7e36d6fdf", { defaultValue: "Your Withdrawals" })}</h2>
+              <p className="text-xs text-white/30 mt-0.5">{_copy("copy.31a3711c4ab5", { defaultValue: "All your withdrawal transactions" })}</p>
             </div>
             <button onClick={() => setShowWithdrawals(false)} className="text-white/40 hover:text-white transition-colors">
               <X className="w-4 h-4" />
@@ -1020,17 +1021,17 @@ export default function StakingPage() {
           {withdrawalsLoading ? (
             <div className="p-8 text-center">
               <RefreshCw className="w-5 h-5 text-white/30 animate-spin mx-auto mb-2" />
-              <p className="text-xs text-white/30">Loading withdrawals…</p>
+              <p className="text-xs text-white/30">{_copy("copy.45c8ed5e9de7", { defaultValue: "Loading withdrawals…" })}</p>
             </div>
           ) : !withdrawalRecords.length ? (
-            <AppState icon="command" title="No withdrawals yet" description="Completed staking withdrawals will appear here." size="drawer" />
+            <AppState icon="command" title={_copy("copy.1fdecb2c9a54", { defaultValue: "No withdrawals yet" })} description={_copy("copy.50b2bdd7a1e5", { defaultValue: "Completed staking withdrawals will appear here." })} size="drawer" />
           ) : (
             <div className="divide-y divide-white/5">
               <div className="hidden sm:grid grid-cols-4 gap-2 px-5 py-2 text-xs text-white/30 uppercase tracking-wider">
-                <span>Amount</span>
-                <span>Chain</span>
-                <span>Date</span>
-                <span className="text-right">Tx</span>
+                <span>{_copy("copy.49e96d7cdf58", { defaultValue: "Amount" })}</span>
+                <span>{_copy("copy.dae0896cbc2c", { defaultValue: "Chain" })}</span>
+                <span>{_copy("copy.99c40ab40592", { defaultValue: "Date" })}</span>
+                <span className="text-right">{_copy("copy.5b9e8d7c728d", { defaultValue: "Tx" })}</span>
               </div>
               {withdrawalRecords.map((rec, idx) => {
                 const explorer = rec.chain === 'BNB'

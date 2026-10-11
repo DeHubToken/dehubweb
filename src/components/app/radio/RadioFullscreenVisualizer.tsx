@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Radio Fullscreen Visualizer
@@ -39,14 +41,14 @@ interface RadioFullscreenVisualizerProps {
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
-  { value: 'bars', label: 'Bars' },
-  { value: 'waveform', label: 'Wave' },
-  { value: 'circular', label: 'Radial' },
-  { value: 'mirror', label: 'Mirror' },
-  { value: 'rings', label: 'Rings' },
-  { value: 'pulse', label: 'Pulse' },
-  { value: 'terrain', label: 'Terrain' },
-  { value: 'orb', label: 'Orb' },
+  { value: 'bars', get label() { return _translateCopy("copy.f2c3526915d3", { defaultValue: "Bars" }); } },
+  { value: 'waveform', get label() { return _translateCopy("copy.43eb1b148ebb", { defaultValue: "Wave" }); } },
+  { value: 'circular', get label() { return _translateCopy("copy.02693d5af964", { defaultValue: "Radial" }); } },
+  { value: 'mirror', get label() { return _translateCopy("copy.90fade6fb78e", { defaultValue: "Mirror" }); } },
+  { value: 'rings', get label() { return _translateCopy("copy.bab4c75d0722", { defaultValue: "Rings" }); } },
+  { value: 'pulse', get label() { return _translateCopy("copy.f7a403c6cdf3", { defaultValue: "Pulse" }); } },
+  { value: 'terrain', get label() { return _translateCopy("copy.5dd6e0396c9d", { defaultValue: "Terrain" }); } },
+  { value: 'orb', get label() { return _translateCopy("copy.8483460e43ab", { defaultValue: "Orb" }); } },
 ];
 
 export function RadioFullscreenVisualizer({ 
@@ -54,6 +56,7 @@ export function RadioFullscreenVisualizer({
   onClose,
   getAnalyser 
 }: RadioFullscreenVisualizerProps) {
+  const { t: _copy } = _useCopy();
   const { currentStation, isPlaying } = useRadioPlayer();
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -305,9 +308,7 @@ export function RadioFullscreenVisualizer({
                   </div>
                   
                   <div>
-                    <p className="text-xs sm:text-sm text-zinc-400 uppercase tracking-wider mb-0.5">
-                      Now Playing
-                    </p>
+                    <p className="text-xs sm:text-sm text-zinc-400 uppercase tracking-wider mb-0.5">{_copy("copy.8b2ae991573c", { defaultValue: "Now Playing" })}</p>
                     <h2 className="text-lg sm:text-2xl font-bold text-white">
                       {currentStation.name}
                     </h2>
@@ -339,7 +340,7 @@ export function RadioFullscreenVisualizer({
                 
                 <div className="min-w-[120px] text-center">
                   <p className="text-white font-semibold text-lg">{STYLES[styleIndex].label}</p>
-                  <p className="text-zinc-500 text-xs">Visualization</p>
+                  <p className="text-zinc-500 text-xs">{_copy("copy.f6ec7f0c995b", { defaultValue: "Visualization" })}</p>
                 </div>
                 
                 <button
@@ -361,7 +362,7 @@ export function RadioFullscreenVisualizer({
                       : "bg-black/40 backdrop-blur-[24px] saturate-[180%] border-white/10 text-zinc-400 hover:text-white"
                   )}
                 >
-                  <BrandIcon src={lavaLampIcon} alt="Lava mode" className="w-4 h-4 invert" />
+                  <BrandIcon src={lavaLampIcon} alt={_copy("copy.99ad7da8e9da", { defaultValue: "Lava mode" })} className="w-4 h-4 invert" />
                 </button>
 
                 <Palette className="w-4 h-4 text-zinc-400" />

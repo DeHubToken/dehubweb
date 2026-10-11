@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Single Post Page
  * ================
@@ -500,16 +501,14 @@ function LivePostWithStatus({ liveData, post, chatSlot, immersive }: { liveData:
  * Processing state component for posts still being minted
  */
 function ProcessingState() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
         <Clock className="w-8 h-8 text-zinc-400 animate-pulse" />
       </div>
-      <h2 className="text-xl font-semibold text-white mb-2">Post is Processing</h2>
-      <p className="text-zinc-400 max-w-md">
-        This post is being minted on decentralized databases. 
-        Metadata is being validated and will be available shortly.
-      </p>
+      <h2 className="text-xl font-semibold text-white mb-2">{_copy("copy.5ef5143d3481", { defaultValue: "Post is Processing" })}</h2>
+      <p className="text-zinc-400 max-w-md">{_copy("copy.ed0b7f073c24", { defaultValue: "This post is being minted on decentralized databases. Metadata is being validated and will be available shortly." })}</p>
     </div>
   );
 }
@@ -518,13 +517,12 @@ function ProcessingState() {
  * Error state component for posts not found
  */
 function NotFoundState() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
       <ThemedIcon icon="posts" alt="" className="w-16 h-16 object-contain mb-4 opacity-80" />
-      <h2 className="text-xl font-semibold text-white mb-2">Post Not Found</h2>
-      <p className="text-zinc-400 max-w-md">
-        This post may have been removed or the link is incorrect.
-      </p>
+      <h2 className="text-xl font-semibold text-white mb-2">{_copy("copy.0a78f0f5908f", { defaultValue: "Post Not Found" })}</h2>
+      <p className="text-zinc-400 max-w-md">{_copy("copy.cc0a24992143", { defaultValue: "This post may have been removed or the link is incorrect." })}</p>
     </div>
   );
 }
@@ -566,6 +564,7 @@ function ImmersiveVideoHeader({
   showBack = true,
   onBack,
 }: ImmersiveVideoHeaderProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -604,7 +603,7 @@ function ImmersiveVideoHeader({
         onClick={handleBack}
         data-on-media
         className="h-8 w-8 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
-        aria-label="Go back"
+        aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
       >
         <ArrowLeft className="w-4 h-4 text-white" />
       </button>
