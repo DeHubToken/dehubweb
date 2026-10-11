@@ -2258,13 +2258,13 @@ function hreflangLinks(route, table) {
 /**
  * Where a crawler asking for ?hl= goes instead, or null when the request is
  * for a page that exists. hl=en, a language the route is not served in,
- * anything that is not a language code, and every ?hl= on a noindex page all
- * land on the bare URL — the one page they would otherwise duplicate.
+ * anything that is not a language code lands on the bare URL. A translated
+ * noindex page remains available to readers without joining the sitemap.
  */
-function unservedLocaleRedirect(url, route, table, noindex) {
+function unservedLocaleRedirect(url, route, table) {
   if (!url.searchParams.has('hl')) return null;
   const hl = requestedLocale(url);
-  if (hl && !noindex && servedLocales(route, table).includes(hl)) return null;
+  if (hl && servedLocales(route, table).includes(hl)) return null;
   return localizedUrl(route, 'en');
 }
 
@@ -2301,9 +2301,9 @@ function jsonLdText(s) {
 /**
  * The page in `hl`, or the English page carrying its cluster.
  *
- * A route served in no other language comes back untouched, and so does a
- * noindex page — annotating a page Google is told to drop only spends the
- * annotation. The bare page gains the cluster and keeps its own canonical. A
+ * A route served in no other language comes back untouched. A noindex page
+ * is translated for readers without gaining a search-language cluster. The
+ * bare indexable page gains the cluster and keeps its own canonical. A
  * translated page swaps the title, description, share-card text, heading,
  * breadcrumb, JSON-LD name and description, and the body between the
  * <!--hl-body--> markers its builder put around it; it declares its language
@@ -2313,10 +2313,12 @@ function jsonLdText(s) {
  */
 function localizePage(html, route, hl, table) {
   const langs = servedLocales(route, table);
-  if (!langs.length || NOINDEX_META.test(html)) return html;
+  if (!langs.length) return html;
+  const noindex = NOINDEX_META.test(html);
   const t = hl && langs.includes(hl) ? table[route][hl] : null;
-  let out = html.replace(/<link rel="alternate" hreflang="[^"]*" href="[^"]*">\n?/g, '').replace('</head>', () => `${hreflangLinks(route, table)}\n</head>`);
-  out = withOgLocale(out, t ? hl : 'en', ['en', ...langs]);
+  if (noindex && !t) return html;
+  let out = noindex ? html : html.replace(/<link rel="alternate" hreflang="[^"]*" href="[^"]*">\n?/g, '').replace('</head>', () => `${hreflangLinks(route, table)}\n</head>`);
+  out = withOgLocale(out, t ? hl : 'en', noindex ? [hl] : ['en', ...langs]);
   if (!t) return out;
   const en = table[route].en || {};
   const title = escHtml(t.title);
@@ -5372,7 +5374,7 @@ async function handleRequest(request, env, ctx) {
     if (!(resp.headers.get('Content-Type') || '').includes('text/html')) return resp;
     let html = stylePrerendered(await resp.text());
     const route = canonicalizePath(pathname).replace(/^\/docs\/blog\//, '/guides/');
-    if (resp.status === 200 && !NOINDEX_META.test(html)) {
+    if (resp.status === 200) {
       const table = await seoI18nTable(env, request.url);
       if (table[route]) {
         const redirect = unservedLocaleRedirect(url, route, table);
@@ -6276,7 +6278,7 @@ async function handleRequest(request, env, ctx) {
   // homepage duplicates. Serve real documentation text extracted at build.
   if (cleanPath === '/docs') {
     const table = await seoI18nTable(env, request.url);
-    const localeRedirect = unservedLocaleRedirect(url, '/docs', table, false);
+    const localeRedirect = unservedLocaleRedirect(url, '/docs', table);
     if (localeRedirect) return redirect301(localeRedirect);
     const docsHtml = buildDocsIndexHtml();
     return guard(new Response(docsHtml, { status: 200, headers: blogHeaders }));
@@ -6419,9 +6421,8 @@ async function handleRequest(request, env, ctx) {
     // in, otherwise the English page with its hreflang cluster (see
     // localizePage). Every other ?hl= — en included — 301s to the bare page.
     const table = await seoI18nTable(env, request.url);
-    const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table, MARKETING_PAGES[sectionKey].noindex);
+    const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table);
     if (localeRedirect) return redirect301(localeRedirect);
-    html = html;
     return guard(new Response(html, {
       status: 200,
       headers: MARKETING_PAGES[sectionKey].noindex
@@ -6999,9 +7000,8 @@ async function handleRequest(request, env, ctx) {
     // to ignore just spends the annotation.
     if (pathname === '/' && !isReferral) {
       const table = await seoI18nTable(env, request.url);
-      const localeRedirect = unservedLocaleRedirect(url, '/', table, false);
+      const localeRedirect = unservedLocaleRedirect(url, '/', table);
       if (localeRedirect) return redirect301(localeRedirect);
-      html = html;
     }
 
     const rendered = await guard(new Response(html, {
