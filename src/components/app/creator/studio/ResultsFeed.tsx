@@ -10,7 +10,7 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
  * result gives the actions that keep the work moving: animate a still, send it
  * to the timeline, run it again.
  */
-import { memo, Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, Suspense, lazy, useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import {
@@ -34,7 +34,8 @@ import { useGenerationStore, type GenerationJob } from '@/store/generationStore'
 import { useCreatorFolderStore } from '@/store/creatorFolderStore';
 import { FolderBar, FolderPicker } from './LibraryFolders';
 import { MeshThumbnailQueue } from './MeshThumbnailQueue';
-import { sendJobToEditor } from '@/lib/creator/sendToEditor';
+import { cancelEditorImport, getEditorImportIds, sendJobToEditor, subscribeToEditorImports } from '@/lib/creator/sendToEditor';
+import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { useCloseOnSurfaceSwitch } from '@/hooks/use-surface-switch';
 
 /** CSS aspect-ratio for a "w:h" string, falling back to 1:1. */
@@ -370,7 +371,8 @@ function ResultViewer({
   const { user } = useAuth();
   const remove = useGenerationStore((s) => s.remove);
   const retry = useGenerationStore((s) => s.retry);
-  const [sending, setSending] = useState(false);
+  const quota = useEditorQuota();
+  const sending = useSyncExternalStore(subscribeToEditorImports, getEditorImportIds).includes(job.id);
   const save = useGenerationStore((s) => s.save);
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
@@ -412,18 +414,14 @@ function ResultViewer({
   }, [onClose]);
 
   const handleSend = useCallback(async () => {
-    setSending(true);
-    try {
-      const id = await sendJobToEditor(job, { wallet });
-      if (id) {
-        toast.success(t('creator.addedToTimeline'));
-        onClose();
-        onOpenEditor();
-      }
-    } finally {
-      setSending(false);
+    const id = await sendJobToEditor(job, { wallet,
+      badgeBalance: quota.badgeBalance, username: quota.username });
+    if (id) {
+      toast.success(t('creator.addedToTimeline'));
+      onClose();
+      onOpenEditor();
     }
-  }, [job, wallet, onClose, onOpenEditor, t]);
+  }, [job, wallet, quota.badgeBalance, quota.username, onClose, onOpenEditor, t]);
 
   /**
    * The `download` attribute is ignored for cross-origin URLs, and every video
@@ -644,8 +642,7 @@ function ResultViewer({
                 {job.kind !== 'model3d' && !!job.url && (
                   <button
                     type="button"
-                    onClick={handleSend}
-                    disabled={sending}
+                    onClick={sending ? () => cancelEditorImport(job.id) : handleSend}
                     className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2.5 text-[13px] font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {sending ? (
@@ -653,7 +650,7 @@ function ResultViewer({
                     ) : (
                       <Scissors className="h-4 w-4" />
                     )}
-                    {t(sending ? 'creator.sending' : 'creator.editInTimeline')}
+                    {t(sending ? 'common.cancel' : 'creator.editInTimeline')}
                   </button>
                 )}
 

@@ -7,7 +7,7 @@ import { importOneFile } from '@/lib/editor/importFiles';
 
 const state = vi.hoisted(() => ({
   auth: { isAuthenticated: true },
-  quota: { overQuota: false, walletAddress: 'wallet', refetchUsage: vi.fn().mockResolvedValue(undefined) },
+  quota: { overQuota: false, walletAddress: 'wallet', badgeBalance: 12000000, username: 'maldoteth', refetchUsage: vi.fn().mockResolvedValue(undefined) },
   generations: { startImage: vi.fn(), startVideo: vi.fn() },
 }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }) }));
@@ -46,6 +46,7 @@ describe('reviewing voice generation in the editor', () => {
     const file = vi.mocked(importOneFile).mock.calls[0][0];
     expect(file.type).toBe('audio/wav');
     expect(file.name).toMatch(/\.wav$/);
+    expect(vi.mocked(importOneFile).mock.calls[0][1]).toEqual({ wallet: 'wallet', badgeBalance: 12000000, username: 'maldoteth' });
     expect(generateAudio).toHaveBeenCalledWith({ text: 'Keep every word, including the last sentence.', voiceId: 'voice' });
     await waitFor(() => expect(screen.getByLabelText('Prompt')).toHaveValue(''));
   });
