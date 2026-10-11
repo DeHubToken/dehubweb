@@ -13,7 +13,11 @@ function Harness() {
   return <div><button data-swipe-back onClick={back}>Back</button><div data-testid="surface" /></div>;
 }
 const touch = (type: string, x: number, y: number, count = 1) => {
-  const point = { identifier: 7, clientX: x, clientY: y };
+  const point: Touch = {
+    identifier: 7, clientX: x, clientY: y, pageX: x, pageY: y,
+    screenX: x, screenY: y, force: 1, radiusX: 1, radiusY: 1,
+    rotationAngle: 0, target: document.body,
+  };
   fireEvent(document.querySelector('[data-testid="surface"]') ?? document.body, new TouchEvent(type, {
     bubbles: true, cancelable: true,
     touches: type === 'touchend' ? [] : Array(count).fill(point), changedTouches: [point],
