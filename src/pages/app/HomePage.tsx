@@ -1004,6 +1004,7 @@ export default function HomePage() {
                   width: homeTabRect.width,
                   height: homeTabRect.height,
                 }}
+                data-no-quick-actions
                 onPointerDown={(event) => { homeLongPress.begin(event); handleHomeDragStart(event); }}
                 onPointerMove={(event) => { homeLongPress.move(event); if (!homeLongPress.fired.current) handleHomeDragMove(event); }}
                 onPointerUp={() => { homeLongPress.cancel(); handleHomeDragEnd(); }}

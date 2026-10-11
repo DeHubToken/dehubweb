@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { NotificationsDrawer } from './NotificationsDrawer';
+import { QuickActionsHost } from './QuickActionsHost';
 import React, { Suspense, useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
 import { Outlet, useLocation, useMatch } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
@@ -507,6 +508,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       </div>
       
       <NotificationsDrawer />
+      <QuickActionsHost />
       <MobileBottomNav />
       {/* Slides each page's sticky nav pill away with the header and bottom
           nav — one subscription for the whole app, applied in CSS. */}
