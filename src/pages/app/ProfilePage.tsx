@@ -271,7 +271,7 @@ export default function ProfilePage() {
     // The pill pins at the very top at every width: phones have no top bar
     // off the home feed (index.css, data-no-top-bar).
     const obs = new IntersectionObserver(
-      ([entry]) => setIsTabsStuck(!entry.isIntersecting),
+      ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 60)),
       { rootMargin: '-60px 0px 0px 0px', threshold: 0 }
     );
     obs.observe(el);
