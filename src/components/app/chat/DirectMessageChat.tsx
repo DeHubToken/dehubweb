@@ -1743,8 +1743,11 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
       });
     }
 
-    // Now send the actual message (with txHash so server unlocks it)
-    return new Promise<boolean>((resolve) => sendMessageMutation.mutate(
+    // Now send the actual message (with txHash so server unlocks it).
+    // mutateAsync, not mutate with per-call callbacks: those are dropped when
+    // another send or a call event starts first, which left the composer
+    // waiting forever with text that had already gone out.
+    return sendMessageMutation.mutateAsync(
       {
         content,
         msgType: type,
@@ -1755,18 +1758,18 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
         replyTo: replyingTo?._id,
         replyPreview,
       },
-      {
-        onSuccess: (data) => {
+    ).then(
+        (data) => {
           // The held fee has now been spent on a message that went out.
           paidTxHashRef.current = null;
           setReplyTarget(current => current?._id === replyingTo?._id ? null : current);
-          resolve(true);
           if (resolvedConversationId.startsWith('new_') && data.conversation) {
             setResolvedConversationId(data.conversation);
           }
           setTimeout(scrollToBottom, 100);
+          return true;
         },
-        onError: (err) => {
+        (err) => {
           /*
            * The composer cleared itself the moment Send was pressed, so a
            * failure here used to destroy the message outright. Put the words
@@ -1776,7 +1779,6 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
            * why the toast distinguishes the two cases.
            */
           const restored = content.trim();
-          resolve(false);
           if (feeTxHash && restored) {
             // The fee is already on-chain. Hold it against this exact message
             // so pressing Send again reuses that payment rather than charging
@@ -1791,9 +1793,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText, d
                 ? `${reason} Please attach it again.`
                 : reason,
           );
+          return false;
         },
-      }
-    ));
+      );
   };
 
   const handleDeleteConversation = () => {
