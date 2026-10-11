@@ -106,7 +106,7 @@ export function FeedIslandCapsule({
           aria-label={isAuthenticated ? _copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
           className="flex shrink-0 items-center justify-center px-5"
         >
-          <span className="inline-flex translate-y-[2.5px] scale-[1.15]">
+          <span className="inline-flex">
             <FeedRefreshLogo>
               <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
             </FeedRefreshLogo>
