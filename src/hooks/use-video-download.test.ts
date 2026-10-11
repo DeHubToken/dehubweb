@@ -72,4 +72,23 @@ describe("video download terminal notifications", () => {
     await act(async () => { await result.current(request); });
     expect(mocks.success).toHaveBeenCalledWith("editor.export.done", terminal);
   });
+
+  it("does not let a completed notification cancel a subsequent active download", async () => {
+    mocks.render.mockResolvedValueOnce(output());
+    const { result } = renderHook(useVideoDownload);
+    await act(async () => { await result.current(request); });
+    const oldCancel = mocks.loading.mock.calls[0][1].action.onClick;
+    let signal!: AbortSignal;
+    mocks.render.mockImplementation((_request, currentSignal: AbortSignal) => {
+      signal = currentSignal;
+      return new Promise((_resolve, reject) => currentSignal.addEventListener("abort", () => reject(new DOMException("Cancelled", "AbortError")), { once: true }));
+    });
+    const pending = result.current(request);
+    await vi.waitFor(() => expect(mocks.render).toHaveBeenCalledTimes(2));
+    oldCancel();
+    expect(signal.aborted).toBe(false);
+    mocks.loading.mock.calls.at(-1)![1].action.onClick();
+    await act(async () => { await pending; });
+    expect(mocks.info).toHaveBeenCalledWith("editor.export.cancelled", terminal);
+  });
 });
