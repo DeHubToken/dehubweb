@@ -19,8 +19,9 @@ export interface PostStageValue {
   quoteCount: number;
   /** Plain reposts of this post (quotes not included). */
   repostCount: number;
-  /** The post card supplies its existing options drawer to the comments header. */
+  /** The post card supplies its existing options drawer to the creator row. */
   registerOptions?: (open: (() => void) | null) => void;
+  openOptions?: () => void;
 }
 
 export const PostStageContext = createContext<PostStageValue | null>(null);

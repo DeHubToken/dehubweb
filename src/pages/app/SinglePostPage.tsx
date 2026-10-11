@@ -1137,6 +1137,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const stageValue = useMemo<PostStageValue>(() => ({
     onBack: goBack,
     registerOptions: registerPostOptions,
+    openOptions: postOptions ?? undefined,
     openComments: () => {
       setShowPageComments(true);
       setPageCommentsInitialTab('replies');
@@ -1154,7 +1155,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     },
     quoteCount: Number(post?.quotes ?? 0) || 0,
     repostCount: Number(post?.totalReposts || post?.reposts || 0) || 0,
-  }), [goBack, registerPostOptions, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
+  }), [goBack, registerPostOptions, postOptions, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
 
   const pageComments = post && id ? (
     <CommentsWrapper
@@ -1216,7 +1217,6 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               forceInline
               stage
               stageCount={commentCount}
-              onStageOptions={postOptions ?? undefined}
               onStageTabChange={setPageCommentsInitialTab}
             />
           }
