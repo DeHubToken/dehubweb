@@ -176,7 +176,7 @@ describe('the stage page shell', () => {
       let tint = false;
       rule.walkDecls((d) => {
         if (d.prop === 'backdrop-filter' && /blur\(28px\)/.test(d.value)) blur = true;
-        if (d.prop === 'background' && /color-mix\(.*80%, transparent\)/.test(d.value)) tint = true;
+        if (d.prop === 'background' && /color-mix\(.*20%, transparent\)/.test(d.value)) tint = true;
       });
       if (blur && tint) composerGlass = true;
     });
@@ -192,5 +192,14 @@ describe('the stage page shell', () => {
     expect(src).toContain('? "fixed inset-x-0 bottom-0');
     // Portalled, so a theme's filtered page frame cannot re-anchor `fixed`.
     expect(src).toContain('createPortal(el, document.body)');
+    expect(src).not.toContain('<div data-stage-composer-fade');
+  });
+
+  it('keeps image post options below the photo and Back in the pinned strip', () => {
+    const image = readFileSync('src/components/app/cards/ImageCard.tsx', 'utf8');
+    expect(image).not.toContain('<StageMediaChrome');
+    expect(image).toContain('<PostHeaderOptionsButton');
+    expect(image).toContain('{isImmersive && headerRow}');
+    expect(image).not.toContain("stage ? 'hidden'");
   });
 });

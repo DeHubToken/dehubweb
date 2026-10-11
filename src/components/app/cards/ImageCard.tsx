@@ -97,7 +97,6 @@ import {
 } from '@/components/ui/drawer';
 import type { ImagePost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
-import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
@@ -898,9 +897,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         badgeBalance={post.creatorBadgeBalance}
       />
       )}
-      {/* On the phone post page these live on the picture (StageMediaChrome);
-          the sheet below stays mounted for them. */}
-      <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
+      {/* Image post options sit below the picture; Back appears in the pinned strip. */}
+      <div className={cn('flex items-center gap-1 pb-2', stage && 'justify-end')}>
         {isOwnPost && (
           <button
             onClick={() => setShowBoostModal(true)}
@@ -1056,13 +1054,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
       <div data-image-media className="relative">
-        {stage && (
-          <StageMediaChrome
-            onBack={stage.onBack}
-            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            onBoost={isOwnPost && postTokenId ? () => setShowBoostModal(true) : undefined}
-          />
-        )}
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}
