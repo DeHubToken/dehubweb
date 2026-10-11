@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -37,6 +38,7 @@ export function ImagePaywallModal({
   isGenerating = false,
   quantity = 1,
 }: ImagePaywallModalProps) {
+  const { t: _copy } = _useCopy();
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const navigate = useNavigate();
@@ -77,7 +79,7 @@ export function ImagePaywallModal({
     try {
       toast.loading(t('tokenPaywall.paying', { amount: formatDhb(costDhb) }), { id: 'image-gen-payment' });
       const txHash = await payForJob(costDhb);
-      toast.success('Payment confirmed. Generating...', { id: 'image-gen-payment' });
+      toast.success(_copy("copy.0b8e8c184964", { defaultValue: "Payment confirmed. Generating..." }), { id: 'image-gen-payment' });
       onConfirm(txHash);
     } catch (err) {
       toast.dismiss('image-gen-payment');
@@ -95,12 +97,8 @@ export function ImagePaywallModal({
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
-            <ImageIcon className="w-5 h-5 text-cyan-400" />
-            Generate Image
-          </DialogTitle>
-          <DialogDescription className="text-zinc-400">
-            Select a model and confirm payment
-          </DialogDescription>
+            <ImageIcon className="w-5 h-5 text-cyan-400" />{_copy("copy.0f44b5601ade", { defaultValue: "Generate Image" })}</DialogTitle>
+          <DialogDescription className="text-zinc-400">{_copy("copy.a16541cb1ea8", { defaultValue: "Select a model and confirm payment" })}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
@@ -166,17 +164,17 @@ export function ImagePaywallModal({
           <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">
               <span className="text-zinc-400">
-                {count > 1 ? `Image Cost (${count} × $${unitCostUsd.toFixed(2)})` : 'Image Cost'}
+                {count > 1 ? _copy("copy.4b545391239a", { defaultValue: "Image Cost ({{value1}} × ${{value2}})", value1: count, value2: unitCostUsd.toFixed(2) }) : _copy("copy.b4f74fcb39e3", { defaultValue: "Image Cost" })}
               </span>
               <span className="text-zinc-300">${costUsd.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-400">Staker Discount</span>
+              <span className="text-zinc-400">{_copy("copy.6689b99d8132", { defaultValue: "Staker Discount" })}</span>
               <span className="text-white font-bold">0%</span>
             </div>
             <div className="border-t border-zinc-700 pt-3">
               <div className="flex items-center justify-between">
-                <span className="text-zinc-300 font-medium">Total</span>
+                <span className="text-zinc-300 font-medium">{_copy("copy.c9b3c38247f7", { defaultValue: "Total" })}</span>
                 <span className="text-white font-semibold">${costUsd.toFixed(2)}</span>
               </div>
             </div>
@@ -187,7 +185,7 @@ export function ImagePaywallModal({
             {isQuoting ? (
               <div className="flex items-center justify-center py-2">
                 <Loader2 className="w-5 h-5 animate-spin text-cyan-400" />
-                <span className="ml-2 text-zinc-400">Pricing this run...</span>
+                <span className="ml-2 text-zinc-400">{_copy("copy.b480f1c3b70b", { defaultValue: "Pricing this run..." })}</span>
               </div>
             ) : (
               <>
@@ -228,16 +226,12 @@ export function ImagePaywallModal({
           </div>
 
           {count > 1 && (
-            <p className="text-xs text-zinc-400 text-center">
-              All {count} images are charged now and generate independently. If one fails, the
-              others still run.
-            </p>
+            <p className="text-xs text-zinc-400 text-center">{_copy("copy.6b2fd69ca13a", { defaultValue: "All " })}{count}{_copy("copy.a11c0b1d6445", { defaultValue: " images are charged now and generate independently. If one fails, the others still run." })}</p>
           )}
 
           {needsTokens && !isQuoting && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
-              <p className="text-red-400 text-sm text-center">
-                This costs {formatDhb(costDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} /> and you hold {formatDhb(walletDhb)}.
+              <p className="text-red-400 text-sm text-center">{_copy("copy.27c7325ba6f7", { defaultValue: "This costs " })}{formatDhb(costDhb)} <DhbCoin label={t('buyCoins.tokensUnit')} />{_copy("copy.3d717322f7c9", { defaultValue: " and you hold " })}{formatDhb(walletDhb)}.
               </p>
             </div>
           )}
@@ -250,9 +244,7 @@ export function ImagePaywallModal({
             className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700"
             onClick={() => onOpenChange(false)}
             disabled={isGenerating || isPaying}
-          >
-            Cancel
-          </Button>
+          >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           <Button
             variant="glass"
             className="flex-1 font-medium"
@@ -261,14 +253,10 @@ export function ImagePaywallModal({
           >
             {isPaying ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Paying...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
             ) : isGenerating ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
             ) : needsTokens ? (
               t('nav.buyDhb')
             ) : (

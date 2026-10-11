@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -25,6 +26,7 @@ interface CreateEventDrawerProps {
 }
 
 export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEventDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, user } = useAuth();
   const createEvent = useCreateEvent();
   const { t } = useTranslation();
@@ -130,7 +132,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
             <Label className="text-zinc-400 text-xs">{t('events.coverImage')}</Label>
             <label className="mt-1 flex items-center justify-center h-32 rounded-xl border border-dashed border-white/10 cursor-pointer hover:bg-white/[0.03] transition-colors overflow-hidden">
               {coverPreview ? (
-                <img src={coverPreview} alt="Cover" className="w-full h-full object-cover" />
+                <img src={coverPreview} alt={_copy("copy.fa8d84566676", { defaultValue: "Cover" })} className="w-full h-full object-cover" />
               ) : (
                 <div className="flex flex-col items-center text-zinc-500">
                   <ImagePlus className="w-6 h-6 mb-1" />
@@ -277,7 +279,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
             <label className="flex items-center justify-between cursor-pointer">
               <div className="flex items-center gap-2">
-                <img src={dehubCoin} alt="Coins" className="w-5 h-5" />
+                <img src={dehubCoin} alt={_copy("copy.7ae57d9d0e8c", { defaultValue: "Coins" })} className="w-5 h-5" />
                 <span className="text-sm font-medium text-white">{t('events.chargeEntryFee')}</span>
               </div>
               <Switch checked={hasGateFee} onCheckedChange={setHasGateFee} />

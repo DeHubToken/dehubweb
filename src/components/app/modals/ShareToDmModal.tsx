@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Share To DM Modal
@@ -59,6 +60,7 @@ function perMessageFeeOf(user: DeHubUser | undefined): number {
 type RowStatus = 'idle' | 'sending' | 'sent';
 
 export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps) {
+  const { t: _copy } = _useCopy();
   const [caption, setCaption] = useSurfaceDraft("components/app/modals/ShareToDmModal.tsx:caption", '', url);
   const [searchInput, setSearchInput] = useSurfaceDraft("components/app/modals/ShareToDmModal.tsx:searchInput", '', url);
   const search = useDebouncedValue(searchInput, 300);
@@ -193,7 +195,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
         onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}
       >
         <DrawerHeader className="relative">
-          <DrawerTitle className="text-white/90 font-semibold">Send in a message</DrawerTitle>
+          <DrawerTitle className="text-white/90 font-semibold">{_copy("copy.20e392c29da3", { defaultValue: "Send in a message" })}</DrawerTitle>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
@@ -211,7 +213,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
           <Input
             value={caption}
             onChange={(e) => setCaption(e.target.value.slice(0, 500))}
-            placeholder="Add a message (optional)"
+            placeholder={_copy("copy.0e4633fab693", { defaultValue: "Add a message (optional)" })}
             className="bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl"
           />
 
@@ -221,7 +223,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
             <Input
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search people…"
+              placeholder={_copy("copy.73913e8faf3f", { defaultValue: "Search people…" })}
               className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl"
             />
           </div>
@@ -237,10 +239,10 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
             {filteredConversations.map((conv) => {
               const u = conv.otherUser;
               const key = `conv:${conv.id}`;
-              const status = rowStatus[key] || 'idle';
+              const status = rowStatus[key] || "idle";
               const avatarUrl = buildAvatarUrl(u?.address || '', u?.avatarImageUrl || u?.avatarUrl);
               const name = u?.displayName || u?.username ||
-                (u?.address ? `${u.address.slice(0, 6)}...${u.address.slice(-4)}` : 'User');
+                (u?.address ? `${u.address.slice(0, 6)}...${u.address.slice(-4)}` : _copy("copy.b512d97e7cbf", { defaultValue: "User" }));
               const fee = perMessageFeeOf(u) || (conv.dmFee?.required && !conv.dmFee.hasFreeAccess ? conv.dmFee.fee : 0);
               return (
                 <RecipientRow
@@ -260,16 +262,14 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
 
             {/* New users from search */}
             {newUserResults.length > 0 && (
-              <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-medium px-1 pt-3 pb-1">
-                Other people
-              </p>
+              <p className="text-zinc-500 text-[11px] uppercase tracking-wider font-medium px-1 pt-3 pb-1">{_copy("copy.5460ee7363b2", { defaultValue: "Other people" })}</p>
             )}
             {newUserResults.map((user) => {
               const key = `user:${user.address || user._id}`;
-              const status = rowStatus[key] || 'idle';
+              const status = rowStatus[key] || "idle";
               const avatarPath = extractAvatarPath(user);
               const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
-              const name = user.displayName || user.display_name || user.username || 'User';
+              const name = user.displayName || user.display_name || user.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" });
               return (
                 <RecipientRow
                   key={key}
@@ -288,13 +288,11 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
 
             {search.trim().length >= 2 && isSearchingUsers && (
               <div className="flex items-center justify-center gap-2 py-4 text-zinc-500 text-sm">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Searching…
-              </div>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.c31723ab3302", { defaultValue: "Searching…" })}</div>
             )}
 
             {!convosLoading && !isSearchingUsers && !hasResults && (
-              <AppState icon={search.trim() ? 'search' : 'messages'} title={search.trim() ? 'No people found' : 'No conversations yet'} description={search.trim() ? 'Try a different search.' : 'Search for someone above to start a conversation.'} kind={search.trim() ? 'search-empty' : 'empty'} size="compact" />
+              <AppState icon={search.trim() ? 'search' : 'messages'} title={search.trim() ? _copy("copy.ea574034aa5a", { defaultValue: "No people found" }) : _copy("copy.0d60084f056e", { defaultValue: "No conversations yet" })} description={search.trim() ? _copy("copy.2e6d79de50dc", { defaultValue: "Try a different search." }) : _copy("copy.47ca5ef7eac6", { defaultValue: "Search for someone above to start a conversation." })} kind={search.trim() ? 'search-empty' : 'empty'} size="compact" />
             )}
           </div>
         </div>
@@ -325,6 +323,7 @@ function RecipientRow({
   status: RowStatus;
   onSend: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   return (
     <div className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] transition-colors">
       <Avatar className="w-10 h-10">
@@ -349,8 +348,7 @@ function RecipientRow({
         {fee > 0 && (
           <p className="text-[11px] text-amber-400 mt-0.5 flex items-center gap-1">
             <Gem className="w-3 h-3" />
-            {fee.toLocaleString()} <DhbCoin /> to message
-          </p>
+            {fee.toLocaleString()} <DhbCoin />{_copy("copy.cf92bc9b461f", { defaultValue: " to message" })}</p>
         )}
       </div>
       <button
@@ -366,11 +364,11 @@ function RecipientRow({
         {status === 'sending' ? (
           <Loader2 className="w-3.5 h-3.5 animate-spin" />
         ) : status === 'sent' ? (
-          <><Check className="w-3.5 h-3.5" /> Sent</>
+          <><Check className="w-3.5 h-3.5" />{_copy("copy.55e8d6528d42", { defaultValue: " Sent" })}</>
         ) : fee > 0 ? (
-          'Open chat'
+          _copy("copy.0600175af842", { defaultValue: "Open chat" })
         ) : (
-          <><Send className="w-3.5 h-3.5" /> Send</>
+          <><Send className="w-3.5 h-3.5" />{_copy("copy.72f38da4fe92", { defaultValue: " Send" })}</>
         )}
       </button>
     </div>

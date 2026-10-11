@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stage Link Embed
  * ================
@@ -41,6 +42,7 @@ interface StageLinkEmbedProps {
 }
 
 export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: StageLinkEmbedProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -127,7 +129,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/10">
               <Calendar className="w-3 h-3 text-zinc-300" />
               <span className="text-zinc-300 text-[11px] font-medium">
-                {isOverdue ? 'STARTING SOON' : 'UPCOMING STAGE'}
+                {isOverdue ? _copy("copy.c1c8f6c1d828", { defaultValue: "STARTING SOON" }) : _copy("copy.2f7e24392d9c", { defaultValue: "UPCOMING STAGE" })}
               </span>
             </span>
           )}
@@ -158,8 +160,7 @@ export function StageLinkEmbed({ stageId, stageShortId, fallback = null }: Stage
             <Calendar className="w-3 h-3 shrink-0" />
             <span>{format(startsAt, 'EEE, MMM d · h:mm a')}</span>
             {!isOverdue && (
-              <span className="text-zinc-500">
-                · in {formatDistanceToNowStrict(startsAt)}
+              <span className="text-zinc-500">{_copy("copy.1345f685c721", { defaultValue: "· in " })}{formatDistanceToNowStrict(startsAt)}
               </span>
             )}
           </p>

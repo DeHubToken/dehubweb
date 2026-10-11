@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Event Gate Payment Hook
  * =======================
@@ -51,6 +52,7 @@ export function useEventGatePayment({
   amount,
   onSuccess,
 }: UseEventGatePaymentOptions) {
+  const { t: _copy } = _useCopy();
   const [isPaying, setIsPaying] = useState(false);
   const { walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
@@ -64,7 +66,7 @@ export function useEventGatePayment({
 
     if (walletAddress.toLowerCase() === creatorAddress.toLowerCase()) {
       // Creator doesn't need to pay their own gate
-      toast.info("You're the event creator — no fee needed!");
+      toast.info(_copy("copy.66e4dac72b40", { defaultValue: "You're the event creator — no fee needed!" }));
       return;
     }
 
@@ -105,7 +107,7 @@ export function useEventGatePayment({
     } finally {
       setIsPaying(false);
     }
-  }, [walletAddress, creatorAddress, amount, eventId, chainId, openLoginModal, onSuccess, queryClient]);
+  }, [walletAddress, creatorAddress, amount, eventId, chainId, openLoginModal, onSuccess, queryClient, _copy]);
 
   return { pay, isPaying };
 }

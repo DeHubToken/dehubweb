@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Shipped Feature Notification Modal
  * ===================================
@@ -17,6 +18,7 @@ import { useUnnotifiedShippedFeatures, useMarkShippedNotified, CATEGORY_LABELS }
 import { getShippedFeatureDestination } from '@/lib/feature-shipped-destination';
 
 export function ShippedFeatureNotificationModal() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress, requiresUsername } = useAuth();
   const navigate = useNavigate();
   const { data: shippedItems } = useUnnotifiedShippedFeatures();
@@ -72,7 +74,7 @@ export function ShippedFeatureNotificationModal() {
             </div>
             <button
               type="button"
-              aria-label="Close shipped request notification"
+              aria-label={_copy("copy.bdd4f5015e96", { defaultValue: "Close shipped request notification" })}
               onClick={handleDismiss}
               className="text-zinc-500 hover:text-white transition-colors p-1"
             >
@@ -81,10 +83,8 @@ export function ShippedFeatureNotificationModal() {
           </div>
 
           <div className="px-5 pt-3 pb-5">
-            <h2 className="text-white font-bold text-lg mb-1.5">Your feedback shipped!</h2>
-            <p className="text-zinc-400 text-sm leading-relaxed mb-4">
-              Thanks for helping make DeHub better — {isPlural ? `${shippedItems.length} things you asked for are` : 'something you asked for is'} now live:
-            </p>
+            <h2 className="text-white font-bold text-lg mb-1.5">{_copy("copy.8f3dc69e83c4", { defaultValue: "Your feedback shipped!" })}</h2>
+            <p className="text-zinc-400 text-sm leading-relaxed mb-4">{_copy("copy.1164d7bbddd1", { defaultValue: "Thanks for helping make DeHub better — " })}{isPlural ? _copy("copy.b96359f1f31b", { defaultValue: "{{value1}} things you asked for are", value1: shippedItems.length }) : _copy("copy.622c73f8d79f", { defaultValue: "something you asked for is" })}{_copy("copy.3b8d0bc452b6", { defaultValue: " now live:" })}</p>
 
             <div className="flex flex-col gap-2 mb-5 max-h-48 overflow-y-auto">
               {shippedItems.map((item) => (
@@ -113,15 +113,13 @@ export function ShippedFeatureNotificationModal() {
                 )}
                 className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-zinc-200 transition-all"
               >
-                {isPlural ? 'View shipped requests' : 'Check it out'}
+                {isPlural ? _copy("copy.20d4214b9d4b", { defaultValue: "View shipped requests" }) : _copy("copy.da4c7c208cf4", { defaultValue: "Check it out" })}
               </button>
               <button
                 type="button"
                 onClick={handleDismiss}
                 className="px-4 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white transition-colors"
-              >
-                Thanks!
-              </button>
+              >{_copy("copy.1aa7b1c1d5fb", { defaultValue: "Thanks!" })}</button>
             </div>
           </div>
         </motion.div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Loader2, Music, Pause, Play, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -50,6 +51,7 @@ function useProgress(audioRef: RefObject<HTMLAudioElement | null> | undefined, a
 const clock = (seconds: number) => `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
 
 export function SoundtrackControl({ title, creator, playing, loading, error, toggle, audioRef, layout = 'overlay' }: Props) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const action = error ? t('explorePage.retry') : loading ? t('common.cancel') : playing ? t('audioPost.pause') : t('audioPost.play');
   const name = title || t('feed.music');
@@ -130,7 +132,7 @@ export function SoundtrackControl({ title, creator, playing, loading, error, tog
         <div
           role="slider"
           tabIndex={0}
-          aria-label="Seek"
+          aria-label={_copy("copy.67ae3405bcd4", { defaultValue: "Seek" })}
           aria-valuemin={0}
           aria-valuemax={Math.round(duration)}
           aria-valuenow={Math.round(scrub === null ? current : scrub * duration)}

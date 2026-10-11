@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * AssistantReplyCard
  * ==================
@@ -30,11 +31,12 @@ const formatDate = (date: Date) => {
 };
 
 export function AssistantReplyCard({ content, timestamp, replyToName }: AssistantReplyCardProps) {
+  const { t: _copy } = _useCopy();
   return (
     <div className="flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group">
       <div className="flex-shrink-0">
         <Avatar className="w-8 h-8">
-          <AvatarImage src={assistantAvatar} alt="assistant" />
+          <AvatarImage src={assistantAvatar} alt={_copy("copy.a39a7ffad4a3", { defaultValue: "assistant" })} />
           <AvatarFallback className="bg-primary/20 text-primary">
             <Sparkles className="w-4 h-4" />
           </AvatarFallback>
@@ -50,7 +52,7 @@ export function AssistantReplyCard({ content, timestamp, replyToName }: Assistan
         )}
 
         <div className="flex items-baseline gap-2">
-          <span className="font-semibold text-white text-sm truncate">assistant</span>
+          <span className="font-semibold text-white text-sm truncate">{_copy("copy.a39a7ffad4a3", { defaultValue: "assistant" })}</span>
           <span className="text-[10px] uppercase tracking-wide px-1.5 py-px rounded bg-primary/20 text-primary border border-primary/30">
             AI
           </span>

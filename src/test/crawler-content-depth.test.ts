@@ -422,7 +422,7 @@ describe('profiles', () => {
     );
     expect(robotsOf(html)).toBe('');
     expect(titleOf(html)).toBe('Ahmad Rasheed (@almondbloom) on DeHub');
-    expect(html).toContain('<a href="https://dehub.io/app/post/3312">Morning light over the old city walls</a>');
+    expect(html).toContain('<a data-creator-copy href="https://dehub.io/app/post/3312">Morning light over the old city walls</a>');
   });
 
   it('does not noindex on an API that did not answer', async () => {

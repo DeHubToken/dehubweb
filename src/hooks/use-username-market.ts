@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Username marketplace hooks
  * ==========================
@@ -182,6 +183,7 @@ export function useCreateUsernameListing() {
 }
 
 export function useUpdateUsernameListing() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ listingId, ...input }: { listingId: string; priceUsd?: number; replacementUsername?: string; description?: string }) =>
@@ -189,20 +191,21 @@ export function useUpdateUsernameListing() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['username-market-mine'] });
       qc.invalidateQueries({ queryKey: ['username-market-browse'] });
-      toast.success('Listing updated');
+      toast.success(_copy("copy.ce737095f636", { defaultValue: "Listing updated" }));
     },
     onError: (err: Error) => toast.error(err.message),
   });
 }
 
 export function useCancelUsernameListing() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: cancelUsernameListing,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['username-market-mine'] });
       qc.invalidateQueries({ queryKey: ['username-market-browse'] });
-      toast.success('Listing withdrawn');
+      toast.success(_copy("copy.fecd0f90ada2", { defaultValue: "Listing withdrawn" }));
     },
     onError: (err: Error) => toast.error(err.message),
   });

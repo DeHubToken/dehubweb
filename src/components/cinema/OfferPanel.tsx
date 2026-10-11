@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo } from 'react';
 import { ExternalLink, Loader2 } from 'lucide-react';
 import {
@@ -13,10 +15,10 @@ import { JustWatchAttribution } from './JustWatchAttribution';
  *  viewer first. A title included with a subscription they already hold beats
  *  a rental, so `flatrate` leads. */
 const SECTIONS: { key: string; label: string; hint: string }[] = [
-  { key: 'flatrate', label: 'Stream', hint: 'Included with a subscription' },
-  { key: 'free', label: 'Free', hint: 'Free to watch, usually with ads' },
-  { key: 'rent', label: 'Rent', hint: 'Time-limited rental' },
-  { key: 'buy', label: 'Buy', hint: 'Keep it permanently' },
+  { key: 'flatrate', get label() { return _translateCopy("copy.1eec3071dd26", { defaultValue: "Stream" }); }, hint: 'Included with a subscription' },
+  { key: 'free', get label() { return _translateCopy("copy.f411a1fb6275", { defaultValue: "Free" }); }, hint: 'Free to watch, usually with ads' },
+  { key: 'rent', get label() { return _translateCopy("copy.f0268cb9100a", { defaultValue: "Rent" }); }, hint: 'Time-limited rental' },
+  { key: 'buy', get label() { return _translateCopy("copy.64e3cb0e4960", { defaultValue: "Buy" }); }, hint: 'Keep it permanently' },
 ];
 
 const QUALITY_RANK: Record<string, number> = { sd: 0, hd: 1, '4k': 2, uhd: 2 };
@@ -75,6 +77,7 @@ export function OfferPanel({
   locale: string;
   isLoading: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const providerName = useMemo(() => {
     const map = new Map<number, JustWatchProvider>();
     for (const p of providers) map.set(p.id, p);
@@ -84,9 +87,7 @@ export function OfferPanel({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center gap-2 rounded-xl border border-white/10 p-10 text-sm text-zinc-500">
-        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-        Checking where you can watch it…
-      </div>
+        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />{_copy("copy.483a5cce9324", { defaultValue: "Checking where you can watch it…" })}</div>
     );
   }
 
@@ -115,16 +116,13 @@ export function OfferPanel({
           <p className="text-xs text-zinc-600">
             {detail.director}
             {detail.director && detail.runtime ? ' · ' : ''}
-            {detail.runtime ? `${detail.runtime} min` : ''}
+            {detail.runtime ? _copy("copy.af34cffefc46", { defaultValue: "{{value1}} min", value1: detail.runtime }) : ''}
           </p>
         )}
       </header>
 
       {grouped.length === 0 && detail.upcoming.length === 0 && (
-        <p className="rounded-xl border border-white/10 p-6 text-sm text-zinc-500">
-          Nothing streaming, renting or on sale in this country yet. Try another
-          country — rights differ by territory.
-        </p>
+        <p className="rounded-xl border border-white/10 p-6 text-sm text-zinc-500">{_copy("copy.7b4429f32dd9", { defaultValue: "Nothing streaming, renting or on sale in this country yet. Try another country — rights differ by territory." })}</p>
       )}
 
       {grouped.map((section) => (
@@ -160,7 +158,7 @@ export function OfferPanel({
                     )}
 
                     <span className="min-w-0 flex-1 truncate text-sm text-white">
-                      {provider?.name ?? 'Watch now'}
+                      {provider?.name ?? _copy("copy.42f3cc7b5f71", { defaultValue: "Watch now" })}
                     </span>
 
                     {quality && (
@@ -170,7 +168,7 @@ export function OfferPanel({
                     )}
 
                     <span className="shrink-0 text-sm font-medium text-white">
-                      {price ?? (section.key === 'flatrate' ? 'Subscription' : 'Free')}
+                      {price ?? (section.key === 'flatrate' ? _copy("copy.4999c6c6c7ba", { defaultValue: "Subscription" }) : _copy("copy.f411a1fb6275", { defaultValue: "Free" }))}
                     </span>
 
                     <ExternalLink className="h-3.5 w-3.5 shrink-0 text-zinc-600" aria-hidden="true" />
@@ -184,14 +182,14 @@ export function OfferPanel({
 
       {detail.upcoming.length > 0 && (
         <section className="space-y-2">
-          <h3 className="text-sm font-semibold text-white">Coming soon</h3>
+          <h3 className="text-sm font-semibold text-white">{_copy("copy.4f7d64017689", { defaultValue: "Coming soon" })}</h3>
           <ul className="space-y-1.5 rounded-xl border border-white/10 p-3">
             {detail.upcoming.map((u, i) => {
               const provider = u.providerId != null ? providerName.get(u.providerId) : undefined;
               return (
                 <li key={`${u.providerId}-${u.from}-${i}`} className="text-sm text-zinc-400">
-                  <span className="text-white">{provider?.name ?? u.releaseType ?? 'Release'}</span>
-                  {u.from ? ` — from ${new Date(u.from).toLocaleDateString(locale.replace('_', '-'))}` : ''}
+                  <span className="text-white">{provider?.name ?? u.releaseType ?? _copy("copy.e020e3c67bd0", { defaultValue: "Release" })}</span>
+                  {u.from ? _copy("copy.2d72d565ea34", { defaultValue: " — from {{value1}}", value1: new Date(u.from).toLocaleDateString(locale.replace('_', '-')) }) : ''}
                 </li>
               );
             })}

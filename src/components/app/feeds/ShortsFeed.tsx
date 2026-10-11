@@ -1,3 +1,6 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { TranslationText } from '@/components/TranslationText';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isShortsPhoto, interleaveShorts } from '@/lib/shorts-photos';
 import { mapToShortVideo } from '@/lib/short-video';
@@ -154,6 +157,7 @@ function CategoryFilterSection({
   onSelect: (cat: string | null) => void;
   isLoading?: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const [search, setSearch] = useSurfaceDraft("components/app/feeds/ShortsFeed.tsx:search", '');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
@@ -185,7 +189,7 @@ function CategoryFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
         <div className="flex items-center justify-center py-3">
           <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
-          <span className="text-xs text-zinc-500 ml-2">Loading categories...</span>
+          <span className="text-xs text-zinc-500 ml-2">{_copy("copy.d3cf16ece088", { defaultValue: "Loading categories..." })}</span>
         </div>
       </div>
     );
@@ -275,6 +279,7 @@ interface ShortsFeedProps {
 }
 
 export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshKey = 0 }: ShortsFeedProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   // Sort is now client-side - default to "Latest" instead of "Random" to avoid 5-page prefetch - persisted
@@ -302,18 +307,18 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   // Auth-guarded sort selection
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
-      toast.info('Subscribed feed coming soon!');
+      toast.info(_copy("copy.35e9cfb027f9", { defaultValue: "Subscribed feed coming soon!" }));
       return;
     }
     if (option.value === 'following' && !isAuthenticated) {
-      toast.info('Log in to see followed creators');
+      toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
       return;
     }
     // Re-tapping the active chip changes nothing, so it must not flash a loader.
     if (option.value === selectedSort.value) return;
     beginFilterTransition();
     setSelectedSort(option);
-  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition]);
+  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition, _copy]);
 
   // Every other chip row goes through these, so each one arms the loader.
   const selectCategory = useCallback((value: string | null) => {
@@ -492,23 +497,19 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
       description={isError ? 'Try loading the shorts feed again.' : 'Short videos will appear here.'}
       kind={isError ? 'error' : 'empty'}
       size="page"
-      primaryAction={isError ? { label: 'Try again', onClick: () => refetch(), icon: <RefreshCw /> } : undefined}
+      primaryAction={isError ? { get label() { return _translateCopy("copy.d8b8392e2c54", { defaultValue: "Try again" }); }, onClick: () => refetch(), icon: <RefreshCw /> } : undefined}
     />
   );
 
   const FilteredEmptyState = () => (
     <div className="flex flex-col items-center justify-center py-12 text-center">
       <ThemedIcon icon="search" alt="" className="w-12 h-12 object-contain mb-3 opacity-65" />
-      <h3 className="text-white font-semibold mb-1">No matches</h3>
-      <p className="text-zinc-400 text-sm mb-3">
-        Try adjusting your filters
-      </p>
+      <h3 className="text-white font-semibold mb-1"><TranslationText name="copy.2df01a03ff43" fallback={"No matches"} /></h3>
+      <p className="text-zinc-400 text-sm mb-3"><TranslationText name="copy.4d765c1adda1" fallback={"Try adjusting your filters"} /></p>
       <button 
         onClick={clearFilters}
         className="text-sm text-white/70 hover:text-white underline"
-      >
-        Clear filters
-      </button>
+      ><TranslationText name="copy.7179ea0035fc" fallback={"Clear filters"} /></button>
     </div>
   );
 
@@ -637,11 +638,11 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                           )}
                         </div>
                         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-white/90 text-[9px] leading-[10px]">
-                          <span className="inline-flex items-center gap-0.5" aria-label={`${short.views || '0'} views`}>
+                          <span className="inline-flex items-center gap-0.5" aria-label={_copy("copy.e90f7c8c03b8", { defaultValue: "{{value1}} views", value1: short.views || '0' })}>
                             <Eye className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
                             <span>{short.views || '0'}</span>
                           </span>
-                          <span className="inline-flex items-center gap-0.5" aria-label={`${short.likes} likes`}>
+                          <span className="inline-flex items-center gap-0.5" aria-label={_copy("copy.d4d4c7619589", { defaultValue: "{{value1}} likes", value1: short.likes })}>
                             <ThumbsUp className="w-[9px] h-[9px] shrink-0" strokeWidth={1.6} aria-hidden="true" />
                             <span>{short.likes}</span>
                           </span>
@@ -671,7 +672,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 </div>
               )}
               {!hasNextPage && shorts.length > 0 && (
-                <p className="text-zinc-500 text-sm">No more shorts to load</p>
+                <p className="text-zinc-500 text-sm">{_copy("copy.5c36e9c0a6ae", { defaultValue: "No more shorts to load" })}</p>
               )}
             </div>
           </div>

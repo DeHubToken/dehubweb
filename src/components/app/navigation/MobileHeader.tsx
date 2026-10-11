@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { ElectricLogo } from './ElectricLogo';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
@@ -29,9 +30,10 @@ import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { FeedIslandCapsule } from './FeedIslandCapsule';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
+  const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} className="block cursor-pointer" aria-label="dehub home">
+    <button onClick={onClick} className="block cursor-pointer" aria-label={_copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" })}>
       <ElectricLogo>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
@@ -59,6 +61,7 @@ interface MobileHeaderProps {
 }
 
 export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { openPostModal } = useGlobalDropZone();
   const location = useLocation();
@@ -140,13 +143,13 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
               {user ? (
                 <button
                   className="rounded-lg hover:opacity-80 transition-opacity"
-                  aria-label="Toggle menu"
+                  aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })}
                 >
                   <Avatar className="w-[27px] h-[27px]">
                     {user.avatarImageUrl && user.address && (
                       <AvatarImage
                         src={buildAvatarUrl(user.address, user.avatarImageUrl)}
-                        alt={`${user.displayName || user.username}'s avatar`}
+                        alt={_copy("copy.f66ca816cb1e", { defaultValue: "{{value1}}'s avatar", value1: user.displayName || user.username })}
                         className="object-cover"
                         loading="eager"
                       />
@@ -159,7 +162,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
               ) : (
                 <button
                   className="p-2 rounded-lg transition-colors -ml-2"
-                  aria-label="Toggle menu"
+                  aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })}
                 >
                   <Menu className="w-[31px] h-[31px] text-white" />
                 </button>
@@ -185,7 +188,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
             onClick={handleMenuClick}
             onPointerDown={warmSheetForLogin}
             className="p-2 rounded-lg transition-colors -ml-2"
-            aria-label="Log in"
+            aria-label={_copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
           >
             <Menu className="w-[31px] h-[31px] text-white" />
           </button>
@@ -206,7 +209,7 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
           <button
             onClick={() => openNotificationsDrawer()}
             className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
-            aria-label="Notifications"
+            aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}
           >
             <Bell className="w-[26px] h-[26px]" />
             {totalNotifUnread > 0 && (

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -56,6 +57,7 @@ const CATEGORY_KEYS: Record<string, string> = {
 };
 
 export function ListingDetailDrawer({ listing, open, onClose }: Props) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   // No stream attached: same quote → pay → verify path the live rail uses.
@@ -246,8 +248,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
               <p className="text-sm text-red-400">{quoteError}</p>
             ) : (
               <div className="flex items-center gap-2 text-sm text-zinc-400">
-                <Loader2 className="w-4 h-4 animate-spin" /> Getting price…
-              </div>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.ac1528d83ae7", { defaultValue: " Getting price…" })}</div>
             )
           )}
 
@@ -304,9 +305,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           </div>
 
           {buy.isPending && (
-            <p className="text-[11px] text-center text-zinc-500">
-              Don't close this — the order is written once the transfer is confirmed on Base.
-            </p>
+            <p className="text-[11px] text-center text-zinc-500">{_copy("copy.30e0ca60e549", { defaultValue: "Don't close this — the order is written once the transfer is confirmed on Base." })}</p>
           )}
         </div>
       </DrawerContent>

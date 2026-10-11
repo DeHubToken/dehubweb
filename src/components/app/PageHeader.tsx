@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -36,6 +37,7 @@ export function PageHeader({
   onBack,
   overlay = false,
 }: PageHeaderProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isCollapsed } = useSidebarCollapse();
   const { theme } = useAppTheme();
@@ -74,7 +76,7 @@ export function PageHeader({
             onClick={handleBack}
             data-on-media={overlay ? '' : undefined}
             className="pointer-events-auto h-9 w-9 rounded-xl bg-black/50 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
-            aria-label="Go back"
+            aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
           >
             <ArrowLeft className="w-4 h-4 text-white" />
           </button>
@@ -99,7 +101,7 @@ export function PageHeader({
           <button
             onClick={handleBack}
             className="p-2 rounded-xl hover:bg-white/10 transition-colors"
-            aria-label="Go back"
+            aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
           >
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>

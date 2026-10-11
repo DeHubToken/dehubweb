@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -89,6 +90,7 @@ interface EventChatProps {
 }
 
 export function EventChat({ eventId }: EventChatProps) {
+  const { t: _copy } = _useCopy();
   const [newMessage, setNewMessage] = useSurfaceDraft("components/app/events/EventChat.tsx:newMessage", '', eventId);
   const [replyTo, setReplyTo] = useDraftState<EventChatMessage | null>(`event:${eventId}:reply`, null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -224,11 +226,11 @@ export function EventChat({ eventId }: EventChatProps) {
                 ))}
               </div>
             ) : messages.length === 0 ? (
-              <AppState icon="messages" title="No messages yet" description="Be the first to chat." size="section" className="h-full" />
+              <AppState icon="messages" title={_copy("copy.f42e0f66017d", { defaultValue: "No messages yet" })} description={_copy("copy.c26c60eb4a6c", { defaultValue: "Be the first to chat." })} size="section" className="h-full" />
             ) : (
               messages.map((msg) => {
                 const avatarUrl = buildAvatarUrl(msg.wallet_address, msg.avatar_url);
-                const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || 'Anon';
+                const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || _copy("copy.90395d452a30", { defaultValue: "Anon" });
                 const handle = msg.username;
                 const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
 
@@ -347,8 +349,8 @@ export function EventChat({ eventId }: EventChatProps) {
         <div className="flex items-center gap-1.5 mx-1 mb-1 px-2 py-1 bg-zinc-800/70 rounded-lg">
           <Reply className="w-3.5 h-3.5 text-white flex-shrink-0" />
           <div className="flex-1 min-w-0">
-            <span className="text-[10px] font-medium text-white">{replyTo.display_name || replyTo.username || 'User'}</span>
-            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
+            <span className="text-[10px] font-medium text-white">{replyTo.display_name || replyTo.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" })}</span>
+            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || _copy("copy.d357175cfe89", { defaultValue: "Media" })}</p>
           </div>
           <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />

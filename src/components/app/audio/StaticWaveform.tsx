@@ -163,7 +163,7 @@ export function StaticWaveform({
         const dimOpacity = 0.08 + h * 0.12;
         const brightOpacity = 0.82 + h * 0.18;
         const opacity = dimOpacity + (brightOpacity - dimOpacity) * lit;
-        const fillColor = color || 'white';
+        const fillColor = color || "white";
 
         return (
           <rect

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,15 +13,17 @@ import { toast } from 'sonner';
 import { ArrowLeft, Send, Loader2 } from 'lucide-react';
 
 export default function CreatorsPage() {
+  const { t: _copy } = _useCopy();
   return (
     <>
-      <SEOHead title="Become a Creator" description="Apply to become a creator on DeHub — the open source, censorship resistant media platform." url="https://dehub.io/creators" />
+      <SEOHead title={_copy("copy.9ae6de224302", { defaultValue: "Become a Creator" })} description={_copy("copy.a39091f6acf5", { defaultValue: "Apply to become a creator on DeHub — the open source, censorship resistant media platform." })} url="https://dehub.io/creators" />
       <CreatorsPageInner />
     </>
   );
 }
 
 function CreatorsPageInner() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -144,23 +147,23 @@ function CreatorsPageInner() {
           <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-6 space-y-5">
             <div className="space-y-2">
               <Label htmlFor="x_username" className="text-zinc-300">{t('creators.xUsername', 'X (Twitter) Username')}</Label>
-              <Input id="x_username" name="x_username" placeholder="@username" value={formData.x_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
+              <Input id="x_username" name="x_username" placeholder={_copy("copy.93100fc44c0a", { defaultValue: "@username" })} value={formData.x_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="youtube_username" className="text-zinc-300">{t('creators.youtubeUsername', 'YouTube Username')}</Label>
-              <Input id="youtube_username" name="youtube_username" placeholder="@channel" value={formData.youtube_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
+              <Input id="youtube_username" name="youtube_username" placeholder={_copy("copy.1a00975a0ac1", { defaultValue: "@channel" })} value={formData.youtube_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="twitch_username" className="text-zinc-300">{t('creators.twitchUsername', 'Twitch Username')}</Label>
-              <Input id="twitch_username" name="twitch_username" placeholder="@username" value={formData.twitch_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
+              <Input id="twitch_username" name="twitch_username" placeholder={_copy("copy.93100fc44c0a", { defaultValue: "@username" })} value={formData.twitch_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="instagram_username" className="text-zinc-300">{t('creators.instagramUsername', 'Instagram Username')}</Label>
-              <Input id="instagram_username" name="instagram_username" placeholder="@username" value={formData.instagram_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
+              <Input id="instagram_username" name="instagram_username" placeholder={_copy("copy.93100fc44c0a", { defaultValue: "@username" })} value={formData.instagram_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="tiktok_username" className="text-zinc-300">{t('creators.tiktokUsername', 'TikTok Username')}</Label>
-              <Input id="tiktok_username" name="tiktok_username" placeholder="@username" value={formData.tiktok_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
+              <Input id="tiktok_username" name="tiktok_username" placeholder={_copy("copy.93100fc44c0a", { defaultValue: "@username" })} value={formData.tiktok_username} onChange={handleChange} className="bg-zinc-800/50 border-zinc-700 focus:border-zinc-500" />
             </div>
             <div className="space-y-2">
               <Label htmlFor="other_socials" className="text-zinc-300">{t('creators.otherSocials', 'Other Usernames/Socials')}</Label>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ interface CommunityEventsProps {
 }
 
 export function CommunityEvents({ communityId, canCreate }: CommunityEventsProps) {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, openLoginModal } = useAuth();
   const [createOpen, setCreateOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CommunityEvent | null>(null);
@@ -33,9 +35,7 @@ export function CommunityEvents({ communityId, canCreate }: CommunityEventsProps
     <div className="space-y-4">
       {canCreate && (
         <Button onClick={handleCreate} variant="outline" size="sm" className="rounded-xl border-white/10 text-white gap-1.5">
-          <Plus className="w-4 h-4" />
-          Create Event
-        </Button>
+          <Plus className="w-4 h-4" />{_copy("copy.7a9f7d429145", { defaultValue: "Create Event" })}</Button>
       )}
 
       {isLoading ? (
@@ -43,12 +43,12 @@ export function CommunityEvents({ communityId, canCreate }: CommunityEventsProps
           {[1, 2].map(i => <div key={i} className="h-48 rounded-xl bg-white/[0.04] animate-pulse" />)}
         </div>
       ) : events.length === 0 ? (
-        <AppState icon="events" title="No events yet" description="Community events will appear here." size="section" />
+        <AppState icon="events" title={_copy("copy.de54ef8dc9c2", { defaultValue: "No events yet" })} description={_copy("copy.008ad4d946bb", { defaultValue: "Community events will appear here." })} size="section" />
       ) : (
         <>
           {upcoming.length > 0 && (
             <div>
-              <h3 className="text-xs font-medium text-zinc-500 uppercase mb-2">Upcoming</h3>
+              <h3 className="text-xs font-medium text-zinc-500 uppercase mb-2">{_copy("copy.5f1a2542e4e4", { defaultValue: "Upcoming" })}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {upcoming.map(e => <EventCard key={e.id} event={e} onClick={() => setSelectedEvent(e)} />)}
               </div>
@@ -56,7 +56,7 @@ export function CommunityEvents({ communityId, canCreate }: CommunityEventsProps
           )}
           {past.length > 0 && (
             <div>
-              <h3 className="text-xs font-medium text-zinc-500 uppercase mb-2 mt-4">Past</h3>
+              <h3 className="text-xs font-medium text-zinc-500 uppercase mb-2 mt-4">{_copy("copy.ca1530e8d701", { defaultValue: "Past" })}</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {past.map(e => <EventCard key={e.id} event={e} onClick={() => setSelectedEvent(e)} />)}
               </div>

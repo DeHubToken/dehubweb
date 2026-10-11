@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Communities Page
@@ -23,6 +24,7 @@ import { communityNotificationRef, type CommunityRef } from '@/lib/community-not
 import communitiesTitleIcon from '@/assets/communities-title-icon.webp';
 
 export default function CommunitiesPage() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const [createOpen, setCreateOpen] = useState(false);
   const [search, setSearch] = useSurfaceDraft("pages/app/CommunitiesPage.tsx:search", '');
@@ -126,15 +128,15 @@ export default function CommunitiesPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Communities — Find Your People on DeHub"
-        description="Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform."
+        title={_copy("copy.0db2b3bc48bc", { defaultValue: "Communities — Find Your People on DeHub" })}
+        description={_copy("copy.26efe78a0c95", { defaultValue: "Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform." })}
         url="https://dehub.io/communities"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: 'DeHub Communities',
           url: 'https://dehub.io/communities',
-          description: 'Public communities on the DeHub decentralized social platform.',
+          description: _copy("copy.2eda69be1216", { defaultValue: "Public communities on the DeHub decentralized social platform." }),
           isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
         }}
       />
@@ -179,10 +181,10 @@ export default function CommunitiesPage() {
                 className="w-full h-10 pl-10 pr-4 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
               />
             </div>
-            <IslandAction label="New" active={sortMode === 'new'} onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}>
+            <IslandAction label={_copy("copy.18fdd549b2ed", { defaultValue: "New" })} active={sortMode === 'new'} onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}>
               <span className="text-base leading-none">💎</span>
             </IslandAction>
-            <IslandAction label="Hot" active={sortMode === 'hot'} onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}>
+            <IslandAction label={_copy("copy.0ec53894d032", { defaultValue: "Hot" })} active={sortMode === 'hot'} onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}>
               <span className="text-base leading-none">🔥</span>
             </IslandAction>
           </div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
 /**
  * Multi-track timeline. Ruler + draggable playhead + tracks lanes with clips.
@@ -66,6 +67,7 @@ function fmtRuler(s: number) {
 }
 
 export function Timeline() {
+  const { t: _copy } = _useCopy();
   const tracks = useEditorStore((s) => s.tracks);
   const clips = useEditorStore((s) => s.clips);
   const zoom = useEditorStore((s) => s.zoom);
@@ -280,17 +282,17 @@ export function Timeline() {
       <div className="flex shrink-0 items-center gap-1 border-b border-white/10 px-2 py-1.5">
         <Button size="sm" variant="ghost" onClick={() => splitAtPlayhead()}
           className="h-7 w-7 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white md:h-7 md:w-auto md:px-2"
-          aria-label="Split">
+          aria-label={_copy("copy.32afaa784333", { defaultValue: "Split" })}>
           <Scissors className="h-3.5 w-3.5" />
-          <span className="ml-1 hidden md:inline">Split</span>
+          <span className="ml-1 hidden md:inline">{_copy("copy.32afaa784333", { defaultValue: "Split" })}</span>
         </Button>
         <Button size="sm" variant="ghost"
           onClick={() => rippleDelete()}
           disabled={!selectedClipIds.length}
           className="h-7 w-7 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40 md:h-7 md:w-auto md:px-2"
-          aria-label="Delete">
+          aria-label={_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}>
           <Trash2 className="h-3.5 w-3.5" />
-          <span className="ml-1 hidden md:inline">Delete</span>
+          <span className="ml-1 hidden md:inline">{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</span>
         </Button>
         <div className="mx-2 h-4 w-px bg-white/10" />
 
@@ -299,36 +301,33 @@ export function Timeline() {
           <PopoverTrigger asChild>
             <Button size="sm" variant="ghost"
               className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white"
-              aria-label="Add">
+              aria-label={_copy("copy.9fd728c66c9a", { defaultValue: "Add" })}>
               <Plus className="h-3.5 w-3.5 md:mr-1" />
-              <span className="hidden md:inline">Add</span>
+              <span className="hidden md:inline">{_copy("copy.9fd728c66c9a", { defaultValue: "Add" })}</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent side="bottom" align="start" className="w-44 border-white/10 bg-black/85 p-1 text-white backdrop-blur-[24px]">
             <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Film className="mr-2 h-3.5 w-3.5" /> Video&nbsp;
-            </Button>
+              <Film className="mr-2 h-3.5 w-3.5" />{_copy("copy.aa93becb8b14", { defaultValue: " Video " })}</Button>
             <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Music className="mr-2 h-3.5 w-3.5" /> Audio&nbsp;
-            </Button>
+              <Music className="mr-2 h-3.5 w-3.5" />{_copy("copy.9d36bbf1fefd", { defaultValue: " Audio " })}</Button>
             <Button size="sm" variant="ghost" onClick={() => addTextClip()}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Type className="mr-2 h-3.5 w-3.5" /> Text&nbsp;
-            </Button>
+              <Type className="mr-2 h-3.5 w-3.5" />{_copy("copy.03b2c0190ef0", { defaultValue: " Text " })}</Button>
           </PopoverContent>
         </Popover>
 
 
         <div className="ml-auto flex items-center gap-1">
           <Button size="icon" variant="ghost" onClick={() => setZoom(zoom / 1.25)}
-            className="h-7 w-7 rounded-md text-white/80 hover:bg-white/10 hover:text-white" aria-label="Zoom out">
+            className="h-7 w-7 rounded-md text-white/80 hover:bg-white/10 hover:text-white" aria-label={_copy("copy.bc7b631a689b", { defaultValue: "Zoom out" })}>
             <Minus className="h-3.5 w-3.5" />
           </Button>
-          <span className="w-12 text-center text-[10px] tabular-nums text-white/50">{Math.round(zoom)}px/s</span>
+          <span className="w-12 text-center text-[10px] tabular-nums text-white/50">{Math.round(zoom)}{_copy("copy.a45bae8fc7bf", { defaultValue: "px/s" })}</span>
           <Button size="icon" variant="ghost" onClick={() => setZoom(zoom * 1.25)}
-            className="h-7 w-7 rounded-md text-white/80 hover:bg-white/10 hover:text-white" aria-label="Zoom in">
+            className="h-7 w-7 rounded-md text-white/80 hover:bg-white/10 hover:text-white" aria-label={_copy("copy.0e47f09a748f", { defaultValue: "Zoom in" })}>
             <Plus className="h-3.5 w-3.5" />
           </Button>
         </div>
@@ -420,6 +419,7 @@ export function Timeline() {
 const TRACK_DRAG_MIME = "application/x-dehub-track";
 
 function TrackHeader({ track, index }: { track: Track; index: number }) {
+  const { t: _copy } = _useCopy();
   const removeTrack = useEditorStore((s) => s.removeTrack);
   const reorderTrack = useEditorStore((s) => s.reorderTrack);
   const tracksLen = useEditorStore((s) => s.tracks.length);
@@ -470,8 +470,8 @@ function TrackHeader({ track, index }: { track: Track; index: number }) {
           e.dataTransfer.setData(TRACK_DRAG_MIME, track.id);
         }}
         className="cursor-grab rounded p-0.5 text-white/30 hover:text-white/70 active:cursor-grabbing"
-        title="Drag to reorder layer"
-        aria-label="Reorder track"
+        title={_copy("copy.767e8129998b", { defaultValue: "Drag to reorder layer" })}
+        aria-label={_copy("copy.7beeed2f3e53", { defaultValue: "Reorder track" })}
       >
         <GripVertical className="h-3.5 w-3.5" />
       </button>
@@ -481,7 +481,7 @@ function TrackHeader({ track, index }: { track: Track; index: number }) {
       <span className="min-w-0 flex-1 truncate text-xs text-white/80" title={track.name}>{track.name}</span>
       <button onClick={track.kind === "audio" ? toggleMute : toggleHide}
         className="rounded p-0.5 text-white/40 hover:bg-white/10 hover:text-white"
-        aria-label={track.kind === "audio" ? "Toggle mute" : "Toggle hidden"}>
+        aria-label={track.kind === "audio" ? _copy("copy.56c867b781df", { defaultValue: "Toggle mute" }) : _copy("copy.5a406cc9602d", { defaultValue: "Toggle hidden" })}>
         {track.kind === "audio"
           ? (track.muted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />)
           : (track.hidden ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />)}
@@ -489,7 +489,7 @@ function TrackHeader({ track, index }: { track: Track; index: number }) {
       {tracksLen > 1 && (
         <button onClick={() => removeTrack(track.id)}
           className="rounded p-0.5 text-white/30 hover:bg-white/10 hover:text-white"
-          aria-label="Remove track">
+          aria-label={_copy("copy.b21fac174275", { defaultValue: "Remove track" })}>
           <X className="h-3 w-3" />
         </button>
       )}
@@ -782,6 +782,7 @@ function KeyframeMarks({ clip, zoom, onSelect }: { clip: Clip; zoom: number; onS
 }
 
 function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string }) {
+  const { t: _copy } = _useCopy();
   const moveTrack = useEditorStore((s) => s.moveTrack);
   const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
   const copySelected = useEditorStore((s) => s.copySelectedToClipboard);
@@ -819,17 +820,14 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
           }
         })}
       >
-        <Pencil className="mr-2 h-3.5 w-3.5" /> Edit
-      </ContextMenuItem>
+        <Pencil className="mr-2 h-3.5 w-3.5" />{_copy("copy.317ed3007a7c", { defaultValue: " Edit" })}</ContextMenuItem>
       <ContextMenuItem onSelect={pick(() => splitAtPlayhead())}>
-        <Scissors className="mr-2 h-3.5 w-3.5" /> Split at playhead
-      </ContextMenuItem>
+        <Scissors className="mr-2 h-3.5 w-3.5" />{_copy("copy.1c6f8e00dd95", { defaultValue: " Split at playhead" })}</ContextMenuItem>
       {canTransition && (
 
         <ContextMenuSub>
           <ContextMenuSubTrigger className="text-white/90">
-            <ArrowLeftRight className="mr-2 h-3.5 w-3.5" /> Transition
-          </ContextMenuSubTrigger>
+            <ArrowLeftRight className="mr-2 h-3.5 w-3.5" />{_copy("copy.ffd103b78c19", { defaultValue: " Transition" })}</ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-44 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
             {TRANSITION_OPTIONS.map((opt) => (
               <ContextMenuItem
@@ -843,9 +841,7 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
             {currentTransition && (
               <>
                 <ContextMenuSeparator className="bg-white/10" />
-                <ContextMenuItem onSelect={pick(() => setClipTransition(clipId, null))}>
-                  Remove transition
-                </ContextMenuItem>
+                <ContextMenuItem onSelect={pick(() => setClipTransition(clipId, null))}>{_copy("copy.cd609bcd00a5", { defaultValue: "Remove transition" })}</ContextMenuItem>
               </>
             )}
           </ContextMenuSubContent>
@@ -853,33 +849,25 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
       )}
       <ContextMenuSeparator className="bg-white/10" />
       <ContextMenuItem disabled={!canForward} onSelect={pick(() => moveTrack(trackId, "front"))}>
-        <ChevronsUp className="mr-2 h-3.5 w-3.5" /> Bring to front
-      </ContextMenuItem>
+        <ChevronsUp className="mr-2 h-3.5 w-3.5" />{_copy("copy.16a14c2c1e15", { defaultValue: " Bring to front" })}</ContextMenuItem>
       <ContextMenuItem disabled={!canForward} onSelect={pick(() => moveTrack(trackId, "forward"))}>
-        <ChevronUp className="mr-2 h-3.5 w-3.5" /> Bring forward
-      </ContextMenuItem>
+        <ChevronUp className="mr-2 h-3.5 w-3.5" />{_copy("copy.0e03d56fd0e2", { defaultValue: " Bring forward" })}</ContextMenuItem>
       <ContextMenuItem disabled={!canBackward} onSelect={pick(() => moveTrack(trackId, "backward"))}>
-        <ChevronDown className="mr-2 h-3.5 w-3.5" /> Send backward
-      </ContextMenuItem>
+        <ChevronDown className="mr-2 h-3.5 w-3.5" />{_copy("copy.600201141dde", { defaultValue: " Send backward" })}</ContextMenuItem>
       <ContextMenuItem disabled={!canBackward} onSelect={pick(() => moveTrack(trackId, "back"))}>
-        <ChevronsDown className="mr-2 h-3.5 w-3.5" /> Send to back
-      </ContextMenuItem>
+        <ChevronsDown className="mr-2 h-3.5 w-3.5" />{_copy("copy.623706db66e3", { defaultValue: " Send to back" })}</ContextMenuItem>
       <ContextMenuSeparator className="bg-white/10" />
       <ContextMenuItem onSelect={pick(() => copySelected())}>
-        <Copy className="mr-2 h-3.5 w-3.5" /> Copy
-      </ContextMenuItem>
+        <Copy className="mr-2 h-3.5 w-3.5" />{_copy("copy.dea0ff385abf", { defaultValue: " Copy" })}</ContextMenuItem>
       <ContextMenuItem onSelect={pick(() => pasteClipboard(clip ? { time: clip.start + clip.duration, trackId: clip.trackId } : undefined))}>
-        <Copy className="mr-2 h-3.5 w-3.5" /> Paste after this
-      </ContextMenuItem>
+        <Copy className="mr-2 h-3.5 w-3.5" />{_copy("copy.40cc2fc5a264", { defaultValue: " Paste after this" })}</ContextMenuItem>
       <ContextMenuItem onSelect={pick(() => duplicateSelected())}>
-        <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
-      </ContextMenuItem>
+        <Copy className="mr-2 h-3.5 w-3.5" />{_copy("copy.1885cbc7f0da", { defaultValue: " Duplicate" })}</ContextMenuItem>
       <ContextMenuItem
         onSelect={pick(() => rippleDelete([clipId]))}
         className="text-red-300 focus:text-red-200"
       >
-        <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
-      </ContextMenuItem>
+        <Trash2 className="mr-2 h-3.5 w-3.5" />{_copy("copy.3534d686f23a", { defaultValue: " Delete" })}</ContextMenuItem>
     </ContextMenuContent>
   );
 }
@@ -888,6 +876,7 @@ type TransitionKindLike = (typeof TRANSITION_OPTIONS)[number]["kind"];
 
 
 function TransitionHandle({ clip }: { clip: Clip }) {
+  const { t: _copy } = _useCopy();
   const allClips = useEditorStore((s) => s.clips);
   const setClipTransition = useEditorStore((s) => s.setClipTransition);
   const next = useMemo(() => findAdjacentNext(clip, allClips), [clip, allClips]);
@@ -905,8 +894,8 @@ function TransitionHandle({ clip }: { clip: Clip }) {
             "absolute right-2 top-1/2 z-20 flex h-5 w-5 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-white/30 backdrop-blur-[24px] transition",
             tr ? "bg-white text-black" : "bg-black/70 text-white/70 hover:text-white hover:bg-black/90",
           )}
-          aria-label="Transition to next clip"
-          title={tr ? `Transition: ${tr.kind} (${tr.duration.toFixed(2)}s)` : "Add transition"}
+          aria-label={_copy("copy.c42f0941ac10", { defaultValue: "Transition to next clip" })}
+          title={tr ? `Transition: ${tr.kind} (${tr.duration.toFixed(2)}s)` : _copy("copy.34f9cd95f3c1", { defaultValue: "Add transition" })}
         >
           <ArrowLeftRight className="h-3 w-3" />
         </button>
@@ -919,14 +908,12 @@ function TransitionHandle({ clip }: { clip: Clip }) {
       >
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold uppercase tracking-wide text-white/70">Transition</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-white/70">{_copy("copy.2fe70464aadf", { defaultValue: "Transition" })}</span>
             {tr && (
               <button
                 onClick={() => setClipTransition(clip.id, null)}
                 className="text-[10px] text-white/50 hover:text-white"
-              >
-                Remove
-              </button>
+              >{_copy("copy.c3812fc4acb8", { defaultValue: "Remove" })}</button>
             )}
           </div>
           <div className="grid grid-cols-2 gap-1">
@@ -952,7 +939,7 @@ function TransitionHandle({ clip }: { clip: Clip }) {
           </div>
           <div className="pt-1">
             <div className="mb-1 flex items-center justify-between text-[10px] text-white/60">
-              <span>Duration</span>
+              <span>{_copy("copy.4fc52a3c4c55", { defaultValue: "Duration" })}</span>
               <span className="tabular-nums">{value.duration.toFixed(2)}s</span>
             </div>
             <Slider
@@ -967,7 +954,7 @@ function TransitionHandle({ clip }: { clip: Clip }) {
                 })
               }
             />
-            <p className="pt-1 text-[10px] text-white/40">Overlaps the next clip for the chosen duration.</p>
+            <p className="pt-1 text-[10px] text-white/40">{_copy("copy.5b5a1b63dc02", { defaultValue: "Overlaps the next clip for the chosen duration." })}</p>
           </div>
         </div>
       </PopoverContent>

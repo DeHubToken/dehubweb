@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -16,15 +18,15 @@ const OG_IMAGE = "https://dehub.io" + ogImage;
 
 const steps = [
   {
-    title: "Open the DeHub connector in Claude",
+    get title() { return _translateCopy("copy.d2afb2d04c64", { defaultValue: "Open the DeHub connector in Claude" }); },
     body: "Click the button below. Claude will open directly on the DeHub connector inside Settings → Connectors.",
   },
   {
-    title: "Enable the connector",
+    get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
     body: "Turn DeHub on and approve access. Claude will now be able to browse public DeHub posts, look up profiles and read trending topics.",
   },
   {
-    title: "Start a chat and prompt it",
+    get title() { return _translateCopy("copy.2f5962c2d543", { defaultValue: "Start a chat and prompt it" }); },
     body: "Open a new conversation and mention DeHub in your message — Claude will call the connector automatically whenever it needs live DeHub context.",
   },
 ];
@@ -57,6 +59,7 @@ const faqs: { q: string; a: string; aKey?: string }[] = [
 ];
 
 export default function ConnectClaudePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const jsonLd = {
     "@context": "https://schema.org",
@@ -65,7 +68,7 @@ export default function ConnectClaudePage() {
         "@type": "HowTo",
         name: "How to use DeHub inside Claude",
         description:
-          "Add the DeHub connector to Claude and let it browse posts, profiles and trends from the DeHub decentralized social network.",
+          _copy("copy.66d89fc56a4e", { defaultValue: "Add the DeHub connector to Claude and let it browse posts, profiles and trends from the DeHub decentralized social network." }),
         image: OG_IMAGE,
         totalTime: "PT1M",
         step: steps.map((s, i) => ({
@@ -89,8 +92,8 @@ export default function ConnectClaudePage() {
   return (
     <div data-glass-page className="min-h-screen bg-black text-white">
       <SEOHead
-        title="DeHub for Claude — Use DeHub inside Claude (MCP Connector)"
-        description="Add DeHub to Claude in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside Claude."
+        title={_copy("copy.31aa434fa5e5", { defaultValue: "DeHub for Claude — Use DeHub inside Claude (MCP Connector)" })}
+        description={_copy("copy.3a478f078658", { defaultValue: "Add DeHub to Claude in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside Claude." })}
         url={PAGE_URL}
         image={OG_IMAGE}
         type="article"
@@ -102,9 +105,7 @@ export default function ConnectClaudePage() {
           to="/app"
           className="mb-8 inline-flex items-center gap-2 text-sm text-white/60 hover:text-white"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to DeHub
-        </Link>
+          <ArrowLeft className="h-4 w-4" />{_copy("copy.2e69c1cda2b3", { defaultValue: "Back to DeHub" })}</Link>
 
         <div
           className="mb-8 aspect-[1200/630] w-full overflow-hidden rounded-2xl border border-white/10"
@@ -120,19 +121,11 @@ export default function ConnectClaudePage() {
           <img src={dehubIcon} alt="DeHub" className="h-4 w-4 object-contain" />
           <span className="text-white/40">×</span>
           <img src={anthropicLogo} alt="Claude" className="h-4 w-4 object-contain" />
-          <span className="ml-1 text-[10px] font-black italic tracking-wider text-white">
-            MCP LIVE
-          </span>
+          <span className="ml-1 text-[10px] font-black italic tracking-wider text-white">{_copy("copy.5b4569693eb1", { defaultValue: "MCP LIVE" })}</span>
         </div>
 
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
-          Use DeHub inside Claude
-        </h1>
-        <p className="mt-3 text-base text-white/60 md:text-lg">
-          DeHub is available as a native Claude connector. Turn it on once and
-          Claude can browse DeHub posts, creators and trends live — right from
-          your chat.
-        </p>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">{_copy("copy.88be8e79a171", { defaultValue: "Use DeHub inside Claude" })}</h1>
+        <p className="mt-3 text-base text-white/60 md:text-lg">{_copy("copy.2b005fde7045", { defaultValue: "DeHub is available as a native Claude connector. Turn it on once and Claude can browse DeHub posts, creators and trends live — right from your chat." })}</p>
 
         <a
           href={APP_URL}
@@ -140,14 +133,12 @@ export default function ConnectClaudePage() {
           rel="noopener noreferrer"
           className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5"
         >
-          <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />
-          Open DeHub in Claude
-          <ArrowUpRight className="h-4 w-4" />
+          <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.8a6656d1e13b", { defaultValue: "Open DeHub in Claude" })}<ArrowUpRight className="h-4 w-4" />
         </a>
 
 
         <section className="mt-14">
-          <h2 className="text-xl font-bold md:text-2xl">Setup in 3 steps</h2>
+          <h2 className="text-xl font-bold md:text-2xl">{_copy("copy.c104151457b7", { defaultValue: "Setup in 3 steps" })}</h2>
           <ol className="mt-6 space-y-4">
             {steps.map((s, i) => (
               <li
@@ -169,7 +160,7 @@ export default function ConnectClaudePage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="text-xl font-bold md:text-2xl">Prompts to try</h2>
+          <h2 className="text-xl font-bold md:text-2xl">{_copy("copy.7887eb17f548", { defaultValue: "Prompts to try" })}</h2>
           <ul className="mt-6 space-y-2">
             {examples.map((e) => (
               <li
@@ -184,7 +175,7 @@ export default function ConnectClaudePage() {
         </section>
 
         <section className="mt-14">
-          <h2 className="text-xl font-bold md:text-2xl">FAQ</h2>
+          <h2 className="text-xl font-bold md:text-2xl">{_copy("copy.dbc468a14b60", { defaultValue: "FAQ" })}</h2>
           <div className="mt-6 space-y-4">
             {faqs.map((f) => (
               <div
@@ -205,16 +196,12 @@ export default function ConnectClaudePage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]"
           >
-            <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />
-            Open DeHub in Claude
-            <ArrowUpRight className="h-4 w-4" />
+            <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />{_copy("copy.8a6656d1e13b", { defaultValue: "Open DeHub in Claude" })}<ArrowUpRight className="h-4 w-4" />
           </a>
           <Link
             to="/connect/chatgpt"
             className="inline-flex items-center gap-2 rounded-2xl border border-white/15 px-5 py-3 text-sm font-semibold text-white hover:bg-white/5"
-          >
-            Prefer ChatGPT? Open the ChatGPT guide
-          </Link>
+          >{_copy("copy.dae9ea33bcbd", { defaultValue: "Prefer ChatGPT? Open the ChatGPT guide" })}</Link>
         </div>
       </div>
     </div>

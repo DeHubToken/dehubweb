@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import {
   UserPlus, Pencil, Copy, Wallet, Star, Clock, Plus, Loader2, Check, Ban, MessageSquare
 } from 'lucide-react';
@@ -120,6 +121,7 @@ export function ProfileHeader({
   isBlocked = false,
   isFetchingProfile = false,
 }: ProfileHeaderProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
 
   const { t } = useTranslation();
@@ -200,7 +202,7 @@ export function ProfileHeader({
             src={profile.coverUrl || getDefaultBanner(profile.walletAddress)}
             srcSet={cdnImageSrcSet(profile.coverUrl, [480, 736, 1100, 1500])}
             sizes="(min-width: 1024px) 700px, 100vw"
-            alt="Cover"
+            alt={_copy("copy.fa8d84566676", { defaultValue: "Cover" })}
             className="w-full h-full object-cover"
             fetchPriority="high"
           />
@@ -244,9 +246,7 @@ export function ProfileHeader({
                   className="rounded-xl gap-2"
                   onClick={() => navigate('/app/settings')}
                 >
-                  <Pencil className="w-4 h-4" />
-                  Edit Profile
-                </Button>
+                  <Pencil className="w-4 h-4" />{_copy("copy.fec2ac0f4cf1", { defaultValue: "Edit Profile" })}</Button>
               ) : isBlocked ? (
                 <Button 
                   size="sm" 
@@ -254,9 +254,7 @@ export function ProfileHeader({
                   className="rounded-xl border-red-500/50 text-red-400 gap-2 cursor-default"
                   disabled
                 >
-                  <Ban className="w-4 h-4" />
-                  Blocked
-                </Button>
+                  <Ban className="w-4 h-4" />{_copy("copy.18f2a0947f9d", { defaultValue: "Blocked" })}</Button>
               ) : isFetchingProfile && profile.isFollowing == null && profile.isPending == null ? (
                 <Skeleton className="h-9 w-24 rounded-xl bg-white/10" />
               ) : (
@@ -268,9 +266,7 @@ export function ProfileHeader({
                       className="rounded-xl border-zinc-600 text-zinc-300 gap-2 cursor-default"
                       disabled
                     >
-                      <Clock className="w-4 h-4" />
-                      Requested
-                    </Button>
+                      <Clock className="w-4 h-4" />{_copy("copy.2d9e28289fac", { defaultValue: "Requested" })}</Button>
                   )}
                   {!isFollowing && !isPending && (
                     <Button 
@@ -285,7 +281,7 @@ export function ProfileHeader({
                       ) : (
                         <UserPlus className="w-4 h-4" />
                       )}
-                      {isTargetPrivate ? 'Request' : apiProfile?.followsYou ? 'Follow Back' : 'Follow'}
+                      {isTargetPrivate ? _copy("copy.59f03d642b41", { defaultValue: "Request" }) : apiProfile?.followsYou ? _copy("copy.fd3fdb5a65ea", { defaultValue: "Follow Back" }) : _copy("copy.641d1ef657bd", { defaultValue: "Follow" })}
                     </Button>
                   )}
                   {isFollowing && (
@@ -318,9 +314,7 @@ export function ProfileHeader({
                         });
                       }}
                     >
-                      <Star className="w-4 h-4" />
-                      Subscribe Now
-                    </Button>
+                      <Star className="w-4 h-4" />{_copy("copy.0cc60490a82f", { defaultValue: "Subscribe Now" })}</Button>
                   )}
                   {isSubscribed && (
                     <Button 
@@ -329,9 +323,7 @@ export function ProfileHeader({
                       className="rounded-xl border-green-500/50 text-green-400 gap-2 cursor-default"
                       disabled
                     >
-                      <Star className="w-4 h-4" />
-                      Subscribed
-                    </Button>
+                      <Star className="w-4 h-4" />{_copy("copy.25c4797cdc7f", { defaultValue: "Subscribed" })}</Button>
                   )}
                 </>
               )}
@@ -412,7 +404,7 @@ export function ProfileHeader({
                 onClick={() => {
                   const username = profile.handle.replace('@', '');
                   navigator.clipboard.writeText(`https://dehub.io/${username}`);
-                  toast.success('Profile URL copied to clipboard');
+                  toast.success(_copy("copy.04a12cab619d", { defaultValue: "Profile URL copied to clipboard" }));
                 }}
                 className="min-w-0 max-w-full truncate text-zinc-500 text-lg hover:text-zinc-300 transition-colors"
               >
@@ -427,18 +419,16 @@ export function ProfileHeader({
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(`https://dehub.io/${profile.ensName}`);
-                    toast.success('ENS profile URL copied to clipboard');
+                    toast.success(_copy("copy.0877581001b8", { defaultValue: "ENS profile URL copied to clipboard" }));
                   }}
-                  title={`Verified ENS name — dehub.io/${profile.ensName}`}
+                  title={_copy("copy.9f8fb573515e", { defaultValue: "Verified ENS name — dehub.io/{{value1}}", value1: profile.ensName })}
                   className="rounded-md bg-zinc-800/60 px-2 py-0.5 text-xs text-zinc-300 transition-colors hover:bg-zinc-700/50 hover:text-white"
                 >
                   {profile.ensName}
                 </button>
               )}
               {!isViewingOwnProfile && apiProfile?.followsYou && (
-                <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800/60 text-zinc-400">
-                  Follows you
-                </span>
+                <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800/60 text-zinc-400">{_copy("copy.3457098e7042", { defaultValue: "Follows you" })}</span>
               )}
             </div>
           </div>
@@ -449,7 +439,7 @@ export function ProfileHeader({
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(profile.walletAddress!);
-                  toast.success('Address copied to clipboard');
+                  toast.success(_copy("copy.b00057d60b08", { defaultValue: "Address copied to clipboard" }));
                 }}
                 className="flex items-center gap-1.5 mt-1 text-zinc-500 text-sm hover:text-zinc-300 transition-colors group"
               >
@@ -578,22 +568,18 @@ export function ProfileHeader({
       <AlertDialog open={showUnfollowConfirm} onOpenChange={setShowUnfollowConfirm}>
         <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Unfollow {profile.name}?</AlertDialogTitle>
-            <AlertDialogDescription className="text-white/50">
-              You will no longer see their posts in your feed.
-            </AlertDialogDescription>
+            <AlertDialogTitle className="text-white">{_copy("copy.3951eec8fb35", { defaultValue: "Unfollow " })}{profile.name}?</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/50">{_copy("copy.34684f511879", { defaultValue: "You will no longer see their posts in your feed." })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-white/[0.06] backdrop-blur-sm border-white/10 text-white hover:bg-white/[0.12]">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="bg-white/[0.06] backdrop-blur-sm border-white/10 text-white hover:bg-white/[0.12]">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-500/20 backdrop-blur-sm border border-red-500/30 text-red-400 hover:bg-red-500/30"
               onClick={() => {
                 handleUnfollow();
                 setShowUnfollowConfirm(false);
               }}
-            >
-              Unfollow
-            </AlertDialogAction>
+            >{_copy("copy.778d568e8819", { defaultValue: "Unfollow" })}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

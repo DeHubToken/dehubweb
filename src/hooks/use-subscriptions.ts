@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -149,6 +150,7 @@ function useSubscriptionInvalidation() {
  * rather than being told to delete it and start again.
  */
 export function usePublishPlan() {
+  const { t: _copy } = _useCopy();
   const invalidate = useSubscriptionInvalidation();
   const [stage, setStage] = useState<ChainStage>('idle');
 
@@ -186,7 +188,7 @@ export function usePublishPlan() {
     },
     onSuccess: () => {
       invalidate();
-      toast.success('Plan is live — people can subscribe now');
+      toast.success(_copy("copy.5d6661a4d994", { defaultValue: "Plan is live — people can subscribe now" }));
     },
     onError: (error: Error) => {
       setStage('idle');
@@ -202,6 +204,7 @@ export function usePublishPlan() {
  * Create a plan, then list it on chain so it can actually be bought.
  */
 export function useCreatePlan() {
+  const { t: _copy } = _useCopy();
   const invalidate = useSubscriptionInvalidation();
   const [stage, setStage] = useState<ChainStage>('idle');
 
@@ -248,7 +251,7 @@ export function useCreatePlan() {
     },
     onSuccess: () => {
       invalidate();
-      toast.success('Plan created and published');
+      toast.success(_copy("copy.12ccad25eaea", { defaultValue: "Plan created and published" }));
     },
     onError: (error: Error) => {
       setStage('idle');

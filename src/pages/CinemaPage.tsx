@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -44,6 +45,7 @@ function useDebounced<T>(value: T, delay: number): T {
 }
 
 export default function CinemaPage() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   // The open title lives in the URL, not in state. It has to: a film with no
   // address of its own cannot be shared, linked, carded or indexed, and every
@@ -85,16 +87,16 @@ export default function CinemaPage() {
   // hub's copy while the fetch is in flight so the tab never reads "undefined".
   const seo = openTitle
     ? {
-        title: `${openTitle.title}${openTitle.year ? ` (${openTitle.year})` : ''} — Where to Watch | DeHub`,
+        title: _copy("copy.87a58776c5e4", { defaultValue: "{{value1}}{{value2}} — Where to Watch | DeHub", value1: openTitle.title, value2: openTitle.year ? ` (${openTitle.year})` : '' }),
         description:
           openTitle.shortDescription ??
-          `Where to stream, rent or buy ${openTitle.title} in ${current.country} and 140+ other countries.`,
+          _copy("copy.9f731f9393a8", { defaultValue: "Where to stream, rent or buy {{value1}} in {{value2}} and 140+ other countries.", value1: openTitle.title, value2: current.country }),
         // Pinned to the production origin on purpose: shareOrigin() reads the
         // current one, which on staging would point every canonical there.
         url: `https://dehub.io/cinema/${canonicalFilmType}/${encodeURIComponent(filmId ?? '')}`,
       }
     : {
-        title: 'Cinema | Where to Stream, Rent or Buy Any Film | DeHub',
+        title: _copy("copy.06ce40d90680", { defaultValue: "Cinema | Where to Stream, Rent or Buy Any Film | DeHub" }),
         description: pageDescription,
         url: 'https://dehub.io/cinema',
       };
@@ -145,26 +147,16 @@ export default function CinemaPage() {
           <header className="max-w-3xl">
             <div className="flex items-center gap-2 text-zinc-500">
               <Clapperboard className="h-4 w-4" aria-hidden="true" />
-              <span className="text-xs font-medium uppercase tracking-[0.18em]">Cinema</span>
+              <span className="text-xs font-medium uppercase tracking-[0.18em]">{_copy("copy.89ec0bb81771", { defaultValue: "Cinema" })}</span>
             </div>
-            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
-              Where to watch anything
-            </h1>
-            <p className="mt-4 text-base leading-7 text-zinc-400 sm:text-lg">
-              Search any film or series and see every legal way to watch it in your
-              country — what it streams on, what it costs to rent, and what it costs
-              to own.
-            </p>
+            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">{_copy("copy.e85c840c1a0e", { defaultValue: "Where to watch anything" })}</h1>
+            <p className="mt-4 text-base leading-7 text-zinc-400 sm:text-lg">{_copy("copy.c3f40d5ba2d1", { defaultValue: "Search any film or series and see every legal way to watch it in your country — what it streams on, what it costs to rent, and what it costs to own." })}</p>
           </header>
 
           {notConfigured ? (
             <div className="mt-10 max-w-2xl rounded-2xl border border-white/10 p-8">
-              <h2 className="text-lg font-semibold text-white">Opening soon</h2>
-              <p className="mt-3 text-sm leading-6 text-zinc-400">
-                Cinema is built and waiting on the data partnership that supplies
-                availability and pricing. It goes live here the moment that
-                completes — no further changes needed.
-              </p>
+              <h2 className="text-lg font-semibold text-white">{_copy("copy.5bbcc826384b", { defaultValue: "Opening soon" })}</h2>
+              <p className="mt-3 text-sm leading-6 text-zinc-400">{_copy("copy.a2031a0257fb", { defaultValue: "Cinema is built and waiting on the data partnership that supplies availability and pricing. It goes live here the moment that completes — no further changes needed." })}</p>
             </div>
           ) : (
             <>
@@ -178,15 +170,15 @@ export default function CinemaPage() {
                     type="search"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder={searchType === 'movie' ? 'Search films…' : 'Search series…'}
-                    aria-label={searchType === 'movie' ? 'Search films' : 'Search series'}
+                    placeholder={searchType === 'movie' ? _copy("copy.27622a814d01", { defaultValue: "Search films…" }) : _copy("copy.216bb98220e8", { defaultValue: "Search series…" })}
+                    aria-label={searchType === 'movie' ? _copy("copy.456b84e47d85", { defaultValue: "Search films" }) : _copy("copy.a3f60d7cdfdf", { defaultValue: "Search series" })}
                     className="h-11 w-full rounded-xl border border-white/10 bg-white/[0.03] pl-10 pr-4 text-sm text-white placeholder:text-zinc-600 focus:border-white/30 focus:outline-none"
                   />
                 </div>
 
                 <div
                   role="group"
-                  aria-label="Content type"
+                  aria-label={_copy("copy.6f51cb040320", { defaultValue: "Content type" })}
                   className="flex h-11 shrink-0 items-center rounded-xl border border-white/10 p-1"
                 >
                   {(['movie', 'show'] as ObjectType[]).map((type) => (
@@ -201,7 +193,7 @@ export default function CinemaPage() {
                           : 'text-zinc-400 hover:text-white'
                       }`}
                     >
-                      {type === 'movie' ? 'Films' : 'Series'}
+                      {type === 'movie' ? _copy("copy.ef9e821ac893", { defaultValue: "Films" }) : _copy("copy.a8295e08ff7a", { defaultValue: "Series" })}
                     </button>
                   ))}
                 </div>
@@ -214,7 +206,7 @@ export default function CinemaPage() {
                   }}
                 >
                   <SelectTrigger
-                    aria-label="Country"
+                    aria-label={_copy("copy.701d021d08c5", { defaultValue: "Country" })}
                     className="h-11 w-full shrink-0 rounded-xl border-white/10 bg-white/[0.03] text-sm text-white sm:w-56"
                   >
                     <SelectValue>
@@ -237,43 +229,31 @@ export default function CinemaPage() {
                 </Select>
               </div>
 
-              <p className="mt-3 text-xs text-zinc-600">
-                Prices and availability are for {current.country}. Streaming rights
-                differ by country, so the same film can cost more, less, or nothing
-                elsewhere.
-              </p>
+              <p className="mt-3 text-xs text-zinc-600">{_copy("copy.cb945f30b273", { defaultValue: "Prices and availability are for " })}{current.country}{_copy("copy.5975ee0ebdc2", { defaultValue: ". Streaming rights differ by country, so the same film can cost more, less, or nothing elsewhere." })}</p>
 
               <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
-                <section aria-label="Search results">
+                <section aria-label={_copy("copy.e978b00de465", { defaultValue: "Search results" })}>
                   {search.isFetching && (
                     <div className="flex items-center gap-2 text-sm text-zinc-500">
-                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                      Searching…
-                    </div>
+                      <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />{_copy("copy.c31723ab3302", { defaultValue: "Searching…" })}</div>
                   )}
 
                   {/* An errored search is not an empty one. Saying "nothing
                       found" when the request failed reads as "that film does
                       not exist", which sends people away rather than back. */}
                   {!search.isFetching && search.isError && (
-                    <p className="text-sm text-zinc-400">
-                      Search is unavailable right now. Try again in a moment.
-                    </p>
+                    <p className="text-sm text-zinc-400">{_copy("copy.f33b22750c05", { defaultValue: "Search is unavailable right now. Try again in a moment." })}</p>
                   )}
 
                   {!search.isFetching &&
                     !search.isError &&
                     debouncedQuery.trim().length >= 2 &&
                     results.length === 0 && (
-                      <p className="text-sm text-zinc-500">
-                        Nothing found for “{debouncedQuery}”. Check the spelling, or
-                        try the original-language title.
-                      </p>
+                      <p className="text-sm text-zinc-500">{_copy("copy.ae122d7771cb", { defaultValue: "Nothing found for “" })}{debouncedQuery}{_copy("copy.d08201697417", { defaultValue: "”. Check the spelling, or try the original-language title." })}</p>
                     )}
 
                   {debouncedQuery.trim().length < 2 && !search.isError && (
-                    <p className="text-sm text-zinc-600">
-                      Start typing to search {searchType === 'movie' ? 'films' : 'series'}.
+                    <p className="text-sm text-zinc-600">{_copy("copy.a9af8eced650", { defaultValue: "Start typing to search " })}{searchType === 'movie' ? _copy("copy.db944067d6c7", { defaultValue: "films" }) : _copy("copy.9cda38ea3a2b", { defaultValue: "series" })}.
                     </p>
                   )}
 
@@ -296,7 +276,7 @@ export default function CinemaPage() {
                   )}
                 </section>
 
-                <aside aria-label="Where to watch" className="lg:sticky lg:top-16 lg:self-start">
+                <aside aria-label={_copy("copy.842e10fb4af2", { defaultValue: "Where to watch" })} className="lg:sticky lg:top-16 lg:self-start">
                   {filmId ? (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between gap-3">
@@ -305,18 +285,14 @@ export default function CinemaPage() {
                           onClick={() => navigate('/cinema')}
                           className="inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-white"
                         >
-                          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-                          Back to search
-                        </button>
+                          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />{_copy("copy.22252a139c6a", { defaultValue: "Back to search" })}</button>
 
                         <button
                           type="button"
                           onClick={() => setShareOpen(true)}
                           className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-sm text-white transition-colors hover:bg-white/5"
                         >
-                          <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
-                          Share
-                        </button>
+                          <Share2 className="h-3.5 w-3.5" aria-hidden="true" />{_copy("copy.29887a5ff984", { defaultValue: "Share" })}</button>
                       </div>
 
                       <OfferPanel
@@ -334,8 +310,7 @@ export default function CinemaPage() {
                     </div>
                   ) : (
                     <div className="rounded-xl border border-white/10 p-6">
-                      <p className="text-sm text-zinc-500">
-                        Pick a title to see every way to watch it in {current.country}.
+                      <p className="text-sm text-zinc-500">{_copy("copy.835a3ae0e78e", { defaultValue: "Pick a title to see every way to watch it in " })}{current.country}.
                       </p>
                     </div>
                   )}

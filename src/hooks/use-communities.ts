@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Communities Hooks
  * =================
@@ -280,6 +281,7 @@ export function useIsCommunityMember(communityId: string | undefined) {
 // ─── Create community ────────────────────────────────────────────────────────
 
 export function useCreateCommunity() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -309,13 +311,13 @@ export function useCreateCommunity() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communities', 'discover'] });
       qc.invalidateQueries({ queryKey: ['communities', 'user'] });
-      toast.success('Community created!');
+      toast.success(_copy("copy.62ce8772eeee", { defaultValue: "Community created!" }));
     },
     onError: (e: any) => {
       if (e?.message?.includes('duplicate')) {
-        toast.error('That slug is already taken');
+        toast.error(_copy("copy.b9553afecdaa", { defaultValue: "That slug is already taken" }));
       } else {
-        toast.error('Failed to create community');
+        toast.error(_copy("copy.fc11ae3b7945", { defaultValue: "Failed to create community" }));
       }
     },
   });
@@ -324,6 +326,7 @@ export function useCreateCommunity() {
 // ─── Update community ────────────────────────────────────────────────────────
 
 export function useUpdateCommunity() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -345,7 +348,7 @@ export function useUpdateCommunity() {
       qc.setQueryData<Community>(['communities', 'slug', data.slug], data);
       qc.invalidateQueries({ queryKey: ['communities', 'discover'] });
       qc.invalidateQueries({ queryKey: ['community'] });
-      toast.success('Community updated');
+      toast.success(_copy("copy.b9e94842367e", { defaultValue: "Community updated" }));
     },
     onError: (error) => toast.error(adminErrorMessage(error, 'Failed to update community')),
   });
@@ -354,6 +357,7 @@ export function useUpdateCommunity() {
 // ─── Join community ──────────────────────────────────────────────────────────
 
 export function useJoinCommunity() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -413,7 +417,7 @@ export function useJoinCommunity() {
       ctx?.prevMembership?.forEach(([key, data]) => qc.setQueryData(key, data));
       if (ctx?.prevDiscover) qc.setQueryData(['communities', 'discover'], ctx.prevDiscover);
       ctx?.prevSlug?.forEach(([key, data]) => qc.setQueryData(key, data));
-      toast.error('Failed to join');
+      toast.error(_copy("copy.6d163522af89", { defaultValue: "Failed to join" }));
     },
     onSuccess: (result, { communityId }) => {
       // Narrow refetches: real membership row (server id) + small per-community lists
@@ -431,6 +435,7 @@ export function useJoinCommunity() {
 // ─── Leave community ────────────────────────────────────────────────────────
 
 export function useLeaveCommunity() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -483,7 +488,7 @@ export function useLeaveCommunity() {
       ctx?.prevSlug?.forEach(([key, data]) => qc.setQueryData(key, data));
       ctx?.prevUser?.forEach(([key, data]) => qc.setQueryData(key, data));
       if (ctx?.prevMembers) qc.setQueryData(['communities', 'members', communityId], ctx.prevMembers);
-      toast.error('Failed to leave');
+      toast.error(_copy("copy.9b71f3f35f22", { defaultValue: "Failed to leave" }));
     },
     onSuccess: (_data, communityId) => {
       // Caches already patched optimistically — mark the narrow keys stale without refetching
@@ -518,6 +523,7 @@ export function usePinnedCommunities(walletAddress: string | null | undefined) {
 }
 
 export function usePinCommunity() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -538,13 +544,14 @@ export function usePinCommunity() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communities', 'pinned'] });
-      toast.success('Community pinned to profile');
+      toast.success(_copy("copy.0bb94dad879e", { defaultValue: "Community pinned to profile" }));
     },
-    onError: () => toast.error('Failed to pin community'),
+    onError: () => toast.error(_copy("copy.de6f13c6ad9b", { defaultValue: "Failed to pin community" })),
   });
 }
 
 export function useUnpinCommunity() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -563,9 +570,9 @@ export function useUnpinCommunity() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communities', 'pinned'] });
-      toast.success('Community unpinned');
+      toast.success(_copy("copy.a9f02f461177", { defaultValue: "Community unpinned" }));
     },
-    onError: () => toast.error('Failed to unpin'),
+    onError: () => toast.error(_copy("copy.b8d9e21d2ec0", { defaultValue: "Failed to unpin" })),
   });
 }
 

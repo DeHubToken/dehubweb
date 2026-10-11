@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageContext - Global context for Stages (audio spaces)
  * =========================================================
@@ -536,6 +537,7 @@ export function createStageNow(
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function StageProvider({ children }: { children: ReactNode }) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, user } = useAuth();
 
   // Stage state
@@ -1159,12 +1161,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
       setMyRole('speaker');
       setIsMuted(true);
       setHasRaisedHand(false);
-      toast.success("You're now a speaker! Unmute to talk.");
+      toast.success(_copy("copy.6c2387c827f2", { defaultValue: "You're now a speaker! Unmute to talk." }));
     } catch (err) {
       console.error('Error upgrading to speaker:', err);
-      toast.error('Failed to enable microphone');
+      toast.error(_copy("copy.0f62bd716439", { defaultValue: "Failed to enable microphone" }));
     }
-  }, [voiceEffect, voiceEffectsHook]);
+  }, [voiceEffect, voiceEffectsHook, _copy]);
 
   // ─── Create stage ────────────────────────────────────────────────────────
 
@@ -1245,7 +1247,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   const createSpace = useCallback(
     async (title: string, description?: string, coverImageUrl?: string | null): Promise<AudioSpace | null> => {
-      if (!walletAddress) { toast.error('Please log in first'); return null; }
+      if (!walletAddress) { toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" })); return null; }
       setIsLoading(true);
       try {
         const channelName = `stage_${Date.now()}_${Math.random().toString(36).substring(7)}`;
@@ -1274,7 +1276,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         if (error) throw error;
 
         await goLiveAsHost(space as AudioSpace, 'ended');
-        toast.success("Stage created! You're now live.");
+        toast.success(_copy("copy.f5bcf2334b45", { defaultValue: "Stage created! You're now live." }));
         return space as AudioSpace;
       } catch (err) {
         // One toast, carrying the actual reason. The old pair of handlers
@@ -1287,7 +1289,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [walletAddress, user, goLiveAsHost, signed],
+    [walletAddress, user, goLiveAsHost, signed, _copy],
   );
 
   // Feed the module-level opener the composer uses (see createStageNow above).
@@ -1300,7 +1302,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   const scheduleSpace = useCallback(
     async (input: ScheduleSpaceInput): Promise<AudioSpace | null> => {
-      if (!walletAddress) { toast.error('Please log in first'); return null; }
+      if (!walletAddress) { toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" })); return null; }
       setIsLoading(true);
       try {
         // The channel name is minted now and kept for the whole life of the
@@ -1332,13 +1334,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
         return space as AudioSpace;
       } catch (err) {
         console.error('Error scheduling stage:', err);
-        toast.error('Failed to schedule stage');
+        toast.error(_copy("copy.6f7b8b255535", { defaultValue: "Failed to schedule stage" }));
         return null;
       } finally {
         setIsLoading(false);
       }
     },
-    [walletAddress, user, refreshScheduledSpaces, signed],
+    [walletAddress, user, refreshScheduledSpaces, signed, _copy],
   );
 
   useEffect(() => {
@@ -1349,7 +1351,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   /** Take a stage that was scheduled earlier live now. Host only. */
   const startScheduledSpace = useCallback(
     async (spaceId: string): Promise<boolean> => {
-      if (!walletAddress) { toast.error('Please log in first'); return false; }
+      if (!walletAddress) { toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" })); return false; }
       setIsLoading(true);
       try {
         const { data: existing, error: readErr } = await supabase
@@ -1363,7 +1365,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // address today, but a row written by any other route with a
         // checksummed one would otherwise lock its own host out of starting it.
         if (!sameWallet(existing.host_wallet_address, walletAddress)) {
-          toast.error('Only the host can start this stage');
+          toast.error(_copy("copy.f60c7be0ca85", { defaultValue: "Only the host can start this stage" }));
           return false;
         }
         if (existing.status === 'live') {
@@ -1371,7 +1373,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           return await joinSpaceRef.current(spaceId);
         }
         if (existing.status !== 'scheduled') {
-          toast.error('This stage has already ended');
+          toast.error(_copy("copy.5d3b3ffaef04", { defaultValue: "This stage has already ended" }));
           return false;
         }
 
@@ -1394,7 +1396,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         await goLiveAsHost(space as AudioSpace, 'scheduled');
         await refreshScheduledSpaces();
-        toast.success("You're now live.");
+        toast.success(_copy("copy.7f66339f6c52", { defaultValue: "You're now live." }));
         return true;
       } catch (err) {
         stageLogger.error('Scheduled stage failed to start', { spaceId }, err);
@@ -1404,7 +1406,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [walletAddress, goLiveAsHost, refreshScheduledSpaces, signed],
+    [walletAddress, goLiveAsHost, refreshScheduledSpaces, signed, _copy],
   );
 
   /** Call off a scheduled stage. Host only; the row is removed outright. */
@@ -1422,20 +1424,20 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .setHeader('x-wallet-address', walletAddress.toLowerCase());
         if (error) throw error;
         await refreshScheduledSpaces();
-        toast.success('Stage cancelled');
+        toast.success(_copy("copy.81e4cd3539c6", { defaultValue: "Stage cancelled" }));
       } catch (err) {
         console.error('Error cancelling scheduled stage:', err);
-        toast.error('Failed to cancel stage');
+        toast.error(_copy("copy.6149a8421d78", { defaultValue: "Failed to cancel stage" }));
       }
     },
-    [walletAddress, refreshScheduledSpaces],
+    [walletAddress, refreshScheduledSpaces, _copy],
   );
 
   // ─── Join stage ──────────────────────────────────────────────────────────
 
   const joinSpace = useCallback(
     async (spaceId: string): Promise<boolean> => {
-      if (!walletAddress) { toast.error('Please log in first'); return false; }
+      if (!walletAddress) { toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" })); return false; }
       // A visitor who was guest-listening and then logged in joins properly —
       // drop the listen-only session before taking the real one.
       if (guestSpaceRef.current) await guestStopListeningRef.current();
@@ -1543,7 +1545,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [walletAddress, user, startRecording],
+    [walletAddress, user, startRecording, _copy],
   );
 
   // ─── Guest listening ─────────────────────────────────────────────────────
@@ -1615,7 +1617,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           const row = payload.new as { status?: string; last_speech_at?: string | null; started_at?: string | null };
           if (row?.status === 'ended') {
             if (endedForInactivity(row)) toastInactivityEnd(guestSpace.title);
-            else toast.info('Stage ended', {
+            else toast.info(_copy("copy.bb29ba6e76c1", { defaultValue: "Stage ended" }), {
               description: `The host ended "${guestSpace.title}".`,
               duration: 6000,
             });
@@ -1731,7 +1733,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     // The room is gone, so the sheet goes with it. Leaving under your own
     // steam is different — that lands you back on the stage list.
     setIsModalOpen(false);
-    toast.success('Stage ended');
+    toast.success(_copy("copy.bb29ba6e76c1", { defaultValue: "Stage ended" }));
     void leaveSpace();
     void signed(
       supabase
@@ -1741,7 +1743,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     ).then(({ error }) => {
       if (error) console.warn('Direct end failed (will auto-end via trigger):', error.message);
     });
-  }, [currentSpace, myRole, leaveSpace, signed]);
+  }, [currentSpace, myRole, leaveSpace, signed, _copy]);
 
   /**
    * Close a stage you host but are not standing in.
@@ -1758,7 +1760,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
    */
   const endStageById = useCallback(
     async (spaceId: string): Promise<boolean> => {
-      if (!walletAddress) { toast.error('Please log in first'); return false; }
+      if (!walletAddress) { toast.error(_copy("copy.f6101c84c1c8", { defaultValue: "Please log in first" })); return false; }
       try {
         const { data: space, error: readError } = await supabase
           .from('audio_spaces')
@@ -1767,7 +1769,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
           .single();
         if (readError || !space) throw new Error('Stage not found');
         if (!sameWallet(space.host_wallet_address, walletAddress)) {
-          toast.error('Only the host can end this stage');
+          toast.error(_copy("copy.2b8696f5ecf8", { defaultValue: "Only the host can end this stage" }));
           return false;
         }
         if (space.status === 'ended') {
@@ -1794,7 +1796,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // If this was the room we thought we were in, stop believing it.
         if (currentSpace?.id === spaceId) await leaveSpace();
         await refreshSpaces();
-        toast.success('Stage ended');
+        toast.success(_copy("copy.bb29ba6e76c1", { defaultValue: "Stage ended" }));
         return true;
       } catch (err) {
         stageLogger.error('Ending a stage from outside it failed', { spaceId }, err);
@@ -1802,7 +1804,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         return false;
       }
     },
-    [walletAddress, signed, refreshSpaces, currentSpace, leaveSpace],
+    [walletAddress, signed, refreshSpaces, currentSpace, leaveSpace, _copy],
   );
 
   // ─── Set voice effect ─────────────────────────────────────────────────────
@@ -1860,11 +1862,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
       toast.success(`Voice: ${effectId === 'none' ? 'Normal' : effectId}`);
     } catch (err) {
       console.error('Error switching voice effect:', err);
-      toast.error('Failed to switch voice effect');
+      toast.error(_copy("copy.85e022c71fbe", { defaultValue: "Failed to switch voice effect" }));
     } finally {
       isEffectSwitchingRef.current = false;
     }
-  }, []); // stable — all Agora and hook state accessed via refs
+  }, [_copy]); // stable — all Agora and hook state accessed via refs
 
   // ─── Toggle mute ─────────────────────────────────────────────────────────
 
@@ -1936,7 +1938,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const startScreenShare = useCallback(async () => {
-    if (!agoraClientRef.current) { toast.error('Not connected to a stage'); return; }
+    if (!agoraClientRef.current) { toast.error(_copy("copy.6f900045dd16", { defaultValue: "Not connected to a stage" })); return; }
     if (screenVideoTrackRef.current) return;
 
     let videoTrack: any = null;
@@ -2007,9 +2009,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
       const name = (err as { name?: string } | null)?.name;
       if (code === 'PERMISSION_DENIED' || name === 'NotAllowedError' || name === 'AbortError') return;
       console.error('Error starting screen share:', err);
-      toast.error('Failed to share screen');
+      toast.error(_copy("copy.5c70d1026341", { defaultValue: "Failed to share screen" }));
     }
-  }, [stopScreenShare]);
+  }, [stopScreenShare, _copy]);
 
   // ─── Radio ───────────────────────────────────────────────────────────────
   //
@@ -2061,9 +2063,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   }, [stopRadio]);
 
   const startRadio = useCallback(async (station: StageRadioStation, queue?: StageRadioStation[]) => {
-    if (!agoraClientRef.current) { toast.error('Not connected to a stage'); return; }
-    if (myRoleRef.current !== 'host') { toast.error('Only the host can put the radio on air'); return; }
-    if (!station.url) { toast.error('That station has no stream to play'); return; }
+    if (!agoraClientRef.current) { toast.error(_copy("copy.6f900045dd16", { defaultValue: "Not connected to a stage" })); return; }
+    if (myRoleRef.current !== 'host') { toast.error(_copy("copy.bc8a2a418b4d", { defaultValue: "Only the host can put the radio on air" })); return; }
+    if (!station.url) { toast.error(_copy("copy.b47c545f76a1", { defaultValue: "That station has no stream to play" })); return; }
 
     setRadioStation(station);
     setRadioStatus('connecting');
@@ -2106,10 +2108,10 @@ export function StageProvider({ children }: { children: ReactNode }) {
       });
     } catch (err) {
       console.error('[Stage] Radio start failed', err);
-      toast.error('Could not put that station on air');
+      toast.error(_copy("copy.88be655c6f72", { defaultValue: "Could not put that station on air" }));
       void stopRadio();
     }
-  }, [advanceRadio, stopRadio]);
+  }, [advanceRadio, stopRadio, _copy]);
   startRadioRef.current = startRadio;
 
   const radioNext = useCallback(() => {
@@ -2201,12 +2203,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
       // row IS the state being asked for; treat it as success.
       if (error && error.code !== '23505') throw error;
       setHasRaisedHand(true);
-      toast.success('Hand raised! Waiting for host approval.');
+      toast.success(_copy("copy.548ec41068da", { defaultValue: "Hand raised! Waiting for host approval." }));
     } catch (err) {
       console.error('Error raising hand:', err);
-      toast.error('Failed to raise hand');
+      toast.error(_copy("copy.522ebbcf89da", { defaultValue: "Failed to raise hand" }));
     }
-  }, [currentSpace, walletAddress, user, myRole, hasRaisedHand, signed]);
+  }, [currentSpace, walletAddress, user, myRole, hasRaisedHand, signed, _copy]);
 
   const lowerHand = useCallback(async () => {
     if (!currentSpace || !walletAddress) return;
@@ -2254,12 +2256,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // a listener it did not have.
         await recountSpace(currentSpace.id);
 
-        toast.success('Speaker approved');
+        toast.success(_copy("copy.0000cb98ea19", { defaultValue: "Speaker approved" }));
       } catch (err) {
         console.error('Error approving speaker:', err);
       }
     },
-    [currentSpace, myRole, signed],
+    [currentSpace, myRole, signed, _copy],
   );
 
   // ─── Remove speaker ──────────────────────────────────────────────────────
@@ -2278,12 +2280,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         await recountSpace(currentSpace.id);
 
-        toast.success('Speaker removed');
+        toast.success(_copy("copy.044443360246", { defaultValue: "Speaker removed" }));
       } catch (err) {
         console.error('Error removing speaker:', err);
       }
     },
-    [currentSpace, myRole, signed],
+    [currentSpace, myRole, signed, _copy],
   );
 
   // ─── Invite speaker directly ─────────────────────────────────────────────
@@ -2303,13 +2305,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         await recountSpace(currentSpace.id);
 
-        toast.success('Invited as speaker');
+        toast.success(_copy("copy.b0ba7f49dd84", { defaultValue: "Invited as speaker" }));
       } catch (err) {
         console.error('Error inviting speaker:', err);
-        toast.error('Failed to invite speaker');
+        toast.error(_copy("copy.a0c9cc42d54d", { defaultValue: "Failed to invite speaker" }));
       }
     },
-    [currentSpace, myRole, signed],
+    [currentSpace, myRole, signed, _copy],
   );
 
   // ─── Realtime subscriptions ──────────────────────────────────────────────
@@ -2415,7 +2417,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             } else if (myRoleRef.current !== 'host') {
               // Named and given room to be read: the room vanishing off the
               // screen is the only other signal a listener gets.
-              toast.info('Stage ended', {
+              toast.info(_copy("copy.bb29ba6e76c1", { defaultValue: "Stage ended" }), {
                 description: `The host ended "${updated.title}".`,
                 duration: 6000,
               });

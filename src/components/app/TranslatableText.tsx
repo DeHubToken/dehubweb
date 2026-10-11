@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Translatable Text Component
  * ===========================
@@ -99,6 +100,7 @@ interface TranslatableTextProps {
  * Inline email copy button - shows mail icon with tooltip, copies on click
  */
 function EmailCopyInline({ email }: { email: string }) {
+  const { t: _copy } = _useCopy();
   const [copied, setCopied] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -106,7 +108,7 @@ function EmailCopyInline({ email }: { email: string }) {
     e.stopPropagation();
     navigator.clipboard.writeText(email).then(() => {
       setCopied(true);
-      toast.success('Email copied');
+      toast.success(_copy("copy.28411e5e86b6", { defaultValue: "Email copied" }));
       setTimeout(() => setCopied(false), 2000);
     });
   };
@@ -121,7 +123,7 @@ function EmailCopyInline({ email }: { email: string }) {
           {copied ? <Check className="w-3 h-3 text-white" /> : <Mail className="w-3 h-3" />}
         </button>
       </TooltipTrigger>
-      <TooltipContent>{copied ? 'Copied!' : email}</TooltipContent>
+      <TooltipContent>{copied ? _copy("copy.ea61bc15688d", { defaultValue: "Copied!" }) : email}</TooltipContent>
     </Tooltip>
   );
 }

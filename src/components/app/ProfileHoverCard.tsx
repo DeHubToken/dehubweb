@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Profile Hover Card
  * ==================
@@ -66,6 +67,7 @@ export function ProfileHoverCard({
   badgeBalance,
   children,
 }: ProfileHoverCardProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, openLoginModal } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -148,10 +150,10 @@ export function ProfileHoverCard({
       name: profile.displayName || profile.username || 'user',
       onError: () => {
         setProfile(prev => prev ? { ...prev, followers: Math.max(0, prev.followers - 1) } : null);
-        toast.error('Failed to follow');
+        toast.error(_copy("copy.add025e2b83c", { defaultValue: "Failed to follow" }));
       },
     });
-  }, [walletAddress, openLoginModal, profile, toggleFollow]);
+  }, [walletAddress, openLoginModal, profile, toggleFollow, _copy]);
 
   const handleNavigate = useCallback(() => {
     const cleanUsername = (profile?.username || creatorUsername)?.replace('@', '');
@@ -210,14 +212,10 @@ export function ProfileHoverCard({
                   data-follow-btn
                   className="inline-flex items-center gap-1.5 px-3 h-7 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/15 text-white border border-white/15 transition-colors disabled:opacity-60"
                 >
-                  <UserPlus className="w-3.5 h-3.5" />
-                  Follow
-                </button>
+                  <UserPlus className="w-3.5 h-3.5" />{_copy("copy.641d1ef657bd", { defaultValue: "Follow" })}</button>
               )}
               {!profile.isOwnProfile && effectiveFollowing && (
-                <span className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-white/80 bg-white/5 border border-white/10">
-                  Following ✓
-                </span>
+                <span className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-white/80 bg-white/5 border border-white/10">{_copy("copy.ec7a1a6ce401", { defaultValue: "Following ✓" })}</span>
               )}
             </div>
 
@@ -226,7 +224,7 @@ export function ProfileHoverCard({
               <div className="flex items-center gap-1.5">
                 <span className="inline-flex items-baseline gap-1 shrink min-w-0">
                   <span className="font-semibold text-white text-sm truncate max-w-[180px] leading-tight">
-                    {profile.displayName || profile.username || 'Unknown'}
+                    {profile.displayName || profile.username || _copy("copy.b764cdc0eab7", { defaultValue: "Unknown" })}
                   </span>
                   <BadgeIcon
                     badgeBalance={profile.badgeBalance}
@@ -255,11 +253,11 @@ export function ProfileHoverCard({
             <div className="flex items-center gap-4 mt-3">
               <span className="text-xs">
                 <span className="text-white font-semibold">{formatCount(profile.following)}</span>
-                <span className="text-white/60 ml-1">Following</span>
+                <span className="text-white/60 ml-1">{_copy("copy.344b4271ca01", { defaultValue: "Following" })}</span>
               </span>
               <span className="text-xs">
                 <span className="text-white font-semibold">{formatCount(profile.followers)}</span>
-                <span className="text-white/60 ml-1">Followers</span>
+                <span className="text-white/60 ml-1">{_copy("copy.a145ab342a4a", { defaultValue: "Followers" })}</span>
               </span>
             </div>
           </div>

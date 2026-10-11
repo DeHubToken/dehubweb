@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Chat AI Model Constants
  * ========================
@@ -16,31 +17,31 @@ export const CHAT_MODEL_OPTIONS: ChatModelOption[] = [
   {
     id: 'auto',
     name: 'Auto',
-    description: 'DeHub trained model',
+    get description() { return _translateCopy("copy.4a9fd15a895c", { defaultValue: "DeHub trained model" }); },
     emoji: '✨'
   },
   {
     id: 'gemini-2.5-flash',
     name: 'Gemini Flash',
-    description: 'Fast & free',
+    get description() { return _translateCopy("copy.98f96a4d8578", { defaultValue: "Fast & free" }); },
     emoji: '⚡'
   },
   {
     id: 'gemini-2.5-pro',
     name: 'Gemini Pro',
-    description: 'Best reasoning $$',
+    get description() { return _translateCopy("copy.6157bb4bd99f", { defaultValue: "Best reasoning $$" }); },
     emoji: '💎'
   },
   {
     id: 'gpt-5-mini',
     name: 'GPT-5 Mini',
-    description: 'OpenAI $',
+    get description() { return _translateCopy("copy.af4707aebdfa", { defaultValue: "OpenAI $" }); },
     emoji: '🧠'
   },
   {
     id: 'grok-4',
     name: 'Grok 4',
-    description: 'xAI flagship $$$',
+    get description() { return _translateCopy("copy.362058144c4a", { defaultValue: "xAI flagship $$$" }); },
     emoji: '🔮'
   }
 ];

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Feature Request Comments Hook
  * ==============================
@@ -181,6 +182,7 @@ async function requestAssistantReply(commentId: string): Promise<void> {
 }
 
 export function useSubmitComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress, user } = useAuth();
 
@@ -272,12 +274,13 @@ export function useSubmitComment() {
       });
     },
     onError: () => {
-      toast.error('Failed to post comment');
+      toast.error(_copy("copy.791ab06be905", { defaultValue: "Failed to post comment" }));
     },
   });
 }
 
 export function useEditComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -295,12 +298,13 @@ export function useEditComment() {
       queryClient.invalidateQueries({ queryKey: ['feature-request-comments', variables.featureRequestId] });
     },
     onError: () => {
-      toast.error('Failed to save comment');
+      toast.error(_copy("copy.78443791af16", { defaultValue: "Failed to save comment" }));
     },
   });
 }
 
 export function useDeleteComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -330,10 +334,10 @@ export function useDeleteComment() {
           ),
         };
       });
-      toast.success('Comment deleted');
+      toast.success(_copy("copy.7199a134a339", { defaultValue: "Comment deleted" }));
     },
     onError: () => {
-      toast.error('Failed to delete comment');
+      toast.error(_copy("copy.c65a5314ca9e", { defaultValue: "Failed to delete comment" }));
     },
   });
 }
@@ -346,6 +350,7 @@ export function useDeleteComment() {
  * upsert standing in for the API's vote swap.
  */
 export function useReactToComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -387,7 +392,7 @@ export function useReactToComment() {
       queryClient.invalidateQueries({ queryKey: ['feature-request-comments', variables.featureRequestId] });
     },
     onError: () => {
-      toast.error('Failed to react');
+      toast.error(_copy("copy.13931898084d", { defaultValue: "Failed to react" }));
     },
   });
 }

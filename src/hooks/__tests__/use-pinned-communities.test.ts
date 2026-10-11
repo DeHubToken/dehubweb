@@ -3,6 +3,8 @@ import { usePinnedCommunities, usePinCommunity, useUnpinCommunity } from '../use
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }) }));
+
 vi.mock('@tanstack/react-query', () => ({
   useQuery: (options: unknown) => options,
   useMutation: (options: unknown) => options,

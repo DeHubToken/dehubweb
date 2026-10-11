@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Store Detail Page
  * ==================
@@ -19,6 +20,7 @@ import { storageImage, deviceWidth, isMdUp } from '@/lib/media-url';
 import { AppState } from '@/components/app/AppState';
 
 export default function StoreDetailPage() {
+  const { t: _copy } = _useCopy();
   const { storeId } = useParams<{ storeId: string }>();
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -67,7 +69,7 @@ export default function StoreDetailPage() {
   if (!store && storeFailed) {
     return (
       <div className="min-h-screen">
-        <SEOHead title={`${t('common.somethingWentWrong')} — DeHub Stores`} description={t('common.somethingWentWrong')} noindex />
+        <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: t('common.somethingWentWrong') })} description={t('common.somethingWentWrong')} noindex />
         <PageIsland back backFallback="/app/stores" icon="stores" title={t('stores.title')} />
         <PageBody>
         <div className="py-12">
@@ -87,7 +89,7 @@ export default function StoreDetailPage() {
   if (!store) {
     return (
       <div className="min-h-screen">
-        <SEOHead title={`${t('stores.storeNotFound')} — DeHub Stores`} description={t('stores.storeNotFound')} noindex />
+        <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: t('stores.storeNotFound') })} description={t('stores.storeNotFound')} noindex />
         <PageIsland back backFallback="/app/stores" icon="stores" title={t('stores.title')} />
         <PageBody>
           <PageEmpty
@@ -102,7 +104,7 @@ export default function StoreDetailPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title={`${store.name} — DeHub Stores`} description={(store.description || `Shop ${store.name} on DeHub. Peer-to-peer commerce paid in tokens or USDC.`).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
+      <SEOHead title={_copy("copy.9a01cfe1592a", { defaultValue: "{{value1}} — DeHub Stores", value1: store.name })} description={(store.description || `Shop ${store.name} on DeHub. Peer-to-peer commerce paid in tokens or USDC.`).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
       <PageIsland
         back
         backFallback="/app/stores"

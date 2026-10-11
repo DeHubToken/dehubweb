@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -93,6 +94,7 @@ interface ChatInputProps {
 }
 
 export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisabledReason, isSendingFee, feeAmount, confirmBeforeSend, canSend, replyTo, onCancelReply, initialText, thread, peerName, draftKey, allowDocuments = true, voiceMaxDuration = 59 }: ChatInputProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [message, setMessage] = useDraft(draftKey, initialText ?? '');
   // initialText can arrive a tick after mount (MessagesPage sets the prefill
@@ -339,7 +341,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     if (!file) return;
 
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('Image must be less than 10MB');
+      toast.error(_copy("copy.61247515dbaa", { defaultValue: "Image must be less than 10MB" }));
       return;
     }
 
@@ -359,7 +361,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     e.preventDefault();
 
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('Image must be less than 10MB');
+      toast.error(_copy("copy.61247515dbaa", { defaultValue: "Image must be less than 10MB" }));
       return;
     }
 
@@ -396,7 +398,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
   const handleEnhanceText = async () => {
     if (!message.trim()) {
-      toast.error('Enter some text to enhance');
+      toast.error(_copy("copy.7530edd4f509", { defaultValue: "Enter some text to enhance" }));
       return;
     }
 
@@ -413,12 +415,12 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
 
       if (data?.enhancedText) {
         setMessage(data.enhancedText);
-        toast.success('Text enhanced!');
+        toast.success(_copy("copy.361c5b420ff8", { defaultValue: "Text enhanced!" }));
       } else if (data?.error) {
         toast.error(data.error);
       }
     } catch (err) {
-      toast.error('Failed to enhance text');
+      toast.error(_copy("copy.95724793b6b1", { defaultValue: "Failed to enhance text" }));
     } finally {
       setIsEnhancing(false);
       textareaRef.current?.focus();
@@ -522,7 +524,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           <Reply className="w-3.5 h-3.5 text-white flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-xs font-medium text-white">{replyTo.userName}</span>
-            <p className="text-xs text-zinc-400 truncate">{replyTo.content || (replyTo.type === 'gif' ? 'GIF' : 'Image')}</p>
+            <p className="text-xs text-zinc-400 truncate">{replyTo.content || (replyTo.type === 'gif' ? 'GIF' : _copy("copy.1aa4cb0bcca7", { defaultValue: "Image" }))}</p>
           </div>
           <button
             onClick={onCancelReply}
@@ -538,7 +540,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
         <div className="mb-2 relative inline-block">
           <img
             src={imagePreviewUrl}
-            alt="Preview"
+            alt={_copy("copy.324b134f57c7", { defaultValue: "Preview" })}
             className="h-20 rounded-lg object-cover"
           />
           <button
@@ -565,7 +567,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           <button
             onClick={clearDoc}
             className="absolute -top-2 -right-2 w-5 h-5 bg-zinc-800 border border-white/20 rounded-md flex items-center justify-center hover:bg-zinc-700 transition-colors"
-            aria-label="Remove attachment"
+            aria-label={_copy("copy.595b066a8838", { defaultValue: "Remove attachment" })}
           >
             <X className="w-3 h-3 text-white" />
           </button>
@@ -576,8 +578,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       {audioPreview && (
         <div className="mb-2 relative inline-flex items-center gap-2 px-3 py-2 bg-zinc-800 rounded-lg">
           <div className="w-2 h-2 rounded-full bg-white" />
-          <span className="text-sm text-white">
-            🎤 Voice message ({formatDuration(audioPreview.duration)})
+          <span className="text-sm text-white">{_copy("copy.1ea036b48a82", { defaultValue: "🎤 Voice message (" })}{formatDuration(audioPreview.duration)})
           </span>
           <button
             onClick={removeAudioPreview}
@@ -592,7 +593,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       <div>
         <Textarea
           ref={textareaRef}
-          placeholder="Type a message..."
+          placeholder={_copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
           value={message}
           onChange={(e) => {
             const val = e.target.value;
@@ -645,7 +646,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
                   <Gem className="w-5 h-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Send a tip</TooltipContent>
+              <TooltipContent>{_copy("copy.3dd188029374", { defaultValue: "Send a tip" })}</TooltipContent>
             </Tooltip>
           )}
 
@@ -685,7 +686,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
                     <Paperclip className="w-5 h-5" />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Attach a file</TooltipContent>
+                <TooltipContent>{_copy("copy.21298c62c8e5", { defaultValue: "Attach a file" })}</TooltipContent>
               </Tooltip>
               <input
                 ref={docInputRef}
@@ -741,8 +742,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
               >
                 <Wand2 className="w-4 h-4 text-zinc-300" />
                 <div className="flex flex-col">
-                  <span>Enhance</span>
-                  <span className="text-[10px] text-zinc-500">Fix spelling & grammar</span>
+                  <span>{_copy("copy.a91c19f54936", { defaultValue: "Enhance" })}</span>
+                  <span className="text-[10px] text-zinc-500">{_copy("copy.0563e717bbdb", { defaultValue: "Fix spelling & grammar" })}</span>
                 </div>
               </button>
               <button
@@ -752,8 +753,8 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
               >
                 <MessageCircleQuestion className="w-4 h-4 text-zinc-300" />
                 <div className="flex flex-col">
-                  <span>Ask</span>
-                  <span className="text-[10px] text-zinc-500">Tag @assistant for help</span>
+                  <span>{_copy("copy.b8c209cdead6", { defaultValue: "Ask" })}</span>
+                  <span className="text-[10px] text-zinc-500">{_copy("copy.63e722c79bfc", { defaultValue: "Tag @assistant for help" })}</span>
                 </div>
               </button>
             </PopoverContent>

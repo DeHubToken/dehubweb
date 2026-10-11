@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Voice chip.
  * ===========
@@ -33,6 +34,7 @@ interface StudioVoicePickerProps {
 const DESIGN_SENTINEL = '__design__';
 
 export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoicePickerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [library, setLibrary] = useState<LibraryVoice[]>([]);
   const { voices: customVoices } = useCustomVoices();
@@ -89,7 +91,7 @@ export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoic
     // The chip must always be able to display its current value. Until the
     // library loads that is nothing, and the chip would read as empty.
     const fallback: ChipOption<string>[] =
-      mine.length || stock.length ? [] : [{ value: DEFAULT_VOICE_ID, label: 'Aria', detail: t('creator.voiceDefault') }];
+      mine.length || stock.length ? [] : [{ value: DEFAULT_VOICE_ID, label: _copy("copy.736001faca59", { defaultValue: "Aria" }), detail: t('creator.voiceDefault') }];
 
     return [
       ...mine,
@@ -97,7 +99,7 @@ export function StudioVoicePicker({ value, onChange, onDesignVoice }: StudioVoic
       ...fallback,
       { value: DESIGN_SENTINEL, label: t('creator.designNewVoice'), detail: t('creator.designNewVoiceDetail') },
     ];
-  }, [customVoices, library, t]);
+  }, [customVoices, library, t, _copy]);
 
   const current = options.find((o) => o.value === value);
 

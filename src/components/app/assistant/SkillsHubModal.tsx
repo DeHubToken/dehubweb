@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * SkillsHubModal
@@ -36,11 +37,11 @@ interface SkillsHubModalProps {
 type Tab = 'browse' | 'mine' | 'create';
 
 const MODELS: { value: string; label: string; kind: 'image' | 'chat' }[] = [
-  { value: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash (fast chat)', kind: 'chat' },
-  { value: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro (deep chat)', kind: 'chat' },
-  { value: 'openai/gpt-5', label: 'GPT-5 (chat)', kind: 'chat' },
-  { value: 'premium.gpt', label: 'GPT-image-2 medium (image)', kind: 'image' },
-  { value: 'google/gemini-3.1-flash-image', label: 'Nano Banana 2 (image, cheap)', kind: 'image' },
+  { value: 'google/gemini-2.5-flash', get label() { return _translateCopy("copy.f72504445c27", { defaultValue: "Gemini 2.5 Flash (fast chat)" }); }, kind: 'chat' },
+  { value: 'google/gemini-2.5-pro', get label() { return _translateCopy("copy.0f1b798b83e6", { defaultValue: "Gemini 2.5 Pro (deep chat)" }); }, kind: 'chat' },
+  { value: 'openai/gpt-5', get label() { return _translateCopy("copy.2ae64c94797c", { defaultValue: "GPT-5 (chat)" }); }, kind: 'chat' },
+  { value: 'premium.gpt', get label() { return _translateCopy("copy.5bf11a3a35a0", { defaultValue: "GPT-image-2 medium (image)" }); }, kind: 'image' },
+  { value: 'google/gemini-3.1-flash-image', get label() { return _translateCopy("copy.c5c5d2d03c9e", { defaultValue: "Nano Banana 2 (image, cheap)" }); }, kind: 'image' },
 ];
 
 export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModalProps) {

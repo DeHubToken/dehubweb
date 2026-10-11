@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * StageReactions - Floating emoji reactions for live Stages
  * Broadcasts reactions to all participants via Supabase realtime.
@@ -42,6 +43,7 @@ interface StageReactionsProps {
 }
 
 export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const [floating, setFloating] = useState<FloatingReaction[]>([]);
   const [cooldown, setCooldown] = useState(false);
@@ -152,9 +154,7 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
       {/* Reactions bento card */}
       <div className="p-3 bg-white/5 rounded-xl border border-white/10">
         <h3 className="text-sm font-medium text-white flex items-center gap-2 mb-2.5">
-          <Smile className="w-4 h-4" />
-          Reactions
-        </h3>
+          <Smile className="w-4 h-4" />{_copy("copy.8a7ede6b5f07", { defaultValue: "Reactions" })}</h3>
         <div className="flex items-center gap-1.5 w-full">
           {REACTIONS.map(r => (
             <button

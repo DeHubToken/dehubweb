@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -91,6 +92,7 @@ export function WarGameLauncher() {
 }
 
 function LauncherInner() {
+  const { t: _copy } = _useCopy();
   const [prompting, setPrompting] = useState(false);
   const [launched, setLaunched] = useState(false);
   const timerRef = useRef<number | null>(null);
@@ -181,15 +183,11 @@ function LauncherInner() {
 
   return (
     <div data-war-deploy-prompt role="status" aria-live="polite">
-      <p data-war-deploy-kicker>INBOUND</p>
-      <p data-war-deploy-title>DEPLOY TO COMBAT ZONE</p>
+      <p data-war-deploy-kicker>{_copy("copy.5a75dd671a6b", { defaultValue: "INBOUND" })}</p>
+      <p data-war-deploy-title>{_copy("copy.d9f60156b536", { defaultValue: "DEPLOY TO COMBAT ZONE" })}</p>
       <div data-war-deploy-actions>
-        <button type="button" onClick={() => setLaunched(true)}>
-          ENTER / DEPLOY
-        </button>
-        <button type="button" onClick={() => dismiss(true)}>
-          ESC / STAND DOWN
-        </button>
+        <button type="button" onClick={() => setLaunched(true)}>{_copy("copy.0f52906ffe2c", { defaultValue: "ENTER / DEPLOY" })}</button>
+        <button type="button" onClick={() => dismiss(true)}>{_copy("copy.8d94586d66f0", { defaultValue: "ESC / STAND DOWN" })}</button>
       </div>
     </div>
   );
@@ -317,6 +315,7 @@ function checkCapability(): Capability {
  * of game code out of the entry bundle until a player actually deploys.
  */
 function WarGameOverlay({ onExit }: { onExit: () => void }) {
+  const { t: _copy } = _useCopy();
   const frameRef = useRef<HTMLIFrameElement>(null);
   // Resolved once: re-picking on a re-render would reload the iframe and
   // restart the bake from zero.
@@ -436,22 +435,20 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
   useGameExitRequest('war-game', frameRef, onExit);
 
   return (
-    <div data-war-game-overlay role="dialog" aria-modal="true" aria-label="Combat zone">
-      <button type="button" data-war-game-exit onClick={onExit}>
-        EXTRACT / ESC
-      </button>
+    <div data-war-game-overlay role="dialog" aria-modal="true" aria-label={_copy("copy.63f8013d7b5a", { defaultValue: "Combat zone" })}>
+      <button type="button" data-war-game-exit onClick={onExit}>{_copy("copy.c683270a539e", { defaultValue: "EXTRACT / ESC" })}</button>
 
       {!cap.ok ? (
         <div data-war-game-missing>
           <p data-war-deploy-kicker>{cap.reason}</p>
-          <p data-war-deploy-title>CANNOT DEPLOY</p>
+          <p data-war-deploy-title>{_copy("copy.2e09e3d50ce9", { defaultValue: "CANNOT DEPLOY" })}</p>
           <p>{cap.detail}</p>
         </div>
       ) : (
       <iframe
         ref={frameRef}
         src={gameUrl}
-        title="Claude of Duty"
+        title={_copy("copy.60b676c3ea06", { defaultValue: "Claude of Duty" })}
         data-war-game-frame
         // The game needs pointer lock for mouse look and fullscreen for
         // immersion. Nothing else is granted.
@@ -483,24 +480,22 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
           announced twice. */}
       {cap.ok && showBoot && (
         <div data-war-game-boot>
-          <p data-war-deploy-kicker>GENERATING COMBAT ZONE</p>
+          <p data-war-deploy-kicker>{_copy("copy.f665ae14eeba", { defaultValue: "GENERATING COMBAT ZONE" })}</p>
           <div
             data-war-game-boot-bar
             role="progressbar"
             aria-valuemin={0}
             aria-valuemax={100}
             aria-valuenow={pct}
-            aria-label="Generating combat zone"
+            aria-label={_copy("copy.74b886bd1df4", { defaultValue: "Generating combat zone" })}
           >
             <span style={{ width: `${pct}%` }} />
           </div>
           <p data-war-game-boot-pct aria-hidden="true">
             {pct}%
           </p>
-          {fault && <p data-war-game-boot-note>FAULT: {fault}</p>}
-          <button type="button" data-war-game-boot-hide onClick={dismiss}>
-            HIDE READOUT
-          </button>
+          {fault && <p data-war-game-boot-note>{_copy("copy.689b1ac5db50", { defaultValue: "FAULT: " })}{fault}</p>}
+          <button type="button" data-war-game-boot-hide onClick={dismiss}>{_copy("copy.9b318c8642ba", { defaultValue: "HIDE READOUT" })}</button>
         </div>
       )}
     </div>

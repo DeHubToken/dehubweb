@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef, useEffect } from 'react';
@@ -49,8 +51,8 @@ import comment3dIcon from '@/assets/icons/comment-3d-icon.webp';
 
 /** Empty-state copy when the channel toolbar's sort/search is what emptied the tab. */
 const NO_MATCHES_COPY = {
-  title: 'Nothing matches',
-  subtitle: 'Try a different search, or clear it to see everything',
+  get title() { return _translateCopy("copy.965b516df3ba", { defaultValue: "Nothing matches" }); },
+  get subtitle() { return _translateCopy("copy.6144d0791f06", { defaultValue: "Try a different search, or clear it to see everything" }); },
 } as const;
 
 // Height estimates for off-screen cards so content-visibility can reserve
@@ -198,6 +200,7 @@ export function ProfileTabContent({
   setCreatePlanModalOpen,
   setEditingPlan,
 }: ProfileTabContentProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
 
   // Track which tabs have been visited so we only mount them once accessed
@@ -228,12 +231,12 @@ export function ProfileTabContent({
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <BrandIcon src={lock3dIcon} alt="Private" className="w-[80px] h-[80px] object-contain mb-4" />
-        <p className="text-white text-lg font-semibold">This account is private</p>
+        <BrandIcon src={lock3dIcon} alt={_copy("copy.c63eb6720c6e", { defaultValue: "Private" })} className="w-[80px] h-[80px] object-contain mb-4" />
+        <p className="text-white text-lg font-semibold">{_copy("copy.c3b243b8b3a6", { defaultValue: "This account is private" })}</p>
         <p className="text-zinc-500 text-sm mt-1 max-w-xs">
           {isPending 
-            ? 'Your follow request is pending approval.'
-            : 'Follow this account to see their posts and content.'}
+            ? _copy("copy.8361b8c143ec", { defaultValue: "Your follow request is pending approval." })
+            : _copy("copy.4dbc9f89189e", { defaultValue: "Follow this account to see their posts and content." })}
         </p>
       </div>
     );
@@ -284,7 +287,7 @@ export function ProfileTabContent({
         {showLoading ? null : PROFILE_IMAGES.length === 0 ? (
           isContentFiltered
             ? <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" {...NO_MATCHES_COPY} />
-            : <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
+            : <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title={_copy("copy.0318e75932f9", { defaultValue: "No images yet" })} subtitle={_copy("copy.a3d5fe6a4d9f", { defaultValue: "Image posts will appear here" })} />
         ) : PROFILE_IMAGES.length >= 4 ? (
           <ProfileImageGrid images={PROFILE_IMAGES} />
         ) : (
@@ -303,7 +306,7 @@ export function ProfileTabContent({
         {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
           isContentFiltered
             ? <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" {...NO_MATCHES_COPY} />
-            : <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />
+            : <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title={_copy("copy.7b1fd32345ce", { defaultValue: "No videos yet" })} subtitle={_copy("copy.e4cea00e921f", { defaultValue: "Video posts will appear here" })} />
         ) : (
           <div className="space-y-3">
             {ALL_PROFILE_VIDEOS.map((video, index) => (
@@ -337,13 +340,13 @@ export function ProfileTabContent({
 
       {/* SONGS TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="songs">
-        <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title="No audio yet" subtitle="Audio tracks will appear here" />
+        <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title={_copy("copy.f9a83d6ac749", { defaultValue: "No audio yet" })} subtitle={_copy("copy.0ff0f3e32eca", { defaultValue: "Audio tracks will appear here" })} />
       </TabPanel>
 
       {/* LIVE TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="live">
         {showLoading ? null : PROFILE_LIVE.length === 0 ? (
-          <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title="No live streams yet" subtitle="Live content will appear here" />
+          <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title={_copy("copy.25d36bfae913", { defaultValue: "No live streams yet" })} subtitle={_copy("copy.b713cad3fece", { defaultValue: "Live content will appear here" })} />
         ) : (
           <div className="space-y-3">
             {PROFILE_LIVE.map((stream, index) => (
@@ -399,13 +402,14 @@ function HomeTabPanel({
   isLoading: boolean;
   isContentFiltered?: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const hasOptimisticPosts = isViewingOwnProfile && optimisticPosts.length > 0;
 
   if (ALL_CONTENT.length === 0 && !hasOptimisticPosts) {
     if (isLoading) return null;
     return isContentFiltered
       ? <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" {...NO_MATCHES_COPY} />
-      : <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title="No posts yet" subtitle="Content will appear here when posted" />;
+      : <ProfileEmptyState iconSrc={home3dIcon} iconAlt="All" iconClassName="opacity-90" title={_copy("copy.f2bd677095e4", { defaultValue: "No posts yet" })} subtitle={_copy("copy.9d35e0e6ebe0", { defaultValue: "Content will appear here when posted" })} />;
   }
   
   const filteredOptimisticPosts = isViewingOwnProfile 
@@ -447,7 +451,7 @@ function HomeTabPanel({
             {item.isRepost && (
               <div className="flex items-center gap-1.5 text-zinc-500 text-xs mb-2 pl-1">
                 <Repeat2 className="w-3.5 h-3.5" />
-                <span className="font-medium">Reposted</span>
+                <span className="font-medium">{_copy("copy.75a6e90c7240", { defaultValue: "Reposted" })}</span>
               </div>
             )}
             {card}
@@ -483,6 +487,7 @@ function PostsTabPanel({
   isLoadingContent: boolean;
   isContentFiltered?: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   // Collect unique tokenIds from comments to batch-fetch parent posts
   const uniqueTokenIds = React.useMemo(() => {
@@ -541,7 +546,7 @@ function PostsTabPanel({
   if (mergedItems.length === 0 && !isLoadingAll && !isLoadingContent) {
     return isContentFiltered
       ? <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" {...NO_MATCHES_COPY} />
-      : <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title="No posts, comments, or replies yet" subtitle="They will appear here" />;
+      : <ProfileEmptyState iconSrc={comment3dIcon} iconAlt="Posts" iconClassName="opacity-90" title={_copy("copy.06c31e423138", { defaultValue: "No posts, comments, or replies yet" })} subtitle={_copy("copy.18cbb7d6aa86", { defaultValue: "They will appear here" })} />;
   }
 
   return (
@@ -615,6 +620,7 @@ function SubscribersTabPanel({
   setCreatePlanModalOpen: (open: boolean) => void;
   setEditingPlan: (plan: SubscriptionPlan | null) => void;
 }) {
+  const { t: _copy } = _useCopy();
   // A plan the creator never published on chain. PlanCard disables its
   // Subscribe button, so these are plans that exist and cannot be sold.
   const draftPlanCount = plans.filter((p) => !isPlanPublished(p)).length;
@@ -622,7 +628,7 @@ function SubscribersTabPanel({
     return (
       <div className="flex flex-col items-center justify-center py-16">
         <Loader2 className="w-8 h-8 text-zinc-400 animate-spin mb-3" />
-        <p className="text-zinc-500 text-sm">Loading plans...</p>
+        <p className="text-zinc-500 text-sm">{_copy("copy.22b880b2bbf8", { defaultValue: "Loading plans..." })}</p>
       </div>
     );
   }
@@ -630,15 +636,13 @@ function SubscribersTabPanel({
   if (isViewingOwnProfile && !hasPlans) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <BrandIcon src={star3dIcon} alt="Star" className="w-16 h-16 object-contain mb-4" />
-        <h3 className="text-white font-bold text-xl mb-3">Subscriber Content</h3>
+        <BrandIcon src={star3dIcon} alt={_copy("copy.e357d396871d", { defaultValue: "Star" })} className="w-16 h-16 object-contain mb-4" />
+        <h3 className="text-white font-bold text-xl mb-3">{_copy("copy.ba89e1b6dd81", { defaultValue: "Subscriber Content" })}</h3>
         <Button
           onClick={() => setCreatePlanModalOpen(true)}
           className="rounded-xl bg-white/10 border border-white/[0.08] hover:bg-white/20 text-white font-semibold gap-2 backdrop-blur-md"
         >
-          <Plus className="w-4 h-4" />
-          Create Your First Plan
-        </Button>
+          <Plus className="w-4 h-4" />{_copy("copy.732f4d852708", { defaultValue: "Create Your First Plan" })}</Button>
       </div>
     );
   }
@@ -647,15 +651,13 @@ function SubscribersTabPanel({
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold">Your Subscription Plans</h3>
+          <h3 className="text-white font-semibold">{_copy("copy.f04dca8697ae", { defaultValue: "Your Subscription Plans" })}</h3>
           <Button 
             onClick={() => setCreatePlanModalOpen(true)}
             size="sm"
             className="rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 text-white gap-1"
           >
-            <Plus className="w-4 h-4" />
-            Add Plan
-          </Button>
+            <Plus className="w-4 h-4" />{_copy("copy.3e1e7128307d", { defaultValue: "Add Plan" })}</Button>
         </div>
         {/* Not one plan on the platform has ever been listed on chain, because
             creating a plan and publishing it are two steps and only the first
@@ -667,12 +669,8 @@ function SubscribersTabPanel({
             <Info className="w-4 h-4 text-white/50 shrink-0 mt-0.5" />
             <p className="text-xs text-white/70">
               {draftPlanCount === 1
-                ? 'One of your plans is still a draft. '
-                : draftPlanCount + ' of your plans are still drafts. '}
-              A plan only sells once it is published on chain. Until then nobody
-              can subscribe to you, and the Subscribers switch on a new post
-              stays off.
-            </p>
+                ? _copy("copy.4bf441cdf785", { defaultValue: "One of your plans is still a draft. " })
+                : draftPlanCount + ' of your plans are still drafts. '}{_copy("copy.50a8089f73e2", { defaultValue: "A plan only sells once it is published on chain. Until then nobody can subscribe to you, and the Subscribers switch on a new post stays off." })}</p>
           </div>
         )}
         <div className="grid gap-4">
@@ -693,8 +691,8 @@ function SubscribersTabPanel({
     return (
       <AppState
         icon="subscriptions"
-        title="No subscription plans"
-        description={`${profile?.name || 'This creator'} hasn't set up any plans yet.`}
+        title={_copy("copy.d1dc938ce4f1", { defaultValue: "No subscription plans" })}
+        description={_copy("copy.440d013a091e", { defaultValue: "{{value1}} hasn't set up any plans yet.", value1: profile?.name || _copy("copy.7387ffb8ad51", { defaultValue: "This creator" }) })}
         size="section"
       />
     );
@@ -702,7 +700,7 @@ function SubscribersTabPanel({
   
   return (
     <div className="space-y-4">
-      <h3 className="text-white font-semibold mb-4">Subscription Plans</h3>
+      <h3 className="text-white font-semibold mb-4">{_copy("copy.3adfe65bf195", { defaultValue: "Subscription Plans" })}</h3>
       <div className="grid gap-4">
         {plans.map((plan) => (
           <PlanCard 
@@ -898,6 +896,7 @@ function PlaylistPostsPanel({
 // ============================================================================
 
 function PinnedTabPanel({ profileAddress }: { profileAddress: string }) {
+  const { t: _copy } = _useCopy();
   const { data, isLoading } = useUserPins(profileAddress);
   const pins = data?.items ?? [];
 
@@ -911,7 +910,7 @@ function PinnedTabPanel({ profileAddress }: { profileAddress: string }) {
 
   if (pins.length === 0) {
     return (
-      <AppState icon="pinned" title="No pinned posts" description="Pinned posts will appear here." size="section" />
+      <AppState icon="pinned" title={_copy("copy.cb88754c2411", { defaultValue: "No pinned posts" })} description={_copy("copy.85c9eb4c8378", { defaultValue: "Pinned posts will appear here." })} size="section" />
     );
   }
 
@@ -1150,6 +1149,7 @@ function CommentCard({ comment, parentPost, parentPostFailed, isOwnComment, onCl
   isOwnComment?: boolean;
   onClick: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useSurfaceDraft("src/components/app/profile/ProfileTabContent.tsx:editText", comment.content, comment.id);
@@ -1293,7 +1293,7 @@ function CommentCard({ comment, parentPost, parentPostFailed, isOwnComment, onCl
                   <button
                     onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
                     className="flex items-center gap-1.5 text-zinc-400 hover:text-white text-xs px-2 py-1.5 rounded-xl transition-colors"
-                    aria-label="Edit"
+                    aria-label={_copy("copy.464c4ffd019e", { defaultValue: "Edit" })}
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
@@ -1301,7 +1301,7 @@ function CommentCard({ comment, parentPost, parentPostFailed, isOwnComment, onCl
                     onClick={handleDelete}
                     disabled={isDeleting}
                     className="flex items-center gap-1.5 text-zinc-400 hover:text-red-400 text-xs px-2 py-1.5 rounded-xl transition-colors"
-                    aria-label="Delete"
+                    aria-label={_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

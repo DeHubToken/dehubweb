@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import defaultBanner1 from '@/assets/banners/default-banner-1.png';
 import defaultBanner2 from '@/assets/banners/default-banner-2.png';
 import defaultBanner3 from '@/assets/banners/default-banner-3.png';
@@ -46,15 +47,15 @@ export type TabValue = 'home' | 'posts' | 'images' | 'videos' | 'subscribers' | 
  * `customs.defaultProfileTab` value.
  */
 export const PROFILE_TAB_OPTIONS: { value: TabValue; label: string }[] = [
-  { value: 'home', label: 'All' },
-  { value: 'posts', label: 'Posts' },
-  { value: 'images', label: 'Images' },
-  { value: 'videos', label: 'Videos' },
-  { value: 'subscribers', label: 'Subscriptions' },
-  { value: 'songs', label: 'Audio' },
-  { value: 'live', label: 'Live' },
-  { value: 'fractions', label: 'Fractions' },
-  { value: 'pinned', label: 'Pinned' },
+  { value: 'home', get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); } },
+  { value: 'posts', get label() { return _translateCopy("copy.a80811cf6889", { defaultValue: "Posts" }); } },
+  { value: 'images', get label() { return _translateCopy("copy.be7e2f201293", { defaultValue: "Images" }); } },
+  { value: 'videos', get label() { return _translateCopy("copy.c9a9639463c2", { defaultValue: "Videos" }); } },
+  { value: 'subscribers', get label() { return _translateCopy("copy.a151f2e912fe", { defaultValue: "Subscriptions" }); } },
+  { value: 'songs', get label() { return _translateCopy("copy.bc1b88907d3b", { defaultValue: "Audio" }); } },
+  { value: 'live', get label() { return _translateCopy("copy.b64ac05f17e6", { defaultValue: "Live" }); } },
+  { value: 'fractions', get label() { return _translateCopy("copy.487aaa977933", { defaultValue: "Fractions" }); } },
+  { value: 'pinned', get label() { return _translateCopy("copy.f20c87946555", { defaultValue: "Pinned" }); } },
 ];
 
 /**

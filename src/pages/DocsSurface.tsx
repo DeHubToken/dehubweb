@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * DocsSurface
  * ===========
@@ -86,6 +87,7 @@ const wrap = (El: React.ComponentType) => (
 );
 
 export default function DocsSurface() {
+  const { t: _copy } = _useCopy();
   const { theme: appTheme } = useAppTheme();
   const forcedTheme = getDocsForcedTheme(appTheme);
 
@@ -180,19 +182,19 @@ export default function DocsSurface() {
             <Route path="/guides/:slug" element={wrap(BlogPost)} />
             <Route path="/docs/faq" element={wrap(FAQ)} />
             <Route path="/docs/donate" element={wrap(Donate)} />
-            <Route path="/docs/website" element={<ComingSoonPage title="Website Documentation" description="Learn about our website features and capabilities." />} />
-            <Route path="/docs/app" element={<ComingSoonPage title="App Documentation" description="Mobile and desktop application guides and features." />} />
-            <Route path="/docs/dehub" element={<ComingSoonPage title="DeHub Platform" description="Complete guide to using the DeHub decentralized platform." />} />
-            <Route path="/docs/x" element={<ComingSoonPage title="X Integration" description="Social media integration and X platform features." />} />
-            <Route path="/docs/instagram" element={<ComingSoonPage title="Instagram Integration" description="Instagram connectivity and social features." />} />
-            <Route path="/docs/architecture" element={<ComingSoonPage title="Architecture" description="System architecture and technical infrastructure details." />} />
-            <Route path="/docs/configuration" element={<ComingSoonPage title="Configuration" description="Setup and configuration guides for developers." />} />
-            <Route path="/docs/data-models" element={<ComingSoonPage title="Data Models" description="Database schemas and data structure documentation." />} />
-            <Route path="/docs/auth" element={<ComingSoonPage title="Authentication" description="Security protocols and authentication methods." />} />
-            <Route path="/docs/webhooks" element={<ComingSoonPage title="Webhooks" description="Real-time notifications and webhook integration guides." />} />
-            <Route path="/docs/best-practices" element={<ComingSoonPage title="Best Practices" description="Recommended approaches and coding standards." />} />
-            <Route path="/docs/troubleshooting" element={<ComingSoonPage title="Troubleshooting" description="Common issues and solutions for developers." />} />
-            <Route path="/docs/examples" element={<ComingSoonPage title="Examples" description="Code examples and implementation samples." />} />
+            <Route path="/docs/website" element={<ComingSoonPage title={_copy("copy.b048526ff7d1", { defaultValue: "Website Documentation" })} description={_copy("copy.88324d21e07e", { defaultValue: "Learn about our website features and capabilities." })} />} />
+            <Route path="/docs/app" element={<ComingSoonPage title={_copy("copy.f569d8ad4ccc", { defaultValue: "App Documentation" })} description={_copy("copy.2785ac1adc62", { defaultValue: "Mobile and desktop application guides and features." })} />} />
+            <Route path="/docs/dehub" element={<ComingSoonPage title={_copy("copy.e5e1e25f7f1d", { defaultValue: "DeHub Platform" })} description={_copy("copy.87acb1194366", { defaultValue: "Complete guide to using the DeHub decentralized platform." })} />} />
+            <Route path="/docs/x" element={<ComingSoonPage title={_copy("copy.deace4186d0f", { defaultValue: "X Integration" })} description={_copy("copy.6f5fcdf9e99b", { defaultValue: "Social media integration and X platform features." })} />} />
+            <Route path="/docs/instagram" element={<ComingSoonPage title={_copy("copy.4d10e3879b66", { defaultValue: "Instagram Integration" })} description={_copy("copy.4036f800a55f", { defaultValue: "Instagram connectivity and social features." })} />} />
+            <Route path="/docs/architecture" element={<ComingSoonPage title={_copy("copy.cd74053c5481", { defaultValue: "Architecture" })} description={_copy("copy.b12f30287c18", { defaultValue: "System architecture and technical infrastructure details." })} />} />
+            <Route path="/docs/configuration" element={<ComingSoonPage title={_copy("copy.b332c3492d5e", { defaultValue: "Configuration" })} description={_copy("copy.d99327d3c6c1", { defaultValue: "Setup and configuration guides for developers." })} />} />
+            <Route path="/docs/data-models" element={<ComingSoonPage title={_copy("copy.91be83cf9b94", { defaultValue: "Data Models" })} description={_copy("copy.36a77cf40009", { defaultValue: "Database schemas and data structure documentation." })} />} />
+            <Route path="/docs/auth" element={<ComingSoonPage title={_copy("copy.66880d2d8216", { defaultValue: "Authentication" })} description={_copy("copy.4b0d7d4e55b5", { defaultValue: "Security protocols and authentication methods." })} />} />
+            <Route path="/docs/webhooks" element={<ComingSoonPage title={_copy("copy.45808d75bf89", { defaultValue: "Webhooks" })} description={_copy("copy.115c96518de0", { defaultValue: "Real-time notifications and webhook integration guides." })} />} />
+            <Route path="/docs/best-practices" element={<ComingSoonPage title={_copy("copy.46d9a34a79d2", { defaultValue: "Best Practices" })} description={_copy("copy.46f973a21dce", { defaultValue: "Recommended approaches and coding standards." })} />} />
+            <Route path="/docs/troubleshooting" element={<ComingSoonPage title={_copy("copy.c3af076f92c5", { defaultValue: "Troubleshooting" })} description={_copy("copy.7b5478b6d329", { defaultValue: "Common issues and solutions for developers." })} />} />
+            <Route path="/docs/examples" element={<ComingSoonPage title={_copy("copy.e68ee04dff59", { defaultValue: "Examples" })} description={_copy("copy.0a862da14a3b", { defaultValue: "Code examples and implementation samples." })} />} />
           </Route>
         </Routes>
       </SearchProvider>

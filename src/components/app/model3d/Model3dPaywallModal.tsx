@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * 3D generation paywall.
@@ -72,6 +73,7 @@ export function Model3dPaywallModal({
   isGenerating = false,
   hasReference = false,
 }: Model3dPaywallModalProps) {
+  const { t: _copy } = _useCopy();
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -202,12 +204,8 @@ export function Model3dPaywallModal({
       <DrawerContent column glass hideHandle={false} className="max-h-[85dvh]">
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Box className="w-5 h-5 text-cyan-400" />
-            Generate 3D Model
-          </DrawerTitle>
-          <DrawerDescription className="text-zinc-400">
-            Select a model and confirm payment
-          </DrawerDescription>
+            <Box className="w-5 h-5 text-cyan-400" />{_copy("copy.7163983bca7f", { defaultValue: "Generate 3D Model" })}</DrawerTitle>
+          <DrawerDescription className="text-zinc-400">{_copy("copy.a16541cb1ea8", { defaultValue: "Select a model and confirm payment" })}</DrawerDescription>
         </DrawerHeader>
 
         <ScrollArea className="flex-1 overflow-y-auto px-4">
@@ -263,7 +261,7 @@ export function Model3dPaywallModal({
                           <div>
                             <p className="font-medium text-white text-xs">{option.name}</p>
                             <p className="text-[10px] text-zinc-500">
-                              {unavailable ? 'Needs an attached image' : option.description}
+                              {unavailable ? _copy("copy.a074b23fd5f3", { defaultValue: "Needs an attached image" }) : option.description}
                             </p>
                           </div>
                         </div>
@@ -285,11 +283,11 @@ export function Model3dPaywallModal({
               <div className="bg-zinc-800/50 rounded-xl p-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-sm text-zinc-400">Texture</span>
+                    <span className="text-sm text-zinc-400">{_copy("copy.e28411a3404d", { defaultValue: "Texture" })}</span>
                     {textured && (
                       <p className="text-[10px] text-zinc-500 mt-0.5">
-                        {`$${getModel3dCostUsd(model, 'none').toFixed(2)} untextured · `}
-                        {`$${getModel3dCostUsd(model, 'standard').toFixed(2)} standard · `}
+                        {_copy("copy.95f9beb1ff4c", { defaultValue: "${{value1}} untextured · ", value1: getModel3dCostUsd(model, 'none').toFixed(2) })}
+                        {_copy("copy.8047751a8b35", { defaultValue: "${{value1}} standard · ", value1: getModel3dCostUsd(model, 'standard').toFixed(2) })}
                         {`$${getModel3dCostUsd(model, 'HD').toFixed(2)} HD`}
                       </p>
                     )}
@@ -306,7 +304,7 @@ export function Model3dPaywallModal({
                             : 'bg-zinc-700/50 text-zinc-400 border border-zinc-600/30 hover:bg-zinc-700'
                         }`}
                       >
-                        {q === 'none' ? 'None' : q === 'standard' ? 'Standard' : 'HD'}
+                        {q === 'none' ? _copy("copy.dc937b598926", { defaultValue: "None" }) : q === 'standard' ? _copy("copy.ef6691545d2c", { defaultValue: "Standard" }) : 'HD'}
                       </button>
                     ))}
                   </div>
@@ -317,7 +315,7 @@ export function Model3dPaywallModal({
             {/* Polygon budget */}
             {model.supportsFaceLimit && (
               <div className="bg-zinc-800/50 rounded-xl p-3 space-y-2">
-                <span className="text-sm text-zinc-400">Detail</span>
+                <span className="text-sm text-zinc-400">{_copy("copy.fb5f27d5457c", { defaultValue: "Detail" })}</span>
                 <div className="grid grid-cols-2 gap-1.5">
                   {FACE_LIMIT_PRESETS.map((preset) => (
                     <button
@@ -342,10 +340,8 @@ export function Model3dPaywallModal({
             {model.supportsQuad && (
               <label className="flex items-center justify-between bg-zinc-800/50 rounded-xl p-3 cursor-pointer">
                 <div>
-                  <p className="text-sm text-zinc-300 font-medium">Quad topology</p>
-                  <p className="text-[10px] text-zinc-500 mt-0.5">
-                    Cleaner edge loops for editing in Blender or Maya
-                  </p>
+                  <p className="text-sm text-zinc-300 font-medium">{_copy("copy.ce8af5da9897", { defaultValue: "Quad topology" })}</p>
+                  <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.866238e68fdd", { defaultValue: "Cleaner edge loops for editing in Blender or Maya" })}</p>
                 </div>
                 <input
                   type="checkbox"
@@ -361,11 +357,9 @@ export function Model3dPaywallModal({
               <div className="bg-zinc-800/50 rounded-xl p-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-sm text-zinc-400">Format</span>
+                    <span className="text-sm text-zinc-400">{_copy("copy.2f343666aaa8", { defaultValue: "Format" })}</span>
                     {exportFormat !== 'glb' && (
-                      <p className="text-[10px] text-amber-400/80 mt-0.5">
-                        Only GLB previews in the browser — others download only
-                      </p>
+                      <p className="text-[10px] text-amber-400/80 mt-0.5">{_copy("copy.5d20f0147a48", { defaultValue: "Only GLB previews in the browser — others download only" })}</p>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-1.5 justify-end">
@@ -394,16 +388,15 @@ export function Model3dPaywallModal({
                 <div className="flex items-center gap-3">
                   <div className="flex-1">
                     <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
-                      <Hash className="w-3.5 h-3.5 text-yellow-400" />
-                      Seed <span className="text-zinc-600 text-xs font-normal">(optional)</span>
+                      <Hash className="w-3.5 h-3.5 text-yellow-400" />{_copy("copy.0802bcab258d", { defaultValue: "Seed " })}<span className="text-zinc-600 text-xs font-normal">{_copy("copy.0059798b7f70", { defaultValue: "(optional)" })}</span>
                     </p>
-                    <p className="text-[10px] text-zinc-500 mt-0.5">Same seed + prompt = same mesh</p>
+                    <p className="text-[10px] text-zinc-500 mt-0.5">{_copy("copy.a4b4492eeb15", { defaultValue: "Same seed + prompt = same mesh" })}</p>
                   </div>
                   <input
                     type="number"
                     value={seed}
                     onChange={(e) => setSeed(e.target.value)}
-                    placeholder="Random"
+                    placeholder={_copy("copy.67bc484430fe", { defaultValue: "Random" })}
                     className="w-24 bg-zinc-900/60 border border-zinc-700/50 rounded-lg px-2 py-1.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                   />
                 </div>
@@ -415,7 +408,7 @@ export function Model3dPaywallModal({
               <div className="bg-gradient-to-br from-cyan-900/20 to-blue-900/20 rounded-xl p-3 border border-cyan-500/10">
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
-                  <span className="text-xs font-medium text-zinc-300">Tips for {model.name}</span>
+                  <span className="text-xs font-medium text-zinc-300">{_copy("copy.5336c950af39", { defaultValue: "Tips for " })}{model.name}</span>
                 </div>
                 <div className="space-y-0.5">
                   {model.tips.map((tip, idx) => (
@@ -430,16 +423,16 @@ export function Model3dPaywallModal({
             {/* Cost */}
             <div className="bg-zinc-800/50 rounded-xl p-3 space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-400">Model Cost</span>
+                <span className="text-zinc-400">{_copy("copy.bcab58168622", { defaultValue: "Model Cost" })}</span>
                 <span className="text-zinc-300">${costUsd.toFixed(2)}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-zinc-400">Typical wait</span>
+                <span className="text-zinc-400">{_copy("copy.6c38ed7e5036", { defaultValue: "Typical wait" })}</span>
                 <span className="text-zinc-300">{model.typicalDuration}</span>
               </div>
               <div className="border-t border-zinc-700 pt-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-zinc-300 font-medium text-sm">Total</span>
+                  <span className="text-zinc-300 font-medium text-sm">{_copy("copy.c9b3c38247f7", { defaultValue: "Total" })}</span>
                   <span className="text-white font-semibold">${costUsd.toFixed(2)}</span>
                 </div>
               </div>
@@ -450,7 +443,7 @@ export function Model3dPaywallModal({
               {loading || isQuoting ? (
                 <div className="flex items-center justify-center py-2">
                   <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
-                  <span className="ml-2 text-zinc-400 text-sm">Fetching live price...</span>
+                  <span className="ml-2 text-zinc-400 text-sm">{_copy("copy.3730788afedc", { defaultValue: "Fetching live price..." })}</span>
                 </div>
               ) : (
                 <>
@@ -517,9 +510,7 @@ export function Model3dPaywallModal({
             className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 h-10"
             onClick={() => onOpenChange(false)}
             disabled={isGenerating || isPaying}
-          >
-            Cancel
-          </Button>
+          >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           <Button
             variant="glass"
             className="flex-1 font-medium h-10"
@@ -528,19 +519,13 @@ export function Model3dPaywallModal({
           >
             {isPaying ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Paying...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.6f1c75a574dc", { defaultValue: "Paying..." })}</>
             ) : isGenerating ? (
               <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />{_copy("copy.49286f33b674", { defaultValue: "Generating..." })}</>
             ) : (
               <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Generate
-              </>
+                <Sparkles className="w-4 h-4 mr-2" />{_copy("copy.49e49bb4401e", { defaultValue: "Generate" })}</>
             )}
           </Button>
         </div>

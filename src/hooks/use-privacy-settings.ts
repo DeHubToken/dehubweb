@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -38,6 +39,7 @@ export function parseVisibility(raw?: unknown): { showFollowersFollowing: boolea
  * Hook to manage the current user's privacy settings via the DeHub API customs field.
  */
 export function usePrivacySettings() {
+  const { t: _copy } = _useCopy();
   const { user, walletAddress, isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
 
@@ -122,11 +124,11 @@ export function usePrivacySettings() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
-      toast.success('Privacy settings updated');
+      toast.success(_copy("copy.3bc473d05556", { defaultValue: "Privacy settings updated" }));
     },
     onError: (error) => {
       console.error('Failed to update privacy settings:', error);
-      toast.error('Failed to update settings');
+      toast.error(_copy("copy.63f6bf5375c1", { defaultValue: "Failed to update settings" }));
     },
   });
 

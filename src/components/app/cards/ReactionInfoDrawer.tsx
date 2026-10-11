@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Reaction Info Drawer
  * ====================
@@ -45,6 +46,7 @@ interface ReactionInfoDrawerProps {
 }
 
 export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfoDrawerProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -150,7 +152,7 @@ export function ReactionInfoDrawer({ open, onOpenChange, tokenId }: ReactionInfo
                   <div className="space-y-2">
                     {people.map((person) => {
                       const displayName =
-                        person.displayName || person.username || person.address?.slice(0, 8) || 'Unknown';
+                        person.displayName || person.username || person.address?.slice(0, 8) || _copy("copy.b764cdc0eab7", { defaultValue: "Unknown" });
                       const avatarUrl = buildAvatarUrl(person.address, extractAvatarPath(person));
                       // A badge holder's reaction is worth more than one — see the
                       // weightedTotalCount note above. Only draw the multiplier when

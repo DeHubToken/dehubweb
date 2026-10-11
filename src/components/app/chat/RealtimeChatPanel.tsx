@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * RealtimeChatPanel
@@ -200,6 +201,7 @@ export function RealtimeChatPanel({
   onClick,
   draftKey,
 }: RealtimeChatPanelProps) {
+  const { t: _copy } = _useCopy();
   const [newMessage, setNewMessage] = useDraft(draftKey);
   const [replyTo, setReplyTo] = useDraftState<RealtimeChatMessage | null>(draftKey ? `${draftKey}:reply` : null, null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -329,7 +331,7 @@ export function RealtimeChatPanel({
             ) : (
               messages.map((msg) => {
                 const avatarUrl = buildAvatarUrl(msg.wallet_address, msg.avatar_url);
-                const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || 'Anon';
+                const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || _copy("copy.90395d452a30", { defaultValue: "Anon" });
                 const handle = msg.username;
                 const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
                 const isMine = !!walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase();
@@ -427,7 +429,7 @@ export function RealtimeChatPanel({
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent side="top">Edit</TooltipContent>
+                              <TooltipContent side="top">{_copy("copy.464c4ffd019e", { defaultValue: "Edit" })}</TooltipContent>
                             </Tooltip>
                           )}
                           {(isMine || canModerate) && (
@@ -440,7 +442,7 @@ export function RealtimeChatPanel({
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent side="top">{isMine ? 'Delete' : 'Remove'}</TooltipContent>
+                              <TooltipContent side="top">{isMine ? _copy("copy.e2d0a54968ea", { defaultValue: "Delete" }) : _copy("copy.c3812fc4acb8", { defaultValue: "Remove" })}</TooltipContent>
                             </Tooltip>
                           )}
                           <Tooltip>
@@ -452,7 +454,7 @@ export function RealtimeChatPanel({
                                 <Reply className="w-3.5 h-3.5" />
                               </button>
                             </TooltipTrigger>
-                            <TooltipContent side="top">Reply</TooltipContent>
+                            <TooltipContent side="top">{_copy("copy.c253f451bdd5", { defaultValue: "Reply" })}</TooltipContent>
                           </Tooltip>
                           <Popover>
                             <Tooltip>
@@ -463,7 +465,7 @@ export function RealtimeChatPanel({
                                   </button>
                                 </PopoverTrigger>
                               </TooltipTrigger>
-                              <TooltipContent side="top">React</TooltipContent>
+                              <TooltipContent side="top">{_copy("copy.01fad993ff61", { defaultValue: "React" })}</TooltipContent>
                             </Tooltip>
                             <PopoverContent
                               side="top"
@@ -510,9 +512,7 @@ export function RealtimeChatPanel({
               onClick={() => { atBottomRef.current = true; scrollToBottom(); }}
               className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 px-3 py-1.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium shadow-lg border border-white/10 transition-colors"
             >
-              <ArrowDown className="w-3.5 h-3.5" />
-              Jump to latest
-            </button>
+              <ArrowDown className="w-3.5 h-3.5" />{_copy("copy.867524581f01", { defaultValue: "Jump to latest" })}</button>
           )}
         </div>
       </SharedTranslationProvider>
@@ -523,9 +523,9 @@ export function RealtimeChatPanel({
           <Reply className="w-3.5 h-3.5 text-white flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-[10px] font-medium text-white">
-              {replyTo.display_name || replyTo.username || 'User'}
+              {replyTo.display_name || replyTo.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" })}
             </span>
-            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
+            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || _copy("copy.d357175cfe89", { defaultValue: "Media" })}</p>
           </div>
           <button onClick={() => setReplyTo.complete(replyTo, null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3.5 h-3.5" />

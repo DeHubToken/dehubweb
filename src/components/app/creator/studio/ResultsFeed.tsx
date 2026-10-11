@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useVideoDownload } from "@/hooks/use-video-download";
 import { useAuth } from "@/contexts/AuthContext";
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
@@ -363,6 +364,7 @@ function ResultViewer({
   onModel3d,
   onOpenEditor,
 }: ResultViewerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const downloadVideo = useVideoDownload();
   const { user } = useAuth();
@@ -599,7 +601,7 @@ function ResultViewer({
             <div className="min-w-0">
               <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
                 {job.modelName}
-                {job.cloudSaved && <span className="ml-2 text-xs text-white/60">Saved to your account</span>}
+                {job.cloudSaved && <span className="ml-2 text-xs text-white/60">{_copy("copy.922cb35a34dc", { defaultValue: "Saved to your account" })}</span>}
                 {job.saveError && <button type="button" className="ml-2 text-xs underline" onClick={() => void save(job.id)}>{job.saveError}</button>}
               </p>
               <p className="mt-0.5 text-[11px] text-white/55">

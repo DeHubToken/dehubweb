@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2, Upload } from 'lucide-react';
@@ -10,6 +11,7 @@ import { MAX_IMAGE_UPLOAD_BYTES, MAX_REQUEST_IMAGE_BYTES } from '@/lib/post-imag
 export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   tokenId: number | string; disabled: boolean; onBusyChange: (busy: boolean) => void;
 }) {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const [images, setImages] = useState<string[]>([]);
   const [imageLimit, setImageLimit] = useState<number | null>(null);
@@ -38,7 +40,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
   const replace = async (file: File) => {
     if (busy || disabled) return;
     if (!/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > MAX_IMAGE_UPLOAD_BYTES) {
-      toast.error('Choose an image of 42.069 MB or smaller');
+      toast.error(_copy("copy.068a20657fd2", { defaultValue: "Choose an image of 42.069 MB or smaller" }));
       return;
     }
     setBusy(true);
@@ -47,7 +49,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       const updated = await replacePostImage(tokenId, position.current, file);
       setImages(updated);
       applyImageReplacement(queryClient, tokenId, updated);
-      toast.success('Image replaced');
+      toast.success(_copy("copy.5f8fb589fe93", { defaultValue: "Image replaced" }));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not replace that image');
     } finally {
@@ -63,11 +65,11 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       return;
     }
     if (files.some(file => !/^image\/(jpeg|png|webp|gif|heic|heif|avif)$/i.test(file.type) || file.size > MAX_IMAGE_UPLOAD_BYTES)) {
-      toast.error('Choose images of 42.069 MB or smaller');
+      toast.error(_copy("copy.0b923404047d", { defaultValue: "Choose images of 42.069 MB or smaller" }));
       return;
     }
     if (files.reduce((total, file) => total + file.size, 0) > MAX_REQUEST_IMAGE_BYTES) {
-      toast.error('Images in one upload must total 100 MB or less');
+      toast.error(_copy("copy.18b277756657", { defaultValue: "Images in one upload must total 100 MB or less" }));
       return;
     }
     position.current = -1;
@@ -77,7 +79,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       const updated = await addPostImages(tokenId, files);
       setImages(updated);
       applyImageReplacement(queryClient, tokenId, updated);
-      toast.success('Images added');
+      toast.success(_copy("copy.82c3fa23437f", { defaultValue: "Images added" }));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Could not add those images');
     } finally {
@@ -86,15 +88,15 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
     }
   };
 
-  if (loading) return <p className="text-sm text-zinc-400">Loading post images…</p>;
-  if (failed) return <button type="button" className="text-sm text-zinc-300" onClick={() => setAttempt(value => value + 1)}>Could not load post images. Retry</button>;
+  if (loading) return <p className="text-sm text-zinc-400">{_copy("copy.0adcf927c8a1", { defaultValue: "Loading post images…" })}</p>;
+  if (failed) return <button type="button" className="text-sm text-zinc-300" onClick={() => setAttempt(value => value + 1)}>{_copy("copy.868ffd193290", { defaultValue: "Could not load post images. Retry" })}</button>;
   if (!images.length) return null;
   const previews = buildFeedImageUrls(images) ?? [];
   return <section className="space-y-2">
-    <h3 className="text-sm font-medium text-zinc-300">Images</h3>
-    <p className="text-xs text-zinc-400">Adding or replacing images saves immediately. Your post keeps its link, views and comments.</p>
-    {imageLimit === null ? <button type="button" disabled={busy || disabled} className="text-xs text-zinc-400" onClick={() => setAttempt(value => value + 1)}>Image allowance unavailable. Retry</button> :
-      <p className="text-xs text-zinc-400">{images.length} / {imageLimit} images · Based on your badge tier</p>}
+    <h3 className="text-sm font-medium text-zinc-300">{_copy("copy.be7e2f201293", { defaultValue: "Images" })}</h3>
+    <p className="text-xs text-zinc-400">{_copy("copy.0f0d5afa82cf", { defaultValue: "Adding or replacing images saves immediately. Your post keeps its link, views and comments." })}</p>
+    {imageLimit === null ? <button type="button" disabled={busy || disabled} className="text-xs text-zinc-400" onClick={() => setAttempt(value => value + 1)}>{_copy("copy.f6a4983ea9c5", { defaultValue: "Image allowance unavailable. Retry" })}</button> :
+      <p className="text-xs text-zinc-400">{images.length} / {imageLimit}{_copy("copy.76d4bc2aa471", { defaultValue: " images · Based on your badge tier" })}</p>}
     <input ref={addInput} type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,image/avif" className="hidden" onChange={event => {
       const files = Array.from(event.target.files ?? []);
       event.target.value = '';
@@ -102,7 +104,7 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
     }} />
     <button type="button" disabled={busy || disabled || imageLimit === null || images.length >= imageLimit}
       onClick={() => addInput.current?.click()} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white disabled:opacity-50">
-      {busy && position.current === -1 ? 'Adding images…' : imageLimit !== null && images.length >= imageLimit ? 'Badge image limit reached' : 'Add images'}
+      {busy && position.current === -1 ? _copy("copy.8a4d34ae97e4", { defaultValue: "Adding images…" }) : imageLimit !== null && images.length >= imageLimit ? _copy("copy.3c4add40558c", { defaultValue: "Badge image limit reached" }) : _copy("copy.89a8ac2bfcee", { defaultValue: "Add images" })}
     </button>
     <input ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,image/avif" className="hidden" onChange={event => {
       const file = event.target.files?.[0];
@@ -113,10 +115,10 @@ export function EditPostImages({ tokenId, disabled, onBusyChange }: {
       {previews.map((src, index) => <button key={index} type="button" disabled={busy || disabled}
         onClick={() => { position.current = index; input.current?.click(); }}
         className="overflow-hidden rounded-xl border border-white/10 bg-white/5 text-white disabled:opacity-50">
-        <img src={src} alt={`Image ${index + 1}`} className="h-28 w-full object-contain" />
+        <img src={src} alt={_copy("copy.5e0cb5ae157b", { defaultValue: "Image {{value1}}", value1: index + 1 })} className="h-28 w-full object-contain" />
         <span className="flex items-center justify-center gap-2 p-2 text-sm">
           {busy && position.current === index ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-          {busy && position.current === index ? 'Replacing…' : `Replace image ${index + 1}`}
+          {busy && position.current === index ? _copy("copy.44207eb29645", { defaultValue: "Replacing…" }) : _copy("copy.cd9939b6aa1a", { defaultValue: "Replace image {{value1}}", value1: index + 1 })}
         </span>
       </button>)}
     </div>

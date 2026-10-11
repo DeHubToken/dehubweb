@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * BillingTab
@@ -23,6 +24,7 @@ const EXPLORERS: Record<string, string> = {
 };
 
 export function BillingTab() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { data: account } = useAdAccount();
   const { data: payments = [], isLoading } = useAdPayments();
@@ -37,11 +39,9 @@ export function BillingTab() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
             <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
-              <Wallet className="w-3.5 h-3.5" /> Ads balance
-            </div>
+              <Wallet className="w-3.5 h-3.5" />{_copy("copy.0ba9edde1a98", { defaultValue: " Ads balance" })}</div>
             <p className="text-3xl font-bold text-foreground">{formatUsd(account?.balance_usd)}</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Deposited {formatUsd(account?.total_deposited_usd)} · Spent {formatUsd(account?.total_spent_usd)}
+            <p className="text-xs text-muted-foreground mt-1">{_copy("copy.bd18f70caac4", { defaultValue: "Deposited " })}{formatUsd(account?.total_deposited_usd)}{_copy("copy.c9aed7193ddf", { defaultValue: " · Spent " })}{formatUsd(account?.total_spent_usd)}
             </p>
           </div>
           <Button variant="glass" onClick={() => setTopUpOpen(true)}>
@@ -58,7 +58,7 @@ export function BillingTab() {
         </p>
         <div className="flex gap-2">
           <Input
-            placeholder="0x… transaction hash"
+            placeholder={_copy("copy.564fb0c997ad", { defaultValue: "0x… transaction hash" })}
             value={manualHash}
             onChange={(e) => setManualHash(e.target.value)}
             className="font-mono text-xs"

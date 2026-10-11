@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Radio Mini Player Component
  * ===========================
@@ -49,6 +50,7 @@ function VolumeControl({ volume, isMuted, setVolume }: { volume: number; isMuted
 }
 
 export function RadioMiniPlayer() {
+  const { t: _copy } = _useCopy();
   const { 
     currentStation, 
     isPlaying, 
@@ -291,7 +293,7 @@ export function RadioMiniPlayer() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs text-zinc-400 uppercase tracking-wider">
-                    {isLoading ? 'Connecting...' : 'Now Playing'}
+                    {isLoading ? _copy("copy.5f04ae9ed6a8", { defaultValue: "Connecting..." }) : _copy("copy.8b2ae991573c", { defaultValue: "Now Playing" })}
                   </span>
                   <span className="text-sm">{countryFlag}</span>
                 </div>
@@ -324,7 +326,7 @@ export function RadioMiniPlayer() {
                     <Maximize2 className="w-4 h-4 text-zinc-400" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Fullscreen visualizer</TooltipContent>
+                <TooltipContent>{_copy("copy.99ee9f07ada8", { defaultValue: "Fullscreen visualizer" })}</TooltipContent>
               </Tooltip>
               
               {/* Minimize Button */}
@@ -337,7 +339,7 @@ export function RadioMiniPlayer() {
                     <Minus className="w-4 h-4 text-zinc-400" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent>Minimize player</TooltipContent>
+                <TooltipContent>{_copy("copy.3fbf2e193b76", { defaultValue: "Minimize player" })}</TooltipContent>
               </Tooltip>
               
               {/* Close Button */}

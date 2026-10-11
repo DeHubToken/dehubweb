@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -29,6 +30,7 @@ interface GifPickerProps {
 }
 
 export function GifPicker({ onGifSelect }: GifPickerProps) {
+  const { t: _copy } = _useCopy();
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useSurfaceDraft("components/app/chat/GifPicker.tsx:searchQuery", '');
 
@@ -62,7 +64,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
           <div className="relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
             <Input
-              placeholder="Search GIFs..."
+              placeholder={_copy("copy.301a3ea004c8", { defaultValue: "Search GIFs..." })}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8 h-8 bg-white/5 border-white/10 text-white text-sm placeholder:text-zinc-500"
@@ -71,7 +73,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
         </div>
         
         <div className="p-2 text-xs text-zinc-500 font-medium">
-          {searchQuery ? 'Search Results' : 'Trending'}
+          {searchQuery ? _copy("copy.39414102545e", { defaultValue: "Search Results" }) : _copy("copy.5e1a0ebc939d", { defaultValue: "Trending" })}
         </div>
         
         {/* GIF grid */}
@@ -95,7 +97,7 @@ export function GifPicker({ onGifSelect }: GifPickerProps) {
         </div>
         
         <div className="p-2 border-t border-white/10 text-center">
-          <span className="text-[10px] text-zinc-500">Powered by GIPHY</span>
+          <span className="text-[10px] text-zinc-500">{_copy("copy.05f14e07ec0c", { defaultValue: "Powered by GIPHY" })}</span>
         </div>
       </PopoverContent>
     </Popover>

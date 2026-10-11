@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Quick Buy Button — shown on cashtag/ticker cards in search.
  * Opens a Uniswap swap drawer for Base tokens, or DPay for tokens.
@@ -28,6 +29,7 @@ interface QuickBuyButtonProps {
 }
 
 export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo, chainId }: QuickBuyButtonProps) {
+  const { t: _copy } = _useCopy();
   const [open, setOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
   const [swapTokenOpen, setSwapTokenOpen] = useState(false);
@@ -46,7 +48,7 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
       <button
         onClick={(e) => { e.stopPropagation(); if (isDHB) navigate('/app/buy'); else setOpen(true); }}
         className="text-zinc-400 hover:text-white transition-colors p-1.5"
-        title={`Buy ${symbol}`}
+        title={_copy("copy.9b5f8d89fc43", { defaultValue: "Buy {{value1}}", value1: symbol })}
       >
         <ShoppingCart className="w-4 h-4" />
       </button>
@@ -54,9 +56,9 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
       {/* Buy Method Drawer */}
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerContent column glass>
-          <DrawerTitle className="sr-only">Buy {symbol}</DrawerTitle>
+          <DrawerTitle className="sr-only">{_copy("copy.e8c84f1c82bf", { defaultValue: "Buy " })}{symbol}</DrawerTitle>
           <div className="p-5 pb-8 space-y-2">
-            <h3 className="text-white font-semibold text-base mb-4">Buy ${symbol}</h3>
+            <h3 className="text-white font-semibold text-base mb-4">{_copy("copy.8d2e3063a993", { defaultValue: "Buy $" })}{symbol}</h3>
 
             {!isDHB && (
               <>
@@ -71,8 +73,8 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
                   >
                     <ArrowRightLeft className="w-5 h-5 text-white/70" />
                     <div className="text-left">
-                      <span className="text-sm font-medium text-white">Instant Swap</span>
-                      <p className="text-xs text-white/40">Swap ETH or any Base token via Uniswap</p>
+                      <span className="text-sm font-medium text-white">{_copy("copy.023f2e9719bd", { defaultValue: "Instant Swap" })}</span>
+                      <p className="text-xs text-white/40">{_copy("copy.5ec47858822e", { defaultValue: "Swap ETH or any Base token via Uniswap" })}</p>
                     </div>
                   </button>
                 )}
@@ -84,10 +86,10 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
                 >
                   <CreditCard className="w-5 h-5 text-white/70" />
                   <div className="text-left flex-1">
-                    <span className="text-sm font-medium text-white">Buy with Card</span>
-                    <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
+                    <span className="text-sm font-medium text-white">{_copy("copy.a0027ccd58bf", { defaultValue: "Buy with Card" })}</span>
+                    <p className="text-xs text-white/40">{_copy("copy.20cc4ce111fa", { defaultValue: "Purchase using Visa, Mastercard, Apple Pay" })}</p>
                   </div>
-                  <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
+                  <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">{_copy("copy.4f7d64017689", { defaultValue: "Coming soon" })}</span>
                 </button>
 
                 {/* Cross-chain deposit */}
@@ -101,8 +103,8 @@ export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo,
                   >
                     <Wallet className="w-5 h-5 text-white/70" />
                     <div className="text-left">
-                      <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                      <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
+                      <span className="text-sm font-medium text-white">{_copy("copy.69cda82c3af5", { defaultValue: "Buy with Crypto" })}</span>
+                      <p className="text-xs text-white/40">{_copy("copy.4be8f5f56303", { defaultValue: "BTC, SOL, ETH, USDC & more from any chain" })}</p>
                     </div>
                   </button>
                 )}

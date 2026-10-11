@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Share Entity Drawer
  * ===================
@@ -82,6 +83,7 @@ export function ShareEntityDrawer({
   postCategory,
   repost,
 }: ShareEntityDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { openPostModal } = useGlobalDropZone();
   const [dmOpen, setDmOpen] = useState(false);
   const [reposting, setReposting] = useState(false);
@@ -96,7 +98,7 @@ export function ShareEntityDrawer({
 
   const handleCopy = () => {
     navigator.clipboard.writeText(url);
-    toast.success('Link copied');
+    toast.success(_copy("copy.d12860c21e78", { defaultValue: "Link copied" }));
     onOpenChange(false);
   };
 
@@ -125,18 +127,18 @@ export function ShareEntityDrawer({
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent column glass className="max-h-[60dvh]" data-no-navigate>
           <DrawerHeader className="sr-only">
-            <DrawerTitle>Share</DrawerTitle>
+            <DrawerTitle>{_copy("copy.29887a5ff984", { defaultValue: "Share" })}</DrawerTitle>
           </DrawerHeader>
           <div className="p-4 space-y-2">
             <ShareAction
               icon={<Link2 className="w-5 h-5 text-zinc-300" />}
-              label="Copy link"
+              label={_copy("copy.dbf362d4f210", { defaultValue: "Copy link" })}
               detail={`Copy the ${noun} link to your clipboard`}
               onClick={handleCopy}
             />
             <ShareAction
               icon={<Send className="w-5 h-5 text-zinc-300" />}
-              label="Send in a message"
+              label={_copy("copy.20e392c29da3", { defaultValue: "Send in a message" })}
               detail="Share it directly with someone"
               onClick={() => {
                 onOpenChange(false);
@@ -148,14 +150,14 @@ export function ShareEntityDrawer({
             {repost && (
               <ShareAction
                 icon={<Repeat2 className={reposting ? 'w-5 h-5 text-zinc-300 animate-pulse' : 'w-5 h-5 text-zinc-300'} />}
-                label="Repost"
+                label={_copy("copy.f4fd9adb8f2d", { defaultValue: "Repost" })}
                 detail={repost.detail ?? 'Send it to your followers as-is'}
                 onClick={handleRepost}
               />
             )}
             <ShareAction
               icon={<MessageSquarePlus className="w-5 h-5 text-zinc-300" />}
-              label="Share to feed"
+              label={_copy("copy.1d321ac64b70", { defaultValue: "Share to feed" })}
               detail="Write a post with it attached"
               onClick={() => {
                 onOpenChange(false);
@@ -165,7 +167,7 @@ export function ShareEntityDrawer({
             {canNativeShare && (
               <ShareAction
                 icon={<Share2 className="w-5 h-5 text-zinc-300" />}
-                label="Share elsewhere"
+                label={_copy("copy.8c7afb50b89c", { defaultValue: "Share elsewhere" })}
                 detail="Open your device's share sheet"
                 onClick={handleNativeShare}
               />

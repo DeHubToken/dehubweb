@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * GroupSettingsDrawer Component
@@ -43,6 +44,7 @@ interface GroupSettingsDrawerProps {
 }
 
 export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpdated }: GroupSettingsDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const [info, setInfo] = useState<GroupInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -78,7 +80,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
     try {
       // Update group with the new member by adding them
       await joinGroup(groupId);
-      toast.success('Member added');
+      toast.success(_copy("copy.1600c55d5a2d", { defaultValue: "Member added" }));
       setShowAddMember(false);
       setMemberSearch.complete(memberSearch, '');
       setSearchResults([]);
@@ -86,7 +88,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
       onUpdated();
     } catch (err) {
       console.error('[GroupSettings] Add member failed:', err);
-      toast.error('Failed to add member');
+      toast.error(_copy("copy.6ced81e1675d", { defaultValue: "Failed to add member" }));
     } finally {
       setIsAddingMember(false);
     }
@@ -102,11 +104,11 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
       setEditDescription(data.description || '');
     } catch (err) {
       console.error('[GroupSettings] Failed to fetch info:', err);
-      toast.error('Failed to load group info');
+      toast.error(_copy("copy.edbff8a650ac", { defaultValue: "Failed to load group info" }));
     } finally {
       setIsLoading(false);
     }
-  }, [groupId, setEditDescription, setEditName]);
+  }, [groupId, setEditDescription, setEditName, _copy]);
 
   useEffect(() => {
     if (open) fetchInfo();
@@ -114,7 +116,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
 
   const handleSave = async () => {
     if (!editName.trim()) {
-      toast.error('Group name is required');
+      toast.error(_copy("copy.a6ba8d7b13f4", { defaultValue: "Group name is required" }));
       return;
     }
     setIsSaving(true);
@@ -123,13 +125,13 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
         name: editName.trim(),
         description: editDescription.trim() || undefined,
       });
-      toast.success('Group updated');
+      toast.success(_copy("copy.149d7c538327", { defaultValue: "Group updated" }));
       setIsEditing(false);
       fetchInfo();
       onUpdated();
     } catch (err) {
       console.error('[GroupSettings] Update failed:', err);
-      toast.error('Failed to update group');
+      toast.error(_copy("copy.af15a4d02eb0", { defaultValue: "Failed to update group" }));
     } finally {
       setIsSaving(false);
     }
@@ -139,12 +141,12 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
     setIsLeaving(true);
     try {
       await leaveGroup(groupId);
-      toast.success('Left the group');
+      toast.success(_copy("copy.11af90c52650", { defaultValue: "Left the group" }));
       onOpenChange(false);
       onLeft();
     } catch (err) {
       console.error('[GroupSettings] Leave failed:', err);
-      toast.error('Failed to leave group');
+      toast.error(_copy("copy.56bdfa488d3d", { defaultValue: "Failed to leave group" }));
     } finally {
       setIsLeaving(false);
       setShowLeaveConfirm(false);
@@ -155,11 +157,11 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
     setBlockingUser(userAddress);
     try {
       await blockUserInGroup(groupId, userAddress);
-      toast.success('User blocked from group');
+      toast.success(_copy("copy.3545f8331036", { defaultValue: "User blocked from group" }));
       fetchInfo();
     } catch (err) {
       console.error('[GroupSettings] Block failed:', err);
-      toast.error('Failed to block user');
+      toast.error(_copy("copy.d2b91e7b896f", { defaultValue: "Failed to block user" }));
     } finally {
       setBlockingUser(null);
     }
@@ -168,12 +170,12 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
   const handleJoin = async () => {
     try {
       await joinGroup(groupId);
-      toast.success('Joined the group');
+      toast.success(_copy("copy.1c37a7680108", { defaultValue: "Joined the group" }));
       fetchInfo();
       onUpdated();
     } catch (err) {
       console.error('[GroupSettings] Join failed:', err);
-      toast.error('Failed to join group');
+      toast.error(_copy("copy.4c674e467017", { defaultValue: "Failed to join group" }));
     }
   };
 
@@ -190,9 +192,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
         <DrawerContent column glass className="px-4 pb-8 max-h-[80dvh]">
           <DrawerHeader className="border-b border-white/10 mb-4">
             <DrawerTitle className="text-white flex items-center gap-2">
-              <Users className="w-5 h-5" />
-              Group Settings
-            </DrawerTitle>
+              <Users className="w-5 h-5" />{_copy("copy.8e4622c03c80", { defaultValue: "Group Settings" })}</DrawerTitle>
           </DrawerHeader>
 
           {isLoading ? (
@@ -205,7 +205,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
               {isEditing ? (
                 <div className="space-y-3">
                   <div className="space-y-1.5">
-                    <label className="text-sm text-zinc-400">Group Name</label>
+                    <label className="text-sm text-zinc-400">{_copy("copy.8e7526fdcc5c", { defaultValue: "Group Name" })}</label>
                     <Input
                       value={editName}
                       onChange={(e) => setEditName(e.target.value)}
@@ -213,7 +213,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-sm text-zinc-400">Description</label>
+                    <label className="text-sm text-zinc-400">{_copy("copy.526e0087cc3f", { defaultValue: "Description" })}</label>
                     <Textarea
                       value={editDescription}
                       onChange={(e) => setEditDescription(e.target.value)}
@@ -226,18 +226,14 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                       variant="glass"
                       onClick={() => setIsEditing(false)}
                       className="flex-1"
-                    >
-                      Cancel
-                    </Button>
+                    >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
                     <Button
                       variant="glass"
                       onClick={handleSave}
                       disabled={isSaving}
                       className="flex-1"
                     >
-                      {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Settings className="w-4 h-4 mr-2" />}
-                      Save
-                    </Button>
+                      {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Settings className="w-4 h-4 mr-2" />}{_copy("copy.1509f561f241", { defaultValue: "Save" })}</Button>
                   </div>
                 </div>
               ) : (
@@ -248,7 +244,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                       {info.description && (
                         <p className="text-sm text-zinc-400 mt-1">{info.description}</p>
                       )}
-                      <p className="text-xs text-zinc-500 mt-1">{info.memberCount} members</p>
+                      <p className="text-xs text-zinc-500 mt-1">{info.memberCount}{_copy("copy.c93aa5da2800", { defaultValue: " members" })}</p>
                     </div>
                     {isCreator && (
                       <Button
@@ -271,8 +267,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-medium text-zinc-400 flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    Members ({info.members?.length || info.memberCount})
+                    <Users className="w-4 h-4" />{_copy("copy.ebc719b960a2", { defaultValue: "Members (" })}{info.members?.length || info.memberCount})
                   </h4>
                   {isCreator && (
                     <Button
@@ -282,7 +277,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                       className="h-7 text-xs text-zinc-400 hover:text-white gap-1"
                     >
                       {showAddMember ? <X className="w-3.5 h-3.5" /> : <UserPlus className="w-3.5 h-3.5" />}
-                      {showAddMember ? 'Cancel' : 'Add'}
+                      {showAddMember ? _copy("copy.19766ed6ccb2", { defaultValue: "Cancel" }) : _copy("copy.9fd728c66c9a", { defaultValue: "Add" })}
                     </Button>
                   )}
                 </div>
@@ -295,7 +290,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                       <Input
                         value={memberSearch}
                         onChange={(e) => setMemberSearch(e.target.value)}
-                        placeholder="Search users..."
+                        placeholder={_copy("copy.beb0e209e98e", { defaultValue: "Search users..." })}
                         className="bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 pl-9 h-9 text-sm"
                         autoFocus
                       />
@@ -327,7 +322,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                               </Avatar>
                               <span className="flex-1 text-sm text-white truncate">{userName}</span>
                               {alreadyMember ? (
-                                <span className="text-xs text-zinc-500">Already in group</span>
+                                <span className="text-xs text-zinc-500">{_copy("copy.d843c41d822b", { defaultValue: "Already in group" })}</span>
                               ) : (
                                 <Button
                                   variant="ghost"
@@ -336,9 +331,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                                   disabled={isAddingMember}
                                   className="h-6 text-xs text-emerald-400 hover:text-emerald-300 gap-1"
                                 >
-                                  {isAddingMember ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserPlus className="w-3 h-3" />}
-                                  Add
-                                </Button>
+                                  {isAddingMember ? <Loader2 className="w-3 h-3 animate-spin" /> : <UserPlus className="w-3 h-3" />}{_copy("copy.9fd728c66c9a", { defaultValue: "Add" })}</Button>
                               )}
                             </div>
                           );
@@ -371,7 +364,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                             className="text-sm text-white font-medium truncate"
                           >
                             {displayName}
-                            {isSelf && <span className="text-zinc-500 ml-1">(you)</span>}
+                            {isSelf && <span className="text-zinc-500 ml-1">{_copy("copy.d1eb47c77576", { defaultValue: "(you)" })}</span>}
                           </BadgedName>
                           {member.username && (
                             <span className="text-xs text-zinc-500">@{member.username}</span>
@@ -395,7 +388,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                                 )}
                               </Button>
                             </TooltipTrigger>
-                            <TooltipContent>Block user from group</TooltipContent>
+                            <TooltipContent>{_copy("copy.cf06f73e8d35", { defaultValue: "Block user from group" })}</TooltipContent>
                           </Tooltip>
                         )}
                       </div>
@@ -420,9 +413,7 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                     aria-busy={isJoining || undefined}
                     className="w-full rounded-xl gap-2"
                   >
-                    {isJoining ? <ButtonLoader /> : <UserPlus className="w-4 h-4" />}
-                    Join Group
-                  </Button>
+                    {isJoining ? <ButtonLoader /> : <UserPlus className="w-4 h-4" />}{_copy("copy.b245d5b75bbb", { defaultValue: "Join Group" })}</Button>
                 )}
 
                 <Button
@@ -430,13 +421,11 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                   variant="outline"
                   className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-xl gap-2"
                 >
-                  <LogOut className="w-4 h-4" />
-                  Leave Group
-                </Button>
+                  <LogOut className="w-4 h-4" />{_copy("copy.0099d0462f96", { defaultValue: "Leave Group" })}</Button>
               </div>
             </div>
           ) : (
-            <p className="text-center text-zinc-500 text-sm py-8">Group not found</p>
+            <p className="text-center text-zinc-500 text-sm py-8">{_copy("copy.c306f1b599ea", { defaultValue: "Group not found" })}</p>
           )}
         </DrawerContent>
       </Drawer>
@@ -445,23 +434,17 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
       <AlertDialog open={showLeaveConfirm} onOpenChange={setShowLeaveConfirm}>
         <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Leave Group?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400">
-              You'll no longer receive messages from this group. You can rejoin later if the group is public.
-            </AlertDialogDescription>
+            <AlertDialogTitle className="text-white">{_copy("copy.9f97ae74bf23", { defaultValue: "Leave Group?" })}</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">{_copy("copy.651245780d28", { defaultValue: "You'll no longer receive messages from this group. You can rejoin later if the group is public." })}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleLeave}
               disabled={isLeaving}
               className="bg-red-600 hover:bg-red-700"
             >
-              {isLeaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Leave
-            </AlertDialogAction>
+              {isLeaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}{_copy("copy.fc6e4a408d56", { defaultValue: "Leave" })}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

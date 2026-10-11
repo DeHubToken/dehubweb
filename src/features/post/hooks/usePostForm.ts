@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { draftIdentity } from '@/hooks/use-surface-draft';
 import { useAccountDraftKey } from '@/hooks/use-draft-state';
@@ -309,6 +310,7 @@ export function usePostForm(
    */
   quotedPost?: DeHubNFT | null,
 ): UsePostFormReturn {
+  const { t: _copy } = _useCopy();
   const isQuoting = !!quotedPost;
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -647,7 +649,7 @@ export function usePostForm(
   const processImageFiles = useCallback((files: File[]) => {
     // Can't add images if there's already a video
     if (hasVideo) {
-      toast.error('Remove the video first to add images');
+      toast.error(_copy("copy.babc49029a3a", { defaultValue: "Remove the video first to add images" }));
       return;
     }
 
@@ -683,7 +685,7 @@ export function usePostForm(
       return true;
     });
     if (filesToAdd.length < eligibleFiles.length) {
-      toast.error('Images in one upload must total 100 MB or less');
+      toast.error(_copy("copy.18b277756657", { defaultValue: "Images in one upload must total 100 MB or less" }));
     }
 
     if (files.length > availableSlots) {
@@ -694,7 +696,7 @@ export function usePostForm(
       const preview = URL.createObjectURL(file);
       setMedia(prev => [...prev, { file, preview, type: 'image' }]);
     });
-  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username, postQuota?.mediaBytesPerDay, postQuota?.tier, t]);
+  }, [hasVideo, media, user?.badgeBalance, user?.badgeLock, user?.username, postQuota?.mediaBytesPerDay, postQuota?.tier, t, _copy]);
     
   const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -706,13 +708,13 @@ export function usePostForm(
   const processVideoFile = useCallback(async (file: File) => {
     // Can't add video if there are already images
     if (hasImage) {
-      toast.error('Remove images first to add a video');
+      toast.error(_copy("copy.e38adb0be028", { defaultValue: "Remove images first to add a video" }));
       return;
     }
 
     // Can't add more than 1 video
     if (hasVideo) {
-      toast.error('Only 1 video allowed per post');
+      toast.error(_copy("copy.ffbd0be1d6f7", { defaultValue: "Only 1 video allowed per post" }));
       return;
     }
 
@@ -801,7 +803,7 @@ export function usePostForm(
         }
       } catch (err) {
         console.warn('[Video] Failed to generate thumbnail:', err);
-        toast.error('Could not generate thumbnail automatically. You can add one manually.');
+        toast.error(_copy("copy.4b91a991a6d5", { defaultValue: "Could not generate thumbnail automatically. You can add one manually." }));
       }
 
       // Update the media entry with duration + thumbnail
@@ -816,11 +818,11 @@ export function usePostForm(
       ));
     } catch (err) {
       console.warn('[Video] Failed to load video metadata:', err);
-      toast.error('Could not process video. Try a different file.');
+      toast.error(_copy("copy.6925145d1695", { defaultValue: "Could not process video. Try a different file." }));
     } finally {
       setIsGeneratingThumbnail(false);
     }
-  }, [hasImage, hasVideo, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier, setText, setTitleText]);
+  }, [hasImage, hasVideo, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier, setText, setTitleText, _copy]);
 
   const removeMedia = useCallback((index: number) => {
     setMedia(prev => {
@@ -869,14 +871,14 @@ export function usePostForm(
         // /user_mint reads every file on one as an image, so the old
         // "Audio added to images" parked a blob that vanished at post time.
         URL.revokeObjectURL(url);
-        toast.info('Audio can\'t ride an image post — use the sound picker to attach an existing audio post as its soundtrack.');
+        toast.info(_copy("copy.43fd30914e36", { defaultValue: "Audio can't ride an image post — use the sound picker to attach an existing audio post as its soundtrack." }));
       } else {
         // Standalone audio post
         setMedia(prev => [...prev, { file, preview: url, type: 'audio', duration }]);
-        toast.success('Audio uploaded');
+        toast.success(_copy("copy.8697acaccf6a", { defaultValue: "Audio uploaded" }));
       }
     };
-  }, [hasImage, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier, setText, setTitleText]);
+  }, [hasImage, text, titleText, editorRef, mediaUploadLimit, mediaUploadLimitLabel, postQuota?.tier, setText, setTitleText, _copy]);
 
   const handleFileDrop = useCallback((files: FileList) => {
     const fileArray = Array.from(files);
@@ -1005,7 +1007,7 @@ export function usePostForm(
    */
   const replaceImageFile = useCallback((index: number, file: File) => {
     if (!file.type.startsWith('image/')) {
-      toast.error('Choose an image file');
+      toast.error(_copy("copy.94377a89a9e4", { defaultValue: "Choose an image file" }));
       return;
     }
     if (file.size > MEDIA_LIMITS.MAX_FILE_SIZE) {
@@ -1024,7 +1026,7 @@ export function usePostForm(
         cropSettings: undefined,
       };
     }));
-  }, []);
+  }, [_copy]);
 
   const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -1036,7 +1038,7 @@ export function usePostForm(
 
   const handleEnhanceWithAI = useCallback(async (mode: 'spellcheck' | 'grammar' | 'style' = 'spellcheck', style?: string) => {
     if (!text.trim()) {
-      toast.error('Enter some text first');
+      toast.error(_copy("copy.9034a5022016", { defaultValue: "Enter some text first" }));
       return;
     }
     setIsEnhancing(true);
@@ -1064,11 +1066,11 @@ export function usePostForm(
       }
     } catch (err) {
       console.error('Enhancement error:', err);
-      toast.error('Failed to process text');
+      toast.error(_copy("copy.b14f4609b8d3", { defaultValue: "Failed to process text" }));
     } finally {
       setIsEnhancing(false);
     }
-  }, [text, setText]);
+  }, [text, setText, _copy]);
 
   const insertFormatting = useCallback((format: 'bold' | 'italic' | 'mention') => {
     const editor = editorRef.current;
@@ -1115,9 +1117,9 @@ export function usePostForm(
   const insertGif = useCallback((gifUrl: string) => {
     // For now, GIFs can be added as media attachments
     // We'll create a temporary image file from the GIF URL
-    toast.info('GIF support coming soon!');
+    toast.info(_copy("copy.d0f6e501c24e", { defaultValue: "GIF support coming soon!" }));
     // TODO: Download GIF and add as media
-  }, []);
+  }, [_copy]);
 
   // Camera modal state
   const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
@@ -1334,12 +1336,12 @@ export function usePostForm(
             setMedia(prev => prev.map(m => 
               m.type === 'image' ? { ...m, audio: { blob: audioBlob, url: audioUrl, duration } } : m
             ));
-            toast.success('Audio added to images');
+            toast.success(_copy("copy.57cc482b01a5", { defaultValue: "Audio added to images" }));
           } else {
             // Standalone audio post - create a File from the blob
             const audioFile = new File([audioBlob], `recording-${Date.now()}.webm`, { type: 'audio/webm' });
             setMedia(prev => [...prev, { file: audioFile, preview: audioUrl, type: 'audio', duration }]);
-            toast.success('Audio recorded');
+            toast.success(_copy("copy.a1c44e01b157", { defaultValue: "Audio recorded" }));
           }
         };
 
@@ -1362,12 +1364,12 @@ export function usePostForm(
         setRecordingTime(prev => prev + 1);
       }, 1000);
 
-      toast.success('Recording started');
+      toast.success(_copy("copy.be3f4838b198", { defaultValue: "Recording started" }));
     } catch (err) {
       console.error('Failed to start recording:', err);
-      toast.error('Could not access microphone. Please check permissions.');
+      toast.error(_copy("copy.d82a155e3482", { defaultValue: "Could not access microphone. Please check permissions." }));
     }
-  }, [hasImage]);
+  }, [hasImage, _copy]);
 
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
@@ -1380,17 +1382,17 @@ export function usePostForm(
     if (isPosting) return;
 
     if (scheduledDate && (!Number.isFinite(scheduledDate.getTime()) || scheduledDate.getTime() <= Date.now())) {
-      toast.error('Pick a time in the future.');
+      toast.error(_copy("copy.ebfef07e2d2b", { defaultValue: "Pick a time in the future." }));
       return;
     }
     if (liveMode === 'video' && scheduledDate && scheduledDate.getTime() < Date.now() + 30 * 60 * 1000) {
-      toast.error('Schedule the livestream at least 30 minutes from now.');
+      toast.error(_copy("copy.154ab8682fce", { defaultValue: "Schedule the livestream at least 30 minutes from now." }));
       return;
     }
 
     // Validate required fields
     if (!text.trim() && media.length === 0 && !liveMode && !pollIsValid) {
-      toast.error('Add some content first');
+      toast.error(_copy("copy.26fc0b87a364", { defaultValue: "Add some content first" }));
       return;
     }
 
@@ -1410,7 +1412,7 @@ export function usePostForm(
       try {
         const stageTitle = (titleText.trim() || text.trim().split('\n')[0] || '').slice(0, 100);
         if (!stageTitle) {
-          toast.error('Give the stage a title first');
+          toast.error(_copy("copy.8856ffa71a21", { defaultValue: "Give the stage a title first" }));
           return;
         }
         const stageDescription = titleText.trim() ? text.trim() : '';
@@ -1434,7 +1436,7 @@ export function usePostForm(
             coverImageUrl = supabase.storage.from('community-media').getPublicUrl(path).data.publicUrl;
           } catch (err) {
             console.error('[Stage] Cover upload failed:', err);
-            toast.error('Cover image failed to upload — going live without it');
+            toast.error(_copy("copy.712735778ca2", { defaultValue: "Cover image failed to upload — going live without it" }));
           }
         }
 
@@ -1450,7 +1452,7 @@ export function usePostForm(
         resetForm();
         onClose();
         if (scheduledDate) {
-          toast.success('Stage scheduled');
+          toast.success(_copy("copy.0d1536855c7e", { defaultValue: "Stage scheduled" }));
           navigate('/stages');
         } else {
           openStageModal('live');
@@ -1480,13 +1482,13 @@ export function usePostForm(
       const postingOnSolana = isSolanaChain(chainId);
 
       if (isQuoting && postingOnSolana) {
-        toast.error('Quotes post on Base — switch chain to quote this post');
+        toast.error(_copy("copy.20cd34f41ecd", { defaultValue: "Quotes post on Base — switch chain to quote this post" }));
         setIsPosting(false);
         return;
       }
 
       if (postingOnSolana && isWatch2Earn) {
-        toast.error('Bounty is not available on Solana');
+        toast.error(_copy("copy.f8b1ff604858", { defaultValue: "Bounty is not available on Solana" }));
         setIsPosting(false);
         return;
       }
@@ -1500,7 +1502,7 @@ export function usePostForm(
       // on screen still claiming it was gated. Refusing is right rather than
       // silently posting it open: the creator asked for a gate.
       if (postingOnSolana && isSubscribersOnly) {
-        toast.error('Subscriber-only posts are not available on Solana');
+        toast.error(_copy("copy.712076af20f7", { defaultValue: "Subscriber-only posts are not available on Solana" }));
         setIsPosting(false);
         return;
       }
@@ -1654,7 +1656,7 @@ export function usePostForm(
 
         // Video posts MUST have a thumbnail; audio posts can optionally have one
         if (!thumbnail && hasVideo) {
-          toast.error('Could not generate thumbnail. Please add a custom thumbnail and try again.');
+          toast.error(_copy("copy.dc66efe388fe", { defaultValue: "Could not generate thumbnail. Please add a custom thumbnail and try again." }));
           setIsPosting(false);
           return;
         }
@@ -2195,17 +2197,17 @@ export function usePostForm(
       toast.dismiss('mint-progress');
       if (mintAbandoned) {
         // Not an error, and deliberately not phrased as one: the post is up.
-        toast.success('Posted, but not minted', {
+        toast.success(_copy("copy.29cac0bde471", { defaultValue: "Posted, but not minted" }), {
           description:
-            'Your wallet never confirmed the mint, so the post was published without it. Mint it any time from the post menu.',
+            _copy("copy.65a8301a457d", { defaultValue: "Your wallet never confirmed the mint, so the post was published without it. Mint it any time from the post menu." }),
           duration: 12000,
         });
       } else {
-        toast.success('Posted successfully');
+        toast.success(_copy("copy.eb1d942a2e5a", { defaultValue: "Posted successfully" }));
       }
 
       if (mintResponse.homeFeedRestricted) {
-        toast.warning('Home feed limit reached', {
+        toast.warning(_copy("copy.5b4f3729a48e", { defaultValue: "Home feed limit reached" }), {
           description: t('postComposer.homeFeedRestrictedDescription'),
           duration: 12000,
         });
@@ -2250,14 +2252,14 @@ export function usePostForm(
               // The DHB has left the wallet. Never offer a retry here — the
               // transfer is the part that cannot be repeated safely, and the
               // hash is stashed and re-sent on its own.
-              toast.info('Payment sent — still confirming', {
+              toast.info(_copy("copy.9b032dc30cbb", { defaultValue: "Payment sent — still confirming" }), {
                 id: 'post-quota-pay',
                 description: t('postComposer.paymentConfirmingDescription'),
                 duration: 10000,
               });
             }
           } catch (err) {
-            toast.error('This post is unpaid', {
+            toast.error(_copy("copy.9cf8505b1521", { defaultValue: "This post is unpaid" }), {
               id: 'post-quota-pay',
               description:
                 err instanceof Error
@@ -2278,7 +2280,7 @@ export function usePostForm(
       // dialog because the composer closes on success — and because nothing
       // here needs acknowledging.
       if (shortfall) {
-        toast.info('Posted — but not minted', {
+        toast.info(_copy("copy.c94920b1b46e", { defaultValue: "Posted — but not minted" }), {
           description: `Minting costs ${formatFeeAmount(shortfall.amount)} ${shortfall.symbol} and your balance is short. Top up and you can mint it from the post's menu any time.`,
           action: { label: t('postComposer.getTokens'), onClick: () => navigate('/app/buy') },
           duration: 12000,
@@ -2526,9 +2528,9 @@ export function usePostForm(
         // Not a failure the user caused, and not a sign-out. Tell them what the
         // prompt is for, that nothing was lost, and — the part that was missing
         // — give them a way to open it if it did not appear on its own.
-        toast.info('Unlock your wallet to finish posting', {
-          description: 'Your draft is still here — tap Post again once unlocked.',
-          action: { label: 'Unlock', onClick: requestWalletUnlock },
+        toast.info(_copy("copy.3765b36cd611", { defaultValue: "Unlock your wallet to finish posting" }), {
+          description: _copy("copy.69c3741c70c7", { defaultValue: "Your draft is still here — tap Post again once unlocked." }),
+          action: { label: _copy("copy.4ac709aa58bc", { defaultValue: "Unlock" }), onClick: requestWalletUnlock },
           duration: 8000,
         });
       } else if (isWalletGone && connectionSource === 'wagmi') {
@@ -2542,9 +2544,9 @@ export function usePostForm(
         // words the user can act on: the raw provider error that used to land
         // here reads as "you are logged out" to someone whose name and avatar
         // are still on screen, which is how this turned into support tickets.
-        toast.error('Please sign in again to post', {
-          description: 'Your draft is still here.',
-          action: { label: 'Sign in', onClick: () => openLoginModal() },
+        toast.error(_copy("copy.24b68dfa4df2", { defaultValue: "Please sign in again to post" }), {
+          description: _copy("copy.5f04aef31bf0", { defaultValue: "Your draft is still here." }),
+          action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() },
           duration: 10000,
         });
       } else if (error instanceof AuthenticationError) {
@@ -2556,14 +2558,14 @@ export function usePostForm(
         toast.dismiss(toastId);
 
         if (recovered) {
-          toast.error('Session restored — tap Post to try again.', {
-            description: 'Your draft is still here.',
+          toast.error(_copy("copy.256aa3af7b5b", { defaultValue: "Session restored — tap Post to try again." }), {
+            description: _copy("copy.5f04aef31bf0", { defaultValue: "Your draft is still here." }),
             duration: 8000,
           });
         } else {
-          toast.error('Please sign in again to post', {
-            description: 'Your draft is still here.',
-            action: { label: 'Sign in', onClick: () => openLoginModal() },
+          toast.error(_copy("copy.24b68dfa4df2", { defaultValue: "Please sign in again to post" }), {
+            description: _copy("copy.5f04aef31bf0", { defaultValue: "Your draft is still here." }),
+            action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() },
             duration: 10000,
           });
         }
@@ -2595,6 +2597,7 @@ export function usePostForm(
     selectedCategory, shopLinks, shopListingIds, myPlanIds,
     postQuota?.outstandingDhb, refreshPostQuota, onLiveStreamReady,
     isQuoting, quotedPost,
+    , _copy
   ]);
 
   /**

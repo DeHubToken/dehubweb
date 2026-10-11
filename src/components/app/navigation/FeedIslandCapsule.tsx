@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useFeedRefresh } from '@/lib/feed-refresh';
 import { ElectricLogo } from './ElectricLogo';
 import { FeedPillPullEffect } from './FeedPillPullEffect';
@@ -43,6 +44,7 @@ export function FeedIslandCapsule({
   onBellClick,
   onCreatePost,
 }: FeedIslandCapsuleProps) {
+  const { t: _copy } = _useCopy();
   const refresh = useFeedRefresh();
   const show = visible || refresh.refreshing || refresh.progress > 0;
   const [tabValue, setTabValue] = useState(readActiveTab);
@@ -87,7 +89,7 @@ export function FeedIslandCapsule({
           width, so the mark sits in the true middle. */}
       <div data-feed-island-surface className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-2xl border border-white/10 px-[10px] text-white">
         <div className="flex min-w-[28px] items-center justify-start">
-          <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label="Toggle menu" className="flex shrink-0 items-center justify-center">
+          <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })} className="flex shrink-0 items-center justify-center">
             {avatar ?? <Menu className="w-6 h-6" />}
           </button>
         </div>
@@ -95,7 +97,7 @@ export function FeedIslandCapsule({
           onClick={toggleFeedTabs}
           tabIndex={visible ? 0 : -1}
           aria-expanded={tabsOpen}
-          aria-label={`Feeds, now on ${tab.label}`}
+          aria-label={_copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label })}
           className="flex shrink-0 items-center justify-center px-5"
         >
           <span className="relative inline-flex" data-feed-refresh-logo aria-busy={refresh.refreshing}>
@@ -111,7 +113,7 @@ export function FeedIslandCapsule({
           </span>
         </button>
         <div className="flex min-w-[28px] items-center justify-end">
-          <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label="Notifications" className="relative flex h-7 w-7 shrink-0 items-center justify-center">
+          <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })} className="relative flex h-7 w-7 shrink-0 items-center justify-center">
             <Bell className="w-[21px] h-[21px]" strokeWidth={1.9} />
             {unread > 0 && (
               <span className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
@@ -155,17 +157,17 @@ export function FeedIslandCapsule({
           ))}
           <div className="mx-2 my-1 h-px bg-white/15" />
           <div className="flex items-center">
-            <button role="menuitem" aria-label="Filters" title="Filters"
+            <button role="menuitem" aria-label={_copy("copy.546ebb8eb993", { defaultValue: "Filters" })} title={_copy("copy.546ebb8eb993", { defaultValue: "Filters" })}
               onClick={() => { setFeedTabsOpen(false); window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: tabValue })); }}
               className="flex h-10 flex-1 items-center justify-center rounded-lg hover:bg-white/10">
               <SlidersHorizontal className="h-4 w-4" />
             </button>
-            <button role="menuitem" aria-label="Open menu" title="Menu"
+            <button role="menuitem" aria-label={_copy("copy.b40b3713b43d", { defaultValue: "Open menu" })} title={_copy("copy.99af6606ff9d", { defaultValue: "Menu" })}
               onClick={() => { setFeedTabsOpen(false); onAvatarClick(); }}
               className="flex h-10 flex-1 items-center justify-center rounded-lg hover:bg-white/10">
               <LayoutGrid className="h-4 w-4" />
             </button>
-            <button role="menuitem" aria-label="Create post" title="Create post"
+            <button role="menuitem" aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })} title={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
               onClick={() => { setFeedTabsOpen(false); onCreatePost(); }}
               className="flex h-10 flex-1 items-center justify-center rounded-lg hover:bg-white/10">
               <Plus className="h-4 w-4" />

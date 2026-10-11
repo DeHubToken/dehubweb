@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * FriendsOnStageBar - One thin row per live Stage at the top of the home
  * feed, for everyone. Rows with people you follow come first and name them.
@@ -30,6 +31,7 @@ interface FriendOnStage {
 
 
 export function FriendsOnStageBar() {
+  const { t: _copy } = _useCopy();
   const { walletAddress, isAuthenticated } = useAuth();
   const { openModal, joinSpace } = useStage();
   const { t } = useTranslation();
@@ -174,19 +176,19 @@ export function FriendsOnStageBar() {
             </>
           ) : hostFriend ? (
             <>
-              <span className="text-white/70">{hostFriend.username || 'Someone you follow'}</span>
-              {' is hosting'}
+              <span className="text-white/70">{hostFriend.username || _copy("copy.af1eb1f0e905", { defaultValue: "Someone you follow" })}</span>
+              {_copy("copy.987710b190c7", { defaultValue: " is hosting" })}
               {otherFriends.length > 0 && (
-                <> · {otherFriends.length} more {otherFriends.length === 1 ? 'friend' : 'friends'} listening</>
+                <> · {otherFriends.length}{_copy("copy.ca1231ab640a", { defaultValue: " more " })}{otherFriends.length === 1 ? _copy("copy.cde48537ca2c", { defaultValue: "friend" }) : _copy("copy.2e4b9cc2428b", { defaultValue: "friends" })}{_copy("copy.bd810aa1cb03", { defaultValue: " listening" })}</>
               )}
             </>
           ) : (
             <>
               <span className="text-white/70">
-                {otherFriends.slice(0, 2).map(f => f.username || 'Friend').join(', ')}
+                {otherFriends.slice(0, 2).map(f => f.username || _copy("copy.acd8f6644016", { defaultValue: "Friend" })).join(', ')}
               </span>
               {otherFriends.length > 2 && ` +${otherFriends.length - 2}`}
-              {' listening'}
+              {_copy("copy.bd810aa1cb03", { defaultValue: " listening" })}
             </>
           )}
         </p>

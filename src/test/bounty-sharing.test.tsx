@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJob } from '@/features/work/types';
 
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }) }));
 vi.mock('@/components/app/war/WarHudIcon', () => ({ ThemedIcon: () => null }));
 vi.mock('@/hooks/use-global-drop-zone', () => ({ useGlobalDropZone: () => ({ openPostModal: vi.fn() }) }));
 vi.mock('sonner', () => ({ toast: { success: vi.fn() } }));

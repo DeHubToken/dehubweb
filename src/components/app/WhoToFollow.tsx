@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
@@ -16,6 +17,7 @@ const BATCH_SIZE = 10;
 const MAX_PAGES = 10;
 
 export function WhoToFollow() {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
@@ -170,12 +172,12 @@ export function WhoToFollow() {
     return (
       <AppState
         icon="subscriptions"
-        title={error ? 'Suggestions could not load' : 'No suggestions yet'}
-        description={error ? 'Try loading account suggestions again.' : 'New account suggestions will appear here.'}
+        title={error ? _copy("copy.30321743d913", { defaultValue: "Suggestions could not load" }) : _copy("copy.52f341e961cd", { defaultValue: "No suggestions yet" })}
+        description={error ? _copy("copy.b5e8c269e811", { defaultValue: "Try loading account suggestions again." }) : _copy("copy.34f5da2599fa", { defaultValue: "New account suggestions will appear here." })}
         kind={error ? 'error' : 'empty'}
         size="section"
         primaryAction={error ? {
-          label: 'Try again',
+          label: _copy("copy.d8b8392e2c54", { defaultValue: "Try again" }),
           onClick: () => refetch(),
           disabled: isFetching,
           loading: isFetching,
@@ -220,7 +222,7 @@ export function WhoToFollow() {
                   : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
               }`}
             >
-              {isAlreadyFollowed(user) ? 'Following' : 'Follow'}
+              {isAlreadyFollowed(user) ? _copy("copy.344b4271ca01", { defaultValue: "Following" }) : _copy("copy.641d1ef657bd", { defaultValue: "Follow" })}
             </button>
           </div>
         ))}

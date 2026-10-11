@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Community Invite Landing
  * ========================
@@ -16,6 +17,7 @@ import { useInvitePreview, useJoinViaInvite } from '@/hooks/use-community-admin'
 import { storageImage, deviceWidth } from '@/lib/media-url';
 
 export default function CommunityInvitePage() {
+  const { t: _copy } = _useCopy();
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
   const { isAuthenticated, openLoginModal } = useAuth();
@@ -39,7 +41,7 @@ export default function CommunityInvitePage() {
   if (isError && !preview) {
     return (
       <div className="max-w-2xl mx-auto px-3 py-4">
-        <SEOHead title={`${t('common.somethingWentWrong')} - DeHub Community`} description={t('common.somethingWentWrong')} noindex />
+        <SEOHead title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: t('common.somethingWentWrong') })} description={t('common.somethingWentWrong')} noindex />
         <div role="alert" className="rounded-xl border border-white/10 bg-white/[0.04] p-3.5 text-center space-y-3">
           <p className="text-white font-medium text-sm">{t('common.somethingWentWrong')}</p>
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -128,8 +130,8 @@ export default function CommunityInvitePage() {
   return (
     <div className="max-w-2xl mx-auto px-3 py-4">
       <SEOHead
-        title={`${communityName} - DeHub Community`}
-        description={preview.description || `Join ${communityName} on DeHub`}
+        title={_copy("copy.62918f8e0390", { defaultValue: "{{value1}} - DeHub Community", value1: communityName })}
+        description={preview.description || _copy("copy.2dc2e3027208", { defaultValue: "Join {{value1}} on DeHub", value1: communityName })}
       />
 
       <div className="rounded-xl border border-white/10 bg-white/[0.04] overflow-hidden">

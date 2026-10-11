@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Arcade game player
@@ -71,21 +72,21 @@ const PostModal = React.lazy(() =>
 );
 
 function NotInTheArcade({ slug }: { slug: string | undefined }) {
+  const { t: _copy } = _useCopy();
   return (
     <div data-theme-page-surface className="relative z-[1] flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center text-foreground">
-      <SEOHead title="Arcade | DeHub" noindex />
+      <SEOHead title={_copy("copy.034c667c0011", { defaultValue: "Arcade | DeHub" })} noindex />
       <Gamepad2 className="h-8 w-8 text-zinc-600" />
-      <p className="text-sm text-zinc-400">
-        There is no game called <span className="font-mono text-zinc-200">{slug}</span> in the arcade.
-      </p>
+      <p className="text-sm text-zinc-400">{_copy("copy.57960f216854", { defaultValue: "There is no game called " })}<span className="font-mono text-zinc-200">{slug}</span>{_copy("copy.939aece8b62c", { defaultValue: " in the arcade." })}</p>
       <Button asChild size="sm" className="rounded-full text-xs">
-        <Link to="/arcade">See what is here</Link>
+        <Link to="/arcade">{_copy("copy.1e6d2a6430c4", { defaultValue: "See what is here" })}</Link>
       </Button>
     </div>
   );
 }
 
 export default function ArcadeGamePage() {
+  const { t: _copy } = _useCopy();
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const game = getArcadeGame(slug);
@@ -108,11 +109,11 @@ export default function ArcadeGamePage() {
       if (message?.source !== 'gods-eye-view' || message.type !== 'presence-place-requested') return;
       const token = getAuthToken();
       if (!token || !wallet) {
-        toast.error('Sign in to place yourself on the globe.');
+        toast.error(_copy("copy.6e3e8fecb404", { defaultValue: "Sign in to place yourself on the globe." }));
         return;
       }
       if (!navigator.geolocation) {
-        toast.error('Location is not available in this browser.');
+        toast.error(_copy("copy.7d8fbc624b73", { defaultValue: "Location is not available in this browser." }));
         return;
       }
       navigator.geolocation.getCurrentPosition(async ({ coords }) => {
@@ -136,11 +137,11 @@ export default function ArcadeGamePage() {
           frameRef.current?.contentWindow?.postMessage({
             source: 'social-presence-host', type: 'refresh',
           }, '*');
-          toast.success('You are on the globe — shown within an approximate 25 km area.');
+          toast.success(_copy("copy.d195c2f3c00e", { defaultValue: "You are on the globe — shown within an approximate 25 km area." }));
         } catch {
-          toast.error('Could not place you on the globe.');
+          toast.error(_copy("copy.971acf3159e1", { defaultValue: "Could not place you on the globe." }));
         }
-      }, () => toast.error('Location permission was not granted.'), {
+      }, () => toast.error(_copy("copy.5c07dbf054bd", { defaultValue: "Location permission was not granted." })), {
         enableHighAccuracy: false, timeout: 15_000, maximumAge: 300_000,
       });
     };
@@ -293,7 +294,7 @@ export default function ArcadeGamePage() {
       {!cap.ok ? (
         <div className="flex h-full flex-col items-center justify-center gap-3 px-8 text-center">
           <p className="text-[11px] font-semibold tracking-[0.25em] text-amber-400">{cap.reason}</p>
-          <p className="text-lg font-semibold text-white">Cannot play {game.title}</p>
+          <p className="text-lg font-semibold text-white">{_copy("copy.956273c1f906", { defaultValue: "Cannot play " })}{game.title}</p>
           <p className="max-w-md text-xs leading-relaxed text-zinc-400">{cap.detail}</p>
         </div>
       ) : (
@@ -323,9 +324,7 @@ export default function ArcadeGamePage() {
         <div className="pointer-events-none absolute bottom-4 right-4 z-20 w-[min(24rem,calc(100%-2rem))] rounded-xl border border-amber-400/25 bg-black/80 p-3 text-xs leading-relaxed text-zinc-300 backdrop-blur-xl">
           <div className="flex items-start gap-2">
             <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
-            <p>
-              If you hold a large amount of tokens or live in an insecure area, hide your badge and balance before using this feature. On-chain transactions still reveal your address.
-              {' '}<Link className="pointer-events-auto font-medium text-white underline underline-offset-2" to="/app/settings?tab=privacy#private-balance">Change privacy settings</Link>
+            <p>{_copy("copy.3a0d0a6ad5c4", { defaultValue: "If you hold a large amount of tokens or live in an insecure area, hide your badge and balance before using this feature. On-chain transactions still reveal your address." })}{' '}<Link className="pointer-events-auto font-medium text-white underline underline-offset-2" to="/app/settings?tab=privacy#private-balance">{_copy("copy.592314529223", { defaultValue: "Change privacy settings" })}</Link>
             </p>
           </div>
         </div>
@@ -341,7 +340,7 @@ export default function ArcadeGamePage() {
           <p className="text-sm font-semibold text-white">{game.title}</p>
           <div
             role="progressbar"
-            aria-label={`Loading ${game.title}`}
+            aria-label={_copy("copy.988dcc0d7e92", { defaultValue: "Loading {{value1}}", value1: game.title })}
             aria-valuenow={pct}
             aria-valuemin={0}
             aria-valuemax={100}
@@ -363,9 +362,7 @@ export default function ArcadeGamePage() {
             type="button"
             onClick={dismiss}
             className="pointer-events-auto mt-2 text-[11px] text-zinc-500 underline-offset-2 hover:text-zinc-300 hover:underline"
-          >
-            Hide this
-          </button>
+          >{_copy("copy.33832e6712de", { defaultValue: "Hide this" })}</button>
         </div>
       ) : null}
 
@@ -379,19 +376,18 @@ export default function ArcadeGamePage() {
       {run.result ? (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/80 p-4">
           <div className="max-h-full w-full max-w-md overflow-y-auto rounded-2xl bg-zinc-950 p-5 ring-1 ring-white/10">
-            <p className="text-[11px] font-semibold tracking-[0.25em] text-zinc-500">RUN OVER</p>
+            <p className="text-[11px] font-semibold tracking-[0.25em] text-zinc-500">{_copy("copy.469890fc30d7", { defaultValue: "RUN OVER" })}</p>
             <p className="mt-1 text-lg font-semibold text-white">
-              {formatProgress(run.result.progress)} down the street
-            </p>
+              {formatProgress(run.result.progress)}{_copy("copy.b17b8cb7bcca", { defaultValue: " down the street" })}</p>
             <p className="mt-0.5 text-xs text-zinc-400">
-              {run.result.life > 0 ? `${run.result.life} HP left` : 'No health left'}
-              {run.result.scored && run.result.rank ? ` · ranked #${run.result.rank}` : ''}
+              {run.result.life > 0 ? _copy("copy.6261ebf7f093", { defaultValue: "{{value1}} HP left", value1: run.result.life }) : _copy("copy.7a31f3b31d5c", { defaultValue: "No health left" })}
+              {run.result.scored && run.result.rank ? _copy("copy.5636cc5a29b8", { defaultValue: " · ranked #{{value1}}", value1: run.result.rank }) : ''}
             </p>
             {run.result.scored ? (
               run.result.improved ? (
-                <p className="mt-2 text-xs font-medium text-amber-300">A new personal best.</p>
+                <p className="mt-2 text-xs font-medium text-amber-300">{_copy("copy.5b7137d39643", { defaultValue: "A new personal best." })}</p>
               ) : (
-                <p className="mt-2 text-xs text-zinc-500">Not past your own best — the board keeps that one.</p>
+                <p className="mt-2 text-xs text-zinc-500">{_copy("copy.9a735b4d3068", { defaultValue: "Not past your own best — the board keeps that one." })}</p>
               )
             ) : (
               <p className="mt-2 text-xs text-zinc-500">{run.result.reason}</p>
@@ -404,15 +400,11 @@ export default function ArcadeGamePage() {
                 type="button"
                 onClick={run.dismiss}
                 className="flex-1 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
-              >
-                Keep playing
-              </button>
+              >{_copy("copy.b0b47d01a067", { defaultValue: "Keep playing" })}</button>
               <Link
                 to="/arcade"
                 className="flex-1 rounded-lg bg-zinc-800 px-4 py-2 text-center text-xs font-semibold text-zinc-200 transition-colors hover:bg-zinc-700"
-              >
-                Back to the arcade
-              </Link>
+              >{_copy("copy.90327bbe01ea", { defaultValue: "Back to the arcade" })}</Link>
             </div>
           </div>
         </div>
@@ -422,7 +414,7 @@ export default function ArcadeGamePage() {
         // spinner over a live game would be a lie about what is blocked.
         <div className="pointer-events-none absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/70 px-3 py-1.5">
           <Loader2 className="h-3 w-3 animate-spin text-zinc-400" />
-          <span className="text-[11px] text-zinc-400">Recording your run…</span>
+          <span className="text-[11px] text-zinc-400">{_copy("copy.d95ee7a7a4f6", { defaultValue: "Recording your run…" })}</span>
         </div>
       ) : null}
 

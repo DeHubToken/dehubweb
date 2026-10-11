@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Recent Actions
  * ==============
@@ -81,7 +82,7 @@ const FILTERS: { key: LogFilter; i18nKey: string; fallback: string }[] = [
 /** Patch keys as they land in `detail`, mapped to something a human reads. */
 const SETTING_LABELS: Record<string, string> = {
   name: 'name',
-  description: 'description',
+  get description() { return _translateCopy("copy.c9046f7a37ad", { defaultValue: "description" }); },
   avatar_url: 'avatar',
   banner_url: 'banner',
   is_private: 'privacy',

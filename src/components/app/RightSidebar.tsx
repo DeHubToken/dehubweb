@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +20,7 @@ interface RightSidebarProps {
 
 // Inner search component that uses router hooks (isolates re-renders)
 function SearchBar({ compact }: { compact?: boolean }) {
+  const { t: _copy } = _useCopy();
   const [searchValue, setSearchValue] = useSurfaceDraft("components/app/RightSidebar.tsx:searchValue", '');
   const navigate = useNavigate();
   const { addToHistory } = useSearchHistory();
@@ -38,7 +40,7 @@ function SearchBar({ compact }: { compact?: boolean }) {
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Search..."
+        placeholder={_copy("copy.7f55382219f0", { defaultValue: "Search..." })}
         className={cn(
           "w-full pl-10 bg-zinc-900 border-0 rounded-xl text-white placeholder:text-zinc-500 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0",
           compact ? "h-[36px] text-sm" : "h-[36px]"

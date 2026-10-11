@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Community Invite Embed
  * ======================
@@ -32,6 +33,7 @@ const INVALID_REASON_COPY: Record<string, string> = {
 };
 
 export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteEmbedProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { data: preview, isLoading, isError } = useInvitePreview(code);
 
@@ -84,10 +86,10 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
 
       <div className="flex-1 min-w-0 relative">
         <p className="text-[10px] uppercase tracking-wide text-zinc-500 font-medium">
-          {isValid ? 'Community invite' : invalidCopy}
+          {isValid ? _copy("copy.587a94f0de38", { defaultValue: "Community invite" }) : invalidCopy}
         </p>
         <p className={`text-sm font-semibold truncate ${isValid ? 'text-white' : 'text-zinc-400'}`}>
-          {isValid ? name : 'This invite cannot be used'}
+          {isValid ? name : _copy("copy.47e4ea17be3b", { defaultValue: "This invite cannot be used" })}
         </p>
         {isValid && preview.description && (
           <p className="text-xs truncate mt-0.5 text-slate-50">{preview.description}</p>
@@ -99,15 +101,11 @@ export function CommunityInviteEmbed({ code, fallback = null }: CommunityInviteE
                 <Users className="w-3 h-3" />
                 <span className="font-semibold text-zinc-300">
                   {preview.member_count.toLocaleString()}
-                </span>{' '}
-                Members
-              </span>
+                </span>{' '}{_copy("copy.1044a4c056d0", { defaultValue: "Members" })}</span>
             )}
             {preview.requires_approval && (
               <span className="flex items-center gap-1 text-xs text-zinc-500">
-                <ShieldCheck className="w-3 h-3" />
-                Approval needed
-              </span>
+                <ShieldCheck className="w-3 h-3" />{_copy("copy.9928dd82f38f", { defaultValue: "Approval needed" })}</span>
             )}
           </div>
         )}

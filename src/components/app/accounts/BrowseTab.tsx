@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Browse Tab
@@ -45,6 +46,7 @@ const PRICE_PRESETS = [
 ];
 
 export function BrowseTab() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -198,7 +200,7 @@ export function BrowseTab() {
       />
 
       {!isAuthenticated && listings.length > 0 && (
-        <p className="text-xs text-zinc-500 text-center">Sign in to buy an account.</p>
+        <p className="text-xs text-zinc-500 text-center">{_copy("copy.240a00448fcd", { defaultValue: "Sign in to buy an account." })}</p>
       )}
     </div>
   );

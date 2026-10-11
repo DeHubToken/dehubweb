@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Transcript panel on a post page.
@@ -74,6 +75,7 @@ function TranscriptLine({
   isCorrected: boolean;
   suggestions: TranscriptCorrection[];
 }) {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { submit, vote, remove } = useCorrectionActions(transcriptId);
   const [isEditing, setIsEditing] = useState(false);
@@ -125,7 +127,7 @@ function TranscriptLine({
                 { onSuccess: () => { setDraft.complete(draft, draft); setIsEditing(false); } },
               )}
               className="shrink-0 p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-40"
-              aria-label="Submit correction"
+              aria-label={_copy("copy.b813cdf613bf", { defaultValue: "Submit correction" })}
             >
               {submit.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
             </button>
@@ -133,7 +135,7 @@ function TranscriptLine({
               type="button"
               onClick={() => setIsEditing(false)}
               className="shrink-0 p-1.5 rounded-lg text-white/60 hover:text-white hover:bg-white/10"
-              aria-label="Cancel"
+              aria-label={_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -142,14 +144,12 @@ function TranscriptLine({
           <p className="text-white/90 leading-relaxed">
             <Highlight text={segment.text} query={query} />
             {isCorrected && (
-              <span className="ml-1.5 text-[10px] text-white/40 align-middle" title="Corrected by viewers">
-                fixed
-              </span>
+              <span className="ml-1.5 text-[10px] text-white/40 align-middle" title={_copy("copy.f4da0c915a26", { defaultValue: "Corrected by viewers" })}>{_copy("copy.992a93455c71", { defaultValue: "fixed" })}</span>
             )}
             <button
               type="button"
               onClick={startEditing}
-              aria-label="Suggest a correction for this line"
+              aria-label={_copy("copy.a93f40039316", { defaultValue: "Suggest a correction for this line" })}
               className="ml-1.5 align-middle p-1 rounded text-white/0 group-hover/line:text-white/40 hover:!text-white focus:text-white/70 transition-colors"
             >
               <Pencil className="w-3 h-3" />
@@ -162,15 +162,14 @@ function TranscriptLine({
           const isMine = !!walletAddress && suggestion.address.toLowerCase() === walletAddress.toLowerCase();
           return (
             <div key={suggestion.id} className="mt-1 flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-2 py-1">
-              <p className="flex-1 min-w-0 text-xs text-white/70 truncate">
-                Suggested: {suggestion.text}
+              <p className="flex-1 min-w-0 text-xs text-white/70 truncate">{_copy("copy.003c052ea56a", { defaultValue: "Suggested: " })}{suggestion.text}
               </p>
               {isMine ? (
                 <button
                   type="button"
                   onClick={() => remove.mutate(suggestion.id)}
                   className="shrink-0 p-1 rounded text-white/50 hover:text-red-400"
-                  aria-label="Withdraw your suggestion"
+                  aria-label={_copy("copy.dc99d484fc86", { defaultValue: "Withdraw your suggestion" })}
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -180,7 +179,7 @@ function TranscriptLine({
                     type="button"
                     onClick={() => isAuthenticated ? vote.mutate({ correctionId: suggestion.id, value: 1 }) : openLoginModal()}
                     className="shrink-0 p-1 rounded text-white/50 hover:text-white"
-                    aria-label="This correction is right"
+                    aria-label={_copy("copy.5d693875b034", { defaultValue: "This correction is right" })}
                   >
                     <ThumbsUp className="w-3 h-3" />
                   </button>
@@ -188,7 +187,7 @@ function TranscriptLine({
                     type="button"
                     onClick={() => isAuthenticated ? vote.mutate({ correctionId: suggestion.id, value: -1 }) : openLoginModal()}
                     className="shrink-0 p-1 rounded text-white/50 hover:text-white"
-                    aria-label="This correction is wrong"
+                    aria-label={_copy("copy.d4ea5e7950a8", { defaultValue: "This correction is wrong" })}
                   >
                     <ThumbsDown className="w-3 h-3" />
                   </button>
@@ -210,6 +209,7 @@ interface Props {
 }
 
 export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
+  const { t: _copy } = _useCopy();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useSurfaceDraft("components/app/post-info/TranscriptSection.tsx:query", '');
   const [overviewLoading, setOverviewLoading] = useState(false);
@@ -250,7 +250,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(fullText);
-    toast.success('Transcript copied');
+    toast.success(_copy("copy.758ba0c08150", { defaultValue: "Transcript copied" }));
   };
   const handleDownloadTxt = () => {
     downloadFile(fullText, `transcript-${tokenId}.txt`);
@@ -281,16 +281,12 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
         className="w-full flex items-center justify-between px-4 py-3 text-white hover:bg-white/5 transition"
       >
         <span className="flex items-center gap-2 font-medium">
-          <FileText className="w-4 h-4 text-white/70" />
-          Transcript
-          {status === 'ready' && (
-            <span className="text-xs text-white/50">· {segments.length} lines</span>
+          <FileText className="w-4 h-4 text-white/70" />{_copy("copy.721164f0dc70", { defaultValue: "Transcript" })}{status === 'ready' && (
+            <span className="text-xs text-white/50">· {segments.length}{_copy("copy.d91fca0e24bb", { defaultValue: " lines" })}</span>
           )}
           {inFlight && (
             <span className="text-xs text-white/60 flex items-center gap-1">
-              <Loader2 className="w-3 h-3 animate-spin" />
-              writing
-            </span>
+              <Loader2 className="w-3 h-3 animate-spin" />{_copy("copy.ee871105e875", { defaultValue: "writing" })}</span>
           )}
         </span>
         {open ? <ChevronUp className="w-4 h-4 text-white/60" /> : <ChevronDown className="w-4 h-4 text-white/60" />}
@@ -300,41 +296,35 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
         <div className="px-4 pb-4 space-y-3">
           {isLoading && (
             <div className="text-sm text-white/60 flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />Loading…
-            </div>
+              <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>
           )}
 
           {!isLoading && status === 'absent' && (
             <AppState
               icon="posts"
-              title="No transcript yet"
-              description="A transcript is written automatically shortly after a video is posted."
+              title={_copy("copy.5ae4bb109db7", { defaultValue: "No transcript yet" })}
+              description={_copy("copy.60aac7666712", { defaultValue: "A transcript is written automatically shortly after a video is posted." })}
               size="drawer"
-              primaryAction={{ label: 'Write it now', onClick: () => start.mutate(), loading: start.isPending }}
+              primaryAction={{ label: _copy("copy.6662a5411155", { defaultValue: "Write it now" }), onClick: () => start.mutate(), loading: start.isPending }}
             />
           )}
 
           {inFlight && (
             <div className="text-sm text-white/70 flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Transcribing
-              {durationSeconds ? ` ${Math.max(1, Math.round(durationSeconds / 60))} min of video` : ''}…
+              <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.5561cf90d112", { defaultValue: "Transcribing" })}{durationSeconds ? _copy("copy.87fb4c427986", { defaultValue: " {{value1}} min of video", value1: Math.max(1, Math.round(durationSeconds / 60)) }) : ''}…
             </div>
           )}
 
           {status === 'empty' && (
-            <p className="text-sm text-white/60">
-              This video has no speech in it, so there is nothing to transcribe.
-            </p>
+            <p className="text-sm text-white/60">{_copy("copy.4c2ea0ddf64b", { defaultValue: "This video has no speech in it, so there is nothing to transcribe." })}</p>
           )}
 
           {status === 'failed' && (
             <div className="space-y-2">
-              <p className="text-sm text-red-300">Transcription failed: {transcript?.error}</p>
+              <p className="text-sm text-red-300">{_copy("copy.9fddb94edef5", { defaultValue: "Transcription failed: " })}{transcript?.error}</p>
               {canRetry && (
                 <Button variant="secondary" className="rounded-xl" onClick={() => start.mutate()}>
-                  <RefreshCw className="w-4 h-4 mr-2" /> Try again
-                </Button>
+                  <RefreshCw className="w-4 h-4 mr-2" />{_copy("copy.55de39f882a3", { defaultValue: " Try again" })}</Button>
               )}
             </div>
           )}
@@ -343,14 +333,11 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
             <>
               <div className="flex gap-2 flex-wrap">
                 <Button size="sm" variant="secondary" className="rounded-lg" onClick={handleCopy}>
-                  <Copy className="w-3.5 h-3.5 mr-1.5" /> Copy
-                </Button>
+                  <Copy className="w-3.5 h-3.5 mr-1.5" />{_copy("copy.dea0ff385abf", { defaultValue: " Copy" })}</Button>
                 <Button size="sm" variant="secondary" className="rounded-lg" onClick={handleDownloadTxt}>
-                  <Download className="w-3.5 h-3.5 mr-1.5" /> Text
-                </Button>
+                  <Download className="w-3.5 h-3.5 mr-1.5" />{_copy("copy.d0bd6ec267f9", { defaultValue: " Text" })}</Button>
                 <Button size="sm" variant="secondary" className="rounded-lg" onClick={handleDownloadSrt}>
-                  <Download className="w-3.5 h-3.5 mr-1.5" /> SRT
-                </Button>
+                  <Download className="w-3.5 h-3.5 mr-1.5" />{_copy("copy.572abf9d987b", { defaultValue: " SRT" })}</Button>
               </div>
 
               <div className="relative">
@@ -358,7 +345,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
                 <Input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search transcript…"
+                  placeholder={_copy("copy.2baeddfdc699", { defaultValue: "Search transcript…" })}
                   className="pl-9 pr-9 h-9 rounded-lg bg-white/5 border-white/10 text-white placeholder:text-white/40"
                 />
                 {query && (
@@ -377,8 +364,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
                   <Sparkles className="w-3.5 h-3.5 text-white/60 mt-0.5 shrink-0" />
                   {overviewLoading && !overview ? (
                     <p className="text-xs text-white/60 flex items-center gap-1.5">
-                      <Loader2 className="w-3 h-3 animate-spin" /> Writing overview…
-                    </p>
+                      <Loader2 className="w-3 h-3 animate-spin" />{_copy("copy.6e929effed4e", { defaultValue: " Writing overview…" })}</p>
                   ) : (
                     <p className="text-xs text-white/80 leading-relaxed">{overview}</p>
                   )}
@@ -388,8 +374,7 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
               {chapters.length > 0 && !q && (
                 <div className="rounded-lg bg-white/5 border border-white/10 px-3 py-2">
                   <p className="text-[11px] text-white/50 flex items-center gap-1.5 mb-1.5">
-                    <ListTree className="w-3 h-3" /> Chapters
-                  </p>
+                    <ListTree className="w-3 h-3" />{_copy("copy.7adf0298ab5e", { defaultValue: " Chapters" })}</p>
                   <div className="space-y-1">
                     {chapters.map((c, i) => (
                       <button
@@ -410,13 +395,13 @@ export function TranscriptSection({ tokenId, durationSeconds, onSeek }: Props) {
 
               {q && (
                 <p className="text-xs text-white/50">
-                  {filtered.length} {filtered.length === 1 ? 'match' : 'matches'}
+                  {filtered.length} {filtered.length === 1 ? _copy("copy.4945a70fa7f9", { defaultValue: "match" }) : _copy("copy.a54084383e3c", { defaultValue: "matches" })}
                 </p>
               )}
 
               <div className="max-h-96 overflow-y-auto space-y-2 pr-2 text-sm">
                 {filtered.length === 0 ? (
-                  <AppState icon="search" title="No transcript matches" kind="search-empty" size="compact" />
+                  <AppState icon="search" title={_copy("copy.14c5558a8cd9", { defaultValue: "No transcript matches" })} kind="search-empty" size="compact" />
                 ) : (
                   filtered.map(({ segment: s, index }) => (
                     <TranscriptLine

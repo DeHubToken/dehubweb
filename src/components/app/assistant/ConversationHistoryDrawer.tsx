@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Conversation History Drawer
@@ -155,6 +156,7 @@ export function ConversationHistoryDrawer({
   onLoadConversation,
   currentConversationId,
 }: ConversationHistoryDrawerProps) {
+  const { t: _copy } = _useCopy();
   const pageAnchorRef = useRef<HTMLSpanElement>(null);
   const pageAnchor = useCallback(() => pageAnchorRef.current, []);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -270,7 +272,7 @@ export function ConversationHistoryDrawer({
       setConversations(data || []);
     } catch (error) {
       console.error('Error fetching conversations:', error);
-      toast.error('Failed to load conversation history');
+      toast.error(_copy("copy.e141f9175006", { defaultValue: "Failed to load conversation history" }));
     } finally {
       setIsLoading(false);
     }
@@ -380,7 +382,7 @@ export function ConversationHistoryDrawer({
       onOpenChange(false);
     } catch (error) {
       console.error('Error loading conversation:', error);
-      toast.error('Failed to load conversation');
+      toast.error(_copy("copy.a7367485803a", { defaultValue: "Failed to load conversation" }));
     }
   };
 
@@ -401,10 +403,10 @@ export function ConversationHistoryDrawer({
 
       setConversations((prev) => prev.filter((c) => c.id !== conversationId));
       setMediaItems((prev) => prev.filter((m) => m.conversation_id !== conversationId));
-      toast.success('Conversation deleted');
+      toast.success(_copy("copy.09d6990a101a", { defaultValue: "Conversation deleted" }));
     } catch (error) {
       console.error('Error deleting conversation:', error);
-      toast.error('Failed to delete conversation');
+      toast.error(_copy("copy.d14b3e7b0776", { defaultValue: "Failed to delete conversation" }));
     } finally {
       setDeletingId(null);
     }
@@ -424,10 +426,10 @@ export function ConversationHistoryDrawer({
       if (error) throw error;
       setConversations([]);
       setMediaItems([]);
-      toast.success('All conversations cleared');
+      toast.success(_copy("copy.56008fc11600", { defaultValue: "All conversations cleared" }));
     } catch (error) {
       console.error('Error clearing conversations:', error);
-      toast.error('Failed to clear conversations');
+      toast.error(_copy("copy.cc293d408bdd", { defaultValue: "Failed to clear conversations" }));
     } finally {
       setIsClearingAll(false);
     }
@@ -449,26 +451,22 @@ export function ConversationHistoryDrawer({
           <DrawerHeader className="shrink-0 border-b border-white/10">
             <div className="flex items-center justify-between">
               <DrawerTitle className="text-white flex items-center gap-2">
-                <History className="w-5 h-5 text-white" />
-                Conversation History
-              </DrawerTitle>
+                <History className="w-5 h-5 text-white" />{_copy("copy.de7df85d9021", { defaultValue: "Conversation History" })}</DrawerTitle>
               <div className="flex items-center gap-2">
                 {conversations.length > 0 && (
                   showClearConfirm ? (
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-white/60">Are you sure?</span>
+                      <span className="text-xs text-white/60">{_copy("copy.f0762c4f3bfc", { defaultValue: "Are you sure?" })}</span>
                       <button
                         onClick={() => setShowClearConfirm(false)}
                         className="px-2.5 py-1 rounded-lg text-xs font-medium text-white/70 hover:bg-white/10 transition-colors"
-                      >
-                        Cancel
-                      </button>
+                      >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
                       <button
                         onClick={() => { handleClearAll(); setShowClearConfirm(false); }}
                         disabled={isClearingAll}
                         className="px-2.5 py-1 rounded-lg text-xs font-medium text-red-400 bg-red-400/10 hover:bg-red-400/20 transition-colors disabled:opacity-50"
                       >
-                        {isClearingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Yes, Clear'}
+                        {isClearingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : _copy("copy.3e49f10693ea", { defaultValue: "Yes, Clear" })}
                       </button>
                     </div>
                   ) : (
@@ -476,9 +474,7 @@ export function ConversationHistoryDrawer({
                       onClick={() => setShowClearConfirm(true)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 hover:bg-red-400/10 transition-colors"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      Clear All
-                    </button>
+                      <Trash2 className="w-3.5 h-3.5" />{_copy("copy.ddceb7adfdb8", { defaultValue: "Clear All" })}</button>
                   )
                 )}
                 <button
@@ -498,7 +494,7 @@ export function ConversationHistoryDrawer({
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search conversations…"
+                  placeholder={_copy("copy.bd2b64636d36", { defaultValue: "Search conversations…" })}
                   className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-white/25 transition-colors"
                 />
                 {searchQuery && (
@@ -522,9 +518,7 @@ export function ConversationHistoryDrawer({
                       ? 'bg-white/10 text-white'
                       : 'text-white/50 hover:text-white/70'
                   }`}
-                >
-                  💬 Chats
-                </button>
+                >{_copy("copy.baca75897cfe", { defaultValue: "💬 Chats" })}</button>
                 <button
                   onClick={() => setActiveTab('media')}
                   className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${
@@ -533,9 +527,7 @@ export function ConversationHistoryDrawer({
                       : 'text-white/50 hover:text-white/70'
                   }`}
                 >
-                  <ImageIcon className="w-3.5 h-3.5" />
-                  Media
-                  {mediaItems.length > 0 && (
+                  <ImageIcon className="w-3.5 h-3.5" />{_copy("copy.d357175cfe89", { defaultValue: "Media" })}{mediaItems.length > 0 && (
                     <span className="text-[10px] text-white/40">({mediaItems.length})</span>
                   )}
                 </button>
@@ -547,8 +539,8 @@ export function ConversationHistoryDrawer({
             {!isAuthenticated ? (
               <AppState
                 icon="lock"
-                title="Log in to view history"
-                description="Your saved conversations and generated media will appear here."
+                title={_copy("copy.cd4c18ea7781", { defaultValue: "Log in to view history" })}
+                description={_copy("copy.ee5a1f5511a6", { defaultValue: "Your saved conversations and generated media will appear here." })}
                 kind="restricted"
                 size="drawer"
               />
@@ -561,8 +553,8 @@ export function ConversationHistoryDrawer({
               mediaItems.length === 0 ? (
                 <AppState
                   icon="images"
-                  title="No media generated yet"
-                  description="Images, videos and music you create will appear here."
+                  title={_copy("copy.d30f57c76653", { defaultValue: "No media generated yet" })}
+                  description={_copy("copy.ec86a388d121", { defaultValue: "Images, videos and music you create will appear here." })}
                   size="drawer"
                 />
               ) : (
@@ -577,7 +569,7 @@ export function ConversationHistoryDrawer({
                           key={filter}
                           className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-white/5 text-white/60 hover:bg-white/10 transition-colors"
                         >
-                          {filter === 'all' ? '🎨 All' : filter === 'image' ? '🖼️ Images' : filter === 'video' ? '🎬 Videos' : '🎵 Audio'}
+                          {filter === 'all' ? _copy("copy.c80312252586", { defaultValue: "🎨 All" }) : filter === 'image' ? _copy("copy.221dff1bea78", { defaultValue: "🖼️ Images" }) : filter === 'video' ? _copy("copy.633c80a3ecf2", { defaultValue: "🎬 Videos" }) : _copy("copy.95956a639e7a", { defaultValue: "🎵 Audio" })}
                           <span className="ml-1 text-white/30">{count}</span>
                         </button>
                       );
@@ -599,8 +591,8 @@ export function ConversationHistoryDrawer({
               /* ---- CHATS TAB (empty) ---- */
               <AppState
                 icon="assistant"
-                title="No conversations yet"
-                description="Start chatting to save a conversation."
+                title={_copy("copy.0d60084f056e", { defaultValue: "No conversations yet" })}
+                description={_copy("copy.89b532bf8e17", { defaultValue: "Start chatting to save a conversation." })}
                 size="drawer"
               />
             ) : (
@@ -611,12 +603,10 @@ export function ConversationHistoryDrawer({
                   <div className="px-4 pt-3 pb-1">
                     {isSearching ? (
                       <div className="flex items-center gap-2 text-white/40 text-xs">
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                        Searching…
-                      </div>
+                        <Loader2 className="w-3 h-3 animate-spin" />{_copy("copy.c31723ab3302", { defaultValue: "Searching…" })}</div>
                     ) : (
                       <p className="text-white/40 text-xs">
-                        {displayedConversations.length} result{displayedConversations.length !== 1 ? 's' : ''} for "{searchQuery}"
+                        {displayedConversations.length}{_copy("copy.6c501d1a34b7", { defaultValue: " result" })}{displayedConversations.length !== 1 ? 's' : ''}{_copy("copy.da1efe0af503", { defaultValue: " for \"" })}{searchQuery}"
                       </p>
                     )}
                   </div>
@@ -644,7 +634,7 @@ export function ConversationHistoryDrawer({
                         
                         <div className="flex-1 min-w-0">
                           <p className="text-white font-medium truncate">
-                            {conversation.title || 'Untitled conversation'}
+                            {conversation.title || _copy("copy.31d248c44579", { defaultValue: "Untitled conversation" })}
                           </p>
                           <p className="text-white/50 text-xs">
                             {formatDistanceToNow(new Date(conversation.updated_at), { addSuffix: true })}

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -35,6 +36,7 @@ export function useSavedAddresses() {
 }
 
 export function useSaveAddress() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -59,13 +61,14 @@ export function useSaveAddress() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['saved-addresses'] });
-      toast.success('Address saved!');
+      toast.success(_copy("copy.68ffe6d28a25", { defaultValue: "Address saved!" }));
     },
     onError: (e: any) => toast.error(e.message),
   });
 }
 
 export function useDeleteAddress() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -79,7 +82,7 @@ export function useDeleteAddress() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['saved-addresses'] });
-      toast.success('Address deleted');
+      toast.success(_copy("copy.3a715e294ea2", { defaultValue: "Address deleted" }));
     },
     onError: (e: any) => toast.error(e.message),
   });

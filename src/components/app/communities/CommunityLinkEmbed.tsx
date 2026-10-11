@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Community Link Embed
  * ====================
@@ -40,6 +41,7 @@ interface CommunityLinkEmbedProps {
 }
 
 export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbedProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { data: community, isLoading } = useCommunity(slug);
 
@@ -92,8 +94,7 @@ export function CommunityLinkEmbed({ slug, fallback = null }: CommunityLinkEmbed
         <div className="flex items-center gap-1.5 mt-1">
           <Users className="w-3 h-3 text-zinc-500" />
           <span className="text-xs text-zinc-500">
-            <span className="font-semibold text-zinc-300">{community.member_count.toLocaleString()}</span> Members
-          </span>
+            <span className="font-semibold text-zinc-300">{community.member_count.toLocaleString()}</span>{_copy("copy.0240fc224d27", { defaultValue: " Members" })}</span>
         </div>
       </div>
     </button>

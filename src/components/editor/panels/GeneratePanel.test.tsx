@@ -10,7 +10,7 @@ const state = vi.hoisted(() => ({
   quota: { overQuota: false, walletAddress: 'wallet', refetchUsage: vi.fn().mockResolvedValue(undefined) },
   generations: { startImage: vi.fn(), startVideo: vi.fn() },
 }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key }) }));
 vi.mock('@/contexts/AuthContext', async (importOriginal) => ({
   ...await importOriginal<typeof import('@/contexts/AuthContext')>(), useAuth: () => state.auth }));
 vi.mock('@/hooks/use-editor-quota', () => ({ useEditorQuota: () => state.quota }));

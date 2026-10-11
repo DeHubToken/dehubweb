@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stages Carousel for Music Feed
  * ===============================
@@ -37,6 +38,7 @@ interface StagesCarouselProps {
 }
 
 function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const totalListeners = (space.speaker_count || 1) + (space.listener_count || 0);
   // With no host_avatar the CDN URL is a guess that 403s for hosts who never
@@ -56,7 +58,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5 px-2 py-1 bg-red-500/20 rounded-lg">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-          <span className="text-red-400 text-xs font-medium">LIVE</span>
+          <span className="text-red-400 text-xs font-medium">{_copy("copy.35e0d0360a0a", { defaultValue: "LIVE" })}</span>
         </div>
         <div className="flex items-center gap-1 text-zinc-400 text-xs">
           <Users className="w-3.5 h-3.5" />
@@ -114,6 +116,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
 }
 
 export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { openModal, joinSpace } = useStage();
 
@@ -155,19 +158,16 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-bold text-white flex items-center gap-2">
-          <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />
-          Stages
-          {liveSpaces.length > 0 ? (
+          <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />{_copy("copy.3a17aa4e4abb", { defaultValue: "Stages" })}{liveSpaces.length > 0 ? (
             <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length})</span>
           ) : showPast ? (
-            <span className="text-zinc-500 font-normal text-sm">Recorded</span>
+            <span className="text-zinc-500 font-normal text-sm">{_copy("copy.c7175fa7a0db", { defaultValue: "Recorded" })}</span>
           ) : null}
         </h2>
         <button 
           onClick={onOpenStages}
           className="text-zinc-400 text-sm hover:text-white flex items-center gap-1"
-        >
-          See all <ChevronRight className="w-4 h-4" />
+        >{_copy("copy.14c21c5e3ffe", { defaultValue: "See all " })}<ChevronRight className="w-4 h-4" />
         </button>
       </div>
       
@@ -193,8 +193,8 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
             <Plus className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
           </div>
           <div className="text-left">
-            <p className="text-white text-sm font-medium">No live stages right now</p>
-            <p className="text-zinc-500 text-xs">Start a stage and go live with your audience</p>
+            <p className="text-white text-sm font-medium">{_copy("copy.3b59e95daada", { defaultValue: "No live stages right now" })}</p>
+            <p className="text-zinc-500 text-xs">{_copy("copy.c88e9158a85f", { defaultValue: "Start a stage and go live with your audience" })}</p>
           </div>
         </button>
       ) : (

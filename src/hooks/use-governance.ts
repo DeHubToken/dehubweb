@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Governance Hook
  * ===============
@@ -324,6 +325,7 @@ async function submitWithPaidFee(
 }
 
 export function useSubmitGovernanceProposal() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -384,7 +386,7 @@ export function useSubmitGovernanceProposal() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['governance-proposals'] });
       queryClient.invalidateQueries({ queryKey: ['governance-proposals-total-count'] });
-      toast.success('Governance proposal submitted!');
+      toast.success(_copy("copy.d866de7ac5f2", { defaultValue: "Governance proposal submitted!" }));
     },
     onError: (err: any) => {
       toast.dismiss('governance-proposal-fee');

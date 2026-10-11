@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -25,6 +26,7 @@ type ResultOption = {
 };
 
 export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: CashtagResultSwitcherProps) {
+  const { t: _copy } = _useCopy();
   const [showDropdown, setShowDropdown] = useState(false);
   const [userPicked, setUserPicked] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -167,7 +169,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-800/80 border border-zinc-700/50 text-sm text-foreground hover:bg-zinc-700/80 transition-colors"
           >
             <span className="font-medium text-white">{selected.label}</span>
-            <span className="text-white/60 text-xs">{selected.type === 'commodity' ? 'Commodity' : selected.type === 'stock' ? 'Stock' : 'Token'}</span>
+            <span className="text-white/60 text-xs">{selected.type === 'commodity' ? _copy("copy.54fb8a1d0578", { defaultValue: "Commodity" }) : selected.type === 'stock' ? _copy("copy.d5cade7ef319", { defaultValue: "Stock" }) : _copy("copy.d2089be67295", { defaultValue: "Token" })}</span>
             <span className="text-white/60 text-xs ml-1">({options.length})</span>
             <ChevronDown className={cn(
               "w-3.5 h-3.5 text-white/60 transition-transform",
@@ -198,7 +200,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
                     )}
                   >
                     <span className="text-xs font-medium px-2 py-0.5 rounded bg-white/10 text-white">
-                      {opt.type === 'commodity' ? 'Commodity' : opt.type === 'stock' ? 'Stock' : 'Token'}
+                      {opt.type === 'commodity' ? _copy("copy.54fb8a1d0578", { defaultValue: "Commodity" }) : opt.type === 'stock' ? _copy("copy.d5cade7ef319", { defaultValue: "Stock" }) : _copy("copy.d2089be67295", { defaultValue: "Token" })}
                     </span>
                     <div className="flex-1 min-w-0 flex items-center gap-2">
                       <span className="text-white text-sm font-medium">{opt.label}</span>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * NewMessageSelector Component
  * ==============================
@@ -21,11 +22,12 @@ export function NewMessageSelector({
   onOpenChange, 
   onSelectDM,
 }: NewMessageSelectorProps) {
+  const { t: _copy } = _useCopy();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-white text-center">Create</DialogTitle>
+          <DialogTitle className="text-white text-center">{_copy("copy.4759498ac2a7", { defaultValue: "Create" })}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-3 pt-2">
@@ -41,8 +43,8 @@ export function NewMessageSelector({
               <MessageCircle className="w-6 h-6 text-white" />
             </div>
             <div className="text-left">
-              <p className="font-semibold text-white">Create DM</p>
-              <p className="text-sm text-white/60">Start a private conversation</p>
+              <p className="font-semibold text-white">{_copy("copy.aff37c1e2823", { defaultValue: "Create DM" })}</p>
+              <p className="text-sm text-white/60">{_copy("copy.303225be20b9", { defaultValue: "Start a private conversation" })}</p>
             </div>
           </Button>
         </div>

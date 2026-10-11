@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -85,6 +86,7 @@ export function AdTopUpPanel({
   cancelLabel,
   onBusyChange,
 }: AdTopUpPanelProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   // Defaulted here, not in the signature: a default parameter cannot call the
   // hook that translates it.
@@ -243,7 +245,7 @@ export function AdTopUpPanel({
         <Input
           type="number"
           min={minTopup}
-          placeholder={`Custom amount (USD, min $${minTopup})`}
+          placeholder={_copy("copy.2e7bbe25543b", { defaultValue: "Custom amount (USD, min ${{value1}})", value1: minTopup })}
           value={customAmount}
           onChange={(e) => setCustomAmount(e.target.value)}
           className="bg-zinc-900/60 border-zinc-700 text-white"
@@ -306,7 +308,7 @@ export function AdTopUpPanel({
               {phase === 'verify' ? t('ads.verifying') : t('ads.sending')}
             </>
           ) : (
-            `Top up $${effectiveUsd.toFixed(0)}`
+            _copy("copy.1403eb7709ec", { defaultValue: "Top up ${{value1}}", value1: effectiveUsd.toFixed(0) })
           )}
         </Button>
       </div>

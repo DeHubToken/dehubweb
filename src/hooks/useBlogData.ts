@@ -1,3 +1,5 @@
+import { useLocalizedBlogMetadata } from '@/hooks/useLocalizedBlogMetadata';
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -8,7 +10,9 @@ import { BlogPost, BlogTag } from '@/types/blog';
 import { newPostsMetadata as newPosts, excludedTitles } from '@/data/blog-metadata.generated';
 
 export const useBlogData = () => {
+  const { t: _copy } = _useCopy();
   const [searchQuery, setSearchQuery] = useState('');
+  const translated = useLocalizedBlogMetadata();
 
   // The active tag filter lives in the URL (?tag=…) so it is shareable,
   // survives a refresh, and can be opened from a tag pill on any blog post.
@@ -31,7 +35,7 @@ export const useBlogData = () => {
 
   // Full list corpus (published + newPosts, deduped, display fix-ups applied)
   // — extracted to blogUtils so the docs search index shares it exactly.
-  const allPosts = useMemo(() => getAllBlogListPosts(), []);
+  const allPosts = useMemo(() => getAllBlogListPosts().map(post => ({ ...post, ...translated?.[post.slug] })), [translated]);
 
   const featuredPosts = useMemo(() => {
     const oldFeatured = getFeaturedPosts().filter(p => !excludedTitles.includes(p.title));
@@ -44,7 +48,7 @@ export const useBlogData = () => {
       if (post.title === 'Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost') {
         return {
           ...post,
-          title: 'Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost',
+          title: _copy("copy.83473b97a77f", { defaultValue: "Faster and Sleeker: major app upgrade reveals UI Overhaul and 200% Backend Speed Boost" }),
           publishedAt: '2024-10-28T12:00:00.000Z',
           bannerImage: '/media/e9632af0-07c2-4ca8-9b82-fc255191358b.png',
           bannerImageAlt: 'Screenshot of the new DeHub application UI'
@@ -59,13 +63,13 @@ export const useBlogData = () => {
       if (post.slug === 'scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025') {
         return {
           ...post,
-          title: 'Scaling New Heights: Livepeer Integration for initially 50k+ Concurrent Viewers With Unlimited Viewer abilities as we scale up.'
+          title: _copy("copy.908faafd71bb", { defaultValue: "Scaling New Heights: Livepeer Integration for initially 50k+ Concurrent Viewers With Unlimited Viewer abilities as we scale up." })
         };
       }
       if (post.slug === 'dhb-tradable-on-coinbase-soon') {
         return {
           ...post,
-          title: 'Confirmed! $DHB To Be Available Directly On Coinbase CEX'
+          title: _copy("copy.82c85a8e86c6", { defaultValue: "Confirmed! $DHB To Be Available Directly On Coinbase CEX" })
         };
       }
       return post;
@@ -77,8 +81,9 @@ export const useBlogData = () => {
         !(post.title.includes('Q1') && post.title.includes('Overview')) && 
         post.title !== 'MVP App Released & Listed on Google Play Store'
       )
-      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
-  }, []);
+      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+      .map(post => ({ ...post, ...translated?.[post.slug] }));
+  }, [_copy, translated]);
 
   const allTags = useMemo((): BlogTag[] => {
     const tagCounts: { [key: string]: number } = {};

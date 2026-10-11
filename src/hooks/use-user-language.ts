@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * User Language Detection Hook
  * ============================
@@ -46,6 +47,7 @@ function bootstrapLanguage(): Promise<void> {
 }
 
 export function useUserLanguage() {
+  const { t: _copy } = _useCopy();
   // Correct on the very first render — see the store's resolveLanguage.
   const [language, setLanguage] = useState(resolveLanguage);
   const [isLoading, setIsLoading] = useState(true);
@@ -68,7 +70,7 @@ export function useUserLanguage() {
   const setPreferredLanguage = useCallback(async (lang: string) => {
     const ok = await loadLanguage(lang);
     if (!ok) {
-      toast.error('Could not load language. Please try again.');
+      toast.error(_copy("copy.51af2182291a", { defaultValue: "Could not load language. Please try again." }));
       return;
     }
     localStorage.setItem(STORAGE_KEY, lang);
@@ -79,7 +81,7 @@ export function useUserLanguage() {
       await prefs.flushPref('language', lang);
     }
     window.location.reload();
-  }, [prefs]);
+  }, [prefs, _copy]);
 
   return { language, isLoading, setPreferredLanguage };
 }
