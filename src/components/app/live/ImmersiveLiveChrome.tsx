@@ -317,6 +317,7 @@ export function ImmersiveLiveChrome({
           <button
             type="button"
             onClick={goBack}
+            data-swipe-back
             aria-label={t('common.close', 'Close')}
             className={CIRCLE}
           >

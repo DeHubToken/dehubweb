@@ -149,6 +149,7 @@ export function StageMiniPlayer({ rootRef, kind, title, subtitle, thumbnail, onB
           type="button"
           tabIndex={visible ? 0 : -1}
           onClick={(e) => { e.stopPropagation(); onBack(); }}
+          data-swipe-back
           aria-label={t('postStage.back', 'Go back')}
           data-stage-mini-btn
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px]"

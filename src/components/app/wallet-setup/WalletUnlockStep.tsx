@@ -747,7 +747,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         />
         {error && <p className="text-sm text-red-400">{error}</p>}
         <div className="flex gap-2">
-          <Button variant="ghost" onClick={() => { setPhase('unlock'); setError(null); }} className="flex-1 h-12 text-white/60 hover:text-white rounded-xl">{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</Button>
+          <Button variant="ghost" data-swipe-back onClick={() => { setPhase('unlock'); setError(null); }} className="flex-1 h-12 text-white/60 hover:text-white rounded-xl">{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</Button>
           <Button
             disabled={busy || !recoveryInput.trim() || !newPassword || !newConfirm}
             onClick={handleRecover}

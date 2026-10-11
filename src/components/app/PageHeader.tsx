@@ -77,6 +77,7 @@ export function PageHeader({
         {showBack ? (
           <button
             onClick={handleBack}
+            data-swipe-back
             data-on-media={overlay ? '' : undefined}
             className={cn(
               'pointer-events-auto h-9 w-9 flex items-center justify-center',
@@ -108,6 +109,7 @@ export function PageHeader({
         {showBack && (
           <button
             onClick={handleBack}
+            data-swipe-back
             className="p-2 rounded-xl hover:bg-white/10 transition-colors"
             aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
           >

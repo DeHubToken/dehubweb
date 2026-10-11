@@ -1009,6 +1009,7 @@ export default function HomePage() {
                   "leaves" the feed. */}
               <button
                 data-post-nav-back={isPostOverlayActive || undefined}
+                data-swipe-back={showNavBack ? '' : undefined}
                 onClick={showNavBack
                   ? handleNavBack
                   : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}

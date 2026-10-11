@@ -72,7 +72,7 @@ export function PageIsland({
       <div data-page-bento data-kit-island className="rounded-[15px] bg-zinc-900 px-3 py-2.5">
         <div className="flex min-h-9 items-center gap-2.5">
           {back && (
-            <button type="button" data-kit-square onClick={handleBack} aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })} className="-ml-0.5">
+            <button type="button" data-kit-square data-swipe-back onClick={handleBack} aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })} className="-ml-0.5">
               <ArrowLeft className="h-[18px] w-[18px]" />
             </button>
           )}
