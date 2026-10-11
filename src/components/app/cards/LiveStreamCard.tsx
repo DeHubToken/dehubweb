@@ -12,7 +12,7 @@ import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } fro
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
-import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
+import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
 import { ButtonLoader } from '@/components/app/DeHubLoader';
 import {
@@ -149,6 +149,15 @@ interface LiveStreamCardProps {
 export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
   const { t: _copy } = _useCopy();
   const keyboardOpen = useKeyboardOpen(immersive);
+  // Android shrinks the fixed root with the keyboard (interactive-widget);
+  // iOS keeps it full height and draws the keys over the chat box. Fit the
+  // root to what is visible above the keys when that happens.
+  const visible = useVisualViewportBox(immersive && keyboardOpen);
+  const keyboardFit =
+    immersive && keyboardOpen && visible.height !== null &&
+    (visible.offsetTop > 1 || visible.height < (typeof window === 'undefined' ? 0 : window.innerHeight) - 40)
+      ? { top: visible.offsetTop, bottom: 'auto', height: visible.height }
+      : undefined;
   // The chat is the post's only conversation, so on the page it starts open;
   // the comment button still folds it away. Full-bleed keeps it open either
   // way — it draws the room itself rather than through this.
@@ -1101,6 +1110,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
 
   return (
     <div
+      style={keyboardFit}
       className={cn(
         immersive
           ? // The picture is the screen. `fixed` rather than a tall block in
