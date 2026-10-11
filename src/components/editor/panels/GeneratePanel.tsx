@@ -17,7 +17,7 @@ import { useEditorStore } from '@/store/editorStore';
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Film, ImageIcon, Loader2, Mic, Sparkles } from 'lucide-react';
+import { Film, ImageIcon, Loader2, Mic, Music2, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -35,6 +35,8 @@ import {
   type VideoModelKey,
 } from '@/constants/video-models.constants';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
+import { AudioPaywallModal } from '@/components/app/audio/AudioPaywallModal';
+import { AUDIO_TASKS, MUSIC_DEFAULT_SECONDS, MUSIC_MIN_SECONDS, MUSIC_MAX_SECONDS, billableUnits } from '@/constants/audio-models.constants';
 import {
   VideoPaywallModal,
   type VideoGenerationOptions,
@@ -45,18 +47,20 @@ import { importOneFile } from '@/lib/editor/importFiles';
 import { useGenerationStore } from '@/store/generationStore';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
-import { SelectChip, type ChipOption } from '@/components/app/creator/studio/StudioChip';
+import { SelectChip, CounterChip, ToggleChip, type ChipOption } from '@/components/app/creator/studio/StudioChip';
 import { PanelHeading } from './DesignPanel';
 
-type GenKind = 'image' | 'video' | 'voice';
+type GenKind = 'image' | 'video' | 'voice' | 'music';
 
 const KINDS: { id: GenKind; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'image', get label() { return _translateCopy("copy.1aa4cb0bcca7", { defaultValue: "Image" }); }, icon: ImageIcon },
   { id: 'video', get label() { return _translateCopy("copy.d534be829e32", { defaultValue: "Video" }); }, icon: Film },
   { id: 'voice', get label() { return _translateCopy("copy.87bf2bc08589", { defaultValue: "Voice" }); }, icon: Mic },
+  { id: 'music', get label() { return _translateCopy('creator.audioTaskMusicLabel', { defaultValue: 'Music' }); }, icon: Music2 },
 ];
 
 const MAX_VOICE_CHARS = 500;
+const MAX_MUSIC_PROMPT_CHARS = 2000;
 
 export function GeneratePanel() {
   const { t: _copy } = _useCopy();
@@ -65,6 +69,7 @@ export function GeneratePanel() {
   const { isAuthenticated } = useAuth() as { isAuthenticated: boolean };
   const startImage = useGenerationStore((s) => s.startImage);
   const startVideo = useGenerationStore((s) => s.startVideo);
+  const startAudio = useGenerationStore((s) => s.startAudio);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const generatePrefill = useEditorUiStore((s) => s.generatePrefill);
   const setGeneratePrefill = useEditorUiStore((s) => s.setGeneratePrefill);
@@ -82,6 +87,9 @@ export function GeneratePanel() {
   const [imagePaywallOpen, setImagePaywallOpen] = useState(false);
   const [videoPaywallOpen, setVideoPaywallOpen] = useState(false);
   const [voiceBusy, setVoiceBusy] = useState(false);
+  const [musicSeconds, setMusicSeconds] = useState(MUSIC_DEFAULT_SECONDS);
+  const [instrumental, setInstrumental] = useState(true);
+  const [musicDraft, setMusicDraft] = useState<{ prompt: string; lengthSeconds: number; instrumental: boolean } | null>(null);
 
   const activeImageModel = IMAGE_MODELS[imageModel];
   const activeVideoModel = VIDEO_MODELS[videoModel];
@@ -115,6 +123,7 @@ export function GeneratePanel() {
     useCallback(() => {
       setImagePaywallOpen(false);
       setVideoPaywallOpen(false);
+      setMusicDraft(null);
     }, []),
   );
   const surfaceEpoch = useSurfaceEpoch();
@@ -128,6 +137,9 @@ export function GeneratePanel() {
     if (!isAuthenticated) return t('editor.signInToGenerate', { defaultValue: 'Sign in to generate.' });
     if (kind === 'voice' && prompt.length > MAX_VOICE_CHARS) {
       return t('editor.voiceoverLimit', { count: MAX_VOICE_CHARS, defaultValue: 'Voiceover is capped at {{count}} characters.' });
+    }
+    if (kind === 'music' && prompt.trim().length > MAX_MUSIC_PROMPT_CHARS) {
+      return t('creator.validation.speechLimit', { length: prompt.trim().length.toLocaleString(), limit: MAX_MUSIC_PROMPT_CHARS.toLocaleString(), defaultValue: 'The prompt is limited to {{limit}} characters.' });
     }
     if (kind === 'video' && activeVideoModel && !activeVideoModel.supports.includes('text-to-video')) {
       return t('editor.videoNeedsImage', { model: activeVideoModel.name, defaultValue: '{{model}} needs a starting image. Generate from the Creator studio instead.' });
@@ -166,8 +178,19 @@ export function GeneratePanel() {
     }
     if (kind === 'image') setImagePaywallOpen(true);
     else if (kind === 'video') setVideoPaywallOpen(true);
+    else if (kind === 'music') setMusicDraft({ prompt: prompt.trim(), lengthSeconds: musicSeconds, instrumental });
     else void runVoice();
-  }, [canRun, blockingIssue, kind, runVoice]);
+  }, [canRun, blockingIssue, kind, runVoice, prompt, musicSeconds, instrumental]);
+
+  const runMusic = useCallback((txHash: string) => {
+    if (!musicDraft) return;
+    startAudio({ task: 'music', ...musicDraft, txHash }, {
+      prompt: musicDraft.prompt, resolvedPrompt: musicDraft.prompt,
+      modelName: t(AUDIO_TASKS.music.labelKey), aspect: '1:1',
+    });
+    setMusicDraft(null); setPanel('library');
+    toast.success(_copy('copy.241a018b66a8', { defaultValue: 'Generating. It lands in the Generations tab.' }));
+  }, [musicDraft, startAudio, setPanel, t, _copy]);
 
   const runImage = useCallback((txHash: string) => {
     setImagePaywallOpen(false);
@@ -279,6 +302,8 @@ export function GeneratePanel() {
         placeholder={
           kind === 'voice'
             ? _copy("copy.24accbdc740c", { defaultValue: "Type what the voice should say" })
+            : kind === 'music'
+              ? t('creator.audioTaskMusicPlaceholder')
             : kind === 'video'
               ? _copy("copy.a931594a03cd", { defaultValue: "Describe the shot you want" })
               : _copy("copy.f0c4005c1962", { defaultValue: "Describe the image you want" })
@@ -290,6 +315,11 @@ export function GeneratePanel() {
         <p className="mt-1.5 px-0.5 text-right text-[11px] tabular-nums text-white/40">
           {prompt.length} / {MAX_VOICE_CHARS}
         </p>
+      ) : kind === 'music' ? (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <CounterChip draftScope={`${draftProjectId}:editor-music`} label={t('creator.length')} displayUnit="s" value={musicSeconds} min={MUSIC_MIN_SECONDS} max={MUSIC_MAX_SECONDS} editable onChange={setMusicSeconds} />
+          <ToggleChip label={t('creator.instrumental')} active={instrumental} onClick={() => setInstrumental(value => !value)} />
+        </div>
       ) : (
         <div className="mt-2 flex flex-wrap gap-1.5">
           <SelectChip
@@ -366,6 +396,15 @@ export function GeneratePanel() {
           onConfirm={runVideoJob}
         />
       )}
+      <AudioPaywallModal
+        key={musicDraft ? 'music-open' : `music-${surfaceEpoch}`}
+        open={!!musicDraft}
+        onOpenChange={open => { if (!open) setMusicDraft(null); }}
+        spec={AUDIO_TASKS.music}
+        units={billableUnits(AUDIO_TASKS.music, musicDraft?.lengthSeconds ?? musicSeconds)}
+        quantityLabel={`${musicDraft?.lengthSeconds ?? musicSeconds}s`}
+        onConfirm={runMusic}
+      />
     </div>
   );
 }
