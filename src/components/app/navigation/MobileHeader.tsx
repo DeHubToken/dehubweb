@@ -37,7 +37,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenti
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+    <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer translate-y-[1.5px] scale-[1.15]" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
       <ElectricLogo>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
