@@ -242,6 +242,15 @@ export default function ProfilePage() {
   // Swallow the tab content at the sticky tabs bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const profileHeaderRef = useRef<HTMLDivElement>(null);
+  const profileTabsRef = useRef<HTMLDivElement>(null);
+  const [profileTabsHeight, setProfileTabsHeight] = useState(56);
+  useEffect(() => {
+    const tabs = profileTabsRef.current;
+    if (!tabs) return;
+    const observer = new ResizeObserver(() => setProfileTabsHeight(tabs.offsetHeight));
+    observer.observe(tabs);
+    return () => observer.disconnect();
+  }, []);
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
@@ -263,7 +272,7 @@ export default function ProfilePage() {
     // off the home feed (index.css, data-no-top-bar).
     const obs = new IntersectionObserver(
       ([entry]) => setIsTabsStuck(!entry.isIntersecting),
-      { rootMargin: '-64px 0px 0px 0px', threshold: 0 }
+      { rootMargin: '-60px 0px 0px 0px', threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -517,6 +526,8 @@ export default function ProfilePage() {
       />
       <CollapsingProfileHeader
         headerRef={profileHeaderRef}
+        tabsPinned={isTabsStuck}
+        tabsHeight={profileTabsHeight}
         name={data.profile.name}
         handle={data.profile.handle}
         coverUrl={data.profile.coverUrl || getDefaultBanner(data.profile.walletAddress)}
@@ -594,6 +605,8 @@ export default function ProfilePage() {
         <div
           data-feed-nav-outer
           data-profile-tabs
+          ref={profileTabsRef}
+          data-joined={isTabsStuck}
           data-nav-hide="off"
           className="sticky bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
         >

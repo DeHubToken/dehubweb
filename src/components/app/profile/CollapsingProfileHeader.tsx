@@ -5,8 +5,10 @@ import type { ReactNode } from 'react';
 import './profile-collapse.css';
 
 /** The cover, name and actions leave independently, as on a native profile. */
-export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, followAction }: {
+export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHeight = 56, name, handle, coverUrl, followAction }: {
   headerRef: RefObject<HTMLDivElement>;
+  tabsPinned?: boolean;
+  tabsHeight?: number;
   name: string;
   handle: string;
   coverUrl?: string;
@@ -43,11 +45,11 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
 
   return (
     <div className="profile-collapse-anchor">
-      <div ref={barRef} data-profile-collapse data-collapsed={surfaceVisible} className="profile-collapse-bar">
+      <div ref={barRef} data-profile-collapse data-collapsed={surfaceVisible} data-joined={surfaceVisible && tabsPinned} className="profile-collapse-bar">
         <div className="profile-collapse-gap-guard" hidden={!surfaceVisible} aria-hidden>
           {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
         </div>
-        <div className="profile-collapse-surface" hidden={!surfaceVisible} aria-hidden>
+        <div className="profile-collapse-surface" style={tabsPinned ? { bottom: -tabsHeight - 4 } : undefined} hidden={!surfaceVisible} aria-hidden>
           {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
         </div>
         <PageHeader overlay className="!top-2 !left-2 !right-auto" />
