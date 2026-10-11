@@ -1909,7 +1909,21 @@
     "offerToBuyTokens": "Offer to buy DeHub tokens",
     "tokenAmount": "Token amount",
     "pricePerTokenUsd": "Price per token (USD)",
-    "votingPowerNote": "Voting lasts 7 days. Voting power is each contributor’s cumulative token contribution when this proposal opens. At least 10% must participate and Accept must beat Reject."
+    "votingPowerNote": "Voting lasts 7 days. Voting power is each contributor’s cumulative token contribution when this proposal opens. At least 10% must participate and Accept must beat Reject.",
+    "votingClosed": "Voting closed",
+    "paymentUnderReview": "Payment under review",
+    "acceptedAwaitingPayment": "Accepted · awaiting payment",
+    "voteWithdrawn": "Vote withdrawn",
+    "voteRecorded": "Vote recorded",
+    "voteFailed": "Could not record vote",
+    "status": {
+      "open": "Open",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "completed": "Completed",
+      "expired": "Expired",
+      "cancelled": "Cancelled"
+    }
   },
   "governance": {
     "title": "Governance",
@@ -4972,7 +4986,15 @@
     "referenceProductName": "Place your product in a clip",
     "referenceProductHint": "Replace the featured product and preserve the original scene.",
     "referenceComposeName": "Combine reference images",
-    "referenceComposeHint": "Bring characters, objects and settings from multiple images into one composition."
+    "referenceComposeHint": "Bring characters, objects and settings from multiple images into one composition.",
+    "validation": {
+      "cannotEditImage": "{{model}} cannot edit an attached image. Remove it or pick another model.",
+      "cannotUseReference": "{{model}} cannot use a reference image. Remove it or pick another model.",
+      "needsImageToAnimate": "{{model}} needs an image to animate. Attach one first.",
+      "needsImageToWork": "{{model}} needs an image to work from. Attach one first.",
+      "speechLimit": "That is {{count}} characters. The limit is {{limit}}.",
+      "musicTrackLength": "{{count}}s track"
+    }
   },
   "pricing": {
     "plansForEveryWorkflow": "Plans for every workflow",
@@ -7719,7 +7741,10 @@
       "matchDuration": "Matching footage is shorter than the requested video. Shorten the duration or choose more media.",
       "matchFailed": "Scene matching is unavailable. Your selected clips and timings are unchanged. You can review them manually.",
       "reviewManually": "Review clips manually"
-    }
+    },
+    "signInToGenerate": "Sign in to generate.",
+    "voiceoverLimit": "Voiceover is capped at {{count}} characters.",
+    "videoNeedsImage": "{{model}} needs a starting image. Generate from the Creator studio instead."
   },
   "jungleMood": {
     "title": "Time of day",
