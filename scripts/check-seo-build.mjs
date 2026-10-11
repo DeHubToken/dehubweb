@@ -1,8 +1,9 @@
 // Fail a deployment if Vite copied a sitemap that lost translated URLs.
 import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = resolve(import.meta.dirname, '..');
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sitemap = readFileSync(resolve(root, 'dist/sitemap-static.xml'), 'utf8');
 const pages = JSON.parse(readFileSync(resolve(root, 'dist/seo-i18n.json'), 'utf8'));
 const blocks = [...sitemap.matchAll(/<url>\s*<loc>([^<]+)<\/loc>([\s\S]*?)<\/url>/g)];
