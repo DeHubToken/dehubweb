@@ -1,10 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { assetToFile } from './assetDownload';
+import { assetToFile, responseToFile } from './assetDownload';
 
 afterEach(() => vi.unstubAllGlobals());
 const mockResponse = (response: Response) => vi.stubGlobal('fetch', vi.fn().mockResolvedValue(response));
 
 describe('bounded generated asset transfers', () => {
+  it('closes a response that arrives after its import was cancelled', async () => {
+    const cancel = vi.fn(), controller = new AbortController(); controller.abort();
+    const response = new Response(new ReadableStream({ cancel }));
+    await expect(responseToFile(response, 'clip.mp4', 'video/mp4', { signal: controller.signal })).rejects.toMatchObject({ name: 'AbortError' });
+    expect(cancel).toHaveBeenCalledOnce();
+  });
   it('preserves the actual format and bytes when content length is absent', async () => {
     mockResponse(new Response(new Uint8Array([1, 2, 3]), { headers: { 'Content-Type': 'audio/wav' } }));
     const file = await assetToFile('https://media.example/voice.mp3', 'voice.mp3', 'audio/mpeg');
