@@ -2,13 +2,8 @@
 
    A lit rim along the pill's bottom edge and a soft halo spilling into the gap
    where the spinner appears. --pull-glow (0 to 1) follows the pull; while the
-   feed refreshes, --pill-glow-breath keeps a slow, quiet pulse until the new
-   posts land. Each theme lights it in its own colour (--tint-accent). */
-@property --pill-glow-breath {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
-}
+   feed refreshes, opacity keeps a slow, quiet pulse until the new posts land.
+   Each theme lights it in its own colour (--tint-accent). */
 
 html {
   --pill-glow-color: color-mix(in srgb, var(--tint-accent) 60%, rgb(240 246 255));
@@ -24,19 +19,20 @@ html[data-theme='light'] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain:
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), var(--pill-glow-breath)));
+  opacity: calc(var(--pill-glow-gain) * var(--pull-glow, 0));
+  will-change: opacity;
 }
 [data-feed-pill-glow][data-refreshing] {
   animation: feed-pill-glow-breath 1.8s ease-in-out infinite alternate;
 }
 @keyframes feed-pill-glow-breath {
-  from { --pill-glow-breath: 0.3; }
-  to { --pill-glow-breath: 0.45; }
+  from { opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), 0.3)); }
+  to { opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), 0.45)); }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-feed-pill-glow][data-refreshing] {
     animation: none;
-    --pill-glow-breath: 0.32;
+    opacity: calc(var(--pill-glow-gain) * max(var(--pull-glow, 0), 0.32));
   }
 }
 
@@ -57,11 +53,11 @@ html[data-theme='light'] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain:
   right: 4%;
   top: 0;
   height: 34px;
-  filter: blur(6px);
   background: radial-gradient(60% 100% at 50% 0%,
-    color-mix(in srgb, var(--pill-glow-color) 42%, transparent),
-    color-mix(in srgb, var(--pill-glow-color) 12%, transparent) 50%,
-    transparent 78%);
+    color-mix(in srgb, var(--pill-glow-color) 34%, transparent),
+    color-mix(in srgb, var(--pill-glow-color) 12%, transparent) 45%,
+    color-mix(in srgb, var(--pill-glow-color) 3%, transparent) 70%,
+    transparent 100%);
 }
 html[data-theme='light'] [data-feed-pill-glow-halo] {
   box-shadow: 0 -6px 18px -8px rgb(60 80 140 / 0.35);
