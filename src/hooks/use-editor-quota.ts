@@ -11,6 +11,8 @@ import { getQuotaForBadge, type QuotaInfo } from "@/lib/editor/quota";
 export interface EditorQuotaState {
   isAuthenticated: boolean;
   walletAddress: string | null;
+  badgeBalance: number;
+  username: string | null;
   usedBytes: number;
   assetCount: number;
   quota: QuotaInfo;
@@ -63,6 +65,8 @@ export function useEditorQuota(): EditorQuotaState {
   return {
     isAuthenticated,
     walletAddress,
+    badgeBalance: lnBalance,
+    username: user?.username ?? null,
     usedBytes,
     assetCount: usageQuery.data?.asset_count ?? 0,
     quota,

@@ -1,21 +1,25 @@
 import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 import './profile-collapse.css';
 
 /** The cover, name and actions leave independently, as on a native profile. */
-export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, followAction }: {
+export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHeight = 56, name, handle, coverUrl, followAction }: {
   headerRef: RefObject<HTMLDivElement>;
+  tabsPinned?: boolean;
+  tabsHeight?: number;
   name: string;
   handle: string;
   coverUrl?: string;
   followAction?: ReactNode;
 }) {
   const active = useContext(CachedPageActiveContext);
+  const { theme } = useAppTheme();
   const barRef = useRef<HTMLDivElement>(null);
-  const [identityVisible, setIdentityVisible] = useState(false);
-  const [actionsVisible, setActionsVisible] = useState(false);
+  const [surfaceVisible, setSurfaceVisible] = useState(false);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -24,14 +28,9 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
     let frame = 0;
     const update = () => {
       frame = 0;
-      const bottom = bar.getBoundingClientRect().bottom;
-      const cover = header.querySelector('[data-profile-cover]');
-      const identity = header.querySelector('[data-profile-identity]');
+      const top = bar.getBoundingClientRect().top - 4;
       const actions = header.querySelector('[data-profile-actions]');
-      const coverBottom = cover?.getBoundingClientRect().bottom ?? Infinity;
-      bar.style.setProperty('--profile-frost', String(Math.max(0, Math.min(1, (bottom + 48 - coverBottom) / 48))));
-      setIdentityVisible(!!identity && identity.getBoundingClientRect().bottom <= bottom);
-      setActionsVisible(!!actions && actions.getBoundingClientRect().bottom <= bottom);
+      setSurfaceVisible(!!actions && actions.getBoundingClientRect().bottom <= top);
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     const resize = new ResizeObserver(schedule);
@@ -49,17 +48,26 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
 
   return (
     <div className="profile-collapse-anchor">
-      <div ref={barRef} data-profile-collapse className="profile-collapse-bar">
-        <div data-page-bento data-keep-bento className="profile-collapse-frost" aria-hidden>
+      <div ref={barRef} data-profile-collapse data-collapsed={surfaceVisible} data-joined={surfaceVisible && tabsPinned} className="profile-collapse-bar">
+        <div className="profile-collapse-gap-guard" hidden={!surfaceVisible} aria-hidden>
           {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
         </div>
-        <PageHeader overlay className="!top-2 !left-2 !right-auto" />
+        <div className="profile-collapse-surface" style={tabsPinned ? { bottom: -tabsHeight - 4 } : undefined} hidden={!surfaceVisible} aria-hidden>
+          {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
+        </div>
+        <PageHeader overlay plainBack className={cn(
+          '!right-auto',
+          surfaceVisible
+            ? '!top-2 !left-2'
+            : '!top-3 !left-0 sm:!top-4 sm:!left-3',
+          !surfaceVisible && (theme === 'system' || theme === 'immersive') && 'max-sm:!top-1',
+        )} />
         <div className="profile-collapse-content">
-          <div className="profile-collapse-identity" data-visible={identityVisible} aria-hidden={!identityVisible}>
+          <div className="profile-collapse-identity" data-visible={surfaceVisible} aria-hidden={!surfaceVisible}>
             <p className="truncate text-sm sm:text-base font-bold text-white">{name}</p>
             <p className="truncate text-xs text-zinc-400">{handle}</p>
           </div>
-          {actionsVisible && followAction && <div className="shrink-0">{followAction}</div>}
+          {surfaceVisible && followAction && <div className="shrink-0">{followAction}</div>}
         </div>
       </div>
     </div>

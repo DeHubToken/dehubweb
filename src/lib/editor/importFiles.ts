@@ -8,6 +8,7 @@ import i18n from "@/i18n";
 import {
   captureImageThumbnail,
   captureVideoThumbnail,
+  deleteMedia,
   detectKind,
   probeDuration,
   putMedia,
@@ -18,8 +19,7 @@ import { toMediaItem, useEditorStore } from "@/store/editorStore";
 import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
 import { getQuotaForBadge, formatBytes } from "@/lib/editor/quota";
 import { getEditorStorageUsage } from "@/lib/editor/cloudMedia";
-
-const MAX_BYTES = 500 * 1024 * 1024;
+import { MAX_EDITOR_MEDIA_BYTES } from "./mediaLimits";
 
 function makeId(): string {
   return typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -38,19 +38,22 @@ export interface ImportContext {
   username?: string | null;
   /** Optional source and licence details for stock-library imports. */
   provenance?: MediaProvenance;
+  signal?: AbortSignal;
 }
 
 /** Import a single file. Returns the media id when the import succeeded. */
 export async function importOneFile(file: File, ctx: ImportContext = {}): Promise<string | null> {
+  if (ctx.signal?.aborted) return null;
   const kind = detectKind(file);
   if (!kind) { toast.error(`Unsupported file: ${file.name}`); return null; }
-  if (file.size > MAX_BYTES) { toast.error(`${file.name} is too large (max 500 MB).`); return null; }
+  if (file.size > MAX_EDITOR_MEDIA_BYTES) { toast.error(`${file.name} is too large (max 500 MB).`); return null; }
 
   // Cloud quota check (best-effort — fail open if the check itself errors)
   if (ctx.wallet) {
     try {
       const quota = getQuotaForBadge(ctx.badgeBalance ?? 0, ctx.username ?? null);
       const usage = await getEditorStorageUsage(ctx.wallet);
+      if (ctx.signal?.aborted) return null;
       if (usage.used_bytes + file.size > quota.bytes) {
         toast.error(
           i18n.t("editor.storageFullImport", {
@@ -66,6 +69,7 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
     }
   }
 
+  if (ctx.signal?.aborted) return null;
   try {
     const id = makeId();
     let duration: number | undefined;
@@ -87,6 +91,7 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
       thumbnail = r.thumbnail; width = r.width; height = r.height;
     }
 
+    if (ctx.signal?.aborted) return null;
     if (kind !== "image" && Number.isFinite(ctx.duration) && (ctx.duration ?? 0) > 0) duration = ctx.duration;
     const row: StoredMedia = {
       id, name: file.name, kind,
@@ -96,6 +101,7 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
       provenance: ctx.provenance,
     };
     await putMedia(row);
+    if (ctx.signal?.aborted) { await deleteMedia(id); return null; }
     useEditorStore.getState().addMedia(toMediaItem(row));
 
     // Fire-and-forget cloud upload so the library survives across devices.
@@ -123,6 +129,7 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
     }
     return id;
   } catch (e) {
+    if (ctx.signal?.aborted) return null;
     console.error("[editor] import failed", file.name, e);
     toast.error(`Failed to import ${file.name}`);
     return null;

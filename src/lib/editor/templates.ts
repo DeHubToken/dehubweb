@@ -10,7 +10,7 @@ import { beginEditorCommand } from "./editorCommand";
 import type { TFunction } from "i18next";
 import type { AspectPreset } from "./types";
 import { VIDEO_TEMPLATES, type VideoTemplateAspect } from "./videoTemplates";
-import { applyOps, type AgentOp } from "./agent";
+import { applyOps, type AgentOp, type ApplyContext } from "./agent";
 
 export interface EditorTemplate {
   id: string;
@@ -170,7 +170,7 @@ export const TEMPLATES: EditorTemplate[] = [
  * fetched from the free stock library; if that fails the template still
  * builds, just without its photo.
  */
-export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx: { wallet?: string | null; aspect?: VideoTemplateAspect; command?: ReturnType<typeof beginEditorCommand> } = {}) {
+export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx: ApplyContext & { aspect?: VideoTemplateAspect } = {}) {
   const command = ctx.command ?? beginEditorCommand();
   const ownsCommand = !ctx.command;
   try {

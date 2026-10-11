@@ -16,6 +16,7 @@ type Take = { task: NonNullable<ReturnType<typeof projectTask>>; recorder: Retur
 export function RecordingPanel() {
   const { t } = useTranslation();
   const quota = useEditorQuota();
+  const latestQuota = useRef(quota); latestQuota.current = quota;
   const take = useRef<Take | null>(null);
   const wallet = useRef(quota.walletAddress); wallet.current = quota.walletAddress;
   const capturedStream = useRef<MediaStream | null>(null);
@@ -70,7 +71,8 @@ export function RecordingPanel() {
         try {
           if (duration < 0.25 || !blob.size) return;
           const file = new File([blob], `${mode}-${Date.now()}.${recordingExtension(blob.type)}`, { type: blob.type });
-          const id = await importOneFile(file, { wallet: captureWallet, duration });
+          const id = await importOneFile(file, { wallet: captureWallet, duration,
+            badgeBalance: latestQuota.current.badgeBalance, username: latestQuota.current.username });
           const state = useEditorStore.getState();
           if (!id || !task.isCurrent()) return;
           await state.runAsOneStep(() => {

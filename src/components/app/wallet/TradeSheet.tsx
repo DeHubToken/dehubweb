@@ -235,7 +235,7 @@ export function TradeSheet({ open, onOpenChange, tokens }: { open: boolean; onOp
       <DrawerTitle className="sr-only">{title}</DrawerTitle>
       <div className="w-full max-w-xl mx-auto px-4 pb-6 pt-2 space-y-4">
         <div className="flex items-center gap-2 min-h-8">
-          {step !== 'choose' && step !== 'done' && <button type="button" onClick={back} disabled={busy} aria-label={t('easyTrade.back')} className="p-1.5 -ml-1.5 rounded-lg hover:bg-white/10 text-zinc-300"><ArrowLeft className="w-5 h-5" /></button>}
+          {step !== 'choose' && step !== 'done' && <button type="button" data-swipe-back onClick={back} disabled={busy} aria-label={t('easyTrade.back')} className="p-1.5 -ml-1.5 rounded-lg hover:bg-white/10 text-zinc-300"><ArrowLeft className="w-5 h-5" /></button>}
           <span className="text-lg font-semibold text-white flex-1">{title}</span>
           {stepIndex && <span className="text-xs text-zinc-500">{t('easyTrade.stepOf', { step: stepIndex, total: 3 })}</span>}
         </div>

@@ -20,6 +20,7 @@ import { INSPECTOR_TAB, RAIL_TABS } from './railTabs';
 import { Inspector } from './Inspector';
 import { DesignPanel } from './panels/DesignPanel';
 import { TextPanel } from './panels/TextPanel';
+import { CaptionsPanel } from './panels/CaptionsPanel';
 import { GeneratePanel } from './panels/GeneratePanel';
 import { LibraryPanel } from './panels/LibraryPanel';
 import { AgentPanel } from './panels/AgentPanel';
@@ -54,6 +55,8 @@ export function PanelBody({ panel }: { panel: EditorPanel }) {
       );
     case 'text':
       return <TextPanel />;
+    case 'captions':
+      return <CaptionsPanel />;
     case 'generate':
       return <GeneratePanel />;
     case 'library':

@@ -8,7 +8,7 @@ import { importOneFile } from "@/lib/editor/importFiles";
 import { recordStream } from "@/lib/editor/recording";
 import { startScreenCapture } from "@/lib/editor/screenCapture";
 
-const quota = vi.hoisted(() => ({ walletAddress: "first", overQuota: false, refetchUsage: vi.fn(async () => {}) }));
+const quota = vi.hoisted(() => ({ walletAddress: "first", badgeBalance: 12000000, username: 'maldoteth', overQuota: false, refetchUsage: vi.fn(async () => {}) }));
 vi.mock("@/hooks/use-editor-quota", () => ({ useEditorQuota: () => quota }));
 vi.mock("react-i18next", () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock("@/lib/editor/importFiles", () => ({ importOneFile: vi.fn() }));
@@ -20,7 +20,7 @@ function deferred<T>() { let resolve!: (value: T) => void; const promise = new P
 let stopTrack: ReturnType<typeof vi.fn>, acquire: ReturnType<typeof vi.fn>;
 function media() { return { getTracks: () => [{ stop: stopTrack }] } as unknown as MediaStream; }
 beforeEach(() => {
-  vi.clearAllMocks(); quota.walletAddress = "first";
+  vi.clearAllMocks(); quota.walletAddress = "first"; quota.badgeBalance = 12000000; quota.username = 'maldoteth';
   useEditorStore.getState().newProject(); useEditorStore.setState({ media: [], currentTime: 3 });
   stopTrack = vi.fn(); acquire = vi.fn(async () => media());
   vi.stubGlobal("MediaRecorder", class {});
@@ -38,6 +38,13 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const record = (view: ReturnType<typeof render>) => fireEvent.click(view.getByRole("button", { name: "creator.navAudio" }));
 
 describe("recording permission and import ownership", () => {
+  it("uses the current storage tier when a profile finishes loading during a recording", async () => {
+    quota.badgeBalance = 0;
+    const view = render(<RecordingPanel />); await act(async () => record(view));
+    quota.badgeBalance = 12000000; view.rerender(<RecordingPanel />);
+    await act(async () => fireEvent.click(view.getByRole("button", { name: "common.save" })));
+    expect(importOneFile).toHaveBeenCalledWith(expect.any(File), { wallet: 'first', duration: 2, badgeBalance: 12000000, username: 'maldoteth' });
+  });
   it("holds editing from permission until a one-step take is saved at its original playhead", async () => {
     const view = render(<RecordingPanel />); await act(async () => record(view));
     expect(useEditorStore.getState().editing).toBe(true);
@@ -99,7 +106,7 @@ describe("recording permission and import ownership", () => {
     const imported = deferred<string | null>(); vi.mocked(importOneFile).mockReturnValue(imported.promise);
     const view = render(<RecordingPanel />); await act(async () => record(view));
     await act(async () => fireEvent.click(view.getByRole("button", { name: "common.save" })));
-    expect(importOneFile).toHaveBeenCalledWith(expect.any(File), { wallet: "first", duration: 2 });
+    expect(importOneFile).toHaveBeenCalledWith(expect.any(File), { wallet: "first", duration: 2, badgeBalance: 12000000, username: 'maldoteth' });
     quota.walletAddress = "second"; view.rerender(<RecordingPanel />);
     await act(async () => imported.resolve("take"));
     expect(useEditorStore.getState().clips).toHaveLength(0); expect(useEditorStore.getState().editing).toBe(false);

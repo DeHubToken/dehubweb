@@ -282,6 +282,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
             {postPage ? (
               <button
                 data-post-nav-back
+                data-swipe-back
                 onClick={handleBack}
                 className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
                 aria-label={_copy("copy.76900f1bfd16", { defaultValue: "Back" })}
@@ -291,6 +292,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
             ) : isHomePage && (
               <button
                 onClick={handleSettingsClick}
+                data-swipe-back={imagesScrollView ? '' : undefined}
                 className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
                 aria-label={imagesScrollView ? _copy("copy.68f5b97c66d9", { defaultValue: "Back to grid" }) : _copy("copy.2ffafd1aa697", { defaultValue: "Feed settings" })}
               >

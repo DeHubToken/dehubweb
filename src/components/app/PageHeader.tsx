@@ -23,6 +23,8 @@ interface PageHeaderProps {
   onBack?: () => void;
   /** Float the controls over the page without reserving a title row. */
   overlay?: boolean;
+  /** Show only the back arrow over a profile banner. */
+  plainBack?: boolean;
 }
 
 export function PageHeader({
@@ -36,6 +38,7 @@ export function PageHeader({
   fallbackRoute = '/app',
   onBack,
   overlay = false,
+  plainBack = false,
 }: PageHeaderProps) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
@@ -74,11 +77,17 @@ export function PageHeader({
         {showBack ? (
           <button
             onClick={handleBack}
+            data-swipe-back
             data-on-media={overlay ? '' : undefined}
-            className="pointer-events-auto h-9 w-9 rounded-xl bg-black/50 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
+            className={cn(
+              'pointer-events-auto h-9 w-9 flex items-center justify-center',
+              plainBack
+                ? 'bg-transparent border-0 shadow-none hover:opacity-70 transition-opacity'
+                : 'rounded-xl bg-black/50 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 transition-colors',
+            )}
             aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
           >
-            <ArrowLeft className="w-4 h-4 text-white" />
+            <ArrowLeft className={cn('text-white', plainBack ? 'w-5 h-5' : 'w-4 h-4')} />
           </button>
         ) : <span />}
         {(title || subtitle) && <span className="sr-only">{title} {subtitle}</span>}
@@ -100,6 +109,7 @@ export function PageHeader({
         {showBack && (
           <button
             onClick={handleBack}
+            data-swipe-back
             className="p-2 rounded-xl hover:bg-white/10 transition-colors"
             aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
           >
