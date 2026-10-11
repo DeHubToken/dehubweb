@@ -7,8 +7,11 @@
  */
 
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { searchNFTs } from '@/lib/api/dehub';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { getNFTInfo, searchNFTs } from '@/lib/api/dehub';
+import { listCommunityPostShares, removeCommunityPost } from '@/lib/community-posts';
+import { resolveCommunityPosts, uniqueCommunityPosts } from '@/lib/community-posts-core';
+import { toast } from 'sonner';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 import type { FeedItem, TextPost, VideoItem, ImagePost, ShortVideo } from '@/types/feed.types';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,6 +26,9 @@ import { useTranslation } from 'react-i18next';
 import { AppState } from '@/components/app/AppState';
 
 interface CommunityFeedProps {
+  communityId: string;
+  wallet: string | null;
+  canModerate: boolean;
   communitySlug: string;
   memberAddresses: Set<string>;
   isMember: boolean;
@@ -42,8 +48,9 @@ function getCreatorId(post: FeedItem): string | undefined {
   }
 }
 
-export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol, tickerContractAddress, tickerChainId, tickerPairAddress }: CommunityFeedProps) {
+export function CommunityFeed({ communityId, wallet, canModerate, communitySlug, memberAddresses, isMember, tickerSymbol, tickerContractAddress, tickerChainId, tickerPairAddress }: CommunityFeedProps) {
   const { t } = useTranslation();
+  const qc = useQueryClient();
 
   const { data: dexPairs = [] } = useDexScreenerSearchMulti(
     tickerSymbol ? `$${tickerSymbol}` : '',
@@ -72,22 +79,34 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
   // every navigation, and the old effect refired the search with a skeleton
   // flash each time. Cached for 2 min, so bouncing between a community and
   // the rest of the app re-renders instantly from cache.
-  const { data: posts = [], isLoading: loading } = useQuery({
-    queryKey: ['community-feed', categoryTag],
-    queryFn: async () => {
-      const results = await searchNFTs({ category: categoryTag, unit: 50, sortMode: 'new' });
-      return (results.data || []).map(mapNFTToFeedItem).filter(Boolean) as FeedItem[];
+  const { data, isLoading: loading, isError, refetch, hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ['community-feed', communityId, categoryTag, wallet],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const [results, shares] = await Promise.all([
+        searchNFTs({ category: categoryTag, unit: 20, page: pageParam, sortMode: 'new' }),
+        listCommunityPostShares(communityId,wallet,pageParam,20),
+      ]);
+      const originals = await resolveCommunityPosts(shares.map(row=>String(row.token_id)),getNFTInfo);
+      return { tagged:(results.data || []).map(mapNFTToFeedItem), originals:originals.map(mapNFTToFeedItem), shares,
+        hasMore:(results.data?.length ?? 0)===20 || shares.length===20 };
     },
+    getNextPageParam: (last,_pages,page) => last.hasMore ? page+1 : undefined,
     enabled: !!categoryTag,
     staleTime: 2 * 60 * 1000,
   });
 
   const memberPosts = useMemo(() => {
-    return posts.filter(post => {
+    const pages = data?.pages ?? [];
+    const originals = pages.flatMap(page=>page.originals);
+    const tagged = pages.flatMap(page=>page.tagged).filter(post => {
       const addr = getCreatorId(post);
       return addr && memberAddresses.has(addr);
     });
-  }, [posts, memberAddresses]);
+    return uniqueCommunityPosts([...originals,...tagged],post=>post.id);
+  }, [data, memberAddresses]);
+  const shares = new Map((data?.pages ?? []).flatMap(page=>page.shares).map(row=>[String(row.token_id),row]));
+  const more = hasNextPage && <button className="w-full rounded-xl border border-white/15 p-3 text-sm text-white" disabled={isFetchingNextPage} onClick={()=>void fetchNextPage()}>{t('communities.existingPost.more')}</button>;
 
   if (loading) {
     return (
@@ -105,6 +124,7 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
     );
   }
 
+  if (isError) return <AppState kind="error" title={t('common.failedToLoad')} primaryAction={{label:t('common.retry'),onClick:()=>void refetch()}} />;
   if (memberPosts.length === 0) {
     return (
       <div className="space-y-3">
@@ -117,6 +137,7 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
           description={isMember ? t('communities.selectCommunityHint') : undefined}
           size="section"
         />
+        {more}
       </div>
     );
   }
@@ -143,10 +164,17 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
         }
         return (
           <div key={post.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            {wallet && shares.has(post.id) && (canModerate || shares.get(post.id)?.shared_by===wallet.toLowerCase()) && (
+              <button className="mb-2 text-xs text-zinc-400 underline" onClick={async ()=> {
+                try { await removeCommunityPost(communityId,wallet,post.id); await qc.invalidateQueries({queryKey:['community-feed',communityId]}); }
+                catch { toast.error(t('communities.existingPost.failed')); }
+              }}>{t('communities.existingPost.remove')}</button>
+            )}
             {card}
           </div>
         );
       })}
+      {more}
     </div>
   );
 }
