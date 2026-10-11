@@ -67,7 +67,7 @@ html[data-theme='system'] .profile-collapse-gap-guard img { display: none; }
   transition: opacity 160ms ease, transform 160ms ease;
 }
 .profile-collapse-identity[data-visible='true'] { opacity: 1; transform: none; }
-[data-profile-tabs] { top: calc(env(safe-area-inset-top, 0px) + 60px); }
+[data-profile-tabs] { top: calc(env(safe-area-inset-top, 0px) + 60px); padding-top: 0; }
 @media (prefers-reduced-motion: reduce) {
   .profile-collapse-identity { transition: none; }
 }
