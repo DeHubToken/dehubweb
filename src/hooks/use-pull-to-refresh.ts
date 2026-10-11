@@ -33,9 +33,10 @@ export function usePullToRefresh({ enabled = false, pullThreshold = 80, onRefres
     const tick = (now: number) => {
       const p = Math.min(1, (now - began) / duration);
       distance.current = from * (1 - pullSpringProgress(p));
+      // Finish the invisible tail instead of repainting subpixel movement.
+      if (distance.current < 0.5 || p === 1) { reset(); return; }
       setPullDistance(distance.current);
-      if (p < 1) frame.current = requestAnimationFrame(tick);
-      else returning.current = false;
+      frame.current = requestAnimationFrame(tick);
     };
     frame.current = requestAnimationFrame(tick);
   }, [reset]);
