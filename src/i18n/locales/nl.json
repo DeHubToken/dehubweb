@@ -5199,7 +5199,7 @@
       "cannotUseReference": "{{model}} kan geen referentieafbeelding gebruiken. Verwijder het of kies een ander model.",
       "needsImageToAnimate": "{{model}} heeft een afbeelding nodig om te animeren. Bevestig er eerst een.",
       "needsImageToWork": "{{model}} heeft een afbeelding nodig om mee te werken. Bevestig er eerst een.",
-      "speechLimit": "Dat zijn {{count}} tekens. De limiet is {{limit}}.",
+      "speechLimit": "Dat zijn {{length}} tekens. De limiet is {{limit}}.",
       "musicTrackLength": "{{count}}s nummer"
     }
   },

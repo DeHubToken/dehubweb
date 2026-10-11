@@ -5010,7 +5010,7 @@
       "cannotUseReference": "{{model}} ne peut pas utiliser une image de référence. Retirez-le ou choisissez un autre modèle.",
       "needsImageToAnimate": "{{model}} a besoin d'une image pour animer. Attachez-en un en premier.",
       "needsImageToWork": "{{model}} a besoin d'une image pour fonctionner. Attachez-en un en premier.",
-      "speechLimit": "Soit {{count}} caractères. La limite est de {{limit}}.",
+      "speechLimit": "Soit {{length}} caractères. La limite est de {{limit}}.",
       "musicTrackLength": "Piste {{count}}s"
     }
   },
@@ -12922,7 +12922,7 @@
     "781cf24b06f2": "Un studio de création d'IA",
     "85185622d8bf": " — générer des images, des vidéos, de la musique et des affiches pour votre chaîne sans quitter l'application.",
     "6fda0d2aa031": "Aucune des cinq autres plates-formes de cette liste n'en expédie.",
-    "3b9ba345dd97": "Qu'est-ce que « décentralisé » achète une banderole",
+    "3b9ba345dd97": "Ce que la « décentralisation » apporte aux streamers",
     "6cc93068cea7": "Trois choses, concrètement. Votre compte et votre audience ne sont pas une plateforme à supprimer, car l'identité vit sur un protocole plutôt que dans la base de données d'une entreprise. Les paiements vont directement du spectateur au créateur, de sorte que rien n'est retenu derrière un programme partenaire ou un seuil de versement. Et votre catalogue arrière ne s'évapore pas si une face avant disparaît. DLive est le contre-exemple à garder à l'esprit : l'image de marque seule ne rend pas une plate-forme durable, et il vaut la peine de vérifier quelles parties d'un service sont réellement décentralisées avant de construire une carrière dessus.",
     "23cc49836f60": "Passez en direct sur DeHub",
     "ce39b97c0f94": "Diffusez à partir de votre navigateur, de votre téléphone ou de votre OBS, avec des changeurs de voix, des effets sonores et des apparences de caméra intégrés. Les pourboires arrivent dans votre portefeuille au fur et à mesure de leur envoi — pas de seuil d'abonné, pas de cycle de versement et aucun portefeuille requis pour commencer.",

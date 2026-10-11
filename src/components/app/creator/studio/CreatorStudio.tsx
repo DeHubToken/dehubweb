@@ -1081,7 +1081,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       // charged for before the call, so an over-length script must fail while
       // it is still free to say no.
       if (activeAudioTask.promptRole !== 'none' && resolvedPrompt.length > MAX_SPEECH_CHARS) {
-        return t('creator.validation.speechLimit', { count: resolvedPrompt.length.toLocaleString(i18n.language), limit: MAX_SPEECH_CHARS.toLocaleString(i18n.language), defaultValue: 'That is {{count}} characters. The limit is {{limit}}.' });
+        return t('creator.validation.speechLimit', { length: resolvedPrompt.length.toLocaleString(i18n.language), limit: MAX_SPEECH_CHARS.toLocaleString(i18n.language), defaultValue: 'That is {{count}} characters. The limit is {{limit}}.' });
       }
       if (audioTask === 'dialogue' && !parseDialogue(resolvedPrompt, voiceId).length) {
         return t('creator.dialogueFormat');

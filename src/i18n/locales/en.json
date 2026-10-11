@@ -5005,7 +5005,7 @@
       "cannotUseReference": "{{model}} cannot use a reference image. Remove it or pick another model.",
       "needsImageToAnimate": "{{model}} needs an image to animate. Attach one first.",
       "needsImageToWork": "{{model}} needs an image to work from. Attach one first.",
-      "speechLimit": "That is {{count}} characters. The limit is {{limit}}.",
+      "speechLimit": "That is {{length}} characters. The limit is {{limit}}.",
       "musicTrackLength": "{{count}}s track"
     }
   },

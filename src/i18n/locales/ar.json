@@ -5010,7 +5010,7 @@
       "cannotUseReference": "لا يمكن لـ{{model}} استخدام صورة مرجعية. قم بإزالته أو اختر طرازًا آخر.",
       "needsImageToAnimate": "يحتاج {{model}} إلى صورة للتحريك. قم بإرفاق واحد أولاً.",
       "needsImageToWork": "يحتاج {{model}} إلى صورة للعمل منها. قم بإرفاق واحد أولاً.",
-      "speechLimit": "هذا {{count}} أحرف. الحد الأقصى هو {{limit}}.",
+      "speechLimit": "هذا {{length}} أحرف. الحد الأقصى هو {{limit}}.",
       "musicTrackLength": "مسار {{count}}s"
     }
   },

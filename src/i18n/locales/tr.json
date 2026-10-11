@@ -4752,7 +4752,7 @@
       "cannotUseReference": "{{model}} bir referans görüntü kullanamaz. Çıkarın veya başka bir model seçin.",
       "needsImageToAnimate": "{{model}} canlandırmak için bir resme ihtiyaç duyuyor. Önce bir tane ekleyin.",
       "needsImageToWork": "{{model}} üzerinde çalışmak için bir resme ihtiyaç duyuyor. Önce bir tane ekleyin.",
-      "speechLimit": "Bu {{count}} karakterdir. Sınır {{limit}}.",
+      "speechLimit": "Bu {{length}} karakterdir. Sınır {{limit}}.",
       "musicTrackLength": "{{count}}s parkur"
     },
     "toolMaboroshi": "Maboroshi",
