@@ -459,7 +459,7 @@ export default function HomePage() {
     setIsRefreshing(true);
 
     // Invalidate feed queries so cards re-render with fresh data (or the
-    // same data re-mounted) — this gives users clear visual feedback even
+    // same cached data) — this gives users clear visual feedback even
     // when nothing new is available.
     void queryClient.invalidateQueries({ queryKey: ['dehub-live'] });
     void queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
@@ -478,7 +478,7 @@ export default function HomePage() {
     document.body.scrollTo({ top: 0, behavior: 'smooth' });
     scrollDocumentToSmooth();
     
-    // Simulate refresh delay then update
+    // Update feed refresh inputs without remounting cards during the return.
     setTimeout(() => {
       setRefreshKey(prev => prev + 1);
       setTimeout(() => {
@@ -511,7 +511,7 @@ export default function HomePage() {
     containerRef: feedContainerRef,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setFeedRefresh({ refreshing: isRefreshing, progress: isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1), distance: pullDistance, pulling: isPulling });
   }, [isRefreshing, isHoldingAtThreshold, holdProgress, pullDistance, isPulling]);
   useEffect(() => () => setFeedRefresh({ refreshing: false, progress: 0 }), []);
@@ -1118,55 +1118,13 @@ export default function HomePage() {
           data-feed-pull-motion
           style={isMobile && pullDistance > 0 ? { position: 'relative', transform: `translate3d(0, ${pullDistance}px, 0)`, willChange: 'transform' } : undefined}
         >
-        {/* Pull-to-refresh indicator with hold progress */}
-        {pullDistance > 0 && !(islandTopBar && isMobile) && (
-          <div 
-            className="absolute inset-x-0 -top-4 h-8 flex items-center justify-center pointer-events-none"
-            style={{ transform: `translate3d(0, ${-pullDistance / 2}px, 0)` }}
-          >
-            <div className="relative">
-              {/* Background circle (track) */}
-              <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="14"
-                  fill="none"
-                  stroke="rgba(255,255,255,0.2)"
-                  strokeWidth="2"
-                />
-                {/* Progress arc - shows hold progress when at threshold */}
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="14"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeDasharray={2 * Math.PI * 14}
-                  strokeDashoffset={2 * Math.PI * 14 * (1 - (isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1)))}
-                />
-              </svg>
-              {/* Center dot that appears when holding */}
-              {isHoldingAtThreshold && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div 
-                    className="w-3 h-3 bg-white rounded-full animate-pulse"
-                    style={{ opacity: holdProgress }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        )}
         {/* Feeds mount lazily on first tab visit, then stay alive (CSS display toggle).
             Memo wrappers prevent re-renders during drag — feeds only update when
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'home'}>
-            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
+            <MemoHomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
             </CachedPageActiveContext.Provider>
           </div>
         )}
@@ -1212,7 +1170,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'live'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoLiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
+              <MemoLiveFeed isRefreshing={isRefreshing} showFilters={showLiveFilters} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>
