@@ -236,7 +236,7 @@ export default function AgentsPage() {
       <div className="min-h-screen">
         <PageIsland back icon="assistant" title={t('agents.title')} />
         <PageBody>
-          <PageEmpty icon="assistant" title="Agents are in private preview" body="This feature is currently available to @maldoteth." />
+          <PageEmpty icon="assistant" title={t('agents.tasks.privateTitle')} body={t('agents.tasks.privateBody')} />
         </PageBody>
       </div>
     );
