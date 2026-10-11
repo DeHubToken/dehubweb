@@ -2,6 +2,7 @@ import { beginEditorCommand } from "./editorCommand";
 import { projectTask } from "./projectTask";
 import { videoMatteCommand } from "./videoMatte";
 import { generationChatRequest, generationDraft, type GenerationDraft } from "./generationDraft";
+import { editorGenerationKinds } from "./generationCapabilities";
 /**
  * Editor agent — client half.
  * ===========================
@@ -177,7 +178,7 @@ export async function askSceneAgent(messages: AgentMessage[], scene: unknown, si
       apikey: ANON_KEY,
       Authorization: `Bearer ${ANON_KEY}`,
     },
-    body: JSON.stringify({ messages, scene }),
+    body: JSON.stringify({ messages, scene, generationKinds: editorGenerationKinds() }),
     signal,
   });
   const data = await res.json().catch(() => null);
