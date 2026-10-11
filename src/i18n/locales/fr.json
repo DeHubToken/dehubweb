@@ -13351,5 +13351,17 @@
     "publish": "Publier l'article",
     "saveDraft": "Enregistrer le brouillon",
     "formatting": "Formatage"
+  },
+  "liveAudience": {
+    "whosHere": "Qui est là",
+    "watchingCount": "{{formatted}} regardent",
+    "hereCount": "{{formatted}} ici",
+    "startedAgo": "A commencé {{time}}",
+    "host": "Hôte",
+    "topTippers": "Meilleurs donateurs",
+    "mostActive": "Les plus actifs",
+    "hereNow": "Ici maintenant",
+    "joinedAgo": "a rejoint {{time}}",
+    "nobodyYet": "Personne pour le moment"
   }
 }
