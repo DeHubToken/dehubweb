@@ -7,7 +7,7 @@ export async function loadPaymentBalances(assets: PaymentAsset[], wallet: string
   await initChainRpcUrls();
   return readPaymentBalances(assets, wallet, solana || getCachedSolanaAddress() || undefined, {
     base: [CHAIN_CONFIGS[8453].rpcUrl, 'https://base-rpc.publicnode.com', 'https://base.drpc.org'],
-    eth: CHAIN_CONFIGS[1].rpcUrl,
+    eth: [CHAIN_CONFIGS[1].rpcUrl, 'https://ethereum-rpc.publicnode.com', 'https://eth.drpc.org'],
     bsc: CHAIN_CONFIGS[56].rpcUrl,
     robinhood: CHAIN_CONFIGS[4663]?.rpcUrl,
     sol: solanaRpcUrl(),
