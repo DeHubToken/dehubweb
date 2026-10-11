@@ -2,14 +2,14 @@
 const $ = (id) => document.getElementById(id);
 let token = '', account = '', current = null, ready = false, allowPayments = false, timer;
 let selectedInput = '', selectedResult = '', requestVersion = 0, sessionVersion = 0;
-let referencesChanged = false, working = false, pendingPayment = null;
+let referencesChanged = false, working = false, pendingPayment = null, paymentNotice = '';
 const localMedia = new Map();
 const busy = () => current && ['queued', 'running'].includes(current.state);
 const locked = () => working || !!pendingPayment;
 const editable = () => allowPayments && (!current || ['uploaded', 'prepared'].includes(current.state));
 const money = (micros) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(micros / 1e6);
 const stateLabel = (state) => ({ uploaded: 'Ready to prepare', prepared: 'Ready to review', queued: 'Queued', running: 'Processing', draft: 'Preview ready', complete: 'HD ready', failed: 'Needs attention', attention: 'Needs attention' })[state] || 'Saved';
-const message = (text) => { $('error').textContent = text || ''; $('error').hidden = !text; };
+const message = (text) => { paymentNotice = ''; $('error').textContent = text || ''; $('error').hidden = !text; };
 const remember = (id) => { try { localStorage.setItem(`maboroshi:last:${account}`, id || ''); } catch { /* Storage may be unavailable in an embedded browser. */ } };
 const remembered = () => { try { return localStorage.getItem(`maboroshi:last:${account}`); } catch { return ''; } };
 async function api(path, options = {}) {
@@ -42,7 +42,7 @@ function mediaPreview(id, media) {
 }
 function clearProject() {
   if (pendingPayment) { pendingPayment.reject(Error('The active project changed.')); pendingPayment = null; }
-  clearTimeout(timer); requestVersion++; current = null; selectedInput = ''; selectedResult = '';
+  clearTimeout(timer); requestVersion++; current = null; selectedInput = ''; selectedResult = ''; paymentNotice = '';
   for (const id of ['preview', 'result', 'source-preview']) { $(id).pause(); $(id).removeAttribute('src'); $(id).removeAttribute('data-file'); $(id).load(); }
   for (const id of ['source', 'reference', 'second']) releaseLocal(id);
   for (const id of ['source-local', 'reference-preview', 'second-preview']) clearMedia(id);
@@ -106,7 +106,8 @@ function render() {
   const step = !current || current.state === 'uploaded' ? 'choose' : ['draft', 'complete'].includes(current.state) || current.stage === 'hd' || current.stage === 'draft' ? 'export' : 'prepare';
   for (const name of ['choose', 'prepare', 'export']) { if (name === step) $(`step-${name}`).setAttribute('aria-current', 'step'); else $(`step-${name}`).removeAttribute('aria-current'); }
   if (!current) return;
-  $('project-status').textContent = pendingPayment ? 'Waiting for payment confirmation' : working ? 'Saving your changes…' : current.status;
+  $('project-status').textContent = pendingPayment ? 'Waiting for payment confirmation' : working ? 'Saving your changes…' : paymentNotice || current.status;
+  $('progress').dataset.notice = String(!!paymentNotice && !working && !pendingPayment);
   $('next-step').textContent = nextStep(); $('progress').dataset.attention = String(['attention', 'failed'].includes(current.state));
   const source = $('source-preview');
   if (current.files['upload.mp4'] && source.dataset.file !== current.id) { source.src = current.files['upload.mp4']; source.dataset.file = current.id; }
@@ -181,6 +182,8 @@ document.addEventListener('maboroshi:native-payment-result', event => { paymentR
 function paymentResult(data) {
   if (!pendingPayment || data?.requestId !== pendingPayment.requestId) return;
   const pending = pendingPayment; pendingPayment = null;
+  // Older web/native hosts identify their explicit Cancel action by this text.
+  if (data.cancelled === true || data.error === 'Payment cancelled.') { pending.resolve({ cancelled: true }); return; }
   if (typeof data.error === 'string' && data.error) pending.reject(Error(data.error)); else pending.resolve();
 }
 function requestPayment(stage) {
@@ -255,8 +258,11 @@ for (const stage of ['prepare', 'draft', 'hd']) $(stage).onclick = async () => {
   try {
     if (stage !== 'hd') await saveReferences();
     if (version !== sessionVersion || current?.id !== ident) return;
-    await requestPayment(stage);
-    if (version === sessionVersion && current?.id === ident) await load(ident);
+    const result = await requestPayment(stage);
+    if (version === sessionVersion && current?.id === ident) {
+      if (result?.cancelled) paymentNotice = 'Payment cancelled. Your project is saved.';
+      else await load(ident);
+    }
   } catch (error) { if (version === sessionVersion) message(error.message); }
   finally { if (version === sessionVersion) { working = false; render(); } }
 };
