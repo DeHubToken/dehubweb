@@ -1,7 +1,7 @@
 /**
  * A pinned community worn by the profile header: the community's
- * art as a soft colour wash behind the profile details, closed off by a thin
- * sharp strip of the same art with its logo, name and a way in.
+ * art as a soft colour wash behind the profile details, dissolving into
+ * the community row with its logo, name and a way in.
  *
  * The featured community uses the same wash and strip at every screen size.
  */
@@ -46,13 +46,13 @@ export function PinnedCommunityStrip({
   const { t } = useTranslation();
   if (!community.banner_url) return null;
   return (
-    <div data-pinned-strip className="relative flex h-[72px] items-center gap-3 overflow-hidden border-t border-white/[0.14] px-4 sm:px-6">
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-cover"
-        style={{ backgroundImage: `url(${storageImage(community.banner_url, 1100)})`, backgroundPosition: 'center 60%' }}
-      />
-      <div data-pinned-strip-shade aria-hidden className="absolute inset-0" />
+    <div data-pinned-strip className="relative flex h-[72px] items-center gap-3 px-4 sm:px-6">
+      <div data-pinned-dissolve aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 -z-10">
+        <div data-pinned-dissolve-bleed style={{ backgroundImage: `url(${storageImage(community.banner_url, 480)})` }} />
+        <div data-pinned-dissolve-art style={{ backgroundImage: `url(${storageImage(community.banner_url, 1100)})` }}>
+          <div data-pinned-strip-shade className="absolute inset-0" />
+        </div>
+      </div>
       <button
         type="button"
         onClick={onOpen}
