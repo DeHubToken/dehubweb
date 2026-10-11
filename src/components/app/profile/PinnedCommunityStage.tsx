@@ -68,8 +68,8 @@ export function PinnedCommunityStrip({
         <span className="min-w-0">
           <span className="block truncate text-sm font-semibold text-white">{community.name}</span>
           <span className="flex items-center gap-1 text-xs text-white opacity-80">
-            <Pin className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate">{t('comments.pinnedBadge')} · {community.member_count.toLocaleString()} {t('communities.members')}</span>
+            {onManagePins && <Pin className="h-3 w-3 flex-shrink-0" />}
+            <span className="truncate">{onManagePins && <>{t('comments.pinnedBadge')} · </>}{community.member_count.toLocaleString()} {t('communities.members')}</span>
           </span>
         </span>
       </button>
