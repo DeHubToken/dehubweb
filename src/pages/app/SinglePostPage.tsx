@@ -737,6 +737,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPageComments, setShowPageComments] = useState(true);
+  const [imageOptions, setImageOptions] = useState<(() => void) | null>(null);
+  const registerImageOptions = useCallback((open: (() => void) | null) => setImageOptions(() => open), []);
   const [pageCommentsInitialTab, setPageCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
@@ -1134,6 +1136,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   }, []);
   const stageValue = useMemo<PostStageValue>(() => ({
     onBack: goBack,
+    registerOptions: registerImageOptions,
     openComments: () => {
       setShowPageComments(true);
       setPageCommentsInitialTab('replies');
@@ -1151,7 +1154,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     },
     quoteCount: Number(post?.quotes ?? 0) || 0,
     repostCount: Number(post?.totalReposts || post?.reposts || 0) || 0,
-  }), [goBack, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
+  }), [goBack, registerImageOptions, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
 
   const pageComments = post && id ? (
     <CommentsWrapper
@@ -1213,6 +1216,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
               forceInline
               stage
               stageCount={commentCount}
+              onStageOptions={isImagePost ? imageOptions ?? undefined : undefined}
               onStageTabChange={setPageCommentsInitialTab}
             />
           }
