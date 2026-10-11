@@ -8,6 +8,7 @@ import { useEditorStore } from "@/store/editorStore";
 import { loadGoogleFont } from "@/lib/editor/googleFonts";
 import { exportSubtitles, parseSubtitles, subtitleClips, subtitleLayers, SUBTITLE_FORMATS, type SubtitleFormat } from "@/lib/editor/subtitles";
 import { CaptionTranslation } from "./CaptionTranslation";
+import { CaptionTextEditor } from "./CaptionTextEditor";
 
 export function SubtitleFiles() {
   const { t: _copy } = _useCopy();
@@ -18,6 +19,7 @@ export function SubtitleFiles() {
   const working = busy || translating;
   const clips = useEditorStore(s => s.clips);
   const tracks = useEditorStore(s => s.tracks);
+  const projectId = useEditorStore(s => s.projectId);
   const captions = subtitleClips(clips, tracks);
   const importFile = async (file: File) => {
     if (working) return;
@@ -62,5 +64,6 @@ export function SubtitleFiles() {
       </Button>)}
     </div>
     <CaptionTranslation disabled={busy} onBusyChange={setTranslating} />
+    <CaptionTextEditor key={projectId} disabled={working} />
   </section>;
 }
