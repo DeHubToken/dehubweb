@@ -46,7 +46,7 @@ export async function authorized(supplied: string, expected: string): Promise<bo
   return different === 0;
 }
 
-export function createHandler(env: Env, fetcher: typeof fetch = fetch) {
+export function createHandler(env: Env, fetcher: typeof fetch = fetch, payment?: (body: Json) => Promise<Response>) {
   const reply = (data: unknown, status = 200) => new Response(JSON.stringify(data), {
     status, headers: {'Content-Type': 'application/json', 'Cache-Control': 'no-store'},
   });
@@ -61,6 +61,9 @@ export function createHandler(env: Env, fetcher: typeof fetch = fetch) {
       body = JSON.parse(raw);
       if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error();
     } catch { return reply({error: 'Invalid request'}, 400); }
+    if (body.operation === 'payment_charge' || body.operation === 'payment_refund') {
+      return payment ? payment(body) : reply({error: 'Payment service unavailable'}, 503);
+    }
     const replicateKey = env('REPLICATE_API_KEY');
     const falKey = env('FAL_KEY');
     if (body.operation === 'health') return reply({ready: Boolean(replicateKey && falKey)});
