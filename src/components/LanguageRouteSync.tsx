@@ -10,18 +10,20 @@ export function LanguageRouteSync() {
   const navigate = useNavigate();
   const { i18n } = useTranslation();
   const pendingUrlLanguage = useRef<string | null>(null);
+  const languageAtRequest = useRef(i18n.language);
   useEffect(() => {
     const requested = new URLSearchParams(location.search).get('hl')?.toLowerCase();
     if (!requested || !SUPPORTED_LANGUAGES.some(option => option.code === requested)) return;
     pendingUrlLanguage.current = requested;
+    languageAtRequest.current = i18n.language;
     let cancelled = false;
     void loadLanguage(requested).then(ok => {
-      if (ok && !cancelled) {
+      if (ok && !cancelled && (i18n.language === languageAtRequest.current || i18n.language === requested)) {
         pendingUrlLanguage.current = null;
         try { localStorage.setItem('user-preferred-language', requested); } catch { /* Visit only. */ }
         void i18n.changeLanguage(requested);
       }
-    });
+    }).finally(() => { if (!cancelled) pendingUrlLanguage.current = null; });
     return () => { cancelled = true; pendingUrlLanguage.current = null; };
   }, [location.key, location.search, i18n]);
 
@@ -32,7 +34,10 @@ export function LanguageRouteSync() {
     const params = new URLSearchParams(location.search);
     const requested = params.get('hl');
     // Let a newly visited explicit URL finish selecting its language first.
-    if (pendingUrlLanguage.current && pendingUrlLanguage.current !== lang) return;
+    if (pendingUrlLanguage.current && pendingUrlLanguage.current !== lang) {
+      if (lang === languageAtRequest.current) return;
+      pendingUrlLanguage.current = null;
+    }
     const next = languages.includes(lang) ? lang : null;
     if (requested !== next) {
       if (next) params.set('hl', next);

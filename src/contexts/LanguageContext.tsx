@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 // English stays static — it's the default and the fallback for missing keys.
 // Every OTHER locale is loaded on demand (see localeLoaders below): the 104
 // static imports that used to live here made the DocsSurface chunk ~4.3 MB
@@ -256,17 +256,20 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return languages.some(option => option.code === candidate) ? candidate as Language : 'en';
   });
 
+  const selection = useRef(0);
   const setLanguage = useCallback((lang: Language) => {
+    const request = ++selection.current;
     setLanguageState(lang);
     try {
       localStorage.setItem('docs-language', lang);
       localStorage.setItem('user-preferred-language', lang);
     } catch { /* The current visit still uses the selected language. */ }
-    void loadLanguage(lang).then(ok => { if (ok) void appI18n.changeLanguage(lang); });
+    void loadLanguage(lang).then(ok => { if (ok && request === selection.current) void appI18n.changeLanguage(lang); });
   }, []);
 
   useEffect(() => {
     const sync = (lang: string) => {
+      selection.current++;
       if (languages.some(option => option.code === lang)) setLanguageState(lang as Language);
     };
     appI18n.on('languageChanged', sync);
