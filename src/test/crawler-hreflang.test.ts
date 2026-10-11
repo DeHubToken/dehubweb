@@ -314,6 +314,11 @@ describe('wiring', () => {
       expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table[route].es.asset), 'utf8')).body).toContain('<a href="https://dehub.io/docs');
     }
     expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table['/'].es.asset), 'utf8')).lede).toBeTruthy();
+    for (const lang of ['ar', 'es', 'fr', 'nl', 'tr']) {
+      const home = JSON.parse(readFileSync(resolve(ROOT, 'public' + table['/'][lang].asset), 'utf8'));
+      expect(home.body).toContain('aria-label=');
+      expect(home.body).not.toContain('aria-label="Learn more about DeHub"');
+    }
   });
 
   it('serves no language on the noindex hubs', () => {

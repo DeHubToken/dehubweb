@@ -589,7 +589,7 @@ function getNotificationContent(
   // handle back off that rather than fetching it twice.
   const actorAddressFallback = notification.actorAddress
     ? `${notification.actorAddress.slice(0, 6)}…${notification.actorAddress.slice(-4)}`
-    : 'Someone';
+    : tr('digest.someone');
   const actorName = notification.actor?.displayName || canonicalActors?.[0]?.display || notification.actorUsername || actorAddressFallback;
   
   // Aggregated web rows retain their interactive list of other actors below.
@@ -600,39 +600,39 @@ function getNotificationContent(
   // Handle custom notification types outside the typed switch
   if ((notification.type as string) === 'feature_request_like') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} liked your feature request "${title}"` : `${actorName} liked your feature request`;
+    return tr(title ? 'notifications.custom.featureLikeNamed' : 'notifications.custom.featureLike', { name: actorName, title });
   }
   if ((notification.type as string) === 'feature_request_comment') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} commented on your feature request "${title}"` : `${actorName} commented on your feature request`;
+    return tr(title ? 'notifications.custom.featureCommentNamed' : 'notifications.custom.featureComment', { name: actorName, title });
   }
   if ((notification.type as string) === 'feature_request_reply') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} replied to you on "${title}"` : `${actorName} replied to your comment`;
+    return tr(title ? 'notifications.custom.featureReplyNamed' : 'notifications.custom.featureReply', { name: actorName, title });
   }
   if ((notification.type as string) === 'feature_request_mention') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} mentioned you on "${title}"` : `${actorName} mentioned you on a feature request`;
+    return tr(title ? 'notifications.custom.featureMentionNamed' : 'notifications.custom.featureMention', { name: actorName, title });
   }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return stageLiveSentence(actorName, title);
+    return stageLiveSentence(actorName, title, tr);
   }
   if ((notification.type as string) === 'stage_reminder') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return stageReminderSentence(title);
+    return stageReminderSentence(title, tr);
   }
   if ((notification.type as string) === 'governance_vote') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} voted on your proposal "${title}"` : `${actorName} voted on your proposal`;
+    return tr(title ? 'notifications.custom.governanceVoteNamed' : 'notifications.custom.governanceVote', { name: actorName, title });
   }
   if ((notification.type as string) === 'governance_comment') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} commented on your proposal "${title}"` : `${actorName} commented on your proposal`;
+    return tr(title ? 'notifications.custom.governanceCommentNamed' : 'notifications.custom.governanceComment', { name: actorName, title });
   }
   if ((notification.type as string) === 'governance_reply') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} replied to you on proposal "${title}"` : `${actorName} replied to your comment on a proposal`;
+    return tr(title ? 'notifications.custom.governanceReplyNamed' : 'notifications.custom.governanceReply', { name: actorName, title });
   }
   // Joins, @mentions and @here all read the same way here and on the
   // Communities page. Before this, only joins had a sentence: mention and
@@ -643,7 +643,7 @@ function getNotificationContent(
   }
   if ((notification.type as string) === 'store_order') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} purchased your listing "${title}"` : `${actorName} purchased your listing`;
+    return tr(title ? 'notifications.custom.storeOrderNamed' : 'notifications.custom.storeOrder', { name: actorName, title });
   }
   // Fraction rows written before the API learned to describe them carry the
   // placeholder "You have a new notification", so treat that as no content.
@@ -654,13 +654,13 @@ function getNotificationContent(
     if (usableContent) return usableContent;
     switch (notification.type as string) {
       case 'fraction_offer':
-        return `${actorName} made an offer on your fractions`;
+        return tr('notifications.custom.fractionOffer', { name: actorName });
       case 'fraction_offer_accepted':
-        return `${actorName} accepted your fraction offer`;
+        return tr('notifications.custom.fractionOfferAccepted', { name: actorName });
       case 'fraction_offer_rejected':
-        return `${actorName} declined your fraction offer`;
+        return tr('notifications.custom.fractionOfferRejected', { name: actorName });
       default:
-        return `${actorName} bought fractions of your post`;
+        return tr('notifications.custom.fractionPurchased', { name: actorName });
     }
   }
 
@@ -700,7 +700,7 @@ function getNotificationContent(
       const postCount = aggCount;
       if (typeStr === 'like') return tr('notifications.likedPosts', { name, count: postCount });
       if (typeStr === 'comment') return tr('notifications.commentedPosts', { name, count: postCount });
-      if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
+      if (typeStr === 'repost') return tr('notifications.custom.repostedPosts', { name, count: postCount });
     } else {
       // Multiple users — first name and others count come from the exact same canonical source as the grid
       const first = canonical[0]?.display || aggNames?.[0] || actorName;
@@ -725,15 +725,12 @@ function getNotificationContent(
   // several open bounties can't act on "someone applied" alone.
   if (typeStr === 'work_application_reply') {
     const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
-    const sentence = tr('notifications.repliedComment', { name: actorName });
-    return jobTitle ? `${sentence} “${jobTitle}”` : sentence;
+    return tr(jobTitle ? 'notifications.custom.bountyReplyNamed' : 'notifications.custom.bountyReply', { name: actorName, title: jobTitle });
   }
   if (typeStr === 'work_application' || typeStr === 'work_submission') {
-    const verb = typeStr === 'work_application'
-      ? 'applied to your bounty'
-      : 'submitted work on your bounty';
     const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
-    return jobTitle ? `${actorName} ${verb} “${jobTitle}”` : `${actorName} ${verb}`;
+    const action = typeStr === 'work_application' ? 'bountyApplied' : 'bountySubmitted';
+    return tr(`notifications.custom.${action}${jobTitle ? 'Named' : ''}`, { name: actorName, title: jobTitle });
   }
 
   switch (notification.type) {
@@ -745,7 +742,7 @@ function getNotificationContent(
     case 'comment_reply':
       return tr('notifications.repliedComment', { name: actorName });
     case 'mention':
-      return `${actorName} mentioned you in a comment`;
+      return tr('notifications.custom.commentMention', { name: actorName });
     case 'tip':
       const tipAmount = notification.amount
         ? ` ${isDhb(notification.currency) ? tr('notifications.tipTokens', { amount: notification.amount }) : `${notification.amount} ${notification.currency}`}`
@@ -759,7 +756,7 @@ function getNotificationContent(
       return localizedNotificationContent({ ...notification, actorUsername: actorName }, tr)
         ?? tr('notifications.startedFollowing', { name: actorName });
     case 'follow_request':
-      return `${actorName} requested to follow you`;
+      return tr('notifications.custom.followRequest', { name: actorName });
     case 'video_milestone':
       return tr('notifications.postMilestone');
     case 'livestream_start':
@@ -2333,7 +2330,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
           open={followDrawerOpen}
           onOpenChange={setFollowDrawerOpen}
           profileAddress={pageWalletAddress}
-          title="Followers"
+          listType="followers"
           newCount={newFollowers.count}
           newUsernames={newFollowers.usernames}
         />

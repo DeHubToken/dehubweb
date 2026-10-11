@@ -73,7 +73,7 @@ interface FollowersListDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   profileAddress: string;
-  title: 'Followers' | 'Following';
+  listType: 'followers' | 'following';
   /** Opened from a grouped follow notification: how many followers are new. */
   newCount?: number;
   /** Usernames the notification named, so they are marked wherever they sort. */
@@ -102,7 +102,7 @@ export function FollowersListDrawer({
   open,
   onOpenChange,
   profileAddress,
-  title,
+  listType,
   newCount = 0,
   newUsernames,
 }: FollowersListDrawerProps) {
@@ -134,11 +134,11 @@ export function FollowersListDrawer({
   // Group assignment — only on your own Following list; there is nothing to
   // file on someone else's, and none of it is visible to them either way.
   const canGroup =
-    title === 'Following' &&
+    listType === 'following' &&
     !!currentUserAddress &&
     profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
   const canFollowBackAll =
-    title === 'Followers' &&
+    listType === 'followers' &&
     !!currentUserAddress &&
     profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
   const { groups, createGroup, toggleMember } = useFollowGroups();
@@ -174,7 +174,7 @@ export function FollowersListDrawer({
       setError(null);
 
       try {
-        const type = title === 'Followers' ? 'followers' : 'following';
+        const type = listType;
 
         // Fetch the list
         const { items, pagination } = await getFollowList(profileAddress, type, {
@@ -188,12 +188,12 @@ export function FollowersListDrawer({
         const processed = items.map(mapFollowListItem);
 
         const isOwnFollowingList =
-          title === 'Following' &&
+          listType === 'following' &&
           currentUserAddress &&
           profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
         const isOwnFollowersList =
-          title === 'Followers' &&
+          listType === 'followers' &&
           currentUserAddress &&
           profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
@@ -282,7 +282,7 @@ export function FollowersListDrawer({
     };
 
     fetchInitialPage();
-  }, [open, profileAddress, title, currentUserAddress, isAuthenticated, sortOption, debouncedSearch, t]);
+  }, [open, profileAddress, listType, currentUserAddress, isAuthenticated, sortOption, debouncedSearch, t]);
 
   // Load more pages
   const loadMore = useCallback(async () => {
@@ -290,7 +290,7 @@ export function FollowersListDrawer({
 
     setIsLoadingMore(true);
     try {
-      const type = title === 'Followers' ? 'followers' : 'following';
+      const type = listType;
       const nextPage = currentPage + 1;
       const { items, pagination } = await getFollowList(profileAddress, type, {
         page: nextPage,
@@ -303,12 +303,12 @@ export function FollowersListDrawer({
       const processed = items.map(mapFollowListItem);
 
       const isOwnFollowingList =
-        title === 'Following' &&
+        listType === 'following' &&
         currentUserAddress &&
         profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
       const isOwnFollowersList =
-        title === 'Followers' &&
+        listType === 'followers' &&
         currentUserAddress &&
         profileAddress.toLowerCase() === currentUserAddress.toLowerCase();
 
@@ -340,7 +340,7 @@ export function FollowersListDrawer({
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, currentPage, title, profileAddress, currentUserAddress, sortOption, debouncedSearch]);
+  }, [isLoadingMore, hasMore, currentPage, listType, profileAddress, currentUserAddress, sortOption, debouncedSearch]);
 
   // IntersectionObserver for infinite scroll
   useEffect(() => {
@@ -623,7 +623,7 @@ export function FollowersListDrawer({
     }
   }, [canFollowBackAll, currentUserAddress, followOverrides, getEveryFollowListItem, handleApiError, isCurrentUser, isFollowingBackAll, queryClient, t, users]);
 
-  const heading = title === 'Followers' ? t('follow.followers') : t('follow.following');
+  const heading = listType === 'followers' ? t('follow.followers') : t('follow.following');
   const titleWithCount = totalCount !== null && totalCount > 0
     ? `${heading} (${totalCount})`
     : heading;
@@ -733,10 +733,10 @@ export function FollowersListDrawer({
               icon={debouncedSearch ? 'search' : 'accounts'}
               title={debouncedSearch
                 ? t('follow.noResults')
-                : title === 'Followers' ? t('follow.noFollowersYet') : t('follow.notFollowingAnyone')}
+                : listType === 'followers' ? t('follow.noFollowersYet') : t('follow.notFollowingAnyone')}
               description={debouncedSearch
                 ? t('follow.noMatches', { query: debouncedSearch })
-                : title === 'Followers' ? t('follow.followersAppearHere') : t('follow.followToSeeThem')}
+                : listType === 'followers' ? t('follow.followersAppearHere') : t('follow.followToSeeThem')}
               kind={debouncedSearch ? 'search-empty' : 'empty'}
               size="drawer"
             />

@@ -799,7 +799,7 @@ export default function ProfilePage() {
         open={followListDrawerOpen}
         onOpenChange={setFollowListDrawerOpen}
         profileAddress={data.apiProfile?.walletAddress || ''}
-        title={followListType === 'followers' ? 'Followers' : 'Following'}
+        listType={followListType}
       />
       
       {/* Login Modal */}
