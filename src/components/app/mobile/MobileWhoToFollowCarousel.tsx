@@ -170,7 +170,7 @@ export function MobileWhoToFollowCarousel() {
 
   if (filteredSuggestions.length === 0) {
     return (
-      <div data-who-to-follow className="py-4 border-y border-zinc-800/50">
+      <div data-who-to-follow data-no-swipe className="py-4 border-y border-zinc-800/50">
         <AppState
           icon="subscriptions"
           title="No follow suggestions yet"
@@ -183,7 +183,7 @@ export function MobileWhoToFollowCarousel() {
   }
 
   return (
-    <div data-who-to-follow className="py-4 border-y border-zinc-800/50">
+    <div data-who-to-follow data-no-swipe className="py-4 border-y border-zinc-800/50">
       {/* Header */}
       <div className="flex items-center justify-between px-4 mb-3">
         <div className="flex items-center gap-2">
@@ -202,7 +202,7 @@ export function MobileWhoToFollowCarousel() {
       {/* Horizontal Carousel */}
       <SwipeableCarousel
         ref={carouselRef}
-        className="flex gap-3 overflow-x-auto scrollbar-hide px-4 pb-2 snap-x snap-mandatory"
+        className="flex gap-3 overflow-x-auto overscroll-x-contain scrollbar-hide px-4 pb-2 snap-x snap-mandatory"
         onScroll={handleScroll}
       >
         {filteredSuggestions.map((user) => (
