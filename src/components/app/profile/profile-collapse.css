@@ -77,13 +77,19 @@ html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_)
 html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_)::before { display: none; }
 html[data-theme] [data-profile-tabs][data-joined='true'] > [data-page-bento]:not(#_):not(#_):not(#_) {
   background: transparent !important;
-  backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  --nav-glass-blur: none;
   border-color: transparent !important;
   box-shadow: none !important;
 }
 html[data-theme] [data-profile-tabs][data-joined='true'] > [data-page-bento]:not(#_):not(#_):not(#_)::before,
 html[data-theme] [data-profile-tabs][data-joined='true'] > [data-page-bento]:not(#_):not(#_):not(#_)::after { display: none !important; }
+html[data-theme] [data-profile-collapse] button:not(#_):not(#_):not(#_),
+html[data-theme] [data-profile-tabs][data-joined='true'] [data-glass-indicator]:not(#_):not(#_):not(#_) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
 @media (prefers-reduced-motion: reduce) {
   .profile-collapse-identity { transition: none; }
 }
