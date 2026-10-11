@@ -21,7 +21,7 @@ vi.mock('@/lib/editor/importFiles', () => ({ importOneFile: vi.fn() }));
 vi.mock('@/components/app/image/ImagePaywallModal', () => ({ ImagePaywallModal: () => null }));
 vi.mock('@/components/app/video/VideoPaywallModal', () => ({ VideoPaywallModal: () => null }));
 vi.mock('@/components/app/audio/AudioPaywallModal', () => ({ AudioPaywallModal: ({ open, units, quantityLabel, onConfirm, onOpenChange }: { open: boolean; units: number; quantityLabel: string; onConfirm: (hash: string) => void; onOpenChange: (open: boolean) => void }) => open ? <div><output aria-label="Music quote">{units}:{quantityLabel}</output><button onClick={() => onConfirm('paid-music')}>Pay for music</button><button onClick={() => onOpenChange(false)}>Cancel music</button></div> : null }));
-vi.mock('@/components/app/creator/studio/StudioChip', () => ({ SelectChip: () => null,
+vi.mock('@/components/app/creator/studio/StudioChip', () => ({ SelectChip: ({ label, value, options, onChange }: { label: string; value: string; options: { value: string; label: string }[]; onChange: (value: string) => void }) => <select aria-label={label} value={value} onChange={event => onChange(event.target.value)}>{options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}</select>,
   CounterChip: ({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) => <input aria-label={label} type="number" value={value} onChange={event => onChange(Number(event.target.value))} />,
   ToggleChip: ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => <button aria-pressed={active} onClick={onClick}>{label}</button>,
 }));
@@ -101,5 +101,32 @@ describe('reviewing voice generation in the editor', () => {
     useEditorUiStore.getState().setGeneratePrefill({ kind: 'music', prompt: reason === 'too long' ? 'x'.repeat(2001) : 'Quiet piano' }); render(<GeneratePanel />);
     expect(screen.getByRole('button', { name: 'Generate' })).toHaveAttribute('aria-disabled', 'true');
     fireEvent.click(screen.getByRole('button', { name: 'Generate' })); expect(screen.queryByRole('button', { name: 'Pay for music' })).toBeNull(); expect(state.generations.startAudio).not.toHaveBeenCalled();
+  });
+
+  it('prepares sound without a call and queues the chosen half-second loop only on Generate', () => {
+    useEditorUiStore.getState().setGeneratePrefill({ kind: 'sfx', prompt: 'A clean interface blip' });
+    render(<GeneratePanel />);
+    expect(screen.getByRole('button', { name: 'Sound effect' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByLabelText('Prompt')).toHaveValue('A clean interface blip');
+    expect(state.generations.startAudio).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText('creator.length'), { target: { value: '0.5' } });
+    fireEvent.click(screen.getByRole('button', { name: 'creator.loop' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Generate' }));
+    expect(state.generations.startAudio).toHaveBeenCalledWith({ task: 'sfx', text: 'A clean interface blip', durationSeconds: 0.5, loop: true, promptInfluence: 0.3, outputFormat: 'mp3_44100_128' }, expect.objectContaining({ prompt: 'A clean interface blip', aspect: '1:1' }));
+    expect(useEditorUiStore.getState().panel).toBe('library');
+    expect(screen.queryByRole('button', { name: 'Pay for music' })).toBeNull();
+  });
+
+  it('omits the duration when automatic sound length is selected', () => {
+    useEditorUiStore.getState().setGeneratePrefill({ kind: 'sfx', prompt: 'Gentle rain' }); render(<GeneratePanel />);
+    fireEvent.click(screen.getByRole('button', { name: 'Generate' }));
+    expect(state.generations.startAudio.mock.calls[0][0]).not.toHaveProperty('durationSeconds');
+  });
+
+  it.each(['signed out', 'quota', 'too long'])('blocks invalid sound before calling the provider: %s', reason => {
+    state.auth.isAuthenticated = reason !== 'signed out'; state.quota.overQuota = reason === 'quota';
+    useEditorUiStore.getState().setGeneratePrefill({ kind: 'sfx', prompt: reason === 'too long' ? 'x'.repeat(1001) : 'Gentle rain' }); render(<GeneratePanel />);
+    expect(screen.getByRole('button', { name: 'Generate' })).toHaveAttribute('aria-disabled', 'true');
+    fireEvent.click(screen.getByRole('button', { name: 'Generate' })); expect(state.generations.startAudio).not.toHaveBeenCalled();
   });
 });

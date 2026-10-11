@@ -48,9 +48,10 @@ import { useGenerationStore } from '@/store/generationStore';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
 import { SelectChip, CounterChip, ToggleChip, type ChipOption } from '@/components/app/creator/studio/StudioChip';
+import { soundEffectRequest, SFX_MAX_PROMPT_CHARS } from '@/lib/editor/soundEffectDraft';
 import { PanelHeading } from './DesignPanel';
 
-type GenKind = 'image' | 'video' | 'voice' | 'music';
+type GenKind = 'image' | 'video' | 'voice' | 'music' | 'sfx';
 
 const KINDS: { id: GenKind; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'image', get label() { return _translateCopy("copy.1aa4cb0bcca7", { defaultValue: "Image" }); }, icon: ImageIcon },
@@ -58,6 +59,8 @@ const KINDS: { id: GenKind; label: string; icon: React.ComponentType<{ className
   { id: 'voice', get label() { return _translateCopy("copy.87bf2bc08589", { defaultValue: "Voice" }); }, icon: Mic },
   { id: 'music', get label() { return _translateCopy('creator.audioTaskMusicLabel', { defaultValue: 'Music' }); }, icon: Music2 },
 ];
+
+KINDS.push({ id: 'sfx', get label() { return _translateCopy('creator.audioTaskSfxLabel', { defaultValue: 'Sound effect' }); }, icon: Music2 });
 
 const MAX_VOICE_CHARS = 500;
 const MAX_MUSIC_PROMPT_CHARS = 2000;
@@ -88,6 +91,8 @@ export function GeneratePanel() {
   const [videoPaywallOpen, setVideoPaywallOpen] = useState(false);
   const [voiceBusy, setVoiceBusy] = useState(false);
   const [musicSeconds, setMusicSeconds] = useState(MUSIC_DEFAULT_SECONDS);
+  const [sfxSeconds, setSfxSeconds] = useState(0);
+  const [sfxLoop, setSfxLoop] = useState(false);
   const [instrumental, setInstrumental] = useState(true);
   const [musicDraft, setMusicDraft] = useState<{ prompt: string; lengthSeconds: number; instrumental: boolean } | null>(null);
 
@@ -138,6 +143,9 @@ export function GeneratePanel() {
     if (kind === 'voice' && prompt.length > MAX_VOICE_CHARS) {
       return t('editor.voiceoverLimit', { count: MAX_VOICE_CHARS, defaultValue: 'Voiceover is capped at {{count}} characters.' });
     }
+    if (kind === 'sfx' && prompt.trim().length > SFX_MAX_PROMPT_CHARS) {
+      return t('creator.validation.speechLimit', { length: prompt.trim().length.toLocaleString(), limit: SFX_MAX_PROMPT_CHARS.toLocaleString() });
+    }
     if (kind === 'music' && prompt.trim().length > MAX_MUSIC_PROMPT_CHARS) {
       return t('creator.validation.speechLimit', { length: prompt.trim().length.toLocaleString(), limit: MAX_MUSIC_PROMPT_CHARS.toLocaleString(), defaultValue: 'The prompt is limited to {{limit}} characters.' });
     }
@@ -179,8 +187,13 @@ export function GeneratePanel() {
     if (kind === 'image') setImagePaywallOpen(true);
     else if (kind === 'video') setVideoPaywallOpen(true);
     else if (kind === 'music') setMusicDraft({ prompt: prompt.trim(), lengthSeconds: musicSeconds, instrumental });
-    else void runVoice();
-  }, [canRun, blockingIssue, kind, runVoice, prompt, musicSeconds, instrumental]);
+    else if (kind === 'sfx') {
+      const request = soundEffectRequest({ text: prompt, durationSeconds: sfxSeconds, loop: sfxLoop });
+      startAudio(request, { prompt: request.text, resolvedPrompt: request.text, modelName: t(AUDIO_TASKS.sfx.labelKey), aspect: '1:1' });
+      setPanel('library');
+      toast.success(_copy('copy.241a018b66a8', { defaultValue: 'Generating. It lands in the Generations tab.' }));
+    } else void runVoice();
+  }, [canRun, blockingIssue, kind, runVoice, prompt, musicSeconds, instrumental, sfxSeconds, sfxLoop, startAudio, setPanel, t, _copy]);
 
   const runMusic = useCallback((txHash: string) => {
     if (!musicDraft) return;
@@ -263,7 +276,7 @@ export function GeneratePanel() {
       <div
         role="group"
         aria-label={_copy("copy.e98872cc5520", { defaultValue: "What to generate" })}
-        className="mb-3 inline-flex w-full items-center gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1"
+        className="mb-3 inline-flex w-full flex-wrap items-center gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1"
       >
         {KINDS.map((k) => {
           const Icon = k.icon;
@@ -276,6 +289,7 @@ export function GeneratePanel() {
               onClick={() => setKind(k.id)}
               className={cn(
                 'inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg px-2 py-1.5 text-[12px] font-semibold transition',
+                k.id === 'sfx' && 'basis-full',
                 active ? 'bg-white text-black' : 'text-white/60 hover:bg-white/10 hover:text-white',
               )}
             >
@@ -302,6 +316,8 @@ export function GeneratePanel() {
         placeholder={
           kind === 'voice'
             ? _copy("copy.24accbdc740c", { defaultValue: "Type what the voice should say" })
+            : kind === 'sfx'
+              ? t('creator.audioTaskSfxPlaceholder')
             : kind === 'music'
               ? t('creator.audioTaskMusicPlaceholder')
             : kind === 'video'
@@ -315,6 +331,13 @@ export function GeneratePanel() {
         <p className="mt-1.5 px-0.5 text-right text-[11px] tabular-nums text-white/40">
           {prompt.length} / {MAX_VOICE_CHARS}
         </p>
+      ) : kind === 'sfx' ? (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <SelectChip label={t('creator.length')} value={String(sfxSeconds)} display={sfxSeconds ? `${sfxSeconds}s` : t('creator.auto')}
+            options={[0, 0.5, 1, 2, 5, 10, 22, 30].map(value => ({ value: String(value), label: value ? `${value}s` : t('creator.auto') }))} onChange={value => setSfxSeconds(Number(value))} />
+          <ToggleChip label={t('creator.loop')} active={sfxLoop} onClick={() => setSfxLoop(value => !value)} />
+          <p className="w-full text-right text-[11px] tabular-nums text-white/40">{prompt.trim().length} / {SFX_MAX_PROMPT_CHARS}</p>
+        </div>
       ) : kind === 'music' ? (
         <div className="mt-2 flex flex-wrap gap-1.5">
           <CounterChip draftScope={`${draftProjectId}:editor-music`} label={t('creator.length')} displayUnit="s" value={musicSeconds} min={MUSIC_MIN_SECONDS} max={MUSIC_MAX_SECONDS} editable onChange={setMusicSeconds} />
