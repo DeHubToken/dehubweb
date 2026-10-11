@@ -42,7 +42,10 @@ export async function renderVideoDownload(request: VideoDownloadRequest, signal:
     return await exportProject({
       snapshot, media: [{ id: "download-source", name: request.title || "video", kind: "video", url, mimeType: blob.type || "video/mp4", size: blob.size, duration, createdAt: Date.now() }],
       format: "mp4", scale: 1, videoBitrate: 8_000_000, username: request.username, signal,
-      onProgress: (p, label) => onProgress?.(p, label),
+      onProgress: (p, label) => {
+        if (label === undefined) onProgress?.(p);
+        else onProgress?.(p, label);
+      },
     });
   } finally { video.pause(); video.removeAttribute("src"); video.load(); URL.revokeObjectURL(url); }
 }
