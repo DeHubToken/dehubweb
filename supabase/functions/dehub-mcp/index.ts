@@ -592,7 +592,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     title?: string; description: string; inputSchema: Shape;
     annotations?: { readOnlyHint?: boolean; destructiveHint?: boolean; idempotentHint?: boolean; openWorldHint?: boolean; title?: string };
   }, callback: (args: z.infer<z.ZodObject<Shape>>) => Promise<ToolResult>) => {
-    server.registerTool(name, config, callback);
+    server.registerTool(name, config, async (args) => callback(z.object(config.inputSchema).strict().parse(args)));
     registry?.set(name, {
       description: config.description,
       validate: (args) => z.object(config.inputSchema).strict().parse(args),
