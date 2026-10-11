@@ -592,7 +592,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     title?: string; description: string; inputSchema: Shape;
     annotations?: { readOnlyHint?: boolean; destructiveHint?: boolean; idempotentHint?: boolean; openWorldHint?: boolean; title?: string };
   }, callback: (args: z.infer<z.ZodObject<Shape>>) => Promise<ToolResult>) => {
-    server.registerTool(name, config, async (args) => callback(z.object(config.inputSchema).strict().parse(args)));
+    // Give the SDK a concrete raw-shape type; its conditional callback type
+    // cannot resolve our generic Shape. Validation still uses the exact schema.
+    server.registerTool<z.ZodRawShape, z.ZodRawShape>(name, config, async (args) => callback(z.object(config.inputSchema).strict().parse(args)));
     registry?.set(name, {
       description: config.description,
       validate: (args) => z.object(config.inputSchema).strict().parse(args),
