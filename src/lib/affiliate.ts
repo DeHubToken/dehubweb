@@ -1,5 +1,6 @@
+import { normalizeSubReferral } from './affiliate-subref';
 import { supabase } from "@/integrations/supabase/client";
-import { getAffiliateRef } from "@/lib/affiliateRef";
+import { getAffiliateRef, getAffiliateSubRef } from "@/lib/affiliateRef";
 import { withWalletHeader } from "@/lib/supabase-wallet-client";
 
 export const AFFILIATE_COMMISSION_PCT = 20;
@@ -44,14 +45,15 @@ export function parseLandingCtas(raw: unknown): AffiliateLandingCta[] {
 }
 
 /** Keep the referral code on the destination so attribution survives a cleared cookie. */
-export function withAffiliateRef(destination: string, code: string): string {
-  const hashAt = destination.indexOf("#");
-  const base = hashAt >= 0 ? destination.slice(0, hashAt) : destination;
-  const hash = hashAt >= 0 ? destination.slice(hashAt) : "";
-  if (/[?&]ref=/.test(base)) return destination;
-  return `${base}${base.includes("?") ? "&" : "?"}ref=${encodeURIComponent(code)}${hash}`;
+export function withAffiliateRef(destination: string, code: string, subId?: string | null): string {
+  const url = new URL(destination, 'https://dehub.io');
+  const existingCode = url.searchParams.get('ref');
+  if (existingCode && existingCode.toUpperCase() !== code.toUpperCase()) return destination;
+  url.searchParams.set('ref', code);
+  const sub = normalizeSubReferral(subId);
+  if (sub) url.searchParams.set('sub', sub);
+  return url.pathname + url.search + url.hash;
 }
-
 export const DEFAULT_AFFILIATE_LANDING: AffiliateLandingCustomization = {
   headline: "Join me on DeHub",
   message: "Create, share and earn on a platform built for creators and their communities.",
@@ -131,45 +133,15 @@ export async function getOrCreateAffiliateCode(
 export async function attributeReferralIfPending(referredAddress: string) {
   const code = getAffiliateRef();
   if (!code) return;
-  const addr = referredAddress.toLowerCase();
-
-  // @ts-ignore
-  const { data: codeRow } = await supabase
-    .from("affiliate_codes" as never)
-    .select("owner_address")
-    .eq("code", code)
-    .eq("active", true)
-    .maybeSingle() as unknown as { data: { owner_address: string } | null };
-  if (!codeRow) return;
-  const l1Owner = codeRow.owner_address.toLowerCase();
-  if (l1Owner === addr) return; // can't self-refer
-
-  // Look up L2: who referred the L1 owner (if anyone)?
-  // @ts-ignore
-  const { data: l2Row } = await supabase
-    .from("affiliate_referrals" as never)
-    .select("owner_address")
-    .ilike("referred_address", l1Owner)
-    .maybeSingle() as unknown as { data: { owner_address: string } | null };
-  const l2Owner = l2Row?.owner_address?.toLowerCase() ?? null;
-
-  await withWalletHeader(
-    // @ts-ignore
-    supabase
-      .from("affiliate_referrals" as never)
-      .insert({
-        code,
-        owner_address: l1Owner,
-        referred_address: addr,
-        l2_owner_address: l2Owner && l2Owner !== addr ? l2Owner : null,
-        source: typeof window !== "undefined" ? window.location.hostname : null,
-      } as never),
-    addr,
+  const { error } = await withWalletHeader(
+    supabase.rpc('attribute_affiliate_referral' as never, { p_code: code, p_sub_id: getAffiliateSubRef() } as never),
+    referredAddress.toLowerCase(),
   );
+  if (error) throw error;
 }
-
 /** A single account you referred — the "who", not just the count. */
 export type AffiliateReferralEntry = {
+  subId?: string | null;
   address: string;         // referred wallet address
   createdAt: string | null; // when they were attributed to you
   code: string | null;     // the invite code they came through
@@ -216,7 +188,7 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
   // (this used to be four serial round-trips and made the page feel slow).
   // The referral queries now select the actual rows with an exact count, so a
   // single round-trip yields both the "who" list and the counter total.
-  const [codeRes, refRes, l2RefRes, earnRes, viewRes, ctaRes] = await Promise.all([
+  const [codeRes, refRes, l2RefRes, earnRes, viewRes, ctaRes, subRes] = await Promise.all([
     getOrCreateAffiliateCode(addr, shareName),
     // @ts-ignore
     supabase
@@ -249,6 +221,9 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
       supabase.rpc("get_affiliate_cta_stats" as never),
       addr,
     ) as unknown as Promise<{ data: Array<{ destination: string; clicks: number; unique_visitors: number }> | null }>,
+    withWalletHeader(
+      supabase.rpc('get_affiliate_sub_referrals' as never), addr,
+    ) as unknown as Promise<{ data: Array<{ referred_address: string; sub_id: string }> | null; error?: unknown }>,
   ]);
   // Supabase reports a failed read as { error } instead of throwing, so an
   // outage used to come back as a real-looking result: no code and every
@@ -260,7 +235,8 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
   }
   const code = codeRes?.code ?? null;
 
-  const l1List = mapReferralRows(refRes.data);
+  const subByAddress = new Map((subRes.data ?? []).map(row => [row.referred_address.toLowerCase(), row.sub_id]));
+  const l1List = mapReferralRows(refRes.data).map(row => ({ ...row, subId: subByAddress.get(row.address) ?? null }));
   const l2List = mapReferralRows(l2RefRes.data);
 
   const rows = earnRes.data ?? [];
