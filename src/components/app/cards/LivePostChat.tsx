@@ -320,10 +320,16 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       toast.error(_copy("copy.048ff525a56b", { defaultValue: "Sign in to chat" }));
       return;
     }
+    // Empty the box the moment the line goes into the chat. Waiting for the
+    // server's echo left the sent words sitting in the box for as long as the
+    // round trip took, which reads as a send that did nothing.
+    const sent = newMessage;
+    setNewMessage('');
     try {
-      await send(newMessage.trim());
-      setNewMessage.complete(newMessage, '');
+      await send(sent.trim());
     } catch {
+      // Hand the words back, unless something new has been typed since.
+      setNewMessage(current => (current.trim() ? current : sent));
       toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
     }
   };
