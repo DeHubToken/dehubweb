@@ -29,7 +29,7 @@ const NAV_ICON_KEYS: Record<string, ThemeIconKey> = {
   Messages: 'messages', Arcade: 'arcade', Apps: 'stores', Communities: 'communities', Assistant: 'assistant',
   Settings: 'settings', Stages: 'stages', Bookmarks: 'bookmarks', Command: 'command',
   Editor: 'videos', Creator: 'paint',
-  Events: 'events', Leaderboard: 'trophy', 'Feature Requests': 'features', Staking: 'staking',
+  Feedback: 'messages', Events: 'events', Leaderboard: 'trophy', 'Feature Requests': 'features', Staking: 'staking',
   SuperPowers: 'superpowers', Governance: 'governance', DAO: 'dao', Bounties: 'bounties',
   Careers: 'careers', Stores: 'stores', Fractions: 'fractions', Usernames: 'usernames',
   Accounts: 'accounts', Advertising: 'ads', 'Live TV': 'tv', Prompt: 'wand',
