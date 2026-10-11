@@ -57,7 +57,16 @@ export const PLAN_TOOL = {
               type: "object",
               properties: {
                 tool: { type: "string", enum: tools },
-                arguments: { type: "object", description: "Exact MCP arguments. For bulk leave the target out: the runner supplies it." },
+                arguments: { type: "object", description: "Only arguments for the selected tool. Omit irrelevant fields. For bulk omit the target: the runner supplies it.",
+                  properties: {
+                    target_wallet: { type: "string" }, action: { type: "string", enum: ["follow", "unfollow"] },
+                    token_id: { type: "string" }, vote_type: { type: "string", enum: ["like", "dislike"] },
+                    content: { type: "string" }, title: { type: "string" }, category: { type: "string" },
+                    media_url: { type: "string" }, media_type: { type: "string", enum: ["text", "image", "video"] },
+                    reply_to_comment_id: { type: "string" }, bio: { type: "string" }, display_name: { type: "string" },
+                    avatar_url: { type: "string" }, banner_url: { type: "string" },
+                  }, additionalProperties: false,
+                },
                 audience: { type: "string", enum: ["single", "all_users", "post_authors", "posts"] },
                 from: { type: ["string", "null"], description: "Inclusive ISO UTC start of a bulk post time window." },
                 to: { type: ["string", "null"], description: "Exclusive ISO UTC end of a bulk post time window, no later than now." },

@@ -98,8 +98,11 @@ GRANT EXECUTE ON FUNCTION public.claim_agent_task() TO service_role;
 CREATE OR REPLACE FUNCTION public.tick_agent_tasks()
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,net AS $$
 BEGIN
-  IF EXISTS(SELECT 1 FROM public.ai_agent_tasks WHERE status IN ('queued','running') AND next_run_at<=now()
-            AND (lease_until IS NULL OR lease_until<now())) THEN
+  IF EXISTS(SELECT 1 FROM public.ai_agent_tasks t JOIN public.ai_agents a ON a.id=t.agent_id
+            WHERE t.status IN ('queued','running') AND t.next_run_at<=now()
+            AND (t.lease_until IS NULL OR t.lease_until<now())
+            AND a.is_active AND public.agent_owner_allowed(a.human_owner_wallet) AND a.human_owner_wallet=t.owner_wallet
+            AND NOT EXISTS(SELECT 1 FROM public.ai_agent_tasks other WHERE other.agent_id=t.agent_id AND other.lease_until>now())) THEN
     PERFORM net.http_post(url:=r.endpoint,
       headers:=jsonb_build_object('Content-Type','application/json','x-agent-runner-secret',r.secret),
       body:='{}'::jsonb,timeout_milliseconds:=120000)

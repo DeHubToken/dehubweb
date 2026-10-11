@@ -234,6 +234,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
   if (!task) return json({ error: "Task not found." }, 404);
   if (input.operation === "history") return json({ actions: checked(await db.from("ai_agent_task_actions").select("id,tool,target,status,result,created_at").eq("task_id", task.id).order("created_at", { ascending: false }).limit(100)) });
   if (!["pause", "resume", "skip"].includes(input.operation)) return json({ error: "Unknown operation." }, 400);
+  if (input.operation === 'pause' && !['queued', 'running'].includes(task.status)) return json({ error: "Only an active task can be paused." }, 409);
   if (input.operation !== 'pause' && (!['paused', 'failed'].includes(task.status) || (task.lease_until && Date.parse(task.lease_until) > Date.now()))) return json({ error: "Wait for the in-flight action to finish before continuing." }, 409);
   if (input.operation === 'skip' && !task.needs_review) return json({ error: "There is no unconfirmed action to skip." }, 409);
   if (input.operation !== "pause" && task.status === "completed") return json({ error: "This task is complete. Submit a new prompt to run it again." }, 409);
