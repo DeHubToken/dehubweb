@@ -295,7 +295,7 @@ html[data-theme='minimal'] [data-stage-tile]:not(#_):not(#_) {
 html [data-stage-composer]:not(#_):not(#_) {
   background: color-mix(in srgb, var(--stage-solid) 20%, transparent);
   backdrop-filter: blur(28px) saturate(1.5);
-  border-top: 1px solid var(--stage-border);
+  border: 0;
   box-shadow: 0 -4px 32px -12px rgb(0 0 0 / 0.08);
   /* It also carries the page pin, which lifts it over the bottom nav; that
      nav is hidden here, so it sits on the screen edge. */
@@ -304,7 +304,7 @@ html [data-stage-composer]:not(#_):not(#_) {
 }
 html [data-stage-composer] [data-comment-field]:not(#_):not(#_) {
   background: color-mix(in srgb, var(--stage-field) 40%, transparent);
-  border-color: var(--stage-border);
+  border: 0;
 }
 html [data-stage-composer] [data-comment-field] textarea:not(#_):not(#_) {
   color: var(--stage-ink);
