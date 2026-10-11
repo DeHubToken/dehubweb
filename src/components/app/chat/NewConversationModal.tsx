@@ -252,6 +252,7 @@ function FeePaymentStep({
       {/* Back button */}
       <button
         onClick={onBack}
+        data-swipe-back
         className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />{_copy("copy.22252a139c6a", { defaultValue: "Back to search" })}</button>

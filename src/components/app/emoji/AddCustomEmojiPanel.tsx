@@ -155,7 +155,7 @@ export function AddCustomEmojiPanel({ onDone }: { onDone: () => void }) {
   return (
     <div className="flex flex-col gap-2 min-w-0 px-3 py-2 text-xs text-zinc-300 break-words">
       <div className="flex items-center gap-2">
-        <button type="button" onClick={onDone} aria-label={t('emojiPicker.back')} className="p-1 rounded hover:bg-white/10">
+        <button type="button" data-swipe-back onClick={onDone} aria-label={t('emojiPicker.back')} className="p-1 rounded hover:bg-white/10">
           <ArrowLeft className="w-4 h-4" />
         </button>
         <div className="flex min-w-0 flex-1 rounded-md bg-white/5 p-0.5">

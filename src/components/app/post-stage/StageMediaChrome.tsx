@@ -49,6 +49,7 @@ export function StageMediaChrome({ onBack, onMenu, onBoost, children, placement 
         data-on-media
         data-stage-glass-square
         onClick={stop(onBack)}
+        data-swipe-back
         aria-label={t('postStage.back', 'Go back')}
         className="pointer-events-auto"
       >

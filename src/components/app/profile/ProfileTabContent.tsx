@@ -842,6 +842,7 @@ function PlaylistPostsPanel({
         <button
           type="button"
           onClick={onBack}
+          data-swipe-back
           className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10"
           aria-label={t('bookmarks.playlist.back')}
           title={t('bookmarks.playlist.back')}

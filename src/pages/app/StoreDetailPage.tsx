@@ -95,7 +95,7 @@ export default function StoreDetailPage() {
           <PageEmpty
             icon="stores"
             title={t('stores.storeNotFound')}
-            action={<KitButton variant="quiet" onClick={() => navigate(-1)}>{t('common.goBack')}</KitButton>}
+            action={<KitButton variant="quiet" data-swipe-back onClick={() => navigate(-1)}>{t('common.goBack')}</KitButton>}
           />
         </PageBody>
       </div>
