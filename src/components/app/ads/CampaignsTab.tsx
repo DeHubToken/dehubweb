@@ -225,7 +225,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 min-w-0">
-          <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" onClick={onBack} aria-label={t('ads.back')}>
+          <Button data-swipe-back variant="ghost" size="icon" className="shrink-0 text-muted-foreground" onClick={onBack} aria-label={t('ads.back')}>
             <ChevronLeft className="w-5 h-5" />
           </Button>
           <div className="min-w-0">

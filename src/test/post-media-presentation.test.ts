@@ -18,8 +18,11 @@ describe('post media presentation', () => {
 
   it('keeps breathing room inside link-preview metadata', () => {
     const preview = readSource('components/app/cards/FeedLinkPreviews.tsx');
+    const content = readSource('components/app/cards/LinkPreviewContent.tsx');
 
-    expect(preview.match(/px-3 pb-3 pt-3\.5 sm:pt-4/g)).toHaveLength(2);
+    expect(preview).toContain('<LinkPreviewContent preview={preview} />');
+    expect(preview).toContain('px-3 pb-3 pt-3.5 sm:pt-4');
+    expect(content).toContain('px-3 pb-3 pt-3.5 sm:pt-4');
   });
 
   it('separates post content from its metadata row', () => {

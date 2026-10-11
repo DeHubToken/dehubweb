@@ -5,11 +5,45 @@ import { BlogPost } from '@/types/blog';
 import { OptimizedImage } from '@/components/OptimizedImage';
 import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
 import { formatDate } from '@/utils/blogUtils';
+import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
+import { localizedPageUrl } from '@/lib/seo/public-locales';
 
 interface RelatedPostsProps {
   currentPost: BlogPost;
   allPosts: BlogPost[];
 }
+
+const RelatedPostCard: React.FC<{ post: BlogPost }> = ({ post }) => {
+  const translatedPage = usePublicPageLocale(`/guides/${post.slug}`);
+  const url = new URL(localizedPageUrl(`/guides/${post.slug}`, translatedPage.language));
+  return (
+    <Link
+      to={url.pathname + url.search}
+      className="group bg-plain-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-sky-blue/10"
+    >
+      <div className="h-20 overflow-hidden">
+        <OptimizedImage
+          src={mediaImage(post.bannerImage, { width: 480 })}
+          srcSet={mediaImageSrcSet(post.bannerImage, [360, 480, 736])}
+          sizes="(min-width: 768px) 300px, 100vw"
+          alt={translatedPage.data?.h1 || post.bannerImageAlt}
+          className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-transform duration-200"
+        />
+      </div>
+      <div className="p-4">
+        <h4 className="font-semibold text-royal-blue group-hover:text-middle-blue transition-colors line-clamp-2 mb-2">
+          {translatedPage.data?.h1 || post.title}
+        </h4>
+        <p className="text-sm text-royal-blue/70 mb-2 line-clamp-2">
+          {translatedPage.data?.description || post.excerpt}
+        </p>
+        <div className="text-xs text-royal-blue/50">
+          {formatDate(post.publishedAt, translatedPage.language)}
+        </div>
+      </div>
+    </Link>
+  );
+};
 
 export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPost, allPosts }) => {
   const { t: _copy } = _useCopy();
@@ -28,34 +62,7 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPost, allPost
     <section className="mt-12 pt-8 border-t border-sky-blue/20">
       <h3 className="text-2xl font-bold text-royal-blue mb-6 font-exo">{_copy("copy.bddb629fc59a", { defaultValue: "Related Posts" })}</h3>
       <div className="grid gap-6 md:grid-cols-3">
-        {relatedPosts.map((post) => (
-          <Link
-            key={post.id}
-            to={`/guides/${post.slug}`}
-            className="group bg-plain-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-sky-blue/10"
-          >
-            <div className="h-20 overflow-hidden">
-              <OptimizedImage
-                src={mediaImage(post.bannerImage, { width: 480 })}
-                srcSet={mediaImageSrcSet(post.bannerImage, [360, 480, 736])}
-                sizes="(min-width: 768px) 300px, 100vw"
-                alt={post.bannerImageAlt}
-                className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-transform duration-200"
-              />
-            </div>
-            <div className="p-4">
-              <h4 className="font-semibold text-royal-blue group-hover:text-middle-blue transition-colors line-clamp-2 mb-2">
-                {post.title}
-              </h4>
-              <p className="text-sm text-royal-blue/70 mb-2 line-clamp-2">
-                {post.excerpt}
-              </p>
-              <div className="text-xs text-royal-blue/50">
-                {formatDate(post.publishedAt)}
-              </div>
-            </div>
-          </Link>
-        ))}
+        {relatedPosts.map((post) => <RelatedPostCard key={post.id} post={post} />)}
       </div>
     </section>
   );

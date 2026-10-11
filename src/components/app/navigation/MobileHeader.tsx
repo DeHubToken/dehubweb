@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { ElectricLogo } from './ElectricLogo';
+import { FeedRefreshLogo } from './FeedRefreshLogo';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -29,11 +30,16 @@ import dehubMark from '@/assets/dehub-logo-compact.png';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { FeedIslandCapsule } from './FeedIslandCapsule';
 
-const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
+const HeaderLogo = memo(function HeaderLogo({ onClick, onPointerDown, isAuthenticated }: {
+  onClick: (e: React.MouseEvent) => void;
+  onPointerDown: () => void;
+  isAuthenticated: boolean;
+}) {
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} className="block cursor-pointer" aria-label={_copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" })}>
+    <button onClick={onClick} onPointerDown={onPointerDown} className="block cursor-pointer translate-y-[2.5px] scale-[1.15]" aria-label={isAuthenticated ? _copy("copy.8ee0cba52fcd", { defaultValue: "dehub home" }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}>
+      <FeedRefreshLogo>
       <ElectricLogo>{theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
@@ -50,6 +56,7 @@ const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.Mo
           height={28}
         />
       )}</ElectricLogo>
+      </FeedRefreshLogo>
     </button>
   );
 });
@@ -89,12 +96,16 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
 
   const handleLogoClick = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
     if (isHomePath(pathnameRef.current)) {
       scrollDocumentToSmooth();
     } else {
       navigate('/app');
     }
-  }, [navigate]);
+  }, [isAuthenticated, openLoginModal, navigate]);
 
   const isNotificationsActive = location.pathname === '/app/notifications' || location.pathname === '/notifications';
   // With or without the /app prefix — both spellings reach the same page.
@@ -115,22 +126,17 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     document.documentElement.toggleAttribute('data-no-top-bar', !showBar || islandBar);
   }, [showBar, islandBar]);
 
-  const handleMenuClick = useCallback(() => {
-    if (!isAuthenticated) {
-      openLoginModal();
-    }
-  }, [isAuthenticated, openLoginModal]);
-
-  // This button IS the login entry when signed out (rendered only then), so
-  // touch-start warms the login sheet — first-open mount dance and body chunk
-  // land before the tap completes, and the drawer swings up on the same frame.
+  // The centre logo opens the login drawer for guests. Warm it on touch-start
+  // so the sheet is ready before the tap completes.
   const warmSheetForLogin = useCallback(() => {
     if (!isAuthenticated) warmLoginSheet();
   }, [isAuthenticated]);
 
   return (
     <>
-    <header data-mobile-header data-clear-top-bar className={`${showBar && !islandBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header data-clear-top-bar={theme === 'system' ? undefined : ''} className={`${showBar && !islandBar ? '' : 'hidden '}lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}
+      style={theme === 'system' && !isOpen && !anyOverlayOpen ? { transform: 'translateY(var(--system-feed-header-offset, 0px))' } : undefined}
+    >
       {/* Profile — left slot.
           Direct post-page URL access: back button replaces the menu/settings toggle.
           When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
@@ -183,23 +189,14 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
               </div>
             </DrawerContent>
           </Drawer>
-        ) : (
-          <button
-            onClick={handleMenuClick}
-            onPointerDown={warmSheetForLogin}
-            className="p-2 rounded-lg transition-colors -ml-2"
-            aria-label={_copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
-          >
-            <Menu className="w-[31px] h-[31px] text-white" />
-          </button>
-        )}
+        ) : null}
       </div>
 
       {/* dehub mark — centred on the bar itself, not between the side slots, so
           it stays put whether or not the notification bell is rendered (it is
           signed-in only) and whichever left control is showing. */}
       <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
-        <HeaderLogo onClick={handleLogoClick} />
+        <HeaderLogo onClick={handleLogoClick} onPointerDown={warmSheetForLogin} isAuthenticated={isAuthenticated} />
       </div>
 
       {/* Notifications — right slot, only visible when logged in.
@@ -223,6 +220,8 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     </header>
     {islandBar && showBar && (
       <FeedIslandCapsule
+        isAuthenticated={isAuthenticated}
+        onLogoPointerDown={warmSheetForLogin}
         visible={navVisible && !isOpen && !anyOverlayOpen && !isPostPage}
         avatar={isAuthenticated && user ? (
           <Avatar className="w-[28px] h-[28px] rounded-lg">

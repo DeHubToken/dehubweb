@@ -5738,11 +5738,9 @@ async function handleRequest(request, env, ctx) {
     return resp;
   };
 
-  // The broad /gods-eye-game/* static rule keeps the generated Cesium tree
-  // immutable, but Cloudflare combines that rule with the exact index rule
-  // even when the latter appears first. Pin the unhashed entry response here:
-  // run_worker_first means this code is the final authority over its headers.
-  if (pathname === '/gods-eye-game/index.html') {
+  // Cloudflare canonicalizes index.html to the directory URL. Both entry
+  // responses must revalidate while fingerprinted assets remain immutable.
+  if (pathname === '/gods-eye-game/index.html' || pathname === '/gods-eye-game/') {
     const resp = await guardNext();
     const out = new Response(resp.body, resp);
     out.headers.set('Access-Control-Allow-Origin', '*');

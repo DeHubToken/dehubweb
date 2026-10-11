@@ -2814,8 +2814,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           className={cn(
             stage
               // Docked to the bottom of the screen for the whole page, over a
-              // soft blurred fade (post-stage.css) so comments never read
-              // through it. The bottom nav is hidden on this page.
+              // translucent blur (post-stage.css). The bottom nav is hidden here.
               ? "fixed inset-x-0 bottom-0 z-[45] px-3 pt-2 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
               : page
               // The app's reply bar: full width, pinned to the bottom of the
@@ -2825,7 +2824,6 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             !page && (isMobile ? "pt-2 pb-1" : "pt-3")
           )}
         >
-          {stage && <div data-stage-composer-fade aria-hidden="true" />}
           {/* Common Ground: say up front that the first reply goes through the
               steps, so the sheet is not a surprise when Post is tapped. */}
           {commonGround && !isOwnThread && (

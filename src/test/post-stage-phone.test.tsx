@@ -176,7 +176,7 @@ describe('the stage page shell', () => {
       let tint = false;
       rule.walkDecls((d) => {
         if (d.prop === 'backdrop-filter' && /blur\(28px\)/.test(d.value)) blur = true;
-        if (d.prop === 'background' && /color-mix\(.*80%, transparent\)/.test(d.value)) tint = true;
+        if (d.prop === 'background' && /color-mix\(.*20%, transparent\)/.test(d.value)) tint = true;
       });
       if (blur && tint) composerGlass = true;
     });
@@ -192,5 +192,27 @@ describe('the stage page shell', () => {
     expect(src).toContain('? "fixed inset-x-0 bottom-0');
     // Portalled, so a theme's filtered page frame cannot re-anchor `fixed`.
     expect(src).toContain('createPortal(el, document.body)');
+    expect(src).not.toContain('<div data-stage-composer-fade');
+  });
+
+  it('keeps image post options beside Follow and Back in the pinned strip', () => {
+    const image = readFileSync('src/components/app/cards/ImageCard.tsx', 'utf8');
+    expect(image).not.toContain('<StageMediaChrome');
+    expect(image).toContain('registerOptions(openPostOptions)');
+    expect(image).toContain("stage ? 'hidden'");
+    const comments = readFileSync('src/components/app/cards/CommentsSection.tsx', 'utf8');
+    const header = comments.slice(comments.indexOf('<div data-stage-comments-head'), comments.indexOf('data-comment-tabs-pin'));
+    expect(header).not.toContain('data-stage-options');
+    const creator = readFileSync('src/components/app/post-stage/StageCreatorRow.tsx', 'utf8');
+    expect(creator.indexOf('data-stage-options')).toBeGreaterThan(creator.indexOf("data-stage-follow="));
+    expect(creator).toContain('usePostStage()?.openOptions');
+    const css = postcss.parse(readFileSync('src/styles/post-stage.css', 'utf8'));
+    for (const marker of ['[data-stage-composer]:', '[data-comment-field]:']) {
+      const rules: string[] = [];
+      css.walkRules(rule => {
+        if (rule.selector.includes(marker)) rule.walkDecls('border', declaration => { rules.push(declaration.value); });
+      });
+      expect(rules).toContain('0');
+    }
   });
 });

@@ -39,6 +39,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
 import { StreamShopPinnedCard } from '../live/StreamShop';
 import { ImmersiveLiveChrome } from '../live/ImmersiveLiveChrome';
+import { LiveClearedLayer } from '../live/LiveClearedLayer';
 import { LiveViewerActionsProvider } from '../live/live-viewer-actions';
 import { ShopBoardLazy } from '../live/ShopBoardLazy';
 import { PostAIChatLazy } from './PostAIChatLazy';
@@ -261,10 +262,61 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   useEffect(() => {
     if (!playbackAllowed && (!isVideoInPictureInPicture(videoRef.current) || visualActivity.isCallBusy())) videoRef.current?.pause();
   }, [playbackAllowed]);
-  // Full-bleed only. The chevron drops the chrome and leaves the picture;
-  // it means nothing in the card, where the chrome IS the card.
+  // Full-bleed only. A live can't be paused, so the picture itself is the
+  // clear button: a tap on it, or a swipe down over the lower half as the
+  // shorts viewer does, clears the chrome. Only a small rotate button stays,
+  // to flip between portrait and landscape. A tap or a swipe up brings it all
+  // back, in portrait.
   const [chromeHidden, setChromeHidden] = useState(false);
-  const toggleChrome = useCallback(() => setChromeHidden((v) => !v), []);
+  // The click that follows the touch which cleared the chrome would land on
+  // the restore layer and bring it straight back.
+  const chromeToggledAt = useRef(0);
+  const setHidden = useCallback((hidden: boolean) => {
+    if (Date.now() - chromeToggledAt.current < 400) return;
+    chromeToggledAt.current = Date.now();
+    setChromeHidden(hidden);
+  }, []);
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+  const onSwipeStart = useCallback((e: React.TouchEvent) => {
+    if (e.touches.length !== 1) { swipeStart.current = null; return; }
+    swipeStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, []);
+  const onSwipeEnd = useCallback((e: React.TouchEvent, direction: 'down' | 'up') => {
+    const start = swipeStart.current;
+    swipeStart.current = null;
+    const touch = e.changedTouches[0];
+    if (!start || !touch) return;
+    const dy = touch.clientY - start.y;
+    const dx = Math.abs(touch.clientX - start.x);
+    if (direction === 'down' && dy > 40 && dy > dx) setHidden(true);
+    if (direction === 'up' && -dy > 40 && -dy > dx) setHidden(false);
+  }, [setHidden]);
+  // Landscape: the real screen lock where the browser has one (Android
+  // Chrome, in fullscreen), else the picture is turned a quarter in CSS
+  // (iPhone Safari has no orientation lock).
+  const [rotation, setRotation] = useState<'none' | 'native' | 'css'>('none');
+  const unrotate = useCallback(() => {
+    setRotation((current) => {
+      if (current === 'native') {
+        try { (screen.orientation as ScreenOrientation & { unlock?: () => void }).unlock?.(); } catch { /* not locked */ }
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      }
+      return 'none';
+    });
+  }, []);
+  const toggleRotation = useCallback(async () => {
+    if (rotation !== 'none') { unrotate(); return; }
+    try {
+      if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+      await (screen.orientation as ScreenOrientation & { lock: (o: string) => Promise<void> }).lock('landscape');
+      setRotation('native');
+    } catch {
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      setRotation('css');
+    }
+  }, [rotation, unrotate]);
+  useEffect(() => { if (!chromeHidden) unrotate(); }, [chromeHidden, unrotate]);
+  useEffect(() => () => unrotate(), [unrotate]);
   /**
    * The replay timeline, for the scrub line the chrome draws.
    *
@@ -1027,7 +1079,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const optionsMenu = (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl bg-black/20 text-white backdrop-blur-sm" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className={immersive ? "flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-black/30 text-white backdrop-blur-md" : "w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"}>
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
@@ -1169,6 +1221,14 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 'absolute inset-0'
               : 'relative aspect-video rounded-lg'
         )}
+        style={
+          immersive && rotation === 'css'
+            ? {
+                position: 'fixed', top: '50%', left: '50%', width: '100dvh', height: '100vw', zIndex: 60,
+                transform: 'translate(-50%, -50%) rotate(90deg)',
+              }
+            : undefined
+        }
       >
 
         {/* The paywall. It wraps the player rather than covering it, so a
@@ -1410,6 +1470,30 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         {/* Full-bleed chrome. Inside the media container so it travels with
             the picture, and after the overlays so nothing is drawn on top
             of the close button. */}
+        {/* Clear the chrome: a tap anywhere on the open picture, or a swipe
+            down over its lower half. Under the chrome, so the chat and
+            buttons keep their own touches. Once cleared, the whole frame
+            takes a tap or a swipe up to bring it all back, and only the
+            rotate button is drawn. */}
+        {immersive && !chromeHidden && (
+          <div
+            aria-hidden
+            data-no-navigate
+            data-live-swipe-zone
+            className="absolute inset-0 z-[15] touch-pan-x"
+            onTouchStart={onSwipeStart}
+            onTouchEnd={(e) => onSwipeEnd(e, 'down')}
+            onClick={(e) => { e.stopPropagation(); setHidden(true); }}
+          />
+        )}
+        {immersive && chromeHidden && (
+          <LiveClearedLayer
+            onRestore={() => setHidden(false)}
+            onRotate={() => void toggleRotation()}
+            onTouchStart={onSwipeStart}
+            onTouchEnd={(e) => onSwipeEnd(e, 'up')}
+          />
+        )}
         {immersive && (
           <ImmersiveLiveChrome
             streamerName={stream.streamer}
@@ -1430,7 +1514,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             progress={streamEnded && stream.replayUrl ? (replayProgress ?? 0) : undefined}
             onSeek={streamEnded && stream.replayUrl ? seekReplay : undefined}
             hidden={chromeHidden}
-            onToggleHidden={toggleChrome}
+            streamId={stream.streamId}
           />
         )}
       </div>

@@ -258,6 +258,8 @@
     "language": "ቋንቋ",
     "languageDesc": "የምትመርጠውን ቋንቋ ምረጥ",
     "light": "ብርሃን",
+    "minimal": "ቀላል",
+    "minimalLight": "ቀላል ብርሃን",
     "dark": "ጨለማ",
     "system": "ስርዓት",
     "immersive": "Immersive",

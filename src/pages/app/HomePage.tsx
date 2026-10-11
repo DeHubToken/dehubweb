@@ -37,6 +37,7 @@ import { setTabSwitchTime } from '@/lib/gesture-state';
 import { getLiteMode } from '@/hooks/use-connection-quality';
 import { clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { useSystemFeedHeaderMotion } from '@/hooks/use-system-feed-header-motion';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
 import { SEOHead } from '@/components/SEOHead';
@@ -459,7 +460,7 @@ export default function HomePage() {
     setIsRefreshing(true);
 
     // Invalidate feed queries so cards re-render with fresh data (or the
-    // same data re-mounted) — this gives users clear visual feedback even
+    // same cached data) — this gives users clear visual feedback even
     // when nothing new is available.
     void queryClient.invalidateQueries({ queryKey: ['dehub-live'] });
     void queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
@@ -478,7 +479,7 @@ export default function HomePage() {
     document.body.scrollTo({ top: 0, behavior: 'smooth' });
     scrollDocumentToSmooth();
     
-    // Simulate refresh delay then update
+    // Update feed refresh inputs without remounting cards during the return.
     setTimeout(() => {
       setRefreshKey(prev => prev + 1);
       setTimeout(() => {
@@ -495,7 +496,7 @@ export default function HomePage() {
 
   // Clip the feed at the visible nav pill's top edge under the glass themes.
   // Two variants match: this page's pill and the collapsed GlobalFeedNav's.
-  // Not on system phones: the pill only drops in on demand under the capsule,
+  // Not on Immersive phones: the pill only drops in on demand under the capsule,
   // and posts run under it to the top of the screen.
   useFeedSwallowClip(feedContainerRef, '[data-feed-nav]', [], { off: islandTopBar && isMobile });
 
@@ -503,17 +504,27 @@ export default function HomePage() {
   // PULL-TO-REFRESH HOOK
   // --------------------------------------------------------------------------
 
-  const { pullDistance, isPulling, isHoldingAtThreshold, holdProgress, handlers: pullHandlers } = usePullToRefresh({
+  const pullMotionRef = useRef<HTMLDivElement>(null);
+  const pullStateRef = useRef({ distance: 0, pulling: false });
+  const refreshingRef = useRef(isRefreshing);
+  refreshingRef.current = isRefreshing;
+  const publishPullMotion = useCallback((distance: number, pulling: boolean) => {
+    pullStateRef.current = { distance, pulling };
+    setFeedRefresh({ refreshing: refreshingRef.current, progress: Math.min(distance / PULL_THRESHOLD, 1), distance, pulling });
+  }, []);
+  const { handlers: pullHandlers } = usePullToRefresh({
     enabled: isMobile,
     pullThreshold: PULL_THRESHOLD,
     onRefresh: triggerRefresh,
     isRefreshing,
     containerRef: feedContainerRef,
+    motionRef: pullMotionRef,
+    onMotion: publishPullMotion,
   });
 
-  useEffect(() => {
-    setFeedRefresh({ refreshing: isRefreshing, progress: isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1), distance: pullDistance, pulling: isPulling });
-  }, [isRefreshing, isHoldingAtThreshold, holdProgress, pullDistance, isPulling]);
+  useLayoutEffect(() => {
+    publishPullMotion(pullStateRef.current.distance, pullStateRef.current.pulling);
+  }, [isRefreshing, publishPullMotion]);
   useEffect(() => () => setFeedRefresh({ refreshing: false, progress: 0 }), []);
 
   // --------------------------------------------------------------------------
@@ -528,6 +539,11 @@ export default function HomePage() {
   // Island mode keeps the tab pill out of sight; the capsule's dropdown picks
   // the feed. The pill only comes down to hold an open filter panel.
   const islandFiltersOpen = ({ home: showHomeFilters, live: showLiveFilters, shorts: showShortsFilters, images: showImagesFilters, videos: showVideosFilters, music: showMusicFilters } as Record<string, boolean>)[activeTab] ?? false;
+
+  const homeNavRef = useRef<HTMLDivElement>(null);
+  const hideHomeNav = isMobile && (anyOverlayOpen || ((islandTopBar ? !islandFiltersOpen : !navVisible) && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')));
+  const linkedSystemHeader = theme === 'system' && isMobile;
+  useSystemFeedHeaderMotion(homeNavRef, linkedSystemHeader && pageActive, hideHomeNav);
 
   const handleTabClick = useCallback((tabValue: string) => {
     // Island mode: picking a feed closes the capsule's dropdown.
@@ -960,11 +976,12 @@ export default function HomePage() {
       )}
       {/* Tab Navigation */}
       <div
+        ref={homeNavRef}
         data-feed-nav-outer
         data-home-tabs
         className={cn("sticky top-11 lg:top-0 bg-black px-2 sm:px-3 pt-1 pb-3 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", anyOverlayOpen ? "z-[40]" : "z-[110]", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
         style={{
-          transform: (isMobile && (anyOverlayOpen || ((islandTopBar ? !islandFiltersOpen : !navVisible) && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)',
+          transform: linkedSystemHeader ? 'translateY(var(--system-feed-header-offset, 0px))' : hideHomeNav ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)',
           willChange: 'transform',
           // Island mode: the pill drops in under the capsule rather than at the very top.
           // Fixed, not sticky, so it takes no room in the page: posts run to
@@ -974,6 +991,7 @@ export default function HomePage() {
       >
         <FeedFilterAnchor behindNav={theme === 'system'}>
         <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl" style={theme === 'system' ? { position: 'relative', zIndex: 10 } : undefined}>
+          <span data-nav-glass-backdrop aria-hidden="true" />
 
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} variant="nav" />
@@ -1002,6 +1020,7 @@ export default function HomePage() {
                   "leaves" the feed. */}
               <button
                 data-post-nav-back={isPostOverlayActive || undefined}
+                data-swipe-back={showNavBack ? '' : undefined}
                 onClick={showNavBack
                   ? handleNavBack
                   : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
@@ -1078,7 +1097,7 @@ export default function HomePage() {
             </div>
         </div>
         {theme !== 'system' && <div ref={homeFiltersRef} className="contents" />}
-        {!islandTopBar && <FeedPillGlow />}
+        {!islandTopBar && <FeedPillGlow refreshing={isRefreshing} />}
         </div>
         {theme === 'system' && <div ref={homeFiltersRef} className="absolute inset-x-0 top-0 z-0 pointer-events-none" />}
         </FeedFilterAnchor>
@@ -1112,58 +1131,20 @@ export default function HomePage() {
         onMouseUp={pullHandlers.onMouseUp}
         onMouseLeave={pullHandlers.onMouseLeave}
         data-feed-pull-content
-        style={islandTopBar && isMobile ? { transform: `translate3d(0, ${pullDistance}px, 0)`, willChange: pullDistance > 0 ? 'transform' : undefined } : undefined}
       >
-        {/* Pull-to-refresh indicator with hold progress */}
-        {pullDistance > 0 && !(islandTopBar && isMobile) && (
-          <div 
-            className="flex items-center justify-center transition-all duration-150"
-            style={{ height: pullDistance, minHeight: pullDistance > 0 ? 20 : 0 }}
-          >
-            <div className="relative">
-              {/* Background circle (track) */}
-              <svg className="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="14"
-                  fill="none"
-                  stroke="rgba(255,255,255,0.2)"
-                  strokeWidth="2"
-                />
-                {/* Progress arc - shows hold progress when at threshold */}
-                <circle
-                  cx="16"
-                  cy="16"
-                  r="14"
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeDasharray={2 * Math.PI * 14}
-                  strokeDashoffset={2 * Math.PI * 14 * (1 - (isHoldingAtThreshold ? holdProgress : Math.min(pullDistance / PULL_THRESHOLD, 1)))}
-                  className="transition-all duration-75"
-                />
-              </svg>
-              {/* Center dot that appears when holding */}
-              {isHoldingAtThreshold && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div 
-                    className="w-3 h-3 bg-white rounded-full animate-pulse"
-                    style={{ opacity: holdProgress }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {/* Keep the swallow clip stationary while the feed moves beneath it. */}
+        <div
+          ref={pullMotionRef}
+          data-feed-pull-motion
+          style={{ position: 'relative' }}
+        >
         {/* Feeds mount lazily on first tab visit, then stay alive (CSS display toggle).
             Memo wrappers prevent re-renders during drag — feeds only update when
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'home'}>
-            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
+            <MemoHomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} chipsPortalRef={isCollapsed && globalFeedNav?.chipsPortalElement ? globalFeedNav.chipsPortalElement : homeChipsRef} />
             </CachedPageActiveContext.Provider>
           </div>
         )}
@@ -1209,7 +1190,7 @@ export default function HomePage() {
           <div className={isCollapsed ? 'pt-2' : undefined} style={{ display: deferredTab === 'live' ? 'block' : 'none' }}>
             <CachedPageActiveContext.Provider value={pageActive && deferredTab === 'live'}>
             <Suspense fallback={<FeedBodySkeleton />}>
-              <MemoLiveFeed key={refreshKey} isRefreshing={isRefreshing} showFilters={showLiveFilters} />
+              <MemoLiveFeed isRefreshing={isRefreshing} showFilters={showLiveFilters} />
             </Suspense>
             </CachedPageActiveContext.Provider>
           </div>
@@ -1242,6 +1223,7 @@ export default function HomePage() {
           </div>
         )}
         {/* end feed tabs */}
+        </div>
       </div>
 
     </div>

@@ -258,6 +258,8 @@
     "language": "ቋንቋ",
     "languageDesc": "ዝድለ ቋንቋኻ ምረጽ",
     "light": "ብሩህ",
+    "minimal": "ቀሊል",
+    "minimalLight": "ቀሊል ብሩህ",
     "dark": "ጸልማት",
     "system": "ስርዓት",
     "immersive": "Immersive",

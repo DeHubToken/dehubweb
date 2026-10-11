@@ -258,6 +258,8 @@
     "language": "Language",
     "languageDesc": "Chọn ngôn ngữ ưa thích của bạn",
     "light": "Light",
+    "minimal": "Tối giản",
+    "minimalLight": "Tối giản sáng",
     "dark": "Dark",
     "system": "System",
     "immersive": "Immersive",

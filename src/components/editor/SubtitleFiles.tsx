@@ -7,17 +7,22 @@ import { Button } from "@/components/ui/button";
 import { useEditorStore } from "@/store/editorStore";
 import { loadGoogleFont } from "@/lib/editor/googleFonts";
 import { exportSubtitles, parseSubtitles, subtitleClips, subtitleLayers, SUBTITLE_FORMATS, type SubtitleFormat } from "@/lib/editor/subtitles";
+import { CaptionTranslation } from "./CaptionTranslation";
+import { CaptionTextEditor } from "./CaptionTextEditor";
 
 export function SubtitleFiles() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
+  const [translating, setTranslating] = useState(false);
+  const working = busy || translating;
   const clips = useEditorStore(s => s.clips);
   const tracks = useEditorStore(s => s.tracks);
+  const projectId = useEditorStore(s => s.projectId);
   const captions = subtitleClips(clips, tracks);
   const importFile = async (file: File) => {
-    if (busy) return;
+    if (working) return;
     const projectId = useEditorStore.getState().projectId;
     setBusy(true);
     try {
@@ -51,12 +56,14 @@ export function SubtitleFiles() {
       const file = event.target.files?.[0]; event.target.value = "";
       if (file) void importFile(file);
     }} />
-    <Button size="sm" variant="ghost" disabled={busy} onClick={() => input.current?.click()} className="h-7 w-full border border-white/10 text-[11px]">
+    <Button size="sm" variant="ghost" disabled={working} onClick={() => input.current?.click()} className="h-7 w-full border border-white/10 text-[11px]">
       {t(busy ? "common.loading" : "editor.design.importMedia")}{_copy("copy.450683b66da4", { defaultValue: " SRT / VTT" })}</Button>
     <div className="grid grid-cols-2 gap-1">
-      {SUBTITLE_FORMATS.map(format => <Button key={format} size="sm" variant="ghost" disabled={!captions.length || busy} onClick={() => download(format)} className="h-7 border border-white/10 text-[11px]">
+      {SUBTITLE_FORMATS.map(format => <Button key={format} size="sm" variant="ghost" disabled={!captions.length || working} onClick={() => download(format)} className="h-7 border border-white/10 text-[11px]">
         {t("common.save")} {format.toUpperCase()}
       </Button>)}
     </div>
+    <CaptionTranslation disabled={busy} onBusyChange={setTranslating} />
+    <CaptionTextEditor key={projectId} disabled={working} />
   </section>;
 }

@@ -97,7 +97,6 @@ import {
 } from '@/components/ui/drawer';
 import type { ImagePost } from '@/types/feed.types';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
-import { StageMediaChrome } from '@/components/app/post-stage/StageMediaChrome';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
@@ -679,6 +678,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
+  const registerOptions = stage?.registerOptions;
+  const openPostOptions = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowOptionsDrawer(true);
+  }, [walletAddress, openLoginModal]);
+  useEffect(() => {
+    if (!registerOptions) return;
+    registerOptions(openPostOptions);
+    return () => registerOptions(null);
+  }, [registerOptions, openPostOptions]);
   // Deep Current is the one power spent on somebody ELSE's post, so it is
   // the one row that belongs in this half of the menu. `status.powers` is
   // the authority for whether this account has it — the badge the client
@@ -898,8 +907,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         badgeBalance={post.creatorBadgeBalance}
       />
       )}
-      {/* On the phone post page these live on the picture (StageMediaChrome);
-          the sheet below stays mounted for them. */}
+      {/* The phone menu sits beside Recent; its drawer remains owned by this card. */}
       <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
         {isOwnPost && (
           <button
@@ -1056,13 +1064,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
       {/* Image Carousel - wrapped to prevent tab switching on swipe */}
       <div data-image-media className="relative">
-        {stage && (
-          <StageMediaChrome
-            onBack={stage.onBack}
-            onMenu={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
-            onBoost={isOwnPost && postTokenId ? () => setShowBoostModal(true) : undefined}
-          />
-        )}
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has (PPV, holdings), rather than
             replacing it. */}

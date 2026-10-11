@@ -257,6 +257,8 @@
     "language": "भाषा",
     "languageDesc": "स्वाभीष्टभाषां चिनुतु",
     "light": "प्रकाशः",
+    "minimal": "सरलम्",
+    "minimalLight": "सरलम् प्रकाशः",
     "dark": "अन्धकारः",
     "system": "तन्त्रम्",
     "immersive": "Immersive",

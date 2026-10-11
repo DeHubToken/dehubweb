@@ -14,6 +14,38 @@ export interface LinkPreviewData {
 
 const previewCache = new Map<string, LinkPreviewData>();
 
+export function getLinkPreviewFavicon(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    if (!/^https?:$/.test(parsed.protocol)) return null;
+    // A missing icon must fail to load, not decode Google's default globe.
+    const domain = `${parsed.protocol}//${parsed.hostname}`;
+    return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(domain)}&size=64&drop_404_icon=true`;
+  } catch {
+    return null;
+  }
+}
+
+function compactPreview(url: string): LinkPreviewData {
+  let domain = url;
+  try { domain = new URL(url).hostname.replace(/^www\./, ''); } catch { /* keep the supplied link */ }
+  return { url, title: domain, description: '', image: null, siteName: domain };
+}
+
+export function getLinkPreviewImage(url: string, image: unknown): string | null {
+  const decodedImage = typeof image === 'string' ? image.replace(/&amp;/gi, '&') : null;
+  if (!decodedImage) return null;
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    const cover = new URL(decodedImage);
+    // Only C Drive's known near-empty cover needs the source-card fallback.
+    if ((host === 'suno.com' || host === 'www.suno.com') &&
+      cover.hostname === 'cdn2.suno.ai' &&
+      cover.pathname === '/image_large_8b26dd51-6297-4403-9f25-e7e2e7d45c64.jpeg') return null;
+  } catch { /* retain other preview images */ }
+  return decodedImage;
+}
+
 export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | null> {
   const prediction = parsePredictionLink(url);
   if (prediction) return fetchPredictionPreview(prediction);
@@ -29,19 +61,19 @@ export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | n
       body: { url },
     });
 
-    if (error) {
+    if (error || !data || data.error) {
       console.error('Error fetching link preview:', error);
-      return null;
+      return compactPreview(url);
     }
 
     const preview: LinkPreviewData = {
-      url: data.url,
-      title: data.title,
-      description: data.description,
+      url,
+      title: data.title || compactPreview(url).title,
+      description: data.description || '',
       // The preview endpoint can return an HTML-escaped OG URL. Its query
       // parameters must be decoded before the image renderer receives them.
-      image: typeof data.image === 'string' ? data.image.replace(/&amp;/gi, '&') : null,
-      siteName: data.siteName,
+      image: getLinkPreviewImage(url, data.image),
+      siteName: data.siteName || compactPreview(url).siteName,
     };
 
     // Cache the result
@@ -50,7 +82,7 @@ export async function fetchLinkPreview(url: string): Promise<LinkPreviewData | n
     return preview;
   } catch (error) {
     console.error('Error fetching link preview:', error);
-    return null;
+    return compactPreview(url);
   }
 }
 

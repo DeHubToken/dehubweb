@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useFeedRefresh } from '@/lib/feed-refresh';
 import { ElectricLogo } from './ElectricLogo';
+import { FeedRefreshLogo } from './FeedRefreshLogo';
 import { FeedPillPullEffect } from './FeedPillPullEffect';
 import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from './feed-drawer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -25,6 +26,8 @@ function readActiveTab(): string {
 }
 
 interface FeedIslandCapsuleProps {
+  isAuthenticated: boolean;
+  onLogoPointerDown: () => void;
   visible: boolean;
   avatar: React.ReactNode;
   onAvatarClick: () => void;
@@ -36,6 +39,8 @@ interface FeedIslandCapsuleProps {
 
 /** Fixed phone navigation capsule with separate sheets behind it. */
 export function FeedIslandCapsule({
+  isAuthenticated,
+  onLogoPointerDown,
   visible,
   avatar,
   onAvatarClick,
@@ -83,33 +88,28 @@ export function FeedIslandCapsule({
       className={`lg:hidden fixed left-1/2 z-[120] w-max h-11 isolate overflow-visible rounded-2xl transition-[opacity,transform] duration-300 ease-out ${show ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
-      {/* Centre crest: you (or a burger when signed out) left, the bell
-          right, the mark dead centre. The mark opens the feed list under it.
+      {/* Centre crest: avatar left, bell right, mark dead centre. Guests
+          open the login drawer from the mark; members open the feed list.
           The pill hugs its contents and the two side columns share one
           width, so the mark sits in the true middle. */}
       <div data-feed-island-surface className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-2xl border border-white/10 px-[10px] text-white">
         <div className="flex min-w-[28px] items-center justify-start">
-          <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })} className="flex shrink-0 items-center justify-center">
+          {isAuthenticated && <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })} className="flex shrink-0 items-center justify-center">
             {avatar ?? <Menu className="w-6 h-6" />}
-          </button>
+          </button>}
         </div>
         <button
-          onClick={toggleFeedTabs}
+          onClick={isAuthenticated ? toggleFeedTabs : onAvatarClick}
+          onPointerDown={onLogoPointerDown}
           tabIndex={visible ? 0 : -1}
-          aria-expanded={tabsOpen}
-          aria-label={_copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label })}
+          aria-expanded={isAuthenticated ? tabsOpen : undefined}
+          aria-label={isAuthenticated ? _copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
           className="flex shrink-0 items-center justify-center px-5"
         >
-          <span className="relative inline-flex" data-feed-refresh-logo aria-busy={refresh.refreshing}>
-            <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
-            {(refresh.refreshing || refresh.progress > 0) && (
-              <svg data-feed-refresh-ring aria-hidden="true" width="36" height="36" viewBox="0 0 36 36" className="absolute left-1/2 top-1/2 pointer-events-none" style={{ transform: 'translate(-50%, -50%)' }}>
-                <g className={refresh.refreshing ? 'animate-spin motion-reduce:animate-none' : undefined} style={{ transformOrigin: '18px 18px' }}>
-                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="1.5" />
-                  <circle cx="18" cy="18" r="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="100.531" strokeDashoffset={100.531 * (1 - (refresh.refreshing ? 0.72 : refresh.progress))} transform="rotate(-90 18 18)" />
-                </g>
-              </svg>
-            )}
+          <span className="inline-flex">
+            <FeedRefreshLogo>
+              <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
+            </FeedRefreshLogo>
           </span>
         </button>
         <div className="flex min-w-[28px] items-center justify-end">

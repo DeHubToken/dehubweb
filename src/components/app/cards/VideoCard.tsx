@@ -833,6 +833,16 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const [subsMenuOpen, setSubsMenuOpen] = useState(false);
   // The phone post page ("Stage"). Null in every feed.
   const stage = usePostStage();
+  const registerOptions = stage?.registerOptions;
+  const openPostOptions = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowOptionsDrawer(true);
+  }, [walletAddress, openLoginModal]);
+  useEffect(() => {
+    if (!registerOptions) return;
+    registerOptions(openPostOptions);
+    return () => registerOptions(null);
+  }, [registerOptions, openPostOptions]);
   // Video posts use the same bare glyph controls at every viewport size,
   // mute in the top corner, and playback actions beside fullscreen on the
   // bottom row with play and remaining time.
@@ -2403,6 +2413,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             aria-label={t('common.goBack')}
             className="absolute left-2 top-1.5 z-20 h-8 w-8 text-white flex items-center justify-center"
             onClick={(event) => { event.stopPropagation(); (onBack ?? stage?.onBack)?.(); }}
+            data-swipe-back
           >
             <MediaControlIcon icon={ArrowLeft} />
           </button>
@@ -2868,14 +2879,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         </div>
         {!hideActions && (
           <>
-            {(postPage || stage) && (
+            {(postPage || stage) && (!stage || isOwnPost) && (
               <div data-post-panel-actions className="flex items-center justify-end gap-1 mb-2">
                 {isOwnPost && (
                   <button type="button" aria-label={t('postOptions.boostPost')} className="h-8 w-8 flex items-center justify-center text-zinc-400 hover:text-white" onClick={(event) => { event.stopPropagation(); setShowBoostModal(true); }}>
                     <Zap className="h-5 w-5" />
                   </button>
                 )}
-                <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
+                {!stage && <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />}
               </div>
             )}
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}

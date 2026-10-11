@@ -258,6 +258,8 @@
     "language": "Хэл",
     "languageDesc": "Өөрт тохирсон хэлээ сонгоно уу",
     "light": "Гэрэлтэй",
+    "minimal": "Минимал",
+    "minimalLight": "Минимал Гэрэлтэй",
     "dark": "Харанхуй",
     "system": "Систем",
     "immersive": "Immersive",

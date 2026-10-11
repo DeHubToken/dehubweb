@@ -1,4 +1,5 @@
 import type { MediaProvenance } from "@/lib/editor/mediaStore";
+import { responseToFile } from '@/lib/creator/assetDownload';
 
 export type FreeAssetKind = "photo" | "video" | "animation" | "graphic" | "gif" | "audio";
 export type FreeAssetOrientation = "all" | "landscape" | "portrait" | "square";
@@ -275,8 +276,9 @@ export async function searchFreeAssets(options: SearchFreeAssetsOptions): Promis
 
 function extensionFor(asset: FreeAsset): string {
   const mime: Record<string, string> = {
-    "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/svg+xml": "svg",
-    "video/mp4": "mp4", "video/webm": "webm", "audio/mpeg": "mp3", "audio/ogg": "ogg", "audio/wav": "wav", "audio/webm": "weba",
+    "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/svg+xml": "svg", "image/avif": "avif",
+    "video/mp4": "mp4", "video/webm": "webm", "video/quicktime": "mov", "audio/mpeg": "mp3", "audio/ogg": "ogg", "audio/wav": "wav", "audio/webm": "weba",
+    "audio/mp4": "m4a", "audio/aac": "aac", "audio/flac": "flac",
   };
   return mime[asset.mimeType] || asset.downloadUrl.split(/[?#]/)[0].split(".").pop()?.toLowerCase() || "bin";
 }
@@ -304,10 +306,18 @@ async function fetchAsset(asset: FreeAsset, signal?: AbortSignal): Promise<Respo
 
 export async function downloadFreeAsset(asset: FreeAsset, signal?: AbortSignal): Promise<File> {
   const response = await fetchAsset(asset, signal);
-  const blob = await response.blob();
-  if (!blob.size) throw new Error("The provider returned an empty file");
-  const type = blob.type || asset.mimeType || "application/octet-stream";
-  return new File([blob], safeFilename(asset), { type, lastModified: Date.now() });
+  const reported = response.headers.get('content-type')?.split(';')[0].trim().toLowerCase();
+  const raw = reported && !/^(application|binary)\/octet-stream$/.test(reported) ? reported : asset.mimeType.split(';')[0].trim().toLowerCase();
+  const type = raw === 'application/ogg' && asset.kind === 'audio' ? 'audio/ogg'
+    : ({ 'audio/x-wav': 'audio/wav', 'audio/wave': 'audio/wav', 'audio/x-flac': 'audio/flac', 'image/jpg': 'image/jpeg' } as Record<string, string>)[raw] ?? raw;
+  const expected = asset.kind === 'audio' ? 'audio/' : asset.kind === 'video' || asset.kind === 'animation' ? 'video/' : 'image/';
+  if (!type.startsWith(expected)) {
+    await response.body?.cancel().catch(() => {});
+    throw new Error('The provider returned an unsupported media format');
+  }
+  const file = await responseToFile(response, safeFilename({ ...asset, mimeType: type }), type, { signal });
+  if (!file.size) throw new Error("The provider returned an empty file");
+  return file.type === type ? file : new File([file], file.name, { type, lastModified: Date.now() });
 }
 
 export function provenanceForAsset(asset: FreeAsset): MediaProvenance {

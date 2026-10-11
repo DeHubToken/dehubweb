@@ -6,12 +6,11 @@
  */
 
 import { useState, useEffect } from 'react';
-import { ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PredictionDetails } from '@/components/app/cards/PredictionDetails';
+import { LinkPreviewContent } from '@/components/app/cards/LinkPreviewContent';
 import { RichLinkCard } from '@/components/app/cards/RichLinkCardLazy';
 
 // Reuse the URL regex from TranslatableText to match the same URLs shown as 🔗
@@ -70,49 +69,10 @@ export function ChatLinkPreviews({ content }: ChatLinkPreviewsProps) {
           }}
           onPointerDown={(e) => e.stopPropagation()}
         >
-          {preview.image && (
-            // 1.91:1 — the ratio share images are authored to everywhere on the
-            // web, and the one the feed card already uses. The fixed 128px band
-            // this replaces cropped a 1200x630 OG image into a 3:1 strip and
-            // sliced off whatever the page actually wanted to show. `contain`
-            // rather than `cover` so an image that is not the standard ratio is
-            // still shown whole; the blurred copy behind it fills the margins.
-            <div className="relative w-full aspect-[1.91/1] bg-white/5 overflow-hidden">
-              <img
-                src={preview.image}
-                alt=""
-                aria-hidden="true"
-                className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-40"
-                loading="lazy"
-              />
-              <img
-                src={preview.image}
-                alt={preview.title}
-                className="relative w-full h-full object-contain"
-                loading="lazy"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
-            </div>
-          )}
-          <div className="p-2.5 min-w-0">
-            <div className="flex items-center gap-1.5 text-[10px] text-white/40 mb-0.5">
-              <ExternalLink className="w-2.5 h-2.5 flex-shrink-0" />
-              <span className="truncate">{preview.siteName || new URL(preview.url).hostname.replace('www.', '')}</span>
-            </div>
-            <h4 className={`text-xs font-medium text-white mb-0.5 ${preview.prediction ? '' : 'line-clamp-1'}`}>
-              {preview.title}
-            </h4>
-            {preview.description && (
-              <p className="text-[11px] text-white/50 line-clamp-2">
-                {preview.description}
-              </p>
-            )}
-            <PredictionDetails preview={preview} />
-          </div>
+          <LinkPreviewContent key={preview.url} preview={preview} chat />
         </motion.a>
       ) : loading ? (
         <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-lg overflow-hidden">
-          <Skeleton className="w-full aspect-[1.91/1]" />
           <div className="p-2.5 space-y-1.5">
             <Skeleton className="h-2.5 w-16" />
             <Skeleton className="h-3 w-full" />

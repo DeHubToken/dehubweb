@@ -258,6 +258,8 @@
     "language": "ভাষা",
     "languageDesc": "আপনার পছন্দের ভাষা নির্বাচন করুন",
     "light": "হালকা",
+    "minimal": "মিনিমাল",
+    "minimalLight": "মিনিমাল হালকা",
     "dark": "গাঢ়",
     "system": "সিস্টেম",
     "immersive": "Immersive",

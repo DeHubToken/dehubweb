@@ -258,6 +258,8 @@
     "language": "Fiteny",
     "languageDesc": "Safidio ny fiteny tianao",
     "light": "Mazava",
+    "minimal": "Tsotra",
+    "minimalLight": "Tsotra Mazava",
     "dark": "Maizina",
     "system": "Rafitra",
     "immersive": "Immersive",

@@ -1,6 +1,7 @@
+import { ProfileFollowButton } from './ProfileFollowButton';
 import { useTranslation as _useCopy } from 'react-i18next';
 import {
-  UserPlus, Pencil, Copy, Wallet, Star, Clock, Plus, Loader2, Check, Ban, MessageSquare
+  Pencil, Copy, Wallet, Star, EllipsisVertical, Ban, MessageSquare
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useRef, useState } from 'react';
@@ -21,16 +22,6 @@ import { PinnedCommunities } from '@/components/app/communities/PinnedCommunitie
 import { PinnedCommunityStrip, PinnedCommunityWash, featuredPinnedCommunity } from './PinnedCommunityStage';
 import { usePinnedCommunities } from '@/hooks/use-communities';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import {
   Drawer,
   DrawerContent,
   DrawerHeader,
@@ -50,7 +41,7 @@ import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { useNavigate } from 'react-router-dom';
 import { openDmDock } from '@/hooks/use-dm-dock';
 
-interface ProfileHeaderProps {
+export interface ProfileHeaderProps {
   profile: ProfileData;
   apiProfile: ProfileData | undefined;
   isViewingOwnProfile: boolean | undefined;
@@ -171,7 +162,6 @@ export function ProfileHeader({
     dismiss();
   }, [ceremony, dismiss]);
 
-  const [showUnfollowConfirm, setShowUnfollowConfirm] = useState(false);
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [avatarCdnFailed, setAvatarCdnFailed] = useState(false);
   // The badge rides on the last word so a wrapping name never leaves it
@@ -190,10 +180,10 @@ export function ProfileHeader({
     <div data-profile-header className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
       {/* Cover Photo */}
       {isFetchingProfile && !profile.coverUrl ? (
-        <Skeleton className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
+        <Skeleton data-profile-cover className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
       ) : (
         <button 
-          className="block aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
+          data-profile-cover className="block aspect-[3/1] bg-zinc-800 w-full cursor-pointer"
           onClick={() => setFullscreenImage(profile.coverUrl || getDefaultBanner(profile.walletAddress))}
         >
           {/* The cover is the profile's LCP element. It was always fetched at
@@ -238,7 +228,7 @@ export function ProfileHeader({
                 )}
               </button>
           </div>
-          <div className="flex items-center gap-2">
+          <div data-profile-actions className="-mr-1 sm:-mr-3 mt-[60px] sm:mt-[68px] self-start flex items-center gap-2">
               {isViewingOwnProfile ? (
                 <Button
                   variant="glass"
@@ -259,48 +249,8 @@ export function ProfileHeader({
                 <Skeleton className="h-9 w-24 rounded-xl bg-white/10" />
               ) : (
                 <>
-                  {isPending && !isFollowing && (
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      className="rounded-xl border-zinc-600 text-zinc-300 gap-2 cursor-default"
-                      disabled
-                    >
-                      <Clock className="w-4 h-4" />{_copy("copy.2d9e28289fac", { defaultValue: "Requested" })}</Button>
-                  )}
-                  {!isFollowing && !isPending && (
-                    <Button 
-                      size="sm" 
-                      variant="glass"
-                      className="rounded-xl gap-2"
-                      onClick={handleFollow}
-                      disabled={isFollowLoading}
-                    >
-                      {isFollowLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <UserPlus className="w-4 h-4" />
-                      )}
-                      {isTargetPrivate ? _copy("copy.59f03d642b41", { defaultValue: "Request" }) : apiProfile?.followsYou ? _copy("copy.fd3fdb5a65ea", { defaultValue: "Follow Back" }) : _copy("copy.641d1ef657bd", { defaultValue: "Follow" })}
-                    </Button>
-                  )}
-                  {isFollowing && (
-                    <Button 
-                      size="sm" 
-                      variant="glass"
-                      className="rounded-xl gap-2"
-                      onClick={() => setShowUnfollowConfirm(true)}
-                      disabled={isFollowLoading}
-                    >
-                      {isFollowLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Check className="w-4 h-4" />
-                      )}
-                      {t('profile.following')}
-                    </Button>
-                  )}
-                  {/* Followers can subscribe to the creator's pinned plans. */}
+                    <ProfileFollowButton profile={profile} apiProfile={apiProfile} isViewingOwnProfile={isViewingOwnProfile} isBlocked={isBlocked} isFetchingProfile={isFetchingProfile} isFollowing={isFollowing} isPending={isPending} isTargetPrivate={isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+                    {/* Followers can subscribe to the creator's pinned plans. */}
                   {isFollowing && !isSubscribed && hasPlans && (
                     <Button
                       size="sm"
@@ -351,8 +301,10 @@ export function ProfileHeader({
                     size="icon" 
                     className="rounded-xl h-9 w-9"
                     aria-label={t('profile.options')}
+                    title={t('profile.options')}
+                    data-profile-options
                   >
-                    <Plus className="w-4 h-4" />
+                    <EllipsisVertical className="w-4 h-4" />
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
@@ -374,7 +326,7 @@ export function ProfileHeader({
                 bottom of the header. The badge stays glued to the last word. */}
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mt-1">
               <span className="group min-w-0 inline-flex items-baseline gap-1">
-                <h2 className="text-2xl font-bold leading-8 text-white break-words line-clamp-2 [text-wrap:balance]">
+                <h2 data-profile-identity className="text-2xl font-bold leading-8 text-white break-words line-clamp-2 [text-wrap:balance]">
                   {nameHead}
                   <span className="whitespace-nowrap">
                     {nameTail}
@@ -564,25 +516,7 @@ export function ProfileHeader({
         />
       )}
 
-      {/* Unfollow confirmation */}
-      <AlertDialog open={showUnfollowConfirm} onOpenChange={setShowUnfollowConfirm}>
-        <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">{_copy("copy.3951eec8fb35", { defaultValue: "Unfollow " })}{profile.name}?</AlertDialogTitle>
-            <AlertDialogDescription className="text-white/50">{_copy("copy.34684f511879", { defaultValue: "You will no longer see their posts in your feed." })}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="bg-white/[0.06] backdrop-blur-sm border-white/10 text-white hover:bg-white/[0.12]">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-red-500/20 backdrop-blur-sm border border-red-500/30 text-red-400 hover:bg-red-500/30"
-              onClick={() => {
-                handleUnfollow();
-                setShowUnfollowConfirm(false);
-              }}
-            >{_copy("copy.778d568e8819", { defaultValue: "Unfollow" })}</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+
     </div>
   );
 }

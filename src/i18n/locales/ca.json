@@ -258,6 +258,8 @@
     "language": "Idioma",
     "languageDesc": "Tria el teu idioma preferit",
     "light": "Clar",
+    "minimal": "Minimalista",
+    "minimalLight": "Minimalista Clar",
     "dark": "Fosc",
     "system": "Sistema",
     "immersive": "Immersive",

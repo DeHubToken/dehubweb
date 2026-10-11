@@ -257,6 +257,8 @@
     "language": "Γλώσσα",
     "languageDesc": "Επιλέξτε τη γλώσσα προτίμησής σας",
     "light": "Φωτεινό",
+    "minimal": "Μινιμαλιστικό",
+    "minimalLight": "Μινιμαλιστικό Φωτεινό",
     "dark": "Σκοτεινό",
     "system": "Σύστημα",
     "immersive": "Immersive",

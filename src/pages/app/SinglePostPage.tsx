@@ -601,6 +601,7 @@ function ImmersiveVideoHeader({
           Canvas themes still dress it in their own material. */}
       <button
         onClick={handleBack}
+        data-swipe-back
         data-on-media
         className="h-8 w-8 rounded-xl bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/10 hover:bg-black/60 transition-colors flex items-center justify-center"
         aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
@@ -736,6 +737,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showPageComments, setShowPageComments] = useState(true);
+  const [postOptions, setPostOptions] = useState<(() => void) | null>(null);
+  const registerPostOptions = useCallback((open: (() => void) | null) => setPostOptions(() => open), []);
   const [pageCommentsInitialTab, setPageCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
@@ -1133,6 +1136,8 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
   }, []);
   const stageValue = useMemo<PostStageValue>(() => ({
     onBack: goBack,
+    registerOptions: registerPostOptions,
+    openOptions: postOptions ?? undefined,
     openComments: () => {
       setShowPageComments(true);
       setPageCommentsInitialTab('replies');
@@ -1150,7 +1155,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     },
     quoteCount: Number(post?.quotes ?? 0) || 0,
     repostCount: Number(post?.totalReposts || post?.reposts || 0) || 0,
-  }), [goBack, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
+  }), [goBack, registerPostOptions, postOptions, revealStageComments, post?.quotes, post?.totalReposts, post?.reposts]);
 
   const pageComments = post && id ? (
     <CommentsWrapper

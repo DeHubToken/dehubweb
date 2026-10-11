@@ -258,6 +258,8 @@
     "language": "Език",
     "languageDesc": "Изберете предпочитания език",
     "light": "Светла",
+    "minimal": "Минималистична",
+    "minimalLight": "Минималистична Светла",
     "dark": "Тъмна",
     "system": "Системна",
     "immersive": "Immersive",

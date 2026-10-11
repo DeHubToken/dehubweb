@@ -291,38 +291,20 @@ html[data-theme='minimal'] [data-stage-tile]:not(#_):not(#_) {
 }
 
 /* --- Docked composer ------------------------------------------------------
-   Liquid glass, not solid: ~80% of the theme surface over a 28px blur, with a
-   soft blurred band above it so comment text scrolling underneath never reads
-   through the edge. */
+   A thin theme tint over blur lets the post remain visible beneath the dock. */
 html [data-stage-composer]:not(#_):not(#_) {
-  isolation: isolate;
-  background: color-mix(in srgb, var(--stage-solid) 80%, transparent);
+  background: color-mix(in srgb, var(--stage-solid) 20%, transparent);
   backdrop-filter: blur(28px) saturate(1.5);
-  border-top: 1px solid var(--stage-border);
+  border: 0;
   box-shadow: 0 -4px 32px -12px rgb(0 0 0 / 0.08);
   /* It also carries the page pin, which lifts it over the bottom nav; that
      nav is hidden here, so it sits on the screen edge. */
   bottom: 0;
   transition: none;
 }
-html [data-stage-composer-fade]:not(#_) {
-  position: absolute;
-  z-index: -1;
-  inset-inline: 0;
-  bottom: 100%;
-  height: 48px;
-  pointer-events: none;
-  background: linear-gradient(to bottom,
-    transparent 0,
-    color-mix(in srgb, var(--stage-solid) 4%, transparent) 35%,
-    color-mix(in srgb, var(--stage-solid) 12%, transparent) 70%,
-    color-mix(in srgb, var(--stage-solid) 24%, transparent) 100%);
-  backdrop-filter: blur(18px);
-  mask-image: linear-gradient(to bottom, transparent 0, rgb(0 0 0 / 0.15) 35%, rgb(0 0 0 / 0.55) 70%, #000 100%);
-}
 html [data-stage-composer] [data-comment-field]:not(#_):not(#_) {
-  background: var(--stage-field);
-  border-color: var(--stage-border);
+  background: color-mix(in srgb, var(--stage-field) 40%, transparent);
+  border: 0;
 }
 html [data-stage-composer] [data-comment-field] textarea:not(#_):not(#_) {
   color: var(--stage-ink);

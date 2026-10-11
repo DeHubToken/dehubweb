@@ -49,6 +49,10 @@ const pathFor = (label: string): string | undefined =>
   [...NAV_ITEMS, ...SEARCH_ONLY_ITEMS].find((item) => item.label === label)?.path;
 
 describe('menu search — the query someone actually types', () => {
+  it('keeps agent search private unless the owner gate is satisfied', () => {
+    expect(filterNavItems(NAV_ITEMS, 'agents', t).some(item => item.path === '/app/agents')).toBe(false);
+    expect(filterNavItems(NAV_ITEMS, 'agents', t, true).some(item => item.path === '/app/agents')).toBe(true);
+  });
   it('leaves the menu alone, by identity, when nothing is typed', () => {
     // Not cosmetic: the rail re-runs this on every render, and a fresh array
     // each time would remount all 28 rows.

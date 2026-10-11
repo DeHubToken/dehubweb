@@ -258,6 +258,8 @@
     "language": "Valoda",
     "languageDesc": "Izvēlieties vēlamo valodu",
     "light": "Gaišs",
+    "minimal": "Minimālisms",
+    "minimalLight": "Minimālisms Gaišs",
     "dark": "Tumšs",
     "system": "Sistēma",
     "immersive": "Immersive",

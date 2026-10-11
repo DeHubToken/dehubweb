@@ -258,6 +258,8 @@
     "language": "Wika",
     "languageDesc": "Piliin ang gusto mong wika",
     "light": "Maliwanag",
+    "minimal": "Minimal",
+    "minimalLight": "Minimal Maliwanag",
     "dark": "Madilim",
     "system": "System",
     "immersive": "Immersive",

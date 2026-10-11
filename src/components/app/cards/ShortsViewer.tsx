@@ -324,6 +324,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const [showComments, setShowComments] = useState(false);
   const commentsPullDismiss = useCommentsPullDismiss(() => setShowComments(false));
+  // The phone split mounts the comment list only once its slide has landed.
+  // Mounting it on the opening frame blocked the main thread for the first
+  // ~200ms of a 350ms slide, so the sheet and the player both skipped straight
+  // to the middle of the motion — the judder on open.
+  const [commentsLanded, setCommentsLanded] = useState(false);
+  useEffect(() => {
+    if (!showComments) setCommentsLanded(false);
+  }, [showComments]);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
@@ -1880,7 +1888,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         </motion.div>
 
         {/* Mobile split comments panel - fills the bottom half when comments are
-            open, with the shrunken video pinned above (Instagram-style). */}
+            open, with the shrunken video pinned above (Instagram-style).
+            It slides on a transform at a fixed half height rather than growing
+            from 0: a growing panel re-laid out the whole comment list on every
+            frame, which is what made opening and closing judder. Same curve and
+            duration as the player's height, so the sheet's top edge and the
+            video's bottom edge stay together the whole way, both directions. */}
         {isMobile && (
           <AnimatePresence>
             {showComments && currentShort?.id && (
@@ -1888,11 +1901,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 key="mobile-comments-split"
                 {...commentsPullDismiss}
                 data-shorts-scrollable
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: '50%', opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
                 transition={SMOOTH_TRANSITION}
-                className="w-full shrink-0 flex flex-col overflow-hidden bg-black/60 backdrop-blur-[24px] border-t border-white/[0.08] rounded-t-2xl z-30"
+                onAnimationComplete={(def) => {
+                  if (def && typeof def === 'object' && 'y' in def && def.y === 0) setCommentsLanded(true);
+                }}
+                // Solid black, not black/60 + backdrop blur: the only thing
+                // ever behind this panel is the viewer's own black floor, so
+                // the blur drew nothing, yet it was re-run every frame of the
+                // slide.
+                className="absolute inset-x-0 bottom-0 h-1/2 flex flex-col overflow-hidden bg-black border-t border-white/[0.08] rounded-t-2xl z-30 will-change-transform"
               >
                 {/* Grab handle + close */}
                 <motion.div
@@ -1915,12 +1935,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   className="flex-1 min-h-0 px-1 pb-[env(safe-area-inset-bottom)]"
                   style={{ touchAction: 'pan-y', overscrollBehavior: 'contain' }}
                 >
-                  <CommentsSection
-                    key={currentShort.id}
-                    tokenId={currentShort.id}
-                    onClose={() => setShowComments(false)}
-                    initialTab={commentsInitialTab}
-                  />
+                  {commentsLanded ? (
+                    <CommentsSection
+                      key={currentShort.id}
+                      tokenId={currentShort.id}
+                      onClose={() => setShowComments(false)}
+                      initialTab={commentsInitialTab}
+                    />
+                  ) : (
+                    <div className="flex h-full items-start justify-center pt-8">
+                      <Loader2 className="w-5 h-5 animate-spin text-white/40" />
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}

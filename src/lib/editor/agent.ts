@@ -2,6 +2,7 @@ import { beginEditorCommand } from "./editorCommand";
 import { projectTask } from "./projectTask";
 import { videoMatteCommand } from "./videoMatte";
 import { generationChatRequest, generationDraft, type GenerationDraft } from "./generationDraft";
+import { editorGenerationKinds } from "./generationCapabilities";
 /**
  * Editor agent — client half.
  * ===========================
@@ -177,7 +178,7 @@ export async function askSceneAgent(messages: AgentMessage[], scene: unknown, si
       apikey: ANON_KEY,
       Authorization: `Bearer ${ANON_KEY}`,
     },
-    body: JSON.stringify({ messages, scene }),
+    body: JSON.stringify({ messages, scene, generationKinds: editorGenerationKinds() }),
     signal,
   });
   const data = await res.json().catch(() => null);
@@ -343,6 +344,8 @@ function pickStock<T extends { title: string; width?: number; mimeType: string }
 
 export interface ApplyContext {
   wallet?: string | null;
+  badgeBalance?: number | null;
+  username?: string | null;
   command?: ReturnType<typeof beginEditorCommand>;
 }
 
@@ -621,7 +624,8 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         }
         const file = await downloadFreeAsset(asset);
         if (!task.isCurrent()) return false;
-        const mediaId = await importOneFile(file, { wallet: ctx.wallet, provenance: provenanceForAsset(asset) });
+        const mediaId = await importOneFile(file, { wallet: ctx.wallet,
+          badgeBalance: ctx.badgeBalance, username: ctx.username, provenance: provenanceForAsset(asset) });
         if (!task.isCurrent() || !mediaId) return false;
         await task.ready();
         const id = store().addClipFromMedia(mediaId, undefined, undefined, { layer: kind === "photo" });

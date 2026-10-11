@@ -262,6 +262,8 @@
     "language": "Jazyk",
     "languageDesc": "Vyberte preferovaný jazyk",
     "light": "Svetlá",
+    "minimal": "Minimalistický",
+    "minimalLight": "Minimalistický Svetlá",
     "dark": "Tmavá",
     "system": "Systém",
     "immersive": "Immersive",

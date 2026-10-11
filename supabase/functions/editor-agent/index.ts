@@ -1,4 +1,5 @@
 import { parseAnswer } from "./answer.ts";
+import { generationInstruction, supportedGenerationKinds, supportsGenerationOp } from "./generation.ts";
 // Editor agent — turns a plain-language request ("make this a square Instagram
 // post with a bold title and a warm filter") into a short list of edit
 // operations that the browser applies to the design.
@@ -68,7 +69,7 @@ Operations (only use fields you need):
 - captions: id (a video or audio layer; omit to use the first one), style ("classic" | "boxed" | "bold"). Transcribes the speech on-device and adds timed caption text layers. Use for "add captions/subtitles", "transcribe".
 - process_audio: id (a video or audio layer), mode ("normalize" | "denoise" | "voice"). Processes the trimmed, speed-adjusted sound on-device and keeps its timing. Normalize volume, reduce steady background noise, or enhance speech with noise reduction, a low-frequency filter and compression. Clips up to ten minutes; use only when process_audio appears in capabilities.
 - remove_background: id (an image layer). Cuts the subject out, free and on-device. Use for "remove the background", "cut out", "isolate", product shots, stickers.
-- generate: kind ("image" | "video"), prompt (a rich, detailed generation prompt). This does NOT run anything; it opens the paid AI generator pre-filled for the user to confirm. Use only when the user explicitly asks to generate/create with AI or stock clearly will not do.
+{{GENERATION_INSTRUCTION}}
 - select: id. Selects a layer so the user sees it.
 - apply_brand: restyle the whole design with the brand kit (fonts and colours). add_logo: put the brand logo in the top-right corner.
 - add_page: duplicate (true to copy the current page's layers). Appends a page and moves to it; every add_* after it lands on that page. Use for carousels, slides, multi-part posts: build page 1, add_page, build page 2, and so on.
@@ -123,7 +124,7 @@ Deno.serve(async (req) => {
   const limited = await rateLimitByIp(req, "editor_agent", { limit: 120, windowMs: 60 * 60 * 1000 });
   if (limited) return limited;
 
-  let body: { messages?: Message[]; scene?: unknown };
+  let body: { messages?: Message[]; scene?: unknown; generationKinds?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -139,8 +140,9 @@ Deno.serve(async (req) => {
   }
 
   const scene = sceneJson(body.scene, MAX_SCENE_CHARS);
+  const generationKinds = supportedGenerationKinds(body.generationKinds);
   const messages = [
-    { role: "system", content: SYSTEM },
+    { role: "system", content: SYSTEM.replace('{{GENERATION_INSTRUCTION}}', generationInstruction(generationKinds)) },
     { role: "system", content: `Current design:\n${scene}` },
     ...history,
   ];
@@ -182,7 +184,7 @@ Deno.serve(async (req) => {
   if (!parsed) return json({ error: "unavailable" }, 502);
 
   const ops = Array.isArray(parsed.ops)
-    ? parsed.ops.filter((o) => o && typeof o === "object" && OP_NAMES.includes((o as { op?: string }).op ?? "")).slice(0, 40)
+    ? parsed.ops.filter((o) => o && typeof o === "object" && OP_NAMES.includes((o as { op?: string }).op ?? "") && supportsGenerationOp(o, generationKinds)).slice(0, 40)
     : [];
   const reply = typeof parsed.reply === "string" ? parsed.reply.slice(0, 600) : "";
   return json({ reply, ops });

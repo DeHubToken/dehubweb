@@ -39,6 +39,7 @@ export default function SkillPage() {
               variant="ghost" 
               size="icon"
               onClick={() => navigate(-1)}
+              data-swipe-back
               className="text-white/60 hover:text-white"
             >
               <ArrowLeft className="w-5 h-5" />
