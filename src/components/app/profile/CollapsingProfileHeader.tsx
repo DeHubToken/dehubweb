@@ -49,7 +49,7 @@ export function CollapsingProfileHeader({ headerRef, name, handle, followAction 
   return (
     <div className="profile-collapse-anchor">
       <div ref={barRef} data-profile-collapse className="profile-collapse-bar">
-        <div data-page-bento className="profile-collapse-frost" aria-hidden />
+        <div data-page-bento data-keep-bento className="profile-collapse-frost" aria-hidden />
         <PageHeader overlay className="!top-2 !left-2 !right-auto" />
         <div className="profile-collapse-content">
           <div className="profile-collapse-identity" data-visible={identityVisible} aria-hidden={!identityVisible}>
