@@ -7,6 +7,8 @@ import { usePerformance } from '@/hooks/usePerformance';
 import { getLatestPost } from '@/utils/blogUtils';
 import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
+import { localizedPageUrl } from '@/lib/seo/public-locales';
 
 // Declare the global build time variable
 declare const __BUILD_TIME__: string;
@@ -20,6 +22,9 @@ const DocsHome = () => {
 
   // Get the latest blog post
   const latestPost = getLatestPost();
+  const latestPage = usePublicPageLocale(`/guides/${latestPost?.slug || ''}`);
+  const latestHref = latestPost ? new URL(localizedPageUrl(`/guides/${latestPost.slug}`, latestPage.language)) : null;
+  const latestPath = latestHref ? latestHref.pathname + latestHref.search : '';
   let bannerImage = latestPost?.bannerImage;
   let bannerImageAlt = latestPost?.bannerImageAlt;
   if (latestPost) {
@@ -191,24 +196,24 @@ const DocsHome = () => {
               <div className="text-center">
                 <span className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">{t('home.latestFromBlog')}</span>
               </div>
-              <Link to={`/guides/${latestPost.slug}`} className="w-full block">
+              <Link to={latestPath} className="w-full block">
                 {/* 40/21 is the banner art's own ratio (1200x630). aspect-video is 16:9, and
                     object-cover on the wider art cropped ~3% off each side — enough to slice
                     through the badges that sit in the banner's corners. Blog cards crop the
                     same art vertically, which is why they look right and this did not. */}
-                <img src={bannerImage && mediaImage(bannerImage, { width: 1100 })} srcSet={mediaImageSrcSet(bannerImage, [480, 736, 1100, 1440])} sizes="(min-width: 1024px) 900px, 100vw" alt={bannerImageAlt} width={1200} height={630} loading="lazy" decoding="async" className="w-full aspect-[40/21] object-cover rounded-xl hover:opacity-95 transition-opacity cursor-pointer" />
+                <img src={bannerImage && mediaImage(bannerImage, { width: 1100 })} srcSet={mediaImageSrcSet(bannerImage, [480, 736, 1100, 1440])} sizes="(min-width: 1024px) 900px, 100vw" alt={latestPage.data?.h1 || bannerImageAlt} width={1200} height={630} loading="lazy" decoding="async" className="w-full aspect-[40/21] object-cover rounded-xl hover:opacity-95 transition-opacity cursor-pointer" />
               </Link>
               <div className="text-center">
                 <div className="mb-4">
                   <h2 className="text-2xl lg:text-3xl font-bold text-foreground mb-3 font-exo">
-                    {latestPost.title}
+                    {latestPage.data?.h1 || latestPost.title}
                   </h2>
                   <p className="text-muted-foreground mb-6 font-exo">
-                    {latestPost.excerpt}
+                    {latestPage.data?.description || latestPost.excerpt}
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to={`/guides/${latestPost.slug}`} className="flex justify-center sm:inline-flex sm:items-center px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all duration-200 font-exo text-center">
+                  <Link to={latestPath} className="flex justify-center sm:inline-flex sm:items-center px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all duration-200 font-exo text-center">
                     {t('common.readArticle')}
                   </Link>
                   <Link to="/docs/blog" className="flex justify-center sm:inline-flex sm:items-center px-6 py-3 border border-border text-foreground font-semibold rounded-lg hover:bg-muted transition-all duration-200 font-exo text-center">

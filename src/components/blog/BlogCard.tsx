@@ -6,6 +6,8 @@ import { BlogPost } from '@/types/blog';
 import { formatDate } from '@/utils/blogUtils';
 import { getDocumentScrollTop } from '@/lib/document-scroll';
 import { mediaImage, mediaImageSrcSet } from '@/lib/media-url';
+import { usePublicPageLocale } from '@/hooks/usePublicPageLocale';
+import { localizedPageUrl } from '@/lib/seo/public-locales';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -56,12 +58,16 @@ const generateExcerpt = (content: string, fallback: string) => {
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
   const { t: _copy } = _useCopy();
-  const excerpt = generateExcerpt(post.content, post.excerpt);
+  const translatedPage = usePublicPageLocale(`/guides/${post.slug}`);
+  const title = translatedPage.data?.h1 || post.title;
+  const excerpt = translatedPage.data?.description || generateExcerpt(post.content, post.excerpt);
+  const url = new URL(localizedPageUrl(`/guides/${post.slug}`, translatedPage.language));
+  const href = url.pathname + url.search;
 
   const displayDate =
     post.title === 'Dream Big: The $1M Home Crypto Raffle by DeHub'
-      ? 'July 11, 2022'
-      : formatDate(post.publishedAt);
+      ? formatDate('2022-07-11T12:00:00Z', translatedPage.language)
+      : formatDate(post.publishedAt, translatedPage.language);
 
   
   const isCoinbasePost = post.slug === 'dhb-tradable-on-coinbase-soon';
@@ -87,14 +93,14 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
 
   return (
     <article className={`group bg-card rounded-xl border border-border hover:border-primary/40 transition-all duration-200 hover:shadow-lg overflow-hidden ${featured ? 'lg:col-span-2' : ''}`}>
-      <Link to={`/guides/${post.slug}`} className="block" onClick={handleLinkClick}>
+      <Link to={href} className="block" onClick={handleLinkClick}>
         <div className="relative">
           <img
             src={mediaImage(getBannerImage(), { width: 736 })}
             srcSet={mediaImageSrcSet(getBannerImage(), [360, 480, 736, 1100])}
             // One column below lg, two above it.
             sizes="(min-width: 1024px) 560px, 100vw"
-            alt={post.bannerImageAlt}
+            alt={translatedPage.data?.h1 || post.bannerImageAlt}
             width={1200}
             height={630}
             loading="lazy"
@@ -119,7 +125,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
           </div>
 
           <h2 className={`font-bold text-foreground mb-3 group-hover:text-muted-foreground transition-colors duration-200 font-exo ${featured ? 'text-2xl lg:text-3xl' : 'text-xl'}`}>
-            {post.title}
+            {title}
           </h2>
 
           <p className={`text-muted-foreground font-exo ${featured ? 'text-lg' : 'text-base'}`}>
@@ -149,7 +155,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
         </div>
 
         <Link
-          to={`/guides/${post.slug}`}
+          to={href}
           onClick={handleLinkClick}
           className="inline-flex items-center text-foreground hover:text-muted-foreground transition-colors duration-200 font-semibold"
         >{_copy("copy.c29602f47757", { defaultValue: "Read More" })}<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
