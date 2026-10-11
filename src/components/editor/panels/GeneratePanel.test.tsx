@@ -4,6 +4,7 @@ import { GeneratePanel } from './GeneratePanel';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { generateAudio } from '@/lib/creator/generationEngine';
 import { importOneFile } from '@/lib/editor/importFiles';
+import { __resetDraftCacheForTests } from '@/lib/draft-cache';
 
 const state = vi.hoisted(() => ({
   auth: { isAuthenticated: true },
@@ -30,6 +31,8 @@ vi.mock('./DesignPanel', () => ({ PanelHeading: () => null }));
 describe('reviewing voice generation in the editor', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.removeItem('dehub-drafts-v1');
+    __resetDraftCacheForTests();
     state.auth.isAuthenticated = true;
     state.quota.overQuota = false;
     useEditorUiStore.setState({ panel: 'generate', generatePrefill: { kind: 'voice', prompt: 'Keep every word, including the last sentence.' } });
