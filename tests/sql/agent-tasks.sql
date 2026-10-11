@@ -1,0 +1,50 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+CREATE SCHEMA extensions;
+CREATE FUNCTION extensions.gen_random_bytes(integer) RETURNS bytea LANGUAGE sql AS 'SELECT public.gen_random_bytes($1)';
+CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role BYPASSRLS;
+CREATE SCHEMA net; CREATE SCHEMA cron;
+CREATE FUNCTION net.http_post(url text,headers jsonb,body jsonb,timeout_milliseconds integer) RETURNS bigint LANGUAGE sql AS 'SELECT 1::bigint';
+CREATE FUNCTION cron.schedule(text,text,text) RETURNS bigint LANGUAGE sql AS 'SELECT 1::bigint';
+CREATE TABLE public.ai_agents(id uuid PRIMARY KEY DEFAULT gen_random_uuid(), name text, description text, api_key text, owner_wallet_address text, human_owner_wallet text,is_active boolean,last_active_at timestamptz,created_at timestamptz DEFAULT now());
+ALTER TABLE public.ai_agents ENABLE ROW LEVEL SECURITY;
+GRANT SELECT,UPDATE,DELETE ON public.ai_agents TO anon,authenticated;
+GRANT ALL ON public.ai_agents TO service_role;
+CREATE POLICY owners ON public.ai_agents FOR ALL USING(true) WITH CHECK(true);
+CREATE FUNCTION public.get_signed_request_wallet_address() RETURNS text LANGUAGE sql STABLE AS $$ SELECT coalesce(current_setting('test.signed_wallet',true),''); $$;
+\ir ../../supabase/migrations/20261011210000_private_agent_tasks.sql
+
+INSERT INTO ai_agents(id,name,api_key,human_owner_wallet,is_active) VALUES
+('00000000-0000-0000-0000-000000000001','owner_agent','private','0x9324840523a5d17dd12a2f11a9472e5a199c1937',true),
+('00000000-0000-0000-0000-000000000002','other_agent','other-secret','0x1111111111111111111111111111111111111111',true);
+
+SET ROLE anon;
+SELECT set_config('request.headers','{"x-wallet-address":"0x9324840523a5d17dd12a2f11a9472e5a199c1937"}',false);
+DO $$ BEGIN
+ IF EXISTS(SELECT 1 FROM public.get_my_agents()) THEN RAISE EXCEPTION 'Unsigned key disclosure'; END IF;
+ UPDATE ai_agents SET name='changed';
+ IF FOUND THEN RAISE EXCEPTION 'Unsigned mutation'; END IF;
+ BEGIN PERFORM public.claim_agent_task(); RAISE EXCEPTION 'Public claim permitted'; EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+ BEGIN PERFORM 1 FROM public.ai_agent_runner; RAISE EXCEPTION 'Runner secret visible'; EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+END $$;
+SELECT set_config('test.signed_wallet','0x1111111111111111111111111111111111111111',false);
+DO $$ BEGIN IF EXISTS(SELECT 1 FROM public.get_my_agents()) THEN RAISE EXCEPTION 'Other owner allowed'; END IF; END $$;
+SELECT set_config('test.signed_wallet','0x9324840523a5d17dd12a2f11a9472e5a199c1937',false);
+DO $$ BEGIN IF (SELECT count(*) FROM public.get_my_agents())<>1 THEN RAISE EXCEPTION 'Owner listing missing'; END IF; END $$;
+RESET ROLE;
+SET ROLE service_role;
+INSERT INTO ai_agent_tasks(agent_id,owner_wallet,request_id,prompt,plan) VALUES
+('00000000-0000-0000-0000-000000000001','0x9324840523a5d17dd12a2f11a9472e5a199c1937',gen_random_uuid(),'Follow everyone','{}'),
+('00000000-0000-0000-0000-000000000001','0x9324840523a5d17dd12a2f11a9472e5a199c1937',gen_random_uuid(),'Like today','{}');
+DO $$ DECLARE claimed jsonb; BEGIN
+ claimed:=public.claim_agent_task();
+ IF claimed IS NULL OR claimed->>'status'<>'running' THEN RAISE EXCEPTION 'Task not claimed'; END IF;
+ IF public.claim_agent_task() IS NOT NULL THEN RAISE EXCEPTION 'Two tasks mutating one agent'; END IF;
+ INSERT INTO ai_agent_task_actions(task_id,cycle,step,target,tool,status) VALUES((claimed->>'id')::uuid,0,0,'123','dehub_vote','pending');
+ BEGIN
+   INSERT INTO ai_agent_task_actions(task_id,cycle,step,target,tool,status) VALUES((claimed->>'id')::uuid,0,0,'123','dehub_vote','pending');
+   RAISE EXCEPTION 'Duplicate action accepted';
+ EXCEPTION WHEN unique_violation THEN NULL; END;
+ UPDATE ai_agent_tasks SET status='paused',lease_until=NULL WHERE id=(claimed->>'id')::uuid;
+ IF public.claim_agent_task()->>'id'=claimed->>'id' THEN RAISE EXCEPTION 'Paused task claimed'; END IF;
+END $$;
+RESET ROLE;

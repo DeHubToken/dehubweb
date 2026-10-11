@@ -10,6 +10,7 @@ import { NAV_ITEMS } from '@/constants/app.constants';
 import type { NavItem } from '@/types/app.types';
 import { SidebarNavItem } from './SidebarNavItem';
 import { filterNavItems, exploreSearchHref } from './nav-search';
+import { canManageAgents } from '@/lib/agent-access';
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
@@ -307,8 +308,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // which is to say until long after the parent armed Kids Mode.
   const isKidsMode = useKidsModeLock();
   const visibleRailItems = useMemo(
-    () => filterNavItems(railItems, navQuery, t),
-    [railItems, navQuery, t, isKidsMode],
+    () => filterNavItems(railItems, navQuery, t, canManageAgents(walletAddress)),
+    [railItems, navQuery, t, isKidsMode, walletAddress],
   );
   const isAIActive = location.pathname === '/app/assistant';
 
