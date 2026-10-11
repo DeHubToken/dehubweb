@@ -7,23 +7,20 @@ let frame: FrameRequestCallback | undefined;
 const rect = (bottom: number) => ({ bottom } as DOMRect);
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
-it('keeps only Back visible until the profile tabs pin, then reverses', () => {
+it('keeps only Back visible until the original actions leave view, then reverses', () => {
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
   vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { frame = cb; return 1; });
   vi.stubGlobal('cancelAnimationFrame', vi.fn());
   const header = document.createElement('div');
   header.innerHTML = '<div data-profile-cover></div><div data-profile-actions></div><h2 data-profile-identity></h2>';
   const ref = { current: header };
-  const tabs = document.createElement('div');
-  let tabsTop = 400;
-  tabs.getBoundingClientRect = () => ({ top: tabsTop } as DOMRect);
   let coverBottom = 140, actionBottom = 180, nameBottom = 230;
   header.children[0].getBoundingClientRect = () => rect(coverBottom);
   header.children[1].getBoundingClientRect = () => rect(actionBottom);
   header.children[2].getBoundingClientRect = () => rect(nameBottom);
-  const { container } = render(<CollapsingProfileHeader headerRef={ref} tabsRef={{ current: tabs }} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
+  const { container } = render(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
   const bar = container.querySelector<HTMLElement>('[data-profile-collapse]')!;
-  bar.getBoundingClientRect = () => rect(56);
+  bar.getBoundingClientRect = () => ({ top: 4, bottom: 56 } as DOMRect);
   const scroll = () => act(() => { fireEvent.scroll(window); frame?.(0); });
   scroll();
   expect(screen.getByText('Back')).toBeVisible();
@@ -34,7 +31,7 @@ it('keeps only Back visible until the profile tabs pin, then reverses', () => {
   scroll();
   expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
   expect(screen.queryByText('Follow')).toBeNull();
-  tabsTop = 60;
+  actionBottom = 0;
   scroll();
   expect(container.querySelector('.profile-collapse-surface')).toBeVisible();
   expect(container.querySelector('.profile-collapse-gap-guard')).toBeVisible();
@@ -43,7 +40,7 @@ it('keeps only Back visible until the profile tabs pin, then reverses', () => {
   nameBottom = 55;
   scroll();
   expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
-  coverBottom = 140; actionBottom = 180; nameBottom = 230; tabsTop = 400;
+  coverBottom = 140; actionBottom = 180; nameBottom = 230;
   scroll();
   expect(screen.queryByText('Follow')).toBeNull();
   expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();

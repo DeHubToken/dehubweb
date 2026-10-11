@@ -5,9 +5,8 @@ import type { ReactNode } from 'react';
 import './profile-collapse.css';
 
 /** The cover, name and actions leave independently, as on a native profile. */
-export function CollapsingProfileHeader({ headerRef, tabsRef, name, handle, coverUrl, followAction }: {
+export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, followAction }: {
   headerRef: RefObject<HTMLDivElement>;
-  tabsRef: RefObject<HTMLDivElement>;
   name: string;
   handle: string;
   coverUrl?: string;
@@ -24,9 +23,9 @@ export function CollapsingProfileHeader({ headerRef, tabsRef, name, handle, cove
     let frame = 0;
     const update = () => {
       frame = 0;
-      const bottom = bar.getBoundingClientRect().bottom;
-      const tabs = tabsRef.current;
-      setSurfaceVisible(!!tabs && tabs.getBoundingClientRect().top <= bottom + 4);
+      const top = bar.getBoundingClientRect().top - 4;
+      const actions = header.querySelector('[data-profile-actions]');
+      setSurfaceVisible(!!actions && actions.getBoundingClientRect().bottom <= top);
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     const resize = new ResizeObserver(schedule);
@@ -40,7 +39,7 @@ export function CollapsingProfileHeader({ headerRef, tabsRef, name, handle, cove
       window.removeEventListener('resize', schedule);
       cancelAnimationFrame(frame);
     };
-  }, [active, headerRef, tabsRef, name, handle]);
+  }, [active, headerRef, name, handle]);
 
   return (
     <div className="profile-collapse-anchor">
