@@ -2,6 +2,7 @@ import { normalizeSubReferral } from './affiliate-subref';
 import { supabase } from "@/integrations/supabase/client";
 import { getAffiliateRef, getAffiliateSubRef } from "@/lib/affiliateRef";
 import { withWalletHeader } from "@/lib/supabase-wallet-client";
+import { ensureWalletSession } from '@/lib/wallet-session';
 
 export const AFFILIATE_COMMISSION_PCT = 20;
 export const AFFILIATE_L1_COMMISSION_PCT = 20;
@@ -133,6 +134,7 @@ export async function getOrCreateAffiliateCode(
 export async function attributeReferralIfPending(referredAddress: string) {
   const code = getAffiliateRef();
   if (!code) return;
+  if (!await ensureWalletSession(referredAddress)) throw new Error('Sign in to attribute a referral');
   const { error } = await withWalletHeader(
     supabase.rpc('attribute_affiliate_referral' as never, { p_code: code, p_sub_id: getAffiliateSubRef() } as never),
     referredAddress.toLowerCase(),
@@ -221,9 +223,12 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
       supabase.rpc("get_affiliate_cta_stats" as never),
       addr,
     ) as unknown as Promise<{ data: Array<{ destination: string; clicks: number; unique_visitors: number }> | null }>,
-    withWalletHeader(
-      supabase.rpc('get_affiliate_sub_referrals' as never), addr,
-    ) as unknown as Promise<{ data: Array<{ referred_address: string; sub_id: string }> | null; error?: unknown }>,
+    (async () => {
+      if (!await ensureWalletSession(addr)) return { data: null };
+      return withWalletHeader(supabase.rpc('get_affiliate_sub_referrals' as never), addr) as unknown as Promise<{
+        data: Array<{ referred_address: string; sub_id: string }> | null;
+      }>;
+    })(),
   ]);
   // Supabase reports a failed read as { error } instead of throwing, so an
   // outage used to come back as a real-looking result: no code and every
