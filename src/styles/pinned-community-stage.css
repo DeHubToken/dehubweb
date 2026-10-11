@@ -7,6 +7,9 @@
   filter: blur(40px) saturate(1.4);
   opacity: 0.5;
 }
+[data-pinned-wash] {
+  mask-image: linear-gradient(#000 calc(100% - 80px), transparent);
+}
 
 /* Fades the strip's art from dark behind the text to clear on the right. */
 [data-pinned-strip-shade] {
