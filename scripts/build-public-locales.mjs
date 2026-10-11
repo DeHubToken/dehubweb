@@ -8,6 +8,9 @@ import { mdToHtml } from './markdown-html.mjs';
 export const PRIORITY_LOCALES = ['ar', 'es', 'fr', 'nl', 'tr'];
 const readJson = file => JSON.parse(fs.readFileSync(file, 'utf8'));
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 16);
+const decodeHtml = value => value.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replaceAll('&quot;', '"').replaceAll('&#39;', "'").replaceAll('&apos;', "'").replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&').replaceAll('&nbsp;', ' ');
+const normalizeCopy = value => decodeHtml(value).replace(/\s+/g, ' ').trim();
+const neutralCopy = s=>!/\p{L}/u.test(s)||/^(?:#[a-f0-9]{3,8}|0x[a-f0-9]{40}|bc1[a-z0-9]{25,}|[^\s@]+@[^\s@]+\.[^\s@]+|(?:https?:\/\/)?[a-z0-9-]+\.(?:io|com|net|org)(?:\/\S*)?|Exo (?:Black|Semi-bold|Medium|Light) — \d+)$/i.test(s);
 const escapeHtml = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 
 /** Read the versioned crawler copy without starting the worker or making requests. */
@@ -92,6 +95,7 @@ export function validatePageTranslation(source, translated) {
 export function buildPublicLocales(root) {
   const sources = collectPublicSources(root);
   const dictionaries = Object.fromEntries(PRIORITY_LOCALES.map(lang => [lang, readJson(path.join(root, `scripts/public-page-translations/${lang}.json`))]));
+  const normalizedDictionaries = Object.fromEntries(PRIORITY_LOCALES.map(lang => [lang, Object.fromEntries(Object.entries(dictionaries[lang]).map(([source, target]) => [normalizeCopy(source), target]))]));
   const version = digest({ sources, dictionaries });
   const table = {}, assets = {}, routes = {};
   for (const [route, source] of Object.entries(sources)) {
@@ -100,10 +104,21 @@ export function buildPublicLocales(root) {
     for (const lang of PRIORITY_LOCALES) {
       const dictionary = dictionaries[lang];
       const translate = text => {
-        if (!text || !/[A-Za-z]{2}/.test(text.replace(/<[^>]*>/g, ''))) return text;
-        const translated = dictionary[text];
-        if (typeof translated !== 'string' || !translated.trim()) throw new Error(`${route}:${lang} missing translation: ${text.slice(0,100)}`);
-        return validatePageTranslation(text, translated);
+        if (!text || neutralCopy(normalizeCopy(text)) || !/[A-Za-z]{2}/.test(text.replace(/<[^>]*>/g, ''))) return text;
+        const translated = dictionary[text] || normalizedDictionaries[lang][normalizeCopy(text)];
+        if (typeof translated === 'string' && translated.trim()) return validatePageTranslation(text, translated);
+        if (/<[a-zA-Z/]/.test(text)) {
+          const body = text.split(/(<code\b[^>]*>[\s\S]*?<\/code>|<[^>]*>)/i).map(part => {
+            if (part.startsWith('<')) return part;
+            const source = normalizeCopy(part);
+            if (!source || neutralCopy(source) || !/[A-Za-z]{2}/.test(source)) return part;
+            const target = normalizedDictionaries[lang][source];
+            if (!target) throw new Error(route + ':' + lang + ' missing HTML text: ' + source.slice(0,100));
+            return part.match(/^\s*/)[0] + escapeHtml(target.trim()) + part.match(/\s*$/)[0];
+          }).join('');
+          return validatePageTranslation(text, body);
+        }
+        throw new Error(route + ':' + lang + ' missing translation: ' + text.slice(0,100));
       };
       const md = source.md?.split(/(\n\s*\n)/).map(text => !text.trim() || /^\s*```/.test(text) ? text : translate(text)).join('');
       const body = md ? mdToHtml(md) : source.body.split(/(?<=<\/(?:p|li|h[1-6]|blockquote|table|div|section)>)/i).map(translate).join('');

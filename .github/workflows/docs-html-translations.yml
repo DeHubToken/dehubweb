@@ -1,0 +1,35 @@
+name: Documentation crawler translations
+
+on:
+  push:
+    branches: [fix/priority-languages-seo-20261011]
+    paths: [scripts/docs-html-translation-request.json]
+
+permissions:
+  contents: read
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        locale: [ar, es, fr, nl, tr]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Translate documentation crawler copy
+        env:
+          TRANSLATION_REQUEST: scripts/docs-html-translation-request.json
+          TRANSLATION_LOCALE: ${{ matrix.locale }}
+        run: node scripts/translate-priority-locales.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docs-html-translations-${{ matrix.locale }}
+          path: translation-output/
+          retention-days: 14
