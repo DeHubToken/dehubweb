@@ -60,6 +60,7 @@ export function LendBadgeRows({ address, handle, onBack, onDone }: LendBadgeRows
     <div className="space-y-1">
       <button
         onClick={onBack}
+        data-swipe-back
         className="flex items-center gap-2 px-1 py-2 text-white/60 hover:text-white transition-colors"
       >
         <ChevronLeft className="w-4 h-4" />

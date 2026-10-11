@@ -57,7 +57,7 @@ export function CopyAddressRows({ onBack, onCopied, className }: CopyAddressRows
   return (
     <div className={`space-y-1 ${className ?? ''}`}>
       {onBack && (
-        <button onClick={onBack} className="flex items-center gap-2 px-1 py-2 text-white/60 hover:text-white transition-colors">
+        <button data-swipe-back onClick={onBack} className="flex items-center gap-2 px-1 py-2 text-white/60 hover:text-white transition-colors">
           <ChevronLeft className="w-4 h-4" />
           <span className="text-sm">{t('wallet.back')}</span>
         </button>

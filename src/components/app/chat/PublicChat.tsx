@@ -341,6 +341,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
             size="icon"
             className="h-8 w-8 text-zinc-400 hover:text-white"
             onClick={onBack}
+            data-swipe-back
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>

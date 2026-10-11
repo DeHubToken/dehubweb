@@ -2403,6 +2403,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             aria-label={t('common.goBack')}
             className="absolute left-2 top-1.5 z-20 h-8 w-8 text-white flex items-center justify-center"
             onClick={(event) => { event.stopPropagation(); (onBack ?? stage?.onBack)?.(); }}
+            data-swipe-back
           >
             <MediaControlIcon icon={ArrowLeft} />
           </button>
