@@ -115,9 +115,9 @@ const BlogPost = () => {
   });
 
   const displayDate =
-    post.title === 'Dream Big: The $1M Home Crypto Raffle by DeHub'
-      ? 'July 11, 2022'
-      : formatDate(post.publishedAt);
+    post.slug === 'dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022'
+      ? formatDate('2022-07-11T12:00:00Z', translatedPage.language)
+      : formatDate(post.publishedAt, translatedPage.language);
 
   return (
     <>

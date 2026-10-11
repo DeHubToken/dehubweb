@@ -89,11 +89,12 @@ export const getAllBlogListPosts = (): BlogPost[] => {
 // Latest post across both corpora — used by the docs home hero.
 export const getLatestPost = (): BlogPost | undefined => latestPostMetadata;
 
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string, locale = 'en-US'): string => {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(locale.replace('_', '-'), {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
+    day: 'numeric',
+    timeZone: 'UTC'
   });
 };
