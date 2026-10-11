@@ -105,7 +105,7 @@ export function FeedIslandCapsule({
           aria-label={isAuthenticated ? _copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
           className="flex shrink-0 items-center justify-center px-5"
         >
-          <span className="relative inline-flex" data-feed-refresh-logo aria-busy={refresh.refreshing}>
+          <span className="relative inline-flex translate-y-[1.5px] scale-[1.15]" data-feed-refresh-logo aria-busy={refresh.refreshing}>
             <ElectricLogo active={show}><img src={logoSrc} alt="dehub" className="block h-[27.3px] w-[31.5px] max-w-none object-contain" width={192} height={164} /></ElectricLogo>
             {(refresh.refreshing || refresh.progress > 0) && (
               <svg data-feed-refresh-ring aria-hidden="true" width="36" height="36" viewBox="0 0 36 36" className="absolute left-1/2 top-1/2 pointer-events-none" style={{ transform: 'translate(-50%, -50%)' }}>
