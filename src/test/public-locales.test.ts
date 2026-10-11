@@ -42,4 +42,10 @@ describe('public page language consistency', () => {
     expect(() => validatePageTranslation(source, source + '<script>alert(1)</script>')).toThrow();
   });
 
+  it('allows translated image descriptions while keeping their destinations fixed', () => {
+    expect(validatePageTranslation('<img src="/art.png" alt="A creator at work">', '<img src="/art.png" alt="Una creadora trabajando">')).toContain('Una creadora');
+    expect(() => validatePageTranslation('![A creator at work](/art.png)', '![Una creadora trabajando](/other.png)')).toThrow();
+    expect(() => validatePageTranslation('<img src="/art.png" alt="A creator at work">', '<img src="/other.png" alt="Una creadora trabajando">')).toThrow();
+  });
+
 });

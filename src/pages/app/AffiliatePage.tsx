@@ -3,6 +3,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import i18n from '@/i18n';
 import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy, Plus, X } from "lucide-react";
 import { AppState } from '@/components/app/AppState';
 import { toast } from "sonner";
@@ -27,7 +28,7 @@ const SITE = typeof window !== "undefined" ? window.location.origin : "https://d
 
 function formatMoney(cents: number, currency = "USD") {
   try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(cents / 100);
+    return new Intl.NumberFormat(i18n.language || 'en', { style: "currency", currency }).format(cents / 100);
   } catch {
     return `$${(cents / 100).toFixed(2)}`;
   }

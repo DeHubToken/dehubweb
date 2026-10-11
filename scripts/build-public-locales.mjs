@@ -12,6 +12,40 @@ const decodeHtml = value => value.replace(/&#(\d+);/g, (_, n) => String.fromCode
 const normalizeCopy = value => decodeHtml(value).replace(/\s+/g, ' ').trim();
 const neutralCopy = s=>!/\p{L}/u.test(s)||/^(?:#[a-f0-9]{3,8}|0x[a-f0-9]{40}|bc1[a-z0-9]{25,}|[^\s@]+@[^\s@]+\.[^\s@]+|(?:https?:\/\/)?[a-z0-9-]+\.(?:io|com|net|org)(?:\/\S*)?|Exo (?:Black|Semi-bold|Medium|Light) — \d+)$/i.test(s);
 const escapeHtml = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+const fixedImageName = value => /^(?:Malik Jan|Mike Hales|Indi Jay Cammish|Bailey Young|DeHub|ChatGPT|Claude)$/i.test(value);
+const numbers = value => [...value.matchAll(/\d[\d.,]*/g)].map(match => match[0].replace(/\D/g, ''));
+const imageAlt = (source, normalizedDictionary, route, lang) => {
+  const suffix = source.endsWith('|avatar') ? '|avatar' : '';
+  const plain = normalizeCopy(source.slice(0, source.length - suffix.length));
+  if (!plain || neutralCopy(plain) || fixedImageName(plain)) return source;
+  const translated = normalizedDictionary[plain];
+  if (!translated) throw new Error(`${route}:${lang} missing image description: ${plain}`);
+  if (JSON.stringify(numbers(plain)) !== JSON.stringify(numbers(translated))) throw new Error(`${route}:${lang} image description changed a number: ${plain}`);
+  return translated.trim() + suffix;
+};
+const localizeMarkdownImages = (source, translated, dictionary, route, lang) => {
+  const originals = [...source.matchAll(/!\[([^\]]*)\]\(([^)]+)\)/g)];
+  let position = 0;
+  const result = translated.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, _alt, destination) => {
+    const original = originals[position++];
+    if (!original || original[2] !== destination) throw new Error(`${route}:${lang} image destination changed`);
+    return `![${imageAlt(original[1], dictionary, route, lang)}](${destination})`;
+  });
+  if (position !== originals.length) throw new Error(`${route}:${lang} image count changed`);
+  return result;
+};
+const localizeHtmlImages = (source, translated, dictionary, route, lang) => {
+  const pattern = /(<img\b[^>]*?\balt=)(["'])(.*?)\2/gi;
+  const originals = [...source.matchAll(pattern)];
+  let position = 0;
+  const result = translated.replace(pattern, (match, prefix, quote) => {
+    const original = originals[position++];
+    if (!original) throw new Error(`${route}:${lang} image count changed`);
+    return `${prefix}${quote}${escapeHtml(imageAlt(original[3], dictionary, route, lang))}${quote}`;
+  });
+  if (position !== originals.length) throw new Error(`${route}:${lang} image count changed`);
+  return result;
+};
 
 /** Read the versioned crawler copy without starting the worker or making requests. */
 export function collectPublicSources(root) {
@@ -83,7 +117,10 @@ export function validatePageTranslation(source, translated) {
   const tags = /<\/?[a-zA-Z][^>]*>/g;
   const placeholders = /\{\{[^}]+\}\}|\{[a-zA-Z_][\w.]*\}|\[TEAM_SECTION_[^\]]+\]/g;
   const links = /https?:\/\/[^\s<>"\)]+/g;
-  if (!equal(matches(source, tags), matches(translated, tags))) throw new Error('Translated HTML changed markup');
+  const stableTag = tag => tag.replace(/\balt=(["']).*?\1/i, 'alt="<translated>"');
+  if (!equal(matches(source, tags).map(stableTag), matches(translated, tags).map(stableTag))) throw new Error('Translated HTML changed markup');
+  const imageDestinations = text => [...text.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)].map(match => match[1]);
+  if (!equal(imageDestinations(source), imageDestinations(translated))) throw new Error('Translated Markdown changed an image destination');
   for (const pattern of [placeholders, links]) {
     if (!equal(matches(source, pattern).sort(), matches(translated, pattern).sort())) throw new Error('Translation changed a placeholder or link');
   }
@@ -120,8 +157,10 @@ export function buildPublicLocales(root) {
         }
         throw new Error(route + ':' + lang + ' missing translation: ' + text.slice(0,100));
       };
-      const md = source.md?.split(/(\n\s*\n)/).map(text => !text.trim() || /^\s*```/.test(text) ? text : translate(text)).join('');
-      const body = md ? mdToHtml(md) : source.body.split(/(?<=<\/(?:p|li|h[1-6]|blockquote|table|div|section)>)/i).map(translate).join('');
+      const translatedMd = source.md?.split(/(\n\s*\n)/).map(text => !text.trim() || /^\s*```/.test(text) ? text : translate(text)).join('');
+      const md = translatedMd ? localizeHtmlImages(source.md, localizeMarkdownImages(source.md, translatedMd, normalizedDictionaries[lang], route, lang), normalizedDictionaries[lang], route, lang) : undefined;
+      const untranslatedAltsBody = md ? mdToHtml(md) : source.body.split(/(?<=<\/(?:p|li|h[1-6]|blockquote|table|div|section)>)/i).map(translate).join('');
+      const body = localizeHtmlImages(md ? mdToHtml(source.md) : source.body, untranslatedAltsBody, normalizedDictionaries[lang], route, lang);
       const page = { title: translate(source.title), description: translate(source.description), h1: translate(source.h1), body, ...(md ? { md } : {}), ...(source.lede ? { lede: translate(source.lede) } : {}) };
       const bodyHeading = body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1];
       if (bodyHeading) page.h1 = bodyHeading.replace(/<[^>]*>/g, '').replaceAll('&amp;', '&').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
