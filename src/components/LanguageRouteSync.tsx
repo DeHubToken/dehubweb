@@ -32,8 +32,7 @@ export function LanguageRouteSync() {
     return () => { cancelled = true; pendingUrlLanguage.current = null; };
   }, [location.key, location.search, i18n]);
 
-  useEffect(() => {
-    const lang = language;
+  const syncUrl = useCallback((lang: string) => {
     const languages = publicPageLanguages(location.pathname);
     if (!languages.length) return;
     const params = new URLSearchParams(location.search);
@@ -49,6 +48,11 @@ export function LanguageRouteSync() {
       else params.delete('hl');
       navigate({ pathname: location.pathname, search: params.toString(), hash: location.hash }, { replace: true });
     }
-  }, [language, location.pathname, location.search, location.hash, navigate]);
+  }, [location.pathname, location.search, location.hash, navigate]);
+  useEffect(() => { syncUrl(language); }, [language, syncUrl]);
+  useEffect(() => {
+    i18n.on('languageChanged', syncUrl);
+    return () => { i18n.off('languageChanged', syncUrl); };
+  }, [i18n, syncUrl]);
   return null;
 }
