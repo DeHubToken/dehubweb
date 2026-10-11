@@ -17,7 +17,7 @@ export function ProfileSkeleton() {
           {/* Avatar + action buttons row */}
           <div className="relative -mt-12 sm:-mt-14 mb-4 flex items-end justify-between">
             <Skeleton className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-white/[0.06] border-2 border-zinc-900" />
-            <div className="flex items-center gap-2">
+            <div className="-mr-1 flex items-center gap-2">
               <Skeleton className="h-9 w-24 rounded-xl bg-white/[0.06]" />
               <Skeleton className="h-9 w-9 rounded-xl bg-white/[0.06]" />
             </div>

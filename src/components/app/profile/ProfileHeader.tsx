@@ -238,7 +238,7 @@ export function ProfileHeader({
                 )}
               </button>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="-mr-1 flex items-center gap-2">
               {isViewingOwnProfile ? (
                 <Button
                   variant="glass"
