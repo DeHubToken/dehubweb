@@ -8,13 +8,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { parseDehubLink } from '@/lib/dehub-links';
 import { Skeleton } from '@/components/ui/skeleton';
 import { fetchAppByDomain, type MiniAppListing } from '@/lib/miniapp/registry';
-import { PredictionDetails } from './PredictionDetails';
+import { LinkPreviewContent } from './LinkPreviewContent';
 import { parsePredictionLink } from '@/lib/predictions';
 import { parseRichLink } from '@/lib/rich-links';
 import { RichLinkCard } from './RichLinkCardLazy';
@@ -117,32 +116,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
               className="block bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:bg-white/[0.08] transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
-              {preview.image && (
-                <div className="w-full aspect-[1.91/1] bg-white/5">
-                  <img
-                    src={preview.image}
-                    alt={preview.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
-                </div>
-              )}
-              <div className="px-3 pb-3 pt-3.5 sm:pt-4 min-w-0">
-                <div className="flex items-center gap-1.5 text-xs text-white/50 mb-0.5">
-                  <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate">{preview.siteName || domain}</span>
-                </div>
-                <h4 className={`text-sm font-medium text-white mb-0.5 ${preview.prediction ? '' : 'line-clamp-1'}`}>
-                  {preview.title}
-                </h4>
-                {preview.description && (
-                  <p className="text-xs text-white/60 line-clamp-2">
-                    {preview.description}
-                  </p>
-                )}
-                <PredictionDetails preview={preview} />
-              </div>
+              <LinkPreviewContent preview={preview} />
             </motion.a>
           );
         })}
@@ -150,7 +124,6 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
 
       {loading && (
         <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
-          <Skeleton className="w-full aspect-[1.91/1]" />
           <div className="px-3 pb-3 pt-3.5 sm:pt-4 space-y-2">
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-4 w-full" />
