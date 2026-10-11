@@ -1,10 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useEditorStore } from "@/store/editorStore";
-import { applyOps, askAgent, describeScene } from "./agent";
+import { applyOps, askAgent, askSceneAgent, describeScene } from "./agent";
 import { useEditorUiStore } from "@/store/editorUiStore";
 
 describe("editor agent", () => {
   beforeEach(() => useEditorStore.getState().newProject());
+
+  it('advertises installed generator controls to the shared planner and keeps a returned sound draft out of Undo history', async () => {
+    const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ reply: '', ops: [{ op: 'generate', kind: 'sfx', prompt: 'A soft door closing.' }] }), { status: 200 }));
+    const before = useEditorStore.getState().toSnapshot(), past = useEditorStore.getState().past;
+    const scene = { selected: [], layers: [] };
+    try {
+      const result = await askSceneAgent([{ role: 'user', content: 'Could this have a soft door sound?' }], scene);
+      const body = JSON.parse(String(fetch.mock.calls[0][1]?.body));
+      expect(body).toEqual({ messages: [{ role: 'user', content: 'Could this have a soft door sound?' }], scene, generationKinds: ['image', 'video', 'voice', 'music', 'sfx'] });
+      expect(await applyOps(result.ops)).toMatchObject({ applied: 0, failed: 0, generate: { kind: 'sfx', prompt: 'A soft door closing.' } });
+      expect(useEditorStore.getState().clips).toEqual(before.clips); expect(useEditorStore.getState().past).toBe(past);
+    } finally { fetch.mockRestore(); }
+  });
 
   it("performs the exact ten one-second cut request without a network planner", async () => {
     useEditorStore.setState({ tracks: [{ id: "v", kind: "video", name: "Video", hidden: false, muted: false }], clips: [{ id: "v1", trackId: "v", kind: "video", mediaId: "m", start: 0, trimIn: 0, duration: 10 }] });
