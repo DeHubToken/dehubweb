@@ -1,3 +1,4 @@
+import { FeedbackLink } from '@/components/app/FeedbackLink';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -588,6 +589,7 @@ export default function YoutubeMigratePage() {
 
       <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3 flex flex-col gap-2 sm:gap-3">
 
+        <FeedbackLink source="migration" />
         {stage === 'loading' && (
           <div className="flex justify-center py-10">
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />

@@ -1,3 +1,4 @@
+import { FeedbackLink } from '@/components/app/FeedbackLink';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * dehub.io/converter — import a video from another platform as a DeHub post.
@@ -355,6 +356,7 @@ export default function YoutubeImportPage() {
             </Button>
           </div>
           <p className="text-sm text-zinc-400 max-w-prose">{t('converter.subtitle')}</p>
+          <FeedbackLink source="converter" />
         </header>
 
         <div className="flex items-center gap-1.5">

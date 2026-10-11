@@ -67,6 +67,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: CalendarDays, label: 'Events', path: '/app/events' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
+  { icon: MessageSquare, label: 'Feedback', path: '/feedback' },
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   // Directly under Staking, because it is what staking buys. Without an entry
   // here a holder who has already staked has no route to the page at all.
