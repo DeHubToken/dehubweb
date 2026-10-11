@@ -2326,6 +2326,19 @@
     "pendingSubmitted": "{{amount}} jeton gönderildi. Onay hala kontrol ediliyor. Tekrar göndermeyin."
   },
   "communities": {
+    "existingPost": {
+      "add": "Mevcut gönderiyi ekle",
+      "hint": "Özgün gönderiyi, beğenileri ve görüntülemeleri koruyun.",
+      "placeholder": "DeHub gönderi bağlantısı veya kimliği",
+      "adding": "Ekleniyor…",
+      "added": "Gönderi topluluğa eklendi",
+      "remove": "Topluluktan kaldır",
+      "more": "Daha fazla gönderi yükle",
+      "failed": "Gönderiler güncellenemedi. Tekrar deneyin.",
+      "invalidLink": "Bir DeHub gönderi bağlantısı veya kimliği yapıştırın.",
+      "unavailable": "Bu gönderi kullanılamıyor.",
+      "signIn": "Topluluk gönderilerini yönetmek için tekrar giriş yapın."
+    },
     "title": "Topluluklar",
     "create": "Oluştur",
     "searchPlaceholder": "Toplulukları ara...",
