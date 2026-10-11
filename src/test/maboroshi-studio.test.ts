@@ -59,8 +59,30 @@ describe('Maboroshi creator journey', () => {
     expect(el('jobs').disabled).toBe(true);
     const payment = sent.find(x => x.type === 'maboroshi:pay');
     w.document.dispatchEvent(new w.CustomEvent('maboroshi:native-payment-result', { detail: { requestId: payment.requestId, error: 'Payment cancelled.' } }));
-    await vi.waitFor(() => expect(el('error').textContent).toBe('Payment cancelled.'));
+    await vi.waitFor(() => expect(el('project-status').textContent).toBe('Payment cancelled. Your project is saved.'));
+    expect(el('error').hidden).toBe(true);
+    expect(el('progress').dataset.notice).toBe('true');
     expect(el('prepare').disabled).toBe(false);
+  });
+  it('shows explicit cancellation as one neutral status and keeps real failures as errors', async () => {
+    await connected(); el('prepare').click();
+    await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:pay')).toBe(true));
+    const requestId = sent.find(x => x.type === 'maboroshi:pay').requestId;
+    w.document.dispatchEvent(new w.CustomEvent('maboroshi:native-payment-result', { detail: { requestId, cancelled: true } }));
+    await vi.waitFor(() => expect(el('progress').dataset.notice).toBe('true'));
+    expect(el('error').hidden).toBe(true);
+    expect(el('project-status').getAttribute('role')).toBe('status');
+    expect(el('next-step').textContent).toContain('Next: prepare');
+    expect(el('source-preview-section').hidden).toBe(false);
+    el('prepare').click();
+    expect(el('progress').dataset.notice).toBe('false');
+    await vi.waitFor(() => expect(sent.filter(x => x.type === 'maboroshi:pay')).toHaveLength(2));
+    w.document.dispatchEvent(new w.CustomEvent('maboroshi:native-payment-result', { detail: { requestId, error: 'Payment could not be confirmed.' } }));
+    await vi.waitFor(() => expect(el('error').hidden).toBe(false));
+    expect(el('error').textContent).toBe('Payment could not be confirmed.');
+    expect(el('error').getAttribute('role')).toBe('alert');
+    expect(el('project-status').textContent).toBe('Source saved.');
+    expect(fetcher.mock.calls.some(([path]) => /\/(prepare|draft|hd)$/.test(path))).toBe(false);
   });
   it('keeps original video and download accessible after processing failure', async () => {
     saved = project({ state: 'failed', stage: 'prepare', status: 'Processing failed. This step has been refunded.' });
