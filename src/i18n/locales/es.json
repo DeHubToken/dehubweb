@@ -13347,5 +13347,17 @@
     "publish": "Publicar artículo",
     "saveDraft": "Guardar borrador",
     "formatting": "Formato"
+  },
+  "liveAudience": {
+    "whosHere": "Quién está aquí",
+    "watchingCount": "{{formatted}} viendo",
+    "hereCount": "{{formatted}} aquí",
+    "startedAgo": "Comenzó {{time}}",
+    "host": "Anfitrión",
+    "topTippers": "Mayores propinas",
+    "mostActive": "Más activos",
+    "hereNow": "Aquí ahora",
+    "joinedAgo": "se unió {{time}}",
+    "nobodyYet": "Aún no hay nadie"
   }
 }

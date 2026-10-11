@@ -13347,5 +13347,17 @@
     "publish": "Makale yayınla",
     "saveDraft": "Kaydet (Taslak Oluştur)",
     "formatting": "Biçimlendirme"
+  },
+  "liveAudience": {
+    "whosHere": "Kimler burada",
+    "watchingCount": "{{formatted}} izliyor",
+    "hereCount": "{{formatted}} kişi burada",
+    "startedAgo": "{{time}} başladı",
+    "host": "Yayıncı",
+    "topTippers": "En çok bahşiş verenler",
+    "mostActive": "En aktifler",
+    "hereNow": "Şu an burada",
+    "joinedAgo": "{{time}} katıldı",
+    "nobodyYet": "Henüz kimse yok"
   }
 }

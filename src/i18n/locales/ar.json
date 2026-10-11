@@ -13351,5 +13351,17 @@
     "publish": "نشر المقال",
     "saveDraft": "حفظ المسودة",
     "formatting": "التنسيق"
+  },
+  "liveAudience": {
+    "whosHere": "من هنا",
+    "watchingCount": "{{formatted}} يشاهدون",
+    "hereCount": "{{formatted}} هنا",
+    "startedAgo": "بدأ {{time}}",
+    "host": "المضيف",
+    "topTippers": "أبرز مقدمي الإكراميات",
+    "mostActive": "الأكثر نشاطًا",
+    "hereNow": "هنا الآن",
+    "joinedAgo": "انضم {{time}}",
+    "nobodyYet": "لا أحد بعد"
   }
 }

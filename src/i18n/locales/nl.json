@@ -13599,5 +13599,17 @@
     "publish": "Publiceer artikel",
     "saveDraft": "Opslag als concept",
     "formatting": "Opmaak"
+  },
+  "liveAudience": {
+    "whosHere": "Wie is hier",
+    "watchingCount": "{{formatted}} kijken",
+    "hereCount": "{{formatted}} hier",
+    "startedAgo": "Begonnen {{time}}",
+    "host": "Host",
+    "topTippers": "Grootste fooiers",
+    "mostActive": "Meest actief",
+    "hereNow": "Nu hier",
+    "joinedAgo": "deelgenomen {{time}}",
+    "nobodyYet": "Nog niemand"
   }
 }
