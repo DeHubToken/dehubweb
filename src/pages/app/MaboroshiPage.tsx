@@ -28,8 +28,8 @@ export default function MaboroshiPage() {
   const paymentInFlight = useRef(false);
   const activeWallet = useRef('');
   activeWallet.current = isAuthenticated ? (walletAddress || '').toLowerCase() : '';
-  const reply = useCallback((requestId: string, error?: string) => {
-    frame.current?.contentWindow?.postMessage({ type: 'maboroshi:payment-result', requestId, error }, ORIGIN);
+  const reply = useCallback((requestId: string, error?: string, cancelled = false) => {
+    frame.current?.contentWindow?.postMessage({ type: 'maboroshi:payment-result', requestId, error, cancelled }, ORIGIN);
   }, []);
   const session = useCallback(() => {
     frame.current?.contentWindow?.postMessage({ type: 'maboroshi:session',
@@ -84,14 +84,14 @@ export default function MaboroshiPage() {
         className="w-full flex-1 border-0" style={{ minHeight: 'calc(100dvh - 65px)' }}
         allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-downloads" referrerPolicy="no-referrer" />
       <Dialog open={!!quote} onOpenChange={open => {
-        if (!open && quote && !paying) { reply(quote.requestId, 'Payment cancelled.'); pending.current = null; setQuote(null); }
+        if (!open && quote && !paying) { reply(quote.requestId, 'Payment cancelled.', true); pending.current = null; setQuote(null); }
       }}>
         <DialogContent onInteractOutside={event => { if (paying) event.preventDefault(); }}>
           <DialogHeader><DialogTitle>{t('creator.toolMaboroshi')}</DialogTitle>
             <DialogDescription>{quote && maboroshiStageLabel(quote.stage)} · {quote && (quote.price_micros / 1000).toLocaleString()} DHB · {quote && new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(quote.price_micros / 1e6)}</DialogDescription>
           </DialogHeader>
           <Button disabled={paying} onClick={() => void confirm()}>{paying ? t('common.loading', 'Loading…') : t('common.confirm', 'Confirm')}</Button>
-          <Button variant="outline" disabled={paying} onClick={() => { if (quote) reply(quote.requestId, 'Payment cancelled.'); pending.current = null; setQuote(null); }}>{t('common.cancel')}</Button>
+          <Button variant="outline" disabled={paying} onClick={() => { if (quote) reply(quote.requestId, 'Payment cancelled.', true); pending.current = null; setQuote(null); }}>{t('common.cancel')}</Button>
         </DialogContent>
       </Dialog>
     </main>
