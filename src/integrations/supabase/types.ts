@@ -2302,6 +2302,30 @@ export type Database = {
         }
         Relationships: []
       }
+      creator_public_posters: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          price_dhb: number
+          skill_slug: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          image_url: string
+          price_dhb?: number
+          skill_slug?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          price_dhb?: number
+          skill_slug?: string
+        }
+        Relationships: []
+      }
       custom_emojis: {
         Row: {
           animated: boolean
@@ -3033,6 +3057,153 @@ export type Database = {
           },
         ]
       }
+      editor_cloud_draft_clients: {
+        Row: {
+          actor_wallet: string
+          anchor_revision: number | null
+          base_revision: number | null
+          client_id: string
+          committed_revision: number | null
+          document_hash: string | null
+          expires_at: string
+          owner_wallet: string
+          project_id: string
+          request_id: string | null
+          sequence: number
+          stored_at: string | null
+          writer_id: string
+        }
+        Insert: {
+          actor_wallet: string
+          anchor_revision?: number | null
+          base_revision?: number | null
+          client_id: string
+          committed_revision?: number | null
+          document_hash?: string | null
+          expires_at?: string
+          owner_wallet: string
+          project_id: string
+          request_id?: string | null
+          sequence?: number
+          stored_at?: string | null
+          writer_id?: string
+        }
+        Update: {
+          actor_wallet?: string
+          anchor_revision?: number | null
+          base_revision?: number | null
+          client_id?: string
+          committed_revision?: number | null
+          document_hash?: string | null
+          expires_at?: string
+          owner_wallet?: string
+          project_id?: string
+          request_id?: string | null
+          sequence?: number
+          stored_at?: string | null
+          writer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_draft_clients_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
+      editor_cloud_draft_receipts: {
+        Row: {
+          actor_wallet: string
+          anchor_revision: number
+          base_revision: number
+          committed_revision: number | null
+          document_hash: string
+          expires_at: string
+          outcome: string
+          owner_wallet: string
+          project_id: string
+          request_id: string
+          sequence: number
+          stored_at: string
+          writer_id: string
+        }
+        Insert: {
+          actor_wallet: string
+          anchor_revision: number
+          base_revision: number
+          committed_revision?: number | null
+          document_hash: string
+          expires_at: string
+          outcome: string
+          owner_wallet: string
+          project_id: string
+          request_id: string
+          sequence: number
+          stored_at: string
+          writer_id: string
+        }
+        Update: {
+          actor_wallet?: string
+          anchor_revision?: number
+          base_revision?: number
+          committed_revision?: number | null
+          document_hash?: string
+          expires_at?: string
+          outcome?: string
+          owner_wallet?: string
+          project_id?: string
+          request_id?: string
+          sequence?: number
+          stored_at?: string
+          writer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_draft_receipts_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
+      editor_cloud_drafts: {
+        Row: {
+          anchor_revision: number
+          document: Json
+          owner_wallet: string
+          project_id: string
+          revision: number
+          updated_at: string
+        }
+        Insert: {
+          anchor_revision: number
+          document: Json
+          owner_wallet: string
+          project_id: string
+          revision: number
+          updated_at?: string
+        }
+        Update: {
+          anchor_revision?: number
+          document?: Json
+          owner_wallet?: string
+          project_id?: string
+          revision?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_drafts_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: true
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
       editor_cloud_members: {
         Row: {
           accepted: boolean
@@ -3111,28 +3282,34 @@ export type Database = {
         Row: {
           created_at: string
           document: Json
+          draft_base_revision: number | null
           editor_wallet: string | null
           project_id: string
           request_id: string
           revision: number
+          saved_base_revision: number | null
           wallet_address: string
         }
         Insert: {
           created_at?: string
           document: Json
+          draft_base_revision?: number | null
           editor_wallet?: string | null
           project_id: string
           request_id: string
           revision: number
+          saved_base_revision?: number | null
           wallet_address: string
         }
         Update: {
           created_at?: string
           document?: Json
+          draft_base_revision?: number | null
           editor_wallet?: string | null
           project_id?: string
           request_id?: string
           revision?: number
+          saved_base_revision?: number | null
           wallet_address?: string
         }
         Relationships: [
@@ -6747,6 +6924,7 @@ export type Database = {
           reaction_tip_seen: boolean
           shorts_enabled: boolean
           updated_at: string
+          video_dub_tip_seen: boolean
           wallet_address: string
         }
         Insert: {
@@ -6755,6 +6933,7 @@ export type Database = {
           reaction_tip_seen?: boolean
           shorts_enabled?: boolean
           updated_at?: string
+          video_dub_tip_seen?: boolean
           wallet_address: string
         }
         Update: {
@@ -6763,6 +6942,7 @@ export type Database = {
           reaction_tip_seen?: boolean
           shorts_enabled?: boolean
           updated_at?: string
+          video_dub_tip_seen?: boolean
           wallet_address?: string
         }
         Relationships: []
@@ -8377,6 +8557,55 @@ export type Database = {
         Args: { p_max_discovered?: number }
         Returns: Json
       }
+      editor_cloud_checkpoint_save: {
+        Args: {
+          p_document: Json
+          p_expected_draft_revision: number
+          p_expected_revision: number
+          p_id: string
+          p_owner: string
+          p_request_id: string
+        }
+        Returns: Json
+      }
+      editor_cloud_draft_load: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_draft_media_allowed: {
+        Args: { p_path: string }
+        Returns: boolean
+      }
+      editor_cloud_draft_open: {
+        Args: { p_client_id: string; p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_draft_resolve: {
+        Args: {
+          p_anchor_revision: number
+          p_document: Json
+          p_expected_revision: number
+          p_id: string
+          p_owner: string
+          p_request_id: string
+          p_sequence: number
+          p_writer_id: string
+        }
+        Returns: Json
+      }
+      editor_cloud_draft_save: {
+        Args: {
+          p_anchor_revision: number
+          p_document: Json
+          p_expected_revision: number
+          p_id: string
+          p_owner: string
+          p_request_id: string
+          p_sequence: number
+          p_writer_id: string
+        }
+        Returns: Json
+      }
       editor_cloud_edit_allowed: {
         Args: { p_id: string; p_owner: string }
         Returns: boolean
@@ -8399,6 +8628,10 @@ export type Database = {
       editor_cloud_list: { Args: never; Returns: Json }
       editor_cloud_list_trash: { Args: never; Returns: Json }
       editor_cloud_live_access: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_live_checkpoint: {
         Args: { p_id: string; p_owner: string }
         Returns: Json
       }
