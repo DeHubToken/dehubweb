@@ -6,7 +6,7 @@
  * in the studio, land on the timeline, keep working.
  */
 import { toast } from 'sonner';
-import { assetToFile } from '@/lib/creator/generationEngine';
+import { assetToFile, throwIfAssetAborted } from './assetDownload';
 import { importOneFile } from '@/lib/editor/importFiles';
 import { useEditorStore } from '@/store/editorStore';
 import type { GenerationJob } from '@/store/generationStore';
@@ -15,9 +15,26 @@ import { assertGeneratedMediaUrl, generatedMediaFormat, generatedMediaName } fro
 
 export interface SendToEditorOptions {
   wallet?: string | null;
+  badgeBalance?: number | null;
+  username?: string | null;
+  signal?: AbortSignal;
   /** Place the clip on the timeline as well as importing it. Default true. */
   addToTimeline?: boolean;
 }
+
+const imports = new Map<string, AbortController>();
+const listeners = new Set<() => void>();
+let importingIds: readonly string[] = [];
+const notifyImports = () => {
+  importingIds = Array.from(imports.keys());
+  for (const listener of listeners) listener();
+};
+export const getEditorImportIds = () => importingIds;
+export const subscribeToEditorImports = (listener: () => void) => {
+  listeners.add(listener);
+  return () => { listeners.delete(listener); };
+};
+export const cancelEditorImport = (id: string) => { imports.get(id)?.abort(); };
 
 /**
  * Import a finished job into the editor. Returns the new media id, or null if
@@ -27,6 +44,22 @@ export async function sendJobToEditor(
   job: GenerationJob,
   options: SendToEditorOptions = {},
 ): Promise<string | null> {
+  if (imports.has(job.id) || options.signal?.aborted) return null;
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  options.signal?.addEventListener('abort', abort, { once: true });
+  imports.set(job.id, controller);
+  notifyImports();
+  try {
+    return await importJob(job, { ...options, signal: controller.signal });
+  } finally {
+    options.signal?.removeEventListener('abort', abort);
+    imports.delete(job.id);
+    notifyImports();
+  }
+}
+
+async function importJob(job: GenerationJob, options: SendToEditorOptions): Promise<string | null> {
   if (!job.url) {
     toast.error(i18n.t('creator.editorAssetMissing'));
     return null;
@@ -46,11 +79,14 @@ export async function sendJobToEditor(
     assertGeneratedMediaUrl(job.url);
     const expected = generatedMediaFormat(job.kind, job.url);
     const title = `${job.prompt || job.resolvedPrompt || job.kind}-${job.id}`;
-    const download = await assetToFile(job.url, generatedMediaName(job.kind, title, expected.ext), expected.mime);
+    const download = await assetToFile(job.url, generatedMediaName(job.kind, title, expected.ext), expected.mime, { signal: options.signal });
+    throwIfAssetAborted(options.signal);
     if (!download.size) throw new Error(i18n.t('creator.editorImportFailed'));
     const actual = generatedMediaFormat(job.kind, job.url, download.type);
     const file = new File([download], generatedMediaName(job.kind, title, actual.ext), { type: actual.mime });
-    const mediaId = await importOneFile(file, { wallet: options.wallet ?? null });
+    const mediaId = await importOneFile(file, { wallet: options.wallet ?? null,
+      badgeBalance: options.badgeBalance, username: options.username, signal: options.signal });
+    throwIfAssetAborted(options.signal);
     if (!mediaId) return null;
 
     if (options.addToTimeline !== false) {
@@ -65,6 +101,7 @@ export async function sendJobToEditor(
     window.dispatchEvent(new CustomEvent('editor:storage-usage-changed'));
     return mediaId;
   } catch (e) {
+    if (options.signal?.aborted || (e instanceof Error && e.name === 'AbortError')) return null;
     console.error('[creator] send to editor failed', e);
     toast.error(i18n.t('creator.editorImportFailed'));
     return null;

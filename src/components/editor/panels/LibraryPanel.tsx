@@ -7,13 +7,13 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * queue, so a clip generated in the studio shows up here already, one click
  * from the timeline.
  */
-import { useCallback, useState } from 'react';
+import { useCallback, useSyncExternalStore } from 'react';
 import { AlertCircle, Box, Film, ImageIcon, Loader2, Music2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
-import { sendJobToEditor } from '@/lib/creator/sendToEditor';
+import { cancelEditorImport, getEditorImportIds, sendJobToEditor, subscribeToEditorImports } from '@/lib/creator/sendToEditor';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { PanelHeading } from './DesignPanel';
 import { AppState } from '@/components/app/AppState';
@@ -30,19 +30,15 @@ export function LibraryPanel() {
   const retry = useGenerationStore((s) => s.retry);
   const quota = useEditorQuota();
   const setPanel = useEditorUiStore((s) => s.setPanel);
-  const [sendingId, setSendingId] = useState<string | null>(null);
+  const sendingIds = useSyncExternalStore(subscribeToEditorImports, getEditorImportIds);
 
   const send = useCallback(
     async (job: GenerationJob) => {
-      setSendingId(job.id);
-      try {
-        const id = await sendJobToEditor(job, { wallet: quota.walletAddress });
-        if (id) {
-          await quota.refetchUsage();
-          toast.success(_copy("copy.381bb6112fec", { defaultValue: "Added to the timeline." }));
-        }
-      } finally {
-        setSendingId(null);
+      const id = await sendJobToEditor(job, { wallet: quota.walletAddress,
+        badgeBalance: quota.badgeBalance, username: quota.username });
+      if (id) {
+        await quota.refetchUsage();
+        toast.success(_copy("copy.381bb6112fec", { defaultValue: "Added to the timeline." }));
       }
     },
     [quota, _copy],
@@ -69,8 +65,9 @@ export function LibraryPanel() {
             <li key={job.id}>
               <JobTile
                 job={job}
-                sending={sendingId === job.id}
+                sending={sendingIds.includes(job.id)}
                 onSend={() => void send(job)}
+                onCancelImport={() => cancelEditorImport(job.id)}
                 onCancel={() => cancel(job.id)}
                 onRetry={() => retry(job.id)}
               />
@@ -90,11 +87,12 @@ interface JobTileProps {
   job: GenerationJob;
   sending: boolean;
   onSend: () => void;
+  onCancelImport: () => void;
   onCancel: () => void;
   onRetry?: () => void;
 }
 
-function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
+function JobTile({ job, sending, onSend, onCancelImport, onCancel, onRetry }: JobTileProps) {
   const { t: _copy } = _useCopy();
   const Icon = KIND_ICON[job.kind];
 
@@ -192,7 +190,7 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
           aria-label={_copy("copy.be0c54989fce", { defaultValue: "View 3D model \"{{value1}}\" on Creator", value1: job.prompt })}
           className={cn(
             'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
-            'opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
+            'opacity-100 sm:opacity-0 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',
           )}
         >
           <span className="rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">{_copy("copy.0916231e7bfb", { defaultValue: "View on Creator" })}</span>
@@ -200,17 +198,16 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
       ) : (
         <button
           type="button"
-          onClick={onSend}
-          disabled={sending}
-          title={_copy("copy.62c1c73d0370", { defaultValue: "Add \"{{value1}}\" to the timeline", value1: job.prompt })}
+          onClick={sending ? onCancelImport : onSend}
+          title={sending ? _copy('common.cancel') : _copy("copy.62c1c73d0370", { defaultValue: "Add \"{{value1}}\" to the timeline", value1: job.prompt })}
           className={cn(
             'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
-            'opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
+            sending ? 'opacity-100' : 'opacity-100 sm:opacity-0 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100',
           )}
         >
           <span className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">
             {sending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
-            {sending ? _copy("copy.0a6691ef373d", { defaultValue: "Adding" }) : _copy("copy.8cb184024922", { defaultValue: "Add to timeline" })}
+            {sending ? _copy('common.cancel') : _copy("copy.8cb184024922", { defaultValue: "Add to timeline" })}
           </span>
         </button>
       )}
