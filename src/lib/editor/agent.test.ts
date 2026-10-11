@@ -31,7 +31,7 @@ describe("editor agent", () => {
       expect(useEditorStore.getState().toSnapshot()).toMatchObject({ ...snapshot, updatedAt: expect.any(Number) });
       expect(useEditorStore.getState().past).toBe(past);
       expect(useEditorUiStore.getState().generatePrefill).toBe(other);
-      expect(await applyOps([{ op: "generate", kind: "music", prompt: "ambient" }])).toMatchObject({ applied: 0, failed: 1 });
+      expect(await applyOps([{ op: "generate", kind: "unsupported", prompt: "ambient" }])).toMatchObject({ applied: 0, failed: 1 });
     } finally { fetch.mockRestore(); useEditorUiStore.getState().setGeneratePrefill(null); }
   });
 
@@ -42,6 +42,16 @@ describe("editor agent", () => {
     expect(second).toMatchObject({ applied: 1, failed: 0, generate: { kind: "video", prompt: "Second video" } });
     useEditorStore.getState().undo();
     expect(useEditorStore.getState().clips).toHaveLength(0);
+  });
+
+  it('prepares a soundtrack offline without changing clips or consuming Undo', async () => {
+    const snapshot = useEditorStore.getState().toSnapshot(), past = useEditorStore.getState().past;
+    const fetch = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('offline'));
+    try {
+      const request = await askAgent([{ role: 'user', content: 'Compose music of quiet piano and warm bass' }]);
+      expect(await applyOps(request.ops)).toMatchObject({ applied: 0, failed: 0, generate: { kind: 'music', prompt: 'quiet piano and warm bass' } });
+      expect(fetch).not.toHaveBeenCalled(); expect(useEditorStore.getState().clips).toEqual(snapshot.clips); expect(useEditorStore.getState().past).toBe(past);
+    } finally { fetch.mockRestore(); }
   });
 
   it("applies a multi-step request as one undo step", async () => {
