@@ -13,6 +13,25 @@
   background: linear-gradient(90deg, rgb(6 4 18 / 0.86) 0%, rgb(6 4 18 / 0.5) 45%, rgb(6 4 18 / 0.12) 100%);
 }
 
+/* Keep the long dissolve behind profile text, with no hard top border. */
+[data-pinned-dissolve] { height: 178px; }
+[data-pinned-dissolve-art], [data-pinned-dissolve-bleed] {
+  position: absolute;
+  inset: auto 0 0;
+  background-size: cover;
+  background-position: center 60%;
+}
+[data-pinned-dissolve-art] {
+  height: 148px;
+  mask-image: linear-gradient(transparent, rgb(0 0 0 / .12) 25%, #000 86%);
+}
+[data-pinned-dissolve-bleed] {
+  height: 178px;
+  filter: blur(24px);
+  opacity: .62;
+  mask-image: linear-gradient(transparent, #000 90%);
+}
+
 /* Light surfaces: a lighter wash so dark text stays readable. The strip keeps
    its own dark shade, so its white text works on every theme. */
 html:is([data-theme="light"], [data-theme="minimal"]) [data-pinned-wash] > div {

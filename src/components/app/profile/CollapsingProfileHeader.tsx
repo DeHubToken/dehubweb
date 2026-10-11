@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
+import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import type { ReactNode } from 'react';
 import './profile-collapse.css';
 
@@ -16,6 +17,8 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
   const barRef = useRef<HTMLDivElement>(null);
   const [identityVisible, setIdentityVisible] = useState(false);
   const [actionsVisible, setActionsVisible] = useState(false);
+  const [surfaceVisible, setSurfaceVisible] = useState(false);
+  useFeedSwallowClip(headerRef, '[data-profile-collapse][data-collapsed="true"]', [surfaceVisible], { allThemes: true });
 
   useEffect(() => {
     const header = headerRef.current;
@@ -25,10 +28,12 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
     const update = () => {
       frame = 0;
       const bottom = bar.getBoundingClientRect().bottom;
+      const cover = header.querySelector('[data-profile-cover]');
       const identity = header.querySelector('[data-profile-identity]');
       const actions = header.querySelector('[data-profile-actions]');
       setIdentityVisible(!!identity && identity.getBoundingClientRect().bottom <= bottom);
       setActionsVisible(!!actions && actions.getBoundingClientRect().bottom <= bottom);
+      setSurfaceVisible(!!cover && cover.getBoundingClientRect().bottom <= bottom);
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     const resize = new ResizeObserver(schedule);
@@ -46,8 +51,11 @@ export function CollapsingProfileHeader({ headerRef, name, handle, coverUrl, fol
 
   return (
     <div className="profile-collapse-anchor">
-      <div ref={barRef} data-profile-collapse className="profile-collapse-bar">
-        <div className="profile-collapse-surface" aria-hidden>
+      <div ref={barRef} data-profile-collapse data-collapsed={surfaceVisible} className="profile-collapse-bar">
+        <div className="profile-collapse-gap-guard" hidden={!surfaceVisible} aria-hidden>
+          {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
+        </div>
+        <div className="profile-collapse-surface" hidden={!surfaceVisible} aria-hidden>
           {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
         </div>
         <PageHeader overlay className="!top-2 !left-2 !right-auto" />

@@ -10,7 +10,21 @@
   height: 52px;
   margin: 0 8px;
   top: 4px;
+  border-radius: 15px;
 }
+.profile-collapse-gap-guard {
+  position: absolute;
+  inset: -4px -8px -8px;
+  background: #18181b;
+  overflow: hidden;
+  /* Only the seams outside the two pills need a stationary cover. */
+  clip-path: polygon(0 0, 100% 0, 100% 4px, 0 4px, 0 56px, 100% 56px, 100% 100%, 0 100%);
+}
+html[data-theme='system'] .profile-collapse-gap-guard {
+  background: #000;
+  clip-path: none;
+}
+html[data-theme='system'] .profile-collapse-gap-guard img { display: none; }
 .profile-collapse-surface {
   position: absolute;
   inset: 0;
