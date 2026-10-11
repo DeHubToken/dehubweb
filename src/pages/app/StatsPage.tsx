@@ -52,7 +52,6 @@ import {
   type SiteStatsUnavailable,
 } from '@/hooks/use-site-stats';
 import { FeedbackSection } from '@/components/app/stats/FeedbackSection';
-import { FinanceSection } from '@/components/app/stats/FinanceSection';
 import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPieces';
 import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
 import { cn } from '@/lib/utils';
@@ -1053,9 +1052,6 @@ export default function StatsPage() {
             charts above with it, and there is no reason for it to take the
             community numbers too. */}
         <CommunitySection range={range} />
-
-        {/* Its own endpoint and its own failure, for the same reason. */}
-        <FinanceSection range={range} />
 
         {/* Same reasoning as CommunitySection: a Cloudflare outage empties the
             charts, and there is no reason for it to take the feedback form with
