@@ -2434,10 +2434,10 @@ function postListHtml(heading, rows, { author = true } = {}) {
     .map((r) => {
       const who = author ? String(r.displayName || r.username || '').replace(/\s+/g, ' ').trim() : '';
       const views = Number(r.totalViews) || 0;
-      const tail = [who && `by ${escHtml(who)}`, views > 0 && `${views.toLocaleString('en-US')} views`]
+      const tail = [who && `<span data-public-by>by ${escHtml(who)}</span>`, views > 0 && `<span data-public-views="${views}">${views.toLocaleString('en-US')} views</span>`]
         .filter(Boolean)
         .join(' · ');
-      return `<li><a href="${APP_URL}/app/post/${Number(r.tokenId)}">${escHtml(postLabel(r))}</a>${tail ? ` — ${tail}` : ''}</li>`;
+      return `<li><a data-creator-copy href="${APP_URL}/app/post/${Number(r.tokenId)}">${escHtml(postLabel(r))}</a>${tail ? ` — ${tail}` : ''}</li>`;
     });
   if (!items.length) return '';
   return `<section class="dh-list"><h2>${escHtml(heading)}</h2><ul>${items.join('')}</ul></section>`;

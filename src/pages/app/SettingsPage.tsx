@@ -3578,7 +3578,7 @@ function MessagesSettings() {
             anchor="e2e-encryption"
             title={t('settings.e2eEncryption')}
             description={t('settings.e2eEncryptionDesc')}
-            action={<span className="text-sm font-medium text-zinc-300">{t('settings.automatic', _copy("copy.d461a493a375", { defaultValue: "Automatic" }))}</span>}
+            action={<span className="text-sm font-medium text-zinc-300">{t('settings.automatic', "Automatic")}</span>}
           />
           <SettingToggle
             icon={Filter}

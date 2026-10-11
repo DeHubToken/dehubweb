@@ -72,6 +72,23 @@ export function pageSegments(page) {
     : page.body.split(/(?<=<\/(?:p|li|h[1-6]|blockquote|table|div|section)>)/i).filter(text => text.trim());
 }
 
+
+/** Preserve executable markup, destinations, and interpolation while translating prose. */
+export function validatePageTranslation(source, translated) {
+  const matches = (text, pattern) => [...text.matchAll(pattern)].map(match => match[0]);
+  const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const tags = /<\/?[a-zA-Z][^>]*>/g;
+  const placeholders = /\{\{[^}]+\}\}|\{[a-zA-Z_][\w.]*\}|\[TEAM_SECTION_[^\]]+\]/g;
+  const links = /https?:\/\/[^\s<>"\)]+/g;
+  if (!equal(matches(source, tags), matches(translated, tags))) throw new Error('Translated HTML changed markup');
+  for (const pattern of [placeholders, links]) {
+    if (!equal(matches(source, pattern).sort(), matches(translated, pattern).sort())) throw new Error('Translation changed a placeholder or link');
+  }
+  const plain = source.replace(tags, '').trim();
+  if (plain.split(/\s+/).length > 8 && source.trim() === translated.trim() && /\b(the|your|with|this|that|you|from|will|please)\b/i.test(plain)) throw new Error('English prose was left untranslated');
+  return translated;
+}
+
 export function buildPublicLocales(root) {
   const sources = collectPublicSources(root);
   const dictionaries = Object.fromEntries(PRIORITY_LOCALES.map(lang => [lang, readJson(path.join(root, `scripts/public-page-translations/${lang}.json`))]));
@@ -86,7 +103,7 @@ export function buildPublicLocales(root) {
         if (!text || !/[A-Za-z]{2}/.test(text.replace(/<[^>]*>/g, ''))) return text;
         const translated = dictionary[text];
         if (typeof translated !== 'string' || !translated.trim()) throw new Error(`${route}:${lang} missing translation: ${text.slice(0,100)}`);
-        return translated;
+        return validatePageTranslation(text, translated);
       };
       const md = source.md?.split(/(\n\s*\n)/).map(text => !text.trim() || /^\s*```/.test(text) ? text : translate(text)).join('');
       const body = md ? mdToHtml(md) : source.body.split(/(?<=<\/(?:p|li|h[1-6]|blockquote|table|div|section)>)/i).map(translate).join('');

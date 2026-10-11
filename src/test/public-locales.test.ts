@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { validatePageTranslation } from '../../scripts/build-public-locales.mjs';
 import { localizePublicChrome, localizePageJsonLd } from '../../server/public-page-locales.js';
 
 describe('public page language consistency', () => {
@@ -19,4 +20,26 @@ describe('public page language consistency', () => {
     expect(localized).toContain('Documentación');
     expect(localized).toContain('A creator post remains unchanged.');
   });
+  it('does not rewrite a creator title that matches a navigation label', () => {
+    const html = '<h2>Latest videos</h2><a data-creator-copy href="https://dehub.io/app/post/1">Docs</a><span data-public-by>by María</span><span data-public-views="1200">1,200 views</span>';
+    const localized = localizePublicChrome(html, '/videos', 'es', {});
+    expect(localized).toContain('Últimos vídeos');
+    expect(localized).toContain('>Docs</a>');
+    expect(localized).toContain('>Por María</span>');
+    expect(localized).toContain('visualizaciones');
+  });
+  it('keeps related articles distinct from the current document', () => {
+    const related = { '@type': 'Article', headline: 'Another creator', url: 'https://dehub.io/app/post/1' };
+    const value = localizePageJsonLd({ '@type': 'WebPage', name: 'A guide', hasPart: related }, '/docs', 'es', page);
+    expect(value.name).toBe(page.title);
+    expect(value.hasPart).toEqual(related);
+  });
+  it('rejects changed markup and link destinations', () => {
+    const source = '<p>Read <a href="https://dehub.io/docs">Docs</a> for {{name}}.</p>';
+    expect(validatePageTranslation(source, '<p>Lee <a href="https://dehub.io/docs">Documentación</a> para {{name}}.</p>')).toContain('Documentación');
+    expect(() => validatePageTranslation(source, '<p>Lee <a href="https://example.com">Documentación</a> para {{name}}.</p>')).toThrow();
+    expect(() => validatePageTranslation(source, '<p>Lee <a href="https://dehub.io/docs">Documentación</a>.</p>')).toThrow();
+    expect(() => validatePageTranslation(source, source + '<script>alert(1)</script>')).toThrow();
+  });
+
 });
