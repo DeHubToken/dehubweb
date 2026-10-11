@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake, SpellCheck, Palette, Gauge, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Search, ThumbsUp, MessageSquare, Quote, ArrowUpDown, MoreHorizontal, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake, SpellCheck, Palette, Gauge, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useKidsModeLock } from '@/hooks/use-kids-mode';
@@ -165,6 +165,7 @@ interface CommentsSectionProps {
   stage?: boolean;
   /** The post's comment total, for the stage header. */
   stageCount?: number;
+  onStageOptions?: () => void;
   /** Tells the host which list the stage is showing, so it can reopen one. */
   onStageTabChange?: (tab: 'replies' | 'quotes' | 'reposts' | 'search') => void;
 }
@@ -915,7 +916,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
 // MAIN COMPONENT
 // ============================================================================
 
-function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageTabChange }: CommentsSectionProps) {
+function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false, forKids = false, postAuthorAddress, onDirtyChange, page = false, stage = false, stageCount, onStageOptions, onStageTabChange }: CommentsSectionProps) {
   // A kids post's thread is open to Kids Mode only. The post's own author is
   // exempt server-side, but they are also the one person who can always reach
   // it, so there is nothing to show them here.
@@ -2444,6 +2445,18 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
                 <ArrowUpDown className="h-3.5 w-3.5" />
                 {t(sortOption.short)}
               </button>
+                {onStageOptions && (
+                  <button
+                    type="button"
+                    data-stage-chip
+                    data-stage-options
+                    onClick={onStageOptions}
+                    aria-label={t('postOptions.options')}
+                    className="flex h-8 w-8 items-center justify-center rounded-lg"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </button>
+                )}
             </div>
           )}
         </div>
@@ -2814,8 +2827,7 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
           className={cn(
             stage
               // Docked to the bottom of the screen for the whole page, over a
-              // soft blurred fade (post-stage.css) so comments never read
-              // through it. The bottom nav is hidden on this page.
+              // translucent blur (post-stage.css). The bottom nav is hidden here.
               ? "fixed inset-x-0 bottom-0 z-[45] px-3 pt-2 pb-[max(0.625rem,env(safe-area-inset-bottom))]"
               : page
               // The app's reply bar: full width, pinned to the bottom of the
@@ -2825,7 +2837,6 @@ function CommentsSectionForAccount({ tokenId, onClose, initialTab, embedded = fa
             !page && (isMobile ? "pt-2 pb-1" : "pt-3")
           )}
         >
-          {stage && <div data-stage-composer-fade aria-hidden="true" />}
           {/* Common Ground: say up front that the first reply goes through the
               steps, so the sheet is not a surprise when Post is tapped. */}
           {commonGround && !isOwnThread && (
