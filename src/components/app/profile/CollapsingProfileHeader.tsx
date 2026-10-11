@@ -52,7 +52,7 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
         <div className="profile-collapse-surface" style={tabsPinned ? { bottom: -tabsHeight - 4 } : undefined} hidden={!surfaceVisible} aria-hidden>
           {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
         </div>
-        <PageHeader overlay className="!top-2 !left-2 !right-auto" />
+        <PageHeader overlay plainBack className="!top-2 !left-1 !right-auto" />
         <div className="profile-collapse-content">
           <div className="profile-collapse-identity" data-visible={surfaceVisible} aria-hidden={!surfaceVisible}>
             <p className="truncate text-sm sm:text-base font-bold text-white">{name}</p>
