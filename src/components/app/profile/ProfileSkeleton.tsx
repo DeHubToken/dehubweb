@@ -9,7 +9,7 @@ export function ProfileSkeleton() {
   return (
     <div data-profile-skeleton className="p-2 sm:p-3 space-y-2 sm:space-y-3">
       {/* Profile Card skeleton */}
-      <div data-profile-header className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden">
+      <div data-profile-header className="max-sm:-mx-2 rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden">
         {/* Cover photo placeholder */}
         <Skeleton className="aspect-[3/1] w-full bg-white/[0.06] rounded-none" />
 

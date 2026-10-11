@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Community Members tab
@@ -89,6 +90,7 @@ function MemberRow({ member, anonymous }: { member: CommunityMember; anonymous: 
 }
 
 export function CommunityMembers({ members, community, membership, onManage }: CommunityMembersProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const abilities = useCommunityAbilities(community, membership);
   const [query, setQuery] = useSurfaceDraft("components/app/communities/CommunityMembers.tsx:query", '', draftIdentity(community));
@@ -168,7 +170,7 @@ export function CommunityMembers({ members, community, membership, onManage }: C
         <AppState
           icon={query ? 'search' : 'subscriptions'}
           title={t('communities.noMembersFound', { defaultValue: 'No members found' })}
-          description={query ? 'Try a different wallet address.' : 'Members will appear here after they join.'}
+          description={query ? _copy("copy.d9be081cbe4e", { defaultValue: "Try a different wallet address." }) : _copy("copy.03745f37dded", { defaultValue: "Members will appear here after they join." })}
           kind={query ? 'search-empty' : 'empty'}
           size="compact"
         />

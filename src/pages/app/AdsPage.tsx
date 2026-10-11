@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Ads Manager Page (/app/ads)
  * ===========================
@@ -19,6 +20,7 @@ import { IslandAction, PageBody, PageEmpty, PageIsland, PageTabs } from '@/compo
 import { useAdRevenue } from '@/hooks/use-ads';
 
 export default function AdsPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [tab, setTab] = useState<'overview' | 'campaigns' | 'billing'>('overview');
   const [wizardOpen, setWizardOpen] = useState(false);
@@ -35,7 +37,7 @@ export default function AdsPage() {
     <div className="min-h-screen">
       <SEOHead
         title={t('ads.seoTitle')}
-        description="Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens."
+        description={_copy("copy.dac3d679946e", { defaultValue: "Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in tokens." })}
       />
 
       <PageIsland
@@ -65,18 +67,15 @@ export default function AdsPage() {
       {/* Content */}
       <PageBody className="max-w-4xl mx-auto">
         {isAuthenticated && revenue.data !== undefined ? <div data-kit-section className="rounded-xl border border-foreground/10 p-4">
-          <p className="font-medium text-foreground">Your ad revenue · ${revenue.data.toFixed(4)}</p>
-          <p className="text-sm text-muted-foreground">Revenue from ads and creator support, awaiting token settlement.</p>
+          <p className="font-medium text-foreground">{_copy("copy.b7c8b1eb6338", { defaultValue: "Your ad revenue · $" })}{revenue.data.toFixed(4)}</p>
+          <p className="text-sm text-muted-foreground">{_copy("copy.6d980563c3da", { defaultValue: "Revenue from ads and creator support, awaiting token settlement." })}</p>
         </div> : null}
         {!isAuthenticated ? (
           <PageEmpty
             icon="ads"
             title={t('ads.advertiseOnDehub')}
             body={
-              <>
-                Target verified badge holders with POVR — proof-of-view-and-rank advertising.
-                Connect your wallet to create your first campaign.
-              </>
+              <>{_copy("copy.c2bb07748c24", { defaultValue: "Target verified badge holders with POVR — proof-of-view-and-rank advertising. Connect your wallet to create your first campaign." })}</>
             }
           />
         ) : tab === 'overview' ? (

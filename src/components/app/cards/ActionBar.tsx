@@ -1,3 +1,5 @@
+import { TranslationText } from '@/components/TranslationText';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Action Bar Component
  * ====================
@@ -365,6 +367,7 @@ export function ActionBar({
   utilityDesktopAnchor = false,
   stage = null,
 }: ActionBarProps) {
+  const { t: _copy } = _useCopy();
   // What one reaction from this viewer counts for. A badge multiplies the
   // reaction they already have; it never buys them a second one, so this only
   // ever scales the count, never the number of votes cast.
@@ -680,12 +683,12 @@ export function ActionBar({
           (old: any) => old ? applyVoteStateToNFT(old, revertState) : old,
         );
       }
-      toast.error('Failed to react. Please try again.');
+      toast.error(_copy("copy.520424cf959c", { defaultValue: "Failed to react. Please try again." }));
     } finally {
       voteInFlightRef.current = false;
       setIsVoting(false);
     }
-  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, myReaction, localLikeCount, localDislikeCount, localReactionCounts, isAuthenticated, queryClient, onLike, onDislike, voteWeight, onLiveReaction]);
+  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, myReaction, localLikeCount, localDislikeCount, localReactionCounts, isAuthenticated, queryClient, onLike, onDislike, voteWeight, onLiveReaction, _copy]);
 
   /**
    * Tapping the thumbs-up / thumbs-down.
@@ -810,7 +813,7 @@ export function ActionBar({
   const handleCopyLink = () => {
     const url = shareUrlForPost();
     navigator.clipboard.writeText(url);
-    toast.success('Post URL copied to clipboard');
+    toast.success(_copy("copy.e91de547a0b8", { defaultValue: "Post URL copied to clipboard" }));
     // A copy is a share: it counts once per actor per post, next to reposts.
     trackLinkCopy(postId, walletAddress, linkCopyCount);
     setSheetOpen(false);
@@ -835,9 +838,9 @@ export function ActionBar({
         setIsReposted(false);
         if (postId) unmarkReposted(postId);
       });
-      toast.success('Reposted!');
+      toast.success(_copy("copy.5f39b8b65253", { defaultValue: "Reposted!" }));
     } else {
-      toast.info('Repost not available for this post');
+      toast.info(_copy("copy.67e396a51838", { defaultValue: "Repost not available for this post" }));
     }
     setSheetOpen(false);
   };
@@ -853,7 +856,7 @@ export function ActionBar({
         setIsReposted(true);
         if (postId) markReposted(postId);
       });
-      toast.success('Repost removed');
+      toast.success(_copy("copy.6a629ab80468", { defaultValue: "Repost removed" }));
     }
     setSheetOpen(false);
   };
@@ -862,7 +865,7 @@ export function ActionBar({
     if (onQuote) {
       onQuote();
     } else {
-      toast.info('Quote not available for this post');
+      toast.info(_copy("copy.12124ce8fbf2", { defaultValue: "Quote not available for this post" }));
     }
     setSheetOpen(false);
   };
@@ -885,7 +888,7 @@ export function ActionBar({
           className="flex items-center gap-3 w-full p-4 text-red-400 hover:text-red-300 hover:bg-white/10 rounded-xl transition-all duration-200"
         >
           <Repeat2 className="w-5 h-5" />
-          <span className="font-medium">Undo Repost</span>
+          <span className="font-medium"><TranslationText name="copy.aed838e7efff" fallback={"Undo Repost"} /></span>
         </button>
       ) : (
         <button
@@ -893,7 +896,7 @@ export function ActionBar({
           className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
         >
           <Repeat2 className="w-5 h-5" />
-          <span className="font-medium">Repost</span>
+          <span className="font-medium"><TranslationText name="copy.f4fd9adb8f2d" fallback={"Repost"} /></span>
         </button>
       )}
       <button
@@ -901,7 +904,7 @@ export function ActionBar({
         className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
       >
         <Quote className="w-5 h-5" />
-        <span className="font-medium">Quote</span>
+        <span className="font-medium"><TranslationText name="copy.eb4cdebd82bf" fallback={"Quote"} /></span>
       </button>
       {onShareAsImage && (
         <button
@@ -919,7 +922,7 @@ export function ActionBar({
           className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
         >
           <Repeat2 className="w-5 h-5" />
-          <span className="font-medium">See Engagements</span>
+          <span className="font-medium"><TranslationText name="copy.f5ab429b0727" fallback={"See Engagements"} /></span>
         </button>
       )}
       {canSendInDm && (
@@ -928,7 +931,7 @@ export function ActionBar({
           className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
         >
           <Send className="w-5 h-5" />
-          <span className="font-medium">Send in a message</span>
+          <span className="font-medium"><TranslationText name="copy.20e392c29da3" fallback={"Send in a message"} /></span>
         </button>
       )}
       <button
@@ -936,7 +939,7 @@ export function ActionBar({
         className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200"
       >
         <Link className="w-5 h-5" />
-        <span className="font-medium">Copy Link</span>
+        <span className="font-medium"><TranslationText name="copy.724e78a3254c" fallback={"Copy Link"} /></span>
       </button>
     </>
   );
@@ -950,7 +953,7 @@ export function ActionBar({
         <button
           onClick={(e) => { e.stopPropagation(); onTip(); }}
           className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
-          aria-label="Tips"
+          aria-label={_copy("copy.3838a4d8cb8c", { defaultValue: "Tips" })}
         >
           <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} />
           {/* Counts come off over a video: the icons are the controls, and a
@@ -1008,7 +1011,7 @@ export function ActionBar({
         }}
         data-engaged={isReposted ? 'repost' : undefined}
         className={cn('flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
-        aria-label="Share"
+        aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
       >
         <Share2 className={isReposted ? "w-[1.5213rem] h-[1.5213rem]" : "w-[1.3965rem] h-[1.3965rem]"} strokeWidth={isReposted ? 2.915 : 2} />
         {!compact && <span className="text-xs text-zinc-400">{formatCount(displayShareCount)}</span>}
@@ -1018,7 +1021,7 @@ export function ActionBar({
         <button
           onClick={onComment}
           className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
-          aria-label="Comment"
+          aria-label={_copy("copy.44f5e3fbec57", { defaultValue: "Comment" })}
         >
           <MessageSquare className="w-5 h-5" />
           <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
@@ -1071,8 +1074,8 @@ export function ActionBar({
           className={cn(THUMB_BUTTON_CLASS, compact && COMPACT_BUTTON_CLASS)}
           aria-label={
             myPositiveReaction || (reactionsEnabled && myNegativeReaction)
-              ? `${reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label} — hold to change your reaction`
-              : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`
+              ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label })
+              : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })
           }
           aria-haspopup={reactionsEnabled ? 'menu' : undefined}
           aria-expanded={reactionsEnabled ? likeTray.open : undefined}
@@ -1132,7 +1135,7 @@ export function ActionBar({
         <Drawer open={sheetOpen} onOpenChange={setSheetOpen}>
           <DrawerContent scrollable column glass className="px-4 pb-6" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()} onPointerDown={(e: React.PointerEvent) => e.stopPropagation()}>
             <DrawerHeader className="relative">
-              <DrawerTitle className="text-white/90 font-semibold">Share</DrawerTitle>
+              <DrawerTitle className="text-white/90 font-semibold">{_copy("copy.29887a5ff984", { defaultValue: "Share" })}</DrawerTitle>
             </DrawerHeader>
             <div className="flex flex-col gap-1 mt-2 relative">
               <ShareOptions />
@@ -1203,8 +1206,8 @@ export function ActionBar({
             className={STAGE_TILE_CLASS}
             aria-label={
               myPositiveReaction || (reactionsEnabled && myNegativeReaction)
-                ? `${reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label} — hold to change your reaction`
-                : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`
+                ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta((myPositiveReaction ?? myNegativeReaction)!).label })
+                : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })
             }
             aria-haspopup={reactionsEnabled ? 'menu' : undefined}
             aria-expanded={reactionsEnabled ? likeTray.open : undefined}
@@ -1229,7 +1232,7 @@ export function ActionBar({
           data-stage-action="comments"
           onClick={(e) => { e.stopPropagation(); stage.openComments(); }}
           className={STAGE_TILE_CLASS}
-          aria-label={`Comments (${commentCount})`}
+          aria-label={_copy("copy.418d80826abc", { defaultValue: "Comments ({{value1}})", value1: commentCount })}
         >
           <MessageSquare className="h-5 w-5" />
           <span className="tabular-nums">{formatCount(commentCount)}</span>
@@ -1249,7 +1252,7 @@ export function ActionBar({
             setSheetOpen(true);
           }}
           className={STAGE_TILE_CLASS}
-          aria-label={`Repost (${displayRepostCount})`}
+          aria-label={_copy("copy.2a12d847add8", { defaultValue: "Repost ({{value1}})", value1: displayRepostCount })}
           aria-haspopup="dialog"
         >
           {/* Same share glyph and sizing as the feed's share button. The fixed
@@ -1267,10 +1270,10 @@ export function ActionBar({
           disabled={!onTip}
           onClick={(e) => { e.stopPropagation(); onTip?.(); }}
           className={cn(STAGE_TILE_CLASS, !onTip && 'opacity-50')}
-          aria-label="Tips"
+          aria-label={_copy("copy.3838a4d8cb8c", { defaultValue: "Tips" })}
         >
           <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className="h-5 w-5" plainClassName="" />
-          <span>Tip</span>
+          <span>{_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}</span>
         </button>
 
         <StageSaveTile postId={postId} tokenId={tokenId} className={STAGE_TILE_CLASS} />

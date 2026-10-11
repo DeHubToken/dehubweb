@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { Suspense, memo, useState, useRef, useCallback, useEffect } from 'react';
 // Lazy: GoLiveModal imports minting/wallet contract code, and WhatsHappening
@@ -108,7 +110,7 @@ const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
   { value: '1w', label: '1W' },
   { value: '1m', label: '1M' },
   { value: '1y', label: '1Y' },
-  { value: 'all', label: 'All' },
+  { value: 'all', get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); } },
 ];
 
 const PERIOD_INDEX: Record<string, number> = { '1d': 0, '1w': 1, '1m': 2, '1y': 3, 'all': 4 };
@@ -127,6 +129,7 @@ interface WhatsHappeningProps {
 }
 
 export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false, surface = 'sidebar' }: WhatsHappeningProps) {
+  const { t: _copy } = _useCopy();
   // The RightSidebar instance is `hidden lg:block` — below 1024px it stays
   // mounted but is never visible, so its polls/rotation are pure waste there.
   // The Explore instance (showCountrySelector) is the one shown on mobile.
@@ -330,9 +333,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                         {(stage.speaker_count || 1) + (stage.listener_count || 0)}
                       </span>
                       <span className="flex items-center gap-0.5">
-                        <span data-live-pulse className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-                        Live
-                      </span>
+                        <span data-live-pulse className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />{_copy("copy.b64ac05f17e6", { defaultValue: "Live" })}</span>
                     </div>
                   </div>
                 </button>
@@ -340,19 +341,19 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center flex-1 text-center">
-              <p className="text-zinc-400 text-xs mb-3">No one live right now — be the first!</p>
+              <p className="text-zinc-400 text-xs mb-3">{_copy("copy.6b0a0a83ec5c", { defaultValue: "No one live right now — be the first!" })}</p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => openStagesModal('create')}
                   className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-white transition-colors"
-                  title="Create Stage"
+                  title={_copy("copy.213834e9da05", { defaultValue: "Create Stage" })}
                 >
                   <Mic className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setShowGoLive(true)}
                   className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-white transition-colors"
-                  title="Live Stream"
+                  title={_copy("copy.7975f2a611d0", { defaultValue: "Live Stream" })}
                 >
                   <Video className="w-4 h-4" />
                 </button>
@@ -449,7 +450,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-500" />
                   <input
                     type="text"
-                    placeholder="Search countries..."
+                    placeholder={_copy("copy.5214b74bd87d", { defaultValue: "Search countries..." })}
                     value={countrySearch}
                     onChange={(e) => setCountrySearch(e.target.value)}
                     className="w-full pl-7 pr-2 py-1.5 bg-zinc-700/50 border border-zinc-600/50 rounded-lg text-xs text-white placeholder:text-zinc-500 outline-none focus:border-zinc-500"
@@ -472,7 +473,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                     {c.code === 'global' && <span className="ml-auto text-[10px] text-emerald-400">✓</span>}
                   </button>
                 )) : (
-                  <p className="text-xs text-zinc-500 text-center py-3">No countries found</p>
+                  <p className="text-xs text-zinc-500 text-center py-3">{_copy("copy.d9ecc10e5e9c", { defaultValue: "No countries found" })}</p>
                 )}
               </div>
             </div>

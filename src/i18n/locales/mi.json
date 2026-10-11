@@ -601,6 +601,7 @@
   },
   "postOptions": {
     "options": "Kōwhiringa",
+    "aiOverview": "Te tirohanga whānui o te AI",
     "sendTip": "Tukuna koha",
     "queue": "Rārangi",
     "watchList": "Rārangi mātakitaki",
@@ -6433,10 +6434,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Ngā wā ataata whakahirahira",
-      "visualPrivacy": "Tukuna ngā tāpare kua tīpakohia hei tātari ā-ataata."
-    },
     "review": {
       "title": "Arotake kaupapa",
       "shared": "I tiritiria ki a koe",
@@ -6852,6 +6849,10 @@
       "sync": "Whakaritea ngā tapahi",
       "none": "Kāore he manawataki pono i kitea.",
       "unchanged": "Kāore i taea te whakatika ngā tapahi."
+    },
+    "highlights": {
+      "visual": "Ngā wā ataata whakahirahira",
+      "visualPrivacy": "Tukuna ngā tāpare kua tīpakohia hei tātari ā-ataata."
     }
   },
   "jungleMood": {

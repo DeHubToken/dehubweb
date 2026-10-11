@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { createSanitizedHtml, processLineForHtml } from './contentUtils';
 
@@ -7,6 +8,7 @@ interface BlockRendererProps {
 }
 
 export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) => {
+  const { t: _copy } = _useCopy();
   block = block.trim();
   if (!block) return null;
   
@@ -133,92 +135,74 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
       return (
         <div key={index} className="space-y-6">
           <div className="p-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-sky-blue/20">
-            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">Revolutionary Live Streaming Experience</h3>
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">
-              DeHub's live streaming platform transforms traditional broadcasting into an <strong>interactive, monetized experience</strong> where creators and audiences engage through real-time tipping, animated reactions, and blockchain-powered rewards. Our streaming infrastructure supports unlimited concurrent viewers while maintaining the personal connection that makes live content special.
-            </p>
+            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.b4cd31c743bf", { defaultValue: "Revolutionary Live Streaming Experience" })}</h3>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.feb5cde351e8", { defaultValue: "DeHub's live streaming platform transforms traditional broadcasting into an " })}<strong>{_copy("copy.04768b4b8dc3", { defaultValue: "interactive, monetized experience" })}</strong>{_copy("copy.1471e76dd037", { defaultValue: " where creators and audiences engage through real-time tipping, animated reactions, and blockchain-powered rewards. Our streaming infrastructure supports unlimited concurrent viewers while maintaining the personal connection that makes live content special." })}</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             <div className="p-6 bg-gradient-to-r from-green-50 to-cyan-50 rounded-lg border border-sky-blue/20">
-              <h4 className="text-lg font-bold text-royal-blue mb-3 font-exo">🎬 Professional Streaming Tools</h4>
+              <h4 className="text-lg font-bold text-royal-blue mb-3 font-exo">{_copy("copy.1be6f8bb2a35", { defaultValue: "🎬 Professional Streaming Tools" })}</h4>
               <ul className="text-royal-blue/80 text-sm font-exo space-y-2">
-                <li>• 4K streaming support with adaptive bitrate</li>
-                <li>• Multi-camera angle switching</li>
-                <li>• Screen sharing and presentation mode</li>
-                <li>• Real-time chat moderation tools</li>
-                <li>• Stream recording and highlights</li>
+                <li>{_copy("copy.eb3ca1010e96", { defaultValue: "• 4K streaming support with adaptive bitrate" })}</li>
+                <li>{_copy("copy.5e3d66c948a6", { defaultValue: "• Multi-camera angle switching" })}</li>
+                <li>{_copy("copy.d1bbed0d4d5e", { defaultValue: "• Screen sharing and presentation mode" })}</li>
+                <li>{_copy("copy.ecb640c6e957", { defaultValue: "• Real-time chat moderation tools" })}</li>
+                <li>{_copy("copy.bbf2f0bc1f63", { defaultValue: "• Stream recording and highlights" })}</li>
               </ul>
             </div>
 
             <div className="p-6 bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg border border-sky-blue/20">
-              <h4 className="text-lg font-bold text-royal-blue mb-3 font-exo">💰 Monetization Features</h4>
+              <h4 className="text-lg font-bold text-royal-blue mb-3 font-exo">{_copy("copy.6cab56411173", { defaultValue: "💰 Monetization Features" })}</h4>
               <ul className="text-royal-blue/80 text-sm font-exo space-y-2">
-                <li>• Real-time DHB token tipping</li>
-                <li>• Animated tip notifications</li>
-                <li>• Subscriber-only streams</li>
-                <li>• Pay-per-view premium content</li>
-                <li>• Revenue sharing with moderators</li>
+                <li>{_copy("copy.7d5111113c68", { defaultValue: "• Real-time DHB token tipping" })}</li>
+                <li>{_copy("copy.265292396840", { defaultValue: "• Animated tip notifications" })}</li>
+                <li>{_copy("copy.5fbdbcb178c7", { defaultValue: "• Subscriber-only streams" })}</li>
+                <li>{_copy("copy.232fdb196faf", { defaultValue: "• Pay-per-view premium content" })}</li>
+                <li>{_copy("copy.cbc2c33d95e7", { defaultValue: "• Revenue sharing with moderators" })}</li>
               </ul>
             </div>
           </div>
 
           <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-sky-blue/20">
-            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">Interactive Engagement System</h3>
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">
-              Our streaming platform features <strong>animated tip reactions</strong> that appear in real-time during broadcasts. When viewers send DHB tips, custom animations overlay the stream, creating visual excitement and encouraging further engagement. Tip amounts trigger different animation styles - from subtle sparkles for small tips to dramatic fireworks for large donations.
-            </p>
+            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.228923df10e9", { defaultValue: "Interactive Engagement System" })}</h3>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.15b666f41569", { defaultValue: "Our streaming platform features " })}<strong>{_copy("copy.8aa4bd86a89d", { defaultValue: "animated tip reactions" })}</strong>{_copy("copy.4e1b3bbf8213", { defaultValue: " that appear in real-time during broadcasts. When viewers send DHB tips, custom animations overlay the stream, creating visual excitement and encouraging further engagement. Tip amounts trigger different animation styles - from subtle sparkles for small tips to dramatic fireworks for large donations." })}</p>
             
             <div className="space-y-3">
               <div className="bg-white/50 p-4 rounded-lg">
-                <h5 className="font-semibold text-royal-blue mb-2 font-exo">Smart Tip Animations</h5>
-                <p className="text-royal-blue/70 text-sm font-exo">
-                  Dynamic visual effects scale with tip amounts: 1-10 DHB triggers particle effects, 11-50 DHB creates screen-wide animations, 50+ DHB launches spectacular celebrations that dominate the stream.
-                </p>
+                <h5 className="font-semibold text-royal-blue mb-2 font-exo">{_copy("copy.9d916ca23ac0", { defaultValue: "Smart Tip Animations" })}</h5>
+                <p className="text-royal-blue/70 text-sm font-exo">{_copy("copy.7dec6dac8568", { defaultValue: "Dynamic visual effects scale with tip amounts: 1-10 DHB triggers particle effects, 11-50 DHB creates screen-wide animations, 50+ DHB launches spectacular celebrations that dominate the stream." })}</p>
               </div>
               
               <div className="bg-white/50 p-4 rounded-lg">
-                <h5 className="font-semibold text-royal-blue mb-2 font-exo">Custom Emote Integration</h5>
-                <p className="text-royal-blue/70 text-sm font-exo">
-                  Creators can upload custom emotes and animations that activate with specific tip amounts, creating personalized experiences that strengthen community bonds and brand identity.
-                </p>
+                <h5 className="font-semibold text-royal-blue mb-2 font-exo">{_copy("copy.1a5ec4bdc51b", { defaultValue: "Custom Emote Integration" })}</h5>
+                <p className="text-royal-blue/70 text-sm font-exo">{_copy("copy.79d4230d1d8a", { defaultValue: "Creators can upload custom emotes and animations that activate with specific tip amounts, creating personalized experiences that strengthen community bonds and brand identity." })}</p>
               </div>
             </div>
           </div>
 
           <div className="p-6 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-sky-blue/20">
-            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">Decentralized Infrastructure Benefits</h3>
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">
-              Built on decentralized video infrastructure, our streaming platform offers <strong>unprecedented reliability and cost efficiency</strong>. Unlike centralized platforms that can experience downtime or impose arbitrary restrictions, DeHub's distributed network ensures your stream stays live and your content remains accessible globally.
-            </p>
+            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.0fddd5e4ab0d", { defaultValue: "Decentralized Infrastructure Benefits" })}</h3>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.95e2f4bccc55", { defaultValue: "Built on decentralized video infrastructure, our streaming platform offers " })}<strong>{_copy("copy.d545c7dd7038", { defaultValue: "unprecedented reliability and cost efficiency" })}</strong>{_copy("copy.92c6f9f23af1", { defaultValue: ". Unlike centralized platforms that can experience downtime or impose arbitrary restrictions, DeHub's distributed network ensures your stream stays live and your content remains accessible globally." })}</p>
             
             <div className="grid md:grid-cols-2 gap-4">
               <div className="bg-white/50 p-4 rounded-lg">
-                <h5 className="font-semibold text-royal-blue mb-2 font-exo">Global CDN Distribution</h5>
-                <p className="text-royal-blue/70 text-sm font-exo">
-                  Streams automatically route through the nearest decentralized nodes, ensuring minimal latency and maximum quality for viewers worldwide.
-                </p>
+                <h5 className="font-semibold text-royal-blue mb-2 font-exo">{_copy("copy.edab70241936", { defaultValue: "Global CDN Distribution" })}</h5>
+                <p className="text-royal-blue/70 text-sm font-exo">{_copy("copy.79ace1fa713b", { defaultValue: "Streams automatically route through the nearest decentralized nodes, ensuring minimal latency and maximum quality for viewers worldwide." })}</p>
               </div>
               
               <div className="bg-white/50 p-4 rounded-lg">
-                <h5 className="font-semibold text-royal-blue mb-2 font-exo">Censorship Resistance</h5>
-                <p className="text-royal-blue/70 text-sm font-exo">
-                  Decentralized infrastructure means no single authority can shut down your stream, protecting creator freedom and audience access.
-                </p>
+                <h5 className="font-semibold text-royal-blue mb-2 font-exo">{_copy("copy.236f3aafc904", { defaultValue: "Censorship Resistance" })}</h5>
+                <p className="text-royal-blue/70 text-sm font-exo">{_copy("copy.ca5ada0fc402", { defaultValue: "Decentralized infrastructure means no single authority can shut down your stream, protecting creator freedom and audience access." })}</p>
               </div>
             </div>
           </div>
 
           <div className="p-6 bg-gradient-to-r from-royal-blue/10 to-middle-blue/10 rounded-xl border border-royal-blue/20">
-            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">Advanced Analytics & Community Building</h3>
-            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">
-              Every stream generates detailed analytics about viewer engagement, tip patterns, peak viewing times, and audience demographics. This data helps creators optimize their content strategy while our community tools facilitate deeper connections between streamers and their most dedicated supporters.
-            </p>
+            <h3 className="text-xl font-bold text-royal-blue mb-4 font-exo">{_copy("copy.4e81043210e8", { defaultValue: "Advanced Analytics & Community Building" })}</h3>
+            <p className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.0a09aae28cbb", { defaultValue: "Every stream generates detailed analytics about viewer engagement, tip patterns, peak viewing times, and audience demographics. This data helps creators optimize their content strategy while our community tools facilitate deeper connections between streamers and their most dedicated supporters." })}</p>
             
             <div className="pt-4 border-t border-royal-blue/30">
-              <p className="text-royal-blue/80 font-exo text-sm italic">
-                Experience the future of live streaming where every moment is interactive, every tip is celebrated, and every creator has the tools to build a thriving community around their passion.
-              </p>
+              <p className="text-royal-blue/80 font-exo text-sm italic">{_copy("copy.0fefb9f94ae7", { defaultValue: "Experience the future of live streaming where every moment is interactive, every tip is celebrated, and every creator has the tools to build a thriving community around their passion." })}</p>
             </div>
           </div>
         </div>
@@ -236,7 +220,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-card-image`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/82928389-9659-4117-8bbe-351a68241694.png" 
-            alt="DeHub Card in premium silver finish showcasing modern crypto payment solution" 
+            alt={_copy("copy.58b616dd23f3", { defaultValue: "DeHub Card in premium silver finish showcasing modern crypto payment solution" })} 
             className="w-full h-auto object-cover"
           />
         </div>
@@ -251,7 +235,7 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-card-stack-image`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/dd33f339-f2d6-46ac-9e87-98b96f3060ca.png" 
-            alt="Stack of DeHub Cards showing multiple card variants in elegant presentation" 
+            alt={_copy("copy.c321934d39bd", { defaultValue: "Stack of DeHub Cards showing multiple card variants in elegant presentation" })} 
             className="w-full h-auto object-cover"
           />
         </div>
@@ -267,12 +251,11 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-airdrop-calculator`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/79082851-6427-4cc2-847b-a7780deb8f44.png" 
-            alt="DeHub Airdrop Calculator interface showing allocation calculations" 
+            alt={_copy("copy.39e5bdc9314b", { defaultValue: "DeHub Airdrop Calculator interface showing allocation calculations" })} 
             className="w-full h-auto object-cover"
           />
         </div>,
-        <p key={`${index}-calculator-text`} className="text-royal-blue/80 mb-4 leading-relaxed font-exo">
-          Check your allocations here: <a href="https://lastchadstanding.com/docs#airdrop-calculator" target="_blank" rel="noopener noreferrer" className="text-middle-blue hover:text-royal-blue transition-colors underline">https://lastchadstanding.com/docs#airdrop-calculator</a>
+        <p key={`${index}-calculator-text`} className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.82796857359a", { defaultValue: "Check your allocations here: " })}<a href="https://lastchadstanding.com/docs#airdrop-calculator" target="_blank" rel="noopener noreferrer" className="text-middle-blue hover:text-royal-blue transition-colors underline">https://lastchadstanding.com/docs#airdrop-calculator</a>
         </p>
       ];
     }
@@ -284,12 +267,11 @@ export const BlockRenderer: React.FC<BlockRendererProps> = ({ block, index }) =>
         <div key={`${index}-airdrop-calculator`} className="my-8 rounded-xl overflow-hidden">
           <img 
             src="/media/d306700c-5d81-4ec5-8010-864d72d705a2.png" 
-            alt="DeHub Airdrop Calculator interface showing allocation calculations" 
+            alt={_copy("copy.39e5bdc9314b", { defaultValue: "DeHub Airdrop Calculator interface showing allocation calculations" })} 
             className="w-full h-auto object-cover"
           />
         </div>,
-        <p key={`${index}-calculator-text`} className="text-royal-blue/80 mb-4 leading-relaxed font-exo">
-          Check your allocations here: <a href="https://lastchadstanding.com/docs#airdrop-calculator" target="_blank" rel="noopener noreferrer" className="text-middle-blue hover:text-royal-blue transition-colors underline">https://lastchadstanding.com/docs#airdrop-calculator</a>
+        <p key={`${index}-calculator-text`} className="text-royal-blue/80 mb-4 leading-relaxed font-exo">{_copy("copy.82796857359a", { defaultValue: "Check your allocations here: " })}<a href="https://lastchadstanding.com/docs#airdrop-calculator" target="_blank" rel="noopener noreferrer" className="text-middle-blue hover:text-royal-blue transition-colors underline">https://lastchadstanding.com/docs#airdrop-calculator</a>
         </p>
       ];
     }

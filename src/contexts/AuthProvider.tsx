@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Auth Provider (heavy implementation — loaded via the WalletProviders chunk)
  * ============
@@ -341,6 +342,7 @@ async function signWithProvider(
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
 
   // Hydrate user/wallet immediately from localStorage to prevent zombie state on mobile refresh.
@@ -1601,7 +1603,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       console.warn('[Auth] Silent wagmi reconnect failed, logging out:', err);
-      toast.info('Your wallet connection was lost. Please log in again.');
+      toast.info(_copy("copy.ac8f060ebca0", { defaultValue: "Your wallet connection was lost. Please log in again." }));
       disconnect();
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1749,8 +1751,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           buildId: getRunningBuildId(),
           ...describeWalletError(firstSignError),
         });
-        toast.info('Your wallet is on a different account', {
-          description: 'Choose the account you want to sign in with.',
+        toast.info(_copy("copy.8a45900dba7d", { defaultValue: "Your wallet is on a different account" }), {
+          description: _copy("copy.3d201968da6a", { defaultValue: "Choose the account you want to sign in with." }),
         });
 
         const chosen = await requestAccountPicker(wagmiConnector);
@@ -1786,24 +1788,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }, signError);
 
       if (isWalletRelayPublishError(signError)) {
-        toast.error('Wallet connection interrupted', {
-          description: 'Choose your wallet again to reconnect and sign in.',
+        toast.error(_copy("copy.1a687c743f8d", { defaultValue: "Wallet connection interrupted" }), {
+          description: _copy("copy.3f28fa15bf02", { defaultValue: "Choose your wallet again to reconnect and sign in." }),
         });
       } else if (timedOut) {
-        toast.error('Your wallet never showed the request', {
-          description: 'Open your wallet and check for a pending signature, then try again.',
+        toast.error(_copy("copy.4bb4d98842fe", { defaultValue: "Your wallet never showed the request" }), {
+          description: _copy("copy.1959838c2196", { defaultValue: "Open your wallet and check for a pending signature, then try again." }),
         });
       } else if (staleBuild) {
         // The tab has been open across a deploy. Nothing the user does to the
         // wallet will help, and telling them to try again just repeats it.
-        toast.error('DeHub has been updated', {
-          description: 'This tab is running an older version. Refresh, then sign in again.',
-          action: { label: 'Refresh', onClick: () => window.location.reload() },
+        toast.error(_copy("copy.a37c96c1e133", { defaultValue: "DeHub has been updated" }), {
+          description: _copy("copy.fc3665c13829", { defaultValue: "This tab is running an older version. Refresh, then sign in again." }),
+          action: { label: _copy("copy.0e9161011702", { defaultValue: "Refresh" }), onClick: () => window.location.reload() },
           duration: 12_000,
         });
       } else if (alreadyPending) {
-        toast.error('Your wallet already has a request open', {
-          description: 'Approve or dismiss it in your wallet, then try again.',
+        toast.error(_copy("copy.c6264bbfc48e", { defaultValue: "Your wallet already has a request open" }), {
+          description: _copy("copy.ba1365f06397", { defaultValue: "Approve or dismiss it in your wallet, then try again." }),
         });
       } else if (rejected) {
         toast.error(
@@ -1814,7 +1816,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         // Explicitly NOT called a rejection any more. This is the branch that
         // used to accuse people of declining a prompt that had failed on its own.
-        toast.error('Wallet signature failed. Please try again.', {
+        toast.error(_copy("copy.3a949a35377e", { defaultValue: "Wallet signature failed. Please try again." }), {
           description: described.shortMessage,
         });
       }
@@ -1895,8 +1897,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           connectorMatchesWallet(wagmiConnector, 'phantom');
         if (!canRetryWithSolana) throw firstError;
 
-        toast.info('One more signature — this proves your Solana wallet', {
-          description: 'Phantom’s Ethereum address is brand new, so we check your Solana side instead.',
+        toast.info(_copy("copy.74dc16b0f1c2", { defaultValue: "One more signature — this proves your Solana wallet" }), {
+          description: _copy("copy.0fceecc879e5", { defaultValue: "Phantom’s Ethereum address is brand new, so we check your Solana side instead." }),
         });
 
         const { signSolanaLoginProof } = await import('@/lib/solana/wallet');
@@ -1940,7 +1942,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // users tapped it six times in a row and read it as a sign-up loop.
         window.dispatchEvent(new CustomEvent(WALLET_SIGNUP_BLOCKED_EVENT, { detail: { address: authAddress } }));
       } else {
-        toast.error('Could not complete sign-in. Please try again.');
+        toast.error(_copy("copy.f764b902534d", { defaultValue: "Could not complete sign-in. Please try again." }));
       }
       throw authError;
     }
@@ -2376,7 +2378,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletAddress(null);
       await activateWalletKey(derived.ethPrivateKey);
       await signAndAuthenticateSmartWallet(toastId);
-      toast.success('Switched to the other wallet', { id: toastId });
+      toast.success(_copy("copy.03736977d1b4", { defaultValue: "Switched to the other wallet" }), { id: toastId });
     } catch (err: any) {
       console.error('[Auth] Wallet switch failed:', err);
       toast.error(err?.message || 'Failed to switch wallet', { id: toastId });
@@ -2453,7 +2455,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // wallet. Let the user start it again after renewal completes.
       finishWalletUnlock(false);
       closeLoginModal();
-      toast.success('New wallet ready — your account came with it', { id: toastId });
+      toast.success(_copy("copy.ea29e65c1577", { defaultValue: "New wallet ready — your account came with it" }), { id: toastId });
     } catch (err: any) {
       console.error('[Auth] Wallet replacement failed:', err);
       driftedLinkRef.current = null;
@@ -2641,7 +2643,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (error) throw error;
           const uid = data?.session?.user?.id;
           if (uid) await proceedToWalletPhase(uid);
-          toast.success('Signed in — link confirmed on another device');
+          toast.success(_copy("copy.a551108d059e", { defaultValue: "Signed in — link confirmed on another device" }));
         } catch (err) {
           console.error('Cross-device session hydrate failed:', err);
         } finally {
@@ -2678,7 +2680,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         options: { shouldCreateUser: true, emailRedirectTo: redirectTo },
       });
       if (error) throw error;
-      toast.success('Magic link sent — check your email');
+      toast.success(_copy("copy.a4dffb5c574f", { defaultValue: "Magic link sent — check your email" }));
     } catch (error: any) {
       console.error('Email login error:', error);
       authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
@@ -2770,7 +2772,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      toast.success('Verification code sent — check your phone');
+      toast.success(_copy("copy.d3ce02621d9c", { defaultValue: "Verification code sent — check your phone" }));
     } catch (error: any) {
       console.error('Phone login error:', error);
       authLogger.trace?.('identity-error', { reason: error?.message, code: error?.code });
@@ -3087,7 +3089,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }, err);
 
       if (rejected) {
-        toast.error('Connection rejected');
+        toast.error(_copy("copy.4c0120c3c78f", { defaultValue: "Connection rejected" }));
       } else {
         const names: Record<string, string> = { metamask: 'MetaMask', phantom: 'Phantom', trust: 'Trust Wallet' };
         const discovered = connectors.find(c => c.id === wallet)?.name;
@@ -3348,7 +3350,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const recovered = await stableCallbacks.refreshSession(true);
         toast.dismiss(toastId);
         if (recovered) {
-          toast.success('Session restored — please try again.');
+          toast.success(_copy("copy.c914f0483c5a", { defaultValue: "Session restored — please try again." }));
         } else {
           // Bring React in line with storage — but ONLY when the credentials
           // are genuinely gone. clearAuthSession runs down in the transport
@@ -3366,9 +3368,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(null);
             setWalletAddress(null);
           }
-          toast.error('Session expired', {
-            description: 'Please sign in again to continue',
-            action: { label: 'Sign in', onClick: () => stableCallbacks.openLoginModal() },
+          toast.error(_copy("copy.e5ee1e7e84aa", { defaultValue: "Session expired" }), {
+            description: _copy("copy.6660f63e06ce", { defaultValue: "Please sign in again to continue" }),
+            action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => stableCallbacks.openLoginModal() },
             duration: 8000,
           });
         }

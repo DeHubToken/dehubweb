@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * AdSlotCard
  * ==========
@@ -26,6 +27,7 @@ const heightByVariant: Record<NonNullable<AdSlotCardProps['variant']>, string> =
 };
 
 export const AdSlotCard = ({ variant = 'md', compact = false, className }: AdSlotCardProps) => {
+  const { t: _copy } = _useCopy();
   return (
     <div
       className={cn(
@@ -38,21 +40,15 @@ export const AdSlotCard = ({ variant = 'md', compact = false, className }: AdSlo
     >
       {!compact && (
         <div className="flex items-center gap-2 text-white/50 text-[10px] uppercase tracking-[0.18em] mb-3">
-          <span className="w-1 h-1 rounded-full bg-white/40" />
-          Sponsored slot
-          <span className="w-1 h-1 rounded-full bg-white/40" />
+          <span className="w-1 h-1 rounded-full bg-white/40" />{_copy("copy.5c2e54197f0e", { defaultValue: "Sponsored slot" })}<span className="w-1 h-1 rounded-full bg-white/40" />
         </div>
       )}
 
       <Megaphone className="w-6 h-6 text-white/70 mb-2" strokeWidth={1.75} />
 
-      <h4 className={cn('text-white/90 font-semibold text-sm', compact ? 'mb-2' : 'mb-1')}>
-        Your advert here
-      </h4>
+      <h4 className={cn('text-white/90 font-semibold text-sm', compact ? 'mb-2' : 'mb-1')}>{_copy("copy.9a1cfa532f4f", { defaultValue: "Your advert here" })}</h4>
       {!compact && (
-        <p className="text-white/50 text-xs mb-4 max-w-[220px] leading-snug">
-          Reach the community. Launch a campaign in minutes.
-        </p>
+        <p className="text-white/50 text-xs mb-4 max-w-[220px] leading-snug">{_copy("copy.c6838c8c06c9", { defaultValue: "Reach the community. Launch a campaign in minutes." })}</p>
       )}
 
       <Link
@@ -63,9 +59,7 @@ export const AdSlotCard = ({ variant = 'md', compact = false, className }: AdSlo
           'bg-white/10 hover:bg-white/20 text-white',
           'border border-white/15 transition-colors'
         )}
-      >
-        Advertise with us
-      </Link>
+      >{_copy("copy.dfefea31355f", { defaultValue: "Advertise with us" })}</Link>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Auth Gate Component
  * ===================
@@ -13,6 +14,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
 
 export function AuthGate({ description: _description }: { description?: string } = {}) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { openLoginModal, isLoading, isConnecting, needsSignature } = useAuth();
   // A missing or slow avatar must never block the sign-in controls.
@@ -40,7 +42,7 @@ export function AuthGate({ description: _description }: { description?: string }
         <>
           <img 
            src={assistantAvatar} 
-            alt="Log in" 
+            alt={_copy("copy.c189840cf7e2", { defaultValue: "Log in" })} 
             className="w-20 h-20 object-contain mb-6 translate-y-[11px]"
           />
           <h2 className="text-xl font-semibold text-white mb-6">{t('auth.loginRequired')}</h2>

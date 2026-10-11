@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { assemblyRequest, assemblyPlan, assemblyProject, assemblyDuration, AssemblySession, persistAssembly } from "./assembly";
+import { assemblyShotKey, assemblyRequest, assemblyPlan, assemblyProject, assemblyDuration, AssemblySession, persistAssembly } from "./assembly";
 import type { MediaClip, ProjectSnapshot } from "./types";
 
 const video: MediaClip = { id: "one", kind: "video", mediaId: "source", trackId: "v", start: 10, duration: 8, trimIn: 2, speed: 2, sourceDuration: 30, audio: { volume: 0.6, fadeIn: 2 }, keyframes: { x: [{ t: 0, v: 0.2 }, { t: 8, v: 0.8 }] } };
@@ -16,11 +16,67 @@ const plan = () => ({ shots: [{ id: "one", offset: 1, duration: 4 }, { id: "two"
 const build = (source = project()) => { let id = 0; return assemblyProject(source, plan(), { id: "copy", title: "Assembled" }, () => `copy-${++id}`); };
 
 describe("editable assembly", () => {
+  it("splits draft ranges locally and retains trims, rate, caption and audio placement in the new project", () => {
+    const source = project();
+    source.clips[2] = { ...sound, start: 10, duration: 6, sourceDuration: 10 };
+    source.clips.push({ id: "caption", trackId: "c", kind: "text", start: 14, duration: 1, trimIn: 0, text: "Second section", fontFamily: "Arial", fontSize: 50, fontWeight: 400, color: "#fff", align: "centre", x: 0.5, y: 0.5 });
+    const before = JSON.stringify(source), session = new AssemblySession({ current: () => source, create: async () => true }, () => {});
+    session.start({ seconds: 6, selected: true, transition: "fade", music: false }, ["one"]);
+    session.split(0);
+    expect(session.state.shots).toEqual([{ id: "one", offset: 0, duration: 3 }, { id: "one", part: 1, offset: 3, duration: 3 }]);
+    let nextId = 0; const copy = assemblyProject(source, session.state, { id: "copy", title: "Two sections" }, () => `id-${++nextId}`);
+    const sections = copy.clips.filter(clip => clip.kind === "video");
+    expect(sections).toHaveLength(2);
+    expect(sections[0]).toMatchObject({ start: 0, duration: 3, trimIn: 2, speed: 2 });
+    expect(sections[1]).toMatchObject({ start: 3, duration: 3, trimIn: 8, speed: 2 });
+    expect(copy.clips.find(clip => clip.kind === "text")).toMatchObject({ start: 4, duration: 1, text: "Second section" });
+    expect(copy.clips.filter(clip => clip.kind === "audio")).toHaveLength(2);
+    expect(JSON.stringify(source)).toBe(before);
+    session.undo(); expect(session.state.shots).toEqual([{ id: "one", offset: 0, duration: 6 }]);
+  });
+
+  it("keeps source identity separate from collision-safe range identity and rejects malformed parts", () => {
+    expect(assemblyShotKey({ id: 'one",1', offset: 0, duration: 1 })).not.toBe(assemblyShotKey({ id: "one", part: 1, offset: 0, duration: 1 }));
+    const source = project(), first = { id: "one", offset: 0, duration: 1 };
+    for (const part of [0, -1, 1.5, Number.NaN, Number.MAX_SAFE_INTEGER + 1]) {
+      expect(() => assemblyProject(source, { shots: [first, { ...first, part, offset: 2 }], transition: null, soundId: null }, { id: "copy", title: "Invalid" }, () => "id")).toThrow("assembly_invalid");
+    }
+    expect(() => assemblyProject(source, { shots: [first, { ...first, offset: 2 }], transition: null, soundId: null }, { id: "copy", title: "Duplicate" }, () => "id")).toThrow("assembly_invalid");
+  });
+
   it("routes explicit assembly while leaving generation, captions, edits and highlights alone", () => {
     expect(assemblyRequest("Create a 10 second video from my clips with fades and music")).toEqual(request);
     expect(assemblyRequest("Combine selected photos without music")).toMatchObject({ selected: true, music: false });
     expect(assemblyRequest("Peux-tu créer une vidéo de 10 secondes à partir de mes clips avec musique")).toMatchObject({ seconds: 10, music: true });
     for (const text of ["Create a photo using my images", "Create captions from my video", "Generate a video of a forest", "Split this video into ten clips", "Create highlights from my video"]) expect(assemblyRequest(text)).toBeNull();
+  });
+  it("honours coordinated exclusions in either order, comma lists and named-file requests", () => {
+    for (const suffix of ["without music or transitions", "without transitions and music", "no fades, music or transitions", "no music and no transitions", "without music, fades, and transitions"]) {
+      expect(assemblyRequest(`Create a 6 second video from editor-multiple-scenes-source.mp4 ${suffix}`)).toMatchObject({ seconds: 6, transition: null, music: false, musicExcluded: true });
+    }
+    expect(assemblyRequest("Combiner les photos sélectionnées sans musique ni fondus")).toMatchObject({ selected: true, transition: null, music: false });
+  });
+  it("ends exclusion lists before positive instructions and ignores words inside filenames", () => {
+    expect(assemblyRequest("Create a video from my clips without music with fades")).toMatchObject({ transition: "fade", music: false });
+    expect(assemblyRequest("Create a video from my clips without transitions with music")).toMatchObject({ transition: null, music: true });
+    expect(assemblyRequest('Create a video from "No Music.mp4" with transitions and music')).toMatchObject({ transition: "fade", music: true, musicExcluded: false });
+  });
+  it("removes draft music and transitions together in one undoable review change", () => {
+    const source = project(), before = JSON.stringify(source);
+    const session = new AssemblySession({ current: () => source, create: async () => true }, () => {});
+    session.start(request, []);
+    const shots = session.state.shots;
+    expect(session.state).toMatchObject({ transition: "fade", soundId: "sound" });
+    expect(session.review("without music or transitions")).toBe(true);
+    expect(session.state).toMatchObject({ transition: null, soundId: null, shots });
+    session.undo(); expect(session.state).toMatchObject({ transition: "fade", soundId: "sound", shots });
+    expect(JSON.stringify(source)).toBe(before);
+  });
+  it("does not partially execute a coordinated review with unrecognised instructions", () => {
+    const source = project(), session = new AssemblySession({ current: () => source, create: async () => true }, () => {});
+    session.start(request, []);
+    expect(session.review("without music or transitions and delete the original project")).toBe(false);
+    expect(session.state).toMatchObject({ transition: "fade", soundId: "sound" });
   });
   it("allocates exactly the budget, limits short shots, and respects explicit selection without fallback", () => {
     const source = project(); source.clips[1] = { ...photo, kind: "video", duration: 2 };
@@ -163,4 +219,36 @@ describe("editable assembly", () => {
     let commits = 0;
     await expect(persistAssembly(source, next, { current: () => source, save: async () => { throw new Error("disk"); }, commit: () => { commits++; } })).rejects.toThrow("disk"); expect(commits).toBe(0);
   });
+});
+
+it("refreshes changed structural ranges while preserving typed numeric drafts and reordered sections", () => {
+  const source = project(), session = new AssemblySession({ current: () => source, create: async () => true }, () => {});
+  session.start({ seconds: 6, selected: true, transition: null, music: false }, ["one"]);
+  const key = assemblyShotKey(session.state.shots[0]), originalScope = session.state.shotScopes![key];
+  session.range(key, 0, 2);
+  expect(session.state.shotScopes![key]).toBe(originalScope);
+  session.split(0);
+  expect(session.state.shots.map(shot => shot.duration)).toEqual([1, 1]);
+  expect(session.state.shotScopes![key]).not.toBe(originalScope);
+  const splitScopes = { ...session.state.shotScopes };
+  session.move(1, -1);
+  expect(session.state.shotScopes).toEqual(splitScopes);
+  const movedKey = assemblyShotKey(session.state.shots[0]);
+  session.range(movedKey, Number.NaN, 1);
+  expect(session.state.shotScopes![movedKey]).toBe(splitScopes[movedKey]);
+  expect(session.state.error).toBe("limit");
+  session.undo();
+  expect(session.state.shots[0].offset).toBe(1);
+  expect(session.state.shotScopes![movedKey]).not.toBe(splitScopes[movedKey]);
+});
+
+it("refreshes surviving numeric fields when source selection reallocates the duration", () => {
+  const source = project(), session = new AssemblySession({ current: () => source, create: async () => true }, () => {});
+  session.start({ seconds: 8, selected: false, transition: null, music: false }, [], [{ id: "extra", kind: "image", name: "Extra" }]);
+  const photoKey = assemblyShotKey(session.state.shots.find(shot => shot.id === "two")!);
+  const initialScope = session.state.shotScopes![photoKey];
+  expect(session.state.shots.find(shot => shot.id === "two")!.duration).toBe(4);
+  session.remove(0);
+  expect(session.state.shots).toEqual([{ id: "two", offset: 0, duration: 8 }]);
+  expect(session.state.shotScopes![photoKey]).not.toBe(initialScope);
 });

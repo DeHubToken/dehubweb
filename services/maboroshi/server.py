@@ -1,7 +1,6 @@
 """Authenticated hosted Maboroshi workflow, with one bounded processing worker."""
 import asyncio
 import json
-import hmac
 import logging
 import os
 import shutil
@@ -14,8 +13,9 @@ from pathlib import Path
 
 import av
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 
 import access
@@ -79,7 +79,6 @@ def run_stage(ident, stage, resume=False):
 
 @asynccontextmanager
 async def lifespan(app):
-    os.environ['ENHANCOR_WEBHOOK_URL'] = access.PUBLIC + '/callback'
     with access.database() as db:
         interrupted = db.execute("SELECT * FROM jobs WHERE state IN ('running','queued')").fetchall()
     for saved in interrupted:
@@ -96,6 +95,8 @@ async def lifespan(app):
 
 
 app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
+app.add_middleware(CORSMiddleware, allow_origins=['https://dehub.io'],
+                   allow_methods=['GET', 'POST'], allow_headers=['x-dehub-token', 'content-type'])
 
 
 @app.middleware('http')
@@ -115,40 +116,12 @@ def index():
 
 @app.get('/setup')
 def setup():
-    return FileResponse(ROOT / 'static' / 'setup.html')
-
-
-@app.post('/configure')
-def configure(replicate: str = Form(...), enhancor: str = Form(...), x_setup_token: str = Header(default='')):
-    with lock:
-        expected = os.environ.get('MABOROSHI_SETUP_TOKEN', '')
-        if (not expected or not hmac.compare_digest(expected, x_setup_token)
-                or time.time() > int(os.environ.get('MABOROSHI_SETUP_EXPIRES', '0'))
-                or (access.DATA / 'setup-consumed').exists()):
-            raise HTTPException(403, 'This setup link has expired or has already been used.')
-        if any(not 20 <= len(value.strip()) <= 500 or any(char.isspace() for char in value.strip()) for value in (replicate, enhancor)):
-            raise HTTPException(400, 'Enter both provider keys without spaces.')
-        values = {'REPLICATE_API_TOKEN': replicate.strip(), 'ENHANCOR_API_KEY': enhancor.strip()}
-        access.DATA.mkdir(parents=True, exist_ok=True)
-        temporary = access.SETTINGS.with_suffix('.tmp')
-        descriptor = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
-        with os.fdopen(descriptor, 'w') as output:
-            json.dump(values, output)
-        temporary.replace(access.SETTINGS)
-        (access.DATA / 'setup-consumed').touch(mode=0o600)
-        os.environ.update(values)
-    return {'configured': True}
+    return RedirectResponse('https://dehub.io/creator/maboroshi', status_code=308)
 
 
 @app.get('/health')
 def health():
     return {'service': 'maboroshi', 'ready': access.readiness(), 'modes': list(access.MODES), 'maxSeconds': 30, 'maxBytes': LIMIT}
-
-
-@app.post('/callback')
-def callback():
-    # Acknowledgement only; the provider status API remains authoritative.
-    return Response(status_code=204)
 
 
 def snapshot(row):
@@ -158,6 +131,11 @@ def snapshot(row):
     result['review'] = review_state(folder)
     result['hasReference'] = bool(row['reference'])
     result['referenceKind'] = 'video' if row['reference_seconds'] else 'image'
+    result['references'] = {}
+    for name, column in (('reference', 'reference'), ('second', 'second_reference')):
+        if row[column] and (folder / row[column]).is_file():
+            result['references'][name] = {'url': access.media_url(folder / row[column]),
+                'kind': result['referenceKind'] if name == 'reference' else 'image', 'key': row[column]}
     from seedance_bridge import resolved_prompt
     result['resolvedPrompt'] = resolved_prompt(folder, row['prompt'], bool(row['reference_seconds']), bool(row['second_reference'])) if row['reference'] else ''
     result['quotes'] = {stage: access.price(row, stage) for stage in ('prepare', 'draft', 'hd')} if access.readiness() else {}
@@ -169,8 +147,13 @@ def snapshot(row):
 @app.get('/jobs')
 def list_jobs(wallet=Depends(owner)):
     with access.database() as db:
-        rows = db.execute('SELECT id,created,state,status,mode FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 30', (wallet,)).fetchall()
+        rows = db.execute('SELECT id,created,state,status,mode,subject FROM jobs WHERE wallet=? ORDER BY created DESC LIMIT 30', (wallet,)).fetchall()
     return {'jobs': [dict(row) for row in rows]}
+
+
+@app.get('/session')
+def session(wallet=Depends(owner)):
+    return {'wallet': wallet}
 
 
 @app.get('/jobs/{ident}')
@@ -201,13 +184,14 @@ def validate_video(path, audio=False):
         with av.open(str(path), options={'protocol_whitelist': 'file'}) as media:
             video = media.streams.video[0]
             seconds = float(video.duration * video.time_base) if video.duration else float(media.duration / av.time_base)
-            if not 0.5 <= seconds <= 30 or video.width * video.height > 3840 * 2160:
+            if (not 2 <= seconds <= 30 or video.width * video.height > 3840 * 2160
+                    or min(video.width, video.height) < 300 or not .4 <= video.width / video.height <= 2.5):
                 raise ValueError('duration or dimensions')
             if audio and not media.streams.audio:
                 raise ValueError('audio missing')
             return seconds
     except Exception:
-        raise HTTPException(400, 'Use a video from 0.5 to 30 seconds, at most 4K, with an audio track for the source.')
+        raise HTTPException(400, 'Use a 2–30 second video, 300 pixels per side to 4K, between 2:5 and 5:2. Include an audio track for the source.')
 
 
 @app.post('/jobs', status_code=201)
@@ -238,8 +222,8 @@ def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject
 def references(ident: str, prompt: str = Form(...), reference: UploadFile | None = File(None), second: UploadFile | None = File(None), wallet=Depends(owner)):
     with lock:
         row = access.job(ident, wallet)
-        if row['state'] != 'prepared' or not 1 <= len(prompt.strip()) <= 6000:
-            raise HTTPException(409, 'Prepare the clip first, then enter a prompt of up to 6,000 characters.')
+        if row['state'] not in ('uploaded', 'prepared') or not 1 <= len(prompt.strip()) <= 6000:
+            raise HTTPException(409, 'Character references can be changed before preparation or after the clip is ready for review. Use a prompt of up to 6,000 characters.')
         folder = access.folder(ident)
         saved = []
         seconds = row['reference_seconds']
@@ -260,17 +244,29 @@ def references(ident: str, prompt: str = Form(...), reference: UploadFile | None
                 save_upload(upload, target)
                 if suffix in ('.mp4', '.mov', '.webm'):
                     seconds = validate_video(target)
+                    if seconds + row['seconds'] > 30:
+                        raise HTTPException(400, 'Source and reference videos must total 30 seconds or less.')
+                    from pipeline import normalize
+                    normalized = target.with_suffix('.normalized.mp4')
+                    replaced.append(normalized.name)
+                    normalize(target, normalized)
+                    saved[-1] = normalized.name
+                    target.unlink()
                 else:
+                    if target.stat().st_size > 30 * 1024 * 1024:
+                        raise HTTPException(400, 'Reference images must be 30 MB or less.')
                     with Image.open(target) as image:
                         image.verify()
                     if index == 0:
                         seconds = 0
             if not saved[0]:
                 raise HTTPException(400, 'Choose a character reference.')
-        except Exception:
+        except Exception as error:
             for name in replaced:
                 if name:
                     (folder / name).unlink(missing_ok=True)
+            if isinstance(error, HTTPException):
+                raise error
             raise HTTPException(400, 'A reference could not be read. Choose a valid image or video within the upload limits.')
         access.update(ident, prompt=prompt.strip(), reference=saved[0], second_reference=saved[1], reference_seconds=seconds)
         for name in (row['reference'], row['second_reference']):
@@ -292,37 +288,61 @@ def save_review(ident: str, approved: bool = Form(...), fingerprint: str = Form(
     return snapshot(access.job(ident, wallet))
 
 
-@app.post('/jobs/{ident}/{stage}')
-def start_stage(ident: str, stage: str, price_micros: int = Form(...), wallet=Depends(owner)):
+def stage_quote(ident, stage, wallet):
     if stage not in ('prepare', 'draft', 'hd'):
         raise HTTPException(404)
+    row = access.job(ident, wallet)
+    expected = {'prepare': 'uploaded', 'draft': 'prepared', 'hd': 'draft'}[stage]
+    if row['state'] != expected:
+        raise HTTPException(409, 'This step has already started or its earlier step is incomplete.')
+    if not access.readiness():
+        raise HTTPException(503, 'Processing is temporarily unavailable. Your source is saved; nothing has been charged.')
+    amount = access.price(row, stage)
+    if stage in ('draft', 'hd'):
+        try:
+            require_approved(access.folder(ident))
+        except ValueError as error:
+            raise HTTPException(409, str(error))
+    if stage == 'draft' and not row['reference']:
+        raise HTTPException(400, 'Save a character reference and prompt first.')
+    if stage == 'hd':
+        from seedance_bridge import require_draft
+        try:
+            require_draft(access.folder(ident))
+        except (ValueError, OSError, KeyError) as error:
+            raise HTTPException(409, str(error) if isinstance(error, ValueError) else 'The completed draft is unavailable.')
+    with access.database() as db:
+        active = db.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')").fetchone()[0]
+    if active >= 4:
+        raise HTTPException(503, 'Maboroshi is busy. Try again when a current job finishes; nothing has been charged.')
+    return row, amount
+
+
+@app.get('/jobs/{ident}/checkout/{stage}')
+def checkout(ident: str, stage: str, wallet=Depends(owner)):
+    with lock:
+        row, amount = stage_quote(ident, stage, wallet)
+        payment = access.payment_reference(row, stage)
+        if payment and payment['amount'] != amount:
+            raise HTTPException(409, 'The saved payment quote needs review.')
+        return {'id': ident, 'stage': stage, 'wallet': wallet, 'price_micros': amount,
+                'payment_ref': payment['tx_hash'] if payment else None}
+
+
+@app.post('/jobs/{ident}/{stage}')
+def start_stage(ident: str, stage: str, price_micros: int = Form(...), tx_hash: str = Form('credits'), wallet=Depends(owner)):
     with lock:
         row = access.job(ident, wallet)
         if row['stage'] == stage and row['state'] in ('queued', 'running', 'draft', 'complete'):
-            return snapshot(row)
-        expected = {'prepare': 'uploaded', 'draft': 'prepared', 'hd': 'draft'}[stage]
-        if row['state'] != expected:
-            raise HTTPException(409, 'This step has already started or its earlier step is incomplete.')
-        if not access.readiness():
-            raise HTTPException(503, 'Maboroshi generation is being connected. Your source is saved; nothing has been charged.')
-        amount = access.price(row, stage)
+            payment = access.payment_reference(row, stage)
+            return {**snapshot(row), 'payment_ref': payment['tx_hash'] if payment else 'credits'}
+        row, amount = stage_quote(ident, stage, wallet)
         if amount != price_micros:
             raise HTTPException(409, 'The price changed. Refresh and review the new quote.')
-        if stage in ('draft', 'hd'):
-            try:
-                require_approved(access.folder(ident))
-            except ValueError as error:
-                raise HTTPException(409, str(error))
-        if stage == 'draft' and not row['reference']:
-            raise HTTPException(400, 'Save a character reference and prompt first.')
-        with access.database() as db:
-            active = db.execute("SELECT COUNT(*) FROM jobs WHERE state IN ('queued','running')").fetchone()[0]
-        if active >= 4:
-            raise HTTPException(503, 'Maboroshi is busy. Try again when a current job finishes; nothing has been charged.')
-        access.debit(row, stage, amount)
+        access.debit(row, stage, amount, tx_hash)
         access.update(ident, state='queued', stage=stage, price=amount, status='Queued for processing. You can return to this job later.')
         executor.submit(run_stage, ident, stage)
-    return snapshot(access.job(ident, wallet))
+    return {**snapshot(access.job(ident, wallet)), 'payment_ref': tx_hash.lower()}
 
 
 @app.get('/media/{relative:path}')

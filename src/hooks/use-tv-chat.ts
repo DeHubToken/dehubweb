@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * TV Chat Hook
  * ============
@@ -41,6 +42,7 @@ const QUERY_KEY = 'tv-chat-messages';
 const PAGE_LIMIT = 200;
 
 export function useTVChat(channelId: string | undefined, enabled = true) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const active = !!channelId && enabled;
@@ -151,10 +153,10 @@ export function useTVChat(channelId: string | undefined, enabled = true) {
     );
     if (error) {
       console.error('[TVChat] Send error:', error);
-      toast.error('Failed to send message');
+      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
       throw error;
     }
-  }, [channelId, walletAddress]);
+  }, [channelId, walletAddress, _copy]);
 
   const addReaction = useCallback(async (messageId: string, emoji: string) => {
     if (!walletAddress || !channelId) return;
@@ -212,12 +214,12 @@ export function useTVChat(channelId: string | undefined, enabled = true) {
     );
     if (error) {
       console.error('[TVChat] Edit error:', error);
-      toast.error('Failed to edit message');
+      toast.error(_copy("copy.da8e926af644", { defaultValue: "Failed to edit message" }));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, channelId] });
       return false;
     }
     return true;
-  }, [walletAddress, channelId, queryClient]);
+  }, [walletAddress, channelId, queryClient, _copy]);
 
   const deleteMessage = useCallback(async (messageId: string) => {
     if (!walletAddress || !channelId) return;
@@ -233,10 +235,10 @@ export function useTVChat(channelId: string | undefined, enabled = true) {
     );
     if (error) {
       console.error('[TVChat] Delete error:', error);
-      toast.error('Failed to delete message');
+      toast.error(_copy("copy.5ce4aeba4357", { defaultValue: "Failed to delete message" }));
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, channelId] });
     }
-  }, [walletAddress, channelId, queryClient]);
+  }, [walletAddress, channelId, queryClient, _copy]);
 
   return { messages, isLoading, sendMessage, editMessage, deleteMessage, addReaction, removeReaction };
 }

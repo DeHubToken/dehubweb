@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Check, Copy, Globe, Loader2 } from 'lucide-react';
@@ -62,6 +63,7 @@ export function EnsHandleSettings() {
 }
 
 function EnsHandleSettingsInner() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { address: connectedAddress } = useAccount();
   const { signMessageAsync } = useSignMessage();
@@ -226,7 +228,7 @@ function EnsHandleSettingsInner() {
         <div className="space-y-3 pl-8">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Input
-              placeholder="yourname.eth"
+              placeholder={_copy("copy.419f1a83fab2", { defaultValue: "yourname.eth" })}
               value={name}
               spellCheck={false}
               autoCapitalize="none"

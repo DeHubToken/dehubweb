@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSavedPosts, getLikedPosts, getWatchHistory, clearWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
@@ -380,15 +381,16 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
 }
 
 export function useClearWatchHistory() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: clearWatchHistory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookmarks', 'history'] });
-      toast.success('Watch history cleared');
+      toast.success(_copy("copy.4c295ff782b6", { defaultValue: "Watch history cleared" }));
     },
     onError: () => {
-      toast.error('Failed to clear history');
+      toast.error(_copy("copy.00a9c07f6bd4", { defaultValue: "Failed to clear history" }));
     },
   });
 }
@@ -397,6 +399,7 @@ export function useClearWatchHistory() {
  * Hook to manage bookmark state for a single post
  */
 export function useBookmarkPost(tokenId: string | number) {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   
@@ -444,7 +447,7 @@ export function useBookmarkPost(tokenId: string | number) {
     },
     onError: (_err, { next }) => {
       setOverride(!next);
-      toast.error('Failed to update bookmark');
+      toast.error(_copy("copy.eb59ee20e10b", { defaultValue: "Failed to update bookmark" }));
     },
   });
 
@@ -454,7 +457,7 @@ export function useBookmarkPost(tokenId: string | number) {
    */
   const toggleBookmark = (onSaved?: () => void) => {
     if (!isAuthenticated) {
-      toast.error('Please log in to bookmark');
+      toast.error(_copy("copy.f29b25efe45b", { defaultValue: "Please log in to bookmark" }));
       return;
     }
 

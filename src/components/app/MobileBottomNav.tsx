@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React, { Suspense, useState, useRef, useEffect } from 'react';
 import { StageNavChip } from './spaces/StageNavChip';
 import { useStage } from '@/contexts/StageContext';
@@ -56,6 +57,7 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Bookmarks: 'nav.bookmarks',
   Settings: 'nav.settings',
   Features: 'nav.featureRequests',
+  Feedback: 'stats.feedback.title',
   Guide: 'nav.guide',
   Stats: 'nav.stats',
   Docs: 'nav.docs',
@@ -117,6 +119,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Lightbulb, label: 'Features', path: '/features' },
+  { icon: MessageSquare, label: 'Feedback', path: '/feedback' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },
   { icon: BookOpen, label: 'Docs', path: '/docs' },
@@ -128,6 +131,7 @@ const SCROLL_NAV_ITEMS = [
 ] satisfies MobileNavItem[];
 
 export function MobileBottomNav() {
+  const { t: _copy } = _useCopy();
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -324,7 +328,7 @@ export function MobileBottomNav() {
             {/* Center Create Button - liquid glass bubble */}
             <button
               onClick={handlePostClick}
-              aria-label="Create post"
+              aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
               className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white"
             >
                 <div data-nav-create className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
@@ -440,8 +444,8 @@ export function MobileBottomNav() {
                     {navIcon(item, cn(
                         'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                         isActive
-                          ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
-                          : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
+                          ? "drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]"
+                          : "hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                       ))}
                     {item.label === 'Notifications' && totalNotifUnread > 0 && (
                       <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">

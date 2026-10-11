@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 import { useState, useMemo, useCallback } from 'react';
@@ -96,6 +97,7 @@ interface GroupedToken {
 }
 
 export default function FullWalletPage() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress } = useAuth();
   const { isCollapsed } = useSidebarCollapse();
   const navigate = useNavigate();
@@ -244,7 +246,7 @@ export default function FullWalletPage() {
         toast.success(t('wallet.addressCopied'));
         setTimeout(() => setCopied(false), 2000);
       })
-      .catch(() => toast.error('Could not copy address'));
+      .catch(() => toast.error(_copy("copy.90d6f4c823a9", { defaultValue: "Could not copy address" })));
   };
 
   /**
@@ -307,8 +309,8 @@ export default function FullWalletPage() {
     // portaled Send/Receive/Buy/Import dialogs and drawers carry the same
     // attribute (portals escape this subtree).
     <div data-wallet-page className="min-h-screen">
-      <SEOHead title="Wallet — Manage Your Crypto Assets" description="View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." url="https://dehub.io/app/wallet" />
-      <h1 className="sr-only">DeHub Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.b98adf20f5f3", { defaultValue: "Wallet — Manage Your Crypto Assets" })} description={_copy("copy.00787feeb046", { defaultValue: "View balances, send and receive tokens, and manage your crypto assets across multiple chains on DeHub." })} url="https://dehub.io/app/wallet" />
+      <h1 className="sr-only">{_copy("copy.112e22b0fd15", { defaultValue: "DeHub Wallet — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Back square only when navigated from command centre */}
       <PageIsland
         title={t('wallet.title')}
@@ -378,16 +380,16 @@ export default function FullWalletPage() {
                     <span className="text-white font-medium">{Math.floor(baseVal).toLocaleString()} <DhbCoin /></span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-zinc-500">BNB Chain</span>
+                    <span className="text-zinc-500">{_copy("copy.5dc85dbc155e", { defaultValue: "BNB Chain" })}</span>
                     <span className="text-white font-medium">{Math.floor(bnbVal).toLocaleString()} <DhbCoin /></span>
                   </div>
                   <div className="flex justify-between text-xs">
-                    <span className="text-zinc-500">Staked</span>
+                    <span className="text-zinc-500">{_copy("copy.6b8a9141538a", { defaultValue: "Staked" })}</span>
                     <span className="text-white font-medium">{Math.floor(stakedVal).toLocaleString()} <DhbCoin /></span>
                   </div>
                   {giveaway && (
                     <div className="flex justify-between text-xs">
-                      <span className="text-zinc-500">Giveaway (locked)</span>
+                      <span className="text-zinc-500">{_copy("copy.228fc4afbce4", { defaultValue: "Giveaway (locked)" })}</span>
                       <span className="text-white font-medium">{Math.floor(giveaway.amount).toLocaleString()} <DhbCoin /></span>
                     </div>
                   )}
@@ -423,7 +425,7 @@ export default function FullWalletPage() {
         </Button>
         <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => navigate('/app/bridge')}>
           <ArrowDownUp className="w-5 h-5" />
-          <span className="max-w-full truncate text-xs">Bridge</span>
+          <span className="max-w-full truncate text-xs">{_copy("copy.3892e10346fd", { defaultValue: "Bridge" })}</span>
         </Button>
         <Button variant="glass" className="flex-col h-auto px-2 py-3 gap-1.5 rounded-xl min-w-0" onClick={() => setTradeOpen(true)}>
           <ChartNoAxesColumn className="w-5 h-5" />
@@ -524,7 +526,7 @@ export default function FullWalletPage() {
                   >
                     {chainInfo && <img src={chainInfo.icon} alt={chainInfo.name} className="w-6 h-6 rounded-md" />}
                     <div className="text-left flex-1 min-w-0">
-                      <span className="text-sm font-medium text-white">{chainInfo?.name || `Chain ${token.chainId}`}</span>
+                      <span className="text-sm font-medium text-white">{chainInfo?.name || _copy("copy.f68ce866a5b4", { defaultValue: "Chain {{value1}}", value1: token.chainId })}</span>
                       <p className="text-xs text-zinc-400">{fmtBal(token.formattedBalance)} {tokenLabel(token.symbol)}</p>
                     </div>
                   </button>
@@ -679,6 +681,7 @@ function GroupedTokenRow({ grouped, onClick, price }: { grouped: GroupedToken; o
  * rendered a decorative lucide QrCode icon — scanning it yielded nothing.
  */
 function AddressQr({ address }: { address: string }) {
+  const { t: _copy } = _useCopy();
   const svg = useMemo(() => {
     const qr = qrcode(0, 'M');
     qr.addData(address);
@@ -687,7 +690,7 @@ function AddressQr({ address }: { address: string }) {
   }, [address]);
   return (
     <div
-      aria-label={`QR code for wallet address ${address}`}
+      aria-label={_copy("copy.1132ea896089", { defaultValue: "QR code for wallet address {{value1}}", value1: address })}
       className="w-full h-full [&>svg]:w-full [&>svg]:h-full"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
@@ -703,6 +706,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
   onBuyCrypto: (symbol: string) => void;
   walletAddress?: string;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [buyMethodOpen, setBuyMethodOpen] = useState(false);
@@ -771,7 +775,7 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
       <Drawer open={buyMethodOpen} onOpenChange={setBuyMethodOpen}>
         <DrawerContent column glass hideHandle={false} data-wallet-page>
           <div className="p-5 pb-8 space-y-2">
-            <h3 className="text-white font-semibold text-base mb-4">Buy {grouped?.symbol}</h3>
+            <h3 className="text-white font-semibold text-base mb-4">{_copy("copy.e8c84f1c82bf", { defaultValue: "Buy " })}{grouped?.symbol}</h3>
             {grouped?.symbol !== 'DHB' && (
               <>
                 {(['ETH', 'USDT', 'USDC'].includes(grouped?.symbol || '')) && walletAddress ? (
@@ -786,8 +790,8 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
                   >
                     <CreditCard className="w-5 h-5 text-white/70" />
                     <div className="text-left">
-                      <span className="text-sm font-medium text-white">Buy with Card</span>
-                      <p className="text-xs text-white/40">Purchase via Coinbase — Visa, Mastercard, Apple Pay</p>
+                      <span className="text-sm font-medium text-white">{_copy("copy.a0027ccd58bf", { defaultValue: "Buy with Card" })}</span>
+                      <p className="text-xs text-white/40">{_copy("copy.911c67ed8f19", { defaultValue: "Purchase via Coinbase — Visa, Mastercard, Apple Pay" })}</p>
                     </div>
                   </button>
                 ) : (
@@ -797,10 +801,10 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
                   >
                     <CreditCard className="w-5 h-5 text-white/70" />
                     <div className="text-left flex-1">
-                      <span className="text-sm font-medium text-white">Buy with Card</span>
-                      <p className="text-xs text-white/40">Purchase using Visa, Mastercard, Apple Pay</p>
+                      <span className="text-sm font-medium text-white">{_copy("copy.a0027ccd58bf", { defaultValue: "Buy with Card" })}</span>
+                      <p className="text-xs text-white/40">{_copy("copy.20cc4ce111fa", { defaultValue: "Purchase using Visa, Mastercard, Apple Pay" })}</p>
                     </div>
-                    <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">Coming soon</span>
+                    <span className="text-[10px] text-white/30 font-medium bg-white/[0.06] px-2 py-0.5 rounded">{_copy("copy.4f7d64017689", { defaultValue: "Coming soon" })}</span>
                   </button>
                 )}
                 <button
@@ -815,8 +819,8 @@ function GroupedActionDrawer({ open, onOpenChange, grouped, onSend, onReceive, o
                 >
                   <Wallet className="w-5 h-5 text-white/70" />
                   <div className="text-left">
-                    <span className="text-sm font-medium text-white">Buy with Crypto</span>
-                    <p className="text-xs text-white/40">BTC, SOL, ETH, USDC & more from any chain</p>
+                    <span className="text-sm font-medium text-white">{_copy("copy.69cda82c3af5", { defaultValue: "Buy with Crypto" })}</span>
+                    <p className="text-xs text-white/40">{_copy("copy.4be8f5f56303", { defaultValue: "BTC, SOL, ETH, USDC & more from any chain" })}</p>
                   </div>
                 </button>
               </>
@@ -838,6 +842,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
   allTokens: WalletToken[];
   onTokenChange: (t: WalletToken) => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useSurfaceDraft("pages/app/FullWalletPage.tsx:amount", '');
@@ -1047,8 +1052,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
             <div className="flex items-center justify-between">
               <label className="text-sm text-zinc-400">{t('wallet.amount')}</label>
               {token && (
-                <button onClick={handleMax} className="text-xs text-white/60 hover:text-white transition-colors">
-                  Max: {fmtBal(token.formattedBalance)}
+                <button onClick={handleMax} className="text-xs text-white/60 hover:text-white transition-colors">{_copy("copy.2b3653ddece2", { defaultValue: "Max: " })}{fmtBal(token.formattedBalance)}
                 </button>
               )}
             </div>
@@ -1084,6 +1088,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
   chainId: WalletChainId;
   onImported: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { solana: solanaAddress } = useWalletAddresses();
@@ -1189,9 +1194,9 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
 
             <p className="text-xs text-zinc-400">{t('wallet.importDescription', { network: selectedChain?.name || CHAIN_CONFIGS[chainId as ChainId]?.name || 'this network' })}</p>
             <div className="space-y-2">
-              <label className="text-sm text-zinc-400">{isSolana ? 'Token mint address' : t('wallet.tokenContractAddress')}</label>
+              <label className="text-sm text-zinc-400">{isSolana ? _copy("copy.15e17712534d", { defaultValue: "Token mint address" }) : t('wallet.tokenContractAddress')}</label>
               <Input
-                placeholder={isSolana ? 'Solana mint address' : '0x...'}
+                placeholder={isSolana ? _copy("copy.0aeda7534815", { defaultValue: "Solana mint address" }) : '0x...'}
                 value={address}
                 onChange={e => { setAddress(e.target.value); setTokenInfo(null); }}
                 className="bg-white/5 border-white/10 text-white font-mono text-sm placeholder:text-zinc-500"
@@ -1228,7 +1233,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
 
             {/* Discovered wallet tokens */}
             <div className="pt-2 border-t border-white/10">
-              <p className="text-xs text-zinc-400 mb-3">Your tokens on {selectedChain?.name || CHAIN_CONFIGS[chainId as ChainId]?.name || 'this network'}</p>
+              <p className="text-xs text-zinc-400 mb-3">{_copy("copy.0730ee08cd26", { defaultValue: "Your tokens on " })}{selectedChain?.name || CHAIN_CONFIGS[chainId as ChainId]?.name || _copy("copy.b4c1cebc35f6", { defaultValue: "this network" })}</p>
               {discovering ? (
                 <div className="flex items-center justify-center py-6">
                   <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
@@ -1268,7 +1273,7 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
                   ))}
                 </div>
               ) : (
-                <AppState icon="search" title="No tokens found" kind="search-empty" size="compact" />
+                <AppState icon="search" title={_copy("copy.6cd980a3f9e2", { defaultValue: "No tokens found" })} kind="search-empty" size="compact" />
               )}
             </div>
           </div>

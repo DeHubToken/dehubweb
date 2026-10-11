@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { JPEG } from "./visualHighlightFixture";
-import { findVisualHighlights, visualWindowPlan } from "./visualHighlights";
+import { findVisualScenes, findVisualHighlights, visualWindowPlan } from "./visualHighlights";
 import { validVisualBatch, validVisualJpeg, visualMoments, visualSampleTimes, type VisualFrame, type VisualWindow } from "./visualHighlightContract";
 import { VISUAL_FRAME_RUNTIME } from "./visualFrameRuntime";
 import type { MediaClip } from "./types";
@@ -8,6 +8,18 @@ const clip = { id: "video", kind: "video", mediaId: "media", duration: 25, trimI
 const frames = (windows: VisualWindow[]): VisualFrame[] => windows.flatMap(window => visualSampleTimes(window).map(at => ({ windowId: window.id, at, dataUrl: JPEG })));
 
 describe("visual highlight evidence", () => {
+  it("keeps assembly candidates beyond the highlight budget using the same bounded scan", async () => {
+    const calls = { highlights: 0, scenes: 0 }, source = { ...clip, duration: 120, speed: 1 };
+    const analyse = (mode: keyof typeof calls) => async (batch: { windows: VisualWindow[] }) => {
+      calls[mode]++;
+      return batch.windows.slice(0, 8).map(window => ({ start: window.start, end: window.end, score: 0.9, text: "Relevant source scene" }));
+    };
+    const highlights = await findVisualHighlights(source, { optIn: true, seconds: 60 }, async (_, windows) => frames(windows), analyse("highlights"), new AbortController().signal);
+    const scenes = await findVisualScenes(source, { optIn: true, focus: "source scenes" }, async (_, windows) => frames(windows), analyse("scenes"), new AbortController().signal);
+    expect(highlights).toHaveLength(8); expect(scenes).toHaveLength(16); expect(calls).toEqual({ highlights: 2, scenes: 2 });
+    expect(scenes.reduce((sum, range) => sum + range.end - range.start, 0)).toBe(96);
+  });
+
   it("covers the entire trimmed playback in bounded groups with no transcript", async () => {
     let calls = 0; const ids: number[] = [];
     const result = await findVisualHighlights({ ...clip, duration: 600, speed: 1 }, { optIn: true, seconds: 30 }, async (_, windows) => frames(windows), async batch => {

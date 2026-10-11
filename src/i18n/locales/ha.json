@@ -602,6 +602,7 @@
   },
   "postOptions": {
     "options": "Zaɓuɓɓuka",
+    "aiOverview": "AI bayyani",
     "sendTip": "Aika Kyauta",
     "queue": "Jerin jira",
     "watchList": "Jerin kallo",
@@ -6354,10 +6355,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Muhimman lokutan gani",
-      "visualPrivacy": "Aika zaɓaɓɓun firam don nazarin hoto."
-    },
     "review": {
       "title": "Bitar aiki",
       "shared": "An raba tare da kai",
@@ -6773,6 +6770,10 @@
       "sync": "Daidaita yanke",
       "none": "Ba a sami ingantaccen kari ba.",
       "unchanged": "Ba a iya daidaita yanke ba."
+    },
+    "highlights": {
+      "visual": "Muhimman lokutan gani",
+      "visualPrivacy": "Aika zaɓaɓɓun firam don nazarin hoto."
     }
   },
   "jungleMood": {

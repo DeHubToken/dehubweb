@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useAccountDraftKey, useDraftState } from '@/hooks/use-draft-state';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useVideoDownload } from "@/hooks/use-video-download";
@@ -200,6 +201,7 @@ const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
 };
 
 function ImageGenerationLoader({ startTime }: { startTime: number }) {
+  const { t: _copy } = _useCopy();
   const [phase, setPhase] = useState<'spinner' | 'skeleton'>('spinner');
   const [progress, setProgress] = useState(0);
   
@@ -247,7 +249,7 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
       >
         <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
           <Loader2 className="w-4 h-4 animate-spin text-white/60" />
-          <span className="text-sm text-white/60">Generating image...</span>
+          <span className="text-sm text-white/60">{_copy("copy.ed9620daafe8", { defaultValue: "Generating image..." })}</span>
         </div>
       </motion.div>
     );
@@ -371,6 +373,7 @@ function describeTools(tools: string[]): string {
 }
 
 function AssistantPageForAccount() {
+  const { t: _copy } = _useCopy();
   // Conversation persistence hook
   const { 
     conversationId, draftScope, 
@@ -703,7 +706,7 @@ function AssistantPageForAccount() {
       // The session is used up. Stop rather than let the mic keep listening
       // into a conversation that cannot answer.
       voiceStopRef.current?.();
-      toast.error('Voice session used up — start voice mode again to buy another.');
+      toast.error(_copy("copy.cf69d7e172fd", { defaultValue: "Voice session used up — start voice mode again to buy another." }));
     },
     isChatLoading: isLoading,
   });
@@ -1100,7 +1103,7 @@ function AssistantPageForAccount() {
     const reader = new FileReader();
     reader.onload = (event) => {
       setAttachedImage(event.target?.result as string);
-      toast.success('Image attached');
+      toast.success(_copy("copy.0e0c8f0dde70", { defaultValue: "Image attached" }));
     };
     reader.readAsDataURL(file);
   };
@@ -1182,7 +1185,7 @@ function AssistantPageForAccount() {
         ));
         setIsVideoLoading(false);
         clearPendingVideo();
-        toast.success('Video generated!');
+        toast.success(_copy("copy.01d9dc4caf8f", { defaultValue: "Video generated!" }));
       } else if (data.status === 'failed') {
         // Clear polling
         if (pollingRef.current[predictionId]) {
@@ -1204,7 +1207,7 @@ function AssistantPageForAccount() {
     } catch (err) {
       console.error('Polling error:', err);
     }
-  }, [clearPendingVideo]);
+  }, [clearPendingVideo, _copy]);
 
   // Handle video generation after payment confirmation
   const handleVideoGenerationConfirm = async (options: VideoGenerationOptions | undefined, txHash: string) => {
@@ -1568,7 +1571,7 @@ function AssistantPageForAccount() {
       }
     } catch (err) {
       console.error('[AI Tool] Error:', err);
-      toast.error('AI tool processing failed.');
+      toast.error(_copy("copy.7498d4bdff6d", { defaultValue: "AI tool processing failed." }));
       setIsAiToolProcessing(false);
     }
 
@@ -1711,7 +1714,7 @@ function AssistantPageForAccount() {
       } else if (isVideoRequest) {
         // Validate Runway requires an image
         if (selectedVideoModel === 'runway-gen4' && !currentAttachedImage) {
-          toast.error('Runway Gen-4 requires an image to animate. Please attach an image or select a different model.');
+          toast.error(_copy("copy.b26e58f90d58", { defaultValue: "Runway Gen-4 requires an image to animate. Please attach an image or select a different model." }));
           setIsLoading(false);
           return;
         }
@@ -1939,7 +1942,7 @@ function AssistantPageForAccount() {
     setMessages(prev => prev.map(m => 
       m.id === messageId ? { ...m, simulationStatus: 'rejected' as const } : m
     ));
-    toast.info('Transaction rejected');
+    toast.info(_copy("copy.feee6f4ba750", { defaultValue: "Transaction rejected" }));
   };
 
   const handleStyleSelect = (styleId: string) => {
@@ -2037,8 +2040,8 @@ function AssistantPageForAccount() {
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      <SEOHead title="AI Assistant — Chat, Generate Images & Video" description="Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place." url="https://dehub.io/app/assistant" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'DeHub AI Assistant', url: 'https://dehub.io/app/assistant', applicationCategory: 'UtilitiesApplication', description: 'AI assistant for chat, image generation, video creation and web search.', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }} />
-      <h1 className="sr-only">DeHub AI Assistant — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.3a1695a9f5a0", { defaultValue: "AI Assistant — Chat, Generate Images & Video" })} description={_copy("copy.f5653f103a71", { defaultValue: "Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place." })} url="https://dehub.io/app/assistant" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'DeHub AI Assistant', url: 'https://dehub.io/app/assistant', applicationCategory: 'UtilitiesApplication', description: _copy("copy.7798213b19b5", { defaultValue: "AI assistant for chat, image generation, video creation and web search." }), operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }} />
+      <h1 className="sr-only">{_copy("copy.5d34a491a342", { defaultValue: "DeHub AI Assistant — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Drag overlay */}
       <AnimatePresence>
         {isDragging && (
@@ -2066,7 +2069,7 @@ function AssistantPageForAccount() {
           }}
           className="flex items-center gap-3 group"
         >
-          <BrandIcon src={aiSparkleIcon} alt="Assistant" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
+          <BrandIcon src={aiSparkleIcon} alt={_copy("copy.391e40515277", { defaultValue: "Assistant" })} className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
           <h1 className="text-lg font-semibold text-white leading-none mt-0.5">{t('assistant.title')}</h1>
         </button>
 
@@ -2079,7 +2082,7 @@ function AssistantPageForAccount() {
                         setAttachedImage(null);
             }}
             className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
-            title="New chat"
+            title={_copy("copy.db18382a249e", { defaultValue: "New chat" })}
           >
             <Plus className="w-5 h-5" />
           </button>
@@ -2279,8 +2282,8 @@ function AssistantPageForAccount() {
                 >
                   <span className="text-lg">🤖</span>
                   <div className="flex flex-col items-start">
-                    <span className="font-medium">System Default</span>
-                    <span className="text-xs text-white/50">Browser built-in voice</span>
+                    <span className="font-medium">{_copy("copy.d8081c667c73", { defaultValue: "System Default" })}</span>
+                    <span className="text-xs text-white/50">{_copy("copy.15dddfe5fd36", { defaultValue: "Browser built-in voice" })}</span>
                   </div>
                 </button>
 
@@ -2365,22 +2368,19 @@ function AssistantPageForAccount() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-white">Voice Cloning Access</h3>
-              <p className="text-sm text-white/60">
-                Voice cloning is free for <span className="font-bold text-white">Blue Whale</span> and <span className="font-bold text-white">Megalodon</span> badge holders.
-              </p>
-              <p className="text-sm text-white/60">
-                You can still clone voices by providing your own ElevenLabs API key. Get one free at{' '}
-                <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-white/80 underline hover:text-white">elevenlabs.io</a>
+              <h3 className="text-lg font-semibold text-white">{_copy("copy.ac70778414c8", { defaultValue: "Voice Cloning Access" })}</h3>
+              <p className="text-sm text-white/60">{_copy("copy.e3d5d00285f0", { defaultValue: "Voice cloning is free for " })}<span className="font-bold text-white">{_copy("copy.1479c63f37eb", { defaultValue: "Blue Whale" })}</span>{_copy("copy.e3ee915a8e8c", { defaultValue: " and " })}<span className="font-bold text-white">{_copy("copy.9580bdc9c3aa", { defaultValue: "Megalodon" })}</span>{_copy("copy.88fa2998e06a", { defaultValue: " badge holders." })}</p>
+              <p className="text-sm text-white/60">{_copy("copy.ac20a028137d", { defaultValue: "You can still clone voices by providing your own ElevenLabs API key. Get one free at" })}{' '}
+                <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-white/80 underline hover:text-white">{_copy("copy.e2d214894af7", { defaultValue: "elevenlabs.io" })}</a>
               </p>
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs text-white/50">ElevenLabs API Key</label>
+              <label className="text-xs text-white/50">{_copy("copy.d4275d91cc0b", { defaultValue: "ElevenLabs API Key" })}</label>
               <Input
                 value={apiKeyInput}
                 onChange={(e) => setApiKeyInput(e.target.value)}
-                placeholder="xi_..."
+                placeholder={_copy("copy.0d026bd69022", { defaultValue: "xi_..." })}
                 type="password"
                 className="bg-white/10 border-white/10 text-white placeholder:text-white/30 font-mono text-sm"
               />
@@ -2391,15 +2391,13 @@ function AssistantPageForAccount() {
                 onClick={() => setShowApiKeyPrompt(false)}
                 variant="outline"
                 className="flex-1 bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
-              >
-                Cancel
-              </Button>
+              >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
               <LiquidGlassBubble
                 shimmer
                 noBorder
                 onClick={() => {
                   if (!apiKeyInput.trim()) {
-                    toast.error('Please enter your ElevenLabs API key');
+                    toast.error(_copy("copy.7c84390d76b4", { defaultValue: "Please enter your ElevenLabs API key" }));
                     return;
                   }
                   setCustomElevenLabsKey(apiKeyInput.trim());
@@ -2410,15 +2408,11 @@ function AssistantPageForAccount() {
                 className="flex-1 cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
                 style={{ height: '40px' }}
               >
-                <span className="flex items-center justify-center text-white text-sm font-medium h-full">
-                  Continue
-                </span>
+                <span className="flex items-center justify-center text-white text-sm font-medium h-full">{_copy("copy.31fbef162594", { defaultValue: "Continue" })}</span>
               </LiquidGlassBubble>
             </div>
 
-            <p className="text-[10px] text-white/25 text-center">
-              Your key is stored locally and never shared. It's only used for voice cloning requests.
-            </p>
+            <p className="text-[10px] text-white/25 text-center">{_copy("copy.ce9fd2753391", { defaultValue: "Your key is stored locally and never shared. It's only used for voice cloning requests." })}</p>
           </div>
         </div>,
         document.body
@@ -2551,7 +2545,7 @@ function AssistantPageForAccount() {
                         <div className="relative">
                           <img 
                             src={message.imageUrl} 
-                            alt="Generated" 
+                            alt={_copy("copy.827ec8d9f99d", { defaultValue: "Generated" })} 
                             className="max-w-full rounded-lg cursor-zoom-in"
                             onClick={() => setLightboxImage(message.imageUrl!)}
                           />
@@ -2707,7 +2701,7 @@ function AssistantPageForAccount() {
                         {message.attachedImage && (
                           <img 
                             src={message.attachedImage} 
-                            alt="Attached" 
+                            alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })} 
                             className="max-w-full rounded-lg"
                           />
                         )}
@@ -2763,14 +2757,14 @@ function AssistantPageForAccount() {
                   >
                     
                     <LiquidGlassBubble2
-                      label="🧠 Skills"
+                      label={_copy("copy.b382155b629f", { defaultValue: "🧠 Skills" })}
                       onClick={() => setSkillsHubOpen(true)}
                       width="auto"
                       height="32px"
                       className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
-                      label="🎨 Make DeHub Poster"
+                      label={_copy("copy.9d5c64ebd6a0", { defaultValue: "🎨 Make DeHub Poster" })}
                       onClick={() => {
                         setPendingPosterPrompt('');
                         setPosterConfigOpen(true);
@@ -2811,7 +2805,7 @@ function AssistantPageForAccount() {
                       className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
-                      label="🎵 Create a song"
+                      label={_copy("copy.68845e302faf", { defaultValue: "🎵 Create a song" })}
                       onClick={() => {
                         setPendingMusicPrompt('');
                         setMusicConfirmOpen(true);
@@ -2822,7 +2816,7 @@ function AssistantPageForAccount() {
                     />
                     {/* Builder launch — build a live mini-app from a prompt */}
                     <LiquidGlassBubble2
-                      label="🧱 Build something"
+                      label={_copy("copy.c72a1f046be5", { defaultValue: "🧱 Build something" })}
                       onClick={() => navigate('/builder')}
                       width="auto"
                       height="32px"
@@ -2868,7 +2862,7 @@ function AssistantPageForAccount() {
                 <div className="mb-2 relative inline-block">
                   <img 
                     src={attachedImage} 
-                    alt="Attached" 
+                    alt={_copy("copy.ac6d9b76a141", { defaultValue: "Attached" })} 
                     className="max-h-20 rounded-lg object-contain"
                   />
                   <button
@@ -2958,7 +2952,7 @@ function AssistantPageForAccount() {
                         <AudioLines className="w-5 h-5" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>{voiceAssistant.isVoiceMode ? 'Stop Voice Chat' : 'Voice Chat (AI)'}</TooltipContent>
+                    <TooltipContent>{voiceAssistant.isVoiceMode ? _copy("copy.dd2108f1cda8", { defaultValue: "Stop Voice Chat" }) : _copy("copy.70438fbf1234", { defaultValue: "Voice Chat (AI)" })}</TooltipContent>
                   </Tooltip>
                 </div>
                 
@@ -3305,7 +3299,7 @@ function AssistantPageForAccount() {
           } catch (err) {
             toast.dismiss('poster-payment');
             console.error('Poster generation error:', err);
-            toast.error('Failed to start poster generation');
+            toast.error(_copy("copy.aafb702d12cc", { defaultValue: "Failed to start poster generation" }));
           } finally {
             setPendingPosterPrompt('');
           }
@@ -3390,7 +3384,7 @@ function AssistantPageForAccount() {
           >
             <button
               onClick={(e) => { e.stopPropagation(); setLightboxImage(null); }}
-              aria-label="Close"
+              aria-label={_copy("copy.7d9eb7acb13e", { defaultValue: "Close" })}
               data-keep-dark
               className="absolute top-4 right-4 flex items-center justify-center w-11 h-11 rounded-xl text-white bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 transition-all"
             >
@@ -3402,7 +3396,7 @@ function AssistantPageForAccount() {
               exit={{ scale: 0.95 }}
               transition={{ duration: 0.2 }}
               src={lightboxImage}
-              alt="Generated (fullscreen)"
+              alt={_copy("copy.4f92f22f54f1", { defaultValue: "Generated (fullscreen)" })}
               onClick={(e) => e.stopPropagation()}
               className="max-w-full max-h-full object-contain rounded-lg cursor-default"
             />

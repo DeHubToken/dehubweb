@@ -603,6 +603,7 @@
   },
   "postOptions": {
     "options": "Opzioni",
+    "aiOverview": "Panoramica AI",
     "sendTip": "Invia mancia",
     "queue": "Coda",
     "watchList": "Lista di visione",
@@ -6464,10 +6465,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Momenti visivi salienti",
-      "visualPrivacy": "Invia fotogrammi selezionati per l'analisi visiva."
-    },
     "review": {
       "title": "Revisione del progetto",
       "shared": "Condiviso con te",
@@ -6883,6 +6880,10 @@
       "sync": "Sincronizza i tagli",
       "none": "Nessun ritmo affidabile trovato.",
       "unchanged": "Non è stato possibile allineare i tagli."
+    },
+    "highlights": {
+      "visual": "Momenti visivi salienti",
+      "visualPrivacy": "Invia fotogrammi selezionati per l'analisi visiva."
     },
     "live": {
       "stopEdits": "Interrompi le modifiche in diretta",

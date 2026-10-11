@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
@@ -11,10 +12,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const steps = [1, 2, 3, 4, 5, 6] as const;
 
 const nextLinks = [
-  { to: '/docs/dapps', title: 'quickStart.nextDappTitle', desc: 'quickStart.nextDappDesc' },
-  { to: '/docs/dapps#badges', title: 'quickStart.nextBadgesTitle', desc: 'quickStart.nextBadgesDesc' },
-  { to: '/docs/token/stake', title: 'quickStart.nextStakeTitle', desc: 'quickStart.nextStakeDesc' },
-  { to: '/docs/faq', title: 'quickStart.nextFaqTitle', desc: 'quickStart.nextFaqDesc' },
+  { to: '/docs/dapps', get title() { return _translateCopy("copy.8160489cae2b", { defaultValue: "quickStart.nextDappTitle" }); }, desc: 'quickStart.nextDappDesc' },
+  { to: '/docs/dapps#badges', get title() { return _translateCopy("copy.8c560bd3f0f8", { defaultValue: "quickStart.nextBadgesTitle" }); }, desc: 'quickStart.nextBadgesDesc' },
+  { to: '/docs/token/stake', get title() { return _translateCopy("copy.b7dc38f3d7f7", { defaultValue: "quickStart.nextStakeTitle" }); }, desc: 'quickStart.nextStakeDesc' },
+  { to: '/docs/faq', get title() { return _translateCopy("copy.be20bbb07d43", { defaultValue: "quickStart.nextFaqTitle" }); }, desc: 'quickStart.nextFaqDesc' },
 ];
 
 const QuickStart = () => {

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * VoiceEffectSelector – horizontal pill selector for voice effects
  * Shown in the live stage view for hosts/speakers
@@ -12,11 +13,10 @@ interface VoiceEffectSelectorProps {
 }
 
 export function VoiceEffectSelector({ activeEffect, onSelect }: VoiceEffectSelectorProps) {
+  const { t: _copy } = _useCopy();
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">
-        🎭 Voice Effect
-      </h3>
+      <h3 className="text-sm font-medium text-white/60 flex items-center gap-2">{_copy("copy.8743415c7005", { defaultValue: "🎭 Voice Effect" })}</h3>
       <div className="flex flex-wrap gap-1.5">
         {VOICE_EFFECTS.map((effect) => (
           <button

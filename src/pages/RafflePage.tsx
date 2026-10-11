@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Prize Draws landing — /raffle
  * =============================
@@ -75,49 +77,49 @@ function SectionHeading({ title, body }: { title: string; body: string }) {
 const steps = [
   {
     icon: ScrollText,
-    title: 'A draw is announced',
+    get title() { return _translateCopy("copy.9ee0c33ce682", { defaultValue: "A draw is announced" }); },
     body: 'Every draw opens with its prize, its closing time and the exact ways to earn an entry, posted in the app and pinned to the feed.',
   },
   {
     icon: Ticket,
-    title: 'You collect entries',
+    get title() { return _translateCopy("copy.4421a7fc1a47", { defaultValue: "You collect entries" }); },
     body: 'Entries are earned by doing things you already do on DeHub. The announcement lists which actions count for that draw and how many entries each is worth.',
   },
   {
     icon: Dice5,
-    title: 'The draw is run',
+    get title() { return _translateCopy("copy.824aa76a3c5b", { defaultValue: "The draw is run" }); },
     body: 'At the closing time the entry list is snapshotted and the winning index is drawn from an on-chain source of randomness — not from a spreadsheet.',
   },
   {
     icon: Trophy,
-    title: 'The result is published',
+    get title() { return _translateCopy("copy.2bb86501f564", { defaultValue: "The result is published" }); },
     body: 'The snapshot, the transaction and the winning entry all go up together, so anyone can re-check the result rather than take our word for it.',
   },
 ];
 
 const entryRoutes = [
-  { icon: PenLine, title: 'Post and engage', body: 'Original posts, videos and comments count towards draws that name them.' },
-  { icon: Coins, title: 'Stake tokens', titleKey: 'raffle.stakeTitle', body: 'An open staking position earns entries for the draws that weight it.', to: '/stake' },
-  { icon: Gamepad2, title: 'Play the arcade', body: 'Arcade sessions and leaderboard placings feed draws built around games.', to: '/arcade' },
-  { icon: Mic, title: 'Join a stage', body: 'Turning up to live audio stages counts, whether you speak or listen.', to: '/stages' },
-  { icon: Ticket, title: 'Buy a ticket', body: 'Some draws also sell a token ticket. Where they do, the price and the per-wallet cap are published up front.', bodyKey: 'raffle.ticketBody' },
-  { icon: Boxes, title: 'Hold a collectible', body: 'Selected NFT collections carry standing entries into draws that name them.' },
+  { icon: PenLine, get title() { return _translateCopy("copy.2cb38f414419", { defaultValue: "Post and engage" }); }, body: 'Original posts, videos and comments count towards draws that name them.' },
+  { icon: Coins, get title() { return _translateCopy("copy.976d2eedb273", { defaultValue: "Stake tokens" }); }, titleKey: 'raffle.stakeTitle', body: 'An open staking position earns entries for the draws that weight it.', to: '/stake' },
+  { icon: Gamepad2, get title() { return _translateCopy("copy.1fd5bacb3230", { defaultValue: "Play the arcade" }); }, body: 'Arcade sessions and leaderboard placings feed draws built around games.', to: '/arcade' },
+  { icon: Mic, get title() { return _translateCopy("copy.6187be8f1d9c", { defaultValue: "Join a stage" }); }, body: 'Turning up to live audio stages counts, whether you speak or listen.', to: '/stages' },
+  { icon: Ticket, get title() { return _translateCopy("copy.8f1e95313a14", { defaultValue: "Buy a ticket" }); }, body: 'Some draws also sell a token ticket. Where they do, the price and the per-wallet cap are published up front.', bodyKey: 'raffle.ticketBody' },
+  { icon: Boxes, get title() { return _translateCopy("copy.bcc9000c9751", { defaultValue: "Hold a collectible" }); }, body: 'Selected NFT collections carry standing entries into draws that name them.' },
 ];
 
 const fairness = [
   {
     icon: Timer,
-    title: 'The list is frozen first',
+    get title() { return _translateCopy("copy.4363d1d9deed", { defaultValue: "The list is frozen first" }); },
     body: 'The entry list is snapshotted at the stated closing time and published before the draw runs. Nothing can be added to it afterwards, including by us.',
   },
   {
     icon: Dice5,
-    title: 'Randomness comes from the chain',
+    get title() { return _translateCopy("copy.251de59d8a37", { defaultValue: "Randomness comes from the chain" }); },
     body: 'The winning index is derived on-chain, so the number that decides the draw exists in a public transaction rather than in an internal tool.',
   },
   {
     icon: ShieldCheck,
-    title: 'The whole result is checkable',
+    get title() { return _translateCopy("copy.b90da6a8778f", { defaultValue: "The whole result is checkable" }); },
     body: 'Snapshot, transaction hash and winning entry are published as one set. Re-running the arithmetic from public data has to reach the same winner.',
   },
 ];
@@ -157,13 +159,14 @@ const faqItems = [
 ];
 
 export default function RafflePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const reduceMotion = useReducedMotion();
 
   return (
     <>
       <SEOHead
-        title="Prize Draws — Win tokens, Hardware and NFTs on DeHub"
+        title={_copy("copy.61a267af92e3", { defaultValue: "Prize Draws — Win tokens, Hardware and NFTs on DeHub" })}
         description={pageDescription}
         image="https://dehub.io/og/raffle.jpg"
         url="https://dehub.io/raffle"
@@ -199,34 +202,24 @@ export default function RafflePage() {
       <div data-glass-page className="min-h-[100dvh] overflow-x-clip bg-zinc-950 text-white">
         <header data-clear-top-bar className="sticky top-0 z-30 border-b border-white/10 bg-zinc-950/85 backdrop-blur-xl">
           <nav
-            aria-label="Prize draws navigation"
+            aria-label={_copy("copy.f956d69eeb1f", { defaultValue: "Prize draws navigation" })}
             className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
           >
-            <Link to="/" aria-label="DeHub home" className="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
+            <Link to="/" aria-label={_copy("copy.73d01ae84196", { defaultValue: "DeHub home" })} className="shrink-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70">
               <img src={dehubLogo} alt="DeHub" className="h-7 w-auto" />
             </Link>
 
             <div className="hidden items-center gap-7 text-sm font-medium text-zinc-400 md:flex">
-              <a href="#how-it-works" className="transition-colors hover:text-white focus-visible:text-white">
-                How it works
-              </a>
-              <a href="#entries" className="transition-colors hover:text-white focus-visible:text-white">
-                Entries
-              </a>
-              <a href="#fairness" className="transition-colors hover:text-white focus-visible:text-white">
-                Fairness
-              </a>
-              <a href="#faq" className="transition-colors hover:text-white focus-visible:text-white">
-                FAQ
-              </a>
+              <a href="#how-it-works" className="transition-colors hover:text-white focus-visible:text-white">{_copy("copy.9c870aa6e5e9", { defaultValue: "How it works" })}</a>
+              <a href="#entries" className="transition-colors hover:text-white focus-visible:text-white">{_copy("copy.7cb76b4af12a", { defaultValue: "Entries" })}</a>
+              <a href="#fairness" className="transition-colors hover:text-white focus-visible:text-white">{_copy("copy.6fb6cce430a2", { defaultValue: "Fairness" })}</a>
+              <a href="#faq" className="transition-colors hover:text-white focus-visible:text-white">{_copy("copy.dbc468a14b60", { defaultValue: "FAQ" })}</a>
             </div>
 
             <Link
               to="/"
               className="whitespace-nowrap rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-            >
-              Open DeHub
-            </Link>
+            >{_copy("copy.efc85ecfd402", { defaultValue: "Open DeHub" })}</Link>
           </nav>
         </header>
 
@@ -240,12 +233,8 @@ export default function RafflePage() {
                 transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                 className="relative z-10 max-w-2xl"
               >
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">
-                  Community prize draws
-                </p>
-                <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.96] tracking-[-0.055em] text-white sm:text-6xl lg:text-7xl">
-                  Every draw, settled on-chain.
-                </h1>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400">{_copy("copy.7be7e0c287c7", { defaultValue: "Community prize draws" })}</p>
+                <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.96] tracking-[-0.055em] text-white sm:text-6xl lg:text-7xl">{_copy("copy.f45afe59e4d8", { defaultValue: "Every draw, settled on-chain." })}</h1>
                 <p className="mt-6 max-w-xl text-base leading-7 text-zinc-300 sm:text-lg">
                   {t('raffle.heroBody')}
                 </p>
@@ -253,16 +242,12 @@ export default function RafflePage() {
                   <a
                     href="#how-it-works"
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                  >
-                    See how a draw works
-                    <ArrowDown aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+                  >{_copy("copy.c2113022d81f", { defaultValue: "See how a draw works" })}<ArrowDown aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
                   </a>
                   <Link
                     to="/"
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                  >
-                    Find the live draw in the app
-                    <ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+                  >{_copy("copy.1e1eeb9bc771", { defaultValue: "Find the live draw in the app" })}<ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
                   </Link>
                 </div>
                 <p className="mt-6 max-w-xl text-sm leading-6 text-zinc-500">
@@ -277,9 +262,7 @@ export default function RafflePage() {
                 className="relative"
               >
                 <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl sm:p-8">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
-                    Anatomy of a draw
-                  </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.99310ccb97ff", { defaultValue: "Anatomy of a draw" })}</p>
                   <dl className="mt-6 space-y-5">
                     {[
                       ['Prize', 'Stated when the draw opens. Never changed afterwards.'],
@@ -304,7 +287,7 @@ export default function RafflePage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <Reveal>
                 <SectionHeading
-                  title="How a draw works"
+                  title={_copy("copy.f7c0e941ca42", { defaultValue: "How a draw works" })}
                   body="Four steps, in the same order, every time. The parts that decide who wins happen in public."
                 />
               </Reveal>
@@ -328,7 +311,7 @@ export default function RafflePage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <Reveal>
                 <SectionHeading
-                  title="Entries are earned, not bought"
+                  title={_copy("copy.05ed765615c5", { defaultValue: "Entries are earned, not bought" })}
                   body="Draws are weighted towards people who use DeHub. Each announcement names the routes that count for it — these are the ones draws are usually built from."
                 />
               </Reveal>
@@ -345,9 +328,7 @@ export default function RafflePage() {
                         <Link
                           to={route.to}
                           className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white transition hover:text-zinc-300"
-                        >
-                          Open
-                          <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
+                        >{_copy("copy.ed077f3d8125", { defaultValue: "Open" })}<ArrowRight aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
                         </Link>
                       )}
                     </div>
@@ -361,7 +342,7 @@ export default function RafflePage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <Reveal>
                 <SectionHeading
-                  title="Why the result can be trusted"
+                  title={_copy("copy.bc5281a40c17", { defaultValue: "Why the result can be trusted" })}
                   body="A raffle is only worth entering if the operator cannot quietly pick the winner. Three things make that true here."
                 />
               </Reveal>
@@ -380,14 +361,8 @@ export default function RafflePage() {
               </div>
               <Reveal delay={0.1}>
                 <div className="mt-10 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
-                  <h3 className="text-lg font-semibold tracking-[-0.02em] text-white">
-                    DeHub will never ask you to pay to release a prize
-                  </h3>
-                  <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">
-                    Winners are named in the app and in the public result post. Nobody from DeHub will
-                    contact you for a fee, a seed phrase, a private key or a wallet signature to hand
-                    over a prize. Any message that does is an impersonation — report it and delete it.
-                  </p>
+                  <h3 className="text-lg font-semibold tracking-[-0.02em] text-white">{_copy("copy.8d0cd01995e2", { defaultValue: "DeHub will never ask you to pay to release a prize" })}</h3>
+                  <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">{_copy("copy.5ab00110ad6b", { defaultValue: "Winners are named in the app and in the public result post. Nobody from DeHub will contact you for a fee, a seed phrase, a private key or a wallet signature to hand over a prize. Any message that does is an impersonation — report it and delete it." })}</p>
                 </div>
               </Reveal>
             </div>
@@ -397,7 +372,7 @@ export default function RafflePage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <Reveal>
                 <SectionHeading
-                  title="Questions"
+                  title={_copy("copy.9a72221a2747", { defaultValue: "Questions" })}
                   body="The ones we get asked most often about draws, entries and prizes."
                 />
               </Reveal>
@@ -420,7 +395,7 @@ export default function RafflePage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <Reveal>
                 <SectionHeading
-                  title="Draws run inside DeHub"
+                  title={_copy("copy.205af87306b5", { defaultValue: "Draws run inside DeHub" })}
                   body="Open the app to see whatever is live now, and turn on notifications so the next one does not pass you by."
                 />
               </Reveal>
@@ -429,9 +404,7 @@ export default function RafflePage() {
                   <Link
                     to="/"
                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:bg-white active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                  >
-                    Open DeHub
-                    <ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
+                  >{_copy("copy.efc85ecfd402", { defaultValue: "Open DeHub" })}<ArrowRight aria-hidden="true" className="h-4 w-4" strokeWidth={1.8} />
                   </Link>
                   <Link
                     to="/docs/token/overview"
@@ -448,12 +421,7 @@ export default function RafflePage() {
         <footer className="border-t border-white/10 bg-zinc-950">
           <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-sm text-zinc-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
             <img src={dehubLogo} alt="DeHub" className="h-6 w-auto self-start opacity-80" loading="lazy" />
-            <p className="max-w-2xl md:text-right">
-              Prize draws are promotional and open to DeHub account holders aged 18 or over, void
-              where local law prohibits them. DeHub staff, contractors and their households are not
-              eligible. Prizes are not exchangeable for cash unless stated, and each draw&rsquo;s own
-              announcement carries its full terms.
-            </p>
+            <p className="max-w-2xl md:text-right">{_copy("copy.cbbe14a2e25e", { defaultValue: "Prize draws are promotional and open to DeHub account holders aged 18 or over, void where local law prohibits them. DeHub staff, contractors and their households are not eligible. Prizes are not exchangeable for cash unless stated, and each draw’s own announcement carries its full terms." })}</p>
           </div>
         </footer>
       </div>

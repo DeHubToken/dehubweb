@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Community Chat Hook
  * ====================
@@ -45,6 +46,7 @@ export function useCommunityChat(
   communityId: string | undefined,
   options?: { isPrivate?: boolean },
 ) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
   const isPrivate = !!options?.isPrivate;
@@ -365,12 +367,12 @@ export function useCommunityChat(
 
     if (error) {
       console.error('[CommunityChat] Edit error:', error);
-      toast.error('Failed to edit message');
+      toast.error(_copy("copy.da8e926af644", { defaultValue: "Failed to edit message" }));
       queryClient.invalidateQueries({ queryKey: messagesKey });
       return false;
     }
     return true;
-  }, [walletAddress, communityId, queryClient]);
+  }, [walletAddress, communityId, queryClient, _copy]);
 
   // Delete message (own message, or a moderator deleting anyone's). Goes through
   // the RPC so a refusal actually raises instead of matching zero rows.

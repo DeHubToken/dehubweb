@@ -9,12 +9,12 @@ export const nl = {
     tokenEconomics: 'Economie & Emissies',
     tokenUtility: 'Nut / Houdervoordelen',
     tokenWhereToBuy: 'Waar te Kopen',
-    tokenGovernance: 'Governance',
+    tokenGovernance: "Bestuur",
     tokenStake: 'Staking',
-    tokenBridge: 'Bridge',
+    tokenBridge: "Brug",
     depin: 'Gedecentraliseerde Fysieke Infrastructuur',
     e2eEncryption: 'End-to-End Encryptie',
-    aiToolkits: 'AI Toolkits',
+    aiToolkits: "Het is een toolkits",
     advertising: 'Adverteren',
     team: 'Team',
     security: 'Beveiliging',
@@ -39,7 +39,7 @@ export const nl = {
     docsChatUnavailable: 'De assistent is momenteel niet beschikbaar. Probeer het later opnieuw.',
     docsChatFailed: 'Kan bericht niet verzenden. Probeer het opnieuw.',
     blog: 'Blog',
-    faq: 'FAQ',
+    faq: "Veelgestelde vragen",
     donate: 'Doneren',
     communityGuidelines: 'Communityrichtlijnen',
     docsChatAssistant: 'Assistent',
@@ -88,14 +88,14 @@ export const nl = {
   overview: {
     title: "DeHub: Een gedecentraliseerd, gebruikerseigendom alternatief voor traditionele media-apps.",
     subtitle: "Weersta censuur en leef voor altijd on-chain.",
-    paragraph1: "Stel je een wereld voor waarin makers hun publieksdata bezitten, hun contentdistributie controleren en nooit censuur of demonetisatie hoeven te vrezen.",
-    paragraph2: "Gebouwd door gamers en streamers, hebben we het probleem van crypto-complexiteit opgelost.",
-    paragraph3: "Lanceer PPV-evenementen, verdien met abonnementen of betaalde berichten, creëer Watch2Earn-ervaringen.",
+    paragraph1: "Stel je een wereld voor waarin makers hun doelgroepgegevens bezitten, hun contentdistributie beheersen en nooit bang zijn voor censuur of demonetisatie. DeHub maakt dit een realiteit als een gedecentraliseerd en door de gebruiker beheerd alternatief voor apps zoals YouTube, X, Rumble, Twitch en Patreon. Aangedreven door zijn eigen utility-token en geavanceerde DePIN-infrastructuur die de manier waarop content wordt gehost, getranscodeerd en wereldwijd wordt geleverd, opnieuw vormgeeft.",
+    paragraph2: "Gebouwd door gamers en streamers, hebben we het crypto-complexiteitsprobleem opgelost. Ons platform levert een naadloze Web2-ervaring terwijl alles on-chain draait met volledige transparantie - geen portemonnee-instellingen, geen gaskosten, geen technische barrières. Gewoon pure creatieve vrijheid met door de blockchain geverifieerde inkomsten die zichtbaar zijn op onze openbare klassementen.",
+    paragraph3: "Start PPV-evenementen, verdien geld met abonnementen of betaalde berichten, creëer Watch2Earn-ervaringen om een publiek te laten groeien of bestaande gemeenschappen te belonen, of distribueer exclusieve token-gated content - allemaal zonder traditionele bank- of KYC-processen. Uw inhoud, uw regels, uw inkomsten. Directe relaties tussen makers en fans in een censuurbestendig ecosysteem waar je succes volledig in jouw handen ligt.",
     paragraph4: "Sluit je aan bij miljoenen makers die al de gebruikerseigendom economie bouwen in gedecentraliseerde apps.",
-    paragraph5: "Onze reis begon als Futurov (FTV), waar we een bloeiende gemeenschap van streamers en gamers opbouwden.",
-    paragraph6: "Klaar om te zien hoe we digitale content revolutioneren?",
+    paragraph5: "Onze reis begon als Futurov (FTV), waar we een bloeiende community van streamers en gamers bouwden die van onze Web2-app hielden en ons ongelooflijke recensies gaven in de Google Play Store. Nu nemen we alles waar ze van hielden en maken we het niet meer te stoppen.",
+    paragraph6: "Klaar om te zien hoe we een revolutie teweegbrengen in digitale inhoud? Duik in onze technische infrastructuur en ontdek de dApps die deze renaissance van makers aandrijven.",
     disclaimerTitle: "Belangrijke Mededeling",
-    disclaimerText: "DeHub-tokens functioneren als utilitytokens binnen ons ecosysteem en zijn geen investeringsinstrumenten.",
+    disclaimerText: "DeHub-tokens dienen als utility-tokens binnen ons ecosysteem, vergelijkbaar met in-game valuta's, en zijn geen investeringsvehikels. Hoewel onze blockchain-infrastructuur ongekende transparantie en verifieerbare on-chain gegevens voor educatieve doeleinden biedt, dragen alle markten inherente risico's met zich mee. U kunt uw volledige investering verliezen als gevolg van marktvolatiliteit, technische problemen, beveiligingsinbreuken of onvoorziene omstandigheden.Doe alleen mee met geld dat je je kunt veroorloven om volledig te verliezen. DeHub en haar gelieerde ondernemingen aanvaarden geen verantwoordelijkheid voor eventuele financiële verliezen.",
   },
   dapp: {
     title: 'Een compleet ecosysteem',
@@ -317,7 +317,7 @@ export const nl = {
     streamCreation: 'Stroomcreatie',
     streamCreation3: 'Aanpasbare instellingen',
     streamCreation4: 'Ondersteuning voor meerdere netwerken',
-    tippingSystem: 'Tipping System',
+    tippingSystem: "Kantelsysteem",
     tipping1: 'Visuele effecten & niveaus',
     tipping2: 'Aangepaste minimumbedragen',
     tipping3: 'Berichtbijlagen',
@@ -341,7 +341,7 @@ export const nl = {
     tipsReceived: 'Tips ontvangen',
     multiToken: 'Meerderetoken',
     streamLikes: 'Stream-likes',
-    engagement: 'Engagement',
+    engagement: "Betrokkenheid",
     chatActivity: 'Chatactiviteit',
     interactive: 'Interactief',
     techInfrastructure: 'Technische infrastructuur',
@@ -617,7 +617,7 @@ export const nl = {
     workB4Desc: 'Elke beloning wordt in bewaring gehouden op het moment dat een premie wordt gepost, en wordt pas vrijgegeven aan de jager zodra het werk is geaccepteerd, waardoor beide partijen worden beschermd.',
     workB5: 'Betrokkenheid & Groei:',
     workB5Desc: 'Makers plaatsen premies om hun community\'s te laten groeien, en de DeHub-community plaatst premies om het ecosysteem zelf te promoten en uit te breiden, waardoor promotie een beloonde, traceerbare activiteit wordt.',
-    workB6: 'Disputes:',
+    workB6: "Geschillen:",
     workB6Desc: 'Een speciale geschillenstroom lost meningsverschillen over bezorging op, dus geëscrowde beloningen worden altijd eerlijk verrekend.',
     storesTitle: 'Winkels',
     storesDesc: 'Winkels laten makers en bedrijven een native storefront openen in DeHub en rechtstreeks aan hun publiek verkopen, geregeld met DeHub-tokens. Een winkel leeft op zijn eigen pagina, zit naast de content van de maker en verandert volgers in klanten zonder ze om te leiden naar een externe kassa. Omdat de betaling via dezelfde ingebouwde portemonnee loopt als de rest van de app, kunnen kopers in een paar tikken kopen en ontvangen verkopers tokens rechtstreeks op hun saldo.',
@@ -994,6 +994,13 @@ export const nl = {
     themesDesc2: 'Twee van de skins verbergen een spel. Stel het thema in op Oorlog en Claude of Duty is van binnenuit bereikbaar; stel het in op Jungle en Jungle Trail is. Beide staan ook in de arcade, maar het thema is waar ze thuishoren.',
     tocAccounts: 'Accounts',
     tvRadioB3: 'Radio:',
+    "creatorControl": "Creators Control",
+    "tokenUtilityDesign": "Token Utility Design",
+    "subsCreatorControl": "Creators Control",
+    "tocAi": "AI Suite",
+    "aiSuiteTitle": "AI Suite",
+    "labelWatch2earn": "Watch2earn",
+    "tocStudio": "Creator Studio",
   },
   games: {
     title: 'Spellen',
@@ -1028,6 +1035,8 @@ export const nl = {
     godsEyeTitle: 'God’s Eye',
     godsEyeDesc: 'Een live 3D-globe van de Aarde met ruimte-intelligentieweergaven. Als je dat wilt, kun je een bewust onnauwkeurige versie van jezelf erop plaatsen onder de DeHub-gemeenschap.',
     submitGames: 'Ontwikkelaars kunnen hun eigen games indienen voor de arcade, en elk van hen wordt beoordeeld voordat ze worden gelijst.',
+    "trenchTitle": "Chartopia",
+    "lcsTitle": "Last Chad Standing",
   },
   tokenOverview: {
     title: 'Overzicht',
@@ -1107,6 +1116,8 @@ export const nl = {
     secureGatewayDesc: 'Alle betalingsgegevens worden gecodeerd en veilig verwerkt door Stripe, we hebben geen toegang tot je gevoelige informatie of kaartgegevens en kunnen deze niet opslaan. Dit geeft je ultieme gemoedsrust.',
     disclaimer: 'Disclaimer',
     disclaimerText: 'DeHub-tokens zijn strikt voor nutsdoeleinden op dezelfde manier als in-game of in-app digitale tokens of valuta\'s en zijn strikt geen investering. Aangezien onze token on-chain leeft, kunnen we extra hulpprogramma\'s en ongekende niveaus van verifieerbare transparantie bieden. De bovenstaande gegevens worden uitsluitend verzameld voor transparantie, educatieve en informatieve doeleinden. DeHub en alle gelieerde ondernemingen zijn niet aansprakelijk voor financiële verliezen die voortvloeien uit de aankoop van tokens of NFT\'s die we vrijgeven. Markten zijn zeer volatiel. U kunt ook al uw geld verliezen als gevolg van onvoorziene fouten zoals competentiestoringen, technische fouten, hacks enzovoort. Daarom moet je alleen uitgeven wat je je kunt veroorloven om te verliezen.',
+
+    "direct": "Direct"
   },
   tokenGovernance: {
     title: 'Bestuur',
@@ -1293,6 +1304,7 @@ export const nl = {
     conclusionText1: 'De voorgestelde DePIN maakt een echt gedecentraliseerde, censuurbestendige, onbeperkt schaalbare en kostenefficiënte infrastructuur voor DeHub mogelijk. Door gebruik te maken van gedeelde rekenkracht en mijnwerkers rechtstreeks te belonen met inkomsten, vermijdt het systeem inflatie en zorgt het voor duurzaamheid op lange termijn.',
     conclusionText2: 'Dit model stelt iedereen met extra computerbronnen, van mobiele telefoons tot servers, in staat om deel te nemen aan en te profiteren van de groei van DeHub. Om deze kolos van een industrie te verstoren, heeft men de steun van een miljardair of echte innovatie nodig, net als deze DePIN.',
     openSourceNote: '*De volledige code is na voltooiing open source.',
+    "workflow": "Workflow",
   },
   e2ee: {
     title: 'End-to-end-codering (E2EE)',
@@ -1336,7 +1348,7 @@ export const nl = {
     msgPrep: '1. Berichtvoorbereiding',
     encryption: '2. Versleuteling',
     storage: '3. Opslag',
-    storageDesc: 'DeHub\'s database stores:',
+    storageDesc: "De database van DeHub slaat op:",
     storeSender: 'Wie het heeft verzonden (uw adres)',
     storeRecipient: 'Wie ontvangt het (adres van de ontvanger)',
     storeTimestamp: 'Toen het werd verzonden (tijdstempel)',
@@ -1426,7 +1438,7 @@ export const nl = {
   aiToolkits: {
     title: 'Het is een toolkits',
     subtitle: 'DeHub-gebruikers hebben binnenkort hun eigen ongecensureerde AI-assistent en volledige toolkit-suite rechtstreeks in de app.',
-    assistantTitle: 'DeHub AI Assistant',
+    assistantTitle: "DeHub AI-assistent",
     assistantDesc: 'Een ongecensureerde AI-assistent die rechtstreeks in het DeHub-platform is ingebouwd en uitgebreide ondersteuning biedt voor makers en gebruikers van inhoud.',
     featuresInclude: 'Functies omvatten, maar zijn niet beperkt tot:',
     contentCreation: 'Contentcreatie',
@@ -1495,6 +1507,7 @@ export const nl = {
     campaignCreator: 'Campagnemaker',
     analytics: 'Analyse',
     budgetCalculator: 'Budgetcalculator',
+    "povrTitle": "POVR: bewijs van weergave en rangschikking",
   },
   team: {
     title: 'Team',
@@ -1909,6 +1922,7 @@ export const nl = {
     changesToAgreementText: 'Wijzigingen in deze voorwaarden zullen worden voorgesteld via mechanismen voor gemeenschapsbestuur. Grote veranderingen vereisen goedkeuring van de gemeenschap door middel van stemmen van tokenhouders.',
     contactText: 'Voor vragen over deze Gebruiksvoorwaarden kun je contact opnemen met onze community-governancekanalen of voorstellen indienen via het DAO-mechanisme.',
     contact: 'Contact',
+    "fiatOnRamp": "Fiat On-Ramp Services",
   },
   communityGuidelines: {
     title: 'Communityrichtlijnen',
@@ -2070,7 +2084,7 @@ export const nl = {
     holdersDesc: 'Exclusief kanaal voor tokenhouders',
     whales: 'Walvissen',
     whalesDesc: 'Voor houders van meer dan 10 miljoen DeHub-tokens',
-    emailContacts: 'Email Contacts',
+    emailContacts: "E-mailcontacten",
     techSupport: 'Technische ondersteuning',
     techSupportDesc: 'Voor technische problemen en ontwikkelingsvragen',
     marketing: 'Marketing',
@@ -2081,6 +2095,8 @@ export const nl = {
     needHelpDesc: 'Word lid van onze community voor realtime ondersteuning en discussies.',
     joinTelegram: 'Deelnemen aan Telegram',
     joinDiscord: 'Word lid van Discord',
+
+    "hindi": "Hindi"
   },
   faq: {
     title: 'Veelgestelde vragen',
@@ -2290,6 +2306,9 @@ export const nl = {
     notFound: 'Niet gevonden',
     rateLimited: 'Tarief Beperkt',
     serverError: 'Serverfout',
+
+    "type": "Type",
+    "parameters": "Parameters",
   },
   advertiserDashboard: {
     title: 'Adverteerdersdashboard',
@@ -2304,6 +2323,8 @@ export const nl = {
     analytics: 'Analyse',
     budgetCalculator: 'Budgetcalculator',
     activeCampaigns: 'Actieve campagnes',
+
+    "status": "Status"
   },
   adTools: {
     budgetCalculatorTitle: 'Campagnebudgetcalculator',
@@ -2397,6 +2418,7 @@ export const nl = {
     reason_mutualGrowthDesc: 'Samen groeien door crosspromotie en gedeelde doelgroepen',
     becomeLaunchPartner: 'Lanceringspartner worden',
     limitedSlots: 'Beperkte partnerschapslots beschikbaar voor onze officiële lancering',
+    "totalAudienceRow": "Totale publiek:",
   },
   docsSearch: {
     title: 'Doorzoek de documenten',

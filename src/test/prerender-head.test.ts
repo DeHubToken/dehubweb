@@ -176,6 +176,7 @@ describe('title clamp shape', () => {
 describe('wiring', () => {
   it('runs inside stylePrerendered, which guard() applies to every HTML response', () => {
     expect(decl('export function stylePrerendered(html) {')).toContain('normalizePrerenderedHead(html)');
-    expect(WORKER).toContain('return new Response(stylePrerendered(await resp.text()), {');
+    expect(WORKER).toContain('let html = stylePrerendered(await resp.text());');
+    expect(WORKER).toContain('return new Response(html, {');
   });
 });

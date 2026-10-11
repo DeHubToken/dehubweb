@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Creator Studio.
  * ===============
@@ -465,6 +466,7 @@ interface CreatorStudioProps {
 }
 
 export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const checkingSession = useRef(false);
@@ -1046,7 +1048,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       if (currentImages.length > (CREATOR_FAL_IMAGE_MODELS[imageModel]?.maxReferenceImages ?? 4)) return t('creator.referenceTooMany');
       if (currentImages.length > 1 && !CREATOR_FAL_IMAGE_MODELS[imageModel]?.editUsesPlural) return t('creator.referenceMultiModel');
       if (model && reference && !imageModelSupportsEdit(model)) {
-        return `${model.name} cannot edit an attached image. Remove it or pick another model.`;
+        return t('creator.validation.cannotEditImage', { model: model.name, defaultValue: '{{model}} cannot edit an attached image. Remove it or pick another model.' });
       }
     }
     if (mode === 'video') {
@@ -1057,17 +1059,17 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       if (currentImages.length > (model.maxReferenceImages ?? 1)) return t('creator.referenceTooMany');
       if (model.requiresVideoInput && currentClip?.seconds && currentClip.seconds > (model.maxDuration ?? 15)) return t('creator.referenceClipLength');
       if (!model.supports.includes('image-to-video') && reference) {
-        return `${model.name} cannot use a reference image. Remove it or pick another model.`;
+        return t('creator.validation.cannotUseReference', { model: model.name, defaultValue: '{{model}} cannot use a reference image. Remove it or pick another model.' });
       }
       if (!model.supports.includes('text-to-video') && !reference) {
-        return `${model.name} needs an image to animate. Attach one first.`;
+        return t('creator.validation.needsImageToAnimate', { model: model.name, defaultValue: '{{model}} needs an image to animate. Attach one first.' });
       }
     }
     if (mode === '3d') {
       const model = MODEL3D_MODELS[model3dModel];
       if (!model) return t('creator.pick3dModel');
       if (!model.supports.includes('text-to-3d') && !reference) {
-        return `${model.name} needs an image to work from. Attach one first.`;
+        return t('creator.validation.needsImageToWork', { model: model.name, defaultValue: '{{model}} needs an image to work from. Attach one first.' });
       }
     }
     if (mode === 'audio') {
@@ -1079,7 +1081,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       // charged for before the call, so an over-length script must fail while
       // it is still free to say no.
       if (activeAudioTask.promptRole !== 'none' && resolvedPrompt.length > MAX_SPEECH_CHARS) {
-        return `That is ${resolvedPrompt.length.toLocaleString()} characters. The limit is ${MAX_SPEECH_CHARS.toLocaleString()}.`;
+        return t('creator.validation.speechLimit', { length: resolvedPrompt.length.toLocaleString(i18n.language), limit: MAX_SPEECH_CHARS.toLocaleString(i18n.language), defaultValue: 'That is {{count}} characters. The limit is {{limit}}.' });
       }
       if (audioTask === 'dialogue' && !parseDialogue(resolvedPrompt, voiceId).length) {
         return t('creator.dialogueFormat');
@@ -1148,13 +1150,13 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     : `${t('creator.priceTokensUsd', { amount: formatDhb(generationQuote.priceDhb), usd: usdText })}${mode === '3d' ? ` · ${t('creator.priceStandardTexture')}` : ''}`;
 
   const audioQuantityLabel = useMemo(() => {
-    if (audioTask === 'music') return `${musicSeconds}s track`;
+    if (audioTask === 'music') return t('creator.validation.musicTrackLength', { count: musicSeconds, defaultValue: '{{count}}s track' });
     const seconds = audioFile?.seconds;
     if (seconds == null) return t('creator.lengthUnknown');
     const mins = Math.floor(seconds / 60);
     const rest = Math.round(seconds % 60);
     return mins ? `${mins}m ${rest}s` : `${rest}s`;
-  }, [audioTask, musicSeconds, audioFile]);
+  }, [audioTask, musicSeconds, audioFile, t]);
 
   /**
    * Queue the chosen audio task.
@@ -1293,7 +1295,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     try {
       await apiCall('/api/auth/verify', { requiresAuth: true });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Could not verify your session.', error instanceof AuthenticationError ? { action: { label: 'Sign in', onClick: () => openLoginModal() } } : undefined);
+      toast.error(error instanceof Error ? error.message : 'Could not verify your session.', error instanceof AuthenticationError ? { action: { label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }), onClick: () => openLoginModal() } } : undefined);
       return;
     } finally { checkingSession.current = false; }
     if (mode === 'image' || mode === 'video') {
@@ -1368,7 +1370,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     freeImageEligible,
     currentAssets,
     setReference,
-  ]);
+  , _copy]);
 
   /**
    * Called by the paywall once the DHB transfer confirms, or straight from
@@ -1615,7 +1617,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       onClick={() => void openPaywall()}
       aria-disabled={generateDisabled}
       aria-describedby={blockingIssue && !compact ? 'studio-blocking-reason' : undefined}
-      aria-label={`${t(staging ? 'creator.preparing' : 'creator.create')}, est 2-5 mins, ${priceLabel}`}
+      aria-label={_copy("copy.394df20de422", { defaultValue: "{{value1}}, est 2-5 mins, {{value2}}", value1: t(staging ? 'creator.preparing' : 'creator.create'), value2: priceLabel })}
       title={compact ? (blockingIssue ?? priceLabel) : undefined}
       data-creator-create
       className={cn(
@@ -1651,7 +1653,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           <span className="grid min-w-0 text-left leading-none">
             <span className="flex items-baseline gap-2 whitespace-nowrap">
               <span className="font-exo text-[19px] font-black tracking-tight">{t(staging ? 'creator.preparing' : 'creator.create')}</span>
-              <span className="text-[11px] font-semibold opacity-75">est 2-5 mins</span>
+              <span className="text-[11px] font-semibold opacity-75">{_copy("copy.775d7629d9b2", { defaultValue: "est 2-5 mins" })}</span>
             </span>
             <span aria-hidden className="mt-1.5 truncate text-[12px] font-semibold tabular-nums opacity-80 sm:text-[12.5px]">
               {priceLoading
@@ -1722,7 +1724,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     <p className="text-[11px] text-white/40">
                       {audioFile.seconds == null
                         ? t('creator.lengthUnreadable')
-                        : `${audioQuantityLabel}${activeAudioTask.paid ? ' — billed on this' : ''}`}
+                        : `${audioQuantityLabel}${activeAudioTask.paid ? _copy("copy.680d5e9f5113", { defaultValue: " — billed on this" }) : ''}`}
                     </p>
                   </div>
                   <button
@@ -1743,6 +1745,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     aria-pressed={videoModel === (workflow === 'swap' ? 'kling-o3-edit' : 'kling-3-motion')}
                     onClick={() => { setVideoModel(workflow === 'swap' ? 'kling-o3-edit' : 'kling-3-motion'); setPresetId(workflow === 'swap' ? 'reference-character-swap' : 'reference-copy-motion'); }}
                     className="rounded-lg border border-white/20 px-3 py-2 text-xs text-white/80">{t(workflow === 'swap' ? 'creator.characterSwap' : 'creator.copyMotion')}</button>)}
+                  <a href="/creator/maboroshi" title={t('creator.toolMaboroshiDesc')}
+                    className="rounded-lg border border-white/20 px-3 py-2 text-xs text-white/80">{t('creator.toolMaboroshi')}</a>
                 </div>
               )}
 
@@ -1786,7 +1790,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
               {undoEnhance !== null && (
                 <div className="mt-1 flex items-center gap-2 px-1">
-                  <span className="text-[11px] text-white/45">Prompt expanded.</span>
+                  <span className="text-[11px] text-white/45">{_copy("copy.97886fe2bb28", { defaultValue: "Prompt expanded." })}</span>
                   <button
                     type="button"
                     onClick={() => {
@@ -1794,9 +1798,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       setBeforeEnhance((b) => ({ ...b, [mode]: null }) as ByMode<string | null>);
                     }}
                     className="rounded-full px-2 py-0.5 text-[11px] font-medium text-white/70 underline-offset-2 transition hover:bg-white/10 hover:text-white hover:underline"
-                  >
-                    Undo
-                  </button>
+                  >{_copy("copy.a8283ade3185", { defaultValue: "Undo" })}</button>
                 </div>
               )}
 
@@ -2236,14 +2238,13 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
 /** Small entry point used by the marketing rows further down /creator. */
 export function StudioJumpButton({ onClick }: { onClick: () => void }) {
+  const { t: _copy } = _useCopy();
   return (
     <button
       type="button"
       onClick={onClick}
       className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20"
     >
-      <Wand2 className="h-4 w-4" />
-      Open the composer
-    </button>
+      <Wand2 className="h-4 w-4" />{_copy("copy.9dd53ae8f5e3", { defaultValue: "Open the composer" })}</button>
   );
 }

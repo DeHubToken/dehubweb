@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Fullscreen Image Viewer Component
@@ -89,6 +90,7 @@ export function FullscreenImageViewer({
   actions,
   soundtrackControl,
 }: FullscreenImageViewerProps) {
+  const { t: _copy } = _useCopy();
   // A zoomed slide owns the drag. `watchDrag` is consulted on every touchstart,
   // so a ref is enough here — no reInit, and no stale closure either.
   const zoomedRef = useRef(false);
@@ -294,7 +296,7 @@ export function FullscreenImageViewer({
                 handleTranslateImage();
               }}
               className="w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
-              aria-label="Translate image text"
+              aria-label={_copy("copy.fc2b88c811c4", { defaultValue: "Translate image text" })}
             >
               <Languages className="w-5 h-5" />
             </button>
@@ -303,7 +305,7 @@ export function FullscreenImageViewer({
             <button
               onClick={onClose}
               className="w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
-              aria-label="Close fullscreen"
+              aria-label={_copy("copy.3eddd92e8c28", { defaultValue: "Close fullscreen" })}
             >
               <X className="w-5 h-5" />
             </button>
@@ -359,7 +361,7 @@ export function FullscreenImageViewer({
                   }}
                   data-keep-dark
                   className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
-                  aria-label="Previous image"
+                  aria-label={_copy("copy.f0a859a7ecd7", { defaultValue: "Previous image" })}
                 >
                   <ChevronLeft className="w-6 h-6" />
                 </button>
@@ -372,7 +374,7 @@ export function FullscreenImageViewer({
                   }}
                   data-keep-dark
                   className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
-                  aria-label="Next image"
+                  aria-label={_copy("copy.a4903f732746", { defaultValue: "Next image" })}
                 >
                   <ChevronRight className="w-6 h-6" />
                 </button>
@@ -395,7 +397,7 @@ export function FullscreenImageViewer({
                       ? 'bg-white w-3'
                       : 'bg-white/50 hover:bg-white/70'
                   }`}
-                  aria-label={`Go to image ${idx + 1}`}
+                  aria-label={_copy("copy.9f40fece26d6", { defaultValue: "Go to image {{value1}}", value1: idx + 1 })}
                 />
               ))}
             </div>

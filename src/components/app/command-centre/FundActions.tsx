@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Copy, CreditCard, Send, ArrowDownToLine, ArrowUpFromLine, Check, Wallet, Globe } from 'lucide-react';
@@ -14,6 +15,7 @@ import { useWalletAddresses } from '@/hooks/use-wallet-addresses';
 import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
 
 export function FundActions() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const { hasChoice: hasAddressChoice } = useWalletAddresses();
   const { t } = useTranslation();
@@ -147,7 +149,7 @@ export function FundActions() {
             <div className="space-y-2">
               <label className="text-sm text-white/50">{t('commandCentre.walletAddressOrUsername')}</label>
               <Input
-                placeholder="0x... or @username"
+                placeholder={_copy("copy.163e1d023bb9", { defaultValue: "0x... or @username" })}
                 value={withdrawTarget}
                 onChange={(e) => setWithdrawTarget(e.target.value)}
                 className="bg-white/[0.06] border-white/10 text-white backdrop-blur-sm"

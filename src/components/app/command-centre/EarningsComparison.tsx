@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Earnings Comparison
@@ -60,7 +62,7 @@ const PLATFORMS: Platform[] = [
   },
   {
     key: 'twitch',
-    label: 'Twitch',
+    get label() { return _translateCopy("copy.a731a58c4cf3", { defaultValue: "Twitch" }); },
     defaultRpm: 3.0,
     range: '$2.00 – $4.00',
     note: 'Ad revenue only — excludes subs and bits, which are usually the larger share.',
@@ -74,7 +76,7 @@ const PLATFORMS: Platform[] = [
   },
   {
     key: 'reels',
-    label: 'Instagram Reels',
+    get label() { return _translateCopy("copy.b19565a545ba", { defaultValue: "Instagram Reels" }); },
     defaultRpm: 0.02,
     range: '$0.01 – $0.05',
     note: 'Bonus programmes are invite-only and have been repeatedly wound down.',
@@ -93,6 +95,7 @@ const compact = (n: number) => {
 };
 
 export function EarningsComparison() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const [rpms, setRpms] = useSurfaceDraft<Record<string, number>>("src/components/app/command-centre/EarningsComparison.tsx:rpms", () =>
@@ -161,10 +164,8 @@ export function EarningsComparison() {
   return (
     <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4 sm:p-5">
       <div className="mb-4">
-        <h3 className="text-white font-semibold">Earnings comparison</h3>
-        <p className="text-zinc-500 text-xs mt-0.5">
-          Your real DeHub earnings against what the same views would have paid elsewhere.
-        </p>
+        <h3 className="text-white font-semibold">{_copy("copy.a7e8af837a2b", { defaultValue: "Earnings comparison" })}</h3>
+        <p className="text-zinc-500 text-xs mt-0.5">{_copy("copy.6b7b77d53839", { defaultValue: "Your real DeHub earnings against what the same views would have paid elsewhere." })}</p>
       </div>
 
       {isLoading ? (
@@ -176,25 +177,25 @@ export function EarningsComparison() {
           {/* Your actual numbers */}
           <div className="grid grid-cols-3 gap-2 mb-4">
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
-              <p className="text-zinc-500 text-[11px]">Earned on DeHub</p>
+              <p className="text-zinc-500 text-[11px]">{_copy("copy.1dc1e547e65f", { defaultValue: "Earned on DeHub" })}</p>
               <p className="text-white text-lg font-bold mt-0.5">
                 {priceKnown ? usd(dehubUsd) : <DhbAmount amount={compact(tipsEarnedDhb)} />}
               </p>
               <p className="text-zinc-600 text-[10px] mt-0.5">
-                {priceKnown ? <DhbAmount amount={compact(tipsEarnedDhb)} /> : 'USD price unavailable'}
+                {priceKnown ? <DhbAmount amount={compact(tipsEarnedDhb)} /> : _copy("copy.6e31723e40c6", { defaultValue: "USD price unavailable" })}
               </p>
             </div>
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
-              <p className="text-zinc-500 text-[11px]">Total views</p>
+              <p className="text-zinc-500 text-[11px]">{_copy("copy.ddcfdfe02311", { defaultValue: "Total views" })}</p>
               <p className="text-white text-lg font-bold mt-0.5">{compact(totalViews)}</p>
-              <p className="text-zinc-600 text-[10px] mt-0.5">across {postCount} posts</p>
+              <p className="text-zinc-600 text-[10px] mt-0.5">{_copy("copy.29aa7a49aa25", { defaultValue: "across " })}{postCount}{_copy("copy.e8468d49b505", { defaultValue: " posts" })}</p>
             </div>
             <div className="rounded-xl bg-white/[0.03] border border-white/10 p-3">
-              <p className="text-zinc-500 text-[11px]">Your DeHub RPM</p>
+              <p className="text-zinc-500 text-[11px]">{_copy("copy.9f9c6f0d0963", { defaultValue: "Your DeHub RPM" })}</p>
               <p className="text-white text-lg font-bold mt-0.5">
                 {totalViews > 0 && priceKnown ? usd((dehubUsd / totalViews) * 1000) : '—'}
               </p>
-              <p className="text-zinc-600 text-[10px] mt-0.5">per 1,000 views</p>
+              <p className="text-zinc-600 text-[10px] mt-0.5">{_copy("copy.1d097df795ff", { defaultValue: "per 1,000 views" })}</p>
             </div>
           </div>
 
@@ -208,13 +209,11 @@ export function EarningsComparison() {
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-white text-sm font-medium">{r.label}</p>
-                    <p className="text-zinc-600 text-[10px] mt-0.5">
-                      typical {r.range} per 1,000
-                    </p>
+                    <p className="text-zinc-600 text-[10px] mt-0.5">{_copy("copy.43fb11b48038", { defaultValue: "typical " })}{r.range}{_copy("copy.4caa918bf60d", { defaultValue: " per 1,000" })}</p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <label className="flex items-center gap-1">
-                      <span className="text-zinc-600 text-[10px]">RPM $</span>
+                      <span className="text-zinc-600 text-[10px]">{_copy("copy.6bdf24e0e55f", { defaultValue: "RPM $" })}</span>
                       <input
                         type="number"
                         step="0.01"
@@ -224,7 +223,7 @@ export function EarningsComparison() {
                           setRpms((prev) => ({ ...prev, [r.key]: Number(e.target.value) || 0 }))
                         }
                         className="w-16 bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1 text-white text-xs"
-                        aria-label={`${r.label} RPM in dollars per 1,000 views`}
+                        aria-label={_copy("copy.2173b63036e3", { defaultValue: "{{value1}} RPM in dollars per 1,000 views", value1: r.label })}
                       />
                     </label>
                     <div className="text-right w-24">
@@ -237,8 +236,7 @@ export function EarningsComparison() {
                           )}
                         >
                           {r.delta >= 0 ? '+' : '−'}
-                          {usd(Math.abs(r.delta))} on DeHub
-                        </p>
+                          {usd(Math.abs(r.delta))}{_copy("copy.0435a318b3b4", { defaultValue: " on DeHub" })}</p>
                       ) : (
                         <p className="text-zinc-600 text-[10px]">—</p>
                       )}
@@ -252,9 +250,7 @@ export function EarningsComparison() {
 
           {/* Estimator — the "not on DeHub yet" half of the request */}
           <div className="mt-4 pt-4 border-t border-white/[0.06]">
-            <label className="text-zinc-400 text-xs block mb-2">
-              Not your numbers? Try any view count
-            </label>
+            <label className="text-zinc-400 text-xs block mb-2">{_copy("copy.600d1c6e47ab", { defaultValue: "Not your numbers? Try any view count" })}</label>
             <input
               type="text"
               inputMode="numeric"

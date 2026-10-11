@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Appeal a moderation decision.
@@ -43,6 +44,7 @@ export function AppealDrawer({
   subject,
   onFiled,
 }: AppealDrawerProps) {
+  const { t: _copy } = _useCopy();
   const [reason, setReason] = useSurfaceDraft("components/app/notifications/AppealDrawer.tsx:reason", '', notificationId);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -82,13 +84,11 @@ export function AppealDrawer({
       <DrawerContent column glass className="max-h-[85dvh]">
         <DrawerHeader className="text-left">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Scale className="w-5 h-5" />
-            Appeal this decision
-          </DrawerTitle>
+            <Scale className="w-5 h-5" />{_copy("copy.3c7e8ac23a6f", { defaultValue: "Appeal this decision" })}</DrawerTitle>
           <DrawerDescription className="text-zinc-400">
             {subject
-              ? `A person will read this and look again at ${subject}.`
-              : 'A person will read this and look at the decision again.'}
+              ? _copy("copy.667f90e3b6d3", { defaultValue: "A person will read this and look again at {{value1}}.", value1: subject })
+              : _copy("copy.1cfb99a31f7b", { defaultValue: "A person will read this and look at the decision again." })}
           </DrawerDescription>
         </DrawerHeader>
 
@@ -97,12 +97,12 @@ export function AppealDrawer({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             maxLength={MAX_REASON}
-            placeholder="What do you think was missed? Context about the content helps more than anything else."
+            placeholder={_copy("copy.ebfe8c93e18f", { defaultValue: "What do you think was missed? Context about the content helps more than anything else." })}
             className="bg-white/5 border-white/10 text-white min-h-[140px] rounded-xl resize-none"
           />
           <p className="text-xs text-zinc-500 text-right">
             {trimmed.length < MIN_REASON
-              ? `${MIN_REASON - trimmed.length} more characters`
+              ? _copy("copy.1c6c54160ae0", { defaultValue: "{{value1}} more characters", value1: MIN_REASON - trimmed.length })
               : `${reason.length}/${MAX_REASON}`}
           </p>
 
@@ -112,19 +112,12 @@ export function AppealDrawer({
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
               className="flex-1 text-zinc-400 hover:text-white hover:bg-white/10"
-            >
-              Cancel
-            </Button>
+            >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             <Button onClick={handleSubmit} disabled={!canSubmit} variant="glass" className="flex-1">
-              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Send appeal
-            </Button>
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}{_copy("copy.13f597e9b138", { defaultValue: "Send appeal" })}</Button>
           </div>
 
-          <p className="text-[11px] text-zinc-500">
-            You get a reference number, and the answer comes back here. One appeal per decision —
-            sending again shows you the first one.
-          </p>
+          <p className="text-[11px] text-zinc-500">{_copy("copy.2d129229aa3c", { defaultValue: "You get a reference number, and the answer comes back here. One appeal per decision — sending again shows you the first one." })}</p>
         </div>
       </DrawerContent>
     </Drawer>

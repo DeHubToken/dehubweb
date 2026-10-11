@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
@@ -18,16 +19,17 @@ const SUGGESTED_USERS = [
 ];
 
 export function ExploreScreen() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Explore" />
+      <MobileTopBar title={_copy("copy.3b73900b8d29", { defaultValue: "Explore" })} />
 
       {/* Search bar */}
       <div className="px-4 py-3">
         <div className="flex items-center gap-2 h-10 px-4 rounded-xl bg-white/[0.06] border border-white/10">
           <Search className="w-4 h-4 text-zinc-500" />
-          <span className="text-zinc-500 text-sm">Search posts, users, tags...</span>
+          <span className="text-zinc-500 text-sm">{_copy("copy.ec65a71c1693", { defaultValue: "Search posts, users, tags..." })}</span>
         </div>
       </div>
 
@@ -36,7 +38,7 @@ export function ExploreScreen() {
         <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-3">
           <div className="flex items-center gap-2 mb-3">
             <TrendingUp className="w-4 h-4 text-white" />
-            <h2 className="text-white text-sm font-semibold">Trending</h2>
+            <h2 className="text-white text-sm font-semibold">{_copy("copy.5e1a0ebc939d", { defaultValue: "Trending" })}</h2>
           </div>
           <div className="space-y-3">
             {TRENDING.map((item, i) => (
@@ -54,7 +56,7 @@ export function ExploreScreen() {
 
       {/* Suggested users */}
       <div className="px-4 pb-4">
-        <h3 className="text-white text-sm font-semibold mb-3">Suggested for you</h3>
+        <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.fe079cfa9423", { defaultValue: "Suggested for you" })}</h3>
         <div className="space-y-3">
           {SUGGESTED_USERS.map((user) => (
             <div key={user.name} className="flex items-center gap-3">
@@ -63,9 +65,7 @@ export function ExploreScreen() {
                 <span className="text-white text-sm font-semibold block truncate">{user.name}</span>
                 <span className="text-zinc-500 text-xs">{user.bio}</span>
               </div>
-              <button className="h-8 px-4 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium">
-                Follow
-              </button>
+              <button className="h-8 px-4 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium">{_copy("copy.641d1ef657bd", { defaultValue: "Follow" })}</button>
             </div>
           ))}
         </div>
@@ -73,7 +73,7 @@ export function ExploreScreen() {
 
       {/* Explore grid */}
       <div className="px-4 pb-4">
-        <h3 className="text-white text-sm font-semibold mb-3">Explore</h3>
+        <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.3b73900b8d29", { defaultValue: "Explore" })}</h3>
         <div className="grid grid-cols-3 gap-1 rounded-xl overflow-hidden">
           {Array.from({ length: 9 }).map((_, i) => (
             <div key={i} className="aspect-square bg-zinc-900 flex items-center justify-center">

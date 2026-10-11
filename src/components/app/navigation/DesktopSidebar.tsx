@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
@@ -47,13 +48,14 @@ import { warmLoginSheet } from '@/components/app/LoginModal';
  * `action` is what makes SidebarNavItem render a button rather than a NavLink;
  * the value is only a discriminator, since the handler is passed in.
  */
-const LOGOUT_ITEM: NavItem = { icon: LogOut, label: 'Log out', path: '', action: 'logout' };
+const LOGOUT_ITEM: NavItem = { icon: LogOut, label: "Log out", path: '', action: 'logout' };
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
 }
 
 export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
+  const { t: _copy } = _useCopy();
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -378,7 +380,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 isLightTheme ? "hover:bg-zinc-200" : "hover:bg-zinc-800",
                 isCollapsed ? "hidden" : "hidden lg:flex mr-1.5"
               )}
-              aria-label="Toggle sidebar"
+              aria-label={_copy("copy.041aefc44394", { defaultValue: "Toggle sidebar" })}
             >
               <Menu className="w-[18px] h-[18px] text-zinc-400" />
             </button>
@@ -439,7 +441,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   "flex-shrink-0 w-[18px] h-[18px] ml-1 flex items-center justify-center rounded-md transition-colors",
                   isLightTheme ? "hover:bg-zinc-200" : "hover:bg-zinc-800"
                 )}
-                aria-label="Expand sidebar"
+                aria-label={_copy("copy.37a5d6485e10", { defaultValue: "Expand sidebar" })}
               >
                 <Menu className="w-[14px] h-[14px] text-zinc-400" />
               </button>

@@ -1,4 +1,4 @@
-"""Private job storage, short-lived file links and keyed DeHub credit charges."""
+"""Private job storage, short-lived file links and keyed Creator payments."""
 import hashlib
 import hmac
 import json
@@ -14,11 +14,6 @@ import requests
 from fastapi import HTTPException
 
 DATA = Path(os.environ.get('MABOROSHI_DATA', '/var/lib/dehub-maboroshi'))
-SETTINGS = DATA / 'provider-settings.json'
-if SETTINGS.exists():
-    for key, value in json.loads(SETTINGS.read_text()).items():
-        if key in ('REPLICATE_API_TOKEN', 'ENHANCOR_API_KEY'):
-            os.environ[key] = value
 PUBLIC = os.environ.get('MABOROSHI_PUBLIC_URL', 'https://live.dehub.io/maboroshi').rstrip('/')
 MODES = ('depth', 'face_mesh', 'depth_mesh')
 FILES = ('upload.mp4', 'original.mp4', 'depth.mp4', 'mask.mp4', 'composite-silent.mp4',
@@ -106,10 +101,11 @@ def resolve_media(relative, expires, supplied):
 
 
 def readiness():
-    required = ('REPLICATE_API_TOKEN', 'ENHANCOR_API_KEY', 'INTERNAL_SERVICE_SECRET',
+    from providers import ready
+    required = ('INTERNAL_SERVICE_SECRET',
                 'MABOROSHI_MEDIA_SECRET', 'MABOROSHI_PREPARE_MICROS',
                 'MABOROSHI_DRAFT_MICROS_PER_SECOND', 'MABOROSHI_HD_MICROS_PER_SECOND')
-    return all(os.environ.get(key) for key in required)
+    return all(os.environ.get(key) for key in required) and ready()
 
 
 def price(row, stage):
@@ -118,7 +114,8 @@ def price(row, stage):
             result = int(os.environ['MABOROSHI_PREPARE_MICROS'])
         else:
             rate = int(os.environ['MABOROSHI_' + stage.upper() + '_MICROS_PER_SECOND'])
-            result = math.ceil(max(4, row['seconds']) + row['reference_seconds']) * rate
+            # Seedance bills all input video seconds plus the output duration.
+            result = math.ceil(row['seconds'] + row['reference_seconds'] + max(4, math.ceil(row['seconds']))) * rate
         if result <= 0 or result > 100_000_000:
             raise ValueError('Invalid configured price')
         return result
@@ -126,14 +123,54 @@ def price(row, stage):
         raise HTTPException(503, 'Maboroshi pricing is being configured. Nothing has been charged.')
 
 
-def debit(row, stage, amount):
+def payment_reference(row, stage):
+    path = folder(row['id']) / f'payment-{stage}.json'
+    if not path.exists():
+        return None
+    record = json.loads(path.read_text())
+    if record.get('wallet') != row['wallet'] or record.get('stage') != stage:
+        raise HTTPException(409, 'Saved payment needs review.')
+    return record
+
+
+def save_payment(row, stage, record):
+    path = folder(row['id']) / f'payment-{stage}.json'
+    temporary = path.with_suffix('.tmp')
+    with temporary.open('w') as output:
+        json.dump(record, output)
+        output.flush()
+        os.fsync(output.fileno())
+    temporary.replace(path)
+
+
+def debit(row, stage, amount, tx_hash='credits'):
     key = f'maboroshi:{row["id"]}:{stage}'
+    tx_hash = tx_hash.lower()
+    if tx_hash != 'credits' and not re.fullmatch(r'0x[a-f0-9]{64}', tx_hash):
+        raise HTTPException(402, 'Review payment in DeHub before starting this step.')
+    previous = payment_reference(row, stage)
+    record = {'wallet': row['wallet'], 'stage': stage, 'amount': amount, 'tx_hash': tx_hash}
+    if previous and previous != record:
+        raise HTTPException(409, 'Retry this step with its saved payment reference.')
+    # Save before contacting either ledger. A timeout must reuse the exact
+    # source and key, never fall through to a second payment method.
+    if not previous:
+        save_payment(row, stage, record)
     try:
-        response = requests.post('https://api.dehub.io/api/internal/credits/debit',
-            headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']},
-            json={'address': row['wallet'], 'usdMicros': amount, 'key': key, 'purpose': 'ai'}, timeout=15)
-        if response.status_code == 402:
-            raise HTTPException(402, 'Insufficient DeHub credit. Top up, then try again.')
+        if tx_hash == 'credits':
+            url = 'https://api.dehub.io/api/internal/credits/debit'
+            body = {'address': row['wallet'], 'usdMicros': amount, 'key': key, 'purpose': 'ai'}
+        else:
+            from providers import BRIDGE
+            url = BRIDGE
+            body = {'operation': 'payment_charge', 'wallet': row['wallet'], 'amount_micros': amount, 'key': key, 'tx_hash': tx_hash}
+        response = requests.post(url, headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']}, json=body, timeout=45)
+        if response.status_code in (402, 403):
+            # Both ledgers definitively refused this source without a charge.
+            (folder(row['id']) / f'payment-{stage}.json').unlink(missing_ok=True)
+            raise HTTPException(response.status_code, 'This payment is unavailable. Review payment again in DeHub.')
+        if response.status_code == 409:
+            raise HTTPException(409, 'This step has a saved or reversed payment that needs review.')
         response.raise_for_status()
         if response.json().get('debited') is not True:
             raise ValueError('Debit unconfirmed')
@@ -143,9 +180,18 @@ def debit(row, stage, amount):
 
 def refund(ident, stage):
     try:
+        row = job(ident)
+        payment = payment_reference(row, stage)
+        key = f'maboroshi:{ident}:{stage}'
+        if payment and payment['tx_hash'] != 'credits':
+            from providers import BRIDGE
+            response = requests.post(BRIDGE,
+                headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']},
+                json={'operation': 'payment_refund', 'key': key}, timeout=45)
+            return response.status_code == 200 and response.json().get('refunded') is True
         response = requests.post('https://api.dehub.io/api/internal/credits/refund',
             headers={'x-internal-secret': os.environ['INTERNAL_SERVICE_SECRET']},
-            json={'key': f'maboroshi:{ident}:{stage}'}, timeout=15)
+            json={'key': key}, timeout=15)
         return response.status_code in (200, 404)
-    except (requests.RequestException, KeyError):
+    except (requests.RequestException, KeyError, ValueError, OSError):
         return False

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Play, Pause, Scissors, Check, Music } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
@@ -32,6 +33,7 @@ export function AudioTrimmer({
   fileName,
   onApply,
 }: AudioTrimmerProps) {
+  const { t: _copy } = _useCopy();
   const [waveform, setWaveform] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -268,7 +270,7 @@ export function AudioTrimmer({
       onApply(trimmedBlob, trimStart, trimEnd);
     } catch (err) {
       console.error('Failed to trim audio:', err);
-      toast.error('Failed to trim audio');
+      toast.error(_copy("copy.e65120bcb2bb", { defaultValue: "Failed to trim audio" }));
     } finally {
       setIsProcessing(false);
     }
@@ -286,7 +288,7 @@ export function AudioTrimmer({
   return (
     <Drawer open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DrawerContent column hideHandle className="bg-zinc-950 border-zinc-800 max-h-[90dvh] overflow-hidden flex flex-col">
-        <DrawerTitle className="sr-only">Trim Audio</DrawerTitle>
+        <DrawerTitle className="sr-only">{_copy("copy.6fdc83d79136", { defaultValue: "Trim Audio" })}</DrawerTitle>
         
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-800 shrink-0">
@@ -296,7 +298,7 @@ export function AudioTrimmer({
           >
             <X className="w-5 h-5 text-zinc-400" />
           </button>
-          <span className="text-white font-semibold">Trim Audio</span>
+          <span className="text-white font-semibold">{_copy("copy.6fdc83d79136", { defaultValue: "Trim Audio" })}</span>
           <button
             onClick={handleApply}
             disabled={isLoading || isProcessing || selectionDuration > maxDuration}
@@ -309,9 +311,7 @@ export function AudioTrimmer({
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
               <Check className="w-4 h-4" />
-            )}
-            Apply
-          </button>
+            )}{_copy("copy.31e392d1c037", { defaultValue: "Apply" })}</button>
         </div>
 
         {/* Content */}
@@ -326,15 +326,14 @@ export function AudioTrimmer({
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-white text-sm font-medium truncate">{displayFileName}</p>
-                <p className="text-zinc-500 text-xs">{formatTime(duration)} total</p>
+                <p className="text-zinc-500 text-xs">{formatTime(duration)}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</p>
               </div>
             </div>
           )}
 
           {/* Info bar */}
           <div className="flex items-center justify-between mb-4 text-sm">
-            <span className="text-zinc-400">
-              Select up to {maxDuration}s
+            <span className="text-zinc-400">{_copy("copy.a00808a0584f", { defaultValue: "Select up to " })}{maxDuration}s
             </span>
             <span className={cn(
               "font-medium px-2 py-0.5 rounded-full text-xs",
@@ -342,8 +341,7 @@ export function AudioTrimmer({
                 ? "bg-red-500/20 text-red-400 border border-red-500/30" 
                 : "bg-white/10 text-white border border-white/20"
             )}>
-              {formatTime(selectionDuration)} selected
-            </span>
+              {formatTime(selectionDuration)}{_copy("copy.97a2e8815acd", { defaultValue: " selected" })}</span>
           </div>
 
           {/* Waveform */}
@@ -462,7 +460,7 @@ export function AudioTrimmer({
 
           {/* Playback Speed Controls */}
           <div className="flex items-center justify-center gap-2 mt-4">
-            <span className="text-xs text-zinc-500 mr-1">Speed:</span>
+            <span className="text-xs text-zinc-500 mr-1">{_copy("copy.6b23717a37a6", { defaultValue: "Speed:" })}</span>
             {PLAYBACK_SPEEDS.map((speed) => (
               <button
                 key={speed}
@@ -481,9 +479,9 @@ export function AudioTrimmer({
 
           {/* Keyboard shortcuts hint */}
           <div className="hidden sm:flex items-center justify-center gap-4 mt-4 text-[10px] text-zinc-600">
-            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">Space</kbd> Play/Pause</span>
-            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">←→</kbd> Move window</span>
-            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">Shift</kbd> Faster</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">{_copy("copy.20eac5aae274", { defaultValue: "Space" })}</kbd>{_copy("copy.4ff927989d2b", { defaultValue: " Play/Pause" })}</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">←→</kbd>{_copy("copy.67e6ba3b52c6", { defaultValue: " Move window" })}</span>
+            <span><kbd className="px-1 py-0.5 rounded bg-zinc-800 text-zinc-400">{_copy("copy.2e544a292f69", { defaultValue: "Shift" })}</kbd>{_copy("copy.9a5253015a01", { defaultValue: " Faster" })}</span>
           </div>
         </div>
       </DrawerContent>

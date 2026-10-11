@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,7 @@ export function SettingDrawerSelect({
   className = '',
   searchable = false,
 }: SettingDrawerSelectProps) {
+  const { t: _copy } = _useCopy();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useSurfaceDraft("components/app/settings/SettingDrawerSelect.tsx:search", '');
   
@@ -118,7 +120,7 @@ export function SettingDrawerSelect({
             </button>
           ))}
           {searchable && filteredOptions.length === 0 && (
-            <AppState icon="search" title="No languages found" kind="search-empty" size="compact" />
+            <AppState icon="search" title={_copy("copy.58d29fba0046", { defaultValue: "No languages found" })} kind="search-empty" size="compact" />
           )}
         </div>
       </DrawerContent>

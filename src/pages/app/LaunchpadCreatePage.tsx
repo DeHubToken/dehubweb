@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +15,7 @@ import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 export default function LaunchpadCreatePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -140,7 +142,7 @@ export default function LaunchpadCreatePage() {
                 </Field>
                 <Field label={t('launchpad.fieldTicker')} hint={t('launchpad.tickerHint')}>
                   <input value={symbol} onChange={e => setSymbol(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,''))}
-                    maxLength={8} placeholder="PEPE" className={inputCls} />
+                    maxLength={8} placeholder={_copy("copy.e63ffac3f5e5", { defaultValue: "PEPE" })} className={inputCls} />
                 </Field>
                 <Field label={t('launchpad.fieldDescription')}>
                   <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} maxLength={280}

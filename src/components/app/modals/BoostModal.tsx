@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Boost Modal
@@ -59,6 +60,7 @@ interface BoostModalProps {
 }
 
 export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModalProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data: status, isLoading, isError } = useSuperpowers(open);
@@ -332,7 +334,7 @@ export function BoostModal({ open, onOpenChange, tokenId, postTitle }: BoostModa
                 active.blockedReason
               ) : (
                 chosen === 'signal_flare'
-                  ? 'Send Signal Flare'
+                  ? _copy("copy.c38d4b61d309", { defaultValue: "Send Signal Flare" })
                   : t('superpowers.spendFor', {
                       power: active?.label ?? '',
                       minutes: status.minutesPerBoost,

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -101,6 +102,7 @@ function PerkRow({ icon: Icon, perkKey }: { icon: React.ElementType; perkKey: st
 }
 
 export default function Premium() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, user, openLoginModal } = useAuth() as any;
   const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
@@ -187,7 +189,7 @@ export default function Premium() {
         <GlassCard>
           <div className="flex items-center gap-2 mb-2">
             <Crown className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-semibold">DeHub Extra</h2>
+            <h2 className="text-lg font-semibold">{_copy("copy.71320997a469", { defaultValue: "DeHub Extra" })}</h2>
           </div>
           <p className="text-sm text-zinc-400">{t('premium.extraTagline')}</p>
           <div className="mt-5 flex items-baseline gap-1">
@@ -212,7 +214,7 @@ export default function Premium() {
         <GlassCard highlight>
           <div className="flex items-center gap-2 mb-2">
             <Users className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-semibold">DeHub Family</h2>
+            <h2 className="text-lg font-semibold">{_copy("copy.08f72fb72234", { defaultValue: "DeHub Family" })}</h2>
           </div>
           <p className="text-sm text-zinc-400">{t('premium.familyTagline')}</p>
           <div className="mt-5 flex items-baseline gap-1">
@@ -242,7 +244,7 @@ export default function Premium() {
         <GlassCard>
           <div className="flex items-center gap-2 mb-2">
             <Rocket className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-semibold">DeHub Extra Large</h2>
+            <h2 className="text-lg font-semibold">{_copy("copy.a74a0480b56d", { defaultValue: "DeHub Extra Large" })}</h2>
           </div>
           <p className="text-sm text-zinc-400">{t('premium.xlTagline')}</p>
           <div className="mt-5 flex items-baseline gap-1">

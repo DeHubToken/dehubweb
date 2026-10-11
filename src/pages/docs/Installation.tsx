@@ -1,9 +1,11 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Package, Download, Settings, CheckCircle, AlertTriangle, Terminal } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Installation = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   const installMethods = [
@@ -35,18 +37,18 @@ const Installation = () => {
           <div>
             <h4 className="font-medium text-foreground mb-2">{t('installation.nodeEnvironment')}</h4>
             <ul className="space-y-1 text-muted-foreground text-sm">
-              <li>• Node.js 16.0.0 or higher</li>
-              <li>• npm 7.0.0 or higher</li>
-              <li>• TypeScript 4.5+ (optional)</li>
+              <li>{_copy("copy.c3cba559e90f", { defaultValue: "• Node.js 16.0.0 or higher" })}</li>
+              <li>{_copy("copy.ba9fe5e3d324", { defaultValue: "• npm 7.0.0 or higher" })}</li>
+              <li>{_copy("copy.e8460f3067b6", { defaultValue: "• TypeScript 4.5+ (optional)" })}</li>
             </ul>
           </div>
           <div>
             <h4 className="font-medium text-foreground mb-2">{t('installation.browserSupport')}</h4>
             <ul className="space-y-1 text-muted-foreground text-sm">
-              <li>• Chrome 90+</li>
-              <li>• Firefox 88+</li>
-              <li>• Safari 14+</li>
-              <li>• Edge 90+</li>
+              <li>{_copy("copy.7046b00dbc33", { defaultValue: "• Chrome 90+" })}</li>
+              <li>{_copy("copy.6dc617ca7c7f", { defaultValue: "• Firefox 88+" })}</li>
+              <li>{_copy("copy.98473f30ec45", { defaultValue: "• Safari 14+" })}</li>
+              <li>{_copy("copy.66dfc75ac659", { defaultValue: "• Edge 90+" })}</li>
             </ul>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Image Generation Models Configuration
  */
@@ -66,7 +67,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'gemini-2.5-flash': {
     id: 'gemini-2.5-flash',
     name: 'Gemini 2.5 Flash',
-    description: 'Fast, balanced quality',
+    get description() { return _translateCopy("copy.f4af9ded2e84", { defaultValue: "Fast, balanced quality" }); },
     emoji: '⚡',
     tier: 'fast',
     baseCostUsd: 0.02,
@@ -74,7 +75,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'gemini-3.1-flash-image': {
     id: 'gemini-3.1-flash-image',
     name: 'Nano Banana 2',
-    description: 'Fast brand image generation',
+    get description() { return _translateCopy("copy.7a403d743104", { defaultValue: "Fast brand image generation" }); },
     emoji: '🍌',
     tier: 'fast',
     baseCostUsd: 0.01,
@@ -82,7 +83,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'gemini-3-pro-image': {
     id: 'gemini-3-pro-image',
     name: 'Gemini 3 Pro',
-    description: 'Latest, highest quality',
+    get description() { return _translateCopy("copy.cdb1f3a5c747", { defaultValue: "Latest, highest quality" }); },
     emoji: '✨',
     tier: 'premium',
     baseCostUsd: 0.08,
@@ -90,7 +91,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'grok-2-image': {
     id: 'grok-2-image',
     name: 'Grok Aurora',
-    description: 'xAI image generation',
+    get description() { return _translateCopy("copy.e7f08f1acc2a", { defaultValue: "xAI image generation" }); },
     emoji: '🔮',
     tier: 'premium',
     baseCostUsd: 0.06,
@@ -107,7 +108,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'nano-banana-pro': {
     id: 'nano-banana-pro',
     name: 'Nano Banana Pro',
-    description: 'Best-in-class text and diagrams',
+    get description() { return _translateCopy("copy.674c9031cb7a", { defaultValue: "Best-in-class text and diagrams" }); },
     emoji: '🍌',
     tier: 'premium',
     // kie.ai rate at 2K, matching where generate-image now runs it.
@@ -116,7 +117,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'nano-banana-2': {
     id: 'nano-banana-2',
     name: 'Nano Banana 2',
-    description: 'Fast, photoreal, very versatile',
+    get description() { return _translateCopy("copy.6e8213cac3d3", { defaultValue: "Fast, photoreal, very versatile" }); },
     emoji: '🍌',
     tier: 'standard',
     // kie.ai rate at 2K, matching where generate-image now runs it.
@@ -125,7 +126,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'seedream-v4.5': {
     id: 'seedream-v4.5',
     name: 'Seedream 4.5',
-    description: 'Precise control and transformations',
+    get description() { return _translateCopy("copy.85cad149b522", { defaultValue: "Precise control and transformations" }); },
     emoji: '🌊',
     tier: 'standard',
     // kie.ai flat rate, matching where generate-image now runs it.
@@ -134,7 +135,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'flux-2-pro': {
     id: 'flux-2-pro',
     name: 'FLUX.2 Pro',
-    description: 'Exceptional prompt adherence',
+    get description() { return _translateCopy("copy.a52e8253b78b", { defaultValue: "Exceptional prompt adherence" }); },
     emoji: '⚡',
     tier: 'standard',
     // kie.ai rate at 1K, matching where generate-image now runs it.
@@ -143,7 +144,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'flux-kontext-max': {
     id: 'flux-kontext-max',
     name: 'FLUX Kontext Max',
-    description: 'Context-aware editing and style transfer',
+    get description() { return _translateCopy("copy.b3de46c00525", { defaultValue: "Context-aware editing and style transfer" }); },
     emoji: '🎛️',
     tier: 'premium',
     baseCostUsd: 0.08,
@@ -151,7 +152,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'flux-2-flex': {
     id: 'flux-2-flex',
     name: 'FLUX.2 Flex',
-    description: 'Tunable steps and guidance for fine control',
+    get description() { return _translateCopy("copy.8f7918a80c26", { defaultValue: "Tunable steps and guidance for fine control" }); },
     emoji: '🎚️',
     tier: 'standard',
     // $0.05 per megapixel, rounded up — the studio requests a single one.
@@ -161,7 +162,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'z-image-turbo': {
     id: 'z-image-turbo',
     name: 'Z-Image Turbo',
-    description: 'Near-instant drafts at the lowest price here',
+    get description() { return _translateCopy("copy.7f05ce754d0e", { defaultValue: "Near-instant drafts at the lowest price here" }); },
     emoji: '🪄',
     tier: 'fast',
     // $0.005 per megapixel; rounded up to stay clear of the rounding boundary.
@@ -171,7 +172,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'recraft-v4.1': {
     id: 'recraft-v4.1',
     name: 'Recraft V4.1',
-    description: 'Brand-grade illustration and layout',
+    get description() { return _translateCopy("copy.b9bc1ba02125", { defaultValue: "Brand-grade illustration and layout" }); },
     emoji: '🎨',
     tier: 'standard',
     baseCostUsd: 0.035,
@@ -180,7 +181,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'recraft-v4.1-vector': {
     id: 'recraft-v4.1-vector',
     name: 'Recraft Vector',
-    description: 'True SVG logos and icons',
+    get description() { return _translateCopy("copy.0f2a22d8a443", { defaultValue: "True SVG logos and icons" }); },
     emoji: '📐',
     tier: 'standard',
     baseCostUsd: 0.08,
@@ -189,7 +190,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'ideogram-v3': {
     id: 'ideogram-v3',
     name: 'Ideogram V3',
-    description: 'Strongest typography in a poster',
+    get description() { return _translateCopy("copy.b5893515b61f", { defaultValue: "Strongest typography in a poster" }); },
     emoji: '🔤',
     tier: 'standard',
     baseCostUsd: 0.06,
@@ -197,7 +198,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'qwen-image': {
     id: 'qwen-image',
     name: 'Qwen Image',
-    description: 'Cheapest solid all-rounder',
+    get description() { return _translateCopy("copy.fc6ec390be63", { defaultValue: "Cheapest solid all-rounder" }); },
     emoji: '🪶',
     tier: 'fast',
     baseCostUsd: 0.02,
@@ -205,7 +206,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
   'grok-imagine': {
     id: 'grok-imagine',
     name: 'Grok Imagine',
-    description: 'Expressive, high-contrast, bold',
+    get description() { return _translateCopy("copy.0459220de3f8", { defaultValue: "Expressive, high-contrast, bold" }); },
     emoji: '🔮',
     tier: 'fast',
     baseCostUsd: 0.02,

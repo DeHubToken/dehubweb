@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Live Shopping Hooks
  * ===================
@@ -125,6 +126,7 @@ export function useStreamProducts(tokenId: string | null, enabled: boolean = tru
 
 /** Creator-side rail management. Every call is ownership-checked server-side. */
 export function useStreamProductActions(tokenId: string | null) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
@@ -138,14 +140,14 @@ export function useStreamProductActions(tokenId: string | null) {
         listingId: params.listingId,
         livePrice: params.livePrice ?? null,
       }, walletAddress),
-    onSuccess: () => { invalidate(); toast.success('Added to the stream'); },
+    onSuccess: () => { invalidate(); toast.success(_copy("copy.b83e2b791732", { defaultValue: "Added to the stream" })); },
     onError: (e: Error) => toast.error(e.message),
   });
 
   const detach = useMutation({
     mutationFn: (listingId: string) =>
       callFn('stream-products', { action: 'detach', tokenId, listingId }, walletAddress),
-    onSuccess: () => { invalidate(); toast.success('Removed from the stream'); },
+    onSuccess: () => { invalidate(); toast.success(_copy("copy.40f9db0a3241", { defaultValue: "Removed from the stream" })); },
     onError: (e: Error) => toast.error(e.message),
   });
 

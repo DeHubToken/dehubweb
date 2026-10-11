@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Public renderer for a Builder app — /builder/preview/:id
  *
@@ -13,6 +14,7 @@ import { loadBuilderAppHtml, BUILDER_IFRAME_SANDBOX } from '@/lib/builder/render
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 export default function BuilderPreviewPage() {
+  const { t: _copy } = _useCopy();
   const { id } = useParams<{ id: string }>();
   const [srcDoc, setSrcDoc] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -32,10 +34,10 @@ export default function BuilderPreviewPage() {
 
   return (
     <div data-theme-page-surface={srcDoc ? undefined : true} className="fixed inset-0 z-[1] bg-background text-foreground">
-      <SEOHead title="Built with DeHub Builder" description="An app built on DeHub Builder." noindex />
+      <SEOHead title={_copy("copy.a06602146802", { defaultValue: "Built with DeHub Builder" })} description={_copy("copy.6be19fadc3c7", { defaultValue: "An app built on DeHub Builder." })} noindex />
       {srcDoc ? (
         <iframe
-          title="App"
+          title={_copy("copy.0d04bfeb7d64", { defaultValue: "App" })}
           srcDoc={srcDoc}
           sandbox={BUILDER_IFRAME_SANDBOX}
           className="w-full h-full border-0 bg-[#fff]"

@@ -1,8 +1,10 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { getAccountInfo } from '@/lib/api/dehub';
 
 export function StatsBar() {
+  const { t: _copy } = _useCopy();
   const { walletAddress, user } = useAuth();
 
   const { data: profile } = useQuery({
@@ -35,11 +37,11 @@ export function StatsBar() {
   };
 
   const stats = [
-    { label: 'Followers', value: fmt(followers) },
-    { label: 'Following', value: fmt(following) },
-    { label: 'Likes', value: fmt(likes) },
-    { label: 'Tips Made', value: fmt(tipsMade) },
-    { label: 'Tips Earned', value: fmt(tipsEarned) },
+    { label: _copy("copy.a145ab342a4a", { defaultValue: "Followers" }), value: fmt(followers) },
+    { label: _copy("copy.344b4271ca01", { defaultValue: "Following" }), value: fmt(following) },
+    { label: _copy("copy.cca0662f9ddd", { defaultValue: "Likes" }), value: fmt(likes) },
+    { label: _copy("copy.48ad64d3aace", { defaultValue: "Tips Made" }), value: fmt(tipsMade) },
+    { label: _copy("copy.457d1b1a71ba", { defaultValue: "Tips Earned" }), value: fmt(tipsEarned) },
   ];
 
   return (

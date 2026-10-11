@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
@@ -61,6 +62,7 @@ const DELIVERED = ['sent', 'completed', 'success'];
 const NOT_STARTED = ['', 'not_sent', 'pending', 'queued'];
 
 export default function BuyCoinsPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -314,7 +316,7 @@ export default function BuyCoinsPage() {
       startPolling(sessionId);
     } else if (paymentStatus === 'cancel') {
       setSearchParams({}, { replace: true });
-      toast.info('Payment cancelled.');
+      toast.info(_copy("copy.2dced6f368ad", { defaultValue: "Payment cancelled." }));
     }
   }, [searchParams, setSearchParams, startPolling]);
 
@@ -404,8 +406,8 @@ export default function BuyCoinsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Buy — Purchase Tokens on DeHub" description="Buy tokens directly on DeHub with your credit card. Fast checkout, multiple chains supported, and tokens delivered to your wallet." url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on DeHub', url: 'https://dehub.io/buy', description: 'Purchase tokens with credit card on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="sr-only">DeHub Buy Tokens — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.f130c6f67cb8", { defaultValue: "Buy — Purchase Tokens on DeHub" })} description={_copy("copy.dd108c142387", { defaultValue: "Buy tokens directly on DeHub with your credit card. Fast checkout, multiple chains supported, and tokens delivered to your wallet." })} url="https://dehub.io/buy" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Buy Tokens on DeHub', url: 'https://dehub.io/buy', description: _copy("copy.307346d9e44b", { defaultValue: "Purchase tokens with credit card on DeHub." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">{_copy("copy.b4681470578d", { defaultValue: "DeHub Buy Tokens — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland back onBack={() => navigate(-1)} icon="buy" title={t('buyCoins.title')} />
 
       <PageBody className="max-w-lg mx-auto">
@@ -537,9 +539,7 @@ export default function BuyCoinsPage() {
           {availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0 && (
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-zinc-400">
-                  Available to buy now
-                </span>
+                <span className="text-zinc-400">{_copy("copy.4010422b82f8", { defaultValue: "Available to buy now" })}</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoin} alt={t('buyCoins.tokensUnit')} className="w-5 h-5" />
                   <span className="text-white font-semibold">
@@ -554,9 +554,7 @@ export default function BuyCoinsPage() {
           {gasTokens && gasTokens.length > 0 && (
             <div>
               <p className="text-xs text-zinc-500 flex items-center gap-1">
-                <Zap className="w-3 h-3" />
-                Gas: {gasTokens.map(g => g.symbol).join(', ')} available on Base
-              </p>
+                <Zap className="w-3 h-3" />{_copy("copy.88cc8f98bfe9", { defaultValue: "Gas: " })}{gasTokens.map(g => g.symbol).join(', ')}{_copy("copy.9720e3be5c2d", { defaultValue: " available on Base" })}</p>
             </div>
           )}
         </div>
@@ -578,7 +576,7 @@ export default function BuyCoinsPage() {
             </div>
             <div className="flex-1 text-left">
               <p className="text-white font-medium">{t('buyCoins.cardBank')}</p>
-              <p className="text-xs text-zinc-400">Visa, Mastercard, Apple Pay, Google Pay</p>
+              <p className="text-xs text-zinc-400">{_copy("copy.0e633747fd23", { defaultValue: "Visa, Mastercard, Apple Pay, Google Pay" })}</p>
             </div>
             {paymentMethod === 'card' && <Check className="w-5 h-5 text-white" />}
           </button>
@@ -627,7 +625,7 @@ export default function BuyCoinsPage() {
             {purchaseStatus === 'polling' && (
               <div className="flex flex-col items-center justify-center gap-3 animate-fade-in">
                 <Loader2 className="w-10 h-10 animate-spin text-white" />
-                <h3 className="text-white font-semibold text-lg">Processing Purchase</h3>
+                <h3 className="text-white font-semibold text-lg">{_copy("copy.6f2ab309aba5", { defaultValue: "Processing Purchase" })}</h3>
                 <p className="text-sm text-white/60">
                   {pollingMessage}
                 </p>
@@ -640,9 +638,7 @@ export default function BuyCoinsPage() {
                     setPurchaseStatus('idle');
                     refreshWalletBalances();
                   }}
-                >
-                  Dismiss — check wallet manually
-                </Button>
+                >{_copy("copy.d4cceadc6ec2", { defaultValue: "Dismiss — check wallet manually" })}</Button>
               </div>
             )}
             {purchaseStatus === 'success' && (
@@ -676,25 +672,21 @@ export default function BuyCoinsPage() {
             {purchaseStatus === 'failed' && (
               <>
                 <XCircle className="w-10 h-10 text-red-400 mx-auto" />
-                <h3 className="text-white font-semibold text-lg">Purchase Failed</h3>
-                <p className="text-sm text-zinc-400">
-                  Something went wrong. Please try again or contact support.
-                </p>
+                <h3 className="text-white font-semibold text-lg">{_copy("copy.e46464aa55f4", { defaultValue: "Purchase Failed" })}</h3>
+                <p className="text-sm text-zinc-400">{_copy("copy.cb1ac99de8c5", { defaultValue: "Something went wrong. Please try again or contact support." })}</p>
                 <Button
                   variant="glass"
                   className="mt-2"
                   onClick={() => setPurchaseStatus('idle')}
-                >
-                  Try Again
-                </Button>
+                >{_copy("copy.df0fe9e00d35", { defaultValue: "Try Again" })}</Button>
               </>
             )}
             {purchaseStatus === 'expired' && (
               <>
                 <XCircle className="w-10 h-10 text-amber-400 mx-auto" />
-                <h3 className="text-white font-semibold text-lg">Checkout Expired</h3>
-                <p className="text-sm text-zinc-400">No payment was completed. Start a new checkout when you are ready.</p>
-                <Button variant="glass" className="mt-2" onClick={() => setPurchaseStatus('idle')}>Try Again</Button>
+                <h3 className="text-white font-semibold text-lg">{_copy("copy.f61de761d956", { defaultValue: "Checkout Expired" })}</h3>
+                <p className="text-sm text-zinc-400">{_copy("copy.02eeddf22117", { defaultValue: "No payment was completed. Start a new checkout when you are ready." })}</p>
+                <Button variant="glass" className="mt-2" onClick={() => setPurchaseStatus('idle')}>{_copy("copy.df0fe9e00d35", { defaultValue: "Try Again" })}</Button>
               </>
             )}
           </div>
@@ -706,7 +698,7 @@ export default function BuyCoinsPage() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <TrendingUp className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs text-zinc-400">Total Volume</span>
+                <span className="text-xs text-zinc-400">{_copy("copy.f92db8fc0164", { defaultValue: "Total Volume" })}</span>
               </div>
               <span className="text-white font-semibold">
                 ${platformStats.totalVolume.toLocaleString(undefined, { maximumFractionDigits: 0 })}
@@ -716,7 +708,7 @@ export default function BuyCoinsPage() {
             <div className="text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <Activity className="w-4 h-4 text-white" />
-                <span className="text-xs text-zinc-400">Transactions</span>
+                <span className="text-xs text-zinc-400">{_copy("copy.3e5136fd4b11", { defaultValue: "Transactions" })}</span>
               </div>
               <span className="text-white font-semibold">
                 {platformStats.totalTransactions.toLocaleString()}
@@ -728,14 +720,14 @@ export default function BuyCoinsPage() {
 
         {/* Purchase History */}
         <div data-page-bento data-kit-section className="bg-zinc-900 p-4 border border-zinc-800">
-          <h3 className="text-white font-semibold mb-3 text-center">Purchase History</h3>
+          <h3 className="text-white font-semibold mb-3 text-center">{_copy("copy.6c8c242860dc", { defaultValue: "Purchase History" })}</h3>
           
           {/* Search */}
           <div className="relative mb-3">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
             <Input
               type="text"
-              placeholder="Search wallet address..."
+              placeholder={_copy("copy.df4e1d945ceb", { defaultValue: "Search wallet address..." })}
               value={txSearch}
               onChange={(e) => setTxSearch(e.target.value)}
               className="pl-9 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl h-9 text-sm"
@@ -747,7 +739,7 @@ export default function BuyCoinsPage() {
               <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
             </div>
           ) : purchaseHistory.length === 0 ? (
-            <AppState icon="command" title="No purchases yet" description="Completed coin purchases will appear here." size="section" />
+            <AppState icon="command" title={_copy("copy.1daf8129262e", { defaultValue: "No purchases yet" })} description={_copy("copy.750bc5e25631", { defaultValue: "Completed coin purchases will appear here." })} size="section" />
           ) : (() => {
             const isSearching = txSearch.trim().length > 0;
             const filtered = isSearching
@@ -756,7 +748,7 @@ export default function BuyCoinsPage() {
                 )
               : purchaseHistory.filter(tx => tx.status === 'completed');
             return filtered.length === 0 ? (
-              <AppState icon="search" title="No matching transactions" description="Try a different wallet address." kind="search-empty" size="compact" />
+              <AppState icon="search" title={_copy("copy.aef28cd815ed", { defaultValue: "No matching transactions" })} description={_copy("copy.d9be081cbe4e", { defaultValue: "Try a different wallet address." })} kind="search-empty" size="compact" />
             ) : (
                 <div
                   ref={purchaseListRef}
@@ -775,7 +767,7 @@ export default function BuyCoinsPage() {
                     : null;
                   const isClickable = tx.status === 'completed' && tx.txHash;
                   const explorerUrl = tx.txHash ? `https://basescan.org/tx/${tx.txHash}` : null;
-                  const rowClass = `flex items-center py-2.5 first:pt-0 last:pb-0 ${isClickable ? 'hover:bg-white/5 px-4 -mx-4 cursor-pointer transition-colors' : ''}`;
+                  const rowClass = `flex items-center py-2.5 first:pt-0 last:pb-0 ${isClickable ? "hover:bg-white/5 px-4 -mx-4 cursor-pointer transition-colors" : ''}`;
                   const content = (
                     <div className="min-w-0 flex-1">
                       <div className="text-sm text-zinc-300">

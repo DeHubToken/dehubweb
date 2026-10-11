@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo } from "react";
 import { Check, X } from "lucide-react";
 import { assessLocal, MIN_ACCEPTABLE_SCORE } from "@/lib/wallet-core/passwordStrength";
@@ -20,6 +21,7 @@ const BAR_COLORS = [
 ] as const;
 
 export function PasswordStrengthMeter({ password }: { password: string }) {
+  const { t: _copy } = _useCopy();
   const a = useMemo(() => assessLocal(password), [password]);
   const accepted = a.score >= MIN_ACCEPTABLE_SCORE;
 
@@ -42,7 +44,7 @@ export function PasswordStrengthMeter({ password }: { password: string }) {
             ))}
           </div>
           <p className={`text-xs ${accepted ? "text-muted-foreground" : "text-red-400"}`}>
-            {accepted ? a.label : `${a.label} — not accepted yet`}
+            {accepted ? a.label : _copy("copy.5d5451da9c19", { defaultValue: "{{value1}} — not accepted yet", value1: a.label })}
           </p>
         </>
       )}

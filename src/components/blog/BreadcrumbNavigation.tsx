@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight, Home } from 'lucide-react';
@@ -8,9 +9,10 @@ interface BreadcrumbNavigationProps {
 }
 
 export const BreadcrumbNavigation: React.FC<BreadcrumbNavigationProps> = ({ currentPost }) => {
+  const { t: _copy } = _useCopy();
   const breadcrumbs = [
-    { label: 'Home', href: '/docs', icon: Home },
-    { label: 'Blog', href: '/docs/blog' },
+    { label: _copy("copy.3a78695388b3", { defaultValue: "Home" }), href: '/docs', icon: Home },
+    { label: _copy("copy.8c6bc099534a", { defaultValue: "Blog" }), href: '/docs/blog' },
   ];
 
   if (currentPost) {
@@ -39,7 +41,7 @@ export const BreadcrumbNavigation: React.FC<BreadcrumbNavigationProps> = ({ curr
       <script type="application/ld+json">
         {JSON.stringify(structuredData)}
       </script>
-      <nav aria-label="Breadcrumb" className="mb-6">
+      <nav aria-label={_copy("copy.2bd873d6c734", { defaultValue: "Breadcrumb" })} className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-royal-blue/70">
           {breadcrumbs.map((breadcrumb, index) => (
             <li key={breadcrumb.href} className="flex items-center">

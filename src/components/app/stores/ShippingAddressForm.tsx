@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export function ShippingAddressForm({ onChange }: Props) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { data: saved = [], isLoading } = useSavedAddresses();
   const saveAddress = useSaveAddress();
@@ -155,7 +157,7 @@ export function ShippingAddressForm({ onChange }: Props) {
                   </SelectItem>
                 ))}
                 <SelectItem value="new" className="text-primary-foreground focus:bg-white/10 focus:text-primary-foreground">
-                  <span className="text-primary-foreground">+ Enter new address</span>
+                  <span className="text-primary-foreground">{_copy("copy.370ec29b9271", { defaultValue: "+ Enter new address" })}</span>
                 </SelectItem>
               </SelectContent>
             </Select>

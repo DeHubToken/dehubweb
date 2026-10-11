@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Single Governance Proposal Page
  * Route: /app/governance/:proposalId
@@ -42,6 +43,7 @@ function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string):
 
 
 export default function GovernanceProposalPage() {
+  const { t: _copy } = _useCopy();
   const { proposalId } = useParams<{ proposalId: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -98,11 +100,9 @@ export default function GovernanceProposalPage() {
         />
         <PageEmpty
           icon="governance"
-          title="Proposal not found"
+          title={_copy("copy.01d2c83f38c6", { defaultValue: "Proposal not found" })}
           action={
-            <KitButton variant="quiet" onClick={() => navigate('/app/governance')}>
-              Back to Governance
-            </KitButton>
+            <KitButton variant="quiet" onClick={() => navigate('/app/governance')}>{_copy("copy.ff18b6454a3b", { defaultValue: "Back to Governance" })}</KitButton>
           }
         />
       </div>
@@ -123,7 +123,7 @@ export default function GovernanceProposalPage() {
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto">
-      <SEOHead title={`${proposal.title} — DeHub Governance`} description={(proposal.description || 'DeHub governance proposal — vote and discuss.').slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" />
+      <SEOHead title={_copy("copy.c1cd85f576ed", { defaultValue: "{{value1}} — DeHub Governance", value1: proposal.title })} description={(proposal.description || _copy("copy.2f33a51e3171", { defaultValue: "DeHub governance proposal — vote and discuss." })).slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" />
       <PageIsland
         back
         onBack={() => navigate('/app/governance')}

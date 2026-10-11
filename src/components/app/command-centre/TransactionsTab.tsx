@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { TrendingUp, Info, Settings2, Loader2, AlertCircle } from 'lucide-react';
@@ -82,6 +83,7 @@ function buildBreakdown(transactions: DPayTransaction[]) {
 }
 
 export function TransactionsTab() {
+  const { t: _copy } = _useCopy();
   const [activeFilter, setActiveFilter] = useState('1m');
   const { isAuthenticated, walletAddress } = useAuth();
 
@@ -156,7 +158,7 @@ export function TransactionsTab() {
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-white">Transactions</h2>
+        <h2 className="text-lg font-semibold text-white">{_copy("copy.3e5136fd4b11", { defaultValue: "Transactions" })}</h2>
         <FundActions />
       </div>
 
@@ -167,12 +169,11 @@ export function TransactionsTab() {
           <div className="flex items-start justify-between mb-2">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-zinc-400 text-sm">Total volume</span>
+                <span className="text-zinc-400 text-sm">{_copy("copy.7c431ccaf9ae", { defaultValue: "Total volume" })}</span>
                 {totalCount > 0 && (
                   <span className="bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-lg flex items-center gap-1">
                     <TrendingUp className="w-3 h-3" />
-                    {totalCount} txns
-                  </span>
+                    {totalCount}{_copy("copy.3fa33e61d5d4", { defaultValue: " txns" })}</span>
                 )}
               </div>
               <div className="flex items-center gap-2">
@@ -192,7 +193,7 @@ export function TransactionsTab() {
             </div>
           </div>
 
-          <p className="text-zinc-400 text-sm mb-2">Income vs. Expenditure</p>
+          <p className="text-zinc-400 text-sm mb-2">{_copy("copy.4c0b2c3a3906", { defaultValue: "Income vs. Expenditure" })}</p>
 
           {/* Time Filters */}
           <div className="mb-4 w-fit">
@@ -252,7 +253,7 @@ export function TransactionsTab() {
             ) : (
               txLoading
                 ? <div className="flex h-full items-center justify-center"><Loader2 className="w-5 h-5 animate-spin" /></div>
-                : <AppState icon="stats" title="No chart data yet" size="compact" className="h-full" />
+                : <AppState icon="stats" title={_copy("copy.459d999d8363", { defaultValue: "No chart data yet" })} size="compact" className="h-full" />
             )}
           </div>
         </div>
@@ -261,11 +262,10 @@ export function TransactionsTab() {
         <div data-page-bento className={cardClass}>
           <div className="flex items-start justify-between mb-4">
             <div>
-              <span className="text-zinc-400 text-sm">Transaction breakdown</span>
+              <span className="text-zinc-400 text-sm">{_copy("copy.4464b5a1fda7", { defaultValue: "Transaction breakdown" })}</span>
               {breakdownData.length > 0 && (
                 <>
-                  <p className="text-zinc-500 text-xs mt-1">
-                    Largest category: <span className="text-emerald-400 font-medium">{breakdownData[0]?.name}</span>
+                  <p className="text-zinc-500 text-xs mt-1">{_copy("copy.00dc1fda673d", { defaultValue: "Largest category: " })}<span className="text-emerald-400 font-medium">{breakdownData[0]?.name}</span>
                   </p>
                 </>
               )}
@@ -306,7 +306,7 @@ export function TransactionsTab() {
           ) : (
             txLoading
               ? <div className="flex h-40 items-center justify-center"><Loader2 className="w-5 h-5 animate-spin" /></div>
-              : <AppState icon="command" title="No transactions yet" size="compact" className="h-40" />
+              : <AppState icon="command" title={_copy("copy.f75dda0d2e06", { defaultValue: "No transactions yet" })} size="compact" className="h-40" />
           )}
         </div>
       </div>
@@ -314,9 +314,9 @@ export function TransactionsTab() {
       {/* Transaction List */}
       <div data-page-bento className={cardClass}>
         <div className="flex items-center justify-between mb-4">
-          <span className="text-white font-semibold">Recent</span>
+          <span className="text-white font-semibold">{_copy("copy.690dbe9dc099", { defaultValue: "Recent" })}</span>
           <span className="text-xs text-zinc-500">
-            {filteredTransactions.length} transaction{filteredTransactions.length !== 1 ? 's' : ''}
+            {filteredTransactions.length}{_copy("copy.556108290716", { defaultValue: " transaction" })}{filteredTransactions.length !== 1 ? 's' : ''}
           </span>
         </div>
 
@@ -325,12 +325,12 @@ export function TransactionsTab() {
             <Loader2 className="w-6 h-6 animate-spin text-zinc-400" />
           </div>
         ) : txError ? (
-          <AppState icon="command" title="Transactions could not load" description="Try loading your transaction history again." kind="error" size="section" />
+          <AppState icon="command" title={_copy("copy.4c1aaeb07b12", { defaultValue: "Transactions could not load" })} description={_copy("copy.2406b03c78e5", { defaultValue: "Try loading your transaction history again." })} kind="error" size="section" />
         ) : filteredTransactions.length === 0 ? (
           <AppState
             icon={transactions.length === 0 ? 'command' : 'search'}
-            title={transactions.length === 0 ? 'No transactions yet' : 'No transactions in this period'}
-            description={transactions.length === 0 ? 'Your completed activity will appear here.' : 'Choose another time period to view more activity.'}
+            title={transactions.length === 0 ? _copy("copy.f75dda0d2e06", { defaultValue: "No transactions yet" }) : _copy("copy.68e8335a0777", { defaultValue: "No transactions in this period" })}
+            description={transactions.length === 0 ? _copy("copy.1ba27210f04c", { defaultValue: "Your completed activity will appear here." }) : _copy("copy.b59b8312c449", { defaultValue: "Choose another time period to view more activity." })}
             kind={transactions.length === 0 ? 'empty' : 'search-empty'}
             size="section"
           />
@@ -341,7 +341,7 @@ export function TransactionsTab() {
               const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
               const isCredit = tx.type === 'buy';
               const explorerUrl = tx.txHash ? getExplorerTxUrl(tx.txHash, tx.chainId) : null;
-              const label = tx.type === 'buy' ? 'Coin Purchase' : (tx.type as string) === 'ppv' ? 'PPV Unlock' : tx.type === 'sell' ? 'Coin Sale' : 'Transfer';
+              const label = tx.type === 'buy' ? _copy("copy.98873264439d", { defaultValue: "Coin Purchase" }) : (tx.type as string) === 'ppv' ? _copy("copy.38f955e2de14", { defaultValue: "PPV Unlock" }) : tx.type === 'sell' ? _copy("copy.b8779512c128", { defaultValue: "Coin Sale" }) : _copy("copy.dde8bef78cbb", { defaultValue: "Transfer" });
 
               const row = (
                 <div key={tx.id} className={cn(

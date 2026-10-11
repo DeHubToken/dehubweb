@@ -2,6 +2,7 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useRef, useState, useCallback } from 'react';
 import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock, Send, Settings2 } from 'lucide-react';
 import { NewConversationModal } from '@/components/app/chat/NewConversationModal';
+import { InviteFollowers } from './InviteFollowers';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -66,6 +67,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
   const [nameInput, setNameInput] = useSurfaceDraft("src/components/app/communities/CommunityHeader.tsx:nameInput", community.name, community.id);
   const [descInput, setDescInput] = useSurfaceDraft("src/components/app/communities/CommunityHeader.tsx:descInput", community.description || '', community.id);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [followersOpen, setFollowersOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -210,6 +212,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-48 p-1.5">
+              {isMember && canInvite && walletAddress && <button onClick={()=>setFollowersOpen(true)} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10"><Users className="w-4 h-4 text-zinc-400"/>{t('communities.followerInvites.title')}</button>}
               <button
                 onClick={() => {
                   openPostModal(dehubLinkFor.community(community.slug), community.slug.toLowerCase());
@@ -390,6 +393,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           toast.success(t('communities.inviteSent', { defaultValue: 'Invite sent' }));
         }}
       />
+      {isMember && canInvite && walletAddress && <InviteFollowers open={followersOpen} onOpenChange={setFollowersOpen} communityId={community.id} slug={community.slug} wallet={walletAddress}/>}
     </div>
   );
 }

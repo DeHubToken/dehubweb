@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Post Info Page
@@ -76,6 +77,7 @@ const getChainInfo = (chainId: number) => {
 };
 
 export default function PostInfoPage() {
+  const { t: _copy } = _useCopy();
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -244,7 +246,7 @@ export default function PostInfoPage() {
             <button
               onClick={() => navigate(-1)}
               className="p-2 rounded-xl hover:bg-white/10 transition-colors"
-              aria-label="Go back"
+              aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
             >
               <ArrowLeft className="w-5 h-5 text-white" />
             </button>
@@ -306,7 +308,7 @@ export default function PostInfoPage() {
             <button
               onClick={() => navigate(-1)}
               className="p-2 rounded-xl hover:bg-white/10 transition-colors"
-              aria-label="Go back"
+              aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
             >
               <ArrowLeft className="w-5 h-5 text-white" />
             </button>
@@ -345,14 +347,14 @@ export default function PostInfoPage() {
 
   return (
     <div data-glass-page className="min-h-screen bg-black">
-      <SEOHead title={`Post #${nftInfo.tokenId} — DeHub`} description={`On-chain post info for token #${nftInfo.tokenId} on DeHub. View mint transaction, creator wallet, and holders.`} url={`https://dehub.io/app/post/${postId}/info`} />
+      <SEOHead title={_copy("copy.f47d2472ba8f", { defaultValue: "Post #{{value1}} — DeHub", value1: nftInfo.tokenId })} description={_copy("copy.c3d7095600bf", { defaultValue: "On-chain post info for token #{{value1}} on DeHub. View mint transaction, creator wallet, and holders.", value1: nftInfo.tokenId })} url={`https://dehub.io/app/post/${postId}/info`} />
       {/* Header */}
       <div className="sticky top-0 z-50 px-4 pt-0 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
         <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
           <button
             onClick={() => navigate(-1)}
             className="p-2 rounded-xl hover:bg-white/10 transition-colors"
-            aria-label="Go back"
+            aria-label={_copy("copy.6aadac2f2b7a", { defaultValue: "Go back" })}
           >
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
@@ -361,7 +363,7 @@ export default function PostInfoPage() {
             <button
               onClick={() => setShowEditModal(true)}
               className="p-2 text-white/60 hover:text-white transition-colors"
-              aria-label="Edit post"
+              aria-label={_copy("copy.a1933147e7c8", { defaultValue: "Edit post" })}
             >
               <Pencil className="w-4 h-4" />
             </button>
@@ -446,7 +448,7 @@ export default function PostInfoPage() {
                   <button
                     onClick={() => copyToClipboard(nftInfo.mintTxHash!)}
                     className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                    aria-label="Copy transaction hash"
+                    aria-label={_copy("copy.0223e9fac9b4", { defaultValue: "Copy transaction hash" })}
                   >
                     <Copy className="w-4 h-4" />
                   </button>
@@ -455,7 +457,7 @@ export default function PostInfoPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                    aria-label={`View on ${chainInfo.explorerName}`}
+                    aria-label={_copy("copy.116044a926ba", { defaultValue: "View on {{value1}}", value1: chainInfo.explorerName })}
                   >
                     <ExternalLink className="w-4 h-4" />
                   </a>
@@ -515,7 +517,7 @@ export default function PostInfoPage() {
               <button
                 onClick={() => copyToClipboard(nftInfo.minter)}
                 className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                aria-label="Copy creator wallet"
+                aria-label={_copy("copy.d7985e1a05c5", { defaultValue: "Copy creator wallet" })}
               >
                 <Copy className="w-4 h-4" />
               </button>
@@ -645,7 +647,7 @@ export default function PostInfoPage() {
                         >
                           <img
                             src={rank === 1 ? medal1 : rank === 2 ? medal2 : medal3}
-                            alt={`Rank ${rank}`}
+                            alt={_copy("copy.11fe66e7be8e", { defaultValue: "Rank {{value1}}", value1: rank })}
                             className="w-10 h-10 object-contain relative"
                           />
                           <div
@@ -662,13 +664,13 @@ export default function PostInfoPage() {
                           {truncateAddr(holder.address)}
                         </p>
                         <p className="text-xs text-white/60">
-                          {holder.balance}/{TOTAL_FRACTIONS} fractions ({holder.percentage}%)
+                          {holder.balance}/{TOTAL_FRACTIONS}{_copy("copy.854cbbb4f34f", { defaultValue: " fractions (" })}{holder.percentage}%)
                         </p>
                       </div>
                       <button
                         onClick={() => copyToClipboard(holder.address)}
                         className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                        aria-label="Copy wallet address"
+                        aria-label={_copy("copy.7614c65db3bf", { defaultValue: "Copy wallet address" })}
                       >
                         <Copy className="w-4 h-4" />
                       </button>
@@ -686,13 +688,12 @@ export default function PostInfoPage() {
                       {truncateAddr(nftInfo.minter)}
                     </p>
                     <p className="text-xs text-white/60">
-                      {TOTAL_FRACTIONS}/{TOTAL_FRACTIONS} fractions (100%)
-                    </p>
+                      {TOTAL_FRACTIONS}/{TOTAL_FRACTIONS}{_copy("copy.817da1791eca", { defaultValue: " fractions (100%)" })}</p>
                   </div>
                   <button
                     onClick={() => copyToClipboard(nftInfo.minter)}
                     className="p-2 text-white/60 hover:text-white transition-colors shrink-0"
-                    aria-label="Copy owner wallet"
+                    aria-label={_copy("copy.144e3f6e3d5c", { defaultValue: "Copy owner wallet" })}
                   >
                     <Copy className="w-4 h-4" />
                   </button>

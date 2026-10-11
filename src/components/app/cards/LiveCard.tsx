@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Live Card Component
  * ===================
@@ -11,7 +12,6 @@
 
 import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { cdnImage } from '@/lib/media-url';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, Bookmark, Info } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -45,6 +45,7 @@ interface LiveCardProps {
 }
 
 export function LiveCard({ stream }: LiveCardProps) {
+  const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -99,18 +100,9 @@ export function LiveCard({ stream }: LiveCardProps) {
           badgeBalance={stream.creatorBadgeBalance}
         />
         <div className="flex items-center gap-2">
-          <motion.button
-            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-            className="text-zinc-400 hover:text-white transition-colors"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Ask AI about this stream"
-          >
-            <Sparkles className="w-[23.5px] h-[23.5px]" />
-          </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
@@ -118,6 +110,12 @@ export function LiveCard({ stream }: LiveCardProps) {
               {/* Bookmark / Post info. Also on the action bar as icons on desktop —
                   the menu carries them at every width so there is one
                   reliable place to look. */}
+              <DropdownMenuItem
+                onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
+                className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
+              >
+                <Sparkles className="w-4 h-4" /> {t("postOptions.aiOverview", "AI overview")}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => toggleBookmark()}
                 disabled={isBookmarkLoading}
@@ -236,7 +234,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           dislikeCount={stream.dislikeCount}
           commentCount={stream.commentCount}
         />
-        <p className="font-semibold text-white text-sm">{livePresence != null ? String(livePresence) : stream.viewers} tuned in</p>
+        <p className="font-semibold text-white text-sm">{livePresence != null ? String(livePresence) : stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>

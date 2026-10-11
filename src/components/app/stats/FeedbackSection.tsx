@@ -47,9 +47,12 @@ interface ApprovedTestimonial {
   created_at: string;
 }
 
-export function FeedbackSection() {
+export function FeedbackSection({ source }: { source?: 'converter' | 'migration' } = {}) {
   const { t } = useTranslation();
   const { user, walletAddress, isAuthenticated } = useAuth();
+  const contextTitle = source === 'converter' ? t('converter.title') : source === 'migration' ? t('migrate.title') : '';
+  const prefix = contextTitle ? `[${contextTitle}]\n` : '';
+  const bodyLimit = MAX_LENGTH - prefix.length;
 
   const [body, setBody] = useSurfaceDraft("components/app/stats/FeedbackSection.tsx:body", '');
   const [timeUsing, setTimeUsing] = useSurfaceDraft("components/app/stats/FeedbackSection.tsx:timeUsing", '');
@@ -80,7 +83,7 @@ export function FeedbackSection() {
     isAuthenticated &&
     !!walletAddress &&
     trimmed.length >= MIN_LENGTH &&
-    trimmed.length <= MAX_LENGTH &&
+    trimmed.length <= bodyLimit &&
     !submitting;
 
   const handleSubmit = useCallback(async () => {
@@ -94,7 +97,7 @@ export function FeedbackSection() {
         supabase.from('user_testimonials').insert({
           wallet_address: walletAddress.toLowerCase(),
           username: user?.username ?? null,
-          body: trimmed,
+          body: prefix + trimmed,
           time_using: timeUsing.trim() || null,
           allow_promo: allowPromo,
           allow_name: allowPromo && allowName,
@@ -113,7 +116,7 @@ export function FeedbackSection() {
     } finally {
       setSubmitting(false);
     }
-  }, [allowName, allowPromo, canSubmit, t, timeUsing, trimmed, user?.username, walletAddress, setBody, setTimeUsing, body]);
+  }, [allowName, allowPromo, canSubmit, t, timeUsing, trimmed, user?.username, walletAddress, setBody, setTimeUsing, body, prefix]);
 
   return (
     <div className="flex flex-col gap-2 sm:gap-3">
@@ -150,9 +153,10 @@ export function FeedbackSection() {
           </div>
         ) : (
           <>
+            {contextTitle && <p className="mb-2 text-xs text-zinc-400">{contextTitle}</p>}
             <textarea
               value={body}
-              onChange={(e) => setBody(e.target.value.slice(0, MAX_LENGTH))}
+              onChange={(e) => setBody(e.target.value.slice(0, bodyLimit))}
               rows={4}
               placeholder={t('stats.feedback.placeholder', 'In your own words…')}
               className="w-full rounded-xl bg-zinc-950 border border-zinc-800 p-3 text-sm text-white placeholder:text-zinc-600 outline-none focus:border-zinc-600 resize-none"
@@ -226,7 +230,7 @@ export function FeedbackSection() {
               <span className="text-[11px] text-zinc-500">
                 {!isAuthenticated
                   ? t('stats.feedback.signedOut', 'Sign in to leave feedback')
-                  : `${trimmed.length}/${MAX_LENGTH}`}
+                  : `${trimmed.length}/${bodyLimit}`}
               </span>
             </div>
           </>

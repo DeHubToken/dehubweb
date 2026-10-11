@@ -1,6 +1,7 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * The three controls that float on the media of the phone post page: back on
- * the left, Ask AI and the options menu on the right. Glass squares with
+ * the left, the options menu on the right (AI overview lives inside it). Glass squares with
  * rounded corners (never circles), the same treatment the feed's media
  * buttons use. Post info lives in the options menu now.
  *
@@ -8,17 +9,16 @@
  * theme-controls.css): that finish turns a dark square into a pale chip that
  * disappears over a bright frame.
  */
-import { ArrowLeft, MoreHorizontal, Sparkles, Zap } from 'lucide-react';
+import { ArrowLeft, MoreHorizontal, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 
 interface StageMediaChromeProps {
   onBack: () => void;
-  onAskAI: () => void;
   onMenu: () => void;
   /** Own posts only: the boost shortcut the creator row used to carry. */
   onBoost?: () => void;
-  /** Extra squares (PPV / bounty / gate badges) placed before Ask AI. */
+  /** Extra squares (PPV / bounty / gate badges) placed before the menu. */
   children?: ReactNode;
   /**
    * `media` floats the row over the top of a photo or video. `inline` is for
@@ -27,7 +27,8 @@ interface StageMediaChromeProps {
   placement?: 'media' | 'inline';
 }
 
-export function StageMediaChrome({ onBack, onAskAI, onMenu, onBoost, children, placement = 'media' }: StageMediaChromeProps) {
+export function StageMediaChrome({ onBack, onMenu, onBoost, children, placement = 'media' }: StageMediaChromeProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const stop = (fn: () => void) => (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -70,17 +71,8 @@ export function StageMediaChrome({ onBack, onAskAI, onMenu, onBoost, children, p
           type="button"
           data-on-media
           data-stage-glass-square
-          onClick={stop(onAskAI)}
-          aria-label={t('postStage.askAI', 'Ask AI about this post')}
-        >
-          <Sparkles className="h-5 w-5" />
-        </button>
-        <button
-          type="button"
-          data-on-media
-          data-stage-glass-square
           onClick={stop(onMenu)}
-          aria-label="Post options"
+          aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })}
         >
           <MoreHorizontal className="h-5 w-5" />
         </button>

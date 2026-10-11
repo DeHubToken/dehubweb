@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * DAO Page
@@ -276,6 +277,7 @@ function ContributeDrawer({ open, onOpenChange }: { open: boolean; onOpenChange:
 }
 
 export default function DaoPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
   const { data, isLoading, isFetching, refetch, isError } = useDaoTreasury();
@@ -309,8 +311,8 @@ export default function DaoPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="DAO Treasury — Fund DeHub and Earn a Say"
-        description="The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent."
+        title={_copy("copy.b87b467906e6", { defaultValue: "DAO Treasury — Fund DeHub and Earn a Say" })}
+        description={_copy("copy.02ce53459982", { defaultValue: "The DeHub DAO treasury: one wallet anyone can send tokens to. See its live balance, who has contributed, and the share of the pool each contributor holds when the DAO decides how it is spent." })}
         url="https://dehub.io/dao"
         image="https://dehub.io/og/dao.jpg"
         jsonLd={{
@@ -318,11 +320,11 @@ export default function DaoPage() {
           '@type': 'WebPage',
           name: 'DeHub DAO Treasury',
           url: 'https://dehub.io/dao',
-          description: 'The DeHub DAO treasury — live balance, contributors and their decision-making share.',
+          description: _copy("copy.9bab7b8fd081", { defaultValue: "The DeHub DAO treasury — live balance, contributors and their decision-making share." }),
           isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
         }}
       />
-      <h1 className="sr-only">DeHub DAO Treasury — Decentralised, User Owned Social Media</h1>
+      <h1 className="sr-only">{_copy("copy.730f5eed0d6e", { defaultValue: "DeHub DAO Treasury — Decentralised, User Owned Social Media" })}</h1>
 
       <PageIsland
         icon="dao"
@@ -333,7 +335,7 @@ export default function DaoPage() {
             <IslandAction label={t('dao.contribute')} onClick={handleContribute}>
               <HeartHandshake className="h-[18px] w-[18px]" />
             </IslandAction>
-            <IslandAction label="Propose" onClick={handlePropose}>
+            <IslandAction label={_copy("copy.1cbd9e713d93", { defaultValue: "Propose" })} onClick={handlePropose}>
               <FilePenLine className="h-[18px] w-[18px]" />
             </IslandAction>
           </>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Bot, MessageSquare, DollarSign, TrendingUp, Globe, Search } from 'lucide-react';
@@ -5,13 +6,14 @@ import { OptimizedImage } from '@/components/OptimizedImage';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const AIToolkits = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-3xl font-bold text-foreground mb-4 font-exo">{t('aiToolkits.title')}</h2>
-        <OptimizedImage src="/media/305d0557-94f8-46fe-b44e-b6b3a810d434.png" alt="DeHub AI interface showing tools and chat bot functionality" className="w-full rounded-lg shadow-lg mb-6" />
+        <OptimizedImage src="/media/305d0557-94f8-46fe-b44e-b6b3a810d434.png" alt={_copy("copy.082e89f805da", { defaultValue: "DeHub AI interface showing tools and chat bot functionality" })} className="w-full rounded-lg shadow-lg mb-6" />
         <p className="text-lg text-muted-foreground leading-relaxed">{t('aiToolkits.subtitle')}</p>
       </div>
 

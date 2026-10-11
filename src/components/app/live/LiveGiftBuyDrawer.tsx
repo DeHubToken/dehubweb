@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useState } from 'react';
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, returnTo = 'gift' }: Props) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -106,14 +108,14 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column glass className="px-4 pb-8 max-h-[90dvh]">
         <DrawerHeader className="border-b border-white/10 mb-4">
-          <DrawerTitle className="text-white">Buy tokens</DrawerTitle>
+          <DrawerTitle className="text-white">{_copy("copy.1dffe3aad33c", { defaultValue: "Buy tokens" })}</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto space-y-4 pb-3">
           <p className="text-sm text-zinc-400">{t('liveGift.buy.intro', { returnTo })}</p>
           {!clientSecret && (
             <div className="grid grid-cols-2 gap-2">
-              <Button variant="glass" className="w-full" onClick={() => setMethod('card')} aria-pressed={method === 'card'}><CreditCard className="w-4 h-4 mr-2" />Card</Button>
-              <Button variant="glass" className="w-full" onClick={() => setMethod('crypto')} aria-pressed={method === 'crypto'}><Wallet className="w-4 h-4 mr-2" />Crypto</Button>
+              <Button variant="glass" className="w-full" onClick={() => setMethod('card')} aria-pressed={method === 'card'}><CreditCard className="w-4 h-4 mr-2" />{_copy("copy.be3702e3f1af", { defaultValue: "Card" })}</Button>
+              <Button variant="glass" className="w-full" onClick={() => setMethod('crypto')} aria-pressed={method === 'crypto'}><Wallet className="w-4 h-4 mr-2" />{_copy("copy.df12b8f89b61", { defaultValue: "Crypto" })}</Button>
             </div>
           )}
           {method === 'crypto' && !clientSecret ? (
@@ -129,11 +131,11 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
                   <EmbeddedCheckout />
                 </EmbeddedCheckoutProvider>
               </div>
-              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? t('liveGift.buy.waitingDelivery') : `Complete payment here. Your ${returnTo} stays open behind this drawer.`}</p>
+              <p className="text-xs text-zinc-400 text-center">{paymentComplete ? t('liveGift.buy.waitingDelivery') : _copy("copy.de7a520d250e", { defaultValue: "Complete payment here. Your {{value1}} stays open behind this drawer.", value1: returnTo })}</p>
             </div>
           ) : (
             <div className="space-y-3">
-              <label className="text-sm text-zinc-400 block">Amount (USD)</label>
+              <label className="text-sm text-zinc-400 block">{_copy("copy.24f52bfeb8a8", { defaultValue: "Amount (USD)" })}</label>
               <Input type="number" min="0.5" step="0.01" value={amountUsd} onChange={(e) => setAmountUsd(e.target.value)} className="bg-zinc-800 border-zinc-700 text-white" />
               {tokenPrice > 0 && <p className="text-xs text-zinc-400">{t('liveGift.buy.estimate', { amount: estimatedDhb.toLocaleString(undefined, { maximumFractionDigits: 2 }) })}</p>}
               <Button className="w-full" onClick={buyWithCard} disabled={busy || Number(amountUsd) < 0.5 || tokenPrice <= 0}>
@@ -142,7 +144,7 @@ export function LiveGiftBuyDrawer({ open, onOpenChange, neededDhb, onFunded, ret
             </div>
           )}
           {error && <p role="alert" className="text-sm text-red-300">{error}</p>}
-          <Button variant="glass" className="w-full" onClick={() => onOpenChange(false)}>Back to {returnTo}</Button>
+          <Button variant="glass" className="w-full" onClick={() => onOpenChange(false)}>{_copy("copy.1b52b1397dee", { defaultValue: "Back to " })}{returnTo}</Button>
         </div>
       </DrawerContent>
     </Drawer>

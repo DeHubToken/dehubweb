@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import type { CSSProperties } from 'react';
 import { X } from 'lucide-react';
 import { ReplyOrb } from './ReplyOrb';
@@ -52,6 +53,7 @@ export function SmartReplyRail({
   dismissLabel,
   className = '',
 }: SmartReplyRailProps) {
+  const { t: _copy } = _useCopy();
   // 'idle' is unresolved, not empty: the call is on its way, so it reads as
   // loading rather than as a rail with nothing in it.
   const busy = status === 'loading' || status === 'idle';
@@ -90,8 +92,8 @@ export function SmartReplyRail({
       onMouseDown={(e) => e.preventDefault()}
       onClick={onGenerate}
       disabled={busy}
-      aria-label={busy ? 'Drafting replies' : 'Draft new replies'}
-      title={busy ? undefined : 'Draft new replies'}
+      aria-label={busy ? _copy("copy.b79dd4557485", { defaultValue: "Drafting replies" }) : _copy("copy.26c4675bcba1", { defaultValue: "Draft new replies" })}
+      title={busy ? undefined : _copy("copy.26c4675bcba1", { defaultValue: "Draft new replies" })}
       className={`pointer-events-auto flex shrink-0 items-center justify-center rounded-full border transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${rimClass} ${
         busy ? '' : 'hover:border-white/25'
       }`}
@@ -102,7 +104,7 @@ export function SmartReplyRail({
   );
 
   return (
-    <div className={className} role="group" aria-label="Suggested replies">
+    <div className={className} role="group" aria-label={_copy("copy.ad9bf4351095", { defaultValue: "Suggested replies" })}>
       <div className="relative">
         {notice ? (
           // No cut-out to sit in, so the orb goes under the line instead of
@@ -123,7 +125,7 @@ export function SmartReplyRail({
                   // the on-screen keyboard up while the user picks.
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => s && onPick(s.text)}
-                  aria-label={s ? `${s.label}: ${s.text}` : 'Drafting a reply'}
+                  aria-label={s ? `${s.label}: ${s.text}` : _copy("copy.bf5e759e3af9", { defaultValue: "Drafting a reply" })}
                   className={`group min-w-0 min-h-[120px] lg:min-h-[100px] flex flex-col items-center justify-center border py-4 text-center transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-inset ${
                     // The cut-out bites a notch radius into the edge each card
                     // turns to the orb, and the mask erases card CONTENT, not
@@ -184,8 +186,8 @@ export function SmartReplyRail({
           type="button"
           onMouseDown={(e) => e.preventDefault()}
           onClick={onDismiss}
-          aria-label={dismissLabel ?? 'Turn off suggested replies'}
-          title={dismissLabel ?? 'Turn off suggested replies'}
+          aria-label={dismissLabel ?? _copy("copy.7dda1098a2d0", { defaultValue: "Turn off suggested replies" })}
+          title={dismissLabel ?? _copy("copy.7dda1098a2d0", { defaultValue: "Turn off suggested replies" })}
           className="absolute right-1 top-1 rounded-full p-1.5 text-zinc-600 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
         >
           <X className="h-3.5 w-3.5" />

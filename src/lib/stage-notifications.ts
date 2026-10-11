@@ -1,3 +1,5 @@
+import i18n from '@/i18n';
+
 /**
  * Stage notification copy and routing
  * ===================================
@@ -30,13 +32,13 @@ export function stageNotificationPath(referenceId?: string | null): string {
 }
 
 /** "@alice's stage "Town Hall" is live — tap to listen in" */
-export function stageLiveSentence(actorName: string, title?: string | null): string {
-  return title
-    ? `${actorName}'s stage "${title}" is live — tap to listen in`
-    : `${actorName} is live on a stage`;
+export function stageLiveSentence(actorName: string, title?: string | null, t?: (key: string, options?: any) => string): string {
+  const translate = t || ((key: string, options?: any) => String(i18n.t(key, options)));
+  return translate(title ? 'notifications.custom.stageLiveNamed' : 'notifications.custom.stageLive', { name: actorName, title });
 }
 
 /** ""Town Hall" is starting soon" */
-export function stageReminderSentence(title?: string | null): string {
-  return title ? `"${title}" is starting soon` : 'A stage you set a reminder for is starting soon';
+export function stageReminderSentence(title?: string | null, t?: (key: string, options?: any) => string): string {
+  const translate = t || ((key: string, options?: any) => String(i18n.t(key, options)));
+  return translate(title ? 'notifications.custom.stageReminderNamed' : 'notifications.custom.stageReminder', { title });
 }

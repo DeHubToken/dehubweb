@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DexPair } from '@/hooks/use-dexscreener';
@@ -72,6 +73,7 @@ function StatRow({ label, value }: { label: string; value: string }) {
 }
 
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { addChartPiP, isChartPiP } = useChartPiP();
   const isDhb = pair.baseToken.symbol?.toUpperCase() === 'DHB';
@@ -149,7 +151,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 <button
                   onClick={(e) => { e.stopPropagation(); navigate('/app/top-100'); }}
                   className="text-zinc-400 text-xs bg-zinc-700/50 px-1.5 py-0.5 rounded hover:bg-zinc-600/50 hover:text-white transition-colors cursor-pointer"
-                  title="View Top Assets"
+                  title={_copy("copy.4cf37481efab", { defaultValue: "View Top Assets" })}
                 >#{cmcData.cmcRank}</button>
               )}
             </div>
@@ -181,14 +183,14 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 ? "text-emerald-400"
                 : "text-zinc-400 hover:text-white"
             )}
-            title="Float chart"
+            title={_copy("copy.111941d859b7", { defaultValue: "Float chart" })}
           >
             <PictureInPicture2 className="w-4 h-4" />
           </button>
           <button
             onClick={handleCopyCA}
             className="text-zinc-400 hover:text-white transition-colors p-1.5"
-            title="Copy contract address"
+            title={_copy("copy.c03f45aec476", { defaultValue: "Copy contract address" })}
           >
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <ClipboardCopy className="w-4 h-4" />}
           </button>
@@ -198,7 +200,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
               "text-zinc-400 hover:text-white transition-all p-1.5 rounded-lg",
               expanded && "bg-zinc-700/50 text-white"
             )}
-            title="More info"
+            title={_copy("copy.7dd4d97d9aae", { defaultValue: "More info" })}
           >
             <ChevronDown className={cn("w-4 h-4 transition-transform", expanded && "rotate-180")} />
           </button>
@@ -234,15 +236,15 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
         <div>
-          <span className="text-zinc-500">Market Cap{cmcData?.marketCap ? '' : ' (DEX)'}</span>
+          <span className="text-zinc-500">{_copy("copy.fb25999766b1", { defaultValue: "Market Cap" })}{cmcData?.marketCap ? '' : _copy("copy.6334c1d377c6", { defaultValue: " (DEX)" })}</span>
           <p className="text-white font-medium">{formatCompact(marketCap)}</p>
         </div>
         <div>
-          <span className="text-zinc-500">Liquidity</span>
+          <span className="text-zinc-500">{_copy("copy.04864c05049e", { defaultValue: "Liquidity" })}</span>
           <p className="text-white font-medium">{formatCompact(pair.liquidity?.usd)}</p>
         </div>
         <div>
-          <span className="text-zinc-500">24h Vol</span>
+          <span className="text-zinc-500">{_copy("copy.d2dd7a64f0a9", { defaultValue: "24h Vol" })}</span>
           <p className="text-white font-medium">{formatCompact(volume24h)}</p>
         </div>
         {pair.dexId && (
@@ -278,11 +280,11 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
               {/* Transaction Activity */}
               {txns24h && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-2">24h Transactions</p>
+                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-2">{_copy("copy.7f7a5598a624", { defaultValue: "24h Transactions" })}</p>
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-emerald-400 text-xs font-medium">{txns24h.buys} buys</span>
-                    <span className="text-red-400 text-xs font-medium">{txns24h.sells} sells</span>
-                    <span className="text-zinc-400 text-xs ml-auto">{totalTxns24h} total</span>
+                    <span className="text-emerald-400 text-xs font-medium">{txns24h.buys}{_copy("copy.b0cd7f667b0a", { defaultValue: " buys" })}</span>
+                    <span className="text-red-400 text-xs font-medium">{txns24h.sells}{_copy("copy.898e5e9f7d29", { defaultValue: " sells" })}</span>
+                    <span className="text-zinc-400 text-xs ml-auto">{totalTxns24h}{_copy("copy.88c4fa961179", { defaultValue: " total" })}</span>
                   </div>
                   {buyRatio != null && (
                     <div className="w-full h-1.5 rounded-full bg-red-400/30 overflow-hidden">
@@ -298,7 +300,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
               {/* Multi-timeframe volume */}
               {pair.volume && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-2">Volume</p>
+                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-2">{_copy("copy.b10fb966d720", { defaultValue: "Volume" })}</p>
                   <div className="grid grid-cols-4 gap-2">
                     <div className="text-center">
                       <span className="text-zinc-500 text-[10px]">5m</span>
@@ -322,37 +324,37 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
 
               {/* Supply & Market Data */}
               <div className="px-4 py-3 border-b border-zinc-700/30">
-                <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">Market Data</p>
+                <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">{_copy("copy.33110b0cc4f2", { defaultValue: "Market Data" })}</p>
                 {cmcData?.fullyDilutedMarketCap && (
-                  <StatRow label="Fully Diluted MC" value={formatCompact(cmcData.fullyDilutedMarketCap)} />
+                  <StatRow label={_copy("copy.2312d4831889", { defaultValue: "Fully Diluted MC" })} value={formatCompact(cmcData.fullyDilutedMarketCap)} />
                 )}
                 {cmcData?.circulatingSupply && (
-                  <StatRow label="Circulating Supply" value={formatNumber(cmcData.circulatingSupply)} />
+                  <StatRow label={_copy("copy.f4819e6034c9", { defaultValue: "Circulating Supply" })} value={formatNumber(cmcData.circulatingSupply)} />
                 )}
                 {cmcData?.totalSupply && (
-                  <StatRow label="Total Supply" value={formatNumber(cmcData.totalSupply)} />
+                  <StatRow label={_copy("copy.294f65a12966", { defaultValue: "Total Supply" })} value={formatNumber(cmcData.totalSupply)} />
                 )}
                 {cmcData?.maxSupply && (
-                  <StatRow label="Max Supply" value={formatNumber(cmcData.maxSupply)} />
+                  <StatRow label={_copy("copy.c1d86cf3ccdc", { defaultValue: "Max Supply" })} value={formatNumber(cmcData.maxSupply)} />
                 )}
                 {cmcData?.volumeChange24h != null && (
-                  <StatRow label="Volume Change 24h" value={`${formatPercent(cmcData.volumeChange24h)}`} />
+                  <StatRow label={_copy("copy.ef0acb0c3b06", { defaultValue: "Volume Change 24h" })} value={`${formatPercent(cmcData.volumeChange24h)}`} />
                 )}
                 {cmcData?.marketCapDominance != null && cmcData.marketCapDominance > 0 && (
-                  <StatRow label="Market Dominance" value={`${cmcData.marketCapDominance.toFixed(4)}%`} />
+                  <StatRow label={_copy("copy.72d34bbd46cb", { defaultValue: "Market Dominance" })} value={`${cmcData.marketCapDominance.toFixed(4)}%`} />
                 )}
                 {pairAge && (
-                  <StatRow label="Pool Age" value={pairAge} />
+                  <StatRow label={_copy("copy.f1ad9dd1882b", { defaultValue: "Pool Age" })} value={pairAge} />
                 )}
-                <StatRow label="Quote Token" value={`${pair.quoteToken.symbol} (${pair.quoteToken.name})`} />
-                <StatRow label="Price (Native)" value={pair.priceNative} />
+                <StatRow label={_copy("copy.9eb96040a358", { defaultValue: "Quote Token" })} value={`${pair.quoteToken.symbol} (${pair.quoteToken.name})`} />
+                <StatRow label={_copy("copy.c7e40613d2c4", { defaultValue: "Price (Native)" })} value={pair.priceNative} />
               </div>
 
               {/* Liquidity Breakdown */}
               {pair.liquidity && (pair.liquidity.base || pair.liquidity.quote) && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">Liquidity Breakdown</p>
-                  <StatRow label="Total (USD)" value={formatCompact(pair.liquidity.usd)} />
+                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">{_copy("copy.1250aa8c64e3", { defaultValue: "Liquidity Breakdown" })}</p>
+                  <StatRow label={_copy("copy.47f5142e2418", { defaultValue: "Total (USD)" })} value={formatCompact(pair.liquidity.usd)} />
                   {pair.liquidity.base != null && (
                     <StatRow label={`${pair.baseToken.symbol}`} value={formatNumber(pair.liquidity.base)} />
                   )}
@@ -364,30 +366,30 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
 
               {/* Contract & Platform */}
               <div className="px-4 py-3 border-b border-zinc-700/30">
-                <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">Contract</p>
+                <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">{_copy("copy.a6f5b0e592fa", { defaultValue: "Contract" })}</p>
                 <div className="flex items-center gap-2 py-1">
                   <span className="text-zinc-400 text-xs truncate flex-1 font-mono">{contractAddress}</span>
                   <button onClick={handleCopyCA} className="text-zinc-500 hover:text-white p-1 shrink-0">
                     {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <ClipboardCopy className="w-3 h-3" />}
                   </button>
                 </div>
-                <StatRow label="Chain" value={pair.chainId.toUpperCase()} />
+                <StatRow label={_copy("copy.dae0896cbc2c", { defaultValue: "Chain" })} value={pair.chainId.toUpperCase()} />
                 <StatRow label="DEX" value={pair.dexId} />
                 {pair.labels?.length ? (
-                  <StatRow label="Pool Type" value={pair.labels.join(', ')} />
+                  <StatRow label={_copy("copy.68957272dd74", { defaultValue: "Pool Type" })} value={pair.labels.join(', ')} />
                 ) : null}
                 {cmcData?.platform && (
-                  <StatRow label="Platform" value={`${cmcData.platform.name} (${cmcData.platform.symbol})`} />
+                  <StatRow label={_copy("copy.c78ffe195710", { defaultValue: "Platform" })} value={`${cmcData.platform.name} (${cmcData.platform.symbol})`} />
                 )}
                 {cmcData?.dateAdded && (
-                  <StatRow label="CMC Listed" value={new Date(cmcData.dateAdded).toLocaleDateString()} />
+                  <StatRow label={_copy("copy.d582e0b1b245", { defaultValue: "CMC Listed" })} value={new Date(cmcData.dateAdded).toLocaleDateString()} />
                 )}
               </div>
 
               {/* Description */}
               {cmcData?.description && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">About</p>
+                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-1">{_copy("copy.4efca0d10c5f", { defaultValue: "About" })}</p>
                   <p className="text-zinc-300 text-xs leading-relaxed line-clamp-4">{cmcData.description}</p>
                 </div>
               )}
@@ -395,7 +397,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
               {/* Tags */}
               {cmcData?.tags && cmcData.tags.length > 0 && (
                 <div className="px-4 py-3 border-b border-zinc-700/30">
-                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-2">Tags</p>
+                  <p className="text-zinc-500 text-[10px] uppercase tracking-wider mb-2">{_copy("copy.1331275bc537", { defaultValue: "Tags" })}</p>
                   <div className="flex flex-wrap gap-1.5">
                     {cmcData.tags.slice(0, 10).map((tag) => (
                       <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-700/50 text-zinc-300">
@@ -404,8 +406,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                     ))}
                     {cmcData.tags.length > 10 && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-700/50 text-zinc-500">
-                        +{cmcData.tags.length - 10} more
-                      </span>
+                        +{cmcData.tags.length - 10}{_copy("copy.226ba18bbcdb", { defaultValue: " more" })}</span>
                     )}
                   </div>
                 </div>
@@ -416,14 +417,12 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 {websiteUrl && (
                   <a href={websiteUrl} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors">
-                    <Globe className="w-3.5 h-3.5" /> Website
-                  </a>
+                    <Globe className="w-3.5 h-3.5" />{_copy("copy.bec40f794f44", { defaultValue: " Website" })}</a>
                 )}
                 {twitterUrl && (
                   <a href={twitterUrl} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors">
-                    <Twitter className="w-3.5 h-3.5" /> Twitter
-                  </a>
+                    <Twitter className="w-3.5 h-3.5" />{_copy("copy.6c7c173673f8", { defaultValue: " Twitter" })}</a>
                 )}
                 {telegramUrl && (
                   <a href={telegramUrl} target="_blank" rel="noopener noreferrer"
@@ -440,25 +439,21 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                 {cmcData?.reddit && (
                   <a href={cmcData.reddit} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors">
-                    <Globe className="w-3.5 h-3.5" /> Reddit
-                  </a>
+                    <Globe className="w-3.5 h-3.5" />{_copy("copy.b880e0bc6395", { defaultValue: " Reddit" })}</a>
                 )}
                 {cmcData?.sourceCode && (
                   <a href={cmcData.sourceCode} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors">
-                    <Globe className="w-3.5 h-3.5" /> Source
-                  </a>
+                    <Globe className="w-3.5 h-3.5" />{_copy("copy.bf414f4980a4", { defaultValue: " Source" })}</a>
                 )}
                 {cmcData?.explorer && cmcData.explorer.length > 0 && (
                   <a href={cmcData.explorer[0]} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors">
-                    <ExternalLink className="w-3.5 h-3.5" /> Explorer
-                  </a>
+                    <ExternalLink className="w-3.5 h-3.5" />{_copy("copy.184745d2a368", { defaultValue: " Explorer" })}</a>
                 )}
                 <a href={dexScreenerUrl} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white bg-zinc-700/40 hover:bg-zinc-700/70 px-2.5 py-1.5 rounded-lg transition-colors ml-auto">
-                  <ExternalLink className="w-3.5 h-3.5" /> DexScreener
-                </a>
+                  <ExternalLink className="w-3.5 h-3.5" />{_copy("copy.edfc0fd2dc23", { defaultValue: " DexScreener" })}</a>
               </div>
             </div>
           </motion.div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Searchable Google Font picker with in-line previews.
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export function FontPicker({ value, onChange }: Props) {
+  const { t: _copy } = _useCopy();
   const currentName = primaryFamily(value);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useSurfaceDraft("components/editor/FontPicker.tsx:query", "");
@@ -73,7 +75,7 @@ export function FontPicker({ value, onChange }: Props) {
           className="h-7 w-full justify-between rounded-md border border-white/10 bg-white/5 px-2 text-xs text-white hover:bg-white/10"
         >
           <span className="truncate" style={{ fontFamily: value }}>
-            {currentName || "Choose font"}
+            {currentName || _copy("copy.6f9e942f919a", { defaultValue: "Choose font" })}
           </span>
           <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-60" />
         </Button>
@@ -88,7 +90,7 @@ export function FontPicker({ value, onChange }: Props) {
             autoFocus
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search fonts…"
+            placeholder={_copy("copy.791f7def2eb4", { defaultValue: "Search fonts…" })}
             className="h-7 border-0 bg-transparent p-0 text-xs text-white placeholder:text-white/40 focus-visible:ring-0"
           />
         </div>
@@ -105,14 +107,14 @@ export function FontPicker({ value, onChange }: Props) {
                   : "text-white/50 hover:bg-white/5 hover:text-white",
               )}
             >
-              {c === "all" ? "All" : c === "sans-serif" ? "Sans" : c === "serif" ? "Serif" : c === "handwriting" ? "Script" : c === "monospace" ? "Mono" : c}
+              {c === "all" ? _copy("copy.a52ace420f21", { defaultValue: "All" }) : c === "sans-serif" ? _copy("copy.b3c18129f841", { defaultValue: "Sans" }) : c === "serif" ? _copy("copy.1b5e747e5031", { defaultValue: "Serif" }) : c === "handwriting" ? _copy("copy.102acc10e67a", { defaultValue: "Script" }) : c === "monospace" ? _copy("copy.6f00156cec07", { defaultValue: "Mono" }) : c}
             </button>
           ))}
         </div>
         <ScrollArea className="h-72">
           <div ref={listRef} className="p-1">
             {filtered.length === 0 && (
-              <AppState icon="search" title={`No fonts match “${query}”`} kind="search-empty" size="compact" />
+              <AppState icon="search" title={_copy("copy.7dfbc9f8da57", { defaultValue: "No fonts match “{{value1}}”", value1: query })} kind="search-empty" size="compact" />
             )}
             {filtered.map((f) => {
               const isSel = f.family.toLowerCase() === currentName.toLowerCase();

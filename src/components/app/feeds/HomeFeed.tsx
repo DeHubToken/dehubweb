@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
@@ -518,6 +519,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
 }
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef, chipsPortalRef }: HomeFeedProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useI18n();
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -790,11 +792,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Handle sort selection with special logic for "Subscribed" (coming soon)
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
-      toast.info('Subscribed feed coming soon!');
+      toast.info(_copy("copy.35e9cfb027f9", { defaultValue: "Subscribed feed coming soon!" }));
       return;
     }
     if (option.value === 'following' && !isAuthenticated) {
-      toast.info('Log in to see followed creators');
+      toast.info(_copy("copy.c32690bd04d1", { defaultValue: "Log in to see followed creators" }));
       return;
     }
     if (option.value === 'prompt') {
@@ -805,7 +807,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     // Re-tapping the active chip changes nothing, so it must not flash a loader.
     if (option.value === optimisticSort.value) return;
     setSelectedSort(option);
-  }, [isAuthenticated, optimisticSort.value, setSelectedSort]);
+  }, [isAuthenticated, optimisticSort.value, setSelectedSort, _copy]);
 
   // Defer heavy filter-derived values so chip clicks paint instantly.
   // The chip buttons read `selectedSort`/`selectedCategories`/etc. directly (urgent),
@@ -1724,7 +1726,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div key="live-now" className="my-3 space-y-2">
             <div className="flex items-center gap-2 px-1">
               <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              <h3 className="text-white font-semibold text-sm">Livestreams</h3>
+              <h3 className="text-white font-semibold text-sm">{_copy("copy.e4629246c285", { defaultValue: "Livestreams" })}</h3>
             </div>
             <SwipeableCarousel>
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
@@ -1856,7 +1858,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div key={`live-now-${index}`} className="space-y-2">
             <div className="flex items-center gap-2 px-1">
               <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              <h3 className="text-white font-semibold text-sm">Livestreams</h3>
+              <h3 className="text-white font-semibold text-sm">{_copy("copy.e4629246c285", { defaultValue: "Livestreams" })}</h3>
             </div>
             <SwipeableCarousel>
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
@@ -2047,7 +2049,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 onClick={() => toggleContentFilter('ppv')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
-                <span className="leading-[1]">PPV</span>
+                <span className="leading-[1]">{_copy("copy.bd9e3879bc60", { defaultValue: "PPV" })}</span>
                 <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
               </button>
             )}
@@ -2058,7 +2060,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 onClick={() => toggleContentFilter('w2e')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
-                <span className="leading-[1]">Bounty</span>
+                <span className="leading-[1]">{_copy("copy.0abbc4ecb2b0", { defaultValue: "Bounty" })}</span>
                 <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
               </button>
             )}
@@ -2069,7 +2071,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 onClick={() => toggleContentFilter('locked')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
-                <span className="leading-[1]">Gated</span>
+                <span className="leading-[1]">{_copy("copy.ad91f5e4de4b", { defaultValue: "Gated" })}</span>
                 <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
               </button>
             )}
@@ -2104,9 +2106,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 setSelectedCategories([]);
               }}
               className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
-            >
-              Clear all
-            </button>
+            >{_copy("copy.29a390f9237e", { defaultValue: "Clear all" })}</button>
           </div>
         );
 
@@ -2279,7 +2279,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                   </div>
                 )}
                 {!hasNextPage && items.length > 0 && (
-                  <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+                  <p className="text-zinc-500 text-sm">{_copy("copy.4020afe05053", { defaultValue: "You've reached the end 🎉" })}</p>
                 )}
               </div>
             </div>

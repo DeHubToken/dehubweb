@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
@@ -14,11 +15,12 @@ const mockBookmarks = (t: TFunction) => [
 ];
 
 export function BookmarksScreen() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Bookmarks" />
+      <MobileTopBar title={_copy("copy.96316f0f6404", { defaultValue: "Bookmarks" })} />
 
       <div className="flex-1 divide-y divide-white/[0.06]">
         {mockBookmarks(t).map((post) => (

@@ -116,7 +116,9 @@ export function joinRoom(roomId?: string) {
   roomRefCounts.set(key, next);
   if (next === 1) {
     console.log('[LiveChat Socket] Joining room', key);
-    emitJoin(getSocket(key), key);
+    const socket = getSocket(key);
+    // Not connected yet: the connect handler joins as soon as it is.
+    if (socket.connected) emitJoin(socket, key);
   }
 }
 

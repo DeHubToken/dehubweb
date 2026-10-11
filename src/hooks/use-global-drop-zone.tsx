@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
 
 interface GlobalDropZoneContextType {
@@ -18,6 +19,7 @@ interface GlobalDropZoneContextType {
 const GlobalDropZoneContext = createContext<GlobalDropZoneContextType | null>(null);
 
 export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
+  const { t: _copy } = _useCopy();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [pendingFiles, setPendingFiles] = useState<FileList | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -174,8 +176,8 @@ export function GlobalDropZoneProvider({ children }: { children: ReactNode }) {
                 />
               </svg>
             </div>
-            <p className="text-xl font-semibold text-white">Drop to create post</p>
-            <p className="text-sm text-zinc-400">Images, videos, or audio files</p>
+            <p className="text-xl font-semibold text-white">{_copy("copy.e08411efaf82", { defaultValue: "Drop to create post" })}</p>
+            <p className="text-sm text-zinc-400">{_copy("copy.d86cfcbdaf60", { defaultValue: "Images, videos, or audio files" })}</p>
           </div>
         </div>
       )}

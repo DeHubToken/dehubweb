@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
@@ -16,23 +17,24 @@ const mockTransactions = (t: TFunction) => [
 ];
 
 export function WalletScreen() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="Wallet" showAvatar={false} />
+      <MobileTopBar title={_copy("copy.d1c9a01d57e9", { defaultValue: "Wallet" })} showAvatar={false} />
 
       {/* Balance card */}
       <div className="mx-4 my-3 p-5 rounded-2xl border border-white/[0.1] bg-white/[0.03] backdrop-blur-xl">
-        <p className="text-zinc-500 text-xs mb-1">Total Balance</p>
+        <p className="text-zinc-500 text-xs mb-1">{_copy("copy.41238b965aa9", { defaultValue: "Total Balance" })}</p>
         <h2 className="text-white text-3xl font-bold">4,250.00 <span className="text-lg text-zinc-400"><DhbCoin /></span></h2>
-        <p className="text-zinc-500 text-sm mt-0.5">≈ $1,275.00 USD</p>
+        <p className="text-zinc-500 text-sm mt-0.5">{_copy("copy.7bfe33be8737", { defaultValue: "≈ $1,275.00 USD" })}</p>
 
         <div className="flex gap-3 mt-5">
           {[
-            { icon: Send, label: 'Send' },
-            { icon: ArrowDownLeft, label: 'Receive' },
-            { icon: Copy, label: 'Copy' },
+            { icon: Send, label: _copy("copy.f6f4688ff23d", { defaultValue: "Send" }) },
+            { icon: ArrowDownLeft, label: _copy("copy.bac9d15ad9f1", { defaultValue: "Receive" }) },
+            { icon: Copy, label: _copy("copy.e21f935f11d7", { defaultValue: "Copy" }) },
             { icon: QrCode, label: 'QR' },
           ].map((action) => (
             <button key={action.label} className="flex-1 flex flex-col items-center gap-1.5">
@@ -47,7 +49,7 @@ export function WalletScreen() {
 
       {/* Tokens */}
       <div className="px-4 mb-4">
-        <h3 className="text-white text-sm font-semibold mb-3">Tokens</h3>
+        <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.a039dfb9628b", { defaultValue: "Tokens" })}</h3>
         <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] divide-y divide-white/[0.04]">
           {[
             { name: 'DHB', balance: '4,250.00', value: '$1,275.00' },
@@ -70,7 +72,7 @@ export function WalletScreen() {
 
       {/* Recent transactions */}
       <div className="px-4 flex-1">
-        <h3 className="text-white text-sm font-semibold mb-3">Recent Activity</h3>
+        <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.9ef7d438ce5b", { defaultValue: "Recent Activity" })}</h3>
         <div className="space-y-2">
           {mockTransactions(t).map((tx) => (
             <div key={tx.id} className="flex items-center gap-3 py-2">

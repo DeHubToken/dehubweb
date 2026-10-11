@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stores Page
  * ============
@@ -16,6 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 
 export default function StoresPage() {
+  const { t: _copy } = _useCopy();
   const [tab, setTab] = useState('browse');
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
@@ -29,8 +31,8 @@ export default function StoresPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Stores | DeHub"
-        description="Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens."
+        title={_copy("copy.1cf3231bf634", { defaultValue: "Stores | DeHub" })}
+        description={_copy("copy.1b2b527551e9", { defaultValue: "Browse and sell items on the DeHub peer-to-peer marketplace. Trade digital goods, merch, art, and services using tokens." })}
         url="https://dehub.io/app/stores"
         image="https://dehub.io/og/stores.jpg"
       />

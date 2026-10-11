@@ -64,7 +64,7 @@ describe('post lists', () => {
   it('links every row to its post, names the author and the views', () => {
     const out = api.postListHtml('Latest videos', [video(5660, 'G-Force – Superspie in missione')]);
     expect(out).toContain('<h2>Latest videos</h2>');
-    expect(out).toContain('<a href="https://dehub.io/app/post/5660">G-Force – Superspie in missione</a> — by Trame e Recensioni · 19 views');
+    expect(out).toContain('<a data-creator-copy href="https://dehub.io/app/post/5660">G-Force – Superspie in missione</a> — <span data-public-by>by Trame e Recensioni</span> · <span data-public-views="19">19 views</span>');
   });
 
   it('escapes what people typed', () => {

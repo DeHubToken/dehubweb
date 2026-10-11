@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
@@ -80,6 +81,7 @@ function ConversationItem({
   onDelete: (conversation: DeHubConversation) => void;
   onBlock: (conversation: DeHubConversation) => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const otherUser = conversation.otherUser || conversation.participants?.[0];
   const avatarUrl = buildAvatarUrl(otherUser?.address || '', otherUser?.avatarImageUrl || otherUser?.avatarUrl);
@@ -169,13 +171,13 @@ function ConversationItem({
         </div>
         {draft ? (
           <p className="text-sm truncate text-white">
-            <span className="font-medium">Draft: </span>
+            <span className="font-medium">{_copy("copy.9565c5e214a4", { defaultValue: "Draft: " })}</span>
             {draft}
           </p>
         ) : (
           <p className={`text-sm truncate text-white ${conversation.unreadCount > 0 ? 'font-bold' : 'font-normal'}`}>
-            {conversation.lastMessage?.type === 'image' ? '📷 Photo' :
-             conversation.lastMessage?.type === 'gif' ? '🎞️ GIF' :
+            {conversation.lastMessage?.type === 'image' ? _copy("copy.1b13ff986443", { defaultValue: "📷 Photo" }) :
+             conversation.lastMessage?.type === 'gif' ? _copy("copy.fd0ce9669a4e", { defaultValue: "🎞️ GIF" }) :
              lastMessagePreview}
           </p>
         )}
@@ -186,6 +188,7 @@ function ConversationItem({
 }
 
 export default function MessagesPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const location = useLocation();
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
@@ -274,11 +277,11 @@ export default function MessagesPage() {
     if (!user?.address) return;
     try {
       await blockUser(user.address, 'Blocked from message list');
-      toast.success('User blocked');
+      toast.success(_copy("copy.2b7bd96d731a", { defaultValue: "User blocked" }));
     } catch {
-      toast.error('Failed to block user');
+      toast.error(_copy("copy.d2b91e7b896f", { defaultValue: "Failed to block user" }));
     }
-  }, []);
+  }, [_copy]);
 
   // Get existing conversation addresses to filter search results
   const existingAddresses = new Set(
@@ -542,7 +545,7 @@ export default function MessagesPage() {
   // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
-      <AuthGate description="Log in to access your messages and chat with others." />
+      <AuthGate description={_copy("copy.b38dabfa0639", { defaultValue: "Log in to access your messages and chat with others." })} />
     );
   }
 
@@ -585,8 +588,8 @@ export default function MessagesPage() {
 
   return (
     <div className="h-full pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
-      <SEOHead title="Messages — Direct & Group Chat" description="Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." url="https://dehub.io/app/messages" />
-      <h1 className="sr-only">DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.3875aefdf8b8", { defaultValue: "Messages — Direct & Group Chat" })} description={_copy("copy.a058b8f54f71", { defaultValue: "Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." })} url="https://dehub.io/app/messages" />
+      <h1 className="sr-only">{_copy("copy.6b5c348f0adc", { defaultValue: "DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] max-h-full`}>
         {/* Full Width Messages Panel. A list, not a set of cards, so it carries
             no surface at all — see [data-bento-flat] in index.css. The
@@ -597,14 +600,14 @@ export default function MessagesPage() {
           {/* Header */}
           <PageIsland
             className="shrink-0"
-            icon={<BrandIcon src={messagesBubbleIcon} alt="Messages" className="h-8 w-8 object-contain" />}
+            icon={<BrandIcon src={messagesBubbleIcon} alt={_copy("copy.04d7b4833927", { defaultValue: "Messages" })} className="h-8 w-8 object-contain" />}
             title={t('messages.title')}
             actions={
               <>
-                <IslandAction label="Refresh" onClick={() => refetch()} disabled={isRefetching}>
+                <IslandAction label={_copy("copy.0e9161011702", { defaultValue: "Refresh" })} onClick={() => refetch()} disabled={isRefetching}>
                   <RefreshCw className={`h-[18px] w-[18px] ${isRefetching ? 'animate-spin' : ''}`} />
                 </IslandAction>
-                <IslandAction label="Start new conversation" onClick={() => setShowNewConversation(true)}>
+                <IslandAction label={_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })} onClick={() => setShowNewConversation(true)}>
                   <Plus className="h-[18px] w-[18px]" />
                 </IslandAction>
               </>
@@ -631,7 +634,7 @@ export default function MessagesPage() {
               <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center flex-shrink-0">
                 <img 
                   src={dehubLogo} 
-                  alt="Public Chat" 
+                  alt={_copy("copy.f73b495201cb", { defaultValue: "Public Chat" })} 
                   className="w-8 h-8 object-contain"
                 />
               </div>
@@ -654,7 +657,7 @@ export default function MessagesPage() {
               <AppState
                 icon="messages"
                 title={t('messages.failedToLoad')}
-                description="Your conversations are still safe. Try loading them again."
+                description={_copy("copy.be26771e6ef9", { defaultValue: "Your conversations are still safe. Try loading them again." })}
                 kind="error"
                 size="drawer"
                 primaryAction={{ label: t('messages.tryAgain'), onClick: () => refetch() }}
@@ -668,7 +671,7 @@ export default function MessagesPage() {
               <AppState
                 icon="messages"
                 title={t('messages.noConversationsYet', 'No conversations yet')}
-                description="Start a conversation and it will appear here."
+                description={_copy("copy.31dfdb14602d", { defaultValue: "Start a conversation and it will appear here." })}
                 size="drawer"
               />
             )}
@@ -691,12 +694,12 @@ export default function MessagesPage() {
             {searchQuery.trim().length >= 2 && newUserResults.length > 0 && (
               <>
                 <div className="px-4 py-2 mt-2">
-                  <p className="text-zinc-500 text-xs uppercase tracking-wider font-medium">Start new conversation</p>
+                  <p className="text-zinc-500 text-xs uppercase tracking-wider font-medium">{_copy("copy.4787aa7e2d5c", { defaultValue: "Start new conversation" })}</p>
                 </div>
                 {newUserResults.map((user: DeHubUser) => {
                   const avatarPath = extractAvatarPath(user);
                   const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
-                  const displayName = user.displayName || (user as any).display_name || user.username || 'User';
+                  const displayName = user.displayName || (user as any).display_name || user.username || _copy("copy.b512d97e7cbf", { defaultValue: "User" });
                   const isVerified = user.isVerified || (user as any).is_verified;
                   const dmSettingsObj = (() => {
                     const raw = (user as any).dmSettings || (user as any).dmSetting;
@@ -729,12 +732,11 @@ export default function MessagesPage() {
                           <p className="text-sm text-zinc-500 truncate">@{user.username}</p>
                         )}
                         {dmDisabled && (
-                          <p className="text-xs text-red-400 mt-0.5">DMs disabled</p>
+                          <p className="text-xs text-red-400 mt-0.5">{_copy("copy.c20ed70dd868", { defaultValue: "DMs disabled" })}</p>
                         )}
                         {!dmDisabled && perMessageFee && perMessageFee > 0 && (
                           <p className="text-xs text-amber-400 mt-0.5">
-                            {perMessageFee.toLocaleString()} <DhbCoin /> to message
-                          </p>
+                            {perMessageFee.toLocaleString()} <DhbCoin />{_copy("copy.cf92bc9b461f", { defaultValue: " to message" })}</p>
                         )}
                       </div>
                       {!dmDisabled && (
@@ -749,9 +751,7 @@ export default function MessagesPage() {
             {/* Searching indicator */}
             {searchQuery.trim().length >= 2 && isSearchingUsers && (
               <div className="flex items-center justify-center gap-2 py-4 text-zinc-500 text-sm">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Searching users...
-              </div>
+                <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.3084651a3386", { defaultValue: "Searching users..." })}</div>
             )}
           </div>
         </div>

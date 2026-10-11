@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useMutualFollowers } from '@/hooks/use-mutual-followers';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -8,6 +9,7 @@ interface MutualFollowersProps {
 }
 
 export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { mutuals, isLoading } = useMutualFollowers({ profileAddress });
 
@@ -55,7 +57,7 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
       {/* Text */}
       <p className="text-zinc-500 text-xs leading-tight">
         {/* Shown without the words: the faces and names already say it. */}
-        <span className="sr-only">Followed by </span>
+        <span className="sr-only">{_copy("copy.d0f08798ff1a", { defaultValue: "Followed by " })}</span>
         {displayed.map((item, i) => (
           <span key={item.address}>
             <button
@@ -65,7 +67,7 @@ export function MutualFollowers({ profileAddress }: MutualFollowersProps) {
               {getDisplayName(item)}
             </button>
             {i < displayed.length - 1 && (remaining > 0 || i < displayed.length - 2) && ', '}
-            {i === displayed.length - 2 && remaining === 0 && ' and '}
+            {i === displayed.length - 2 && remaining === 0 && _copy("copy.e3ee915a8e8c", { defaultValue: " and " })}
           </span>
         ))}
         {remaining > 0 && <span> +{remaining}</span>}

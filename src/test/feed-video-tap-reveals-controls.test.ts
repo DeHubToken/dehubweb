@@ -74,7 +74,7 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
   });
 
   it('gives the seek line a touch-sized hit target without thickening its rail', () => {
-    expect(VIDEO_CARD).toContain('aria-label="Video progress"');
+    expect(VIDEO_CARD).toMatch(/aria-label=\{_copy\("copy\.[a-f0-9]+", \{ defaultValue: "Video progress" \}\)\}/);
     expect(VIDEO_CARD).toContain('className="flex-1 h-6 bg-transparent');
     expect(VIDEO_CARD).toContain("backgroundSize: '100% 4px'");
   });

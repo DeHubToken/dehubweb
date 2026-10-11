@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -70,13 +72,13 @@ interface BootLine {
 }
 
 const BOOT_LINES: BootLine[] = [
-  { label: 'POWER ON SELF TEST', value: 'OK' },
-  { label: 'CRYPTO MODULE / AES-256', value: 'OK' },
-  { label: 'UPLINK / GEOSTATIONARY', value: 'ACQUIRED' },
-  { label: 'NODE HANDSHAKE 0x4F3A', value: 'COMPLETE' },
-  { label: 'MAP DATA / TERRAIN CACHE', value: 'SYNCED' },
-  { label: 'TRACK / 05 CONTACTS', value: 'LOCKED' },
-  { label: 'OPERATOR CLEARANCE', value: 'GRANTED' },
+  { get label() { return _translateCopy("copy.3fa166bf3458", { defaultValue: "POWER ON SELF TEST" }); }, value: 'OK' },
+  { get label() { return _translateCopy("copy.68d6169126ca", { defaultValue: "CRYPTO MODULE / AES-256" }); }, value: 'OK' },
+  { get label() { return _translateCopy("copy.b72988f504fc", { defaultValue: "UPLINK / GEOSTATIONARY" }); }, value: 'ACQUIRED' },
+  { get label() { return _translateCopy("copy.b1a86a177256", { defaultValue: "NODE HANDSHAKE 0x4F3A" }); }, value: 'COMPLETE' },
+  { get label() { return _translateCopy("copy.0a6d2b40baa6", { defaultValue: "MAP DATA / TERRAIN CACHE" }); }, value: 'SYNCED' },
+  { get label() { return _translateCopy("copy.743901de27bf", { defaultValue: "TRACK / 05 CONTACTS" }); }, value: 'LOCKED' },
+  { get label() { return _translateCopy("copy.0a0ae2624226", { defaultValue: "OPERATOR CLEARANCE" }); }, value: 'GRANTED' },
 ];
 
 /** Eased-progress point at which each log line commits. */
@@ -111,15 +113,15 @@ const LOCK_ACQUIRE_S = LOCK_AT.map(
 );
 
 const HEAD_LEFT = [
-  { label: 'NODE', value: 'DH-114' },
-  { label: 'GRID', value: '37N 05E' },
-  { label: 'MODE', value: 'RECON' },
+  { get label() { return _translateCopy("copy.fef2ec95d68c", { defaultValue: "NODE" }); }, value: 'DH-114' },
+  { get label() { return _translateCopy("copy.e7404b86c92a", { defaultValue: "GRID" }); }, value: '37N 05E' },
+  { get label() { return _translateCopy("copy.ac6c84ed1369", { defaultValue: "MODE" }); }, value: 'RECON' },
 ];
 
 const HEAD_RIGHT = [
-  { label: 'LINK', value: 'SATCOM' },
-  { label: 'CIPHER', value: 'AES-256' },
-  { label: 'BAND', value: 'KU 12.4' },
+  { get label() { return _translateCopy("copy.e26ef19029cc", { defaultValue: "LINK" }); }, value: 'SATCOM' },
+  { get label() { return _translateCopy("copy.e555a71f0ce4", { defaultValue: "CIPHER" }); }, value: 'AES-256' },
+  { get label() { return _translateCopy("copy.52f1b54ce34b", { defaultValue: "BAND" }); }, value: 'KU 12.4' },
 ];
 
 const FOOT_CHIPS = ['SECTOR 07', 'BEARING 214', 'ELEV 1180 M', 'RANGE 4.2 KM'];
@@ -174,6 +176,7 @@ interface Stage {
 const STAGE_ZERO: Stage = { cells: 0, logs: 0, locks: 0 };
 
 function WarBootSequence() {
+  const { t: _copy } = _useCopy();
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
   const [stage, setStage] = useState<Stage>(STAGE_ZERO);
@@ -379,7 +382,7 @@ function WarBootSequence() {
     <div
       role="status"
       aria-live="polite"
-      aria-label="Secure link boot sequence"
+      aria-label={_copy("copy.6bac54e99009", { defaultValue: "Secure link boot sequence" })}
       aria-busy={!complete}
       data-war-boot
       data-leaving={leaving ? 'true' : 'false'}
@@ -394,8 +397,8 @@ function WarBootSequence() {
       */}
       <span className="sr-only">
         {complete
-          ? 'Secure link established.'
-          : 'Establishing secure link. Please wait.'}
+          ? _copy("copy.5b59a8123984", { defaultValue: "Secure link established." })
+          : _copy("copy.e97e4e94ffed", { defaultValue: "Establishing secure link. Please wait." })}
       </span>
 
       {!prefersReducedMotion && <BootGlobe />}
@@ -449,9 +452,9 @@ function WarBootSequence() {
               data-acquired={i < stage.locks ? 'true' : 'false'}
             >
               <span data-war-track-id>{track.id}</span>
-              <span data-war-track-bearing>BRG {track.bearing}</span>
+              <span data-war-track-bearing>{_copy("copy.4a49c5b26d3d", { defaultValue: "BRG " })}{track.bearing}</span>
               <span data-war-track-state>
-                {i < stage.locks ? 'LOCK' : 'SCAN'}
+                {i < stage.locks ? _copy("copy.74c4812d040a", { defaultValue: "LOCK" }) : _copy("copy.7a1580c49e45", { defaultValue: "SCAN" })}
               </span>
             </li>
           ))}
@@ -464,9 +467,9 @@ function WarBootSequence() {
         data-war-boot-panel
         className="relative z-10 w-full max-w-xl px-6 text-center"
       >
-        <p data-war-boot-kicker>DEHUB // TACTICAL NETWORK</p>
-        <h1 data-war-boot-title>ESTABLISHING SECURE LINK</h1>
-        <p data-war-boot-sub>STAND BY FOR OPERATOR CLEARANCE</p>
+        <p data-war-boot-kicker>{_copy("copy.5e57e90565ce", { defaultValue: "DEHUB // TACTICAL NETWORK" })}</p>
+        <h1 data-war-boot-title>{_copy("copy.2c01f8850300", { defaultValue: "ESTABLISHING SECURE LINK" })}</h1>
+        <p data-war-boot-sub>{_copy("copy.1d1b5289a648", { defaultValue: "STAND BY FOR OPERATOR CLEARANCE" })}</p>
 
         {/* Deliberately NOT also tagged data-war-meter. That primitive models a
             single track with a [data-war-meter-fill] child and declares
@@ -522,13 +525,9 @@ function WarBootSequence() {
           type="button"
           ref={skipRef}
           data-war-boot-skip
-          aria-label="Skip boot sequence"
+          aria-label={_copy("copy.964e51ef0bed", { defaultValue: "Skip boot sequence" })}
           onClick={dismiss}
-        >
-          SKIP
-          <span data-war-key aria-hidden="true">
-            ESC
-          </span>
+        >{_copy("copy.6ad446059a8b", { defaultValue: "SKIP" })}<span data-war-key aria-hidden="true">{_copy("copy.c5b7d0ec4f69", { defaultValue: "ESC" })}</span>
         </button>
       </div>
     </div>

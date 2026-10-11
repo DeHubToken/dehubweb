@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTabLongPress } from '@/hooks/use-tab-long-press';
 /**
  * Global Feed Navigation Bar
@@ -50,6 +51,7 @@ function getPersistedTab(): string {
  *   related-feed bentos below it, identical to the home feed's nav/feed look.
  */
 export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {}) {
+  const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -282,7 +284,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
                 data-post-nav-back
                 onClick={handleBack}
                 className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
-                aria-label="Back"
+                aria-label={_copy("copy.76900f1bfd16", { defaultValue: "Back" })}
               >
                 <ArrowLeft className="relative z-10 w-4 h-4" />
               </button>
@@ -290,7 +292,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
               <button
                 onClick={handleSettingsClick}
                 className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
-                aria-label={imagesScrollView ? "Back to grid" : "Feed settings"}
+                aria-label={imagesScrollView ? _copy("copy.68f5b97c66d9", { defaultValue: "Back to grid" }) : _copy("copy.2ffafd1aa697", { defaultValue: "Feed settings" })}
               >
                 {imagesScrollView
                   ? <ArrowLeft className="relative z-10 w-4 h-4" />

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Community Administration Hooks
  * ===============================
@@ -452,6 +453,7 @@ export function useUpdateCommunitySettings() {
 }
 
 export function useDeleteCommunity() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -460,7 +462,7 @@ export function useDeleteCommunity() {
       callRpc('community_delete', { _community_id: communityId }, walletAddress),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['communities'] });
-      toast.success('Community deleted');
+      toast.success(_copy("copy.7793fc7ea486", { defaultValue: "Community deleted" }));
     },
     onError: (error) => toast.error(adminErrorMessage(error, 'Failed to delete community')),
   });
@@ -512,6 +514,7 @@ export function useCommunityInvites(communityId: string | undefined, enabled: bo
 }
 
 export function useCreateInvite() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -533,13 +536,14 @@ export function useCreateInvite() {
     onSuccess: (_link, vars) => {
       qc.invalidateQueries({ queryKey: ['communities', 'invites', vars.communityId] });
       qc.invalidateQueries({ queryKey: ['communities', 'admin-log', vars.communityId] });
-      toast.success('Invite link created');
+      toast.success(_copy("copy.f2661a2edcee", { defaultValue: "Invite link created" }));
     },
     onError: (error) => toast.error(adminErrorMessage(error, 'Failed to create invite link')),
   });
 }
 
 export function useRevokeInvite() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
 
@@ -548,7 +552,7 @@ export function useRevokeInvite() {
       callRpc('community_revoke_invite', { _invite_id: inviteId }, walletAddress),
     onSuccess: (_data, { communityId }) => {
       qc.invalidateQueries({ queryKey: ['communities', 'invites', communityId] });
-      toast.success('Invite link revoked');
+      toast.success(_copy("copy.0727efedeb3b", { defaultValue: "Invite link revoked" }));
     },
     onError: (error) => toast.error(adminErrorMessage(error, 'Failed to revoke invite link')),
   });

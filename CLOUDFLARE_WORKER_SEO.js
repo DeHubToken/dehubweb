@@ -1,3 +1,4 @@
+import { localizePublicChrome, localizeStructuredData } from './server/public-page-locales.js';
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
 import { applyTextPostImage } from './server/post-share-card.js';
@@ -521,7 +522,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Docs', url: `${APP_URL}/docs` }, { name
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs">Docs</a></p>
 <article><h1>${escHtml(meta.title.replace(/ — DeHub( Docs)?$/, ''))}</h1>
-${body}</article>
+<!--hl-body-->${body}<!--/hl-body--></article>
 <nav aria-label="DeHub documentation"><h2>More documentation</h2><ul>${nav}</ul></nav>
 <p><a href="${APP_URL}/docs/blog">DeHub Blog</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
@@ -762,7 +763,7 @@ ${ogLocaleTag()}
 <h1>${escHtml(post.title)}</h1>
 <p><em>By ${escHtml(post.author || 'DeHub Team')}${published ? ` — ${escHtml(published.slice(0, 10))}` : ''}</em></p>
 ${banner ? `<img src="${escHtml(banner)}" alt="${escHtml(post.bannerImageAlt || post.title)}" style="max-width:100%">` : ''}
-${body}
+<!--hl-body-->${body}<!--/hl-body-->
 </article>
 ${manifest ? relatedPostsHtml(manifest, post.slug) : ''}
 <p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
@@ -926,7 +927,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: meta.heading, url: canonicalUrl }])}
 <p><a href="${APP_URL}/">DeHub</a> › ${escHtml(meta.heading)}</p>
 <h1>${escHtml(meta.heading)}</h1>
 <p>${escHtml(meta.intro)}</p>
-${meta.bodyHtml || ''}
+<!--hl-body-->${meta.bodyHtml || ''}<!--/hl-body-->
 ${primaryNavHtml(`/${key}`)}
 <p style="margin-top:24px"><a class="dh-cta" href="${appHref(canonicalUrl)}" rel="nofollow">Open ${escHtml(meta.heading)} on DeHub</a></p>
 </body>
@@ -2238,7 +2239,7 @@ function servedLocales(route, table) {
   return Object.keys(langs)
     .filter((l) => {
       const t = langs[l];
-      return l !== 'en' && /^[a-z]{2}$/.test(l) && t && t.title && t.body && (!en || t.title !== en.title);
+      return l !== 'en' && /^[a-z]{2}$/.test(l) && t && t.title && (t.body || t.asset) && (t.asset || !en || t.title !== en.title);
     })
     .sort();
 }
@@ -2257,13 +2258,13 @@ function hreflangLinks(route, table) {
 /**
  * Where a crawler asking for ?hl= goes instead, or null when the request is
  * for a page that exists. hl=en, a language the route is not served in,
- * anything that is not a language code, and every ?hl= on a noindex page all
- * land on the bare URL — the one page they would otherwise duplicate.
+ * anything that is not a language code lands on the bare URL. A translated
+ * noindex page remains available to readers without joining the sitemap.
  */
-function unservedLocaleRedirect(url, route, table, noindex) {
+function unservedLocaleRedirect(url, route, table) {
   if (!url.searchParams.has('hl')) return null;
   const hl = requestedLocale(url);
-  if (hl && !noindex && servedLocales(route, table).includes(hl)) return null;
+  if (hl && servedLocales(route, table).includes(hl)) return null;
   return localizedUrl(route, 'en');
 }
 
@@ -2300,9 +2301,9 @@ function jsonLdText(s) {
 /**
  * The page in `hl`, or the English page carrying its cluster.
  *
- * A route served in no other language comes back untouched, and so does a
- * noindex page — annotating a page Google is told to drop only spends the
- * annotation. The bare page gains the cluster and keeps its own canonical. A
+ * A route served in no other language comes back untouched. A noindex page
+ * is translated for readers without gaining a search-language cluster. The
+ * bare indexable page gains the cluster and keeps its own canonical. A
  * translated page swaps the title, description, share-card text, heading,
  * breadcrumb, JSON-LD name and description, and the body between the
  * <!--hl-body--> markers its builder put around it; it declares its language
@@ -2312,10 +2313,12 @@ function jsonLdText(s) {
  */
 function localizePage(html, route, hl, table) {
   const langs = servedLocales(route, table);
-  if (!langs.length || NOINDEX_META.test(html)) return html;
+  if (!langs.length) return html;
+  const noindex = NOINDEX_META.test(html);
   const t = hl && langs.includes(hl) ? table[route][hl] : null;
-  let out = html.replace('</head>', () => `${hreflangLinks(route, table)}\n</head>`);
-  out = withOgLocale(out, t ? hl : 'en', ['en', ...langs]);
+  if (noindex && !t) return html;
+  let out = noindex ? html : html.replace(/<link rel="alternate" hreflang="[^"]*" href="[^"]*">\n?/g, '').replace('</head>', () => `${hreflangLinks(route, table)}\n</head>`);
+  out = withOgLocale(out, t ? hl : 'en', noindex ? [hl] : ['en', ...langs]);
   if (!t) return out;
   const en = table[route].en || {};
   const title = escHtml(t.title);
@@ -2356,7 +2359,7 @@ function localizePage(html, route, hl, table) {
   // a translation of it as `lede`.
   if (englishHeading) out = out.split(`› ${englishHeading}</p>`).join(`› ${heading}</p>`);
   if (t.lede) out = out.replace(/(<\/h1>\s*)<p>[^<]*<\/p>/i, (m, a) => `${a}<p>${escHtml(t.lede)}</p>`);
-  return out;
+  return localizeStructuredData(localizePublicChrome(out, route, hl, table), route, hl, t);
 }
 
 const DEHUB_API = 'https://api.dehub.io/api';
@@ -2433,10 +2436,10 @@ function postListHtml(heading, rows, { author = true } = {}) {
     .map((r) => {
       const who = author ? String(r.displayName || r.username || '').replace(/\s+/g, ' ').trim() : '';
       const views = Number(r.totalViews) || 0;
-      const tail = [who && `by ${escHtml(who)}`, views > 0 && `${views.toLocaleString('en-US')} views`]
+      const tail = [who && `<span data-public-by>by ${escHtml(who)}</span>`, views > 0 && `<span data-public-views="${views}">${views.toLocaleString('en-US')} views</span>`]
         .filter(Boolean)
         .join(' · ');
-      return `<li><a href="${APP_URL}/app/post/${Number(r.tokenId)}">${escHtml(postLabel(r))}</a>${tail ? ` — ${tail}` : ''}</li>`;
+      return `<li><a data-creator-copy href="${APP_URL}/app/post/${Number(r.tokenId)}">${escHtml(postLabel(r))}</a>${tail ? ` — ${tail}` : ''}</li>`;
     });
   if (!items.length) return '';
   return `<section class="dh-list"><h2>${escHtml(heading)}</h2><ul>${items.join('')}</ul></section>`;
@@ -3672,7 +3675,7 @@ ${breadcrumbScript([HOME_CRUMB, { name: 'Blog', url: `${APP_URL}/docs/blog` }, {
 </head>
 <body>
 <p><a href="${APP_URL}/">DeHub</a> › <a href="${APP_URL}/docs/blog">Blog</a></p>
-<article>${article}</article>
+<article><!--hl-body-->${article}<!--/hl-body--></article>
 <p><a href="${APP_URL}/docs/blog">← All DeHub blog posts</a> · <a href="${APP_URL}/">dehub.io home</a></p>
 </body>
 </html>`;
@@ -5369,7 +5372,24 @@ async function handleRequest(request, env, ctx) {
   const guard = async (resp) => {
     if (!isCanonicalHost) resp.headers.set('X-Robots-Tag', 'noindex');
     if (!(resp.headers.get('Content-Type') || '').includes('text/html')) return resp;
-    return new Response(stylePrerendered(await resp.text()), {
+    let html = stylePrerendered(await resp.text());
+    const route = canonicalizePath(pathname).replace(/^\/docs\/blog\//, '/guides/');
+    if (resp.status === 200) {
+      const table = await seoI18nTable(env, request.url);
+      if (table[route]) {
+        const redirect = unservedLocaleRedirect(url, route, table);
+        if (redirect) return new Response(null, { status: 301, headers: { Location: redirect } });
+        const lang = requestedLocale(url);
+        const row = lang && table[route][lang];
+        if (row?.asset) {
+          const asset = await env.ASSETS.fetch(new URL(row.asset, request.url), { headers: { Accept: 'application/json' } });
+          if (!asset.ok) return new Response('Translated page temporarily unavailable', { status: 503, headers: { 'Retry-After': '60', 'Cache-Control': 'no-store' } });
+          const page = { ...row, ...await asset.json() };
+          html = localizePage(html, route, lang, { ...table, [route]: { ...table[route], [lang]: page } });
+        } else html = localizePage(html, route, lang, table);
+      }
+    }
+    return new Response(html, {
       status: resp.status,
       headers: resp.headers,
     });
@@ -6258,14 +6278,9 @@ async function handleRequest(request, env, ctx) {
   // homepage duplicates. Serve real documentation text extracted at build.
   if (cleanPath === '/docs') {
     const table = await seoI18nTable(env, request.url);
-    const localeRedirect = unservedLocaleRedirect(url, '/docs', table, false);
+    const localeRedirect = unservedLocaleRedirect(url, '/docs', table);
     if (localeRedirect) return redirect301(localeRedirect);
-    const docsHtml = localizePage(
-      buildDocsIndexHtml(),
-      '/docs',
-      requestedLocale(url),
-      table,
-    );
+    const docsHtml = buildDocsIndexHtml();
     return guard(new Response(docsHtml, { status: 200, headers: blogHeaders }));
   }
   const docsMatch = cleanPath.match(/^\/docs\/(.+)$/);
@@ -6406,9 +6421,8 @@ async function handleRequest(request, env, ctx) {
     // in, otherwise the English page with its hreflang cluster (see
     // localizePage). Every other ?hl= — en included — 301s to the bare page.
     const table = await seoI18nTable(env, request.url);
-    const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table, MARKETING_PAGES[sectionKey].noindex);
+    const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table);
     if (localeRedirect) return redirect301(localeRedirect);
-    html = localizePage(html, `/${sectionKey}`, requestedLocale(url), table);
     return guard(new Response(html, {
       status: 200,
       headers: MARKETING_PAGES[sectionKey].noindex
@@ -6986,9 +7000,8 @@ async function handleRequest(request, env, ctx) {
     // to ignore just spends the annotation.
     if (pathname === '/' && !isReferral) {
       const table = await seoI18nTable(env, request.url);
-      const localeRedirect = unservedLocaleRedirect(url, '/', table, false);
+      const localeRedirect = unservedLocaleRedirect(url, '/', table);
       if (localeRedirect) return redirect301(localeRedirect);
-      html = localizePage(html, '/', requestedLocale(url), table);
     }
 
     const rendered = await guard(new Response(html, {

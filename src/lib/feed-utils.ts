@@ -1,3 +1,5 @@
+import i18n from 'i18next';
+import { formatRelativeTime } from '@/i18n/date-locale';
 /**
  * Feed Utilities
  * ===============
@@ -604,6 +606,7 @@ export function parseFormattedCount(value?: string | number | null): number {
  * Evaluates from largest to smallest unit, never showing 0 values.
  */
 export function formatTimeAgo(dateString?: string): string {
+  if (i18n.language && i18n.language !== 'en') return formatRelativeTime(dateString, i18n.language, 'narrow');
   if (!dateString) return 'Just now';
   
   const date = new Date(dateString);

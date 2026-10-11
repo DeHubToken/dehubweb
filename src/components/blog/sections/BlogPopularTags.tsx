@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { BlogTag } from '@/types/blog';
@@ -13,11 +14,12 @@ export const BlogPopularTags: React.FC<BlogPopularTagsProps> = ({
   setSelectedTag,
   shouldShow
 }) => {
+  const { t: _copy } = _useCopy();
   if (!shouldShow) return null;
 
   return (
     <section className="bg-card rounded-2xl border border-border p-8">
-      <h2 className="text-2xl font-bold text-foreground mb-6 font-exo">Popular Tags</h2>
+      <h2 className="text-2xl font-bold text-foreground mb-6 font-exo">{_copy("copy.1a8835e75e15", { defaultValue: "Popular Tags" })}</h2>
       <div className="flex flex-wrap gap-3">
         {allTags.slice(0, 10).map(tag => (
           <button

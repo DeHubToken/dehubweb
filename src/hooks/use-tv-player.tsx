@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * TV Player Hook
  * ==============
@@ -69,6 +70,7 @@ interface TVPlayerProviderProps {
 const TV_PLAYER_ID = 'tv-player-global';
 
 export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
+  const { t: _copy } = _useCopy();
   const [state, setState] = useState<TVPlayerState>({
     currentChannel: null,
     isPlaying: false,
@@ -179,8 +181,8 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
                   isLoading: false,
                   isPlaying: false,
                 }));
-                toast.error('Stream Error', {
-                  description: 'Unable to play this channel. Try another one.',
+                toast.error(_copy("copy.fb89f39a0240", { defaultValue: "Stream Error" }), {
+                  description: _copy("copy.37bc2409cce3", { defaultValue: "Unable to play this channel. Try another one." }),
                 });
                 break;
             }
@@ -200,8 +202,8 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
           error: 'HLS not supported',
           isLoading: false,
         }));
-        toast.error('Playback Error', {
-          description: 'Your browser does not support HLS streaming.',
+        toast.error(_copy("copy.2ed17d468145", { defaultValue: "Playback Error" }), {
+          description: _copy("copy.0215c831e5aa", { defaultValue: "Your browser does not support HLS streaming." }),
         });
       }
     })().catch(() => {
@@ -213,7 +215,7 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
         isPlaying: false,
       }));
     });
-  }, []);
+  }, [_copy]);
   
   const play = useCallback((channel: TVChannel) => {
     const video = videoRef.current;

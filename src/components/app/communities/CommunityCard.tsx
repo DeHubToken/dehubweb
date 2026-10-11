@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { Users, Lock, Crown, Link as LinkIcon, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
@@ -39,6 +40,7 @@ interface CommunityCardProps {
 }
 
 export function CommunityCard({ community, isMember, role, unreadCount, onClick }: CommunityCardProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const isOwner = role === 'owner';
   const description = community.description || '';
@@ -110,9 +112,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           {isMember && (
             isOwner ? (
               <span className="flex items-center gap-1 text-xs text-amber-400/80">
-                <Crown className="w-3 h-3" />
-                Owner
-              </span>
+                <Crown className="w-3 h-3" />{_copy("copy.4b1b8aa3608a", { defaultValue: "Owner" })}</span>
             ) : (
               <span className="text-xs text-emerald-500/80">{t('communities.joined')}</span>
             )

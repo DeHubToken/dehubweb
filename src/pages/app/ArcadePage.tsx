@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Arcade Page
  * ===========
@@ -29,6 +30,7 @@ import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
 const RANKED_GAMES = ARCADE_GAMES.filter((game) => game.leaderboard);
 
 function GameCard({ game }: { game: ArcadeGame }) {
+  const { t: _copy } = _useCopy();
   // Reduced motion gets the clip's poster as a plain image, never the loop.
   const reduceMotion = useReducedMotion();
   return (
@@ -94,9 +96,7 @@ function GameCard({ game }: { game: ArcadeGame }) {
               to={game.onlineHref}
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-800 px-4 py-2 text-xs font-semibold text-zinc-200 transition-colors hover:bg-zinc-700"
             >
-              <Swords className="h-3.5 w-3.5" />
-              Wager
-            </Link>
+              <Swords className="h-3.5 w-3.5" />{_copy("copy.339071395687", { defaultValue: "Wager" })}</Link>
           ) : null}
         </div>
       </div>
@@ -105,6 +105,7 @@ function GameCard({ game }: { game: ArcadeGame }) {
 }
 
 export default function ArcadePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const submissionOpen = searchParams.get('submit') === '1';
@@ -147,7 +148,7 @@ export default function ArcadePage() {
         icon="arcade"
         title={t('arcade.title')}
         actions={
-          <IslandAction label="Submit a game" onClick={openSubmission}>
+          <IslandAction label={_copy("copy.3bb8f2fe14a5", { defaultValue: "Submit a game" })} onClick={openSubmission}>
             <Upload className="h-[18px] w-[18px]" />
           </IslandAction>
         }

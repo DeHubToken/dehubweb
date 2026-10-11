@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
@@ -134,16 +136,16 @@ interface AudioVisualizerProps {
 }
 
 const STYLES: { value: AnyStyle; label: string }[] = [
-  { value: 'static', label: 'Default' },
-  { value: 'bars', label: 'Bars' },
-  { value: 'waveform', label: 'Wave' },
-  { value: 'circular', label: 'Radial' },
-  { value: 'spectrum', label: 'Spectrum' },
-  { value: 'mirror', label: 'Mirror' },
-  { value: 'rings', label: 'Rings' },
-  { value: 'pulse', label: 'Pulse' },
-  { value: 'terrain', label: 'Terrain' },
-  { value: 'orb', label: 'Orb' },
+  { value: 'static', get label() { return _translateCopy("copy.21b111cbfe6e", { defaultValue: "Default" }); } },
+  { value: 'bars', get label() { return _translateCopy("copy.f2c3526915d3", { defaultValue: "Bars" }); } },
+  { value: 'waveform', get label() { return _translateCopy("copy.43eb1b148ebb", { defaultValue: "Wave" }); } },
+  { value: 'circular', get label() { return _translateCopy("copy.02693d5af964", { defaultValue: "Radial" }); } },
+  { value: 'spectrum', get label() { return _translateCopy("copy.fc457d42d767", { defaultValue: "Spectrum" }); } },
+  { value: 'mirror', get label() { return _translateCopy("copy.90fade6fb78e", { defaultValue: "Mirror" }); } },
+  { value: 'rings', get label() { return _translateCopy("copy.bab4c75d0722", { defaultValue: "Rings" }); } },
+  { value: 'pulse', get label() { return _translateCopy("copy.f7a403c6cdf3", { defaultValue: "Pulse" }); } },
+  { value: 'terrain', get label() { return _translateCopy("copy.5dd6e0396c9d", { defaultValue: "Terrain" }); } },
+  { value: 'orb', get label() { return _translateCopy("copy.8483460e43ab", { defaultValue: "Orb" }); } },
   ...EXTRA_STYLES,
 ];
 
@@ -193,6 +195,7 @@ export function AudioVisualizer({
   handoffKey,
   onPlaybackAdopted,
 }: AudioVisualizerProps) {
+  const { t: _copy } = _useCopy();
   const surfaceActive = useContext(CachedPageActiveContext);
   const { t } = useTranslation();
   /* ─── The corner player ──────────────────────────────────────────────
@@ -973,7 +976,7 @@ export function AudioVisualizer({
               max={360}
               step={1}
               onValueChange={(value) => setHue(value[0])}
-              aria-label="Visualizer colour"
+              aria-label={_copy("copy.89a167dad6da", { defaultValue: "Visualizer colour" })}
               /* Root overflows the track vertically so the grab area is
                  26px rather than 6px. Targets Slider's own data-* hooks —
                  the old [class*=Track] selectors matched nothing, since
@@ -1005,7 +1008,7 @@ export function AudioVisualizer({
                   type="button"
                   data-on-media
                   data-audio-bare
-                  aria-label={isEffectivelyMuted ? 'Unmute' : 'Mute'}
+                  aria-label={isEffectivelyMuted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })}
                   onClick={(e) => {
                     e.stopPropagation();
                     if (!isEffectivelyMuted) { setSelfMuted(true); videoPlaybackManager.globalMuted = true; onMuteChange?.(true); return; }
@@ -1031,7 +1034,7 @@ export function AudioVisualizer({
                     min={0}
                     max={100}
                     step={1}
-                    aria-label="Volume"
+                    aria-label={_copy("copy.b10fb966d720", { defaultValue: "Volume" })}
                     onValueChange={(value) => {
                       setVolume(value[0] / 100);
                       setSelfMuted(value[0] === 0);
@@ -1074,7 +1077,7 @@ export function AudioVisualizer({
             type="button"
             data-on-media
             data-audio-bare
-            aria-label={isPlaying ? 'Pause' : 'Play'}
+            aria-label={isPlaying ? _copy("copy.858e4ba7a29f", { defaultValue: "Pause" }) : _copy("copy.436e61016e26", { defaultValue: "Play" })}
             onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
             className={cn(
               'pointer-events-auto shrink-0 w-8 flex items-center justify-center transition-colors',
@@ -1167,7 +1170,7 @@ export function AudioVisualizer({
             type="button"
             data-on-media
             data-audio-bare
-            aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            aria-label={isFullscreen ? _copy("copy.37fd4e355ba3", { defaultValue: "Exit fullscreen" }) : _copy("copy.c461dbb2bab7", { defaultValue: "Fullscreen" })}
             onClick={(e) => { e.stopPropagation(); onFullscreen(e); }}
             onPointerDown={stopBubble}
             className={cn(
@@ -1184,7 +1187,7 @@ export function AudioVisualizer({
             data-scrub-track
             role="slider"
             tabIndex={0}
-            aria-label="Seek"
+            aria-label={_copy("copy.67ae3405bcd4", { defaultValue: "Seek" })}
             aria-valuemin={0}
             aria-valuemax={Math.max(0, Math.round(duration))}
             aria-valuenow={Math.max(0, Math.round(displayTime))}

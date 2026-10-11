@@ -588,6 +588,7 @@
   },
   "postOptions": {
     "options": "Opcijas",
+    "aiOverview": "MI pārskats",
     "sendTip": "Sūtīt dzeramnaudu",
     "queue": "Rinda",
     "watchList": "Skatīšanās saraksts",
@@ -6440,10 +6441,6 @@
     }
   },
   "editor": {
-    "highlights": {
-      "visual": "Vizuāli spilgtākie mirkļi",
-      "visualPrivacy": "Nosūtīt atlasītos kadrus vizuālai analīzei."
-    },
     "review": {
       "title": "Projekta pārskatīšana",
       "shared": "Kopīgots ar jums",
@@ -6859,6 +6856,10 @@
       "sync": "Sinhronizēt griezumus",
       "none": "Uzticams ritms nav atrasts.",
       "unchanged": "Griezumus nevarēja izlīdzināt."
+    },
+    "highlights": {
+      "visual": "Vizuāli spilgtākie mirkļi",
+      "visualPrivacy": "Nosūtīt atlasītos kadrus vizuālai analīzei."
     }
   },
   "jungleMood": {

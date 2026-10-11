@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Cinematic Live (System theme, phones)
  * =====================================
@@ -32,10 +33,9 @@ function Avatar({ src, name, className }: { src?: string; name: string; classNam
 }
 
 function LiveBadge({ className }: { className?: string }) {
+  const { t: _copy } = _useCopy();
   return (
-    <span className={cn('rounded-[5px] bg-red-500 px-1.5 py-px text-[10px] font-bold uppercase tracking-wide text-white', className)}>
-      Live
-    </span>
+    <span className={cn('rounded-[5px] bg-red-500 px-1.5 py-px text-[10px] font-bold uppercase tracking-wide text-white', className)}>{_copy("copy.b64ac05f17e6", { defaultValue: "Live" })}</span>
   );
 }
 
@@ -82,6 +82,7 @@ function GameCover({ name, image, active, dimmed, onClick }: {
 }
 
 function StreamTile({ stream, onClick }: { stream: LiveStream; onClick: () => void }) {
+  const { t: _copy } = _useCopy();
   const [thumbFailed, setThumbFailed] = useState(false);
   const hasThumb = !!stream.thumbnail && !thumbFailed;
   return (
@@ -105,7 +106,7 @@ function StreamTile({ stream, onClick }: { stream: LiveStream; onClick: () => vo
       <span className="mt-1.5 flex gap-1.5">
         <Avatar src={stream.avatar} name={stream.streamer} className="h-[22px] w-[22px] shrink-0 rounded-md" />
         <span className="min-w-0">
-          <span className="block truncate text-[13px] font-semibold text-white">{stream.title || `${stream.streamer} is live`}</span>
+          <span className="block truncate text-[13px] font-semibold text-white">{stream.title || _copy("copy.558192c9f69f", { defaultValue: "{{value1}} is live", value1: stream.streamer })}</span>
           <span className="block truncate text-[11px] text-zinc-400">{stream.streamer} · {stream.game}</span>
         </span>
       </span>
@@ -120,6 +121,7 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState, show
   emptyState: React.ReactNode;
   showFilters?: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const [gameId, setGameId] = useState<string | null>(null);
   const game = LIVE_GAMES.find((g) => g.id === gameId) || null;
@@ -146,7 +148,7 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState, show
     <div data-cinematic-live className={cn('pb-32', showFilters ? 'pt-[calc(env(safe-area-inset-top,0px)+5.75rem)]' : 'pt-[calc(env(safe-area-inset-top,0px)+3.75rem)]')}>
       {showFilters && <div data-no-swipe data-feed-filter-panel className="mb-3 rounded-[15px] px-2 py-3">
         <GlassFilterRow<string>
-          items={[{ key: 'all', label: 'All' }, ...LIVE_GAMES.map(g => ({ key: g.id, label: g.name }))]}
+          items={[{ key: 'all', label: _copy("copy.a52ace420f21", { defaultValue: "All" }) }, ...LIVE_GAMES.map(g => ({ key: g.id, label: g.name }))]}
           activeKey={gameId ?? 'all'} onSelect={key => setGameId(key === 'all' ? null : key)} />
       </div>}
       {liveCreators.length > 0 && (
@@ -181,7 +183,7 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState, show
       </SwipeableCarousel>
 
       <SectionTitle
-        title={game ? game.name : 'Live streams'}
+        title={game ? game.name : _copy("copy.74fbbb0cdb03", { defaultValue: "Live streams" })}
         meta={game ? 'Show all' : liveCount > 0 ? `${liveCount} ${liveCount === 1 ? 'stream' : 'streams'}` : undefined}
         onMeta={game ? () => setGameId(null) : undefined}
       />
@@ -199,10 +201,8 @@ export function CinematicLive({ streams, isLoading, tvChannels, emptyState, show
       ) : shown.length === 0 ? (
         <div className="flex flex-col items-center gap-2 px-6 py-10 text-center">
           <Radio className="h-8 w-8 text-zinc-600" />
-          <p className="text-sm text-zinc-400">No one is streaming {game?.name} right now.</p>
-          <button onClick={() => setGameId(null)} data-cinematic-glass className="mt-1 h-9 rounded-[10px] px-4 text-sm font-semibold text-white">
-            See all streams
-          </button>
+          <p className="text-sm text-zinc-400">{_copy("copy.1de134eff461", { defaultValue: "No one is streaming " })}{game?.name}{_copy("copy.51599ee1733e", { defaultValue: " right now." })}</p>
+          <button onClick={() => setGameId(null)} data-cinematic-glass className="mt-1 h-9 rounded-[10px] px-4 text-sm font-semibold text-white">{_copy("copy.666703409dd4", { defaultValue: "See all streams" })}</button>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-x-2.5 gap-y-3.5 px-1.5">

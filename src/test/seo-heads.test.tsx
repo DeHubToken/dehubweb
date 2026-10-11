@@ -311,12 +311,10 @@ function seoProp(source: string, prop: 'title' | 'description'): string | null {
   const literal = source.match(new RegExp(`<SEOHead[^>]*${prop}="([^"]+)"`));
   if (literal) return literal[1];
 
-  const keyed = source.match(new RegExp(`<SEOHead[^>]*${prop}=\\{t\\('([^']+)'\\)\\}`));
+  const keyed = source.match(new RegExp('<SEOHead[\\s\\S]*?\\b' + prop + '=\\{(?:t|_copy)\\(\\s*[\'"]([^\'"]+)[\'"]'));
   if (!keyed) return null;
-
-  const [ns, key] = keyed[1].split('.');
   const en = JSON.parse(readFileSync('src/i18n/locales/en.json', 'utf-8'));
-  return en?.[ns]?.[key] ?? null;
+  return keyed[1].split('.').reduce((value, key) => value?.[key], en) ?? null;
 }
 
 describe('SEO: Title and description length constraints', () => {

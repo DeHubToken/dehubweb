@@ -92,7 +92,8 @@ async function renderPage(root, source) {
       name: 'guide-content-stubs',
       setup(b) {
         b.onResolve({ filter: /^@\/components\/SEOHead$/ }, () => ({ path: 'seo-head', namespace: 'stub' }));
-        b.onLoad({ filter: /.*/, namespace: 'stub' }, () => ({ contents: 'export function SEOHead() { return null; }', loader: 'js' }));
+        b.onResolve({ filter: /^@\/hooks\/usePublicPageLocale$/ }, () => ({ path: 'public-locale', namespace: 'stub' }));
+        b.onLoad({ filter: /.*/, namespace: 'stub' }, args => ({ contents: args.path === 'public-locale' ? 'export function usePublicPageLocale() { return { localized: false }; }' : 'export function SEOHead() { return null; }', loader: 'js' }));
         b.onResolve({ filter: /^@\// }, (args) =>
           b.resolve(`./src/${args.path.slice(2)}`, { resolveDir: root, kind: args.kind }));
       },

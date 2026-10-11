@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Cinematic Music (System theme, phones)
  * ======================================
@@ -26,10 +28,10 @@ import type { VideoItem } from '@/types/feed.types';
 type Chip = 'top' | 'radio' | 'stages' | 'new';
 
 const CHIPS: { key: Chip; label: string }[] = [
-  { key: 'top', label: 'Top 50' },
-  { key: 'radio', label: 'Radio' },
-  { key: 'stages', label: 'Stages' },
-  { key: 'new', label: 'New' },
+  { key: 'top', get label() { return _translateCopy("copy.50ea9e32e19c", { defaultValue: "Top 50" }); } },
+  { key: 'radio', get label() { return _translateCopy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" }); } },
+  { key: 'stages', get label() { return _translateCopy("copy.3a17aa4e4abb", { defaultValue: "Stages" }); } },
+  { key: 'new', get label() { return _translateCopy("copy.18fdd549b2ed", { defaultValue: "New" }); } },
 ];
 
 const LIKED_STATIONS_KEY = 'dehub.likedStations';
@@ -51,6 +53,7 @@ function stationLogo(station: RadioStation): string | undefined {
 // ============================================================================
 
 function RadioHero({ station }: { station: RadioStation }) {
+  const { t: _copy } = _useCopy();
   const { currentStation, isPlaying, isLoading, play, togglePlayPause } = useRadioPlayer();
   const [liked, setLiked] = useState(() => readLikedStations().includes(station.stationuuid));
   const [logoFailed, setLogoFailed] = useState(false);
@@ -84,7 +87,7 @@ function RadioHero({ station }: { station: RadioStation }) {
         return;
       }
       await navigator.clipboard.writeText(`${text} ${url}`);
-      toast.success('Link copied');
+      toast.success(_copy("copy.d12860c21e78", { defaultValue: "Link copied" }));
     } catch {
       // Share sheet dismissed.
     }
@@ -118,12 +121,10 @@ function RadioHero({ station }: { station: RadioStation }) {
       <div className="absolute inset-x-3.5 bottom-4 [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">
         <div className="flex items-center gap-2 text-xs">
           <span className="inline-flex items-center gap-1 rounded-md bg-red-500 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white [text-shadow:none]">
-            <Radio className="h-3 w-3" strokeWidth={2.5} /> On air
-          </span>
+            <Radio className="h-3 w-3" strokeWidth={2.5} />{_copy("copy.89f55db34c78", { defaultValue: " On air" })}</span>
           {station.clickcount > 0 && (
             <span className="inline-flex items-center gap-1 text-zinc-200">
-              <Headphones className="h-3 w-3" /> {formatViews(station.clickcount).replace(' views', '')} plays today
-            </span>
+              <Headphones className="h-3 w-3" /> {formatViews(station.clickcount).replace(' views', '')}{_copy("copy.fb374167f445", { defaultValue: " plays today" })}</span>
           )}
         </div>
         <h2 className="mt-2 text-[26px] font-bold leading-tight text-white line-clamp-2">{station.name}</h2>
@@ -141,18 +142,18 @@ function RadioHero({ station }: { station: RadioStation }) {
             ) : (
               <Play className="h-[18px] w-[18px] fill-current" />
             )}
-            {playing ? 'Pause' : 'Listen'}
+            {playing ? _copy("copy.858e4ba7a29f", { defaultValue: "Pause" }) : _copy("copy.225d29f6201e", { defaultValue: "Listen" })}
           </button>
           <button
             onClick={toggleLike}
-            aria-label={liked ? 'Unlike station' : 'Like station'}
+            aria-label={liked ? _copy("copy.350650e80de8", { defaultValue: "Unlike station" }) : _copy("copy.e31da4912a6a", { defaultValue: "Like station" })}
             aria-pressed={liked}
             data-cinematic-glass
             className="flex h-11 w-11 items-center justify-center rounded-[10px] text-white"
           >
             <Heart className={cn('h-5 w-5', liked && 'fill-red-500 text-red-500')} />
           </button>
-          <button onClick={share} aria-label="Share station" data-cinematic-glass className="flex h-11 w-11 items-center justify-center rounded-[10px] text-white">
+          <button onClick={share} aria-label={_copy("copy.b38881c3328a", { defaultValue: "Share station" })} data-cinematic-glass className="flex h-11 w-11 items-center justify-center rounded-[10px] text-white">
             <Share2 className="h-5 w-5" />
           </button>
         </div>
@@ -248,6 +249,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
   blockedAddresses?: Set<string>;
   showFilters?: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const [chip, setChip] = useState<Chip>('top');
   const { currentStation, isPlaying, play, togglePlayPause } = useRadioPlayer();
@@ -267,14 +269,14 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
         {list.isLoading ? (
           <ChartSkeleton />
         ) : list.items.length === 0 ? (
-          <p className="px-3.5 py-8 text-center text-sm text-zinc-500">Nothing here yet.</p>
+          <p className="px-3.5 py-8 text-center text-sm text-zinc-500">{_copy("copy.2de5247a982a", { defaultValue: "Nothing here yet." })}</p>
         ) : (
           list.items.map((item, i) => (
             <ChartRow
               key={item.id}
               rank={i + 1}
               image={item.thumbnail}
-              title={item.title || 'Untitled'}
+              title={item.title || _copy("copy.f59ab8d1331b", { defaultValue: "Untitled" })}
               subtitle={`${item.channel}${item.views ? ` · ${item.views}` : ''}`}
               trailing={item.duration && item.duration !== '0:00' ? item.duration : undefined}
               onClick={() => openPost(item)}
@@ -315,7 +317,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
       {chip === 'new' && renderTracks(fresh, 'New releases')}
       {chip === 'radio' && (
         <>
-          <SectionTitle title="Radio stations" />
+          <SectionTitle title={_copy("copy.38be740dac96", { defaultValue: "Radio stations" })} />
           <div className="-mx-2 border-t border-white/[0.12]">
             {radioStations.length === 0 ? (
               <ChartSkeleton />
@@ -328,7 +330,7 @@ export function CinematicMusic({ radioStations, blockedAddresses, showFilters = 
                     rank={i + 1}
                     image={stationLogo(station)}
                     title={station.name}
-                    subtitle={getPrimaryTags(station.tags).join(', ') || 'Radio'}
+                    subtitle={getPrimaryTags(station.tags).join(', ') || _copy("copy.2a7dfeb2f2b0", { defaultValue: "Radio" })}
                     active={current && isPlaying}
                     trailing={current && isPlaying ? <Pause className="h-4 w-4 fill-current" /> : <Play className="h-4 w-4 fill-current" />}
                     onClick={() => (current ? togglePlayPause() : play(station))}

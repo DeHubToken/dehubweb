@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * New Post Page
  * =============
@@ -22,6 +23,7 @@ import { resolveNewPost } from '@/lib/api/dehub';
 import SinglePostPage from './SinglePostPage';
 
 export default function NewPostPage() {
+  const { t: _copy } = _useCopy();
   const { n } = useParams<{ n: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -51,14 +53,12 @@ export default function NewPostPage() {
     return (
       <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 p-8 text-center">
         <SEOHead title={`${t('postInfo.notFound')} — DeHub`} description={t('postInfo.notFound')} noindex noCanonical />
-        <p className="text-white font-medium">This post doesn't exist</p>
-        <p className="text-white/50 text-sm">The link may be wrong, or the post was deleted.</p>
+        <p className="text-white font-medium">{_copy("copy.fb44f57948b0", { defaultValue: "This post doesn't exist" })}</p>
+        <p className="text-white/50 text-sm">{_copy("copy.23b0c7979c69", { defaultValue: "The link may be wrong, or the post was deleted." })}</p>
         <button
           onClick={() => navigate('/app')}
           className="mt-2 px-6 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-medium transition-colors"
-        >
-          Go to feed
-        </button>
+        >{_copy("copy.4027386e8d11", { defaultValue: "Go to feed" })}</button>
       </div>
     );
   }

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +22,7 @@ import type { ChainId } from '@/components/app/ChainSelector';
  * entry bundle, and the wallet stack must stay out of it.
  */
 export function useMintExistingPost() {
+  const { t: _copy } = _useCopy();
   const [isMinting, setIsMinting] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -105,7 +107,7 @@ export function useMintExistingPost() {
         chainId: targetChain as number,
       }).catch((err) => console.warn('[MintExisting] confirm-mint queue failed:', err));
 
-      toast.success('Post minted', { id: toastId });
+      toast.success(_copy("copy.4ae79158e4cd", { defaultValue: "Post minted" }), { id: toastId });
       return true;
     } catch (err: any) {
       console.error('[MintExisting] failed:', err);
@@ -114,7 +116,7 @@ export function useMintExistingPost() {
     } finally {
       setIsMinting(false);
     }
-  }, [isMinting, navigate, t]);
+  }, [isMinting, navigate, t, _copy]);
 
   return { mint, isMinting };
 }

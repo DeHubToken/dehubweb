@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { NotificationsDrawer } from './NotificationsDrawer';
 import React, { Suspense, useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
 import { Outlet, useLocation, useMatch } from 'react-router-dom';
@@ -135,6 +136,7 @@ const POST_LAYER_LEFT = 'var(--app-main-left, 0px)';
 const POST_LAYER_WIDTH = 'var(--app-main-width, 100%)';
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
+  const { t: _copy } = _useCopy();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText, initialCategory, clearInitialCategory, openPostModal } = useGlobalDropZone();
 
@@ -480,7 +482,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
                   WebkitOverflowScrolling: 'touch',
                 }}
               >
-                <ErrorBoundary compact resetKey={location.pathname} label="Post">
+                <ErrorBoundary compact resetKey={location.pathname} label={_copy("copy.a5554622c655", { defaultValue: "Post" })}>
                   <Suspense fallback={null}>
                     <SinglePostPage inOverlay />
                   </Suspense>

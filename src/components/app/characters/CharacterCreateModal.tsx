@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -24,6 +25,7 @@ interface Props {
 const MAX_REFS = 6;
 
 export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
+  const { t: _copy } = _useCopy();
   const create = useCreateCharacter();
   const update = useUpdateCharacter();
   const [name, setName] = useSurfaceDraft("components/app/characters/CharacterCreateModal.tsx:name", '');
@@ -55,7 +57,7 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
     }
     const oversize = files.find((f) => f.size > 8 * 1024 * 1024);
     if (oversize) {
-      toast.error('Each image must be under 8MB');
+      toast.error(_copy("copy.e128de648a98", { defaultValue: "Each image must be under 8MB" }));
       e.target.value = '';
       return;
     }
@@ -84,8 +86,8 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
   };
 
   const handleSave = async () => {
-    if (!name.trim()) return toast.error('Give your character a name');
-    if (refs.length === 0) return toast.error('Add at least one reference image');
+    if (!name.trim()) return toast.error(_copy("copy.6a99a6232864", { defaultValue: "Give your character a name" }));
+    if (refs.length === 0) return toast.error(_copy("copy.7b72c9f162cc", { defaultValue: "Add at least one reference image" }));
     const payload = {
       name: name.trim(),
       description: description.trim(),
@@ -96,10 +98,10 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
     try {
       if (editing) {
         await update.mutateAsync({ id: editing.id, patch: payload });
-        toast.success('Character updated');
+        toast.success(_copy("copy.9b28eeeae8c9", { defaultValue: "Character updated" }));
       } else {
         await create.mutateAsync(payload);
-        toast.success('Character created');
+        toast.success(_copy("copy.2b81be13f577", { defaultValue: "Character created" }));
       }
       onOpenChange(false);
     } catch (err) {
@@ -113,33 +115,30 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl bg-zinc-900 border-white/10 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editing ? 'Edit Character' : 'Create Character'}</DialogTitle>
+          <DialogTitle>{editing ? _copy("copy.c2e08169f2db", { defaultValue: "Edit Character" }) : _copy("copy.fd8c3b1965fd", { defaultValue: "Create Character" })}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Name</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nova" />
+            <label className="text-xs text-zinc-400 mb-1 block">{_copy("copy.dcd1d5223f73", { defaultValue: "Name" })}</label>
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={_copy("copy.ec653e8e8748", { defaultValue: "Nova" })} />
             {slugPreview && (
-              <p className="text-[11px] text-zinc-500 mt-1">
-                Reference in prompts as <span className="text-white">@{slugPreview}</span>
+              <p className="text-[11px] text-zinc-500 mt-1">{_copy("copy.4063f4cd2b3c", { defaultValue: "Reference in prompts as " })}<span className="text-white">@{slugPreview}</span>
               </p>
             )}
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Description / persona</label>
+            <label className="text-xs text-zinc-400 mb-1 block">{_copy("copy.6a5f3874d8ec", { defaultValue: "Description / persona" })}</label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              placeholder="28yo, silver hair, leather jacket, cinematic noir lighting"
+              placeholder={_copy("copy.4437ae0544b7", { defaultValue: "28yo, silver hair, leather jacket, cinematic noir lighting" })}
               className="resize-none"
             />
-            <p className="text-[11px] text-zinc-500 mt-1">Prepended to every prompt that references this character.</p>
+            <p className="text-[11px] text-zinc-500 mt-1">{_copy("copy.78c705bd9058", { defaultValue: "Prepended to every prompt that references this character." })}</p>
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-2 block">
-              Reference images ({refs.length}/{MAX_REFS}) — first one is the video starting frame
-            </label>
+            <label className="text-xs text-zinc-400 mb-2 block">{_copy("copy.8d840c4d4dc7", { defaultValue: "Reference images (" })}{refs.length}/{MAX_REFS}{_copy("copy.37e140ad64ef", { defaultValue: ") — first one is the video starting frame" })}</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {refs.map((url) => (
                 <div key={url} className="relative w-20 h-20 rounded-xl overflow-hidden border border-white/10 group">
@@ -150,7 +149,7 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
                     className={`absolute bottom-0.5 left-0.5 w-5 h-5 rounded-full flex items-center justify-center transition-colors ${
                       primaryUrl === url ? 'bg-white text-black' : 'bg-black/70 text-white opacity-0 group-hover:opacity-100'
                     }`}
-                    title="Set as primary"
+                    title={_copy("copy.f3268949fdec", { defaultValue: "Set as primary" })}
                   >
                     <Star className="w-3 h-3" fill={primaryUrl === url ? 'currentColor' : 'none'} />
                   </button>
@@ -177,12 +176,10 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
                 </label>
               )}
             </div>
-            <p className="text-[11px] text-zinc-500">
-              Upload 1–6 clear photos: front view, side view, different expressions. More angles = better consistency.
-            </p>
+            <p className="text-[11px] text-zinc-500">{_copy("copy.a428fbbe6ad2", { defaultValue: "Upload 1–6 clear photos: front view, side view, different expressions. More angles = better consistency." })}</p>
           </div>
           <div>
-            <label className="text-xs text-zinc-400 mb-1 block">Visibility</label>
+            <label className="text-xs text-zinc-400 mb-1 block">{_copy("copy.7448611d5f93", { defaultValue: "Visibility" })}</label>
             <div className="flex gap-2">
               {(['private', 'public'] as const).map((v) => (
                 <button
@@ -199,17 +196,17 @@ export function CharacterCreateModal({ open, onOpenChange, editing }: Props) {
             </div>
             <p className="text-[11px] text-zinc-500 mt-1">
               {visibility === 'public'
-                ? 'Anyone can reference this character with @' + (slugPreview || 'slug')
-                : 'Only you can reference this character.'}
+                ? 'Anyone can reference this character with @' + (slugPreview || _copy("copy.cd03861f0ff8", { defaultValue: "slug" }))
+                : _copy("copy.f9e5b8d2da95", { defaultValue: "Only you can reference this character." })}
             </p>
           </div>
           <div className="flex justify-end gap-2 pt-2">
-            <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
+            <Button variant="ghost" onClick={() => onOpenChange(false)}>{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             <LiquidGlassBubble2
               onClick={handleSave}
               disabled={isSaving}
               loading={isSaving}
-              label={editing ? 'Save changes' : 'Create character'}
+              label={editing ? _copy("copy.dd0ae7a5cbcf", { defaultValue: "Save changes" }) : _copy("copy.a367a9cea7fc", { defaultValue: "Create character" })}
               width="180px"
             />
           </div>

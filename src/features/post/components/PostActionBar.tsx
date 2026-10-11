@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -101,6 +102,7 @@ export function PostActionBar({
   extraTool,
   hideLive = false,
 }: PostActionBarProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   /**
@@ -196,18 +198,14 @@ export function PostActionBar({
             onClick={handleSpellCheck}
             className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >
-            <SpellCheck className="w-5 h-5 text-white" />
-            Spell Check
-          </button>
+            <SpellCheck className="w-5 h-5 text-white" />{_copy("copy.c7792f24e82b", { defaultValue: "Spell Check" })}</button>
           
           <button
             type="button"
             onClick={handleGrammar}
             className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >
-            <Type className="w-5 h-5 text-white" />
-            Fix Grammar
-          </button>
+            <Type className="w-5 h-5 text-white" />{_copy("copy.687f9b07420c", { defaultValue: "Fix Grammar" })}</button>
           
           <button
             type="button"
@@ -215,9 +213,7 @@ export function PostActionBar({
             className="flex items-center justify-between px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Palette className="w-5 h-5 text-white" />
-              Change Style
-            </div>
+              <Palette className="w-5 h-5 text-white" />{_copy("copy.21b90e9de0f4", { defaultValue: "Change Style" })}</div>
             <ChevronRight className="w-4 h-4 text-zinc-500" />
           </button>
 
@@ -231,9 +227,7 @@ export function PostActionBar({
             }}
             className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
           >
-            <MessageSquare className="w-5 h-5 text-white" />
-            Generate Content
-          </button>
+            <MessageSquare className="w-5 h-5 text-white" />{_copy("copy.d0f3b9c25380", { defaultValue: "Generate Content" })}</button>
         </>
       )}
     </div>
@@ -274,12 +268,12 @@ export function PostActionBar({
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-xs text-white/60">
                 {mintAwaitingWallet
-                  ? 'Confirming'
+                  ? _copy("copy.d978a5522ce4", { defaultValue: "Confirming" })
                   : (uploadProgress ?? 0) < 60
-                    ? 'Uploading...'
+                    ? _copy("copy.72cb29c90ccd", { defaultValue: "Uploading..." })
                     : (uploadProgress ?? 0) < 100
-                      ? 'Publishing...'
-                      : 'Done!'}
+                      ? _copy("copy.5f51143bee08", { defaultValue: "Publishing..." })
+                      : _copy("copy.b4e19ee2ae63", { defaultValue: "Done!" })}
               </span>
               <span className="text-xs text-white/60 tabular-nums">{uploadProgress ?? 0}%</span>
             </div>
@@ -314,16 +308,12 @@ export function PostActionBar({
             */}
             {mintAwaitingWallet && onAbandonMint && (
               <div className="mt-2 flex items-center justify-between gap-3">
-                <span className="text-[11px] leading-tight text-white/45">
-                  Your post is saved. If your wallet has not asked you to confirm, publish it without minting.
-                </span>
+                <span className="text-[11px] leading-tight text-white/45">{_copy("copy.c70f4a525aee", { defaultValue: "Your post is saved. If your wallet has not asked you to confirm, publish it without minting." })}</span>
                 <button
                   type="button"
                   onClick={onAbandonMint}
                   className="shrink-0 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-[11px] text-white/80 transition-colors hover:bg-white/[0.12]"
-                >
-                  Post without minting
-                </button>
+                >{_copy("copy.61a3f68e5e7d", { defaultValue: "Post without minting" })}</button>
               </div>
             )}
           </LiquidGlassBubble>
@@ -375,7 +365,7 @@ export function PostActionBar({
                 <Camera className="w-5 h-5 text-white" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>Record video</TooltipContent>
+            <TooltipContent>{_copy("copy.5cb2b16872cb", { defaultValue: "Record video" })}</TooltipContent>
           </Tooltip>
         )}
 
@@ -395,8 +385,8 @@ export function PostActionBar({
             </TooltipTrigger>
             <TooltipContent>
               {isLive
-                ? 'Set live preview image or video'
-                : hasImage ? 'Add image' : hasVideo ? 'Replace video' : 'Add image or video'}
+                ? _copy("copy.baf75275d4f5", { defaultValue: "Set live preview image or video" })
+                : hasImage ? _copy("copy.04136060b40f", { defaultValue: "Add image" }) : hasVideo ? _copy("copy.e9594fc595b1", { defaultValue: "Replace video" }) : _copy("copy.9f343703fd8d", { defaultValue: "Add image or video" })}
             </TooltipContent>
           </Tooltip>
         )}
@@ -426,7 +416,7 @@ export function PostActionBar({
                     setAudioPopoverOpen(false);
                   }}
                   className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
-                  title="Upload Audio"
+                  title={_copy("copy.31997f8069c4", { defaultValue: "Upload Audio" })}
                 >
                   <Upload className="w-5 h-5 text-white" />
                 </button>
@@ -437,7 +427,7 @@ export function PostActionBar({
                     setAudioPopoverOpen(false);
                   }}
                   className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
-                  title="Record Audio"
+                  title={_copy("copy.ba70b10213ad", { defaultValue: "Record Audio" })}
                 >
                   <Mic className="w-5 h-5 text-white" />
                 </button>
@@ -449,7 +439,7 @@ export function PostActionBar({
                       setAudioPopoverOpen(false);
                     }}
                     className="p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition-all"
-                    title="Search Sounds"
+                    title={_copy("copy.05408027906c", { defaultValue: "Search Sounds" })}
                   >
                     <Search className="w-5 h-5 text-white" />
                   </button>
@@ -473,7 +463,7 @@ export function PostActionBar({
                   }
                 }}
                 className={cn("p-2 hover:bg-white/10 rounded-xl transition-colors", isLive && "bg-white/20")}
-                title="Go live"
+                title={_copy("copy.a9f690169703", { defaultValue: "Go live" })}
               >
                 <Radio className={cn("w-5 h-5", isLive ? "text-white" : "text-white")} />
               </button>
@@ -531,7 +521,7 @@ export function PostActionBar({
                 <BarChart2 className="w-5 h-5 text-white" />
               </button>
             </TooltipTrigger>
-            <TooltipContent>{hasPoll ? 'Remove poll' : 'Add poll'}</TooltipContent>
+            <TooltipContent>{hasPoll ? _copy("copy.03ed4421a6d5", { defaultValue: "Remove poll" }) : _copy("copy.1dd3d9f671d4", { defaultValue: "Add poll" })}</TooltipContent>
           </Tooltip>
         )}
 
@@ -556,7 +546,7 @@ export function PostActionBar({
           className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
         >
           {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-          <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'AI'}</span>
+          <span className="hidden sm:inline">{isEnhancing ? _copy("copy.4a158b0341fe", { defaultValue: "Enhancing..." }) : 'AI'}</span>
         </Button>
         
         <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
@@ -568,13 +558,11 @@ export function PostActionBar({
                   onClick={() => setStyleView(false)}
                   className="flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors mb-2"
                 >
-                  <ChevronLeft className="w-4 h-4" />
-                  Back
-                </button>
+                  <ChevronLeft className="w-4 h-4" />{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</button>
               )}
               <DrawerTitle className="text-white flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-white" />
-                {styleView ? 'Choose Style' : 'Enhance'}
+                {styleView ? _copy("copy.dc7a1d57c478", { defaultValue: "Choose Style" }) : _copy("copy.a91c19f54936", { defaultValue: "Enhance" })}
               </DrawerTitle>
             </DrawerHeader>
             {menuContent}
@@ -587,7 +575,7 @@ export function PostActionBar({
           // again — the composer already has them, and the mint provisions the
           // stream, so going live is just posting a live post.
           onClick={onPost}
-          aria-label={isScheduled ? 'Schedule' : isLive ? 'Go Live' : 'Post'}
+          aria-label={isScheduled ? _copy("copy.f4830a1dae29", { defaultValue: "Schedule" }) : isLive ? _copy("copy.9e28dbaeb7ac", { defaultValue: "Go Live" }) : _copy("copy.a5554622c655", { defaultValue: "Post" })}
           disabled={(!canPost && !isLive) || isPosting}
           className={cn(
             "rounded-xl px-3 h-8 sm:px-4 font-semibold disabled:opacity-50 text-sm",
@@ -603,7 +591,7 @@ export function PostActionBar({
           ) : (
             <>
               <span className="hidden sm:inline">
-                {isScheduled ? 'Schedule' : isLive ? 'Go Live' : 'Post'}
+                {isScheduled ? _copy("copy.f4830a1dae29", { defaultValue: "Schedule" }) : isLive ? _copy("copy.9e28dbaeb7ac", { defaultValue: "Go Live" }) : _copy("copy.a5554622c655", { defaultValue: "Post" })}
               </span>
               {isScheduled ? <Calendar className="w-4 h-4 sm:hidden" /> : isLive ? <Radio className="w-4 h-4 sm:hidden" /> : <Send className="w-4 h-4 sm:hidden" />}
             </>

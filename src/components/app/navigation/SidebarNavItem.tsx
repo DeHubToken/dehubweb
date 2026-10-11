@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -27,7 +28,7 @@ export const NAV_LABEL_KEYS: Record<string, string> = {
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Editor: 'creator.editor', Creator: 'commandCentre.creator',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
-  'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', SuperPowers: 'superpowers.title', Governance: 'nav.governance', DAO: 'nav.dao', Communities: 'nav.communities', Events: 'nav.events', Careers: 'nav.careers', Converter: 'nav.converter', Migrate: 'migrate.title', Fractions: 'fractions.title', Glossary: 'nav.glossary', Guide: 'nav.guide', Stats: 'nav.stats', Arcade: 'nav.arcade', Apps: 'miniApps.store.title',
+  Feedback: 'stats.feedback.title', 'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', SuperPowers: 'superpowers.title', Governance: 'nav.governance', DAO: 'nav.dao', Communities: 'nav.communities', Events: 'nav.events', Careers: 'nav.careers', Converter: 'nav.converter', Migrate: 'migrate.title', Fractions: 'fractions.title', Glossary: 'nav.glossary', Guide: 'nav.guide', Stats: 'nav.stats', Arcade: 'nav.arcade', Apps: 'miniApps.store.title',
   // Search-only destinations (nav-search.ts). The three feed surfaces reuse the
   // keys the feed tabs already ship, so they arrive translated for free.
   Videos: 'feed.videos', Shorts: 'feed.shorts', Music: 'feed.music',
@@ -89,6 +90,7 @@ export function SidebarNavItem({
   layoutId = 'sidebar-nav',
   registerActiveRef,
 }: SidebarNavItemProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { theme } = useAppTheme();
@@ -258,7 +260,7 @@ export function SidebarNavItem({
           isDesktop ? "w-9 h-9" : "w-10 h-10"
         )}>
           {avatarUrl && (
-            <AvatarImage src={avatarUrl} alt="Profile" className="object-cover rounded-xl" />
+            <AvatarImage src={avatarUrl} alt={_copy("copy.d696a35bdd18", { defaultValue: "Profile" })} className="object-cover rounded-xl" />
           )}
           <AvatarFallback className="bg-zinc-700 text-white font-medium text-sm rounded-xl">
             {avatarFallback || 'U'}

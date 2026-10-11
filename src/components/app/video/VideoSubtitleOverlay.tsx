@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { MediaControlIcon } from './MediaControlIcon';
 /**
@@ -49,12 +51,12 @@ const LS_LANG = 'video-subs:lang';
 const LS_SIZE = 'video-subs:size';
 
 const SIZE_PRESETS = [
-  { key: 'xs', label: 'XS', px: 11 },
+  { key: 'xs', get label() { return _translateCopy("copy.4e12aed95e4c", { defaultValue: "XS" }); }, px: 11 },
   { key: 'sm', label: 'S', px: 13 },
   { key: 'md', label: 'M', px: 15 },
   { key: 'lg', label: 'L', px: 18 },
-  { key: 'xl', label: 'XL', px: 22 },
-  { key: '2xl', label: 'XXL', px: 28 },
+  { key: 'xl', get label() { return _translateCopy("copy.f365705bb061", { defaultValue: "XL" }); }, px: 22 },
+  { key: '2xl', get label() { return _translateCopy("copy.0a783b9b8a7d", { defaultValue: "XXL" }); }, px: 28 },
 ] as const;
 type SizeKey = typeof SIZE_PRESETS[number]['key'];
 
@@ -561,6 +563,7 @@ interface SubtitleMenuProps {
 }
 
 function SubtitleMenu(props: SubtitleMenuProps) {
+  const { t: _copy } = _useCopy();
   const {
     open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonPortalTarget, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
@@ -619,7 +622,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       }}
       data-video-caption-control
       data-on-media
-      aria-label={enabled ? 'Subtitles on' : 'Subtitles off'}
+      aria-label={enabled ? _copy("copy.ea577b10b85f", { defaultValue: "Subtitles on" }) : _copy("copy.6a5216300cb9", { defaultValue: "Subtitles off" })}
       className={cn(
         'z-20 h-8 w-8 flex items-center justify-center',
         inRow
@@ -645,7 +648,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
   const header = (
     <div className="p-2 border-b border-white/10">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-white text-xs font-semibold">Subtitles</span>
+        <span className="text-white text-xs font-semibold">{_copy("copy.0ee695bdeb26", { defaultValue: "Subtitles" })}</span>
         <div className="flex items-center gap-1.5">
           <button
             type="button"
@@ -657,12 +660,12 @@ function SubtitleMenu(props: SubtitleMenuProps) {
                 : 'bg-transparent text-white/60 border-white/10',
             )}
           >
-            {enabled ? 'On' : 'Off'}
+            {enabled ? _copy("copy.130011756125", { defaultValue: "On" }) : _copy("copy.ca7981b46ecf", { defaultValue: "Off" })}
           </button>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setShowSettings((v) => !v); }}
-            aria-label="Subtitle settings"
+            aria-label={_copy("copy.b3ad333bebc8", { defaultValue: "Subtitle settings" })}
             className={cn(
               'h-5 w-5 rounded-md border flex items-center justify-center',
               showSettings
@@ -677,17 +680,16 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       {!isReady && (
         <p className="text-[11px] text-white/50">
           {isWorking
-            ? 'Generating subtitles…'
+            ? _copy("copy.108752399735", { defaultValue: "Generating subtitles…" })
             : isEmpty
-            ? 'No speech found in this video.'
+            ? _copy("copy.38dc207d4510", { defaultValue: "No speech found in this video." })
             : isFailed
-            ? 'Subtitles could not be generated.'
-            : 'Subtitles are being prepared.'}
+            ? _copy("copy.8f4d4e8f9bed", { defaultValue: "Subtitles could not be generated." })
+            : _copy("copy.54135ae2031f", { defaultValue: "Subtitles are being prepared." })}
         </p>
       )}
       {isReady && (
-        <p className="text-[11px] text-white/50">
-          Language: <span className="text-white/80">{langLabel}</span>
+        <p className="text-[11px] text-white/50">{_copy("copy.a6e6ee702c2c", { defaultValue: "Language: " })}<span className="text-white/80">{langLabel}</span>
         </p>
       )}
       {/* Audio: the original track, or the same lines spoken in the caption
@@ -736,7 +738,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
   const settingsBlock = showSettings && (
     <div className="p-2 border-b border-white/10">
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-[11px] text-white/60">Text size</span>
+        <span className="text-[11px] text-white/60">{_copy("copy.d68761cc1eb2", { defaultValue: "Text size" })}</span>
         <span className="text-[11px] text-white/80">
           {SIZE_PRESETS.find((s) => s.key === size)?.label}
         </span>
@@ -750,7 +752,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
             if (idx > 0) setSize(SIZE_PRESETS[idx - 1].key);
           }}
           className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
-          aria-label="Smaller"
+          aria-label={_copy("copy.00417195b1e2", { defaultValue: "Smaller" })}
         >
           <Minus className="w-3 h-3" />
         </button>
@@ -779,7 +781,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
             if (idx < SIZE_PRESETS.length - 1) setSize(SIZE_PRESETS[idx + 1].key);
           }}
           className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
-          aria-label="Larger"
+          aria-label={_copy("copy.b05e2520a37f", { defaultValue: "Larger" })}
         >
           <Plus className="w-3 h-3" />
         </button>
@@ -788,9 +790,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         <span
           className="text-white font-medium"
           style={{ fontSize: `${sizePx}px`, textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
-        >
-          Preview
-        </span>
+        >{_copy("copy.324b134f57c7", { defaultValue: "Preview" })}</span>
       </div>
     </div>
   );
@@ -802,7 +802,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search language"
+          placeholder={_copy("copy.bd16bde755d6", { defaultValue: "Search language" })}
           className="h-7 pl-7 text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30"
         />
       </div>
@@ -830,7 +830,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         </button>
       ))}
       {filteredLangs.length === 0 && (
-        <p className="px-3 py-3 text-[11px] text-white/40 text-center">No match</p>
+        <p className="px-3 py-3 text-[11px] text-white/40 text-center">{_copy("copy.cd8d844d2c3d", { defaultValue: "No match" })}</p>
       )}
     </div>
   );
@@ -846,7 +846,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         {triggerButton}
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerContent glass hideHandle={false} className="px-0 pb-4 max-h-[85dvh]">
-            <DrawerTitle className="sr-only">Subtitles</DrawerTitle>
+            <DrawerTitle className="sr-only">{_copy("copy.0ee695bdeb26", { defaultValue: "Subtitles" })}</DrawerTitle>
             <div onClick={(e) => e.stopPropagation()}>
               {header}
               {settingsBlock}

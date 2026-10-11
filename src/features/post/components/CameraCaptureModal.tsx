@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Camera Capture Modal
  * ====================
@@ -21,6 +22,7 @@ interface CameraCaptureModalProps {
 const MAX_DURATION = 180; // 3 minutes max
 
 export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCaptured }: CameraCaptureModalProps) {
+  const { t: _copy } = _useCopy();
   const [isInitializing, setIsInitializing] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -68,12 +70,12 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
       }
     } catch (error) {
       console.error('Camera access error:', error);
-      toast.error('Could not access camera. Please check permissions.');
+      toast.error(_copy("copy.ac7a2d882664", { defaultValue: "Could not access camera. Please check permissions." }));
       onClose();
     } finally {
       setIsInitializing(false);
     }
-  }, [facingMode, onClose]);
+  }, [facingMode, onClose, _copy]);
 
   useEffect(() => {
     if (isOpen && !recordedBlob) {
@@ -126,11 +128,11 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
           a.download = `camera-photo-${Date.now()}.png`;
           a.click();
           URL.revokeObjectURL(url);
-          toast.success('Photo captured!');
+          toast.success(_copy("copy.8771d9435aca", { defaultValue: "Photo captured!" }));
         }
       }
     }, 'image/png');
-  }, [facingMode, onPhotoCaptured]);
+  }, [facingMode, onPhotoCaptured, _copy]);
 
   const startRecording = () => {
     if (!streamRef.current) return;
@@ -355,14 +357,14 @@ export function CameraCaptureModal({ isOpen, onClose, onVideoRecorded, onPhotoCa
                 className="flex-1 h-14 rounded-xl bg-red-500/20 backdrop-blur-[24px] saturate-[180%] border border-red-500/40 flex items-center justify-center gap-2 hover:bg-red-500/30 transition-all"
               >
                 <Trash2 className="w-5 h-5 text-red-400" />
-                <span className="text-red-400 font-medium">Delete</span>
+                <span className="text-red-400 font-medium">{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</span>
               </button>
               <button
                 onClick={confirmVideo}
                 className="flex-1 h-14 rounded-xl bg-white/10 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center gap-2 hover:bg-white/20 transition-all"
               >
                 <Check className="w-5 h-5 text-white" />
-                <span className="text-white font-medium">Use Video</span>
+                <span className="text-white font-medium">{_copy("copy.30be3ea2fb19", { defaultValue: "Use Video" })}</span>
               </button>
             </div>
           )}

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Proposal Discussion Hook
  * ========================
@@ -92,6 +93,7 @@ export function useProposalDiscussion(proposalId: string | null) {
 }
 
 export function useSubmitProposalComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress, user } = useAuth();
 
@@ -130,12 +132,13 @@ export function useSubmitProposalComment() {
       invalidateProposalCaches(queryClient, variables.proposalId);
     },
     onError: () => {
-      toast.error('Failed to post comment');
+      toast.error(_copy("copy.791ab06be905", { defaultValue: "Failed to post comment" }));
     },
   });
 }
 
 export function useEditProposalComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -153,12 +156,13 @@ export function useEditProposalComment() {
       queryClient.invalidateQueries({ queryKey: ['governance-comments', variables.proposalId] });
     },
     onError: () => {
-      toast.error('Failed to save comment');
+      toast.error(_copy("copy.78443791af16", { defaultValue: "Failed to save comment" }));
     },
   });
 }
 
 export function useDeleteProposalComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -174,10 +178,10 @@ export function useDeleteProposalComment() {
     },
     onSuccess: (_data, variables) => {
       invalidateProposalCaches(queryClient, variables.proposalId);
-      toast.success('Comment deleted');
+      toast.success(_copy("copy.7199a134a339", { defaultValue: "Comment deleted" }));
     },
     onError: () => {
-      toast.error('Failed to delete comment');
+      toast.error(_copy("copy.c65a5314ca9e", { defaultValue: "Failed to delete comment" }));
     },
   });
 }
@@ -189,6 +193,7 @@ export function useDeleteProposalComment() {
  * tapping another replaces it.
  */
 export function useReactToProposalComment() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -230,7 +235,7 @@ export function useReactToProposalComment() {
       queryClient.invalidateQueries({ queryKey: ['governance-comments', variables.proposalId] });
     },
     onError: () => {
-      toast.error('Failed to react');
+      toast.error(_copy("copy.13931898084d", { defaultValue: "Failed to react" }));
     },
   });
 }

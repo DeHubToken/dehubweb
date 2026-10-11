@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { Users, RefreshCw } from "lucide-react";
@@ -9,6 +10,7 @@ import { browserCloudProjectSession } from "@/lib/editor/cloudProjectDevice";
 import { ensureWalletSession } from "@/lib/wallet-session";
 import { Button } from "@/components/ui/button";
 export function LiveProjectSession({ projectId }: { projectId: string }) {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth(),{t}=useTranslation();
   const live = useCloudProjectPresence(walletAddress, projectId, browserCloudProjectSession, ensureWalletSession);
   const edits=useCloudDraftController(walletAddress,projectId,browserCloudProjectSession,cloudDraftEditorStore,live);
@@ -16,8 +18,8 @@ export function LiveProjectSession({ projectId }: { projectId: string }) {
   const joined = live.status === "connected", waiting = live.status === "connecting";
   return <div className="flex min-h-9 shrink-0 flex-wrap items-center gap-2 border-b border-white/10 bg-black px-4 py-1 text-xs text-white/70">
     <Users className="h-3.5 w-3.5" aria-hidden="true" />
-    <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-white" disabled={waiting} onClick={() => joined ? live.leave() : void live.join()}>{waiting ? "Joining live session…" : joined ? "Leave live session" : "Join live session"}</Button>
-    {joined ? <><span role="status">{live.participants.length} connected · Cloud version {live.revision}</span><Button size="icon" variant="ghost" className="h-7 w-7" aria-label="Refresh live session" onClick={live.refresh}><RefreshCw className="h-3.5 w-3.5" /></Button><span title={live.participants.map(p => p.wallet).join(", ")} className="hidden truncate text-white/40 sm:block">{live.participants.map(p => `${p.wallet.slice(0, 6)}…${p.wallet.slice(-4)}${p.connections > 1 ? ` (${p.connections})` : ""}`).join(", ")}</span></> : <span>{live.status === "disconnected" ? "Disconnected. Join again to reconnect." : "Share your presence with this project's editors."}</span>}
+    <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-white" disabled={waiting} onClick={() => joined ? live.leave() : void live.join()}>{waiting ? _copy("copy.73a52ee57f8c", { defaultValue: "Joining live session…" }) : joined ? _copy("copy.1f4d8ee1e986", { defaultValue: "Leave live session" }) : _copy("copy.b49c6ebec4f2", { defaultValue: "Join live session" })}</Button>
+    {joined ? <><span role="status">{live.participants.length}{_copy("copy.9586f17de23f", { defaultValue: " connected · Cloud version " })}{live.revision}</span><Button size="icon" variant="ghost" className="h-7 w-7" aria-label={_copy("copy.5a5b370add65", { defaultValue: "Refresh live session" })} onClick={live.refresh}><RefreshCw className="h-3.5 w-3.5" /></Button><span title={live.participants.map(p => p.wallet).join(", ")} className="hidden truncate text-white/40 sm:block">{live.participants.map(p => `${p.wallet.slice(0, 6)}…${p.wallet.slice(-4)}${p.connections > 1 ? ` (${p.connections})` : ""}`).join(", ")}</span></> : <span>{live.status === "disconnected" ? _copy("copy.a5283be66218", { defaultValue: "Disconnected. Join again to reconnect." }) : _copy("copy.ed0b724840b0", { defaultValue: "Share your presence with this project's editors." })}</span>}
     {live.error && <span role="alert" className="w-full text-red-300">{live.error}</span>}
     {joined && <div className="flex w-full flex-wrap items-center gap-2">
       {edits.mode ? <Button size="sm" variant="ghost" className="h-7 px-2 text-xs text-white" onClick={edits.stop}>{t("editor.live.stopEdits")}</Button> : <>

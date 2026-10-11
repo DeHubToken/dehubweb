@@ -1,10 +1,11 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import { retryWalletSession } from '@/lib/wallet-session';
+import { ensureWalletSession, retryWalletSession } from '@/lib/wallet-session';
 import { AuthenticationError, ensureFreshToken } from '@/lib/api/dehub/core';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -40,6 +41,7 @@ const MCP_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dehub-mcp`;
 const connectorUrl = (apiKey: string) => `${MCP_BASE}/k/${apiKey}`;
 
 export default function AgentsPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress, refreshSession, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
@@ -146,6 +148,7 @@ export default function AgentsPage() {
   const deleteAgentMutation = useMutation({
     mutationFn: async (agentId: string) => {
       if (!walletAddress) throw new Error('Not connected');
+      if (!await ensureWalletSession(walletAddress)) throw new AuthenticationError();
       
       const query = supabase
         .from('ai_agents')
@@ -237,8 +240,8 @@ export default function AgentsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="AI Agents — Build & Manage Bots" description="Create and manage AI-powered agents on DeHub. Automate posting, engage with your audience, and integrate with the DeHub API." url="https://dehub.io/app/agents" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'DeHub AI Agents', url: 'https://dehub.io/app/agents', applicationCategory: 'DeveloperApplication', description: 'Create and manage AI-powered agents on DeHub.', operatingSystem: 'Web' }} />
-      <h1 className="sr-only">DeHub AI Agents — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      <SEOHead title={_copy("copy.c3b249872662", { defaultValue: "AI Agents — Build & Manage Bots" })} description={_copy("copy.42739bad06c8", { defaultValue: "Create and manage AI-powered agents on DeHub. Automate posting, engage with your audience, and integrate with the DeHub API." })} url="https://dehub.io/app/agents" jsonLd={{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'DeHub AI Agents', url: 'https://dehub.io/app/agents', applicationCategory: 'DeveloperApplication', description: _copy("copy.056df2381a18", { defaultValue: "Create and manage AI-powered agents on DeHub." }), operatingSystem: 'Web' }} />
+      <h1 className="sr-only">{_copy("copy.69a9d7f732d3", { defaultValue: "DeHub AI Agents — Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       <PageIsland back icon="assistant" title={t('agents.title')} />
 
       <PageBody>
@@ -254,9 +257,7 @@ export default function AgentsPage() {
               href="/connect"
               className="flex items-center gap-1 text-sm text-white hover:underline"
             >
-              <ExternalLink className="w-4 h-4" />
-              Connect to AI
-            </a>
+              <ExternalLink className="w-4 h-4" />{_copy("copy.fb96f4798ac0", { defaultValue: "Connect to AI" })}</a>
             <a
               href="/skill.md"
               target="_blank"

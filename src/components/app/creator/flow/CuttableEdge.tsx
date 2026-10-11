@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Creator Flow — the edge with a scissors button on hover.
  * ========================================================
@@ -22,6 +23,7 @@ export default function CuttableEdge({
   data,
   selected,
 }: EdgeProps) {
+  const { t: _copy } = _useCopy();
   const edgeData = data as Record<string, unknown> | undefined;
   const dying = edgeData?.dying === true;
   const error = edgeData?.error === true;
@@ -74,7 +76,7 @@ export default function CuttableEdge({
         <EdgeLabelRenderer>
           <button
             type="button"
-            aria-label="Cut connection"
+            aria-label={_copy("copy.7c89c192cb07", { defaultValue: "Cut connection" })}
             className="nodrag nopan pointer-events-auto flex h-7 w-7 items-center justify-center rounded-lg border border-white/20 bg-zinc-950/95 text-white/80 shadow-xl backdrop-blur transition hover:border-white/50 hover:text-white"
             style={{ position: 'absolute', transform: `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px)` }}
             onMouseEnter={() => {

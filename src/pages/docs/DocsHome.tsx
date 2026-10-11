@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Book, Code, Zap, Shield, Users, Database, Rocket, Star, CheckCircle, ExternalLink, Copy, Check } from 'lucide-react';
@@ -10,6 +11,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 // Declare the global build time variable
 declare const __BUILD_TIME__: string;
 const DocsHome = () => {
+  const { t: _copy } = _useCopy();
   const [copiedAddress, setCopiedAddress] = useState<string>('');
   const { t, language } = useLanguage();
 
@@ -77,27 +79,27 @@ const DocsHome = () => {
 
   // Quick Links
   const quickLinks = [{
-    title: 'Basescan',
+    title: _copy("copy.6a53133d5d71", { defaultValue: "Basescan" }),
     icon: ExternalLink,
     path: 'https://basescan.org/token/0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
     color: 'from-middle-blue to-sky-blue',
     external: true,
     contractAddress: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c'
   }, {
-    title: 'BSCScan',
+    title: _copy("copy.b635325d40c2", { defaultValue: "BSCScan" }),
     icon: ExternalLink,
     path: 'https://bscscan.com/token/0x680d3113caf77b61b510f332d5ef4cf5b41a761d',
     color: 'from-sky-blue to-middle-blue',
     external: true,
     contractAddress: '0x680d3113caf77b61b510f332d5ef4cf5b41a761d'
   }, {
-    title: 'DHBScan',
+    title: _copy("copy.993d23ce5b8b", { defaultValue: "DHBScan" }),
     icon: ExternalLink,
     path: 'https://dhbscan.com',
     color: 'from-royal-blue to-sky-blue',
     external: true
   }, {
-    title: 'DeHub App',
+    title: _copy("copy.2b9910127168", { defaultValue: "DeHub App" }),
     icon: ExternalLink,
     path: 'https://dehub.io',
     color: 'from-middle-blue to-royal-blue',
@@ -154,9 +156,7 @@ const DocsHome = () => {
                   </div>
                   <h3 className="text-lg font-semibold text-foreground mb-2 font-exo">{link.title}</h3>
                   <div className="flex flex-row lg:flex-col items-center justify-center gap-2 mt-3">
-                    {!link.contractAddress && <div className="flex items-center justify-center text-sm text-muted-foreground group-hover:text-foreground font-exo">
-                        Visit site
-                        <ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
+                    {!link.contractAddress && <div className="flex items-center justify-center text-sm text-muted-foreground group-hover:text-foreground font-exo">{_copy("copy.5e2fa934ec16", { defaultValue: "Visit site" })}<ArrowRight className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
                       </div>}
                     {link.contractAddress && <button onClick={e => {
                 e.preventDefault();
