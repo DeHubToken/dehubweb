@@ -307,8 +307,9 @@ async function fetchAsset(asset: FreeAsset, signal?: AbortSignal): Promise<Respo
 export async function downloadFreeAsset(asset: FreeAsset, signal?: AbortSignal): Promise<File> {
   const response = await fetchAsset(asset, signal);
   const reported = response.headers.get('content-type')?.split(';')[0].trim().toLowerCase();
-  const raw = reported && !/^(application|binary)\/octet-stream$/.test(reported) ? reported : asset.mimeType;
-  const type = ({ 'audio/x-wav': 'audio/wav', 'audio/wave': 'audio/wav', 'audio/x-flac': 'audio/flac', 'image/jpg': 'image/jpeg' } as Record<string, string>)[raw] ?? raw;
+  const raw = reported && !/^(application|binary)\/octet-stream$/.test(reported) ? reported : asset.mimeType.split(';')[0].trim().toLowerCase();
+  const type = raw === 'application/ogg' && asset.kind === 'audio' ? 'audio/ogg'
+    : ({ 'audio/x-wav': 'audio/wav', 'audio/wave': 'audio/wav', 'audio/x-flac': 'audio/flac', 'image/jpg': 'image/jpeg' } as Record<string, string>)[raw] ?? raw;
   const expected = asset.kind === 'audio' ? 'audio/' : asset.kind === 'video' || asset.kind === 'animation' ? 'video/' : 'image/';
   if (!type.startsWith(expected)) {
     await response.body?.cancel().catch(() => {});
