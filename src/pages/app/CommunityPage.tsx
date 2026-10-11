@@ -14,6 +14,7 @@ import { useCommunityAbilities, isEffectivelyActive, isActivelyBanned } from '@/
 import { CommunityManageSheet } from '@/components/app/communities/manage/CommunityManageSheet';
 import { CommunityHeader } from '@/components/app/communities/CommunityHeader';
 import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
+import { AddExistingPost } from '@/components/app/communities/AddExistingPost';
 import { CommunityMembers } from '@/components/app/communities/CommunityMembers';
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
@@ -188,7 +189,13 @@ export default function CommunityPage() {
         ) : (
           <>
             <div className={tab === 'posts' ? '' : 'hidden'}>
+              {walletAddress && abilities.can('send_messages') && abilities.can('embed_links') && (
+                <AddExistingPost communityId={community.id} wallet={walletAddress} />
+              )}
               <CommunityFeed
+                communityId={community.id}
+                wallet={walletAddress}
+                canModerate={abilities.can('delete_messages')}
                 communitySlug={community.slug}
                 memberAddresses={memberAddresses}
                 isMember={isMember}
