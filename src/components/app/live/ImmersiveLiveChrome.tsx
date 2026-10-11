@@ -25,7 +25,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChevronDown, ChevronUp, Clock, Eye, Heart, Plus, Volume2, VolumeX, X } from 'lucide-react';
+import { ChevronUp, Clock, Eye, Heart, Plus, Volume2, VolumeX, X } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useTranslation } from 'react-i18next';
@@ -340,15 +340,6 @@ export function ImmersiveLiveChrome({
             className={CIRCLE}
           >
             {isMuted ? <VolumeX className="h-[18px] w-[18px]" /> : <Volume2 className="h-[18px] w-[18px]" />}
-          </button>
-
-          <button
-            type="button"
-            onClick={onToggleHidden}
-            aria-label={t('stages.fullscreen', 'Fullscreen')}
-            className={CIRCLE}
-          >
-            <ChevronDown className="h-5 w-5" />
           </button>
 
           <button
