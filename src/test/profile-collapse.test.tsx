@@ -1,0 +1,42 @@
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
+import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
+
+vi.mock('@/components/app/PageHeader', () => ({ PageHeader: () => <button>Back</button> }));
+let frame: FrameRequestCallback | undefined;
+const rect = (bottom: number) => ({ bottom } as DOMRect);
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+
+it('forms the header as the cover leaves, transfers each control at its boundary, and reverses', () => {
+  vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
+  vi.stubGlobal('requestAnimationFrame', (cb: FrameRequestCallback) => { frame = cb; return 1; });
+  vi.stubGlobal('cancelAnimationFrame', vi.fn());
+  const header = document.createElement('div');
+  header.innerHTML = '<div data-profile-cover></div><div data-profile-actions></div><h2 data-profile-identity></h2>';
+  const ref = { current: header };
+  let coverBottom = 140, actionBottom = 180, nameBottom = 230;
+  header.children[0].getBoundingClientRect = () => rect(coverBottom);
+  header.children[1].getBoundingClientRect = () => rect(actionBottom);
+  header.children[2].getBoundingClientRect = () => rect(nameBottom);
+  const { container } = render(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
+  const bar = container.querySelector<HTMLElement>('[data-profile-collapse]')!;
+  bar.getBoundingClientRect = () => rect(56);
+  const scroll = () => act(() => { fireEvent.scroll(window); frame?.(0); });
+  scroll();
+  expect(screen.getByText('Back')).toBeVisible();
+  expect(bar.style.getPropertyValue('--profile-frost')).toBe('0');
+  expect(screen.queryByText('Follow')).toBeNull();
+  coverBottom = 56;
+  actionBottom = 55;
+  scroll();
+  expect(bar.style.getPropertyValue('--profile-frost')).toBe('1');
+  expect(screen.getByText('Follow')).toBeVisible();
+  expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'true');
+  nameBottom = 55;
+  scroll();
+  expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
+  coverBottom = 140; actionBottom = 180; nameBottom = 230;
+  scroll();
+  expect(screen.queryByText('Follow')).toBeNull();
+  expect(bar.style.getPropertyValue('--profile-frost')).toBe('0');
+});
