@@ -55,8 +55,8 @@ export function MediaPanel() {
     try {
       await importFilesShared(list, {
         wallet: quota.walletAddress,
-        badgeBalance: undefined, // quota check inside importFiles uses its own lookup
-        username: null,
+        badgeBalance: quota.badgeBalance,
+        username: quota.username,
       });
       await quota.refetchUsage();
     } finally {

@@ -32,6 +32,15 @@ function deferredStock() {
 }
 
 describe("the real command executor while providers are pending", () => {
+  it("uses the creator's storage tier for requested stock and template stock", async () => {
+    bridges.search.mockResolvedValue(stock);
+    const context = { wallet: 'creator', badgeBalance: 12000000, username: 'maldoteth' };
+    await applyOps([{ op: 'add_stock', kind: 'video', query: 'ocean' }], context);
+    expect(bridges.importFile).toHaveBeenLastCalledWith(expect.any(File), expect.objectContaining(context));
+    const template: EditorTemplate = { id: 'stock-quota', kind: 'video', aspect: '16:9', preview: { bg: '#000000', fg: '#ffffff', font: 'Inter' }, titleKey: 'stock', ops: () => [{ op: 'add_stock', kind: 'video', query: 'ocean' }] };
+    await applyTemplate(template, ((key: string) => key) as unknown as import('i18next').TFunction, context);
+    expect(bridges.importFile).toHaveBeenLastCalledWith(expect.any(File), expect.objectContaining(context));
+  });
   it("keeps one request Undo separate from an independent edit during stock search", async () => {
     const pending = deferredStock();
     const execution = applyOps([{ op: "effects", id: "a", brightness: 1.2 }, { op: "add_stock", kind: "video", query: "ocean" }, { op: "effects", id: "a", contrast: 1.3 }]);
