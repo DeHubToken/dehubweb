@@ -143,7 +143,8 @@ export function GeneratePanel() {
       const { blob } = await generateAudio({ text: prompt.trim(), voiceId: DEFAULT_VOICE_ID });
       const format = generatedMediaFormat('audio', '', blob.type);
       const file = new File([blob], `voiceover-${Date.now()}.${format.ext}`, { type: format.mime });
-      const id = await importOneFile(file, { wallet: quota.walletAddress });
+      const id = await importOneFile(file, { wallet: quota.walletAddress,
+        badgeBalance: quota.badgeBalance, username: quota.username });
       if (id) {
         await quota.refetchUsage();
         window.dispatchEvent(new CustomEvent('editor:storage-usage-changed'));

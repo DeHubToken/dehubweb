@@ -1,0 +1,1 @@
+export const MAX_EDITOR_MEDIA_BYTES = 500 * 1024 * 1024;
