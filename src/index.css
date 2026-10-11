@@ -1812,6 +1812,14 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    glass surface, and the feed is swallowed at the pill's top edge (clip logic
    in HomePage). Posts sliding behind the pill bleed through the blur exactly
    as they do on cosmic/hazy/swarms. */
+/* System's phone logo and pill move as one header, as in the native feed.
+   Keep the solid logo backing and the glass pill on the same trajectory. */
+@media (max-width: 1023px) {
+  html[data-theme="system"] :is([data-mobile-header], [data-home-tabs]) {
+    transition-duration: 380ms;
+    transition-timing-function: cubic-bezier(0.25, 1, 0.5, 1);
+  }
+}
 html:is([data-theme="system"], [data-theme="immersive"]) [data-feed-nav-outer] {
   background-color: transparent !important;
 }
