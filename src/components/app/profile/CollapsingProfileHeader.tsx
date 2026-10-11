@@ -1,6 +1,8 @@
 import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 import './profile-collapse.css';
 
@@ -15,6 +17,7 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
   followAction?: ReactNode;
 }) {
   const active = useContext(CachedPageActiveContext);
+  const { theme } = useAppTheme();
   const barRef = useRef<HTMLDivElement>(null);
   const [surfaceVisible, setSurfaceVisible] = useState(false);
 
@@ -52,7 +55,13 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
         <div className="profile-collapse-surface" style={tabsPinned ? { bottom: -tabsHeight - 4 } : undefined} hidden={!surfaceVisible} aria-hidden>
           {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
         </div>
-        <PageHeader overlay className="!top-2 !left-2 !right-auto" />
+        <PageHeader overlay plainBack className={cn(
+          '!right-auto',
+          surfaceVisible
+            ? '!top-2 !left-2'
+            : '!top-3 !left-0 sm:!top-4 sm:!left-3',
+          !surfaceVisible && (theme === 'system' || theme === 'immersive') && 'max-sm:!top-1',
+        )} />
         <div className="profile-collapse-content">
           <div className="profile-collapse-identity" data-visible={surfaceVisible} aria-hidden={!surfaceVisible}>
             <p className="truncate text-sm sm:text-base font-bold text-white">{name}</p>
