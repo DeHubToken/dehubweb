@@ -665,6 +665,16 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   // The phone post page ("Stage"). Null in every feed.
   const stage = usePostStage();
+  const registerOptions = stage?.registerOptions;
+  const openPostOptions = useCallback(() => {
+    if (!walletAddress) { openLoginModal(); return; }
+    setShowOptionsDrawer(true);
+  }, [walletAddress, openLoginModal]);
+  useEffect(() => {
+    if (!registerOptions) return;
+    registerOptions(openPostOptions);
+    return () => registerOptions(null);
+  }, [registerOptions, openPostOptions]);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
@@ -897,8 +907,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
         badgeBalance={post.creatorBadgeBalance}
       />
       )}
-      {/* Image post options sit below the picture; Back appears in the pinned strip. */}
-      <div className={cn('flex items-center gap-1 pb-2', stage && 'justify-end')}>
+      {/* The phone menu sits beside Recent; its drawer remains owned by this card. */}
+      <div className={stage ? 'hidden' : 'flex items-center gap-1 pb-2'}>
         {isOwnPost && (
           <button
             onClick={() => setShowBoostModal(true)}
