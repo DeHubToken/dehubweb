@@ -13610,6 +13610,8 @@
     "mostActive": "Meest actief",
     "hereNow": "Nu hier",
     "joinedAgo": "deelgenomen {{time}}",
-    "nobodyYet": "Nog niemand"
+    "nobodyYet": "Nog niemand",
+    "rotate": "Scherm draaien",
+    "showControls": "Bediening tonen"
   }
 }

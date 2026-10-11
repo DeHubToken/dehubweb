@@ -13329,6 +13329,8 @@
     "mostActive": "Most active",
     "hereNow": "Here now",
     "joinedAgo": "joined {{time}}",
-    "nobodyYet": "No one yet"
+    "nobodyYet": "No one yet",
+    "rotate": "Rotate screen",
+    "showControls": "Show controls"
   }
 }
