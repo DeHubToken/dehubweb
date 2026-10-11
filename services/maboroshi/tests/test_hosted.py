@@ -4,6 +4,7 @@ import time
 import unittest
 from pathlib import Path
 from unittest.mock import Mock, patch
+import requests
 from fastapi.testclient import TestClient
 import access
 import mask_review
@@ -108,6 +109,52 @@ class HostedTests(unittest.TestCase):
         self.assertEqual(result.headers['location'], 'https://dehub.io/creator/maboroshi')
         self.assertEqual(self.client.post('/configure', data={'replicate': 'test'}).status_code, 404)
         self.assertEqual(self.client.get('/static/setup.html').status_code, 404)
+
+    def test_checkout_identifies_the_authenticated_wallet_without_charging(self):
+        with patch('access.debit') as debit:
+            self.assertEqual(self.client.get('/session').json(), {'wallet': WALLET})
+            quote = self.client.get(f'/jobs/{IDENT}/checkout/prepare').json()
+            self.assertEqual(quote['wallet'], WALLET)
+            self.assertEqual(quote['price_micros'], 1000000)
+            self.assertIsNone(quote['payment_ref'])
+            debit.assert_not_called()
+
+    def test_transfer_payment_retries_keep_the_same_receipt_and_never_debit_credits(self):
+        tx_hash = '0x' + '4' * 64
+        row = access.job(IDENT)
+        with patch('access.requests.post', side_effect=requests.Timeout) as post:
+            with self.assertRaises(Exception): access.debit(row, 'prepare', 1000000, tx_hash)
+            self.assertIn('maboroshi-provider', post.call_args.args[0])
+        self.assertEqual(self.client.get(f'/jobs/{IDENT}/checkout/prepare').json()['payment_ref'], tx_hash)
+        with patch('access.requests.post') as post:
+            with self.assertRaises(Exception): access.debit(row, 'prepare', 1000000, 'credits')
+            post.assert_not_called()
+        confirmed = Mock(status_code=200)
+        confirmed.json.return_value = {'debited': True}
+        with patch('access.requests.post', return_value=confirmed) as post:
+            access.debit(row, 'prepare', 1000000, tx_hash)
+            self.assertEqual(post.call_args.kwargs['json']['key'], f'maboroshi:{IDENT}:prepare')
+            self.assertEqual(post.call_args.kwargs['json']['wallet'], WALLET)
+
+    def test_rejected_payment_can_choose_another_source_and_refund_uses_its_actual_ledger(self):
+        row = access.job(IDENT)
+        with patch('access.requests.post', return_value=Mock(status_code=402)):
+            with self.assertRaises(Exception): access.debit(row, 'prepare', 1000000, 'credits')
+        self.assertIsNone(access.payment_reference(row, 'prepare'))
+        reply = Mock(status_code=200)
+        reply.json.return_value = {'debited': True, 'refunded': True}
+        with patch('access.requests.post', return_value=reply) as post:
+            access.debit(row, 'prepare', 1000000, '0x' + '4' * 64)
+            self.assertTrue(access.refund(IDENT, 'prepare'))
+            self.assertEqual(post.call_args.kwargs['json']['operation'], 'payment_refund')
+
+    def test_only_production_web_origin_can_read_checkout_with_session_header(self):
+        allowed = self.client.options(f'/jobs/{IDENT}/checkout/prepare', headers={
+            'Origin': 'https://dehub.io', 'Access-Control-Request-Method': 'GET', 'Access-Control-Request-Headers': 'x-dehub-token'})
+        self.assertEqual(allowed.headers.get('access-control-allow-origin'), 'https://dehub.io')
+        denied = self.client.options(f'/jobs/{IDENT}/checkout/prepare', headers={
+            'Origin': 'https://evil.test', 'Access-Control-Request-Method': 'GET'})
+        self.assertNotIn('access-control-allow-origin', denied.headers)
 
 
 if __name__ == '__main__':

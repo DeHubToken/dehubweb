@@ -1,6 +1,6 @@
 'use strict';
 const $ = (id) => document.getElementById(id);
-let token = '', account = '', current = null, ready = false, allowPayments = true, timer, selectedInput = '', selectedResult = '', requestVersion = 0, referencesChanged = false;
+let token = '', account = '', current = null, ready = false, allowPayments = false, timer, selectedInput = '', selectedResult = '', requestVersion = 0, referencesChanged = false, pendingPayment = null;
 const busy = () => current && ['queued', 'running'].includes(current.state);
 const money = (micros) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(micros / 1e6);
 const message = (text) => { $('error').textContent = text || ''; $('error').hidden = !text; };
@@ -11,6 +11,7 @@ async function api(path, options = {}) {
   return data;
 }
 function clearProject() {
+  if (pendingPayment) { pendingPayment.reject(Error('The active project changed.')); pendingPayment = null; }
   clearTimeout(timer); requestVersion++; current = null; selectedInput = ''; selectedResult = '';
   for (const id of ['preview', 'result']) { $(id).pause(); $(id).removeAttribute('src'); $(id).load(); }
   $('project').hidden = true; $('source-section').hidden = false;
@@ -75,7 +76,7 @@ function render() {
     const cost = current.quotes[stage];
     $(stage).textContent = cost ? `${label} · ${money(cost)}` : `${label} · unavailable`;
     $(stage).hidden = !allowPayments;
-    $(stage).disabled = !ready || !allowPayments || busy() || !cost ||
+    $(stage).disabled = !ready || !allowPayments || !!pendingPayment || busy() || !cost ||
       (stage === 'draft' && (!current.review.approved || !current.hasReference || referencesChanged)) ||
       (stage === 'hd' && (current.state !== 'draft' || !$('draft-reviewed').checked));
   }
@@ -98,23 +99,42 @@ async function load(ident) {
 }
 async function authenticate(data) {
   if (typeof data.token !== 'string' || typeof data.wallet !== 'string') return;
-  if (data.token === token && data.wallet === account) return;
-  clearProject(); token = data.token; account = data.wallet; allowPayments = data.allowPayments !== false;
+  const permitted = data.allowPayments !== false && data.paymentBridge === 1;
+  if (data.token === token && data.wallet.toLowerCase() === account && permitted === allowPayments) return;
+  clearProject(); token = data.token; account = data.wallet.toLowerCase(); allowPayments = permitted;
   $('jobs').replaceChildren(new Option('New project', ''));
   $('upload').disabled = !token; message('');
   if (!token) { $('connection').textContent = 'Sign in to DeHub to save and run a Maboroshi project.'; return; }
   try {
+    const verified = await api('session');
+    if (verified.wallet !== account) throw Error('The signed-in account does not match this project session. Sign in again.');
     await list();
-    $('connection').textContent = !allowPayments ? 'Your saved project previews and downloads are available in this app.' : !ready ? 'Processing is temporarily unavailable. Your projects stay saved and nothing will be charged.' : 'Use your DeHub credits. Each processing step shows its price before you start.';
+    $('connection').textContent = !allowPayments ? 'Your saved project previews and downloads are available in this app.' : !ready ? 'Processing is temporarily unavailable. Your projects stay saved and nothing will be charged.' : 'Each step uses the same payment options as Creator. Review its price in DeHub before confirming.';
     if (!allowPayments) { $('prepare-section').hidden = true; $('draft-section').hidden = true; $('hd-review').hidden = true; }
   } catch (error) { $('upload').disabled = true; message(error.message); }
 }
 window.addEventListener('message', (event) => {
-  if (event.source !== window.parent || event.origin !== 'https://dehub.io' || event.data?.type !== 'maboroshi:session') return;
-  void authenticate(event.data);
+  if (event.source !== window.parent || event.origin !== 'https://dehub.io') return;
+  if (event.data?.type === 'maboroshi:session') void authenticate(event.data);
+  if (event.data?.type === 'maboroshi:payment-result') paymentResult(event.data);
 });
 // Native injects this event only after verifying the WebView's exact origin/path.
 document.addEventListener('maboroshi:native-session', (event) => { void authenticate(event.detail); });
+document.addEventListener('maboroshi:native-payment-result', (event) => { paymentResult(event.detail); });
+function paymentResult(data) {
+  if (!pendingPayment || data?.requestId !== pendingPayment.requestId) return;
+  const pending = pendingPayment; pendingPayment = null;
+  if (typeof data.error === 'string' && data.error) pending.reject(Error(data.error)); else pending.resolve();
+}
+function requestPayment(stage) {
+  if (!current || !allowPayments || pendingPayment) throw Error('Payment is unavailable in this session.');
+  const input = { type: 'maboroshi:pay', requestId: crypto.randomUUID(), id: current.id, stage };
+  return new Promise((resolve, reject) => {
+    pendingPayment = { requestId: input.requestId, resolve, reject }; render();
+    if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(input));
+    else window.parent.postMessage(input, 'https://dehub.io');
+  });
+}
 function announce() {
   if (window.parent !== window) window.parent.postMessage({ type: 'maboroshi:ready' }, 'https://dehub.io');
   if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'maboroshi:ready' }));
@@ -141,8 +161,9 @@ $('references-form').onsubmit = async (event) => {
 };
 $('references-form').oninput = () => { referencesChanged = true; render(); };
 for (const stage of ['prepare', 'draft', 'hd']) $(stage).onclick = async () => {
-  if (!current) return; message(''); $(stage).disabled = true;
-  try { const body = new FormData(); body.set('price_micros', current.quotes[stage]); await api(`jobs/${current.id}/${stage}`, { method: 'POST', body }); await load(current.id); }
+  if (!current || !allowPayments || pendingPayment) return; message(''); $(stage).disabled = true;
+  const ident = current.id;
+  try { await requestPayment(stage); if (current?.id === ident) await load(ident); }
   catch (error) { message(error.message); render(); }
 };
 for (const approved of [true, false]) $(approved ? 'approve' : 'reject').onclick = async () => {
