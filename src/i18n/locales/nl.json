@@ -4150,8 +4150,8 @@
     "povrPricingIntro": "Ons lineaire op tiers gebaseerde prijsmodel zorgt voor eerlijke en schaalbare advertentiekosten op basis van de waarde van het publiek. De waarde wordt geprijsd in USD voor eenvoudig beheer, echter betalingen zullen in DeHub tokens worden gevraagd op het moment van uitvoering."
   },
   "launchpad": {
-    "seoTitle": "Launchpad — DeHub",
-    "seoDescription": "Tokeniseer een bedrijf op het DeHub launchpad: blader door live coins of maak je eigen.",
+    "seoTitle": "Lanceerplatform — DeHub",
+    "seoDescription": "Tokeniseer een bedrijf op het lanceerplatform van DeHub: bekijk actieve tokens of maak je eigen token.",
     "srHeading": "DeHub Launchpad",
     "phaseBadge": "Fase 1 · Privévoorbeeld",
     "heroTitle": "BEDRIJF TOKENISEREN",
@@ -5894,8 +5894,8 @@
     "notEnoughTokensForBounty": "Niet genoeg tokens. Nodig {{need}} tokens maar heb {{have}}."
   },
   "events": {
-    "seoTitle": "Events — Meetups & Community Events op DeHub",
-    "seoDescription": "Blader door aankomende DeHub-communitygebeurtenissen, RSVP voor meetups en host je eigen events op het gedecentraliseerde, gebruikerseigen sociale platform.",
+    "seoTitle": "Evenementen — bijeenkomsten en community-evenementen op DeHub",
+    "seoDescription": "Bekijk aankomende DeHub-evenementen, meld je aan voor bijeenkomsten en organiseer zelf evenementen op het gedecentraliseerde sociale platform van gebruikers.",
     "defaultSeoDescription": "Communitygebeurtenis op DeHub.",
     "title": "Evenementen",
     "filterUpcoming": "Aankomend",

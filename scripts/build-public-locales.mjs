@@ -8,12 +8,12 @@ import { mdToHtml } from './markdown-html.mjs';
 export const PRIORITY_LOCALES = ['ar', 'es', 'fr', 'nl', 'tr'];
 const readJson = file => JSON.parse(fs.readFileSync(file, 'utf8'));
 const digest = value => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 16);
-const decodeHtml = value => value.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replaceAll('&quot;', '"').replaceAll('&#39;', "'").replaceAll('&apos;', "'").replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&').replaceAll('&nbsp;', ' ');
+const decodeHtml = value => value.replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replaceAll('&quot;', '"').replaceAll('&#39;', "'").replaceAll('&apos;', "'").replaceAll('&rsquo;', '’').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&').replaceAll('&nbsp;', ' ');
 const normalizeCopy = value => decodeHtml(value).replace(/\s+/g, ' ').trim();
 const neutralCopy = s=>!/\p{L}/u.test(s)||/^(?:#[a-f0-9]{3,8}|0x[a-f0-9]{40}|bc1[a-z0-9]{25,}|[^\s@]+@[^\s@]+\.[^\s@]+|(?:https?:\/\/)?[a-z0-9-]+\.(?:io|com|net|org)(?:\/\S*)?|Exo (?:Black|Semi-bold|Medium|Light) — \d+)$/i.test(s);
 const escapeHtml = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const fixedImageName = value => /^(?:Malik Jan|Mike Hales|Indi Jay Cammish|Bailey Young|DeHub|ChatGPT|Claude)$/i.test(value);
-const numbers = value => [...value.matchAll(/\d[\d.,]*/g)].map(match => match[0].replace(/\D/g, ''));
+const numbers = value => [...value.replace(/(\d)[\u00a0 ](?=\d{3}(?:\D|$))/g, '$1').matchAll(/\d[\d.,]*/g)].map(match => match[0].replace(/\D/g, ''));
 const accessibleText = (source, normalizedDictionary, route, lang) => {
   const suffix = source.endsWith('|avatar') ? '|avatar' : '';
   const plain = normalizeCopy(source.slice(0, source.length - suffix.length));
@@ -133,9 +133,9 @@ export function validatePageTranslation(source, translated) {
   if (!equal(matches(source, tags).map(stableTag), matches(translated, tags).map(stableTag))) throw new Error('Translated HTML changed markup');
   const imageDestinations = text => [...text.matchAll(/!\[[^\]]*\]\(([^)]+)\)/g)].map(match => match[1]);
   if (!equal(imageDestinations(source), imageDestinations(translated))) throw new Error('Translated Markdown changed an image destination');
-  for (const pattern of [placeholders, links]) {
-    if (!equal(matches(source, pattern).sort(), matches(translated, pattern).sort())) throw new Error('Translation changed a placeholder or link');
-  }
+  if (!equal(matches(source, placeholders).sort(), matches(translated, placeholders).sort())) throw new Error('Translation changed a placeholder');
+  const urls = text => matches(text, links).map(link => link.replace(/[.,;!?]+$/, '')).sort();
+  if (!equal(urls(source), urls(translated))) throw new Error('Translation changed a link');
   const plain = source.replace(tags, '').trim();
   if (plain.split(/\s+/).length > 8 && source.trim() === translated.trim() && /\b(the|your|with|this|that|you|from|will|please)\b/i.test(plain)) throw new Error('English prose was left untranslated');
   return translated;
