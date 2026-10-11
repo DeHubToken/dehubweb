@@ -995,7 +995,15 @@ export const fr = {
     "spNameBoost": "Booster",
     "tocArcade": "Arcade",
     "notificationsTitle": "Notifications",
-    "arcadeTitle": "Arcade"
+    "arcadeTitle": "Arcade",
+    "boostPower": "1) Boostez",
+    "spHomePage": "la page SuperPowers",
+    "spNameTimelineBomber": "Timeline Bomber",
+    "spDescTimelineBomber": "Vos abonnés voient votre publication avant celle de quiconque d’autre, donc un Roi Cobra gagne le tirage au sort contre un MégaLodon pour les personnes ayant choisi d’entendre de vous.",
+    "spMinShort": "min",
+    "spTierCobra": "Roi Cobra",
+    "spTierCrocodile": "Crocodile",
+    "notificationsB2": "Poussez sur web et mobile :",
   },
   games: {
     title: 'Jeux',
@@ -1305,6 +1313,7 @@ export const fr = {
     conclusionText1: 'Le DePIN proposé permet une infrastructure véritablement décentralisée, résistante à la censure, évolutive sans limite et rentable pour DeHub. En tirant parti de la puissance de calcul partagée et en récompensant les mineurs directement à partir des revenus, le système évite l\'inflation et assure la durabilité à long terme.',
     conclusionText2: 'Ce modèle permet à toute personne disposant de ressources informatiques inutilisées, des téléphones mobiles aux serveurs, de participer et de bénéficier de la croissance de DeHub. Pour perturber ce mastodonte d\'une industrie, il faut un soutien milliardaire ou une véritable innovation, tout comme ce DePIN.',
     openSourceNote: '*Le code complet sera ouvert une fois terminé.',
+    "minimumSpecs": "Spécifications minimales",
   },
   e2ee: {
     title: 'Chiffrement de bout en bout',
@@ -1532,7 +1541,7 @@ export const fr = {
     experience: 'Expérience',
     malName: 'Mal Jan',
     malRole: 'Co-fondateur',
-    malBio: "Full stack web and blockchain developer, building AI business solutions at Pixcellor, former senior consultant at Randstad, scaled DeHub to a £250m market cap peak with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow and builder of entire regions at the UK's largest construction agency, ITS.",
+    malBio: "Développeur web et blockchain full stack, construisant des solutions commerciales d'IA chez Pixcellor, ancien consultant senior chez Randstad, a fait passer DeHub à un pic de capitalisation boursière de 250 millions de livres sterling avec un pool de liquidités proche de 10 millions de dollars et un chiffre d'affaires de 2 millions de dollars la première année. Auparavant, consultant annuel à la plus haute facturation au Royaume-Uni chez l'agence la plus importante, Blue Arrow, et constructeur de régions entières chez l'agence de construction la plus importante du Royaume-Uni, ITS.",
     malExp1: "Guide Dogs : A levé plus d'1M$ en tant que responsable de collecte de fonds avec une équipe de 5-10 personnes dans plusieurs secteurs",
     malExp2: "Randstad : Consultant senior dans une entreprise de 8Mds$ de capitalisation et la plus grande agence au monde",
     malExp3: "Blue Arrow : Plus gros factureur et consultant primé dans la plus grande agence du Royaume-Uni avec plus de 600 employés et 70 bureaux nationaux. Produisant des marges nettes personnelles de plus de 10 000$ par semaine",
@@ -1819,6 +1828,7 @@ export const fr = {
     requestFullBrandKit: 'Demander un kit de marque complet',
     requestFullBrandKitDesc: 'Pour les formats SVG, EPS et autres formats vectoriels, ou si vous avez besoin d\'actifs non présentés ici, veuillez contacter notre équipe de marque.',
     contactBrandTeam: 'Contactez l\'Équipe Marque',
+    "shakeUp2025": "2025 Shake Up",
   },
   legalDisclaimer: {
     title: 'Avis juridique',
@@ -1974,6 +1984,7 @@ export const fr = {
     designatedModeratorsItem4: 'La gouvernance définit la politique que ces modérateurs appliquent et peuvent examiner ou annuler leurs décisions, mais l\'application elle-même est immédiate',
     restrictionsItem4: 'Suppression de contenu par des modérateurs désignés pour violation des consignes de la communauté',
     restrictionsItem5: 'Suspension ou expulsion permanente d\'un compte par des modérateurs désignés pour comportement abusif',
+    "fiatOnRamp": "Fiat On-Ramp Services",
   },
   privacyPolicy: {
     title: 'Politique de confidentialité',
