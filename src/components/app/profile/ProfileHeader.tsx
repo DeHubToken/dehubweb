@@ -1,7 +1,7 @@
 import { ProfileFollowButton } from './ProfileFollowButton';
 import { useTranslation as _useCopy } from 'react-i18next';
 import {
-  Pencil, Copy, Wallet, Star, Plus, Ban, MessageSquare
+  Pencil, Copy, Wallet, Star, EllipsisVertical, Ban, MessageSquare
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useRef, useState } from 'react';
@@ -304,7 +304,7 @@ export function ProfileHeader({
                     title={t('profile.options')}
                     data-profile-options
                   >
-                    <Plus className="w-4 h-4" />
+                    <EllipsisVertical className="w-4 h-4" />
                   </Button>
                 </DrawerTrigger>
                 <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
