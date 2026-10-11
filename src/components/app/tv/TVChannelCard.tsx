@@ -136,7 +136,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   // card's (muted) stream alive alongside it would just double the download.
   // Trailing slash normalized so '/app/tv/' doesn't read as "left".
   const { pathname } = useLocation();
-  const isTvRouteActive = pathname.replace(/\/+$/, '') === '/app/tv';
+  const normalizedPath = pathname.replace(/\/+$/, '');
+  const isTvRouteActive = normalizedPath === '/tv' || normalizedPath === '/app/tv';
   useEffect(() => {
     if (isTvRouteActive) return;
     if ((isPlaying || isPaused) && !isInPiP) {
