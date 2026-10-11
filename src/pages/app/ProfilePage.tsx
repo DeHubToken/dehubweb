@@ -247,6 +247,7 @@ export default function ProfilePage() {
     profileContentRef,
     '[data-feed-nav-outer] > [data-page-bento]',
     [!!data.profile, data.isAuthenticated],
+    { allThemes: true },
   );
 
   // Detect when the tabs pill is anchored to the top. Once stuck there's no
