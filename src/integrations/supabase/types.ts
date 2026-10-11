@@ -606,6 +606,32 @@ export type Database = {
         }
         Relationships: []
       }
+      affiliate_sub_referrals: {
+        Row: {
+          owner_address: string
+          referral_id: string
+          sub_id: string
+        }
+        Insert: {
+          owner_address: string
+          referral_id: string
+          sub_id: string
+        }
+        Update: {
+          owner_address?: string
+          referral_id?: string
+          sub_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_sub_referrals_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: true
+            referencedRelation: "affiliate_referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_agent_rate_limits: {
         Row: {
           action_type: string
@@ -1947,6 +1973,38 @@ export type Database = {
           },
         ]
       }
+      community_invite_attempts: {
+        Row: {
+          community_id: string
+          created_at: string
+          inviter: string
+          recipient: string
+          status: string
+        }
+        Insert: {
+          community_id: string
+          created_at?: string
+          inviter: string
+          recipient: string
+          status?: string
+        }
+        Update: {
+          community_id?: string
+          created_at?: string
+          inviter?: string
+          recipient?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_invite_attempts_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       community_invite_links: {
         Row: {
           code: string
@@ -2049,6 +2107,35 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "community_members_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_post_shares: {
+        Row: {
+          community_id: string
+          created_at: string
+          shared_by: string
+          token_id: number
+        }
+        Insert: {
+          community_id: string
+          created_at?: string
+          shared_by: string
+          token_id: number
+        }
+        Update: {
+          community_id?: string
+          created_at?: string
+          shared_by?: string
+          token_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_post_shares_community_id_fkey"
             columns: ["community_id"]
             isOneToOne: false
             referencedRelation: "communities"
@@ -2299,6 +2386,30 @@ export type Database = {
           save_count?: number
           slug?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      creator_public_posters: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          price_dhb: number
+          skill_slug: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          image_url: string
+          price_dhb?: number
+          skill_slug?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          price_dhb?: number
+          skill_slug?: string
         }
         Relationships: []
       }
@@ -3033,6 +3144,153 @@ export type Database = {
           },
         ]
       }
+      editor_cloud_draft_clients: {
+        Row: {
+          actor_wallet: string
+          anchor_revision: number | null
+          base_revision: number | null
+          client_id: string
+          committed_revision: number | null
+          document_hash: string | null
+          expires_at: string
+          owner_wallet: string
+          project_id: string
+          request_id: string | null
+          sequence: number
+          stored_at: string | null
+          writer_id: string
+        }
+        Insert: {
+          actor_wallet: string
+          anchor_revision?: number | null
+          base_revision?: number | null
+          client_id: string
+          committed_revision?: number | null
+          document_hash?: string | null
+          expires_at?: string
+          owner_wallet: string
+          project_id: string
+          request_id?: string | null
+          sequence?: number
+          stored_at?: string | null
+          writer_id?: string
+        }
+        Update: {
+          actor_wallet?: string
+          anchor_revision?: number | null
+          base_revision?: number | null
+          client_id?: string
+          committed_revision?: number | null
+          document_hash?: string | null
+          expires_at?: string
+          owner_wallet?: string
+          project_id?: string
+          request_id?: string | null
+          sequence?: number
+          stored_at?: string | null
+          writer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_draft_clients_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
+      editor_cloud_draft_receipts: {
+        Row: {
+          actor_wallet: string
+          anchor_revision: number
+          base_revision: number
+          committed_revision: number | null
+          document_hash: string
+          expires_at: string
+          outcome: string
+          owner_wallet: string
+          project_id: string
+          request_id: string
+          sequence: number
+          stored_at: string
+          writer_id: string
+        }
+        Insert: {
+          actor_wallet: string
+          anchor_revision: number
+          base_revision: number
+          committed_revision?: number | null
+          document_hash: string
+          expires_at: string
+          outcome: string
+          owner_wallet: string
+          project_id: string
+          request_id: string
+          sequence: number
+          stored_at: string
+          writer_id: string
+        }
+        Update: {
+          actor_wallet?: string
+          anchor_revision?: number
+          base_revision?: number
+          committed_revision?: number | null
+          document_hash?: string
+          expires_at?: string
+          outcome?: string
+          owner_wallet?: string
+          project_id?: string
+          request_id?: string
+          sequence?: number
+          stored_at?: string
+          writer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_draft_receipts_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: false
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
+      editor_cloud_drafts: {
+        Row: {
+          anchor_revision: number
+          document: Json
+          owner_wallet: string
+          project_id: string
+          revision: number
+          updated_at: string
+        }
+        Insert: {
+          anchor_revision: number
+          document: Json
+          owner_wallet: string
+          project_id: string
+          revision: number
+          updated_at?: string
+        }
+        Update: {
+          anchor_revision?: number
+          document?: Json
+          owner_wallet?: string
+          project_id?: string
+          revision?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_cloud_drafts_owner_wallet_project_id_fkey"
+            columns: ["owner_wallet", "project_id"]
+            isOneToOne: true
+            referencedRelation: "editor_cloud_projects"
+            referencedColumns: ["wallet_address", "id"]
+          },
+        ]
+      }
       editor_cloud_members: {
         Row: {
           accepted: boolean
@@ -3111,28 +3369,34 @@ export type Database = {
         Row: {
           created_at: string
           document: Json
+          draft_base_revision: number | null
           editor_wallet: string | null
           project_id: string
           request_id: string
           revision: number
+          saved_base_revision: number | null
           wallet_address: string
         }
         Insert: {
           created_at?: string
           document: Json
+          draft_base_revision?: number | null
           editor_wallet?: string | null
           project_id: string
           request_id: string
           revision: number
+          saved_base_revision?: number | null
           wallet_address: string
         }
         Update: {
           created_at?: string
           document?: Json
+          draft_base_revision?: number | null
           editor_wallet?: string | null
           project_id?: string
           request_id?: string
           revision?: number
+          saved_base_revision?: number | null
           wallet_address?: string
         }
         Relationships: [
@@ -4246,6 +4510,36 @@ export type Database = {
           started_at?: string
           stream_id?: string | null
           token_id?: string
+        }
+        Relationships: []
+      }
+      maboroshi_stage_payments: {
+        Row: {
+          created_at: string
+          key: string
+          price_dhb: number
+          status: string
+          tx_hash: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          price_dhb: number
+          status?: string
+          tx_hash: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          price_dhb?: number
+          status?: string
+          tx_hash?: string
+          updated_at?: string
+          wallet_address?: string
         }
         Relationships: []
       }
@@ -6747,6 +7041,7 @@ export type Database = {
           reaction_tip_seen: boolean
           shorts_enabled: boolean
           updated_at: string
+          video_dub_tip_seen: boolean
           wallet_address: string
         }
         Insert: {
@@ -6755,6 +7050,7 @@ export type Database = {
           reaction_tip_seen?: boolean
           shorts_enabled?: boolean
           updated_at?: string
+          video_dub_tip_seen?: boolean
           wallet_address: string
         }
         Update: {
@@ -6763,6 +7059,7 @@ export type Database = {
           reaction_tip_seen?: boolean
           shorts_enabled?: boolean
           updated_at?: string
+          video_dub_tip_seen?: boolean
           wallet_address?: string
         }
         Relationships: []
@@ -8081,6 +8378,7 @@ export type Database = {
         }
         Returns: Json
       }
+      affiliate_wallet: { Args: never; Returns: string }
       ai_free_claim: {
         Args: {
           p_job_id: string
@@ -8129,6 +8427,10 @@ export type Database = {
         Args: { p_dhb: number; p_tx_hash: string; p_wallet: string }
         Returns: number
       }
+      attribute_affiliate_referral: {
+        Args: { p_code: string; p_sub_id?: string }
+        Returns: undefined
+      }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
       category_counts: {
         Args: { p_since?: string }
@@ -8175,6 +8477,14 @@ export type Database = {
           _target: string
           _until?: string
         }
+        Returns: undefined
+      }
+      community_claim_invite: {
+        Args: { _community_id: string; _recipient: string }
+        Returns: string
+      }
+      community_confirm_invite: {
+        Args: { _community_id: string; _recipient: string }
         Returns: undefined
       }
       community_create_invite: {
@@ -8251,6 +8561,11 @@ export type Database = {
         Args: { _message_id: string; _pinned: boolean }
         Returns: undefined
       }
+      community_post_wallet: { Args: never; Returns: string }
+      community_posts_readable: {
+        Args: { _community_id: string }
+        Returns: boolean
+      }
       community_preview_invite: { Args: { _code: string }; Returns: Json }
       community_privileged: { Args: never; Returns: boolean }
       community_purge_member_messages: {
@@ -8259,6 +8574,10 @@ export type Database = {
       }
       community_reject_member: {
         Args: { _community_id: string; _target: string }
+        Returns: undefined
+      }
+      community_remove_shared_post: {
+        Args: { _community_id: string; _token_id: number }
         Returns: undefined
       }
       community_revoke_invite: {
@@ -8277,6 +8596,10 @@ export type Database = {
           _role: string
           _target: string
         }
+        Returns: undefined
+      }
+      community_share_post: {
+        Args: { _community_id: string; _token_id: number }
         Returns: undefined
       }
       community_target_guard: {
@@ -8377,6 +8700,55 @@ export type Database = {
         Args: { p_max_discovered?: number }
         Returns: Json
       }
+      editor_cloud_checkpoint_save: {
+        Args: {
+          p_document: Json
+          p_expected_draft_revision: number
+          p_expected_revision: number
+          p_id: string
+          p_owner: string
+          p_request_id: string
+        }
+        Returns: Json
+      }
+      editor_cloud_draft_load: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_draft_media_allowed: {
+        Args: { p_path: string }
+        Returns: boolean
+      }
+      editor_cloud_draft_open: {
+        Args: { p_client_id: string; p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_draft_resolve: {
+        Args: {
+          p_anchor_revision: number
+          p_document: Json
+          p_expected_revision: number
+          p_id: string
+          p_owner: string
+          p_request_id: string
+          p_sequence: number
+          p_writer_id: string
+        }
+        Returns: Json
+      }
+      editor_cloud_draft_save: {
+        Args: {
+          p_anchor_revision: number
+          p_document: Json
+          p_expected_revision: number
+          p_id: string
+          p_owner: string
+          p_request_id: string
+          p_sequence: number
+          p_writer_id: string
+        }
+        Returns: Json
+      }
       editor_cloud_edit_allowed: {
         Args: { p_id: string; p_owner: string }
         Returns: boolean
@@ -8399,6 +8771,10 @@ export type Database = {
       editor_cloud_list: { Args: never; Returns: Json }
       editor_cloud_list_trash: { Args: never; Returns: Json }
       editor_cloud_live_access: {
+        Args: { p_id: string; p_owner: string }
+        Returns: Json
+      }
+      editor_cloud_live_checkpoint: {
         Args: { p_id: string; p_owner: string }
         Returns: Json
       }
@@ -8551,6 +8927,13 @@ export type Database = {
           views_30d: number
         }[]
       }
+      get_affiliate_sub_referrals: {
+        Args: never
+        Returns: {
+          referred_address: string
+          sub_id: string
+        }[]
+      }
       get_anonymous_view_counts: {
         Args: { p_token_ids: string[] }
         Returns: {
@@ -8651,6 +9034,16 @@ export type Database = {
           total: number
         }[]
       }
+      maboroshi_payment_refund: { Args: { p_key: string }; Returns: boolean }
+      maboroshi_payment_spend: {
+        Args: {
+          p_dhb: number
+          p_key: string
+          p_tx_hash: string
+          p_wallet: string
+        }
+        Returns: undefined
+      }
       miniapp_compute_rewards: {
         Args: { p_week_start?: string }
         Returns: number
@@ -8703,6 +9096,17 @@ export type Database = {
           p_kdf_iterations: number
           p_new_address: string
           p_salt: string
+        }
+        Returns: Json
+      }
+      reserve_agent_registration: {
+        Args: {
+          _api_key: string
+          _description: string
+          _name: string
+          _owner: string
+          _private_key: string
+          _wallet: string
         }
         Returns: Json
       }
