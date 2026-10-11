@@ -5462,7 +5462,8 @@
       "inLast30Days": "{{count}} over 30 dagen",
       "percentJoined": "{{pct}}% is lid geworden",
       "noVisits": "Nog geen bezoeken",
-      "selfVisitsExcluded": "Uw eigen bezoeken aan uw link worden niet meegeteld."
+      "selfVisitsExcluded": "Uw eigen bezoeken aan uw link worden niet meegeteld.",
+      "commissionPersistence": "doorlopend · blijvend"
     },
     "seoTitle": "DeHub — het gedecentraliseerde creatieve netwerk",
     "seoTitleInvited": "{{inviter}} heeft je uitgenodigd voor DeHub — verdien, post & bouw on-chain",

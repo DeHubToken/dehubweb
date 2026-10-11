@@ -5278,7 +5278,8 @@
       "inLast30Days": "{{count}} en 30 días",
       "percentJoined": "{{pct}}% se unió",
       "noVisits": "Aún no hay visitas",
-      "selfVisitsExcluded": "Sus propias visitas a su enlace no se cuentan."
+      "selfVisitsExcluded": "Sus propias visitas a su enlace no se cuentan.",
+      "commissionPersistence": "residual · permanente"
     },
     "seoTitle": "DeHub — la red descentralizada de creadores",
     "seoTitleInvited": "{{inviter}} te invitó a DeHub — gana, publica y construye on-chain",

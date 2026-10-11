@@ -2333,7 +2333,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
           open={followDrawerOpen}
           onOpenChange={setFollowDrawerOpen}
           profileAddress={pageWalletAddress}
-          title="Followers"
+          title={t('profile.followers')}
           newCount={newFollowers.count}
           newUsernames={newFollowers.usernames}
         />

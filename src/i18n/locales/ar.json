@@ -5273,7 +5273,8 @@
       "inLast30Days": "{{count}} في 30 يومًا",
       "percentJoined": "{{pct}}% انضم",
       "noVisits": "لا توجد زيارات حتى الآن",
-      "selfVisitsExcluded": "لا يتم احتساب زياراتك الخاصة إلى رابطك."
+      "selfVisitsExcluded": "لا يتم احتساب زياراتك الخاصة إلى رابطك.",
+      "commissionPersistence": "مستمر · دائم"
     },
     "seoTitle": "DeHub — شبكة المبدعين اللامركزية",
     "seoTitleInvited": "دعاك {{inviter}} إلى DeHub — اربح وانشر وابنِ على السلسلة",

@@ -254,7 +254,7 @@ export default function AffiliatePage() {
               icon={<Sparkles className="w-4 h-4" />}
               label={_copy("copy.3d41e1a66a7d", { defaultValue: "Commission" })}
               value={`${AFFILIATE_L1_COMMISSION_PCT}% + ${AFFILIATE_L2_COMMISSION_PCT}%`}
-              hint="residual · perpetual"
+              hint={t('referral.stats.commissionPersistence')}
             />
             <p className="col-span-2 md:col-span-3 text-[11px] text-white/40">
               {t('referral.stats.selfVisitsExcluded')}
