@@ -25,6 +25,8 @@ function readActiveTab(): string {
 }
 
 interface FeedIslandCapsuleProps {
+  isAuthenticated: boolean;
+  onLogoPointerDown: () => void;
   visible: boolean;
   avatar: React.ReactNode;
   onAvatarClick: () => void;
@@ -36,6 +38,8 @@ interface FeedIslandCapsuleProps {
 
 /** Fixed phone navigation capsule with separate sheets behind it. */
 export function FeedIslandCapsule({
+  isAuthenticated,
+  onLogoPointerDown,
   visible,
   avatar,
   onAvatarClick,
@@ -83,21 +87,22 @@ export function FeedIslandCapsule({
       className={`lg:hidden fixed left-1/2 z-[120] w-max h-11 isolate overflow-visible rounded-2xl transition-[opacity,transform] duration-300 ease-out ${show ? 'opacity-100 -translate-x-1/2 translate-y-0 scale-100' : 'pointer-events-none opacity-0 -translate-x-1/2 -translate-y-3 scale-90'}`}
       style={{ top: 'calc(env(safe-area-inset-top, 0px) + 0.375rem)' }}
     >
-      {/* Centre crest: you (or a burger when signed out) left, the bell
-          right, the mark dead centre. The mark opens the feed list under it.
+      {/* Centre crest: avatar left, bell right, mark dead centre. Guests
+          open the login drawer from the mark; members open the feed list.
           The pill hugs its contents and the two side columns share one
           width, so the mark sits in the true middle. */}
       <div data-feed-island-surface className="relative z-10 grid h-11 w-max grid-cols-[1fr_auto_1fr] items-center rounded-2xl border border-white/10 px-[10px] text-white">
         <div className="flex min-w-[28px] items-center justify-start">
-          <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })} className="flex shrink-0 items-center justify-center">
+          {isAuthenticated && <button onClick={onAvatarClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.c02651240c87", { defaultValue: "Toggle menu" })} className="flex shrink-0 items-center justify-center">
             {avatar ?? <Menu className="w-6 h-6" />}
-          </button>
+          </button>}
         </div>
         <button
-          onClick={toggleFeedTabs}
+          onClick={isAuthenticated ? toggleFeedTabs : onAvatarClick}
+          onPointerDown={onLogoPointerDown}
           tabIndex={visible ? 0 : -1}
-          aria-expanded={tabsOpen}
-          aria-label={_copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label })}
+          aria-expanded={isAuthenticated ? tabsOpen : undefined}
+          aria-label={isAuthenticated ? _copy("copy.7b9a17ee7709", { defaultValue: "Feeds, now on {{value1}}", value1: tab.label }) : _copy("copy.c189840cf7e2", { defaultValue: "Log in" })}
           className="flex shrink-0 items-center justify-center px-5"
         >
           <span className="relative inline-flex" data-feed-refresh-logo aria-busy={refresh.refreshing}>
