@@ -21,6 +21,15 @@
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   opacity: var(--profile-frost);
+  overflow: hidden;
+}
+.profile-collapse-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(18px);
+  transform: scale(1.12);
+  opacity: .28;
 }
 .profile-collapse-content {
   position: relative;
