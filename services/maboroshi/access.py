@@ -14,11 +14,6 @@ import requests
 from fastapi import HTTPException
 
 DATA = Path(os.environ.get('MABOROSHI_DATA', '/var/lib/dehub-maboroshi'))
-SETTINGS = DATA / 'provider-settings.json'
-if SETTINGS.exists():
-    for key, value in json.loads(SETTINGS.read_text()).items():
-        if key in ('REPLICATE_API_TOKEN', 'ENHANCOR_API_KEY'):
-            os.environ[key] = value
 PUBLIC = os.environ.get('MABOROSHI_PUBLIC_URL', 'https://live.dehub.io/maboroshi').rstrip('/')
 MODES = ('depth', 'face_mesh', 'depth_mesh')
 FILES = ('upload.mp4', 'original.mp4', 'depth.mp4', 'mask.mp4', 'composite-silent.mp4',
@@ -106,10 +101,11 @@ def resolve_media(relative, expires, supplied):
 
 
 def readiness():
-    required = ('REPLICATE_API_TOKEN', 'ENHANCOR_API_KEY', 'INTERNAL_SERVICE_SECRET',
+    from providers import ready
+    required = ('INTERNAL_SERVICE_SECRET',
                 'MABOROSHI_MEDIA_SECRET', 'MABOROSHI_PREPARE_MICROS',
                 'MABOROSHI_DRAFT_MICROS_PER_SECOND', 'MABOROSHI_HD_MICROS_PER_SECOND')
-    return all(os.environ.get(key) for key in required)
+    return all(os.environ.get(key) for key in required) and ready()
 
 
 def price(row, stage):
@@ -118,7 +114,8 @@ def price(row, stage):
             result = int(os.environ['MABOROSHI_PREPARE_MICROS'])
         else:
             rate = int(os.environ['MABOROSHI_' + stage.upper() + '_MICROS_PER_SECOND'])
-            result = math.ceil(max(4, row['seconds']) + row['reference_seconds']) * rate
+            # Seedance bills all input video seconds plus the output duration.
+            result = math.ceil(row['seconds'] + row['reference_seconds'] + max(4, math.ceil(row['seconds']))) * rate
         if result <= 0 or result > 100_000_000:
             raise ValueError('Invalid configured price')
         return result

@@ -1745,6 +1745,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     aria-pressed={videoModel === (workflow === 'swap' ? 'kling-o3-edit' : 'kling-3-motion')}
                     onClick={() => { setVideoModel(workflow === 'swap' ? 'kling-o3-edit' : 'kling-3-motion'); setPresetId(workflow === 'swap' ? 'reference-character-swap' : 'reference-copy-motion'); }}
                     className="rounded-lg border border-white/20 px-3 py-2 text-xs text-white/80">{t(workflow === 'swap' ? 'creator.characterSwap' : 'creator.copyMotion')}</button>)}
+                  <a href="/creator/maboroshi" title={t('creator.toolMaboroshiDesc')}
+                    className="rounded-lg border border-white/20 px-3 py-2 text-xs text-white/80">{t('creator.toolMaboroshi')}</a>
                 </div>
               )}
 

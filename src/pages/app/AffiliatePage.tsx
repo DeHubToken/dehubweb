@@ -679,6 +679,7 @@ function AffiliateRow({ entry, viewerWallet }: { entry: AffiliateReferralEntry; 
         </div>
       </div>
 
+      {entry.subId && <code className="text-xs text-white/60 break-all">sub={entry.subId}</code>}
       <ExternalLink className="w-3.5 h-3.5 text-white/30 shrink-0" />
     </Link>
   );

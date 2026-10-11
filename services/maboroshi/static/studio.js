@@ -105,7 +105,7 @@ async function authenticate(data) {
   if (!token) { $('connection').textContent = 'Sign in to DeHub to save and run a Maboroshi project.'; return; }
   try {
     await list();
-    $('connection').textContent = !allowPayments ? 'Your saved project previews and downloads are available in this app.' : !ready ? 'Maboroshi is being connected to its generation providers. You can save a source now; paid processing is unavailable and nothing will be charged.' : 'Connected to your DeHub account. Each processing step shows its price before you start.';
+    $('connection').textContent = !allowPayments ? 'Your saved project previews and downloads are available in this app.' : !ready ? 'Processing is temporarily unavailable. Your projects stay saved and nothing will be charged.' : 'Use your DeHub credits. Each processing step shows its price before you start.';
     if (!allowPayments) { $('prepare-section').hidden = true; $('draft-section').hidden = true; $('hd-review').hidden = true; }
   } catch (error) { $('upload').disabled = true; message(error.message); }
 }

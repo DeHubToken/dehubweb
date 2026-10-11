@@ -67,7 +67,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
   const { pathname } = useLocation();
   const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
   const isHostRouteActive =
-    normalizedPath === '/app/tv' ||
+    normalizedPath === '/tv' || normalizedPath === '/app/tv' ||
     normalizedPath === '/' || normalizedPath === '/app' ||
     normalizedPath === '/videos' || normalizedPath === '/shorts';
   useEffect(() => {

@@ -369,7 +369,7 @@ if (typeof window !== "undefined") {
  */
 function AppContent() {
   const { t: _copy } = _useCopy();
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isAuthenticated, isConnecting, isProcessingRedirect, requiresUsername } = useAuth();
   const queryClient = useQueryClient();
   usePreloadIcons();
   // Views are recorded by <PageViewTracker /> above <Routes>; this only
@@ -411,9 +411,9 @@ function AppContent() {
 
   // When a wallet signs in, self-attribute any pending cookie referral.
   useEffect(() => {
-    if (!wallet) return;
+    if (!wallet || !isAuthenticated || requiresUsername || isConnecting || isProcessingRedirect) return;
     import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
-  }, [wallet]);
+  }, [wallet, isAuthenticated, requiresUsername, isConnecting, isProcessingRedirect]);
 
   return (
     <>
@@ -594,6 +594,7 @@ function AppContent() {
             <Route path="/jobs" element={null} />
             <Route path="/stats" element={null} />
             <Route path="/features" element={null} />
+            <Route path="/feedback" element={null} />
             <Route path="/governance" element={null} />
             <Route path="/dao" element={null} />
             <Route path="/stake" element={null} />
@@ -654,6 +655,7 @@ function AppContent() {
               <Route path="agents" element={null} />
               <Route path="tv" element={null} />
               <Route path="features" element={null} />
+              <Route path="feedback" element={null} />
               <Route path="requests" element={<Navigate to="/app/features" replace />} />
               <Route path="governance" element={null} />
               <Route path="dao" element={null} />

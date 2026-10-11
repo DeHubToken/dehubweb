@@ -28,7 +28,7 @@ export const NAV_LABEL_KEYS: Record<string, string> = {
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Editor: 'creator.editor', Creator: 'commandCentre.creator',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
-  'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', SuperPowers: 'superpowers.title', Governance: 'nav.governance', DAO: 'nav.dao', Communities: 'nav.communities', Events: 'nav.events', Careers: 'nav.careers', Converter: 'nav.converter', Migrate: 'migrate.title', Fractions: 'fractions.title', Glossary: 'nav.glossary', Guide: 'nav.guide', Stats: 'nav.stats', Arcade: 'nav.arcade', Apps: 'miniApps.store.title',
+  Feedback: 'stats.feedback.title', 'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', SuperPowers: 'superpowers.title', Governance: 'nav.governance', DAO: 'nav.dao', Communities: 'nav.communities', Events: 'nav.events', Careers: 'nav.careers', Converter: 'nav.converter', Migrate: 'migrate.title', Fractions: 'fractions.title', Glossary: 'nav.glossary', Guide: 'nav.guide', Stats: 'nav.stats', Arcade: 'nav.arcade', Apps: 'miniApps.store.title',
   // Search-only destinations (nav-search.ts). The three feed surfaces reuse the
   // keys the feed tabs already ship, so they arrive translated for free.
   Videos: 'feed.videos', Shorts: 'feed.shorts', Music: 'feed.music',

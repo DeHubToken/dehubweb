@@ -1,0 +1,34 @@
+name: Affiliate outreach tracking
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/20261011120000_affiliate_sub_referrals.sql'
+      - 'tests/sql/affiliate-sub-*.sql'
+      - '.github/workflows/affiliate-sub-referrals.yml'
+  workflow_dispatch:
+jobs:
+  database:
+    name: Affiliate outreach privacy and attribution
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    services:
+      postgres:
+        image: public.ecr.aws/docker/library/postgres:16
+        env:
+          POSTGRES_PASSWORD: affiliate-test
+          POSTGRES_DB: affiliate_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s
+          --health-timeout 5s --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: affiliate-test
+      PGDATABASE: affiliate_test
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          psql -v ON_ERROR_STOP=1 -f tests/sql/affiliate-sub-bootstrap.sql
+          psql -v ON_ERROR_STOP=1 -f supabase/migrations/20261011120000_affiliate_sub_referrals.sql
+          psql -v ON_ERROR_STOP=1 -f tests/sql/affiliate-sub-referrals.sql

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { normalizeSubReferral } from '@/lib/affiliate-subref';
 import { SEOHead } from "@/components/SEOHead";
 import { Copy, ArrowRight, Share2 } from "lucide-react";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ export default function ReferralLanding() {
   const code = (rawCode || "").trim().toUpperCase();
   const valid = isValidAffiliateCode(code);
   const { search } = useLocation();
+  const subId = normalizeSubReferral(new URLSearchParams(search).get('sub'));
   const navigate = useNavigate();
   // `/r/<CODE>/docs/whatever` (or `?to=/docs/whatever`) attributes the visit and
   // then hands the visitor straight to that page, so one hyperlink can both earn
@@ -39,20 +41,21 @@ export default function ReferralLanding() {
   const baseShareImage = `${getAffiliateShareImageUrl(code, 1200, 630, "svg")}&v=${SHARE_IMG_VERSION}`;
   const shareImage = imgRetry > 0 ? `${baseShareImage}&r=${imgRetry}` : baseShareImage;
   const pageUrl = `${SITE}/r/${code}`;
-  const ctaUrl = `/app?ref=${code}`;
+  const shareUrl = subId ? `${pageUrl}?sub=${encodeURIComponent(subId)}` : pageUrl;
+  const ctaUrl = withAffiliateRef("/app", code, subId);
 
   // Attribution has to be written before the destination page mounts, so the
   // cookie and the redirect happen in one effect rather than racing a <Navigate>
   // against the lookup effect below.
   useEffect(() => {
     if (!valid || !deepLink) return;
-    setAffiliateRef(code);
-    navigate(deepLink, { replace: true });
-  }, [valid, deepLink, code, navigate]);
+    setAffiliateRef(code, subId);
+    navigate(withAffiliateRef(deepLink, code, subId), { replace: true });
+  }, [valid, deepLink, code, navigate, subId]);
 
   useEffect(() => {
     if (!valid || deepLink) return;
-    setAffiliateRef(code);
+    setAffiliateRef(code, subId);
     let cancelled = false;
     (async () => {
       // @ts-ignore - new table not in generated types
@@ -94,7 +97,7 @@ export default function ReferralLanding() {
       if (!cancelled && resolved) setInviter(resolved);
     })();
     return () => { cancelled = true; };
-  }, [code, valid, deepLink]);
+  }, [code, valid, deepLink, subId]);
 
   // This page mounts outside WalletProviders (see App.tsx), so there is no
   // auth context to ask. The signed-in address is read straight from storage
@@ -194,7 +197,7 @@ export default function ReferralLanding() {
                   {landing.ctas.map((cta, i) => (
                     <Link
                       key={`${cta.destination}-${i}`}
-                      to={withAffiliateRef(cta.destination, code)}
+                      to={withAffiliateRef(cta.destination, code, subId)}
                       onClick={() => recordAffiliateCtaClick(code, cta.destination, getPersistedViewerAddress())}
                       className="group flex items-center justify-between gap-2 rounded-xl border border-white/15 bg-white/[0.04] px-4 py-3 text-left text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
                     >
@@ -207,17 +210,17 @@ export default function ReferralLanding() {
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Button asChild size="lg">
                   <Link
-                    to={landing.destination ? withAffiliateRef(landing.destination, code) : ctaUrl}
+                    to={landing.destination ? withAffiliateRef(landing.destination, code, subId) : ctaUrl}
                     onClick={() => recordAffiliateCtaClick(code, landing.destination || "/app", getPersistedViewerAddress())}
                   >{landing.ctaLabel || t('referral.continueToDehub')} <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
-                <Button size="lg" variant="outline" onClick={() => copy(pageUrl)}>
+                <Button size="lg" variant="outline" onClick={() => copy(shareUrl)}>
                   <Copy className="mr-2 h-4 w-4" /> {t('referral.copyInviteLink')}
                 </Button>
                 {typeof navigator !== "undefined" && (navigator as Navigator & { share?: (d: ShareData) => Promise<void> }).share && (
                   <Button size="lg" variant="ghost" onClick={() => {
                     (navigator as Navigator & { share: (d: ShareData) => Promise<void> }).share({
-                      title, text: description, url: pageUrl,
+                      title, text: description, url: shareUrl,
                     }).catch(() => undefined);
                   }}>
                     <Share2 className="mr-2 h-4 w-4" /> {t('referral.share')}

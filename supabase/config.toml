@@ -415,3 +415,7 @@ project_id = "aigxuutjaqsywioxjefr"
 
 [functions.editor-visual-highlights]
 verify_jwt = false
+
+# Private worker authenticates using the existing internal service credential.
+[functions.maboroshi-provider]
+verify_jwt = false
