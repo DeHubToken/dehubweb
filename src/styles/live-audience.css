@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Live viewer, phone web: the "Who's here" sheet and the Follow pill.
+   ==========================================================================
+   Colours come from the post-stage tokens (--stage-*, post-stage.css), so
+   each theme's live surfaces match its post page. Canvas themes draw each
+   list in the sheet as a glass bento; System is full immersive, no boxes,
+   lists full width between hairlines.
+   ========================================================================== */
+
+[data-live-audience-ink] { color: var(--stage-ink, #f4f4f5); }
+[data-live-audience-muted] { color: var(--stage-muted, #9a9aa2); }
+[data-live-audience-accent] { color: var(--stage-accent, #fff); }
+
+[data-live-audience-section] {
+  margin: 0 12px 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--stage-glass, rgb(255 255 255 / 0.08));
+  border: 1px solid var(--stage-border, rgb(255 255 255 / 0.12));
+}
+[data-live-audience-label] {
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--stage-muted, #9a9aa2);
+}
+
+html[data-theme='system'] [data-live-audience-section] {
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--stage-border, rgb(255 255 255 / 0.12));
+}
+html[data-theme='system'] [data-live-audience-section] [data-live-audience-row] + [data-live-audience-row] {
+  border-top: 1px solid rgb(255 255 255 / 0.08);
+}
+
+/* The one coloured control on the live frame. */
+[data-live-follow] {
+  background: var(--stage-accent, #fff);
+  color: var(--stage-on-accent, #000);
+}

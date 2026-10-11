@@ -35,6 +35,7 @@ const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then(m => ({ default: m.PostModal }))
 );
 import { useAuth } from '@/contexts/AuthContext';
+import { canManageAgents } from '@/lib/agent-access';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -45,7 +46,7 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   const closeMenu = useCallback(() => onOpenChange(false), [onOpenChange]);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAuthenticated, disconnect, user } = useAuth();
+  const { isAuthenticated, disconnect, user, walletAddress } = useAuth();
   // Read-only: SelfBadgeSync and the header already own these fetches.
   const dhbBalance = useSelfBadge().balance ?? 0;
   const { data: unreadCount } = useUnreadNotificationCount();
@@ -65,8 +66,8 @@ export function AppSidebar({ isOpen, onOpenChange }: AppSidebarProps) {
   // keeps its adult destinations until the query or the language changes.
   const isKidsMode = useKidsModeLock();
   const visibleNavItems = useMemo(
-    () => filterNavItems(NAV_ITEMS, menuQuery, t),
-    [menuQuery, t, isKidsMode],
+    () => filterNavItems(NAV_ITEMS, menuQuery, t, canManageAgents(walletAddress)),
+    [menuQuery, t, isKidsMode, walletAddress],
   );
   // Reset whenever the sheet closes, so it never reopens mid-filter.
   useEffect(() => {

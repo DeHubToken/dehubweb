@@ -32,6 +32,8 @@ import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
 import { PollCard } from '@/components/app/cards/PollCard';
+import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
+import type { LiveAudience } from '@/lib/api/dehub/livestream';
 import type { DeHubPoll } from '@/lib/api/dehub';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
@@ -250,6 +252,7 @@ export default function StateGalleryPage() {
         <PinnedProfileGallery />
 
         <PollGallery />
+        <LiveViewerGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
           <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
@@ -424,6 +427,64 @@ const GALLERY_COMMUNITY = {
 } as Community;
 const noop = () => {};
 
+const GALLERY_STREAM_ID = 'gallery-live-stream';
+const minutesAgo = (m: number) => new Date(Date.now() - m * 60_000).toISOString();
+const GALLERY_AUDIENCE: LiveAudience = {
+  host: { address: '0x00000000000000000000000000000000000000a1', username: 'marco_v', displayName: 'Marco', startedAt: minutesAgo(24) },
+  watching: 216,
+  here: [
+    { address: '0x00000000000000000000000000000000000000b1', username: 'kira', displayName: 'Kira', joinedAt: minutesAgo(1) },
+    { address: '0x00000000000000000000000000000000000000b2', username: 'dex', displayName: 'Dex', joinedAt: minutesAgo(2) },
+    { address: '0x00000000000000000000000000000000000000b3', username: 'juno', displayName: 'Juno', joinedAt: minutesAgo(4) },
+    { address: '0x00000000000000000000000000000000000000b4', username: 'oto', displayName: 'Oto', joinedAt: minutesAgo(7) },
+  ],
+  topTippers: [
+    { address: '0x00000000000000000000000000000000000000b2', username: 'dex', displayName: 'Dex', total: 350, count: 3 },
+    { address: '0x00000000000000000000000000000000000000b1', username: 'kira', displayName: 'Kira', total: 120, count: 1 },
+    { address: '0x00000000000000000000000000000000000000b4', username: 'oto', displayName: 'Oto', total: 80, count: 2 },
+  ],
+  mostActive: [
+    { address: '0x00000000000000000000000000000000000000b3', username: 'juno', displayName: 'Juno', messages: 42 },
+    { address: '0x00000000000000000000000000000000000000b1', username: 'kira', displayName: 'Kira', messages: 19 },
+  ],
+};
+
+/** The phone live viewer's chrome over a stand-in picture, with a seeded Who's here. */
+function LiveViewerGallery() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  useState(() => queryClient.setQueryData(['live-audience', GALLERY_STREAM_ID], GALLERY_AUDIENCE));
+  return (
+    <section data-page-bento data-live-viewer-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('liveAudience.whosHere')}</h2>
+      <AuthContext.Provider value={GALLERY_AUTH}>
+        <div
+          data-live-viewer-frame
+          className="relative mx-auto h-[720px] w-[390px] max-w-full overflow-hidden rounded-[28px] bg-black"
+          style={{ background: 'radial-gradient(60% 30% at 50% 26%, rgba(255,170,90,.55), transparent 70%), radial-gradient(40% 25% at 20% 10%, rgba(255,60,160,.5), transparent 70%), radial-gradient(40% 25% at 85% 12%, rgba(80,120,255,.55), transparent 70%), linear-gradient(180deg, #2a1240 0%, #3b1d4f 40%, #120a1c 100%)' }}
+        >
+          <ImmersiveLiveChrome
+            streamerName="Marco"
+            creatorUsername="marco_v"
+            creatorId="0x00000000000000000000000000000000000000a1"
+            avatar={galleryAvatar}
+            title="Friday night set, requests open"
+            isLive
+            isEnded={false}
+            viewers={216}
+            giftTotal={3100}
+            startedAt={minutesAgo(24)}
+            isMuted
+            onToggleMute={noop}
+            hidden={false}
+            streamId={GALLERY_STREAM_ID}
+          />
+        </div>
+      </AuthContext.Provider>
+    </section>
+  );
+}
+
 /** The desktop profile header wearing a pinned community (lg and up; phones keep the card). */
 function PinnedProfileGallery() {
   const { t: _copy } = _useCopy();
@@ -471,7 +532,7 @@ function PinnedProfileGallery() {
 
 // Ids far above any real post, so the seeded answers never collide with one.
 const GALLERY_POLLS: Array<{ label: string; poll: DeHubPoll }> = (() => {
-  const { t: _copy } = _useCopy();
+  const _copy = _translateCopy;
   const day = 24 * 60 * 60 * 1000;
   const base = {
     _id: 'gallery', address: '0x0000000000000000000000000000000000000000',
