@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * "Post to DeHub" flow — renders the timeline via the existing export pipeline,
  * then opens the global PostModal with the resulting video file pre-attached.
@@ -30,6 +31,7 @@ function filesToFileList(files: File[]): FileList {
 }
 
 export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
+  const { t: _copy } = _useCopy();
   const auth = useAuth();
   const isAuthenticated = !!auth?.isAuthenticated;
   const openLoginModal = auth?.openLoginModal;
@@ -64,11 +66,11 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
 
   const onClick = () => {
     if (duration <= 0) {
-      toast.error("Add clips to the timeline first.");
+      toast.error(_copy("copy.7a8850b5d8b4", { defaultValue: "Add clips to the timeline first." }));
       return;
     }
     if (!isExportSupported()) {
-      toast.error("Your browser doesn't support video export. Try Chrome, Edge, Brave, or Arc.");
+      toast.error(_copy("copy.c642972f523a", { defaultValue: "Your browser doesn't support video export. Try Chrome, Edge, Brave, or Arc." }));
       return;
     }
     if (!isAuthenticated) {
@@ -140,7 +142,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
   return (
     <>
       <LiquidGlassBubble2
-        label="Post"
+        label={_copy("copy.a5554622c655", { defaultValue: "Post" })}
         icon={<Share2 className="h-4 w-4" />}
         onClick={onClick}
         iconOnly={iconOnly}
@@ -151,10 +153,8 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
       <Dialog open={renderOpen} onOpenChange={(v) => { if (!v) abortRef.current?.abort(); setRenderOpen(v); }}>
         <DialogContent className="border-white/10 bg-black/80 text-white backdrop-blur-[24px] sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Rendering your video…</DialogTitle>
-            <DialogDescription className="text-white/60">
-              Once it's ready, the post composer will open with the video attached.
-            </DialogDescription>
+            <DialogTitle>{_copy("copy.592b84d727da", { defaultValue: "Rendering your video…" })}</DialogTitle>
+            <DialogDescription className="text-white/60">{_copy("copy.2b10d962095a", { defaultValue: "Once it's ready, the post composer will open with the video attached." })}</DialogDescription>
           </DialogHeader>
           <div className="space-y-2 py-2">
             <Progress value={progress} className="h-2 bg-white/10" />
@@ -169,8 +169,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
               onClick={() => abortRef.current?.abort()}
               className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white"
             >
-              <X className="mr-1 h-4 w-4" /> Cancel
-            </Button>
+              <X className="mr-1 h-4 w-4" />{_copy("copy.24b113e7a0b4", { defaultValue: " Cancel" })}</Button>
           </div>
         </DialogContent>
       </Dialog>

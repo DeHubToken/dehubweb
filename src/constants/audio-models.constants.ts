@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Audio Generation Configuration
  * ==============================
@@ -326,7 +327,7 @@ export const TTS_MODELS: Record<TtsModelKey, TtsModel> = {
   eleven_v3: {
     id: 'eleven_v3',
     name: 'Eleven v3',
-    description: 'Most expressive — reads performance tags',
+    get description() { return _translateCopy("copy.4a7e6c152011", { defaultValue: "Most expressive — reads performance tags" }); },
     supportsTags: true,
     // v3 derives pace from the tags and the text rather than a speed dial, and
     // sending one is rejected outright.
@@ -336,7 +337,7 @@ export const TTS_MODELS: Record<TtsModelKey, TtsModel> = {
   eleven_multilingual_v2: {
     id: 'eleven_multilingual_v2',
     name: 'Multilingual v2',
-    description: 'Most lifelike and stable — the safe default',
+    get description() { return _translateCopy("copy.a247f63db3cc", { defaultValue: "Most lifelike and stable — the safe default" }); },
     supportsTags: false,
     supportsSpeed: true,
     languages: 29,
@@ -344,7 +345,7 @@ export const TTS_MODELS: Record<TtsModelKey, TtsModel> = {
   eleven_turbo_v2_5: {
     id: 'eleven_turbo_v2_5',
     name: 'Turbo v2.5',
-    description: 'Balanced quality and speed',
+    get description() { return _translateCopy("copy.9007e731081b", { defaultValue: "Balanced quality and speed" }); },
     supportsTags: false,
     supportsSpeed: true,
     languages: 32,
@@ -352,7 +353,7 @@ export const TTS_MODELS: Record<TtsModelKey, TtsModel> = {
   eleven_flash_v2_5: {
     id: 'eleven_flash_v2_5',
     name: 'Flash v2.5',
-    description: 'Fastest, for long scripts',
+    get description() { return _translateCopy("copy.7ade9f675e6f", { defaultValue: "Fastest, for long scripts" }); },
     supportsTags: false,
     supportsSpeed: true,
     languages: 32,
@@ -397,9 +398,9 @@ export const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
  * and it costs nothing extra to offer.
  */
 export const AUDIO_OUTPUT_FORMATS = [
-  { value: 'mp3_44100_128', label: 'MP3 128 kbps', detail: 'Default — smallest' },
-  { value: 'mp3_44100_192', label: 'MP3 192 kbps', detail: 'Higher quality' },
-  { value: 'pcm_44100', label: 'WAV / PCM', detail: 'Uncompressed, for editing' },
+  { value: 'mp3_44100_128', get label() { return _translateCopy("copy.811aa4592c1c", { defaultValue: "MP3 128 kbps" }); }, detail: 'Default — smallest' },
+  { value: 'mp3_44100_192', get label() { return _translateCopy("copy.4812442f11c9", { defaultValue: "MP3 192 kbps" }); }, detail: 'Higher quality' },
+  { value: 'pcm_44100', get label() { return _translateCopy("copy.0d199b18375b", { defaultValue: "WAV / PCM" }); }, detail: 'Uncompressed, for editing' },
 ] as const;
 
 export type AudioOutputFormat = (typeof AUDIO_OUTPUT_FORMATS)[number]['value'];
@@ -420,38 +421,38 @@ export interface AudioLanguage {
 }
 
 export const AUDIO_LANGUAGES: AudioLanguage[] = [
-  { code: 'en', label: 'English' },
-  { code: 'es', label: 'Spanish' },
-  { code: 'fr', label: 'French' },
-  { code: 'de', label: 'German' },
-  { code: 'it', label: 'Italian' },
-  { code: 'pt', label: 'Portuguese' },
-  { code: 'pl', label: 'Polish' },
-  { code: 'nl', label: 'Dutch' },
-  { code: 'sv', label: 'Swedish' },
-  { code: 'no', label: 'Norwegian' },
-  { code: 'da', label: 'Danish' },
-  { code: 'fi', label: 'Finnish' },
-  { code: 'cs', label: 'Czech' },
-  { code: 'uk', label: 'Ukrainian' },
-  { code: 'ru', label: 'Russian' },
-  { code: 'tr', label: 'Turkish' },
-  { code: 'ar', label: 'Arabic' },
-  { code: 'hi', label: 'Hindi' },
-  { code: 'ta', label: 'Tamil' },
-  { code: 'id', label: 'Indonesian' },
-  { code: 'fil', label: 'Filipino' },
-  { code: 'vi', label: 'Vietnamese' },
-  { code: 'ms', label: 'Malay' },
-  { code: 'zh', label: 'Chinese' },
-  { code: 'ja', label: 'Japanese' },
-  { code: 'ko', label: 'Korean' },
-  { code: 'el', label: 'Greek' },
-  { code: 'ro', label: 'Romanian' },
-  { code: 'hu', label: 'Hungarian' },
-  { code: 'bg', label: 'Bulgarian' },
-  { code: 'hr', label: 'Croatian' },
-  { code: 'sk', label: 'Slovak' },
+  { code: 'en', get label() { return _translateCopy("copy.ba118bf7fc9c", { defaultValue: "English" }); } },
+  { code: 'es', get label() { return _translateCopy("copy.3411059cb8e0", { defaultValue: "Spanish" }); } },
+  { code: 'fr', get label() { return _translateCopy("copy.7458199fe97a", { defaultValue: "French" }); } },
+  { code: 'de', get label() { return _translateCopy("copy.a659b60d246d", { defaultValue: "German" }); } },
+  { code: 'it', get label() { return _translateCopy("copy.fe1d9c7db376", { defaultValue: "Italian" }); } },
+  { code: 'pt', get label() { return _translateCopy("copy.98b01b890687", { defaultValue: "Portuguese" }); } },
+  { code: 'pl', get label() { return _translateCopy("copy.770341d6e89e", { defaultValue: "Polish" }); } },
+  { code: 'nl', get label() { return _translateCopy("copy.45f16144c18c", { defaultValue: "Dutch" }); } },
+  { code: 'sv', get label() { return _translateCopy("copy.a89a9329d3d4", { defaultValue: "Swedish" }); } },
+  { code: 'no', get label() { return _translateCopy("copy.71f4cf5c7a23", { defaultValue: "Norwegian" }); } },
+  { code: 'da', get label() { return _translateCopy("copy.fe4338ad620c", { defaultValue: "Danish" }); } },
+  { code: 'fi', get label() { return _translateCopy("copy.5710b435f90a", { defaultValue: "Finnish" }); } },
+  { code: 'cs', get label() { return _translateCopy("copy.8b463ea23a7e", { defaultValue: "Czech" }); } },
+  { code: 'uk', get label() { return _translateCopy("copy.6f424303fa12", { defaultValue: "Ukrainian" }); } },
+  { code: 'ru', get label() { return _translateCopy("copy.5bcc40adf6e0", { defaultValue: "Russian" }); } },
+  { code: 'tr', get label() { return _translateCopy("copy.6e7aac65db01", { defaultValue: "Turkish" }); } },
+  { code: 'ar', get label() { return _translateCopy("copy.bafb66f32cd7", { defaultValue: "Arabic" }); } },
+  { code: 'hi', get label() { return _translateCopy("copy.63c2dc51d089", { defaultValue: "Hindi" }); } },
+  { code: 'ta', get label() { return _translateCopy("copy.135d78ac8f56", { defaultValue: "Tamil" }); } },
+  { code: 'id', get label() { return _translateCopy("copy.4fe1bb67f3b9", { defaultValue: "Indonesian" }); } },
+  { code: 'fil', get label() { return _translateCopy("copy.e8a6062c5c37", { defaultValue: "Filipino" }); } },
+  { code: 'vi', get label() { return _translateCopy("copy.f25499e9df5c", { defaultValue: "Vietnamese" }); } },
+  { code: 'ms', get label() { return _translateCopy("copy.cd43b2d3b020", { defaultValue: "Malay" }); } },
+  { code: 'zh', get label() { return _translateCopy("copy.8a9779f42128", { defaultValue: "Chinese" }); } },
+  { code: 'ja', get label() { return _translateCopy("copy.be4ee906d3ef", { defaultValue: "Japanese" }); } },
+  { code: 'ko', get label() { return _translateCopy("copy.04656c6fe003", { defaultValue: "Korean" }); } },
+  { code: 'el', get label() { return _translateCopy("copy.5c74e5b8100c", { defaultValue: "Greek" }); } },
+  { code: 'ro', get label() { return _translateCopy("copy.096b861df653", { defaultValue: "Romanian" }); } },
+  { code: 'hu', get label() { return _translateCopy("copy.58801e6907f0", { defaultValue: "Hungarian" }); } },
+  { code: 'bg', get label() { return _translateCopy("copy.ecd986094baf", { defaultValue: "Bulgarian" }); } },
+  { code: 'hr', get label() { return _translateCopy("copy.754787c2f88c", { defaultValue: "Croatian" }); } },
+  { code: 'sk', get label() { return _translateCopy("copy.e2922f6751d4", { defaultValue: "Slovak" }); } },
 ];
 
 // ── Task-specific bounds ────────────────────────────────────────────────────

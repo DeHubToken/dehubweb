@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -143,6 +144,7 @@ interface LivePostChatProps {
 }
 
 export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = false, isHost = false, overlay = false }: LivePostChatProps) {
+  const { t: _copy } = _useCopy();
   // Gift, share and the reaction thumb, when a full-bleed viewer is around
   // this chat. They share the composer's row — see live-viewer-actions.
   const viewerActions = useLiveViewerActions();
@@ -246,11 +248,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       await pinLiveChatMessage(streamId, msg.id);
       setPinnedMessageId(msg.id);
     } catch {
-      toast.error('Failed to pin message');
+      toast.error(_copy("copy.675c5fe95089", { defaultValue: "Failed to pin message" }));
     } finally {
       setIsPinning(false);
     }
-  }, [streamId]);
+  }, [streamId, _copy]);
 
   const handleUnpinMessage = useCallback(async () => {
     if (!pinnedMessageId) return;
@@ -259,11 +261,11 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       await unpinLiveChatMessage(streamId, pinnedMessageId);
       setPinnedMessageId(null);
     } catch {
-      toast.error('Failed to unpin message');
+      toast.error(_copy("copy.3b69de078742", { defaultValue: "Failed to unpin message" }));
     } finally {
       setIsPinning(false);
     }
-  }, [streamId, pinnedMessageId]);
+  }, [streamId, pinnedMessageId, _copy]);
 
   /** Your own line, whoever is hosting — the test the edit and delete controls hang off. */
   const isMine = useCallback(
@@ -298,7 +300,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
-      toast.error('Sign in to send voice notes');
+      toast.error(_copy("copy.e00e9d5ec2e0", { defaultValue: "Sign in to send voice notes" }));
       return;
     }
     const toastId = 'livechat-voice-upload';
@@ -306,23 +308,23 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
     try {
       const { url, duration } = await uploadLiveChatVoice(blob);
       await send('', 'audio', undefined, undefined, url, duration);
-      toast.success('Voice note sent!', { id: toastId });
+      toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[LiveChat] Voice upload failed:', err);
       toast.error(err?.message || 'Failed to send voice note', { id: toastId });
     }
-  }, [isAuthenticated, send]);
+  }, [isAuthenticated, send, _copy]);
 
   const handleSend = async () => {
     if (!isAuthenticated) {
-      toast.error('Sign in to chat');
+      toast.error(_copy("copy.048ff525a56b", { defaultValue: "Sign in to chat" }));
       return;
     }
     try {
       await send(newMessage.trim());
       setNewMessage.complete(newMessage, '');
     } catch {
-      toast.error('Failed to send message');
+      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
     }
   };
 
@@ -363,18 +365,18 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       <div className={cn('flex items-center justify-between mb-3', overlay && 'hidden')}>
         <div className="flex items-center gap-2">
           <MessageSquare className="w-4 h-4 text-zinc-400" />
-          <h3 className="font-semibold text-white text-sm">Live Chat</h3>
+          <h3 className="font-semibold text-white text-sm">{_copy("copy.c4ea7311107b", { defaultValue: "Live Chat" })}</h3>
           {isOffline && (
-            <span className="text-xs text-zinc-500 px-2 py-0.5 rounded-full bg-zinc-800">Offline</span>
+            <span className="text-xs text-zinc-500 px-2 py-0.5 rounded-full bg-zinc-800">{_copy("copy.a1794783aab7", { defaultValue: "Offline" })}</span>
           )}
         </div>
         {/* The audience, not the platform. A bare people-icon-plus-number is
             exactly what the old global count looked like, so this one says
             what it is counting. */}
         {watching !== null && (
-          <div className="flex items-center gap-1.5 text-zinc-500 text-xs" title="People watching this stream right now">
+          <div className="flex items-center gap-1.5 text-zinc-500 text-xs" title={_copy("copy.7c5784e7b79a", { defaultValue: "People watching this stream right now" })}>
             <Eye className="w-3.5 h-3.5" />
-            <span>{watching} watching</span>
+            <span>{watching}{_copy("copy.dcb8e1a4fcaa", { defaultValue: " watching" })}</span>
           </div>
         )}
       </div>
@@ -392,9 +394,9 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
         >
           <Pin className="w-3.5 h-3.5 text-blue-400 shrink-0 fill-current" />
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] text-blue-400 font-medium leading-none mb-0.5">Pinned Message</p>
+            <p className="text-[10px] text-blue-400 font-medium leading-none mb-0.5">{_copy("copy.2aa60e3c77ee", { defaultValue: "Pinned Message" })}</p>
             <p className="text-xs text-zinc-300 truncate">
-              {pinnedMessage.content || (pinnedMessage.message_type === 'voice' ? '🎤 Voice message' : '📎 Media')}
+              {pinnedMessage.content || (pinnedMessage.message_type === 'voice' ? _copy("copy.68981d194d79", { defaultValue: "🎤 Voice message" }) : _copy("copy.2bc85f36b3e4", { defaultValue: "📎 Media" }))}
             </p>
           </div>
           {isHost && (
@@ -422,7 +424,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             : 'h-64 space-y-1 mb-3'
         )}
       >
-        <p className="py-1.5 px-1 text-xs text-zinc-300">Live started</p>
+        <p className="py-1.5 px-1 text-xs text-zinc-300">{_copy("copy.4ff3e008d45e", { defaultValue: "Live started" })}</p>
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
@@ -432,7 +434,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             if (msg.message_type === 'system') {
               const moment = momentById.get(msg.id);
               const who = msg.sender_username
-                || (msg.sender_address ? `${msg.sender_address.slice(0, 6)}…${msg.sender_address.slice(-4)}` : 'A viewer');
+                || (msg.sender_address ? `${msg.sender_address.slice(0, 6)}…${msg.sender_address.slice(-4)}` : _copy("copy.f541591bfa86", { defaultValue: "A viewer" }));
               const face = msg.sender_avatar_url ? buildAvatarUrl(msg.sender_address, msg.sender_avatar_url) : undefined;
               return (
                 <div key={msg.id} className="flex items-start gap-2 py-1 px-1">
@@ -501,8 +503,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                           className="w-full resize-none rounded-lg border border-white/15 bg-black/40 px-2 py-1 text-xs text-white outline-none focus:border-white/30"
                         />
                         <div className="mt-0.5 flex items-center gap-2 text-[10px] text-zinc-400">
-                          <button onClick={() => commitEdit(msg)} className="text-white hover:underline">Save</button>
-                          <button onClick={() => setEditingId(null)} className="hover:text-white">Cancel</button>
+                          <button onClick={() => commitEdit(msg)} className="text-white hover:underline">{_copy("copy.1509f561f241", { defaultValue: "Save" })}</button>
+                          <button onClick={() => setEditingId(null)} className="hover:text-white">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
                         </div>
                       </div>
                     ) : (msg.message_type === 'audio' || msg.message_type === 'voice') && (msg.audio_url || msg.image_url) ? (
@@ -518,7 +520,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                     )}
                     <span className="text-[10px] text-zinc-600 mt-0.5 block">
                       {format(new Date(msg.created_at), 'HH:mm')}
-                      {msg.is_edited && <span className="ml-1">(edited)</span>}
+                      {msg.is_edited && <span className="ml-1">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
                     </span>
                   </div>
                   {/* Your own line — edit and remove, on hover like the host's pin */}
@@ -528,7 +530,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                         <button
                           onClick={() => startEditing(msg)}
                           className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-white mt-0.5"
-                          title="Edit message"
+                          title={_copy("copy.9757ccd5ef12", { defaultValue: "Edit message" })}
                         >
                           <Pencil className="w-3.5 h-3.5" />
                         </button>
@@ -536,7 +538,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                       <button
                         onClick={() => handleDeleteMessage(msg)}
                         className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-red-400 mt-0.5"
-                        title="Delete message"
+                        title={_copy("copy.87e7176a7ce7", { defaultValue: "Delete message" })}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -548,7 +550,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
                       onClick={() => isPinned ? handleUnpinMessage() : handlePinMessage(msg)}
                       disabled={isPinning}
                       className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-blue-400 mt-0.5"
-                      title={isPinned ? 'Unpin' : 'Pin message'}
+                      title={isPinned ? _copy("copy.ee3c71613054", { defaultValue: "Unpin" }) : _copy("copy.b936d7787033", { defaultValue: "Pin message" })}
                     >
                       <Pin className={`w-3.5 h-3.5 ${isPinned ? 'fill-current text-blue-400' : ''}`} />
                     </button>
@@ -575,7 +577,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
               className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
             >
               <Pin className="w-3.5 h-3.5" />
-              {contextMenuMsg.id === pinnedMessageId ? 'Unpin message' : 'Pin message'}
+              {contextMenuMsg.id === pinnedMessageId ? _copy("copy.be8d20ff25bd", { defaultValue: "Unpin message" }) : _copy("copy.b936d7787033", { defaultValue: "Pin message" })}
             </button>
           )}
           {isMine(contextMenuMsg) && (!contextMenuMsg.message_type || contextMenuMsg.message_type === 'text') && (
@@ -583,18 +585,14 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
               onClick={() => startEditing(contextMenuMsg)}
               className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
             >
-              <Pencil className="w-3.5 h-3.5" />
-              Edit message
-            </button>
+              <Pencil className="w-3.5 h-3.5" />{_copy("copy.9757ccd5ef12", { defaultValue: "Edit message" })}</button>
           )}
           {isMine(contextMenuMsg) && (
             <button
               onClick={() => handleDeleteMessage(contextMenuMsg)}
               className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-white/10 transition-colors"
             >
-              <Trash2 className="w-3.5 h-3.5" />
-              Delete message
-            </button>
+              <Trash2 className="w-3.5 h-3.5" />{_copy("copy.87e7176a7ce7", { defaultValue: "Delete message" })}</button>
           )}
         </div>
       )}
@@ -619,7 +617,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
               mention.handleInput(val, cursorPos ?? undefined);
             }}
             onKeyDown={handleKeyDown}
-            placeholder={isOffline ? 'Chat is offline' : 'Type a message...'}
+            placeholder={isOffline ? _copy("copy.17529a437b97", { defaultValue: "Chat is offline" }) : _copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
             disabled={isOffline || !isAuthenticated}
             className={cn(
               'max-h-32 resize-none text-white text-sm',

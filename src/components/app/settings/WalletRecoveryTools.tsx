@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Wallet recovery tools (Settings → Account Security):
@@ -42,6 +43,7 @@ const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text
 // ── Back up wallet (12 words, private key under Advanced) ─────────────────
 
 function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean; onOpenChange: (v: boolean) => void; onBackedUp: () => void }) {
+  const { t: _copy } = _useCopy();
   const { exportPrivateKey, exportPrivateKeyWithBiometrics, supabaseUserId } = useAuth();
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
@@ -96,7 +98,7 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
     <Drawer open={open} onOpenChange={close}>
       <DrawerContent column className="bg-black/95 border-white/10">
         <DrawerHeader>
-          <DrawerTitle className="text-white text-center">Back up wallet</DrawerTitle>
+          <DrawerTitle className="text-white text-center">{_copy("copy.ef9ec257e675", { defaultValue: "Back up wallet" })}</DrawerTitle>
         </DrawerHeader>
         <div className="px-6 pb-8 space-y-4">
           {backup?.phrase && !showKey ? (
@@ -110,9 +112,7 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
                 type="button"
                 onClick={() => setShowKey(true)}
                 className="w-full py-1 text-xs text-white/40 hover:text-white/70 transition-colors"
-              >
-                Advanced: show private key instead
-              </button>
+              >{_copy("copy.50e88d341eaa", { defaultValue: "Advanced: show private key instead" })}</button>
             </>
           ) : revealedKey ? (
             <PrivateKeyBackup
@@ -124,13 +124,13 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
             <>
               <p className="text-white/60 text-sm flex items-center gap-2">
                 {canUseBiometrics && !hasPassword
-                  ? <><Fingerprint className="w-4 h-4 shrink-0" /> Confirm with your fingerprint or face to see your backup.</>
-                  : <><KeyRound className="w-4 h-4 shrink-0" /> Enter your wallet password to see your backup.</>}
+                  ? <><Fingerprint className="w-4 h-4 shrink-0" />{_copy("copy.a130d3033853", { defaultValue: " Confirm with your fingerprint or face to see your backup." })}</>
+                  : <><KeyRound className="w-4 h-4 shrink-0" />{_copy("copy.1cfa0e57d832", { defaultValue: " Enter your wallet password to see your backup." })}</>}
               </p>
               {hasPassword && (
                 <Input
                   type="password"
-                  placeholder="Wallet password"
+                  placeholder={_copy("copy.b7aaad3dc136", { defaultValue: "Wallet password" })}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputClass}
@@ -144,7 +144,7 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
                   disabled={busy || !password}
                   className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
                 >
-                  {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Decrypting…</span> : 'Show backup'}
+                  {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.ffa6d46b9ed4", { defaultValue: " Decrypting…" })}</span> : _copy("copy.2c44bdeaa37c", { defaultValue: "Show backup" })}
                 </Button>
               )}
               {canUseBiometrics && (
@@ -157,11 +157,11 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
                     : 'w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'}
                 >
                   {busy && !hasPassword
-                    ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Decrypting…</span>
+                    ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.ffa6d46b9ed4", { defaultValue: " Decrypting…" })}</span>
                     : (
                       <span className="flex items-center gap-2">
                         <Fingerprint className="w-4 h-4" />
-                        {hasPassword ? 'Use biometrics instead' : 'Show backup'}
+                        {hasPassword ? _copy("copy.b94496133a98", { defaultValue: "Use biometrics instead" }) : _copy("copy.2c44bdeaa37c", { defaultValue: "Show backup" })}
                       </span>
                     )}
                 </Button>
@@ -169,7 +169,7 @@ function BackUpWalletDialog({ open, onOpenChange, onBackedUp }: { open: boolean;
               {!hasPassword && !canUseBiometrics && (
                 <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
                   <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-                  <p>This wallet unlocks with biometrics, which aren’t available in this browser. Back it up from the device you set it up on.</p>
+                  <p>{_copy("copy.7b33d21f5c2c", { defaultValue: "This wallet unlocks with biometrics, which aren’t available in this browser. Back it up from the device you set it up on." })}</p>
                 </div>
               )}
             </>
@@ -188,6 +188,7 @@ const OLD_LOGIN_LABELS: Record<string, string> = {
 };
 
 function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const { t: _copy } = _useCopy();
   const { switchActiveWallet, walletAddress } = useAuth();
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
   const [migrateEmail, setMigrateEmail] = useSurfaceDraft("src/components/app/settings/WalletRecoveryTools.tsx:migrateEmail", '');
@@ -307,35 +308,32 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
     <Drawer open={open} onOpenChange={close}>
       <DrawerContent column className="bg-black/95 border-white/10">
         <DrawerHeader>
-          <DrawerTitle className="text-white text-center">Switch to a different old account</DrawerTitle>
+          <DrawerTitle className="text-white text-center">{_copy("copy.90b92c105ff2", { defaultValue: "Switch to a different old account" })}</DrawerTitle>
         </DrawerHeader>
         <div className="px-6 pb-8 space-y-4">
           {!migratedKey && (
             <>
               <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
                 <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-                <p>This replaces your active wallet. Export your current private key first if you want to keep access to it.</p>
+                <p>{_copy("copy.ff3cc0ff8997", { defaultValue: "This replaces your active wallet. Export your current private key first if you want to keep access to it." })}</p>
               </div>
               {!knownAccountsChecked ? (
                 <p className="text-white/60 text-sm flex items-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" /> Loading your older profiles...
-                </p>
+                  <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.8b3b208294c9", { defaultValue: " Loading your older profiles..." })}</p>
               ) : knownAccounts.length > 0 ? (
               <div className="space-y-2">
-                <p className="text-white/70 text-sm">
-                  We found {knownAccounts.length} older profiles linked to this email. Different sign-ins could create separate profiles before login methods were linked.
-                </p>
+                <p className="text-white/70 text-sm">{_copy("copy.cb75c6f3c889", { defaultValue: "We found " })}{knownAccounts.length}{_copy("copy.bd5a081ced3a", { defaultValue: " older profiles linked to this email. Different sign-ins could create separate profiles before login methods were linked." })}</p>
                 <div className="space-y-1">
                   {knownAccounts.map((account, index) => (
                     <div key={account.ethAddress || index} className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs">
                       <span className="min-w-0">
                         <span className="block truncate font-medium text-white">
-                          {account.username ? `@${account.username}` : `Older profile ${index + 1}`}
+                          {account.username ? `@${account.username}` : _copy("copy.63b6ac6dd6db", { defaultValue: "Older profile {{value1}}", value1: index + 1 })}
                         </span>
                         <span className="block text-white/50">
                           {account.signupMethod
-                            ? `Original sign-in: ${OLD_LOGIN_LABELS[account.signupMethod] ?? account.signupMethod}`
-                            : 'Original sign-in was not recorded'}
+                            ? _copy("copy.9a63b218711e", { defaultValue: "Original sign-in: {{value1}}", value1: OLD_LOGIN_LABELS[account.signupMethod] ?? account.signupMethod })
+                            : _copy("copy.fd89fc8921b3", { defaultValue: "Original sign-in was not recorded" })}
                         </span>
                       </span>
                       {typeof account.badgeBalance === 'number' && (
@@ -346,15 +344,11 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                 </div>
               </div>
               ) : (
-                <p className="text-white/60 text-sm">
-                  We could not load the profile list. Use the original sign-in that created the old profile.
-                </p>
+                <p className="text-white/60 text-sm">{_copy("copy.088468b96b16", { defaultValue: "We could not load the profile list. Use the original sign-in that created the old profile." })}</p>
               )}
-              <p className="text-white/60 text-sm">
-                Use the original sign-in for the profile you want. We verify its DeHub wallet before switching.
-              </p>
+              <p className="text-white/60 text-sm">{_copy("copy.d0d03da52f24", { defaultValue: "Use the original sign-in for the profile you want. We verify its DeHub wallet before switching." })}</p>
               {migrateBusy && migrateBusy !== 'email_passwordless' ? (
-                <p className="text-white/60 text-sm flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Retrieving old wallet…</p>
+                <p className="text-white/60 text-sm flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.5cbe7783f7b1", { defaultValue: " Retrieving old wallet…" })}</p>
               ) : (
                 <div className="space-y-2">
                   {(['google', 'apple', 'twitter', 'discord'] as const).map((p) => {
@@ -369,12 +363,10 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                       >
                         <span className="flex items-center">
                           {migrateBusy === p ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                          {known?.username ? `${OLD_LOGIN_LABELS[p]} for @${known.username}` : `Try ${OLD_LOGIN_LABELS[p]}`}
+                          {known?.username ? _copy("copy.61d964ed9f7f", { defaultValue: "{{value1}} for @{{value2}}", value1: OLD_LOGIN_LABELS[p], value2: known.username }) : _copy("copy.1476d70d1ec7", { defaultValue: "Try {{value1}}", value1: OLD_LOGIN_LABELS[p] })}
                         </span>
                         {known && (
-                          <span className="text-[10px] text-green-300 text-right">
-                            Matched
-                          </span>
+                          <span className="text-[10px] text-green-300 text-right">{_copy("copy.0d6346e060b4", { defaultValue: "Matched" })}</span>
                         )}
                       </Button>
                     );
@@ -382,7 +374,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                   <div className="flex gap-2">
                     <Input
                       type="email"
-                      placeholder="Old account email"
+                      placeholder={_copy("copy.aca3b4d885fe", { defaultValue: "Old account email" })}
                       value={migrateEmail}
                       onChange={(e) => setMigrateEmail(e.target.value)}
                       className={`${inputClass} h-11 flex-1 ${accountFor('email') || accountFor('email_passwordless') ? 'ring-1 ring-green-400/50' : ''}`}
@@ -399,8 +391,8 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                   {accountFor('email_passwordless') && (
                     <p className="text-xs text-green-300 px-1">
                       {accountFor('email_passwordless')?.username
-                        ? `Email recovers @${accountFor('email_passwordless')?.username}`
-                        : 'Email recovers the matched profile'}
+                        ? _copy("copy.5ec7bb337f2b", { defaultValue: "Email recovers @{{value1}}", value1: accountFor('email_passwordless')?.username })
+                        : _copy("copy.57c2e5f0dc0f", { defaultValue: "Email recovers the matched profile" })}
                     </p>
                   )}
                 </div>
@@ -411,49 +403,43 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
           {migratedKey && !safeAddressChecked && (
             <p className="text-white/60 text-sm flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" /> Matching this wallet to your DeHub profile...
-            </p>
+              <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.40d4cc8bff03", { defaultValue: " Matching this wallet to your DeHub profile..." })}</p>
           )}
 
           {migratedKey && safeAddressChecked && profileMatchFailed && (
             <div className="space-y-3">
               <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
                 <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
-                <p>This login recovered a different wallet from the profiles shown above. Nothing was changed.</p>
+                <p>{_copy("copy.7018324cc834", { defaultValue: "This login recovered a different wallet from the profiles shown above. Nothing was changed." })}</p>
               </div>
-              <Button variant="ghost" onClick={() => setMigratedKey(null)} className="w-full">
-                Try a different login
-              </Button>
+              <Button variant="ghost" onClick={() => setMigratedKey(null)} className="w-full">{_copy("copy.25b4eebad209", { defaultValue: "Try a different login" })}</Button>
             </div>
           )}
 
           {migratedKey && safeAddressChecked && !profileMatchFailed && sameAsCurrent && (
             <>
-              <p className="text-white/70 text-sm">This profile is already active. There is nothing to switch.</p>
-              <Button onClick={() => close(false)} className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl">
-                Close
-              </Button>
+              <p className="text-white/70 text-sm">{_copy("copy.3c5519c538a6", { defaultValue: "This profile is already active. There is nothing to switch." })}</p>
+              <Button onClick={() => close(false)} className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl">{_copy("copy.7d9eb7acb13e", { defaultValue: "Close" })}</Button>
             </>
           )}
 
           {migratedKey && safeAddressChecked && !profileMatchFailed && !sameAsCurrent && targetProfileAddress && (
             <>
               <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-white space-y-1">
-                <p className="text-white/50">Current active wallet</p>
+                <p className="text-white/50">{_copy("copy.e0012e751b11", { defaultValue: "Current active wallet" })}</p>
                 <p className="break-all">{walletAddress}</p>
-                <p className="text-white/50 pt-2">
-                  Will switch to {matchedAccount?.username ? `@${matchedAccount.username}` : 'recovered profile'}
+                <p className="text-white/50 pt-2">{_copy("copy.7c1b59f63339", { defaultValue: "Will switch to " })}{matchedAccount?.username ? `@${matchedAccount.username}` : _copy("copy.9b0822fb624d", { defaultValue: "recovered profile" })}
                 </p>
                 <p className="break-all text-green-300">{targetProfileAddress}</p>
               </div>
               <label className="flex items-start gap-2 text-sm text-white">
                 <Checkbox checked={ack} onCheckedChange={(v) => setAck(v === true)} className="mt-0.5" />
-                <span>I've exported my current wallet's private key (or don't need it)</span>
+                <span>{_copy("copy.de3d1f7155f6", { defaultValue: "I've exported my current wallet's private key (or don't need it)" })}</span>
               </label>
               <div className="space-y-2">
                 <Input
                   type="password"
-                  placeholder={`New wallet password (min ${MIN_PASSWORD_LENGTH} chars)`}
+                  placeholder={_copy("copy.064656b93bd0", { defaultValue: "New wallet password (min {{value1}} chars)", value1: MIN_PASSWORD_LENGTH })}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputClass}
@@ -462,7 +448,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
               </div>
               <Input
                 type="password"
-                placeholder="Confirm password"
+                placeholder={_copy("copy.5ac265f396a2", { defaultValue: "Confirm password" })}
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 className={inputClass}
@@ -473,7 +459,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                 disabled={busy || !ack || !password || !confirm}
                 className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
               >
-                {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Switching…</span> : 'Switch wallet'}
+                {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.8c7583c6d77d", { defaultValue: " Switching…" })}</span> : _copy("copy.b7af0b97837b", { defaultValue: "Switch wallet" })}
               </Button>
             </>
           )}
@@ -486,6 +472,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
 // ── Settings entry points ───────────────────────────────────────────────────
 
 export function WalletRecoveryTools() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { supabaseUserId } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -527,28 +514,22 @@ export function WalletRecoveryTools() {
     <>
       <SettingsRow
         icon={<KeyRound />}
-        title={<span className="inline-flex items-center gap-2">
-          Back up wallet
-          {backedUpAt === null && <span className="w-2 h-2 rounded-full bg-amber-400" aria-label="Not backed up yet" />}
+        title={<span className="inline-flex items-center gap-2">{_copy("copy.ef9ec257e675", { defaultValue: "Back up wallet" })}{backedUpAt === null && <span className="w-2 h-2 rounded-full bg-amber-400" aria-label={_copy("copy.67e716b9f541", { defaultValue: "Not backed up yet" })} />}
         </span>}
         description={<>
           {backedUpAt
             ? `${t('walletBackup.backedUpOn', { date: new Date(backedUpAt).toLocaleDateString() })}. ${t('walletBackup.backupDescription')}`
             : t('walletBackup.backupDescription')}
-          {hasMultipleOldAccounts ? ' — required to keep access if you switch accounts below' : ''}
+          {hasMultipleOldAccounts ? _copy("copy.e0de4ffb9e25", { defaultValue: " — required to keep access if you switch accounts below" }) : ''}
         </>}
-        action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setExportOpen(true)}>
-          Back up
-        </Button>}
+        action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setExportOpen(true)}>{_copy("copy.0054e707d5a9", { defaultValue: "Back up" })}</Button>}
       />
       {hasMultipleOldAccounts && (
       <SettingsRow
         icon={<Repeat />}
-        title="Switch to a different old account"
-        description="Had two old accounts (e.g. one via Google, one via email)? Swap which one is active"
-        action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setSwitchOpen(true)}>
-          Switch
-        </Button>}
+        title={_copy("copy.90b92c105ff2", { defaultValue: "Switch to a different old account" })}
+        description={_copy("copy.e770a59d7d01", { defaultValue: "Had two old accounts (e.g. one via Google, one via email)? Swap which one is active" })}
+        action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setSwitchOpen(true)}>{_copy("copy.39921a740bf2", { defaultValue: "Switch" })}</Button>}
       />
       )}
       <BackUpWalletDialog open={exportOpen} onOpenChange={setExportOpen} onBackedUp={loadBackupStatus} />

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * The pinned strip of the phone post page. Once the media has scrolled out of
  * view it appears at the top: back, a small thumbnail with a progress line,
@@ -43,6 +44,7 @@ function findLikeTile(root: HTMLElement | null): HTMLButtonElement | null {
 }
 
 export function StageMiniPlayer({ rootRef, kind, title, subtitle, thumbnail, onBack }: StageMiniPlayerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -174,7 +176,7 @@ export function StageMiniPlayer({ rootRef, kind, title, subtitle, thumbnail, onB
             type="button"
             tabIndex={visible ? 0 : -1}
             onClick={togglePlay}
-            aria-label={playing ? 'Pause' : 'Play'}
+            aria-label={playing ? _copy("copy.858e4ba7a29f", { defaultValue: "Pause" }) : _copy("copy.436e61016e26", { defaultValue: "Play" })}
             data-stage-mini-btn
             data-stage-mini-play
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px]"

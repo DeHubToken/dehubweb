@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useState, useEffect, useMemo } from 'react';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { Outlet, Link, useLocation } from 'react-router-dom';
@@ -210,7 +212,7 @@ const getMenuItems = (t: (key: string) => string) => [{
     path: '/docs/brand-assets',
     iconComponent: Tag
   }, {
-    title: 'Featured In',
+    get title() { return _translateCopy("copy.dbc2def4603a", { defaultValue: "Featured In" }); },
     path: '/docs/featured-in',
     iconComponent: Newspaper
   }, {
@@ -239,7 +241,7 @@ const getMenuItems = (t: (key: string) => string) => [{
   titleKey: 'Key Links',
   items: [
     {
-      title: 'App',
+      get title() { return _translateCopy("copy.0d04bfeb7d64", { defaultValue: "App" }); },
       path: 'https://dehub.io',
       icon: '/media/dhb-icon-white-logo-2.png',
       external: true,
@@ -303,6 +305,7 @@ const getMenuItems = (t: (key: string) => string) => [{
 }];
 
 const DocsLayoutContent = () => {
+  const { t: _copy } = _useCopy();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<{
     [key: string]: boolean;
@@ -383,7 +386,7 @@ const DocsLayoutContent = () => {
             {/* Center: Logo */}
             <div className="flex-1 flex justify-center">
               <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
-                <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
+                <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt={_copy("copy.148ca13e91cd", { defaultValue: "DeHub Logo" })} className="w-6 h-6 dark:invert" />
               </Link>
             </div>
             
@@ -402,7 +405,7 @@ const DocsLayoutContent = () => {
           {/* Desktop Layout */}
           <div className="hidden lg:flex items-center space-x-3">
             <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
-              <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
+              <img src="/media/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt={_copy("copy.148ca13e91cd", { defaultValue: "DeHub Logo" })} className="w-6 h-6 dark:invert" />
             </Link>
           </div>
 

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Spend one SuperPower, from the SuperPowers page
@@ -61,6 +62,7 @@ interface SpendPowerDrawerProps {
 }
 
 export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data: status } = useSuperpowers();
@@ -395,7 +397,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
                       )}
                       <div className="min-w-0 flex-1">
                         <p className="text-sm text-white line-clamp-2 leading-snug">
-                          {postText || postTitle || `Post #${id}`}
+                          {postText || postTitle || _copy("copy.a17c49cfedad", { defaultValue: "Post #{{value1}}", value1: id })}
                         </p>
                         {postText && postTitle && postTitle !== postText && (
                           <p className="text-[11px] text-zinc-400 truncate mt-0.5">{postTitle}</p>
@@ -555,7 +557,7 @@ export function SpendPowerDrawer({ power, onOpenChange }: SpendPowerDrawerProps)
           ) : (
             signals
               ? isMegalodon
-                ? 'Signal Flare to everyone'
+                ? _copy("copy.8e4b97ca7c6e", { defaultValue: "Signal Flare to everyone" })
                 : t('superpowers.signalFlareTo', {
                     people: signalFlarePeople ?? 0,
                     defaultValue: `Signal Flare to ${(signalFlarePeople ?? 0).toLocaleString()} people`,

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * SponsoredAdCard
  * ===============
@@ -22,6 +23,7 @@ interface SponsoredAdCardProps {
 }
 
 export function SponsoredAdCard({ ad, className, compact = false }: SponsoredAdCardProps) {
+  const { t: _copy } = _useCopy();
   const { ref, onClick } = useAdImpression(ad);
   const [videoPlaying, setVideoPlaying] = useState(false);
 
@@ -49,7 +51,7 @@ export function SponsoredAdCard({ ad, className, compact = false }: SponsoredAdC
             type="button"
             className="relative w-full h-full group"
             onClick={(e) => { e.stopPropagation(); setVideoPlaying(true); }}
-            aria-label="Play ad video"
+            aria-label={_copy("copy.eebc59403cd4", { defaultValue: "Play ad video" })}
           >
             {ad.thumbnailUrl ? (
               <img src={ad.thumbnailUrl} alt={ad.headline} className="w-full h-full object-cover" loading="lazy" />
@@ -96,9 +98,9 @@ export function SponsoredAdCard({ ad, className, compact = false }: SponsoredAdC
           >
             {ad.advertiser}
           </BadgedName>
-          <p className="text-[11px] text-muted-foreground">Sponsored</p>
+          <p className="text-[11px] text-muted-foreground">{_copy("copy.c01d19506818", { defaultValue: "Sponsored" })}</p>
         </div>
-        <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded shrink-0">AD</span>
+        <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded shrink-0">{_copy("copy.c7bf4bbdbcd8", { defaultValue: "AD" })}</span>
       </div>
 
       {media}
@@ -119,7 +121,7 @@ export function SponsoredAdCard({ ad, className, compact = false }: SponsoredAdC
               'border border-foreground/10 transition-colors',
             )}
           >
-            {ad.ctaLabel || 'Learn more'}
+            {ad.ctaLabel || _copy("copy.1445799c033a", { defaultValue: "Learn more" })}
             <ExternalLink className="w-3.5 h-3.5" />
           </button>
         )}

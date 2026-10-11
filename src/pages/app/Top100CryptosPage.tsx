@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { useCmcTop100, type CmcCoin } from '@/hooks/use-cmc-top-100';
 import { useTopAssets, type TopAsset } from '@/hooks/use-top-assets';
@@ -59,38 +60,35 @@ function PercentBadge({ value }: { value: number }) {
 }
 
 function GoldIcon() {
+  const { t: _copy } = _useCopy();
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#FFD700] to-[#B8860B] text-black">
-      Au
-    </div>
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#FFD700] to-[#B8860B] text-black">{_copy("copy.3325c2b56f2b", { defaultValue: "Au" })}</div>
   );
 }
 
 function SilverIcon() {
+  const { t: _copy } = _useCopy();
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E0E0E0] to-[#A0A0A0] text-black">
-      Ag
-    </div>
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E0E0E0] to-[#A0A0A0] text-black">{_copy("copy.468415f0e112", { defaultValue: "Ag" })}</div>
   );
 }
 
 function CopperIcon() {
+  const { t: _copy } = _useCopy();
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E8A065] to-[#B87333] text-black">
-      Cu
-    </div>
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E8A065] to-[#B87333] text-black">{_copy("copy.b62c681738d1", { defaultValue: "Cu" })}</div>
   );
 }
 
 function PlatinumIcon() {
+  const { t: _copy } = _useCopy();
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E5E4E2] to-[#8E8D8A] text-white drop-shadow-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
-      Pt
-    </div>
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E5E4E2] to-[#8E8D8A] text-white drop-shadow-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>{_copy("copy.b602b7029be6", { defaultValue: "Pt" })}</div>
   );
 }
 
 function NaturalGasIcon() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="w-6 h-6 rounded-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#4FC3F7] to-[#0288D1]">
       <div className="absolute inset-0 flex flex-wrap justify-center items-center gap-[2px] opacity-40">
@@ -98,24 +96,25 @@ function NaturalGasIcon() {
           <div key={i} className="w-[5px] h-[5px] rounded-full bg-white/70" />
         ))}
       </div>
-      <span className="text-[8px] font-bold text-white relative z-10" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>NG</span>
+      <span className="text-[8px] font-bold text-white relative z-10" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>{_copy("copy.d8d91b2e06df", { defaultValue: "NG" })}</span>
     </div>
   );
 }
 
 function AssetLogoElement({ asset }: { asset: TopAsset }) {
+  const { t: _copy } = _useCopy();
   if (asset.symbol === 'GOLD') return <GoldIcon />;
   if (asset.symbol === 'SILVER') return <SilverIcon />;
   if (asset.symbol === 'COPPER') return <CopperIcon />;
   if (asset.symbol === 'PLATINUM') return <PlatinumIcon />;
   if (asset.symbol === 'NATGAS') return <NaturalGasIcon />;
-  if (asset.symbol === 'AAPL') return <img src={appleLogoImg} alt="Apple" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'AAPL') return <img src={appleLogoImg} alt={_copy("copy.f223faa96f22", { defaultValue: "Apple" })} className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   if (asset.symbol === 'GOOGL') return <img src={googleLogoImg} alt="Google" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
-  if (asset.symbol === 'MSFT') return <img src={microsoftLogoImg} alt="Microsoft" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
-  if (asset.symbol === 'BRK-B' || asset.symbol === 'BRK.B' || asset.symbol === 'BRK-A') return <img src={berkshireLogoImg} alt="Berkshire Hathaway" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
-  if (asset.symbol === 'TSM') return <img src={tsmcLogoImg} alt="TSMC" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
-  if (asset.symbol === 'AVGO') return <img src={broadcomLogoImg} alt="Broadcom" className="w-6 h-6 rounded-full object-cover" />;
-  if (asset.symbol === 'JPM') return <img src={jpmcLogoImg} alt="JPMorgan" className="w-6 h-6 rounded-full object-cover" />;
+  if (asset.symbol === 'MSFT') return <img src={microsoftLogoImg} alt={_copy("copy.c7bac46904be", { defaultValue: "Microsoft" })} className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'BRK-B' || asset.symbol === 'BRK.B' || asset.symbol === 'BRK-A') return <img src={berkshireLogoImg} alt={_copy("copy.6850f76b953d", { defaultValue: "Berkshire Hathaway" })} className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'TSM') return <img src={tsmcLogoImg} alt={_copy("copy.00fb5022b75a", { defaultValue: "TSMC" })} className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'AVGO') return <img src={broadcomLogoImg} alt={_copy("copy.caf79e01972c", { defaultValue: "Broadcom" })} className="w-6 h-6 rounded-full object-cover" />;
+  if (asset.symbol === 'JPM') return <img src={jpmcLogoImg} alt={_copy("copy.94a05775d9f1", { defaultValue: "JPMorgan" })} className="w-6 h-6 rounded-full object-cover" />;
   return <TickerLogo symbol={asset.symbol} size={24} />;
 }
 
@@ -156,6 +155,7 @@ function UnifiedRow({ asset, rank, onClick }: { asset: UnifiedAsset; rank: numbe
 }
 
 export default function Top100CryptosPage() {
+  const { t: _copy } = _useCopy();
   const { data: coins, isLoading: cryptoLoading, error: cryptoError, refetch: refetchCrypto } = useCmcTop100();
   const { data: assets, isLoading: assetsLoading, error: assetsError, refetch: refetchAssets } = useTopAssets();
   const navigate = useNavigate();
@@ -230,17 +230,17 @@ export default function Top100CryptosPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Top Assets — Live Prices for Stocks, Commodities & Crypto" description="Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for top stocks, commodities and cryptocurrencies.' }} />
-      <h1 className="sr-only">DeHub Top Assets — Live Prices for Stocks, Commodities & Crypto</h1>
+      <SEOHead title={_copy("copy.dcd9f0047f78", { defaultValue: "Top Assets — Live Prices for Stocks, Commodities & Crypto" })} description={_copy("copy.d5e22f862878", { defaultValue: "Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." })} url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: _copy("copy.7038f259078d", { defaultValue: "Live prices and market data for top stocks, commodities and cryptocurrencies." }) }} />
+      <h1 className="sr-only">{_copy("copy.0ea0134b0336", { defaultValue: "DeHub Top Assets — Live Prices for Stocks, Commodities & Crypto" })}</h1>
 
       <div className="max-w-5xl mx-auto">
       <PageIsland
         back
         onBack={() => navigate(-1)}
         icon="stats"
-        title="Top Assets"
+        title={_copy("copy.c603180499e7", { defaultValue: "Top Assets" })}
         subtitle={!isLoading && allAssets.length > 0
-          ? `Showing ${visibleAssets.length.toLocaleString()} of ${allAssets.length.toLocaleString()}`
+          ? _copy("copy.ccf0988984a3", { defaultValue: "Showing {{value1}} of {{value2}}", value1: visibleAssets.length.toLocaleString(), value2: allAssets.length.toLocaleString() })
           : undefined}
       />
 
@@ -257,11 +257,11 @@ export default function Top100CryptosPage() {
       {!isLoading && (cryptoError || assetsError || allAssets.length === 0) && (
         <AppState
           icon={cryptoError || assetsError ? 'notifications' : 'stats'}
-          title={cryptoError || assetsError ? "Couldn't load market data" : 'No market data available'}
-          description={cryptoError || assetsError ? 'Check your connection and try again.' : 'Market data will appear here when available.'}
+          title={cryptoError || assetsError ? _copy("copy.706b4d2da0bf", { defaultValue: "Couldn't load market data" }) : _copy("copy.12c2486eb469", { defaultValue: "No market data available" })}
+          description={cryptoError || assetsError ? _copy("copy.481859b689b0", { defaultValue: "Check your connection and try again." }) : _copy("copy.b98cb2290638", { defaultValue: "Market data will appear here when available." })}
           kind={cryptoError || assetsError ? 'error' : 'empty'}
           size="page"
-          primaryAction={{ label: 'Retry', onClick: () => { refetchCrypto(); refetchAssets(); } }}
+          primaryAction={{ label: _copy("copy.942087cc2d41", { defaultValue: "Retry" }), onClick: () => { refetchCrypto(); refetchAssets(); } }}
         />
       )}
 
@@ -271,13 +271,13 @@ export default function Top100CryptosPage() {
             <thead>
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">
                 <th className="py-3 px-3 text-left">#</th>
-                <th className="py-3 px-3 text-left">Name</th>
-                <th className="py-3 px-3 text-right whitespace-nowrap">Market Cap</th>
-                <th className="py-3 px-3 text-right whitespace-nowrap">Price</th>
+                <th className="py-3 px-3 text-left">{_copy("copy.dcd1d5223f73", { defaultValue: "Name" })}</th>
+                <th className="py-3 px-3 text-right whitespace-nowrap">{_copy("copy.fb25999766b1", { defaultValue: "Market Cap" })}</th>
+                <th className="py-3 px-3 text-right whitespace-nowrap">{_copy("copy.93c91c851e7a", { defaultValue: "Price" })}</th>
                 <th className="py-3 px-3 text-right hidden lg:table-cell">1h</th>
                 <th className="py-3 px-3 text-right whitespace-nowrap">24h</th>
                 <th className="py-3 px-3 text-right hidden xl:table-cell">7d</th>
-                <th className="py-3 px-3 text-right hidden 2xl:table-cell">Volume (24h)</th>
+                <th className="py-3 px-3 text-right hidden 2xl:table-cell">{_copy("copy.03fba4e9f0e2", { defaultValue: "Volume (24h)" })}</th>
               </tr>
             </thead>
             <tbody>

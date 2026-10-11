@@ -1,3 +1,4 @@
+import { localizePublicChrome, localizeStructuredData } from '../../server/public-page-locales.js';
 /**
  * dehub.io had 110 UI locales and one indexable language: every page said
  * lang="en", nothing carried hreflang, and there was no localised URL. The
@@ -28,9 +29,9 @@ function constant(name: string): string {
   return line![0];
 }
 
-type Row = { title: string; description: string; h1?: string; body?: string; lede?: string };
+type Row = { title: string; description: string; h1?: string; body?: string; lede?: string; asset?: string };
 type Table = Record<string, Record<string, Row>>;
-const api = new Function(`
+const api = new Function('localizePublicChrome', 'localizeStructuredData', `
   ${constant('APP_URL')}
   ${constant('OG_LOCALE')}
   ${constant('OG_LOCALES')}
@@ -41,19 +42,19 @@ const api = new Function(`
   ${decl('function localizedUrl(route, lang) {')}
   ${decl('function servedLocales(route, table) {')}
   ${decl('function hreflangLinks(route, table) {')}
-  ${decl('function unservedLocaleRedirect(url, route, table, noindex) {')}
+  ${decl('function unservedLocaleRedirect(url, route, table) {')}
   ${decl('function ogLocale(lang) {')}
   ${decl('function ogLocaleTag(locale = OG_LOCALE) {')}
   ${decl('function withOgLocale(html, lang, langs) {')}
   ${decl('function jsonLdText(s) {')}
   ${decl('function localizePage(html, route, hl, table) {')}
   return { requestedLocale, localizedUrl, servedLocales, hreflangLinks, unservedLocaleRedirect, localizePage };
-`)() as {
+`)(localizePublicChrome, localizeStructuredData) as {
   requestedLocale: (url: URL) => string;
   localizedUrl: (route: string, lang: string) => string;
   servedLocales: (route: string, table: Table) => string[];
   hreflangLinks: (route: string, table: Table) => string;
-  unservedLocaleRedirect: (url: URL, route: string, table: Table, noindex: boolean) => string | null;
+  unservedLocaleRedirect: (url: URL, route: string, table: Table) => string | null;
   localizePage: (html: string, route: string, hl: string, table: Table) => string;
 };
 
@@ -159,7 +160,7 @@ describe('the cluster', () => {
 });
 
 describe('?hl= that is not a served page', () => {
-  const redirect = (u: string, noindex = false) => api.unservedLocaleRedirect(new URL(u), '/tv', TABLE, noindex);
+  const redirect = (u: string) => api.unservedLocaleRedirect(new URL(u), '/tv', TABLE);
 
   it('lets a served language through', () => {
     expect(redirect('https://dehub.io/tv?hl=de')).toBeNull();
@@ -171,11 +172,12 @@ describe('?hl= that is not a served page', () => {
     for (const hl of ['en', 'fr', 'nl', 'ja', 'acm', '']) {
       expect(redirect(`https://dehub.io/tv?hl=${hl}`), hl).toBe('https://dehub.io/tv');
     }
-    expect(api.unservedLocaleRedirect(new URL('https://dehub.io/?hl=zz'), '/', TABLE, false)).toBe('https://dehub.io/');
+    expect(api.unservedLocaleRedirect(new URL('https://dehub.io/?hl=zz'), '/', TABLE)).toBe('https://dehub.io/');
   });
 
-  it('301s even a translated language on a noindex page', () => {
-    expect(redirect('https://dehub.io/tv?hl=de', true)).toBe('https://dehub.io/tv');
+  it('keeps a translated noindex page available and redirects unsupported languages', () => {
+    expect(api.unservedLocaleRedirect(new URL('https://dehub.io/events?hl=de'), '/events', TABLE)).toBeNull();
+    expect(redirect('https://dehub.io/tv?hl=fr')).toBe('https://dehub.io/tv');
   });
 });
 
@@ -216,9 +218,13 @@ describe('the bare page', () => {
 });
 
 describe('a noindex page', () => {
-  it('carries no cluster and no locale rewrite, whatever hl asks for', () => {
+  it('keeps the bare page untouched and translates a requested page without hreflang', () => {
     expect(api.localizePage(noindexPage, '/tv', '', TABLE)).toBe(noindexPage);
-    expect(api.localizePage(noindexPage, '/tv', 'de', TABLE)).toBe(noindexPage);
+    const localized = api.localizePage(noindexPage, '/tv', 'de', TABLE);
+    expect(localized).toContain('<meta name="robots" content="noindex, follow">');
+    expect(localized).toContain('<html lang="de">');
+    expect(localized).toContain('Deutscher Text über DeHub TV.');
+    expect(localized).not.toContain('hreflang=');
   });
 });
 
@@ -280,8 +286,8 @@ describe('a translated page', () => {
 
 describe('wiring', () => {
   it('runs on the marketing pages, reads the table through ASSETS, and 301s unserved hl', () => {
-    expect(WORKER).toContain('const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table, MARKETING_PAGES[sectionKey].noindex);');
-    expect(WORKER).toContain('html = localizePage(html, `/${sectionKey}`, requestedLocale(url), table);');
+    expect(WORKER).toContain('const localeRedirect = unservedLocaleRedirect(url, `/${sectionKey}`, table);');
+    expect(WORKER).toContain('html = localizePage(html, route, lang,');
     expect(WORKER).toContain("env.ASSETS.fetch(new URL('/seo-i18n.json', requestUrl)");
   });
 
@@ -290,10 +296,10 @@ describe('wiring', () => {
    * render outside the marketing branch, so each is wired on its own.
    */
   it('runs on the homepage and the docs index too', () => {
-    expect(WORKER).toContain("const localeRedirect = unservedLocaleRedirect(url, '/', table, false);");
-    expect(WORKER).toContain("html = localizePage(html, '/', requestedLocale(url), table);");
-    expect(WORKER).toContain("const localeRedirect = unservedLocaleRedirect(url, '/docs', table, false);");
-    expect(WORKER).toMatch(/localizePage\(\s*buildDocsIndexHtml\(\),\s*'\/docs',/);
+    expect(WORKER).toContain("const localeRedirect = unservedLocaleRedirect(url, '/', table);");
+    expect(WORKER).toContain("const route = canonicalizePath(pathname)");
+    expect(WORKER).toContain("const localeRedirect = unservedLocaleRedirect(url, '/docs', table);");
+    expect(WORKER).toContain('const page = { ...row, ...await asset.json() };');
     expect((WORKER.match(/if \(localeRedirect\) return redirect301\(localeRedirect\);/g) || []).length).toBe(3);
   });
 
@@ -310,15 +316,23 @@ describe('wiring', () => {
     for (const route of ['/', '/docs']) {
       expect(api.servedLocales(route, table), route).toEqual(['ar', 'es', 'fr', 'nl', 'tr']);
       expect(table[route].es.title).toContain('DeHub');
-      expect(table[route].es.body).toContain('<a href="https://dehub.io/docs');
+      expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table[route].es.asset), 'utf8')).body).toContain('<a href="https://dehub.io/docs');
     }
-    expect(table['/'].es.lede).toBeTruthy();
+    expect(JSON.parse(readFileSync(resolve(ROOT, 'public' + table['/'].es.asset), 'utf8')).lede).toBeTruthy();
+    for (const lang of ['ar', 'es', 'fr', 'nl', 'tr']) {
+      const home = JSON.parse(readFileSync(resolve(ROOT, 'public' + table['/'][lang].asset), 'utf8'));
+      expect(home.body).toContain('aria-label=');
+      expect(home.body).not.toContain('aria-label="Learn more about DeHub"');
+    }
   });
 
-  it('serves no language on the noindex hubs', () => {
+  it('keeps noindex hubs out of the language cluster while serving translations', () => {
     const table = JSON.parse(readFileSync(resolve(ROOT, 'public/seo-i18n.json'), 'utf8')) as Table;
-    expect(api.servedLocales('/events', table)).toEqual([]);
-    expect(api.servedLocales('/launchpad', table)).toEqual([]);
+    expect(WORKER).toContain('if (resp.status === 200) {');
+    for (const route of ['/events', '/launchpad']) {
+      expect(api.servedLocales(route, table)).toEqual(['ar', 'es', 'fr', 'nl', 'tr']);
+      expect(api.unservedLocaleRedirect(new URL(`https://dehub.io${route}?hl=es`), route, table)).toBeNull();
+    }
   });
 
   it('the app honours ?hl= on arrival and keeps it', () => {

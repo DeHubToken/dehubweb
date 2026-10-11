@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * TargetingEditor
@@ -49,6 +50,7 @@ interface TargetingEditorProps {
 }
 
 export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [creatorInput, setCreatorInput] = useSurfaceDraft("components/app/ads/TargetingEditor.tsx:creatorInput", '');
   const [communitySearch, setCommunitySearch] = useSurfaceDraft("components/app/ads/TargetingEditor.tsx:communitySearch", '');
@@ -124,8 +126,8 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
       <label className="flex items-start gap-3 rounded-xl border border-foreground/10 p-4">
         <Checkbox checked={value.creatorSupport === true} onCheckedChange={(checked) => patch({ creatorSupport: checked === true })} />
         <span>
-          <span className="block font-medium">Creator support ads</span>
-          <span className="block text-sm text-muted-foreground">Let viewers support a creator by watching 30 seconds of your video. The creator receives the revenue share; the viewer pays nothing. Requires an approved video of at least 30 seconds.</span>
+          <span className="block font-medium">{_copy("copy.6000c051c5df", { defaultValue: "Creator support ads" })}</span>
+          <span className="block text-sm text-muted-foreground">{_copy("copy.24ebcff14226", { defaultValue: "Let viewers support a creator by watching 30 seconds of your video. The creator receives the revenue share; the viewer pays nothing. Requires an approved video of at least 30 seconds." })}</span>
         </span>
       </label>
       {/* Live estimate */}
@@ -139,11 +141,9 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
         </div>
         <div className="min-w-0">
           <p className="text-lg font-bold text-foreground leading-tight">
-            {formatCompact(estimate?.audience ?? 0)} <span className="text-sm font-medium text-muted-foreground">tracked wallets</span>
+            {formatCompact(estimate?.audience ?? 0)} <span className="text-sm font-medium text-muted-foreground">{_copy("copy.3475a5f878fd", { defaultValue: "tracked wallets" })}</span>
           </p>
-          <p className="text-xs text-muted-foreground">
-            Live estimate from on-chain holdings snapshots — No Badge &amp; guest reach is additional
-            {value.followedCreators?.length ? ' · follower audiences resolve at approval' : ''}
+          <p className="text-xs text-muted-foreground">{_copy("copy.f17e14bd5d26", { defaultValue: "Live estimate from on-chain holdings snapshots — No Badge & guest reach is additional" })}{value.followedCreators?.length ? _copy("copy.3edd69854997", { defaultValue: " · follower audiences resolve at approval" }) : ''}
           </p>
         </div>
       </div>
@@ -183,7 +183,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
                         whole remaining userbase + guests. */}
                     ${tier.cpm.toFixed(2)} CPM
                     {tier.name === NO_BADGE_TIER.name
-                      ? ' · all other users & guests'
+                      ? _copy("copy.885562905576", { defaultValue: " · all other users & guests" })
                       : estimate?.byTier?.[tier.name] !== undefined
                         ? ` · ${formatCompact(estimate.byTier[tier.name])}`
                         : ''}
@@ -357,13 +357,11 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
       {/* Followers of creators */}
       <div>
         <Label htmlFor="ads-creator-input" className="text-foreground">{t('ads.followersOfCreators')}</Label>
-        <p className="text-xs text-muted-foreground mb-2">
-          Target the follower base of specific creators (wallet addresses). Audiences are materialized when your campaign is approved.
-        </p>
+        <p className="text-xs text-muted-foreground mb-2">{_copy("copy.bcd6cfdbf8d4", { defaultValue: "Target the follower base of specific creators (wallet addresses). Audiences are materialized when your campaign is approved." })}</p>
         <div className="flex gap-2">
           <Input
             id="ads-creator-input"
-            placeholder="0x… creator wallet"
+            placeholder={_copy("copy.57bd8debeff7", { defaultValue: "0x… creator wallet" })}
             value={creatorInput}
             onChange={(e) => setCreatorInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCreator(); } }}
@@ -372,9 +370,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
             type="button"
             onClick={addCreator}
             className="px-4 rounded-xl text-sm font-medium bg-foreground/10 hover:bg-foreground/15 text-foreground border border-foreground/10 transition-colors shrink-0"
-          >
-            Add
-          </button>
+          >{_copy("copy.9fd728c66c9a", { defaultValue: "Add" })}</button>
         </div>
         {(value.followedCreators ?? []).length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2">
@@ -385,7 +381,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
                   type="button"
                   onClick={() => patch({ followedCreators: (value.followedCreators ?? []).filter((x) => x !== w) })}
                   className="hover:text-destructive"
-                  aria-label={`Remove ${w}`}
+                  aria-label={_copy("copy.d2f6b9b77710", { defaultValue: "Remove {{value1}}", value1: w })}
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -397,8 +393,7 @@ export function TargetingEditor({ value, onChange }: TargetingEditorProps) {
 
       {/* Summary of tier labels for review contexts */}
       {(value.tiers ?? []).length > 0 && (
-        <p className="text-xs text-muted-foreground">
-          Selected tiers: {(value.tiers ?? []).map(tierLabel).join(', ')}
+        <p className="text-xs text-muted-foreground">{_copy("copy.ee479da25162", { defaultValue: "Selected tiers: " })}{(value.tiers ?? []).map(tierLabel).join(', ')}
         </p>
       )}
     </div>

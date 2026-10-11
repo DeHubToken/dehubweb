@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stores Hooks
  * =============
@@ -29,6 +30,7 @@ export function useMyStores() {
 }
 
 export function useCreateStore() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -48,7 +50,7 @@ export function useCreateStore() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['my-stores'] });
-      toast.success('Store created!');
+      toast.success(_copy("copy.b48875b564b2", { defaultValue: "Store created!" }));
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -156,6 +158,7 @@ export function useMyListings() {
 }
 
 export function useCreateListing() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -190,7 +193,7 @@ export function useCreateListing() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['my-store-listings'] });
       qc.invalidateQueries({ queryKey: ['store-listings-browse'] });
-      toast.success('Listing created!');
+      toast.success(_copy("copy.c2e1e173fbc9", { defaultValue: "Listing created!" }));
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -268,6 +271,7 @@ export function useUpdateOrderStatus() {
 
 // ── Update Store ──────────────────────────────────────────
 export function useUpdateStore() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -282,7 +286,7 @@ export function useUpdateStore() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['my-stores'] });
       qc.invalidateQueries({ queryKey: ['store'] });
-      toast.success('Store updated!');
+      toast.success(_copy("copy.494f351679ab", { defaultValue: "Store updated!" }));
     },
     onError: (e: any) => toast.error(e.message),
   });

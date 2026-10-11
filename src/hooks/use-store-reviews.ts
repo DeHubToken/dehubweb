@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Store Reviews Hooks
  */
@@ -46,6 +47,7 @@ export function useHasPurchased(listingId: string | undefined) {
 }
 
 export function useCreateReview() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
@@ -65,7 +67,7 @@ export function useCreateReview() {
     },
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: ['store-reviews', vars.listing_id] });
-      toast.success('Review submitted!');
+      toast.success(_copy("copy.b0dd0a526e86", { defaultValue: "Review submitted!" }));
     },
     onError: (e: any) => toast.error(e.message || 'Failed to submit review'),
   });

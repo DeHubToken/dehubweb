@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -30,6 +31,7 @@ function mergeTimeSeries(
 }
 
 export function EngagementChart() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const [range, setRange] = useState<Range>('30d');
 
@@ -56,7 +58,7 @@ export function EngagementChart() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-zinc-400" />
-            <span className="text-sm font-semibold text-white">Engagement</span>
+            <span className="text-sm font-semibold text-white">{_copy("copy.ea68771a3994", { defaultValue: "Engagement" })}</span>
           </div>
           <GlassFilterRow
             items={RANGES.map(r => ({ key: r.key, label: r.label }))}
@@ -70,9 +72,7 @@ export function EngagementChart() {
             <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
           </div>
         ) : isError || chartData.length === 0 ? (
-          <div className="flex items-center justify-center h-36 text-zinc-500 text-sm">
-            No data for this period
-          </div>
+          <div className="flex items-center justify-center h-36 text-zinc-500 text-sm">{_copy("copy.dfdd39a6da39", { defaultValue: "No data for this period" })}</div>
         ) : (
           <ResponsiveContainer width="100%" height={140}>
             <LineChart data={chartData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
@@ -92,9 +92,9 @@ export function EngagementChart() {
         {data && (
           <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-white/[0.06]">
             {[
-              { label: 'Total Likes', value: data.totals.likes },
-              { label: 'Followers', value: data.totals.followers },
-              { label: 'Uploads', value: data.totals.uploads },
+              { label: _copy("copy.0c1d7b48b2fb", { defaultValue: "Total Likes" }), value: data.totals.likes },
+              { label: _copy("copy.a145ab342a4a", { defaultValue: "Followers" }), value: data.totals.followers },
+              { label: _copy("copy.d084236cbcc7", { defaultValue: "Uploads" }), value: data.totals.uploads },
             ].map(stat => (
               <div key={stat.label} className="text-center">
                 <div className="text-sm font-bold text-white">{stat.value.toLocaleString()}</div>

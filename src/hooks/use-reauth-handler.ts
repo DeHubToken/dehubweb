@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Re-Authentication Handler Hook
  * ==============================
@@ -17,6 +18,7 @@ import { toast } from 'sonner';
  * a toast with a "Sign in" action that opens the login modal.
  */
 export function useReauthHandler() {
+  const { t: _copy } = _useCopy();
   const { openLoginModal, refreshSession } = useAuth();
 
   /**
@@ -38,15 +40,15 @@ export function useReauthHandler() {
       toast.dismiss(toastId);
       
       if (refreshed) {
-        toast.success('Session refreshed! Please try again.');
+        toast.success(_copy("copy.b18e2ef76989", { defaultValue: "Session refreshed! Please try again." }));
         return true; // Caller can retry the action
       }
       
       // Fallback to full sign-in if refresh fails
-      toast.error('Session expired', {
-        description: 'Please sign in again to continue',
+      toast.error(_copy("copy.e5ee1e7e84aa", { defaultValue: "Session expired" }), {
+        description: _copy("copy.6660f63e06ce", { defaultValue: "Please sign in again to continue" }),
         action: {
-          label: 'Sign in',
+          label: _copy("copy.bfd402b2f6f3", { defaultValue: "Sign in" }),
           onClick: () => openLoginModal(),
         },
         duration: 8000,

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { AbiCoder,concat,getCreate2Address,Interface,keccak256,toUtf8Bytes } from 'ethers';
@@ -16,6 +17,7 @@ async function codeAt(address:string) {
  return data.result as string;
 }
 export function WorkEscrowSetup() {
+  const { t: _copy } = _useCopy();
  const {t}=useTranslation(); const {walletAddress}=useAuth(); const {data:config}=useWorkConfig(); const qc=useQueryClient();
  const [busy,setBusy]=useState(false); const [message,setMessage]=useState(''); const [hash,setHash]=useSurfaceDraft("src/features/work/components/WorkEscrowSetup.tsx:hash", '');
  if(!config || walletAddress?.toLowerCase()!==config.owner_address) return null;
@@ -49,7 +51,7 @@ export function WorkEscrowSetup() {
   <h2 className="font-semibold">{t('work.integrity.escrowSetup')}</h2>
   {config.escrow_address?<a className="text-xs break-all" href={'https://basescan.org/address/'+config.escrow_address} target="_blank" rel="noreferrer">{t('work.integrity.escrowActive')}: {config.escrow_address}</a>:<>
    <p className="text-xs text-white/70">{t('work.integrity.deployNotice')}</p>
-   <p className="text-xs break-all">Owner: {config.owner_address}<br/>Fee recipient: {config.fee_recipient}<br/>Tokens: DHB, USDC · Base</p>
+   <p className="text-xs break-all">{_copy("copy.60d5bbcba717", { defaultValue: "Owner: " })}{config.owner_address}<br/>{_copy("copy.90b8bc518ac2", { defaultValue: "Fee recipient: " })}{config.fee_recipient}<br/>{_copy("copy.47890e046218", { defaultValue: "Tokens: DHB, USDC · Base" })}</p>
    <input aria-label={t('work.integrity.recoverTx')} value={hash} onChange={e=>setHash(e.target.value)} placeholder={t('work.integrity.hashPlaceholder')} className="w-full rounded-lg bg-white/5 border border-white/20 px-3 py-2 text-xs" />
    <button onClick={deploy} disabled={busy || !config.expected_code_hash} className="px-4 py-2 rounded-lg bg-white text-black text-sm font-semibold disabled:opacity-40">{t(busy?'work.integrity.deploying':hash?'work.integrity.activateEscrow':'work.integrity.deployEscrow')}</button>
   </>}

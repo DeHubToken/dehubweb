@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +23,7 @@ interface VoiceOption {
 }
 
 export function StageTTS() {
+  const { t: _copy } = _useCopy();
   const { t, i18n } = useTranslation();
   const [text, setText] = useSurfaceDraft("components/app/spaces/StageTTS.tsx:text", '');
   const [selectedVoice, setSelectedVoice] = useState<string>('');
@@ -365,7 +367,7 @@ export function StageTTS() {
               <p className="text-sm text-white/60">{t('stages.voiceCloningFree')}</p>
               <p className="text-sm text-white/60">
                 {t('stages.voiceCloningByo')}{' '}
-                <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300">elevenlabs.io</a>
+                <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300">{_copy("copy.e2d214894af7", { defaultValue: "elevenlabs.io" })}</a>
               </p>
             </div>
 
@@ -374,7 +376,7 @@ export function StageTTS() {
               <Input
                 value={apiKeyInput}
                 onChange={(e) => setApiKeyInput(e.target.value)}
-                placeholder="xi_..."
+                placeholder={_copy("copy.0d026bd69022", { defaultValue: "xi_..." })}
                 type="password"
                 className="bg-white/10 border-white/10 text-white placeholder:text-white/30 font-mono text-sm"
               />

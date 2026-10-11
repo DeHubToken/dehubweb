@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Block Author Hook
  * =================
@@ -20,6 +21,7 @@ import { blockUser, type BlockedUser } from '@/lib/api/dehub';
 import { lowerAddress, pruneUnifiedPages, pruneNftPages } from '@/lib/feed-prune';
 
 export function useBlockAuthor() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const [isBlocking, setIsBlocking] = useState(false);
 
@@ -53,11 +55,11 @@ export function useBlockAuthor() {
       toast.success(`Blocked ${displayName || 'account'} — they can no longer see you either`);
     } catch (error) {
       console.error('[blockAuthor]', error);
-      toast.error('Failed to block account');
+      toast.error(_copy("copy.5ce62627732e", { defaultValue: "Failed to block account" }));
     } finally {
       setIsBlocking(false);
     }
-  }, [queryClient, isBlocking]);
+  }, [queryClient, isBlocking, _copy]);
 
   return { blockAuthor, isBlocking };
 }

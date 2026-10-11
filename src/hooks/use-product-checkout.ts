@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Product Checkout
  * ================
@@ -83,6 +84,7 @@ export async function callFn<T>(
  * the build if wagmi lands in the entry chunk.
  */
 export function useProductCheckout(tokenId: string | null) {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -151,7 +153,7 @@ export function useProductCheckout(tokenId: string | null) {
       queryClient.invalidateQueries({ queryKey: ['store-listings'] });
       queryClient.invalidateQueries({ queryKey: ['store-listing'] });
       if (data.warning) toast.warning(data.warning);
-      else toast.success('Order placed');
+      else toast.success(_copy("copy.494c28566f1e", { defaultValue: "Order placed" }));
     },
     onError: (e: Error) => toast.error(e.message),
   });

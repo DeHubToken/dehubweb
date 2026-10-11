@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +16,7 @@ const seenKey = (address: string) => `wc-giveaway-seen:${address.toLowerCase()}`
  * The CTA opens the wallet, where the prize shows as a pending credit.
  */
 export function GiveawayPrizeModal() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -77,7 +79,7 @@ export function GiveawayPrizeModal() {
         <button
           onClick={markSeen}
           className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-10"
-          aria-label="Close"
+          aria-label={_copy("copy.7d9eb7acb13e", { defaultValue: "Close" })}
         >
           <X className="w-5 h-5" />
         </button>
@@ -92,33 +94,25 @@ export function GiveawayPrizeModal() {
             </span>
           </div>
 
-          <p className="text-amber-400 text-xs font-semibold tracking-widest uppercase mb-1">
-            World Cup Giveaway
-          </p>
-          <h2 className="text-white text-2xl font-bold mb-3">Congratulations! 🏆</h2>
+          <p className="text-amber-400 text-xs font-semibold tracking-widest uppercase mb-1">{_copy("copy.a085fa5e0539", { defaultValue: "World Cup Giveaway" })}</p>
+          <h2 className="text-white text-2xl font-bold mb-3">{_copy("copy.65858b52b7f3", { defaultValue: "Congratulations! 🏆" })}</h2>
 
           <div className="my-4 flex items-center justify-center gap-1.5">
             <span className="text-5xl font-extrabold text-white">$200</span>
-            <span className="text-base font-bold text-amber-400 self-end mb-2">prize</span>
+            <span className="text-base font-bold text-amber-400 self-end mb-2">{_copy("copy.72a7a4f82e48", { defaultValue: "prize" })}</span>
           </div>
 
-          <p className="text-white/75 text-sm leading-relaxed mb-6">
-            You won a <span className="text-white font-medium">$200 prize</span> from our World Cup giveaway on Twitter. Your tokens have been credited to your account, set for transfer when the contract is live.
-          </p>
+          <p className="text-white/75 text-sm leading-relaxed mb-6">{_copy("copy.29eeeb9e4b0e", { defaultValue: "You won a " })}<span className="text-white font-medium">{_copy("copy.24154912f277", { defaultValue: "$200 prize" })}</span>{_copy("copy.7e5782fce821", { defaultValue: " from our World Cup giveaway on Twitter. Your tokens have been credited to your account, set for transfer when the contract is live." })}</p>
 
           <button
             onClick={handleView}
             className="w-full py-3 rounded-2xl bg-white text-black font-semibold flex items-center justify-center gap-2 hover:bg-white/90 transition-colors"
-          >
-            View in wallet
-            <ArrowRight className="w-4 h-4" />
+          >{_copy("copy.81cd52e4f368", { defaultValue: "View in wallet" })}<ArrowRight className="w-4 h-4" />
           </button>
           <button
             onClick={markSeen}
             className="block w-full py-3 mt-1 text-sm text-white/40 hover:text-white transition-colors"
-          >
-            Maybe later
-          </button>
+          >{_copy("copy.2ac741e6203a", { defaultValue: "Maybe later" })}</button>
         </div>
       </div>
     </div>

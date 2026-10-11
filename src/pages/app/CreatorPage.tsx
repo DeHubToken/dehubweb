@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -495,6 +496,7 @@ function getGalleryColumns(): number {
 }
 
 const GalleryTile = memo(function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryItem) => void }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const ref = useRef<HTMLButtonElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -544,9 +546,7 @@ const GalleryTile = memo(function GalleryTile({ item, onOpen }: { item: GalleryI
         />
       ))}
       {isVideo && (
-        <span data-keep-dark className="absolute right-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-black uppercase text-white backdrop-blur">
-          Video
-        </span>
+        <span data-keep-dark className="absolute right-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-black uppercase text-white backdrop-blur">{_copy("copy.d534be829e32", { defaultValue: "Video" })}</span>
       )}
     </button>
   );

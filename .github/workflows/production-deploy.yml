@@ -1,0 +1,69 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      revision:
+        description: Exact merged main commit to deploy
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require the requested commit to be live main
+        env:
+          EXPECTED_REVISION: ${{ inputs.revision }}
+        run: |
+          [[ "$EXPECTED_REVISION" =~ ^[a-f0-9]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$EXPECTED_REVISION"
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$EXPECTED_REVISION"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Cloudflare production credentials
+        run: node scripts/cloudflare-production-credentials.mjs
+        env:
+          CLOUDFLARE_APITOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CLOUDFLARE_ID: ${{ secrets.CLOUDFLARE_ID }}
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - name: Build production assets
+        run: pnpm build
+      - name: Recheck main before deployment
+        env:
+          EXPECTED_REVISION: ${{ inputs.revision }}
+        run: |
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$EXPECTED_REVISION"
+      - name: Deploy production worker and assets
+        run: pnpm exec wrangler deploy --config wrangler.jsonc
+      - name: Verify production serves this commit
+        env:
+          EXPECTED_REVISION: ${{ inputs.revision }}
+        run: |
+          curl --fail --silent --show-error "https://dehub.io/version.json?commit=$EXPECTED_REVISION" --output /tmp/production-version.json
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const version = JSON.parse(fs.readFileSync('/tmp/production-version.json', 'utf8'));
+          if (version.id !== process.env.EXPECTED_REVISION.slice(0, 8)) throw new Error('Production serves a different commit: ' + JSON.stringify(version));
+          console.log('Production serves ' + process.env.EXPECTED_REVISION);
+          JS

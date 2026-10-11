@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Live Card Component
  * ===================
@@ -44,6 +45,7 @@ interface LiveCardProps {
 }
 
 export function LiveCard({ stream }: LiveCardProps) {
+  const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -100,7 +102,7 @@ export function LiveCard({ stream }: LiveCardProps) {
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label={_copy("copy.2545613b2ba8", { defaultValue: "Post options" })} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
@@ -232,7 +234,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           dislikeCount={stream.dislikeCount}
           commentCount={stream.commentCount}
         />
-        <p className="font-semibold text-white text-sm">{livePresence != null ? String(livePresence) : stream.viewers} tuned in</p>
+        <p className="font-semibold text-white text-sm">{livePresence != null ? String(livePresence) : stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
         <h3 className="text-white text-sm mt-1">{stream.title}</h3>
         <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
       </div>

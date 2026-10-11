@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Mute Author Hook
  * ================
@@ -18,6 +19,7 @@ import type { MutedUser } from '@/lib/api/dehub/mutes';
 import { lowerAddress, pruneUnifiedPages, pruneNftPages } from '@/lib/feed-prune';
 
 export function useMuteAuthor() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const [isMuting, setIsMuting] = useState(false);
 
@@ -69,7 +71,7 @@ export function useMuteAuthor() {
         // from nothing since it was written.
         toast.success(`Muted ${displayName || 'account'} — they won't know`, {
           action: {
-            label: 'Undo',
+            label: _copy("copy.a8283ade3185", { defaultValue: "Undo" }),
             onClick: () => {
               void (async () => {
                 try {
@@ -86,7 +88,7 @@ export function useMuteAuthor() {
                   toast.success(`Unmuted ${displayName || 'account'}`);
                 } catch (error) {
                   console.error('[unmuteAuthor]', error);
-                  toast.error('Failed to unmute account');
+                  toast.error(_copy("copy.6487e666c44d", { defaultValue: "Failed to unmute account" }));
                 }
               })();
             },
@@ -94,12 +96,12 @@ export function useMuteAuthor() {
         });
       } catch (error) {
         console.error('[muteAuthor]', error);
-        toast.error('Failed to mute account');
+        toast.error(_copy("copy.a82fcbd4b343", { defaultValue: "Failed to mute account" }));
       } finally {
         setIsMuting(false);
       }
     },
-    [queryClient, isMuting],
+    [queryClient, isMuting, _copy],
   );
 
   return { muteAuthor, isMuting };

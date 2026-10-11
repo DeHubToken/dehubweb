@@ -123,10 +123,10 @@ export function ReplyOrb({ state = 'idle', size = 44, className = '' }: ReplyOrb
           marginLeft: -dot / 2,
           marginTop: -dot / 2 + m.y * R,
           background: m.bright
-            ? 'rgba(var(--orb-ink),0.95)'
+            ? "rgba(var(--orb-ink),0.95)"
             : busy
-            ? 'rgba(var(--orb-ink),0.8)'
-            : 'rgba(var(--orb-ink),0.68)',
+            ? "rgba(var(--orb-ink),0.8)"
+            : "rgba(var(--orb-ink),0.68)",
           transform: `translateX(${(m.ringRadius * R * Math.sin(angle)).toFixed(2)}px) scale(${(0.55 + 0.45 * depth).toFixed(3)})`,
           opacity: 0.2 + 0.8 * depth,
           animationDuration: `${d.spin}ms`,

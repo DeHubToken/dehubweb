@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Feature Requests Hook
  * =====================
@@ -413,6 +414,7 @@ export function useMarkShippedNotified() {
 }
 
 export function useSubmitFeatureRequest() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress, user } = useAuth();
 
@@ -490,7 +492,7 @@ export function useSubmitFeatureRequest() {
         const retry = await insert(row);
         if (retry.error) throw retry.error;
         if (imageUrls.length > 1) {
-          toast.warning('Only the first attachment was saved — attachments are still rolling out');
+          toast.warning(_copy("copy.70db7d7e716b", { defaultValue: "Only the first attachment was saved — attachments are still rolling out" }));
         }
         return retry.data;
       }
@@ -500,16 +502,17 @@ export function useSubmitFeatureRequest() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
-      toast.success('Feature request submitted!');
+      toast.success(_copy("copy.27873a08f25d", { defaultValue: "Feature request submitted!" }));
     },
     onError: (error) => {
       console.error('Submit feature request failed:', error);
-      toast.error('Failed to submit feature request');
+      toast.error(_copy("copy.c7ea1b9c02fb", { defaultValue: "Failed to submit feature request" }));
     },
   });
 }
 
 export function useVoteFeatureRequest() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -620,7 +623,7 @@ export function useVoteFeatureRequest() {
       if (context?.previousVotes) {
         queryClient.setQueryData(['feature-request-votes', walletAddress], context.previousVotes);
       }
-      toast.error('Vote failed. Please try again.');
+      toast.error(_copy("copy.485fbbcb6b0e", { defaultValue: "Vote failed. Please try again." }));
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['feature-request-votes'] });
@@ -631,6 +634,7 @@ export function useVoteFeatureRequest() {
 }
 
 export function useEditFeatureRequest() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -649,15 +653,16 @@ export function useEditFeatureRequest() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
-      toast.success('Feature request updated!');
+      toast.success(_copy("copy.b8af57e311aa", { defaultValue: "Feature request updated!" }));
     },
     onError: () => {
-      toast.error('Failed to update feature request');
+      toast.error(_copy("copy.db455cae992e", { defaultValue: "Failed to update feature request" }));
     },
   });
 }
 
 export function useDeleteFeatureRequest() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -674,10 +679,10 @@ export function useDeleteFeatureRequest() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
       queryClient.invalidateQueries({ queryKey: ['feature-requests-total-count'] });
-      toast.success('Feature request deleted');
+      toast.success(_copy("copy.be692c8e223e", { defaultValue: "Feature request deleted" }));
     },
     onError: () => {
-      toast.error('Failed to delete feature request');
+      toast.error(_copy("copy.b500b2068ac7", { defaultValue: "Failed to delete feature request" }));
     },
   });
 }

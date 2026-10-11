@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useVideoDownload } from "@/hooks/use-video-download";
 import { useMatureGate } from "./MatureContentGate";
 /**
@@ -99,6 +100,7 @@ function formatCount(count?: number | string): string {
 
 /** Expandable post description with Show more / Show less */
 function ExpandableDescription({ text }: { text: string }) {
+  const { t: _copy } = _useCopy();
   const [expanded, setExpanded] = useState(false);
   const ref = useRef<HTMLParagraphElement>(null);
   const [clamped, setClamped] = useState(false);
@@ -129,7 +131,7 @@ function ExpandableDescription({ text }: { text: string }) {
           onClick={() => setExpanded(p => !p)}
           className="text-white/50 hover:text-white text-[11px] mt-0.5 transition-colors"
         >
-          {expanded ? 'Show less' : 'Show more'}
+          {expanded ? _copy("copy.94ea9b1d33a0", { defaultValue: "Show less" }) : _copy("copy.f5c9bd131486", { defaultValue: "Show more" })}
         </button>
       )}
     </div>
@@ -170,6 +172,7 @@ function ShortCaption({
   expanded?: boolean;
   onToggleExpanded?: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
 
   // "Untitled" is the uploader's placeholder, not a heading anybody wrote.
@@ -246,7 +249,7 @@ function ShortCaption({
           </div>
           {((shownBody?.length ?? 0) > 80 || (shownTitle?.length ?? 0) > 40) && (
             <span className="text-white/60 text-xs mt-1">
-              {expanded ? 'less' : 'more'}
+              {expanded ? _copy("copy.4fdd3b6201a2", { defaultValue: "less" }) : _copy("copy.187897ce0afc", { defaultValue: "more" })}
             </span>
           )}
         </button>
@@ -307,6 +310,7 @@ const CORNER_CONTROL =
   "absolute top-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center text-white transition-[background-color,opacity] duration-300";
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const instanceId = useId();
   useEffect(() => {
@@ -536,7 +540,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleFollow = useCallback(() => {
     const creatorAddress = currentShort?.creatorId;
     if (!creatorAddress) {
-      toast.error('Unable to follow - creator not found');
+      toast.error(_copy("copy.cf8b4e247840", { defaultValue: "Unable to follow - creator not found" }));
       return;
     }
 
@@ -558,10 +562,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           next.delete(creatorAddress);
           return next;
         });
-        if (!info.handled) toast.error('Failed to follow user');
+        if (!info.handled) toast.error(_copy("copy.f5a7643bdaac", { defaultValue: "Failed to follow user" }));
       },
     });
-  }, [currentShort, isAuthenticated, openLoginModal, isCreatorFollowed, queryClient]);
+  }, [currentShort, isAuthenticated, openLoginModal, isCreatorFollowed, queryClient, _copy]);
 
   // Bookmark hook
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
@@ -724,12 +728,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         dislikeCount: Math.max(0, localDislikeCount),
         reactionCounts: localReactionCounts,
       });
-      toast.error('Failed to react. Please try again.');
+      toast.error(_copy("copy.520424cf959c", { defaultValue: "Failed to react. Please try again." }));
     } finally {
       voteInFlightRef.current = false;
       setIsVoting(false);
     }
-  }, [currentShort?.id, isVoting, isLiked, isDisliked, myReaction, localReactionCounts, isAuthenticated, localLikeCount, localDislikeCount, voteWeight]);
+  }, [currentShort?.id, isVoting, isLiked, isDisliked, myReaction, localReactionCounts, isAuthenticated, localLikeCount, localDislikeCount, voteWeight, _copy]);
 
   /**
    * The thumb casts whichever reaction it is WEARING, so a short leading with
@@ -1251,7 +1255,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const handleCopyLink = () => {
     const url = `${window.location.origin}/app/post/${currentShort.id}`;
     navigator.clipboard.writeText(url);
-    toast.success('Post URL copied to clipboard');
+    toast.success(_copy("copy.e91de547a0b8", { defaultValue: "Post URL copied to clipboard" }));
     // A copy is a share: it counts once per actor per post, next to reposts.
     trackLinkCopy(currentShort?.id, walletAddress, linkCopyCount);
     setShareSheetOpen(false);
@@ -1265,19 +1269,19 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (isNaN(numericId)) return;
     // Optimistic: bump the counter + toast instantly, revert on failure.
     setShareDelta(prev => prev + 1);
-    toast.success('Reposted!');
+    toast.success(_copy("copy.5f39b8b65253", { defaultValue: "Reposted!" }));
     setShareSheetOpen(false);
     try {
       const { repostPost } = await import('@/lib/api/dehub');
       await repostPost(numericId);
     } catch {
       setShareDelta(prev => prev - 1);
-      toast.error('Failed to repost');
+      toast.error(_copy("copy.7527dc6722fc", { defaultValue: "Failed to repost" }));
     }
   };
 
   const handleQuote = () => {
-    toast.info('Quote for shorts coming soon!');
+    toast.info(_copy("copy.5dd5e168bdf8", { defaultValue: "Quote for shorts coming soon!" }));
     setShareSheetOpen(false);
   };
 
@@ -1486,7 +1490,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   "right-[3.75rem]",
                   chromeHidden && "opacity-0 pointer-events-none",
                 )}
-                aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+                aria-label={isFullscreen ? _copy("copy.37fd4e355ba3", { defaultValue: "Exit fullscreen" }) : _copy("copy.4a56b3cb6008", { defaultValue: "Enter fullscreen" })}
               >
                 {isFullscreen ? (
                   <Minimize className="w-5 h-5" />
@@ -1502,7 +1506,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   "right-3",
                   chromeHidden && "opacity-0 pointer-events-none",
                 )}
-                aria-label={isMuted ? 'Unmute' : 'Mute'}
+                aria-label={isMuted ? _copy("copy.ce4ee4efc5e3", { defaultValue: "Unmute" }) : _copy("copy.8dd6857baf02", { defaultValue: "Mute" })}
               >
                 {isMuted ? (
                   <VolumeX className="w-5 h-5" />
@@ -1569,7 +1573,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <button
                     onClick={() => leaveFullscreenThen(() => setShowTipModal(true))}
                     className="flex items-center gap-1"
-                    aria-label="Tip"
+                    aria-label={_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}
                   >
                     <Gem className="w-5 h-5 text-white drop-shadow-lg" />
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
@@ -1579,7 +1583,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <button
                     onClick={() => leaveFullscreenThen(() => setShareSheetOpen(true))}
                     className="flex items-center gap-1"
-                    aria-label="Share"
+                    aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
                   >
                     <Share2 className="w-5 h-5 text-white drop-shadow-lg" />
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(displayShareCount)}</span>
@@ -1591,7 +1595,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     <button
                       onClick={() => { setCommentsInitialTab('replies'); setShowComments(v => !v); }}
                       className="flex items-center gap-1"
-                      aria-label="Comments"
+                      aria-label={_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}
                     >
                       <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
                       <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
@@ -1621,7 +1625,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myReaction ? `${reactionMeta(myReaction).label} — hold to change your reaction` : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
+                      aria-label={myReaction ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta(myReaction).label }) : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })}
                       aria-haspopup="menu"
                       aria-expanded={likeTray.open}
                     >
@@ -1663,7 +1667,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   onClick={goToPrev}
                   disabled={currentIndex === 0}
                   className="w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors"
-                  aria-label="Previous short"
+                  aria-label={_copy("copy.ebb1fb9de107", { defaultValue: "Previous short" })}
                 >
                   <ChevronUp className="w-5 h-5 text-white" />
                 </button>
@@ -1671,7 +1675,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   onClick={goToNext}
                   disabled={currentIndex === shorts.length - 1}
                   className="w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed rounded-xl flex items-center justify-center transition-colors"
-                  aria-label="Next short"
+                  aria-label={_copy("copy.680029c7141b", { defaultValue: "Next short" })}
                 >
                   <ChevronDown className="w-5 h-5 text-white" />
                 </button>
@@ -1696,11 +1700,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     className="absolute top-16 right-0 bottom-0 z-30 w-full max-w-[420px] flex flex-col bg-black/60 backdrop-blur-[24px] border-l border-t border-white/[0.08] rounded-tl-2xl overflow-hidden"
                   >
                     <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 border-b border-white/[0.08]">
-                      <span className="text-white font-semibold text-sm">Comments</span>
+                      <span className="text-white font-semibold text-sm">{_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}</span>
                       <button
                         onClick={() => setShowComments(false)}
                         className="w-8 h-8 rounded-lg bg-white/[0.08] hover:bg-white/15 flex items-center justify-center transition-colors"
-                        aria-label="Close comments"
+                        aria-label={_copy("copy.3530ee6dc03c", { defaultValue: "Close comments" })}
                       >
                         <X className="w-4 h-4 text-white/70" />
                       </button>
@@ -1802,7 +1806,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <button
                     onClick={() => setShowTipModal(true)}
                     className="flex items-center gap-1"
-                    aria-label="Tip"
+                    aria-label={_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}
                   >
                     <Gem className="w-5 h-5 text-white drop-shadow-lg" />
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(tipCount)}</span>
@@ -1812,7 +1816,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <button
                     onClick={() => setShareSheetOpen(true)}
                     className="flex items-center gap-1"
-                    aria-label="Share"
+                    aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
                   >
                     <Share2 className="w-5 h-5 text-white drop-shadow-lg" />
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(displayShareCount)}</span>
@@ -1822,7 +1826,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <button
                     onClick={() => setShowComments(true)}
                     className="flex items-center gap-1"
-                    aria-label="Comments"
+                    aria-label={_copy("copy.355f79f29d7d", { defaultValue: "Comments" })}
                   >
                     <MessageSquare className="w-5 h-5 text-white drop-shadow-lg" />
                     <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(currentShort.comments || 0)}</span>
@@ -1851,7 +1855,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       className="flex items-center gap-1 select-none touch-none"
                       animate={justVoted ? { scale: [1, 1.3, 1] } : {}}
                       transition={{ duration: 0.3, ease: "easeOut" }}
-                      aria-label={myReaction ? `${reactionMeta(myReaction).label} — hold to change your reaction` : `${reactionMeta(leadReaction ?? 'like').label} — hold to react`}
+                      aria-label={myReaction ? _copy("copy.a3156ed263d2", { defaultValue: "{{value1}} — hold to change your reaction", value1: reactionMeta(myReaction).label }) : _copy("copy.12b91b0ac5dd", { defaultValue: "{{value1}} — hold to react", value1: reactionMeta(leadReaction ?? "like").label })}
                       aria-haspopup="menu"
                       aria-expanded={likeTray.open}
                     >
@@ -1902,7 +1906,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   <button
                     onClick={() => setShowComments(false)}
                     className="absolute right-3 top-1.5 w-8 h-8 rounded-lg bg-white/[0.08] hover:bg-white/15 flex items-center justify-center transition-colors"
-                    aria-label="Close comments"
+                    aria-label={_copy("copy.3530ee6dc03c", { defaultValue: "Close comments" })}
                   >
                     <ChevronDown className="w-5 h-5 text-white/70" />
                   </button>
@@ -1937,14 +1941,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   className="w-8 h-8 bg-white/[0.08] hover:bg-white/15 rounded-lg flex items-center justify-center transition-colors"
                   animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  aria-label="Bookmark"
+                  aria-label={_copy("copy.1bac4007880b", { defaultValue: "Bookmark" })}
                 >
                   <Bookmark className={cn("w-4 h-4", isBookmarked ? "fill-yellow-500 text-yellow-500" : "text-white/60")} />
                 </motion.button>
                 <button
                   onClick={() => { navigate(`/app/post/${currentShort.id}/info`); onClose(); }}
                   className="w-8 h-8 bg-white/[0.08] hover:bg-white/15 rounded-lg flex items-center justify-center transition-colors"
-                  aria-label="Post info"
+                  aria-label={_copy("copy.8ec595494efe", { defaultValue: "Post info" })}
                 >
                   <Info className="w-4 h-4 text-white/60" />
                 </button>
@@ -1966,16 +1970,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               </button>
               <ShortCaption key={currentShort.id} short={currentShort} variant="stacked" />
               {currentShort.creatorId && followCheckingCreators.has(currentShort.creatorId) ? (
-                <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">
-                  Loading…
-                </div>
+                <div className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white/40 text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/10 text-center animate-pulse">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>
               ) : (
                 <button
                   onClick={handleFollow}
                   disabled={isCreatorFollowed(currentShort.creatorId)}
                   className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isCreatorFollowed(currentShort.creatorId) ? 'Following ✓' : 'Follow'}
+                  {isCreatorFollowed(currentShort.creatorId) ? _copy("copy.ec7a1a6ce401", { defaultValue: "Following ✓" }) : _copy("copy.641d1ef657bd", { defaultValue: "Follow" })}
                 </button>
               )}
             </div>
@@ -2036,7 +2038,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               }}
               className="h-10 min-w-[40px] px-1.5 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
               style={{ touchAction: 'manipulation' }}
-              aria-label="Playback speed"
+              aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
               <span className="text-white text-[11px] font-bold leading-none">{formatRate(playbackRate)}x</span>
             </button>
@@ -2078,7 +2080,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       <Drawer open={shareSheetOpen} onOpenChange={setShareSheetOpen}>
         <DrawerContent scrollable glass className="px-4 pb-6">
           <DrawerHeader className="relative pb-2">
-            <DrawerTitle className="text-white text-lg">Options</DrawerTitle>
+            <DrawerTitle className="text-white text-lg">{_copy("copy.d0db8b5e364b", { defaultValue: "Options" })}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-1">
             {/* Bookmark / pin / post info — the same three the feed card's
@@ -2102,48 +2104,40 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               onClick={() => { setShareSheetOpen(false); setTimeout(() => setShowReportModal(true), 300); }}
               className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
             >
-              <Flag className="w-5 h-5" /> Report
-            </button>
+              <Flag className="w-5 h-5" />{_copy("copy.5d0faf6c887c", { defaultValue: " Report" })}</button>
             <button
               onClick={handleCopyLink}
               className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
             >
-              <Link className="w-5 h-5" /> Copy Link
-            </button>
+              <Link className="w-5 h-5" />{_copy("copy.d9a664a0310b", { defaultValue: " Copy Link" })}</button>
             <button
               onClick={() => { setShareSheetOpen(false); setCommentsInitialTab('reposts'); setShowComments(true); }}
               className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
             >
-              <Repeat2 className="w-5 h-5" /> See Engagements
-            </button>
+              <Repeat2 className="w-5 h-5" />{_copy("copy.3c6161e34023", { defaultValue: " See Engagements" })}</button>
             <button
               onClick={handleRepost}
               className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
             >
-              <Share2 className="w-5 h-5" /> Repost
-            </button>
+              <Share2 className="w-5 h-5" />{_copy("copy.ae3db03ac230", { defaultValue: " Repost" })}</button>
             <button
               onClick={handleQuote}
               className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
             >
-              <Quote className="w-5 h-5" /> Quote
-            </button>
+              <Quote className="w-5 h-5" />{_copy("copy.4b24c14ae0eb", { defaultValue: " Quote" })}</button>
             {!isOwnShort && currentShort?.creatorId && !isCreatorFollowed(currentShort.creatorId) && (
               <button
                 onClick={handleFollow}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-50"
               >
-                <UserPlus className="w-5 h-5" />
-                Follow
-              </button>
+                <UserPlus className="w-5 h-5" />{_copy("copy.641d1ef657bd", { defaultValue: "Follow" })}</button>
             )}
             {!isOwnShort && currentShort?.creatorId && isCreatorFollowed(currentShort.creatorId) && (
               <button
                 disabled
                 className="flex items-center gap-3 px-4 py-3 text-zinc-500 rounded-xl text-left cursor-default"
               >
-                <UserCheck className="w-5 h-5" /> Following
-              </button>
+                <UserCheck className="w-5 h-5" />{_copy("copy.56a12e72f40d", { defaultValue: " Following" })}</button>
             )}
             {!isOwnShort && (
               <button
@@ -2154,8 +2148,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 }}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
               >
-                <Ban className="w-5 h-5" /> Block Creator
-              </button>
+                <Ban className="w-5 h-5" />{_copy("copy.eb326e0e85cf", { defaultValue: " Block Creator" })}</button>
             )}
             {isOwnShort && (
               <>
@@ -2167,19 +2160,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       await updateTokenVisibility(currentShort.id, next);
                       setVisibility(next);
                       toast.success(`Post set to ${next}`);
-                    } catch { toast.error('Failed to update visibility'); }
+                    } catch { toast.error(_copy("copy.67ca6fcb8233", { defaultValue: "Failed to update visibility" })); }
                   }}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
                   {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
-                  {visibility === 'public' ? 'Make Private' : 'Make Public'}
+                  {visibility === 'public' ? _copy("copy.ffab73178509", { defaultValue: "Make Private" }) : _copy("copy.24139936d627", { defaultValue: "Make Public" })}
                 </button>
                 <button
                   onClick={() => { setShareSheetOpen(false); setTimeout(() => setShowDeleteModal(true), 300); }}
                   className="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
-                  <Trash2 className="w-5 h-5" /> Delete
-                </button>
+                  <Trash2 className="w-5 h-5" />{_copy("copy.3534d686f23a", { defaultValue: " Delete" })}</button>
               </>
             )}
           </div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Account marketplace hooks
  * =========================
@@ -108,6 +109,7 @@ export function useCreateAccountListing() {
 }
 
 export function useUpdateAccountListing() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ listingId, ...input }: { listingId: string; priceDhb?: number; description?: string }) =>
@@ -115,20 +117,21 @@ export function useUpdateAccountListing() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['account-market-mine'] });
       qc.invalidateQueries({ queryKey: ['account-market-browse'] });
-      toast.success('Listing updated');
+      toast.success(_copy("copy.ce737095f636", { defaultValue: "Listing updated" }));
     },
     onError: (err: Error) => toast.error(err.message),
   });
 }
 
 export function useCancelAccountListing() {
+  const { t: _copy } = _useCopy();
   const qc = useQueryClient();
   return useMutation({
     mutationFn: cancelAccountListing,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['account-market-mine'] });
       qc.invalidateQueries({ queryKey: ['account-market-browse'] });
-      toast.success('Listing withdrawn');
+      toast.success(_copy("copy.fecd0f90ada2", { defaultValue: "Listing withdrawn" }));
     },
     onError: (err: Error) => toast.error(err.message),
   });

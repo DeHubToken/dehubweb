@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Markdown Renderer Utility
  * =========================
@@ -15,6 +16,7 @@ import { toast } from 'sonner';
  * Inline email copy button - shows mail icon, copies email on click.
  */
 function EmailCopyButton({ email }: { email: string }) {
+  const { t: _copy } = _useCopy();
   const [copied, setCopied] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -22,7 +24,7 @@ function EmailCopyButton({ email }: { email: string }) {
     e.stopPropagation();
     navigator.clipboard.writeText(email).then(() => {
       setCopied(true);
-      toast.success('Email copied');
+      toast.success(_copy("copy.28411e5e86b6", { defaultValue: "Email copied" }));
       setTimeout(() => setCopied(false), 2000);
     });
   };
@@ -30,7 +32,7 @@ function EmailCopyButton({ email }: { email: string }) {
   return (
     <button
       onClick={handleClick}
-      title={copied ? 'Copied!' : `Copy ${email}`}
+      title={copied ? _copy("copy.ea61bc15688d", { defaultValue: "Copied!" }) : _copy("copy.9776bafbaa83", { defaultValue: "Copy {{value1}}", value1: email })}
       className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/10 hover:bg-white/20 transition-colors text-xs text-white/70 hover:text-white align-middle"
     >
       {copied ? <Check className="w-3 h-3 text-white" /> : <Mail className="w-3 h-3" />}

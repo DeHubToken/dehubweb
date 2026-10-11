@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Sound Picker
@@ -27,6 +28,7 @@ interface SoundPickerProps {
 }
 
 export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPickerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [search, setSearch] = useSurfaceDraft("features/post/components/SoundPicker.tsx:search", '');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -129,9 +131,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
       <DrawerContent column glass className="border-t border-white/10 max-h-[90dvh]">
         <DrawerHeader className="border-b border-white/10 pb-3">
           <DrawerTitle className="text-white flex items-center gap-2">
-            <Music className="w-5 h-5" />
-            Add Sound
-          </DrawerTitle>
+            <Music className="w-5 h-5" />{_copy("copy.76d311c4cef6", { defaultValue: "Add Sound" })}</DrawerTitle>
         </DrawerHeader>
 
         {/* Search */}
@@ -141,7 +141,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search sounds..."
+              placeholder={_copy("copy.db66c92fd9e0", { defaultValue: "Search sounds..." })}
               className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/30"
             />
           </div>
@@ -154,7 +154,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
               <Loader2 className="w-6 h-6 text-white/40 animate-spin" />
             </div>
           ) : allTracks.length === 0 ? (
-            <AppState icon={debouncedSearch ? 'search' : 'audio'} title={debouncedSearch ? 'No sounds found' : 'No audio tracks available'} kind={debouncedSearch ? 'search-empty' : 'empty'} size="compact" />
+            <AppState icon={debouncedSearch ? 'search' : 'audio'} title={debouncedSearch ? _copy("copy.950e8e5b8f0e", { defaultValue: "No sounds found" }) : _copy("copy.4a8e3a5bada7", { defaultValue: "No audio tracks available" })} kind={debouncedSearch ? 'search-empty' : 'empty'} size="compact" />
           ) : (
             <>
               {allTracks.map((nft) => {
@@ -195,14 +195,14 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
                     {/* Track info */}
                     <div className="flex-1 min-w-0">
                       <div className="text-sm text-white font-medium truncate">
-                        {nft.name?.trim() || nft.title?.trim() || nft.description?.split('\n')[0]?.trim() || 'Untitled'}
+                        {nft.name?.trim() || nft.title?.trim() || nft.description?.split('\n')[0]?.trim() || _copy("copy.f59ab8d1331b", { defaultValue: "Untitled" })}
                       </div>
                       <div className="text-xs text-white/50 truncate flex items-center gap-1.5">
                         <Avatar className="w-3.5 h-3.5">
                           <AvatarImage src={avatar} />
                           <AvatarFallback className="text-[6px] bg-white/10">?</AvatarFallback>
                         </Avatar>
-                        {nft.minterUsername || nft.minterDisplayName || 'Unknown'}
+                        {nft.minterUsername || nft.minterDisplayName || _copy("copy.b764cdc0eab7", { defaultValue: "Unknown" })}
                         {duration != null && (
                           <span className="text-white/30">• {formatDuration(duration)}</span>
                         )}

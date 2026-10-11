@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * MusicConfirmDialog
@@ -65,6 +66,7 @@ function detectVoiceGender(prompt: string): 'male' | 'female' | 'auto' {
 }
 
 export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }: MusicConfirmDialogProps) {
+  const { t: _copy } = _useCopy();
   const [title, setTitle] = useSurfaceDraft("components/app/assistant/MusicConfirmDialog.tsx:title", '');
   const [lyrics, setLyrics] = useSurfaceDraft("components/app/assistant/MusicConfirmDialog.tsx:lyrics", '');
   const [style, setStyle] = useSurfaceDraft("components/app/assistant/MusicConfirmDialog.tsx:style", '');
@@ -101,7 +103,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
 
       if (data?.lyrics) {
         setLyrics(data.lyrics);
-        toast.success('Lyrics generated!');
+        toast.success(_copy("copy.ae55fa4ea56b", { defaultValue: "Lyrics generated!" }));
       }
     } catch (err: any) {
       console.error('Lyrics generation error:', err);
@@ -109,40 +111,38 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
     } finally {
       setIsGeneratingLyrics(false);
     }
-  }, [title, style, voiceGender, lyrics, userPrompt, setLyrics]);
+  }, [title, style, voiceGender, lyrics, userPrompt, setLyrics, _copy]);
 
   const genderOptions: { value: 'male' | 'female' | 'auto'; label: string; emoji: string }[] = [
-    { value: 'auto', label: 'Auto', emoji: '🎤' },
-    { value: 'male', label: 'Male', emoji: '🧑' },
-    { value: 'female', label: 'Female', emoji: '👩' },
+    { value: 'auto', label: _copy("copy.0286249762f7", { defaultValue: "Auto" }), emoji: '🎤' },
+    { value: 'male', label: _copy("copy.03f8c1273e3d", { defaultValue: "Male" }), emoji: '🧑' },
+    { value: 'female', label: _copy("copy.e8cca808ae5a", { defaultValue: "Female" }), emoji: '👩' },
   ];
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent column glass className="border-t border-white/10">
         <DrawerHeader className="border-b border-white/10 pb-3">
-          <DrawerTitle className="text-white flex items-center gap-2 text-base">
-            🎵 Create a Song
-          </DrawerTitle>
-          <p className="text-white/40 text-xs mt-1">Review and customize before generating</p>
+          <DrawerTitle className="text-white flex items-center gap-2 text-base">{_copy("copy.c9f2f9f8a5ab", { defaultValue: "🎵 Create a Song" })}</DrawerTitle>
+          <p className="text-white/40 text-xs mt-1">{_copy("copy.3f41cd7ad606", { defaultValue: "Review and customize before generating" })}</p>
         </DrawerHeader>
 
         <div className="p-4 space-y-4 max-h-[65vh] overflow-y-auto">
           {/* Song Title */}
           <div>
-            <label className="text-xs font-medium text-white/60 mb-1.5 block">Song Title</label>
+            <label className="text-xs font-medium text-white/60 mb-1.5 block">{_copy("copy.5184bc4beb07", { defaultValue: "Song Title" })}</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Leave blank for AI to decide"
+              placeholder={_copy("copy.e5b06b1da4c0", { defaultValue: "Leave blank for AI to decide" })}
               className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors"
             />
           </div>
 
           {/* Song Style */}
           <div>
-            <label className="text-xs font-medium text-white/60 mb-1.5 block">Style / Genre</label>
+            <label className="text-xs font-medium text-white/60 mb-1.5 block">{_copy("copy.ae9f83d725f5", { defaultValue: "Style / Genre" })}</label>
             <input
               type="text"
               value={style}
@@ -154,7 +154,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
 
           {/* Voice Gender */}
           <div>
-            <label className="text-xs font-medium text-white/60 mb-1.5 block">Voice</label>
+            <label className="text-xs font-medium text-white/60 mb-1.5 block">{_copy("copy.87bf2bc08589", { defaultValue: "Voice" })}</label>
             <div className="flex gap-2">
               {genderOptions.map(opt => (
                 <button
@@ -175,14 +175,13 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
 
           {/* Lyrics */}
           <div>
-            <label className="text-xs font-medium text-white/60 mb-1.5 block">
-              Lyrics <span className="text-white/25">(optional — AI writes if blank)</span>
+            <label className="text-xs font-medium text-white/60 mb-1.5 block">{_copy("copy.e9f96afd5448", { defaultValue: "Lyrics " })}<span className="text-white/25">{_copy("copy.37c4c0a62315", { defaultValue: "(optional — AI writes if blank)" })}</span>
             </label>
             <div className="relative">
               <textarea
                 value={lyrics}
                 onChange={(e) => setLyrics(e.target.value)}
-                placeholder={"[verse]\nYour lyrics here...\n\n[chorus]\nChorus lyrics..."}
+                placeholder={_copy("copy.431bc73eb60b", { defaultValue: "[verse]\nYour lyrics here...\n\n[chorus]\nChorus lyrics..." })}
                 rows={5}
                 className="w-full px-3 py-2.5 pb-10 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors resize-none"
               />
@@ -199,11 +198,9 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
               >
                 {isGeneratingLyrics ? (
                   <span className="flex items-center gap-1.5">
-                    <span className="inline-block w-3 h-3 border-2 border-white/30 border-t-white/80 rounded-full animate-spin" />
-                    Writing...
-                  </span>
+                    <span className="inline-block w-3 h-3 border-2 border-white/30 border-t-white/80 rounded-full animate-spin" />{_copy("copy.8343b1273ba1", { defaultValue: "Writing..." })}</span>
                 ) : (
-                  '✨ Enhance Lyrics'
+                  _copy("copy.98b4adfad956", { defaultValue: "✨ Enhance Lyrics" })
                 )}
               </button>
             </div>
@@ -216,11 +213,9 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
           <button
             onClick={() => onOpenChange(false)}
             className="flex-1 py-2.5 rounded-xl border border-white/10 text-sm font-medium text-white/60 hover:bg-white/5 transition-colors"
-          >
-            Cancel
-          </button>
+          >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
           <LiquidGlassBubble2
-            label="Continue to Payment"
+            label={_copy("copy.bac1555a01a0", { defaultValue: "Continue to Payment" })}
             onClick={handleConfirm}
             width="auto"
             height="40px"

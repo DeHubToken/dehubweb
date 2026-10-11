@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { Twitter, Facebook, Linkedin, Share2, Send } from 'lucide-react';
@@ -12,6 +13,7 @@ interface ShareButtonsProps {
 }
 
 export const ShareButtons: React.FC<ShareButtonsProps> = ({ shareUrl: articleUrl, postTitle, imageUrl, variant = 'icons' }) => {
+  const { t: _copy } = _useCopy();
   const shareUrl = useAffiliateShareUrl(articleUrl);
 
   const handleShare = (platform: string) => {
@@ -35,8 +37,8 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ shareUrl: articleUrl
         break;
       case 'copy':
         navigator.clipboard.writeText(shareUrl);
-        toast.success("Link Copied", {
-          description: "Blog post link copied to clipboard",
+        toast.success(_copy("copy.93f102a54ec8", { defaultValue: "Link Copied" }), {
+          description: _copy("copy.413ecefdf0a6", { defaultValue: "Blog post link copied to clipboard" }),
         });
         return;
     }
@@ -52,60 +54,54 @@ export const ShareButtons: React.FC<ShareButtonsProps> = ({ shareUrl: articleUrl
             <button
               onClick={() => handleShare('twitter')}
               className="px-6 py-3 border border-sky-blue text-royal-blue rounded-lg hover:bg-sky-blue/10 transition-all duration-200 font-exo"
-            >
-              Share on Twitter
-            </button>
+            >{_copy("copy.db704af914e9", { defaultValue: "Share on Twitter" })}</button>
             <button
               onClick={() => handleShare('linkedin')}
               className="px-6 py-3 border border-sky-blue text-royal-blue rounded-lg hover:bg-sky-blue/10 transition-all duration-200 font-exo"
-            >
-              Share on LinkedIn
-            </button>
+            >{_copy("copy.ab87c050148b", { defaultValue: "Share on LinkedIn" })}</button>
             <button
               onClick={() => handleShare('telegram')}
               className="px-6 py-3 border border-sky-blue text-royal-blue rounded-lg hover:bg-sky-blue/10 transition-all duration-200 font-exo"
-            >
-              Share on Telegram
-            </button>
+            >{_copy("copy.13564bc87b1e", { defaultValue: "Share on Telegram" })}</button>
         </div>
       )
   }
 
   return (
     <div className="flex items-center gap-4">
-      <span className="text-royal-blue/70 font-semibold font-exo">Share:</span>
+      <span className="text-royal-blue/70 font-semibold font-exo">{_copy("copy.c412c6de9a86", { defaultValue: "Share:" })}</span>
       <button
         onClick={() => handleShare('twitter')}
         className="p-2 rounded-lg bg-sky-blue/10 text-royal-blue hover:bg-sky-blue/20 transition-colors duration-200"
-        aria-label="Share on Twitter"
+        aria-label={_copy("copy.db704af914e9", { defaultValue: "Share on Twitter" })}
       >
         <Twitter className="w-4 h-4" />
       </button>
       <button
         onClick={() => handleShare('facebook')}
         className="p-2 rounded-lg bg-sky-blue/10 text-royal-blue hover:bg-sky-blue/20 transition-colors duration-200"
-        aria-label="Share on Facebook"
+        aria-label={_copy("copy.27065eecbccd", { defaultValue: "Share on Facebook" })}
       >
         <Facebook className="w-4 h-4" />
       </button>
       <button
         onClick={() => handleShare('linkedin')}
         className="p-2 rounded-lg bg-sky-blue/10 text-royal-blue hover:bg-sky-blue/20 transition-colors duration-200"
-        aria-label="Share on LinkedIn"
+        aria-label={_copy("copy.ab87c050148b", { defaultValue: "Share on LinkedIn" })}
       >
         <Linkedin className="w-4 h-4" />
       </button>
       <button
         onClick={() => handleShare('telegram')}
         className="p-2 rounded-lg bg-sky-blue/10 text-royal-blue hover:bg-sky-blue/20 transition-colors duration-200"
-        aria-label="Share on Telegram"
+        aria-label={_copy("copy.13564bc87b1e", { defaultValue: "Share on Telegram" })}
       >
         <Send className="w-4 h-4" />
       </button>
       <button
         onClick={() => handleShare('copy')}
         className="p-2 rounded-lg bg-sky-blue/10 text-royal-blue hover:bg-sky-blue/20 transition-colors duration-200"
-        aria-label="Copy link"
+        aria-label={_copy("copy.dbf362d4f210", { defaultValue: "Copy link" })}
       >
         <Share2 className="w-4 h-4" />
       </button>

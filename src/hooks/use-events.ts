@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Events Hooks
  * =============
@@ -207,6 +208,7 @@ export function useManageRsvp() {
 
 // Create event
 export function useCreateEvent() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
@@ -241,16 +243,17 @@ export function useCreateEvent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events'] });
-      toast.success('Event created!');
+      toast.success(_copy("copy.0de0253da6f1", { defaultValue: "Event created!" }));
     },
     onError: () => {
-      toast.error('Failed to create event');
+      toast.error(_copy("copy.d980d2b4ac8b", { defaultValue: "Failed to create event" }));
     },
   });
 }
 
 // Update event (creator only)
 export function useUpdateEvent() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
@@ -281,10 +284,10 @@ export function useUpdateEvent() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['event', variables.eventId] });
       queryClient.invalidateQueries({ queryKey: ['events'] });
-      toast.success('Event updated!');
+      toast.success(_copy("copy.1603d5423679", { defaultValue: "Event updated!" }));
     },
     onError: () => {
-      toast.error('Failed to update event');
+      toast.error(_copy("copy.ab77f2abb3ae", { defaultValue: "Failed to update event" }));
     },
   });
 }
@@ -292,6 +295,7 @@ export function useUpdateEvent() {
 
 // Delete event
 export function useDeleteEvent() {
+  const { t: _copy } = _useCopy();
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
@@ -306,7 +310,7 @@ export function useDeleteEvent() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['events'] });
-      toast.success('Event deleted');
+      toast.success(_copy("copy.5b7a1ac615bb", { defaultValue: "Event deleted" }));
     },
   });
 }

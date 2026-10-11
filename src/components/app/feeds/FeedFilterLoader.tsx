@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Feed Filter Loader
  * ==================
@@ -79,6 +80,7 @@ function WarFilterLoader({
   label: string;
   className?: string;
 }) {
+  const { t: _copy } = _useCopy();
   return (
     <div
       role="status"
@@ -98,8 +100,8 @@ function WarFilterLoader({
       <span aria-hidden="true" data-war-mini-sweep />
 
       <div aria-hidden="true" data-war-mini-frame>
-        <p data-war-mini-kicker>DEHUB // TACTICAL NETWORK</p>
-        <p data-war-mini-title>RETASKING SENSORS</p>
+        <p data-war-mini-kicker>{_copy("copy.5e57e90565ce", { defaultValue: "DEHUB // TACTICAL NETWORK" })}</p>
+        <p data-war-mini-title>{_copy("copy.dbe84c320006", { defaultValue: "RETASKING SENSORS" })}</p>
 
         <div data-war-mini-bar>
           {MINI_CELLS.map((cell) => (
@@ -110,7 +112,7 @@ function WarFilterLoader({
           ))}
         </div>
 
-        <p data-war-mini-sub>REACQUIRING TARGETS &middot; STAND BY</p>
+        <p data-war-mini-sub>{_copy("copy.38c65fb481e0", { defaultValue: "REACQUIRING TARGETS · STAND BY" })}</p>
       </div>
     </div>
   );

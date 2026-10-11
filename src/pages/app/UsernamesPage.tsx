@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Usernames Page
  * ==============
@@ -21,8 +22,7 @@ const JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
   name: 'DeHub Username Marketplace',
-  description:
-    'Buy and sell DeHub usernames with tokens. Search handles for sale, list your own, and transfer instantly on-chain.',
+  get description() { return _translateCopy("copy.eedbc3b3bda6", { defaultValue: "Buy and sell DeHub usernames with tokens. Search handles for sale, list your own, and transfer instantly on-chain." }); },
   url: 'https://dehub.io/usernames',
 };
 

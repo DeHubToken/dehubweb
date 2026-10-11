@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { openNotificationsDrawer } from '../NotificationsDrawer';
 import { useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -89,6 +90,7 @@ export function SidebarNavItem({
   layoutId = 'sidebar-nav',
   registerActiveRef,
 }: SidebarNavItemProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { theme } = useAppTheme();
@@ -258,7 +260,7 @@ export function SidebarNavItem({
           isDesktop ? "w-9 h-9" : "w-10 h-10"
         )}>
           {avatarUrl && (
-            <AvatarImage src={avatarUrl} alt="Profile" className="object-cover rounded-xl" />
+            <AvatarImage src={avatarUrl} alt={_copy("copy.d696a35bdd18", { defaultValue: "Profile" })} className="object-cover rounded-xl" />
           )}
           <AvatarFallback className="bg-zinc-700 text-white font-medium text-sm rounded-xl">
             {avatarFallback || 'U'}

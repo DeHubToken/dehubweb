@@ -12,6 +12,8 @@
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
+import i18n from '@/i18n';
+import { formatRelativeTime } from '@/i18n/date-locale';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -54,14 +56,7 @@ import { toast } from 'sonner';
 
 function timeAgo(ended?: string | null): string {
   if (!ended) return '';
-  const diff = Date.now() - new Date(ended).getTime();
-  const mins = Math.floor(diff / 60000);
-  const hrs = Math.floor(mins / 60);
-  const days = Math.floor(hrs / 24);
-  if (days > 0) return `${days}d ago`;
-  if (hrs > 0) return `${hrs}h ago`;
-  if (mins > 0) return `${mins}m ago`;
-  return 'just now';
+  return formatRelativeTime(ended, i18n.language, 'short');
 }
 
 function stageDuration(space: AudioSpace): string | null {

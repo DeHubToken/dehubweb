@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +15,7 @@ const TOPIC_PERIODS: { value: TopicPeriod; label: string }[] = [
   { value: '1w', label: '1W' },
   { value: '1m', label: '1M' },
   { value: '1y', label: '1Y' },
-  { value: 'all', label: 'All' },
+  { value: 'all', get label() { return _translateCopy("copy.a52ace420f21", { defaultValue: "All" }); } },
 ];
 
 const PERIOD_INDEX: Record<string, number> = { '1d': 0, '1w': 1, '1m': 2, '1y': 3, 'all': 4 };
@@ -39,6 +41,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   defaultPeriod = 'all',
   minHeight = 280,
 }: TrendingTopicsListProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>(defaultPeriod);
@@ -206,11 +209,11 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
                         popularity.
                       */}
                       {cat.boosted && (
-                        <ThemedIcon icon="superpowers" alt="Boosted" className="w-4 h-4 shrink-0 object-contain opacity-70" />
+                        <ThemedIcon icon="superpowers" alt={_copy("copy.c1f1c8819e33", { defaultValue: "Boosted" })} className="w-4 h-4 shrink-0 object-contain opacity-70" />
                       )}
                     </div>
                     <span className="text-[11px] text-zinc-500 shrink-0 ml-2">
-                      {isPlaceholder ? '-' : `${cat.post_count} ${cat.post_count === 1 ? 'post' : 'posts'}`}
+                      {isPlaceholder ? '-' : `${cat.post_count} ${cat.post_count === 1 ? _copy("copy.72231043bc18", { defaultValue: "post" }) : _copy("copy.a44f1b975171", { defaultValue: "posts" })}`}
                     </span>
                   </button>
                 );

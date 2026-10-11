@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Fraction Checkout
  * =================
@@ -164,6 +165,7 @@ export function useCreateListing() {
 
 /** Buy fractions from a listing: quote → pay DHB → server verifies. */
 export function useFractionPurchase() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -203,7 +205,7 @@ export function useFractionPurchase() {
     },
     onSuccess: (data) => {
       invalidateFractionQueries(queryClient, data.trade?.token_id);
-      toast.success('Paid — the seller has been asked to send your fractions');
+      toast.success(_copy("copy.ac7d69cdcaf6", { defaultValue: "Paid — the seller has been asked to send your fractions" }));
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -219,6 +221,7 @@ export function useFractionPurchase() {
  * the only difference.
  */
 export function useSettleTrade() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -245,7 +248,7 @@ export function useSettleTrade() {
     },
     onSuccess: (data) => {
       invalidateFractionQueries(queryClient, data.trade?.token_id);
-      toast.success('Delivered — the trade is settled');
+      toast.success(_copy("copy.2579be0056a3", { defaultValue: "Delivered — the trade is settled" }));
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -273,7 +276,7 @@ export function useSettleTrade() {
     },
     onSuccess: (data) => {
       invalidateFractionQueries(queryClient, data.trade?.token_id);
-      toast.success('Paid — the trade is settled');
+      toast.success(_copy("copy.8066dc7e1263", { defaultValue: "Paid — the trade is settled" }));
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -289,6 +292,7 @@ export function useSettleTrade() {
  * accepted, which is what makes the buyer's resulting payment obligation real.
  */
 export function useOfferResponse() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
 
@@ -314,7 +318,7 @@ export function useOfferResponse() {
     },
     onSuccess: (data) => {
       invalidateFractionQueries(queryClient, data.trade?.token_id);
-      toast.success('Sent — the buyer has been asked to pay');
+      toast.success(_copy("copy.466d81c34cf4", { defaultValue: "Sent — the buyer has been asked to pay" }));
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -327,7 +331,7 @@ export function useOfferResponse() {
       ).then(() => params),
     onSuccess: (params) => {
       invalidateFractionQueries(queryClient, params.tokenId);
-      toast.success('Offer rejected');
+      toast.success(_copy("copy.83d7538eeb56", { defaultValue: "Offer rejected" }));
     },
     onError: (e: Error) => toast.error(e.message),
   });

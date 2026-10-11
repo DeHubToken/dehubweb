@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useDraft } from '@/hooks/use-draft';
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
@@ -145,6 +146,7 @@ interface SidebarChatProps {
 }
 
 export function SidebarChat({ isActive }: SidebarChatProps) {
+  const { t: _copy } = _useCopy();
   const [replyTo, setReplyTo] = useState<SupabaseLiveChatMessage | null>(null);
   // Edits happen in the row itself rather than in the composer at the foot of
   // the rail — the composer is a 169-character single line shared with the
@@ -273,12 +275,12 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     try {
       const { url, duration } = await uploadLiveChatVoice(blob);
       await send('', 'audio', undefined, replyTo?.id, url, duration);
-      toast.success('Voice note sent!', { id: toastId });
+      toast.success(_copy("copy.690c816e9745", { defaultValue: "Voice note sent!" }), { id: toastId });
     } catch (err: any) {
       console.error('[SidebarChat] Voice upload failed:', err);
       toast.error(err?.message || 'Failed to send voice note', { id: toastId });
     }
-  }, [isAuthenticated, openLoginModal, send, replyTo]);
+  }, [isAuthenticated, openLoginModal, send, replyTo, _copy]);
 
   const handleSend = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
@@ -291,7 +293,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       setNewMessage(current => current === newMessage ? '' : current);
     } catch (err) {
       console.error('[SidebarChat] Send failed:', err);
-      toast.error('Failed to send message');
+      toast.error(_copy("copy.66b8e077d85f", { defaultValue: "Failed to send message" }));
     }
   };
 
@@ -310,7 +312,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       await send('', 'gif', gifUrl, replyToId);
     } catch (err) {
       console.error('[SidebarChat] GIF send failed:', err);
-      toast.error('Failed to send GIF');
+      toast.error(_copy("copy.f59dcbd274a8", { defaultValue: "Failed to send GIF" }));
     }
   };
 
@@ -372,7 +374,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
               ))}
             </>
           ) : mergedItems.length === 0 ? (
-            <AppState icon="messages" title="No messages yet" description="Be the first to say hello." size="compact" className="h-full" />
+            <AppState icon="messages" title={_copy("copy.f42e0f66017d", { defaultValue: "No messages yet" })} description={_copy("copy.937510f750fd", { defaultValue: "Be the first to say hello." })} size="compact" className="h-full" />
           ) : (
             mergedItems.map((item) => {
               if (item.type === 'buy_alert') {
@@ -416,7 +418,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                   >
                     <div className="flex items-start gap-2">
                       <Avatar className="w-6 h-6 flex-shrink-0">
-                        <AvatarImage src={assistantAvatar} alt="assistant" />
+                        <AvatarImage src={assistantAvatar} alt={_copy("copy.a39a7ffad4a3", { defaultValue: "assistant" })} />
                         <AvatarFallback className="bg-primary/20 text-primary">
                           <Sparkles className="w-3 h-3" />
                         </AvatarFallback>
@@ -429,7 +431,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           </div>
                         )}
                         <span className="inline-flex items-baseline gap-1.5">
-                          <span className="text-xs font-semibold text-white">assistant</span>
+                          <span className="text-xs font-semibold text-white">{_copy("copy.a39a7ffad4a3", { defaultValue: "assistant" })}</span>
                           <span className="text-[8px] uppercase tracking-wide px-1 py-px rounded bg-primary/20 text-primary border border-primary/30">
                             AI
                           </span>
@@ -447,7 +449,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
 
               const msg = item.data;
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
-              const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
+              const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || _copy("copy.90395d452a30", { defaultValue: "Anon" });
               const handle = msg.sender_username;
               const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
@@ -482,7 +484,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                           <SidebarChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                         </span>
                         <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
-                        {msg.is_edited && <span className="text-zinc-600 text-[10px]">(edited)</span>}
+                        {msg.is_edited && <span className="text-zinc-600 text-[10px]">{_copy("copy.de44febe4cc8", { defaultValue: "(edited)" })}</span>}
                       </span>
                       {editingId === msg.id ? (
                         <div className="mt-0.5">
@@ -509,10 +511,8 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                                 void commitDraftEdit(msg.id);
                               }}
                               className="text-white hover:underline"
-                            >
-                              Save
-                            </button>
-                            <button onClick={() => setEditingId(null)} className="hover:text-zinc-300">Cancel</button>
+                            >{_copy("copy.1509f561f241", { defaultValue: "Save" })}</button>
+                            <button onClick={() => setEditingId(null)} className="hover:text-zinc-300">{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
                           </div>
                         </div>
                       ) : msg.message_type === 'image' && msg.image_url ? (
@@ -549,7 +549,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                               <Reply className="w-3 h-3" />
                             </button>
                           </TooltipTrigger>
-                          <TooltipContent side="top">Reply</TooltipContent>
+                          <TooltipContent side="top">{_copy("copy.c253f451bdd5", { defaultValue: "Reply" })}</TooltipContent>
                         </Tooltip>
                         {walletAddress && msg.sender_address?.toLowerCase() === walletAddress.toLowerCase() && (
                           <>
@@ -565,7 +565,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                                     <Pencil className="w-3 h-3" />
                                   </button>
                                 </TooltipTrigger>
-                                <TooltipContent side="top">Edit</TooltipContent>
+                                <TooltipContent side="top">{_copy("copy.464c4ffd019e", { defaultValue: "Edit" })}</TooltipContent>
                               </Tooltip>
                             )}
                             <Tooltip>
@@ -577,7 +577,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                                   <Trash2 className="w-3 h-3" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent side="top">Delete</TooltipContent>
+                              <TooltipContent side="top">{_copy("copy.e2d0a54968ea", { defaultValue: "Delete" })}</TooltipContent>
                             </Tooltip>
                           </>
                         )}
@@ -590,7 +590,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
                                 </button>
                               </PopoverTrigger>
                             </TooltipTrigger>
-                            <TooltipContent side="top">React</TooltipContent>
+                            <TooltipContent side="top">{_copy("copy.01fad993ff61", { defaultValue: "React" })}</TooltipContent>
                           </Tooltip>
                           <PopoverContent
                             side="top"
@@ -641,9 +641,9 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
           <Reply className="w-3 h-3 text-white flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <span className="text-[10px] font-medium text-white">
-              {replyTo.sender_display_name || replyTo.sender_username || 'User'}
+              {replyTo.sender_display_name || replyTo.sender_username || _copy("copy.b512d97e7cbf", { defaultValue: "User" })}
             </span>
-            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || 'Media'}</p>
+            <p className="text-[10px] text-zinc-400 truncate">{replyTo.content || _copy("copy.d357175cfe89", { defaultValue: "Media" })}</p>
           </div>
           <button onClick={() => setReplyTo(null)} className="flex-shrink-0 p-0.5 text-zinc-500 hover:text-white">
             <X className="w-3 h-3" />
@@ -656,7 +656,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
         <div>
           <Textarea
             ref={textareaRef}
-            placeholder="Type a message..."
+            placeholder={_copy("copy.69518e684f06", { defaultValue: "Type a message..." })}
             value={newMessage}
             onChange={(e) => {
               const val = e.target.value;

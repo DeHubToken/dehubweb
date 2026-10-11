@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BlogPost } from '@/types/blog';
@@ -11,6 +12,7 @@ interface RelatedPostsProps {
 }
 
 export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPost, allPosts }) => {
+  const { t: _copy } = _useCopy();
   // Find related posts based on tags or recent posts
   const relatedPosts = allPosts
     .filter(post => 
@@ -24,7 +26,7 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPost, allPost
 
   return (
     <section className="mt-12 pt-8 border-t border-sky-blue/20">
-      <h3 className="text-2xl font-bold text-royal-blue mb-6 font-exo">Related Posts</h3>
+      <h3 className="text-2xl font-bold text-royal-blue mb-6 font-exo">{_copy("copy.bddb629fc59a", { defaultValue: "Related Posts" })}</h3>
       <div className="grid gap-6 md:grid-cols-3">
         {relatedPosts.map((post) => (
           <Link

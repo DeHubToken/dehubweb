@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { confirmChatDelivery, roomMessageMatches } from '@/lib/chat-delivery';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
@@ -317,6 +318,7 @@ export function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChat
  * Livechat messages hook.
  */
 export function useLiveChatMessages(roomId: string | null) {
+  const { t: _copy } = _useCopy();
   const [messages, setMessages] = useState<SupabaseLiveChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
@@ -567,7 +569,7 @@ export function useLiveChatMessages(roomId: string | null) {
     ) => {
       if (!roomId || !isAuthenticated || !walletAddress) throw new Error('Sign in to send a message');
       if (isBanned) {
-        toast.error('You are banned from chat');
+        toast.error(_copy("copy.4d7240d59cda", { defaultValue: "You are banned from chat" }));
         throw new Error('You are banned from chat');
       }
       setIsSending(true);
@@ -674,7 +676,7 @@ export function useLiveChatMessages(roomId: string | null) {
     // Deliberately NOT depending on `messages` — it is read through
     // messagesRef, so this callback stays identical for the life of the room
     // instead of being rebuilt on every arrival.
-    [roomId, isAuthenticated, walletAddress, user, isBanned, scheduleOptimisticSweep]
+    [roomId, isAuthenticated, walletAddress, user, isBanned, scheduleOptimisticSweep, _copy]
   );
 
   /**
@@ -690,11 +692,11 @@ export function useLiveChatMessages(roomId: string | null) {
     const target = messagesRef.current.find((m) => m.id === messageId);
     if (!target) return false;
     if (target.sender_address?.toLowerCase() !== walletAddress.toLowerCase()) {
-      toast.error('You can only edit your own messages');
+      toast.error(_copy("copy.50164dfe3302", { defaultValue: "You can only edit your own messages" }));
       return false;
     }
     if (messageId.startsWith('temp-')) {
-      toast.error('Message is still sending');
+      toast.error(_copy("copy.284407e430a6", { defaultValue: "Message is still sending" }));
       return false;
     }
     if (trimmed === target.content) return true;
@@ -717,10 +719,10 @@ export function useLiveChatMessages(roomId: string | null) {
     });
     if (!confirmed) {
       setMessages(previous => previous.map(message => message.id === messageId && message.content === trimmed ? target : message));
-      toast.error('Edit was not confirmed. Your draft has been kept.');
+      toast.error(_copy("copy.9b102aa14105", { defaultValue: "Edit was not confirmed. Your draft has been kept." }));
     }
     return confirmed;
-  }, [walletAddress, roomId]);
+  }, [walletAddress, roomId, _copy]);
 
   /** Remove a message — your own, or anyone's if you moderate the room. */
   const deleteMessage = useCallback(async (messageId: string) => {
@@ -740,7 +742,7 @@ export function useLiveChatMessages(roomId: string | null) {
     // Auth state can briefly flicker during Web3Auth/Wagmi handshakes, which was
     // blocking reactions even for already-signed-in users.
     if (!walletAddress) {
-      toast.error('Sign in to react');
+      toast.error(_copy("copy.e8cb7197e531", { defaultValue: "Sign in to react" }));
       return;
     }
     // Optimistic update
@@ -756,7 +758,7 @@ export function useLiveChatMessages(roomId: string | null) {
       })
     );
     emitAddReaction(roomId, messageId, emoji);
-  }, [roomId, walletAddress]);
+  }, [roomId, walletAddress, _copy]);
 
   const removeReaction = useCallback((messageId: string, emoji: string) => {
     if (!walletAddress) return;

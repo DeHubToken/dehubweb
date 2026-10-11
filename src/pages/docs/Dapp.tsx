@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useEffect, useRef, useState } from 'react';
 import { badgeImage } from '@/lib/staking-badges';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
@@ -55,6 +56,7 @@ const GuideSection = ({ id, title, paras, bullets = [] }: { id: string; title: s
 };
 
 const Dapp = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
   const { hash } = useLocation();
   const navigate = useNavigate();
@@ -404,14 +406,14 @@ const Dapp = () => {
 
         <GuideSection
           id="articles"
-          title="dapp.articlesTitle"
+          title={_copy("copy.ca8d24a3e762", { defaultValue: "dapp.articlesTitle" })}
           paras={['dapp.articlesDesc']}
           bullets={[['dapp.articlesB1', 'dapp.articlesB1Desc'], ['dapp.articlesB2', 'dapp.articlesB2Desc'], ['dapp.articlesB3', 'dapp.articlesB3Desc']]}
         />
 
         <GuideSection
           id="multi-posting"
-          title="dapp.multipostTitle"
+          title={_copy("copy.b6ad48b669f7", { defaultValue: "dapp.multipostTitle" })}
           paras={['dapp.multipostDesc']}
           bullets={[['dapp.multipostB1', 'dapp.multipostB1Desc'], ['dapp.multipostB2', 'dapp.multipostB2Desc'], ['dapp.multipostB3', 'dapp.multipostB3Desc']]}
         />
@@ -656,28 +658,28 @@ const Dapp = () => {
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubOwnership')}</td>
                   </tr>
                   <tr>
-                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Friend.tech</td>
+                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">{_copy("copy.599f4a9886b4", { defaultValue: "Friend.tech" })}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.friendTechModel')}</td>
                     <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.friendTechValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.friendTechRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.friendTechOwnership')}</td>
                   </tr>
                   <tr>
-                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Lens Protocol</td>
+                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">{_copy("copy.6133f824f41c", { defaultValue: "Lens Protocol" })}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.lensModel')}</td>
                     <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.lensValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.lensRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.lensOwnership')}</td>
                   </tr>
                   <tr>
-                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Zora</td>
+                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">{_copy("copy.a37468be5d59", { defaultValue: "Zora" })}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.zoraModel')}</td>
                     <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.zoraValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.zoraRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.zoraOwnership')}</td>
                   </tr>
                   <tr>
-                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Patreon</td>
+                    <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">{_copy("copy.eec736f63bbb", { defaultValue: "Patreon" })}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.patreonModel')}</td>
                     <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.patreonValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.patreonRevenue')}</td>
@@ -825,7 +827,7 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.exploreFormula')}</p>
           
           <div className="bg-muted p-4 rounded-lg mb-4 border border-border">
-            <code className="text-foreground font-exo">MV + MS + BE + BS = (RG / RS)</code>
+            <code className="text-foreground font-exo">{_copy("copy.538447759dad", { defaultValue: "MV + MS + BE + BS = (RG / RS)" })}</code>
           </div>
           
           <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.exploreAlgorithm')}</p>
@@ -1008,7 +1010,7 @@ const Dapp = () => {
 
         <GuideSection
           id="dao-treasury"
-          title="dapp.daoTitle"
+          title={_copy("copy.c558e7501904", { defaultValue: "dapp.daoTitle" })}
           paras={['dapp.daoDesc']}
           bullets={[['dapp.daoB1', 'dapp.daoB1Desc'], ['dapp.daoB2', 'dapp.daoB2Desc'], ['dapp.daoB3', 'dapp.daoB3Desc']]}
         />
@@ -1797,7 +1799,7 @@ const Dapp = () => {
 
         <GuideSection
           id="packs"
-          title="dapp.packsTitle"
+          title={_copy("copy.e79b190608ca", { defaultValue: "dapp.packsTitle" })}
           paras={['dapp.packsDesc']}
           bullets={[['dapp.packsB1', 'dapp.packsB1Desc'], ['dapp.packsB2', 'dapp.packsB2Desc']]}
         />
@@ -1839,7 +1841,7 @@ const Dapp = () => {
           <Shot src="/media/docs-music.png" alt={t('dapp.altMusic')} />
         </section>
 
-        <GuideSection id="cinema" title="dapp.cinemaTitle" paras={['dapp.cinemaDesc']} />
+        <GuideSection id="cinema" title={_copy("copy.5e3ce481ab0d", { defaultValue: "dapp.cinemaTitle" })} paras={['dapp.cinemaDesc']} />
 
         <section id="wallet" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
@@ -1867,14 +1869,14 @@ const Dapp = () => {
 
         <GuideSection
           id="exchange"
-          title="dapp.exchangeTitle"
+          title={_copy("copy.43b9fafd6db4", { defaultValue: "dapp.exchangeTitle" })}
           paras={['dapp.exchangeDesc']}
           bullets={[['dapp.exchangeB1', 'dapp.exchangeB1Desc'], ['dapp.exchangeB2', 'dapp.exchangeB2Desc'], ['dapp.exchangeB3', 'dapp.exchangeB3Desc']]}
         />
 
         <GuideSection
           id="marketplaces"
-          title="dapp.marketsTitle"
+          title={_copy("copy.d924f9b45914", { defaultValue: "dapp.marketsTitle" })}
           paras={['dapp.marketsDesc']}
           bullets={[['dapp.marketsB1', 'dapp.marketsB1Desc'], ['dapp.marketsB2', 'dapp.marketsB2Desc'], ['dapp.marketsB3', 'dapp.marketsB3Desc']]}
         />
@@ -1961,14 +1963,14 @@ const Dapp = () => {
 
         <GuideSection
           id="converter"
-          title="dapp.converterTitle"
+          title={_copy("copy.e207739f2f08", { defaultValue: "dapp.converterTitle" })}
           paras={['dapp.converterDesc']}
           bullets={[['dapp.converterB1', 'dapp.converterB1Desc'], ['dapp.converterB2', 'dapp.converterB2Desc'], ['dapp.converterB3', 'dapp.converterB3Desc']]}
         />
 
         <GuideSection
           id="mini-apps"
-          title="dapp.miniAppsTitle"
+          title={_copy("copy.663e192da1bc", { defaultValue: "dapp.miniAppsTitle" })}
           paras={['dapp.miniAppsDesc']}
           bullets={[['dapp.miniAppsB1', 'dapp.miniAppsB1Desc'], ['dapp.miniAppsB2', 'dapp.miniAppsB2Desc'], ['dapp.miniAppsB3', 'dapp.miniAppsB3Desc'], ['dapp.miniAppsB4', 'dapp.miniAppsB4Desc']]}
         />
@@ -2035,7 +2037,7 @@ const Dapp = () => {
 
         <GuideSection
           id="kids-mode"
-          title="dapp.kidsTitle"
+          title={_copy("copy.421205947abf", { defaultValue: "dapp.kidsTitle" })}
           paras={['dapp.kidsDesc']}
           bullets={[['dapp.kidsB1', 'dapp.kidsB1Desc'], ['dapp.kidsB2', 'dapp.kidsB2Desc']]}
         />

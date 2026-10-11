@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * PPV Payment Hook
  * ================
@@ -74,6 +75,7 @@ export function usePPVPayment({
   chainId: postChainId = BASE_CHAIN_ID,
   onSuccess,
 }: UsePPVPaymentOptions) {
+  const { t: _copy } = _useCopy();
   // Everything below the Solana branch in pay() is EVM-only and has already
   // ruled out 101/103, so it can treat the post's chain as a ChainId.
   const chainId = postChainId as ChainId;
@@ -95,12 +97,12 @@ export function usePPVPayment({
     setShortfall(null);
 
     if (!creatorAddress) {
-      toast.error('Creator address not available');
+      toast.error(_copy("copy.401979c70f39", { defaultValue: "Creator address not available" }));
       return;
     }
 
     if (price <= 0) {
-      toast.error('Invalid PPV price');
+      toast.error(_copy("copy.746c520a928e", { defaultValue: "Invalid PPV price" }));
       return;
     }
 
@@ -115,7 +117,7 @@ export function usePPVPayment({
         await sendSolanaPayment({ tokenId, kind: 'ppv', chainId: postChainId });
 
         markTokenUnlocked(tokenId);
-        toast.success('Content unlocked!', { id: 'ppv-payment' });
+        toast.success(_copy("copy.44cca707086c", { defaultValue: "Content unlocked!" }), { id: 'ppv-payment' });
         queryClient.invalidateQueries({ queryKey: ['bookmarks', 'ppv'] });
         queryClient.invalidateQueries({ queryKey: ['feed'] });
         onSuccess?.();
@@ -154,7 +156,7 @@ export function usePPVPayment({
       const signerAddress = await getWalletAddress();
 
       if (signerAddress.toLowerCase() === creatorAddress.toLowerCase()) {
-        toast.error('You cannot unlock your own content');
+        toast.error(_copy("copy.c2108b164b52", { defaultValue: "You cannot unlock your own content" }));
         setIsPaying(false);
         return;
       }
@@ -210,7 +212,7 @@ export function usePPVPayment({
       }
 
       markTokenUnlocked(tokenId);
-      toast.success('Content unlocked!', { id: 'ppv-payment' });
+      toast.success(_copy("copy.44cca707086c", { defaultValue: "Content unlocked!" }), { id: 'ppv-payment' });
       console.log('[PPV] Payment confirmed:', txHash);
 
       queryClient.invalidateQueries({ queryKey: ['bookmarks', 'ppv'] });
@@ -244,7 +246,7 @@ export function usePPVPayment({
     openLoginModal,
     onSuccess,
     queryClient,
-  ]);
+  , _copy]);
 
   return { pay, isPaying, shortfall, clearShortfall };
 }

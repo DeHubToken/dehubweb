@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Generations panel.
  * ==================
@@ -23,6 +24,7 @@ import { AppState } from '@/components/app/AppState';
 const KIND_ICON = { image: ImageIcon, video: Film, audio: Music2, model3d: Box } as const;
 
 export function LibraryPanel() {
+  const { t: _copy } = _useCopy();
   const jobs = useGenerationStore((s) => s.jobs);
   const cancel = useGenerationStore((s) => s.cancel);
   const retry = useGenerationStore((s) => s.retry);
@@ -37,30 +39,29 @@ export function LibraryPanel() {
         const id = await sendJobToEditor(job, { wallet: quota.walletAddress });
         if (id) {
           await quota.refetchUsage();
-          toast.success('Added to the timeline.');
+          toast.success(_copy("copy.381bb6112fec", { defaultValue: "Added to the timeline." }));
         }
       } finally {
         setSendingId(null);
       }
     },
-    [quota],
+    [quota, _copy],
   );
 
   const running = jobs.filter((j) => j.status === 'running');
 
   return (
     <div className="flex h-full flex-col overflow-y-auto p-3">
-      <PanelHeading>
-        Generations{running.length > 0 ? ` (${running.length} running)` : ''}
+      <PanelHeading>{_copy("copy.dc98456bbe64", { defaultValue: "Generations" })}{running.length > 0 ? _copy("copy.d05a65eb0e67", { defaultValue: " ({{value1}} running)", value1: running.length }) : ''}
       </PanelHeading>
 
       {jobs.length === 0 ? (
         <AppState
           icon="wand"
-          title="Nothing generated yet"
-          description="Anything you make here or in the Creator studio collects in this tab."
+          title={_copy("copy.76f613ec06cb", { defaultValue: "Nothing generated yet" })}
+          description={_copy("copy.f61f1f091c1a", { defaultValue: "Anything you make here or in the Creator studio collects in this tab." })}
           size="compact"
-          primaryAction={{ label: 'Generate something', onClick: () => setPanel('generate') }}
+          primaryAction={{ label: _copy("copy.4c02b2095c3a", { defaultValue: "Generate something" }), onClick: () => setPanel('generate') }}
         />
       ) : (
         <ul className="grid grid-cols-2 gap-2">
@@ -79,9 +80,7 @@ export function LibraryPanel() {
       )}
 
       {jobs.length > 0 && (
-        <p className="mt-3 px-0.5 text-[11px] leading-relaxed text-white/40">
-          Adding a generation imports it into Media and drops it on the timeline at the playhead.
-        </p>
+        <p className="mt-3 px-0.5 text-[11px] leading-relaxed text-white/40">{_copy("copy.ec8a1263ecc5", { defaultValue: "Adding a generation imports it into Media and drops it on the timeline at the playhead." })}</p>
       )}
     </div>
   );
@@ -96,13 +95,14 @@ interface JobTileProps {
 }
 
 function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
+  const { t: _copy } = _useCopy();
   const Icon = KIND_ICON[job.kind];
 
   if (job.status === 'running') {
     return (
       <div className="flex aspect-square flex-col items-center justify-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.04] p-2 text-center">
         <Loader2 className="h-4 w-4 animate-spin text-white/60" />
-        <p className="text-[10px] font-medium text-white/70">{job.stage || 'Working'}</p>
+        <p className="text-[10px] font-medium text-white/70">{job.stage || _copy("copy.a92f0449a9f7", { defaultValue: "Working" })}</p>
         {/* Same guard as the studio feed: stopping the poll cannot cancel or
             refund a render that has already been paid for. */}
         <button
@@ -116,9 +116,7 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
             if (ok) onCancel();
           }}
           className="rounded-full border border-white/15 px-2 py-0.5 text-[9px] font-medium text-white/60 transition hover:bg-white/10 hover:text-white"
-        >
-          Stop waiting
-        </button>
+        >{_copy("copy.d4af24be4049", { defaultValue: "Stop waiting" })}</button>
       </div>
     );
   }
@@ -128,7 +126,7 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
       <div className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border border-white/10 bg-white/[0.02] p-2 text-center">
         <AlertCircle className="h-4 w-4 text-white/40" />
         <p className="text-[10px] font-medium text-white/60">
-          {job.status === 'cancelled' ? 'Cancelled' : 'Failed'}
+          {job.status === 'cancelled' ? _copy("copy.d353a99eb455", { defaultValue: "Cancelled" }) : _copy("copy.031a8f0f659d", { defaultValue: "Failed" })}
         </p>
         <p className="line-clamp-2 text-[9px] leading-snug text-white/55">{job.error}</p>
         {/* Only the polling gave up; the paid render is probably ready. */}
@@ -137,9 +135,7 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
             type="button"
             onClick={onRetry}
             className="mt-0.5 rounded-full border border-white/20 px-2 py-0.5 text-[9px] font-medium text-white/75 transition hover:bg-white/10 hover:text-white"
-          >
-            Reconnect
-          </button>
+          >{_copy("copy.bf8a9eab9e7e", { defaultValue: "Reconnect" })}</button>
         )}
       </div>
     );
@@ -192,23 +188,21 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
         // hover, and by keyboard a bare thumbnail is unreachable and unlabelled.
         <a
           href="/creator"
-          title={`View "${job.prompt}" on Creator`}
-          aria-label={`View 3D model "${job.prompt}" on Creator`}
+          title={_copy("copy.023e45b5489c", { defaultValue: "View \"{{value1}}\" on Creator", value1: job.prompt })}
+          aria-label={_copy("copy.be0c54989fce", { defaultValue: "View 3D model \"{{value1}}\" on Creator", value1: job.prompt })}
           className={cn(
             'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
             'opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
           )}
         >
-          <span className="rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">
-            View on Creator
-          </span>
+          <span className="rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">{_copy("copy.0916231e7bfb", { defaultValue: "View on Creator" })}</span>
         </a>
       ) : (
         <button
           type="button"
           onClick={onSend}
           disabled={sending}
-          title={`Add "${job.prompt}" to the timeline`}
+          title={_copy("copy.62c1c73d0370", { defaultValue: "Add \"{{value1}}\" to the timeline", value1: job.prompt })}
           className={cn(
             'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
             'opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
@@ -216,7 +210,7 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
         >
           <span className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">
             {sending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
-            {sending ? 'Adding' : 'Add to timeline'}
+            {sending ? _copy("copy.0a6691ef373d", { defaultValue: "Adding" }) : _copy("copy.8cb184024922", { defaultValue: "Add to timeline" })}
           </span>
         </button>
       )}

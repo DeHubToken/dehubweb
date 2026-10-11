@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getBookmarkFolders,
@@ -30,6 +31,7 @@ type FolderItemVariables = {
 };
 
 export function useBookmarkFolders() {
+  const { t: _copy } = _useCopy();
   const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
@@ -57,10 +59,10 @@ export function useBookmarkFolders() {
     onSuccess: (_data, { suppressToast }) => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
       invalidateOwnPlaylists();
-      if (!suppressToast) toast.success('Folder created');
+      if (!suppressToast) toast.success(_copy("copy.b1dfe0e9670c", { defaultValue: "Folder created" }));
     },
     onError: (_error, { suppressToast }) => {
-      if (!suppressToast) toast.error('Failed to create folder');
+      if (!suppressToast) toast.error(_copy("copy.6e99e5419d22", { defaultValue: "Failed to create folder" }));
     },
   });
 
@@ -70,9 +72,9 @@ export function useBookmarkFolders() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
       invalidateOwnPlaylists();
-      toast.success('Folder updated');
+      toast.success(_copy("copy.1bafabfde564", { defaultValue: "Folder updated" }));
     },
-    onError: () => toast.error('Failed to update folder'),
+    onError: () => toast.error(_copy("copy.819e1b7af3c5", { defaultValue: "Failed to update folder" })),
   });
 
   const deleteMutation = useMutation({
@@ -80,9 +82,9 @@ export function useBookmarkFolders() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
       invalidateOwnPlaylists();
-      toast.success('Folder deleted');
+      toast.success(_copy("copy.796dc50ba898", { defaultValue: "Folder deleted" }));
     },
-    onError: () => toast.error('Failed to delete folder'),
+    onError: () => toast.error(_copy("copy.d4f50856e992", { defaultValue: "Failed to delete folder" })),
   });
 
   const addItemMutation = useMutation({
@@ -95,7 +97,7 @@ export function useBookmarkFolders() {
       invalidateOwnPlaylists();
     },
     onError: (_error, { suppressToast }) => {
-      if (!suppressToast) toast.error('Failed to add to folder');
+      if (!suppressToast) toast.error(_copy("copy.f2c5107d6a9d", { defaultValue: "Failed to add to folder" }));
     },
   });
 
@@ -109,7 +111,7 @@ export function useBookmarkFolders() {
       invalidateOwnPlaylists();
     },
     onError: (_error, { suppressToast }) => {
-      if (!suppressToast) toast.error('Failed to remove from folder');
+      if (!suppressToast) toast.error(_copy("copy.a5f72cfa4b70", { defaultValue: "Failed to remove from folder" }));
     },
   });
 
@@ -190,6 +192,7 @@ export function useFolderItems(folderId: string) {
 }
 
 export function useBulkAddToFolder() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -197,9 +200,9 @@ export function useBulkAddToFolder() {
       addItemsToFolderBulk(folderId, tokenIds),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FOLDERS_KEY });
-      toast.success('Posts added to folder');
+      toast.success(_copy("copy.bc1bdd6b0d53", { defaultValue: "Posts added to folder" }));
     },
-    onError: () => toast.error('Failed to add posts'),
+    onError: () => toast.error(_copy("copy.6770a4659c4e", { defaultValue: "Failed to add posts" })),
   });
 }
 

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
@@ -16,6 +17,7 @@ const mockMessages = (t: TFunction) => [
 ];
 
 export function ChatScreen() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
@@ -26,8 +28,8 @@ export function ChatScreen() {
         <ChevronLeft className="w-5 h-5 text-white flex-shrink-0" />
         <MockAvatar name="bob_dev" size="sm" />
         <div className="flex-1 min-w-0">
-          <span className="text-white text-sm font-semibold">bob_dev</span>
-          <p className="text-[10px] text-zinc-500">Online</p>
+          <span className="text-white text-sm font-semibold">{_copy("copy.447d260023b2", { defaultValue: "bob_dev" })}</span>
+          <p className="text-[10px] text-zinc-500">{_copy("copy.0d21bd52022c", { defaultValue: "Online" })}</p>
         </div>
         <Phone className="w-4 h-4 text-zinc-400" />
         <MoreVertical className="w-4 h-4 text-zinc-400" />
@@ -56,7 +58,7 @@ export function ChatScreen() {
         <div className="flex items-center gap-2">
           <Paperclip className="w-5 h-5 text-zinc-500 flex-shrink-0" />
           <div className="flex-1 h-9 rounded-full bg-white/[0.06] border border-white/10 px-4 flex items-center">
-            <span className="text-zinc-600 text-sm">Message...</span>
+            <span className="text-zinc-600 text-sm">{_copy("copy.2bd85cce6b7b", { defaultValue: "Message..." })}</span>
           </div>
           <Smile className="w-5 h-5 text-zinc-500 flex-shrink-0" />
           <div className="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">

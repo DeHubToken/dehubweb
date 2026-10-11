@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Setting up the voice a stage gets dubbed in.
  * ============================================
@@ -48,6 +49,7 @@ interface StageVoiceSetupProps {
 }
 
 export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: StageVoiceSetupProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [status, setStatus] = useState<VoiceCloneStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -234,7 +236,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
             <p className="text-sm text-white">{t('stages.alreadyPaidFree')}</p>
             <p className="text-xs text-white/50">
               {status.voiceName
-                ? `Switching "${status.voiceName}" back on. You can turn it off and on whenever you like.`
+                ? _copy("copy.15e9e8b6bbc2", { defaultValue: "Switching \"{{value1}}\" back on. You can turn it off and on whenever you like.", value1: status.voiceName })
                 : t('stages.switchingBackOn')}
             </p>
           </>
@@ -248,8 +250,7 @@ export function StageVoiceSetup({ wallet, displayName, onReady, onCancel }: Stag
         ) : (
           <>
             <p className="text-sm text-white">
-              {status.priceDhb.toLocaleString()} <DhbCoin />, once.
-            </p>
+              {status.priceDhb.toLocaleString()} <DhbCoin />{_copy("copy.4b332749a593", { defaultValue: ", once." })}</p>
             <p className="text-xs text-white/50">
               {status.owned
                 ? t('stages.alreadyHaveVoice')

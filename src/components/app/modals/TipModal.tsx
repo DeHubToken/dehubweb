@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -82,6 +83,7 @@ export function TipModal({
   context,
   commentId,
 }: TipModalProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
@@ -200,11 +202,11 @@ export function TipModal({
         const profile = await getAccountInfo(creatorAddress);
         if (profile?.hideBadgeAndBalance) {
           setRecipientPrivate(true);
-          toast.error('This account has disabled tips while private balance mode is on.');
+          toast.error(_copy("copy.412ae55409b3", { defaultValue: "This account has disabled tips while private balance mode is on." }));
           return;
         }
       } catch {
-        toast.error('Could not verify the recipient privacy setting. No tip was sent.');
+        toast.error(_copy("copy.babd987b2954", { defaultValue: "Could not verify the recipient privacy setting. No tip was sent." }));
         return;
       }
       if (payWith) {
@@ -294,7 +296,7 @@ export function TipModal({
               <p className="text-white/60 text-xs">{t('tip.customAmount', 'Or enter amount')}</p>
               {dhbBalance != null && (
                 <p className="text-white/30 text-xs">
-                  {dhbBalance.toLocaleString()} <DhbCoin /> · via {chainName}
+                  {dhbBalance.toLocaleString()} <DhbCoin />{_copy("copy.9b15afcf73c5", { defaultValue: " · via " })}{chainName}
                 </p>
               )}
             </div>
@@ -315,9 +317,7 @@ export function TipModal({
                 onClick={handleAll}
                 disabled={dhbBalance == null || dhbBalance < MIN_TIP_DHB}
                 className="h-12 px-4 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 text-sm font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                All
-              </button>
+              >{_copy("copy.a52ace420f21", { defaultValue: "All" })}</button>
             </div>
           </div>
 

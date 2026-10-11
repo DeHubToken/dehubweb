@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { localizedNotificationContent } from "@/lib/notification-content";
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react';
@@ -588,7 +589,7 @@ function getNotificationContent(
   // handle back off that rather than fetching it twice.
   const actorAddressFallback = notification.actorAddress
     ? `${notification.actorAddress.slice(0, 6)}…${notification.actorAddress.slice(-4)}`
-    : 'Someone';
+    : tr('digest.someone');
   const actorName = notification.actor?.displayName || canonicalActors?.[0]?.display || notification.actorUsername || actorAddressFallback;
   
   // Aggregated web rows retain their interactive list of other actors below.
@@ -599,39 +600,39 @@ function getNotificationContent(
   // Handle custom notification types outside the typed switch
   if ((notification.type as string) === 'feature_request_like') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} liked your feature request "${title}"` : `${actorName} liked your feature request`;
+    return tr(title ? 'notifications.custom.featureLikeNamed' : 'notifications.custom.featureLike', { name: actorName, title });
   }
   if ((notification.type as string) === 'feature_request_comment') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} commented on your feature request "${title}"` : `${actorName} commented on your feature request`;
+    return tr(title ? 'notifications.custom.featureCommentNamed' : 'notifications.custom.featureComment', { name: actorName, title });
   }
   if ((notification.type as string) === 'feature_request_reply') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} replied to you on "${title}"` : `${actorName} replied to your comment`;
+    return tr(title ? 'notifications.custom.featureReplyNamed' : 'notifications.custom.featureReply', { name: actorName, title });
   }
   if ((notification.type as string) === 'feature_request_mention') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} mentioned you on "${title}"` : `${actorName} mentioned you on a feature request`;
+    return tr(title ? 'notifications.custom.featureMentionNamed' : 'notifications.custom.featureMention', { name: actorName, title });
   }
   if ((notification.type as string) === 'stage_live') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return stageLiveSentence(actorName, title);
+    return stageLiveSentence(actorName, title, tr);
   }
   if ((notification.type as string) === 'stage_reminder') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return stageReminderSentence(title);
+    return stageReminderSentence(title, tr);
   }
   if ((notification.type as string) === 'governance_vote') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} voted on your proposal "${title}"` : `${actorName} voted on your proposal`;
+    return tr(title ? 'notifications.custom.governanceVoteNamed' : 'notifications.custom.governanceVote', { name: actorName, title });
   }
   if ((notification.type as string) === 'governance_comment') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} commented on your proposal "${title}"` : `${actorName} commented on your proposal`;
+    return tr(title ? 'notifications.custom.governanceCommentNamed' : 'notifications.custom.governanceComment', { name: actorName, title });
   }
   if ((notification.type as string) === 'governance_reply') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} replied to you on proposal "${title}"` : `${actorName} replied to your comment on a proposal`;
+    return tr(title ? 'notifications.custom.governanceReplyNamed' : 'notifications.custom.governanceReply', { name: actorName, title });
   }
   // Joins, @mentions and @here all read the same way here and on the
   // Communities page. Before this, only joins had a sentence: mention and
@@ -642,7 +643,7 @@ function getNotificationContent(
   }
   if ((notification.type as string) === 'store_order') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
-    return title ? `${actorName} purchased your listing "${title}"` : `${actorName} purchased your listing`;
+    return tr(title ? 'notifications.custom.storeOrderNamed' : 'notifications.custom.storeOrder', { name: actorName, title });
   }
   // Fraction rows written before the API learned to describe them carry the
   // placeholder "You have a new notification", so treat that as no content.
@@ -653,13 +654,13 @@ function getNotificationContent(
     if (usableContent) return usableContent;
     switch (notification.type as string) {
       case 'fraction_offer':
-        return `${actorName} made an offer on your fractions`;
+        return tr('notifications.custom.fractionOffer', { name: actorName });
       case 'fraction_offer_accepted':
-        return `${actorName} accepted your fraction offer`;
+        return tr('notifications.custom.fractionOfferAccepted', { name: actorName });
       case 'fraction_offer_rejected':
-        return `${actorName} declined your fraction offer`;
+        return tr('notifications.custom.fractionOfferRejected', { name: actorName });
       default:
-        return `${actorName} bought fractions of your post`;
+        return tr('notifications.custom.fractionPurchased', { name: actorName });
     }
   }
 
@@ -699,7 +700,7 @@ function getNotificationContent(
       const postCount = aggCount;
       if (typeStr === 'like') return tr('notifications.likedPosts', { name, count: postCount });
       if (typeStr === 'comment') return tr('notifications.commentedPosts', { name, count: postCount });
-      if (typeStr === 'repost') return `${name} reposted ${postCount} of your posts`;
+      if (typeStr === 'repost') return tr('notifications.custom.repostedPosts', { name, count: postCount });
     } else {
       // Multiple users — first name and others count come from the exact same canonical source as the grid
       const first = canonical[0]?.display || aggNames?.[0] || actorName;
@@ -724,15 +725,12 @@ function getNotificationContent(
   // several open bounties can't act on "someone applied" alone.
   if (typeStr === 'work_application_reply') {
     const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
-    const sentence = tr('notifications.repliedComment', { name: actorName });
-    return jobTitle ? `${sentence} “${jobTitle}”` : sentence;
+    return tr(jobTitle ? 'notifications.custom.bountyReplyNamed' : 'notifications.custom.bountyReply', { name: actorName, title: jobTitle });
   }
   if (typeStr === 'work_application' || typeStr === 'work_submission') {
-    const verb = typeStr === 'work_application'
-      ? 'applied to your bounty'
-      : 'submitted work on your bounty';
     const jobTitle = (notification as DeHubNotification & { _customReferenceTitle?: string })._customReferenceTitle;
-    return jobTitle ? `${actorName} ${verb} “${jobTitle}”` : `${actorName} ${verb}`;
+    const action = typeStr === 'work_application' ? 'bountyApplied' : 'bountySubmitted';
+    return tr(`notifications.custom.${action}${jobTitle ? 'Named' : ''}`, { name: actorName, title: jobTitle });
   }
 
   switch (notification.type) {
@@ -744,7 +742,7 @@ function getNotificationContent(
     case 'comment_reply':
       return tr('notifications.repliedComment', { name: actorName });
     case 'mention':
-      return `${actorName} mentioned you in a comment`;
+      return tr('notifications.custom.commentMention', { name: actorName });
     case 'tip':
       const tipAmount = notification.amount
         ? ` ${isDhb(notification.currency) ? tr('notifications.tipTokens', { amount: notification.amount }) : `${notification.amount} ${notification.currency}`}`
@@ -758,7 +756,7 @@ function getNotificationContent(
       return localizedNotificationContent({ ...notification, actorUsername: actorName }, tr)
         ?? tr('notifications.startedFollowing', { name: actorName });
     case 'follow_request':
-      return `${actorName} requested to follow you`;
+      return tr('notifications.custom.followRequest', { name: actorName });
     case 'video_milestone':
       return tr('notifications.postMilestone');
     case 'livestream_start':
@@ -1012,6 +1010,7 @@ const NotificationItem = memo(function NotificationItem({
   enrichedAvatars: Map<string, EnrichedAvatar>;
   style?: React.CSSProperties;
 }) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
@@ -1055,7 +1054,7 @@ const NotificationItem = memo(function NotificationItem({
       if (!requestId) {
         // No pending request found — it was likely already handled
         setFollowRequestAction(action === 'accept' ? 'accepted' : 'rejected');
-        toast.info('Request already handled');
+        toast.info(_copy("copy.2a14c0b8505d", { defaultValue: "Request already handled" }));
         return;
       }
       
@@ -1077,7 +1076,7 @@ const NotificationItem = memo(function NotificationItem({
       const msg = err?.message?.toLowerCase() || '';
       if (msg.includes('not found') || msg.includes('already')) {
         setFollowRequestAction(action === 'accept' ? 'accepted' : 'rejected');
-        toast.info('Request already handled');
+        toast.info(_copy("copy.2a14c0b8505d", { defaultValue: "Request already handled" }));
       } else {
         toast.error(`Failed to ${action} follow request`);
       }
@@ -1312,7 +1311,7 @@ const NotificationItem = memo(function NotificationItem({
                     e.preventDefault();
                     setShowActorsDrawer(true);
                   }}
-                  title="View all"
+                  title={_copy("copy.30a64216eaea", { defaultValue: "View all" })}
                 >
                   {getNotificationIcon(notification.type, notification.reaction)}
                 </button>
@@ -1398,8 +1397,7 @@ const NotificationItem = memo(function NotificationItem({
               </p>
               {/* Secondary post title context for reply/mention */}
               {isReplyOrMention && notification.tokenTitle && (
-                <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1">
-                  on: {notification.tokenTitle}
+                <p className="text-xs text-zinc-500 mt-0.5 line-clamp-1">{_copy("copy.2c26ae1e5724", { defaultValue: "on: " })}{notification.tokenTitle}
                 </p>
               )}
             </>
@@ -1432,24 +1430,20 @@ const NotificationItem = memo(function NotificationItem({
               disabled={followRequestLoading !== null}
               className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
             >
-              {followRequestLoading === 'accept' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
-              Accept
-            </button>
+              {followRequestLoading === 'accept' ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}{_copy("copy.89713b9c9c1b", { defaultValue: "Accept" })}</button>
             <button
               onClick={() => handleFollowRequestAction('reject')}
               disabled={followRequestLoading !== null}
               className="h-7 px-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 text-xs font-medium flex items-center gap-1 transition-colors disabled:opacity-50"
             >
-              {followRequestLoading === 'reject' ? <Loader2 className="w-3 h-3 animate-spin" /> : <XIcon className="w-3 h-3" />}
-              Reject
-            </button>
+              {followRequestLoading === 'reject' ? <Loader2 className="w-3 h-3 animate-spin" /> : <XIcon className="w-3 h-3" />}{_copy("copy.ab604a360777", { defaultValue: "Reject" })}</button>
           </div>
         )}
         {isFollowRequest && followRequestAction && (
           <span className={`text-xs font-medium mt-2 inline-block px-2 py-1 rounded-lg ${
             followRequestAction === 'accepted' ? 'text-green-400 bg-green-500/10' : 'text-zinc-500 bg-zinc-800/50'
           }`}>
-            {followRequestAction === 'accepted' ? '✓ Accepted' : '✗ Rejected'}
+            {followRequestAction === 'accepted' ? _copy("copy.9d93faae179b", { defaultValue: "✓ Accepted" }) : _copy("copy.5bf903ccf3b7", { defaultValue: "✗ Rejected" })}
           </span>
         )}
 
@@ -1462,14 +1456,11 @@ const NotificationItem = memo(function NotificationItem({
               onClick={() => setShowAppealDrawer(true)}
               className="h-7 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center gap-1 transition-colors"
             >
-              <Scale className="w-3 h-3" />
-              Appeal
-            </button>
+              <Scale className="w-3 h-3" />{_copy("copy.b8b66bda14ac", { defaultValue: "Appeal" })}</button>
           </div>
         )}
         {isModerationDecision && appealRef && (
-          <span className="text-xs font-medium mt-2 inline-block px-2 py-1 rounded-lg text-zinc-400 bg-zinc-800/50">
-            Appeal sent · {appealRef}
+          <span className="text-xs font-medium mt-2 inline-block px-2 py-1 rounded-lg text-zinc-400 bg-zinc-800/50">{_copy("copy.0c243417b8de", { defaultValue: "Appeal sent · " })}{appealRef}
           </span>
         )}
         {isModerationDecision && (
@@ -1492,7 +1483,7 @@ const NotificationItem = memo(function NotificationItem({
         >
           <img 
             src={postThumbnail} 
-            alt={notification.tokenTitle || 'Post'} 
+            alt={notification.tokenTitle || _copy("copy.a5554622c655", { defaultValue: "Post" })} 
             className="w-12 h-12 rounded-lg object-cover"
           />
         </Link>
@@ -1510,7 +1501,7 @@ const NotificationItem = memo(function NotificationItem({
             }}
             disabled={isClosing}
             className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors disabled:opacity-50 flex-shrink-0"
-            title="Mark as read"
+            title={_copy("copy.50c8b81faf51", { defaultValue: "Mark as read" })}
             initial={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] } }}
           >
@@ -1538,7 +1529,7 @@ const NotificationItem = memo(function NotificationItem({
         <DrawerContent column data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[70dvh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
-              {(notification.type as string) === 'like' ? 'Reacted by' : (notification.type as string) === 'repost' ? 'Reposted by' : (notification.type as string) === 'comment' ? 'Commented by' : 'Users'}
+              {(notification.type as string) === 'like' ? _copy("copy.0cd09d44006a", { defaultValue: "Reacted by" }) : (notification.type as string) === 'repost' ? _copy("copy.5b79c5daab9d", { defaultValue: "Reposted by" }) : (notification.type as string) === 'comment' ? _copy("copy.03a8c852177a", { defaultValue: "Commented by" }) : _copy("copy.6b0cc904d081", { defaultValue: "Users" })}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 space-y-1 overflow-y-auto max-h-[50vh]" data-vaul-no-drag>
@@ -1563,9 +1554,7 @@ const NotificationItem = memo(function NotificationItem({
               );
             })}
             {aggregatedCount > canonicalActors.length && (
-              <p className="text-center text-zinc-500 text-xs py-2">
-                and {aggregatedCount - canonicalActors.length} more
-              </p>
+              <p className="text-center text-zinc-500 text-xs py-2">{_copy("copy.427a379ae3e6", { defaultValue: "and " })}{aggregatedCount - canonicalActors.length}{_copy("copy.226ba18bbcdb", { defaultValue: " more" })}</p>
             )}
           </div>
         </DrawerContent>
@@ -1579,7 +1568,7 @@ const NotificationItem = memo(function NotificationItem({
         <DrawerContent column data-notifications-page className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[80dvh]">
           <DrawerHeader className="text-center pb-2">
             <DrawerTitle className="text-white text-base">
-              {notification.type === 'like' ? 'Reacted posts' : notification.type === 'comment' ? 'Commented posts' : (notification.type as string) === 'repost' ? 'Reposted posts' : 'Posts'}
+              {notification.type === 'like' ? _copy("copy.376bde01356c", { defaultValue: "Reacted posts" }) : notification.type === 'comment' ? _copy("copy.25eee375e3f4", { defaultValue: "Commented posts" }) : (notification.type as string) === 'repost' ? _copy("copy.1318b0271dac", { defaultValue: "Reposted posts" }) : _copy("copy.a80811cf6889", { defaultValue: "Posts" })}
             </DrawerTitle>
           </DrawerHeader>
           <div className="px-4 pb-6 overflow-y-auto max-h-[65vh] space-y-4" data-vaul-no-drag>
@@ -1592,6 +1581,7 @@ const NotificationItem = memo(function NotificationItem({
 });
 
 export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boolean } = {}) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<NotificationTypeFilter>('all');
   const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
@@ -1654,7 +1644,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     },
     onError: (_err, _vars, context) => {
       if (context?.prev) queryClient.setQueryData(notifPrefsKey, context.prev);
-      toast.error('Failed to update notification settings');
+      toast.error(_copy("copy.688844358512", { defaultValue: "Failed to update notification settings" }));
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: notifPrefsKey }),
   });
@@ -1997,9 +1987,9 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
       // Invalidate custom notification caches
       queryClient.invalidateQueries({ queryKey: ['custom-notifications'] });
       
-      toast.success('All notifications cleared');
+      toast.success(_copy("copy.0e99a6d38dbd", { defaultValue: "All notifications cleared" }));
     } catch (error) {
-      toast.error('Failed to clear notifications');
+      toast.error(_copy("copy.da97d1dae94f", { defaultValue: "Failed to clear notifications" }));
     } finally {
       setIsClearingAll(false);
     }
@@ -2034,8 +2024,8 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
     // portaled settings sheet / actors drawer carry the same attribute
     // (portals escape this subtree).
     <div data-notifications-page className={inDrawer ? "min-h-full" : "min-h-screen"}>
-      {!inDrawer && <SEOHead title="Notifications - Stay Updated" description="Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." url="https://dehub.io/app/notifications" />}
-      <h1 className="sr-only">DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      {!inDrawer && <SEOHead title={_copy("copy.c598c6a2fa2a", { defaultValue: "Notifications - Stay Updated" })} description={_copy("copy.3ac4d647017f", { defaultValue: "Stay on top of likes, comments, follows, tips, mentions and more on DeHub. Never miss an interaction from your community." })} url="https://dehub.io/app/notifications" />}
+      <h1 className="sr-only">{_copy("copy.231ec14284fc", { defaultValue: "DeHub Notifications - Decentralised Social Media, Censorship Resistant & Freedom of Speech" })}</h1>
       {/* Header */}
       <div ref={islandHostRef} className="contents">
         <PageIsland
@@ -2340,7 +2330,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
           open={followDrawerOpen}
           onOpenChange={setFollowDrawerOpen}
           profileAddress={pageWalletAddress}
-          title="Followers"
+          listType="followers"
           newCount={newFollowers.count}
           newUsernames={newFollowers.usernames}
         />

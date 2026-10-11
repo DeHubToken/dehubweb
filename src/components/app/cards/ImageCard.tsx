@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 /**
  * Image Card Component
@@ -314,6 +315,7 @@ function ImageCarousel({
   /** The photo's soundtrack is playing: the photo drifts slowly. */
   soundPlaying?: boolean;
 }) {
+  const { t: _copy } = _useCopy();
   const scrollRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   /** Where the current photo sits inside the gallery, for the overlay. */
@@ -463,7 +465,7 @@ function ImageCarousel({
             <button
               onClick={scrollPrev}
               className="hidden lg:flex absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
-              aria-label="Previous image"
+              aria-label={_copy("copy.f0a859a7ecd7", { defaultValue: "Previous image" })}
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -472,7 +474,7 @@ function ImageCarousel({
             <button
               onClick={scrollNext}
               className="hidden lg:flex absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 items-center justify-center text-white hover:bg-black/60 transition-colors"
-              aria-label="Next image"
+              aria-label={_copy("copy.a4903f732746", { defaultValue: "Next image" })}
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -515,6 +517,7 @@ function FeedDescription({
   isTranslated?: boolean;
   translatedText?: string;
 }) {
+  const { t: _copy } = _useCopy();
   const [expanded, setExpanded] = useState(false);
   // A single tap on the title or description opens the post, like the rest of
   // the card; two and three taps still react. Links and "See more" keep theirs.
@@ -608,9 +611,7 @@ function FeedDescription({
           <p className="text-zinc-300 text-[14px] leading-relaxed">
             {renderTextWithLinks(shownDescription)}
             {stage && hasLongDescription && !expanded && (
-              <button type="button" data-stage-more onClick={() => setExpanded(true)} className="ml-1 font-bold">
-                more
-              </button>
+              <button type="button" data-stage-more onClick={() => setExpanded(true)} className="ml-1 font-bold">{_copy("copy.187897ce0afc", { defaultValue: "more" })}</button>
             )}
           </p>
           {hasLongDescription && !(stage && !expanded) && (
@@ -619,9 +620,9 @@ function FeedDescription({
               className="text-zinc-500 text-xs flex items-center gap-0.5 mt-1 hover:text-zinc-400 transition-colors"
             >
               {expanded ? (
-                <>Show less <ChevronUp className="w-3 h-3" /></>
+                <>{_copy("copy.c0aab98fd372", { defaultValue: "Show less " })}<ChevronUp className="w-3 h-3" /></>
               ) : (
-                <>Show more <ChevronDown className="w-3 h-3" /></>
+                <>{_copy("copy.d7cb0dc5c172", { defaultValue: "Show more " })}<ChevronDown className="w-3 h-3" /></>
               )}
             </button>
           )}
@@ -635,6 +636,7 @@ function FeedDescription({
 }
 
 export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOpenComments, isImmersive = false, postPage = false }: ImageCardProps) {
+  const { t: _copy } = _useCopy();
   const [showComments, setShowComments] = useState(false);
   const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments, post.id);
@@ -780,13 +782,13 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
     toast.loading('Preparing download...', { id: toastId });
     try {
       await downloadMedia(source, imageDownloadName(source, post.id, activeImageIndex));
-      toast.success('Download started', { id: toastId });
+      toast.success(_copy("copy.efece5dd1933", { defaultValue: "Download started" }), { id: toastId });
     } catch {
-      toast.error('Download failed. Please try again.', { id: toastId });
+      toast.error(_copy("copy.d2bde7afd757", { defaultValue: "Download failed. Please try again." }), { id: toastId });
     } finally {
       setIsDownloading(false);
     }
-  }, [images, activeImageIndex, isDownloading, post.id]);
+  }, [images, activeImageIndex, isDownloading, post.id, _copy]);
 
   const openPost = useCallback(() => {
     if (wasDrawerJustDismissed() || showPPVDrawer || showBountyDrawer || showLockedDrawer) return;
@@ -830,10 +832,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'], refetchType: 'none' });
     } catch (err) {
-      toast.error('Failed to repost');
+      toast.error(_copy("copy.7527dc6722fc", { defaultValue: "Failed to repost" }));
       throw err; // let ActionBar roll back its optimistic repost state
     }
-  }, [post.id, walletAddress, openLoginModal, queryClient]);
+  }, [post.id, walletAddress, openLoginModal, queryClient, _copy]);
 
   // Quote handler
   const handleQuote = useCallback(() => {
@@ -995,8 +997,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                     onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowPollCreator(true), 300); }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
-                    <BarChart2 className="w-5 h-5" /> Create Poll
-                  </button>
+                    <BarChart2 className="w-5 h-5" />{_copy("copy.b8e082c979d9", { defaultValue: " Create Poll" })}</button>
                   <button
                     onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
@@ -1026,12 +1027,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                         await updateTokenVisibility(post.id, next);
                         setVisibility(next);
                         toast.success(`Post set to ${next}`);
-                      } catch { toast.error('Failed to update visibility'); }
+                      } catch { toast.error(_copy("copy.67ca6fcb8233", { defaultValue: "Failed to update visibility" })); }
                     }}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
                     {visibility === 'public' ? <EyeOff className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
-                    {visibility === 'public' ? 'Make Private' : 'Make Public'}
+                    {visibility === 'public' ? _copy("copy.ffab73178509", { defaultValue: "Make Private" }) : _copy("copy.24139936d627", { defaultValue: "Make Public" })}
                   </button>
                 </>
               )}
@@ -1100,11 +1101,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                     <Lock className="h-6 w-6 text-white" />
                   </div>
                 </div>
-                <p className="text-white font-semibold text-sm mb-1">
-                  Unlock for <DhbAmount amount={formatCompact(Number(post.ppvPrice))} currency={post.ppvCurrency} />
+                <p className="text-white font-semibold text-sm mb-1">{_copy("copy.0249799121f4", { defaultValue: "Unlock for " })}<DhbAmount amount={formatCompact(Number(post.ppvPrice))} currency={post.ppvCurrency} />
                 </p>
-                <p className="text-white/70 text-xs">
-                  Must be holding <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
+                <p className="text-white/70 text-xs">{_copy("copy.5ec168a82232", { defaultValue: "Must be holding " })}<DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
                 </p>
               </div>
             </div>
@@ -1137,9 +1136,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                   <Ticket className="h-7 w-7 text-white" />
                 </div>
-                <p className="text-white font-semibold text-sm mb-1">Pay-Per-View Content</p>
-                <p className="text-white/70 text-xs">
-                  Unlock for {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
+                <p className="text-white font-semibold text-sm mb-1">{_copy("copy.48e072480fc5", { defaultValue: "Pay-Per-View Content" })}</p>
+                <p className="text-white/70 text-xs">{_copy("copy.0249799121f4", { defaultValue: "Unlock for " })}{formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
                 </p>
                 
               </div>
@@ -1175,14 +1173,13 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                   <Star className="h-7 w-7 text-white" />
                 </div>
-                <p className="text-white font-semibold text-sm mb-1">Subscribers only</p>
+                <p className="text-white font-semibold text-sm mb-1">{_copy("copy.109ddfc1cc4a", { defaultValue: "Subscribers only" })}</p>
                 <p className="text-white/70 text-xs">
                   {cheapestPlanPrice !== undefined ? (
-                    <>
-                      Subscribe from <DhbAmount amount={formatCompact(cheapestPlanPrice)} />
+                    <>{_copy("copy.c2947d66723d", { defaultValue: "Subscribe from " })}<DhbAmount amount={formatCompact(cheapestPlanPrice)} />
                     </>
                   ) : (
-                    `Subscribe to ${post.username}`
+                    _copy("copy.855f365abafc", { defaultValue: "Subscribe to {{value1}}", value1: post.username })
                   )}
                 </p>
               </div>
@@ -1216,9 +1213,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 <div className="w-16 h-16 rounded-2xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-3">
                   <Lock className="h-7 w-7 text-white" />
                 </div>
-                <p className="text-white font-semibold text-sm mb-1">Holdings Required</p>
-                <p className="text-white/70 text-xs">
-                  Must be holding <DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
+                <p className="text-white font-semibold text-sm mb-1">{_copy("copy.490f4babbf34", { defaultValue: "Holdings Required" })}</p>
+                <p className="text-white/70 text-xs">{_copy("copy.5ec168a82232", { defaultValue: "Must be holding " })}<DhbAmount amount={formatCompact(Number(post.lockedPrice))} currency={post.lockedCurrency} />
                 </p>
               </div>
             </div>
@@ -1253,7 +1249,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 <span className="text-white text-xs font-medium">
                   {post.bountyAmount && post.bountyAmount > 0 
                     ? <DhbAmount amount={formatCompact(post.bountyAmount)} currency={post.bountyCurrency} />
-                    : 'Bounty'}
+                    : _copy("copy.0abbc4ecb2b0", { defaultValue: "Bounty" })}
                 </span>
               </button>
             )}
@@ -1567,7 +1563,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       {isSubGated && (
         <Drawer open={showSubDrawer} onOpenChange={setShowSubDrawer}>
           <DrawerContent scrollable column glass className="px-4 pb-6">
-            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">Loading…</div>}>
+            <Suspense fallback={<div className="py-10 text-center text-white/60 text-sm">{_copy("copy.ba3bbbe10d8b", { defaultValue: "Loading…" })}</div>}>
               <SubscriberGateDrawer
                 creatorAddress={post.creatorId || ""}
                 creatorName={post.username}
@@ -1641,12 +1637,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
       <Drawer open={showPollCreator} onOpenChange={setShowPollCreator}>
         <DrawerContent scrollable column glass className="px-4 pb-6">
           <DrawerHeader className="pb-2">
-            <DrawerTitle className="text-white text-lg">Create Poll</DrawerTitle>
+            <DrawerTitle className="text-white text-lg">{_copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}</DrawerTitle>
           </DrawerHeader>
           <div className="flex flex-col gap-3">
             <input
               className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-zinc-500 outline-none"
-              placeholder="Ask a question…"
+              placeholder={_copy("copy.d6a2035c7300", { defaultValue: "Ask a question…" })}
               value={pollQuestion}
               onChange={e => setPollQuestion(e.target.value)}
             />
@@ -1654,7 +1650,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
               <div key={i} className="flex items-center gap-2">
                 <input
                   className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-zinc-500 outline-none"
-                  placeholder={`Option ${i + 1}`}
+                  placeholder={_copy("copy.c553678c42d5", { defaultValue: "Option {{value1}}", value1: i + 1 })}
                   value={opt}
                   onChange={e => { const next = [...pollOptions]; next[i] = e.target.value; setPollOptions(next); }}
                 />
@@ -1667,13 +1663,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
             ))}
             {pollOptions.length < 4 && (
               <button onClick={() => setPollOptions([...pollOptions, ''])} className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white">
-                <Plus className="w-4 h-4" /> Add option
-              </button>
+                <Plus className="w-4 h-4" />{_copy("copy.d66886c7e738", { defaultValue: " Add option" })}</button>
             )}
             <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
-              <input type="checkbox" checked={pollMultiple} onChange={e => setPollMultiple(e.target.checked)} className="accent-white" />
-              Allow multiple choices
-            </label>
+              <input type="checkbox" checked={pollMultiple} onChange={e => setPollMultiple(e.target.checked)} className="accent-white" />{_copy("copy.3c1cc071d396", { defaultValue: "Allow multiple choices" })}</label>
             <input
               type="datetime-local"
               className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm outline-none"
@@ -1701,7 +1694,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
               }}
             >
-              {createPollMutation.isPending ? 'Creating…' : 'Create Poll'}
+              {createPollMutation.isPending ? _copy("copy.c79ed9492e3c", { defaultValue: "Creating…" }) : _copy("copy.b2b9c2e81c4c", { defaultValue: "Create Poll" })}
             </button>
           </div>
         </DrawerContent>

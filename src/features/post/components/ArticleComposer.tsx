@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -58,6 +59,7 @@ function useAutoGrow(ref: React.RefObject<HTMLTextAreaElement>, value: string) {
  * nobody has to write the summary before the article.
  */
 export function ArticleComposer(props: ArticleComposerProps) {
+  const { t: _copy } = _useCopy();
   const {
     title, setTitle, summary, setSummary, body, setBody, coverPreview, onCoverChange,
     onSaveDraft, onPublish, formReady, isPosting, uploadProgress, mintAwaitingWallet, onAbandonMint,
@@ -122,7 +124,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
               <div className="space-y-1 p-3">
                 <p className="article-ink line-clamp-1 text-sm font-semibold">{title.trim()}</p>
                 <p className="article-meta line-clamp-2 text-xs">{summary.trim() || t('articles.summaryPlaceholder', 'A sentence or two about your article')}</p>
-                <p className="article-meta text-[11px]">dehub.io · {t('articles.minRead', { count: minutes, defaultValue: '{{count}} min read' })}</p>
+                <p className="article-meta text-[11px]">{_copy("copy.bf640b85d499", { defaultValue: "dehub.io · " })}{t('articles.minRead', { count: minutes, defaultValue: '{{count}} min read' })}</p>
               </div>
             </div>
           </section>
@@ -145,7 +147,7 @@ export function ArticleComposer(props: ArticleComposerProps) {
           )}
           {mintAwaitingWallet && (
             <div className="article-meta flex items-center justify-between text-xs">
-              <span>Confirming</span>
+              <span>{_copy("copy.d978a5522ce4", { defaultValue: "Confirming" })}</span>
               <button type="button" onClick={onAbandonMint} className="underline">{t('common.cancel', 'Cancel')}</button>
             </div>
           )}

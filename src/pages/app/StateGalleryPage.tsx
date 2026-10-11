@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
 import { PenSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -40,18 +42,17 @@ import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
 import galleryCommunityLogo from '@/assets/avatars/vrgl.png';
 
 function PredictionGallery() {
+  const { t: _copy } = _useCopy();
   const [text, setText] = useState('https://polymarket.com/event/will-the-us-confirm-that-aliens-exist-before-2027');
   return (
     <section data-prediction-gallery className="mb-5 space-y-4 rounded-2xl border border-white/10 bg-background/80 p-4">
-      <h2 className="text-lg font-semibold">Prediction sharing</h2>
-      <label className="block text-sm">
-        Market link
-        <textarea value={text} onChange={event => setText(event.target.value)} className="mt-2 min-h-20 w-full rounded-lg border border-white/20 bg-transparent p-3" />
+      <h2 className="text-lg font-semibold">{_copy("copy.7ac5be993252", { defaultValue: "Prediction sharing" })}</h2>
+      <label className="block text-sm">{_copy("copy.ae3e6542a1b6", { defaultValue: "Market link" })}<textarea value={text} onChange={event => setText(event.target.value)} className="mt-2 min-h-20 w-full rounded-lg border border-white/20 bg-transparent p-3" />
       </label>
       <div className="grid items-start gap-5 lg:grid-cols-3">
-        <div><h3>Draft</h3><LinkPreviews text={text} /></div>
-        <div><h3>Feed</h3><FeedLinkPreviews text={text} /></div>
-        <div><h3>Conversation</h3><ChatLinkPreviews content={text} /></div>
+        <div><h3>{_copy("copy.ebf12ef47cf5", { defaultValue: "Draft" })}</h3><LinkPreviews text={text} /></div>
+        <div><h3>{_copy("copy.396c3cb18f81", { defaultValue: "Feed" })}</h3><FeedLinkPreviews text={text} /></div>
+        <div><h3>{_copy("copy.ccca18175753", { defaultValue: "Conversation" })}</h3><ChatLinkPreviews content={text} /></div>
       </div>
     </section>
   );
@@ -72,7 +73,7 @@ const BadgeShowcase = lazy(() => import('@/components/app/badge-showcase/BadgeSh
 const SAMPLE_PHRASE = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 
 const SAMPLE_ARTICLE = {
-  title: 'Why we moved our streams on-chain',
+  get title() { return _translateCopy("copy.b91b0545d5a2", { defaultValue: "Why we moved our streams on-chain" }); },
   summary: 'After two years of takedowns and payout freezes, here is what changed when our audience started paying us directly.',
   cover: '/media/ai-creator-studio-banner.jpg',
   body: [
@@ -89,6 +90,7 @@ const SAMPLE_ARTICLE = {
 };
 
 function ArticleGallery({ onAction }: { onAction: () => void }) {
+  const { t: _copy } = _useCopy();
   const [title, setTitle] = useState(SAMPLE_ARTICLE.title);
   const [summary, setSummary] = useState('');
   const [body, setBody] = useState(SAMPLE_ARTICLE.body);
@@ -96,19 +98,19 @@ function ArticleGallery({ onAction }: { onAction: () => void }) {
     <section data-article-gallery className="mb-5 grid gap-5 lg:grid-cols-2">
       <div className="space-y-5">
         <div data-feed-item className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Article in the feed</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.572fbffbb7a7", { defaultValue: "Article in the feed" })}</p>
           <ArticleFeedCover title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} coverUrl={SAMPLE_ARTICLE.cover} onOpen={onAction}>
             <p className="article-ink-2 text-[15.25px] leading-[22.5px]">{SAMPLE_ARTICLE.summary}</p>
           </ArticleFeedCover>
         </div>
         <div data-feed-item className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Article without a cover</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.88bd6a8020c0", { defaultValue: "Article without a cover" })}</p>
           <ArticleFeedCover title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} onOpen={onAction}>
             <p className="article-ink-2 text-[15.25px] leading-[22.5px]">{SAMPLE_ARTICLE.summary}</p>
           </ArticleFeedCover>
         </div>
         <div data-feed-item className="flex h-[720px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
-          <p className="px-4 pt-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Writing an article</p>
+          <p className="px-4 pt-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.3ab556ac9956", { defaultValue: "Writing an article" })}</p>
           <ArticleComposer
             title={title} setTitle={setTitle} summary={summary} setSummary={setSummary} body={body} setBody={setBody}
             coverPreview={SAMPLE_ARTICLE.cover} onCoverChange={onAction} onSaveDraft={onAction} onPublish={onAction}
@@ -117,7 +119,7 @@ function ArticleGallery({ onAction }: { onAction: () => void }) {
         </div>
       </div>
       <div data-feed-item className="rounded-2xl border border-white/10 bg-white/[0.04] p-3" data-article-reader-sample>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Reading an article</p>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.fd5dcf90c053", { defaultValue: "Reading an article" })}</p>
         <ArticleReader
           title={SAMPLE_ARTICLE.title} body={SAMPLE_ARTICLE.body} coverUrl={SAMPLE_ARTICLE.cover}
           createdAt="2026-09-28T12:00:00Z" shareUrl="https://dehub.io/app/post/1" onComment={onAction} onTip={onAction}
@@ -137,14 +139,15 @@ const SAMPLE_REACTIONS: ReactionCounts = { like: 19, love: 4, hot: 2, lol: 1, di
  * the post — the thumb wears their 👎, since there is no thumbs-down button.
  */
 function ReactionsGallery() {
+  const { t: _copy } = _useCopy();
   const rows = [
-    { id: '990001', label: 'No reaction yet', myReaction: null },
-    { id: '990002', label: 'You disliked it', myReaction: 'dislike' as const },
+    { id: '990001', label: _copy("copy.5735e3593d23", { defaultValue: "No reaction yet" }), myReaction: null },
+    { id: '990002', label: _copy("copy.bf74a035bfa2", { defaultValue: "You disliked it" }), myReaction: 'dislike' as const },
   ];
   return (
     <AuthContext.Provider value={GALLERY_AUTH}>
     <section data-page-bento data-reactions-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-      <h2 className="mb-3 text-sm font-semibold">Reactions</h2>
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.8a7ede6b5f07", { defaultValue: "Reactions" })}</h2>
       <div className="grid gap-4 lg:grid-cols-2">
         {rows.map((row) => (
           <div key={row.id} data-reactions-row={row.id} className="rounded-2xl border border-white/10 bg-black/30 pt-3">
@@ -184,6 +187,7 @@ const ICONS: ThemeIconKey[] = [
 ];
 
 export default function StateGalleryPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { theme, setTheme } = useAppTheme();
   const [params, setParams] = useSearchParams();
@@ -219,11 +223,9 @@ export default function StateGalleryPage() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">Universal app states</p>
-            <h1 className="mt-2 text-3xl font-semibold capitalize">{theme} theme</h1>
-            <p className="mt-2 max-w-xl text-sm text-zinc-500">
-              One semantic system, with the icon material owned by the active theme.
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">{_copy("copy.fa03600217af", { defaultValue: "Universal app states" })}</p>
+            <h1 className="mt-2 text-3xl font-semibold capitalize">{theme}{_copy("copy.ac06016aec14", { defaultValue: " theme" })}</h1>
+            <p className="mt-2 max-w-xl text-sm text-zinc-500">{_copy("copy.b061895ebdc1", { defaultValue: "One semantic system, with the icon material owned by the active theme." })}</p>
           </div>
           <div className="flex max-w-2xl flex-wrap justify-end gap-2">
             {THEMES.map((item) => (
@@ -250,24 +252,22 @@ export default function StateGalleryPage() {
         <PollGallery />
 
         <section data-page-bento data-badge-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-          <h2 className="mb-3 text-sm font-semibold">Badge animations</h2>
+          <h2 className="mb-3 text-sm font-semibold">{_copy("copy.43a84f7c2297", { defaultValue: "Badge animations" })}</h2>
           <div className="flex flex-wrap items-center gap-3">
-            <select aria-label="Badge tier" value={badgeTier} onChange={event => setBadgeTier(Number(event.target.value))}
+            <select aria-label={_copy("copy.ec7ae81278ad", { defaultValue: "Badge tier" })} value={badgeTier} onChange={event => setBadgeTier(Number(event.target.value))}
               className="rounded-lg border border-white/15 bg-background p-2 text-sm">
               {BADGE_ORDER.map((tier, index) => <option key={tier} value={index}>{index + 1}. {tier}</option>)}
             </select>
             <button className="flex items-center gap-2 p-2" onPointerEnter={warmBadge} onFocus={warmBadge} onTouchStart={warmBadge} onClick={event => setBadge({ anchor: event.currentTarget.querySelector('img'), promote: false })}>
-              <img src={badgeImage(BADGE_ORDER[badgeTier]) ?? ''} alt="" className="h-10 w-10" /> Open badge
-            </button>
+              <img src={badgeImage(BADGE_ORDER[badgeTier]) ?? ''} alt="" className="h-10 w-10" />{_copy("copy.a698decd6fbd", { defaultValue: " Open badge" })}</button>
             <button className="flex items-center gap-2 p-2" onClick={event => setBadge({ anchor: event.currentTarget.querySelector('img'), promote: true })}>
-              <img src={badgeImage(BADGE_ORDER[Math.max(0, badgeTier - 1)]) ?? ''} alt="" className="h-10 w-10" /> Promote badge
-            </button>
-            <button className="p-2" onClick={() => setBadge({ anchor: null, promote: true, first: true })}>First badge</button>
+              <img src={badgeImage(BADGE_ORDER[Math.max(0, badgeTier - 1)]) ?? ''} alt="" className="h-10 w-10" />{_copy("copy.a1fde35ae1b6", { defaultValue: " Promote badge" })}</button>
+            <button className="p-2" onClick={() => setBadge({ anchor: null, promote: true, first: true })}>{_copy("copy.7805d3b61e8f", { defaultValue: "First badge" })}</button>
           </div>
           <div data-inline-badge-gallery className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[12, 14, 16, 24].map(size => (
               <div key={size} data-badge-font-size={size} className="space-y-3">
-                <p className="text-xs text-zinc-500">{size}px names</p>
+                <p className="text-xs text-zinc-500">{size}{_copy("copy.6bd019c9ce73", { defaultValue: "px names" })}</p>
                 {BADGE_ORDER.map(tier => (
                   <span key={tier} data-badge-sample={tier} className="flex items-baseline gap-1" style={{ fontSize: size, lineHeight: 1.4 }}>
                     <span className="font-semibold">H {tier}</span>
@@ -278,8 +278,8 @@ export default function StateGalleryPage() {
             ))}
           </div>
           <div className="mt-4 flex flex-wrap gap-4" data-badge-font-inheritance>
-            <BadgedName badgeBalance={50_000_000} className="text-xs font-semibold">H Compact name</BadgedName>
-            <BadgedName badgeBalance={50_000_000} className="text-2xl font-bold">H Profile name</BadgedName>
+            <BadgedName badgeBalance={50_000_000} className="text-xs font-semibold">{_copy("copy.dbbdf8b3a103", { defaultValue: "H Compact name" })}</BadgedName>
+            <BadgedName badgeBalance={50_000_000} className="text-2xl font-bold">{_copy("copy.5331015e914e", { defaultValue: "H Profile name" })}</BadgedName>
           </div>
         </section>
         {badge && <Suspense fallback={null}>
@@ -288,7 +288,7 @@ export default function StateGalleryPage() {
         </Suspense>}
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">Semantic icon family</p>
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">{_copy("copy.d08726f3e653", { defaultValue: "Semantic icon family" })}</p>
           <div className="grid grid-cols-4 gap-3 sm:grid-cols-8" data-theme-icon-grid>
             {ICONS.map((icon) => (
               <div key={icon} className="flex min-w-0 flex-col items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] p-3">
@@ -300,7 +300,7 @@ export default function StateGalleryPage() {
         </section>
 
         <section data-home-loading-gallery className="mb-5">
-          <h2 className="mb-3 text-sm font-semibold">Home loading</h2>
+          <h2 className="mb-3 text-sm font-semibold">{_copy("copy.b644f52adc76", { defaultValue: "Home loading" })}</h2>
           <div className="max-w-2xl mx-auto">
             <FeedTabBarSkeleton />
             <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0">
@@ -312,35 +312,35 @@ export default function StateGalleryPage() {
         <PageKitGallery />
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-          <h2 className="mb-3 text-sm font-semibold">Theme controls</h2>
+          <h2 className="mb-3 text-sm font-semibold">{_copy("copy.64392c53237a", { defaultValue: "Theme controls" })}</h2>
           <div className="flex flex-wrap items-center gap-3" data-theme-control-grid>
-            <Button onClick={press}>Primary</Button>
-            <Button variant="secondary" onClick={press}>Secondary</Button>
-            <Button variant="outline" onClick={press}>Outline</Button>
-            <Button variant="glass" onClick={press}>Glass</Button>
-            <Button variant="ghost" onClick={press}>Ghost</Button>
-            <Button variant="destructive" onClick={press}>Destructive</Button>
-            <Button disabled>Disabled</Button>
-            <button className="rounded-xl bg-white px-4 py-2 text-black" onClick={press}>Neutral white</button>
-            <button className="rounded-xl bg-zinc-800 px-4 py-2 text-white" onClick={press}>Neutral zinc</button>
-            <button className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30 px-4 py-2 text-white" onClick={press}>Neutral gradient</button>
+            <Button onClick={press}>{_copy("copy.efe10c80ec8a", { defaultValue: "Primary" })}</Button>
+            <Button variant="secondary" onClick={press}>{_copy("copy.62f2ccfffcc5", { defaultValue: "Secondary" })}</Button>
+            <Button variant="outline" onClick={press}>{_copy("copy.eabbf3abaf8d", { defaultValue: "Outline" })}</Button>
+            <Button variant="glass" onClick={press}>{_copy("copy.82c268188cd6", { defaultValue: "Glass" })}</Button>
+            <Button variant="ghost" onClick={press}>{_copy("copy.df1bc4984a05", { defaultValue: "Ghost" })}</Button>
+            <Button variant="destructive" onClick={press}>{_copy("copy.c3e58a73609d", { defaultValue: "Destructive" })}</Button>
+            <Button disabled>{_copy("copy.75081b593d15", { defaultValue: "Disabled" })}</Button>
+            <button className="rounded-xl bg-white px-4 py-2 text-black" onClick={press}>{_copy("copy.71420ed6d983", { defaultValue: "Neutral white" })}</button>
+            <button className="rounded-xl bg-zinc-800 px-4 py-2 text-white" onClick={press}>{_copy("copy.6ad68ee9fcc1", { defaultValue: "Neutral zinc" })}</button>
+            <button className="rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30 px-4 py-2 text-white" onClick={press}>{_copy("copy.d7b9e99fbc88", { defaultValue: "Neutral gradient" })}</button>
             <button data-primary-cta data-nav-create className="rounded-2xl bg-zinc-900/90 border border-white/30 px-4 py-3" onClick={press}>
               <div className="flex items-center justify-center gap-2 font-semibold text-white">
                 <PenSquare className="h-[18px] w-[18px]" />
                 <span>{t('nav.create')}</span>
               </div>
             </button>
-            <LiquidGlassBubble2 label="Bubble action" onClick={press} />
-            <LiquidGlassBubble2 label="Active bubble" active onClick={press} />
-            <LiquidGlassBubble2 label="Disabled bubble" disabled onClick={press} />
-            <button className="rounded-xl bg-red-600 px-4 py-2 text-white" onClick={press}>Semantic red</button>
-            <button className="rounded-xl px-4 py-2 hover:bg-white/10" onClick={press}>Bare action</button>
+            <LiquidGlassBubble2 label={_copy("copy.fc922b564311", { defaultValue: "Bubble action" })} onClick={press} />
+            <LiquidGlassBubble2 label={_copy("copy.d2f3799012c3", { defaultValue: "Active bubble" })} active onClick={press} />
+            <LiquidGlassBubble2 label={_copy("copy.b8d66477ae02", { defaultValue: "Disabled bubble" })} disabled onClick={press} />
+            <button className="rounded-xl bg-red-600 px-4 py-2 text-white" onClick={press}>{_copy("copy.c2ca38f2ffc5", { defaultValue: "Semantic red" })}</button>
+            <button className="rounded-xl px-4 py-2 hover:bg-white/10" onClick={press}>{_copy("copy.8ab32717132c", { defaultValue: "Bare action" })}</button>
           </div>
-          <output aria-live="polite" className="mt-3 block text-xs">Actions fired: {presses}</output>
+          <output aria-live="polite" className="mt-3 block text-xs">{_copy("copy.c9098dc7451d", { defaultValue: "Actions fired: " })}{presses}</output>
         </section>
 
         <section data-page-bento className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4" data-wallet-backup-gallery>
-          <h2 className="mb-3 text-sm font-semibold">Wallet backup</h2>
+          <h2 className="mb-3 text-sm font-semibold">{_copy("copy.3c00e7b75264", { defaultValue: "Wallet backup" })}</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
               <SeedPhraseBackup phrase={SAMPLE_PHRASE} variant="signup" onFinished={press} />
@@ -368,17 +368,17 @@ export default function StateGalleryPage() {
           <div data-page-bento className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl">
             <AppState
               icon="communities"
-              title="No communities yet"
-              description="Communities you join will appear here."
+              title={_copy("copy.46ff381b91e6", { defaultValue: "No communities yet" })}
+              description={_copy("copy.f88ed969d454", { defaultValue: "Communities you join will appear here." })}
               size="section"
-              primaryAction={{ label: 'Explore communities', onClick: () => undefined }}
+              primaryAction={{ label: _copy("copy.9ee9a4e1de2e", { defaultValue: "Explore communities" }), onClick: () => undefined }}
             />
           </div>
           <div data-page-bento className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl">
             <AppState
               icon="search"
-              title="No results found"
-              description="Try a different search or remove a filter."
+              title={_copy("copy.7d7e36058609", { defaultValue: "No results found" })}
+              description={_copy("copy.6a4877d51d2d", { defaultValue: "Try a different search or remove a filter." })}
               kind="search-empty"
               size="section"
             />
@@ -386,18 +386,18 @@ export default function StateGalleryPage() {
           <div data-page-bento className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl">
             <AppState
               icon="notifications"
-              title="Content could not load"
-              description="Check your connection and try again."
+              title={_copy("copy.7b9e7606e550", { defaultValue: "Content could not load" })}
+              description={_copy("copy.481859b689b0", { defaultValue: "Check your connection and try again." })}
               kind="error"
               size="section"
-              primaryAction={{ label: 'Try again', onClick: () => undefined }}
+              primaryAction={{ label: _copy("copy.d8b8392e2c54", { defaultValue: "Try again" }), onClick: () => undefined }}
             />
           </div>
           <div data-page-bento className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.04] backdrop-blur-xl">
             <AppState
               icon="lock"
-              title="Approval pending"
-              description="This content appears after your request is approved."
+              title={_copy("copy.e16b1a168ac5", { defaultValue: "Approval pending" })}
+              description={_copy("copy.1e5d5c1a7ee7", { defaultValue: "This content appears after your request is approved." })}
               kind="restricted"
               size="section"
             />
@@ -418,7 +418,7 @@ const GALLERY_PROFILE = {
 } as ProfileData;
 const GALLERY_COMMUNITY = {
   id: 'gallery-community', name: 'Synthwave City', slug: 'synthwave-city',
-  description: 'Neon nights, retro drives and late-night beats.',
+  get description() { return _translateCopy("copy.03a664b256d4", { defaultValue: "Neon nights, retro drives and late-night beats." }); },
   avatar_url: galleryCommunityLogo, banner_url: galleryCommunityArt,
   creator_wallet_address: GALLERY_PROFILE_WALLET, is_private: false, member_count: 12421,
 } as Community;
@@ -426,13 +426,14 @@ const noop = () => {};
 
 /** The desktop profile header wearing a pinned community (lg and up; phones keep the card). */
 function PinnedProfileGallery() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   useState(() => queryClient.setQueryData(['communities', 'pinned', GALLERY_PROFILE_WALLET], [
     { id: 'gallery-pin', community_id: GALLERY_COMMUNITY.id, display_order: 0, communities: GALLERY_COMMUNITY } as unknown as PinnedCommunity,
   ]));
   return (
     <section data-page-bento data-pinned-profile-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-      <h2 className="mb-3 text-sm font-semibold">Profile with a pinned community</h2>
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.d57ba2d3adb3", { defaultValue: "Profile with a pinned community" })}</h2>
       <AuthContext.Provider value={GALLERY_AUTH}>
         <div className="max-w-[680px]">
           <ProfileHeader
@@ -470,6 +471,7 @@ function PinnedProfileGallery() {
 
 // Ids far above any real post, so the seeded answers never collide with one.
 const GALLERY_POLLS: Array<{ label: string; poll: DeHubPoll }> = (() => {
+  const { t: _copy } = _useCopy();
   const day = 24 * 60 * 60 * 1000;
   const base = {
     _id: 'gallery', address: '0x0000000000000000000000000000000000000000',
@@ -477,19 +479,20 @@ const GALLERY_POLLS: Array<{ label: string; poll: DeHubPoll }> = (() => {
   };
   const options = (counts: number[]) => ['Live co-streams', 'Creator tips', 'Music charts'].map((text, index) => ({ index, text, voteCount: counts[index] }));
   return [
-    { label: 'Open', poll: { ...base, tokenId: 990000001, options: options([12, 30, 8]), totalVotes: 50, isActive: true, expiresAt: new Date(Date.now() + day).toISOString() } },
-    { label: 'Ended', poll: { ...base, tokenId: 990000002, options: options([12, 30, 8]), totalVotes: 50, isActive: true, isExpired: true, expiresAt: new Date(Date.now() - day).toISOString() } },
-    { label: 'Ended, you voted', poll: { ...base, tokenId: 990000003, options: options([12, 30, 8]), totalVotes: 50, isActive: false, expiresAt: new Date(Date.now() - day).toISOString(), userVote: { optionIndexes: [0], votedAt: base.createdAt } } },
+    { label: _copy("copy.ed077f3d8125", { defaultValue: "Open" }), poll: { ...base, tokenId: 990000001, options: options([12, 30, 8]), totalVotes: 50, isActive: true, expiresAt: new Date(Date.now() + day).toISOString() } },
+    { label: _copy("copy.7cdc804e6996", { defaultValue: "Ended" }), poll: { ...base, tokenId: 990000002, options: options([12, 30, 8]), totalVotes: 50, isActive: true, isExpired: true, expiresAt: new Date(Date.now() - day).toISOString() } },
+    { label: _copy("copy.668b01f4c6f1", { defaultValue: "Ended, you voted" }), poll: { ...base, tokenId: 990000003, options: options([12, 30, 8]), totalVotes: 50, isActive: false, expiresAt: new Date(Date.now() - day).toISOString(), userVote: { optionIndexes: [0], votedAt: base.createdAt } } },
   ];
 })();
 
 function PollGallery() {
+  const { t: _copy } = _useCopy();
   const queryClient = useQueryClient();
   // Seed before the cards mount so they render the sample polls, never fetch.
   useState(() => GALLERY_POLLS.forEach(({ poll }) => queryClient.setQueryData(['polls', poll.tokenId], poll)));
   return (
     <section data-page-bento data-poll-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-      <h2 className="mb-3 text-sm font-semibold">Polls</h2>
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.996729458535", { defaultValue: "Polls" })}</h2>
       <AuthContext.Provider value={GALLERY_AUTH}>
         <div className="grid gap-4 md:grid-cols-3">
           {GALLERY_POLLS.map(({ label, poll }) => (
@@ -530,28 +533,29 @@ function StreamerArtworkGallery() {
 
 /** The shared page kit (components/app/page-kit) in the active theme. */
 function PageKitGallery() {
+  const { t: _copy } = _useCopy();
   const [tab, setTab] = useState<'browse' | 'mine' | 'sell'>('browse');
   return (
     <section data-page-bento data-page-kit-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-      <h2 className="mb-3 text-sm font-semibold">Page kit</h2>
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.483f6431de87", { defaultValue: "Page kit" })}</h2>
       <div className="space-y-3">
         <PageTabs
           value={tab}
           onChange={setTab}
           tabs={[
-            { id: 'browse', label: 'Browse', icon: 'search' },
-            { id: 'mine', label: 'Mine', icon: 'usernames' },
-            { id: 'sell', label: 'Sell', icon: 'stores' },
+            { id: 'browse', label: _copy("copy.3227aa966625", { defaultValue: "Browse" }), icon: 'search' },
+            { id: 'mine', label: _copy("copy.f57afb7d275a", { defaultValue: "Mine" }), icon: 'usernames' },
+            { id: 'sell', label: _copy("copy.2ec1e2815946", { defaultValue: "Sell" }), icon: 'stores' },
           ]}
         />
-        <PageSection eyebrow="Treasury balance" title="Section title">
-          <p className="text-sm text-zinc-400">Sections are rounded bentos on canvas themes and full width between hairlines on System phones.</p>
+        <PageSection eyebrow="Treasury balance" title={_copy("copy.13666ca7642b", { defaultValue: "Section title" })}>
+          <p className="text-sm text-zinc-400">{_copy("copy.2a6ac5a48e62", { defaultValue: "Sections are rounded bentos on canvas themes and full width between hairlines on System phones." })}</p>
         </PageSection>
         <div className="flex gap-2">
-          <KitButton>Primary</KitButton>
-          <KitButton variant="quiet">Quiet</KitButton>
+          <KitButton>{_copy("copy.efe10c80ec8a", { defaultValue: "Primary" })}</KitButton>
+          <KitButton variant="quiet">{_copy("copy.c0ebb7d6b693", { defaultValue: "Quiet" })}</KitButton>
         </div>
-        <PageEmpty icon="stores" title="No listings yet" body="Be the first to sell something." />
+        <PageEmpty icon="stores" title={_copy("copy.38975ad4e835", { defaultValue: "No listings yet" })} body="Be the first to sell something." />
       </div>
     </section>
   );

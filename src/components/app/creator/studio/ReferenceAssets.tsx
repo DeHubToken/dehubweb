@@ -30,7 +30,7 @@ export const ReferenceAssets = memo(function ReferenceAssets({ assets, onAdd, on
   return <div className={assets.length > 0 ? 'mb-2' : undefined}>
     <div className="flex flex-wrap gap-2">
       {assets.map(asset => {
-        const tag = asset.kind === 'video' ? '@Video1' : `@Image${++imageNumber}`;
+        const tag = asset.kind === 'video' ? "@Video1" : `@Image${++imageNumber}`;
         return <div key={asset.url} className="flex max-w-full items-center gap-2 rounded-xl border border-white/15 bg-black/30 p-1.5">
           {asset.kind === 'image' || asset.posterUrl ? <img src={asset.posterUrl || asset.url} alt="" className="h-10 w-10 rounded-lg object-cover" /> : <video src={`${asset.url}#t=0.1`} muted playsInline preload="metadata" className="h-10 w-10 rounded-lg object-cover" />}
           <button type="button" onClick={() => onMention(tag)} className="min-w-0 text-left" aria-label={t('creator.referenceInsert', { tag })}>

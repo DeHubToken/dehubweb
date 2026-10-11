@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag, Award } from 'lucide-react';
 import { ReportModal } from '@/components/app/modals/ReportModal';
@@ -34,6 +35,7 @@ export function ProfileOptionsContent({
   isBlockLoading = false,
   handleBlock,
 }: ProfileOptionsDrawerProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [reportModalOpen, setReportModalOpen] = useState(false);
@@ -186,7 +188,7 @@ export function ProfileOptionsContent({
                 <div className="w-8 h-8 rounded-xl bg-red-500/20 backdrop-blur-sm flex items-center justify-center">
                   <Flag className="w-4 h-4 text-red-400" />
                 </div>
-                <span className="text-red-400 font-medium">Report User</span>
+                <span className="text-red-400 font-medium">{_copy("copy.ae89cfa0886b", { defaultValue: "Report User" })}</span>
               </button>
             </>
           )}

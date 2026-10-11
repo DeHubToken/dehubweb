@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useMemo, useState } from "react";
 import {
   EmbeddedCheckoutProvider,
@@ -24,6 +25,7 @@ export function PremiumCheckoutModal({
   walletAddress,
   customerEmail,
 }: PremiumCheckoutModalProps) {
+  const { t: _copy } = _useCopy();
   const [error, setError] = useState<string | null>(null);
 
   // New session every time the dialog opens for a (priceId, wallet) pair.
@@ -72,7 +74,7 @@ export function PremiumCheckoutModal({
         <div className="max-h-[85vh] overflow-y-auto">
           {error || !isPaymentsConfigured() ? (
             <div className="p-8 text-center text-sm text-red-300">
-              {error || "Subscriptions are temporarily unavailable. Please try again later."}
+              {error || _copy("copy.1834bcf708ea", { defaultValue: "Subscriptions are temporarily unavailable. Please try again later." })}
             </div>
           ) : open ? (
             <div className="bg-white">

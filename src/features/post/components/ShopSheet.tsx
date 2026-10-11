@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 /**
  * Shop editor
@@ -83,6 +84,7 @@ export function looksLikeUrl(value: string): boolean {
 }
 
 export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, draftScope }: ShopSheetProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [rows, setRows] = useDraftState<ShopLink[]>(`${draftScope}:shop:rows`, value.links);
   const [listingIds, setListingIds] = useDraftState<string[]>(`${draftScope}:shop:listings`, value.listingIds);
@@ -135,36 +137,30 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
       <DrawerContent column glass className="max-h-[90dvh] flex flex-col overflow-hidden">
         <DrawerHeader className="text-left shrink-0">
           <DrawerTitle className="flex items-center gap-2 text-white">
-            <Store className="w-5 h-5" />
-            Shop
-          </DrawerTitle>
+            <Store className="w-5 h-5" />{_copy("copy.d00aae6b7fbf", { defaultValue: "Shop" })}</DrawerTitle>
         </DrawerHeader>
 
         <div className="px-4 pb-4 space-y-4 overflow-y-auto flex-1 min-h-0 overscroll-contain">
           <div className="flex items-start gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
             <Info className="w-4 h-4 text-white/50 shrink-0 mt-0.5" />
-            <span className="text-xs text-white/50">
-              Put your own listings or affiliate links on this post — viewers open them from the
-              Shop button.{' '}
+            <span className="text-xs text-white/50">{_copy("copy.013e62028196", { defaultValue: "Put your own listings or affiliate links on this post — viewers open them from the Shop button." })}{' '}
               {tier
-                ? `Your ${tier} badge gives you ${allowance} in total.`
-                : `You get ${allowance} in total. Every badge tier adds one more.`}
+                ? _copy("copy.cccae7763640", { defaultValue: "Your {{value1}} badge gives you {{value2}} in total.", value1: tier, value2: allowance })
+                : _copy("copy.53a9b7c51beb", { defaultValue: "You get {{value1}} in total. Every badge tier adds one more.", value1: allowance })}
             </span>
           </div>
 
           {/* Own listings first: they check out in-app and the money is the
               creator's, which is worth more to both sides than a referral. */}
           <div className="space-y-2">
-            <p className="text-sm text-white/70">From your shop</p>
+            <p className="text-sm text-white/70">{_copy("copy.dbb1cbf6e98b", { defaultValue: "From your shop" })}</p>
 
             {listingsLoading ? (
               <div className="flex justify-center py-6">
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
               </div>
             ) : sellable.length === 0 ? (
-              <p className="text-xs text-white/40 py-2">
-                Nothing on sale in your shop yet. Anything you list there can go on a post.
-              </p>
+              <p className="text-xs text-white/40 py-2">{_copy("copy.f9dc9e29b0d7", { defaultValue: "Nothing on sale in your shop yet. Anything you list there can go on a post." })}</p>
             ) : (
               sellable.map((listing: any) => {
                 const picked = listingIds.includes(listing.id);
@@ -207,10 +203,8 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm text-white/70">Links</p>
-            <p className="text-xs text-white/40 -mt-1">
-              Affiliate links are welcome — Amazon Associates, referral links, anywhere you sell.
-            </p>
+            <p className="text-sm text-white/70">{_copy("copy.9024c197d849", { defaultValue: "Links" })}</p>
+            <p className="text-xs text-white/40 -mt-1">{_copy("copy.bd6ce1009501", { defaultValue: "Affiliate links are welcome — Amazon Associates, referral links, anywhere you sell." })}</p>
 
             {rows.map((row, index) => {
               const invalid = row.url.trim().length > 0 && !looksLikeUrl(row.url);
@@ -220,12 +214,12 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
                   className="space-y-2 p-3 rounded-xl border border-white/10 bg-white/[0.02]"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-white/40">Link {index + 1}</span>
+                    <span className="text-xs text-white/40">{_copy("copy.bdc42286f86c", { defaultValue: "Link " })}{index + 1}</span>
                     <button
                       type="button"
                       onClick={() => remove(index)}
                       className="p-1.5 -mr-1.5 text-white/40 hover:text-red-400 transition-colors"
-                      aria-label={`Remove link ${index + 1}`}
+                      aria-label={_copy("copy.d32af5b18e14", { defaultValue: "Remove link {{value1}}", value1: index + 1 })}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -234,7 +228,7 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
                     type="text"
                     value={row.label}
                     onChange={e => update(index, { label: e.target.value.slice(0, 40) })}
-                    placeholder="What it is — e.g. My mic"
+                    placeholder={_copy("copy.fd8b72bbcbf1", { defaultValue: "What it is — e.g. My mic" })}
                     className={inputClass}
                   />
                   <input
@@ -249,7 +243,7 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
                     className={cn(inputClass, invalid && 'border-red-500/60 focus:border-red-500')}
                   />
                   {invalid && (
-                    <p className="text-xs text-red-400">That does not look like a web address.</p>
+                    <p className="text-xs text-red-400">{_copy("copy.dd3bfd98b141", { defaultValue: "That does not look like a web address." })}</p>
                   )}
                 </div>
               );
@@ -261,8 +255,7 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
                 onClick={() => setRows(current => [...current, { label: '', url: '' }])}
                 className="w-full h-12 rounded-xl border border-dashed border-white/20 text-sm text-white/70 hover:bg-white/5 hover:text-white transition-colors flex items-center justify-center gap-2"
               >
-                <Plus className="w-4 h-4" /> Add a link
-              </button>
+                <Plus className="w-4 h-4" />{_copy("copy.62b242593656", { defaultValue: " Add a link" })}</button>
             ) : (
               <p className="text-xs text-white/40 text-center py-1">
                 {t('stores.shopAllowanceUsed', { allowance })}
@@ -276,9 +269,7 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
             variant="glass"
             onClick={() => onOpenChange(false)}
             className="flex-1 rounded-xl min-h-[48px] touch-manipulation"
-          >
-            Cancel
-          </Button>
+          >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
           <Button
             variant="glass"
             disabled={!canSave}
@@ -289,9 +280,7 @@ export function ShopSheet({ open, onOpenChange, value, onSave, allowance, tier, 
             }}
             className="flex-1 rounded-xl min-h-[48px] touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Check className="w-4 h-4 mr-2" />
-            Save
-          </Button>
+            <Check className="w-4 h-4 mr-2" />{_copy("copy.1509f561f241", { defaultValue: "Save" })}</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -28,6 +29,7 @@ import { CopyAddressRows } from '@/components/app/wallet/CopyAddressRows';
  * on a locked wallet with an error and nothing to press.
  */
 function UnlockWalletRow({ onUnlock }: { onUnlock: () => void }) {
+  const { t: _copy } = _useCopy();
   return (
     <button
       onClick={onUnlock}
@@ -37,8 +39,8 @@ function UnlockWalletRow({ onUnlock }: { onUnlock: () => void }) {
         <Lock className="w-4 h-4 text-white" />
       </div>
       <div>
-        <span className="text-white font-medium block">Unlock wallet</span>
-        <span className="text-zinc-400 text-xs">Needed to post, tip or send</span>
+        <span className="text-white font-medium block">{_copy("copy.5cb728cf5ada", { defaultValue: "Unlock wallet" })}</span>
+        <span className="text-zinc-400 text-xs">{_copy("copy.79c2ab20514c", { defaultValue: "Needed to post, tip or send" })}</span>
       </div>
     </button>
   );
@@ -58,6 +60,7 @@ interface WalletMenuContentProps {
 type MenuView = 'main' | 'buy' | 'stake' | 'receive';
 
 export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanceMenuProps) {
+  const { t: _copy } = _useCopy();
   const [isOpen, setIsOpen] = useState(false);
   const { walletAddress, requestWalletUnlock } = useAuth();
   const walletLocked = useWalletLocked();
@@ -82,13 +85,13 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const handleCopyAddress = () => {
     if (!walletAddress) {
-      toast.error('No wallet connected');
+      toast.error(_copy("copy.3f248f69b2f7", { defaultValue: "No wallet connected" }));
       return;
     }
 
     navigator.clipboard.writeText(walletAddress);
     setCopied(true);
-    toast.success('Address copied');
+    toast.success(_copy("copy.a26175817712", { defaultValue: "Address copied" }));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -113,7 +116,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
   const handleStakeAll = () => {
     if (balance <= 0) {
-      toast.error('No coins to stake');
+      toast.error(_copy("copy.4508884e64ac", { defaultValue: "No coins to stake" }));
       return;
     }
     setStakeAmount(balance.toString());
@@ -129,7 +132,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     >
       <img 
         src={dehubCoin} 
-        alt="coins" 
+        alt={_copy("copy.62f014cb3162", { defaultValue: "coins" })} 
         className={`transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_8px_rgba(255,215,0,0.6)] ${variant === 'mobile' ? 'h-[26px] w-[26px]' : 'h-5 w-5'}`}
       />
     </div>
@@ -157,7 +160,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
       <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
         {/* DeHub Coin Balance */}
         <div className="flex items-center gap-2">
-          <img src={dehubCoin} alt="coins" className="w-5 h-5" />
+          <img src={dehubCoin} alt={_copy("copy.62f014cb3162", { defaultValue: "coins" })} className="w-5 h-5" />
           <span className="text-white font-semibold">{formatBalance(balance)}</span>
         </div>
         {/* USD Balance with USDC logo */}
@@ -178,7 +181,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Plus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Buy Coins</span>
+        <span className="text-white font-medium">{_copy("copy.dd3632ffdf11", { defaultValue: "Buy Coins" })}</span>
       </button>
       <button
         onClick={() => {
@@ -190,7 +193,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Buy / Sell</span>
+        <span className="text-white font-medium">{_copy("copy.dde0cacd953d", { defaultValue: "Buy / Sell" })}</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
@@ -200,8 +203,8 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
           {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
         </div>
         <div className="flex flex-col">
-          <span className="text-white font-medium">Receive Coins</span>
-          <span className="text-xs text-zinc-400">{formattedWalletAddress ?? 'Connect wallet'}</span>
+          <span className="text-white font-medium">{_copy("copy.f322a587e79e", { defaultValue: "Receive Coins" })}</span>
+          <span className="text-xs text-zinc-400">{formattedWalletAddress ?? _copy("copy.7b1f118169bc", { defaultValue: "Connect wallet" })}</span>
         </div>
       </button>
       <button
@@ -211,7 +214,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Lock className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Stake Coins</span>
+        <span className="text-white font-medium">{_copy("copy.b051ea55295c", { defaultValue: "Stake Coins" })}</span>
       </button>
 
     </div>
@@ -224,7 +227,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         className="flex items-center gap-2 text-zinc-400 hover:text-white mb-3 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span className="text-sm">Back</span>
+        <span className="text-sm">{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</span>
       </button>
       <button
         onClick={handleBuyWithCard}
@@ -233,7 +236,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <CreditCard className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Buy with Card</span>
+        <span className="text-white font-medium">{_copy("copy.a0027ccd58bf", { defaultValue: "Buy with Card" })}</span>
       </button>
       <button
         onClick={handleBuyWithCrypto}
@@ -242,7 +245,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Bitcoin className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Buy with Crypto</span>
+        <span className="text-white font-medium">{_copy("copy.69cda82c3af5", { defaultValue: "Buy with Crypto" })}</span>
       </button>
     </div>
   );
@@ -254,21 +257,21 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
         className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span className="text-sm">Back</span>
+        <span className="text-sm">{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</span>
       </button>
       
       <div className="p-3 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
         <div className="flex items-center gap-2 mb-1">
           <Lock className="w-4 h-4 text-white" />
-          <span className="text-white font-medium text-sm">Staking</span>
+          <span className="text-white font-medium text-sm">{_copy("copy.5190ff487713", { defaultValue: "Staking" })}</span>
         </div>
-        <p className="text-xs text-zinc-400">Stake your coins to earn rewards over time.</p>
+        <p className="text-xs text-zinc-400">{_copy("copy.fc0f58010b05", { defaultValue: "Stake your coins to earn rewards over time." })}</p>
       </div>
       
       <div>
-        <label className="text-sm text-zinc-400 mb-1 block">Amount to Stake</label>
+        <label className="text-sm text-zinc-400 mb-1 block">{_copy("copy.661d104ca22d", { defaultValue: "Amount to Stake" })}</label>
         <div className="relative">
-          <img src={dehubCoin} alt="coins" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+          <img src={dehubCoin} alt={_copy("copy.62f014cb3162", { defaultValue: "coins" })} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
           <Input
             type="number"
             placeholder="0"
@@ -277,7 +280,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
             className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:ring-0 focus:border-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
           />
         </div>
-        <p className="text-xs text-zinc-400 mt-1">Available: {balance.toLocaleString()} coins</p>
+        <p className="text-xs text-zinc-400 mt-1">{_copy("copy.333771bad487", { defaultValue: "Available: " })}{balance.toLocaleString()}{_copy("copy.54358ea00495", { defaultValue: " coins" })}</p>
       </div>
       
       <div className="flex gap-2">
@@ -285,16 +288,12 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
           onClick={handleStakeAll}
           variant="outline"
           className="flex-1 bg-white/5 backdrop-blur-md border-white/10 text-white hover:bg-white/10"
-        >
-          Stake All
-        </Button>
+        >{_copy("copy.26d2d4fc2c0f", { defaultValue: "Stake All" })}</Button>
         <Button
           onClick={handleStakeCoins}
           disabled={!stakeAmount || Number(stakeAmount) <= 0 || Number(stakeAmount) > balance}
           className="flex-1 bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20"
-        >
-          Stake
-        </Button>
+        >{_copy("copy.8939aea8419b", { defaultValue: "Stake" })}</Button>
       </div>
     </div>
   );
@@ -320,7 +319,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
       </DrawerTrigger>
       <DrawerContent column glass hideHandle={false} className="px-4 pt-1 pb-8">
         <DrawerHeader className="sr-only">
-          <DrawerTitle>Coin Menu</DrawerTitle>
+          <DrawerTitle>{_copy("copy.151c8f21638e", { defaultValue: "Coin Menu" })}</DrawerTitle>
         </DrawerHeader>
         {getMenuContent()}
       </DrawerContent>
@@ -330,6 +329,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
 // Export standalone wallet menu content for use in other drawers
 export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) {
+  const { t: _copy } = _useCopy();
   const { walletAddress, requestWalletUnlock } = useAuth();
   const walletLocked = useWalletLocked();
   const navigate = useNavigate();
@@ -345,12 +345,12 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
 
   const handleCopyAddress = () => {
     if (!walletAddress) {
-      toast.error('No wallet connected');
+      toast.error(_copy("copy.3f248f69b2f7", { defaultValue: "No wallet connected" }));
       return;
     }
     navigator.clipboard.writeText(walletAddress);
     setCopied(true);
-    toast.success('Address copied');
+    toast.success(_copy("copy.a26175817712", { defaultValue: "Address copied" }));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -372,7 +372,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
 
   const handleStakeAll = () => {
     if (balance <= 0) {
-      toast.error('No coins to stake');
+      toast.error(_copy("copy.4508884e64ac", { defaultValue: "No coins to stake" }));
       return;
     }
     setStakeAmount(balance.toString());
@@ -403,7 +403,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           className="flex items-center gap-2 text-zinc-400 hover:text-white mb-3 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm">Back</span>
+          <span className="text-sm">{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</span>
         </button>
         <button
           onClick={handleBuyWithCard}
@@ -412,7 +412,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
             <CreditCard className="w-4 h-4 text-white" />
           </div>
-          <span className="text-white font-medium">Buy with Card</span>
+          <span className="text-white font-medium">{_copy("copy.a0027ccd58bf", { defaultValue: "Buy with Card" })}</span>
         </button>
         <button
           onClick={handleBuyWithCrypto}
@@ -421,7 +421,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
             <Bitcoin className="w-4 h-4 text-white" />
           </div>
-          <span className="text-white font-medium">Buy with Crypto</span>
+          <span className="text-white font-medium">{_copy("copy.69cda82c3af5", { defaultValue: "Buy with Crypto" })}</span>
         </button>
       </div>
     );
@@ -435,21 +435,21 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm">Back</span>
+          <span className="text-sm">{_copy("copy.76900f1bfd16", { defaultValue: "Back" })}</span>
         </button>
         
         <div className="p-3 bg-white/5 backdrop-blur-md rounded-xl border border-white/10">
           <div className="flex items-center gap-2 mb-1">
             <Lock className="w-4 h-4 text-white" />
-            <span className="text-white font-medium text-sm">Staking</span>
+            <span className="text-white font-medium text-sm">{_copy("copy.5190ff487713", { defaultValue: "Staking" })}</span>
           </div>
-          <p className="text-xs text-zinc-400">Stake your coins to earn rewards over time.</p>
+          <p className="text-xs text-zinc-400">{_copy("copy.fc0f58010b05", { defaultValue: "Stake your coins to earn rewards over time." })}</p>
         </div>
         
         <div>
-          <label className="text-sm text-zinc-400 mb-1 block">Amount to Stake</label>
+          <label className="text-sm text-zinc-400 mb-1 block">{_copy("copy.661d104ca22d", { defaultValue: "Amount to Stake" })}</label>
           <div className="relative">
-            <img src={dehubCoin} alt="coins" className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
+            <img src={dehubCoin} alt={_copy("copy.62f014cb3162", { defaultValue: "coins" })} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" />
             <Input
               type="number"
               placeholder="0"
@@ -458,7 +458,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
               className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-zinc-400 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none focus:ring-0 focus:border-white/10 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
-          <p className="text-xs text-zinc-400 mt-1">Available: {balance.toLocaleString()} coins</p>
+          <p className="text-xs text-zinc-400 mt-1">{_copy("copy.333771bad487", { defaultValue: "Available: " })}{balance.toLocaleString()}{_copy("copy.54358ea00495", { defaultValue: " coins" })}</p>
         </div>
         
         <div className="flex gap-2">
@@ -466,16 +466,12 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
             variant="outline"
             onClick={handleStakeAll}
             className="flex-1 bg-white/5 border-white/10 text-white hover:bg-white/10"
-          >
-            Max
-          </Button>
+          >{_copy("copy.a1a5936d3b0f", { defaultValue: "Max" })}</Button>
           <Button
             onClick={handleStakeCoins}
             disabled={!stakeAmount || Number(stakeAmount) <= 0}
             className="flex-1 bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 text-white disabled:opacity-50"
-          >
-            Stake
-          </Button>
+          >{_copy("copy.8939aea8419b", { defaultValue: "Stake" })}</Button>
         </div>
       </div>
     );
@@ -486,7 +482,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
     <div className="space-y-1">
       <div className="px-3 py-3 mb-2 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 space-y-2">
         <div className="flex items-center gap-2">
-          <img src={dehubCoin} alt="coins" className="w-5 h-5" />
+          <img src={dehubCoin} alt={_copy("copy.62f014cb3162", { defaultValue: "coins" })} className="w-5 h-5" />
           <span className="text-white font-semibold">{formatBalance(balance)}</span>
         </div>
         {/* Held back until a quote is in: rendering $0.00 against a real
@@ -506,7 +502,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Plus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Buy Coins</span>
+        <span className="text-white font-medium">{_copy("copy.dd3632ffdf11", { defaultValue: "Buy Coins" })}</span>
       </button>
       <button
         onClick={() => {
@@ -518,7 +514,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Minus className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Buy / Sell</span>
+        <span className="text-white font-medium">{_copy("copy.dde0cacd953d", { defaultValue: "Buy / Sell" })}</span>
       </button>
       <button
         onClick={() => (hasAddressChoice ? setMenuView('receive') : handleCopyAddress())}
@@ -528,8 +524,8 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4 text-white" />}
         </div>
         <div className="flex flex-col">
-          <span className="text-white font-medium">Receive Coins</span>
-          <span className="text-xs text-zinc-400">{formattedWalletAddress ?? 'Connect wallet'}</span>
+          <span className="text-white font-medium">{_copy("copy.f322a587e79e", { defaultValue: "Receive Coins" })}</span>
+          <span className="text-xs text-zinc-400">{formattedWalletAddress ?? _copy("copy.7b1f118169bc", { defaultValue: "Connect wallet" })}</span>
         </div>
       </button>
       <button
@@ -539,7 +535,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
         <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
           <Lock className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Stake Coins</span>
+        <span className="text-white font-medium">{_copy("copy.b051ea55295c", { defaultValue: "Stake Coins" })}</span>
       </button>
     </div>
   );

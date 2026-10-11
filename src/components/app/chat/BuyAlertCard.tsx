@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 /**
  * Shared Buy Alert Card
@@ -43,6 +44,7 @@ interface BuyAlertCardProps {
 }
 
 export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) {
+  const { t: _copy } = _useCopy();
   const [confirming, setConfirming] = useState(false);
 
   let data: BuyAlertData | null = null;
@@ -59,9 +61,7 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
           {/* Confirmation overlay */}
           {confirming && (
             <div className="mb-2.5 p-2.5 rounded-lg bg-white/5 border border-white/10">
-              <p className="text-zinc-300 text-[11px] leading-relaxed mb-2">
-                Are you sure you want to hide all past and future buy bot messages?
-              </p>
+              <p className="text-zinc-300 text-[11px] leading-relaxed mb-2">{_copy("copy.60e7431f98a2", { defaultValue: "Are you sure you want to hide all past and future buy bot messages?" })}</p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
@@ -69,15 +69,11 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
                     setConfirming(false);
                   }}
                   className="px-3 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[11px] font-medium transition-colors"
-                >
-                  Confirm
-                </button>
+                >{_copy("copy.eebdd24a77d9", { defaultValue: "Confirm" })}</button>
                 <button
                   onClick={() => setConfirming(false)}
                   className="px-3 py-1 rounded-md bg-white/5 hover:bg-white/10 text-zinc-400 text-[11px] font-medium transition-colors"
-                >
-                  Cancel
-                </button>
+                >{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</button>
               </div>
             </div>
           )}
@@ -85,13 +81,13 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-1.5">
               <img src={dehubCoin} alt={tokenLabel()} className="w-5 h-5" />
-              <span className="font-bold text-white text-sm tracking-wide">{fmtTokens(data.dhbAmount)} BUY</span>
+              <span className="font-bold text-white text-sm tracking-wide">{fmtTokens(data.dhbAmount)}{_copy("copy.4c917437a03f", { defaultValue: " BUY" })}</span>
             </div>
             {onHide && !confirming && (
               <button
                 onClick={() => setConfirming(true)}
                 className="p-0.5 rounded hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors"
-                title="Hide buy bot alerts"
+                title={_copy("copy.9df4802820a6", { defaultValue: "Hide buy bot alerts" })}
               >
                 <Minus className="w-3.5 h-3.5" />
               </button>
@@ -101,7 +97,7 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
           <div className="space-y-1.5">
             <div className="flex items-center gap-1.5">
               <span className="text-sm">💸</span>
-              <span className="text-zinc-400">Spent:</span>
+              <span className="text-zinc-400">{_copy("copy.f541afdb3850", { defaultValue: "Spent:" })}</span>
               <span className="text-white font-semibold">
                 {data.ethSpent > 0
                   ? `${data.ethSpent.toFixed(4)} ETH`
@@ -114,22 +110,20 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
 
             <div className="flex items-center gap-1.5">
               <span className="text-sm">🟢</span>
-              <span className="text-zinc-400">Buyer:</span>
+              <span className="text-zinc-400">{_copy("copy.ead0a1f8a3d5", { defaultValue: "Buyer:" })}</span>
               <span className="flex items-center gap-1.5">
                 <a href={buyerUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-mono">
                   {data.shortBuyer}
                 </a>
                 <span className="text-zinc-600">|</span>
-                <a href={basescanUrl} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white underline">
-                  Txn
-                </a>
+                <a href={basescanUrl} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white underline">{_copy("copy.cf8e8ad4d277", { defaultValue: "Txn" })}</a>
               </span>
             </div>
 
             {data.newBalance > 0 && (
               <div className="flex items-center gap-1.5">
                 <span className="text-sm">🔼</span>
-                <span className="text-zinc-400">Balance:</span>
+                <span className="text-zinc-400">{_copy("copy.e0351221d473", { defaultValue: "Balance:" })}</span>
                 <span className="text-white font-semibold">
                   {fmtTokens(data.newBalance)}{' '}
                   {data.balanceChangePct > 0 && (
@@ -143,7 +137,7 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
 
             <div className="flex items-center gap-1.5">
               <span className="text-sm">💲</span>
-              <span className="text-zinc-400">Price:</span>
+              <span className="text-zinc-400">{_copy("copy.bfc89dd8228b", { defaultValue: "Price:" })}</span>
               <span className="text-white font-semibold">
                 ${data.priceUsd.toFixed(7)}
               </span>
@@ -152,7 +146,7 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
             {data.marketCapUsd != null && (
               <div className="flex items-center gap-1.5">
                 <span className="text-sm">📊</span>
-                <span className="text-zinc-400">Market cap:</span>
+                <span className="text-zinc-400">{_copy("copy.32acbd96e5cd", { defaultValue: "Market cap:" })}</span>
                 <span className="text-white font-semibold">
                   {fmt(data.marketCapUsd, 0)}
                 </span>

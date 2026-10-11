@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 
 import React, { useState, useRef, useEffect } from 'react';
 
@@ -25,6 +26,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   height,
   fetchPriority,
 }) => {
+  const { t: _copy } = _useCopy();
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(loading === 'eager');
   const [hasError, setHasError] = useState(false);
@@ -71,9 +73,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         <div className="absolute inset-0 bg-sky-blue/10 animate-pulse rounded"></div>
       )}
       {hasError ? (
-        <div className="flex items-center justify-center bg-sky-blue/5 text-royal-blue/60 text-sm p-4 rounded">
-          Image failed to load
-        </div>
+        <div className="flex items-center justify-center bg-sky-blue/5 text-royal-blue/60 text-sm p-4 rounded">{_copy("copy.d4719771b47b", { defaultValue: "Image failed to load" })}</div>
       ) : (
         <img
           ref={imgRef}

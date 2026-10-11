@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * AdFundingStep
  * =============
@@ -115,6 +116,7 @@ interface AdFundingStepProps {
 }
 
 export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundingStepProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [phase, setPhase] = useState<Phase>('scanning');
   const [pick, setPick] = useState<Pick | null>(null);
@@ -337,9 +339,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
 
       {phase === 'scanning' && (
         <div className="flex items-center justify-center gap-2 py-3 text-sm text-zinc-400">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          Finding the quickest way to fund this…
-        </div>
+          <Loader2 className="w-4 h-4 animate-spin" />{_copy("copy.f5ed952637f1", { defaultValue: "Finding the quickest way to fund this…" })}</div>
       )}
 
       {phase === 'paused' && (
@@ -361,9 +361,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
           <p className="text-center text-[11px] text-zinc-500 px-2">
             {t('ads.leaveOpenTokensLand')}
           </p>
-          <Button variant="glass" className="w-full" onClick={() => { stopPolling(); setPhase('ready'); }}>
-            Stop waiting
-          </Button>
+          <Button variant="glass" className="w-full" onClick={() => { stopPolling(); setPhase('ready'); }}>{_copy("copy.d4af24be4049", { defaultValue: "Stop waiting" })}</Button>
         </>
       )}
 
@@ -390,11 +388,9 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
                   : <Wallet className="w-5 h-5 text-white/70" />}
                 <div className="text-left flex-1">
                   <span className="text-sm font-medium text-white">
-                    {phase === 'swapping' ? t('ads.buyingDhb') : `Pay with ${pick.token.symbol} you already hold`}
+                    {phase === 'swapping' ? t('ads.buyingDhb') : _copy("copy.d5f002181e09", { defaultValue: "Pay with {{value1}} you already hold", value1: pick.token.symbol })}
                   </span>
-                  <p className="text-xs text-white/40">
-                    About {formatToken(pick.route.amountIn, pick.token.decimals)} {pick.token.symbol} · instant
-                  </p>
+                  <p className="text-xs text-white/40">{_copy("copy.c381a5010d7e", { defaultValue: "About " })}{formatToken(pick.route.amountIn, pick.token.decimals)} {pick.token.symbol}{_copy("copy.ebf10f39f357", { defaultValue: " · instant" })}</p>
                 </div>
                 {phase !== 'swapping' && <ArrowRight className="w-4 h-4 text-white/40" />}
               </button>
@@ -418,7 +414,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
               >
                 <CreditCard className="w-5 h-5 text-white/70" />
                 <div className="text-left flex-1">
-                  <span className="text-sm font-medium text-white">Pay ${cardUsd} by card</span>
+                  <span className="text-sm font-medium text-white">{_copy("copy.90c8ade7de6f", { defaultValue: "Pay $" })}{cardUsd}{_copy("copy.4745dfade438", { defaultValue: " by card" })}</span>
                   <p className="text-xs text-white/40">{t('ads.cardMethods')}</p>
                 </div>
                 <ExternalLink className="w-4 h-4 text-white/40" />
@@ -434,9 +430,7 @@ export function AdFundingStep({ needDhb, haveDhb, onFunded, onCancel }: AdFundin
             )}
           </div>
 
-          <Button variant="glass" className="w-full" onClick={onCancel} disabled={phase === 'swapping'}>
-            Not now
-          </Button>
+          <Button variant="glass" className="w-full" onClick={onCancel} disabled={phase === 'swapping'}>{_copy("copy.a0e63d7c7125", { defaultValue: "Not now" })}</Button>
         </>
       )}
     </div>

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Post Metadata Component
  * =======================
@@ -37,6 +38,7 @@ interface PostMetadataProps {
 }
 
 export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, isAudio, translateControl, watched }: PostMetadataProps) {
+  const { t: _copy } = _useCopy();
   const { t, i18n } = useTranslation();
 
   // Format timestamp - if it's an ISO string, convert to relative time
@@ -46,6 +48,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
       : timestamp
   ) : undefined;
 
+  const displayedCount = typeof viewCount === 'string' ? viewCount.replace(/\s+views?$/i, '') : viewCount;
   const hasViews = viewCount !== undefined && viewCount !== null;
   const hasMetadata = formattedTimestamp || hasViews;
 
@@ -76,7 +79,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
       <button
         onClick={translateControl.onTranslate}
         disabled={translateControl.isLoading}
-        aria-label="Translate this post"
+        aria-label={_copy("copy.2f45e002d1d8", { defaultValue: "Translate this post" })}
         className={cn(
           "flex items-center gap-1 transition-colors",
           translateControl.error 
@@ -108,9 +111,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
   return (
     <div data-post-metadata className={cn("flex items-center gap-2 text-zinc-500 text-xs flex-wrap", className)}>
       {isAd && (
-        <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
-          AD
-        </span>
+        <span className="px-1.5 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">{_copy("copy.c7bf4bbdbcd8", { defaultValue: "AD" })}</span>
       )}
       {isAd && hasMetadata && <span>•</span>}
       {formattedTimestamp && <span>{formattedTimestamp}</span>}
@@ -118,7 +119,7 @@ export function PostMetadata({ className, timestamp, viewCount, tokenId, isAd, i
       {hasViews && (
         <span className="flex items-center gap-1">
           {isAudio ? <Headphones className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
-          <span>{viewCount}{watched ? watchedLabel(i18n.resolvedLanguage ?? i18n.language) : ''}</span>
+          <span>{displayedCount}{watched ? watchedLabel(i18n.resolvedLanguage ?? i18n.language) : ''}</span>
         </span>
       )}
       {hasMetadata && translateControl && <span>•</span>}

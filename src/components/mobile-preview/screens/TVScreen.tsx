@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
@@ -15,6 +16,7 @@ const MOCK_CHANNELS = [
 const CATEGORIES = ['All', 'Crypto', 'News', 'Finance', 'Music', 'Education'];
 
 export function TVScreen() {
+  const { t: _copy } = _useCopy();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
@@ -42,19 +44,19 @@ export function TVScreen() {
           </div>
           <div className="absolute bottom-2 left-2 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm rounded px-2 py-1">
             <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-            <span className="text-[10px] text-white font-medium">LIVE</span>
-            <span className="text-[10px] text-zinc-400">12.4K watching</span>
+            <span className="text-[10px] text-white font-medium">{_copy("copy.35e0d0360a0a", { defaultValue: "LIVE" })}</span>
+            <span className="text-[10px] text-zinc-400">{_copy("copy.9a65602c6c31", { defaultValue: "12.4K watching" })}</span>
           </div>
         </div>
         <div className="p-3 bg-white/[0.02]">
-          <h3 className="text-white text-sm font-semibold">CryptoTV Live — Market Analysis</h3>
-          <p className="text-zinc-500 text-xs mt-0.5">Live stream • Crypto</p>
+          <h3 className="text-white text-sm font-semibold">{_copy("copy.194952e5d71d", { defaultValue: "CryptoTV Live — Market Analysis" })}</h3>
+          <p className="text-zinc-500 text-xs mt-0.5">{_copy("copy.35d28d22dfa5", { defaultValue: "Live stream • Crypto" })}</p>
         </div>
       </div>
 
       {/* Channel list */}
       <div className="px-4 flex-1">
-        <h3 className="text-white text-sm font-semibold mb-3">All Channels</h3>
+        <h3 className="text-white text-sm font-semibold mb-3">{_copy("copy.8a422ea5d758", { defaultValue: "All Channels" })}</h3>
         <div className="space-y-1">
           {MOCK_CHANNELS.map((channel) => (
             <div key={channel.name} className="flex items-center gap-3 py-2.5 rounded-lg">

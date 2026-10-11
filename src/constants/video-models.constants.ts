@@ -1,3 +1,4 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
 /**
  * Video Generation Models Configuration
  * Premium models available via Replicate API and fal.ai
@@ -115,7 +116,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'seedance-2.5': {
     id: 'seedance-2.5',
     name: 'Seedance 2.5',
-    description: 'ByteDance flagship — 30s takes, best prompt adherence',
+    get description() { return _translateCopy("copy.b8c339f21031", { defaultValue: "ByteDance flagship — 30s takes, best prompt adherence" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-30s',
     tier: 'premium',
@@ -151,7 +152,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'kling-2.6-pro': {
     id: 'kling-2.6-pro',
     name: 'Kling 2.6 Pro',
-    description: 'Top-tier cinematic with native audio',
+    get description() { return _translateCopy("copy.4bddb1751509", { defaultValue: "Top-tier cinematic with native audio" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '5-10s',
     tier: 'premium',
@@ -177,7 +178,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'luma-ray2': {
     id: 'luma-ray2',
     name: 'Luma Ray 2',
-    description: 'Photorealistic, dreamy aesthetic (720p)',
+    get description() { return _translateCopy("copy.897e18877075", { defaultValue: "Photorealistic, dreamy aesthetic (720p)" }); },
     supports: ['text-to-video'],
     duration: '5s',
     tier: 'premium',
@@ -194,7 +195,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'runway-gen4': {
     id: 'runway-gen4',
     name: 'Runway Gen-4 Turbo',
-    description: 'Animate images (requires image)',
+    get description() { return _translateCopy("copy.3385bf19ecf6", { defaultValue: "Animate images (requires image)" }); },
     supports: ['image-to-video'],
     duration: '5-10s',
     tier: 'premium',
@@ -216,7 +217,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'minimax-video': {
     id: 'minimax-video',
     name: 'Minimax Video-01',
-    description: 'Fast generation, great quality',
+    get description() { return _translateCopy("copy.f508a0cf129e", { defaultValue: "Fast generation, great quality" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '6s',
     tier: 'standard',
@@ -232,7 +233,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'ltx-video': {
     id: 'ltx-video',
     name: 'LTX Video',
-    description: 'Fast and efficient',
+    get description() { return _translateCopy("copy.8884959c3902", { defaultValue: "Fast and efficient" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s',
     tier: 'fast',
@@ -250,7 +251,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'seedance-1.5-pro': {
     id: 'seedance-1.5-pro',
     name: 'Seedance 1.5 Pro',
-    description: 'ByteDance cinematic with native audio',
+    get description() { return _translateCopy("copy.ee76a220959c", { defaultValue: "ByteDance cinematic with native audio" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '2-12s',
     tier: 'premium',
@@ -275,7 +276,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'seedance-2.0': {
     id: 'seedance-2.0',
     name: 'Seedance 2.0',
-    description: 'Latest ByteDance model, superior quality & audio',
+    get description() { return _translateCopy("copy.c5a1d3b9268d", { defaultValue: "Latest ByteDance model, superior quality & audio" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-15s',
     tier: 'premium',
@@ -310,7 +311,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'seedance-2.0-fast': {
     id: 'seedance-2.0-fast',
     name: 'Seedance 2.0 Fast',
-    description: 'Faster generation, slightly lower quality',
+    get description() { return _translateCopy("copy.f4a56d3cb00f", { defaultValue: "Faster generation, slightly lower quality" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-15s',
     tier: 'standard',
@@ -354,7 +355,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'veo-3.1': {
     id: 'veo-3.1',
     name: 'Veo 3.1',
-    description: 'Google flagship, ultra-realistic with audio',
+    get description() { return _translateCopy("copy.8e831aaaa051", { defaultValue: "Google flagship, ultra-realistic with audio" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-8s',
     tier: 'premium',
@@ -380,7 +381,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'veo-3.1-fast': {
     id: 'veo-3.1-fast',
     name: 'Veo 3.1 Fast',
-    description: 'Veo look, a quarter of the price',
+    get description() { return _translateCopy("copy.d593de2ed999", { defaultValue: "Veo look, a quarter of the price" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-8s',
     tier: 'standard',
@@ -405,7 +406,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'kling-3.0': {
     id: 'kling-3.0',
     name: 'Kling 3.0 Pro',
-    description: 'Multi-shot, audio sync, long takes',
+    get description() { return _translateCopy("copy.e2741c299499", { defaultValue: "Multi-shot, audio sync, long takes" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '3-15s',
     tier: 'premium',
@@ -430,7 +431,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'kling-3.0-standard': {
     id: 'kling-3.0-standard',
     name: 'Kling 3.0 Standard',
-    description: 'Same model, lighter render tier',
+    get description() { return _translateCopy("copy.b50840a8facb", { defaultValue: "Same model, lighter render tier" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '3-15s',
     tier: 'standard',
@@ -454,7 +455,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'kling-2.5-turbo': {
     id: 'kling-2.5-turbo',
     name: 'Kling 2.5 Turbo Pro',
-    description: 'Fluid motion and tight prompt precision, no audio',
+    get description() { return _translateCopy("copy.ea5e0b780f7b", { defaultValue: "Fluid motion and tight prompt precision, no audio" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s or 10s',
     tier: 'standard',
@@ -479,7 +480,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'hailuo-2.3': {
     id: 'hailuo-2.3',
     name: 'MiniMax Hailuo 2.3',
-    description: 'Natural physics and facial emotion',
+    get description() { return _translateCopy("copy.c1cc166082bf", { defaultValue: "Natural physics and facial emotion" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '6s',
     tier: 'premium',
@@ -496,7 +497,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'hailuo-2.3-fast': {
     id: 'hailuo-2.3-fast',
     name: 'Hailuo 2.3 Fast',
-    description: 'Quicker, cheaper Hailuo',
+    get description() { return _translateCopy("copy.970971377727", { defaultValue: "Quicker, cheaper Hailuo" }); },
     supports: ['image-to-video'],
     duration: '6s',
     tier: 'standard',
@@ -512,7 +513,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'wan-2.6': {
     id: 'wan-2.6',
     name: 'Wan 2.6',
-    description: 'Character-consistent with synced audio',
+    get description() { return _translateCopy("copy.cc65f4a45ebf", { defaultValue: "Character-consistent with synced audio" }); },
     supports: ['image-to-video'],
     duration: '5-10s',
     tier: 'premium',
@@ -538,7 +539,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'wan-2.5': {
     id: 'wan-2.5',
     name: 'Wan 2.5',
-    description: 'Open-weight, stylised and experimental',
+    get description() { return _translateCopy("copy.a525541f3e90", { defaultValue: "Open-weight, stylised and experimental" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '5-10s',
     tier: 'standard',
@@ -563,7 +564,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'luma-ray2-flash': {
     id: 'luma-ray2-flash',
     name: 'Luma Ray 2 Flash',
-    description: 'Dreamy Luma aesthetic, budget tier',
+    get description() { return _translateCopy("copy.18ecea8f32e4", { defaultValue: "Dreamy Luma aesthetic, budget tier" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '5s',
     tier: 'fast',
@@ -585,7 +586,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'pixverse-v5': {
     id: 'pixverse-v5',
     name: 'PixVerse V5',
-    description: 'Stylised and anime-leaning motion',
+    get description() { return _translateCopy("copy.b19b2e83cbb1", { defaultValue: "Stylised and anime-leaning motion" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '5-8s',
     tier: 'standard',
@@ -608,7 +609,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   'ltx-13b': {
     id: 'ltx-13b',
     name: 'LTX Video 13B',
-    description: 'Cheapest per second, fast drafts',
+    get description() { return _translateCopy("copy.d2847c1435c7", { defaultValue: "Cheapest per second, fast drafts" }); },
     supports: ['text-to-video', 'image-to-video'],
     duration: '5-10s',
     tier: 'fast',

@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Stages Page
  * ===========
@@ -81,6 +82,7 @@ function ScheduledStageCard({
   onCancel: () => void;
   onShare: () => void;
 }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const startsAt = space.scheduled_at ? new Date(space.scheduled_at) : null;
   const isOverdue = !!startsAt && startsAt.getTime() < Date.now();
@@ -172,7 +174,7 @@ function ScheduledStageCard({
             <CalendarDays className="w-3 h-3 shrink-0" />
             {format(startsAt, 'EEE, MMM d · h:mm a')}
             {!isOverdue && (
-              <span className="text-zinc-500">· in {formatDistanceToNowStrict(startsAt)}</span>
+              <span className="text-zinc-500">{_copy("copy.1345f685c721", { defaultValue: "· in " })}{formatDistanceToNowStrict(startsAt)}</span>
             )}
           </p>
         )}
@@ -358,6 +360,7 @@ function LiveStageCard({
 }
 
 export default function StagesPage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<StagesTab>('live');
   const {
@@ -510,10 +513,7 @@ export default function StagesPage() {
         <div data-page-bento data-kit-section className="bg-zinc-900 p-8 text-center">
           <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
           <h2 className="text-white font-semibold">{t('stages.nothingScheduled')}</h2>
-          <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
-            Announce a stage ahead of time and it shows up here — with a card
-            people can share before you go live.
-          </p>
+          <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">{_copy("copy.69c2b5bc0840", { defaultValue: "Announce a stage ahead of time and it shows up here — with a card people can share before you go live." })}</p>
           <KitButton onClick={() => openModal('create')} className="mt-4 inline-flex items-center gap-2">
             <CalendarDays className="w-4 h-4" />
             {t('stages.scheduleAStage')}
@@ -556,9 +556,7 @@ export default function StagesPage() {
           <div data-page-bento data-kit-section className="bg-zinc-900 p-8 text-center">
             <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
             <h2 className="text-white font-semibold">{t('stages.noLiveStages')}</h2>
-            <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
-              Start a stage and go live with your audience, or listen back to a recorded one below.
-            </p>
+            <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">{_copy("copy.945bf05a81a4", { defaultValue: "Start a stage and go live with your audience, or listen back to a recorded one below." })}</p>
             <KitButton onClick={() => openModal('create')} className="mt-4 inline-flex items-center gap-2">
               <Plus className="w-4 h-4" />
               {t('stages.startAStageButton')}
@@ -702,14 +700,14 @@ export default function StagesPage() {
     <div className="min-h-screen" data-stages-page>
       <SEOHead
         title={t('stages.seoTitle')}
-        description="Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform."
+        description={_copy("copy.6cbd1288cf63", { defaultValue: "Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform." })}
         url="https://dehub.io/stages"
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           name: 'DeHub Stages',
           url: 'https://dehub.io/stages',
-          description: 'Live audio rooms and recorded conversations on DeHub.',
+          description: _copy("copy.9670b2daa982", { defaultValue: "Live audio rooms and recorded conversations on DeHub." }),
           isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
         }}
       />
@@ -717,7 +715,7 @@ export default function StagesPage() {
 
       <PageIsland
         icon={<BrandIcon src={stagesMicIcon} alt="" className="h-8 w-8 object-contain" />}
-        title="Stages"
+        title={_copy("copy.3a17aa4e4abb", { defaultValue: "Stages" })}
         subtitle={
           liveSpaces.length > 0
             ? t('stages.liveCount', { count: liveSpaces.length })

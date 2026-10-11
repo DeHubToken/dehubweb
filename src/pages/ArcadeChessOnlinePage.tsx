@@ -1,3 +1,5 @@
+import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { useTranslation as _useCopy } from 'react-i18next';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 /**
  * Online King's Gambit
@@ -63,9 +65,9 @@ const OPEN_QUERY_KEY = 'chess-open-challenges';
 const MINE_QUERY_KEY = 'chess-my-match';
 
 const CLOCK_CHOICES = [
-  { label: '5 min', ms: 5 * 60_000 },
-  { label: '10 min', ms: 10 * 60_000 },
-  { label: '15 min', ms: 15 * 60_000 },
+  { get label() { return _translateCopy("copy.53bc57cdb692", { defaultValue: "5 min" }); }, ms: 5 * 60_000 },
+  { get label() { return _translateCopy("copy.8361323b37e4", { defaultValue: "10 min" }); }, ms: 10 * 60_000 },
+  { get label() { return _translateCopy("copy.8d616d350961", { defaultValue: "15 min" }); }, ms: 15 * 60_000 },
 ] as const;
 
 interface ChessMatch {
@@ -207,6 +209,7 @@ function ChallengeRow({
   onJoin: (match: ChessMatch) => void;
   onCancel: (match: ChessMatch) => void;
 }) {
+  const { t: _copy } = _useCopy();
   const minutes = Math.round(match.clock_initial_ms / 60_000);
   const name = profileName(profile, match.created_by);
   const avatarUrl = profileAvatar(profile, match.created_by);
@@ -229,14 +232,14 @@ function ChallengeRow({
                 className="h-[1em] w-[1em]"
               />
             </span>
-            {mine ? <span className="shrink-0 text-[10px] font-normal text-zinc-500">(you)</span> : null}
+            {mine ? <span className="shrink-0 text-[10px] font-normal text-zinc-500">{_copy("copy.d1eb47c77576", { defaultValue: "(you)" })}</span> : null}
           </p>
           <p className="truncate text-xs text-zinc-500">
             {profile?.username ? `@${profile.username} · ` : ''}
             {recordLine(record)}
           </p>
           <p className="text-xs text-zinc-500">
-            {minutes} min · {match.start_fen ? "King's Gambit opening" : 'Standard'}
+            {minutes}{_copy("copy.46e2a1c0fa99", { defaultValue: " min · " })}{match.start_fen ? _copy("copy.d8548d6fc0b9", { defaultValue: "King's Gambit opening" }) : _copy("copy.ef6691545d2c", { defaultValue: "Standard" })}
           </p>
         </div>
       </div>
@@ -247,8 +250,7 @@ function ChallengeRow({
           onClick={() => onCancel(match)}
           className="flex shrink-0 items-center gap-1.5 rounded-lg bg-zinc-800 px-3 py-2 text-xs font-semibold text-zinc-300 transition-colors hover:bg-zinc-700 disabled:opacity-50"
         >
-          <X className="h-3.5 w-3.5" /> Withdraw
-        </button>
+          <X className="h-3.5 w-3.5" />{_copy("copy.36fa4d4f60f5", { defaultValue: " Withdraw" })}</button>
       ) : (
         <button
           type="button"
@@ -256,8 +258,7 @@ function ChallengeRow({
           onClick={() => onJoin(match)}
           className="flex shrink-0 items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90 disabled:opacity-50"
         >
-          <Swords className="h-3.5 w-3.5" /> Accept
-        </button>
+          <Swords className="h-3.5 w-3.5" />{_copy("copy.b50104341b2b", { defaultValue: " Accept" })}</button>
       )}
     </div>
   );
@@ -266,6 +267,7 @@ function ChallengeRow({
 // ----------------------------------------------------------------- the page
 
 export default function ArcadeChessOnlinePage() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -634,11 +636,11 @@ export default function ArcadeChessOnlinePage() {
     const finished = match.status === 'finished';
     return (
       <div className="fixed inset-0 z-[100] bg-black">
-        <SEOHead title="Online match | King's Gambit | DeHub Arcade" noindex />
+        <SEOHead title={_copy("copy.1b21e44c944d", { defaultValue: "Online match | King's Gambit | DeHub Arcade" })} noindex />
         <iframe
           ref={frameRef}
           src={FRAME_URL}
-          title="King's Gambit — online match"
+          title={_copy("copy.623fddd8b12d", { defaultValue: "King's Gambit — online match" })}
           className="h-full w-full border-0"
           allow="fullscreen; autoplay"
           sandbox={ARCADE_SANDBOX}
@@ -650,16 +652,13 @@ export default function ArcadeChessOnlinePage() {
           <div className="absolute inset-x-0 bottom-8 z-20 flex justify-center">
             <div className="pointer-events-auto flex items-center gap-4 rounded-full bg-zinc-900/95 py-2 pl-5 pr-2 ring-1 ring-white/10">
               <span className="flex items-center gap-2 text-xs text-zinc-300">
-                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Waiting for an opponent…
-              </span>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />{_copy("copy.732d77e12c28", { defaultValue: " Waiting for an opponent…" })}</span>
               <button
                 type="button"
                 disabled={busy}
                 onClick={() => void cancelChallenge(match)}
                 className="rounded-full bg-zinc-800 px-3 py-1.5 text-xs font-semibold text-zinc-200 transition-colors hover:bg-zinc-700 disabled:opacity-50"
-              >
-                Withdraw
-              </button>
+              >{_copy("copy.164546a9c548", { defaultValue: "Withdraw" })}</button>
             </div>
           </div>
         ) : null}
@@ -669,9 +668,7 @@ export default function ArcadeChessOnlinePage() {
               type="button"
               onClick={() => setMatch(null)}
               className="pointer-events-auto rounded-full bg-white px-5 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
-            >
-              Back to the lobby
-            </button>
+            >{_copy("copy.5a398d82529e", { defaultValue: "Back to the lobby" })}</button>
           </div>
         ) : null}
       </div>
@@ -681,27 +678,24 @@ export default function ArcadeChessOnlinePage() {
   return (
     <div data-glass-page data-theme-page-surface className="relative z-[1] min-h-screen bg-black">
       <SEOHead
-        title="Play online | King's Gambit | DeHub Arcade"
-        description="Challenge another player to cinematic 3D chess. Open a challenge or accept one from the lobby."
+        title={_copy("copy.7596c44092d2", { defaultValue: "Play online | King's Gambit | DeHub Arcade" })}
+        description={_copy("copy.f627491c1ceb", { defaultValue: "Challenge another player to cinematic 3D chess. Open a challenge or accept one from the lobby." })}
         noindex
       />
       <div className="mx-auto max-w-2xl px-4 pb-24 pt-8">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="flex items-center gap-2 text-xl font-bold text-white">
-              <Crown className="h-5 w-5" /> King&apos;s Gambit online
-            </h1>
+              <Crown className="h-5 w-5" />{_copy("copy.a8389d07e77b", { defaultValue: " King's Gambit online" })}</h1>
             <p className="mt-1 text-xs text-zinc-500">{t('arcade.chessOnlineIntro')}</p>
           </div>
-          <Link to="/arcade/kings-gambit" className="text-xs text-zinc-400 underline-offset-2 hover:text-white hover:underline">
-            Play the computer instead
-          </Link>
+          <Link to="/arcade/kings-gambit" className="text-xs text-zinc-400 underline-offset-2 hover:text-white hover:underline">{_copy("copy.c1cb588cc55c", { defaultValue: "Play the computer instead" })}</Link>
         </div>
 
         {!wallet ? (
           <div className="rounded-2xl bg-zinc-900 px-5 py-8 text-center ring-1 ring-white/[0.06]">
-            <p className="text-sm text-zinc-300">Sign in to challenge another player.</p>
-            <p className="mt-1 text-xs text-zinc-500">The lobby needs to know whose banner you fly.</p>
+            <p className="text-sm text-zinc-300">{_copy("copy.c3f04ec9417c", { defaultValue: "Sign in to challenge another player." })}</p>
+            <p className="mt-1 text-xs text-zinc-500">{_copy("copy.3538df545e54", { defaultValue: "The lobby needs to know whose banner you fly." })}</p>
           </div>
         ) : (
           <>
@@ -713,18 +707,18 @@ export default function ArcadeChessOnlinePage() {
               >
                 <span className="text-sm font-medium text-amber-200">
                   {myLiveMatch.status === 'active'
-                    ? `Your battle with ${profileName(
+                    ? _copy("copy.65bc4474f7ea", { defaultValue: "Your battle with {{value1}} is under way", value1: profileName(
                         profiles[otherPlayer(myLiveMatch, wallet) ?? ''],
                         otherPlayer(myLiveMatch, wallet),
-                      )} is under way`
-                    : 'Your challenge is still open'}
+                      ) })
+                    : _copy("copy.1700ca3eae6a", { defaultValue: "Your challenge is still open" })}
                 </span>
-                <span className="text-xs font-semibold text-amber-400">Return to the board →</span>
+                <span className="text-xs font-semibold text-amber-400">{_copy("copy.963e89830f1e", { defaultValue: "Return to the board →" })}</span>
               </button>
             ) : null}
 
             <div className="rounded-2xl bg-zinc-900 p-5 ring-1 ring-white/[0.06]">
-              <h2 className="text-sm font-semibold text-white">Open a challenge</h2>
+              <h2 className="text-sm font-semibold text-white">{_copy("copy.626282c72046", { defaultValue: "Open a challenge" })}</h2>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {CLOCK_CHOICES.map((choice) => (
                   <button
@@ -745,10 +739,8 @@ export default function ArcadeChessOnlinePage() {
                   className={`rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
                     variant === 'kings-gambit' ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                   }`}
-                  title="Every duel opens 1.e4 e5 2.f4 — the gambit the game is named for"
-                >
-                  King&apos;s Gambit opening
-                </button>
+                  title={_copy("copy.c72fc4eba330", { defaultValue: "Every duel opens 1.e4 e5 2.f4 — the gambit the game is named for" })}
+                >{_copy("copy.d8548d6fc0b9", { defaultValue: "King's Gambit opening" })}</button>
               </div>
               <button
                 type="button"
@@ -756,17 +748,15 @@ export default function ArcadeChessOnlinePage() {
                 onClick={() => void createChallenge()}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-xs font-semibold text-black transition-opacity hover:opacity-90 disabled:opacity-50"
               >
-                {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
-                Open the challenge
-              </button>
+                {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}{_copy("copy.63dc6f25690d", { defaultValue: "Open the challenge" })}</button>
             </div>
 
             <div className="mt-6">
-              <h2 className="mb-3 text-sm font-semibold text-white">Open challenges</h2>
+              <h2 className="mb-3 text-sm font-semibold text-white">{_copy("copy.ed0a60f493af", { defaultValue: "Open challenges" })}</h2>
               {lobbyLoading ? (
-                <p className="text-xs text-zinc-500">Reading the notice board…</p>
+                <p className="text-xs text-zinc-500">{_copy("copy.e27e62232360", { defaultValue: "Reading the notice board…" })}</p>
               ) : openChallenges.length === 0 ? (
-                <p className="text-xs text-zinc-500">No one is waiting. Open a challenge and hold the board.</p>
+                <p className="text-xs text-zinc-500">{_copy("copy.d663e7f748c1", { defaultValue: "No one is waiting. Open a challenge and hold the board." })}</p>
               ) : (
                 // Local provider: this route lives outside AppLayout, so the
                 // app-level TooltipProvider never wraps it, and BadgeIcon's

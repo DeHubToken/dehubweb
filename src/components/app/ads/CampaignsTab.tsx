@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * CampaignsTab
@@ -46,6 +47,7 @@ interface CampaignsTabProps {
 }
 
 export function CampaignsTab({ focusCampaignId, onFocusHandled, onNewCampaign }: CampaignsTabProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const { data: campaigns = [], isLoading } = useAdCampaigns();
@@ -70,8 +72,7 @@ export function CampaignsTab({ focusCampaignId, onFocusHandled, onNewCampaign }:
           <Rocket className="w-8 h-8 text-muted-foreground mx-auto" />
           <p className="text-sm text-muted-foreground">{t('ads.noCampaigns')}</p>
           <Button variant="glass" size="sm" onClick={onNewCampaign}>
-            <Plus className="w-4 h-4 mr-1" /> Create your first campaign
-          </Button>
+            <Plus className="w-4 h-4 mr-1" />{_copy("copy.c270b43aa0ca", { defaultValue: " Create your first campaign" })}</Button>
         </div>
       ) : (
         campaigns.map((c) => {
@@ -88,8 +89,8 @@ export function CampaignsTab({ focusCampaignId, onFocusHandled, onNewCampaign }:
                 <StatusPill status={c.status} />
               </div>
               <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground mb-2">
-                <span>{formatUsd(c.spent_usd)} of {formatUsd(c.total_budget_usd)}</span>
-                <span>{formatUsd(c.daily_budget_usd)}/day</span>
+                <span>{formatUsd(c.spent_usd)}{_copy("copy.a4282e4b2298", { defaultValue: " of " })}{formatUsd(c.total_budget_usd)}</span>
+                <span>{formatUsd(c.daily_budget_usd)}{_copy("copy.ea30d1c554b8", { defaultValue: "/day" })}</span>
               </div>
               <div className="h-1.5 rounded-full bg-foreground/10 overflow-hidden">
                 <div className="h-full rounded-full bg-foreground/50" style={{ width: `${progress * 100}%` }} />
@@ -112,6 +113,7 @@ export function CampaignsTab({ focusCampaignId, onFocusHandled, onNewCampaign }:
 // ---------------------------------------------------------------------------
 
 function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { data: campaign, isLoading } = useAdCampaign(id);
   const { data: creatives = [] } = useAdCreatives(id);
@@ -189,7 +191,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       onClick: () => setStatusFunded('pending_review', t('ads.submittedForReviewToast')),
     });
     actions.push({
-      label: 'Delete', icon: Trash2, danger: true,
+      label: _copy("copy.e2d0a54968ea", { defaultValue: "Delete" }), icon: Trash2, danger: true,
       onClick: () => deleteCampaign.mutate(id, { onSuccess: () => { toast.success(t('ads.draftDeleted')); onBack(); } }),
     });
   }
@@ -204,7 +206,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
     });
   }
   if (campaign.status === 'active') {
-    actions.push({ label: 'Pause', icon: Pause, onClick: () => setStatus('paused', t('ads.campaignPaused')) });
+    actions.push({ label: _copy("copy.858e4ba7a29f", { defaultValue: "Pause" }), icon: Pause, onClick: () => setStatus('paused', t('ads.campaignPaused')) });
   }
   if (campaign.status === 'paused') {
     actions.push({
@@ -212,10 +214,10 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
       icon: unfunded ? Wallet : Play,
       onClick: () => setStatusFunded('active', t('ads.campaignResumed')),
     });
-    actions.push({ label: 'Archive', icon: Archive, onClick: () => setStatus('archived', t('ads.campaignArchived')) });
+    actions.push({ label: _copy("copy.66f4804ee23d", { defaultValue: "Archive" }), icon: Archive, onClick: () => setStatus('archived', t('ads.campaignArchived')) });
   }
   if (campaign.status === 'completed') {
-    actions.push({ label: 'Archive', icon: Archive, onClick: () => setStatus('archived', t('ads.campaignArchived')) });
+    actions.push({ label: _copy("copy.66f4804ee23d", { defaultValue: "Archive" }), icon: Archive, onClick: () => setStatus('archived', t('ads.campaignArchived')) });
   }
 
   return (
@@ -231,7 +233,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
               <h2 className="text-lg font-bold text-foreground truncate">{campaign.name}</h2>
               <StatusPill status={campaign.status} />
             </div>
-            <p className="text-xs text-muted-foreground capitalize">{campaign.objective} · cap {campaign.frequency_cap}/day</p>
+            <p className="text-xs text-muted-foreground capitalize">{campaign.objective}{_copy("copy.69db30741f9c", { defaultValue: " · cap " })}{campaign.frequency_cap}{_copy("copy.ea30d1c554b8", { defaultValue: "/day" })}</p>
           </div>
         </div>
         <div className="flex gap-2 flex-wrap justify-end">
@@ -267,9 +269,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
                 : t('ads.zeroBalanceWarning')}
             </span>
           </div>
-          <Button size="sm" variant="glass" className="w-full" onClick={() => setTopUpOpen(true)}>
-            Top up
-          </Button>
+          <Button size="sm" variant="glass" className="w-full" onClick={() => setTopUpOpen(true)}>{_copy("copy.79f52e0ce619", { defaultValue: "Top up" })}</Button>
         </div>
       )}
 
@@ -321,7 +321,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
                 <div key={tier} className="flex items-center justify-between gap-3 rounded-xl border border-foreground/10 px-3.5 py-2.5 text-sm">
                   <span className="font-medium text-foreground">{tierLabel(tier)}</span>
                   <span className="text-muted-foreground text-xs">
-                    {formatCompact(v.impressions)} imp · {formatCompact(v.clicks)} clicks · {formatUsd(v.spend)}
+                    {formatCompact(v.impressions)}{_copy("copy.4a9c3a78d864", { defaultValue: " imp · " })}{formatCompact(v.clicks)}{_copy("copy.f12cc90aad82", { defaultValue: " clicks · " })}{formatUsd(v.spend)}
                   </span>
                 </div>
               ))}
@@ -351,7 +351,7 @@ function CampaignDetail({ id, onBack }: { id: string; onBack: () => void }) {
               setEditingTargeting((v) => !v);
             }}
           >
-            <PencilLine className="w-3.5 h-3.5 mr-1" /> {editingTargeting ? t('ads.saveTargeting') : 'Edit'}
+            <PencilLine className="w-3.5 h-3.5 mr-1" /> {editingTargeting ? t('ads.saveTargeting') : _copy("copy.464c4ffd019e", { defaultValue: "Edit" })}
           </Button>
         </div>
         {editingTargeting && targetingDraft ? (
@@ -418,6 +418,7 @@ function TargetingSummary({ targeting }: { targeting: AdTargeting }) {
 }
 
 function BudgetEditor({ campaign }: { campaign: { id: string; daily_budget_usd: number; total_budget_usd: number; spent_usd: number } }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const updateCampaign = useUpdateCampaign();
   const [daily, setDaily] = useSurfaceDraft("src/components/app/ads/CampaignsTab.tsx:daily", String(campaign.daily_budget_usd), campaign.id);
@@ -450,8 +451,7 @@ function BudgetEditor({ campaign }: { campaign: { id: string; daily_budget_usd: 
             )
           }
         >
-          {updateCampaign.isPending && <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />} Save budget
-        </Button>
+          {updateCampaign.isPending && <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />}{_copy("copy.6e85ceceef57", { defaultValue: " Save budget" })}</Button>
       )}
     </div>
   );
@@ -514,6 +514,7 @@ function CreativeCard({ creative }: { creative: AdCreative }) {
 }
 
 function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone: () => void }) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const createCreative = useCreateCreative();
@@ -549,7 +550,7 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
           {uploading ? <Loader2 className="w-4 h-4 animate-spin text-foreground" /> : (
             <>
               <Upload className="w-4 h-4 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">{mediaUrl ? t('ads.replaceFile') : `Upload ${kind}`}</span>
+              <span className="text-xs text-muted-foreground">{mediaUrl ? t('ads.replaceFile') : _copy("copy.00ec9936bf43", { defaultValue: "Upload {{value1}}", value1: kind })}</span>
             </>
           )}
           <input
@@ -598,8 +599,7 @@ function InlineCreativeForm({ campaignId, onDone }: { campaignId: string; onDone
             })
           }
         >
-          {createCreative.isPending && <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />} Add creative
-        </Button>
+          {createCreative.isPending && <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />}{_copy("copy.cf363753c3a6", { defaultValue: " Add creative" })}</Button>
       </div>
     </div>
   );

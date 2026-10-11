@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
@@ -13,11 +14,12 @@ const mockMessages = (t: TFunction) => [
 ];
 
 export function AssistantScreen() {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   return (
     <div className="min-h-full bg-black flex flex-col">
       <MobileStatusBar />
-      <MobileTopBar title="AI Assistant" showAvatar={false} showNotification={false} />
+      <MobileTopBar title={_copy("copy.0ad1b06f64f2", { defaultValue: "AI Assistant" })} showAvatar={false} showNotification={false} />
 
       {/* Messages */}
       <div className="flex-1 px-4 py-3 space-y-4 overflow-y-auto">
@@ -45,7 +47,7 @@ export function AssistantScreen() {
       <div className="px-4 pb-2 pt-2 border-t border-white/[0.06]">
         <div className="flex items-center gap-2">
           <div className="flex-1 h-10 rounded-xl bg-white/[0.06] border border-white/10 px-4 flex items-center">
-            <span className="text-zinc-600 text-sm">Ask anything...</span>
+            <span className="text-zinc-600 text-sm">{_copy("copy.da0e101a67e7", { defaultValue: "Ask anything..." })}</span>
           </div>
           <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center">
             <Send className="w-4 h-4 text-white" />

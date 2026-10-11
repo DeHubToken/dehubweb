@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Profile Link Embed
  * ==================
@@ -26,6 +27,7 @@ function formatCount(n: number): string {
 }
 
 export function ProfileLinkEmbed({ username, fallback = null }: ProfileLinkEmbedProps) {
+  const { t: _copy } = _useCopy();
   const navigate = useNavigate();
 
   const { data: user, isLoading, isError } = useQuery({
@@ -90,8 +92,7 @@ export function ProfileLinkEmbed({ username, fallback = null }: ProfileLinkEmbed
         {bio && <p className="text-xs text-slate-50 truncate mt-0.5">{bio}</p>}
         <div className="flex items-center gap-1.5 mt-1">
           <span className="text-xs text-zinc-500">
-            <span className="font-semibold text-zinc-300">{formatCount(followers)}</span> Followers
-          </span>
+            <span className="font-semibold text-zinc-300">{formatCount(followers)}</span>{_copy("copy.734016725161", { defaultValue: " Followers" })}</span>
         </div>
       </div>
     </button>

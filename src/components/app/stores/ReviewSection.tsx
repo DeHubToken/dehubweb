@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * ReviewSection — Full review system for store listings
@@ -21,6 +22,7 @@ interface ReviewSectionProps {
 }
 
 export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) {
+  const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
   const { data: reviews = [], isLoading } = useListingReviews(listingId);
@@ -65,9 +67,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
       >
         <div className="flex items-center gap-2">
           <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-          <span className="text-sm font-semibold text-primary-foreground">
-            Reviews
-          </span>
+          <span className="text-sm font-semibold text-primary-foreground">{_copy("copy.84cb7871b741", { defaultValue: "Reviews" })}</span>
           <span className="text-xs text-zinc-500">({reviews.length})</span>
         </div>
         {expanded ? <ChevronUp className="w-4 h-4 text-zinc-500" /> : <ChevronDown className="w-4 h-4 text-zinc-500" />}
@@ -83,7 +83,7 @@ export function ReviewSection({ listingId, sellerAddress }: ReviewSectionProps) 
                 <div className="flex flex-col items-center justify-center min-w-[72px]">
                   <span className="text-3xl font-bold text-primary-foreground">{avgRating.toFixed(1)}</span>
                   <StarRating value={avgRating} readonly size="sm" />
-                  <span className="text-[10px] text-zinc-500 mt-0.5">{reviews.length} review{reviews.length !== 1 ? 's' : ''}</span>
+                  <span className="text-[10px] text-zinc-500 mt-0.5">{reviews.length}{_copy("copy.68338686d5cd", { defaultValue: " review" })}{reviews.length !== 1 ? 's' : ''}</span>
                 </div>
                 {/* Distribution bars */}
                 <div className="flex-1 flex flex-col justify-center gap-1">

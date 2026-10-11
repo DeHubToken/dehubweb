@@ -1,3 +1,4 @@
+import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,6 +29,7 @@ type LogoAsset = {
 };
 
 const BrandAssets = () => {
+  const { t: _copy } = _useCopy();
   const { t } = useLanguage();
 
   const handleDownload = async (url: string, filename: string) => {
@@ -52,7 +54,7 @@ const BrandAssets = () => {
     {
       id: 'wordmark-white',
       name: 'Wordmark — White',
-      description: 'Full DeHub wordmark for use on dark backgrounds.',
+      description: _copy("copy.febe4ba8ab01", { defaultValue: "Full DeHub wordmark for use on dark backgrounds." }),
       url: wordmarkWhite.url,
       filename: 'dehub-wordmark-white.png',
       bg: 'dark',
@@ -60,7 +62,7 @@ const BrandAssets = () => {
     {
       id: 'wordmark-black',
       name: 'Wordmark — Black',
-      description: 'Full DeHub wordmark for use on light backgrounds.',
+      description: _copy("copy.b3a0a6360ee6", { defaultValue: "Full DeHub wordmark for use on light backgrounds." }),
       url: wordmarkBlack.url,
       filename: 'dehub-wordmark-black.png',
       bg: 'light',
@@ -68,7 +70,7 @@ const BrandAssets = () => {
     {
       id: 'mark-white',
       name: 'Mark — White',
-      description: 'DeHub icon mark for use on dark backgrounds.',
+      description: _copy("copy.91387693b21c", { defaultValue: "DeHub icon mark for use on dark backgrounds." }),
       url: markWhite.url,
       filename: 'dehub-mark-white.png',
       bg: 'dark',
@@ -76,7 +78,7 @@ const BrandAssets = () => {
     {
       id: 'mark-black',
       name: 'Mark — Black',
-      description: 'DeHub icon mark for use on light backgrounds.',
+      description: _copy("copy.eef94579ec7c", { defaultValue: "DeHub icon mark for use on light backgrounds." }),
       url: markBlack.url,
       filename: 'dehub-mark-black.png',
       bg: 'light',
@@ -151,12 +153,8 @@ const BrandAssets = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Palette className="w-5 h-5" />
-            Monochrome Palette
-          </CardTitle>
-          <CardDescription>
-            DeHub is strictly black, white and grey. No decorative colour.
-          </CardDescription>
+            <Palette className="w-5 h-5" />{_copy("copy.c67ade5cbfe4", { defaultValue: "Monochrome Palette" })}</CardTitle>
+          <CardDescription>{_copy("copy.5a28721d3125", { defaultValue: "DeHub is strictly black, white and grey. No decorative colour." })}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -203,16 +201,16 @@ const BrandAssets = () => {
         <CardContent>
           <div className="font-exo grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
             {[
-              { weight: 'font-black', label: 'Exo Black', value: '900' },
-              { weight: 'font-semibold', label: 'Exo Semi-bold', value: '600' },
-              { weight: 'font-medium', label: 'Exo Medium', value: '500' },
-              { weight: 'font-light', label: 'Exo Light', value: '300' },
+              { weight: 'font-black', label: "Exo Black", value: '900' },
+              { weight: 'font-semibold', label: "Exo Semi-bold", value: '600' },
+              { weight: 'font-medium', label: "Exo Medium", value: '500' },
+              { weight: 'font-light', label: "Exo Light", value: '300' },
             ].map((f) => (
               <div
                 key={f.value}
                 className="border border-border rounded-lg p-4 flex flex-col justify-center items-center"
               >
-                <p className={`text-5xl ${f.weight}`}>Aa</p>
+                <p className={`text-5xl ${f.weight}`}>{_copy("copy.81acaafba961", { defaultValue: "Aa" })}</p>
                 <p className="mt-2 text-lg font-semibold text-foreground">{f.label}</p>
                 <p className="text-sm text-muted-foreground">{f.value}</p>
               </div>
@@ -238,46 +236,34 @@ const BrandAssets = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <ImageIcon className="w-5 h-5" />
-            Social Media Templates
-          </CardTitle>
-          <CardDescription>
-            Editable Figma templates for social posts, banners and campaigns.
-          </CardDescription>
+            <ImageIcon className="w-5 h-5" />{_copy("copy.37c3f0f37b36", { defaultValue: "Social Media Templates" })}</CardTitle>
+          <CardDescription>{_copy("copy.19249dfea533", { defaultValue: "Editable Figma templates for social posts, banners and campaigns." })}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline" className="flex items-center gap-2 w-full sm:w-auto">
-                <ExternalLink className="w-4 h-4" />
-                Copy and edit
-              </Button>
+                <ExternalLink className="w-4 h-4" />{_copy("copy.f2c174c8b5b1", { defaultValue: "Copy and edit" })}</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Edit & Copy in Figma</DialogTitle>
-                <DialogDescription>
-                  Using Figma's free account tier, you can duplicate this file and edit as you please!
-                </DialogDescription>
+                <DialogTitle>{_copy("copy.283551a268cc", { defaultValue: "Edit & Copy in Figma" })}</DialogTitle>
+                <DialogDescription>{_copy("copy.121680131671", { defaultValue: "Using Figma's free account tier, you can duplicate this file and edit as you please!" })}</DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <img
                   src={figmaDuplicateInstruction.url}
-                  alt="Right-click a Figma file thumbnail and choose Duplicate"
+                  alt={_copy("copy.5e9fe00ece85", { defaultValue: "Right-click a Figma file thumbnail and choose Duplicate" })}
                   className="w-full rounded-xl border border-border"
                   loading="lazy"
                 />
-                <p className="text-sm text-muted-foreground">
-                  Simply right click on any file thumbnail in your recent or shared tabs then hit duplicate.
-                </p>
+                <p className="text-sm text-muted-foreground">{_copy("copy.3e046f2c30b1", { defaultValue: "Simply right click on any file thumbnail in your recent or shared tabs then hit duplicate." })}</p>
                 <Button asChild className="w-full rounded-2xl flex items-center gap-2">
                   <a
                     href="https://www.figma.com/design/BjnSoqSIFYXL73yz4svKLh/Dehub-SM-Template-2.0--Copy-"
                     target="_blank"
                     rel="noopener noreferrer"
-                  >
-                    Continue to Figma
-                    <ExternalLink className="w-4 h-4" />
+                  >{_copy("copy.8f7bdf474291", { defaultValue: "Continue to Figma" })}<ExternalLink className="w-4 h-4" />
                   </a>
                 </Button>
               </div>
@@ -285,7 +271,7 @@ const BrandAssets = () => {
           </Dialog>
           <div className="w-full rounded-lg overflow-hidden border border-border bg-black">
             <iframe
-              title="DeHub Social Media Templates"
+              title={_copy("copy.b86577a30956", { defaultValue: "DeHub Social Media Templates" })}
               src="https://embed.figma.com/design/BjnSoqSIFYXL73yz4svKLh/Dehub-SM-Template-2.0--Copy-?node-id=0-1&embed-host=share"
               className="w-full h-[600px] block"
               allowFullScreen
@@ -313,9 +299,7 @@ const BrandAssets = () => {
               <div className="flex items-center justify-center gap-3 flex-wrap">
                 <Button asChild>
                   <a href={designSystemZip.url} download="dehub-design-system.zip">
-                    <Download className="w-4 h-4 mr-2" />
-                    Download kit
-                  </a>
+                    <Download className="w-4 h-4 mr-2" />{_copy("copy.8bd075ad6b13", { defaultValue: "Download kit" })}</a>
                 </Button>
                 <Button variant="outline" asChild>
                   <a href="mailto:marketing@dehub.net">{t('brandAssets.contactBrandTeam')}</a>
