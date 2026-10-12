@@ -4892,11 +4892,11 @@ html[data-theme="light"] .art-rim {
   --post-media-max-h: 80dvh;
 }
 
-/* Feed videos fill their column, capped at 75% of the viewport height. The
+/* Feed videos fill their column, capped at 70% of the viewport height. The
    attribute is removed on post pages and in fullscreen. Override cinematic
    feed sizing too, which otherwise applies the taller post-page cap. */
 [data-feed-video-frame]:not(#_) {
-  max-height: 75svh !important;
+  max-height: 70svh !important;
 }
 @media (max-width: 639px) {
   :root {

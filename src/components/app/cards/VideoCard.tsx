@@ -2075,7 +2075,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         data-feed-video-frame={cropFeedVideo || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
-        /* Feed videos fill the column and crop only past 75% of the viewport.
+        /* Feed videos fill the column and crop only past 70% of the viewport.
            On the post page (immersive) it's centred in the column instead, and
            grows until it fills either the column width or most of the screen
            height, whichever it hits first — never cropped, never stretched. */
@@ -2092,7 +2092,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 ? {
                     aspectRatio: mediaAspect,
                     width: '100%',
-                    maxHeight: '75svh',
+                    maxHeight: '70svh',
                   }
                 : {
                   aspectRatio: mediaAspect,
