@@ -106,6 +106,13 @@ async function selectAll<T>(
 }
 
 /** DHB's market price. Falls back to the gateway peg, and says which it used. */
+/**
+ * Below this much liquidity a pool's price is noise, not a market: DexScreener
+ * lists a DHB/USDC pool on Base holding a few cents that quotes DHB thousands
+ * of times under the peg, and reading DHB payments at that price zeroes them.
+ */
+const MIN_MARKET_LIQUIDITY_USD = 10_000;
+
 async function dhbPrice(): Promise<{ usd: number; source: 'market' | 'peg' }> {
   try {
     const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${DHB_BASE}`, {
@@ -117,7 +124,8 @@ async function dhbPrice(): Promise<{ usd: number; source: 'market' | 'peg' }> {
       const pairs = (data?.pairs ?? []) as { priceUsd?: string; liquidity?: { usd?: number } }[];
       const best = pairs.sort((a, b) => (b.liquidity?.usd ?? 0) - (a.liquidity?.usd ?? 0))[0];
       const price = Number(best?.priceUsd);
-      if (Number.isFinite(price) && price > 0) return { usd: price, source: 'market' };
+      const deep = (best?.liquidity?.usd ?? 0) >= MIN_MARKET_LIQUIDITY_USD;
+      if (deep && Number.isFinite(price) && price > 0) return { usd: price, source: 'market' };
     }
   } catch {
     // Fall through to the peg.
@@ -305,13 +313,32 @@ interface ApiRevenue {
   sources: string[];
 }
 
+/**
+ * The core API's revenue totals. Its first read after a deploy runs every
+ * aggregation cold, and it rate-limits per IP, so one slow or throttled answer
+ * is retried once before the lines it carries are reported as unavailable.
+ */
+async function fetchApiRevenue(): Promise<Response> {
+  let last: Response | null = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      last = await fetch(`${API_BASE}/api/stats/revenue`, {
+        headers: { Accept: 'application/json', 'User-Agent': 'dehub-finance-stats' },
+        signal: AbortSignal.timeout(25_000),
+      });
+      if (last.ok || (last.status !== 429 && last.status < 500)) return last;
+    } catch (err) {
+      if (attempt === 1) throw err;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+  return last!;
+}
+
 async function readApi(r: Reading, dhbUsd: number, fx: Record<string, number>) {
   try {
-    const res = await fetch(`${API_BASE}/api/stats/revenue`, {
-      headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(10_000),
-    });
-    if (!res.ok) throw new Error(`api ${res.status}`);
+    const res = await fetchApiRevenue();
+    if (!res.ok) throw new Error(`answered ${res.status}`);
     const body = (await res.json()) as ApiRevenue;
     if (!body?.ok || !Array.isArray(body.rows)) throw new Error('api shape');
     let dropped = 0;
@@ -333,7 +360,9 @@ async function readApi(r: Reading, dhbUsd: number, fx: Record<string, number>) {
     if (dropped) r.notes.push(`${dropped} days of card payments were in a currency with no exchange rate today and are left out.`);
     for (const id of body.sources ?? []) r.ok.add(id);
   } catch (err) {
-    console.error('[finance-stats] core API revenue', err instanceof Error ? err.message : err);
+    const reason = err instanceof Error ? (err.name === 'TimeoutError' ? 'timed out' : err.message) : String(err);
+    console.error('[finance-stats] core API revenue', API_BASE, reason);
+    r.notes.push(`DeHub's core API could not be read this time (${reason}), so in-app buys and the fees it reports are left out until the next read.`);
   }
 }
 
@@ -464,7 +493,7 @@ async function compute() {
       endpoint: 'finance-stats',
       timezone: 'UTC' as const,
       conversion:
-        'Amounts paid in DHB are valued at DHB’s live market price on DexScreener, or at the $0.001 gateway peg when no market price is available. Amounts already recorded in USD keep that value; other fiat uses the ECB reference rate.',
+        'Amounts paid in DHB are valued at DHB’s live market price on DexScreener when a pool holds at least $10,000 of liquidity, and otherwise at the $0.001 gateway peg the app sells and spends DHB at. Amounts already recorded in USD keep that value; other fiat uses the ECB reference rate.',
       excluded: [
         'Tips, pay-per-view and paid DMs go from fan to creator with no platform cut, so they are not revenue.',
         'DHB credit balances are counted when they are spent on a DeHub product, not when they are loaded, so the same money is not counted twice.',

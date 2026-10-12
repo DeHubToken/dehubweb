@@ -41,8 +41,6 @@ import { lazyWithRetry } from "@/lib/lazy-with-retry";
 
 import { CONSOLIDATED_GUIDES } from "@/lib/blog-redirects.js";
 const DexPage = React.lazy(() => import("@/pages/app/DexPage"));
-// Parked at an unlinked address until its figures join /stats.
-const MoneyStatsPage = React.lazy(() => import("@/pages/app/MoneyStatsPage"));
 const DexPoolPage = React.lazy(() => import("@/pages/app/DexPoolPage"));
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SurfaceTransition } from "@/components/transitions/SurfaceTransition";
@@ -597,7 +595,8 @@ function AppContent() {
           <Route element={<AppLayout />}>
             <Route path="/jobs" element={null} />
             <Route path="/stats" element={null} />
-            <Route path="/stats/money" element={<Suspense fallback={<PageLoader />}><MoneyStatsPage /></Suspense>} />
+            {/* Revenue & costs was parked here before it joined /stats. */}
+            <Route path="/stats/money" element={<Navigate to="/stats" replace />} />
             <Route path="/features" element={null} />
             <Route path="/feedback" element={null} />
             <Route path="/governance" element={null} />

@@ -52,6 +52,7 @@ import {
   type SiteStatsUnavailable,
 } from '@/hooks/use-site-stats';
 import { FeedbackSection } from '@/components/app/stats/FeedbackSection';
+import { FinanceSection } from '@/components/app/stats/FinanceSection';
 import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPieces';
 import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
 import { cn } from '@/lib/utils';
@@ -862,7 +863,7 @@ export default function StatsPage() {
     <div className="min-h-screen">
       <SEOHead
         title={_copy("copy.1340eb7a333e", { defaultValue: "Live Site Stats — DeHub Visitors and Members in Real Time" })}
-        description={_copy("copy.e1110847f32e", { defaultValue: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database." })}
+        description={_copy("copy.e1110847f32e", { defaultValue: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, DeHub's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction." })}
         url="https://dehub.io/stats"
         image="https://dehub.io/og/stats.jpg"
         jsonLd={{
@@ -1052,6 +1053,9 @@ export default function StatsPage() {
             charts above with it, and there is no reason for it to take the
             community numbers too. */}
         <CommunitySection range={range} />
+
+        {/* Its own endpoint and its own failure, for the same reason. */}
+        <FinanceSection range={range} />
 
         {/* Same reasoning as CommunitySection: a Cloudflare outage empties the
             charts, and there is no reason for it to take the feedback form with
