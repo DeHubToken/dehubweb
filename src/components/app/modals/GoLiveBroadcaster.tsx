@@ -14,7 +14,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SwitchCamera, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow } from "lucide-react";
+import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
+import { SwitchCamera, ScreenShare, ScreenShareOff, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow } from "lucide-react";
 import MicOff from "@/components/ui/cut-icons/mic-off";
 import Video from "@/components/ui/cut-icons/video";
 import VideoOff from "@/components/ui/cut-icons/video-off";

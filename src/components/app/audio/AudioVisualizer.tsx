@@ -13,7 +13,8 @@ import {
   useAudioPostPlayback,
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
-import { Minimize, PictureInPicture2 } from "lucide-react";
+import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
+import { Minimize } from "lucide-react";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
