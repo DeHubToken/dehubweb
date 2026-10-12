@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
 import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
+import { useMediaLooping } from '@/lib/video-preferences';
 
 interface VideoSlideProps {
   short: ShortVideo;
@@ -98,6 +99,7 @@ export const VideoSlide = memo(function VideoSlide({
   progressLayer = null,
 }: VideoSlideProps) {
   const { t: _copy } = _useCopy();
+  const isLooping = useMediaLooping();
   const playbackAllowed = useFeedPlaybackAllowed();
   const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -488,7 +490,7 @@ export const VideoSlide = memo(function VideoSlide({
             src={short.soundtrackUrl || short.videoUrl}
             className={`shorts-inline-video pointer-events-none w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`}
             style={{ willChange: 'transform' }}
-            loop
+            loop={isLooping}
             playsInline
             controls={false}
             controlsList="nofullscreen noremoteplayback nodownload"
