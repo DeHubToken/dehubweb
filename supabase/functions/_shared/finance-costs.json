@@ -1,0 +1,19 @@
+{
+  "note": "Fixed monthly bills that no API reports. Each is spread evenly across the days it covers, from `since` until `until` (or today). Change an amount by adding a new entry with a new `since` and closing the old one with `until`, so past days keep the price they were actually paid at.",
+  "items": [
+    {
+      "id": "claude_max",
+      "label": "Claude Max 20x",
+      "group": "ai_tools",
+      "usdMonthly": 200,
+      "since": "2026-08-01"
+    },
+    {
+      "id": "chatgpt_pro",
+      "label": "ChatGPT Pro",
+      "group": "ai_tools",
+      "usdMonthly": 200,
+      "since": "2026-08-01"
+    }
+  ]
+}
