@@ -1,60 +1,30 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { saveCloudGeneration, saveGenerationPreview } from './cloudLibrary';
-import type { GenerationJob } from '@/store/generationStore';
+import { beforeEach, expect, it, vi } from "vitest";
+import { loadCloudGenerationPage, loadCloudGenerations } from "./cloudLibrary";
 
-const { invoke, upload } = vi.hoisted(() => ({ invoke: vi.fn(), upload: vi.fn() }));
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: { functions: { invoke }, storage: { from: () => ({ uploadToSignedUrl: upload }) } },
-}));
-vi.mock('@/lib/api/dehub/core', () => ({ ensureFreshToken: async () => 'test-token' }));
-
-const job: GenerationJob = {
-  id: 'mesh-result', kind: 'model3d', prompt: 'A chair', resolvedPrompt: 'A chair',
-  model: 'tripo-2.5', modelName: 'Tripo 2.5', aspect: '1:1', status: 'done', stage: '', createdAt: 1,
-  url: 'https://media.example/chair.glb', posterUrl: 'https://media.example/chair.webp', sourceImage: 'private-reference',
-};
-
+const mocks = vi.hoisted(() => ({ invoke: vi.fn(), fresh: vi.fn().mockResolvedValue("session") }));
+vi.mock("@/integrations/supabase/client", () => ({ supabase: { functions: { invoke: mocks.invoke } } }));
+vi.mock("@/lib/api/dehub/core", () => ({ ensureFreshToken: mocks.fresh }));
 beforeEach(() => { vi.clearAllMocks(); });
-afterEach(() => { vi.unstubAllGlobals(); });
 
-describe('saving a mesh with its preview', () => {
-  it('keeps the poster in account metadata while uploading the original mesh', async () => {
-    invoke.mockResolvedValueOnce({ data: { path: 'account/mesh-result/original', token: 'upload-token' } })
-      .mockResolvedValueOnce({ data: { saved: true } });
-    upload.mockResolvedValue({ error: null });
-    const bytes = new Blob(['mesh'], { type: 'model/gltf-binary' });
-    const fetchMedia = vi.fn().mockResolvedValue({ ok: true, blob: async () => bytes });
-    vi.stubGlobal('fetch', fetchMedia);
+it("loads a specific account's next saved page without changing the generation queue", async () => {
+  const jobs = Array.from({ length: 100 }, (_, index) => ({ id: `saved-${index}`, kind: "audio", status: "done" }));
+  mocks.invoke.mockResolvedValue({ data: { jobs, nextOffset: 200 }, error: null });
+  expect(await loadCloudGenerationPage("owner", 100)).toEqual({ jobs, nextOffset: 200 });
+  expect(mocks.invoke).toHaveBeenCalledWith("creator-library", { body: { action: "list", offset: 100 }, headers: { "x-dehub-token": "session", "x-wallet-address": "owner" } });
+  expect(mocks.invoke).toHaveBeenCalledTimes(1);
+});
 
-    await saveCloudGeneration('account', job);
+it.each([-1, 10001, 1.5, NaN])("rejects invalid page offsets %s before a request", async offset => {
+  await expect(loadCloudGenerationPage("owner", offset)).rejects.toThrow("Invalid library page");
+  expect(mocks.invoke).not.toHaveBeenCalled();
+});
 
-    const metadata = invoke.mock.calls[0][1].body.metadata;
-    expect(metadata.posterUrl).toBe(job.posterUrl);
-    expect(metadata).not.toHaveProperty('sourceImage');
-    expect(metadata).not.toHaveProperty('url');
-    expect(fetchMedia).toHaveBeenCalledExactlyOnceWith(job.url);
-    expect(upload).toHaveBeenCalledWith('account/mesh-result/original', 'upload-token', bytes, { contentType: 'model/gltf-binary' });
-    expect(invoke.mock.calls[1][1].body).toEqual({ action: 'complete', id: job.id });
-  });
+it.each([0, 10000, 10100, "100", null])("does not follow an invalid or repeated next offset %s", async nextOffset => {
+  mocks.invoke.mockResolvedValue({ data: { jobs: [], nextOffset }, error: null });
+  expect((await loadCloudGenerationPage("owner", 10000)).nextOffset).toBeNull();
+});
 
-  it('updates previews on an already saved result without uploading the mesh again', async () => {
-    invoke.mockResolvedValueOnce({ data: { saved: true } });
-    const fetchMedia = vi.fn();
-    vi.stubGlobal('fetch', fetchMedia);
-    await saveCloudGeneration('account', job);
-    expect(invoke.mock.calls[0][1].body.metadata.posterUrl).toBe(job.posterUrl);
-    expect(fetchMedia).not.toHaveBeenCalled();
-    expect(upload).not.toHaveBeenCalled();
-  });
-
-  it('stores a generated still separately and returns its private viewing URL', async () => {
-    invoke.mockResolvedValueOnce({ data: { path: 'account/mesh-result/preview', token: 'preview-token' } })
-      .mockResolvedValueOnce({ data: { posterUrl: 'https://storage.example/private-preview' } });
-    upload.mockResolvedValue({ error: null });
-    const preview = new Blob(['still'], { type: 'image/webp' });
-    expect(await saveGenerationPreview('account', job.id, preview)).toBe('https://storage.example/private-preview');
-    expect(invoke.mock.calls[0][1].body).toEqual({ action: 'prepare-preview', id: job.id });
-    expect(upload).toHaveBeenCalledWith('account/mesh-result/preview', 'preview-token', preview, { contentType: 'image/webp' });
-    expect(invoke.mock.calls[1][1].body).toEqual({ action: 'complete-preview', id: job.id });
-  });
+it("keeps the existing first-page sync interface and bounded metadata", async () => {
+  mocks.invoke.mockResolvedValue({ data: { jobs: Array.from({ length: 150 }, (_, index) => ({ id: String(index) })), nextOffset: 100 }, error: null });
+  expect(await loadCloudGenerations("owner")).toHaveLength(100);
 });
