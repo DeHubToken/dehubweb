@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { runCanvasBackdrop, type CanvasScene } from '@/lib/canvas-backdrop';
+import { createIslandWater } from './island-water';
 
 /**
  * "Island" — a lagoon at golden hour that follows the viewer's local clock.
@@ -12,15 +13,14 @@ import { runCanvasBackdrop, type CanvasScene } from '@/lib/canvas-backdrop';
  * same way back. A palm island sits on the left, clouds drift, and the sun
  * and moon are soft layered glows rather than flat discs.
  *
- * Plain 2D canvas. The sky, lights, land and still water only change with
- * the clock, so they are painted into a cached layer every few seconds; each
- * frame blits that and adds clouds, swaying palms and a few hundred glints.
+ * Cached 2D sky and coastline, with a small GPU water surface composed into
+ * the same capped, pauseable loop. Devices without WebGL retain the 2D sea.
  */
 export function IslandBackground() {
   const { theme } = useAppTheme();
   if (theme !== 'island') return null;
   return (
-    <div data-island-scene="coastal-v2" aria-hidden="true" className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+    <div data-island-scene="water-v3" aria-hidden="true" className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
       <IslandCanvas />
     </div>
   );
@@ -243,6 +243,7 @@ export function createIslandScene(): CanvasScene {
   let coast: HTMLCanvasElement | null = null;
   let builtA = NaN;
   let pal = paletteAt(Math.min(alt, 0.45));
+  const water = createIslandWater();
 
   const geom = () => {
     const hz = H * 0.42;
@@ -382,6 +383,17 @@ export function createIslandScene(): CanvasScene {
     base = cv;
     builtA = a;
     buildClouds();
+    if (water) {
+      // Upload a bounded reflection source only when the clock/size changes.
+      // Fine foliage and cloud light belong to the reflected scene as well.
+      const [sky, skyContext] = layer(W, hz, Math.min(1, 768 / W, 512 / hz));
+      skyContext.drawImage(cv, 0, 0, cv.width, hz * dpr, 0, 0, W, hz);
+      for (const c of clouds) {
+        if (c.sprite) skyContext.drawImage(c.sprite, c.x % (W + c.w * 1.4) - c.w * 1.2, c.y - c.w * 0.25);
+      }
+      for (const p of palms) paintPalm(skyContext, p, 0);
+      water.setSky(sky);
+    }
   };
 
   const buildVignette = () => {
@@ -407,6 +419,7 @@ export function createIslandScene(): CanvasScene {
     resize(w, h) {
       W = w;
       H = h;
+      water?.resize(w, h * 0.58);
       const n = Math.min(160, Math.round((w * h) / 7000));
       stars = Array.from({ length: n }, (_, i) => [detail(i + 1) * w, detail(i + 201) * h * 0.38, detail(i + 401)]);
       const nc = w > 900 ? 6 : 4;
@@ -464,110 +477,131 @@ export function createIslandScene(): CanvasScene {
         x.drawImage(c.sprite, cx, c.y - c.w * 0.25);
       }
 
+      const moonStrength = clamp((-a - 0.12) / 0.2);
+      const useMoon = moonStrength > 0.5;
+      const geometry = geom();
+      const sea = water?.draw({
+        time: t,
+        aspect: w / h,
+        lightX: (useMoon ? moonX : sunX) / w,
+        lightHeight: (hz - (useMoon ? geometry.moonY : geometry.sunY)) / h,
+        lightStrength: Math.max(clamp(0.4 + a * 2), moonStrength * 0.8),
+        lightColor: useMoon ? [220, 200, 255] : pal.glint,
+        waterTop: pal.waterTop,
+        waterBottom: pal.waterBot,
+        skyTop: pal.skyTop,
+      });
+      if (sea) x.drawImage(sea, 0, hz, w, h - hz);
+      const renderer = sea ? 'gpu' : 'fallback';
+      if (x.canvas?.dataset && x.canvas.dataset.islandWater !== renderer) x.canvas.dataset.islandWater = renderer;
+
       // Cached fine foliage sways from its root; reflections stretch and break
       // into water bands rather than looking like a second upside-down island.
       for (const p of palms) paintPalm(x, p, t);
-      if (coast) {
+      if (!sea) {
+        if (coast) {
         const reflectionDepth = Math.min(h * 0.10, w * 0.16);
         const bands = 18;
         for (let i = 0; i < bands; i++) {
-          const depth = (i / bands) * reflectionDepth;
-          const bandH = reflectionDepth / bands;
-          const sourceH = bandH / 0.65;
-          const sourceY = Math.max(0, hz - (depth + bandH) / 0.65);
-          x.globalAlpha = 0.26 * (1 - i / bands) ** 1.5;
-          x.drawImage(coast, 0, sourceY * dpr, coast.width, sourceH * dpr,
-            Math.sin(t * 0.7 + i * 1.1) * (1 + i * 0.35), hz + depth, w * 0.44, bandH + 0.5);
+            const depth = (i / bands) * reflectionDepth;
+            const bandH = reflectionDepth / bands;
+            const sourceH = bandH / 0.65;
+            const sourceY = Math.max(0, hz - (depth + bandH) / 0.65);
+            x.globalAlpha = 0.26 * (1 - i / bands) ** 1.5;
+            x.drawImage(coast, 0, sourceY * dpr, coast.width, sourceH * dpr,
+              Math.sin(t * 0.7 + i * 1.1) * (1 + i * 0.35), hz + depth, w * 0.44, bandH + 0.5);
         }
         x.globalAlpha = 1;
-      }
-      x.save();
-      x.beginPath();
-      x.rect(0, hz, w * 0.44, h * 0.2);
-      x.clip();
-      x.translate(Math.sin(t * 0.7) * 2, hz * 1.65);
-      x.scale(1, -0.65);
-      x.globalAlpha = 0.08;
-      for (const p of palms) paintPalm(x, p, t + 0.4);
-      x.restore();
+        }
+        x.save();
+        x.beginPath();
+        x.rect(0, hz, w * 0.44, h * 0.2);
+        x.clip();
+        x.translate(Math.sin(t * 0.7) * 2, hz * 1.65);
+        x.scale(1, -0.65);
+        x.globalAlpha = 0.08;
+        for (const p of palms) paintPalm(x, p, t + 0.4);
+        x.restore();
 
-      // Perspective swells have a shaded body, a fine crest, and fragmented
-      // specular light. The light path widens toward the camera.
-      const moonA = clamp((-a - 0.12) / 0.2);
-      const pathX = moonA > 0.5 ? moonX : sunX;
-      const pathStrength = Math.max(clamp(0.4 + a * 2), moonA * 0.8);
-      const rows = Math.min(48, Math.max(24, Math.round(h / 18)));
-      const segs = Math.min(16, Math.max(6, Math.round(w / 95)));
-      const samples = Math.min(64, Math.max(24, Math.round(w / 24)));
-      const seaH = h - hz;
-      x.lineCap = 'round';
-      for (let i = 0; i < rows; i++) {
+        // Perspective swells have a shaded body, a fine crest, and fragmented
+        // specular light. The light path widens toward the camera.
+        const moonA = clamp((-a - 0.12) / 0.2);
+        const pathX = moonA > 0.5 ? moonX : sunX;
+        const pathStrength = Math.max(clamp(0.4 + a * 2), moonA * 0.8);
+        const rows = Math.min(48, Math.max(24, Math.round(h / 18)));
+        const segs = Math.min(16, Math.max(6, Math.round(w / 95)));
+        const samples = Math.min(64, Math.max(24, Math.round(w / 24)));
+        const seaH = h - hz;
+        x.lineCap = 'round';
+        for (let i = 0; i < rows; i++) {
         const d = (i + 1) / rows;
         const y = hz + 2 + d ** 2.1 * seaH;
         const amplitude = 0.3 + d ** 1.7 * 7;
         const wave = (u: number) =>
-          y + Math.sin(u * 12 + t * 0.52 + i * 1.8) * amplitude
-            + Math.sin(u * 27 - t * 0.33 + i * 0.71) * amplitude * 0.32;
+            y + Math.sin(u * 12 + t * 0.52 + i * 1.8) * amplitude
+              + Math.sin(u * 27 - t * 0.33 + i * 0.71) * amplitude * 0.32;
         x.beginPath();
         for (let j = 0; j <= samples; j++) {
-          const u = j / samples;
-          if (j === 0) x.moveTo(0, wave(u));
-          else x.lineTo(u * w, wave(u));
+            const u = j / samples;
+            if (j === 0) x.moveTo(0, wave(u));
+            else x.lineTo(u * w, wave(u));
         }
         for (let j = samples; j >= 0; j--) {
-          const u = j / samples;
-          x.lineTo(u * w, wave(u) + 1 + d * 8);
+            const u = j / samples;
+            x.lineTo(u * w, wave(u) + 1 + d * 8);
         }
         x.closePath();
         x.fillStyle = css(pal.waterBot, 0.07 + d * 0.1);
         x.fill();
 
         for (let s = 0; s < segs; s++) {
-          const seed = i * 7.13 + s * 3.7;
-          const off = ((s + detail(seed + 20)) / segs) * w + Math.sin(t * 0.3 + seed) * 9 * d;
-          const len = (3 + d ** 1.4 * 50) * (0.4 + detail(seed + 40));
-          const lightX = pathX + Math.sin(t * 0.38 + i * 0.81) * (3 + d * 15);
-          const nearPath = Math.exp(-(((off - lightX) / (R * (0.55 + d * 3.8))) ** 2));
-          const flicker = 0.45 + 0.55 * Math.sin(t * 0.95 + seed) ** 2;
-          const alpha = (0.025 + 0.04 * (1 - d) + nearPath * pathStrength * 0.52) * flicker;
-          x.strokeStyle = css(mixRgb(pal.waterTop, pal.glint, nearPath * 0.85), alpha);
-          x.lineWidth = 0.5 + d * 1.25;
-          x.beginPath();
-          x.moveTo(off - len / 2, wave((off - len / 2) / w));
-          x.quadraticCurveTo(off, wave(off / w) - 0.4 * d, off + len / 2, wave((off + len / 2) / w));
-          x.stroke();
+            const seed = i * 7.13 + s * 3.7;
+            const off = ((s + detail(seed + 20)) / segs) * w + Math.sin(t * 0.3 + seed) * 9 * d;
+            const len = (3 + d ** 1.4 * 50) * (0.4 + detail(seed + 40));
+            const lightX = pathX + Math.sin(t * 0.38 + i * 0.81) * (3 + d * 15);
+            const nearPath = Math.exp(-(((off - lightX) / (R * (0.55 + d * 3.8))) ** 2));
+            const flicker = 0.45 + 0.55 * Math.sin(t * 0.95 + seed) ** 2;
+            const alpha = (0.025 + 0.04 * (1 - d) + nearPath * pathStrength * 0.52) * flicker;
+            x.strokeStyle = css(mixRgb(pal.waterTop, pal.glint, nearPath * 0.85), alpha);
+            x.lineWidth = 0.5 + d * 1.25;
+            x.beginPath();
+            x.moveTo(off - len / 2, wave((off - len / 2) / w));
+            x.quadraticCurveTo(off, wave(off / w) - 0.4 * d, off + len / 2, wave((off + len / 2) / w));
+            x.stroke();
         }
-      }
+        }
 
-      // Twinkling sparkles on the light path.
-      if (pathStrength > 0.05) {
+        // Twinkling sparkles on the light path.
+        if (pathStrength > 0.05) {
         for (const [u, v, k] of sparkles) {
-          const y = hz + 4 + v * (h - hz) * 0.9;
-          const spread = R * (0.8 + v * 3.5);
-          const sx = pathX + (u - 0.5) * 2 * spread + Math.sin(t * 0.7 + k) * 6;
-          const tw = Math.max(0, Math.sin(t * 1.4 + k * 3)) ** 8;
-          const r = (0.5 + v * 1.4) * tw;
-          if (r < 0.2) continue;
-          x.fillStyle = css(mixRgb(pal.glint, WHITE, 0.6), 0.85 * pathStrength * tw);
-          x.fillRect(sx - r, y - 0.5, r * 2, 1);
+            const y = hz + 4 + v * (h - hz) * 0.9;
+            const spread = R * (0.8 + v * 3.5);
+            const sx = pathX + (u - 0.5) * 2 * spread + Math.sin(t * 0.7 + k) * 6;
+            const tw = Math.max(0, Math.sin(t * 1.4 + k * 3)) ** 8;
+            const r = (0.5 + v * 1.4) * tw;
+            if (r < 0.2) continue;
+            x.fillStyle = css(mixRgb(pal.glint, WHITE, 0.6), 0.85 * pathStrength * tw);
+            x.fillRect(sx - r, y - 0.5, r * 2, 1);
         }
-      }
+        }
 
-      // A slow swell of light rolling toward the viewer.
-      const sweep = ((t * 0.045) % 1.3) - 0.15;
-      const sy = hz + sweep * (h - hz);
-      const g = x.createLinearGradient(0, sy - h * 0.08, 0, sy + h * 0.08);
-      g.addColorStop(0, css(pal.glint, 0));
-      g.addColorStop(0.5, css(pal.glint, 0.06));
-      g.addColorStop(1, css(pal.glint, 0));
-      x.fillStyle = g;
-      x.fillRect(0, hz, w, h - hz);
+        // A slow swell of light rolling toward the viewer.
+        const sweep = ((t * 0.045) % 1.3) - 0.15;
+        const sy = hz + sweep * (h - hz);
+        const g = x.createLinearGradient(0, sy - h * 0.08, 0, sy + h * 0.08);
+        g.addColorStop(0, css(pal.glint, 0));
+        g.addColorStop(0.5, css(pal.glint, 0.06));
+        g.addColorStop(1, css(pal.glint, 0));
+        x.fillStyle = g;
+        x.fillRect(0, hz, w, h - hz);
+      }
 
       // The sun breathes very gently.
       glow(x, sunX, Math.min(geom().sunY, hz), R * 2.6, pal.sun, 0.06 * (1 + Math.sin(t * 0.6)) * clamp(0.55 + a));
 
       if (vignette) x.drawImage(vignette, 0, 0, w, h);
     },
+    dispose() { water?.dispose(); },
   };
 }
 
