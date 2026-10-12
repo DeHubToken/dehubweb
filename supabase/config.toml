@@ -232,6 +232,9 @@ project_id = "aigxuutjaqsywioxjefr"
   # verified by requireDeHubAuth, not by a Supabase JWT.
   [functions.film-reviews]
     verify_jwt = false
+  # Public revenue and costs behind dehub.io/stats — daily totals only.
+  [functions.finance-stats]
+    verify_jwt = false
   # Read-only DO stats. Auth is the CDN_PURGE_SERVICE_SECRET shared secret in
   # x-infra-stats-secret, verified in-function — not a Supabase JWT.
   [functions.infra-stats]
