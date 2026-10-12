@@ -60,7 +60,8 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
         {(theme === 'system' || theme === 'immersive') && (
           <div className="profile-collapse-gap-guard" hidden={!surfaceVisible} aria-hidden />
         )}
-        <div data-feed-nav className="profile-collapse-surface" hidden={!surfaceVisible} aria-hidden>
+        {/* Shared nav glass uses relative positioning; this plate must fill the compact bar. */}
+        <div data-feed-nav className="profile-collapse-surface" style={{ position: 'absolute' }} hidden={!surfaceVisible} aria-hidden>
           <div data-nav-glass-backdrop />
         </div>
         <PageHeader overlay plainBack className={cn(
