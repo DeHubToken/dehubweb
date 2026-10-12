@@ -31,7 +31,7 @@ export function ShareRow({
   max: number;
   formatted: string;
 }) {
-  const pct = max > 0 ? Math.max(2, Math.round((value / max) * 100)) : 0;
+  const pct = max > 0 && value > 0 ? Math.max(2, Math.round((value / max) * 100)) : 0;
   return (
     <div className="flex items-center gap-3 py-1.5">
       {leading && <span className="text-base leading-none w-5 shrink-0">{leading}</span>}

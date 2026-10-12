@@ -52,10 +52,13 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
     <div><h2 className="font-semibold">{t('agents.tasks.title')}</h2><p className="text-sm text-white/60">{t('agents.tasks.description')}</p></div>
     {active.length ? <>
       <label className="block text-sm">{t('agents.agentName')}<select aria-label={t('agents.agentName')} className="mt-1 w-full rounded-lg border border-white/10 bg-background p-2" value={agentId} disabled={create.isPending} onChange={event => { setChosen(event.target.value); setRequestId(crypto.randomUUID()); }}>{active.map(agent => <option key={agent.id} value={agent.id}>@{agent.name}</option>)}</select></label>
-      <Textarea value={prompt} disabled={create.isPending} maxLength={4000} onChange={event => { setPrompt(event.target.value); setRequestId(crypto.randomUUID()); }} aria-label={t('agents.tasks.instructions')} placeholder={t('agents.tasks.examples')} className="min-h-28" />
+      <Textarea value={prompt} disabled={create.isPending} maxLength={4000} onChange={event => { setPrompt(event.target.value); setRequestId(crypto.randomUUID()); create.reset(); }} aria-label={t('agents.tasks.instructions')} placeholder={t('agents.tasks.examples')} className="min-h-28 bg-black/20 text-white placeholder:text-white/50" />
       <Button disabled={!prompt.trim() || create.isPending} onClick={() => create.mutate()}>{create.isPending ? t('agents.tasks.preparing') : t('agents.tasks.run')}</Button>
       <p className="text-xs text-white/50">{t('agents.tasks.limits')}</p>
     </> : <p className="text-sm text-white/60">{t('agents.tasks.createFirst')}</p>}
+    {create.error && <p role="alert" className="text-sm break-words">{create.error.message}</p>}
+    {control.error && <p role="alert" className="text-sm break-words">{control.error.message}</p>}
+    {create.isSuccess && <p role="status" className="text-sm">{t('agents.tasks.queued')}</p>}
     <div className="flex items-center justify-between"><h3 className="font-medium">{t('agents.tasks.list')}</h3><Button variant="ghost" size="sm" disabled={tasks.isFetching} onClick={refresh}>{t('agents.tasks.refresh')}</Button></div>
     {tasks.error && <p role="alert">{tasks.error.message}</p>}
     {tasks.isLoading && <p>{t('agents.tasks.loading')}</p>}

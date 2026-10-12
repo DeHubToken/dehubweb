@@ -11,11 +11,20 @@ export interface AgentTaskAction {
 }
 export async function agentTaskRequest<T>(wallet: string, body: Record<string, unknown>): Promise<T> {
   const token = await ensureFreshToken();
-  const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dehub-mcp/tasks`, {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 60000);
+  try {
+  const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co'}/functions/v1/dehub-mcp/tasks`, {
     method: 'POST', headers: { 'Content-Type': 'application/json', 'x-dehub-token': token, 'x-wallet-address': wallet },
-    body: JSON.stringify(body),
+    body: JSON.stringify(body), signal: controller.signal,
   });
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'The task could not be saved.');
+  const data = await response.json().catch(() => { throw new Error(`The task service returned an unreadable response (${response.status}). Refresh tasks before retrying.`); });
+  if (!response.ok) throw new Error(typeof data?.error === 'string' ? data.error : `The task request failed (${response.status}). Refresh tasks before retrying.`);
   return data;
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error('The task request timed out. Refresh tasks before retrying.');
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
 }

@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
 import { visibleFeedTokenIds } from '@/lib/feed-visible-counts';
-import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
+import { isShortsPhoto, shortsPhotoMedia } from '@/lib/shorts-photos';
 /**
  * Home Feed Component
  * ===================
@@ -13,7 +13,7 @@ import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -22,9 +22,15 @@ import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { RefreshCw, Radio, ArrowUp } from "lucide-react";
-import { ChevronRight } from "@/components/ui/cut-icons";
+import { shortsBatchCount, shortsBatchIndex, SHORTS_BATCH_SIZE } from '@/lib/shorts-rotation';
+import { useShortsRotation, type ShortsHistoryStore } from '@/hooks/use-shorts-rotation';
 
+const shortsHistoryStore: ShortsHistoryStore = {
+  read: async key => localStorage.getItem(key),
+  write: async (key, value) => { localStorage.setItem(key, value); },
+};
+import { RefreshCw, Radio, ArrowUp } from 'lucide-react';
+import { ChevronRight } from '@/components/ui/cut-icons';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
@@ -117,22 +123,12 @@ type FeedItemType =
   | { type: 'ad'; data: ServedAd };
 
 const PAGE_SIZE = 20;
-const SHORTS_INSERT_INTERVAL = 5;
 // Start the next page while several cards are still below the fold. At 600px a
 // fast wheel/trackpad gesture could reach the document bottom before the
 // request completed, so subsequent wheel deltas had nowhere to go and appeared
 // to freeze until another input arrived.
 const INFINITE_SCROLL_PREFETCH_MARGIN = '2400px 0px';
 
-/** Videos longer than this are the ones the Shorts lane does NOT carry: the
- *  backend routes a plain video of 90s or less into Shorts by duration, whatever
- *  its post type. So "long form" here is a duration test, not a type test. */
-const LONG_FORM_MIN_SECONDS = 90;
-/** Tiles in the reel. */
-const SCROLL_REEL_SIZE = 10;
-/** The reel filters to long-form client-side, because /api/feed has no
- *  duration parameter. Long-form is roughly a fifth of the top videos,
- *  so this is what it takes to fill the reel. */
 const SCROLL_REEL_FETCH_LIMIT = 50;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
@@ -144,6 +140,7 @@ const DEFAULT_HOME_SORT = SORT_OPTIONS.find(o => o.value === 'latest') || SORT_O
 const CLASSIC_INSERT_INTERVAL = 6;
 
 interface HomeFeedProps {
+  active?: boolean;
   shuffleKey: number;
   isRefreshing: boolean;
   showFilters?: boolean;
@@ -520,7 +517,7 @@ function nftToFeedItem(pinnedPost: any): FeedItemType {
     }
 }
 
-export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef, chipsPortalRef }: HomeFeedProps) {
+export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef, chipsPortalRef }: HomeFeedProps) {
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -539,7 +536,17 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const queryClient = useQueryClient();
   // PersistentPageCache never unmounts this component once home has been
   // visited, so anything on a timer here has to ask whether home is on screen.
-  const isHomeActive = isHomeFeedRoute(useLocation().pathname);
+  const { pathname } = useLocation();
+  const isHomeActive = active && isHomeFeedRoute(pathname);
+  const [shortsVisit, setShortsVisit] = useState(0);
+  const previousHome = useRef({ active: isHomeActive, pathname });
+  useEffect(() => {
+    const previous = previousHome.current;
+    if (isHomeActive && !previous.active && !/^\/(app\/)?(post|newpost)\//.test(previous.pathname)) {
+      setShortsVisit(value => value + 1);
+    }
+    previousHome.current = { active: isHomeActive, pathname };
+  }, [isHomeActive, pathname]);
 
   // Clear persisted filters on fresh page load (not in-app navigation)
   useEffect(() => {
@@ -952,6 +959,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   });
 
   const showNewPosts = useCallback(() => {
+    setShortsVisit(value => value + 1);
     // Drop every page but the first before refetching, so the reader lands on
     // a fresh top of feed rather than waiting for ten loaded pages to re-fetch
     // in place. The list scrolls to the top either way.
@@ -980,12 +988,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     sortOrder: 'desc',
     range: 'month',
     status: 'all',
-    enabled: shortsEnabled && railsEnabled,
+    enabled: shortsEnabled && railsEnabled && isHomeActive && !isKidsMode,
   });
 
   const scrollPhotosFeed = useUnifiedFeed({
-    limit: SCROLL_REEL_SIZE, postType: 'feed-images', search: 'soundtrack',
-    sortBy: 'views', sortOrder: 'desc', range: 'month', status: 'all', enabled: shortsEnabled && railsEnabled,
+    limit: 20, postType: 'feed-images', search: 'soundtrack',
+    sortBy: 'views', sortOrder: 'desc', range: 'month', status: 'all', enabled: shortsEnabled && railsEnabled && isHomeActive && !isKidsMode,
   });
 
   // Flip the rails gate once the primary feed's first page settles (data or error).
@@ -1001,23 +1009,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return () => clearTimeout(t);
   }, []);
 
-  // Shorts carousel on Home feed
-  const shorts = useMemo((): ShortVideo[] => {
-    if (!shortsEnabled) return [];
-    if (!scrollFeed.data?.pages && !scrollPhotosFeed.data?.pages) return [];
-    // Same offset-paging overlap as the main feed: without this the carousel
-    // can show one short twice inside its ten slots.
-    const allItems = flattenFeedPages(scrollFeed.data?.pages || []);
-    // Exclude PPV content from shorts carousels
-    const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
-    // Long-form first, then the rest, both already in most-viewed order. Topping
-    // up rather than truncating keeps the reel ten tiles wide on a thin day
-    // instead of leaving a three-tile stub. A post with no videoDuration has
-    // not finished transcoding, so it counts as the top-up, not as long-form.
-    const isLongForm = (item: UnifiedFeedItem) => (item.videoDuration ?? 0) > LONG_FORM_MIN_SECONDS;
-    const ranked = [...nonPPV.filter(isLongForm), ...nonPPV.filter(item => !isLongForm(item))];
+  const shortsCandidates = useMemo(() => {
+    if (!shortsEnabled || isKidsMode) return [];
+    const videos = flattenFeedPages(scrollFeed.data?.pages || [])
+      .filter(item => !item.streamInfo?.isPayPerView);
     const photos = flattenFeedPages(scrollPhotosFeed.data?.pages || []).filter(isShortsPhoto);
-    return interleaveShorts(ranked, photos).slice(0, SCROLL_REEL_SIZE).map((item) => {
+    return [...videos, ...photos];
+  }, [scrollFeed.data, scrollPhotosFeed.data, shortsEnabled, isKidsMode]);
+
+  const mapCarouselItem = useCallback((item: UnifiedFeedItem): ShortVideo => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
       const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;
@@ -1054,8 +1054,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         isLiked: (item as any).isLiked ?? voteType === 'for',
         isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
-    });
-  }, [scrollFeed.data, scrollPhotosFeed.data, shortsEnabled]);
+  }, []);
 
   // Fetch curated radio stations for carousel. The carousel sits several posts
   // down, so nobody sees it before scrolling; fetching at mount put a
@@ -1338,6 +1337,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return out;
   }, [itemsWithAds, boostedIds, queuedBoostItems]);
 
+  const shortsCount = shortsEnabled && !isKidsMode
+    ? shortsBatchCount(items.filter(item => item.type !== 'ad').length) : 0;
+  const shortsRotation = useShortsRotation(
+    shortsCandidates, shortsCount, `${walletAddress ?? 'guest'}:${shuffleKey}:${shortsVisit}`,
+    `home-shorts-recent:${walletAddress ?? 'guest'}`, shortsHistoryStore,
+    isHomeActive && (!!scrollFeed.data || scrollFeed.isError) && (!!scrollPhotosFeed.data || scrollPhotosFeed.isError),
+    (!scrollFeed.hasNextPage || scrollFeed.isError) && (!scrollPhotosFeed.hasNextPage || scrollPhotosFeed.isError),
+  );
+  const shortsBatches = useMemo(() => shortsRotation.batches.map(batch => batch.map(mapCarouselItem)),
+    [shortsRotation.batches, mapCarouselItem]);
+  useEffect(() => {
+    const uniqueCount = new Set(shortsCandidates.map(item => String(item.tokenId))).size;
+    if (!isHomeActive || !shortsCount || uniqueCount >= shortsCount * SHORTS_BATCH_SIZE) return;
+    if (scrollFeed.hasNextPage && !scrollFeed.isFetching && !scrollFeed.isError) void scrollFeed.fetchNextPage();
+    if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching && !scrollPhotosFeed.isError) void scrollPhotosFeed.fetchNextPage();
+  }, [isHomeActive, shortsCount, shortsCandidates, scrollFeed.hasNextPage, scrollFeed.isFetching,
+    scrollFeed.isError, scrollFeed.fetchNextPage, scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching,
+    scrollPhotosFeed.isError, scrollPhotosFeed.fetchNextPage]);
+
   // Auto-remove optimistic posts once their real counterpart appears in the feed
   useEffect(() => {
     if (optimisticPosts.length === 0 || items.length === 0) return;
@@ -1533,10 +1551,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Live carousel insert position: 4 posts after the radio carousel
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
-  // New members: halfway between the live carousel and the leaderboard, which
-  // keeps the single-column run of carousels — follow, radio, live, new
-  // members, leaderboard — at roughly one every five posts.
-  const NEW_MEMBERS_INSERT_AFTER = LIVE_INSERT_AFTER + 5;
+  // New members sit three posts before the second Shorts carousel.
+  const NEW_MEMBERS_INSERT_AFTER = LIVE_INSERT_AFTER + 3;
   // Leaderboard carousel: 10 posts after the live streams carousel
   const LEADERBOARD_INSERT_AFTER = LIVE_INSERT_AFTER + LEADERBOARD_INSERT_AFTER_LIVE_OFFSET;
 
@@ -1566,103 +1582,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       window.removeEventListener('resize', onResize);
     };
   }, [isCollapsed]);
-
-  // Estimate height weight for a feed item to balance columns
-  const getItemWeight = (item: FeedItemType): number => {
-    switch (item.type) {
-      case 'video': return 2;    // videos are medium height
-      case 'image': return 3;    // images tend to be tallest
-      case 'post': return 1;     // text posts are shortest
-      case 'shorts': return 2;
-      case 'ad': return 2;       // sponsored cards sit between post and image
-      default: return 1.5;
-    }
-  };
-
-  const calculateColumnWeights = (feedItems: FeedItemType[], cols: number): number[] => {
-    const weights = new Array(cols).fill(0);
-    feedItems.forEach((item) => {
-      let minIdx = 0;
-      for (let c = 1; c < cols; c++) {
-        if (weights[c] < weights[minIdx]) minIdx = c;
-      }
-      weights[minIdx] += getItemWeight(item);
-    });
-    return weights;
-  };
-
-  const getWeightSpread = (weights: number[]): number => {
-    if (weights.length === 0) return 0;
-    return Math.max(...weights) - Math.min(...weights);
-  };
-
-  // Pick a flexible shorts insertion point that minimizes visible column imbalance
-  const getAdaptiveShortsInsertIndex = (feedItems: FeedItemType[], cols: number): number | null => {
-    if (cols <= 1 || feedItems.length < cols * 2) return null;
-
-    const targetIndex = Math.min(feedItems.length, 8);
-    const minInsert = Math.min(feedItems.length, Math.max(cols * 2, 5));
-    const maxInsert = Math.min(feedItems.length, Math.max(minInsert, targetIndex + cols * 4));
-
-    let best: { index: number; score: number } | null = null;
-
-    for (let index = minInsert; index <= maxInsert; index++) {
-      const before = feedItems.slice(0, index);
-      const after = feedItems.slice(index);
-      if (before.length < cols) continue;
-
-      const beforeSpread = getWeightSpread(calculateColumnWeights(before, cols));
-      const afterSpread = after.length >= cols
-        ? getWeightSpread(calculateColumnWeights(after, cols))
-        : 0;
-
-      const distancePenalty = Math.abs(index - targetIndex) * 0.12;
-      const shortTailPenalty = after.length > 0 && after.length < cols ? 2 : 0;
-      const score = beforeSpread * 1.6 + afterSpread * 0.7 + distancePenalty + shortTailPenalty;
-
-      if (!best || score < best.score) {
-        best = { index, score };
-      }
-    }
-
-    if (!best) return null;
-
-    // If no balanced split exists, keep masonry continuous and place shorts after the grid
-    const maxAcceptableScore = cols === 3 ? 3.6 : 3.0;
-    if (best.score > maxAcceptableScore) return feedItems.length;
-
-    return best.index;
-  };
-
-  // The O(items × candidate-range) balance scan above (two slices per
-  // candidate) only depends on the item list and layout — memoized so
-  // unrelated feed re-renders (query updates, bookmark churn) skip it.
-  const adaptiveShortsInsertIndex = useMemo(
-    () =>
-      shorts.length > 0 && colCount > 1
-        ? (getAdaptiveShortsInsertIndex(items, colCount) ?? items.length)
-        : items.length,
-    // getAdaptiveShortsInsertIndex is a pure helper recreated per render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [items, colCount, shorts.length]
-  );
-
-  // Distribute items into columns using shortest-column-first (height-balanced)
-  const distributeToColumns = (nodes: ReactNode[], cols: number, feedItems?: FeedItemType[]): ReactNode[][] => {
-    if (cols <= 1) return [nodes];
-    const columns: ReactNode[][] = Array.from({ length: cols }, () => []);
-    const colWeights = new Array(cols).fill(0);
-    nodes.forEach((node, i) => {
-      // Find the column with the lowest accumulated weight
-      let minIdx = 0;
-      for (let c = 1; c < cols; c++) {
-        if (colWeights[c] < colWeights[minIdx]) minIdx = c;
-      }
-      columns[minIdx].push(node);
-      colWeights[minIdx] += feedItems ? getItemWeight(feedItems[i]) : 1.5;
-    });
-    return columns;
-  };
 
   const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[], padEnd = false, beforeShorts = false, afterShorts = false) => {
     if (colCount <= 1) {
@@ -1695,223 +1614,64 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
 
 
-  // Render feed items with shorts and radio carousels inserted
-  // Segments feed into alternating masonry containers and full-width inserts
+  // One insertion schedule for single-column and measured masonry layouts.
   const renderFeedWithShorts = () => {
-    const isMultiCol = colCount > 1;
-
-    // --- MULTI-COLUMN: adaptive shorts placement with masonry-safe fallback ---
-    if (isMultiCol) {
-      const adaptiveShortsIndex = adaptiveShortsInsertIndex;
-
-      const shouldSplitForShorts = shorts.length > 0 && adaptiveShortsIndex > 0 && adaptiveShortsIndex < items.length;
-      const beforeShorts = shouldSplitForShorts ? items.slice(0, adaptiveShortsIndex) : items;
-      // When no shorts split, treat ALL items as afterShorts so carousels still get interleaved
-      const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : items;
-      const afterShortsBase = shouldSplitForShorts ? adaptiveShortsIndex : 0;
-
-      // Generous spacing: ~16 items (3-col) or ~12 items (2-col) between each carousel
-      const MIN_ITEMS_BETWEEN = colCount === 3 ? 16 : 12;
-
-      // The carousels this column count will interleave, in the order they
-      // appear down the feed. Follow suggestions and new members are here as
-      // well as in the single-column path: multi-column is what a desktop
-      // browser gets, and leaving them out of it is why "who to follow"
-      // vanished from the feed on every screen wide enough to split.
-      const fullWidthInserts: ReactNode[] = isKidsMode ? [] : [
-        // Gated here as well as inside the component: an insert that renders
-        // nothing still splits the masonry run around it, and a logged-out feed
-        // should not be chopped in two for a row it will never show.
-        isAuthenticated ? <div key="who-to-follow" className="my-3"><MobileWhoToFollowCarousel /></div> : null,
-        radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection stations={radioStations} /></div> : null,
-        liveNowStreams.length > 0 ? (
-          <div key="live-now" className="my-3 space-y-2">
-            <div className="flex items-center gap-2 px-1">
-              <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              <h3 className="text-white font-semibold text-sm">{_copy("copy.e4629246c285", { defaultValue: "Livestreams" })}</h3>
-            </div>
-            <SwipeableCarousel>
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
-                {liveNowStreams.map((stream) => (
-                  <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
-                    <LiveCard stream={stream} />
-                  </div>
-                ))}
-              </div>
-            </SwipeableCarousel>
-          </div>
-        ) : null,
-        <div key="new-members" className="my-3"><NewMembersCarousel /></div>,
-        <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
-      ].filter(Boolean) as ReactNode[];
-
-      // One split point per insert, each MIN_ITEMS_BETWEEN further down, so the
-      // spacing stays the same however many carousels have something to show.
-      const splitPoints = fullWidthInserts
-        .map((_, i) => Math.min(afterShorts.length, (i + 1) * MIN_ITEMS_BETWEEN))
-        .filter((p, i, arr) => p > 0 && p < afterShorts.length && (i === 0 || p > arr[i - 1]));
-
-      // Build segments: chunks of afterShorts items with full-width inserts between them
-      const segments: { items: typeof afterShorts; startIndex: number }[] = [];
-      let lastSplit = 0;
-      for (const sp of splitPoints) {
-        segments.push({ items: afterShorts.slice(lastSplit, sp), startIndex: afterShortsBase + lastSplit });
-        lastSplit = sp;
-      }
-      segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
-
-      return (
-        <>
-          {/* Only render beforeShorts separately if we actually split for shorts */}
-          {shouldSplitForShorts && beforeShorts.length > 0 && renderMasonryGrid(
-            beforeShorts.map((item, i) => renderFeedItem(item, i)),
-            beforeShorts,
-            shorts.length > 0,
-            true
-          )}
-          {shouldSplitForShorts && shorts.length > 0 && (
-            <div className={cn('my-3', isCollapsed && 'mt-5')}>
-              <ShortsReel shorts={shorts} />
-            </div>
-          )}
-          {segments.map((seg, segIdx) => {
-            // When not splitting for shorts, render ShortsReel before the first fullWidthInsert (after first segment)
-            const showShortsHere = !shouldSplitForShorts && shorts.length > 0 && segIdx === 0;
-            const hasInsertAfter = showShortsHere || (segIdx < fullWidthInserts.length && !!fullWidthInserts[segIdx]);
-            return (
-              <div key={`multi-seg-${segIdx}`}>
-                {seg.items.length > 0 && (
-                  <div className="mt-3">
-                    {renderMasonryGrid(
-                      seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
-                      seg.items,
-                      hasInsertAfter,
-                      showShortsHere,
-                      shouldSplitForShorts && segIdx === 0
-                    )}
-                  </div>
-                )}
-                {showShortsHere && (
-                  <div className={cn('my-3', isCollapsed && 'mt-5')}>
-                    <ShortsReel shorts={shorts} />
-                  </div>
-                )}
-                {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
-              </div>
-            );
-          })}
-
-        </>
-      );
-    }
-
-    // --- SINGLE COLUMN: keep full-width inserts inline as before ---
-    type Segment = { type: 'cards'; items: ReactNode[] } | { type: 'fullwidth'; node: ReactNode; shorts: boolean };
+    type Segment = { items: FeedItemType[]; start: number; inserts: ReactElement[]; shorts: boolean };
     const segments: Segment[] = [];
-    let currentCards: ReactNode[] = [];
-    let shortsInserted = false;
-    let leaderboardInserted = false;
-    let radioInserted = false;
-    let liveInserted = false;
-    let whoToFollowInserted = false;
-    let newMembersInserted = false;
-
-    const flushCards = () => {
-      if (currentCards.length > 0) {
-        segments.push({ type: 'cards', items: [...currentCards] });
-        currentCards = [];
-      }
-    };
-
-    // One gate for all seven single-column inserts rather than seven `&&`s on
-    // the call sites: a rail added later gets the same answer without anybody
-    // remembering to ask. Kids Mode drops them all — see the note by
-    // `isKidsMode` above.
-    const addFullWidth = (node: ReactNode, shorts = false) => {
-      if (isKidsMode) return;
-      flushCards();
-      segments.push({ type: 'fullwidth', node, shorts });
-    };
-
+    let posts = 0;
+    let start = 0;
     items.forEach((item, index) => {
-      const beforeShorts = !isKidsMode && shorts.length > 0 && !shortsInserted && (
-        (index + 1) % SHORTS_INSERT_INTERVAL === 0 ||
-        (index === items.length - 1 && items.length < SHORTS_INSERT_INTERVAL)
-      );
-      currentCards.push(renderFeedItem(item, index, 'feed', beforeShorts));
-
-      if ((index + 1) === 3 && !whoToFollowInserted) {
-        addFullWidth(<div key={`who-to-follow-${index}`}><MobileWhoToFollowCarousel /></div>);
-        whoToFollowInserted = true;
-      }
-
-      if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
-        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>, true);
-        shortsInserted = true;
-      }
-
-      if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
-        addFullWidth(<div key={`radio-carousel-${index}`}><RadioCarouselSection stations={radioStations} /></div>);
-        radioInserted = true;
-      }
-
-      if ((index + 1) === LIVE_INSERT_AFTER && liveNowStreams.length > 0 && !liveInserted) {
-        addFullWidth(
-          <div key={`live-now-${index}`} className="space-y-2">
+      if (item.type === 'ad') return;
+      posts++;
+      const inserts: ReactElement[] = [];
+      const batchIndex = shortsBatchIndex(posts);
+      const batch = batchIndex >= 0 ? shortsBatches[batchIndex] : undefined;
+      const hasShorts = !!batch?.length && !isKidsMode;
+      if (!isKidsMode) {
+        if (hasShorts) inserts.push(
+          <div key={`shorts-${shortsRotation.generation}-${batchIndex}`} data-shorts-after-post={posts}>
+            <ShortsReel shorts={batch!} />
+          </div>,
+        );
+        // Keep other inserts at least two posts away from a Shorts boundary.
+        if (posts === 3 && isAuthenticated) inserts.push(<MobileWhoToFollowCarousel key="who-to-follow" />);
+        if (posts === RADIO_INSERT_AFTER && radioStations.length) inserts.push(
+          <RadioCarouselSection key="radio" stations={radioStations} />,
+        );
+        if (posts === LIVE_INSERT_AFTER && liveNowStreams.length) inserts.push(
+          <div key="live-now" className="space-y-2">
             <div className="flex items-center gap-2 px-1">
               <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
               <h3 className="text-white font-semibold text-sm">{_copy("copy.e4629246c285", { defaultValue: "Livestreams" })}</h3>
             </div>
             <SwipeableCarousel>
               <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
-                {liveNowStreams.map((stream) => (
-                  <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
-                    <LiveCard stream={stream} />
-                  </div>
-                ))}
+                {liveNowStreams.map(stream => <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80"><LiveCard stream={stream} /></div>)}
               </div>
             </SwipeableCarousel>
-          </div>
+          </div>,
         );
-        liveInserted = true;
+        if (posts === NEW_MEMBERS_INSERT_AFTER) inserts.push(<NewMembersCarousel key="new-members" />);
+        if (posts === LEADERBOARD_INSERT_AFTER) inserts.push(<LeaderboardCarousel key="leaderboard" />);
       }
-
-      if ((index + 1) === NEW_MEMBERS_INSERT_AFTER && !newMembersInserted) {
-        addFullWidth(<div key={`new-members-${index}`}><NewMembersCarousel /></div>);
-        newMembersInserted = true;
-      }
-
-      if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {
-        addFullWidth(<div key={`leaderboard-carousel-${index}`}><LeaderboardCarousel /></div>);
-        leaderboardInserted = true;
+      if (inserts.length) {
+        segments.push({ items: items.slice(start, index + 1), start, inserts, shorts: hasShorts });
+        start = index + 1;
       }
     });
-
-    if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
-      addFullWidth(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>, true);
-    }
-
-    flushCards();
-
-    return (
-      <>
-        {segments.map((seg, i) => {
-          if (seg.type === 'fullwidth') {
-            return <div key={`fw-${i}`} className="mb-3">{seg.node}</div>;
-          }
-          const next = segments[i + 1];
-          const previous = segments[i - 1];
-          return (
-            <div key={`cols-${i}`} className="mb-3">
-              {renderMasonryGrid(seg.items, undefined, false,
-                next?.type === 'fullwidth' && next.shorts,
-                previous?.type === 'fullwidth' && previous.shorts,
-              )}
-            </div>
-          );
-        })}
-      </>
-    );
+    if (start < items.length) segments.push({ items: items.slice(start), start, inserts: [], shorts: false });
+    return <>{segments.flatMap((segment, index) => [
+      <div key={`feed-segment-${segment.start}`} className="mb-3">
+        {renderMasonryGrid(
+          segment.items.map((item, offset) => renderFeedItem(item, segment.start + offset, 'feed',
+            segment.shorts && offset === segment.items.length - 1)),
+          segment.items, segment.inserts.length > 0, segment.shorts, index > 0 && segments[index - 1].shorts,
+        )}
+      </div>,
+      // Carousel keys live beside the segments so an arriving radio/live row
+      // cannot remount a Shorts viewer or reset its horizontal scroll.
+      ...segment.inserts.map(node => <div key={node.key} className="my-3">{node}</div>),
+    ])}</>;
   };
 
   // Determine loading state

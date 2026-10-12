@@ -8,6 +8,6 @@ export async function analyseVisualHighlights(batch: VisualBatch, signal: AbortS
   if (!validVisualBatch(batch)) throw new Error("visual_frames_invalid");
   const { data, error } = await supabase.functions.invoke("editor-visual-highlights", { body: visualBatchForTransport(batch), signal });
   if (signal.aborted) throw new Error("cancelled");
-  if (error || data?.contract !== (batch.purpose === "matching" ? 2 : 1) || !Array.isArray(data?.moments)) throw new Error("unavailable");
+  if (error || (data?.contract !== 1 && (batch.purpose !== "matching" || data?.contract !== 2)) || !Array.isArray(data?.moments)) throw new Error("unavailable");
   return data.moments;
 }

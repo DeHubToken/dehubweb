@@ -252,6 +252,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
     )}>
       <FeedFilterAnchor behindNav={theme === 'system'}>
       <div data-feed-nav className="flex flex-col bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px', ...(theme === 'system' ? { position: 'relative', zIndex: 10 } as const : {}) }}>
+        <span data-nav-glass-backdrop aria-hidden="true" />
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} variant="nav" />
           {/* Drag handle overlay */}

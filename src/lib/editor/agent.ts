@@ -32,6 +32,7 @@ import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { nanoid } from "nanoid";
 import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
 import { preciseCommand } from "./preciseCommands";
+import { compactVideoTemplateTracks } from "./videoTemplateTracks";
 import { videoTemplateAspect, videoTemplateCommand, videoTemplatePageStarts } from "./videoTemplates";
 import { stockSearchPlan } from "./stockSearchPlan";
 import { applyAudioTool } from "./applyAudioTool";
@@ -674,6 +675,8 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         // Nested ops run inside this request's undo step; their new layers
         // are not addressable as new:N from the outer list.
         const inner = await applyOps(tpl.ops(i18n.t.bind(i18n), videoTemplateAspect(op.aspect)), ctx);
+        await task.ready();
+        if (tpl.kind === "video") task.commit(() => useEditorStore.setState(compactVideoTemplateTracks(store(), i18n.t("editor.layers.text"))));
         store().updateSettings({ pages: videoTemplatePageStarts(tpl.id), pageTiming: tpl.kind === "video" ? "content" : undefined });
         store().setCurrentTime(tpl.kind === "video" ? 0.6 : 0);
         return inner.applied > 0;

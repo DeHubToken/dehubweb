@@ -9,6 +9,8 @@ import { beginEditorCommand } from "./editorCommand";
  */
 import type { TFunction } from "i18next";
 import type { AspectPreset } from "./types";
+import { compactVideoTemplateTracks } from "./videoTemplateTracks";
+import { useEditorStore } from "@/store/editorStore";
 import { VIDEO_TEMPLATES, videoTemplatePageStarts, type VideoTemplateAspect } from "./videoTemplates";
 import { applyOps, type AgentOp, type ApplyContext } from "./agent";
 
@@ -189,6 +191,7 @@ export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx:
     const s = command.store();
     const end = s.clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
     for (const c of s.clips) if (template.kind !== "video" && c.start + c.duration < end) s.patchClip(c.id, { duration: end - c.start });
+    if (template.kind === "video") command.commit(() => useEditorStore.setState(compactVideoTemplateTracks(command.store(), t("editor.layers.text"))));
     command.store().updateSettings({ pages: videoTemplatePageStarts(template.id), pageTiming: template.kind === "video" ? "content" : undefined });
     command.store().setCurrentTime(template.kind === "video" ? 0.6 : 0);
     command.store().selectClip(null);
