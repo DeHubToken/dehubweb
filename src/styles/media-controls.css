@@ -99,3 +99,56 @@ html[data-theme] body :is([data-video-card], [data-audio-player], [data-video-ca
 [data-video-scrubber="line"][data-controls-hidden="true"] [data-video-button-row] :is(button, [role="button"]) {
   pointer-events: none;
 }
+
+/* Reserve a separate black transport strip; the picture ends above it. */
+[data-feed-video-frame][data-video-split-controls]:not(#_) {
+  max-height: calc(75svh - 47px) !important;
+}
+html[data-theme] body [data-video-card] [data-video-split-controls] {
+  width: 100% !important;
+  margin-top: 0 !important;
+}
+html[data-theme="immersive"] [data-cinematic] [data-video-card] > [data-video-split-controls]:not([data-feed-video-frame]) {
+  max-height: calc(var(--post-media-max-h, 80dvh) - 47px) !important;
+}
+html[data-theme] body [data-video-card] [data-video-split-controls][data-video-fullscreen] {
+  max-height: none !important;
+}
+html[data-theme] body [data-video-card] [data-video-control-strip] {
+  height: 47px;
+  padding: 0 !important;
+  background: #000 !important;
+  opacity: 1;
+}
+html[data-theme] body [data-video-control-strip] [data-video-button-row] {
+  height: 44px;
+  gap: 4px;
+}
+html[data-theme] body [data-video-control-strip] [data-video-inline-tools] {
+  gap: 2px;
+}
+html[data-theme] body [data-video-control-strip] :is(button, span) {
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+}
+html[data-theme] body [data-video-control-strip] button {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+html[data-theme] body [data-video-card] [data-video-control-strip] [data-video-glyph-plain] svg {
+  width: 18px !important;
+  height: 18px !important;
+  color: #fff !important;
+}
+html[data-theme] body [data-video-card] [data-video-control-strip] [data-video-glyph-plain][data-video-glyph-active] svg {
+  color: #b8d5ff !important;
+}
+html[data-theme] body [data-video-control-strip] [data-video-cc] {
+  font: 600 13px/1 Arial, sans-serif;
+  letter-spacing: 0.1px;
+}
+@media (max-width: 359px) {
+  [data-video-control-strip] [data-video-time] { display: none; }
+}

@@ -75,6 +75,7 @@ interface Props {
   buttonClassName?: string;
   /** When false, the CC button is faded out (captions still render). Defaults true. */
   buttonVisible?: boolean;
+  plainButton?: boolean;
   /**
    * Render the CC button into this element instead of positioning it against
    * the video. The player's control row is a flex row: portalling into it puts
@@ -103,7 +104,7 @@ function readSize(): SizeKey {
   return 'xs';
 }
 
-export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true, buttonPortalTarget, onMenuOpenChange, onDubAvailableChange }: Props) {
+export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true, plainButton = false, buttonPortalTarget, onMenuOpenChange, onDubAvailableChange }: Props) {
   const { i18n } = useTranslation();
   const numericId = useMemo(() => {
     const n = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId ?? 0;
@@ -644,9 +645,9 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       )}
     >
       {buttonState === 'working' ? (
-        <MediaControlIcon icon={Loader2} spinning />
+        <MediaControlIcon icon={Loader2} spinning plain={plainButton} />
       ) : (
-        <MediaControlIcon captions />
+        <MediaControlIcon captions plain={plainButton} active={plainButton && enabled} />
       )}
     </button>
   );
