@@ -1662,6 +1662,38 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
   const cropFeedVideo = !isImmersive && !isFullscreen && !video.isAudio;
+  useEffect(() => {
+    if (!cropFeedVideo) return;
+    const frame = containerRef.current;
+    const card = frame?.closest<HTMLElement>('[data-feed-item]');
+    if (!frame || !card) return;
+    let raf = 0;
+    const measure = () => {
+      const cardRect = card.getBoundingClientRect();
+      if (cardRect.bottom < 0 || cardRect.top > window.innerHeight) return;
+      const mediaHeight = frame.getBoundingClientRect().height;
+      const chromeHeight = cardRect.height - mediaHeight;
+      if (chromeHeight < 0) return;
+      // The feed item includes the header, caption, metadata, actions and padding.
+      const budget = Math.max(96, Math.round(window.innerHeight * 0.7 - chromeHeight));
+      frame.style.setProperty('--feed-video-budget', `${budget}px`);
+    };
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
+    };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(card);
+    observer.observe(frame);
+    window.addEventListener('resize', schedule);
+    schedule();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', schedule);
+      cancelAnimationFrame(raf);
+      frame.style.removeProperty('--feed-video-budget');
+    };
+  }, [cropFeedVideo]);
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -2075,7 +2107,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         data-feed-video-frame={cropFeedVideo || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
-        /* Feed videos fill the column and crop only past 75% of the viewport.
+        /* Feed videos fill the column and crop within the post's 70% budget.
            On the post page (immersive) it's centred in the column instead, and
            grows until it fills either the column width or most of the screen
            height, whichever it hits first — never cropped, never stretched. */
@@ -2092,7 +2124,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 ? {
                     aspectRatio: mediaAspect,
                     width: '100%',
-                    maxHeight: '75svh',
+                    maxHeight: 'var(--feed-video-budget, calc(70svh - 180px))',
                   }
                 : {
                   aspectRatio: mediaAspect,
