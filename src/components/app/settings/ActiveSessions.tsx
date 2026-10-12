@@ -10,7 +10,9 @@ import { useCallback, useEffect, useState } from 'react';
 import i18n from '@/i18n';
 import { formatRelativeTime as localizedRelativeTime } from '@/i18n/date-locale';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Smartphone, Globe, Clock, LogOut, RefreshCw } from 'lucide-react';
+import { Loader2, Smartphone, Globe, Clock } from "lucide-react";
+import { LogOut, RefreshCw } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {

@@ -15,7 +15,9 @@ import { tokenLabel } from '@/lib/token-label';
 
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { Bell } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

@@ -1,7 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Apple, Clock, Flag, Gamepad2, Hand, Heart, ImagePlus, Lightbulb, Loader2, PawPrint, Plane, Smile, Sparkles, type LucideIcon } from "lucide-react";
+import { Apple, Clock, Hand, Heart, ImagePlus, Loader2, PawPrint, Plane, Smile, type LucideIcon } from "lucide-react";
+import { Flag, Gamepad2, Lightbulb, Sparkles } from "@/components/ui/cut-icons";
+
 import { Plus, Search, X } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

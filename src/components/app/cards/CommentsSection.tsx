@@ -22,7 +22,9 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { Quote, ArrowUpDown, Square, Trash2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Anchor, Eye, Baby, Pin, PinOff, Flag, Sparkles, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
+import { ArrowUpDown, Square, Loader2, ImagePlus, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
+import { Quote, Trash2, Link, Reply, Pencil, Check, Languages, Eye, Flag, Sparkles } from "@/components/ui/cut-icons";
+
 import { X, Search, ThumbsUp, MessageSquare, Mic, Play, Pause, Share2, Repeat2, ChevronRight } from "@/components/ui/cut-icons";
 
 import { motion, AnimatePresence } from 'framer-motion';

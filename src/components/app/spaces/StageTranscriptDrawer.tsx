@@ -36,7 +36,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { FileText, Loader2, RefreshCw, Sparkles, Bot, Globe2, MoreHorizontal, Copy, Pencil, Lock, Users as UsersIcon, Eye, Quote } from "lucide-react";
+import { FileText, Loader2, Bot, Globe2 } from "lucide-react";
+import { RefreshCw, Sparkles, MoreHorizontal, Copy, Pencil, Lock, Users as UsersIcon, Eye, Quote } from "@/components/ui/cut-icons";
+
 import { X, User, Search, Download, Share2, Play, Pause } from "@/components/ui/cut-icons";
 
 import { supabase } from '@/integrations/supabase/client';

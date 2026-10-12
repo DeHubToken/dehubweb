@@ -10,7 +10,9 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Clock, Flame, Lock, Radio, Timer, Tv, Zap, type LucideIcon } from 'lucide-react';
+import { Clock, Flame, Timer, Tv, Zap, type LucideIcon } from "lucide-react";
+import { Check, Lock, Radio } from "@/components/ui/cut-icons";
+
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { STREAMER_BADGE_IDS, streamerBadgeSvg, type StreamerBadgeId } from '@/lib/streamer-badge-art';
 import { streamerCardProgress, type StreamerCardMetric } from '@/lib/streamer-card-goals';

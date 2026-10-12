@@ -7,7 +7,9 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useEffect, useRef, useCallback, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { RefreshCw, Loader2, Trash2, Ban } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { RefreshCw, Trash2, Ban } from "@/components/ui/cut-icons";
+
 import { Search, Plus, MessageCircle } from "@/components/ui/cut-icons";
 
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';

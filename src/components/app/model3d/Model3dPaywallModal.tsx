@@ -22,7 +22,9 @@ import {
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, Box, AlertCircle, ChevronDown, Hash, Lightbulb, Sparkles } from 'lucide-react';
+import { Loader2, Box, AlertCircle, ChevronDown, Hash } from "lucide-react";
+import { Lightbulb, Sparkles } from "@/components/ui/cut-icons";
+
 import {
   MODEL3D_MODELS,
   MODEL3D_MODEL_OPTIONS,

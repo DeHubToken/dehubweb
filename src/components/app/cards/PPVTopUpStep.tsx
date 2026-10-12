@@ -18,7 +18,9 @@ import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { AlertCircle, ArrowRight, CreditCard, Loader2, Wallet } from 'lucide-react';
+import { AlertCircle, ArrowRight, CreditCard, Loader2 } from "lucide-react";
+import { Wallet } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { DhbAmount } from '@/components/app/DhbAmount';

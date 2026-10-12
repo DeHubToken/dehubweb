@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Copy } from 'lucide-react';
+import { AlertTriangle } from "lucide-react";
+import { Copy } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { copyThenClear } from '@/lib/wallet-core/clipboard';

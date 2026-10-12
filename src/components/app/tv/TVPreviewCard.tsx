@@ -12,7 +12,9 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
-import { Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from "lucide-react";
+import { Minimize, PictureInPicture2 } from "lucide-react";
+import { Volume2, VolumeX, Maximize } from "@/components/ui/cut-icons";
+
 import { Play, Pause } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

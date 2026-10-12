@@ -1,4 +1,6 @@
-import { Loader2, Wallet } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { Wallet } from "@/components/ui/cut-icons";
+
 import { useNavigate } from 'react-router-dom';
 import { FundActions } from './FundActions';
 import { useTranslation } from 'react-i18next';

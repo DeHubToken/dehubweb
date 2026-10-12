@@ -20,7 +20,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { AlertTriangle, Loader2, RotateCcw, Trash2 } from 'lucide-react';
+import { AlertTriangle, Loader2, RotateCcw } from "lucide-react";
+import { Trash2 } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

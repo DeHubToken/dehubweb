@@ -5,7 +5,9 @@ import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Minus, Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, ArrowLeftRight, Film, Music, Type, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, GripVertical, Pencil } from "lucide-react";
+import { Minus, ArrowLeftRight, Film, Type, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, GripVertical } from "lucide-react";
+import { Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, Music, Copy, Pencil } from "@/components/ui/cut-icons";
+
 import { Plus, X } from "@/components/ui/cut-icons";
 
 import { Button } from "@/components/ui/button";

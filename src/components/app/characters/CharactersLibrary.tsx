@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
-import { Users, Trash2, Pencil, Copy, Check } from "lucide-react";
+import { Users, Trash2, Pencil, Copy, Check } from "@/components/ui/cut-icons";
+
 import { Search, Plus } from "@/components/ui/cut-icons";
 
 import { Input } from '@/components/ui/input';

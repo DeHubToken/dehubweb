@@ -16,7 +16,9 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IslandAction, KitButton, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
-import { Loader2, Sparkles, CheckCircle2, ShieldCheck, Info, Languages, RotateCcw } from "lucide-react";
+import { Loader2, CheckCircle2, RotateCcw } from "lucide-react";
+import { Sparkles, ShieldCheck, Info, Languages } from "@/components/ui/cut-icons";
+
 import { Search, Plus, X, MessageCircle } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

@@ -5,7 +5,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { Users } from 'lucide-react';
+import { Users } from "@/components/ui/cut-icons";
+
 import { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

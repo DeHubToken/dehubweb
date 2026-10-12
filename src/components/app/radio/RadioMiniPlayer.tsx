@@ -8,7 +8,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/radio/RadioMiniPlayer
  */
 
-import { Radio, Volume2, VolumeX, Loader2, Maximize2, Minus, GripVertical } from "lucide-react";
+import { Loader2, Maximize2, Minus, GripVertical } from "lucide-react";
+import { Radio, Volume2, VolumeX } from "@/components/ui/cut-icons";
+
 import { Play, Pause, X } from "@/components/ui/cut-icons";
 
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';

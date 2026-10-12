@@ -32,7 +32,9 @@ import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, AlertCircle, Check } from 'lucide-react';
+import { Loader2, AlertCircle } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { Interface } from 'ethers';
 import { useTopUpCredit, useAdsTopUpQuote } from '@/hooks/use-ads';

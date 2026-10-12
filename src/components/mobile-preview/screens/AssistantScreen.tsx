@@ -4,7 +4,8 @@ import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/cut-icons";
+
 import { Send, Plus } from "@/components/ui/cut-icons";
 
 

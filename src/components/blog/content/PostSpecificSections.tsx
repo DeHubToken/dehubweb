@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink } from "@/components/ui/cut-icons";
+
 
 interface PostSpecificSectionsProps {
   content: string;

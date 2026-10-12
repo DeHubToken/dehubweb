@@ -9,7 +9,9 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
  */
 
 import { useMemo, useState } from 'react';
-import { Crown, Shield, VolumeX } from "lucide-react";
+import { Crown, Shield } from "lucide-react";
+import { VolumeX } from "@/components/ui/cut-icons";
+
 import { User, Settings2 } from "@/components/ui/cut-icons";
 
 import { useNavigate } from 'react-router-dom';

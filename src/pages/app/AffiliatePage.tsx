@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from '@/i18n';
-import { Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy } from "lucide-react";
+import { Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy } from "@/components/ui/cut-icons";
+
 import { Share2, Plus, X } from "@/components/ui/cut-icons";
 
 import { AppState } from '@/components/app/AppState';

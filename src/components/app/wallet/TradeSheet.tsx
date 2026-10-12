@@ -7,7 +7,9 @@ import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
-import { ArrowUp, CandlestickChart, Check, Loader2, Sparkles } from "lucide-react";
+import { ArrowUp, CandlestickChart, Loader2 } from "lucide-react";
+import { Check, Sparkles } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, ChevronRight } from "@/components/ui/cut-icons";
 
 import { useAuth } from '@/contexts/AuthContext';

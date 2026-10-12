@@ -37,7 +37,9 @@ import { ButtonLoader } from '../DeHubLoader';
 import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { stashLiveSession } from '@/lib/live-handoff';
-import { Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from "lucide-react";
+import { Minimize, PictureInPicture2 } from "lucide-react";
+import { Volume2, VolumeX, Maximize } from "@/components/ui/cut-icons";
+
 import { Play, Pause } from "@/components/ui/cut-icons";
 
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';

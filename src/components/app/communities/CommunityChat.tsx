@@ -15,7 +15,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Loader2, SmilePlus, Reply, CornerDownRight, LogIn, Pencil, Check, Trash2, ArrowDown, Pin, PinOff, MicOff, Ban } from "lucide-react";
+import { Loader2, SmilePlus, CornerDownRight, LogIn, ArrowDown, Pin, PinOff } from "lucide-react";
+import { Reply, Pencil, Check, Trash2, MicOff, Ban } from "@/components/ui/cut-icons";
+
 import { Send, X, MessageSquare, Search } from "@/components/ui/cut-icons";
 
 import { VoiceRecorder } from '../chat/VoiceRecorder';
@@ -57,7 +59,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { MarkdownText } from '@/lib/markdown';
 import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
-import { Sparkles } from 'lucide-react';
+import { Sparkles } from "@/components/ui/cut-icons";
+
 
 
 

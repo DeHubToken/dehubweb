@@ -5,7 +5,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { MoreHorizontal, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
+import { MoreHorizontal } from "@/components/ui/cut-icons";
+
 import { Bookmark } from "@/components/ui/cut-icons";
 
 

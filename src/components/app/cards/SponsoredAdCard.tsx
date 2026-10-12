@@ -9,7 +9,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState } from 'react';
-import { Megaphone, ExternalLink } from "lucide-react";
+import { Megaphone, ExternalLink } from "@/components/ui/cut-icons";
+
 import { Play } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

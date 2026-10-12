@@ -1,7 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useDeferredValue, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Lock, Users } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Lock, Users } from "@/components/ui/cut-icons";
+
 import { Search, X } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

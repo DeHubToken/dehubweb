@@ -13,7 +13,9 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Minimize2, Palette, Radio, ChevronLeft } from "lucide-react";
+import { Minimize2, Palette, ChevronLeft } from "lucide-react";
+import { Radio } from "@/components/ui/cut-icons";
+
 import { ChevronRight } from "@/components/ui/cut-icons";
 
 import lavaLampIcon from '@/assets/lava-lamp-icon.png';

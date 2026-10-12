@@ -10,7 +10,9 @@ import type { MouseEvent, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { BadgeCheck, Blocks } from 'lucide-react';
+import { BadgeCheck } from "lucide-react";
+import { Blocks } from "@/components/ui/cut-icons";
+
 import { fetchAppBySlug } from '@/lib/miniapp/registry';
 
 interface AppLinkEmbedProps {

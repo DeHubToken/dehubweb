@@ -4,7 +4,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Ticket, Gift, Shield, Eye, EyeOff, Check, Info, Hash, Save, Type, Users, Coins, ShoppingBag, Baby } from "lucide-react";
+import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby } from "lucide-react";
+import { Gift, Eye, EyeOff, Check, Info, Users, Coins } from "@/components/ui/cut-icons";
+
 import { MessageCircle, Search, X, Plus } from "@/components/ui/cut-icons";
 
 import { Switch } from '@/components/ui/switch';

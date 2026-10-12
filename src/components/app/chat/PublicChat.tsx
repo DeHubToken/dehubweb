@@ -3,7 +3,9 @@ import { useDraftState } from "@/hooks/use-draft-state";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { MoreVertical, Loader2, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Languages, RotateCcw } from "lucide-react";
+import { MoreVertical, Loader2, ShieldBan, MessageSquarePlus, AlertCircle, RotateCcw } from "lucide-react";
+import { ShieldCheck, RefreshCw, Languages } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, Settings, MessageCircle, Search, X } from "@/components/ui/cut-icons";
 
 import { LiveChatOnlineCount } from './LiveChatOnlineCount';

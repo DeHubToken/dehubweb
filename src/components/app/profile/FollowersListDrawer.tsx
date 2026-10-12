@@ -4,7 +4,9 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import { Loader2, Users, UserPlus, UserMinus, ArrowUpDown, Clock, FolderPlus } from "lucide-react";
+import { Loader2, UserMinus, ArrowUpDown, Clock, FolderPlus } from "lucide-react";
+import { Users, UserPlus } from "@/components/ui/cut-icons";
+
 import { Search, X } from "@/components/ui/cut-icons";
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';

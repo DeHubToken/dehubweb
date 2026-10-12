@@ -7,7 +7,9 @@
 
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RotateCcw, Loader2, Languages } from 'lucide-react';
+import { RotateCcw, Loader2 } from "lucide-react";
+import { Languages } from "@/components/ui/cut-icons";
+
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';

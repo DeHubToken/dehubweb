@@ -18,7 +18,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Link2 } from 'lucide-react';
+import { Link2 } from "@/components/ui/cut-icons";
+
 import { resolveNewPost } from '@/lib/api/dehub';
 import type { DehubLinkMatch } from '@/lib/dehub-links';
 import { dehubLinkLabel, MAX_EMBEDS_PER_MESSAGE } from '@/lib/dehub-links';

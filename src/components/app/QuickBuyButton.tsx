@@ -5,7 +5,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState } from 'react';
-import { ShoppingCart, CreditCard, Wallet, ArrowRightLeft } from 'lucide-react';
+import { ShoppingCart, CreditCard, ArrowRightLeft } from "lucide-react";
+import { Wallet } from "@/components/ui/cut-icons";
+
 import { useNavigate } from 'react-router-dom';
 import {
   Drawer,

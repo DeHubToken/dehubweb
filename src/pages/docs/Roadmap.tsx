@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle, Calendar, FileText, ArrowRight } from 'lucide-react';
+import { CheckCircle, FileText, ArrowRight } from "lucide-react";
+import { Calendar } from "@/components/ui/cut-icons";
+
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 

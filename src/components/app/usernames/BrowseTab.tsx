@@ -16,7 +16,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Check, Lock, Tag } from "lucide-react";
+import { Tag } from "lucide-react";
+import { Check, Lock } from "@/components/ui/cut-icons";
+
 import { Search, SlidersHorizontal, User } from "@/components/ui/cut-icons";
 
 import { Input } from '@/components/ui/input';

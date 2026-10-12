@@ -22,7 +22,9 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Clock, Loader2, Trash2 } from "lucide-react";
+import { Clock, Loader2 } from "lucide-react";
+import { Check, Trash2 } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

@@ -13,7 +13,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useEffect, useState } from 'react';
-import { Check, Loader2, ThumbsDown, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Check, ThumbsDown, Trash2 } from "@/components/ui/cut-icons";
+
 import { ThumbsUp } from "@/components/ui/cut-icons";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

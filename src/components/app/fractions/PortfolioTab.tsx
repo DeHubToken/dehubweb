@@ -13,7 +13,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Tag, Wallet, ImageIcon, HandCoins } from "lucide-react";
+import { Loader2, Tag, ImageIcon, HandCoins } from "lucide-react";
+import { Wallet } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

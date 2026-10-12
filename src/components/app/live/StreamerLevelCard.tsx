@@ -17,7 +17,9 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/streamer-badge-art';
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Flame, Layers, Lock, Radio } from 'lucide-react';
+import { Flame, Layers } from "lucide-react";
+import { Lock, Radio } from "@/components/ui/cut-icons";
+
 import {
   Dialog,
   DialogContent,

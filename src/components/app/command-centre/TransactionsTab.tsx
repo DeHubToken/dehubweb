@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
-import { TrendingUp, Info, Loader2, AlertCircle } from "lucide-react";
+import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
+import { Info } from "@/components/ui/cut-icons";
+
 import { Settings2 } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

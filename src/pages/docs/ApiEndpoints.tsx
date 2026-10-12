@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useState } from 'react';
-import { Code, Copy, CheckCircle, Globe, Lock, Zap } from 'lucide-react';
+import { Code, CheckCircle, Globe, Zap } from "lucide-react";
+import { Copy, Lock } from "@/components/ui/cut-icons";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const ApiEndpoints = () => {

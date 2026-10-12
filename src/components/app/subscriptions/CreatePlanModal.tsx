@@ -4,7 +4,9 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { tokenLabel } from '@/lib/token-label';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { Loader2, Star, Clock, FileText, Gift, Check } from "lucide-react";
+import { Loader2, Star, Clock, FileText } from "lucide-react";
+import { Gift, Check } from "@/components/ui/cut-icons";
+
 import { Plus, X, Settings2 } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

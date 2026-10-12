@@ -18,7 +18,9 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Sparkles, Loader2, ChevronDown, ImageIcon, Copy, Paperclip, Video, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines, LifeBuoy } from "lucide-react";
+import { Loader2, ChevronDown, ImageIcon, Square, XCircle, Zap, AudioLines, LifeBuoy } from "lucide-react";
+import { Sparkles, Copy, Paperclip, Video, Volume2, VolumeX, LayoutDashboard, Check, Lock, History } from "@/components/ui/cut-icons";
+
 import { Send, X, Plus, Settings, Download, Mic } from "@/components/ui/cut-icons";
 
 import { useLocation, useNavigate } from 'react-router-dom';

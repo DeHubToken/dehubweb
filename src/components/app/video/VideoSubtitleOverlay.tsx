@@ -22,7 +22,9 @@ import { MediaControlIcon } from './MediaControlIcon';
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { Check, Loader2, Minus } from "lucide-react";
+import { Loader2, Minus } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { Search, Settings2, Plus } from "@/components/ui/cut-icons";
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';

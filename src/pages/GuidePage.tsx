@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Lightbulb, PenSquare, Bot, Wallet, Landmark, Trophy, LayoutDashboard, Vote, ArrowLeftRight, Music, Tv, BookOpen, ShoppingCart, LogIn } from "lucide-react";
+import { PenSquare, Bot, ArrowLeftRight, Tv, ShoppingCart, LogIn } from "lucide-react";
+import { Lightbulb, Wallet, Landmark, Trophy, LayoutDashboard, Vote, Music, BookOpen } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, ChevronRight, Menu, X, Home, ThumbsUp, Search, User, MessageCircle, Bell, Bookmark, Settings } from "@/components/ui/cut-icons";
 
 import { useTranslation } from "react-i18next";

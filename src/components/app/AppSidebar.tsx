@@ -1,7 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PenSquare, LogIn, LogOut, CornerDownLeft } from "lucide-react";
+import { PenSquare, LogIn, CornerDownLeft } from "lucide-react";
+import { LogOut } from "@/components/ui/cut-icons";
+
 import { Search, X } from "@/components/ui/cut-icons";
 
 import { DhbCoin } from '@/components/app/DhbAmount';

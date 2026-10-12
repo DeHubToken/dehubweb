@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, memo, useMemo } from 'react';
-import { SquareUserRound, Trophy, MessagesSquare, Star } from 'lucide-react';
+import { SquareUserRound, MessagesSquare, Star } from "lucide-react";
+import { Trophy } from "@/components/ui/cut-icons";
+
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';
 import { SidebarChat } from './SidebarChat';

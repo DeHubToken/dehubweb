@@ -12,7 +12,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Copy, Check, Loader2, HeartHandshake, ExternalLink, RefreshCw, Info, FilePenLine } from 'lucide-react';
+import { Loader2, HeartHandshake, FilePenLine } from "lucide-react";
+import { Copy, Check, ExternalLink, RefreshCw, Info } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { SEOHead } from '@/components/SEOHead';

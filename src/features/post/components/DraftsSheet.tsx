@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Save, Trash2, Clock, Image, Video, BarChart3, CalendarClock } from "lucide-react";
+import { Save, Clock, CalendarClock } from "lucide-react";
+import { Trash2, Image, Video, BarChart3 } from "@/components/ui/cut-icons";
+
 import { X, Mic } from "@/components/ui/cut-icons";
 
 import { motion, AnimatePresence } from 'framer-motion';

@@ -12,7 +12,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Eye, HardDrive, Images, Landmark, Lock, Newspaper, Percent, Upload, type LucideIcon } from "lucide-react";
+import { HardDrive, Newspaper, Percent, type LucideIcon } from "lucide-react";
+import { Check, Eye, Images, Landmark, Lock, Upload } from "@/components/ui/cut-icons";
+
 import { Mic, Share2 } from "@/components/ui/cut-icons";
 
 import { AuthContext } from '@/contexts/AuthContext';

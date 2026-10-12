@@ -1,7 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Copy, Check, Loader2, Globe, ExternalLink, AlertTriangle } from "lucide-react";
+import { Loader2, Globe, AlertTriangle } from "lucide-react";
+import { Copy, Check, ExternalLink } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, ChevronRight, Search } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { X, Plus } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

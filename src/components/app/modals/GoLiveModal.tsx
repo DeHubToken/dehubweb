@@ -2,7 +2,9 @@ import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
-import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, Video, MonitorPlay, ScreenShare } from "lucide-react";
+import { Loader2, ImagePlus, MonitorPlay, ScreenShare } from "lucide-react";
+import { Radio, Copy, Check, ExternalLink, Video } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';

@@ -27,7 +27,9 @@ import {
   type Viewport,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Clapperboard, Loader2, Sparkles } from "lucide-react";
+import { Clapperboard, Loader2 } from "lucide-react";
+import { Sparkles } from "@/components/ui/cut-icons";
+
 import { MessageSquare, Play } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

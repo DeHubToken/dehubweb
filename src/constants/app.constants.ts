@@ -1,4 +1,7 @@
-import { Blocks, AtSign, Store, Trophy, FileText, Image, Video, Film, Radio, Users, CalendarDays, FileTextIcon, Coins, LayoutDashboard, Sparkles, Wand2, Wallet, BookOpen, Scroll, Lightbulb, Briefcase, ShieldCheck, Landmark, Vault, Map, BarChart3, Gamepad2, PieChart, Zap, ArrowDownToLine, FolderInput, Megaphone, Tv } from "lucide-react";
+import { Blog } from "@/components/ui/cut-icons";
+import { AtSign, FileText, Film, FileTextIcon, Wand2, Scroll, Zap, ArrowDownToLine, FolderInput, Tv } from "lucide-react";
+import { Blocks, Store, Trophy, Image, Video, Radio, Users, CalendarDays, Coins, LayoutDashboard, Sparkles, Wallet, BookOpen, Lightbulb, Briefcase, ShieldCheck, Landmark, Vault, Map, BarChart3, Gamepad2, PieChart, Megaphone } from "@/components/ui/cut-icons";
+
 import { Home, Search, Bell, MessageSquare, Bookmark, Settings, User, Play, Mic } from "@/components/ui/cut-icons";
 
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
@@ -51,7 +54,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },
   { icon: BookOpen, label: 'Docs', path: '/docs' },
-  { icon: FileText, label: 'Blog', path: '/docs/blog' },
+  { icon: Blog, label: 'Blog', path: '/docs/blog' },
 ];
 
 /**

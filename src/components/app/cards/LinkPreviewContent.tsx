@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink } from "@/components/ui/cut-icons";
+
 import { getLinkPreviewFavicon, type LinkPreviewData } from '@/lib/api/link-preview';
 import { PredictionDetails } from './PredictionDetails';
 

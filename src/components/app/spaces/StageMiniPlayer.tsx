@@ -7,7 +7,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { MicOff, Maximize2, Users, Volume2, ScreenShare, Radio } from "lucide-react";
+import { Maximize2, ScreenShare } from "lucide-react";
+import { MicOff, Users, Volume2, Radio } from "@/components/ui/cut-icons";
+
 import { Mic, X } from "@/components/ui/cut-icons";
 
 import { motion, useDragControls } from 'framer-motion';

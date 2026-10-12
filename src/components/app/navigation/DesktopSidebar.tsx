@@ -5,7 +5,9 @@ import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PenSquare, Sparkles, LogIn, LogOut, CornerDownLeft } from "lucide-react";
+import { PenSquare, LogIn, CornerDownLeft } from "lucide-react";
+import { Sparkles, LogOut } from "@/components/ui/cut-icons";
+
 import { Menu, Search, X } from "@/components/ui/cut-icons";
 
 import { NAV_ITEMS } from '@/constants/app.constants';

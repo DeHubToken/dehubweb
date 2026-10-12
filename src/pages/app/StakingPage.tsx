@@ -12,7 +12,9 @@ import { motion } from 'framer-motion';
 import { formatUnits, parseUnits } from 'ethers';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiCall } from '@/lib/api/dehub/core';
-import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Copy } from "lucide-react";
+import { TrendingUp, DollarSign, Activity, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, AlertTriangle, Percent, Zap, Crown } from "lucide-react";
+import { Lock, ExternalLink, RefreshCw, Gift, Wallet, Copy } from "@/components/ui/cut-icons";
+
 import { X, ChevronRight } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

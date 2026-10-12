@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight } from "lucide-react";
+import { Calendar } from "@/components/ui/cut-icons";
+
 import { BlogPost } from '@/types/blog';
 import { formatDate } from '@/utils/blogUtils';
 import { getDocumentScrollTop } from '@/lib/document-scroll';

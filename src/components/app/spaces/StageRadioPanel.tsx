@@ -26,7 +26,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useQuery } from '@tanstack/react-query';
-import { Radio, Square, SkipBack, SkipForward, Loader2, Music, Volume2, VolumeX, Headphones, HeadphoneOff, Trash2 } from "lucide-react";
+import { Square, Loader2, Headphones, HeadphoneOff } from "lucide-react";
+import { Radio, SkipBack, SkipForward, Music, Volume2, VolumeX, Trash2 } from "@/components/ui/cut-icons";
+
 import { Search, Play, Pause, Plus } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

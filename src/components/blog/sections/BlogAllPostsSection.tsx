@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
-import { Calendar } from "lucide-react";
+import { Calendar } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { BlogPost } from '@/types/blog';

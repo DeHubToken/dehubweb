@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Upload, Trash2, Film, Music, Image as ImageIcon, HardDrive, Lock, ExternalLink, Copy } from "lucide-react";
+import { Film, HardDrive } from "lucide-react";
+import { Upload, Trash2, Music, Image as ImageIcon, Lock, ExternalLink, Copy } from "@/components/ui/cut-icons";
+
 import { Plus } from "@/components/ui/cut-icons";
 
 import { Button } from "@/components/ui/button";

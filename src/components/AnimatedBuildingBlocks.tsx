@@ -1,6 +1,8 @@
 
 import React from 'react';
-import { Building, Blocks } from 'lucide-react';
+import { Building } from "lucide-react";
+import { Blocks } from "@/components/ui/cut-icons";
+
 
 const AnimatedBuildingBlocks = () => {
   return (

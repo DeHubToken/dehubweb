@@ -6,7 +6,8 @@ import { FeedPillPullEffect } from './FeedPillPullEffect';
 import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from './feed-drawer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Check, LayoutGrid } from "lucide-react";
+import { Check, LayoutGrid } from "@/components/ui/cut-icons";
+
 import { Bell, Menu, SlidersHorizontal, Plus } from "@/components/ui/cut-icons";
 
 import { FEED_TABS } from '@/constants/app.constants';

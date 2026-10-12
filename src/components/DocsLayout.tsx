@@ -6,7 +6,9 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { DocsSEO } from '@/components/DocsSEO';
 import { docsAsideVariants, docsContentVariants, useIsDesktop } from '@/lib/surface-motion';
-import { Book, FileText, Code, Database, Shield, Zap, Users, ExternalLink, ChevronDown, Coins, Github, Phone, Monitor, Gamepad2, Tv, Lock, Map, Tag, Newspaper, Scale, ShieldCheck, PenLine, HelpCircle, Heart } from "lucide-react";
+import { Book, FileText, Code, Database, Shield, Zap, ChevronDown, Github, Phone, Monitor, Tv, Tag, Newspaper, Scale, Heart } from "lucide-react";
+import { Users, ExternalLink, Coins, Gamepad2, Lock, Map, ShieldCheck, PenLine, HelpCircle } from "@/components/ui/cut-icons";
+
 import { ChevronRight, Menu, X, Search, Settings, Home } from "@/components/ui/cut-icons";
 
 import { ScrollArea } from '@/components/ui/scroll-area';

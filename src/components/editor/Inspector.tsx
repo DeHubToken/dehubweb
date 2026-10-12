@@ -30,7 +30,9 @@ import { HighlightTools } from "@/components/editor/HighlightTools";
 import { AudioTools } from "@/components/editor/AudioTools";
 import { TextFitControls } from "@/components/editor/TextFitControls";
 import { fitCaptionTrack } from "@/lib/editor/textFit";
-import { Captions, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Captions } from "@/components/ui/cut-icons";
+
 import { toast } from "sonner";
 
 

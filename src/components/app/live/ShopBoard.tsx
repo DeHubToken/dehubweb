@@ -42,7 +42,9 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ShoppingBag, ExternalLink, ImageIcon, Loader2 } from "lucide-react";
+import { ShoppingBag, ImageIcon, Loader2 } from "lucide-react";
+import { ExternalLink } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

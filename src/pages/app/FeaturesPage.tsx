@@ -20,7 +20,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
-import { Loader2, Sparkles, CheckCircle2, Trash2, MoreVertical, Pencil, ImagePlus } from "lucide-react";
+import { Loader2, CheckCircle2, MoreVertical, ImagePlus } from "lucide-react";
+import { Sparkles, Trash2, Pencil } from "@/components/ui/cut-icons";
+
 import { Search, Plus, X } from "@/components/ui/cut-icons";
 
 import featuresLightbulb from '@/assets/features-lightbulb.png';

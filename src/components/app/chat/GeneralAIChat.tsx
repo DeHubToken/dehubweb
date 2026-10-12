@@ -11,7 +11,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Sparkles, Loader2, ImageIcon } from "lucide-react";
+import { Loader2, ImageIcon } from "lucide-react";
+import { Sparkles } from "@/components/ui/cut-icons";
+
 import { X, Send, Share } from "@/components/ui/cut-icons";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

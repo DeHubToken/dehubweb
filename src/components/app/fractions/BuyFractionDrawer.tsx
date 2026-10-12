@@ -27,7 +27,9 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { Loader2, ShoppingCart, AlertTriangle, Info } from 'lucide-react';
+import { Loader2, ShoppingCart, AlertTriangle } from "lucide-react";
+import { Info } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { useFractionPurchase, type FractionQuote } from '@/hooks/use-fraction-checkout';
 import { useSellerStats, TOTAL_FRACTIONS, type FractionListing } from '@/hooks/use-fraction-marketplace';

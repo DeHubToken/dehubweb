@@ -8,7 +8,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { Link } from 'react-router-dom';
-import { Megaphone } from 'lucide-react';
+import { Megaphone } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 
 interface AdSlotCardProps {

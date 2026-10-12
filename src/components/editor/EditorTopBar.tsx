@@ -5,7 +5,9 @@ import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { useEditorStore } from "@/store/editorStore";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
-import { Save, Undo2, Redo2, FilePlus2, Info, Sparkles } from "lucide-react";
+import { Save, FilePlus2 } from "lucide-react";
+import { Undo2, Redo2, Info, Sparkles } from "@/components/ui/cut-icons";
+
 import { Download } from "@/components/ui/cut-icons";
 
 import { useCallback, useState, useEffect } from "react";

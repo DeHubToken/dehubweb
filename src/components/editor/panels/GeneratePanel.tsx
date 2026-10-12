@@ -17,7 +17,9 @@ import { useEditorStore } from '@/store/editorStore';
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Film, ImageIcon, Loader2, Music2, Sparkles } from "lucide-react";
+import { Film, ImageIcon, Loader2 } from "lucide-react";
+import { Music2, Sparkles } from "@/components/ui/cut-icons";
+
 import { Mic } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

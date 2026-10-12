@@ -9,7 +9,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import React, { useState } from 'react';
-import { Mail, Check } from 'lucide-react';
+import { Mail } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 
 /**

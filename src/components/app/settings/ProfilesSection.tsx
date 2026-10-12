@@ -10,7 +10,8 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Users } from "lucide-react";
+import { Check, Users } from "@/components/ui/cut-icons";
+
 import { Plus, X } from "@/components/ui/cut-icons";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

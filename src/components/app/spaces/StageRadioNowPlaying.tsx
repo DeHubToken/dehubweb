@@ -12,7 +12,8 @@
  * a second subscription to the same topic from one client is refused.
  */
 
-import { Music, Radio } from 'lucide-react';
+import { Music, Radio } from "@/components/ui/cut-icons";
+
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

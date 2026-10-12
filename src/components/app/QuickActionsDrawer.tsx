@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bug, RefreshCw, Users, LogOut, Loader2 } from "lucide-react";
+import { Bug, Loader2 } from "lucide-react";
+import { RefreshCw, Users, LogOut } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';

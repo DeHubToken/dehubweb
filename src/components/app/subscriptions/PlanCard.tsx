@@ -1,7 +1,9 @@
 import { tokenLabel } from '@/lib/token-label';
 import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Clock, Loader2, Star, Users, Upload, Info, Pin } from 'lucide-react';
+import { Clock, Loader2, Star, Pin } from "lucide-react";
+import { Check, Users, Upload, Info } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import {
   AlertDialog,

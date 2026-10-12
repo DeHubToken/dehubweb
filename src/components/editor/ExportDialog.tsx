@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
-import { Scissors } from "lucide-react";
+import { Scissors } from "@/components/ui/cut-icons";
+
 import { Download, X } from "@/components/ui/cut-icons";
 
 import { toast } from "sonner";

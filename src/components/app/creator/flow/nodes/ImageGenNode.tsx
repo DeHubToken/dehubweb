@@ -6,7 +6,9 @@
  * keeps a carousel of everything it has produced.
  */
 import { useCallback, useRef, useState } from 'react';
-import { ChevronLeft, CopyPlus, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { ChevronLeft, CopyPlus, Loader2 } from "lucide-react";
+import { Sparkles, Trash2 } from "@/components/ui/cut-icons";
+
 import { ChevronRight, Download } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

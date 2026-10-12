@@ -14,7 +14,9 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { RefreshCw, Loader2, Ticket } from "lucide-react";
+import { Loader2, Ticket } from "lucide-react";
+import { RefreshCw } from "@/components/ui/cut-icons";
+
 import { ThumbsUp, MessageSquare } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

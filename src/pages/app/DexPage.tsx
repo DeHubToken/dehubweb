@@ -5,7 +5,9 @@ import { minuteCache, parseDehubMarket, isDehubPool, CANDLE_INTERVALS, type Shar
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import { ArrowDownUp, ExternalLink, RefreshCw } from 'lucide-react';
+import { ArrowDownUp } from "lucide-react";
+import { ExternalLink, RefreshCw } from "@/components/ui/cut-icons";
+
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';

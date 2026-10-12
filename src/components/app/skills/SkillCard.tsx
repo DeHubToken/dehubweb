@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Sparkles, ArrowUpRight, Trash2 } from 'lucide-react';
+import { ArrowUpRight } from "lucide-react";
+import { Sparkles, Trash2 } from "@/components/ui/cut-icons";
+
 import type { UserSkill } from '@/hooks/use-user-skills';
 
 interface Props {

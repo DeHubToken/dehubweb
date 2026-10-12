@@ -14,7 +14,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState, Suspense, lazy, type ReactNode } from 'react';
-import { Link2, MessageSquarePlus } from "lucide-react";
+import { MessageSquarePlus } from "lucide-react";
+import { Link2 } from "@/components/ui/cut-icons";
+
 import { Repeat2, Send, Share2 } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

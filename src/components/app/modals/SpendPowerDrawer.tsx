@@ -32,7 +32,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Check, SquarePen } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Check, SquarePen } from "@/components/ui/cut-icons";
+
 import { Search, X, Play } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

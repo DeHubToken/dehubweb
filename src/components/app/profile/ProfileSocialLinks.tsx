@@ -1,7 +1,8 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink } from "@/components/ui/cut-icons";
+
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import { normalizeSocialUrl } from '@/lib/social-links';

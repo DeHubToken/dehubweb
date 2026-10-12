@@ -17,7 +17,9 @@ import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
-import { RefreshCw, Eye, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { RefreshCw, Eye } from "@/components/ui/cut-icons";
+
 import { Play, ThumbsUp } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

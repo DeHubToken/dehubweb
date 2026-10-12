@@ -15,7 +15,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Bot, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from "lucide-react";
+import { Bot } from "lucide-react";
+import { Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from "@/components/ui/cut-icons";
+
 import { Plus } from "@/components/ui/cut-icons";
 
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';

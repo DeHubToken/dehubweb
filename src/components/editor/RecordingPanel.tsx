@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { toast } from "sonner";
-import { Camera, Monitor, Square } from "lucide-react";
+import { Monitor, Square } from "lucide-react";
+import { Camera } from "@/components/ui/cut-icons";
+
 import { Mic } from "@/components/ui/cut-icons";
 
 import { Button } from "@/components/ui/button";

@@ -19,7 +19,9 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { stageUtcClock } from '@/lib/stage-time';
-import { Calendar, Loader2, ImagePlus, Check, Copy } from "lucide-react";
+import { Loader2, ImagePlus } from "lucide-react";
+import { Calendar, Check, Copy } from "@/components/ui/cut-icons";
+
 import { X, Send } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

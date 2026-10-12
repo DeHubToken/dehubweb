@@ -5,7 +5,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Heart, UserPlus, Coins, AtSign } from "lucide-react";
+import { Heart, AtSign } from "lucide-react";
+import { UserPlus, Coins } from "@/components/ui/cut-icons";
+
 import { MessageSquare, Repeat2 } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

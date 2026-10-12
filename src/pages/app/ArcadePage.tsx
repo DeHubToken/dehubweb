@@ -17,7 +17,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Swords, Upload } from "lucide-react";
+import { Swords } from "lucide-react";
+import { Upload } from "@/components/ui/cut-icons";
+
 import { Play } from "@/components/ui/cut-icons";
 
 import { useReducedMotion } from 'framer-motion';

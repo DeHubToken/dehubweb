@@ -19,7 +19,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowUp, Sparkles, Wand2 } from "lucide-react";
+import { ArrowUp, Wand2 } from "lucide-react";
+import { Sparkles } from "@/components/ui/cut-icons";
+
 import { MessageCircle, Share2, X } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

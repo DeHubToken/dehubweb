@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Scissors, Check, Film } from "lucide-react";
+import { Film } from "lucide-react";
+import { Scissors, Check } from "@/components/ui/cut-icons";
+
 import { X, Play, Pause } from "@/components/ui/cut-icons";
 
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';

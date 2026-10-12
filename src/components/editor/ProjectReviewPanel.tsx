@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RefreshCw, Users } from "lucide-react";
+import { RefreshCw, Users } from "@/components/ui/cut-icons";
+
 import { MessageSquare } from "@/components/ui/cut-icons";
 
 import { Button } from "@/components/ui/button";

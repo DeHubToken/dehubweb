@@ -10,7 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Image as ImageIcon, FileText, Package, Palette, ExternalLink } from "lucide-react";
+import { FileText, Package, Palette } from "lucide-react";
+import { Image as ImageIcon, ExternalLink } from "@/components/ui/cut-icons";
+
 import { Download } from "@/components/ui/cut-icons";
 
 import { useLanguage } from '@/contexts/LanguageContext';

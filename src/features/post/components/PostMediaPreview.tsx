@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Square, Trash2, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Pencil, Grip, Image as ImageIcon } from "lucide-react";
+import { Square, Loader2, Paintbrush, Grip } from "lucide-react";
+import { Trash2, Upload, Music, Crop, Scissors, Pencil, Image as ImageIcon } from "@/components/ui/cut-icons";
+
 import { X, Mic, Play, Pause } from "@/components/ui/cut-icons";
 
 import nailIcon from '@/assets/icons/nail-icon.png';

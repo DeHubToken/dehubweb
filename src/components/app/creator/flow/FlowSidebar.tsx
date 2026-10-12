@@ -6,7 +6,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * a fresh canvas or the UGC starter.
  */
 import { useState } from 'react';
-import { Check, Cloud, CloudOff, Copy, Globe, Loader2, MoreHorizontal, Pencil, Sparkles, Trash2 } from "lucide-react";
+import { Cloud, CloudOff, Globe, Loader2 } from "lucide-react";
+import { Check, Copy, MoreHorizontal, Pencil, Sparkles, Trash2 } from "@/components/ui/cut-icons";
+
 import { Plus, X } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

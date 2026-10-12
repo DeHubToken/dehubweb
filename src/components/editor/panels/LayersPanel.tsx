@@ -8,7 +8,9 @@
  */
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Eye, EyeOff, Image as ImageIcon, Lock, Shapes, Type, Unlock, Video } from 'lucide-react';
+import { Shapes, Type, Unlock } from "lucide-react";
+import { Eye, EyeOff, Image as ImageIcon, Lock, Video } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useEditorStore } from '@/store/editorStore';
 import { isVisualClip } from '@/lib/editor/render';

@@ -30,7 +30,9 @@ import { getAiScrapingPreference } from '@/lib/ai-scraping';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
-import { Clock, Sparkles, Flag, Link2, Pencil, Trash2 } from "lucide-react";
+import { Clock } from "lucide-react";
+import { Sparkles, Flag, Link2, Pencil, Trash2 } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, Gem } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

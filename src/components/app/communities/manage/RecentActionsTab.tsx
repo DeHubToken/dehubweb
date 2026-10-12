@@ -12,7 +12,9 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  */
 
 import { memo, useMemo, useState } from 'react';
-import { Activity, Link2, Users, type LucideIcon } from "lucide-react";
+import { Activity, type LucideIcon } from "lucide-react";
+import { Link2, Users } from "@/components/ui/cut-icons";
+
 import { MessageSquare, Settings, User } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';
