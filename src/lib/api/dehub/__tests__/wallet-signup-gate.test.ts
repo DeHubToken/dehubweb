@@ -33,6 +33,12 @@ afterEach(() => {
 });
 
 describe('authenticateWallet on a blocked signup', () => {
+  it('sends the challenge and exposes replay errors without losing their code', async () => {
+    mockFetch({ code: 'WALLET_CHALLENGE_UNAVAILABLE', message: 'Used proof' }, 401);
+    await expect(authenticateWallet(ADDRESS, '0xsignature', 1_800_000_000, 8453, undefined, undefined, undefined, 'a'.repeat(64)))
+      .rejects.toMatchObject({ code: 'WALLET_CHALLENGE_UNAVAILABLE', status: 401 });
+    expect(JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)).challengeId).toBe('a'.repeat(64));
+  });
   it('raises WalletSignupBlockedError for the gate code', async () => {
     mockFetch(
       {
