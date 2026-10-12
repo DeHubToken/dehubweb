@@ -280,13 +280,29 @@ html[data-theme='jungle'] [data-side-panel-tabs] {
 /* The mobile top bar draws no plank: the logo and icons sit straight on the
    canvas, as on every other canvas theme (index.css). */
 
+/* [data-bottom-nav] is the FULL-WIDTH fixed wrapper (`left-0 right-0 p-2`), not
+   the pill. Painting it laid an edge-to-edge plank across the bottom of every
+   phone screen, over the feed's action buttons. The wrapper stays invisible;
+   the glass pill inside it (glass-surfaces.css) is the surface, the same split
+   osaka-theme.css and war-theme.css make. */
 html[data-theme='jungle'] [data-bottom-nav] {
-  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.9) !important;
-  backdrop-filter: var(--jungle-blur) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
   border-color: transparent !important;
-  box-shadow:
-    inset 0 1.5px 0 rgb(var(--jungle-glint) / 0.18),
-    inset 0 2.5px 0 rgb(0 0 0 / 0.32) !important;
+  box-shadow: none !important;
+}
+
+/* Phones: no wood grain on the chrome or the bentos, matching the app. The
+   fibre and banding read as hard stripes at phone density; the glass tint and
+   blur stay, so surfaces remain translucent. */
+@media (max-width: 1023px) {
+  html[data-theme='jungle'] {
+    --glass-highlight: none;
+  }
+  html[data-theme='jungle'] [data-feed-item],
+  html[data-theme='jungle'] [data-feed-item]:hover {
+    background-image: none !important;
+  }
 }
 
 html[data-theme='jungle'] [data-bottom-nav] [data-active='true'] {
