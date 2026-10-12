@@ -30,6 +30,9 @@ describe("timed video starters", () => {
       expect(Math.max(...project.clips.map(clip => clip.start + clip.duration))).toBe(end);
       const words = project.clips.filter((clip): clip is TextClip => clip.kind === "text");
       expect(words).toHaveLength(beats.length * 3);
+      expect(project.tracks).toHaveLength(3);
+      expect(new Set(words.map(clip => clip.trackId)).size).toBe(3);
+      for (const track of project.tracks) expect(words.filter(clip => clip.trackId === track.id)).toHaveLength(beats.length);
       expect(words.every(clip => clip.maxWidth === 0.78 && typeof clip.maxHeight === "number" && clip.animateIn && clip.animateOut)).toBe(true);
       expect(words.every(clip => clip.text && !clip.text.startsWith("editor."))).toBe(true);
       beats.forEach(([start, finish]) => {
