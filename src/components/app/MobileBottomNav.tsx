@@ -276,11 +276,11 @@ export function MobileBottomNav() {
           {/* Nav items container */}
           <div 
             ref={scrollRef}
-            className="flex min-w-0 flex-1 items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth [--create-size:48px] md:[--create-size:56px]"
+            className="flex min-w-0 flex-1 items-center h-12 md:h-14 overflow-x-auto scrollbar-hide scroll-smooth"
             style={{ scrollSnapType: 'x proximity' }}
           >
             {/* Left side items - Home + Messages */}
-            <div className="flex items-center justify-start flex-shrink-0" style={{ width: 'calc((100% - var(--create-size)) / 2)' }}>
+            <div className="flex items-center justify-start flex-shrink-0" style={{ width: '40%' }}>
               {kidsNav(LEFT_NAV_ITEMS).map((item, index) => {
                 const isActive = item.path === '/app'
                   ? isHomePath(location.pathname)
@@ -299,6 +299,7 @@ export function MobileBottomNav() {
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
+                    <div className="relative w-5 h-5 md:w-6 md:h-6">
                       {item.label === 'Home' && isHomeRefreshing ? (
                         <Loader2
                           className={cn(
@@ -316,10 +317,11 @@ export function MobileBottomNav() {
                         />
                       )}
                       {item.label === 'Messages' && messagesUnread > 0 && (
-                        <span className="absolute top-1.5 right-1 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                        <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                           {messagesUnread > 99 ? '99+' : messagesUnread}
                         </span>
                       )}
+                    </div>
                   </NavLink>
                 );
               })}
@@ -329,7 +331,7 @@ export function MobileBottomNav() {
             <button
               onClick={handlePostClick}
               aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
-              className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-white"
+              className="flex-shrink-0 w-1/5 h-12 md:h-14 flex items-center justify-center text-white"
             >
                 <div data-nav-create className="w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center relative transition-transform duration-300 active:scale-95">
                   <div
@@ -350,7 +352,7 @@ export function MobileBottomNav() {
             </button>
 
             {/* Right side items - AI + Profile */}
-            <div className="flex items-center justify-end flex-shrink-0" style={{ width: 'calc((100% - var(--create-size)) / 2)' }}>
+            <div className="flex items-center justify-end flex-shrink-0" style={{ width: '40%' }}>
               {kidsNav(RIGHT_NAV_ITEMS).map((item) => {
                 const isActive = location.pathname.startsWith(item.path);
                 
@@ -408,7 +410,7 @@ export function MobileBottomNav() {
                     rel="noopener noreferrer"
                     aria-label={navLabel(item.label)}
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                    style={{ width: 'calc((100% - var(--create-size)) / 4)' }}
+                    style={{ width: '20%' }}
                   >
                     {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
                   </a>
@@ -422,7 +424,7 @@ export function MobileBottomNav() {
                     onClick={() => openStageModal()}
                     aria-label={navLabel(item.label)}
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                    style={{ width: 'calc((100% - var(--create-size)) / 4)' }}
+                    style={{ width: '20%' }}
                   >
                     {navIcon(item, "w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]")}
                   </button>
@@ -438,7 +440,7 @@ export function MobileBottomNav() {
                   onPointerEnter={() => preloadRoute(item.path)}
                   aria-label={navLabel(item.label)}
                   className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-colors duration-200 text-white"
-                  style={{ width: 'calc((100% - var(--create-size)) / 4)' }}
+                  style={{ width: '20%' }}
                 >
                   <div className="relative">
                     {navIcon(item, cn(
