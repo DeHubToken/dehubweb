@@ -10,6 +10,32 @@ export interface IslandWaterFrame {
   waterTop: Rgb;
   waterBottom: Rgb;
   skyTop: Rgb;
+  /** Painted-frame interval; zero after a pause or on the initial frame. */
+  frameInterval?: number;
+}
+
+/** Lower pixel work after sustained missed frames, never after one hitch.
+ * Keep the chosen budget until remount so capped frame rates cannot cause
+ * repeated resolution changes when a device is just keeping up. */
+export function createIslandWaterBudget() {
+  let scale = 1;
+  let elapsed = 0;
+  let frames = 0;
+  return (interval: number) => {
+    if (!Number.isFinite(interval) || interval <= 0 || interval > 0.1) {
+      elapsed = 0;
+      frames = 0;
+      return scale;
+    }
+    elapsed += interval;
+    frames++;
+    if (elapsed >= 2) {
+      if (elapsed / frames > 0.041) scale = Math.max(0.65, scale * 0.85);
+      elapsed = 0;
+      frames = 0;
+    }
+    return scale;
+  };
 }
 
 const VERTEX = `
@@ -35,6 +61,7 @@ uniform vec3 uWaterBottom;
 uniform vec3 uSkyTop;
 
 vec3 linearColor(vec3 c) { return pow(c, vec3(2.2)); }
+float fifth(float x) { float x2 = x * x; return x2 * x2 * x; }
 
 // Height and analytic derivatives of crossing wind waves. Short wavelengths
 // fade at the pixel footprint, so the horizon does not sparkle from aliasing.
@@ -86,20 +113,20 @@ void main() {
   float skyEdge = smoothstep(0.0, 0.05, skyUv.x) * (1.0 - smoothstep(0.95, 1.0, skyUv.x));
   skyEdge *= 1.0 - smoothstep(0.94, 1.0, skyUv.y);
   vec3 sky = linearColor(texture2D(uSky, clamp(skyUv, 0.0, 1.0)).rgb);
-  sky = mix(linearColor(uSkyTop), sky, skyEdge);
+  sky = mix(uSkyTop, sky, skyEdge);
 
   float nv = max(0.001, dot(normal, view));
-  float fresnel = 0.02 + 0.98 * pow(1.0 - nv, 5.0);
+  float fresnel = 0.02 + 0.98 * fifth(1.0 - nv);
   float shallows = exp(-distance * 0.022);
-  vec3 body = mix(linearColor(uWaterBottom), linearColor(uWaterTop), 0.26 + shallows * 0.35);
-  float subsurface = 0.70 + field.x * 0.08 + max(0.0, dot(normal, normalize(uLight))) * 0.46;
+  vec3 body = mix(uWaterBottom, uWaterTop, 0.26 + shallows * 0.35);
+  float subsurface = 0.70 + field.x * 0.08 + max(0.0, dot(normal, uLight)) * 0.46;
   body *= subsurface;
   vec3 color = mix(body, sky, fresnel);
 
   // Broad sun radiance and fine specular peaks respond to the same normal.
   // GGX roughness keeps highlights finite while the light path breaks into
   // irregular facets rather than independent moving dashes.
-  vec3 light = normalize(uLight);
+  vec3 light = uLight;
   vec3 halfVector = normalize(light + view);
   float nl = max(0.001, dot(normal, light));
   float nh = max(0.0, dot(normal, halfVector));
@@ -111,9 +138,9 @@ void main() {
   float distribution = alpha2 / max(0.000001, 3.14159 * denominator * denominator);
   float k = (roughness + 1.0) * (roughness + 1.0) * 0.125;
   float geometry = nv / (nv * (1.0 - k) + k) * nl / (nl * (1.0 - k) + k);
-  float specularFresnel = 0.02 + 0.98 * pow(1.0 - vh, 5.0);
+  float specularFresnel = 0.02 + 0.98 * fifth(1.0 - vh);
   float specular = distribution * geometry * specularFresnel / max(0.004, 4.0 * nv);
-  color += linearColor(uLightColor) * min(2.8, specular) * uLightStrength * 1.6;
+  color += uLightColor * min(2.8, specular) * uLightStrength * 1.6;
 
   // Atmospheric perspective merges the distant sea into its reflected sky.
   float mist = (1.0 - exp(-distance * 0.006)) * 0.24;
@@ -197,15 +224,25 @@ export function createIslandWater(): IslandWater | null {
     if (!reflectionContext) throw new Error('Water reflection unavailable');
     const names = ['uResolution', 'uTime', 'uAspect', 'uLight', 'uLightStrength', 'uLightColor', 'uWaterTop', 'uWaterBottom', 'uSkyTop'] as const;
     const uniforms = Object.fromEntries(names.map(name => [name, gl.getUniformLocation(program!, name)]));
-    const color = (name: string, rgb: Rgb) => gl.uniform3f(uniforms[name], rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
+    const color = (name: string, rgb: Rgb) => gl.uniform3f(uniforms[name], (rgb[0] / 255) ** 2.2, (rgb[1] / 255) ** 2.2, (rgb[2] / 255) ** 2.2);
+    const budget = createIslandWaterBudget();
+    let width = 1;
+    let seaHeight = 1;
+    let quality = 1;
+    const size = () => {
+      const scale = Math.min(1, 1000 / width, 640 / seaHeight) * quality;
+      const nextWidth = Math.max(1, Math.round(width * scale));
+      const nextHeight = Math.max(1, Math.round(seaHeight * scale));
+      if (canvas.width !== nextWidth) canvas.width = nextWidth;
+      if (canvas.height !== nextHeight) canvas.height = nextHeight;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
     canvas.addEventListener('webglcontextlost', onLost);
     return {
-      resize(width, seaHeight) {
-        // Bound fragment work on desktops and high-density phones alike.
-        const scale = Math.min(1, 1000 / width, 640 / seaHeight);
-        canvas.width = Math.max(1, Math.round(width * scale));
-        canvas.height = Math.max(1, Math.round(seaHeight * scale));
-        gl.viewport(0, 0, canvas.width, canvas.height);
+      resize(nextWidth, nextSeaHeight) {
+        width = Math.max(1, nextWidth);
+        seaHeight = Math.max(1, nextSeaHeight);
+        size();
       },
       setSky(sky) {
         if (disposed || gl.isContextLost()) return;
@@ -217,11 +254,19 @@ export function createIslandWater(): IslandWater | null {
       },
       draw(frame) {
         if (!ready || disposed || gl.isContextLost()) return null;
+        const nextQuality = budget(frame.frameInterval ?? 0);
+        if (nextQuality !== quality) {
+          quality = nextQuality;
+          size();
+        }
         gl.useProgram(program);
         gl.uniform2f(uniforms.uResolution, canvas.width, canvas.height);
         gl.uniform1f(uniforms.uTime, frame.time);
         gl.uniform1f(uniforms.uAspect, frame.aspect);
-        gl.uniform3f(uniforms.uLight, (frame.lightX - 0.5) * frame.aspect * 1.6, Math.max(0.025, frame.lightHeight), -1.25);
+        const lightX = (frame.lightX - 0.5) * frame.aspect * 1.6;
+        const lightY = Math.max(0.025, frame.lightHeight);
+        const lightLength = Math.hypot(lightX, lightY, 1.25);
+        gl.uniform3f(uniforms.uLight, lightX / lightLength, lightY / lightLength, -1.25 / lightLength);
         gl.uniform1f(uniforms.uLightStrength, frame.lightStrength);
         color('uLightColor', frame.lightColor);
         color('uWaterTop', frame.waterTop);
