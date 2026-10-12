@@ -508,6 +508,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         setOpen={setOpen}
         handleToggle={handleToggle}
         buttonVisible={buttonVisible}
+        plainButton={plainButton}
         buttonClassName={buttonClassName}
         buttonPortalTarget={buttonPortalTarget}
         buttonState={buttonState}
@@ -542,6 +543,7 @@ interface SubtitleMenuProps {
   setOpen: (v: boolean) => void;
   handleToggle: (e: React.MouseEvent) => void;
   buttonVisible: boolean;
+  plainButton: boolean;
   buttonClassName?: string;
   buttonPortalTarget?: HTMLElement | null;
   buttonState: 'off' | 'on' | 'working' | 'loading';
@@ -572,7 +574,7 @@ interface SubtitleMenuProps {
 function SubtitleMenu(props: SubtitleMenuProps) {
   const { t: _copy } = _useCopy();
   const {
-    open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonPortalTarget, buttonState,
+    open, setOpen, handleToggle, buttonVisible, plainButton, buttonClassName, buttonPortalTarget, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
     isReady, isWorking, isEmpty, isFailed, langLabel, query, setQuery, filteredLangs, lang, setLang,
     dubOn, setDubOn, dubHint, dubPossible,
