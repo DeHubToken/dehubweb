@@ -58,7 +58,15 @@ const CACHE_TTL_MS = 5 * 60_000;
 const PAGE = 1000;
 const MAX_ROWS = 200_000;
 const DHB_BASE = '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c';
-const API_BASE = (Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io').replace(/\/$/, '');
+/**
+ * The core API's origin. Not `DEHUB_API_BASE`: that secret is set to
+ * `https://api.dehub.io/api` for assistant-agent.ts, and reading it here asked
+ * for /api/api/stats/revenue, a 404 that took every in-app buy off the page.
+ * Same override and stripping as _shared/transcripts.ts.
+ */
+const API_BASE = (Deno.env.get('DEHUB_PUBLIC_API_BASE') || 'https://api.dehub.io')
+  .replace(/\/+$/, '')
+  .replace(/\/api$/, '');
 /** Where in-app DHB payments land — the same default the payment verifiers use. */
 const TREASURY = (Deno.env.get('AI_TREASURY_ADDRESS') || '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c').toLowerCase();
 
