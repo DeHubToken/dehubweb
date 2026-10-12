@@ -4,7 +4,7 @@ import { createLogger } from '@/lib/logger';
 const log = createLogger('SessionRequest');
 
 /** Retry only session establishment with the same proof, never wallet writes. */
-export async function requestSession(endpoint: '/api/web/auth' | '/api/web/auth/supabase', init: RequestInit): Promise<Response> {
+export async function requestSession(endpoint: '/api/web/auth' | '/api/web/auth/supabase' | '/api/auth/wallet-challenge', init: RequestInit): Promise<Response> {
   // The apex relay accepts login POSTs and the staging origin's CORS headers.
   // The staging static host itself answers these POSTs with 405.
   const relay = 'https://dehub.io/_api';
