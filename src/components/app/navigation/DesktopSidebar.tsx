@@ -71,8 +71,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const isWarTheme = theme === 'war';
   const isMinimal = theme === 'minimal';
   const desktopNavTextColor = isLightTheme ? 'text-black' : 'text-white';

@@ -404,8 +404,8 @@ function AssistantPageForAccount() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useDraftState(`assistant:${draftScope}:input`, '');
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const actionBubbleClass = cn(
     "shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs",
     isLightTheme

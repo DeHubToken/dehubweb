@@ -70,7 +70,7 @@ interface SidebarNavItemProps {
 
 function getDesktopTextColor(theme?: string) {
   // Light theme uses black text on light surfaces; minimal/dark/system use white.
-  if (theme === 'light') return 'text-black';
+  if (theme === 'light' || theme === 'system-light') return 'text-black';
   return 'text-white';
 }
 
@@ -93,12 +93,12 @@ export function SidebarNavItem({
   const { t: _copy } = _useCopy();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
   const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const isDesktop = variant === 'desktop';
-  const desktopTextColor = getDesktopTextColor(theme);
-  const isLightTheme = theme === 'light';
+  const desktopTextColor = getDesktopTextColor(themeChoice === 'system-light' ? themeChoice : theme);
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const desktopHoverClass = isLightTheme ? 'hover:font-semibold' : 'hover:bg-zinc-800/50';
 
   useEffect(() => {

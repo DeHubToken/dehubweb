@@ -42,6 +42,16 @@ html[data-theme='light'] {
   --kit-primary-bg: #111114;
   --kit-primary-ink: #fff;
 }
+html[data-system-tone="light"] {
+  --kit-hairline: rgb(0 0 0 / 0.08);
+  --kit-chip-bg: rgb(0 0 0 / 0.05);
+  --kit-chip-ink: rgb(0 0 0 / 0.62);
+  --kit-chip-active-bg: #111114;
+  --kit-chip-active-ink: #fff;
+  --kit-square-bg: rgb(0 0 0 / 0.05);
+  --kit-primary-bg: #111114;
+  --kit-primary-ink: #fff;
+}
 html[data-theme='minimal'] {
   --kit-hairline: rgb(255 255 255 / 0.14);
   --kit-chip-bg: transparent;
@@ -62,6 +72,11 @@ html[data-theme] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {
 }
 /* Light and minimal draw a flat island, like their home tab strip. */
 html[data-theme='light'] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {
+  background: rgb(255 255 255 / 0.86) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 8px 24px rgb(0 0 0 / 0.06) !important;
+}
+html[data-system-tone="light"] [data-kit-island-outer] > [data-kit-island]:not(#_):not(#_) {
   background: rgb(255 255 255 / 0.86) !important;
   backdrop-filter: blur(20px) saturate(160%);
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08), 0 8px 24px rgb(0 0 0 / 0.06) !important;
@@ -177,6 +192,11 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
     padding-right: 1rem;
     padding-top: 1.125rem;
     padding-bottom: 1.125rem;
+  }
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"]) [data-kit-section]:not(#_):not(#_) {
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
   }
   html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::before,
   html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-section]:not(#_):not(#_)::after {

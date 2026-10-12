@@ -74,8 +74,8 @@ export default function BuyCoinsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { isAuthenticated, walletAddress } = useAuth();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useSurfaceDraft("pages/app/BuyCoinsPage.tsx:customAmount", '');
   const [selectedToken] = useState<DPayToken | null>(null);

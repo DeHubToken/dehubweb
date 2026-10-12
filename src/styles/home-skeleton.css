@@ -61,3 +61,7 @@ html[data-theme="light"] [data-home-skeleton-card] {
   background: transparent;
   border-color: var(--hairline-strong);
 }
+html[data-system-tone="light"] [data-home-skeleton-card] {
+  background: transparent;
+  border-color: var(--hairline-strong);
+}

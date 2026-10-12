@@ -156,8 +156,8 @@ function ContentTypeFilterSection({
   onToggle: (filter: keyof ContentTypeFilters) => void 
 }) {
   const { t } = useI18n();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   return (
     <div className="flex flex-col gap-2">
@@ -417,8 +417,8 @@ export function ImagesFeed({
 }: ImagesFeedProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const hasAnimated = useRef(false);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   

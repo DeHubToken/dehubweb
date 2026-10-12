@@ -11,6 +11,11 @@ html[data-theme='light'] [data-theme-page-surface] {
   color: var(--ink);
 }
 
+html[data-system-tone="light"] [data-theme-page-surface] {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
 html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) [data-theme-page-surface] {
   background-color: rgb(var(--glass-tint) / var(--glass-regular));
   color: #fff;
@@ -31,7 +36,24 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
   --control-ink: #fff;
   --control-shadow: inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(255,255,255,0.10);
 }
+
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"]) {
+  --control-fill: rgba(255,255,255,0.12);
+  --control-raised: rgba(255,255,255,0.24);
+  --control-sheen: linear-gradient(160deg, rgba(255,255,255,0.20), rgba(255,255,255,0.05));
+  --control-edge: rgba(255,255,255,0.30);
+  --control-ink: #fff;
+  --control-shadow: inset 0 1px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(255,255,255,0.10);
+}
 html[data-theme='light'] {
+  --control-fill: #f3f3f3;
+  --control-raised: #e4e4e7;
+  --control-sheen: linear-gradient(160deg, #fff, #e4e4e7);
+  --control-edge: rgba(0,0,0,0.20);
+  --control-ink: #1a1a1a;
+  --control-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,0.12);
+}
+html[data-system-tone="light"] {
   --control-fill: #f3f3f3;
   --control-raised: #e4e4e7;
   --control-sheen: linear-gradient(160deg, #fff, #e4e4e7);
@@ -54,17 +76,32 @@ html[data-theme='light'] [data-nav-create] {
   border: 1px solid var(--control-edge) !important;
   box-shadow: var(--control-shadow) !important;
 }
+html[data-system-tone="light"] [data-nav-create] {
+  background: var(--control-sheen), var(--control-fill) !important;
+  box-shadow: var(--control-shadow) !important;
+}
 html[data-theme='light'] [data-nav-create],
 html[data-theme='light'] [data-nav-create] :is(div, span, svg) {
   color: var(--control-ink) !important;
 }
+html[data-system-tone="light"] [data-nav-create],
+html[data-system-tone="light"] [data-nav-create] :is(div, span, svg) {
+  color: var(--control-ink) !important;
+}
 html[data-theme='light'] [data-nav-create] svg {
+  stroke: var(--control-ink) !important;
+}
+html[data-system-tone="light"] [data-nav-create] svg {
   stroke: var(--control-ink) !important;
 }
 html[data-theme='light'] [data-nav-create] > [aria-hidden='true'] {
   display: none;
 }
 html[data-theme='light'] [data-nav-create] .animate-spin {
+  border-color: var(--control-edge) !important;
+  border-top-color: var(--control-ink) !important;
+}
+html[data-system-tone="light"] [data-nav-create] .animate-spin {
   border-color: var(--control-edge) !important;
   border-top-color: var(--control-ink) !important;
 }
@@ -80,7 +117,27 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
   color: var(--control-ink) !important;
   backdrop-filter: blur(12px);
 }
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/'])
+  ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty) {
+  background: var(--control-sheen), var(--control-fill) !important;
+  box-shadow: var(--control-shadow) !important;
+  color: var(--control-ink) !important;
+  backdrop-filter: blur(12px);
+}
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'])
+  :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
+    :is(button, a[role='button']):is([class^='bg-white'], [class*=' bg-white'], [class^='bg-black'], [class*=' bg-black'], [class^='bg-zinc-'], [class*=' bg-zinc-'], [class^='from-white/'], [class*=' from-white/'])
+  ):not([data-keep-dark]):not([data-keep-white]):not([data-on-media]):not([data-video-bare]):not([data-video-topbar] *):not([data-video-inline-tools] *):not([data-audio-player] *):not([class*='aspect-']):not([role='tab']):not([data-switch-track]):not(:empty)
+  :is(.text-black, .text-white, .text-zinc-900, .text-zinc-800, .text-zinc-700, svg) {
+  color: var(--control-ink) !important;
+}
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"])
   :is(#app-root, [data-theme-page-surface], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
   :is(
     [data-theme-button]:is([data-button-variant='default'], [data-button-variant='glass'], [data-button-variant='secondary'], [data-button-variant='outline']),
@@ -100,7 +157,18 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
   color: var(--control-ink) !important;
   backdrop-filter: blur(12px);
 }
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"])
+  [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *):not([data-keep-white]):not([data-keep-white] *) {
+  background: var(--control-sheen), var(--control-fill) !important;
+  box-shadow: var(--control-shadow) !important;
+  color: var(--control-ink) !important;
+  backdrop-filter: blur(12px);
+}
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'])
+  [data-theme-control-active] > [data-theme-control-surface]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
+  background: var(--control-sheen), var(--control-raised) !important;
+}
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"])
   [data-theme-control-active] > [data-theme-control-surface]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
   background: var(--control-sheen), var(--control-raised) !important;
 }
@@ -114,6 +182,11 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::before,
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::after {
+  background-image: none !important;
+}
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::before, html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::after {
   background-image: none !important;
 }
@@ -142,6 +215,10 @@ html[data-theme][data-theme] [data-side-panel]
 /* Bubble actions keep the theme's label colour when their white active
    material is replaced by the shared tinted surface. */
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'])
+  [data-theme-control-label]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
+  color: var(--control-ink) !important;
+}
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"])
   [data-theme-control-label]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
   color: var(--control-ink) !important;
 }

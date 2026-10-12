@@ -354,8 +354,8 @@ export function NotificationsSkeleton() {
 
 /** Leaderboard skeleton — header bento with trophy + filter pills + search + table rows */
 export function LeaderboardSkeleton() {
-  const { theme } = useAppTheme();
-  const isLight = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLight = (theme === 'light' || themeChoice === 'system-light');
   const bentoClass = isLight ? 'bg-zinc-50 border border-zinc-200' : 'bg-zinc-900';
   const sk = isLight ? 'bg-zinc-200' : SK;
 

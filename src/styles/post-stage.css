@@ -65,6 +65,18 @@ html[data-theme='light'] {
   --stage-on-accent: #fff;
   --stage-avatar: #c9c4bb;
 }
+html[data-system-tone="light"] {
+  --stage-ink: #1b1b1d;
+  --stage-muted: #6c6a66;
+  --stage-solid: #fff;
+  --stage-glass: rgb(255 255 255 / 0.72);
+  --stage-border: rgb(0 0 0 / 0.1);
+  --stage-chip: rgb(0 0 0 / 0.07);
+  --stage-field: rgb(0 0 0 / 0.05);
+  --stage-accent: #1b1b1d;
+  --stage-on-accent: #fff;
+  --stage-avatar: #c9c4bb;
+}
 html[data-theme='hazy'] {
   --stage-ink: #f5efff;
   --stage-muted: #bfaedc;

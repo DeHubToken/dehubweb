@@ -34,8 +34,8 @@ const positionCache = new Map<string, { x: number; y: number; width: number; hei
  */
 export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
   function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey, enableTransition = false, fixedHeightPx, variant }, ref) {
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   // Cache every stable rect position
   useEffect(() => {
     if (rect.ready && layoutKey) {

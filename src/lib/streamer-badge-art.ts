@@ -21,6 +21,7 @@ export const BADGE_MATERIALS: Record<string, BadgeMaterial> = {
   system: silver,
   minimal: { ...silver, highlight: '#ffffff', metal: '#ffffff', shade: '#ffffff', face: '#000000', panel: '#000000', edge: '#777777', flat: true },
   light: { ...silver, highlight: '#ffffff', metal: '#a9afb9', shade: '#505866', face: '#e4e7eb', panel: '#f5f6f8', text: '#181a20', muted: '#545966' },
+  'system-light': { ...silver, highlight: '#ffffff', metal: '#a9afb9', shade: '#505866', face: '#e4e7eb', panel: '#f4f4f6', text: '#0b0b0d', muted: '#545966' },
   cosmic: { ...silver, highlight: '#e6ddff', metal: '#9a91b8', shade: '#393343', face: '#17131f', panel: '#17131f' },
   hazy: { ...silver, highlight: '#c1fbff', metal: '#a391fc', shade: '#30236a', edge: '#8272c0', face: '#181333', panel: '#181333' },
   swarms: { ...silver, highlight: '#d7ffff', metal: '#49dcff', shade: '#613fa9', edge: '#6985da', face: '#101e40', panel: '#101e32' },

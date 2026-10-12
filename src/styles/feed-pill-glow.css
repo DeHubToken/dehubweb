@@ -13,6 +13,7 @@ html[data-theme='system'] { --pill-glow-color: rgb(228 240 255); }
 html[data-theme='minimal'] { --pill-glow-color: rgb(255 255 255); --pill-glow-gain: 0.6; }
 /* White light vanishes on a light page, so Light gets a blue glow. */
 html[data-theme='light'] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain: 0.85; }
+html[data-system-tone="light"] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain: 0.85; }
 
 [data-feed-pill-glow] {
   position: absolute;
@@ -66,6 +67,9 @@ html[data-theme='light'] { --pill-glow-color: rgb(96 150 255); --pill-glow-gain:
     transparent 100%);
 }
 html[data-theme='light'] [data-feed-pill-glow-halo] {
+  box-shadow: 0 -6px 18px -8px rgb(60 80 140 / 0.35);
+}
+html[data-system-tone="light"] [data-feed-pill-glow-halo] {
   box-shadow: 0 -6px 18px -8px rgb(60 80 140 / 0.35);
 }
 

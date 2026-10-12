@@ -125,8 +125,8 @@ export default function HomePage() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isCollapsed } = useSidebarCollapse();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   // Immersive theme on phones: the tab pill rests hidden and the island capsule
   // (FeedIslandCapsule) opens it.
   const islandTopBar = theme === 'immersive';

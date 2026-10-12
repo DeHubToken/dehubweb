@@ -23,7 +23,11 @@
           var d = document.documentElement;
           var t = localStorage.getItem('dehub.theme') || 'system';
           if (t === 'christmas') t = 'winter'; // legacy name migration
+          // System Light runs as System with a light tone (ThemeContext SYSTEM_LIGHT).
+          var tone = t === 'system-light' ? 'light' : 'dark';
+          if (tone === 'light') t = 'system';
           d.dataset.theme = t;
+          d.dataset.systemTone = tone;
           d.dataset.shortsEnabled = localStorage.getItem('shorts-enabled') === 'false' ? 'false' : 'true';
           d.dataset.sidebarCollapsed = localStorage.getItem('sidebar-collapsed') === 'true' ? 'true' : 'false';
 
@@ -38,15 +42,15 @@
           // canvas shows through, leaving <html> as the only thing that paints
           // — so on those the white canvas stays visible for the whole of that
           // window rather than being covered by an opaque body.
-          d.style.colorScheme = t === 'light' ? 'light' : 'dark';
+          d.style.colorScheme = t === 'light' || tone === 'light' ? 'light' : 'dark';
 
           // Paint the theme's own backdrop NOW, at head-parse time, rather than
           // waiting for the render-blocking stylesheet that normally carries it.
           // Values mirror the settled `background-color` of <html> per theme —
           // keep them in sync with index.css if a theme's backdrop changes.
           var BG = { light: '#f9f8f4', osaka: '#0a0812', jungle: '#16110c' };
-          d.style.setProperty('--boot-bg', BG[t] || '#000');
-          d.style.setProperty('--boot-fg', t === 'light' ? '#09090b' : '#fff');
+          d.style.setProperty('--boot-bg', tone === 'light' ? '#fff' : BG[t] || '#000');
+          d.style.setProperty('--boot-fg', t === 'light' || tone === 'light' ? '#09090b' : '#fff');
 
           d.dataset.dimLights = localStorage.getItem('dehub.dimLights') === '1' ? 'true' : 'false';
           var s = Number(localStorage.getItem('dehub.dimStrength'));
