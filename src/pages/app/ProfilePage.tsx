@@ -281,7 +281,7 @@ export default function ProfilePage() {
   }, [!!data.profile]);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab, isTabsStuck);
-  const { ref: tabsFadeRef, style: tabsFadeStyle, edges: tabsFadeEdges } = useScrollFadeMask<HTMLDivElement>();
+  const { ref: tabsFadeRef, style: tabsFadeStyle } = useScrollFadeMask<HTMLDivElement>();
   useEffect(() => {
     const button = profileTabButtonPositions.current[activeTab];
     const rail = tabsFadeRef.current;
@@ -686,8 +686,6 @@ export default function ProfilePage() {
               })}
             </div>
           </div>
-          {tabsFadeEdges.start && <div aria-hidden className="profile-rail-blur profile-rail-blur-start" />}
-          {tabsFadeEdges.end && <div aria-hidden className="profile-rail-blur profile-rail-blur-end" />}
           </div>
           {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%]">
             <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
