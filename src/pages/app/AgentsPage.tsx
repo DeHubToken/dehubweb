@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -360,7 +361,7 @@ export default function AgentsPage() {
               <Card key={agent.id} data-kit-section className="bg-white/5 border-white/10">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
+                    <Link to={`/${encodeURIComponent(agent.name)}`} aria-label={t('feed.viewProfile', { name: agent.name })} className="flex items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
                       <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                         <Bot className="w-5 h-5 text-white" />
                       </div>
@@ -368,14 +369,14 @@ export default function AgentsPage() {
                         <h3 className="font-semibold text-white">{agent.name}</h3>
                         <p className="text-sm text-white/60">{agent.description}</p>
                       </div>
-                    </div>
+                    </Link>
                     <Badge variant={agent.is_active ? 'default' : 'secondary'}>
                       {agent.is_active ? t('agents.active') : t('agents.inactive')}
                     </Badge>
                   </div>
 
                   {/* API Key */}
-                  <AgentProfilePanel wallet={walletAddress} agentId={agent.id} />
+                  <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
                   {!agent.api_key ? (
                     <div className="bg-black/30 rounded-lg p-3 mb-3">
                       <div className="flex items-center justify-between mb-1">
