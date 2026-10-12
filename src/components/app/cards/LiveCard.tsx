@@ -13,7 +13,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cdnImage } from '@/lib/media-url';
-import { MoreVertical } from "lucide-react";
+import MoreVertical from "@/components/ui/cut-icons/morevertical";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
