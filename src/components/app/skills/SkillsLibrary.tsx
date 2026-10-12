@@ -2,8 +2,10 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles } from "lucide-react";
-import { Search, Plus } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
+import Search from "@/components/ui/cut-icons/search";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';

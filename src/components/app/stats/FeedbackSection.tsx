@@ -25,7 +25,10 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Loader2, MessageSquareQuote, Quote } from 'lucide-react';
+import { Loader2, MessageSquareQuote } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import Quote from "@/components/ui/cut-icons/quote";
+
 import { toast } from 'sonner';
 
 import { useAuth } from '@/contexts/AuthContext';

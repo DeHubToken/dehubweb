@@ -6,8 +6,12 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { MicOff, Loader2, Volume2 } from "lucide-react";
-import { Mic, X } from "@/components/ui/cut-icons";
+import { Loader2 } from "lucide-react";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import Volume2 from "@/components/ui/cut-icons/volume";
+
+import Mic from "@/components/ui/cut-icons/mic";
+import X from "@/components/ui/cut-icons/close";
 
 import type { VoiceStatus } from '@/hooks/use-voice-assistant';
 

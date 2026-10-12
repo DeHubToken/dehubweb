@@ -11,7 +11,8 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowDown, ArrowUp, Loader2, ScrollText } from "lucide-react";
-import { Plus, X } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from 'sonner';
 

@@ -14,7 +14,8 @@ import { useTabLongPress } from '@/hooks/use-tab-long-press';
 import { useRef, useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
-import { Settings2, ArrowLeft } from "@/components/ui/cut-icons";
+import Settings2 from "@/components/ui/cut-icons/settings";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';

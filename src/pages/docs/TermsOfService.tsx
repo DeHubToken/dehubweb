@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Users, Zap, Globe, CreditCard } from 'lucide-react';
+import { Shield, Zap, Globe, CreditCard } from "lucide-react";
+import Users from "@/components/ui/cut-icons/communities";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Section = ({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) => (

@@ -10,8 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Image as ImageIcon, FileText, Package, Palette, ExternalLink } from "lucide-react";
-import { Download } from "@/components/ui/cut-icons";
+import { FileText, Package, Palette } from "lucide-react";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+
+import Download from "@/components/ui/cut-icons/download";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 const designSystemZip = { url: '/brand/dehub-design-system.zip' };

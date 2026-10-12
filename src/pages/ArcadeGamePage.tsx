@@ -31,7 +31,9 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTrenchstarHost } from '@/lib/trenchstar-host';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { AlertTriangle, Gamepad2, Loader2 } from 'lucide-react';
+import { AlertTriangle, Loader2 } from "lucide-react";
+import Gamepad2 from "@/components/ui/cut-icons/arcade";
+
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';

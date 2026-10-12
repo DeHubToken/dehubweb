@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { cn } from '@/lib/utils';
 import { useSubscriptionCredits } from '@/hooks/use-subscription-credits';

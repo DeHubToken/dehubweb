@@ -1,6 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Shield, Calendar, Lock, Globe, Loader2 } from 'lucide-react';
+import { Shield, Globe, Loader2 } from "lucide-react";
+import Calendar from "@/components/ui/cut-icons/events";
+import Lock from "@/components/ui/cut-icons/privacy";
+
 import { useTranslation } from 'react-i18next';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';

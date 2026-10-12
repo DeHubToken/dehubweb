@@ -10,11 +10,13 @@ import { useTranslation } from "react-i18next";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { matchesBackgroundRemovalScope } from "@/lib/editor/backgroundRemovalFailure";
 import { useEditorQuota } from "@/hooks/use-editor-quota";
-import {
-  AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical,
-  AlignStartHorizontal, AlignStartVertical, Bold, FlipHorizontal2, FlipVertical2, Italic,
-  Maximize, Minimize, RotateCcw, Scissors, Loader2, Underline, CaseUpper, Frame, Eye, EyeOff, Lock, Unlock,
-} from "lucide-react";
+import { AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical, AlignStartHorizontal, AlignStartVertical, Bold, FlipHorizontal2, FlipVertical2, Italic, Minimize, RotateCcw, Loader2, Underline, CaseUpper, Frame, Unlock } from "lucide-react";
+import Maximize from "@/components/ui/cut-icons/fullscreen";
+import Scissors from "@/components/ui/cut-icons/trim";
+import Eye from "@/components/ui/cut-icons/visibility";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Lock from "@/components/ui/cut-icons/privacy";
+
 import { Label } from "@/components/ui/label";
 import { EditorSlider as Slider } from "@/components/editor/EditorSlider";
 import { cn } from "@/lib/utils";

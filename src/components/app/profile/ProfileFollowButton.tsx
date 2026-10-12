@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useTranslation as _useCopy, useTranslation } from 'react-i18next';
-import { Clock, Loader2, UserPlus, Check } from 'lucide-react';
+import { Clock, Loader2 } from "lucide-react";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Check from "@/components/ui/cut-icons/check";
+
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';

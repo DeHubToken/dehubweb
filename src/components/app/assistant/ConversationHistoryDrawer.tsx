@@ -8,11 +8,21 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Music } from "lucide-react";
-import { Pause, Download } from "@/components/ui/cut-icons";
+import Music from "@/components/ui/cut-icons/music";
 
-import { History, Trash2, Loader2, Image as ImageIcon } from "lucide-react";
-import { MessageCircle, ChevronRight, Play, Search, X } from "@/components/ui/cut-icons";
+import Pause from "@/components/ui/cut-icons/pause";
+import Download from "@/components/ui/cut-icons/download";
+
+import { Loader2 } from "lucide-react";
+import History from "@/components/ui/cut-icons/history";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import ImageIcon from "@/components/ui/cut-icons/images";
+
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Play from "@/components/ui/cut-icons/play";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';

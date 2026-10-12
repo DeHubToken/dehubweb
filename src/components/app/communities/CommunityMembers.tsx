@@ -9,8 +9,11 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
  */
 
 import { useMemo, useState } from 'react';
-import { Crown, Shield, VolumeX } from "lucide-react";
-import { User, Settings2 } from "@/components/ui/cut-icons";
+import { Crown, Shield } from "lucide-react";
+import VolumeX from "@/components/ui/cut-icons/mute";
+
+import User from "@/components/ui/cut-icons/profile";
+import Settings2 from "@/components/ui/cut-icons/settings";
 
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

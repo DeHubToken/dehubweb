@@ -13,8 +13,11 @@ import { useDraftState } from "@/hooks/use-draft-state";
 import { useRef } from "react";
 import { useEditorControlGesture } from "@/components/editor/useEditorControlGesture";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, Diamond, Timer, Trash2 } from "lucide-react";
-import { ChevronRight, Plus } from "@/components/ui/cut-icons";
+import { ChevronLeft, Diamond, Timer } from "lucide-react";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";

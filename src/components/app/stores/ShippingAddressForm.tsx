@@ -8,7 +8,11 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSavedAddresses, useSaveAddress, useDeleteAddress, type SavedAddress } from '@/hooks/use-saved-addresses';
-import { BookmarkPlus, Trash2, Loader2, Check, MapPin } from 'lucide-react';
+import { BookmarkPlus, Loader2 } from "lucide-react";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Check from "@/components/ui/cut-icons/check";
+import MapPin from "@/components/ui/cut-icons/location";
+
 import { toast } from 'sonner';
 
 interface AddressFields {

@@ -10,7 +10,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState } from 'react';
 import { Loader2 } from "lucide-react";
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 import { AppState } from '@/components/app/AppState';
 import { cn } from '@/lib/utils';

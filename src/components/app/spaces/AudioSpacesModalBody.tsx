@@ -25,8 +25,19 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { MicOff, Users, Hand, ChevronLeft, Loader2, Volume2, Link, UserPlus, Minimize2, PictureInPicture2, Clock, Trash2, FileText, ScreenShare, ScreenShareOff, Crown } from "lucide-react";
-import { Mic, X, Bell, Play, Pause } from "@/components/ui/cut-icons";
+import { Hand, ChevronLeft, Loader2, Minimize2, PictureInPicture2, Clock, FileText, ScreenShare, ScreenShareOff, Crown } from "lucide-react";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import Users from "@/components/ui/cut-icons/communities";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import Link from "@/components/ui/cut-icons/link";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import Mic from "@/components/ui/cut-icons/mic";
+import X from "@/components/ui/cut-icons/close";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { StageTranscriptDrawer } from './StageTranscriptDrawer';
 import { StageScreenShare } from './StageScreenShare';

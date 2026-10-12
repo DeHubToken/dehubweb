@@ -14,7 +14,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2, AlertTriangle, KeyRound, ArrowDownToLine, Fingerprint } from "lucide-react";
-import { Repeat } from "@/components/ui/cut-icons";
+import SwitchAccounts from "@/components/ui/cut-icons/switch-accounts";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -528,7 +528,7 @@ export function WalletRecoveryTools() {
       />
       {hasMultipleOldAccounts && (
       <SettingsRow
-        icon={<Repeat />}
+        icon={<SwitchAccounts />}
         title={_copy("copy.90b92c105ff2", { defaultValue: "Switch to a different old account" })}
         description={_copy("copy.e770a59d7d01", { defaultValue: "Had two old accounts (e.g. one via Google, one via email)? Swap which one is active" })}
         action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setSwitchOpen(true)}>{_copy("copy.39921a740bf2", { defaultValue: "Switch" })}</Button>}

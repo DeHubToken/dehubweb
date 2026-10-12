@@ -26,8 +26,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useQuery } from '@tanstack/react-query';
-import { Radio, Square, SkipBack, SkipForward, Loader2, Music, Volume2, VolumeX, Headphones, HeadphoneOff, Trash2 } from "lucide-react";
-import { Search, Play, Pause, Plus } from "@/components/ui/cut-icons";
+import { Square, Loader2, Headphones, HeadphoneOff } from "lucide-react";
+import Radio from "@/components/ui/cut-icons/live";
+import SkipBack from "@/components/ui/cut-icons/previous";
+import SkipForward from "@/components/ui/cut-icons/next-track";
+import Music from "@/components/ui/cut-icons/music";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import Search from "@/components/ui/cut-icons/search";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

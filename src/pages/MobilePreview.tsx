@@ -3,8 +3,24 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
-import { Trophy, Wallet, Music, Tv, Sparkles, LayoutDashboard, Vote, Coins, ShoppingCart, Bot, Briefcase } from "lucide-react";
-import { Home, User, MessageSquare, Bell, Search, Settings, Bookmark, ChevronRight } from "@/components/ui/cut-icons";
+import { Tv, ShoppingCart, Bot } from "lucide-react";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Music from "@/components/ui/cut-icons/music";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import LayoutDashboard from "@/components/ui/cut-icons/command";
+import Vote from "@/components/ui/cut-icons/governance";
+import Coins from "@/components/ui/cut-icons/coins";
+import Briefcase from "@/components/ui/cut-icons/bounties";
+
+import Home from "@/components/ui/cut-icons/home";
+import User from "@/components/ui/cut-icons/profile";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Search from "@/components/ui/cut-icons/search";
+import Settings from "@/components/ui/cut-icons/settings";
+import Bookmark from "@/components/ui/cut-icons/save";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 
 // Screen components

@@ -20,7 +20,10 @@
  * @module lib/community-notifications
  */
 
-import { Megaphone, MessageSquareText, UsersRound } from 'lucide-react';
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import MessageSquareText from "@/components/ui/cut-icons/messages";
+import UsersRound from "@/components/ui/cut-icons/communities";
+
 import type { DeHubNotification } from '@/lib/api/dehub/notifications';
 
 /** Every type written against a community. Order is display order, not priority. */

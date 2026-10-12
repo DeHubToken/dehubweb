@@ -13,7 +13,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Tag, Loader2 } from "lucide-react";
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';

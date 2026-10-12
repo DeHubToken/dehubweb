@@ -6,7 +6,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { useCallback, useEffect, useState } from 'react';
 import { useReactFlow, type Node } from '@xyflow/react';
-import { CopyPlus, Group, LayoutGrid, Trash2 } from 'lucide-react';
+import { CopyPlus, Group } from "lucide-react";
+import LayoutGrid from "@/components/ui/cut-icons/apps";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
 import { useTranslation } from 'react-i18next';
 import { arrangeNodes } from '@/lib/creator/flow/arrangeNodes';
 import { FALLBACK_SIZE, NODE_SIZE } from '@/lib/creator/flow/nodeTypes';

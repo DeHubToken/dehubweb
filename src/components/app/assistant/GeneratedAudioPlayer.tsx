@@ -1,7 +1,10 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Loader2 } from "lucide-react";
-import { Download, Pause, Play, Share } from "@/components/ui/cut-icons";
+import Download from "@/components/ui/cut-icons/download";
+import Pause from "@/components/ui/cut-icons/pause";
+import Play from "@/components/ui/cut-icons/play";
+import Share from "@/components/ui/cut-icons/share";
 
 import { decodeAudioWaveform } from '@/components/app/audio/visualizer-styles';
 import { formatTime } from '@/lib/audio-waveform';

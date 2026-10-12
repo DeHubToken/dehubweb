@@ -3,8 +3,11 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { ThumbsDown, Clock, CheckCircle, AlertCircle } from "lucide-react";
-import { ThumbsUp, MessageSquare } from "@/components/ui/cut-icons";
+import { Clock, CheckCircle, AlertCircle } from "lucide-react";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
+
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { cn } from '@/lib/utils';
 

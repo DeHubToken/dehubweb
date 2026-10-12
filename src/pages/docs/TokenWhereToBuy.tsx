@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ExternalLink, Zap, Shield, CreditCard } from 'lucide-react';
+import { Zap, Shield, CreditCard } from "lucide-react";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const TokenWhereToBuy = () => {

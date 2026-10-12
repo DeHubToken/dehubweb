@@ -9,7 +9,7 @@
  */
 
 import { Ticket, Loader2 } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';

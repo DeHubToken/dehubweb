@@ -2,8 +2,12 @@
  * Creator Flow — the floating left toolbar.
  * =========================================
  */
-import { Hand, MousePointer2, Redo2, Undo2 } from "lucide-react";
-import { Plus, Share2 } from "@/components/ui/cut-icons";
+import { Hand, MousePointer2 } from "lucide-react";
+import Redo2 from "@/components/ui/cut-icons/redo";
+import Undo2 from "@/components/ui/cut-icons/undo";
+
+import Plus from "@/components/ui/cut-icons/add";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

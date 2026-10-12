@@ -18,7 +18,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useRef, type ReactNode } from 'react';
-import { ArrowLeft } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';

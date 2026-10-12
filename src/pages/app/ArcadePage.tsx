@@ -17,8 +17,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Swords, Upload } from "lucide-react";
-import { Play } from "@/components/ui/cut-icons";
+import { Swords } from "lucide-react";
+import Upload from "@/components/ui/cut-icons/upload";
+
+import Play from "@/components/ui/cut-icons/play";
 
 import { useReducedMotion } from 'framer-motion';
 import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';

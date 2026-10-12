@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Users } from 'lucide-react';
+import Users from "@/components/ui/cut-icons/communities";
+
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SOCIAL_CONFIGS } from '@/components/app/profile/ProfileSocialLinks';
 import { formatCount } from '@/lib/feed-utils';

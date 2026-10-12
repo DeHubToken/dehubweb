@@ -19,8 +19,13 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { stageUtcClock } from '@/lib/stage-time';
-import { Calendar, Loader2, ImagePlus, Check, Copy } from "lucide-react";
-import { X, Send } from "@/components/ui/cut-icons";
+import { Loader2, ImagePlus } from "lucide-react";
+import Calendar from "@/components/ui/cut-icons/events";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
+
+import X from "@/components/ui/cut-icons/close";
+import Send from "@/components/ui/cut-icons/send";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

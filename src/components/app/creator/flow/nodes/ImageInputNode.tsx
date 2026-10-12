@@ -7,7 +7,11 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * hosted in the background so the durable link is what gets saved and sent.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link2, Loader2, Trash2, Upload } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import Link2 from "@/components/ui/cut-icons/link";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Upload from "@/components/ui/cut-icons/upload";
+
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';
 import { toast } from 'sonner';

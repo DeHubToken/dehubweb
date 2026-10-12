@@ -8,8 +8,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Upload, Loader2, ChevronLeft } from "lucide-react";
-import { X, ChevronRight } from "@/components/ui/cut-icons";
+import { Loader2, ChevronLeft } from "lucide-react";
+import Upload from "@/components/ui/cut-icons/upload";
+
+import X from "@/components/ui/cut-icons/close";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';

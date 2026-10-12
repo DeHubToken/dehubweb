@@ -15,8 +15,14 @@ import { useTranslation } from 'react-i18next';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
-import { ChevronLeft, Loader2, Rocket, Trash2, Archive, Upload, PencilLine, AlertTriangle, ImageIcon, Film, Type, Wallet } from "lucide-react";
-import { Pause, Play, Plus } from "@/components/ui/cut-icons";
+import { ChevronLeft, Loader2, Rocket, Archive, PencilLine, AlertTriangle, ImageIcon, Film, Type } from "lucide-react";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Upload from "@/components/ui/cut-icons/upload";
+import Wallet from "@/components/ui/cut-icons/wallet";
+
+import Pause from "@/components/ui/cut-icons/pause";
+import Play from "@/components/ui/cut-icons/play";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

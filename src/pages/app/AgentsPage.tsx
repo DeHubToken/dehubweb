@@ -15,8 +15,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Bot, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from "lucide-react";
-import { Plus } from "@/components/ui/cut-icons";
+import { Bot } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Eye from "@/components/ui/cut-icons/visibility";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Link2 from "@/components/ui/cut-icons/link";
+import Wallet from "@/components/ui/cut-icons/wallet";
+
+import Plus from "@/components/ui/cut-icons/add";
 
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { SEOHead } from '@/components/SEOHead';

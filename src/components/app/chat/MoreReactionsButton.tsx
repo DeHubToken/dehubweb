@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { EmojiPanel } from '@/components/app/emoji/EmojiPanel';

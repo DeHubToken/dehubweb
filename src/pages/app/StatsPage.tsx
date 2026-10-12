@@ -29,19 +29,15 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import {
-  Activity,
-  BarChart3,
-  Check,
-  ChevronDown,
-  Copy,
-  ExternalLink,
-  Globe,
-  Loader2,
-  ShieldCheck,
-  UserPlus,
-  Users,
-} from 'lucide-react';
+import { Activity, ChevronDown, Globe, Loader2 } from "lucide-react";
+import BarChart3 from "@/components/ui/cut-icons/stats";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Users from "@/components/ui/cut-icons/communities";
+
 
 import { SEOHead } from '@/components/SEOHead';
 import {

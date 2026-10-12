@@ -21,8 +21,10 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, ExternalLink, Loader2, ReceiptText } from "lucide-react";
-import { Download } from "@/components/ui/cut-icons";
+import { ChevronDown, Loader2, ReceiptText } from "lucide-react";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+
+import Download from "@/components/ui/cut-icons/download";
 
 
 import {

@@ -2,8 +2,14 @@ import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
-import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, Video, MonitorPlay, ScreenShare } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { Loader2, ImagePlus, MonitorPlay, ScreenShare } from "lucide-react";
+import Radio from "@/components/ui/cut-icons/live";
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Video from "@/components/ui/cut-icons/video";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';

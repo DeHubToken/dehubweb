@@ -1,7 +1,11 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Coins, Lock, TrendingUp, Users, Zap, Shield, ArrowRight } from 'lucide-react';
+import { TrendingUp, Zap, Shield, ArrowRight } from "lucide-react";
+import Coins from "@/components/ui/cut-icons/coins";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Users from "@/components/ui/cut-icons/communities";
+
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 

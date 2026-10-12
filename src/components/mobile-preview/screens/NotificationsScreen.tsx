@@ -5,8 +5,12 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Heart, UserPlus, Coins, AtSign } from "lucide-react";
-import { MessageSquare, Repeat2 } from "@/components/ui/cut-icons";
+import { Heart, AtSign } from "lucide-react";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Coins from "@/components/ui/cut-icons/coins";
+
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Repeat2 from "@/components/ui/cut-icons/repost";
 
 import { cn } from '@/lib/utils';
 

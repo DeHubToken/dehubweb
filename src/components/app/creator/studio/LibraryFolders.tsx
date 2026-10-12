@@ -7,7 +7,12 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * in and stays on the device otherwise, like the library itself.
  */
 import { useState } from 'react';
-import { Check, FolderPlus, Folder as FolderIcon, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { FolderPlus, Folder as FolderIcon } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
 import { useTranslation } from 'react-i18next';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useCreatorFolderStore } from '@/store/creatorFolderStore';

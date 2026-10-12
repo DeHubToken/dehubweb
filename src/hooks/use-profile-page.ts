@@ -2,8 +2,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
-import { Image, Film, Star, Radio, PieChart, Pin, ListVideo } from "lucide-react";
-import { Home, MessageSquare, Play } from "@/components/ui/cut-icons";
+import { Film, Star, Pin, ListVideo } from "lucide-react";
+import Image from "@/components/ui/cut-icons/images";
+import Radio from "@/components/ui/cut-icons/live";
+import PieChart from "@/components/ui/cut-icons/fractions";
+
+import Home from "@/components/ui/cut-icons/home";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Play from "@/components/ui/cut-icons/play";
 
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';

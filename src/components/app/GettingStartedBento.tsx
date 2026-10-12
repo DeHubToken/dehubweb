@@ -25,8 +25,18 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Check, PenLine, Sparkles, ThumbsDown, Trophy, UserRound, UsersRound, Wallet } from "lucide-react";
-import { MessageCircle, ThumbsUp, X } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import PenLine from "@/components/ui/cut-icons/edit";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import UserRound from "@/components/ui/cut-icons/profile";
+import UsersRound from "@/components/ui/cut-icons/communities";
+import Wallet from "@/components/ui/cut-icons/wallet";
+
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import X from "@/components/ui/cut-icons/close";
 
 
 import { Button } from '@/components/ui/button';

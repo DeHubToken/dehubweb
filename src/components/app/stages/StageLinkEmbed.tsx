@@ -24,7 +24,11 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict, isPast } from 'date-fns';
-import { Calendar, Radio, Users, Clock, Headphones } from 'lucide-react';
+import { Clock, Headphones } from "lucide-react";
+import Calendar from "@/components/ui/cut-icons/events";
+import Radio from "@/components/ui/cut-icons/live";
+import Users from "@/components/ui/cut-icons/communities";
+
 import type { ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';

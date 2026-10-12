@@ -14,8 +14,23 @@ import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Copy, ExternalLink, ThumbsDown, Eye, Loader2, Users, Tag, Hash, HandCoins, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from "lucide-react";
-import { ArrowLeft, ThumbsUp, MessageSquare, User, Plus } from "@/components/ui/cut-icons";
+import { Loader2, Tag, Hash, HandCoins, Globe, Ticket } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Users from "@/components/ui/cut-icons/communities";
+import Lock from "@/components/ui/cut-icons/privacy";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Radio from "@/components/ui/cut-icons/live";
+import Coins from "@/components/ui/cut-icons/coins";
+
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import User from "@/components/ui/cut-icons/profile";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';

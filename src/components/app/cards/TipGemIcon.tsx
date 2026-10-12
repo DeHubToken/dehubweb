@@ -10,7 +10,7 @@
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Sparkle } from "lucide-react";
-import { Gem } from "@/components/ui/cut-icons";
+import Gem from "@/components/ui/cut-icons/diamond";
 
 import { cn } from '@/lib/utils';
 

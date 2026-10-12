@@ -23,7 +23,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
-import { ThumbsUp } from "@/components/ui/cut-icons";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

@@ -12,8 +12,16 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Eye, HardDrive, Images, Landmark, Lock, Newspaper, Percent, Upload, type LucideIcon } from "lucide-react";
-import { Mic, Share2 } from "@/components/ui/cut-icons";
+import { HardDrive, Newspaper, Percent, type LucideIcon } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Images from "@/components/ui/cut-icons/images";
+import Landmark from "@/components/ui/cut-icons/dao";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Upload from "@/components/ui/cut-icons/upload";
+
+import Mic from "@/components/ui/cut-icons/mic";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { AuthContext } from '@/contexts/AuthContext';
 import { DhbCoin } from '@/components/app/DhbAmount';

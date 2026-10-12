@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Square } from "lucide-react";
-import { Mic } from "@/components/ui/cut-icons";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { toast } from 'sonner';
 import { createVoiceRecorder, voiceRecordingBlob, VOICE_RECORDING_SECONDS } from '@/lib/voice-recording';

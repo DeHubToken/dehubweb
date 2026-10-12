@@ -5,7 +5,11 @@
  * none of them drag, arranged into a grid, or dissolved.
  */
 import { useRef } from 'react';
-import { LayoutGrid, Lock, Trash2, Ungroup, Unlock } from 'lucide-react';
+import { Ungroup, Unlock } from "lucide-react";
+import LayoutGrid from "@/components/ui/cut-icons/apps";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';
 import { arrangeNodes } from '@/lib/creator/flow/arrangeNodes';

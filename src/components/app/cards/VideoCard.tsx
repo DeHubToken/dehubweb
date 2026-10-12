@@ -46,8 +46,29 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Ban, Zap, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, Link2, Trash2, Music, Pencil, Star, Loader2 } from "lucide-react";
-import { ArrowLeft, Download, Play, Pause, MessageCircle, MessageSquare, Gem, Repeat, X } from "@/components/ui/cut-icons";
+import { MoreVertical, ListPlus, Clock, Zap, Minimize, FastForward, Rewind, PictureInPicture2, Ticket, Star, Loader2 } from "lucide-react";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Flag from "@/components/ui/cut-icons/report";
+import Ban from "@/components/ui/cut-icons/blocked";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Maximize from "@/components/ui/cut-icons/fullscreen";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Link2 from "@/components/ui/cut-icons/link";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Music from "@/components/ui/cut-icons/music";
+import Pencil from "@/components/ui/cut-icons/edit";
+
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import Download from "@/components/ui/cut-icons/download";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Gem from "@/components/ui/cut-icons/diamond";
+import Repeat from "@/components/ui/cut-icons/repost";
+import X from "@/components/ui/cut-icons/close";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';

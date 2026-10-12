@@ -14,8 +14,12 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { formatUnits } from 'viem';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { ArrowDownUp, RefreshCw, Loader2, ArrowRight, ExternalLink, Copy } from "lucide-react";
-import { Search } from "@/components/ui/cut-icons";
+import { ArrowDownUp, Loader2, ArrowRight } from "lucide-react";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Copy from "@/components/ui/cut-icons/copy";
+
+import Search from "@/components/ui/cut-icons/search";
 
 import { supabase } from '@/integrations/supabase/client';
 

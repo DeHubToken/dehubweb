@@ -1,6 +1,7 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
-import { Reply } from 'lucide-react';
+import Reply from "@/components/ui/cut-icons/reply";
+
 import { useTranslation } from 'react-i18next';
 import { useCommentOnApplication } from '../hooks/use-application-comments';
 import type { WorkApplication, WorkApplicationComment } from '../types';

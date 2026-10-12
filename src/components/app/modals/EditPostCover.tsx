@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Loader2, Upload } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import Upload from "@/components/ui/cut-icons/upload";
+
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { DEHUB_CDN_BASE, getNFTInfo, replaceVideoCover } from '@/lib/api/dehub';

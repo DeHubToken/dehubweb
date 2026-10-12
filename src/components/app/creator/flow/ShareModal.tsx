@@ -5,7 +5,11 @@
  * their own editor, but never edit or generate on the owner's flow.
  */
 import { useEffect, useState } from 'react';
-import { Check, Copy, Globe, Lock } from 'lucide-react';
+import { Globe } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
+import Lock from "@/components/ui/cut-icons/privacy";
+
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';

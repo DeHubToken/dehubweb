@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Home } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Home from "@/components/ui/cut-icons/home";
 
 import { BlogPost } from '@/types/blog';
 

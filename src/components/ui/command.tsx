@@ -1,7 +1,7 @@
 import * as React from "react";
 import { type DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 
 import { cn } from "@/lib/utils";

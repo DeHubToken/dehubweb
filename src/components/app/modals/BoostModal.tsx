@@ -28,11 +28,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { getNFTInfo } from '@/lib/api/dehub';
-import {
-  Loader2,
-  Lock,
-  Check,
-} from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Check from "@/components/ui/cut-icons/check";
+
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

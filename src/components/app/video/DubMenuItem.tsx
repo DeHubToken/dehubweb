@@ -6,7 +6,9 @@
  * first, so the row either works or says why — never switches on to silence.
  */
 import { useTranslation } from 'react-i18next';
-import { Check, Languages } from 'lucide-react';
+import Check from "@/components/ui/cut-icons/check";
+import Languages from "@/components/ui/cut-icons/language";
+
 import { toast } from 'sonner';
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
 import { useDubPreference, loadVoices, pickVoice, primeSpeech } from '@/hooks/dub-preference';

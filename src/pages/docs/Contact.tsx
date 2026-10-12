@@ -1,7 +1,10 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, Users } from "lucide-react";
-import { MessageCircle, Send } from "@/components/ui/cut-icons";
+import { Mail } from "lucide-react";
+import Users from "@/components/ui/cut-icons/communities";
+
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import Send from "@/components/ui/cut-icons/send";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 

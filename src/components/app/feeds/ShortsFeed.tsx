@@ -17,8 +17,12 @@ import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
-import { RefreshCw, Eye, Loader2 } from "lucide-react";
-import { Play, ThumbsUp } from "@/components/ui/cut-icons";
+import { Loader2 } from "lucide-react";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Eye from "@/components/ui/cut-icons/visibility";
+
+import Play from "@/components/ui/cut-icons/play";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';

@@ -14,7 +14,10 @@ import { tokenLabel } from '@/lib/token-label';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { CalendarClock, Upload, Users } from 'lucide-react';
+import { CalendarClock } from "lucide-react";
+import Upload from "@/components/ui/cut-icons/upload";
+import Users from "@/components/ui/cut-icons/communities";
+
 import dehubCoin from '@/assets/dehub-coin.png';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { BadgeIcon } from '@/components/app/BadgeIcon';

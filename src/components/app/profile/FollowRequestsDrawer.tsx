@@ -1,7 +1,10 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Check, Loader2, UserPlus, Clock, CheckCheck, XCircle } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { Loader2, Clock, CheckCheck, XCircle } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

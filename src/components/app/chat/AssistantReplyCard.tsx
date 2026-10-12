@@ -9,7 +9,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Visual layout MUST match ChatMessage exactly (spacing, avatar size, timestamp format)
  * so it sits inline naturally with surrounding messages.
  */
-import { Sparkles, CornerDownRight } from 'lucide-react';
+import { CornerDownRight } from "lucide-react";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { renderTextWithLinks } from '../TranslatableText';
 import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';

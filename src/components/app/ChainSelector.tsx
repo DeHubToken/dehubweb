@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Check } from 'lucide-react';
+import Check from "@/components/ui/cut-icons/check";
+
 import {
   Drawer,
   DrawerContent,

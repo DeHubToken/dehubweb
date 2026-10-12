@@ -6,8 +6,16 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * a fresh canvas or the UGC starter.
  */
 import { useState } from 'react';
-import { Check, Cloud, CloudOff, Copy, Globe, Loader2, MoreHorizontal, Pencil, Sparkles, Trash2 } from "lucide-react";
-import { Plus, X } from "@/components/ui/cut-icons";
+import { Cloud, CloudOff, Globe, Loader2 } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { useTranslation } from 'react-i18next';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';

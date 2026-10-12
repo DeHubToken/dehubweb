@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
+
 import { toast } from 'sonner';
 import { useLanguage } from '@/contexts/LanguageContext';
 

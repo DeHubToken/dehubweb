@@ -18,8 +18,24 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Sparkles, Loader2, ChevronDown, ImageIcon, Copy, Paperclip, Video, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines, LifeBuoy } from "lucide-react";
-import { Send, X, Plus, Settings, Download, Mic } from "@/components/ui/cut-icons";
+import { Loader2, ChevronDown, ImageIcon, Square, XCircle, Zap, AudioLines, LifeBuoy } from "lucide-react";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Copy from "@/components/ui/cut-icons/copy";
+import Paperclip from "@/components/ui/cut-icons/attach";
+import Video from "@/components/ui/cut-icons/video";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import LayoutDashboard from "@/components/ui/cut-icons/command";
+import Check from "@/components/ui/cut-icons/check";
+import Lock from "@/components/ui/cut-icons/privacy";
+import History from "@/components/ui/cut-icons/history";
+
+import Send from "@/components/ui/cut-icons/send";
+import X from "@/components/ui/cut-icons/close";
+import Plus from "@/components/ui/cut-icons/add";
+import Settings from "@/components/ui/cut-icons/settings";
+import Download from "@/components/ui/cut-icons/download";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

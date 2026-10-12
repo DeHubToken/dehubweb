@@ -19,8 +19,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ShoppingBag, Trash2, Radio, ImageIcon, Loader2, PackageOpen, Store } from "lucide-react";
-import { Plus } from "@/components/ui/cut-icons";
+import { ShoppingBag, ImageIcon, Loader2, PackageOpen } from "lucide-react";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Radio from "@/components/ui/cut-icons/live";
+import Store from "@/components/ui/cut-icons/store";
+
+import Plus from "@/components/ui/cut-icons/add";
 
 import { useNavigate } from 'react-router-dom';
 import { useMyListings } from '@/hooks/use-stores';

@@ -1,8 +1,14 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
-import { Users, Trash2, Pencil, Copy, Check } from "lucide-react";
-import { Search, Plus } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
+
+import Search from "@/components/ui/cut-icons/search";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';

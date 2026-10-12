@@ -5,8 +5,11 @@
  * list, so a node type is declared once.
  */
 import type { ReactNode } from 'react';
-import { Bot, Clapperboard, Film, Image as ImageIcon, Sparkles } from "lucide-react";
-import { MessageSquare } from "@/components/ui/cut-icons";
+import { Bot, Clapperboard, Film } from "lucide-react";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import type { FlowNodeType } from './types';
 

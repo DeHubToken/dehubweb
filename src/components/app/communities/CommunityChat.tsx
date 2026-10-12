@@ -15,8 +15,18 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Loader2, SmilePlus, Reply, CornerDownRight, LogIn, Pencil, Check, Trash2, ArrowDown, Pin, PinOff, MicOff, Ban } from "lucide-react";
-import { Send, X, MessageSquare, Search } from "@/components/ui/cut-icons";
+import { Loader2, SmilePlus, CornerDownRight, LogIn, ArrowDown, Pin, PinOff } from "lucide-react";
+import Reply from "@/components/ui/cut-icons/reply";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Check from "@/components/ui/cut-icons/check";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import Ban from "@/components/ui/cut-icons/blocked";
+
+import Send from "@/components/ui/cut-icons/send";
+import X from "@/components/ui/cut-icons/close";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Search from "@/components/ui/cut-icons/search";
 
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { voiceRecordingFile } from '@/lib/voice-recording';
@@ -57,7 +67,8 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { MarkdownText } from '@/lib/markdown';
 import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';
-import { Sparkles } from 'lucide-react';
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
 
 
 

@@ -2,8 +2,15 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AudioLines, Clapperboard, ExternalLink, Film, Image as ImageIcon, Loader2, Shapes, Sparkles } from "lucide-react";
-import { Play, Plus, Search, X } from "@/components/ui/cut-icons";
+import { AudioLines, Clapperboard, Film, Loader2, Shapes } from "lucide-react";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
+import Play from "@/components/ui/cut-icons/play";
+import Plus from "@/components/ui/cut-icons/add";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";

@@ -29,8 +29,11 @@ const shortsHistoryStore: ShortsHistoryStore = {
   read: async key => localStorage.getItem(key),
   write: async (key, value) => { localStorage.setItem(key, value); },
 };
-import { RefreshCw, Radio, ArrowUp } from 'lucide-react';
-import { ChevronRight } from '@/components/ui/cut-icons';
+import { ArrowUp } from "lucide-react";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Radio from "@/components/ui/cut-icons/live";
+
+import ChevronRight from "@/components/ui/cut-icons/next";
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';

@@ -3,7 +3,11 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Grid3X3, Video, Heart, UserPlus, Link as LinkIcon } from 'lucide-react';
+import { Grid3X3, Heart } from "lucide-react";
+import Video from "@/components/ui/cut-icons/video";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import LinkIcon from "@/components/ui/cut-icons/link";
+
 
 const MOCK_POSTS_GRID = Array.from({ length: 9 }, (_, i) => ({
   id: String(i),

@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useEffect } from "react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import googlePlayBadge from "@/assets/google-play-badge.png";
 

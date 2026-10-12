@@ -32,7 +32,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { AlertCircle, ArrowRight, CreditCard, ExternalLink, Loader2, Wallet } from 'lucide-react';
+import { AlertCircle, ArrowRight, CreditCard, Loader2 } from "lucide-react";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Wallet from "@/components/ui/cut-icons/wallet";
+
 import { Button } from '@/components/ui/button';
 import { BASE_CHAIN_ID, getChainConfig, toWei } from '@/lib/contracts/dhb-token';
 import {

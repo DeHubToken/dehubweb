@@ -26,8 +26,13 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, Folder, FolderOpen, Globe, Link2, Loader2, Pencil, Trash2, Check, ArrowUpDown, FolderInput } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { ChevronLeft, Folder, FolderOpen, Globe, Loader2, ArrowUpDown, FolderInput } from "lucide-react";
+import Link2 from "@/components/ui/cut-icons/link";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Check from "@/components/ui/cut-icons/check";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

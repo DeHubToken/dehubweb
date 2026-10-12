@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 import { Button } from '@/components/ui/button';
 import { useDocsSearch } from '@/hooks/useDocsSearch';

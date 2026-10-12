@@ -3,8 +3,16 @@ import { useDraftState } from "@/hooks/use-draft-state";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { MoreVertical, Loader2, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Languages, RotateCcw } from "lucide-react";
-import { ArrowLeft, Settings, MessageCircle, Search, X } from "@/components/ui/cut-icons";
+import { MoreVertical, Loader2, ShieldBan, MessageSquarePlus, AlertCircle, RotateCcw } from "lucide-react";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Languages from "@/components/ui/cut-icons/language";
+
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import Settings from "@/components/ui/cut-icons/settings";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { LiveChatOnlineCount } from './LiveChatOnlineCount';
 import { useTranslation } from 'react-i18next';

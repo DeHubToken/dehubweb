@@ -19,8 +19,12 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowUp, Sparkles, Wand2 } from "lucide-react";
-import { MessageCircle, Share2, X } from "@/components/ui/cut-icons";
+import { ArrowUp, Wand2 } from "lucide-react";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import X from "@/components/ui/cut-icons/close";
 
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';

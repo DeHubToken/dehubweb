@@ -4,8 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
-import { Check, Clock3, Loader2, ShoppingCart, ThumbsDown, WalletCards } from "lucide-react";
-import { Send, ThumbsUp } from "@/components/ui/cut-icons";
+import { Clock3, Loader2, ShoppingCart, WalletCards } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
+
+import Send from "@/components/ui/cut-icons/send";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { toast } from 'sonner';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';

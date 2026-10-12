@@ -16,8 +16,12 @@ import { useRef, useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { verifyMessage } from 'ethers';
-import { AlertTriangle, CheckCircle2, Copy, Loader2, ShieldCheck } from "lucide-react";
-import { Play, Send } from "@/components/ui/cut-icons";
+import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+
+import Play from "@/components/ui/cut-icons/play";
+import Send from "@/components/ui/cut-icons/send";
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';

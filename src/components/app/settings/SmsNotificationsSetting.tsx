@@ -35,8 +35,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ListFilter } from "lucide-react";
-import { MessageSquare } from "@/components/ui/cut-icons";
+import ListFilter from "@/components/ui/cut-icons/sort";
+
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { toast } from 'sonner';
 

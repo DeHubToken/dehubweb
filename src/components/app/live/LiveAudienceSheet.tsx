@@ -14,8 +14,10 @@ import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow } from 'date-fns';
-import { Crown, Eye } from "lucide-react";
-import { MessageCircle } from "@/components/ui/cut-icons";
+import { Crown } from "lucide-react";
+import Eye from "@/components/ui/cut-icons/visibility";
+
+import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';

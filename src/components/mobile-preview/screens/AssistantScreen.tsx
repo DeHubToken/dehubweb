@@ -4,8 +4,10 @@ import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { Sparkles } from "lucide-react";
-import { Send, Plus } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
+import Send from "@/components/ui/cut-icons/send";
+import Plus from "@/components/ui/cut-icons/add";
 
 
 const mockMessages = (t: TFunction) => [

@@ -18,7 +18,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
-import { ChevronRight } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { WalletButton, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';

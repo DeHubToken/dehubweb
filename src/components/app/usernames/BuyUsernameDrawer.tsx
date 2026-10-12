@@ -24,8 +24,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Loader2, ShieldCheck } from "lucide-react";
-import { Share2 } from "@/components/ui/cut-icons";
+import { ArrowRight, Loader2 } from "lucide-react";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';

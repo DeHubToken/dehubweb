@@ -4,7 +4,10 @@ import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { Lock, TrendingUp, Clock, Coins } from 'lucide-react';
+import { TrendingUp, Clock } from "lucide-react";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Coins from "@/components/ui/cut-icons/coins";
+
 
 const stakingOptions = (t: TFunction) => [
   { period: '7 Days', apy: '8.2%', minStake: t('mobilePreview.tokenAmount', { amount: '100' }), locked: t('mobilePreview.tokenAmount', { amount: '2.4M' }) },

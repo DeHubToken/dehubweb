@@ -7,7 +7,8 @@
  */
 
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
-import { Play, Pause } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 

@@ -12,7 +12,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ArrowUpRight } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';

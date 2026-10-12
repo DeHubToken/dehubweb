@@ -3,8 +3,11 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { tokenLabel } from '@/lib/token-label';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
-import { Loader2, Star, Clock, FileText, Gift } from "lucide-react";
-import { Plus, X } from "@/components/ui/cut-icons";
+import { Loader2, Star, Clock, FileText } from "lucide-react";
+import Gift from "@/components/ui/cut-icons/gifts";
+
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
