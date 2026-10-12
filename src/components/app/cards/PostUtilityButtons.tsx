@@ -1,3 +1,4 @@
+import { FEED_ICON_CLASS } from './feed-icon-size';
 /**
  * Post Utility Buttons
  * ====================
@@ -75,7 +76,7 @@ export function PostUtilityButtons({
     if (postId) navigate(`/app/post/${postId}/info`);
   };
 
-  const iconSize = 'w-5 h-5';
+
 
   return (
     <>
@@ -98,7 +99,7 @@ export function PostUtilityButtons({
         animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
         transition={{ duration: 0.2, ease: 'easeOut' }}
       >
-        <Bookmark className={cn("w-[29px] h-[29px]", isBookmarked && 'fill-current')} />
+        <Bookmark className={cn(FEED_ICON_CLASS.bookmark, isBookmarked && 'fill-current')} />
       </motion.button>
 
       {isOwnPost && (
@@ -117,7 +118,7 @@ export function PostUtilityButtons({
               : cn('transition-colors disabled:opacity-40', isPinned ? 'text-blue-400' : 'text-zinc-400 hover:text-white'),
           )}
         >
-          <Pin className={cn(iconSize, isPinned && 'fill-current')} />
+          <Pin className={cn(FEED_ICON_CLASS.pin, isPinned && 'fill-current')} />
         </button>
       )}
 
@@ -126,7 +127,7 @@ export function PostUtilityButtons({
         className={cn(isChip ? CHIP_BASE : 'text-zinc-400 hover:text-white transition-colors')}
         aria-label={t('postInfo.title', 'Post info')}
       >
-        <Info className={iconSize} />
+        <Info className={FEED_ICON_CLASS.info} />
       </button>
 
       <SaveToFolderDrawerLazy
