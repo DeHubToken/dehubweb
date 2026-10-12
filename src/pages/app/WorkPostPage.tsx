@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { ArrowLeft } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { useCreateJob } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';

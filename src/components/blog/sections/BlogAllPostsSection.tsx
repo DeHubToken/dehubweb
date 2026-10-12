@@ -1,9 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
-import { Calendar } from "@/components/ui/cut-icons";
+import Calendar from "@/components/ui/cut-icons/events";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { BlogPost } from '@/types/blog';
 import BlogCard from '@/components/blog/BlogCard';

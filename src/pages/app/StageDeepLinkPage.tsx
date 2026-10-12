@@ -38,9 +38,14 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { CalendarPlus, Loader2, BellRing, Headphones, Square, Clock, PictureInPicture2, FileText } from "lucide-react";
-import { CalendarDays, Radio, Users } from "@/components/ui/cut-icons";
+import CalendarDays from "@/components/ui/cut-icons/events";
+import Radio from "@/components/ui/cut-icons/live";
+import Users from "@/components/ui/cut-icons/communities";
 
-import { Share2, Bell, Play, Pause } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { toast } from 'sonner';
 import { mintPost } from '@/lib/api/dehub';

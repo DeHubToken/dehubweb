@@ -16,9 +16,9 @@ import { TranslationText } from '@/components/TranslationText';
 
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { AlertTriangle } from "lucide-react";
-import { RefreshCw } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
 
-import { Home } from "@/components/ui/cut-icons";
+import Home from "@/components/ui/cut-icons/home";
 
 import { Button } from '@/components/ui/button';
 import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';

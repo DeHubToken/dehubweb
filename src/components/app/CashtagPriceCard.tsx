@@ -12,9 +12,10 @@ const TokenPriceChart = lazy(() =>
 );
 const CHART_FALLBACK = <div className="w-full h-[180px] bg-zinc-900/50" />;
 import { TrendingUp, TrendingDown, ClipboardCopy, ChevronDown, Globe, Twitter, PictureInPicture2 } from "lucide-react";
-import { Check, ExternalLink } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
-import { MessageCircle } from "@/components/ui/cut-icons";
+import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';
 import { useChartPiP } from '@/contexts/ChartPiPContext';

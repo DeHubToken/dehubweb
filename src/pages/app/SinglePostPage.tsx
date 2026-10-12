@@ -31,9 +31,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback, useMemo, Suspense } from 'react';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { Clock } from "lucide-react";
-import { Sparkles, Flag, Link2, Pencil, Trash2 } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Flag from "@/components/ui/cut-icons/report";
+import Link2 from "@/components/ui/cut-icons/link";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { ArrowLeft, Gem } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import Gem from "@/components/ui/cut-icons/diamond";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useTranslation as useI18n } from 'react-i18next';

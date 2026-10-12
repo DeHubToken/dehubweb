@@ -24,9 +24,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Loader2, AlertCircle, Globe, ChevronDown } from "lucide-react";
-import { LogOut, Check, Camera } from "@/components/ui/cut-icons";
+import LogOut from "@/components/ui/cut-icons/sign-out";
+import Check from "@/components/ui/cut-icons/check";
+import Camera from "@/components/ui/cut-icons/camera";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 
 import { useAuth } from '@/contexts/AuthContext';

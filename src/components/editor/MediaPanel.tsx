@@ -2,9 +2,15 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Film, HardDrive } from "lucide-react";
-import { Upload, Trash2, Music, Image as ImageIcon, Lock, ExternalLink, Copy } from "@/components/ui/cut-icons";
+import Upload from "@/components/ui/cut-icons/upload";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Music from "@/components/ui/cut-icons/music";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import Lock from "@/components/ui/cut-icons/privacy";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Copy from "@/components/ui/cut-icons/copy";
 
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

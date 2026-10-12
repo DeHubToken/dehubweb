@@ -1,7 +1,7 @@
 import '@/styles/article.css';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BookOpen } from "@/components/ui/cut-icons";
+import BookOpen from "@/components/ui/cut-icons/docs";
 
 import { articleReadingMinutes } from '@/lib/article';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

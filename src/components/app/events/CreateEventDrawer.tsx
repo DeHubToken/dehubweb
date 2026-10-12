@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, ImagePlus, Loader2, Globe } from "lucide-react";
-import { Lock } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
 
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';

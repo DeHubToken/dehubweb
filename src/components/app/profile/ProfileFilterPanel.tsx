@@ -21,7 +21,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { RefreshCw } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
 
 import { useTranslation } from 'react-i18next';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';

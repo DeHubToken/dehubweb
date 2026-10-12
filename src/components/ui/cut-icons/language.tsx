@@ -1,0 +1,6 @@
+import React from "react";
+import { createCutIcon } from "./create-cut-icon";
+
+export default createCutIcon("CutLanguage", ({ weight, maskId }) => <>
+<path d="M4 5H18Q28 5 28 15V28H14Q4 28 4 18Z" fill="none" stroke="currentColor" strokeWidth={weight * 1.2} strokeLinejoin="round"/><path d="M9.1600 12.0000L18.0000 12.0000L18.0000 11.1600Q18.0000 10.0000 16.8400 10.0000L8.0000 10.0000L8.0000 10.8400Q8.0000 12.0000 9.1600 12.0000Z" fill="currentColor" fillRule="evenodd"/><path d="M12.0000 9.1600L12.0000 11.0000L12.8400 11.0000Q14.0000 11.0000 14.0000 9.8400L14.0000 8.0000L13.1600 8.0000Q12.0000 8.0000 12.0000 9.1600Z" fill="currentColor" fillRule="evenodd"/><path d="M16 11Q15 17 9 20 M10 13Q12 17 17 19" fill="none" stroke="currentColor" strokeWidth={weight * 1.0} strokeLinejoin="round"/><path d="M19.3524 23.2813L21.5000 17.7590L24.0680 24.3624L24.8509 24.0580Q25.9320 23.6376 25.5116 22.5564L21.5000 12.2410L17.0680 23.6376L17.8509 23.9420Q18.9320 24.3624 19.3524 23.2813Z" fill="currentColor" fillRule="evenodd"/><path d="M20.0440 21.9000L24.0000 21.9000L24.0000 21.1440Q24.0000 20.1000 22.9560 20.1000L19.0000 20.1000L19.0000 20.8560Q19.0000 21.9000 20.0440 21.9000Z" fill="currentColor" fillRule="evenodd"/>
+</>);

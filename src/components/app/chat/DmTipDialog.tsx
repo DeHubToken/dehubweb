@@ -11,7 +11,7 @@ import { tokenLabel } from '@/lib/token-label';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
-import { Gem } from "@/components/ui/cut-icons";
+import Gem from "@/components/ui/cut-icons/diamond";
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';

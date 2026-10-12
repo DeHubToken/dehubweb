@@ -2,7 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { Pencil, Trash2, Sparkles } from "@/components/ui/cut-icons";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';

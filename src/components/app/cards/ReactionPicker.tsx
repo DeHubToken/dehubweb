@@ -50,7 +50,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Info } from "@/components/ui/cut-icons";
+import Info from "@/components/ui/cut-icons/information";
 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

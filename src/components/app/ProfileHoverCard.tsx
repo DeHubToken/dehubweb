@@ -11,7 +11,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
-import { UserPlus } from "@/components/ui/cut-icons";
+import UserPlus from "@/components/ui/cut-icons/add-account";
 
 import { CheckCircle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

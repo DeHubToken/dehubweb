@@ -14,7 +14,7 @@
  * what replaces the old empty/black placeholder that live posts used to show.
  */
 import { useEffect, useRef, useState } from 'react';
-import { Radio } from "@/components/ui/cut-icons";
+import Radio from "@/components/ui/cut-icons/live";
 
 import { cn } from '@/lib/utils';
 import { cdnImage, deviceWidth, isMdUp } from '@/lib/media-url';

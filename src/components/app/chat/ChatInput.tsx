@@ -4,9 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Wand2, MessageCircleQuestion, FileText } from "lucide-react";
-import { Image, Sparkles, Reply, Paperclip } from "@/components/ui/cut-icons";
+import Image from "@/components/ui/cut-icons/images";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Reply from "@/components/ui/cut-icons/reply";
+import Paperclip from "@/components/ui/cut-icons/attach";
 
-import { Send, X, Gem } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
+import X from "@/components/ui/cut-icons/close";
+import Gem from "@/components/ui/cut-icons/diamond";
 
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';

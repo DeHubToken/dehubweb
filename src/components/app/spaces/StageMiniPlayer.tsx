@@ -8,9 +8,13 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Maximize2, ScreenShare } from "lucide-react";
-import { MicOff, Users, Volume2, Radio } from "@/components/ui/cut-icons";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import Users from "@/components/ui/cut-icons/communities";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import Radio from "@/components/ui/cut-icons/live";
 
-import { Mic, X } from "@/components/ui/cut-icons";
+import Mic from "@/components/ui/cut-icons/mic";
+import X from "@/components/ui/cut-icons/close";
 
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';

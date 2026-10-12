@@ -10,9 +10,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * disappears over a bright frame.
  */
 import { Zap } from "lucide-react";
-import { MoreHorizontal } from "@/components/ui/cut-icons";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
 
-import { ArrowLeft } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';

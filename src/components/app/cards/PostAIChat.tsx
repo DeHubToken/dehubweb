@@ -10,9 +10,13 @@ import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Loader2, Square, Minus } from "lucide-react";
-import { Sparkles, Paperclip, VolumeX } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Paperclip from "@/components/ui/cut-icons/attach";
+import VolumeX from "@/components/ui/cut-icons/mute";
 
-import { X, Send, Mic } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import Send from "@/components/ui/cut-icons/send";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';

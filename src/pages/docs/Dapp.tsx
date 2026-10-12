@@ -13,9 +13,18 @@ import E2EEncryption from './E2EEncryption';
 import AIToolkits from './AIToolkits';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Zap, Crown, Banknote, TrendingUp, Infinity, Percent, Scale, CheckCircle2, AlertTriangle, Layers, Network, CreditCard, Gauge, Rocket } from "lucide-react";
-import { Video, Coins, Users, Eye, Lock, Vote, ExternalLink, History } from "@/components/ui/cut-icons";
+import Video from "@/components/ui/cut-icons/video";
+import Coins from "@/components/ui/cut-icons/coins";
+import Users from "@/components/ui/cut-icons/communities";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Vote from "@/components/ui/cut-icons/governance";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import History from "@/components/ui/cut-icons/history";
 
-import { Settings, MessageCircle, ChevronRight } from "@/components/ui/cut-icons";
+import Settings from "@/components/ui/cut-icons/settings";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { DhbAmount } from '@/components/app/DhbAmount';

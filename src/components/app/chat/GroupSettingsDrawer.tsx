@@ -10,9 +10,14 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useEffect, useCallback } from 'react';
 import { Loader2, ShieldBan } from "lucide-react";
-import { Users, LogOut, Pencil, UserPlus } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import LogOut from "@/components/ui/cut-icons/sign-out";
+import Pencil from "@/components/ui/cut-icons/edit";
+import UserPlus from "@/components/ui/cut-icons/add-account";
 
-import { Settings, Search, X } from "@/components/ui/cut-icons";
+import Settings from "@/components/ui/cut-icons/settings";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';

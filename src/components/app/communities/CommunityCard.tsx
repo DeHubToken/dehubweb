@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Crown, Clock } from "lucide-react";
-import { Users, Lock, Link as LinkIcon } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import Lock from "@/components/ui/cut-icons/privacy";
+import LinkIcon from "@/components/ui/cut-icons/link";
 
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';

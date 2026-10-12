@@ -8,7 +8,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Star, MessageSquarePlus, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
-import { ThumbsUp } from "@/components/ui/cut-icons";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { StarRating } from './StarRating';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';

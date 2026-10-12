@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useTranslation as _useCopy, useTranslation } from 'react-i18next';
 import { Clock, Loader2 } from "lucide-react";
-import { UserPlus, Check } from "@/components/ui/cut-icons";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Check from "@/components/ui/cut-icons/check";
 
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

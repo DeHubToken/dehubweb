@@ -1,4 +1,4 @@
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { motion } from 'framer-motion';
 import type { LinkPreviewData } from '@/lib/api/link-preview';

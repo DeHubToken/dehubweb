@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Star, Loader2 } from "lucide-react";
-import { Trash2 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';

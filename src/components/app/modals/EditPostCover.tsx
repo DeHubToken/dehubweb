@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
-import { Upload } from "@/components/ui/cut-icons";
+import Upload from "@/components/ui/cut-icons/upload";
 
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';

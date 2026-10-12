@@ -5,9 +5,11 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CreditCard, Loader2, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package } from "lucide-react";
-import { Wallet, Check } from "@/components/ui/cut-icons";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Check from "@/components/ui/cut-icons/check";
 
-import { Search, Send } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Send from "@/components/ui/cut-icons/send";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

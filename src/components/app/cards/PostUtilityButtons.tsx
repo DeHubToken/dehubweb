@@ -19,9 +19,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Pin } from "lucide-react";
-import { Info } from "@/components/ui/cut-icons";
+import Info from "@/components/ui/cut-icons/information";
 
-import { Bookmark } from "@/components/ui/cut-icons";
+import Bookmark from "@/components/ui/cut-icons/save";
 
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

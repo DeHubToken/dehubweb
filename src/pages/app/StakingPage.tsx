@@ -13,9 +13,15 @@ import { formatUnits, parseUnits } from 'ethers';
 import { useQueryClient } from '@tanstack/react-query';
 import { apiCall } from '@/lib/api/dehub/core';
 import { TrendingUp, DollarSign, Activity, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, AlertTriangle, Percent, Zap, Crown } from "lucide-react";
-import { Lock, ExternalLink, RefreshCw, Gift, Wallet, Copy } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Copy from "@/components/ui/cut-icons/copy";
 
-import { X, ChevronRight } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { IslandAction, PageBody, PageIsland } from '@/components/app/page-kit/PageKit';

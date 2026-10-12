@@ -29,9 +29,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CalendarClock, Loader2 } from "lucide-react";
-import { Check, ShieldCheck, Upload, Users, Wallet } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Upload from "@/components/ui/cut-icons/upload";
+import Users from "@/components/ui/cut-icons/communities";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
-import { Share2, X } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import X from "@/components/ui/cut-icons/close";
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';

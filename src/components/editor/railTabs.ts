@@ -6,9 +6,10 @@
  * only exports components and stays hot-reloadable.
  */
 import { Bot, ImagePlus, Layers, LayoutTemplate, LibraryBig, Shapes, Type, Wand2 } from "lucide-react";
-import { Captions, Sparkles } from "@/components/ui/cut-icons";
+import Captions from "@/components/ui/cut-icons/captions";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
-import { SlidersHorizontal } from "@/components/ui/cut-icons";
+import SlidersHorizontal from "@/components/ui/cut-icons/settings";
 
 import type { EditorPanel } from '@/store/editorUiStore';
 

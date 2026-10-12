@@ -2,9 +2,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useCallback } from 'react';
 import { Loader2, Square, Key } from "lucide-react";
-import { Upload } from "@/components/ui/cut-icons";
+import Upload from "@/components/ui/cut-icons/upload";
 
-import { Mic, X } from "@/components/ui/cut-icons";
+import Mic from "@/components/ui/cut-icons/mic";
+import X from "@/components/ui/cut-icons/close";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';

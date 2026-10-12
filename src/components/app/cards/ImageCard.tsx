@@ -26,9 +26,25 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Zap, ChevronDown, ChevronUp, ChevronLeft, Globe, Ticket, BarChart2, Star } from "lucide-react";
-import { Eye, Flag, Ban, VolumeX, EyeOff, Link2, Languages, Trash2, Gift, Lock, Pencil } from "@/components/ui/cut-icons";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Flag from "@/components/ui/cut-icons/report";
+import Ban from "@/components/ui/cut-icons/blocked";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Link2 from "@/components/ui/cut-icons/link";
+import Languages from "@/components/ui/cut-icons/language";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Pencil from "@/components/ui/cut-icons/edit";
 
-import { Download, ChevronRight, MessageSquare, MessageCircle, Gem, X, Plus } from "@/components/ui/cut-icons";
+import Download from "@/components/ui/cut-icons/download";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import Gem from "@/components/ui/cut-icons/diamond";
+import X from "@/components/ui/cut-icons/close";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';

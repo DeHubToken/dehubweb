@@ -8,9 +8,10 @@
  */
 
 import { Loader2 } from "lucide-react";
-import { Radio } from "@/components/ui/cut-icons";
+import Radio from "@/components/ui/cut-icons/live";
 
-import { Play, Pause } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks/use-radio-player';

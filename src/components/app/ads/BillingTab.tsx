@@ -12,9 +12,10 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { ArrowDownToLine, Loader2 } from "lucide-react";
-import { Wallet, ExternalLink } from "@/components/ui/cut-icons";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

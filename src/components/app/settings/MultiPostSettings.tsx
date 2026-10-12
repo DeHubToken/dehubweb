@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Clock, Unlink } from "lucide-react";
-import { Coins, Link2 } from "@/components/ui/cut-icons";
+import Coins from "@/components/ui/cut-icons/coins";
+import Link2 from "@/components/ui/cut-icons/link";
 
-import { Plus, Share2 } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 
 import { Button } from '@/components/ui/button';

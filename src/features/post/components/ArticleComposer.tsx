@@ -2,9 +2,13 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bold, Heading1, Heading2, ImagePlus, Italic, List, ListOrdered, Loader2, PencilLine } from "lucide-react";
-import { Check, Eye, Link2, Quote } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Link2 from "@/components/ui/cut-icons/link";
+import Quote from "@/components/ui/cut-icons/quote";
 
-import { ArrowLeft, X } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import X from "@/components/ui/cut-icons/close";
 
 import {
   ARTICLE_BODY_MAX, ARTICLE_BODY_MIN, ARTICLE_SUMMARY_MAX, articleReadingMinutes, articleSummaryFromBody, articleWordCount,

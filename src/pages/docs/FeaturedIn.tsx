@@ -3,7 +3,8 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Newspaper } from "lucide-react";
-import { ExternalLink, Quote } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Quote from "@/components/ui/cut-icons/quote";
 
 
 type PressFeature = {

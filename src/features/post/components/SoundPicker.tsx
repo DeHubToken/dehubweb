@@ -10,9 +10,13 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
-import { Check, Music } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Music from "@/components/ui/cut-icons/music";
 
-import { Search, Play, Pause, X } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
+import X from "@/components/ui/cut-icons/close";
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { searchNFTs, getMediaUrl, DEHUB_CDN_BASE } from '@/lib/api/dehub';

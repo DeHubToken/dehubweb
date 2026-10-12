@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Share2 } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { bountyUrl } from '../seo';
 import type { WorkJob } from '../types';

@@ -18,9 +18,16 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { ImageDown } from "lucide-react";
-import { ThumbsDown, Quote, Link, Info } from "@/components/ui/cut-icons";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
+import Quote from "@/components/ui/cut-icons/quote";
+import Link from "@/components/ui/cut-icons/link";
+import Info from "@/components/ui/cut-icons/information";
 
-import { ThumbsUp, MessageSquare, Share2, Repeat2, Send } from "@/components/ui/cut-icons";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Repeat2 from "@/components/ui/cut-icons/repost";
+import Send from "@/components/ui/cut-icons/send";
 
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';

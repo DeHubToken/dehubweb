@@ -11,9 +11,10 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { MousePointerClick, DollarSign, Rocket, TrendingUp } from "lucide-react";
-import { Wallet, Eye } from "@/components/ui/cut-icons";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Eye from "@/components/ui/cut-icons/visibility";
 
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Button } from '@/components/ui/button';
 import { AdTopUpModal } from '@/components/app/ads/AdTopUpModal';

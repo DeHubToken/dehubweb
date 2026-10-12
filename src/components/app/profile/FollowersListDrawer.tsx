@@ -5,9 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2, UserMinus, ArrowUpDown, Clock, FolderPlus } from "lucide-react";
-import { Users, UserPlus } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import UserPlus from "@/components/ui/cut-icons/add-account";
 
-import { Search, X } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

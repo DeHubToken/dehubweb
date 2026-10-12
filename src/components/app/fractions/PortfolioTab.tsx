@@ -14,9 +14,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Tag, ImageIcon, HandCoins } from "lucide-react";
-import { Wallet } from "@/components/ui/cut-icons";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';

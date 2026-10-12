@@ -1,7 +1,11 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heart, ShoppingBag, ArrowRightLeft } from "lucide-react";
-import { Coins, Lock, Sparkles, Trophy, PieChart } from "@/components/ui/cut-icons";
+import Coins from "@/components/ui/cut-icons/coins";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import PieChart from "@/components/ui/cut-icons/fractions";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 

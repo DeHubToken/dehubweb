@@ -6,9 +6,11 @@ import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { Heart, AtSign } from "lucide-react";
-import { UserPlus, Coins } from "@/components/ui/cut-icons";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Coins from "@/components/ui/cut-icons/coins";
 
-import { MessageSquare, Repeat2 } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Repeat2 from "@/components/ui/cut-icons/repost";
 
 import { cn } from '@/lib/utils';
 

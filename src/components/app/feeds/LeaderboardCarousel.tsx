@@ -7,9 +7,9 @@
 import { memo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
-import { Trophy } from "@/components/ui/cut-icons";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
 
-import { ChevronRight } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

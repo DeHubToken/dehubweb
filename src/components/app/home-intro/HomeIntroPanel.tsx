@@ -25,7 +25,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import type { CSSProperties, MouseEventHandler, PointerEventHandler } from 'react';
 import { Link } from 'react-router-dom';
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

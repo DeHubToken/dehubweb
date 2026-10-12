@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { Background, BackgroundVariant, Controls, ReactFlow, ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Hand, MousePointer2 } from "lucide-react";
-import { Copy } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
 
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';

@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Shield, Key, CheckCircle, XCircle, AlertTriangle, Clock, QrCode, Smartphone } from "lucide-react";
-import { Lock } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';

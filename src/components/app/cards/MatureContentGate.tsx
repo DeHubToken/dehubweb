@@ -21,7 +21,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useCallback, useState } from 'react';
-import { EyeOff } from "@/components/ui/cut-icons";
+import EyeOff from "@/components/ui/cut-icons/hidden";
 
 import { cn } from '@/lib/utils';
 import { useMatureContent } from '@/hooks/use-mature-content';

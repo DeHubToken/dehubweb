@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import * as React from "react";
 

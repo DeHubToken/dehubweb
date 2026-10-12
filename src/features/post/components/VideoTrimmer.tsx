@@ -1,9 +1,12 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Film } from "lucide-react";
-import { Scissors, Check } from "@/components/ui/cut-icons";
+import Scissors from "@/components/ui/cut-icons/trim";
+import Check from "@/components/ui/cut-icons/check";
 
-import { X, Play, Pause } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Slider } from '@/components/ui/slider';

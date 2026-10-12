@@ -17,9 +17,12 @@ import { useTranslation, Trans } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { useSearchParams } from 'react-router-dom';
 import { Tag } from "lucide-react";
-import { Check, Lock } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Lock from "@/components/ui/cut-icons/privacy";
 
-import { Search, SlidersHorizontal, User } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import SlidersHorizontal from "@/components/ui/cut-icons/settings";
+import User from "@/components/ui/cut-icons/profile";
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

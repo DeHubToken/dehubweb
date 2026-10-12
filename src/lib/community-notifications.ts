@@ -20,7 +20,9 @@
  * @module lib/community-notifications
  */
 
-import { Megaphone, MessageSquareText, UsersRound } from "@/components/ui/cut-icons";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import MessageSquareText from "@/components/ui/cut-icons/messages";
+import UsersRound from "@/components/ui/cut-icons/communities";
 
 import type { DeHubNotification } from '@/lib/api/dehub/notifications';
 

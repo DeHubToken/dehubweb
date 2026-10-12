@@ -14,7 +14,7 @@ import { apiCall } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
 import { Loader2, AtSign } from "lucide-react";
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';

@@ -5,9 +5,10 @@
  */
 
 import { PhoneOff, Maximize2, Phone } from "lucide-react";
-import { MicOff, Video } from "@/components/ui/cut-icons";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import Video from "@/components/ui/cut-icons/video";
 
-import { Mic } from "@/components/ui/cut-icons";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';

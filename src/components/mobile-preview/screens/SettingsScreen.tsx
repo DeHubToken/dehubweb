@@ -5,9 +5,13 @@ import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { Shield, Globe, Palette, Smartphone } from "lucide-react";
-import { Moon, HelpCircle, LogOut } from "@/components/ui/cut-icons";
+import Moon from "@/components/ui/cut-icons/appearance";
+import HelpCircle from "@/components/ui/cut-icons/help";
+import LogOut from "@/components/ui/cut-icons/sign-out";
 
-import { ChevronRight, User, Bell } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import User from "@/components/ui/cut-icons/profile";
+import Bell from "@/components/ui/cut-icons/alerts";
 
 
 const SETTINGS_SECTIONS = [

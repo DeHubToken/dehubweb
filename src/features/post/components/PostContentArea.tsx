@@ -10,9 +10,12 @@ import type { MediaFile, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { Save, Clock, Square, Hash } from "lucide-react";
-import { Upload, Calendar } from "@/components/ui/cut-icons";
+import Upload from "@/components/ui/cut-icons/upload";
+import Calendar from "@/components/ui/cut-icons/events";
 
-import { Mic, Plus, X } from "@/components/ui/cut-icons";
+import Mic from "@/components/ui/cut-icons/mic";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { ScheduleSheet } from './ScheduleSheet';

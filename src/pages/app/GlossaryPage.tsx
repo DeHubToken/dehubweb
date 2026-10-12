@@ -33,9 +33,46 @@ import medal10 from '@/assets/medal-10.png';
 
 const MEDALS = [medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10];
 import { Ticket, Heart, Star, Unlock, ArrowUpDown, Zap, Crown, TrendingUp, Clock, CheckCircle2, RotateCcw, ChevronUp, ChevronDown, Pin, AtSign, Hash, Globe, Tag, HandCoins } from "lucide-react";
-import { ThumbsDown, Languages, Eye, Flag, MoreHorizontal, Sparkles, Trophy, Wallet, ShieldCheck, Lightbulb, Radio, Video, Image, Coins, Users, Lock, BookOpen, Volume2, Copy, ExternalLink, Pencil, Trash2, Info, PieChart, BarChart3, EyeOff } from "@/components/ui/cut-icons";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
+import Languages from "@/components/ui/cut-icons/language";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Flag from "@/components/ui/cut-icons/report";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Lightbulb from "@/components/ui/cut-icons/feature-requests";
+import Radio from "@/components/ui/cut-icons/live";
+import Video from "@/components/ui/cut-icons/video";
+import Image from "@/components/ui/cut-icons/images";
+import Coins from "@/components/ui/cut-icons/coins";
+import Users from "@/components/ui/cut-icons/communities";
+import Lock from "@/components/ui/cut-icons/privacy";
+import BookOpen from "@/components/ui/cut-icons/docs";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import Copy from "@/components/ui/cut-icons/copy";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Info from "@/components/ui/cut-icons/information";
+import PieChart from "@/components/ui/cut-icons/fractions";
+import BarChart3 from "@/components/ui/cut-icons/stats";
+import EyeOff from "@/components/ui/cut-icons/hidden";
 
-import { ThumbsUp, MessageSquare, Share2, Bookmark, Bell, Send, Search, Settings, Home, Play, Mic, Gem, Plus } from "@/components/ui/cut-icons";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Bookmark from "@/components/ui/cut-icons/save";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Send from "@/components/ui/cut-icons/send";
+import Search from "@/components/ui/cut-icons/search";
+import Settings from "@/components/ui/cut-icons/settings";
+import Home from "@/components/ui/cut-icons/home";
+import Play from "@/components/ui/cut-icons/play";
+import Mic from "@/components/ui/cut-icons/mic";
+import Gem from "@/components/ui/cut-icons/diamond";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Input } from '@/components/ui/input';
 

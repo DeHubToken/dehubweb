@@ -8,7 +8,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle } from "lucide-react";
-import { Copy, Eye } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Eye from "@/components/ui/cut-icons/visibility";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from 'sonner';

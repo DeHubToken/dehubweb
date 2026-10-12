@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Volume2, VolumeX } from "@/components/ui/cut-icons";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MediaControlIcon } from './MediaControlIcon';

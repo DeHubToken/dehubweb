@@ -11,7 +11,9 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Clock, Flame, Timer, Tv, Zap, type LucideIcon } from "lucide-react";
-import { Check, Lock, Radio } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Radio from "@/components/ui/cut-icons/live";
 
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { STREAMER_BADGE_IDS, streamerBadgeSvg, type StreamerBadgeId } from '@/lib/streamer-badge-art';

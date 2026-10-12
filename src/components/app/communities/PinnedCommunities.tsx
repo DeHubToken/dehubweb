@@ -4,9 +4,10 @@
 
 import { useNavigate } from 'react-router-dom';
 import { Pin } from "lucide-react";
-import { Users } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
 
-import { Plus, X } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
 import { useState } from 'react';

@@ -6,9 +6,15 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Loader2, AlertCircle, ChevronDown, Film, Hash } from "lucide-react";
-import { Video, Volume2, Upload, Image, Music, Lightbulb } from "@/components/ui/cut-icons";
+import Video from "@/components/ui/cut-icons/video";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import Upload from "@/components/ui/cut-icons/upload";
+import Image from "@/components/ui/cut-icons/images";
+import Music from "@/components/ui/cut-icons/music";
+import Lightbulb from "@/components/ui/cut-icons/feature-requests";
 
-import { X, Plus } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb, getVideoResolutions, snapVideoDuration } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';

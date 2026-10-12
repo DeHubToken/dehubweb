@@ -10,7 +10,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * so it sits inline naturally with surrounding messages.
  */
 import { CornerDownRight } from "lucide-react";
-import { Sparkles } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { renderTextWithLinks } from '../TranslatableText';

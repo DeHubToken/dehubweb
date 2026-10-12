@@ -2,9 +2,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { Loader2 } from "lucide-react";
-import { UserPlus, ShieldCheck } from "@/components/ui/cut-icons";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import ShieldCheck from "@/components/ui/cut-icons/security";
 
-import { Settings } from "@/components/ui/cut-icons";
+import Settings from "@/components/ui/cut-icons/settings";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Eye, Coins } from "@/components/ui/cut-icons";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Coins from "@/components/ui/cut-icons/coins";
 
-import { MessageCircle } from "@/components/ui/cut-icons";
+import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

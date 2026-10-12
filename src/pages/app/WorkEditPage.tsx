@@ -4,9 +4,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Lock } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
 
-import { ArrowLeft } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { useWorkJob, useUpdateJob, isJobEditable, isBudgetEditable } from '@/features/work/hooks/use-work';
 import type { WorkJob, WorkCurrency, WorkJobType, WorkPlatform } from '@/features/work/types';

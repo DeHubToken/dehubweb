@@ -5,9 +5,13 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Star, AlertTriangle, Clock } from "lucide-react";
-import { ExternalLink, Check, Pencil, Wallet } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Check from "@/components/ui/cut-icons/check";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
-import { ArrowLeft, X } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import X from "@/components/ui/cut-icons/close";
 
 import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,

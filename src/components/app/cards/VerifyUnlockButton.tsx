@@ -15,7 +15,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { useCallback, useState } from 'react';
 import { Loader2 } from "lucide-react";
-import { ShieldCheck } from "@/components/ui/cut-icons";
+import ShieldCheck from "@/components/ui/cut-icons/security";
 
 import { toast } from 'sonner';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';

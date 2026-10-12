@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useRef, useState } from "react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import type { FreeAsset } from "@/lib/editor/freeAssets";
 

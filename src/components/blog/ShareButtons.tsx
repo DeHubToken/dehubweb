@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { Twitter, Facebook, Linkedin } from "lucide-react";
-import { Share2, Send } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Send from "@/components/ui/cut-icons/send";
 
 import { toast } from 'sonner';
 import { useAffiliateShareUrl } from '@/lib/useAffiliateShareUrl';

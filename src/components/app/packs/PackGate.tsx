@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
-import { Lock } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
 
 import { cn } from '@/lib/utils';
 import {

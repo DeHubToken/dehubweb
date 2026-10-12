@@ -10,7 +10,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useEffect } from 'react';
 import { Loader2 } from "lucide-react";
-import { Flag } from "@/components/ui/cut-icons";
+import Flag from "@/components/ui/cut-icons/report";
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';

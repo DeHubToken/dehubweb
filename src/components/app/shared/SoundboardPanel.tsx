@@ -13,9 +13,18 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Loader2, PartyPopper, Drum, Bug, Laugh, Ghost, Wand2, Hand, AlertTriangle, Timer, FileAudio } from "lucide-react";
-import { Music, Volume2, VolumeX, Upload, Trash2, Megaphone, Sparkles, ThumbsDown } from "@/components/ui/cut-icons";
+import Music from "@/components/ui/cut-icons/music";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Upload from "@/components/ui/cut-icons/upload";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
 
-import { X, User, ThumbsUp } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import User from "@/components/ui/cut-icons/profile";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';

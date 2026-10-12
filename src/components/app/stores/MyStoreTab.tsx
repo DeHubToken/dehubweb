@@ -10,9 +10,10 @@ import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle } from "lucide-react";
-import { Pencil, Store as StoreIcon } from "@/components/ui/cut-icons";
+import Pencil from "@/components/ui/cut-icons/edit";
+import StoreIcon from "@/components/ui/cut-icons/store";
 
-import { Settings } from "@/components/ui/cut-icons";
+import Settings from "@/components/ui/cut-icons/settings";
 
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';

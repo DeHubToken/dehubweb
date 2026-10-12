@@ -1,7 +1,10 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Loader2 } from "lucide-react";
-import { MessageCircle, X, Send, User } from "@/components/ui/cut-icons";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import X from "@/components/ui/cut-icons/close";
+import Send from "@/components/ui/cut-icons/send";
+import User from "@/components/ui/cut-icons/profile";
 
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';

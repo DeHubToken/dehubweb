@@ -10,9 +10,13 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Loader2, SmilePlus, CornerDownRight, LogIn } from "lucide-react";
-import { Reply, Pencil, Check } from "@/components/ui/cut-icons";
+import Reply from "@/components/ui/cut-icons/reply";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Check from "@/components/ui/cut-icons/check";
 
-import { Send, X, MessageSquare } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
+import X from "@/components/ui/cut-icons/close";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

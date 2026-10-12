@@ -20,9 +20,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, ImageIcon, Film, Type, ChevronLeft, Rocket, Save } from "lucide-react";
-import { Upload, Wallet } from "@/components/ui/cut-icons";
+import Upload from "@/components/ui/cut-icons/upload";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
-import { ChevronRight } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

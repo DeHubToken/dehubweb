@@ -40,7 +40,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Crown, Loader2, Swords } from "lucide-react";
-import { Plus, X } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';

@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { usePools } from '@/hooks/use-dex-pools';
 import { ChevronDown } from "lucide-react";
-import { Plus, Search } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import Search from "@/components/ui/cut-icons/search";
 
 import { poolPath, POOL_CHAIN_INFO, type DexPool } from '@/lib/dex/pools';
 import dhbCoinImage from '@/assets/dehub-coin.png';

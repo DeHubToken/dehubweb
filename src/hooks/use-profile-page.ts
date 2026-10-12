@@ -3,9 +3,13 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { Film, Star, Pin, ListVideo } from "lucide-react";
-import { Image, Radio, PieChart } from "@/components/ui/cut-icons";
+import Image from "@/components/ui/cut-icons/images";
+import Radio from "@/components/ui/cut-icons/live";
+import PieChart from "@/components/ui/cut-icons/fractions";
 
-import { Home, MessageSquare, Play } from "@/components/ui/cut-icons";
+import Home from "@/components/ui/cut-icons/home";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Play from "@/components/ui/cut-icons/play";
 
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';

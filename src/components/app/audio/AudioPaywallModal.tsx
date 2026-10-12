@@ -42,7 +42,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2, AlertCircle } from "lucide-react";
-import { Lightbulb, Music2 } from "@/components/ui/cut-icons";
+import Lightbulb from "@/components/ui/cut-icons/feature-requests";
+import Music2 from "@/components/ui/cut-icons/music";
 
 import {
   getAudioCostDhb,

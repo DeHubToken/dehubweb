@@ -31,7 +31,7 @@ import { useTranslation } from 'react-i18next';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
-import { Info } from "@/components/ui/cut-icons";
+import Info from "@/components/ui/cut-icons/information";
 
 import { useAuth } from '@/contexts/AuthContext';
 import { getAccountInfo, getMyPosts, getDHBPrice } from '@/lib/api/dehub';

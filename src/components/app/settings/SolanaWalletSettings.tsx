@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Check, Copy } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
 
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';

@@ -7,7 +7,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { watchedLabel } from '@/i18n/watched-label';
 import { Headphones, RotateCcw, Loader2 } from "lucide-react";
-import { Eye, Languages } from "@/components/ui/cut-icons";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Languages from "@/components/ui/cut-icons/language";
 
 import { useTranslation } from 'react-i18next';
 import { formatTimeAgo } from '@/lib/feed-utils';

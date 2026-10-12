@@ -14,9 +14,10 @@ import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import { Loader2, ArrowDown, CheckCircle2, AlertCircle, CreditCard, ChevronDown } from "lucide-react";
-import { Wallet } from "@/components/ui/cut-icons";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
-import { Plus, Send } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import Send from "@/components/ui/cut-icons/send";
 
 import { useOptionalGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';

@@ -19,9 +19,14 @@ import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { IslandAction, KitButton, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { Clock, Loader2, BellRing } from "lucide-react";
-import { Radio, Users, CalendarDays } from "@/components/ui/cut-icons";
+import Radio from "@/components/ui/cut-icons/live";
+import Users from "@/components/ui/cut-icons/communities";
+import CalendarDays from "@/components/ui/cut-icons/events";
 
-import { Plus, Share2, Bell, Mic } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import { dehubLinkFor } from '@/lib/dehub-links';

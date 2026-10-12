@@ -12,12 +12,12 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useMemo, useEffect, useCallback, useRef, useSyncExternalStore, createContext, useContext, ReactNode, RefObject } from 'react';
 import { Mail } from "lucide-react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
 import { toast } from 'sonner';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { RotateCcw, Loader2 } from "lucide-react";
-import { Languages } from "@/components/ui/cut-icons";
+import Languages from "@/components/ui/cut-icons/language";
 
 import { supabase } from '@/integrations/supabase/client';
 import { autoTranslateEnabled, setAutoTranslateEnabled, subscribeAutoTranslate } from '@/lib/auto-translate-setting';

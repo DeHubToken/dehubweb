@@ -9,9 +9,27 @@ import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/p
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
 import { AtSign, Loader2, AlertTriangle, Zap, MailOpen, Mail, Star, ShoppingBag, Scale, Siren, Award } from "lucide-react";
-import { MessageSquareText, Users, Check, UserPlus, Trophy, Video, Trash2, Store, UsersRound, Lightbulb, Radio, Briefcase, Blocks } from "@/components/ui/cut-icons";
+import MessageSquareText from "@/components/ui/cut-icons/messages";
+import Users from "@/components/ui/cut-icons/communities";
+import Check from "@/components/ui/cut-icons/check";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import Video from "@/components/ui/cut-icons/video";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Store from "@/components/ui/cut-icons/store";
+import UsersRound from "@/components/ui/cut-icons/communities";
+import Lightbulb from "@/components/ui/cut-icons/feature-requests";
+import Radio from "@/components/ui/cut-icons/live";
+import Briefcase from "@/components/ui/cut-icons/bounties";
+import Blocks from "@/components/ui/cut-icons/apps";
 
-import { Settings, ThumbsUp, Gem, Bell, Repeat2, X as XIcon, Send } from "@/components/ui/cut-icons";
+import Settings from "@/components/ui/cut-icons/settings";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import Gem from "@/components/ui/cut-icons/diamond";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Repeat2 from "@/components/ui/cut-icons/repost";
+import XIcon from "@/components/ui/cut-icons/close";
+import Send from "@/components/ui/cut-icons/send";
 
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';

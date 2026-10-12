@@ -17,9 +17,10 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Mic2, Disc3 } from "lucide-react";
-import { Music, Radio } from "@/components/ui/cut-icons";
+import Music from "@/components/ui/cut-icons/music";
+import Radio from "@/components/ui/cut-icons/live";
 
-import { Play } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
 
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';

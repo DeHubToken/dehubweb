@@ -8,7 +8,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { Link } from 'react-router-dom';
-import { Megaphone } from "@/components/ui/cut-icons";
+import Megaphone from "@/components/ui/cut-icons/advertising";
 
 import { cn } from '@/lib/utils';
 

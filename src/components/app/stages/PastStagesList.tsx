@@ -19,9 +19,12 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { PictureInPicture2, Clock, FileText } from "lucide-react";
-import { Users, Trash2 } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { Play, Pause, MessageSquare } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';

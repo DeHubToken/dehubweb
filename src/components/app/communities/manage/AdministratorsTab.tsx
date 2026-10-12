@@ -13,7 +13,9 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Crown, Shield } from "lucide-react";
-import { ChevronRight, Search, User } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Search from "@/components/ui/cut-icons/search";
+import User from "@/components/ui/cut-icons/profile";
 
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';

@@ -17,7 +17,7 @@
  * and the row simply does not appear.
  */
 
-import { Bell } from "@/components/ui/cut-icons";
+import Bell from "@/components/ui/cut-icons/alerts";
 
 import { cn } from '@/lib/utils';
 import { useStageReminderFaces } from '@/hooks/use-stage-reminders';

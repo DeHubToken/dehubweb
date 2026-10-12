@@ -6,9 +6,9 @@ import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { ChevronLeft, Smile, Phone, MoreVertical } from "lucide-react";
-import { Paperclip } from "@/components/ui/cut-icons";
+import Paperclip from "@/components/ui/cut-icons/attach";
 
-import { Send } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
 
 
 const mockMessages = (t: TFunction) => [

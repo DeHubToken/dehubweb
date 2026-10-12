@@ -32,7 +32,7 @@ import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } fr
 import { useTrenchstarHost } from '@/lib/trenchstar-host';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AlertTriangle, Loader2 } from "lucide-react";
-import { Gamepad2 } from "@/components/ui/cut-icons";
+import Gamepad2 from "@/components/ui/cut-icons/arcade";
 
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';

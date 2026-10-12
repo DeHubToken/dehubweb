@@ -4,7 +4,10 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowDown, ArrowRight, Boxes, CircleDollarSign, Cpu, Gauge, HardDrive, Loader2, Network, Server, WifiOff } from "lucide-react";
-import { Check, LockKeyhole, Radio, ShieldCheck } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import LockKeyhole from "@/components/ui/cut-icons/privacy";
+import Radio from "@/components/ui/cut-icons/live";
+import ShieldCheck from "@/components/ui/cut-icons/security";
 
 import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';

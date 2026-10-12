@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowDownToLine, ChartNoAxesColumn } from "lucide-react";
-import { Lock } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
 
-import { Send } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
 
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

@@ -31,7 +31,7 @@ import { AudioTools } from "@/components/editor/AudioTools";
 import { TextFitControls } from "@/components/editor/TextFitControls";
 import { fitCaptionTrack } from "@/lib/editor/textFit";
 import { Loader2 } from "lucide-react";
-import { Captions } from "@/components/ui/cut-icons";
+import Captions from "@/components/ui/cut-icons/captions";
 
 import { toast } from "sonner";
 

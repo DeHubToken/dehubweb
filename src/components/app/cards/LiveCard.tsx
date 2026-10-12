@@ -14,9 +14,14 @@ import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cdnImage } from '@/lib/media-url';
 import { MoreVertical } from "lucide-react";
-import { Sparkles, Flag, Ban, EyeOff, Info } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Flag from "@/components/ui/cut-icons/report";
+import Ban from "@/components/ui/cut-icons/blocked";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Info from "@/components/ui/cut-icons/information";
 
-import { Bell, Bookmark } from "@/components/ui/cut-icons";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Bookmark from "@/components/ui/cut-icons/save";
 
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';

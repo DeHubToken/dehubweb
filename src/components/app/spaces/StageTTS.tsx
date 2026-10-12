@@ -3,9 +3,13 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Square } from "lucide-react";
-import { Volume2, MicOff } from "@/components/ui/cut-icons";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import MicOff from "@/components/ui/cut-icons/mic-off";
 
-import { Send, Search, Play, Mic } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
+import Search from "@/components/ui/cut-icons/search";
+import Play from "@/components/ui/cut-icons/play";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

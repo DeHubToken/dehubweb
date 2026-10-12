@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ChevronLeft } from "lucide-react";
-import { ChevronRight } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { DayPicker } from "react-day-picker";
 

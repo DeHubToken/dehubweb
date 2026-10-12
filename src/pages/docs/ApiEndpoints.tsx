@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useState } from 'react';
 import { Code, CheckCircle, Globe, Zap } from "lucide-react";
-import { Copy, Lock } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Lock from "@/components/ui/cut-icons/privacy";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 

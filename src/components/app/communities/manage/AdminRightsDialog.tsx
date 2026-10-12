@@ -12,7 +12,7 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 
 import { useState } from 'react';
 import { Loader2 } from "lucide-react";
-import { User } from "@/components/ui/cut-icons";
+import User from "@/components/ui/cut-icons/profile";
 
 import { useTranslation } from 'react-i18next';
 import {

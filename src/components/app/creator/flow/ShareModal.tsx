@@ -6,7 +6,9 @@
  */
 import { useEffect, useState } from 'react';
 import { Globe } from "lucide-react";
-import { Check, Copy, Lock } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
+import Lock from "@/components/ui/cut-icons/privacy";
 
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';

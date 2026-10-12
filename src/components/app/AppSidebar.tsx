@@ -2,9 +2,10 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PenSquare, LogIn, CornerDownLeft } from "lucide-react";
-import { LogOut } from "@/components/ui/cut-icons";
+import LogOut from "@/components/ui/cut-icons/sign-out";
 
-import { Search, X } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';

@@ -1,6 +1,6 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
-import { Reply } from "@/components/ui/cut-icons";
+import Reply from "@/components/ui/cut-icons/reply";
 
 import { useTranslation } from 'react-i18next';
 import { useCommentOnApplication } from '../hooks/use-application-comments';

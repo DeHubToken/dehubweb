@@ -18,7 +18,8 @@ import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/strea
 import { useTranslation } from 'react-i18next';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Flame, Layers } from "lucide-react";
-import { Lock, Radio } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Radio from "@/components/ui/cut-icons/live";
 
 import {
   Dialog,

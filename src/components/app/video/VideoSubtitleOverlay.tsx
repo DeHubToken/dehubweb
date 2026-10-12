@@ -23,9 +23,11 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2, Minus } from "lucide-react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { Search, Settings2, Plus } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Settings2 from "@/components/ui/cut-icons/settings";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';

@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
-import { Users, RefreshCw } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
 
 import { useAuth } from "@/contexts/AuthContext";
 import { cloudDraftEditorStore } from "@/lib/editor/cloudDraftEditorStore";

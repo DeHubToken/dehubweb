@@ -20,9 +20,10 @@
 
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
-import { Coins, Check } from "@/components/ui/cut-icons";
+import Coins from "@/components/ui/cut-icons/coins";
+import Check from "@/components/ui/cut-icons/check";
 
-import { Send } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
 
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAuth } from '@/contexts/AuthContext';

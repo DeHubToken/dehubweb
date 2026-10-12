@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
-import { Video } from "@/components/ui/cut-icons";
+import Video from "@/components/ui/cut-icons/video";
 
 import { Button } from '@/components/ui/button';
 import { useCall } from '@/contexts/CallContext';

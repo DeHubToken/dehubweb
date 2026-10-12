@@ -7,7 +7,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReactFlow } from '@xyflow/react';
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 import { useTranslation } from 'react-i18next';
 import { FALLBACK_SIZE, NODES, NODE_SIZE, getDefaultNodeSize, getLastNodeSettings, type NodeCategory } from '@/lib/creator/flow/nodeTypes';

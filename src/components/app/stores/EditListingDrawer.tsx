@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Loader2, ImagePlus } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { useUpdateListing, prepareStoreImage, STORE_MEDIA_CACHE_CONTROL } from '@/hooks/use-stores';
 import { supabase } from '@/integrations/supabase/client';

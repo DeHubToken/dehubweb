@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { CallDuration } from './CallDuration';
 import { Phone, PhoneOff } from "lucide-react";
-import { MicOff, Volume2 } from "@/components/ui/cut-icons";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import Volume2 from "@/components/ui/cut-icons/volume";
 
-import { Mic } from "@/components/ui/cut-icons";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { useTranslation } from 'react-i18next';
 import { useCall } from '@/contexts/CallContext';

@@ -6,9 +6,13 @@ import { FeedPillPullEffect } from './FeedPillPullEffect';
 import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from './feed-drawer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { Check, LayoutGrid } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import LayoutGrid from "@/components/ui/cut-icons/apps";
 
-import { Bell, Menu, SlidersHorizontal, Plus } from "@/components/ui/cut-icons";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Menu from "@/components/ui/cut-icons/menu";
+import SlidersHorizontal from "@/components/ui/cut-icons/settings";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { FEED_TABS } from '@/constants/app.constants';
 import { setFeedTabsOpen, toggleFeedTabs, useFeedTabsOpen } from '@/lib/feed-tabs-reveal';

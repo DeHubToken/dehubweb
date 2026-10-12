@@ -29,7 +29,8 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, AlertCircle } from "lucide-react";
-import { Search, ArrowLeft } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';

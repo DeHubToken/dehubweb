@@ -6,9 +6,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";

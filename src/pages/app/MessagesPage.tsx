@@ -8,9 +8,13 @@ import { useState, useEffect, useRef, useCallback, type CSSProperties } from 're
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
-import { RefreshCw, Trash2, Ban } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Ban from "@/components/ui/cut-icons/blocked";
 
-import { Search, Plus, MessageCircle } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Plus from "@/components/ui/cut-icons/add";
+import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

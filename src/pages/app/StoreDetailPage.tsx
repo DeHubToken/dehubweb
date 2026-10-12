@@ -8,9 +8,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MapPin } from "@/components/ui/cut-icons";
+import MapPin from "@/components/ui/cut-icons/location";
 
-import { Share2 } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { useStoreById, useStoreListings, useStoreListing } from '@/hooks/use-stores';
 import { StoreListingCard } from '@/components/app/stores/StoreListingCard';

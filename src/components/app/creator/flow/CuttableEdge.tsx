@@ -7,7 +7,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { useEffect, useRef, useState } from 'react';
 import { EdgeLabelRenderer, getBezierPath, useReactFlow, type EdgeProps } from '@xyflow/react';
-import { Scissors } from "@/components/ui/cut-icons";
+import Scissors from "@/components/ui/cut-icons/trim";
 
 import { edgeStyle } from '@/lib/creator/flow/edgeStyles';
 

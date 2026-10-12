@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Package, CheckCircle, AlertTriangle, Terminal } from "lucide-react";
-import { Download, Settings } from "@/components/ui/cut-icons";
+import Download from "@/components/ui/cut-icons/download";
+import Settings from "@/components/ui/cut-icons/settings";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 

@@ -24,9 +24,10 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { ArrowRight, Box, Film, ImageIcon, Loader2, Wand2 } from "lucide-react";
-import { Music2, Paperclip } from "@/components/ui/cut-icons";
+import Music2 from "@/components/ui/cut-icons/music";
+import Paperclip from "@/components/ui/cut-icons/attach";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

@@ -2,9 +2,11 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { CreditCard, ArrowDownToLine, ArrowUpFromLine, Globe } from "lucide-react";
-import { Copy, Check, Wallet } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
-import { Send } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
 
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';

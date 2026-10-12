@@ -8,7 +8,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState } from 'react';
 import { Loader2 } from "lucide-react";
-import { Trash2 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { Button } from '@/components/ui/button';
 import {

@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { Flame } from "lucide-react";
-import { MapPin, Users, Calendar, Lock } from "@/components/ui/cut-icons";
+import MapPin from "@/components/ui/cut-icons/location";
+import Users from "@/components/ui/cut-icons/communities";
+import Calendar from "@/components/ui/cut-icons/events";
+import Lock from "@/components/ui/cut-icons/privacy";
 
 import type { CommunityEvent } from '@/hooks/use-events';
 import dehubCoin from '@/assets/dehub-coin.png';

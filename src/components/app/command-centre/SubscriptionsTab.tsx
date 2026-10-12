@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { TrendingDown, TrendingUp, Star, Loader2, Clock } from "lucide-react";
-import { Info, ExternalLink, Calendar } from "@/components/ui/cut-icons";
+import Info from "@/components/ui/cut-icons/information";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Calendar from "@/components/ui/cut-icons/events";
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

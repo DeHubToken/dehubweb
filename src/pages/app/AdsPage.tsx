@@ -10,9 +10,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Rocket } from "lucide-react";
-import { LayoutDashboard, Wallet } from "@/components/ui/cut-icons";
+import LayoutDashboard from "@/components/ui/cut-icons/command";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';

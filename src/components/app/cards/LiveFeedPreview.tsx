@@ -38,9 +38,12 @@ import { liveSourceFromHlsUrl, whepEndpointFor } from '@/lib/live-ingest';
 import type { WhepSubscription } from '@/lib/livepeer/whep';
 import { stashLiveSession } from '@/lib/live-handoff';
 import { Minimize, PictureInPicture2 } from "lucide-react";
-import { Volume2, VolumeX, Maximize } from "@/components/ui/cut-icons";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Maximize from "@/components/ui/cut-icons/fullscreen";
 
-import { Play, Pause } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';

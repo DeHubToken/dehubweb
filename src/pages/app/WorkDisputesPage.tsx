@@ -4,7 +4,8 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ExternalLink, Wallet } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
 import { PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { useAuth } from '@/contexts/AuthContext';

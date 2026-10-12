@@ -4,9 +4,9 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { normalizeSubReferral } from '@/lib/affiliate-subref';
 import { SEOHead } from "@/components/SEOHead";
 import { ArrowRight } from "lucide-react";
-import { Copy } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
 
-import { Share2 } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";

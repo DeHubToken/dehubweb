@@ -1,6 +1,9 @@
-import { Sparkles } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
-import { Home, Search, Plus, MessageSquare } from "@/components/ui/cut-icons";
+import Home from "@/components/ui/cut-icons/home";
+import Search from "@/components/ui/cut-icons/search";
+import Plus from "@/components/ui/cut-icons/add";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { cn } from '@/lib/utils';
 

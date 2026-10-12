@@ -2,7 +2,9 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { Heart, ArrowRight } from "lucide-react";
-import { Copy, Check, Landmark } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
+import Landmark from "@/components/ui/cut-icons/dao";
 
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';

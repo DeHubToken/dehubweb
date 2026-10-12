@@ -7,9 +7,9 @@ import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { ArrowUpRight, ArrowDownLeft, QrCode } from "lucide-react";
-import { Copy } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
 
-import { Send } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
 
 
 const mockTransactions = (t: TFunction) => [
