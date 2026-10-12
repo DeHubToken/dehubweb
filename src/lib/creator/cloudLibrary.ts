@@ -26,9 +26,15 @@ export async function saveCloudGeneration(wallet: string, job: GenerationJob): P
   await call(wallet, { action: 'complete', id: job.id });
 }
 
+export async function loadCloudGenerationPage(wallet: string, offset = 0): Promise<{ jobs: GenerationJob[]; nextOffset: number | null }> {
+  if (!Number.isInteger(offset) || offset < 0 || offset > 10000) throw new Error('Invalid library page');
+  const data = await call(wallet, { action: 'list', offset });
+  const next = data.nextOffset;
+  return { jobs: Array.isArray(data.jobs) ? data.jobs.slice(0, 100) : [], nextOffset: Number.isInteger(next) && next > offset && next <= 10000 ? next : null };
+}
+
 export async function loadCloudGenerations(wallet: string): Promise<GenerationJob[]> {
-  const data = await call(wallet, { action: 'list' });
-  return data.jobs ?? [];
+  return (await loadCloudGenerationPage(wallet)).jobs;
 }
 
 export async function saveGenerationPreview(wallet: string, id: string, preview: Blob): Promise<string> {
