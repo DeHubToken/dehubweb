@@ -8,6 +8,7 @@ import { pathToFileURL } from 'node:url';
 assert(process.env.ISLAND_BROWSER_ROOT, 'Hosted browser dependency directory is required');
 const { chromium } = await import(pathToFileURL(resolve(process.env.ISLAND_BROWSER_ROOT, 'node_modules/playwright/index.mjs')).href);
 const source = stripTypeScriptTypes(await readFile('src/components/app/island-water.ts', 'utf8'));
+const baselineSource = stripTypeScriptTypes(await readFile('island-base/src/components/app/island-water.ts', 'utf8'));
 const sceneSource = await readFile('src/components/app/IslandBackground.tsx', 'utf8');
 // The scene factory is independent of its React wrapper. Strip only that
 // wrapper so this browser runs the real coastline, reflection source and loop.
@@ -17,10 +18,12 @@ await mkdir(output, { recursive: true });
 const html = `<!doctype html><style>body{margin:0;background:#071624}canvas{width:100%;height:100vh;display:block}</style>
 <canvas id="result"></canvas><script type="module">
 import { createIslandWater } from '/water.js';
+import { createIslandWater as createBaselineWater } from '/baseline.js';
 import { createIslandScene } from '/scene.js';
 window.water = createIslandWater();
+window.baselineWater = createBaselineWater();
 if (!window.water) throw new Error('Real water shader did not compile');
-window.render = (time, night = false) => {
+window.render = (time, night = false, renderer = water) => {
   const sky = document.createElement('canvas'); sky.width = 512; sky.height = 256;
   const s = sky.getContext('2d'), gradient = s.createLinearGradient(0,0,0,256);
   gradient.addColorStop(0,night?'#07081c':'#3a5896');
@@ -29,11 +32,11 @@ window.render = (time, night = false) => {
   s.fillStyle=gradient;s.fillRect(0,0,512,256);
   s.fillStyle=night?'#e6d8ff':'#fff1c9';s.beginPath();s.arc(512*.69,256*.55,19,0,Math.PI*2);s.fill();
   s.fillStyle='#101d27';s.beginPath();s.moveTo(0,256);s.lineTo(0,225);s.lineTo(100,210);s.lineTo(180,256);s.fill();
-  water.resize(innerWidth,innerHeight*.58); water.setSky(sky);
+  renderer.resize(innerWidth,innerHeight*.58); renderer.setSky(sky);
   window.frame={time,aspect:innerWidth/innerHeight,lightX:.69,lightHeight:.19,lightStrength:night?.55:1,
     lightColor:night?[220,200,255]:[255,240,207],waterTop:night?[26,35,88]:[47,179,181],
     waterBottom:night?[4,9,32]:[7,52,79],skyTop:night?[7,8,28]:[58,88,150]};
-  const surface=water.draw(frame);if(!surface)throw new Error('Water surface unavailable');
+  const surface=renderer.draw(frame);if(!surface)throw new Error('Water surface unavailable');
   const canvas=document.querySelector('#result');canvas.width=innerWidth;canvas.height=innerHeight;
   const context=canvas.getContext('2d');context.drawImage(surface,0,0,canvas.width,canvas.height);
   const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
@@ -56,7 +59,7 @@ window.renderScene = (time, hour=13) => {
 </script>`;
 const server = createServer((request, response) => {
   response.setHeader('content-type', request.url.endsWith('.js') ? 'text/javascript' : 'text/html');
-  response.end(request.url === '/water.js' ? source : request.url === '/scene.js' ? sceneFactory : html);
+  response.end(request.url === '/water.js' ? source : request.url === '/baseline.js' ? baselineSource : request.url === '/scene.js' ? sceneFactory : html);
 });
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const browser = await chromium.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
@@ -70,12 +73,26 @@ try {
     await page.waitForFunction(() => typeof window.render === 'function');
     const first = await page.evaluate(() => render(0));
     const second = await page.evaluate(() => render(2.5));
+    const baseline = await page.evaluate(() => render(0, false, baselineWater));
+    const difference = first.sample.reduce((sum, value, i) => sum + Math.abs(value - baseline.sample[i]), 0) / first.sample.length;
+    assert(difference < 1, 'Moving uniform arithmetic off the GPU must preserve the approved lighting');
+    await page.evaluate(() => baselineWater.dispose());
     assert(first.opaque, 'Sea must cover the underlying fallback');
     assert(first.mean > 5 && first.mean < 245, 'Sea must contain visible shaded pixels');
     assert(first.variation > .04, 'Wave normals must shade a spatially varied surface');
     assert.notDeepEqual(first.sample, second.sample, 'Wave motion must change the reflected surface');
     assert(first.width <= 1000 && first.height <= 640, 'Fragment work must stay bounded');
     await page.screenshot({ path: resolve(output, 'water-' + width + '.png') });
+    if (width === 390) {
+      const reduced = await page.evaluate(() => {
+        for (let i = 0; i < 85; i++) water.draw({ ...frame, frameInterval: 0.1 });
+        return render(0);
+      });
+      assert(reduced.width * reduced.height < first.width * first.height * .44, 'Slow-device budget must remove more than half the fragment work');
+      assert(Math.abs(reduced.mean - first.mean) < first.mean * .08, 'Reduced water must preserve the overall palette and reflected light');
+      assert(reduced.opaque && reduced.variation > .04, 'Reduced water must retain wave shading and full sea coverage');
+      await page.screenshot({ path: resolve(output, 'water-low-budget.png') });
+    }
     const night = await page.evaluate(() => render(0, true));
     assert(night.mean < first.mean * .8, 'Night water must follow the dark scene palette');
     const lost = await page.evaluate(async () => {
@@ -89,7 +106,7 @@ try {
     assert.equal(await page.evaluate(() => renderScene(2.5)), 'gpu', 'The full coastal scene must use the new water renderer');
     await page.screenshot({ path: resolve(output, 'island-' + width + '.png') });
     assert.deepEqual(errors, []);
-    report.push({ width, height, mean: first.mean, night: night.mean, variation: first.variation, contextLossFallback: lost });
+    report.push({ width, height, mean: first.mean, night: night.mean, variation: first.variation, baselineDifference: difference, contextLossFallback: lost });
     await page.close();
   }
   await writeFile(resolve(output, 'report.json'), JSON.stringify(report, null, 2));

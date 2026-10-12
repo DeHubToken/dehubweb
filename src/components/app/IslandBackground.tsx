@@ -20,7 +20,7 @@ export function IslandBackground() {
   const { theme } = useAppTheme();
   if (theme !== 'island') return null;
   return (
-    <div data-island-scene="water-v3" aria-hidden="true" className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+    <div data-island-scene="water-v4" aria-hidden="true" className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }}>
       <IslandCanvas />
     </div>
   );
@@ -30,7 +30,7 @@ function IslandCanvas() {
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (!ref.current) return;
-    return runCanvasBackdrop(ref.current, createIslandScene(), { fps: 30 });
+    return runCanvasBackdrop(ref.current, createIslandScene(), { fps: 30, dprCap: 1.25 });
   }, []);
   return <canvas ref={ref} className="block" />;
 }
@@ -482,6 +482,7 @@ export function createIslandScene(): CanvasScene {
       const geometry = geom();
       const sea = water?.draw({
         time: t,
+        frameInterval: dt,
         aspect: w / h,
         lightX: (useMoon ? moonX : sunX) / w,
         lightHeight: (hz - (useMoon ? geometry.moonY : geometry.sunY)) / h,
@@ -494,6 +495,7 @@ export function createIslandScene(): CanvasScene {
       if (sea) x.drawImage(sea, 0, hz, w, h - hz);
       const renderer = sea ? 'gpu' : 'fallback';
       if (x.canvas?.dataset && x.canvas.dataset.islandWater !== renderer) x.canvas.dataset.islandWater = renderer;
+      if (sea && x.canvas?.dataset) x.canvas.dataset.islandWaterSize = `${sea.width}x${sea.height}`;
 
       // Cached fine foliage sways from its root; reflections stretch and break
       // into water bands rather than looking like a second upside-down island.
