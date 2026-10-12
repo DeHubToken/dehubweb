@@ -58,6 +58,11 @@ vec3 ocean(vec2 p, float footprint) {
   wave(field, p, vec2(-0.31, 0.951), 0.91, 0.058, -1.19, 1.2, footprint);
   wave(field, p, vec2(0.43, 0.903), 1.83, 0.027, -1.68, 3.8, footprint);
   wave(field, p, vec2(-0.81, 0.586), 3.61, 0.013, -2.31, 5.4, footprint);
+  wave(field, p, vec2(0.18, 0.984), 8.47, 0.0058, -3.12, 2.5, footprint);
+  wave(field, p, vec2(-0.61, 0.792), 17.31, 0.0032, -4.26, 0.9, footprint);
+  wave(field, p, vec2(0.57, 0.822), 35.17, 0.0018, -5.81, 4.2, footprint);
+  wave(field, p, vec2(-0.25, 0.968), 68.43, 0.0009, -7.64, 1.8, footprint);
+  wave(field, p, vec2(0.79, 0.613), 123.7, 0.0004, -9.87, 3.6, footprint);
   return field;
 }
 
@@ -87,7 +92,7 @@ void main() {
   float fresnel = 0.02 + 0.98 * pow(1.0 - nv, 5.0);
   float shallows = exp(-distance * 0.022);
   vec3 body = mix(linearColor(uWaterBottom), linearColor(uWaterTop), 0.26 + shallows * 0.35);
-  float subsurface = 0.84 + field.x * 0.09 + max(0.0, dot(normal, normalize(uLight))) * 0.16;
+  float subsurface = 0.70 + field.x * 0.08 + max(0.0, dot(normal, normalize(uLight))) * 0.46;
   body *= subsurface;
   vec3 color = mix(body, sky, fresnel);
 

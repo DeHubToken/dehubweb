@@ -8,11 +8,16 @@ import { pathToFileURL } from 'node:url';
 assert(process.env.ISLAND_BROWSER_ROOT, 'Hosted browser dependency directory is required');
 const { chromium } = await import(pathToFileURL(resolve(process.env.ISLAND_BROWSER_ROOT, 'node_modules/playwright/index.mjs')).href);
 const source = stripTypeScriptTypes(await readFile('src/components/app/island-water.ts', 'utf8'));
+const sceneSource = await readFile('src/components/app/IslandBackground.tsx', 'utf8');
+// The scene factory is independent of its React wrapper. Strip only that
+// wrapper so this browser runs the real coastline, reflection source and loop.
+const sceneFactory = stripTypeScriptTypes("import { createIslandWater } from '/water.js';\n" + sceneSource.slice(sceneSource.indexOf('type Rgb ='), sceneSource.lastIndexOf('\nexport default')));
 const output = resolve('island-water-results');
 await mkdir(output, { recursive: true });
 const html = `<!doctype html><style>body{margin:0;background:#071624}canvas{width:100%;height:100vh;display:block}</style>
 <canvas id="result"></canvas><script type="module">
 import { createIslandWater } from '/water.js';
+import { createIslandScene } from '/scene.js';
 window.water = createIslandWater();
 if (!window.water) throw new Error('Real water shader did not compile');
 window.render = (time, night = false) => {
@@ -39,10 +44,19 @@ window.render = (time, night = false) => {
   return {mean,variation:variation/(pixels.length/4),opaque,width:surface.width,height:surface.height,
     sample:Array.from(pixels.filter((_,index)=>index%997===0))};
 };
+window.renderScene = (time, hour=13) => {
+  window.__ISLAND_HOUR=hour;
+  const scene=createIslandScene(),canvas=document.querySelector('#result');
+  canvas.width=innerWidth;canvas.height=innerHeight;
+  scene.resize(innerWidth,innerHeight);scene.draw(canvas.getContext('2d'),innerWidth,innerHeight,time,0);
+  const renderer=canvas.dataset.islandWater;
+  scene.dispose();
+  return renderer;
+};
 </script>`;
 const server = createServer((request, response) => {
-  response.setHeader('content-type', request.url === '/water.js' ? 'text/javascript' : 'text/html');
-  response.end(request.url === '/water.js' ? source : html);
+  response.setHeader('content-type', request.url.endsWith('.js') ? 'text/javascript' : 'text/html');
+  response.end(request.url === '/water.js' ? source : request.url === '/scene.js' ? sceneFactory : html);
 });
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const browser = await chromium.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader'] });
@@ -72,6 +86,8 @@ try {
     });
     assert(lost, 'Context loss must return control to the 2D fallback');
     await page.evaluate(() => { water.dispose(); water.dispose(); });
+    assert.equal(await page.evaluate(() => renderScene(2.5)), 'gpu', 'The full coastal scene must use the new water renderer');
+    await page.screenshot({ path: resolve(output, 'island-' + width + '.png') });
     assert.deepEqual(errors, []);
     report.push({ width, height, mean: first.mean, night: night.mean, variation: first.variation, contextLossFallback: lost });
     await page.close();

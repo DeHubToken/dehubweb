@@ -500,9 +500,9 @@ export function createIslandScene(): CanvasScene {
       for (const p of palms) paintPalm(x, p, t);
       if (!sea) {
         if (coast) {
-        const reflectionDepth = Math.min(h * 0.10, w * 0.16);
-        const bands = 18;
-        for (let i = 0; i < bands; i++) {
+          const reflectionDepth = Math.min(h * 0.10, w * 0.16);
+          const bands = 18;
+          for (let i = 0; i < bands; i++) {
             const depth = (i / bands) * reflectionDepth;
             const bandH = reflectionDepth / bands;
             const sourceH = bandH / 0.65;
@@ -510,8 +510,8 @@ export function createIslandScene(): CanvasScene {
             x.globalAlpha = 0.26 * (1 - i / bands) ** 1.5;
             x.drawImage(coast, 0, sourceY * dpr, coast.width, sourceH * dpr,
               Math.sin(t * 0.7 + i * 1.1) * (1 + i * 0.35), hz + depth, w * 0.44, bandH + 0.5);
-        }
-        x.globalAlpha = 1;
+          }
+          x.globalAlpha = 1;
         }
         x.save();
         x.beginPath();
@@ -534,27 +534,27 @@ export function createIslandScene(): CanvasScene {
         const seaH = h - hz;
         x.lineCap = 'round';
         for (let i = 0; i < rows; i++) {
-        const d = (i + 1) / rows;
-        const y = hz + 2 + d ** 2.1 * seaH;
-        const amplitude = 0.3 + d ** 1.7 * 7;
-        const wave = (u: number) =>
+          const d = (i + 1) / rows;
+          const y = hz + 2 + d ** 2.1 * seaH;
+          const amplitude = 0.3 + d ** 1.7 * 7;
+          const wave = (u: number) =>
             y + Math.sin(u * 12 + t * 0.52 + i * 1.8) * amplitude
               + Math.sin(u * 27 - t * 0.33 + i * 0.71) * amplitude * 0.32;
-        x.beginPath();
-        for (let j = 0; j <= samples; j++) {
+          x.beginPath();
+          for (let j = 0; j <= samples; j++) {
             const u = j / samples;
             if (j === 0) x.moveTo(0, wave(u));
             else x.lineTo(u * w, wave(u));
-        }
-        for (let j = samples; j >= 0; j--) {
+          }
+          for (let j = samples; j >= 0; j--) {
             const u = j / samples;
             x.lineTo(u * w, wave(u) + 1 + d * 8);
-        }
-        x.closePath();
-        x.fillStyle = css(pal.waterBot, 0.07 + d * 0.1);
-        x.fill();
+          }
+          x.closePath();
+          x.fillStyle = css(pal.waterBot, 0.07 + d * 0.1);
+          x.fill();
 
-        for (let s = 0; s < segs; s++) {
+          for (let s = 0; s < segs; s++) {
             const seed = i * 7.13 + s * 3.7;
             const off = ((s + detail(seed + 20)) / segs) * w + Math.sin(t * 0.3 + seed) * 9 * d;
             const len = (3 + d ** 1.4 * 50) * (0.4 + detail(seed + 40));
@@ -568,12 +568,12 @@ export function createIslandScene(): CanvasScene {
             x.moveTo(off - len / 2, wave((off - len / 2) / w));
             x.quadraticCurveTo(off, wave(off / w) - 0.4 * d, off + len / 2, wave((off + len / 2) / w));
             x.stroke();
-        }
+          }
         }
 
         // Twinkling sparkles on the light path.
         if (pathStrength > 0.05) {
-        for (const [u, v, k] of sparkles) {
+          for (const [u, v, k] of sparkles) {
             const y = hz + 4 + v * (h - hz) * 0.9;
             const spread = R * (0.8 + v * 3.5);
             const sx = pathX + (u - 0.5) * 2 * spread + Math.sin(t * 0.7 + k) * 6;
@@ -582,7 +582,7 @@ export function createIslandScene(): CanvasScene {
             if (r < 0.2) continue;
             x.fillStyle = css(mixRgb(pal.glint, WHITE, 0.6), 0.85 * pathStrength * tw);
             x.fillRect(sx - r, y - 0.5, r * 2, 1);
-        }
+          }
         }
 
         // A slow swell of light rolling toward the viewer.
