@@ -22,6 +22,8 @@ export interface CanvasScene {
    * since the last painted frame (0 for the first).
    */
   draw(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, dt: number): void;
+  /** Release any offscreen GPU resources when the theme unmounts. */
+  dispose?(): void;
 }
 
 export interface CanvasBackdropOptions {
@@ -112,6 +114,7 @@ export function runCanvasBackdrop(
     window.removeEventListener('resize', onResize);
     document.removeEventListener('visibilitychange', onVisibility);
     unsubscribe();
+    scene.dispose?.();
   };
 }
 

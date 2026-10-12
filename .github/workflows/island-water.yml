@@ -1,0 +1,39 @@
+name: Island water rendering
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/app/island-water.ts'
+      - 'src/components/app/IslandBackground*'
+      - 'src/lib/canvas-backdrop.ts'
+      - 'tests/island-water-browser.mjs'
+      - '.github/workflows/island-water.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    name: Island water shader
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare the hosted browser
+        run: |
+          npm install --prefix "$RUNNER_TEMP/island-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0
+          "$RUNNER_TEMP/island-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Render real water across clock, viewport and context loss
+        env:
+          ISLAND_BROWSER_ROOT: ${{ runner.temp }}/island-browser
+        run: timeout 180s node tests/island-water-browser.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: island-water-rendering
+          path: island-water-results/
+          if-no-files-found: ignore
+          retention-days: 14

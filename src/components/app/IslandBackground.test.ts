@@ -43,7 +43,7 @@ function surface() {
       return Reflect.set(obj, key, value);
     },
   }) as unknown as CanvasRenderingContext2D;
-  return { width: 1, height: 1, getContext: () => context, context, balanced: () => alpha.length === 0, operations: () => operations };
+  return { width: 1, height: 1, getContext: (type: string) => type === '2d' ? context : null, context, balanced: () => alpha.length === 0, operations: () => operations };
 }
 
 const clock = window as unknown as { __ISLAND_HOUR?: number };
@@ -76,6 +76,7 @@ describe('Island coastal scene', () => {
       scene.resize?.(height, width);
       scene.draw(target.context, height, width, 0, 0);
       expect(target.balanced()).toBe(true);
+      scene.dispose?.();
     });
   }
 });
