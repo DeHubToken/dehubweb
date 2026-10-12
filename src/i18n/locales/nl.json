@@ -3208,9 +3208,9 @@
         "fees": "Vergoedingen",
         "compute": "AI-rekenkracht",
         "aiTools": "AI-tools",
-        "infrastructure": "Infrastructuur",
+        "infrastructure": "Droplet",
         "payments": "Betaalkosten",
-        "tax": "Tokenbelasting"
+        "tax": "Inkomsten"
       },
       "title": "Inkomsten en kosten",
       "loss": "Nettoverlies",
@@ -3233,7 +3233,13 @@
       "unavailable": "{{sources}} kon niet worden bereikt, dus die zijn weggelaten uit elk totaal hierboven in plaats van geschat.",
       "definitionsSubtitle": "Elke regel, waar die vandaan komt en wat is weggelaten",
       "tooltipMonth": "{{month}} · {{days}} dagen",
-      "tooltipPerDay": "{{revenue}} / {{costs}} per dag"
+      "tooltipPerDay": "{{revenue}} / {{costs}} per dag",
+      "reinvestment": "Marketing en ontwikkelaarssalarissen",
+      "reinvestmentGroup": "Herinvestering",
+      "reinvestmentNote": "Volgens DeHub zijn de ingehouden historische bedrijfsinkomsten volledig herbelegd. Marketing en ontwikkelaarssalarissen worden samen getoond en over elke maand verdeeld, na aftrek van de kosten die in die maand al zijn geboekt.",
+      "profitShared": "Gedeelde nettowinst",
+      "profitSharedHint": "{{usd}} betaald aan houders en stakers · {{from}}–{{to}}",
+      "sourceUnavailable": "Niet beschikbaar"
     },
     "ledger": {
       "allTime": "sinds het begin",

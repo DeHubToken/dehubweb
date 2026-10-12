@@ -22,10 +22,6 @@ function formatUsd(n: number): string {
   return `$${Math.round(n).toLocaleString('en-US')}`;
 }
 
-function formatBnb(n: number): string {
-  return `${n.toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 })} BNB`;
-}
-
 /** 178,286,700 → "178.3M". */
 function formatCount(n: number): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
@@ -48,10 +44,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       label: t('stats.taxSplit.team', 'DeHub operations'),
       usd: split.team.usd,
       bnb: split.team.bnb,
-      detail: t('stats.taxSplit.teamDetail', '{{gross}} came in; {{passed}} of it was passed on to holders', {
-        gross: formatBnb(split.team.grossBnb),
-        passed: formatBnb(split.team.passedOnBnb),
-      }),
+      detail: t('stats.money.reinvestment', 'Marketing & developer wages'),
     },
     {
       id: 'bsc_token_burn',
@@ -122,7 +115,6 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
               <span className="ml-auto tabular-nums normal-case">{pct(p.usd)}%</span>
             </div>
             <div className="text-xl sm:text-2xl font-bold text-white mt-0.5 tabular-nums">{formatUsd(p.usd)}</div>
-            <div className="text-xs text-zinc-300 tabular-nums">{formatBnb(p.bnb)}</div>
             <div className="text-[11px] text-zinc-500 mt-0.5 leading-snug">{p.detail}</div>
             <div className="self-start inline-flex items-center gap-1 text-[11px] text-zinc-400 group-hover:text-white transition-colors mt-auto pt-1">
               {t('stats.taxSplit.see', 'See every line')}
