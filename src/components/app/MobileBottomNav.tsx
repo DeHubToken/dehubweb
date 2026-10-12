@@ -9,7 +9,7 @@ import { isHomePath, isOnLiveFeed } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
-import { FileText, Scroll, Wand2, Palette, Loader2, Zap } from "lucide-react";
+import { FileText, Scroll, Wand2, Loader2, Zap } from "lucide-react";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 import LayoutDashboard from "@/components/ui/cut-icons/command";
 import Sparkles from "@/components/ui/cut-icons/assistant";
@@ -32,7 +32,8 @@ import Plus from "@/components/ui/cut-icons/add";
 import User from "@/components/ui/cut-icons/profile";
 import Search from "@/components/ui/cut-icons/search";
 import Bookmark from "@/components/ui/cut-icons/save";
-import Settings from "@/components/ui/cut-icons/settings";
+import Settings from "@/components/ui/cut-icons/settings-cog";
+import Creator from "@/components/ui/cut-icons/creator";
 import Bell from "@/components/ui/cut-icons/alerts";
 import Mic from "@/components/ui/cut-icons/mic";
 
@@ -130,7 +131,7 @@ type MobileNavItem = {
 const SCROLL_NAV_ITEMS = [
   { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Wand2, themedIcon: 'videos', label: 'Editor', path: '/editor' },
-  { icon: Palette, themedIcon: 'paint', label: 'Creator', path: '/creator' },
+  { icon: Creator, label: 'Creator', path: '/creator' },
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
