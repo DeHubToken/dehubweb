@@ -76,26 +76,6 @@ html[data-theme] [data-profile-collapse] button:not(#_):not(#_):not(#_) {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
-.profile-rail-blur {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 24px;
-  z-index: 50;
-  pointer-events: none;
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
-}
-.profile-rail-blur-start {
-  left: 0;
-  -webkit-mask-image: linear-gradient(to right, #000, transparent);
-  mask-image: linear-gradient(to right, #000, transparent);
-}
-.profile-rail-blur-end {
-  right: 0;
-  -webkit-mask-image: linear-gradient(to left, #000, transparent);
-  mask-image: linear-gradient(to left, #000, transparent);
-}
 .profile-rail-follow button { max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .profile-collapse-identity { transition: none; }
