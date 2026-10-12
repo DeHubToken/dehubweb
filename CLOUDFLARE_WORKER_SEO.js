@@ -1504,11 +1504,14 @@ const MARKETING_PAGES = {
   },
   'stats': {
     title: 'Live Site Stats — DeHub Visitors and Members in Real Time',
-    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, and DeHub's own member counts — total members, daily, weekly and monthly active users, new signups and growth, published straight from the platform database.",
+    description: "Live numbers for dehub.io: visitors measured at Cloudflare's edge, DeHub's own member counts, and what the platform earns and spends — revenue, costs and where the original token tax went, with every on-chain line linked to its transaction.",
     heading: 'DeHub Live Stats',
     bodyHtml: `<p>Visitor numbers come from Cloudflare's own analytics for this zone, counted at the edge before a request reaches the app. They are not a client-side counter the page could inflate, and they are not a number anyone typed.</p>
 <h2>Members as well as traffic</h2>
-<p>Alongside traffic the page publishes DeHub's own community figures — total members, daily, weekly and monthly active users, new signups and growth — read straight from the platform database.</p>`,
+<p>Alongside traffic the page publishes DeHub's own community figures — total members, daily, weekly and monthly active users, new signups and growth — read straight from the platform database.</p>
+<h2>Revenue and costs</h2>
+<p>The page also adds up what DeHub earns and what it spends to run it, in USD: in-app buys, platform fees and token-tax history against AI compute, infrastructure and payment fees. Every on-chain line links to its transaction, and the full ledger downloads as CSV.</p>
+<p>The original DeHub token's 2021–23 trading tax is split three ways — what went to DeHub operations, what bought back and burned DeHub, and what was paid to holders and stakers in BNB — each valued at the BNB price on the day it moved.</p>`,
   },
   'accounts': {
     title: 'Account Marketplace — DeHub',
