@@ -54,7 +54,7 @@ const TILE_BOX: Record<string, string> = {
 
 function TemplateTile({ template, aspect = template.aspect, busy, disabled, onPick }: { template: EditorTemplate; aspect?: AspectPreset; busy: boolean; disabled: boolean; onPick: () => void }) {
   const { t } = useTranslation();
-  const title = t(template.titleKey);
+  const title = t(template.titleKey, { defaultValue: template.titleDefault ?? template.titleKey });
   return (
     <button
       type="button"
