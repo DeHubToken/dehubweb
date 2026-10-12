@@ -56,6 +56,8 @@ import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProf
 import { PageHeader } from '@/components/app/PageHeader';
 import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButton';
 import { UserAvatar } from '@/components/app/UserAvatar';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
@@ -614,16 +616,23 @@ export default function ProfilePage() {
           data-nav-hide="off"
           className="sticky z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
         >
-        <div data-page-bento data-feed-nav data-profile-single-row className="bg-zinc-900 rounded-xl relative flex items-center gap-1 p-1" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        <div data-page-bento data-feed-nav data-profile-single-row className={cn('bg-zinc-900 rounded-xl relative', isTabsStuck && 'flex items-center gap-1 p-1')} style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div data-nav-glass-backdrop aria-hidden />
           {isTabsStuck && <>
             <div className="relative shrink-0 w-9 h-11">
               <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
             </div>
-            <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
+            {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
               <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
-              <span className="hidden sm:block max-w-24 truncate text-sm font-bold text-white">{data.profile.name}</span>
-            </div>
+              <div className="min-w-0 max-w-[76px] sm:max-w-24">
+                <div className="flex items-baseline gap-1 text-xs sm:text-sm font-bold leading-tight text-white">
+                  <p className="min-w-0 truncate">{data.profile.name}</p>
+                  <BadgeIcon src={data.badgeUrl} className="w-[1em] h-[1em]" />
+                  <StreamerBadge address={data.profile.walletAddress} />
+                </div>
+                <p className="truncate text-[10px] sm:text-xs leading-tight text-zinc-400">{data.profile.handle}</p>
+              </div>
+            </div>}
           </>}
           <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl">
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
@@ -665,7 +674,10 @@ export default function ProfilePage() {
                     aria-pressed={isActive}
                     title={t(`profile.tabs.${tab.value}`, tab.label)}
                     data-feed-tab-btn data-active={isActive}
-                    className="relative z-40 shrink-0 w-14 h-11 flex flex-col items-center justify-center gap-px px-2 rounded-xl transition-colors text-white"
+                    className={cn(
+                      'relative z-40 flex flex-col items-center justify-center gap-px px-2 rounded-xl transition-colors text-white',
+                      isTabsStuck ? 'shrink-0 w-14 h-11' : 'flex-1 min-w-[52px] py-[9px]',
+                    )}
                   >
                     <tab.icon className="w-[18px] h-[18px] relative z-10" />
                     <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count}</span>
