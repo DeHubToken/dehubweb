@@ -27,7 +27,6 @@ import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPi
 import { RevenueLedger } from '@/components/app/stats/RevenueLedger';
 import { TokenTaxSplit } from '@/components/app/stats/TokenTaxSplit';
 import { cn } from '@/lib/utils';
-import { withReinvestedOperations } from '@/lib/finance-reinvestment';
 
 type Range = '24h' | '3d' | '7d' | '30d' | '1y' | 'all';
 
@@ -45,7 +44,7 @@ function windowDays(range: Range): number | null {
 const MONTHLY_AFTER_DAYS = 62;
 
 const REVENUE_GROUPS = ['buys', 'fees', 'tax'] as const;
-const COST_GROUPS = ['compute', 'ai_tools', 'infrastructure', 'payments', 'reinvestment'] as const;
+const COST_GROUPS = ['compute', 'ai_tools', 'infrastructure', 'payments', 'operations'] as const;
 
 // ---------------------------------------------------------------------------
 // Formatting
@@ -315,7 +314,7 @@ export function FinanceSection({ range }: { range: Range }) {
   const span = windowDays(range);
   const ledgerParams = new URLSearchParams(window.location.search);
   const incomingSource = ledgerParams.get('finance-source');
-  const incomingTax = ledgerParams.get('finance-view') === 'tax';
+  const incomingTax = ledgerParams.get('finance-view') === 'tax' || incomingSource === 'bsc_holder_share';
   const [ledgerOpen, setLedgerOpen] = useState(!!incomingSource && !incomingTax);
   const [ledgerSource, setLedgerSource] = useState<string | null>(incomingTax ? null : incomingSource);
   const [taxOpen, setTaxOpen] = useState(!!incomingSource && incomingTax);
@@ -323,6 +322,10 @@ export function FinanceSection({ range }: { range: Range }) {
 
   /** A revenue line opens the ledger on that source, and brings it into view. */
   const showLedger = (sourceId: string) => {
+    if (sourceId === 'bsc_holder_share') {
+      showTaxLedger(sourceId);
+      return;
+    }
     setLedgerSource(sourceId);
     setLedgerOpen(true);
     requestAnimationFrame(() =>
@@ -341,8 +344,7 @@ export function FinanceSection({ range }: { range: Range }) {
 
   const view = useMemo(() => {
     if (!stats) return null;
-    const accounted = withReinvestedOperations(stats);
-    const days: FinanceDay[] = span == null ? accounted.days : accounted.days.slice(-span);
+    const days: FinanceDay[] = span == null ? stats.days : stats.days.slice(-span);
 
     const revenue = new Map<string, number>();
     const costs = new Map<string, number>();
@@ -406,8 +408,8 @@ export function FinanceSection({ range }: { range: Range }) {
   const revenueSources = stats.sources.filter((s) => s.kind === 'revenue');
   const costSources: FinanceSource[] = stats.sources.filter((s) => s.kind === 'cost').map(source => source.id === 'operations_reinvestment' ? {
       ...source,
-      label: t('stats.money.reinvestment', 'Marketing & developer wages'),
-      note: t('stats.money.reinvestmentNote', 'DeHub reports that retained historical operating funds were fully reinvested. Marketing and developer wages are shown together, averaged across each month, after subtracting costs already recorded that month.'),
+      label: t('stats.money.estimatedOperations', 'Estimated operations'),
+      note: t('stats.money.estimatedOperationsNote', 'Operating costs follow a modeled monthly trend, peaking at $100,000 in November 2021 and declining thereafter. Recorded bills are included, without double counting. This is an estimate, not an invoice ledger.'),
     } : source);
   const unavailable = stats.sources.filter((s) => s.status === 'unavailable');
 
@@ -442,7 +444,7 @@ export function FinanceSection({ range }: { range: Range }) {
     ai_tools: t('stats.money.group.aiTools', 'AI tools'),
     infrastructure: t('stats.money.group.infrastructure', 'Droplet'),
     payments: t('stats.money.group.payments', 'Payment fees'),
-    reinvestment: t('stats.money.reinvestmentGroup', 'Reinvestment'),
+    operations: t('stats.money.operationsGroup', 'Operations'),
   };
 
   return (

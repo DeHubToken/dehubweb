@@ -4,26 +4,31 @@ import fs from 'node:fs';
 import { reinvestOperatingFunds, mergeFinanceSummary, mergeFinanceLedger, handleFinanceRequest, restoreCoreSources } from './finance-stats.js';
 
 const history = JSON.parse(fs.readFileSync(new URL('../public/finance-history/marketplace.json', import.meta.url)));
-const summary = { ok: true, sources: [], days: [{ date: '2022-07-07', revenue: { operating: 100 }, costs: { hosting: 20 } }] };
+const sharing = JSON.parse(fs.readFileSync(new URL('../public/finance-history/bnb-sharing.json', import.meta.url)));
+const summary = { ok: true, sources: [], taxSplit: { shared: { usd: sharing.totalUsd } }, days: [{ date: '2022-07-07', revenue: { operating: 100 }, costs: { hosting: 20 } }] };
 const total = rows => rows.reduce((sum, row) => sum + row.usd, 0);
 
-test('recorded bills consume the reinvestment budget once, including marketplace receipts', () => {
-  const days = [{ date: '2022-07-01', revenue: { tax: 80, nft: 20 }, costs: { hosting: 10 } }, { date: '2022-07-02', revenue: {}, costs: { wages: 10 } }];
+test('cost estimate peaks at $100k per month and remains independent of revenue', () => {
+  const days = [{ date: '2021-10-01', revenue: { tax: 200000 }, costs: { hosting: 10 } }, { date: '2021-11-01', revenue: {}, costs: { hosting: 10 } }, { date: '2021-12-01', revenue: {}, costs: { hosting: 10 } }];
   const result = reinvestOperatingFunds(days);
-  assert.equal(result[0].costs.operations_reinvestment, 40);
-  assert.equal(result[1].costs.operations_reinvestment, 40);
+  assert.ok(result[0].costs.operations_reinvestment + 10 < result[1].costs.operations_reinvestment + 10);
+  assert.equal(Math.round((result[1].costs.operations_reinvestment + 10) * 30), 100000);
+  assert.ok(result[2].costs.operations_reinvestment + 10 < result[1].costs.operations_reinvestment + 10);
   assert.deepEqual(reinvestOperatingFunds(result), result);
   assert.equal(days[0].costs.operations_reinvestment, undefined);
-  assert.equal(reinvestOperatingFunds([{ date: '2026-01-01', revenue: {}, costs: { hosting: 20 } }])[0].costs.hosting, 20);
+  assert.equal(reinvestOperatingFunds([{ date: '2026-01-01', revenue: {}, costs: { hosting: 200 } }])[0].costs.operations_reinvestment, 0);
 });
 
-test('summary includes verified sales and zero-fee catalogue, never wallet movements', () => {
-  const merged = mergeFinanceSummary(summary, history);
+test('summary includes dated BNB sharing, verified sales and zero-fee catalogue', () => {
+  const merged = mergeFinanceSummary(summary, history, sharing);
   const revenue = merged.days.reduce((sum, day) => sum + (day.revenue.bsc_nft_marketplace ?? 0), 0);
+  const shared = merged.days.reduce((sum, day) => sum + (day.revenue.bsc_holder_share ?? 0), 0);
   assert.equal(revenue.toFixed(2), total(history.entries).toFixed(2));
+  assert.equal(shared.toFixed(2), sharing.totalUsd.toFixed(2));
+  assert.ok(merged.sources.some(source => source.id === 'bsc_holder_share' && source.kind === 'revenue'));
   assert.ok(merged.sources.some(source => source.id === 'tips_fees'));
   assert.ok(!merged.sources.some(source => source.id === 'bsc_nft_wallet_transfers'));
-  assert.equal(mergeFinanceSummary(merged, history).days.reduce((sum, day) => sum + (day.revenue.bsc_nft_marketplace ?? 0), 0), revenue);
+  assert.equal(mergeFinanceSummary(merged, history, sharing).days.reduce((sum, day) => sum + (day.revenue.bsc_holder_share ?? 0), 0), shared);
 });
 
 test('snapshot reconciles external sales separately from the internal purchase and transfers', () => {
@@ -56,7 +61,7 @@ test('missing app purchases are restored once and unavailable currencies remain 
 });
 
 test('public route handles CORS and HEAD, rejects unavailable data without inventing zeroes', async () => {
-  const env = { ASSETS: { fetch: async () => Response.json(history) } };
+  const env = { ASSETS: { fetch: async request => Response.json(request.url.endsWith('bnb-sharing.json') ? sharing : history) } };
   const fetcher = async () => Response.json(summary);
   const response = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats'), env, fetcher, null);
   assert.equal(response.status, 200);
