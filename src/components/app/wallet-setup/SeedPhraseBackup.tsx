@@ -7,7 +7,9 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Copy, Eye } from 'lucide-react';
+import { AlertTriangle } from "lucide-react";
+import { Copy, Eye } from "@/components/ui/cut-icons";
+
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

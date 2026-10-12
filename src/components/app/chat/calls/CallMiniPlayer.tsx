@@ -4,7 +4,9 @@
  * For video calls, shows a 16:9 webcam preview.
  */
 
-import { MicOff, PhoneOff, Maximize2, Phone, Video } from "lucide-react";
+import { PhoneOff, Maximize2, Phone } from "lucide-react";
+import { MicOff, Video } from "@/components/ui/cut-icons";
+
 import { Mic } from "@/components/ui/cut-icons";
 
 import { motion, useDragControls } from 'framer-motion';

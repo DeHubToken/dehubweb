@@ -21,7 +21,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { openDmDock } from '@/hooks/use-dm-dock';
-import { Check, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { Search, Send, X, Gem } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

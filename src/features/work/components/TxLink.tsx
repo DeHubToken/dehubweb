@@ -1,4 +1,5 @@
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink } from "@/components/ui/cut-icons";
+
 import { workExplorerTxUrl } from '@/lib/contracts/dehub-work';
 import type { WorkJobStatus } from '../types';
 

@@ -18,7 +18,9 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { PictureInPicture2, Users, Clock, FileText, Trash2 } from "lucide-react";
+import { PictureInPicture2, Clock, FileText } from "lucide-react";
+import { Users, Trash2 } from "@/components/ui/cut-icons";
+
 import { Play, Pause, MessageSquare } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

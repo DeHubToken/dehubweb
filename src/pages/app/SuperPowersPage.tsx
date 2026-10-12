@@ -19,7 +19,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Loader2, Lock, Check, Clock, History, Users } from "lucide-react";
+import { Loader2, Clock } from "lucide-react";
+import { Lock, Check, History, Users } from "@/components/ui/cut-icons";
+
 import { ChevronRight, X } from "@/components/ui/cut-icons";
 
 import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';

@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Clock, Coins, Link2, Unlink } from "lucide-react";
+import { Clock, Unlink } from "lucide-react";
+import { Coins, Link2 } from "@/components/ui/cut-icons";
+
 import { Plus, Share2 } from "@/components/ui/cut-icons";
 
 

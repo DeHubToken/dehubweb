@@ -21,7 +21,9 @@
  * @module lib/reactions
  */
 
-import { ThumbsDown, Heart, Flame, type LucideIcon } from "lucide-react";
+import { Heart, Flame, type LucideIcon } from "lucide-react";
+import { ThumbsDown } from "@/components/ui/cut-icons";
+
 import { ThumbsUp } from "@/components/ui/cut-icons";
 
 

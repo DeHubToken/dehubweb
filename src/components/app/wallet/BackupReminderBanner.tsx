@@ -7,7 +7,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import {

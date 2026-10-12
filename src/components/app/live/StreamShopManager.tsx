@@ -19,7 +19,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ShoppingBag, Trash2, Radio, ImageIcon, Loader2, PackageOpen, Store } from "lucide-react";
+import { ShoppingBag, ImageIcon, Loader2, PackageOpen } from "lucide-react";
+import { Trash2, Radio, Store } from "@/components/ui/cut-icons";
+
 import { Plus } from "@/components/ui/cut-icons";
 
 import { useNavigate } from 'react-router-dom';

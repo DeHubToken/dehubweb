@@ -7,7 +7,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * hands back a better one, streamed token by token. Works signed out.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight, RotateCcw, Sparkles } from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
+import { Sparkles } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,7 @@
 import type React from 'react';
-import { AudioLines, AtSign, BarChart3, CalendarDays, Crosshair, Coins, Film, Image as ImageIcon, Layers, Landmark, Link2, Mail, Radio, Rocket, Star, Users, Wand2, Palette, BookOpen, Briefcase, Clapperboard, Flame, Gamepad2, Lamp, Lightbulb, LayoutDashboard, Lock, Megaphone, ShieldCheck, Sparkles, Store, Ticket, Trophy, Tv, Vault, type LucideIcon, Zap, Anchor, Armchair, Bomb, Handshake, Hourglass, Shield, Siren, TrendingUp, Waves, Target } from "lucide-react";
+import { AudioLines, AtSign, Crosshair, Film, Layers, Mail, Rocket, Star, Wand2, Palette, Clapperboard, Flame, Lamp, Ticket, Tv, type LucideIcon, Zap, Anchor, Armchair, Bomb, Handshake, Hourglass, Shield, Siren, TrendingUp, Waves, Target } from "lucide-react";
+import { BarChart3, CalendarDays, Coins, Image as ImageIcon, Landmark, Link2, Radio, Users, BookOpen, Briefcase, Gamepad2, Lightbulb, LayoutDashboard, Lock, Megaphone, ShieldCheck, Sparkles, Store, Trophy, Vault } from "@/components/ui/cut-icons";
+
 import { Bookmark, Home, MessageSquare, Bell, MessageCircle, Mic, Settings, User } from "@/components/ui/cut-icons";
 
 import { useAppTheme } from '@/contexts/ThemeContext';

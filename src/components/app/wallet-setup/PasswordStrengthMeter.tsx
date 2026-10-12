@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo } from "react";
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { assessLocal, MIN_ACCEPTABLE_SCORE } from "@/lib/wallet-core/passwordStrength";

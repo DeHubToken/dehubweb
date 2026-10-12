@@ -9,7 +9,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Loader2, SmilePlus, Reply, CornerDownRight, LogIn, Pencil, Check } from "lucide-react";
+import { Loader2, SmilePlus, CornerDownRight, LogIn } from "lucide-react";
+import { Reply, Pencil, Check } from "@/components/ui/cut-icons";
+
 import { Send, X, MessageSquare } from "@/components/ui/cut-icons";
 
 import { BadgeIcon } from '@/components/app/BadgeIcon';

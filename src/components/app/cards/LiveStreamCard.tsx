@@ -22,7 +22,9 @@ import {
 } from '@/lib/media-session';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Volume2, VolumeX, Maximize, Minimize, Heart, Gift, StopCircle, Activity, Loader2, Info } from "lucide-react";
+import { MoreVertical, Minimize, Heart, StopCircle, Activity, Loader2 } from "lucide-react";
+import { Sparkles, Flag, Ban, EyeOff, Volume2, VolumeX, Maximize, Gift, Info } from "@/components/ui/cut-icons";
+
 import { Bell, Play, Pause, Bookmark, Gem } from "@/components/ui/cut-icons";
 
 import { useTranslation as useI18n } from 'react-i18next';

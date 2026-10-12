@@ -32,7 +32,9 @@ import medal9 from '@/assets/medal-9.png';
 import medal10 from '@/assets/medal-10.png';
 
 const MEDALS = [medal1, medal2, medal3, medal4, medal5, medal6, medal7, medal8, medal9, medal10];
-import { ThumbsDown, Languages, Eye, Ticket, Heart, Flag, MoreHorizontal, Sparkles, Trophy, Wallet, ShieldCheck, Lightbulb, Radio, Video, Image, Coins, Users, Star, Lock, Unlock, ArrowUpDown, Zap, BookOpen, Volume2, Crown, TrendingUp, Clock, CheckCircle2, Copy, ExternalLink, RotateCcw, Pencil, Trash2, ChevronUp, ChevronDown, Pin, AtSign, Hash, Info, PieChart, BarChart3, Globe, EyeOff, Tag, HandCoins } from "lucide-react";
+import { Ticket, Heart, Star, Unlock, ArrowUpDown, Zap, Crown, TrendingUp, Clock, CheckCircle2, RotateCcw, ChevronUp, ChevronDown, Pin, AtSign, Hash, Globe, Tag, HandCoins } from "lucide-react";
+import { ThumbsDown, Languages, Eye, Flag, MoreHorizontal, Sparkles, Trophy, Wallet, ShieldCheck, Lightbulb, Radio, Video, Image, Coins, Users, Lock, BookOpen, Volume2, Copy, ExternalLink, Pencil, Trash2, Info, PieChart, BarChart3, EyeOff } from "@/components/ui/cut-icons";
+
 import { ThumbsUp, MessageSquare, Share2, Bookmark, Bell, Send, Search, Settings, Home, Play, Mic, Gem, Plus } from "@/components/ui/cut-icons";
 
 import { Input } from '@/components/ui/input';

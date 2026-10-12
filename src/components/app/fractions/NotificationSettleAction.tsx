@@ -19,7 +19,9 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Loader2, Coins, Check } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Coins, Check } from "@/components/ui/cut-icons";
+
 import { Send } from "@/components/ui/cut-icons";
 
 import { DhbAmount } from '@/components/app/DhbAmount';

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Vote, Users, Shield } from 'lucide-react';
+import { Shield } from "lucide-react";
+import { Vote, Users } from "@/components/ui/cut-icons";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const TokenGovernance = () => {

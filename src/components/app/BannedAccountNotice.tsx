@@ -13,7 +13,8 @@
  * is the one-line form for sitting above an input that is still on screen.
  */
 
-import { Ban } from 'lucide-react';
+import { Ban } from "@/components/ui/cut-icons";
+
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

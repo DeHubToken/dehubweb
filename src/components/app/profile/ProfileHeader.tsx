@@ -1,6 +1,8 @@
 import { ProfileFollowButton } from './ProfileFollowButton';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Pencil, Copy, Wallet, Star, EllipsisVertical, Ban } from "lucide-react";
+import { Star, EllipsisVertical } from "lucide-react";
+import { Pencil, Copy, Wallet, Ban } from "@/components/ui/cut-icons";
+
 import { MessageSquare } from "@/components/ui/cut-icons";
 
 import { Skeleton } from '@/components/ui/skeleton';

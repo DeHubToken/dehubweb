@@ -13,7 +13,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { ImageIcon, Music, Video, Users } from 'lucide-react';
+import { ImageIcon } from "lucide-react";
+import { Music, Video, Users } from "@/components/ui/cut-icons";
+
 import { cdnImage } from '@/lib/media-url';
 import { truncateAddress } from '@/lib/api/token-holders';
 import { useTokenPrices } from '@/hooks/use-token-prices';

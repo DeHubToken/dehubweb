@@ -7,7 +7,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState } from 'react';
-import { Trash2, Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { Trash2 } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import {
   Drawer,

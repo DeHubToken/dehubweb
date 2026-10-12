@@ -8,7 +8,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp, Languages, FileText, Loader2, AlertCircle } from "lucide-react";
+import { ChevronDown, ChevronUp, FileText, Loader2, AlertCircle } from "lucide-react";
+import { Languages } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { LANGUAGE_NAMES } from '@/hooks/use-image-translation';

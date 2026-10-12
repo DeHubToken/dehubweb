@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo, useEffect } from 'react';
-import { ChevronDown, ChevronUp, RotateCcw, Check } from "lucide-react";
+import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { X, Play } from "@/components/ui/cut-icons";
 
 import { motion, AnimatePresence } from 'framer-motion';

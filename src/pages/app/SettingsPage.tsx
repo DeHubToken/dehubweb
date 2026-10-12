@@ -13,7 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Shield, Palette, Eye, EyeOff, Camera, Link2, Users, Moon, Clock, Globe, Lock, Filter, Sun, LayoutGrid, VolumeX, Sparkles, Wand2, Save, FileText, MapPin, Wallet, ExternalLink, AtSign, Handshake, PieChart, UserPlus, Check, Copy, Loader2, LogOut, Coins, Gift, Lamp, Bug, Ban, Bot, Film, Hand, Paintbrush, Gauge, Megaphone, FastForward, Radio, LifeBuoy, Trash2, ChevronDown } from "lucide-react";
+import { Shield, Palette, Clock, Globe, Sun, Wand2, Save, FileText, AtSign, Handshake, Loader2, Lamp, Bug, Bot, Film, Hand, Paintbrush, Gauge, FastForward, LifeBuoy, ChevronDown } from "lucide-react";
+import { Eye, EyeOff, Camera, Link2, Users, Moon, Lock, Filter, LayoutGrid, VolumeX, Sparkles, MapPin, Wallet, ExternalLink, PieChart, UserPlus, Check, Copy, LogOut, Coins, Gift, Ban, Megaphone, Radio, Trash2 } from "@/components/ui/cut-icons";
+
 import { Settings as SettingsIcon, User, Bell, ThumbsUp, MessageSquare, MessageCircle, Repeat2, Play, Gem, X, Download } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

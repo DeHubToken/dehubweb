@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Newspaper, ExternalLink, Quote } from 'lucide-react';
+import { Newspaper } from "lucide-react";
+import { ExternalLink, Quote } from "@/components/ui/cut-icons";
+
 
 type PressFeature = {
   outlet: string;

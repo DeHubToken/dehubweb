@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Coins, Heart, Lock, Sparkles, Trophy, ShoppingBag, PieChart, ArrowRightLeft } from 'lucide-react';
+import { Heart, ShoppingBag, ArrowRightLeft } from "lucide-react";
+import { Coins, Lock, Sparkles, Trophy, PieChart } from "@/components/ui/cut-icons";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const TokenOverview = () => {

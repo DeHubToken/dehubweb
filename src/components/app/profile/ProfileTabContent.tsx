@@ -6,7 +6,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Repeat2 } from "@/components/ui/cut-icons";
 
-import { Loader2, Heart, ArrowUpRight, Info, Image, Pencil, Trash2, Pin, ListVideo, ChevronLeft } from "lucide-react";
+import { Loader2, Heart, ArrowUpRight, Pin, ListVideo, ChevronLeft } from "lucide-react";
+import { Info, Image, Pencil, Trash2 } from "@/components/ui/cut-icons";
+
 import { Plus, MessageCircle, ThumbsUp, MessageSquare, Share2, Bookmark } from "@/components/ui/cut-icons";
 
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';

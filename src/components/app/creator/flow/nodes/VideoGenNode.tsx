@@ -8,7 +8,9 @@ import { useAuth } from "@/contexts/AuthContext";
  * on demand, a still from it — so one generator can feed the next.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Camera, ChevronLeft, Clapperboard, CopyPlus, Loader2, Trash2 } from "lucide-react";
+import { ChevronLeft, Clapperboard, CopyPlus, Loader2 } from "lucide-react";
+import { Camera, Trash2 } from "@/components/ui/cut-icons";
+
 import { ChevronRight, Download } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

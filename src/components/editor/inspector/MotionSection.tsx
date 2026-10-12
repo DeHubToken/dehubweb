@@ -13,7 +13,9 @@ import { useDraftState } from "@/hooks/use-draft-state";
 import { useRef } from "react";
 import { useEditorControlGesture } from "@/components/editor/useEditorControlGesture";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, Diamond, Timer, Trash2 } from "lucide-react";
+import { ChevronLeft, Diamond, Timer } from "lucide-react";
+import { Trash2 } from "@/components/ui/cut-icons";
+
 import { ChevronRight, Plus } from "@/components/ui/cut-icons";
 
 import { cn } from "@/lib/utils";

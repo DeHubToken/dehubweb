@@ -30,7 +30,9 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Info } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { Info } from "@/components/ui/cut-icons";
+
 import { useAuth } from '@/contexts/AuthContext';
 import { getAccountInfo, getMyPosts, getDHBPrice } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';

@@ -9,7 +9,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil, Store as StoreIcon } from "lucide-react";
+import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle } from "lucide-react";
+import { Pencil, Store as StoreIcon } from "@/components/ui/cut-icons";
+
 import { Settings } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

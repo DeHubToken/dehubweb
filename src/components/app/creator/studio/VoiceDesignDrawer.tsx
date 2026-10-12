@@ -26,7 +26,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, Sparkles, Square } from "lucide-react";
+import { Loader2, Square } from "lucide-react";
+import { Sparkles } from "@/components/ui/cut-icons";
+
 import { Play } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

@@ -13,7 +13,9 @@
  * (see lib/overlay-dismiss.ts). Swapping the rows in place has none of that.
  */
 import { useState } from 'react';
-import { Check, ChevronLeft, Copy, Wallet } from 'lucide-react';
+import { ChevronLeft } from "lucide-react";
+import { Check, Copy, Wallet } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { useWalletAddresses } from '@/hooks/use-wallet-addresses';

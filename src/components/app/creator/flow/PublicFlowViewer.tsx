@@ -7,7 +7,9 @@
 import { useEffect, useState } from 'react';
 import { Background, BackgroundVariant, Controls, ReactFlow, ReactFlowProvider } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Copy, Hand, MousePointer2 } from 'lucide-react';
+import { Hand, MousePointer2 } from "lucide-react";
+import { Copy } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { fetchPublicFlow, type PublicFlow } from '@/lib/creator/flow/api';

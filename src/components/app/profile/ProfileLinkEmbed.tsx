@@ -9,7 +9,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { CheckCircle, UserRound } from 'lucide-react';
+import { CheckCircle } from "lucide-react";
+import { UserRound } from "@/components/ui/cut-icons";
+
 import type { ReactNode } from 'react';
 import { getAccountByUsername } from '@/lib/api/dehub/users';
 import { buildAvatarUrl } from '@/lib/media-url';

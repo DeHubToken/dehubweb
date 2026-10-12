@@ -1,6 +1,8 @@
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, Pencil, Check, Link2, FileText, Link as LinkIcon, Clock } from "lucide-react";
+import { LogIn, Crown, Pin, PinOff, TrendingUp, FileText, Clock } from "lucide-react";
+import { Users, LogOut, Camera, Pencil, Check, Link2, Link as LinkIcon } from "@/components/ui/cut-icons";
+
 import { X, Share2, Send, Settings2 } from "@/components/ui/cut-icons";
 
 import { NewConversationModal } from '@/components/app/chat/NewConversationModal';

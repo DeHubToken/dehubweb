@@ -29,19 +29,9 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import {
-  Activity,
-  BarChart3,
-  Check,
-  ChevronDown,
-  Copy,
-  ExternalLink,
-  Globe,
-  Loader2,
-  ShieldCheck,
-  UserPlus,
-  Users,
-} from 'lucide-react';
+import { Activity, ChevronDown, Globe, Loader2 } from "lucide-react";
+import { BarChart3, Check, Copy, ExternalLink, ShieldCheck, UserPlus, Users } from "@/components/ui/cut-icons";
+
 
 import { SEOHead } from '@/components/SEOHead';
 import {

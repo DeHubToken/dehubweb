@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useFormDraft } from '@/hooks/use-form-draft';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { ArrowLeft } from "@/components/ui/cut-icons";
 
 import { useCreateJob } from '@/features/work/hooks/use-work';

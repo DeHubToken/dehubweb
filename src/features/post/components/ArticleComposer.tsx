@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bold, Check, Eye, Heading1, Heading2, ImagePlus, Italic, Link2, List, ListOrdered, Loader2, PencilLine, Quote } from "lucide-react";
+import { Bold, Heading1, Heading2, ImagePlus, Italic, List, ListOrdered, Loader2, PencilLine } from "lucide-react";
+import { Check, Eye, Link2, Quote } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, X } from "@/components/ui/cut-icons";
 
 import {

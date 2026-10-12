@@ -23,7 +23,9 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { Loader2, LogOut, AlertCircle, Check, Camera, Globe, ChevronDown } from "lucide-react";
+import { Loader2, AlertCircle, Globe, ChevronDown } from "lucide-react";
+import { LogOut, Check, Camera } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 

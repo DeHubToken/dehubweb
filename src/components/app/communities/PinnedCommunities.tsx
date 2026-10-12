@@ -3,7 +3,9 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Users, Pin } from "lucide-react";
+import { Pin } from "lucide-react";
+import { Users } from "@/components/ui/cut-icons";
+
 import { Plus, X } from "@/components/ui/cut-icons";
 
 import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';

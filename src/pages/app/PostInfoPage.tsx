@@ -14,7 +14,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Copy, ExternalLink, ThumbsDown, Eye, Loader2, Users, Tag, Hash, HandCoins, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from "lucide-react";
+import { Loader2, Tag, Hash, HandCoins, Globe, Ticket } from "lucide-react";
+import { Copy, ExternalLink, ThumbsDown, Eye, Users, Lock, EyeOff, Pencil, Radio, Coins } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, ThumbsUp, MessageSquare, User, Plus } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

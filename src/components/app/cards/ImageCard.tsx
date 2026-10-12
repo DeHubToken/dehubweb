@@ -25,7 +25,9 @@ import { stripAssetRefs } from '@/lib/asset-refs';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, Flag, Ban, VolumeX, EyeOff, Zap, ChevronDown, ChevronUp, ChevronLeft, Link2, Languages, Globe, Trash2, Ticket, Gift, Lock, BarChart2, Pencil, Star } from "lucide-react";
+import { Zap, ChevronDown, ChevronUp, ChevronLeft, Globe, Ticket, BarChart2, Star } from "lucide-react";
+import { Eye, Flag, Ban, VolumeX, EyeOff, Link2, Languages, Trash2, Gift, Lock, Pencil } from "@/components/ui/cut-icons";
+
 import { Download, ChevronRight, MessageSquare, MessageCircle, Gem, X, Plus } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

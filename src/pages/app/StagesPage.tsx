@@ -18,7 +18,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { IslandAction, KitButton, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
-import { Radio, Clock, Users, Loader2, CalendarDays, BellRing } from "lucide-react";
+import { Clock, Loader2, BellRing } from "lucide-react";
+import { Radio, Users, CalendarDays } from "@/components/ui/cut-icons";
+
 import { Plus, Share2, Bell, Mic } from "@/components/ui/cut-icons";
 
 import { format, formatDistanceToNowStrict } from 'date-fns';

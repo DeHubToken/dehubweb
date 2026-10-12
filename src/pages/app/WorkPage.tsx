@@ -4,7 +4,8 @@ import { tokenLabel } from '@/lib/token-label';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { History } from 'lucide-react';
+import { History } from "@/components/ui/cut-icons";
+
 import { useBrowseJobs, useRecentCompletedJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';

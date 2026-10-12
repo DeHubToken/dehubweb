@@ -7,7 +7,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { ArrowRightLeft, Check, Loader2, AlertTriangle, ExternalLink } from 'lucide-react';
+import { ArrowRightLeft, Loader2, AlertTriangle } from "lucide-react";
+import { Check, ExternalLink } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { getSwapQuote, swapTokens, applySlippage, isAutoSwapSupported } from '@/lib/contracts/uniswap-swap';

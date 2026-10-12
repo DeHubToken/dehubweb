@@ -13,7 +13,9 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { memo, Suspense, lazy, useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
-import { AlertCircle, Box, Clapperboard, FileText, Film, ImageIcon, Loader2, Music2, RefreshCw, Scissors, Trash2 } from "lucide-react";
+import { AlertCircle, Box, Clapperboard, FileText, Film, ImageIcon, Loader2 } from "lucide-react";
+import { Music2, RefreshCw, Scissors, Trash2 } from "@/components/ui/cut-icons";
+
 import { Download, X } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

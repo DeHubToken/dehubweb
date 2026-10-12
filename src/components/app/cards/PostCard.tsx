@@ -16,7 +16,9 @@ import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Zap, Link2, Flag, Ban, Eye, EyeOff, Globe, Trash2, UserPlus, UserCheck, BarChart2, VolumeX, Pencil, Coins, Gift, Lock, Star } from "lucide-react";
+import { Zap, Globe, UserCheck, BarChart2, Star } from "lucide-react";
+import { Link2, Flag, Ban, Eye, EyeOff, Trash2, UserPlus, VolumeX, Pencil, Coins, Gift, Lock } from "@/components/ui/cut-icons";
+
 import { MessageSquare, Repeat2, Plus, X } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

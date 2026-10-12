@@ -17,7 +17,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Upload } from "@/components/ui/cut-icons";
+
 import { Download } from "@/components/ui/cut-icons";
 
 import { toast } from 'sonner';

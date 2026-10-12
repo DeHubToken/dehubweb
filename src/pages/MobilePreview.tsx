@@ -3,7 +3,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
-import { Trophy, Wallet, Music, Tv, Sparkles, LayoutDashboard, Vote, Coins, ShoppingCart, Bot, Briefcase } from "lucide-react";
+import { Tv, ShoppingCart, Bot } from "lucide-react";
+import { Trophy, Wallet, Music, Sparkles, LayoutDashboard, Vote, Coins, Briefcase } from "@/components/ui/cut-icons";
+
 import { Home, User, MessageSquare, Bell, Search, Settings, Bookmark, ChevronRight } from "@/components/ui/cut-icons";
 
 

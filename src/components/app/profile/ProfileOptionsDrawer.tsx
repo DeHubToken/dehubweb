@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Copy, AtSign, Wallet, Gift, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag, Award } from "lucide-react";
+import { AtSign, Handshake, UserMinus, Loader2, Award } from "lucide-react";
+import { Copy, Wallet, Gift, Ban, LayoutDashboard, ShieldCheck, Flag } from "@/components/ui/cut-icons";
+
 import { MessageCircle, Bell } from "@/components/ui/cut-icons";
 
 import { ReportModal } from '@/components/app/modals/ReportModal';

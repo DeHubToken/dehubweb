@@ -17,7 +17,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ThumbsDown, Quote, Link, Info, ImageDown } from "lucide-react";
+import { ImageDown } from "lucide-react";
+import { ThumbsDown, Quote, Link, Info } from "@/components/ui/cut-icons";
+
 import { ThumbsUp, MessageSquare, Share2, Repeat2, Send } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';
@@ -1015,7 +1017,7 @@ export function ActionBar({
         className={cn('flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
         aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
       >
-        <Share2 className={isReposted ? "w-[1.5213rem] h-[1.5213rem]" : "w-[1.3965rem] h-[1.3965rem]"} strokeWidth={isReposted ? 2.915 : 2} />
+        <Share2 className={isReposted ? "w-[26px] h-[26px]" : "w-[24px] h-[24px]"} strokeWidth={isReposted ? 2.915 : 2} />
         {!compact && <span className="text-xs text-zinc-400">{formatCount(displayShareCount)}</span>}
       </button>
 
@@ -1025,7 +1027,7 @@ export function ActionBar({
           className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
           aria-label={_copy("copy.44f5e3fbec57", { defaultValue: "Comment" })}
         >
-          <MessageSquare className="w-5 h-5" />
+          <MessageSquare className="w-[28px] h-[28px]" />
           <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
         </button>
       )}
@@ -1098,7 +1100,7 @@ export function ActionBar({
               <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
             </span>
           ) : (
-            <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
+            <ThumbsUp className={cn("w-[27px] h-[27px]", isLiked && "fill-current")} />
           )}
           {!compact && (
             <span className="text-xs text-zinc-400">{formatCount(thumbCount)}</span>
@@ -1222,7 +1224,7 @@ export function ActionBar({
                 <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
               </span>
             ) : (
-              <ThumbsUp className={cn('h-5 w-5', isLiked && 'fill-current')} />
+              <ThumbsUp className={cn('h-[27px] w-[27px]', isLiked && 'fill-current')} />
             )}
             <span className="tabular-nums">{formatCount(localLikeCount)}</span>
           </motion.button>
@@ -1236,7 +1238,7 @@ export function ActionBar({
           className={STAGE_TILE_CLASS}
           aria-label={_copy("copy.418d80826abc", { defaultValue: "Comments ({{value1}})", value1: commentCount })}
         >
-          <MessageSquare className="h-5 w-5" />
+          <MessageSquare className="h-[28px] w-[28px]" />
           <span className="tabular-nums">{formatCount(commentCount)}</span>
         </button>
 
@@ -1260,7 +1262,7 @@ export function ActionBar({
           {/* Same share glyph and sizing as the feed's share button. The fixed
               20px box keeps the count's baseline level with the other tiles. */}
           <span className="flex h-5 w-5 items-center justify-center">
-            <Share2 className={isReposted ? 'h-[1.5213rem] w-[1.5213rem] shrink-0' : 'h-[1.3965rem] w-[1.3965rem] shrink-0'} strokeWidth={isReposted ? 2.915 : 2} />
+            <Share2 className={isReposted ? 'h-[26px] w-[26px] shrink-0' : 'h-[24px] w-[24px] shrink-0'} strokeWidth={isReposted ? 2.915 : 2} />
           </span>
           <span className="tabular-nums">{formatCount(displayRepostCount)}</span>
         </button>

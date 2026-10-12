@@ -4,7 +4,9 @@ import { isWorkAdmin } from '@/constants/app.constants';
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Star, AlertTriangle, ExternalLink, Check, Pencil, Wallet, Clock } from "lucide-react";
+import { Star, AlertTriangle, Clock } from "lucide-react";
+import { ExternalLink, Check, Pencil, Wallet } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, X } from "@/components/ui/cut-icons";
 
 import {

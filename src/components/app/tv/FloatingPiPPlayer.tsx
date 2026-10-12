@@ -6,7 +6,9 @@
  */
 
 import { useRef, useEffect, useState, useCallback, useId } from 'react';
-import { Volume2, VolumeX, GripHorizontal, Maximize2, Minimize2 } from "lucide-react";
+import { GripHorizontal, Maximize2, Minimize2 } from "lucide-react";
+import { Volume2, VolumeX } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

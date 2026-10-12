@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { RefreshCw } from "lucide-react";
+import { RefreshCw } from "@/components/ui/cut-icons";
+
 import { ArrowLeft } from "@/components/ui/cut-icons";
 
 import { useAuth } from '@/contexts/AuthContext';

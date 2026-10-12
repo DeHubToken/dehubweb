@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { CloudUpload, History, RefreshCw, RotateCcw, Trash2 } from "lucide-react";
+import { CloudUpload, RotateCcw } from "lucide-react";
+import { History, RefreshCw, Trash2 } from "@/components/ui/cut-icons";
+
 import { MessageSquare } from "@/components/ui/cut-icons";
 
 import { ProjectReviewPanel } from "./ProjectReviewPanel";

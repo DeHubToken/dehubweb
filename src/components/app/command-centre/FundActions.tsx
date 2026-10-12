@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
-import { Copy, CreditCard, ArrowDownToLine, ArrowUpFromLine, Check, Wallet, Globe } from "lucide-react";
+import { CreditCard, ArrowDownToLine, ArrowUpFromLine, Globe } from "lucide-react";
+import { Copy, Check, Wallet } from "@/components/ui/cut-icons";
+
 import { Send } from "@/components/ui/cut-icons";
 
 import { useTranslation } from 'react-i18next';

@@ -3,7 +3,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { SkipBack, SkipForward, Shuffle, Heart, ListMusic, Radio } from "lucide-react";
+import { Shuffle, Heart, ListMusic } from "lucide-react";
+import { SkipBack, SkipForward, Radio } from "@/components/ui/cut-icons";
+
 import { Play, Repeat } from "@/components/ui/cut-icons";
 
 

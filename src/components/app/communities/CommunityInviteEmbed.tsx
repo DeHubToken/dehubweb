@@ -15,7 +15,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Users, Ticket, ShieldCheck } from 'lucide-react';
+import { Ticket } from "lucide-react";
+import { Users, ShieldCheck } from "@/components/ui/cut-icons";
+
 import type { ReactNode } from 'react';
 import { useInvitePreview } from '@/hooks/use-community-admin';
 import { storageImage, deviceWidth } from '@/lib/media-url';

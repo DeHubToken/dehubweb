@@ -19,7 +19,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Loader2, Pencil, Trash2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Check, Pencil, Trash2 } from "@/components/ui/cut-icons";
+
 import { MessageSquare, Send, ThumbsUp, X } from "@/components/ui/cut-icons";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

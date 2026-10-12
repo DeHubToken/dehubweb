@@ -17,7 +17,9 @@ import {
 } from '@/lib/media-session';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ChevronLeft, MoreHorizontal, Eye, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe, RotateCcw } from "lucide-react";
+import { Minimize, ChevronUp, ChevronDown, ChevronLeft, UserCheck, Loader2, Globe, RotateCcw } from "lucide-react";
+import { Volume2, VolumeX, Maximize, MoreHorizontal, Eye, Info, Flag, Ban, UserPlus, Trash2, EyeOff } from "@/components/ui/cut-icons";
+
 import { Download, X, ThumbsUp, MessageSquare, Bookmark, Share2, Send, Gem } from "@/components/ui/cut-icons";
 
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
@@ -58,7 +60,8 @@ import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { Quote, Link } from "lucide-react";
+import { Quote, Link } from "@/components/ui/cut-icons";
+
 import { Repeat2 } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

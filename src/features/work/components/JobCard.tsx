@@ -1,7 +1,9 @@
 import { tokenLabel } from '@/lib/token-label';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Eye, Users, Coins, Clock } from 'lucide-react';
+import { Clock } from "lucide-react";
+import { Eye, Users, Coins } from "@/components/ui/cut-icons";
+
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import type { WorkJob, WorkJobType } from '../types';
 import { bountyPath } from '../seo';

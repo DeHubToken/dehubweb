@@ -13,7 +13,8 @@
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { Plus } from "@/components/ui/cut-icons";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

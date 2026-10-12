@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Clock, Check, ChevronLeft } from "lucide-react";
+import { Clock, ChevronLeft } from "lucide-react";
+import { Check } from "@/components/ui/cut-icons";
+
 import { X, ChevronRight } from "@/components/ui/cut-icons";
 
 import { motion } from 'framer-motion';

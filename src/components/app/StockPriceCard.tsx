@@ -5,7 +5,9 @@ import type { StockQuote } from '@/hooks/use-stock-quote';
 const TokenPriceChart = lazy(() =>
   import('@/components/app/TokenPriceChart').then(m => ({ default: m.TokenPriceChart }))
 );
-import { TrendingUp, TrendingDown, ExternalLink, ChevronDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, ChevronDown } from "lucide-react";
+import { ExternalLink } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';

@@ -3,7 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { normalizeSubReferral } from '@/lib/affiliate-subref';
 import { SEOHead } from "@/components/SEOHead";
-import { Copy, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Copy } from "@/components/ui/cut-icons";
+
 import { Share2 } from "@/components/ui/cut-icons";
 
 import { toast } from "sonner";

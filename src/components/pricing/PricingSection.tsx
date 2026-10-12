@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check } from 'lucide-react';
+import { Check } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';

@@ -1,7 +1,8 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Image } from "lucide-react";
+import { Users, Image } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

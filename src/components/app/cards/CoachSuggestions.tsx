@@ -10,7 +10,9 @@
  * there is something to post, and a coach that failed renders nothing at all.
  */
 import { useTranslation } from 'react-i18next';
-import { Check, Loader2, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Check, Sparkles } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

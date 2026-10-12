@@ -3,11 +3,9 @@
  * them evenly, duplicate or delete them. Every action is one undo step.
  */
 import { useTranslation } from "react-i18next";
-import {
-  AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical,
-  AlignHorizontalSpaceAround, AlignStartHorizontal, AlignStartVertical, AlignVerticalSpaceAround,
-  Copy, Trash2,
-} from "lucide-react";
+import { AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical, AlignHorizontalSpaceAround, AlignStartHorizontal, AlignStartVertical, AlignVerticalSpaceAround } from "lucide-react";
+import { Copy, Trash2 } from "@/components/ui/cut-icons";
+
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
 import { clipBoxForSize, getTransform, isVisualClip, placementPatch, type ClipBox } from "@/lib/editor/render";

@@ -9,7 +9,9 @@ import { PollEditor } from './PollEditor';
 import type { MediaFile, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { Upload, Calendar, Save, Clock, Square, Hash } from "lucide-react";
+import { Save, Clock, Square, Hash } from "lucide-react";
+import { Upload, Calendar } from "@/components/ui/cut-icons";
+
 import { Mic, Plus, X } from "@/components/ui/cut-icons";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';

@@ -46,7 +46,9 @@ const SegmentMarkerDrawer = lazy(() =>
 );
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Ban, Zap, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, Link2, Trash2, Music, Pencil, Star, Loader2 } from "lucide-react";
+import { MoreVertical, ListPlus, Clock, Zap, Minimize, FastForward, Rewind, PictureInPicture2, Ticket, Star, Loader2 } from "lucide-react";
+import { Eye, Flag, Ban, Volume2, VolumeX, Maximize, Lock, Gift, Link2, Trash2, Music, Pencil } from "@/components/ui/cut-icons";
+
 import { ArrowLeft, Download, Play, Pause, MessageCircle, MessageSquare, Gem, Repeat, X } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

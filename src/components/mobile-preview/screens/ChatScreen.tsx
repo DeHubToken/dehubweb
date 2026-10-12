@@ -5,7 +5,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { ChevronLeft, Paperclip, Smile, Phone, MoreVertical } from "lucide-react";
+import { ChevronLeft, Smile, Phone, MoreVertical } from "lucide-react";
+import { Paperclip } from "@/components/ui/cut-icons";
+
 import { Send } from "@/components/ui/cut-icons";
 
 

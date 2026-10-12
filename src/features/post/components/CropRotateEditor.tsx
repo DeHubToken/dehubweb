@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { RotateCw, FlipHorizontal, FlipVertical, Check, Crop, ZoomIn, ZoomOut, ArrowUpDown } from "lucide-react";
+import { RotateCw, FlipHorizontal, FlipVertical, ZoomIn, ZoomOut, ArrowUpDown } from "lucide-react";
+import { Check, Crop } from "@/components/ui/cut-icons";
+
 import { X } from "@/components/ui/cut-icons";
 
 import { motion } from 'framer-motion';

@@ -25,7 +25,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Users, Volume2, VolumeX } from "lucide-react";
+import { Users, Volume2, VolumeX } from "@/components/ui/cut-icons";
+
 import { ChevronRight, X } from "@/components/ui/cut-icons";
 
 import { formatDistanceToNow } from 'date-fns';

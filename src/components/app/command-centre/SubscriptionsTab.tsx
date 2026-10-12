@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { TrendingDown, TrendingUp, Info, Star, Loader2, ExternalLink, Calendar, Clock } from 'lucide-react';
+import { TrendingDown, TrendingUp, Star, Loader2, Clock } from "lucide-react";
+import { Info, ExternalLink, Calendar } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';

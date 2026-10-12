@@ -10,7 +10,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useNavigate } from 'react-router-dom';
-import { Eye, Radio } from "lucide-react";
+import { Eye, Radio } from "@/components/ui/cut-icons";
+
 import { ChevronRight } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

@@ -3,7 +3,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { TrendingUp, Image } from "lucide-react";
+import { TrendingUp } from "lucide-react";
+import { Image } from "@/components/ui/cut-icons";
+
 import { Search } from "@/components/ui/cut-icons";
 
 

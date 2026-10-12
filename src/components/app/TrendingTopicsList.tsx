@@ -3,7 +3,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { LayoutGrid } from "@/components/ui/cut-icons";
+
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { motion, AnimatePresence } from 'framer-motion';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';

@@ -10,7 +10,9 @@ import { memo } from 'react';
 import { usePoll } from '@/hooks/use-polls';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CheckCircle, Images, Ticket, Lock, BarChart2 } from "lucide-react";
+import { CheckCircle, Ticket, BarChart2 } from "lucide-react";
+import { Images, Lock } from "@/components/ui/cut-icons";
+
 import { Play } from "@/components/ui/cut-icons";
 
 import { getMediaUrl } from '@/lib/api/dehub/core';

@@ -41,7 +41,9 @@ import {
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, AlertCircle, Lightbulb, Music2 } from 'lucide-react';
+import { Loader2, AlertCircle } from "lucide-react";
+import { Lightbulb, Music2 } from "@/components/ui/cut-icons";
+
 import {
   getAudioCostDhb,
   getAudioCostUsd,

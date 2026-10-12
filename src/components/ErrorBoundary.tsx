@@ -15,7 +15,9 @@ import { TranslationText } from '@/components/TranslationText';
  */
 
 import { Component, type ReactNode, type ErrorInfo } from 'react';
-import { AlertTriangle, RefreshCw } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+import { RefreshCw } from "@/components/ui/cut-icons";
+
 import { Home } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

@@ -12,7 +12,8 @@
 
 import { useState, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
-import { Eye } from "lucide-react";
+import { Eye } from "@/components/ui/cut-icons";
+
 import { Play, ChevronRight, ThumbsUp } from "@/components/ui/cut-icons";
 
 import { AnimatePresence } from 'framer-motion';

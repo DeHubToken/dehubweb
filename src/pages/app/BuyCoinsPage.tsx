@@ -4,7 +4,9 @@ import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package } from "lucide-react";
+import { CreditCard, Loader2, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package } from "lucide-react";
+import { Wallet, Check } from "@/components/ui/cut-icons";
+
 import { Search, Send } from "@/components/ui/cut-icons";
 
 import { Button } from '@/components/ui/button';

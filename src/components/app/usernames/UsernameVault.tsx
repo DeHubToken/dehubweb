@@ -28,7 +28,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Check, Loader2, Tag, Trash2 } from 'lucide-react';
+import { Loader2, Tag } from "lucide-react";
+import { Check, Trash2 } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import {

@@ -18,7 +18,9 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Pin, Info } from "lucide-react";
+import { Pin } from "lucide-react";
+import { Info } from "@/components/ui/cut-icons";
+
 import { Bookmark } from "@/components/ui/cut-icons";
 
 import { useNavigate } from 'react-router-dom';
@@ -96,7 +98,7 @@ export function PostUtilityButtons({
         animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
         transition={{ duration: 0.2, ease: 'easeOut' }}
       >
-        <Bookmark className={cn(iconSize, isBookmarked && 'fill-current')} />
+        <Bookmark className={cn("w-[29px] h-[29px]", isBookmarked && 'fill-current')} />
       </motion.button>
 
       {isOwnPost && (

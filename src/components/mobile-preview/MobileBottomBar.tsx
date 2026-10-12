@@ -1,4 +1,5 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles } from "@/components/ui/cut-icons";
+
 import { Home, Search, Plus, MessageSquare } from "@/components/ui/cut-icons";
 
 import { cn } from '@/lib/utils';

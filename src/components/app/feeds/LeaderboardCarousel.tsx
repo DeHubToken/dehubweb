@@ -7,7 +7,8 @@
 import { memo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useQuery } from '@tanstack/react-query';
-import { Trophy } from "lucide-react";
+import { Trophy } from "@/components/ui/cut-icons";
+
 import { ChevronRight } from "@/components/ui/cut-icons";
 
 import { Link } from 'react-router-dom';

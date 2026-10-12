@@ -11,7 +11,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  *    keeps a lost or unsupported device from meaning a lost wallet.
  */
 import { useCallback, useEffect, useState } from 'react';
-import { Loader2, Fingerprint, Trash2, KeyRound, AlertTriangle } from 'lucide-react';
+import { Loader2, Fingerprint, KeyRound, AlertTriangle } from "lucide-react";
+import { Trash2 } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

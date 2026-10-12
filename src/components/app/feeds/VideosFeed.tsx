@@ -18,7 +18,9 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Radio, Eye, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { RefreshCw, Radio, Eye } from "@/components/ui/cut-icons";
+
 import { Play, ChevronRight } from "@/components/ui/cut-icons";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';

@@ -1,7 +1,6 @@
-import {
-  ArrowLeftRight, Bot, Coins, Crown, Film, Gamepad2, History, ListOrdered,
-  Music2, Plug, Smartphone, Star, Tag, Video,
-} from 'lucide-react';
+import { ArrowLeftRight, Bot, Crown, Film, ListOrdered, Plug, Smartphone, Star, Tag } from "lucide-react";
+import { Coins, Gamepad2, History, Music2, Video } from "@/components/ui/cut-icons";
+
 import type { NavItem } from '@/types/app.types';
 import { NAV_LABEL_KEYS } from './SidebarNavItem';
 import { isKidsModePath } from '@/constants/app.constants';

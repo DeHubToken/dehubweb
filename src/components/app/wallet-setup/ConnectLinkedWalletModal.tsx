@@ -20,7 +20,9 @@ import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
-import { LogOut, Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { LogOut } from "@/components/ui/cut-icons";
+
 import { WALLET_CONNECT_REQUIRED_EVENT, finishSessionWalletConnect } from '@/lib/wallet-reconnect';
 
 const ConnectLinkedWalletBody = React.lazy(() =>
