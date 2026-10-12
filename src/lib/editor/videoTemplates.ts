@@ -146,24 +146,29 @@ const STARTERS: Starter[] = [
 
 function starterOps(starter: Starter, t: TFunction, aspect: VideoTemplateAspect): AgentOp[] {
   const ops: AgentOp[] = [{ op: "set_canvas", aspect, background: "#000000" }];
-  const duration = starter.beats.reduce((end, beat) => end + beat.seconds, 0);
   let created = 0;
   const layer = (op: AgentOp, start: number, seconds: number, entrance = "fade") => {
     const id = `new:${created++}`;
     ops.push(op, { op: "timing", id, start, duration: seconds });
     if (op.op === "add_text") ops.push({ op: "animate", id, in: entrance, out: "fade" });
   };
-  layer({ op: "add_shape", shape: "rect", x: 0.5, y: 0.76, w: 0.08, h: 0.003, fill: "#ffffff" }, 0, duration);
   const wide = aspect === "16:9";
   const base = { op: "add_text", fontFamily: "Inter", color: "#ffffff", x: 0.5, align: "centre", maxWidth: 0.78, lineHeight: 1.1 };
   let start = 0;
   starter.beats.forEach((beat, index) => {
-    layer({ ...base, text: beat.number ?? String(index + 1).padStart(2, "0"), y: 0.32, fontSize: 36, fontWeight: 500, letterSpacing: 4, maxHeight: 0.06, color: "#b6b6b6" }, start, beat.seconds);
-    layer({ ...base, text: t(`editor.videoTemplates.copy.${beat.headline}`, { defaultValue: WORDS.copy[beat.headline] ?? "" }), y: 0.47, fontSize: wide ? 136 : 100, fontWeight: 700, maxHeight: 0.24 }, start, beat.seconds, "rise");
-    layer({ ...base, text: t(`editor.videoTemplates.copy.${beat.body}`, { defaultValue: WORDS.copy[beat.body] ?? "" }), y: 0.65, fontSize: wide ? 46 : 36, fontWeight: 400, maxHeight: 0.13, color: "#b6b6b6" }, start, beat.seconds);
+    layer({ ...base, text: beat.number ?? String(index + 1).padStart(2, "0"), y: 0.34, fontSize: 36, fontWeight: 500, letterSpacing: 4, maxHeight: 0.04, color: "#b6b6b6" }, start, beat.seconds);
+    layer({ ...base, text: t(`editor.videoTemplates.copy.${beat.headline}`, { defaultValue: WORDS.copy[beat.headline] ?? "" }), y: 0.5, fontSize: wide ? 136 : 100, fontWeight: 700, maxHeight: 0.2 }, start, beat.seconds, "rise");
+    layer({ ...base, text: t(`editor.videoTemplates.copy.${beat.body}`, { defaultValue: WORDS.copy[beat.body] ?? "" }), y: 0.66, fontSize: wide ? 46 : 36, fontWeight: 400, maxHeight: 0.1, color: "#b6b6b6" }, start, beat.seconds);
     start += beat.seconds;
   });
   return ops;
+}
+
+export function videoTemplatePageStarts(id: string): number[] | undefined {
+  const starter = STARTERS.find(item => `video-${item.id}` === id);
+  if (!starter) return undefined;
+  let start = 0;
+  return starter.beats.map(beat => { const at = start; start += beat.seconds; return at; });
 }
 
 export const VIDEO_TEMPLATES: EditorTemplate[] = STARTERS.map((starter) => ({

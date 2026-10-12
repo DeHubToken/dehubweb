@@ -5,11 +5,12 @@
  */
 import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Copy, Plus, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Copy, Play, Plus, Type, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
+import { useEditorUiStore } from "@/store/editorUiStore";
 import { drawClip, isVisualClip, type RenderSources } from "@/lib/editor/render";
-import { getPages, pageAt, type Page } from "@/lib/editor/pages";
+import { getPages, pageAt, pagePreviewTime, type Page } from "@/lib/editor/pages";
 
 const THUMB_H = 44;
 
@@ -36,7 +37,7 @@ function PageThumb({ page, active, sources, onPick }: { page: Page; active: bool
       ctx.fillRect(0, 0, settings.width, settings.height);
       const hidden = new Set(tracks.filter((tr) => tr.hidden).map((tr) => tr.id));
       const z = (id: string) => tracks.findIndex((tr) => tr.id === id);
-      const at = page.start + 0.001;
+      const at = pagePreviewTime(page);
       clips
         .filter((c) => isVisualClip(c) && !hidden.has(c.trackId) && at >= c.start && at < c.start + c.duration)
         .sort((a, b) => z(a.trackId) - z(b.trackId))
@@ -91,34 +92,38 @@ export function PagesStrip({ sources }: { sources: RenderSources }) {
 
   const btn = "flex h-7 shrink-0 items-center gap-1 rounded-md border border-white/10 px-2 text-[11px] text-white/70 transition hover:bg-white/10 hover:text-white";
 
+  const pick = (page: Page) => {
+    setIsPlaying(false);
+    useEditorStore.getState().selectClip(null);
+    setCurrentTime(pagePreviewTime(page));
+  };
+  const headline = (page: Page) => clips.filter(c => c.kind === "text" && c.start < page.end && c.start + c.duration > page.start)
+    .sort((a, b) => (b.kind === "text" ? b.fontSize : 0) - (a.kind === "text" ? a.fontSize : 0))
+    .find(c => c.kind === "text");
   return (
-    <div className="flex min-w-0 items-center gap-2 overflow-x-auto border-t border-white/10 bg-black/60 px-3 py-2 scrollbar-none">
-      {multi &&
-        pages.map((p) => (
-          <PageThumb
-            key={p.index}
-            page={p}
-            active={p.index === current.index}
-            sources={sources}
-            onPick={() => { setIsPlaying(false); setCurrentTime(p.start); }}
-          />
-        ))}
-      <button type="button" onClick={() => addPage()} className={btn} title={t("editor.pages.add")}>
-        <Plus className="h-3.5 w-3.5" /> {t("editor.pages.add")}
-      </button>
-      <button type="button" onClick={() => addPage({ duplicate: true })} className={btn} title={t("editor.pages.duplicate")}>
-        <Copy className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("editor.pages.duplicate")}</span>
-      </button>
-      {multi && (
-        <button type="button" onClick={() => deletePage(current.index)} className={btn} title={t("editor.pages.delete")}>
-          <Trash2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("editor.pages.delete")}</span>
-        </button>
-      )}
-      {multi && (
-        <span className="ml-auto shrink-0 pl-2 text-[11px] tabular-nums text-white/45">
-          {t("editor.pages.position", { current: current.index + 1, total: pages.length })}
-        </span>
-      )}
+    <div className="min-w-0 shrink-0 border-t border-white/10 bg-black/60 px-3 py-2">
+      {multi && <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-medium text-white/85">{t("editor.pages.position", { current: current.index + 1, total: pages.length })}</span>
+        <button type="button" className={btn + " disabled:opacity-30"} disabled={current.index === 0} aria-label={t("editor.captions.previousText")} onClick={() => pick(pages[current.index - 1])}><ChevronLeft className="h-4 w-4" /></button>
+        <button type="button" className={btn + " disabled:opacity-30"} disabled={current.index === pages.length - 1} aria-label={t("editor.captions.nextText")} onClick={() => pick(pages[current.index + 1])}><ChevronRight className="h-4 w-4" /></button>
+        <button type="button" className={btn} onClick={() => useEditorUiStore.getState().setPanel("text")}><Type className="h-3.5 w-3.5" />{t("editor.menu.editText")}</button>
+        <button type="button" className={btn + " ml-auto"} onClick={() => { useEditorStore.getState().selectClip(null); setCurrentTime(0); setIsPlaying(true); }}><Play className="h-3.5 w-3.5" />{t("creator.preview")} · {t("creator.navVideo")} <span className="tabular-nums text-white/50">{pages[pages.length - 1].end}s</span></button>
+      </div>}
+      <div className="flex min-w-0 items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
+        {multi && pages.map(p => {
+          const title = headline(p);
+          return <div key={p.index} className="flex w-28 shrink-0 flex-col gap-1">
+            <PageThumb page={p} active={p.index === current.index} sources={sources} onPick={() => pick(p)} />
+            <button type="button" onClick={() => pick(p)} className="text-left text-[11px] leading-snug" aria-label={`${t("editor.pages.page", { number: p.index + 1 })}: ${title?.kind === "text" ? title.text : ""}`}>
+              <span className={p.index === current.index ? "text-white" : "text-white/65"}>{t("editor.pages.page", { number: p.index + 1 })} · {Number((p.end - p.start).toFixed(2))}s</span>
+              <span className="block truncate text-white/45">{title?.kind === "text" ? title.text : ""}</span>
+            </button>
+          </div>;
+        })}
+        <button type="button" onClick={() => addPage()} className={btn} title={t("editor.pages.add")}><Plus className="h-3.5 w-3.5" />{t("editor.pages.add")}</button>
+        <button type="button" onClick={() => addPage({ duplicate: true })} className={btn} title={t("editor.pages.duplicate")}><Copy className="h-3.5 w-3.5" /><span className="hidden sm:inline">{t("editor.pages.duplicate")}</span></button>
+        {multi && <button type="button" onClick={() => deletePage(current.index)} className={btn} title={t("editor.pages.delete")}><Trash2 className="h-3.5 w-3.5" /><span className="hidden sm:inline">{t("editor.pages.delete")}</span></button>}
+      </div>
     </div>
   );
 }
