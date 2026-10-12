@@ -16,8 +16,11 @@ const mf = new Miniflare(convertV4MiniflareOptions({ modules, compatibilityDate:
   return new WorkerResponse(JSON.stringify(valid ? { wallet, ownerWallet: owner, projectId: target.p_id, role: wallet === owner ? "owner" : "editor", revision: target.p_id === other ? 20 : head, draftRevision: target.p_id === other ? 0 : draft } : { code: "42501" }), { status: valid ? 200 : 401 });
 } }));
 const sockets = [];
-async function connect(id = project) {
-  const response = await mf.dispatchFetch(`https://dehub.io/api/editor/presence/${owner}/${id}`, { headers: { Upgrade: "websocket", Origin: "https://dehub.io" } });
+async function connect(id = project, gateway = false, native = false) {
+  const headers = { Upgrade: "websocket" };
+  if (!native) headers.Origin = "https://dehub.io";
+  if (gateway) headers["X-DeHub-Public-Host"] = "dehub.io";
+  const response = await mf.dispatchFetch(`https://${gateway ? "origin.dehub.io" : "dehub.io"}/api/editor/presence/${owner}/${id}`, { headers });
   assert.equal(response.status, 101); assert(response.webSocket);
   const ws = response.webSocket, messages = [], waiters = [];
   ws.accept(); sockets.push(ws);
@@ -33,22 +36,30 @@ try {
   assert.equal((await mf.dispatchFetch(path)).status, 426);
   assert.equal((await mf.dispatchFetch(path + "?token=private", { headers: { Upgrade: "websocket" } })).status, 404);
   assert.equal((await mf.dispatchFetch(path, { headers: { Upgrade: "websocket", Origin: "https://other.example" } })).status, 403);
+  const upstream = path.replace("dehub.io", "origin.dehub.io");
+  const gatewayHeaders = { "X-DeHub-Public-Host": "dehub.io" };
+  assert.equal((await mf.dispatchFetch(upstream, { headers: gatewayHeaders })).status, 426);
+  assert.equal((await mf.dispatchFetch(upstream)).status, 404);
+  assert.equal((await mf.dispatchFetch(upstream, { headers: { "X-DeHub-Public-Host": "other.example" } })).status, 404);
+  assert.equal((await mf.dispatchFetch(path.replace("dehub.io", "other.example"), { headers: gatewayHeaders })).status, 404);
+  assert.equal((await mf.dispatchFetch(upstream + "?token=private", { headers: { ...gatewayHeaders, Upgrade: "websocket" } })).status, 404);
+  assert.equal((await mf.dispatchFetch(upstream, { headers: { ...gatewayHeaders, Upgrade: "websocket", Origin: "https://other.example" } })).status, 403);
   assert.equal(lookups, 0);
   const a = await connect(); a.join(owner); await a.next(v => v.type === "presence" && v.participants.length === 1);
-  const b = await connect(); b.join(owner); await b.next(v => v.type === "presence" && v.participants[0]?.connections === 2);
-  const c = await connect(); c.join(editor); const joined = await c.next(v => v.type === "presence" && v.participants.length === 2);
+  const b = await connect(project, true); b.join(owner); await b.next(v => v.type === "presence" && v.participants[0]?.connections === 2);
+  const c = await connect(project, true, true); c.join(editor); const joined = await c.next(v => v.type === "presence" && v.participants.length === 2);
   assert.equal(joined.participants.find(p => p.wallet === owner).connections, 2);
   const secondRoom = await connect(other); secondRoom.join(owner); const isolated = await secondRoom.next(v => v.type === "presence"); assert.equal(isolated.revision, 20); assert.equal(isolated.participants.length, 1);
   await delay(300); draft=7; a.ws.send('{"type":"refresh"}'); const liveCheckpoint=await c.next(v=>v.type==="presence"&&v.draftRevision===7); assert.equal(liveCheckpoint.revision,3); assert(!("document" in liveCheckpoint)); await b.next(v=>v.type==="presence"&&v.draftRevision===7);
   await delay(300); head = 4; a.ws.send('{"type":"refresh"}'); await c.next(v => v.type === "presence" && v.revision === 4); await b.next(v => v.type === "presence" && v.revision === 4);
   await delay(300); allowed = false; head = 5; a.ws.send('{"type":"refresh"}'); await c.next(v => v.type === "error"); const revoked = await b.next(v => v.type === "presence" && v.revision === 5); assert.equal(revoked.participants.length, 1); assert.equal(revoked.participants[0].wallet, owner);
-  const unauthenticated = await connect(); unauthenticated.ws.send('{"type":"refresh"}'); await unauthenticated.next(v => v.type === "error");
+  const unauthenticated = await connect(project, true, true); unauthenticated.ws.send('{"type":"refresh"}'); await unauthenticated.next(v => v.type === "error");
   const viewer = await connect(); viewer.join(denied); await viewer.next(v => v.type === "error"); assert(!viewer.messages.some(v => v.type === "presence"));
-  const forged = await connect(); forged.ws.send(JSON.stringify({ type: "join", wallet: owner, token: token(editor) })); await forged.next(v => v.type === "error"); assert(!forged.messages.some(v => v.type === "presence"));
+  const forged = await connect(project, true); forged.ws.send(JSON.stringify({ type: "join", wallet: owner, token: token(editor) })); await forged.next(v => v.type === "error"); assert(!forged.messages.some(v => v.type === "presence"));
   b.ws.close(); await a.next(v => v.type === "presence" && v.revision === 5 && v.participants[0]?.connections === 1);
   // Closed peers can still finish their queued close-handler broadcasts.
   // Begin the idle window after those event-driven permission checks settle.
   await delay(300);
   const count = lookups; await delay(300); assert.equal(lookups, count, "idle presence must not poll the database");
-  console.log(JSON.stringify({ engine: "workerd", productionEntryBundled: true, sqliteBinding: true, realWebSockets: true, joinsAndDuplicateConnections: true, roomIsolation: true, savedHeadBroadcast: true, mutableDraftBroadcastWithoutSave: true, privateDocumentsAbsent: true, revokedRecipientExcluded: true, forgedAndUnsignedDenied: true, disconnectUpdates: true, idleDatabasePolling: false, productionAccountUsed: false }));
+  console.log(JSON.stringify({ engine: "workerd", productionEntryBundled: true, sqliteBinding: true, realWebSockets: true, gatewayBrowserAndNativeClients: true, gatewayHostAndOriginChecks: true, joinsAndDuplicateConnections: true, roomIsolation: true, savedHeadBroadcast: true, mutableDraftBroadcastWithoutSave: true, privateDocumentsAbsent: true, revokedRecipientExcluded: true, forgedAndUnsignedDenied: true, disconnectUpdates: true, idleDatabasePolling: false, productionAccountUsed: false }));
 } finally { for (const socket of sockets) { try { socket.close(); } catch {} } await mf.dispose(); }
