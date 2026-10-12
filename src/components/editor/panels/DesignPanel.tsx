@@ -11,7 +11,7 @@ import { Film, Instagram, Loader2, Monitor, Smartphone, Square } from 'lucide-re
 import { useEditorQuota } from '@/hooks/use-editor-quota';
 import { TEMPLATES, applyTemplate, type EditorTemplate } from '@/lib/editor/templates';
 import { loadGoogleFont } from '@/lib/editor/googleFonts';
-import { VIDEO_TEMPLATE_FORMATS, type VideoTemplateAspect } from '@/lib/editor/videoTemplates';
+import { VIDEO_TEMPLATE_FORMATS, videoTemplatePageStarts, type VideoTemplateAspect } from '@/lib/editor/videoTemplates';
 import { BrandSection } from './BrandSection';
 import {
   AlertDialog,
@@ -55,6 +55,8 @@ const TILE_BOX: Record<string, string> = {
 function TemplateTile({ template, aspect = template.aspect, busy, disabled, onPick }: { template: EditorTemplate; aspect?: AspectPreset; busy: boolean; disabled: boolean; onPick: () => void }) {
   const { t } = useTranslation();
   const title = t(template.titleKey, { defaultValue: template.titleDefault ?? template.titleKey });
+  const screens = videoTemplatePageStarts(template.id);
+  const previewWords = template.kind === "video" ? template.ops(t, aspect as VideoTemplateAspect).filter(op => op.op === "add_text").slice(0, 3) : [];
   return (
     <button
       type="button"
@@ -63,7 +65,7 @@ function TemplateTile({ template, aspect = template.aspect, busy, disabled, onPi
       onMouseEnter={() => loadGoogleFont(template.preview.font, [400, 700, 900])}
       aria-label={t('editor.templates.use', { name: title })}
       title={title}
-      className="group flex flex-col gap-1 text-left disabled:opacity-60"
+      className="group flex h-full flex-col gap-1 text-left disabled:opacity-60"
     >
       <span
         className={cn(
@@ -72,11 +74,8 @@ function TemplateTile({ template, aspect = template.aspect, busy, disabled, onPi
         )}
         style={{ background: template.preview.bg }}
       >
-        <span
-          className="line-clamp-3 text-center text-[13px] font-black uppercase leading-none"
-          style={{ color: template.preview.fg, fontFamily: `'${template.preview.font}', sans-serif` }}
-        >
-          {title}
+        <span className="flex w-full flex-col items-center justify-center gap-3 text-center" style={{ color: template.preview.fg, fontFamily: `'${template.preview.font}', sans-serif` }}>
+          {previewWords.length ? previewWords.map((word, index) => <span key={index} className={cn("line-clamp-3 max-w-full", index === 1 ? "text-[13px] font-bold leading-tight" : "text-[8px] leading-relaxed opacity-65")}>{String(word.text ?? "")}</span>) : <span className="line-clamp-3 text-[13px] font-black uppercase leading-tight">{title}</span>}
         </span>
         {busy && (
           <span className="absolute inset-0 flex items-center justify-center bg-black/50">
@@ -84,7 +83,8 @@ function TemplateTile({ template, aspect = template.aspect, busy, disabled, onPi
           </span>
         )}
       </span>
-      <span className="truncate px-0.5 text-[10px] text-white/45">{aspect}{template.duration ? ` · ${t("editor.videoTemplates.duration", { seconds: template.duration })}` : ""}</span>
+      <span className="px-0.5 text-[12px] font-medium leading-snug text-white/90">{title}</span>
+      <span className="mt-auto px-0.5 text-[10px] text-white/60">{aspect}{screens ? ` · ${screens.length} ${t("editor.pages.label").toLocaleLowerCase()}` : ""}{template.duration ? ` · ${t("editor.videoTemplates.duration", { seconds: template.duration })}` : ""}</span>
     </button>
   );
 }
@@ -120,6 +120,10 @@ export function DesignPanel() {
     setApplyingId(template.id);
     try {
       await applyTemplate(template, t, { wallet: quota.walletAddress, badgeBalance: quota.badgeBalance, username: quota.username, aspect });
+      if (template.kind === "video") {
+        useEditorUiStore.getState().setTimelineOpen(false);
+        setPanel("text");
+      }
     } finally {
       setApplyingId(null);
     }
@@ -135,14 +139,14 @@ export function DesignPanel() {
           {aspect}
         </button>)}
       </div>
-      <div className="grid grid-cols-2 items-end gap-2">
+      <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-4">
         {TEMPLATES.filter(tpl => tpl.kind === 'video').map(tpl => (
           <TemplateTile key={tpl.id} template={tpl} aspect={videoAspect} busy={applyingId === tpl.id} disabled={!!applyingId} onPick={() => pickTemplate(tpl)} />
         ))}
       </div>
       <p className="mt-2 px-0.5 text-[10px] leading-relaxed text-white/40">{t('editor.videoTemplates.hint')}</p>
       <PanelHeading className="mt-5">{t('editor.templates.heading')}</PanelHeading>
-      <div className="grid grid-cols-2 items-end gap-2">
+      <div className="grid grid-cols-2 items-stretch gap-x-3 gap-y-4">
         {TEMPLATES.filter(tpl => tpl.kind !== 'video').map(tpl => (
           <TemplateTile key={tpl.id} template={tpl} busy={applyingId === tpl.id} disabled={!!applyingId} onPick={() => pickTemplate(tpl)} />
         ))}
