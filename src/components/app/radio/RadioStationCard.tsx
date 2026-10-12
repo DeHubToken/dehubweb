@@ -7,7 +7,9 @@
  * @module components/app/radio/RadioStationCard
  */
 
-import { Play, Pause, Radio, Loader2 } from 'lucide-react';
+import { Radio, Loader2 } from "lucide-react";
+import { Play, Pause } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks/use-radio-player';
 import type { RadioStation } from '@/lib/api/radio-browser';

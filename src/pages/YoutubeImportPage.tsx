@@ -29,7 +29,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Loader2, ArrowDownToLine, Link2, Clipboard, CheckCircle2, XCircle, Clock, X } from 'lucide-react';
+import { Loader2, ArrowDownToLine, Link2, Clipboard, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { ImportDetailsDialog } from '@/components/app/converter/ImportDetailsDialog';
 import { PodcastImportSection } from '@/components/app/converter/PodcastImportSection';
 import { toast } from 'sonner';

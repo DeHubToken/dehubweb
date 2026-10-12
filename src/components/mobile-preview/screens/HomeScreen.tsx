@@ -4,7 +4,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Heart, MessageSquare, Repeat2, Share, MoreHorizontal, Image } from 'lucide-react';
+import { Heart, MoreHorizontal, Image } from "lucide-react";
+import { MessageSquare, Repeat2, Share } from "@/components/ui/cut-icons";
+
 
 const mockPosts = (t: TFunction) => [
   { id: '1', user: 'alice.eth', content: 'Just minted my first NFT collection on Base 🎨 The creative freedom in web3 is unmatched.', likes: 42, comments: 8, reposts: 3, time: '2m' },

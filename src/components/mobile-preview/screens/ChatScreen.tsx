@@ -5,7 +5,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { ChevronLeft, Send, Paperclip, Smile, Phone, MoreVertical } from 'lucide-react';
+import { ChevronLeft, Paperclip, Smile, Phone, MoreVertical } from "lucide-react";
+import { Send } from "@/components/ui/cut-icons";
+
 
 const mockMessages = (t: TFunction) => [
   { id: '1', sender: 'bob_dev', content: 'Hey! Did you see the new governance proposal?', time: '10:23 AM', isMine: false },

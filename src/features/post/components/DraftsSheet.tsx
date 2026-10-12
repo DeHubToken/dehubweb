@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { X, Save, Trash2, Clock, Image, Video, Mic, BarChart3, CalendarClock } from 'lucide-react';
+import { Save, Trash2, Clock, Image, Video, BarChart3, CalendarClock } from "lucide-react";
+import { X, Mic } from "@/components/ui/cut-icons";
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';

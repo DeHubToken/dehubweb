@@ -20,11 +20,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import {
-  Briefcase, Users, MapPin, Clock, DollarSign,
-  Send, Loader2, ExternalLink, ChevronUp, Target, Handshake,
-  Globe, TrendingUp, Megaphone, Heart, Sparkles, CheckCircle2,
-} from 'lucide-react';
+import { Briefcase, Users, MapPin, Clock, DollarSign, Loader2, ExternalLink, ChevronUp, Target, Handshake, Globe, TrendingUp, Megaphone, Heart, Sparkles, CheckCircle2 } from "lucide-react";
+import { Send } from "@/components/ui/cut-icons";
+
 import careersBriefcase from '@/assets/careers-briefcase.png';
 
 /* ─── Reusable sub-components ─── */

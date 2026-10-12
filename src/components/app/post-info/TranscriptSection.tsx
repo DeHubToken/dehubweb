@@ -12,10 +12,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
-import {
-  ChevronDown, ChevronUp, FileText, Loader2, Copy, Download,
-  RefreshCw, Search, X, Sparkles, ListTree, Pencil, Check, ThumbsUp, ThumbsDown,
-} from 'lucide-react';
+import { ChevronDown, ChevronUp, FileText, Loader2, Copy, RefreshCw, Sparkles, ListTree, Pencil, Check, ThumbsDown } from "lucide-react";
+import { Download, Search, X, ThumbsUp } from "@/components/ui/cut-icons";
+
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
 import type { TranscriptSegment } from '@/hooks/use-transcript';
 import { useAuth } from '@/contexts/AuthContext';

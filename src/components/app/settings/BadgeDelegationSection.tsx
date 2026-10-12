@@ -28,7 +28,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Award, Loader2, X } from 'lucide-react';
+import { Award, Loader2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { badgeImage } from '@/lib/staking-badges';
 import { Switch } from '@/components/ui/switch';
 import {

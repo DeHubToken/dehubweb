@@ -23,17 +23,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
-import {
-  ArrowRight,
-  Box,
-  Film,
-  ImageIcon,
-  Loader2,
-  Music2,
-  Paperclip,
-  Wand2,
-  X,
-} from 'lucide-react';
+import { ArrowRight, Box, Film, ImageIcon, Loader2, Music2, Paperclip, Wand2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';

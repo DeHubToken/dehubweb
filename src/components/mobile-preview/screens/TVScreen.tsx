@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { Play, Tv, Search, ChevronRight } from 'lucide-react';
+import { Tv } from "lucide-react";
+import { Play, Search, ChevronRight } from "@/components/ui/cut-icons";
+
 
 const MOCK_CHANNELS = [
   { name: 'CryptoTV Live', category: 'Crypto', country: '🇺🇸', viewers: '12.4K' },

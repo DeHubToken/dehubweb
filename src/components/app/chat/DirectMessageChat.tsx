@@ -12,7 +12,9 @@ import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Download, Pencil, Check, Lock, Unlock, SmilePlus, Reply } from 'lucide-react';
+import { MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, AlertCircle, RefreshCw, Gift, Languages, RotateCcw, Pin, Phone, CornerUpRight, FileText, Pencil, Check, Lock, Unlock, SmilePlus, Reply } from "lucide-react";
+import { ArrowLeft, Settings, Play, Pause, Search, X, Gem, Download } from "@/components/ui/cut-icons";
+
 import { TipGemIcon } from '@/components/app/cards/TipGemIcon';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useDmEncryption } from '@/hooks/use-dm-encryption';

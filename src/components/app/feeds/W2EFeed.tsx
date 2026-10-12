@@ -1,5 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { Eye, MessageCircle, Coins } from 'lucide-react';
+import { Eye, Coins } from "lucide-react";
+import { MessageCircle } from "@/components/ui/cut-icons";
+
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 

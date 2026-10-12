@@ -19,10 +19,9 @@ import { useDraftState } from '@/hooks/use-draft-state';
 
 import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import {
-  Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn,
-  Pencil, Check, Trash2, ArrowDown, type LucideIcon,
-} from 'lucide-react';
+import { Loader2, SmilePlus, Reply, CornerDownRight, LogIn, Pencil, Check, Trash2, ArrowDown, type LucideIcon } from "lucide-react";
+import { Send, X, MessageSquare } from "@/components/ui/cut-icons";
+
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

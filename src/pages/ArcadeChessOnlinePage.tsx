@@ -39,7 +39,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Crown, Loader2, Plus, Swords, X } from 'lucide-react';
+import { Crown, Loader2, Swords } from "lucide-react";
+import { Plus, X } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

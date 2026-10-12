@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Share2 } from 'lucide-react';
+import { Share2 } from "@/components/ui/cut-icons";
+
 
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';

@@ -9,7 +9,9 @@ import { isHomePath, isOnLiveFeed } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Landmark, Scroll, Map, Wand2, Palette, Loader2, BarChart3, Gamepad2, Zap } from 'lucide-react';
+import { Trophy, LayoutDashboard, Sparkles, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Users, CalendarDays, Vault, ShieldCheck, Landmark, Scroll, Map, Wand2, Palette, Loader2, BarChart3, Gamepad2, Zap } from "lucide-react";
+import { Home, MessageSquare, Plus, User, Search, Bookmark, Settings, Bell, Mic } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';

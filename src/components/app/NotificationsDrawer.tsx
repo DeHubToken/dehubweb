@@ -1,7 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { X } from "@/components/ui/cut-icons";
+
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 
 const NotificationsPage = lazy(() => import('@/pages/app/NotificationsPage'));

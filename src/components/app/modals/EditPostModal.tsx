@@ -9,7 +9,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { Pencil, Loader2, X, Upload, ShoppingBag } from 'lucide-react';
+import { Pencil, Loader2, Upload, ShoppingBag } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

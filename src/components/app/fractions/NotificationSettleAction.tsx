@@ -19,7 +19,9 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Loader2, Send, Coins, Check } from 'lucide-react';
+import { Loader2, Coins, Check } from "lucide-react";
+import { Send } from "@/components/ui/cut-icons";
+
 import { DhbAmount } from '@/components/app/DhbAmount';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOpenTrades } from '@/hooks/use-fraction-marketplace';

@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft } from "lucide-react";
+import { ChevronRight } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 
 /** The soundtrack belongs to the enclosing slide, never to an individual photo. */

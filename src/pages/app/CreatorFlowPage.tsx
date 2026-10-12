@@ -9,7 +9,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * then sync to the account. Generating is the only thing that needs sign-in.
  */
 import { useCallback, useEffect, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';

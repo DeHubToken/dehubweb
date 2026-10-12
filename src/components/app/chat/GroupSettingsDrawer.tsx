@@ -9,7 +9,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { Settings, Users, Loader2, LogOut, ShieldBan, Pencil, UserPlus, Search, X } from 'lucide-react';
+import { Users, Loader2, LogOut, ShieldBan, Pencil, UserPlus } from "lucide-react";
+import { Settings, Search, X } from "@/components/ui/cut-icons";
+
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Search, Loader2, Clapperboard, Share2, ArrowLeft } from 'lucide-react';
+import { Loader2, Clapperboard } from "lucide-react";
+import { Search, Share2, ArrowLeft } from "@/components/ui/cut-icons";
+
 import { SEOHead } from '@/components/SEOHead';
 import {
   Select,

@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
-import { Settings, Loader2, UserPlus, ShieldCheck } from 'lucide-react';
+import { Loader2, UserPlus, ShieldCheck } from "lucide-react";
+import { Settings } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {

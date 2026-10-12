@@ -3,11 +3,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
-import {
-  Home, User, MessageSquare, Bell, Search, Settings, Bookmark,
-  Trophy, Wallet, Music, Tv, Sparkles, LayoutDashboard, Vote,
-  Coins, ShoppingCart, Bot, Briefcase, ChevronRight
-} from 'lucide-react';
+import { Trophy, Wallet, Music, Tv, Sparkles, LayoutDashboard, Vote, Coins, ShoppingCart, Bot, Briefcase } from "lucide-react";
+import { Home, User, MessageSquare, Bell, Search, Settings, Bookmark, ChevronRight } from "@/components/ui/cut-icons";
+
 
 // Screen components
 import { HomeScreen } from '@/components/mobile-preview/screens/HomeScreen';

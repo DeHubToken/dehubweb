@@ -3,7 +3,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Smile, Search, Loader2 } from 'lucide-react';
+import { Smile, Loader2 } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { AppState } from '@/components/app/AppState';

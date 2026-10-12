@@ -8,7 +8,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Square, RotateCcw, Check, Loader2, Trash2, Camera } from 'lucide-react';
+import { Square, RotateCcw, Check, Loader2, Trash2, Camera } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 

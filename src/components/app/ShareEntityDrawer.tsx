@@ -14,7 +14,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState, Suspense, lazy, type ReactNode } from 'react';
-import { Link2, MessageSquarePlus, Repeat2, Send, Share2 } from 'lucide-react';
+import { Link2, MessageSquarePlus } from "lucide-react";
+import { Repeat2, Send, Share2 } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';

@@ -13,7 +13,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Check, Link2, Loader2, Pencil, Plus, Trash2, Upload, X } from 'lucide-react';
+import { Check, Link2, Loader2, Pencil, Trash2, Upload } from "lucide-react";
+import { Plus, X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';

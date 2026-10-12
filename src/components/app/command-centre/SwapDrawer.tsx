@@ -3,7 +3,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { ArrowDownUp, Loader2, ExternalLink, AlertTriangle, Send } from 'lucide-react';
+import { ArrowDownUp, Loader2, ExternalLink, AlertTriangle } from "lucide-react";
+import { Send } from "@/components/ui/cut-icons";
+
 import { useOptionalGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { SlippageSettings } from '@/components/app/SlippageSettings';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';

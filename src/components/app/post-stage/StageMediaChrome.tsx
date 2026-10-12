@@ -9,7 +9,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * theme-controls.css): that finish turns a dark square into a pale chip that
  * disappears over a bright frame.
  */
-import { ArrowLeft, MoreHorizontal, Zap } from 'lucide-react';
+import { MoreHorizontal, Zap } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 

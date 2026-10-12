@@ -6,7 +6,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, Loader2, Volume2, X } from 'lucide-react';
+import { MicOff, Loader2, Volume2 } from "lucide-react";
+import { Mic, X } from "@/components/ui/cut-icons";
+
 import type { VoiceStatus } from '@/hooks/use-voice-assistant';
 
 interface VoiceAssistantOverlayProps {

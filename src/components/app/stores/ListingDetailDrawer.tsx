@@ -24,7 +24,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from './ShippingAddressForm';
-import { ExternalLink, ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck, Share2, PauseCircle } from 'lucide-react';
+import { ExternalLink, ShoppingCart, Loader2, ChevronLeft, Package, Truck, PauseCircle } from "lucide-react";
+import { MessageSquare, ChevronRight, Share2 } from "@/components/ui/cut-icons";
+
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { dehubLinkFor } from '@/lib/dehub-links';
 import { useAuth } from '@/contexts/AuthContext';

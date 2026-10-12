@@ -15,7 +15,9 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
-import { Play, Pause, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from "lucide-react";
+import { Play, Pause } from "@/components/ui/cut-icons";
+
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';

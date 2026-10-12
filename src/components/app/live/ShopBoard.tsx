@@ -42,7 +42,9 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ShoppingBag, ExternalLink, ImageIcon, X, Loader2 } from 'lucide-react';
+import { ShoppingBag, ExternalLink, ImageIcon, Loader2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import {

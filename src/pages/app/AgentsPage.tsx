@@ -14,7 +14,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Bot, Plus, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from 'lucide-react';
+import { Bot, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from "lucide-react";
+import { Plus } from "@/components/ui/cut-icons";
+
 import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { SEOHead } from '@/components/SEOHead';
 import { canManageAgents } from '@/lib/agent-access';

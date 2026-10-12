@@ -25,7 +25,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { ChevronRight, Users, Volume2, VolumeX, X } from 'lucide-react';
+import { Users, Volume2, VolumeX } from "lucide-react";
+import { ChevronRight, X } from "@/components/ui/cut-icons";
+
 import { formatDistanceToNow } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { BadgeIcon } from '@/components/app/BadgeIcon';

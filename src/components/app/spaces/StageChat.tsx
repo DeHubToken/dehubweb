@@ -16,7 +16,8 @@
  * @module components/app/spaces/StageChat
  */
 
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare } from "@/components/ui/cut-icons";
+
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RealtimeChatPanel, type ChatSenderProfile } from '@/components/app/chat/RealtimeChatPanel';

@@ -10,7 +10,9 @@ import { useDraftState } from '@/hooks/use-draft-state';
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDown, ArrowUp, Loader2, Plus, ScrollText, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Loader2, ScrollText } from "lucide-react";
+import { Plus, X } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';

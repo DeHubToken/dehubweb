@@ -26,7 +26,9 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useCallback, useEffect, useMemo, useState, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
+import { ChevronLeft, Languages } from "lucide-react";
+import { X, ChevronRight } from "@/components/ui/cut-icons";
+
 import useEmblaCarousel from 'embla-carousel-react';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { ActionBar } from './ActionBar';

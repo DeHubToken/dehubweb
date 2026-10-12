@@ -7,7 +7,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * hands back a better one, streamed token by token. Works signed out.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ArrowRight, RotateCcw, Sparkles, X } from 'lucide-react';
+import { ArrowRight, RotateCcw, Sparkles } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { ASSISTANT_MODELS, DEFAULT_ASSISTANT_MODEL, streamAssistant, type AssistantMessage, type AssistantModelId } from '@/lib/creator/flow/assistant';

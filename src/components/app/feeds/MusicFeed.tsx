@@ -11,7 +11,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo, useRef, useCallback, useEffect, useId } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useNavigate } from 'react-router-dom';
-import { Play, Music, Mic2, Radio, Disc3, ChevronRight, Pause, Volume2, VolumeX, Loader2, Headphones } from 'lucide-react';
+import { Music, Mic2, Radio, Disc3, Volume2, VolumeX, Loader2, Headphones } from "lucide-react";
+import { Play, ChevronRight, Pause } from "@/components/ui/cut-icons";
+
 import { AppState } from '@/components/app/AppState';
 import { AnimatePresence, motion } from 'framer-motion';
 

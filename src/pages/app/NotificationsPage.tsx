@@ -8,9 +8,9 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { IslandAction, PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { useTranslation } from 'react-i18next';
 import { AppealDrawer } from '@/components/app/notifications/AppealDrawer';
-import { AtSign, Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Send, Scale, Siren, Briefcase, Award,
-  Blocks,
-} from 'lucide-react';
+import { AtSign, MessageSquareText, Users, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Star, Store, UsersRound, ShoppingBag, Lightbulb, Radio, Scale, Siren, Briefcase, Award, Blocks } from "lucide-react";
+import { Settings, ThumbsUp, Gem, Bell, Repeat2, X as XIcon, Send } from "@/components/ui/cut-icons";
+
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';

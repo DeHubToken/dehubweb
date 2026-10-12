@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Paperclip, Calendar, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2, MonitorPlay } from 'lucide-react';
+import { Paperclip, Calendar, Radio, Sparkles, Loader2, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, Type, Camera, Hash, BarChart2, MonitorPlay } from "lucide-react";
+import { Send, Mic, ChevronRight, X, Search, MessageSquare } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
