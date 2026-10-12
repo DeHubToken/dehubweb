@@ -1,3 +1,4 @@
+import Minimize from "@/components/ui/cut-icons/exit-fullscreen";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
@@ -23,7 +24,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MoreVertical from "@/components/ui/cut-icons/morevertical";
-import { Minimize, Heart, StopCircle, Activity, Loader2 } from "lucide-react";
+import { Heart, StopCircle, Activity, Loader2 } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
