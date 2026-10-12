@@ -21,6 +21,8 @@ The native app currently exposes fourteen themes: System, Immersive, Minimal, Co
 
 ## Verification
 
+Image feed surfaces follow the same contract on both clients: canvas themes remain visible behind glass cards when a collage opens into a feed. The cached collage is hidden while the feed is open and retains its scroll state for the return. Native fullscreen image feeds keep an opaque base from the current theme to cover their previous route. Drawer and grab-strip materials must update after a theme change rather than retain colours captured when their module first loaded.
+
 Shared-component tests should exercise ordinary header visibility across every native theme, theme material precedence over stale caller fills, disabled controls, published artwork keys, search navigation, and modal dismissal. Full checks run in GitHub-hosted CI.
 
 Source coverage across all native screen files is distinct from device verification. After Android publication, check a flat theme and a canvas theme on the installed app, including settings/search, a keyboard-open conversation, attachments, recording controls, and representative dialogs. Opening a media or profile route must retain its intended cover treatment. Do not count an unpublished bundle or a merged PR as a verified installed update.
