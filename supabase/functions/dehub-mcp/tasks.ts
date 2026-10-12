@@ -1,6 +1,6 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
-import { agentOwnerAllowed, nextScheduledRun, PLAN_TOOL, taskPlanSchema, type TaskPlan, type TaskStep } from "./task-plan.ts";
+import { agentOwnerAllowed, explicitTaskPlan, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
 export interface TaskTool {
@@ -9,9 +9,10 @@ export interface TaskTool {
   call: (args: Record<string, unknown>) => Promise<any>;
 }
 type Registry = Map<string, TaskTool>;
+export type ProfileImages = Partial<Record<'avatar' | 'banner', File>>;
 type Context = {
   db: () => any;
-  tools: (key: string, request: Request) => Registry;
+  tools: (key: string, request: Request, images?: ProfileImages) => Registry;
   token: (agent: any) => Promise<string | null>;
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json" } });
@@ -32,6 +33,8 @@ async function completion(messages: unknown[], planning = false) {
 async function planPrompt(prompt: string, timezone: string, registry: Registry): Promise<TaskPlan> {
   const now = new Date();
   const local = new Intl.DateTimeFormat("en-GB", { timeZone: timezone, dateStyle: "full", timeStyle: "long" }).format(now);
+  let plan = explicitTaskPlan(prompt);
+  if (!plan) {
   const output = await completion([
     { role: "system", content: `Translate an owner's instruction into a precise DeHub task. UTC now: ${now.toISOString()}. Owner local time: ${local}; timezone ${timezone}.
 Act as the selected agent, never as the human owner. Only the five tools below are available. Unsupported requests, unspecified targets/time windows or ambiguous counts must return clarification, never a guessed action.
@@ -43,12 +46,14 @@ dehub_update_profile: {bio?:string,display_name?:string,avatar_url?:string,banne
 dehub_post_create: {content:string,title?:string,category?:string,media_url?:string,media_type?:text|image|video}. If the user asks for posts ABOUT a topic, set topic to the writing instructions; a new original post is written on each run. Literal text uses content and null topic. No image/video generation capability.
 Use audience single unless bulk is explicitly requested. A request to follow every user is all_users, not ten users. A request to follow people who posted today uses post_authors, from local midnight to now. Convert relative windows with the timezone above. Never extend the window into the future. All dates must be ISO UTC with Z.
 For N posts/day use ONE generated-post step and interval_minutes 1440/N (fractional minutes are allowed); for once use null. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
-No registration, transfers, tips, purchases, private messages, admin actions or tools outside this catalog. Return only plan_agent_task. Keep the summary explicit about agent actions, time window and cadence.` },
+No registration, transfers, tips, purchases, private messages, admin actions or tools outside this catalog. Return only plan_agent_task with both top-level fields: plan and clarification. For a supported task, plan must contain summary, steps and interval_minutes and clarification must be null. For an unsupported task, plan is null and clarification explains why. Never return an empty object or put plan fields at the top level.
+Example for "Post 3 times per day about music": {"plan":{"summary":"Post about music three times daily, every eight hours.","interval_minutes":480,"steps":[{"tool":"dehub_post_create","arguments":{},"audience":"single","from":null,"to":null,"topic":"music"}]},"clarification":null}.
+Keep the summary explicit about agent actions, time window and cadence.` },
     { role: "user", content: prompt },
   ], true);
   const raw = JSON.parse(output?.tool_calls?.find((call: any) => call.function?.name === "plan_agent_task")?.function.arguments ?? "{}");
-  if (raw.clarification) throw new Error(String(raw.clarification));
-  const plan = taskPlanSchema.parse(raw.plan);
+  plan = parseTaskPlan(raw);
+  }
   for (const step of plan.steps) {
     if (step.to && Date.parse(step.to) > now.getTime() + 1000) throw new Error("The post time window must end at or before now.");
     const tool = registry.get(step.tool);
@@ -59,7 +64,8 @@ No registration, transfers, tips, purchases, private messages, admin actions or 
       if (profile.isError || !data?.profile?.wallet) throw new Error('That user could not be found. Specify their exact username or wallet.');
       step.arguments.target_wallet = data.profile.wallet;
     }
-    tool.validate(stepArguments(step, step.audience === "single" ? null : (step.tool === "dehub_follow" ? "0x0000000000000000000000000000000000000001" : "1"), step.topic ? "Post content" : undefined));
+    try { tool.validate(stepArguments(step, step.audience === "single" ? null : (step.tool === "dehub_follow" ? "0x0000000000000000000000000000000000000001" : "1"), step.topic ? "Post content" : undefined)); }
+    catch { throw new Error('The task is missing details for an action. Specify the exact user, post or profile changes.'); }
   }
   return plan;
 }
@@ -208,7 +214,35 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
   const auth = await requireDeHubAuth(req);
   if (!auth.ok) return auth.response;
   if (!agentOwnerAllowed(auth.wallet)) return json({ error: "Agents are in private preview." }, 403);
-  const input = await req.json();
+  let input: Record<string, any>;
+  const images: ProfileImages = {};
+  if (req.headers.get('content-type')?.startsWith('multipart/form-data')) {
+    if (Number(req.headers.get('content-length')) > 11 * 1024 * 1024) return json({ error: 'Choose images smaller than 5 MB each.' }, 413);
+    const form = await req.formData();
+    input = { operation: form.get('operation'), agent_id: form.get('agent_id'), updates: {} };
+    if (input.operation !== 'update_profile') return json({ error: 'Unsupported upload operation.' }, 400);
+    for (const field of ['bio', 'display_name']) if (form.has(field)) input.updates[field] = form.get(field);
+    for (const field of ['avatar', 'banner'] as const) {
+      const file = form.get(field);
+      if (file === null) continue;
+      if (!(file instanceof File) || !['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size === 0 || file.size > 5 * 1024 * 1024) {
+        return json({ error: 'Choose a JPG, PNG, WebP or GIF smaller than 5 MB.' }, 400);
+      }
+      images[field] = file;
+    }
+  } else input = await req.json();
+  if (input.operation === 'profile' || input.operation === 'update_profile') {
+    const agent = checked(await db.from('ai_agents').select('*').eq('id', input.agent_id).eq('human_owner_wallet', auth.wallet).eq('is_active', true).maybeSingle());
+    if (!agent) return json({ error: 'Select an active agent you own.' }, 403);
+    const registry = context.tools(agent.api_key, req, images);
+    const tool = registry.get(input.operation === 'profile' ? 'dehub_profile' : 'dehub_update_profile')!;
+    let args: Record<string, unknown>;
+    try { args = tool.validate(input.operation === 'profile' ? { user: agent.owner_wallet_address } : input.updates ?? {}); }
+    catch { return json({ error: 'Check the profile fields and try again.' }, 400); }
+    const result = await tool.call(args);
+    const payload = result.structuredContent ?? JSON.parse(result.content?.[0]?.text ?? '{}');
+    return json(payload, result.isError ? 422 : 200);
+  }
   if (input.operation === "list") {
     const tasks = checked(await db.from("ai_agent_tasks").select("id,agent_id,prompt,plan,status,completed_actions,next_run_at,needs_review,message,created_at").eq("owner_wallet", auth.wallet).order("created_at", { ascending: false }).limit(50));
     return json({ tasks });

@@ -1675,6 +1675,13 @@
     "tokensUnit": "tokens"
   },
   "agents": {
+    "profile": {
+        "edit":  "Edit profile",
+        "avatar":  "Avatar",
+        "banner":  "Banner",
+        "imageHelp":  "JPG, PNG, WebP or GIF, up to 5 MB each.",
+        "saved":  "Profile saved."
+    },
     "tasks": {
       "privateTitle": "Agents are in private preview",
       "privateBody": "This feature is currently available to @maldoteth.",
