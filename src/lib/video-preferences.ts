@@ -167,4 +167,10 @@ export function getMediaVolume(): number {
 }
 export const useMediaVolume = () => useSyncExternalStore(subscribeMedia, getMediaVolume, () => DEFAULTS.volume);
 export const useMediaMuted = () => useSyncExternalStore(subscribeMedia, () => getVideoPreferences().mediaMuted === true, () => false);
-export function setMediaMuted(muted: boolean) { save({ ...getVideoPreferences(), mediaMuted: muted }); }
+export function setMediaMuted(muted: boolean) {
+  const prefs = { ...getVideoPreferences(), mediaMuted: muted };
+  // Closing or suspending the app can stop timers without a pagehide event.
+  // Commit this choice in the tap itself; notifications can remain deferred.
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch {}
+  save(prefs);
+}
