@@ -1,3 +1,4 @@
+import { hasTimelineMotion } from "@/lib/editor/projectMotion";
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Download dialog — video (MP4/WebM via WebCodecs) or a still image (PNG/JPG)
@@ -86,7 +87,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   // Each time the dialog opens, suggest the format that fits the project.
   useEffect(() => {
     if (!open) return;
-    const hasMotion = clips.some((c) => c.kind === "video" || c.kind === "audio");
+    const hasMotion = hasTimelineMotion(clips);
     setFormat(hasMotion ? "mp4" : "png");
     setScaleKey("1");
     setScope("timeline");
