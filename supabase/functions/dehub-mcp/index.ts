@@ -1092,7 +1092,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         const current = await dehubApi(`/api/nft_info/${encodeURIComponent(token_id)}`, { token });
         if (!current.ok) return fail("Could not verify the current reaction. No vote was sent.");
         const post = unwrap(current.data);
-        await recordPostViews([post?.tokenId], { token });
+        try { await recordPostViews([post?.tokenId], { token }); }
+        catch { return fail('Could not record the public post view. No vote was sent. Please retry.'); }
         if ((vote && post.isLiked === true) || (!vote && post.isDisliked === true)) return ok({ success: true, skipped: true, token_id, message: "This reaction is already set." });
       }
       // The backend reads `vote` from the query string because a `false` body
