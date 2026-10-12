@@ -53,20 +53,18 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     expect(VIDEO_CARD).toMatch(/data-no-navigate[\s\S]{0,200}?data-media-full/);
   });
 
-  it('keeps centered playback and the timeline available before metadata loads', () => {
-    // Lite mode has no duration until Play is pressed. The centered button
-    // must still start playback, and the timeline must stay mounted with its
-    // slider disabled until metadata arrives.
+  it('keeps strip playback and the timeline available before metadata loads', () => {
+    // Lite mode has no duration until Play is pressed. The strip button must
+    // still start playback; seeking stays disabled until metadata arrives.
     const bar = VIDEO_CARD.match(
       /\{!video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
     expect(bar, 'transport bar must remain mounted before metadata and while controls are hidden').not.toBeNull();
     expect(VIDEO_CARD).toContain('data-controls-hidden={!controlsVisible');
-    const center = VIDEO_CARD.match(/\{!isLoading && video\.videoUrl[^\n]*?&& \(([\s\S]*?)\n {8}\)\}/);
-    expect(center, 'centered playback must not wait for metadata').not.toBeNull();
-    expect(center![1]).toContain('data-video-center');
-    expect(center![1]).toContain('handlePlayClick()');
-    expect(center![0]).not.toContain('duration');
+    const play = bar![1].match(/\{splitControls && <button[\s\S]*?<\/button>\}/);
+    expect(play, 'strip playback must not wait for metadata').not.toBeNull();
+    expect(play![0]).toContain('handlePlayClick()');
+    expect(play![0]).not.toContain('duration');
     // Nothing inside the bar waits on the clip's length any more: a profile
     // card that never autoplayed used to render no timeline at all.
     expect(bar![1]).not.toContain('{duration > 0 &&');
