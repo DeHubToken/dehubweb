@@ -11,3 +11,10 @@ export const FEED_ICON_CLASS = {
   tip: 'w-[23.76px] h-[23.76px] shrink-0',
   pin: 'w-[21.12px] h-[21.12px] shrink-0',
 } as const;
+
+export const COMMENT_ICON_CLASS = {
+  like: 'w-[18px] h-[18px] shrink-0',
+  comment: 'w-[18.67px] h-[18.67px] shrink-0',
+  share: 'w-4 h-4 shrink-0',
+  tip: 'w-[18px] h-[18px] shrink-0',
+} as const;
