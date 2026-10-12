@@ -3,7 +3,7 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { useDraft } from '@/hooks/use-draft';
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Send, Users, Loader2, Mic, SmilePlus, Reply, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
+import { Send, Loader2, Mic, SmilePlus, Reply, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -40,6 +40,7 @@ import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 
 import { QUICK_CHAT_REACTIONS } from '@/components/app/chat/reaction-options';
 import { MoreReactionsButton } from '@/components/app/chat/MoreReactionsButton';
+import { LiveChatOnlineCount } from '@/components/app/chat/LiveChatOnlineCount';
 
 /**
  * A text message in the side panel, with the same cards every other chat
@@ -354,6 +355,11 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
 
   return (
     <div className="flex flex-col h-full pl-px">
+      {roomId && (
+        <div className="flex shrink-0 items-center px-2.5 pb-2">
+          <LiveChatOnlineCount count={onlineCount} />
+        </div>
+      )}
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">
         <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
