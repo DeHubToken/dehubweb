@@ -261,7 +261,7 @@ export default function ProfilePage() {
     profileContentRef,
     '[data-profile-tabs] > [data-feed-nav]',
     [!!data.profile, data.isAuthenticated],
-    { allThemes: true },
+    { allThemes: true, edge: 'bottom' },
   );
 
   // At the top edge, the tabs become the single profile navigation row.
