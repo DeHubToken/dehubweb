@@ -54,3 +54,29 @@ test("contact sheets preserve every sample position with at most three provider 
   assert.equal((await handleVisualHighlights(request(packed),deps)).status,200);assert.equal(calls,1);
   assert.equal((await handleVisualHighlights(request({...packed,contactSheets:packed.contactSheets!.slice(1)}),deps)).status,400);assert.equal(calls,1);
 });
+
+test("matching accepts static subjects at sample-cell boundaries while old highlight clients retain their contract", async () => {
+  let calls = 0;
+  const matching: VisualBatch = { ...batch, purpose: "matching", seconds: 60, focus: "red scenes" };
+  const deps = { headers: {}, preflight: () => null, limited: async () => null, complete: async (body: Record<string, unknown>) => {
+    calls++;
+    const messages = body.messages as { content: unknown }[];
+    assert.match(String(messages[0].content), /Static scenes, colours, objects and title cards can be valid matches/);
+    const content = messages[1].content as { type: string; text?: string }[];
+    const metadata = JSON.parse(content[0].text!);
+    assert.equal(metadata.sampleCells.length, 6);
+    assert.deepEqual(metadata.sampleCells[0], { id: 0, windowId: 0, at: 0.5, start: 0, end: 1 });
+    assert.equal(content.filter(part => part.type === "image_url").length, 6);
+    return Response.json({ choices: [{ message: { content: JSON.stringify({ moments: [
+      { startSample: 0, endSample: 1, score: 0.97, description: "The red scene", focusMatch: true },
+      { startSample: 10, endSample: 11, score: 1, description: "Invented samples", focusMatch: true },
+    ] }) } }] });
+  } };
+  const result = await handleVisualHighlights(request(matching), deps);
+  assert.deepEqual(await result.json(), { moments: [{ start: 0, end: 2, text: "The red scene", score: 0.97 }], contract: 2 });
+  assert.equal(calls, 1);
+  assert.equal((await handleVisualHighlights(request({ ...matching, purpose: "unknown" }), deps)).status, 400);
+  assert.equal(calls, 1);
+  const availability = await handleVisualHighlights(new Request("https://example.test/visual"), deps);
+  assert.equal((await availability.json()).sceneMatchingContract, 2);
+});
