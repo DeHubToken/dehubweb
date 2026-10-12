@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({ download: vi.fn(), import: vi.fn(), add: vi.fn
   jobs: [{ id: 'voice-result', kind: 'audio', prompt: 'A saved voice', url: 'https://media.example/voice.wav', status: 'done' }],
 }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { defaultValue?: string }) => key === 'common.cancel' ? 'Cancel' : options?.defaultValue ?? key }) }));
+vi.mock('@tanstack/react-query', () => ({ useQuery: () => ({ data: undefined, isPending: false, isFetching: false, error: null, refetch: vi.fn() }) }));
 vi.mock('sonner', () => ({ toast: { error: vi.fn(), success: vi.fn(), info: vi.fn() } }));
 vi.mock('@/i18n', () => ({ default: { t: (key: string) => key } }));
 vi.mock('@/hooks/use-editor-quota', () => ({ useEditorQuota: () => mocks.quota }));

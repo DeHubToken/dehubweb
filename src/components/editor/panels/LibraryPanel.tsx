@@ -7,7 +7,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * queue, so a clip generated in the studio shows up here already, one click
  * from the timeline.
  */
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useState, useSyncExternalStore } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { loadCloudGenerationPage } from '@/lib/creator/cloudLibrary';
 import { AlertCircle, Box, Film, ImageIcon, Loader2, Music2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -45,13 +47,34 @@ export function LibraryPanel() {
   );
 
   const running = jobs.filter((j) => j.status === 'running');
+  const [source, setSource] = useState<'recent' | 'saved'>('recent');
+  const [offsets, setOffsets] = useState<Record<string, number>>({});
+  const wallet = quota.walletAddress ?? '';
+  const offset = offsets[wallet] ?? 0;
+  const saved = useQuery({
+    queryKey: ['editor-saved-library', wallet, offset],
+    queryFn: () => loadCloudGenerationPage(wallet, offset),
+    enabled: source === 'saved' && !!wallet,
+    retry: false, refetchOnWindowFocus: false, staleTime: 60_000, gcTime: 120_000,
+  });
+  const visible = source === 'recent' ? jobs : saved.data?.jobs ?? [];
+  const changePage = (next: number) => setOffsets(previous => ({ ...previous, [wallet]: next }));
 
   return (
     <div className="flex h-full flex-col overflow-y-auto p-3">
       <PanelHeading>{_copy("copy.dc98456bbe64", { defaultValue: "Generations" })}{running.length > 0 ? _copy("copy.d05a65eb0e67", { defaultValue: " ({{value1}} running)", value1: running.length }) : ''}
       </PanelHeading>
 
-      {jobs.length === 0 ? (
+      <div className="mb-3 grid grid-cols-2 gap-2" role="tablist">
+        <button type="button" role="tab" aria-selected={source === 'recent'} onClick={() => setSource('recent')} className={cn('min-h-11 rounded-lg border px-2 text-xs', source === 'recent' ? 'border-white bg-white text-black' : 'border-white/20 text-white/80')}>{_copy('bookmarks.recent')}</button>
+        <button type="button" role="tab" aria-selected={source === 'saved'} onClick={() => setSource('saved')} className={cn('min-h-11 rounded-lg border px-2 text-xs', source === 'saved' ? 'border-white bg-white text-black' : 'border-white/20 text-white/80')}>{_copy('creator.yourLibrary')}</button>
+      </div>
+      {source === 'saved' && <div className="mb-3 flex items-center justify-between gap-2">
+        <button type="button" disabled={offset === 0 || saved.isFetching} onClick={() => changePage(Math.max(0, offset - 100))} className="min-h-11 rounded-lg border border-white/20 px-3 text-xs text-white/80 disabled:opacity-30">{_copy('editor.captions.previousText')}</button>
+        <span className="text-xs text-white/65">{_copy('editor.pages.page', { number: Math.floor(offset / 100) + 1 })}</span>
+        <button type="button" disabled={saved.data?.nextOffset == null || saved.isFetching} onClick={() => changePage(saved.data!.nextOffset!)} className="min-h-11 rounded-lg border border-white/20 px-3 text-xs text-white/80 disabled:opacity-30">{_copy('editor.captions.nextText')}</button>
+      </div>}
+      {source === 'saved' && !wallet ? <p className="text-sm text-white/65">{_copy('creator.signInToSee')}</p> : source === 'saved' && saved.isPending ? <Loader2 className="mx-auto h-5 w-5 animate-spin text-white/70" aria-label={_copy('common.loading')} /> : source === 'saved' && saved.error ? <div role="alert" className="space-y-2 text-sm text-white/75"><p>{_copy('creator.libraryEmpty')}</p><button type="button" onClick={() => void saved.refetch()} className="min-h-11 rounded-lg border border-white/20 px-3">{_copy('common.retry')}</button></div> : visible.length === 0 ? (
         <AppState
           icon="wand"
           title={_copy("copy.76f613ec06cb", { defaultValue: "Nothing generated yet" })}
@@ -61,7 +84,7 @@ export function LibraryPanel() {
         />
       ) : (
         <ul className="grid grid-cols-2 gap-2">
-          {jobs.map((job) => (
+          {visible.map((job) => (
             <li key={job.id}>
               <JobTile
                 job={job}
@@ -76,7 +99,7 @@ export function LibraryPanel() {
         </ul>
       )}
 
-      {jobs.length > 0 && (
+      {visible.length > 0 && (
         <p className="mt-3 px-0.5 text-[11px] leading-relaxed text-white/40">{_copy("copy.ec8a1263ecc5", { defaultValue: "Adding a generation imports it into Media and drops it on the timeline at the playhead." })}</p>
       )}
     </div>
