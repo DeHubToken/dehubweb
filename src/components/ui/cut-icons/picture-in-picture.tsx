@@ -1,6 +1,6 @@
 import React from "react";
 import { createCutIcon } from "./create-cut-icon";
 
-export default createCutIcon("CutPictureinpicture", () => <>
-<path d="M4 6H21Q28 6 28 13V26H11Q4 26 4 19Z M6.4 8.4V19Q6.4 23.6 11 23.6H25.6V13Q25.6 8.4 21 8.4Z" fill="currentColor" fillRule="evenodd"/><path d="M16 15H20Q23 15 23 18V21H19Q16 21 16 18Z" fill="currentColor"/>
+export default createCutIcon("CutPictureinpicture", ({ weight }) => <>
+<path d="M12 26H10Q4 26 4 20V6H21Q28 6 28 13" fill="none" stroke="currentColor" strokeWidth={weight * 1.2} strokeLinejoin="round"/><path d="M17 17H23Q28 17 28 22V27H21Q17 27 17 23Z" fill="none" stroke="currentColor" strokeWidth={weight * 1.2} strokeLinejoin="round"/>
 </>);
