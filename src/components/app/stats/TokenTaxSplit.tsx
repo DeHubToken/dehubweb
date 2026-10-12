@@ -43,14 +43,12 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       id: 'bsc_token_tax',
       label: t('stats.taxSplit.team', 'DeHub operations'),
       usd: split.team.usd,
-      bnb: split.team.bnb,
       detail: t('stats.money.reinvestment', 'Marketing & developer wages'),
     },
     {
       id: 'bsc_token_burn',
       label: t('stats.taxSplit.burned', 'Bought back and burned'),
       usd: split.burned.usd,
-      bnb: split.burned.bnb,
       detail: t('stats.taxSplit.burnedDetail', '{{tokens}} DeHub burned in {{n}} buybacks', {
         tokens: formatCount(split.burned.tokens),
         n: split.burned.buybacks.toLocaleString('en-US'),
@@ -60,7 +58,6 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       id: 'bsc_holder_share',
       label: t('stats.taxSplit.shared', 'Paid to holders and stakers'),
       usd: split.shared.usd,
-      bnb: split.shared.bnb,
       detail: t('stats.taxSplit.sharedDetail', '{{claims}} claims by {{wallets}} wallets', {
         claims: (split.shared.holderClaims + split.shared.stakerClaims).toLocaleString('en-US'),
         wallets: split.shared.wallets.toLocaleString('en-US'),
@@ -76,7 +73,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
     <div data-page-bento data-kit-section className="bg-zinc-900 border border-zinc-800 p-4">
       <div className="flex items-center gap-2 mb-1">
         <Flame className="w-4 h-4 text-zinc-400 shrink-0" />
-        <span className="text-sm font-semibold text-white">{t('stats.taxSplit.title', 'Where the token tax went')}</span>
+        <span className="text-sm font-semibold text-white">{t('stats.taxSplit.title', 'Where revenue went')}</span>
         <span className="text-[11px] text-zinc-500 ml-auto shrink-0 tabular-nums">
           {from === to ? from : `${from}–${to}`}
         </span>
@@ -84,7 +81,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       <p className="text-xs text-zinc-500 leading-relaxed mb-3">
         {t(
           'stats.taxSplit.intro',
-          'The original DeHub token took 12% of every trade until 2023. In BNB, 4% bought DeHub back and burned it, 2% went to DeHub operations and 2% to holders and stakers, so the burn was always twice either of the other two. This is where that BNB went, valued at the BNB price on the day each payment happened.',
+          'Historical revenue funded operations, token buybacks and rewards for holders and stakers. Amounts are shown in dollars at the value on each payment date. Open each part to see its original currencies and every transaction.',
         )}
       </p>
 
@@ -127,8 +124,7 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
       <p className="text-[11px] text-zinc-500 leading-relaxed mt-3 pt-3 border-t border-zinc-800">
         {t(
           'stats.taxSplit.footnote',
-          'Only the DeHub operations part counts as revenue above. The other 4% is in none of the three: 2% was added to the trading pool as liquidity, and 1% each went to holders and operations as tokens. Holders also claimed {{early}} straight from the token in its first two weeks, before the rewards contract existed.',
-          { early: '1.40 BNB' },
+          'Only retained operating funds count as revenue above. Buybacks and shared rewards are recorded separately. Every amount and original currency can be inspected in the ledger.',
         )}
       </p>
     </div>
