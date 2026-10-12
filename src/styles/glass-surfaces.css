@@ -204,6 +204,31 @@ html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::after {
   border-radius: inherit;
 }
 
+/* The new-posts bridge borrows the nav material in every theme. Light and
+   Minimal keep their flat file-tab finish; War keeps its gunmetal finish. */
+html[data-theme='light'] :is([data-feed-new-posts-bridge], [data-feed-new-posts-button]) {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--hairline-strong);
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+html[data-theme='minimal'] :is([data-feed-new-posts-bridge], [data-feed-new-posts-button]) {
+  background: #000 !important;
+  color: #fff !important;
+  border: 1px solid rgb(255 255 255 / 0.69);
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border-radius: 0 !important;
+}
+html[data-theme='war'] :is([data-feed-new-posts-bridge], [data-feed-new-posts-button]) {
+  background: linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
+  border: 1px solid rgb(79 227 224 / 0.35);
+  backdrop-filter: var(--nav-glass-blur) !important;
+}
+[data-feed-new-posts-bridge] { border-bottom: 0 !important; }
+[data-feed-new-posts-button] { margin-top: -2px; }
+
 /* Bentos: page bentos, side panels and post cards on every canvas theme. Only
    the fill colour changes (the theme colour mixed into a thinner smoke), so
    each theme's own texture layers, sheen, rings and radii stay as they are.
