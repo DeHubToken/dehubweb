@@ -117,3 +117,8 @@ export { default as Gift } from "./cut-icons/gifts";
 export { default as MapPin } from "./cut-icons/location";
 export { default as History } from "./cut-icons/history";
 export { default as MoreVertical, default as EllipsisVertical } from "./cut-icons/morevertical";
+export { default as PictureInPicture2 } from "./cut-icons/picture-in-picture";
+export { default as PictureInPicture } from "./cut-icons/picture-in-picture";
+export { default as FastForward } from "./cut-icons/fast-forward";
+export { default as Rewind } from "./cut-icons/rewind";
+export { default as Minimize } from "./cut-icons/exit-fullscreen";
