@@ -27,7 +27,7 @@ import { clearWagmiStorage } from '@/lib/wagmi-session';
 import { setBackgroundPaused } from '@/lib/background-gate';
 
 import type { SolanaLoginProof } from '@/lib/api/dehub/auth';
-import { buildDeHubLoginMessage } from '@/lib/dehub-login-message';
+import { fetchWalletChallenge, submitWalletProof, type WalletChallenge, type WalletProofPurpose } from '@/lib/wallet-challenge';
 import {
   authenticateWallet,
   rotateWallet,
@@ -305,9 +305,9 @@ async function getSupabaseAccessToken(): Promise<string | undefined> {
  */
 async function signWithProvider(
   provider: any,
-  displayedDate: Date,
   flowLabel: string,
-): Promise<{ address: string; signature: string }> {
+  purpose: WalletProofPurpose = 'login-web',
+): Promise<WalletChallenge & { signature: string }> {
   console.log(`[Auth] [${flowLabel}] Fetching accounts...`);
   let accounts: string[] = [];
   for (let i = 0; i < 10; i++) {
@@ -318,7 +318,8 @@ async function signWithProvider(
   if (!accounts?.length) throw new Error('No accounts available for signing');
   const address = accounts[0].toLowerCase();
 
-  const message = buildDeHubLoginMessage(address, Math.floor(displayedDate.getTime() / 1000));
+  const challenge = await fetchWalletChallenge(address, 8453, purpose);
+  const message = challenge.message;
   const encodedMessage = `0x${Array.from(new TextEncoder().encode(message), byte => byte.toString(16).padStart(2, '0')).join('')}`;
 
   let signature: string;
@@ -338,7 +339,7 @@ async function signWithProvider(
     })) as string;
   }
 
-  return { address, signature };
+  return { ...challenge, signature };
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -1620,7 +1621,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * which provider code, which build) to tell the causes apart.
    */
   const completeDeHubAuthWagmi = async (address: string, trigger: WagmiAuthTrigger = 'user') => {
-    const timestamp = Math.floor(Date.now() / 1000);
     const connectorId = wagmiConnector?.id;
     const connectorName = wagmiConnector?.name;
 
@@ -1671,7 +1671,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Rebuilt whenever the account changes — the address is inside the signed
     // text, so a message built for the old one proves nothing about the new.
-    let message = buildDeHubLoginMessage(authAddress, timestamp);
+    let challenge = await fetchWalletChallenge(authAddress, 8453, 'login-web');
+    let message = challenge.message;
 
     // Time-box the signature. When the request never settles (see the gap
     // wait above — the popup-race case queues it invisibly), no catch and no
@@ -1729,7 +1730,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             SIGN_TIMEOUT_MS,
           );
         }),
-      ]);
+      ]).finally(() => {
+        clearTimeout(signTimeoutTimer);
+        clearTimeout(signNudgeTimer);
+      });
     };
 
     try {
@@ -1761,7 +1765,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!chosen) throw firstSignError;
 
         authAddress = chosen;
-        message = buildDeHubLoginMessage(authAddress, timestamp);
+        challenge = await fetchWalletChallenge(authAddress, 8453, 'login-web');
+        message = challenge.message;
         signature = await requestSignature();
       }
     } catch (signError: any) {
@@ -1872,7 +1877,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let solanaProof: SolanaLoginProof | null = null;
     try {
       try {
-        authResponse = await authenticateWallet(authAddress, signature, timestamp, BASE_CHAIN_ID);
+        authResponse = await submitWalletProof({ ...challenge, signature },
+          async () => {
+            challenge = await fetchWalletChallenge(authAddress, BASE_CHAIN_ID, 'login-web');
+            message = challenge.message;
+            signature = await requestSignature();
+            return { ...challenge, signature };
+          },
+          proof => authenticateWallet(authAddress, proof.signature, proof.timestamp, BASE_CHAIN_ID,
+            undefined, undefined, undefined, proof.challengeId));
       } catch (firstError: any) {
         // The one failure a second signature can actually fix.
         //
@@ -1890,8 +1903,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // appears exactly when it unblocks somebody. Everyone else links their
         // Solana wallet deliberately, from Settings.
         //
-        // The EVM signature is still inside its validity window, so the retry
-        // reuses it rather than asking the wallet to sign twice.
+        // The first login attempt consumed its proof, even when signup was
+        // refused. The retry needs fresh EVM and Solana evidence.
         const canRetryWithSolana =
           firstError instanceof WalletSignupBlockedError &&
           connectorMatchesWallet(wagmiConnector, 'phantom');
@@ -1902,20 +1915,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
 
         const { signSolanaLoginProof } = await import('@/lib/solana/wallet');
-        solanaProof = await signSolanaLoginProof(message);
-        // Declined, or a Phantom too old to sign a message. The original
-        // refusal is the honest answer, and it names the alternatives.
-        if (!solanaProof) throw firstError;
-
-        authResponse = await authenticateWallet(
-          authAddress,
-          signature,
-          timestamp,
-          BASE_CHAIN_ID,
-          undefined,
-          undefined,
-          solanaProof,
-        );
+        const signWithSolana = async () => {
+          challenge = await fetchWalletChallenge(authAddress, BASE_CHAIN_ID, 'login-web');
+          message = challenge.message;
+          signature = await requestSignature();
+          solanaProof = await signSolanaLoginProof(message);
+          if (!solanaProof) throw firstError;
+          return { ...challenge, signature, solanaProof };
+        };
+        authResponse = await submitWalletProof(await signWithSolana(), signWithSolana, proof =>
+          authenticateWallet(authAddress, proof.signature, proof.timestamp, BASE_CHAIN_ID,
+            undefined, undefined, proof.solanaProof, proof.challengeId));
       }
     } catch (authError: any) {
       // A signature the wallet happily produced, refused one step later. The
@@ -2205,8 +2215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const moveAccountToThisWallet = async (
     address: string,
-    signature: string,
-    timestamp: number,
+    provider: any,
     chainId: number,
   ) => {
     const linked = driftedLinkRef.current;
@@ -2223,7 +2232,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (requiredWalletRotationRef.current) throw new Error('Sign in again to finish replacing your wallet');
         return;
       }
-      await rotateWallet(address, signature, timestamp, chainId, accessToken);
+      const sign = async () => {
+        const proof = await signWithProvider(provider, 'WALLET-RECOVERY', 'rotate-wallet');
+        if (proof.address !== address.toLowerCase()) throw new Error('Wallet changed during recovery. Please try again.');
+        return proof;
+      };
+      await submitWalletProof(await sign(), sign, proof =>
+        rotateWallet(address, proof.signature, proof.timestamp, chainId, accessToken, proof.challengeId));
       authLogger.warn('Moved account onto the wallet this browser holds', {
         from: linked,
         to: address,
@@ -2245,8 +2260,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signAndAuthenticateSmartWallet = async (toastId: string) => {
-    const timestamp = Math.floor(Date.now() / 1000);
-    const displayedDate = new Date(timestamp * 1000);
     const BASE_CHAIN_ID = 8453;
 
     const eoaProvider = await restoreWalletSession();
@@ -2269,7 +2282,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw new Error('Could not connect the new smart wallet. Try again to finish renewal.');
     }
     const flow = aaProvider ? 'SMART-SA' : 'SMART-EOA';
-    const { address, signature } = await signWithProvider(signingProvider, displayedDate, flow);
+    const initialProof = await signWithProvider(signingProvider, flow);
+    const { address } = initialProof;
 
     // Address guard: prevent silent account switch during session refresh
     if (!requiredWalletRotationRef.current && walletAddress && walletAddress.toLowerCase() !== address.toLowerCase()) {
@@ -2279,8 +2293,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const meta = await getSupabaseAuthMeta();
     const supabaseToken = await getSupabaseAccessToken();
     toast.loading(i18n.t('toasts.signing_in', 'Signing in...'), { id: toastId });
-    await moveAccountToThisWallet(address, signature, timestamp, BASE_CHAIN_ID);
-    const authResponse = await authenticateWallet(address, signature, timestamp, BASE_CHAIN_ID, meta, supabaseToken);
+    await moveAccountToThisWallet(address, signingProvider, BASE_CHAIN_ID);
+    const renewLogin = async () => {
+      const proof = await signWithProvider(signingProvider, flow);
+      if (proof.address !== address) throw new Error('Wallet changed during sign-in. Please try again.');
+      return proof;
+    };
+    const authResponse = await submitWalletProof(initialProof, renewLogin, proof =>
+      authenticateWallet(address, proof.signature, proof.timestamp, BASE_CHAIN_ID, meta, supabaseToken,
+        undefined, proof.challengeId));
 
     applyAuthenticatedSession(authResponse, address, supabaseUserId, flow);
     if (pending) await completeWalletReplacement(ownerAddress);

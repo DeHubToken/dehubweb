@@ -89,12 +89,14 @@ export async function authenticateWallet(
   web3AuthMeta?: Web3AuthMeta,
   supabaseAccessToken?: string,
   solanaProof?: SolanaLoginProof | null,
+  challengeId?: string,
 ): Promise<AuthResponse> {
   const body: Record<string, any> = {
     address: address.toLowerCase(),
     sig: signature,
     timestamp,
     chainId,
+    ...(challengeId ? { challengeId } : {}),
   };
 
   // Phantom signs in through its Ethereum provider, and that EVM address is a
@@ -146,7 +148,7 @@ export async function authenticateWallet(
     if (errorData.code === WALLET_SIGNUP_BLOCKED_CODE) {
       throw new WalletSignupBlockedError(errorData.message || errorData.error_message);
     }
-    throw new Error(errorData.message || errorData.error || "Authentication failed");
+    throw Object.assign(new Error(errorData.message || errorData.error || "Authentication failed"), { code: errorData.code, status: response.status });
   }
 
   const data: AuthResponse = await response.json();
@@ -215,6 +217,7 @@ export async function rotateWallet(
   timestamp: number,
   chainId: number,
   supabaseAccessToken: string,
+  challengeId?: string,
 ): Promise<void> {
   const response = await fetch(`${DEHUB_API_BASE}/api/auth/rotate-wallet`, {
     method: 'POST',
@@ -234,6 +237,7 @@ export async function rotateWallet(
       // "Could not move the account onto this wallet: Failed to fetch" rows.
       // The endpoint accepts either; only the body form works cross-origin.
       supabaseAccessToken,
+      ...(challengeId ? { challengeId } : {}),
     }),
   });
 
@@ -243,9 +247,9 @@ export async function rotateWallet(
     if (code === 'WALLET_NOT_LINKED') {
       throw new WalletNotLinkedError((errorData.message as string) || undefined);
     }
-    throw new Error(
+    throw Object.assign(new Error(
       (errorData.message as string) || (errorData.error as string) || 'Could not move the account',
-    );
+    ), { code, status: response.status });
   }
 }
 
