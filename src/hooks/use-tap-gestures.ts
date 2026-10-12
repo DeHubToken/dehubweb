@@ -266,5 +266,5 @@ export function useTapGestures({
     reset();
   }, [reset]);
 
-  return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel };
+  return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel, 'data-no-quick-actions': enableLongPress ? '' : undefined };
 }

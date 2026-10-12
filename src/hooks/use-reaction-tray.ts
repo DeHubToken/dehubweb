@@ -50,6 +50,7 @@ export interface ReactionTray {
   };
   /** Spread on the thumb itself. */
   buttonProps: {
+    'data-no-quick-actions': string | undefined;
     onPointerDown: () => void;
     onPointerUp: () => void;
     onPointerLeave: () => void;
@@ -144,6 +145,7 @@ export function useReactionTray(
     close,
     areaProps: { onMouseEnter, onMouseLeave },
     buttonProps: {
+      'data-no-quick-actions': enabled ? '' : undefined,
       onPointerDown,
       onPointerUp: cancelHold,
       onPointerLeave: cancelHold,

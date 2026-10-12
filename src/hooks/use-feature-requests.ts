@@ -502,6 +502,7 @@ export function useSubmitFeatureRequest() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['feature-requests'] });
+      queryClient.invalidateQueries({ queryKey: ['feature-requests-total-count'] });
       toast.success(_copy("copy.27873a08f25d", { defaultValue: "Feature request submitted!" }));
     },
     onError: (error) => {
