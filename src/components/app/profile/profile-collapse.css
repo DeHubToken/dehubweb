@@ -15,16 +15,10 @@
 .profile-collapse-gap-guard {
   position: absolute;
   inset: -4px -8px -8px;
-  background: #18181b;
-  overflow: hidden;
-  /* Only the seams outside the two pills need a stationary cover. */
-  clip-path: polygon(0 0, 100% 0, 100% 4px, 0 4px, 0 56px, 100% 56px, 100% 100%, 0 100%);
-}
-html[data-theme='system'] .profile-collapse-gap-guard {
+  /* Solid themes can hide compositor lag with their own page colour.
+     Canvas themes clip the scrolling header instead of painting outside the pill. */
   background: #000;
-  clip-path: none;
 }
-html[data-theme='system'] .profile-collapse-gap-guard img { display: none; }
 /* Once the bar and tabs join into one card the seam sits inside it, so the
    lower band would only poke out past the card's sides. */
 .profile-collapse-bar[data-joined='true'] .profile-collapse-gap-guard {
