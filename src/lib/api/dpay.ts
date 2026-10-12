@@ -4,6 +4,7 @@
  * Handles fiat onramp, token purchases, and payment processing.
  */
 
+import { rejectCardPayment } from './card-payment';
 import { getAuthToken } from './dehub';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -717,10 +718,9 @@ export async function createOnrampSession(request: OnrampSessionRequest): Promis
 }
 
 /**
- * Create a checkout session for fiat-to-DHB purchase (Stripe flow)
- * Flow: POST /dpay/checkout → Stripe Checkout → webhook → Backend sends DHB → redirect
+ * Reject new card purchases through the existing checkout error flow.
  */
-export async function createCheckoutSession(request: {
+export async function createCheckoutSession(_request: {
   amount: number;
   currency?: string;
   tokenSymbol: string;
@@ -731,54 +731,7 @@ export async function createCheckoutSession(request: {
   redirect?: string;
   embedded?: boolean;
 }): Promise<{ checkoutUrl: string; sessionId: string; clientSecret?: string }> {
-  console.log('[DPay API] Creating checkout session...', request);
-
-  const token = getAuthToken();
-  if (!token) {
-    throw new Error('Authentication required');
-  }
-
-  const address = request.walletAddress;
-  const payload = {
-    chainId: request.chainId ?? 8453,
-    address,
-    receiverAddress: address,
-    amount: request.amount,
-    tokensToReceive: request.tokensToReceive,
-    tokenSymbol: request.tokenSymbol,
-    currency: (request.currency ?? 'usd').toLowerCase(),
-    redirect: request.redirect ?? 'dehub://dpay-result',
-    embedded: request.embedded ?? false,
-    termsAndServicesAccepted: true,
-  };
-
-  try {
-    const response = await fetch(`${DEHUB_API_BASE}/api/dpay/checkout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Failed to create checkout: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const result = data?.result || data;
-    
-    return {
-      checkoutUrl: result.url || result.checkoutUrl,
-      sessionId: result.sessionId || result.id,
-      clientSecret: result.clientSecret,
-    };
-  } catch (error) {
-    console.error('[DPay API] Error creating checkout:', error);
-    throw error;
-  }
+  return rejectCardPayment();
 }
 
 /* ────────────────────────────────────────────────────────────────────────
