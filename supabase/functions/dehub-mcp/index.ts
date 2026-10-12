@@ -6,7 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Interface, JsonRpcProvider, Wallet, formatEther } from "ethers";
 import { requireDeHubAuth } from "../_shared/auth.ts";
 import { agentOwnerAllowed } from "./task-plan.ts";
-import { handleTaskRequest, type TaskTool } from "./tasks.ts";
+import { handleTaskRequest, type TaskTool, type ProfileImages } from "./tasks.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -262,6 +262,8 @@ function shapeProfile(u: any) {
     username: u.username,
     display_name: u.displayName,
     bio: u.aboutMe ?? "",
+    avatar: u.avatarImageUrl ?? null,
+    banner: u.coverImageUrl ?? null,
     url: u.username ? `https://dehub.io/${u.username}` : undefined,
     followers: u.followers ?? 0,
     following: u.followings ?? 0,
@@ -583,7 +585,7 @@ const MIN_GAS_WEI = 200_000_000_000_000n; // 0.0002 ETH
  * The previous version held the key in a module-level `let` that every request
  * overwrote, so two agents calling at once could execute each other's writes.
  */
-function buildServer(apiKey: string | null, req: Request, registry?: Map<string, TaskTool>): McpServer {
+function buildServer(apiKey: string | null, req: Request, registry?: Map<string, TaskTool>, profileImages: ProfileImages = {}): McpServer {
   const server = new McpServer({ name: "dehub-mcp", version: "2.0.0" });
   const READ = { readOnlyHint: true, openWorldHint: true } as const;
   const WRITE = { readOnlyHint: false, destructiveHint: false, openWorldHint: true } as const;
@@ -1185,8 +1187,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       description:
         "Update the agent's own DeHub profile — bio, display name, avatar and banner. Images are fetched from the URLs given. Rate limited to 5 updates per hour.",
       inputSchema: {
-        bio: z.string().optional().describe("New bio / about text"),
-        display_name: z.string().optional().describe("Display name shown on the profile"),
+        bio: z.string().max(2000).optional().describe("New bio / about text"),
+        display_name: z.string().min(1).max(100).optional().describe("Display name shown on the profile"),
         avatar_url: z.string().optional().describe("URL of an image to use as the avatar"),
         banner_url: z.string().optional().describe("URL of an image to use as the cover banner"),
       },
@@ -1198,7 +1200,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if ("error" in resolved) return resolved.error;
       const { agent } = resolved;
 
-      if (!bio && !display_name && !avatar_url && !banner_url) {
+      if (bio === undefined && display_name === undefined && !avatar_url && !banner_url && !profileImages.avatar && !profileImages.banner) {
         return fail("Nothing to update.", "Provide at least one of bio, display_name, avatar_url or banner_url.");
       }
 
@@ -1210,8 +1212,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
 
       const formData = new FormData();
       formData.append("username", agent.name);
-      if (bio) formData.append("aboutMe", bio);
-      if (display_name) formData.append("displayName", display_name);
+      if (bio !== undefined) formData.append("aboutMe", bio);
+      if (display_name !== undefined) formData.append("displayName", display_name);
 
       for (
         const [field, url, filename] of [
@@ -1219,6 +1221,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
           ["coverImg", banner_url, `${agent.name}-banner.png`],
         ] as const
       ) {
+        const uploaded = field === 'avatarImg' ? profileImages.avatar : profileImages.banner;
+        if (uploaded) { formData.append(field, uploaded); continue; }
         if (!url) continue;
         try {
           const imageResponse = await fetch(url);
@@ -1251,6 +1255,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const profile: any = verify.ok ? unwrap(verify.data) : null;
 
       await touchAgent(supabase, agent.id);
+      if (bio !== undefined) await supabase.from('ai_agents').update({ description: bio }).eq('id', agent.id);
 
       return ok({
         success: true,
@@ -1265,8 +1270,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
             banner: profile.coverImageUrl ?? null,
           }
           : null,
-        avatar_persisted: avatar_url ? !!profile?.avatarImageUrl : null,
-        banner_persisted: banner_url ? !!profile?.coverImageUrl : null,
+        avatar_persisted: avatar_url || profileImages.avatar ? !!profile?.avatarImageUrl : null,
+        banner_persisted: banner_url || profileImages.banner ? !!profile?.coverImageUrl : null,
       });
     },
   );
@@ -1321,7 +1326,7 @@ app.post("/*", async (c, next) => {
     return await handleTaskRequest(c.req.raw, {
       db,
       token: getAgentToken,
-      tools: (key, request) => { const registry = new Map<string, TaskTool>(); buildServer(key, request, registry); return registry; },
+      tools: (key, request, images) => { const registry = new Map<string, TaskTool>(); buildServer(key, request, registry, images); return registry; },
     });
   } catch (error) {
     console.error("[Agent tasks]", error instanceof Error ? error.message : "Request failed");
