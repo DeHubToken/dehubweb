@@ -261,7 +261,7 @@ export default function ProfilePage() {
     profileContentRef,
     '[data-profile-tabs] > [data-feed-nav]',
     [!!data.profile, data.isAuthenticated],
-    { allThemes: true },
+    { allThemes: true, edge: 'bottom' },
   );
 
   // At the top edge, the tabs become the single profile navigation row.
@@ -624,7 +624,7 @@ export default function ProfilePage() {
             </div>
             {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
               <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
-              <div className="min-w-0 max-w-[76px] sm:max-w-24">
+              <div className="hidden min-w-0 max-w-24 md:block">
                 <div className="flex items-baseline gap-1 text-xs sm:text-sm font-bold leading-tight text-white">
                   <p className="min-w-0 truncate">{data.profile.name}</p>
                   <BadgeIcon src={data.badgeUrl} className="w-[1em] h-[1em]" />
