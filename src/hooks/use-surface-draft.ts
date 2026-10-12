@@ -1,5 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { UNSAFE_LocationContext } from 'react-router-dom';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useDraftState, type DraftSetter } from './use-draft-state';
 
 export function draftIdentity(entity: unknown): string | null {
@@ -19,6 +20,13 @@ export function draftIdentity(entity: unknown): string | null {
 /** Source field plus route/entity identity; never use translated labels or render order. */
 export function useSurfaceDraft<T>(field: string, initial: T | (() => T), identity?: string | number | null): [T, DraftSetter<T>] {
   const location = useContext(UNSAFE_LocationContext);
-  const place = identity === undefined ? location?.location.pathname ?? '/' : identity;
+  // Cached pages stay mounted while hidden, so the router location here can be
+  // another page's. Keep the path this page was last shown at, otherwise every
+  // navigation re-keys (and blanks) the hidden page's fields.
+  const active = useContext(CachedPageActiveContext);
+  const pathname = location?.location.pathname ?? '/';
+  const ownPath = useRef(pathname);
+  if (active) ownPath.current = pathname;
+  const place = identity === undefined ? ownPath.current : identity;
   return useDraftState(place === null ? null : `field:${JSON.stringify([field, place])}`, initial);
 }
