@@ -90,6 +90,7 @@ function showUpdateToast(version: BuildVersion, note: string, isMobile: boolean,
         <span className="flex flex-row gap-2">
           <button
             type="button"
+            data-keep-dark
             className={BUTTON_CLASSES}
             // A plain reload is enough to land on the new build: sw.js serves
             // navigations NetworkFirst, so the HTML comes back fresh with live
@@ -100,7 +101,7 @@ function showUpdateToast(version: BuildVersion, note: string, isMobile: boolean,
             {i18n.t('toasts.refresh')}
           </button>
           {version.url ? (
-            <a href={version.url} target="_blank" rel="noopener noreferrer" className={BUTTON_CLASSES}>
+            <a href={version.url} target="_blank" rel="noopener noreferrer" data-keep-dark className={BUTTON_CLASSES}>
               {i18n.t('toasts.what_changed')}
             </a>
           ) : null}
