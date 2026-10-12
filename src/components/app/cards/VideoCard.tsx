@@ -2673,7 +2673,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               style={{ touchAction: 'manipulation' }}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
-              {formatRate(playbackRate)}x
+              {splitControls ? playbackRate : formatRate(playbackRate)}x
             </button>
             <Tooltip>
               <TooltipTrigger asChild>
