@@ -29,8 +29,7 @@
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { KeyboardEvent, SyntheticEvent } from 'react';
-import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
-import { Loader2 } from "lucide-react";
+import { Loader2, PictureInPicture2 } from "lucide-react";
 import Play from "@/components/ui/cut-icons/play";
 import Pause from "@/components/ui/cut-icons/pause";
 
