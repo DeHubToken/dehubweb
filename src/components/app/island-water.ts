@@ -182,12 +182,19 @@ export function createIslandWater(): IslandWater | null {
     gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
     gl.uniform1i(gl.getUniformLocation(program, 'uSky'), 0);
+    // Power-of-two reflection levels let the GPU filter fine foliage at each
+    // ripple's footprint instead of turning the coastline into pixel specks.
+    const reflection = document.createElement('canvas');
+    reflection.width = 512;
+    reflection.height = 256;
+    const reflectionContext = reflection.getContext('2d');
+    if (!reflectionContext) throw new Error('Water reflection unavailable');
     const names = ['uResolution', 'uTime', 'uAspect', 'uLight', 'uLightStrength', 'uLightColor', 'uWaterTop', 'uWaterBottom', 'uSkyTop'] as const;
     const uniforms = Object.fromEntries(names.map(name => [name, gl.getUniformLocation(program!, name)]));
     const color = (name: string, rgb: Rgb) => gl.uniform3f(uniforms[name], rgb[0] / 255, rgb[1] / 255, rgb[2] / 255);
@@ -202,8 +209,10 @@ export function createIslandWater(): IslandWater | null {
       },
       setSky(sky) {
         if (disposed || gl.isContextLost()) return;
+        reflectionContext.drawImage(sky, 0, 0, 512, 256);
         gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sky);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, reflection);
+        gl.generateMipmap(gl.TEXTURE_2D);
         ready = true;
       },
       draw(frame) {
