@@ -661,6 +661,139 @@ export type Database = {
           },
         ]
       }
+      ai_agent_runner: {
+        Row: {
+          endpoint: string
+          id: boolean
+          secret: string
+        }
+        Insert: {
+          endpoint?: string
+          id?: boolean
+          secret?: string
+        }
+        Update: {
+          endpoint?: string
+          id?: boolean
+          secret?: string
+        }
+        Relationships: []
+      }
+      ai_agent_task_actions: {
+        Row: {
+          created_at: string
+          cycle: number
+          id: string
+          result: Json | null
+          status: string
+          step: number
+          target: string
+          task_id: string
+          tool: string
+        }
+        Insert: {
+          created_at?: string
+          cycle: number
+          id?: string
+          result?: Json | null
+          status: string
+          step: number
+          target: string
+          task_id: string
+          tool: string
+        }
+        Update: {
+          created_at?: string
+          cycle?: number
+          id?: string
+          result?: Json | null
+          status?: string
+          step?: number
+          target?: string
+          task_id?: string
+          tool?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_task_actions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agent_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_agent_tasks: {
+        Row: {
+          agent_id: string
+          completed_actions: number
+          created_at: string
+          cursor: Json
+          cycle: number
+          cycle_started_at: string
+          id: string
+          lease: string | null
+          lease_until: string | null
+          message: string | null
+          needs_review: boolean
+          next_run_at: string
+          owner_wallet: string
+          plan: Json
+          prompt: string
+          request_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          agent_id: string
+          completed_actions?: number
+          created_at?: string
+          cursor?: Json
+          cycle?: number
+          cycle_started_at?: string
+          id?: string
+          lease?: string | null
+          lease_until?: string | null
+          message?: string | null
+          needs_review?: boolean
+          next_run_at?: string
+          owner_wallet: string
+          plan: Json
+          prompt: string
+          request_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_id?: string
+          completed_actions?: number
+          created_at?: string
+          cursor?: Json
+          cycle?: number
+          cycle_started_at?: string
+          id?: string
+          lease?: string | null
+          lease_until?: string | null
+          message?: string | null
+          needs_review?: boolean
+          next_run_at?: string
+          owner_wallet?: string
+          plan?: Json
+          prompt?: string
+          request_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_agent_tasks_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "ai_agents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_agents: {
         Row: {
           api_key: string
@@ -8379,6 +8512,7 @@ export type Database = {
         Returns: Json
       }
       affiliate_wallet: { Args: never; Returns: string }
+      agent_owner_allowed: { Args: { wallet: string }; Returns: boolean }
       ai_free_claim: {
         Args: {
           p_job_id: string
@@ -8451,6 +8585,7 @@ export type Database = {
           wins: number
         }[]
       }
+      claim_agent_task: { Args: never; Returns: Json }
       claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
       claim_reaction_tip: { Args: never; Returns: boolean }
       claim_video_dub_tip: { Args: never; Returns: boolean }
@@ -9164,6 +9299,7 @@ export type Database = {
           space_id: string
         }[]
       }
+      tick_agent_tasks: { Args: never; Returns: undefined }
       touch_post_translation: {
         Args: { p_target_lang: string; p_text_hash: string }
         Returns: undefined
