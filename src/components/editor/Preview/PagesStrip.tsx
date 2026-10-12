@@ -107,6 +107,7 @@ export function PagesStrip({ sources }: { sources: RenderSources }) {
         <button type="button" className={btn + " disabled:opacity-30"} disabled={current.index === 0} aria-label={t("editor.captions.previousText")} onClick={() => pick(pages[current.index - 1])}><ChevronLeft className="h-4 w-4" /></button>
         <button type="button" className={btn + " disabled:opacity-30"} disabled={current.index === pages.length - 1} aria-label={t("editor.captions.nextText")} onClick={() => pick(pages[current.index + 1])}><ChevronRight className="h-4 w-4" /></button>
         <button type="button" className={btn} onClick={() => useEditorUiStore.getState().setPanel("text")}><Type className="h-3.5 w-3.5" />{t("editor.menu.editText")}</button>
+        <button type="button" className={btn} onClick={() => useEditorUiStore.getState().setTimelineOpen(true)}>{t("editor.canvas.showTimeline")}</button>
         <button type="button" className={btn + " ml-auto"} onClick={() => { useEditorStore.getState().selectClip(null); setCurrentTime(0); setIsPlaying(true); }}><Play className="h-3.5 w-3.5" />{t("creator.preview")} · {t("creator.navVideo")} <span className="tabular-nums text-white/50">{pages[pages.length - 1].end}s</span></button>
       </div>}
       <div className="flex min-w-0 items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
