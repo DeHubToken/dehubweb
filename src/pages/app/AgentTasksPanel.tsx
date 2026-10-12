@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { agentTaskRequest, type AgentTask, type AgentTaskAction } from '@/lib/agent-tasks';
 import { toast } from 'sonner';
@@ -51,7 +52,12 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   return <section data-kit-section className="space-y-4 border border-white/10 bg-white/5 p-4 text-white">
     <div><h2 className="font-semibold">{t('agents.tasks.title')}</h2><p className="text-sm text-white/60">{t('agents.tasks.description')}</p></div>
     {active.length ? <>
-      <label className="block text-sm">{t('agents.agentName')}<select data-theme-control-surface aria-label={t('agents.agentName')} className="mt-1 w-full rounded-lg border border-white/10 bg-transparent p-2" value={agentId} disabled={create.isPending} onChange={event => { setChosen(event.target.value); setRequestId(crypto.randomUUID()); }}>{active.map(agent => <option key={agent.id} value={agent.id}>@{agent.name}</option>)}</select></label>
+      <div className="space-y-1 text-sm"><label htmlFor="task-agent">{t('agents.agentName')}</label>
+        <Select value={agentId} disabled={create.isPending} onValueChange={value => { setChosen(value); setRequestId(crypto.randomUUID()); create.reset(); }}>
+          <SelectTrigger id="task-agent" data-theme-control-surface aria-label={t('agents.agentName')} className="bg-transparent text-white"><SelectValue /></SelectTrigger>
+          <SelectContent>{active.map(agent => <SelectItem key={agent.id} value={agent.id}>@{agent.name}</SelectItem>)}</SelectContent>
+        </Select>
+      </div>
       <Textarea value={prompt} disabled={create.isPending} maxLength={4000} onChange={event => { setPrompt(event.target.value); setRequestId(crypto.randomUUID()); create.reset(); }} aria-label={t('agents.tasks.instructions')} placeholder={t('agents.tasks.examples')} data-theme-control-surface className="min-h-28 bg-transparent text-white placeholder:text-white/50" />
       <Button disabled={!prompt.trim() || create.isPending} onClick={() => create.mutate()}>{create.isPending ? t('agents.tasks.preparing') : t('agents.tasks.run')}</Button>
       <p className="text-xs text-white/50">{t('agents.tasks.limits')}</p>
