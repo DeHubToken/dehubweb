@@ -10,6 +10,7 @@ import Radio from "@/components/ui/cut-icons/live";
 import Users from "@/components/ui/cut-icons/communities";
 import BookOpen from "@/components/ui/cut-icons/docs";
 import Briefcase from "@/components/ui/cut-icons/bounties";
+import Hammer from "@/components/ui/cut-icons/work";
 import Gamepad2 from "@/components/ui/cut-icons/arcade";
 import Lightbulb from "@/components/ui/cut-icons/feature-requests";
 import LayoutDashboard from "@/components/ui/cut-icons/command";
@@ -102,7 +103,7 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
   ['dehub-originals', Clapperboard],
   ['arcade.webp', Gamepad2],
   ['stores.webp', Store],
-  ['bounties.webp', Briefcase],
+  ['bounties.webp', Hammer],
   ['events.webp', CalendarDays],
   ['stats.webp', BarChart3],
   ['ads.webp', Megaphone],
@@ -244,7 +245,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
   profile: User,
   arcade: Gamepad2,
   stores: Store,
-  bounties: Briefcase,
+  bounties: Hammer,
   events: CalendarDays,
   stats: BarChart3,
   ads: Megaphone,
