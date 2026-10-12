@@ -39,3 +39,18 @@ test("rate limits, provider failure and insufficient evidence preserve empty or 
   const empty = await handleVisualHighlights(request(batch), { ...base, complete: async () => Response.json({ choices: [{ message: { content: '{"moments":[]}' } }] }) });
   assert.deepEqual(await empty.json(), { moments: [], contract: 1 });
 });
+
+test("contact sheets preserve every sample position with at most three provider images", async () => {
+  const windows=Array.from({length:10},(_,id)=>({id,start:id*6,end:(id+1)*6}));
+  const packed:VisualBatch={...batch,duration:60,windows,frames:windows.flatMap(window=>visualSampleTimes(window).map(at=>({windowId:window.id,at,dataUrl:""}))),contactSheets:[0,20,40].map(startIndex=>({startIndex,endIndex:startIndex+20,dataUrl:JPEG}))};
+  let calls=0;
+  const deps={headers:{},preflight:()=>null,limited:async()=>null,complete:async(body:Record<string,unknown>)=>{
+    calls++;const messages=body.messages as {content:{type:string;text?:string}[]}[];
+    assert.equal(messages[1].content.filter(part=>part.type==="image_url").length,3);
+    const labels=messages[1].content.filter(part=>part.text?.startsWith("Contact sheet:")).map(part=>JSON.parse(part.text!.split("Samples: ")[1]));
+    assert.deepEqual(labels.flat(),packed.frames.map(({windowId,at})=>({windowId,at})));
+    return Response.json({choices:[{message:{content:'{"moments":[]}'}}]});
+  }};
+  assert.equal((await handleVisualHighlights(request(packed),deps)).status,200);assert.equal(calls,1);
+  assert.equal((await handleVisualHighlights(request({...packed,contactSheets:packed.contactSheets!.slice(1)}),deps)).status,400);assert.equal(calls,1);
+});
