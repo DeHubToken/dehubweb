@@ -123,8 +123,8 @@ export function TokenTaxSplit({ split, onOpen }: { split: TaxSplit; onOpen: (sou
 
       <p className="text-[11px] text-zinc-500 leading-relaxed mt-3 pt-3 border-t border-zinc-800">
         {t(
-          'stats.taxSplit.footnote',
-          'Only retained operating funds count as revenue above. Buybacks and shared rewards are recorded separately. Every amount and original currency can be inspected in the ledger.',
+          'stats.taxSplit.grossFootnote',
+          'The revenue total above includes BNB shared with holders and stakers. These payments were distributed, not retained by DeHub. Buybacks remain separate. Every amount and original currency can be inspected in the ledger.',
         )}
       </p>
     </div>
