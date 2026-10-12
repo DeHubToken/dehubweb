@@ -73,8 +73,8 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
         )} />
         <div className="profile-collapse-content">
           <div className="profile-collapse-identity" data-visible={surfaceVisible} aria-hidden={!surfaceVisible}>
-            <p className="hidden md:block truncate text-base font-bold text-white">{name}</p>
-            <p className="hidden md:block truncate text-xs text-zinc-400">{handle}</p>
+            <p className="truncate text-base font-bold text-white">{name}</p>
+            <p className="truncate text-xs text-zinc-400">{handle}</p>
           </div>
           {surfaceVisible && followAction && <div className="shrink-0">{followAction}</div>}
         </div>
