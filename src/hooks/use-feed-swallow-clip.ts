@@ -38,7 +38,7 @@ export function useFeedSwallowClip(
   containerRef: RefObject<HTMLElement | null>,
   cutSelector: string,
   deps: unknown[] = [],
-  opts: { allThemes?: boolean; off?: boolean } = {},
+  opts: { allThemes?: boolean; off?: boolean; edge?: 'top' | 'bottom' } = {},
 ) {
   // False while this page sits in PersistentPageCache but is not the route on
   // screen. Those pages are never unmounted, so without this gate every page
@@ -93,7 +93,12 @@ export function useFeedSwallowClip(
           const pr = cut.getBoundingClientRect();
           const cr = el.getBoundingClientRect();
           const y = pr.top - cr.top;
-          if (y > 0.5) {
+          if (opts.edge === 'bottom' && !el.contains(cut)) {
+            // Profile bars keep their own material instead of showing posts
+            // through the surface or in its rounded side gutters.
+            const bottomY = Math.max(0, pr.bottom - cr.top);
+            if (bottomY > 0.5) clip = `inset(${bottomY.toFixed(2)}px 0 0 0)`;
+          } else if (y > 0.5) {
             // The cut follows the surface's silhouette: its top edge with the
             // surface's own corner rounding, then full width just below the
             // corner arcs — so nothing peeks out beside the rounded corners.
@@ -140,6 +145,11 @@ export function useFeedSwallowClip(
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     const pageObserver = pageScope ? new MutationObserver(invalidateGeometry) : null;
     pageObserver?.observe(pageScope, { attributes: true, attributeFilter: ['style'] });
+    // Loading posts and profile details can change geometry after scrolling
+    // has stopped. Recompute rather than retaining a cut from the skeleton.
+    const resizeObserver = new ResizeObserver(invalidateGeometry);
+    resizeObserver.observe(el);
+    if (el.parentElement) resizeObserver.observe(el.parentElement);
     schedule();
 
     return () => {
@@ -147,9 +157,10 @@ export function useFeedSwallowClip(
       window.removeEventListener('resize', invalidateGeometry);
       themeObserver.disconnect();
       pageObserver?.disconnect();
+      resizeObserver.disconnect();
       if (rafId != null) cancelAnimationFrame(rafId);
       el.style.clipPath = '';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef, cutSelector, opts.allThemes, opts.off, isActivePage, ...deps]);
+  }, [containerRef, cutSelector, opts.allThemes, opts.off, opts.edge, isActivePage, ...deps]);
 }

@@ -25,7 +25,7 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
     headerRef,
     '[data-profile-collapse][data-collapsed="true"]',
     [],
-    { allThemes: true, off: !surfaceVisible || tabsPinned },
+    { allThemes: true, edge: 'bottom', off: !surfaceVisible || tabsPinned },
   );
 
   useEffect(() => {
