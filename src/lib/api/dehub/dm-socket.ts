@@ -331,6 +331,7 @@ export function emitSendMessage(payload: SendMessagePayload): Promise<DmMessage>
     await waitForDmSocket();
     const socket = getDmSocket();
     return confirmDmSend<DmMessage>({
+      senderAddress: localStorage.getItem('dehub_wallet') || undefined,
       on: (event, handler) => {
         socket.on(event, handler);
         return () => { socket.off(event, handler); };
