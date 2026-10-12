@@ -39,6 +39,26 @@ export const taskPlanSchema = z.object({
 export type TaskPlan = z.infer<typeof taskPlanSchema>;
 export type TaskStep = z.infer<typeof taskStepSchema>;
 
+/** Exact commands need no model round trip; other wording uses the planner. */
+export function explicitTaskPlan(prompt: string): TaskPlan | null {
+  const text = prompt.trim();
+  const follow = text.match(/^follow\s+(@[a-z0-9_]{3,20}|0x[a-f0-9]{40})(?:\s+once)?[.!]?$/i);
+  if (follow) return taskPlanSchema.parse({ summary: `Follow ${follow[1]} once.`, interval_minutes: null,
+    steps: [{ tool: 'dehub_follow', arguments: { target_wallet: follow[1].replace(/^@/, ''), action: 'follow' }, audience: 'single', from: null, to: null, topic: null }] });
+  if (/^follow\s+(?:every user|everyone|all users)(?:\s+once)?[.!]?$/i.test(text)) return taskPlanSchema.parse({
+    summary: 'Follow every user in the public directory once.', interval_minutes: null,
+    steps: [{ tool: 'dehub_follow', arguments: { action: 'follow' }, audience: 'all_users', from: null, to: null, topic: null }],
+  });
+  const posts = text.match(/^(?:post|publish)\s+(\d+)\s+(?:times|posts?)\s+(?:per day|a day|daily)\s+about\s+([\s\S]+)$/i);
+  if (!posts) return null;
+  const count = Number(posts[1]);
+  if (count < 1 || count > 48) throw new Error('Choose between 1 and 48 posts per day (at most two per hour).');
+  const topic = posts[2].trim();
+  if (topic.length > 2000) throw new Error('Keep the posting topic within 2,000 characters.');
+  return taskPlanSchema.parse({ summary: `Post ${count} times per day about ${topic}`, interval_minutes: 1440 / count,
+    steps: [{ tool: 'dehub_post_create', arguments: {}, audience: 'single', from: null, to: null, topic }] });
+}
+
 export const PLAN_TOOL = {
   type: "function",
   function: {

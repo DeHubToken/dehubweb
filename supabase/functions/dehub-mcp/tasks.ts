@@ -1,6 +1,6 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
-import { agentOwnerAllowed, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema, type TaskPlan, type TaskStep } from "./task-plan.ts";
+import { agentOwnerAllowed, explicitTaskPlan, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
 export interface TaskTool {
@@ -33,6 +33,8 @@ async function completion(messages: unknown[], planning = false) {
 async function planPrompt(prompt: string, timezone: string, registry: Registry): Promise<TaskPlan> {
   const now = new Date();
   const local = new Intl.DateTimeFormat("en-GB", { timeZone: timezone, dateStyle: "full", timeStyle: "long" }).format(now);
+  let plan = explicitTaskPlan(prompt);
+  if (!plan) {
   const output = await completion([
     { role: "system", content: `Translate an owner's instruction into a precise DeHub task. UTC now: ${now.toISOString()}. Owner local time: ${local}; timezone ${timezone}.
 Act as the selected agent, never as the human owner. Only the five tools below are available. Unsupported requests, unspecified targets/time windows or ambiguous counts must return clarification, never a guessed action.
@@ -50,7 +52,8 @@ Keep the summary explicit about agent actions, time window and cadence.` },
     { role: "user", content: prompt },
   ], true);
   const raw = JSON.parse(output?.tool_calls?.find((call: any) => call.function?.name === "plan_agent_task")?.function.arguments ?? "{}");
-  const plan = parseTaskPlan(raw);
+  plan = parseTaskPlan(raw);
+  }
   for (const step of plan.steps) {
     if (step.to && Date.parse(step.to) > now.getTime() + 1000) throw new Error("The post time window must end at or before now.");
     const tool = registry.get(step.tool);
@@ -61,7 +64,8 @@ Keep the summary explicit about agent actions, time window and cadence.` },
       if (profile.isError || !data?.profile?.wallet) throw new Error('That user could not be found. Specify their exact username or wallet.');
       step.arguments.target_wallet = data.profile.wallet;
     }
-    tool.validate(stepArguments(step, step.audience === "single" ? null : (step.tool === "dehub_follow" ? "0x0000000000000000000000000000000000000001" : "1"), step.topic ? "Post content" : undefined));
+    try { tool.validate(stepArguments(step, step.audience === "single" ? null : (step.tool === "dehub_follow" ? "0x0000000000000000000000000000000000000001" : "1"), step.topic ? "Post content" : undefined)); }
+    catch { throw new Error('The task is missing details for an action. Specify the exact user, post or profile changes.'); }
   }
   return plan;
 }

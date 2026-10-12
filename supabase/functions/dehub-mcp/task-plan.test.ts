@@ -1,4 +1,4 @@
-import { agentOwnerAllowed, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema } from './task-plan.ts';
+import { agentOwnerAllowed, explicitTaskPlan, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema } from './task-plan.ts';
 const assert = (value: unknown, message = 'Assertion failed') => { if (!value) throw new Error(message); };
 const base = { summary: 'Like yesterday’s posts', interval_minutes: null, steps: [{ tool: 'dehub_vote', arguments: { vote_type: 'like' }, audience: 'posts', from: '2026-10-10T00:00:00Z', to: '2026-10-11T00:00:00Z', topic: null }] };
 
@@ -35,4 +35,19 @@ Deno.test('planning requires an explicit plan or clarification and rejects incom
   let clarification = '';
   try { parseTaskPlan({ plan: null, clarification: 'Which post should receive the comment?' }); } catch (error) { clarification = (error as Error).message; }
   assert(clarification === 'Which post should receive the comment?');
+});
+
+Deno.test('exact follow and posting commands preserve explicit intent without a model', () => {
+  const follow = explicitTaskPlan('Follow @maldoteth once.');
+  assert(follow?.steps[0].arguments.target_wallet === 'maldoteth' && follow.interval_minutes === null);
+  assert(explicitTaskPlan('Follow every user.')?.steps[0].audience === 'all_users');
+  const posts = explicitTaskPlan('Post 3 times per day about supporting independent musicians.');
+  assert(posts?.interval_minutes === 480 && posts.steps[0].topic === 'supporting independent musicians.');
+  assert(explicitTaskPlan('Publish 7 posts a day about music')?.interval_minutes === 1440 / 7);
+  for (const prompt of ['Follow @maldoteth except on Mondays', 'Follow everyone who posts today', 'Post about music', 'Post 3 times per day at 09:00 about music']) assert(explicitTaskPlan(prompt) === null, 'expanded ambiguous or constrained wording');
+  for (const count of [0, 49]) {
+    let rejected = false;
+    try { explicitTaskPlan(`Post ${count} times per day about music`); } catch { rejected = true; }
+    assert(rejected, 'accepted a schedule outside the rate budget');
+  }
 });
