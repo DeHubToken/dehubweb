@@ -3015,9 +3015,9 @@
         "fees": "Fees",
         "compute": "AI compute",
         "aiTools": "AI tools",
-        "infrastructure": "Infrastructure",
+        "infrastructure": "Droplet",
         "payments": "Payment fees",
-        "tax": "Token tax"
+        "tax": "Revenue"
       },
       "title": "Revenue & costs",
       "loss": "Net loss",
@@ -3040,7 +3040,13 @@
       "unavailable": "{{sources}} could not be reached, so they are left out of every total above rather than guessed.",
       "definitionsSubtitle": "Every line, where it is read from, and what is left out",
       "tooltipMonth": "{{month}} · {{days}} days",
-      "tooltipPerDay": "{{revenue}} / {{costs}} a day"
+      "tooltipPerDay": "{{revenue}} / {{costs}} a day",
+      "reinvestment": "Marketing & developer wages",
+      "reinvestmentGroup": "Reinvestment",
+      "reinvestmentNote": "DeHub reports that retained historical operating funds were fully reinvested. Marketing and developer wages are shown together, averaged across each month, after subtracting costs already recorded that month.",
+      "profitShared": "Net profit shared",
+      "profitSharedHint": "{{usd}} paid to holders and stakers · {{from}}–{{to}}",
+      "sourceUnavailable": "Unavailable"
     },
     "ledger": {
       "allTime": "all time",

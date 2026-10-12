@@ -3019,9 +3019,9 @@
         "fees": "Frais",
         "compute": "Calcul IA",
         "aiTools": "Outils IA",
-        "infrastructure": "Infrastructure",
+        "infrastructure": "Droplet",
         "payments": "Frais de paiement",
-        "tax": "Taxe du token"
+        "tax": "Revenus"
       },
       "title": "Revenus et coûts",
       "loss": "Perte nette",
@@ -3044,7 +3044,13 @@
       "unavailable": "{{sources}} n’ont pas pu être joints : ils sont exclus de tous les totaux ci-dessus plutôt qu’estimés.",
       "definitionsSubtitle": "Chaque ligne, d’où elle est lue et ce qui est exclu",
       "tooltipMonth": "{{month}} · {{days}} jours",
-      "tooltipPerDay": "{{revenue}} / {{costs}} par jour"
+      "tooltipPerDay": "{{revenue}} / {{costs}} par jour",
+      "reinvestment": "Marketing et salaires des développeurs",
+      "reinvestmentGroup": "Réinvestissement",
+      "reinvestmentNote": "DeHub indique que les fonds d’exploitation historiques conservés ont été entièrement réinvestis. Le marketing et les salaires des développeurs sont regroupés et répartis sur chaque mois, après déduction des coûts déjà comptabilisés ce mois-là.",
+      "profitShared": "Bénéfice net partagé",
+      "profitSharedHint": "{{usd}} versés aux détenteurs et aux stakers · {{from}}–{{to}}",
+      "sourceUnavailable": "Indisponible"
     },
     "ledger": {
       "allTime": "depuis le début",

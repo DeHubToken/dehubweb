@@ -3015,9 +3015,9 @@
         "fees": "Ücretler",
         "compute": "Yapay zekâ işlem gücü",
         "aiTools": "Yapay zekâ araçları",
-        "infrastructure": "Altyapı",
+        "infrastructure": "Droplet",
         "payments": "Ödeme ücretleri",
-        "tax": "Token vergisi"
+        "tax": "Gelir"
       },
       "title": "Gelir ve maliyetler",
       "loss": "Net zarar",
@@ -3040,7 +3040,13 @@
       "unavailable": "{{sources}} kaynağına ulaşılamadı, bu yüzden tahmin edilmek yerine yukarıdaki tüm toplamların dışında bırakıldı.",
       "definitionsSubtitle": "Her satır, nereden okunduğu ve neyin dışarıda bırakıldığı",
       "tooltipMonth": "{{month}} · {{days}} gün",
-      "tooltipPerDay": "günde {{revenue}} / {{costs}}"
+      "tooltipPerDay": "günde {{revenue}} / {{costs}}",
+      "reinvestment": "Pazarlama ve geliştirici maaşları",
+      "reinvestmentGroup": "Yeniden yatırım",
+      "reinvestmentNote": "DeHub, geçmişte elde tutulan işletme gelirlerinin tamamının yeniden yatırıldığını bildiriyor. Pazarlama ve geliştirici maaşları birlikte gösterilir ve o ay zaten kaydedilmiş maliyetler çıkarıldıktan sonra ayın günlerine dağıtılır.",
+      "profitShared": "Paylaşılan net kâr",
+      "profitSharedHint": "Sahiplere ve staking katılımcılarına ödenen {{usd}} · {{from}}–{{to}}",
+      "sourceUnavailable": "Kullanılamıyor"
     },
     "ledger": {
       "allTime": "tüm zamanlar",

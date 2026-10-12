@@ -10,9 +10,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://aigxuutjaqsywioxjefr.supabase.co';
-
-export const FINANCE_STATS_ENDPOINT = `${SUPABASE_URL}/functions/v1/finance-stats`;
+export const FINANCE_STATS_ENDPOINT = 'https://dehub.io/api/finance-stats';
 
 export type FinanceKind = 'revenue' | 'cost';
 
@@ -122,6 +120,10 @@ export interface LedgerItem {
   /** The transaction, or for a day's total of many events, the contract that logged them. */
   ref?: { chain: ProofChain; tx?: string; address?: string };
   note?: string;
+  /** Wallet movements stay visible but do not count as fresh revenue. */
+  counted?: boolean;
+  /** False when no historical USD quote is available. */
+  priced?: boolean;
 }
 
 export interface FinanceLedger {

@@ -3015,9 +3015,9 @@
         "fees": "Comisiones",
         "compute": "Cómputo de IA",
         "aiTools": "Herramientas de IA",
-        "infrastructure": "Infraestructura",
+        "infrastructure": "Droplet",
         "payments": "Comisiones de pago",
-        "tax": "Impuesto del token"
+        "tax": "Ingresos"
       },
       "title": "Ingresos y costes",
       "loss": "Pérdida neta",
@@ -3040,7 +3040,13 @@
       "unavailable": "No se pudo acceder a {{sources}}, así que se excluyen de todos los totales anteriores en lugar de estimarse.",
       "definitionsSubtitle": "Cada línea, de dónde se lee y qué se deja fuera",
       "tooltipMonth": "{{month}} · {{days}} días",
-      "tooltipPerDay": "{{revenue}} / {{costs}} al día"
+      "tooltipPerDay": "{{revenue}} / {{costs}} al día",
+      "reinvestment": "Marketing y salarios de desarrolladores",
+      "reinvestmentGroup": "Reinversión",
+      "reinvestmentNote": "DeHub declara que los fondos operativos históricos retenidos se reinvirtieron íntegramente. El marketing y los salarios de desarrolladores se muestran juntos, repartidos en cada mes, tras descontar los costes ya registrados ese mes.",
+      "profitShared": "Beneficio neto compartido",
+      "profitSharedHint": "{{usd}} pagados a titulares y participantes de staking · {{from}}–{{to}}",
+      "sourceUnavailable": "No disponible"
     },
     "ledger": {
       "allTime": "desde el inicio",
