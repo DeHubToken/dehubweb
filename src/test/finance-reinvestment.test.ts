@@ -1,6 +1,20 @@
 import { expect, it } from 'vitest';
 import { withReinvestedOperations, type FinanceAccountingDay } from '@/lib/finance-reinvestment';
 
+it('preserves the existing server allocation when month totals have floating-point residue', () => {
+  const stats: { days: FinanceAccountingDay[] } = { days: Array.from({ length: 31 }, (_, index) => ({
+    date: `2021-11-${String(index + 1).padStart(2, '0')}`,
+    revenue: { bsc_token_tax: index === 0 ? 100.1 : 0 },
+    costs: { operations_reinvestment: 100.1 / 31 },
+  })) };
+  expect(withReinvestedOperations(stats)).toEqual(stats);
+});
+
+it('adds a remaining allocation without replacing costs already allocated', () => {
+  const stats = { days: [{ date: '2021-11-01', revenue: { bsc_token_tax: 100 }, costs: { operations_reinvestment: 60 } }] };
+  expect(withReinvestedOperations(stats).days[0].costs.operations_reinvestment).toBe(100);
+});
+
 it('averages retained operating funds after recorded costs without counting rewards twice', () => {
   const stats: { days: FinanceAccountingDay[] } = { days: [
     { date: '2022-01-01', revenue: { bsc_token_tax: 100 }, costs: { digitalocean: 10 } },
