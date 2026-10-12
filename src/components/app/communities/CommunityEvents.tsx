@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEvents } from '@/hooks/use-events';

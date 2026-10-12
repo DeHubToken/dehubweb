@@ -9,7 +9,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Play, Pause, Check, Music, X, Loader2 } from 'lucide-react';
+import { Check, Music, Loader2 } from "lucide-react";
+import { Search, Play, Pause, X } from "@/components/ui/cut-icons";
+
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { searchNFTs, getMediaUrl, DEHUB_CDN_BASE } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';

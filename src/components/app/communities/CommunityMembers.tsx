@@ -9,7 +9,9 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
  */
 
 import { useMemo, useState } from 'react';
-import { Crown, Shield, User, Settings2, VolumeX } from 'lucide-react';
+import { Crown, Shield, VolumeX } from "lucide-react";
+import { User, Settings2 } from "@/components/ui/cut-icons";
+
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { Community, CommunityMember } from '@/hooks/use-communities';

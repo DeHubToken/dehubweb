@@ -18,7 +18,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useRef, type ReactNode } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';

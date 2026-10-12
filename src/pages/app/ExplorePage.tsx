@@ -18,7 +18,9 @@ import search3dIcon from '@/assets/icons/search-3d-icon.webp';
 import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { Search, SlidersHorizontal, X, Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2 } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "@/components/ui/cut-icons";
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';

@@ -3,7 +3,9 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { useDraft } from '@/hooks/use-draft';
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Send, Loader2, Mic, SmilePlus, Reply, CornerDownRight, Pencil, Trash2, X } from 'lucide-react';
+import { Loader2, SmilePlus, Reply, CornerDownRight, Pencil, Trash2 } from "lucide-react";
+import { Send, Mic, X } from "@/components/ui/cut-icons";
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';

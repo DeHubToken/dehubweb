@@ -13,7 +13,9 @@ import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } fr
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp, Share2 } from 'lucide-react';
+import { Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp } from "lucide-react";
+import { Search, Share2 } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import trophyIcon from '@/assets/trophy-icon.png';
 import medal1 from '@/assets/medal-1.png';

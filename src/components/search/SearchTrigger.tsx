@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { useDocsSearch } from '@/hooks/useDocsSearch';
 import { useLanguage } from '@/contexts/LanguageContext';

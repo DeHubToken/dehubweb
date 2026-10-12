@@ -1,7 +1,8 @@
 import { lazy, Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Plus } from 'lucide-react';
+import { Plus } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useSubscriptionCredits } from '@/hooks/use-subscription-credits';
 import dehubCoin from '@/assets/dehub-coin.png';

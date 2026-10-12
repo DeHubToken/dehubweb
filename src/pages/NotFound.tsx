@@ -8,7 +8,8 @@ import { WarningGraphic } from "@/components/ui/warning-graphic";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { SEOHead } from "@/components/SEOHead";
-import { Home } from "lucide-react";
+import { Home } from "@/components/ui/cut-icons";
+
 
 const NotFound = () => {
   const { t } = useTranslation();

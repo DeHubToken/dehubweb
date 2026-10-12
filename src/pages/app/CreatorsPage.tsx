@@ -10,7 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { ArrowLeft, Send, Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { ArrowLeft, Send } from "@/components/ui/cut-icons";
+
 
 export default function CreatorsPage() {
   const { t: _copy } = _useCopy();

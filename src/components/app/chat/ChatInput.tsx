@@ -3,7 +3,9 @@ import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X, Gem, Reply, Wand2, MessageCircleQuestion, Paperclip, FileText } from 'lucide-react';
+import { Image, Sparkles, Loader2, Reply, Wand2, MessageCircleQuestion, Paperclip, FileText } from "lucide-react";
+import { Send, X, Gem } from "@/components/ui/cut-icons";
+
 import { EmojiGifPicker } from './EmojiGifPicker';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 

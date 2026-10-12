@@ -1,6 +1,8 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, User, Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, User } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';

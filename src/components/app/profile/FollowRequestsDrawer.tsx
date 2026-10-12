@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Check, X, Loader2, UserPlus, Clock, CheckCheck, XCircle } from 'lucide-react';
+import { Check, Loader2, UserPlus, Clock, CheckCheck, XCircle } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

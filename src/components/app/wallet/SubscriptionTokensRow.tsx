@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDownToLine, ChartNoAxesColumn, Lock, Send } from 'lucide-react';
+import { ArrowDownToLine, ChartNoAxesColumn, Lock } from "lucide-react";
+import { Send } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

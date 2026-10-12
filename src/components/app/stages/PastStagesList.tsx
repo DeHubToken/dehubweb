@@ -18,16 +18,9 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Play,
-  Pause,
-  PictureInPicture2,
-  Users,
-  Clock,
-  FileText,
-  Trash2,
-  MessageSquare,
-} from 'lucide-react';
+import { PictureInPicture2, Users, Clock, FileText, Trash2 } from "lucide-react";
+import { Play, Pause, MessageSquare } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { deleteStageRecordings } from '@/lib/stage-recording-delete';

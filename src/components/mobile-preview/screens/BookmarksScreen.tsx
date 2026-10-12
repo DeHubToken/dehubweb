@@ -5,7 +5,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Bookmark, MoreHorizontal, Heart } from 'lucide-react';
+import { MoreHorizontal, Heart } from "lucide-react";
+import { Bookmark } from "@/components/ui/cut-icons";
+
 
 const mockBookmarks = (t: TFunction) => [
   { id: '1', user: 'defi_whale', content: t('mobilePreview.bookmarks.stakingGuide'), likes: 342, time: '2d' },

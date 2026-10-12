@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, Check, Download, Link2, Send, Facebook } from "lucide-react";
+import { Check, Link2, Facebook } from "lucide-react";
+import { ArrowLeft, Download, Send } from "@/components/ui/cut-icons";
+
 import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { SEOHead } from "@/components/SEOHead";
 import dehubWordmark from "@/assets/dehub-wordmark-white.png";

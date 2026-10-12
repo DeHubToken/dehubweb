@@ -11,7 +11,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { MessageSquare, Send, Loader2, Eye, Mic, Languages, RotateCcw, Pin, Pencil, Trash2, X } from 'lucide-react';
+import { Loader2, Eye, Languages, RotateCcw, Pin, Pencil, Trash2 } from "lucide-react";
+import { MessageSquare, Send, Mic, X } from "@/components/ui/cut-icons";
+
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';

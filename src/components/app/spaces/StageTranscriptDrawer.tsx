@@ -36,10 +36,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  FileText, Loader2, RefreshCw, Sparkles, X, Bot, User, Search, Globe2, MoreHorizontal,
-  Copy, Download, Share2, Pencil, Lock, Users as UsersIcon, Eye, Play, Pause, Quote,
-} from 'lucide-react';
+import { FileText, Loader2, RefreshCw, Sparkles, Bot, Globe2, MoreHorizontal, Copy, Pencil, Lock, Users as UsersIcon, Eye, Quote } from "lucide-react";
+import { X, User, Search, Download, Share2, Play, Pause } from "@/components/ui/cut-icons";
+
 import { supabase } from '@/integrations/supabase/client';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { cn } from '@/lib/utils';

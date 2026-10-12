@@ -8,7 +8,9 @@
  * is funded, so the viewer never has to find their way back to the post.
  */
 
-import { Ticket, Loader2, X } from 'lucide-react';
+import { Ticket, Loader2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';

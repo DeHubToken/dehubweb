@@ -12,11 +12,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  Music, Volume2, VolumeX, X, Upload, Trash2, Loader2,
-  Megaphone, PartyPopper, Drum, Bug, Laugh, Sparkles, User, Ghost, Wand2, Hand,
-  ThumbsUp, ThumbsDown, AlertTriangle, Timer, FileAudio,
-} from 'lucide-react';
+import { Music, Volume2, VolumeX, Upload, Trash2, Loader2, Megaphone, PartyPopper, Drum, Bug, Laugh, Sparkles, Ghost, Wand2, Hand, ThumbsDown, AlertTriangle, Timer, FileAudio } from "lucide-react";
+import { X, User, ThumbsUp } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { Slider } from '@/components/ui/slider';

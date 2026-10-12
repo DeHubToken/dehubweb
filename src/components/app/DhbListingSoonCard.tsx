@@ -15,7 +15,9 @@ import { tokenLabel } from '@/lib/token-label';
 
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bell, Check, Loader2 } from 'lucide-react';
+import { Check, Loader2 } from "lucide-react";
+import { Bell } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import dhbCoinIcon from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';

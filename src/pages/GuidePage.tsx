@@ -2,12 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ChevronRight, Lightbulb, Menu, X,
-  Home, PenSquare, ThumbsUp, Search, User, MessageCircle,
-  Bot, Bell, Wallet, Landmark, Trophy, LayoutDashboard,
-  Vote, Bookmark, Settings, ArrowLeftRight, Music, Tv,
-  BookOpen, ShoppingCart, LogIn
-} from "lucide-react";
+import { Lightbulb, PenSquare, Bot, Wallet, Landmark, Trophy, LayoutDashboard, Vote, ArrowLeftRight, Music, Tv, BookOpen, ShoppingCart, LogIn } from "lucide-react";
+import { ArrowLeft, ChevronRight, Menu, X, Home, ThumbsUp, Search, User, MessageCircle, Bell, Bookmark, Settings } from "@/components/ui/cut-icons";
+
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";

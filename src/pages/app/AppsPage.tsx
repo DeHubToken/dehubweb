@@ -10,7 +10,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { BadgeCheck, Blocks, Code2, Search } from 'lucide-react';
+import { BadgeCheck, Blocks, Code2 } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 import { SEOHead } from '@/components/SEOHead';
 import { IslandAction, KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
 import { fetchAddedApps, fetchLatestScores, fetchListedApps, removeApp, type AddedApp, type MiniAppListing, type AppScore } from '@/lib/miniapp/registry';

@@ -21,13 +21,9 @@
  * @module lib/reactions
  */
 
-import {
-  ThumbsUp,
-  ThumbsDown,
-  Heart,
-  Flame,
-  type LucideIcon,
-} from 'lucide-react';
+import { ThumbsDown, Heart, Flame, type LucideIcon } from "lucide-react";
+import { ThumbsUp } from "@/components/ui/cut-icons";
+
 
 /** Every reaction, in picker order — also the deterministic tiebreak order. */
 export const POST_REACTIONS = [

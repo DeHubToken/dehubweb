@@ -1,5 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { X, Plus, Check } from 'lucide-react';
+import { Check } from "lucide-react";
+import { X, Plus } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import type { PollData, PollOption } from '../types';
 

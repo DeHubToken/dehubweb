@@ -23,7 +23,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
-import { Mic, Square, Upload, Loader2, ChevronLeft, Check, Trash2 } from 'lucide-react';
+import { Square, Upload, Loader2, ChevronLeft, Check, Trash2 } from "lucide-react";
+import { Mic } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

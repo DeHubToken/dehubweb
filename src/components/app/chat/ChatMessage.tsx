@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useState, useCallback, memo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, Pencil, X } from 'lucide-react';
+import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, Pencil } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';

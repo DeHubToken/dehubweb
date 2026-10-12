@@ -20,7 +20,8 @@
  * @module components/app/profile/ProfileContentToolbar
  */
 
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Search, SlidersHorizontal, X } from "@/components/ui/cut-icons";
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';

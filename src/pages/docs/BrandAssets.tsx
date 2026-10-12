@@ -10,7 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Download, Image as ImageIcon, FileText, Package, Palette, ExternalLink } from 'lucide-react';
+import { Image as ImageIcon, FileText, Package, Palette, ExternalLink } from "lucide-react";
+import { Download } from "@/components/ui/cut-icons";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 const designSystemZip = { url: '/brand/dehub-design-system.zip' };
 const figmaDuplicateInstruction = { url: '/docs/figma-duplicate-instruction.png' };

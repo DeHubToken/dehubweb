@@ -25,19 +25,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  Check,
-  MessageCircle,
-  PenLine,
-  Sparkles,
-  ThumbsDown,
-  ThumbsUp,
-  Trophy,
-  UserRound,
-  UsersRound,
-  Wallet,
-  X,
-} from 'lucide-react';
+import { Check, PenLine, Sparkles, ThumbsDown, Trophy, UserRound, UsersRound, Wallet } from "lucide-react";
+import { MessageCircle, ThumbsUp, X } from "@/components/ui/cut-icons";
+
 
 import { Button } from '@/components/ui/button';
 import { useOnboarding } from '@/contexts/OnboardingChecklistContext';

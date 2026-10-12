@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare } from "@/components/ui/cut-icons";
+
 import { PageBody, PageIsland } from '@/components/app/page-kit/PageKit';
 import { FeedbackSection } from '@/components/app/stats/FeedbackSection';
 

@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Play, Pause, Scissors, Check, Music } from 'lucide-react';
+import { Scissors, Check, Music } from "lucide-react";
+import { X, Play, Pause } from "@/components/ui/cut-icons";
+
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { generateWaveformFromBlob, sliceAudioBlob, formatTime } from '@/lib/audio-waveform';
 import { toast } from 'sonner';

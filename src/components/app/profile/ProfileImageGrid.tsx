@@ -7,7 +7,9 @@
  */
 
 import { useState, memo } from 'react';
-import { X, ThumbsUp, MessageSquare, Ticket } from 'lucide-react';
+import { Ticket } from "lucide-react";
+import { X, ThumbsUp, MessageSquare } from "@/components/ui/cut-icons";
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { ImagePost } from '@/types/feed.types';

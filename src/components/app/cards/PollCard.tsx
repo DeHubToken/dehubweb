@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { pollHasEnded, pollVotePercent, pollOptionWins } from '@/lib/poll-results';
 import { useEffect, useRef, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { Check, X } from 'lucide-react';
+import { Check } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { usePoll, useVoteOnPoll, useRemovePollVote, useClosePoll } from '@/hooks/use-polls';
 import { useAuth } from '@/contexts/AuthContext';

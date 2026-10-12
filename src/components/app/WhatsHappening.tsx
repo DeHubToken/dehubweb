@@ -12,7 +12,9 @@ const GoLiveModal = React.lazy(() =>
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search, Globe, ChevronDown, Hash, Flame, Radio, Mic, Video, Users } from 'lucide-react';
+import { Globe, ChevronDown, Hash, Flame, Radio, Video, Users } from "lucide-react";
+import { Search, Mic } from "@/components/ui/cut-icons";
+
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';

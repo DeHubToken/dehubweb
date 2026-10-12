@@ -4,8 +4,11 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Repeat2 } from 'lucide-react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, MessageSquare, Share2, Bookmark, Info, Image, Pencil, Trash2, Pin, ListVideo, ChevronLeft } from 'lucide-react';
+import { Repeat2 } from "@/components/ui/cut-icons";
+
+import { Loader2, Heart, ArrowUpRight, Info, Image, Pencil, Trash2, Pin, ListVideo, ChevronLeft } from "lucide-react";
+import { Plus, MessageCircle, ThumbsUp, MessageSquare, Share2, Bookmark } from "@/components/ui/cut-icons";
+
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';

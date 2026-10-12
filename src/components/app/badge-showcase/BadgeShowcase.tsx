@@ -12,20 +12,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  Check,
-  Eye,
-  HardDrive,
-  Images,
-  Landmark,
-  Lock,
-  Mic,
-  Newspaper,
-  Percent,
-  Share2,
-  Upload,
-  type LucideIcon,
-} from 'lucide-react';
+import { Check, Eye, HardDrive, Images, Landmark, Lock, Newspaper, Percent, Upload, type LucideIcon } from "lucide-react";
+import { Mic, Share2 } from "@/components/ui/cut-icons";
+
 import { AuthContext } from '@/contexts/AuthContext';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useBadgeLadderPrice, useBadgeScale } from '@/hooks/use-badge-scale';

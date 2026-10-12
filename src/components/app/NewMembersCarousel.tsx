@@ -19,7 +19,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useCallback, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Loader2, Star } from 'lucide-react';
+import { Loader2, Star } from "lucide-react";
+import { ChevronRight } from "@/components/ui/cut-icons";
+
 import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

@@ -3,7 +3,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { ThumbsUp, ThumbsDown, MessageSquare, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { ThumbsDown, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { ThumbsUp, MessageSquare } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 
 const MOCK_PROPOSALS = [

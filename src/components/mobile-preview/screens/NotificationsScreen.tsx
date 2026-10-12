@@ -5,7 +5,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Heart, MessageSquare, Repeat2, UserPlus, Coins, AtSign } from 'lucide-react';
+import { Heart, UserPlus, Coins, AtSign } from "lucide-react";
+import { MessageSquare, Repeat2 } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 
 const mockNotifications = (t: TFunction) => [

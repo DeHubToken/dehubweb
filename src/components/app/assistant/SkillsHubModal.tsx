@@ -16,7 +16,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { Search, Plus, Wand2, Loader2, ArrowLeft } from 'lucide-react';
+import { Wand2, Loader2 } from "lucide-react";
+import { Search, Plus, ArrowLeft } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';

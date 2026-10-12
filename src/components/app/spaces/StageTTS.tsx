@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Volume2, Send, Loader2, Search, Play, Square, Mic, MicOff } from 'lucide-react';
+import { Volume2, Loader2, Square, MicOff } from "lucide-react";
+import { Send, Search, Play, Mic } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';

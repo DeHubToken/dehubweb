@@ -18,7 +18,9 @@ import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, BadgeCheck, Loader2, ShieldAlert, Wrench, X } from 'lucide-react';
+import { AlertTriangle, BadgeCheck, Loader2, ShieldAlert, Wrench } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';

@@ -1,6 +1,8 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
-import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { SEOHead } from "@/components/SEOHead";

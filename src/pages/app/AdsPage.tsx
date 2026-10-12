@@ -9,7 +9,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LayoutDashboard, Rocket, Wallet, Plus } from 'lucide-react';
+import { LayoutDashboard, Rocket, Wallet } from "lucide-react";
+import { Plus } from "@/components/ui/cut-icons";
+
 import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/contexts/AuthContext';
 import { AdsOverviewTab } from '@/components/app/ads/AdsOverviewTab';

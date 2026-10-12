@@ -20,7 +20,8 @@ import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useSearchParams, useNavigationType, useLocation, useNavigate, useMatch } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Settings2, ArrowLeft } from 'lucide-react';
+import { Settings2, ArrowLeft } from "@/components/ui/cut-icons";
+
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useAppTheme } from '@/contexts/ThemeContext';

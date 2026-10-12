@@ -29,7 +29,9 @@
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { KeyboardEvent, SyntheticEvent } from 'react';
-import { Play, Pause, Loader2, PictureInPicture2 } from 'lucide-react';
+import { Loader2, PictureInPicture2 } from "lucide-react";
+import { Play, Pause } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';

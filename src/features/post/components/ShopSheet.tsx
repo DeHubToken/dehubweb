@@ -29,7 +29,9 @@ import { useDraftState } from '@/hooks/use-draft-state';
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus, Trash2, Check, Info, ImageIcon, Store, Loader2 } from 'lucide-react';
+import { Trash2, Check, Info, ImageIcon, Store, Loader2 } from "lucide-react";
+import { Plus } from "@/components/ui/cut-icons";
+
 import {
   Drawer,
   DrawerContent,

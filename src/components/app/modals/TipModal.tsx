@@ -26,7 +26,8 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
-import { Gem } from 'lucide-react';
+import { Gem } from "@/components/ui/cut-icons";
+
 import { ButtonLoader } from '@/components/app/DeHubLoader';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';

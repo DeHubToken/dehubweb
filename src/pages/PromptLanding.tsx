@@ -2,7 +2,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowUp, Mic, MicOff } from 'lucide-react';
+import { ArrowUp, MicOff } from "lucide-react";
+import { ArrowLeft, Mic } from "@/components/ui/cut-icons";
+
 import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';

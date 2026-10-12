@@ -10,7 +10,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useAccount, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
-import { Mail, Phone, Wallet, Loader2, Fingerprint, ArrowDownToLine, KeyRound, X } from 'lucide-react';
+import { Mail, Phone, Wallet, Loader2, Fingerprint, ArrowDownToLine, KeyRound } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

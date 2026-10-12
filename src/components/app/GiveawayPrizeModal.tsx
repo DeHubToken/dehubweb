@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Trophy, ArrowRight } from 'lucide-react';
+import { Trophy, ArrowRight } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { useAuth } from '@/contexts/AuthContext';
 import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
 import dehubCoin from '@/assets/dehub-coin.png';

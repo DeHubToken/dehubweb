@@ -28,7 +28,9 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CalendarClock, Check, Loader2, ShieldCheck, Share2, Upload, Users, Wallet, X } from 'lucide-react';
+import { CalendarClock, Check, Loader2, ShieldCheck, Upload, Users, Wallet } from "lucide-react";
+import { Share2, X } from "@/components/ui/cut-icons";
+
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';
 import { useAuth } from '@/contexts/AuthContext';
