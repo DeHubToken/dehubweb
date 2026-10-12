@@ -22,7 +22,9 @@ import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { RefreshCw, Radio, ChevronRight, ArrowUp } from 'lucide-react';
+import { RefreshCw, Radio, ArrowUp } from "lucide-react";
+import { ChevronRight } from "@/components/ui/cut-icons";
+
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';

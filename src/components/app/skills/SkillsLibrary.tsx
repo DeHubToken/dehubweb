@@ -2,7 +2,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, Sparkles } from 'lucide-react';
+import { Sparkles } from "lucide-react";
+import { Search, Plus } from "@/components/ui/cut-icons";
+
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';

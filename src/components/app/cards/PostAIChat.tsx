@@ -9,7 +9,9 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
-import { X, Send, Sparkles, Loader2, Paperclip, Mic, Square, VolumeX, Minus } from 'lucide-react';
+import { Sparkles, Loader2, Paperclip, Square, VolumeX, Minus } from "lucide-react";
+import { X, Send, Mic } from "@/components/ui/cut-icons";
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

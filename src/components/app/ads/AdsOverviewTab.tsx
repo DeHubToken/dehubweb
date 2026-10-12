@@ -10,7 +10,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
-import { Wallet, Eye, MousePointerClick, DollarSign, Rocket, Plus, TrendingUp } from 'lucide-react';
+import { Wallet, Eye, MousePointerClick, DollarSign, Rocket, TrendingUp } from "lucide-react";
+import { Plus } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { AdTopUpModal } from '@/components/app/ads/AdTopUpModal';
 import { useAdAccount, useAdCampaigns, useAllCampaignStats } from '@/hooks/use-ads';

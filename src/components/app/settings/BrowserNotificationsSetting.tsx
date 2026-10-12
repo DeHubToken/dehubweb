@@ -24,7 +24,9 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bell, BellOff, BellRing } from 'lucide-react';
+import { BellOff, BellRing } from "lucide-react";
+import { Bell } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 
 import { Switch } from '@/components/ui/switch';

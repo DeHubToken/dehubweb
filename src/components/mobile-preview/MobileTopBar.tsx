@@ -1,4 +1,5 @@
-import { Menu, Bell } from 'lucide-react';
+import { Menu, Bell } from "@/components/ui/cut-icons";
+
 import { MockAvatar } from './MockAvatar';
 
 interface MobileTopBarProps {

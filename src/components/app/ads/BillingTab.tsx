@@ -11,7 +11,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { Wallet, Plus, ArrowDownToLine, Loader2, ExternalLink } from 'lucide-react';
+import { Wallet, ArrowDownToLine, Loader2, ExternalLink } from "lucide-react";
+import { Plus } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAdAccount, useAdPayments, useTopUpCredit } from '@/hooks/use-ads';

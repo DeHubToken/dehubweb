@@ -13,65 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { 
-  Settings as SettingsIcon, 
-  User, 
-  Bell, 
-  Shield, 
-  Palette, 
-  Eye,
-  EyeOff,
-  Camera,
-  Link2,
-  ThumbsUp,
-  MessageSquare,
-  Users,
-  Moon,
-  Clock,
-  Globe,
-  Lock,
-  MessageCircle,
-  Filter,
-  Repeat2,
-  Sun,
-  LayoutGrid,
-  Play,
-  VolumeX,
-  Sparkles,
-  Wand2,
-  Save,
-  FileText,
-  MapPin,
-  Wallet,
-  ExternalLink,
-  Gem,
-  AtSign,
-  Handshake,
-  PieChart,
-  UserPlus,
-  X,
-  Check,
-  Download,
-  Copy,
-  Loader2,
-  LogOut,
-  Coins,
-  Gift,
-  Lamp,
-  Bug,
-  Ban,
-  Bot,
-  Film,
-  Hand,
-  Paintbrush,
-  Gauge,
-  Megaphone,
-  FastForward,
-  Radio,
-  LifeBuoy,
-  Trash2,
-  ChevronDown,
-} from 'lucide-react';
+import { Shield, Palette, Eye, EyeOff, Camera, Link2, Users, Moon, Clock, Globe, Lock, Filter, Sun, LayoutGrid, VolumeX, Sparkles, Wand2, Save, FileText, MapPin, Wallet, ExternalLink, AtSign, Handshake, PieChart, UserPlus, Check, Copy, Loader2, LogOut, Coins, Gift, Lamp, Bug, Ban, Bot, Film, Hand, Paintbrush, Gauge, Megaphone, FastForward, Radio, LifeBuoy, Trash2, ChevronDown } from "lucide-react";
+import { Settings as SettingsIcon, User, Bell, ThumbsUp, MessageSquare, MessageCircle, Repeat2, Play, Gem, X, Download } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -96,7 +40,8 @@ import {
 } from '@/components/app/settings/SettingsRow';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { Search, Share2 } from 'lucide-react';
+import { Search, Share2 } from "@/components/ui/cut-icons";
+
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';

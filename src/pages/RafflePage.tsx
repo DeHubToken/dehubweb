@@ -16,21 +16,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import {
-  ArrowDown,
-  ArrowRight,
-  Boxes,
-  Coins,
-  Dice5,
-  Gamepad2,
-  Mic,
-  PenLine,
-  ScrollText,
-  ShieldCheck,
-  Ticket,
-  Timer,
-  Trophy,
-} from 'lucide-react';
+import { ArrowDown, ArrowRight, Boxes, Coins, Dice5, Gamepad2, PenLine, ScrollText, ShieldCheck, Ticket, Timer, Trophy } from "lucide-react";
+import { Mic } from "@/components/ui/cut-icons";
+
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';

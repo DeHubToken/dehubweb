@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Mail, MessageCircle, Send, Users } from 'lucide-react';
+import { Mail, Users } from "lucide-react";
+import { MessageCircle, Send } from "@/components/ui/cut-icons";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Contact = () => {

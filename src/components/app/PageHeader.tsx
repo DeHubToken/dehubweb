@@ -1,5 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';

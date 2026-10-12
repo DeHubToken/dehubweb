@@ -4,7 +4,8 @@
  * use, so all three always agree.
  */
 import { useState } from 'react';
-import { Bookmark } from 'lucide-react';
+import { Bookmark } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';

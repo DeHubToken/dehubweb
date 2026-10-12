@@ -17,7 +17,9 @@ import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 const ShortsPhotoPager = lazy(() => import('./ShortsPhotoPager').then(m => ({ default: m.ShortsPhotoPager })));
 import { createPortal } from 'react-dom';
-import { Play, Pause, Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { Play, Pause } from "@/components/ui/cut-icons";
+
 import { motion } from 'framer-motion';
 import type { ShortVideo } from '@/types/feed.types';
 import { cn } from '@/lib/utils';

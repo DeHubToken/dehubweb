@@ -8,7 +8,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Share2 } from 'lucide-react';
+import { MapPin } from "lucide-react";
+import { Share2 } from "@/components/ui/cut-icons";
+
 import { useStoreById, useStoreListings, useStoreListing } from '@/hooks/use-stores';
 import { StoreListingCard } from '@/components/app/stores/StoreListingCard';
 import { ListingDetailDrawer } from '@/components/app/stores/ListingDetailDrawer';

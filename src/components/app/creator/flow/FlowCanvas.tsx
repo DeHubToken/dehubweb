@@ -27,7 +27,9 @@ import {
   type Viewport,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Clapperboard, Loader2, MessageSquare, Play, Sparkles } from 'lucide-react';
+import { Clapperboard, Loader2, Sparkles } from "lucide-react";
+import { MessageSquare, Play } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { edgeStyle } from '@/lib/creator/flow/edgeStyles';

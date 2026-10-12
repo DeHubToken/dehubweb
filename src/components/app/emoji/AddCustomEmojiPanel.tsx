@@ -18,7 +18,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { ArrowLeft, Loader2, Upload } from 'lucide-react';
+import { Loader2, Upload } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import {

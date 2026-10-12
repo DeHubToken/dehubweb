@@ -1,7 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, X, Image } from 'lucide-react';
+import { Users, Image } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

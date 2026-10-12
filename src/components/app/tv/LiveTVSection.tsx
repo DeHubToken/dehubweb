@@ -9,7 +9,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search } from "@/components/ui/cut-icons";
+
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useQuery } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';

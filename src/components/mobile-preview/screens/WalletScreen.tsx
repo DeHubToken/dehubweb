@@ -6,7 +6,9 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Send, ArrowUpRight, ArrowDownLeft, Copy, QrCode } from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft, Copy, QrCode } from "lucide-react";
+import { Send } from "@/components/ui/cut-icons";
+
 
 const mockTransactions = (t: TFunction) => [
   { id: '1', type: 'received', user: 'bob_dev', amount: t('mobilePreview.tokenAmount', { amount: '+50' }), time: '2h ago' },

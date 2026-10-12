@@ -15,7 +15,9 @@
 import { useTranslation } from 'react-i18next';
 import { memo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ImageIcon, ShoppingBag, X, ChevronRight } from 'lucide-react';
+import { ImageIcon, ShoppingBag } from "lucide-react";
+import { X, ChevronRight } from "@/components/ui/cut-icons";
+
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import { useStreamProducts, effectivePrice, type StreamProduct } from '@/hooks/use-stream-shopping';
 import { StreamCheckoutDrawer } from './StreamCheckoutDrawer';

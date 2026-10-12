@@ -17,7 +17,8 @@
  * and the row simply does not appear.
  */
 
-import { Bell } from 'lucide-react';
+import { Bell } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { useStageReminderFaces } from '@/hooks/use-stage-reminders';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';

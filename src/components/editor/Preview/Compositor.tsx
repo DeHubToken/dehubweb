@@ -18,10 +18,9 @@ import { prepareGifImage, releaseGifImage } from "@/lib/editor/gifImage";
  */
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Play, Pause, Repeat, Type, ChevronLeft, ChevronRight, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown,
-  Copy, Trash2, Pencil, Scissors, FlipHorizontal2, FlipVertical2, Maximize, Minimize, Crosshair, PanelBottomClose, PanelBottomOpen,
-} from "lucide-react";
+import { Type, ChevronLeft, RotateCcw, RotateCw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, Trash2, Pencil, Scissors, FlipHorizontal2, FlipVertical2, Maximize, Minimize, Crosshair, PanelBottomClose, PanelBottomOpen } from "lucide-react";
+import { Play, Pause, Repeat, ChevronRight } from "@/components/ui/cut-icons";
+
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {

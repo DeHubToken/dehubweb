@@ -15,7 +15,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2, ArrowDown, Pin, PinOff, MicOff, Ban } from 'lucide-react';
+import { Loader2, SmilePlus, Reply, CornerDownRight, LogIn, Pencil, Check, Trash2, ArrowDown, Pin, PinOff, MicOff, Ban } from "lucide-react";
+import { Send, X, MessageSquare, Search } from "@/components/ui/cut-icons";
+
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { voiceRecordingFile } from '@/lib/voice-recording';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';

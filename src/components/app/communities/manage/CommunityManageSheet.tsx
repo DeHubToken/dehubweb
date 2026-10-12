@@ -9,17 +9,9 @@
 
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Settings,
-  Shield,
-  Users,
-  SlidersHorizontal,
-  Link2,
-  ScrollText,
-  History,
-  AlertTriangle,
-  type LucideIcon,
-} from 'lucide-react';
+import { Shield, Users, Link2, ScrollText, History, AlertTriangle, type LucideIcon } from "lucide-react";
+import { Settings, SlidersHorizontal } from "@/components/ui/cut-icons";
+
 
 import {
   Dialog,

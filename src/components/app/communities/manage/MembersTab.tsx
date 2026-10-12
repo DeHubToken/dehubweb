@@ -9,7 +9,9 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, ChevronDown, Crown, Loader2, Search, Shield, Undo2, User, X } from 'lucide-react';
+import { Check, ChevronDown, Crown, Loader2, Shield, Undo2 } from "lucide-react";
+import { Search, User, X } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';

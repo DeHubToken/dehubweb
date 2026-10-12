@@ -14,7 +14,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Loader2, ImagePlus, X, Video } from 'lucide-react';
+import { Loader2, ImagePlus, Video } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { useCreateListing, prepareStoreImage, STORE_MEDIA_CACHE_CONTROL } from '@/hooks/use-stores';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';

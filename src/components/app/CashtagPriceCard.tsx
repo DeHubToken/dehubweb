@@ -11,7 +11,9 @@ const TokenPriceChart = lazy(() =>
   import('@/components/app/TokenPriceChart').then(m => ({ default: m.TokenPriceChart }))
 );
 const CHART_FALLBACK = <div className="w-full h-[180px] bg-zinc-900/50" />;
-import { TrendingUp, TrendingDown, ClipboardCopy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle, PictureInPicture2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, ClipboardCopy, Check, ChevronDown, ExternalLink, Globe, Twitter, PictureInPicture2 } from "lucide-react";
+import { MessageCircle } from "@/components/ui/cut-icons";
+
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';
 import { useChartPiP } from '@/contexts/ChartPiPContext';
 import { cn } from '@/lib/utils';

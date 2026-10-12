@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { SEOHead } from "@/components/SEOHead";
 import manualHtml from "@/content/godmode-manual.html?raw";
 

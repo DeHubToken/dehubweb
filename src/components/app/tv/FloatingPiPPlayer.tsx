@@ -6,7 +6,9 @@
  */
 
 import { useRef, useEffect, useState, useCallback, useId } from 'react';
-import { X, Volume2, VolumeX, GripHorizontal, Maximize2, Minimize2 } from 'lucide-react';
+import { Volume2, VolumeX, GripHorizontal, Maximize2, Minimize2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import Hls from 'hls.js';

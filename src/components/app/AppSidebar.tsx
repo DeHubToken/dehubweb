@@ -1,7 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { Suspense, useState, useEffect, useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { PenSquare, LogIn, LogOut, Search, X, CornerDownLeft } from 'lucide-react';
+import { PenSquare, LogIn, LogOut, CornerDownLeft } from "lucide-react";
+import { Search, X } from "@/components/ui/cut-icons";
+
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation } from 'react-i18next';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';

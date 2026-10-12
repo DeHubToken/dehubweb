@@ -11,7 +11,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, ChevronDown, Minus, Plus, Search } from 'lucide-react';
+import { Check, ChevronDown, Minus } from "lucide-react";
+import { Plus, Search } from "@/components/ui/cut-icons";
+
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';

@@ -28,7 +28,9 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import { Loader2, Pause, Play, X } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { Pause, Play, X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { StageRateButton } from '@/components/app/stages/StageRateButton';

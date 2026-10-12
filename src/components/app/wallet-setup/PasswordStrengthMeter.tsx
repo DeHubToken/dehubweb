@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo } from "react";
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { assessLocal, MIN_ACCEPTABLE_SCORE } from "@/lib/wallet-core/passwordStrength";
 
 // Live, local-only strength meter. The breach check still runs on submit in the

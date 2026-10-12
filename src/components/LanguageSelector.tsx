@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-import { Globe, Search, Check } from "lucide-react";
+import { Globe, Check } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 import { useState } from "react";
 import {
   Drawer,

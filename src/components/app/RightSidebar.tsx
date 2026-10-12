@@ -3,7 +3,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { Search } from "@/components/ui/cut-icons";
+
 import { Input } from '@/components/ui/input';
 import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';

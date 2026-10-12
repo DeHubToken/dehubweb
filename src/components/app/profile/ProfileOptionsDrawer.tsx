@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Copy, AtSign, Wallet, MessageCircle, Gift, Bell, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag, Award } from 'lucide-react';
+import { Copy, AtSign, Wallet, Gift, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag, Award } from "lucide-react";
+import { MessageCircle, Bell } from "@/components/ui/cut-icons";
+
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';

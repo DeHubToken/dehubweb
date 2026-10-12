@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { SEOHead } from '@/components/SEOHead';
-import { Plus, Rocket, Search } from 'lucide-react';
+import { Rocket } from "lucide-react";
+import { Plus, Search } from "@/components/ui/cut-icons";
+
 import { useAuth } from '@/contexts/AuthContext';
 import { useLaunchpadTokens, type LaunchpadFilter } from '@/hooks/use-launchpad-tokens';
 import { CoinCard } from '@/components/app/launchpad/CoinCard';

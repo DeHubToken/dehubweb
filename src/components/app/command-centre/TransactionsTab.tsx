@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
-import { TrendingUp, Info, Settings2, Loader2, AlertCircle } from 'lucide-react';
+import { TrendingUp, Info, Loader2, AlertCircle } from "lucide-react";
+import { Settings2 } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { FundActions } from './FundActions';
 import { Area, AreaChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Line, ComposedChart } from 'recharts';

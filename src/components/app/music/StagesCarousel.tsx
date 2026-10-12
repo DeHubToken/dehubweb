@@ -15,7 +15,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
+import { Mic2, Users } from "lucide-react";
+import { ChevronRight, Plus } from "@/components/ui/cut-icons";
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

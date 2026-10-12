@@ -22,7 +22,9 @@ import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Loader2, ThumbsUp } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { ThumbsUp } from "@/components/ui/cut-icons";
+
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getCommentLikers, type CommentLiker } from '@/lib/api/dehub';

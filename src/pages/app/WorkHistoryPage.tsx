@@ -4,7 +4,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Search, AlertTriangle, Plus } from 'lucide-react';
+import { AlertTriangle } from "lucide-react";
+import { Search, Plus } from "@/components/ui/cut-icons";
+
 import { useMyPostedJobs, useMyWorkSubmissions } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';
 import { TxLink, statusBadgeClass, statusLabelKey } from '@/features/work/components/TxLink';

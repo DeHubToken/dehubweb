@@ -1,5 +1,7 @@
 import React from 'react';
-import { Search, Clock, Hash, FileText, Book, ArrowRight } from 'lucide-react';
+import { Clock, Hash, FileText, Book, ArrowRight } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 import {
   CommandDialog,
   CommandEmpty,

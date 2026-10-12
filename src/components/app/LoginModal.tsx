@@ -24,7 +24,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import React, { Suspense, useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from "@/components/ui/cut-icons";
+
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, warmDeferredSheets } from '@/components/ui/drawer';

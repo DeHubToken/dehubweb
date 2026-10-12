@@ -12,7 +12,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { RefreshCw, Radio, Eye, Tv, ChevronRight, Play, MicOff } from 'lucide-react';
+import { RefreshCw, Radio, Eye, Tv, MicOff } from "lucide-react";
+import { ChevronRight, Play } from "@/components/ui/cut-icons";
+
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';

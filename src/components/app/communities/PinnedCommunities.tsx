@@ -3,7 +3,9 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Users, Plus, X, Pin } from 'lucide-react';
+import { Users, Pin } from "lucide-react";
+import { Plus, X } from "@/components/ui/cut-icons";
+
 import { usePinnedCommunities, useUserCommunities, usePinCommunity, useUnpinCommunity } from '@/hooks/use-communities';
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

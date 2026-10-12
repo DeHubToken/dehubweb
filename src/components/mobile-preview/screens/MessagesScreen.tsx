@@ -3,7 +3,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Edit, Search } from 'lucide-react';
+import { Edit } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 
 const MOCK_CONVERSATIONS = [
   { id: '1', user: 'bob_dev', lastMessage: 'Hey, check out the new proposal!', time: '2m', unread: 3 },

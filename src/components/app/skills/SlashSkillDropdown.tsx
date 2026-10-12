@@ -5,7 +5,9 @@
  */
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Sparkles, LayoutGrid, ImageIcon, MessageSquare } from 'lucide-react';
+import { Sparkles, LayoutGrid, ImageIcon } from "lucide-react";
+import { MessageSquare } from "@/components/ui/cut-icons";
+
 import type { UserSkill } from '@/hooks/use-user-skills';
 
 interface Props {

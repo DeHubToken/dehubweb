@@ -3,7 +3,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Search, TrendingUp, Image } from 'lucide-react';
+import { TrendingUp, Image } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 
 const TRENDING = [
   { tag: '#DeHubDAO', posts: '2.4K posts' },

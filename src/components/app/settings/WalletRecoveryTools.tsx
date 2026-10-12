@@ -13,7 +13,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Loader2, AlertTriangle, KeyRound, Repeat, ArrowDownToLine, Fingerprint } from 'lucide-react';
+import { Loader2, AlertTriangle, KeyRound, ArrowDownToLine, Fingerprint } from "lucide-react";
+import { Repeat } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';

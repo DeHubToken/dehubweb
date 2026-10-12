@@ -17,7 +17,9 @@ import {
 } from '@/lib/media-session';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Download, X, Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ThumbsUp, MessageSquare, Bookmark, Share2, Send, ChevronLeft, MoreHorizontal, Eye, Gem, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe, RotateCcw } from 'lucide-react';
+import { Volume2, VolumeX, Maximize, Minimize, ChevronUp, ChevronDown, ChevronLeft, MoreHorizontal, Eye, Info, Flag, Ban, UserPlus, UserCheck, Loader2, Trash2, EyeOff, Globe, RotateCcw } from "lucide-react";
+import { Download, X, ThumbsUp, MessageSquare, Bookmark, Share2, Send, Gem } from "@/components/ui/cut-icons";
+
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -56,7 +58,9 @@ import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { Repeat2, Quote, Link } from 'lucide-react';
+import { Quote, Link } from "lucide-react";
+import { Repeat2 } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import type { ShortVideo } from '@/types/feed.types';
 import { useQueryClient } from '@tanstack/react-query';

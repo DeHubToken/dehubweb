@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Copy, ArrowLeft, CreditCard, Bitcoin, Check, Lock, Minus } from 'lucide-react';
+import { Copy, CreditCard, Bitcoin, Check, Lock, Minus } from "lucide-react";
+import { Plus, ArrowLeft } from "@/components/ui/cut-icons";
+
 import {
   Drawer,
   DrawerContent,

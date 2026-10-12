@@ -13,7 +13,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cdnImage } from '@/lib/media-url';
-import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, Bookmark, Info } from 'lucide-react';
+import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Info } from "lucide-react";
+import { Bell, Bookmark } from "@/components/ui/cut-icons";
+
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { CardHeader } from './CardHeader';

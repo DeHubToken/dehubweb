@@ -15,10 +15,9 @@ import { useTranslation } from 'react-i18next';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
-import {
-  ChevronLeft, Loader2, Pause, Play, Plus, Rocket, Trash2, Archive,
-  Upload, PencilLine, AlertTriangle, ImageIcon, Film, Type, Wallet,
-} from 'lucide-react';
+import { ChevronLeft, Loader2, Rocket, Trash2, Archive, Upload, PencilLine, AlertTriangle, ImageIcon, Film, Type, Wallet } from "lucide-react";
+import { Pause, Play, Plus } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

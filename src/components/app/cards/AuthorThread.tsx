@@ -15,7 +15,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { ThumbsUp, Share2, Trash2 } from 'lucide-react';
+import { Trash2 } from "lucide-react";
+import { ThumbsUp, Share2 } from "@/components/ui/cut-icons";
+
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

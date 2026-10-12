@@ -11,7 +11,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * sheet is a cache hit.
  */
 import { useQuery } from '@tanstack/react-query';
-import { ChevronRight, Link2, MoreHorizontal, Quote, Repeat2, Send, MessageCircle } from 'lucide-react';
+import { Link2, MoreHorizontal, Quote } from "lucide-react";
+import { ChevronRight, Repeat2, Send, MessageCircle } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { getPostQuotes, getPostReposters } from '@/lib/api/dehub';

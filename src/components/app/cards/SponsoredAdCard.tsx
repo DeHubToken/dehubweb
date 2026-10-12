@@ -9,7 +9,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState } from 'react';
-import { Megaphone, ExternalLink, Play } from 'lucide-react';
+import { Megaphone, ExternalLink } from "lucide-react";
+import { Play } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import type { ServedAd } from '@/lib/ads/povr';
 import { useAdImpression } from '@/hooks/use-ad-serving';

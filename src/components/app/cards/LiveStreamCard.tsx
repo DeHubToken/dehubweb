@@ -22,12 +22,9 @@ import {
 } from '@/lib/media-session';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell,
-  Play, Pause, Volume2, VolumeX, Maximize, Minimize,
-  Heart, Gift, StopCircle, Activity, Loader2, Bookmark, Info,
-  Gem
-} from 'lucide-react';
+import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Volume2, VolumeX, Maximize, Minimize, Heart, Gift, StopCircle, Activity, Loader2, Info } from "lucide-react";
+import { Bell, Play, Pause, Bookmark, Gem } from "@/components/ui/cut-icons";
+
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
 // Type-only: the hls.js runtime (~400 kB raw) loads dynamically at attach time

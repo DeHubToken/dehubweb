@@ -4,7 +4,9 @@
  * the kit on its own.
  */
 import { useTranslation } from 'react-i18next';
-import { Plus, Stamp, Wand2, X } from 'lucide-react';
+import { Stamp, Wand2 } from "lucide-react";
+import { Plus, X } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { useBrandStore, hasBrand } from '@/store/editorBrandStore';
 import { useEditorStore } from '@/store/editorStore';

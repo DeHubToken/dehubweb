@@ -12,7 +12,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { Search, Tag, Loader2 } from 'lucide-react';
+import { Tag, Loader2 } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useMarketListings, useSellerStatsBatch, type MarketSort, type FractionListing } from '@/hooks/use-fraction-marketplace';

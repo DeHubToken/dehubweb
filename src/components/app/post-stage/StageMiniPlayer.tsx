@@ -11,7 +11,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * place (ActionBar) and the two controls can never disagree.
  */
 import { useCallback, useEffect, useState, type RefObject } from 'react';
-import { ArrowLeft, Pause, Play, ThumbsUp } from 'lucide-react';
+import { ArrowLeft, Pause, Play, ThumbsUp } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';

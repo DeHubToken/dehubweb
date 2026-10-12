@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { RefreshCw } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { useAuth } from '@/contexts/AuthContext';
 import { SEOHead } from '@/components/SEOHead';
 import { getAuthToken } from '@/lib/api/dehub/core';

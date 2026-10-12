@@ -5,7 +5,8 @@
  * "Open a copy" puts the graph into their own /creator/flow to run.
  */
 import { useCallback, useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';

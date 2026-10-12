@@ -3,7 +3,9 @@ import { localizedPageUrl } from '@/lib/seo/public-locales';
 
 import React, { useLayoutEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { ArrowLeft, RotateCw } from 'lucide-react';
+import { RotateCw } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { useQuery } from '@tanstack/react-query';
 import { getPostBySlug, getNewPostBySlug, excludedTitles, formatDate } from '@/utils/blogUtils';
 import { SEOHead } from '@/components/SEOHead';

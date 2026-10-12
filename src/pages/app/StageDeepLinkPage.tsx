@@ -37,7 +37,9 @@ import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format, formatDistanceToNowStrict } from 'date-fns';
-import { CalendarDays, CalendarPlus, Radio, Loader2, Share2, Bell, BellRing, Headphones, Square, Users, Clock, Play, Pause, PictureInPicture2, FileText } from 'lucide-react';
+import { CalendarDays, CalendarPlus, Radio, Loader2, BellRing, Headphones, Square, Users, Clock, PictureInPicture2, FileText } from "lucide-react";
+import { Share2, Bell, Play, Pause } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { mintPost } from '@/lib/api/dehub';
 import { useStage } from '@/contexts/StageContext';

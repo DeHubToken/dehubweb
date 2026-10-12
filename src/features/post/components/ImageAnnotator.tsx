@@ -19,7 +19,9 @@ import { useDraftState } from "@/hooks/use-draft-state";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
-import { X, Check, Pencil, Type, Undo2, Trash2 } from 'lucide-react';
+import { Check, Pencil, Type, Undo2, Trash2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 
 type Tool = 'draw' | 'text';

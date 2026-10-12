@@ -1,4 +1,6 @@
-import { Home, Search, Plus, MessageSquare, Sparkles } from 'lucide-react';
+import { Sparkles } from "lucide-react";
+import { Home, Search, Plus, MessageSquare } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 
 interface MobileBottomBarProps {

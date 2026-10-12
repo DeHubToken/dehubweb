@@ -6,7 +6,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Share2, X } from "lucide-react";
+import { Share2, X } from "@/components/ui/cut-icons";
+
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import {
   Dialog,

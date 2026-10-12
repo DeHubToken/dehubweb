@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import type { CSSProperties } from 'react';
-import { X } from 'lucide-react';
+import { X } from "@/components/ui/cut-icons";
+
 import { ReplyOrb } from './ReplyOrb';
 import type { SmartReplySuggestion } from '@/hooks/use-smart-replies';
 

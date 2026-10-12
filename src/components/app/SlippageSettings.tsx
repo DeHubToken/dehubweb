@@ -7,7 +7,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState } from 'react';
-import { Settings2, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from "lucide-react";
+import { Settings2 } from "@/components/ui/cut-icons";
+
 import { Input } from '@/components/ui/input';
 
 const PRESETS = [

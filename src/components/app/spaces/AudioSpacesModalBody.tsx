@@ -25,12 +25,9 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Volume2, Bell,
-  Link, UserPlus, Minimize2, Play, Pause, PictureInPicture2, Clock, Trash2, FileText,
-  ScreenShare, ScreenShareOff, Crown,
-} from 'lucide-react';
+import { MicOff, Users, Hand, ChevronLeft, Loader2, Volume2, Link, UserPlus, Minimize2, PictureInPicture2, Clock, Trash2, FileText, ScreenShare, ScreenShareOff, Crown } from "lucide-react";
+import { Mic, X, Bell, Play, Pause } from "@/components/ui/cut-icons";
+
 import { StageTranscriptDrawer } from './StageTranscriptDrawer';
 import { StageScreenShare } from './StageScreenShare';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

@@ -12,7 +12,9 @@ import { useMemo, useState } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { Heart, Headphones, Loader2, Pause, Play, Radio, Share2 } from 'lucide-react';
+import { Heart, Headphones, Loader2, Radio } from "lucide-react";
+import { Pause, Play, Share2 } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useRadioPlayer } from '@/hooks/use-radio-player';

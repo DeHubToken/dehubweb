@@ -19,7 +19,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Upload, ImageIcon, Film, Type, ChevronLeft, ChevronRight, Rocket, Save, Wallet } from 'lucide-react';
+import { Loader2, Upload, ImageIcon, Film, Type, ChevronLeft, Rocket, Save, Wallet } from "lucide-react";
+import { ChevronRight } from "@/components/ui/cut-icons";
+
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';

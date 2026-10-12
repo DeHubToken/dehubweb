@@ -14,7 +14,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import { Users, Loader2, X } from 'lucide-react';
+import { Users, Loader2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

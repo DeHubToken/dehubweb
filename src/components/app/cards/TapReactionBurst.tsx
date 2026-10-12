@@ -29,7 +29,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Heart, ThumbsUp } from 'lucide-react';
+import { Heart } from "lucide-react";
+import { ThumbsUp } from "@/components/ui/cut-icons";
+
 import {
   subscribeTapReactionFeedback,
   type DoubleTapLikeEventDetail,

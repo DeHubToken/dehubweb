@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 
 const BackButton: React.FC = () => {

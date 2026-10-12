@@ -1,6 +1,8 @@
 import * as React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { Check, ChevronRight, Circle } from "lucide-react";
+import { Check, Circle } from "lucide-react";
+import { ChevronRight } from "@/components/ui/cut-icons";
+
 
 import { cn } from "@/lib/utils";
 import { OverlayContentPresent, useOverlayLifetime } from "@/hooks/use-overlay-lifetime";

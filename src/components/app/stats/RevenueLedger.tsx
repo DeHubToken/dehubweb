@@ -21,7 +21,9 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown, Download, ExternalLink, Loader2, ReceiptText } from 'lucide-react';
+import { ChevronDown, ExternalLink, Loader2, ReceiptText } from "lucide-react";
+import { Download } from "@/components/ui/cut-icons";
+
 
 import {
   financeLedgerEndpoint,

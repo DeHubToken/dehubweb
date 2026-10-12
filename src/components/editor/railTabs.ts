@@ -5,7 +5,9 @@
  * same tools in the same order. Kept in its own module so the rail file
  * only exports components and stays hot-reloadable.
  */
-import { Bot, Captions, ImagePlus, Layers, LayoutTemplate, LibraryBig, Shapes, SlidersHorizontal, Sparkles, Type, Wand2 } from 'lucide-react';
+import { Bot, Captions, ImagePlus, Layers, LayoutTemplate, LibraryBig, Shapes, Sparkles, Type, Wand2 } from "lucide-react";
+import { SlidersHorizontal } from "@/components/ui/cut-icons";
+
 import type { EditorPanel } from '@/store/editorUiStore';
 
 export interface RailTab {

@@ -17,7 +17,9 @@ import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Loader2, Tag, HandCoins, Plus } from 'lucide-react';
+import { Loader2, Tag, HandCoins } from "lucide-react";
+import { Plus } from "@/components/ui/cut-icons";
+
 import {
   useFractionListings,
   useFractionOffers,

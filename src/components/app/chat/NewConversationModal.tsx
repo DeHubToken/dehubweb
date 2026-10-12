@@ -28,7 +28,9 @@ import { AppState } from '@/components/app/AppState';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Search, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Loader2, AlertCircle } from "lucide-react";
+import { Search, ArrowLeft } from "@/components/ui/cut-icons";
+
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
 import { Input } from '@/components/ui/input';

@@ -1,6 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useRef, useState } from "react";
-import { X } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import type { FreeAsset } from "@/lib/editor/freeAssets";
 
 export function FreeAssetPreview({ asset, onClose }: { asset: FreeAsset; onClose: () => void }) {

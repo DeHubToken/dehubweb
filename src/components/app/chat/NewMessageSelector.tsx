@@ -6,7 +6,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * Note: DeHub backend supports 1:1 DMs only — Create Group is hidden.
  */
 
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle } from "@/components/ui/cut-icons";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 

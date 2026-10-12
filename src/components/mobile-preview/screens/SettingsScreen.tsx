@@ -4,7 +4,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { ChevronRight, User, Bell, Shield, Globe, Moon, Palette, HelpCircle, LogOut, Smartphone } from 'lucide-react';
+import { Shield, Globe, Moon, Palette, HelpCircle, LogOut, Smartphone } from "lucide-react";
+import { ChevronRight, User, Bell } from "@/components/ui/cut-icons";
+
 
 const SETTINGS_SECTIONS = [
   {

@@ -8,7 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 import { CrossChainDepositDrawer } from '@/components/app/command-centre/CrossChainDepositDrawer';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
-import { Copy, Check, Send, QrCode, Plus, ArrowDownToLine, Loader2, Search, ShoppingCart, User, Lock, ChartNoAxesColumn, CreditCard, Wallet, Globe, ArrowDownUp, Info } from 'lucide-react';
+import { Copy, Check, QrCode, ArrowDownToLine, Loader2, ShoppingCart, Lock, ChartNoAxesColumn, CreditCard, Wallet, Globe, ArrowDownUp, Info } from "lucide-react";
+import { Send, Plus, Search, User } from "@/components/ui/cut-icons";
+
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';

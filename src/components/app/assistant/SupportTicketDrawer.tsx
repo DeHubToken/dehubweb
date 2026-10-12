@@ -15,7 +15,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LifeBuoy, Loader2, Plus, ArrowLeft, CheckCircle2, Clock, AlertCircle } from 'lucide-react';
+import { LifeBuoy, Loader2, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { Plus, ArrowLeft } from "@/components/ui/cut-icons";
+
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

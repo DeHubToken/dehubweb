@@ -8,7 +8,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X } from "@/components/ui/cut-icons";
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import type { DexPair } from '@/hooks/use-dexscreener';

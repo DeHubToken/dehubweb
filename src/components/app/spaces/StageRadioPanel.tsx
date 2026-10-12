@@ -26,10 +26,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Radio, Search, Play, Pause, Square, SkipBack, SkipForward, Loader2, Music,
-  Volume2, VolumeX, Headphones, HeadphoneOff, Plus, Trash2,
-} from 'lucide-react';
+import { Radio, Square, SkipBack, SkipForward, Loader2, Music, Volume2, VolumeX, Headphones, HeadphoneOff, Trash2 } from "lucide-react";
+import { Search, Play, Pause, Plus } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';

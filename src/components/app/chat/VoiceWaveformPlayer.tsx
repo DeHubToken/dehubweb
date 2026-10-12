@@ -7,7 +7,8 @@
  */
 
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause } from "@/components/ui/cut-icons";
+
 import { registerOffDocumentMedia } from '@/lib/pause-media-in';
 
 interface VoiceWaveformPlayerProps {

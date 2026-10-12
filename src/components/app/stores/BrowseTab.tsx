@@ -7,7 +7,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, X } from "@/components/ui/cut-icons";
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';

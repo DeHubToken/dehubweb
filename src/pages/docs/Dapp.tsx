@@ -12,7 +12,9 @@ import DePIN from './DePIN';
 import E2EEncryption from './E2EEncryption';
 import AIToolkits from './AIToolkits';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard, Gauge, Rocket, History, ChevronRight } from 'lucide-react';
+import { Video, Coins, Shield, Users, Eye, Zap, Crown, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard, Gauge, Rocket, History } from "lucide-react";
+import { Settings, MessageCircle, ChevronRight } from "@/components/ui/cut-icons";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { DhbAmount } from '@/components/app/DhbAmount';
 

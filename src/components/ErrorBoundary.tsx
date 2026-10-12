@@ -15,7 +15,9 @@ import { TranslationText } from '@/components/TranslationText';
  */
 
 import { Component, type ReactNode, type ErrorInfo } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw } from "lucide-react";
+import { Home } from "@/components/ui/cut-icons";
+
 import { Button } from '@/components/ui/button';
 import { isChunkLoadError, recoverFromChunkError } from '@/lib/lazy-with-retry';
 import { ASSISTANT_AVATAR as assistantAvatar } from '@/lib/assistant';

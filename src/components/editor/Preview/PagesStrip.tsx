@@ -5,7 +5,9 @@
  */
 import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight, Copy, Play, Plus, Type, Trash2 } from "lucide-react";
+import { ChevronLeft, Copy, Type, Trash2 } from "lucide-react";
+import { ChevronRight, Play, Plus } from "@/components/ui/cut-icons";
+
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";

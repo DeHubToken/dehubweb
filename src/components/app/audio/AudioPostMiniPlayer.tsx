@@ -18,7 +18,9 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { AudioLines, Loader2, Pause, Play, X } from 'lucide-react';
+import { AudioLines, Loader2 } from "lucide-react";
+import { Pause, Play, X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { useStagePlayback } from '@/lib/stage-playback';

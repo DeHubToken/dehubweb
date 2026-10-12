@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X } from "@/components/ui/cut-icons";
+
 import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';

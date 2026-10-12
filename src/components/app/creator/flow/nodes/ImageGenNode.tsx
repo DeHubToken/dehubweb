@@ -6,7 +6,9 @@
  * keeps a carousel of everything it has produced.
  */
 import { useCallback, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, CopyPlus, Download, Loader2, Sparkles, Trash2 } from 'lucide-react';
+import { ChevronLeft, CopyPlus, Loader2, Sparkles, Trash2 } from "lucide-react";
+import { ChevronRight, Download } from "@/components/ui/cut-icons";
+
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';
 import { IMAGE_MODEL_OPTIONS, IMAGE_MODELS, imageModelSupportsEdit } from '@/constants/image-models.constants';

@@ -10,7 +10,9 @@
  * there is something to post, and a coach that failed renders nothing at all.
  */
 import { useTranslation } from 'react-i18next';
-import { Check, Loader2, Sparkles, X } from 'lucide-react';
+import { Check, Loader2, Sparkles } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import type { CoachFlag, CoachStatus } from '@/hooks/use-conversation-coach';
 

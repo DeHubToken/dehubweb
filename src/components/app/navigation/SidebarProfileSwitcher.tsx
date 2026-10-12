@@ -13,7 +13,9 @@
  */
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, Plus } from 'lucide-react';
+import { Check } from "lucide-react";
+import { Plus } from "@/components/ui/cut-icons";
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, deviceWidth } from '@/lib/media-url';

@@ -10,7 +10,9 @@ import { tokenLabel } from '@/lib/token-label';
 
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Gem, Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { Gem } from "@/components/ui/cut-icons";
+
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

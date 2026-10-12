@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Box, Loader2, Music2, Play } from 'lucide-react';
+import { Box, Loader2, Music2 } from "lucide-react";
+import { Play } from "@/components/ui/cut-icons";
+
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import examples from '@/lib/creator/examples.json';
 import type { PresetKind } from '@/lib/creator/presets';

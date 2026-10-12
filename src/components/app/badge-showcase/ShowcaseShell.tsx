@@ -9,7 +9,8 @@ import type { CSSProperties, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useReducedMotion } from 'framer-motion';
-import { Pause, Play, X } from 'lucide-react';
+import { Pause, Play, X } from "@/components/ui/cut-icons";
+
 import { StickerStage, stickerArtRect, type StickerFinish, type StickerItem } from './sticker-stage';
 import { SHOWCASE_CSS } from './showcase-ui';
 import { playAscension, type AscensionHandle } from './ascension';

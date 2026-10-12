@@ -2,7 +2,9 @@ import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
-import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, X, Video, MonitorPlay, ScreenShare } from 'lucide-react';
+import { Radio, Loader2, Copy, Check, ExternalLink, ImagePlus, Video, MonitorPlay, ScreenShare } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { EndStreamConfirmDialog } from '@/components/app/modals/EndStreamConfirmDialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';

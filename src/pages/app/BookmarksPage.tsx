@@ -2,7 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon, ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Search, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket, Trash2, FolderOpen } from 'lucide-react';
+import { LayoutGrid, Clock, Image, Video, FileText, RefreshCw, Loader2, History, Ticket, Trash2, FolderOpen } from "lucide-react";
+import { Search, ThumbsUp } from "@/components/ui/cut-icons";
+
 import { BookmarksEmptyContent } from '@/components/app/bookmarks/BookmarksEmptyContent';
 import { BookmarkFoldersPanel } from '@/components/app/bookmarks/BookmarkFoldersPanel';
 import { Input } from '@/components/ui/input';

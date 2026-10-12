@@ -1,7 +1,9 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Package, Download, Settings, CheckCircle, AlertTriangle, Terminal } from 'lucide-react';
+import { Package, CheckCircle, AlertTriangle, Terminal } from "lucide-react";
+import { Download, Settings } from "@/components/ui/cut-icons";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Installation = () => {

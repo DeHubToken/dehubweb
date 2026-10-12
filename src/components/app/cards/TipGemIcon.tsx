@@ -9,7 +9,9 @@
  */
 import { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Gem, Sparkle } from 'lucide-react';
+import { Sparkle } from "lucide-react";
+import { Gem } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 
 const SPARKLES = [0, 60, 120, 180, 240, 300].map((angle, i) => {

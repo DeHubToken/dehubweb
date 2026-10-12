@@ -1,6 +1,8 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Film, X } from 'lucide-react';
+import { Film } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import { useGenerationStore } from '@/store/generationStore';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 

@@ -13,7 +13,9 @@ import {
   useAudioPostPlayback,
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
-import { Play, Pause, Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
+import { Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from "lucide-react";
+import { Play, Pause } from "@/components/ui/cut-icons";
+
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
 import { useAppTheme } from '@/contexts/ThemeContext';

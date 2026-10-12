@@ -18,7 +18,9 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { RefreshCw, Play, ChevronRight, Radio, Eye, Loader2 } from 'lucide-react';
+import { RefreshCw, Radio, Eye, Loader2 } from "lucide-react";
+import { Play, ChevronRight } from "@/components/ui/cut-icons";
+
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';

@@ -14,7 +14,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Loader2, X } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import { X } from "@/components/ui/cut-icons";
+
 import type { QueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { ShortsViewer } from '@/components/app/cards/ShortsViewer';

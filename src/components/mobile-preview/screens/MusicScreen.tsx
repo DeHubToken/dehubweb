@@ -3,7 +3,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { Play, SkipBack, SkipForward, Shuffle, Repeat, Heart, ListMusic, Radio } from 'lucide-react';
+import { SkipBack, SkipForward, Shuffle, Heart, ListMusic, Radio } from "lucide-react";
+import { Play, Repeat } from "@/components/ui/cut-icons";
+
 
 const MOCK_TRACKS = [
   { get title() { return _translateCopy("copy.b29ae9358c04", { defaultValue: "Digital Dreams" }); }, artist: 'CryptoBeats', duration: '3:42' },

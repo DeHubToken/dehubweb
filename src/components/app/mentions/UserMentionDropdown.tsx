@@ -13,7 +13,9 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { apiCall } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { ASSISTANT_AVATAR, isAssistantAddress } from '@/lib/assistant';
-import { Search, Loader2, AtSign } from 'lucide-react';
+import { Loader2, AtSign } from "lucide-react";
+import { Search } from "@/components/ui/cut-icons";
+
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppState } from '@/components/app/AppState';

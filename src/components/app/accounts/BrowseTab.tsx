@@ -13,7 +13,9 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, SlidersHorizontal, Check } from 'lucide-react';
+import { Check } from "lucide-react";
+import { Search, SlidersHorizontal } from "@/components/ui/cut-icons";
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';

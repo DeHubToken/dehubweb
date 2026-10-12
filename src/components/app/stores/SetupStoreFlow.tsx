@@ -11,7 +11,9 @@ import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Loader2, ArrowLeft, Camera } from 'lucide-react';
+import { Loader2, Camera } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/cut-icons";
+
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useCreateStore, uploadStoreMedia } from '@/hooks/use-stores';
 import { useAuth } from '@/contexts/AuthContext';

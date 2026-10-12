@@ -4,7 +4,9 @@ import type { TFunction } from 'i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { Sparkles, Send, Plus } from 'lucide-react';
+import { Sparkles } from "lucide-react";
+import { Send, Plus } from "@/components/ui/cut-icons";
+
 
 const mockMessages = (t: TFunction) => [
   { id: '1', role: 'user', content: t('mobilePreview.assistant.question1') },

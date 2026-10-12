@@ -1,4 +1,5 @@
-import { X } from 'lucide-react';
+import { X } from "@/components/ui/cut-icons";
+
 import { motion } from 'framer-motion';
 import type { LinkPreviewData } from '@/lib/api/link-preview';
 import { LinkPreviewContent } from '@/components/app/cards/LinkPreviewContent';

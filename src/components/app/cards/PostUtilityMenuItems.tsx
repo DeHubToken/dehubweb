@@ -15,7 +15,9 @@
  * so a row and the icon button for the same post always agree.
  */
 
-import { Bookmark, Pin, Info, Sparkles } from 'lucide-react';
+import { Pin, Info, Sparkles } from "lucide-react";
+import { Bookmark } from "@/components/ui/cut-icons";
+
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Plus } from 'lucide-react';
+import { Plus } from "@/components/ui/cut-icons";
+
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { EmojiPanel } from '@/components/app/emoji/EmojiPanel';
 import { cn } from '@/lib/utils';
