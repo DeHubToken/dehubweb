@@ -131,6 +131,14 @@ html[data-theme] [data-feed-nav] [data-theme-control-surface]:not(#_):not(#_) {
   backdrop-filter: none !important;
 }
 
+/* Side-panel controls use the stationary panel's frost. Their selection,
+   hover and pressed layers keep their fill and rim without another sample. */
+html[data-theme][data-theme] [data-side-panel]
+  :is(button, a, [data-theme-control-surface], [data-sidebar-active-indicator]):not(#_):not(#_) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
 /* Bubble actions keep the theme's label colour when their white active
    material is replaced by the shared tinted surface. */
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'])
