@@ -258,3 +258,28 @@ html {
     --tint-bento-raised: 1;
   }
 }
+
+/* Unread count chips (bell, bottom nav, menu, sidebar, chat tabs) sit on the
+   glass, so they must be solid: the theme palette locks turn bg-red-* into a
+   wash (Jungle 0.2, War 0.85) and the frost showed through the number. Each
+   theme keeps its own chip colour, always fully opaque. */
+html {
+  --unread-chip-bg: rgb(239 68 68);
+  --unread-chip-fg: rgb(255 255 255);
+}
+html[data-theme='jungle'] {
+  --unread-chip-bg: rgb(var(--jungle-alert, 224 108 92));
+}
+html[data-theme='war'] {
+  --unread-chip-bg: rgb(var(--war-hud, 79 227 224));
+  --unread-chip-fg: rgb(var(--war-void, 6 10 9));
+}
+html[data-theme] [data-unread-chip]:not(#_):not(#_):not(#_) {
+  background: var(--unread-chip-bg) !important;
+  color: var(--unread-chip-fg) !important;
+  opacity: 1 !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
+  isolation: isolate;
+}

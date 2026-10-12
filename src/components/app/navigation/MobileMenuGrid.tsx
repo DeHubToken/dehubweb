@@ -67,7 +67,7 @@ function TileBody({ label, iconKey, glyph: Glyph, active, badge }: TileShellProp
           <Glyph data-menu-glyph className="h-7 w-7 text-zinc-200" strokeWidth={1.75} />
         )}
         {!!badge && badge > 0 && (
-          <span data-menu-badge className="absolute -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+          <span data-unread-chip data-menu-badge className="absolute -top-1 -right-1.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
             {badge > 99 ? '99+' : badge}
           </span>
         )}

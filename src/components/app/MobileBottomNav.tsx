@@ -343,7 +343,7 @@ export function MobileBottomNav() {
                         />
                       )}
                       {item.label === 'Messages' && messagesUnread > 0 && (
-                        <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                        <span data-unread-chip className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                           {messagesUnread > 99 ? '99+' : messagesUnread}
                         </span>
                       )}
@@ -476,7 +476,7 @@ export function MobileBottomNav() {
                           : "hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]"
                       ))}
                     {item.label === 'Notifications' && totalNotifUnread > 0 && (
-                      <span className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                      <span data-unread-chip className="absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                         {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
                       </span>
                     )}
