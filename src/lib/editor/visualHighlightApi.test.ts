@@ -5,7 +5,7 @@ import { analyseVisualHighlights } from "./visualHighlightApi";
 import { visualSampleTimes, type VisualBatch } from "./visualHighlightContract";
 import { JPEG } from "./visualHighlightFixture";
 const windows = [{ id: 0, start: 0, end: 6 }];
-const batch = (purpose?: "matching"): VisualBatch => ({ optIn: true, duration: 6, seconds: 1, focus: "red scenes", purpose, windows,
+const batch = (purpose?: "matching"): VisualBatch => ({ optIn: true, duration: 6, seconds: 15, focus: "red scenes", purpose, windows,
   frames: visualSampleTimes(windows[0]).map(at => ({ windowId: 0, at, dataUrl: JPEG })) });
 const moments = [{ start: 0, end: 2, score: 0.95, description: "Red title card", focusMatch: true }];
 
