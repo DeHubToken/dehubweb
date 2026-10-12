@@ -47,9 +47,9 @@ export const PLAN_TOOL = {
     parameters: {
       type: "object",
       properties: {
-        clarification: { type: "string", description: "Set this instead of plan if information or an unsupported capability is needed." },
+        clarification: { type: ["string", "null"], description: "Null for a supported task. Otherwise explain what is needed and set plan to null." },
         plan: {
-          type: "object",
+          type: ["object", "null"],
           properties: {
             summary: { type: "string" },
             interval_minutes: { type: ["number", "null"], description: "Null for once. For N posts/day use 1440/N, minimum 30. Each run executes every step." },
@@ -73,14 +73,27 @@ export const PLAN_TOOL = {
                 topic: { type: ["string", "null"], description: "Instructions for an original post on each run; null for literal supplied content." },
               },
               required: ["tool", "arguments", "audience", "from", "to", "topic"],
+              additionalProperties: false,
             } },
           },
           required: ["summary", "steps", "interval_minutes"],
+          additionalProperties: false,
         },
       },
+      required: ["plan", "clarification"],
+      additionalProperties: false,
     },
   },
 };
+
+export function parseTaskPlan(output: unknown): TaskPlan {
+  const envelope = z.object({ plan: z.unknown(), clarification: z.string().nullable().optional() }).safeParse(output);
+  if (!envelope.success) throw new Error('Could not prepare a complete task. Try stating one action and its schedule.');
+  if (envelope.data.clarification) throw new Error(envelope.data.clarification);
+  const parsed = taskPlanSchema.safeParse(envelope.data.plan);
+  if (!parsed.success) throw new Error('Could not prepare a complete task. Try stating one action and its schedule.');
+  return parsed.data;
+}
 
 export function nextScheduledRun(previous: string, minutes: number, now: number): string {
   const interval = minutes * 60000;
