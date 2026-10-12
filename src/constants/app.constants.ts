@@ -1,4 +1,5 @@
 import Blog from "@/components/ui/cut-icons/blog";
+import Shorts from "@/components/ui/cut-icons/shorts";
 import { AtSign, FileText, Film, FileTextIcon, Wand2, Scroll, Zap, ArrowDownToLine, FolderInput, Tv } from "lucide-react";
 import Blocks from "@/components/ui/cut-icons/apps";
 import Store from "@/components/ui/cut-icons/store";
@@ -131,7 +132,7 @@ export function isKidsModePath(pathname: string): boolean {
 
 export const FEED_TABS: SearchTab[] = [
   { icon: Home, label: 'Home', value: 'home' },
-  { icon: Film, label: 'Shorts', value: 'shorts' },
+  { icon: Shorts, label: 'Shorts', value: 'shorts' },
   { icon: Image, label: 'Images', value: 'images' },
   { icon: Video, label: 'Videos', value: 'videos' },
   { icon: Mic, label: 'Music', value: 'music' },
