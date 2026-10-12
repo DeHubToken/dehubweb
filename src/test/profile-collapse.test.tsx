@@ -41,8 +41,12 @@ it('keeps only Back visible until the original actions leave view, then reverses
   expect(screen.getByText('Follow')).toBeVisible();
   expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
   rerender(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" tabsPinned tabsHeight={56} followAction={<button>Follow</button>} />);
-  expect(bar).toHaveAttribute('data-joined', 'true');
-  expect(container.querySelector('.profile-collapse-surface')).toHaveStyle({ bottom: '-60px' });
+  expect(bar).toHaveAttribute('data-tabs-pinned', 'true');
+  expect(bar).toHaveAttribute('aria-hidden', 'true');
+  expect(screen.queryByText('Back')).toBeNull();
+  expect(screen.queryByText('Follow')).toBeNull();
+  expect(container.querySelector('.profile-collapse-surface')).toBeNull();
+  rerender(<CollapsingProfileHeader headerRef={ref} name="Creator" handle="@creator" followAction={<button>Follow</button>} />);
   nameBottom = 55;
   scroll();
   expect(screen.getByText('Creator').parentElement).toHaveAttribute('aria-hidden', 'false');
@@ -53,10 +57,10 @@ it('keeps only Back visible until the original actions leave view, then reverses
   expect(container.querySelector('.profile-collapse-gap-guard')).not.toBeVisible();
 });
 
-it.each(['hazy', 'cosmic', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'minimal', 'light'])('keeps cover material inside the rounded bar on %s', (nextTheme) => {
+it.each(['hazy', 'cosmic', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'minimal', 'light'])('uses the shared navigation glass without cover artwork on %s', (nextTheme) => {
   theme = nextTheme;
   const { container } = render(<CollapsingProfileHeader headerRef={{ current: null }} name="Creator" handle="@creator" coverUrl="/cover.jpg" />);
   expect(container.querySelector('.profile-collapse-gap-guard')).toBeNull();
-  expect(container.querySelectorAll('.profile-collapse-cover')).toHaveLength(1);
-  expect(container.querySelector('.profile-collapse-surface img')).not.toBeNull();
+  expect(container.querySelectorAll('.profile-collapse-cover')).toHaveLength(0);
+  expect(container.querySelector('.profile-collapse-surface[data-feed-nav] > [data-nav-glass-backdrop]')).not.toBeNull();
 });
