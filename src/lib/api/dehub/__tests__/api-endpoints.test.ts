@@ -166,11 +166,10 @@ describe("payments.ts", () => {
     expect(res.totalVolume).toBe(1000);
   });
 
-  it("createCheckout calls POST /api/dpay/checkout", async () => {
+  it("createCheckout rejects card payments without creating a checkout", async () => {
     const { createCheckout } = await import("../payments");
-    mockOk({ result: { sessionId: "s1", url: "https://pay.example.com" } });
-    const res = await createCheckout({ amount: 100 });
-    expect(res.sessionId).toBe("s1");
+    await expect(createCheckout({ amount: 100 })).rejects.toThrow('Stripe has blocked this payment');
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 
   it("createDPayTicket calls POST /api/dpay/tk", async () => {

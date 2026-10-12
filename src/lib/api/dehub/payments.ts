@@ -1,4 +1,5 @@
 import { apiCall } from './core';
+import { rejectCardPayment } from '../card-payment';
 
 export interface DPayToken {
   symbol: string;
@@ -127,13 +128,8 @@ export async function getDPayTotal(): Promise<DPayTotal> {
   return response?.result ?? response as any;
 }
 
-export async function createCheckout(body: Record<string, unknown>): Promise<CheckoutSession> {
-  const response = await apiCall<{ result: CheckoutSession }>("/api/dpay/checkout", {
-    method: "POST",
-    body,
-    requiresAuth: true,
-  });
-  return response?.result ?? response as any;
+export async function createCheckout(_body: Record<string, unknown>): Promise<CheckoutSession> {
+  return rejectCardPayment();
 }
 
 export async function createDPayTicket(body: Record<string, unknown>): Promise<{ result: unknown }> {
