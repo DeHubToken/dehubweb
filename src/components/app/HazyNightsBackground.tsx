@@ -265,9 +265,10 @@ function CelestialSphere({
       // by the pixel-ratio cap (only the sampling resolution drops).
       material.uniforms.u_resolution.value.set(clientWidth, clientHeight);
       camera.updateProjectionMatrix();
-      if (prefersReducedMotion) {
-        renderer.render(scene, camera);
-      }
+      // Resizing clears the drawing buffer, including while the animation is
+      // paused for an unfocused tab or a covered native screen. Keep one frame
+      // visible without restarting the ambient loop.
+      renderer.render(scene, camera);
     };
 
 
