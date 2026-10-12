@@ -5736,6 +5736,17 @@ async function handleRequest(request, env, ctx) {
   }
   const guardNext = async () => {
     const resp = await env.ASSETS.fetch(request);
+    const isHtml = (resp.headers.get('Content-Type') || '').toLowerCase().startsWith('text/html');
+    if (isHtml) {
+      // The SPA shell names this deployment's chunks. Reusing an older shell
+      // after a deploy can leave the editor importing files that no longer exist.
+      const fresh = new Response(resp.body, resp);
+      fresh.headers.set('Cache-Control', 'no-store');
+      fresh.headers.set('CDN-Cache-Control', 'no-store');
+      fresh.headers.set('Cloudflare-CDN-Cache-Control', 'no-store');
+      if (!isCanonicalHost) fresh.headers.set('X-Robots-Tag', 'noindex');
+      return fresh;
+    }
     if (!isCanonicalHost) {
       const r = new Response(resp.body, resp);
       r.headers.set('X-Robots-Tag', 'noindex');
