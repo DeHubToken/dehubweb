@@ -21,6 +21,7 @@ import { KitButton, PageBody, PageEmpty, PageIsland } from '@/components/app/pag
 import { SEOHead } from '@/components/SEOHead';
 import { canManageAgents } from '@/lib/agent-access';
 import { AgentTasksPanel } from './AgentTasksPanel';
+import { AgentProfilePanel } from './AgentProfilePanel';
 
 interface AIAgent {
   id: string;
@@ -291,7 +292,7 @@ export default function AgentsPage() {
                   value={newAgentName}
                   onChange={(e) => setNewAgentName(e.target.value)}
                   placeholder={t('agents.agentNamePlaceholder')}
-                  className="bg-white/5 border-white/10 text-white"
+                  data-theme-control-surface className="bg-transparent border-white/10 text-white"
                 />
               </div>
               <div>
@@ -300,7 +301,7 @@ export default function AgentsPage() {
                   value={newAgentDescription}
                   onChange={(e) => setNewAgentDescription(e.target.value)}
                   placeholder={t('agents.agentDescriptionPlaceholder')}
-                  className="bg-white/5 border-white/10 text-white min-h-[80px]"
+                  data-theme-control-surface className="bg-transparent border-white/10 text-white min-h-[80px]"
                 />
               </div>
               <div className="flex gap-2">
@@ -374,6 +375,7 @@ export default function AgentsPage() {
                   </div>
 
                   {/* API Key */}
+                  <AgentProfilePanel wallet={walletAddress} agentId={agent.id} />
                   {!agent.api_key ? (
                     <div className="bg-black/30 rounded-lg p-3 mb-3">
                       <div className="flex items-center justify-between mb-1">
