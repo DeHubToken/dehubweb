@@ -3,7 +3,8 @@ import { useDraftState } from "@/hooks/use-draft-state";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X, Languages, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X, Languages, RotateCcw } from 'lucide-react';
+import { LiveChatOnlineCount } from './LiveChatOnlineCount';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
@@ -334,8 +335,8 @@ export function PublicChat({ onBack }: PublicChatProps) {
   return (
     <div data-page-bento data-bento-flat className="flex flex-col h-full overflow-hidden overflow-x-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-white/[0.07]">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-2 p-4 border-b border-white/[0.07]">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
@@ -357,15 +358,12 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 </TooltipTrigger>
                 <TooltipContent>{roomDescription}</TooltipContent>
               </Tooltip>
-            ) : rooms.length > 0 ? (
-              <span className="text-zinc-500 text-xs flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                {onlineCount}{_copy("copy.35105b29f706", { defaultValue: " online" })}</span>
             ) : null}
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
+          {selectedRoomId && <LiveChatOnlineCount count={onlineCount} />}
           {/* Translate all toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
