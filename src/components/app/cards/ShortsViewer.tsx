@@ -64,7 +64,8 @@ import { VideoSlide } from './VideoSlide';
 import { pauseMediaIn, resumeMedia } from '@/lib/pause-media-in';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { setVoteCache, getVoteCache } from '@/lib/vote-cache';
-import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
+import { getVideoPreferences, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate, useMediaMuted } from '@/lib/video-preferences';
+import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import { createWheelGesture } from '@/lib/wheel-gesture';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -319,7 +320,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     return () => resumeMedia(paused);
   }, []);
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [isMuted, setIsMuted] = useState(false);
+  const isMuted = useMediaMuted();
+  const toggleMute = useCallback(() => {
+    videoPlaybackManager.globalMuted = getVideoPreferences().mediaMuted !== true;
+  }, []);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const [showComments, setShowComments] = useState(false);
@@ -935,7 +939,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         else onClose();
       }
       else if (e.key === 'f') toggleFullscreen();
-      else if (e.key === 'm') setIsMuted(prev => !prev);
+      else if (e.key === 'm') toggleMute();
       else if (e.key === ' ') {
         e.preventDefault();
         togglePlayPause();
@@ -944,7 +948,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen, showComments]);
+  }, [goToNext, goToPrev, onClose, isFullscreen, toggleFullscreen, showComments, toggleMute]);
 
   // Handle drag for visual feedback during swipe
   const isRestoreDrag = useCallback((info: PanInfo) => {
@@ -1508,7 +1512,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               </button>
 
               <button
-                onClick={() => setIsMuted(prev => !prev)}
+                onClick={toggleMute}
                 className={cn(
                   CORNER_CONTROL,
                   "right-3",
@@ -2071,7 +2075,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
             {/* Mute button */}
             <button
-              onClick={() => setIsMuted(prev => !prev)}
+              onClick={toggleMute}
               className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
             >
               {isMuted ? (
