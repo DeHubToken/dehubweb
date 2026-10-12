@@ -302,10 +302,12 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     // unless something new has been typed since.
     const sent = message;
     setMessage('');
-    if (!(await onSendMessage({ content: sent.trim(), type: 'msg' }))) {
+    resetComposerHeight();
+    let delivered = false;
+    try { delivered = await onSendMessage({ content: sent.trim(), type: 'msg' }); } catch { delivered = false; }
+    if (!delivered) {
       setMessage(current => (current.trim() ? current : sent));
     }
-    resetComposerHeight();
     } finally { sendInFlight.current = false; }
   };
 
