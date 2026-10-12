@@ -30,7 +30,13 @@ async function readBody(request: Request): Promise<unknown> {
 }
 export function visualMessages(batch: VisualBatch): { role: string; content: unknown }[] {
   const content: unknown[] = [{ type: "text", text: JSON.stringify({ maximumSeconds: batch.seconds, focus: batch.focus, windows: batch.windows, timing: "Seconds in the selected clip's current playback" }) }];
-  for (const frame of batch.frames) {
+  if (batch.contactSheets) {
+    for (const sheet of batch.contactSheets) {
+      const samples = batch.frames.slice(sheet.startIndex, sheet.endIndex).map(({ windowId, at }) => ({ windowId, at }));
+      content.push({ type: "text", text: "Contact sheet: read left to right, then top to bottom. Every occupied cell is labelled with its window and playback time. Blank cells are unused. Samples: " + JSON.stringify(samples) });
+      content.push({ type: "image_url", image_url: { url: sheet.dataUrl } });
+    }
+  } else for (const frame of batch.frames) {
     content.push({ type: "text", text: `Window ${frame.windowId}, playback time ${frame.at}s` });
     content.push({ type: "image_url", image_url: { url: frame.dataUrl } });
   }
