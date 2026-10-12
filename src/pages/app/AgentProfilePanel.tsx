@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
@@ -63,17 +64,23 @@ function ProfileForm({ wallet, agentId, profile, onClose }: { wallet: string; ag
   </form>;
 }
 
-export function AgentProfilePanel({ wallet, agentId }: { wallet: string; agentId: string }) {
+export function AgentProfilePanel({ wallet, agentId, agentName }: { wallet: string; agentId: string; agentName: string }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const profile = useQuery({ queryKey: ['agent-profile', wallet, agentId], staleTime: 60000,
     queryFn: () => agentTaskRequest<{ profile: Profile }>(wallet, { operation: 'profile', agent_id: agentId }) });
   const data = profile.data?.profile;
+  const profilePath = `/${encodeURIComponent(agentName)}`;
   return <div className="mb-4 space-y-2">
-    {!open && picture(data?.banner) && <img src={picture(data?.banner)} alt={t('agents.profile.banner')} className="aspect-[3/1] w-full rounded-xl object-cover" />}
-    {!open && picture(data?.avatar) && <img src={picture(data?.avatar)} alt={t('agents.profile.avatar')} className="h-16 w-16 rounded-full object-cover" />}
-    {data?.display_name && <p className="font-medium">{data.display_name}</p>}
-    <Button type="button" variant="outline" aria-expanded={open} onClick={() => setOpen(value => !value)}>{t('agents.profile.edit')}</Button>
+    {!open && (picture(data?.banner) || picture(data?.avatar)) && <Link to={profilePath} aria-label={t('feed.viewProfile', { name: agentName })} className="block space-y-2 rounded-xl">
+      {picture(data?.banner) && <img src={picture(data?.banner)} alt={t('agents.profile.banner')} className="aspect-[3/1] w-full rounded-xl object-cover" />}
+      {picture(data?.avatar) && <img src={picture(data?.avatar)} alt={t('agents.profile.avatar')} className="h-16 w-16 rounded-full object-cover" />}
+    </Link>}
+    {data?.display_name && <Link to={profilePath} className="block font-medium hover:underline">{data.display_name}</Link>}
+    <div className="flex flex-wrap gap-2">
+      <Button asChild variant="outline"><Link to={profilePath}>{t('nav.profile')}</Link></Button>
+      <Button type="button" variant="outline" aria-expanded={open} onClick={() => setOpen(value => !value)}>{t('agents.profile.edit')}</Button>
+    </div>
     {open && profile.isLoading && <p>{t('common.loading')}</p>}
     {open && profile.error && <div role="alert"><p>{profile.error.message}</p><Button onClick={() => profile.refetch()}>{t('common.retry')}</Button></div>}
     {open && data && <ProfileForm wallet={wallet} agentId={agentId} profile={data} onClose={() => setOpen(false)} />}
