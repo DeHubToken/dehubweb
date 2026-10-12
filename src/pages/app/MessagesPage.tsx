@@ -651,7 +651,7 @@ export default function MessagesPage() {
                 <p className="text-zinc-500 text-sm truncate">{t('publicChat.subtitle')}</p>
               </div>
               {publicUnread > 0 && (
-                <span data-public-chat-unread className="min-w-5 h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center leading-none">
+                <span data-unread-chip data-public-chat-unread className="min-w-5 h-5 px-1.5 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center leading-none">
                   {publicUnread > 99 ? '99+' : publicUnread}
                 </span>
               )}

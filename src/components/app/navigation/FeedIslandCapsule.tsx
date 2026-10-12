@@ -123,7 +123,7 @@ export function FeedIslandCapsule({
           <button onClick={onBellClick} tabIndex={visible ? 0 : -1} aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })} className="relative flex h-7 w-7 shrink-0 items-center justify-center">
             <Bell className="w-[21px] h-[21px]" strokeWidth={1.9} />
             {unread > 0 && (
-              <span className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
+              <span data-unread-chip className="absolute -top-0.5 -right-1.5 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-[6px] flex items-center justify-center leading-none">
                 {unread > 99 ? '99+' : unread}
               </span>
             )}

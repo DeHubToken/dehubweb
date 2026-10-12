@@ -2055,7 +2055,7 @@ export default function NotificationsPage({ inDrawer = false }: { inDrawer?: boo
             <span className="inline-flex max-w-full items-center gap-2 align-middle">
               <span className="truncate" aria-live="polite">{activeTabLabel}</span>
               {headerUnread > 0 && (
-                <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
+                <span data-unread-chip className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
                   {headerUnread > 99 ? '99+' : headerUnread}
                 </span>
               )}

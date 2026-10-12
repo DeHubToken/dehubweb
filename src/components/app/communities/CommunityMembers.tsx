@@ -148,7 +148,7 @@ export function CommunityMembers({ members, community, membership, onManage }: C
             <Settings2 className="w-3.5 h-3.5" />
             {t('communities.manageButton', { defaultValue: 'Manage' })}
             {pendingMembers.length > 0 && (
-              <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+              <span data-unread-chip className="min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
                 {pendingMembers.length > 99 ? '99+' : pendingMembers.length}
               </span>
             )}
