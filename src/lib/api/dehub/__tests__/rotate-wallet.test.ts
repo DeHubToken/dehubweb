@@ -37,6 +37,12 @@ afterEach(() => {
 });
 
 describe('rotateWallet', () => {
+  it('sends the rotation challenge and exposes replay errors for fresh signing', async () => {
+    mockFetch({ code: 'WALLET_CHALLENGE_UNAVAILABLE', message: 'Used proof' }, 401);
+    await expect(rotateWallet(ADDRESS, SIGNATURE, TIMESTAMP, 8453, 'supabase-jwt', 'a'.repeat(64)))
+      .rejects.toMatchObject({ code: 'WALLET_CHALLENGE_UNAVAILABLE', status: 401 });
+    expect(JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]?.body)).challengeId).toBe('a'.repeat(64));
+  });
   it('posts to the rotate endpoint with the destination signature', async () => {
     mockFetch({ status: true, result: { address: ADDRESS.toLowerCase() } });
     await rotate();
