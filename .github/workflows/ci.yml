@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 5
     services:
       postgres:
-        image: public.ecr.aws/docker/library/postgres:16
+        image: postgres:16
         env:
           POSTGRES_PASSWORD: dex-test
           POSTGRES_DB: dex_test
@@ -47,7 +47,7 @@ jobs:
     timeout-minutes: 5
     services:
       postgres:
-        image: public.ecr.aws/docker/library/postgres:16
+        image: postgres:16
         env:
           POSTGRES_PASSWORD: dub-test
           POSTGRES_DB: dub_test
@@ -92,7 +92,7 @@ jobs:
     timeout-minutes: 5
     services:
       postgres:
-        image: public.ecr.aws/docker/library/postgres:16
+        image: postgres:16
         env:
           POSTGRES_PASSWORD: wallet-test
           POSTGRES_DB: wallet_test
