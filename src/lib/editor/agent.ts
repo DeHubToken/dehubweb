@@ -32,7 +32,7 @@ import { useCaptionsStore } from "@/store/editorCaptionsStore";
 import { nanoid } from "nanoid";
 import { applyTimelineOp, expandBatch, TIMELINE_OPS } from "./timelineAgent";
 import { preciseCommand } from "./preciseCommands";
-import { videoTemplateAspect, videoTemplateCommand } from "./videoTemplates";
+import { videoTemplateAspect, videoTemplateCommand, videoTemplatePageStarts } from "./videoTemplates";
 import { stockSearchPlan } from "./stockSearchPlan";
 import { applyAudioTool } from "./applyAudioTool";
 import { AUDIO_TOOL_MODES, audioToolCommand, type AudioToolMode } from "./audioTools";
@@ -669,11 +669,13 @@ export async function applyOps(ops: AgentOp[], ctx: ApplyContext = {}): Promise<
         await task.ready();
         const all = store().clips.map((c) => c.id);
         if (all.length) store().rippleDelete(all);
-        store().updateSettings({ pages: undefined });
+        store().updateSettings({ pages: undefined, pageTiming: undefined });
         store().setCurrentTime(0);
         // Nested ops run inside this request's undo step; their new layers
         // are not addressable as new:N from the outer list.
         const inner = await applyOps(tpl.ops(i18n.t.bind(i18n), videoTemplateAspect(op.aspect)), ctx);
+        store().updateSettings({ pages: videoTemplatePageStarts(tpl.id), pageTiming: tpl.kind === "video" ? "content" : undefined });
+        store().setCurrentTime(tpl.kind === "video" ? 0.6 : 0);
         return inner.applied > 0;
       }
       case "captions": {

@@ -1,3 +1,4 @@
+import { getPages, timelineDuration } from "./pages";
 import { describe, it, expect, vi } from "vitest";
 import { useEditorStore } from "@/store/editorStore";
 import { applyOps, askAgent } from "./agent";
@@ -23,7 +24,9 @@ describe("timed video starters", () => {
       const beats = timings[template.id.replace("video-", "")];
       const end = beats[beats.length - 1][1];
       expect(project.settings.aspectPreset).toBe(aspect);
-      expect(project.settings.pages).toBeUndefined();
+      expect(project.settings.pages).toEqual(beats.map(([start]) => start));
+      expect(getPages(project.settings, project.clips).map(page => [page.start, page.end])).toEqual(beats);
+      expect(timelineDuration(project.settings, project.clips)).toBe(end);
       expect(Math.max(...project.clips.map(clip => clip.start + clip.duration))).toBe(end);
       const words = project.clips.filter((clip): clip is TextClip => clip.kind === "text");
       expect(words).toHaveLength(beats.length * 3);
@@ -32,6 +35,7 @@ describe("timed video starters", () => {
       beats.forEach(([start, finish]) => {
         const active = words.filter(clip => clip.start <= start + 0.6 && clip.start + clip.duration > start + 0.6);
         expect(active).toHaveLength(3);
+        expect(active.map(clip => clip.y).sort()).toEqual([0.34, 0.5, 0.66]);
         expect(active.every(clip => clip.start === start && clip.duration === finish - start)).toBe(true);
       });
       expect(words.filter(clip => clip.start + clip.duration > end)).toHaveLength(0);
@@ -88,7 +92,7 @@ it("replaces an old paged design as one undo step without extending later scenes
   await applyTemplate(VIDEO_TEMPLATES.find(template => template.id === "video-question")!, t, { aspect: "16:9" });
   expect(useEditorStore.getState().past).toHaveLength(past + 1);
   const starter = useEditorStore.getState().toSnapshot();
-  expect(starter.settings.pages).toBeUndefined();
+  expect(starter.settings.pages).toEqual([0, 3, 7]);
   useEditorStore.getState().undo();
   expect(useEditorStore.getState().clips).toEqual(original.clips);
   expect(useEditorStore.getState().settings).toEqual(original.settings);

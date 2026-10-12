@@ -9,7 +9,7 @@ import { beginEditorCommand } from "./editorCommand";
  */
 import type { TFunction } from "i18next";
 import type { AspectPreset } from "./types";
-import { VIDEO_TEMPLATES, type VideoTemplateAspect } from "./videoTemplates";
+import { VIDEO_TEMPLATES, videoTemplatePageStarts, type VideoTemplateAspect } from "./videoTemplates";
 import { applyOps, type AgentOp, type ApplyContext } from "./agent";
 
 export interface EditorTemplate {
@@ -179,7 +179,7 @@ export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx:
     const store = command.store();
     const all = store.clips.map((c) => c.id);
     if (all.length) store.rippleDelete(all);
-    store.updateSettings({ pages: undefined });
+    store.updateSettings({ pages: undefined, pageTiming: undefined });
     store.setCurrentTime(0);
     await applyOps(template.ops(t, ctx.aspect), { ...ctx, command });
     await command.ready();
@@ -189,6 +189,8 @@ export async function applyTemplate(template: EditorTemplate, t: TFunction, ctx:
     const s = command.store();
     const end = s.clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
     for (const c of s.clips) if (template.kind !== "video" && c.start + c.duration < end) s.patchClip(c.id, { duration: end - c.start });
+    command.store().updateSettings({ pages: videoTemplatePageStarts(template.id), pageTiming: template.kind === "video" ? "content" : undefined });
+    command.store().setCurrentTime(template.kind === "video" ? 0.6 : 0);
     command.store().selectClip(null);
   } finally { if (ownsCommand) command.release(); }
 }

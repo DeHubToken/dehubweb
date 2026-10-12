@@ -7,6 +7,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * canvas to place, or onto the timeline to schedule.
  */
 import { useCallback } from 'react';
+import { getPages, pageAt } from '@/lib/editor/pages';
+import { useEditorDraftFocus } from '@/components/editor/useEditorDraftFocus';
+import { ScreenSwitch } from '@/components/editor/ScreenSwitch';
+import type { TextClip } from '@/lib/editor/types';
 import { useEditorStore } from '@/store/editorStore';
 import { TEXT_DRAG_MIME, TEXT_PRESETS, type TextPreset } from '@/lib/editor/textPresets';
 import { PanelHeading } from './DesignPanel';
@@ -15,6 +19,13 @@ export function TextPanel() {
   const { t: _copy } = _useCopy();
   const addTextClip = useEditorStore((s) => s.addTextClip);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
+  const clips = useEditorStore(s => s.clips);
+  const settings = useEditorStore(s => s.settings);
+  const currentTime = useEditorStore(s => s.currentTime);
+  const pages = getPages(settings, clips);
+  const page = pageAt(pages, currentTime);
+  const words = clips.filter((clip): clip is TextClip => clip.kind === "text" && clip.start < page.end && clip.start + clip.duration > page.start).sort((a, b) => a.y - b.y);
+  const draft = useEditorDraftFocus(`screen-text-${page.index}`, false);
 
   const insert = useCallback(
     (p: TextPreset) => {
@@ -26,6 +37,13 @@ export function TextPanel() {
 
   return (
     <div className="flex h-full flex-col overflow-y-auto p-3">
+      {pages.length > 1 && <section {...draft.props} className="mb-5 space-y-3">
+        <ScreenSwitch />
+        {words.map((word, index) => <label key={word.id} className="block space-y-1">
+          <span className="text-xs text-white/65">{_copy("editor.menu.editText")} {index + 1}</span>
+          <textarea disabled={word.locked} aria-label={`${_copy("editor.menu.editText")} ${index + 1}`} rows={word.fontSize >= 80 ? 3 : 2} value={word.text} onChange={e => updateTextClip(word.id, { text: e.target.value })} className="w-full resize-y rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-sm text-white focus:border-white/60 focus:outline-none disabled:opacity-50" />
+        </label>)}
+      </section>}
       <PanelHeading>{_copy("copy.1b4d10038c32", { defaultValue: "Add text" })}</PanelHeading>
 
       <button
