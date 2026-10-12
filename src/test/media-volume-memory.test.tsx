@@ -30,3 +30,9 @@ it('clamps volume adjustments to the player range', () => {
   setVolume(2); expect(getMediaVolume()).toBe(1);
   setVolume(-1); expect(getMediaVolume()).toBe(0);
 });
+it('saves mute and unmute before app suspension can stop timers', () => {
+  setMediaMuted(true);
+  expect(JSON.parse(localStorage.getItem('video-preferences')!).mediaMuted).toBe(true);
+  setMediaMuted(false);
+  expect(JSON.parse(localStorage.getItem('video-preferences')!).mediaMuted).toBe(false);
+});
