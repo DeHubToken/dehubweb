@@ -13,7 +13,7 @@ import { isShortsPhoto, shortsPhotoMedia } from '@/lib/shorts-photos';
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -1615,14 +1615,14 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
 
   // One insertion schedule for single-column and measured masonry layouts.
   const renderFeedWithShorts = () => {
-    type Segment = { items: FeedItemType[]; start: number; inserts: ReactNode[]; shorts: boolean };
+    type Segment = { items: FeedItemType[]; start: number; inserts: ReactElement[]; shorts: boolean };
     const segments: Segment[] = [];
     let posts = 0;
     let start = 0;
     items.forEach((item, index) => {
       if (item.type === 'ad') return;
       posts++;
-      const inserts: ReactNode[] = [];
+      const inserts: ReactElement[] = [];
       const batchIndex = shortsBatchIndex(posts);
       const batch = batchIndex >= 0 ? shortsBatches[batchIndex] : undefined;
       const hasShorts = !!batch?.length && !isKidsMode;
@@ -1659,16 +1659,18 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
       }
     });
     if (start < items.length) segments.push({ items: items.slice(start), start, inserts: [], shorts: false });
-    return <>{segments.map((segment, index) => (
-      <div key={`feed-segment-${segment.start}`}>
+    return <>{segments.flatMap((segment, index) => [
+      <div key={`feed-segment-${segment.start}`} className="mb-3">
         {renderMasonryGrid(
           segment.items.map((item, offset) => renderFeedItem(item, segment.start + offset, 'feed',
             segment.shorts && offset === segment.items.length - 1)),
           segment.items, segment.inserts.length > 0, segment.shorts, index > 0 && segments[index - 1].shorts,
         )}
-        {segment.inserts.map((node, insertIndex) => <div key={insertIndex} className="my-3">{node}</div>)}
-      </div>
-    ))}</>;
+      </div>,
+      // Carousel keys live beside the segments so an arriving radio/live row
+      // cannot remount a Shorts viewer or reset its horizontal scroll.
+      ...segment.inserts.map(node => <div key={node.key} className="my-3">{node}</div>),
+    ])}</>;
   };
 
   // Determine loading state
