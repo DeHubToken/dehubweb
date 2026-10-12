@@ -1,3 +1,4 @@
+import { Play as StripPlay, Pause as StripPause, Volume2 as StripVolume, VolumeX as StripMute, Repeat2 as StripLoop, PictureInPicture2 as StripPip, Maximize as StripFullscreen, Minimize as StripExitFullscreen } from 'lucide-react';
 import Minimize from "@/components/ui/cut-icons/exit-fullscreen";
 import FastForward from "@/components/ui/cut-icons/fast-forward";
 import Rewind from "@/components/ui/cut-icons/rewind";
@@ -1440,7 +1441,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
   // A menu or slider open over the player counts as activity: the row must not
   // vanish out from under the thing the pointer is already inside.
-  const controlsVisible = !isPlaying || showControls || subsMenuOpen || volumeOpen;
+  const splitControls = bareControls && !isContentGated;
+  const controlsVisible = splitControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
   useEffect(() => {
     if (controlsVisible && videoRef.current) setCurrentTime(videoRef.current.currentTime);
   }, [controlsVisible]);
@@ -1673,7 +1675,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: `dehub-inline-video w-full h-full ${cropFeedVideo ? 'object-cover' : 'object-contain'}`,
+    className: 'dehub-inline-video w-full h-full object-contain',
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2073,26 +2075,26 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         tabIndex={0}
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
+        data-video-split-controls={splitControls || undefined}
+        data-video-fullscreen={isFullscreen || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
-        /* Feed videos fill the column and crop only past 75% of the viewport.
-           On the post page (immersive) it's centred in the column instead, and
-           grows until it fills either the column width or most of the screen
-           height, whichever it hits first — never cropped, never stretched. */
-        style={
+        /* Fit the full picture within the media budget, reserving a separate
+           transport strip below it on feeds, post pages and fullscreen. */
+        style={{ ...(
           isFullscreen || (isImmersive && showComments)
             ? undefined
             : isImmersive
               ? {
                   aspectRatio: mediaAspect,
                   width: `min(100%, calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
-                  maxHeight: IMMERSIVE_MAX_MEDIA_HEIGHT,
+                  maxHeight: splitControls ? `calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)` : IMMERSIVE_MAX_MEDIA_HEIGHT,
                 }
               : cropFeedVideo
                 ? {
                     aspectRatio: mediaAspect,
                     width: '100%',
-                    maxHeight: '75svh',
+                    maxHeight: splitControls ? 'calc(75svh - 47px)' : '75svh',
                   }
                 : {
                   aspectRatio: mediaAspect,
@@ -2100,9 +2102,9 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   // Backstop for the minimal theme, which forces media to full
                   // bleed with !important width: the box letterboxes there rather
                   // than growing past a screen.
-                  maxHeight: MAX_MEDIA_HEIGHT,
+                  maxHeight: splitControls ? MAX_MEDIA_HEIGHT - 47 : MAX_MEDIA_HEIGHT,
                 }
-        }
+        ), ...(splitControls ? { paddingBottom: 47, boxSizing: 'content-box' as const, ...(isFullscreen ? { height: 'calc(100dvh - 47px)' } : {}) } : {}) }}
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
@@ -2128,6 +2130,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       >
+        <div data-video-picture className={splitControls ? "absolute inset-x-0 top-0 bottom-[47px]" : "contents"}>
         {/* Mature warning sits outermost: revealing it falls through to
             whatever gate the post actually has, rather than replacing it. */}
         {matureGate.isGated ? (
@@ -2368,7 +2371,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${cropFeedVideo ? 'object-cover' : 'object-contain'}`}
+                    className="absolute inset-0 w-full h-full object-contain"
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
@@ -2474,6 +2477,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               buttonPortalTarget={ccSlot}
               buttonClassName={ccSlot ? undefined : 'absolute top-2 right-2 z-20'}
               buttonVisible={controlsVisible}
+              plainButton={splitControls}
               onMenuOpenChange={setSubsMenuOpen}
               onDubAvailableChange={setDubAvailable}
             />
@@ -2481,14 +2485,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         )}
         
         
-        {/* Video controls - hidden when PPV locked */}
+        {/* Video overlays - hidden when PPV locked */}
         {!isContentGated && <>
         {/* First-frame glitch loader */}
         {isLoading && (
           <VideoGlitchLoader poster={thumbnail} />
         )}
         
-        {!isLoading && video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow) && (
+        {!splitControls && !isLoading && video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow) && (
           <button
             data-video-controls data-video-bare data-video-center
             data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
@@ -2515,7 +2519,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             to act on there, and the row appeared on hover over a visualizer
             that already carries its own transport. */}
 
-        {controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+        </>}
+        </div>
+
+        {!isContentGated && <>
+        {!splitControls && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 top-1.5 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
@@ -2583,12 +2591,128 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             from the centered Play button; seeking enables once the length is
             known. Audio posts and live streams own their transport. */}
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
+          <div data-video-controls data-video-control-strip={splitControls || undefined} data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-none" />}
 
-            <div data-video-button-row className={cn("flex items-center gap-2", bareControls && (mediaAspect >= 1 ? "px-2" : "px-1.5"))}>
-              <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
+            <div data-video-button-row className="flex items-center justify-between gap-1 px-2">
+              <div data-video-transport className="flex items-center gap-1">
+                {splitControls && <button data-video-bare type="button"
+                  aria-label={t(isPlaying ? 'audioPost.pause' : 'audioPost.play')}
+                  className="flex h-8 w-8 items-center justify-center text-white"
+                  onClick={event => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}>
+                  <MediaControlIcon icon={isPlaying ? StripPause : StripPlay} plain />
+                </button>}
+                {splitControls && <div data-video-volume>
+            {dubAvailable ? (
+              <Suspense fallback={<span className="h-8 w-8" />}>
+              <DubVolumeControl plain open={volumeOpen} onOpenChange={setVolumeOpen} muted={isMuted || volume === 0}
+                onToggleMute={(event) => { if (volume === 0) setVolumeTo(0.8); else toggleMute(event); }}
+                onUnmute={() => { if (isMuted || volume === 0) setVolumeTo(volume || 0.8); }} />
+              </Suspense>
+            ) : <div
+              className="relative"
+              onPointerEnter={(e) => { if (e.pointerType === 'mouse') setVolumeOpen(true); }}
+              onPointerLeave={() => setVolumeOpen(false)}
+              onTouchStart={() => setVolumeOpen(false)}
+            >
+              <button
+                className="h-8 w-8 text-white flex items-center justify-center"
+                onClick={toggleMute}
+                aria-label={t('videoPlayer.volume')}
+              >
+                {isMuted ? <MediaControlIcon icon={StripMute} plain /> : <MediaControlIcon icon={StripVolume} plain />}
+              </button>
+              {volumeOpen && (
+                <div className="absolute bottom-full left-0 pb-1.5" onClick={(e) => e.stopPropagation()}>
+                  <div className="h-[104px] w-8 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 flex items-center justify-center">
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={volumePct}
+                      onChange={(e) => setVolumeTo(Number(e.target.value) / 100)}
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={t('videoPlayer.volume')}
+                      className="h-1 w-[84px] -rotate-90 appearance-none cursor-pointer rounded-full bg-transparent
+                        [&::-webkit-slider-thumb]:appearance-none
+                        [&::-webkit-slider-thumb]:w-3
+                        [&::-webkit-slider-thumb]:h-3
+                        [&::-webkit-slider-thumb]:bg-white
+                        [&::-webkit-slider-thumb]:rounded-full
+                        [&::-webkit-slider-thumb]:shadow-md
+                        [&::-moz-range-thumb]:w-3
+                        [&::-moz-range-thumb]:h-3
+                        [&::-moz-range-thumb]:bg-white
+                        [&::-moz-range-thumb]:rounded-full
+                        [&::-moz-range-thumb]:border-0"
+                      style={{
+                        backgroundImage: 'linear-gradient(to right, white ' + volumePct + '%, rgba(255,255,255,0.3) ' + volumePct + '%)',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '100% 4px',
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>}
+                </div>}
+                <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
+              </div>
+              <div data-video-inline-tools className="ml-auto flex shrink-0 items-center gap-1">
+            {/* Subtitles mount here — display:contents keeps the button a direct
+                flex item, so it sits in the row's gap like everything else. */}
+            <div ref={setCcSlot} className="contents" />
+
+            <button
+              data-on-media
+              className="h-8 w-[44px] text-white flex items-center justify-center  text-xs font-medium"
+              onClick={cyclePlaybackRate}
+              style={{ touchAction: 'manipulation' }}
+              aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
+            >
+              {formatRate(playbackRate)}x
+            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+              data-on-media
+                  className={cn(
+                    "h-8 w-8 text-white flex items-center justify-center ",
+                  )}
+                  onClick={toggleLoop}
+                  aria-label={isLooping ? _copy("copy.5178a4089a25", { defaultValue: "Disable loop" }) : _copy("copy.833dcdfad12f", { defaultValue: "Enable loop" })}
+                  aria-pressed={isLooping}
+                >
+                  <MediaControlIcon icon={splitControls ? StripLoop : Repeat} active={isLooping} plain={splitControls} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{isLooping ? _copy("copy.2e68f91aef20", { defaultValue: "Loop on" }) : _copy("copy.daee48e3d2b7", { defaultValue: "Loop off" })}</TooltipContent>
+            </Tooltip>
+            {document.pictureInPictureEnabled && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+              data-on-media
+                    className="h-8 w-8 text-white flex items-center justify-center "
+                    onClick={handlePictureInPicture}
+                    aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
+                  >
+                    <MediaControlIcon icon={splitControls ? StripPip : PictureInPicture2} plain={splitControls} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>{_copy("copy.bc8805b92ad0", { defaultValue: "Picture in Picture (P)" })}</TooltipContent>
+              </Tooltip>
+            )}
+                <button data-video-bare onClick={handleFullscreen}
+                  aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center text-white">
+                  <MediaControlIcon icon={splitControls ? (isFullscreen ? StripExitFullscreen : StripFullscreen) : (isFullscreen ? Minimize : Maximize)} plain={splitControls} />
+                </button>
+              </div>
+            </div>
               <input
                 type="range"
                 min={0}
@@ -2644,75 +2768,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   backgroundSize: '100% 4px',
                 }}
               />
-              <div data-video-inline-tools className="ml-auto flex shrink-0 items-center gap-1">
-            {/* Subtitles mount here — display:contents keeps the button a direct
-                flex item, so it sits in the row's gap like everything else. */}
-            <div ref={setCcSlot} className="contents" />
 
-            <button
-              data-on-media
-              className="h-8 w-[52px] text-white flex items-center justify-center  text-xs font-medium"
-              onClick={cyclePlaybackRate}
-              style={{ touchAction: 'manipulation' }}
-              aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
-            >
-              {formatRate(playbackRate)}x
-            </button>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-              data-on-media
-                  className={cn(
-                    "h-8 w-8 text-white flex items-center justify-center ",
-                  )}
-                  onClick={toggleLoop}
-                  aria-label={isLooping ? _copy("copy.5178a4089a25", { defaultValue: "Disable loop" }) : _copy("copy.833dcdfad12f", { defaultValue: "Enable loop" })}
-                  aria-pressed={isLooping}
-                >
-                  <MediaControlIcon icon={Repeat} active={isLooping} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>{isLooping ? _copy("copy.2e68f91aef20", { defaultValue: "Loop on" }) : _copy("copy.daee48e3d2b7", { defaultValue: "Loop off" })}</TooltipContent>
-            </Tooltip>
-            {document.pictureInPictureEnabled && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-              data-on-media
-                    className="h-8 w-8 text-white flex items-center justify-center "
-                    onClick={handlePictureInPicture}
-                    aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
-                  >
-                    <MediaControlIcon icon={PictureInPicture2} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>{_copy("copy.bc8805b92ad0", { defaultValue: "Picture in Picture (P)" })}</TooltipContent>
-              </Tooltip>
-            )}
-            {!bareControls && (
-              <button
-              data-on-media
-                className="h-8 w-8 text-white flex items-center justify-center "
-                onClick={handleFullscreen}
-                aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
-              >
-                {isFullscreen ? <MediaControlIcon icon={Minimize} /> : <MediaControlIcon icon={Maximize} />}
-              </button>
-            )}
-              </div>
-              {bareControls ? (
-                <>
-                  <button
-                    data-video-bare
-                    onClick={handleFullscreen}
-                    aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
-                    className={cn("flex h-8 w-8 shrink-0 items-center justify-center text-white", mediaAspect < 1 && "-mr-1")}
-                  >
-                    {isFullscreen ? <MediaControlIcon icon={Minimize} /> : <MediaControlIcon icon={Maximize} />}
-                  </button>
-                </>
-              ) : null}
-            </div>
           </div>
         )}
 
