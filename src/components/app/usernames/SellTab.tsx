@@ -23,7 +23,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
-import { AlertTriangle, ArrowRight, Loader2, Trash2 } from 'lucide-react';
+import { AlertTriangle, ArrowRight, Loader2 } from "lucide-react";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

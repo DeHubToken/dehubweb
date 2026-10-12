@@ -13,8 +13,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Check, Link2, Loader2, Pencil, Trash2, Upload } from "lucide-react";
-import { Plus, X } from "@/components/ui/cut-icons";
+import { Loader2 } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import Link2 from "@/components/ui/cut-icons/link";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Upload from "@/components/ui/cut-icons/upload";
+
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';

@@ -3,8 +3,13 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
-import { SkipBack, SkipForward, Shuffle, Heart, ListMusic, Radio } from "lucide-react";
-import { Play, Repeat } from "@/components/ui/cut-icons";
+import { Shuffle, Heart, ListMusic } from "lucide-react";
+import SkipBack from "@/components/ui/cut-icons/previous";
+import SkipForward from "@/components/ui/cut-icons/next-track";
+import Radio from "@/components/ui/cut-icons/live";
+
+import Play from "@/components/ui/cut-icons/play";
+import Repeat from "@/components/ui/cut-icons/repost";
 
 
 const MOCK_TRACKS = [

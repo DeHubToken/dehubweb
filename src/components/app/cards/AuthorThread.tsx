@@ -15,8 +15,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Trash2 } from "lucide-react";
-import { ThumbsUp, Share2 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';

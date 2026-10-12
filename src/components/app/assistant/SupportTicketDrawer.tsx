@@ -16,7 +16,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LifeBuoy, Loader2, CheckCircle2, Clock, AlertCircle } from "lucide-react";
-import { Plus, ArrowLeft } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';

@@ -5,8 +5,16 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Lock, Globe, Clock, UserCheck, UserX, Pencil } from "lucide-react";
-import { Share2, X } from "@/components/ui/cut-icons";
+import { Flame, CheckCircle2, Globe, Clock, UserCheck, UserX } from "lucide-react";
+import MapPin from "@/components/ui/cut-icons/location";
+import Calendar from "@/components/ui/cut-icons/events";
+import Users from "@/components/ui/cut-icons/communities";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Pencil from "@/components/ui/cut-icons/edit";
+
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import X from "@/components/ui/cut-icons/close";
 
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';

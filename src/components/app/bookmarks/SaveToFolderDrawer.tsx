@@ -15,8 +15,10 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Folder, FolderPlus, Check, CircleAlert, CircleCheck, Globe, Loader2 } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { Folder, FolderPlus, CircleAlert, CircleCheck, Globe, Loader2 } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';

@@ -7,7 +7,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * their prompts. `@Label` mentions of wired image nodes order the references.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Braces, Copy, CopyPlus, Trash2 } from 'lucide-react';
+import { Braces, CopyPlus } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';
 import { toast } from 'sonner';

@@ -7,8 +7,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Users } from "lucide-react";
-import { ArrowLeft } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';

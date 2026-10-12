@@ -2,8 +2,22 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Paperclip, Calendar, Radio, Sparkles, Loader2, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, Type, Camera, Hash, BarChart2, MonitorPlay } from "lucide-react";
-import { Send, Mic, ChevronRight, X, Search, MessageSquare } from "@/components/ui/cut-icons";
+import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay } from "lucide-react";
+import Paperclip from "@/components/ui/cut-icons/attach";
+import Calendar from "@/components/ui/cut-icons/events";
+import Radio from "@/components/ui/cut-icons/live";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Music from "@/components/ui/cut-icons/music";
+import Video from "@/components/ui/cut-icons/video";
+import Upload from "@/components/ui/cut-icons/upload";
+import Camera from "@/components/ui/cut-icons/camera";
+
+import Send from "@/components/ui/cut-icons/send";
+import Mic from "@/components/ui/cut-icons/mic";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import X from "@/components/ui/cut-icons/close";
+import Search from "@/components/ui/cut-icons/search";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';

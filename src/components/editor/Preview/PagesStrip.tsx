@@ -5,8 +5,13 @@
  */
 import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, Copy, Type, Trash2 } from "lucide-react";
-import { ChevronRight, Play, Plus } from "@/components/ui/cut-icons";
+import { ChevronLeft, Type } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Play from "@/components/ui/cut-icons/play";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";

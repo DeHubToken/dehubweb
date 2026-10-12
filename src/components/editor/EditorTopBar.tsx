@@ -5,8 +5,13 @@ import { useAccountDraftKey } from '@/hooks/use-draft-state';
 import { useEditorStore } from "@/store/editorStore";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
-import { Save, Undo2, Redo2, FilePlus2, Info, Sparkles } from "lucide-react";
-import { Download } from "@/components/ui/cut-icons";
+import { Save, FilePlus2 } from "lucide-react";
+import Undo2 from "@/components/ui/cut-icons/undo";
+import Redo2 from "@/components/ui/cut-icons/redo";
+import Info from "@/components/ui/cut-icons/information";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
+import Download from "@/components/ui/cut-icons/download";
 
 import { useCallback, useState, useEffect } from "react";
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";

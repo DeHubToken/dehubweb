@@ -3,8 +3,10 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { SETTINGS_CONTROL_CLASS } from '@/components/app/settings/SettingsRow';
-import { Check, ChevronDown } from "lucide-react";
-import { Search } from "@/components/ui/cut-icons";
+import { ChevronDown } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+
+import Search from "@/components/ui/cut-icons/search";
 
 import {
   Drawer,

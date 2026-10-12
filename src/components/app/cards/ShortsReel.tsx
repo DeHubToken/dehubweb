@@ -12,8 +12,11 @@
 
 import { useState, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
-import { Eye } from "lucide-react";
-import { Play, ChevronRight, ThumbsUp } from "@/components/ui/cut-icons";
+import Eye from "@/components/ui/cut-icons/visibility";
+
+import Play from "@/components/ui/cut-icons/play";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { AnimatePresence } from 'framer-motion';
 // Lazy for the same reason as the other call sites — see ShortsFeed.

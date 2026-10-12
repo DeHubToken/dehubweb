@@ -1,7 +1,10 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { RotateCw, FlipHorizontal, FlipVertical, Check, Crop, ZoomIn, ZoomOut, ArrowUpDown } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { RotateCw, FlipHorizontal, FlipVertical, ZoomIn, ZoomOut, ArrowUpDown } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import Crop from "@/components/ui/cut-icons/crop";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { motion } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';

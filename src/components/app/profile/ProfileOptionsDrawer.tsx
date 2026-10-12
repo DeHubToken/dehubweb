@@ -1,7 +1,16 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState } from 'react';
-import { Copy, AtSign, Wallet, Gift, Handshake, UserMinus, Ban, LayoutDashboard, Loader2, ShieldCheck, Flag, Award } from "lucide-react";
-import { MessageCircle, Bell } from "@/components/ui/cut-icons";
+import { AtSign, Handshake, UserMinus, Loader2, Award } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Ban from "@/components/ui/cut-icons/blocked";
+import LayoutDashboard from "@/components/ui/cut-icons/command";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Flag from "@/components/ui/cut-icons/report";
+
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import Bell from "@/components/ui/cut-icons/alerts";
 
 import { ReportModal } from '@/components/app/modals/ReportModal';
 import { toast } from 'sonner';

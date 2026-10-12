@@ -28,8 +28,15 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CalendarClock, Check, Loader2, ShieldCheck, Upload, Users, Wallet } from "lucide-react";
-import { Share2, X } from "@/components/ui/cut-icons";
+import { CalendarClock, Loader2 } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Upload from "@/components/ui/cut-icons/upload";
+import Users from "@/components/ui/cut-icons/communities";
+import Wallet from "@/components/ui/cut-icons/wallet";
+
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import X from "@/components/ui/cut-icons/close";
 
 import dehubCoin from '@/assets/dehub-coin.png';
 import { ShareEntityDrawer } from '@/components/app/ShareEntityDrawer';

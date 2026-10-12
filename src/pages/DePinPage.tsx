@@ -3,23 +3,12 @@ import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
-import {
-  ArrowDown,
-  ArrowRight,
-  Boxes,
-  Check,
-  CircleDollarSign,
-  Cpu,
-  Gauge,
-  HardDrive,
-  Loader2,
-  LockKeyhole,
-  Network,
-  Radio,
-  Server,
-  ShieldCheck,
-  WifiOff,
-} from 'lucide-react';
+import { ArrowDown, ArrowRight, Boxes, CircleDollarSign, Cpu, Gauge, HardDrive, Loader2, Network, Server, WifiOff } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import LockKeyhole from "@/components/ui/cut-icons/privacy";
+import Radio from "@/components/ui/cut-icons/live";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+
 import { Link } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';

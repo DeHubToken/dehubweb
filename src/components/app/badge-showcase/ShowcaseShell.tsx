@@ -9,7 +9,9 @@ import type { CSSProperties, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useReducedMotion } from 'framer-motion';
-import { Pause, Play, X } from "@/components/ui/cut-icons";
+import Pause from "@/components/ui/cut-icons/pause";
+import Play from "@/components/ui/cut-icons/play";
+import X from "@/components/ui/cut-icons/close";
 
 import { StickerStage, stickerArtRect, type StickerFinish, type StickerItem } from './sticker-stage';
 import { SHOWCASE_CSS } from './showcase-ui';

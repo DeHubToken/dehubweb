@@ -1,6 +1,13 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
-import { Check, Copy, Eye, EyeOff, Loader2, RefreshCw, Radio } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
+import Eye from "@/components/ui/cut-icons/visibility";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Radio from "@/components/ui/cut-icons/live";
+
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 

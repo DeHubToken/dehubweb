@@ -17,8 +17,11 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useMemo, useCallback, useRef, useEffect } from 'react';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { UserPlus, Loader2, RefreshCw } from "lucide-react";
-import { ChevronRight } from "@/components/ui/cut-icons";
+import { Loader2 } from "lucide-react";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useNavigate } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';

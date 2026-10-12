@@ -11,8 +11,12 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Sparkles, Loader2, ImageIcon } from "lucide-react";
-import { X, Send, Share } from "@/components/ui/cut-icons";
+import { Loader2, ImageIcon } from "lucide-react";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
+import X from "@/components/ui/cut-icons/close";
+import Send from "@/components/ui/cut-icons/send";
+import Share from "@/components/ui/cut-icons/share";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';

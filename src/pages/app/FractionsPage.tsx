@@ -13,7 +13,9 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShoppingBag, Wallet, Activity } from 'lucide-react';
+import { ShoppingBag, Activity } from "lucide-react";
+import Wallet from "@/components/ui/cut-icons/wallet";
+
 import { SEOHead } from '@/components/SEOHead';
 import { PageBody, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { BrowseFractionsTab } from '@/components/app/fractions/BrowseFractionsTab';

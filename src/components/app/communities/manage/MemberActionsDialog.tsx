@@ -10,8 +10,16 @@
 import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Ban, Crown, ExternalLink, Loader2, MicOff, Shield, ShieldCheck, Trash2, Undo2, UserX } from "lucide-react";
-import { Mic, User } from "@/components/ui/cut-icons";
+import { Crown, Loader2, Shield, UserX } from "lucide-react";
+import Ban from "@/components/ui/cut-icons/blocked";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Undo2 from "@/components/ui/cut-icons/undo";
+
+import Mic from "@/components/ui/cut-icons/mic";
+import User from "@/components/ui/cut-icons/profile";
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {

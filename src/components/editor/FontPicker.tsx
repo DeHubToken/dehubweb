@@ -5,8 +5,10 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * Fonts are lazily loaded on hover/selection so the initial menu is cheap.
  */
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { Search } from "@/components/ui/cut-icons";
+import { ChevronsUpDown } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+
+import Search from "@/components/ui/cut-icons/search";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";

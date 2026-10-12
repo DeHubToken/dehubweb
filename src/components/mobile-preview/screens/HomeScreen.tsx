@@ -4,8 +4,13 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
-import { Heart, MoreHorizontal, Image } from "lucide-react";
-import { MessageSquare, Repeat2, Share } from "@/components/ui/cut-icons";
+import { Heart } from "lucide-react";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Image from "@/components/ui/cut-icons/images";
+
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Repeat2 from "@/components/ui/cut-icons/repost";
+import Share from "@/components/ui/cut-icons/share";
 
 
 const mockPosts = (t: TFunction) => [

@@ -8,8 +8,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/radio/RadioMiniPlayer
  */
 
-import { Radio, Volume2, VolumeX, Loader2, Maximize2, Minus, GripVertical } from "lucide-react";
-import { Play, Pause, X } from "@/components/ui/cut-icons";
+import { Loader2, Maximize2, Minus, GripVertical } from "lucide-react";
+import Radio from "@/components/ui/cut-icons/live";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
+import X from "@/components/ui/cut-icons/close";
 
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';

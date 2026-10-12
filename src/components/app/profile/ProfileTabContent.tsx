@@ -4,10 +4,20 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Repeat2 } from "@/components/ui/cut-icons";
+import Repeat2 from "@/components/ui/cut-icons/repost";
 
-import { Loader2, Heart, ArrowUpRight, Info, Image, Pencil, Trash2, Pin, ListVideo, ChevronLeft } from "lucide-react";
-import { Plus, MessageCircle, ThumbsUp, MessageSquare, Share2, Bookmark } from "@/components/ui/cut-icons";
+import { Loader2, Heart, ArrowUpRight, Pin, ListVideo, ChevronLeft } from "lucide-react";
+import Info from "@/components/ui/cut-icons/information";
+import Image from "@/components/ui/cut-icons/images";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import Plus from "@/components/ui/cut-icons/add";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Bookmark from "@/components/ui/cut-icons/save";
 
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';

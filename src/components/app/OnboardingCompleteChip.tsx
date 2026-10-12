@@ -17,7 +17,8 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Trophy } from 'lucide-react';
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingChecklistContext';

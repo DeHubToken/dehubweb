@@ -5,8 +5,19 @@ import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Minus, Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, ArrowLeftRight, Film, Music, Type, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, GripVertical, Pencil } from "lucide-react";
-import { Plus, X } from "@/components/ui/cut-icons";
+import { Minus, ArrowLeftRight, Film, Type, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, GripVertical } from "lucide-react";
+import Scissors from "@/components/ui/cut-icons/trim";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Eye from "@/components/ui/cut-icons/visibility";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Music from "@/components/ui/cut-icons/music";
+import Copy from "@/components/ui/cut-icons/copy";
+import Pencil from "@/components/ui/cut-icons/edit";
+
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

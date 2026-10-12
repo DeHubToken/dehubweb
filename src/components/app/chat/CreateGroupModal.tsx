@@ -8,8 +8,12 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Loader2, Users, Check } from "lucide-react";
-import { Search, X } from "@/components/ui/cut-icons";
+import { Loader2 } from "lucide-react";
+import Users from "@/components/ui/cut-icons/communities";
+import Check from "@/components/ui/cut-icons/check";
+
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

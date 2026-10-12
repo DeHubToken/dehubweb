@@ -1,6 +1,34 @@
 import type React from 'react';
-import { AudioLines, AtSign, BarChart3, CalendarDays, Crosshair, Coins, Film, Image as ImageIcon, Layers, Landmark, Link2, Mail, Radio, Rocket, Star, Users, Wand2, Palette, BookOpen, Briefcase, Clapperboard, Flame, Gamepad2, Lamp, Lightbulb, LayoutDashboard, Lock, Megaphone, ShieldCheck, Sparkles, Store, Ticket, Trophy, Tv, Vault, type LucideIcon, Zap, Anchor, Armchair, Bomb, Handshake, Hourglass, Shield, Siren, TrendingUp, Waves, Target } from "lucide-react";
-import { Bookmark, Home, MessageSquare, Bell, MessageCircle, Mic, Settings, User } from "@/components/ui/cut-icons";
+import { AudioLines, AtSign, Crosshair, Film, Layers, Mail, Rocket, Star, Wand2, Palette, Clapperboard, Flame, Lamp, Ticket, Tv, type LucideIcon, Zap, Anchor, Armchair, Bomb, Handshake, Hourglass, Shield, Siren, TrendingUp, Waves, Target } from "lucide-react";
+import BarChart3 from "@/components/ui/cut-icons/stats";
+import CalendarDays from "@/components/ui/cut-icons/events";
+import Coins from "@/components/ui/cut-icons/coins";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import Landmark from "@/components/ui/cut-icons/dao";
+import Link2 from "@/components/ui/cut-icons/link";
+import Radio from "@/components/ui/cut-icons/live";
+import Users from "@/components/ui/cut-icons/communities";
+import BookOpen from "@/components/ui/cut-icons/docs";
+import Briefcase from "@/components/ui/cut-icons/bounties";
+import Gamepad2 from "@/components/ui/cut-icons/arcade";
+import Lightbulb from "@/components/ui/cut-icons/feature-requests";
+import LayoutDashboard from "@/components/ui/cut-icons/command";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Store from "@/components/ui/cut-icons/store";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import Vault from "@/components/ui/cut-icons/staking";
+
+import Bookmark from "@/components/ui/cut-icons/save";
+import Home from "@/components/ui/cut-icons/home";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Bell from "@/components/ui/cut-icons/alerts";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import Mic from "@/components/ui/cut-icons/mic";
+import Settings from "@/components/ui/cut-icons/settings";
+import User from "@/components/ui/cut-icons/profile";
 
 import { useAppTheme } from '@/contexts/ThemeContext';
 

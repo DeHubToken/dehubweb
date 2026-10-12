@@ -2,8 +2,11 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { ArrowUp, Coins, ListOrdered, Type } from "lucide-react";
-import { MessageSquare, Share2 } from "@/components/ui/cut-icons";
+import { ArrowUp, ListOrdered, Type } from "lucide-react";
+import Coins from "@/components/ui/cut-icons/coins";
+
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { articleHeadings, articleReadingMinutes } from '@/lib/article';
 import { ArticleBody } from './ArticleBody';

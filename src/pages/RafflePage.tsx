@@ -16,8 +16,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowDown, ArrowRight, Boxes, Coins, Dice5, Gamepad2, PenLine, ScrollText, ShieldCheck, Ticket, Timer, Trophy } from "lucide-react";
-import { Mic } from "@/components/ui/cut-icons";
+import { ArrowDown, ArrowRight, Boxes, Dice5, ScrollText, Ticket, Timer } from "lucide-react";
+import Coins from "@/components/ui/cut-icons/coins";
+import Gamepad2 from "@/components/ui/cut-icons/arcade";
+import PenLine from "@/components/ui/cut-icons/edit";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

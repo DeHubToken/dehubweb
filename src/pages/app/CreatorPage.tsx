@@ -11,22 +11,12 @@ import { SubscriptionCreditsPill } from '@/components/app/credits/SubscriptionCr
 import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
-import {
-  ArrowUpRight,
-  Blocks,
-  Bot,
-  Clapperboard,
-  Film,
-  ImageIcon,
-  Megaphone,
-  Mic2,
-  Music2,
-  PanelsTopLeft,
-  PenTool,
-  Sparkles,
-  Wand2,
-  Workflow,
-} from 'lucide-react';
+import { ArrowUpRight, Bot, Clapperboard, Film, ImageIcon, Mic2, PanelsTopLeft, PenTool, Wand2, Workflow } from "lucide-react";
+import Blocks from "@/components/ui/cut-icons/apps";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import Music2 from "@/components/ui/cut-icons/music";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
 import { cn } from '@/lib/utils';
 import { CreatorBento, CreatorHeroWall, MediumDoors, loadCreatorGallery, thumbUrl, type GalleryItem } from '@/components/app/creator/CreatorStage';
 

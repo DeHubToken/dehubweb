@@ -12,7 +12,10 @@
 
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ShieldCheck, ShieldAlert, Clock, Sparkles } from 'lucide-react';
+import { ShieldAlert, Clock } from "lucide-react";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
 import { cn } from '@/lib/utils';
 import type { FractionSellerStats } from '@/hooks/use-fraction-marketplace';
 

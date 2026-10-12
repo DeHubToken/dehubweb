@@ -14,8 +14,12 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState, Suspense, lazy, type ReactNode } from 'react';
-import { Link2, MessageSquarePlus } from "lucide-react";
-import { Repeat2, Send, Share2 } from "@/components/ui/cut-icons";
+import { MessageSquarePlus } from "lucide-react";
+import Link2 from "@/components/ui/cut-icons/link";
+
+import Repeat2 from "@/components/ui/cut-icons/repost";
+import Send from "@/components/ui/cut-icons/send";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

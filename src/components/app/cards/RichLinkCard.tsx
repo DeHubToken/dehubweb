@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CalendarClock, Clock, ExternalLink, GitFork, Star } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { CalendarClock, Clock, GitFork, Star } from "lucide-react";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+
+import X from "@/components/ui/cut-icons/close";
 
 import type { RichPreview, RichDetails } from '@/lib/rich-links';
 import { pauseMediaIn } from '@/lib/pause-media-in';

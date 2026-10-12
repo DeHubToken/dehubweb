@@ -10,8 +10,11 @@ import { memo } from 'react';
 import { usePoll } from '@/hooks/use-polls';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CheckCircle, Images, Ticket, Lock, BarChart2 } from "lucide-react";
-import { Play } from "@/components/ui/cut-icons";
+import { CheckCircle, Ticket, BarChart2 } from "lucide-react";
+import Images from "@/components/ui/cut-icons/images";
+import Lock from "@/components/ui/cut-icons/privacy";
+
+import Play from "@/components/ui/cut-icons/play";
 
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildAvatarUrl, extractAvatarPath, buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';

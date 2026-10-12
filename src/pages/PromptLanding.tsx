@@ -2,8 +2,11 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowUp, MicOff } from "lucide-react";
-import { ArrowLeft, Mic } from "@/components/ui/cut-icons";
+import { ArrowUp } from "lucide-react";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';

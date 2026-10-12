@@ -4,7 +4,8 @@
  * Renders a description with URLs extracted and shown as link emoji icons below.
  */
 
-import { Link as LinkIcon } from 'lucide-react';
+import LinkIcon from "@/components/ui/cut-icons/link";
+
 
 const URL_REGEX = /https?:\/\/[^\s)<>]+/gi;
 

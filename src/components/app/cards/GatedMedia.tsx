@@ -25,8 +25,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * and is therefore lazy, exactly as the cards load it today.
  */
 import { Suspense, lazy, useState } from 'react';
-import { Lock, Ticket, Star, Loader2 } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { Ticket, Star, Loader2 } from "lucide-react";
+import Lock from "@/components/ui/cut-icons/privacy";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

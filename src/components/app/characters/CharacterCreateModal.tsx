@@ -7,7 +7,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Button } from '@/components/ui/button';
 import { Loader2, Star } from "lucide-react";
-import { X, Plus } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { toast } from 'sonner';
 import {

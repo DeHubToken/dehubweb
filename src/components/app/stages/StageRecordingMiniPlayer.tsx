@@ -29,7 +29,9 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
-import { Pause, Play, X } from "@/components/ui/cut-icons";
+import Pause from "@/components/ui/cut-icons/pause";
+import Play from "@/components/ui/cut-icons/play";
+import X from "@/components/ui/cut-icons/close";
 
 import { cn } from '@/lib/utils';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';

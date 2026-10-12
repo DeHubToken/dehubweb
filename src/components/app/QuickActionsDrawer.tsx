@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bug, RefreshCw, Users, LogOut, Loader2 } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { Bug, Loader2 } from "lucide-react";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Users from "@/components/ui/cut-icons/communities";
+import LogOut from "@/components/ui/cut-icons/sign-out";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';

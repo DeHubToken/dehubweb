@@ -1,8 +1,14 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Copy, Check, Loader2, Globe, ExternalLink, AlertTriangle } from "lucide-react";
-import { ArrowLeft, ChevronRight, Search } from "@/components/ui/cut-icons";
+import { Loader2, Globe, AlertTriangle } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Search from "@/components/ui/cut-icons/search";
 
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Bell, Bookmark, MessageSquare, Share2 } from './cut-icons';
+import { Bell, Bookmark, MessageSquare, Share2, Coins, MicOff, EyeOff, Blog, Search, Quote, Copy, Flag, HelpCircle } from './cut-icons';
 import approved from './cut-icon-paths.json';
 
 describe('Cut icons', () => {
   it('preserves approved geometry, including the bell and aligned share node', () => {
-    for (const [Component, name] of [[Bell, 'Alerts'], [MessageSquare, 'Messages'], [Share2, 'FeedShare']] as const) {
+    for (const [Component, name] of [[Bell, 'Alerts'], [MessageSquare, 'Messages'], [Share2, 'FeedShare'], [Blog, 'Blog'], [Search, 'Search'], [Quote, 'Quote'], [Copy, 'Copy'], [Flag, 'Report'], [HelpCircle, 'Help'], [Coins, 'Coins']] as const) {
       const { container, unmount } = render(<Component />);
       const reference = new DOMParser().parseFromString(`<svg>${approved[name]}</svg>`, 'image/svg+xml');
       expect([...container.querySelectorAll('path')].map(p => p.getAttribute('d')))
@@ -13,6 +13,22 @@ describe('Cut icons', () => {
       expect(container.querySelector('svg')).toHaveAttribute('viewBox', '0 0 32 32');
       unmount();
     }
+  });
+
+  it('keeps muted icon masks unique when controls repeat in a feed', () => {
+    const { container } = render(<><MicOff /><MicOff /><EyeOff /></>);
+    const ids = [...container.querySelectorAll('mask')].map(mask => mask.id);
+    expect(new Set(ids).size).toBe(3);
+    for (const group of container.querySelectorAll('g[mask]')) {
+      expect(ids).toContain(group.getAttribute('mask')?.slice(5, -1));
+    }
+  });
+
+  it('uses vector DeHub artwork for monochrome coin controls', () => {
+    const { container } = render(<Coins color="white" />);
+    expect(container.querySelector('image, img')).toBeNull();
+    expect(container.querySelectorAll('path').length).toBeGreaterThan(1);
+    expect(container.querySelector('svg')).toHaveAttribute('color', 'white');
   });
 
   it('forwards refs, size, accessible names and selected-state styling', () => {

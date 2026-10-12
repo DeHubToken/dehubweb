@@ -20,8 +20,10 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Check } from "lucide-react";
-import { Search, User } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+
+import Search from "@/components/ui/cut-icons/search";
+import User from "@/components/ui/cut-icons/profile";
 
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from '@/components/ui/button';

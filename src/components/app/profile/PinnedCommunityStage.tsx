@@ -6,7 +6,9 @@
  * The featured community uses the same wash and strip at every screen size.
  */
 
-import { Pin, Users } from 'lucide-react';
+import { Pin } from "lucide-react";
+import Users from "@/components/ui/cut-icons/communities";
+
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
 import { storageImage } from '@/lib/media-url';

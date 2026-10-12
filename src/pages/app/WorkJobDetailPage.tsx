@@ -4,8 +4,14 @@ import { isWorkAdmin } from '@/constants/app.constants';
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Star, AlertTriangle, ExternalLink, Check, Pencil, Wallet, Clock } from "lucide-react";
-import { ArrowLeft, X } from "@/components/ui/cut-icons";
+import { Star, AlertTriangle, Clock } from "lucide-react";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Check from "@/components/ui/cut-icons/check";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Wallet from "@/components/ui/cut-icons/wallet";
+
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import X from "@/components/ui/cut-icons/close";
 
 import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,

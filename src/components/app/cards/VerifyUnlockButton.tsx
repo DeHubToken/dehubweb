@@ -14,7 +14,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * build otherwise). Contract modules are pulled in inside the click handler.
  */
 import { useCallback, useState } from 'react';
-import { Loader2, ShieldCheck } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+
 import { toast } from 'sonner';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { useAuth } from '@/contexts/AuthContext';

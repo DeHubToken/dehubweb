@@ -13,8 +13,15 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cdnImage } from '@/lib/media-url';
-import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Info } from "lucide-react";
-import { Bell, Bookmark } from "@/components/ui/cut-icons";
+import { MoreVertical } from "lucide-react";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Flag from "@/components/ui/cut-icons/report";
+import Ban from "@/components/ui/cut-icons/blocked";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Info from "@/components/ui/cut-icons/information";
+
+import Bell from "@/components/ui/cut-icons/alerts";
+import Bookmark from "@/components/ui/cut-icons/save";
 
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';

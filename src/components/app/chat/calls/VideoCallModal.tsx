@@ -1,7 +1,11 @@
 import React from 'react';
 import { CallDuration } from './CallDuration';
-import { Phone, PhoneOff, MicOff, Video, VideoOff, RotateCcw } from "lucide-react";
-import { Mic } from "@/components/ui/cut-icons";
+import { Phone, PhoneOff, RotateCcw } from "lucide-react";
+import MicOff from "@/components/ui/cut-icons/mic-off";
+import Video from "@/components/ui/cut-icons/video";
+import VideoOff from "@/components/ui/cut-icons/video-off";
+
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { useTranslation } from 'react-i18next';
 import { useCall } from '@/contexts/CallContext';

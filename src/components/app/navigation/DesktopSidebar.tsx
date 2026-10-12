@@ -5,8 +5,13 @@ import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PenSquare, Sparkles, LogIn, LogOut, CornerDownLeft } from "lucide-react";
-import { Menu, Search, X } from "@/components/ui/cut-icons";
+import { PenSquare, LogIn, CornerDownLeft } from "lucide-react";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import LogOut from "@/components/ui/cut-icons/sign-out";
+
+import Menu from "@/components/ui/cut-icons/menu";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import { NAV_ITEMS } from '@/constants/app.constants';
 import type { NavItem } from '@/types/app.types';

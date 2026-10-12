@@ -5,7 +5,8 @@
  */
 import { useTranslation } from 'react-i18next';
 import { Stamp, Wand2 } from "lucide-react";
-import { Plus, X } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from 'sonner';
 import { useBrandStore, hasBrand } from '@/store/editorBrandStore';

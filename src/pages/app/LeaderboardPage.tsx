@@ -13,8 +13,13 @@ import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } fr
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
-import { Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp } from "lucide-react";
-import { Search, Share2 } from "@/components/ui/cut-icons";
+import { Loader2, ArrowUpRight, CreditCard, Heart, UserCheck, ArrowDown, ArrowUp, TrendingUp } from "lucide-react";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Users from "@/components/ui/cut-icons/communities";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+
+import Search from "@/components/ui/cut-icons/search";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { toast } from 'sonner';
 import trophyIcon from '@/assets/trophy-icon.png';

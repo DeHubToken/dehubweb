@@ -13,8 +13,13 @@ import {
   useAudioPostPlayback,
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
-import { Volume2, VolumeX, Maximize, Minimize, PictureInPicture2 } from "lucide-react";
-import { Play, Pause } from "@/components/ui/cut-icons";
+import { Minimize, PictureInPicture2 } from "lucide-react";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Maximize from "@/components/ui/cut-icons/fullscreen";
+
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { MediaControlIcon } from '@/components/app/video/MediaControlIcon';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';

@@ -12,8 +12,13 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  */
 
 import { memo, useMemo, useState } from 'react';
-import { Activity, Link2, Users, type LucideIcon } from "lucide-react";
-import { MessageSquare, Settings, User } from "@/components/ui/cut-icons";
+import { Activity, type LucideIcon } from "lucide-react";
+import Link2 from "@/components/ui/cut-icons/link";
+import Users from "@/components/ui/cut-icons/communities";
+
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Settings from "@/components/ui/cut-icons/settings";
+import User from "@/components/ui/cut-icons/profile";
 
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';

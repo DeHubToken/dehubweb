@@ -4,7 +4,7 @@
  * use, so all three always agree.
  */
 import { useState } from 'react';
-import { Bookmark } from "@/components/ui/cut-icons";
+import Bookmark from "@/components/ui/cut-icons/save";
 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

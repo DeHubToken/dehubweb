@@ -6,8 +6,23 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { DocsSEO } from '@/components/DocsSEO';
 import { docsAsideVariants, docsContentVariants, useIsDesktop } from '@/lib/surface-motion';
-import { Book, FileText, Code, Database, Shield, Zap, Users, ExternalLink, ChevronDown, Coins, Github, Phone, Monitor, Gamepad2, Tv, Lock, Map, Tag, Newspaper, Scale, ShieldCheck, PenLine, HelpCircle, Heart } from "lucide-react";
-import { ChevronRight, Menu, X, Search, Settings, Home } from "@/components/ui/cut-icons";
+import { Book, FileText, Code, Database, Shield, Zap, ChevronDown, Github, Phone, Monitor, Tv, Tag, Newspaper, Scale, Heart } from "lucide-react";
+import Users from "@/components/ui/cut-icons/communities";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Coins from "@/components/ui/cut-icons/coins";
+import Gamepad2 from "@/components/ui/cut-icons/arcade";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Map from "@/components/ui/cut-icons/guide";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import PenLine from "@/components/ui/cut-icons/edit";
+import HelpCircle from "@/components/ui/cut-icons/help";
+
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Menu from "@/components/ui/cut-icons/menu";
+import X from "@/components/ui/cut-icons/close";
+import Search from "@/components/ui/cut-icons/search";
+import Settings from "@/components/ui/cut-icons/settings";
+import Home from "@/components/ui/cut-icons/home";
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';

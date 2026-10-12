@@ -3,8 +3,14 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { useDraft } from '@/hooks/use-draft';
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Loader2, SmilePlus, Reply, CornerDownRight, Pencil, Trash2 } from "lucide-react";
-import { Send, Mic, X } from "@/components/ui/cut-icons";
+import { Loader2, SmilePlus, CornerDownRight } from "lucide-react";
+import Reply from "@/components/ui/cut-icons/reply";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import Send from "@/components/ui/cut-icons/send";
+import Mic from "@/components/ui/cut-icons/mic";
+import X from "@/components/ui/cut-icons/close";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -36,7 +42,8 @@ import { BuyAlertCard } from '../chat/BuyAlertCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { ASSISTANT_AVATAR as assistantAvatar, isAssistantAddress } from '@/lib/assistant';
 import { useAssistantReplies, useAssistantReplyEngine, type AssistantReply } from '@/hooks/use-assistant-replies';
-import { Sparkles } from 'lucide-react';
+import Sparkles from "@/components/ui/cut-icons/assistant";
+
 import { DehubLinkEmbeds, useDehubLinks } from '@/components/app/cards/DehubLinkEmbedsLazy';
 import { ChatLinkPreviews } from '../chat/ChatLinkPreviews';
 

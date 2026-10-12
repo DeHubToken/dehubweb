@@ -2,8 +2,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useState, useCallback, memo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, Trash2, Pencil } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import { ShieldBan, MoreVertical, Loader2, RotateCcw, SmilePlus, CornerDownRight } from "lucide-react";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Languages from "@/components/ui/cut-icons/language";
+import Reply from "@/components/ui/cut-icons/reply";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Pencil from "@/components/ui/cut-icons/edit";
+
+import X from "@/components/ui/cut-icons/close";
 
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

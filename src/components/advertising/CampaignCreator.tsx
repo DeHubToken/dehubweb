@@ -8,7 +8,11 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Target, DollarSign, Users, Eye, Handshake, Rocket, TrendingUp, MapPin, Globe } from 'lucide-react';
+import { Target, DollarSign, Handshake, Rocket, TrendingUp, Globe } from "lucide-react";
+import Users from "@/components/ui/cut-icons/communities";
+import Eye from "@/components/ui/cut-icons/visibility";
+import MapPin from "@/components/ui/cut-icons/location";
+
 import { useLanguage } from '@/contexts/LanguageContext';
 import { badgeTiers } from './utils/badgeTiers';
 import { fill } from './utils/fill';

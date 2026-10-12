@@ -23,8 +23,12 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
-import { Square, Upload, Loader2, ChevronLeft, Check, Trash2 } from "lucide-react";
-import { Mic } from "@/components/ui/cut-icons";
+import { Square, Loader2, ChevronLeft } from "lucide-react";
+import Upload from "@/components/ui/cut-icons/upload";
+import Check from "@/components/ui/cut-icons/check";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';

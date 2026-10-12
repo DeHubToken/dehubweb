@@ -5,7 +5,10 @@
  * sharper one, streamed as it arrives. Free, and works signed out.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Bot, Copy, CopyPlus, Square, Trash2 } from 'lucide-react';
+import { Bot, CopyPlus, Square } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';
 import { toast } from 'sonner';

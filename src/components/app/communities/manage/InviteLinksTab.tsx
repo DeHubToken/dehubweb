@@ -11,7 +11,11 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow } from 'date-fns';
-import { Copy, Link2, Loader2, Trash2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
+import Copy from "@/components/ui/cut-icons/copy";
+import Link2 from "@/components/ui/cut-icons/link";
+import Trash2 from "@/components/ui/cut-icons/delete";
+
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';

@@ -38,18 +38,13 @@ import { tokenLabel } from '@/lib/token-label';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Loader2,
-  ArrowDownToLine,
-  Image as ImageIcon,
-  CheckCircle2,
-  XCircle,
-  ExternalLink,
-  Eye,
-  Clipboard,
-  Pencil,
-  Link2,
-} from 'lucide-react';
+import { Loader2, ArrowDownToLine, CheckCircle2, XCircle, Clipboard } from "lucide-react";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Link2 from "@/components/ui/cut-icons/link";
+
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';

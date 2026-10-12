@@ -17,7 +17,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Wand2, Loader2 } from "lucide-react";
-import { Search, Plus, ArrowLeft } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Plus from "@/components/ui/cut-icons/add";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';

@@ -25,7 +25,9 @@
 
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, ClipboardCopy, Check } from 'lucide-react';
+import { TrendingUp, TrendingDown, ClipboardCopy } from "lucide-react";
+import Check from "@/components/ui/cut-icons/check";
+
 import { cn } from '@/lib/utils';
 import { explorerUrlFor, findAssetRefs, stripAssetRefs, type AssetRef } from '@/lib/asset-refs';
 import type { ResolvedAsset } from '@/lib/api/market';
