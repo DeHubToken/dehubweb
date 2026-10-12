@@ -56,6 +56,8 @@ import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProf
 import { PageHeader } from '@/components/app/PageHeader';
 import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButton';
 import { UserAvatar } from '@/components/app/UserAvatar';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { StreamerBadge } from '@/components/app/live/StreamerBadge';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
@@ -620,13 +622,17 @@ export default function ProfilePage() {
             <div className="relative shrink-0 w-9 h-11">
               <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
             </div>
-            <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
+            {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
               <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
               <div className="min-w-0 max-w-[76px] sm:max-w-24">
-                <p className="truncate text-xs sm:text-sm font-bold leading-tight text-white">{data.profile.name}</p>
+                <div className="flex items-baseline gap-1 text-xs sm:text-sm font-bold leading-tight text-white">
+                  <p className="min-w-0 truncate">{data.profile.name}</p>
+                  <BadgeIcon src={data.badgeUrl} className="w-[1em] h-[1em]" />
+                  <StreamerBadge address={data.profile.walletAddress} />
+                </div>
                 <p className="truncate text-[10px] sm:text-xs leading-tight text-zinc-400">{data.profile.handle}</p>
               </div>
-            </div>
+            </div>}
           </>}
           <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl">
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
