@@ -189,7 +189,7 @@ export async function getLiveChatUserProfile(address: string): Promise<LiveChatU
 export async function getLiveChatOnlineCount(): Promise<number> {
   try {
     const response = await apiCall<Record<string, unknown>>('/api/livechat/online', {
-      requiresAuth: true,
+      requiresAuth: false,
     });
     if (response && typeof response === 'object') {
       return (response as any).count ?? (response as any).online ?? (response as any).result ?? 0;
