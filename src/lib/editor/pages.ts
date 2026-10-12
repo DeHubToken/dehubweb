@@ -38,15 +38,17 @@ export function timelineDuration(settings: ProjectSettings, clips: Clip[]): numb
   const starts = settings.pages?.length ? settings.pages : presetPageStarts(clips);
   if (!starts?.length) return end;
   const last = starts[starts.length - 1];
-  return end > last ? end : last + PAGE_MIN;
+  const exact = settings.pageTiming === "content" || !!presetPageStarts(clips);
+  return exact && end > last ? end : Math.max(end, last + PAGE_MIN);
 }
 
 export function getPages(settings: ProjectSettings, clips: Clip[]): Page[] {
   const starts = settings.pages?.length ? settings.pages : presetPageStarts(clips) ?? [0];
   const end = timelineEnd(clips);
+  const exact = settings.pageTiming === "content" || !!presetPageStarts(clips);
   return starts.map((start, index) => {
     const next = starts[index + 1];
-    return { index, start, end: next ?? (end > start ? end : start + PAGE_MIN) };
+    return { index, start, end: next ?? (exact && end > start ? end : Math.max(end, start + PAGE_MIN)) };
   });
 }
 
