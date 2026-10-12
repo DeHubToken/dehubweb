@@ -18,7 +18,8 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { PictureInPicture2, Clock, FileText } from "lucide-react";
+import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
+import { Clock, FileText } from "lucide-react";
 import Users from "@/components/ui/cut-icons/communities";
 import Trash2 from "@/components/ui/cut-icons/delete";
 
