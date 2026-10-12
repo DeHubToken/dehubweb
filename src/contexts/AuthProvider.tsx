@@ -1687,13 +1687,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // costs most of the minute on its own, so the flow refused precisely the
     // people who did what it asked.
     //
-    // Nothing about the signature goes stale in that time: the timestamp is
-    // inside the signed text and the API accepts it for 24 hours
-    // (loginSignatureTtlSeconds), so a late signature is worth exactly as much
-    // as a prompt one. The first deadline therefore no longer aborts — it
-    // nudges, and the flow keeps waiting. The hard deadline behind it is what
-    // stops isConnecting latching forever, and sits far enough out that only a
-    // genuinely dead request reaches it.
+    // The server challenge lasts ten minutes. Nudge first, then allow time
+    // to find the wallet prompt; expired proofs get one fresh challenge.
     const SIGN_NUDGE_MS = 25_000;
     const SIGN_TIMEOUT_MS = 5 * 60_000;
     let signature: string;
@@ -2204,9 +2199,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * login never reaches it, and neither does switchActiveWallet, which is a
    * deliberate move to a DIFFERENT account and must not drag this one onto it.
    *
-   * The same signature serves both calls: it carries the timestamp it was
-   * signed with, the backend re-derives the message from that, and it stays
-   * valid for 24 hours. Two round trips, one wallet prompt.
+   * Recovery and login each sign a separate, operation-bound challenge.
    *
    * A failure here never blocks the sign-in. The rescue is best-effort by
    * design — a backend without the endpoint, a link that turns out to point
