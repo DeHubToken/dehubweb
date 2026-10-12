@@ -1,6 +1,6 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
-import { agentOwnerAllowed, nextScheduledRun, PLAN_TOOL, taskPlanSchema, type TaskPlan, type TaskStep } from "./task-plan.ts";
+import { agentOwnerAllowed, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
 export interface TaskTool {
@@ -44,12 +44,13 @@ dehub_update_profile: {bio?:string,display_name?:string,avatar_url?:string,banne
 dehub_post_create: {content:string,title?:string,category?:string,media_url?:string,media_type?:text|image|video}. If the user asks for posts ABOUT a topic, set topic to the writing instructions; a new original post is written on each run. Literal text uses content and null topic. No image/video generation capability.
 Use audience single unless bulk is explicitly requested. A request to follow every user is all_users, not ten users. A request to follow people who posted today uses post_authors, from local midnight to now. Convert relative windows with the timezone above. Never extend the window into the future. All dates must be ISO UTC with Z.
 For N posts/day use ONE generated-post step and interval_minutes 1440/N (fractional minutes are allowed); for once use null. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
-No registration, transfers, tips, purchases, private messages, admin actions or tools outside this catalog. Return only plan_agent_task. Keep the summary explicit about agent actions, time window and cadence.` },
+No registration, transfers, tips, purchases, private messages, admin actions or tools outside this catalog. Return only plan_agent_task with both top-level fields: plan and clarification. For a supported task, plan must contain summary, steps and interval_minutes and clarification must be null. For an unsupported task, plan is null and clarification explains why. Never return an empty object or put plan fields at the top level.
+Example for "Post 3 times per day about music": {"plan":{"summary":"Post about music three times daily, every eight hours.","interval_minutes":480,"steps":[{"tool":"dehub_post_create","arguments":{},"audience":"single","from":null,"to":null,"topic":"music"}]},"clarification":null}.
+Keep the summary explicit about agent actions, time window and cadence.` },
     { role: "user", content: prompt },
   ], true);
   const raw = JSON.parse(output?.tool_calls?.find((call: any) => call.function?.name === "plan_agent_task")?.function.arguments ?? "{}");
-  if (raw.clarification) throw new Error(String(raw.clarification));
-  const plan = taskPlanSchema.parse(raw.plan);
+  const plan = parseTaskPlan(raw);
   for (const step of plan.steps) {
     if (step.to && Date.parse(step.to) > now.getTime() + 1000) throw new Error("The post time window must end at or before now.");
     const tool = registry.get(step.tool);
