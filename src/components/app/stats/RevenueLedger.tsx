@@ -75,12 +75,12 @@ function csvCell(value: string | number | undefined | null): string {
 }
 
 function downloadCsv(ledger: FinanceLedger, items: LedgerItem[], labels: Map<string, string>, name: string) {
-  const header = ['date', 'source', 'usd', 'amount', 'unit', 'payments', 'chain', 'transaction', 'proof_url', 'note'];
+  const header = ['date', 'source', 'usd', 'amount', 'unit', 'payments', 'chain', 'transaction', 'proof_url', 'note', 'counts_as_revenue'];
   const lines = items.map((item) =>
     [
       item.date,
       labels.get(item.source) ?? item.source,
-      item.usd.toFixed(2),
+      item.priced === false ? '' : item.usd.toFixed(2),
       item.amount,
       item.unit,
       item.count,
@@ -88,6 +88,7 @@ function downloadCsv(ledger: FinanceLedger, items: LedgerItem[], labels: Map<str
       item.ref?.tx ?? item.ref?.address,
       proofUrl(ledger, item),
       item.note,
+      String(item.counted !== false),
     ]
       .map(csvCell)
       .join(','),
@@ -136,7 +137,7 @@ export function RevenueLedger({
     for (const item of inRange) {
       const c = counts.get(item.source) ?? { n: 0, usd: 0 };
       c.n += 1;
-      c.usd += item.usd;
+      c.usd += item.counted === false ? 0 : item.usd;
       counts.set(item.source, c);
     }
     const chips = ledger.sources
@@ -153,7 +154,7 @@ export function RevenueLedger({
       items,
       active,
       chips,
-      total: items.reduce((a, i) => a + i.usd, 0),
+      total: items.reduce((a, i) => a + (i.counted === false ? 0 : i.usd), 0),
       proven: items.filter((i) => i.ref).length,
       unavailable: ledger.sources.filter((s) => s.status === 'unavailable'),
     };
@@ -317,7 +318,7 @@ export function RevenueLedger({
                           <span className="flex-1 min-w-0 text-sm text-white truncate">
                             {view.labels.get(item.source) ?? item.source}
                           </span>
-                          <span className="text-sm text-white tabular-nums shrink-0">{formatUsd(item.usd)}</span>
+                          <span className="text-sm text-white tabular-nums shrink-0">{item.priced === false ? t('stats.money.sourceUnavailable', 'Unavailable') : formatUsd(item.usd)}</span>
                         </div>
                         <div className="flex items-baseline gap-3 sm:pl-[5.5rem]">
                           <span className="flex-1 min-w-0 text-[11px] text-zinc-500 leading-snug">
