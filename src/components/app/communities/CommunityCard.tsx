@@ -82,7 +82,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
         )}
        </div>
         {unreadCount !== undefined && unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full z-10 leading-none">
+          <span data-unread-chip className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full z-10 leading-none">
             {unreadCount > 99 ? '99+' : unreadCount}
           </span>
         )}
