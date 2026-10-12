@@ -5352,7 +5352,7 @@ function ssrCachePut(ctx, key, resp) {
 
 async function handleRequest(request, env, ctx) {
   if (new URL(request.url).pathname.startsWith('/api/editor/presence/')) {
-    return handleEditorPresence(request, env);
+    return handleEditorPresence(canonicalOriginRequest(request), env);
   }
   if (new URL(request.url).pathname === '/api/work/receipt') {
     return handleWorkReceipt(request, env);
