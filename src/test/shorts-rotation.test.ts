@@ -5,9 +5,9 @@ const videos = (count: number, start = 0) => Array.from({ length: count }, (_, i
   tokenId: start + i + 1, postType: 'video', videoDuration: 120,
 }));
 
-it('inserts after 6 posts and every 12 thereafter', () => {
-  expect([5, 6, 17, 18, 29, 30, 42].map(shortsBatchCount)).toEqual([0, 1, 1, 2, 2, 3, 4]);
-  expect([5, 6, 7, 18, 30, 42].map(shortsBatchIndex)).toEqual([-1, 0, -1, 1, 2, 3]);
+it('inserts after the first post, then after 6 posts and every 12 thereafter', () => {
+  expect([0, 1, 5, 6, 17, 18, 29, 30, 42].map(shortsBatchCount)).toEqual([0, 1, 1, 2, 2, 3, 3, 4, 5]);
+  expect([0, 1, 2, 5, 6, 7, 18, 30, 42].map(shortsBatchIndex)).toEqual([-1, 0, -1, -1, 1, -1, 2, 3, 4]);
 });
 
 it('makes distinct ten-item rows, including when offset pages overlap', () => {
