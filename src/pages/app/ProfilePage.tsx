@@ -55,6 +55,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
 import { PageHeader } from '@/components/app/PageHeader';
 import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButton';
+import { UserAvatar } from '@/components/app/UserAvatar';
 
 /** Tabs served by the creator's own /api/feed content query. */
 const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
@@ -256,15 +257,12 @@ export default function ProfilePage() {
   const profileContentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(
     profileContentRef,
-    '[data-feed-nav-outer] > [data-page-bento]',
+    '[data-profile-tabs] > [data-feed-nav]',
     [!!data.profile, data.isAuthenticated],
     { allThemes: true },
   );
 
-  // Detect when the tabs pill is anchored to the top. Once stuck there's no
-  // horizontal-scroll affordance to hint at, so we drop the right-edge fade —
-  // its fade-to-transparent is where scrolled posts bleed through the pill.
-  // The pill itself keeps its liquid-glass look; only the fade edge changes.
+  // At the top edge, the tabs become the single profile navigation row.
   const stuckSentinelRef = useRef<HTMLDivElement>(null);
   const [isTabsStuck, setIsTabsStuck] = useState(false);
   useEffect(() => {
@@ -273,20 +271,24 @@ export default function ProfilePage() {
     // The pill pins at the very top at every width: phones have no top bar
     // off the home feed (index.css, data-no-top-bar).
     const obs = new IntersectionObserver(
-      ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 60)),
-      { rootMargin: '-60px 0px 0px 0px', threshold: 0 }
+      ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 4)),
+      { rootMargin: '-4px 0px 0px 0px', threshold: 0 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, [!!data.profile]);
 
-  const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab);
-  // Still dropped while stuck, matching the painted strip this replaced. The
-  // reason for dropping it is gone though — a mask paints no surface, so there
-  // is no fade-to-transparent sliver for scrolled posts to bleed through any
-  // more. Drop the `!isTabsStuck` gate (and the sentinel above) if the
-  // scroll affordance is wanted in the stuck state too.
-  const { ref: tabsFadeRef, style: tabsFadeStyle } = useScrollFadeMask<HTMLDivElement>(undefined, !isTabsStuck);
+  const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab, isTabsStuck);
+  const { ref: tabsFadeRef, style: tabsFadeStyle, edges: tabsFadeEdges } = useScrollFadeMask<HTMLDivElement>();
+  useEffect(() => {
+    const button = profileTabButtonPositions.current[activeTab];
+    const rail = tabsFadeRef.current;
+    if (!button || !rail) return;
+    const buttonRect = button.getBoundingClientRect();
+    const railRect = rail.getBoundingClientRect();
+    if (buttonRect.left < railRect.left) rail.scrollLeft += buttonRect.left - railRect.left;
+    else if (buttonRect.right > railRect.right) rail.scrollLeft += buttonRect.right - railRect.right;
+  }, [activeTab, isTabsStuck, tabsFadeRef]);
   const [tabTransition, setTabTransition] = useState(false);
 
   // Drag-to-swipe state for profile tab indicator
@@ -602,7 +604,7 @@ export default function ProfilePage() {
         />
         </div>
 
-        {/* Tabs stay below the profile bar while content scrolls behind them. */}
+        {/* Back, profile identity, scrolling tabs and Follow share one pinned row. */}
         <div ref={stuckSentinelRef} aria-hidden className="h-0" />
         <div
           data-feed-nav-outer
@@ -610,9 +612,20 @@ export default function ProfilePage() {
           ref={profileTabsRef}
           data-joined={isTabsStuck}
           data-nav-hide="off"
-          className="sticky bg-black z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
+          className="sticky z-50 -mx-2 sm:-mx-3 -mb-2 sm:-mb-3 px-2 sm:px-3 pt-1 pb-1"
         >
-        <div data-page-bento className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        <div data-page-bento data-feed-nav data-profile-single-row className="bg-zinc-900 rounded-xl relative flex items-center gap-1 p-1" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+          <div data-nav-glass-backdrop aria-hidden />
+          {isTabsStuck && <>
+            <div className="relative shrink-0 w-9 h-11">
+              <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
+            </div>
+            <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
+              <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
+              <span className="hidden sm:block max-w-24 truncate text-sm font-bold text-white">{data.profile.name}</span>
+            </div>
+          </>}
+          <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl">
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={profileDragDisplayRect} borderRadius="0.75rem" enableTransition={!isProfileDragging && tabTransition} />
             {/* Drag handle overlay */}
@@ -636,7 +649,7 @@ export default function ProfilePage() {
             <div
               ref={tabsFadeRef}
               className="relative z-20 flex overflow-x-auto scrollbar-hide"
-              style={{ touchAction: 'manipulation', WebkitOverflowScrolling: 'touch', willChange: 'scroll-position', ...tabsFadeStyle } as React.CSSProperties}
+              style={{ touchAction: 'pan-x pan-y', WebkitOverflowScrolling: 'touch', ...tabsFadeStyle } as React.CSSProperties}
               onScroll={handleTabsScroll}
             >
               {data.PROFILE_TABS.map((tab) => {
@@ -651,7 +664,8 @@ export default function ProfilePage() {
                     onClick={() => setActiveTab(tab.value)}
                     aria-pressed={isActive}
                     title={t(`profile.tabs.${tab.value}`, tab.label)}
-                    className="relative z-40 flex-1 flex flex-col items-center justify-center gap-px px-2 py-[9px] rounded-xl transition-colors min-w-[52px] text-white"
+                    data-feed-tab-btn data-active={isActive}
+                    className="relative z-40 shrink-0 w-14 h-11 flex flex-col items-center justify-center gap-px px-2 rounded-xl transition-colors text-white"
                   >
                     <tab.icon className="w-[18px] h-[18px] relative z-10" />
                     <span className="text-[10px] leading-tight font-medium relative z-10">{tab.count}</span>
@@ -660,6 +674,12 @@ export default function ProfilePage() {
               })}
             </div>
           </div>
+          {tabsFadeEdges.start && <div aria-hidden className="profile-rail-blur profile-rail-blur-start" />}
+          {tabsFadeEdges.end && <div aria-hidden className="profile-rail-blur profile-rail-blur-end" />}
+          </div>
+          {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%]">
+            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+          </div>}
         </div>
         </div>
 

@@ -84,5 +84,5 @@ export function useScrollFadeMask<T extends HTMLElement>(
     return { maskImage: mask, WebkitMaskImage: mask };
   }, [edges, enabled]);
 
-  return { ref, style };
+  return { ref, style, edges };
 }

@@ -66,31 +66,37 @@
   transition: opacity 160ms ease, transform 160ms ease;
 }
 .profile-collapse-identity[data-visible='true'] { opacity: 1; transform: none; }
-[data-profile-tabs] { top: calc(env(safe-area-inset-top, 0px) + 60px); padding-top: 0; }
+[data-profile-tabs] { top: calc(env(safe-area-inset-top, 0px) + 4px); padding-top: 0; }
 html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_) {
   z-index: 70;
-  /* 4px inside the card's sides, matching the gap under the tabs, so the
-     active pill clears the card's rounded corners. */
-  padding-left: 12px;
-  padding-right: 12px;
   background: transparent !important;
 }
-html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_)::before { display: none; }
-html[data-theme] [data-profile-tabs][data-joined='true'] > [data-page-bento]:not(#_):not(#_):not(#_) {
-  background: transparent !important;
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-  --nav-glass-blur: none;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
-html[data-theme] [data-profile-tabs][data-joined='true'] > [data-page-bento]:not(#_):not(#_):not(#_)::before,
-html[data-theme] [data-profile-tabs][data-joined='true'] > [data-page-bento]:not(#_):not(#_):not(#_)::after { display: none !important; }
-html[data-theme] [data-profile-collapse] button:not(#_):not(#_):not(#_),
-html[data-theme] [data-profile-tabs][data-joined='true'] [data-glass-indicator]:not(#_):not(#_):not(#_) {
+.profile-collapse-bar[data-tabs-pinned='true'] { visibility: hidden; }
+html[data-theme] [data-profile-collapse] button:not(#_):not(#_):not(#_) {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
+.profile-rail-blur {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  z-index: 50;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.profile-rail-blur-start {
+  left: 0;
+  -webkit-mask-image: linear-gradient(to right, #000, transparent);
+  mask-image: linear-gradient(to right, #000, transparent);
+}
+.profile-rail-blur-end {
+  right: 0;
+  -webkit-mask-image: linear-gradient(to left, #000, transparent);
+  mask-image: linear-gradient(to left, #000, transparent);
+}
+.profile-rail-follow button { max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .profile-collapse-identity { transition: none; }
 }
