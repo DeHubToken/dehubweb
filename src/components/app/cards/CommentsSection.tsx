@@ -1,3 +1,6 @@
+import ArrowUpDown from '@/components/ui/cut-icons/sort';
+import ImagePlus from '@/components/ui/cut-icons/images';
+import { COMMENT_ICON_CLASS } from './feed-icon-size';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
@@ -22,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowUpDown, Square, Loader2, ImagePlus, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
+import { Square, Loader2, Anchor, Baby, Pin, PinOff, Handshake, SpellCheck, Palette, Gauge, ChevronLeft } from "lucide-react";
 import Quote from "@/components/ui/cut-icons/quote";
 import Trash2 from "@/components/ui/cut-icons/delete";
 import Link from "@/components/ui/cut-icons/link";
@@ -742,11 +745,11 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                 aria-expanded={isOwnComment ? undefined : likeTray.open}
               >
                 {leadReaction ? (
-                  <span data-engaged-glyph className="w-4 h-4 flex items-center justify-center text-sm leading-none" aria-hidden="true">
+                  <span data-engaged-glyph className="w-[18px] h-[18px] flex items-center justify-center text-base leading-none" aria-hidden="true">
                     <ReactionEmoji reaction={leadReaction} animate={leadReaction === myHeldReaction} />
                   </span>
                 ) : (
-                  <ThumbsUp className={cn("w-4 h-4", !isOwnComment && comment.isLiked && "fill-current")} />
+                  <ThumbsUp className={cn(COMMENT_ICON_CLASS.like, !isOwnComment && comment.isLiked && "fill-current")} />
                 )}
                 {(comment.likes > 0 || isOwnComment) && <span className="text-xs">{comment.likes}</span>}
               </button>
@@ -757,7 +760,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
               className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
               aria-label={i18n.t('features.replyToComment')}
             >
-              <MessageSquare className="w-4 h-4" />
+              <MessageSquare className={COMMENT_ICON_CLASS.comment} />
             </button>
             {/* Tip the comment's author. Rendered for own comments too so the
                 author sees what the comment has earned; the payment hook
@@ -767,7 +770,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
               className={cn(COMMENT_ACTION_HIT, "flex items-center gap-1 text-white hover:text-zinc-400 transition-colors")}
               aria-label={i18n.t('comments.tip')}
             >
-              <TipGemIcon tipped={!!viewerTipped || tipBurst > 0} burstKey={tipBurst} className="w-4 h-4" plainClassName="" />
+              <TipGemIcon tipped={!!viewerTipped || tipBurst > 0} burstKey={tipBurst} className={COMMENT_ICON_CLASS.tip} plainClassName="" />
               {(tipTotal ?? 0) > 0 && <span className="text-xs">{formatCount(tipTotal!)}</span>}
             </button>
             {/*
@@ -838,7 +841,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                   className={cn(COMMENT_ACTION_HIT, "text-white hover:text-zinc-400 transition-colors")}
                   aria-label={i18n.t('comments.share')}
                 >
-                  <Share2 className="w-4 h-4" />
+                  <Share2 className={COMMENT_ICON_CLASS.share} />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" data-comments-dropdown className="min-w-[160px]">

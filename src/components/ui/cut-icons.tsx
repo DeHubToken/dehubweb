@@ -116,3 +116,4 @@ export { default as ChartPie } from "./cut-icons/fractions";
 export { default as Gift } from "./cut-icons/gifts";
 export { default as MapPin } from "./cut-icons/location";
 export { default as History } from "./cut-icons/history";
+export { default as MoreVertical, default as EllipsisVertical } from "./cut-icons/morevertical";
