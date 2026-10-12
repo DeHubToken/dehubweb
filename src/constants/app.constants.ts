@@ -1,4 +1,5 @@
 import Blog from "@/components/ui/cut-icons/blog";
+import Hammer from "@/components/ui/cut-icons/work";
 import Shorts from "@/components/ui/cut-icons/shorts";
 import { AtSign, FileText, Film, FileTextIcon, Wand2, Scroll, Zap, ArrowDownToLine, FolderInput, Tv } from "lucide-react";
 import Blocks from "@/components/ui/cut-icons/apps";
@@ -67,7 +68,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Zap, label: 'SuperPowers', path: '/app/superpowers' },
   { icon: Vote, label: 'Governance', path: '/governance' },
   { icon: Landmark, label: 'DAO', path: '/dao' },
-  { icon: Briefcase, label: 'Bounties', path: '/work' },
+  { icon: Hammer, label: 'Bounties', path: '/work' },
   { icon: Users, label: 'Affiliate', path: '/affiliate' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Store, label: 'Stores', path: '/app/stores' },
