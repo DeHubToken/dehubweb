@@ -41,6 +41,7 @@ export function getVideoPreferences(): VideoPreferences {
       cached = {
         ...DEFAULTS,
         ...stored,
+        isLooping: stored?.isLooping === true,
         // Spread alone would carry through a null/array left by an older blob
         // and every read of it would then throw on lookup.
         ratesByCreator:
@@ -146,7 +147,10 @@ function normaliseCreator(creatorId?: string | null): string | null {
 
 export function setIsLooping(looping: boolean) {
   const prefs = getVideoPreferences();
-  save({ ...prefs, isLooping: looping });
+  const next = { ...prefs, isLooping: looping };
+  // Persist in the tap before a close or suspension can stop the save timer.
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+  save(next);
 }
 
 export function setVolume(volume: number) {
