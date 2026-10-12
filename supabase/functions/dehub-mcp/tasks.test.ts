@@ -1,4 +1,4 @@
-import { runTask, type TaskTool } from './tasks.ts';
+import { handleTaskRequest, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
 import { AGENT_OWNER } from './task-plan.ts';
 
 const assert = (value: unknown, description: string) => { if (!value) throw new Error(description); };
@@ -34,7 +34,7 @@ const fixture = (prior?: string) => {
   let calls = 0;
   let callback: () => Promise<any> = async () => ({ structuredContent: { success: true } });
   const registry = new Map<string, TaskTool>([['dehub_vote', { description: 'Vote', validate: args => args, call: async () => { calls++; return callback(); } }]]);
-  return { rows, task, calls: () => calls, onCall: (handler: () => Promise<any>) => { callback = handler; },
+  return { rows, db, task, calls: () => calls, onCall: (handler: () => Promise<any>) => { callback = handler; },
     run: () => runTask({ db: () => db, token: async () => 'test', tools: () => registry }, new Request('https://example.test/tasks/tick'), structuredClone(task)) };
 };
 
@@ -65,4 +65,65 @@ Deno.test('pausing during an in-flight action preserves both the receipt and pau
   const test = fixture(); test.onCall(async () => { test.task.status = 'paused'; return { structuredContent: { success: true } }; }); await test.run();
   assert(test.task.status === 'paused', 'overrode owner pause');
   assert(test.task.completed_actions === 1 && test.rows.ai_agent_task_actions[0].status === 'succeeded', 'lost in-flight receipt');
+});
+
+async function profileRequest(body: FormData | Record<string, unknown>, wallet: string | null = AGENT_OWNER, owned = true) {
+  const test = fixture();
+  if (!owned) test.rows.ai_agents[0].human_owner_wallet = '0x2222222222222222222222222222222222222222';
+  let call: { tool: string; args: Record<string, unknown>; images?: ProfileImages } | undefined;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => {
+    assert(String(input) === 'https://api.dehub.io/api/auth/verify', 'unexpected network request');
+    return Response.json({ address: wallet });
+  };
+  try {
+    const headers = new Headers(wallet ? { 'x-dehub-token': 'test-session' } : {});
+    if (!(body instanceof FormData)) headers.set('content-type', 'application/json');
+    const response = await handleTaskRequest(new Request('https://example.test/tasks', {
+      method: 'POST', headers, body: body instanceof FormData ? body : JSON.stringify(body),
+    }), { db: () => test.db, token: async () => 'test', tools: (key, _request, images) => {
+      assert(key === 'test', 'incorrect agent key');
+      return new Map(['dehub_profile', 'dehub_update_profile'].map(tool => [tool, {
+        description: tool, validate: args => args,
+        call: async args => { call = { tool, args, images }; return { structuredContent: { success: true, profile: { display_name: 'Name' } } }; },
+      } as TaskTool]));
+    } });
+    return { status: response.status, payload: await response.json(), call };
+  } finally { globalThis.fetch = originalFetch; }
+}
+
+Deno.test('profile reads and edits require a verified preview owner and an owned agent', async () => {
+  for (const operation of ['profile', 'update_profile']) {
+    const body = { operation, agent_id: 'agent', updates: { bio: 'Changed' } };
+    const anonymous = await profileRequest(body, null);
+    assert(anonymous.status === 401 && !anonymous.call, 'anonymous profile access');
+    const otherUser = await profileRequest(body, '0x2222222222222222222222222222222222222222');
+    assert(otherUser.status === 403 && !otherUser.call, 'non-preview profile access');
+    const otherAgent = await profileRequest(body, AGENT_OWNER, false);
+    assert(otherAgent.status === 403 && !otherAgent.call, 'another owner profile access');
+  }
+  const ownProfile = await profileRequest({ operation: 'profile', agent_id: 'agent' });
+  assert(ownProfile.status === 200 && ownProfile.call?.args.user === '0x1111111111111111111111111111111111111111', 'profile did not target the selected agent');
+  assert(!JSON.stringify(ownProfile.payload).includes('test'), 'profile exposed a credential');
+});
+
+Deno.test('profile uploads preserve both image files and intentional empty bio', async () => {
+  const form = new FormData();
+  form.set('operation', 'update_profile'); form.set('agent_id', 'agent');
+  form.set('display_name', 'Community'); form.set('bio', '');
+  form.set('avatar', new File(['avatar bytes'], 'avatar.jpg', { type: 'image/jpeg' }));
+  form.set('banner', new File(['banner bytes'], 'banner.webp', { type: 'image/webp' }));
+  const result = await profileRequest(form);
+  assert(result.status === 200 && result.call?.tool === 'dehub_update_profile', 'upload did not reach the profile callback');
+  assert(result.call?.args.bio === '' && result.call?.args.display_name === 'Community', 'profile fields were lost');
+  assert(await result.call?.images?.avatar?.text() === 'avatar bytes', 'avatar bytes changed');
+  assert(await result.call?.images?.banner?.text() === 'banner bytes', 'banner bytes changed');
+});
+
+Deno.test('unsupported or oversized profile uploads never reach a write callback', async () => {
+  for (const file of [new File(['html'], 'avatar.html', { type: 'text/html' }), new File([], 'empty.png', { type: 'image/png' }), new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'large.png', { type: 'image/png' })]) {
+    const form = new FormData(); form.set('operation', 'update_profile'); form.set('agent_id', 'agent'); form.set('avatar', file);
+    const result = await profileRequest(form);
+    assert(result.status === 400 && !result.call, 'invalid image reached profile write');
+  }
 });

@@ -9,9 +9,10 @@ export interface TaskTool {
   call: (args: Record<string, unknown>) => Promise<any>;
 }
 type Registry = Map<string, TaskTool>;
+export type ProfileImages = Partial<Record<'avatar' | 'banner', File>>;
 type Context = {
   db: () => any;
-  tools: (key: string, request: Request) => Registry;
+  tools: (key: string, request: Request, images?: ProfileImages) => Registry;
   token: (agent: any) => Promise<string | null>;
 };
 const json = (value: unknown, status = 200) => new Response(JSON.stringify(value), { status, headers: { "Content-Type": "application/json" } });
@@ -208,7 +209,35 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
   const auth = await requireDeHubAuth(req);
   if (!auth.ok) return auth.response;
   if (!agentOwnerAllowed(auth.wallet)) return json({ error: "Agents are in private preview." }, 403);
-  const input = await req.json();
+  let input: Record<string, any>;
+  const images: ProfileImages = {};
+  if (req.headers.get('content-type')?.startsWith('multipart/form-data')) {
+    if (Number(req.headers.get('content-length')) > 11 * 1024 * 1024) return json({ error: 'Choose images smaller than 5 MB each.' }, 413);
+    const form = await req.formData();
+    input = { operation: form.get('operation'), agent_id: form.get('agent_id'), updates: {} };
+    if (input.operation !== 'update_profile') return json({ error: 'Unsupported upload operation.' }, 400);
+    for (const field of ['bio', 'display_name']) if (form.has(field)) input.updates[field] = form.get(field);
+    for (const field of ['avatar', 'banner'] as const) {
+      const file = form.get(field);
+      if (file === null) continue;
+      if (!(file instanceof File) || !['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size === 0 || file.size > 5 * 1024 * 1024) {
+        return json({ error: 'Choose a JPG, PNG, WebP or GIF smaller than 5 MB.' }, 400);
+      }
+      images[field] = file;
+    }
+  } else input = await req.json();
+  if (input.operation === 'profile' || input.operation === 'update_profile') {
+    const agent = checked(await db.from('ai_agents').select('*').eq('id', input.agent_id).eq('human_owner_wallet', auth.wallet).eq('is_active', true).maybeSingle());
+    if (!agent) return json({ error: 'Select an active agent you own.' }, 403);
+    const registry = context.tools(agent.api_key, req, images);
+    const tool = registry.get(input.operation === 'profile' ? 'dehub_profile' : 'dehub_update_profile')!;
+    let args: Record<string, unknown>;
+    try { args = tool.validate(input.operation === 'profile' ? { user: agent.owner_wallet_address } : input.updates ?? {}); }
+    catch { return json({ error: 'Check the profile fields and try again.' }, 400); }
+    const result = await tool.call(args);
+    const payload = result.structuredContent ?? JSON.parse(result.content?.[0]?.text ?? '{}');
+    return json(payload, result.isError ? 422 : 200);
+  }
   if (input.operation === "list") {
     const tasks = checked(await db.from("ai_agent_tasks").select("id,agent_id,prompt,plan,status,completed_actions,next_run_at,needs_review,message,created_at").eq("owner_wallet", auth.wallet).order("created_at", { ascending: false }).limit(50));
     return json({ tasks });

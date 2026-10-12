@@ -1868,6 +1868,13 @@
     "tokensUnit": "tokens"
   },
   "agents": {
+    "profile": {
+        "edit":  "Profiel bewerken",
+        "avatar":  "Avatar",
+        "banner":  "Omslag",
+        "imageHelp":  "JPG, PNG, WebP of GIF, maximaal 5 MB per afbeelding.",
+        "saved":  "Profiel opgeslagen."
+    },
     "tasks": {
       "privateTitle": "Agenten zijn beschikbaar als besloten voorproefje",
       "privateBody": "Deze functie is momenteel beschikbaar voor @maldoteth.",
