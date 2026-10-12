@@ -459,7 +459,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             6.5px above the panel, so both land in the wash with the panel's
             bright glass rim right underneath and stop being legible. The hook
             lets index.css drop the cast for the collapsed rail only. */}
-        <motion.div ref={sidePanelRef} data-side-panel data-rail-collapsed={isCollapsed ? 'true' : undefined} layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden contain-paint flex flex-col">
+        <motion.div ref={sidePanelRef} data-side-panel data-sidebar-glass-surface data-rail-collapsed={isCollapsed ? 'true' : undefined} layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden flex flex-col">
+          <div data-sidebar-glass-backdrop aria-hidden="true" />
           {/* Menu search — revealed by scrolling the list, retracted when it
               returns to the top. Animated through grid-template-rows so the
               row's own height decides the travel; no hardcoded pixel value to
@@ -575,7 +576,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <motion.div
               data-sidebar-active-indicator
               className={cn(
-                "pointer-events-none absolute left-0 top-0 z-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+                "pointer-events-none absolute left-0 top-0 z-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/30",
                 isLightTheme
                   ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-1px_0_rgba(255,255,255,0.06)]"
                   : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
