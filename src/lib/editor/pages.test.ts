@@ -28,7 +28,7 @@ describe("scene editing", () => {
 
 it("keeps a short final screen exact while giving an empty appended screen room", () => {
   const short = { ...clip, duration: 10 };
-  const screens = { ...settings, pages: [0, 3, 7] };
+  const screens = { ...settings, pages: [0, 3, 7], pageTiming: "content" as const };
   expect(timelineDuration(screens, [short])).toBe(10);
   const empty = appendPage(screens, [short], 7.6, false, () => "new");
   expect(empty.start).toBe(10);

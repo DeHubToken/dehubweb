@@ -12,6 +12,7 @@ vi.mock("react-i18next", () => ({ useTranslation: () => ({ t: (key: string, opti
   const translated = key.split(".").reduce<unknown>((node, part) => node && typeof node === "object" ? (node as Record<string, unknown>)[part] : undefined, en);
   return String(translated ?? options.defaultValue ?? key).replace(/{{(\w+)}}/g, (_, name) => String(options[name] ?? ""));
 } }) }));
+vi.mock("@/i18n", () => ({ default: { t: (key: string) => key } }));
 vi.mock("./panels/DesignPanel", () => ({ PanelHeading: ({ children }: { children: React.ReactNode }) => <h2>{children}</h2> }));
 
 const t = ((key: string, options?: { defaultValue?: string }) => {
