@@ -999,12 +999,11 @@ export function useSendMessage(conversationId: string) {
       };
 
       queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {
-        if (!old?.pages) return old;
-        const newPages = [...old.pages];
+        const newPages = old?.pages?.length ? [...old.pages] : [{ items: [], totalCount: 0, hasMore: false }];
         if (newPages[0]) {
           newPages[0] = { ...newPages[0], items: [optimisticMessage, ...newPages[0].items] };
         }
-        return { ...old, pages: newPages };
+        return { ...old, pageParams: old?.pageParams ?? [0], pages: newPages };
       });
 
       return { optimisticId: optimisticMessage._id };
