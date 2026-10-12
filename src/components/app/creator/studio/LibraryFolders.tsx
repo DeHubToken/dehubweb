@@ -8,7 +8,10 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useState } from 'react';
 import { FolderPlus, Folder as FolderIcon } from "lucide-react";
-import { Check, MoreHorizontal, Pencil, Trash2 } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { useTranslation } from 'react-i18next';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';

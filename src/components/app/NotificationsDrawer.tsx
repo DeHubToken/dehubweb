@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 

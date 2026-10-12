@@ -28,9 +28,10 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Clapperboard, Loader2 } from "lucide-react";
-import { Sparkles } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
-import { MessageSquare, Play } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Play from "@/components/ui/cut-icons/play";
 
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';

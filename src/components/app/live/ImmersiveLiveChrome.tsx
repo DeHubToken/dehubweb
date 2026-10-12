@@ -25,9 +25,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Users, Volume2, VolumeX } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
 
-import { ChevronRight, X } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import X from "@/components/ui/cut-icons/close";
 
 import { formatDistanceToNow } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';

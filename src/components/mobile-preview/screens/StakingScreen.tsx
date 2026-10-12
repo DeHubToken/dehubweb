@@ -5,7 +5,8 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { TrendingUp, Clock } from "lucide-react";
-import { Lock, Coins } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Coins from "@/components/ui/cut-icons/coins";
 
 
 const stakingOptions = (t: TFunction) => [

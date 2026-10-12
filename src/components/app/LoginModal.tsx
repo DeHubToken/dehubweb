@@ -24,7 +24,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import React, { Suspense, useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronRight } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { LoginBodySkeleton } from '@/components/app/login/LoginBodySkeleton';

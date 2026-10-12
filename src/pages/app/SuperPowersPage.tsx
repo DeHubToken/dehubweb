@@ -20,9 +20,13 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Loader2, Clock } from "lucide-react";
-import { Lock, Check, History, Users } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Check from "@/components/ui/cut-icons/check";
+import History from "@/components/ui/cut-icons/history";
+import Users from "@/components/ui/cut-icons/communities";
 
-import { ChevronRight, X } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import X from "@/components/ui/cut-icons/close";
 
 import { SuperPowerIcon } from '@/components/app/SuperPowerIcon';
 import { toast } from 'sonner';

@@ -20,9 +20,14 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
-import { Check, Pencil, Trash2 } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { MessageSquare, Send, ThumbsUp, X } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Send from "@/components/ui/cut-icons/send";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import X from "@/components/ui/cut-icons/close";
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';

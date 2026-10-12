@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';

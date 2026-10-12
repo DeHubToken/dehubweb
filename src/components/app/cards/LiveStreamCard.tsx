@@ -23,9 +23,21 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MoreVertical, Minimize, Heart, StopCircle, Activity, Loader2 } from "lucide-react";
-import { Sparkles, Flag, Ban, EyeOff, Volume2, VolumeX, Maximize, Gift, Info } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Flag from "@/components/ui/cut-icons/report";
+import Ban from "@/components/ui/cut-icons/blocked";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Maximize from "@/components/ui/cut-icons/fullscreen";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Info from "@/components/ui/cut-icons/information";
 
-import { Bell, Play, Pause, Bookmark, Gem } from "@/components/ui/cut-icons";
+import Bell from "@/components/ui/cut-icons/alerts";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
+import Bookmark from "@/components/ui/cut-icons/save";
+import Gem from "@/components/ui/cut-icons/diamond";
 
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';

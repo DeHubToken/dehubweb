@@ -4,7 +4,8 @@
  */
 import { useTranslation } from "react-i18next";
 import { AlignCenterHorizontal, AlignCenterVertical, AlignEndHorizontal, AlignEndVertical, AlignHorizontalSpaceAround, AlignStartHorizontal, AlignStartVertical, AlignVerticalSpaceAround } from "lucide-react";
-import { Copy, Trash2 } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";

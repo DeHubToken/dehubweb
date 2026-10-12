@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ExternalLink } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
 import { getLinkPreviewFavicon, type LinkPreviewData } from '@/lib/api/link-preview';
 import { PredictionDetails } from './PredictionDetails';

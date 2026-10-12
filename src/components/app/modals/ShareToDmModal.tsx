@@ -22,9 +22,12 @@ import { useState, useEffect, useMemo } from 'react';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { openDmDock } from '@/hooks/use-dm-dock';
 import { Loader2 } from "lucide-react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { Search, Send, X, Gem } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Send from "@/components/ui/cut-icons/send";
+import X from "@/components/ui/cut-icons/close";
+import Gem from "@/components/ui/cut-icons/diamond";
 
 import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

@@ -21,7 +21,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 import { Loader2 } from "lucide-react";
-import { LogOut } from "@/components/ui/cut-icons";
+import LogOut from "@/components/ui/cut-icons/sign-out";
 
 import { WALLET_CONNECT_REQUIRED_EVENT, finishSessionWalletConnect } from '@/lib/wallet-reconnect';
 

@@ -8,9 +8,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';
 import { ArrowUp, CandlestickChart, Loader2 } from "lucide-react";
-import { Check, Sparkles } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
-import { ArrowLeft, ChevronRight } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useWalletLocked } from '@/hooks/use-wallet-locked';

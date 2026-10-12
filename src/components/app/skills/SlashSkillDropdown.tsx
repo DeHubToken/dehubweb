@@ -6,9 +6,10 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImageIcon } from "lucide-react";
-import { Sparkles, LayoutGrid } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import LayoutGrid from "@/components/ui/cut-icons/apps";
 
-import { MessageSquare } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import type { UserSkill } from '@/hooks/use-user-skills';
 

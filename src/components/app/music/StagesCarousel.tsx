@@ -16,9 +16,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Mic2 } from "lucide-react";
-import { Users } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
 
-import { ChevronRight, Plus } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';

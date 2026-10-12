@@ -1,9 +1,10 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Loader2, RotateCcw } from "lucide-react";
-import { Music } from "@/components/ui/cut-icons";
+import Music from "@/components/ui/cut-icons/music";
 
-import { Pause, Play } from "@/components/ui/cut-icons";
+import Pause from "@/components/ui/cut-icons/pause";
+import Play from "@/components/ui/cut-icons/play";
 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

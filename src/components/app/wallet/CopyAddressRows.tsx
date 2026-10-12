@@ -14,7 +14,9 @@
  */
 import { useState } from 'react';
 import { ChevronLeft } from "lucide-react";
-import { Check, Copy, Wallet } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';

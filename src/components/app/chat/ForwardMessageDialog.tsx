@@ -9,7 +9,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 
 import { useMemo, useState } from 'react';
 import { CornerUpRight } from "lucide-react";
-import { Search, X } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
 
 import {
   Dialog,

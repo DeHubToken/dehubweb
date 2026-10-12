@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useState } from 'react';
 import { Globe, Loader2 } from "lucide-react";
-import { Check, Copy } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Copy from "@/components/ui/cut-icons/copy";
 
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';

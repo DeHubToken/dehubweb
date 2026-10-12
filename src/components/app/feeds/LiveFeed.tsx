@@ -13,9 +13,13 @@ import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { Tv } from "lucide-react";
-import { RefreshCw, Radio, Eye, MicOff } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Radio from "@/components/ui/cut-icons/live";
+import Eye from "@/components/ui/cut-icons/visibility";
+import MicOff from "@/components/ui/cut-icons/mic-off";
 
-import { ChevronRight, Play } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Play from "@/components/ui/cut-icons/play";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useNavigate } from 'react-router-dom';

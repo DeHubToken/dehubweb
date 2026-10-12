@@ -27,9 +27,10 @@ import { useCallback, useEffect, useMemo, useState, useRef, type ReactNode } fro
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft } from "lucide-react";
-import { Languages } from "@/components/ui/cut-icons";
+import Languages from "@/components/ui/cut-icons/language";
 
-import { X, ChevronRight } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import useEmblaCarousel from 'embla-carousel-react';
 import { ImageTranslationSheet } from './ImageTranslationSheet';

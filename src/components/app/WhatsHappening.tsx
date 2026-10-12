@@ -13,9 +13,12 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Globe, ChevronDown, Hash, Flame } from "lucide-react";
-import { Radio, Video, Users } from "@/components/ui/cut-icons";
+import Radio from "@/components/ui/cut-icons/live";
+import Video from "@/components/ui/cut-icons/video";
+import Users from "@/components/ui/cut-icons/communities";
 
-import { Search, Mic } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';

@@ -11,9 +11,14 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * sheet is a cache hit.
  */
 import { useQuery } from '@tanstack/react-query';
-import { Link2, MoreHorizontal, Quote } from "@/components/ui/cut-icons";
+import Link2 from "@/components/ui/cut-icons/link";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Quote from "@/components/ui/cut-icons/quote";
 
-import { ChevronRight, Repeat2, Send, MessageCircle } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Repeat2 from "@/components/ui/cut-icons/repost";
+import Send from "@/components/ui/cut-icons/send";
+import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

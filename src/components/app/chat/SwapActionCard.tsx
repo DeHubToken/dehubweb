@@ -8,7 +8,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useCallback, useEffect } from 'react';
 import { ArrowRightLeft, Loader2, AlertTriangle } from "lucide-react";
-import { Check, ExternalLink } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';

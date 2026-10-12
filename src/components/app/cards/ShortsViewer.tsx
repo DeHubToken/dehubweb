@@ -18,9 +18,26 @@ import {
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Minimize, ChevronUp, ChevronDown, ChevronLeft, UserCheck, Loader2, Globe, RotateCcw } from "lucide-react";
-import { Volume2, VolumeX, Maximize, MoreHorizontal, Eye, Info, Flag, Ban, UserPlus, Trash2, EyeOff } from "@/components/ui/cut-icons";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Maximize from "@/components/ui/cut-icons/fullscreen";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Info from "@/components/ui/cut-icons/information";
+import Flag from "@/components/ui/cut-icons/report";
+import Ban from "@/components/ui/cut-icons/blocked";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import EyeOff from "@/components/ui/cut-icons/hidden";
 
-import { Download, X, ThumbsUp, MessageSquare, Bookmark, Share2, Send, Gem } from "@/components/ui/cut-icons";
+import Download from "@/components/ui/cut-icons/download";
+import X from "@/components/ui/cut-icons/close";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Bookmark from "@/components/ui/cut-icons/save";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Send from "@/components/ui/cut-icons/send";
+import Gem from "@/components/ui/cut-icons/diamond";
 
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
@@ -60,9 +77,10 @@ import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { Quote, Link } from "@/components/ui/cut-icons";
+import Quote from "@/components/ui/cut-icons/quote";
+import Link from "@/components/ui/cut-icons/link";
 
-import { Repeat2 } from "@/components/ui/cut-icons";
+import Repeat2 from "@/components/ui/cut-icons/repost";
 
 import { cn } from '@/lib/utils';
 import type { ShortVideo } from '@/types/feed.types';

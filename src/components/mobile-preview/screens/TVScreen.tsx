@@ -3,7 +3,9 @@ import { MobileStatusBar } from '../MobileStatusBar';
 import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { Tv } from "lucide-react";
-import { Play, Search, ChevronRight } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
+import Search from "@/components/ui/cut-icons/search";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 
 const MOCK_CHANNELS = [

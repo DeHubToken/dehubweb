@@ -5,9 +5,18 @@ import { useState, useEffect, useMemo } from 'react';
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Ticket, Shield, Hash, Save, Type, ShoppingBag, Baby } from "lucide-react";
-import { Gift, Eye, EyeOff, Check, Info, Users, Coins } from "@/components/ui/cut-icons";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Eye from "@/components/ui/cut-icons/visibility";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Check from "@/components/ui/cut-icons/check";
+import Info from "@/components/ui/cut-icons/information";
+import Users from "@/components/ui/cut-icons/communities";
+import Coins from "@/components/ui/cut-icons/coins";
 
-import { MessageCircle, Search, X, Plus } from "@/components/ui/cut-icons";
+import MessageCircle from "@/components/ui/cut-icons/messages";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { Switch } from '@/components/ui/switch';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from '@/components/ui/drawer';

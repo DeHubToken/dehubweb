@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { ChevronLeft } from "lucide-react";
-import { ChevronRight } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useTranslation } from 'react-i18next';
 

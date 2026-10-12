@@ -30,9 +30,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2, ArrowDownToLine, Clipboard, CheckCircle2, XCircle, Clock } from "lucide-react";
-import { Link2 } from "@/components/ui/cut-icons";
+import Link2 from "@/components/ui/cut-icons/link";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { ImportDetailsDialog } from '@/components/app/converter/ImportDetailsDialog';
 import { PodcastImportSection } from '@/components/app/converter/PodcastImportSection';

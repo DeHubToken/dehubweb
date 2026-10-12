@@ -3,9 +3,11 @@
  * =========================================
  */
 import { Hand, MousePointer2 } from "lucide-react";
-import { Redo2, Undo2 } from "@/components/ui/cut-icons";
+import Redo2 from "@/components/ui/cut-icons/redo";
+import Undo2 from "@/components/ui/cut-icons/undo";
 
-import { Plus, Share2 } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

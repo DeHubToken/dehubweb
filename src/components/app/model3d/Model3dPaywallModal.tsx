@@ -23,7 +23,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2, Box, AlertCircle, ChevronDown, Hash } from "lucide-react";
-import { Lightbulb, Sparkles } from "@/components/ui/cut-icons";
+import Lightbulb from "@/components/ui/cut-icons/feature-requests";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
 import {
   MODEL3D_MODELS,

@@ -2,9 +2,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { RefreshCw, Users } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Users from "@/components/ui/cut-icons/communities";
 
-import { MessageSquare } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

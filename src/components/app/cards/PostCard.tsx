@@ -17,9 +17,23 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Zap, Globe, UserCheck, BarChart2, Star } from "lucide-react";
-import { Link2, Flag, Ban, Eye, EyeOff, Trash2, UserPlus, VolumeX, Pencil, Coins, Gift, Lock } from "@/components/ui/cut-icons";
+import Link2 from "@/components/ui/cut-icons/link";
+import Flag from "@/components/ui/cut-icons/report";
+import Ban from "@/components/ui/cut-icons/blocked";
+import Eye from "@/components/ui/cut-icons/visibility";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import UserPlus from "@/components/ui/cut-icons/add-account";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Coins from "@/components/ui/cut-icons/coins";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Lock from "@/components/ui/cut-icons/privacy";
 
-import { MessageSquare, Repeat2, Plus, X } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Repeat2 from "@/components/ui/cut-icons/repost";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { useSuperpowers } from '@/hooks/use-superpowers';

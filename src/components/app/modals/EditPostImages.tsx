@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
-import { Upload } from "@/components/ui/cut-icons";
+import Upload from "@/components/ui/cut-icons/upload";
 
 import { getNFTInfo, replacePostImage, addPostImages, getPostImageAllowance } from '@/lib/api/dehub';
 import { buildFeedImageUrls } from '@/lib/media-url';

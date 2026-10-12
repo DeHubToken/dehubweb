@@ -6,7 +6,7 @@
 
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { GripHorizontal, TrendingUp, TrendingDown } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { AreaChart, Area, ResponsiveContainer, YAxis, Tooltip, XAxis } from 'recharts';
 import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';

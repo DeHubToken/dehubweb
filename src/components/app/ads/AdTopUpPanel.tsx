@@ -33,7 +33,7 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, AlertCircle } from "lucide-react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
 import { toast } from 'sonner';
 import { Interface } from 'ethers';

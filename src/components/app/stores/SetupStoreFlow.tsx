@@ -12,9 +12,9 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from "lucide-react";
-import { Camera } from "@/components/ui/cut-icons";
+import Camera from "@/components/ui/cut-icons/camera";
 
-import { ArrowLeft } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useCreateStore, uploadStoreMedia } from '@/hooks/use-stores';

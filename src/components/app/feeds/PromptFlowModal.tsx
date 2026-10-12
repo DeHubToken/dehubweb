@@ -6,7 +6,13 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { ArrowUp, Cpu, Atom, Film } from "lucide-react";
-import { Sparkles, Gamepad2, Trophy, Music2, Image as ImageIcon, Radio, Check } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Gamepad2 from "@/components/ui/cut-icons/arcade";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import Music2 from "@/components/ui/cut-icons/music";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import Radio from "@/components/ui/cut-icons/live";
+import Check from "@/components/ui/cut-icons/check";
 
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';

@@ -12,7 +12,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowUp, Loader2, RotateCcw, Wand2 } from "lucide-react";
-import { Sparkles, Trash2 } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { cn } from '@/lib/utils';
 import { useEditorStore } from '@/store/editorStore';

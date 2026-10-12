@@ -7,7 +7,7 @@
  */
 
 import { Pin } from "lucide-react";
-import { Users } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
 
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';

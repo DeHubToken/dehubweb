@@ -3,7 +3,7 @@
  * the playhead; it is then moved, resized and styled like any other layer.
  */
 import { useTranslation } from 'react-i18next';
-import { PenLine } from "@/components/ui/cut-icons";
+import PenLine from "@/components/ui/cut-icons/edit";
 
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';

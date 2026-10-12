@@ -11,9 +11,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Crown, Loader2 } from "lucide-react";
-import { Trash2 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { Search, User } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import User from "@/components/ui/cut-icons/profile";
 
 
 import {

@@ -6,7 +6,8 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, typ
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { ArrowDownUp } from "lucide-react";
-import { ExternalLink, RefreshCw } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
 
 import { formatUnits, parseUnits } from 'ethers';
 import { toast } from 'sonner';

@@ -1,9 +1,10 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo, useEffect } from 'react';
 import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { X, Play } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import Play from "@/components/ui/cut-icons/play";
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';

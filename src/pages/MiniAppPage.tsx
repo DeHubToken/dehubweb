@@ -19,7 +19,7 @@ import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } fr
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, BadgeCheck, Loader2, ShieldAlert, Wrench } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';

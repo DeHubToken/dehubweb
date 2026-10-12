@@ -30,9 +30,12 @@ import { useDraftState } from '@/hooks/use-draft-state';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImageIcon, Loader2 } from "lucide-react";
-import { Trash2, Check, Info, Store } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Check from "@/components/ui/cut-icons/check";
+import Info from "@/components/ui/cut-icons/information";
+import Store from "@/components/ui/cut-icons/store";
 
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import {
   Drawer,

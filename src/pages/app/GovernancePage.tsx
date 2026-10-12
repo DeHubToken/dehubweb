@@ -17,9 +17,15 @@ import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IslandAction, KitButton, PageBody, PageEmpty, PageIsland, PageTabs } from '@/components/app/page-kit/PageKit';
 import { Loader2, CheckCircle2, RotateCcw } from "lucide-react";
-import { Sparkles, ShieldCheck, Info, Languages } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import Info from "@/components/ui/cut-icons/information";
+import Languages from "@/components/ui/cut-icons/language";
 
-import { Search, Plus, X, MessageCircle } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
+import MessageCircle from "@/components/ui/cut-icons/messages";
 
 import { toast } from 'sonner';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';

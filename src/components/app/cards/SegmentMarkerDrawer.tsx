@@ -14,9 +14,11 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useEffect, useState } from 'react';
 import { Loader2 } from "lucide-react";
-import { Check, ThumbsDown, Trash2 } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { ThumbsUp } from "@/components/ui/cut-icons";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';

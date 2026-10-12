@@ -8,7 +8,9 @@
 
 import { useState, memo } from 'react';
 import { Ticket } from "lucide-react";
-import { X, ThumbsUp, MessageSquare } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import ThumbsUp from "@/components/ui/cut-icons/like";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';

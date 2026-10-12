@@ -14,7 +14,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { ImageIcon } from "lucide-react";
-import { Music, Video, Users } from "@/components/ui/cut-icons";
+import Music from "@/components/ui/cut-icons/music";
+import Video from "@/components/ui/cut-icons/video";
+import Users from "@/components/ui/cut-icons/communities";
 
 import { cdnImage } from '@/lib/media-url';
 import { truncateAddress } from '@/lib/api/token-holders';

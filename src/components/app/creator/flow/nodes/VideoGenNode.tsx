@@ -9,9 +9,11 @@ import { useAuth } from "@/contexts/AuthContext";
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronLeft, Clapperboard, CopyPlus, Loader2 } from "lucide-react";
-import { Camera, Trash2 } from "@/components/ui/cut-icons";
+import Camera from "@/components/ui/cut-icons/camera";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { ChevronRight, Download } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Download from "@/components/ui/cut-icons/download";
 
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';

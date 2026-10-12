@@ -2,7 +2,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Bot, DollarSign, TrendingUp, Globe } from "lucide-react";
-import { MessageSquare, Search } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Search from "@/components/ui/cut-icons/search";
 
 import { OptimizedImage } from '@/components/OptimizedImage';
 import { useLanguage } from '@/contexts/LanguageContext';

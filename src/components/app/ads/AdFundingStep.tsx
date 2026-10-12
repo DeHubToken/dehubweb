@@ -33,7 +33,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { AlertCircle, ArrowRight, CreditCard, Loader2 } from "lucide-react";
-import { ExternalLink, Wallet } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
 import { Button } from '@/components/ui/button';
 import { BASE_CHAIN_ID, getChainConfig, toWei } from '@/lib/contracts/dhb-token';

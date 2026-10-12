@@ -4,9 +4,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from '@/i18n';
-import { Users, Wallet, Sparkles, RefreshCw, ExternalLink, Copy } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Copy from "@/components/ui/cut-icons/copy";
 
-import { Share2, Plus, X } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Plus from "@/components/ui/cut-icons/add";
+import X from "@/components/ui/cut-icons/close";
 
 import { AppState } from '@/components/app/AppState';
 import { toast } from "sonner";

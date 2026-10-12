@@ -1,5 +1,5 @@
 import { Sun } from "lucide-react";
-import { Moon } from "@/components/ui/cut-icons";
+import Moon from "@/components/ui/cut-icons/appearance";
 
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";

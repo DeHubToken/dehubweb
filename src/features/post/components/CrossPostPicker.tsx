@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { Share2 } from "@/components/ui/cut-icons";
+import Share2 from "@/components/ui/cut-icons/feedshare";
 
 
 import { cn } from '@/lib/utils';

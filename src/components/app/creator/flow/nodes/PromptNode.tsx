@@ -8,7 +8,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Braces, CopyPlus } from "lucide-react";
-import { Copy, Trash2 } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';

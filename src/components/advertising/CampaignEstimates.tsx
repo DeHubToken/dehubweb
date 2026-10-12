@@ -2,7 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, AlertCircle } from "lucide-react";
-import { Eye } from "@/components/ui/cut-icons";
+import Eye from "@/components/ui/cut-icons/visibility";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { CampaignCalculations } from './utils/badgeTiers';

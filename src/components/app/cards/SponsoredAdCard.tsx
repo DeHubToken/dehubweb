@@ -9,9 +9,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useState } from 'react';
-import { Megaphone, ExternalLink } from "@/components/ui/cut-icons";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
-import { Play } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
 
 import { cn } from '@/lib/utils';
 import type { ServedAd } from '@/lib/ads/povr';

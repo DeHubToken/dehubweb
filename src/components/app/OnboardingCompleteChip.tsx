@@ -17,7 +17,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Trophy } from "@/components/ui/cut-icons";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
 
 
 import { useAuth } from '@/contexts/AuthContext';

@@ -13,9 +13,17 @@ import { Button } from '@/components/ui/button';
 import { AppState } from '@/components/app/AppState';
 import { Input } from '@/components/ui/input';
 import { ChevronDown, ChevronUp, FileText, Loader2, ListTree } from "lucide-react";
-import { Copy, RefreshCw, Sparkles, Pencil, Check, ThumbsDown } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Check from "@/components/ui/cut-icons/check";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
 
-import { Download, Search, X, ThumbsUp } from "@/components/ui/cut-icons";
+import Download from "@/components/ui/cut-icons/download";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
 import type { TranscriptSegment } from '@/hooks/use-transcript';

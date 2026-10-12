@@ -22,9 +22,9 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, Loader2, ReceiptText } from "lucide-react";
-import { ExternalLink } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
-import { Download } from "@/components/ui/cut-icons";
+import Download from "@/components/ui/cut-icons/download";
 
 
 import {

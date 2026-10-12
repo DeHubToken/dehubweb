@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 
 import { cn } from "@/lib/utils";

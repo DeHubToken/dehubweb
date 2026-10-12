@@ -12,7 +12,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { useCallback, useEffect, useState } from 'react';
 import { Loader2, Fingerprint, KeyRound, AlertTriangle } from "lucide-react";
-import { Trash2 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

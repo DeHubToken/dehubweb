@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as ContextMenuPrimitive from "@radix-ui/react-context-menu";
 import { Circle } from "lucide-react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { ChevronRight } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 
 import { cn } from "@/lib/utils";

@@ -25,9 +25,10 @@ import { useSurfaceDraft, draftIdentity } from '@/hooks/use-surface-draft';
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { X, ChevronRight } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';

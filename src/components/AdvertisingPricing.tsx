@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Badge } from './ui/badge';
 import { DollarSign, TrendingUp } from "lucide-react";
-import { Users } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
 
 import { badgeImage } from '@/lib/staking-badges';
 import { DhbAmount } from '@/components/app/DhbAmount';

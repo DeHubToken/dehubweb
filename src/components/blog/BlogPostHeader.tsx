@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock } from "lucide-react";
-import { Calendar } from "@/components/ui/cut-icons";
+import Calendar from "@/components/ui/cut-icons/events";
 
 import { BlogPost } from '@/types/blog';
 import { ShareButtons } from './ShareButtons';

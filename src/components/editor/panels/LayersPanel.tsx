@@ -9,7 +9,11 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shapes, Type, Unlock } from "lucide-react";
-import { Eye, EyeOff, Image as ImageIcon, Lock, Video } from "@/components/ui/cut-icons";
+import Eye from "@/components/ui/cut-icons/visibility";
+import EyeOff from "@/components/ui/cut-icons/hidden";
+import ImageIcon from "@/components/ui/cut-icons/images";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Video from "@/components/ui/cut-icons/video";
 
 import { cn } from '@/lib/utils';
 import { useEditorStore } from '@/store/editorStore';

@@ -1,7 +1,7 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, memo, useMemo } from 'react';
 import { SquareUserRound, MessagesSquare, Star } from "lucide-react";
-import { Trophy } from "@/components/ui/cut-icons";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
 
 import { WhoToFollow } from '../WhoToFollow';
 import { SidebarLeaderboard, type SidebarLeaderboardHandle } from './SidebarLeaderboard';

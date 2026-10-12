@@ -14,7 +14,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2, Minus } from "lucide-react";
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';

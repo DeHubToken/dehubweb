@@ -13,7 +13,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2, HeartHandshake, FilePenLine } from "lucide-react";
-import { Copy, Check, ExternalLink, RefreshCw, Info } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Info from "@/components/ui/cut-icons/information";
 
 import { toast } from 'sonner';
 import { DhbAmount } from '@/components/app/DhbAmount';

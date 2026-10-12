@@ -28,7 +28,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { Loader2, ShoppingCart, AlertTriangle } from "lucide-react";
-import { Info } from "@/components/ui/cut-icons";
+import Info from "@/components/ui/cut-icons/information";
 
 import { toast } from 'sonner';
 import { useFractionPurchase, type FractionQuote } from '@/hooks/use-fraction-checkout';

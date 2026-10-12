@@ -3,9 +3,14 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Crown, Zap, Shield, PlayCircle, ImageIcon, Palette, Rocket, Heart, Infinity as InfinityIcon } from "lucide-react";
-import { Check, Sparkles, Users, Video, Eye, Lock } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Users from "@/components/ui/cut-icons/communities";
+import Video from "@/components/ui/cut-icons/video";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Lock from "@/components/ui/cut-icons/privacy";
 
-import { MessageSquare } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { SEOHead } from '@/components/SEOHead';
 import {

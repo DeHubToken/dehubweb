@@ -3,7 +3,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Loader2, Clapperboard } from "lucide-react";
-import { Search, Share2, ArrowLeft } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 
 import { SEOHead } from '@/components/SEOHead';
 import {

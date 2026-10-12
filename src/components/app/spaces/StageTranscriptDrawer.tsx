@@ -37,9 +37,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { FileText, Loader2, Bot, Globe2 } from "lucide-react";
-import { RefreshCw, Sparkles, MoreHorizontal, Copy, Pencil, Lock, Users as UsersIcon, Eye, Quote } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
+import Copy from "@/components/ui/cut-icons/copy";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Lock from "@/components/ui/cut-icons/privacy";
+import UsersIcon from "@/components/ui/cut-icons/communities";
+import Eye from "@/components/ui/cut-icons/visibility";
+import Quote from "@/components/ui/cut-icons/quote";
 
-import { X, User, Search, Download, Share2, Play, Pause } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import User from "@/components/ui/cut-icons/profile";
+import Search from "@/components/ui/cut-icons/search";
+import Download from "@/components/ui/cut-icons/download";
+import Share2 from "@/components/ui/cut-icons/feedshare";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { supabase } from '@/integrations/supabase/client';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';

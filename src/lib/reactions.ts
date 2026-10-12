@@ -22,9 +22,9 @@
  */
 
 import { Heart, Flame, type LucideIcon } from "lucide-react";
-import { ThumbsDown } from "@/components/ui/cut-icons";
+import ThumbsDown from "@/components/ui/cut-icons/dislike";
 
-import { ThumbsUp } from "@/components/ui/cut-icons";
+import ThumbsUp from "@/components/ui/cut-icons/like";
 
 
 /** Every reaction, in picker order — also the deterministic tiebreak order. */

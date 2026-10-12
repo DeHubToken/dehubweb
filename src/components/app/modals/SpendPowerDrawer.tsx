@@ -33,9 +33,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
-import { Check, SquarePen } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import SquarePen from "@/components/ui/cut-icons/edit";
 
-import { Search, X, Play } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
+import Play from "@/components/ui/cut-icons/play";
 
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

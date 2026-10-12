@@ -15,7 +15,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { CaptionsOff, Headphones } from "lucide-react";
-import { Captions, Check, Volume2 } from "@/components/ui/cut-icons";
+import Captions from "@/components/ui/cut-icons/captions";
+import Check from "@/components/ui/cut-icons/check";
+import Volume2 from "@/components/ui/cut-icons/volume";
 
 import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { Button } from '@/components/ui/button';

@@ -6,9 +6,12 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, Type } from "lucide-react";
-import { Copy, Trash2 } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { ChevronRight, Play, Plus } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Play from "@/components/ui/cut-icons/play";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";

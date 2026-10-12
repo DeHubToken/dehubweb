@@ -10,7 +10,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
-import { Users } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
 
 import { Button } from '@/components/ui/button';
 import { SEOHead } from '@/components/SEOHead';

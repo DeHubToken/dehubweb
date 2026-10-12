@@ -5,7 +5,8 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { SEOHead } from '@/components/SEOHead';
 import { Rocket } from "lucide-react";
-import { Plus, Search } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
+import Search from "@/components/ui/cut-icons/search";
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useLaunchpadTokens, type LaunchpadFilter } from '@/hooks/use-launchpad-tokens';

@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import React from 'react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-import { ExternalLink } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
 
 interface PostSpecificSectionsProps {

@@ -26,9 +26,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 import { Suspense, lazy, useState } from 'react';
 import { Ticket, Star, Loader2 } from "lucide-react";
-import { Lock } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { useTranslation } from 'react-i18next';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

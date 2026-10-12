@@ -6,9 +6,9 @@ import { MobileTopBar } from '../MobileTopBar';
 import { MobileBottomBar } from '../MobileBottomBar';
 import { MockAvatar } from '../MockAvatar';
 import { Heart } from "lucide-react";
-import { MoreHorizontal } from "@/components/ui/cut-icons";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
 
-import { Bookmark } from "@/components/ui/cut-icons";
+import Bookmark from "@/components/ui/cut-icons/save";
 
 
 const mockBookmarks = (t: TFunction) => [

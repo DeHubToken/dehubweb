@@ -10,9 +10,12 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Shield, ScrollText, AlertTriangle, type LucideIcon } from "lucide-react";
-import { Users, Link2, History } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import Link2 from "@/components/ui/cut-icons/link";
+import History from "@/components/ui/cut-icons/history";
 
-import { Settings, SlidersHorizontal } from "@/components/ui/cut-icons";
+import Settings from "@/components/ui/cut-icons/settings";
+import SlidersHorizontal from "@/components/ui/cut-icons/settings";
 
 
 import {

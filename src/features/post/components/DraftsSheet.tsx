@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Save, Clock, CalendarClock } from "lucide-react";
-import { Trash2, Image, Video, BarChart3 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import Image from "@/components/ui/cut-icons/images";
+import Video from "@/components/ui/cut-icons/video";
+import BarChart3 from "@/components/ui/cut-icons/stats";
 
-import { X, Mic } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';

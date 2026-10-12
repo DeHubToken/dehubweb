@@ -11,9 +11,10 @@
  */
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from "lucide-react";
-import { Check, Sparkles } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { cn } from '@/lib/utils';
 import type { CoachFlag, CoachStatus } from '@/hooks/use-conversation-coach';

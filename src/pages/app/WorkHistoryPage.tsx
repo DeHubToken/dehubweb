@@ -5,7 +5,8 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle } from "lucide-react";
-import { Search, Plus } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { useMyPostedJobs, useMyWorkSubmissions } from '@/features/work/hooks/use-work';
 import { bountyPath } from '@/features/work/seo';

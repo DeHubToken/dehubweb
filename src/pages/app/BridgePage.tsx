@@ -15,9 +15,11 @@ import { formatUnits } from 'viem';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowDownUp, Loader2, ArrowRight } from "lucide-react";
-import { RefreshCw, ExternalLink, Copy } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Copy from "@/components/ui/cut-icons/copy";
 
-import { Search } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
 
 import { supabase } from '@/integrations/supabase/client';
 

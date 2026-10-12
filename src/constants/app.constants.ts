@@ -1,8 +1,38 @@
-import { Blog } from "@/components/ui/cut-icons";
+import Blog from "@/components/ui/cut-icons/blog";
 import { AtSign, FileText, Film, FileTextIcon, Wand2, Scroll, Zap, ArrowDownToLine, FolderInput, Tv } from "lucide-react";
-import { Blocks, Store, Trophy, Image, Video, Radio, Users, CalendarDays, Coins, LayoutDashboard, Sparkles, Wallet, BookOpen, Lightbulb, Briefcase, ShieldCheck, Landmark, Vault, Map, BarChart3, Gamepad2, PieChart, Megaphone } from "@/components/ui/cut-icons";
+import Blocks from "@/components/ui/cut-icons/apps";
+import Store from "@/components/ui/cut-icons/store";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
+import Image from "@/components/ui/cut-icons/images";
+import Video from "@/components/ui/cut-icons/video";
+import Radio from "@/components/ui/cut-icons/live";
+import Users from "@/components/ui/cut-icons/communities";
+import CalendarDays from "@/components/ui/cut-icons/events";
+import Coins from "@/components/ui/cut-icons/coins";
+import LayoutDashboard from "@/components/ui/cut-icons/command";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import BookOpen from "@/components/ui/cut-icons/docs";
+import Lightbulb from "@/components/ui/cut-icons/feature-requests";
+import Briefcase from "@/components/ui/cut-icons/bounties";
+import Vote from "@/components/ui/cut-icons/governance";
+import Landmark from "@/components/ui/cut-icons/dao";
+import Vault from "@/components/ui/cut-icons/staking";
+import Map from "@/components/ui/cut-icons/guide";
+import BarChart3 from "@/components/ui/cut-icons/stats";
+import Gamepad2 from "@/components/ui/cut-icons/arcade";
+import PieChart from "@/components/ui/cut-icons/fractions";
+import Megaphone from "@/components/ui/cut-icons/advertising";
 
-import { Home, Search, Bell, MessageSquare, Bookmark, Settings, User, Play, Mic } from "@/components/ui/cut-icons";
+import Home from "@/components/ui/cut-icons/home";
+import Search from "@/components/ui/cut-icons/search";
+import Bell from "@/components/ui/cut-icons/alerts";
+import MessageSquare from "@/components/ui/cut-icons/messages";
+import Bookmark from "@/components/ui/cut-icons/save";
+import Settings from "@/components/ui/cut-icons/settings";
+import User from "@/components/ui/cut-icons/profile";
+import Play from "@/components/ui/cut-icons/play";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -34,7 +64,7 @@ export const NAV_ITEMS: NavItem[] = [
   // Directly under Staking, because it is what staking buys. Without an entry
   // here a holder who has already staked has no route to the page at all.
   { icon: Zap, label: 'SuperPowers', path: '/app/superpowers' },
-  { icon: ShieldCheck, label: 'Governance', path: '/governance' },
+  { icon: Vote, label: 'Governance', path: '/governance' },
   { icon: Landmark, label: 'DAO', path: '/dao' },
   { icon: Briefcase, label: 'Bounties', path: '/work' },
   { icon: Users, label: 'Affiliate', path: '/affiliate' },

@@ -19,9 +19,12 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from "lucide-react";
-import { RefreshCw, Radio, Eye } from "@/components/ui/cut-icons";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Radio from "@/components/ui/cut-icons/live";
+import Eye from "@/components/ui/cut-icons/visibility";
 
-import { Play, ChevronRight } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
+import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { AppState } from '@/components/app/AppState';

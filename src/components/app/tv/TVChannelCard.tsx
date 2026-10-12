@@ -16,9 +16,12 @@ import { useLocation } from 'react-router-dom';
 import { releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { usePictureInPicture } from '@/hooks/use-picture-in-picture';
 import { Loader2, RotateCcw, Minimize, PictureInPicture2 } from "lucide-react";
-import { Volume2, VolumeX, Maximize } from "@/components/ui/cut-icons";
+import Volume2 from "@/components/ui/cut-icons/volume";
+import VolumeX from "@/components/ui/cut-icons/mute";
+import Maximize from "@/components/ui/cut-icons/fullscreen";
 
-import { Play, Pause } from "@/components/ui/cut-icons";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
 
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { usePiP } from '@/contexts/PiPContext';

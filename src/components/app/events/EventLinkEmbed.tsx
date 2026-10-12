@@ -9,7 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Flame } from "lucide-react";
-import { Calendar, MapPin, Users, Lock } from "@/components/ui/cut-icons";
+import Calendar from "@/components/ui/cut-icons/events";
+import MapPin from "@/components/ui/cut-icons/location";
+import Users from "@/components/ui/cut-icons/communities";
+import Lock from "@/components/ui/cut-icons/privacy";
 
 import type { ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';

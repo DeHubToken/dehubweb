@@ -7,9 +7,11 @@
  */
 import { useCallback, useRef, useState } from 'react';
 import { ChevronLeft, CopyPlus, Loader2 } from "lucide-react";
-import { Sparkles, Trash2 } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { ChevronRight, Download } from "@/components/ui/cut-icons";
+import ChevronRight from "@/components/ui/cut-icons/next";
+import Download from "@/components/ui/cut-icons/download";
 
 import { useTranslation } from 'react-i18next';
 import type { NodeProps } from '@xyflow/react';

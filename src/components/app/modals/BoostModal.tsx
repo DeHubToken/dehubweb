@@ -29,7 +29,8 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { getNFTInfo } from '@/lib/api/dehub';
 import { Loader2 } from "lucide-react";
-import { Lock, Check } from "@/components/ui/cut-icons";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Check from "@/components/ui/cut-icons/check";
 
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

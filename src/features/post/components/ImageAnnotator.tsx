@@ -20,9 +20,12 @@ import { useDraftState } from "@/hooks/use-draft-state";
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Type } from "lucide-react";
-import { Check, Pencil, Undo2, Trash2 } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Undo2 from "@/components/ui/cut-icons/undo";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { cn } from '@/lib/utils';
 

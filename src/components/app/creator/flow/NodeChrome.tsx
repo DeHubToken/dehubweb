@@ -8,7 +8,7 @@
 import React, { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Handle, NodeResizeControl, Position, useStore as useFlowStore } from '@xyflow/react';
 import { AlertTriangle, ChevronDown, Film, Loader2, Type } from "lucide-react";
-import { Image as ImageIcon } from "@/components/ui/cut-icons";
+import ImageIcon from "@/components/ui/cut-icons/images";
 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

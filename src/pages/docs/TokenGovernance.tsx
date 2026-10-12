@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield } from "lucide-react";
-import { Vote, Users } from "@/components/ui/cut-icons";
+import Vote from "@/components/ui/cut-icons/governance";
+import Users from "@/components/ui/cut-icons/communities";
 
 import { useLanguage } from '@/contexts/LanguageContext';
 

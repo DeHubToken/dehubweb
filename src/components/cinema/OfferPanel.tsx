@@ -2,7 +2,7 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo } from 'react';
 import { Loader2 } from "lucide-react";
-import { ExternalLink } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
 import {
   formatPrice,

@@ -12,7 +12,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatDistanceToNow } from 'date-fns';
 import { Loader2 } from "lucide-react";
-import { Copy, Link2, Trash2 } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Link2 from "@/components/ui/cut-icons/link";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';

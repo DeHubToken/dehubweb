@@ -4,9 +4,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { DhbCoin } from '@/components/app/DhbAmount';
 import { ArrowDownUp, Loader2, AlertTriangle } from "lucide-react";
-import { ExternalLink } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
-import { Send } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
 
 import { useOptionalGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { SlippageSettings } from '@/components/app/SlippageSettings';

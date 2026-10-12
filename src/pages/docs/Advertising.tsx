@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, TrendingUp, AlertTriangle, DollarSign, Bot, TrendingDown, Target, Calculator } from "lucide-react";
-import { Eye, BarChart3 } from "@/components/ui/cut-icons";
+import Eye from "@/components/ui/cut-icons/visibility";
+import BarChart3 from "@/components/ui/cut-icons/stats";
 
 import AdvertisingPricing from '@/components/AdvertisingPricing';
 import CampaignCreator from '@/components/advertising/CampaignCreator';

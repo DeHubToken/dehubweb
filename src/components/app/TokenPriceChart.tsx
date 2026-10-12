@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
 import { Loader2 } from "lucide-react";
-import { ExternalLink } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';

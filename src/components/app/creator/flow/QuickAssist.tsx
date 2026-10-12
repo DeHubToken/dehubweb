@@ -8,9 +8,9 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, RotateCcw } from "lucide-react";
-import { Sparkles } from "@/components/ui/cut-icons";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';

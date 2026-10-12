@@ -13,9 +13,24 @@ import { DhbAmount, DhbCoin } from '@/components/app/DhbAmount';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { MoreVertical, Loader2, ArrowDown, ShieldBan, AlertCircle, RotateCcw, Pin, Phone, CornerUpRight, FileText, Unlock, SmilePlus } from "lucide-react";
-import { Trash2, ShieldCheck, RefreshCw, Gift, Languages, Pencil, Check, Lock, Reply } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
+import ShieldCheck from "@/components/ui/cut-icons/security";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Gift from "@/components/ui/cut-icons/gifts";
+import Languages from "@/components/ui/cut-icons/language";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Check from "@/components/ui/cut-icons/check";
+import Lock from "@/components/ui/cut-icons/privacy";
+import Reply from "@/components/ui/cut-icons/reply";
 
-import { ArrowLeft, Settings, Play, Pause, Search, X, Gem, Download } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import Settings from "@/components/ui/cut-icons/settings";
+import Play from "@/components/ui/cut-icons/play";
+import Pause from "@/components/ui/cut-icons/pause";
+import Search from "@/components/ui/cut-icons/search";
+import X from "@/components/ui/cut-icons/close";
+import Gem from "@/components/ui/cut-icons/diamond";
+import Download from "@/components/ui/cut-icons/download";
 
 import { TipGemIcon } from '@/components/app/cards/TipGemIcon';
 import { useTranslation as useI18n } from 'react-i18next';

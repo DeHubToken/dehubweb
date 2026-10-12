@@ -2,9 +2,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useMemo } from 'react';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { TrendingUp, Loader2, AlertCircle } from "lucide-react";
-import { Info } from "@/components/ui/cut-icons";
+import Info from "@/components/ui/cut-icons/information";
 
-import { Settings2 } from "@/components/ui/cut-icons";
+import Settings2 from "@/components/ui/cut-icons/settings";
 
 import { Button } from '@/components/ui/button';
 import { FundActions } from './FundActions';

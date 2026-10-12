@@ -26,7 +26,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, MessageSquareQuote } from "lucide-react";
-import { Check, Quote } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Quote from "@/components/ui/cut-icons/quote";
 
 import { toast } from 'sonner';
 

@@ -16,7 +16,7 @@ import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { toggleFollowFor, useFollowOverrides } from '@/hooks/use-follow';
 import { BadgedName } from '@/components/app/BadgedName';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { MoreHorizontal } from "@/components/ui/cut-icons";
+import MoreHorizontal from "@/components/ui/cut-icons/more";
 
 import { usePostStage } from './post-stage-context';
 

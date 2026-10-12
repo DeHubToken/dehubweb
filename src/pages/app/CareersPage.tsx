@@ -21,9 +21,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Clock, DollarSign, Loader2, ChevronUp, Target, Handshake, Globe, TrendingUp, Heart, CheckCircle2 } from "lucide-react";
-import { Briefcase, Users, MapPin, ExternalLink, Megaphone, Sparkles } from "@/components/ui/cut-icons";
+import Briefcase from "@/components/ui/cut-icons/bounties";
+import Users from "@/components/ui/cut-icons/communities";
+import MapPin from "@/components/ui/cut-icons/location";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Megaphone from "@/components/ui/cut-icons/advertising";
+import Sparkles from "@/components/ui/cut-icons/assistant";
 
-import { Send } from "@/components/ui/cut-icons";
+import Send from "@/components/ui/cut-icons/send";
 
 import careersBriefcase from '@/assets/careers-briefcase.png';
 

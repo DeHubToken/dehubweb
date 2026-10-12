@@ -20,7 +20,9 @@
  * @module components/app/profile/ProfileContentToolbar
  */
 
-import { Search, SlidersHorizontal, X } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import SlidersHorizontal from "@/components/ui/cut-icons/settings";
+import X from "@/components/ui/cut-icons/close";
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';

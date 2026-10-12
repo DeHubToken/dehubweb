@@ -2,9 +2,11 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Square, Loader2 } from "lucide-react";
-import { Trash2 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { Search, Play, Mic } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import Play from "@/components/ui/cut-icons/play";
+import Mic from "@/components/ui/cut-icons/mic";
 
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';

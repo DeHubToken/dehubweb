@@ -14,9 +14,13 @@ import { memo, Suspense, lazy, useCallback, useEffect, useRef, useState, useSync
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { AlertCircle, Box, Clapperboard, FileText, Film, ImageIcon, Loader2 } from "lucide-react";
-import { Music2, RefreshCw, Scissors, Trash2 } from "@/components/ui/cut-icons";
+import Music2 from "@/components/ui/cut-icons/music";
+import RefreshCw from "@/components/ui/cut-icons/refresh";
+import Scissors from "@/components/ui/cut-icons/trim";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { Download, X } from "@/components/ui/cut-icons";
+import Download from "@/components/ui/cut-icons/download";
+import X from "@/components/ui/cut-icons/close";
 
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

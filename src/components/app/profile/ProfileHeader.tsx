@@ -1,9 +1,12 @@
 import { ProfileFollowButton } from './ProfileFollowButton';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Star, EllipsisVertical } from "lucide-react";
-import { Pencil, Copy, Wallet, Ban } from "@/components/ui/cut-icons";
+import Pencil from "@/components/ui/cut-icons/edit";
+import Copy from "@/components/ui/cut-icons/copy";
+import Wallet from "@/components/ui/cut-icons/wallet";
+import Ban from "@/components/ui/cut-icons/blocked";
 
-import { MessageSquare } from "@/components/ui/cut-icons";
+import MessageSquare from "@/components/ui/cut-icons/messages";
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEffect, useRef, useState } from 'react';

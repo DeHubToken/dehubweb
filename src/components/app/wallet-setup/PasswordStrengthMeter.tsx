@@ -1,8 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useMemo } from "react";
-import { Check } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { assessLocal, MIN_ACCEPTABLE_SCORE } from "@/lib/wallet-core/passwordStrength";
 

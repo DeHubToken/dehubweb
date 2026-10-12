@@ -15,7 +15,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { ArrowDownRight, ArrowUpRight, ChevronDown, ListChecks } from "lucide-react";
-import { Wallet } from "@/components/ui/cut-icons";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
 
 import {

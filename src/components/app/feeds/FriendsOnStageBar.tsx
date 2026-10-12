@@ -5,7 +5,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
-import { Users } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
 
 import { useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';

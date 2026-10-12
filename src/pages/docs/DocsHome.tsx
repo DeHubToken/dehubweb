@@ -2,7 +2,10 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Book, Code, Zap, Shield, Database, Rocket, Star, CheckCircle } from "lucide-react";
-import { Users, ExternalLink, Copy, Check } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
+import Copy from "@/components/ui/cut-icons/copy";
+import Check from "@/components/ui/cut-icons/check";
 
 import { toast } from 'sonner';
 import { usePerformance } from '@/hooks/usePerformance';

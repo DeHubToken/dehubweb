@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Facebook } from "lucide-react";
-import { Check, Link2 } from "@/components/ui/cut-icons";
+import Check from "@/components/ui/cut-icons/check";
+import Link2 from "@/components/ui/cut-icons/link";
 
-import { ArrowLeft, Download, Send } from "@/components/ui/cut-icons";
+import ArrowLeft from "@/components/ui/cut-icons/back";
+import Download from "@/components/ui/cut-icons/download";
+import Send from "@/components/ui/cut-icons/send";
 
 import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { SEOHead } from "@/components/SEOHead";

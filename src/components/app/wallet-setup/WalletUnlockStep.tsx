@@ -16,7 +16,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2, KeyRound, AlertTriangle, Fingerprint } from "lucide-react";
-import { Copy, Wallet } from "@/components/ui/cut-icons";
+import Copy from "@/components/ui/cut-icons/copy";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

@@ -7,7 +7,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Users } from "@/components/ui/cut-icons";
+import Users from "@/components/ui/cut-icons/communities";
 
 import type { ReactNode } from 'react';
 import { useCommunity } from '@/hooks/use-communities';

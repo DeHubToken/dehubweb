@@ -6,7 +6,7 @@ const TokenPriceChart = lazy(() =>
   import('@/components/app/TokenPriceChart').then(m => ({ default: m.TokenPriceChart }))
 );
 import { TrendingUp, TrendingDown, ChevronDown } from "lucide-react";
-import { ExternalLink } from "@/components/ui/cut-icons";
+import ExternalLink from "@/components/ui/cut-icons/open-externally";
 
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';

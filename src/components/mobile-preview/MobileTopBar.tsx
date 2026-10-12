@@ -1,4 +1,5 @@
-import { Menu, Bell } from "@/components/ui/cut-icons";
+import Menu from "@/components/ui/cut-icons/menu";
+import Bell from "@/components/ui/cut-icons/alerts";
 
 import { MockAvatar } from './MockAvatar';
 

@@ -11,9 +11,9 @@ import { useCallback, useState, useSyncExternalStore } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { loadCloudGenerationPage } from '@/lib/creator/cloudLibrary';
 import { AlertCircle, Box, Film, ImageIcon, Loader2 } from "lucide-react";
-import { Music2 } from "@/components/ui/cut-icons";
+import Music2 from "@/components/ui/cut-icons/music";
 
-import { Plus } from "@/components/ui/cut-icons";
+import Plus from "@/components/ui/cut-icons/add";
 
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

@@ -19,9 +19,11 @@ import trendingFireIcon from '@/assets/icons/trending-fire-icon.png';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import { Loader2 } from "lucide-react";
-import { Trash2 } from "@/components/ui/cut-icons";
+import Trash2 from "@/components/ui/cut-icons/delete";
 
-import { Search, SlidersHorizontal, X } from "@/components/ui/cut-icons";
+import Search from "@/components/ui/cut-icons/search";
+import SlidersHorizontal from "@/components/ui/cut-icons/settings";
+import X from "@/components/ui/cut-icons/close";
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

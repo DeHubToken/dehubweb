@@ -9,7 +9,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  */
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Wallet } from "@/components/ui/cut-icons";
+import Wallet from "@/components/ui/cut-icons/wallet";
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

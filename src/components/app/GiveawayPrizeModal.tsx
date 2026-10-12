@@ -3,9 +3,9 @@ import { tokenLabel } from '@/lib/token-label';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from "lucide-react";
-import { Trophy } from "@/components/ui/cut-icons";
+import Trophy from "@/components/ui/cut-icons/leaderboard";
 
-import { X } from "@/components/ui/cut-icons";
+import X from "@/components/ui/cut-icons/close";
 
 import { useAuth } from '@/contexts/AuthContext';
 import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
