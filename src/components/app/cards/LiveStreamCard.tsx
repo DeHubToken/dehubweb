@@ -22,7 +22,8 @@ import {
 } from '@/lib/media-session';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MoreVertical, Minimize, Heart, StopCircle, Activity, Loader2 } from "lucide-react";
+import MoreVertical from "@/components/ui/cut-icons/morevertical";
+import { Minimize, Heart, StopCircle, Activity, Loader2 } from "lucide-react";
 import Sparkles from "@/components/ui/cut-icons/assistant";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";

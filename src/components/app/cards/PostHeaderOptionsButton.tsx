@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import type { ButtonHTMLAttributes } from 'react';
-import { MoreVertical } from 'lucide-react';
+import MoreVertical from '@/components/ui/cut-icons/morevertical';
 import { cn } from '@/lib/utils';
 
 type PostHeaderOptionsButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -28,8 +28,8 @@ export function PostHeaderOptionsButton({
         style={{
           width: iconSize,
           height: iconSize,
-          // The stroked dots end at x=14 on Lucide's 24-unit grid.
-          transform: `translateX(${iconSize * (10 / 24)}px)`,
+          // Align the edge of the vertical dots on the 32-unit grid.
+          transform: `translateX(${iconSize * (14 / 32)}px)`,
         }}
       />
     </button>
