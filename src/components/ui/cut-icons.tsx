@@ -123,3 +123,5 @@ export { default as PictureInPicture } from "./cut-icons/picture-in-picture";
 export { default as FastForward } from "./cut-icons/fast-forward";
 export { default as Rewind } from "./cut-icons/rewind";
 export { default as Minimize } from "./cut-icons/exit-fullscreen";
+export { default as Hammer } from "./cut-icons/work";
+export { default as Handshake } from "./cut-icons/affiliate";
