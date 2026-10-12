@@ -5,6 +5,14 @@ import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
 
 /**
+ * Canvas themes: the nav is see-through glass over the live background, so the
+ * feed is cut at the surface's BOTTOM edge and posts never slide under it.
+ * System and Immersive keep the top-edge cut (posts bleed through the frosted
+ * pill), which their black leak guard in index.css is built around.
+ */
+const BOTTOM_CUT_THEMES = GLASS_NAV_THEMES.filter(t => t !== 'system' && t !== 'immersive');
+
+/**
  * Swallow scrolled feed content at the top edge of a sticky glass nav surface.
  *
  * Under the glass-nav themes the sticky nav pill/bento is semi-transparent, so
@@ -92,10 +100,11 @@ export function useFeedSwallowClip(
           }
           const pr = cut.getBoundingClientRect();
           const cr = el.getBoundingClientRect();
+          const f = (n: number) => n.toFixed(2);
           const y = pr.top - cr.top;
-          if (opts.edge === 'bottom' && !el.contains(cut)) {
-            // Profile bars keep their own material instead of showing posts
-            // through the surface or in its rounded side gutters.
+          if ((opts.edge === 'bottom' || (opts.edge !== 'top' && BOTTOM_CUT_THEMES.includes(theme))) && !el.contains(cut)) {
+            // Profile bars and canvas nav surfaces keep their own material.
+            // A surface inside the content retains its top cut to stay visible.
             const bottomY = Math.max(0, pr.bottom - cr.top);
             if (bottomY > 0.5) clip = `inset(${bottomY.toFixed(2)}px 0 0 0)`;
           } else if (y > 0.5) {
@@ -110,7 +119,6 @@ export function useFeedSwallowClip(
             // browser actually paints. This keeps pills, bento headers and
             // post action surfaces on the same universal silhouette.
             const r = Math.min(cachedRadius, pr.width / 2, pr.height / 2);
-            const f = (n: number) => n.toFixed(2);
             const L = pr.left - cr.left;
             const R = pr.right - cr.left;
             const W = cr.width;
