@@ -13,6 +13,7 @@ import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon } from '@/components/app/war/WarHudIcon';
+import AssistantNavIcon from '@/components/ui/AssistantNavIcon';
 
 // Map nav item labels to i18n keys. Exported because the menu-search filter
 // (nav-search.ts) has to match on the same translated label a row renders.
@@ -136,7 +137,9 @@ export function SidebarNavItem({
   };
 
   const showAvatar = avatarUrl !== undefined;
-  const navIcon = (className: string) => !isDesktop && item.themedIcon ? (
+  const navIcon = (className: string) => isDesktop && item.path === '/app/assistant' ? (
+    <AssistantNavIcon className={className} />
+  ) : !isDesktop && item.themedIcon ? (
     <ThemedIcon icon={item.themedIcon} alt="" className={cn(className, 'object-contain')} />
   ) : (
     <item.icon className={className} />
