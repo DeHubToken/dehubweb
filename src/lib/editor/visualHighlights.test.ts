@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { JPEG } from "./visualHighlightFixture";
 import { findVisualScenes, findVisualHighlights, visualWindowPlan } from "./visualHighlights";
-import { validVisualBatch, validVisualJpeg, visualMoments, visualSampleTimes, type VisualFrame, type VisualWindow } from "./visualHighlightContract";
+import { validVisualBatch, validVisualJpeg, visualMoments, visualMatchingMoments, visualSampleCells, visualSampleTimes, type VisualFrame, type VisualWindow } from "./visualHighlightContract";
 import { VISUAL_FRAME_RUNTIME } from "./visualFrameRuntime";
 import type { MediaClip } from "./types";
 const clip = { id: "video", kind: "video", mediaId: "media", duration: 25, trimIn: 10, speed: 2 } as MediaClip;
@@ -74,4 +74,30 @@ describe("visual highlight evidence", () => {
     expect(sheet.width).toBe(0); expect(sheet.height).toBe(0);
     expect(paused).toBe(true); expect(surface.width).toBe(0); expect(surface.height).toBe(0);
   });
+});
+
+it("matches a two-second static subject inside a mixed six-second source without a larger scan", async () => {
+  const source = { ...clip, duration: 6, speed: 1 }, windows = visualWindowPlan(source);
+  let sampled = 0, analysed = 0;
+  const result = await findVisualScenes(source, { optIn: true, focus: "red scenes" }, async (_, group) => {
+    sampled++; expect(group).toHaveLength(1); return frames(group);
+  }, async batch => {
+    analysed++; expect(batch.purpose).toBe("matching"); expect(batch.frames).toHaveLength(6);
+    return [
+      { start: 0, end: 2, score: 0.96, text: "The red scene" },
+      { start: 2.123, end: 3, score: 0.99, text: "Invented sample boundary" },
+    ];
+  }, new AbortController().signal);
+  expect(result).toEqual([{ start: 0, end: 2, score: 0.96, text: "The red scene" }]);
+  expect(sampled).toBe(1); expect(analysed).toBe(1);
+  expect(visualMatchingMoments([{ startSample: 0, endSample: 1, score: 0.96, description: "The red scene", focusMatch: true }], windows, 60)).toEqual(result);
+});
+
+it("rejects invented, overlapping, weak and unfocused sample selections", () => {
+  const windows = visualWindowPlan({ ...clip, duration: 6, speed: 1 });
+  const match = { startSample: 0, endSample: 1, score: 0.96, description: "The red scene", focusMatch: true };
+  const result = visualMatchingMoments([match, { ...match, startSample: 1, endSample: 2 }, { ...match, startSample: -1 }, { ...match, endSample: 6 }, { ...match, startSample: 3, endSample: 2 }, { ...match, startSample: 4, endSample: 5, score: 0.7 }, { ...match, startSample: 4, endSample: 5, focusMatch: false }], windows, 60);
+  expect(result).toEqual([{ start: 0, end: 2, score: 0.96, text: "The red scene" }]);
+  expect(visualMatchingMoments([match], windows, 1)).toEqual([]);
+  expect(visualSampleCells([{ id: 10, start: 60, end: 65.4 }]).map(cell => [cell.id, cell.start, cell.end])).toEqual([[0, 60, 60.9], [1, 60.9, 61.8], [2, 61.8, 62.7], [3, 62.7, 63.6], [4, 63.6, 64.5], [5, 64.5, 65.4]]);
 });
