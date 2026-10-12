@@ -79,7 +79,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
               )}
               <Icon className="w-4 h-4 relative z-10" />
               {tab.id === 'chat' && publicUnread > 0 && (
-                <span data-public-chat-unread className="absolute top-1 right-2 z-20 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center leading-none">
+                <span data-unread-chip data-public-chat-unread className="absolute top-1 right-2 z-20 min-w-[16px] h-4 px-1 rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center leading-none">
                   {publicUnread > 99 ? '99+' : publicUnread}
                 </span>
               )}

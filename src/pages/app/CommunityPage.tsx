@@ -180,7 +180,7 @@ export default function CommunityPage() {
           >
             {tItem.label}
             {'badge' in tItem && (tItem as any).badge > 0 && (
-              <span className="absolute top-1.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+              <span data-unread-chip className="absolute top-1.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
                 {(tItem as any).badge > 99 ? '99+' : (tItem as any).badge}
               </span>
             )}
