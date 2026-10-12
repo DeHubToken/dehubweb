@@ -355,11 +355,6 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
 
   return (
     <div className="flex flex-col h-full pl-px">
-      {roomId && (
-        <div className="flex shrink-0 items-center px-2.5 pb-2">
-          <LiveChatOnlineCount count={onlineCount} />
-        </div>
-      )}
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">
         <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
@@ -693,6 +688,11 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
             onClose={mention.handleClose}
           />
           <div className="flex items-center justify-end gap-0.5 pt-1">
+            {roomId && (
+              <div className="mr-auto flex items-center">
+                <LiveChatOnlineCount count={onlineCount} />
+              </div>
+            )}
             <VoiceRecorder
               onRecordingComplete={handleVoiceRecordingComplete}
               disabled={isSending}
