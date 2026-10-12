@@ -43,6 +43,26 @@ html[data-theme] body [data-audio-player] span[data-audio-bare] {
   paint-order: stroke fill;
 }
 
+/* Theme rules must preserve both layers, including filled Cut artwork. */
+html[data-theme] body :is([data-video-card], [data-audio-player], [data-video-caption-control]) [data-video-glyph] svg {
+  color: #fff !important;
+}
+html[data-theme] body :is([data-video-card], [data-audio-player], [data-video-caption-control]) [data-video-glyph] svg[data-video-glyph-outline] {
+  color: rgb(0 0 0 / 0.8) !important;
+}
+html[data-theme] body :is([data-video-card], [data-audio-player], [data-video-caption-control]) [data-video-glyph-active] svg {
+  color: #000 !important;
+}
+html[data-theme] body :is([data-video-card], [data-audio-player], [data-video-caption-control]) [data-video-glyph-active] svg[data-video-glyph-outline] {
+  color: #fff !important;
+}
+[data-video-glyph-outline].cut-icon [fill="currentColor"] {
+  stroke: currentColor;
+  stroke-width: 1px;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
 [data-audio-button-row] button[data-audio-bare] {
   touch-action: pan-y !important;
   clip-path: inset(0 0 6px);
