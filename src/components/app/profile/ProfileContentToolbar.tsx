@@ -177,7 +177,7 @@ export function ProfileContentToolbar({
               onSelect={onSortChange}
               className="-mx-2 min-w-0"
               borderRadius="0.75rem"
-              buttonClassName="h-9 px-3 py-0 rounded-xl text-xs text-white"
+              buttonClassName="h-9 max-md:flex-1 max-md:min-w-0 max-md:px-1 px-3 py-0 rounded-xl text-xs text-white"
               leadingContent={(
                 <>
                   <button
