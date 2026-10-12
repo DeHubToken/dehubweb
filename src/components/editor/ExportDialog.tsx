@@ -1,3 +1,4 @@
+import { prepareFileShare } from "@/lib/editor/shareFile";
 import { hasTimelineMotion } from "@/lib/editor/projectMotion";
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -112,7 +113,11 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     a.download = filename;
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
-    toast.success(t("editor.export.done", { filename }));
+    const share = prepareFileShare(blob, filename);
+    toast.success(t("editor.export.done", { filename }), share ? {
+      duration: 15000,
+      action: { label: t("postOptions.share", { defaultValue: "Share" }), onClick: () => { void share().catch(() => toast.error(t("editor.export.failed"))); } },
+    } : undefined);
   };
 
   const handleStill = async () => {
