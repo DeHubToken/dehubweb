@@ -22,6 +22,7 @@
 // the other's payloads instead of silently guessing.
 
 import { argon2id } from "hash-wasm";
+import { validateArgon2Parameters, validatePbkdf2Iterations } from './kdf-limits';
 
 // PBKDF2 legacy default (OWASP 2023 baseline for SHA-256).
 const PBKDF2_ITERATIONS_DEFAULT = 600_000;
@@ -88,6 +89,7 @@ async function deriveKeyPbkdf2(
   salt: Uint8Array,
   iterations: number,
 ): Promise<CryptoKey> {
+  validatePbkdf2Iterations(iterations);
   const baseKey = await crypto.subtle.importKey(
     "raw",
     enc.encode(password) as BufferSource,
@@ -109,6 +111,7 @@ async function deriveKeyArgon2id(
   salt: Uint8Array,
   header: Argon2Header,
 ): Promise<CryptoKey> {
+  validateArgon2Parameters(header);
   const raw = await argon2id({
     password,
     salt,
