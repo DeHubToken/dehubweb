@@ -117,22 +117,20 @@ async function hashViewer(deviceId: string, ip: string): Promise<string> {
  * Hand the newly-recorded views to the DeHub API, where they land in the post's
  * `totalViews` — the count the apps display.
  *
- * Best-effort by design. A failure here loses those views from the displayed
- * total, but the ledger row is already written, so nothing is double-counted on
- * a later request and the totals table still holds the truth for a re-import.
- * The viewer's own request must never fail because of this.
+ * A successful ledger write is not a successful public view until this forward
+ * succeeds. Report failures so callers can retry through the normal cooldown.
  */
 async function forwardToDeHub(
   tokenIds: string[],
   repeatTokenIds: string[] = [],
   viewerKey?: string,
-): Promise<void> {
-  if (tokenIds.length === 0 && repeatTokenIds.length === 0) return;
+): Promise<boolean> {
+  if (tokenIds.length === 0 && repeatTokenIds.length === 0) return true;
 
   const serviceKey = Deno.env.get('VIEW_SERVICE_KEY');
   if (!serviceKey) {
     console.error('[anon-views] VIEW_SERVICE_KEY is not set — views recorded but not forwarded');
-    return;
+    return false;
   }
 
   const controller = new AbortController();
@@ -156,9 +154,12 @@ async function forwardToDeHub(
 
     if (!response.ok) {
       console.error(`[anon-views] forward failed: ${response.status}`, await response.text());
+      return false;
     }
+    return (await response.json()).success === true;
   } catch (error) {
     console.error('[anon-views] forward error:', error);
+    return false;
   } finally {
     clearTimeout(timer);
   }
@@ -267,7 +268,9 @@ Deno.serve(async (req) => {
         `[anon-views] recorded ${newIds.length}/${tokenIds.length} anonymous views (${repeatIds.length} repeat)`,
       );
 
-      await forwardToDeHub(newIds, repeatIds, viewerHash);
+      if (!await forwardToDeHub(newIds, repeatIds, viewerHash)) {
+        return errorResponse('Public view recording is temporarily unavailable', 503);
+      }
 
       return json({
         success: true,
