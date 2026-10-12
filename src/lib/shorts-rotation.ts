@@ -1,3 +1,6 @@
+// One reel always follows the opening post; the regular schedule then runs
+// from SHORTS_FIRST_POST every SHORTS_POST_INTERVAL posts.
+export const SHORTS_LEAD_POST = 1;
 export const SHORTS_FIRST_POST = 6;
 export const SHORTS_POST_INTERVAL = 12;
 export const SHORTS_BATCH_SIZE = 10;
@@ -13,12 +16,14 @@ export type ShortsCandidate = {
 export const shortsId = (item: ShortsCandidate): string => String(item.tokenId ?? item.id ?? '');
 
 export function shortsBatchCount(posts: number): number {
-  return posts < SHORTS_FIRST_POST ? 0 : 1 + Math.floor((posts - SHORTS_FIRST_POST) / SHORTS_POST_INTERVAL);
+  if (posts < SHORTS_LEAD_POST) return 0;
+  return 1 + (posts < SHORTS_FIRST_POST ? 0 : 1 + Math.floor((posts - SHORTS_FIRST_POST) / SHORTS_POST_INTERVAL));
 }
 
 export function shortsBatchIndex(posts: number): number {
+  if (posts === SHORTS_LEAD_POST) return 0;
   return posts >= SHORTS_FIRST_POST && (posts - SHORTS_FIRST_POST) % SHORTS_POST_INTERVAL === 0
-    ? (posts - SHORTS_FIRST_POST) / SHORTS_POST_INTERVAL : -1;
+    ? 1 + (posts - SHORTS_FIRST_POST) / SHORTS_POST_INTERVAL : -1;
 }
 
 export function readShortsHistory(raw: string | null): string[] {
