@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
-import { Volume2 as PlainVolume, VolumeX as PlainMute } from 'lucide-react';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { MediaControlIcon } from './MediaControlIcon';
@@ -54,7 +53,7 @@ export function DubVolumeControl({ open, onOpenChange, muted, onToggleMute, onUn
               if (!touch.current.held && !touch.current.moved) onToggleMute(event);
             }
           }} aria-label={t('videoPlayer.volume')}>
-          <MediaControlIcon icon={plain ? (muted ? PlainMute : PlainVolume) : (muted ? VolumeX : Volume2)} plain={plain} />
+          <MediaControlIcon icon={muted ? VolumeX : Volume2} plain={plain} />
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" side="bottom" sideOffset={6}
