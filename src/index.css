@@ -1669,7 +1669,10 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    so the tall columns don't smudge the gutters. Page bentos keep --glass-edge
    above — they're normal-sized cards where the soft halo reads correctly. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-side-panel] {
-  box-shadow: var(--glass-edge-panel) !important;
+  /* These panels sit inside a vertically scrolling rail. Any ambient shadow
+     bleeds sideways into the rail's clipped edge and leaves a straight seam
+     beside the middle column. Keep the glass rim and top sheen without a cast. */
+  box-shadow: var(--glass-edge-flat) !important;
 }
 
 /* The COLLAPSED left rail drops the ambient cast entirely.
