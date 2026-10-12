@@ -255,7 +255,7 @@ jobs:
 
       - name: Render text post share cards
         run: |
-          node --test server/post-share-card.test.mjs
+          node --test server/post-share-card.test.mjs server/finance-stats.test.mjs
           timeout 120s node tests/post-share-workerd.mjs
 
       - name: Validate production Worker bundle

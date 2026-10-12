@@ -27,6 +27,7 @@ import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPi
 import { RevenueLedger } from '@/components/app/stats/RevenueLedger';
 import { TokenTaxSplit } from '@/components/app/stats/TokenTaxSplit';
 import { cn } from '@/lib/utils';
+import { withReinvestedOperations } from '@/lib/finance-reinvestment';
 
 type Range = '24h' | '3d' | '7d' | '30d' | '1y' | 'all';
 
@@ -44,7 +45,7 @@ function windowDays(range: Range): number | null {
 const MONTHLY_AFTER_DAYS = 62;
 
 const REVENUE_GROUPS = ['buys', 'fees', 'tax'] as const;
-const COST_GROUPS = ['compute', 'ai_tools', 'infrastructure', 'payments'] as const;
+const COST_GROUPS = ['compute', 'ai_tools', 'infrastructure', 'payments', 'reinvestment'] as const;
 
 // ---------------------------------------------------------------------------
 // Formatting
@@ -56,11 +57,6 @@ function formatUsd(n: number): string {
   if (abs < 10_000) return `$${Math.round(abs).toLocaleString('en-US')}`;
   if (abs < 1_000_000) return `$${(abs / 1000).toFixed(abs < 100_000 ? 1 : 0)}K`;
   return `$${(abs / 1_000_000).toFixed(1)}M`;
-}
-
-function formatSigned(n: number): string {
-  if (Math.abs(n) < 0.005) return '$0.00';
-  return `${n < 0 ? '−' : '+'}${formatUsd(n)}`;
 }
 
 /**
@@ -113,13 +109,11 @@ function FinanceTooltip({
   payload,
   revenueLabel,
   costsLabel,
-  netLabel,
 }: {
   active?: boolean;
   payload?: { payload: ChartRow }[];
   revenueLabel: string;
   costsLabel: string;
-  netLabel: string;
 }) {
   const { t } = useTranslation();
   if (!active || !payload?.length) return null;
@@ -137,9 +131,6 @@ function FinanceTooltip({
       </div>
       <div className="text-xs text-white tabular-nums">
         {formatUsd(totals.costs)} <span className="text-zinc-400">{costsLabel}</span>
-      </div>
-      <div className="text-xs text-white tabular-nums border-t border-zinc-800 mt-1 pt-1">
-        {formatSigned(totals.revenue - totals.costs)} <span className="text-zinc-400">{netLabel}</span>
       </div>
       {row.month && (
         <div className="text-[11px] text-zinc-500 tabular-nums mt-1">
@@ -184,7 +175,6 @@ function SourceList({
   totals,
   sources,
   emptyLabel,
-  quietLabel,
   onSelect,
   selectLabel,
 }: {
@@ -202,9 +192,8 @@ function SourceList({
   /** Accessible name for that button, with `{{source}}` for the line's label. */
   selectLabel?: (label: string) => string;
 }) {
-  const live = sources.filter((s) => s.status === 'ok');
-  const withValue = live.filter((s) => (totals.get(s.id) ?? 0) > 0.004);
-  const quiet = live.filter((s) => (totals.get(s.id) ?? 0) <= 0.004);
+  const { t } = useTranslation();
+  const withValue = sources;
   const max = Math.max(0, ...withValue.map((s) => totals.get(s.id) ?? 0));
 
   return (
@@ -234,7 +223,7 @@ function SourceList({
                       label={s.label}
                       value={totals.get(s.id) ?? 0}
                       max={max}
-                      formatted={formatUsd(totals.get(s.id) ?? 0)}
+                      formatted={s.status === 'ok' ? formatUsd(totals.get(s.id) ?? 0) : t('stats.money.sourceUnavailable', 'Unavailable')}
                     />
                   );
                   return onSelect ? (
@@ -257,11 +246,6 @@ function SourceList({
         })
       )}
 
-      {quiet.length > 0 && (
-        <p className="text-[11px] text-zinc-500 leading-relaxed mt-2 pt-2 border-t border-zinc-800">
-          {quietLabel} {quiet.map((s) => s.label).join(', ')}.
-        </p>
-      )}
     </div>
   );
 }
@@ -329,10 +313,13 @@ export function FinanceSection({ range }: { range: Range }) {
   const { t } = useTranslation();
   const { data: stats } = useFinanceStats();
   const span = windowDays(range);
-  const [ledgerOpen, setLedgerOpen] = useState(false);
-  const [ledgerSource, setLedgerSource] = useState<string | null>(null);
-  const [taxOpen, setTaxOpen] = useState(false);
-  const [taxSource, setTaxSource] = useState<string | null>(null);
+  const ledgerParams = new URLSearchParams(window.location.search);
+  const incomingSource = ledgerParams.get('finance-source');
+  const incomingTax = ledgerParams.get('finance-view') === 'tax';
+  const [ledgerOpen, setLedgerOpen] = useState(!!incomingSource && !incomingTax);
+  const [ledgerSource, setLedgerSource] = useState<string | null>(incomingTax ? null : incomingSource);
+  const [taxOpen, setTaxOpen] = useState(!!incomingSource && incomingTax);
+  const [taxSource, setTaxSource] = useState<string | null>(incomingTax ? incomingSource : null);
 
   /** A revenue line opens the ledger on that source, and brings it into view. */
   const showLedger = (sourceId: string) => {
@@ -354,7 +341,8 @@ export function FinanceSection({ range }: { range: Range }) {
 
   const view = useMemo(() => {
     if (!stats) return null;
-    const days: FinanceDay[] = span == null ? stats.days : stats.days.slice(-span);
+    const accounted = withReinvestedOperations(stats);
+    const days: FinanceDay[] = span == null ? accounted.days : accounted.days.slice(-span);
 
     const revenue = new Map<string, number>();
     const costs = new Map<string, number>();
@@ -408,7 +396,6 @@ export function FinanceSection({ range }: { range: Range }) {
       costs,
       revenueTotal,
       costTotal,
-      net: revenueTotal - costTotal,
       revenueByGroup: REVENUE_GROUPS.map((group) => ({ group, usd: byGroup(revenue, group) })),
       chart,
     };
@@ -417,12 +404,15 @@ export function FinanceSection({ range }: { range: Range }) {
   if (!stats || !view) return null;
 
   const revenueSources = stats.sources.filter((s) => s.kind === 'revenue');
-  const costSources = stats.sources.filter((s) => s.kind === 'cost');
+  const costSources: FinanceSource[] = stats.sources.filter((s) => s.kind === 'cost').map(source => source.id === 'operations_reinvestment' ? {
+      ...source,
+      label: t('stats.money.reinvestment', 'Marketing & developer wages'),
+      note: t('stats.money.reinvestmentNote', 'DeHub reports that retained historical operating funds were fully reinvested. Marketing and developer wages are shown together, averaged across each month, after subtracting costs already recorded that month.'),
+    } : source);
   const unavailable = stats.sources.filter((s) => s.status === 'unavailable');
 
   const revenueLabel = t('stats.money.revenue', 'Revenue');
   const costsLabel = t('stats.money.costs', 'Costs');
-  const netLabel = t('stats.money.net', 'Net');
   const windowHint =
     span === 1
       ? t('stats.money.today', 'today so far, UTC')
@@ -447,11 +437,12 @@ export function FinanceSection({ range }: { range: Range }) {
   const groupLabels: Record<string, string> = {
     buys: t('stats.money.group.buys', 'In-app buys'),
     fees: t('stats.money.group.fees', 'Fees'),
-    tax: t('stats.money.group.tax', 'Token tax'),
+    tax: t('stats.money.group.tax', 'Revenue'),
     compute: t('stats.money.group.compute', 'AI compute'),
     ai_tools: t('stats.money.group.aiTools', 'AI tools'),
-    infrastructure: t('stats.money.group.infrastructure', 'Infrastructure'),
+    infrastructure: t('stats.money.group.infrastructure', 'Droplet'),
     payments: t('stats.money.group.payments', 'Payment fees'),
+    reinvestment: t('stats.money.reinvestmentGroup', 'Reinvestment'),
   };
 
   return (
@@ -477,11 +468,13 @@ export function FinanceSection({ range }: { range: Range }) {
           }
         />
         <StatTile label={costsLabel} value={formatUsd(view.costTotal)} hint={windowHint} />
+        <button type="button" className="text-left" onClick={() => showTaxLedger('bsc_holder_share')}>
         <StatTile
-          label={view.net < 0 ? t('stats.money.loss', 'Net loss') : t('stats.money.profit', 'Net profit')}
-          value={formatSigned(view.net)}
-          hint={t('stats.money.netHint', 'revenue minus costs')}
+          label={t('stats.money.profitShared', 'Net profit shared')}
+          value={stats.taxSplit ? formatUsd(stats.taxSplit.shared.usd) : '—'}
+          hint={stats.taxSplit ? t('stats.money.profitSharedHint', '{{usd}} paid to holders and stakers · {{from}}–{{to}}', { usd: formatUsd(stats.taxSplit.shared.usd), from: stats.taxSplit.period.from.slice(0, 4), to: stats.taxSplit.period.to.slice(0, 4) }) : undefined}
         />
+        </button>
         <StatTile
           label={t('stats.money.covered', 'Costs covered')}
           value={covered}
@@ -525,7 +518,7 @@ export function FinanceSection({ range }: { range: Range }) {
                   tickFormatter={(v: number) => formatAxisUsd(v)}
                 />
                 <Tooltip
-                  content={<FinanceTooltip revenueLabel={revenueLabel} costsLabel={costsLabel} netLabel={netLabel} />}
+                  content={<FinanceTooltip revenueLabel={revenueLabel} costsLabel={costsLabel} />}
                   cursor={{ stroke: 'currentColor', strokeOpacity: 0.15 }}
                 />
                 <Line
@@ -611,7 +604,7 @@ export function FinanceSection({ range }: { range: Range }) {
         </>
       )}
 
-      <FinanceDefinitions stats={stats} />
+      <FinanceDefinitions stats={{ ...stats, sources: [...revenueSources, ...costSources] }} />
     </>
   );
 }

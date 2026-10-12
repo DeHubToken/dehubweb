@@ -2,6 +2,7 @@ import { localizePublicChrome, localizeStructuredData } from './server/public-pa
 import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
 import { applyTextPostImage } from './server/post-share-card.js';
+import { handleFinanceRequest } from './server/finance-stats.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
 /**
@@ -5583,6 +5584,8 @@ async function handleRequest(request, env, ctx) {
   // Live visitor stats for the /stats page. Answered here at the edge, ahead
   // of every SEO/SSR branch below — none of that applies to a JSON endpoint,
   // and shouldServeSSR() would otherwise have to reason about it.
+  if (pathname === '/api/finance-stats') return handleFinanceRequest(request, env);
+
   if (pathname === '/api/stats' || pathname === '/api/stats/raw') {
     return handleStatsRequest(request, env, pathname.endsWith('/raw'));
   }
