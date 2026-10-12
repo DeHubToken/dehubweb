@@ -1102,7 +1102,7 @@ export function ActionBar({
                  Your own reaction moves, the same as it does in the tray — a
                  🔥 somebody else put in the lead stays still. */
               data-engaged-glyph
-              className="text-[22px] leading-none w-7 h-7 flex items-center justify-center"
+              className="text-[19.36px] leading-none w-[24.64px] h-[24.64px] flex items-center justify-center"
               aria-hidden="true"
             >
               <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
@@ -1228,7 +1228,7 @@ export function ActionBar({
             transition={{ duration: 0.3, ease: 'easeOut' }}
           >
             {leadReaction ? (
-              <span data-engaged-glyph className="flex h-7 w-7 items-center justify-center text-[22px] leading-none" aria-hidden="true">
+              <span data-engaged-glyph className="flex h-[24.64px] w-[24.64px] items-center justify-center text-[19.36px] leading-none" aria-hidden="true">
                 <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
               </span>
             ) : (
@@ -1268,8 +1268,8 @@ export function ActionBar({
           aria-haspopup="dialog"
         >
           {/* Same share glyph and sizing as the feed's share button. The fixed
-              28px box keeps the count's baseline level with the other tiles. */}
-          <span className="flex h-7 w-7 items-center justify-center">
+              24.64px box keeps the count's baseline level with the other tiles. */}
+          <span className="flex h-[24.64px] w-[24.64px] items-center justify-center">
             <Share2 className={FEED_ICON_CLASS.share} strokeWidth={isReposted ? 2.915 : 2} />
           </span>
           <span className="tabular-nums">{formatCount(displayRepostCount)}</span>
