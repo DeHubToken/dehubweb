@@ -75,6 +75,7 @@ interface Props {
   buttonClassName?: string;
   /** When false, the CC button is faded out (captions still render). Defaults true. */
   buttonVisible?: boolean;
+  plainButton?: boolean;
   /**
    * Render the CC button into this element instead of positioning it against
    * the video. The player's control row is a flex row: portalling into it puts
@@ -103,7 +104,7 @@ function readSize(): SizeKey {
   return 'xs';
 }
 
-export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true, buttonPortalTarget, onMenuOpenChange, onDubAvailableChange }: Props) {
+export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true, plainButton = false, buttonPortalTarget, onMenuOpenChange, onDubAvailableChange }: Props) {
   const { i18n } = useTranslation();
   const numericId = useMemo(() => {
     const n = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId ?? 0;
@@ -507,6 +508,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         setOpen={setOpen}
         handleToggle={handleToggle}
         buttonVisible={buttonVisible}
+        plainButton={plainButton}
         buttonClassName={buttonClassName}
         buttonPortalTarget={buttonPortalTarget}
         buttonState={buttonState}
@@ -541,6 +543,7 @@ interface SubtitleMenuProps {
   setOpen: (v: boolean) => void;
   handleToggle: (e: React.MouseEvent) => void;
   buttonVisible: boolean;
+  plainButton: boolean;
   buttonClassName?: string;
   buttonPortalTarget?: HTMLElement | null;
   buttonState: 'off' | 'on' | 'working' | 'loading';
@@ -571,7 +574,7 @@ interface SubtitleMenuProps {
 function SubtitleMenu(props: SubtitleMenuProps) {
   const { t: _copy } = _useCopy();
   const {
-    open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonPortalTarget, buttonState,
+    open, setOpen, handleToggle, buttonVisible, plainButton, buttonClassName, buttonPortalTarget, buttonState,
     enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
     isReady, isWorking, isEmpty, isFailed, langLabel, query, setQuery, filteredLangs, lang, setLang,
     dubOn, setDubOn, dubHint, dubPossible,
@@ -644,9 +647,9 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       )}
     >
       {buttonState === 'working' ? (
-        <MediaControlIcon icon={Loader2} spinning />
+        <MediaControlIcon icon={Loader2} spinning plain={plainButton} />
       ) : (
-        <MediaControlIcon captions />
+        <MediaControlIcon captions plain={plainButton} active={plainButton && enabled} />
       )}
     </button>
   );
