@@ -50,6 +50,24 @@ beforeEach(() => {
 afterEach(() => { vi.useRealTimers(); });
 
 describe('reply persistence through refresh and failure', () => {
+  it('shows a pending send before the conversation history has loaded', async () => {
+    let confirm!: (message: any) => void;
+    mocks.send.mockImplementation(() => new Promise(resolve => { confirm = resolve; }));
+    const client = new QueryClient({ defaultOptions: { mutations: { retry: false } } });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={client}>{children}</QueryClientProvider>
+    );
+    const hook = renderHook(() => useSendMessage('c1'), { wrapper });
+    let pending!: Promise<any>;
+    act(() => { pending = hook.result.current.mutateAsync({ content: 'new reply' }); });
+    await waitFor(() => expect(mocks.send).toHaveBeenCalledOnce());
+    expect(client.getQueryData<any>(messagesKeys.messages('c1')).pages[0].items[0].content).toBe('new reply');
+    await act(async () => { confirm(saved); await pending; });
+    expect(client.getQueryData<any>(messagesKeys.messages('c1')).pages[0].items.map((message: any) => message._id)).toEqual(['saved']);
+    hook.unmount();
+    client.clear();
+  });
+
   it('keeps the pending reply across a refresh and replaces it with the persisted id', async () => {
     let confirm!: (message: any) => void;
     mocks.send.mockImplementation(() => new Promise(resolve => { confirm = resolve; }));
