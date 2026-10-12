@@ -4,7 +4,8 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
  * =====================
  * Universal header for all feed card types.
  * Displays avatar with gradient ring, username, verified badge, and content type label.
- * Clickable to navigate to creator's profile.
+ * The avatar, name and @handle open the creator's profile; the blank
+ * space beside them opens the post with the rest of the card.
  * Badge is fetched on-chain via useBadgeBalance hook.
  */
 
@@ -161,24 +162,37 @@ export function CardHeader({
           </Avatar>
         </button>
       </ProfileHoverCard>
-      <button
-        onClick={handleProfileClick}
-        onMouseDown={handleProfileMouseDown}
-        disabled={!isClickable}
-        className={`flex flex-1 flex-col min-w-0 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
-      >
-        <div className="flex items-center gap-1.5 min-w-0 w-full">
-          <span className="inline-flex items-baseline gap-1 shrink min-w-0 max-w-full text-base leading-5">
+      {/* Only the name and the @handle open the profile. The blank space
+          around them is not a button, so a tap there falls through to the
+          card and opens the post like the rest of it. */}
+      <div className="flex flex-1 flex-col items-start min-w-0">
+        <div className="flex items-center gap-1.5 min-w-0 max-w-full">
+          <button
+            type="button"
+            onClick={handleProfileClick}
+            onMouseDown={handleProfileMouseDown}
+            disabled={!isClickable}
+            className={`inline-flex items-baseline gap-1 shrink min-w-0 max-w-full text-base leading-5 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+          >
             <span className="font-semibold text-white truncate min-w-0 leading-5">{username}</span>
             <BadgeIcon badgeBalance={badgeBalance} lookupId={badgeLookupId} username={handle || username} badgeLock={badgeLock} className="w-[1em] h-[1em]" />
             <NewMemberChip address={creatorId} className="shrink-0 ml-0.5" />
-          </span>
+          </button>
           {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 self-end" />}
         </div>
         {(formattedHandle || timestamp) && (
-          <div className="flex items-center gap-1 min-w-0 w-full">
+          <div className="flex items-center gap-1 min-w-0 max-w-full">
             {formattedHandle && (
-              <span className="text-zinc-500 text-sm truncate min-w-0 leading-4">{formattedHandle}</span>
+              <button
+                type="button"
+                onClick={handleProfileClick}
+                onMouseDown={handleProfileMouseDown}
+                disabled={!isClickable}
+                tabIndex={-1}
+                className={`text-zinc-500 text-sm truncate min-w-0 leading-4 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+              >
+                {formattedHandle}
+              </button>
             )}
             {timestamp && (
               <>
@@ -188,7 +202,7 @@ export function CardHeader({
             )}
           </div>
         )}
-      </button>
+      </div>
     </div>
   );
 }
