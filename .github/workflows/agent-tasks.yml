@@ -17,7 +17,7 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno check --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts
-      - run: deno test --allow-env --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/task-plan.test.ts supabase/functions/dehub-mcp/tasks.test.ts
+      - run: deno test --allow-env --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/task-plan.test.ts supabase/functions/dehub-mcp/tasks.test.ts supabase/functions/dehub-mcp/post-views.test.ts
   database:
     name: Agent task permissions and claims
     runs-on: ubuntu-latest

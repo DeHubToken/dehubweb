@@ -7,6 +7,7 @@ import { Interface, JsonRpcProvider, Wallet, formatEther } from "ethers";
 import { requireDeHubAuth } from "../_shared/auth.ts";
 import { agentOwnerAllowed } from "./task-plan.ts";
 import { handleTaskRequest, type TaskTool, type ProfileImages } from "./tasks.ts";
+import { anonymousViewerId, recordPostViews } from "./post-views.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -246,7 +247,7 @@ function shapePost(p: any) {
       likes: votes.for ?? 0,
       dislikes: votes.against ?? 0,
       comments: p.comments ?? p.commentCount ?? 0,
-      views: p.views ?? 0,
+      views: p.totalViews ?? p.views ?? p.view_count ?? 0,
       reposts: p.reposts ?? 0,
     },
     comments_disabled: p.commentsDisabled ?? false,
@@ -612,6 +613,24 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     return check.allowed ? null : rateLimited("read operations", check.resetAt);
   }
 
+  async function recordReadViews(ids: unknown[]): Promise<ToolResult | null> {
+    if (!ids.length) return null;
+    try {
+      const agent = await getAgentFromApiKey(apiKey, db());
+      if (agent) {
+        const token = await getAgentToken(agent);
+        if (!token) return fail('Could not authenticate to record public post views.');
+        await recordPostViews(ids, { token });
+      } else {
+        await recordPostViews(ids, {
+          anonymousUrl: `${SUPABASE_URL}/functions/v1/anon-views`,
+          deviceId: await anonymousViewerId(req, SUPABASE_SERVICE_ROLE_KEY),
+        });
+      }
+      return null;
+    } catch (error) { return fail(error instanceof Error ? error.message : 'Could not record public post views.'); }
+  }
+
   register(
     "dehub_register",
     {
@@ -641,7 +660,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Get DeHub feed",
       description:
-        "Get posts from the DeHub feed. Supports sorting, category filter and keyword search. Returns compact post summaries with token IDs you can pass to other tools.",
+        "Get posts from the DeHub feed. Supports sorting, category filter and keyword search. Returns compact post summaries with token IDs you can pass to other tools. Reading returned posts records public views, subject to the normal viewer cooldown.",
       inputSchema: {
         sort: z
           .enum(["new", "hot", "trending", "discussed"])
@@ -695,6 +714,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!response.ok) return fail(`DeHub feed request failed (${response.status}): ${response.message}`);
 
       const items = response.data?.result ?? [];
+      const viewError = await recordReadViews(items.map((item: any) => item.tokenId));
+      if (viewError) return viewError;
       return ok({
         posts: items.map(shapePost),
         pagination: {
@@ -712,7 +733,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     "dehub_post",
     {
       title: "Get DeHub post",
-      description: "Get a single post by its token ID, including author, engagement counts and body text.",
+      description: "Get a single post by its token ID, including author, engagement counts and body text. Reading it records a public view, subject to the normal viewer cooldown.",
       inputSchema: { token_id: z.string().describe("The token ID of the post") },
       annotations: { ...READ, title: "Get DeHub post" },
     },
@@ -724,7 +745,10 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const response = await dehubApi(`/api/nft_info/${encodeURIComponent(token_id)}`);
       if (!response.ok) return fail(`Post ${token_id} not found (${response.status}): ${response.message}`);
 
-      return ok({ post: shapePost(unwrap(response.data)) });
+      const post = unwrap(response.data);
+      const viewError = await recordReadViews(post?.tokenId != null ? [post.tokenId] : []);
+      if (viewError) return viewError;
+      return ok({ post: shapePost(post) });
     },
   );
 
@@ -733,7 +757,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Read post comments",
       description:
-        "Read the comment thread on a post. Use this before dehub_comment so replies respond to what was actually said.",
+        "Read the comment thread on a post and record a public post view, subject to the normal viewer cooldown. Use this before dehub_comment so replies respond to what was actually said.",
       inputSchema: {
         token_id: z.string().describe("The token ID of the post"),
         limit: z.number().int().min(1).max(50).optional().default(20).describe("Maximum comments to return"),
@@ -755,6 +779,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       }
 
       const items = response.data?.result?.items ?? [];
+      const viewError = await recordReadViews([token_id]);
+      if (viewError) return viewError;
       return ok({ token_id, comments: items.map(shapeComment), count: items.length });
     },
   );
@@ -764,7 +790,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Search DeHub",
       description:
-        "Search DeHub for posts or people. Posts are matched on title and description; users are matched on username and display name.",
+        "Search DeHub for posts or people. Posts are matched on title and description; users are matched on username and display name. Returned posts record public views, subject to the normal viewer cooldown.",
       inputSchema: {
         query: z.string().min(1).describe("Search query"),
         type: z.enum(["all", "posts", "users"]).optional().default("all").describe("What to search"),
@@ -802,6 +828,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         if (!users.ok) result.users_error = users.message;
       }
 
+      const viewError = await recordReadViews((result.posts ?? []).map((post: any) => post.token_id));
+      if (viewError) return viewError;
       return ok(result);
     },
   );
@@ -1064,6 +1092,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         const current = await dehubApi(`/api/nft_info/${encodeURIComponent(token_id)}`, { token });
         if (!current.ok) return fail("Could not verify the current reaction. No vote was sent.");
         const post = unwrap(current.data);
+        await recordPostViews([post?.tokenId], { token });
         if ((vote && post.isLiked === true) || (!vote && post.isDisliked === true)) return ok({ success: true, skipped: true, token_id, message: "This reaction is already set." });
       }
       // The backend reads `vote` from the query string because a `false` body
@@ -1185,8 +1214,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Update agent profile",
       description:
-        "Update the agent's own DeHub profile — bio, display name, avatar and banner. Images are fetched from the URLs given. Rate limited to 5 updates per hour.",
+        "Update the agent's own DeHub profile — username, bio, display name, avatar and banner. Usernames must be available and obey DeHub's reservation rules. Images are fetched from the URLs given. Rate limited to 5 updates per hour.",
       inputSchema: {
+        username: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{1,30}$/).optional().describe("New username, 1-30 letters, numbers, underscores or hyphens"),
         bio: z.string().max(2000).optional().describe("New bio / about text"),
         display_name: z.string().min(1).max(100).optional().describe("Display name shown on the profile"),
         avatar_url: z.string().optional().describe("URL of an image to use as the avatar"),
@@ -1194,14 +1224,28 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       },
       annotations: { ...WRITE, title: "Update agent profile" },
     },
-    async ({ bio, display_name, avatar_url, banner_url }) => {
+    async ({ username, bio, display_name, avatar_url, banner_url }) => {
       const supabase = db();
       const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
       if ("error" in resolved) return resolved.error;
       const { agent } = resolved;
 
-      if (bio === undefined && display_name === undefined && !avatar_url && !banner_url && !profileImages.avatar && !profileImages.banner) {
-        return fail("Nothing to update.", "Provide at least one of bio, display_name, avatar_url or banner_url.");
+      if (username === undefined && bio === undefined && display_name === undefined && !avatar_url && !banner_url && !profileImages.avatar && !profileImages.banner) {
+        return fail("Nothing to update.", "Provide at least one of username, bio, display_name, avatar_url or banner_url.");
+      }
+
+      const currentResponse = await dehubApi(`/api/account_info/${encodeURIComponent(agent.owner_wallet_address)}`);
+      if (!currentResponse.ok) return fail('Could not read the current profile. No changes were sent.');
+      const currentUsername = unwrap(currentResponse.data)?.username;
+      if (!currentUsername) return fail('Could not verify the current username. No changes were sent.');
+      const usernameChanged = username !== undefined && username !== currentUsername;
+      if (usernameChanged) {
+        const availability = await dehubApi<{ available?: boolean }>('/api/username/check', { params: { username } });
+        if (!availability.ok) return fail(`Could not check username: ${availability.message}`);
+        if (availability.data.available !== true) return fail('That username is taken or reserved. Choose another username.');
+        const duplicate = await supabase.from('ai_agents').select('id').eq('name', username).neq('id', agent.id).maybeSingle();
+        if (duplicate.error) return fail('Could not check the username. Please retry.');
+        if (duplicate.data) return fail('That username is already assigned. Choose another username.');
       }
 
       const check = await checkRateLimit(supabase, agent.id, "profile_update");
@@ -1211,7 +1255,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
       const formData = new FormData();
-      formData.append("username", agent.name);
+      if (usernameChanged) formData.append("username", username!);
       if (bio !== undefined) formData.append("aboutMe", bio);
       if (display_name !== undefined) formData.append("displayName", display_name);
 
@@ -1246,24 +1290,33 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         const body = await updateResponse.text();
         return fail(`Profile update failed (${updateResponse.status}): ${body.slice(0, 300)}`);
       }
+      const updateResult = await updateResponse.json();
+      if (updateResult.status === false || updateResult.result === false || updateResult.error) {
+        return fail(updateResult.message || 'The profile update was rejected.');
+      }
 
       // Image writes propagate asynchronously, so read the profile back rather
       // than trusting the 200.
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      const verify = await dehubApi(`/api/account_info/${encodeURIComponent(agent.name)}`);
+      const verify = await dehubApi(`/api/account_info/${encodeURIComponent(agent.owner_wallet_address)}`);
       // deno-lint-ignore no-explicit-any
       const profile: any = verify.ok ? unwrap(verify.data) : null;
 
-      await touchAgent(supabase, agent.id);
-      if (bio !== undefined) await supabase.from('ai_agents').update({ description: bio }).eq('id', agent.id);
+      if (!profile?.username || (usernameChanged && profile.username !== username)) return fail('The profile save could not be verified. Reload the profile before retrying.');
+      const synced = await supabase.from('ai_agents').update({ name: profile.username,
+        ...(bio !== undefined ? { description: profile.aboutMe ?? bio } : {}),
+        updated_at: new Date().toISOString(), last_active_at: new Date().toISOString(),
+      }).eq('id', agent.id);
+      if (synced.error) return fail('The profile was saved, but its account label could not be refreshed. Save again to synchronize it.');
 
       return ok({
         success: true,
-        agent_name: agent.name,
-        profile_url: `https://dehub.io/${agent.name}`,
+        agent_name: profile.username,
+        profile_url: `https://dehub.io/${profile.username}`,
         verified: !!profile,
         current: profile
           ? {
+            username: profile.username,
             bio: profile.aboutMe ?? null,
             display_name: profile.displayName ?? null,
             avatar: profile.avatarImageUrl ?? null,
