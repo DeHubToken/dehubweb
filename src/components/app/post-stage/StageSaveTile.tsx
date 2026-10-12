@@ -1,3 +1,4 @@
+import { FEED_ICON_CLASS } from '../cards/feed-icon-size';
 /**
  * The Save tile of the phone post page's action bar: the bookmark, with the
  * same shared query and folder picker the bookmark icon and the options menu
@@ -38,7 +39,7 @@ export function StageSaveTile({ postId, tokenId, className }: StageSaveTileProps
         aria-label={isBookmarked ? t('postOptions.removeBookmark', 'Remove bookmark') : t('postOptions.bookmark', 'Bookmark')}
         className={cn(className, isLoading && 'opacity-60')}
       >
-        <Bookmark className={cn('h-5 w-5', isBookmarked && 'fill-current')} />
+        <Bookmark className={cn(FEED_ICON_CLASS.bookmark, isBookmarked && 'fill-current')} />
         <span>{isBookmarked ? t('postStage.saved', 'Saved') : t('postStage.save', 'Save')}</span>
       </button>
       <SaveToFolderDrawerLazy open={showFolderDrawer} onOpenChange={setShowFolderDrawer} tokenId={folderTokenId} />

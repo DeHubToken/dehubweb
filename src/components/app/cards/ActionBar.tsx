@@ -1,3 +1,4 @@
+import { FEED_ICON_CLASS } from './feed-icon-size';
 import { TranslationText } from '@/components/TranslationText';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -966,7 +967,7 @@ export function ActionBar({
           className={cn('flex items-center gap-0 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
           aria-label={_copy("copy.3838a4d8cb8c", { defaultValue: "Tips" })}
         >
-          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} />
+          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className={FEED_ICON_CLASS.tip} />
           {/* Counts come off over a video: the icons are the controls, and a
               tally beside each one is three more numbers on someone's frame. */}
           {!compact && (
@@ -994,7 +995,7 @@ export function ActionBar({
             animate={justVoted === 'dislike' ? { scale: [1, 1.3, 1] } : {}}
             transition={{ duration: 0.3, ease: "easeOut" }}
           >
-            <ThumbsDown className={cn("w-5 h-5", isDisliked && "fill-current")} />
+            <ThumbsDown className={cn(FEED_ICON_CLASS.like, isDisliked && "fill-current")} />
             <span className="text-xs text-zinc-400">{formatCount(localDislikeCount)}</span>
           </motion.button>
         </span>
@@ -1024,7 +1025,7 @@ export function ActionBar({
         className={cn('flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors', compact && COMPACT_BUTTON_CLASS)}
         aria-label={_copy("copy.29887a5ff984", { defaultValue: "Share" })}
       >
-        <Share2 className={isReposted ? "w-[26px] h-[26px]" : "w-[24px] h-[24px]"} strokeWidth={isReposted ? 2.915 : 2} />
+        <Share2 className={FEED_ICON_CLASS.share} strokeWidth={isReposted ? 2.915 : 2} />
         {!compact && <span className="text-xs text-zinc-400">{formatCount(displayShareCount)}</span>}
       </button>
 
@@ -1034,7 +1035,7 @@ export function ActionBar({
           className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
           aria-label={_copy("copy.44f5e3fbec57", { defaultValue: "Comment" })}
         >
-          <MessageSquare className="w-[28px] h-[28px]" />
+          <MessageSquare className={FEED_ICON_CLASS.comment} />
           <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
         </button>
       )}
@@ -1101,13 +1102,13 @@ export function ActionBar({
                  Your own reaction moves, the same as it does in the tray — a
                  🔥 somebody else put in the lead stays still. */
               data-engaged-glyph
-              className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
+              className="text-[22px] leading-none w-7 h-7 flex items-center justify-center"
               aria-hidden="true"
             >
               <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
             </span>
           ) : (
-            <ThumbsUp className={cn("w-[27px] h-[27px]", isLiked && "fill-current")} />
+            <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && "fill-current")} />
           )}
           {!compact && (
             <span className="text-xs text-zinc-400">{formatCount(thumbCount)}</span>
@@ -1227,11 +1228,11 @@ export function ActionBar({
             transition={{ duration: 0.3, ease: 'easeOut' }}
           >
             {leadReaction ? (
-              <span data-engaged-glyph className="flex h-5 w-5 items-center justify-center text-[1.1rem] leading-none" aria-hidden="true">
+              <span data-engaged-glyph className="flex h-7 w-7 items-center justify-center text-[22px] leading-none" aria-hidden="true">
                 <ReactionEmoji reaction={leadReaction} animate={leadReaction === myReaction} />
               </span>
             ) : (
-              <ThumbsUp className={cn('h-[27px] w-[27px]', isLiked && 'fill-current')} />
+              <ThumbsUp className={cn(FEED_ICON_CLASS.like, isLiked && 'fill-current')} />
             )}
             <span className="tabular-nums">{formatCount(localLikeCount)}</span>
           </motion.button>
@@ -1245,7 +1246,7 @@ export function ActionBar({
           className={STAGE_TILE_CLASS}
           aria-label={_copy("copy.418d80826abc", { defaultValue: "Comments ({{value1}})", value1: commentCount })}
         >
-          <MessageSquare className="h-[28px] w-[28px]" />
+          <MessageSquare className={FEED_ICON_CLASS.comment} />
           <span className="tabular-nums">{formatCount(commentCount)}</span>
         </button>
 
@@ -1267,9 +1268,9 @@ export function ActionBar({
           aria-haspopup="dialog"
         >
           {/* Same share glyph and sizing as the feed's share button. The fixed
-              20px box keeps the count's baseline level with the other tiles. */}
-          <span className="flex h-5 w-5 items-center justify-center">
-            <Share2 className={isReposted ? 'h-[26px] w-[26px] shrink-0' : 'h-[24px] w-[24px] shrink-0'} strokeWidth={isReposted ? 2.915 : 2} />
+              28px box keeps the count's baseline level with the other tiles. */}
+          <span className="flex h-7 w-7 items-center justify-center">
+            <Share2 className={FEED_ICON_CLASS.share} strokeWidth={isReposted ? 2.915 : 2} />
           </span>
           <span className="tabular-nums">{formatCount(displayRepostCount)}</span>
         </button>
@@ -1283,7 +1284,7 @@ export function ActionBar({
           className={cn(STAGE_TILE_CLASS, !onTip && 'opacity-50')}
           aria-label={_copy("copy.3838a4d8cb8c", { defaultValue: "Tips" })}
         >
-          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className="h-5 w-5" plainClassName="" />
+          <TipGemIcon tipped={viewerTipped || tipBurst > 0} burstKey={tipBurst} className={FEED_ICON_CLASS.tip} plainClassName="" />
           <span>{_copy("copy.a4245a3c4f56", { defaultValue: "Tip" })}</span>
         </button>
 
