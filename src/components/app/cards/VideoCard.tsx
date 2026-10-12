@@ -1,4 +1,3 @@
-import { Play as StripPlay, Pause as StripPause, Volume2 as StripVolume, VolumeX as StripMute, Repeat2 as StripLoop, PictureInPicture2 as StripPip, Maximize as StripFullscreen, Minimize as StripExitFullscreen } from 'lucide-react';
 import Minimize from "@/components/ui/cut-icons/exit-fullscreen";
 import FastForward from "@/components/ui/cut-icons/fast-forward";
 import Rewind from "@/components/ui/cut-icons/rewind";
@@ -2601,7 +2600,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   aria-label={t(isPlaying ? 'audioPost.pause' : 'audioPost.play')}
                   className="flex h-8 w-8 items-center justify-center text-white"
                   onClick={event => { event.stopPropagation(); showControlsBriefly(); handlePlayClick(); }}>
-                  <MediaControlIcon icon={isPlaying ? StripPause : StripPlay} plain />
+                  <MediaControlIcon icon={isPlaying ? Pause : Play} plain />
                 </button>}
                 {splitControls && <div data-video-volume>
             {dubAvailable ? (
@@ -2621,7 +2620,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 onClick={toggleMute}
                 aria-label={t('videoPlayer.volume')}
               >
-                {isMuted ? <MediaControlIcon icon={StripMute} plain /> : <MediaControlIcon icon={StripVolume} plain />}
+                {isMuted ? <MediaControlIcon icon={VolumeX} plain /> : <MediaControlIcon icon={Volume2} plain />}
               </button>
               {volumeOpen && (
                 <div className="absolute bottom-full left-0 pb-1.5" onClick={(e) => e.stopPropagation()}>
@@ -2686,7 +2685,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   aria-label={isLooping ? _copy("copy.5178a4089a25", { defaultValue: "Disable loop" }) : _copy("copy.833dcdfad12f", { defaultValue: "Enable loop" })}
                   aria-pressed={isLooping}
                 >
-                  <MediaControlIcon icon={splitControls ? StripLoop : Repeat} active={isLooping} plain={splitControls} />
+                  <MediaControlIcon icon={Repeat} active={isLooping} plain={splitControls} />
                 </button>
               </TooltipTrigger>
               <TooltipContent>{isLooping ? _copy("copy.2e68f91aef20", { defaultValue: "Loop on" }) : _copy("copy.daee48e3d2b7", { defaultValue: "Loop off" })}</TooltipContent>
@@ -2700,7 +2699,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     onClick={handlePictureInPicture}
                     aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
                   >
-                    <MediaControlIcon icon={splitControls ? StripPip : PictureInPicture2} plain={splitControls} />
+                    <MediaControlIcon icon={PictureInPicture2} plain={splitControls} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>{_copy("copy.bc8805b92ad0", { defaultValue: "Picture in Picture (P)" })}</TooltipContent>
@@ -2709,7 +2708,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 <button data-video-bare onClick={handleFullscreen}
                   aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
                   className="flex h-8 w-8 shrink-0 items-center justify-center text-white">
-                  <MediaControlIcon icon={splitControls ? (isFullscreen ? StripExitFullscreen : StripFullscreen) : (isFullscreen ? Minimize : Maximize)} plain={splitControls} />
+                  <MediaControlIcon icon={isFullscreen ? Minimize : Maximize} plain={splitControls} />
                 </button>
               </div>
             </div>

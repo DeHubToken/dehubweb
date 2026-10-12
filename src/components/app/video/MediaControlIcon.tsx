@@ -7,7 +7,6 @@ export function MediaControlIcon({ icon: Icon, captions = false, spinning = fals
   const outlineColor = active ? '#fff' : 'rgba(0,0,0,0.8)';
   const Glyph = captions ? Captions : Icon;
   const glyph = (outline: boolean) => Glyph ? <Glyph size={size} strokeWidth={plain ? 1.8 : outline ? 3 : 1.75} color={outline ? outlineColor : foreground} stroke={outline ? outlineColor : foreground} aria-hidden="true" data-video-glyph-outline={outline || undefined} style={{ position: 'relative', zIndex: outline ? 0 : 1 }} /> : null;
-  if (plain && captions) return <span data-video-cc aria-hidden="true" style={{ color: foreground }}>CC</span>;
   return <span data-video-glyph data-video-glyph-plain={plain || undefined} data-video-glyph-active={active || undefined} className={spinning ? 'relative inline-flex animate-spin' : 'relative inline-flex'} style={{ width: size, height: size }}>
     {!plain && <span className="absolute inset-0" aria-hidden="true">{glyph(true)}</span>}
     {glyph(false)}
