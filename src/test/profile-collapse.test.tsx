@@ -3,9 +3,12 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
 
 vi.mock('@/components/app/PageHeader', () => ({ PageHeader: () => <button>Back</button> }));
+vi.mock('@/hooks/use-feed-swallow-clip', () => ({ useFeedSwallowClip: vi.fn() }));
+let theme = 'system';
+vi.mock('@/contexts/ThemeContext', () => ({ useAppTheme: () => ({ theme }) }));
 let frame: FrameRequestCallback | undefined;
 const rect = (bottom: number) => ({ bottom } as DOMRect);
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); theme = 'system'; });
 
 it('keeps only Back visible until the original actions leave view, then reverses', () => {
   vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
@@ -48,4 +51,12 @@ it('keeps only Back visible until the original actions leave view, then reverses
   expect(screen.queryByText('Follow')).toBeNull();
   expect(container.querySelector('.profile-collapse-surface')).not.toBeVisible();
   expect(container.querySelector('.profile-collapse-gap-guard')).not.toBeVisible();
+});
+
+it.each(['hazy', 'cosmic', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'minimal', 'light'])('keeps cover material inside the rounded bar on %s', (nextTheme) => {
+  theme = nextTheme;
+  const { container } = render(<CollapsingProfileHeader headerRef={{ current: null }} name="Creator" handle="@creator" coverUrl="/cover.jpg" />);
+  expect(container.querySelector('.profile-collapse-gap-guard')).toBeNull();
+  expect(container.querySelectorAll('.profile-collapse-cover')).toHaveLength(1);
+  expect(container.querySelector('.profile-collapse-surface img')).not.toBeNull();
 });

@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
 import './profile-collapse.css';
@@ -20,6 +21,12 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
   const { theme } = useAppTheme();
   const barRef = useRef<HTMLDivElement>(null);
   const [surfaceVisible, setSurfaceVisible] = useState(false);
+  useFeedSwallowClip(
+    headerRef,
+    '[data-profile-collapse][data-collapsed="true"]',
+    [],
+    { allThemes: true, off: !surfaceVisible },
+  );
 
   useEffect(() => {
     const header = headerRef.current;
@@ -49,9 +56,9 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
   return (
     <div className="profile-collapse-anchor">
       <div ref={barRef} data-profile-collapse data-collapsed={surfaceVisible} data-joined={surfaceVisible && tabsPinned} className="profile-collapse-bar">
-        <div className="profile-collapse-gap-guard" hidden={!surfaceVisible} aria-hidden>
-          {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
-        </div>
+        {(theme === 'system' || theme === 'immersive') && (
+          <div className="profile-collapse-gap-guard" hidden={!surfaceVisible} aria-hidden />
+        )}
         <div className="profile-collapse-surface" style={tabsPinned ? { bottom: -tabsHeight - 4 } : undefined} hidden={!surfaceVisible} aria-hidden>
           {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
         </div>
