@@ -1,4 +1,5 @@
 // Compatibility exports for tests and external consumers. App code imports individual artwork.
+export { default as Shorts } from "./cut-icons/shorts";
 export { default as Home } from "./cut-icons/home";
 export { default as House } from "./cut-icons/home";
 export { default as Search } from "./cut-icons/search";
