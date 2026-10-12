@@ -25,7 +25,7 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
     headerRef,
     '[data-profile-collapse][data-collapsed="true"]',
     [],
-    { allThemes: true, off: !surfaceVisible },
+    { allThemes: true, off: !surfaceVisible || tabsPinned },
   );
 
   useEffect(() => {
@@ -55,12 +55,13 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
 
   return (
     <div className="profile-collapse-anchor">
-      <div ref={barRef} data-profile-collapse data-collapsed={surfaceVisible} data-joined={surfaceVisible && tabsPinned} className="profile-collapse-bar">
+      <div ref={barRef} data-profile-collapse data-collapsed={surfaceVisible && !tabsPinned} data-tabs-pinned={tabsPinned} className="profile-collapse-bar" aria-hidden={tabsPinned}>
+        {!tabsPinned && <>
         {(theme === 'system' || theme === 'immersive') && (
           <div className="profile-collapse-gap-guard" hidden={!surfaceVisible} aria-hidden />
         )}
-        <div className="profile-collapse-surface" style={tabsPinned ? { bottom: -tabsHeight - 4 } : undefined} hidden={!surfaceVisible} aria-hidden>
-          {coverUrl && <img src={coverUrl} alt="" className="profile-collapse-cover" />}
+        <div data-feed-nav className="profile-collapse-surface" hidden={!surfaceVisible} aria-hidden>
+          <div data-nav-glass-backdrop />
         </div>
         <PageHeader overlay plainBack className={cn(
           '!right-auto',
@@ -76,6 +77,7 @@ export function CollapsingProfileHeader({ headerRef, tabsPinned = false, tabsHei
           </div>
           {surfaceVisible && followAction && <div className="shrink-0">{followAction}</div>}
         </div>
+        </>}
       </div>
     </div>
   );
