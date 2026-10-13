@@ -31,8 +31,28 @@ function normaliseThemeColor(value: number): number {
   return ((Math.round(value) % 360) + 360) % 360;
 }
 
+/**
+ * System Light is System's layout in daylight colours. It is stored as its own
+ * choice ('system-light') but runs as System everywhere: `theme` reads
+ * 'system' so every System layout rule and check applies unchanged, and
+ * <html data-system-tone="light"> switches the palette (styles/system-light.css).
+ */
+export const SYSTEM_LIGHT = 'system-light';
+export function effectiveTheme(choice: string): string {
+  return choice === SYSTEM_LIGHT ? 'system' : choice;
+}
+function stampTheme(choice: string) {
+  const root = document.documentElement;
+  root.dataset.theme = effectiveTheme(choice);
+  root.dataset.systemTone = choice === SYSTEM_LIGHT ? 'light' : 'dark';
+  root.style.colorScheme = choice === 'light' || choice === SYSTEM_LIGHT ? 'light' : 'dark';
+}
+
 type ThemeContextValue = {
+  /** The theme that styles the app (System Light reads as 'system'). */
   theme: string;
+  /** What the person picked, e.g. 'system-light'. Use for pickers. */
+  themeChoice: string;
   setTheme: (value: string) => void;
   dimLights: boolean;
   setDimLights: (value: boolean) => void;
@@ -231,13 +251,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // chrome for a beat. The token guards against a slow fetch landing after a
     // later switch.
     let cancelled = false;
-    const pending = loadThemeCss(theme);
+    const pending = loadThemeCss(effectiveTheme(theme));
     if (!pending) {
-      document.documentElement.dataset.theme = theme;
+      stampTheme(theme);
       return;
     }
     const apply = () => {
-      if (!cancelled) document.documentElement.dataset.theme = theme;
+      if (!cancelled) stampTheme(theme);
     };
     pending.then(apply, apply);
     return () => {
@@ -268,7 +288,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Memoized: ThemeProvider wraps the whole app and its consumers include the
   // feed and every themed component — a fresh value literal re-renders them all.
   const value = useMemo(
-    () => ({ theme, setTheme, dimLights, setDimLights, dimStrength, setDimStrength, themeHues, setThemeHue, brandColors, setBrandColors }),
+    () => ({ theme: effectiveTheme(theme), themeChoice: theme, setTheme, dimLights, setDimLights, dimStrength, setDimStrength, themeHues, setThemeHue, brandColors, setBrandColors }),
     [theme, setTheme, dimLights, setDimLights, dimStrength, setDimStrength, themeHues, setThemeHue, brandColors, setBrandColors],
   );
 
@@ -285,9 +305,9 @@ export function ThemePreviewProvider({ children, initialTheme = 'system' }: { ch
 
   useLayoutEffect(() => {
     let cancelled = false;
-    const pending = loadThemeCss(theme);
+    const pending = loadThemeCss(effectiveTheme(theme));
     const apply = () => {
-      if (!cancelled) document.documentElement.dataset.theme = theme;
+      if (!cancelled) stampTheme(theme);
     };
     if (pending) pending.then(apply, apply);
     else apply();
@@ -295,7 +315,8 @@ export function ThemePreviewProvider({ children, initialTheme = 'system' }: { ch
   }, [theme]);
 
   const value = useMemo<ThemeContextValue>(() => ({
-    theme,
+    theme: effectiveTheme(theme),
+    themeChoice: theme,
     setTheme,
     dimLights: false,
     setDimLights: () => undefined,
@@ -316,6 +337,7 @@ export function useAppTheme() {
     // Safe fallback so components don't crash if provider is missing.
     return {
       theme: 'system',
+      themeChoice: 'system',
       setTheme: () => {},
       dimLights: false,
       setDimLights: () => {},

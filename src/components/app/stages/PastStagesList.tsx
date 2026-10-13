@@ -89,11 +89,11 @@ export function PastStagesList({
   const emptyTitleText = emptyTitle ?? t('stages.noRecordedStages');
   const emptyHintText = emptyHint ?? t('stages.noRecordedStagesHint');
   const { walletAddress } = useAuth();
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
   const navigate = useNavigate();
   // Light/minimal are paper themes: white waveform bars would be invisible on
   // them, so ink the bars instead (text/surfaces are handled by class choice).
-  const isPaper = theme === 'light' || theme === 'minimal';
+  const isPaper = (theme === 'light' || themeChoice === 'system-light') || theme === 'minimal';
   const queryClient = useQueryClient();
 
   const [transcriptStage, setTranscriptStage] = useState<AudioSpace | null>(null);

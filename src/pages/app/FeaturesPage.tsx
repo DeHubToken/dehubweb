@@ -906,8 +906,8 @@ export default function FeaturesPage() {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');

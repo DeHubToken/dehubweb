@@ -175,7 +175,7 @@ function ReactionsGallery() {
 }
 
 const THEMES = [
-  'system', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
+  'system', 'system-light', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
   'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror',
 ] as const;
 
@@ -192,7 +192,7 @@ const ICONS: ThemeIconKey[] = [
 export default function StateGalleryPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const { theme, setTheme } = useAppTheme();
+  const { theme, themeChoice, setTheme } = useAppTheme();
   const [params, setParams] = useSearchParams();
   const requestedTheme = params.get('theme');
   const [presses, setPresses] = useState(0);
@@ -202,10 +202,10 @@ export default function StateGalleryPage() {
   const press = () => setPresses((count) => count + 1);
 
   useEffect(() => {
-    if (requestedTheme && THEMES.includes(requestedTheme as typeof THEMES[number]) && requestedTheme !== theme) {
+    if (requestedTheme && THEMES.includes(requestedTheme as typeof THEMES[number]) && requestedTheme !== themeChoice) {
       setTheme(requestedTheme);
     }
-  }, [requestedTheme, setTheme, theme]);
+  }, [requestedTheme, setTheme, themeChoice]);
 
   const chooseTheme = (nextTheme: typeof THEMES[number]) => {
     setTheme(nextTheme);
@@ -227,7 +227,7 @@ export default function StateGalleryPage() {
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">{_copy("copy.fa03600217af", { defaultValue: "Universal app states" })}</p>
-            <h1 className="mt-2 text-3xl font-semibold capitalize">{theme}{_copy("copy.ac06016aec14", { defaultValue: " theme" })}</h1>
+            <h1 className="mt-2 text-3xl font-semibold capitalize">{themeChoice.replace('-', ' ')}{_copy("copy.ac06016aec14", { defaultValue: " theme" })}</h1>
             <p className="mt-2 max-w-xl text-sm text-zinc-500">{_copy("copy.b061895ebdc1", { defaultValue: "One semantic system, with the icon material owned by the active theme." })}</p>
           </div>
           <div className="flex max-w-2xl flex-wrap justify-end gap-2">
@@ -237,7 +237,7 @@ export default function StateGalleryPage() {
                 type="button"
                 onClick={() => chooseTheme(item)}
                 className={`rounded-full border px-3 py-1.5 text-xs capitalize backdrop-blur-xl transition ${
-                  item === theme ? 'border-white/35 bg-white/15' : 'border-white/10 bg-white/5 text-zinc-500'
+                  item === themeChoice ? 'border-white/35 bg-white/15' : 'border-white/10 bg-white/5 text-zinc-500'
                 }`}
               >
                 {item}
@@ -593,21 +593,21 @@ function PollGallery() {
 }
 
 function StreamerArtworkGallery() {
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
   const { t } = useTranslation();
   const instance = useId();
-  const material = badgeMaterial(theme);
+  const material = badgeMaterial(themeChoice === 'system-light' ? themeChoice : theme);
   return (
     <section data-page-bento data-streamer-gallery className="mb-5 rounded-3xl border p-4" style={{ background: material.panel, color: material.text, borderColor: material.edge }}>
       <h2 className="mb-3 text-sm font-semibold">{t('live.progress.cardsTitle')}</h2>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
         {STREAMER_BADGE_IDS.map(id => (
           <div key={id} data-streamer-art={id} className="flex flex-col items-center gap-2 text-center">
-            <div aria-hidden className="h-24 w-24 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, true, instance) }} />
+            <div aria-hidden className="h-24 w-24 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, themeChoice === 'system-light' ? themeChoice : theme, true, instance) }} />
             <span className="text-xs font-medium">{t(`live.progress.card.${id}.name`)}</span>
             <div className="flex items-center gap-3" aria-hidden>
-              <span className="h-4 w-4 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, true, `${instance}-inline`, 'compact') }} />
-              <span className="h-8 w-8 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, false, `${instance}-locked`) }} />
+              <span className="h-4 w-4 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, themeChoice === 'system-light' ? themeChoice : theme, true, `${instance}-inline`, 'compact') }} />
+              <span className="h-8 w-8 [&>svg]:h-full [&>svg]:w-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, themeChoice === 'system-light' ? themeChoice : theme, false, `${instance}-locked`) }} />
             </div>
           </div>
         ))}

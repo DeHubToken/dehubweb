@@ -58,8 +58,8 @@ const STEPS = [
 export default function BuilderPage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const { theme } = useAppTheme();
-  const isLight = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLight = (theme === 'light' || themeChoice === 'system-light');
   const ink = isLight ? 'text-[#1a1a1a]' : 'text-[#fff]';
   const dim = isLight ? 'text-[#5a5a5a]' : TEXT_DIM;
   const stroke = isLight ? 'border-[rgba(0,0,0,0.12)]' : STROKE;

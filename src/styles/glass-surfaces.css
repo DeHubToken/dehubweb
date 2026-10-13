@@ -21,6 +21,9 @@ html {
 html[data-theme='light'] {
   --float-glass: rgb(249 248 244 / 0.78);
 }
+html[data-system-tone="light"] {
+  --float-glass: rgb(249 248 244 / 0.78);
+}
 html[data-theme='war'] {
   --float-glass: rgb(var(--war-gunmetal, 14 20 18) / 0.76);
 }
@@ -54,6 +57,9 @@ html[data-theme][data-theme]
     --float-glass: rgb(var(--glass-tint, 9 9 11));
   }
   html[data-theme='light'] {
+    --float-glass: rgb(249 248 244);
+  }
+  html[data-system-tone="light"] {
     --float-glass: rgb(249 248 244);
   }
 }

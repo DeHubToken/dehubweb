@@ -243,8 +243,8 @@ const ExploreSearchInput = memo(function ExploreSearchInput({
 export default function ExplorePage() {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const [searchParams, setSearchParams] = useSearchParams();
   const { walletAddress, isAuthenticated } = useAuth();
   const navigate = useNavigate();

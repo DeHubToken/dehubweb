@@ -35,8 +35,8 @@ const LiquidGlassBubble = React.forwardRef<HTMLDivElement, LiquidGlassBubbleProp
       none: 'rounded-2xl'
     };
 
-    const { theme } = useAppTheme();
-    const isLightTheme = theme === 'light';
+    const { theme, themeChoice } = useAppTheme();
+    const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
 
     return (
       <div ref={ref} className={cn("relative group", className)} {...props}>

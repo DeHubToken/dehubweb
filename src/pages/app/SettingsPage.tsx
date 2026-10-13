@@ -284,7 +284,7 @@ export default function SettingsPage() {
   const settingsIsDraggingRef = useRef(false);
   const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect, onScroll: onSettingsTabScroll } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
 
-  const { theme, setTheme } = useAppTheme();
+  const { theme, themeChoice, setTheme } = useAppTheme();
   const { isAuthenticated, disconnect } = useAuth();
 
   const { t } = useTranslation();
@@ -484,7 +484,7 @@ export default function SettingsPage() {
         {activeTab === 'profile' && <ProfileSettings />}
         {activeTab === 'notifications' && <NotificationSettings />}
         {activeTab === 'privacy' && <PrivacySettings />}
-        {activeTab === 'appearance' && <AppearanceSettings theme={theme} setTheme={setTheme} />}
+        {activeTab === 'appearance' && <AppearanceSettings theme={theme} themeChoice={themeChoice} setTheme={setTheme} />}
         {activeTab === 'content' && <ContentSettings />}
         {activeTab === 'messages' && <MessagesSettings />}
         {activeTab === 'assets' && <AssetsSettings />}
@@ -2516,6 +2516,7 @@ function ThemeColorPicker({ theme }: { theme: string }) {
 
 const THEME_OPTIONS = [
   { value: 'system', labelKey: 'settings.system', available: true },
+  { value: 'system-light', labelKey: 'settings.systemLight', available: true },
   { value: 'immersive', labelKey: 'settings.immersive', available: true },
   { value: 'minimal', labelKey: 'settings.minimal', available: true },
   { value: 'light', labelKey: 'settings.minimalLight', available: true },
@@ -2532,7 +2533,7 @@ const THEME_OPTIONS = [
   { value: 'horror', labelKey: 'settings.horror', available: true },
 ];
 
-function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
+function AppearanceSettings({ theme, themeChoice, setTheme }: { theme: string; themeChoice: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
   const { isCollapsed, setCollapsed } = useSidebarCollapse();
   const { ref: themePickerFadeRef, style: themePickerFadeStyle } = useScrollFadeMask<HTMLDivElement>();
@@ -2558,7 +2559,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                 key={option.value}
                 value={option.value}
                 label={t(option.labelKey)}
-                active={theme === option.value}
+                active={themeChoice === option.value}
                 available={option.available}
                 onSelect={() => {
                   if (option.available) {

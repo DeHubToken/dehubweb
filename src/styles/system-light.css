@@ -1,0 +1,142 @@
+/* System Light: System's layout in daylight.
+
+   Picked as "System Light" (ThemeContext SYSTEM_LIGHT); the app runs as System
+   and <html data-system-tone="light"> switches the palette. Every Minimal Light
+   rule also matches this tone (the :is(... [data-system-tone="light"]) selectors
+   across the sheets), so pages that already read on paper read here too; this
+   file then puts System's look back on top: a white page instead of paper, no
+   bentos (posts run edge to edge between hairlines), frosted white glass on the
+   pills, bars, popups and drawers, and ink-black primary buttons.
+
+   The :not(#_) runs are specificity, not logic: they outrank the System sheets
+   (system-immersive.css, theme-controls.css), which use the same trick. */
+
+html[data-theme="system"][data-system-tone="light"] {
+  --paper: #ffffff;
+  --paper-deep: #f4f4f6;
+  --ink: #0b0b0d;
+  --ink-muted: rgba(11, 11, 13, 0.62);
+  --hairline: rgba(11, 11, 13, 0.09);
+  --hairline-strong: rgba(11, 11, 13, 0.14);
+  --immersive-hairline: rgba(11, 11, 13, 0.09);
+  --float-glass: rgb(255 255 255 / 0.8);
+  --background: 0 0% 100%;
+  --foreground: 240 8% 5%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 8% 5%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 8% 5%;
+  --primary: 240 8% 5%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 5% 96%;
+  --secondary-foreground: 240 8% 5%;
+  --muted: 240 5% 96%;
+  --muted-foreground: 240 4% 40%;
+  --accent: 240 5% 96%;
+  --accent-foreground: 240 8% 5%;
+  --border: 240 6% 90%;
+  --input: 240 6% 90%;
+  --ring: 240 8% 5%;
+}
+
+/* White, not paper: no texture and no grain. */
+html[data-theme="system"][data-system-tone="light"]:not(#_) :is(body, #root, #app-root, [data-vaul-drawer], [data-login-modal], .login-modal-overlay) { background-image: none !important; }
+html[data-theme="system"][data-system-tone="light"] body::after { display: none !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-vaul-drawer]:not([data-keep-dark]) { background-color: var(--float-glass) !important; backdrop-filter: blur(24px) saturate(180%) !important; color: var(--ink) !important; }
+
+html[data-theme="system"][data-system-tone="light"] { --sl-page: #ffffff; --sl-card: #f4f4f6; --sl-ink: #0b0b0d; --sl-ink-2: rgba(11,11,13,.62); --sl-line: rgba(11,11,13,.09); }
+html[data-theme="system"][data-system-tone="light"], html[data-theme="system"][data-system-tone="light"] body, html[data-theme="system"][data-system-tone="light"] #root,
+html[data-theme="system"][data-system-tone="light"] #app-root, html[data-theme="system"][data-system-tone="light"] #app-root > div:not([data-bottom-nav]),
+html[data-theme="system"][data-system-tone="light"] main, html[data-theme="system"][data-system-tone="light"] main > div { background-color: var(--sl-page) !important; color: var(--sl-ink) !important; }
+html[data-theme="system"][data-system-tone="light"] #app-root:not(#_):not(#_):not(#_) :is(.bg-black, .bg-zinc-950, .bg-zinc-900, [class*="bg-black/"]):not([data-media-full]):not([data-media-full] *):not([data-feed-video-frame]):not([data-keep-dark]):not([data-keep-dark] *) { background-color: var(--sl-page) !important; }
+/* Ink */
+html[data-theme="system"][data-system-tone="light"] #app-root:not(#_):not(#_):not(#_) :is(.text-white, [class*="text-white/"], .text-zinc-100, .text-zinc-200, .text-zinc-300) { color: var(--sl-ink) !important; }
+html[data-theme="system"][data-system-tone="light"] #app-root:not(#_):not(#_):not(#_) :is(.text-zinc-400, .text-zinc-500, [class*="text-white/5"], [class*="text-white/6"], [class*="text-white/4"]) { color: var(--sl-ink-2) !important; }
+html[data-theme="system"][data-system-tone="light"] #app-root:not(#_) svg { color: inherit; }
+/* Hairlines and washes */
+html[data-theme="system"][data-system-tone="light"] #app-root:not(#_):not(#_):not(#_) [class*="border-white/"], html[data-theme="system"][data-system-tone="light"] #app-root:not(#_):not(#_):not(#_) [class*="border-zinc-8"], html[data-theme="system"][data-system-tone="light"] #app-root:not(#_):not(#_):not(#_) [class*="border-zinc-7"] { border-color: var(--sl-line) !important; }
+html[data-theme="system"][data-system-tone="light"] #app-root:not(#_):not(#_):not(#_) [class*="bg-white/"]:not([data-on-media]):not([data-on-media] *) { background-color: rgba(11,11,13,.045) !important; }
+/* Bento cards: soft grey plates, no glow */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-item] { background: var(--sl-card) !important; border-color: transparent !important; box-shadow: none !important; }
+/* Liquid glass pills: frosted white */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav, [data-feed-nav-outer] > [data-page-bento]) {
+  background-image: none !important;
+  background: rgba(255,255,255,.62) !important; border: 1px solid rgba(255,255,255,.9) !important;
+  box-shadow: 0 8px 28px rgba(0,0,0,.10), inset 0 1px 0 rgba(255,255,255,.9), 0 0 0 .5px rgba(0,0,0,.08) !important;
+  backdrop-filter: blur(22px) saturate(1.8) !important;
+}
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav) :is([data-glass-indicator], [data-active="true"], [aria-current="page"], [data-state="active"]) {
+  background: rgba(11,11,13,.07) !important; border-color: rgba(11,11,13,.06) !important; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.1) !important;
+}
+/* Logo turns ink */
+html[data-theme="system"][data-system-tone="light"] header img[alt*="DeHub" i], html[data-theme="system"][data-system-tone="light"] [data-island-logo] img, html[data-theme="system"][data-system-tone="light"] header svg { filter: invert(1); }
+/* Media keeps its own white chrome */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is([data-media-full], [data-on-media], [data-video-controls], [data-video-topbar]) :is(*, svg) { color: #fff !important; }
+
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav)::before,
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav)::after { display:none !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-nav-outer]::before { background: var(--sl-page) !important; }
+/* Create: the one solid ink key on the bar */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-nav-create] > [aria-hidden] { background: #0b0b0d !important; border-color: transparent !important; box-shadow: 0 2px 8px rgba(0,0,0,.18) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-nav-create] svg { color: #fff !important; position: relative; }
+/* Active tab: ink, no white glow */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-bottom-nav] svg { filter: none !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-bottom-nav] a { background: transparent !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-bottom-nav] a:not(.active) { color: rgba(11,11,13,.45) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-nav] [data-glass-indicator] { background: rgba(11,11,13,.065) !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-nav] button:not(#_) { background-color: transparent !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-nav] button:not([aria-selected="true"]):not([data-active="true"]) svg { opacity: .55; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) [data-feed-item] { box-shadow: 0 1px 0 rgba(0,0,0,.02) !important; }
+/* Desktop rails */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) img[src*="header-logo"], html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) img[alt="dehub"] { filter: invert(1) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-sidebar-fade] { background-image: linear-gradient(to top, #fff, rgba(255,255,255,0)) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is([data-sidebar-active-indicator], [data-theme-control-surface]):not([data-media-full] *) { background: #fff !important; background-image: none !important; border-color: rgba(11,11,13,.08) !important; box-shadow: 0 2px 10px rgba(0,0,0,.07) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-primary-cta] { background: #0b0b0d !important; background-image: none !important; color: #fff !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-primary-cta] * { color: #fff !important; }
+html[data-theme="system"][data-system-tone="light"] input::placeholder, html[data-theme="system"][data-system-tone="light"] textarea::placeholder { color: rgba(11,11,13,.4) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is(input, textarea) { color: #0b0b0d !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [class*="lg:bg-zinc-800"] { background-color: rgba(11,11,13,.05) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-primary-cta] { border-color: transparent !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is(.w-10.h-10.bg-zinc-800, .w-9.h-9.bg-zinc-800) { background-color: rgba(11,11,13,.05) !important; background-image: none !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :has(> input[placeholder^="Search"]), html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) input[placeholder^="Search"] { background-color: rgba(11,11,13,.045) !important; border-radius: 12px; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) :is(input, textarea)::placeholder { color: rgba(11,11,13,.42) !important; -webkit-text-fill-color: rgba(11,11,13,.42) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) input.bg-zinc-900 { background-color: rgba(11,11,13,.045) !important; }
+/* System rule: no bentos. Posts run edge to edge, split by hairlines. */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-item] { background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--sl-line) !important; border-radius: 0 !important; box-shadow: none !important; margin-left: 0 !important; margin-right: 0 !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-item]::before, html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-item]::after { display: none !important; }
+/* ---- Top bar v2: spacing, depth, segmented feel ---- */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav-outer] { background: transparent !important; padding: 6px 12px 10px !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav-outer]::before { background: linear-gradient(#fff 55%, rgba(255,255,255,0)) !important; height: 100% !important; inset: 0 !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] {
+  background: rgba(244,244,247,.78) !important; background-image: none !important;
+  border: 0 !important; border-radius: 16px !important; padding: 4px !important;
+  box-shadow: inset 0 0 0 .5px rgba(11,11,13,.07), inset 0 1px 0 rgba(255,255,255,.9), 0 1px 1px rgba(11,11,13,.03), 0 6px 16px -4px rgba(11,11,13,.08), 0 18px 36px -12px rgba(11,11,13,.10) !important;
+  backdrop-filter: blur(24px) saturate(1.8) !important;
+}
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] [data-glass-indicator] {
+  background: #fff !important; border-radius: 12px !important; border: 0 !important;
+  box-shadow: 0 0 0 .5px rgba(11,11,13,.06), 0 1px 2px rgba(11,11,13,.08), 0 3px 10px -2px rgba(11,11,13,.10) !important;
+}
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] button { color: rgba(11,11,13,.42) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] button svg { opacity: 1 !important; width: 18px !important; height: 18px !important; stroke-width: 1.9; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] button[data-active="true"] { color: #0b0b0d !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] .z-20 > button:first-child:not([data-feed-tab-btn]) { margin-right: 6px; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] .z-20 > button:first-child:not([data-feed-tab-btn])::after { content: ""; position: absolute; right: -3px; top: 25%; bottom: 25%; width: 1px; background: rgba(11,11,13,.10); }
+/* Logo row: a touch more air */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) header { background: #fff !important; }
+/* Bottom bar shares the same depth recipe */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-bottom-nav] > nav {
+  background: rgba(255,255,255,.80) !important; border: 0 !important; border-radius: 20px !important;
+  box-shadow: inset 0 0 0 .5px rgba(11,11,13,.07), inset 0 1px 0 rgba(255,255,255,.9), 0 1px 1px rgba(11,11,13,.03), 0 8px 20px -6px rgba(11,11,13,.10), 0 22px 44px -14px rgba(11,11,13,.14) !important;
+}
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] [data-nav-glass-backdrop] { display: none !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-feed-nav] button:not([data-feed-tab-btn]) { background: transparent !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-bottom-nav] nav *:not([data-nav-create] *) { border-color: transparent !important; }
+
+/* Page title islands share the top bar's glass. */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) [data-nav-glass-backdrop] { display: none !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_):not(#_):not(#_) :is([data-kit-island], [data-feed-nav-outer] > [data-page-bento]) {
+  background: rgba(244,244,247,.78) !important; background-image: none !important; border: 0 !important;
+  box-shadow: inset 0 0 0 .5px rgba(11,11,13,.07), inset 0 1px 0 rgba(255,255,255,.9), 0 1px 1px rgba(11,11,13,.03), 0 6px 16px -4px rgba(11,11,13,.08), 0 18px 36px -12px rgba(11,11,13,.10) !important;
+  backdrop-filter: blur(24px) saturate(1.8) !important;
+}

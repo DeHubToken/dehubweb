@@ -1197,6 +1197,10 @@ html[data-theme='light'] :is([data-comment-tabs-pin], [data-comment-composer-pin
   background: rgb(250 250 249 / 0.94);
   border-color: rgb(0 0 0 / 0.08);
 }
+html[data-system-tone="light"] :is([data-comment-tabs-pin], [data-comment-composer-pin]) {
+  background: rgb(250 250 249 / 0.94);
+  border-color: rgb(0 0 0 / 0.08);
+}
 html[data-theme='minimal'] :is([data-comment-tabs-pin], [data-comment-composer-pin]) {
   background: #000;
   border-color: rgb(255 255 255 / 0.1);
@@ -2373,13 +2377,25 @@ html[data-theme="minimal"] [data-notification-row][data-unread]:hover {
 html[data-theme="light"] [data-notification-row]:not([data-keep-dark]):not(button):not([role="button"]) {
   background-color: transparent !important;
 }
+html[data-system-tone="light"] [data-notification-row]:not([data-keep-dark]):not(button):not([role="button"]) {
+  background-color: transparent !important;
+}
 html[data-theme="light"] [data-notification-row]:not([data-keep-dark]):not(button):not([role="button"]):hover {
+  background-color: var(--hover-wash) !important;
+}
+html[data-system-tone="light"] [data-notification-row]:not([data-keep-dark]):not(button):not([role="button"]):hover {
   background-color: var(--hover-wash) !important;
 }
 html[data-theme="light"] [data-notification-row][data-unread]:not([data-keep-dark]):not(button):not([role="button"]) {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
+html[data-system-tone="light"] [data-notification-row][data-unread]:not([data-keep-dark]):not(button):not([role="button"]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 html[data-theme="light"] [data-notification-row][data-unread]:not([data-keep-dark]):not(button):not([role="button"]):hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-system-tone="light"] [data-notification-row][data-unread]:not([data-keep-dark]):not(button):not([role="button"]):hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -2410,12 +2426,24 @@ html[data-theme="light"] [data-comments-wrapper] {
   backdrop-filter: none !important;
 }
 
+html[data-system-tone="light"] [data-comments-wrapper] {
+  background-color: hsl(var(--card)) !important;
+  border-color: var(--hairline) !important;
+  backdrop-filter: none !important;
+}
+
 /* The tab indicator is the same liquid-glass recipe: a white gradient behind a
    white border, which over paper is a white pill on a white row - the selected
    tab was marked by nothing but a faint shadow. GlassIndicator already branches
    on the light theme, but only to soften its shadow, and the fill it cannot
    reach from there is the part that matters. Ink wash and a real hairline. */
 html[data-theme="light"] [data-glass-indicator] {
+  background-image: none !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  border-color: var(--hairline-strong) !important;
+  backdrop-filter: none !important;
+}
+html[data-system-tone="light"] [data-glass-indicator] {
   background-image: none !important;
   background-color: rgba(0, 0, 0, 0.06) !important;
   border-color: var(--hairline-strong) !important;
@@ -2436,7 +2464,14 @@ html[data-theme="light"] [data-page-bento] button.bg-zinc-800 {
   background-color: rgba(0, 0, 0, 0.04) !important;
   border-color: var(--hairline) !important;
 }
+html[data-system-tone="light"] [data-page-bento] button.bg-zinc-800 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--hairline) !important;
+}
 html[data-theme="light"] [data-page-bento] button.bg-zinc-800:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-system-tone="light"] [data-page-bento] button.bg-zinc-800:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 html[data-theme="light"] [data-page-bento] button.bg-zinc-800.text-white,
@@ -2444,13 +2479,29 @@ html[data-theme="light"] [data-page-bento] button.bg-zinc-800 .text-white,
 html[data-theme="light"] [data-page-bento] button.bg-zinc-800 svg {
   color: #1a1a1a !important;
 }
+html[data-system-tone="light"] [data-page-bento] button.bg-zinc-800.text-white,
+html[data-system-tone="light"] [data-page-bento] button.bg-zinc-800 .text-white,
+html[data-system-tone="light"] [data-page-bento] button.bg-zinc-800 svg {
+  color: #1a1a1a !important;
+}
 html[data-theme="light"] [data-page-bento] [class~="bg-white/10"] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-system-tone="light"] [data-page-bento] [class~="bg-white/10"] {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 html[data-theme="light"] [data-page-bento] [class~="border-white/20"] {
   border-color: var(--hairline-strong) !important;
 }
+html[data-system-tone="light"] [data-page-bento] [class~="border-white/20"] {
+  border-color: var(--hairline-strong) !important;
+}
 html[data-theme="light"] [data-page-bento] [class*="from-white/20"] {
+  background-image: none !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  border-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] [data-page-bento] [class*="from-white/20"] {
   background-image: none !important;
   background-color: rgba(0, 0, 0, 0.06) !important;
   border-color: var(--hairline-strong) !important;
@@ -2472,16 +2523,33 @@ html[data-theme="light"] .dehub-intro button svg,
 html[data-theme="light"] .dehub-intro .text-white {
   color: #ffffff !important;
 }
+html[data-system-tone="light"] .dehub-intro button,
+html[data-system-tone="light"] .dehub-intro button svg,
+html[data-system-tone="light"] .dehub-intro .text-white {
+  color: #ffffff !important;
+}
 html[data-theme="light"] .dehub-intro [class~="text-zinc-300"] {
+  color: rgba(255, 255, 255, 0.80) !important;
+}
+html[data-system-tone="light"] .dehub-intro [class~="text-zinc-300"] {
   color: rgba(255, 255, 255, 0.80) !important;
 }
 html[data-theme="light"] .dehub-intro [class~="text-zinc-400"] {
   color: rgba(255, 255, 255, 0.65) !important;
 }
+html[data-system-tone="light"] .dehub-intro [class~="text-zinc-400"] {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
 html[data-theme="light"] .dehub-intro [class~="text-zinc-500"] {
   color: rgba(255, 255, 255, 0.55) !important;
 }
+html[data-system-tone="light"] .dehub-intro [class~="text-zinc-500"] {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
 html[data-theme="light"] .dehub-intro [class~="text-white/50"] {
+  color: rgba(255, 255, 255, 0.50) !important;
+}
+html[data-system-tone="light"] .dehub-intro [class~="text-white/50"] {
   color: rgba(255, 255, 255, 0.50) !important;
 }
 
@@ -2492,6 +2560,9 @@ html[data-theme="light"] .dehub-intro [class~="text-white/50"] {
    near-black slab across the top of a paper page. Media well, so it takes the
    paper wash. */
 html[data-theme="light"] button[class~="aspect-[3/1]"][class~="bg-zinc-800"] {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+html[data-system-tone="light"] button[class~="aspect-[3/1]"][class~="bg-zinc-800"] {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
 
@@ -2836,11 +2907,28 @@ html[data-theme="light"] {
   --hover-wash: rgba(0, 0, 0, 0.05);
   --tab-hover-wash: rgba(0, 0, 0, 0.06);
 }
+html[data-system-tone="light"] {
+  --paper: #f9f8f4;
+  --zinc-500: 113 113 122;
+  --paper-deep: #ece8df;
+  --ink: #1a1a1a;
+  --ink-muted: #5a5a5a;
+  --hairline: rgba(0, 0, 0, 0.08);
+  --hairline-strong: rgba(0, 0, 0, 0.12);
+  --hover-wash: rgba(0, 0, 0, 0.05);
+  --tab-hover-wash: rgba(0, 0, 0, 0.06);
+}
 
 html[data-theme="light"] body {
   background-color: var(--paper) !important;
   background-image: url('./assets/textures/paper-texture.png') !important;
   background-size: 256px 256px !important;
+  color: var(--ink) !important;
+}
+
+html[data-system-tone="light"] body {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
   color: var(--ink) !important;
 }
 /* Note: #app-root > div also matches floating direct children (the mobile
@@ -2853,12 +2941,23 @@ html[data-theme="light"] #app-root > div > main > div {
   background-color: var(--paper) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] #app-root,
+html[data-system-tone="light"] #app-root > div:not([data-bottom-nav]),
+html[data-system-tone="light"] #app-root > div > main,
+html[data-system-tone="light"] #app-root > div > main > div {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+}
 
 /* <html> and #root are forced #000 by the Web3Auth gap fallbacks (~L576);
    only body/#app-root were overridden here, so overscroll rubber-banding and
    routes outside the app shell flashed black edges on paper. */
 html[data-theme="light"],
 html[data-theme="light"] #root {
+  background-color: var(--paper) !important;
+}
+html[data-system-tone="light"],
+html[data-system-tone="light"] #root {
   background-color: var(--paper) !important;
 }
 
@@ -2875,10 +2974,17 @@ html[data-theme="light"] body::after {
   background-size: 256px 256px;
   background-repeat: repeat;
 }
+html[data-system-tone="light"] body::after {
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22512%22%20height%3D%22512%22%3E%3Cfilter%20id%3D%22n%22%20x%3D%220%22%20y%3D%220%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.75%22%20numOctaves%3D%224%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23n)%22%2F%3E%3C%2Fsvg%3E");
+}
 
 
 /* Theme picker: the selected sample is ringed in white, which vanishes on paper. */
 html[data-theme="light"] [data-theme-option][data-active="true"] {
+  border-color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-theme-option][data-active="true"] {
   border-color: var(--ink) !important;
 }
 
@@ -2888,12 +2994,25 @@ html[data-theme="light"] .text-zinc-50,
 html[data-theme="light"] .text-zinc-100 {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] .text-white,
+html[data-system-tone="light"] .text-zinc-50,
+html[data-system-tone="light"] .text-zinc-100 {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] .text-zinc-200,
 html[data-theme="light"] .text-zinc-300 {
   color: #2e2e2e !important;
 }
+html[data-system-tone="light"] .text-zinc-200,
+html[data-system-tone="light"] .text-zinc-300 {
+  color: #2e2e2e !important;
+}
 html[data-theme="light"] .text-zinc-400,
 html[data-theme="light"] .text-zinc-500 {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] .text-zinc-400,
+html[data-system-tone="light"] .text-zinc-500 {
   color: var(--ink-muted) !important;
 }
 
@@ -2910,10 +3029,19 @@ html[data-theme="light"] [data-switch-track][data-state="unchecked"] {
      findable by its shadow. 0.32 keeps the wash quiet and clears 2:1. */
   background-color: rgba(0, 0, 0, 0.32) !important;
 }
+html[data-system-tone="light"] [data-switch-track][data-state="unchecked"] {
+  background-color: rgba(0, 0, 0, 0.32) !important;
+}
 html[data-theme="light"] [data-switch-track][data-state="checked"] {
   background-color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-switch-track][data-state="checked"] {
+  background-color: var(--ink) !important;
+}
 html[data-theme="light"] [data-switch-thumb] {
+  background-color: var(--paper) !important;
+}
+html[data-system-tone="light"] [data-switch-thumb] {
   background-color: var(--paper) !important;
 }
 
@@ -2926,8 +3054,18 @@ html[data-theme="light"] .toaster .toast .loader,
 html[data-theme="light"] .toaster .toast svg {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] .toaster .toast,
+html[data-system-tone="light"] .toaster .toast .actionButton,
+html[data-system-tone="light"] .toaster .toast .loader,
+html[data-system-tone="light"] .toaster .toast svg {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] .toaster .toast .description,
 html[data-theme="light"] .toaster .toast .cancelButton {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] .toaster .toast .description,
+html[data-system-tone="light"] .toaster .toast .cancelButton {
   color: var(--ink-muted) !important;
 }
 /* The toast surface itself keeps its dark-glass bg-white/10 + border-white/20
@@ -2938,7 +3076,15 @@ html[data-theme="light"] .toaster .toast {
   border-color: var(--hairline-strong) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
 }
+html[data-system-tone="light"] .toaster .toast {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
 html[data-theme="light"] .text-zinc-600 {
+  color: #707070 !important;
+}
+html[data-system-tone="light"] .text-zinc-600 {
   color: #707070 !important;
 }
 
@@ -2946,6 +3092,10 @@ html[data-theme="light"] .text-zinc-600 {
    so the ✕ is readable next to the chip label. */
 html[data-theme="light"] [data-filter-chip] .text-white\/40,
 html[data-theme="light"] [data-filter-chip] .hover\:text-white:hover {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-filter-chip] .text-white\/40,
+html[data-system-tone="light"] [data-filter-chip] .hover\:text-white:hover {
   color: var(--ink) !important;
 }
 
@@ -2957,7 +3107,17 @@ html[data-theme="light"] [data-new-member-chip] {
   color: #3a3a3a !important;
   border-color: rgba(0, 0, 0, 0.14) !important;
 }
+html[data-system-tone="light"] [data-new-member-chip] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  color: #3a3a3a !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
 html[data-theme="light"] [data-keep-dark] [data-new-member-chip] {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+html[data-system-tone="light"] [data-keep-dark] [data-new-member-chip] {
   background-color: rgba(255, 255, 255, 0.12) !important;
   color: rgba(255, 255, 255, 0.75) !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
@@ -2977,6 +3137,16 @@ html[data-theme="light"] [role="button"].bg-zinc-700.text-white,
 html[data-theme="light"] [role="button"].bg-zinc-600.text-white {
   color: #ffffff !important;
 }
+html[data-system-tone="light"] [data-keep-dark],
+html[data-system-tone="light"] [data-keep-dark] *,
+html[data-system-tone="light"] button.bg-zinc-800.text-white,
+html[data-system-tone="light"] button.bg-zinc-700.text-white,
+html[data-system-tone="light"] button.bg-zinc-600.text-white,
+html[data-system-tone="light"] [role="button"].bg-zinc-800.text-white,
+html[data-system-tone="light"] [role="button"].bg-zinc-700.text-white,
+html[data-system-tone="light"] [role="button"].bg-zinc-600.text-white {
+  color: #ffffff !important;
+}
 
 /* Icons (chevrons, arrows, glyphs) inside those dark button chips must stay
    white too — otherwise .text-zinc-400/500 remaps to dark ink and disappears
@@ -2987,6 +3157,14 @@ html[data-theme="light"] button.bg-zinc-600 svg,
 html[data-theme="light"] [role="button"].bg-zinc-800 svg,
 html[data-theme="light"] [role="button"].bg-zinc-700 svg,
 html[data-theme="light"] [role="button"].bg-zinc-600 svg {
+  color: #ffffff !important;
+}
+html[data-system-tone="light"] button.bg-zinc-800 svg,
+html[data-system-tone="light"] button.bg-zinc-700 svg,
+html[data-system-tone="light"] button.bg-zinc-600 svg,
+html[data-system-tone="light"] [role="button"].bg-zinc-800 svg,
+html[data-system-tone="light"] [role="button"].bg-zinc-700 svg,
+html[data-system-tone="light"] [role="button"].bg-zinc-600 svg {
   color: #ffffff !important;
 }
 
@@ -3007,8 +3185,18 @@ html[data-theme="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-bl
 html[data-theme="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) * {
   color: #ffffff !important;
 }
+html[data-system-tone="light"] button[class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]),
+html[data-system-tone="light"] button[class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) *,
+html[data-system-tone="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]),
+html[data-system-tone="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) * {
+  color: #ffffff !important;
+}
 html[data-theme="light"] button[class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) svg,
 html[data-theme="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) svg {
+  color: #ffffff !important;
+}
+html[data-system-tone="light"] button[class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) svg,
+html[data-system-tone="light"] [role="button"][class*="bg-black\/"]:not([class~="bg-black/5"]):not([class~="bg-black/10"]):not([class~="bg-black/20"]) svg {
   color: #ffffff !important;
 }
 
@@ -3023,7 +3211,17 @@ html[data-theme="light"] [data-country-block-drawer] {
   box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.12) !important;
   backdrop-filter: none !important;
 }
+html[data-system-tone="light"] [data-country-block-drawer] {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  color: var(--ink) !important;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: none !important;
+}
 html[data-theme="light"] [data-country-block-drawer] .text-white {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-country-block-drawer] .text-white {
   color: var(--ink) !important;
 }
 html[data-theme="light"] [data-country-block-drawer] input {
@@ -3031,10 +3229,21 @@ html[data-theme="light"] [data-country-block-drawer] input {
   border-color: var(--hairline-strong) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-country-block-drawer] input {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-country-block-drawer] button:hover {
   background-color: var(--hover-wash) !important;
 }
+html[data-system-tone="light"] [data-country-block-drawer] button:hover {
+  background-color: var(--hover-wash) !important;
+}
 html[data-theme="light"] [data-country-block-drawer] .border-white\/10 {
+  border-color: var(--hairline) !important;
+}
+html[data-system-tone="light"] [data-country-block-drawer] .border-white\/10 {
   border-color: var(--hairline) !important;
 }
 
@@ -3047,6 +3256,13 @@ html[data-theme="light"] .bg-zinc-800:not([data-keep-dark]):not(button):not([rol
 html[data-theme="light"] .bg-zinc-700:not([data-keep-dark]):not(button):not([role="button"]) {
   background-color: var(--paper) !important;
 }
+html[data-system-tone="light"] .bg-black:not([data-keep-dark]),
+html[data-system-tone="light"] .bg-zinc-950:not([data-keep-dark]),
+html[data-system-tone="light"] .bg-zinc-900:not([data-keep-dark]),
+html[data-system-tone="light"] .bg-zinc-800:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-700:not([data-keep-dark]):not(button):not([role="button"]) {
+  background-color: var(--paper) !important;
+}
 
 /* Translucent zinc surfaces -> subtle ink wash on paper. */
 html[data-theme="light"] .bg-zinc-800\/50,
@@ -3057,6 +3273,16 @@ html[data-theme="light"] .bg-zinc-700\/60,
 html[data-theme="light"] .bg-zinc-800\/30,
 html[data-theme="light"] .hover\:bg-zinc-800\/50:hover,
 html[data-theme="light"] .hover\:bg-zinc-700\/50:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-system-tone="light"] .bg-zinc-800\/50,
+html[data-system-tone="light"] .bg-zinc-800\/60,
+html[data-system-tone="light"] .bg-zinc-800\/90,
+html[data-system-tone="light"] .bg-zinc-700\/50,
+html[data-system-tone="light"] .bg-zinc-700\/60,
+html[data-system-tone="light"] .bg-zinc-800\/30,
+html[data-system-tone="light"] .hover\:bg-zinc-800\/50:hover,
+html[data-system-tone="light"] .hover\:bg-zinc-700\/50:hover {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -3133,12 +3359,71 @@ html[data-theme="light"] .hover\:bg-zinc-950\/90:hover:not([data-keep-dark]):not
 html[data-theme="light"] .hover\:bg-zinc-950\/95:hover:not([data-keep-dark]):not(button):not([role="button"]) {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
+html[data-system-tone="light"] .bg-zinc-600\/50:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-700\/30:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-700\/40:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-700\/50:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-700\/60:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-700\/70:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-700\/80:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-800\/30:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-800\/40:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-800\/50:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-800\/60:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-800\/70:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-800\/80:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-800\/90:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-900\/10:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-900\/40:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-900\/50:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-900\/60:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-900\/70:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-900\/85:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-900\/95:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-950\/60:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-950\/80:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-950\/85:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-950\/90:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .bg-zinc-950\/95:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-600\/50:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-700\/30:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-700\/40:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-700\/50:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-700\/60:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-700\/70:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-700\/80:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-800\/30:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-800\/40:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-800\/50:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-800\/60:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-800\/70:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-800\/80:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-800\/90:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-900\/10:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-900\/40:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-900\/50:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-900\/60:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-900\/70:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-900\/85:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-900\/95:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-950\/60:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-950\/80:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-950\/85:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-950\/90:hover:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-system-tone="light"] .hover\:bg-zinc-950\/95:hover:not([data-keep-dark]):not(button):not([role="button"]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 
 /* Active-state pills / indicators that use bg-white in dark mode read as
    invisible on paper. Flip them to ink so the active tab is legible. */
 html[data-theme="light"] .bg-white:not([data-keep-white]),
 html[data-theme="light"] .bg-white\/90:not([data-keep-white]),
 html[data-theme="light"] .bg-white\/80:not([data-keep-white]) {
+  background-color: var(--ink) !important;
+}
+html[data-system-tone="light"] .bg-white:not([data-keep-white]),
+html[data-system-tone="light"] .bg-white\/90:not([data-keep-white]),
+html[data-system-tone="light"] .bg-white\/80:not([data-keep-white]) {
   background-color: var(--ink) !important;
 }
 html[data-theme="light"] .bg-white:not([data-keep-white]) .text-black,
@@ -3159,10 +3444,31 @@ html[data-theme="light"] .bg-white\/90.text-zinc-900:not([data-keep-white]),
 html[data-theme="light"] .bg-white\/80.text-zinc-900:not([data-keep-white]) {
   color: #ffffff !important;
 }
+html[data-system-tone="light"] .bg-white:not([data-keep-white]) .text-black,
+html[data-system-tone="light"] .bg-white:not([data-keep-white]) .text-zinc-900,
+html[data-system-tone="light"] .bg-white:not([data-keep-white]) .text-zinc-950,
+html[data-system-tone="light"] .bg-white\/90:not([data-keep-white]) .text-black,
+html[data-system-tone="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-900,
+html[data-system-tone="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-950,
+html[data-system-tone="light"] .bg-white\/80:not([data-keep-white]) .text-black,
+html[data-system-tone="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-900,
+html[data-system-tone="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-950,
+html[data-system-tone="light"] .bg-white.text-black:not([data-keep-white]),
+html[data-system-tone="light"] .bg-white\/90.text-black:not([data-keep-white]),
+html[data-system-tone="light"] .bg-white\/80.text-black:not([data-keep-white]),
+html[data-system-tone="light"] .bg-white.text-zinc-900:not([data-keep-white]),
+html[data-system-tone="light"] .bg-white\/90.text-zinc-900:not([data-keep-white]),
+html[data-system-tone="light"] .bg-white\/80.text-zinc-900:not([data-keep-white]) {
+  color: #ffffff !important;
+}
 
 /* Desktop / mobile brand logos are white PNGs — invert on paper. */
 html[data-theme="light"] img[alt="dehub"][src*="dehub-header-logo"],
 html[data-theme="light"] img[alt="dehub"][src*="dehub-logo-compact"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+html[data-system-tone="light"] img[alt="dehub"][src*="dehub-header-logo"],
+html[data-system-tone="light"] img[alt="dehub"][src*="dehub-logo-compact"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 
@@ -3173,6 +3479,11 @@ html[data-theme="light"] .bg-muted {
   background-color: #52525b !important; /* zinc-600 */
   color: #ffffff !important;
 }
+html[data-system-tone="light"] [data-radix-avatar-fallback],
+html[data-system-tone="light"] .bg-muted {
+  background-color: #52525b !important;
+  color: #ffffff !important;
+}
 
 /* …but not in docs. There .bg-muted is the wash panel nested inside a white
    bento — a quote block, a code sample, a comparison table — and the chip
@@ -3180,6 +3491,10 @@ html[data-theme="light"] .bg-muted {
    on it. The blanket .bg-muted in the selector above was only ever meant to
    catch avatar fallbacks, which render outside the docs surface. */
 html[data-theme="light"] .docs-root .bg-muted {
+  background-color: hsl(var(--muted)) !important;
+  color: inherit !important;
+}
+html[data-system-tone="light"] .docs-root .bg-muted {
   background-color: hsl(var(--muted)) !important;
   color: inherit !important;
 }
@@ -3195,6 +3510,9 @@ html:not(.dark) .docs-root .text-destructive {
 html[data-theme="light"] .animate-pulse.bg-muted {
   background-color: #e4e4e7 !important; /* zinc-200 */
 }
+html[data-system-tone="light"] .animate-pulse.bg-muted {
+  background-color: #e4e4e7 !important;
+}
 
 /* Primary CTA (create-post / log-in) uses bg-zinc-900/90 — keep it black. */
 html[data-theme="light"] .bg-zinc-900\/90,
@@ -3202,11 +3520,23 @@ html[data-theme="light"] .bg-zinc-900\/80 {
   background-color: #000000 !important;
   color: #ffffff !important;
 }
+html[data-system-tone="light"] .bg-zinc-900\/90,
+html[data-system-tone="light"] .bg-zinc-900\/80 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
 html[data-theme="light"] .bg-zinc-900\/90 *,
 html[data-theme="light"] .bg-zinc-900\/80 * {
   color: #ffffff !important;
 }
+html[data-system-tone="light"] .bg-zinc-900\/90 *,
+html[data-system-tone="light"] .bg-zinc-900\/80 * {
+  color: #ffffff !important;
+}
 html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
+  background-color: #1a1a1a !important;
+}
+html[data-system-tone="light"] .hover\:bg-zinc-800\/90:hover {
   background-color: #1a1a1a !important;
 }
 
@@ -3222,11 +3552,24 @@ html[data-theme="light"] .login-modal-overlay {
   background-color: rgba(255, 255, 255, 0.35) !important;
   backdrop-filter: blur(24px) saturate(120%) !important;
 }
+html[data-system-tone="light"] .login-modal-overlay {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(24px) saturate(120%) !important;
+}
 
 html[data-theme="light"] [data-login-modal] {
   background-color: var(--paper) !important;
   background-image: url('./assets/textures/paper-texture.png') !important;
   background-size: 256px 256px !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-system-tone="light"] [data-login-modal] {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
   color: var(--ink) !important;
   border-color: var(--hairline-strong) !important;
   box-shadow: none !important;
@@ -3240,7 +3583,16 @@ html[data-theme="light"] [data-login-modal] .text-white\/60,
 html[data-theme="light"] [data-login-modal] .text-white\/40 {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-login-modal],
+html[data-system-tone="light"] [data-login-modal] .text-white,
+html[data-system-tone="light"] [data-login-modal] .text-white\/60,
+html[data-system-tone="light"] [data-login-modal] .text-white\/40 {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-login-modal] .text-white\/40 {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-login-modal] .text-white\/40 {
   color: var(--ink-muted) !important;
 }
 
@@ -3252,11 +3604,25 @@ html[data-theme="light"] [data-login-modal] .bg-white\/10 {
   border-color: var(--hairline-strong) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-login-modal] button.bg-white\/10,
+html[data-system-tone="light"] [data-login-modal] button.hover\:bg-white\/15:hover,
+html[data-system-tone="light"] [data-login-modal] .bg-white\/10 {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-login-modal] button.bg-white\/10:hover,
 html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/15:hover {
   background-color: var(--paper-deep) !important;
 }
+html[data-system-tone="light"] [data-login-modal] button.bg-white\/10:hover,
+html[data-system-tone="light"] [data-login-modal] button.hover\:bg-white\/15:hover {
+  background-color: var(--paper-deep) !important;
+}
 html[data-theme="light"] [data-login-modal] button svg {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-login-modal] button svg {
   color: var(--ink) !important;
 }
 /* Keep brand-colored provider icons (Google, X, Discord, wallet logos) intact. */
@@ -3264,8 +3630,15 @@ html[data-theme="light"] [data-login-modal] button svg[viewBox="0 0 24 24"] path
 html[data-theme="light"] [data-login-modal] button img {
   color: unset !important;
 }
+html[data-system-tone="light"] [data-login-modal] button svg[viewBox="0 0 24 24"] path[fill],
+html[data-system-tone="light"] [data-login-modal] button img {
+  color: unset !important;
+}
 /* X (Twitter) glyph uses .fill-white — swap to ink on paper. */
 html[data-theme="light"] [data-login-modal] button svg.fill-white path {
+  fill: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-login-modal] button svg.fill-white path {
   fill: var(--ink) !important;
 }
 
@@ -3274,12 +3647,24 @@ html[data-theme="light"] [data-login-modal] button.bg-white {
   background-color: var(--ink) !important;
   color: #ffffff !important;
 }
+html[data-system-tone="light"] [data-login-modal] button.bg-white {
+  background-color: var(--ink) !important;
+  color: #ffffff !important;
+}
 html[data-theme="light"] [data-login-modal] button.bg-white:hover,
 html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/90:hover {
   background-color: #000000 !important;
   color: #ffffff !important;
 }
+html[data-system-tone="light"] [data-login-modal] button.bg-white:hover,
+html[data-system-tone="light"] [data-login-modal] button.hover\:bg-white\/90:hover {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
 html[data-theme="light"] [data-login-modal] button.bg-white * {
+  color: #ffffff !important;
+}
+html[data-system-tone="light"] [data-login-modal] button.bg-white * {
   color: #ffffff !important;
 }
 
@@ -3289,8 +3674,17 @@ html[data-theme="light"] [data-login-modal] button.bg-transparent {
   border-color: var(--hairline-strong) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-login-modal] button.bg-transparent {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-login-modal] button.bg-transparent:hover,
 html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/5:hover {
+  background-color: var(--paper-deep) !important;
+}
+html[data-system-tone="light"] [data-login-modal] button.bg-transparent:hover,
+html[data-system-tone="light"] [data-login-modal] button.hover\:bg-white\/5:hover {
   background-color: var(--paper-deep) !important;
 }
 
@@ -3300,7 +3694,15 @@ html[data-theme="light"] [data-login-modal] input {
   border-color: var(--hairline-strong) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-login-modal] input {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-login-modal] input::placeholder {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-login-modal] input::placeholder {
   color: var(--ink-muted) !important;
 }
 
@@ -3309,8 +3711,16 @@ html[data-theme="light"] [data-login-modal] [role="separator"],
 html[data-theme="light"] [data-login-modal] .border-white\/10 {
   border-color: var(--hairline) !important;
 }
+html[data-system-tone="light"] [data-login-modal] [role="separator"],
+html[data-system-tone="light"] [data-login-modal] .border-white\/10 {
+  border-color: var(--hairline) !important;
+}
 html[data-theme="light"] [data-login-modal] [data-orientation="horizontal"][role="separator"],
 html[data-theme="light"] [data-login-modal] hr {
+  background-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] [data-login-modal] [data-orientation="horizontal"][role="separator"],
+html[data-system-tone="light"] [data-login-modal] hr {
   background-color: var(--hairline-strong) !important;
 }
 
@@ -3319,9 +3729,16 @@ html[data-theme="light"] [data-login-modal] .bg-black\/20 {
   background-color: var(--paper) !important;
   border-color: var(--hairline) !important;
 }
+html[data-system-tone="light"] [data-login-modal] .bg-black\/20 {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline) !important;
+}
 
 /* DeHub wordmark in the modal header is a white PNG — invert it on paper. */
 html[data-theme="light"] [data-login-modal] img[alt="DeHub"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+html[data-system-tone="light"] [data-login-modal] img[alt="DeHub"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 
@@ -3329,9 +3746,15 @@ html[data-theme="light"] [data-login-modal] img[alt="DeHub"] {
 html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/10:hover {
   background-color: var(--paper-deep) !important;
 }
+html[data-system-tone="light"] [data-login-modal] button.hover\:bg-white\/10:hover {
+  background-color: var(--paper-deep) !important;
+}
 
 /* AuthGate login trigger: heading + button on paper. */
 html[data-theme="light"] [data-auth-gate] h2 {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-auth-gate] h2 {
   color: var(--ink) !important;
 }
 html[data-theme="light"] [data-auth-gate] [data-primary-cta] {
@@ -3339,10 +3762,21 @@ html[data-theme="light"] [data-auth-gate] [data-primary-cta] {
   color: #ffffff !important;
   border-color: transparent !important;
 }
+html[data-system-tone="light"] [data-auth-gate] [data-primary-cta] {
+  background-color: var(--ink) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
 html[data-theme="light"] [data-auth-gate] [data-primary-cta]:hover {
   background-color: #000000 !important;
 }
+html[data-system-tone="light"] [data-auth-gate] [data-primary-cta]:hover {
+  background-color: #000000 !important;
+}
 html[data-theme="light"] [data-auth-gate] [data-primary-cta] * {
+  color: #ffffff !important;
+}
+html[data-system-tone="light"] [data-auth-gate] [data-primary-cta] * {
   color: #ffffff !important;
 }
 
@@ -3355,6 +3789,12 @@ html[data-theme="light"] button .lucide-chevrons-up-down,
 html[data-theme="light"] [role="button"] .lucide-chevrons-up-down {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] button .lucide-chevron-down,
+html[data-system-tone="light"] [role="button"] .lucide-chevron-down,
+html[data-system-tone="light"] button .lucide-chevrons-up-down,
+html[data-system-tone="light"] [role="button"] .lucide-chevrons-up-down {
+  color: var(--ink) !important;
+}
 
 /* Profile hover card: liquid-glass panel needs paper-mode text/button styling.
    Text defaults to white in dark mode; on paper, flip name/handle/bio/stats to
@@ -3364,12 +3804,25 @@ html[data-theme="light"] [data-profile-hover-card] {
   border-color: var(--hairline-strong) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
 }
+html[data-system-tone="light"] [data-profile-hover-card] {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
 html[data-theme="light"] [data-profile-hover-card] .text-white,
 html[data-theme="light"] [data-profile-hover-card] .text-white\/80,
 html[data-theme="light"] [data-profile-hover-card] .text-white\/60 {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-profile-hover-card] .text-white,
+html[data-system-tone="light"] [data-profile-hover-card] .text-white\/80,
+html[data-system-tone="light"] [data-profile-hover-card] .text-white\/60 {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-profile-hover-card] .text-white\/60 {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-profile-hover-card] .text-white\/60 {
   color: var(--ink-muted) !important;
 }
 html[data-theme="light"] [data-profile-hover-card] [data-follow-btn] {
@@ -3378,7 +3831,16 @@ html[data-theme="light"] [data-profile-hover-card] [data-follow-btn] {
   border-color: var(--hairline-strong) !important;
   box-shadow: none !important;
 }
+html[data-system-tone="light"] [data-profile-hover-card] [data-follow-btn] {
+  background-color: transparent !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: none !important;
+}
 html[data-theme="light"] [data-profile-hover-card] [data-follow-btn]:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-system-tone="light"] [data-profile-hover-card] [data-follow-btn]:hover {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
@@ -3406,6 +3868,16 @@ html[data-theme="light"] [data-reaction-tray] {
     inset 0 1px 0 rgba(255, 255, 255, 0.9),
     0 8px 32px rgba(0, 0, 0, 0.12) !important;
 }
+
+html[data-system-tone="light"] [data-reaction-tray] {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.62)),
+    rgba(255, 255, 255, 0.72) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
 /* Nothing paints behind a reaction on hover, here or in the dark themes — the
    lift and grow carry it. This rule used to ink a 7% disc under the hovered
    glyph, the light-theme twin of the `hover:bg-white/10` the button no longer
@@ -3416,17 +3888,29 @@ html[data-theme="light"] [data-reaction-tray] {
 html[data-theme="light"] [data-reaction-tray] [data-reaction-option]:focus-visible {
   --tw-ring-color: rgba(0, 0, 0, 0.35) !important;
 }
+html[data-system-tone="light"] [data-reaction-tray] [data-reaction-option]:focus-visible {
+  --tw-ring-color: rgba(0, 0, 0, 0.35) !important;
+}
 /* Per-reaction totals: white-on-white once the tray turns to paper. The global
    `.text-white → ink` remap only catches the bare utility, not `text-white/70`,
    so the numbers under each emoji need their own flip. */
 html[data-theme="light"] [data-reaction-tray] [data-reaction-count] {
   color: rgba(0, 0, 0, 0.62) !important;
 }
+html[data-system-tone="light"] [data-reaction-tray] [data-reaction-count] {
+  color: rgba(0, 0, 0, 0.62) !important;
+}
 html[data-theme="light"] [data-reaction-tray] [data-reaction-count][data-zero="true"] {
+  color: rgba(0, 0, 0, 0.28) !important;
+}
+html[data-system-tone="light"] [data-reaction-tray] [data-reaction-count][data-zero="true"] {
   color: rgba(0, 0, 0, 0.28) !important;
 }
 /* The hairline between the faces and 👎: white-on-white on paper too. */
 html[data-theme="light"] [data-reaction-tray] [data-reaction-divider] {
+  background-color: rgba(0, 0, 0, 0.14) !important;
+}
+html[data-system-tone="light"] [data-reaction-tray] [data-reaction-divider] {
   background-color: rgba(0, 0, 0, 0.14) !important;
 }
 
@@ -3436,6 +3920,9 @@ html[data-theme="light"] [data-reaction-tray] [data-reaction-divider] {
     backdrop-filter: none !important;
   }
   html[data-theme="light"] [data-reaction-tray] {
+    background: rgba(255, 255, 255, 0.96) !important;
+  }
+  html[data-system-tone="light"] [data-reaction-tray] {
     background: rgba(255, 255, 255, 0.96) !important;
   }
 }
@@ -3454,10 +3941,27 @@ html[data-theme="light"] [data-post-modal] .text-zinc-400,
 html[data-theme="light"] [data-post-modal] .text-zinc-500 {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-post-modal] .text-white,
+html[data-system-tone="light"] [data-post-modal] .text-white\/40,
+html[data-system-tone="light"] [data-post-modal] .text-white\/50,
+html[data-system-tone="light"] [data-post-modal] .text-white\/60,
+html[data-system-tone="light"] [data-post-modal] .text-white\/70,
+html[data-system-tone="light"] [data-post-modal] .text-white\/80,
+html[data-system-tone="light"] [data-post-modal] .hover\:text-white:hover,
+html[data-system-tone="light"] [data-post-modal] .text-zinc-400,
+html[data-system-tone="light"] [data-post-modal] .text-zinc-500 {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/50::placeholder,
 html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/70::placeholder,
 html[data-theme="light"] [data-post-modal] .sm\:placeholder\:text-white\/70::placeholder,
 html[data-theme="light"] [data-assistant-input] textarea::placeholder {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-post-modal] .placeholder\:text-white\/50::placeholder,
+html[data-system-tone="light"] [data-post-modal] .placeholder\:text-white\/70::placeholder,
+html[data-system-tone="light"] [data-post-modal] .sm\:placeholder\:text-white\/70::placeholder,
+html[data-system-tone="light"] [data-assistant-input] textarea::placeholder {
   color: var(--ink) !important;
 }
 html[data-theme="light"] [data-post-modal] .empty\:before\:text-white\/50:empty::before,
@@ -3465,8 +3969,17 @@ html[data-theme="light"] [data-post-modal] .empty\:before\:text-white\/70:empty:
 html[data-theme="light"] [data-post-modal] .sm\:empty\:before\:text-white\/70:empty::before {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-post-modal] .empty\:before\:text-white\/50:empty::before,
+html[data-system-tone="light"] [data-post-modal] .empty\:before\:text-white\/70:empty::before,
+html[data-system-tone="light"] [data-post-modal] .sm\:empty\:before\:text-white\/70:empty::before {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-post-modal] .caret-white,
 html[data-theme="light"] [data-post-modal] [style*="caret-color: white"] {
+  caret-color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-post-modal] .caret-white,
+html[data-system-tone="light"] [data-post-modal] [style*="caret-color: white"] {
   caret-color: var(--ink) !important;
 }
 html[data-theme="light"] [data-post-modal] .bg-white\/5,
@@ -3477,9 +3990,22 @@ html[data-theme="light"] [data-post-modal] .bg-white\/50,
 html[data-theme="light"] [data-post-modal] .bg-white\/80 {
   background-color: rgba(0, 0, 0, 0.12) !important;
 }
+html[data-system-tone="light"] [data-post-modal] .bg-white\/5,
+html[data-system-tone="light"] [data-post-modal] .bg-white\/10,
+html[data-system-tone="light"] [data-post-modal] .bg-white\/20,
+html[data-system-tone="light"] [data-post-modal] .bg-white\/30,
+html[data-system-tone="light"] [data-post-modal] .bg-white\/50,
+html[data-system-tone="light"] [data-post-modal] .bg-white\/80 {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
 html[data-theme="light"] [data-post-modal] .border-white\/10,
 html[data-theme="light"] [data-post-modal] .border-white\/20,
 html[data-theme="light"] [data-post-modal] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-system-tone="light"] [data-post-modal] .border-white\/10,
+html[data-system-tone="light"] [data-post-modal] .border-white\/20,
+html[data-system-tone="light"] [data-post-modal] .border-white\/30 {
   border-color: rgba(0, 0, 0, 0.12) !important;
 }
 
@@ -3492,16 +4018,35 @@ html[data-theme="light"] .from-black {
   --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
 }
+html[data-system-tone="light"] .from-black {
+  --tw-gradient-from: var(--paper) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
 html[data-theme="light"] .via-black {
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--paper) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
+html[data-system-tone="light"] .via-black {
   --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
   --tw-gradient-stops: var(--tw-gradient-from), var(--paper) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
 }
 html[data-theme="light"] .to-black {
   --tw-gradient-to: var(--paper) var(--tw-gradient-to-position) !important;
 }
+html[data-system-tone="light"] .to-black {
+  --tw-gradient-to: var(--paper) var(--tw-gradient-to-position) !important;
+}
 html[data-theme="light"] .from-zinc-950,
 html[data-theme="light"] .from-zinc-900,
 html[data-theme="light"] .from-zinc-800 {
+  --tw-gradient-from: var(--paper) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+html[data-system-tone="light"] .from-zinc-950,
+html[data-system-tone="light"] .from-zinc-900,
+html[data-system-tone="light"] .from-zinc-800 {
   --tw-gradient-from: var(--paper) var(--tw-gradient-from-position) !important;
   --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
@@ -3512,9 +4057,20 @@ html[data-theme="light"] .via-zinc-800 {
   --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
   --tw-gradient-stops: var(--tw-gradient-from), var(--paper) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
 }
+html[data-system-tone="light"] .via-zinc-950,
+html[data-system-tone="light"] .via-zinc-900,
+html[data-system-tone="light"] .via-zinc-800 {
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--paper) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
 html[data-theme="light"] .to-zinc-950,
 html[data-theme="light"] .to-zinc-900,
 html[data-theme="light"] .to-zinc-800 {
+  --tw-gradient-to: var(--paper) var(--tw-gradient-to-position) !important;
+}
+html[data-system-tone="light"] .to-zinc-950,
+html[data-system-tone="light"] .to-zinc-900,
+html[data-system-tone="light"] .to-zinc-800 {
   --tw-gradient-to: var(--paper) var(--tw-gradient-to-position) !important;
 }
 
@@ -3526,15 +4082,33 @@ html[data-theme="light"] [class*="from-zinc-950\\/"] {
   --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
 }
+html[data-system-tone="light"] [class*="from-black\\/"],
+html[data-system-tone="light"] [class*="from-zinc-900\\/"],
+html[data-system-tone="light"] [class*="from-zinc-950\\/"] {
+  --tw-gradient-from: rgba(245,242,235,0.75) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
 html[data-theme="light"] [class*="via-black\\/"],
 html[data-theme="light"] [class*="via-zinc-900\\/"],
 html[data-theme="light"] [class*="via-zinc-950\\/"] {
   --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
   --tw-gradient-stops: var(--tw-gradient-from), rgba(245,242,235,0.55) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
 }
+html[data-system-tone="light"] [class*="via-black\\/"],
+html[data-system-tone="light"] [class*="via-zinc-900\\/"],
+html[data-system-tone="light"] [class*="via-zinc-950\\/"] {
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), rgba(245,242,235,0.55) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
 html[data-theme="light"] [class*="to-black\\/"],
 html[data-theme="light"] [class*="to-zinc-900\\/"],
 html[data-theme="light"] [class*="to-zinc-950\\/"] {
+  --tw-gradient-to: rgba(245,242,235,0.75) var(--tw-gradient-to-position) !important;
+}
+html[data-system-tone="light"] [class*="to-black\\/"],
+html[data-system-tone="light"] [class*="to-zinc-900\\/"],
+html[data-system-tone="light"] [class*="to-zinc-950\\/"] {
   --tw-gradient-to: rgba(245,242,235,0.75) var(--tw-gradient-to-position) !important;
 }
 
@@ -3546,11 +4120,22 @@ html[data-theme="light"] header.lg\:hidden.fixed.top-0 {
   border-bottom: 0 !important;
   box-shadow: none !important;
 }
+html[data-system-tone="light"] header.lg\:hidden.fixed.top-0 {
+  background-color: var(--paper) !important;
+  box-shadow: none !important;
+}
 html[data-theme="light"] header.lg\:hidden.fixed.top-0 img[alt="dehub"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+html[data-system-tone="light"] header.lg\:hidden.fixed.top-0 img[alt="dehub"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 html[data-theme="light"] header.lg\:hidden.fixed.top-0 svg,
 html[data-theme="light"] header.lg\:hidden.fixed.top-0 button .text-white {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] header.lg\:hidden.fixed.top-0 svg,
+html[data-system-tone="light"] header.lg\:hidden.fixed.top-0 button .text-white {
   color: var(--ink) !important;
 }
 
@@ -3562,10 +4147,22 @@ html[data-theme="light"] [data-vaul-drawer] {
   border-color: var(--hairline) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-vaul-drawer] {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  border-color: var(--hairline) !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-vaul-drawer] .text-white,
 html[data-theme="light"] [data-vaul-drawer] .text-zinc-100,
 html[data-theme="light"] [data-vaul-drawer] .text-zinc-200,
 html[data-theme="light"] [data-vaul-drawer] .text-zinc-300 {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-vaul-drawer] .text-white,
+html[data-system-tone="light"] [data-vaul-drawer] .text-zinc-100,
+html[data-system-tone="light"] [data-vaul-drawer] .text-zinc-200,
+html[data-system-tone="light"] [data-vaul-drawer] .text-zinc-300 {
   color: var(--ink) !important;
 }
 
@@ -3578,19 +4175,40 @@ html[data-theme="light"] [data-menu-search] {
   border-color: var(--hairline) !important;
   box-shadow: none !important;
 }
+html[data-system-tone="light"] [data-menu-tile],
+html[data-system-tone="light"] [data-menu-chip],
+html[data-system-tone="light"] [data-menu-search] {
+  background-color: rgba(0, 0, 0, 0.035) !important;
+  border-color: var(--hairline) !important;
+  box-shadow: none !important;
+}
 html[data-theme="light"] [data-menu-tile="active"] {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  border-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] [data-menu-tile="active"] {
   background-color: rgba(0, 0, 0, 0.08) !important;
   border-color: var(--hairline-strong) !important;
 }
 html[data-theme="light"] [data-menu-search] {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-menu-search] {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-vaul-drawer] nav > .border-white\/10,
 html[data-theme="light"] [data-menu-footer] {
   border-color: var(--hairline) !important;
 }
+html[data-system-tone="light"] [data-vaul-drawer] nav > .border-white\/10,
+html[data-system-tone="light"] [data-menu-footer] {
+  border-color: var(--hairline) !important;
+}
 /* The unread count keeps white on red. */
 html[data-theme="light"] [data-menu-badge] {
+  color: #ffffff !important;
+}
+html[data-system-tone="light"] [data-menu-badge] {
   color: #ffffff !important;
 }
 
@@ -3601,6 +4219,10 @@ html[data-theme="light"] [data-menu-badge] {
    intermittent mismatch.) Force the same flat paper as every other page.
    Must come after the [data-vaul-drawer] rule to win the specificity tie. */
 html[data-theme="light"] [data-post-drawer] {
+  background-color: var(--paper) !important;
+  background-image: none !important;
+}
+html[data-system-tone="light"] [data-post-drawer] {
   background-color: var(--paper) !important;
   background-image: none !important;
 }
@@ -3616,6 +4238,11 @@ html[data-theme="light"] [data-bottom-nav] > nav {
   backdrop-filter: none !important;
   border-color: var(--hairline-strong) !important;
 }
+html[data-system-tone="light"] [data-bottom-nav] > nav {
+  background-color: var(--paper) !important;
+  backdrop-filter: none !important;
+  border-color: var(--hairline-strong) !important;
+}
 /* The centre create button hardcodes a white + on white glass via inline
    styles — flip the glyph and its bubble ring to ink so it reads on paper
    (!important beats the inline styles). */
@@ -3623,7 +4250,14 @@ html[data-theme="light"] [data-bottom-nav] .lucide-plus {
   color: var(--ink) !important;
   stroke: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-bottom-nav] .lucide-plus {
+  color: var(--ink) !important;
+  stroke: var(--ink) !important;
+}
 html[data-theme="light"] [data-bottom-nav] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.25) !important;
+}
+html[data-system-tone="light"] [data-bottom-nav] .border-white\/30 {
   border-color: rgba(0, 0, 0, 0.25) !important;
 }
 
@@ -3640,13 +4274,25 @@ html[data-theme="light"] [data-video-controls] .text-white,
 html[data-theme="light"] [data-video-controls] svg {
   color: #ffffff !important;
 }
+html[data-system-tone="light"] [data-video-controls],
+html[data-system-tone="light"] [data-video-controls] *,
+html[data-system-tone="light"] [data-video-controls] .text-white,
+html[data-system-tone="light"] [data-video-controls] svg {
+  color: #ffffff !important;
+}
 
 
 /* Prompt landing page (/prompt): dark logo + dark ink copy on paper. */
 html[data-theme="light"] [data-prompt-landing] {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-prompt-landing] {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-prompt-landing] img[alt="DeHub"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+html[data-system-tone="light"] [data-prompt-landing] img[alt="DeHub"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 html[data-theme="light"] [data-prompt-landing] h1,
@@ -3655,22 +4301,46 @@ html[data-theme="light"] [data-prompt-landing] textarea,
 html[data-theme="light"] [data-prompt-landing] button {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-prompt-landing] h1,
+html[data-system-tone="light"] [data-prompt-landing] p,
+html[data-system-tone="light"] [data-prompt-landing] textarea,
+html[data-system-tone="light"] [data-prompt-landing] button {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-prompt-landing] .text-white\/50,
 html[data-theme="light"] [data-prompt-landing] .text-white\/70,
 html[data-theme="light"] [data-prompt-landing] .text-white\/40 {
   color: var(--ink-muted) !important;
 }
+html[data-system-tone="light"] [data-prompt-landing] .text-white\/50,
+html[data-system-tone="light"] [data-prompt-landing] .text-white\/70,
+html[data-system-tone="light"] [data-prompt-landing] .text-white\/40 {
+  color: var(--ink-muted) !important;
+}
 html[data-theme="light"] [data-prompt-landing] textarea::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+html[data-system-tone="light"] [data-prompt-landing] textarea::placeholder {
   color: rgba(0, 0, 0, 0.35) !important;
 }
 html[data-theme="light"] [data-prompt-landing] textarea {
   background-color: rgba(0, 0, 0, 0.04) !important;
   border-color: rgba(0, 0, 0, 0.12) !important;
 }
+html[data-system-tone="light"] [data-prompt-landing] textarea {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
 html[data-theme="light"] [data-prompt-landing] .bg-white\/5 {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
+html[data-system-tone="light"] [data-prompt-landing] .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
 html[data-theme="light"] [data-prompt-landing] .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-system-tone="light"] [data-prompt-landing] .hover\:bg-white\/10:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -3684,6 +4354,10 @@ html[data-theme="light"] [data-side-panel] {
   box-shadow: none !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+}
+html[data-system-tone="light"] [data-side-panel] {
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 html[data-theme="light"] [data-side-panel] > * {
   padding-left: 0 !important;
@@ -3748,6 +4422,63 @@ html[data-theme="light"] [data-side-panel] :where(
   background-color: var(--paper) !important;
   background-image: none !important;
 }
+html[data-system-tone="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+),
+  html[data-system-tone="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+)::before,
+  html[data-system-tone="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+)::after {
+  background-color: var(--paper) !important;
+  background-image: none !important;
+}
 
 /* Page-level bento squares dissolve into the paper canvas entirely — no box,
    no border, no hover wash, just content on the page. Rows/tiles that are
@@ -3759,6 +4490,11 @@ html[data-theme="light"] [data-page-bento]:not([data-keep-dark]) {
   background-color: transparent !important;
   background-image: none !important;
   border: 0 !important;
+  box-shadow: none !important;
+}
+html[data-system-tone="light"] [data-page-bento]:not([data-keep-dark]) {
+  background-color: transparent !important;
+  background-image: none !important;
   box-shadow: none !important;
 }
 
@@ -3773,8 +4509,18 @@ html[data-theme="light"] [class*="divide-white"] > :not([hidden]) ~ :not([hidden
 html[data-theme="light"] [class*="divide-black"] > :not([hidden]) ~ :not([hidden]) {
   border-color: var(--hairline) !important;
 }
+html[data-system-tone="light"] [class*="divide-zinc-800"] > :not([hidden]) ~ :not([hidden]),
+html[data-system-tone="light"] [class*="divide-zinc-700"] > :not([hidden]) ~ :not([hidden]),
+html[data-system-tone="light"] [class*="divide-white"] > :not([hidden]) ~ :not([hidden]),
+html[data-system-tone="light"] [class*="divide-black"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--hairline) !important;
+}
 html[data-theme="light"] .border-zinc-700,
 html[data-theme="light"] .border-zinc-800 {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] .border-zinc-700,
+html[data-system-tone="light"] .border-zinc-800 {
   border-color: var(--hairline-strong) !important;
 }
 
@@ -3785,6 +4531,9 @@ html[data-theme="light"] [data-feed-item] {
   border: 0 !important;
   border-radius: 0 !important;
   border-bottom: 1px solid var(--hairline) !important;
+}
+html[data-system-tone="light"] [data-feed-item] {
+  background-color: transparent !important;
 }
 html[data-theme="light"] [data-feed-item]:last-child {
   border-bottom: 0 !important;
@@ -3799,6 +4548,12 @@ html[data-theme="light"] [data-view-all] * {
   border-radius: 0 !important;
   box-shadow: none !important;
 }
+html[data-system-tone="light"] [data-view-all],
+html[data-system-tone="light"] [data-view-all] * {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
 html[data-theme="light"] [data-view-all] *::before,
 html[data-theme="light"] [data-view-all] *::after {
   background: transparent !important;
@@ -3806,6 +4561,12 @@ html[data-theme="light"] [data-view-all] *::after {
   border: 0 !important;
   box-shadow: none !important;
   display: none !important;
+}
+html[data-system-tone="light"] [data-view-all] *::before,
+html[data-system-tone="light"] [data-view-all] *::after {
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
 }
 
 /* Square everything off, same as minimal. */
@@ -3833,6 +4594,10 @@ html[data-theme="light"] [data-sidebar-fade] {
   background: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
   background-image: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
 }
+html[data-system-tone="light"] [data-sidebar-fade] {
+  background: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
+  background-image: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
+}
 
 /* Full-width media on mobile/tablet. */
 @media (max-width: 639px) {
@@ -3857,6 +4622,9 @@ html[data-theme="light"] [data-sidebar-fade] {
     background: var(--hairline);
     pointer-events: none;
   }
+  html[data-system-tone="light"] [data-feed-root] [data-feed-item]::after {
+    background: var(--hairline);
+  }
 }
 @media (min-width: 640px) and (max-width: 1023px) {
   html[data-theme="light"] [data-feed-root] [data-feed-item] [data-media-full] {
@@ -3879,6 +4647,9 @@ html[data-theme="light"] [data-sidebar-fade] {
     height: 1px;
     background: var(--hairline);
     pointer-events: none;
+  }
+  html[data-system-tone="light"] [data-feed-root] [data-feed-item]::after {
+    background: var(--hairline);
   }
 }
 
@@ -3919,7 +4690,13 @@ html[data-theme="light"] [data-feed-root] [data-feed-item]:last-child::after {
 html[data-theme="light"] [data-side-panel] [class*="hover:bg-zinc-"]:hover {
   background-color: var(--hover-wash) !important;
 }
+html[data-system-tone="light"] [data-side-panel] [class*="hover:bg-zinc-"]:hover {
+  background-color: var(--hover-wash) !important;
+}
 html[data-theme="light"] [data-side-panel] [class*="hover:text-zinc-"]:hover {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-side-panel] [class*="hover:text-zinc-"]:hover {
   color: var(--ink) !important;
 }
 /* Side panel icon tabs (TabbedSidePanel + WhatsHappening, also on Explore):
@@ -3940,6 +4717,9 @@ html[data-theme="light"] [data-side-panel-tabs]::after {
   pointer-events: none;
   z-index: 1;
 }
+html[data-system-tone="light"] [data-side-panel-tabs]::after {
+  background-color: var(--hairline-strong);
+}
 /* The gradient active/hover washes are replaced by the file-tab treatment */
 html[data-theme="light"] [data-side-panel-tabs] [data-active-tab-indicator],
 html[data-theme="light"] [data-side-panel-tabs] .tab-hover-bg {
@@ -3951,8 +4731,14 @@ html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn] {
   border-radius: 0 !important;
   background-color: transparent !important;
 }
+html[data-system-tone="light"] [data-side-panel-tabs] [data-tab-btn] {
+  background-color: transparent !important;
+}
 html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"] {
   background-color: var(--paper) !important; /* masks the baseline segment */
+}
+html[data-system-tone="light"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"] {
+  background-color: var(--paper) !important;
 }
 html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]::before {
   content: "";
@@ -3969,6 +4755,12 @@ html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]::before {
   transition: opacity 220ms ease;
   pointer-events: none;
 }
+html[data-system-tone="light"] [data-side-panel-tabs] [data-tab-btn]::before {
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset 1px 0 0 0 var(--hairline-strong),
+    inset -1px 0 0 0 var(--hairline-strong);
+}
 html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"]::before {
   opacity: 1;
 }
@@ -3979,7 +4771,17 @@ html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]:first-child::befo
     inset 0 1px 0 0 var(--hairline-strong),
     inset -1px 0 0 0 var(--hairline-strong);
 }
+html[data-system-tone="light"] [data-side-panel-tabs] [data-tab-btn]:first-child::before {
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset -1px 0 0 0 var(--hairline-strong);
+}
 html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]:last-child::before {
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset 1px 0 0 0 var(--hairline-strong);
+}
+html[data-system-tone="light"] [data-side-panel-tabs] [data-tab-btn]:last-child::before {
   box-shadow:
     inset 0 1px 0 0 var(--hairline-strong),
     inset 1px 0 0 0 var(--hairline-strong);
@@ -3988,6 +4790,9 @@ html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]:last-child::befor
 /* File-system style feed tab nav. */
 html[data-theme="light"] [data-feed-nav] {
   position: relative;
+  background-color: var(--paper) !important;
+}
+html[data-system-tone="light"] [data-feed-nav] {
   background-color: var(--paper) !important;
 }
 html[data-theme="light"] [data-feed-nav] > div:first-child::after {
@@ -4001,6 +4806,9 @@ html[data-theme="light"] [data-feed-nav] > div:first-child::after {
   pointer-events: none;
   z-index: 1;
 }
+html[data-system-tone="light"] [data-feed-nav] > div:first-child::after {
+  background-color: var(--hairline-strong);
+}
 html[data-theme="light"] [data-feed-nav] [data-glass-indicator] {
   display: none !important;
 }
@@ -4011,11 +4819,23 @@ html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn] {
   border-radius: 0 !important;
   color: var(--ink-muted);
 }
+html[data-system-tone="light"] [data-feed-nav] [data-feed-tab-btn] {
+  background-color: transparent !important;
+  color: var(--ink-muted);
+}
 html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn]:hover {
   background-color: transparent !important;
   color: var(--ink);
 }
+html[data-system-tone="light"] [data-feed-nav] [data-feed-tab-btn]:hover {
+  background-color: transparent !important;
+  color: var(--ink);
+}
 html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
+  background-color: var(--paper) !important;
+  color: var(--ink);
+}
+html[data-system-tone="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
   background-color: var(--paper) !important;
   color: var(--ink);
 }
@@ -4034,6 +4854,12 @@ html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn]::before {
   transition: opacity 220ms ease;
   pointer-events: none;
 }
+html[data-system-tone="light"] [data-feed-nav] [data-feed-tab-btn]::before {
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset 1px 0 0 0 var(--hairline-strong),
+    inset -1px 0 0 0 var(--hairline-strong);
+}
 html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::before {
   opacity: 1;
 }
@@ -4045,7 +4871,15 @@ html[data-theme="light"] [data-glass-toggle-button][data-active="true"],
 html[data-theme="light"] [data-glass-toggle-button][data-active="true"] * {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-glass-toggle-button][data-active="true"],
+html[data-system-tone="light"] [data-glass-toggle-button][data-active="true"] * {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-glass-toggle-button][data-active="true"] svg {
+  color: var(--ink) !important;
+  stroke: currentColor !important;
+}
+html[data-system-tone="light"] [data-glass-toggle-button][data-active="true"] svg {
   color: var(--ink) !important;
   stroke: currentColor !important;
 }
@@ -4070,6 +4904,12 @@ html[data-theme="light"] [data-explore-page] .bg-zinc-800 {
   color: var(--ink-muted) !important;
   border: 1px solid var(--hairline) !important;
 }
+html[data-system-tone="light"] [data-explore-page] button.bg-zinc-800,
+html[data-system-tone="light"] [data-explore-page] [role="button"].bg-zinc-800,
+html[data-system-tone="light"] [data-explore-page] .bg-zinc-800 {
+  background-color: transparent !important;
+  color: var(--ink-muted) !important;
+}
 html[data-theme="light"] [data-explore-page] button.bg-zinc-800:hover,
 html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800:hover,
 html[data-theme="light"] [data-explore-page] .bg-zinc-800:hover,
@@ -4078,9 +4918,22 @@ html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover {
   background-color: var(--hover-wash) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-explore-page] button.bg-zinc-800:hover,
+html[data-system-tone="light"] [data-explore-page] [role="button"].bg-zinc-800:hover,
+html[data-system-tone="light"] [data-explore-page] .bg-zinc-800:hover,
+html[data-system-tone="light"] [data-explore-page] .hover\:bg-zinc-700:hover,
+html[data-system-tone="light"] [data-explore-page] .hover\:bg-zinc-800:hover {
+  background-color: var(--hover-wash) !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-explore-page] button.bg-zinc-800 svg,
 html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800 svg,
 html[data-theme="light"] [data-explore-page] .bg-zinc-800 svg {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-explore-page] button.bg-zinc-800 svg,
+html[data-system-tone="light"] [data-explore-page] [role="button"].bg-zinc-800 svg,
+html[data-system-tone="light"] [data-explore-page] .bg-zinc-800 svg {
   color: var(--ink-muted) !important;
 }
 html[data-theme="light"] [data-explore-page] button.bg-zinc-800:hover svg,
@@ -4088,6 +4941,13 @@ html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800:hover s
 html[data-theme="light"] [data-explore-page] .bg-zinc-800:hover svg,
 html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-700:hover svg,
 html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover svg {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-explore-page] button.bg-zinc-800:hover svg,
+html[data-system-tone="light"] [data-explore-page] [role="button"].bg-zinc-800:hover svg,
+html[data-system-tone="light"] [data-explore-page] .bg-zinc-800:hover svg,
+html[data-system-tone="light"] [data-explore-page] .hover\:bg-zinc-700:hover svg,
+html[data-system-tone="light"] [data-explore-page] .hover\:bg-zinc-800:hover svg {
   color: var(--ink) !important;
 }
 
@@ -4101,23 +4961,46 @@ html[data-theme="light"] [data-poll-card] {
   background-color: rgba(0, 0, 0, 0.03) !important;
   border-color: var(--hairline-strong) !important;
 }
+html[data-system-tone="light"] [data-poll-card] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  border-color: var(--hairline-strong) !important;
+}
 html[data-theme="light"] [data-poll-card] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+html[data-system-tone="light"] [data-poll-card] .border-white\/30 {
   border-color: rgba(0, 0, 0, 0.4) !important;
 }
 html[data-theme="light"] [data-poll-card] .border-white {
   border-color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-poll-card] .border-white {
+  border-color: var(--ink) !important;
+}
 html[data-theme="light"] [data-poll-card] .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-system-tone="light"] [data-poll-card] .bg-white\/10 {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 html[data-theme="light"] [data-poll-card] .bg-white\/40 {
   background-color: rgba(0, 0, 0, 0.26) !important;
 }
+html[data-system-tone="light"] [data-poll-card] .bg-white\/40 {
+  background-color: rgba(0, 0, 0, 0.26) !important;
+}
 html[data-theme="light"] [data-poll-card] .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-system-tone="light"] [data-poll-card] .bg-white\/20 {
   background-color: rgba(0, 0, 0, 0.12) !important;
 }
 html[data-theme="light"] [data-poll-card] .hover\:bg-white\/5:hover,
 html[data-theme="light"] [data-poll-card] .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-system-tone="light"] [data-poll-card] .hover\:bg-white\/5:hover,
+html[data-system-tone="light"] [data-poll-card] .hover\:bg-white\/20:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -4208,7 +5091,14 @@ html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):
   background-color: rgba(0, 0, 0, 0.05) !important;
   backdrop-filter: none !important;
 }
+html[data-system-tone="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([role="dialog"]):not([data-vaul-drawer]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-comments-wrapper]):not([data-ai-chat]):not([data-ai-chat] *) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: none !important;
+}
 html[data-theme="light"] [class*="hover\:bg-black\/"]:hover:not(button):not([role="button"]):not([data-keep-dark]) {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-system-tone="light"] [class*="hover\:bg-black\/"]:hover:not(button):not([role="button"]):not([data-keep-dark]) {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -4220,8 +5110,18 @@ html[data-theme="light"] .text-slate-200,
 html[data-theme="light"] .text-slate-300 {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] .text-slate-50,
+html[data-system-tone="light"] .text-slate-100,
+html[data-system-tone="light"] .text-slate-200,
+html[data-system-tone="light"] .text-slate-300 {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] .text-slate-400,
 html[data-theme="light"] .text-slate-500 {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] .text-slate-400,
+html[data-system-tone="light"] .text-slate-500 {
   color: var(--ink-muted) !important;
 }
 
@@ -4237,12 +5137,23 @@ html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark])
 html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/90 {
   color: var(--ink-muted) !important;
 }
+html[data-system-tone="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/40,
+html[data-system-tone="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/50,
+html[data-system-tone="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/60,
+html[data-system-tone="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/70,
+html[data-system-tone="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/80,
+html[data-system-tone="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/90 {
+  color: var(--ink-muted) !important;
+}
 
 /* Assistant page: neutralise the heavy black drop-shadows used on chat
    bubbles / send buttons so the surface reads as light. Also flip the
    ultra-translucent white washes (bg-white/[0.03]/[0.05]/[0.08]) to a
    soft ink wash and keep the model-picker dropdown legible on paper. */
 html[data-theme="light"] [data-assistant-page] [class*="shadow-\["] {
+  box-shadow: none !important;
+}
+html[data-system-tone="light"] [data-assistant-page] [class*="shadow-\["] {
   box-shadow: none !important;
 }
 html[data-theme="light"] [data-assistant-page] .bg-white\/\[0\.03\],
@@ -4253,10 +5164,24 @@ html[data-theme="light"] [data-assistant-page] .bg-white\/10,
 html[data-theme="light"] [data-assistant-page] .bg-white\/20 {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
+html[data-system-tone="light"] [data-assistant-page] .bg-white\/\[0\.03\],
+html[data-system-tone="light"] [data-assistant-page] .bg-white\/\[0\.05\],
+html[data-system-tone="light"] [data-assistant-page] .bg-white\/\[0\.08\],
+html[data-system-tone="light"] [data-assistant-page] .bg-white\/5,
+html[data-system-tone="light"] [data-assistant-page] .bg-white\/10,
+html[data-system-tone="light"] [data-assistant-page] .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 html[data-theme="light"] [data-assistant-page] .border-white\/\[0\.08\],
 html[data-theme="light"] [data-assistant-page] .border-white\/\[0\.12\],
 html[data-theme="light"] [data-assistant-page] .border-white\/10,
 html[data-theme="light"] [data-assistant-page] .border-white\/20 {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] [data-assistant-page] .border-white\/\[0\.08\],
+html[data-system-tone="light"] [data-assistant-page] .border-white\/\[0\.12\],
+html[data-system-tone="light"] [data-assistant-page] .border-white\/10,
+html[data-system-tone="light"] [data-assistant-page] .border-white\/20 {
   border-color: var(--hairline-strong) !important;
 }
 html[data-theme="light"] [data-assistant-page] .text-white,
@@ -4265,10 +5190,22 @@ html[data-theme="light"] [data-assistant-page] .text-white\/70,
 html[data-theme="light"] [data-assistant-page] .text-white\/80 {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-assistant-page] .text-white,
+html[data-system-tone="light"] [data-assistant-page] .text-white\/60,
+html[data-system-tone="light"] [data-assistant-page] .text-white\/70,
+html[data-system-tone="light"] [data-assistant-page] .text-white\/80 {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-assistant-page] .text-white\/25,
 html[data-theme="light"] [data-assistant-page] .text-white\/30,
 html[data-theme="light"] [data-assistant-page] .text-white\/40,
 html[data-theme="light"] [data-assistant-page] .text-white\/50 {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-assistant-page] .text-white\/25,
+html[data-system-tone="light"] [data-assistant-page] .text-white\/30,
+html[data-system-tone="light"] [data-assistant-page] .text-white\/40,
+html[data-system-tone="light"] [data-assistant-page] .text-white\/50 {
   color: var(--ink-muted) !important;
 }
 /* Model-picker / dropdown panels on the assistant use raw bg-black/95 —
@@ -4278,6 +5215,15 @@ html[data-theme="light"] [data-assistant-page] .bg-black\/90,
 html[data-theme="light"] [data-assistant-page] .bg-black\/80,
 html[data-theme="light"] [data-assistant-page] .bg-black\/70,
 html[data-theme="light"] [data-assistant-page] .bg-black\/60 {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  backdrop-filter: none !important;
+}
+html[data-system-tone="light"] [data-assistant-page] .bg-black\/95,
+html[data-system-tone="light"] [data-assistant-page] .bg-black\/90,
+html[data-system-tone="light"] [data-assistant-page] .bg-black\/80,
+html[data-system-tone="light"] [data-assistant-page] .bg-black\/70,
+html[data-system-tone="light"] [data-assistant-page] .bg-black\/60 {
   background-color: var(--paper) !important;
   border-color: var(--hairline-strong) !important;
   backdrop-filter: none !important;
@@ -4294,10 +5240,21 @@ html[data-theme="light"] [data-comments-wrapper] {
   border-color: var(--hairline-strong) !important;
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-comments-wrapper] {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-comments-wrapper] .text-white,
 html[data-theme="light"] [data-comments-wrapper] .text-zinc-300,
 html[data-theme="light"] [data-comments-wrapper] .text-zinc-400,
 html[data-theme="light"] [data-comments-wrapper] .text-zinc-500 {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-comments-wrapper] .text-white,
+html[data-system-tone="light"] [data-comments-wrapper] .text-zinc-300,
+html[data-system-tone="light"] [data-comments-wrapper] .text-zinc-400,
+html[data-system-tone="light"] [data-comments-wrapper] .text-zinc-500 {
   color: var(--ink) !important;
 }
 
@@ -4312,9 +5269,24 @@ html[data-theme="light"] [data-comments-section] .bg-zinc-900\/80,
 html[data-theme="light"] [data-comments-section] .bg-zinc-900\/70 {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
+html[data-system-tone="light"] [data-comments-section] [class*="bg-white\/"],
+html[data-system-tone="light"] [data-comments-section] .bg-zinc-800,
+html[data-system-tone="light"] [data-comments-section] .bg-zinc-800\/80,
+html[data-system-tone="light"] [data-comments-section] .bg-zinc-700,
+html[data-system-tone="light"] [data-comments-section] .bg-zinc-700\/50,
+html[data-system-tone="light"] [data-comments-section] .bg-zinc-900,
+html[data-system-tone="light"] [data-comments-section] .bg-zinc-900\/80,
+html[data-system-tone="light"] [data-comments-section] .bg-zinc-900\/70 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 html[data-theme="light"] [data-comments-section] [class*="hover\:bg-white\/"]:hover,
 html[data-theme="light"] [data-comments-section] .hover\:bg-zinc-700:hover,
 html[data-theme="light"] [data-comments-section] .hover\:bg-zinc-800:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-system-tone="light"] [data-comments-section] [class*="hover\:bg-white\/"]:hover,
+html[data-system-tone="light"] [data-comments-section] .hover\:bg-zinc-700:hover,
+html[data-system-tone="light"] [data-comments-section] .hover\:bg-zinc-800:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -4326,13 +5298,29 @@ html[data-theme="light"] [data-comments-section] .text-zinc-300,
 html[data-theme="light"] [data-comments-section] .text-zinc-400 {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-comments-section] :not([data-keep-dark]).text-white,
+html[data-system-tone="light"] [data-comments-section] .text-zinc-100,
+html[data-system-tone="light"] [data-comments-section] .text-zinc-200,
+html[data-system-tone="light"] [data-comments-section] .text-zinc-300,
+html[data-system-tone="light"] [data-comments-section] .text-zinc-400 {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-comments-section] .text-zinc-500,
 html[data-theme="light"] [data-comments-section] .placeholder\:text-zinc-500::placeholder {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-comments-section] .text-zinc-500,
+html[data-system-tone="light"] [data-comments-section] .placeholder\:text-zinc-500::placeholder {
   color: var(--ink-muted) !important;
 }
 html[data-theme="light"] [data-comments-section] :not([data-keep-dark]).hover\:text-white:hover,
 html[data-theme="light"] [data-comments-section] .hover\:text-zinc-200:hover,
 html[data-theme="light"] [data-comments-section] .hover\:text-zinc-400:hover {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-comments-section] :not([data-keep-dark]).hover\:text-white:hover,
+html[data-system-tone="light"] [data-comments-section] .hover\:text-zinc-200:hover,
+html[data-system-tone="light"] [data-comments-section] .hover\:text-zinc-400:hover {
   color: var(--ink) !important;
 }
 
@@ -4342,9 +5330,20 @@ html[data-theme="light"] [data-comments-section] .border-zinc-700,
 html[data-theme="light"] [data-comments-section] .border-zinc-800 {
   border-color: var(--hairline-strong) !important;
 }
+html[data-system-tone="light"] [data-comments-section] [class*="border-white\/"],
+html[data-system-tone="light"] [data-comments-section] .border-zinc-700,
+html[data-system-tone="light"] [data-comments-section] .border-zinc-800 {
+  border-color: var(--hairline-strong) !important;
+}
 
 /* Share dropdown inside comments — rendered in a portal, so scope by data attr. */
 html[data-theme="light"] [data-comments-dropdown] {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  backdrop-filter: none !important;
+}
+html[data-system-tone="light"] [data-comments-dropdown] {
   background-color: var(--paper) !important;
   color: var(--ink) !important;
   border-color: var(--hairline-strong) !important;
@@ -4356,8 +5355,18 @@ html[data-theme="light"] [data-comments-dropdown] .focus\:text-white:focus,
 html[data-theme="light"] [data-comments-dropdown] .focus\:text-white[data-highlighted] {
   color: var(--ink) !important;
 }
+html[data-system-tone="light"] [data-comments-dropdown] .text-white,
+html[data-system-tone="light"] [data-comments-dropdown] .text-zinc-300,
+html[data-system-tone="light"] [data-comments-dropdown] .focus\:text-white:focus,
+html[data-system-tone="light"] [data-comments-dropdown] .focus\:text-white[data-highlighted] {
+  color: var(--ink) !important;
+}
 html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"]:focus,
 html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"][data-highlighted] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-system-tone="light"] [data-comments-dropdown] [class*="focus\:bg-"]:focus,
+html[data-system-tone="light"] [data-comments-dropdown] [class*="focus\:bg-"][data-highlighted] {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -4378,9 +5387,20 @@ html[data-theme="light"] [data-radix-popper-content-wrapper] > :not([data-profil
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
   backdrop-filter: none !important;
 }
+html[data-system-tone="light"] [data-radix-popper-content-wrapper] > :not([data-profile-hover-card]):not([data-keep-dark]):not([data-comments-dropdown]) {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: none !important;
+}
 /* Item hover/selection highlight (Radix sets data-highlighted on focus). */
 html[data-theme="light"] [data-radix-popper-content-wrapper] [data-highlighted],
 html[data-theme="light"] [data-radix-popper-content-wrapper] [data-state="checked"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-radix-popper-content-wrapper] [data-highlighted],
+html[data-system-tone="light"] [data-radix-popper-content-wrapper] [data-state="checked"] {
   background-color: rgba(0, 0, 0, 0.06) !important;
   color: var(--ink) !important;
 }
@@ -4397,14 +5417,30 @@ html[data-theme="light"] [data-ai-chat] {
   color: var(--ink) !important;
   backdrop-filter: none !important;
 }
+html[data-system-tone="light"] [data-ai-chat] {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+  backdrop-filter: none !important;
+}
 html[data-theme="light"] [data-ai-chat] [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-system-tone="light"] [data-ai-chat] [class*="bg-white/"] {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
 html[data-theme="light"] [data-ai-chat] [class*="border-white/"] {
   border-color: var(--hairline-strong) !important;
 }
+html[data-system-tone="light"] [data-ai-chat] [class*="border-white/"] {
+  border-color: var(--hairline-strong) !important;
+}
 html[data-theme="light"] [data-ai-chat] input::placeholder,
 html[data-theme="light"] [data-ai-chat] textarea::placeholder {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-ai-chat] input::placeholder,
+html[data-system-tone="light"] [data-ai-chat] textarea::placeholder {
   color: var(--ink-muted) !important;
 }
 
@@ -4420,7 +5456,13 @@ html[data-theme="light"] [data-ai-chat] textarea::placeholder {
 html[data-theme="light"] [data-notifications-page] .bg-zinc-900\/50 {
   background-color: transparent !important;
 }
+html[data-system-tone="light"] [data-notifications-page] .bg-zinc-900\/50 {
+  background-color: transparent !important;
+}
 html[data-theme="light"] [data-notifications-page] .bg-zinc-800\/80 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-system-tone="light"] [data-notifications-page] .bg-zinc-800\/80 {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 /* Hovers: deepen the ink wash instead of going dark zinc. */
@@ -4428,30 +5470,57 @@ html[data-theme="light"] [data-notifications-page] .hover\:bg-zinc-800:hover,
 html[data-theme="light"] [data-notifications-page] .hover\:bg-zinc-700:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
+html[data-system-tone="light"] [data-notifications-page] .hover\:bg-zinc-800:hover,
+html[data-system-tone="light"] [data-notifications-page] .hover\:bg-zinc-700:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
 /* White-wash chips (mark-read buttons, settings rows) are invisible on
    paper — flip to ink washes, hovers one step deeper. */
 html[data-theme="light"] [data-notifications-page] .bg-white\/5 {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
+html[data-system-tone="light"] [data-notifications-page] .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
 html[data-theme="light"] [data-notifications-page] .bg-white\/10 {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
+html[data-system-tone="light"] [data-notifications-page] .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
 html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/5:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-system-tone="light"] [data-notifications-page] .hover\:bg-white\/5:hover {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/10:hover,
 html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/15:hover {
   background-color: rgba(0, 0, 0, 0.09) !important;
 }
+html[data-system-tone="light"] [data-notifications-page] .hover\:bg-white\/10:hover,
+html[data-system-tone="light"] [data-notifications-page] .hover\:bg-white\/15:hover {
+  background-color: rgba(0, 0, 0, 0.09) !important;
+}
 html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-system-tone="light"] [data-notifications-page] .hover\:bg-white\/20:hover {
   background-color: rgba(0, 0, 0, 0.12) !important;
 }
 /* Avatar-stack rings and hairlines. */
 html[data-theme="light"] [data-notifications-page] .ring-zinc-800 {
   --tw-ring-color: var(--hairline-strong) !important;
 }
+html[data-system-tone="light"] [data-notifications-page] .ring-zinc-800 {
+  --tw-ring-color: var(--hairline-strong) !important;
+}
 html[data-theme="light"] [data-notifications-page] .border-zinc-800,
 html[data-theme="light"] [data-notifications-page] [class*="border-white/"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] [data-notifications-page] .border-zinc-800,
+html[data-system-tone="light"] [data-notifications-page] [class*="border-white/"] {
   border-color: var(--hairline-strong) !important;
 }
 /* Portaled surfaces (settings sheet, actors/posts drawers): dark glass ->
@@ -4461,7 +5530,15 @@ html[data-theme="light"] [data-notifications-page].bg-zinc-950 {
   background-color: var(--paper) !important;
   backdrop-filter: none !important;
 }
+html[data-system-tone="light"] [data-notifications-page][class*="bg-black/"],
+html[data-system-tone="light"] [data-notifications-page].bg-zinc-950 {
+  background-color: var(--paper) !important;
+  backdrop-filter: none !important;
+}
 html[data-theme="light"] [data-notifications-page] .text-white\/50 {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-notifications-page] .text-white\/50 {
   color: var(--ink-muted) !important;
 }
 
@@ -4477,15 +5554,29 @@ html[data-theme="light"] [data-notifications-page] .text-white\/50 {
 html[data-theme="light"] [data-wallet-page] [class*="bg-white\/"]:not([data-keep-white]) {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
+html[data-system-tone="light"] [data-wallet-page] [class*="bg-white\/"]:not([data-keep-white]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 html[data-theme="light"] [data-wallet-page] [class*="hover\:bg-white\/"]:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-system-tone="light"] [data-wallet-page] [class*="hover\:bg-white\/"]:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
 html[data-theme="light"] [data-wallet-page] [class*="border-white\/"] {
   border-color: var(--hairline-strong) !important;
 }
+html[data-system-tone="light"] [data-wallet-page] [class*="border-white\/"] {
+  border-color: var(--hairline-strong) !important;
+}
 html[data-theme="light"] [data-wallet-page] .text-white\/30,
 html[data-theme="light"] [data-wallet-page] .text-white\/40,
 html[data-theme="light"] [data-wallet-page] .text-white\/50 {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-wallet-page] .text-white\/30,
+html[data-system-tone="light"] [data-wallet-page] .text-white\/40,
+html[data-system-tone="light"] [data-wallet-page] .text-white\/50 {
   color: var(--ink-muted) !important;
 }
 
@@ -4506,10 +5597,19 @@ html[data-theme="light"] [data-wallet-page] .text-white\/50 {
 html[data-theme="light"] [data-work-surface] [class*="bg-white\/"]:not([data-keep-white]) {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
+html[data-system-tone="light"] [data-work-surface] [class*="bg-white\/"]:not([data-keep-white]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 html[data-theme="light"] [data-work-surface] [class*="hover\:bg-white\/"]:hover {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
+html[data-system-tone="light"] [data-work-surface] [class*="hover\:bg-white\/"]:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
 html[data-theme="light"] [data-work-surface] [class*="border-white\/"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] [data-work-surface] [class*="border-white\/"] {
   border-color: var(--hairline-strong) !important;
 }
 html[data-theme="light"] [data-work-surface] .text-white\/30,
@@ -4518,12 +5618,24 @@ html[data-theme="light"] [data-work-surface] .text-white\/50,
 html[data-theme="light"] [data-work-surface] .text-white\/60 {
   color: var(--ink-muted) !important;
 }
+html[data-system-tone="light"] [data-work-surface] .text-white\/30,
+html[data-system-tone="light"] [data-work-surface] .text-white\/40,
+html[data-system-tone="light"] [data-work-surface] .text-white\/50,
+html[data-system-tone="light"] [data-work-surface] .text-white\/60 {
+  color: var(--ink-muted) !important;
+}
 html[data-theme="light"] [data-work-surface] input::placeholder {
+  color: var(--ink-muted) !important;
+}
+html[data-system-tone="light"] [data-work-surface] input::placeholder {
   color: var(--ink-muted) !important;
 }
 /* `hover:text-white` would repaint ink back to white on paper — invisible.
    The glass themes get this rescue already; light never did. */
 html[data-theme="light"] [data-work-surface] [class*="hover\:text-white"]:hover {
+  color: var(--ink) !important;
+}
+html[data-system-tone="light"] [data-work-surface] [class*="hover\:text-white"]:hover {
   color: var(--ink) !important;
 }
 
@@ -4540,14 +5652,25 @@ html[data-theme="light"] .animate-pulse.bg-white\/\[0\.06\],
 html[data-theme="light"] .animate-pulse .bg-white\/\[0\.06\] {
   background-color: rgba(0, 0, 0, 0.08) !important;
 }
+html[data-system-tone="light"] .animate-pulse.bg-white\/\[0\.06\],
+html[data-system-tone="light"] .animate-pulse .bg-white\/\[0\.06\] {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
 /* Skeleton card shells: hairline border + faint ink fill while they contain
    a pulsing shimmer. (:has() is unsupported below Safari 15.4 — those
    browsers just keep the borderless shell; the shimmer above still shows.) */
 html[data-theme="light"] [class*="bg-white/[0.03]"]:has(.animate-pulse) {
   background-color: rgba(0, 0, 0, 0.02) !important;
 }
+html[data-system-tone="light"] [class*="bg-white/[0.03]"]:has(.animate-pulse) {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
 html[data-theme="light"] [class*="border-white/[0.08]"]:has(.animate-pulse),
 html[data-theme="light"] [class*="border-white/[0.12]"]:has(.animate-pulse) {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-system-tone="light"] [class*="border-white/[0.08]"]:has(.animate-pulse),
+html[data-system-tone="light"] [class*="border-white/[0.12]"]:has(.animate-pulse) {
   border-color: var(--hairline-strong) !important;
 }
 
@@ -4626,6 +5749,9 @@ html[data-theme="light"] [data-dehub-loader],
 html.light [data-dehub-loader] {
   filter: invert(1);
 }
+html[data-system-tone="light"] [data-dehub-loader] {
+  filter: invert(1);
+}
 
 /* …except inside the login sheet, which is bg-black/60 with white text on
    EVERY theme. The invert above keys off the page theme, so on `light` it
@@ -4635,6 +5761,9 @@ html.light [data-dehub-loader] {
    (0,2,1). */
 html[data-theme="light"] [data-login-modal] [data-dehub-loader],
 html.light [data-login-modal] [data-dehub-loader] {
+  filter: none;
+}
+html[data-system-tone="light"] [data-login-modal] [data-dehub-loader] {
   filter: none;
 }
 
@@ -4684,6 +5813,9 @@ overridden there, rather than a second animation.
 html[data-theme="light"] {
   --orb-ink: 26, 26, 26;
 }
+html[data-system-tone="light"] {
+  --orb-ink: 26, 26, 26;
+}
 
 html[data-theme="light"] .smart-reply-rail [class*="bg-white/"] {
   /* Outline, not fill. A tinted card here is two grey slabs sitting on paper;
@@ -4691,10 +5823,20 @@ html[data-theme="light"] .smart-reply-rail [class*="bg-white/"] {
      UI separates surfaces the same way. Hover still washes. */
   background-color: transparent !important;
 }
+
+html[data-system-tone="light"] .smart-reply-rail [class*="bg-white/"] {
+  background-color: transparent !important;
+}
 html[data-theme="light"] .smart-reply-rail button[class*="bg-white/"]:hover {
   background-color: rgba(0, 0, 0, 0.09) !important;
 }
+html[data-system-tone="light"] .smart-reply-rail button[class*="bg-white/"]:hover {
+  background-color: rgba(0, 0, 0, 0.09) !important;
+}
 html[data-theme="light"] .smart-reply-rail [class*="border-white/"] {
+  border-color: var(--hairline) !important;
+}
+html[data-system-tone="light"] .smart-reply-rail [class*="border-white/"] {
   border-color: var(--hairline) !important;
 }
 
@@ -4702,6 +5844,9 @@ html[data-theme="light"] .smart-reply-rail [class*="border-white/"] {
   --settings-reveal-ink: 255, 255, 255;
 }
 html[data-theme="light"] {
+  --settings-reveal-ink: 26, 26, 26;
+}
+html[data-system-tone="light"] {
   --settings-reveal-ink: 26, 26, 26;
 }
 
@@ -4878,6 +6023,10 @@ html[data-theme="light"] .art-rim {
   filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
           drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
 }
+html[data-system-tone="light"] .art-rim {
+  filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
+          drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)));
+}
 @media (prefers-color-scheme: light) {
   html:is([data-theme="system"], [data-theme="immersive"]) .art-rim {
     filter: drop-shadow(0 0 1px var(--artwork-plate, rgba(9, 11, 16, 0.92)))
@@ -4921,6 +6070,9 @@ html[data-theme="light"] .art-rim {
    black), but the light theme's global .text-white -> ink remap turned its
    headings and card titles black-on-black. Keep them white there. */
 html[data-theme="light"] [data-creator-page] .text-white {
+  color: #ffffff !important;
+}
+html[data-system-tone="light"] [data-creator-page] .text-white {
   color: #ffffff !important;
 }
 
@@ -5377,6 +6529,7 @@ html[data-theme="immersive"] [data-feed-filter-panel] {
   --cr-glow: rgba(255, 255, 255, 0.32);
 }
 html[data-theme="light"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #a1a1aa 60%, #f4f4f5 100%); }
+html[data-system-tone="light"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #ffffff 0%, #e4e4e7 30%, #a1a1aa 60%, #f4f4f5 100%); }
 html[data-theme="hazy"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #e879f9 0%, #a855f7 45%, #6366f1 100%); --cr-accent-ink: #ffffff; --cr-glow: rgba(168, 85, 247, 0.7); }
 html[data-theme="cosmic"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #93c5fd 0%, #6366f1 50%, #a855f7 100%); --cr-accent-ink: #ffffff; --cr-glow: rgba(99, 102, 241, 0.65); }
 html[data-theme="swarms"] [data-creator-page] { --cr-accent: linear-gradient(135deg, #fde68a 0%, #f59e0b 55%, #d97706 100%); --cr-accent-ink: #1c1003; --cr-glow: rgba(245, 158, 11, 0.6); }
@@ -5464,19 +6617,38 @@ html[data-theme="horror"] [data-creator-page] { --cr-accent: linear-gradient(135
     background: rgb(255 255 255 / 0.8);
     box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.09), 0 10px 30px rgb(0 0 0 / 0.08);
   }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro {
+    background: rgb(255 255 255 / 0.8);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.09), 0 10px 30px rgb(0 0 0 / 0.08);
+  }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand { background: #111114 !important; box-shadow: none !important; }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-brand { background: #111114 !important; box-shadow: none !important; }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-brand img { filter: invert(1); }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-brand img { filter: invert(1); }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-head { background-image: linear-gradient(180deg, #111114 30%, #6b6b72 100%) !important; filter: none !important; }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-head { background-image: linear-gradient(180deg, #111114 30%, #6b6b72 100%) !important; filter: none !important; }
   html[data-theme="light"] .dehub-intro.dehub-intro :is(.text-white, .dehub-intro-desc, [class~="text-zinc-300"], [class~="text-zinc-400"], [class~="text-zinc-500"], [class~="text-white/50"], button, button svg) {
     color: rgb(0 0 0 / 0.6) !important;
   }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro :is(.text-white, .dehub-intro-desc, [class~="text-zinc-300"], [class~="text-zinc-400"], [class~="text-zinc-500"], [class~="text-white/50"], button, button svg) {
+    color: rgb(0 0 0 / 0.6) !important;
+  }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-about { border-color: rgb(0 0 0 / 0.08); }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-about { border-color: rgb(0 0 0 / 0.08); }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-pills > button { background: rgb(0 0 0 / 0.1); }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-pills > button { background: rgb(0 0 0 / 0.1); }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-pills > button > span { background: #111114; }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-pills > button > span { background: #111114; }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-ctas > *:not(#_):not(#_) {
     background: rgb(0 0 0 / 0.05) !important; color: #111114 !important; border-color: rgb(0 0 0 / 0.1) !important;
   }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-ctas > *:not(#_):not(#_) {
+    background: rgb(0 0 0 / 0.05) !important; color: #111114 !important; border-color: rgb(0 0 0 / 0.1) !important;
+  }
   html[data-theme="light"] .dehub-intro.dehub-intro .dehub-intro-ctas > .dehub-intro-join:not(#_):not(#_) {
+    background: #111114 !important; color: #fff !important; border-color: transparent !important;
+  }
+  html[data-system-tone="light"] .dehub-intro.dehub-intro .dehub-intro-ctas > .dehub-intro-join:not(#_):not(#_) {
     background: #111114 !important; color: #fff !important; border-color: transparent !important;
   }
 }
