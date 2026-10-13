@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -433,9 +434,9 @@ export default function MusicPage() {
       {/* Content */}
       <div data-feed-swallow-bounds>
 <div ref={musicContentRef} className="p-2 sm:p-3">
-<div data-feed-swallow-motion>
+<FeedSwallowMotion>
         {renderContent()}
-      </div>
+      </FeedSwallowMotion>
 </div>
 </div>
     </div>

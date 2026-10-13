@@ -22,9 +22,12 @@ function fixture(timeline = false) {
   outer.append(pill);
   const content = document.createElement('div');
   const bounds = document.createElement('div'); bounds.dataset.feedSwallowBounds = '';
+  const cutLayer = document.createElement('div'); cutLayer.dataset.feedSwallowCut = '';
   const motion = document.createElement('div'); motion.dataset.feedSwallowMotion = '';
-  content.append(motion); bounds.append(content);
+  const inverseNavLayer = document.createElement('div'); inverseNavLayer.dataset.feedSwallowContent = '';
+  motion.append(inverseNavLayer); cutLayer.append(motion); content.append(cutLayer); bounds.append(content);
   content.getBoundingClientRect = () => ({ top: -100, left: 0, width: 390, height: 12000 } as DOMRect);
+  cutLayer.getBoundingClientRect = content.getBoundingClientRect;
   document.body.append(outer, bounds);
   const root = document.scrollingElement || document.documentElement;
   Object.defineProperty(root, 'scrollHeight', { configurable: true, value: 12000 });
@@ -35,7 +38,7 @@ function fixture(timeline = false) {
   motion.animate = animate as unknown as typeof motion.animate;
   vi.stubGlobal('ScrollTimeline', timeline ? class {} : undefined);
   const hook = renderHook(() => useFeedSwallowClip({ current: content }, '[data-feed-nav]'));
-  return { callbacks, content, animate, cancel, hook };
+  return { callbacks, content, cutLayer, animate, cancel, hook };
 }
 
 it('applies the fallback before the first paint and has no idle frame tail', () => {
@@ -57,13 +60,14 @@ it('does not wake the cut for an unrelated chat scroller', () => {
 });
 
 it('lets the scroll timeline own fast scrolling and cancels it on unmount', () => {
-  const { content, callbacks, animate, cancel, hook } = fixture(true);
+  const { content, cutLayer, callbacks, animate, cancel, hook } = fixture(true);
   expect(animate).toHaveBeenCalledTimes(2);
   const frames = animate.mock.calls[0][0] as Keyframe[];
   expect(frames[0].transform).toBe('translateY(0px)');
   expect(frames[frames.length - 1]?.transform).toBe('translateY(11200px)');
   expect(content.dataset.feedSwallowDriver).toBe('scroll-transform');
-  expect(content.style.clipPath).toMatch(/^path\('M 0 120\.00 /);
+  expect(content.style.clipPath).toBe('');
+  expect(cutLayer.style.clipPath).toMatch(/^path\('M 0 120\.00 /);
   act(() => window.dispatchEvent(new Event('scroll')));
   expect(callbacks).toHaveLength(0);
   hook.unmount();

@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
  * Page kit
@@ -204,9 +205,9 @@ export function PageBody({
   return (
     <div data-feed-swallow-bounds className="w-full">
     <div ref={ref} data-kit-body className={cn('w-full pb-28 pt-3', measure && 'max-w-2xl', className)}>
-      <div data-feed-swallow-motion data-kit-flat-skip>
+      <FeedSwallowMotion>
       {children}
-      </div>
+      </FeedSwallowMotion>
     </div>
     </div>
   );

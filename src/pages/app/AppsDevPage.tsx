@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
 /**
@@ -252,7 +253,7 @@ export default function AppsDevPage() {
 
       <div data-feed-swallow-bounds>
 <div ref={contentRef} className="mx-auto max-w-3xl space-y-3 px-2 pb-24 pt-2 sm:px-3">
-<div data-feed-swallow-motion className="space-y-3">
+<FeedSwallowMotion className="space-y-3">
         <Section title={t('miniApps.dev.checkTitle')}>
           <form
             className="flex flex-col gap-2 sm:flex-row"
@@ -479,7 +480,7 @@ export default function AppsDevPage() {
           <p className="text-xs leading-relaxed text-zinc-400">{t('miniApps.dev.notifyBody')}</p>
           <CodeBlock code={NOTIFY} />
         </Section>
-      </div>
+      </FeedSwallowMotion>
 </div>
 </div>
     </div>

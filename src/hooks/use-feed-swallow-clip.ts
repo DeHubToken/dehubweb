@@ -43,10 +43,13 @@ export function useFeedSwallowClip(
     let animationSource: HTMLElement | null = null;
     let lastFrames = '';
     let lastClip = '';
+    let clipTarget: HTMLElement = el;
     let findCut = true;
     let radius = 12;
     let motionUntil = 0;
-    const motion = el.querySelector<HTMLElement>(':scope > [data-feed-swallow-motion]');
+    const cutLayer = el.querySelector<HTMLElement>(':scope > [data-feed-swallow-cut]');
+    const motion = cutLayer?.querySelector<HTMLElement>(':scope > [data-feed-swallow-motion]');
+    const inverseNavLayer = motion?.querySelector<HTMLElement>(':scope > [data-feed-swallow-content]');
     const bounds = el.parentElement?.matches('[data-feed-swallow-bounds]') ? el.parentElement : null;
     const originalOverflow = bounds?.style.overflow || '';
     const visibleCut = (root: ParentNode) => Array.from(root.querySelectorAll<HTMLElement>(cutSelector)).find(candidate =>
@@ -63,8 +66,9 @@ export function useFeedSwallowClip(
       lastFrames = '';
       if (bounds) bounds.style.overflow = originalOverflow;
     };
-    const writeClip = (clip: string) => {
-      if (clip !== lastClip) { el.style.clipPath = clip; lastClip = clip; }
+    const writeClip = (clip: string, target = el) => {
+      if (clipTarget !== target) { clipTarget.style.clipPath = ''; lastClip = ''; clipTarget = target; }
+      if (clip !== lastClip) { target.style.clipPath = clip; lastClip = clip; }
     };
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(update); };
     const invalidate = () => { findCut = true; schedule(); };
@@ -101,14 +105,14 @@ export function useFeedSwallowClip(
       const nested = el.contains(cut);
       const bottom = !nested && (opts.edge === 'bottom' || (opts.edge !== 'top' && BOTTOM_CUT_THEMES.includes(theme)));
       const r = Math.min(radius, pr.width / 2, pr.height / 2);
-      const shape = (y: number) => bottom ? `inset(${y.toFixed(2)}px 0 0 0)`
-        : feedSwallowPath(y, r, pr.left - cr.left, pr.right - cr.left, cr.width, cr.height);
+      const shape = (y: number, rect = cr) => bottom ? `inset(${y.toFixed(2)}px 0 0 0)`
+        : feedSwallowPath(y, r, pr.left - rect.left, pr.right - rect.left, rect.width, rect.height);
       const currentY = (bottom ? pr.bottom : pr.top) - cr.top;
       const outer = cut.closest<HTMLElement>('[data-feed-nav-outer], [data-kit-island-outer]');
       const maxScroll = source.scrollHeight - source.clientHeight;
       // The scrollport itself has a stationary clip; its descendants already
       // scroll within that cut on the compositor (including post overlays).
-      if (Timeline && outer && !nested && source !== el && maxScroll > 0 && motion && bounds) {
+      if (Timeline && outer && !nested && source !== el && maxScroll > 0 && motion && bounds && cutLayer && inverseNavLayer) {
         let pinnedY = bottom ? pr.bottom : pr.top;
         if (source.contains(outer)) {
           const outerRect = outer.getBoundingClientRect();
@@ -130,7 +134,10 @@ export function useFeedSwallowClip(
         // A resized document changes timeline progress before endpoints are
         // refreshed. Recover the layout origin from the actual transform,
         // rather than assuming the old animation still exactly cancels scroll.
-        const layoutTop = cr.top + source.scrollTop - counterOffset;
+        const cutRect = cutLayer.getBoundingClientRect();
+        const cutTransform = getComputedStyle(cutLayer).transform;
+        const cutOffset = cutTransform && cutTransform !== 'none' ? new DOMMatrixReadOnly(cutTransform).m42 : 0;
+        const layoutTop = cutRect.top + source.scrollTop - counterOffset - cutOffset;
         const navTransform = getComputedStyle(outer).transform;
         const navOffset = navTransform && navTransform !== 'none' ? new DOMMatrixReadOnly(navTransform).m42 : 0;
         const transition = outer.getAnimations().find(candidate =>
@@ -144,7 +151,7 @@ export function useFeedSwallowClip(
         if (source !== animationSource || !animation) {
           clearAnimation();
           try {
-            const timing = { timeline: new Timeline({ source, axis: 'block' }), fill: 'both' as const, easing: 'linear', composite: 'add' as const };
+            const timing = { timeline: new Timeline({ source, axis: 'block' }), fill: 'both' as const, easing: 'linear' };
             animation = el.animate(frames, timing);
             contentAnimation = motion.animate(contentFrames, timing);
             bounds.style.overflow = 'clip';
@@ -163,9 +170,9 @@ export function useFeedSwallowClip(
             const effect = transition.effect as KeyframeEffect;
             const navFrames = effect.getKeyframes().map(keyframe => ({ offset: keyframe.offset, easing: keyframe.easing, transform: keyframe.transform }));
             const inverseFrames = navFrames.map(keyframe => ({ ...keyframe, transform: `translateY(${-new DOMMatrixReadOnly(String(keyframe.transform)).m42}px)` }));
-            const timing = { ...effect.getTiming(), composite: 'add' as const, fill: 'both' as const };
-            navAnimation = el.animate(navFrames, timing);
-            inverseNavAnimation = motion.animate(inverseFrames, timing);
+            const timing = { ...effect.getTiming(), fill: 'both' as const };
+            navAnimation = cutLayer.animate(navFrames, timing);
+            inverseNavAnimation = inverseNavLayer.animate(inverseFrames, timing);
             navAnimation.startTime = transition.startTime;
             inverseNavAnimation.startTime = transition.startTime;
             sourceNavAnimation = transition;
@@ -173,7 +180,7 @@ export function useFeedSwallowClip(
             navAnimation?.cancel(); inverseNavAnimation?.cancel();
             navAnimation = null; inverseNavAnimation = null; sourceNavAnimation = null;
           }
-          lastFrames = key; writeClip(shape(y0)); el.dataset.feedSwallowDriver = 'scroll-transform';
+          lastFrames = key; writeClip(shape(y0, cutRect), cutLayer); el.dataset.feedSwallowDriver = 'scroll-transform';
         } else { writeClip(currentY > 0.5 ? shape(currentY) : ''); el.dataset.feedSwallowDriver = 'frame'; }
       } else {
         clearAnimation(); writeClip(currentY > 0.5 ? shape(currentY) : '');
@@ -214,7 +221,7 @@ export function useFeedSwallowClip(
       document.removeEventListener('transitioncancel', onMotion, true);
       themeObserver.disconnect(); pageObserver?.disconnect(); resizeObserver.disconnect();
       if (frame !== null) cancelAnimationFrame(frame);
-      clearAnimation(); el.style.clipPath = ''; delete el.dataset.feedSwallowDriver;
+      clearAnimation(); clipTarget.style.clipPath = ''; el.style.clipPath = ''; delete el.dataset.feedSwallowDriver;
       if (bounds) bounds.style.overflow = originalOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

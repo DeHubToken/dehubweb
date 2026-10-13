@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { useTranslation as _useCopy } from 'react-i18next';
 import i18n from '@/i18n';
 import { formatRelativeTime } from '@/i18n/date-locale';
@@ -1211,7 +1212,7 @@ export default function FeaturesPage() {
       {/* Content */}
       <div data-feed-swallow-bounds>
 <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
-<div data-feed-swallow-motion>
+<FeedSwallowMotion>
       {/* The request a notification pointed at, above whichever tab is open. */}
       {focusedRequest && (
         <div className="mb-3">
@@ -1347,7 +1348,7 @@ export default function FeaturesPage() {
           )}
         </>
       )}
-      </div>
+      </FeedSwallowMotion>
 </div>
 </div>
 
