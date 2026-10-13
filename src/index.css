@@ -1985,18 +1985,17 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"] {
   display: none !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) *:has(> .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"]) {
-  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
-  mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
-}
 
 /* Same for the vertical zinc-900 fades above "view all" footers and at the
    sidebar nav's bottom: dissolve the list rows instead of painting smoke. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"][class*="to-transparent"] {
   display: none !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) *:has(+ * > .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"]),
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-side-panel] > *:has(+ [data-sidebar-fade]) {
+/* The wrapper is marked in markup (data-fade-mask-bottom) rather than found
+   with :has(+ ...): a sibling :has() that tests class names makes every class
+   change and every inserted node anywhere on the page re-check it, even when
+   another theme is active. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-fade-mask-bottom] {
   -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.25rem), transparent 100%);
   mask-image: linear-gradient(to bottom, black calc(100% - 2.25rem), transparent 100%);
 }
@@ -6157,13 +6156,16 @@ html[data-system-tone="light"] [data-creator-page] .text-white {
     flex-direction: column;
   }
   /* A queued boost label belongs below this leading photo card, so it
-     cannot create a strip above the picture. */
-  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"]:has([data-image-card] > [data-image-media] [data-media-full]) > button {
+     cannot create a strip above the picture. `order` only takes effect once
+     the rule above makes the item a flex column, so this needs no :has() of
+     its own (one here, ahead of `> button`, re-checks on every DOM change). */
+  html[data-theme="immersive"] [data-feed-root] [data-feed-item][data-cinematic-first][data-cinematic="image"] > button {
     order: 2;
   }
   html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    --cinematic-badge-top: calc(env(safe-area-inset-top, 0px) + 3.75rem + 0.5rem);
   }
   html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) > [data-image-media] {
     grid-row: 1;
@@ -6179,9 +6181,16 @@ html[data-system-tone="light"] [data-creator-page] .text-white {
     grid-column: 1;
   }
 
-  /* Keep existing photo gate/bounty badges clear of the floating capsule. */
-  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card]:has(> [data-image-media] [data-media-full]) [data-image-media] :is(.absolute.top-2, .absolute.top-3) {
-    top: calc(env(safe-area-inset-top, 0px) + 3.75rem + 0.5rem);
+  /* Keep existing photo gate/bounty badges clear of the floating capsule.
+     The card above publishes the offset; badges read it with their own
+     Tailwind value as the fallback. Matching the badges through the card's
+     :has() put the :has() ahead of a descendant selector, which makes every
+     DOM change on the page re-check it, whatever the theme. */
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card] [data-image-media] .absolute.top-2 {
+    top: var(--cinematic-badge-top, 0.5rem);
+  }
+  html[data-theme="immersive"] [data-feed-root] [data-cinematic-first][data-cinematic="image"] [data-image-card] [data-image-media] .absolute.top-3 {
+    top: var(--cinematic-badge-top, 0.75rem);
   }
 
   /* The first video uses explicit grid rows for picture then identity;
@@ -6409,8 +6418,14 @@ html[data-system-tone="light"] [data-creator-page] .text-white {
     padding-left: 0.875rem;
     padding-right: 0.875rem;
   }
-  html[data-theme="immersive"] [data-cinematic] [data-card-info]:has([data-card-caption]) .\!mt-3 {
-    margin-top: 0.375rem !important;
+  /* The caption publishes the tighter gap and the row reads it, rather than
+     matching the row through a :has() placed ahead of a descendant selector,
+     which re-checks on every DOM change anywhere. */
+  html[data-theme="immersive"] [data-cinematic] [data-card-info]:has([data-card-caption]) {
+    --cinematic-caption-gap: 0.375rem;
+  }
+  html[data-theme="immersive"] [data-cinematic] [data-card-info] .\!mt-3 {
+    margin-top: var(--cinematic-caption-gap, 0.75rem) !important;
   }
   html[data-theme="immersive"] [data-cinematic] [data-card-info] > .mb-3 {
     margin-bottom: 0.5rem;
@@ -6698,7 +6713,7 @@ html body [data-video-card] [data-video-inline-tools] button {
 @media (max-width: 767px) {
   html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-head-boost] { display: none; }
   html[data-theme="immersive"] [data-cinematic] [data-video-card] [data-card-info] > [data-video-caption-actions] { width: auto; }
-  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-video-caption-actions]:has([data-caption-boost]) + .relative { padding-right: 4rem; }
+  html[data-theme="immersive"] [data-cinematic]:not([data-cinematic-first]) [data-video-card] [data-video-caption-actions][data-has-boost] + .relative { padding-right: 4rem; }
 }
 
 /* Keep only the narrow seek input interactive when playback chrome fades. */
