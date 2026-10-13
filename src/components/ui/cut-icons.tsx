@@ -125,3 +125,5 @@ export { default as Rewind } from "./cut-icons/rewind";
 export { default as Minimize } from "./cut-icons/exit-fullscreen";
 export { default as Hammer } from "./cut-icons/work";
 export { default as Handshake } from "./cut-icons/affiliate";
+export { default as SettingsCog } from "./cut-icons/settings-cog";
+export { default as Creator } from "./cut-icons/creator";
