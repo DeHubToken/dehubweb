@@ -3,14 +3,19 @@ import { ChevronLeft } from "lucide-react";
 import ChevronRight from "@/components/ui/cut-icons/next";
 
 import { useTranslation } from 'react-i18next';
+import { galleryIndex, rememberGalleryIndex } from '@/lib/media-presentation';
 
 /** The soundtrack belongs to the enclosing slide, never to an individual photo. */
-export function ShortsPhotoPager({ images }: { images: string[] }) {
+export function ShortsPhotoPager({ images, galleryKey = '' }: { images: string[]; galleryKey?: string }) {
   const { t } = useTranslation();
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(() => Math.min(galleryIndex(galleryKey), images.length - 1));
   const start = useRef<{ x: number; y: number } | null>(null);
   const wheel = useRef(0);
-  const step = (delta: number) => setIndex(value => Math.max(0, Math.min(images.length - 1, value + delta)));
+  const step = (delta: number) => {
+    const next = Math.max(0, Math.min(images.length - 1, index + delta));
+    setIndex(next);
+    if (galleryKey) rememberGalleryIndex(galleryKey, next);
+  };
   return <div className="absolute inset-0 z-[3] overflow-hidden" data-shorts-photos
     tabIndex={images.length > 1 ? 0 : undefined} aria-label={t('feed.images')}
     onKeyDown={event => {

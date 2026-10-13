@@ -98,7 +98,7 @@ import { cacheImageForNavigation } from '@/lib/post-cache';
 import { HandoffImage } from './HandoffImage';
 import { galleryIndex, rememberGalleryIndex, subscribeGallery } from '@/lib/media-presentation';
 import { warmPostPage } from '@/lib/preload-post-page';
-import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
+import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { downloadMedia, imageDownloadName } from '@/lib/download-media';
 import { isHoldGated, isSubscriberGated, cheapestSubscriberPlan, subscriberPlanPrice } from '@/lib/content-gate';
@@ -140,7 +140,7 @@ function useIsTabletOrMobile() {
  * full-width 9:16 frame, so a tall photo runs edge to edge like a vertical
  * video instead of stopping a few pixels short of both sides.
  */
-const IMMERSIVE_IMAGE_MAX_HEIGHT = 'var(--post-media-max-h, 80dvh)';
+const IMMERSIVE_IMAGE_MAX_HEIGHT = '50svh';
 
 interface ImageCardProps {
   post: ImagePost;
@@ -263,7 +263,7 @@ function ImageSlide({
   return (
     <div
       ref={slideRef}
-      className={cn('relative flex cursor-pointer select-none', immersive ? 'justify-center' : 'justify-start')}
+      className="relative flex cursor-pointer select-none justify-start"
       style={{ minHeight: ratio ? undefined : '200px' }}
       // Still stops the click reaching the card's navigate handler; the ladder
       // itself now runs off pointer events, which embla's drag does not consume.
@@ -284,15 +284,13 @@ function ImageSlide({
         sizes={FEED_IMAGE_SIZES}
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
-        className={cn('block w-auto h-auto max-w-full object-contain', immersive ? 'rounded-none' : 'rounded-2xl')}
+        className={cn('inline-feed-photo block w-auto h-auto max-w-full object-contain', immersive ? 'rounded-none' : 'rounded-2xl')}
         // Keep the slide's geometry when its offscreen bitmap is released.
         // An img without src otherwise collapses and changes the feed height.
         // On the post page (immersive) the photo follows the post page video
         // rule: it grows until it fills the width or 80% of the screen height,
         // whichever comes first, keeping its real shape.
-        style={immersive
-          ? { maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT, width: ratio ? `calc(${IMMERSIVE_IMAGE_MAX_HEIGHT} * ${ratio.toFixed(4)})` : undefined, aspectRatio: ratio }
-          : { maxHeight: FEED_IMAGE_MAX_HEIGHT, width: ratio ? ratio * FEED_IMAGE_MAX_HEIGHT : undefined, aspectRatio: ratio }}
+        style={{ maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT, width: ratio ? `calc(${IMMERSIVE_IMAGE_MAX_HEIGHT} * ${ratio.toFixed(4)})` : undefined, aspectRatio: ratio }}
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
         onImageLoad={(el) => {
@@ -827,8 +825,17 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
   const handleImageClick = (index: number) => {
     if (wasDrawerJustDismissed()) return;
-    if (!postPage) {
-      openPost();
+    if (!isPPV && !isLocked && !isComboLocked && !matureGate.isGated) {
+      rememberGalleryIndex(String(post.id), index);
+      openBrainrotFeed(post.id, {
+        ...post,
+        type: 'short',
+        imageUrls: images,
+        videoUrl: '',
+        thumbnail: images[index] || post.image,
+        likes: String(post.likes),
+        comments: String(post.comments),
+      });
       return;
     }
     setFullscreenIndex(index);
@@ -1097,7 +1104,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
@@ -1137,7 +1144,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
@@ -1174,7 +1181,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
@@ -1214,7 +1221,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
