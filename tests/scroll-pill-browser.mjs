@@ -67,7 +67,7 @@ try {
           assert.equal(state.driver, 'scroll-transform'); assert.notEqual(state.clip, '');
         }
         // Follow nav hide/show transitions rather than freezing mid-motion.
-        for (const transform of ['translateY(-56px)', 'translateY(0px)']) {
+        for (const transform of ['translateY(calc(-100% - 3rem))', 'translateY(0px)']) {
           await page.evaluate(transform => document.querySelector('[data-feed-nav-outer]').style.transform = transform, transform);
           for (let sample = 0; sample < 8; sample++) {
             const top = await page.locator('[data-feed-nav]').evaluate(el => el.getBoundingClientRect().top);
@@ -91,7 +91,7 @@ try {
           cdp.on('Tracing.dataCollected', event => trace.push(...event.value));
           await cdp.send('Tracing.start', { categories: 'disabled-by-default-devtools.screenshot,devtools.timeline,blink.user_timing', transferMode: 'ReportEvents' });
           // Return the pill while JS is blocked, as on a quick upward reversal.
-          await page.evaluate(() => document.querySelector('[data-feed-nav-outer]').style.transform = 'translateY(-56px)');
+          await page.evaluate(() => document.querySelector('[data-feed-nav-outer]').style.transform = 'translateY(calc(-100% - 3rem))');
           await page.waitForTimeout(350);
           await page.evaluate(() => document.querySelector('[data-feed-nav-outer]').style.transform = 'translateY(0px)');
           const gesture = cdp.send('Input.synthesizeScrollGesture', { x: width / 2, y: 600, yDistance: -2000, speed: 1000, gestureSourceType: 'mouse' });

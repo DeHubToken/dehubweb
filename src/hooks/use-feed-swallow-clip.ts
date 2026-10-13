@@ -18,6 +18,20 @@ function scrollSource(el: HTMLElement): HTMLElement {
   return (document.scrollingElement || document.documentElement) as HTMLElement;
 }
 
+function navTranslation(value: string, nav: HTMLElement): number {
+  try { return new DOMMatrixReadOnly(value).m42; } catch {
+    // CSS transition keyframes may retain translateY percentages/calc. Resolve
+    // them against the NAV, not the much taller feed layer receiving the copy.
+    const match = value.match(/^translateY\((.*)\)$/);
+    if (!match) throw new Error('Unsupported nav transform');
+    const terms = Array.from(match[1].matchAll(/([+-]?\s*(?:\d*\.)?\d+)\s*(px|%|rem)/g));
+    if (!terms.length) throw new Error('Unresolved nav transform');
+    const height = nav.getBoundingClientRect().height;
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    return terms.reduce((sum, term) => sum + parseFloat(term[1].replace(/\s/g, '')) * (term[2] === '%' ? height / 100 : term[2] === 'rem' ? rem : 1), 0);
+  }
+}
+
 /** Scroll-driven cut: JS refreshes geometry and nav transitions, not each scroll frame. */
 export function useFeedSwallowClip(
   containerRef: RefObject<HTMLElement | null>,
@@ -168,7 +182,7 @@ export function useFeedSwallowClip(
           if (mirrorNav && transition !== sourceNavAnimation) {
             navAnimation?.cancel(); inverseNavAnimation?.cancel();
             const effect = transition.effect as KeyframeEffect;
-            const navFrames = effect.getKeyframes().map(keyframe => ({ offset: keyframe.offset, easing: keyframe.easing, transform: keyframe.transform }));
+            const navFrames = effect.getKeyframes().map(keyframe => ({ offset: keyframe.offset, easing: keyframe.easing, transform: `translateY(${navTranslation(String(keyframe.transform), outer)}px)` }));
             const inverseFrames = navFrames.map(keyframe => ({ ...keyframe, transform: `translateY(${-new DOMMatrixReadOnly(String(keyframe.transform)).m42}px)` }));
             const timing = { ...effect.getTiming(), fill: 'both' as const };
             navAnimation = cutLayer.animate(navFrames, timing);
