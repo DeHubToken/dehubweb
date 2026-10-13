@@ -1404,6 +1404,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
   feedPreviewRef.current = feedPreview;
+  useEffect(() => {
+    if (!feedPreview || !bootSettled || !nearViewport || liteMode) return;
+    // Warm the viewer code while its preview is visible. Queries still start
+    // on touch-down so scrolling through cards does not fetch five feeds.
+    import('@/components/app/BrainrotFeedHost').catch(() => {});
+  }, [feedPreview, bootSettled, nearViewport, liteMode]);
 
   /** Swiped up out of fullscreen: stop here and carry on in the shorts feed. */
   const swipeIntoShorts = useCallback(() => {

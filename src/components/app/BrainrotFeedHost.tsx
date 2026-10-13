@@ -105,7 +105,7 @@ export default function BrainrotFeedHost() {
     return () => clearTimeout(timer);
   }, [session]);
   const allAnswered = BRAINROT_BUCKETS.every(bucket => lists[bucket].items.length > 0 || lists[bucket].done);
-  const ready = !!session && ((allAnswered && !watchedLoading) || timedOut);
+  const ready = !!session && ((allAnswered && !watchedLoading) || (!!session.first && !watchedLoading) || timedOut);
 
   const mix = useMemo(() => {
     if (!session || !ready) return null;
@@ -157,6 +157,7 @@ export default function BrainrotFeedHost() {
           key={`brainrot-${session.key}`}
           shorts={shorts}
           initialIndex={0}
+          reuseInitialVideo={!!session.first}
           onClose={closeBrainrotFeed}
           onLoadMore={loadMore}
           hasMore={!!waitingOn}
