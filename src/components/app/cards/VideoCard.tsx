@@ -2524,8 +2524,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
         {/* Top-left lock badge removed — centered Holdings Required overlay covers this */}
 
-        {/* Optional CC subtitle overlay */}
-        {!isContentGated && video.videoUrl && (
+        {/* Captions belong to the opened player; feed previews show mute only. */}
+        {!feedPreview && !isContentGated && video.videoUrl && (
           <Suspense fallback={null}>
             <VideoSubtitleOverlay
               tokenId={video.id}
