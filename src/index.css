@@ -737,6 +737,19 @@ html[data-feed-loading="off"] #root::after {
    and the panel would slide over it on scroll. */
 html[data-feed-loading] .dehub-intro { z-index: 121; }
 
+/* The scroll-cut wrappers otherwise trap the welcome card below #root::after,
+   even at translateY(0). Keep its ancestry free of stacking contexts through
+   the frost fade; the normal scroll clipping resumes when the attribute goes. */
+html[data-feed-loading] [data-feed-swallow-bounds]:has(.dehub-intro) > div,
+html[data-feed-loading] [data-feed-swallow-bounds]:has(.dehub-intro) :is(
+  [data-feed-swallow-cut],
+  [data-feed-swallow-motion],
+  [data-feed-swallow-content]
+) {
+  transform: none !important;
+  clip-path: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html[data-feed-loading] #root::after { transition: none; }
 }
