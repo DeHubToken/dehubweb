@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 import assert from 'node:assert/strict';
 
 const require = createRequire(resolve(process.env.BROWSER_DEPS, 'package.json'));
-const { build } = require('esbuild');
+const { build, transform } = require('esbuild');
 const { chromium, webkit } = require('playwright');
 const { PNG } = require('pngjs');
 const jpeg = require('jpeg-js');
@@ -18,7 +18,8 @@ const bundle = await build({
   define: { 'process.env.NODE_ENV': '"production"' },
 });
 const css = await readFile('src/index.css', 'utf8');
-const frostCss = css.slice(css.indexOf('html[data-feed-loading] #root::after {'), css.indexOf('/* Medal shine animation'));
+// Match Vite's Safari 14 target, including the prefixed backdrop filter.
+const frostCss = (await transform(css.slice(css.indexOf('html[data-feed-loading] #root::after {'), css.indexOf('/* Medal shine animation')), { loader: 'css', target: 'safari14' })).code;
 assert(frostCss.includes('.dehub-intro'), 'Use the real first-visit frost styles');
 const html = `<!doctype html><html data-theme="system"><style>
 html,body{margin:0;background:#101010} [data-feed-nav-outer]{position:sticky;top:0;padding:8px 12px 12px;z-index:10;transition:transform .3s}
