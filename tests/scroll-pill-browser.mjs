@@ -90,6 +90,10 @@ try {
           const trace = [];
           cdp.on('Tracing.dataCollected', event => trace.push(...event.value));
           await cdp.send('Tracing.start', { categories: 'disabled-by-default-devtools.screenshot,devtools.timeline,blink.user_timing', transferMode: 'ReportEvents' });
+          // Return the pill while JS is blocked, as on a quick upward reversal.
+          await page.evaluate(() => document.querySelector('[data-feed-nav-outer]').style.transform = 'translateY(-56px)');
+          await page.waitForTimeout(350);
+          await page.evaluate(() => document.querySelector('[data-feed-nav-outer]').style.transform = 'translateY(0px)');
           const gesture = cdp.send('Input.synthesizeScrollGesture', { x: width / 2, y: 600, yDistance: -2000, speed: 1000, gestureSourceType: 'mouse' });
           await new Promise(resolve => setTimeout(resolve, 150));
           await cdp.send('Runtime.evaluate', { expression: "performance.mark('swallow-stall-start');const until=performance.now()+1000;while(performance.now()<until){}performance.mark('swallow-stall-end');" });
@@ -98,7 +102,7 @@ try {
           await cdp.send('Tracing.end'); await finished;
           const start = trace.find(event => event.name === 'swallow-stall-start')?.ts;
           const end = trace.find(event => event.name === 'swallow-stall-end')?.ts;
-          const duringStall = trace.filter(event => event.name === 'Screenshot' && event.ts > start && event.ts < end && event.args.snapshot);
+          const duringStall = trace.filter(event => event.name === 'Screenshot' && event.ts > start + 300000 && event.ts < end && event.args.snapshot);
           await writeFile(`${output}/stall-trace-${width}.json`, JSON.stringify(trace));
           assert(duringStall.length > 0, 'Must capture compositor frames during the traced main-thread stall');
           for (const frame of duringStall) assertCut(Buffer.from(frame.args.snapshot, 'base64'), 8, `blocked-main-thread/${width}`, true, width);

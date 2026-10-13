@@ -37,6 +37,9 @@ export function useFeedSwallowClip(
     let source: HTMLElement | null = null;
     let animation: Animation | null = null;
     let contentAnimation: Animation | null = null;
+    let navAnimation: Animation | null = null;
+    let inverseNavAnimation: Animation | null = null;
+    let sourceNavAnimation: Animation | null = null;
     let animationSource: HTMLElement | null = null;
     let lastFrames = '';
     let lastClip = '';
@@ -52,8 +55,10 @@ export function useFeedSwallowClip(
     const clearAnimation = () => {
       animation?.cancel();
       contentAnimation?.cancel();
+      navAnimation?.cancel(); inverseNavAnimation?.cancel();
       animation = null;
       contentAnimation = null;
+      navAnimation = null; inverseNavAnimation = null; sourceNavAnimation = null;
       animationSource = null;
       lastFrames = '';
       if (bounds) bounds.style.overflow = originalOverflow;
@@ -125,14 +130,21 @@ export function useFeedSwallowClip(
         // A resized document changes timeline progress before endpoints are
         // refreshed. Recover the layout origin from the actual transform,
         // rather than assuming the old animation still exactly cancels scroll.
-        const y0 = pinnedY - cr.top - source.scrollTop + counterOffset;
+        const layoutTop = cr.top + source.scrollTop - counterOffset;
+        const navTransform = getComputedStyle(outer).transform;
+        const navOffset = navTransform && navTransform !== 'none' ? new DOMMatrixReadOnly(navTransform).m42 : 0;
+        const transition = outer.getAnimations().find(candidate =>
+          'transitionProperty' in candidate && candidate.transitionProperty === 'transform' && candidate.playState === 'running',
+        );
+        const mirrorNav = !!transition && typeof transition.startTime === 'number';
+        const y0 = pinnedY - layoutTop - (mirrorNav ? navOffset : 0);
         const frames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${maxScroll}px)` }];
         const contentFrames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${-maxScroll}px)` }];
         const key = String(maxScroll);
         if (source !== animationSource || !animation) {
           clearAnimation();
           try {
-            const timing = { timeline: new Timeline({ source, axis: 'block' }), fill: 'both' as const, easing: 'linear' };
+            const timing = { timeline: new Timeline({ source, axis: 'block' }), fill: 'both' as const, easing: 'linear', composite: 'add' as const };
             animation = el.animate(frames, timing);
             contentAnimation = motion.animate(contentFrames, timing);
             bounds.style.overflow = 'clip';
@@ -143,6 +155,24 @@ export function useFeedSwallowClip(
           (contentAnimation!.effect as KeyframeEffect).setKeyframes(contentFrames);
         }
         if (animation) {
+          // Copy the nav's own transform transition onto the clipping layer,
+          // with the inverse on its content. Shared start times keep the cut
+          // attached to a returning pill even if JS stalls mid-transition.
+          if (mirrorNav && transition !== sourceNavAnimation) {
+            navAnimation?.cancel(); inverseNavAnimation?.cancel();
+            const effect = transition.effect as KeyframeEffect;
+            const navFrames = effect.getKeyframes().map(keyframe => ({ offset: keyframe.offset, easing: keyframe.easing, transform: keyframe.transform }));
+            const inverseFrames = navFrames.map(keyframe => ({ ...keyframe, transform: `translateY(${-new DOMMatrixReadOnly(String(keyframe.transform)).m42}px)` }));
+            const timing = { ...effect.getTiming(), composite: 'add' as const, fill: 'both' as const };
+            navAnimation = el.animate(navFrames, timing);
+            inverseNavAnimation = motion.animate(inverseFrames, timing);
+            navAnimation.startTime = transition.startTime;
+            inverseNavAnimation.startTime = transition.startTime;
+            sourceNavAnimation = transition;
+          } else if (!mirrorNav) {
+            navAnimation?.cancel(); inverseNavAnimation?.cancel();
+            navAnimation = null; inverseNavAnimation = null; sourceNavAnimation = null;
+          }
           lastFrames = key; writeClip(shape(y0)); el.dataset.feedSwallowDriver = 'scroll-transform';
         } else { writeClip(currentY > 0.5 ? shape(currentY) : ''); el.dataset.feedSwallowDriver = 'frame'; }
       } else {
