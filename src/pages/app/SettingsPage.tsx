@@ -91,7 +91,7 @@ import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useMatureContent } from '@/hooks/use-mature-content';
 import { useKidsMode } from '@/hooks/use-kids-mode';
 import { KidsModeDrawer } from '@/components/app/settings/KidsModeDrawer';
-import { Baby } from 'lucide-react';
+import { Baby, RectangleHorizontal } from 'lucide-react';
 import { JungleMoodToggle } from '@/components/app/jungle/JungleMoodToggle';
 import { useJungleMood } from '@/lib/jungle-mood';
 import { useHideWatched } from '@/hooks/use-watched-videos';
@@ -103,6 +103,7 @@ import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
 import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRateCount, clearCreatorPlaybackRates } from '@/lib/video-preferences';
+import { normaliseFeedVideoShape, useFeedVideoShape, writeFeedVideoShape } from '@/lib/feed-video-shape';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useNewMemberSelf } from '@/hooks/use-new-members';
@@ -2745,6 +2746,7 @@ function ContentSettings() {
           <SkipSegmentsToggle />
           <VideoGlitchToggle />
           <ChannelSpeedRow />
+          <FeedVideoShapeRow />
           <AdLoadRow />
         </div>
       </div>
@@ -3124,6 +3126,35 @@ function VideoGlitchToggle() {
         writeVideoGlitch(checked);
         prefs?.setPref('videoGlitchLoader', checked);
       }}
+    />
+  );
+}
+
+function FeedVideoShapeRow() {
+  const { t } = useTranslation();
+  const shape = useFeedVideoShape();
+  const prefs = useUserPreferences();
+
+  return (
+    <SettingsRow
+      icon={<RectangleHorizontal />}
+      anchor="feed-video-shape"
+      title={t('settings.feedVideoShape', 'Video size in your feed')}
+      description={t('settings.feedVideoShapeDesc', 'Keep tall vertical videos from filling the screen while you scroll. Tap a video to see it full size.')}
+      action={<SettingDrawerSelect
+        value={shape}
+        onValueChange={(value) => {
+          const next = normaliseFeedVideoShape(value);
+          writeFeedVideoShape(next);
+          prefs?.setPref('feedVideoShape', next);
+        }}
+        title={t('settings.feedVideoShape', 'Video size in your feed')}
+        options={[
+          { value: 'original', label: t('settings.feedVideoShapeOriginal', 'Original'), description: t('settings.feedVideoShapeOriginalDesc', 'Every video keeps its own shape') },
+          { value: 'square', label: t('settings.feedVideoShapeSquare', 'Square'), description: t('settings.feedVideoShapeSquareDesc', 'Tall videos fit inside a square') },
+          { value: 'wide', label: t('settings.feedVideoShapeWide', 'Widescreen'), description: t('settings.feedVideoShapeWideDesc', 'Every video fits a 16:9 frame') },
+        ]}
+      />}
     />
   );
 }
