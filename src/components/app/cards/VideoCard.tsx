@@ -217,8 +217,8 @@ const MAX_MEDIA_HEIGHT = 600;
  * video spans the screen edge to edge (index.css, --post-media-max-h).
  */
 const IMMERSIVE_MAX_MEDIA_HEIGHT = 'var(--post-media-max-h, 80dvh)';
-/** Phone feed preview cap, the same half screen the app uses. */
-const FEED_PREVIEW_MAX_HEIGHT = '50svh';
+/** Phone feed preview cap: a bit taller than X's long-form videos (~46%). */
+const FEED_PREVIEW_MAX_HEIGHT = '55svh';
 
 /**
  * How long the player's controls stay up after the interaction that revealed
@@ -1691,14 +1691,6 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // square or 16:9 frame instead of filling the screen. Feed frame only.
   const feedVideoShape = useFeedVideoShape();
   const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
-  // Otherwise feed videos fill the bento's width. The box takes the clip's
-  // shape, so the only trim is top and bottom when a tall clip hits the height
-  // cap. A clip wider than the box (wider than the shape clamp allows) is
-  // shown whole instead, so its sides are never cut.
-  const fillFeedWidth = cropFeedVideo && !feedPreview
-    && feedFrameAspect <= mediaAspect + 0.01
-    && !(intrinsicAspect && intrinsicAspect > mediaAspect + 0.01);
-  const feedVideoFit = fillFeedWidth ? 'object-cover' : 'object-contain';
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -1710,7 +1702,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: `dehub-inline-video w-full h-full ${feedVideoFit}`,
+    className: 'dehub-inline-video w-full h-full object-contain',
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2144,12 +2136,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 }
               : feedPreview
                 ? {
-                    // The frame hugs the clip, up to half the screen: a slim
-                    // video gets a narrower box, never bars at its sides.
+                    // The frame hugs the clip, X style: up to 55% of the screen
+                    // tall, left aligned, so a slim video leaves empty space on
+                    // the right instead of bars at its sides.
                     aspectRatio: mediaAspect,
                     width: `min(100%, calc(${FEED_PREVIEW_MAX_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
                     maxHeight: FEED_PREVIEW_MAX_HEIGHT,
-                    marginInline: 'auto',
+                    marginLeft: 0,
+                    marginRight: 'auto',
                     ['--feed-preview-aspect' as string]: mediaAspect.toFixed(4),
                   }
               : cropFeedVideo
@@ -2433,7 +2427,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${feedVideoFit}`}
+                    className="absolute inset-0 w-full h-full object-contain"
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
