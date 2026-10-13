@@ -396,6 +396,7 @@ function ImageCarousel({
     const restore = () => {
       const viewport = scrollRef.current;
       const index = Math.min(galleryIndex(galleryKey), images.length - 1);
+      if (index === 0 && selectedRef.current === 0) return;
       if (index === selectedRef.current && viewport?.scrollLeft) return;
       const slide = viewport?.children[index] as HTMLElement | undefined;
       if (viewport && slide) {
@@ -412,8 +413,12 @@ function ImageCarousel({
     const viewport = scrollRef.current;
     if (!viewport) return;
 
-    updateCurrentIndex();
-    if (typeof ResizeObserver === 'undefined') return;
+    // The first ResizeObserver delivery includes the initial dimensions after
+    // layout. Measuring here instead flushes the whole feed once per gallery.
+    if (typeof ResizeObserver === 'undefined') {
+      updateCurrentIndex();
+      return;
+    }
 
     const observer = new ResizeObserver(updateCurrentIndex);
     observer.observe(viewport);

@@ -151,6 +151,12 @@ export function useKeyboardSafeSheet(enabled: boolean): {
   const keyboardOpen = useKeyboardOpen(enabled);
   const { height, offsetTop } = useVisualViewportBox(enabled && keyboardOpen);
 
+  // Feed cards keep their closed comments sheet mounted. Do not measure the
+  // document once per card when there is no keyboard to accommodate.
+  if (!enabled || !keyboardOpen || !height) {
+    return { keyboardOpen: enabled && keyboardOpen, style: null };
+  }
+
   // Only step in where the keyboard actually eats into the visible area
   // without the layout viewport following — iOS. On Android the two shrink
   // together, `bottom: 0` already lands above the keyboard, and this would be
@@ -160,7 +166,7 @@ export function useKeyboardSafeSheet(enabled: boolean): {
   const keyboardTakesSpace =
     height !== null && (offsetTop > 1 || height < layoutHeight - 40);
 
-  if (!enabled || !keyboardOpen || !height || !keyboardTakesSpace) {
+  if (!keyboardTakesSpace) {
     return { keyboardOpen: enabled && keyboardOpen, style: null };
   }
   return {
