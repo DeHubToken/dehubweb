@@ -19,7 +19,7 @@ const bundle = await build({
 });
 const html = `<!doctype html><html data-theme="system"><style>
 html,body{margin:0;background:#101010} [data-feed-nav-outer]{position:sticky;top:0;padding:8px 12px 12px;z-index:10;transition:transform .3s}
-[data-feed-nav]{height:36px;border-radius:12px;background:#3338;color:white} #feed{margin:0 12px}
+[data-feed-nav]{position:relative;height:36px;border-radius:12px;background:#3338;color:white} #feed{margin:0 12px}
 html[data-theme="light"] [data-feed-nav]{border-radius:0}
 </style><div id="root"></div><script>${bundle.outputFiles[0].text}</script>`;
 const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/html'); res.end(html); });
@@ -42,6 +42,21 @@ function assertCut(bytes, bottom, label, viewportWidth, showThrough = true) {
   // the glass immediately below the new upper-rim cutoff.
   const glassPixel = (Math.floor((bottom + 8) * scale) * png.width + Math.floor(png.width / 2)) * 4;
   if (showThrough) assert(png.data[glassPixel + 1] > 100 && png.data[glassPixel] < 70, `${label}: feed must show through the pill below the upper-rim cut`);
+}
+function assertMovingCut(bytes, label) {
+  const png = PNG.sync.read(bytes);
+  // The red marker is pinned to the nav's top in the SAME painted frame.
+  // Compare the painted nav and cutoff together rather than reading two
+  // separately sampled CSS/WAAPI transforms between rendered frames.
+  const x = Math.floor(png.width / 2) + 2;
+  let navTop = -1;
+  for (let y = 0; y < png.height; y++) {
+    const i = (y * png.width + x) * 4;
+    if (png.data[i] > 230 && png.data[i + 1] < 20 && png.data[i + 2] < 20) { navTop = y; break; }
+  }
+  if (navTop < 0) return false; // Hidden pill: its cut is outside the viewport.
+  assertCut(bytes, navTop + 4, label);
+  return true;
 }
 try {
   for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
@@ -70,21 +85,14 @@ try {
         // Follow nav hide/show transitions rather than freezing mid-motion.
         for (const transform of ['translateY(calc(-100% - 3rem))', 'translateY(0px)']) {
           await page.evaluate(transform => document.querySelector('[data-feed-nav-outer]').style.transform = transform, transform);
+          let visibleSamples = 0;
           for (let sample = 0; sample < 8; sample++) {
-            const motionState = await page.evaluate(() => {
-              const layer = document.querySelector('#feed > [data-feed-swallow-cut]');
-              const inset = getComputedStyle(layer).clipPath.match(/inset\(([\d.-]+)px/);
-              const outer = document.querySelector('[data-feed-nav-outer]');
-              const state = a => ({ start: a.startTime, time: a.currentTime, state: a.playState, timing: a.effect.getTiming(), frames: a.effect.getKeyframes(), computed: a.effect.getComputedTiming() });
-              return { gap: +inset[1] + layer.getBoundingClientRect().top - document.querySelector('[data-feed-nav]').getBoundingClientRect().top, navTransform: getComputedStyle(outer).transform, cutTransform: getComputedStyle(layer).transform, clip: getComputedStyle(layer).clipPath, navAnimations: outer.getAnimations().map(state), cutAnimations: layer.getAnimations().map(state) };
-            });
-            if (Math.abs(motionState.gap - 4) >= 1.5) {
-              await page.screenshot({ path: `${output}/transition-failure-${name}-${width}.png` });
-              await writeFile(`${output}/transition-failure-${name}-${width}.json`, JSON.stringify({ transform, sample, ...motionState }));
-            }
-            assert(Math.abs(motionState.gap - 4) < 1.5, `${name}/${width}/nav-transition: ${JSON.stringify(motionState)}`);
+            const bytes = await page.screenshot();
+            try { if (assertMovingCut(bytes, `${name}/${width}/nav-transition`)) visibleSamples++; }
+            catch (error) { await writeFile(`${output}/transition-failure-${name}-${width}.png`, bytes); throw error; }
             await page.waitForTimeout(40);
           }
+          if (transform === 'translateY(0px)') assert(visibleSamples > 0, 'Must check painted frames of the returning pill');
         }
         await page.waitForTimeout(350);
         // New feed data changes the scroll range without another scroll event.
