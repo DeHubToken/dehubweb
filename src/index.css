@@ -6028,6 +6028,14 @@ html[data-system-tone="light"] .art-rim {
   margin-left: 0 !important;
   margin-right: auto !important;
 }
+.inline-feed-photo:not(#_):not(#_) {
+  width: auto !important;
+  max-width: 100% !important;
+  max-height: 50svh !important;
+  object-fit: contain !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
 @media (max-width: 639px) {
   :root {
     --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
