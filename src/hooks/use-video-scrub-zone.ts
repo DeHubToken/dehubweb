@@ -68,11 +68,13 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       const target = event.target as Element;
       const button = !!target.closest('button, [role="button"]')
         && (!args.mediaRef || !!target.closest('[data-video-controls], [data-audio-controls]'));
-      const dedicated = !button;
+      // A finger must choose horizontal travel before seeking; vertical travel
+      // belongs to the feed even when it starts on the timeline or caption.
+      const dedicated = !button && event.pointerType !== 'touch';
       gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, button, dragging: dedicated };
       // Disable the range's native seek; this gesture commits only on release.
       if (!button) {
-        event.currentTarget.setPointerCapture(event.pointerId);
+        if (dedicated) event.currentTarget.setPointerCapture(event.pointerId);
         event.preventDefault();
         event.stopPropagation();
       }
