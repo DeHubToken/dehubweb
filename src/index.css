@@ -1666,41 +1666,15 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
   backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
+}
+
+/* Page bentos can keep an ambient cast because their full outline is visible. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-page-bento]:not([data-bento-flat]) {
   box-shadow: var(--glass-edge) !important;
 }
 
-/* Side panels only: swap the full ambient halo for the tucked-in panel shadow
-   so the tall columns don't smudge the gutters. Page bentos keep --glass-edge
-   above — they're normal-sized cards where the soft halo reads correctly. */
+/* Tall side panels use an inset rim without a cast that clips at the rail edge. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-side-panel] {
-  /* These panels sit inside a vertically scrolling rail. Any ambient shadow
-     bleeds sideways into the rail's clipped edge and leaves a straight seam
-     beside the middle column. Keep the glass rim and top sheen without a cast. */
-  box-shadow: var(--glass-edge-flat) !important;
-}
-
-/* The COLLAPSED left rail drops the ambient cast entirely.
-
-   Nothing above it is wrong — expanded, the halo is what lifts the column off
-   the canvas and the 40px wordmark sits clear of it. Collapsed is a different
-   object: the rail is a 44px icon strip whose brand mark shrinks to 22px and
-   whose expand toggle is a 14px zinc-400 glyph, and both sit 6.5px above the
-   panel's top edge. A 32px blur reaches ~16px past that edge, so the gap
-   directly under them fills with soft black and the panel's bright 1.5px glass
-   rim lands immediately below — at that size the mark stops reading as a mark
-   and the toggle stops reading as a button. The lift buys nothing on a 44px
-   strip anyway; the ring and top sheen already separate it from the canvas.
-
-   SPECIFICITY, because this is the trap this file keeps falling into: the
-   regular-glass block ~30 lines up scores (0,3,1), not (0,2,1), because a
-   `:is()` inherits its most specific argument and that one contains
-   `[data-page-bento]:not([data-bento-flat])`. Two attributes here tie it at
-   (0,3,1) and this rule is declared later, so it wins. Drop either attribute
-   and it silently loses — which is exactly how the panel rule above ended up
-   painting --glass-edge instead of --glass-edge-panel. [data-side-panel] is
-   already in the Osaka and Jungle net exclusion lists, so no id-scoped rule
-   comes along behind this one. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-side-panel][data-rail-collapsed="true"] {
   box-shadow: var(--glass-edge-flat) !important;
 }
 
