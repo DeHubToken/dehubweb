@@ -21,7 +21,7 @@ export function GenerationWindow() {
   useEffect(() => {
     controller.current = new AbortController();
     return () => controller.current.abort();
-  }, []);
+  }, [quota.walletAddress]);
   useEffect(() => { if (state !== 'closed') setMounted(true); }, [state]);
   const track = useCallback((id: string) => {
     pending.current.set(id, quota.walletAddress?.toLowerCase() ?? null);
