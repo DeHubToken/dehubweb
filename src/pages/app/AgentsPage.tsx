@@ -385,7 +385,7 @@ export default function AgentsPage() {
 
                   {/* API Key */}
                   <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
-                  <details className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
+                  <details defaultOpen={!!createdKeys[agent.id]} className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
                     <summary className="cursor-pointer font-medium text-white/90">{t('agents.apiDocs')} · {t('agents.apiKey')}</summary>
                     <div className="mt-4">
                   {!agent.api_key ? (
