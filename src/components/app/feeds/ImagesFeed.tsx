@@ -1,3 +1,4 @@
+import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -368,15 +369,15 @@ function EndlessScrollView({
       <div ref={scrollTargetRef} />
       {visiblePosts.map((post, index) => (
         <Fragment key={post.id}>
-          <div
+          <WindowedFeedItem
             data-feed-item
             data-cinematic="image"
             data-cinematic-first={index === 0 ? '' : undefined}
             className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
-            style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 640px' } : undefined}
+            eager={index < 3} estimatedHeight={640}
           >
             <ImageCard post={post} />
-          </div>
+          </WindowedFeedItem>
           {index === 0 && servedAd && (
             <div data-feed-item data-cinematic="ad" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
               <SponsoredAdCard ad={servedAd} />
