@@ -1,3 +1,7 @@
+import Globe from "@/components/ui/cut-icons/world";
+import ChevronDown from "@/components/ui/cut-icons/next";
+import Hash from "@/components/ui/cut-icons/topics";
+import Flame from "@/components/ui/cut-icons/trending";
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -12,7 +16,7 @@ const GoLiveModal = React.lazy(() =>
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Globe, ChevronDown, Hash, Flame } from "lucide-react";
+
 import Radio from "@/components/ui/cut-icons/live";
 import Video from "@/components/ui/cut-icons/video";
 import Users from "@/components/ui/cut-icons/communities";
