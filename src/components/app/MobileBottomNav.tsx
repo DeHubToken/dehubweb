@@ -1,3 +1,7 @@
+import Film from "@/components/ui/cut-icons/editor";
+import Wand2 from "@/components/ui/cut-icons/prompt";
+import Zap from "@/components/ui/cut-icons/superpowers";
+import Scroll from "@/components/ui/cut-icons/glossary";
 import { useTranslation as _useCopy } from 'react-i18next';
 import React, { Suspense, useState, useRef, useEffect } from 'react';
 import { StageNavChip } from './spaces/StageNavChip';
@@ -9,7 +13,7 @@ import { isHomePath, isOnLiveFeed } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
-import { FileText, Scroll, Wand2, Loader2, Zap } from "lucide-react";
+import { FileText, Loader2} from "lucide-react";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 import LayoutDashboard from "@/components/ui/cut-icons/command";
 import AssistantNavIcon from '@/components/ui/AssistantNavIcon';
@@ -130,7 +134,7 @@ type MobileNavItem = {
 
 const SCROLL_NAV_ITEMS = [
   { icon: Settings, label: 'Settings', path: '/app/settings' },
-  { icon: Wand2, themedIcon: 'videos', label: 'Editor', path: '/editor' },
+  { icon: Film, label: 'Editor', path: '/editor' },
   { icon: Creator, label: 'Creator', path: '/creator' },
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
