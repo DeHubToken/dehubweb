@@ -189,6 +189,7 @@ export function WhoToFollow() {
   return (
     <div className="flex flex-col h-full">
       <div
+        data-fade-mask-bottom
         ref={scrollRef}
         className="flex-1 overflow-y-auto overflow-x-hidden space-y-1 pr-1 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent"
       >
