@@ -39,6 +39,19 @@ describe('keyboard-safe sheet', () => {
     expect(result.current.style?.top).toBe(118);
   });
 
+  it('does not measure the viewport for closed sheets or an unfocused keyboard', () => {
+    const original = Object.getOwnPropertyDescriptor(window, 'innerHeight')!;
+    const read = vi.fn(() => 800);
+    Object.defineProperty(window, 'innerHeight', { configurable: true, get: read });
+    try {
+      const { rerender } = renderHook(({ enabled }) => useKeyboardSafeSheet(enabled), { initialProps: { enabled: false } });
+      rerender({ enabled: true });
+      expect(read).not.toHaveBeenCalled();
+    } finally {
+      Object.defineProperty(window, 'innerHeight', original);
+    }
+  });
+
   it('detects a field already focused when the sheet mounts and fits short landscape viewports', () => {
     input.focus();
     viewport.height = 150;
