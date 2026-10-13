@@ -9,8 +9,9 @@ type Claim = {
   props: ImageProps;
   loaded?: { src: string; width: number; height: number };
   failed?: boolean;
+  measuredSlot?: HTMLSpanElement;
 };
-type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean };
+type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean; appliedStyle?: Record<string, string> };
 const images = new Map<string, Entry>();
 
 interface ImageProps extends Pick<HTMLAttributes<HTMLSpanElement>, 'onClick' | 'onPointerDown' | 'onPointerMove' | 'onPointerUp' | 'onPointerCancel'> {
@@ -37,8 +38,8 @@ function show(entry: Entry) {
   const { image } = entry;
   if (image.parentNode !== claim.slot) {
     const oldSlot = image.parentElement;
-    const rect = image.getBoundingClientRect();
-    if (oldSlot && rect.height > 0) {
+    const rect = oldSlot ? image.getBoundingClientRect() : undefined;
+    if (oldSlot && rect && rect.height > 0) {
       oldSlot.style.minHeight = `${rect.height}px`;
       oldSlot.style.width = `${rect.width}px`;
     }
@@ -59,16 +60,21 @@ function show(entry: Entry) {
     props.onFailure?.(failed);
   };
   notifyFailure();
-  image.className = props.className ?? '';
-  image.style.cssText = '';
+  if (image.className !== (props.className ?? '')) image.className = props.className ?? '';
+  const nextStyle: Record<string, string> = {};
   for (const [property, value] of Object.entries(props.style ?? {})) {
     if (value == null) continue;
-    (image.style as any)[property] = typeof value === 'number' && !['aspectRatio', 'opacity', 'zIndex'].includes(property) ? `${value}px` : String(value);
+    nextStyle[property] = typeof value === 'number' && !['aspectRatio', 'opacity', 'zIndex'].includes(property) ? `${value}px` : String(value);
   }
-  if (entry.failed) image.style.visibility = 'hidden';
+  if (entry.failed) nextStyle.visibility = 'hidden';
+  for (const property of new Set([...Object.keys(entry.appliedStyle ?? {}), ...Object.keys(nextStyle)])) {
+    const value = nextStyle[property] ?? '';
+    if ((image.style as any)[property] !== value) (image.style as any)[property] = value;
+  }
+  entry.appliedStyle = nextStyle;
   if (props.imageRef) props.imageRef.current = image;
-  image.loading = props.loading ?? 'lazy';
-  image.setAttribute('fetchpriority', props.fetchPriority ?? 'auto');
+  if (image.loading !== (props.loading ?? 'lazy')) image.loading = props.loading ?? 'lazy';
+  if (image.getAttribute('fetchpriority') !== (props.fetchPriority ?? 'auto')) image.setAttribute('fetchpriority', props.fetchPriority ?? 'auto');
   for (const [attribute, value] of Object.entries({ src: props.src ? entry.fallback ?? props.src : undefined, srcset: entry.fallback ? undefined : props.srcSet, sizes: props.sizes, width: props.width, height: props.height })) {
     if (value == null) image.removeAttribute(attribute);
     else if (image.getAttribute(attribute) !== String(value)) image.setAttribute(attribute, String(value));
@@ -76,17 +82,17 @@ function show(entry: Entry) {
   const loaded = () => {
     entry.failed = false;
     notifyFailure();
-    const rect = image.getBoundingClientRect();
-    if (rect.height > 0 && claim.priority < 2) claim.slot.style.minHeight = `${rect.height}px`;
-    if (!props.onImageLoad) return;
     const src = image.currentSrc || image.src;
     const width = image.naturalWidth;
     const height = image.naturalHeight;
-    if (claim.loaded?.src === src && claim.loaded.width === width && claim.loaded.height === height) return;
+    if (claim.loaded?.src === src && claim.loaded.width === width && claim.loaded.height === height && claim.measuredSlot === claim.slot) return;
+    const rect = image.getBoundingClientRect();
+    if (rect.height > 0 && claim.priority < 2) claim.slot.style.minHeight = `${rect.height}px`;
+    claim.measuredSlot = claim.slot;
     // Cached images are shown on every layout. Notify each owner once per bitmap
     // before its callback can schedule another render.
     claim.loaded = { src, width, height };
-    props.onImageLoad(image);
+    props.onImageLoad?.(image);
   };
   image.onload = loaded;
   image.onerror = () => {
@@ -100,6 +106,7 @@ function show(entry: Entry) {
     }
     entry.failed = true;
     image.style.visibility = 'hidden';
+    entry.appliedStyle = { ...entry.appliedStyle, visibility: 'hidden' };
     notifyFailure();
   };
   if (image.complete && image.naturalWidth) loaded();

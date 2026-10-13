@@ -66,10 +66,11 @@ interface CommentsWrapperProps {
 function useIsTabletOrMobile() {
   const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
   useEffect(() => {
-    const check = () => setIsTabletOrMobile(window.innerWidth < 1024);
+    const query = window.matchMedia('(max-width: 1023px)');
+    const check = () => setIsTabletOrMobile(query.matches);
     check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    query.addEventListener('change', check);
+    return () => query.removeEventListener('change', check);
   }, []);
   return isTabletOrMobile;
 }
@@ -77,10 +78,11 @@ function useIsTabletOrMobile() {
 function useIsPhone() {
   const [isPhone, setIsPhone] = useState(false);
   useEffect(() => {
-    const check = () => setIsPhone(window.innerWidth < 768);
+    const query = window.matchMedia('(max-width: 767px)');
+    const check = () => setIsPhone(query.matches);
     check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    query.addEventListener('change', check);
+    return () => query.removeEventListener('change', check);
   }, []);
   return isPhone;
 }
