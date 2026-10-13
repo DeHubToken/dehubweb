@@ -15,6 +15,7 @@ function fixture(timeline = false) {
   const outer = document.createElement('div');
   outer.dataset.feedNavOuter = ''; outer.style.position = 'sticky'; outer.style.top = '0px'; outer.style.transform = 'none';
   outer.getBoundingClientRect = () => ({ top: 0, height: 56 } as DOMRect);
+  outer.getAnimations = () => [];
   const pill = document.createElement('div'); pill.dataset.feedNav = '';
   Object.defineProperty(pill, 'offsetParent', { value: document.body });
   pill.getBoundingClientRect = () => ({ top: 8, bottom: 44, left: 12, right: 378, width: 366, height: 36 } as DOMRect);
