@@ -75,7 +75,8 @@ try {
               const layer = document.querySelector('#feed > [data-feed-swallow-cut]');
               const inset = getComputedStyle(layer).clipPath.match(/inset\(([\d.-]+)px/);
               const outer = document.querySelector('[data-feed-nav-outer]');
-              return { gap: +inset[1] + layer.getBoundingClientRect().top - document.querySelector('[data-feed-nav]').getBoundingClientRect().top, navTransform: getComputedStyle(outer).transform, cutTransform: getComputedStyle(layer).transform, clip: getComputedStyle(layer).clipPath, navAnimations: outer.getAnimations().map(a => ({start: a.startTime, time: a.currentTime, state: a.playState, timing: a.effect.getTiming()})), cutAnimations: layer.getAnimations().map(a => ({start:a.startTime, time:a.currentTime, state:a.playState, timing:a.effect.getTiming()})) };
+              const state = a => ({ start: a.startTime, time: a.currentTime, state: a.playState, timing: a.effect.getTiming(), frames: a.effect.getKeyframes(), computed: a.effect.getComputedTiming() });
+              return { gap: +inset[1] + layer.getBoundingClientRect().top - document.querySelector('[data-feed-nav]').getBoundingClientRect().top, navTransform: getComputedStyle(outer).transform, cutTransform: getComputedStyle(layer).transform, clip: getComputedStyle(layer).clipPath, navAnimations: outer.getAnimations().map(state), cutAnimations: layer.getAnimations().map(state) };
             });
             if (Math.abs(motionState.gap - 4) >= 1.5) {
               await page.screenshot({ path: `${output}/transition-failure-${name}-${width}.png` });
