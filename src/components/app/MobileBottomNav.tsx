@@ -12,7 +12,7 @@ import { scrollDocumentToSmooth } from '@/lib/document-scroll';
 import { FileText, Scroll, Wand2, Palette, Loader2, Zap } from "lucide-react";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 import LayoutDashboard from "@/components/ui/cut-icons/command";
-import Sparkles from "@/components/ui/cut-icons/assistant";
+import AssistantNavIcon from '@/components/ui/AssistantNavIcon';
 import Wallet from "@/components/ui/cut-icons/wallet";
 import BookOpen from "@/components/ui/cut-icons/docs";
 import Lightbulb from "@/components/ui/cut-icons/feature-requests";
@@ -116,7 +116,7 @@ const LEFT_NAV_ITEMS = [
 
 // Right side: AI link, Profile
 const RIGHT_NAV_ITEMS = [
-  { icon: Sparkles, label: 'AI', path: '/app/assistant' },
+  { icon: AssistantNavIcon, label: 'AI', path: '/app/assistant' },
 ];
 
 type MobileNavItem = {
