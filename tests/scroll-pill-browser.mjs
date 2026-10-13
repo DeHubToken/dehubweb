@@ -137,11 +137,14 @@ try {
   if (process.env.CHECK_PRODUCTION === 'true') {
     const browser = await chromium.launch();
     try {
-      for (const width of [390, 1280]) for (const theme of ['system', 'hazy']) for (const route of ['/app', '/features']) {
+      for (const width of [390, 1280]) for (const route of ['/app', '/features']) {
         const page = await browser.newPage({ viewport: { width, height: 800 } });
-        await page.addInitScript(theme => localStorage.setItem('dehub.theme', theme), theme);
         await page.goto(`https://dehub.io${route}`, { waitUntil: 'domcontentloaded' });
         await page.locator('[data-feed-swallow-driver="scroll-transform"]').first().waitFor({ timeout: 60000 });
+        // Appearance resets to System when anonymous auth resolves. Record
+        // the rendered theme, rather than labelling a seeded localStorage value.
+        await page.waitForFunction(() => document.documentElement.dataset.theme === 'system');
+        const theme = await page.evaluate(() => document.documentElement.dataset.theme);
         const measurements = [];
         for (const y of [300, 1800, 600, 2500, 100]) {
           await page.evaluate(y => window.scrollTo(0, y), y);
