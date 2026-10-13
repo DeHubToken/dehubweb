@@ -452,7 +452,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           >
             <Globe className="w-3.5 h-3.5" />
             <span>{t('commandCentre.viewAll')}</span>
-            <ChevronDown className={cn('w-3 h-3 transition-transform', showCountryDropdown && 'rotate-180')} />
+            <ChevronDown className="w-3 h-3 transition-transform" style={{ transform: `rotate(${showCountryDropdown ? -90 : 90}deg)` }} />
           </button>
           {showCountryDropdown && (
             <div data-inline-popover className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">
