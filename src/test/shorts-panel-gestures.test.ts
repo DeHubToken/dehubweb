@@ -11,9 +11,9 @@ function viewer(overrides: Record<string, unknown> = {}) {
   const context = {
     useCallback: (callback: unknown) => callback,
     videoContainer: { getBoundingClientRect: () => ({ top: 100, height: 800 }) },
-    isMobile: true, overlaysHidden: true, autoHidden: false, showComments: false,
-    RESTORE_ZONE_TOP: 0.55,
-    setDragOffset: vi.fn(), setOverlaysHidden: vi.fn(), setAutoHidden: vi.fn(),
+    window: { scrollY: 0 }, isMobile: true, overlaysHidden: true, autoHidden: false, showComments: false,
+    RESTORE_ZONE_TOP: 0.61, RESTORE_ZONE_BOTTOM: 0.85,
+    setDragOffset: vi.fn(), resetDragOffset: vi.fn(), setOverlaysHidden: vi.fn(), setAutoHidden: vi.fn(),
     goToNext: vi.fn(), goToPrev: vi.fn(), ...overrides,
   };
   const callbacks = source.slice(source.indexOf('  const isRestoreDrag ='), source.indexOf('  // Toggle play/pause'));
@@ -28,12 +28,12 @@ function drag(startY: number, y: number, x = 0) {
 }
 
 describe('shorts panel swipe arbitration', () => {
-  it.each([{ overlaysHidden: true }, { overlaysHidden: false, autoHidden: true }])(
+  it.each([{ overlaysHidden: true }])(
     'restores hidden chrome on an upward lower-area flick without paging: %o', (state) => {
       const v = viewer(state);
-      v.handleDrag(null, drag(780, -60));
-      v.handleDragEnd(null, drag(780, -60));
-      expect(v.setDragOffset).toHaveBeenLastCalledWith(0);
+      v.handleDrag(null, drag(700, -60));
+      v.handleDragEnd(null, drag(700, -60));
+      expect(v.resetDragOffset).toHaveBeenCalled();
       expect(v.setOverlaysHidden).toHaveBeenCalledWith(false);
       expect(v.setAutoHidden).toHaveBeenCalledWith(false);
       expect(v.goToNext).not.toHaveBeenCalled();
@@ -43,16 +43,19 @@ describe('shorts panel swipe arbitration', () => {
 
   it('does not page on a claimed flick shorter than the panel threshold', () => {
     const v = viewer();
-    v.handleDragEnd(null, drag(780, -25));
+    v.handleDragEnd(null, drag(700, -25));
     expect(v.setOverlaysHidden).not.toHaveBeenCalled();
     expect(v.goToNext).not.toHaveBeenCalled();
   });
 
   it.each([
-    [{ overlaysHidden: false }, drag(780, -100), 'goToNext'],
+    [{ overlaysHidden: false }, drag(700, -100), 'goToNext'],
     [{}, drag(350, -100), 'goToNext'],
-    [{}, drag(780, 100), 'goToPrev'],
-    [{ isMobile: false }, drag(780, -100), 'goToNext'],
+    [{}, drag(580, -100), 'goToNext'], // removed top 20% of restore band
+    [{}, drag(790, -100), 'goToNext'], // seek strip must page on first swipe
+    [{ overlaysHidden: false, autoHidden: true }, drag(700, -100), 'goToNext'],
+    [{}, drag(700, 100), 'goToPrev'],
+    [{ isMobile: false }, drag(700, -100), 'goToNext'],
   ])('keeps normal carousel gestures available: %o', (state, info, action) => {
     const v = viewer(state as Record<string, unknown>);
     v.handleDragEnd(null, info);
@@ -60,9 +63,16 @@ describe('shorts panel swipe arbitration', () => {
     expect(v.setOverlaysHidden).not.toHaveBeenCalled();
   });
 
+  it('uses viewport coordinates when opened from a deeply scrolled feed', () => {
+    const v = viewer({ window: { scrollY: 2400 } });
+    v.handleDragEnd(null, drag(2750, -100));
+    expect(v.goToNext).toHaveBeenCalledTimes(1);
+    expect(v.setOverlaysHidden).not.toHaveBeenCalled();
+  });
+
   it('leaves horizontal photo paging alone', () => {
     const v = viewer();
-    v.handleDragEnd(null, drag(780, -50, 100));
+    v.handleDragEnd(null, drag(700, -50, 100));
     expect(v.setOverlaysHidden).not.toHaveBeenCalled();
     expect(v.goToNext).not.toHaveBeenCalled();
     expect(v.goToPrev).not.toHaveBeenCalled();
@@ -74,8 +84,8 @@ describe('panel restore and playback taps', () => {
     const context = {
       useCallback: (callback: unknown) => callback, useRef: (value: unknown) => ({ current: value }),
       useEffect: () => {}, isMobile: true, overlaysHidden: true, showComments: false,
-      isTransitioning: false, window: { innerHeight: 800 }, RESTORE_ZONE_TOP: 0.55,
-      RESTORE_ZONE_BOTTOM: 0.85, restoreTouchStart: { current: null },
+      isTransitioning: false, window: { innerHeight: 800 }, RESTORE_ZONE_TOP: 0.61, RESTORE_ZONE_BOTTOM: 0.85,
+      videoContainer: { getBoundingClientRect: () => ({ top: 0, height: 800 }) }, restoreTouchStart: { current: null },
       suppressVideoTapRef: { current: false }, suppressVideoTapTimer: { current: null },
       setOverlaysHidden: vi.fn(), setAutoHidden: vi.fn(), setIsPaused: vi.fn(),
       setShowPlayIndicator: vi.fn(), setTimeout: () => 1, clearTimeout: vi.fn(), ...overrides,
