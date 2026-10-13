@@ -62,24 +62,79 @@ try {
           const state = await page.evaluate(() => ({ driver: document.querySelector('#feed').dataset.feedSwallowDriver, clip: document.querySelector('#feed').style.clipPath }));
           assert.equal(state.driver, 'scroll-timeline'); assert.equal(state.clip, '');
         }
+        // Follow nav hide/show transitions rather than freezing mid-motion.
+        for (const transform of ['translateY(-56px)', 'translateY(0px)']) {
+          await page.evaluate(transform => document.querySelector('[data-feed-nav-outer]').style.transform = transform, transform);
+          for (let sample = 0; sample < 8; sample++) {
+            const top = await page.locator('[data-feed-nav]').evaluate(el => el.getBoundingClientRect().top);
+            if (top > 1) assertCut(await page.screenshot(), Math.floor(top) - 1, `${name}/${width}/nav-transition`);
+          }
+        }
+        await page.waitForTimeout(350);
+        // New feed data changes the scroll range without another scroll event.
+        await page.evaluate(() => document.querySelector('#feed > div').style.height = '18000px');
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        await page.evaluate(() => window.scrollTo(0, 14000));
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        assertCut(await page.screenshot(), 44, `${name}/${width}/loaded-more`);
         if (name === 'chromium') {
           await page.evaluate(() => { document.documentElement.dataset.theme = 'system'; window.scrollTo(0, 400); });
           await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
           const cdp = await page.context().newCDPSession(page);
-          // Hold the main thread while the compositor scrolls and captures.
+          // Page.captureScreenshot waits for the renderer's main thread.
+          // Screencast frames arrive directly as the compositor paints.
           let busyFinished = false;
+          const duringStall = [];
+          cdp.on('Page.screencastFrame', frame => {
+            void cdp.send('Page.screencastFrameAck', { sessionId: frame.sessionId });
+            if (!busyFinished && frame.metadata.scrollOffsetY > 450) duringStall.push(frame);
+          });
+          await cdp.send('Page.startScreencast', { format: 'png', everyNthFrame: 1 });
           const busy = cdp.send('Runtime.evaluate', { expression: 'const until=performance.now()+2500;while(performance.now()<until){}' }).then(() => { busyFinished = true; });
           await new Promise(resolve => setTimeout(resolve, 100));
-          await cdp.send('Input.synthesizeScrollGesture', { x: width / 2, y: 600, yDistance: -700, speed: 2000, gestureSourceType: 'touch' });
-          const capture = await cdp.send('Page.captureScreenshot', { format: 'png' });
-          const bytes = Buffer.from(capture.data, 'base64');
-          assert.equal(busyFinished, false, 'The cutoff capture must occur while JavaScript is blocked');
-          assertCut(bytes, 8, `blocked-main-thread/${width}`, true);
-          await writeFile(`${output}/blocked-main-thread-${width}.png`, bytes);
+          const gesture = cdp.send('Input.synthesizeScrollGesture', { x: width / 2, y: 600, yDistance: -700, speed: 2000, gestureSourceType: 'mouse' });
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          assert.equal(busyFinished, false, 'The compositor sample must occur while JavaScript is blocked');
           await busy;
+          await gesture;
+          await cdp.send('Page.stopScreencast');
+          assert(duringStall.length > 0, 'Must capture scrolling compositor frames during the main-thread stall');
+          for (const frame of duringStall) assertCut(Buffer.from(frame.data, 'base64'), 8, `blocked-main-thread/${width}`, true);
+          await writeFile(`${output}/blocked-main-thread-${width}.png`, Buffer.from(duringStall.at(-1).data, 'base64'));
           await cdp.detach();
         }
         evidence.push({ browser: name, width, timeline, result: 'cutoff passed' });
+        await page.close();
+      }
+    } finally { await browser.close(); }
+  }
+  if (process.env.CHECK_PRODUCTION === 'true') {
+    const browser = await chromium.launch();
+    try {
+      for (const width of [390, 1280]) {
+        const page = await browser.newPage({ viewport: { width, height: 800 } });
+        await page.goto('https://dehub.io/app', { waitUntil: 'domcontentloaded' });
+        await page.locator('[data-feed-swallow-driver="scroll-timeline"]').first().waitFor({ timeout: 60000 });
+        const measurements = [];
+        for (const y of [300, 1800, 600, 2500, 100]) {
+          await page.evaluate(y => window.scrollTo(0, y), y);
+          await page.waitForTimeout(600);
+          const cuts = await page.locator('[data-feed-swallow-driver="scroll-timeline"]').evaluateAll(elements => elements.map(el => {
+            const clip = getComputedStyle(el).clipPath;
+            const nav = Array.from(document.querySelectorAll('[data-feed-nav]')).find(n => n.getBoundingClientRect().width > 0);
+            const cr = el.getBoundingClientRect(); const pr = nav?.getBoundingClientRect();
+            const first = clip.match(/M 0 ([\d.-]+)/); const inset = clip.match(/inset\(([\d.-]+)px/);
+            const radius = nav ? Math.min(parseFloat(getComputedStyle(nav).borderTopLeftRadius), pr.width / 2, pr.height / 2) : 0;
+            return { clip, navTop: pr?.top, cutTop: first ? +first[1] + cr.top - radius : inset ? +inset[1] + cr.top : null, edge: first ? 'top' : 'bottom', navBottom: pr?.bottom };
+          }));
+          for (const cut of cuts) {
+            assert.notEqual(cut.cutTop, null, 'Production must have an active cut');
+            assert(Math.abs(cut.cutTop - (cut.edge === 'top' ? cut.navTop : cut.navBottom)) < 1.5, `Production cutoff mismatch: ${JSON.stringify(cut)}`);
+          }
+          measurements.push({ y, cuts });
+        }
+        await page.screenshot({ path: `${output}/production-${width}.png` });
+        evidence.push({ browser: 'production-chromium', width, measurements });
         await page.close();
       }
     } finally { await browser.close(); }
