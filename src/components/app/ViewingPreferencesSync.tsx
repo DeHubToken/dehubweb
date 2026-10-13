@@ -20,6 +20,7 @@ import { useSyncedPreference } from '@/contexts/UserPreferencesContext';
 import { getCreatorPlaybackRates, setCreatorPlaybackRates } from '@/lib/video-preferences';
 import { sanitiseGroups, useFollowGroupList, writeGroups } from '@/lib/follow-groups';
 import { DEFAULT_AD_LOAD, normaliseAdLoad, useAdLoad, writeAdLoad } from '@/lib/ad-load';
+import { DEFAULT_FEED_VIDEO_SHAPE, normaliseFeedVideoShape, useFeedVideoShape, writeFeedVideoShape } from '@/lib/feed-video-shape';
 import { useSkipSegments, writeSkipSegments } from '@/lib/skip-segments';
 import { useVideoGlitch, writeVideoGlitch } from '@/lib/video-glitch';
 import {
@@ -37,6 +38,7 @@ import {
 const PREF_KEY = 'videoChannelSpeeds';
 const GROUPS_KEY = 'followGroups';
 const AD_LOAD_KEY = 'adLoad';
+const FEED_VIDEO_SHAPE_KEY = 'feedVideoShape';
 const SKIP_SEGMENTS_KEY = 'skipVideoSegments';
 const VIDEO_GLITCH_KEY = 'videoGlitchLoader';
 const EMPTY: Record<string, number> = {};
@@ -62,6 +64,15 @@ function useAdLoadSync() {
     writeAdLoad(normaliseAdLoad(value));
   }, []);
   useSyncedPreference(AD_LOAD_KEY, adLoad, apply, DEFAULT_AD_LOAD);
+}
+
+/** Feed video shape is one string; same as ad load. */
+function useFeedVideoShapeSync() {
+  const shape = useFeedVideoShape();
+  const apply = useCallback((value: unknown) => {
+    writeFeedVideoShape(normaliseFeedVideoShape(value));
+  }, []);
+  useSyncedPreference(FEED_VIDEO_SHAPE_KEY, shape, apply, DEFAULT_FEED_VIDEO_SHAPE);
 }
 
 /** Sponsor skipping is one boolean; inbound only, like the two above. */
@@ -110,6 +121,7 @@ function usePublicChatAlertsSync() {
 export function ViewingPreferencesSync() {
   useFollowGroupSync();
   useAdLoadSync();
+  useFeedVideoShapeSync();
   useSkipSegmentsSync();
   useVideoGlitchSync();
   usePublicChatAlertsSync();
