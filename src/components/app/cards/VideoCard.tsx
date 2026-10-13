@@ -1836,7 +1836,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     // see. On gated media the tap belongs to the unlock overlay. ImageCard
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
-    disabled: hideActions || !!video.isAudio || isContentGated || !isFullscreen,
+    disabled: hideActions || !!video.isAudio || isContentGated,
     onSingleTap: isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
@@ -2131,7 +2131,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
-        {...tapGestures}
+        {...(isFullscreen ? tapGestures : {})}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
