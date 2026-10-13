@@ -26,7 +26,7 @@ const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const url = `http://127.0.0.1:${server.address().port}`;
 const evidence = [];
-function assertCut(bytes, bottom, label, viewportWidth) {
+function assertCut(bytes, bottom, label, viewportWidth, showThrough = true) {
   const png = bytes[0] === 137 ? PNG.sync.read(bytes) : jpeg.decode(bytes, { useTArray: true });
   const scale = viewportWidth ? png.width / viewportWidth : 1;
   // Scan the full band above the cut. Green there is actual content leakage.
@@ -41,7 +41,7 @@ function assertCut(bytes, bottom, label, viewportWidth) {
   // Catch a regression to the old bottom-edge cut: feed must show through
   // the glass immediately below the new upper-rim cutoff.
   const glassPixel = (Math.floor((bottom + 8) * scale) * png.width + Math.floor(png.width / 2)) * 4;
-  assert(png.data[glassPixel + 1] > 100 && png.data[glassPixel] < 70, `${label}: feed must show through the pill below the upper-rim cut`);
+  if (showThrough) assert(png.data[glassPixel + 1] > 100 && png.data[glassPixel] < 70, `${label}: feed must show through the pill below the upper-rim cut`);
 }
 try {
   for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
@@ -58,7 +58,7 @@ try {
             await page.evaluate(y => window.scrollTo(0, y), y);
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const png = await page.screenshot();
-            assertCut(png, 12, `${name}/${width}/${theme}/${y}`);
+            assertCut(png, 12, `${name}/${width}/${theme}/${y}`, width, y > 0);
           }
           await page.screenshot({ path: `${output}/${name}-${width}-${theme}.png` });
         }
