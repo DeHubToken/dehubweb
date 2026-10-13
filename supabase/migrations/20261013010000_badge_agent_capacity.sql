@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION public.reserve_agent_registration(
 ) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
 DECLARE existing public.ai_agents; reserved public.ai_agents;
 BEGIN
-  IF NOT public.agent_owner_allowed(_owner) OR _limit NOT BETWEEN 1 AND 25
+  IF NOT public.agent_owner_allowed(_owner) OR _limit IS NULL OR _limit NOT BETWEEN 1 AND 25
      OR _owner !~ '^0x[a-f0-9]{40}$' OR _wallet !~ '^0x[a-f0-9]{40}$'
      OR _name !~ '^[a-z0-9_]{3,20}$' OR _private_key !~ '^0x[a-fA-F0-9]{64}$'
      OR _api_key !~ '^dehub_[a-f0-9]{64}$' THEN
