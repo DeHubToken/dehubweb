@@ -36,20 +36,27 @@ export function useFeedSwallowClip(
     let cut: HTMLElement | null = null;
     let source: HTMLElement | null = null;
     let animation: Animation | null = null;
+    let contentAnimation: Animation | null = null;
     let animationSource: HTMLElement | null = null;
     let lastFrames = '';
     let lastClip = '';
     let findCut = true;
     let radius = 12;
     let motionUntil = 0;
+    const motion = el.querySelector<HTMLElement>(':scope > [data-feed-swallow-motion]');
+    const bounds = el.parentElement?.matches('[data-feed-swallow-bounds]') ? el.parentElement : null;
+    const originalOverflow = bounds?.style.overflow || '';
     const visibleCut = (root: ParentNode) => Array.from(root.querySelectorAll<HTMLElement>(cutSelector)).find(candidate =>
       candidate.offsetParent !== null && getComputedStyle(candidate).visibility !== 'hidden',
     ) || null;
     const clearAnimation = () => {
       animation?.cancel();
+      contentAnimation?.cancel();
       animation = null;
+      contentAnimation = null;
       animationSource = null;
       lastFrames = '';
+      if (bounds) bounds.style.overflow = originalOverflow;
     };
     const writeClip = (clip: string) => {
       if (clip !== lastClip) { el.style.clipPath = clip; lastClip = clip; }
@@ -83,14 +90,14 @@ export function useFeedSwallowClip(
       const nested = el.contains(cut);
       const bottom = !nested && (opts.edge === 'bottom' || (opts.edge !== 'top' && BOTTOM_CUT_THEMES.includes(theme)));
       const r = Math.min(radius, pr.width / 2, pr.height / 2);
-      const shape = (y: number) => bottom ? `inset(${Math.max(0, y).toFixed(2)}px 0 0 0)`
+      const shape = (y: number) => bottom ? `inset(${y.toFixed(2)}px 0 0 0)`
         : feedSwallowPath(y, r, pr.left - cr.left, pr.right - cr.left, cr.width, cr.height);
       const currentY = (bottom ? pr.bottom : pr.top) - cr.top;
       const outer = cut.closest<HTMLElement>('[data-feed-nav-outer], [data-kit-island-outer]');
       const maxScroll = source.scrollHeight - source.clientHeight;
       // The scrollport itself has a stationary clip; its descendants already
       // scroll within that cut on the compositor (including post overlays).
-      if (Timeline && outer && !nested && source !== el && maxScroll > 0) {
+      if (Timeline && outer && !nested && source !== el && maxScroll > 0 && motion && bounds) {
         let pinnedY = bottom ? pr.bottom : pr.top;
         if (source.contains(outer)) {
           const outerRect = outer.getBoundingClientRect();
@@ -102,21 +109,30 @@ export function useFeedSwallowClip(
             pinnedY += sourceTop + top + transformY - outerRect.top;
           }
         }
-        const y0 = pinnedY - cr.top - source.scrollTop;
-        const frames: Keyframe[] = [{ offset: 0, clipPath: shape(y0) }];
-        // Preserve the zero inset until content reaches the bottom-edge cut.
-        if (bottom && y0 < 0 && -y0 < maxScroll) frames.push({ offset: -y0 / maxScroll, clipPath: shape(0) });
-        frames.push({ offset: 1, clipPath: shape(y0 + maxScroll) });
-        const key = JSON.stringify(frames);
+        // Move the clipping surface against the document scroll, and move
+        // its content back by the same distance. Both transforms composite;
+        // the rounded cut stays stationary even while JS cannot run. Bounds
+        // retain the original layout height, preventing transformed overflow
+        // from enlarging the document's scroll range as the page scrolls.
+        const y0 = pinnedY - cr.top - (animation ? 0 : source.scrollTop);
+        const frames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${maxScroll}px)` }];
+        const contentFrames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${-maxScroll}px)` }];
+        const key = String(maxScroll);
         if (source !== animationSource || !animation) {
           clearAnimation();
           try {
-            animation = el.animate(frames, { timeline: new Timeline({ source, axis: 'block' }), fill: 'both', easing: 'linear' });
+            const timing = { timeline: new Timeline({ source, axis: 'block' }), fill: 'both' as const, easing: 'linear' };
+            animation = el.animate(frames, timing);
+            contentAnimation = motion.animate(contentFrames, timing);
+            bounds.style.overflow = 'clip';
             animationSource = source;
-          } catch { /* Partial implementations keep the frame fallback. */ }
-        } else if (key !== lastFrames) (animation.effect as KeyframeEffect).setKeyframes(frames);
+          } catch { clearAnimation(); /* Partial implementations keep the frame fallback. */ }
+        } else if (key !== lastFrames) {
+          (animation.effect as KeyframeEffect).setKeyframes(frames);
+          (contentAnimation!.effect as KeyframeEffect).setKeyframes(contentFrames);
+        }
         if (animation) {
-          lastFrames = key; writeClip(''); el.dataset.feedSwallowDriver = 'scroll-timeline';
+          lastFrames = key; writeClip(shape(y0)); el.dataset.feedSwallowDriver = 'scroll-transform';
         } else { writeClip(currentY > 0.5 ? shape(currentY) : ''); el.dataset.feedSwallowDriver = 'frame'; }
       } else {
         clearAnimation(); writeClip(currentY > 0.5 ? shape(currentY) : '');
@@ -158,6 +174,7 @@ export function useFeedSwallowClip(
       themeObserver.disconnect(); pageObserver?.disconnect(); resizeObserver.disconnect();
       if (frame !== null) cancelAnimationFrame(frame);
       clearAnimation(); el.style.clipPath = ''; delete el.dataset.feedSwallowDriver;
+      if (bounds) bounds.style.overflow = originalOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, cutSelector, opts.allThemes, opts.off, opts.edge, isActivePage, ...deps]);

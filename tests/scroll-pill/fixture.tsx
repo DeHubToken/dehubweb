@@ -5,6 +5,6 @@ import { useFeedSwallowClip } from '../../src/hooks/use-feed-swallow-clip';
 function Fixture() {
   const ref = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(ref, '[data-feed-nav]');
-  return <><div data-feed-nav-outer><div data-feed-nav>Feed</div></div><div ref={ref} id="feed"><div style={{ height: 12000, background: '#00ff00' }} /></div></>;
+  return <><div data-feed-nav-outer><div data-feed-nav>Feed</div></div><div data-feed-swallow-bounds><div ref={ref} id="feed"><div data-feed-swallow-motion><div id="posts" style={{ height: 12000, background: '#00ff00' }} /></div></div></div></>;
 }
 createRoot(document.getElementById('root')!).render(<Fixture />);

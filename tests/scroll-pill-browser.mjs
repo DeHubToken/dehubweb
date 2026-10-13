@@ -62,7 +62,7 @@ try {
         if (timeline) {
           // At rest, scrolling must not mutate the inline cut or run a JS tail.
           const state = await page.evaluate(() => ({ driver: document.querySelector('#feed').dataset.feedSwallowDriver, clip: document.querySelector('#feed').style.clipPath }));
-          assert.equal(state.driver, 'scroll-timeline'); assert.equal(state.clip, '');
+          assert.equal(state.driver, 'scroll-transform'); assert.notEqual(state.clip, '');
         }
         // Follow nav hide/show transitions rather than freezing mid-motion.
         for (const transform of ['translateY(-56px)', 'translateY(0px)']) {
@@ -74,7 +74,7 @@ try {
         }
         await page.waitForTimeout(350);
         // New feed data changes the scroll range without another scroll event.
-        await page.evaluate(() => document.querySelector('#feed > div').style.height = '18000px');
+        await page.evaluate(() => document.querySelector('#posts').style.height = '18000px');
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         await page.evaluate(() => window.scrollTo(0, 14000));
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -114,12 +114,12 @@ try {
       for (const width of [390, 1280]) {
         const page = await browser.newPage({ viewport: { width, height: 800 } });
         await page.goto('https://dehub.io/app', { waitUntil: 'domcontentloaded' });
-        await page.locator('[data-feed-swallow-driver="scroll-timeline"]').first().waitFor({ timeout: 60000 });
+        await page.locator('[data-feed-swallow-driver="scroll-transform"]').first().waitFor({ timeout: 60000 });
         const measurements = [];
         for (const y of [300, 1800, 600, 2500, 100]) {
           await page.evaluate(y => window.scrollTo(0, y), y);
           await page.waitForTimeout(600);
-          const cuts = await page.locator('[data-feed-swallow-driver="scroll-timeline"]').evaluateAll(elements => elements.map(el => {
+          const cuts = await page.locator('[data-feed-swallow-driver="scroll-transform"]').evaluateAll(elements => elements.map(el => {
             const clip = getComputedStyle(el).clipPath;
             const nav = Array.from(document.querySelectorAll('[data-feed-nav]')).find(n => n.getBoundingClientRect().width > 0);
             const cr = el.getBoundingClientRect(); const pr = nav?.getBoundingClientRect();

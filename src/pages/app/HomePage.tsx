@@ -1122,6 +1122,7 @@ export default function HomePage() {
       {location.pathname === '/' && <HomeIntro />}
 
       {/* Feed Content - Pull-to-refresh only works within this container */}
+      <div data-feed-swallow-bounds>
       <div 
         ref={feedContainerRef}
         onTouchStart={handleTouchStart}
@@ -1135,6 +1136,7 @@ export default function HomePage() {
         onMouseLeave={pullHandlers.onMouseLeave}
         data-feed-pull-content
       >
+        <div data-feed-swallow-motion>
         {/* Keep the swallow clip stationary while the feed moves beneath it. */}
         <div
           ref={pullMotionRef}
@@ -1227,6 +1229,8 @@ export default function HomePage() {
         )}
         {/* end feed tabs */}
         </div>
+        </div>
+      </div>
       </div>
 
     </div>
