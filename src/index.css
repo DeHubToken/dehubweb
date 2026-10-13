@@ -6020,6 +6020,14 @@ html[data-system-tone="light"] .art-rim {
 [data-feed-video-frame]:not(#_) {
   max-height: 75svh !important;
 }
+/* Keep the frame fitted to the picture, including themes that force full width. */
+[data-inline-video-frame]:not(#_):not(#_) {
+  width: var(--inline-video-width) !important;
+  max-width: 100% !important;
+  max-height: var(--inline-video-height) !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
 @media (max-width: 639px) {
   :root {
     --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
