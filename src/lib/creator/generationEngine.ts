@@ -33,6 +33,7 @@ export interface ImageRequest {
 }
 
 export interface VideoRequest {
+  effect?: string;
   clientJobId?: string;
   prompt: string;
   model: string;
@@ -446,6 +447,7 @@ export async function generateVideo(
       ...(req.endFrameUrl ? { endFrameUrl: req.endFrameUrl } : {}),
       ...(req.audioUrls?.length ? { audioUrls: req.audioUrls } : {}),
       ...(req.videoUrls?.length ? { videoUrls: req.videoUrls } : {}),
+      ...(req.effect ? { effect: req.effect } : {}),
       ...(req.seed !== undefined ? { seed: req.seed } : {}),
       ...(req.txHash ? { txHash: req.txHash } : {}),
     },
