@@ -1,3 +1,4 @@
+import FileText from "@/components/ui/cut-icons/blog";
 import Film from "@/components/ui/cut-icons/editor";
 import Wand2 from "@/components/ui/cut-icons/prompt";
 import Zap from "@/components/ui/cut-icons/superpowers";
@@ -13,7 +14,7 @@ import { isHomePath, isOnLiveFeed } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
-import { FileText, Loader2} from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 import LayoutDashboard from "@/components/ui/cut-icons/command";
 import AssistantNavIcon from '@/components/ui/AssistantNavIcon';

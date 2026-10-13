@@ -1,3 +1,6 @@
+import PenSquare from "@/components/ui/cut-icons/edit";
+import LogIn from "@/components/ui/cut-icons/sign-in";
+import CornerDownLeft from "@/components/ui/cut-icons/reply";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
@@ -5,7 +8,7 @@ import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PenSquare, LogIn, CornerDownLeft } from "lucide-react";
+
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 import LogOut from "@/components/ui/cut-icons/sign-out";
 

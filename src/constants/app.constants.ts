@@ -1,3 +1,5 @@
+import FileText from "@/components/ui/cut-icons/blog";
+import FileTextIcon from "@/components/ui/cut-icons/blog";
 import Film from "@/components/ui/cut-icons/editor";
 import Wand2 from "@/components/ui/cut-icons/prompt";
 import Zap from "@/components/ui/cut-icons/superpowers";
@@ -10,7 +12,7 @@ import Blog from "@/components/ui/cut-icons/blog";
 import Hammer from "@/components/ui/cut-icons/work";
 import Shorts from "@/components/ui/cut-icons/shorts";
 import Handshake from "@/components/ui/cut-icons/affiliate";
-import { FileText, FileTextIcon} from "lucide-react";
+
 import Blocks from "@/components/ui/cut-icons/apps";
 import Store from "@/components/ui/cut-icons/store";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
