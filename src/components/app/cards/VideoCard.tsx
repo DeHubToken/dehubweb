@@ -1114,12 +1114,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               if (!vid.getAttribute('src') && video.videoUrl) vid.src = video.videoUrl;
               // Only the clip that is actually on screen may take the sound;
               // one peeking in at the bottom of the window plays silently.
-              const prominent = isProminent(containerRef.current);
-              const ownsAudio = prominent ? videoPlaybackManager.play(instanceId) : videoPlaybackManager.playMuted(instanceId);
+              videoPlaybackManager.playMuted(instanceId);
               // "Start autoplay muted" beats an earlier unmute: scrolling
               // onto a clip must never be what makes sound.
-              const shouldMute = autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
-              autoMutedRef.current = shouldMute && !prominent && !autoplayMutedRef.current && !videoPlaybackManager.globalMuted;
+              const shouldMute = true;
+              autoMutedRef.current = false;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
               setIsLoading(true);
@@ -1659,13 +1658,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const measuredAspect = useMediaAspect(
     video.isAudio ? null : thumbnail,
     intrinsicAspect,
-    isImmersive ? THIN_MIN_RATIO : undefined,
+    THIN_MIN_RATIO,
   );
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
   const cropFeedVideo = !isImmersive && !isFullscreen && !video.isAudio;
-  // Settings > Video size in your feed: a tall clip letterboxes inside a
-  // square or 16:9 frame instead of filling the screen. Feed frame only.
+  // Feed size preferences reduce the picture width without padding its sides.
   const feedVideoShape = useFeedVideoShape();
   const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
 
@@ -1808,6 +1806,22 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
   }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
 
+  const openVideoViewer = useCallback(() => {
+    if (isContentGated || isVideoNotReady || video.isAudio || video.isLivePost) return;
+    pauseVideo();
+    videoPlaybackManager.stop(instanceId);
+    openBrainrotFeed(video.id, {
+      ...video,
+      type: 'short',
+      videoUrl: video.videoUrl || '',
+      username: video.channel,
+      avatar: video.channelAvatar,
+      likes: String(video.likeCount ?? 0),
+      dislikes: video.dislikeCount,
+      comments: String(video.commentCount ?? 0),
+    });
+  }, [isContentGated, isVideoNotReady, video, pauseVideo, instanceId]);
+
   /**
    * One tap drives playback; two taps Like; three taps Love. Playback is
    * reversible, so the first tap happens immediately and is put back on tap
@@ -1822,7 +1836,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     // see. On gated media the tap belongs to the unlock overlay. ImageCard
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
-    disabled: hideActions || !!video.isAudio || isContentGated,
+    disabled: hideActions || !!video.isAudio || isContentGated || !isFullscreen,
     onSingleTap: isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
@@ -1848,13 +1862,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // Playback and reactions run from pointer events above. The compatibility
   // click only keeps the visible controls awake; it must never toggle twice.
   const handleVideoAreaClick = useCallback(() => {
+    if (!isFullscreen && !video.isLivePost) { openVideoViewer(); return; }
     if (!isImmersive) {
       showControlsBriefly();
       handlePlayClick();
       return;
     }
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick]);
+  }, [isFullscreen, video.isLivePost, openVideoViewer, isImmersive, showControlsBriefly, handlePlayClick]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -1901,10 +1916,9 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       return;
     }
 
-    if (!isImmersive) {
+    if (!isFullscreen && !video.isLivePost && !video.isAudio) {
       e.preventDefault();
-      showControlsBriefly();
-      handlePlayClick();
+      openVideoViewer();
       return;
     }
 
@@ -1912,7 +1926,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, video.isLivePost, video.isAudio, openVideoViewer]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -2081,6 +2095,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         data-feed-video-frame={cropFeedVideo || undefined}
         data-video-split-controls={splitControls || undefined}
         data-video-fullscreen={isFullscreen || undefined}
+        data-inline-video-frame={!isFullscreen && !video.isAudio || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
         /* Fit the full picture within the media budget, reserving a separate
@@ -2108,7 +2123,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   // than growing past a screen.
                   maxHeight: splitControls ? MAX_MEDIA_HEIGHT - 47 : MAX_MEDIA_HEIGHT,
                 }
-        ), ...(splitControls ? { paddingBottom: 47, boxSizing: 'content-box' as const, ...(isFullscreen ? { height: 'calc(100dvh - 47px)' } : {}) } : {}) }}
+        ), ...(!isFullscreen && !video.isAudio ? {
+          aspectRatio: mediaAspect,
+          '--inline-video-width': `min(${100 * mediaAspect / (cropFeedVideo ? feedFrameAspect : mediaAspect)}%, calc((50svh - ${splitControls ? 47 : 0}px) * ${mediaAspect}))`,
+          '--inline-video-height': `calc(50svh - ${splitControls ? 47 : 0}px)`,
+        } : {}), ...(splitControls ? { paddingBottom: 47, boxSizing: 'content-box' as const, ...(isFullscreen ? { height: 'calc(100dvh - 47px)' } : {}) } : {}) } as React.CSSProperties}
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}

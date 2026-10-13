@@ -123,12 +123,12 @@ export default function BrainrotFeedHost() {
     if (!session || !mix) return;
     const next = mix.items.map((item, index) => mapToShortVideo(item, index) as ShortVideo);
     setFeed(prev => {
-      const base = prev.key === session.key ? prev.shorts : [];
+      const base = prev.key === session.key ? prev.shorts : session.initialVideo ? [session.initialVideo] : [];
       const shorts = appendStable(base, next, short => short.id);
       return shorts === prev.shorts ? prev : { key: session.key, shorts };
     });
   }, [session, mix]);
-  const shorts = session && feed.key === session.key ? feed.shorts : [];
+  const shorts = session && feed.key === session.key ? feed.shorts : session?.initialVideo ? [session.initialVideo] : [];
 
   const waitingOn = mix?.waitingOn ?? null;
   const waitingQuery = waitingOn ? queries[waitingOn] : null;

@@ -286,6 +286,7 @@ export interface BrainrotSession {
   key: number;
   /** The video the person swiped away from. */
   fromId?: string;
+  initialVideo?: import('@/types/feed.types').ShortVideo;
 }
 
 let session: BrainrotSession | null = null;
@@ -296,8 +297,8 @@ function emit() {
   for (const notify of listeners) notify();
 }
 
-export function openBrainrotFeed(fromId?: string): void {
-  session = { key: Date.now(), fromId };
+export function openBrainrotFeed(fromId?: string, initialVideo?: import('@/types/feed.types').ShortVideo): void {
+  session = { key: Date.now(), fromId, initialVideo };
   everOpened = true;
   emit();
 }
