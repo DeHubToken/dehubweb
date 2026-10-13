@@ -442,6 +442,7 @@ export default function HomePage() {
   
   // Feed container ref for pull-to-refresh constraint
   const feedContainerRef = useRef<HTMLDivElement>(null);
+  const swallowContentRef = useRef<HTMLDivElement>(null);
   
   // Debounce guard for home-refresh events to prevent rapid succession
   const lastRefreshTime = useRef<number>(0);
@@ -500,7 +501,7 @@ export default function HomePage() {
   // Two variants match: this page's pill and the collapsed GlobalFeedNav's.
   // Not on Immersive phones: the pill only drops in on demand under the capsule,
   // and posts run under it to the top of the screen.
-  useFeedSwallowClip(feedContainerRef, '[data-feed-nav]', [], { off: islandTopBar && isMobile });
+  useFeedSwallowClip(swallowContentRef, '[data-feed-nav]', [], { off: islandTopBar && isMobile });
 
   // --------------------------------------------------------------------------
   // PULL-TO-REFRESH HOOK
@@ -1119,10 +1120,12 @@ export default function HomePage() {
           Root only: this one instance also serves /app, /videos and /shorts, and
           "/" is both the canonical indexable URL and the 301 target — the others
           are noindex app chrome (see shouldServeSSR in the worker). */}
+      <div data-feed-swallow-bounds>
+      <div ref={swallowContentRef}>
+      <div data-feed-swallow-motion>
       {location.pathname === '/' && <HomeIntro />}
 
       {/* Feed Content - Pull-to-refresh only works within this container */}
-      <div data-feed-swallow-bounds>
       <div 
         ref={feedContainerRef}
         onTouchStart={handleTouchStart}
@@ -1136,7 +1139,6 @@ export default function HomePage() {
         onMouseLeave={pullHandlers.onMouseLeave}
         data-feed-pull-content
       >
-        <div data-feed-swallow-motion>
         {/* Keep the swallow clip stationary while the feed moves beneath it. */}
         <div
           ref={pullMotionRef}
@@ -1230,6 +1232,7 @@ export default function HomePage() {
         {/* end feed tabs */}
         </div>
         </div>
+      </div>
       </div>
       </div>
 
