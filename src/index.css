@@ -739,9 +739,11 @@ html[data-feed-loading] .dehub-intro { z-index: 121; }
 
 /* The scroll-cut wrappers otherwise trap the welcome card below #root::after,
    even at translateY(0). Keep its ancestry free of stacking contexts through
-   the frost fade; the normal scroll clipping resumes when the attribute goes. */
-html[data-feed-loading] [data-feed-swallow-bounds]:has(.dehub-intro) > div,
-html[data-feed-loading] [data-feed-swallow-bounds]:has(.dehub-intro) :is(
+   the frost fade; the normal scroll clipping resumes when the attribute goes.
+   The route marks this ancestry explicitly: a descendant :has() here makes
+   media DOM changes invalidate thousands of unrelated divs during scrolling. */
+html[data-feed-loading] [data-feed-welcome-bounds] > [data-feed-swallow-shell],
+html[data-feed-loading] [data-feed-welcome-bounds] :is(
   [data-feed-swallow-cut],
   [data-feed-swallow-motion],
   [data-feed-swallow-content]
