@@ -6,7 +6,7 @@ export const FEED_ICON_CLASS = {
   like: 'w-[23.76px] h-[23.76px] shrink-0',
   comment: 'w-[24.64px] h-[24.64px] shrink-0',
   share: 'w-[21.12px] h-[21.12px] shrink-0',
-  bookmark: 'w-[23.76px] h-[23.76px] shrink-0',
+  bookmark: 'w-[23.76px] h-[23.76px] shrink-0 scale-x-[1.12]',
   info: 'w-[23.76px] h-[23.76px] shrink-0',
   tip: 'w-[23.76px] h-[23.76px] shrink-0',
   pin: 'w-[21.12px] h-[21.12px] shrink-0',
