@@ -43,7 +43,7 @@ function fixture(timeline = false) {
 
 it('applies the fallback before the first paint and has no idle frame tail', () => {
   const { content, callbacks } = fixture();
-  expect(content.style.clipPath).toMatch(/^path\('M 0 120\.00 /);
+  expect(content.style.clipPath).toBe('inset(112.00px 0 0 0)');
   expect(content.dataset.feedSwallowDriver).toBe('frame');
   expect(callbacks).toHaveLength(0);
   act(() => window.dispatchEvent(new Event('scroll')));
@@ -67,7 +67,7 @@ it('lets the scroll timeline own fast scrolling and cancels it on unmount', () =
   expect(frames[frames.length - 1]?.transform).toBe('translateY(11200px)');
   expect(content.dataset.feedSwallowDriver).toBe('scroll-transform');
   expect(content.style.clipPath).toBe('');
-  expect(cutLayer.style.clipPath).toMatch(/^path\('M 0 120\.00 /);
+  expect(cutLayer.style.clipPath).toBe('inset(112.00px 0 0 0)');
   act(() => window.dispatchEvent(new Event('scroll')));
   expect(callbacks).toHaveLength(0);
   hook.unmount();
