@@ -26,22 +26,22 @@ const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const url = `http://127.0.0.1:${server.address().port}`;
 const evidence = [];
-function assertCut(bytes, bottom, label, rounded = false, viewportWidth) {
+function assertCut(bytes, bottom, label, viewportWidth) {
   const png = bytes[0] === 137 ? PNG.sync.read(bytes) : jpeg.decode(bytes, { useTArray: true });
   const scale = viewportWidth ? png.width / viewportWidth : 1;
   // Scan the full band above the cut. Green there is actual content leakage.
-  for (let y = 0; y < (bottom + (rounded ? 12 : 0)) * scale; y++) for (let x = Math.ceil(12 * scale); x < png.width - 12 * scale; x++) {
-    const cornerDistance = Math.min((x + 0.5) / scale - 12, (png.width - (x + 0.5)) / scale - 12);
-    const cut = rounded && cornerDistance < 12
-      ? bottom + 12 - Math.sqrt(144 - (12 - cornerDistance) ** 2)
-      : bottom;
+  for (let y = 0; y < bottom * scale; y++) for (let x = Math.ceil(12 * scale); x < png.width - 12 * scale; x++) {
     // Leave the antialiased boundary pixel out of the colour assertion.
-    if ((y + 1) / scale >= cut - 1) continue;
+    if ((y + 1) / scale >= bottom - 1) continue;
     const i = (y * png.width + x) * 4;
     assert(!(png.data[i + 1] > 200 && png.data[i] < 30), `${label}: content leaked at ${x},${y}`);
   }
   const visiblePixel = (Math.floor((bottom + 100) * scale) * png.width + Math.floor(png.width / 2)) * 4;
   assert(png.data[visiblePixel + 1] > 200 && png.data[visiblePixel] < 30, `${label}: feed must remain visible below the cut`);
+  // Catch a regression to the old bottom-edge cut: feed must show through
+  // the glass immediately below the new upper-rim cutoff.
+  const glassPixel = (Math.floor((bottom + 8) * scale) * png.width + Math.floor(png.width / 2)) * 4;
+  assert(png.data[glassPixel + 1] > 100 && png.data[glassPixel] < 70, `${label}: feed must show through the pill below the upper-rim cut`);
 }
 try {
   for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
@@ -58,7 +58,7 @@ try {
             await page.evaluate(y => window.scrollTo(0, y), y);
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const png = await page.screenshot();
-            assertCut(png, theme === 'hazy' ? 44 : 8, `${name}/${width}/${theme}/${y}`, theme === 'system' || theme === 'minimal');
+            assertCut(png, 12, `${name}/${width}/${theme}/${y}`);
           }
           await page.screenshot({ path: `${output}/${name}-${width}-${theme}.png` });
         }
@@ -71,8 +71,13 @@ try {
         for (const transform of ['translateY(calc(-100% - 3rem))', 'translateY(0px)']) {
           await page.evaluate(transform => document.querySelector('[data-feed-nav-outer]').style.transform = transform, transform);
           for (let sample = 0; sample < 8; sample++) {
-            const top = await page.locator('[data-feed-nav]').evaluate(el => el.getBoundingClientRect().top);
-            if (top > 1) assertCut(await page.screenshot(), Math.floor(top) - 1, `${name}/${width}/nav-transition`);
+            const gap = await page.evaluate(() => {
+              const layer = document.querySelector('#feed > [data-feed-swallow-cut]');
+              const inset = getComputedStyle(layer).clipPath.match(/inset\(([\d.-]+)px/);
+              return +inset[1] + layer.getBoundingClientRect().top - document.querySelector('[data-feed-nav]').getBoundingClientRect().top;
+            });
+            assert(Math.abs(gap - 4) < 1.5, `${name}/${width}/nav-transition: cutoff must follow the upper rim`);
+            await page.waitForTimeout(40);
           }
         }
         await page.waitForTimeout(350);
@@ -81,7 +86,7 @@ try {
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
         await page.evaluate(() => window.scrollTo(0, 14000));
         await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-        assertCut(await page.screenshot(), 44, `${name}/${width}/loaded-more`);
+        assertCut(await page.screenshot(), 12, `${name}/${width}/loaded-more`);
         if (name === 'chromium') {
           await page.evaluate(() => { document.documentElement.dataset.theme = 'system'; window.scrollTo(0, 400); });
           await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -106,7 +111,7 @@ try {
           const duringStall = trace.filter(event => event.name === 'Screenshot' && event.ts > start + 300000 && event.ts < end && event.args.snapshot);
           await writeFile(`${output}/stall-trace-${width}.json`, JSON.stringify(trace));
           assert(duringStall.length > 0, 'Must capture compositor frames during the traced main-thread stall');
-          for (const frame of duringStall) assertCut(Buffer.from(frame.args.snapshot, 'base64'), 8, `blocked-main-thread/${width}`, true, width);
+          for (const frame of duringStall) assertCut(Buffer.from(frame.args.snapshot, 'base64'), 12, `blocked-main-thread/${width}`, width);
           await writeFile(`${output}/blocked-main-thread-${width}.jpg`, Buffer.from(duringStall.at(-1).args.snapshot, 'base64'));
           await cdp.detach();
         }
@@ -118,9 +123,10 @@ try {
   if (process.env.CHECK_PRODUCTION === 'true') {
     const browser = await chromium.launch();
     try {
-      for (const width of [390, 1280]) {
+      for (const width of [390, 1280]) for (const theme of ['system', 'hazy']) for (const route of ['/app', '/features']) {
         const page = await browser.newPage({ viewport: { width, height: 800 } });
-        await page.goto('https://dehub.io/app', { waitUntil: 'domcontentloaded' });
+        await page.addInitScript(theme => localStorage.setItem('dehub.theme', theme), theme);
+        await page.goto(`https://dehub.io${route}`, { waitUntil: 'domcontentloaded' });
         await page.locator('[data-feed-swallow-driver="scroll-transform"]').first().waitFor({ timeout: 60000 });
         const measurements = [];
         for (const y of [300, 1800, 600, 2500, 100]) {
@@ -129,20 +135,20 @@ try {
           const cuts = await page.locator('[data-feed-swallow-driver="scroll-transform"]').evaluateAll(elements => elements.map(el => {
             const clipped = el.querySelector(':scope > [data-feed-swallow-cut]') || el;
             const clip = getComputedStyle(clipped).clipPath;
-            const nav = Array.from(document.querySelectorAll('[data-feed-nav]')).find(n => n.getBoundingClientRect().width > 0);
+            const scope = el.closest('[data-cached-page]') || document;
+            const nav = Array.from(scope.querySelectorAll('[data-feed-nav], [data-feed-nav-outer] > [data-page-bento]')).find(n => n.getBoundingClientRect().width > 0);
             const cr = clipped.getBoundingClientRect(); const pr = nav?.getBoundingClientRect();
-            const first = clip.match(/M 0 ([\d.-]+)/); const inset = clip.match(/inset\(([\d.-]+)px/);
-            const radius = nav ? Math.min(parseFloat(getComputedStyle(nav).borderTopLeftRadius), pr.width / 2, pr.height / 2) : 0;
-            return { clip, navTop: pr?.top, cutTop: first ? +first[1] + cr.top - radius : inset ? +inset[1] + cr.top : null, edge: first ? 'top' : 'bottom', navBottom: pr?.bottom };
+            const inset = clip.match(/inset\(([\d.-]+)px/);
+            return { clip, navTop: pr?.top, cutTop: inset ? +inset[1] + cr.top : null };
           }));
           for (const cut of cuts) {
             assert.notEqual(cut.cutTop, null, 'Production must have an active cut');
-            assert(Math.abs(cut.cutTop - (cut.edge === 'top' ? cut.navTop : cut.navBottom)) < 1.5, `Production cutoff mismatch: ${JSON.stringify(cut)}`);
+            assert(Math.abs(cut.cutTop - cut.navTop - 4) < 1.5, `Production cutoff mismatch: ${JSON.stringify(cut)}`);
           }
           measurements.push({ y, cuts });
         }
-        await page.screenshot({ path: `${output}/production-${width}.png` });
-        evidence.push({ browser: 'production-chromium', width, measurements });
+        await page.screenshot({ path: `${output}/production-${route.slice(1)}-${theme}-${width}.png` });
+        evidence.push({ browser: 'production-chromium', width, theme, route, measurements });
         await page.close();
       }
     } finally { await browser.close(); }

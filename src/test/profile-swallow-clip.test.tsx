@@ -5,7 +5,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 afterEach(() => { cleanup(); document.body.innerHTML = ''; delete document.documentElement.dataset.theme; vi.unstubAllGlobals(); });
 
 it.each([
-  ['hazy', undefined, false, true],
+  ['hazy', undefined, false, false],
   ['system', undefined, false, false],
   ['immersive', undefined, false, false],
   ['system', 'bottom', false, true],
@@ -30,7 +30,7 @@ it.each([
   ));
   act(() => frame?.(0));
   if (bottom) expect(content.style.clipPath).toBe('inset(156.00px 0 0 0)');
-  else expect(content.style.clipPath).toMatch(/^path\('M 0 116\.00 /);
+  else expect(content.style.clipPath).toBe('inset(108.00px 0 0 0)');
   unmount();
 });
 
