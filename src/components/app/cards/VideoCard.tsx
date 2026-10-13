@@ -2605,7 +2605,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-video-control-strip={splitControls || undefined} data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
-            {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-none" />}
+            {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-pan-y" />}
 
             <div data-video-button-row className="flex items-center justify-between gap-1 px-2">
               <div data-video-transport className="flex items-center gap-1">
