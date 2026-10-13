@@ -140,3 +140,16 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(
   box-shadow: inset 0 0 0 .5px rgba(11,11,13,.07), inset 0 1px 0 rgba(255,255,255,.9), 0 1px 1px rgba(11,11,13,.03), 0 6px 16px -4px rgba(11,11,13,.08), 0 18px 36px -12px rgba(11,11,13,.10) !important;
   backdrop-filter: blur(24px) saturate(1.8) !important;
 }
+
+/* Toasts sit outside #app-root, so the ink rules above never reach them: the
+   white copy and the white glass buttons vanished into the white card (the
+   new-version toast showed a heading over two blank pills). */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-sonner-toast] { color: var(--sl-ink) !important; border-color: rgba(11,11,13,.08) !important; box-shadow: 0 10px 30px rgba(0,0,0,.10), 0 0 0 .5px rgba(0,0,0,.06) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-sonner-toast] :is([data-title], [data-content]) { color: var(--sl-ink) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-sonner-toast] [data-description] { color: var(--sl-ink-2) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-sonner-toast] :is([data-description] :is(button, a), [data-button]) {
+  color: var(--sl-ink) !important; background: rgba(11,11,13,.05) !important; background-image: none !important;
+  border-color: rgba(11,11,13,.12) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 1px 2px rgba(0,0,0,.06) !important;
+}
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-sonner-toast] [data-description] :is(button, a):first-child { color: #fff !important; background: var(--sl-ink) !important; border-color: transparent !important; box-shadow: 0 2px 8px rgba(0,0,0,.18) !important; }
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-sonner-toast] [data-close-button] { color: var(--sl-ink) !important; background: rgba(255,255,255,.9) !important; border-color: rgba(11,11,13,.12) !important; }
