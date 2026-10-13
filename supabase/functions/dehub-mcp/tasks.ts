@@ -1,5 +1,6 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
+import { recordPostViews } from "./post-views.ts";
 import { agentOwnerAllowed, explicitTaskPlan, nextScheduledRun, parseTaskPlan, PLAN_TOOL, taskPlanSchema, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
@@ -42,7 +43,7 @@ Tools:
 dehub_follow: {target_wallet: 0x address or exact username, action: follow|unfollow}. Named users are resolved before queueing. all_users follows the public directory; post_authors follows unique creators of posts in a specified window.
 dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects posts in a time window. The runner preserves existing matching votes.
 dehub_comment: {token_id: string, content: string, reply_to_comment_id?: string}. Only literal requested comment text; do not invent replies for a bulk audience.
-dehub_update_profile: {bio?:string,display_name?:string,avatar_url?:string,banner_url?:string}.
+dehub_update_profile: {username?:string,bio?:string,display_name?:string,avatar_url?:string,banner_url?:string}.
 dehub_post_create: {content:string,title?:string,category?:string,media_url?:string,media_type?:text|image|video}. If the user asks for posts ABOUT a topic, set topic to the writing instructions; a new original post is written on each run. Literal text uses content and null topic. No image/video generation capability.
 Use audience single unless bulk is explicitly requested. A request to follow every user is all_users, not ten users. A request to follow people who posted today uses post_authors, from local midnight to now. Convert relative windows with the timezone above. Never extend the window into the future. All dates must be ISO UTC with Z.
 For N posts/day use ONE generated-post step and interval_minutes 1440/N (fractional minutes are allowed); for once use null. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
@@ -103,6 +104,7 @@ async function loadTargets(step: TaskStep, task: any, token: string): Promise<vo
       const at = Date.parse(post.createdAt);
       return Number.isFinite(at) && at >= Date.parse(step.from!) && at < Date.parse(step.to!);
     });
+    await recordPostViews(posts.map((post: any) => post.tokenId), { token });
     cursor.targets = posts.map((post: any) => step.audience === "post_authors" ? post.minter?.toLowerCase() : String(post.tokenId)).filter(Boolean);
     cursor.afterTime = data.pagination.next_cursor?.created_at;
     cursor.afterToken = data.pagination.next_cursor?.token_id;
@@ -221,7 +223,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     const form = await req.formData();
     input = { operation: form.get('operation'), agent_id: form.get('agent_id'), updates: {} };
     if (input.operation !== 'update_profile') return json({ error: 'Unsupported upload operation.' }, 400);
-    for (const field of ['bio', 'display_name']) if (form.has(field)) input.updates[field] = form.get(field);
+    for (const field of ['username', 'bio', 'display_name']) if (form.has(field)) input.updates[field] = form.get(field);
     for (const field of ['avatar', 'banner'] as const) {
       const file = form.get(field);
       if (file === null) continue;

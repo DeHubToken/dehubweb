@@ -110,14 +110,44 @@ Deno.test('profile reads and edits require a verified preview owner and an owned
 Deno.test('profile uploads preserve both image files and intentional empty bio', async () => {
   const form = new FormData();
   form.set('operation', 'update_profile'); form.set('agent_id', 'agent');
-  form.set('display_name', 'Community'); form.set('bio', '');
+  form.set('username', 'community_news'); form.set('display_name', 'Community'); form.set('bio', '');
   form.set('avatar', new File(['avatar bytes'], 'avatar.jpg', { type: 'image/jpeg' }));
   form.set('banner', new File(['banner bytes'], 'banner.webp', { type: 'image/webp' }));
   const result = await profileRequest(form);
   assert(result.status === 200 && result.call?.tool === 'dehub_update_profile', 'upload did not reach the profile callback');
   assert(result.call?.args.bio === '' && result.call?.args.display_name === 'Community', 'profile fields were lost');
+  assert(result.call?.args.username === 'community_news', 'username was lost');
   assert(await result.call?.images?.avatar?.text() === 'avatar bytes', 'avatar bytes changed');
   assert(await result.call?.images?.banner?.text() === 'banner bytes', 'banner bytes changed');
+});
+
+Deno.test('bulk post reads record public views before the cursor advances or actions run', async () => {
+  for (const failViews of [false, true]) {
+    const test = fixture();
+    const step = test.task.plan.steps[0] as any;
+    step.audience = 'posts'; step.from = '2026-10-01T00:00:00Z'; step.to = '2026-10-02T00:00:00Z';
+    const originalFetch = globalThis.fetch;
+    let viewed = false;
+    globalThis.fetch = async (url, init) => {
+      if (String(url).includes('/api/feed?')) return Response.json({ result: [
+        { tokenId: 123, createdAt: '2026-10-01T12:00:00Z' },
+        { tokenId: 456, createdAt: '2026-09-01T12:00:00Z' },
+      ], pagination: { next_cursor: null } });
+      assert(String(url) === 'https://api.dehub.io/api/view/batch', 'unexpected network call');
+      assert(JSON.stringify(JSON.parse(String(init?.body)).tokenIds) === '[123]', 'counted unread/out-of-window posts');
+      assert(new Headers(init?.headers).get('authorization') === 'Bearer test', 'lost the reading account');
+      assert(test.calls() === 0, 'action ran before views were recorded');
+      viewed = true;
+      return failViews ? new Response('', { status: 503 }) : Response.json({ success: true });
+    };
+    try {
+      let failed = false;
+      try { await test.run(); } catch { failed = true; }
+      assert(viewed && failed === failViews, 'view failure was hidden');
+      assert(test.calls() === (failViews ? 0 : 1), 'lost ordering or advanced after a failed view write');
+      if (failViews) assert(!('targets' in test.task.cursor), 'persisted cursor before recording views');
+    } finally { globalThis.fetch = originalFetch; }
+  }
 });
 
 Deno.test('unsupported or oversized profile uploads never reach a write callback', async () => {
