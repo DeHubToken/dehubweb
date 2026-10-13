@@ -16,6 +16,7 @@
     "https://deno.land/std@0.168.0/async/pool.ts": "6854d8cd675a74c73391c82005cbbe4cc58183bddcd1fbbd7c2bcda42b61cf69",
     "https://deno.land/std@0.168.0/async/retry.ts": "e8e5173623915bbc0ddc537698fa418cf875456c347eda1ed453528645b42e67",
     "https://deno.land/std@0.168.0/async/tee.ts": "3a47cc4e9a940904fd4341f0224907e199121c80b831faa5ec2b054c6d2eff5e",
+    "https://deno.land/std@0.168.0/encoding/hex.ts": "b51e99b684486a3ad2406807a8be953f5ef8bac95af202774a759f9fcf0d87a6",
     "https://deno.land/std@0.168.0/http/server.ts": "e99c1bee8a3f6571ee4cdeb2966efad465b8f6fe62bec1bdb59c1f007cc4d155",
     "https://deno.land/std@0.190.0/_util/asserts.ts": "178dfc49a464aee693a7e285567b3d0b555dc805ff490505a8aae34f9cfb1462",
     "https://deno.land/std@0.190.0/async/abortable.ts": "fd682fa46f3b7b16b4606a5ab52a7ce309434b76f820d3221bdfb862719a15d7",
@@ -53,13 +54,15 @@
     "https://esm.sh/qrcode@1.5.4": "db5f81bc5a339015d2a6d91018b9c9e382b7d7659aff51a1dd6e0b2c5a9df124",
     "https://esm.sh/replicate@0.25.2": "006f94ae2bbe2e5fa584334958e7215bdc896235fe027aa17be1934c97f3f4c4",
     "https://esm.sh/satori@0.10.13": "466fce1889e84dd813f3822553929ae44bc6020c1b7c448776bfa1bd90126936",
-    "https://esm.sh/standardwebhooks@1.0.0": "b8cafcb7e9a890c14c0eb74cb093f36333000122e2276cc204818f6a680c8ba9"
+    "https://esm.sh/standardwebhooks@1.0.0": "b8cafcb7e9a890c14c0eb74cb093f36333000122e2276cc204818f6a680c8ba9",
+    "https://esm.sh/stripe@22.0.2": "798f6bfcc183b06f58c383d365ee7bd315ce187b50a6ab81672fcc5d546ff239"
   },
   "workspace": {
     "packageJson": {
       "dependencies": [
         "npm:@coinbase/wallet-sdk@^4.3.7",
         "npm:@eslint/js@^9.32.0",
+        "npm:@farcaster/miniapp-host@0.3.0",
         "npm:@hookform/resolvers@^3.10.0",
         "npm:@lovable.dev/cloud-auth-js@^1.1.2",
         "npm:@lovable.dev/mcp-js@0.20",
@@ -96,6 +99,7 @@
         "npm:@radix-ui/react-tooltip@^1.2.7",
         "npm:@radix-ui/react-visually-hidden@^1.2.4",
         "npm:@rainbow-me/rainbowkit@^2.2.10",
+        "npm:@resvg/resvg-wasm@2.6.2",
         "npm:@solana/web3.js@^1.98.4",
         "npm:@stripe/react-stripe-js@6.2.0",
         "npm:@stripe/stripe-js@9.2.0",
@@ -134,7 +138,7 @@
         "npm:clsx@^2.1.1",
         "npm:cmdk@^1.1.1",
         "npm:date-fns@^3.6.0",
-        "npm:dompurify@^3.4.13",
+        "npm:dompurify@^3.4.16",
         "npm:embla-carousel-react@^8.6.0",
         "npm:eslint-plugin-react-hooks@^5.2.0",
         "npm:eslint-plugin-react-refresh@~0.4.20",
@@ -180,11 +184,11 @@
         "npm:typescript@^5.8.3",
         "npm:vaul@~0.9.9",
         "npm:viem@2.44.4",
-        "npm:vite@^5.4.19",
-        "npm:vitest@^3.2.6",
+        "npm:vite@^8.3.1",
+        "npm:vitest@^5.0.2",
         "npm:wagmi@^2.19.5",
         "npm:webm-muxer@^5.1.4",
-        "npm:wrangler@^4.133.0",
+        "npm:wrangler@^4.149.0",
         "npm:zod@^3.25.76",
         "npm:zustand@^5.0.14"
       ]

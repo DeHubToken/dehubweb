@@ -17,6 +17,7 @@ import {
   type Segment,
   type Target,
 } from '../_shared/transcripts.ts';
+import { aiChat } from '../_shared/ai-chat.ts';
 
 const AI_KEY = Deno.env.get('GEMINI_API_KEY') ?? Deno.env.get('LOVABLE_API_KEY');
 const FAL_KEY = Deno.env.get('FAL_KEY');
