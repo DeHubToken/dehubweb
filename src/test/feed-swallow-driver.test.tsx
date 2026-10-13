@@ -55,7 +55,7 @@ it('lets the scroll timeline own fast scrolling and cancels it on unmount', () =
   expect(animate).toHaveBeenCalledTimes(1);
   const frames = animate.mock.calls[0][0] as Keyframe[];
   expect(frames[0].clipPath).toMatch(/^path\('M 0 120\.00 /);
-  expect(frames.at(-1)?.clipPath).toMatch(/^path\('M 0 11320\.00 /);
+  expect(frames[frames.length - 1]?.clipPath).toMatch(/^path\('M 0 11320\.00 /);
   expect(content.dataset.feedSwallowDriver).toBe('scroll-timeline');
   expect(content.style.clipPath).toBe('');
   act(() => window.dispatchEvent(new Event('scroll')));
