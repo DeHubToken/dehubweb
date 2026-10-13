@@ -191,6 +191,37 @@ describe('video scrub priority', () => {
     expect(scroll.defaultPrevented).toBe(false);
   });
 
+  it('leaves vertical swipes through the expanded seek area to native scrolling', () => {
+    const s = setup(true), caption = s.getByTestId('caption');
+    const listen = vi.spyOn(document, 'addEventListener');
+    s.pointer(caption, 'pointerdown', 100, 110, 'touch');
+    s.pointer(caption, 'pointermove', 102, 70, 'touch');
+    const move = new Event('touchmove', { bubbles: true, cancelable: true });
+    fireEvent(caption, move);
+    s.pointer(caption, 'pointerup', 102, 70, 'touch');
+    expect(move.defaultPrevented).toBe(false);
+    expect(s.onStart).not.toHaveBeenCalled();
+    expect(s.onCommit).not.toHaveBeenCalled();
+    expect(listen.mock.calls.filter(([type]) => type === 'touchmove')).toHaveLength(0);
+    listen.mockRestore();
+  });
+
+  it('installs a blocking touch listener only for an active scrub and removes it on release', () => {
+    const listen = vi.spyOn(document, 'addEventListener');
+    const remove = vi.spyOn(document, 'removeEventListener');
+    const s = setup(true), track = s.getByTestId('track');
+    expect(listen.mock.calls.filter(([type]) => type === 'touchmove')).toHaveLength(0);
+    s.pointer(track, 'pointerdown', 20, 95);
+    const added = listen.mock.calls.find(([type]) => type === 'touchmove')!;
+    expect(added[2]).toEqual({ capture: true, passive: false });
+    s.pointer(track, 'pointerup', 40, 95);
+    expect(remove).toHaveBeenCalledWith('touchmove', added[1], true);
+    const move = new Event('touchmove', { bubbles: true, cancelable: true });
+    fireEvent(track, move);
+    expect(move.defaultPrevented).toBe(false);
+    listen.mockRestore(); remove.mockRestore();
+  });
+
   it('preserves stationary transport button taps with the expanded post boundary', () => {
     const s = setup(true), button = s.getByRole('button', { name: 'Play' });
     s.pointer(button, 'pointerdown', 20, 80);

@@ -22,6 +22,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
   } | null>(null);
   const swallowClick = useRef(false);
   const bottomTouch = useRef(false);
+  const releaseScroll = useRef<(() => void) | null>(null);
   const rectAt = (element: HTMLDivElement) => (args.mediaRef?.current ?? element).getBoundingClientRect();
   const timeAt = (event: PointerEvent<HTMLDivElement>) => {
     const rect = rectAt(event.currentTarget);
@@ -32,9 +33,8 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
     return args.enabled && x >= left && x <= right && y >= Math.max(top, bottom - 64)
       && y <= bottom + (args.mediaRef ? 24 : 0);
   };
-  useEffect(() => {
-    const element = args.eventRef?.current;
-    if (!element) return;
+  const ownScroll = (element: HTMLDivElement) => {
+    if (releaseScroll.current) return;
     // The expanded area includes ordinary caption/author DOM below the player.
     // Prevent browser panning only while a scrub owns this touch; React's root
     // touch listeners are passive and cannot keep that pointer stream alive.
@@ -44,11 +44,14 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
     // Run before React stops propagation at its root capture listener.
     const document = element.ownerDocument;
     document.addEventListener('touchmove', keepScrub, { capture: true, passive: false });
-    return () => document.removeEventListener('touchmove', keepScrub, true);
-  }, [args.eventRef]);
+    releaseScroll.current = () => document.removeEventListener('touchmove', keepScrub, true);
+  };
+  const freeScroll = () => { releaseScroll.current?.(); releaseScroll.current = null; };
+  useEffect(() => () => releaseScroll.current?.(), []);
   const cancel = () => {
     const active = gesture.current;
     gesture.current = null;
+    freeScroll();
     swallowClick.current = true;
     if (active?.dragging) {
       args.onCancel();
@@ -80,6 +83,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       }
       if (dedicated) {
         swallowClick.current = true;
+        ownScroll(event.currentTarget);
         args.onStart();
         args.onPreview(timeAt(event));
       }
@@ -94,6 +98,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
         if (dx <= 6 || dx <= dy) return;
         active.dragging = true;
         swallowClick.current = true;
+        ownScroll(event.currentTarget);
         args.onStart();
         event.currentTarget.setPointerCapture(event.pointerId);
       }
@@ -105,6 +110,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       const active = gesture.current;
       if (!active || active.id !== event.pointerId) return;
       gesture.current = null;
+      freeScroll();
       if (active.button && !active.dragging) return;
       swallowClick.current = true;
       event.preventDefault();
