@@ -101,6 +101,7 @@ import { useGenerationStore, type GenerationJob } from '@/store/generationStore'
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
 import { CounterChip, SelectChip, ToggleChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
+import { MaboroshiShowcase } from '../MaboroshiShowcase';
 import { GenerationExample } from './GenerationExample';
 import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
@@ -2120,6 +2121,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         </div>
       </div>
 
+      <MaboroshiShowcase />
       <section className="px-3 pb-6 sm:px-4">
         {/* One input for both channels. The accept list and the handler follow
             the mode, so the picker offers recordings on the audio tasks that
