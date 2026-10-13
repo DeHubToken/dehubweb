@@ -8,6 +8,8 @@ import { requireDeHubAuth } from "../_shared/auth.ts";
 import { agentOwnerAllowed } from "./task-plan.ts";
 import { handleTaskRequest, type TaskTool, type ProfileImages } from "./tasks.ts";
 import { anonymousViewerId, recordPostViews } from "./post-views.ts";
+import { resolveVoteWeight } from "../_shared/badge-weight.ts";
+import { agentCapForBadgeWeight } from "./agent-cap.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -33,10 +35,6 @@ const RATE_LIMITS: Record<string, { limit: number; windowMs: number }> = {
   profile_update: { limit: 5, windowMs: 60 * 60 * 1000 },
   default: { limit: 100, windowMs: 60 * 1000 },
 };
-
-// Cap on agents per owner wallet. dehub_register mints a real DeHub account
-// every call, and wallets are free to make, so without this it is a spam faucet.
-const MAX_AGENTS_PER_OWNER = 5;
 
 // The agent name becomes its DeHub username, so it has to satisfy the same
 // rule the signup modal enforces: lowercase, digits and underscores.
@@ -419,13 +417,14 @@ const REGISTER_AUTH_HINT =
  * The owner is the wallet on the caller's verified DeHub token. It used to be
  * whatever owner_wallet_address the caller sent, so anyone could file agents
  * under someone else's wallet: they showed up in that wallet's /app/agents,
- * were attributed to it, and used up its MAX_AGENTS_PER_OWNER slots. The field
+ * were attributed to it, and used up its agent slots. The field
  * is still accepted, but only as a cross-check.
  */
 async function registerAgent(
   req: Request,
   input: {
     name: string;
+    display_name?: string;
     description?: string;
     owner_wallet_address?: string;
   },
@@ -462,17 +461,23 @@ async function registerAgent(
       },
     };
   }
+  const displayName = input.display_name?.trim() || name;
+  if (displayName.length > 100) return { status: 400, body: { error: "Display name must be 100 characters or fewer." } };
+
+  let cap: number;
+  try { cap = agentCapForBadgeWeight((await resolveVoteWeight(owner, true)).weight); }
+  catch { return { status: 503, body: { error: "Badge allowance is temporarily unavailable. Try again." } }; }
 
   // Reserve before authentication so retries never create orphaned accounts or keys.
   const wallet = Wallet.createRandom();
   const bio = input.description?.trim() || `AI agent: ${name}`;
   const { data: reserved, error: reserveError } = await supabase.rpc('reserve_agent_registration', {
     _owner: owner, _name: name, _description: bio, _wallet: wallet.address.toLowerCase(),
-    _private_key: wallet.privateKey, _api_key: generateApiKey(),
+    _private_key: wallet.privateKey, _api_key: generateApiKey(), _limit: cap,
   });
   if (reserveError || !reserved) {
     if (reserveError?.code === '23505') return { status: 409, body: { error: `Agent name "${name}" is already taken` } };
-    if (reserveError?.message === 'AGENT_OWNER_LIMIT') return { status: 429, body: { error: `You already own ${MAX_AGENTS_PER_OWNER} agents, which is the limit.` } };
+    if (reserveError?.message === 'AGENT_OWNER_LIMIT') return { status: 429, body: { error: `Your badge allows ${cap} agent${cap === 1 ? '' : 's'}, and all slots are in use.` } };
     return { status: 503, body: { error: 'Account registration is temporarily unavailable. Try again.' } };
   }
   const registration = reserved as AgentRow;
@@ -488,9 +493,12 @@ async function registerAgent(
   const profile = await dehubApi("/api/update_profile", {
     method: "POST",
     token: authToken,
-    body: { username: name, aboutMe: registration.description },
+    body: { username: name, displayName, aboutMe: registration.description },
   });
-  if (!profile.ok) console.warn(`[Register] Profile update failed for "${name}": ${profile.message}`);
+  if (!profile.ok) {
+    console.warn(`[Register] Profile update failed for "${name}": ${profile.message}`);
+    return { status: 502, body: { error: `Profile setup could not finish. Retry with the same username "${name}".` } };
+  }
 
   const { data, error } = await supabase
     .from("ai_agents")
@@ -641,6 +649,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         name: z
           .string()
           .describe("Unique username for the agent (3-20 chars, lowercase letters/numbers/underscore)"),
+        display_name: z.string().min(1).max(100).optional().describe("Public display name, separate from the username"),
         description: z.string().optional().describe("Bio describing what the agent does"),
         owner_wallet_address: z
           .string()
@@ -1403,7 +1412,7 @@ app.post("/*", async (c, next) => {
 app.post("/*", async (c, next) => {
   if (!new URL(c.req.url).pathname.endsWith("/register")) return next();
 
-  let input: { name?: string; description?: string; owner_wallet_address?: string };
+  let input: { name?: string; display_name?: string; description?: string; owner_wallet_address?: string };
   try {
     input = await c.req.json();
   } catch {
@@ -1412,6 +1421,7 @@ app.post("/*", async (c, next) => {
 
   const { status, body } = await registerAgent(c.req.raw, {
     name: input.name ?? "",
+    display_name: input.display_name,
     description: input.description,
     owner_wallet_address: input.owner_wallet_address,
   });
@@ -1419,6 +1429,19 @@ app.post("/*", async (c, next) => {
     status,
     headers: { "Content-Type": "application/json" },
   });
+});
+
+app.get("/*", async (c, next) => {
+  if (!new URL(c.req.url).pathname.endsWith("/limits")) return next();
+  const auth = await requireDeHubAuth(c.req.raw);
+  if (!auth.ok) return auth.response;
+  if (!agentOwnerAllowed(auth.wallet)) return c.json({ error: "Agents are in private preview." }, 403);
+  try {
+    const { weight, badgeName } = await resolveVoteWeight(auth.wallet, true);
+    return c.json({ limit: agentCapForBadgeWeight(weight), badge: badgeName });
+  } catch {
+    return c.json({ error: "Badge allowance is temporarily unavailable. Try again." }, 503);
+  }
 });
 
 app.get("/*", (c, next) => {
