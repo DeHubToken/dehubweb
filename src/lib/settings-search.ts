@@ -115,6 +115,7 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
   { tab: 'content', anchor: 'skip-segments', label: 'Skip sponsors and intros', labelKey: 'settings.skipSegments', keywords: 'sponsorblock ads intro' },
   { tab: 'content', anchor: 'video-glitch', label: 'Glitch effect while videos load', labelKey: 'settings.videoGlitch', keywords: 'static noise scanlines animation loading' },
   { tab: 'content', anchor: 'channel-speed', label: 'Playback speed per channel', labelKey: 'settings.channelSpeed', keywords: 'speed playback rate' },
+  { tab: 'content', anchor: 'feed-video-shape', label: 'Video size in your feed', labelKey: 'settings.feedVideoShape', keywords: 'tall vertical portrait long square widescreen wide shorter smaller bento card height' },
   { tab: 'content', anchor: 'ad-load', label: 'Ads in your feed', labelKey: 'settings.adLoad', keywords: 'advertising frequency sponsored' },
 
   // Messages
