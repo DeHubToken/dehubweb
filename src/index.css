@@ -6035,6 +6035,24 @@ html[data-system-tone="light"] .art-rim {
 [data-feed-video-frame]:not(#_) {
   max-height: 75svh !important;
 }
+/* Phone feed preview (VideoCard): the frame hugs the clip within 55% of the
+   screen, left aligned like X, so a slim video leaves empty space on the
+   right rather than bars at its sides.
+   Beats the cap above and the cinematic feed's full-width media rule. */
+[data-feed-video-frame][data-feed-preview]:not(#_):not(#_) {
+  max-height: 55svh !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+[data-media-full][data-feed-preview]:not(#_):not(#_) {
+  width: min(100%, calc(55svh * var(--feed-preview-aspect, 1.7778))) !important;
+}
+/* The cinematic feed lays its author row and buttons over the top of the
+   media, so unmute drops below them there. */
+html[data-theme="immersive"] [data-cinematic] [data-preview-mute] {
+  top: 3.5rem;
+}
 @media (max-width: 639px) {
   :root {
     --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
