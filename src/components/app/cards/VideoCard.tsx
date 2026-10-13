@@ -157,6 +157,7 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useMediaAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
+import { FEED_VIDEO_MIN_ASPECT, useFeedVideoShape } from '@/lib/feed-video-shape';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { GatePreview } from './GatePreview';
 import { deviceWidth, isMdUp } from '@/lib/media-url';
@@ -1663,11 +1664,17 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
   const cropFeedVideo = !isImmersive && !isFullscreen && !video.isAudio;
-  // Feed videos fill the bento's width. The box takes the clip's shape, so the
-  // only trim is top and bottom when a tall clip hits the height cap. A clip
-  // wider than the box (wider than the shape clamp allows) is shown whole
-  // instead, so its sides are never cut.
-  const fillFeedWidth = cropFeedVideo && !(intrinsicAspect && intrinsicAspect > mediaAspect + 0.01);
+  // Settings > Video size in your feed: a tall clip letterboxes inside a
+  // square or 16:9 frame instead of filling the screen. Feed frame only.
+  const feedVideoShape = useFeedVideoShape();
+  const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
+  // Otherwise feed videos fill the bento's width. The box takes the clip's
+  // shape, so the only trim is top and bottom when a tall clip hits the height
+  // cap. A clip wider than the box (wider than the shape clamp allows) is
+  // shown whole instead, so its sides are never cut.
+  const fillFeedWidth = cropFeedVideo
+    && feedFrameAspect <= mediaAspect + 0.01
+    && !(intrinsicAspect && intrinsicAspect > mediaAspect + 0.01);
   const feedVideoFit = fillFeedWidth ? 'object-cover' : 'object-contain';
 
   // Claims the shared <video> for this post into the slot rendered below, and
@@ -2097,7 +2104,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 }
               : cropFeedVideo
                 ? {
-                    aspectRatio: mediaAspect,
+                    aspectRatio: feedFrameAspect,
                     width: '100%',
                     maxHeight: splitControls ? 'calc(75svh - 47px)' : '75svh',
                   }
