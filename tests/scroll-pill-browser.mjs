@@ -8,6 +8,7 @@ const require = createRequire(resolve(process.env.BROWSER_DEPS, 'package.json'))
 const { build } = require('esbuild');
 const { chromium, webkit } = require('playwright');
 const { PNG } = require('pngjs');
+const jpeg = require('jpeg-js');
 const output = resolve('scroll-pill-evidence');
 await mkdir(output, { recursive: true });
 const bundle = await build({
@@ -24,16 +25,17 @@ const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const url = `http://127.0.0.1:${server.address().port}`;
 const evidence = [];
-function assertCut(bytes, bottom, label, rounded = false) {
-  const png = PNG.sync.read(bytes);
+function assertCut(bytes, bottom, label, rounded = false, viewportWidth) {
+  const png = bytes[0] === 137 ? PNG.sync.read(bytes) : jpeg.decode(bytes, { useTArray: true });
+  const scale = viewportWidth ? png.width / viewportWidth : 1;
   // Scan the full band above the cut. Green there is actual content leakage.
-  for (let y = 0; y < bottom + (rounded ? 12 : 0); y++) for (let x = 12; x < png.width - 12; x++) {
-    const cornerDistance = Math.min(x + 0.5 - 12, png.width - 12 - (x + 0.5));
+  for (let y = 0; y < (bottom + (rounded ? 12 : 0)) * scale; y++) for (let x = Math.ceil(12 * scale); x < png.width - 12 * scale; x++) {
+    const cornerDistance = Math.min((x + 0.5) / scale - 12, (png.width - (x + 0.5)) / scale - 12);
     const cut = rounded && cornerDistance < 12
       ? bottom + 12 - Math.sqrt(144 - (12 - cornerDistance) ** 2)
       : bottom;
     // Leave the antialiased boundary pixel out of the colour assertion.
-    if (y + 1 >= cut) continue;
+    if ((y + 1) / scale >= cut - 1) continue;
     const i = (y * png.width + x) * 4;
     assert(!(png.data[i + 1] > 200 && png.data[i] < 30), `${label}: content leaked at ${x},${y}`);
   }
@@ -81,26 +83,24 @@ try {
           await page.evaluate(() => { document.documentElement.dataset.theme = 'system'; window.scrollTo(0, 400); });
           await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
           const cdp = await page.context().newCDPSession(page);
-          // Page.captureScreenshot waits for the renderer's main thread.
-          // Screencast frames arrive directly as the compositor paints.
-          let busyFinished = false;
-          const duringStall = [];
-          cdp.on('Page.screencastFrame', frame => {
-            void cdp.send('Page.screencastFrameAck', { sessionId: frame.sessionId });
-            if (!busyFinished && frame.metadata.scrollOffsetY > 450) duringStall.push(frame);
-          });
-          await cdp.send('Page.startScreencast', { format: 'png', everyNthFrame: 1 });
-          const busy = cdp.send('Runtime.evaluate', { expression: 'const until=performance.now()+2500;while(performance.now()<until){}' }).then(() => { busyFinished = true; });
-          await new Promise(resolve => setTimeout(resolve, 100));
-          const gesture = cdp.send('Input.synthesizeScrollGesture', { x: width / 2, y: 600, yDistance: -700, speed: 2000, gestureSourceType: 'mouse' });
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          assert.equal(busyFinished, false, 'The compositor sample must occur while JavaScript is blocked');
-          await busy;
+          // Trace screenshots are timestamped compositor frames. Start the
+          // gesture before blocking JS so input hit-testing has already landed.
+          const trace = [];
+          cdp.on('Tracing.dataCollected', event => trace.push(...event.value));
+          await cdp.send('Tracing.start', { categories: 'disabled-by-default-devtools.screenshot,devtools.timeline,blink.user_timing', transferMode: 'ReportEvents' });
+          const gesture = cdp.send('Input.synthesizeScrollGesture', { x: width / 2, y: 600, yDistance: -2000, speed: 1000, gestureSourceType: 'mouse' });
+          await new Promise(resolve => setTimeout(resolve, 150));
+          await cdp.send('Runtime.evaluate', { expression: "performance.mark('swallow-stall-start');const until=performance.now()+1000;while(performance.now()<until){}performance.mark('swallow-stall-end');" });
           await gesture;
-          await cdp.send('Page.stopScreencast');
-          assert(duringStall.length > 0, 'Must capture scrolling compositor frames during the main-thread stall');
-          for (const frame of duringStall) assertCut(Buffer.from(frame.data, 'base64'), 8, `blocked-main-thread/${width}`, true);
-          await writeFile(`${output}/blocked-main-thread-${width}.png`, Buffer.from(duringStall.at(-1).data, 'base64'));
+          const finished = new Promise(resolve => cdp.once('Tracing.tracingComplete', resolve));
+          await cdp.send('Tracing.end'); await finished;
+          const start = trace.find(event => event.name === 'swallow-stall-start')?.ts;
+          const end = trace.find(event => event.name === 'swallow-stall-end')?.ts;
+          const duringStall = trace.filter(event => event.name === 'Screenshot' && event.ts > start && event.ts < end && event.args.snapshot);
+          await writeFile(`${output}/stall-trace-${width}.json`, JSON.stringify(trace));
+          assert(duringStall.length > 0, 'Must capture compositor frames during the traced main-thread stall');
+          for (const frame of duringStall) assertCut(Buffer.from(frame.args.snapshot, 'base64'), 8, `blocked-main-thread/${width}`, true, width);
+          await writeFile(`${output}/blocked-main-thread-${width}.jpg`, Buffer.from(duringStall.at(-1).args.snapshot, 'base64'));
           await cdp.detach();
         }
         evidence.push({ browser: name, width, timeline, result: 'cutoff passed' });
