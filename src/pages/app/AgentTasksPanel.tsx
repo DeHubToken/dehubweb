@@ -37,13 +37,17 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   const client = useQueryClient();
   const [prompt, setPrompt] = useSurfaceDraft('agent-task-prompt', '');
   const [chosen, setChosen] = useState('');
+  const [swarm, setSwarm] = useState(false);
+  const [selected, setSelected] = useState<string[]>([]);
   const [requestId, setRequestId] = useState(() => crypto.randomUUID());
   const active = agents.filter(agent => agent.is_active);
   const agentId = active.some(agent => agent.id === chosen) ? chosen : active[0]?.id;
+  const swarmIds = active.filter(agent => selected.includes(agent.id)).map(agent => agent.id);
   const tasks = useQuery({ queryKey: ['agent-tasks', wallet],
     queryFn: () => agentTaskRequest<{ tasks: AgentTask[] }>(wallet, { operation: 'list' }) });
   const refresh = () => { client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); client.invalidateQueries({ queryKey: ['agent-task-history', wallet] }); };
-  const create = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: 'create', agent_id: agentId,
+  const create = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: swarm ? 'create_swarm' : 'create',
+    ...(swarm ? { agent_ids: swarmIds } : { agent_id: agentId }),
     prompt, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
     onSuccess: () => { setPrompt.complete(prompt, ''); setRequestId(crypto.randomUUID()); refresh(); toast.success(t('agents.tasks.queued')); },
     onError: (error: Error) => toast.error(error.message),
@@ -53,6 +57,7 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   const pastTasks = tasks.data?.tasks.filter(task => ['completed', 'failed', 'cancelled'].includes(task.status)) ?? [];
   const renderTask = (task: AgentTask) => <article key={task.id} className="space-y-2 rounded-xl border border-white/15 bg-black/20 p-4">
     <p className="font-medium leading-snug text-white">{task.plan.summary}</p>
+    {task.swarm_id && <p className="text-xs font-medium uppercase tracking-wide text-white/65">{t('agents.tasks.swarmMember', { index: (task.swarm_index ?? 0) + 1, total: task.swarm_size })}</p>}
     <p className="text-sm text-white/75">{t('agents.tasks.meta', { agent: agents.find(agent => agent.id === task.agent_id)?.name || 'agent', status: task.status, total: task.completed_actions })}</p>
     {task.message && <p className="text-sm text-white/80">{task.message}</p>}
     {task.status === 'queued' && <p className="text-sm text-white/70">{t('agents.tasks.next', { time: new Date(task.next_run_at).toLocaleString() })}</p>}
@@ -63,14 +68,23 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   return <section data-kit-section className="space-y-5 rounded-2xl border border-white/20 bg-black/35 p-5 text-white backdrop-blur-xl">
     <div><h2 className="text-lg font-semibold text-white">{t('agents.tasks.title')}</h2><p className="text-sm leading-relaxed text-white/75">{t('agents.tasks.description')}</p></div>
     {active.length ? <>
-      <div className="space-y-2 text-sm"><label className="font-medium text-white/85" htmlFor="task-agent">{t('agents.agentName')}</label>
+      {active.length > 1 && <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.mode')}>
+        <Button type="button" size="sm" variant={!swarm ? 'default' : 'outline'} onClick={() => { setSwarm(false); setRequestId(crypto.randomUUID()); create.reset(); }}>{t('agents.tasks.oneAgent')}</Button>
+        <Button type="button" size="sm" variant={swarm ? 'default' : 'outline'} onClick={() => { setSwarm(true); setSelected(active.map(agent => agent.id)); setRequestId(crypto.randomUUID()); create.reset(); }}>{t('agents.tasks.swarm')}</Button>
+      </div>}
+      {swarm ? <div className="space-y-2"><p className="text-sm font-medium text-white/85">{t('agents.tasks.swarmChoose')}</p>
+        <div className="flex flex-wrap gap-2">{active.map(agent => <button key={agent.id} type="button" aria-pressed={selected.includes(agent.id)} disabled={create.isPending}
+          onClick={() => { setSelected(ids => ids.includes(agent.id) ? ids.filter(id => id !== agent.id) : [...ids, agent.id]); setRequestId(crypto.randomUUID()); create.reset(); }}
+          className={`rounded-full border px-3 py-2 text-sm transition-colors ${selected.includes(agent.id) ? 'border-white/70 bg-white/20 text-white' : 'border-white/20 bg-black/20 text-white/70'}`}>@{agent.name}</button>)}</div>
+        <p className="text-sm text-white/70">{t('agents.tasks.swarmHelp')}</p>
+      </div> : <div className="space-y-2 text-sm"><label className="font-medium text-white/85" htmlFor="task-agent">{t('agents.agentName')}</label>
         <Select value={agentId} disabled={create.isPending} onValueChange={value => { setChosen(value); setRequestId(crypto.randomUUID()); create.reset(); }}>
           <SelectTrigger id="task-agent" data-theme-control-surface aria-label={t('agents.agentName')} className="border-white/20 bg-black/25 text-white"><SelectValue /></SelectTrigger>
           <SelectContent>{active.map(agent => <SelectItem key={agent.id} value={agent.id}>@{agent.name}</SelectItem>)}</SelectContent>
         </Select>
-      </div>
+      </div>}
       <Textarea value={prompt} disabled={create.isPending} maxLength={4000} onChange={event => { setPrompt(event.target.value); setRequestId(crypto.randomUUID()); create.reset(); }} aria-label={t('agents.tasks.instructions')} placeholder={t('agents.tasks.examples')} data-theme-control-surface className="min-h-36 rounded-xl border-white/25 bg-black/35 p-4 text-base leading-relaxed text-white placeholder:text-white/65 focus-visible:ring-2 focus-visible:ring-white/50" />
-      <div className="flex flex-wrap items-center gap-3"><Button disabled={!prompt.trim() || create.isPending} onClick={() => create.mutate()}>{create.isPending ? t('agents.tasks.preparing') : t('agents.tasks.run')}</Button><p className="min-w-0 flex-1 text-sm leading-relaxed text-white/75">{t('agents.tasks.limits')}</p></div>
+      <div className="flex flex-wrap items-center gap-3"><Button disabled={!prompt.trim() || create.isPending || (swarm && swarmIds.length < 2)} onClick={() => create.mutate()}>{create.isPending ? t('agents.tasks.preparing') : swarm ? t('agents.tasks.runSwarm') : t('agents.tasks.run')}</Button><p className="min-w-0 flex-1 text-sm leading-relaxed text-white/75">{t('agents.tasks.limits')}</p></div>
     </> : <p className="text-sm text-white/60">{t('agents.tasks.createFirst')}</p>}
     {create.error && <p role="alert" className="text-sm break-words">{create.error.message}</p>}
     {control.error && <p role="alert" className="text-sm break-words">{control.error.message}</p>}
