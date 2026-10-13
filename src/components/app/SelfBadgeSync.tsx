@@ -24,13 +24,23 @@ import { useSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { useBadgeLadderSync } from '@/hooks/use-badge-scale';
 import { getBadgeName, parseBadgeLock } from '@/lib/staking-badges';
 import { setLiveBadgeBalanceForProfiles } from '@/lib/profiles';
-import { patchTipBadges, subscribeTipBadges } from '@/lib/tip-badges';
+import { patchTipBadges, publishTipBadges, subscribeTipBadges } from '@/lib/tip-badges';
 
 export function SelfBadgeSync() {
   const { user, refreshUser } = useAuth();
   const queryClient = useQueryClient();
   const live = useSelfBadgeBalance();
   const scale = useBadgeLadderSync();
+
+  useEffect(() => {
+    if (!user?.address) return;
+    let disposed = false;
+    let unsubscribe: (() => void) | undefined;
+    void import('@/lib/api/dehub/dm-socket').then(({ onBadgeBalanceUpdated }) => {
+      if (!disposed) unsubscribe = onBadgeBalanceUpdated(account => publishTipBadges([account]));
+    }).catch(error => console.warn('[Badge] Live updates unavailable', error));
+    return () => { disposed = true; unsubscribe?.(); };
+  }, [user?.address]);
 
   useEffect(() => subscribeTipBadges(accounts => {
     queryClient.setQueriesData({}, (data: unknown) => patchTipBadges(data, accounts));
