@@ -31,7 +31,7 @@ export function useFeedSwallowClip(
     const el = containerRef.current;
     if (!el) return;
     const pageScope = el.closest<HTMLElement>('[data-cached-page]');
-    const Timeline = (window as Window & { ScrollTimeline?: TimelineConstructor }).ScrollTimeline;
+    const Timeline = (window as unknown as { ScrollTimeline?: TimelineConstructor }).ScrollTimeline;
     let frame: number | null = null;
     let cut: HTMLElement | null = null;
     let source: HTMLElement | null = null;
