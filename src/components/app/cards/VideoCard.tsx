@@ -1122,7 +1122,10 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               autoMutedRef.current = shouldMute && !prominent && !autoplayMutedRef.current && !videoPlaybackManager.globalMuted;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
-              setIsLoading(true);
+              // A clip that already has a frame (scrolled back to, or adopted) starts
+              // on that frame; covering it with the poster loader for the length
+              // of play() is the flash seen while scrolling.
+              setIsLoading(vid.readyState < HTMLMediaElement.HAVE_CURRENT_DATA);
               autoStartedRef.current = true;
               requestVideoPlayback(vid).then(() => {
                 // Scroll-away race: if the card left the viewport while play() was
@@ -1728,7 +1731,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   });
   useEffect(() => {
     setHasError(playbackPhase === 'failed');
-    setIsLoading(playbackPhase === 'loading' || playbackPhase === 'retrying');
+    // A buffer stall mid-play ('waiting') holds the last frame, as any player
+    // does. Swapping the poster loader over a frame that is already showing
+    // made playing clips flash to their thumbnail while the feed scrolled.
+    const hasFrame = (videoRef.current?.readyState ?? 0) >= HTMLMediaElement.HAVE_CURRENT_DATA;
+    setIsLoading(playbackPhase === 'retrying' || (playbackPhase === 'loading' && !hasFrame));
     if (playbackPhase === 'failed' || playbackPhase === 'blocked') {
       isPlayingRef.current = false;
       setIsPlaying(false);
