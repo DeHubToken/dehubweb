@@ -11,7 +11,7 @@ import { z } from "npm:zod@^3.25.76";
 
 // src/lib/mcp/tools/dehub-rpc.ts
 var DEHUB_MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
-function parseStreamableResponse(raw) {
+function parseStreamableResponse(raw = "") {
   const trimmed = raw.trim();
   if (!trimmed) throw new Error("DeHub MCP returned an empty response");
   if (trimmed.startsWith("{")) return JSON.parse(trimmed);
@@ -19,7 +19,7 @@ function parseStreamableResponse(raw) {
   if (!dataLines.length) throw new Error("DeHub MCP returned no data frame");
   return JSON.parse(dataLines[dataLines.length - 1]);
 }
-async function callDeHubTool(name, args) {
+async function callDeHubTool(name = "", args = {}) {
   const response = await fetch(DEHUB_MCP_URL, {
     method: "POST",
     headers: {
@@ -47,7 +47,7 @@ async function callDeHubTool(name, args) {
   }
   return body ?? {};
 }
-function safeParse(text) {
+function safeParse(text = "") {
   if (!text) return void 0;
   try {
     const parsed = JSON.parse(text);
