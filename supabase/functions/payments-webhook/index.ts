@@ -3,14 +3,19 @@ import { type StripeEnv, createStripeClient, verifyWebhook } from "../_shared/st
 import { AI_PLANS, invoicePlanMetadata, planGrantDhb } from "../_shared/ai-plans.ts";
 import { reportInvoiceToPlay, reportRefundToPlay } from "./play-report.ts";
 
-let _supabase: ReturnType<typeof createClient> | null = null;
+// The client's type must come from an actual call. `ReturnType<typeof createClient>`
+// instantiates the generic with its default argument instead, which resolves every
+// table and function to `never` and breaks every query below.
+function makeSupabase() {
+  return createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+}
+
+let _supabase: ReturnType<typeof makeSupabase> | null = null;
 function getSupabase() {
-  if (!_supabase) {
-    _supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
-  }
+  if (!_supabase) _supabase = makeSupabase();
   return _supabase;
 }
 
