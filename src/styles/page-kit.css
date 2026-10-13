@@ -151,7 +151,7 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
 @media (min-width: 640px) {
   [data-kit-body] { padding-left: 0.75rem; padding-right: 0.75rem; }
 }
-[data-kit-body] > * + * { margin-top: 0.75rem; }
+:is([data-kit-body], [data-kit-body] > [data-feed-swallow-motion]) > * + * { margin-top: 0.75rem; }
 [data-kit-section] { border-radius: 12px; }
 
 /* System, Immersive, minimal and light on phones: the home feed's full-width look.
@@ -161,8 +161,8 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
     padding-left: 0;
     padding-right: 0;
   }
-  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > * + * { margin-top: 0; }
-  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) [data-kit-body] > :not([data-kit-section]):not([data-kit-flat-skip]) {
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) :is([data-kit-body], [data-kit-body] > [data-feed-swallow-motion]) > * + * { margin-top: 0; }
+  html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light']) :is([data-kit-body], [data-kit-body] > [data-feed-swallow-motion]) > :not([data-kit-section]):not([data-kit-flat-skip]) {
     padding-left: 1rem;
     padding-right: 1rem;
   }

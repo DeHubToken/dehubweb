@@ -202,9 +202,9 @@ export function PageBody({
   const ref = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(ref, '[data-kit-island-outer] > [data-page-bento]');
   return (
-    <div data-feed-swallow-bounds className={cn('w-full', measure && 'max-w-2xl')}>
+    <div data-feed-swallow-bounds className="w-full">
     <div ref={ref} data-kit-body className={cn('w-full pb-28 pt-3', measure && 'max-w-2xl', className)}>
-      <div data-feed-swallow-motion>
+      <div data-feed-swallow-motion data-kit-flat-skip>
       {children}
       </div>
     </div>

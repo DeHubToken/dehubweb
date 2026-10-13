@@ -431,9 +431,13 @@ export default function MusicPage() {
       </div>
 
       {/* Content */}
-      <div ref={musicContentRef} className="p-2 sm:p-3">
+      <div data-feed-swallow-bounds>
+<div ref={musicContentRef} className="p-2 sm:p-3">
+<div data-feed-swallow-motion>
         {renderContent()}
       </div>
+</div>
+</div>
     </div>
   );
 }

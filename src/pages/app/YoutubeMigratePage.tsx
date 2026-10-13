@@ -579,7 +579,9 @@ export default function YoutubeMigratePage() {
         </div>
       </div>
 
-      <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3 flex flex-col gap-2 sm:gap-3">
+      <div data-feed-swallow-bounds>
+<div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3 flex flex-col gap-2 sm:gap-3">
+<div data-feed-swallow-motion className="flex flex-col gap-2 sm:gap-3">
 
         <FeedbackLink source="migration" />
         {stage === 'loading' && (
@@ -1092,6 +1094,8 @@ export default function YoutubeMigratePage() {
           </div>
         </section>
       </div>
+</div>
+</div>
     </>
   );
 }
