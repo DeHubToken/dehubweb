@@ -1,0 +1,33 @@
+name: Feed cutoff browser checks
+on:
+  pull_request:
+    paths:
+      - 'src/hooks/use-feed-swallow-clip.ts'
+      - 'src/hooks/use-scroll-direction.ts'
+      - 'tests/scroll-pill/**'
+      - 'tests/scroll-pill-browser.mjs'
+      - '.github/workflows/scroll-pill.yml'
+  workflow_dispatch:
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare isolated browser dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/scroll-browser" --no-save --no-package-lock --ignore-scripts playwright@1.64.0 esbuild react@18.3.1 react-dom@18.3.1 pngjs
+          "$RUNNER_TEMP/scroll-browser/node_modules/.bin/playwright" install --with-deps chromium webkit
+      - name: Check fast scrolling and cutoff with a blocked main thread
+        run: node tests/scroll-pill-browser.mjs
+        env:
+          BROWSER_DEPS: ${{ runner.temp }}/scroll-browser
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scroll-pill-evidence
+          path: scroll-pill-evidence/
+          retention-days: 14
