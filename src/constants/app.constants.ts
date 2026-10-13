@@ -32,7 +32,8 @@ import Search from "@/components/ui/cut-icons/search";
 import Bell from "@/components/ui/cut-icons/alerts";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Bookmark from "@/components/ui/cut-icons/save";
-import Settings from "@/components/ui/cut-icons/settings";
+import Settings from "@/components/ui/cut-icons/settings-cog";
+import Creator from "@/components/ui/cut-icons/creator";
 import User from "@/components/ui/cut-icons/profile";
 import Play from "@/components/ui/cut-icons/play";
 import Mic from "@/components/ui/cut-icons/mic";
@@ -54,7 +55,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Film, themedIcon: 'videos', label: 'Editor', path: '/editor' },
-  { icon: Wand2, themedIcon: 'paint', label: 'Creator', path: '/creator' },
+  { icon: Creator, label: 'Creator', path: '/creator' },
   { icon: Mic, label: 'Stages', path: '/stages' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
