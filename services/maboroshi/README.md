@@ -3,6 +3,18 @@
 Video subject replacement for DeHub Creator at `/creator/maboroshi`. The web
 page and native app share the same hosted interface and private job store.
 
+Find Maboroshi in Creator's video model search, alongside Kling Character Swap
+and Motion Control. The composer has no separate shortcut row.
+
+The shared interface contains 108 original character-look directions in 12
+categories. Search and category filters work before sign-in; applying a preset
+requires an editable project session and fills the editable character direction.
+The creator supplies a matching reference image or video. Selecting a preset
+does not upload files, charge tokens, or start a generation. These are curated
+creative directions, not measured viral rankings, provider preset IDs, preview
+renders, or an import of Higgsfield's proprietary catalog. A complete generated
+result still requires preparation, clip review, a paid preview and optional HD.
+
 Adapted from [Genjustsu Open Source Workflow](https://github.com/sirioberati/Genjustsu-Open-Source-Workflow)
 at `40fd6615c2b7d940d4d7060e82de522292eefe99`. The upstream MIT notice is retained
 in `LICENSE`; see `THIRD-PARTY.md` for dependencies. Processing modules retain

@@ -6,6 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <title>Maboroshi | DeHub</title>
   <link rel="stylesheet" href="static/style.css">
+  <script src="static/presets.js" defer></script>
   <script src="static/studio.js" defer></script>
 </head>
 <body>
@@ -37,6 +38,19 @@
     <section id="references-section" class="panel">
       <p class="eyebrow">THE CHARACTER</p><h2>Choose the new look</h2>
       <p class="hint">Use your own character image or video as the reference.</p>
+      <details id="preset-browser">
+        <summary>Choose a preset <span id="preset-total"></span></summary>
+        <p class="hint">Pick a look, upload a character reference showing that look, then review your preview. Presets fill in the direction; they do not include character images.</p>
+        <label for="preset-search" class="sr-only">Search character presets</label>
+        <input id="preset-search" type="search" placeholder="Search plushie, anime, chrome…" autocomplete="off">
+        <label for="preset-group" class="sr-only">Preset category</label>
+        <select id="preset-group"><option value="">All categories</option></select>
+        <p id="preset-count" class="hint" role="status"></p>
+        <div id="preset-list" class="preset-list" role="group" aria-label="Character presets"></div>
+        <button id="preset-reset-search" class="secondary" type="button" hidden>Clear filters</button>
+        <div id="preset-detail" hidden><strong id="preset-name"></strong><p id="preset-direction" class="hint"></p><button id="preset-apply" type="button">Use this preset</button><p id="preset-guidance" class="hint"></p></div>
+      </details>
+      <p id="preset-applied" class="hint" role="status" hidden></p>
       <form id="references-form"><fieldset id="reference-fields">
         <label class="upload" for="reference">Character reference<small>Image up to 30 MB, or video up to 100 MB</small><input id="reference" name="reference" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm"></label>
         <div id="reference-preview" class="media-preview" hidden></div>

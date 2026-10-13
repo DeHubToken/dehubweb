@@ -70,16 +70,6 @@ const NAV_KEYS: Record<string, string> = {
 
 const tools: Tool[] = [
   {
-    id: 'maboroshi',
-    nameKey: 'creator.toolMaboroshi',
-    labelKey: 'creator.navVideo',
-    descriptionKey: 'creator.toolMaboroshiDesc',
-    icon: Wand2,
-    category: 'Video',
-    badge: 'NEW',
-    action: { kind: 'navigate', to: '/creator/maboroshi' },
-  },
-  {
     id: 'builder',
     nameKey: 'creator.toolBuilder',
     labelKey: 'creator.navApps',
@@ -609,11 +599,7 @@ const CommunityGallery = memo(function CommunityGallery() {
       </div>
 
       {!inView || loading ? (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {Array.from({ length: Math.ceil(getGalleryColumns() * 1.5) }).map((_, i) => (
-            <div key={i} className="aspect-square animate-pulse rounded-lg bg-white/5" />
-          ))}
-        </div>
+        <p role="status" className="py-8 text-sm text-white/50">{t('common.loading')}</p>
       ) : items.length === 0 ? (
         <div className="rounded-[22px] border border-white/12 bg-white/[0.06] p-10 text-center text-sm text-white/50 backdrop-blur-2xl">
           {t('creator.noCreationsYet')}
