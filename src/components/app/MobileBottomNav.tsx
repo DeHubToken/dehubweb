@@ -336,10 +336,11 @@ export function MobileBottomNav() {
                       ) : (
                         <item.icon
                           data-home-nav-glyph={item.label === 'Home' || undefined}
+                            data-messages-nav-glyph={item.label === 'Messages' || undefined}
                           className={cn(
                             'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                             item.label === 'Home' && 'origin-center scale-110',
-                            item.label === 'Messages' && 'origin-center scale-[1.2]',
+                            item.label === 'Messages' && 'origin-center scale-x-[1.38] scale-y-[1.2]',
                             isActive
                               ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
                               : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'

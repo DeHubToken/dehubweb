@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MoreVertical from "@/components/ui/cut-icons/morevertical";
 import { Heart, StopCircle, Activity, Loader2 } from "lucide-react";
-import Sparkles from "@/components/ui/cut-icons/assistant";
+import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
 import EyeOff from "@/components/ui/cut-icons/hidden";
@@ -1104,7 +1104,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
               >
-                <Sparkles className="w-4 h-4" /> {t("postOptions.aiOverview", "AI overview")}
+                <AssistantNavIcon className="w-4 h-4" /> {t("postOptions.aiOverview", "AI overview")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => toggleBookmark()}
