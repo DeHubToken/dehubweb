@@ -90,6 +90,12 @@ export function useFeedSwallowClip(
     });
     const update = () => {
       frame = null;
+      // Running transform animations create a stacking context even when CSS
+      // overrides their transform to none. Cancel them while the welcome card
+      // needs to paint above the root frost, including its fade-out interval.
+      if (document.documentElement.hasAttribute('data-feed-loading') && el.querySelector('.dehub-intro')) {
+        clearAnimation(); writeClip(''); delete el.dataset.feedSwallowDriver; return;
+      }
       const theme = document.documentElement.dataset.theme || '';
       if (!opts.allThemes && !GLASS_NAV_THEMES.includes(theme)) {
         clearAnimation(); writeClip(''); delete el.dataset.feedSwallowDriver; return;
@@ -211,7 +217,7 @@ export function useFeedSwallowClip(
     resizeObserver.observe(el);
     if (el.parentElement) resizeObserver.observe(el.parentElement);
     const themeObserver = new MutationObserver(invalidate);
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-nav-hidden', 'data-sticky-nav-hidden', 'data-scroll-hidden', 'data-sticky-scroll-hidden', 'data-no-top-bar', 'data-overlay-open'] });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-feed-loading', 'data-theme', 'data-nav-hidden', 'data-sticky-nav-hidden', 'data-scroll-hidden', 'data-sticky-scroll-hidden', 'data-no-top-bar', 'data-overlay-open'] });
     const pageObserver = pageScope ? new MutationObserver(invalidate) : null;
     pageObserver?.observe(pageScope, { attributes: true, attributeFilter: ['style'] });
     window.addEventListener('scroll', onScroll, { passive: true, capture: true });
