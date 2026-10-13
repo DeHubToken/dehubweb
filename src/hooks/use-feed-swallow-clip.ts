@@ -2,14 +2,9 @@ import { useContext, useLayoutEffect, type RefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
-const BOTTOM_CUT_THEMES = GLASS_NAV_THEMES.filter(t => t !== 'system' && t !== 'immersive');
+// The feed stops just inside the upper rim, above the pill's curved midpoint.
+const PILL_CUT_INSET = 4;
 type TimelineConstructor = new (options: { source: Element; axis: 'block' }) => AnimationTimeline;
-
-/** Identical path commands at each endpoint allow continuous interpolation. */
-export function feedSwallowPath(y: number, r: number, left: number, right: number, width: number, height: number) {
-  const f = (n: number) => n.toFixed(2);
-  return `path('M 0 ${f(y + r)} L ${f(left)} ${f(y + r)} A ${f(r)} ${f(r)} 0 0 1 ${f(left + r)} ${f(y)} L ${f(right - r)} ${f(y)} A ${f(r)} ${f(r)} 0 0 1 ${f(right)} ${f(y + r)} L ${f(width)} ${f(y + r)} L ${f(width)} ${f(height)} L 0 ${f(height)} Z')`;
-}
 
 function scrollSource(el: HTMLElement): HTMLElement {
   for (let node: HTMLElement | null = el; node && node !== document.documentElement; node = node.parentElement) {
@@ -59,7 +54,6 @@ export function useFeedSwallowClip(
     let lastClip = '';
     let clipTarget: HTMLElement = el;
     let findCut = true;
-    let radius = 12;
     let motionUntil = 0;
     const cutLayer = el.querySelector<HTMLElement>(':scope > [data-feed-swallow-cut]');
     const motion = cutLayer?.querySelector<HTMLElement>(':scope > [data-feed-swallow-motion]');
@@ -106,8 +100,6 @@ export function useFeedSwallowClip(
           cut = next;
           if (cut) resizeObserver.observe(cut);
         }
-        radius = cut ? parseFloat(getComputedStyle(cut).borderTopLeftRadius) : 12;
-        if (!Number.isFinite(radius)) radius = 12;
         source = scrollSource(el);
         findCut = false;
       }
@@ -117,17 +109,18 @@ export function useFeedSwallowClip(
       const pr = cut.getBoundingClientRect();
       const cr = el.getBoundingClientRect();
       const nested = el.contains(cut);
-      const bottom = !nested && (opts.edge === 'bottom' || (opts.edge !== 'top' && BOTTOM_CUT_THEMES.includes(theme)));
-      const r = Math.min(radius, pr.width / 2, pr.height / 2);
-      const shape = (y: number, rect = cr) => bottom ? `inset(${y.toFixed(2)}px 0 0 0)`
-        : feedSwallowPath(y, r, pr.left - rect.left, pr.right - rect.left, rect.width, rect.height);
-      const currentY = (bottom ? pr.bottom : pr.top) - cr.top;
+      // Profile headers explicitly request their bottom edge. Every feed pill
+      // uses one full-width line at the upper rim, including canvas themes.
+      const bottom = !nested && opts.edge === 'bottom';
+      const cutY = bottom ? pr.bottom : pr.top + Math.min(PILL_CUT_INSET, pr.height / 2);
+      const shape = (y: number) => `inset(${y.toFixed(2)}px 0 0 0)`;
+      const currentY = cutY - cr.top;
       const outer = cut.closest<HTMLElement>('[data-feed-nav-outer], [data-kit-island-outer]');
       const maxScroll = source.scrollHeight - source.clientHeight;
       // The scrollport itself has a stationary clip; its descendants already
       // scroll within that cut on the compositor (including post overlays).
       if (Timeline && outer && !nested && source !== el && maxScroll > 0 && motion && bounds && cutLayer && inverseNavLayer) {
-        let pinnedY = bottom ? pr.bottom : pr.top;
+        let pinnedY = cutY;
         if (source.contains(outer)) {
           const outerRect = outer.getBoundingClientRect();
           const style = getComputedStyle(outer);
@@ -194,7 +187,7 @@ export function useFeedSwallowClip(
             navAnimation?.cancel(); inverseNavAnimation?.cancel();
             navAnimation = null; inverseNavAnimation = null; sourceNavAnimation = null;
           }
-          lastFrames = key; writeClip(shape(y0, cutRect), cutLayer); el.dataset.feedSwallowDriver = 'scroll-transform';
+          lastFrames = key; writeClip(shape(y0), cutLayer); el.dataset.feedSwallowDriver = 'scroll-transform';
         } else { writeClip(currentY > 0.5 ? shape(currentY) : ''); el.dataset.feedSwallowDriver = 'frame'; }
       } else {
         clearAnimation(); writeClip(currentY > 0.5 ? shape(currentY) : '');
