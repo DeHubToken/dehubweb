@@ -71,12 +71,17 @@ try {
         for (const transform of ['translateY(calc(-100% - 3rem))', 'translateY(0px)']) {
           await page.evaluate(transform => document.querySelector('[data-feed-nav-outer]').style.transform = transform, transform);
           for (let sample = 0; sample < 8; sample++) {
-            const gap = await page.evaluate(() => {
+            const motionState = await page.evaluate(() => {
               const layer = document.querySelector('#feed > [data-feed-swallow-cut]');
               const inset = getComputedStyle(layer).clipPath.match(/inset\(([\d.-]+)px/);
-              return +inset[1] + layer.getBoundingClientRect().top - document.querySelector('[data-feed-nav]').getBoundingClientRect().top;
+              const outer = document.querySelector('[data-feed-nav-outer]');
+              return { gap: +inset[1] + layer.getBoundingClientRect().top - document.querySelector('[data-feed-nav]').getBoundingClientRect().top, navTransform: getComputedStyle(outer).transform, cutTransform: getComputedStyle(layer).transform, clip: getComputedStyle(layer).clipPath, navAnimations: outer.getAnimations().map(a => ({start: a.startTime, time: a.currentTime, state: a.playState, timing: a.effect.getTiming()})), cutAnimations: layer.getAnimations().map(a => ({start:a.startTime, time:a.currentTime, state:a.playState, timing:a.effect.getTiming()})) };
             });
-            assert(Math.abs(gap - 4) < 1.5, `${name}/${width}/nav-transition: cutoff must follow the upper rim`);
+            if (Math.abs(motionState.gap - 4) >= 1.5) {
+              await page.screenshot({ path: `${output}/transition-failure-${name}-${width}.png` });
+              await writeFile(`${output}/transition-failure-${name}-${width}.json`, JSON.stringify({ transform, sample, ...motionState }));
+            }
+            assert(Math.abs(motionState.gap - 4) < 1.5, `${name}/${width}/nav-transition: ${JSON.stringify(motionState)}`);
             await page.waitForTimeout(40);
           }
         }
