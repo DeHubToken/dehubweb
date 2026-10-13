@@ -11,7 +11,7 @@ type Claim = {
   failed?: boolean;
   measuredSlot?: HTMLSpanElement;
 };
-type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean; appliedStyle?: Record<string, string> };
+type Entry = { image: HTMLImageElement; claims: Claim[]; timer?: ReturnType<typeof setTimeout>; source?: string; fallback?: string; failed?: boolean; appliedStyle?: Record<string, string>; size?: { width: number; height: number }; observer?: ResizeObserver };
 const images = new Map<string, Entry>();
 
 interface ImageProps extends Pick<HTMLAttributes<HTMLSpanElement>, 'onClick' | 'onPointerDown' | 'onPointerMove' | 'onPointerUp' | 'onPointerCancel'> {
@@ -38,7 +38,7 @@ function show(entry: Entry) {
   const { image } = entry;
   if (image.parentNode !== claim.slot) {
     const oldSlot = image.parentElement;
-    const rect = oldSlot ? image.getBoundingClientRect() : undefined;
+    const rect = oldSlot ? entry.size ?? image.getBoundingClientRect() : undefined;
     if (oldSlot && rect && rect.height > 0) {
       oldSlot.style.minHeight = `${rect.height}px`;
       oldSlot.style.width = `${rect.width}px`;
@@ -86,8 +86,12 @@ function show(entry: Entry) {
     const width = image.naturalWidth;
     const height = image.naturalHeight;
     if (claim.loaded?.src === src && claim.loaded.width === width && claim.loaded.height === height && claim.measuredSlot === claim.slot) return;
-    const rect = image.getBoundingClientRect();
-    if (rect.height > 0 && claim.priority < 2) claim.slot.style.minHeight = `${rect.height}px`;
+    // ResizeObserver maintains the placeholder from already-computed layout,
+    // including orientation changes. Older engines measure once per bitmap.
+    if (!entry.observer) {
+      const rect = image.getBoundingClientRect();
+      if (rect.height > 0 && claim.priority < 2) claim.slot.style.minHeight = `${rect.height}px`;
+    }
     claim.measuredSlot = claim.slot;
     // Cached images are shown on every layout. Notify each owner once per bitmap
     // before its callback can schedule another render.
@@ -132,6 +136,7 @@ export function HandoffImage(props: ImageProps) {
         previous.entry.timer = setTimeout(() => {
           if (previous.entry.claims.length) return;
           images.delete(props.mediaKey);
+          previous.entry.observer?.disconnect();
           previous.entry.image.removeAttribute('src');
           previous.entry.image.removeAttribute('srcset');
         }, 2000);
@@ -146,6 +151,19 @@ export function HandoffImage(props: ImageProps) {
       image.draggable = false;
       entry = { image, claims: [] };
       images.set(props.mediaKey, entry);
+      if (typeof ResizeObserver !== 'undefined') {
+        const tracked = entry;
+        entry.observer = new ResizeObserver(([measurement]) => {
+          if (!measurement || measurement.contentRect.height <= 0) return;
+          const { width, height } = measurement.contentRect;
+          tracked.size = { width, height };
+          const active = tracked.claims.find(claim => claim.slot === image.parentElement);
+          if (active && active.priority < 2 && active.slot.style.minHeight !== `${height}px`) {
+            active.slot.style.minHeight = `${height}px`;
+          }
+        });
+        entry.observer.observe(image);
+      }
     }
     clearTimeout(entry.timer);
     const claim = { slot, priority: propsRef.current.priority ?? 0, props: propsRef.current };
