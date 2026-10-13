@@ -2859,7 +2859,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         {/* System theme phone feed only (index.css): the options button sits
             here, top right of the caption, instead of on the media. */}
         {!isImmersive && !postPage && !stage && !hideActions && (
-          <div data-caption-options data-video-caption-actions className="hidden">
+          <div data-caption-options data-video-caption-actions data-has-boost={isOwnPost ? "" : undefined} className="hidden">
             {isOwnPost && (
               <button data-caption-boost onClick={() => setShowBoostModal(true)} aria-label={t('postOptions.boostPost')} className="flex h-8 w-8 items-center justify-center">
                 <Zap className="w-5 h-5" />

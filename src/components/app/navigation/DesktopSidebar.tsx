@@ -560,6 +560,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           )}
           <div
             ref={scrollRef}
+            data-fade-mask-bottom={isCollapsed && !navQuery && !navAtBottom ? "" : undefined}
             className={cn(
               // overscroll-contain: without it, reaching the end of the nav list
               // chains the wheel to the document and the feed scrolls out from
@@ -736,6 +737,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               panel, so there is nothing under it. */}
           {!isCollapsed && (
             <div
+              data-fade-mask-bottom={!navQuery && !navAtBottom ? "" : undefined}
               className={cn(
                 "relative z-20 grid transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none",
                 showBottomSearch ? "opacity-100" : "opacity-0 pointer-events-none"
