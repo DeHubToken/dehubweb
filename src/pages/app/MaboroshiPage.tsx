@@ -1,6 +1,6 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import RefreshCw from "@/components/ui/cut-icons/refresh";
 
@@ -19,6 +19,9 @@ const ORIGIN = 'https://live.dehub.io';
 const STUDIO = `${ORIGIN}/maboroshi/`;
 
 export default function MaboroshiPage() {
+  const [searchParams] = useSearchParams();
+  const preset = searchParams.get('preset') || '';
+  const studioUrl = /^[a-z0-9-]{1,80}$/.test(preset) ? `${STUDIO}?preset=${encodeURIComponent(preset)}` : STUDIO;
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -83,7 +86,7 @@ export default function MaboroshiPage() {
         </div>
       </header>
       {!connected && <p role="status" className="px-4 py-3 text-sm text-white/60">{t('common.loading', 'Loading…')}{_copy("copy.8f3a26244094", { defaultValue: " Maboroshi" })}</p>}
-      <iframe key={`${walletAddress || 'guest'}:${attempt}`} ref={frame} src={STUDIO} title={_copy("copy.c6d99d44a9f8", { defaultValue: "Maboroshi" })}
+      <iframe key={`${walletAddress || 'guest'}:${attempt}`} ref={frame} src={studioUrl} title={_copy("copy.c6d99d44a9f8", { defaultValue: "Maboroshi" })}
         className="w-full flex-1 border-0" style={{ minHeight: 'calc(100dvh - 65px)' }}
         allow="fullscreen" sandbox="allow-scripts allow-same-origin allow-forms allow-downloads" referrerPolicy="no-referrer" />
       <Dialog open={!!quote} onOpenChange={open => {

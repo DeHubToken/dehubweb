@@ -213,8 +213,6 @@ const ResultCard = memo(function ResultCard({ job, onOpen }: { job: GenerationJo
         style={aspectStyle(job.aspect)}
         className="relative flex w-full flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center"
       >
-        {/* Skeleton shimmer marks the slot the result will fill. */}
-        <div className="absolute inset-0 animate-pulse bg-white/[0.03]" aria-hidden />
         <Loader2 className="relative h-5 w-5 animate-spin text-white/60" />
         <p className="relative text-[11px] font-medium text-white/70">{job.stage || t('creator.working')}</p>
         <p className="relative line-clamp-2 px-1 text-[10px] leading-snug text-white/55">{job.prompt}</p>

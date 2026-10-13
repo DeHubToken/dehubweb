@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const html = readFileSync('services/maboroshi/static/index.html', 'utf8');
 const script = readFileSync('services/maboroshi/static/studio.js', 'utf8');
+const presetsScript = readFileSync('services/maboroshi/static/presets.js', 'utf8');
 const wallet = `0x${'1'.repeat(40)}`;
 const id = 'a'.repeat(32);
 const project = (extra = {}) => ({ id, subject: 'person', created: 1, state: 'uploaded', stage: '', status: 'Source saved.', seconds: 5,
@@ -24,6 +25,7 @@ beforeEach(() => {
   jobs = [project()]; saved = project(); sessionWallet = wallet; sent = [];
   dom = new JSDOM(html, { url: 'https://live.dehub.io/maboroshi/', runScripts: 'outside-only' }); w = dom.window;
   w.HTMLMediaElement.prototype.load = vi.fn(); w.HTMLMediaElement.prototype.pause = vi.fn();
+  w.HTMLElement.prototype.scrollIntoView = vi.fn();
   w.HTMLDialogElement.prototype.showModal = function () { this.open = true; };
   w.HTMLDialogElement.prototype.close = function (value) { this.returnValue = value; this.open = false; this.dispatchEvent(new w.Event('close')); };
   w.URL.createObjectURL = vi.fn(() => 'blob:reference'); w.URL.revokeObjectURL = vi.fn();
@@ -41,12 +43,68 @@ beforeEach(() => {
     if (path === `jobs/${id}`) return respond(saved);
     throw new Error(`Unexpected request: ${path}`);
   });
-  w.fetch = fetcher; w.localStorage.setItem(`maboroshi:last:${wallet}`, id); w.eval(script);
+  w.fetch = fetcher; w.localStorage.setItem(`maboroshi:last:${wallet}`, id); w.eval(presetsScript); w.eval(script);
 });
 afterEach(() => { dom.window.close(); });
 const connected = async () => { await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:ready')).toBe(true)); session(); await vi.waitFor(() => expect(el('project').hidden).toBe(false)); };
 
 describe('Maboroshi creator journey', () => {
+  it('offers 180 unique directions and recovers from an empty search', () => {
+    const presets = w.MABOROSHI_PRESETS;
+    expect(presets).toHaveLength(180);
+    expect(new Set(presets.map(p => p.id)).size).toBe(180);
+    expect(new Set(presets.map(p => p.prompt)).size).toBe(180);
+    expect(new Set(presets.map(p => p.group)).size).toBe(20);
+    el('preset-search').value = 'plushie'; el('preset-search').dispatchEvent(new w.Event('input'));
+    expect(el('preset-list').children).toHaveLength(1);
+    el('preset-search').value = 'no-such-look'; el('preset-search').dispatchEvent(new w.Event('input'));
+    expect(el('preset-count').textContent).toBe('0 of 180 presets');
+    el('preset-reset-search').click(); expect(el('preset-list').children).toHaveLength(180);
+  });
+  it('applies a direction without sending a generation or changing selected files', async () => {
+    await connected(); chooseReference();
+    el('preset-list').querySelector('button').click(); el('preset-apply').click();
+    expect(el('prompt').value).toContain('Soft felt');
+    expect(el('reference').files[0].name).toBe('character.png');
+    expect(el('preset-applied').hidden).toBe(false);
+    expect(el('character-options').open).toBe(true);
+    expect(sent.some(x => x.type === 'maboroshi:pay')).toBe(false);
+    expect(fetcher.mock.calls.some(([path]) => path.endsWith('/references'))).toBe(false);
+  });
+  it('lets guests browse without modifying or submitting a project', () => {
+    el('preset-list').querySelector('button').click();
+    expect(el('preset-apply').disabled).toBe(true);
+    expect(el('preset-guidance').textContent).toContain('Sign in');
+  });
+  it('connects all six visual cards to real presets without charging', () => {
+    expect(el('featured-looks').children).toHaveLength(6);
+    for (const button of el('featured-looks').children) {
+      button.click();
+      expect(el('preset-browser').open).toBe(true);
+      expect(el('preset-name').textContent).toBe(button.textContent);
+      expect(el('preset-apply').disabled).toBe(true);
+    }
+    expect(sent.some(x => x.type === 'maboroshi:pay')).toBe(false);
+  });
+  it('keeps a linked look selected through sign-in without restoring a different project', async () => {
+    await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:ready')).toBe(true));
+    w.history.replaceState({}, '', '?preset=liquid-chrome');
+    // Recreate the page so the incoming URL is read at initial load.
+    dom.window.close();
+    fetcher.mockClear(); sent = [];
+    dom = new JSDOM(html, { url: 'https://live.dehub.io/maboroshi/?preset=liquid-chrome', runScripts: 'outside-only' });
+    w = dom.window;
+    w.HTMLMediaElement.prototype.load = vi.fn(); w.HTMLMediaElement.prototype.pause = vi.fn();
+    w.fetch = fetcher; w.ReactNativeWebView = { postMessage: data => sent.push(JSON.parse(data)) };
+    w.localStorage.setItem(`maboroshi:last:${wallet}`, id);
+    w.eval(presetsScript); w.eval(script);
+    expect(el('preset-name').textContent).toBe('Liquid chrome');
+    session();
+    await vi.waitFor(() => expect(el('preset-apply').disabled).toBe(false));
+    expect(el('project').hidden).toBe(true);
+    expect(el('preset-name').textContent).toBe('Liquid chrome');
+    expect(fetcher.mock.calls.some(([path]) => path === `jobs/${id}`)).toBe(false);
+  });
   it('saves an early character before requesting the normal payment confirmation', async () => {
     await connected(); chooseReference();
     expect(el('reference-preview').querySelector('img').src).toBe('blob:reference');
