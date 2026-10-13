@@ -50,7 +50,8 @@ const MAX_TOKENS_PER_REQUEST = 50;
 // junk out of the totals table, which is keyed by token_id.
 const TOKEN_ID_PATTERN = /^\d{1,20}$/;
 
-const DEHUB_API_BASE = Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io';
+const DEHUB_API_BASE = (Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io')
+  .replace(/\/api\/?$/, '').replace(/\/$/, '');
 
 // The DeHub API refuses to count a view it cannot attribute, so the forward is
 // abandoned rather than retried if it takes longer than this. The view is
