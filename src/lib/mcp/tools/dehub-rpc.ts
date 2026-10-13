@@ -29,7 +29,14 @@ interface McpToolResult {
  * the last `data:` payload out. A plain JSON body is also accepted, since the
  * transport is allowed to send one.
  */
-function parseStreamableResponse(raw: string): { result?: McpToolResult; error?: { message?: string } } {
+/**
+ * The parameter defaults below are load-bearing, not cosmetics. This module is
+ * bundled into `supabase/functions/mcp/index.ts` by the MCP Vite plugin, which
+ * strips type annotations; the edge-function typecheck then rejects the bare
+ * parameters as implicit `any`. A default keeps the type inferable after the
+ * annotations are gone. No caller relies on one.
+ */
+function parseStreamableResponse(raw: string = ""): { result?: McpToolResult; error?: { message?: string } } {
   const trimmed = raw.trim();
   if (!trimmed) throw new Error("DeHub MCP returned an empty response");
 
@@ -47,8 +54,8 @@ function parseStreamableResponse(raw: string): { result?: McpToolResult; error?:
 
 /** Call a tool on dehub-mcp and return its structured payload. */
 export async function callDeHubTool(
-  name: string,
-  args: Record<string, unknown>,
+  name: string = "",
+  args: Record<string, unknown> = {},
 ): Promise<ToolPayload> {
   const response = await fetch(DEHUB_MCP_URL, {
     method: "POST",
@@ -85,7 +92,7 @@ export async function callDeHubTool(
   return body ?? {};
 }
 
-function safeParse(text: string | undefined): ToolPayload | undefined {
+function safeParse(text: string | undefined = ""): ToolPayload | undefined {
   if (!text) return undefined;
   try {
     const parsed: unknown = JSON.parse(text);
