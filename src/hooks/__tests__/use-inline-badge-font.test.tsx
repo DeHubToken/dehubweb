@@ -13,6 +13,7 @@ function flush() {
   act(() => { const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(fn => fn(0)); });
 }
 beforeEach(() => {
+  vi.stubGlobal('IntersectionObserver', undefined);
   frames = new Map(); resize = []; observers = [];
   let id = 0;
   vi.stubGlobal('requestAnimationFrame', vi.fn((fn: FrameRequestCallback) => { frames.set(++id, fn); return id; }));
@@ -26,6 +27,31 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
 describe('inline badge font batching', () => {
+  it('leaves offscreen badges asleep and only measures them when they approach the viewport', () => {
+    let intersect!: (entries: Partial<IntersectionObserverEntry>[]) => void;
+    vi.stubGlobal('IntersectionObserver', class {
+      constructor(callback: typeof intersect) { intersect = callback; }
+      observe() {} unobserve() {} disconnect() {}
+    });
+    const { getByTestId, rerender } = render(<Badge />);
+    const badge = getByTestId('badge');
+    expect(frames.size).toBe(0);
+    resize[0]();
+    expect(frames.size).toBe(0);
+    intersect([{ target: badge, isIntersecting: true }]);
+    expect(frames.size).toBe(1);
+    flush();
+    expect(badge.style.fontSize).toBe('16px');
+    rerender(<Badge />);
+    expect(frames.size).toBe(0);
+    intersect([{ target: badge, isIntersecting: false }]);
+    rerender(<Badge size={24} />);
+    expect(frames.size).toBe(0);
+    intersect([{ target: badge, isIntersecting: true }]);
+    flush();
+    expect(badge.style.fontSize).toBe('24px');
+  });
+
   it('reads a page of names before writing any badge font', () => {
     const { getAllByTestId } = render(<><Badge size={20} /><Badge size={24} /></>);
     const badges = getAllByTestId('badge');
