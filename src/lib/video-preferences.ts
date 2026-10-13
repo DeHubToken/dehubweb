@@ -41,6 +41,7 @@ export function getVideoPreferences(): VideoPreferences {
       cached = {
         ...DEFAULTS,
         ...stored,
+        isLooping: stored?.isLooping === true,
         // Spread alone would carry through a null/array left by an older blob
         // and every read of it would then throw on lookup.
         ratesByCreator:
@@ -66,13 +67,16 @@ function flushSave() {
   window.dispatchEvent(new CustomEvent('video-prefs-changed', { detail: prefs }));
 }
 const mediaListeners = new Set<() => void>();
+const loopListeners = new Set<() => void>();
 function save(prefs: VideoPreferences) {
   const before = getVideoPreferences();
   const mediaChanged = before.volume !== prefs.volume || before.mediaMuted !== prefs.mediaMuted;
+  const loopChanged = before.isLooping !== prefs.isLooping;
   // The next tap reads the new rate immediately; storage and every mounted
   // player's preference listener must not run in the control's input event.
   cached = prefs; pendingSave = prefs;
   if (mediaChanged) mediaListeners.forEach(fn => fn());
+  if (loopChanged) loopListeners.forEach(fn => fn());
   if (saveTimer !== null) clearTimeout(saveTimer);
   saveTimer = setTimeout(flushSave, 0);
 }
@@ -146,8 +150,14 @@ function normaliseCreator(creatorId?: string | null): string | null {
 
 export function setIsLooping(looping: boolean) {
   const prefs = getVideoPreferences();
-  save({ ...prefs, isLooping: looping });
+  const next = { ...prefs, isLooping: looping };
+  // Persist in the tap before a close or suspension can stop the save timer.
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch {}
+  save(next);
 }
+
+const subscribeLoop = (fn: () => void) => { loopListeners.add(fn); return () => loopListeners.delete(fn); };
+export const useMediaLooping = () => useSyncExternalStore(subscribeLoop, () => getVideoPreferences().isLooping, () => false);
 
 export function setVolume(volume: number) {
   const prefs = getVideoPreferences();
