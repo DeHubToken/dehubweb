@@ -1,3 +1,8 @@
+import FileText from "@/components/ui/cut-icons/blog";
+import Film from "@/components/ui/cut-icons/editor";
+import Wand2 from "@/components/ui/cut-icons/prompt";
+import Zap from "@/components/ui/cut-icons/superpowers";
+import Scroll from "@/components/ui/cut-icons/glossary";
 import { useTranslation as _useCopy } from 'react-i18next';
 import React, { Suspense, useState, useRef, useEffect } from 'react';
 import { StageNavChip } from './spaces/StageNavChip';
@@ -9,7 +14,7 @@ import { isHomePath, isOnLiveFeed } from '@/lib/home-path';
 import { isHomeFeedRoute } from '@/lib/home-routes';
 import { disarmHomeNavIntent, resolveHomeNavIntent } from '@/lib/home-nav-intent';
 import { scrollDocumentToSmooth } from '@/lib/document-scroll';
-import { FileText, Scroll, Wand2, Palette, Loader2, Zap } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 import LayoutDashboard from "@/components/ui/cut-icons/command";
 import AssistantNavIcon from '@/components/ui/AssistantNavIcon';
@@ -32,7 +37,8 @@ import Plus from "@/components/ui/cut-icons/add";
 import User from "@/components/ui/cut-icons/profile";
 import Search from "@/components/ui/cut-icons/search";
 import Bookmark from "@/components/ui/cut-icons/save";
-import Settings from "@/components/ui/cut-icons/settings";
+import Settings from "@/components/ui/cut-icons/settings-cog";
+import Creator from "@/components/ui/cut-icons/creator";
 import Bell from "@/components/ui/cut-icons/alerts";
 import Mic from "@/components/ui/cut-icons/mic";
 
@@ -129,8 +135,8 @@ type MobileNavItem = {
 
 const SCROLL_NAV_ITEMS = [
   { icon: Settings, label: 'Settings', path: '/app/settings' },
-  { icon: Wand2, themedIcon: 'videos', label: 'Editor', path: '/editor' },
-  { icon: Palette, themedIcon: 'paint', label: 'Creator', path: '/creator' },
+  { icon: Film, label: 'Editor', path: '/editor' },
+  { icon: Creator, label: 'Creator', path: '/creator' },
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
   { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
@@ -335,10 +341,11 @@ export function MobileBottomNav() {
                       ) : (
                         <item.icon
                           data-home-nav-glyph={item.label === 'Home' || undefined}
+                            data-messages-nav-glyph={item.label === 'Messages' || undefined}
                           className={cn(
                             'w-5 h-5 md:w-6 md:h-6 transition-[filter] duration-200',
                             item.label === 'Home' && 'origin-center scale-110',
-                            item.label === 'Messages' && 'origin-center scale-[1.2]',
+                            item.label === 'Messages' && 'origin-center scale-x-[1.38] scale-y-[1.2]',
                             isActive
                               ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
                               : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'

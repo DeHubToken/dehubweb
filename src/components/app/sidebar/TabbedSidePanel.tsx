@@ -1,6 +1,8 @@
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef, useCallback, memo, useMemo } from 'react';
-import { SquareUserRound, MessagesSquare, Star } from "lucide-react";
+import SquareUserRound from "@/components/ui/cut-icons/growing";
+import MessagesSquare from "@/components/ui/cut-icons/chat";
+import Star from "@/components/ui/cut-icons/new-members";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
 
 import { WhoToFollow } from '../WhoToFollow';

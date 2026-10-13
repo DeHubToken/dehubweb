@@ -1,4 +1,13 @@
-import { ArrowLeftRight, Bot, Crown, Film, ListOrdered, Plug, Smartphone, Star, Tag } from "lucide-react";
+import ArrowLeftRight from "@/components/ui/cut-icons/bridge";
+import Bot from "@/components/ui/cut-icons/agents";
+import Crown from "@/components/ui/cut-icons/premium";
+import Film from "@/components/ui/cut-icons/editor";
+import ListOrdered from "@/components/ui/cut-icons/rank";
+import Plug from "@/components/ui/cut-icons/connect";
+import Smartphone from "@/components/ui/cut-icons/get-the-app";
+import Star from "@/components/ui/cut-icons/new-members";
+import Tag from "@/components/ui/cut-icons/pricing";
+
 import Coins from "@/components/ui/cut-icons/coins";
 import Gamepad2 from "@/components/ui/cut-icons/arcade";
 import History from "@/components/ui/cut-icons/history";

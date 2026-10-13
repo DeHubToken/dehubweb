@@ -994,7 +994,7 @@ export default function HomePage() {
         }}
       >
         <FeedFilterAnchor behindNav={theme === 'system'}>
-        <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl" style={theme === 'system' ? { position: 'relative', zIndex: 10 } : undefined}>
+        <div data-feed-nav className="flex flex-col bg-zinc-900 overflow-visible rounded-xl relative" style={theme === 'system' ? { zIndex: 10 } : undefined}>
           <span data-nav-glass-backdrop aria-hidden="true" />
 
           <div ref={homeTabLayerRef} className="relative overflow-visible">

@@ -17,7 +17,7 @@
 
 import { Pin } from "lucide-react";
 import Info from "@/components/ui/cut-icons/information";
-import Sparkles from "@/components/ui/cut-icons/assistant";
+import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 
 import Bookmark from "@/components/ui/cut-icons/save";
 
@@ -62,7 +62,7 @@ export function PostUtilityMenuItems({
     <>
       {onAskAI && (
         <button onClick={onAskAI} className={cn(ROW, 'text-white')}>
-          <Sparkles className="w-5 h-5" /> {t('postOptions.aiOverview', 'AI overview')}
+          <AssistantNavIcon className="w-5 h-5" /> {t('postOptions.aiOverview', 'AI overview')}
         </button>
       )}
 
