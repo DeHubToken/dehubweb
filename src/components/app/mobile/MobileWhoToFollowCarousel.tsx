@@ -177,7 +177,7 @@ export function MobileWhoToFollowCarousel() {
 
   if (filteredSuggestions.length === 0) {
     return (
-      <div data-who-to-follow data-no-swipe className="py-4 border-y border-zinc-800/50">
+      <div data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
         <AppState
           icon="subscriptions"
           title={_copy("copy.f45e06965f93", { defaultValue: "No follow suggestions yet" })}
@@ -190,7 +190,7 @@ export function MobileWhoToFollowCarousel() {
   }
 
   return (
-    <div data-who-to-follow data-no-swipe className="py-4 border-y border-zinc-800/50">
+    <div data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
       {/* Header */}
       <div className="flex items-center justify-between px-4 mb-3">
         <div className="flex items-center gap-2">
