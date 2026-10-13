@@ -31,6 +31,42 @@ DO $$ BEGIN IF EXISTS(SELECT 1 FROM public.get_my_agents()) THEN RAISE EXCEPTION
 SELECT set_config('test.signed_wallet','0x9324840523a5d17dd12a2f11a9472e5a199c1937',false);
 DO $$ BEGIN IF (SELECT count(*) FROM public.get_my_agents())<>1 THEN RAISE EXCEPTION 'Owner listing missing'; END IF; END $$;
 RESET ROLE;
+ALTER TABLE public.ai_agents ADD COLUMN wallet_private_key text, ADD COLUMN metadata jsonb DEFAULT '{}'::jsonb;
+\ir ../../supabase/migrations/20261013010000_badge_agent_capacity.sql
+SET ROLE service_role;
+DO $$
+DECLARE owner_wallet text := '0x9324840523a5d17dd12a2f11a9472e5a199c1937';
+BEGIN
+  BEGIN
+    PERFORM public.reserve_agent_registration(owner_wallet,'agent_two','bio','0x'||repeat('a',40),'0x'||repeat('b',64),'dehub_'||repeat('c',64),1);
+    RAISE EXCEPTION 'No-badge account exceeded one slot';
+  EXCEPTION WHEN SQLSTATE 'P0001' THEN
+    IF SQLERRM <> 'AGENT_OWNER_LIMIT' THEN RAISE; END IF;
+  END;
+  BEGIN
+    PERFORM public.reserve_agent_registration(owner_wallet,'agent_null','bio','0x'||repeat('a',40),'0x'||repeat('b',64),'dehub_'||repeat('c',64),NULL);
+    RAISE EXCEPTION 'Missing allowance accepted';
+  EXCEPTION WHEN SQLSTATE '22023' THEN NULL;
+  END;
+  BEGIN
+    PERFORM public.reserve_agent_registration('0x1111111111111111111111111111111111111111','other_two','bio','0x'||repeat('a',40),'0x'||repeat('b',64),'dehub_'||repeat('c',64),25);
+    RAISE EXCEPTION 'Non-preview owner registered';
+  EXCEPTION WHEN SQLSTATE '22023' THEN NULL;
+  END;
+  INSERT INTO public.ai_agents(name,human_owner_wallet,is_active)
+    SELECT 'dummy_'||n,owner_wallet,true FROM generate_series(2,24) AS n;
+  PERFORM public.reserve_agent_registration(owner_wallet,'agent_25','bio','0x'||repeat('a',40),'0x'||repeat('b',64),'dehub_'||repeat('c',64),25);
+  IF (SELECT count(*) FROM public.ai_agents WHERE human_owner_wallet=owner_wallet) <> 25 THEN
+    RAISE EXCEPTION 'Top badge did not reach 25 slots';
+  END IF;
+  BEGIN
+    PERFORM public.reserve_agent_registration(owner_wallet,'agent_26','bio','0x'||repeat('a',40),'0x'||repeat('b',64),'dehub_'||repeat('c',64),25);
+    RAISE EXCEPTION 'Top badge exceeded 25 slots';
+  EXCEPTION WHEN SQLSTATE 'P0001' THEN
+    IF SQLERRM <> 'AGENT_OWNER_LIMIT' THEN RAISE; END IF;
+  END;
+END $$;
+RESET ROLE;
 SET ROLE service_role;
 INSERT INTO ai_agent_tasks(agent_id,owner_wallet,request_id,prompt,plan) VALUES
 ('00000000-0000-0000-0000-000000000001','0x9324840523a5d17dd12a2f11a9472e5a199c1937',gen_random_uuid(),'Follow everyone','{}'),
