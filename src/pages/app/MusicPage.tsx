@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -364,7 +365,7 @@ export default function MusicPage() {
   // Swallow the music feed at the sticky nav bento's top edge under the glass
   // themes, exactly like the home feed cuts at its nav pill.
   const musicContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(musicContentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(musicContentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   // Drag-to-swipe for music tab indicator (after all hooks to avoid TDZ)
   const musicTabPositions = useRef<Partial<Record<MusicTabValue, HTMLElement | null>>>({});
@@ -431,9 +432,13 @@ export default function MusicPage() {
       </div>
 
       {/* Content */}
-      <div ref={musicContentRef} className="p-2 sm:p-3">
+      <div data-feed-swallow-bounds>
+<div ref={musicContentRef} className="p-2 sm:p-3">
+<FeedSwallowMotion>
         {renderContent()}
-      </div>
+      </FeedSwallowMotion>
+</div>
+</div>
     </div>
   );
 }

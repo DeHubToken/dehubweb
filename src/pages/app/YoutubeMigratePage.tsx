@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { FeedbackLink } from '@/components/app/FeedbackLink';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
@@ -540,7 +541,7 @@ export default function YoutubeMigratePage() {
   // Swallow the page content at the sticky header bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   return (
     <>
@@ -579,7 +580,9 @@ export default function YoutubeMigratePage() {
         </div>
       </div>
 
-      <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3 flex flex-col gap-2 sm:gap-3">
+      <div data-feed-swallow-bounds>
+<div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3 flex flex-col gap-2 sm:gap-3">
+<FeedSwallowMotion className="flex flex-col gap-2 sm:gap-3">
 
         <FeedbackLink source="migration" />
         {stage === 'loading' && (
@@ -1091,7 +1094,9 @@ export default function YoutubeMigratePage() {
             </p>
           </div>
         </section>
-      </div>
+      </FeedSwallowMotion>
+</div>
+</div>
     </>
   );
 }

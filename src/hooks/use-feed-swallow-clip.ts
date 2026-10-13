@@ -1,173 +1,242 @@
-import { useContext, useEffect, type RefObject } from 'react';
+import { useContext, useLayoutEffect, type RefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
-/** Themes whose sticky feed nav is a glass surface (pill or bento). */
 const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
-
-/**
- * Canvas themes: the nav is see-through glass over the live background, so the
- * feed is cut at the surface's BOTTOM edge and posts never slide under it.
- * System and Immersive keep the top-edge cut (posts bleed through the frosted
- * pill), which their black leak guard in index.css is built around.
- */
 const BOTTOM_CUT_THEMES = GLASS_NAV_THEMES.filter(t => t !== 'system' && t !== 'immersive');
+type TimelineConstructor = new (options: { source: Element; axis: 'block' }) => AnimationTimeline;
 
-/**
- * Swallow scrolled feed content at the top edge of a sticky glass nav surface.
- *
- * Under the glass-nav themes the sticky nav pill/bento is semi-transparent, so
- * without this, scrolled posts slide behind it and re-emerge above it in the
- * padding gap. The surface's top edge is the design's hard cut-off line:
- * content shows through the glass but must never come out the other side. That
- * line is fixed in the viewport while the feed scrolls, which CSS clip alone
- * can't express — so a rAF-throttled scroll listener clips the scrolling
- * container at the visible surface's top, tracing its corner radius.
- *
- * Used by the home feed (cut element = the `[data-feed-nav]` pill, present in
- * two variants — this page's and the collapsed GlobalFeedNav) and by the
- * bento feed pages (Explore/Music/Notifications, cut element = the sticky
- * `[data-page-bento]` header). No-op on themes with opaque nav bars.
- *
- * @param containerRef  the scrolling content container to clip
- * @param cutSelector   CSS selector for the sticky surface whose top edge is
- *                      the cut line; the first visible match is used
- * @param deps          extra effect deps — pass a value that flips when a
- *                      conditionally-mounted container appears (e.g. a post
- *                      overlay) so the listener re-attaches to the live element
- * @param opts          allThemes: clip on every theme, not just the glass
- *                      ones — for surfaces whose nav floats with a gap above
- *                      it on the opaque/paper themes too (e.g. the docs blog
- *                      pill pins below the docs header), where content would
- *                      otherwise re-emerge above the nav
- *                      off: skip the clip entirely (the Immersive theme's phone
- *                      feed has no resting pill to cut at)
- */
+/** Identical path commands at each endpoint allow continuous interpolation. */
+export function feedSwallowPath(y: number, r: number, left: number, right: number, width: number, height: number) {
+  const f = (n: number) => n.toFixed(2);
+  return `path('M 0 ${f(y + r)} L ${f(left)} ${f(y + r)} A ${f(r)} ${f(r)} 0 0 1 ${f(left + r)} ${f(y)} L ${f(right - r)} ${f(y)} A ${f(r)} ${f(r)} 0 0 1 ${f(right)} ${f(y + r)} L ${f(width)} ${f(y + r)} L ${f(width)} ${f(height)} L 0 ${f(height)} Z')`;
+}
+
+function scrollSource(el: HTMLElement): HTMLElement {
+  for (let node: HTMLElement | null = el; node && node !== document.documentElement; node = node.parentElement) {
+    if (/(auto|scroll)/.test(getComputedStyle(node).overflowY) && node.scrollHeight > node.clientHeight) return node;
+  }
+  return (document.scrollingElement || document.documentElement) as HTMLElement;
+}
+
+function navTranslation(value: string, nav: HTMLElement): number {
+  try { return new DOMMatrixReadOnly(value).m42; } catch {
+    // CSS transition keyframes may retain translateY percentages/calc. Resolve
+    // them against the NAV, not the much taller feed layer receiving the copy.
+    const match = value.match(/^translateY\((.*)\)$/);
+    if (!match) throw new Error('Unsupported nav transform');
+    const terms = Array.from(match[1].matchAll(/([+-]?\s*(?:\d*\.)?\d+)\s*(px|%|rem)/g));
+    if (!terms.length) throw new Error('Unresolved nav transform');
+    const height = nav.getBoundingClientRect().height;
+    const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    return terms.reduce((sum, term) => sum + parseFloat(term[1].replace(/\s/g, '')) * (term[2] === '%' ? height / 100 : term[2] === 'rem' ? rem : 1), 0);
+  }
+}
+
+/** Scroll-driven cut: JS refreshes geometry and nav transitions, not each scroll frame. */
 export function useFeedSwallowClip(
   containerRef: RefObject<HTMLElement | null>,
   cutSelector: string,
   deps: unknown[] = [],
   opts: { allThemes?: boolean; off?: boolean; edge?: 'top' | 'bottom' } = {},
 ) {
-  // False while this page sits in PersistentPageCache but is not the route on
-  // screen. Those pages are never unmounted, so without this gate every page
-  // the visitor has opened keeps a capture-phase scroll listener and its own
-  // rAF loop alive for the rest of the session, each running a document-wide
-  // querySelectorAll and two forced layouts per frame to clip a container
-  // nobody can see. Measured on staging: 26 such listeners, none ever removed,
-  // and 4-10ms of wasted work per scroll frame after a fifteen-page session.
   const isActivePage = useContext(CachedPageActiveContext);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isActivePage || opts.off) return;
     const el = containerRef.current;
     if (!el) return;
     const pageScope = el.closest<HTMLElement>('[data-cached-page]');
-    let rafId: number | null = null;
+    const Timeline = (window as unknown as { ScrollTimeline?: TimelineConstructor }).ScrollTimeline;
+    let frame: number | null = null;
+    let cut: HTMLElement | null = null;
+    let source: HTMLElement | null = null;
+    let animation: Animation | null = null;
+    let contentAnimation: Animation | null = null;
+    let navAnimation: Animation | null = null;
+    let inverseNavAnimation: Animation | null = null;
+    let sourceNavAnimation: Animation | null = null;
+    let animationSource: HTMLElement | null = null;
+    let lastFrames = '';
     let lastClip = '';
-    let lastEventAt = 0;
-    let cachedCut: HTMLElement | null = null;
-    let cachedRadius = 12;
-    // The radius cache is keyed on the theme as well as the element, because
-    // themes restyle the SAME node: minimal and light de-round surfaces, and
-    // war squares every bento outright. Keying on the element alone meant a
-    // theme switch kept the previous radius, so the clip carved a rounded arc
-    // at each top corner while the surface behind it was square, leaving two
-    // triangular gaps where content showed above the cut line.
-    let cachedTheme = '';
-
+    let clipTarget: HTMLElement = el;
+    let findCut = true;
+    let radius = 12;
+    let motionUntil = 0;
+    const cutLayer = el.querySelector<HTMLElement>(':scope > [data-feed-swallow-cut]');
+    const motion = cutLayer?.querySelector<HTMLElement>(':scope > [data-feed-swallow-motion]');
+    const inverseNavLayer = motion?.querySelector<HTMLElement>(':scope > [data-feed-swallow-content]');
+    const bounds = el.parentElement?.matches('[data-feed-swallow-bounds]') ? el.parentElement : null;
+    const originalOverflow = bounds?.style.overflow || '';
+    const visibleCut = (root: ParentNode) => Array.from(root.querySelectorAll<HTMLElement>(cutSelector)).find(candidate =>
+      candidate.offsetParent !== null && getComputedStyle(candidate).visibility !== 'hidden',
+    ) || null;
+    const clearAnimation = () => {
+      animation?.cancel();
+      contentAnimation?.cancel();
+      navAnimation?.cancel(); inverseNavAnimation?.cancel();
+      animation = null;
+      contentAnimation = null;
+      navAnimation = null; inverseNavAnimation = null; sourceNavAnimation = null;
+      animationSource = null;
+      lastFrames = '';
+      if (bounds) bounds.style.overflow = originalOverflow;
+    };
+    const writeClip = (clip: string, target = el) => {
+      if (clipTarget !== target) { clipTarget.style.clipPath = ''; lastClip = ''; clipTarget = target; }
+      if (clip !== lastClip) { target.style.clipPath = clip; lastClip = clip; }
+    };
+    const schedule = () => { if (frame === null) frame = requestAnimationFrame(update); };
+    const invalidate = () => { findCut = true; schedule(); };
+    const resizeObserver = new ResizeObserver(() => {
+      // A new scroll range changes timeline progress immediately. Refresh
+      // endpoints in this pre-paint callback, avoiding one stale range frame.
+      findCut = true;
+      if (frame !== null) cancelAnimationFrame(frame);
+      update();
+    });
     const update = () => {
+      frame = null;
       const theme = document.documentElement.dataset.theme || '';
-      let clip = '';
-      if (opts.allThemes || GLASS_NAV_THEMES.includes(theme)) {
-        const findVisibleCut = (root: ParentNode) =>
-          Array.from(root.querySelectorAll<HTMLElement>(cutSelector))
-            .find(p => p.offsetParent !== null);
-        // PersistentPageCache hides inactive pages with visibility/content-
-        // visibility, which does not reliably null offsetParent. Prefer this
-        // container's own cached page so a hidden bento cannot become its cut.
-        // Fall back globally for the collapsed nav and post-overlay layouts,
-        // whose cut surface intentionally lives outside the content page.
-        const cut = (pageScope && findVisibleCut(pageScope)) || findVisibleCut(document);
-        if (cut) {
-          if (cut !== cachedCut || theme !== cachedTheme) {
-            cachedCut = cut;
-            cachedTheme = theme;
-            // NaN-check rather than `|| 12`: a genuine 0 radius (the light
-            // theme de-rounds the docs blog pill) must give a square cut,
-            // not the 12px fallback arc.
-            const parsed = parseFloat(getComputedStyle(cut).borderTopLeftRadius);
-            cachedRadius = Number.isNaN(parsed) ? 12 : parsed;
-          }
-          const pr = cut.getBoundingClientRect();
-          const cr = el.getBoundingClientRect();
-          const f = (n: number) => n.toFixed(2);
-          const y = pr.top - cr.top;
-          if ((opts.edge === 'bottom' || (opts.edge !== 'top' && BOTTOM_CUT_THEMES.includes(theme))) && !el.contains(cut)) {
-            // Profile bars and canvas nav surfaces keep their own material.
-            // A surface inside the content retains its top cut to stay visible.
-            const bottomY = Math.max(0, pr.bottom - cr.top);
-            if (bottomY > 0.5) clip = `inset(${bottomY.toFixed(2)}px 0 0 0)`;
-          } else if (y > 0.5) {
-            // The cut follows the surface's silhouette: its top edge with the
-            // surface's own corner rounding, then full width just below the
-            // corner arcs — so nothing peeks out beside the rounded corners.
-            // CSS resolves very large/full radii (for example `rounded-full`)
-            // against both axes of the box. getComputedStyle still reports the
-            // declared pixel value, though, so capping only by width turns a
-            // short nav pill into a huge semicircular bite through the feed.
-            // Clamp by the surface height as well to match the radius the
-            // browser actually paints. This keeps pills, bento headers and
-            // post action surfaces on the same universal silhouette.
-            const r = Math.min(cachedRadius, pr.width / 2, pr.height / 2);
-            const L = pr.left - cr.left;
-            const R = pr.right - cr.left;
-            const W = cr.width;
-            const H = cr.height;
-            clip = `path('M 0 ${f(y + r)} L ${f(L)} ${f(y + r)} A ${f(r)} ${f(r)} 0 0 1 ${f(L + r)} ${f(y)} L ${f(R - r)} ${f(y)} A ${f(r)} ${f(r)} 0 0 1 ${f(R)} ${f(y + r)} L ${f(W)} ${f(y + r)} L ${f(W)} ${f(H)} L 0 ${f(H)} Z')`;
+      if (!opts.allThemes && !GLASS_NAV_THEMES.includes(theme)) {
+        clearAnimation(); writeClip(''); delete el.dataset.feedSwallowDriver; return;
+      }
+      if (findCut || !cut?.isConnected) {
+        const next = (pageScope && visibleCut(pageScope)) || visibleCut(document);
+        if (cut !== next) {
+          if (cut) resizeObserver.unobserve(cut);
+          cut = next;
+          if (cut) resizeObserver.observe(cut);
+        }
+        radius = cut ? parseFloat(getComputedStyle(cut).borderTopLeftRadius) : 12;
+        if (!Number.isFinite(radius)) radius = 12;
+        source = scrollSource(el);
+        findCut = false;
+      }
+      if (!cut || !source) { clearAnimation(); writeClip(''); delete el.dataset.feedSwallowDriver; return; }
+
+      // Read all geometry before writes. No selector traversal on ordinary scrolls.
+      const pr = cut.getBoundingClientRect();
+      const cr = el.getBoundingClientRect();
+      const nested = el.contains(cut);
+      const bottom = !nested && (opts.edge === 'bottom' || (opts.edge !== 'top' && BOTTOM_CUT_THEMES.includes(theme)));
+      const r = Math.min(radius, pr.width / 2, pr.height / 2);
+      const shape = (y: number, rect = cr) => bottom ? `inset(${y.toFixed(2)}px 0 0 0)`
+        : feedSwallowPath(y, r, pr.left - rect.left, pr.right - rect.left, rect.width, rect.height);
+      const currentY = (bottom ? pr.bottom : pr.top) - cr.top;
+      const outer = cut.closest<HTMLElement>('[data-feed-nav-outer], [data-kit-island-outer]');
+      const maxScroll = source.scrollHeight - source.clientHeight;
+      // The scrollport itself has a stationary clip; its descendants already
+      // scroll within that cut on the compositor (including post overlays).
+      if (Timeline && outer && !nested && source !== el && maxScroll > 0 && motion && bounds && cutLayer && inverseNavLayer) {
+        let pinnedY = bottom ? pr.bottom : pr.top;
+        if (source.contains(outer)) {
+          const outerRect = outer.getBoundingClientRect();
+          const style = getComputedStyle(outer);
+          const top = parseFloat(style.top);
+          if (style.position === 'sticky' && Number.isFinite(top)) {
+            const sourceTop = source === document.scrollingElement ? 0 : source.getBoundingClientRect().top + source.clientTop;
+            const transformY = style.transform === 'none' ? 0 : new DOMMatrixReadOnly(style.transform).m42;
+            pinnedY += sourceTop + top + transformY - outerRect.top;
           }
         }
+        // Move the clipping surface against the document scroll, and move
+        // its content back by the same distance. Both transforms composite;
+        // the rounded cut stays stationary even while JS cannot run. Bounds
+        // retain the original layout height, preventing transformed overflow
+        // from enlarging the document's scroll range as the page scrolls.
+        const currentTransform = animation ? getComputedStyle(el).transform : '';
+        const counterOffset = currentTransform && currentTransform !== 'none' ? new DOMMatrixReadOnly(currentTransform).m42 : 0;
+        // A resized document changes timeline progress before endpoints are
+        // refreshed. Recover the layout origin from the actual transform,
+        // rather than assuming the old animation still exactly cancels scroll.
+        const cutRect = cutLayer.getBoundingClientRect();
+        const cutTransform = getComputedStyle(cutLayer).transform;
+        const cutOffset = cutTransform && cutTransform !== 'none' ? new DOMMatrixReadOnly(cutTransform).m42 : 0;
+        const layoutTop = cutRect.top + source.scrollTop - counterOffset - cutOffset;
+        const navTransform = getComputedStyle(outer).transform;
+        const navOffset = navTransform && navTransform !== 'none' ? new DOMMatrixReadOnly(navTransform).m42 : 0;
+        const transition = outer.getAnimations().find(candidate =>
+          'transitionProperty' in candidate && candidate.transitionProperty === 'transform' && candidate.playState === 'running',
+        );
+        const mirrorNav = !!transition && typeof transition.startTime === 'number';
+        const y0 = pinnedY - layoutTop - (mirrorNav ? navOffset : 0);
+        const frames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${maxScroll}px)` }];
+        const contentFrames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${-maxScroll}px)` }];
+        const key = String(maxScroll);
+        if (source !== animationSource || !animation) {
+          clearAnimation();
+          try {
+            const timing = { timeline: new Timeline({ source, axis: 'block' }), fill: 'both' as const, easing: 'linear' };
+            animation = el.animate(frames, timing);
+            contentAnimation = motion.animate(contentFrames, timing);
+            bounds.style.overflow = 'clip';
+            animationSource = source;
+          } catch { clearAnimation(); /* Partial implementations keep the frame fallback. */ }
+        } else if (key !== lastFrames) {
+          (animation.effect as KeyframeEffect).setKeyframes(frames);
+          (contentAnimation!.effect as KeyframeEffect).setKeyframes(contentFrames);
+        }
+        if (animation) {
+          // Copy the nav's own transform transition onto the clipping layer,
+          // with the inverse on its content. Shared start times keep the cut
+          // attached to a returning pill even if JS stalls mid-transition.
+          if (mirrorNav && transition !== sourceNavAnimation) {
+            navAnimation?.cancel(); inverseNavAnimation?.cancel();
+            const effect = transition.effect as KeyframeEffect;
+            const navFrames = effect.getKeyframes().map(keyframe => ({ offset: keyframe.offset, easing: keyframe.easing, transform: `translateY(${navTranslation(String(keyframe.transform), outer)}px)` }));
+            const inverseFrames = navFrames.map(keyframe => ({ ...keyframe, transform: `translateY(${-new DOMMatrixReadOnly(String(keyframe.transform)).m42}px)` }));
+            const timing = { ...effect.getTiming(), fill: 'both' as const };
+            navAnimation = cutLayer.animate(navFrames, timing);
+            inverseNavAnimation = inverseNavLayer.animate(inverseFrames, timing);
+            navAnimation.startTime = transition.startTime;
+            inverseNavAnimation.startTime = transition.startTime;
+            sourceNavAnimation = transition;
+          } else if (!mirrorNav) {
+            navAnimation?.cancel(); inverseNavAnimation?.cancel();
+            navAnimation = null; inverseNavAnimation = null; sourceNavAnimation = null;
+          }
+          lastFrames = key; writeClip(shape(y0, cutRect), cutLayer); el.dataset.feedSwallowDriver = 'scroll-transform';
+        } else { writeClip(currentY > 0.5 ? shape(currentY) : ''); el.dataset.feedSwallowDriver = 'frame'; }
+      } else {
+        clearAnimation(); writeClip(currentY > 0.5 ? shape(currentY) : '');
+        el.dataset.feedSwallowDriver = source === el && !nested ? 'scrollport' : 'frame';
       }
-      if (clip !== lastClip) {
-        lastClip = clip;
-        el.style.clipPath = clip;
-      }
-      // Keep tracking briefly after the last scroll event so the clip line
-      // follows the nav's hide/show transform to its resting spot.
-      rafId = performance.now() - lastEventAt < 450 ? requestAnimationFrame(update) : null;
+      if (performance.now() < motionUntil) schedule();
     };
-    const schedule = () => {
-      lastEventAt = performance.now();
-      if (rafId == null) rafId = requestAnimationFrame(update);
+    const onScroll = (event: Event) => {
+      const target = event.target;
+      // Ignore chat, carousels and dialogs; only an ancestor moves this feed.
+      if (target !== document && target !== event.currentTarget && !(target instanceof HTMLElement && target.contains(el))) return;
+      if (!animation && !(source === el && !el.contains(cut))) schedule();
     };
-    const invalidateGeometry = () => {
-      cachedCut = null;
+    const onMotion = (event: TransitionEvent) => {
+      if (event.propertyName !== 'transform' || !(event.target instanceof HTMLElement)) return;
+      if (!event.target.contains(cut) && !event.target.contains(el)) return;
+      motionUntil = event.type === 'transitionrun' ? performance.now() + 500 : 0;
       schedule();
     };
-
-    // The feed scrolls on document.body in this app; scroll events don't
-    // bubble, so capture-phase listeners catch whichever element scrolls.
-    const targets: EventTarget[] = [window, document];
-    targets.forEach(t => t.addEventListener('scroll', schedule, { passive: true, capture: true }));
-    window.addEventListener('resize', invalidateGeometry, { passive: true });
-    const themeObserver = new MutationObserver(invalidateGeometry);
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    const pageObserver = pageScope ? new MutationObserver(invalidateGeometry) : null;
-    pageObserver?.observe(pageScope, { attributes: true, attributeFilter: ['style'] });
-    // Loading posts and profile details can change geometry after scrolling
-    // has stopped. Recompute rather than retaining a cut from the skeleton.
-    const resizeObserver = new ResizeObserver(invalidateGeometry);
     resizeObserver.observe(el);
     if (el.parentElement) resizeObserver.observe(el.parentElement);
-    schedule();
-
+    const themeObserver = new MutationObserver(invalidate);
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-nav-hidden', 'data-sticky-nav-hidden', 'data-scroll-hidden', 'data-sticky-scroll-hidden', 'data-no-top-bar', 'data-overlay-open'] });
+    const pageObserver = pageScope ? new MutationObserver(invalidate) : null;
+    pageObserver?.observe(pageScope, { attributes: true, attributeFilter: ['style'] });
+    window.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', invalidate, { passive: true });
+    document.addEventListener('transitionrun', onMotion, true);
+    document.addEventListener('transitionend', onMotion, true);
+    document.addEventListener('transitioncancel', onMotion, true);
+    // Apply before paint so the initial render never exposes uncut content.
+    update();
     return () => {
-      targets.forEach(t => t.removeEventListener('scroll', schedule, { capture: true }));
-      window.removeEventListener('resize', invalidateGeometry);
-      themeObserver.disconnect();
-      pageObserver?.disconnect();
-      resizeObserver.disconnect();
-      if (rafId != null) cancelAnimationFrame(rafId);
-      el.style.clipPath = '';
+      window.removeEventListener('scroll', onScroll, { capture: true });
+      window.removeEventListener('resize', invalidate);
+      document.removeEventListener('transitionrun', onMotion, true);
+      document.removeEventListener('transitionend', onMotion, true);
+      document.removeEventListener('transitioncancel', onMotion, true);
+      themeObserver.disconnect(); pageObserver?.disconnect(); resizeObserver.disconnect();
+      if (frame !== null) cancelAnimationFrame(frame);
+      clearAnimation(); clipTarget.style.clipPath = ''; el.style.clipPath = ''; delete el.dataset.feedSwallowDriver;
+      if (bounds) bounds.style.overflow = originalOverflow;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, cutSelector, opts.allThemes, opts.off, opts.edge, isActivePage, ...deps]);

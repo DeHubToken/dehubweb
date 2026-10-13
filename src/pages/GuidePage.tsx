@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
@@ -278,7 +279,7 @@ const GuidePage: React.FC = () => {
   // Swallow the guide content at the sticky header pill's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   // Filter & rank sections by search relevance
   const filteredSections = useMemo(() => {
@@ -435,7 +436,9 @@ const GuidePage: React.FC = () => {
         </aside>
 
         {/* Content */}
-        <main ref={contentRef} className="flex-1 min-w-0 space-y-6 pb-20">
+        <div data-feed-swallow-bounds className="flex-1 min-w-0">
+<main ref={contentRef} className="flex-1 min-w-0 space-y-6 pb-20">
+<FeedSwallowMotion className="space-y-6">
           {/* Hero */}
           {!isSearching && (
             <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-2xl p-6 md:p-10 mb-2">
@@ -479,7 +482,9 @@ const GuidePage: React.FC = () => {
           {filteredSections.map(s => (
             <SectionCard key={s.id} section={s} tokens={tokens} />
           ))}
-        </main>
+        </FeedSwallowMotion>
+</main>
+</div>
       </div>
     </div>
     </>

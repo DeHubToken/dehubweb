@@ -3,11 +3,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('useStickyNavVisibility', () => {
   let scrollY = 0;
+  let pendingFrame: FrameRequestCallback | undefined;
+  const flushFrame = () => { const callback = pendingFrame; pendingFrame = undefined; callback?.(0); };
 
   beforeEach(() => {
     vi.resetModules();
     document.body.innerHTML = '';
     scrollY = 0;
+    pendingFrame = undefined;
+    vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => { pendingFrame = callback; return 1; });
+    vi.stubGlobal('cancelAnimationFrame', vi.fn());
     Object.defineProperty(window, 'scrollY', {
       configurable: true,
       get: () => scrollY,
@@ -16,6 +21,7 @@ describe('useStickyNavVisibility', () => {
 
   afterEach(() => {
     document.body.innerHTML = '';
+    vi.unstubAllGlobals();
   });
 
   it('waits for content to cover the pill gap and only returns at the top', async () => {
@@ -38,12 +44,14 @@ describe('useStickyNavVisibility', () => {
     act(() => {
       scrollY = 200;
       window.dispatchEvent(new Event('scroll'));
+      flushFrame();
     });
     expect(result.current).toBe(true);
 
     act(() => {
       scrollY = 244;
       window.dispatchEvent(new Event('scroll'));
+      flushFrame();
     });
     expect(result.current).toBe(false);
 
@@ -51,12 +59,14 @@ describe('useStickyNavVisibility', () => {
     act(() => {
       scrollY = 120;
       window.dispatchEvent(new Event('scroll'));
+      flushFrame();
     });
     expect(result.current).toBe(false);
 
     act(() => {
       scrollY = 0;
       window.dispatchEvent(new Event('scroll'));
+      flushFrame();
     });
     expect(result.current).toBe(true);
 

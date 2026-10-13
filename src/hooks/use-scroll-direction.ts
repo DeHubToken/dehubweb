@@ -69,7 +69,9 @@ function getStickyNavHideThreshold(): number {
 
 function updateStickyNavVisibility(y: number) {
   if (y <= STICKY_NAV_TOP_THRESHOLD) setStickyNavVisible(true);
-  else if (y >= getStickyNavHideThreshold()) setStickyNavVisible(false);
+  // Once hidden, only reaching the top can show it. Measuring it again on
+  // every event cannot change the result and forces needless style/layout.
+  else if (stickyNavVisible && y >= getStickyNavHideThreshold()) setStickyNavVisible(false);
 }
 
 function attachListeners(): () => void {
@@ -107,18 +109,25 @@ function attachListeners(): () => void {
   // re-seeds the baseline and skips one frame rather than diffing this
   // container's scrollTop against the last one's — a jump of a few thousand
   // pixels would otherwise read as a hard scroll down.
+  let scrollFrame: number | null = null;
   const onCapturedScroll = (e: Event) => {
     const target = e.target;
     const el =
       target instanceof HTMLElement && target.matches(SCROLL_NAV_SOURCE_SELECTOR)
         ? target
         : null;
+    const documentScroll = target === document || target === e.currentTarget || target === document.documentElement || target === document.body || target === document.getElementById('app-root');
+    // Nested chat and carousel scrolling must not reset the feed baseline.
+    if (!el && !documentScroll) return;
     if (el !== activeScroller) {
       activeScroller = el;
       lastScrollY = getY();
-      return;
+      updateStickyNavVisibility(lastScrollY);
     }
-    if (el) onScroll();
+    if (scrollFrame === null) scrollFrame = requestAnimationFrame(() => {
+      scrollFrame = null;
+      onScroll();
+    });
   };
 
   // ── touch events: most reliable on iOS/Android ──────────────────────────
@@ -148,23 +157,14 @@ function attachListeners(): () => void {
   };
 
   // Attach scroll to all candidates — no matter which one is the real container
-  const targets: EventTarget[] = [
-    window,
-    document,
-    document.documentElement,
-    document.body,
-  ];
-  // Also attach to the app root div (overflow-x-clip may make it the scroll container)
-  const appRoot = document.getElementById('app-root');
-  if (appRoot) targets.push(appRoot);
-  targets.forEach(t => t.addEventListener('scroll', onScroll, { passive: true }));
-  document.addEventListener('scroll', onCapturedScroll, { passive: true, capture: true });
+  // One capture listener sees both document and tagged element scrollers.
+  window.addEventListener('scroll', onCapturedScroll, { passive: true, capture: true });
   window.addEventListener('touchstart', onTouchStart, { passive: true });
   window.addEventListener('touchmove',  onTouchMove,  { passive: true });
 
   return () => {
-    targets.forEach(t => t.removeEventListener('scroll', onScroll));
-    document.removeEventListener('scroll', onCapturedScroll, { capture: true });
+    window.removeEventListener('scroll', onCapturedScroll, { capture: true });
+    if (scrollFrame !== null) cancelAnimationFrame(scrollFrame);
     activeScroller = null;
     window.removeEventListener('touchstart', onTouchStart);
     window.removeEventListener('touchmove',  onTouchMove);
