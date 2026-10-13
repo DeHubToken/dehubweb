@@ -2661,9 +2661,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 <span data-video-bare data-video-time className="min-w-[36px] text-center text-xs font-medium tabular-nums text-white">{formatTime(Math.max(0, Math.ceil(duration - currentTime)))}</span>
               </div>
               <div data-video-inline-tools className="ml-auto flex shrink-0 items-center gap-1">
-            {/* Subtitles mount here — display:contents keeps the button a direct
-                flex item, so it sits in the row's gap like everything else. */}
-            <div ref={setCcSlot} className="contents" />
+            {/* Keep the CC slot and glyph in place while the subtitle menu loads. */}
+            <div ref={setCcSlot} data-video-caption-slot className="relative h-8 w-8 shrink-0 [&:has(button)>[data-video-caption-placeholder]]:hidden">
+              <span data-video-caption-placeholder aria-hidden="true" className="absolute inset-0 flex items-center justify-center">
+                <MediaControlIcon captions plain={splitControls} />
+              </span>
+            </div>
 
             <button
               data-on-media
