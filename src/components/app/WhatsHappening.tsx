@@ -1,3 +1,7 @@
+import Globe from "@/components/ui/cut-icons/world";
+import ChevronDown from "@/components/ui/cut-icons/next";
+import Hash from "@/components/ui/cut-icons/topics";
+import Flame from "@/components/ui/cut-icons/trending";
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
@@ -12,7 +16,7 @@ const GoLiveModal = React.lazy(() =>
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Globe, ChevronDown, Hash, Flame } from "lucide-react";
+
 import Radio from "@/components/ui/cut-icons/live";
 import Video from "@/components/ui/cut-icons/video";
 import Users from "@/components/ui/cut-icons/communities";
@@ -448,7 +452,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           >
             <Globe className="w-3.5 h-3.5" />
             <span>{t('commandCentre.viewAll')}</span>
-            <ChevronDown className={cn('w-3 h-3 transition-transform', showCountryDropdown && 'rotate-180')} />
+            <ChevronDown className="w-3 h-3 transition-transform" style={{ transform: `rotate(${showCountryDropdown ? -90 : 90}deg)` }} />
           </button>
           {showCountryDropdown && (
             <div data-inline-popover className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">

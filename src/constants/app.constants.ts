@@ -1,8 +1,18 @@
+import FileText from "@/components/ui/cut-icons/blog";
+import FileTextIcon from "@/components/ui/cut-icons/blog";
+import Film from "@/components/ui/cut-icons/editor";
+import Wand2 from "@/components/ui/cut-icons/prompt";
+import Zap from "@/components/ui/cut-icons/superpowers";
+import AtSign from "@/components/ui/cut-icons/usernames";
+import Tv from "@/components/ui/cut-icons/live-tv";
+import ArrowDownToLine from "@/components/ui/cut-icons/converter";
+import FolderInput from "@/components/ui/cut-icons/migrate";
+import Scroll from "@/components/ui/cut-icons/glossary";
 import Blog from "@/components/ui/cut-icons/blog";
 import Hammer from "@/components/ui/cut-icons/work";
 import Shorts from "@/components/ui/cut-icons/shorts";
 import Handshake from "@/components/ui/cut-icons/affiliate";
-import { AtSign, FileText, Film, FileTextIcon, Wand2, Scroll, Zap, ArrowDownToLine, FolderInput, Tv } from "lucide-react";
+
 import Blocks from "@/components/ui/cut-icons/apps";
 import Store from "@/components/ui/cut-icons/store";
 import Trophy from "@/components/ui/cut-icons/leaderboard";
@@ -32,7 +42,8 @@ import Search from "@/components/ui/cut-icons/search";
 import Bell from "@/components/ui/cut-icons/alerts";
 import MessageSquare from "@/components/ui/cut-icons/messages";
 import Bookmark from "@/components/ui/cut-icons/save";
-import Settings from "@/components/ui/cut-icons/settings";
+import Settings from "@/components/ui/cut-icons/settings-cog";
+import Creator from "@/components/ui/cut-icons/creator";
 import User from "@/components/ui/cut-icons/profile";
 import Play from "@/components/ui/cut-icons/play";
 import Mic from "@/components/ui/cut-icons/mic";
@@ -53,8 +64,8 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Users, label: 'Communities', path: '/app/communities' },
   { icon: Sparkles, label: 'Assistant', path: '/app/assistant' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
-  { icon: Film, themedIcon: 'videos', label: 'Editor', path: '/editor' },
-  { icon: Wand2, themedIcon: 'paint', label: 'Creator', path: '/creator' },
+  { icon: Film, label: 'Editor', path: '/editor' },
+  { icon: Creator, label: 'Creator', path: '/creator' },
   { icon: Mic, label: 'Stages', path: '/stages' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },

@@ -14,7 +14,7 @@ import { useState, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cdnImage } from '@/lib/media-url';
 import MoreVertical from "@/components/ui/cut-icons/morevertical";
-import Sparkles from "@/components/ui/cut-icons/assistant";
+import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 import Flag from "@/components/ui/cut-icons/report";
 import Ban from "@/components/ui/cut-icons/blocked";
 import EyeOff from "@/components/ui/cut-icons/hidden";
@@ -123,7 +123,7 @@ export function LiveCard({ stream }: LiveCardProps) {
                 onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
                 className="text-white hover:bg-zinc-700 cursor-pointer gap-2"
               >
-                <Sparkles className="w-4 h-4" /> {t("postOptions.aiOverview", "AI overview")}
+                <AssistantNavIcon className="w-4 h-4" /> {t("postOptions.aiOverview", "AI overview")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => toggleBookmark()}

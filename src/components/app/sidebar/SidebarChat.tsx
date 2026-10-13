@@ -1,9 +1,11 @@
+import SmilePlus from "@/components/ui/cut-icons/packs";
+import CornerDownRight from "@/components/ui/cut-icons/reply";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useDraft } from '@/hooks/use-draft';
 import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
-import { Loader2, SmilePlus, CornerDownRight } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Reply from "@/components/ui/cut-icons/reply";
 import Pencil from "@/components/ui/cut-icons/edit";
 import Trash2 from "@/components/ui/cut-icons/delete";
