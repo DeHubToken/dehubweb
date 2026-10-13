@@ -6,7 +6,7 @@ import { isHomePath } from '@/lib/home-path';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { PenSquare, LogIn, CornerDownLeft } from "lucide-react";
-import Sparkles from "@/components/ui/cut-icons/assistant";
+import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
 import LogOut from "@/components/ui/cut-icons/sign-out";
 
 import Menu from "@/components/ui/cut-icons/menu";
@@ -627,7 +627,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                     "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
                     isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
                   )}>
-                    <Sparkles className="w-5 h-5" />
+                    <AssistantNavIcon className="w-5 h-5" />
                   </div>
                   <span className={cn("relative z-10 truncate", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.assistant')}</span>
                 </NavLink>
