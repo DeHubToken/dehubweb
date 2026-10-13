@@ -5,11 +5,14 @@ let selectedInput = '', selectedResult = '', requestVersion = 0, sessionVersion 
 let referencesChanged = false, working = false, pendingPayment = null, paymentNotice = '';
 const localMedia = new Map();
 const presets = window.MABOROSHI_PRESETS || [];
-let selectedPreset = null;
+const linkedPreset = presets.find(preset => preset.id === new URLSearchParams(location.search).get('preset')) || null;
+let selectedPreset = linkedPreset;
 function renderPresets() {
   const search = $('preset-search').value.trim().toLocaleLowerCase(), group = $('preset-group').value;
+  const featured = window.MABOROSHI_FEATURED || [];
+  const rank = preset => featured.includes(preset.id) ? featured.indexOf(preset.id) : featured.length;
   const matches = presets.filter(preset => (!group || preset.group === group) &&
-    `${preset.name} ${preset.group} ${preset.direction}`.toLocaleLowerCase().includes(search));
+    `${preset.name} ${preset.group} ${preset.direction}`.toLocaleLowerCase().includes(search)).sort((a, b) => rank(a) - rank(b));
   $('preset-count').textContent = `${matches.length} of ${presets.length} presets`;
   $('preset-reset-search').hidden = !search && !group;
   $('preset-list').replaceChildren();
@@ -73,7 +76,7 @@ function clearProject() {
   for (const id of ['source-local', 'reference-preview', 'second-preview']) clearMedia(id);
   $('source-form').reset(); $('references-form').reset(); $('reviewed').checked = false; $('draft-reviewed').checked = false;
   $('character-options').open = false; referencesChanged = false; render();
-  selectedPreset = null; $('preset-applied').hidden = true; renderPresets(); renderPresetDetail();
+  selectedPreset = linkedPreset; $('preset-applied').hidden = true; $('preset-browser').open = !!linkedPreset; renderPresets(); renderPresetDetail();
 }
 async function list(restore = false) {
   const version = sessionVersion, data = await api('jobs');
@@ -83,7 +86,7 @@ async function list(restore = false) {
     const date = new Date(job.created * 1000).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     $('jobs').add(new Option(`${job.subject || 'Video'} · ${date} · ${stateLabel(job.state)}`, job.id));
   }
-  const last = restore ? remembered() : '';
+  const last = restore && !linkedPreset ? remembered() : '';
   if (last && data.jobs.some(job => job.id === last)) await load(last);
   $('jobs').value = current?.id || '';
 }
@@ -291,8 +294,20 @@ $('preset-apply').onclick = () => {
   render(); $('reference').focus();
 };
 $('preset-total').textContent = `(${presets.length})`;
+$('preset-browser').open = !!linkedPreset;
 for (const group of new Set(presets.map(preset => preset.group))) $('preset-group').add(new Option(group, group));
 renderPresets(); renderPresetDetail();
+const featuredRail = $('featured-looks');
+for (const [index, id] of (window.MABOROSHI_FEATURED || []).entries()) {
+  const preset = presets.find(item => item.id === id);
+  if (!preset) continue;
+  const button = document.createElement('button'); button.type = 'button'; button.className = 'featured-look';
+  const art = document.createElement('span'); art.className = 'look-art'; art.setAttribute('aria-hidden', 'true');
+  art.style.backgroundPosition = `${(index % 3) * 50}% ${Math.floor(index / 3) * 100}%`;
+  const name = document.createElement('strong'); name.textContent = preset.name; button.append(art, name);
+  button.onclick = () => { selectedPreset = preset; $('preset-browser').open = true; renderPresets(); renderPresetDetail(); $('preset-detail').scrollIntoView({ block: 'nearest' }); $('preset-apply').focus(); };
+  featuredRail.append(button);
+}
 for (const stage of ['prepare', 'draft', 'hd']) $(stage).onclick = async () => {
   if (!current || !allowPayments || locked()) return;
   const ident = current.id, version = sessionVersion; message(''); working = true; render();

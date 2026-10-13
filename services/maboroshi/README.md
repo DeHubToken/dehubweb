@@ -6,7 +6,7 @@ page and native app share the same hosted interface and private job store.
 Find Maboroshi in Creator's video model search, alongside Kling Character Swap
 and Motion Control. The composer has no separate shortcut row.
 
-The shared interface contains 108 original character-look directions in 12
+The shared interface contains 180 original character-look directions in 20
 categories. Search and category filters work before sign-in; applying a preset
 requires an editable project session and fills the editable character direction.
 The creator supplies a matching reference image or video. Selecting a preset
