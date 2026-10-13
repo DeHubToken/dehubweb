@@ -39,6 +39,8 @@ function assertCut(bytes, bottom, label, rounded = false, viewportWidth) {
     const i = (y * png.width + x) * 4;
     assert(!(png.data[i + 1] > 200 && png.data[i] < 30), `${label}: content leaked at ${x},${y}`);
   }
+  const visiblePixel = (Math.floor((bottom + 100) * scale) * png.width + Math.floor(png.width / 2)) * 4;
+  assert(png.data[visiblePixel + 1] > 200 && png.data[visiblePixel] < 30, `${label}: feed must remain visible below the cut`);
 }
 try {
   for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {

@@ -120,7 +120,12 @@ export function useFeedSwallowClip(
         // the rounded cut stays stationary even while JS cannot run. Bounds
         // retain the original layout height, preventing transformed overflow
         // from enlarging the document's scroll range as the page scrolls.
-        const y0 = pinnedY - cr.top - (animation ? 0 : source.scrollTop);
+        const currentTransform = animation ? getComputedStyle(el).transform : '';
+        const counterOffset = currentTransform && currentTransform !== 'none' ? new DOMMatrixReadOnly(currentTransform).m42 : 0;
+        // A resized document changes timeline progress before endpoints are
+        // refreshed. Recover the layout origin from the actual transform,
+        // rather than assuming the old animation still exactly cancels scroll.
+        const y0 = pinnedY - cr.top - source.scrollTop + counterOffset;
         const frames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${maxScroll}px)` }];
         const contentFrames: Keyframe[] = [{ transform: 'translateY(0px)' }, { transform: `translateY(${-maxScroll}px)` }];
         const key = String(maxScroll);
