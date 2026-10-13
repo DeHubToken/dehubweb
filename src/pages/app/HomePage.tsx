@@ -1092,7 +1092,7 @@ export default function HomePage() {
                       isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
                     )}
                   >
-                    <tab.icon className="relative z-10 w-4 h-4" />
+                    <tab.icon data-home-nav-glyph={tab.value === 'home' || undefined} className={cn('relative z-10 w-4 h-4', tab.value === 'home' && 'origin-center max-lg:scale-[1.125]')} />
                   </button>
 
                 );
