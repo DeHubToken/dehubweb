@@ -116,7 +116,7 @@ function attachListeners(): () => void {
       target instanceof HTMLElement && target.matches(SCROLL_NAV_SOURCE_SELECTOR)
         ? target
         : null;
-    const documentScroll = target === document || target === window || target === document.documentElement || target === document.body || target === document.getElementById('app-root');
+    const documentScroll = target === document || target === e.currentTarget || target === document.documentElement || target === document.body || target === document.getElementById('app-root');
     // Nested chat and carousel scrolling must not reset the feed baseline.
     if (!el && !documentScroll) return;
     if (el !== activeScroller) {

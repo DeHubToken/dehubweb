@@ -32,7 +32,7 @@ function fixture(timeline = false) {
   const animate = vi.fn((_frames: Keyframe[], _options: KeyframeAnimationOptions) => ({ cancel, effect: { setKeyframes } }));
   content.animate = animate as unknown as typeof content.animate;
   motion.animate = animate as unknown as typeof motion.animate;
-  if (timeline) vi.stubGlobal('ScrollTimeline', class {});
+  vi.stubGlobal('ScrollTimeline', timeline ? class {} : undefined);
   const hook = renderHook(() => useFeedSwallowClip({ current: content }, '[data-feed-nav]'));
   return { callbacks, content, animate, cancel, hook };
 }
@@ -40,6 +40,7 @@ function fixture(timeline = false) {
 it('applies the fallback before the first paint and has no idle frame tail', () => {
   const { content, callbacks } = fixture();
   expect(content.style.clipPath).toMatch(/^path\('M 0 120\.00 /);
+  expect(content.dataset.feedSwallowDriver).toBe('frame');
   expect(callbacks).toHaveLength(0);
   act(() => window.dispatchEvent(new Event('scroll')));
   expect(callbacks).toHaveLength(1);
