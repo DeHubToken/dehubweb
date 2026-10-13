@@ -133,7 +133,7 @@ export function useFeedSwallowClip(
         }
         // Move the clipping surface against the document scroll, and move
         // its content back by the same distance. Both transforms composite;
-        // the rounded cut stays stationary even while JS cannot run. Bounds
+        // the full-width cut stays stationary even while JS cannot run. Bounds
         // retain the original layout height, preventing transformed overflow
         // from enlarging the document's scroll range as the page scrolls.
         const currentTransform = animation ? getComputedStyle(el).transform : '';
