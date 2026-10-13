@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module';
-import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import assert from 'node:assert/strict';
@@ -24,10 +24,16 @@ const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const url = `http://127.0.0.1:${server.address().port}`;
 const evidence = [];
-function assertCut(bytes, bottom, label) {
+function assertCut(bytes, bottom, label, rounded = false) {
   const png = PNG.sync.read(bytes);
   // Scan the full band above the cut. Green there is actual content leakage.
-  for (let y = 0; y < bottom; y++) for (let x = 12; x < png.width - 12; x++) {
+  for (let y = 0; y < bottom + (rounded ? 12 : 0); y++) for (let x = 12; x < png.width - 12; x++) {
+    const cornerDistance = Math.min(x + 0.5 - 12, png.width - 12 - (x + 0.5));
+    const cut = rounded && cornerDistance < 12
+      ? bottom + 12 - Math.sqrt(144 - (12 - cornerDistance) ** 2)
+      : bottom;
+    // Leave the antialiased boundary pixel out of the colour assertion.
+    if (y + 1 >= cut) continue;
     const i = (y * png.width + x) * 4;
     assert(!(png.data[i + 1] > 200 && png.data[i] < 30), `${label}: content leaked at ${x},${y}`);
   }
@@ -47,7 +53,7 @@ try {
             await page.evaluate(y => window.scrollTo(0, y), y);
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const png = await page.screenshot();
-            assertCut(png, theme === 'system' ? 8 : 44, `${name}/${width}/${theme}/${y}`);
+            assertCut(png, theme === 'system' ? 8 : 44, `${name}/${width}/${theme}/${y}`, theme === 'system');
           }
           await page.screenshot({ path: `${output}/${name}-${width}-${theme}.png` });
         }
@@ -61,12 +67,14 @@ try {
           await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
           const cdp = await page.context().newCDPSession(page);
           // Hold the main thread while the compositor scrolls and captures.
-          const busy = cdp.send('Runtime.evaluate', { expression: 'const until=performance.now()+1500;while(performance.now()<until){}' });
+          let busyFinished = false;
+          const busy = cdp.send('Runtime.evaluate', { expression: 'const until=performance.now()+2500;while(performance.now()<until){}' }).then(() => { busyFinished = true; });
           await new Promise(resolve => setTimeout(resolve, 100));
           await cdp.send('Input.synthesizeScrollGesture', { x: width / 2, y: 600, yDistance: -700, speed: 2000, gestureSourceType: 'touch' });
           const capture = await cdp.send('Page.captureScreenshot', { format: 'png' });
           const bytes = Buffer.from(capture.data, 'base64');
-          assertCut(bytes, 8, `blocked-main-thread/${width}`);
+          assert.equal(busyFinished, false, 'The cutoff capture must occur while JavaScript is blocked');
+          assertCut(bytes, 8, `blocked-main-thread/${width}`, true);
           await writeFile(`${output}/blocked-main-thread-${width}.png`, bytes);
           await busy;
           await cdp.detach();
