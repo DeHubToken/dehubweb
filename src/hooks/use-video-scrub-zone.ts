@@ -110,13 +110,12 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       const active = gesture.current;
       if (!active || active.id !== event.pointerId) return;
       gesture.current = null;
-    freeScroll();
+      freeScroll();
       if (active.button && !active.dragging) return;
       swallowClick.current = true;
       event.preventDefault();
       event.stopPropagation();
-      if (!active.dragging) ownScroll(event.currentTarget);
-        args.onStart();
+      if (!active.dragging) args.onStart();
       args.onCommit(timeAt(event));
       args.onFinish();
     },
