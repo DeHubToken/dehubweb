@@ -297,8 +297,17 @@ export function deviceWidth(cssPx: number): number {
  * own. That is deliberate: the cost of being wrong is one slightly soft or
  * slightly heavy image until the next render, and phones do not cross 768 px.
  */
+let mdMatches: boolean | undefined;
 export function isMdUp(): boolean {
-  return typeof window !== 'undefined' && window.innerWidth >= 768;
+  if (typeof window === 'undefined') return false;
+  if (mdMatches === undefined) {
+    const query = window.matchMedia('(min-width: 768px)');
+    mdMatches = query.matches;
+    query.addEventListener('change', (event) => { mdMatches = event.matches; });
+  }
+  // Feed cards call this while React commits DOM changes. Reading innerWidth
+  // there synchronously lays out the growing feed for a breakpoint boolean.
+  return mdMatches;
 }
 
 // Defaults for callers that don't state a size. These are the COMMON case, not
