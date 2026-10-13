@@ -34,6 +34,8 @@ import { useBootSettled, useFirstInteraction } from '@/hooks/use-boot-settled';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
 import { isBrainrotSwipe, isTouchPrimary, openBrainrotFeed } from '@/lib/brainrot-feed';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { videoItemToShort } from '@/lib/short-video';
 import { useTapGestures } from '@/hooks/use-tap-gestures';
 import { useVideoScrubZone } from '@/hooks/use-video-scrub-zone';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
@@ -215,6 +217,8 @@ const MAX_MEDIA_HEIGHT = 600;
  * video spans the screen edge to edge (index.css, --post-media-max-h).
  */
 const IMMERSIVE_MAX_MEDIA_HEIGHT = 'var(--post-media-max-h, 80dvh)';
+/** Phone feed preview cap: a bit taller than X's long-form videos (~46%). */
+const FEED_PREVIEW_MAX_HEIGHT = '55svh';
 
 /**
  * How long the player's controls stay up after the interaction that revealed
@@ -1005,6 +1009,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     videoPlaybackManager.stop(instanceId);
   }, [autoplayEnabled, pauseVideo, instanceId]);
   const autoplayMutedRef = useRef(autoplayMuted);
+  // Phone feed preview (set further down): autoplay there is always silent.
+  const feedPreviewRef = useRef(false);
   autoplayMutedRef.current = autoplayMuted;
   const liteModeRef = useRef(liteMode);
   liteModeRef.current = liteMode;
@@ -1118,7 +1124,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               const ownsAudio = prominent ? videoPlaybackManager.play(instanceId) : videoPlaybackManager.playMuted(instanceId);
               // "Start autoplay muted" beats an earlier unmute: scrolling
               // onto a clip must never be what makes sound.
-              const shouldMute = autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
+              const shouldMute = feedPreviewRef.current || autoplayMutedRef.current || videoPlaybackManager.globalMuted || !ownsAudio;
               autoMutedRef.current = shouldMute && !prominent && !autoplayMutedRef.current && !videoPlaybackManager.globalMuted;
               vid.muted = shouldMute;
               setIsMuted(shouldMute);
@@ -1389,6 +1395,16 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       .catch(() => {});
   }, [isFullscreen, swipeToShorts, queryClient]);
 
+  // Phone feeds show the clip as it is: muted autoplay, an unmute button in
+  // the corner and nothing else. A tap anywhere opens it in the shorts viewer
+  // (full controls there), which then carries on into more shorts. Desktop,
+  // the post page and gated or live posts keep the full player.
+  const isPhone = useIsMobile();
+  const feedPreview = isPhone && shortsEnabled && !isImmersive && !isFullscreen && !hideActions
+    && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
+    && !isContentGated && !isVideoNotReady;
+  feedPreviewRef.current = feedPreview;
+
   /** Swiped up out of fullscreen: stop here and carry on in the shorts feed. */
   const swipeIntoShorts = useCallback(() => {
     pauseVideo();
@@ -1396,6 +1412,13 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     toggleFullscreen();
     openBrainrotFeed(video.id);
   }, [pauseVideo, instanceId, toggleFullscreen, video.id]);
+
+  /** Phone feed preview tapped: this clip first in the shorts viewer, then more shorts. */
+  const openPreviewInShorts = useCallback(() => {
+    pauseVideo();
+    videoPlaybackManager.stop(instanceId);
+    openBrainrotFeed(video.id, videoItemToShort(video));
+  }, [pauseVideo, instanceId, video]);
 
   const handleFullscreen = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -1441,7 +1464,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
   // A menu or slider open over the player counts as activity: the row must not
   // vanish out from under the thing the pointer is already inside.
-  const splitControls = bareControls && !isContentGated;
+  const splitControls = bareControls && !isContentGated && !feedPreview;
   const controlsVisible = splitControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
   useEffect(() => {
     if (controlsVisible && videoRef.current) setCurrentTime(videoRef.current.currentTime);
@@ -1668,14 +1691,6 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // square or 16:9 frame instead of filling the screen. Feed frame only.
   const feedVideoShape = useFeedVideoShape();
   const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
-  // Otherwise feed videos fill the bento's width. The box takes the clip's
-  // shape, so the only trim is top and bottom when a tall clip hits the height
-  // cap. A clip wider than the box (wider than the shape clamp allows) is
-  // shown whole instead, so its sides are never cut.
-  const fillFeedWidth = cropFeedVideo
-    && feedFrameAspect <= mediaAspect + 0.01
-    && !(intrinsicAspect && intrinsicAspect > mediaAspect + 0.01);
-  const feedVideoFit = fillFeedWidth ? 'object-cover' : 'object-contain';
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -1687,7 +1702,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: `dehub-inline-video w-full h-full ${feedVideoFit}`,
+    className: 'dehub-inline-video w-full h-full object-contain',
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -1830,7 +1845,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     // see. On gated media the tap belongs to the unlock overlay. ImageCard
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
-    disabled: hideActions || !!video.isAudio || isContentGated,
+    disabled: hideActions || !!video.isAudio || isContentGated || feedPreview,
     onSingleTap: isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
@@ -1856,13 +1871,17 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // Playback and reactions run from pointer events above. The compatibility
   // click only keeps the visible controls awake; it must never toggle twice.
   const handleVideoAreaClick = useCallback(() => {
+    if (feedPreview) {
+      openPreviewInShorts();
+      return;
+    }
     if (!isImmersive) {
       showControlsBriefly();
       handlePlayClick();
       return;
     }
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, feedPreview, openPreviewInShorts]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -1875,11 +1894,17 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0];
     touchStartRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+    // A tap here opens the shorts viewer: start loading it on the way down.
+    if (feedPreviewRef.current) {
+      import('@/components/app/BrainrotFeedHost')
+        .then(m => m.prefetchBrainrotFeed(queryClient))
+        .catch(() => {});
+    }
       // A touch is not a hover. Tapping a control can synthesize mouseenter
       // without a matching mouseleave on a phone, so do not let that stale
       // hover state make later mousemove events keep the controls visible.
     isHoveringRef.current = false;
-  }, []);
+  }, [queryClient]);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
     const touch = e.changedTouches[0];
@@ -1909,6 +1934,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       return;
     }
 
+    if (feedPreview) {
+      e.preventDefault();
+      openPreviewInShorts();
+      return;
+    }
+
     if (!isImmersive) {
       e.preventDefault();
       showControlsBriefly();
@@ -1920,7 +1951,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedPreview, openPreviewInShorts]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -2085,6 +2116,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       <div 
         ref={containerRef}
         tabIndex={0}
+        data-feed-preview={feedPreview || undefined}
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
         data-video-split-controls={splitControls || undefined}
@@ -2102,6 +2134,18 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   width: `min(100%, calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
                   maxHeight: splitControls ? `calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)` : IMMERSIVE_MAX_MEDIA_HEIGHT,
                 }
+              : feedPreview
+                ? {
+                    // The frame hugs the clip, X style: up to 55% of the screen
+                    // tall, left aligned, so a slim video leaves empty space on
+                    // the right instead of bars at its sides.
+                    aspectRatio: mediaAspect,
+                    width: `min(100%, calc(${FEED_PREVIEW_MAX_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
+                    maxHeight: FEED_PREVIEW_MAX_HEIGHT,
+                    marginLeft: 0,
+                    marginRight: 'auto',
+                    ['--feed-preview-aspect' as string]: mediaAspect.toFixed(4),
+                  }
               : cropFeedVideo
                 ? {
                     aspectRatio: feedFrameAspect,
@@ -2383,7 +2427,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className={`absolute inset-0 w-full h-full ${feedVideoFit}`}
+                    className="absolute inset-0 w-full h-full object-contain"
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
@@ -2504,7 +2548,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
           <VideoGlitchLoader poster={thumbnail} />
         )}
         
-        {!splitControls && !isLoading && video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow) && (
+        {!feedPreview && !splitControls && !isLoading && video.videoUrl && !video.isAudio && !isVideoNotReady && !(video.isLivePost && video.isLiveNow) && (
           <button
             data-video-controls data-video-bare data-video-center
             data-controls-hidden={isPlaying && !controlsVisible ? 'true' : undefined}
@@ -2535,7 +2579,22 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         </div>
 
         {!isContentGated && <>
-        {!splitControls && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+        {feedPreview && (
+          <button
+            type="button"
+            data-video-controls data-video-bare data-preview-mute
+            aria-label={isMuted ? t('common.unmute', 'Unmute') : t('common.mute', 'Mute')}
+            onPointerDown={(event) => event.stopPropagation()}
+            onPointerUp={(event) => event.stopPropagation()}
+            onTouchStart={(event) => event.stopPropagation()}
+            onTouchEnd={(event) => event.stopPropagation()}
+            onClick={toggleMute}
+            className="absolute right-1.5 top-1.5 z-20 flex h-9 w-9 items-center justify-center text-white"
+          >
+            <MediaControlIcon icon={isMuted ? VolumeX : Volume2} plain />
+          </button>
+        )}
+        {!feedPreview && !splitControls && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-video-topbar="bare" className={cn("absolute right-2 top-1.5 flex items-center z-10", bareControls ? "gap-1" : "gap-2")}>
             {/* Hovering the speaker drops a slider for this video alone —
                 turning a loud clip down should not mean reaching for the system
@@ -2602,7 +2661,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         {/* Keep the timeline mounted before metadata arrives. Lite mode starts
             from the centered Play button; seeking enables once the length is
             known. Audio posts and live streams own their transport. */}
-        {!video.isAudio && !(video.isLivePost && video.isLiveNow) && (
+        {!feedPreview && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
           <div data-video-controls data-video-control-strip={splitControls || undefined} data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-pan-y" />}
