@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 
 const html = readFileSync('services/maboroshi/static/index.html', 'utf8');
 const script = readFileSync('services/maboroshi/static/studio.js', 'utf8');
+const presetsScript = readFileSync('services/maboroshi/static/presets.js', 'utf8');
 const wallet = `0x${'1'.repeat(40)}`;
 const id = 'a'.repeat(32);
 const project = (extra = {}) => ({ id, subject: 'person', created: 1, state: 'uploaded', stage: '', status: 'Source saved.', seconds: 5,
@@ -41,12 +42,39 @@ beforeEach(() => {
     if (path === `jobs/${id}`) return respond(saved);
     throw new Error(`Unexpected request: ${path}`);
   });
-  w.fetch = fetcher; w.localStorage.setItem(`maboroshi:last:${wallet}`, id); w.eval(script);
+  w.fetch = fetcher; w.localStorage.setItem(`maboroshi:last:${wallet}`, id); w.eval(presetsScript); w.eval(script);
 });
 afterEach(() => { dom.window.close(); });
 const connected = async () => { await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:ready')).toBe(true)); session(); await vi.waitFor(() => expect(el('project').hidden).toBe(false)); };
 
 describe('Maboroshi creator journey', () => {
+  it('offers 108 unique directions and recovers from an empty search', () => {
+    const presets = w.MABOROSHI_PRESETS;
+    expect(presets).toHaveLength(108);
+    expect(new Set(presets.map(p => p.id)).size).toBe(108);
+    expect(new Set(presets.map(p => p.prompt)).size).toBe(108);
+    expect(new Set(presets.map(p => p.group)).size).toBe(12);
+    el('preset-search').value = 'plushie'; el('preset-search').dispatchEvent(new w.Event('input'));
+    expect(el('preset-list').children).toHaveLength(1);
+    el('preset-search').value = 'no-such-look'; el('preset-search').dispatchEvent(new w.Event('input'));
+    expect(el('preset-count').textContent).toBe('0 of 108 presets');
+    el('preset-reset-search').click(); expect(el('preset-list').children).toHaveLength(108);
+  });
+  it('applies a direction without sending a generation or changing selected files', async () => {
+    await connected(); chooseReference();
+    el('preset-list').querySelector('button').click(); el('preset-apply').click();
+    expect(el('prompt').value).toContain('Soft felt');
+    expect(el('reference').files[0].name).toBe('character.png');
+    expect(el('preset-applied').hidden).toBe(false);
+    expect(el('character-options').open).toBe(true);
+    expect(sent.some(x => x.type === 'maboroshi:pay')).toBe(false);
+    expect(fetcher.mock.calls.some(([path]) => path.endsWith('/references'))).toBe(false);
+  });
+  it('lets guests browse without modifying or submitting a project', () => {
+    el('preset-list').querySelector('button').click();
+    expect(el('preset-apply').disabled).toBe(true);
+    expect(el('preset-guidance').textContent).toContain('Sign in');
+  });
   it('saves an early character before requesting the normal payment confirmation', async () => {
     await connected(); chooseReference();
     expect(el('reference-preview').querySelector('img').src).toBe('blob:reference');
