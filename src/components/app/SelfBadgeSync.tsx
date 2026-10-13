@@ -24,12 +24,26 @@ import { useSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { useBadgeLadderSync } from '@/hooks/use-badge-scale';
 import { getBadgeName, parseBadgeLock } from '@/lib/staking-badges';
 import { setLiveBadgeBalanceForProfiles } from '@/lib/profiles';
+import { patchTipBadges, subscribeTipBadges } from '@/lib/tip-badges';
 
 export function SelfBadgeSync() {
   const { user, refreshUser } = useAuth();
   const queryClient = useQueryClient();
   const live = useSelfBadgeBalance();
   const scale = useBadgeLadderSync();
+
+  useEffect(() => subscribeTipBadges(accounts => {
+    queryClient.setQueriesData({}, (data: unknown) => patchTipBadges(data, accounts));
+    for (const account of accounts) {
+      for (const id of [account.address, account.username].filter(Boolean)) {
+        queryClient.setQueryData(['badge-balance', id!.toLowerCase()], account);
+      }
+    }
+    void queryClient.invalidateQueries({ queryKey: ['self-badge-balance'] });
+    if (accounts.some(account => account.address.toLowerCase() === user?.address?.toLowerCase())) {
+      void refreshRef.current?.();
+    }
+  }), [queryClient, user?.address]);
 
   const stored = user?.badgeBalance;
   const username = user?.username ?? null;
