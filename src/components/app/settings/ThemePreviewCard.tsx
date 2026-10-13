@@ -32,6 +32,7 @@ const GLASS = { bento: 'rgba(9,9,11,0.82)', border: 'rgba(255,255,255,0.12)', li
 
 export const THEME_SWATCHES: Record<string, Swatch> = {
   system: { page: '#000000', bento: '#18181b', border: 'rgba(255,255,255,0.06)', line: 'rgba(255,255,255,0.8)', faint: 'rgba(255,255,255,0.22)', accent: '#ffffff' },
+  'system-light': { page: '#ffffff', bento: 'transparent', border: 'rgba(11,11,13,0.09)', line: '#0b0b0d', faint: 'rgba(11,11,13,0.18)', accent: '#0b0b0d', flat: true },
   light: { page: '#f4f4f5', bento: '#ffffff', border: '#e4e4e7', line: '#18181b', faint: '#d4d4d8', accent: '#18181b' },
   immersive: { page: '#000000', bento: 'rgba(16,16,18,0.9)', border: 'rgba(255,255,255,0.12)', line: 'rgba(255,255,255,0.8)', faint: 'rgba(255,255,255,0.22)', accent: '#ffffff', flat: true },
   minimal: { page: '#000000', bento: 'transparent', border: 'rgba(255,255,255,0.1)', line: 'rgba(255,255,255,0.8)', faint: 'rgba(255,255,255,0.22)', accent: '#ffffff', square: true, flat: true },

@@ -55,8 +55,8 @@ export interface SidebarLeaderboardHandle {
 /** Renders a single period's leaderboard list — always mounted, visibility toggled by parent */
 const PeriodList = memo(function PeriodList({ period, isActive }: { period: PeriodLabel; isActive: boolean }) {
   const { t } = useTranslation();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const apiPeriod = PERIOD_MAP[period] || 'all';
   const isTimeDelta = apiPeriod !== 'all';
 

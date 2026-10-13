@@ -265,8 +265,8 @@ export function AudioVisualizer({
   onPlaybackAdoptedRef.current = onPlaybackAdopted;
   const adoptionPendingRef = useRef<boolean | null>(null);
 
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
   // The presets do not fit a narrow card. Mask whichever edge is actually

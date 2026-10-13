@@ -177,9 +177,9 @@ export function StreamerLevelCard({ address, className }: StreamerLevelCardProps
 
 function StreamerCardGrid({ progress, locale, saving, onSelect, onOpen }: { progress: StreamerProgress; locale: string; saving: boolean; onSelect: (id: StreamerCardId) => void; onOpen: (id: StreamerCardId, anchor: HTMLElement) => void }) {
   const { t } = useTranslation();
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
   const instance = useId();
-  const material = badgeMaterial(theme);
+  const material = badgeMaterial(themeChoice === 'system-light' ? themeChoice : theme);
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
       {STREAMER_BADGE_IDS.map((id) => {
@@ -192,7 +192,7 @@ function StreamerCardGrid({ progress, locale, saving, onSelect, onOpen }: { prog
             <button type="button" aria-label={t(`live.progress.card.${id}.name`)} onPointerEnter={warmShowcase} onFocus={warmShowcase}
               onClick={(e) => onOpen(id, e.currentTarget)}
               className="w-24 h-24 shrink-0 rounded-lg transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white/60 [&>div>svg]:w-full [&>div>svg]:h-full">
-              <div aria-hidden="true" className="w-full h-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, theme, earned, instance) }} />
+              <div aria-hidden="true" className="w-full h-full" dangerouslySetInnerHTML={{ __html: streamerBadgeSvg(id, themeChoice === 'system-light' ? themeChoice : theme, earned, instance) }} />
             </button>
             <div className="text-sm font-semibold leading-snug break-words">{t(`live.progress.card.${id}.name`)}</div>
             <div className="text-xs leading-relaxed" style={{ color: material.muted }}>{t(`live.progress.card.${id}.hint`)}</div>

@@ -45,8 +45,8 @@ const LeaderboardCard = memo(function LeaderboardCard({
   rank: number;
 }) {
   const { t } = useTranslation();
-  const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light';
+  const { theme, themeChoice } = useAppTheme();
+  const isLightTheme = (theme === 'light' || themeChoice === 'system-light');
   const avatarUrl = entry.avatarUrl && entry.account
     ? buildAvatarUrl(entry.account, entry.avatarUrl)
     : null;

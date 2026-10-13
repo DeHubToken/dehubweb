@@ -385,9 +385,9 @@ export default function StagesPage() {
   } = useStage();
   const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
   // Paper themes need inked waveform bars (white bars vanish on a light card).
-  const isPaper = theme === 'light' || theme === 'minimal';
+  const isPaper = (theme === 'light' || themeChoice === 'system-light') || theme === 'minimal';
   const [joiningId, setJoiningId] = useState<string | null>(null);
   const [busyScheduledId, setBusyScheduledId] = useState<string | null>(null);
   // One share sheet for the whole page. It cannot live inside LiveStageCard:

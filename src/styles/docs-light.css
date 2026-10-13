@@ -191,6 +191,10 @@ html[data-theme="light"] .docs-root .bg-white:not([data-keep-white]) {
   background-color: hsl(var(--card)) !important;
 }
 
+html[data-system-tone="light"] .docs-root .bg-white:not([data-keep-white]) {
+  background-color: hsl(var(--card)) !important;
+}
+
 /* Docs CTAs built from the app's liquid-glass recipe: a white gradient behind
    a white label, which is a button on a dark canvas and a blank pill on paper.
    On /docs/featured-in every "Read the article" rendered as an empty white

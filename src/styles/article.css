@@ -57,6 +57,12 @@ html[data-theme="light"] [data-article] {
   --art-accent: var(--ink, #111114); --art-on-accent: #fff;
   --art-glass: rgba(255, 255, 255, 0.62); --art-glass-line: rgba(0, 0, 0, 0.1);
 }
+html[data-system-tone="light"] [data-article] {
+  --art-ink: var(--ink, #111114); --art-ink-2: rgba(17, 17, 20, 0.8); --art-ink-3: rgba(17, 17, 20, 0.55);
+  --art-line: rgba(0, 0, 0, 0.1); --art-wash: rgba(0, 0, 0, 0.04);
+  --art-accent: var(--ink, #111114); --art-on-accent: #fff;
+  --art-glass: rgba(255, 255, 255, 0.62); --art-glass-line: rgba(0, 0, 0, 0.1);
+}
 
 /* ---- Body copy ---- */
 .article-body {
@@ -249,3 +255,4 @@ html[data-theme="hacker"] .article-pill svg { color: var(--art-accent); filter: 
 .article-cover .article-pill { --art-glass: rgba(0, 0, 0, 0.45); --art-glass-line: rgba(255, 255, 255, 0.22); color: #fff; }
 /* Paper's accent is ink, which vanishes on a dark photo. */
 html[data-theme="light"] .article-cover-text .article-label { color: rgba(255, 255, 255, 0.92); }
+html[data-system-tone="light"] .article-cover-text .article-label { color: rgba(255, 255, 255, 0.92); }

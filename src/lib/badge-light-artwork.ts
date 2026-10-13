@@ -15,5 +15,6 @@ function rules(root: string): string {
 // App light uses data-theme; the independent docs toggle uses html.light.
 export const badgeLightArtworkCss = [
   rules('html[data-theme="light"]'),
+  rules('html[data-system-tone="light"]'),
   rules('html.light'),
 ].join('\n');

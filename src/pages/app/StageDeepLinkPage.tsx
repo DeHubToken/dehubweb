@@ -144,9 +144,9 @@ export default function StageDeepLinkPage() {
   });
 
   const playback = useStagePlayback();
-  const { theme } = useAppTheme();
+  const { theme, themeChoice } = useAppTheme();
   // Light/minimal are paper themes: white waveform bars vanish on them.
-  const isPaper = theme === 'light' || theme === 'minimal';
+  const isPaper = (theme === 'light' || themeChoice === 'system-light') || theme === 'minimal';
   const [transcriptOpen, setTranscriptOpen] = useState(false);
 
   // Stop a listen-only session when the page unmounts — for a guest, this page
