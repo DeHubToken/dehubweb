@@ -20,14 +20,18 @@ function fixture(timeline = false) {
   pill.getBoundingClientRect = () => ({ top: 8, bottom: 44, left: 12, right: 378, width: 366, height: 36 } as DOMRect);
   outer.append(pill);
   const content = document.createElement('div');
+  const bounds = document.createElement('div'); bounds.dataset.feedSwallowBounds = '';
+  const motion = document.createElement('div'); motion.dataset.feedSwallowMotion = '';
+  content.append(motion); bounds.append(content);
   content.getBoundingClientRect = () => ({ top: -100, left: 0, width: 390, height: 12000 } as DOMRect);
-  document.body.append(outer, content);
+  document.body.append(outer, bounds);
   const root = document.scrollingElement || document.documentElement;
   Object.defineProperty(root, 'scrollHeight', { configurable: true, value: 12000 });
   Object.defineProperty(root, 'clientHeight', { configurable: true, value: 800 });
   const cancel = vi.fn(); const setKeyframes = vi.fn();
   const animate = vi.fn((_frames: Keyframe[], _options: KeyframeAnimationOptions) => ({ cancel, effect: { setKeyframes } }));
   content.animate = animate as unknown as typeof content.animate;
+  motion.animate = animate as unknown as typeof motion.animate;
   if (timeline) vi.stubGlobal('ScrollTimeline', class {});
   const hook = renderHook(() => useFeedSwallowClip({ current: content }, '[data-feed-nav]'));
   return { callbacks, content, animate, cancel, hook };
@@ -52,15 +56,15 @@ it('does not wake the cut for an unrelated chat scroller', () => {
 
 it('lets the scroll timeline own fast scrolling and cancels it on unmount', () => {
   const { content, callbacks, animate, cancel, hook } = fixture(true);
-  expect(animate).toHaveBeenCalledTimes(1);
+  expect(animate).toHaveBeenCalledTimes(2);
   const frames = animate.mock.calls[0][0] as Keyframe[];
-  expect(frames[0].clipPath).toMatch(/^path\('M 0 120\.00 /);
-  expect(frames[frames.length - 1]?.clipPath).toMatch(/^path\('M 0 11320\.00 /);
-  expect(content.dataset.feedSwallowDriver).toBe('scroll-timeline');
-  expect(content.style.clipPath).toBe('');
+  expect(frames[0].transform).toBe('translateY(0px)');
+  expect(frames[frames.length - 1]?.transform).toBe('translateY(11200px)');
+  expect(content.dataset.feedSwallowDriver).toBe('scroll-transform');
+  expect(content.style.clipPath).toMatch(/^path\('M 0 120\.00 /);
   act(() => window.dispatchEvent(new Event('scroll')));
   expect(callbacks).toHaveLength(0);
   hook.unmount();
-  expect(cancel).toHaveBeenCalledTimes(1);
+  expect(cancel).toHaveBeenCalledTimes(2);
   expect(content.dataset.feedSwallowDriver).toBeUndefined();
 });
