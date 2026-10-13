@@ -631,6 +631,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       }}
       data-video-caption-control
       data-on-media
+      aria-busy={buttonState === 'working'}
       aria-label={enabled ? _copy("copy.ea577b10b85f", { defaultValue: "Subtitles on" }) : _copy("copy.6a5216300cb9", { defaultValue: "Subtitles off" })}
       className={cn(
         'z-20 h-8 w-8 flex items-center justify-center',
@@ -646,11 +647,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         buttonClassName ?? (inRow ? undefined : 'absolute bottom-12 left-2'),
       )}
     >
-      {buttonState === 'working' ? (
-        <MediaControlIcon icon={Loader2} spinning plain={plainButton} />
-      ) : (
-        <MediaControlIcon captions plain={plainButton} active={plainButton && enabled} />
-      )}
+      <MediaControlIcon captions plain={plainButton} active={plainButton && enabled} />
     </button>
   );
 

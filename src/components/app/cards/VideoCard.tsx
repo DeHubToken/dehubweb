@@ -2667,9 +2667,9 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
             <button
               data-on-media
-              className={cn("h-8 w-[44px] text-white flex items-center justify-center tabular-nums", splitControls ? "text-sm font-bold" : "text-xs font-medium")}
+              className={cn("h-8 w-[44px] text-white flex items-center justify-center tabular-nums", splitControls ? "text-[18px] leading-[18px] font-bold" : "text-xs font-medium")}
+              style={{ fontFamily: 'Exo, sans-serif', touchAction: 'manipulation' }}
               onClick={cyclePlaybackRate}
-              style={{ touchAction: 'manipulation' }}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
               {splitControls ? playbackRate : formatRate(playbackRate)}x
