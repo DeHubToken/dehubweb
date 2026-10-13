@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { resolve } from 'node:path';
 import assert from 'node:assert/strict';
@@ -17,12 +17,16 @@ const bundle = await build({
   alias: { '@/contexts/CachedPageActiveContext': resolve('src/contexts/CachedPageActiveContext.ts') },
   define: { 'process.env.NODE_ENV': '"production"' },
 });
+const css = await readFile('src/index.css', 'utf8');
+const frostCss = css.slice(css.indexOf('html[data-feed-loading] #root::after {'), css.indexOf('/* Medal shine animation'));
+assert(frostCss.includes('.dehub-intro'), 'Use the real first-visit frost styles');
 const html = `<!doctype html><html data-theme="system"><style>
 html,body{margin:0;background:#101010} [data-feed-nav-outer]{position:sticky;top:0;padding:8px 12px 12px;z-index:10;transition:transform .3s}
 [data-feed-nav]{position:relative;height:36px;border-radius:12px;background:#3338;color:white} #feed{margin:0 12px}
 html[data-theme="light"] [data-feed-nav]{border-radius:0}
+${frostCss}
 </style><div id="root"></div><script>${bundle.outputFiles[0].text}</script>`;
-const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/html'); res.end(html); });
+const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/html'); res.end(req.url.includes('welcome') ? html.replace('data-theme="system"', 'data-theme="system" data-feed-loading="on"') : html); });
 await new Promise(done => server.listen(0, '127.0.0.1', done));
 const url = `http://127.0.0.1:${server.address().port}`;
 const evidence = [];
@@ -62,6 +66,31 @@ try {
   for (const [name, engine] of [['chromium', chromium], ['webkit', webkit]]) {
     const browser = await engine.launch();
     try {
+      const welcome = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+      await welcome.goto(`${url}?welcome`);
+      await welcome.locator('.dehub-intro').waitFor();
+      const rect = await welcome.locator('.dehub-intro').boundingBox();
+      const pixels = PNG.sync.read(await welcome.screenshot({ path: `${output}/welcome-${name}.png` }));
+      const contrast = y => {
+        const values = Array.from({ length: 100 }, (_, x) => pixels.data[(Math.floor(y) * pixels.width + Math.floor(rect.x + 100 + x)) * 4 + 1]);
+        return Math.max(...values) - Math.min(...values);
+      };
+      assert(contrast(rect.y + 100) > 240, `${name}: welcome must remain sharp above the frost`);
+      assert(contrast(rect.y + rect.height + 100) < 30, `${name}: the rest of the feed must remain blurred`);
+      for (const state of ['on', 'off']) {
+        await welcome.evaluate(state => document.documentElement.dataset.feedLoading = state, state);
+        assert.equal(await welcome.locator('#feed').evaluate(el => el.getAnimations({ subtree: true }).length), 0, `${name}: no scroll stacking contexts during frost ${state}`);
+      }
+      await welcome.evaluate(() => delete document.documentElement.dataset.feedLoading);
+      await welcome.locator('#feed[data-feed-swallow-driver]').waitFor();
+      await welcome.evaluate(() => window.scrollTo(0, 800));
+      await welcome.waitForFunction(() => {
+        const feed = document.querySelector('#feed');
+        const cut = feed.querySelector('[data-feed-swallow-cut]');
+        return getComputedStyle(cut).clipPath !== 'none' || getComputedStyle(feed).clipPath !== 'none';
+      });
+      evidence.push({ browser: name, welcome: 'sharp card, blurred feed, clipping restored' });
+      await welcome.close();
       for (const width of [390, 1280]) {
         const page = await browser.newPage({ viewport: { width, height: 800 }, deviceScaleFactor: 1 });
         await page.goto(url);
@@ -137,6 +166,26 @@ try {
   if (process.env.CHECK_PRODUCTION === 'true') {
     const browser = await chromium.launch();
     try {
+      const welcome = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+      await welcome.goto('https://dehub.io/', { waitUntil: 'domcontentloaded' });
+      await welcome.locator('[data-cached-page="home"] .dehub-intro').waitFor({ timeout: 60000 });
+      await welcome.screenshot({ path: `${output}/production-welcome-first-load.png` });
+      const layers = await welcome.locator('.dehub-intro').evaluate(el => {
+        const ancestors = [];
+        for (let parent = el.parentElement; parent; parent = parent.parentElement) {
+          const s = getComputedStyle(parent);
+          ancestors.push({ tag: parent.tagName, transform: s.transform, clip: s.clipPath, animations: parent.getAnimations().length });
+        }
+        return { frost: document.documentElement.dataset.feedLoading, ancestors };
+      });
+      assert.equal(layers.frost, 'on', 'Production must be a real first visit with frost active');
+      assert(layers.ancestors.every(layer => layer.transform === 'none' && layer.clip === 'none' && layer.animations === 0), `Welcome trapped by an ancestor: ${JSON.stringify(layers)}`);
+      evidence.push({ browser: 'production-chromium', welcome: layers });
+      await welcome.mouse.wheel(0, 500);
+      await welcome.waitForFunction(() => !document.documentElement.hasAttribute('data-feed-loading'));
+      await welcome.locator('[data-feed-swallow-driver]').first().waitFor();
+      await welcome.screenshot({ path: `${output}/production-welcome-after-scroll.png` });
+      await welcome.close();
       for (const width of [390, 1280]) for (const route of ['/app', '/features']) {
         const page = await browser.newPage({ viewport: { width, height: 800 } });
         await page.goto(`https://dehub.io${route}`, { waitUntil: 'domcontentloaded' });
