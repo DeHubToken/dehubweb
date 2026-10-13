@@ -1668,6 +1668,14 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   // square or 16:9 frame instead of filling the screen. Feed frame only.
   const feedVideoShape = useFeedVideoShape();
   const feedFrameAspect = Math.max(mediaAspect, FEED_VIDEO_MIN_ASPECT[feedVideoShape]);
+  // Otherwise feed videos fill the bento's width. The box takes the clip's
+  // shape, so the only trim is top and bottom when a tall clip hits the height
+  // cap. A clip wider than the box (wider than the shape clamp allows) is
+  // shown whole instead, so its sides are never cut.
+  const fillFeedWidth = cropFeedVideo
+    && feedFrameAspect <= mediaAspect + 0.01
+    && !(intrinsicAspect && intrinsicAspect > mediaAspect + 0.01);
+  const feedVideoFit = fillFeedWidth ? 'object-cover' : 'object-contain';
 
   // Claims the shared <video> for this post into the slot rendered below, and
   // keeps this card's props on it while this card is the one showing it.
@@ -1679,7 +1687,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     muted: isMuted,
     loop: !!(video.isAd || isLooping),
     preload: videoPreload,
-    className: 'dehub-inline-video w-full h-full object-contain',
+    className: `dehub-inline-video w-full h-full ${feedVideoFit}`,
     onEnded: handleVideoEnded,
     onError: handleVideoError,
     onTimeUpdate: handleTimeUpdate,
@@ -2375,7 +2383,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     src={thumbnail} srcSet={cdnImageSrcSet(thumbnail, [320, 480, 640, 960, 1280])} sizes="(min-width: 1024px) 600px, 100vw" decoding="async"
                     alt=""
                     aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-contain"
+                    className={`absolute inset-0 w-full h-full ${feedVideoFit}`}
                     loading={aboveFold ? 'eager' : 'lazy'}
                     fetchPriority={aboveFold ? 'high' : 'auto'}
                   />
