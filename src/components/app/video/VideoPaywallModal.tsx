@@ -358,7 +358,7 @@ export function VideoPaywallModal({
             <div className="relative">
               <button
                 type="button"
-                disabled={model.requiresVideoInput}
+                disabled={model.requiresVideoInput || model.id === 'pixverse-effects'}
                 onClick={() => setModelSelectorOpen(!modelSelectorOpen)}
                 className="w-full bg-zinc-800/50 hover:bg-zinc-800 transition-colors rounded-xl p-3 text-left"
               >
@@ -380,7 +380,7 @@ export function VideoPaywallModal({
                 </div>
               </button>
               
-              {modelSelectorOpen && (
+              {modelSelectorOpen && model.id !== 'pixverse-effects' && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-52 overflow-y-auto">
                   {VIDEO_MODEL_OPTIONS.map((option) => {
                     const optionModel = VIDEO_MODELS[option.id as VideoModelKey];
