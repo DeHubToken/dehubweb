@@ -63,7 +63,7 @@ try {
         }
         if (timeline) {
           // At rest, scrolling must not mutate the inline cut or run a JS tail.
-          const state = await page.evaluate(() => ({ driver: document.querySelector('#feed').dataset.feedSwallowDriver, clip: document.querySelector('#feed').style.clipPath }));
+          const state = await page.evaluate(() => ({ driver: document.querySelector('#feed').dataset.feedSwallowDriver, clip: document.querySelector('#feed > [data-feed-swallow-cut]').style.clipPath }));
           assert.equal(state.driver, 'scroll-transform'); assert.notEqual(state.clip, '');
         }
         // Follow nav hide/show transitions rather than freezing mid-motion.
@@ -126,9 +126,10 @@ try {
           await page.evaluate(y => window.scrollTo(0, y), y);
           await page.waitForTimeout(600);
           const cuts = await page.locator('[data-feed-swallow-driver="scroll-transform"]').evaluateAll(elements => elements.map(el => {
-            const clip = getComputedStyle(el).clipPath;
+            const clipped = el.querySelector(':scope > [data-feed-swallow-cut]') || el;
+            const clip = getComputedStyle(clipped).clipPath;
             const nav = Array.from(document.querySelectorAll('[data-feed-nav]')).find(n => n.getBoundingClientRect().width > 0);
-            const cr = el.getBoundingClientRect(); const pr = nav?.getBoundingClientRect();
+            const cr = clipped.getBoundingClientRect(); const pr = nav?.getBoundingClientRect();
             const first = clip.match(/M 0 ([\d.-]+)/); const inset = clip.match(/inset\(([\d.-]+)px/);
             const radius = nav ? Math.min(parseFloat(getComputedStyle(nav).borderTopLeftRadius), pr.width / 2, pr.height / 2) : 0;
             return { clip, navTop: pr?.top, cutTop: first ? +first[1] + cr.top - radius : inset ? +inset[1] + cr.top : null, edge: first ? 'top' : 'bottom', navBottom: pr?.bottom };

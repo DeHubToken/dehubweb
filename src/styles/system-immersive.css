@@ -70,10 +70,10 @@ html:is([data-theme='system'], [data-theme='immersive']) [data-kit-body] {
   padding-left: 0;
   padding-right: 0;
 }
-html:is([data-theme='system'], [data-theme='immersive']) :is([data-kit-body], [data-kit-body] > [data-feed-swallow-motion]) > * + * {
+html:is([data-theme='system'], [data-theme='immersive']) :is([data-kit-body], [data-kit-body] [data-feed-swallow-content]) > * + * {
   margin-top: 0;
 }
-html:is([data-theme='system'], [data-theme='immersive']) :is([data-kit-body], [data-kit-body] > [data-feed-swallow-motion]) > :not([data-kit-section]):not([data-kit-flat-skip]) {
+html:is([data-theme='system'], [data-theme='immersive']) :is([data-kit-body], [data-kit-body] [data-feed-swallow-content]) > :not([data-kit-section]):not([data-kit-flat-skip]) {
   padding-left: 1rem;
   padding-right: 1rem;
 }

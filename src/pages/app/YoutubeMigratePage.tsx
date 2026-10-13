@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { FeedbackLink } from '@/components/app/FeedbackLink';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { tokenLabel } from '@/lib/token-label';
@@ -581,7 +582,7 @@ export default function YoutubeMigratePage() {
 
       <div data-feed-swallow-bounds>
 <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3 flex flex-col gap-2 sm:gap-3">
-<div data-feed-swallow-motion className="flex flex-col gap-2 sm:gap-3">
+<FeedSwallowMotion className="flex flex-col gap-2 sm:gap-3">
 
         <FeedbackLink source="migration" />
         {stage === 'loading' && (
@@ -1093,7 +1094,7 @@ export default function YoutubeMigratePage() {
             </p>
           </div>
         </section>
-      </div>
+      </FeedSwallowMotion>
 </div>
 </div>
     </>

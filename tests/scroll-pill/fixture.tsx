@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useFeedSwallowClip } from '../../src/hooks/use-feed-swallow-clip';
+import { FeedSwallowMotion } from '../../src/components/app/feeds/FeedSwallowMotion';
 
 function Fixture() {
   const ref = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(ref, '[data-feed-nav]');
-  return <><div data-feed-nav-outer><div data-feed-nav>Feed</div></div><div data-feed-swallow-bounds><div ref={ref} id="feed"><div data-feed-swallow-motion><div id="posts" style={{ height: 12000, background: '#00ff00' }} /></div></div></div></>;
+  return <><div data-feed-nav-outer><div data-feed-nav>Feed</div></div><div data-feed-swallow-bounds><div ref={ref} id="feed"><FeedSwallowMotion><div id="posts" style={{ height: 12000, background: '#00ff00' }} /></FeedSwallowMotion></div></div></>;
 }
 createRoot(document.getElementById('root')!).render(<Fixture />);

@@ -1,3 +1,4 @@
+import { FeedSwallowMotion } from '@/components/app/feeds/FeedSwallowMotion';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useTabLongPress } from '@/hooks/use-tab-long-press';
 import { setFeedRefresh } from '@/lib/feed-refresh';
@@ -1122,7 +1123,7 @@ export default function HomePage() {
           are noindex app chrome (see shouldServeSSR in the worker). */}
       <div data-feed-swallow-bounds>
       <div ref={swallowContentRef}>
-      <div data-feed-swallow-motion>
+      <FeedSwallowMotion>
       {location.pathname === '/' && <HomeIntro />}
 
       {/* Feed Content - Pull-to-refresh only works within this container */}
@@ -1232,7 +1233,7 @@ export default function HomePage() {
         {/* end feed tabs */}
         </div>
         </div>
-      </div>
+      </FeedSwallowMotion>
       </div>
       </div>
 
