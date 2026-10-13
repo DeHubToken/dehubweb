@@ -12,7 +12,7 @@ export function feedSwallowPath(y: number, r: number, left: number, right: numbe
 }
 
 function scrollSource(el: HTMLElement): HTMLElement {
-  for (let node: HTMLElement | null = el; node && node !== document.body; node = node.parentElement) {
+  for (let node: HTMLElement | null = el; node && node !== document.documentElement; node = node.parentElement) {
     if (/(auto|scroll)/.test(getComputedStyle(node).overflowY) && node.scrollHeight > node.clientHeight) return node;
   }
   return (document.scrollingElement || document.documentElement) as HTMLElement;
