@@ -154,7 +154,7 @@ export function useFeedSwallowClip(
     const onScroll = (event: Event) => {
       const target = event.target;
       // Ignore chat, carousels and dialogs; only an ancestor moves this feed.
-      if (target !== document && target !== window && !(target instanceof HTMLElement && target.contains(el))) return;
+      if (target !== document && target !== event.currentTarget && !(target instanceof HTMLElement && target.contains(el))) return;
       if (!animation && !(source === el && !el.contains(cut))) schedule();
     };
     const onMotion = (event: TransitionEvent) => {
