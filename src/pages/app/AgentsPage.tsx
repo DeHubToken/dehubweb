@@ -64,6 +64,7 @@ export default function AgentsPage() {
   const [newAgentName, setNewAgentName] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentName", '');
   const [newAgentDescription, setNewAgentDescription] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentDescription", '');
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set());
+  const [openConnections, setOpenConnections] = useState<Set<string>>(new Set());
   const [revealing, setRevealing] = useState(false);
 
   const { data: agents, isLoading, isError, refetch } = useQuery({
@@ -142,6 +143,7 @@ export default function AgentsPage() {
       // Show the API key for the new agent
       if (data.agent?.id) {
         setVisibleKeys(prev => new Set([...prev, data.agent.id]));
+        setOpenConnections(prev => new Set([...prev, data.agent.id]));
         if (data.agent.api_key) {
           setCreatedKeys(prev => ({ ...prev, [data.agent.id]: data.agent.api_key }));
         }
@@ -385,8 +387,16 @@ export default function AgentsPage() {
 
                   {/* API Key */}
                   <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
-                  <details defaultOpen={!!createdKeys[agent.id]} className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
-                    <summary className="cursor-pointer font-medium text-white/90">{t('agents.apiDocs')} · {t('agents.apiKey')}</summary>
+                  <details open={openConnections.has(agent.id)} className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
+                    <summary onClick={event => {
+                      event.preventDefault();
+                      setOpenConnections(previous => {
+                        const next = new Set(previous);
+                        if (next.has(agent.id)) next.delete(agent.id);
+                        else next.add(agent.id);
+                        return next;
+                      });
+                    }} className="cursor-pointer font-medium text-white/90">{t('agents.apiDocs')} · {t('agents.apiKey')}</summary>
                     <div className="mt-4">
                   {!agent.api_key ? (
                     <div className="bg-black/30 rounded-lg p-3 mb-3">
