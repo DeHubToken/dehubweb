@@ -279,7 +279,7 @@ const GuidePage: React.FC = () => {
   // Swallow the guide content at the sticky header pill's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   // Filter & rank sections by search relevance
   const filteredSections = useMemo(() => {

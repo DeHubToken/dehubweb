@@ -365,7 +365,7 @@ export default function MusicPage() {
   // Swallow the music feed at the sticky nav bento's top edge under the glass
   // themes, exactly like the home feed cuts at its nav pill.
   const musicContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(musicContentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(musicContentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   // Drag-to-swipe for music tab indicator (after all hooks to avoid TDZ)
   const musicTabPositions = useRef<Partial<Record<MusicTabValue, HTMLElement | null>>>({});

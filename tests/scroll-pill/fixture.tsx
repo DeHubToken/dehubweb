@@ -5,7 +5,7 @@ import { FeedSwallowMotion } from '../../src/components/app/feeds/FeedSwallowMot
 
 function Fixture() {
   const ref = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(ref, '[data-feed-nav]');
+  useFeedSwallowClip(ref, '[data-feed-nav]', [], { allThemes: true });
   return <><div data-feed-nav-outer><div data-feed-nav>Feed</div></div><div data-feed-swallow-bounds><div ref={ref} id="feed"><FeedSwallowMotion><div id="posts" style={{ height: 12000, background: '#00ff00' }} /></FeedSwallowMotion></div></div></>;
 }
 createRoot(document.getElementById('root')!).render(<Fixture />);

@@ -20,6 +20,7 @@ const bundle = await build({
 const html = `<!doctype html><html data-theme="system"><style>
 html,body{margin:0;background:#101010} [data-feed-nav-outer]{position:sticky;top:0;padding:8px 12px 12px;z-index:10;transition:transform .3s}
 [data-feed-nav]{height:36px;border-radius:12px;background:#3338;color:white} #feed{margin:0 12px}
+html[data-theme="light"] [data-feed-nav]{border-radius:0}
 </style><div id="root"></div><script>${bundle.outputFiles[0].text}</script>`;
 const server = createServer((req, res) => { res.setHeader('Content-Type', 'text/html'); res.end(html); });
 await new Promise(done => server.listen(0, '127.0.0.1', done));
@@ -51,13 +52,13 @@ try {
         await page.goto(url);
         await page.locator('#feed[data-feed-swallow-driver]').waitFor();
         const timeline = await page.evaluate(() => typeof ScrollTimeline !== 'undefined');
-        for (const theme of ['system', 'hazy']) {
+        for (const theme of ['light', 'minimal', 'system', 'hazy']) {
           await page.evaluate(theme => document.documentElement.dataset.theme = theme, theme);
           for (const y of [100, 1600, 6000, 200, 4000, 0, 1800]) {
             await page.evaluate(y => window.scrollTo(0, y), y);
             await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const png = await page.screenshot();
-            assertCut(png, theme === 'system' ? 8 : 44, `${name}/${width}/${theme}/${y}`, theme === 'system');
+            assertCut(png, theme === 'hazy' ? 44 : 8, `${name}/${width}/${theme}/${y}`, theme === 'system' || theme === 'minimal');
           }
           await page.screenshot({ path: `${output}/${name}-${width}-${theme}.png` });
         }
