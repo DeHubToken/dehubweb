@@ -14,17 +14,18 @@ function scrollSource(el: HTMLElement): HTMLElement {
 }
 
 function navTranslation(value: string, nav: HTMLElement): number {
-  try { return new DOMMatrixReadOnly(value).m42; } catch {
-    // CSS transition keyframes may retain translateY percentages/calc. Resolve
-    // them against the NAV, not the much taller feed layer receiving the copy.
-    const match = value.match(/^translateY\((.*)\)$/);
-    if (!match) throw new Error('Unsupported nav transform');
+  // Resolve translateY before DOMMatrix: WebKit can accept calc() while
+  // silently dropping its percentage term. Use the NAV's measured height,
+  // never the much taller feed layer receiving the copied transition.
+  const match = value.match(/^translateY\((.*)\)$/);
+  if (match) {
     const terms = Array.from(match[1].matchAll(/([+-]?\s*(?:\d*\.)?\d+)\s*(px|%|rem)/g));
     if (!terms.length) throw new Error('Unresolved nav transform');
     const height = nav.getBoundingClientRect().height;
     const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
     return terms.reduce((sum, term) => sum + parseFloat(term[1].replace(/\s/g, '')) * (term[2] === '%' ? height / 100 : term[2] === 'rem' ? rem : 1), 0);
   }
+  return new DOMMatrixReadOnly(value).m42;
 }
 
 /** Scroll-driven cut: JS refreshes geometry and nav transitions, not each scroll frame. */
