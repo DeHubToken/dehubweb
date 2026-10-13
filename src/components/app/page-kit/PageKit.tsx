@@ -201,7 +201,7 @@ export function PageBody({
   measure?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(ref, '[data-kit-island-outer] > [data-page-bento]');
+  useFeedSwallowClip(ref, '[data-kit-island-outer] > [data-page-bento]', [], { allThemes: true });
   return (
     <div data-feed-swallow-bounds className="w-full">
     <div ref={ref} data-kit-body className={cn('w-full pb-28 pt-3', measure && 'max-w-2xl', className)}>

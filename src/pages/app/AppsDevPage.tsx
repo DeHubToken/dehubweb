@@ -164,7 +164,7 @@ export default function AppsDevPage() {
     staleTime: 30_000,
   });
   const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   const parsed = parseAppUrl(url, { dev: true });
   const isLocal = parsed?.protocol === 'http:';

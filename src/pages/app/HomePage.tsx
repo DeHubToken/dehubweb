@@ -502,7 +502,7 @@ export default function HomePage() {
   // Two variants match: this page's pill and the collapsed GlobalFeedNav's.
   // Not on Immersive phones: the pill only drops in on demand under the capsule,
   // and posts run under it to the top of the screen.
-  useFeedSwallowClip(swallowContentRef, '[data-feed-nav]', [], { off: islandTopBar && isMobile });
+  useFeedSwallowClip(swallowContentRef, '[data-feed-nav]', [], { allThemes: true, off: islandTopBar && isMobile });
 
   // --------------------------------------------------------------------------
   // PULL-TO-REFRESH HOOK

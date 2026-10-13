@@ -1040,7 +1040,7 @@ export default function FeaturesPage() {
   // Swallow the feature-request list at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
   const contentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   return (
     <div className="min-h-screen">
