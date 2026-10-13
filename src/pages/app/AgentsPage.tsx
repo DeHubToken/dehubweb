@@ -64,6 +64,7 @@ export default function AgentsPage() {
   const [newAgentName, setNewAgentName] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentName", '');
   const [newAgentDescription, setNewAgentDescription] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentDescription", '');
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set());
+  const [openConnections, setOpenConnections] = useState<Set<string>>(new Set());
   const [revealing, setRevealing] = useState(false);
 
   const { data: agents, isLoading, isError, refetch } = useQuery({
@@ -142,6 +143,7 @@ export default function AgentsPage() {
       // Show the API key for the new agent
       if (data.agent?.id) {
         setVisibleKeys(prev => new Set([...prev, data.agent.id]));
+        setOpenConnections(prev => new Set([...prev, data.agent.id]));
         if (data.agent.api_key) {
           setCreatedKeys(prev => ({ ...prev, [data.agent.id]: data.agent.api_key }));
         }
@@ -262,13 +264,13 @@ export default function AgentsPage() {
 
       <PageBody>
         {/* Header with docs link */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-white/60 text-sm">
+            <p className="text-white/80 text-sm leading-relaxed">
               {t('agents.description')}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-4">
             <a
               href="/connect"
               className="flex items-center gap-1 text-sm text-white hover:underline"
@@ -366,16 +368,16 @@ export default function AgentsPage() {
         ) : (
           <>
             {listedAgents?.map((agent) => (
-              <Card key={agent.id} data-kit-section className="bg-white/5 border-white/10">
+              <Card key={agent.id} data-kit-section className="border-white/20 bg-black/35 backdrop-blur-xl">
                 <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
                     <Link to={`/${encodeURIComponent(agent.name)}`} aria-label={t('feed.viewProfile', { name: agent.name })} className="flex items-center gap-3 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4">
                       <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
                         <Bot className="w-5 h-5 text-white" />
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-white">{agent.name}</h3>
-                        <p className="text-sm text-white/60">{agent.description}</p>
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-white">@{agent.name}</h3>
+                        <p className="text-sm leading-relaxed text-white/80">{agent.description}</p>
                       </div>
                     </Link>
                     <Badge variant={agent.is_active ? 'default' : 'secondary'}>
@@ -385,6 +387,17 @@ export default function AgentsPage() {
 
                   {/* API Key */}
                   <AgentProfilePanel wallet={walletAddress} agentId={agent.id} agentName={agent.name} />
+                  <details open={openConnections.has(agent.id)} className="mt-4 rounded-xl border border-white/15 bg-black/20 p-3">
+                    <summary onClick={event => {
+                      event.preventDefault();
+                      setOpenConnections(previous => {
+                        const next = new Set(previous);
+                        if (next.has(agent.id)) next.delete(agent.id);
+                        else next.add(agent.id);
+                        return next;
+                      });
+                    }} className="cursor-pointer font-medium text-white/90">{t('agents.apiDocs')} · {t('agents.apiKey')}</summary>
+                    <div className="mt-4">
                   {!agent.api_key ? (
                     <div className="bg-black/30 rounded-lg p-3 mb-3">
                       <div className="flex items-center justify-between mb-1">
@@ -504,6 +517,8 @@ export default function AgentsPage() {
                       )}
                     </p>
                   </div>
+                    </div>
+                  </details>
 
                   {/* Meta info */}
                   <div className="flex items-center justify-between text-xs text-white/40">
