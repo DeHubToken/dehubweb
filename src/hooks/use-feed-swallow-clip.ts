@@ -63,7 +63,13 @@ export function useFeedSwallowClip(
     };
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(update); };
     const invalidate = () => { findCut = true; schedule(); };
-    const resizeObserver = new ResizeObserver(invalidate);
+    const resizeObserver = new ResizeObserver(() => {
+      // A new scroll range changes timeline progress immediately. Refresh
+      // endpoints in this pre-paint callback, avoiding one stale range frame.
+      findCut = true;
+      if (frame !== null) cancelAnimationFrame(frame);
+      update();
+    });
     const update = () => {
       frame = null;
       const theme = document.documentElement.dataset.theme || '';

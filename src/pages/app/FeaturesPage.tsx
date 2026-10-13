@@ -1209,7 +1209,9 @@ export default function FeaturesPage() {
       </div>
 
       {/* Content */}
-      <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
+      <div data-feed-swallow-bounds>
+<div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
+<div data-feed-swallow-motion>
       {/* The request a notification pointed at, above whichever tab is open. */}
       {focusedRequest && (
         <div className="mb-3">
@@ -1346,6 +1348,8 @@ export default function FeaturesPage() {
         </>
       )}
       </div>
+</div>
+</div>
 
       {/* Submit Drawer */}
       <SubmitFeatureDrawer

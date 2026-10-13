@@ -250,7 +250,9 @@ export default function AppsDevPage() {
         </div>
       </div>
 
-      <div ref={contentRef} className="mx-auto max-w-3xl space-y-3 px-2 pb-24 pt-2 sm:px-3">
+      <div data-feed-swallow-bounds>
+<div ref={contentRef} className="mx-auto max-w-3xl space-y-3 px-2 pb-24 pt-2 sm:px-3">
+<div data-feed-swallow-motion className="space-y-3">
         <Section title={t('miniApps.dev.checkTitle')}>
           <form
             className="flex flex-col gap-2 sm:flex-row"
@@ -478,6 +480,8 @@ export default function AppsDevPage() {
           <CodeBlock code={NOTIFY} />
         </Section>
       </div>
+</div>
+</div>
     </div>
   );
 }
