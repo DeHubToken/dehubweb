@@ -46,10 +46,7 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
     document.addEventListener('touchmove', keepScrub, { capture: true, passive: false });
     releaseScroll.current = () => document.removeEventListener('touchmove', keepScrub, true);
   };
-  const freeScroll = () => {
-    releaseScroll.current?.();
-    releaseScroll.current = null;
-  };
+  const freeScroll = () => { releaseScroll.current?.(); releaseScroll.current = null; };
   useEffect(() => () => releaseScroll.current?.(), []);
   const cancel = () => {
     const active = gesture.current;
@@ -74,19 +71,19 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       const target = event.target as Element;
       const button = !!target.closest('button, [role="button"]')
         && (!args.mediaRef || !!target.closest('[data-video-controls], [data-audio-controls]'));
-      // The actual rail owns a press immediately. Its expanded hit area must
-      // wait for horizontal intent so a vertical feed swipe can pass through.
-      const dedicated = !!target.closest('[data-scrub-track], input[type="range"], [role="slider"]');
+      // A finger must choose horizontal travel before seeking; vertical travel
+      // belongs to the feed even when it starts on the timeline or caption.
+      const dedicated = !button && event.pointerType !== 'touch';
       gesture.current = { id: event.pointerId, x: event.clientX, y: event.clientY, button, dragging: dedicated };
       // Disable the range's native seek; this gesture commits only on release.
-      if (dedicated) {
-        event.currentTarget.setPointerCapture(event.pointerId);
+      if (!button) {
+        if (dedicated) event.currentTarget.setPointerCapture(event.pointerId);
         event.preventDefault();
         event.stopPropagation();
       }
       if (dedicated) {
-        ownScroll(event.currentTarget);
         swallowClick.current = true;
+        ownScroll(event.currentTarget);
         args.onStart();
         args.onPreview(timeAt(event));
       }
@@ -101,9 +98,9 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
         if (dx <= 6 || dx <= dy) return;
         active.dragging = true;
         swallowClick.current = true;
+        ownScroll(event.currentTarget);
         args.onStart();
         event.currentTarget.setPointerCapture(event.pointerId);
-        ownScroll(event.currentTarget);
       }
       event.preventDefault();
       event.stopPropagation();
@@ -113,12 +110,13 @@ export function useVideoScrubZone(args: ScrubArgs): HTMLAttributes<HTMLDivElemen
       const active = gesture.current;
       if (!active || active.id !== event.pointerId) return;
       gesture.current = null;
-      freeScroll();
+    freeScroll();
       if (active.button && !active.dragging) return;
       swallowClick.current = true;
       event.preventDefault();
       event.stopPropagation();
-      if (!active.dragging) args.onStart();
+      if (!active.dragging) ownScroll(event.currentTarget);
+        args.onStart();
       args.onCommit(timeAt(event));
       args.onFinish();
     },
