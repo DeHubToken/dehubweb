@@ -541,7 +541,7 @@ html[data-theme='jungle'] [data-follow-btn]:active {
    it at 1.2 lets the browser centre the line box in the remaining space, which
    is what a fixed-height control needs. textarea is excluded — it is
    multi-line, and 1.2 there would crush the leading. */
-html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]) {
+html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]):not([data-media-full] *):not([data-video-controls] *) {
   border-radius: var(--jungle-r-input) !important;
   background: rgb(var(--jungle-loam) / 0.72) !important;
   border-color: transparent !important;
@@ -559,8 +559,8 @@ html[data-theme='jungle']
 
 /* Focus is a ring, not a glow: a blooming input is genuinely harder to type in,
    and this one has to survive sitting over a moving canopy. */
-html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]):focus,
-html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]):focus-visible {
+html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]):not([data-media-full] *):not([data-video-controls] *):focus,
+html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]):not([data-media-full] *):not([data-video-controls] *):focus-visible {
   outline: none !important;
   box-shadow:
     var(--jungle-edge-carved),
@@ -612,7 +612,7 @@ html[data-theme='jungle']
 }
 
 /* Sliders: a routed channel with a wooden peg in it. */
-html[data-theme='jungle'] #app-root [role='slider'] {
+html[data-theme='jungle'] #app-root [role='slider']:not([data-media-full] *):not([data-video-controls] *) {
   background-color: rgb(var(--jungle-timber)) !important;
   border-color: rgb(var(--jungle-husk) / 0.6) !important;
   box-shadow:
