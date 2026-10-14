@@ -31,6 +31,8 @@ interface EditorUiState {
   setCanvasFocus: (focus: boolean) => void;
   generatePrefill: GeneratePrefill | null;
   setGeneratePrefill: (prefill: GeneratePrefill | null) => void;
+  generatorWindow: 'closed' | 'open' | 'minimized';
+  setGeneratorWindow: (state: 'closed' | 'open' | 'minimized') => void;
   /** Freehand drawing: while set, dragging on the canvas draws instead of selecting. */
   draw: { color: string; width: number } | null;
   setDraw: (draw: { color: string; width: number } | null) => void;
@@ -59,6 +61,8 @@ export const useEditorUiStore = create<EditorUiState>((set) => ({
   recordMotion: false,
   setRecordMotion: (recordMotion) => set({ recordMotion }),
   generatePrefill: null,
+  generatorWindow: 'closed',
+  setGeneratorWindow: (generatorWindow) => set({ generatorWindow }),
   setGeneratePrefill: (generatePrefill) => set({ generatePrefill }),
   setPanel: (panel) => set({ panel }),
   togglePanel: (panel) => set((s) => ({ panel: s.panel === panel ? null : panel })),

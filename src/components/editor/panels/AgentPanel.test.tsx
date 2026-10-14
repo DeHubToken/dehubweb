@@ -115,7 +115,7 @@ describe('reviewing generation drafts from editor chat', () => {
     render(<AgentPanel />);
     const review = screen.getAllByRole('button', { name: 'editor.agent.openGenerator' });
     fireEvent.click(review[1]);
-    expect(useEditorUiStore.getState()).toMatchObject({ panel: 'generate', generatePrefill: video });
+    expect(useEditorUiStore.getState()).toMatchObject({ panel: 'agent', generatorWindow: 'open', generatePrefill: video });
     act(() => useEditorUiStore.getState().setGeneratePrefill(null));
     fireEvent.click(review[0]);
     expect(useEditorUiStore.getState().generatePrefill).toEqual(voice);
