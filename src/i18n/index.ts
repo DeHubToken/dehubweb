@@ -178,12 +178,15 @@ const writePackCache = async (key: string, value: string) => { try { localStorag
 const loadedPacks = new Set<string>([`${manifest.version}:en:core`]);
 const retryAfter = new Map<string, number>();
 const pendingPacks = new Map<string, Promise<boolean>>();
-async function loadPack(lang: string, group: string): Promise<boolean> {
+async function loadPack(lang: string, group: string, trigger = 'language-selection'): Promise<boolean> {
   if (!manifest.languages.includes(lang)) return false;
   const key = `${manifest.version}:${lang}:${group}`;
   if (loadedPacks.has(key)) return true;
   if ((retryAfter.get(key) || 0) > Date.now()) return false;
   if (pendingPacks.has(key)) return pendingPacks.get(key)!;
+  // Record only the first attempt for a pack, so startup audits can identify
+  // the translation caller without recording user text or repeated renders.
+  globalThis.performance?.mark?.('locale-pack-request', { detail: { language: lang, group, trigger } });
   const pending = (async () => {
     try {
       const cached = await readPackCache(key);
@@ -223,8 +226,8 @@ i18n.use({
       // Inline English is already the fallback. Fetching its entire optional
       // dictionary duplicates that copy and interrupts the first feed render.
       const inlineEnglish = typeof options.defaultValue === 'string' && options.defaultValue.length > 0;
-      if (lang !== 'en' || !inlineEnglish) void loadPack(lang, group);
-      if (lang !== 'en' && !inlineEnglish) void loadPack('en', group);
+      if (lang !== 'en' || !inlineEnglish) void loadPack(lang, group, keys[0]);
+      if (lang !== 'en' && !inlineEnglish) void loadPack('en', group, keys[0]);
     }
     return value;
   },
