@@ -28,6 +28,8 @@ Deno.test('curated media belongs only to a generated post and has a usable subje
   assert(taskPlanSchema.safeParse({ summary: 'Trail posts', interval_minutes: 1440, steps: [post] }).success);
   assert(!taskPlanSchema.safeParse({ summary: 'Repeated file', interval_minutes: 1440, steps: [{ ...post, arguments: { media_url: media_pool[0].url } }] }).success);
   assert(!taskPlanSchema.safeParse({ summary: 'Bad media', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...media_pool[0], subject: '' }] }] }).success);
+  assert(taskPlanSchema.safeParse({ summary: 'Curated caption', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...media_pool[0], caption: 'Just the trail and the ridgeline.' }] }] }).success);
+  assert(!taskPlanSchema.safeParse({ summary: 'Empty caption', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...media_pool[0], caption: '   ' }] }] }).success);
   const video = { url: 'https://videos.pexels.com/clip.mp4', type: 'video', subject: 'Coffee poured into a cup' };
   assert(!taskPlanSchema.safeParse({ summary: 'Missing cover', interval_minutes: 1440, steps: [{ ...post, media_pool: [video] }] }).success);
   assert(taskPlanSchema.safeParse({ summary: 'Video with cover', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...video, thumbnail_url: 'https://images.pexels.com/videos/clip.jpg' }] }] }).success);
