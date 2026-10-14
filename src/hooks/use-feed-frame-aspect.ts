@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useRef, type RefObject } from 'react';
 
 const displayed = new Map<string, number>();
-const subscriptions = new Map<Element, (visible: boolean) => void>();
+const subscriptions = new Map<Element, Set<(visible: boolean) => void>>();
 let observer: IntersectionObserver | undefined;
 
 /** Hold a feed frame once seen; late decoding must not move the next post. */
@@ -19,8 +19,8 @@ export function useFeedFrameAspect(key: string, candidate: number, element: RefO
     const node = element.current;
     if (!node || typeof IntersectionObserver === 'undefined') return;
     observer ??= new IntersectionObserver(entries => {
-      for (const entry of entries) subscriptions.get(entry.target)?.(entry.isIntersecting);
-    }, { rootMargin: '0px 10000px' });
+      for (const entry of entries) subscriptions.get(entry.target)?.forEach(sync => sync(entry.isIntersecting));
+    });
     const sync = (visible: boolean) => {
       if (latest.current.key !== key) return;
       const next = frame.current;
@@ -38,11 +38,19 @@ export function useFeedFrameAspect(key: string, candidate: number, element: RefO
       }
       update();
     };
-    subscriptions.set(node, sync);
-    observer.observe(node);
+    let listeners = subscriptions.get(node);
+    if (!listeners) {
+      listeners = new Set();
+      subscriptions.set(node, listeners);
+      observer.observe(node);
+    }
+    listeners.add(sync);
     return () => {
-      subscriptions.delete(node);
-      observer?.unobserve(node);
+      listeners.delete(sync);
+      if (!listeners.size) {
+        subscriptions.delete(node);
+        observer?.unobserve(node);
+      }
       if (!subscriptions.size) { observer?.disconnect(); observer = undefined; }
     };
   }, [key, element, enabled]);
