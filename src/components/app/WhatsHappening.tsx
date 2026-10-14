@@ -250,7 +250,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
   const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Radio, tickers: Flame };
   // Icon-only tabs need a spoken name.
-  const tabLabels: Record<Tab, string> = { posts: t('sidebar.posts'), stages: t('stages.title'), tickers: t('sidebar.tickers') };
+  const tabLabels: Record<Tab, string> = { posts: t('sidebar.posts'), stages: t('stages.title', 'Stages'), tickers: t('sidebar.tickers') };
 
   // Live stages for the stages tab — shared from StageProvider's single
   // fetch + realtime channel (was a duplicate query + 60s poll here).
@@ -451,7 +451,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-b-2xl bg-zinc-900/90 hover:bg-zinc-800/90 border-t border-zinc-800/50 transition-colors text-xs text-zinc-400 hover:text-white"
           >
             <Globe className="w-3.5 h-3.5" />
-            <span>{t('commandCentre.viewAll')}</span>
+            <span>{t('commandCentre.viewAll', 'View all')}</span>
             <ChevronDown className="w-3 h-3 transition-transform" style={{ transform: `rotate(${showCountryDropdown ? -90 : 90}deg)` }} />
           </button>
           {showCountryDropdown && (
@@ -494,7 +494,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       {!showCountrySelector && (
         <div data-view-all>
           <LiquidGlassBubble2
-            label={t('commandCentre.viewAll')}
+            label={t('commandCentre.viewAll', 'View all')}
             onClick={() => {
               if (activeTab === 'stages') { openStagesModal('browse'); }
               else { navigate('/app/explore'); }

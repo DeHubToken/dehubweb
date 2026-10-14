@@ -584,7 +584,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
   const touchOrigin = useRef<{ x: number; y: number } | null>(null);
 
   const dubHintText =
-    dubHint === 'unavailable' ? t('dub.unavailable') : dubHint === 'preparing' ? t('dub.preparing') : null;
+    dubHint === 'unavailable' ? t('dub.unavailable', 'Dubbed audio is not available for this video.') : dubHint === 'preparing' ? t('dub.preparing', 'Preparing dubbed audio…') : null;
 
   // Inside the control row the button is a sibling of the speed/loop/PiP/mute
   // buttons and wears exactly their chrome; standalone it keeps the older
@@ -704,7 +704,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       {/* Audio: the original track, or the same lines spoken in the caption
           language by a voice on this device. */}
       <div className="mt-2 flex items-center justify-between">
-        <span className="text-[11px] text-white/60">{t('dub.audio')}</span>
+        <span className="text-[11px] text-white/60">{t('dub.audio', 'Audio')}</span>
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -717,7 +717,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
                 : 'bg-transparent text-white/60 border-white/10',
             )}
           >
-            {t('dub.original')}
+            {t('dub.original', 'Original audio')}
           </button>
           <button
             type="button"
@@ -731,7 +731,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
                 : 'bg-transparent text-white/60 border-white/10',
             )}
           >
-            {t('dub.dubbed')}
+            {t('dub.dubbed', 'Dubbed audio')}
           </button>
         </div>
       </div>

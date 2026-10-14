@@ -2818,7 +2818,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
               </Tooltip>
             )}
                 <button data-video-bare onClick={handleFullscreen}
-                  aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen')}
+                  aria-label={t(isFullscreen ? 'stages.exitFullscreen' : 'stages.fullscreen', isFullscreen ? 'Exit fullscreen' : 'Fullscreen')}
                   className="flex h-8 w-8 shrink-0 items-center justify-center text-white">
                   <MediaControlIcon icon={isFullscreen ? Minimize : Maximize} plain={splitControls} />
                 </button>
