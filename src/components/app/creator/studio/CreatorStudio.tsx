@@ -106,7 +106,7 @@ import { PresetStrip } from './PresetStrip';
 import { ViralTemplateShowcase } from '../ViralTemplateShowcase';
 import { VIRAL_EFFECTS, VIRAL_EFFECT_MODEL } from '../../../../../supabase/functions/_shared/viral-effects';
 import { MotionLibraryShowcase } from '../MotionLibraryShowcase';
-import { motionAspect, motionModel, type MotionClip } from '@/lib/creator/motionLibrary';
+import { downloadMotionSource, motionAspect, motionModel, type MotionClip } from '@/lib/creator/motionLibrary';
 import { GenerationExample } from './GenerationExample';
 import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
@@ -970,7 +970,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     setExtraReferences(previous => {
       previous.video.filter(asset => asset.kind === 'video' && asset.file).forEach(asset => URL.revokeObjectURL(asset.url));
       return { ...previous, video: [...previous.video.filter(asset => asset.kind !== 'video'),
-        { url: clip.url, label: clip.name, kind: 'video', seconds: clip.seconds, posterUrl: clip.poster }] };
+        { url: clip.url, label: clip.name, kind: 'video', seconds: clip.seconds, posterUrl: clip.poster, sourceClipId: clip.id }] };
     });
     focusComposer();
   }, [focusComposer, setPresetFor]);
@@ -1373,8 +1373,9 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       setStaging(true);
       try {
         const hosted = await Promise.all(currentAssets.map(async asset => {
-          const url = asset.file ? await hostCreatorFile(asset.file) : asset.url.startsWith('data:') ? await hostDataUrl(asset.url) : asset.url;
-          return { ...asset, file: undefined, url };
+          const file = asset.file ?? (asset.sourceClipId ? await downloadMotionSource(asset.sourceClipId) : undefined);
+          const url = file ? await hostCreatorFile(file) : asset.url.startsWith('data:') ? await hostDataUrl(asset.url) : asset.url;
+          return { ...asset, file: undefined, sourceClipId: undefined, url };
         }));
         currentAssets.forEach(asset => { if (asset.file) URL.revokeObjectURL(asset.url); });
         const primary = hosted.find(a => a.kind === 'image');
