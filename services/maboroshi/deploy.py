@@ -67,7 +67,10 @@ def install(revision):
     # Retire the one-use credential form and migrate its initial retail tariff.
     lines = [line for line in config.read_text().splitlines() if not line.startswith(('MABOROSHI_SETUP_', 'REPLICATE_', 'ENHANCOR_'))]
     tariffs = {'MABOROSHI_DRAFT_MICROS_PER_SECOND': '160000', 'MABOROSHI_HD_MICROS_PER_SECOND': '850000'}
+    tariffs.update(MABOROSHI_KLING_MICROS_PER_SECOND='280000', MABOROSHI_KLING_OVERHEAD_MICROS='350000')
     lines = [f'{key}="{tariffs[key]}"' if (key := line.partition('=')[0]) in tariffs else line for line in lines]
+    present = {line.partition('=')[0] for line in lines}
+    lines += [f'{key}="{value}"' for key, value in tariffs.items() if key not in present]
     config.write_text('\n'.join(lines) + '\n')
     config.chmod(0o600)
     shutil.copy2(release / 'dehub-maboroshi.service', '/etc/systemd/system/dehub-maboroshi.service')

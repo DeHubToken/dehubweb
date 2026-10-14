@@ -125,6 +125,13 @@ function nextStep() {
 }
 function render() {
   renderPresetDetail();
+  const kling = (current ? current.renderer || 'seedance' : $('renderer').value) === 'kling';
+  $('preparation-options').hidden = kling;
+  $('renderer-help').textContent = kling ? 'Kling: 3–15 second MP4/MOV at 720p or higher, with image references. One paid render; original soundtrack preserved.' : 'Seedance Premium: 2–30 seconds, image or video references. Paid preparation and preview, with optional 1080p completion.';
+  $('reference').accept = kling ? 'image/png,image/jpeg,image/webp' : 'image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm';
+  $('review-guidance').textContent = kling ? 'Watch the full original clip and confirm the subject, motion and soundtrack. Kling uses this source directly.' : 'Check edges, hair, hands, background spill and face alignment through every cut. Listen to the pitched vocals.';
+  $('render-hint').textContent = kling ? 'One complete render. No preparation or separate HD charge.' : 'HD is a separate choice after you watch the preview.';
+  $('export-guidance').textContent = kling ? 'Your complete original soundtrack is restored. Download your finished Kling video.' : 'Your full original soundtrack is restored. You can download the preview as it is, or approve HD within six days.';
   $('project').hidden = !current; $('progress').hidden = !current;
   $('source-section').hidden = !!current; $('source-preview-section').hidden = !current?.files['upload.mp4'];
   $('jobs').disabled = locked(); $('new-project').disabled = locked(); $('refresh').disabled = locked();
@@ -144,7 +151,7 @@ function render() {
   const source = $('source-preview');
   if (current.files['upload.mp4'] && source.dataset.file !== current.id) { source.src = current.files['upload.mp4']; source.dataset.file = current.id; }
   $('source-download').href = current.files['upload.mp4'] || ''; $('source-download').download = 'maboroshi-original.mp4';
-  $('source-meta').textContent = `${Number(current.seconds).toFixed(1)} seconds · Replacing: ${current.subject}`;
+  $('source-meta').textContent = `${Number(current.seconds).toFixed(1)} seconds · ${kling ? 'Kling' : 'Seedance Premium'} · Replacing: ${current.subject}`;
   $('prepare-section').hidden = current.state !== 'uploaded' || !allowPayments;
   const input = Object.entries({ 'seedance-input.mp4': 'Prepared clip', 'upload.mp4': 'Original', 'depth.mp4': 'Depth guide', 'mask.mp4': 'Subject mask' }).filter(([file]) => current.files[file]);
   $('review-section').hidden = !current.files['seedance-input.mp4'];
@@ -157,7 +164,7 @@ function render() {
   const hasReference = current.hasReference || !!$('reference').files[0];
   $('draft-guidance').textContent = !current.review.approved ? 'Approve the prepared clip above to continue.' : !hasReference ? 'Choose a character reference above to continue.' : 'Your clip is approved. Continue to review the preview price in DeHub.';
   $('resolved').hidden = !current.resolvedPrompt || referencesChanged; $('resolved-prompt').textContent = current.resolvedPrompt;
-  const outputs = [['final-preview.mp4', 'Preview'], ['hd/final-preview.mp4', '1080p']].filter(([file]) => current.files[file]);
+  const outputs = [['final-preview.mp4', kling ? 'Kling result' : 'Preview'], ['hd/final-preview.mp4', '1080p']].filter(([file]) => current.files[file]);
   $('export-section').hidden = !outputs.length;
   if (outputs.length) showVideo('result', outputs);
   $('hd-review').hidden = current.state !== 'draft' || !allowPayments;
@@ -165,8 +172,9 @@ function render() {
   $('duration-note').textContent = current.durationAdjustment ? `The last frame was held for ${Number(current.durationAdjustment.seconds).toFixed(2)} seconds to preserve the complete original soundtrack.` : '';
   for (const [stage, label, state] of [['prepare', 'Prepare clip', 'uploaded'], ['draft', 'Generate preview', 'prepared'], ['hd', 'Generate 1080p', 'draft']]) {
     const cost = current.quotes[stage];
-    $(stage).textContent = cost ? `${label} · ${money(cost)}` : `${label} · temporarily unavailable`;
-    $(stage).hidden = !allowPayments || current.state !== state;
+    const title = kling && stage === 'draft' ? 'Generate Kling video' : label;
+    $(stage).textContent = cost ? `${title} · ${money(cost)}` : `${title} · temporarily unavailable`;
+    $(stage).hidden = !allowPayments || current.state !== state || (kling && stage !== 'draft');
     $(stage).disabled = !ready || !allowPayments || locked() || busy() || !cost || current.state !== state ||
       (stage === 'draft' && (!current.review.approved || !hasReference)) || (stage === 'hd' && !$('draft-reviewed').checked);
   }
@@ -380,6 +388,7 @@ async function switchProject(ident) {
   if (ident) try { await load(ident); } catch (error) { message(error.message); }
 }
 $('reviewed').onchange = render; $('draft-reviewed').onchange = render;
+$('renderer').onchange = render;
 $('jobs').onchange = () => { void switchProject($('jobs').value); };
 $('new-project').onclick = () => { void switchProject(''); };
 $('refresh').onclick = async () => {
