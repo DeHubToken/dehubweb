@@ -44,6 +44,22 @@ html[data-theme] body [data-audio-player] span[data-audio-bare] {
 }
 
 /* Theme rules must preserve both layers, including filled Cut artwork. */
+html[data-theme] body [data-video-card] [data-video-button-row] button {
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+html[data-theme] body [data-video-card] [data-video-inline-tools] button[data-video-speed] {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 18px;
+}
+html[data-theme] body [data-video-card] button[data-video-speed] > span {
+  display: block;
+  height: 18px;
+  transform: translateY(1px);
+}
+
 html[data-theme] body :is([data-video-card], [data-audio-player], [data-video-caption-control]) [data-video-glyph] svg {
   color: #fff !important;
 }
