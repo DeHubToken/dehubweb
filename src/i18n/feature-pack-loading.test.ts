@@ -11,6 +11,7 @@ it('renders inline English and interpolation without downloading optional dictio
   expect(i18n.t('editor.rail.agent', 'Agent')).toBe('Agent');
   expect(i18n.t('creator.editor', 'Editor')).toBe('Editor');
   expect(i18n.t('commandCentre.creator', 'Creator')).toBe('Creator');
+  expect(i18n.t('stats.feedback.title', 'Feedback')).toBe('Feedback');
   await Promise.resolve();
   expect(fetchPack).not.toHaveBeenCalled();
 });
