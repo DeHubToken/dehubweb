@@ -1,7 +1,13 @@
-import { handleTaskRequest, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
+import { handleTaskRequest, postBreaksGroundingRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
 import { AGENT_OWNER } from './task-plan.ts';
 
 const assert = (value: unknown, description: string) => { if (!value) throw new Error(description); };
+Deno.test('post drafts keep concrete opinions but reject invented scenes and generic filler', () => {
+  assert(!postBreaksGroundingRules("Basil leaves going yellow? I'd check the pot before adding water.", 100, 'yellow basil leaves'), 'rejected a grounded opinion');
+  assert(postBreaksGroundingRules('Just whispered to my basil—turns out it prefers silence.', 100, 'yellow basil leaves'), 'allowed an invented action');
+  assert(postBreaksGroundingRules('Take the 1965 Mustang for a sunrise run.', 100, 'a worn steering wheel'), 'allowed an invented dated scene');
+  assert(postBreaksGroundingRules('The little things tell a story.', 100, 'yellow basil leaves'), 'allowed generic filler');
+});
 const fixture = (prior?: string) => {
   const agent = { id: 'agent', human_owner_wallet: AGENT_OWNER, owner_wallet_address: '0x1111111111111111111111111111111111111111', api_key: 'test', is_active: true };
   const task = { id: 'task', agent_id: 'agent', owner_wallet: AGENT_OWNER, status: 'running', lease: 'lease', completed_actions: 0,
