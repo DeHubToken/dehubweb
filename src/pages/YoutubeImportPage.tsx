@@ -544,7 +544,7 @@ export default function YoutubeImportPage() {
                     data-page-bento
                     className="relative flex flex-col bg-zinc-900 rounded-2xl overflow-hidden"
                   >
-                    <div className="relative aspect-video bg-zinc-800 overflow-hidden">
+                    <div data-media-scrim className="relative aspect-video bg-zinc-800 overflow-hidden">
                       {thumbnail && (
                         <img
                           src={thumbnail}

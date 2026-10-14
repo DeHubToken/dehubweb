@@ -136,6 +136,7 @@ export function CharactersLibrary() {
             return (
               <div
                 key={c.id}
+                data-media-scrim
                 className="group relative aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 bg-black/60 backdrop-blur-[24px]"
               >
                 {cover ? (

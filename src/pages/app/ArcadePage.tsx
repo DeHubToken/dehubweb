@@ -43,7 +43,7 @@ function GameCard({ game }: { game: ArcadeGame }) {
       className="group flex flex-col overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/[0.06] transition-colors hover:ring-white/[0.14]"
     >
       <Link to={`/arcade/${game.slug}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
-        <div className="relative aspect-video overflow-hidden bg-black">
+        <div data-media-scrim={!game.brand || undefined} className="relative aspect-video overflow-hidden bg-black">
           {!game.brand && game.artVideo && !reduceMotion ? (
             <video
               src={game.artVideo}

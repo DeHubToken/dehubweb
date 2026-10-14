@@ -1,6 +1,11 @@
 name: Production performance audit
 on:
   workflow_dispatch:
+    inputs:
+      invalidations:
+        description: Include verbose CSS invalidation causes (large trace files)
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -19,8 +24,10 @@ jobs:
       - name: Measure production cold load, warm load, scroll and navigation
         env:
           PERFORMANCE_BROWSER_ROOT: ${{ runner.temp }}/performance-browser
+          PERFORMANCE_INVALIDATIONS: ${{ inputs.invalidations && '1' || '0' }}
         run: node tests/performance-production.mjs
       - name: Check delayed media frame stability through scroll-back
+        if: always()
         env:
           PERFORMANCE_BROWSER_ROOT: ${{ runner.temp }}/performance-browser
         run: node tests/feed-frame-production.mjs

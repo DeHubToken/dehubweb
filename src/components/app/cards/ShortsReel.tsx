@@ -105,7 +105,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
               className="flex-shrink-0 w-[120px] md:w-[180px] cursor-pointer group"
             >
               {/* Thumbnail */}
-              <div className="relative aspect-[9/16] rounded-xl overflow-hidden">
+              <div data-media-scrim className="relative aspect-[9/16] rounded-xl overflow-hidden">
                 {short.videoUrl ? (
                   <AutoplayVideo
                     src={short.videoUrl}
