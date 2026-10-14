@@ -23,7 +23,7 @@ import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { flattenFeedPages } from '@/lib/feed-pages';
 import { isHomeFeedRoute } from '@/lib/home-routes';
-import { shortsBatchCount, shortsBatchIndex, SHORTS_BATCH_SIZE } from '@/lib/shorts-rotation';
+import { shortsBatchCount, shortsBatchIndex } from '@/lib/shorts-rotation';
 import { useShortsRotation, type ShortsHistoryStore } from '@/hooks/use-shorts-rotation';
 
 const shortsHistoryStore: ShortsHistoryStore = {
@@ -1355,11 +1355,10 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   const shortsBatches = useMemo(() => shortsRotation.batches.map(batch => batch.map(mapCarouselItem)),
     [shortsRotation.batches, mapCarouselItem]);
   useEffect(() => {
-    const uniqueCount = new Set(shortsCandidates.map(item => String(item.tokenId))).size;
-    if (!isHomeActive || !shortsCount || uniqueCount >= shortsCount * SHORTS_BATCH_SIZE) return;
+    if (!isHomeActive || !shortsCount || shortsRotation.batches.length >= shortsCount) return;
     if (scrollFeed.hasNextPage && !scrollFeed.isFetching && !scrollFeed.isError) void scrollFeed.fetchNextPage();
     if (scrollPhotosFeed.hasNextPage && !scrollPhotosFeed.isFetching && !scrollPhotosFeed.isError) void scrollPhotosFeed.fetchNextPage();
-  }, [isHomeActive, shortsCount, shortsCandidates, scrollFeed.hasNextPage, scrollFeed.isFetching,
+  }, [isHomeActive, shortsCount, shortsRotation.batches.length, scrollFeed.hasNextPage, scrollFeed.isFetching,
     scrollFeed.isError, scrollFeed.fetchNextPage, scrollPhotosFeed.hasNextPage, scrollPhotosFeed.isFetching,
     scrollPhotosFeed.isError, scrollPhotosFeed.fetchNextPage]);
 
