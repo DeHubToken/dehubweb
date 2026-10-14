@@ -17,6 +17,7 @@ const images = new Map<string, Entry>();
 interface ImageProps extends Pick<HTMLAttributes<HTMLSpanElement>, 'onClick' | 'onPointerDown' | 'onPointerMove' | 'onPointerUp' | 'onPointerCancel'> {
   mediaKey: string;
   priority?: number;
+  fixedFrame?: boolean;
   src?: string;
   srcSet?: string;
   sizes?: string;
@@ -39,7 +40,7 @@ function show(entry: Entry) {
   if (image.parentNode !== claim.slot) {
     const oldSlot = image.parentElement;
     const rect = oldSlot ? entry.size ?? image.getBoundingClientRect() : undefined;
-    if (oldSlot && rect && rect.height > 0) {
+    if (oldSlot && rect && rect.height > 0 && !entry.claims.find(c => c.slot === oldSlot)?.props.fixedFrame) {
       oldSlot.style.minHeight = `${rect.height}px`;
       oldSlot.style.width = `${rect.width}px`;
     }
@@ -66,6 +67,9 @@ function show(entry: Entry) {
     if (value == null) continue;
     nextStyle[property] = typeof value === 'number' && !['aspectRatio', 'opacity', 'zIndex'].includes(property) ? `${value}px` : String(value);
   }
+  if (props.fixedFrame) Object.assign(nextStyle, {
+    position: 'absolute', inset: '0px', width: '100%', height: '100%', maxHeight: '100%', aspectRatio: 'auto',
+  });
   if (entry.failed) nextStyle.visibility = 'hidden';
   for (const property of new Set([...Object.keys(entry.appliedStyle ?? {}), ...Object.keys(nextStyle)])) {
     const value = nextStyle[property] ?? '';
@@ -90,7 +94,7 @@ function show(entry: Entry) {
     // including orientation changes. Older engines measure once per bitmap.
     if (!entry.observer) {
       const rect = image.getBoundingClientRect();
-      if (rect.height > 0 && claim.priority < 2) claim.slot.style.minHeight = `${rect.height}px`;
+      if (rect.height > 0 && claim.priority < 2 && !props.fixedFrame) claim.slot.style.minHeight = `${rect.height}px`;
     }
     claim.measuredSlot = claim.slot;
     // Cached images are shown on every layout. Notify each owner once per bitmap
@@ -158,7 +162,7 @@ export function HandoffImage(props: ImageProps) {
           const { width, height } = measurement.contentRect;
           tracked.size = { width, height };
           const active = tracked.claims.find(claim => claim.slot === image.parentElement);
-          if (active && active.priority < 2 && active.slot.style.minHeight !== `${height}px`) {
+          if (active && active.priority < 2 && !active.props.fixedFrame && active.slot.style.minHeight !== `${height}px`) {
             active.slot.style.minHeight = `${height}px`;
           }
         });
@@ -177,7 +181,7 @@ export function HandoffImage(props: ImageProps) {
     show(held.current.entry);
   });
   return <span ref={attach} data-image-slot onClick={props.onClick} onPointerDown={props.onPointerDown} onPointerMove={props.onPointerMove} onPointerUp={props.onPointerUp} onPointerCancel={props.onPointerCancel}
-    style={{ position: 'relative', display: 'flex', maxWidth: '100%', minWidth: failed ? 160 : undefined, minHeight: failed ? 160 : undefined, maxHeight: props.priority === 2 ? '100%' : undefined, width: props.style?.width, aspectRatio: props.style?.aspectRatio, backgroundColor: 'rgba(128,128,128,0.06)' }}>
+    style={{ position: 'relative', display: 'flex', maxWidth: '100%', overflow: props.fixedFrame ? 'hidden' : undefined, minWidth: failed && !props.fixedFrame ? 160 : undefined, minHeight: failed && !props.fixedFrame ? 160 : undefined, maxHeight: props.priority === 2 ? '100%' : props.fixedFrame ? props.style?.maxHeight : undefined, width: props.style?.width, aspectRatio: props.style?.aspectRatio, backgroundColor: 'rgba(128,128,128,0.06)' }}>
     {failed && <button type="button" className="absolute left-1/2 top-1/2 z-10 min-h-11 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/70 px-5 text-white"
       onPointerDown={event => event.stopPropagation()} onPointerUp={event => event.stopPropagation()}
       onClick={event => {
