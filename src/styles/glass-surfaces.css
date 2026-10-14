@@ -116,11 +116,9 @@ html {
 
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   :is([data-feed-nav]:not(:has(> [data-nav-glass-backdrop])), [data-feed-island-surface], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]):not(:has(> [data-nav-glass-backdrop])), [data-bottom-nav] > nav):not(#_):not(#_) {
-  background: linear-gradient(rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.025) 45%, rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
-  /* Keep the standard property last: the production CSS optimiser otherwise
-     retains only the Safari prefix and removes blur in Chromium/Firefox. */
-  -webkit-backdrop-filter: var(--nav-glass-blur) !important;
-  backdrop-filter: var(--nav-glass-blur) !important;
+  background: linear-gradient(rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.025) 45%, rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), color-mix(in srgb, var(--nav-glass-base) 30%, rgb(9 9 11 / 0.88)) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 1.5px 0 rgb(255 255 255 / 0.4) !important;
 }
 html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_)::before,
@@ -137,11 +135,10 @@ html[data-theme][data-theme='war'] [data-feed-nav]:not(#_):not(#_) {
   backdrop-filter: none !important;
 }
 
-/* Keep the frost in a stationary layer behind the controls. Repainting a
-   moving selection or an island action must not invalidate the backdrop
-   texture on the same surface; that can leave a vertical seam in Chromium.
-   War keeps its chamfered ::before plate. Light and Minimal keep their flat
-   material. The controls remain unclipped, including floating filter rows. */
+/* Keep the nav paint in a stationary layer behind the controls. Repainting a
+   moving selection or feed media cannot invalidate a sampled backdrop and
+   leave a seam in Chromium. War keeps its chamfered ::before plate. Light and
+   Minimal keep their flat material. Floating filter rows stay unclipped. */
 [data-nav-glass-backdrop] {
   display: none;
 }
@@ -163,12 +160,15 @@ html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'],
   border-radius: inherit;
   overflow: hidden;
   pointer-events: none;
-  transform: translateZ(0);
-  background: linear-gradient(rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.025) 45%, rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base);
+  background: linear-gradient(rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.025) 45%, rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), color-mix(in srgb, var(--nav-glass-base) 30%, rgb(9 9 11 / 0.88));
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22), inset 0 1.5px 0 rgb(255 255 255 / 0.4);
-  -webkit-backdrop-filter: var(--nav-glass-blur);
-  backdrop-filter: var(--nav-glass-blur);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
+
+/* Live feed media and scroll transforms can invalidate a backdrop sample in
+   strips. Paint navigation from a stable tint so no sampled line can flash
+   through the bar while its controls or the feed move. */
 
 /* The sidebar scrolls and animates its selection independently of its frost.
    Keep one promoted backdrop behind the list, as on the feed pill: repainting
