@@ -26,7 +26,7 @@ export async function handleCreatorMotionSource(request, env) {
     if (media.protocol !== 'https:' || media.username || media.password || media.port || !HOSTS.has(media.hostname)) return fail(404, 'Source clip unavailable.');
     stage = 'upstream';
     const upstream = await fetch(media.href, { method: request.method, headers: range ? { Range: range } : {},
-      redirect: 'error', signal: AbortSignal.timeout(30000), cf: { cacheEverything: true, cacheTtl: 3600 } });
+      redirect: 'manual', signal: AbortSignal.timeout(30000), cf: { cacheEverything: true, cacheTtl: 3600 } });
     if (!upstream.ok) { headers.set('X-Source-Status', String(upstream.status)); await upstream.body?.cancel(); return fail(upstream.status === 404 ? 404 : 502, 'Source clip unavailable.'); }
     stage = 'stream';
     const declared = upstream.headers.get('Content-Range')?.split('/')[1] ?? upstream.headers.get('Content-Length');
@@ -44,6 +44,7 @@ export async function handleCreatorMotionSource(request, env) {
   } catch (error) {
     headers.set('X-Source-Stage', stage);
     headers.set('X-Source-Error', error instanceof Error ? error.name : 'Error');
+    if (error instanceof Error) headers.set('X-Source-Detail', encodeURIComponent(error.message).slice(0, 240));
     return fail(502, 'Source clip unavailable.');
   }
 }
