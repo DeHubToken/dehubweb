@@ -3,13 +3,18 @@ import { type StripeEnv, createStripeClient, verifyWebhook } from "../_shared/st
 import { AI_PLANS, invoicePlanMetadata, planGrantDhb } from "../_shared/ai-plans.ts";
 import { reportInvoiceToPlay, reportRefundToPlay } from "./play-report.ts";
 
-let _supabase: ReturnType<typeof createClient> | null = null;
+// Derive the client type from the actual call instead of `ReturnType<typeof createClient>`,
+// whose unbound generics resolve every table to `never` under deno check.
+function createSupabaseClient() {
+  return createClient(
+    Deno.env.get("SUPABASE_URL")!,
+    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+  );
+}
+let _supabase: ReturnType<typeof createSupabaseClient> | null = null;
 function getSupabase() {
   if (!_supabase) {
-    _supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-    );
+    _supabase = createSupabaseClient();
   }
   return _supabase;
 }
