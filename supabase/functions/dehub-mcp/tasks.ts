@@ -228,7 +228,11 @@ export async function runTask(context: Context, req: Request, task: any) {
       if (!content || postBreaksGroundingRules(content, maxLength)) {
         content = (await completion([...messages, { role: "assistant", content: content ?? "" }, { role: "user", content: "Rewrite this as a short opinion or question. No first-person experience, time claim, date, statistic, emoji or invented detail. Stay within the character limit." }]))?.content?.trim();
       }
-      if (!content || postBreaksGroundingRules(content, maxLength)) throw new Error("The draft did not meet the posting rules. No post was published.");
+      if (!content || postBreaksGroundingRules(content, maxLength)) {
+        task.cursor.index++;
+        await save({ message: "The draft did not meet the posting rules, so this post was skipped." });
+        continue;
+      }
     }
     const tool = registry.get(step.tool)!;
     const prepared = stepArguments(step, target === "single" ? null : target, content);
