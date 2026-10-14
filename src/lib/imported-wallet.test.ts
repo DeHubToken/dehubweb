@@ -48,7 +48,7 @@ it('cannot keep signing through a cached provider after the wallet locks', async
   const cached = await connector.getProvider();
   await finishImportedWallet(true);
   lockWallet();
-  await expect(cached.request({ method: 'personal_sign' })).rejects.toThrow('reconnect');
+  await expect(cached.request({ method: 'personal_sign', params: [] })).rejects.toThrow('reconnect');
   expect(await connector.isAuthorized()).toBe(false);
 });
 

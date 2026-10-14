@@ -13,6 +13,7 @@ vi.mock('wagmi', () => ({
   useAccount: () => ({ isConnected: true, address: '0xe7129f5f15b381b67cc6cf53defa9071ca670f1f', connector: { id: 'trust', name: 'Trust' } }),
   useDisconnect: () => ({ disconnectAsync: wagmi.disconnectAsync }),
   useConnectors: () => [],
+  useConnect: () => ({ connectAsync: vi.fn() }),
 }));
 vi.mock('sonner', () => ({ toast: Object.assign(vi.fn(), { dismiss, error: vi.fn(), success: vi.fn() }) }));
 vi.mock('@/components/app/WagmiScope', () => ({ WagmiScope: ({ children }: { children: ReactNode }) => <>{children}</> }));
