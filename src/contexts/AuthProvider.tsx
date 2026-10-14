@@ -1531,12 +1531,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } catch { /* already gone */ }
           }
         } finally {
-          if (wagmiConnector?.id === 'dehub-imported-wallet') {
-            const { finishImportedWallet } = await import('@/lib/imported-wallet');
-            await finishImportedWallet(false);
+          try {
+            if (wagmiConnector?.id === 'dehub-imported-wallet') {
+              const { finishImportedWallet } = await import('@/lib/imported-wallet');
+              await finishImportedWallet(false);
+            }
+          } finally {
+            wagmiAuthInProgressRef.current = false;
+            setIsConnecting(false);
           }
-          wagmiAuthInProgressRef.current = false;
-          setIsConnecting(false);
         }
       }
     };
