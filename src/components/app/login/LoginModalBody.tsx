@@ -8,7 +8,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * arrives behind it. See the note at the top of LoginModal.tsx.
  */
 import React, { useEffect, useMemo, useState } from 'react';
-import { useAccount, useConnectors, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useConnectors, useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { Mail, Phone, Loader2, Fingerprint, ArrowDownToLine, KeyRound } from "lucide-react";
 import Wallet from "@/components/ui/cut-icons/wallet";
@@ -52,6 +52,9 @@ const WalletCreateStep = React.lazy(() =>
 );
 const WalletUnlockStep = React.lazy(() =>
   import('@/components/app/wallet-setup/WalletUnlockStep').then(m => ({ default: m.WalletUnlockStep })),
+);
+const LoginImportWalletStep = React.lazy(() =>
+  import('./LoginImportWalletStep').then(m => ({ default: m.LoginImportWalletStep })),
 );
 
 /**
@@ -120,6 +123,7 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
     connector: wagmiCurrentConnector,
   } = useAccount();
   const { disconnectAsync: wagmiDisconnectAsync } = useDisconnect();
+  const { connectAsync } = useConnect();
   const allConnectors = useConnectors();
   const { t } = useTranslation();
 
@@ -186,7 +190,12 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   // "Migrate account" / "Import keys", chosen before signing in.
   // Mirrored from sessionStorage so it survives an OAuth redirect and reaches
   // the wallet step once the identity exists (see lib/wallet-setup-intent).
-  const [setupIntent, setSetupIntentState] = useState<WalletSetupIntent | null>(() => getWalletSetupIntent());
+  const [setupIntent, setSetupIntentState] = useState<WalletSetupIntent | null>(() => {
+    const intent = getWalletSetupIntent();
+    // An older tab may still carry the former identity-gated import choice.
+    if (intent === 'import') { setWalletSetupIntent(null); return null; }
+    return intent;
+  });
   const chooseSetupIntent = (intent: WalletSetupIntent | null) => {
     setWalletSetupIntent(intent);
     setSetupIntentState(intent);
@@ -698,9 +707,8 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
         <span>{t('loginModal.connectWallet')}</span>
       </Button>
 
-      {/* Two more ways in, both of which still need a sign-in above first:
-          the wallet is tied to the identity, so the choice is recorded now
-          and acted on at the wallet step. */}
+      {/* Account migration records an identity intent. Wallet import opens
+          its own key/seed form and authenticates the wallet directly. */}
       {!setupIntent && (
         <div className="grid grid-cols-2 gap-3">
           <Button
@@ -713,13 +721,13 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
             <span className="truncate">{t('loginModal.migrateAccount', 'Migrate account')}</span>
           </Button>
           <Button
-            onClick={() => chooseSetupIntent('import')}
+            onClick={() => { chooseSetupIntent(null); setStep('import-wallet'); }}
             disabled={isConnecting}
             variant="outline"
             className="h-12 bg-transparent hover:bg-white/5 text-white rounded-xl flex items-center justify-center gap-2 border-white/10 px-2"
           >
             <KeyRound className="w-5 h-5 shrink-0" />
-            <span className="truncate">{t('loginModal.importExternalWallet', 'Import')}</span>
+            <span className="truncate">{t('copy.a865110e919b')}</span>
           </Button>
         </div>
       )}
@@ -980,6 +988,23 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
       {step === 'email-waiting' && renderEmailWaitingStep()}
       {step === 'phone' && renderPhoneStep()}
       {step === 'phone-code' && renderPhoneCodeStep()}
+      {step === 'import-wallet' && (
+        <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
+          <LoginImportWalletStep busy={isConnecting} onImport={async privateKey => {
+            await handleUseDifferentWallet();
+            const { prepareImportedWallet, ensureImportedWalletConnector, finishImportedWallet, IMPORTED_WALLET_ID } = await import('@/lib/imported-wallet');
+            try {
+              await prepareImportedWallet(privateKey);
+              setWagmiAuthIntent(true, IMPORTED_WALLET_ID);
+              await connectAsync({ connector: ensureImportedWalletConnector() });
+            } catch (error) {
+              setWagmiAuthIntent(false);
+              await finishImportedWallet(false);
+              throw error;
+            }
+          }} />
+        </React.Suspense>
+      )}
       {step === 'wallets' && (
         <React.Suspense fallback={<DeHubPageLoader size={56} minHeight="180px" />}>
           <LoginWalletsStep

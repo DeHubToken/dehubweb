@@ -1874,6 +1874,7 @@
     "createNewInstead": "Créez plutôt un nouveau compte",
     "migrateAccount": "Migrer le compte",
     "importExternalWallet": "Importer",
+    "invalidImportSecret": "Saisissez une clé privée ou une phrase de récupération valide.",
     "migrateIntentHint": "Connectez-vous avec l'une des options ci-dessous. S'il correspond à un compte DeHub antérieur, vous apporterez son portefeuille, son nom d'utilisateur et son solde.",
     "importIntentHint": "Connectez-vous avec l'une des options ci-dessous, puis collez la phrase de récupération ou la clé privée du portefeuille que vous souhaitez utiliser.",
     "title": "Se connecter",
