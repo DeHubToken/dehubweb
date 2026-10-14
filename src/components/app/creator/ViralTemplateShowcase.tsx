@@ -43,7 +43,6 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralTempla
       className="mt-2 flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-white/20 px-3 text-sm font-semibold hover:bg-white/10 focus-visible:outline focus-visible:outline-2">
       {t('viralTemplates.use')}<ArrowRight aria-hidden className="h-4 w-4 rtl:rotate-180" />
     </button>
-    {effect.sourceUrl && <a href={effect.sourceUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-[11px] text-white/45 underline">{effect.sourceName}</a>}
   </article>;
   const visible = results.slice(0, limit);
   return <section id="viral-templates" aria-labelledby="viral-templates-title" className="mx-auto w-full max-w-[1100px] scroll-mt-24 px-3 pb-8 pt-10 text-white sm:px-4 sm:pt-14">
@@ -76,6 +75,5 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralTempla
         {results.length === 0 && <p className="py-6 text-white/60">{t('viralTemplates.empty')}</p>}
         {results.length > limit && <button type="button" onClick={() => setLimit(limit + 24)} className="mt-5 min-h-11 rounded-full border border-white/20 px-6 text-sm font-semibold">{t('viralTemplates.more')}</button>}
       </div>}
-    <p className="mt-5 text-xs leading-relaxed text-white/45">{t('viralTemplates.source')} <a href="https://app.pixverse.ai/?tab=template" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">PixVerse</a>{' · '}<a href="https://jeanphilai.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">Jean Phil AI</a></p>
   </section>;
 }
