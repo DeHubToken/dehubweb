@@ -19,7 +19,13 @@ try {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.addInitScript(() => {
-      window.frameAudit = { shifts: [], seen: [], inspected: 0 };
+      window.frameAudit = { shifts: [], corrections: [], seen: [], inspected: 0 };
+      let lastMotion = -Infinity;
+      let touching = false;
+      const motion = () => { lastMotion = performance.now(); };
+      for (const event of ['wheel', 'scroll', 'touchmove']) window.addEventListener(event, motion, { passive: true, capture: true });
+      window.addEventListener('touchstart', () => { touching = true; motion(); }, { passive: true, capture: true });
+      for (const event of ['touchend', 'touchcancel']) window.addEventListener(event, () => { touching = false; motion(); }, { passive: true, capture: true });
       const items = new Map();
       const old = new Map();
       const visibility = new IntersectionObserver(entries => {
@@ -36,10 +42,20 @@ try {
           if (width < 1 || height < 1) continue;
           const previous = state.size;
           const returning = old.get(state.key);
+          const measured = entry.target.getAttribute('data-media-frame-measured');
           const differs = size => size && (Math.abs(size.width - width) > 3 || Math.abs(size.height - height) > 3);
-          if (state.visible && differs(previous)) window.frameAudit.shifts.push({ key: state.key, previous, next: { width, height } });
-          if (!previous && differs(returning)) window.frameAudit.shifts.push({ key: state.key, remount: true, previous: returning, next: { width, height } });
-          state.size = { width, height };
+          const record = (before, remount = false) => {
+            const active = touching || performance.now() - lastMotion < 500;
+            const correction = !active && measured != null && measured !== before.measured &&
+              Math.abs(width / height - Number(measured)) < 0.01;
+            const detail = { key: state.key, remount, previous: before, next: { width, height, measured }, active };
+            // Correcting an unknown video fallback is intentional only after
+            // settling. Same-dimension remounts and images must never resize.
+            window.frameAudit[correction ? 'corrections' : 'shifts'].push(detail);
+          };
+          if (state.visible && differs(previous)) record(previous);
+          if (!previous && differs(returning)) record(returning, true);
+          state.size = { width, height, measured };
           old.set(state.key, state.size);
         }
       });
@@ -90,7 +106,7 @@ try {
     console.log(JSON.stringify(result));
     await page.screenshot({ path: `performance-results/frames-${phone ? 'phone' : 'desktop'}.png` });
     assert.ok(audit.seen.length >= 5, 'The audit did not exercise enough media frames');
-    assert.equal(audit.shifts.length, 0, 'Visible or returning media frames resized');
+    assert.equal(audit.shifts.length, 0, 'Media resized during motion or changed without newly measured video dimensions');
     assert.equal(errors.length, 0, 'Production raised page errors');
     const scrims = await page.evaluate(() => {
       document.documentElement.dataset.theme = 'system';
