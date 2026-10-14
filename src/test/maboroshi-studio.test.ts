@@ -49,6 +49,27 @@ afterEach(() => { dom.window.close(); });
 const connected = async () => { await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:ready')).toBe(true)); session(); await vi.waitFor(() => expect(el('project').hidden).toBe(false)); };
 
 describe('Maboroshi creator journey', () => {
+  it('imports a library source into a new project without sending a paid request or credentials to the media host', async () => {
+    await connected();
+    el('new-project').click(); await vi.waitFor(() => expect(el('project').hidden).toBe(true));
+    const source = 'https://dehub.io/api/creator-motion-source?id=' + '1'.repeat(20);
+    const originalFetch = fetcher.getMockImplementation();
+    fetcher.mockImplementation(async (path, options) => path === source ? {
+      ok: true, headers: { get: () => '5' }, blob: async () => new w.Blob(['video'], { type: 'video/mp4' }),
+    } : originalFetch(path, options));
+    w.document.dispatchEvent(new w.CustomEvent('maboroshi:native-clip', { detail: { id: '1'.repeat(20), url: 'https://d2ol7oe51mr4n9.cloudfront.net/content_user_id/source.mp4', name: 'Studio rap', seconds: 12 } }));
+    await vi.waitFor(() => expect(el('source-local').textContent).toContain('Studio rap'));
+    expect(el('source').required).toBe(false);
+    const download = fetcher.mock.calls.find(([path]) => path === source);
+    expect(download[1].credentials).toBe('omit'); expect(download[1].headers).toBeUndefined();
+    expect(sent.some(x => x.type === 'maboroshi:pay')).toBe(false);
+  });
+  it('rejects external media hosts and leaves an existing project intact', async () => {
+    await connected(); fetcher.mockClear();
+    w.document.dispatchEvent(new w.CustomEvent('maboroshi:native-clip', { detail: { id: '1'.repeat(20), url: 'https://untrusted.example/source.mp4', name: 'Clip', seconds: 12 } }));
+    await Promise.resolve();
+    expect(fetcher).not.toHaveBeenCalled(); expect(el('project').hidden).toBe(false);
+  });
   it('offers 180 unique directions and recovers from an empty search', () => {
     const presets = w.MABOROSHI_PRESETS;
     expect(presets).toHaveLength(180);

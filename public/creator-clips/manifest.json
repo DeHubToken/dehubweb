@@ -1,0 +1,23 @@
+{
+  "captured": "2026-10-14",
+  "entriesInspected": 20035,
+  "sourceClips": 19537,
+  "categories": {
+    "Other": 9503,
+    "Fashion": 222,
+    "Dance": 3777,
+    "Reactions": 191,
+    "Film": 2320,
+    "Travel": 2002,
+    "Sports": 471,
+    "Rap": 1051
+  },
+  "skippedReferences": {
+    "duration": 556
+  },
+  "durationRange": [
+    3,
+    30
+  ],
+  "schemaVersion": 1
+}
