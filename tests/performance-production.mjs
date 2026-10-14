@@ -61,7 +61,7 @@ try {
       await cdp.send('Profiler.start');
       const timeline = [];
       cdp.on('Tracing.dataCollected', ({ value }) => timeline.push(...value));
-      await cdp.send('Tracing.start', { categories: 'devtools.timeline,v8.execute', transferMode: 'ReportEvents' });
+      await cdp.send('Tracing.start', { categories: 'devtools.timeline,v8.execute,disabled-by-default-devtools.timeline.invalidationTracking', transferMode: 'ReportEvents' });
       for (let i = 0; i < 12; i++) {
         if (device === 'phone') {
           await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 190, y: 650 }] });
