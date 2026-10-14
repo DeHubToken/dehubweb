@@ -16,6 +16,9 @@ const CHUNK_RECOVERY_TIER_KEY = 'chunk-reload-tier';
 const RECOVERY_WINDOW_MS = 120_000;
 /** A reload takes a moment to land; ignore anything caught while it is in flight. */
 const RELOAD_SETTLE_MS = 5_000;
+// Only this document can have a navigation in flight. A persisted timestamp
+// belongs to the retry budget, not to the new document's navigation state.
+let reloadStartedAt: number | null = null;
 
 export type ChunkRecovery = 'reloading' | 'exhausted';
 
@@ -66,10 +69,13 @@ function purgeCaches(): Promise<void> {
  *   3rd failure — out of ideas. Return 'exhausted' so the caller can surface the
  *     error rather than reloading forever.
  *
- * A 'reloading' result means a navigation is already scheduled and the caller
- * should render nothing further.
+ * A 'reloading' result means navigation was requested. Callers must still
+ * settle their promises and keep a fallback visible if navigation is blocked.
  */
 export function recoverFromChunkError(): ChunkRecovery {
+  if (reloadStartedAt !== null) {
+    return Date.now() - reloadStartedAt < RELOAD_SETTLE_MS ? 'reloading' : 'exhausted';
+  }
   let last = 0;
   let tier = 0;
   try {
@@ -81,8 +87,6 @@ export function recoverFromChunkError(): ChunkRecovery {
   }
 
   const since = Date.now() - last;
-  // A reload we already triggered is still landing — do not stack another.
-  if (last && since < RELOAD_SETTLE_MS) return 'reloading';
   // Long enough since the last one that this counts as a new incident.
   if (since > RECOVERY_WINDOW_MS) tier = 0;
 
@@ -96,11 +100,12 @@ export function recoverFromChunkError(): ChunkRecovery {
     return 'exhausted';
   }
 
-  if (nextTier === 1) {
-    window.location.reload();
-  } else {
-    void purgeCaches().then(() => window.location.reload());
-  }
+  reloadStartedAt = Date.now();
+  const reload = () => {
+    try { window.location.reload(); } catch { /* Keep the recovery UI available. */ }
+  };
+  if (nextTier === 1) reload();
+  else void purgeCaches().then(reload);
   return 'reloading';
 }
 
@@ -137,8 +142,7 @@ export function isChunkLoadError(error: unknown): boolean {
  * 3. If the retry fails, reloads for fresh HTML with live chunk URLs — and if
  *    that reload did not help, purges the caches and service worker and
  *    reloads again
- * 4. Only once both recovery tiers are spent does it reject, so the
- *    ErrorBoundary can show up
+ * 4. Reject so the ErrorBoundary remains usable if navigation never completes.
  *
  * The retry in step 2 only earns its keep when the failure was a genuine
  * network blip. A stale-deploy miss is served from cache (the edge answers a
@@ -170,12 +174,7 @@ export function lazyWithRetry<T extends React.ComponentType<any>>(
             importFn()
               .then(resolve)
               .catch((retryError: unknown) => {
-                if (recoverFromChunkError() === 'reloading') {
-                  // Never resolve, so no error flashes before the reload lands.
-                  return;
-                }
-                // Both recovery tiers are spent and we are back here anyway —
-                // let it through to the ErrorBoundary rather than looping.
+                if (isChunkLoadError(retryError)) recoverFromChunkError();
                 reject(retryError);
               });
           }, 1000);

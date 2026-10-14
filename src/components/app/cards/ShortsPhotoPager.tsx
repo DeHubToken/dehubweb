@@ -11,11 +11,11 @@ export function ShortsPhotoPager({ images, galleryKey = '' }: { images: string[]
   const [index, setIndex] = useState(() => Math.min(galleryIndex(galleryKey), images.length - 1));
   const start = useRef<{ x: number; y: number } | null>(null);
   const wheel = useRef(0);
-  const step = (delta: number) => {
-    const next = Math.max(0, Math.min(images.length - 1, index + delta));
-    setIndex(next);
+  const step = (delta: number) => setIndex(value => {
+    const next = Math.max(0, Math.min(images.length - 1, value + delta));
     if (galleryKey) rememberGalleryIndex(galleryKey, next);
-  };
+    return next;
+  });
   return <div className="absolute inset-0 z-[3] overflow-hidden" data-shorts-photos
     tabIndex={images.length > 1 ? 0 : undefined} aria-label={t('feed.images')}
     onKeyDown={event => {

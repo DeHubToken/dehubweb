@@ -1,3 +1,4 @@
+import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 /**
@@ -616,14 +617,14 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
   return (
     <div data-feed-root className="space-y-3 pb-32">
       {videos.map((video, index) => (
-        <div
+        <WindowedFeedItem
           key={video.id}
           data-feed-item
           className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3"
-          style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 520px' } : undefined}
+          eager={index < 3} estimatedHeight={520}
         >
           <VideoCard video={video} />
-        </div>
+        </WindowedFeedItem>
       ))}
       
       {/* Infinite scroll trigger */}

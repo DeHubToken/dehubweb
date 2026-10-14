@@ -4,6 +4,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { isShortsPhoto, shortsPhotoMedia, interleaveShorts } from '@/lib/shorts-photos';
 import { ShortsPhotoPager } from '@/components/app/cards/ShortsPhotoPager';
+import { galleryIndex, rememberGalleryIndex } from '@/lib/media-presentation';
 import { VideoSlide } from '@/components/app/cards/VideoSlide';
 vi.mock('@/lib/thumbnail-fallback', () => ({ useResolvedThumbnail: (url: string) => url }));
 vi.mock('@/hooks/use-tap-gestures', () => ({ useTapGestures: () => ({}) }));
@@ -27,7 +28,7 @@ afterEach(() => {
   clients.splice(0).forEach(client => client.clear());
   vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers();
 });
-it('buffers only a settled neighbour and immediately loads a selected clip', () => {
+it('immediately buffers the requested neighbour and selected clip', () => {
   vi.useFakeTimers();
   vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
@@ -35,13 +36,11 @@ it('buffers only a settled neighbour and immediately loads a selected clip', () 
     likes: '0', videoUrl: '/first.mp4', thumbnail: '' };
   const { container, rerender } = renderSlide(<VideoSlide short={short} isActive={false} isMuted preload="auto" />);
   const player = () => container.querySelector('video')!;
-  expect(player().preload).toBe('metadata');
-  act(() => vi.advanceTimersByTime(200));
-  rerender(<VideoSlide short={{ ...short, id: 'second' }} isActive={false} isMuted preload="auto" />);
-  act(() => vi.advanceTimersByTime(200));
-  expect(player().preload).toBe('metadata');
-  act(() => vi.advanceTimersByTime(200));
   expect(player().preload).toBe('auto');
+  rerender(<VideoSlide short={{ ...short, id: 'second' }} isActive={false} isMuted preload="auto" />);
+  expect(player().preload).toBe('auto');
+  rerender(<VideoSlide short={short} isActive={false} isMuted preload="metadata" />);
+  expect(player().preload).toBe('metadata');
   rerender(<VideoSlide short={short} isActive isMuted preload="auto" />);
   expect(player().preload).toBe('auto');
 });
@@ -93,6 +92,14 @@ it('pages horizontally within bounds and leaves vertical keys alone', () => {
   expect(screen.getByText('2 / 2')).toBeTruthy();
   fireEvent.keyDown(screen.getByLabelText('Post photos'), { key: 'ArrowLeft' });
   expect(screen.getByText('1 / 2')).toBeTruthy();
+});
+it('starts on the selected feed photo and preserves subsequent horizontal navigation', () => {
+  rememberGalleryIndex('selected-photo-test', 1);
+  render(<ShortsPhotoPager images={['one.jpg', 'two.jpg', 'three.jpg']} galleryKey="selected-photo-test" />);
+  expect(screen.getByText('2 / 3')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Next photo' }));
+  expect(screen.getByText('3 / 3')).toBeTruthy();
+  expect(galleryIndex('selected-photo-test')).toBe(2);
 });
 it('does not show paging controls for a single musical photo', () => {
   render(<ShortsPhotoPager images={['one.jpg']} />);
