@@ -14,6 +14,11 @@ import { io, Socket } from 'socket.io-client';
 import { DEHUB_API_BASE, getAuthToken } from './core';
 import type { DmMessage, DmConversation, DmMsgType } from './dm';
 import { confirmDmSend } from '@/lib/dm-send-confirmation';
+import type { TipBadgeAccount } from '@/lib/tip-badges';
+
+export function onBadgeBalanceUpdated(cb: (account: TipBadgeAccount) => void): () => void {
+  return addPersistentListener('badgeBalanceUpdated', cb);
+}
 
 // ─── Socket event payload types ───────────────────────────────────────────────
 

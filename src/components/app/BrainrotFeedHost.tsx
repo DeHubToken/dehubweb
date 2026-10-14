@@ -105,7 +105,7 @@ export default function BrainrotFeedHost() {
     return () => clearTimeout(timer);
   }, [session]);
   const allAnswered = BRAINROT_BUCKETS.every(bucket => lists[bucket].items.length > 0 || lists[bucket].done);
-  const ready = !!session && ((allAnswered && !watchedLoading) || timedOut);
+  const ready = !!session && ((allAnswered && !watchedLoading) || (!!session.first && !watchedLoading) || timedOut);
 
   const mix = useMemo(() => {
     if (!session || !ready) return null;
@@ -123,12 +123,13 @@ export default function BrainrotFeedHost() {
     if (!session || !mix) return;
     const next = mix.items.map((item, index) => mapToShortVideo(item, index) as ShortVideo);
     setFeed(prev => {
-      const base = prev.key === session.key ? prev.shorts : [];
+      const base = prev.key === session.key ? prev.shorts : session.first ? [session.first] : [];
       const shorts = appendStable(base, next, short => short.id);
       return shorts === prev.shorts ? prev : { key: session.key, shorts };
     });
   }, [session, mix]);
-  const shorts = session && feed.key === session.key ? feed.shorts : [];
+  // A tapped feed video plays at once, before the lists have answered.
+  const shorts = session && feed.key === session.key ? feed.shorts : session?.first ? [session.first] : [];
 
   const waitingOn = mix?.waitingOn ?? null;
   const waitingQuery = waitingOn ? queries[waitingOn] : null;
@@ -156,6 +157,7 @@ export default function BrainrotFeedHost() {
           key={`brainrot-${session.key}`}
           shorts={shorts}
           initialIndex={0}
+          reuseInitialVideo={!!session.first}
           onClose={closeBrainrotFeed}
           onLoadMore={loadMore}
           hasMore={!!waitingOn}

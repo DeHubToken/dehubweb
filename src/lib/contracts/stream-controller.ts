@@ -19,6 +19,8 @@ import {
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from './dhb-token';
 import { isV3Chain } from '@/lib/chains/robinhood';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { apiCall } from '@/lib/api/dehub/core';
+import { publishTipBadges, type TipBadgeAccount } from '@/lib/tip-badges';
 
 // StreamController contract address on Base Mainnet (default for backward compatibility)
 export const STREAM_CONTROLLER_ADDRESS = '0x4fa30dAef50c6dc8593470750F3c721CA3275581';
@@ -261,7 +263,17 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
   // Return hash immediately; confirmation runs in background
   return {
     hash: result.hash,
-    confirmed: result.wait(1).then(confirmedTipHash),
+    confirmed: result.wait(1).then(confirmedTipHash).then(async hash => {
+      if (![56, 8453].includes(chainId) || tokenAddress.toLowerCase() !== chainConfig.dhbToken.toLowerCase()) return hash;
+      try {
+        const response = await apiCall<{ result: TipBadgeAccount[] }>(`/api/badge/tip/${chainId}/${hash}`, { method: 'POST', body: {} });
+        publishTipBadges(response.result);
+      } catch (error) {
+        // A refresh failure must never turn a successful payment into a retry.
+        console.warn('[Tip] Badge reconciliation failed', error);
+      }
+      return hash;
+    }),
   };
 }
 

@@ -12,7 +12,7 @@ import { getMediaUrl } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { resolveViewCount } from '@/lib/engagement';
 import { shortsPhotoMedia } from '@/lib/shorts-photos';
-import type { ShortVideo } from '@/types/feed.types';
+import type { ShortVideo, VideoItem } from '@/types/feed.types';
 
 export function formatLikes(count: number): string {
   if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
@@ -79,4 +79,39 @@ export function mapToShortVideo(nft: any, index: number): ShortVideo & { duratio
     isLiked: nft.isLiked ?? voteType === 'for',
     isDisliked: nft.isDisliked ?? voteType === 'against',
   } as ShortVideo & { durationSeconds: number; uploadedAgo: string; handle: string };
+}
+
+/**
+ * A feed video card's post as a short, so a tap on a phone feed video can open
+ * it at the head of the shorts viewer without refetching it.
+ */
+export function videoItemToShort(video: VideoItem): ShortVideo {
+  return {
+    id: video.id,
+    type: 'short',
+    username: video.channel || video.creatorUsername || 'user',
+    verified: !!video.verified,
+    avatar: video.channelAvatar?.startsWith('http') ? video.channelAvatar : undefined,
+    likes: String(video.likeCount ?? 0),
+    dislikes: video.dislikeCount ?? 0,
+    thumbnail: video.thumbnail,
+    videoUrl: video.videoUrl || '',
+    transcodingStatus: video.transcodingStatus,
+    title: video.title || '',
+    description: video.description || '',
+    sound: 'Original Sound',
+    comments: String(video.commentCount ?? 0),
+    shares: '0',
+    repostCount: video.repostCount ?? 0,
+    views: video.views,
+    creatorUsername: video.creatorUsername,
+    creatorId: video.creatorId,
+    displayName: video.channel,
+    isLiked: video.isLiked,
+    isDisliked: video.isDisliked,
+    myReaction: video.myReaction,
+    reactionCounts: video.reactionCounts,
+    createdAt: video.createdAt,
+    contentRating: video.contentRating,
+  };
 }

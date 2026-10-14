@@ -1,3 +1,4 @@
+import { WindowedFeedItem } from '@/components/app/feeds/WindowedFeedItem';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { isFirstVisibleFeedCard } from '@/lib/feed-first-card';
@@ -1530,7 +1531,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
     // to a wrong fixed height and shifts everything below it.
     const intrinsicH = item.type === 'video' ? '520px' : item.type === 'image' ? '640px' : item.type === 'ad' ? '420px' : '320px';
     return (
-      <div
+      <WindowedFeedItem
         key={key}
         data-feed-item
         data-feed-token-id={item.type === 'ad' ? undefined : (item.data as any)?.id}
@@ -1538,7 +1539,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         data-cinematic={item.type}
         data-cinematic-first={firstFeedPost ? '' : undefined}
         className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
-        style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: `auto 0 auto ${intrinsicH}` } : undefined}
+        eager={index < 3} estimatedHeight={parseInt(intrinsicH, 10)}
       >
         {index >= 0 && queuedBoostIds.includes(String((item.data as any)?.id)) && (
           <button
@@ -1551,7 +1552,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
           </button>
         )}
         {card}
-      </div>
+      </WindowedFeedItem>
     );
   };
 
