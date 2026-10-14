@@ -1,9 +1,14 @@
 const UPSTREAM = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/finance-stats';
 const WALLET = '0x2226ab7ff45d9a241e8986163ffb0176fabf5613';
+export const LIVE_COSTS_SINCE = '2026-04-01';
+const CLOUDFLARE = {
+  id: 'cloudflare', label: 'Cloudflare', kind: 'cost', group: 'infrastructure', origin: 'api', status: 'unavailable',
+  note: 'Cloudflare billing charges in USD, recorded on their billing date. Bills can arrive after usage; unbilled usage is not estimated. Billing access is unavailable until a read-only billing token is connected.',
+};
 const REINVESTMENT = {
   id: 'operations_reinvestment', label: 'Estimated operations', kind: 'cost',
   group: 'operations', origin: 'estimate', status: 'ok',
-  note: 'Historical operating costs are estimated from a $100,000 monthly peak in November 2021, with a gradual rise beforehand and decline afterward. Recorded bills are included in that monthly estimate, not added twice. This is a modeled trend, not an invoice ledger.',
+  note: 'Operating costs before 1 April 2026 follow a historical estimate, peaking at $100,000 a month in November 2021. From 1 April 2026, only recorded provider costs and subscriptions are included, with no estimated operations top-up. Provider reporting can lag; unavailable bills are excluded, not zero.',
 };
 const BNB_SHARING = {
   id: 'bsc_holder_share', label: 'BNB sharing to holders and stakers', kind: 'revenue',
@@ -42,6 +47,10 @@ function estimatedMonthlyCost(month) {
 /** Recorded bills consume the estimated monthly operating budget. */
 export function reinvestOperatingFunds(days) {
   return days.map(day => {
+    if (day.date >= LIVE_COSTS_SINCE) {
+      const { operations_reinvestment, ...costs } = day.costs;
+      return { ...day, costs };
+    }
     if (day.costs.operations_reinvestment != null) return day;
     const [year, month] = day.date.slice(0, 7).split('-').map(Number);
     const dailyBudget = estimatedMonthlyCost(day.date.slice(0, 7)) / new Date(Date.UTC(year, month, 0)).getUTCDate();
@@ -73,7 +82,7 @@ export function mergeFinanceSummary(upstream, history, sharing = { days: [] }) {
     days: reinvestOperatingFunds([...days.values()].sort((a, b) => a.date.localeCompare(b.date))),
     notes: [...(upstream.notes ?? []), ...history.notes.filter(note => !note.startsWith('The retained operating funds')), history.valuation, REINVESTMENT.note, BNB_SHARING.note],
     marketplaceHistory: history.verification,
-    provenance: { ...upstream.provenance, endpoint: 'https://dehub.io/api/finance-stats', marketplaceSnapshot: 'https://dehub.io/finance-history/marketplace.json', bnbSharingSnapshot: 'https://dehub.io/finance-history/bnb-sharing.json', expenseAllocation: REINVESTMENT.note },
+    provenance: { ...upstream.provenance, endpoint: 'https://dehub.io/api/finance-stats', marketplaceSnapshot: 'https://dehub.io/finance-history/marketplace.json', bnbSharingSnapshot: 'https://dehub.io/finance-history/bnb-sharing.json', expenseAllocation: REINVESTMENT.note, liveCostsSince: LIVE_COSTS_SINCE },
   };
 }
 
@@ -137,6 +146,51 @@ export async function restoreCoreSources(upstream, view, fetcher) {
   } catch { return upstream; }
 }
 
+/** Keep billing credentials on the server and publish only daily USD totals. */
+export async function readCloudflareCosts(upstream, env, fetcher = fetch) {
+  if (upstream.sources.some(source => source.id === CLOUDFLARE.id)) return upstream;
+  const unavailable = { ...upstream, sources: [...upstream.sources, CLOUDFLARE] };
+  const token = env.CLOUDFLARE_BILLING_READ_TOKEN;
+  const account = env.CLOUDFLARE_BILLING_ACCOUNT_ID;
+  if (!token || !/^[a-f0-9]{32}$/i.test(account ?? '')) return unavailable;
+  try {
+    const totals = new Map();
+    const seen = new Set();
+    for (let page = 1; page <= 100; page++) {
+      const response = await fetcher(`https://api.cloudflare.com/client/v4/accounts/${account}/billing/history?per_page=100&page=${page}`, {
+        headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8_000),
+      });
+      if (!response.ok) throw new Error('Billing unavailable');
+      const body = await response.json();
+      if (body.success !== true || !Array.isArray(body.result)) throw new Error('Invalid billing response');
+      for (const row of body.result) {
+        const date = row.occurred_at?.slice(0, 10);
+        if (!date || date < LIVE_COSTS_SINCE || date > new Date().toISOString().slice(0, 10)) continue;
+        // Ignore payment settlements: they settle an existing charge, not a second cost.
+        if (!['charge', 'refund', 'credit'].includes(row.type)) continue;
+        if (!row.id || !/^\d{4}-\d{2}-\d{2}$/.test(date) || row.currency?.toUpperCase() !== 'USD' || typeof row.amount !== 'number' || !Number.isFinite(row.amount)) throw new Error('Unpriced billing record');
+        if (seen.has(row.id)) continue;
+        seen.add(row.id);
+        const amount = row.type === 'charge' ? row.amount : -Math.abs(row.amount);
+        totals.set(date, (totals.get(date) ?? 0) + amount);
+      }
+      const info = body.result_info;
+      if (!info || !Number.isFinite(info.total_count)) throw new Error('Incomplete billing pagination');
+      if (page * 100 >= info.total_count) break;
+      if (page === 100) throw new Error('Incomplete billing history');
+    }
+    const days = new Map(upstream.days.map(day => [day.date, { ...day, costs: { ...day.costs } }]));
+    for (const [date, amount] of totals) {
+      const day = days.get(date) ?? { date, revenue: {}, costs: {} };
+      day.costs.cloudflare = amount;
+      days.set(date, day);
+    }
+    return { ...upstream, days: [...days.values()].sort((a, b) => a.date.localeCompare(b.date)), sources: [...upstream.sources, { ...CLOUDFLARE, status: 'ok', note: 'Cloudflare USD charges, refunds and credits on their billing date, refreshed every five minutes. Unbilled usage is excluded until Cloudflare reports a charge.' }] };
+  } catch {
+    return unavailable;
+  }
+}
+
 export async function handleFinanceRequest(request, env, fetcher = fetch, cache = globalThis.caches?.default) {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: HEADERS });
   if (!['GET', 'HEAD'].includes(request.method)) return Response.json({ ok: false, error: 'Method not allowed' }, { status: 405, headers: { ...HEADERS, Allow: 'GET, HEAD, OPTIONS' } });
@@ -154,6 +208,7 @@ export async function handleFinanceRequest(request, env, fetcher = fetch, cache 
     let body = upstream;
     if (view !== 'tax') {
       upstream = await restoreCoreSources(upstream, view, fetcher);
+      if (view !== 'ledger') upstream = await readCloudflareCosts(upstream, env, fetcher);
       const snapshotResponse = await env.ASSETS.fetch(new Request(new URL('/finance-history/marketplace.json', url)));
       if (!snapshotResponse.ok) throw new Error('Marketplace history is unavailable');
       const history = await snapshotResponse.json();

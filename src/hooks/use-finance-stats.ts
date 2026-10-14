@@ -20,7 +20,7 @@ export interface FinanceSource {
   kind: FinanceKind;
   /** `buys`, `fees` and `tax` for revenue; `compute`, `ai_tools`, `infrastructure`, `payments` for costs. */
   group: string;
-  origin: 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain';
+  origin: 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain' | 'estimate';
   /** `unavailable` means it could not be read this time — not that it was zero. */
   status: 'ok' | 'unavailable';
   note: string;
