@@ -21,6 +21,18 @@ function VideoSlot({ detail = false }: { detail?: boolean }) {
 }
 
 describe('media navigation continuity', () => {
+  it('keeps a feed image inside its reserved frame when a late bitmap arrives', () => {
+    const view = render(<HandoffImage mediaKey="reserved-feed-photo" src="/late-photo.jpg" fixedFrame style={{ width: '300px', aspectRatio: 1 }} />);
+    const slot = view.container.querySelector<HTMLElement>('[data-image-slot]')!;
+    const image = slot.querySelector('img')!;
+    Object.defineProperties(image, { naturalWidth: { value: 900 }, naturalHeight: { value: 1600 } });
+    fireEvent.load(image);
+    expect(slot.style.aspectRatio).toBe('1');
+    expect(slot.style.width).toBe('300px');
+    expect(slot.style.minHeight).toBe('');
+    expect(image.style.position).toBe('absolute');
+    expect(image.style.height).toBe('100%');
+  });
   it('keeps a hidden cached feed from stealing the visible video or image', () => {
     const slot = (active: boolean) => <CachedPageActiveContext.Provider value={active}><VideoSlot /><HandoffImage mediaKey="hidden-tab-photo" src="/photo.jpg" /></CachedPageActiveContext.Provider>;
     const view = render(<><div data-testid="visible-tab">{slot(true)}</div><div data-testid="hidden-tab">{slot(false)}</div></>);
