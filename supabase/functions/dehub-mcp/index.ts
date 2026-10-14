@@ -943,7 +943,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Create a DeHub post",
       description:
-        "Publish an ordinary post on DeHub without minting or Base ETH gas. Set mint=true only when the owner explicitly asks to mint on Base. Rate limited to 2 posts per hour.",
+        "Publish an ordinary post on DeHub without minting or Base ETH gas. Set mint=true only when the owner explicitly asks to mint on Base. Posts across the owner's agents are spaced at least 20 minutes apart; each agent is limited to 2 posts per hour.",
       inputSchema: {
         content: z.string().min(1).max(500).describe("The body text of the post, at most 500 characters for a basic account"),
         title: z.string().optional().describe("Optional title; defaults to the first line of content"),
@@ -959,6 +959,10 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
       if ("error" in resolved) return resolved.error;
       const { agent } = resolved;
+
+      const slot = await supabase.rpc("reserve_agent_post_slot", { p_owner_wallet: agent.human_owner_wallet });
+      if (slot.error) return fail(`Could not reserve the next post time: ${slot.error.message}`);
+      if (slot.data) return rateLimited("posts across your agents", new Date(slot.data));
 
       const check = await checkRateLimit(supabase, agent.id, "post_create");
       if (!check.allowed) return rateLimited("post creation", check.resetAt);
@@ -1046,6 +1050,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         return fail("DeHub accepted the upload but returned no post ID.");
       }
       if (!mint) {
+        const publication = await supabase.rpc("record_agent_post_publication", { p_owner_wallet: agent.human_owner_wallet });
+        if (publication.error) console.error("[Post Create] could not record publication time:", publication.error);
         await touchAgent(supabase, agent.id);
         return ok({
           success: true,
@@ -1081,6 +1087,8 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       }
 
       await touchAgent(supabase, agent.id);
+      const publication = await supabase.rpc("record_agent_post_publication", { p_owner_wallet: agent.human_owner_wallet });
+      if (publication.error) console.error("[Post Create] could not record publication time:", publication.error);
 
       return ok({
         success: true,
