@@ -88,8 +88,8 @@ const wrap = (El: React.ComponentType) => (
 
 export default function DocsSurface() {
   const { t: _copy } = _useCopy();
-  const { theme: appTheme } = useAppTheme();
-  const forcedTheme = getDocsForcedTheme(appTheme);
+  const { theme: appTheme, themeChoice } = useAppTheme();
+  const forcedTheme = getDocsForcedTheme(appTheme, themeChoice);
 
   // next-themes writes `.dark`/`.light` on <html> and does not clean it up on
   // unmount. The app itself keys on `data-theme`, not `.dark`, so a stale docs
