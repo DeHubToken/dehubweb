@@ -7,29 +7,41 @@ const VIDEO_CARD = readFileSync(
   'utf8'
 );
 
-describe('feed video opens the scrolling viewer', () => {
-  function handler(name: string) {
-    const start = VIDEO_CARD.indexOf(`const ${name} = useCallback`);
-    expect(start).toBeGreaterThan(-1);
-    return VIDEO_CARD.slice(start, VIDEO_CARD.indexOf('\n  }, [', start));
+/**
+ * In the feed, the media is content — not a link to content. Tapping the video
+ * reveals the player's own controls for a couple of seconds; opening the post
+ * page is the bento's job, the same as it is for every other post type.
+ *
+ * This was the other way round for a long time, with a comment calling the feed
+ * player "a preview" to justify it, so the pull back in this direction is easy
+ * to make by accident. Assert on the two handlers that own a press on the media.
+ */
+describe('feed video — a tap on the media toggles playback, it does not navigate', () => {
+  /** The `!isImmersive` (feed) branch of a handler, up to its `return`. */
+  function feedBranch(handler: string) {
+    const fn = VIDEO_CARD.match(
+      new RegExp(`const ${handler} = useCallback\\(([\\s\\S]*?)\\n  \\}, \\[`)
+    );
+    expect(fn, `${handler} not found`).not.toBeNull();
+    const branch = fn![1].match(/if \(!isImmersive\) \{([\s\S]*?)\n {4}\}/);
+    expect(branch, `${handler} has no !isImmersive branch`).not.toBeNull();
+    return branch![1];
   }
 
-  it('opens the selected video from mouse and touch input', () => {
-    for (const name of ['handleVideoAreaClick', 'handleTouchEnd']) {
-      const body = handler(name);
-      expect(body).toContain('!isFullscreen && !video.isLivePost');
-      expect(body).toContain('openVideoViewer();');
-      expect(body).not.toContain('openPost()');
-    }
-    expect(handler('openVideoViewer')).toContain('openBrainrotFeed(video.id, {');
-    expect(handler('openVideoViewer')).toContain('isContentGated || isVideoNotReady');
+  it('does not open the post from a click on the player', () => {
+    const branch = feedBranch('handleVideoAreaClick');
+    expect(branch).toContain('showControlsBriefly()');
+    expect(branch).toContain('handlePlayClick()');
+    expect(branch).not.toContain('openPost');
   });
 
-  it('keeps scrolling and control touches out of viewer navigation', () => {
-    const body = handler('handleTouchEnd');
-    expect(body.indexOf('> TAP_SLOP_PX')).toBeLessThan(body.indexOf('openVideoViewer();'));
-    expect(body.indexOf('isControlTarget(e.target)')).toBeLessThan(body.indexOf('openVideoViewer();'));
+  it('does not open the post from a tap on the player', () => {
+    const branch = feedBranch('handleTouchEnd');
+    expect(branch).toContain('showControlsBriefly()');
+    expect(branch).toContain('handlePlayClick()');
+    expect(branch).not.toContain('openPost');
   });
+
   it('never paints a focus outline around the video surface', () => {
     expect(VIDEO_CARD).toContain('focus-visible:outline-none');
   });
@@ -38,14 +50,14 @@ describe('feed video opens the scrolling viewer', () => {
     // handleCardClick is the one that navigates, and the media container opts
     // out of it by name — [data-no-navigate] — rather than by stopPropagation.
     expect(VIDEO_CARD).toMatch(/const handleCardClick[\s\S]{0,600}?openPost\(\)/);
-    expect(VIDEO_CARD).toMatch(/data-no-navigate[^>]*?data-media-full/);
+    expect(VIDEO_CARD).toMatch(/data-no-navigate[\s\S]{0,200}?data-media-full/);
   });
 
   it('keeps strip playback and the timeline available before metadata loads', () => {
     // Lite mode has no duration until Play is pressed. The strip button must
     // still start playback; seeking stays disabled until metadata arrives.
     const bar = VIDEO_CARD.match(
-      /\{!video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
+      /\{(?:!feedPreview && )?!video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
     expect(bar, 'transport bar must remain mounted before metadata and while controls are hidden').not.toBeNull();
     expect(VIDEO_CARD).toContain('data-controls-hidden={!controlsVisible');

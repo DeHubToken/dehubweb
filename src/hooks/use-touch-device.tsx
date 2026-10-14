@@ -8,10 +8,10 @@ export function useIsTouchDevice() {
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${TABLET_BREAKPOINT - 1}px)`);
     const onChange = () => {
-      setIsTouchDevice(window.innerWidth < TABLET_BREAKPOINT);
+      setIsTouchDevice(mql.matches);
     };
     mql.addEventListener("change", onChange);
-    setIsTouchDevice(window.innerWidth < TABLET_BREAKPOINT);
+    setIsTouchDevice(mql.matches);
     return () => mql.removeEventListener("change", onChange);
   }, []);
 

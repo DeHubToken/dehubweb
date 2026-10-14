@@ -5,6 +5,7 @@ on:
       - 'supabase/functions/dehub-mcp/**'
       - 'supabase/functions/anon-views/**'
       - 'supabase/migrations/20261011210000_private_agent_tasks.sql'
+      - 'supabase/migrations/20261013010000_badge_agent_capacity.sql'
       - 'tests/sql/agent-tasks.sql'
       - '.github/workflows/agent-tasks.yml'
 jobs:
@@ -18,7 +19,7 @@ jobs:
         with:
           deno-version: v2.x
       - run: deno check --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/index.ts supabase/functions/anon-views/index.ts
-      - run: deno test --allow-env --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/task-plan.test.ts supabase/functions/dehub-mcp/tasks.test.ts supabase/functions/dehub-mcp/post-views.test.ts
+      - run: deno test --allow-env --config supabase/functions/dehub-mcp/deno.json supabase/functions/dehub-mcp/task-plan.test.ts supabase/functions/dehub-mcp/tasks.test.ts supabase/functions/dehub-mcp/post-views.test.ts supabase/functions/dehub-mcp/agent-cap.test.ts
   database:
     name: Agent task permissions and claims
     runs-on: ubuntu-latest

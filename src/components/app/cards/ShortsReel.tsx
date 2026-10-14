@@ -26,6 +26,7 @@ const ShortsViewer = lazy(() =>
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
+import { BadgedName } from '@/components/app/BadgedName';
 import { cdnImage, deviceWidth, isMdUp } from '@/lib/media-url';
 
 /**
@@ -130,7 +131,17 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                     decoding="async"
                   />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/60" />
+                <div className="absolute top-2 left-2 right-2 flex items-center gap-1 text-[10px] md:text-xs text-white drop-shadow-md">
+                  <ShortAvatar avatar={short.avatar} username={short.displayName || short.username} />
+                  <BadgedName
+                    lookupId={short.creatorUsername || short.creatorId || short.username}
+                    username={short.creatorUsername || short.username}
+                    className="font-semibold"
+                  >
+                    {short.displayName || short.creatorUsername || short.username}
+                  </BadgedName>
+                </div>
                 
                 {/* Stats at bottom - using real views from API */}
                 <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between">

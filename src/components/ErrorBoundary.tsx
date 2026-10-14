@@ -102,14 +102,12 @@ interface ErrorBoundaryState {
   error: Error | null;
   /** Last `resetKey` we reconciled against (for auto-recovery on change). */
   lastResetKey: unknown;
-  /** A chunk-failure reload is in flight; render nothing until it lands. */
-  recovering: boolean;
 }
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false, error: null, lastResetKey: props.resetKey, recovering: false };
+    this.state = { hasError: false, error: null, lastResetKey: props.resetKey };
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
@@ -122,7 +120,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   ): Partial<ErrorBoundaryState> | null {
     // Auto-recover when the reset key (route) changes.
     if (props.resetKey !== state.lastResetKey) {
-      return { hasError: false, error: null, lastResetKey: props.resetKey, recovering: false };
+      return { hasError: false, error: null, lastResetKey: props.resetKey };
     }
     return null;
   }
@@ -136,14 +134,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // shared with lazyWithRetry and main.tsx's vite:preloadError handler — see
     // lib/lazy-with-retry.
     if (isChunkLoadError(error)) {
-      if (recoverFromChunkError() === 'reloading') {
-        // render() draws nothing while the navigation lands, so the user sees a
-        // blank beat rather than "Something went wrong" followed by a reload.
-        this.setState({ recovering: true });
-        return;
-      }
-      // Recovery is spent and it is still broken — report it and let the
-      // fallback through, because the reload is demonstrably not the answer.
+      recoverFromChunkError();
     }
 
     reportError(error, errorInfo, this.props.label);
@@ -159,9 +150,6 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   };
 
   render(): ReactNode {
-    // A reload is already on its way; anything drawn here would flash and vanish.
-    if (this.state.recovering) return null;
-
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;

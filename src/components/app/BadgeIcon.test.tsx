@@ -30,8 +30,9 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('badge hover playback', () => {
-  it('uses the adjacent name font when its wrapper has a different size', () => {
+  it('uses the adjacent name font when its wrapper has a different size', async () => {
     render(<span style={{ fontSize: 16 }}><span style={{ fontSize: 24 }}>H Profile</span><BadgeIcon /></span>);
+    await act(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())));
     expect(screen.getByRole('button').style.fontSize).toBe('24px');
     expect(screen.getByRole('button').style.verticalAlign).toBe('baseline');
   });

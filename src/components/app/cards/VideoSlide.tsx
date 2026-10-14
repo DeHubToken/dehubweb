@@ -8,7 +8,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * @module components/app/cards/VideoSlide
  */
 
-import { useRef, useEffect, useState, useCallback, memo, lazy, Suspense } from 'react';
+import { useRef, useEffect, useState, useCallback, memo, lazy, Suspense, useId } from 'react';
 import { useFeedPlaybackAllowed } from '@/lib/visual-activity';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { requestVideoPlayback } from '@/lib/video-start';
@@ -30,11 +30,13 @@ import { useTranslation } from 'react-i18next';
 import { TapReactionBurst } from '@/components/app/cards/TapReactionBurst';
 const TranscodeRetry = lazy(() => import('./TranscodeRetry').then(m => ({ default: m.TranscodeRetry })));
 import { useVideoProcessingStatus } from '@/hooks/use-video-processing-status';
+import { useHandoffVideo } from '@/hooks/use-handoff-video';
 import { useMediaLooping } from '@/lib/video-preferences';
 
 interface VideoSlideProps {
   short: ShortVideo;
   isActive: boolean;
+  handoffKey?: string;
   isMuted: boolean;
   playbackRate?: number;
   onTimeUpdate?: (currentTime: number, duration: number, loops?: boolean) => void;
@@ -85,6 +87,7 @@ interface VideoSlideProps {
 export const VideoSlide = memo(function VideoSlide({
   short,
   isActive: activeSlide,
+  handoffKey,
   isMuted,
   playbackRate = 1,
   onTimeUpdate,
@@ -111,18 +114,10 @@ export const VideoSlide = memo(function VideoSlide({
   // a slide that has left the active position can never restart itself.
   const isActiveRef = useRef(isActive);
   isActiveRef.current = isActive;
-  const [neighbourReady, setNeighbourReady] = useState(false);
-  useEffect(() => {
-    setNeighbourReady(false);
-    if (isActive || preload !== 'auto') return;
-    const timer = window.setTimeout(() => setNeighbourReady(true), 400);
-    return () => window.clearTimeout(timer);
-  }, [isActive, preload, short.id]);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
   const thumbnail = useResolvedThumbnail(short.thumbnail);
   const [videoAspect, setVideoAspect] = useState<'portrait' | 'landscape' | 'square'>('portrait');
-  const [isVideoReady, setIsVideoReady] = useState(false);
   const playbackPhase = usePlaybackRecovery(videoRef, short.soundtrackUrl || short.videoUrl, isActive, {
     component: 'ShortsViewer', postId: short.id,
     allowed: () => isActiveRef.current && !visualActivity.isCallBusy(),
@@ -178,39 +173,20 @@ export const VideoSlide = memo(function VideoSlide({
           setVideoAspect('square');
         }
       }
-      setIsVideoReady(true);
     }
   }, []);
 
-  // Handle canplay event for faster ready state
-  const handleCanPlay = useCallback(() => {
-    setIsVideoReady(true);
-  }, []);
-
-  // Play/pause based on isActive state - delay playback for buttery landing
+  // Start as soon as ownership changes, including during the slide transition.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
     if (isActive) {
-      // Delay playback slightly to let transition settle completely
-      const timer = setTimeout(() => {
-        if (!isActiveRef.current) return;
-        if (video.currentTime === 0 || video.ended) {
-          video.currentTime = 0;
-        }
-        void requestVideoPlayback(video).catch(() => {});
-      }, 50); // 50ms delay for buttery smooth landing
-      
-      return () => {
-        clearTimeout(timer);
-        // Pausing in cleanup closes the hand-off gap before the next render's
-        // inactive effect runs, including when the viewer itself unmounts.
-        releaseAfterPictureInPicture(video, () => video.pause());
-      };
-    } else {
-      video.pause();
-    }
+      if (video.ended) video.currentTime = 0;
+      void requestVideoPlayback(video).catch(() => {});
+    } else video.pause();
+    return () => {
+      releaseAfterPictureInPicture(video, () => video.pause());
+    };
   }, [isActive, transcodingStatus]);
 
   const handlePlay = useCallback(() => {
@@ -244,6 +220,31 @@ export const VideoSlide = memo(function VideoSlide({
       }
     }
   }, [onTimeUpdate, isSeeking]);
+
+  const slideId = useId();
+  const fitWhole = letterbox || videoAspect !== 'portrait';
+  const { attachSlot } = useHandoffVideo({
+    videoRef,
+    handoffKey: handoffKey ?? `shorts:${slideId}`,
+    src: short.soundtrackUrl || short.videoUrl || undefined,
+    poster: thumbnail,
+    muted: isMuted,
+    loop: isLooping,
+    preload: isActive ? 'auto' : preload ?? 'metadata',
+    className: `shorts-inline-video pointer-events-none w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`,
+    onTimeUpdate: handleTimeUpdate,
+    onLoadedMetadata: handleLoadedMetadata,
+    onPlaybackChange: (playing) => { if (playing) handlePlay(); },
+    onAdopt: (video) => {
+      video.controls = false;
+      video.setAttribute('controlsList', 'nofullscreen noremoteplayback nodownload');
+      video.disableRemotePlayback = true;
+      video.muted = isMuted;
+      video.loop = isLooping;
+      video.playbackRate = playbackRate;
+      handleLoadedMetadata();
+    },
+  });
 
   // Seek to position from progress bar interaction
   const seekToPosition = useCallback((clientX: number) => {
@@ -346,7 +347,7 @@ export const VideoSlide = memo(function VideoSlide({
       }
 
       // A stationary tap inside the strip seeks to that position.
-      if (g && g.mode === 'pending') {
+      if (e.type === 'pointerup' && g && g.mode === 'pending') {
         const dx = Math.abs(e.clientX - g.x);
         const dy = Math.abs(e.clientY - g.y);
         if (dx < DECIDE_PX && dy < DECIDE_PX) seekToPosition(e.clientX);
@@ -368,6 +369,18 @@ export const VideoSlide = memo(function VideoSlide({
       endSeek(e);
     };
 
+    const cancelSeek = () => {
+      const g = gestureRef.current;
+      gestureRef.current = null;
+      if (!isSeekingRef.current) return;
+      isSeekingRef.current = false;
+      setIsSeeking(false);
+      onSeekEnd?.();
+      if (g && bar.hasPointerCapture?.(g.id)) {
+        try { bar.releasePointerCapture(g.id); } catch { /* already released */ }
+      }
+    };
+
     // Swallow the ghost click that follows a scrub.
     const blockClick = (e: Event) => { e.stopPropagation(); e.stopImmediatePropagation(); };
 
@@ -375,6 +388,8 @@ export const VideoSlide = memo(function VideoSlide({
     bar.addEventListener('pointermove', onMove, { capture: true });
     bar.addEventListener('pointerup', onUp, { capture: true });
     bar.addEventListener('pointercancel', onUp, { capture: true });
+    bar.addEventListener('lostpointercapture', cancelSeek);
+    window.addEventListener('blur', cancelSeek);
     bar.addEventListener('click', blockClick, { capture: true });
     window.addEventListener('pointerup', windowFailsafe);
     window.addEventListener('pointercancel', windowFailsafe);
@@ -384,6 +399,9 @@ export const VideoSlide = memo(function VideoSlide({
       bar.removeEventListener('pointermove', onMove, { capture: true });
       bar.removeEventListener('pointerup', onUp, { capture: true });
       bar.removeEventListener('pointercancel', onUp, { capture: true });
+      cancelSeek();
+      bar.removeEventListener('lostpointercapture', cancelSeek);
+      window.removeEventListener('blur', cancelSeek);
       bar.removeEventListener('click', blockClick, { capture: true });
       window.removeEventListener('pointerup', windowFailsafe);
       window.removeEventListener('pointercancel', windowFailsafe);
@@ -393,7 +411,6 @@ export const VideoSlide = memo(function VideoSlide({
   // Show the video whole (never cropped) whenever it isn't a perfect fit for the
   // frame: always in `letterbox` mode (desktop), otherwise only for non-portrait.
   // For a true 9:16 short this fills edge-to-edge, so the glass fill stays hidden.
-  const fitWhole = letterbox || videoAspect !== 'portrait';
 
   // Pinned to the very bottom of whichever box it lands in — the seek zone in
   // place, or the viewer's video container through the portal below. `z-20`
@@ -450,7 +467,7 @@ export const VideoSlide = memo(function VideoSlide({
       <div className="absolute inset-0 z-[2]" {...tapGestures}>
         {short.imageUrls?.length ? (
           <Suspense fallback={<img src={short.imageUrls[0]} alt="" className="w-full h-full object-contain" />}>
-            <ShortsPhotoPager images={short.imageUrls} galleryKey={short.id} />
+            <ShortsPhotoPager images={short.imageUrls} galleryKey={String(short.id)} />
           </Suspense>
         ) : null}
         {transcodingStatus === 'failed' ? (
@@ -485,25 +502,7 @@ export const VideoSlide = memo(function VideoSlide({
             </div>
           </div>
         ) : (short.videoUrl || short.soundtrackUrl) ? (
-          <video
-            ref={videoRef}
-            src={short.soundtrackUrl || short.videoUrl}
-            className={`shorts-inline-video pointer-events-none w-full h-full ${fitWhole || isFullscreen ? 'object-contain' : 'object-cover'} transition-none`}
-            style={{ willChange: 'transform' }}
-            loop={isLooping}
-            playsInline
-            controls={false}
-            controlsList="nofullscreen noremoteplayback nodownload"
-            disableRemotePlayback
-            {...{"webkit-playsinline": ""}}
-            muted={isMuted}
-            poster={thumbnail}
-            preload={isActive ? 'auto' : preload === 'auto' && !neighbourReady ? 'metadata' : preload ?? 'metadata'}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-            onCanPlay={handleCanPlay}
-            onPlay={handlePlay}
-          />
+          <div ref={attachSlot} className="w-full h-full" />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-zinc-900">
             <img 
