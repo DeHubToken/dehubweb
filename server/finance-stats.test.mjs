@@ -1,12 +1,54 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { reinvestOperatingFunds, mergeFinanceSummary, mergeFinanceLedger, handleFinanceRequest, restoreCoreSources } from './finance-stats.js';
+import { reinvestOperatingFunds, mergeFinanceSummary, mergeFinanceLedger, handleFinanceRequest, restoreCoreSources, readCloudflareCosts } from './finance-stats.js';
 
 const history = JSON.parse(fs.readFileSync(new URL('../public/finance-history/marketplace.json', import.meta.url)));
 const sharing = JSON.parse(fs.readFileSync(new URL('../public/finance-history/bnb-sharing.json', import.meta.url)));
 const summary = { ok: true, sources: [], taxSplit: { shared: { usd: sharing.totalUsd } }, days: [{ date: '2022-07-07', revenue: { operating: 100 }, costs: { hosting: 20 } }] };
 const total = rows => rows.reduce((sum, row) => sum + row.usd, 0);
+
+test('April 2026 ends historical estimates without changing recorded provider costs', () => {
+  const costs = { ai_text_usage: 0.34, digitalocean: 4.32, cloudflare: 0.25, chatgpt_pro: 6.45 };
+  const input = ['2026-03-31', '2026-04-01', '2026-10-14'].map(date => ({ date, revenue: {}, costs: { ...costs } }));
+  const result = reinvestOperatingFunds(input);
+  assert.ok(result[0].costs.operations_reinvestment > 0);
+  assert.deepEqual(result[1].costs, costs);
+  assert.deepEqual(result[2].costs, costs);
+  assert.deepEqual(reinvestOperatingFunds(result), result);
+  assert.equal(input[0].costs.operations_reinvestment, undefined);
+  assert.deepEqual(reinvestOperatingFunds([{ date: '2026-04-01', costs: { ...costs, operations_reinvestment: 100 } }])[0].costs, costs);
+});
+
+test('Cloudflare uses reported charges once, nets refunds, and excludes payment settlements', async () => {
+  const env = { CLOUDFLARE_BILLING_READ_TOKEN: 'test', CLOUDFLARE_BILLING_ACCOUNT_ID: 'a'.repeat(32) };
+  const charge = { id: 'charge-1', type: 'charge', amount: 25, currency: 'USD', occurred_at: '2026-04-09T00:00:00Z' };
+  const fetcher = async () => Response.json({ success: true, result: [charge, charge, { ...charge, id: 'refund-1', type: 'refund', amount: 5 }, { ...charge, id: 'payment-1', type: 'payment' }], result_info: { total_count: 4 } });
+  const result = await readCloudflareCosts(summary, env, fetcher);
+  assert.equal(result.days.find(day => day.date === '2026-04-09').costs.cloudflare, 20);
+  assert.equal(result.sources.find(source => source.id === 'cloudflare').status, 'ok');
+  assert.deepEqual(await readCloudflareCosts(result, env, fetcher), result);
+  const unavailable = await readCloudflareCosts(summary, {}, fetcher);
+  assert.equal(unavailable.sources.find(source => source.id === 'cloudflare').status, 'unavailable');
+  assert.deepEqual(unavailable.days, summary.days);
+  const failed = await readCloudflareCosts(summary, env, async () => new Response('', { status: 403 }));
+  assert.equal(failed.sources.find(source => source.id === 'cloudflare').status, 'unavailable');
+  assert.deepEqual(failed.days, summary.days);
+});
+
+test('an incomplete or non-USD Cloudflare read never publishes a partial total as complete', async () => {
+  const env = { CLOUDFLARE_BILLING_READ_TOKEN: 'test', CLOUDFLARE_BILLING_ACCOUNT_ID: 'a'.repeat(32) };
+  for (const currency of ['GBP', 'USD']) {
+    let calls = 0;
+    const result = await readCloudflareCosts(summary, env, async () => {
+      calls++;
+      if (calls > 1) return new Response('', { status: 503 });
+      return Response.json({ success: true, result: [{ id: 'charge', type: 'charge', amount: 10, currency, occurred_at: '2026-04-09T00:00:00Z' }], result_info: { total_count: 101 } });
+    });
+    assert.equal(result.sources.find(source => source.id === 'cloudflare').status, 'unavailable');
+    assert.deepEqual(result.days, summary.days);
+  }
+});
 
 test('cost estimate peaks at $100k per month and remains independent of revenue', () => {
   const days = [{ date: '2021-10-01', revenue: { tax: 200000 }, costs: { hosting: 10 } }, { date: '2021-11-01', revenue: {}, costs: { hosting: 10 } }, { date: '2021-12-01', revenue: {}, costs: { hosting: 10 } }];
