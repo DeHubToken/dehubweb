@@ -16,16 +16,19 @@ export async function handleCreatorMotionSource(request, env) {
   if (!['GET', 'HEAD'].includes(request.method)) return fail(405, 'Use GET or HEAD.');
   const range = request.headers.get('Range');
   if (range && !/^bytes=(?:\d+-\d*|-\d+)$/.test(range)) return fail(400, 'Use a single byte range.');
+  let stage = 'catalog';
   try {
-    const index = await env.ASSETS.fetch(new URL(`/creator-clips/sources/${id.slice(0, 2)}.json`, request.url));
+    const index = await env.ASSETS.fetch(new Request(new URL(`/creator-clips/sources/${id.slice(0, 2)}.json`, request.url), { headers: { Accept: 'application/json' } }));
     if (!index.ok || !index.headers.get('Content-Type')?.includes('application/json')) return fail(404, 'Source clip unavailable.');
     const sources = await index.json(), source = sources[id];
     if (typeof source !== 'string') return fail(404, 'Source clip unavailable.');
     const media = new URL(source);
     if (media.protocol !== 'https:' || media.username || media.password || media.port || !HOSTS.has(media.hostname)) return fail(404, 'Source clip unavailable.');
+    stage = 'upstream';
     const upstream = await fetch(media.href, { method: request.method, headers: range ? { Range: range } : {},
       redirect: 'error', signal: AbortSignal.timeout(30000), cf: { cacheEverything: true, cacheTtl: 3600 } });
-    if (!upstream.ok) { await upstream.body?.cancel(); return fail(upstream.status === 404 ? 404 : 502, 'Source clip unavailable.'); }
+    if (!upstream.ok) { headers.set('X-Source-Status', String(upstream.status)); await upstream.body?.cancel(); return fail(upstream.status === 404 ? 404 : 502, 'Source clip unavailable.'); }
+    stage = 'stream';
     const declared = upstream.headers.get('Content-Range')?.split('/')[1] ?? upstream.headers.get('Content-Length');
     const bytes = declared === null ? null : Number(declared);
     if (bytes !== null && (!Number.isFinite(bytes) || bytes <= 0 || bytes > MAX_BYTES)) { await upstream.body?.cancel(); return fail(413, 'Choose a source clip under 100 MB.'); }
@@ -38,5 +41,9 @@ export async function handleCreatorMotionSource(request, env) {
       else controller.enqueue(chunk);
     } }));
     return new Response(body, { status: upstream.status, headers });
-  } catch { return fail(502, 'Source clip unavailable.'); }
+  } catch (error) {
+    headers.set('X-Source-Stage', stage);
+    headers.set('X-Source-Error', error instanceof Error ? error.name : 'Error');
+    return fail(502, 'Source clip unavailable.');
+  }
 }
