@@ -254,7 +254,7 @@ export function ScheduleStagePanel({
       <div className="space-y-2">
         <label className="text-sm text-white/60">{t('stages.coverGraphic')}</label>
         {coverPreview ? (
-          <div className="relative rounded-xl overflow-hidden border border-white/10">
+          <div data-media-scrim className="relative rounded-xl overflow-hidden border border-white/10">
             <img src={coverPreview} alt={_copy("copy.23c6e123513a", { defaultValue: "Stage cover preview" })} className="w-full h-28 object-cover" />
             {/* The same scrim the card and the live room use, so what the host
                 sees here is what the graphic will actually look like in use. */}

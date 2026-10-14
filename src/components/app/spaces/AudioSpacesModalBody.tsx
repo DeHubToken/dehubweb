@@ -824,6 +824,7 @@ export function AudioSpacesModalBody() {
                   Only rendered when the host actually set one. */}
               {currentSpace.cover_image_url && (
                 <div
+                  data-media-scrim
                   aria-hidden
                   className="absolute -inset-x-4 -top-4 bottom-0 -z-10 overflow-hidden pointer-events-none rounded-2xl"
                 >

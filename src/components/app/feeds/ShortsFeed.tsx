@@ -591,6 +591,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 <div
                   key={short.id}
                   data-media-tile
+                  data-media-scrim
                   onClick={() => handleShortClick(index)}
                   className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
                 >

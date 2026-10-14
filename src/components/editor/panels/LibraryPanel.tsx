@@ -167,7 +167,7 @@ function JobTile({ job, sending, onSend, onCancelImport, onCancel, onRetry }: Jo
   }
 
   return (
-    <div className="group relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-white/5">
+    <div data-media-scrim className="group relative aspect-square overflow-hidden rounded-xl border border-white/10 bg-white/5">
       {job.kind === 'image' ? (
         <img
           src={job.url}

@@ -92,6 +92,19 @@ try {
     assert.ok(audit.seen.length >= 5, 'The audit did not exercise enough media frames');
     assert.equal(audit.shifts.length, 0, 'Visible or returning media frames resized');
     assert.equal(errors.length, 0, 'Production raised page errors');
+    const scrims = await page.evaluate(() => {
+      document.documentElement.dataset.theme = 'system';
+      document.documentElement.dataset.systemTone = 'light';
+      const oldScope = ':has(> .absolute.inset-0:is([class*="bg-gradient-to-t"], [class*="bg-gradient-to-b"])[class*="from-black"])';
+      return {
+        unmarked: document.querySelectorAll(`${oldScope}:not([data-media-scrim])`).length,
+        colours: Array.from(document.querySelectorAll('[data-media-scrim] .text-white'), el => getComputedStyle(el).color),
+      };
+    });
+    assert.equal(scrims.unmarked, 0, 'A picture scrim is missing its explicit colour scope');
+    assert.ok(scrims.colours.length > 0, 'The light-theme check did not exercise overlay text');
+    assert.ok(scrims.colours.every(colour => colour === 'rgb(255, 255, 255)'), 'Picture overlay text lost white contrast in System Light');
+    await page.screenshot({ path: `performance-results/scrims-light-${phone ? 'phone' : 'desktop'}.png` });
     await context.close();
   }
 } finally {
