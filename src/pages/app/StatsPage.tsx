@@ -47,7 +47,6 @@ import {
   type SiteStatsResponse,
   type SiteStatsUnavailable,
 } from '@/hooks/use-site-stats';
-import { FeedbackSection } from '@/components/app/stats/FeedbackSection';
 import { FinanceSection } from '@/components/app/stats/FinanceSection';
 import { GroupHeading, ShareRow, StatTile } from '@/components/app/stats/StatsPieces';
 import { USER_STATS_ENDPOINT, useUserStats } from '@/hooks/use-user-stats';
@@ -1052,11 +1051,6 @@ export default function StatsPage() {
 
         {/* Its own endpoint and its own failure, for the same reason. */}
         <FinanceSection range={range} />
-
-        {/* Same reasoning as CommunitySection: a Cloudflare outage empties the
-            charts, and there is no reason for it to take the feedback form with
-            them. It is the one thing on this page a reader can act on. */}
-        <FeedbackSection />
 
         {stats && view && (
           <>

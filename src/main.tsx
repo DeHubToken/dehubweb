@@ -69,8 +69,7 @@ if (dhHost !== "dehub.io" && dhHost !== "localhost" && dhHost !== "127.0.0.1") {
 // Never preventDefault here: that makes Vite resolve the import with
 // `undefined` instead of rejecting, and any React.lazy() that renders before
 // the reload lands crashes on `undefined.default`. Letting the error through
-// is safe — lazyWithRetry and the ErrorBoundary see the reload in flight and
-// render nothing until it lands.
+// is safe — the ErrorBoundary keeps recovery controls visible until it lands.
 window.addEventListener('vite:preloadError', () => {
   recoverFromChunkError();
 });
