@@ -632,6 +632,21 @@ export type Database = {
           },
         ]
       }
+      ai_agent_post_slots: {
+        Row: {
+          next_post_at: string
+          owner_wallet: string
+        }
+        Insert: {
+          next_post_at?: string
+          owner_wallet: string
+        }
+        Update: {
+          next_post_at?: string
+          owner_wallet?: string
+        }
+        Relationships: []
+      }
       ai_agent_rate_limits: {
         Row: {
           action_type: string
@@ -9229,6 +9244,10 @@ export type Database = {
             }
             Returns: undefined
           }
+      record_agent_post_publication: {
+        Args: { p_owner_wallet: string }
+        Returns: undefined
+      }
       record_ai_provider_usage: { Args: { p_rows: Json }; Returns: undefined }
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
@@ -9255,6 +9274,10 @@ export type Database = {
           p_salt: string
         }
         Returns: Json
+      }
+      reserve_agent_post_slot: {
+        Args: { p_owner_wallet: string }
+        Returns: string
       }
       reserve_agent_registration:
         | {
