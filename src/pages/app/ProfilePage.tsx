@@ -271,14 +271,25 @@ export default function ProfilePage() {
   useEffect(() => {
     const el = stuckSentinelRef.current;
     if (!el) return;
-    // The pill pins at the very top at every width: phones have no top bar
-    // off the home feed (index.css, data-no-top-bar).
-    const obs = new IntersectionObserver(
-      ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 4)),
-      { rootMargin: '-4px 0px 0px 0px', threshold: 0 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    // On desktop the profile row pins directly beneath the feed pill. Phones
+    // have no feed pill here and keep their original safe-area threshold.
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    let observer: IntersectionObserver;
+    const observe = () => {
+      observer?.disconnect();
+      const top = desktop.matches ? 44 : 4;
+      observer = new IntersectionObserver(
+        ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? top)),
+        { rootMargin: `-${top}px 0px 0px 0px`, threshold: 0 },
+      );
+      observer.observe(el);
+    };
+    observe();
+    desktop.addEventListener('change', observe);
+    return () => {
+      desktop.removeEventListener('change', observe);
+      observer?.disconnect();
+    };
   }, [!!data.profile]);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab, isTabsStuck);
@@ -531,7 +542,7 @@ export default function ProfilePage() {
           }),
         }}
       />
-      <div className="hidden lg:sticky lg:top-0 lg:z-[80] lg:block" data-profile-desktop-feed-nav>
+      <div className="hidden lg:sticky lg:top-0 lg:z-[80] lg:block" data-profile-desktop-feed-nav data-joined={isTabsStuck}>
         <GlobalFeedNav profilePage />
       </div>
       <CollapsingProfileHeader
