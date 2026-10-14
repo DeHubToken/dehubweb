@@ -28,6 +28,17 @@ or spread invoices over an assumed billing period. Unbilled usage appears after
 the provider reports charges. The endpoint and both clients refresh on a
 five-minute cadence; provider reporting delays still apply.
 
+Cloudflare production history returns `type: invoice`, lowercase `usd`, and
+`result_info.next_page` rather than `total_count`. The reader handles that shape
+and also accepts the documented charge/total-count shape. Invoice and charge
+records for the same invoice count once; void and failed records are excluded.
+
+Public responses use `Cache-Control: no-store` and `CDN-Cache-Control: no-store`
+so the zone's four-hour browser TTL does not delay billing refreshes. Provider
+responses are still cached privately in the Worker Cache API for five minutes.
+Both clients bypass old browser response caches. The accounting cache key is
+versioned so a previous operations estimate cannot survive the rollout.
+
 An unavailable source is missing from the total, not free. Other unconnected
 provider bills, including Lovable Cloud runtime usage, remain outside this feed.
 Do not describe the total as a complete company expense ledger until those

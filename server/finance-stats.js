@@ -101,7 +101,13 @@ export function mergeFinanceLedger(upstream, history) {
   };
 }
 
-const HEADERS = { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS', 'Cache-Control': 'public, max-age=60, s-maxage=300' };
+const HEADERS = { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS', 'Cache-Control': 'no-store', 'CDN-Cache-Control': 'no-store' };
+
+function clientResponse(response, method) {
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(HEADERS)) headers.set(key, value);
+  return new Response(method === 'HEAD' ? null : response.body, { status: response.status, headers });
+}
 
 /** Read missing core sources directly while the managed endpoint is unavailable. */
 export async function restoreCoreSources(upstream, view, fetcher) {
@@ -154,8 +160,7 @@ export async function readCloudflareCosts(upstream, env, fetcher = fetch) {
   const account = env.CLOUDFLARE_BILLING_ACCOUNT_ID;
   if (!token || !/^[a-f0-9]{32}$/i.test(account ?? '')) return unavailable;
   try {
-    const totals = new Map();
-    const seen = new Set();
+    const records = new Map();
     const signal = AbortSignal.timeout(15_000);
     for (let page = 1; page <= 100; page++) {
       const response = await fetcher(`https://api.cloudflare.com/client/v4/accounts/${account}/billing/history?per_page=100&page=${page}`, {
@@ -168,18 +173,24 @@ export async function readCloudflareCosts(upstream, env, fetcher = fetch) {
         const date = row.occurred_at?.slice(0, 10);
         if (!date || date < LIVE_COSTS_SINCE || date > new Date().toISOString().slice(0, 10)) continue;
         // Ignore payment settlements: they settle an existing charge, not a second cost.
-        if (!['charge', 'refund', 'credit'].includes(row.type)) continue;
+        if (!['invoice', 'charge', 'refund', 'credit'].includes(row.type)) continue;
+        if (['FAILED', 'VOID', 'VOIDED', 'CANCELLED', 'CANCELED', 'DRAFT'].includes(row.status?.toUpperCase())) continue;
         if (!row.id || !/^\d{4}-\d{2}-\d{2}$/.test(date) || row.currency?.toUpperCase() !== 'USD' || typeof row.amount !== 'number' || !Number.isFinite(row.amount)) throw new Error('Unpriced billing record');
-        if (seen.has(row.id)) continue;
-        seen.add(row.id);
-        const amount = row.type === 'charge' ? row.amount : -Math.abs(row.amount);
-        totals.set(date, (totals.get(date) ?? 0) + amount);
+        const isCharge = row.type === 'invoice' || row.type === 'charge';
+        const key = isCharge ? `invoice:${row.invoice_id ?? row.id}` : `${row.type}:${row.id}`;
+        if (records.has(key) && row.type !== 'invoice') continue;
+        records.set(key, { date, amount: isCharge ? row.amount : -Math.abs(row.amount) });
       }
       const info = body.result_info;
-      if (!info || !Number.isFinite(info.total_count)) throw new Error('Incomplete billing pagination');
-      if (page * 100 >= info.total_count) break;
+      if (info?.next_page === false) break;
+      if (info?.next_page !== true) {
+        if (!Number.isFinite(info?.total_count) || !Number.isFinite(info?.per_page) || info.per_page <= 0) throw new Error('Incomplete billing pagination');
+        if (page * info.per_page >= info.total_count) break;
+      }
       if (page === 100) throw new Error('Incomplete billing history');
     }
+    const totals = new Map();
+    for (const { date, amount } of records.values()) totals.set(date, (totals.get(date) ?? 0) + amount);
     const days = new Map(upstream.days.map(day => [day.date, { ...day, costs: { ...day.costs } }]));
     for (const [date, amount] of totals) {
       const day = days.get(date) ?? { date, revenue: {}, costs: {} };
@@ -198,9 +209,9 @@ export async function handleFinanceRequest(request, env, fetcher = fetch, cache 
   const url = new URL(request.url);
   const view = url.searchParams.get('view');
   if (view && !['ledger', 'tax'].includes(view)) return Response.json({ ok: false, error: 'Unknown finance view' }, { status: 400, headers: HEADERS });
-  const key = new Request(`${url.origin}/api/finance-stats${view ? `?view=${view}` : ''}`);
+  const key = new Request(`${url.origin}/api/finance-stats?accounting=live-april-v2${view ? `&view=${view}` : ''}`);
   const cached = await cache?.match(key);
-  if (cached) return request.method === 'HEAD' ? new Response(null, cached) : cached;
+  if (cached) return clientResponse(cached, request.method);
   try {
     const response = await fetcher(`${UPSTREAM}${view ? `?view=${view}` : ''}`, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(30_000) });
     if (!response.ok) throw new Error('Upstream finance response failed');
@@ -224,7 +235,12 @@ export async function handleFinanceRequest(request, env, fetcher = fetch, cache 
       body = view === 'ledger' ? mergeFinanceLedger(upstream, history) : mergeFinanceSummary(upstream, history, sharing);
     }
     const result = Response.json(body, { headers: HEADERS });
-    await cache?.put(key, result.clone());
+    if (cache) {
+      const stored = result.clone();
+      stored.headers.set('Cache-Control', 'public, max-age=300, s-maxage=300');
+      stored.headers.delete('CDN-Cache-Control');
+      await cache.put(key, stored);
+    }
     return request.method === 'HEAD' ? new Response(null, result) : result;
   } catch {
     return Response.json({ ok: false, error: 'Finance sources could not be read' }, { status: 502, headers: { ...HEADERS, 'Cache-Control': 'no-store' } });
