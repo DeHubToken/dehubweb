@@ -185,9 +185,10 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_) [data-builde
 /* bg-zinc-900/90 buttons get the light control sheen (theme-controls.css), but
    the Minimal Light "black CTA" rule still whitened their labels. */
 html[data-theme="system"][data-system-tone="light"] :is(#app-root, [role="dialog"], [data-vaul-drawer]):not(#_) :is(button, a[role="button"]):is(.bg-zinc-900\/90, .bg-zinc-900\/80):not([data-keep-dark]):not([data-on-media]):not([data-keep-white]):not([data-primary-cta]):not([data-nav-create]) * { color: inherit !important; }
-/* Text over a picture's black scrim (short tiles, game cards) stays white. */
-html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_):not(#_):not(#_) :has(> .absolute.inset-0:is([class*="bg-gradient-to-t"], [class*="bg-gradient-to-b"])[class*="from-black"]) :is(.text-white, [class*="text-white/"], .text-zinc-100, .text-zinc-200, .text-zinc-300) { color: #fff !important; }
-html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_):not(#_):not(#_) :has(> .absolute.inset-0:is([class*="bg-gradient-to-t"], [class*="bg-gradient-to-b"])[class*="from-black"]) :is([class*="text-white/"], .text-zinc-300, .text-zinc-400) { color: rgba(255,255,255,.75) !important; }
+/* Explicitly mark picture scrims. A class-based :has() before descendants
+   invalidates the whole root on feed class changes, even in other themes. */
+html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_):not(#_):not(#_) [data-media-scrim] :is(.text-white, [class*="text-white/"], .text-zinc-100, .text-zinc-200, .text-zinc-300) { color: #fff !important; }
+html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_):not(#_):not(#_) [data-media-scrim] :is([class*="text-white/"], .text-zinc-300, .text-zinc-400) { color: rgba(255,255,255,.75) !important; }
 html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_):not(#_) .bg-red-900\/40 { background-color: #fff1f1 !important; border-color: #f3c9c9 !important; color: #9b1c1c !important; }
 /* Dark-only decoration (specks and vignettes drawn for a black page). */
 html[data-system-tone="light"] [data-dark-decor] { display: none !important; }
