@@ -29,6 +29,7 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     for (const visit of ['cold', 'warm']) {
       const started = Date.now();
+      const version = await (await context.request.get('https://dehub.io/version.json')).json();
       await page.goto('https://dehub.io/app', { waitUntil: 'domcontentloaded' });
       const author = page.getByRole('button', { name: /^View .+'s profile$/ }).first();
       await author.waitFor({ state: 'visible', timeout: 60000 });
@@ -58,7 +59,12 @@ try {
       const scrollStarted = await page.evaluate(() => performance.now());
       for (let i = 0; i < 12; i++) {
         if (device === 'phone') {
-          await cdp.send('Input.synthesizeScrollGesture', { x: 190, y: 650, yDistance: -500, speed: 900, gestureSourceType: 'touch' });
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 190, y: 650 }] });
+          for (let step = 1; step <= 8; step++) {
+            await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 190, y: 650 - step * 55 }] });
+            await page.waitForTimeout(25);
+          }
+          await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
         } else {
           await page.mouse.move(720, 650);
           await page.mouse.wheel(0, 550);
@@ -87,7 +93,7 @@ try {
       await page.goBack();
       await author.waitFor({ state: 'visible' });
       const backMs = Date.now() - backStarted;
-      results.push({ device, visit, cpuSlowdown: device === 'phone' ? 4 : 1, feedVisibleMs, profileShellMs, backMs, load, scroll, errors: [...errors] });
+      results.push({ version, device, visit, scrollValid: scroll.top > 100, cpuSlowdown: device === 'phone' ? 4 : 1, feedVisibleMs, profileShellMs, backMs, load, scroll, errors: [...errors] });
       console.log(JSON.stringify({ device, visit, feedVisibleMs, profileShellMs, backMs, scroll }));
     }
     await context.close();

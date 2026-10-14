@@ -3,7 +3,7 @@ import CornerDownRight from "@/components/ui/cut-icons/reply";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useDraftState } from '@/hooks/use-draft-state';
 import { useDraft } from '@/hooks/use-draft';
-import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { Loader2 } from "lucide-react";
 import Reply from "@/components/ui/cut-icons/reply";
@@ -219,17 +219,34 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
     | { type: 'message'; data: typeof messages[0] }
     | { type: 'buy_alert'; data: BuyAlertMessage }
     | { type: 'assistant'; data: AssistantReply };
-  const mergedItems: MergedItem[] = (() => {
+  const mergedItems: MergedItem[] = useMemo(() => {
     const items: MergedItem[] = [
       ...messages.map((m) => ({ type: 'message' as const, data: m })),
-      ...buyAlerts.map((a) => ({ type: 'buy_alert' as const, data: a })),
+      ...(buyBotHidden ? [] : buyAlerts.map((a) => ({ type: 'buy_alert' as const, data: a }))),
       ...localAssistantReplies.map((a) => ({ type: 'assistant' as const, data: a })),
     ];
     const tsOf = (it: MergedItem) =>
       it.type === 'assistant' ? it.data.timestamp.getTime() : new Date(it.data.created_at).getTime();
     items.sort((a, b) => tsOf(a) - tsOf(b));
     return items;
-  })();
+  }, [messages, buyAlerts, localAssistantReplies, buyBotHidden]);
+
+  // The rail is only 400px tall. Mount recent rows first so old link previews,
+  // badges and media do not compete with the feed at startup.
+  const [visibleCount, setVisibleCount] = useState(30);
+  const olderAnchor = useRef<{ top: number; height: number } | null>(null);
+  const visibleItems = mergedItems.slice(-visibleCount);
+  const loadOlder = () => {
+    const el = scrollContainerRef.current;
+    if (el) olderAnchor.current = { top: el.scrollTop, height: el.scrollHeight };
+    setVisibleCount(count => count + 30);
+  };
+  useLayoutEffect(() => {
+    const el = scrollContainerRef.current;
+    const anchor = olderAnchor.current;
+    if (el && anchor) el.scrollTop = anchor.top + el.scrollHeight - anchor.height;
+    olderAnchor.current = null;
+  }, [visibleCount]);
 
   // Scroll to bottom (jump, not animated). For initial load we retry a few times
   // because async content (avatars, link previews, GIFs) keeps growing scrollHeight
@@ -369,6 +386,11 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">
         <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+          {!isLoading && mergedItems.length > visibleCount && (
+            <button type="button" onClick={loadOlder} className="w-full py-2 text-xs text-zinc-400 hover:text-white">
+              {_copy("copy.f17671d83db0", { defaultValue: "Load older messages" })}
+            </button>
+          )}
           {isLoading ? (
             <>
               {[...Array(4)].map((_, i) => (
@@ -388,7 +410,7 @@ export function SidebarChat({ isActive }: SidebarChatProps) {
           ) : mergedItems.length === 0 ? (
             <AppState icon="messages" title={_copy("copy.f42e0f66017d", { defaultValue: "No messages yet" })} description={_copy("copy.937510f750fd", { defaultValue: "Be the first to say hello." })} size="compact" className="h-full" />
           ) : (
-            mergedItems.map((item) => {
+            visibleItems.map((item) => {
               if (item.type === 'buy_alert') {
                 if (buyBotHidden) return null;
                 return (
