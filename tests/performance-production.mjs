@@ -57,6 +57,11 @@ try {
         requestAnimationFrame(frame);
       });
       const scrollStarted = await page.evaluate(() => performance.now());
+      await cdp.send('Profiler.enable');
+      await cdp.send('Profiler.start');
+      const timeline = [];
+      cdp.on('Tracing.dataCollected', ({ value }) => timeline.push(...value));
+      await cdp.send('Tracing.start', { categories: 'devtools.timeline,v8.execute,disabled-by-default-devtools.timeline.invalidationTracking', transferMode: 'ReportEvents' });
       for (let i = 0; i < 12; i++) {
         if (device === 'phone') {
           await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 190, y: 650 }] });
@@ -82,6 +87,13 @@ try {
           nodes: document.querySelectorAll('*').length,
         };
       }, scrollStarted);
+      const { profile } = await cdp.send('Profiler.stop');
+      const traced = new Promise(resolve => cdp.once('Tracing.tracingComplete', resolve));
+      await cdp.send('Tracing.end');
+      await traced;
+      cdp.removeAllListeners('Tracing.dataCollected');
+      await fs.writeFile(`performance-results/${device}-${visit}.cpuprofile`, JSON.stringify(profile));
+      await fs.writeFile(`performance-results/${device}-${visit}-timeline.json`, JSON.stringify(timeline));
       await page.screenshot({ path: `performance-results/${device}-${visit}-scroll.png` });
       await page.evaluate(() => { window.scrollTo(0, 0); document.body.scrollTop = 0; });
       const navigationStarted = Date.now();
