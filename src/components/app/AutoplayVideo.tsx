@@ -190,7 +190,9 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     }
   }, [disabled, src]);
 
-  const shouldLoad = isVisible && !disabled && engaged;
+  // A playback slot also owns the network/decoder budget. Merely pausing the
+  // other visible tiles still lets their metadata downloads compete.
+  const shouldLoad = isVisible && !disabled && groupAllowed && engaged;
 
   // If video has a format error (H.265/HEVC), just show poster
   if (hasError) {
