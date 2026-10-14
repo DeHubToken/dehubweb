@@ -34,7 +34,7 @@ const fixture = (prior?: string) => {
   let calls = 0;
   let callback: () => Promise<any> = async () => ({ structuredContent: { success: true } });
   const registry = new Map<string, TaskTool>([['dehub_vote', { description: 'Vote', validate: args => args, call: async () => { calls++; return callback(); } }]]);
-  return { rows, db, task, calls: () => calls, onCall: (handler: () => Promise<any>) => { callback = handler; },
+  return { rows, db, task, registry, calls: () => calls, onCall: (handler: () => Promise<any>) => { callback = handler; },
     run: () => runTask({ db: () => db, token: async () => 'test', tools: () => registry }, new Request('https://example.test/tasks/tick'), structuredClone(task)) };
 };
 
@@ -177,6 +177,31 @@ Deno.test('daily selected likes view the scanned feed but act only on relevant t
     const targets = test.rows.ai_agent_task_actions.map(action => action.target).sort();
     assert(viewed && JSON.stringify(targets) === '["100","101"]', 'liked an unrelated or owned post');
     assert(test.task.status === 'queued', 'daily task did not schedule its next cycle');
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+Deno.test('daily likes continue while an unfunded agent waits to post', async () => {
+  const test = fixture();
+  (test.task.plan as any).interval_minutes = 1440;
+  (test.task.plan.steps[0] as any).audience = 'selected_posts';
+  (test.task.plan.steps[0] as any).recent_keywords = ['music'];
+  (test.task.plan.steps[0] as any).recent_limit = 1;
+  (test.task.plan.steps[0] as any).arguments = { vote_type: 'like' };
+  (test.task.plan.steps as any).push({ tool: 'dehub_post_create', arguments: {}, audience: 'single', topic: 'music' });
+  test.registry.set('dehub_agent_status', { description: 'Status', validate: args => args,
+    call: async () => ({ structuredContent: { gas: { sufficient_for_posting: false } } }) });
+  test.registry.set('dehub_post_create', { description: 'Post', validate: args => args,
+    call: async () => { throw new Error('Unfunded agent tried to post'); } });
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => String(url).includes('/api/feed?')
+    ? Response.json({ result: [{ tokenId: 100, createdAt: new Date(Date.now() - 60_000).toISOString(),
+      name: 'Good music', minter: '0x2222222222222222222222222222222222222222' }] })
+    : Response.json({ success: true });
+  try {
+    await test.run();
+    assert(test.calls() === 1, 'the selected like did not run');
+    assert(test.task.status === 'queued' && test.task.cycle === 1, 'the next daily cycle was not scheduled');
+    assert(test.rows.ai_agent_task_actions.length === 1, 'an unfunded post was recorded as an action');
   } finally { globalThis.fetch = originalFetch; }
 });
 
