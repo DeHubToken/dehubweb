@@ -10,6 +10,7 @@ import { handleTaskRequest, type TaskTool, type ProfileImages } from "./tasks.ts
 import { anonymousViewerId, recordPostViews } from "./post-views.ts";
 import { resolveVoteWeight } from "../_shared/badge-weight.ts";
 import { agentCapForBadgeWeight } from "./agent-cap.ts";
+import { agentPostType } from "./post-type.ts";
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -990,7 +991,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       formData.append("description", content);
       // Ordinary text posts use the same feed-simple form as the web composer.
       // The placeholder file is only needed for the explicit mint path.
-      formData.append("postType", isVideo ? "video" : hasMedia || mint ? "image" : "feed-simple");
+      formData.append("postType", agentPostType(hasMedia, isVideo, mint));
       formData.append("chainId", String(CHAIN_ID));
       formData.append("category", JSON.stringify([category || "General"]));
       formData.append("minter", agent.owner_wallet_address);
