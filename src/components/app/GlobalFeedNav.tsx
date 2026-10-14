@@ -51,8 +51,10 @@ function getPersistedTab(): string {
  *   full-width insets (px-2 sm:px-3), and a back arrow in place of the home
  *   settings button — so the pill shares its width with the full-width post +
  *   related-feed bentos below it, identical to the home feed's nav/feed look.
+ * @param profilePage Keep that feed pill on desktop profiles, with Back in the
+ *   settings slot, so opening a profile preserves the home navigation shape.
  */
-export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {}) {
+export function GlobalFeedNav({ postPage = false, profilePage = false }: { postPage?: boolean; profilePage?: boolean } = {}) {
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   const location = useLocation();
@@ -66,11 +68,11 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
   const isHomePage = isHomePath(location.pathname);
 
   const handleBack = useCallback(() => {
-    if (window.history.length > 1) navigate(-1);
-    else navigate('/app');
+    if (typeof window.history.state?.idx === 'number' && window.history.state.idx > 0) navigate(-1);
+    else navigate('/app', { replace: true });
   }, [navigate]);
 
-  const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
+  const [activeTab, setActiveTab] = useState(() => isHomePage || profilePage ? getPersistedTab() : '');
   const [enableTransition, setEnableTransition] = useState(false);
   const { shortsEnabled } = useShortsEnabled();
   const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
@@ -239,7 +241,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
   return (
     <div data-feed-nav-outer className={cn(
       "sticky bg-black transition-transform duration-300 ease-in-out",
-      postPage
+      (postPage || profilePage)
         // Standalone post page: mirror the home tab bar exactly — clear the
         // mobile header (top-11), sit above the post content (z-90, which tops
         // out at z-50), same insets — so the pill shares its width with the post
@@ -283,9 +285,10 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
             {/* Back button on a directly-loaded post page (mirrors the from-feed
                 overlay, whose home pill turns its settings slot into a back
                 button). On the home feed this slot toggles the tab's filters. */}
-            {postPage ? (
+            {(postPage || profilePage) ? (
               <button
-                data-post-nav-back
+                data-post-nav-back={postPage ? '' : undefined}
+                data-profile-nav-back={profilePage ? '' : undefined}
                 data-swipe-back
                 onClick={handleBack}
                 className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
