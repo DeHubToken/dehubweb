@@ -6027,6 +6027,7 @@ html[data-system-tone="light"] .art-rim {
    the screen edge to edge instead of stopping a few pixels short. */
 :root {
   --post-media-max-h: 80dvh;
+  --feed-image-max-h: 600px;
 }
 
 /* Feed videos fill their column, capped at 75% of the viewport height. The
@@ -6056,6 +6057,7 @@ html[data-theme="immersive"] [data-cinematic] [data-preview-mute] {
 @media (max-width: 639px) {
   :root {
     --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
+    --feed-image-max-h: min(600px, 55svh);
   }
 }
 
@@ -6315,11 +6317,17 @@ html[data-system-tone="light"] [data-creator-page] .text-white {
     max-width: none !important;
     max-height: var(--post-media-max-h, 80dvh) !important;
   }
+  /* Photos follow the feed video rule: wide ones run full width, tall ones
+     hug their real shape within 55% of the screen, left aligned, uncropped
+     (ImageCard sizes the width from the photo's ratio). */
   html[data-theme="immersive"] [data-cinematic="image"] [data-media-full] img:not(.blur-lg) {
+    max-width: 100% !important;
+    max-height: var(--feed-image-max-h, 55svh) !important;
+    object-fit: contain;
+  }
+  /* Until its shape is known the photo holds the full width. */
+  html[data-theme="immersive"] [data-cinematic="image"] [data-media-full] img:not(.blur-lg):not([width]) {
     width: 100% !important;
-    max-width: none !important;
-    max-height: var(--post-media-max-h, 80dvh) !important;
-    object-fit: cover;
   }
 
   /* Photos keep a plain author row above the picture, Instagram style. */
