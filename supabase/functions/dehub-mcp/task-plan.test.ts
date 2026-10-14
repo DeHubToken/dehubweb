@@ -22,6 +22,15 @@ Deno.test('posting schedules respect the action budget and skip missed slots wit
   assert(nextScheduledRun('2026-10-10T00:00:00Z', 480, Date.parse('2026-10-11T03:00:00Z')) === '2026-10-11T08:00:00.000Z');
 });
 
+Deno.test('curated media belongs only to a generated post and has a usable subject', () => {
+  const media_pool = [{ url: 'https://images.unsplash.com/photo-example?w=1200', type: 'image', subject: 'A mountain trail' }];
+  const post = { tool: 'dehub_post_create', arguments: {}, audience: 'single', topic: 'Walking trails', from: null, to: null, media_pool };
+  assert(taskPlanSchema.safeParse({ summary: 'Trail posts', interval_minutes: 1440, steps: [post] }).success);
+  assert(!taskPlanSchema.safeParse({ summary: 'Repeated file', interval_minutes: 1440, steps: [{ ...post, arguments: { media_url: media_pool[0].url } }] }).success);
+  assert(!taskPlanSchema.safeParse({ summary: 'Bad media', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...media_pool[0], subject: '' }] }] }).success);
+  assert(!taskPlanSchema.safeParse({ ...base, steps: [{ ...base.steps[0], media_pool }] }).success);
+});
+
 Deno.test('planning requires an explicit plan or clarification and rejects incomplete output', () => {
   assert(PLAN_TOOL.function.parameters.required.includes('plan'));
   assert(PLAN_TOOL.function.parameters.required.includes('clarification'));

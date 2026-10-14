@@ -14,6 +14,7 @@ export const taskStepSchema = z.object({
   topic: z.string().max(2000).nullable().default(null),
   recent_keywords: z.array(z.string().trim().min(2).max(40)).min(1).max(6).nullable().default(null),
   recent_limit: z.number().int().min(1).max(3).nullable().default(null),
+  media_pool: z.array(z.object({ url: z.string().url(), type: z.enum(["image", "video"]), subject: z.string().min(3).max(200) }).strict()).max(12).nullable().default(null),
 }).strict();
 export const taskPlanSchema = z.object({
   summary: z.string().min(1).max(1000),
@@ -30,6 +31,8 @@ export const taskPlanSchema = z.object({
     if (["posts", "post_authors"].includes(step.audience) && (!step.from || !step.to)) invalid("Choose a start and end time for the posts.");
     if (step.from && step.to && Date.parse(step.from) >= Date.parse(step.to)) invalid("The start must precede the end.");
     if (step.topic && step.tool !== "dehub_post_create") invalid("Topics are for generated posts.");
+    if (step.media_pool && (step.tool !== "dehub_post_create" || !step.topic)) invalid("Curated media is for generated posts.");
+    if (plan.interval_minutes && step.tool === "dehub_post_create" && step.arguments.media_url) invalid("Recurring posts need a curated media pool so the same file is not repeated.");
     if (step.audience !== "single" && step.tool === "dehub_follow" && step.arguments.action === "unfollow") invalid("Unfollowing requires a specific user.");
   });
   if (plan.interval_minutes !== null && plan.steps.some(step => !["single", "selected_posts"].includes(step.audience))) {
@@ -107,6 +110,7 @@ export const PLAN_TOOL = {
                 topic: { type: ["string", "null"], description: "Instructions for an original post on each run; null for literal supplied content." },
                 recent_keywords: { type: ["array", "null"], items: { type: "string" }, description: "One to six exact interests for selected_posts; null otherwise." },
                 recent_limit: { type: ["integer", "null"], description: "Maximum one to three matching recent posts to like each run; null otherwise." },
+                media_pool: { type: ["array", "null"], description: "Owner-supplied or licensed media for generated recurring posts. Each asset is used once; media posts are spread across task cycles. Omit when none is supplied.", items: { type: "object", properties: { url: { type: "string" }, type: { type: "string", enum: ["image", "video"] }, subject: { type: "string" } }, required: ["url", "type", "subject"], additionalProperties: false } },
               },
               required: ["tool", "arguments", "audience", "from", "to", "topic"],
               additionalProperties: false,
