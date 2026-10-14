@@ -2144,6 +2144,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         data-feed-preview={feedPreview || undefined}
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
+        data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
         data-video-split-controls={splitControls || undefined}
         data-video-fullscreen={isFullscreen || undefined}
         data-media-full
