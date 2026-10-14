@@ -17,12 +17,15 @@ import {
 } from '@/lib/media-session';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Minimize, ChevronUp, ChevronDown, UserCheck, Loader2, Globe, RotateCcw } from "lucide-react";
+import { ChevronUp, ChevronDown, UserCheck, Loader2, Globe, RotateCcw } from "lucide-react";
+import Minimize from "@/components/ui/cut-icons/exit-fullscreen";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import ArrowLeft from "@/components/ui/cut-icons/back";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
 import MoreHorizontal from "@/components/ui/cut-icons/more";
+import PictureInPicture2 from "@/components/ui/cut-icons/picture-in-picture";
+import { VIEWER_CONTROL } from '@/lib/viewer-chrome';
 import Eye from "@/components/ui/cut-icons/visibility";
 import Info from "@/components/ui/cut-icons/information";
 import Flag from "@/components/ui/cut-icons/report";
@@ -338,7 +341,7 @@ const DESKTOP_AUTO_HIDE_MS = 2000;
  * hidden state are all either is allowed to add.
  */
 const CORNER_CONTROL =
-  "absolute top-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center text-white transition-[background-color,opacity] duration-300";
+  `absolute top-3 z-10 ${VIEWER_CONTROL} transition-opacity duration-300`;
 
 export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore, reuseInitialVideo = false }: ShortsViewerProps) {
   const { t: _copy } = _useCopy();
@@ -1018,24 +1021,18 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   }, [isMobile, overlaysHidden, autoHidden, showComments, videoContainer]);
 
   const handleDrag = useCallback((_: any, info: PanInfo) => {
-    if (isRestoreDrag(info)) {
-      setDragOffset(0);
-      return;
-    }
     setDragOffset(Math.abs(info.offset.x) > Math.abs(info.offset.y) ? 0 : info.offset.y);
-  }, [isRestoreDrag, setDragOffset]);
+  }, [setDragOffset]);
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
     resetDragOffset();
 
-    // The upward counterpart of clearing the caption belongs to the panel,
-    // even when its velocity would otherwise page to the next short.
+    // Restoring the caption must not consume a valid navigation flick.
     if (isRestoreDrag(info)) {
       if (info.offset.y < -40) {
         setOverlaysHidden(false);
         setAutoHidden(false);
       }
-      return;
     }
     
     if (Math.abs(info.offset.x) > Math.abs(info.offset.y)) return;
@@ -2119,13 +2116,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               and cut icons of the app's picture-in-picture button. */}
           <button
             onClick={onClose}
-            className="absolute top-4 left-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-20"
+            className={cn(VIEWER_CONTROL, 'absolute top-4 left-4 z-20')}
           >
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           
           {/* Right side controls */}
           <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+            {document.pictureInPictureEnabled && !currentShort?.imageUrls?.length && <button
+              className={VIEWER_CONTROL}
+              aria-label={_copy("copy.c49677dc5ccd", { defaultValue: "Picture in picture" })}
+              onClick={(event) => {
+                event.stopPropagation();
+                const player = containerRef.current?.querySelector<HTMLVideoElement>(`[data-shorts-slide="${currentIndex}"] video`);
+                if (player) void player.requestPictureInPicture().catch(() => {});
+              }}
+            ><PictureInPicture2 className="w-5 h-5" /></button>}
             {/* Playback speed */}
             <button
               onClick={(event) => {
@@ -2138,7 +2144,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 setPlaybackRate(nextRate);
                 vpSetPlaybackRate(nextRate, currentShort?.creatorId);
               }}
-              className="h-10 min-w-[40px] px-1.5 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center"
+              className={cn(VIEWER_CONTROL, 'min-w-[40px] px-1.5')}
               style={{ touchAction: 'manipulation' }}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
@@ -2148,7 +2154,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {/* Mute button */}
             <button
               onClick={toggleMute}
-              className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center"
+              className={VIEWER_CONTROL}
             >
               {isMuted ? (
                 <VolumeX className="w-5 h-5 text-white" />
@@ -2160,7 +2166,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {/* More options button */}
             <button
               onClick={() => setShareSheetOpen(true)}
-              className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center"
+              className={VIEWER_CONTROL}
             >
               <MoreHorizontal className="w-5 h-5 text-white" />
             </button>
@@ -2172,7 +2178,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       {!isMobile && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center z-20 transition-colors"
+          aria-label={t('common.close')}
+          className="absolute top-0 right-0 w-10 h-10 flex items-center justify-center text-white/80 hover:text-white z-20 transition-colors"
         >
           <X className="w-5 h-5 text-white" />
         </button>

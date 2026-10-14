@@ -110,6 +110,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                   <AutoplayVideo
                     src={short.videoUrl}
                     poster={short.thumbnail}
+                    disabled={viewerOpen}
                     /* This reel sits in the first viewport of the home page;
                        see the prop for why it holds the poster until the
                        visitor's first scroll. */
