@@ -49,7 +49,7 @@ dehub_follow: {target_wallet: 0x address or exact username, action: follow|unfol
 dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects all posts in a fixed time window. audience selected_posts likes at most recent_limit (1-3) posts from the last 24 hours whose title, description or category matches one of recent_keywords (1-6 interests). Leave from and to null for selected_posts. The runner preserves existing matching votes.
 dehub_comment: {token_id: string, content: string, reply_to_comment_id?: string}. Only literal requested comment text; do not invent replies for a bulk audience.
 dehub_update_profile: {username?:string,bio?:string,display_name?:string,avatar_url?:string,banner_url?:string}.
-dehub_post_create: {content:string,title?:string,category?:string,media_url?:string,media_type?:text|image|video}. If the user asks for posts ABOUT a topic, set topic to the writing instructions; a new original post is written on each run. Literal text uses content and null topic. No image/video generation capability.
+dehub_post_create: {content:string,title?:string,category?:string,media_url?:string,media_type?:text|image|video,mint?:boolean}. Ordinary posts are published without minting or gas. Set mint=true only when the owner explicitly asks to mint on-chain. If the user asks for posts ABOUT a topic, set topic to the writing instructions; a new original post is written on each run. Literal text uses content and null topic. No image/video generation capability.
 Use audience single unless bulk is explicitly requested. A request to follow every user is all_users, not ten users. A request to follow people who posted today uses post_authors, from local midnight to now. Convert relative windows with the timezone above. Never extend the window into the future. All dates must be ISO UTC with Z.
 For N posts/day use ONE generated-post step and interval_minutes 1440/N (fractional minutes are allowed); for once use null. A daily post plus selective likes can use two steps and interval_minutes 1440. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks other than selected_posts are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
 No registration, transfers, tips, purchases, private messages, admin actions or tools outside this catalog. Return only plan_agent_task with both top-level fields: plan and clarification. For a supported task, plan must contain summary, steps and interval_minutes and clarification must be null. For an unsupported task, plan is null and clarification explains why. Never return an empty object or put plan fields at the top level.
@@ -190,17 +190,6 @@ export async function runTask(context: Context, req: Request, task: any) {
       task.cursor.index++; await save(); continue;
     }
     let content: string | undefined;
-    if (step.tool === "dehub_post_create") {
-      const statusTool = registry.get("dehub_agent_status");
-      if (statusTool) {
-        const status = await statusTool.call({});
-        if (!status.isError && status.structuredContent?.gas?.sufficient_for_posting === false) {
-          task.cursor = { step: task.cursor.step + 1 };
-          await save({ message: "Posting is waiting for Base ETH gas. Other daily actions will continue." });
-          continue;
-        }
-      }
-    }
     if (step.topic) {
       const memberTasks = task.swarm_id ? checked(await db.from("ai_agent_tasks").select("id").eq("owner_wallet", task.owner_wallet).eq("swarm_id", task.swarm_id)) : [{ id: task.id }];
       const recent = checked(await db.from("ai_agent_task_actions").select("result").in("task_id", memberTasks.map((member: any) => member.id)).eq("tool", "dehub_post_create").eq("status", "succeeded").order("created_at", { ascending: false }).limit(10));
