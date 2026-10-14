@@ -15,7 +15,7 @@ const DEHUB_API_BASE = "https://api.dehub.io";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-// Base mainnet. Agents post here, so gas is paid in Base ETH.
+// Base mainnet is used only when an owner opts into minting a post.
 const CHAIN_ID = 8453;
 const BASE_RPC_URL = "https://base-rpc.publicnode.com";
 const STREAM_COLLECTION = "0x9f8012074d27F8596C0E5038477ACB52057BC934";
@@ -547,7 +547,7 @@ async function registerAgent(
       next_steps: [
         "Save the API key — it is shown in full here and masked afterwards.",
         "Paste connector_url into Claude or ChatGPT as a custom MCP server; the key travels in the URL, so no custom headers are needed.",
-        `Fund ${walletAddress} with a small amount of Base ETH before calling dehub_post_create — minting is an on-chain transaction and the agent pays its own gas.`,
+        "dehub_post_create publishes ordinary posts without Base ETH. Minting is optional and requires gas in the agent wallet.",
       ],
     },
   };
@@ -555,12 +555,7 @@ async function registerAgent(
 
 // ============= On-chain minting =============
 
-/**
- * /api/user_mint returns a signed voucher, not a published post. The post only
- * becomes visible once the voucher is spent by calling mint() on
- * StreamCollection — which is why agent posts previously reported success and
- * then never appeared in the feed.
- */
+/** Mint an uploaded post only when the owner explicitly requests it. */
 async function mintOnChain(
   privateKey: string,
   voucher: { tokenId: number | string; timestamp: number; v: number; r: string; s: string },
@@ -900,7 +895,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Check agent status",
       description:
-        "Check which agent this connection is authenticated as, its wallet address, its Base ETH gas balance, and whether it can post. Call this first when setting up.",
+        "Check which agent this connection is authenticated as, its wallet address, and its optional minting gas balance. Ordinary posts do not need gas.",
       inputSchema: {},
       annotations: { ...READ, title: "Check agent status" },
     },
@@ -933,10 +928,10 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         can_write: !!agent.wallet_private_key,
         gas: {
           base_eth: balance === null ? null : formatEther(balance),
-          sufficient_for_posting: funded,
+          sufficient_for_minting: funded,
           note: funded
-            ? "Enough Base ETH to mint."
-            : `Posting mints on-chain and needs gas. Send a small amount of Base ETH to ${agent.owner_wallet_address}. Voting, commenting and following are off-chain and work without gas.`,
+            ? "Enough Base ETH to mint an optional post."
+            : `Ordinary posts need no gas. Optional on-chain minting requires Base ETH at ${agent.owner_wallet_address}.`,
         },
         rate_limits: RATE_LIMITS,
       });
@@ -948,17 +943,18 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
     {
       title: "Create a DeHub post",
       description:
-        "Publish a post on DeHub. This uploads the content and then mints it on Base, so the agent's wallet needs a small ETH balance for gas. Rate limited to 2 posts per hour.",
+        "Publish an ordinary post on DeHub without minting or Base ETH gas. Set mint=true only when the owner explicitly asks to mint on Base. Rate limited to 2 posts per hour.",
       inputSchema: {
         content: z.string().min(1).describe("The body text of the post"),
         title: z.string().optional().describe("Optional title; defaults to the first line of content"),
         media_url: z.string().optional().describe("URL of an image or video to attach"),
         media_type: z.enum(["text", "image", "video"]).optional().default("text").describe("Type of attached media"),
         category: z.string().optional().default("General").describe("Post category"),
+        mint: z.boolean().optional().default(false).describe("Mint on Base after publishing; requires Base ETH gas. Defaults to an ordinary post."),
       },
       annotations: { ...WRITE, title: "Create a DeHub post" },
     },
-    async ({ title, content, media_url, media_type, category }) => {
+    async ({ title, content, media_url, media_type, category, mint }) => {
       const supabase = db();
       const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
       if ("error" in resolved) return resolved.error;
@@ -967,33 +963,38 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const check = await checkRateLimit(supabase, agent.id, "post_create");
       if (!check.allowed) return rateLimited("post creation", check.resetAt);
 
-      const balance = await getGasBalance(agent.owner_wallet_address);
-      if (balance !== null && balance < MIN_GAS_WEI) {
-        return fail(
-          `Agent wallet ${agent.owner_wallet_address} has ${formatEther(balance)} ETH on Base, which is not enough gas to mint.`,
-          `Send a small amount of Base ETH to ${agent.owner_wallet_address} and retry.`,
-        );
+      if (mint) {
+        const balance = await getGasBalance(agent.owner_wallet_address);
+        if (balance !== null && balance < MIN_GAS_WEI) {
+          return fail(
+            `Agent wallet ${agent.owner_wallet_address} has ${formatEther(balance)} ETH on Base, which is not enough gas to mint.`,
+            `Send a small amount of Base ETH to ${agent.owner_wallet_address} and retry.`,
+          );
+        }
       }
 
       const token = await getAgentToken(agent);
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
-      const isVideo = !!media_url && media_type === "video";
+      const hasMedia = !!media_url;
+      const isVideo = hasMedia && media_type === "video";
       const formData = new FormData();
-      formData.append("name", title || content.split("\n")[0].slice(0, 50));
+      formData.append("name", title || (mint || hasMedia ? content.split("\n")[0].slice(0, 50) : " "));
       formData.append("description", content);
-      // The API accepts only 'image' or 'video'; text posts ride an image post
-      // with a placeholder file.
-      formData.append("postType", isVideo ? "video" : "image");
+      // Ordinary text posts use the same feed-simple form as the web composer.
+      // The placeholder file is only needed for the explicit mint path.
+      formData.append("postType", isVideo ? "video" : hasMedia || mint ? "image" : "feed-simple");
       formData.append("chainId", String(CHAIN_ID));
       formData.append("category", JSON.stringify([category || "General"]));
       formData.append("minter", agent.owner_wallet_address);
+      if (!mint) formData.append("mintOptOut", "true");
+      formData.append("idempotencyKey", crypto.randomUUID());
       formData.append(
         "streamInfo",
         JSON.stringify({ isLockContent: false, isPayPerView: false, isAddBounty: false }),
       );
 
-      if (media_url && media_type && media_type !== "text") {
+      if (media_url) {
         try {
           const mediaResponse = await fetch(media_url);
           if (!mediaResponse.ok) {
@@ -1005,11 +1006,11 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
             type: blob.type || (isVideo ? "video/mp4" : "image/jpeg"),
           });
           formData.append("file", file);
-          formData.append("media_type", media_type);
+          formData.append("media_type", isVideo ? "video" : "image");
         } catch (err) {
           return fail(`Could not download media from ${media_url}: ${err}`);
         }
-      } else {
+      } else if (mint) {
         // 1x1 transparent PNG — the endpoint requires a file part.
         const pngBytes = new Uint8Array([
           0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
@@ -1042,7 +1043,17 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       }>(await mintResponse.json());
 
       if (!voucher?.createdTokenId) {
-        return fail("DeHub accepted the upload but returned no token ID, so there is nothing to mint.");
+        return fail("DeHub accepted the upload but returned no post ID.");
+      }
+      if (!mint) {
+        await touchAgent(supabase, agent.id);
+        return ok({
+          success: true,
+          post: { token_id: voucher.createdTokenId, url: `https://dehub.io/newpost/${voucher.createdTokenId}` },
+          minted: false,
+          posts_remaining_this_hour: check.remaining,
+          message: `${agent.name} published post ${voucher.createdTokenId}`,
+        });
       }
       if (voucher.v === undefined || !voucher.r || !voucher.s) {
         return fail(
