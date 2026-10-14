@@ -1,6 +1,8 @@
 import { CREATOR_FAL_IMAGE_MODELS, CREATOR_FAL_VIDEO_MODELS } from './creator-fal-catalog.ts';
+import { VIRAL_EFFECTS } from './viral-effects.ts';
 
 export interface CreatorFalVideoOptions {
+  effect?: string;
   prompt: string;
   sourceImage?: string;
   duration?: string | number;
@@ -27,6 +29,14 @@ export function buildCreatorFalVideoRequest(modelId: string, o: CreatorFalVideoO
   if (!m.aspectRatios.includes(aspect)) throw new Error(`Invalid aspect ratio for ${m.name}`);
   const resolution = o.resolution ?? (m.resolutions.includes('720p') ? '720p' : m.resolutions[0]);
   if (m.supportsResolution && !m.resolutions.includes(resolution)) throw new Error(`Invalid resolution for ${m.name}`);
+  if (m.family === 'pixverseeffects') {
+    if (!VIRAL_EFFECTS.some(item => item.name === o.effect)) throw new Error('Choose a supported video effect');
+    if (!o.sourceImage) throw new Error('Attach one photo to use this effect');
+    if (resolution !== '720p' || o.referenceImageUrls?.length || o.videoUrls?.length || o.audioUrls?.length || o.endFrameUrl || o.seed !== undefined || o.negativePrompt) {
+      throw new Error('Effects take one photo and render a five-second 720p video');
+    }
+    return { appId: m.falImageModel, input: { effect: o.effect, image_url: o.sourceImage, duration: '5', resolution: '720p', enable_safety_checker: true }, durationSeconds: 5 };
+  }
   if (!o.prompt?.trim()) throw new Error('Prompt is required');
   if (m.maxPromptLength && o.prompt.length > m.maxPromptLength) throw new Error(`Use a prompt of up to ${m.maxPromptLength} characters for ${m.name}`);
   if (m.requiresVideoInput) {

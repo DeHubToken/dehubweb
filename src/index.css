@@ -739,9 +739,11 @@ html[data-feed-loading] .dehub-intro { z-index: 121; }
 
 /* The scroll-cut wrappers otherwise trap the welcome card below #root::after,
    even at translateY(0). Keep its ancestry free of stacking contexts through
-   the frost fade; the normal scroll clipping resumes when the attribute goes. */
-html[data-feed-loading] [data-feed-swallow-bounds]:has(.dehub-intro) > div,
-html[data-feed-loading] [data-feed-swallow-bounds]:has(.dehub-intro) :is(
+   the frost fade; the normal scroll clipping resumes when the attribute goes.
+   The route marks this ancestry explicitly: a descendant :has() here makes
+   media DOM changes invalidate thousands of unrelated divs during scrolling. */
+html[data-feed-loading] [data-feed-welcome-bounds] > [data-feed-swallow-shell],
+html[data-feed-loading] [data-feed-welcome-bounds] :is(
   [data-feed-swallow-cut],
   [data-feed-swallow-motion],
   [data-feed-swallow-content]
@@ -6025,6 +6027,7 @@ html[data-system-tone="light"] .art-rim {
    the screen edge to edge instead of stopping a few pixels short. */
 :root {
   --post-media-max-h: 80dvh;
+  --feed-image-max-h: 600px;
 }
 
 /* Feed videos fill their column, capped at 75% of the viewport height. The
@@ -6033,9 +6036,28 @@ html[data-system-tone="light"] .art-rim {
 [data-feed-video-frame]:not(#_) {
   max-height: 75svh !important;
 }
+/* Phone feed preview (VideoCard): the frame hugs the clip within 55% of the
+   screen, left aligned like X, so a slim video leaves empty space on the
+   right rather than bars at its sides.
+   Beats the cap above and the cinematic feed's full-width media rule. */
+[data-feed-video-frame][data-feed-preview]:not(#_):not(#_) {
+  max-height: 55svh !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+[data-media-full][data-feed-preview]:not(#_):not(#_) {
+  width: min(100%, calc(55svh * var(--feed-preview-aspect, 1.7778))) !important;
+}
+/* The cinematic feed lays its author row and buttons over the top of the
+   media, so unmute drops below them there. */
+html[data-theme="immersive"] [data-cinematic] [data-preview-mute] {
+  top: 3.5rem;
+}
 @media (max-width: 639px) {
   :root {
     --post-media-max-h: max(80dvh, calc(100vw * 16 / 9));
+    --feed-image-max-h: min(600px, 55svh);
   }
 }
 
@@ -6295,11 +6317,17 @@ html[data-system-tone="light"] [data-creator-page] .text-white {
     max-width: none !important;
     max-height: var(--post-media-max-h, 80dvh) !important;
   }
+  /* Photos follow the feed video rule: wide ones run full width, tall ones
+     hug their real shape within 55% of the screen, left aligned, uncropped
+     (ImageCard sizes the width from the photo's ratio). */
   html[data-theme="immersive"] [data-cinematic="image"] [data-media-full] img:not(.blur-lg) {
+    max-width: 100% !important;
+    max-height: var(--feed-image-max-h, 55svh) !important;
+    object-fit: contain;
+  }
+  /* Until its shape is known the photo holds the full width. */
+  html[data-theme="immersive"] [data-cinematic="image"] [data-media-full] img:not(.blur-lg):not([width]) {
     width: 100% !important;
-    max-width: none !important;
-    max-height: var(--post-media-max-h, 80dvh) !important;
-    object-fit: cover;
   }
 
   /* Photos keep a plain author row above the picture, Instagram style. */
@@ -6762,7 +6790,7 @@ html[data-theme="immersive"] [data-feed-filter-panel] {
    Lift them to the same near-white the canvas themes already use (#e4e4e7);
    the active tab stays pure white with its glass indicator. Light, minimal,
    osaka, war and jungle style these bars in their own sheets and keep them. */
-html:not([data-theme="light"], [data-theme="minimal"], [data-theme="osaka"], [data-theme="war"], [data-theme="jungle"]) :is([data-feed-nav], [data-mobile-header]) :is(button, a).text-zinc-400:not(:hover) {
+html:not([data-theme="light"], [data-theme="minimal"], [data-theme="osaka"], [data-theme="war"], [data-theme="jungle"], [data-system-tone="light"]) :is([data-feed-nav], [data-mobile-header]) :is(button, a).text-zinc-400:not(:hover) {
   color: rgb(228 228 231);
 }
 

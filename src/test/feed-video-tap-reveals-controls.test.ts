@@ -57,7 +57,7 @@ describe('feed video — a tap on the media toggles playback, it does not naviga
     // Lite mode has no duration until Play is pressed. The strip button must
     // still start playback; seeking stays disabled until metadata arrives.
     const bar = VIDEO_CARD.match(
-      /\{!video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
+      /\{(?:!feedPreview && )?!video\.isAudio && !\(video\.isLivePost && video\.isLiveNow\) && \(\n\s*<div data-video-controls[^\n]*?"absolute bottom-0([\s\S]*?)\n {8}\)\}/
     );
     expect(bar, 'transport bar must remain mounted before metadata and while controls are hidden').not.toBeNull();
     expect(VIDEO_CARD).toContain('data-controls-hidden={!controlsVisible');
