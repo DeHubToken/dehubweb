@@ -10,6 +10,7 @@
 import { useMemo } from 'react';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { mergeLiveCounts } from '@/lib/live-counts';
+import { displayPostTitle } from '@/lib/post-caption';
 import {
   searchNFTs,
   getMediaUrl,
@@ -185,9 +186,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const soundtrackTokenId = soundtrackUrl ? descText.match(/\[soundtrack:(\d+)/)?.[1] : undefined;
 
   // Clean soundtrack tag from description for display
-  const cleanDescription = soundtrackUrl
-    ? descText.replace(/\[soundtrack:[^\]]*\]/, '').trim()
-    : undefined;
+  const cleanDescription = descText.replace(/\[soundtrack:[^\]]*\]/, '').trim();
+  const videoTitle = nft.name || nft.title;
 
   return {
     id,
@@ -202,8 +202,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isAudio: isAudioPost,
     duration: formatDuration(duration),
     durationSeconds: typeof duration === 'number' ? duration : 0,
-    title: nft.name || nft.title || nft.description?.split('\n')[0] || '',
-    description: cleanDescription ?? undefined,
+    title: displayPostTitle(videoTitle, cleanDescription),
+    description: cleanDescription || undefined,
     channel,
     channelAvatar,
     verified,
@@ -305,10 +305,11 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   const creatorUsername = nft.minterUsername || nft.mintername || nft.creator?.username;
 
   // Get title and description
-  const title = nft.name || nft.title || '';
+  const rawTitle = nft.name || nft.title;
   const rawDescription = nft.description || '';
   const soundtrack = parseSoundtrackTag(rawDescription);
   const description = rawDescription.replace(/\[soundtrack:[^\]]*\]/, '').trim();
+  const title = displayPostTitle(rawTitle, description);
 
   return {
     id,

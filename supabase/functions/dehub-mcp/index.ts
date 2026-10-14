@@ -987,7 +987,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const hasMedia = !!media_url;
       const isVideo = hasMedia && media_type === "video";
       const formData = new FormData();
-      formData.append("name", title || (mint || hasMedia ? content.split("\n")[0].slice(0, 50) : " "));
+      const distinctTitle = title?.trim() && !content.trimStart().startsWith(title.trim()) ? title.trim() : "";
+      // Feed posts carry their words in description; a copied caption in name renders twice.
+      formData.append("name", distinctTitle || (mint ? content.split("\n")[0].slice(0, 50) : " "));
       formData.append("description", content);
       // Ordinary text posts use the same feed-simple form as the web composer.
       // The placeholder file is only needed for the explicit mint path.
