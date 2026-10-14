@@ -5,12 +5,19 @@ const subscriptions = new Map<Element, Set<(visible: boolean) => void>>();
 let observer: IntersectionObserver | undefined;
 
 /** Hold a feed frame once seen; late decoding must not move the next post. */
-export function useFeedFrameAspect(key: string, candidate: number, element: RefObject<HTMLElement>, enabled = true): number {
+export function useFeedFrameAspect(key: string, candidate: number, element: RefObject<HTMLElement>, enabled = true, measured?: number | null): number {
   const valid = Number.isFinite(candidate) && candidate > 0 ? candidate : 1;
   const latest = useRef({ key, candidate: valid });
   latest.current = { key, candidate: valid };
   const frame = useRef({ key, ratio: displayed.get(key) ?? valid, preparing: false });
   if (frame.current.key !== key) frame.current = { key, ratio: displayed.get(key) ?? valid, preparing: false };
+  // Video metadata and decoded posters can correct an initial fallback frame.
+  // Image galleries omit this value and retain their reserved scroll geometry.
+  if (enabled && measured != null && Number.isFinite(measured) && measured > 0) {
+    frame.current.ratio = measured;
+    displayed.set(key, measured);
+    if (displayed.size > 1000) displayed.delete(displayed.keys().next().value!);
+  }
   if (frame.current.preparing && !displayed.has(key)) frame.current.ratio = valid;
   const [, update] = useReducer(value => value + 1, 0);
 
