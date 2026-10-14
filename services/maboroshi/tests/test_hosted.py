@@ -19,6 +19,25 @@ IDENT = 'a' * 32
 
 
 class HostedTests(unittest.TestCase):
+    def test_kling_skips_paid_preparation_and_cannot_buy_hd(self):
+        with access.database() as db:
+            db.execute("UPDATE jobs SET renderer='kling',state='prepared',seconds=10 WHERE id=?", (IDENT,))
+        (self.folder / 'workflow-mode.json').write_text('{"mode":"kling"}')
+        (self.folder / 'seedance-input.mp4').write_bytes(b'test')
+        mask_review.review(self.folder, True, 'Reviewed source', mask_review.fingerprint(self.folder))
+        access.update(IDENT, reference='reference.png')
+        quote = self.client.get(f'/jobs/{IDENT}/checkout/draft')
+        self.assertEqual(quote.status_code, 200)
+        self.assertEqual(quote.json()['renderer'], 'kling')
+        self.assertEqual(quote.json()['price_micros'], 3150000)
+        self.assertEqual(set(self.client.get(f'/jobs/{IDENT}').json()['quotes']), {'draft'})
+        with patch('access.debit') as debit, patch.object(server.executor, 'submit') as submit:
+            for stage in ('prepare', 'hd'):
+                self.assertEqual(self.client.post(f'/jobs/{IDENT}/{stage}', data={'price_micros': 3150000}).status_code, 400)
+            for _ in range(2):
+                self.assertEqual(self.client.post(f'/jobs/{IDENT}/draft', data={'price_micros': 3150000}).status_code, 200)
+            debit.assert_called_once(); submit.assert_called_once()
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

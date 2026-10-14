@@ -3,6 +3,25 @@
 Video subject replacement for DeHub Creator at `/creator/maboroshi`. The web
 page and native app share the same hosted interface and private job store.
 
+New projects offer Kling as the lower-cost, single-pass option and Seedance
+Premium for the prepared draft/HD workflow. Existing projects remain Seedance.
+Kling accepts 3–15 second MP4/MOV sources with at least 720 pixels per side and
+one or two image character references. It uses the original clip directly,
+requires review of that exact source, and has no paid preparation or HD step.
+Both routes restore the complete original compressed audio track after rendering.
+Kling output is delivered at the provider's output resolution; it is not sold as
+a separate 1080p completion.
+
+Kling costs $0.28 per started source second plus $0.35 per render ($3.15 for
+10 seconds). Configure `MABOROSHI_KLING_MICROS_PER_SECOND` and
+`MABOROSHI_KLING_OVERHEAD_MICROS`; the server refuses rates below $0.24/s or
+a processing reserve below $0.35. At fal's checked $0.168/output-second tariff,
+that floor retains at least 30% before the processing reserve. Maboroshi uses
+its full server quote without staking discounts and never retries uncertain
+provider submissions automatically. Review provider charges, processing,
+payment fees and charged failures before changing these tariffs.
+Provider reference: https://fal.ai/models/fal-ai/kling-video/o3/pro/video-to-video/edit
+
 Find Maboroshi in Creator's video model search, alongside Kling Character Swap
 and Motion Control. The composer has no separate shortcut row.
 
