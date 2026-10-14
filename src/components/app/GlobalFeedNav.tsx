@@ -11,7 +11,7 @@ import { useTabLongPress } from '@/hooks/use-tab-long-press';
  * between tabs for a tactile, interactive experience.
  */
 
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback, useState, useEffect, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import Settings2 from "@/components/ui/cut-icons/settings";
@@ -54,7 +54,7 @@ function getPersistedTab(): string {
  * @param profilePage Keep that feed pill on desktop profiles, with Back in the
  *   settings slot, so opening a profile preserves the home navigation shape.
  */
-export function GlobalFeedNav({ postPage = false, profilePage = false }: { postPage?: boolean; profilePage?: boolean } = {}) {
+export function GlobalFeedNav({ postPage = false, profilePage = false, compactProfileContent }: { postPage?: boolean; profilePage?: boolean; compactProfileContent?: ReactNode } = {}) {
   const { t: _copy } = _useCopy();
   const { theme } = useAppTheme();
   const location = useLocation();
@@ -256,6 +256,20 @@ export function GlobalFeedNav({ postPage = false, profilePage = false }: { postP
       <FeedFilterAnchor behindNav={theme === 'system'}>
       <div data-feed-nav className="flex flex-col bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px', ...(theme === 'system' ? { position: 'relative', zIndex: 10 } as const : {}) }}>
         <span data-nav-glass-backdrop aria-hidden="true" />
+        {compactProfileContent ? (
+          <div data-profile-compact-nav className="relative z-20 flex h-9 min-w-0 items-center gap-2 px-1">
+            <button
+              data-profile-nav-back
+              data-swipe-back
+              onClick={handleBack}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-zinc-400 hover:text-white hover:bg-white/5"
+              aria-label={_copy("copy.76900f1bfd16", { defaultValue: "Back" })}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            {compactProfileContent}
+          </div>
+        ) : (
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} variant="nav" />
           {/* Drag handle overlay */}
@@ -332,6 +346,7 @@ export function GlobalFeedNav({ postPage = false, profilePage = false }: { postP
             })}
           </div>
         </div>
+        )}
         {/* Filter panel portal target — rendered here so the dropdown stays
             visible below the global nav even when the home page tab bar is
             hidden (collapsed desktop mode). */}
