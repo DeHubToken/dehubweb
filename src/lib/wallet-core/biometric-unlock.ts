@@ -99,7 +99,7 @@ export async function unlockWithBiometrics(
     throw new PasskeyUnsupportedError("Biometric unlock isn't set up for this account yet.");
   }
 
-  const refs: PasskeyRef[] = wraps.map((w) => ({ credentialId: w.credentialId, prfSalt: w.prfSalt }));
+  const refs: PasskeyRef[] = wraps.map((w) => ({ credentialId: w.credentialId, prfSalt: w.prfSalt, transports: w.transports }));
   const { credentialId, keyMaterial, backedUp } = await evaluatePrf(refs);
 
   const ordered = [
