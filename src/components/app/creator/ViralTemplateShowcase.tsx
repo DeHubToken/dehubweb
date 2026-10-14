@@ -37,7 +37,7 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralTempla
           </button>}
       {failed === effect.id && <p role="status" className="absolute inset-x-2 top-2 rounded-md bg-black/85 p-2 text-xs">{t('viralTemplates.previewUnavailable')}</p>}
     </div>
-    <p className="mt-3 text-xs text-white/50">{effect.motionSeconds ? t('viralTemplates.motion') : t(`viralTemplates.${effect.category}`)}{effect.motionSeconds ? ` Â· ${Math.ceil(effect.motionSeconds)}s` : ''}</p>
+    <p className="mt-3 text-xs text-white/50">{effect.motionSeconds ? t('viralTemplates.motion') : t(`viralTemplates.${effect.category}`)}{effect.motionSeconds ? ` · ${Math.ceil(effect.motionSeconds)}s` : ''}</p>
     <h3 className="mt-1 truncate text-base font-semibold" title={effect.name}>{effect.name}</h3>
     <button type="button" onClick={() => choose(effect)} aria-label={t('viralTemplates.useNamed', { name: effect.name })}
       className="mt-2 flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-white/20 px-3 text-sm font-semibold hover:bg-white/10 focus-visible:outline focus-visible:outline-2">
