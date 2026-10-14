@@ -102,7 +102,8 @@ import { useGenerationStore, type GenerationJob } from '@/store/generationStore'
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
 import { CounterChip, SelectChip, ToggleChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
-import { MaboroshiShowcase } from '../MaboroshiShowcase';
+import { ViralTemplateShowcase } from '../ViralTemplateShowcase';
+import { VIRAL_EFFECTS, VIRAL_EFFECT_MODEL, type ViralEffect } from '../../../../../supabase/functions/_shared/viral-effects';
 import { GenerationExample } from './GenerationExample';
 import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
@@ -598,6 +599,20 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const fileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
+  const effectMode = mode === 'video' && videoModel === VIRAL_EFFECT_MODEL;
+  const selectedEffect = VIRAL_EFFECTS.find(effect => effect.name === prompts.video) ?? VIRAL_EFFECTS.find(effect => effect.id === 'earth-zoom')!;
+  useEffect(() => {
+    if (videoModel !== VIRAL_EFFECT_MODEL) return;
+    setPresetFor('video', null);
+    if (!VIRAL_EFFECTS.some(effect => effect.name === prompts.video)) setPromptFor('video', selectedEffect.name);
+  }, [videoModel, prompts.video, selectedEffect.name, setPresetFor, setPromptFor]);
+  const pickEffect = (effect: ViralEffect) => {
+    setMode('video'); setVideoModel(VIRAL_EFFECT_MODEL); setPresetFor('video', null);
+    setPromptFor('video', effect.name); setDuration(5); setResolution('720p');
+    setExtraReferences(previous => ({ ...previous, video: [] }));
+    composerRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
+    textareaRef.current?.focus({ preventScroll: true });
+  };
 
   // Paywalls are Radix dialogs, portalled outside the host's hidden wrapper.
   useCloseOnSurfaceSwitch(
@@ -1431,6 +1446,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         {
           prompt: resolvedPrompt,
           model: videoModel,
+          ...(videoModel === VIRAL_EFFECT_MODEL ? { effect: selectedEffect.name } : {}),
           aspectRatio: videoAspect,
           duration: options?.duration ?? duration,
           // Only send a resolution to models that declare support for one.
@@ -1461,6 +1477,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     [
       resolvedPrompt,
       videoModel,
+      selectedEffect.name,
       videoAspect,
       duration,
       resolution,
@@ -1777,6 +1794,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       id={promptId}
                       ref={textareaRef}
                       value={prompt}
+                      readOnly={effectMode}
                       onChange={(e) => editPrompt(e.target.value)}
                       onKeyDown={(e) => {
                         // Enter submits everywhere else, but a dialogue script
@@ -1793,10 +1811,11 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     />
                   </>
                 )}
-                {enhanceButton()}
+                {!effectMode && enhanceButton()}
               </div>
 
-              {undoEnhance !== null && (
+              {effectMode && <p className="py-2 text-sm text-white/60">{t('viralTemplates.ready', { name: selectedEffect.name })}</p>}
+              {!effectMode && undoEnhance !== null && (
                 <div className="mt-1 flex items-center gap-2 px-1">
                   <span className="text-[11px] text-white/45">{_copy("copy.97886fe2bb28", { defaultValue: "Prompt expanded." })}</span>
                   <button
@@ -1889,7 +1908,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     />
                   )}
                   {/* Clip workflows retain the source clip's framing. */}
-                  {(mode === 'image' || (mode === 'video' && !activeVideoModel?.requiresVideoInput)) && (
+                  {(mode === 'image' || (mode === 'video' && !effectMode && !activeVideoModel?.requiresVideoInput)) && (
                     <SelectChip
                       label={t('creator.aspectRatio')}
                       value={aspect}
@@ -2083,7 +2102,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
                   {mode === 'video' && (
                     <>
-                      {activeVideoModel?.requiresVideoInput ? <span className="rounded-xl border border-white/15 px-3 py-2 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
+                      {activeVideoModel?.requiresVideoInput || effectMode ? <span className="rounded-xl border border-white/15 px-3 py-2 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
                         draftScope={`creator:duration:${videoModel}`}
                         label={t('creator.secondsUnit')}
                         singular={t('creator.secondUnit')}
@@ -2141,7 +2160,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         </div>
       </div>
 
-      {!embedded && <MaboroshiShowcase />}
+      {!embedded && <ViralTemplateShowcase onPick={pickEffect} />}
       <section className="px-3 pb-6 sm:px-4">
         {/* One input for both channels. The accept list and the handler follow
             the mode, so the picker offers recordings on the audio tasks that
@@ -2159,7 +2178,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           }}
         />
 
-        <div className="mt-5">
+        {!effectMode && <div className="mt-5">
           <GenerationExample kind={mode} model={mode === 'video' ? videoModel : undefined} />
           <PresetStrip
             kind={mode}
@@ -2167,7 +2186,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             onPick={pickPreset}
             audioTask={audioTask}
           />
-        </div>
+        </div>}
 
         <div className="mt-7">
           <ResultsFeed

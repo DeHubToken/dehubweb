@@ -1121,8 +1121,8 @@ export default function HomePage() {
           Root only: this one instance also serves /app, /videos and /shorts, and
           "/" is both the canonical indexable URL and the 301 target — the others
           are noindex app chrome (see shouldServeSSR in the worker). */}
-      <div data-feed-swallow-bounds>
-      <div ref={swallowContentRef}>
+      <div data-feed-swallow-bounds data-feed-welcome-bounds={location.pathname === '/' ? '' : undefined}>
+      <div ref={swallowContentRef} data-feed-swallow-shell>
       <FeedSwallowMotion>
       {location.pathname === '/' && <HomeIntro />}
 

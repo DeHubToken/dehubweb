@@ -279,6 +279,7 @@ const VIDEO_MODELS: Record<string, {
 type ModelKey = keyof typeof VIDEO_MODELS;
 
 interface GenerateVideoRequest {
+  effect?: string;
   prompt: string;
   model: ModelKey;
   sourceImage?: string;
@@ -935,7 +936,7 @@ serve(async (req) => {
     }
 
     // ─── New generation ───
-    const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed } = body as GenerateVideoRequest;
+    const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect } = body as GenerateVideoRequest;
 
     if (!prompt) throw new Error('Prompt is required');
     if (!model || !VIDEO_MODELS[model]) {
@@ -959,7 +960,7 @@ serve(async (req) => {
     let validatedDuration: number | undefined;
     if (CREATOR_FAL_VIDEO_MODELS[model]) {
       try {
-        validatedDuration = buildCreatorFalVideoRequest(model, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed }).durationSeconds;
+        validatedDuration = buildCreatorFalVideoRequest(model, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect }).durationSeconds;
         if (CREATOR_FAL_VIDEO_MODELS[model].requiresVideoInput) {
           const auth = await requireDeHubAuth(req);
           if (!auth.ok) return auth.response;
@@ -1004,7 +1005,7 @@ serve(async (req) => {
       });
       const response = kieResponse
         ?? (modelConfig.provider === 'fal'
-          ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed)
+          ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect)
           : await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed));
       if (!response.ok) await charged.refund();
       return await recordGeneration(charged, response);
@@ -1054,12 +1055,13 @@ async function handleFalGeneration(
   audioUrls?: string[],
   videoUrls?: string[],
   seed?: number,
+  effect?: string,
 ) {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
   const prepared = CREATOR_FAL_VIDEO_MODELS[modelConfig.id]
-    ? buildCreatorFalVideoRequest(modelConfig.id, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed })
+    ? buildCreatorFalVideoRequest(modelConfig.id, { prompt, sourceImage, duration, aspectRatio, resolution, negativePrompt, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, effect })
     : undefined;
 
   // Choose the right endpoint: reference-to-video if ref images, image-to-video if source image, else text-to-video
