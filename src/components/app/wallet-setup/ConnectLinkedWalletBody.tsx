@@ -23,6 +23,8 @@ import { writeConnectionSource } from '@/lib/connection-source';
 import { setWalletReconnectGuard } from '@/lib/wallet-reconnect';
 import { isUserRejection } from '@/lib/wallet-errors';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
+import { LoginImportWalletStep } from '../login/LoginImportWalletStep';
+import { Button } from '@/components/ui/button';
 
 interface ConnectLinkedWalletBodyProps {
   /** The session's wallet — the only address a connection is kept for. */
@@ -58,6 +60,7 @@ function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectL
   // "did we start something" would leave the sheet dead after a closed QR.
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   // Stand the account-switch handling down for as long as this sheet is up —
   // not just per connect attempt, because the WalletConnect path delivers its
@@ -142,12 +145,36 @@ function ConnectLinkedWalletBodyInner({ expectedAddress, onConnected }: ConnectL
 
   return (
     <div className="space-y-3">
+      {importing ? (
+        <LoginImportWalletStep busy={busy} onImport={async privateKey => {
+          const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
+          if (deriveFromSecret(privateKey).ethAddress.toLowerCase() !== expectedAddress.toLowerCase()) {
+            setError(t('wallet.linkedMismatch', { address: shortenAddress(expectedAddress) }));
+            return;
+          }
+          setBusy(true);
+          const { prepareImportedWallet, ensureImportedWalletConnector, finishImportedWallet } = await import('@/lib/imported-wallet');
+          try {
+            await disconnectAsync();
+            await prepareImportedWallet(privateKey);
+            await connectAsync({ connector: ensureImportedWalletConnector() });
+            await finishImportedWallet(true);
+          } catch (error) {
+            await finishImportedWallet(false);
+            throw error;
+          } finally { setBusy(false); }
+        }} />
+      ) : <>
       <LoginWalletsStep
         isConnecting={busy}
         activeProvider={activeProvider}
         onWalletConnect={handleWalletConnect}
         onWalletConnectConnect={handleWalletConnectConnect}
       />
+      <Button variant="outline" className="w-full" disabled={busy} onClick={() => setImporting(true)}>
+        {t('copy.a865110e919b')}
+      </Button>
+      </>}
       {error && <p className="text-sm text-red-400">{error}</p>}
       <p className="text-white/40 text-xs text-center">{_copy("copy.8121de8a51c5", { defaultValue: "This account’s wallet: " })}{shortenAddress(expectedAddress)}{_copy("copy.df417b8a7c3a", { defaultValue: ". Connecting a different one won’t affect your session — we’ll just ask you to switch." })}</p>
     </div>
