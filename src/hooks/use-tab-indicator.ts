@@ -1,5 +1,6 @@
-import { useState, useRef, useCallback, useLayoutEffect, useEffect } from 'react';
+import { useState, useRef, useCallback, useLayoutEffect, useEffect, useContext } from 'react';
 import type { RefObject } from 'react';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
 /**
  * Hook that manages a floating overlay indicator for tab rows.
@@ -12,6 +13,7 @@ export function useTabIndicator<T extends string>(
   isDraggingRef?: RefObject<boolean>,
   shrinkWidthByPercent: number = 0,
 ) {
+  const pageActive = useContext(CachedPageActiveContext);
   const layerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const trackingRafRef = useRef<number | null>(null);
@@ -22,16 +24,21 @@ export function useTabIndicator<T extends string>(
 
 
   const update = useCallback(() => {
+    // Cached routes remain mounted. Never replace the visible geometry with
+    // their collapsed layout while another page is active.
+    if (!pageActive) return;
     const layer = layerRef.current;
     const btn = buttonRefs.current[activeTab];
     if (!layer || !btn) return;
 
+    if (getComputedStyle(layer).visibility === 'hidden') return;
     const lr = layer.getBoundingClientRect();
-    // Skip update when container is hidden (e.g. PersistentPageCache hides pages
-    // with height:0 + visibility:hidden — getBoundingClientRect returns corrupted values)
-    if (lr.width === 0 && lr.height === 0) return;
+    // A cached/hidden row can have zero width but retain its 36px height.
+    // Accepting that layout collapses the selection into a bright sliver.
+    if (lr.width <= 0 || lr.height <= 0) return;
 
     const br = btn.getBoundingClientRect();
+    if (br.width <= 0 || br.height <= 0) return;
     const width = br.width * shrinkFactor;
     const next = {
       x: br.left - lr.left + (br.width - width) / 2,
@@ -49,7 +56,7 @@ export function useTabIndicator<T extends string>(
       prev.height === next.height &&
       prev.ready === next.ready
     ) ? prev : next);
-  }, [activeTab, shrinkFactor]);
+  }, [activeTab, shrinkFactor, pageActive]);
 
 
   const stopTracking = useCallback(() => {
@@ -98,6 +105,7 @@ export function useTabIndicator<T extends string>(
 
   // Only track for duration AFTER user switches tabs (not on initial mount)
   useEffect(() => {
+    if (!pageActive) { stopTracking(); return; }
     if (!hasMountedRef.current) {
       hasMountedRef.current = true;
       // On mount, just do a single delayed update instead of 700ms polling
@@ -113,9 +121,10 @@ export function useTabIndicator<T extends string>(
     // User switched tabs or layout shifted — track to stay synced
     trackForDuration(700);
     return stopTracking;
-  }, [activeTab, layoutShiftKey, trackForDuration, stopTracking, update]);
+  }, [activeTab, layoutShiftKey, trackForDuration, stopTracking, update, pageActive]);
 
   useEffect(() => {
+    if (!pageActive) return;
     const handler = () => {
       requestAnimationFrame(update);
       trackForDuration(350);
@@ -123,9 +132,10 @@ export function useTabIndicator<T extends string>(
 
     window.addEventListener('resize', handler);
     return () => window.removeEventListener('resize', handler);
-  }, [update, trackForDuration]);
+  }, [update, trackForDuration, pageActive]);
 
   useEffect(() => {
+    if (!pageActive) return;
     const layer = layerRef.current;
     const btn = buttonRefs.current[activeTab];
 
@@ -139,7 +149,7 @@ export function useTabIndicator<T extends string>(
     observer.observe(btn);
 
     return () => observer.disconnect();
-  }, [activeTab, update, layoutShiftKey]);
+  }, [activeTab, update, layoutShiftKey, pageActive]);
 
   return { layerRef, setRef, rect, onScroll };
 }
