@@ -175,7 +175,7 @@ export function MobileBottomNav() {
   // directly, and without a hook holding that value this bar would keep its
   // adult destinations until something else happened to re-render it.
   useKidsModeLock();
-  const navLabel = (label: string) => t(NAV_LABEL_KEYS[label] ?? label);
+  const navLabel = (label: string) => t(NAV_LABEL_KEYS[label] ?? label, label);
   const navIcon = (
     item: MobileNavItem,
     className: string,
