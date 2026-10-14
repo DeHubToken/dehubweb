@@ -29,7 +29,7 @@ interface McpToolResult {
  * the last `data:` payload out. A plain JSON body is also accepted, since the
  * transport is allowed to send one.
  */
-function parseStreamableResponse(raw: string = ""): { result?: McpToolResult; error?: { message?: string } } {
+function parseStreamableResponse(raw: string): { result?: McpToolResult; error?: { message?: string } } {
   const trimmed = raw.trim();
   if (!trimmed) throw new Error("DeHub MCP returned an empty response");
 
@@ -37,8 +37,8 @@ function parseStreamableResponse(raw: string = ""): { result?: McpToolResult; er
 
   const dataLines = trimmed
     .split(/\r?\n/)
-    .filter((line = "") => line.startsWith("data:"))
-    .map((line = "") => line.slice(5).trim())
+    .filter((line) => line.startsWith("data:"))
+    .map((line) => line.slice(5).trim())
     .filter(Boolean);
 
   if (!dataLines.length) throw new Error("DeHub MCP returned no data frame");
@@ -47,8 +47,8 @@ function parseStreamableResponse(raw: string = ""): { result?: McpToolResult; er
 
 /** Call a tool on dehub-mcp and return its structured payload. */
 export async function callDeHubTool(
-  name: string = "",
-  args: Record<string, unknown> = {},
+  name: string,
+  args: Record<string, unknown>,
 ): Promise<ToolPayload> {
   const response = await fetch(DEHUB_MCP_URL, {
     method: "POST",
@@ -76,7 +76,7 @@ export async function callDeHubTool(
 
   // A tool can fail while the transport succeeds; surface its message rather
   // than handing back an error object dressed as data.
-  const body = result.structuredContent ?? safeParse(result.content?.[0]?.text ?? "");
+  const body = result.structuredContent ?? safeParse(result.content?.[0]?.text);
   if (result.isError) {
     const message = typeof body?.error === "string" ? body.error : undefined;
     throw new Error(message ?? "DeHub tool call failed");
@@ -85,7 +85,7 @@ export async function callDeHubTool(
   return body ?? {};
 }
 
-function safeParse(text: string = ""): ToolPayload | undefined {
+function safeParse(text: string | undefined): ToolPayload | undefined {
   if (!text) return undefined;
   try {
     const parsed: unknown = JSON.parse(text);
