@@ -51,7 +51,8 @@ import { useSuperpowers } from '@/hooks/use-superpowers';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { cdnImageSrcSet } from '@/lib/media-url';
+import { cdnImageSrcSet, cdnImageSource } from '@/lib/media-url';
+import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { motion, AnimatePresence } from 'framer-motion';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { CardHeader } from './CardHeader';
@@ -227,8 +228,11 @@ function ImageSlide({
   // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
   // the exact final height up front.
   const [measurement, setMeasurement] = useState<{ img: string; ratio: number }>();
-  const ratio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
+  const measuredRatio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
   const slideRef = useRef<HTMLDivElement>(null);
+  // All slides share the row's vertical visibility: a late hidden neighbour
+  // must not increase the carousel's height while its first photo is in view.
+  const ratio = useFeedFrameAspect(`image:${postId ?? ''}:${idx}:${cdnImageSource(img)}`, measuredRatio ?? 1, viewportRef, !immersive);
   const [retainBitmap, setRetainBitmap] = useState(aboveFold || immersive);
   const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef, pinned);
   // Resolve the ratio during render so a replaced image never paints with the
@@ -271,7 +275,8 @@ function ImageSlide({
     <div
       ref={slideRef}
       className={cn('relative flex cursor-pointer select-none', immersive ? 'justify-center' : 'justify-start')}
-      style={{ minHeight: ratio ? undefined : '200px' }}
+      data-feed-image-frame={!immersive || undefined}
+      data-media-frame-key={!immersive ? `image:${postId ?? img}:${idx}` : undefined}
       // Still stops the click reaching the card's navigate handler; the ladder
       // itself now runs off pointer events, which embla's drag does not consume.
       onClick={(e) => e.stopPropagation()}
@@ -286,6 +291,7 @@ function ImageSlide({
       <HandoffImage
         mediaKey={`${postId ?? img}:${idx}`}
         priority={immersive ? 1 : 0}
+        fixedFrame={!immersive}
         src={retainBitmap && horizontalBitmap ? img : undefined}
         srcSet={retainBitmap && horizontalBitmap ? cdnImageSrcSet(img, FEED_IMAGE_WIDTHS) : undefined}
         sizes={FEED_IMAGE_SIZES}

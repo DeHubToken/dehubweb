@@ -19,14 +19,16 @@
  * costing a second download (unlike the CORS probe in use-blank-poster).
  */
 import { useEffect, useRef, useState } from 'react';
+import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 
 const cache = new Map<string, number>();
-const videoAspects = new Map<string, number>();
+const videoAspects = createMediaAspectCache(
+  () => localStorage.getItem('video-aspects-v1'), value => localStorage.setItem('video-aspects-v1', value),
+);
 
 export function rememberVideoAspect(key: string, ratio: number): void {
   if (!Number.isFinite(ratio) || ratio <= 0) return;
   videoAspects.set(key, ratio);
-  if (videoAspects.size > 500) videoAspects.delete(videoAspects.keys().next().value!);
 }
 
 /**
