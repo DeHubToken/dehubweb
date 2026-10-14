@@ -603,12 +603,12 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const composerAnchorRef = useRef<HTMLDivElement>(null);
   const [composerParked, setComposerParked] = useState(false);
   useEffect(() => {
-    const anchor = composerAnchorRef.current;
-    if (embedded || !anchor) return;
+    const composer = composerRef.current;
+    if (embedded || !composer) return;
     const observer = new IntersectionObserver(([entry]) => {
-      setComposerParked(!entry.isIntersecting && entry.boundingClientRect.top < stickyTop);
+      setComposerParked(!entry.isIntersecting && entry.boundingClientRect.bottom < stickyTop);
     }, { rootMargin: `-${stickyTop}px 0px 0px 0px`, threshold: 0 });
-    observer.observe(anchor);
+    observer.observe(composer);
     return () => observer.disconnect();
   }, [embedded, stickyTop]);
   const effectMode = mode === 'video' && videoModel === VIRAL_EFFECT_MODEL;
