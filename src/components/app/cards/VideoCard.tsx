@@ -158,7 +158,7 @@ import { PostUtilityMenuItems } from './PostUtilityMenuItems';
 import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
-import { useMediaAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
+import { useMediaAspect, rememberVideoAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
 import { FEED_VIDEO_MIN_ASPECT, useFeedVideoShape } from '@/lib/feed-video-shape';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { GatePreview } from './GatePreview';
@@ -857,7 +857,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
   const [hasError, setHasError] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [intrinsicAspect, setIntrinsicAspect] = useState<number | null>(null);
+  const [videoShape, setVideoShape] = useState<{ id: string; ratio: number } | null>(null);
+  const intrinsicAspect = videoShape?.id === video.id ? videoShape.ratio : null;
+  const setIntrinsicAspect = useCallback((ratio: number) => {
+    rememberVideoAspect(video.id, ratio);
+    setVideoShape({ id: video.id, ratio });
+  }, [video.id]);
   const volume = useMediaVolume();
   /**
    * The control row mounts the subtitle button through this node, so it shares
@@ -1683,7 +1688,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       const { videoWidth: w, videoHeight: h } = videoRef.current;
       if (w && h) setIntrinsicAspect(w / h);
     }
-  }, []);
+  }, [setIntrinsicAspect]);
 
   /**
    * Real shape of the media, so a portrait clip shows portrait instead of being
@@ -1697,6 +1702,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     video.isAudio ? null : thumbnail,
     intrinsicAspect,
     isImmersive ? THIN_MIN_RATIO : undefined,
+    video.id,
   );
   const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;

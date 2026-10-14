@@ -29,23 +29,23 @@ function drag(startY: number, y: number, x = 0) {
 
 describe('shorts panel swipe arbitration', () => {
   it.each([{ overlaysHidden: true }])(
-    'restores hidden chrome on an upward lower-area flick without paging: %o', (state) => {
+    'restores hidden chrome while paging on an upward lower-area flick: %o', (state) => {
       const v = viewer(state);
       v.handleDrag(null, drag(700, -60));
       v.handleDragEnd(null, drag(700, -60));
       expect(v.resetDragOffset).toHaveBeenCalled();
       expect(v.setOverlaysHidden).toHaveBeenCalledWith(false);
       expect(v.setAutoHidden).toHaveBeenCalledWith(false);
-      expect(v.goToNext).not.toHaveBeenCalled();
+      expect(v.goToNext).toHaveBeenCalledTimes(1);
       expect(v.goToPrev).not.toHaveBeenCalled();
     },
   );
 
-  it('does not page on a claimed flick shorter than the panel threshold', () => {
+  it('pages on a fast short flick even below the panel restore threshold', () => {
     const v = viewer();
     v.handleDragEnd(null, drag(700, -25));
     expect(v.setOverlaysHidden).not.toHaveBeenCalled();
-    expect(v.goToNext).not.toHaveBeenCalled();
+    expect(v.goToNext).toHaveBeenCalledTimes(1);
   });
 
   it.each([
