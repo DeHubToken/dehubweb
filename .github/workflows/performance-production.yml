@@ -20,6 +20,10 @@ jobs:
         env:
           PERFORMANCE_BROWSER_ROOT: ${{ runner.temp }}/performance-browser
         run: node tests/performance-production.mjs
+      - name: Check delayed media frame stability through scroll-back
+        env:
+          PERFORMANCE_BROWSER_ROOT: ${{ runner.temp }}/performance-browser
+        run: node tests/feed-frame-production.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

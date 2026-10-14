@@ -20,7 +20,7 @@ export function useFeedFrameAspect(key: string, candidate: number, element: RefO
     if (!node || typeof IntersectionObserver === 'undefined') return;
     observer ??= new IntersectionObserver(entries => {
       for (const entry of entries) subscriptions.get(entry.target)?.(entry.isIntersecting);
-    });
+    }, { rootMargin: '0px 10000px' });
     const sync = (visible: boolean) => {
       if (latest.current.key !== key) return;
       const next = frame.current;

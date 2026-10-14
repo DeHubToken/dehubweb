@@ -274,6 +274,7 @@ function ImageSlide({
       ref={slideRef}
       className={cn('relative flex cursor-pointer select-none', immersive ? 'justify-center' : 'justify-start')}
       data-feed-image-frame={!immersive || undefined}
+      data-media-frame-key={!immersive ? `image:${postId ?? img}:${idx}` : undefined}
       // Still stops the click reaching the card's navigate handler; the ladder
       // itself now runs off pointer events, which embla's drag does not consume.
       onClick={(e) => e.stopPropagation()}
