@@ -61,7 +61,8 @@ try {
       await cdp.send('Profiler.start');
       const timeline = [];
       cdp.on('Tracing.dataCollected', ({ value }) => timeline.push(...value));
-      await cdp.send('Tracing.start', { categories: 'devtools.timeline,v8.execute,disabled-by-default-devtools.timeline.invalidationTracking', transferMode: 'ReportEvents' });
+      const categories = 'devtools.timeline,v8.execute' + (process.env.PERFORMANCE_INVALIDATIONS === '1' ? ',disabled-by-default-devtools.timeline.invalidationTracking' : '');
+      await cdp.send('Tracing.start', { categories, transferMode: 'ReportEvents' });
       for (let i = 0; i < 12; i++) {
         if (device === 'phone') {
           await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 190, y: 650 }] });
@@ -96,6 +97,10 @@ try {
       await fs.writeFile(`performance-results/${device}-${visit}-timeline.json`, JSON.stringify(timeline));
       await page.screenshot({ path: `performance-results/${device}-${visit}-scroll.png` });
       await page.evaluate(() => { window.scrollTo(0, 0); document.body.scrollTop = 0; });
+      // A concurrent production release can announce itself over the first
+      // author's button. Dismiss the notice as a reader would before navigating.
+      const closeToast = page.getByRole('button', { name: 'Close toast', exact: true });
+      for (const toast of await closeToast.all()) if (await toast.isVisible()) await toast.click();
       const navigationStarted = Date.now();
       await author.click();
       await page.waitForURL(url => url.pathname !== '/app');

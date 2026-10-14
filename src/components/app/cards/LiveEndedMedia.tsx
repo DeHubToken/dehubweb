@@ -59,7 +59,7 @@ function TvStatic({ label }: { label: string }) {
     return () => io.disconnect();
   }, []);
   return (
-    <div ref={rootRef} className="absolute inset-0 bg-black overflow-hidden" aria-hidden="true">
+    <div data-media-scrim ref={rootRef} className="absolute inset-0 bg-black overflow-hidden" aria-hidden="true">
       {/* Snow — noise tile re-randomizes position each step */}
       <div
         className="absolute inset-0 opacity-90"
@@ -107,7 +107,7 @@ export function LiveEndedMedia({
   const showCover = !!thumbnail && !imgFailed;
 
   return (
-    <div className={cn('absolute inset-0 overflow-hidden bg-black', rounded, className)}>
+    <div data-media-scrim={showCover || undefined} className={cn('absolute inset-0 overflow-hidden bg-black', rounded, className)}>
       {showCover ? (
         <>
           <img
