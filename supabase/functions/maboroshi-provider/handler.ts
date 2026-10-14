@@ -57,14 +57,6 @@ export function createHandler(env: Env, fetcher: typeof fetch = fetch, payment?:
     if (Number(req.headers.get('content-length')) > 24000) return reply({error: 'Request too large'}, 413);
     let body: Json;
     try {
-      if (body.operation === 'kling') {
-        const p = body.input;
-        if (!p || !Array.isArray(p.image_urls) || p.image_urls.length < 1 || p.image_urls.length > 2) return reply({error: 'Invalid Kling references'}, 400);
-        const result = await request(KLING, 'fal', {prompt: text(p.prompt, 8000), video_url: media(p.video_url),
-          image_urls: p.image_urls.map(media), keep_audio: true});
-        const id = identifier(result.request_id);
-        return reply({requestId: id, provider: 'fal', status_url: queueUrl(result.status_url, id, 'status'), response_url: queueUrl(result.response_url, id, 'result')});
-      }
       const raw = await req.text();
       if (raw.length > 24000) return reply({error: 'Request too large'}, 413);
       body = JSON.parse(raw);
@@ -87,6 +79,14 @@ export function createHandler(env: Env, fetcher: typeof fetch = fetch, payment?:
       return await response.json();
     };
     try {
+      if (body.operation === 'kling') {
+        const p = body.input;
+        if (!p || !Array.isArray(p.image_urls) || p.image_urls.length < 1 || p.image_urls.length > 2) return reply({error: 'Invalid Kling references'}, 400);
+        const result = await request(KLING, 'fal', {prompt: text(p.prompt, 8000), video_url: media(p.video_url),
+          image_urls: p.image_urls.map(media), keep_audio: true});
+        const id = identifier(result.request_id);
+        return reply({requestId: id, provider: 'fal', status_url: queueUrl(result.status_url, id, 'status'), response_url: queueUrl(result.response_url, id, 'result')});
+      }
       if (body.operation === 'prepare') {
         const url = media(body.media);
         let version: string;
