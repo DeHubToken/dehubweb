@@ -142,6 +142,14 @@ function useIsTabletOrMobile() {
  */
 const IMMERSIVE_IMAGE_MAX_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 
+/**
+ * Tallest a photo gets in feeds (index.css, --feed-image-max-h): 600px, and
+ * on phones no more than 55% of the screen, the same cap as feed videos, so a
+ * tall photo hugs the left with empty space on the right instead of running
+ * most of the screen.
+ */
+const FEED_IMAGE_CAP = `var(--feed-image-max-h, ${FEED_IMAGE_MAX_HEIGHT}px)`;
+
 interface ImageCardProps {
   post: ImagePost;
   /** Dedicated pages own one shared comments window below the post card. */
@@ -292,7 +300,7 @@ function ImageSlide({
         // whichever comes first, keeping its real shape.
         style={immersive
           ? { maxHeight: IMMERSIVE_IMAGE_MAX_HEIGHT, width: ratio ? `calc(${IMMERSIVE_IMAGE_MAX_HEIGHT} * ${ratio.toFixed(4)})` : undefined, aspectRatio: ratio }
-          : { maxHeight: FEED_IMAGE_MAX_HEIGHT, width: ratio ? ratio * FEED_IMAGE_MAX_HEIGHT : undefined, aspectRatio: ratio }}
+          : { maxHeight: FEED_IMAGE_CAP, width: ratio ? `calc(${FEED_IMAGE_CAP} * ${ratio.toFixed(4)})` : undefined, aspectRatio: ratio }}
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
         onImageLoad={(el) => {
@@ -1102,7 +1110,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: FEED_IMAGE_CAP }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
@@ -1142,7 +1150,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: FEED_IMAGE_CAP }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
@@ -1179,7 +1187,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: FEED_IMAGE_CAP }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
@@ -1219,7 +1227,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
                 src={images[0]}
                 alt=""
                 className="w-full object-cover blur-lg"
-                style={{ maxHeight: FEED_IMAGE_MAX_HEIGHT }}
+                style={{ maxHeight: FEED_IMAGE_CAP }}
                 loading={aboveFold ? 'eager' : 'lazy'}
                 fetchPriority={aboveFold ? 'high' : 'auto'}
                 decoding={aboveFold ? 'sync' : 'async'}
