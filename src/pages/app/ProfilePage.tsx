@@ -282,8 +282,7 @@ export default function ProfilePage() {
   useEffect(() => {
     const el = stuckSentinelRef.current;
     if (!el) return;
-    // On desktop the profile row pins directly beneath the feed pill. Phones
-    // have no feed pill here and keep their original safe-area threshold.
+    // The desktop tab row replaces the feed pill when it reaches the top.
     const desktop = window.matchMedia('(min-width: 1024px)');
     let observer: IntersectionObserver;
     const observe = () => {
@@ -660,10 +659,10 @@ export default function ProfilePage() {
         <div data-page-bento data-feed-nav data-profile-single-row className={cn('bg-zinc-900 rounded-xl relative', isTabsStuck && 'flex items-center gap-1 p-1')} style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div data-nav-glass-backdrop aria-hidden />
           {isTabsStuck && <>
-            <div className="relative shrink-0 w-9 h-11 lg:hidden">
+            <div className="relative shrink-0 w-9 h-11">
               <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
             </div>
-            {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1 lg:hidden" title={`${data.profile.name} ${data.profile.handle}`}>
+            {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
               <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
               <div className="hidden min-w-0 max-w-24 md:block">
                 <div className="flex items-baseline gap-1 text-xs sm:text-sm font-bold leading-tight text-white">
@@ -728,7 +727,7 @@ export default function ProfilePage() {
             </div>
           </div>
           </div>
-          {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%] lg:hidden">
+          {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%]">
             <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
           </div>}
         </div>
