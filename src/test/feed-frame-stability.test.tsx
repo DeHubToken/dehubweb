@@ -14,6 +14,20 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const visible = (value: boolean) => act(() => deliver([{ target: element.current, isIntersecting: value }]));
 
 describe('visible feed media frames', () => {
+  it('corrects a frozen fallback when a portrait video reports its real shape', () => {
+    const view = renderHook(({ measured }: { measured: number | null }) =>
+      useFeedFrameAspect('resolved-web-portrait', measured ?? 16 / 9, element, true, measured), {
+      initialProps: { measured: null },
+    });
+    visible(true);
+    expect(view.result.current).toBe(16 / 9);
+    view.rerender({ measured: 9 / 16 });
+    expect(view.result.current).toBe(9 / 16);
+    view.unmount();
+    const recycled = renderHook(() => useFeedFrameAspect('resolved-web-portrait', 16 / 9, element));
+    expect(recycled.result.current).toBe(9 / 16);
+  });
+
   it('holds every slide in a visible gallery, including hidden horizontal neighbours', () => {
     const view = renderHook(({ ratio }) => [
       useFeedFrameAspect('gallery-first', ratio, element),

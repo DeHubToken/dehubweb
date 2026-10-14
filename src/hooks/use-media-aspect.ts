@@ -22,6 +22,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 
 const cache = new Map<string, number>();
+export const getMeasuredMediaAspect = (url?: string | null) => url ? cache.get(url) ?? null : null;
 const videoAspects = createMediaAspectCache(
   () => localStorage.getItem('video-aspects-v1'), value => localStorage.setItem('video-aspects-v1', value),
 );
