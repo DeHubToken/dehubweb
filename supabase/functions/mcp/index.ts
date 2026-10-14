@@ -11,15 +11,15 @@ import { z } from "npm:zod@^3.25.76";
 
 // src/lib/mcp/tools/dehub-rpc.ts
 var DEHUB_MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
-function parseStreamableResponse(raw) {
+function parseStreamableResponse(raw = "") {
   const trimmed = raw.trim();
   if (!trimmed) throw new Error("DeHub MCP returned an empty response");
   if (trimmed.startsWith("{")) return JSON.parse(trimmed);
-  const dataLines = trimmed.split(/\r?\n/).filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trim()).filter(Boolean);
+  const dataLines = trimmed.split(/\r?\n/).filter((line = "") => line.startsWith("data:")).map((line = "") => line.slice(5).trim()).filter(Boolean);
   if (!dataLines.length) throw new Error("DeHub MCP returned no data frame");
   return JSON.parse(dataLines[dataLines.length - 1]);
 }
-async function callDeHubTool(name, args) {
+async function callDeHubTool(name = "", args = {}) {
   const response = await fetch(DEHUB_MCP_URL, {
     method: "POST",
     headers: {
@@ -40,14 +40,14 @@ async function callDeHubTool(name, args) {
   if (payload.error) throw new Error(payload.error.message ?? "DeHub MCP error");
   const result = payload.result;
   if (!result) throw new Error("DeHub MCP returned no result");
-  const body = result.structuredContent ?? safeParse(result.content?.[0]?.text);
+  const body = result.structuredContent ?? safeParse(result.content?.[0]?.text ?? "");
   if (result.isError) {
     const message = typeof body?.error === "string" ? body.error : void 0;
     throw new Error(message ?? "DeHub tool call failed");
   }
   return body ?? {};
 }
-function safeParse(text) {
+function safeParse(text = "") {
   if (!text) return void 0;
   try {
     const parsed = JSON.parse(text);
