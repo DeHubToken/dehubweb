@@ -20,7 +20,8 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * The composer keeps its shape while scrolling. Desktop uses CSS sticky;
  * phones keep it in normal flow so references cannot cover the whole viewport.
  */
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import type { GenerationDraft } from '@/lib/editor/generationDraft';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import i18n from '@/i18n';
@@ -454,6 +455,9 @@ function ModeToggle({
 }
 
 interface CreatorStudioProps {
+  embedded?: boolean;
+  generationDraft?: GenerationDraft | null;
+  onJobStarted?: (id: string) => void;
   /** Switches the host to /editor after a result is sent to the timeline. */
   onOpenEditor: () => void;
   /**
@@ -463,7 +467,8 @@ interface CreatorStudioProps {
   stickyTop?: number;
 }
 
-export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioProps) {
+export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyTop = 60, embedded = false, generationDraft, onJobStarted }: CreatorStudioProps) {
+  const promptId = useId();
   const navigate = useNavigate();
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
@@ -472,10 +477,14 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   // openPaywall is declared above runImage; the ref gives it the current one.
   const runImageRef = useRef<(txHash?: string) => void>(() => {});
 
-  const startImage = useGenerationStore((s) => s.startImage);
-  const startVideo = useGenerationStore((s) => s.startVideo);
-  const startModel3d = useGenerationStore((s) => s.startModel3d);
-  const startAudio = useGenerationStore((s) => s.startAudio);
+  const startImageJob = useGenerationStore((s) => s.startImage);
+  const startVideoJob = useGenerationStore((s) => s.startVideo);
+  const startModel3dJob = useGenerationStore((s) => s.startModel3d);
+  const startAudioJob = useGenerationStore((s) => s.startAudio);
+  const startImage = useCallback((...args: Parameters<typeof startImageJob>) => { const id = startImageJob(...args); onJobStarted?.(id); return id; }, [startImageJob, onJobStarted]);
+  const startVideo = useCallback((...args: Parameters<typeof startVideoJob>) => { const id = startVideoJob(...args); onJobStarted?.(id); return id; }, [startVideoJob, onJobStarted]);
+  const startModel3d = useCallback((...args: Parameters<typeof startModel3dJob>) => { const id = startModel3dJob(...args); onJobStarted?.(id); return id; }, [startModel3dJob, onJobStarted]);
+  const startAudio = useCallback((...args: Parameters<typeof startAudioJob>) => { const id = startAudioJob(...args); onJobStarted?.(id); return id; }, [startAudioJob, onJobStarted]);
   const runningCount = useGenerationStore((s) => s.jobs.filter((j) => j.status === 'running').length);
 
   // One read of the cache, on mount, shared by every slice below.
@@ -524,6 +533,17 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
    * that says a file is attached when nothing is.
    */
   const [audioFile, setAudioFile] = useState<{ file: File; seconds: number | null } | null>(null);
+
+  useEffect(() => {
+    if (!generationDraft) return;
+    const nextMode: Mode = generationDraft.kind === 'image' ? 'image' : generationDraft.kind === 'video' ? 'video' : 'audio';
+    setMode(nextMode);
+    setPrompts(previous => ({ ...previous, [nextMode]: generationDraft.prompt }));
+    setPresetIds(previous => ({ ...previous, [nextMode]: null }));
+    if (nextMode === 'audio') setAudioTask(generationDraft.kind === 'voice' ? 'speech' : generationDraft.kind as AudioTask);
+    if (generationDraft.aspect && nextMode === 'image') setImageAspect(generationDraft.aspect);
+    if (generationDraft.aspect && nextMode === 'video') setVideoAspect(generationDraft.aspect);
+  }, [generationDraft]);
 
   const activeAudioTask = AUDIO_TASKS[audioTask];
 
@@ -1696,7 +1716,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     <>
       {/* Token Stage hero: a centred headline over the page's wall of
           community work (drawn by CreatorPage behind this section). */}
-      <section className="relative px-3 pb-4 pt-5 text-center sm:px-4 sm:pb-6 sm:pt-16">
+      {!embedded && <section className="relative px-3 pb-4 pt-5 text-center sm:px-4 sm:pb-6 sm:pt-16">
         <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] py-1 pl-1 pr-3 text-[12.5px] font-semibold text-white/85 backdrop-blur-xl">
           <ThemedIcon icon="features" className="h-6 w-6 object-contain" />
           {t('creator.heroKicker', { model: currentModelName })}
@@ -1713,13 +1733,13 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
             {t('creator.countRunning', { count: runningCount })}
           </span>
         )}
-      </section>
+      </section>}
 
 
       {/* Horizontal padding only. Padding or a margin on the top edge would
           ride along when it parks, leaving a transparent strip between the
           header and the composer with the page scrolling through it. */}
-      <div className="z-40 px-3 sm:sticky sm:px-4" style={{ top: stickyTop }}>
+      <div className={cn('px-3 sm:px-4', !embedded && 'z-40 sm:sticky')} style={embedded ? undefined : { top: stickyTop }}>
         <div
           ref={composerRef}
           data-creator-composer
@@ -1767,11 +1787,11 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                   </p>
                 ) : (
                   <>
-                    <label htmlFor="studio-prompt" className="sr-only">
+                    <label htmlFor={promptId} className="sr-only">
                       {t('creator.promptLabel')}
                     </label>
                     <textarea
-                      id="studio-prompt"
+                      id={promptId}
                       ref={textareaRef}
                       value={prompt}
                       readOnly={effectMode}
@@ -2116,7 +2136,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                 </div>
 
                 {/* Its own row on a phone, so Create and its price get the full width. */}
-                <div className="flex w-full items-end gap-2 sm:w-auto">
+                  <div className="ml-auto flex w-full items-end justify-end gap-2">
                   {generateButton()}
                 </div>
               </div>
@@ -2140,7 +2160,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         </div>
       </div>
 
-      <ViralTemplateShowcase onPick={pickEffect} />
+      {!embedded && <ViralTemplateShowcase onPick={pickEffect} />}
       <section className="px-3 pb-6 sm:px-4">
         {/* One input for both channels. The accept list and the handler follow
             the mode, so the picker offers recordings on the audio tasks that

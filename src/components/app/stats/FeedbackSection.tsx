@@ -1,29 +1,9 @@
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
-/**
- * Feedback — the permanent testimonial hub
- * ========================================
- * A panel on the Stats page where an existing user can leave feedback at any
- * time, and explicitly authorise us to quote it.
- *
- * The login survey already asks new accounts why they joined. That is the
- * moment someone knows DeHub least. The quotes worth having tend to arrive
- * months later, from someone who has actually lived with the product, and
- * until now there was nowhere to put one — so they went into DMs, Telegram and
- * replies, and were never usable because nobody had said "yes, quote me".
- *
- * Two consent boxes, not one. `allow_promo` licenses the words; `allow_name`
- * licenses attaching the person to them. Being happy to be quoted anonymously
- * is a normal position and one checkbox cannot express it. Both default off,
- * and neither is required to submit: feedback we may not publish is still
- * feedback worth reading.
- *
- * The wall below the form shows only rows a human approved (see the RLS in
- * 20260914180000_user_testimonials.sql). It renders nothing at all until the
- * first one is approved, rather than an empty-state promising quotes that do
- * not exist yet.
- */
+/** Feedback submissions and the paginated, consent-approved public wall. */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { KitButton, PageSection } from '@/components/app/page-kit/PageKit';
 import { useTranslation } from 'react-i18next';
 import { Loader2, MessageSquareQuote } from "lucide-react";
 import Check from "@/components/ui/cut-icons/check";
@@ -34,7 +14,6 @@ import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import { cn } from '@/lib/utils';
 
 const MIN_LENGTH = 10;
 const MAX_LENGTH = 1200;
@@ -63,23 +42,23 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
   const [allowName, setAllowName] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [approved, setApproved] = useState<ApprovedTestimonial[]>([]);
-
-  // The wall is public, so it loads for signed-out readers too — the whole
-  // point of publishing testimonials is that people who are not members yet
-  // can read them.
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
+  const feedback = useInfiniteQuery({
+    queryKey: ['public-testimonials'],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const { data, error } = await supabase
         .from('public_testimonials')
         .select('id, body, time_using, username, created_at')
         .order('created_at', { ascending: false })
-        .limit(12);
-      if (!cancelled && data) setApproved(data as ApprovedTestimonial[]);
-    })();
-    return () => { cancelled = true; };
-  }, []);
+        .order('id', { ascending: false })
+        .range(pageParam, pageParam + 23);
+      if (error) throw error;
+      return (data ?? []) as ApprovedTestimonial[];
+    },
+    getNextPageParam: (lastPage, pages) => lastPage.length === 24 ? pages.length * 24 : undefined,
+    staleTime: 60_000,
+  });
+  const approved = feedback.data?.pages.flat() ?? [];
 
   const trimmed = body.trim();
   const canSubmit =
@@ -123,7 +102,7 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
 
   return (
     <div className="flex flex-col gap-2 sm:gap-3">
-      <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+      <PageSection>
         <div className="flex items-center gap-2 mb-2">
           <MessageSquareQuote className="w-4 h-4 text-zinc-400" />
           <span className="text-sm font-semibold text-white">
@@ -210,16 +189,9 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
             )}
 
             <div className="mt-3 flex items-center gap-3">
-              <button
-                type="button"
+              <KitButton
                 disabled={!canSubmit}
                 onClick={handleSubmit}
-                className={cn(
-                  'rounded-xl px-4 py-2 text-sm font-semibold transition-colors',
-                  canSubmit
-                    ? 'bg-white text-black hover:bg-zinc-200'
-                    : 'bg-zinc-800 text-zinc-500 cursor-not-allowed',
-                )}
               >
                 {submitting ? (
                   <span className="flex items-center gap-2">
@@ -229,7 +201,7 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
                 ) : (
                   t('stats.feedback.submit', 'Send feedback')
                 )}
-              </button>
+              </KitButton>
               <span className="text-[11px] text-zinc-500">
                 {!isAuthenticated
                   ? t('stats.feedback.signedOut', 'Sign in to leave feedback')
@@ -238,10 +210,9 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
             </div>
           </>
         )}
-      </div>
+      </PageSection>
 
-      {approved.length > 0 && (
-        <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
+        <PageSection>
           <div className="flex items-center gap-2 mb-3">
             <Quote className="w-4 h-4 text-zinc-400" />
             <span className="text-sm font-semibold text-white">
@@ -250,6 +221,11 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
             <span className="text-[11px] text-zinc-500 ml-auto">
               {t('stats.feedback.wallNote', 'published with permission')}
             </span>
+          </div>
+          <div role="status" className="text-xs text-zinc-400">
+            {feedback.isPending ? t('common.loading') : null}
+            {!feedback.isPending && !feedback.isError && approved.length === 0 ? t('search.noResults') : null}
+            {feedback.isError ? t('common.failedToLoad') : null}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 sm:gap-3">
             {approved.map((item) => (
@@ -264,8 +240,13 @@ export function FeedbackSection({ source }: { source?: 'converter' | 'migration'
               </figure>
             ))}
           </div>
-        </div>
-      )}
+          {(feedback.isError || feedback.hasNextPage) && (
+            <KitButton variant="quiet" className="mt-3" disabled={feedback.isFetching}
+              onClick={() => { void (feedback.isError ? (approved.length ? feedback.fetchNextPage() : feedback.refetch()) : feedback.fetchNextPage()); }}>
+              {t(feedback.isFetching ? 'common.loading' : feedback.isError ? 'common.retry' : 'common.loadMore')}
+            </KitButton>
+          )}
+        </PageSection>
     </div>
   );
 }
