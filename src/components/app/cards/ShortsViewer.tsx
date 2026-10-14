@@ -17,8 +17,9 @@ import {
 } from '@/lib/media-session';
 import { createPortal } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Minimize, ChevronUp, ChevronDown, ChevronLeft, UserCheck, Loader2, Globe, RotateCcw } from "lucide-react";
+import { Minimize, ChevronUp, ChevronDown, UserCheck, Loader2, Globe, RotateCcw } from "lucide-react";
 import Volume2 from "@/components/ui/cut-icons/volume";
+import ArrowLeft from "@/components/ui/cut-icons/back";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
 import MoreHorizontal from "@/components/ui/cut-icons/more";
@@ -2114,12 +2115,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           transition={{ duration: 0.25, ease: 'easeOut' }}
           style={{ pointerEvents: (chromeHidden || showComments) ? 'none' : 'auto' }}
         >
-          {/* Back button - top left */}
+          {/* Back button - top left. All four buttons wear the black/50 square
+              and cut icons of the app's picture-in-picture button. */}
           <button
             onClick={onClose}
-            className="absolute top-4 left-4 w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center z-20"
+            className="absolute top-4 left-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center z-20"
           >
-            <ChevronLeft className="w-6 h-6 text-white" />
+            <ArrowLeft className="w-5 h-5 text-white" />
           </button>
           
           {/* Right side controls */}
@@ -2136,7 +2138,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 setPlaybackRate(nextRate);
                 vpSetPlaybackRate(nextRate, currentShort?.creatorId);
               }}
-              className="h-10 min-w-[40px] px-1.5 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
+              className="h-10 min-w-[40px] px-1.5 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center"
               style={{ touchAction: 'manipulation' }}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
@@ -2146,7 +2148,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {/* Mute button */}
             <button
               onClick={toggleMute}
-              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
+              className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center"
             >
               {isMuted ? (
                 <VolumeX className="w-5 h-5 text-white" />
@@ -2158,7 +2160,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             {/* More options button */}
             <button
               onClick={() => setShareSheetOpen(true)}
-              className="w-10 h-10 bg-zinc-900/60 backdrop-blur-sm rounded-xl flex items-center justify-center"
+              className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-xl flex items-center justify-center"
             >
               <MoreHorizontal className="w-5 h-5 text-white" />
             </button>

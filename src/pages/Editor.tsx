@@ -18,6 +18,7 @@ import { Inspector } from "@/components/editor/Inspector";
 import { ShortcutsLayer } from "@/components/editor/ShortcutsLayer";
 import { Autosave } from "@/components/editor/Autosave";
 import { MediaLibraryLoader } from "@/components/editor/MediaLibraryLoader";
+import { GenerationWindow } from "@/components/editor/GenerationWindow";
 import { MobileBottomBar } from "@/components/editor/MobileBottomBar";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
@@ -84,6 +85,7 @@ export default function EditorPage() {
       <ShortcutsLayer />
       <Autosave />
       <MediaLibraryLoader />
+      <GenerationWindow />
     </div>
   );
 }
