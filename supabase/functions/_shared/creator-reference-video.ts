@@ -22,7 +22,8 @@ export function allowedReferenceVideo(url: string, storageHost: string): boolean
   try {
     const u = new URL(url);
     return u.protocol === 'https:' && !u.username && !u.password && !u.port &&
-      (u.hostname === storageHost || u.hostname === 'storage.googleapis.com' || u.hostname.endsWith('.fal.media'));
+      (u.hostname === storageHost || u.hostname === 'storage.googleapis.com' || u.hostname.endsWith('.fal.media') ||
+        VIRAL_MOTION_TEMPLATES.some(template => template.preview === url));
   } catch { return false; }
 }
 
@@ -56,3 +57,5 @@ export async function referenceVideoDuration(url: string, maxSeconds: number, st
   if (seconds < 3 || seconds > maxSeconds) throw new Error(`Use a reference clip between 3 and ${maxSeconds} seconds`);
   return Math.ceil(seconds);
 }
+import { VIRAL_MOTION_TEMPLATES } from './viral-templates.ts';
+

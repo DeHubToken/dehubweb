@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MOTION_TEMPLATE_PROMPT, TEMPLATE_FEATURED_IDS, VIRAL_MOTION_TEMPLATES, VIRAL_TEMPLATES } from '../lib/creator/viralTemplates';
 import { buildCreatorFalVideoRequest } from '../../supabase/functions/_shared/creator-fal-input';
+import { allowedReferenceVideo } from '../../supabase/functions/_shared/creator-reference-video';
 
 describe('playable motion templates', () => {
   it('has unique clips and a playable featured selection', () => {
@@ -18,9 +19,15 @@ describe('playable motion templates', () => {
       });
       expect(template.motionSeconds).toBeGreaterThanOrEqual(3);
       expect(template.motionSeconds).toBeLessThanOrEqual(30);
+      expect(allowedReferenceVideo(template.preview!, 'storage.example.com')).toBe(true);
       expect(request.appId).toBe('fal-ai/kling-video/v3/pro/motion-control');
       expect(request.input).toMatchObject({ image_url: 'https://example.com/person.jpg', video_url: template.preview, character_orientation: 'video', keep_original_sound: true });
       expect(request.input).not.toHaveProperty('effect');
     }
+  });
+  it('does not trust arbitrary files on a template host', () => {
+    expect(allowedReferenceVideo('https://jeanphilai.com/private.mp4', 'storage.example.com')).toBe(false);
+    expect(allowedReferenceVideo(VIRAL_MOTION_TEMPLATES[0].preview + '&redirect=http://127.0.0.1', 'storage.example.com')).toBe(false);
+    expect(allowedReferenceVideo('http://127.0.0.1/clip.mp4', 'storage.example.com')).toBe(false);
   });
 });
