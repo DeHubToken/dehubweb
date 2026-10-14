@@ -219,6 +219,8 @@ const MAX_MEDIA_HEIGHT = 600;
 const IMMERSIVE_MAX_MEDIA_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 /** Phone feed preview cap: a bit taller than X's long-form videos (~46%). */
 const FEED_PREVIEW_MAX_HEIGHT = '55svh';
+/** Desktop/tablet feed frame cap: the clip hugs its shape up to 75% of the screen. */
+const DESKTOP_FEED_MAX_HEIGHT = '75svh';
 
 /**
  * How long the player's controls stay up after the interaction that revealed
@@ -1473,7 +1475,10 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
   // A menu or slider open over the player counts as activity: the row must not
   // vanish out from under the thing the pointer is already inside.
-  const splitControls = bareControls && !isContentGated && !feedPreview;
+  // Desktop/tablet feeds: the frame hugs the clip (no black side panels) and
+  // the transport bar only shows on hover or while paused, over the picture.
+  const desktopFeedHug = !isPhone && !isImmersive && !isFullscreen && !video.isAudio;
+  const splitControls = bareControls && !isContentGated && !feedPreview && !desktopFeedHug;
   const controlsVisible = splitControls || !isPlaying || showControls || subsMenuOpen || volumeOpen;
   useEffect(() => {
     if (controlsVisible && videoRef.current) setCurrentTime(videoRef.current.currentTime);
@@ -2159,6 +2164,16 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     marginRight: 'auto',
                     ['--feed-preview-aspect' as string]: mediaAspect.toFixed(4),
                   }
+              : desktopFeedHug
+                ? {
+                    // Same rule as the phone preview, in the desktop column:
+                    // up to 75% of the screen tall, left aligned.
+                    aspectRatio: feedFrameAspect,
+                    width: `min(100%, calc(${DESKTOP_FEED_MAX_HEIGHT} * ${feedFrameAspect.toFixed(4)}))`,
+                    maxHeight: DESKTOP_FEED_MAX_HEIGHT,
+                    marginLeft: 0,
+                    marginRight: 'auto',
+                  }
               : cropFeedVideo
                 ? {
                     aspectRatio: feedFrameAspect,
@@ -2675,7 +2690,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             from the centered Play button; seeking enables once the length is
             known. Audio posts and live streams own their transport. */}
         {!feedPreview && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
-          <div data-video-controls data-video-control-strip={splitControls || undefined} data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent")}>
+          <div data-video-controls data-video-control-strip={splitControls || undefined} data-no-swipe data-controls-hidden={!controlsVisible ? "true" : undefined} data-video-scrubber={bareControls ? 'line' : undefined} className={cn("absolute bottom-0 left-0 right-0 z-10", bareControls ? "pb-1.5" : "px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent", bareControls && desktopFeedHug && "pt-8 bg-gradient-to-t from-black/60 to-transparent")}>
 
             {bareControls && <div data-video-scrub-surface className="absolute bottom-0 left-0 right-0 h-16 touch-pan-y" />}
 
