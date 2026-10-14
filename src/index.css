@@ -6027,7 +6027,7 @@ html[data-system-tone="light"] .art-rim {
    the screen edge to edge instead of stopping a few pixels short. */
 :root {
   --post-media-max-h: 80dvh;
-  --feed-image-max-h: 600px;
+  --feed-image-max-h: 75svh;
 }
 
 /* Feed videos fill their column, capped at 75% of the viewport height. The
