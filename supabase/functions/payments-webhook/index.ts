@@ -3,18 +3,14 @@ import { type StripeEnv, createStripeClient, verifyWebhook } from "../_shared/st
 import { AI_PLANS, invoicePlanMetadata, planGrantDhb } from "../_shared/ai-plans.ts";
 import { reportInvoiceToPlay, reportRefundToPlay } from "./play-report.ts";
 
-function createSupabaseAdmin() {
-  return createClient(
-    Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
-  );
-}
-
-type SupabaseAdminClient = ReturnType<typeof createSupabaseAdmin>;
-
-let _supabase: SupabaseAdminClient | null = null;
-function getSupabase(): SupabaseAdminClient {
-  if (!_supabase) _supabase = createSupabaseAdmin();
+let _supabase: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
+    );
+  }
   return _supabase;
 }
 
