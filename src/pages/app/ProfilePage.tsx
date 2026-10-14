@@ -54,6 +54,7 @@ import { useUsernameMarketConfig } from '@/hooks/use-username-market';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
 import { PageHeader } from '@/components/app/PageHeader';
+import { GlobalFeedNav } from '@/components/app/GlobalFeedNav';
 import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButton';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -530,6 +531,9 @@ export default function ProfilePage() {
           }),
         }}
       />
+      <div className="hidden lg:sticky lg:top-0 lg:z-[80] lg:block" data-profile-desktop-feed-nav>
+        <GlobalFeedNav profilePage />
+      </div>
       <CollapsingProfileHeader
         headerRef={profileHeaderRef}
         tabsPinned={isTabsStuck}
@@ -619,7 +623,7 @@ export default function ProfilePage() {
         <div data-page-bento data-feed-nav data-profile-single-row className={cn('bg-zinc-900 rounded-xl relative', isTabsStuck && 'flex items-center gap-1 p-1')} style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div data-nav-glass-backdrop aria-hidden />
           {isTabsStuck && <>
-            <div className="relative shrink-0 w-9 h-11">
+            <div className="relative shrink-0 w-9 h-11 lg:hidden">
               <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
             </div>
             {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
