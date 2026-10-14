@@ -43,6 +43,7 @@ import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import dehubMarkBlack from '@/assets/dehub-mark-black.png';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
+import { warmPostComposer } from '@/lib/preload-post-composer';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
@@ -289,6 +290,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   // itself starts the slide-up on the same frame.
   const warmSheetForLogin = () => {
     if (!isAuthenticated) warmLoginSheet();
+    else warmPostComposer();
   };
 
   // The rail's own running order. Home is pinned to the top wherever it sits in
@@ -811,6 +813,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             onClick={handlePostClick}
             onPointerDown={warmSheetForLogin}
             onMouseEnter={warmSheetForLogin}
+            onFocus={warmSheetForLogin}
             disabled={isConnecting}
           >
             <div className={cn(
