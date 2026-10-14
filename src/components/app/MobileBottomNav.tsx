@@ -44,6 +44,7 @@ import Mic from "@/components/ui/cut-icons/mic";
 
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
+import { warmPostComposer } from '@/lib/preload-post-composer';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 // Lazy: the composer pulls minting/wallet contract code — a static import
 // here (eager via AppLayout) would land it in the entry bundle
@@ -366,6 +367,9 @@ export function MobileBottomNav() {
             {/* Center Create Button - liquid glass bubble */}
             <button
               onClick={handlePostClick}
+              onPointerDown={() => { if (isAuthenticated) warmPostComposer(); }}
+              onPointerEnter={() => { if (isAuthenticated) warmPostComposer(); }}
+              onFocus={() => { if (isAuthenticated) warmPostComposer(); }}
               aria-label={_copy("copy.bcf1bfcaa2af", { defaultValue: "Create post" })}
               className="flex-shrink-0 w-1/5 h-12 md:h-14 flex items-center justify-center text-white"
             >

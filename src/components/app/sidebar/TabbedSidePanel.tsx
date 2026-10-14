@@ -31,6 +31,8 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
   // screen. The new-members roster is not worth a request the feed is waiting
   // behind.
   const [newMembersOpened, setNewMembersOpened] = useState(persistedTab === 'newMembers');
+  const [leaderboardOpened, setLeaderboardOpened] = useState(persistedTab === 'leaderboard');
+  const [followOpened, setFollowOpened] = useState(persistedTab === 'follow');
 
   const tabs = useMemo(() => {
     const base: { id: TabType; icon: typeof SquareUserRound; label: string }[] = [
@@ -52,6 +54,8 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
     setActiveTab(() => id);
     if (id === 'chat') setChatOpened(true);
     if (id === 'newMembers') setNewMembersOpened(true);
+    if (id === 'leaderboard') setLeaderboardOpened(true);
+    if (id === 'follow') setFollowOpened(true);
   }, []);
 
   return (
@@ -102,12 +106,12 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
       <div className="h-[400px]">
         {/* Leaderboard panel */}
         <div className={`h-full overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'leaderboard' ? '' : 'hidden'}`}>
-          <SidebarLeaderboard ref={leaderboardRef} />
+          {(leaderboardOpened || effectiveTab === 'leaderboard') && <SidebarLeaderboard ref={leaderboardRef} />}
         </div>
         {/* Follow panel - only rendered when authenticated */}
         {isAuthenticated && (
           <div className={`h-full flex flex-col overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'follow' ? '' : 'hidden'}`}>
-            <WhoToFollow />
+            {followOpened && <WhoToFollow />}
           </div>
         )}
         {/* New members panel — mounted lazily on first open, like chat. */}
