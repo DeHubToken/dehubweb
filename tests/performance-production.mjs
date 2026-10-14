@@ -28,8 +28,8 @@ try {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     for (const visit of ['cold', 'warm']) {
-      const started = Date.now();
       const version = await (await context.request.get('https://dehub.io/version.json')).json();
+      const started = Date.now();
       await page.goto('https://dehub.io/app', { waitUntil: 'domcontentloaded' });
       const author = page.getByRole('button', { name: /^View .+'s profile$/ }).first();
       await author.waitFor({ state: 'visible', timeout: 60000 });
