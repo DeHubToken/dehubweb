@@ -5,6 +5,12 @@ import { readFileSync } from 'node:fs';
 const html = readFileSync('services/maboroshi/static/index.html', 'utf8');
 const script = readFileSync('services/maboroshi/static/studio.js', 'utf8');
 const presetsScript = readFileSync('services/maboroshi/static/presets.js', 'utf8');
+it('permits the registered DeHub source route through the hosted studio policy without provider credits', () => {
+  const server = readFileSync('services/maboroshi/server.py', 'utf8');
+  expect(server).toContain("connect-src 'self' https://dehub.io;");
+  expect(server).toContain("media-src 'self' blob:;");
+  expect(html).not.toContain('Processing uses');
+});
 const wallet = `0x${'1'.repeat(40)}`;
 const id = 'a'.repeat(32);
 const project = (extra = {}) => ({ id, subject: 'person', created: 1, state: 'uploaded', stage: '', status: 'Source saved.', seconds: 5,
