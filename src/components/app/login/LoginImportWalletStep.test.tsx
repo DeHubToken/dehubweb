@@ -27,6 +27,15 @@ it('rejects invalid secrets before connecting or making a request', async () => 
   expect(onImport).not.toHaveBeenCalled();
 });
 
+it('derives a 24-word phrase on the same EVM path as mobile', async () => {
+  const words = `${'abandon '.repeat(23)}art`;
+  const onImport = vi.fn().mockResolvedValue(undefined);
+  render(<LoginImportWalletStep busy={false} onImport={onImport} />);
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: words } });
+  fireEvent.click(screen.getByRole('button'));
+  await waitFor(() => expect(onImport).toHaveBeenCalledWith(deriveFromSecret(words).ethPrivateKey));
+});
+
 it('keeps the form usable after a connection fails', async () => {
   const onImport = vi.fn().mockRejectedValue(new Error('connection failed'));
   render(<LoginImportWalletStep busy={false} onImport={onImport} />);
