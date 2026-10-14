@@ -32,6 +32,7 @@ import {
   walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { wagmiConfig, WALLET_CONNECT_PROJECT_ID } from '@/lib/wagmi'
+import { ensureImportedWalletConnector } from '@/lib/imported-wallet'
 
 /**
  * RainbowKit's phantomWallet()/trustWallet() resolve the injected provider
@@ -89,6 +90,7 @@ export function walletConnectorsReady(): boolean {
  * can look a connector up on the next line.
  */
 export function ensureWalletConnectors(): void {
+  ensureImportedWalletConnector()
   if (walletConnectorsReady()) return
 
   // RainbowKit connectors: MetaMask, Phantom, Trust, WalletConnect.

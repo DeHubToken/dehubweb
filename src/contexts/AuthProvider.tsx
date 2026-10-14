@@ -1417,7 +1417,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // reconnect sheet's verification connects get the same treatment:
             // it compares the address itself and shows "wrong wallet" in place,
             // so a mismatch there must not read as an account switch.
-            if (connectionSource === 'web3auth' || savedSrc === 'web3auth' || isWalletReconnectGuardActive()) {
+            if ((!wagmiAuthIntentRef.current && (connectionSource === 'web3auth' || savedSrc === 'web3auth')) || isWalletReconnectGuardActive()) {
               clearWagmiStorage();
               wagmiDisconnect();
               return;
@@ -1531,6 +1531,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } catch { /* already gone */ }
           }
         } finally {
+          if (wagmiConnector?.id === 'dehub-imported-wallet') {
+            const { finishImportedWallet } = await import('@/lib/imported-wallet');
+            await finishImportedWallet(false);
+          }
           wagmiAuthInProgressRef.current = false;
           setIsConnecting(false);
         }
@@ -1952,6 +1956,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw authError;
     }
 
+    if (connectorId === 'dehub-imported-wallet') {
+      const { finishImportedWallet } = await import('@/lib/imported-wallet');
+      await finishImportedWallet(true);
+    }
     const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
     // From here the session's address is `authAddress`, which is whatever the
