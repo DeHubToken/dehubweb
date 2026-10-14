@@ -14,6 +14,15 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const visible = (value: boolean) => act(() => deliver([{ target: element.current, isIntersecting: value }]));
 
 describe('visible feed media frames', () => {
+  it('holds every slide in a visible gallery, including hidden horizontal neighbours', () => {
+    const view = renderHook(({ ratio }) => [
+      useFeedFrameAspect('gallery-first', ratio, element),
+      useFeedFrameAspect('gallery-neighbour', ratio, element),
+    ], { initialProps: { ratio: 1 } });
+    visible(true);
+    view.rerender({ ratio: 0.5 });
+    expect(view.result.current).toEqual([1, 1]);
+  });
   it('prepares dimensions offscreen, then holds through metadata, scroll-back and remount', () => {
     const view = renderHook(({ ratio }) => useFeedFrameAspect('prepared-video', ratio, element), { initialProps: { ratio: 16 / 9 } });
     visible(false);

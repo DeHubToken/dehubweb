@@ -230,7 +230,9 @@ function ImageSlide({
   const [measurement, setMeasurement] = useState<{ img: string; ratio: number }>();
   const measuredRatio = measurement?.img === img ? measurement.ratio : imageAspectRatioCache.get(img);
   const slideRef = useRef<HTMLDivElement>(null);
-  const ratio = useFeedFrameAspect(`image:${postId ?? ''}:${idx}:${cdnImageSource(img)}`, measuredRatio ?? 1, slideRef, !immersive);
+  // All slides share the row's vertical visibility: a late hidden neighbour
+  // must not increase the carousel's height while its first photo is in view.
+  const ratio = useFeedFrameAspect(`image:${postId ?? ''}:${idx}:${cdnImageSource(img)}`, measuredRatio ?? 1, viewportRef, !immersive);
   const [retainBitmap, setRetainBitmap] = useState(aboveFold || immersive);
   const horizontalBitmap = useHorizontalBitmap(img, !!ratio, viewportRef, slideRef, pinned);
   // Resolve the ratio during render so a replaced image never paints with the
