@@ -20,7 +20,9 @@ export function useFeedFrameAspect(key: string, candidate: number, element: RefO
     if (!node || typeof IntersectionObserver === 'undefined') return;
     observer ??= new IntersectionObserver(entries => {
       for (const entry of entries) subscriptions.get(entry.target)?.forEach(sync => sync(entry.isIntersecting));
-    });
+    // Freeze before the screen edge: observer delivery follows layout, so a
+    // zero-margin boundary lets late metadata resize a just-entering card.
+    }, { rootMargin: '600px 0px' });
     const sync = (visible: boolean) => {
       if (latest.current.key !== key) return;
       const next = frame.current;
