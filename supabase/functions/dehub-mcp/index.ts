@@ -1049,7 +1049,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         await touchAgent(supabase, agent.id);
         return ok({
           success: true,
-          post: { token_id: voucher.createdTokenId, url: `https://dehub.io/newpost/${voucher.createdTokenId}` },
+          post: { token_id: voucher.createdTokenId, url: `https://dehub.io/app/post/${voucher.createdTokenId}` },
           minted: false,
           posts_remaining_this_hour: check.remaining,
           message: `${agent.name} published post ${voucher.createdTokenId}`,
