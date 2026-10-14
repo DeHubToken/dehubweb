@@ -1859,7 +1859,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
               {/* Compact primary controls share a row; additional tools can wrap. */}
               <div data-creator-toolbar className="mt-2 flex items-end gap-2">
-                <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] [&>*]:shrink-0">
+                <div className="flex h-10 min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&>*]:shrink-0">
                 {/* Sound effects, music and voice design have nothing to attach
                     — offering a paperclip there is a control that can only
                     produce an error. */}
