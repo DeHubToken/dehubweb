@@ -27,7 +27,7 @@ afterEach(() => {
   clients.splice(0).forEach(client => client.clear());
   vi.restoreAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers();
 });
-it('buffers only a settled neighbour and immediately loads a selected clip', () => {
+it('immediately buffers the requested neighbour and selected clip', () => {
   vi.useFakeTimers();
   vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue();
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
@@ -35,13 +35,11 @@ it('buffers only a settled neighbour and immediately loads a selected clip', () 
     likes: '0', videoUrl: '/first.mp4', thumbnail: '' };
   const { container, rerender } = renderSlide(<VideoSlide short={short} isActive={false} isMuted preload="auto" />);
   const player = () => container.querySelector('video')!;
-  expect(player().preload).toBe('metadata');
-  act(() => vi.advanceTimersByTime(200));
-  rerender(<VideoSlide short={{ ...short, id: 'second' }} isActive={false} isMuted preload="auto" />);
-  act(() => vi.advanceTimersByTime(200));
-  expect(player().preload).toBe('metadata');
-  act(() => vi.advanceTimersByTime(200));
   expect(player().preload).toBe('auto');
+  rerender(<VideoSlide short={{ ...short, id: 'second' }} isActive={false} isMuted preload="auto" />);
+  expect(player().preload).toBe('auto');
+  rerender(<VideoSlide short={short} isActive={false} isMuted preload="metadata" />);
+  expect(player().preload).toBe('metadata');
   rerender(<VideoSlide short={short} isActive isMuted preload="auto" />);
   expect(player().preload).toBe('auto');
 });

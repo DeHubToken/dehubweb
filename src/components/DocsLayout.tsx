@@ -330,14 +330,14 @@ const DocsLayoutContent = () => {
   const location = useLocation();
   const { setIsOpen } = useDocsSearch();
   const { t, dir } = useLanguage();
-  const { theme: appTheme } = useAppTheme();
+  const { theme: appTheme, themeChoice } = useAppTheme();
   const isDesktop = useIsDesktop();
   // Stable across inner docs navigation so the panel doesn't re-slide when only
   // the reading content changes (it re-slides only on app↔docs surface changes).
   const asideVariants = useMemo(() => docsAsideVariants(isDesktop), [isDesktop]);
   // When the app theme pins the docs surface (canvas glass or clean paper), the
   // local light/dark toggle is a dead control — hide it. Only `system` keeps it.
-  const docsThemePinned = getDocsForcedTheme(appTheme) !== undefined;
+  const docsThemePinned = getDocsForcedTheme(appTheme, themeChoice) !== undefined;
   const menuItems = getMenuItems(t);
   
   // Initialize text highlighting
