@@ -600,6 +600,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                       src={short.videoUrl}
                       poster={short.thumbnail}
                       className="w-full h-full object-cover"
+                      disabled={viewerOpen}
+                      playbackGroup="shorts-grid"
                       threshold={0.7}
                       rootMargin="200px"
                     />
