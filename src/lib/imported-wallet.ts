@@ -50,8 +50,17 @@ export function ensureImportedWalletConnector() {
       const provider = await this.getProvider();
       return Number(await provider.request({ method: 'eth_chainId' }));
     },
-    async connect() {
-      return { accounts: await this.getAccounts(), chainId: await this.getChainId() };
+    async connect<withCapabilities extends boolean = false>(parameters?: { withCapabilities?: withCapabilities | boolean; chainId?: number; isReconnecting?: boolean }) {
+      const accounts = await this.getAccounts();
+      if (parameters?.chainId && parameters.chainId !== await this.getChainId()) {
+        await this.switchChain!({ chainId: parameters.chainId });
+      }
+      return {
+        accounts: (parameters?.withCapabilities
+          ? accounts.map(address => ({ address, capabilities: {} }))
+          : accounts) as withCapabilities extends true ? readonly { address: Address; capabilities: Record<string, unknown> }[] : readonly Address[],
+        chainId: await this.getChainId(),
+      };
     },
     async disconnect() {
       pendingProvider = null;

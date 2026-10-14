@@ -190,7 +190,12 @@ function LoginModalBodyInner({ open, step, setStep }: LoginModalBodyProps) {
   // "Migrate account" / "Import keys", chosen before signing in.
   // Mirrored from sessionStorage so it survives an OAuth redirect and reaches
   // the wallet step once the identity exists (see lib/wallet-setup-intent).
-  const [setupIntent, setSetupIntentState] = useState<WalletSetupIntent | null>(() => getWalletSetupIntent());
+  const [setupIntent, setSetupIntentState] = useState<WalletSetupIntent | null>(() => {
+    const intent = getWalletSetupIntent();
+    // An older tab may still carry the former identity-gated import choice.
+    if (intent === 'import') { setWalletSetupIntent(null); return null; }
+    return intent;
+  });
   const chooseSetupIntent = (intent: WalletSetupIntent | null) => {
     setWalletSetupIntent(intent);
     setSetupIntentState(intent);
