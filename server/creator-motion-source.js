@@ -44,6 +44,7 @@ export async function handleCreatorMotionSource(request, env) {
   } catch (error) {
     headers.set('X-Source-Stage', stage);
     headers.set('X-Source-Error', error instanceof Error ? error.name : 'Error');
+    if (error instanceof Error) headers.set('X-Source-Detail', encodeURIComponent(error.message).slice(0, 240));
     return fail(502, 'Source clip unavailable.');
   }
 }
