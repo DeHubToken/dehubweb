@@ -438,54 +438,73 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          // Shared icon modules otherwise create a separate request per icon.
-          // Keep the used Lucide exports together; tree shaking still drops
-          // unused icons before this chunk is emitted.
-          if (id.includes('/node_modules/lucide-react/')) {
-            return 'vendor-icons';
-          }
-          // Three.js — only used by lazy theme backgrounds / landing hero.
-          // Match ONLY the npm package: a broader '/three/' also catches
-          // src/lib/three/*, whose shared imports (e.g. lib/theme-color.ts)
-          // Rollup then hoists INTO vendor-three — making the entry chunk
-          // statically depend on it and download three.js at boot.
-          if (id.includes('node_modules/three/') || id.includes('/three@')) {
-            return 'vendor-three';
-          }
-          // NOTE: wagmi / viem / rainbowkit / web3auth are NOT manually chunked here.
-          // They have deep internal circular deps that Rollup cannot safely reorder when
-          // forced into a named chunk — results in TDZ "Cannot access before initialization".
-          // WalletProviders React.lazy() already moves them into an async chunk naturally.
-          // Framer Motion — animation library
-          if (id.includes('framer-motion')) {
-            return 'vendor-animation';
-          }
-          // Radix UI is deliberately NOT grouped: one named chunk made every
-          // primitive (menus, dialogs, sliders used by one lazy page) an eager
-          // boot download. Left alone, Rollup keeps each with its importers.
-          // React core. Anchored on /node_modules/<pkg>/ on purpose: a bare
-          // '/react/' also matched @xyflow/react, zustand/react, valtio/react
-          // and @lit/react, so the whole React Flow canvas (plus its d3-zoom,
-          // d3-drag and d3-interpolate) shipped inside the eagerly preloaded
-          // React chunk for every visitor, and Lighthouse traced d3's transform
-          // parser forcing layout at boot. The chunk is meant to be React, the
-          // DOM renderer, the scheduler and the router — nothing else.
-          if (
-            id.includes('/node_modules/react/') ||
-            id.includes('/node_modules/react-dom/') ||
-            id.includes('/node_modules/scheduler/') ||
-            id.includes('/node_modules/react-router/') ||
-            id.includes('/node_modules/react-router-dom/')
-          ) {
-            return 'vendor-react';
-          }
-          // Supabase client
-          if (id.includes('@supabase/')) {
-            return 'vendor-supabase';
-          }
+        // Vite 8 bundles with Rolldown, which (unlike Rollup under Vite 5) does
+        // not fold modules shared between the entry and lazy routes back into
+        // the entry. Left on its own it split the boot path into ~280 chunks,
+        // 200 of them under 5 KB, every one a modulepreload the phone fetches
+        // and evaluates before first paint: first paint went 4.7-5.7 s ->
+        // 6.8-7.0 s on Lighthouse's phone profile after the upgrade (#1901).
+        // The 'boot' group gathers everything on the initial (static) path that
+        // no vendor group claims into one chunk. Lazy-only modules carry no
+        // $initial tag, so routes, the wallet stack and theme extras stay split.
+        codeSplitting: {
+          groups: [
+            { name: vendorChunkName, debugName: 'vendor', priority: 10 },
+            { name: 'boot', tags: ['$initial'], priority: 1 },
+          ],
         },
       },
     },
   },
 }));
+
+// Named vendor chunks (was output.manualChunks, which Rolldown ignores once
+// codeSplitting is set).
+function vendorChunkName(id: string): string | null {
+  // Shared icon modules otherwise create a separate request per icon.
+  // Keep the used Lucide exports together; tree shaking still drops
+  // unused icons before this chunk is emitted.
+  if (id.includes('/node_modules/lucide-react/')) {
+    return 'vendor-icons';
+  }
+  // Three.js — only used by lazy theme backgrounds / landing hero.
+  // Match ONLY the npm package: a broader '/three/' also catches
+  // src/lib/three/*, whose shared imports (e.g. lib/theme-color.ts)
+  // Rollup then hoists INTO vendor-three — making the entry chunk
+  // statically depend on it and download three.js at boot.
+  if (id.includes('node_modules/three/') || id.includes('/three@')) {
+    return 'vendor-three';
+  }
+  // NOTE: wagmi / viem / rainbowkit / web3auth are NOT manually chunked here.
+  // They have deep internal circular deps that Rollup cannot safely reorder when
+  // forced into a named chunk — results in TDZ "Cannot access before initialization".
+  // WalletProviders React.lazy() already moves them into an async chunk naturally.
+  // Framer Motion — animation library
+  if (id.includes('framer-motion')) {
+    return 'vendor-animation';
+  }
+  // Radix UI is deliberately NOT grouped: one named chunk made every
+  // primitive (menus, dialogs, sliders used by one lazy page) an eager
+  // boot download. Left alone, Rollup keeps each with its importers.
+  // React core. Anchored on /node_modules/<pkg>/ on purpose: a bare
+  // '/react/' also matched @xyflow/react, zustand/react, valtio/react
+  // and @lit/react, so the whole React Flow canvas (plus its d3-zoom,
+  // d3-drag and d3-interpolate) shipped inside the eagerly preloaded
+  // React chunk for every visitor, and Lighthouse traced d3's transform
+  // parser forcing layout at boot. The chunk is meant to be React, the
+  // DOM renderer, the scheduler and the router — nothing else.
+  if (
+    id.includes('/node_modules/react/') ||
+    id.includes('/node_modules/react-dom/') ||
+    id.includes('/node_modules/scheduler/') ||
+    id.includes('/node_modules/react-router/') ||
+    id.includes('/node_modules/react-router-dom/')
+  ) {
+    return 'vendor-react';
+  }
+  // Supabase client
+  if (id.includes('@supabase/')) {
+    return 'vendor-supabase';
+  }
+  return null;
+}
