@@ -253,7 +253,7 @@ function ThreadEntry({
           </button>
           {isAssistantAddress(entry.address) && (
             <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
-              {t('editor.rail.agent')}
+              {t('editor.rail.agent', 'Agent')}
             </span>
           )}
           <span className="text-zinc-500 text-xs truncate max-w-[120px]">@{entry.username}</span>

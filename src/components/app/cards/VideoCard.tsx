@@ -2145,6 +2145,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         tabIndex={0}
         data-feed-preview={feedPreview || undefined}
         data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
+        data-media-frame-measured={resolvedVideoAspect == null ? undefined : measuredAspect}
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
         data-video-split-controls={splitControls || undefined}
@@ -3080,7 +3081,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     <Zap className="h-5 w-5" />
                   </button>
                 )}
-                {!stage && <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />}
+                {!stage && <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more', 'Post options')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />}
               </div>
             )}
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
