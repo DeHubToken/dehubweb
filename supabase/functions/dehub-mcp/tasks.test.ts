@@ -180,18 +180,23 @@ Deno.test('daily selected likes view the scanned feed but act only on relevant t
   } finally { globalThis.fetch = originalFetch; }
 });
 
-Deno.test('daily likes continue while an unfunded agent waits to post', async () => {
+Deno.test('daily likes and ordinary posts run without mint gas', async () => {
   const test = fixture();
   (test.task.plan as any).interval_minutes = 1440;
   (test.task.plan.steps[0] as any).audience = 'selected_posts';
   (test.task.plan.steps[0] as any).recent_keywords = ['music'];
   (test.task.plan.steps[0] as any).recent_limit = 1;
   (test.task.plan.steps[0] as any).arguments = { vote_type: 'like' };
-  (test.task.plan.steps as any).push({ tool: 'dehub_post_create', arguments: {}, audience: 'single', topic: 'music' });
+  (test.task.plan.steps as any).push({ tool: 'dehub_post_create', arguments: { content: 'A music note' }, audience: 'single', topic: null });
   test.registry.set('dehub_agent_status', { description: 'Status', validate: args => args,
     call: async () => ({ structuredContent: { gas: { sufficient_for_posting: false } } }) });
+  let posted = false;
   test.registry.set('dehub_post_create', { description: 'Post', validate: args => args,
-    call: async () => { throw new Error('Unfunded agent tried to post'); } });
+    call: async args => {
+      assert(args.content === 'A music note', 'lost the post body');
+      posted = true;
+      return { structuredContent: { success: true, post: { url: 'https://dehub.io/newpost/500' } } };
+    } });
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url) => String(url).includes('/api/feed?')
     ? Response.json({ result: [{ tokenId: 100, createdAt: new Date(Date.now() - 60_000).toISOString(),
@@ -200,8 +205,9 @@ Deno.test('daily likes continue while an unfunded agent waits to post', async ()
   try {
     await test.run();
     assert(test.calls() === 1, 'the selected like did not run');
+    assert(posted, 'ordinary post was blocked by zero mint gas');
     assert(test.task.status === 'queued' && test.task.cycle === 1, 'the next daily cycle was not scheduled');
-    assert(test.rows.ai_agent_task_actions.length === 1, 'an unfunded post was recorded as an action');
+    assert(test.rows.ai_agent_task_actions.length === 2, 'like and post should both be recorded');
   } finally { globalThis.fetch = originalFetch; }
 });
 

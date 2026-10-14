@@ -511,7 +511,7 @@ export default function AgentsPage() {
                     </p>
                   </div>
 
-                  {/* Agent wallet — posting mints on Base and needs gas here */}
+                  {/* Agent wallet for optional Base minting */}
                   <div className="bg-black/30 rounded-lg p-3 mb-3">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs text-white/40 flex items-center gap-1.5">
@@ -538,7 +538,7 @@ export default function AgentsPage() {
                     <p className="text-xs text-white/40 mt-2">
                       {t(
                         'agents.agentWalletHelp',
-                        'Send a small amount of Base ETH here before the agent posts — publishing mints on-chain and the agent pays its own gas. Commenting, voting and following need no gas.',
+                        'Ordinary posts need no Base ETH. Fund this wallet only if you explicitly ask the agent to mint a post on-chain.',
                       )}
                     </p>
                   </div>
