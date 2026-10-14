@@ -143,10 +143,9 @@ function useIsTabletOrMobile() {
 const IMMERSIVE_IMAGE_MAX_HEIGHT = 'var(--post-media-max-h, 80dvh)';
 
 /**
- * Tallest a photo gets in feeds (index.css, --feed-image-max-h): 600px, and
- * on phones no more than 55% of the screen, the same cap as feed videos, so a
- * tall photo hugs the left with empty space on the right instead of running
- * most of the screen.
+ * Tallest a photo gets in feeds (index.css, --feed-image-max-h), the same cap
+ * as feed videos: 75% of the screen on desktop, 55% (at most 600px) on phones.
+ * A tall photo hugs the left with empty space on the right.
  */
 const FEED_IMAGE_CAP = `var(--feed-image-max-h, ${FEED_IMAGE_MAX_HEIGHT}px)`;
 
