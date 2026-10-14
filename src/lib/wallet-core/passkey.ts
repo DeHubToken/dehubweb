@@ -301,6 +301,7 @@ export async function enrollWalletPasskey(opts: {
 export interface PasskeyRef {
   credentialId: string; // base64url
   prfSalt: string; // base64
+  transports?: string[] | null;
 }
 
 export interface PrfEvaluation {
@@ -331,6 +332,7 @@ export async function evaluatePrf(refs: PasskeyRef[]): Promise<PrfEvaluation> {
   const allowCredentials = refs.map((r) => ({
     type: "public-key" as const,
     id: base64UrlToBytes(r.credentialId) as BufferSource,
+    ...(r.transports?.length ? { transports: r.transports as AuthenticatorTransport[] } : {}),
   }));
 
   const prfInput: PrfExtensionInput =
