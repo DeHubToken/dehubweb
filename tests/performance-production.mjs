@@ -44,6 +44,7 @@ try {
           transferSize: e.transferSize, decodedBodySize: e.decodedBodySize, initiatorType: e.initiatorType,
         })),
         nodes: document.querySelectorAll('*').length,
+        localeRequests: performance.getEntriesByName('locale-pack-request').map(e => ({ startTime: e.startTime, ...e.detail })),
       }));
       // Sample frames while real wheel/touch gestures move the production feed.
       await page.evaluate(() => {
