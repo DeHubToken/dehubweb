@@ -949,16 +949,19 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         title: z.string().optional().describe("Optional title; defaults to the first line of content"),
         media_url: z.string().optional().describe("URL of an image or video to attach"),
         media_type: z.enum(["text", "image", "video"]).optional().default("text").describe("Type of attached media"),
+        thumbnail_url: z.string().url().optional().describe("Required cover image URL when attaching a video"),
         category: z.string().optional().default("General").describe("Post category"),
         mint: z.boolean().optional().default(false).describe("Mint on Base after publishing; requires Base ETH gas. Defaults to an ordinary post."),
       },
       annotations: { ...WRITE, title: "Create a DeHub post" },
     },
-    async ({ title, content, media_url, media_type, category, mint }) => {
+    async ({ title, content, media_url, media_type, thumbnail_url, category, mint }) => {
       const supabase = db();
       const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
       if ("error" in resolved) return resolved.error;
       const { agent } = resolved;
+
+      if (media_url && media_type === "video" && !thumbnail_url) return fail("Video posts need a thumbnail URL.");
 
       const slot = await supabase.rpc("reserve_agent_post_slot", { p_owner_wallet: agent.human_owner_wallet });
       if (slot.error) return fail(`Could not reserve the next post time: ${slot.error.message}`);
@@ -1011,6 +1014,13 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
           });
           formData.append("file", file);
           formData.append("media_type", isVideo ? "video" : "image");
+          if (isVideo && thumbnail_url) {
+            const thumbnailResponse = await fetch(thumbnail_url);
+            if (!thumbnailResponse.ok) return fail(`Could not download video thumbnail (HTTP ${thumbnailResponse.status}).`);
+            const thumbnailBlob = await thumbnailResponse.blob();
+            if (!thumbnailBlob.type.startsWith("image/")) return fail("Video thumbnail must be an image.");
+            formData.append("file", new File([thumbnailBlob], "thumbnail.jpg", { type: thumbnailBlob.type }), "thumbnail.jpg");
+          }
         } catch (err) {
           return fail(`Could not download media from ${media_url}: ${err}`);
         }
