@@ -159,6 +159,7 @@ import { useBlockAuthor } from '@/hooks/use-block-author';
 import { useMuteAuthor } from '@/hooks/use-mute-author';
 import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useMediaAspect, rememberVideoAspect, DEFAULT_ASPECT, THIN_MIN_RATIO } from '@/hooks/use-media-aspect';
+import { useFeedFrameAspect } from '@/hooks/use-feed-frame-aspect';
 import { FEED_VIDEO_MIN_ASPECT, useFeedVideoShape } from '@/lib/feed-video-shape';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
 import { GatePreview } from './GatePreview';
@@ -1704,7 +1705,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     isImmersive ? THIN_MIN_RATIO : undefined,
     video.id,
   );
-  const mediaAspect = video.isAudio ? DEFAULT_ASPECT : measuredAspect;
+  const mediaAspect = useFeedFrameAspect(`video:${video.id}`, video.isAudio ? DEFAULT_ASPECT : measuredAspect, containerRef, !isImmersive && !isFullscreen);
   const headerAboveMedia = firstFeedPost && !video.isAudio && !video.isLivePost && mediaAspect >= 1;
   const cropFeedVideo = !isImmersive && !isFullscreen && !video.isAudio;
   // Settings > Video size in your feed: a tall clip letterboxes inside a
