@@ -3,7 +3,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * BadgeIcon — Reusable staking badge image with tooltip. A click opens the
  * badge showcase, flying the badge out of this spot.
  */
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -13,8 +13,6 @@ import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useInlineBadgeFont } from '@/hooks/use-inline-badge-font';
-
-let idleWarmupScheduled = false;
 
 function BadgeAnimation({ src, style, onError }: { src: string; style: CSSProperties; onError: () => void }) {
   const [ready, setReady] = useState(false);
@@ -95,14 +93,8 @@ export function BadgeIcon({ badgeBalance, username, lookupId, badgeLock, src, cl
   const { theme } = useAppTheme();
   const metallic = badgeAnimationStyle(theme) === 'metallic';
   const warmShowcase = () => { void preloadBadgeShowcase(metallic ? visualName : undefined).catch(() => {}); };
-  useEffect(() => {
-    if (!metallic || !visualName || idleWarmupScheduled) return;
-    idleWarmupScheduled = true;
-    // The first inline badge primes one renderer while the feed is idle.
-    const warm = () => { void preloadBadgeShowcase(visualName, false).catch(() => { idleWarmupScheduled = false; }); };
-    if ('requestIdleCallback' in window) window.requestIdleCallback(warm, { timeout: 1800 });
-    else setTimeout(warm, 800);
-  }, [metallic, visualName]);
+  // Warm only on intent below. An idle callback still downloads the full 3D
+  // showcase and creates a renderer while the visitor is loading the feed.
   const optics = (originalStill ? BADGE_OPTICS['Killer Whale'] : art?.posterBounds) ?? (visualName ? BADGE_OPTICS[visualName] : undefined);
   const bounds = optics ?? { left: 0, top: 0, right: 128, bottom: 128 };
   const artworkHeight = bounds.bottom - bounds.top;
