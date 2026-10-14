@@ -20,7 +20,7 @@ export function generateMnemonic12(): string {
 }
 
 export function isValidMnemonic(phrase: string): boolean {
-  return Mnemonic.isValidMnemonic(phrase.trim().toLowerCase());
+  return Mnemonic.isValidMnemonic(phrase.trim().replace(/\s+/g, ' ').toLowerCase());
 }
 
 /** Raw 32-byte hex private key, with or without 0x prefix. */
@@ -42,7 +42,7 @@ export function deriveFromSecret(rawSecret: string): DerivedWallet {
     return { secret: pk, ethAddress: wallet.address, ethPrivateKey: wallet.privateKey };
   }
 
-  const mnemonic = trimmed.toLowerCase();
+  const mnemonic = trimmed.replace(/\s+/g, ' ').toLowerCase();
   if (!Mnemonic.isValidMnemonic(mnemonic)) {
     throw new Error("Invalid recovery phrase");
   }

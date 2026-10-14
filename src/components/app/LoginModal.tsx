@@ -183,6 +183,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     : step === 'phone' ? t('loginModal.continuePhone', 'Continue with phone')
     : step === 'phone-code' ? t('loginModal.enterCode', 'Enter verification code')
     : step === 'passkey' ? t('loginModal.continuePasskey', 'Continue with fingerprint')
+    : step === 'import-wallet' ? t('copy.a865110e919b')
     // "Secure account", not "Create your wallet": this step is most people's
     // first encounter with the wallet, and leading with crypto vocabulary puts
     // off users who came for the app. What the step actually does — make the
