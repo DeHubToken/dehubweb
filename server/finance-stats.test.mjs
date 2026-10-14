@@ -23,7 +23,7 @@ test('April 2026 ends historical estimates without changing recorded provider co
 test('Cloudflare uses reported charges once, nets refunds, and excludes payment settlements', async () => {
   const env = { CLOUDFLARE_BILLING_READ_TOKEN: 'test', CLOUDFLARE_BILLING_ACCOUNT_ID: 'a'.repeat(32) };
   const charge = { id: 'charge-1', type: 'charge', amount: 25, currency: 'USD', occurred_at: '2026-04-09T00:00:00Z' };
-  const fetcher = async () => Response.json({ success: true, result: [charge, charge, { ...charge, id: 'refund-1', type: 'refund', amount: 5 }, { ...charge, id: 'payment-1', type: 'payment' }], result_info: { total_count: 4 } });
+  const fetcher = async () => Response.json({ success: true, result: [charge, charge, { ...charge, id: 'refund-1', type: 'refund', amount: 5 }, { ...charge, id: 'payment-1', type: 'payment' }], result_info: { total_count: 4, per_page: 100 } });
   const result = await readCloudflareCosts(summary, env, fetcher);
   assert.equal(result.days.find(day => day.date === '2026-04-09').costs.cloudflare, 20);
   assert.equal(result.sources.find(source => source.id === 'cloudflare').status, 'ok');
@@ -34,6 +34,19 @@ test('Cloudflare uses reported charges once, nets refunds, and excludes payment 
   const failed = await readCloudflareCosts(summary, env, async () => new Response('', { status: 403 }));
   assert.equal(failed.sources.find(source => source.id === 'cloudflare').status, 'unavailable');
   assert.deepEqual(failed.days, summary.days);
+});
+
+test('Cloudflare accepts production invoice records and next_page pagination', async () => {
+  const env = { CLOUDFLARE_BILLING_READ_TOKEN: 'test', CLOUDFLARE_BILLING_ACCOUNT_ID: 'a'.repeat(32) };
+  let calls = 0;
+  const result = await readCloudflareCosts(summary, env, async () => {
+    calls++;
+    const invoice = { id: `invoice-${calls}`, invoice_id: `bill-${calls}`, type: 'invoice', amount: 25, currency: 'usd', occurred_at: '2026-04-09T10:53:50Z', status: 'CLOSED' };
+    return Response.json({ success: true, result: [invoice, { ...invoice, id: `payment-${calls}`, type: 'charge', amount: 10 }, { ...invoice, id: 'void', invoice_id: 'void', status: 'VOID' }], result_info: { page: calls, per_page: 50, next_page: calls < 2 } });
+  });
+  assert.equal(calls, 2);
+  assert.equal(result.sources.find(source => source.id === 'cloudflare').status, 'ok');
+  assert.equal(result.days.find(day => day.date === '2026-04-09').costs.cloudflare, 50);
 });
 
 test('an incomplete or non-USD Cloudflare read never publishes a partial total as complete', async () => {
@@ -108,6 +121,7 @@ test('public route handles CORS and HEAD, rejects unavailable data without inven
   const response = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats'), env, fetcher, null);
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), '*');
+  assert.equal(response.headers.get('Cache-Control'), 'no-store');
   assert.equal((await response.json()).marketplaceHistory.countedSales, 684);
   const head = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats', { method: 'HEAD' }), env, fetcher, null);
   assert.equal(await head.text(), '');
@@ -115,4 +129,28 @@ test('public route handles CORS and HEAD, rejects unavailable data without inven
   assert.equal(failed.status, 502);
   assert.equal(failed.headers.get('Cache-Control'), 'no-store');
   assert.equal((await failed.json()).ok, false);
+});
+
+test('five-minute internal caching never turns into a four-hour browser cache', async () => {
+  const env = { ASSETS: { fetch: async request => Response.json(request.url.endsWith('bnb-sharing.json') ? sharing : history) } };
+  let stored;
+  let reads = 0;
+  const cache = {
+    match: async () => stored?.clone(),
+    put: async (key, value) => {
+      assert.ok(key.url.includes('accounting=live-april-v2'));
+      assert.equal(value.headers.get('Cache-Control'), 'public, max-age=300, s-maxage=300');
+      assert.equal(value.headers.get('CDN-Cache-Control'), null);
+      stored = value;
+    },
+  };
+  const fetcher = async () => { reads++; return Response.json(summary); };
+  for (const method of ['GET', 'GET', 'HEAD']) {
+    const response = await handleFinanceRequest(new Request('https://dehub.io/api/finance-stats', { method }), env, fetcher, cache);
+    assert.equal(response.headers.get('Cache-Control'), 'no-store');
+    assert.equal(response.headers.get('CDN-Cache-Control'), 'no-store');
+    if (method === 'HEAD') assert.equal(await response.text(), '');
+    else assert.equal((await response.json()).provenance.liveCostsSince, '2026-04-01');
+  }
+  assert.equal(reads, 1);
 });
