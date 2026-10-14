@@ -11,7 +11,7 @@ Deno.test('Kling uses the exact edit endpoint and keeps audio without draft or H
   const sent: any[] = [];
   const handler = createHandler(env, (async (url, options) => {
     assert(String(url) === 'https://queue.fal.run/fal-ai/kling-video/o3/pro/video-to-video/edit');
-    sent.push(JSON.parse(String((options as RequestInit)?.body)));
+    sent.push(JSON.parse(String(options?.body)));
     return Response.json({request_id: 'kling-id', status_url: 'https://queue.fal.run/fal-ai/kling-video/requests/kling-id/status', response_url: 'https://queue.fal.run/fal-ai/kling-video/requests/kling-id'});
   }) as typeof fetch);
   assert((await handler(req({operation: 'kling', input: {prompt: 'Replace subject', video_url: signed, image_urls: [signed], keep_audio: false}}))).status === 200);
@@ -42,8 +42,8 @@ Deno.test('untrusted media and arbitrary queue URLs cannot receive credentials',
 Deno.test('draft forces shared-account preview and HD uses returned draft ID', async () => {
   const sent: Array<{url: string; body: any}> = [];
   const handler = createHandler(env, (async (url, options) => {
-    assert(new Headers((options as RequestInit)?.headers).get('Authorization') === 'Key private-fal');
-    sent.push({url: String(url), body: JSON.parse(String((options as RequestInit)?.body))});
+    assert(new Headers(options?.headers).get('Authorization') === 'Key private-fal');
+    sent.push({url: String(url), body: JSON.parse(String(options?.body))});
     return Response.json({request_id: 'queue-id', status_url: 'https://queue.fal.run/bytedance/seedance-2.5/requests/queue-id/status', response_url: 'https://queue.fal.run/bytedance/seedance-2.5/requests/queue-id'});
   }) as typeof fetch);
   assert((await handler(req({operation: 'draft', input: {prompt: 'Replace subject', task: 'editing', video_urls: [signed], image_urls: [signed], duration: 'auto', draft: false, resolution: '1080p'}}))).status === 200);
