@@ -156,9 +156,10 @@ export async function readCloudflareCosts(upstream, env, fetcher = fetch) {
   try {
     const totals = new Map();
     const seen = new Set();
+    const signal = AbortSignal.timeout(15_000);
     for (let page = 1; page <= 100; page++) {
       const response = await fetcher(`https://api.cloudflare.com/client/v4/accounts/${account}/billing/history?per_page=100&page=${page}`, {
-        headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(8_000),
+        headers: { Authorization: `Bearer ${token}` }, signal,
       });
       if (!response.ok) throw new Error('Billing unavailable');
       const body = await response.json();
