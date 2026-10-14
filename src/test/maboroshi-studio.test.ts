@@ -55,6 +55,16 @@ afterEach(() => { dom.window.close(); });
 const connected = async () => { await vi.waitFor(() => expect(sent.some(x => x.type === 'maboroshi:ready')).toBe(true)); session(); await vi.waitFor(() => expect(el('project').hidden).toBe(false)); };
 
 describe('Maboroshi creator journey', () => {
+  it('offers one complete Kling render with no preparation or HD purchase', async () => {
+    saved = project({ renderer: 'kling', state: 'prepared', hasReference: true, review: { approved: true }, quotes: { draft: 3150000 }, files: { ...project().files, 'seedance-input.mp4': 'https://live.dehub.io/maboroshi/media/input.mp4' } });
+    await connected();
+    expect(el('draft').textContent).toContain('Generate Kling video');
+    expect(el('draft').textContent).toContain('3.15');
+    expect(el('prepare').hidden).toBe(true);
+    expect(el('hd').hidden).toBe(true);
+    expect(el('render-hint').textContent).toContain('No preparation');
+    expect(el('reference').accept).not.toContain('video/');
+  });
   it('imports a library source into a new project without sending a paid request or credentials to the media host', async () => {
     await connected();
     el('new-project').click(); await vi.waitFor(() => expect(el('project').hidden).toBe(true));

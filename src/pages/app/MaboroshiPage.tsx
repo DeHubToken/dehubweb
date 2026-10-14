@@ -113,7 +113,7 @@ export default function MaboroshiPage() {
       }}>
         <DialogContent onInteractOutside={event => { if (paying) event.preventDefault(); }}>
           <DialogHeader><DialogTitle>{t('creator.toolMaboroshi')}</DialogTitle>
-            <DialogDescription>{quote && maboroshiStageLabel(quote.stage)} · {quote && (quote.price_micros / 1000).toLocaleString()} DHB · {quote && new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(quote.price_micros / 1e6)}</DialogDescription>
+            <DialogDescription>{quote && maboroshiStageLabel(quote.stage, quote.renderer)} · {quote && (quote.price_micros / 1000).toLocaleString()} DHB · {quote && new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(quote.price_micros / 1e6)}</DialogDescription>
           </DialogHeader>
           <Button disabled={paying} onClick={() => void confirm()}>{paying ? t('common.loading', 'Loading…') : t('common.confirm', 'Confirm')}</Button>
           <Button variant="outline" disabled={paying} onClick={() => { if (quote) reply(quote.requestId, 'Payment cancelled.', true); pending.current = null; setQuote(null); }}>{t('common.cancel')}</Button>

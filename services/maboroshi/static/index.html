@@ -28,10 +28,12 @@
       <p class="eyebrow">THE SCENE</p><h2>Start with your video</h2>
       <p class="hint">Your motion, camera and soundtrack carry into the result.</p>
       <form id="source-form">
+        <label for="renderer">Rendering option<select id="renderer" name="renderer"><option value="kling">Kling — lower cost, one render</option><option value="seedance">Seedance Premium — preparation, preview and optional HD</option></select></label>
+        <p id="renderer-help" class="hint">Kling: 3–15 second MP4/MOV at 720p or higher, with image references. $0.28 per started second + $0.35. Original soundtrack preserved.</p>
         <label class="upload" for="source">Choose a video<small>2–30 seconds · up to 100 MB · include audio</small><input id="source" name="video" type="file" accept="video/mp4,video/quicktime,video/webm" required></label>
         <div id="source-local" class="media-preview" hidden></div>
         <label for="subject">Who or what are you replacing?<input id="subject" name="subject" maxlength="200" value="person" required></label>
-        <details><summary>Advanced preparation</summary><label for="mode">Motion guide<select id="mode" name="mode"><option value="depth">Depth + subject mask (recommended)</option><option value="face_mesh">Face mesh (one speaker)</option><option value="depth_mesh">Depth + mask + face mesh</option></select></label><p class="hint">Depth separates your subject from the scene. Face mesh follows one centred speaker; review tracking through every cut.</p></details>
+        <details id="preparation-options" hidden><summary>Advanced preparation</summary><label for="mode">Motion guide<select id="mode" name="mode"><option value="depth">Depth + subject mask (recommended)</option><option value="face_mesh">Face mesh (one speaker)</option><option value="depth_mesh">Depth + mask + face mesh</option></select></label><p class="hint">Depth separates your subject from the scene. Face mesh follows one centred speaker; review tracking through every cut.</p></details>
         <div class="action"><button id="upload" disabled>Save project</button><span class="hint">No charge to save.</span></div>
       </form>
     </section>
@@ -77,19 +79,19 @@
       <p class="eyebrow">REVIEW THE MOTION</p><h2>Check the whole clip</h2>
       <div class="tabs" id="preview-tabs" role="group" aria-label="Input preview"></div>
       <video id="preview" controls playsinline preload="metadata"></video><a id="preview-download" download>Download prepared input</a>
-      <p class="hint">Check edges, hair, hands, background spill and face alignment through every cut. Listen to the pitched vocals.</p>
-      <div id="input-review-actions"><label class="check"><input id="reviewed" type="checkbox">I reviewed the whole prepared clip and its alignment is correct.</label><div class="row"><button id="approve" disabled>Approve clip</button><button id="reject" class="secondary">Needs correction</button></div></div>
+      <p id="review-guidance" class="hint">Watch the full source clip and confirm the subject, motion and soundtrack.</p>
+      <div id="input-review-actions"><label class="check"><input id="reviewed" type="checkbox"><span id="review-label">I reviewed the whole prepared clip and its alignment is correct.</span></label><div class="row"><button id="approve" disabled>Approve clip</button><button id="reject" class="secondary">Needs correction</button></div></div>
       <p id="review-status" class="hint" role="status"></p>
     </section>
     <section id="draft-section" class="stage-panel" hidden>
       <p class="eyebrow">BRING THE CHARACTER IN</p><h2>Create your preview</h2><p id="draft-guidance">Approve the prepared clip and choose a character to continue.</p>
       <details id="resolved" hidden><summary>Exact generation prompt</summary><p id="resolved-prompt"></p></details>
-      <div class="action"><button id="draft" disabled>Generate preview</button><span class="hint">HD is a separate choice after you watch the preview.</span></div>
+      <div class="action"><button id="draft" disabled>Generate preview</button><span id="render-hint" class="hint">HD is a separate choice after you watch the preview.</span></div>
     </section>
     <section id="export-section" class="stage-panel" hidden>
       <p class="eyebrow">YOUR RESULT</p><h2>Watch it. Make it yours.</h2>
       <div class="tabs" id="result-tabs" role="group" aria-label="Result preview"></div><video id="result" controls playsinline preload="metadata"></video><a id="result-download" download>Download video</a>
-      <p>Your full original soundtrack is restored. You can download the preview as it is, or approve HD within six days.</p><p id="duration-note" class="hint" hidden></p>
+      <p id="export-guidance">Your full original soundtrack is restored. You can download the preview as it is, or approve HD within six days.</p><p id="duration-note" class="hint" hidden></p>
       <label class="check" id="hd-review"><input id="draft-reviewed" type="checkbox">I approve this preview and want to purchase the 1080p version.</label><button id="hd" disabled>Generate 1080p</button>
     </section>
   </div>
