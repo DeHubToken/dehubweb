@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import '@/i18n/registerMotionLibrary';
 import { ArrowLeft, ArrowRight, Play } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { loadFeaturedMotionClips, loadMotionCatalog, searchMotionClips, type MotionClip } from '@/lib/creator/motionLibrary';

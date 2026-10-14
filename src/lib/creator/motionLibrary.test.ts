@@ -1,11 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { motionModel, searchMotionClips, type MotionCatalog, type MotionClip } from './motionLibrary';
+import { MOTION_LIBRARY_COPY } from '@/i18n/motionLibraryCopy';
 
 const catalog: MotionCatalog = JSON.parse(readFileSync('public/creator-clips/catalog.json', 'utf8'));
 const featured: MotionCatalog = JSON.parse(readFileSync('public/creator-clips/featured.json', 'utf8'));
 
 describe('Creator source clips', () => {
+  it('keeps all priority languages complete with matching interpolation fields', () => {
+    const placeholder = (text: string) => text.match(/\{\{[^}]+\}\}/g) ?? [];
+    for (const copy of Object.values(MOTION_LIBRARY_COPY)) {
+      expect(Object.keys(copy)).toEqual(Object.keys(MOTION_LIBRARY_COPY.en));
+      for (const key of Object.keys(MOTION_LIBRARY_COPY.en) as Array<keyof typeof MOTION_LIBRARY_COPY.en>) expect(placeholder(copy[key])).toEqual(placeholder(MOTION_LIBRARY_COPY.en[key]));
+    }
+  });
   it('ships original source footage separately from its remake examples', () => {
     expect(catalog.clips.length).toBeGreaterThan(15000);
     expect(new Set(catalog.clips.map(clip => clip.id)).size).toBe(catalog.clips.length);
