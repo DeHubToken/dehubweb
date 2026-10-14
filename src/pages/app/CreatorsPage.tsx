@@ -119,7 +119,7 @@ function CreatorsPageInner() {
   return (
     <div data-glass-page className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Subtle pixelated gradient overlay */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div data-dark-decor className="absolute inset-0 pointer-events-none">
         {dots.map((dot, i) => (
           <div key={i} className="absolute" style={dot} />
         ))}

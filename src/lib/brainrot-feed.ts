@@ -34,6 +34,7 @@
  * @module lib/brainrot-feed
  */
 
+import type { ShortVideo } from '@/types/feed.types';
 import { useEffect, useState } from 'react';
 import type { UnifiedFeedParams } from '@/hooks/use-unified-feed';
 
@@ -286,6 +287,8 @@ export interface BrainrotSession {
   key: number;
   /** The video the person swiped away from. */
   fromId?: string;
+  /** Played first, before the mix: the feed video the person tapped. */
+  first?: ShortVideo;
 }
 
 let session: BrainrotSession | null = null;
@@ -296,8 +299,8 @@ function emit() {
   for (const notify of listeners) notify();
 }
 
-export function openBrainrotFeed(fromId?: string): void {
-  session = { key: Date.now(), fromId };
+export function openBrainrotFeed(fromId?: string, first?: ShortVideo): void {
+  session = { key: Date.now(), fromId, first };
   everOpened = true;
   emit();
 }

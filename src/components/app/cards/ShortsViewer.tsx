@@ -39,7 +39,7 @@ import Share2 from "@/components/ui/cut-icons/feedshare";
 import Send from "@/components/ui/cut-icons/send";
 import Gem from "@/components/ui/cut-icons/diamond";
 
-import { motion, AnimatePresence, PanInfo } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo, useMotionValue, animate } from 'framer-motion';
 import { useTranslation as useContentTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -113,6 +113,8 @@ interface ShortsViewerProps {
   hasMore?: boolean;
   /** Whether currently loading more shorts */
   isLoadingMore?: boolean;
+  /** Reuse the tapped feed player, including its decoded frame and buffer. */
+  reuseInitialVideo?: boolean;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -144,7 +146,7 @@ function ExpandableDescription({ text }: { text: string }) {
     // Spacing above belongs to ShortCaption, which may be drawing a title
     // immediately over this.
     <div className="flex-shrink-0">
-      <div className={cn(expanded && "max-h-[7.5rem] overflow-y-auto") }>
+      <div data-shorts-scrollable={expanded || undefined} className={cn(expanded && "max-h-[7.5rem] overflow-y-auto") }>
         <p
           ref={ref}
           className={cn("text-white/80 text-xs lg:text-sm", !expanded && "line-clamp-2")}
@@ -254,6 +256,8 @@ function ShortCaption({
               and nothing else; with a title above it, the first line of the
               caption sat half outside the box. */}
           <div
+            data-shorts-scrollable={expanded || undefined}
+            style={expanded ? { touchAction: 'pan-y' } : undefined}
             className={`overflow-y-auto scrollbar-hide transition-all duration-200 ${
               expanded ? 'max-h-[calc(2.5rem+200px)]' : ''
             }`}
@@ -307,7 +311,7 @@ const SMOOTH_TRANSITION = {
 // Tap-to-restore band used while the mobile chrome is hidden: the lower part of
 // the frame where the overlays live, stopping short of VideoSlide's bottom 15%
 // seek strip so a restore tap never scrubs the timeline.
-const RESTORE_ZONE_TOP = 0.55;
+const RESTORE_ZONE_TOP = 0.61; // 30% -> 24% of the frame: 20% smaller.
 const RESTORE_ZONE_BOTTOM = 0.85;
 
 // How long a short plays untouched before the chrome clears itself. The
@@ -335,7 +339,7 @@ const DESKTOP_AUTO_HIDE_MS = 2000;
 const CORNER_CONTROL =
   "absolute top-3 z-10 w-10 h-10 bg-black/40 backdrop-blur-[24px] border border-white/10 hover:bg-black/60 rounded-xl flex items-center justify-center text-white transition-[background-color,opacity] duration-300";
 
-export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore }: ShortsViewerProps) {
+export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMore, isLoadingMore, reuseInitialVideo = false }: ShortsViewerProps) {
   const { t: _copy } = _useCopy();
   const { t } = useI18n();
   const instanceId = useId();
@@ -350,6 +354,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     videoPlaybackManager.globalMuted = getVideoPreferences().mediaMuted !== true;
   }, []);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitioningRef = useRef(false);
+  const queuedStep = useRef<'next' | 'prev' | null>(null);
+  useEffect(() => {
+    if (!isTransitioning) return;
+    const timer = setTimeout(() => {
+      transitioningRef.current = false;
+      setIsTransitioning(false);
+    }, SMOOTH_TRANSITION.duration * 1000);
+    return () => clearTimeout(timer);
+  }, [isTransitioning]);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const [showComments, setShowComments] = useState(false);
   const commentsPullDismiss = useCommentsPullDismiss(() => setShowComments(false));
@@ -374,6 +388,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // re-arms itself, and neither is true of this one.
   const [autoHidden, setAutoHidden] = useState(false);
   const [isTimelineSeeking, setIsTimelineSeeking] = useState(false);
+  const beginTimelineSeek = useCallback(() => setIsTimelineSeeking(true), []);
+  const endTimelineSeek = useCallback(() => setIsTimelineSeeking(false), []);
   const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
   
   // Gesture tracking for overlay hide/show
@@ -387,7 +403,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const suppressVideoTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Drag state for visual feedback
-  const [dragOffset, setDragOffset] = useState(0);
+  // Finger movement stays on the compositor, without rerendering every sheet,
+  // caption and player at touch frequency.
+  const dragOffset = useMotionValue(0);
+  const setDragOffset = useCallback((value: number) => dragOffset.set(value), [dragOffset]);
+  const resetDragOffset = useCallback(() => {
+    animate(dragOffset, 0, SMOOTH_TRANSITION);
+  }, [dragOffset]);
   
   // Voting state - synced with API
   const [isLiked, setIsLiked] = useState(false);
@@ -862,10 +884,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   const goToNext = useCallback(() => {
     if (isMobile && showComments) return;
-    if (currentIndex < shorts.length - 1 && !isTransitioning) {
+    if (transitioningRef.current) { queuedStep.current = 'next'; return; }
+    if (currentIndex < shorts.length - 1) {
+      transitioningRef.current = true;
       setIsTransitioning(true);
       setCurrentIndex(prev => prev + 1);
-      setTimeout(() => setIsTransitioning(false), 350);
     }
     // Load more when within 3 items of the end
     if (currentIndex >= shorts.length - 4 && hasMore && !isLoadingMore && onLoadMore) {
@@ -875,10 +898,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   const goToPrev = useCallback(() => {
     if (isMobile && showComments) return;
-    if (currentIndex > 0 && !isTransitioning) {
+    if (transitioningRef.current) { queuedStep.current = 'prev'; return; }
+    if (currentIndex > 0) {
+      transitioningRef.current = true;
       setIsTransitioning(true);
       setCurrentIndex(prev => prev - 1);
-      setTimeout(() => setIsTransitioning(false), 350);
     }
   }, [currentIndex, isTransitioning, isMobile, showComments]);
 
@@ -890,6 +914,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const goToPrevRef = useRef(goToPrev);
   goToNextRef.current = goToNext;
   goToPrevRef.current = goToPrev;
+  useEffect(() => {
+    if (isTransitioning || !queuedStep.current) return;
+    const step = queuedStep.current;
+    queuedStep.current = null;
+    if (step === 'next') goToNextRef.current();
+    else goToPrevRef.current();
+  }, [isTransitioning]);
 
   // Handle mouse wheel / trackpad scrolling.
   //
@@ -914,7 +945,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       // out by attribute. This has to be a target test rather than the
       // `stopPropagation` it replaces: a window-level capture listener runs
       // before any handler inside the panel could stop it.
-      if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-scrollable]')) return;
+      if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-scrollable], [data-vaul-drawer], [role="dialog"], [role="menu"]')) return;
 
       if ((e.target as HTMLElement | null)?.closest?.('[data-shorts-photos]') && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         e.preventDefault();
@@ -978,9 +1009,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   // Handle drag for visual feedback during swipe
   const isRestoreDrag = useCallback((info: PanInfo) => {
     const frame = videoContainer?.getBoundingClientRect();
-    if (!isMobile || !(overlaysHidden || autoHidden) || showComments || !frame) return false;
-    const startY = info.point.y - info.offset.y - frame.top;
+    if (!isMobile || !overlaysHidden || showComments || !frame) return false;
+    const startY = info.point.y - window.scrollY - info.offset.y - frame.top;
     return startY > frame.height * RESTORE_ZONE_TOP &&
+      startY < frame.height * RESTORE_ZONE_BOTTOM &&
       info.offset.y < -16 && Math.abs(info.offset.y) > Math.abs(info.offset.x);
   }, [isMobile, overlaysHidden, autoHidden, showComments, videoContainer]);
 
@@ -990,10 +1022,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       return;
     }
     setDragOffset(Math.abs(info.offset.x) > Math.abs(info.offset.y) ? 0 : info.offset.y);
-  }, [isRestoreDrag]);
+  }, [isRestoreDrag, setDragOffset]);
 
   const handleDragEnd = useCallback((_: any, info: PanInfo) => {
-    setDragOffset(0);
+    resetDragOffset();
 
     // The upward counterpart of clearing the caption belongs to the panel,
     // even when its velocity would otherwise page to the next short.
@@ -1015,7 +1047,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
       goToPrev();
     }
-  }, [goToNext, goToPrev, isRestoreDrag]);
+  }, [goToNext, goToPrev, isRestoreDrag, resetDragOffset]);
 
   // Toggle play/pause - only shows indicator on explicit tap
   /**
@@ -1120,9 +1152,11 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   // Overlay hide/show gesture handlers - integrated with drag system
   const handleOverlayGestureTouchStart = useCallback((e: React.TouchEvent) => {
-    if (!isMobile) return;
-    
+    overlaySwipeStartY.current = null;
+    overlaySwipeStartX.current = null;
+    if (!isMobile || (e.target as HTMLElement)?.closest?.('[data-shorts-scrollable]')) return;
     const touch = e.touches[0];
+    if (!touch) return;
     
     // These handlers are on the caption/action stack itself: all of that
     // stack must accept the gesture, including captions above the bottom 20%.
@@ -1144,13 +1178,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const deltaX = Math.abs(touch.clientX - overlaySwipeStartX.current);
     const isVerticalSwipe = Math.abs(deltaY) > 40 && Math.abs(deltaY) > deltaX;
 
-    if (!overlaysHidden && isVerticalSwipe && deltaY > 40) {
-      setOverlaysHidden(true);
+    if (!overlaysHidden && isVerticalSwipe) {
+      const frame = e.currentTarget.getBoundingClientRect();
+      const inHideZone = overlaySwipeStartY.current >= frame.top + frame.height * 0.2;
+      if (deltaY > 40 && inHideZone) setOverlaysHidden(true);
+      else if (deltaY < -40) goToNext();
+      else if (deltaY > 40) goToPrev();
     }
 
     overlaySwipeStartY.current = null;
     overlaySwipeStartX.current = null;
-  }, [isMobile, overlaysHidden]);
+  }, [isMobile, overlaysHidden, goToNext, goToPrev]);
 
   // Keep tap-to-restore as a second route. The carousel also accepts an
   // upward swipe from this lower area without paging (isRestoreDrag).
@@ -1164,12 +1202,15 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     restoreTouchStart.current = null;
     if (!isMobile || !overlaysHidden || showComments || !start) return;
 
-    const screenHeight = window.innerHeight;
+    const frame = videoContainer?.getBoundingClientRect();
+    if (!frame) return;
+    const startY = start.y - frame.top;
+    const screenHeight = frame.height;
 
     // Stops short of the bottom 15% so a restore tap never scrubs the timeline.
     const startedInZone =
-      start.y > screenHeight * RESTORE_ZONE_TOP &&
-      start.y < screenHeight * RESTORE_ZONE_BOTTOM;
+      startY > screenHeight * RESTORE_ZONE_TOP &&
+      startY < screenHeight * RESTORE_ZONE_BOTTOM;
     if (!startedInZone) return;
 
     const isTap =
@@ -1183,7 +1224,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     suppressVideoTapTimer.current = setTimeout(() => {
       suppressVideoTapRef.current = false;
     }, 400);
-  }, [isMobile, overlaysHidden, showComments]);
+  }, [isMobile, overlaysHidden, showComments, videoContainer]);
 
   useEffect(() => () => {
     if (suppressVideoTapTimer.current) clearTimeout(suppressVideoTapTimer.current);
@@ -1334,7 +1375,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   return createPortal(
     <motion.div
       ref={containerRef}
-      initial={{ opacity: 0 }}
+      initial={false}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       data-media-full
@@ -1417,7 +1458,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           // restore tap must be consumed before that toggle, not after it.
           onPointerDownCapture={handleRestoreTouchStart}
           onPointerUpCapture={handleRestoreTouchEnd}
-          onPointerCancelCapture={() => { restoreTouchStart.current = null; }}
+          onPointerCancelCapture={() => { restoreTouchStart.current = null; resetDragOffset(); endTimelineSeek(); }}
           onMouseMove={isMobile ? undefined : handleDesktopPointerMove}
           onMouseLeave={isMobile ? undefined : handleDesktopPointerLeave}
         >
@@ -1429,7 +1470,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             dragListener={!isTimelineSeeking && !(isMobile && showComments)}
             dragDirectionLock
             dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.15}
+            dragElastic={0}
+            dragMomentum={false}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
           >
@@ -1451,22 +1493,22 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     initial={false}
                     animate={{
                       y: `${offset * 100}%`,
-                      // Add drag offset to create the "train car" effect
-                      translateY: isActive ? dragOffset : dragOffset * 0.3,
                     }}
-                    transition={dragOffset === 0 ? SMOOTH_TRANSITION : { duration: 0 }}
+                    transition={SMOOTH_TRANSITION}
                     style={{ zIndex: isActive ? 2 : 1 }}
                   >
+                    <motion.div className="absolute inset-0" style={{ y: dragOffset }}>
                     <VideoSlide
                       short={short}
-                      isActive={isActive && !isPaused && !isTransitioning && dragOffset === 0}
+                      isActive={isActive && !isPaused}
+                      handoffKey={reuseInitialVideo && index === initialIndex ? short.id : undefined}
                       isMuted={isMuted}
                       playbackRate={playbackRate}
                       onTimeUpdate={isActive ? trackView : undefined}
                       onTap={togglePlayPause}
                       onTapUndo={undoPlayPause}
-                      onSeekStart={() => setIsTimelineSeeking(true)}
-                      onSeekEnd={() => setIsTimelineSeeking(false)}
+                      onSeekStart={beginTimelineSeek}
+                      onSeekEnd={endTimelineSeek}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
                       letterbox
                       isFullscreen={isFullscreen}
@@ -1481,6 +1523,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       // three videos fighting for bandwidth on the active one.
                       preload={offset === 0 || offset === 1 ? 'auto' : 'metadata'}
                     />
+                    </motion.div>
                   </motion.div>
                 );
               })}
@@ -1790,9 +1833,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   // Hidden chrome is opacity-0, which still takes taps — kill
                   // pointer events too so a restore tap can't hit an invisible
                   // avatar / follow button on its way in.
-                  className={cn("px-4 pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
+                  className={cn("px-4 pointer-events-auto", !isDescriptionExpanded && "touch-none", (showComments || chromeHidden) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
+                  onTouchCancel={() => { overlaySwipeStartY.current = null; overlaySwipeStartX.current = null; }}
                 >
                   {/* Creator info row */}
                   <div className="flex items-center gap-2 mb-3">
@@ -1832,6 +1876,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
+                  onTouchCancel={() => { overlaySwipeStartY.current = null; overlaySwipeStartX.current = null; }}
                 >
                   {/* Views */}
                   <div className="flex items-center gap-1">

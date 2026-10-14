@@ -28,15 +28,50 @@ function setup(expanded = false) {
   media.setPointerCapture = vi.fn();
   const post = view.getByTestId('post');
   post.setPointerCapture = vi.fn();
-  const pointer = (target: Element, type: string, x: number, y = 80) => {
+  const pointer = (target: Element, type: string, x: number, y = 80, pointerType = 'mouse') => {
     const event = new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0 });
-    Object.defineProperties(event, { pointerId: { value: 1 }, isPrimary: { value: true } });
+    Object.defineProperties(event, { pointerId: { value: 1 }, isPrimary: { value: true }, pointerType: { value: pointerType } });
     fireEvent(target, event);
   };
   return { ...view, media, post, pointer, onCommit, onPreview, onStart, onFinish, onCancel, buttonPress, openPost, openProfile, tabTouch };
 }
 
 describe('video scrub priority', () => {
+  it.each([false, true])('lets a finger scroll vertically from the seek zone (expanded=%s)', expanded => {
+    const s = setup(expanded), strip = s.getByTestId('strip');
+    const y = expanded ? 110 : 95;
+    s.pointer(strip, 'pointerdown', 20, y, 'touch');
+    expect(s.onStart).not.toHaveBeenCalled();
+    expect((expanded ? s.post : s.media).setPointerCapture).not.toHaveBeenCalled();
+    const pendingMove = new Event('touchmove', { bubbles: true, cancelable: true });
+    fireEvent(strip, pendingMove);
+    expect(pendingMove.defaultPrevented).toBe(false);
+    s.pointer(strip, 'pointermove', 21, y - 30, 'touch');
+    s.pointer(strip, 'pointerup', 21, y - 30, 'touch');
+    fireEvent.click(strip, { detail: 1 });
+    expect(s.onCommit).not.toHaveBeenCalled();
+    expect(s.openPost).not.toHaveBeenCalled();
+  });
+
+  it('keeps a horizontal finger scrub through later vertical drift', () => {
+    const s = setup(true), caption = s.getByTestId('caption');
+    s.pointer(caption, 'pointerdown', 20, 110, 'touch');
+    s.pointer(caption, 'pointermove', 50, 112, 'touch');
+    expect(s.onStart).toHaveBeenCalledTimes(1);
+    expect(s.post.setPointerCapture).toHaveBeenCalledWith(1);
+    s.pointer(s.post, 'pointermove', 150, 30, 'touch');
+    s.pointer(s.post, 'pointerup', 150, 30, 'touch');
+    expect(s.onCommit).toHaveBeenCalledExactlyOnceWith(75);
+  });
+
+  it('keeps finger tap-to-seek without opening the post', () => {
+    const s = setup(), strip = s.getByTestId('strip');
+    s.pointer(strip, 'pointerdown', 160, 95, 'touch');
+    s.pointer(strip, 'pointerup', 160, 95, 'touch');
+    fireEvent.click(strip, { detail: 1 });
+    expect(s.onCommit).toHaveBeenCalledExactlyOnceWith(80);
+    expect(s.openPost).not.toHaveBeenCalled();
+  });
   it('keeps every touch phase of a scrub away from tab navigation', () => {
     const s = setup(), track = s.getByTestId('track');
     fireEvent.touchStart(track, { touches: [{ clientX: 20, clientY: 95 }] });
@@ -154,6 +189,37 @@ describe('video scrub priority', () => {
     const scroll = new Event('touchmove', { bubbles: true, cancelable: true });
     fireEvent(caption, scroll);
     expect(scroll.defaultPrevented).toBe(false);
+  });
+
+  it('leaves vertical swipes through the expanded seek area to native scrolling', () => {
+    const s = setup(true), caption = s.getByTestId('caption');
+    const listen = vi.spyOn(document, 'addEventListener');
+    s.pointer(caption, 'pointerdown', 100, 110, 'touch');
+    s.pointer(caption, 'pointermove', 102, 70, 'touch');
+    const move = new Event('touchmove', { bubbles: true, cancelable: true });
+    fireEvent(caption, move);
+    s.pointer(caption, 'pointerup', 102, 70, 'touch');
+    expect(move.defaultPrevented).toBe(false);
+    expect(s.onStart).not.toHaveBeenCalled();
+    expect(s.onCommit).not.toHaveBeenCalled();
+    expect(listen.mock.calls.filter(([type]) => type === 'touchmove')).toHaveLength(0);
+    listen.mockRestore();
+  });
+
+  it('installs a blocking touch listener only for an active scrub and removes it on release', () => {
+    const listen = vi.spyOn(document, 'addEventListener');
+    const remove = vi.spyOn(document, 'removeEventListener');
+    const s = setup(true), track = s.getByTestId('track');
+    expect(listen.mock.calls.filter(([type]) => type === 'touchmove')).toHaveLength(0);
+    s.pointer(track, 'pointerdown', 20, 95);
+    const added = listen.mock.calls.find(([type]) => type === 'touchmove')!;
+    expect(added[2]).toEqual({ capture: true, passive: false });
+    s.pointer(track, 'pointerup', 40, 95);
+    expect(remove).toHaveBeenCalledWith('touchmove', added[1], true);
+    const move = new Event('touchmove', { bubbles: true, cancelable: true });
+    fireEvent(track, move);
+    expect(move.defaultPrevented).toBe(false);
+    listen.mockRestore(); remove.mockRestore();
   });
 
   it('preserves stationary transport button taps with the expanded post boundary', () => {
