@@ -190,6 +190,17 @@ export async function runTask(context: Context, req: Request, task: any) {
       task.cursor.index++; await save(); continue;
     }
     let content: string | undefined;
+    if (step.tool === "dehub_post_create") {
+      const statusTool = registry.get("dehub_agent_status");
+      if (statusTool) {
+        const status = await statusTool.call({});
+        if (!status.isError && status.structuredContent?.gas?.sufficient_for_posting === false) {
+          task.cursor = { step: task.cursor.step + 1 };
+          await save({ message: "Posting is waiting for Base ETH gas. Other daily actions will continue." });
+          continue;
+        }
+      }
+    }
     if (step.topic) {
       const memberTasks = task.swarm_id ? checked(await db.from("ai_agent_tasks").select("id").eq("owner_wallet", task.owner_wallet).eq("swarm_id", task.swarm_id)) : [{ id: task.id }];
       const recent = checked(await db.from("ai_agent_task_actions").select("result").in("task_id", memberTasks.map((member: any) => member.id)).eq("tool", "dehub_post_create").eq("status", "succeeded").order("created_at", { ascending: false }).limit(10));
