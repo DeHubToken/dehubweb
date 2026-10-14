@@ -131,7 +131,7 @@ const LiveFeedPreview = lazy(() => import('./LiveFeedPreview').then(m => ({ defa
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
-import { getVideoPreferences, useMediaVolume, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
+import { getVideoPreferences, useMediaVolume, getPlaybackRateFor, setPlaybackRate as vpSetPlaybackRate, setIsLooping as vpSetIsLooping, setVolume as vpSetVolume, PLAYBACK_RATES } from '@/lib/video-preferences';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePostLinkCopyCount, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { useAutoplay } from '@/contexts/AutoplayContext';
@@ -2773,12 +2773,13 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
 
             <button
               data-on-media
-              className={cn("h-8 w-[44px] text-white flex items-center justify-center tabular-nums", splitControls ? "text-sm font-bold" : "text-xs font-medium")}
+              data-video-speed
+              className="h-8 w-[44px] text-white flex items-center justify-center tabular-nums"
               onClick={cyclePlaybackRate}
               style={{ touchAction: 'manipulation' }}
               aria-label={_copy("copy.afec2b22114c", { defaultValue: "Playback speed" })}
             >
-              {splitControls ? playbackRate : formatRate(playbackRate)}x
+              <span>{playbackRate}x</span>
             </button>
             <Tooltip>
               <TooltipTrigger asChild>
