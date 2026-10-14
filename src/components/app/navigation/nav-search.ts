@@ -20,7 +20,7 @@ import { isKidsModePath } from '@/constants/app.constants';
 import { isKidsModeLocked } from '@/lib/kids-mode-lock';
 
 /** Just the shape we need from react-i18next's `t`, so no version-pinned type. */
-type TranslateFn = (key: string, defaultValue?: string) => string;
+type TranslateFn = (key: string, defaultValue: string) => string;
 
 /**
  * Menu search — shared by the desktop rail and the mobile menu sheet.
