@@ -30,7 +30,14 @@ export async function findMotionClip(id: string): Promise<MotionClip | undefined
 export function motionModel(clip: MotionClip, workflow: 'swap' | 'motion' = 'swap') {
   return workflow === 'motion' || clip.seconds > 15 ? 'kling-3-motion' : 'kling-o3-edit';
 }
-export function motionAspect(clip: MotionClip) { return clip.width > clip.height ? '16:9' : '9:16'; }
+export function motionAspect(clip: MotionClip) { return clip.width / clip.height > 1.3 ? '16:9' : clip.height / clip.width > 1.3 ? '9:16' : '1:1'; }
+export async function downloadMotionSource(id: string): Promise<File> {
+  const response = await fetch(`/api/creator-motion-source?id=${encodeURIComponent(id)}`, { credentials: 'omit', referrerPolicy: 'no-referrer' });
+  if (!response.ok || Number(response.headers.get('Content-Length')) > 100 * 1024 * 1024) throw new Error('This source clip is unavailable or exceeds 100 MB.');
+  const blob = await response.blob();
+  if (blob.size > 100 * 1024 * 1024) throw new Error('Choose a source clip smaller than 100 MB.');
+  return new File([blob], `source-${id}.mp4`, { type: 'video/mp4' });
+}
 export function searchMotionClips(clips: MotionClip[], query: string, category = 'All') {
   const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
   return clips.filter(clip => (category === 'All' || clip.category === category)

@@ -5,6 +5,8 @@ import hashlib
 import json
 import pathlib
 import re
+import struct
+import urllib.request
 from urllib.parse import urlparse
 
 CATEGORIES = {
@@ -67,6 +69,7 @@ def main():
     parser.add_argument('catalogs', nargs='+', help='Saved item arrays or paginated catalog responses')
     parser.add_argument('--output', default='public/creator-clips')
     parser.add_argument('--captured', required=True)
+    parser.add_argument('--templates', help='Additional reviewed motion templates from the shared TypeScript catalog')
     args = parser.parse_args()
     items = {}; order = []
     for file in args.catalogs:
@@ -76,11 +79,42 @@ def main():
                 if item['id'] not in items: order.append(item['id'])
                 items[item['id']] = item
     clips, skipped = normalize([items[key] for key in order])
+    if args.templates:
+        text = pathlib.Path(args.templates).read_text(encoding='utf-8')
+        template_data = text.split('export const VIRAL_MOTION_TEMPLATES: ViralTemplate[] = ', 1)[1].split('\n];', 1)[0] + '\n]'
+        for template in json.loads(template_data):
+            url = template['preview']
+            if any(clip['url'] == url for clip in clips): continue
+            dimensions = None
+            for value in ['bytes=0-524287', 'bytes=-524288']:
+                request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0', 'Range': value})
+                with urllib.request.urlopen(request, timeout=30) as response: data = response.read(524288)
+                for match in re.finditer(b'tkhd', data):
+                    start = match.start() - 4
+                    if start < 0: continue
+                    size = struct.unpack_from('>I', data, start)[0]; end = start + size
+                    if size < 84 or end > len(data): continue
+                    width, height = [value >> 16 for value in struct.unpack_from('>II', data, end - 8)]
+                    if width >= 100 and height >= 100:
+                        a, b = struct.unpack_from('>ii', data, end - 44)
+                        if a == 0 and abs(b) == 65536: width, height = height, width
+                        dimensions = (width, height); break
+                if dimensions: break
+            if not dimensions: raise ValueError(f"Could not verify dimensions for {template['id']}")
+            clips.append({'id': hashlib.sha256(url.encode()).hexdigest()[:20], 'name': template['name'],
+                'category': category(template['name']), 'tags': template['name'] + (' Jeanphilanthrope Jean Phil' if 'jeanphilai.com' in url else ''),
+                'url': url, 'poster': template['poster'], 'seconds': template['motionSeconds'],
+                'width': dimensions[0], 'height': dimensions[1], 'variants': []})
     featured = []
     for group in CATEGORIES:
         featured.extend([clip for clip in clips if clip['category'] == group and clip['variants']][:4])
     featured.extend([clip for clip in clips if clip['category'] == 'Other' and clip['variants']][:4])
     output = pathlib.Path(args.output); output.mkdir(parents=True, exist_ok=True)
+    shards = collections.defaultdict(dict)
+    for clip in clips: shards[clip['id'][:2]][clip['id']] = clip['url']
+    (output / 'sources').mkdir(exist_ok=True)
+    for key, urls in shards.items():
+        (output / 'sources' / f'{key}.json').write_text(json.dumps(urls, indent=2) + '\n', encoding='utf-8')
     for filename, values in [('catalog.json', clips), ('featured.json', featured)]:
         header = json.dumps({'captured': args.captured, 'total': len(clips)}, separators=(',', ':'))[:-1]
         records = ',\n'.join(json.dumps(value, ensure_ascii=False, separators=(',', ':')) for value in values)

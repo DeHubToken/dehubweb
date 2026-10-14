@@ -218,14 +218,14 @@ async function chooseCatalogClip(clip) {
   if (!clip || !/^[a-f0-9]{20}$/.test(clip.id || '') || typeof clip.url !== 'string' || typeof clip.name !== 'string' || !(clip.seconds >= 3 && clip.seconds <= 30)) return;
   let url;
   try { url = new URL(clip.url); } catch { return; }
-  if (url.protocol !== 'https:' || url.username || url.password || !['d2ol7oe51mr4n9.cloudfront.net', 'cdn.higgsfield.ai', 'd8j0ntlcm91z4.cloudfront.net', 'static.higgsfield.ai'].includes(url.hostname)) return;
+  if (url.protocol !== 'https:' || url.username || url.password || !['d2ol7oe51mr4n9.cloudfront.net', 'cdn.higgsfield.ai', 'd8j0ntlcm91z4.cloudfront.net', 'static.higgsfield.ai', 'jeanphilai.com', 'media.pixverse.ai'].includes(url.hostname)) return;
   if (selectedClipId === clip.id) return;
   if (clipImport) return;
   if (current || locked()) { message('Start a new project before choosing another source clip. Your saved project stays available.'); return; }
   const version = sessionVersion, controller = new AbortController(); clipImport = controller;
   working = true; message(''); render();
   try {
-    const response = await fetch(url.href, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: controller.signal });
+    const response = await fetch(`https://dehub.io/api/creator-motion-source?id=${encodeURIComponent(clip.id)}`, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: controller.signal });
     if (!response.ok || Number(response.headers.get('Content-Length')) > 100 * 1024 * 1024) throw Error('This source clip is unavailable or exceeds 100 MB. Choose another clip.');
     const blob = await response.blob();
     if (blob.size > 100 * 1024 * 1024) throw Error('Choose a source clip smaller than 100 MB.');

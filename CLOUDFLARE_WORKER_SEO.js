@@ -3,6 +3,7 @@ import { handleWorkReceipt } from './server/work-receipts.ts';
 import { handleEditorPresence } from './server/editor-presence.ts';
 import { applyTextPostImage } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
+import { handleCreatorMotionSource } from './server/creator-motion-source.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
 /**
@@ -5585,6 +5586,7 @@ async function handleRequest(request, env, ctx) {
   // of every SEO/SSR branch below — none of that applies to a JSON endpoint,
   // and shouldServeSSR() would otherwise have to reason about it.
   if (pathname === '/api/finance-stats') return handleFinanceRequest(request, env);
+  if (isCanonicalHost && pathname === '/api/creator-motion-source') return handleCreatorMotionSource(request, env);
 
   if (pathname === '/api/stats' || pathname === '/api/stats/raw') {
     return handleStatsRequest(request, env, pathname.endsWith('/raw'));
