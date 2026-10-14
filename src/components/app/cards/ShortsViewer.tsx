@@ -2178,7 +2178,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       {!isMobile && (
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 bg-zinc-800/80 hover:bg-zinc-700 rounded-xl flex items-center justify-center z-20 transition-colors"
+          aria-label={t('common.close')}
+          className="absolute top-0 right-0 w-10 h-10 flex items-center justify-center text-white/80 hover:text-white z-20 transition-colors"
         >
           <X className="w-5 h-5 text-white" />
         </button>
