@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import postcss from 'postcss';
 import { expect, it } from 'vitest';
 
-it('the home capsule and bottom nav share a stable nav material', () => {
+it('the home capsule and bottom nav match the same liquid-glass rule', () => {
   const css = postcss.parse(readFileSync('src/styles/glass-surfaces.css', 'utf8'));
   let navRule: postcss.Rule | undefined;
   css.walkRules(rule => {
@@ -21,8 +21,8 @@ it('the home capsule and bottom nav share a stable nav material', () => {
   expect(selectors).toContain('[data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]):not(:has(> [data-nav-glass-backdrop]))');
   expect(selectors.some(selector => selector.includes('button'))).toBe(false);
   const values = Object.fromEntries(navRule!.nodes.filter(node => node.type === 'decl').map(node => [(node as postcss.Declaration).prop, (node as postcss.Declaration).value]));
-  expect(values['backdrop-filter']).toBe('none');
-  expect(values['-webkit-backdrop-filter']).toBe('none');
+  expect(values['backdrop-filter']).toBe('var(--nav-glass-blur)');
+  expect(values['-webkit-backdrop-filter']).toBe('var(--nav-glass-blur)');
   expect(values.background).toContain('var(--nav-glass-base)');
   expect(readFileSync('src/components/app/navigation/FeedIslandCapsule.tsx', 'utf8')).not.toContain('rounded-[15px]');
 });
