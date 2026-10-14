@@ -50,7 +50,10 @@ def run_stage(ident, stage, resume=False):
                 run_depth(folder / 'upload.mp4', folder, row['subject'], 'replicate', progress)
             access.update(ident, state='prepared', status='Prepared input ready. Review the full clip before generating.')
         else:
-            from seedance_bridge import submit, submit_hd, wait_and_finish
+            if row.get('renderer') == 'kling':
+                from kling_bridge import submit, wait_and_finish
+            else:
+                from seedance_bridge import submit, submit_hd, wait_and_finish
             target = folder / 'hd' if stage == 'hd' else folder
             response_path = target / ('response.json' if stage == 'hd' else 'seedance-response.json')
             if resume:
@@ -61,8 +64,9 @@ def run_stage(ident, stage, resume=False):
             else:
                 request_id = submit_hd(folder)
             wait_and_finish(target, request_id, progress)
-            access.update(ident, state='complete' if stage == 'hd' else 'draft',
-                          status='1080p ready with original audio.' if stage == 'hd' else 'Draft ready with original audio. Review before approving 1080p.')
+            complete = stage == 'hd' or row.get('renderer') == 'kling'
+            access.update(ident, state='complete' if complete else 'draft',
+                          status='Video ready with the complete original audio.' if complete else 'Draft ready with original audio. Review before approving 1080p.')
     except Exception:
         # Provider response bodies and signed URLs stay out of user-visible errors.
         log.exception('Maboroshi %s failed for %s', stage, ident)
@@ -126,7 +130,7 @@ def health():
 
 def snapshot(row):
     folder = access.folder(row['id'])
-    result = {key: row[key] for key in ('id', 'created', 'state', 'stage', 'status', 'mode', 'subject', 'seconds', 'prompt')}
+    result = {key: row[key] for key in ('id', 'created', 'state', 'stage', 'status', 'mode', 'subject', 'seconds', 'prompt', 'renderer')}
     result['files'] = {name: access.media_url(folder / name) for name in access.FILES if (folder / name).is_file()}
     result['review'] = review_state(folder)
     result['hasReference'] = bool(row['reference'])
@@ -137,8 +141,13 @@ def snapshot(row):
             result['references'][name] = {'url': access.media_url(folder / row[column]),
                 'kind': result['referenceKind'] if name == 'reference' else 'image', 'key': row[column]}
     from seedance_bridge import resolved_prompt
-    result['resolvedPrompt'] = resolved_prompt(folder, row['prompt'], bool(row['reference_seconds']), bool(row['second_reference'])) if row['reference'] else ''
-    result['quotes'] = {stage: access.price(row, stage) for stage in ('prepare', 'draft', 'hd')} if access.readiness() else {}
+    if row['renderer'] == 'kling':
+        from kling_bridge import resolved_prompt as kling_prompt
+        result['resolvedPrompt'] = kling_prompt(row['prompt'], bool(row['second_reference'])) if row['reference'] else ''
+    else:
+        result['resolvedPrompt'] = resolved_prompt(folder, row['prompt'], bool(row['reference_seconds']), bool(row['second_reference'])) if row['reference'] else ''
+    stages = ('draft',) if row['renderer'] == 'kling' else ('prepare', 'draft', 'hd')
+    result['quotes'] = {stage: access.price(row, stage) for stage in stages} if access.readiness() else {}
     adjustment = folder / ('hd/duration-adjustment.json' if row['state'] == 'complete' else 'duration-adjustment.json')
     result['durationAdjustment'] = json.loads(adjustment.read_text()) if adjustment.exists() else None
     return result
@@ -195,7 +204,9 @@ def validate_video(path, audio=False):
 
 
 @app.post('/jobs', status_code=201)
-def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject: str = Form('person'), wallet=Depends(owner)):
+def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject: str = Form('person'), renderer: str = Form('seedance'), wallet=Depends(owner)):
+    if renderer not in ('seedance', 'kling'):
+        raise HTTPException(400, 'Choose Kling or Seedance Premium.')
     if mode not in access.MODES or not 1 <= len(subject.strip()) <= 200:
         raise HTTPException(400, 'Choose a preparation mode and describe the subject in up to 200 characters.')
     with lock, access.database() as db:
@@ -210,8 +221,16 @@ def create_job(video: UploadFile = File(...), mode: str = Form('depth'), subject
         try:
             save_upload(video, folder / 'upload.mp4')
             seconds = validate_video(folder / 'upload.mp4', audio=True)
-            db.execute('INSERT INTO jobs (id,wallet,created,state,stage,status,mode,subject,seconds) VALUES (?,?,?,?,?,?,?,?,?)',
-                (ident, wallet, int(time.time()), 'uploaded', '', 'Source saved. Review the preparation price to continue.', mode, subject.strip(), seconds))
+            if renderer == 'kling':
+                with av.open(str(folder / 'upload.mp4')) as source:
+                    stream = source.streams.video[0]
+                    if not 3 <= seconds <= 15 or min(stream.width, stream.height) < 720 or Path(video.filename or '').suffix.lower() not in ('.mp4', '.mov'):
+                        raise HTTPException(400, 'Kling needs a 3–15 second MP4 or MOV, at least 720 pixels on each side. Use Seedance Premium for other clips.')
+                shutil.copy2(folder / 'upload.mp4', folder / 'seedance-input.mp4')
+                (folder / 'workflow-mode.json').write_text(json.dumps({'mode': 'kling'}))
+            db.execute('INSERT INTO jobs (id,wallet,created,state,stage,status,mode,subject,seconds,renderer) VALUES (?,?,?,?,?,?,?,?,?,?)',
+                (ident, wallet, int(time.time()), 'prepared' if renderer == 'kling' else 'uploaded', '',
+                 'Review your source clip, then generate with Kling.' if renderer == 'kling' else 'Source saved. Review the preparation price to continue.', mode, subject.strip(), seconds, renderer))
         except Exception:
             shutil.rmtree(folder)
             raise
@@ -237,6 +256,8 @@ def references(ident: str, prompt: str = Form(...), reference: UploadFile | None
                 allowed = ('.png', '.jpg', '.jpeg', '.webp') + (('.mp4', '.mov', '.webm') if index == 0 else ())
                 if suffix not in allowed:
                     raise HTTPException(400, 'Choose a PNG, JPG or WebP reference; the first reference can also be a video.')
+                if row['renderer'] == 'kling' and suffix in ('.mp4', '.mov', '.webm'):
+                    raise HTTPException(400, 'Kling uses image character references. Use Seedance Premium for video references.')
                 name = f'reference-{index}-{uuid.uuid4().hex}{suffix}'
                 target = folder / name
                 saved.append(name)
@@ -292,6 +313,8 @@ def stage_quote(ident, stage, wallet):
     if stage not in ('prepare', 'draft', 'hd'):
         raise HTTPException(404)
     row = access.job(ident, wallet)
+    if row['renderer'] == 'kling' and stage != 'draft':
+        raise HTTPException(400, 'Kling has one complete render and no separate preparation or HD step.')
     expected = {'prepare': 'uploaded', 'draft': 'prepared', 'hd': 'draft'}[stage]
     if row['state'] != expected:
         raise HTTPException(409, 'This step has already started or its earlier step is incomplete.')
@@ -326,6 +349,7 @@ def checkout(ident: str, stage: str, wallet=Depends(owner)):
         if payment and payment['amount'] != amount:
             raise HTTPException(409, 'The saved payment quote needs review.')
         return {'id': ident, 'stage': stage, 'wallet': wallet, 'price_micros': amount,
+                'renderer': row['renderer'],
                 'payment_ref': payment['tx_hash'] if payment else None}
 
 
