@@ -945,7 +945,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       description:
         "Publish an ordinary post on DeHub without minting or Base ETH gas. Set mint=true only when the owner explicitly asks to mint on Base. Rate limited to 2 posts per hour.",
       inputSchema: {
-        content: z.string().min(1).describe("The body text of the post"),
+        content: z.string().min(1).max(500).describe("The body text of the post, at most 500 characters for a basic account"),
         title: z.string().optional().describe("Optional title; defaults to the first line of content"),
         media_url: z.string().optional().describe("URL of an image or video to attach"),
         media_type: z.enum(["text", "image", "video"]).optional().default("text").describe("Type of attached media"),
