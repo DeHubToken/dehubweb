@@ -531,7 +531,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         <OnlinePresenceHost />
       </Suspense>
       {brainrotOpened && (
-        <Suspense fallback={<div className="fixed inset-0 z-[200] bg-black" />}>
+        <Suspense fallback={null}>
           <BrainrotFeedHost />
         </Suspense>
       )}

@@ -4,6 +4,34 @@ let token = '', account = '', current = null, ready = false, allowPayments = fal
 let selectedInput = '', selectedResult = '', requestVersion = 0, sessionVersion = 0;
 let referencesChanged = false, working = false, pendingPayment = null, paymentNotice = '';
 const localMedia = new Map();
+const presets = window.MABOROSHI_PRESETS || [];
+const linkedPreset = presets.find(preset => preset.id === new URLSearchParams(location.search).get('preset')) || null;
+let selectedPreset = linkedPreset;
+function renderPresets() {
+  const search = $('preset-search').value.trim().toLocaleLowerCase(), group = $('preset-group').value;
+  const featured = window.MABOROSHI_FEATURED || [];
+  const rank = preset => featured.includes(preset.id) ? featured.indexOf(preset.id) : featured.length;
+  const matches = presets.filter(preset => (!group || preset.group === group) &&
+    `${preset.name} ${preset.group} ${preset.direction}`.toLocaleLowerCase().includes(search)).sort((a, b) => rank(a) - rank(b));
+  $('preset-count').textContent = `${matches.length} of ${presets.length} presets`;
+  $('preset-reset-search').hidden = !search && !group;
+  $('preset-list').replaceChildren();
+  for (const preset of matches) {
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'preset-card secondary';
+    button.setAttribute('aria-pressed', String(selectedPreset?.id === preset.id));
+    const name = document.createElement('strong'), category = document.createElement('small');
+    name.textContent = preset.name; category.textContent = preset.group; button.append(name, category);
+    button.onclick = () => { selectedPreset = preset; renderPresetDetail(); for (const card of $('preset-list').children) card.setAttribute('aria-pressed', String(card === button)); };
+    $('preset-list').append(button);
+  }
+}
+function renderPresetDetail() {
+  $('preset-detail').hidden = !selectedPreset;
+  $('preset-name').textContent = selectedPreset?.name || '';
+  $('preset-direction').textContent = selectedPreset?.direction || '';
+  $('preset-apply').disabled = !selectedPreset || !editable() || locked();
+  $('preset-guidance').textContent = !token ? 'Sign in to DeHub to use a preset.' : !allowPayments ? 'This app supports saved previews and downloads.' : !editable() ? 'Start a new project to try another look.' : 'Replaces the direction below. Your files stay selected. You can edit the wording before saving.';
+}
 const busy = () => current && ['queued', 'running'].includes(current.state);
 const locked = () => working || !!pendingPayment;
 const editable = () => allowPayments && (!current || ['uploaded', 'prepared'].includes(current.state));
@@ -48,6 +76,7 @@ function clearProject() {
   for (const id of ['source-local', 'reference-preview', 'second-preview']) clearMedia(id);
   $('source-form').reset(); $('references-form').reset(); $('reviewed').checked = false; $('draft-reviewed').checked = false;
   $('character-options').open = false; referencesChanged = false; render();
+  selectedPreset = linkedPreset; $('preset-applied').hidden = true; $('preset-browser').open = !!linkedPreset; renderPresets(); renderPresetDetail();
 }
 async function list(restore = false) {
   const version = sessionVersion, data = await api('jobs');
@@ -57,7 +86,7 @@ async function list(restore = false) {
     const date = new Date(job.created * 1000).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     $('jobs').add(new Option(`${job.subject || 'Video'} · ${date} · ${stateLabel(job.state)}`, job.id));
   }
-  const last = restore ? remembered() : '';
+  const last = restore && !linkedPreset ? remembered() : '';
   if (last && data.jobs.some(job => job.id === last)) await load(last);
   $('jobs').value = current?.id || '';
 }
@@ -93,6 +122,7 @@ function nextStep() {
   return 'Your video is ready to download. Your original and preview remain saved.';
 }
 function render() {
+  renderPresetDetail();
   $('project').hidden = !current; $('progress').hidden = !current;
   $('source-section').hidden = !!current; $('source-preview-section').hidden = !current?.files['upload.mp4'];
   $('jobs').disabled = locked(); $('new-project').disabled = locked(); $('refresh').disabled = locked();
@@ -148,6 +178,7 @@ async function load(ident) {
     selectedInput = ''; selectedResult = ''; $('reviewed').checked = false; $('draft-reviewed').checked = false;
     for (const id of ['preview', 'result', 'source-preview']) $(id).removeAttribute('data-file');
     if (data.prompt) $('prompt').value = data.prompt;
+    $('preset-applied').hidden = true;
     $('character-options').open = !!data.references?.second;
   }
   remember(data.id); render();
@@ -252,6 +283,31 @@ $('references-form').onsubmit = async event => {
   finally { if (version === sessionVersion) { working = false; render(); } }
 };
 $('references-form').oninput = () => { referencesChanged = true; render(); };
+$('preset-search').oninput = renderPresets;
+$('preset-group').onchange = renderPresets;
+$('preset-reset-search').onclick = () => { $('preset-search').value = ''; $('preset-group').value = ''; renderPresets(); $('preset-search').focus(); };
+$('preset-apply').onclick = () => {
+  if (!selectedPreset || !editable() || locked()) return;
+  $('prompt').value = selectedPreset.prompt; referencesChanged = true;
+  $('preset-applied').textContent = `${selectedPreset.name} selected. Add a matching character reference, or edit the direction below.`;
+  $('preset-applied').hidden = false; $('preset-browser').open = false; $('character-options').open = true;
+  render(); $('reference').focus();
+};
+$('preset-total').textContent = `(${presets.length})`;
+$('preset-browser').open = !!linkedPreset;
+for (const group of new Set(presets.map(preset => preset.group))) $('preset-group').add(new Option(group, group));
+renderPresets(); renderPresetDetail();
+const featuredRail = $('featured-looks');
+for (const [index, id] of (window.MABOROSHI_FEATURED || []).entries()) {
+  const preset = presets.find(item => item.id === id);
+  if (!preset) continue;
+  const button = document.createElement('button'); button.type = 'button'; button.className = 'featured-look';
+  const art = document.createElement('span'); art.className = 'look-art'; art.setAttribute('aria-hidden', 'true');
+  art.style.backgroundPosition = `${(index % 3) * 50}% ${Math.floor(index / 3) * 100}%`;
+  const name = document.createElement('strong'); name.textContent = preset.name; button.append(art, name);
+  button.onclick = () => { selectedPreset = preset; $('preset-browser').open = true; renderPresets(); renderPresetDetail(); $('preset-detail').scrollIntoView({ block: 'nearest' }); $('preset-apply').focus(); };
+  featuredRail.append(button);
+}
 for (const stage of ['prepare', 'draft', 'hd']) $(stage).onclick = async () => {
   if (!current || !allowPayments || locked()) return;
   const ident = current.id, version = sessionVersion; message(''); working = true; render();

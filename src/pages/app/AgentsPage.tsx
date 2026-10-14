@@ -62,6 +62,7 @@ export default function AgentsPage() {
   const queryClient = useQueryClient();
   const [isCreating, setIsCreating] = useState(false);
   const [newAgentName, setNewAgentName] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentName", '');
+  const [newAgentDisplayName, setNewAgentDisplayName] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentDisplayName", '');
   const [newAgentDescription, setNewAgentDescription] = useSurfaceDraft("pages/app/AgentsPage.tsx:newAgentDescription", '');
   const [visibleKeys, setVisibleKeys] = useState<Set<string>>(new Set());
   const [openConnections, setOpenConnections] = useState<Set<string>>(new Set());
@@ -91,6 +92,16 @@ export default function AgentsPage() {
     },
     enabled: allowed,
   });
+  const { data: agentAllowance } = useQuery({
+    queryKey: ['agent-allowance', walletAddress], enabled: allowed,
+    queryFn: async (): Promise<{ limit: number; badge: string | null }> => {
+      const token = await ensureFreshToken();
+      const response = await fetch(`${MCP_BASE}/limits`, { headers: { 'x-dehub-token': token } });
+      if (!response.ok) throw new Error('Agent allowance is unavailable.');
+      return response.json();
+    },
+  });
+  const atCapacity = agentAllowance && (agents?.length ?? 0) >= agentAllowance.limit;
 
   // Keys registration just handed back. The list only carries a key for a
   // signed request, so a new agent's key would otherwise vanish on refetch
@@ -101,7 +112,7 @@ export default function AgentsPage() {
   );
 
   const createAgentMutation = useMutation({
-    mutationFn: async ({ name, description }: { name: string; description: string }) => {
+    mutationFn: async ({ name, displayName, description }: { name: string; displayName: string; description: string }) => {
       // dehub-mcp is a Streamable HTTP MCP server, so a bare JSON-RPC envelope
       // posted at its root comes back 406 and no agent is ever created. It
       // exposes a plain REST route for this instead.
@@ -121,6 +132,7 @@ export default function AgentsPage() {
         headers: { 'Content-Type': 'application/json', 'x-dehub-token': token },
         body: JSON.stringify({
           name,
+          display_name: displayName,
           description,
           owner_wallet_address: walletAddress,
         }),
@@ -134,8 +146,10 @@ export default function AgentsPage() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['ai-agents'] });
+      queryClient.invalidateQueries({ queryKey: ['agent-allowance'] });
       setIsCreating(false);
       setNewAgentName.complete(newAgentName, '');
+      setNewAgentDisplayName.complete(newAgentDisplayName, '');
       setNewAgentDescription.complete(newAgentDescription, '');
       toast.success(t('agents.agentCreated'), {
         description: t('agents.saveApiKey'),
@@ -289,6 +303,8 @@ export default function AgentsPage() {
 
         <AgentTasksPanel wallet={walletAddress} agents={listedAgents ?? []} />
 
+        {agentAllowance && <p className="text-sm text-white/75">{t('agents.capacity', { used: agents?.length ?? 0, limit: agentAllowance.limit, badge: agentAllowance.badge ?? t('agents.noBadge') })}</p>}
+
         {/* Create new agent */}
         {isCreating ? (
           <Card data-kit-section className="bg-white/5 border-white/10">
@@ -298,13 +314,20 @@ export default function AgentsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm text-white/60 mb-1 block">{t('agents.agentName')}</label>
+                <label className="text-sm text-white/75 mb-1 block" htmlFor="new-agent-username">{t('agents.agentUsername')}</label>
                 <Input
+                  id="new-agent-username"
                   value={newAgentName}
                   onChange={(e) => setNewAgentName(e.target.value)}
                   placeholder={t('agents.agentNamePlaceholder')}
                   data-theme-control-surface className="bg-transparent border-white/10 text-white"
                 />
+              </div>
+              <div>
+                <label className="text-sm text-white/75 mb-1 block" htmlFor="new-agent-display-name">{t('agents.agentDisplayName')}</label>
+                <Input id="new-agent-display-name" value={newAgentDisplayName} onChange={(e) => setNewAgentDisplayName(e.target.value)}
+                  maxLength={100} placeholder={t('agents.agentDisplayNamePlaceholder')}
+                  data-theme-control-surface className="bg-transparent border-white/10 text-white" />
               </div>
               <div>
                 <label className="text-sm text-white/60 mb-1 block">{t('agents.agentDescription')}</label>
@@ -319,9 +342,10 @@ export default function AgentsPage() {
                 <Button
                   onClick={() => createAgentMutation.mutate({ 
                     name: newAgentName, 
+                    displayName: newAgentDisplayName,
                     description: newAgentDescription 
                   })}
-                  disabled={!newAgentName || createAgentMutation.isPending}
+                  disabled={!newAgentName || createAgentMutation.isPending || !!atCapacity}
                   className="bg-primary"
                 >
                   {createAgentMutation.isPending ? t('agents.creating') : t('agents.createAgent')}
@@ -339,6 +363,7 @@ export default function AgentsPage() {
         ) : (
           <Button
             onClick={() => setIsCreating(true)}
+            disabled={!!atCapacity}
             className="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white"
           >
             <Plus className="w-4 h-4 mr-2" />

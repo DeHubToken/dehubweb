@@ -6,6 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <title>Maboroshi | DeHub</title>
   <link rel="stylesheet" href="static/style.css">
+  <script src="static/presets.js" defer></script>
   <script src="static/studio.js" defer></script>
 </head>
 <body>
@@ -14,6 +15,12 @@
   <div class="library"><label class="sr-only" for="jobs">Your Maboroshi projects</label><select id="jobs"><option value="">New project</option></select><button id="new-project" class="secondary" type="button">New project</button><button id="refresh" class="icon-button secondary" type="button" aria-label="Refresh project">↻</button></div>
   <p id="connection" role="status">Connecting to DeHub…</p>
   <p id="error" role="alert" tabindex="-1" hidden></p>
+  <section class="look-showcase" aria-labelledby="looks-heading">
+    <h2 id="looks-heading">Your scene. A different you.</h2>
+    <p class="hint">180 character looks. Choose your inspiration, then bring your own matching reference.</p>
+    <div id="featured-looks" class="featured-looks" role="group" aria-label="Featured character looks"></div>
+    <p class="hint">Look inspiration, not rendered video previews. Your movement and soundtrack stay yours.</p>
+  </section>
   <ol class="steps" aria-label="Project progress"><li id="step-choose" aria-current="step"><span>1</span>Clip &amp; character</li><li id="step-prepare"><span>2</span>Prepare &amp; review</li><li id="step-export"><span>3</span>Preview &amp; export</li></ol>
   <div id="progress" class="progress" hidden><strong id="project-status" role="status" aria-live="polite"></strong><p id="next-step" class="hint"></p></div>
   <div class="creative-grid">
@@ -37,6 +44,19 @@
     <section id="references-section" class="panel">
       <p class="eyebrow">THE CHARACTER</p><h2>Choose the new look</h2>
       <p class="hint">Use your own character image or video as the reference.</p>
+      <details id="preset-browser">
+        <summary>Choose a preset <span id="preset-total"></span></summary>
+        <p class="hint">Pick a look, upload a character reference showing that look, then review your preview. Presets fill in the direction; they do not include character images.</p>
+        <label for="preset-search" class="sr-only">Search character presets</label>
+        <input id="preset-search" type="search" placeholder="Search plushie, anime, chrome…" autocomplete="off">
+        <label for="preset-group" class="sr-only">Preset category</label>
+        <select id="preset-group"><option value="">All categories</option></select>
+        <p id="preset-count" class="hint" role="status"></p>
+        <div id="preset-list" class="preset-list" role="group" aria-label="Character presets"></div>
+        <button id="preset-reset-search" class="secondary" type="button" hidden>Clear filters</button>
+        <div id="preset-detail" hidden><strong id="preset-name"></strong><p id="preset-direction" class="hint"></p><button id="preset-apply" type="button">Use this preset</button><p id="preset-guidance" class="hint"></p></div>
+      </details>
+      <p id="preset-applied" class="hint" role="status" hidden></p>
       <form id="references-form"><fieldset id="reference-fields">
         <label class="upload" for="reference">Character reference<small>Image up to 30 MB, or video up to 100 MB</small><input id="reference" name="reference" type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm"></label>
         <div id="reference-preview" class="media-preview" hidden></div>

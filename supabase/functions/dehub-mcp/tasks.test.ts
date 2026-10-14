@@ -150,6 +150,31 @@ Deno.test('bulk post reads record public views before the cursor advances or act
   }
 });
 
+Deno.test('swarm members divide bulk targets without repeating actions', async () => {
+  const performed: string[][] = [];
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    if (String(url).includes('/api/feed?')) return Response.json({ result: [123, 124, 125, 126].map(tokenId => ({
+      tokenId, createdAt: '2026-10-01T12:00:00Z',
+    })), pagination: { next_cursor: null } });
+    assert(String(url) === 'https://api.dehub.io/api/view/batch', 'unexpected network request');
+    return Response.json({ success: true });
+  };
+  try {
+    for (const index of [0, 1]) {
+      const test = fixture();
+      const step = test.task.plan.steps[0] as any;
+      step.audience = 'posts'; step.from = '2026-10-01T00:00:00Z'; step.to = '2026-10-02T00:00:00Z';
+      (test.task as any).swarm_size = 2; (test.task as any).swarm_index = index;
+      await test.run();
+      performed.push(test.rows.ai_agent_task_actions.map(action => action.target));
+    }
+  } finally { globalThis.fetch = originalFetch; }
+  const combined = performed.flat();
+  assert(combined.length === 4 && new Set(combined).size === 4, 'swarm duplicated or missed a target');
+  assert(['123', '124', '125', '126'].every(target => combined.includes(target)), 'swarm did not cover the complete window');
+});
+
 Deno.test('unsupported or oversized profile uploads never reach a write callback', async () => {
   for (const file of [new File(['html'], 'avatar.html', { type: 'text/html' }), new File([], 'empty.png', { type: 'image/png' }), new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'large.png', { type: 'image/png' })]) {
     const form = new FormData(); form.set('operation', 'update_profile'); form.set('agent_id', 'agent'); form.set('avatar', file);

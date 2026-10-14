@@ -291,7 +291,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
       </div>
 
       {/* Scrollable list — sliding strip */}
-      <div className="flex-1 overflow-hidden relative">
+      <div data-fade-mask-bottom className="flex-1 overflow-hidden relative">
         <div
           className="absolute inset-0 flex transition-transform duration-300 ease-out"
           style={{

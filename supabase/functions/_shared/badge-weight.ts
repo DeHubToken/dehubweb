@@ -187,7 +187,7 @@ async function ladderScale(): Promise<number> {
  * actually enforced. An unreachable API returns 0 rather than 1: failing open
  * would hand a free vote to anyone who could make the lookup fail.
  */
-export async function resolveVoteWeight(wallet: string): Promise<ResolvedWeight> {
+export async function resolveVoteWeight(wallet: string, requireAccount = false): Promise<ResolvedWeight> {
   let account: Record<string, unknown> | null = null;
   try {
     const res = await fetch(`${DEHUB_API_BASE}/api/account_info/${encodeURIComponent(wallet)}`);
@@ -198,7 +198,10 @@ export async function resolveVoteWeight(wallet: string): Promise<ResolvedWeight>
   } catch {
     account = null;
   }
-  if (!account) return { weight: 0, badgeName: null };
+  if (!account) {
+    if (requireAccount) throw new Error("Badge allowance is temporarily unavailable.");
+    return { weight: 0, badgeName: null };
+  }
 
   const scale = await ladderScale();
   const badgeName = badgeTier(account.badgeBalance, (account.username as string) ?? null, {
