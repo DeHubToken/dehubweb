@@ -247,6 +247,17 @@ export default function ProfilePage() {
   // glass themes, exactly like the home feed cuts at its nav pill.
   const profileHeaderRef = useRef<HTMLDivElement>(null);
   const profileTabsRef = useRef<HTMLDivElement>(null);
+  const [showDesktopIdentity, setShowDesktopIdentity] = useState(false);
+  useEffect(() => {
+    const actions = profileHeaderRef.current?.querySelector('[data-profile-actions]');
+    if (!actions) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowDesktopIdentity(entry.boundingClientRect.bottom <= (entry.rootBounds?.top ?? 44)),
+      { rootMargin: '-44px 0px 0px 0px', threshold: 0 },
+    );
+    observer.observe(actions);
+    return () => observer.disconnect();
+  }, [!!data.profile, profileKey]);
   const [profileTabsHeight, setProfileTabsHeight] = useState(56);
   useEffect(() => {
     const tabs = profileTabsRef.current;
@@ -543,7 +554,22 @@ export default function ProfilePage() {
         }}
       />
       <div className="hidden lg:sticky lg:top-0 lg:z-[80] lg:block" data-profile-desktop-feed-nav data-joined={isTabsStuck}>
-        <GlobalFeedNav profilePage />
+        <GlobalFeedNav profilePage compactProfileContent={showDesktopIdentity ? <>
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-1 text-sm font-bold leading-tight text-white">
+                <span className="truncate">{data.profile.name}</span>
+                <BadgeIcon src={data.badgeUrl} className="h-[1em] w-[1em] shrink-0" />
+                <StreamerBadge address={data.profile.walletAddress} />
+              </div>
+              <p className="truncate text-[10px] leading-tight text-zinc-400">{data.profile.handle}</p>
+            </div>
+          </div>
+          <div className="shrink-0 pr-1">
+            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+          </div>
+        </> : undefined} />
       </div>
       <CollapsingProfileHeader
         headerRef={profileHeaderRef}
@@ -637,7 +663,7 @@ export default function ProfilePage() {
             <div className="relative shrink-0 w-9 h-11 lg:hidden">
               <PageHeader overlay plainBack className="!top-1 !left-0 !right-auto" />
             </div>
-            {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1" title={`${data.profile.name} ${data.profile.handle}`}>
+            {!data.isViewingOwnProfile && <div className="flex shrink-0 items-center gap-2 pr-1 lg:hidden" title={`${data.profile.name} ${data.profile.handle}`}>
               <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
               <div className="hidden min-w-0 max-w-24 md:block">
                 <div className="flex items-baseline gap-1 text-xs sm:text-sm font-bold leading-tight text-white">
@@ -702,7 +728,7 @@ export default function ProfilePage() {
             </div>
           </div>
           </div>
-          {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%]">
+          {isTabsStuck && <div className="profile-rail-follow shrink-0 max-w-[36%] lg:hidden">
             <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
           </div>}
         </div>
