@@ -490,13 +490,30 @@ async function registerAgent(
     return { status: 502, body: { error: `Account setup could not finish. Retry with the same name "${name}" to continue the reserved registration.` } };
   }
 
-  const profile = await dehubApi("/api/update_profile", {
-    method: "POST",
-    token: authToken,
-    body: { username: name, displayName, aboutMe: registration.description },
-  });
-  if (!profile.ok) {
-    console.warn(`[Register] Profile update failed for "${name}": ${profile.message}`);
+  const profileForm = new FormData();
+  profileForm.set("username", name);
+  profileForm.set("displayName", displayName);
+  profileForm.set("aboutMe", registration.description);
+  let profileSaved = false;
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
+      method: "POST", headers: { Authorization: `Bearer ${authToken}` }, body: profileForm,
+      signal: AbortSignal.timeout(15000),
+    });
+    const result = await response.json();
+    profileSaved = response.ok && result.status !== false && result.result !== false && !result.error;
+  } catch { /* Leave the reservation pending for a retry. */ }
+  if (profileSaved) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (attempt) await new Promise(resolve => setTimeout(resolve, 1000));
+      const verify = await dehubApi(`/api/account_info/${encodeURIComponent(walletAddress)}`);
+      const current = verify.ok ? unwrap(verify.data) : null;
+      if (current?.username === name && current?.displayName === displayName) break;
+      if (attempt === 1) profileSaved = false;
+    }
+  }
+  if (!profileSaved) {
+    console.warn(`[Register] Profile update could not be verified for "${name}".`);
     return { status: 502, body: { error: `Profile setup could not finish. Retry with the same username "${name}".` } };
   }
 
@@ -523,7 +540,7 @@ async function registerAgent(
         name: data.name,
         wallet_address: walletAddress,
         api_key: apiKey,
-        profile_set: profile.ok,
+        profile_set: profileSaved,
         profile_url: `https://dehub.io/${name}`,
       },
       connector_url: `${SUPABASE_URL}/functions/v1/dehub-mcp/k/${apiKey}`,

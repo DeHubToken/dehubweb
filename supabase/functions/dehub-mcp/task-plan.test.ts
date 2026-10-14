@@ -44,6 +44,10 @@ Deno.test('exact follow and posting commands preserve explicit intent without a 
   const posts = explicitTaskPlan('Post 3 times per day about supporting independent musicians.');
   assert(posts?.interval_minutes === 480 && posts.steps[0].topic === 'supporting independent musicians.');
   assert(explicitTaskPlan('Publish 7 posts a day about music')?.interval_minutes === 1440 / 7);
+  const daily = explicitTaskPlan('Post once per day about: independent music\nStyle: curious and concise\nLike up to 2 recent posts per day about: music, live shows, vinyl');
+  assert(daily?.interval_minutes === 1440 && daily.steps.length === 2, 'daily post and likes were not combined');
+  assert(daily?.steps[0].audience === 'selected_posts' && daily?.steps[0].recent_limit === 2 && daily?.steps[0].recent_keywords?.[1] === 'live shows', 'selected likes lost their interests');
+  assert(daily?.steps[1].topic?.includes('curious and concise'), 'post style was lost');
   for (const prompt of ['Follow @maldoteth except on Mondays', 'Follow everyone who posts today', 'Post about music', 'Post 3 times per day at 09:00 about music']) assert(explicitTaskPlan(prompt) === null, 'expanded ambiguous or constrained wording');
   for (const count of [0, 49]) {
     let rejected = false;

@@ -150,6 +150,36 @@ Deno.test('bulk post reads record public views before the cursor advances or act
   }
 });
 
+Deno.test('daily selected likes view the scanned feed but act only on relevant third-party posts', async () => {
+  const test = fixture();
+  const step = test.task.plan.steps[0] as any;
+  step.audience = 'selected_posts'; step.arguments = { vote_type: 'like' };
+  step.recent_keywords = ['music', 'vinyl']; step.recent_limit = 2;
+  (test.task.plan as any).interval_minutes = 1440;
+  const originalFetch = globalThis.fetch;
+  let viewed = false;
+  const recent = new Date(Date.now() - 60_000).toISOString();
+  globalThis.fetch = async (url, init) => {
+    if (String(url).includes('/api/feed?')) return Response.json({ result: [
+      { tokenId: 100, createdAt: recent, name: 'New music finds', minter: '0x2222222222222222222222222222222222222222' },
+      { tokenId: 101, createdAt: recent, category: ['vinyl'], minter: '0x3333333333333333333333333333333333333333' },
+      { tokenId: 102, createdAt: recent, name: 'Football today', minter: '0x4444444444444444444444444444444444444444' },
+      { tokenId: 103, createdAt: recent, name: 'Music again', minter: '0x1111111111111111111111111111111111111111' },
+    ] });
+    assert(String(url) === 'https://api.dehub.io/api/view/batch', 'unexpected network request');
+    assert(JSON.stringify(JSON.parse(String(init?.body)).tokenIds) === '[100,101,102,103]', 'did not count every scanned post as viewed');
+    assert(test.calls() === 0, 'liked before recording views');
+    viewed = true;
+    return Response.json({ success: true });
+  };
+  try {
+    await test.run();
+    const targets = test.rows.ai_agent_task_actions.map(action => action.target).sort();
+    assert(viewed && JSON.stringify(targets) === '["100","101"]', 'liked an unrelated or owned post');
+    assert(test.task.status === 'queued', 'daily task did not schedule its next cycle');
+  } finally { globalThis.fetch = originalFetch; }
+});
+
 Deno.test('swarm members divide bulk targets without repeating actions', async () => {
   const performed: string[][] = [];
   const originalFetch = globalThis.fetch;
