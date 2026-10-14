@@ -55,9 +55,9 @@ export default function QuickActionsDrawer({ context, initialReport, onClose }: 
       if (setMessage.complete(message, '')) onClose();
     } catch { setError(true); } finally { submitted.current = false; }
   };
-  const row = 'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm hover:bg-muted disabled:opacity-50';
+  const row = 'flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm hover:bg-white/10 disabled:opacity-50';
   return <Drawer open onOpenChange={open => { if (!open) close(); }} dismissible={!busy && !submit.isPending}>
-    <DrawerContent data-quick-actions-ui column className="px-4 pb-6 text-foreground">
+    <DrawerContent data-quick-actions-ui column className="px-4 pb-6 text-white">
       <DrawerHeader className="px-0 pr-10 text-left">
         <DrawerTitle>{view === 'report' ? t('quickActions.question') : view === 'profiles' ? t('settings.switchAccount') : t('quickActions.title')}</DrawerTitle>
         <DrawerDescription>{view === 'report' ? t('quickActions.publicNotice') : t('quickActions.hint')}</DrawerDescription>
@@ -71,14 +71,14 @@ export default function QuickActionsDrawer({ context, initialReport, onClose }: 
       </div>}
       {view === 'profiles' && <div className="max-h-[65dvh] overflow-y-auto"><ProfilesSection onSelect={onClose} /></div>}
       {view === 'report' && <div className="space-y-3 overflow-y-auto">
-        <textarea aria-label={t('quickActions.question')} placeholder={t('quickActions.placeholder')} value={message} onChange={e => setMessage(e.target.value)} maxLength={1500} rows={4} className="w-full resize-none rounded-xl border border-border bg-muted p-3 text-sm" />
+        <textarea aria-label={t('quickActions.question')} placeholder={t('quickActions.placeholder')} value={message} onChange={e => setMessage(e.target.value)} maxLength={1500} rows={4} className="w-full resize-none rounded-xl border border-white/10 bg-white/5 p-3 text-sm placeholder:text-muted-foreground" />
         <p className="break-all text-xs text-muted-foreground">{context.page}</p>
         <p className="text-xs text-muted-foreground">{t('quickActions.deviceNotice')}</p>
         {capturing && <p className="flex items-center gap-2 text-xs text-muted-foreground"><Loader2 size={14} className="animate-spin" />{t('quickActions.capturing')}</p>}
-        {preview && <div className="relative"><img src={preview} alt={t('quickActions.screenshot')} className="max-h-40 rounded-lg border border-border object-contain" /><button className="absolute right-2 top-2 rounded-full bg-background p-2" aria-label={t('quickActions.removeScreenshot')} onClick={() => setScreenshot(null)}><X size={16} /></button></div>}
+        {preview && <div className="relative"><img src={preview} alt={t('quickActions.screenshot')} className="max-h-40 rounded-lg border border-border object-contain" /><button className="absolute right-2 top-2 rounded-full bg-black/60 p-2" aria-label={t('quickActions.removeScreenshot')} onClick={() => setScreenshot(null)}><X size={16} /></button></div>}
         {!capturing && !preview && <p className="text-xs text-muted-foreground">{t('quickActions.noScreenshot')}</p>}
         <label className="block text-sm">{t('quickActions.attachScreenshot')}<input type="file" accept="image/*" className="mt-1 block w-full text-xs" onChange={event => { const file = event.target.files?.[0]; if (file && file.type.startsWith('image/') && file.size <= 20 * 1024 * 1024) { setScreenshot(file); setError(false); } else if (file) setError(true); event.target.value = ''; }} /></label>
-        <button onClick={send} disabled={!message.trim() || capturing || submit.isPending} className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-40">{submit.isPending && <Loader2 size={16} className="animate-spin" />}{t(isAuthenticated ? 'quickActions.send' : 'quickActions.signIn')}</button>
+        <button onClick={send} disabled={!message.trim() || capturing || submit.isPending} className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-black ring-1 ring-black/10 disabled:opacity-40">{submit.isPending && <Loader2 size={16} className="animate-spin" />}{t(isAuthenticated ? 'quickActions.send' : 'quickActions.signIn')}</button>
       </div>}
       {error && <p role="alert" className="mt-3 text-sm text-destructive">{t('quickActions.failed')}</p>}
     </DrawerContent>
