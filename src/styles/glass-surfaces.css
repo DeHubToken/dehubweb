@@ -115,7 +115,7 @@ html {
 }
 
 html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
-  :is([data-feed-nav]:not(:has(> [data-nav-glass-backdrop])), [data-feed-island-surface], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]), [data-bottom-nav] > nav):not(#_):not(#_) {
+  :is([data-feed-nav]:not(:has(> [data-nav-glass-backdrop])), [data-feed-island-surface], [data-feed-nav-outer] > [data-page-bento]:not([data-bento-flat]):not(:has(> [data-nav-glass-backdrop])), [data-bottom-nav] > nav):not(#_):not(#_) {
   background: linear-gradient(rgb(255 255 255 / 0.18), rgb(255 255 255 / 0.025) 45%, rgb(255 255 255 / 0)), linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
   /* Keep the standard property last: the production CSS optimiser otherwise
      retains only the Safari prefix and removes blur in Chromium/Firefox. */
