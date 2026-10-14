@@ -46,12 +46,12 @@ async function planPrompt(prompt: string, timezone: string, registry: Registry):
 Act as the selected agent, never as the human owner. Only the five tools below are available. Unsupported requests, unspecified targets/time windows or ambiguous counts must return clarification, never a guessed action.
 Tools:
 dehub_follow: {target_wallet: 0x address or exact username, action: follow|unfollow}. Named users are resolved before queueing. all_users follows the public directory; post_authors follows unique creators of posts in a specified window.
-dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects posts in a time window. The runner preserves existing matching votes.
+dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects all posts in a fixed time window. audience selected_posts likes at most recent_limit (1-3) posts from the last 24 hours whose title, description or category matches one of recent_keywords (1-6 interests). Leave from and to null for selected_posts. The runner preserves existing matching votes.
 dehub_comment: {token_id: string, content: string, reply_to_comment_id?: string}. Only literal requested comment text; do not invent replies for a bulk audience.
 dehub_update_profile: {username?:string,bio?:string,display_name?:string,avatar_url?:string,banner_url?:string}.
 dehub_post_create: {content:string,title?:string,category?:string,media_url?:string,media_type?:text|image|video}. If the user asks for posts ABOUT a topic, set topic to the writing instructions; a new original post is written on each run. Literal text uses content and null topic. No image/video generation capability.
 Use audience single unless bulk is explicitly requested. A request to follow every user is all_users, not ten users. A request to follow people who posted today uses post_authors, from local midnight to now. Convert relative windows with the timezone above. Never extend the window into the future. All dates must be ISO UTC with Z.
-For N posts/day use ONE generated-post step and interval_minutes 1440/N (fractional minutes are allowed); for once use null. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
+For N posts/day use ONE generated-post step and interval_minutes 1440/N (fractional minutes are allowed); for once use null. A daily post plus selective likes can use two steps and interval_minutes 1440. Minimum interval 30 minutes and maximum 2 posts/hour. Recurring bulk tasks other than selected_posts are not supported; explain that rather than changing them to once. Daily schedules use evenly spaced elapsed intervals starting when the task is queued. If exact local clock times are requested, explain they are not supported yet.
 No registration, transfers, tips, purchases, private messages, admin actions or tools outside this catalog. Return only plan_agent_task with both top-level fields: plan and clarification. For a supported task, plan must contain summary, steps and interval_minutes and clarification must be null. For an unsupported task, plan is null and clarification explains why. Never return an empty object or put plan fields at the top level.
 Example for "Post 3 times per day about music": {"plan":{"summary":"Post about music three times daily, every eight hours.","interval_minutes":480,"steps":[{"tool":"dehub_post_create","arguments":{},"audience":"single","from":null,"to":null,"topic":"music"}]},"clarification":null}.
 Keep the summary explicit about agent actions, time window and cadence.` },
@@ -92,9 +92,33 @@ async function api(path: string, token: string, params: Record<string, unknown>)
   return response.json();
 }
 
-async function loadTargets(step: TaskStep, task: any, token: string): Promise<void> {
+async function loadTargets(step: TaskStep, task: any, token: string, ownedWallets: Set<string>): Promise<void> {
   const cursor = task.cursor;
   if (step.audience === "single") { cursor.targets = ["single"]; cursor.index = 0; cursor.done = true; return; }
+  if (step.audience === "selected_posts") {
+    const end = Date.now();
+    const from = new Date(end - 24 * 60 * 60 * 1000).toISOString();
+    const to = new Date(end).toISOString();
+    const data = await api("feed", token, { sortBy: "createdAt", sortOrder: "desc", status: "minted", limit: 50,
+      from, to, agent_cursor: "true" });
+    const posts = (data.result ?? []).filter((post: any) => {
+      const at = Date.parse(post.createdAt);
+      return Number.isFinite(at) && at >= Date.parse(from) && at < end;
+    });
+    await recordPostViews(posts.map((post: any) => post.tokenId), { token });
+    const keywords = step.recent_keywords!.map(keyword => keyword.toLowerCase());
+    cursor.targets = posts.filter((post: any) => {
+      if (ownedWallets.has(String(post.minter ?? '').toLowerCase())) return false;
+      const description = [post.name, post.description, ...(Array.isArray(post.category) ? post.category : [post.category])]
+        .filter(Boolean).join(' ').toLowerCase();
+      return keywords.some(keyword => description.includes(keyword));
+    }).sort((a: any, b: any) => swarmBucket(`${task.agent_id}:${task.cycle}:${a.tokenId}`, 4294967296) -
+      swarmBucket(`${task.agent_id}:${task.cycle}:${b.tokenId}`, 4294967296))
+      .slice(0, step.recent_limit!).map((post: any) => String(post.tokenId));
+    cursor.index = 0;
+    cursor.done = true;
+    return;
+  }
   if (step.audience === "all_users") {
     const data = await api("users_search", token, { directory: "true", after: cursor.after ?? "", before: task.cycle_started_at, limit: 50 });
     if (!data.pagination || !("next_cursor" in data.pagination)) throw new Error("The user directory has not been deployed yet.");
@@ -127,6 +151,8 @@ export async function runTask(context: Context, req: Request, task: any) {
   if (!token) throw new Error("Could not sign in as this agent.");
   const registry = context.tools(agent.api_key, req);
   const plan = taskPlanSchema.parse(task.plan);
+  const ownedAgents = checked(await db.from("ai_agents").select("owner_wallet_address").eq("human_owner_wallet", task.owner_wallet));
+  const ownedWallets = new Set<string>(ownedAgents.map((row: any) => String(row.owner_wallet_address).toLowerCase()));
   const save = async (extra: Record<string, unknown> = {}) => checked(await db.from("ai_agent_tasks").update({
     cursor: task.cursor, completed_actions: task.completed_actions, updated_at: new Date().toISOString(), ...extra,
   }).eq("id", task.id).eq("lease", task.lease));
@@ -149,7 +175,7 @@ export async function runTask(context: Context, req: Request, task: any) {
     }
     if (!task.cursor.targets || task.cursor.index >= task.cursor.targets.length) {
       if (task.cursor.done) { task.cursor = { step: task.cursor.step + 1 }; await save(); continue; }
-      await loadTargets(step, task, token);
+      await loadTargets(step, task, token, ownedWallets);
       await save();
       if (!task.cursor.targets.length) continue;
     }
