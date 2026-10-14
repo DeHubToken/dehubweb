@@ -18,6 +18,9 @@ it('renders inline English and interpolation without downloading optional dictio
     ['dub.audio', 'Audio'], ['dub.original', 'Original audio'], ['dub.dubbed', 'Dubbed audio'],
     ['emojiPicker.tabEmoji', 'Emoji'], ['creatorPacks.tabStickers', 'Stickers'], ['emojiPicker.tabGif', 'GIF'],
   ]) expect(i18n.t(key, label)).toBe(label);
+  for (const count of [0, 1, 28]) {
+    expect(i18n.t('publicChat.online', { count, defaultValue: '{{count}} online' })).toBe(`${count} online`);
+  }
   await Promise.resolve();
   expect(fetchPack).not.toHaveBeenCalled();
 });
