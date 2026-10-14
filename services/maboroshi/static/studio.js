@@ -4,6 +4,7 @@ let token = '', account = '', current = null, ready = false, allowPayments = fal
 let selectedInput = '', selectedResult = '', requestVersion = 0, sessionVersion = 0;
 let referencesChanged = false, working = false, pendingPayment = null, paymentNotice = '';
 const localMedia = new Map();
+let selectedSourceFile = null, selectedClipId = '', clipImport = null;
 const presets = window.MABOROSHI_PRESETS || [];
 const linkedPreset = presets.find(preset => preset.id === new URLSearchParams(location.search).get('preset')) || null;
 let selectedPreset = linkedPreset;
@@ -69,6 +70,7 @@ function mediaPreview(id, media) {
   preview.hidden = false; preview.dataset.key = key;
 }
 function clearProject() {
+  clipImport?.abort(); clipImport = null; selectedSourceFile = null; selectedClipId = ''; $('source').required = true;
   if (pendingPayment) { pendingPayment.reject(Error('The active project changed.')); pendingPayment = null; }
   clearTimeout(timer); requestVersion++; current = null; selectedInput = ''; selectedResult = ''; paymentNotice = '';
   for (const id of ['preview', 'result', 'source-preview']) { $(id).pause(); $(id).removeAttribute('src'); $(id).removeAttribute('data-file'); $(id).load(); }
@@ -206,10 +208,37 @@ window.addEventListener('message', event => {
   if (event.source !== window.parent || event.origin !== 'https://dehub.io') return;
   if (event.data?.type === 'maboroshi:session') void authenticate(event.data);
   if (event.data?.type === 'maboroshi:payment-result') paymentResult(event.data);
+  if (event.data?.type === 'maboroshi:clip') void chooseCatalogClip(event.data.clip);
 });
 // Native injects events only after verifying the exact WebView origin and path.
 document.addEventListener('maboroshi:native-session', event => { void authenticate(event.detail); });
 document.addEventListener('maboroshi:native-payment-result', event => { paymentResult(event.detail); });
+document.addEventListener('maboroshi:native-clip', event => { void chooseCatalogClip(event.detail); });
+async function chooseCatalogClip(clip) {
+  if (!clip || !/^[a-f0-9]{20}$/.test(clip.id || '') || typeof clip.url !== 'string' || typeof clip.name !== 'string' || !(clip.seconds >= 3 && clip.seconds <= 30)) return;
+  let url;
+  try { url = new URL(clip.url); } catch { return; }
+  if (url.protocol !== 'https:' || url.username || url.password || !['d2ol7oe51mr4n9.cloudfront.net', 'cdn.higgsfield.ai', 'd8j0ntlcm91z4.cloudfront.net', 'static.higgsfield.ai'].includes(url.hostname)) return;
+  if (selectedClipId === clip.id) return;
+  if (clipImport) return;
+  if (current || locked()) { message('Start a new project before choosing another source clip. Your saved project stays available.'); return; }
+  const version = sessionVersion, controller = new AbortController(); clipImport = controller;
+  working = true; message(''); render();
+  try {
+    const response = await fetch(url.href, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: controller.signal });
+    if (!response.ok || Number(response.headers.get('Content-Length')) > 100 * 1024 * 1024) throw Error('This source clip is unavailable or exceeds 100 MB. Choose another clip.');
+    const blob = await response.blob();
+    if (blob.size > 100 * 1024 * 1024) throw Error('Choose a source clip smaller than 100 MB.');
+    if (version !== sessionVersion || current || controller.signal.aborted) return;
+    releaseLocal('source');
+    selectedSourceFile = new File([blob], `source-${clip.id}.mp4`, { type: 'video/mp4' });
+    selectedClipId = clip.id; $('source').value = ''; $('source').required = false;
+    localMedia.set('source', { url: URL.createObjectURL(selectedSourceFile), kind: 'video', name: clip.name });
+    mediaPreview('source-local', localMedia.get('source'));
+    $('source-section').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  } catch (error) { if (version === sessionVersion && error.name !== 'AbortError') message(error.message); }
+  finally { if (clipImport === controller) { clipImport = null; working = false; render(); } }
+}
 function paymentResult(data) {
   if (!pendingPayment || data?.requestId !== pendingPayment.requestId) return;
   const pending = pendingPayment; pendingPayment = null;
@@ -234,6 +263,7 @@ for (const id of ['source-download', 'preview-download', 'result-download']) $(i
   if (window.ReactNativeWebView) { event.preventDefault(); window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'maboroshi:download', url: $(id).href })); }
 };
 for (const [id, target] of [['source', 'source-local'], ['reference', 'reference-preview'], ['second', 'second-preview']]) $(id).onchange = () => {
+  if (id === 'source') { selectedSourceFile = null; selectedClipId = ''; $('source').required = true; }
   releaseLocal(id); const file = $(id).files[0];
   if (file) localMedia.set(id, { url: URL.createObjectURL(file), kind: file.type.startsWith('video/') ? 'video' : 'image', name: file.name });
   mediaPreview(target, localMedia.get(id));
@@ -262,14 +292,14 @@ async function saveReferences() {
 }
 $('source-form').onsubmit = async event => {
   event.preventDefault(); if (!token || !allowPayments || locked()) return;
-  const file = $('source').files[0];
+  const file = selectedSourceFile || $('source').files[0];
   if (!file || file.size > 100 * 1024 * 1024) { message('Choose a video smaller than 100 MB.'); return; }
-  const body = new FormData(event.target), version = sessionVersion;
+  const body = new FormData(event.target), version = sessionVersion; body.set('video', file);
   message(''); working = true; render();
   try {
     const data = await api('jobs', { method: 'POST', body });
     if (version !== sessionVersion) return;
-    current = data; remember(data.id); releaseLocal('source'); clearMedia('source-local');
+    current = data; remember(data.id); selectedSourceFile = null; selectedClipId = ''; releaseLocal('source'); clearMedia('source-local');
     await list();
     if (version !== sessionVersion) return;
     if ($('reference').files[0]) await saveReferences();
@@ -332,7 +362,7 @@ for (const approved of [true, false]) $(approved ? 'approve' : 'reject').onclick
   finally { if (version === sessionVersion) { working = false; render(); } }
 };
 async function canLeave() {
-  if (!(referencesChanged || (!current && $('source').files.length))) return true;
+  if (!(referencesChanged || (!current && ($('source').files.length || selectedSourceFile)))) return true;
   const dialog = $('discard-dialog');
   if (dialog.open) return false;
   return new Promise(resolve => {
@@ -357,6 +387,6 @@ $('refresh').onclick = async () => {
   try { await list(); if (current) { for (const id of ['preview', 'result', 'source-preview']) $(id).removeAttribute('data-file'); await load(current.id); } }
   catch (error) { message(error.message); }
 };
-window.addEventListener('beforeunload', event => { if (referencesChanged || (!current && $('source').files.length)) { event.preventDefault(); event.returnValue = ''; } });
+window.addEventListener('beforeunload', event => { if (referencesChanged || (!current && ($('source').files.length || selectedSourceFile))) { event.preventDefault(); event.returnValue = ''; } });
 document.addEventListener('visibilitychange', () => { clearTimeout(timer); if (!document.hidden && busy()) void load(current.id).catch(error => message(error.message)); });
 fetch('health').then(response => response.json()).then(data => { ready = data.ready; $('connection').textContent = 'Sign in to DeHub to save and continue a project.'; render(); announce(); }).catch(() => { message('Maboroshi is temporarily unavailable. Reload to reconnect.'); announce(); });
