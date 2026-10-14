@@ -9,6 +9,8 @@ it('renders inline English and interpolation without downloading optional dictio
   const { default: i18n } = await import('./index');
   expect(i18n.t('copy.performanceProbe', { defaultValue: 'Hello {{name}}', name: 'Sam' })).toBe('Hello Sam');
   expect(i18n.t('editor.rail.agent', 'Agent')).toBe('Agent');
+  expect(i18n.t('creator.editor', 'Editor')).toBe('Editor');
+  expect(i18n.t('commandCentre.creator', 'Creator')).toBe('Creator');
   await Promise.resolve();
   expect(fetchPack).not.toHaveBeenCalled();
 });
