@@ -37,7 +37,7 @@ const busy = () => current && ['queued', 'running'].includes(current.state);
 const locked = () => working || !!pendingPayment;
 const editable = () => allowPayments && (!current || ['uploaded', 'prepared'].includes(current.state));
 const money = (micros) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(micros / 1e6);
-const stateLabel = (state) => ({ uploaded: 'Ready to prepare', prepared: 'Ready to review', queued: 'Queued', running: 'Processing', draft: 'Preview ready', complete: 'HD ready', failed: 'Needs attention', attention: 'Needs attention' })[state] || 'Saved';
+const stateLabel = (state) => ({ uploaded: 'Ready to prepare', prepared: 'Ready to review', queued: 'Queued', running: 'Processing', draft: 'Preview ready', complete: 'Video ready', failed: 'Needs attention', attention: 'Needs attention' })[state] || 'Saved';
 const message = (text) => { paymentNotice = ''; $('error').textContent = text || ''; $('error').hidden = !text; };
 const remember = (id) => { try { localStorage.setItem(`maboroshi:last:${account}`, id || ''); } catch { /* Storage may be unavailable in an embedded browser. */ } };
 const remembered = () => { try { return localStorage.getItem(`maboroshi:last:${account}`); } catch { return ''; } };
@@ -119,7 +119,7 @@ function nextStep() {
   if (current.state === 'attention') return 'Your saved files are available below. A previous submission needs review before any further paid attempt.';
   if (current.state === 'failed') return 'Your original and any completed previews are available below. Check the processing message before starting a new project.';
   if (current.state === 'uploaded') return 'Next: prepare the clip, then review the motion before generating.';
-  if (current.state === 'prepared') return current.review.approved ? 'Clip approved. Choose your character and generate a preview.' : 'Next: watch the entire prepared clip and approve its alignment.';
+  if (current.state === 'prepared') return current.renderer === 'kling' ? current.review.approved ? 'Source approved. Choose your character and generate the complete Kling video.' : 'Next: watch and approve your entire original source clip.' : current.review.approved ? 'Clip approved. Choose your character and generate a preview.' : 'Next: watch the entire prepared clip and approve its alignment.';
   if (current.state === 'draft') return 'Next: watch or download the preview. Choose 1080p only if you want an HD version.';
   return 'Your video is ready to download. Your original and preview remain saved.';
 }
@@ -130,6 +130,7 @@ function render() {
   $('renderer-help').textContent = kling ? 'Kling: 3–15 second MP4/MOV at 720p or higher, with image references. One paid render; original soundtrack preserved.' : 'Seedance Premium: 2–30 seconds, image or video references. Paid preparation and preview, with optional 1080p completion.';
   $('reference').accept = kling ? 'image/png,image/jpeg,image/webp' : 'image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm';
   $('review-guidance').textContent = kling ? 'Watch the full original clip and confirm the subject, motion and soundtrack. Kling uses this source directly.' : 'Check edges, hair, hands, background spill and face alignment through every cut. Listen to the pitched vocals.';
+  $('review-label').textContent = kling ? 'I reviewed the whole original clip and want to use it for this edit.' : 'I reviewed the whole prepared clip and its alignment is correct.';
   $('render-hint').textContent = kling ? 'One complete render. No preparation or separate HD charge.' : 'HD is a separate choice after you watch the preview.';
   $('export-guidance').textContent = kling ? 'Your complete original soundtrack is restored. Download your finished Kling video.' : 'Your full original soundtrack is restored. You can download the preview as it is, or approve HD within six days.';
   $('project').hidden = !current; $('progress').hidden = !current;

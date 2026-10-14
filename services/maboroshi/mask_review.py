@@ -27,7 +27,10 @@ def state(folder):
     saved=json.loads(path.read_text()) if path.exists() else {}
     try:current=fingerprint(folder)
     except ValueError:return {'approved':False,'status':'unavailable','note':'Prepare the video first.'}
-    if saved.get('fingerprint')!=current:return {'approved':False,'status':'pending','note':'Review the entire prepared input: mask coverage for depth mode; facial tracking and overlay alignment for fast mode.','fingerprint':current}
+    if saved.get('fingerprint')!=current:
+        mode=Path(folder)/'workflow-mode.json'
+        kling=mode.exists() and json.loads(mode.read_text()).get('mode')=='kling'
+        return {'approved':False,'status':'pending','note':'Review the whole original source clip, including its soundtrack.' if kling else 'Review the entire prepared input: mask coverage for depth mode; facial tracking and overlay alignment for fast mode.','fingerprint':current}
     return saved
 
 def review(folder,approved,note,expected):
