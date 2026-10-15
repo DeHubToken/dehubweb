@@ -64,6 +64,12 @@ function perMessageFeeOf(user: DeHubUser | undefined): number {
   return Number(settings?.perMessageFee) || 0;
 }
 
+function conversationFeeOf(conv: DeHubConversation): number {
+  // The server's access decision takes precedence over the creator's public fee.
+  if (conv.dmFee) return conv.dmFee.required && !conv.dmFee.hasFreeAccess ? conv.dmFee.fee : 0;
+  return perMessageFeeOf(conv.otherUser);
+}
+
 type RowStatus = 'idle' | 'sending' | 'sent';
 
 export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps) {
@@ -130,7 +136,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
 
   const sendToConversation = async (conv: DeHubConversation) => {
     const key = `conv:${conv.id}`;
-    const fee = perMessageFeeOf(conv.otherUser) || (conv.dmFee?.required && !conv.dmFee.hasFreeAccess ? conv.dmFee.fee : 0);
+    const fee = conversationFeeOf(conv);
     if (fee > 0) {
       if (conv.otherUser?.address) routeToChat(conv.otherUser.address, conv.otherUser.username);
       return;
@@ -160,11 +166,6 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
 
   const sendToUser = async (user: DeHubUser, statusKey?: string) => {
     const key = statusKey ?? `user:${user.address || user._id}`;
-    const fee = perMessageFeeOf(user);
-    if (fee > 0) {
-      if (user.address) routeToChat(user.address, user.username);
-      return;
-    }
     setRowStatus(s => ({ ...s, [key]: 'sending' }));
     try {
       let userId = user._id || user.id;
@@ -179,6 +180,11 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
       if (!userId) throw new Error('Missing recipient id');
       const conv = await emitCreateAndStart(userId);
       if (!conv?._id) throw new Error('Could not open conversation');
+      if (conv.dmFee?.required && !conv.dmFee.hasFreeAccess && conv.dmFee.fee > 0) {
+        if (user.address) routeToChat(user.address, user.username);
+        setRowStatus(s => ({ ...s, [key]: 'idle' }));
+        return;
+      }
       const wire = await prepareOutgoing(user.address, buildContent());
       await emitSendMessage({ dmId: conv._id, content: wire.content, type: 'msg' });
       setRowStatus(s => ({ ...s, [key]: 'sent' }));
@@ -250,7 +256,7 @@ export function ShareToDmModal({ open, onOpenChange, url }: ShareToDmModalProps)
               const avatarUrl = buildAvatarUrl(u?.address || '', u?.avatarImageUrl || u?.avatarUrl);
               const name = u?.displayName || u?.username ||
                 (u?.address ? `${u.address.slice(0, 6)}...${u.address.slice(-4)}` : _copy("copy.b512d97e7cbf", { defaultValue: "User" }));
-              const fee = perMessageFeeOf(u) || (conv.dmFee?.required && !conv.dmFee.hasFreeAccess ? conv.dmFee.fee : 0);
+              const fee = conversationFeeOf(conv);
               return (
                 <RecipientRow
                   key={key}

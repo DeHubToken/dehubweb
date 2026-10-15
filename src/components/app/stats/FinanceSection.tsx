@@ -408,10 +408,10 @@ export function FinanceSection({ range }: { range: Range }) {
   if (!stats || !view) return null;
 
   const revenueSources = stats.sources.filter((s) => s.kind === 'revenue');
-  const costSources: FinanceSource[] = stats.sources.filter((s) => s.kind === 'cost').map(source => source.id === 'operations_reinvestment' ? {
+  const costSources: FinanceSource[] = stats.sources.filter((s) => s.kind === 'cost' && (s.id !== 'operations_reinvestment' || view.costs.has(s.id))).map(source => source.id === 'operations_reinvestment' ? {
       ...source,
       label: t('stats.money.estimatedOperations', 'Estimated operations'),
-      note: t('stats.money.estimatedOperationsNote', 'Operating costs follow a modeled monthly trend, peaking at $100,000 in November 2021 and declining thereafter. Recorded bills are included, without double counting. This is an estimate, not an invoice ledger.'),
+      note: source.note,
     } : source);
   const unavailable = stats.sources.filter((s) => s.status === 'unavailable');
 
