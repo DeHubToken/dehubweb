@@ -2,13 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { useMaintenanceStatus } from '@/hooks/use-maintenance-status';
+import { ThemePreviewProvider } from '@/contexts/ThemeContext';
 import './maintenance.css';
 
 type Props = { checking?: boolean; failed?: boolean; onRetry?: () => void };
 
 export function MaintenanceScreen({ checking = false, failed = false, onRetry }: Props) {
   const { t } = useTranslation();
-  return <div className="maintenance-page" data-maintenance-screen>
+  return <ThemePreviewProvider initialTheme="system"><div className="maintenance-page" data-maintenance-screen>
     <Helmet><title>{t('maintenance.title')} | DeHub</title><meta name="robots" content="noindex, nofollow" /></Helmet>
     <div className="maintenance-frame">
       <header className="maintenance-header">
@@ -30,7 +31,7 @@ export function MaintenanceScreen({ checking = false, failed = false, onRetry }:
       </main>
       <footer className="maintenance-footer"><span>{t('maintenance.ownership')}</span><span>dehub.io</span></footer>
     </div>
-  </div>;
+  </div></ThemePreviewProvider>;
 }
 
 /** Public preview uses the same screen and retry path without enabling an outage. */
