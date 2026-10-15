@@ -1,0 +1,5 @@
+.maintenance-waves{position:fixed;inset:0;overflow:hidden;z-index:-1;pointer-events:none;background:#050505}
+.maintenance-wave-track{position:absolute;inset:-12%;transform:translate3d(var(--maintenance-x,0px),var(--maintenance-y,0px),0);transition:transform 1.6s cubic-bezier(.16,1,.3,1)}
+.maintenance-wave-surface{position:absolute;inset:-3%;background:linear-gradient(110deg,#0008,#000c),url('/brand-kit/bg/bg-01.jpg') center/cover;animation:maintenance-wave 18s ease-in-out infinite alternate;will-change:transform}
+@keyframes maintenance-wave{from{transform:translate3d(-1.5%,-1%,0) scale(1.03) rotate(-1deg)}to{transform:translate3d(1.5%,1%,0) scale(1.08) rotate(1deg)}}
+@media(prefers-reduced-motion:reduce){.maintenance-wave-track{transform:none;transition:none}.maintenance-wave-surface{animation:none;will-change:auto}}

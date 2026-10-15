@@ -7,29 +7,35 @@
   <meta name="theme-color" content="#050505">
   <title>A little work. A better DeHub.</title>
   <link rel="icon" href="/brand-kit/brand/mark-white.png">
+  <link rel="stylesheet" href="/brand-kit/maintenance-motion.css">
   <link rel="preload" href="/brand-kit/font/exo-500.ttf" as="font" type="font/ttf" crossorigin>
   <style>
     @font-face{font-family:Exo;src:url('/brand-kit/font/exo-500.ttf') format('truetype');font-weight:500;font-display:swap}
     @font-face{font-family:Exo;src:url('/brand-kit/font/exo-700.ttf') format('truetype');font-weight:700;font-display:swap}
-    *{box-sizing:border-box}html{background:#050505}body{margin:0;color:#f5f5f5;font-family:Exo,sans-serif;font-weight:500;background:linear-gradient(110deg,#0008,#000c),url('/brand-kit/bg/bg-01.jpg') center/cover fixed;padding:clamp(24px,4vw,56px);min-height:100dvh}
+    *{box-sizing:border-box}html{background:#050505}body{position:relative;isolation:isolate;margin:0;color:#f5f5f5;font-family:Exo,sans-serif;font-weight:500;background:#050505;padding:clamp(24px,4vw,56px);min-height:100dvh}
     .frame{max-width:1120px;min-height:calc(100dvh - clamp(48px,8vw,112px));margin:auto;display:flex;flex-direction:column}
-    header{display:flex;align-items:center;gap:24px;min-height:44px}.logo{width:110px;height:auto}header span{padding-left:24px;border-left:1px solid #ffffff24;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#bbb}
+    header{display:flex;align-items:center;gap:24px;min-height:44px}.logo{width:40px;height:40px;object-fit:contain}header span{padding-left:24px;border-left:1px solid #ffffff24;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#bbb}
     main{display:flex;flex:1;align-items:center;justify-content:space-between;gap:40px;padding:64px 0}.copy{flex:1;min-width:0}.eyebrow{margin:0 0 24px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#bbb}
     h1{margin:0 0 28px;font-size:clamp(40px,6vw,76px);font-weight:700;letter-spacing:-.045em;line-height:1.04}.description{max-width:360px;margin:0 0 32px;font-size:16px;line-height:1.75;color:#aaa}.actions{display:flex;align-items:center;flex-wrap:wrap;gap:24px}.actions span{font-size:12px;color:#bbb}
     button{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 32px;border-radius:12px;border:1px solid #ffffff4d;background:linear-gradient(135deg,#fff3,#ffffff1a,#ffffff0d);box-shadow:0 8px 32px #0003,inset 0 1px 0 #fff6,inset 0 -1px 0 #ffffff1a;color:#fff;font:500 14px Exo,sans-serif;cursor:pointer;transition:background .15s,transform .15s}button:hover{background:linear-gradient(135deg,#ffffff4d,#ffffff26,#ffffff1a)}button:active{transform:scale(.97)}button:focus-visible{outline:2px solid #fff;outline-offset:4px}
     .clock{flex:none;width:39%;max-width:420px;height:auto;filter:drop-shadow(0 12px 40px #ffffff12)}footer{display:flex;justify-content:space-between;gap:24px;padding-top:24px;border-top:1px solid #ffffff24;font-size:11px;color:#999}footer span:first-child{text-transform:uppercase;letter-spacing:.08em}
-    @media(max-width:640px){body{padding:max(24px,env(safe-area-inset-top)) 24px max(24px,env(safe-area-inset-bottom))}.frame{min-height:calc(100dvh - 48px)}header{gap:18px}.logo{width:92px}header span{padding-left:18px;font-size:10px}main{flex-direction:column-reverse;justify-content:center;gap:28px;padding:40px 0;text-align:center}.clock{width:155px}.copy{flex:none}h1{font-size:clamp(32px,10.8vw,44px)}.description{margin-inline:auto}.eyebrow{margin-bottom:18px}.actions{justify-content:center;gap:18px}footer{font-size:10px}}
+    @media(max-width:640px){body{padding:max(24px,env(safe-area-inset-top)) 24px max(24px,env(safe-area-inset-bottom))}.frame{min-height:calc(100dvh - 48px)}header{gap:18px}.logo{width:36px;height:36px}header span{padding-left:18px;font-size:10px}main{flex-direction:column-reverse;justify-content:center;gap:28px;padding:40px 0;text-align:center}.clock{width:155px}.copy{flex:none}h1{font-size:clamp(32px,10.8vw,44px)}.description{margin-inline:auto}.eyebrow{margin-bottom:18px}.actions{justify-content:center;gap:18px}footer{font-size:10px}}
     @media(prefers-reduced-motion:reduce){button{transition:none}button:active{transform:none}}
   </style>
 </head>
 <body>
+  <div class="maintenance-waves" aria-hidden="true"><div class="maintenance-wave-track"><div class="maintenance-wave-surface"></div></div></div>
   <div class="frame">
-    <header><img class="logo" src="/brand-kit/brand/wordmark-white.png" alt="DeHub" width="110" height="28"><span>Maintenance mode</span></header>
+    <header><img class="logo" src="/brand-kit/brand/mark-white.png" alt="DeHub" width="40" height="40"><span>Maintenance mode</span></header>
     <main>
       <div class="copy"><p class="eyebrow">Temporarily offline</p><h1>A little work.<br>A better DeHub.</h1><p class="description">We're carrying out maintenance. Please check back shortly.</p><div class="actions"><button type="button" onclick="window.location.reload()">Try again</button></div></div>
       <img class="clock" src="/brand-kit/icons/clock.png" alt="" width="480" height="504">
     </main>
     <footer><span>Open source. User owned.</span><span>dehub.io</span></footer>
   </div>
+  <script type="module">
+    import { attachMaintenanceMotion } from '/brand-kit/maintenance-motion.js';
+    attachMaintenanceMotion(document.querySelector('.maintenance-waves'));
+  </script>
 </body>
 </html>

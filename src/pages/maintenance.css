@@ -7,16 +7,9 @@
   color: #f5f5f5;
   font-family: 'Exo', sans-serif;
 }
-.maintenance-page::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(110deg, #0008, #000c), url('/brand-kit/bg/bg-01.jpg') center / cover;
-}
 .maintenance-frame { max-width: 1120px; min-height: calc(100dvh - clamp(32px, 8vw, 112px)); margin: auto; display: flex; flex-direction: column; }
 .maintenance-header { display: flex; align-items: center; gap: 24px; min-height: 44px; }
-.maintenance-header img { width: 110px; height: auto; }
+.maintenance-header img { width: 40px; height: 40px; object-fit: contain; }
 .maintenance-header span { padding-left: 24px; border-left: 1px solid #ffffff24; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #bbb; }
 .maintenance-main { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 40px; padding: 64px 0; }
 .maintenance-copy { flex: 1; min-width: 0; }
@@ -33,7 +26,7 @@
   .maintenance-page { padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom)); }
   .maintenance-frame { min-height: calc(100dvh - 48px); }
   .maintenance-header { gap: 18px; }
-  .maintenance-header img { width: 92px; }
+  .maintenance-header img { width: 36px; height: 36px; }
   .maintenance-header span { padding-left: 18px; font-size: 10px; }
   .maintenance-main { flex-direction: column-reverse; justify-content: center; gap: 28px; padding: 40px 0; text-align: center; }
   .maintenance-clock { width: 155px; }
