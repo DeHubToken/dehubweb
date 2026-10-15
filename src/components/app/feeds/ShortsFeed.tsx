@@ -591,6 +591,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 <div
                   key={short.id}
                   data-media-tile
+                  data-media-scrim
                   onClick={() => handleShortClick(index)}
                   className="relative aspect-[9/16] bg-zinc-900 rounded-xl overflow-hidden cursor-pointer group"
                 >
@@ -600,6 +601,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                       src={short.videoUrl}
                       poster={short.thumbnail}
                       className="w-full h-full object-cover"
+                      disabled={viewerOpen}
+                      playbackGroup="shorts-grid"
                       threshold={0.7}
                       rootMargin="200px"
                     />

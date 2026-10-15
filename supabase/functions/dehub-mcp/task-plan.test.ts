@@ -22,6 +22,20 @@ Deno.test('posting schedules respect the action budget and skip missed slots wit
   assert(nextScheduledRun('2026-10-10T00:00:00Z', 480, Date.parse('2026-10-11T03:00:00Z')) === '2026-10-11T08:00:00.000Z');
 });
 
+Deno.test('curated media belongs only to a generated post and has a usable subject', () => {
+  const media_pool = [{ url: 'https://images.unsplash.com/photo-example?w=1200', type: 'image', subject: 'A mountain trail' }];
+  const post = { tool: 'dehub_post_create', arguments: {}, audience: 'single', topic: 'Walking trails', from: null, to: null, media_pool };
+  assert(taskPlanSchema.safeParse({ summary: 'Trail posts', interval_minutes: 1440, steps: [post] }).success);
+  assert(!taskPlanSchema.safeParse({ summary: 'Repeated file', interval_minutes: 1440, steps: [{ ...post, arguments: { media_url: media_pool[0].url } }] }).success);
+  assert(!taskPlanSchema.safeParse({ summary: 'Bad media', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...media_pool[0], subject: '' }] }] }).success);
+  assert(taskPlanSchema.safeParse({ summary: 'Curated caption', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...media_pool[0], caption: 'Just the trail and the ridgeline.' }] }] }).success);
+  assert(!taskPlanSchema.safeParse({ summary: 'Empty caption', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...media_pool[0], caption: '   ' }] }] }).success);
+  const video = { url: 'https://videos.pexels.com/clip.mp4', type: 'video', subject: 'Coffee poured into a cup' };
+  assert(!taskPlanSchema.safeParse({ summary: 'Missing cover', interval_minutes: 1440, steps: [{ ...post, media_pool: [video] }] }).success);
+  assert(taskPlanSchema.safeParse({ summary: 'Video with cover', interval_minutes: 1440, steps: [{ ...post, media_pool: [{ ...video, thumbnail_url: 'https://images.pexels.com/videos/clip.jpg' }] }] }).success);
+  assert(!taskPlanSchema.safeParse({ ...base, steps: [{ ...base.steps[0], media_pool }] }).success);
+});
+
 Deno.test('planning requires an explicit plan or clarification and rejects incomplete output', () => {
   assert(PLAN_TOOL.function.parameters.required.includes('plan'));
   assert(PLAN_TOOL.function.parameters.required.includes('clarification'));
@@ -44,6 +58,10 @@ Deno.test('exact follow and posting commands preserve explicit intent without a 
   const posts = explicitTaskPlan('Post 3 times per day about supporting independent musicians.');
   assert(posts?.interval_minutes === 480 && posts.steps[0].topic === 'supporting independent musicians.');
   assert(explicitTaskPlan('Publish 7 posts a day about music')?.interval_minutes === 1440 / 7);
+  const daily = explicitTaskPlan('Post once per day about: independent music\nStyle: curious and concise\nLike up to 2 recent posts per day about: music, live shows, vinyl');
+  assert(daily?.interval_minutes === 1440 && daily.steps.length === 2, 'daily post and likes were not combined');
+  assert(daily?.steps[0].audience === 'selected_posts' && daily?.steps[0].recent_limit === 2 && daily?.steps[0].recent_keywords?.[1] === 'live shows', 'selected likes lost their interests');
+  assert(daily?.steps[1].topic?.includes('curious and concise'), 'post style was lost');
   for (const prompt of ['Follow @maldoteth except on Mondays', 'Follow everyone who posts today', 'Post about music', 'Post 3 times per day at 09:00 about music']) assert(explicitTaskPlan(prompt) === null, 'expanded ambiguous or constrained wording');
   for (const count of [0, 49]) {
     let rejected = false;

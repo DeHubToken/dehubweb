@@ -1,5 +1,6 @@
 // Only the private Maboroshi worker may use the existing provider accounts.
 const FAL = 'https://queue.fal.run/bytedance/seedance-2.5';
+const KLING = 'https://queue.fal.run/fal-ai/kling-video/o3/pro/video-to-video/edit';
 const REPLICATE = 'https://api.replicate.com/v1';
 const AUDIO_VERSION = '25a173108cff36ef9f80f854c162d01df9e6528be175794b81158fa03836d953';
 const MASK_VERSION = '408f82fc20c300aac5d61d2e34ddb34cd0181e810e9f609d250aed14d5f81269';
@@ -24,7 +25,7 @@ export function media(value: unknown): string {
 export function queueUrl(value: unknown, id: string, kind: 'status' | 'result'): string {
   const url = new URL(text(value, 1024));
   const path = url.pathname.split('/requests/');
-  const allowed = ['/bytedance/seedance-2.5', '/bytedance/seedance-2.5/reference-to-video', '/bytedance/seedance-2.5/draft/complete'];
+  const allowed = ['/bytedance/seedance-2.5', '/bytedance/seedance-2.5/reference-to-video', '/bytedance/seedance-2.5/draft/complete', '/fal-ai/kling-video', '/fal-ai/kling-video/o3/pro/video-to-video/edit'];
   if (url.origin !== 'https://queue.fal.run' || url.username || url.password || url.search || url.hash
       || path.length !== 2 || !allowed.includes(path[0])
       || !(kind === 'status' ? path[1] === `${id}/status` : [id, `${id}/response`].includes(path[1]))) throw new Error('Invalid queue handle');
@@ -78,6 +79,14 @@ export function createHandler(env: Env, fetcher: typeof fetch = fetch, payment?:
       return await response.json();
     };
     try {
+      if (body.operation === 'kling') {
+        const p = body.input;
+        if (!p || !Array.isArray(p.image_urls) || p.image_urls.length < 1 || p.image_urls.length > 2) return reply({error: 'Invalid Kling references'}, 400);
+        const result = await request(KLING, 'fal', {prompt: text(p.prompt, 8000), video_url: media(p.video_url),
+          image_urls: p.image_urls.map(media), keep_audio: true});
+        const id = identifier(result.request_id);
+        return reply({requestId: id, provider: 'fal', status_url: queueUrl(result.status_url, id, 'status'), response_url: queueUrl(result.response_url, id, 'result')});
+      }
       if (body.operation === 'prepare') {
         const url = media(body.media);
         let version: string;

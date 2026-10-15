@@ -33,6 +33,9 @@ def database():
         prompt TEXT NOT NULL DEFAULT '', reference TEXT NOT NULL DEFAULT '',
         second_reference TEXT NOT NULL DEFAULT '', reference_seconds REAL NOT NULL DEFAULT 0,
         price INTEGER NOT NULL DEFAULT 0)''')
+    if 'renderer' not in {row[1] for row in db.execute('PRAGMA table_info(jobs)')}:
+        db.execute("ALTER TABLE jobs ADD COLUMN renderer TEXT NOT NULL DEFAULT 'seedance'")
+        db.commit()
     return db
 
 
@@ -110,6 +113,18 @@ def readiness():
 
 def price(row, stage):
     try:
+        if row.get('renderer', 'seedance') == 'kling':
+            if stage != 'draft':
+                raise HTTPException(400, 'Kling uses one complete render, with no preparation or HD charge.')
+            rate = int(os.environ.get('MABOROSHI_KLING_MICROS_PER_SECOND', '280000'))
+            overhead = int(os.environ.get('MABOROSHI_KLING_OVERHEAD_MICROS', '350000'))
+            # $0.168/s provider cost; retain at least 30% before the processing reserve.
+            if rate < 240000 or overhead < 350000 or not 3 <= row['seconds'] <= 15 or row['reference_seconds']:
+                raise ValueError('Invalid Kling tariff or input')
+            result = math.ceil(row['seconds']) * rate + overhead
+            if result <= 0 or result > 100_000_000:
+                raise ValueError('Invalid configured price')
+            return result
         if stage == 'prepare':
             result = int(os.environ['MABOROSHI_PREPARE_MICROS'])
         else:

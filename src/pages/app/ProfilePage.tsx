@@ -54,6 +54,7 @@ import { useUsernameMarketConfig } from '@/hooks/use-username-market';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { CollapsingProfileHeader } from '@/components/app/profile/CollapsingProfileHeader';
 import { PageHeader } from '@/components/app/PageHeader';
+import { GlobalFeedNav } from '@/components/app/GlobalFeedNav';
 import { ProfileFollowButton } from '@/components/app/profile/ProfileFollowButton';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -246,6 +247,17 @@ export default function ProfilePage() {
   // glass themes, exactly like the home feed cuts at its nav pill.
   const profileHeaderRef = useRef<HTMLDivElement>(null);
   const profileTabsRef = useRef<HTMLDivElement>(null);
+  const [showDesktopIdentity, setShowDesktopIdentity] = useState(false);
+  useEffect(() => {
+    const actions = profileHeaderRef.current?.querySelector('[data-profile-actions]');
+    if (!actions) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowDesktopIdentity(entry.boundingClientRect.bottom <= (entry.rootBounds?.top ?? 44)),
+      { rootMargin: '-44px 0px 0px 0px', threshold: 0 },
+    );
+    observer.observe(actions);
+    return () => observer.disconnect();
+  }, [!!data.profile, profileKey]);
   const [profileTabsHeight, setProfileTabsHeight] = useState(56);
   useEffect(() => {
     const tabs = profileTabsRef.current;
@@ -270,14 +282,24 @@ export default function ProfilePage() {
   useEffect(() => {
     const el = stuckSentinelRef.current;
     if (!el) return;
-    // The pill pins at the very top at every width: phones have no top bar
-    // off the home feed (index.css, data-no-top-bar).
-    const obs = new IntersectionObserver(
-      ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? 4)),
-      { rootMargin: '-4px 0px 0px 0px', threshold: 0 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    // The desktop tab row replaces the feed pill when it reaches the top.
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    let observer: IntersectionObserver;
+    const observe = () => {
+      observer?.disconnect();
+      const top = desktop.matches ? 44 : 4;
+      observer = new IntersectionObserver(
+        ([entry]) => setIsTabsStuck(entry.boundingClientRect.top <= (entry.rootBounds?.top ?? top)),
+        { rootMargin: `-${top}px 0px 0px 0px`, threshold: 0 },
+      );
+      observer.observe(el);
+    };
+    observe();
+    desktop.addEventListener('change', observe);
+    return () => {
+      desktop.removeEventListener('change', observe);
+      observer?.disconnect();
+    };
   }, [!!data.profile]);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab, isTabsStuck);
@@ -530,6 +552,24 @@ export default function ProfilePage() {
           }),
         }}
       />
+      <div className="hidden lg:sticky lg:top-0 lg:z-[80] lg:block" data-profile-desktop-feed-nav data-joined={isTabsStuck}>
+        <GlobalFeedNav profilePage compactProfileContent={showDesktopIdentity ? <>
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <UserAvatar name={data.profile.name} handle={data.profile.handle} avatarUrl={data.profile.avatarUrl} size="sm" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-1 text-sm font-bold leading-tight text-white">
+                <span className="truncate">{data.profile.name}</span>
+                <BadgeIcon src={data.badgeUrl} className="h-[1em] w-[1em] shrink-0" />
+                <StreamerBadge address={data.profile.walletAddress} />
+              </div>
+              <p className="truncate text-[10px] leading-tight text-zinc-400">{data.profile.handle}</p>
+            </div>
+          </div>
+          <div className="shrink-0 pr-1">
+            <ProfileFollowButton profile={data.profile} apiProfile={data.apiProfile} isViewingOwnProfile={data.isViewingOwnProfile} isBlocked={data.isBlocked} isFetchingProfile={data.isFetchingProfile} isFollowing={data.isFollowing} isPending={data.isPending} isTargetPrivate={data.isTargetPrivate} isFollowLoading={isFollowLoading} handleFollow={handleFollow} handleUnfollow={handleUnfollow} />
+          </div>
+        </> : undefined} />
+      </div>
       <CollapsingProfileHeader
         headerRef={profileHeaderRef}
         tabsPinned={isTabsStuck}

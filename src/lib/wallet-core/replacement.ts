@@ -1,6 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { EncryptedPayload } from './crypto';
-import { cacheWallet, type StoredWallet } from './store';
+import { cacheWallet, fetchWallet, type StoredWallet } from './store';
 
 /** Archive the old encrypted records and replace the active wallet atomically. */
 export async function replaceStoredWallet(
@@ -39,4 +39,11 @@ export async function getPendingWalletReplacement(userId: string, address: strin
 export async function completeWalletReplacement(address: string): Promise<void> {
   const { error } = await (supabase as any).rpc('complete_wallet_replacement', { p_new_address: address });
   if (error) throw new Error(error.message || 'Could not finish wallet replacement');
+}
+
+/** A failed profile login may resume only the replacement still active now. */
+export async function getReplacementToResume(userId: string): Promise<string | null> {
+  const wallet = await fetchWallet(userId);
+  if (!wallet || !await getPendingWalletReplacement(userId, wallet.ethAddress)) return null;
+  return wallet.ethAddress;
 }

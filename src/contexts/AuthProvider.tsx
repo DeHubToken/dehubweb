@@ -82,7 +82,7 @@ import {
   WALLET_LOCK_CHANGED_EVENT,
 } from '@/lib/smart-wallet';
 import { fetchWallet, saveWallet, clearWalletCache, getCachedWallet } from '@/lib/wallet-core/store';
-import { replaceStoredWallet, getPendingWalletReplacement, completeWalletReplacement } from '@/lib/wallet-core/replacement';
+import { replaceStoredWallet, getPendingWalletReplacement, completeWalletReplacement, getReplacementToResume } from '@/lib/wallet-core/replacement';
 import { hasBiometricUsableHere } from '@/lib/wallet-core/biometric-unlock';
 import {
   WALLET_UNLOCK_INTERVAL_KEY,
@@ -856,7 +856,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       // The server verifies the identity and selects its linked profile.
       // Wallet storage and key availability are unrelated to profile access.
-      if (await completeLoginWithoutUnlock(userId, '')) return;
+      try {
+        if (await completeLoginWithoutUnlock(userId, '')) return;
+      } catch (error) {
+        // The replacement row is saved before its profile is rotated. A
+        // restart in that gap makes profile login refuse the wallet hint.
+        // Only a matching pending archive authorizes resuming the reset.
+        const replacementAddress = await getReplacementToResume(userId);
+        if (!replacementAddress) throw error;
+        authLogger.warn('Resuming pending wallet replacement', { address: replacementAddress });
+        setWalletPhase('unlock');
+        openLoginModal();
+        return;
+      }
 
       const existing = await fetchWallet(userId);
       authLogger.trace?.('wallet-resolution', { wallet_state: existing ? 'existing-unlinked' : 'new' });
@@ -1417,7 +1429,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // reconnect sheet's verification connects get the same treatment:
             // it compares the address itself and shows "wrong wallet" in place,
             // so a mismatch there must not read as an account switch.
-            if (connectionSource === 'web3auth' || savedSrc === 'web3auth' || isWalletReconnectGuardActive()) {
+            if ((!wagmiAuthIntentRef.current && (connectionSource === 'web3auth' || savedSrc === 'web3auth')) || isWalletReconnectGuardActive()) {
               clearWagmiStorage();
               wagmiDisconnect();
               return;
@@ -1531,8 +1543,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } catch { /* already gone */ }
           }
         } finally {
-          wagmiAuthInProgressRef.current = false;
-          setIsConnecting(false);
+          try {
+            if (wagmiConnector?.id === 'dehub-imported-wallet') {
+              const { finishImportedWallet } = await import('@/lib/imported-wallet');
+              await finishImportedWallet(false);
+            }
+          } finally {
+            wagmiAuthInProgressRef.current = false;
+            setIsConnecting(false);
+          }
         }
       }
     };
@@ -1952,6 +1971,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       throw authError;
     }
 
+    if (connectorId === 'dehub-imported-wallet') {
+      const { finishImportedWallet } = await import('@/lib/imported-wallet');
+      await finishImportedWallet(true);
+    }
     const normalizedUser = normalizeUser(authResponse.user, authAddress);
 
     // From here the session's address is `authAddress`, which is whatever the

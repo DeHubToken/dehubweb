@@ -67,6 +67,13 @@
 }
 .profile-collapse-identity[data-visible='true'] { opacity: 1; transform: none; }
 [data-profile-tabs] { top: calc(env(safe-area-inset-top, 0px) + 4px); padding-top: 0; }
+@media (min-width: 1024px) {
+  [data-profile-desktop-feed-nav] ~ .profile-collapse-anchor { display: none; }
+  [data-profile-desktop-feed-nav] [data-feed-nav-outer] { padding-bottom: 0; }
+  [data-profile-desktop-feed-nav] ~ * [data-profile-tabs] { top: 44px; }
+  [data-profile-desktop-feed-nav][data-joined='true'] { visibility: hidden; }
+  [data-profile-desktop-feed-nav] ~ * [data-profile-tabs][data-joined='true'] { top: 0; }
+}
 html[data-theme] [data-profile-tabs][data-joined='true']:not(#_):not(#_):not(#_) {
   z-index: 70;
   background: transparent !important;

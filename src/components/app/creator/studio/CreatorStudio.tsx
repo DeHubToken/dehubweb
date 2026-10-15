@@ -17,15 +17,16 @@ import { useTranslation as _useCopy } from 'react-i18next';
  * survives a reload. Only large attachments are dropped from the cache — see
  * `persistableReference`.
  *
- * The composer keeps its shape while scrolling. Desktop uses CSS sticky;
- * phones keep it in normal flow so references cannot cover the whole viewport.
+ * The full composer stays in the document. A single-line bar takes over below
+ * the navigation after scrolling past it, without changing the page height.
  */
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { MOTION_TEMPLATE_PROMPT, type ViralTemplate } from '@/lib/creator/viralTemplates';
 import type { GenerationDraft } from '@/lib/editor/generationDraft';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import i18n from '@/i18n';
-import { ArrowRight, Box, Film, ImageIcon, Loader2, Wand2 } from "lucide-react";
+import { Box, Film, ImageIcon, Loader2, Wand2 } from "lucide-react";
 import Music2 from "@/components/ui/cut-icons/music";
 import Paperclip from "@/components/ui/cut-icons/attach";
 
@@ -103,7 +104,9 @@ import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-sw
 import { CounterChip, SelectChip, ToggleChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
 import { ViralTemplateShowcase } from '../ViralTemplateShowcase';
-import { VIRAL_EFFECTS, VIRAL_EFFECT_MODEL, type ViralEffect } from '../../../../../supabase/functions/_shared/viral-effects';
+import { VIRAL_EFFECTS, VIRAL_EFFECT_MODEL } from '../../../../../supabase/functions/_shared/viral-effects';
+import { MotionLibraryShowcase } from '../MotionLibraryShowcase';
+import { downloadMotionSource, motionAspect, motionModel, type MotionClip } from '@/lib/creator/motionLibrary';
 import { GenerationExample } from './GenerationExample';
 import { ReferenceAssets, type CreatorReferenceAsset } from './ReferenceAssets';
 import { remapAssetMentions } from '@/lib/creator/assetMentions';
@@ -599,6 +602,17 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
   const fileRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
+  const composerAnchorRef = useRef<HTMLDivElement>(null);
+  const [composerParked, setComposerParked] = useState(false);
+  useEffect(() => {
+    const composer = composerRef.current;
+    if (embedded || !composer) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setComposerParked(!entry.isIntersecting && entry.boundingClientRect.bottom < stickyTop);
+    }, { rootMargin: `-${stickyTop}px 0px 0px 0px`, threshold: 0 });
+    observer.observe(composer);
+    return () => observer.disconnect();
+  }, [embedded, stickyTop]);
   const effectMode = mode === 'video' && videoModel === VIRAL_EFFECT_MODEL;
   const selectedEffect = VIRAL_EFFECTS.find(effect => effect.name === prompts.video) ?? VIRAL_EFFECTS.find(effect => effect.id === 'earth-zoom')!;
   useEffect(() => {
@@ -606,11 +620,17 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     setPresetFor('video', null);
     if (!VIRAL_EFFECTS.some(effect => effect.name === prompts.video)) setPromptFor('video', selectedEffect.name);
   }, [videoModel, prompts.video, selectedEffect.name, setPresetFor, setPromptFor]);
-  const pickEffect = (effect: ViralEffect) => {
-    setMode('video'); setVideoModel(VIRAL_EFFECT_MODEL); setPresetFor('video', null);
-    setPromptFor('video', effect.name); setDuration(5); setResolution('720p');
-    setExtraReferences(previous => ({ ...previous, video: [] }));
-    composerRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
+  const pickEffect = (effect: ViralTemplate) => {
+    setMode('video'); setPresetFor('video', null);
+    if (effect.motionSeconds && effect.preview) {
+      setVideoModel('kling-3-motion'); setPromptFor('video', MOTION_TEMPLATE_PROMPT);
+      setDuration(Math.ceil(effect.motionSeconds)); setResolution('1080p');
+      setExtraReferences(previous => ({ ...previous, video: [{ kind: 'video', url: effect.preview!, label: effect.name, seconds: effect.motionSeconds, posterUrl: effect.poster }] }));
+    } else {
+      setVideoModel(VIRAL_EFFECT_MODEL); setPromptFor('video', effect.name); setDuration(5); setResolution('720p');
+      setExtraReferences(previous => ({ ...previous, video: [] }));
+    }
+    composerAnchorRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
     textareaRef.current?.focus({ preventScroll: true });
   };
 
@@ -716,7 +736,10 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   // ── Sticky composer ───────────────────────────────────────────────────────
 
-  const openComposer = useCallback(() => textareaRef.current?.focus(), []);
+  const openComposer = useCallback(() => {
+    composerAnchorRef.current?.scrollIntoView({ block: 'center', behavior: 'instant' });
+    textareaRef.current?.focus({ preventScroll: true });
+  }, []);
 
   // ── Model legality ────────────────────────────────────────────────────────
 
@@ -936,6 +959,21 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     requestAnimationFrame(() => textareaRef.current?.focus());
   }, []);
+
+  const pickMotionClip = useCallback((clip: MotionClip, workflow: 'swap' | 'motion') => {
+    const model = motionModel(clip, workflow);
+    setMode('video');
+    setVideoModel(model);
+    setPresetFor('video', model === 'kling-3-motion' ? 'reference-copy-motion' : 'reference-character-swap');
+    setVideoAspect(motionAspect(clip));
+    setDuration(Math.ceil(clip.seconds));
+    setExtraReferences(previous => {
+      previous.video.filter(asset => asset.kind === 'video' && asset.file).forEach(asset => URL.revokeObjectURL(asset.url));
+      return { ...previous, video: [...previous.video.filter(asset => asset.kind !== 'video'),
+        { url: clip.url, label: clip.name, kind: 'video', seconds: clip.seconds, posterUrl: clip.poster, sourceClipId: clip.id }] };
+    });
+    focusComposer();
+  }, [focusComposer, setPresetFor]);
 
   /**
    * The page's "Pick a medium" tiles live outside the studio. They ask for a
@@ -1315,7 +1353,6 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
   const openPaywall = useCallback(async () => {
     if (checkingSession.current) return;
-    if (!isAuthenticated) { openLoginModal(); return; }
     if (promptMissing) {
       openComposer();
       return;
@@ -1324,6 +1361,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       toast.error(blockingIssue);
       return;
     }
+    if (!isAuthenticated) { openLoginModal(); return; }
     checkingSession.current = true;
     try {
       await apiCall('/api/auth/verify', { requiresAuth: true });
@@ -1335,8 +1373,9 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       setStaging(true);
       try {
         const hosted = await Promise.all(currentAssets.map(async asset => {
-          const url = asset.file ? await hostCreatorFile(asset.file) : asset.url.startsWith('data:') ? await hostDataUrl(asset.url) : asset.url;
-          return { ...asset, file: undefined, url };
+          const file = asset.file ?? (asset.sourceClipId ? await downloadMotionSource(asset.sourceClipId) : undefined);
+          const url = file ? await hostCreatorFile(file) : asset.url.startsWith('data:') ? await hostDataUrl(asset.url) : asset.url;
+          return { ...asset, file: undefined, sourceClipId: undefined, url };
         }));
         currentAssets.forEach(asset => { if (asset.file) URL.revokeObjectURL(asset.url); });
         const primary = hosted.find(a => a.kind === 'image');
@@ -1616,7 +1655,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           ? t(activeAudioTask.placeholderKey)
           : t('creator.placeholderVideo');
 
-  const generateDisabled = promptMissing || !!blockingIssue || staging;
+  const generateDisabled = staging;
   const undoEnhance = beforeEnhance[mode];
 
   /** Prompt assist: expands a terse idea into a fuller prompt, keeping the
@@ -1650,14 +1689,14 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
     <button
       type="button"
       onClick={() => void openPaywall()}
+      disabled={staging}
       aria-disabled={generateDisabled}
-      aria-describedby={blockingIssue && !compact ? 'studio-blocking-reason' : undefined}
       aria-label={_copy("copy.394df20de422", { defaultValue: "{{value1}}, est 2-5 mins, {{value2}}", value1: t(staging ? 'creator.preparing' : 'creator.create'), value2: priceLabel })}
-      title={compact ? (blockingIssue ?? priceLabel) : undefined}
+      title={compact ? priceLabel : undefined}
       data-creator-create
       className={cn(
         'relative inline-flex shrink-0 items-center font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70',
-        compact ? 'h-9 gap-1.5 rounded-xl pl-1.5 pr-3' : 'h-[64px] min-w-0 flex-1 gap-3 rounded-[20px] pl-2 pr-2 sm:min-w-[300px] sm:flex-none',
+        compact ? 'h-9 gap-1.5 rounded-xl pl-1.5 pr-3' : 'h-10 gap-2 rounded-xl px-2.5',
         generateDisabled ? 'cursor-not-allowed opacity-55 saturate-50' : 'hover:brightness-110 active:scale-[0.99]',
       )}
       style={{
@@ -1670,34 +1709,30 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
         data-creator-coin={generateDisabled ? undefined : ''}
         className={cn(
           'relative flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-black/15 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35)]',
-          compact ? 'h-6 w-6' : 'h-12 w-12',
+          'h-6 w-6',
         )}
       >
         {staging ? (
           <Loader2 className={cn('animate-spin', compact ? 'h-3.5 w-3.5' : 'h-5 w-5')} />
         ) : (
-          <img src={dehubCoin} alt="" className={compact ? 'h-6 w-6' : 'h-10 w-10'} draggable={false} />
+          <img src={dehubCoin} alt="" className="h-6 w-6" draggable={false} />
         )}
       </span>
       {compact ? (
         <span className="text-[13px] tabular-nums">
-          {priceLoading ? t('common.loading') : priceMain}
+          {t(staging ? 'creator.preparing' : 'creator.create')}
         </span>
       ) : (
         <>
           <span className="grid min-w-0 text-left leading-none">
             <span className="flex items-baseline gap-2 whitespace-nowrap">
-              <span className="font-exo text-[19px] font-black tracking-tight">{t(staging ? 'creator.preparing' : 'creator.create')}</span>
-              <span className="text-[11px] font-semibold opacity-75">{_copy("copy.775d7629d9b2", { defaultValue: "est 2-5 mins" })}</span>
+              <span className="font-exo text-[14px] font-black tracking-tight">{t(staging ? 'creator.preparing' : 'creator.create')}</span>
             </span>
-            <span aria-hidden className="mt-1.5 truncate text-[12px] font-semibold tabular-nums opacity-80 sm:text-[12.5px]">
+            <span aria-hidden className="mt-1 truncate text-[10px] font-semibold tabular-nums opacity-80">
               {priceLoading
                 ? t('common.loading')
                 : priceSub ? `${priceMain} · ${priceSub}` : priceMain}
             </span>
-          </span>
-          <span aria-hidden className="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-black/10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)]">
-            <ArrowRight className="h-5 w-5" />
           </span>
         </>
       )}
@@ -1739,7 +1774,20 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       {/* Horizontal padding only. Padding or a margin on the top edge would
           ride along when it parks, leaving a transparent strip between the
           header and the composer with the page scrolling through it. */}
-      <div className={cn('px-3 sm:px-4', !embedded && 'z-40 sm:sticky')} style={embedded ? undefined : { top: stickyTop }}>
+      <div ref={composerAnchorRef} aria-hidden className="h-px" />
+      {!embedded && composerParked && (
+        <div data-creator-compact className="fixed inset-x-0 z-40 px-3 sm:px-4" style={{ top: stickyTop }}>
+          <div className="mx-auto flex h-12 max-w-[1040px] items-center gap-2 rounded-2xl border border-white/15 bg-black/85 px-2 backdrop-blur-xl">
+            <button type="button" onClick={openComposer} aria-label={t('creator.promptLabel')} className="min-w-0 flex-1 truncate px-2 text-left text-sm text-white/85">
+              {prompt || placeholder}
+            </button>
+            <button type="button" onClick={openComposer} className="hidden max-w-40 truncate text-xs text-white/60 sm:block">{currentModelName}</button>
+            <span className="shrink-0 text-[11px] text-white/60">{priceLoading ? t('common.loading') : priceMain}</span>
+            {generateButton(true)}
+          </div>
+        </div>
+      )}
+      <div className="px-3 sm:px-4">
         <div
           ref={composerRef}
           data-creator-composer
@@ -1811,10 +1859,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                     />
                   </>
                 )}
-                {!effectMode && enhanceButton()}
               </div>
 
-              {effectMode && <p className="py-2 text-sm text-white/60">{t('viralTemplates.ready', { name: selectedEffect.name })}</p>}
               {!effectMode && undoEnhance !== null && (
                 <div className="mt-1 flex items-center gap-2 px-1">
                   <span className="text-[11px] text-white/45">{_copy("copy.97886fe2bb28", { defaultValue: "Prompt expanded." })}</span>
@@ -1830,7 +1876,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
               )}
 
               {/* Compact primary controls share a row; additional tools can wrap. */}
-              <div className="mt-1.5 flex flex-wrap items-center gap-1">
+              <div data-creator-toolbar className="mt-2 flex items-end gap-2">
+                <div className="flex h-10 min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&>*]:shrink-0">
                 {/* Sound effects, music and voice design have nothing to attach
                     — offering a paperclip there is a control that can only
                     produce an error. */}
@@ -2135,8 +2182,9 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                   )}
                 </div>
 
-                {/* Its own row on a phone, so Create and its price get the full width. */}
-                  <div className="ml-auto flex w-full items-end justify-end gap-2">
+                {!effectMode && enhanceButton()}
+                </div>
+                  <div className="ml-auto flex shrink-0 items-end justify-end">
                   {generateButton()}
                 </div>
               </div>
@@ -2151,15 +2199,11 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                   {t('creator.useFreeModel', { count: freeImages.remaining, model: IMAGE_MODELS[freeModelSuggestion]?.name ?? freeModelSuggestion })}
                 </button>
               )}
-              {blockingIssue && (
-                <p id="studio-blocking-reason" className="mt-2 px-1 text-[12px] text-white/45">
-                  {blockingIssue}
-                </p>
-              )}
           </>
         </div>
       </div>
 
+      {!embedded && <MotionLibraryShowcase onPick={pickMotionClip} onMaboroshi={clip => navigate(`/creator/maboroshi?clip=${clip.id}`)} />}
       {!embedded && <ViralTemplateShowcase onPick={pickEffect} />}
       <section className="px-3 pb-6 sm:px-4">
         {/* One input for both channels. The accept list and the handler follow

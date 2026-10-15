@@ -28,6 +28,23 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.runOnlyPendingTimers(); vi.useRealTimers(); vi.restoreAllMocks(); });
 
 describe('feed to shorts playback', () => {
+  it('replays an ended adopted clip immediately without replacing its buffered source', () => {
+    const slot = document.createElement('div');
+    document.body.appendChild(slot);
+    const claim = claimHandoffVideo(short.id, slot);
+    claim.el.src = short.videoUrl;
+    claim.el.currentTime = 24;
+    Object.defineProperty(claim.el, 'ended', { configurable: true, value: true });
+    const setSource = vi.spyOn(claim.el, 'src', 'set');
+    const view = render(<VideoSlide {...props} handoffKey={short.id} />);
+    expect(view.container.querySelector('video')).toBe(claim.el);
+    expect(claim.el.currentTime).toBe(0);
+    expect(claim.el.play).toHaveBeenCalled();
+    expect(setSource).not.toHaveBeenCalled();
+    view.unmount();
+    releaseHandoffVideo(short.id, claim.token);
+    slot.remove();
+  });
   it('adopts the same buffered video without reassigning its source or resetting its time', () => {
     const feedSlot = document.createElement('div');
     document.body.appendChild(feedSlot);

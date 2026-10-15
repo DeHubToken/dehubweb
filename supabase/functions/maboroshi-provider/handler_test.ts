@@ -7,6 +7,19 @@ const signed = `https://live.dehub.io/maboroshi/media/${'a'.repeat(32)}/seedance
 const req = (body: unknown, credential = secret) => new Request('https://example.org', {method: 'POST', headers: {'x-internal-secret': credential}, body: JSON.stringify(body)});
 function assert(value: unknown, message = 'Assertion failed'): asserts value { if (!value) throw new Error(message); }
 
+Deno.test('Kling uses the exact edit endpoint and keeps audio without draft or HD', async () => {
+  const sent: any[] = [];
+  const handler = createHandler(env, (async (url, options) => {
+    assert(String(url) === 'https://queue.fal.run/fal-ai/kling-video/o3/pro/video-to-video/edit');
+    sent.push(JSON.parse(String(options?.body)));
+    return Response.json({request_id: 'kling-id', status_url: 'https://queue.fal.run/fal-ai/kling-video/requests/kling-id/status', response_url: 'https://queue.fal.run/fal-ai/kling-video/requests/kling-id'});
+  }) as typeof fetch);
+  assert((await handler(req({operation: 'kling', input: {prompt: 'Replace subject', video_url: signed, image_urls: [signed], keep_audio: false}}))).status === 200);
+  assert(sent[0].keep_audio === true && sent[0].draft === undefined);
+  assert((await handler(req({operation: 'kling', input: {prompt: 'Replace subject', video_url: 'https://example.org/private', image_urls: [signed]}}))).status === 502);
+  assert(sent.length === 1);
+});
+
 Deno.test('anonymous and wallet callers cannot access shared credentials or start processing', async () => {
   let calls = 0;
   const handler = createHandler(env, (() => { calls++; throw new Error(); }) as typeof fetch);

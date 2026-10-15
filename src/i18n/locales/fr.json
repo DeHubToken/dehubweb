@@ -1,11 +1,9 @@
 {
   "viralTemplates": {
-    "eyebrow":  "{{count}} effets vidéo",
     "title":  "Votre prochain moment viral.",
     "intro":  "Regardez un exemple. Choisissez un effet ou un personnage. Ajoutez votre photo.",
     "browse":  "Voir les {{count}} modèles",
     "featured":  "Retour à la sélection",
-    "use":  "Utiliser cet effet",
     "useNamed":  "Utiliser {{name}}",
     "preview":  "Voir l’aperçu de {{name}}",
     "previewUnavailable":  "Aperçu indisponible",
@@ -24,7 +22,11 @@
     "ready":  "{{name}} sélectionné. Ajoutez une photo pour créer une vidéo de 5 secondes. Le cadrage suit votre photo.",
     "chooseFirst":  "Choisissez un effet avant de générer.",
     "back":  "Retour aux modèles",
-    "close":  "Fermer les modèles"
+    "close":  "Fermer les modèles",
+    "eyebrow":  "{{count}} modèles vidéo",
+    "use":  "Utiliser ce modèle",
+    "motion":  "Reprendre ce mouvement",
+    "motionReady":  "{{name}} sélectionné. Ajoutez votre photo pour reproduire les mouvements de cette vidéo."
 },
 
   "maboroshiShowcase": {
@@ -1872,6 +1874,7 @@
     "createNewInstead": "Créez plutôt un nouveau compte",
     "migrateAccount": "Migrer le compte",
     "importExternalWallet": "Importer",
+    "invalidImportSecret": "Saisissez une clé privée ou une phrase de récupération valide.",
     "migrateIntentHint": "Connectez-vous avec l'une des options ci-dessous. S'il correspond à un compte DeHub antérieur, vous apporterez son portefeuille, son nom d'utilisateur et son solde.",
     "importIntentHint": "Connectez-vous avec l'une des options ci-dessous, puis collez la phrase de récupération ou la clé privée du portefeuille que vous souhaitez utiliser.",
     "title": "Se connecter",

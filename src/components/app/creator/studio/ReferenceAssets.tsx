@@ -13,6 +13,7 @@ export interface CreatorReferenceAsset {
   seconds?: number;
   file?: File;
   posterUrl?: string;
+  sourceClipId?: string;
 }
 
 export const ReferenceAssets = memo(function ReferenceAssets({ assets, onAdd, onRemove, onMention, allowVideo, singleImage = false, libraryOpen, onLibraryOpenChange }: {

@@ -107,7 +107,7 @@ export function MobileMenuGrid({ items, currentPath, notificationCount, messageC
       : !item.external && !item.action && currentPath.startsWith(item.path);
 
   const renderNavTile = (item: NavItem) => {
-    const label = t(NAV_LABEL_KEYS[item.label] || item.label);
+    const label = t(NAV_LABEL_KEYS[item.label] || item.label, item.label);
     const active = isActive(item);
     const body = (
       <TileBody

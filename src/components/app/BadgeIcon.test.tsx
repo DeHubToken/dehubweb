@@ -2,7 +2,7 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { BadgeIcon } from './BadgeIcon';
 import { badgeHoverArt } from '@/lib/badge-hover-art';
-import { openBadgeShowcase } from '@/lib/badge-showcase';
+import { openBadgeShowcase, preloadBadgeShowcase } from '@/lib/badge-showcase';
 
 vi.mock('@/hooks/use-badge-balance', () => ({
   useBadgeVisual: () => ({ url: '/assets/' + badgeTier + '.webp', name: badgeTier, big: false }),
@@ -30,6 +30,16 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('badge hover playback', () => {
+  it('leaves the 3D showcase unloaded until the reader interacts with a badge', () => {
+    const idle = vi.fn();
+    vi.stubGlobal('requestIdleCallback', idle);
+    render(<><BadgeIcon /><BadgeIcon /></>);
+    expect(preloadBadgeShowcase).not.toHaveBeenCalled();
+    expect(idle).not.toHaveBeenCalled();
+    fireEvent.focus(screen.getAllByRole('button')[0]);
+    expect(preloadBadgeShowcase).toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
   it('uses the adjacent name font when its wrapper has a different size', async () => {
     render(<span style={{ fontSize: 16 }}><span style={{ fontSize: 24 }}>H Profile</span><BadgeIcon /></span>);
     await act(() => new Promise<void>(resolve => requestAnimationFrame(() => resolve())));

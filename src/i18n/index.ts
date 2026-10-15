@@ -178,12 +178,15 @@ const writePackCache = async (key: string, value: string) => { try { localStorag
 const loadedPacks = new Set<string>([`${manifest.version}:en:core`]);
 const retryAfter = new Map<string, number>();
 const pendingPacks = new Map<string, Promise<boolean>>();
-async function loadPack(lang: string, group: string): Promise<boolean> {
+async function loadPack(lang: string, group: string, trigger = 'language-selection'): Promise<boolean> {
   if (!manifest.languages.includes(lang)) return false;
   const key = `${manifest.version}:${lang}:${group}`;
   if (loadedPacks.has(key)) return true;
   if ((retryAfter.get(key) || 0) > Date.now()) return false;
   if (pendingPacks.has(key)) return pendingPacks.get(key)!;
+  // Record only the first attempt for a pack, so startup audits can identify
+  // the translation caller without recording user text or repeated renders.
+  globalThis.performance?.mark?.('locale-pack-request', { detail: { language: lang, group, trigger } });
   const pending = (async () => {
     try {
       const cached = await readPackCache(key);
@@ -215,12 +218,16 @@ const requestedGroups = new Set<string>(['core']);
 const groupForKey = (key: string) => (manifest.groups as Record<string, string>)[key.split('.')[0]];
 i18n.use({
   type: 'postProcessor', name: 'featurePacks',
-  process(value: string, keys: string[]) {
+  process(value: string, keys: string[], options: { defaultValue?: unknown; lng?: unknown }) {
     const group = groupForKey(keys[0] || '');
     if (group) {
       requestedGroups.add(group);
-      void loadPack(i18n.language || 'en', group);
-      if (i18n.language !== 'en') void loadPack('en', group);
+      const lang = typeof options.lng === 'string' ? options.lng : i18n.language || 'en';
+      // Inline English is already the fallback. Fetching its entire optional
+      // dictionary duplicates that copy and interrupts the first feed render.
+      const inlineEnglish = typeof options.defaultValue === 'string' && options.defaultValue.length > 0;
+      if (lang !== 'en' || !inlineEnglish) void loadPack(lang, group, keys[0]);
+      if (lang !== 'en' && !inlineEnglish) void loadPack('en', group, keys[0]);
     }
     return value;
   },

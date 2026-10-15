@@ -6,7 +6,7 @@ import { tokenLabel } from '@/lib/token-label';
  * Price is stored in USD; displayed as DHB equivalent with USD subtitle.
  */
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -22,6 +22,7 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
   const { t } = useTranslation();
   const images = (listing.images as string[]) || [];
   const firstImage = images[0];
+  const [failedImage, setFailedImage] = useState<string | null>(null);
   const storeName = listing.stores?.name || t('stores.unknownStore');
   const { data: prices } = useTokenPrices();
   const dhbPrice = prices?.DHB ?? 0;
@@ -35,8 +36,8 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
     >
       {/* Image */}
       <div className="aspect-square bg-white/5 relative overflow-hidden">
-        {firstImage ? (
-          <img src={firstImage} alt={listing.title} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+        {firstImage && firstImage !== failedImage ? (
+          <img src={firstImage} alt={listing.title} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" loading="lazy" onError={() => setFailedImage(firstImage)} />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
             <ThemedIcon icon="images" alt="" className="w-14 h-14 object-contain opacity-70" />

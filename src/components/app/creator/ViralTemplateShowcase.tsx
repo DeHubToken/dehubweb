@@ -1,12 +1,12 @@
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, ArrowRight, Play, Search } from 'lucide-react';
-import { VIRAL_EFFECTS, VIRAL_FEATURED_IDS, type ViralEffect } from '../../../../supabase/functions/_shared/viral-effects';
+import { VIRAL_TEMPLATES, TEMPLATE_FEATURED_IDS, type ViralTemplate } from '@/lib/creator/viralTemplates';
 
 const CATEGORIES = ['all', 'effects', 'characters', 'dance', 'sports', 'products', 'seasonal'] as const;
 
 /** Provider examples are opt-in: one player at a time, never an autoplay wall. */
-export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralEffect) => void }) {
+export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralTemplate) => void }) {
   const { t } = useTranslation();
   const rail = useRef<HTMLDivElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -15,16 +15,16 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralEffect
   const [playing, setPlaying] = useState<string | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
   const [limit, setLimit] = useState(24);
-  const featured = VIRAL_FEATURED_IDS.flatMap(id => VIRAL_EFFECTS.filter(effect => effect.id === id && effect.preview));
-  const results = useMemo(() => VIRAL_EFFECTS.filter(effect => (category === 'all' || effect.category === category)
+  const featured = TEMPLATE_FEATURED_IDS.flatMap(id => VIRAL_TEMPLATES.filter(effect => effect.id === id && effect.preview));
+  const results = useMemo(() => VIRAL_TEMPLATES.filter(effect => (category === 'all' || effect.category === category)
     && `${effect.name} ${t(`viralTemplates.${effect.category}`)}`.toLowerCase().includes(query.trim().toLowerCase())), [category, query, t]);
   const move = (direction: number) => {
     const node = rail.current;
     if (node) node.scrollBy({ left: direction * (getComputedStyle(node).direction === 'rtl' ? -1 : 1) * node.clientWidth * .85,
       behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   };
-  const choose = (effect: ViralEffect) => { setPlaying(null); onPick(effect); };
-  const card = (effect: ViralEffect, carousel = false) => <article key={effect.id}
+  const choose = (effect: ViralTemplate) => { setPlaying(null); onPick(effect); };
+  const card = (effect: ViralTemplate, carousel = false) => <article key={effect.id}
     className={carousel ? 'w-[72%] max-w-[270px] shrink-0 snap-start sm:w-[25%]' : 'min-w-0'}>
     <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-white/5">
       {playing === effect.id && effect.preview && failed !== effect.id
@@ -37,7 +37,7 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralEffect
           </button>}
       {failed === effect.id && <p role="status" className="absolute inset-x-2 top-2 rounded-md bg-black/85 p-2 text-xs">{t('viralTemplates.previewUnavailable')}</p>}
     </div>
-    <p className="mt-3 text-xs text-white/50">{t(`viralTemplates.${effect.category}`)}</p>
+    <p className="mt-3 text-xs text-white/50">{effect.motionSeconds ? t('viralTemplates.motion') : t(`viralTemplates.${effect.category}`)}{effect.motionSeconds ? ` · ${Math.ceil(effect.motionSeconds)}s` : ''}</p>
     <h3 className="mt-1 truncate text-base font-semibold" title={effect.name}>{effect.name}</h3>
     <button type="button" onClick={() => choose(effect)} aria-label={t('viralTemplates.useNamed', { name: effect.name })}
       className="mt-2 flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-white/20 px-3 text-sm font-semibold hover:bg-white/10 focus-visible:outline focus-visible:outline-2">
@@ -46,12 +46,12 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralEffect
   </article>;
   const visible = results.slice(0, limit);
   return <section id="viral-templates" aria-labelledby="viral-templates-title" className="mx-auto w-full max-w-[1100px] scroll-mt-24 px-3 pb-8 pt-10 text-white sm:px-4 sm:pt-14">
-    <p className="mb-2 text-sm font-semibold text-white/55">{t('viralTemplates.eyebrow', { count: VIRAL_EFFECTS.length })}</p>
+    <p className="mb-2 text-sm font-semibold text-white/55">{t('viralTemplates.eyebrow', { count: VIRAL_TEMPLATES.length })}</p>
     <h2 id="viral-templates-title" className="max-w-2xl font-exo text-[32px] font-black leading-[1.06] tracking-tight sm:text-[46px]">{t('viralTemplates.title')}</h2>
     <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60 sm:text-base">{t('viralTemplates.intro')}</p>
     <div className="my-5 flex items-center justify-between gap-3">
       <button type="button" aria-expanded={expanded} aria-controls="viral-template-library" onClick={() => { setExpanded(!expanded); setPlaying(null); }}
-        className="min-h-11 text-sm font-semibold underline decoration-white/25 underline-offset-4 hover:decoration-white">{t(expanded ? 'viralTemplates.featured' : 'viralTemplates.browse', { count: VIRAL_EFFECTS.length })}</button>
+        className="min-h-11 text-sm font-semibold underline decoration-white/25 underline-offset-4 hover:decoration-white">{t(expanded ? 'viralTemplates.featured' : 'viralTemplates.browse', { count: VIRAL_TEMPLATES.length })}</button>
       {!expanded && <div className="flex gap-2">{[-1, 1].map(direction => <button key={direction} type="button" onClick={() => move(direction)}
         aria-label={t(direction < 0 ? 'maboroshiShowcase.previous' : 'maboroshiShowcase.next')}
         className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 hover:bg-white/10">
@@ -75,6 +75,5 @@ export function ViralTemplateShowcase({ onPick }: { onPick: (effect: ViralEffect
         {results.length === 0 && <p className="py-6 text-white/60">{t('viralTemplates.empty')}</p>}
         {results.length > limit && <button type="button" onClick={() => setLimit(limit + 24)} className="mt-5 min-h-11 rounded-full border border-white/20 px-6 text-sm font-semibold">{t('viralTemplates.more')}</button>}
       </div>}
-    <p className="mt-5 text-xs leading-relaxed text-white/45">{t('viralTemplates.source')} <a href="https://app.pixverse.ai/?tab=template" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">PixVerse</a></p>
   </section>;
 }
