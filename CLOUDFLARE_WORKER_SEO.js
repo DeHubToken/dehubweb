@@ -5757,6 +5757,26 @@ async function handleRequest(request, env, ctx) {
     return resp;
   };
 
+  // One uncached status document is shared by web and native clients.
+  if (pathname === '/maintenance.json') {
+    const resp = await env.ASSETS.fetch(request);
+    const out = new Response(resp.body, resp);
+    out.headers.set('Content-Type', 'application/json; charset=utf-8');
+    out.headers.set('Cache-Control', 'no-store');
+    out.headers.set('CDN-Cache-Control', 'no-store');
+    out.headers.set('Cloudflare-CDN-Cache-Control', 'no-store');
+    out.headers.set('Access-Control-Allow-Origin', '*');
+    out.headers.set('X-Robots-Tag', 'noindex');
+    return out;
+  }
+
+  if (pathname === '/maintenance' || pathname === '/maintenance/') {
+    const resp = await guardNext();
+    const out = new Response(resp.body, resp);
+    out.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return out;
+  }
+
   // Cloudflare canonicalizes index.html to the directory URL. Both entry
   // responses must revalidate while fingerprinted assets remain immutable.
   if (pathname === '/gods-eye-game/index.html' || pathname === '/gods-eye-game/') {
