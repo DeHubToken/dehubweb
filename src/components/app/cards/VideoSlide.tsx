@@ -467,7 +467,7 @@ export const VideoSlide = memo(function VideoSlide({
       <div className="absolute inset-0 z-[2]" {...tapGestures}>
         {short.imageUrls?.length ? (
           <Suspense fallback={<img src={short.imageUrls[0]} alt="" className="w-full h-full object-contain" />}>
-            <ShortsPhotoPager images={short.imageUrls} />
+            <ShortsPhotoPager images={short.imageUrls} galleryKey={String(short.id)} />
           </Suspense>
         ) : null}
         {transcodingStatus === 'failed' ? (

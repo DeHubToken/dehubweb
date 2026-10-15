@@ -99,6 +99,7 @@ import { cacheImageForNavigation } from '@/lib/post-cache';
 import { HandoffImage } from './HandoffImage';
 import { galleryIndex, rememberGalleryIndex, subscribeGallery } from '@/lib/media-presentation';
 import { warmPostPage } from '@/lib/preload-post-page';
+import { openBrainrotFeed } from '@/lib/brainrot-feed';
 import { FEED_IMAGE_MAX_HEIGHT } from '@/lib/feed-image-layout';
 import { chainVerticalWheel } from '@/lib/chain-vertical-wheel';
 import { downloadMedia, imageDownloadName } from '@/lib/download-media';
@@ -845,8 +846,21 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
 
   const handleImageClick = (index: number) => {
     if (wasDrawerJustDismissed()) return;
-    if (!postPage) {
+    if (!postPage && (isPPV || isLocked || isSubGated || isW2E || matureGate.isGated)) {
       openPost();
+      return;
+    }
+    if (!postPage) {
+      rememberGalleryIndex(String(post.id), index);
+      openBrainrotFeed(post.id, {
+        ...post,
+        type: 'short',
+        imageUrls: images,
+        videoUrl: '',
+        thumbnail: images[index] || post.image,
+        likes: String(post.likes),
+        comments: String(post.comments),
+      });
       return;
     }
     setFullscreenIndex(index);
