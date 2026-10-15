@@ -632,6 +632,21 @@ export type Database = {
           },
         ]
       }
+      ai_agent_post_slots: {
+        Row: {
+          next_post_at: string
+          owner_wallet: string
+        }
+        Insert: {
+          next_post_at?: string
+          owner_wallet: string
+        }
+        Update: {
+          next_post_at?: string
+          owner_wallet?: string
+        }
+        Relationships: []
+      }
       ai_agent_rate_limits: {
         Row: {
           action_type: string
@@ -742,6 +757,9 @@ export type Database = {
           prompt: string
           request_id: string
           status: string
+          swarm_id: string | null
+          swarm_index: number | null
+          swarm_size: number | null
           updated_at: string
         }
         Insert: {
@@ -762,6 +780,9 @@ export type Database = {
           prompt: string
           request_id: string
           status?: string
+          swarm_id?: string | null
+          swarm_index?: number | null
+          swarm_size?: number | null
           updated_at?: string
         }
         Update: {
@@ -782,6 +803,9 @@ export type Database = {
           prompt?: string
           request_id?: string
           status?: string
+          swarm_id?: string | null
+          swarm_index?: number | null
+          swarm_size?: number | null
           updated_at?: string
         }
         Relationships: [
@@ -8827,6 +8851,19 @@ export type Database = {
           valid: boolean
         }[]
       }
+      create_agent_swarm_tasks: {
+        Args: {
+          p_agent_ids: string[]
+          p_interval_minutes: number
+          p_owner_wallet: string
+          p_plan: Json
+          p_prompt: string
+          p_request_id: string
+        }
+        Returns: {
+          id: string
+        }[]
+      }
       decrement_listing_stock: {
         Args: { p_listing_id: string }
         Returns: number
@@ -9207,6 +9244,10 @@ export type Database = {
             }
             Returns: undefined
           }
+      record_agent_post_publication: {
+        Args: { p_owner_wallet: string }
+        Returns: undefined
+      }
       record_ai_provider_usage: { Args: { p_rows: Json }; Returns: undefined }
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
@@ -9234,17 +9275,34 @@ export type Database = {
         }
         Returns: Json
       }
-      reserve_agent_registration: {
-        Args: {
-          _api_key: string
-          _description: string
-          _name: string
-          _owner: string
-          _private_key: string
-          _wallet: string
-        }
-        Returns: Json
+      reserve_agent_post_slot: {
+        Args: { p_owner_wallet: string }
+        Returns: string
       }
+      reserve_agent_registration:
+        | {
+            Args: {
+              _api_key: string
+              _description: string
+              _name: string
+              _owner: string
+              _private_key: string
+              _wallet: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _api_key: string
+              _description: string
+              _limit: number
+              _name: string
+              _owner: string
+              _private_key: string
+              _wallet: string
+            }
+            Returns: Json
+          }
       reserve_chirp_characters: {
         Args: { p_characters: number }
         Returns: boolean

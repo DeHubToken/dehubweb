@@ -95,7 +95,7 @@ export function SidebarNavItem({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { theme, themeChoice } = useAppTheme();
-  const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
+  const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label, item.label);
   const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const isDesktop = variant === 'desktop';
   const desktopTextColor = getDesktopTextColor(themeChoice === 'system-light' ? themeChoice : theme);

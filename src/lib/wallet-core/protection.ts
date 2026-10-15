@@ -102,6 +102,12 @@ export async function getWalletProtection(userId: string): Promise<WalletProtect
   if (!authedRead && wraps.length === 0) wraps = getCachedPasskeyWraps();
 
   const payloadKind = wallet?.payload ? classifyPayloadKind(wallet.payload.ciphertext) : null;
+  // A phone can answer a hybrid/QR request even when this computer has no
+  // platform authenticator. Keep enrollment capability separate from unlock.
+  const canRequestSavedPasskey = biometricAvailable || (
+    typeof window !== 'undefined' && window.isSecureContext &&
+    !!window.PublicKeyCredential && typeof navigator.credentials?.get === 'function'
+  );
 
   return {
     wallet,
@@ -109,8 +115,8 @@ export async function getWalletProtection(userId: string): Promise<WalletProtect
     seedIsPasskeyWrapped: payloadKind === "passkey",
     wraps,
     biometricAvailable,
-    canUseBiometrics: biometricAvailable && wraps.length > 0,
-    biometricEnrolledElsewhere: !biometricAvailable && wraps.length > 0,
+    canUseBiometrics: canRequestSavedPasskey && wraps.length > 0,
+    biometricEnrolledElsewhere: !canRequestSavedPasskey && wraps.length > 0,
     noWalletOnServer,
     stateUnknown: (!wallet && wraps.length === 0 && !noWalletOnServer) ||
       (wrapsResult.status === 'rejected' && wraps.length === 0 &&

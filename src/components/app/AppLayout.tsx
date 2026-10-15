@@ -64,7 +64,7 @@ const ShippedFeatureNotificationModal = React.lazy(() =>
   import('@/components/app/ShippedFeatureNotificationModal').then(m => ({ default: m.ShippedFeatureNotificationModal }))
 );
 // Lazy: the post composer is heavy (media handling) and only needed when the
-// user opens it — kept out of the entry bundle, preloaded on idle below.
+// user opens it. Create controls warm it on pointer/keyboard intent.
 const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then(m => ({ default: m.PostModal }))
 );
@@ -172,20 +172,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   }, [openPostModal]);
 
   // PostModal mounts on first open, then stays mounted so its close animation
-  // isn't cut short. Both lazy chunks (composer + post overlay) preload on
-  // idle so first use doesn't wait on the network.
+  // isn't cut short. Create controls and post cards warm their chunks on intent.
   const [postModalMounted, setPostModalMounted] = useState(false);
   useEffect(() => {
     if (isPostModalOpen) setPostModalMounted(true);
   }, [isPostModalOpen]);
-  useEffect(() => {
-    const idle = (cb: () => void) =>
-      'requestIdleCallback' in window ? requestIdleCallback(cb) : setTimeout(cb, 2000);
-    idle(() => {
-      import('@/features/post/PostModal').catch(() => {});
-      import('@/pages/app/SinglePostPage').catch(() => {});
-    });
-  }, []);
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
   const mainRef = useRef<HTMLElement | null>(null);

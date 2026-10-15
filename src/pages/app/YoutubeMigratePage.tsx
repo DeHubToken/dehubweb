@@ -719,7 +719,7 @@ export default function YoutubeMigratePage() {
                       checked && !v.alreadyImported && 'ring-2 ring-white/60',
                     )}
                   >
-                    <div className="relative aspect-video bg-zinc-800 overflow-hidden">
+                    <div data-media-scrim className="relative aspect-video bg-zinc-800 overflow-hidden">
                       {v.thumbnailUrl ? (
                         <img
                           src={v.thumbnailUrl}
@@ -945,7 +945,7 @@ export default function YoutubeMigratePage() {
                         href && 'hover:ring-2 hover:ring-white/30',
                       )}
                     >
-                      <div className="relative aspect-video bg-zinc-800 overflow-hidden flex items-center justify-center">
+                      <div data-media-scrim className="relative aspect-video bg-zinc-800 overflow-hidden flex items-center justify-center">
                         {thumb ? (
                           <img
                             src={thumb}

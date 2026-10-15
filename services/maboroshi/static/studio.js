@@ -4,6 +4,7 @@ let token = '', account = '', current = null, ready = false, allowPayments = fal
 let selectedInput = '', selectedResult = '', requestVersion = 0, sessionVersion = 0;
 let referencesChanged = false, working = false, pendingPayment = null, paymentNotice = '';
 const localMedia = new Map();
+let selectedSourceFile = null, selectedClipId = '', clipImport = null;
 const presets = window.MABOROSHI_PRESETS || [];
 const linkedPreset = presets.find(preset => preset.id === new URLSearchParams(location.search).get('preset')) || null;
 let selectedPreset = linkedPreset;
@@ -36,7 +37,7 @@ const busy = () => current && ['queued', 'running'].includes(current.state);
 const locked = () => working || !!pendingPayment;
 const editable = () => allowPayments && (!current || ['uploaded', 'prepared'].includes(current.state));
 const money = (micros) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(micros / 1e6);
-const stateLabel = (state) => ({ uploaded: 'Ready to prepare', prepared: 'Ready to review', queued: 'Queued', running: 'Processing', draft: 'Preview ready', complete: 'HD ready', failed: 'Needs attention', attention: 'Needs attention' })[state] || 'Saved';
+const stateLabel = (state) => ({ uploaded: 'Ready to prepare', prepared: 'Ready to review', queued: 'Queued', running: 'Processing', draft: 'Preview ready', complete: 'Video ready', failed: 'Needs attention', attention: 'Needs attention' })[state] || 'Saved';
 const message = (text) => { paymentNotice = ''; $('error').textContent = text || ''; $('error').hidden = !text; };
 const remember = (id) => { try { localStorage.setItem(`maboroshi:last:${account}`, id || ''); } catch { /* Storage may be unavailable in an embedded browser. */ } };
 const remembered = () => { try { return localStorage.getItem(`maboroshi:last:${account}`); } catch { return ''; } };
@@ -69,6 +70,7 @@ function mediaPreview(id, media) {
   preview.hidden = false; preview.dataset.key = key;
 }
 function clearProject() {
+  clipImport?.abort(); clipImport = null; selectedSourceFile = null; selectedClipId = ''; $('source').required = true;
   if (pendingPayment) { pendingPayment.reject(Error('The active project changed.')); pendingPayment = null; }
   clearTimeout(timer); requestVersion++; current = null; selectedInput = ''; selectedResult = ''; paymentNotice = '';
   for (const id of ['preview', 'result', 'source-preview']) { $(id).pause(); $(id).removeAttribute('src'); $(id).removeAttribute('data-file'); $(id).load(); }
@@ -117,12 +119,20 @@ function nextStep() {
   if (current.state === 'attention') return 'Your saved files are available below. A previous submission needs review before any further paid attempt.';
   if (current.state === 'failed') return 'Your original and any completed previews are available below. Check the processing message before starting a new project.';
   if (current.state === 'uploaded') return 'Next: prepare the clip, then review the motion before generating.';
-  if (current.state === 'prepared') return current.review.approved ? 'Clip approved. Choose your character and generate a preview.' : 'Next: watch the entire prepared clip and approve its alignment.';
+  if (current.state === 'prepared') return current.renderer === 'kling' ? current.review.approved ? 'Source approved. Choose your character and generate the complete Kling video.' : 'Next: watch and approve your entire original source clip.' : current.review.approved ? 'Clip approved. Choose your character and generate a preview.' : 'Next: watch the entire prepared clip and approve its alignment.';
   if (current.state === 'draft') return 'Next: watch or download the preview. Choose 1080p only if you want an HD version.';
   return 'Your video is ready to download. Your original and preview remain saved.';
 }
 function render() {
   renderPresetDetail();
+  const kling = (current ? current.renderer || 'seedance' : $('renderer').value) === 'kling';
+  $('preparation-options').hidden = kling;
+  $('renderer-help').textContent = kling ? 'Kling: 3–15 second MP4/MOV at 720p or higher, with image references. One paid render; original soundtrack preserved.' : 'Seedance Premium: 2–30 seconds, image or video references. Paid preparation and preview, with optional 1080p completion.';
+  $('reference').accept = kling ? 'image/png,image/jpeg,image/webp' : 'image/png,image/jpeg,image/webp,video/mp4,video/quicktime,video/webm';
+  $('review-guidance').textContent = kling ? 'Watch the full original clip and confirm the subject, motion and soundtrack. Kling uses this source directly.' : 'Check edges, hair, hands, background spill and face alignment through every cut. Listen to the pitched vocals.';
+  $('review-label').textContent = kling ? 'I reviewed the whole original clip and want to use it for this edit.' : 'I reviewed the whole prepared clip and its alignment is correct.';
+  $('render-hint').textContent = kling ? 'One complete render. No preparation or separate HD charge.' : 'HD is a separate choice after you watch the preview.';
+  $('export-guidance').textContent = kling ? 'Your complete original soundtrack is restored. Download your finished Kling video.' : 'Your full original soundtrack is restored. You can download the preview as it is, or approve HD within six days.';
   $('project').hidden = !current; $('progress').hidden = !current;
   $('source-section').hidden = !!current; $('source-preview-section').hidden = !current?.files['upload.mp4'];
   $('jobs').disabled = locked(); $('new-project').disabled = locked(); $('refresh').disabled = locked();
@@ -142,7 +152,7 @@ function render() {
   const source = $('source-preview');
   if (current.files['upload.mp4'] && source.dataset.file !== current.id) { source.src = current.files['upload.mp4']; source.dataset.file = current.id; }
   $('source-download').href = current.files['upload.mp4'] || ''; $('source-download').download = 'maboroshi-original.mp4';
-  $('source-meta').textContent = `${Number(current.seconds).toFixed(1)} seconds · Replacing: ${current.subject}`;
+  $('source-meta').textContent = `${Number(current.seconds).toFixed(1)} seconds · ${kling ? 'Kling' : 'Seedance Premium'} · Replacing: ${current.subject}`;
   $('prepare-section').hidden = current.state !== 'uploaded' || !allowPayments;
   const input = Object.entries({ 'seedance-input.mp4': 'Prepared clip', 'upload.mp4': 'Original', 'depth.mp4': 'Depth guide', 'mask.mp4': 'Subject mask' }).filter(([file]) => current.files[file]);
   $('review-section').hidden = !current.files['seedance-input.mp4'];
@@ -155,7 +165,7 @@ function render() {
   const hasReference = current.hasReference || !!$('reference').files[0];
   $('draft-guidance').textContent = !current.review.approved ? 'Approve the prepared clip above to continue.' : !hasReference ? 'Choose a character reference above to continue.' : 'Your clip is approved. Continue to review the preview price in DeHub.';
   $('resolved').hidden = !current.resolvedPrompt || referencesChanged; $('resolved-prompt').textContent = current.resolvedPrompt;
-  const outputs = [['final-preview.mp4', 'Preview'], ['hd/final-preview.mp4', '1080p']].filter(([file]) => current.files[file]);
+  const outputs = [['final-preview.mp4', kling ? 'Kling result' : 'Preview'], ['hd/final-preview.mp4', '1080p']].filter(([file]) => current.files[file]);
   $('export-section').hidden = !outputs.length;
   if (outputs.length) showVideo('result', outputs);
   $('hd-review').hidden = current.state !== 'draft' || !allowPayments;
@@ -163,8 +173,9 @@ function render() {
   $('duration-note').textContent = current.durationAdjustment ? `The last frame was held for ${Number(current.durationAdjustment.seconds).toFixed(2)} seconds to preserve the complete original soundtrack.` : '';
   for (const [stage, label, state] of [['prepare', 'Prepare clip', 'uploaded'], ['draft', 'Generate preview', 'prepared'], ['hd', 'Generate 1080p', 'draft']]) {
     const cost = current.quotes[stage];
-    $(stage).textContent = cost ? `${label} · ${money(cost)}` : `${label} · temporarily unavailable`;
-    $(stage).hidden = !allowPayments || current.state !== state;
+    const title = kling && stage === 'draft' ? 'Generate Kling video' : label;
+    $(stage).textContent = cost ? `${title} · ${money(cost)}` : `${title} · temporarily unavailable`;
+    $(stage).hidden = !allowPayments || current.state !== state || (kling && stage !== 'draft');
     $(stage).disabled = !ready || !allowPayments || locked() || busy() || !cost || current.state !== state ||
       (stage === 'draft' && (!current.review.approved || !hasReference)) || (stage === 'hd' && !$('draft-reviewed').checked);
   }
@@ -206,10 +217,37 @@ window.addEventListener('message', event => {
   if (event.source !== window.parent || event.origin !== 'https://dehub.io') return;
   if (event.data?.type === 'maboroshi:session') void authenticate(event.data);
   if (event.data?.type === 'maboroshi:payment-result') paymentResult(event.data);
+  if (event.data?.type === 'maboroshi:clip') void chooseCatalogClip(event.data.clip);
 });
 // Native injects events only after verifying the exact WebView origin and path.
 document.addEventListener('maboroshi:native-session', event => { void authenticate(event.detail); });
 document.addEventListener('maboroshi:native-payment-result', event => { paymentResult(event.detail); });
+document.addEventListener('maboroshi:native-clip', event => { void chooseCatalogClip(event.detail); });
+async function chooseCatalogClip(clip) {
+  if (!clip || !/^[a-f0-9]{20}$/.test(clip.id || '') || typeof clip.url !== 'string' || typeof clip.name !== 'string' || !(clip.seconds >= 3 && clip.seconds <= 30)) return;
+  let url;
+  try { url = new URL(clip.url); } catch { return; }
+  if (url.protocol !== 'https:' || url.username || url.password || !['d2ol7oe51mr4n9.cloudfront.net', 'cdn.higgsfield.ai', 'd8j0ntlcm91z4.cloudfront.net', 'static.higgsfield.ai', 'jeanphilai.com', 'media.pixverse.ai'].includes(url.hostname)) return;
+  if (selectedClipId === clip.id) return;
+  if (clipImport) return;
+  if (current || locked()) { message('Start a new project before choosing another source clip. Your saved project stays available.'); return; }
+  const version = sessionVersion, controller = new AbortController(); clipImport = controller;
+  working = true; message(''); render();
+  try {
+    const response = await fetch(`https://dehub.io/api/creator-motion-source?id=${encodeURIComponent(clip.id)}`, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: controller.signal });
+    if (!response.ok || Number(response.headers.get('Content-Length')) > 100 * 1024 * 1024) throw Error('This source clip is unavailable or exceeds 100 MB. Choose another clip.');
+    const blob = await response.blob();
+    if (blob.size > 100 * 1024 * 1024) throw Error('Choose a source clip smaller than 100 MB.');
+    if (version !== sessionVersion || current || controller.signal.aborted) return;
+    releaseLocal('source');
+    selectedSourceFile = new File([blob], `source-${clip.id}.mp4`, { type: 'video/mp4' });
+    selectedClipId = clip.id; $('source').value = ''; $('source').required = false;
+    localMedia.set('source', { url: URL.createObjectURL(selectedSourceFile), kind: 'video', name: clip.name });
+    mediaPreview('source-local', localMedia.get('source'));
+    $('source-section').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  } catch (error) { if (version === sessionVersion && error.name !== 'AbortError') message(error.message); }
+  finally { if (clipImport === controller) { clipImport = null; working = false; render(); } }
+}
 function paymentResult(data) {
   if (!pendingPayment || data?.requestId !== pendingPayment.requestId) return;
   const pending = pendingPayment; pendingPayment = null;
@@ -234,6 +272,7 @@ for (const id of ['source-download', 'preview-download', 'result-download']) $(i
   if (window.ReactNativeWebView) { event.preventDefault(); window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'maboroshi:download', url: $(id).href })); }
 };
 for (const [id, target] of [['source', 'source-local'], ['reference', 'reference-preview'], ['second', 'second-preview']]) $(id).onchange = () => {
+  if (id === 'source') { selectedSourceFile = null; selectedClipId = ''; $('source').required = true; }
   releaseLocal(id); const file = $(id).files[0];
   if (file) localMedia.set(id, { url: URL.createObjectURL(file), kind: file.type.startsWith('video/') ? 'video' : 'image', name: file.name });
   mediaPreview(target, localMedia.get(id));
@@ -262,14 +301,14 @@ async function saveReferences() {
 }
 $('source-form').onsubmit = async event => {
   event.preventDefault(); if (!token || !allowPayments || locked()) return;
-  const file = $('source').files[0];
+  const file = selectedSourceFile || $('source').files[0];
   if (!file || file.size > 100 * 1024 * 1024) { message('Choose a video smaller than 100 MB.'); return; }
-  const body = new FormData(event.target), version = sessionVersion;
+  const body = new FormData(event.target), version = sessionVersion; body.set('video', file);
   message(''); working = true; render();
   try {
     const data = await api('jobs', { method: 'POST', body });
     if (version !== sessionVersion) return;
-    current = data; remember(data.id); releaseLocal('source'); clearMedia('source-local');
+    current = data; remember(data.id); selectedSourceFile = null; selectedClipId = ''; releaseLocal('source'); clearMedia('source-local');
     await list();
     if (version !== sessionVersion) return;
     if ($('reference').files[0]) await saveReferences();
@@ -332,7 +371,7 @@ for (const approved of [true, false]) $(approved ? 'approve' : 'reject').onclick
   finally { if (version === sessionVersion) { working = false; render(); } }
 };
 async function canLeave() {
-  if (!(referencesChanged || (!current && $('source').files.length))) return true;
+  if (!(referencesChanged || (!current && ($('source').files.length || selectedSourceFile)))) return true;
   const dialog = $('discard-dialog');
   if (dialog.open) return false;
   return new Promise(resolve => {
@@ -350,6 +389,7 @@ async function switchProject(ident) {
   if (ident) try { await load(ident); } catch (error) { message(error.message); }
 }
 $('reviewed').onchange = render; $('draft-reviewed').onchange = render;
+$('renderer').onchange = render;
 $('jobs').onchange = () => { void switchProject($('jobs').value); };
 $('new-project').onclick = () => { void switchProject(''); };
 $('refresh').onclick = async () => {
@@ -357,6 +397,6 @@ $('refresh').onclick = async () => {
   try { await list(); if (current) { for (const id of ['preview', 'result', 'source-preview']) $(id).removeAttribute('data-file'); await load(current.id); } }
   catch (error) { message(error.message); }
 };
-window.addEventListener('beforeunload', event => { if (referencesChanged || (!current && $('source').files.length)) { event.preventDefault(); event.returnValue = ''; } });
+window.addEventListener('beforeunload', event => { if (referencesChanged || (!current && ($('source').files.length || selectedSourceFile))) { event.preventDefault(); event.returnValue = ''; } });
 document.addEventListener('visibilitychange', () => { clearTimeout(timer); if (!document.hidden && busy()) void load(current.id).catch(error => message(error.message)); });
 fetch('health').then(response => response.json()).then(data => { ready = data.ready; $('connection').textContent = 'Sign in to DeHub to save and continue a project.'; render(); announce(); }).catch(() => { message('Maboroshi is temporarily unavailable. Reload to reconnect.'); announce(); });

@@ -38,6 +38,7 @@ import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ShortsReel } from '@/components/app/cards/ShortsReel';
+import { uniqueShortsCreators } from '@/lib/shorts-rotation';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
 
 import { useUnifiedFeed, mapToVideoItem, type UnifiedFeedParams, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
@@ -697,7 +698,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
     // Exclude PPV content from shorts carousels
     const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
-    return nonPPV.slice(0, 10).map((item) => {
+    return uniqueShortsCreators(nonPPV).slice(0, 10).map((item) => {
       const id = String(item.tokenId);
       const minterAddress = item.minter || '';
       const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;

@@ -1,11 +1,9 @@
 {
   "viralTemplates": {
-    "eyebrow":  "{{count}} video effects",
     "title":  "Find your next viral moment.",
     "intro":  "Watch an example. Pick an effect or character. Add your photo and make it yours.",
     "browse":  "Browse all {{count}} templates",
     "featured":  "Back to featured",
-    "use":  "Use this effect",
     "useNamed":  "Use {{name}}",
     "preview":  "Play {{name}} preview",
     "previewUnavailable":  "Preview unavailable",
@@ -24,7 +22,11 @@
     "ready":  "{{name}} selected. Add one photo to create a 5-second video. Framing follows your photo.",
     "chooseFirst":  "Choose an effect before generating.",
     "back":  "Back to templates",
-    "close":  "Close templates"
+    "close":  "Close templates",
+    "eyebrow":  "{{count}} video templates",
+    "use":  "Use this template",
+    "motion":  "Copy this motion",
+    "motionReady":  "{{name}} selected. Add your photo to perform the movement in this clip."
 },
 
   "maboroshiShowcase": {
@@ -1747,10 +1749,10 @@
       "runSwarm": "Run swarm",
       "description": "Actions run as the selected agent. Scheduled tasks continue with the app closed.",
       "instructions": "Agent instructions",
-      "examples": "Follow everyone who posted today.\nLike every post from the last 24 hours.\nPost 3 times per day about independent music.",
+      "examples": "Post once per day about: independent music\nStyle: curious, concise and conversational\nLike up to 2 recent posts per day about: music, live shows, vinyl",
       "preparing": "Preparing task…",
       "run": "Run prompt",
-      "limits": "Supports posts, follows, reactions, comments and profile changes. Topic posts use writing credits and Base gas. Bulk actions continue at the agent’s existing limits.",
+      "limits": "One daily post and up to 3 relevant likes per task. All agents share a 20-minute post gap. Photos use checked captions; videos need a cover image. Posts stay under 500 characters. No gas unless minting; writing may use credits.",
       "createFirst": "Create an agent below to give it a task.",
       "list": "Tasks",
       "refresh": "Refresh",
@@ -1812,7 +1814,7 @@
     "connectorUrlHelp": "Add this as a custom MCP connector in Claude or ChatGPT. It authenticates as this agent, so treat it like the API key.",
     "agentWallet": "Agent wallet (Base)",
     "walletCopied": "Wallet address copied",
-    "agentWalletHelp": "Send a small amount of Base ETH here before the agent posts — publishing mints on-chain and the agent pays its own gas. Commenting, voting and following need no gas.",
+    "agentWalletHelp": "Ordinary posts need no Base ETH. Fund this wallet only if you explicitly ask the agent to mint a post on-chain.",
     "loadFailed": "Couldn't load agents",
     "keyHidden": "Hidden. Confirm it's you to see this key.",
     "revealKey": "Reveal key",
@@ -1868,6 +1870,7 @@
     "createNewInstead": "Create a new account instead",
     "migrateAccount": "Migrate account",
     "importExternalWallet": "Import",
+    "invalidImportSecret": "Enter a valid private key or seed phrase.",
     "migrateIntentHint": "Sign in with any option below. If it matches an earlier DeHub account you will bring over its wallet, username and balance.",
     "importIntentHint": "Sign in with any option below, then paste the recovery phrase or private key of the wallet you want to use.",
     "title": "Log in / Sign up",

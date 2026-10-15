@@ -14,6 +14,8 @@ import { getWalletAddress } from '@/lib/contracts/aa-utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { completeMaboroshiPayment, getMaboroshiQuote, isMaboroshiPaymentRequest, maboroshiStageLabel, type MaboroshiQuote } from '@/lib/maboroshi-payment';
+import { MotionLibraryShowcase } from '@/components/app/creator/MotionLibraryShowcase';
+import { findMotionClip, type MotionClip } from '@/lib/creator/motionLibrary';
 
 const ORIGIN = 'https://live.dehub.io';
 const STUDIO = `${ORIGIN}/maboroshi/`;
@@ -27,6 +29,8 @@ export default function MaboroshiPage() {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const frame = useRef<HTMLIFrameElement>(null);
   const [connected, setConnected] = useState(false);
+  const [selectedClip, setSelectedClip] = useState<MotionClip | null>(null);
+  const selectedClipRef = useRef(selectedClip); selectedClipRef.current = selectedClip;
   const [attempt, setAttempt] = useState(0);
   const [quote, setQuote] = useState<MaboroshiQuote | null>(null);
   const [paying, setPaying] = useState(false);
@@ -47,7 +51,11 @@ export default function MaboroshiPage() {
   useEffect(() => {
     const receive = (event: MessageEvent) => {
       if (event.origin !== ORIGIN || event.source !== frame.current?.contentWindow) return;
-      if (event.data?.type === 'maboroshi:ready') { setConnected(true); session(); return; }
+      if (event.data?.type === 'maboroshi:ready') {
+        setConnected(true); session();
+        if (selectedClipRef.current) frame.current?.contentWindow?.postMessage({ type: 'maboroshi:clip', clip: selectedClipRef.current }, ORIGIN);
+        return;
+      }
       if (!isMaboroshiPaymentRequest(event.data) || pending.current) return;
       const input = event.data;
       pending.current = input.requestId;
@@ -60,6 +68,16 @@ export default function MaboroshiPage() {
     return () => window.removeEventListener('message', receive);
   }, [session, reply]);
   useEffect(() => { session(); }, [session]);
+  useEffect(() => {
+    const clipId = searchParams.get('clip');
+    if (!clipId || !/^[a-f0-9]{20}$/.test(clipId)) return;
+    let cancelled = false;
+    void findMotionClip(clipId).then(clip => { if (!cancelled && clip) setSelectedClip(clip); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [searchParams]);
+  useEffect(() => {
+    if (connected && selectedClip) frame.current?.contentWindow?.postMessage({ type: 'maboroshi:clip', clip: selectedClip }, ORIGIN);
+  }, [connected, selectedClip, isAuthenticated, walletAddress]);
   useEffect(() => { setQuote(null); pending.current = null; }, [walletAddress]);
   const confirm = async () => {
     if (!quote || paymentInFlight.current) return;
@@ -85,6 +103,7 @@ export default function MaboroshiPage() {
           {!isAuthenticated && <button type="button" onClick={() => openLoginModal()} className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black">{t('creator.login', 'Login')}</button>}
         </div>
       </header>
+      <MotionLibraryShowcase onPick={clip => { setSelectedClip(clip); frame.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} />
       {!connected && <p role="status" className="px-4 py-3 text-sm text-white/60">{t('common.loading', 'Loading…')}{_copy("copy.8f3a26244094", { defaultValue: " Maboroshi" })}</p>}
       <iframe key={`${walletAddress || 'guest'}:${attempt}`} ref={frame} src={studioUrl} title={_copy("copy.c6d99d44a9f8", { defaultValue: "Maboroshi" })}
         className="w-full flex-1 border-0" style={{ minHeight: 'calc(100dvh - 65px)' }}
@@ -94,7 +113,7 @@ export default function MaboroshiPage() {
       }}>
         <DialogContent onInteractOutside={event => { if (paying) event.preventDefault(); }}>
           <DialogHeader><DialogTitle>{t('creator.toolMaboroshi')}</DialogTitle>
-            <DialogDescription>{quote && maboroshiStageLabel(quote.stage)} · {quote && (quote.price_micros / 1000).toLocaleString()} DHB · {quote && new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(quote.price_micros / 1e6)}</DialogDescription>
+            <DialogDescription>{quote && maboroshiStageLabel(quote.stage, quote.renderer)} · {quote && (quote.price_micros / 1000).toLocaleString()} DHB · {quote && new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(quote.price_micros / 1e6)}</DialogDescription>
           </DialogHeader>
           <Button disabled={paying} onClick={() => void confirm()}>{paying ? t('common.loading', 'Loading…') : t('common.confirm', 'Confirm')}</Button>
           <Button variant="outline" disabled={paying} onClick={() => { if (quote) reply(quote.requestId, 'Payment cancelled.', true); pending.current = null; setQuote(null); }}>{t('common.cancel')}</Button>

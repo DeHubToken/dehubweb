@@ -1,7 +1,13 @@
-import { handleTaskRequest, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
+import { handleTaskRequest, postBreaksGroundingRules, runTask, type TaskTool, type ProfileImages } from './tasks.ts';
 import { AGENT_OWNER } from './task-plan.ts';
 
 const assert = (value: unknown, description: string) => { if (!value) throw new Error(description); };
+Deno.test('post drafts keep concrete opinions but reject invented scenes and generic filler', () => {
+  assert(!postBreaksGroundingRules("Basil leaves going yellow? I'd check the pot before adding water.", 100, 'yellow basil leaves'), 'rejected a grounded opinion');
+  assert(postBreaksGroundingRules('Just whispered to my basil—turns out it prefers silence.', 100, 'yellow basil leaves'), 'allowed an invented action');
+  assert(postBreaksGroundingRules('Take the 1965 Mustang for a sunrise run.', 100, 'a worn steering wheel'), 'allowed an invented dated scene');
+  assert(postBreaksGroundingRules('The little things tell a story.', 100, 'yellow basil leaves'), 'allowed generic filler');
+});
 const fixture = (prior?: string) => {
   const agent = { id: 'agent', human_owner_wallet: AGENT_OWNER, owner_wallet_address: '0x1111111111111111111111111111111111111111', api_key: 'test', is_active: true };
   const task = { id: 'task', agent_id: 'agent', owner_wallet: AGENT_OWNER, status: 'running', lease: 'lease', completed_actions: 0,
@@ -34,7 +40,7 @@ const fixture = (prior?: string) => {
   let calls = 0;
   let callback: () => Promise<any> = async () => ({ structuredContent: { success: true } });
   const registry = new Map<string, TaskTool>([['dehub_vote', { description: 'Vote', validate: args => args, call: async () => { calls++; return callback(); } }]]);
-  return { rows, db, task, calls: () => calls, onCall: (handler: () => Promise<any>) => { callback = handler; },
+  return { rows, db, task, registry, calls: () => calls, onCall: (handler: () => Promise<any>) => { callback = handler; },
     run: () => runTask({ db: () => db, token: async () => 'test', tools: () => registry }, new Request('https://example.test/tasks/tick'), structuredClone(task)) };
 };
 
@@ -148,6 +154,67 @@ Deno.test('bulk post reads record public views before the cursor advances or act
       if (failViews) assert(!('targets' in test.task.cursor), 'persisted cursor before recording views');
     } finally { globalThis.fetch = originalFetch; }
   }
+});
+
+Deno.test('daily selected likes view the scanned feed but act only on relevant third-party posts', async () => {
+  const test = fixture();
+  const step = test.task.plan.steps[0] as any;
+  step.audience = 'selected_posts'; step.arguments = { vote_type: 'like' };
+  step.recent_keywords = ['music', 'vinyl']; step.recent_limit = 2;
+  (test.task.plan as any).interval_minutes = 1440;
+  const originalFetch = globalThis.fetch;
+  let viewed = false;
+  const recent = new Date(Date.now() - 60_000).toISOString();
+  globalThis.fetch = async (url, init) => {
+    if (String(url).includes('/api/feed?')) return Response.json({ result: [
+      { tokenId: 100, createdAt: recent, name: 'New music finds', minter: '0x2222222222222222222222222222222222222222' },
+      { tokenId: 101, createdAt: recent, category: ['vinyl'], minter: '0x3333333333333333333333333333333333333333' },
+      { tokenId: 102, createdAt: recent, name: 'Football today', minter: '0x4444444444444444444444444444444444444444' },
+      { tokenId: 103, createdAt: recent, name: 'Music again', minter: '0x1111111111111111111111111111111111111111' },
+    ] });
+    assert(String(url) === 'https://api.dehub.io/api/view/batch', 'unexpected network request');
+    assert(JSON.stringify(JSON.parse(String(init?.body)).tokenIds) === '[100,101,102,103]', 'did not count every scanned post as viewed');
+    assert(test.calls() === 0, 'liked before recording views');
+    viewed = true;
+    return Response.json({ success: true });
+  };
+  try {
+    await test.run();
+    const targets = test.rows.ai_agent_task_actions.map(action => action.target).sort();
+    assert(viewed && JSON.stringify(targets) === '["100","101"]', 'liked an unrelated or owned post');
+    assert(test.task.status === 'queued', 'daily task did not schedule its next cycle');
+  } finally { globalThis.fetch = originalFetch; }
+});
+
+Deno.test('daily likes and ordinary posts run without mint gas', async () => {
+  const test = fixture();
+  (test.task.plan as any).interval_minutes = 1440;
+  (test.task.plan.steps[0] as any).audience = 'selected_posts';
+  (test.task.plan.steps[0] as any).recent_keywords = ['music'];
+  (test.task.plan.steps[0] as any).recent_limit = 1;
+  (test.task.plan.steps[0] as any).arguments = { vote_type: 'like' };
+  (test.task.plan.steps as any).push({ tool: 'dehub_post_create', arguments: { content: 'A music note' }, audience: 'single', topic: null });
+  test.registry.set('dehub_agent_status', { description: 'Status', validate: args => args,
+    call: async () => ({ structuredContent: { gas: { sufficient_for_posting: false } } }) });
+  let posted = false;
+  test.registry.set('dehub_post_create', { description: 'Post', validate: args => args,
+    call: async args => {
+      assert(args.content === 'A music note', 'lost the post body');
+      posted = true;
+      return { structuredContent: { success: true, post: { url: 'https://dehub.io/newpost/500' } } };
+    } });
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => String(url).includes('/api/feed?')
+    ? Response.json({ result: [{ tokenId: 100, createdAt: new Date(Date.now() - 60_000).toISOString(),
+      name: 'Good music', minter: '0x2222222222222222222222222222222222222222' }] })
+    : Response.json({ success: true });
+  try {
+    await test.run();
+    assert(test.calls() === 1, 'the selected like did not run');
+    assert(posted, 'ordinary post was blocked by zero mint gas');
+    assert(test.task.status === 'queued' && test.task.cycle === 1, 'the next daily cycle was not scheduled');
+    assert(test.rows.ai_agent_task_actions.length === 2, 'like and post should both be recorded');
+  } finally { globalThis.fetch = originalFetch; }
 });
 
 Deno.test('swarm members divide bulk targets without repeating actions', async () => {

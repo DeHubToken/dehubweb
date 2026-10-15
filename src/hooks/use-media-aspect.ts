@@ -18,9 +18,19 @@
  * URL the card renders, so it is served from the browser cache rather than
  * costing a second download (unlike the CORS probe in use-blank-poster).
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { createMediaAspectCache } from '@/lib/media-aspect-cache';
 
 const cache = new Map<string, number>();
+export const getMeasuredMediaAspect = (url?: string | null) => url ? cache.get(url) ?? null : null;
+const videoAspects = createMediaAspectCache(
+  () => localStorage.getItem('video-aspects-v1'), value => localStorage.setItem('video-aspects-v1', value),
+);
+
+export function rememberVideoAspect(key: string, ratio: number): void {
+  if (!Number.isFinite(ratio) || ratio <= 0) return;
+  videoAspects.set(key, ratio);
+}
 
 /**
  * Ratios outside this band are clamped. The lower bound is full-height 9:16 —
@@ -55,19 +65,24 @@ export function useMediaAspect(
   posterUrl?: string | null,
   intrinsic?: number | null,
   minRatio: number = MIN_RATIO,
+  mediaKey?: string,
 ): number {
-  const [posterRatio, setPosterRatio] = useState<number | null>(() =>
-    posterUrl ? cache.get(posterUrl) ?? null : null,
-  );
+  const [measured, setMeasured] = useState<{ url: string; ratio: number } | null>(null);
+  const shown = useRef<{ key: string | null | undefined; ratio: number } | null>(null);
+  const key = mediaKey ?? posterUrl;
+  const posterRatio = posterUrl
+    ? (measured?.url === posterUrl ? measured.ratio : cache.get(posterUrl) ?? null)
+    : null;
+  const known = intrinsic || (mediaKey ? videoAspects.get(mediaKey) : null) || posterRatio;
+  const ratio = known || (shown.current && shown.current.key === key ? shown.current.ratio : null);
+  shown.current = ratio ? { key, ratio } : null;
 
   useEffect(() => {
     if (!posterUrl) {
-      setPosterRatio(null);
       return;
     }
     const cached = cache.get(posterUrl);
     if (cached !== undefined) {
-      setPosterRatio(cached);
       return;
     }
 
@@ -80,7 +95,7 @@ export function useMediaAspect(
       if (!w || !h) return;
       const ratio = w / h;
       cache.set(posterUrl, ratio);
-      setPosterRatio(ratio);
+      setMeasured({ url: posterUrl, ratio });
     };
     // No handler on error: an unmeasurable poster just leaves the default.
     img.src = posterUrl;
@@ -90,7 +105,6 @@ export function useMediaAspect(
     };
   }, [posterUrl]);
 
-  if (intrinsic && intrinsic > 0) return clampAspect(intrinsic, minRatio);
-  if (posterRatio) return clampAspect(posterRatio, minRatio);
+  if (ratio) return clampAspect(ratio, minRatio);
   return DEFAULT_ASPECT;
 }

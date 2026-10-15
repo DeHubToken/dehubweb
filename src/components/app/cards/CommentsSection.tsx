@@ -617,7 +617,7 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
               indistinguishable from a user who picked the handle. */}
           {isAssistantAddress(comment.address) && (
             <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
-              {i18n.t('editor.rail.agent')}
+              {i18n.t('editor.rail.agent', 'Agent')}
             </span>
           )}
           {comment.displayName && (

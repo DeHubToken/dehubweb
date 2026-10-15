@@ -584,7 +584,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
   const touchOrigin = useRef<{ x: number; y: number } | null>(null);
 
   const dubHintText =
-    dubHint === 'unavailable' ? t('dub.unavailable') : dubHint === 'preparing' ? t('dub.preparing') : null;
+    dubHint === 'unavailable' ? t('dub.unavailable', 'Dubbed audio is not available for this video.') : dubHint === 'preparing' ? t('dub.preparing', 'Preparing dubbed audio…') : null;
 
   // Inside the control row the button is a sibling of the speed/loop/PiP/mute
   // buttons and wears exactly their chrome; standalone it keeps the older
@@ -631,6 +631,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       }}
       data-video-caption-control
       data-on-media
+      aria-busy={buttonState === 'working'}
       aria-label={enabled ? _copy("copy.ea577b10b85f", { defaultValue: "Subtitles on" }) : _copy("copy.6a5216300cb9", { defaultValue: "Subtitles off" })}
       className={cn(
         'z-20 h-8 w-8 flex items-center justify-center',
@@ -646,11 +647,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
         buttonClassName ?? (inRow ? undefined : 'absolute bottom-12 left-2'),
       )}
     >
-      {buttonState === 'working' ? (
-        <MediaControlIcon icon={Loader2} spinning plain={plainButton} />
-      ) : (
-        <MediaControlIcon captions plain={plainButton} active={plainButton && enabled} />
-      )}
+      <MediaControlIcon captions plain={plainButton} active={plainButton && enabled} />
     </button>
   );
 
@@ -704,7 +701,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
       {/* Audio: the original track, or the same lines spoken in the caption
           language by a voice on this device. */}
       <div className="mt-2 flex items-center justify-between">
-        <span className="text-[11px] text-white/60">{t('dub.audio')}</span>
+        <span className="text-[11px] text-white/60">{t('dub.audio', 'Audio')}</span>
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -717,7 +714,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
                 : 'bg-transparent text-white/60 border-white/10',
             )}
           >
-            {t('dub.original')}
+            {t('dub.original', 'Original audio')}
           </button>
           <button
             type="button"
@@ -731,7 +728,7 @@ function SubtitleMenu(props: SubtitleMenuProps) {
                 : 'bg-transparent text-white/60 border-white/10',
             )}
           >
-            {t('dub.dubbed')}
+            {t('dub.dubbed', 'Dubbed audio')}
           </button>
         </div>
       </div>

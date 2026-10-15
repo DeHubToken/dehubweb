@@ -10,6 +10,11 @@ import { useTranslation } from 'react-i18next';
 
 const actionNames: Record<string, string> = { dehub_follow: 'agents.tasks.follow', dehub_vote: 'agents.tasks.reaction', dehub_post_create: 'agents.tasks.post', dehub_comment: 'agents.tasks.comment', dehub_update_profile: 'agents.tasks.profile' };
 
+function postActionUrl(post?: { token_id?: string | number; url?: string }) {
+  const id = String(post?.token_id ?? '');
+  return /^\d+$/.test(id) ? `/app/post/${id}` : post?.url;
+}
+
 function TaskHistory({ task, wallet }: { task: AgentTask; wallet: string }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -25,7 +30,7 @@ function TaskHistory({ task, wallet }: { task: AgentTask; wallet: string }) {
       {action.result?.content && <p className="whitespace-pre-wrap">{action.result.content}</p>}
       {action.result?.error && <p>{action.result.error}</p>}
       {action.result?.hint && <p>{action.result.hint}</p>}
-      {action.result?.post?.url && <a className="underline" href={action.result.post.url} target="_blank" rel="noreferrer">{t('agents.tasks.viewPost')}</a>}
+      {postActionUrl(action.result?.post) && <a className="underline" href={postActionUrl(action.result?.post)} target="_blank" rel="noreferrer">{t('agents.tasks.viewPost')}</a>}
     </li>)}</ul>
     {history.data?.actions.length === 0 && <p className="text-white/60">{t('agents.tasks.emptyActivity')}</p>}
     {(history.data?.actions.length ?? 0) >= 100 && <p>{t('agents.tasks.latestActivity')}</p>}

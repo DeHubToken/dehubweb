@@ -21,6 +21,7 @@ import type { ContentRating } from '@/lib/api/dehub/types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { memoizeFeedRow } from '@/lib/memoize-feed-row';
+import { displayPostTitle } from '@/lib/post-caption';
 import { isAnonymousFeedResponse } from '@/lib/feed-response-auth';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -270,7 +271,7 @@ function mapVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
     isAudio: isAudioPost,
     duration: formatDuration(isAudioPost ? item.audioDuration : (item.videoDuration ?? replayDurationSec)),
     durationSeconds: (isAudioPost ? item.audioDuration : (item.videoDuration ?? replayDurationSec)) || 0,
-    title: item.name || item.description?.split('\n')[0] || '',
+    title: displayPostTitle(item.name, item.description),
     description: item.description,
     channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
     channelAvatar,
@@ -363,7 +364,7 @@ function mapImagePost(item: UnifiedFeedItem, index: number): ImagePost {
     avatar,
     image,
     imageUrls,
-    title: item.name,
+    title: displayPostTitle(item.name, cleanDescription),
     description: cleanDescription,
     ...soundtrack,
     likes: resolveLikeCount(item),

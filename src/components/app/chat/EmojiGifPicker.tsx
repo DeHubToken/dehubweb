@@ -156,7 +156,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, triggerClassName, i
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
-              {t(tab === 'emoji' ? 'emojiPicker.tabEmoji' : tab === 'sticker' ? 'creatorPacks.tabStickers' : 'emojiPicker.tabGif')}
+              {t(tab === 'emoji' ? 'emojiPicker.tabEmoji' : tab === 'sticker' ? 'creatorPacks.tabStickers' : 'emojiPicker.tabGif', tab === 'emoji' ? 'Emoji' : tab === 'sticker' ? 'Stickers' : 'GIF')}
             </button>
           ))}
         </div>
