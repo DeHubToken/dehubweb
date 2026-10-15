@@ -30,6 +30,7 @@ export { EditorPresenceRoom } from './server/editor-presence.ts';
 // esbuild can bundle it here and vite can bundle it there). SYSTEM_ROUTES below
 // is derived from it — see the comment there.
 import { ROUTE_SEGMENTS, WORKER_ASSET_ROUTES } from './src/lib/reserved-usernames.js';
+import { edgeMaintenanceResponse } from './server/edge-maintenance.mjs';
 import { CONSOLIDATED_GUIDES, MILESTONE_REDIRECTS, RETIRED_GUIDES } from './src/lib/blog-redirects.js';
 
 /**
@@ -5356,6 +5357,8 @@ function ssrCachePut(ctx, key, resp) {
 }
 
 async function handleRequest(request, env, ctx) {
+  const maintenance = await edgeMaintenanceResponse(request, env);
+  if (maintenance) return maintenance;
   if (new URL(request.url).pathname.startsWith('/api/editor/presence/')) {
     return handleEditorPresence(canonicalOriginRequest(request), env);
   }
