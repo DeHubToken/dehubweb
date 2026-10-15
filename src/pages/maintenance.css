@@ -21,14 +21,14 @@
 .maintenance-main { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 40px; padding: 64px 0; }
 .maintenance-copy { flex: 1; min-width: 0; }
 .maintenance-eyebrow { margin-bottom: 24px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: #bbb; }
-.maintenance-copy h1 { max-width: 580px; margin: 0 0 28px; font-size: clamp(48px, 7vw, 88px); font-weight: 600; letter-spacing: -.045em; line-height: 1.04; text-wrap: balance; }
+.maintenance-copy h1 { max-width: 600px; margin: 0 0 28px; font-size: clamp(40px, 6vw, 76px); font-weight: 600; letter-spacing: -.045em; line-height: 1.04; white-space: pre-line; text-wrap: balance; }
 .maintenance-description { max-width: 360px; margin-bottom: 32px; font-size: 16px; line-height: 1.75; color: #aaa; }
 .maintenance-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; }
 .maintenance-actions span { font-size: 12px; color: #bbb; }
 .maintenance-feedback { min-height: 20px; margin-top: 20px; max-width: 360px; color: #bbb; font-size: 12px; }
 .maintenance-clock { flex: none; width: 39%; max-width: 420px; height: auto; object-fit: contain; filter: drop-shadow(0 12px 40px #ffffff12); }
-.maintenance-footer { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; border-top: 1px solid #ffffff24; font-size: 11px; color: #999; }
-.maintenance-footer > :first-child { text-transform: uppercase; letter-spacing: .08em; }
+.maintenance-bottomline { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; border-top: 1px solid #ffffff24; font-size: 11px; color: #999; }
+.maintenance-bottomline > :first-child { text-transform: uppercase; letter-spacing: .08em; }
 @media (max-width: 640px) {
   .maintenance-page { padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom)); }
   .maintenance-frame { min-height: calc(100dvh - 48px); }
@@ -42,5 +42,5 @@
   .maintenance-description, .maintenance-feedback { margin-inline: auto; }
   .maintenance-eyebrow { margin-bottom: 18px; }
   .maintenance-actions { justify-content: center; gap: 18px; }
-  .maintenance-footer { font-size: 10px; }
+  .maintenance-bottomline { font-size: 10px; }
 }
