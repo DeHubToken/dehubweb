@@ -1,4 +1,5 @@
 import { LanguageRouteSync } from '@/components/LanguageRouteSync';
+import MaintenanceGate from '@/components/MaintenanceGate';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { NotificationsPromptToast } from "@/components/app/NotificationsPromptToast";
@@ -170,6 +171,7 @@ function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
 
 // Pages — lazy loaded
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
+const MaintenancePage = React.lazy(() => import('./pages/MaintenancePage'));
 const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const TelegramAuth = React.lazy(() => import("./pages/TelegramAuth"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
@@ -915,10 +917,12 @@ const App = () => (
            * from `/` to `/app` happens inside AppContent's <Routes>.
            */}
           <RouteErrorBoundary>
+          <MaintenanceGate>
           {/* Above <Routes>: /r/:code never reaches AppContent, and it is a
               new visitor's first touch. */}
           <PageViewTracker />
           <Routes>
+            <Route path="/maintenance" element={<Suspense fallback={null}><MaintenancePage /></Suspense>} />
             {/*
              * Referral lander — a new user's first touch of DeHub. Mounted
              * OUTSIDE WalletProviders (it uses no auth/wallet state) so it
@@ -987,6 +991,7 @@ const App = () => (
               }
             />
           </Routes>
+          </MaintenanceGate>
           </RouteErrorBoundary>
         </BrowserRouter>
       </QueryClientProvider>
