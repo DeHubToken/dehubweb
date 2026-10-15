@@ -27,8 +27,8 @@
 .maintenance-actions span { font-size: 12px; color: #bbb; }
 .maintenance-feedback { min-height: 20px; margin-top: 20px; max-width: 360px; color: #bbb; font-size: 12px; }
 .maintenance-clock { flex: none; width: 39%; max-width: 420px; height: auto; object-fit: contain; filter: drop-shadow(0 12px 40px #ffffff12); }
-.maintenance-footer { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; border-top: 1px solid #ffffff24; font-size: 11px; color: #999; }
-.maintenance-footer > :first-child { text-transform: uppercase; letter-spacing: .08em; }
+.maintenance-bottomline { display: flex; justify-content: space-between; gap: 24px; padding-top: 24px; border-top: 1px solid #ffffff24; font-size: 11px; color: #999; }
+.maintenance-bottomline > :first-child { text-transform: uppercase; letter-spacing: .08em; }
 @media (max-width: 640px) {
   .maintenance-page { padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom)); }
   .maintenance-frame { min-height: calc(100dvh - 48px); }
@@ -42,5 +42,5 @@
   .maintenance-description, .maintenance-feedback { margin-inline: auto; }
   .maintenance-eyebrow { margin-bottom: 18px; }
   .maintenance-actions { justify-content: center; gap: 18px; }
-  .maintenance-footer { font-size: 10px; }
+  .maintenance-bottomline { font-size: 10px; }
 }
