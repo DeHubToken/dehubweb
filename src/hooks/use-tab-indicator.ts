@@ -14,6 +14,8 @@ export function useTabIndicator<T extends string>(
   shrinkWidthByPercent: number = 0,
 ) {
   const pageActive = useContext(CachedPageActiveContext);
+  const pageActiveRef = useRef(pageActive);
+  useLayoutEffect(() => { pageActiveRef.current = pageActive; }, [pageActive]);
   const layerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const trackingRafRef = useRef<number | null>(null);
@@ -26,7 +28,7 @@ export function useTabIndicator<T extends string>(
   const update = useCallback(() => {
     // Cached routes remain mounted. Never replace the visible geometry with
     // their collapsed layout while another page is active.
-    if (!pageActive) return;
+    if (!pageActiveRef.current) return;
     const layer = layerRef.current;
     const btn = buttonRefs.current[activeTab];
     if (!layer || !btn) return;

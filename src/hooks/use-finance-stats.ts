@@ -20,7 +20,7 @@ export interface FinanceSource {
   kind: FinanceKind;
   /** `buys`, `fees` and `tax` for revenue; `compute`, `ai_tools`, `infrastructure`, `payments` for costs. */
   group: string;
-  origin: 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain';
+  origin: 'database' | 'api' | 'digitalocean' | 'stripe' | 'config' | 'chain' | 'estimate';
   /** `unavailable` means it could not be read this time — not that it was zero. */
   status: 'ok' | 'unavailable';
   note: string;
@@ -77,7 +77,7 @@ export interface TaxSplit {
 }
 
 async function fetchFinanceStats(): Promise<FinanceStats> {
-  const res = await fetch(FINANCE_STATS_ENDPOINT, { headers: { Accept: 'application/json' } });
+  const res = await fetch(FINANCE_STATS_ENDPOINT, { headers: { Accept: 'application/json' }, cache: 'no-store' });
   if (!res.ok) throw new Error(`finance stats endpoint returned ${res.status}`);
 
   const body = (await res.json()) as FinanceStats;
@@ -149,7 +149,7 @@ export function financeLedgerEndpoint(view: LedgerView): string {
 export const FINANCE_LEDGER_ENDPOINT = financeLedgerEndpoint('ledger');
 
 async function fetchFinanceLedger(view: LedgerView): Promise<FinanceLedger> {
-  const res = await fetch(financeLedgerEndpoint(view), { headers: { Accept: 'application/json' } });
+  const res = await fetch(financeLedgerEndpoint(view), { headers: { Accept: 'application/json' }, cache: 'no-store' });
   if (!res.ok) throw new Error(`finance ledger endpoint returned ${res.status}`);
   const body = (await res.json()) as FinanceLedger;
   if (!body || body.ok !== true || !Array.isArray(body.items)) {
