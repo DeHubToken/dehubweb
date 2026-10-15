@@ -23,7 +23,6 @@ export function MaintenanceScreen({ checking = false, failed = false, onRetry }:
           <p className="maintenance-description">{t('maintenance.description')}</p>
           <div className="maintenance-actions">
             <Button size="lg" loading={checking} onClick={onRetry}>{t('maintenance.retry')}</Button>
-            <span>{t('maintenance.community')}</span>
           </div>
           <p className="maintenance-feedback" role="status">{failed ? t('maintenance.checkFailed') : ''}</p>
         </div>
