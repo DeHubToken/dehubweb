@@ -163,7 +163,7 @@ export function clipBoxForSize(
   if (clip.kind === "text") {
     const l = layoutText(ctx, clip, W, H);
     const w = (l.curve ? l.curve.width : l.maxW) + l.pad * 2;
-    const h = (l.curve ? l.curve.height : l.lines.length * l.lh) + l.pad * 2;
+    const h = (l.curve ? l.curve.height : l.height) + l.pad * 2;
     const ax = clip.x * W;
     const cx = clip.align === "centre" ? ax : clip.align === "left" ? ax + (l.curve ? l.curve.width : l.maxW) / 2 : ax - (l.curve ? l.curve.width : l.maxW) / 2;
     return { cx, cy: clip.y * H, w, h, rotation: tr.rotation };
@@ -587,7 +587,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
   ctx.textAlign = text.align === "centre" ? "center" : text.align;
   // Local frame: origin is the box centre.
   const ax = text.align === "centre" ? 0 : text.align === "left" ? -l.maxW / 2 : l.maxW / 2;
-  const startY = -((l.lines.length - 1) * l.lh) / 2;
+  const startY = -(l.height - l.lh) / 2;
   const lines = progress === undefined ? l.lines : textRevealLines(l.lines, progress);
   const leftFor = (i: number) => text.align === "centre" ? ax - l.widths[i] / 2 : text.align === "left" ? ax + (l.offsets?.[i] ?? 0) : ax + (l.offsets?.[i] ?? 0) - l.widths[i];
   const drawX = (i: number) => progress === undefined ? ax + (l.offsets?.[i] ?? 0) : rtl ? leftFor(i) + l.widths[i] : leftFor(i);
@@ -602,7 +602,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     if (text.background.perLine && !l.curve) {
       const padding = Math.max(0, text.background.padding / 1080 * H * l.scale);
       ctx.beginPath();
-      l.lines.forEach((line, index) => { if (line.trim()) roundRectPath(ctx, leftFor(index) - padding, startY + index * l.lh - l.size / 2 - padding, l.widths[index] + padding * 2, l.size + padding * 2, radius * l.scale, true); });
+      l.lines.forEach((line, index) => { if (line.trim()) roundRectPath(ctx, leftFor(index) - padding, startY + l.lineY[index] - l.size / 2 - padding, l.widths[index] + padding * 2, l.size + padding * 2, radius * l.scale, true); });
     } else roundRectPath(ctx, -box.w / 2, -box.h / 2, box.w, box.h, radius);
     ctx.fill();
     clearShadow(ctx);
@@ -651,7 +651,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     clearShadow(ctx);
     return;
   }
-  lines.forEach((line, index) => drawEcho(line, drawX(index), startY + index * l.lh));
+  lines.forEach((line, index) => drawEcho(line, drawX(index), startY + l.lineY[index]));
   const textStroke: TextStroke | null = text.stroke ?? (text.hollow ? { color: text.color, width: 3 } : null);
   if (textStroke && textStroke.width > 0) {
     ctx.setLineDash((Array.isArray(textStroke.dash) ? textStroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
@@ -660,20 +660,20 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     ctx.strokeStyle = textStroke.color;
     ctx.lineJoin = "round";
     ctx.globalAlpha = textAlpha * paintOpacity(textStroke.opacity);
-    lines.forEach((ln, i) => ctx.strokeText(ln, drawX(i), startY + i * l.lh));
+    lines.forEach((ln, i) => ctx.strokeText(ln, drawX(i), startY + l.lineY[i]));
     ctx.globalAlpha = textAlpha;
     clearShadow(ctx);
   }
 
   ctx.fillStyle = createGradientFill(ctx, box.w, box.h, text.gradient) ?? text.color;
   ctx.globalAlpha = textAlpha * fillAlpha;
-  if (!text.hollow) lines.forEach((ln, i) => ctx.fillText(ln, drawX(i), startY + i * l.lh));
+  if (!text.hollow) lines.forEach((ln, i) => ctx.fillText(ln, drawX(i), startY + l.lineY[i]));
   clearShadow(ctx);
 
   if (text.strikethrough) {
     l.lines.forEach((_, i) => {
       const width = progress === undefined ? l.widths[i] : ctx.measureText(lines[i]).width, left = rtl && progress !== undefined ? leftFor(i) + l.widths[i] - width : leftFor(i);
-      ctx.fillRect(left, startY + i * l.lh, width, Math.max(1, l.size * 0.055));
+      ctx.fillRect(left, startY + l.lineY[i], width, Math.max(1, l.size * 0.055));
     });
   }
   if (text.underline) {
@@ -681,7 +681,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     l.lines.forEach((_, i) => {
       const w = progress === undefined ? l.widths[i] : ctx.measureText(lines[i]).width;
       const left = rtl && progress !== undefined ? leftFor(i) + l.widths[i] - w : leftFor(i);
-      ctx.fillRect(left, startY + i * l.lh + l.size * 0.45, w, thick);
+      ctx.fillRect(left, startY + l.lineY[i] + l.size * 0.45, w, thick);
     });
   }
   ctx.globalAlpha = textAlpha;
