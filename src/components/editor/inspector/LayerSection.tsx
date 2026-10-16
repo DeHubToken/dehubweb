@@ -1,3 +1,4 @@
+import { MEDIA_FRAMES, MEDIA_FRAME_NAMES } from "@/lib/editor/mediaFrames";
 import { CropPresets } from "../CropPresets";
 /**
  * Layer controls for the inspector: placement, crop, corners, shadow and text
@@ -247,7 +248,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           <label className="block space-y-1 text-xs text-white/65">
             <span>{t("editor.frames.title", { defaultValue: "Photo frame" })}</span>
             <select disabled={!!clip.locked} value={mediaClip.frame ?? "rect"} onChange={e => patchClip(clip.id, { frame: e.target.value as MediaClip["frame"] })} className="h-9 w-full rounded-lg border border-white/15 bg-neutral-900 px-2 text-white disabled:opacity-35">
-              {(["rect", "ellipse", "triangle", "star", "heart", "hexagon"] as const).map(frame => <option key={frame} value={frame}>{t(`editor.frames.${frame}`, { defaultValue: ({ rect: "Rectangle", ellipse: "Oval", triangle: "Triangle", star: "Star", heart: "Heart", hexagon: "Hexagon" })[frame] })}</option>)}
+              {MEDIA_FRAMES.map(frame => <option key={frame} value={frame}>{t(`editor.frames.${frame}`, { defaultValue: MEDIA_FRAME_NAMES[frame] })}</option>)}
             </select>
           </label>
           <label className="flex min-h-9 items-center gap-2 text-xs text-white/70"><input type="checkbox" checked={!!mediaClip.border} onChange={e => patchClip(clip.id, { border: e.target.checked ? { color: "#ffffff", width: 6 } : null })} />{t("editor.outline.border", { defaultValue: "Photo border" })}</label>
