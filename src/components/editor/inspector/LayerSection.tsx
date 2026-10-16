@@ -1,3 +1,4 @@
+import { FreehandShapeControls } from "../FreehandShapeControls";
 import { FreehandPointControls } from "../FreehandPointControls";
 import { TextListControls } from "../TextListControls";
 import { ShapeStrokeEdges } from "../ShapeStrokeEdges";
@@ -220,6 +221,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           <ShapeStrokeEdges value={shape} onChange={patch => patchClip(clip.id, patch)} />
           {shape.stroke && <StrokePattern stroke={shape.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
           {shape.shape === "path" && shape.points && <FreehandPointControls key={shape.id} points={shape.points} closed={!!shape.closedPath} disabled={!!shape.locked} onChange={points => { if (!shape.locked) patchClip(shape.id, { points }); }} />}
+          {shape.shape === "path" && <FreehandShapeControls key={shape.id} value={shape} onChange={patch => { if (!shape.locked) patchClip(shape.id, patch); }} />}
           {shape.shape === "path" && <PenControls refineOnly value={{ color: shape.stroke?.color ?? "#ffffff", width: shape.stroke?.width ?? 8, smoothing: shape.pathSmoothing, cap: shape.strokeCap, join: shape.strokeJoin, closed: shape.closedPath, dash: shape.stroke?.dash }} onChange={value => { if (!clip.locked) patchClip(clip.id, penShapeStyle(value, shape.stroke?.opacity, shape.stroke?.dashOffset)); }} />}
           {shape.shape === "rect" && live(t("editor.layer.cornerRounding", { value: Math.round(shape.radius ?? 0) }), shape.radius ?? 0, 0, 540, 1,
             (v) => patchClipLive(clip.id, { radius: v }))}
