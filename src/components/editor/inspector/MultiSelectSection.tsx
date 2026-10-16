@@ -1,3 +1,4 @@
+import { SelectionTransformControls } from "../SelectionTransformControls";
 import { layoutDesign, type LayoutAction } from "@/lib/editor/designLayout";
 /**
  * Inspector for several layers at once: align them to each other, spread
@@ -87,26 +88,6 @@ export function MultiSelectSection() {
     </button>
   );
 
-  const transformTogether = (scale: number, degrees: number) => {
-    const items = measure();
-    if (items.length < 2) return;
-    const s = useEditorStore.getState(), W = s.settings.width, H = s.settings.height;
-    const cx = (Math.min(...items.map(i => i.box.cx - i.hw)) + Math.max(...items.map(i => i.box.cx + i.hw))) / 2;
-    const cy = (Math.min(...items.map(i => i.box.cy - i.hh)) + Math.max(...items.map(i => i.box.cy + i.hh))) / 2;
-    const radians = degrees * Math.PI / 180, cos = Math.cos(radians), sin = Math.sin(radians);
-    void s.runAsOneStep(() => {
-      for (const { clip } of items) {
-        const tr = getTransform(resolveClipAt(clip, s.currentTime));
-        const x = (tr.x * W - cx) * scale, y = (tr.y * H - cy) * scale;
-        const place = { x: (cx + x * cos - y * sin) / W, y: (cy + x * sin + y * cos) / H,
-          ...(degrees ? { rotation: tr.rotation + degrees } : {}),
-          ...(clip.kind !== "text" && scale !== 1 ? { scale: Math.max(0.05, Math.min(20, tr.scale * scale)) } : {}) };
-        s.patchClip(clip.id, { ...placementPatchAt(clip, place, s.currentTime, recordOpts()),
-          ...(clip.kind === "text" && scale !== 1 ? { fontSize: Math.max(6, Math.min(1000, clip.fontSize * scale)) } : {}) });
-      }
-    });
-  };
-
   return (
     <div className="space-y-3">
       <p className="text-xs text-white/70">{t("editor.multi.selected", { count: selectedClipIds.length })}</p>
@@ -114,12 +95,7 @@ export function MultiSelectSection() {
         <button type="button" onClick={() => useEditorStore.getState().groupSelected()} disabled={layers.length < 2 || clips.some(c => selectedClipIds.includes(c.id) && c.locked)} className="min-h-9 rounded-lg border border-white/20 text-xs text-white/80 hover:bg-white/10 disabled:opacity-35">{t("editor.groups.group", { defaultValue: "Group" })}</button>
         <button type="button" onClick={() => useEditorStore.getState().ungroupSelected()} disabled={!clips.some(c => selectedClipIds.includes(c.id) && c.groupId)} className="min-h-9 rounded-lg border border-white/20 text-xs text-white/80 hover:bg-white/10 disabled:opacity-35">{t("editor.groups.ungroup", { defaultValue: "Ungroup" })}</button>
       </div>
-      <div className="grid grid-cols-2 gap-2">
-        <button type="button" onClick={() => transformTogether(0.9, 0)} className="min-h-9 rounded-lg border border-white/15 text-xs text-white/75 hover:bg-white/10">{t("editor.groups.smaller", { defaultValue: "Scale down 10%" })}</button>
-        <button type="button" onClick={() => transformTogether(1.1, 0)} className="min-h-9 rounded-lg border border-white/15 text-xs text-white/75 hover:bg-white/10">{t("editor.groups.larger", { defaultValue: "Scale up 10%" })}</button>
-        <button type="button" onClick={() => transformTogether(1, -15)} className="min-h-9 rounded-lg border border-white/15 text-xs text-white/75 hover:bg-white/10">{t("editor.groups.rotateLeft", { defaultValue: "Rotate −15°" })}</button>
-        <button type="button" onClick={() => transformTogether(1, 15)} className="min-h-9 rounded-lg border border-white/15 text-xs text-white/75 hover:bg-white/10">{t("editor.groups.rotateRight", { defaultValue: "Rotate +15°" })}</button>
-      </div>
+      <SelectionTransformControls />
       <p className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.multi.alignTogether")}</p>
       <div className="grid grid-cols-6 gap-1">
         {btn(t("editor.layer.alignLeft"), <AlignStartVertical className="h-3.5 w-3.5" />, () => align("x", "start"), layers.length < 2)}
