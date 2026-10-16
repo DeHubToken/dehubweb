@@ -1,3 +1,6 @@
+import { freehandSvg, type PenSettings } from "@/lib/editor/freehand";
+import { insertFreehandStroke } from "@/lib/editor/freehandProject";
+import { nanoid } from "nanoid";
 import { FIT_VIEWPORT, zoomDesignViewport, type DesignViewport } from "@/lib/editor/designViewport";
 import { PresentationView } from "./PresentationView";
 import { panMediaCrop, zoomMediaCrop } from "@/lib/editor/mediaCrop";
@@ -781,8 +784,9 @@ export function Compositor() {
   }, [onGestureEnd, draftFocus.begin]);
 
 
-  const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: { color: string; width: number }) => {
+  const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: PenSettings) => {
     strokeCleanup.current?.();
+    const strokeTime = useEditorStore.getState().currentTime; useEditorStore.getState().setIsPlaying(false);
     const lease = useEditorStore.getState().holdEdits();
     const pts: [number, number][] = [];
     const push = (clientX: number, clientY: number) => {
@@ -811,24 +815,8 @@ export function Compositor() {
       try {
       if (!pts.length) return;
       const s = useEditorStore.getState();
-      const W = s.settings.width;
-      const H = s.settings.height;
-      const xs = pts.map((p) => p[0]);
-      const ys = pts.map((p) => p[1]);
-      const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
-      // Give a straight or tiny stroke a real box so its points stay finite.
-      const w = Math.max(maxX - minX, 4);
-      const h = Math.max(maxY - minY, 4);
-      const cx = (minX + maxX) / 2;
-      const cy = (minY + maxY) / 2;
-      s.addShapeClip("path", {
-        fill: null,
-        stroke: { color: pen.color, width: pen.width },
-        w: w / W,
-        h: h / H,
-        points: pts.map(([x, y]) => [(x - cx) / w, (y - cy) / h] as [number, number]),
-        transform: { x: cx / W, y: cy / H, scale: 1, rotation: 0 },
-      });
+      const before = s.toSnapshot(), result = insertFreehandStroke(before, strokeTime, pts, pen, () => nanoid(10));
+      if (result) s.applyDesignEdit(before, result.project);
       // Keep drawing: no selection box getting in the way of the next stroke.
       useEditorStore.getState().selectClip(null);
       } finally { lease.release(); }
@@ -1141,13 +1129,15 @@ export function Compositor() {
 
           {stroke && draw && (
             <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
-              <polyline
-                points={stroke.map(([x, y]) => `${x * scale},${y * scale}`).join(" ")}
+              <path
+                d={freehandSvg(stroke, scale, scale, draw.smoothing ?? 1, !!draw.closed)}
+                opacity={draw.opacity ?? 1}
+                strokeDasharray={draw.dash?.map(value => value * settings.height / 1080 * scale).join(" ")}
                 fill="none"
                 stroke={draw.color}
-                strokeWidth={Math.max(1, (draw.width / 1080) * settings.height * scale)}
-                strokeLinecap="round"
-                strokeLinejoin="round"
+                strokeWidth={Math.max(0.1, (draw.width / 1080) * settings.height * scale)}
+                strokeLinecap={stroke.length === 1 ? "round" : draw.cap ?? "round"}
+                strokeLinejoin={draw.join ?? "round"}
               />
             </svg>
           )}

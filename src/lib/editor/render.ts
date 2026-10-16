@@ -1,3 +1,4 @@
+import { freehandPath } from "./freehand";
 import { vectorSymbolPath } from "./vectorSymbols";
 import { drawConnector } from "./connectors";
 import { applyPhotoTone, needsPhotoTone } from "./photoTone";
@@ -544,8 +545,9 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     ctx.setLineDash((stroke.dash || []).filter(Number.isFinite).slice(0, 8).map(value => Math.max(0, value) * k));
     applyShadow(ctx, clip, H); drawConnector(ctx, box.w, box.h, clip.connector); clearShadow(ctx); return;
   }
-  const open = clip.shape === "line" || clip.shape === "arrow" || clip.shape === "path";
+  const open = clip.shape === "line" || clip.shape === "arrow" || (clip.shape === "path" && !clip.closedPath);
   if (clip.symbol) vectorSymbolPath(ctx, box.w, box.h, clip.symbol);
+  else if (clip.shape === "path") freehandPath(ctx, box.w, box.h, clip.points ?? [], clip.pathSmoothing ?? 1, !!clip.closedPath);
   else shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points);
   applyShadow(ctx, clip, H);
   const gradient = createGradientFill(ctx, box.w, box.h, clip.gradient);
@@ -559,8 +561,8 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     ctx.setLineDash((Array.isArray(stroke.dash) ? stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * k));
     ctx.lineWidth = stroke.width * k;
     ctx.strokeStyle = (open || clip.symbol) && gradient ? gradient : stroke.color;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
+    ctx.lineJoin = clip.strokeJoin ?? "round";
+    ctx.lineCap = clip.shape === "path" && clip.points?.length === 1 ? "round" : clip.strokeCap ?? "round";
     ctx.stroke();
   }
   clearShadow(ctx);

@@ -1,3 +1,5 @@
+import { PenControls } from "../PenControls";
+import { penShapeStyle } from "@/lib/editor/freehand";
 import { MEDIA_FRAMES, MEDIA_FRAME_NAMES } from "@/lib/editor/mediaFrames";
 import { CropPresets } from "../CropPresets";
 /**
@@ -177,7 +179,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           {live(t("editor.layer.size", { value: Math.round(tr.scale * 100) }), tr.scale, 0.05, 6, 0.01,
             (v) => patchClipLive(clip.id, placementPatchAt(clip, { scale: v }, now, { record: recording })))}
           <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.style")}</p>
-          {shape.shape !== "line" && shape.shape !== "arrow" && shape.shape !== "path" && (
+          {shape.shape !== "line" && shape.shape !== "arrow" && (shape.shape !== "path" || shape.closedPath) && (
             <div className="grid grid-cols-[1fr_auto] items-end gap-2">
               <div className="space-y-1">
                 <Label className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.fill")}</Label>
@@ -208,6 +210,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           {shape.stroke && live(t("editor.shape.outlineWidth", { value: Math.round(shape.stroke.width) }), shape.stroke.width, 1, 60, 1,
             (v) => patchClipLive(clip.id, { stroke: { ...shape.stroke!, width: v } }))}
           {shape.stroke && <StrokePattern stroke={shape.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
+          {shape.shape === "path" && <PenControls refineOnly value={{ color: shape.stroke?.color ?? "#ffffff", width: shape.stroke?.width ?? 8, smoothing: shape.pathSmoothing, cap: shape.strokeCap, join: shape.strokeJoin, closed: shape.closedPath, dash: shape.stroke?.dash }} onChange={value => { if (!clip.locked) patchClip(clip.id, penShapeStyle(value)); }} />}
           {shape.shape === "rect" && live(t("editor.layer.cornerRounding", { value: Math.round(shape.radius ?? 0) }), shape.radius ?? 0, 0, 540, 1,
             (v) => patchClipLive(clip.id, { radius: v }))}
         </>
