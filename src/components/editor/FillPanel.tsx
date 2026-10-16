@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
 import { GRADIENT_PRESETS, gradientFromColours, type GradientFill } from "@/lib/editor/gradientFill";
-import { fillDesignLayers, putGradientBackground } from "@/lib/editor/fillProject";
+import { fillDesignLayers, putGradientBackground, putSolidBackground, solidDesignLayers, removePageBackground } from "@/lib/editor/fillProject";
 
 export function FillPanel() {
   const { t } = useTranslation();
@@ -15,13 +15,19 @@ export function FillPanel() {
   const [angle, setAngle] = useState(45);
   const [first, setFirst] = useState("#2563eb"), [last, setLast] = useState("#22d3ee");
   useEffect(() => {
-    if (!gradient?.stops?.length) return;
+    if (!gradient?.stops?.length) { if (selected?.kind === "text") setFirst(selected.color); else if (selected?.kind === "shape" && selected.fill) setFirst(selected.fill); return; }
     setType(gradient.type); setAngle(gradient.angle); setFirst(gradient.stops[0].colour); setLast(gradient.stops[gradient.stops.length - 1].colour);
   }, [selected?.id, gradient]);
   const apply = (value: GradientFill | null, background = false) => {
     const store = useEditorStore.getState(), before = store.toSnapshot();
     const result = background && value ? putGradientBackground(before, store.currentTime, value, () => nanoid(10)) : null;
     const next = background ? result?.project : fillDesignLayers(before, store.selectedClipIds, value);
+    if (next && next !== before && store.applyDesignEdit(before, next) && result) store.selectClip(result.id);
+  };
+  const applySolid = (background = false) => {
+    const store = useEditorStore.getState(), before = store.toSnapshot();
+    const result = background ? putSolidBackground(before, store.currentTime, first, () => nanoid(10)) : null;
+    const next = background ? result?.project : solidDesignLayers(before, store.selectedClipIds, first);
     if (next && next !== before && store.applyDesignEdit(before, next) && result) store.selectClip(result.id);
   };
   const canFill = clips.some(c => ids.includes(c.id) && !c.locked && (c.kind === "text" || (c.kind === "shape" && !c.chart && !c.table && !c.qr)));
@@ -37,6 +43,9 @@ export function FillPanel() {
       <label>{t("editor.fills.angle", { defaultValue: "Angle" })}<input type="number" min={0} max={360} value={angle} onChange={e => setAngle(Math.max(0, Math.min(360, Number(e.target.value) || 0)))} className="ml-2 min-h-9 w-20 rounded-lg border border-white/20 bg-white/5 px-2" /></label>
       <button type="button" disabled={!canFill} onClick={() => apply(gradientFromColours([first, last], type, angle))} className="min-h-9 rounded-lg bg-white px-3 font-medium text-black disabled:opacity-35">{t("editor.fills.apply", { defaultValue: "Apply fill" })}</button>
       <button type="button" onClick={() => apply(gradientFromColours([first, last], type, angle), true)} className="min-h-9 rounded-lg border border-white/20 px-3">{t("editor.fills.background", { defaultValue: "Use as page background" })}</button>
+      <button type="button" disabled={!canFill} onClick={() => applySolid()} className="min-h-9 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.fills.applySolid", { defaultValue: "Apply first colour as solid" })}</button>
+      <button type="button" onClick={() => applySolid(true)} className="min-h-9 rounded-lg border border-white/20 px-3">{t("editor.fills.solidBackground", { defaultValue: "Use first colour as page background" })}</button>
+      <button type="button" onClick={() => { const store = useEditorStore.getState(), before = store.toSnapshot(); store.applyDesignEdit(before, removePageBackground(before, store.currentTime)); }} className="min-h-9 rounded-lg border border-white/20 px-3">{t("editor.fills.resetBackground", { defaultValue: "Reset page background" })}</button>
       <button type="button" disabled={!canFill} onClick={() => apply(null)} className="min-h-9 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.fills.solid", { defaultValue: "Restore solid fill" })}</button>
     </div>
   </div>;
