@@ -1,3 +1,4 @@
+import { designPrintDpi } from "@/lib/editor/documentDimensions";
 import { registerDesignPagePreview } from "@/lib/editor/designPagePreviews";
 import { freehandSvg, type PenSettings } from "@/lib/editor/freehand";
 import { insertFreehandStroke } from "@/lib/editor/freehandProject";
@@ -1206,7 +1207,7 @@ export function Compositor() {
 
           {croppingId && selBox && <div aria-hidden className="pointer-events-none absolute border-2 border-cyan-300" style={{ left: (selBox.cx - selBox.w / 2) * scale, top: (selBox.cy - selBox.h / 2) * scale, width: selBox.w * scale, height: selBox.h * scale, transform: `rotate(${selBox.rotation}deg)` }}>{[1 / 3, 2 / 3].map(n => <div key={n}><div className="absolute bottom-0 top-0 w-px bg-white/50" style={{ left: `${n * 100}%` }} /><div className="absolute left-0 right-0 h-px bg-white/50" style={{ top: `${n * 100}%` }} /></div>)}</div>}
           {/* Snapping guides */}
-          {(layoutGuides.rulers || editingGuides) && <DesignRulers width={settings.width} height={settings.height} scale={scale} />}
+          {(layoutGuides.rulers || editingGuides) && <DesignRulers width={settings.width} height={settings.height} scale={scale} unit={layoutGuides.unit} dpi={designPrintDpi(settings)} />}
           {layoutGuides.visible && !editingGuides && layoutGuides.vertical.map(x => <div key={`layout-v${x}`} aria-hidden className="pointer-events-none absolute bottom-0 top-0 w-px bg-cyan-400/65" style={{ left: x * settings.width * scale }} />)}
           {layoutGuides.visible && !editingGuides && layoutGuides.horizontal.map(y => <div key={`layout-h${y}`} aria-hidden className="pointer-events-none absolute left-0 right-0 h-px bg-cyan-400/65" style={{ top: y * settings.height * scale }} />)}
           {layoutGuides.visible && layoutGuides.margin > 0 && <div aria-hidden className="pointer-events-none absolute border border-dashed border-cyan-300/60" style={{ inset: layoutGuides.margin * Math.min(settings.width, settings.height) * scale }} />}
