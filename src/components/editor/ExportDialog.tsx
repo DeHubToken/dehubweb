@@ -1,3 +1,4 @@
+import { presentationNotesText } from "@/lib/editor/presentationNotesText";
 import { SectionExportPicker } from "./SectionExportPicker";
 import { designPageSections } from "@/lib/editor/pageDetails";
 import { pageFilenamePatternError } from "@/lib/editor/pageFilenamePattern";
@@ -43,7 +44,7 @@ interface Props {
   onOpenChange: (v: boolean) => void;
 }
 
-type Format = ExportFormat | StillFormat | "pdf" | "pptx";
+type Format = ExportFormat | StillFormat | "pdf" | "pptx" | "notes";
 
 const QUALITY_PRESETS = {
   low: 2_500_000,
@@ -53,7 +54,7 @@ const QUALITY_PRESETS = {
 } as const;
 type Quality = keyof typeof QUALITY_PRESETS;
 
-const isStill = (f: Format): boolean => f === "png" || f === "jpg" || f === "pdf" || f === "pptx";
+const isStill = (f: Format): boolean => f === "png" || f === "jpg" || f === "pdf" || f === "pptx" || f === "notes";
 
 export function ExportDialog({ open, onOpenChange }: Props) {
   const { t: _copy } = _useCopy();
@@ -148,6 +149,11 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     const check = () => { if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError"); };
     try {
       const snapshot = toSnapshot();
+      if (format === "notes") {
+        const content = presentationNotesText(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection));
+        download(new Blob(["\uFEFF", content], { type: "text/plain;charset=utf-8" }), exportFilename(snapshot.title, "txt", "-notes", "design"));
+        setProgress(100); onOpenChange(false); return;
+      }
       const imageFormat = format === "pdf" || format === "pptx" ? "jpg" : format as StillFormat;
       const frames = pageExportFrames(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection), imageFormat, format === "png" || format === "jpg" ? filenamePattern : "");
       if (format === "pptx") {
@@ -277,7 +283,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         <DialogHeader>
           <DialogTitle>{t("editor.export.title")}</DialogTitle>
           <DialogDescription className="text-white/60">
-            {gif ? t("editor.export.gifHint") : still ? t("editor.export.stillDescription") : t("editor.export.videoDescription")}
+            {format === "notes" ? t("editor.export.notesTextHint", { defaultValue: "Downloads section headings, original page numbers, page names, and presenter notes as a text file." }) : gif ? t("editor.export.gifHint") : still ? t("editor.export.stillDescription") : t("editor.export.videoDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -296,7 +302,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   <SelectItem value="png">{t("editor.export.png")}</SelectItem>
                   <SelectItem value="jpg">{t("editor.export.jpg")}</SelectItem>
                   <SelectItem value="pdf">{t("editor.export.pdf", { defaultValue: "PDF document" })}</SelectItem>
-                  <SelectItem value="pptx">{t("editor.export.pptx", { defaultValue: "PowerPoint presentation" })}</SelectItem>
+                  <SelectItem value="notes">{t("editor.export.notesText", { defaultValue: "Presenter notes (.txt)" })}</SelectItem>
+                    <SelectItem value="pptx">{t("editor.export.pptx", { defaultValue: "PowerPoint presentation" })}</SelectItem>
                   <SelectItem value="mp4">{t("editor.export.mp4")}</SelectItem>
                   <SelectItem value="webm">{t("editor.export.webm")}</SelectItem>
                   <SelectItem value="gif">{t("emojiPicker.tabGif")}</SelectItem>
@@ -315,7 +322,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </Select>
               </Row>
             )}
-            <Row label={t("editor.export.resolution")}>
+            {format !== "notes" && <Row label={t("editor.export.resolution")}>
               <Select value={scaleKey} onValueChange={setScaleKey}>
                 <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
                 <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
@@ -329,19 +336,20 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   })}
                 </SelectContent>
               </Select>
-            </Row>
+            </Row>}
             {format === "pdf" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={cropMarks} onChange={event => setCropMarks(event.target.checked)} />{t("editor.export.cropMarks", { defaultValue: "Crop marks and print margins" })}</label>}
             {format === "pdf" && multiPage && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={bookmarks} onChange={event => setBookmarks(event.target.checked)} />{t("editor.export.pageBookmarks", { defaultValue: "Page-name bookmarks" })}</label>}
             {format === "pdf" && cropMarks && <p className="text-xs text-white/45">{t("editor.export.cropMarkHint", { defaultValue: "Adds cutting marks outside the artwork. The saved print resolution sets the finished page size." })}</p>}
             {(format === "png" || format === "jpg") && <div className="space-y-2"><label className="text-xs text-white/65">{t("editor.export.filenamePattern", { defaultValue: "Page filename pattern" })}<Input value={filenamePattern} maxLength={160} onChange={event => setFilenamePattern(event.target.value)} placeholder="{title}-{page:2}-{name}" className="mt-2 h-9 border-white/10 bg-white/5 text-white" /></label><div className="flex flex-wrap gap-2">{[["", "Default"], ["{title}-{page:2}", "Title and number"], ["{page:2}-{name}", "Page names"]].map(([pattern, label]) => <button type="button" key={label} onClick={() => setFilenamePattern(pattern)} className="min-h-8 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t(`editor.export.filenamePreset.${label}`, { defaultValue: label })}</button>)}</div><p className="text-[10px] text-white/45">{t("editor.export.filenameHint", { defaultValue: "Leave blank for default names. Use {title}, {name}, {section}, {page}, or {page:3}. Add a prefix as plain text. Duplicate names receive a page-number suffix." })}</p>{filenameError && <p role="alert" className="text-xs text-red-300">{filenameError}</p>}</div>}
             {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
+            {format === "notes" && <p className="text-xs text-white/55">{t("editor.export.notesTextHint", { defaultValue: "Downloads section headings, original page numbers, page names, and presenter notes as a text file." })}</p>}
             {format === "pptx" && <p className="text-xs text-white/55">{t("editor.export.pptxHint", { defaultValue: "Each page becomes one slide image, with presenter notes and links. Edit individual text and elements in the original design." })}</p>}
             {still && multiPage && (
               <Row label={t("editor.pages.label")}>
                 <Select value={pageScope} onValueChange={v => setPageScope(v as typeof pageScope)}>
                   <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
                   <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
-                    <SelectItem value="all">{format === "pptx" ? t("editor.pages.allPptx", { defaultValue: "All {{count}} pages in one presentation", count: pages.length }) : format === "pdf" ? t("editor.pages.allPdf", { defaultValue: "All {{count}} pages in one PDF", count: pages.length }) : t("editor.pages.allZip", { count: pages.length })}</SelectItem>
+                    <SelectItem value="all">{format === "pptx" ? t("editor.pages.allPptx", { defaultValue: "All {{count}} pages in one presentation", count: pages.length }) : format === "notes" ? t("editor.pages.allNotes", { defaultValue: "All {{count}} pages in one notes file", count: pages.length }) : format === "pdf" ? t("editor.pages.allPdf", { defaultValue: "All {{count}} pages in one PDF", count: pages.length }) : t("editor.pages.allZip", { count: pages.length })}</SelectItem>
                     <SelectItem value="current">{t("editor.pages.thisPage")}</SelectItem>
                     {!!sections.length && <SelectItem value="section">{t("editor.export.section", { defaultValue: "Named section" })}</SelectItem>}
                     <SelectItem value="custom">{t("editor.pages.choosePages", { defaultValue: "Choose pages" })}</SelectItem>
@@ -366,7 +374,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             )}
 
             <div className="rounded-md border border-white/10 bg-white/5 p-2.5 text-xs text-white/70">
-              {still ? (
+              {format === "notes" ? <div>{t("editor.export.notesText", { defaultValue: "Presenter notes (.txt)" })}</div> : still ? (
                 <div>{t("editor.export.frameAt", { time: Math.min(currentTime, duration).toFixed(2) })}</div>
               ) : (
                 <>
@@ -376,11 +384,11 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   </> : <div>{t("editor.export.rangeHint")}</div>}
                 </>
               )}
-              <div>
+              {format !== "notes" && <div>
                 {still
                   ? t("editor.export.outputStill", { width: outW, height: outH })
                   : t("editor.export.outputVideo", { width: outW, height: outH, fps: gif ? gifOutput.fps : settings.fps })}
-              </div>
+              </div>}
               {gifTooLong && <div>{t("editor.export.gifTooLong")}</div>}
             </div>
           </div>
