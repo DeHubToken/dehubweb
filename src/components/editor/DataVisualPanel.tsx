@@ -52,7 +52,7 @@ export function DataVisualPanel() {
     setMode(next);
     if (next === "chart") {
       const value = chart ?? DEFAULT_CHART;
-      setChartAppearance({ valueFormat: value.valueFormat, donutHole: value.donutHole }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setShowLegend(value.showLegend !== false);
+      setChartAppearance({ valueFormat: value.valueFormat, donutHole: value.donutHole, lineWidth: value.lineWidth, pointSize: value.pointSize, areaOpacity: value.areaOpacity, barGap: value.barGap, showGrid: value.showGrid }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setShowLegend(value.showLegend !== false);
       setForeground(value.textColour); setAccent(value.colours[0] ?? "#38bdf8"); setShowLabels(value.showLabels); setShowValues(value.showValues);
     } else {
       const value = table ?? DEFAULT_TABLE;
@@ -67,7 +67,7 @@ export function DataVisualPanel() {
       setTableFormat({ ...next }); setData(formatDelimitedData(next.rows, "\t")); setForeground(next.textColour); setAccent(next.headerColour); setShowLabels(next.header);
     } else {
       const next = chart ?? DEFAULT_CHART;
-      setChartAppearance({ valueFormat: next.valueFormat, donutHole: next.donutHole });
+      setChartAppearance({ valueFormat: next.valueFormat, donutHole: next.donutHole, lineWidth: next.lineWidth, pointSize: next.pointSize, areaOpacity: next.areaOpacity, barGap: next.barGap, showGrid: next.showGrid });
       setData(chartDataSource(next)); setMultiple(!!next.series?.length); setStacked(!!next.stacked); setShowLegend(next.showLegend !== false); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
       setShowLabels(next.showLabels); setShowValues(next.showValues); setKind(next.kind);
     }
@@ -126,7 +126,7 @@ export function DataVisualPanel() {
     <label className="inline-flex min-h-9 cursor-pointer items-center rounded-lg border border-white/20 px-3 text-xs hover:bg-white/10">{t("editor.dataVisual.import", { defaultValue: "Import CSV or TSV" })}<input type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" className="sr-only" onChange={e => { void importFile(e.target.files?.[0]); e.target.value = ""; }} /></label>
     <div className="flex gap-2">{(["cells", "source"] as const).map(view => <button type="button" key={view} aria-pressed={dataView === view} onClick={() => setDataView(view)} className={`min-h-9 rounded-lg border px-3 text-xs ${dataView === view ? "border-white bg-white/15" : "border-white/20"}`}>{t(`editor.dataVisual.view.${view}`, { defaultValue: view === "cells" ? "Edit cells" : "Source data" })}</button>)}</div>
     {dataView === "cells" ? <DataCells value={data} onChange={setData} chart={mode === "chart"} multiSeries={multiple} onCellFocus={mode === "table" ? setFocusedCell : undefined} onStructure={mode === "table" ? changeTableStructure : undefined} /> : <textarea value={data} onChange={e => setData(e.target.value)} aria-label={t("editor.dataVisual.data", { defaultValue: "Data" })} rows={4} className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />}
-    {mode === "chart" && <ChartFormattingPanel kind={kind} value={chartAppearance} onChange={setChartAppearance} />}
+    {mode === "chart" && <ChartFormattingPanel multiple={multiple} kind={kind} value={chartAppearance} onChange={setChartAppearance} />}
     <div className="flex flex-wrap gap-2"><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setAccent} label={t("editor.colourPicker.accent", { defaultValue: "Pick accent from canvas" })} /><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setForeground} label={t("editor.colourPicker.ink", { defaultValue: "Pick text colour from canvas" })} /></div>
     {mode === "table" && <TableStyleGallery value={{ ...tableFormat, textColour: foreground, headerColour: accent }} onChange={value => { setTableFormat(value); setForeground(value.textColour); setAccent(value.headerColour); }} />}
     {mode === "table" && <TableFormattingPanel focusedCell={focusedCell} value={{ ...tableFormat, header: showLabels }} source={data} onChange={setTableFormat} onSource={setData} />}

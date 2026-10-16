@@ -1,0 +1,9 @@
+import { useTranslation } from "react-i18next";
+import type { ChartData } from "@/lib/editor/dataVisuals";
+import { CHART_GEOMETRY_CONTROLS, defaultChartGeometry, chartGeometryLabel, type ChartGeometry } from "@/lib/editor/chartGeometry";
+
+export function ChartGeometryControls({ value, kind, multiple, onChange }: { value: ChartGeometry; kind: ChartData["kind"]; multiple: boolean; onChange: (value: ChartGeometry) => void }) {
+  const { t } = useTranslation();
+  if (kind === "pie" || kind === "donut") return null;
+  return <div className="space-y-3 border-t border-white/10 pt-3"><label className="flex items-center gap-2 text-xs text-white/65"><input type="checkbox" checked={value.showGrid ?? (multiple || kind === "radar")} onChange={event => onChange({ ...value, showGrid: event.target.checked })} />{t("editor.charts.showGrid", { defaultValue: "Show grid lines" })}</label>{CHART_GEOMETRY_CONTROLS.filter(control => (control.kinds as readonly string[]).includes(kind)).map(control => { const amount = value[control.key] ?? defaultChartGeometry(control.key, multiple); return <label key={control.key} className="flex flex-wrap items-center gap-3 text-xs text-white/65"><span>{t(`editor.charts.geometry.${control.key}`, { defaultValue: control.label })}</span><input type="range" min={control.min} max={control.max} step={control.step} value={amount} onChange={event => onChange({ ...value, [control.key]: Number(event.target.value) })} className="min-w-20 flex-1" /><span className="w-12 text-right tabular-nums">{chartGeometryLabel(control.key, amount)}</span></label>; })}<button type="button" className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/65" onClick={() => onChange({ ...value, lineWidth: undefined, pointSize: undefined, areaOpacity: undefined, barGap: undefined, showGrid: undefined })}>{t("editor.charts.resetGeometry", { defaultValue: "Reset chart geometry" })}</button></div>;
+}
