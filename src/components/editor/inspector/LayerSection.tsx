@@ -1,3 +1,4 @@
+import { CropPresets } from "../CropPresets";
 /**
  * Layer controls for the inspector: placement, crop, corners, shadow and text
  * styling. Everything a photo or graphic needs that the timeline-era inspector
@@ -310,6 +311,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
       {mediaClip && (
         <>
           <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.layer.crop")}</p>
+          <CropPresets key={clip.id} clip={mediaClip} source={source?.width && source.height ? { width: source.width, height: source.height } : null} />
           <div className="grid grid-cols-2 gap-2">
             {(["left", "right", "top", "bottom"] as const).map((edge) => (
               <div key={edge}>
