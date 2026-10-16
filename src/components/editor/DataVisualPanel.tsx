@@ -1,3 +1,4 @@
+import { DataVisualDraftPreview } from "./DataVisualDraftPreview";
 import { ChartTransposeControl } from "./ChartTransposeControl";
 import { ChartStyleGallery } from "./ChartStyleGallery";
 import { chartSeriesEditColours } from "@/lib/editor/chartSeriesStructure";
@@ -25,6 +26,7 @@ import { nanoid } from "nanoid";
 export function DataVisualPanel() {
   const { t } = useTranslation();
   const panelId = useId();
+  const previewSettings = useEditorStore(store => store.settings);
   const selected = useEditorStore(s => s.clips.find(c => s.selectedClipIds.length === 1 && c.id === s.selectedClipIds[0]));
   const chart = selected?.kind === "shape" ? selected.chart : undefined;
   const table = selected?.kind === "shape" ? selected.table : undefined;
@@ -99,6 +101,12 @@ export function DataVisualPanel() {
     try { const next = editTableStructure(data, { ...tableFormat, header: showLabels }, axis, index, action); setTableFormat(next.format); setData(next.source); setFocusedCell(axis === "row" ? `A${next.selected + 1}` : `${String.fromCharCode(65 + next.selected)}1`); setError(""); }
     catch (reason) { setError(reason instanceof Error ? reason.message : "Could not change this table"); }
   };
+  const previewValue = useMemo(() => {
+    try {
+      const value = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), ...chartAppearance, stacked, stackPercent, showLegend, colours: [accent, ...chartPalette.slice(1)], textColour: foreground, showLabels, showValues } } : { table: { ...tableFormat, rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
+      return validDataVisuals(value) ? value : null;
+    } catch { return null; }
+  }, [mode, chart, kind, data, multiple, chartAppearance, stacked, stackPercent, showLegend, accent, chartPalette, foreground, showLabels, showValues, tableFormat]);
   const apply = () => {
     try {
       const s = useEditorStore.getState(), before = s.toSnapshot();
@@ -117,6 +125,7 @@ export function DataVisualPanel() {
       {(["chart", "table"] as const).map(value => <button key={value} type="button" aria-pressed={mode === value} onClick={() => choose(value)} className={`min-h-9 rounded-lg border px-3 text-xs ${mode === value ? "border-white bg-white text-black" : "border-white/20 text-white/70"}`}>{t(`editor.dataVisual.${value}`, { defaultValue: value === "chart" ? "Chart" : "Table" })}</button>)}
       {mode === "chart" && <select value={kind} aria-label={t("editor.dataVisual.chartType", { defaultValue: "Chart type" })} onChange={e => setKind(e.target.value as ChartKind)} className="min-h-9 rounded-lg border border-white/20 bg-neutral-900 px-2 text-xs">{CHART_KINDS.map(value => <option key={value} value={value}>{t(`editor.dataVisual.${value}`, { defaultValue: value.charAt(0).toUpperCase() + value.slice(1) })}</option>)}</select>}
     </div>
+    <DataVisualDraftPreview key={useEditorStore.getState().projectId} projectId={useEditorStore.getState().projectId} value={previewValue} width={previewSettings.width * (selected?.kind === "shape" && (chart || table) ? selected.w : 0.8)} height={previewSettings.height * (selected?.kind === "shape" && (chart || table) ? selected.h : 0.65)} background={previewSettings.background} />
     <div role="tablist" aria-label={t("editor.dataVisual.sections", { defaultValue: "Graphic editing sections" })} className="sticky top-0 z-10 flex gap-1 rounded-lg bg-neutral-950 p-1">{(["data", "design"] as const).map(value => <button key={value} type="button" role="tab" id={`${panelId}-${value}-tab`} aria-controls={`${panelId}-${value}-panel`} aria-selected={section === value} tabIndex={section === value ? 0 : -1} onKeyDown={event => { if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) { event.preventDefault(); const next = event.key === "Home" ? "data" : event.key === "End" ? "design" : section === "data" ? "design" : "data"; setSection(next); const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("button"); buttons?.[next === "data" ? 0 : 1]?.focus(); } }} onClick={() => setSection(value)} className={`min-h-10 flex-1 rounded-md px-3 text-xs font-medium ${section === value ? "bg-white/15 text-white" : "text-white/55 hover:bg-white/5"}`}>{t(`editor.dataVisual.section.${value}`, { defaultValue: value === "data" ? "Data" : "Design" })}</button>)}</div>
     <div role="tabpanel" id={`${panelId}-data-panel`} aria-labelledby={`${panelId}-data-tab`} hidden={section !== "data"} className="space-y-3">
     {mode === "chart" && <div className="flex flex-wrap items-center gap-3 text-xs text-white/70"><label className="flex items-center gap-2"><input type="checkbox" checked={multiple} onChange={event => changeMultiple(event.target.checked)} />{t("editor.dataVisual.multipleSeries", { defaultValue: "Multiple data series" })}</label>{multiple && <><label className="flex items-center gap-2"><input type="checkbox" checked={showLegend} onChange={event => setShowLegend(event.target.checked)} />{t("editor.dataVisual.showLegend", { defaultValue: "Show legend" })}</label>{(kind === "bar" || kind === "column") && <label className="flex items-center gap-2"><input type="checkbox" checked={stacked} onChange={event => setStacked(event.target.checked)} />{t("editor.dataVisual.stacked", { defaultValue: "Stack series" })}</label>}{(kind === "pie" || kind === "donut") && <span className="text-white/45">{t("editor.dataVisual.pieSeriesHint", { defaultValue: "Pie and donut charts display the first data series." })}</span>}</>}</div>}
