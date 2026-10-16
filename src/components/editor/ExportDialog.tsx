@@ -1,3 +1,5 @@
+import { SectionExportPicker } from "./SectionExportPicker";
+import { designPageSections } from "@/lib/editor/pageDetails";
 import { pageFilenamePatternError } from "@/lib/editor/pageFilenamePattern";
 import { prepareFileShare } from "@/lib/editor/shareFile";
 import { hasTimelineMotion } from "@/lib/editor/projectMotion";
@@ -24,7 +26,7 @@ import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
 import { getPages } from "@/lib/editor/pages";
-import { pageExportFrames, parsePageSelection } from "@/lib/editor/pageExports";
+import { pageExportFrames, resolvePageExportScope } from "@/lib/editor/pageExports";
 import { exportFilename } from "@/lib/editor/exportName";
 import { zipFiles } from "@/lib/editor/zip";
 import { useAuth } from "@/contexts/AuthContext";
@@ -69,7 +71,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [format, setFormat] = useState<Format>("mp4");
   const [scaleKey, setScaleKey] = useState("1");
   const [qualityKey, setQualityKey] = useState<Quality>("high");
-  const [pageScope, setPageScope] = useState<"all" | "current" | "custom">("all");
+  const [pageScope, setPageScope] = useState<"all" | "current" | "custom" | "section">("all");
+  const [sectionName, setSectionName] = useState("");
   const [pageSelection, setPageSelection] = useState("1");
   const [filenamePattern, setFilenamePattern] = useState("");
   const [transparent, setTransparent] = useState(false);
@@ -82,6 +85,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const ranges = scope === "selection" ? selectedRanges : allRanges;
   const pages = getPages(settings, clips);
   const multiPage = pages.length > 1;
+  const sections = designPageSections(rangeSnapshot), effectiveSection = sections.some(section => section.name === sectionName) ? sectionName : sections[0]?.name ?? "";
 
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -145,10 +149,10 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     try {
       const snapshot = toSnapshot();
       const imageFormat = format === "pdf" || format === "pptx" ? "jpg" : format as StillFormat;
-      const frames = pageExportFrames(snapshot, currentTime, pageScope === "custom" ? parsePageSelection(pageSelection, getPages(snapshot.settings, snapshot.clips).length) : pageScope, imageFormat, format === "png" || format === "jpg" ? filenamePattern : "");
+      const frames = pageExportFrames(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection), imageFormat, format === "png" || format === "jpg" ? filenamePattern : "");
       if (format === "pptx") {
         let captured = 0;
-        const blob = await exportPresentation(snapshot, currentTime, pageScope === "custom" ? parsePageSelection(pageSelection, getPages(snapshot.settings, snapshot.clips).length) : pageScope, async time => {
+        const blob = await exportPresentation(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection), async time => {
           check(); setLabel(t("editor.pages.exporting", { current: ++captured, total: frames.length }));
           return exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, ignoreAnimations: true, time });
         }, ctl.signal, fraction => setProgress(Math.round(fraction * 100)));
@@ -265,7 +269,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const scales = still ? ["0.5", "1", "2"] : ["1", "0.75", "0.5"];
   const gifTooLong = gif && (scope === "timeline" ? duration > GIF_CONTENT_LIMIT : ranges.some(r => r.end - r.start > GIF_CONTENT_LIMIT));
   const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : "";
-  const canDownload = !filenameError && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
+  const canDownload = !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!busy) onOpenChange(v); }}>
@@ -339,11 +343,13 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                   <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
                     <SelectItem value="all">{format === "pptx" ? t("editor.pages.allPptx", { defaultValue: "All {{count}} pages in one presentation", count: pages.length }) : format === "pdf" ? t("editor.pages.allPdf", { defaultValue: "All {{count}} pages in one PDF", count: pages.length }) : t("editor.pages.allZip", { count: pages.length })}</SelectItem>
                     <SelectItem value="current">{t("editor.pages.thisPage")}</SelectItem>
+                    {!!sections.length && <SelectItem value="section">{t("editor.export.section", { defaultValue: "Named section" })}</SelectItem>}
                     <SelectItem value="custom">{t("editor.pages.choosePages", { defaultValue: "Choose pages" })}</SelectItem>
                   </SelectContent>
                 </Select>
               </Row>
             )}
+            {still && pageScope === "section" && <SectionExportPicker sections={sections} value={effectiveSection} onChange={setSectionName} />}
             {still && multiPage && pageScope === "custom" && <Row label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })}><Input value={pageSelection} onChange={e => setPageSelection(e.target.value)} placeholder="1,3-5" aria-label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })} className="h-9 border-white/10 bg-white/5 text-white" /></Row>}
             {!still && !gif && (
               <Row label={t("editor.export.quality")}>
