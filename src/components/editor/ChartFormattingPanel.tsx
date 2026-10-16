@@ -1,9 +1,10 @@
+import { ChartReferenceControls } from "./ChartReferenceControls";
 import { ChartScaleControls } from "./ChartScaleControls";
 import { ChartGeometryControls } from "./ChartGeometryControls";
 import { useTranslation } from "react-i18next";
 import { CHART_CURRENCIES, CHART_NUMBER_LOCALES, CHART_LOCALE_LABELS, chartValueLabel, type ChartValueFormat } from "@/lib/editor/chartValueFormat";
 import type { ChartData } from "@/lib/editor/dataVisuals";
-export type ChartAppearance = Pick<ChartData, "xAxisTitle" | "yAxisTitle" | "valueFormat" | "pieRotation" | "pieGap" | "pieValueMode" | "donutHole" | "donutLabel" | "donutTotal" | "lineWidth" | "scatterLines" | "lineStyle" | "pointSize" | "areaOpacity" | "barGap" | "showGrid" | "showAxisValues" | "legendPosition" | "scaleXMin" | "scaleXMax" | "scaleMin" | "scaleMax">;
+export type ChartAppearance = Pick<ChartData, "referenceLine" | "xAxisTitle" | "yAxisTitle" | "valueFormat" | "pieRotation" | "pieGap" | "pieValueMode" | "donutHole" | "donutLabel" | "donutTotal" | "lineWidth" | "scatterLines" | "lineStyle" | "pointSize" | "areaOpacity" | "barGap" | "showGrid" | "showAxisValues" | "legendPosition" | "scaleXMin" | "scaleXMax" | "scaleMin" | "scaleMax">;
 export function ChartFormattingPanel({ kind, value, onChange, multiple = false, percentStack = false }: { kind: ChartData["kind"]; multiple?: boolean; percentStack?: boolean; value: ChartAppearance; onChange: (value: ChartAppearance) => void }) {
   const { t } = useTranslation(), format = percentStack ? { style: "percent" as const, currency: "USD" as const, decimals: value.valueFormat?.decimals ?? 0, compact: false, locale: value.valueFormat?.locale, prefix: value.valueFormat?.prefix, suffix: value.valueFormat?.suffix } : value.valueFormat;
   const change = (patch: Partial<ChartValueFormat>) => onChange({ ...value, valueFormat: { style: "number", currency: "USD", decimals: 0, compact: false, ...format, ...patch } });
@@ -20,6 +21,7 @@ export function ChartFormattingPanel({ kind, value, onChange, multiple = false, 
     {kind !== "pie" && kind !== "donut" && kind !== "radar" && <div className="grid grid-cols-1 gap-2">{(["xAxisTitle", "yAxisTitle"] as const).map(key => <label key={key} className="text-xs text-white/65">{t(`editor.charts.${key}`, { defaultValue: key === "xAxisTitle" ? "Horizontal axis title" : "Vertical axis title" })}<input value={value[key] ?? ""} onChange={event => onChange({ ...value, [key]: event.target.value })} maxLength={100} className="mt-1 block min-h-9 w-full rounded-lg border border-white/20 bg-neutral-900 px-3 text-xs text-white" /></label>)}</div>}
     {!percentStack && kind !== "pie" && kind !== "donut" && <ChartScaleControls value={value} onChange={scale => onChange({ ...value, ...scale })} />}
     {kind === "scatter" && <ChartScaleControls axis="x" value={{ scaleMin: value.scaleXMin, scaleMax: value.scaleXMax }} onChange={scale => onChange({ ...value, scaleXMin: scale.scaleMin, scaleXMax: scale.scaleMax })} />}
+    {kind !== "pie" && kind !== "donut" && kind !== "radar" && <ChartReferenceControls value={value.referenceLine} percent={percentStack} onChange={referenceLine => onChange({ ...value, referenceLine })} />}
     <ChartGeometryControls value={value} kind={kind} multiple={multiple} onChange={geometry => onChange({ ...value, ...geometry })} />
   </div>;
 }
