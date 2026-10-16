@@ -324,6 +324,8 @@ export interface ProjectSettings {
   pages?: number[];
   /** Explicit end of the last page, including blank time and short still pages. */
   pageEnd?: number;
+  /** Portable brand colours and fonts; logos retain their existing media ownership. */
+  brandStyles?: import("./brandStyles").BrandStyles;
   /** Page names and presenter notes, indexed by page order. */
   pageDetails?: import("./pageDetails").PageDetails[];
   /** Timed video screens retain short final scenes; empty screens still get five seconds. */
