@@ -1,3 +1,4 @@
+import { ChartCategoryColours } from "./ChartCategoryColours";
 import { DataExportControls } from "./DataExportControls";
 import { ColourPickerButton } from "./ColourPickerButton";
 import { ChartFormattingPanel, type ChartAppearance } from "./ChartFormattingPanel";
@@ -77,6 +78,7 @@ export function DataVisualPanel() {
     if (!multiple) return [];
     try { return parseChartSource(data, true).series?.map(series => series.label) ?? []; } catch { return []; }
   }, [data, multiple]);
+  const categoryLabels = useMemo(() => { if (multiple || mode !== "chart" || kind === "radar") return []; try { return parseChartSource(data, false).rows.map(row => row.label); } catch { return []; } }, [data, multiple, mode, kind]);
   const seriesColour = (index: number) => index === 0 ? accent : chartPalette[index % chartPalette.length] ?? DEFAULT_CHART.colours[index % DEFAULT_CHART.colours.length];
   const setSeriesColour = (index: number, colour: string) => {
     if (index === 0) { setAccent(colour); return; }
@@ -95,6 +97,7 @@ export function DataVisualPanel() {
     } catch (e) { setError(e instanceof Error ? e.message : "Invalid data"); }
   };
   return <div className="space-y-3">
+    {mode === "chart" && !multiple && kind !== "radar" && <ChartCategoryColours key={useEditorStore.getState().projectId + ":" + (selected?.id ?? "new")} labels={categoryLabels} colours={[accent, ...chartPalette.slice(1)]} onChange={colours => { setChartPalette(colours); setAccent(colours[0]); }} projectId={useEditorStore.getState().projectId} />}
     <DataExportControls source={data} mode={mode} multiple={multiple} title={useEditorStore.getState().title} />
     {mode === "chart" && <div className="flex flex-wrap items-center gap-3 text-xs text-white/70"><label className="flex items-center gap-2"><input type="checkbox" checked={multiple} onChange={event => changeMultiple(event.target.checked)} />{t("editor.dataVisual.multipleSeries", { defaultValue: "Multiple data series" })}</label>{multiple && <><label className="flex items-center gap-2"><input type="checkbox" checked={showLegend} onChange={event => setShowLegend(event.target.checked)} />{t("editor.dataVisual.showLegend", { defaultValue: "Show legend" })}</label>{(kind === "bar" || kind === "column") && <label className="flex items-center gap-2"><input type="checkbox" checked={stacked} onChange={event => setStacked(event.target.checked)} />{t("editor.dataVisual.stacked", { defaultValue: "Stack series" })}</label>}{(kind === "pie" || kind === "donut") && <span className="text-white/45">{t("editor.dataVisual.pieSeriesHint", { defaultValue: "Pie and donut charts display the first data series." })}</span>}</>}</div>}
     <div className="flex flex-wrap items-center gap-2">
