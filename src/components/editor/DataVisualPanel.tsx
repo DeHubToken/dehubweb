@@ -1,3 +1,5 @@
+import { GraphicDraftHistoryControls } from "./GraphicDraftHistoryControls";
+import { useGraphicDraftHistory } from "@/lib/editor/useGraphicDraftHistory";
 import { PasteDataImportControls } from "./PasteDataImportControls";
 import { DataImportMappingControls } from "./DataImportMappingControls";
 import type { MappedDataImport } from "@/lib/editor/dataImportMapping";
@@ -76,7 +78,7 @@ export function DataVisualPanel() {
   const [error, setError] = useState("");
   const [pendingImport, setPendingImport] = useState<{ id: number; scope: string; source: string; name: string } | null>(null);
   const importScope = `${projectId}:${selected?.id ?? "new"}:${mode}`;
-  const importRequest = useRef(0);
+  const importRequest = useRef(0), historyGeneration = useRef(0);
   const editData = useCallback((value: string) => { importRequest.current++; setPendingImport(null); setData(value); setError(""); }, []);
   useEffect(() => { setFocusedCell(""); setPendingImport(null); importRequest.current++; return () => { importRequest.current++; }; }, [projectId, selected?.id, mode]);
   const importFile = async (file?: File) => {
@@ -91,7 +93,7 @@ export function DataVisualPanel() {
     } catch (error) { if (request === importRequest.current) setError(error instanceof Error ? error.message : "Could not read this file"); }
   };
   useEffect(() => {
-    importRequest.current++;
+    importRequest.current++; historyGeneration.current++;
     const next = table ? "table" : "chart";
     setMode(next);
     if (next === "chart") {
@@ -104,6 +106,13 @@ export function DataVisualPanel() {
     }
     setError("");
   }, [projectId, selected?.id, chart, table]);
+  const draftHistoryValue = { mode, kind, data, foreground, accent, chartPalette, chartAppearance, tableFormat, multiple, stacked, stackPercent, showLegend, showLabels, showValues };
+  const draftHistory = useGraphicDraftHistory(`${projectId}:${selected?.id ?? "new"}:${historyGeneration.current}`, draftHistoryValue, value => {
+    importRequest.current++; setPendingImport(null); setFocusedCell(""); setError("");
+    setMode(value.mode); setKind(value.kind); setData(value.data); setForeground(value.foreground); setAccent(value.accent);
+    setChartPalette(value.chartPalette); setChartAppearance(value.chartAppearance); setTableFormat(value.tableFormat);
+    setMultiple(value.multiple); setStacked(value.stacked); setStackPercent(value.stackPercent); setShowLegend(value.showLegend); setShowLabels(value.showLabels); setShowValues(value.showValues);
+  });
   const choose = (value: "chart" | "table") => {
     importRequest.current++; setPendingImport(null); setMode(value); setError("");
     if (value === "table") {
@@ -199,6 +208,7 @@ export function DataVisualPanel() {
       {(["chart", "table"] as const).map(value => <button key={value} type="button" aria-pressed={mode === value} onClick={() => choose(value)} className={`min-h-9 rounded-lg border px-3 text-xs ${mode === value ? "border-white bg-white text-black" : "border-white/20 text-white/70"}`}>{t(`editor.dataVisual.${value}`, { defaultValue: value === "chart" ? "Chart" : "Table" })}</button>)}
     </div>
     {mode === "chart" && <ChartTypePicker value={kind} onChange={setKind} />}
+    <GraphicDraftHistoryControls {...draftHistory} />
     <DataVisualDraftPreview key={useEditorStore.getState().projectId} projectId={useEditorStore.getState().projectId} value={draftPreviewValue} width={previewSettings.width * (selected?.kind === "shape" && (chart || table) ? selected.w : 0.8)} height={previewSettings.height * (selected?.kind === "shape" && (chart || table) ? selected.h : 0.65)} background={previewSettings.background} />
     <div role="tablist" aria-label={t("editor.dataVisual.sections", { defaultValue: "Graphic editing sections" })} className="sticky top-0 z-10 flex gap-1 rounded-lg bg-neutral-950 p-1">{(["data", "design"] as const).map(value => <button key={value} type="button" role="tab" id={`${panelId}-${value}-tab`} aria-controls={`${panelId}-${value}-panel`} aria-selected={section === value} tabIndex={section === value ? 0 : -1} onKeyDown={event => { if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) { event.preventDefault(); const next = event.key === "Home" ? "data" : event.key === "End" ? "design" : section === "data" ? "design" : "data"; setSection(next); const buttons = event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("button"); buttons?.[next === "data" ? 0 : 1]?.focus(); } }} onClick={() => setSection(value)} className={`min-h-10 flex-1 rounded-md px-3 text-xs font-medium ${section === value ? "bg-white/15 text-white" : "text-white/55 hover:bg-white/5"}`}>{t(`editor.dataVisual.section.${value}`, { defaultValue: value === "data" ? "Data" : "Design" })}</button>)}</div>
     <div role="tabpanel" id={`${panelId}-data-panel`} aria-labelledby={`${panelId}-data-tab`} hidden={section !== "data"} className="space-y-3">
