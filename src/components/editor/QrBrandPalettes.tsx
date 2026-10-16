@@ -1,0 +1,9 @@
+import { qrBrandColours } from "@/lib/editor/qrBrandColours";
+import { SavePalettePreset } from "./SavePalettePreset";
+import { useTranslation } from "react-i18next";
+import { useBrandPresets } from "@/lib/editor/useBrandPresets";
+export function QrBrandPalettes({ value, onChange }: { value: readonly string[]; onChange: (value: string[]) => void }) {
+  const { t } = useTranslation(), library = useBrandPresets(), palettes = library.presets.filter(preset => preset.styles.colors.length > 0);
+  const colours = [...new Set(value)].slice(0, 10);
+  return <details className="rounded-lg border border-white/10 p-3"><summary className="cursor-pointer text-xs font-medium text-white/75">{t("editor.qr.brandPalettes", { defaultValue: "Saved palettes and QR colours" })}</summary><div className="mt-3 space-y-3"><div className="flex flex-wrap gap-2">{palettes.map(preset => <button type="button" key={preset.id} onClick={() => onChange(qrBrandColours(preset.styles.colors))} className="flex min-h-9 items-center gap-2 rounded-lg border border-white/20 px-3 text-xs text-white/75"><span aria-hidden="true" className="flex overflow-hidden rounded">{preset.styles.colors.map((colour, index) => <span key={index} className="h-4 w-2" style={{ background: colour }} />)}</span>{preset.name}</button>)}</div>{!palettes.length && <p className="text-xs text-white/45">{t("editor.qr.noBrandPalettes", { defaultValue: "Save a colour palette in Brand styles to use it here." })}</p>}<p className="text-xs text-white/45">{t("editor.qr.brandPaletteHint", { defaultValue: "Chooses a dark foreground and light background from the palette, using black or white when more contrast is needed. Save palette stores the current QR colours; the encoded content stays unchanged." })}</p><SavePalettePreset colours={colours} /></div></details>;
+}
