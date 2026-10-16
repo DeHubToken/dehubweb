@@ -1,3 +1,4 @@
+import { DataVisualVectorDownload } from "./DataVisualVectorDownload";
 import { DataVisualDraftPreview } from "./DataVisualDraftPreview";
 import { ChartTransposeControl } from "./ChartTransposeControl";
 import { ChartStyleGallery } from "./ChartStyleGallery";
@@ -171,6 +172,7 @@ export function DataVisualPanel() {
       {mode === "chart" && <label className="flex items-center gap-2"><input type="checkbox" checked={showValues} onChange={e => setShowValues(e.target.checked)} />{t("editor.dataVisual.values", { defaultValue: "Show values" })}</label>}
     </div>
     </div>
+    <DataVisualVectorDownload key={`${projectId}:${selected?.id ?? "new"}`} projectId={projectId} value={previewValue} width={previewSettings.width * (selected?.kind === "shape" && (chart || table) ? selected.w : 0.8)} height={previewSettings.height * (selected?.kind === "shape" && (chart || table) ? selected.h : 0.65)} title={useEditorStore.getState().title} />
     <div className="sticky bottom-0 z-10 flex flex-wrap items-center gap-2 border-t border-white/10 bg-neutral-950 py-3 text-xs">
       <button type="button" onClick={() => choose(mode)} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t("editor.dataVisual.resetDraft", { defaultValue: "Reset draft" })}</button>
       <button type="button" disabled={!!selected?.locked && !!(chart || table)} onClick={apply} className="min-h-9 rounded-lg bg-white px-3 font-medium text-black disabled:opacity-35">{t(chart || table ? "editor.dataVisual.update" : "editor.dataVisual.insert", { defaultValue: chart || table ? "Update graphic" : "Insert graphic" })}</button>
