@@ -270,7 +270,7 @@ function shapePatch(op: AgentOp): Partial<ShapeClip> {
   if (stroke) p.stroke = { color: stroke, width: clamp(num(op.strokeWidth) ?? 6, 0, 80) };
   const r = num(op.radius);
   if (r !== undefined) p.radius = clamp(r, 0, 540);
-  if (SHAPE_KINDS.includes(op.shape as ShapeKind)) { p.shape = op.shape as ShapeKind; if (op.shape !== "line") p.connector = undefined; }
+  if (SHAPE_KINDS.includes(op.shape as ShapeKind)) { p.shape = op.shape as ShapeKind; p.symbol = undefined; if (op.shape !== "line") p.connector = undefined; }
   return p;
 }
 
