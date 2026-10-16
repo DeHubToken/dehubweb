@@ -1,3 +1,4 @@
+import { GradientStyleFileControls } from "./GradientStyleFileControls";
 import { GradientVectorDownload } from "./GradientVectorDownload";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -52,6 +53,7 @@ export function FillPanel() {
       <button type="button" onClick={() => { const store = useEditorStore.getState(), before = store.toSnapshot(); store.applyDesignEdit(before, removePageBackground(before, store.currentTime)); }} className={button}>{t("editor.fills.resetBackground", { defaultValue: "Reset page background" })}</button>
       <button type="button" disabled={!canFill} onClick={() => apply(null)} className={button}>{t("editor.fills.solid", { defaultValue: "Restore solid fill" })}</button>
     </div>
+    <GradientStyleFileControls key={useEditorStore.getState().projectId} value={fill} title={title} onApply={setFill} />
     <GradientVectorDownload value={fill} width={settings.width} height={settings.height} title={title} />
     {error && <p role="alert" className="text-xs text-red-300">{error}</p>}
   </div>;
