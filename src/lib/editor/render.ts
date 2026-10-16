@@ -1,3 +1,4 @@
+import { drawConnector } from "./connectors";
 import { applyPhotoTone, needsPhotoTone } from "./photoTone";
 import { textRevealLines } from "./textReveal";
 /**
@@ -534,6 +535,14 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     return;
   }
   const k = H / 1080;
+  if (clip.connector) {
+    const stroke = clip.stroke ?? { color: clip.fill ?? "#ffffff", width: 8 };
+    if (stroke.width <= 0) return;
+    ctx.lineWidth = stroke.width * k;
+    ctx.strokeStyle = createGradientFill(ctx, box.w, box.h, clip.gradient) || stroke.color;
+    ctx.setLineDash((stroke.dash || []).filter(Number.isFinite).slice(0, 8).map(value => Math.max(0, value) * k));
+    applyShadow(ctx, clip, H); drawConnector(ctx, box.w, box.h, clip.connector); clearShadow(ctx); return;
+  }
   const open = clip.shape === "line" || clip.shape === "arrow" || clip.shape === "path";
   shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points);
   applyShadow(ctx, clip, H);
