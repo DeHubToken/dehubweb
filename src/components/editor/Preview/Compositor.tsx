@@ -53,6 +53,7 @@ import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { PagesStrip } from "./PagesStrip";
 import { GOOGLE_FONTS, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
+import { replaceDesignMedia } from "@/lib/editor/replaceMedia";
 import { audioGainAt } from "@/lib/editor/audioEnvelope";
 import { leaseMedia } from "@/lib/editor/mediaLeases";
 
@@ -880,7 +881,16 @@ export function Compositor() {
       e.preventDefault();
       try {
         const parsed = JSON.parse(mediaRaw) as { mediaId?: unknown };
-        if (typeof parsed.mediaId === "string") placeAt(addClipFromMedia(parsed.mediaId), nx, ny);
+        if (typeof parsed.mediaId === "string") {
+          const s = useEditorStore.getState(), hit = hitTest(e.clientX, e.clientY);
+          const source = s.media.find(media => media.id === parsed.mediaId);
+          const target = hit?.clip;
+          if (target && (target.kind === "image" || target.kind === "video") && target.frame && source && source.kind !== "audio") {
+            const before = s.toSnapshot(), previous = s.media.find(media => media.id === target.mediaId);
+            const next = replaceDesignMedia(before, target.id, source, previous);
+            if (next !== before) { s.applyDesignEdit(before, next); s.selectClip(target.id); }
+          } else placeAt(addClipFromMedia(parsed.mediaId), nx, ny);
+        }
       } catch { /* noop */ }
       return;
     }
