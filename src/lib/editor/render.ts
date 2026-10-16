@@ -288,7 +288,7 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
   if (clip.blend && clip.blend !== "normal") ctx.globalCompositeOperation = clip.blend;
 
   if (clip.kind === "text") drawText(ctx, clip, box, W, H, anim.textProgress);
-  else if (clip.kind === "shape") drawShape(ctx, clip, box, H);
+  else if (clip.kind === "shape") drawShape(ctx, clip, box, H, t);
   else drawMedia(ctx, clip as MediaClip, box, H, src, sourceTime ?? ((clip as MediaClip).trimIn + (t - clip.start) * ((clip as MediaClip).speed ?? 1)));
 
   ctx.restore();
@@ -527,16 +527,16 @@ export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: n
   ctx.closePath();
 }
 
-function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
+function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number, time?: number) {
   if (clip.photoFrame) {
-    drawShape(ctx, { ...clip, photoFrame: false }, box, H);
+    drawShape(ctx, { ...clip, photoFrame: false }, box, H, time);
     const size = Math.min(box.w, box.h) * 0.35;
     ctx.fillStyle = "#94a3b8"; ctx.beginPath(); ctx.moveTo(-size, size * 0.65); ctx.lineTo(-size * 0.2, -size * 0.45); ctx.lineTo(size * 0.25, size * 0.2); ctx.lineTo(size * 0.55, -size * 0.2); ctx.lineTo(size, size * 0.65); ctx.closePath(); ctx.fill();
     ctx.beginPath(); ctx.arc(size * 0.55, -size * 0.65, size * 0.18, 0, Math.PI * 2); ctx.fill(); return;
   }
   if (clip.qr) { drawQrGraphic(ctx, box.w, box.h, clip.qr); return; }
   if (clip.chart || clip.table) {
-    drawDataVisual(ctx, box.w, box.h, clip.chart, clip.table);
+    drawDataVisual(ctx, box.w, box.h, clip.chart, clip.table, time === undefined ? undefined : (time - clip.start) / Math.max(0.001, clip.duration));
     return;
   }
   const k = H / 1080;
