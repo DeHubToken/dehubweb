@@ -1,3 +1,4 @@
+import { panMediaCrop, zoomMediaCrop } from "@/lib/editor/mediaCrop";
 import { DesignRulers } from "../DesignRulers";
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
@@ -101,6 +102,7 @@ function halfExtents(b: ClipBox) {
 }
 
 type Gesture =
+  | { mode: "crop"; id: string; clip: MediaClip; box: ClipBox; px: number; py: number }
   | {
       mode: "move"; id: string; px: number; py: number; box: ClipBox; ax: number; ay: number;
       /** Other selected layers that travel with this one. */
@@ -526,6 +528,11 @@ export function Compositor() {
     return null;
   }, [toCanvas, layersAt]);
 
+  const [croppingId, setCroppingId] = useState<string | null>(null);
+  const cropProject = useEditorStore(s => s.projectId);
+  useEffect(() => setCroppingId(null), [cropProject]);
+  useEffect(() => { if (croppingId && (selectedClipIds.length !== 1 || selectedClipIds[0] !== croppingId || !clips.some(c => c.id === croppingId && !c.locked))) setCroppingId(null); }, [croppingId, selectedClipIds, clips]);
+  useCloseOnSurfaceSwitch(useCallback(() => setCroppingId(null), []));
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const editingText = useMemo(() => {
     if (!editingTextId) return null;
@@ -558,6 +565,12 @@ export function Compositor() {
     const W = s.settings.width;
     const H = s.settings.height;
     const p = toCanvas(e.clientX, e.clientY);
+
+    if (g.mode === "crop") {
+      const patch = panMediaCrop(g.clip, g.box, p.x - g.px, p.y - g.py);
+      if (patch) s.patchClipLive(g.id, patch);
+      return;
+    }
 
     if (g.mode === "marquee") {
       setMarquee({ x: Math.min(g.x0, p.x), y: Math.min(g.y0, p.y), w: Math.abs(p.x - g.x0), h: Math.abs(p.y - g.y0) });
@@ -697,6 +710,29 @@ export function Compositor() {
   }, [onGestureMove, onGestureEnd]);
 
   useEffect(() => () => { onGestureEnd(); strokeCleanup.current?.(); }, [onGestureEnd]);
+  useCloseOnSurfaceSwitch(onGestureEnd);
+  useEffect(() => {
+    if (!croppingId) return;
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || (event.target instanceof Element && event.target.closest("input, textarea, select, [contenteditable=true]"))) return;
+      event.preventDefault(); onGestureEnd(); setCroppingId(null);
+    };
+    window.addEventListener("keydown", escape);
+    return () => window.removeEventListener("keydown", escape);
+  }, [croppingId, onGestureEnd]);
+
+  useEffect(() => {
+    const begin = (event: Event) => {
+      if (!wrapRef.current?.getClientRects().length) return;
+      const id = (event as CustomEvent<{ id: string }>).detail?.id;
+      const store = useEditorStore.getState(), clip = store.clips.find(value => value.id === id);
+      if (!clip || clip.locked || (clip.kind !== "image" && clip.kind !== "video")) return;
+      onGestureEnd(); store.setIsPlaying(false); store.selectGroupMember(id); setCroppingId(id);
+    };
+    window.addEventListener("editor:crop-photo", begin);
+    return () => window.removeEventListener("editor:crop-photo", begin);
+  }, [onGestureEnd]);
+
 
   const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: { color: string; width: number }) => {
     strokeCleanup.current?.();
@@ -765,6 +801,11 @@ export function Compositor() {
     }
     const hit = hitTest(e.clientX, e.clientY);
     const p = toCanvas(e.clientX, e.clientY);
+    if (croppingId && hit?.clip.id === croppingId && (hit.clip.kind === "image" || hit.clip.kind === "video")) {
+      startGesture({ mode: "crop", id: hit.clip.id, clip: hit.clip, box: hit.box, px: p.x, py: p.y });
+      return;
+    }
+    if (croppingId) setCroppingId(null);
     if (!hit) {
       // Drag on empty canvas draws a selection box; a plain click clears.
       if (!e.shiftKey) selectClip(null);
@@ -825,6 +866,9 @@ export function Compositor() {
       if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       if (draftFocus.begin()) setEditingTextId(hit.clip.id);
     } else if (hit) {
+      if (hit.clip.kind === "image" || hit.clip.kind === "video") {
+        onGestureEnd(); useEditorStore.getState().selectGroupMember(hit.clip.id); useEditorStore.getState().setIsPlaying(false); setCroppingId(hit.clip.id);
+      }
       if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       window.dispatchEvent(new Event("editor:open-inspector"));
     }
@@ -973,7 +1017,7 @@ export function Compositor() {
     return { pts, keys };
   }, [selectedClip, settings.width, settings.height, sources]);
 
-  const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && scale > 0
+  const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && !croppingId && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
         top: (selBox.cy - selBox.h / 2) * scale,
@@ -985,6 +1029,8 @@ export function Compositor() {
 
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
+      {croppingId && <div className="flex shrink-0 items-center gap-2 border-b border-white/15 bg-neutral-950 px-3 py-2 text-xs text-white/70"><span className="min-w-0 flex-1">{t("editor.crop.canvasHint", { defaultValue: "Drag to move the image inside its frame." })}</span>{[0.9, 1.1].map(zoom => <button type="button" key={zoom} aria-label={t(zoom < 1 ? "editor.crop.zoomOut" : "editor.crop.zoomIn", { defaultValue: zoom < 1 ? "Zoom image out" : "Zoom image in" })} onClick={() => { const store = useEditorStore.getState(), clip = store.clips.find(c => c.id === croppingId); if (clip && (clip.kind === "image" || clip.kind === "video")) { const patch = zoomMediaCrop(clip, zoom); if (patch) store.patchClip(clip.id, patch); } }} className="min-h-8 min-w-8 rounded-lg border border-white/20 px-2">{zoom < 1 ? "−" : "+"}</button>)}<button type="button" onClick={() => { onGestureEnd(); setCroppingId(null); }} className="min-h-8 rounded-lg bg-white px-3 font-medium text-black">{t("editor.crop.done", { defaultValue: "Done" })}</button></div>}
+
       <div {...draftFocus.props}
         ref={wrapRef}
         onDragOver={onSurfaceDragOver}
@@ -1076,6 +1122,7 @@ export function Compositor() {
             </div>
           )}
 
+          {croppingId && selBox && <div aria-hidden className="pointer-events-none absolute border-2 border-cyan-300" style={{ left: (selBox.cx - selBox.w / 2) * scale, top: (selBox.cy - selBox.h / 2) * scale, width: selBox.w * scale, height: selBox.h * scale, transform: `rotate(${selBox.rotation}deg)` }}>{[1 / 3, 2 / 3].map(n => <div key={n}><div className="absolute bottom-0 top-0 w-px bg-white/50" style={{ left: `${n * 100}%` }} /><div className="absolute left-0 right-0 h-px bg-white/50" style={{ top: `${n * 100}%` }} /></div>)}</div>}
           {/* Snapping guides */}
           {layoutGuides.rulers && <DesignRulers width={settings.width} height={settings.height} scale={scale} />}
           {layoutGuides.visible && layoutGuides.vertical.map(x => <div key={`layout-v${x}`} aria-hidden className="pointer-events-none absolute bottom-0 top-0 w-px bg-cyan-400/65" style={{ left: x * settings.width * scale }} />)}
