@@ -1,3 +1,4 @@
+import { registerDesignPagePreview } from "@/lib/editor/designPagePreviews";
 import { freehandSvg, type PenSettings } from "@/lib/editor/freehand";
 import { insertFreehandStroke } from "@/lib/editor/freehandProject";
 import { nanoid } from "nanoid";
@@ -170,6 +171,18 @@ export function Compositor() {
   const imagePool = useRef<Map<string, HTMLImageElement>>(new Map());
   const gifLoads = useRef(new Map<string, AbortController>());
   const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current, videosByClip: new Map<string, HTMLVideoElement>() }), []);
+  const previewProject = useEditorStore(state => state.projectId);
+  useLayoutEffect(() => registerDesignPagePreview(previewProject, async (snapshot, at, maxEdge) => {
+    if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
+    const { width, height, background } = snapshot.settings, ratio = Math.min(1, maxEdge / Math.max(width, height));
+    const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(width * ratio)); canvas.height = Math.max(1, Math.round(height * ratio));
+    const context = canvas.getContext("2d"); if (!context) throw new Error("Page previews are unavailable");
+    context.scale(canvas.width / width, canvas.height / height); context.fillStyle = background; context.fillRect(0, 0, width, height);
+    const hidden = new Set(snapshot.tracks.filter(track => track.hidden).map(track => track.id)), order = new Map(snapshot.tracks.map((track, index) => [track.id, index]));
+    const visible = snapshot.clips.filter(clip => isVisualClip(clip) && !clip.hidden && !hidden.has(clip.trackId) && at >= clip.start && at < clip.start + clip.duration).sort((a, b) => (order.get(a.trackId) ?? 0) - (order.get(b.trackId) ?? 0));
+    for (const clip of visible) { context.save(); try { drawClip(context, width, height, { ...clip, animateIn: undefined, animateOut: undefined }, at, sources); } finally { context.restore(); } }
+    return canvas.toDataURL("image/jpeg", 0.75);
+  }), [previewProject, sources]);
   useEffect(() => () => {
     extraVideos.current.forEach(releaseMedia);
     extraAudio.current.forEach(releaseMedia);

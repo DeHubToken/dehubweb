@@ -70,7 +70,7 @@ export function DesignTools() {
   const button = "flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-xs text-white/80 transition hover:bg-white/10 disabled:opacity-35 disabled:hover:bg-transparent";
   return <div {...draftFocus.props} className="relative z-10 shrink-0 border-b border-white/10 bg-neutral-950/95">
     <div role="toolbar" aria-label={t("editor.designTools.toolbar", { defaultValue: "Design tools" })} className="flex min-h-11 items-center gap-1 overflow-x-auto px-2">
-      <DesignToolSearch onChoose={id => { draftFocus.finish(); setInsertOpen(false); setPanel(id); }} />
+      <DesignToolSearch onChoose={id => { draftFocus.finish(); useEditorStore.getState().setIsPlaying(false); setInsertOpen(false); setPanel(id); }} />
       <DropdownMenu key={surfaceEpoch} open={insertOpen} onOpenChange={setInsertOpen}>
         <DropdownMenuTrigger asChild><button type="button" className={button + " bg-white/10 font-medium"}><Plus size={15} />{t("editor.designTools.insert", { defaultValue: "Insert" })}</button></DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="border-white/15 bg-neutral-950 text-white">
