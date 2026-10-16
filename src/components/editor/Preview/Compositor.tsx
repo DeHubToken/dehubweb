@@ -1,3 +1,4 @@
+import { FIT_VIEWPORT, zoomDesignViewport, type DesignViewport } from "@/lib/editor/designViewport";
 import { panMediaCrop, zoomMediaCrop } from "@/lib/editor/mediaCrop";
 import { DesignRulers } from "../DesignRulers";
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
@@ -405,7 +406,37 @@ export function Compositor() {
   }, [tracks, clips, settings, sources]);
 
   // ── Layout: scale canvas to fit (sync initial measurement + observer) ──
-  const [scale, setScale] = useState(0);
+  const [fitScale, setFitScale] = useState(0);
+  const [viewport, setViewport] = useState<DesignViewport>(FIT_VIEWPORT);
+  const [navigating, setNavigating] = useState(false);
+  const viewportCleanup = useRef<(() => void) | null>(null);
+  const viewportProject = useEditorStore(s => s.projectId);
+  const scale = fitScale * viewport.zoom;
+  useEffect(() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); setNavigating(false); }, [viewportProject, settings.width, settings.height]);
+  useEffect(() => () => viewportCleanup.current?.(), []);
+  useCloseOnSurfaceSwitch(useCallback(() => { viewportCleanup.current?.(); setNavigating(false); }, []));
+  const startViewportPan = (event: React.PointerEvent<Element>) => {
+    if (event.button !== 0) return;
+    event.preventDefault(); event.stopPropagation(); viewportCleanup.current?.();
+    const before = viewport, x = event.clientX, y = event.clientY, pointer = event.pointerId;
+    const move = (next: PointerEvent) => { if (next.pointerId === pointer) setViewport({ ...before, x: before.x + next.clientX - x, y: before.y + next.clientY - y }); };
+    const end = (next: PointerEvent) => { if (next.pointerId === pointer) cleanup(); };
+    const cleanup = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", end); window.removeEventListener("pointercancel", end); viewportCleanup.current = null; };
+    viewportCleanup.current = cleanup;
+    window.addEventListener("pointermove", move); window.addEventListener("pointerup", end); window.addEventListener("pointercancel", end);
+  };
+  useEffect(() => {
+    const element = wrapRef.current; if (!element) return;
+    const wheel = (event: WheelEvent) => {
+      if (!event.ctrlKey && !event.metaKey) return;
+      event.preventDefault();
+      viewportCleanup.current?.();
+      const rect = element.getBoundingClientRect(), anchor = { x: event.clientX - rect.left - rect.width / 2, y: event.clientY - rect.top - rect.height / 2 };
+      setViewport(before => zoomDesignViewport(before, before.zoom * Math.exp(-event.deltaY * 0.002), anchor));
+    };
+    element.addEventListener("wheel", wheel, { passive: false });
+    return () => element.removeEventListener("wheel", wheel);
+  }, []);
   const PAD = 24;
   const retryRef = useRef<number | null>(null);
 
@@ -426,7 +457,7 @@ export function Compositor() {
     const ah = Math.max(0, wrap.clientHeight - PAD * 2);
     if (aw <= 0 || ah <= 0) return false;
     const s = Math.min(aw / settings.width, ah / settings.height);
-    setScale(Math.max(0.01, s));
+    setFitScale(Math.max(0.01, s));
     return true;
   }, [settings.width, settings.height]);
 
@@ -727,7 +758,7 @@ export function Compositor() {
       const id = (event as CustomEvent<{ id: string }>).detail?.id;
       const store = useEditorStore.getState(), clip = store.clips.find(value => value.id === id);
       if (!clip || clip.locked || (clip.kind !== "image" && clip.kind !== "video")) return;
-      onGestureEnd(); store.setIsPlaying(false); store.selectGroupMember(id); setCroppingId(id);
+      onGestureEnd(); setNavigating(false); store.setIsPlaying(false); store.selectGroupMember(id); setCroppingId(id);
     };
     window.addEventListener("editor:crop-photo", begin);
     return () => window.removeEventListener("editor:crop-photo", begin);
@@ -795,6 +826,7 @@ export function Compositor() {
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (editingTextId) return;
     if (e.button !== 0) return;
+    if (navigating) { startViewportPan(e); return; }
     if (draw) {
       startStroke(e, draw);
       return;
@@ -861,13 +893,14 @@ export function Compositor() {
   };
 
   const onCanvasDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (navigating) { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); return; }
     const hit = hitTest(e.clientX, e.clientY);
     if (hit && hit.clip.kind === "text") {
       if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       if (draftFocus.begin()) setEditingTextId(hit.clip.id);
     } else if (hit) {
       if (hit.clip.kind === "image" || hit.clip.kind === "video") {
-        onGestureEnd(); useEditorStore.getState().selectGroupMember(hit.clip.id); useEditorStore.getState().setIsPlaying(false); setCroppingId(hit.clip.id);
+        onGestureEnd(); setNavigating(false); useEditorStore.getState().selectGroupMember(hit.clip.id); useEditorStore.getState().setIsPlaying(false); setCroppingId(hit.clip.id);
       }
       if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       window.dispatchEvent(new Event("editor:open-inspector"));
@@ -1017,7 +1050,7 @@ export function Compositor() {
     return { pts, keys };
   }, [selectedClip, settings.width, settings.height, sources]);
 
-  const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && !croppingId && scale > 0
+  const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && !croppingId && !navigating && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
         top: (selBox.cy - selBox.h / 2) * scale,
@@ -1033,6 +1066,7 @@ export function Compositor() {
 
       <div {...draftFocus.props}
         ref={wrapRef}
+        onPointerDown={event => { if (navigating && !editingTextId && !(event.target instanceof Element && event.target.closest("button, input, textarea, select"))) startViewportPan(event); }}
         onDragOver={onSurfaceDragOver}
         onDragLeave={onSurfaceDragLeave}
         onDrop={onSurfaceDrop}
@@ -1045,10 +1079,12 @@ export function Compositor() {
             height: Math.max(2, settings.height * scale),
             background: settings.background,
             visibility: scale > 0 ? "visible" : "hidden",
-            margin: "auto",
+            position: "absolute", left: "50%", top: "50%",
+            transform: `translate(calc(-50% + ${viewport.x}px), calc(-50% + ${viewport.y}px))`,
+            cursor: navigating ? "grab" : undefined,
           }}
           className={cn(
-            "relative col-start-1 row-start-1 rounded-lg shadow-2xl ring-1 ring-white/10 transition",
+            "relative col-start-1 row-start-1 rounded-lg shadow-2xl ring-1 ring-white/10",
             recording && "ring-2 ring-red-500/70",
             dropKind && "ring-2 ring-white/70",
           )}
@@ -1065,7 +1101,7 @@ export function Compositor() {
                   onContextMenu={onCanvasContextMenu}
                   className={cn(
                     "h-full w-full touch-none",
-                    draw ? "cursor-crosshair" : editingTextId ? "cursor-text" : selectedClip ? "cursor-move" : "cursor-default",
+                    navigating ? "cursor-grab" : draw ? "cursor-crosshair" : editingTextId ? "cursor-text" : selectedClip ? "cursor-move" : "cursor-default",
                   )}
                 />
               </ContextMenuTrigger>
@@ -1073,7 +1109,7 @@ export function Compositor() {
             </ContextMenu>
           </div>
 
-          {groupBounds && (
+          {groupBounds && !navigating && !croppingId && (
             <div className="pointer-events-none absolute rounded-[2px] border-2 border-dashed border-white/90"
               style={groupBounds}>
               <button type="button" aria-label={t("editor.groups.resize", { defaultValue: "Resize selection" })} title={t("editor.groups.resize", { defaultValue: "Resize selection" })} onPointerDown={onGroupHandleDown("scale")} className="pointer-events-auto absolute -bottom-2 -right-2 h-4 w-4 cursor-nwse-resize rounded-sm border border-black bg-white" />
@@ -1247,6 +1283,13 @@ export function Compositor() {
       </div>
 
 
+      <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70">
+        <button type="button" aria-pressed={navigating} onClick={() => { onGestureEnd(); setCroppingId(null); if (!navigating) useEditorUiStore.getState().setDraw(null); setNavigating(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${navigating ? "border-white bg-white/15" : "border-white/20"}`}>{t("editor.viewport.pan", { defaultValue: "Pan canvas" })}</button>
+        <button type="button" aria-label={t("editor.viewport.zoomOut", { defaultValue: "Zoom canvas out" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom / 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">−</button>
+        <span className="min-w-10 text-center tabular-nums">{Math.round(scale * 100)}%</span>
+        <button type="button" aria-label={t("editor.viewport.zoomIn", { defaultValue: "Zoom canvas in" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom * 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">+</button>
+        <button type="button" onClick={() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); }} className="min-h-8 rounded-lg border border-white/20 px-3">{t("editor.viewport.fit", { defaultValue: "Fit" })}</button>
+      </div>
       <PagesStrip sources={sources} />
 
       <div className="flex min-w-0 items-center gap-1 border-t border-white/10 bg-black/60 px-2 py-2.5 backdrop-blur-[24px] sm:gap-3 sm:px-4">
