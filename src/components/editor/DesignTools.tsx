@@ -1,4 +1,5 @@
 import { VectorSymbolsPanel } from "./VectorSymbolsPanel";
+import { DesignClipboardControls } from "./DesignClipboardControls";
 import { ConnectorsPanel } from "./ConnectorsPanel";
 import { PageAnimationPanel } from "./PageAnimationPanel";
 import { BulkCreatePanel } from "./BulkCreatePanel";
@@ -60,6 +61,7 @@ export function DesignTools() {
       <button type="button" className={button} aria-expanded={panel === "colours"} onClick={() => setPanel(panel === "colours" ? null : "colours")}><Palette size={15} />{t("editor.designTools.colours", { defaultValue: "Document colours" })}</button>
       <button type="button" className={button} aria-expanded={panel === "layout"} onClick={() => setPanel(panel === "layout" ? null : "layout")}>{t("editor.layout.title", { defaultValue: "Position and spacing" })}</button>
       <span className="mx-1 h-4 w-px shrink-0 bg-white/15" />
+      <DesignClipboardControls />
       <button type="button" className={button} disabled={selected.length !== 1} onClick={copy}><Copy size={15} />{t("editor.designTools.copyStyle", { defaultValue: "Copy style" })}</button>
       <button type="button" className={button} disabled={!style || !selected.some(c => !c.locked)} onClick={() => style && apply(p => applyDesignStyle(p, ids, style))}><Paintbrush size={15} />{t("editor.designTools.pasteStyle", { defaultValue: "Paste style" })}</button>
       <button type="button" className={button} aria-expanded={panel === "search"} onClick={() => setPanel(panel === "search" ? null : "search")}><Search size={15} />{t("editor.designTools.findReplace", { defaultValue: "Find and replace" })}</button>
