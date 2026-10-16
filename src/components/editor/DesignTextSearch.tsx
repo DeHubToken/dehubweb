@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { findDesignText, replaceDesignText } from "@/lib/editor/designTools";
 import type { ProjectSnapshot } from "@/lib/editor/types";
+import { DocumentFonts } from "./DocumentFonts";
 
 export function DesignTextSearch({ project, apply, seek }: { project: ProjectSnapshot;
   apply: (operation: (p: ProjectSnapshot) => ProjectSnapshot) => void; seek: (id: string, time: number) => void }) {
@@ -24,5 +25,6 @@ export function DesignTextSearch({ project, apply, seek }: { project: ProjectSna
       <button type="button" onClick={() => seek(clip.id, clip.start)} className="min-h-9 max-w-56 truncate px-3 text-left text-xs text-white/80">{clip.text}</button>
       <button type="button" disabled={clip.locked} onClick={() => apply(p => replaceDesignText(p, query, replacement, matchCase, [clip.id]))} className="min-h-9 border-l border-white/15 px-3 text-xs text-white/65 hover:bg-white/10 disabled:opacity-35">{t("editor.designTools.replace", { defaultValue: "Replace" })}</button>
     </div>)}</div>
+    <DocumentFonts project={project} apply={apply} />
   </div>;
 }

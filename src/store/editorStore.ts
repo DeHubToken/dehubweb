@@ -828,7 +828,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
 
   applyDesignEdit: (expected, next) => {
     const s = get();
-    if (s.editing || expected.id !== s.projectId || next.id !== s.projectId ||
+    if (expected.id !== s.projectId || next.id !== s.projectId ||
       projectReviewSnapshotKey(s.toSnapshot()) !== projectReviewSnapshotKey(expected)) return false;
     const existing = new Set(next.clips.map(c => c.id));
     set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], tracks: next.tracks,

@@ -52,6 +52,7 @@ import { importFiles } from "@/lib/editor/importFiles";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { PagesStrip } from "./PagesStrip";
+import { GOOGLE_FONTS, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
 import { audioGainAt } from "@/lib/editor/audioEnvelope";
 import { leaseMedia } from "@/lib/editor/mediaLeases";
 
@@ -117,6 +118,13 @@ export function Compositor() {
 
   const tracks = useEditorStore((s) => s.tracks);
   const clips = useEditorStore((s) => s.clips);
+  const fontFamilies = useMemo(() => [...new Set(clips.flatMap(clip => clip.kind === "text" ? [primaryFamily(clip.fontFamily)] : []))].sort().join("|"), [clips]);
+  useEffect(() => {
+    for (const family of fontFamilies.split("|")) {
+      const font = GOOGLE_FONTS.find(item => item.family === family);
+      if (font) loadGoogleFont(font.family, font.weights);
+    }
+  }, [fontFamilies]);
   const media = useEditorStore((s) => s.media);
   const settings = useEditorStore((s) => s.settings);
   const currentTime = useEditorStore((s) => s.currentTime);
