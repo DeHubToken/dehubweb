@@ -1,14 +1,16 @@
+import { BulkPageFieldsControls } from "./BulkPageFieldsControls";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
-import { bulkConnected, bulkFieldText, bulkTemplateFields, bulkTextValue, createBulkPages, parseBulkData, type BulkConnections } from "@/lib/editor/bulkCreate";
+import { bulkPageFieldsConnected, type BulkPageFields, bulkConnected, bulkFieldText, bulkTemplateFields, bulkTextValue, createBulkPages, parseBulkData, type BulkConnections } from "@/lib/editor/bulkCreate";
 
 export function BulkCreatePanel() {
   const { t } = useTranslation();
   const clips = useEditorStore(s => s.clips), settings = useEditorStore(s => s.settings), time = useEditorStore(s => s.currentTime);
   const projectId = useEditorStore(s => s.projectId);
   const [source, setSource] = useState("Name,Role\nAlex,Designer\nSam,Producer");
+  const [pageFields, setPageFields] = useState<BulkPageFields>({});
   const [connections, setConnections] = useState<BulkConnections>({});
   const [first, setFirst] = useState("1"), [last, setLast] = useState("");
   const [rowIndex, setRowIndex] = useState(0), [fieldPage, setFieldPage] = useState(0);
@@ -33,7 +35,7 @@ export function BulkCreatePanel() {
       if (!data) return;
       const store = useEditorStore.getState(), before = store.toSnapshot();
       if (before.id !== projectId) return;
-      const result = createBulkPages(before, store.currentTime, data, connections, Number(first), end, () => nanoid(10));
+      const result = createBulkPages(before, store.currentTime, data, connections, Number(first), end, () => nanoid(10), pageFields);
       if (store.applyDesignEdit(before, result.project)) {
         store.setIsPlaying(false); store.setCurrentTime(result.start + 0.01); store.selectClip(null);
         setMessage(t("editor.bulk.created", { defaultValue: "Created {{count}} pages. Undo restores the original design.", count: result.count })); setError("");
@@ -48,11 +50,12 @@ export function BulkCreatePanel() {
     <textarea value={source} onChange={e => { request.current++; changeSource(e.target.value); }} maxLength={500000} rows={4} aria-label={t("editor.bulk.data", { defaultValue: "Spreadsheet data with column headers" })} className="w-full rounded-lg border border-white/20 bg-white/5 p-2 font-mono text-xs text-white" />
     {data && <>
       <div className="flex flex-wrap items-center gap-2 text-xs text-white/65"><span>{data.rows.length} {t("editor.bulk.rows", { defaultValue: "data rows" })}</span><label>{t("editor.bulk.first", { defaultValue: "From row" })}<input type="number" min={1} max={data.rows.length} value={first} onChange={e => setFirst(e.target.value)} className="ml-2 min-h-9 w-16 rounded border border-white/20 bg-white/5 px-2" /></label><label>{t("editor.bulk.last", { defaultValue: "To row" })}<input type="number" min={1} max={data.rows.length} value={last || data.rows.length} onChange={e => setLast(e.target.value)} className="ml-2 min-h-9 w-16 rounded border border-white/20 bg-white/5 px-2" /></label></div>
+      <BulkPageFieldsControls headers={data.headers} row={previewRow} value={pageFields} onChange={value => { setPageFields(value); setMessage(""); }} />
       {!fields.length && <p className="text-xs text-white/60">{t("editor.bulk.noText", { defaultValue: "Add an unlocked text or QR layer to this page to connect your data." })}</p>}
       {fields.slice(page * 8, page * 8 + 8).map(clip => <div key={clip.id} className="grid gap-2 rounded-lg border border-white/10 p-2 sm:grid-cols-2"><span className="truncate text-xs text-white/80" title={bulkFieldText(clip)}>{clip.label || (clip.kind === "shape" ? "QR: " + bulkFieldText(clip) : bulkFieldText(clip)) || t("editor.bulk.emptyText", { defaultValue: "Empty text layer" })}</span><select aria-label={t("editor.bulk.connect", { defaultValue: "Connect {{name}} to a column", name: clip.label || bulkFieldText(clip).slice(0, 60) })} value={connections[clip.id] ?? ""} onChange={e => { setConnections(value => ({ ...value, [clip.id]: e.target.value })); setMessage(""); }} className="min-h-9 rounded border border-white/20 bg-neutral-900 px-2 text-xs text-white"><option value="">{t("editor.bulk.placeholders", { defaultValue: "Use placeholders in text" })}</option>{data.headers.map(header => <option key={header} value={header}>{header}</option>)}</select>{previewRow && <p className="whitespace-pre-wrap break-words text-xs text-white/50 sm:col-span-2">{bulkTextValue(clip, data.headers, previewRow, connections).slice(0, 500)}</p>}</div>)}
       {fields.length > 8 && <div className="flex items-center gap-2"><button type="button" className={button} disabled={page === 0} onClick={() => setFieldPage(page - 1)}>{t("editor.bulk.previousLayers", { defaultValue: "Previous layers" })}</button><span className="text-xs text-white/50">{page + 1} / {Math.ceil(fields.length / 8)}</span><button type="button" className={button} disabled={(page + 1) * 8 >= fields.length} onClick={() => setFieldPage(page + 1)}>{t("editor.bulk.nextLayers", { defaultValue: "Next layers" })}</button></div>}
       <label className="block text-xs text-white/60">{t("editor.bulk.preview", { defaultValue: "Preview data row" })}<select value={Math.min(rowIndex, data.rows.length - 1)} onChange={e => setRowIndex(Number(e.target.value))} className="ml-2 min-h-9 rounded border border-white/20 bg-neutral-900 px-2 text-white">{data.rows.map((row, index) => <option key={index} value={index}>{index + 1} · {(row[0] || "—").slice(0, 60)}</option>)}</select></label>
-      <button type="button" disabled={!connected.length || !Number.isInteger(Number(first)) || Number(first) < 1 || !Number.isInteger(end) || end < Number(first) || end > data.rows.length} onClick={generate} className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black disabled:opacity-35">{t("editor.bulk.generate", { defaultValue: "Generate {{count}} pages", count: Math.max(0, end - Number(first) + 1) || 0 })}</button>
+      <button type="button" disabled={(!connected.length && !bulkPageFieldsConnected(data.headers, pageFields)) || !Number.isInteger(Number(first)) || Number(first) < 1 || !Number.isInteger(end) || end < Number(first) || end > data.rows.length} onClick={generate} className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black disabled:opacity-35">{t("editor.bulk.generate", { defaultValue: "Generate {{count}} pages", count: Math.max(0, end - Number(first) + 1) || 0 })}</button>
     </>}
     {(parsed.error || error) && <p role="alert" className="text-xs text-red-300">{error || parsed.error}</p>}
     {message && <p role="status" className="text-xs text-emerald-300">{message}</p>}
