@@ -1,3 +1,4 @@
+import { ensureProjectFonts } from "@/lib/editor/googleFonts";
 import { nextDesignLayer } from "@/lib/editor/layerNavigation";
 import { SpacingGuides } from "../SpacingGuides";
 import { OverlapLayerPicker } from "../OverlapLayerPicker";
@@ -184,6 +185,8 @@ export function Compositor() {
   const colourPick = useDesignColourPick(), sampling = colourPick?.projectId === previewProject;
   useEffect(() => { if (presenting && sampling) cancelDesignColourPick(colourPick.token); }, [presenting, sampling, colourPick?.token]);
   useLayoutEffect(() => registerDesignPagePreview(previewProject, async (snapshot, at, maxEdge) => {
+    if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
+    await ensureProjectFonts(snapshot.clips);
     if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
     const { width, height, background } = snapshot.settings, ratio = Math.min(1, maxEdge / Math.max(width, height));
     const canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(width * ratio)); canvas.height = Math.max(1, Math.round(height * ratio));
