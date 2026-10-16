@@ -1,3 +1,4 @@
+import { ChartFormattingPanel, type ChartAppearance } from "./ChartFormattingPanel";
 import { chartDataSource, parseChartSource } from "@/lib/editor/chartSeries";
 import { TableFormattingPanel } from "./TableFormattingPanel";
 import { DESIGN_PALETTES } from "@/lib/editor/designTools";
@@ -22,6 +23,7 @@ export function DataVisualPanel() {
   const [foreground, setForeground] = useState("#ffffff");
   const [accent, setAccent] = useState("#38bdf8");
   const [chartPalette, setChartPalette] = useState<string[]>([...DEFAULT_CHART.colours]);
+  const [chartAppearance, setChartAppearance] = useState<ChartAppearance>({});
   const [tableFormat, setTableFormat] = useState<Omit<TableData, "rows">>({ ...DEFAULT_TABLE });
   const [multiple, setMultiple] = useState(false), [stacked, setStacked] = useState(false), [showLegend, setShowLegend] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
@@ -44,7 +46,7 @@ export function DataVisualPanel() {
     setMode(next);
     if (next === "chart") {
       const value = chart ?? DEFAULT_CHART;
-      setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setShowLegend(value.showLegend !== false);
+      setChartAppearance({ valueFormat: value.valueFormat, donutHole: value.donutHole }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setShowLegend(value.showLegend !== false);
       setForeground(value.textColour); setAccent(value.colours[0] ?? "#38bdf8"); setShowLabels(value.showLabels); setShowValues(value.showValues);
     } else {
       const value = table ?? DEFAULT_TABLE;
@@ -59,6 +61,7 @@ export function DataVisualPanel() {
       setTableFormat({ ...next }); setData(formatDelimitedData(next.rows, "\t")); setForeground(next.textColour); setAccent(next.headerColour); setShowLabels(next.header);
     } else {
       const next = chart ?? DEFAULT_CHART;
+      setChartAppearance({ valueFormat: next.valueFormat, donutHole: next.donutHole });
       setData(chartDataSource(next)); setMultiple(!!next.series?.length); setStacked(!!next.stacked); setShowLegend(next.showLegend !== false); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
       setShowLabels(next.showLabels); setShowValues(next.showValues); setKind(next.kind);
     }
@@ -80,7 +83,7 @@ export function DataVisualPanel() {
   const apply = () => {
     try {
       const s = useEditorStore.getState(), before = s.toSnapshot();
-      const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), stacked, showLegend,
+      const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), ...chartAppearance, stacked, showLegend,
         colours: [accent, ...chartPalette.slice(1)], textColour: foreground, showLabels, showValues } }
         : { table: { ...tableFormat, rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
       if (!validDataVisuals(value)) throw new Error("Use valid colours and table formatting");
@@ -110,6 +113,7 @@ export function DataVisualPanel() {
     <label className="inline-flex min-h-9 cursor-pointer items-center rounded-lg border border-white/20 px-3 text-xs hover:bg-white/10">{t("editor.dataVisual.import", { defaultValue: "Import CSV or TSV" })}<input type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" className="sr-only" onChange={e => { void importFile(e.target.files?.[0]); e.target.value = ""; }} /></label>
     <div className="flex gap-2">{(["cells", "source"] as const).map(view => <button type="button" key={view} aria-pressed={dataView === view} onClick={() => setDataView(view)} className={`min-h-9 rounded-lg border px-3 text-xs ${dataView === view ? "border-white bg-white/15" : "border-white/20"}`}>{t(`editor.dataVisual.view.${view}`, { defaultValue: view === "cells" ? "Edit cells" : "Source data" })}</button>)}</div>
     {dataView === "cells" ? <DataCells value={data} onChange={setData} chart={mode === "chart"} multiSeries={multiple} /> : <textarea value={data} onChange={e => setData(e.target.value)} aria-label={t("editor.dataVisual.data", { defaultValue: "Data" })} rows={4} className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />}
+    {mode === "chart" && <ChartFormattingPanel kind={kind} value={chartAppearance} onChange={setChartAppearance} />}
     {mode === "table" && <TableFormattingPanel value={{ ...tableFormat, header: showLabels }} source={data} onChange={setTableFormat} onSource={setData} />}
     <div className="flex flex-wrap items-center gap-3 text-xs">
       <label className="flex items-center gap-2"><input type="checkbox" checked={showLabels} onChange={e => setShowLabels(e.target.checked)} />{t(mode === "chart" ? "editor.dataVisual.labels" : "editor.dataVisual.header", { defaultValue: mode === "chart" ? "Show labels" : "Header row" })}</label>
