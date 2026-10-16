@@ -77,6 +77,7 @@ export function DataVisualPanel() {
       setTableFormat({ ...next }); setData(formatDelimitedData(next.rows, "\t")); setForeground(next.textColour); setAccent(next.headerColour); setShowLabels(next.header);
     } else {
       const next = chart ?? DEFAULT_CHART;
+      setChartPalette([...next.colours]);
       setChartAppearance({ xAxisTitle: next.xAxisTitle, yAxisTitle: next.yAxisTitle, valueFormat: next.valueFormat, donutHole: next.donutHole, donutLabel: next.donutLabel, donutTotal: next.donutTotal, lineWidth: next.lineWidth, lineStyle: next.lineStyle, pointSize: next.pointSize, areaOpacity: next.areaOpacity, barGap: next.barGap, showGrid: next.showGrid, showAxisValues: next.showAxisValues, legendPosition: next.legendPosition, scaleMin: next.scaleMin, scaleMax: next.scaleMax });
       setData(chartDataSource(next)); setMultiple(!!next.series?.length); setStacked(!!next.stacked); setStackPercent(!!next.stackPercent); setShowLegend(next.showLegend !== false); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
       setShowLabels(next.showLabels); setShowValues(next.showValues); setKind(next.kind);
@@ -166,6 +167,7 @@ export function DataVisualPanel() {
     </div>
     </div>
     <div className="sticky bottom-0 z-10 flex flex-wrap items-center gap-2 border-t border-white/10 bg-neutral-950 py-3 text-xs">
+      <button type="button" onClick={() => choose(mode)} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t("editor.dataVisual.resetDraft", { defaultValue: "Reset draft" })}</button>
       <button type="button" disabled={!!selected?.locked && !!(chart || table)} onClick={apply} className="min-h-9 rounded-lg bg-white px-3 font-medium text-black disabled:opacity-35">{t(chart || table ? "editor.dataVisual.update" : "editor.dataVisual.insert", { defaultValue: chart || table ? "Update graphic" : "Insert graphic" })}</button>
       {error && <span role="alert" className="text-red-300">{error}</span>}
     </div>
