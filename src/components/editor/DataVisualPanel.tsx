@@ -16,7 +16,7 @@ import { TableFormattingPanel } from "./TableFormattingPanel";
 import { DESIGN_PALETTES } from "@/lib/editor/designTools";
 import { DataCells } from "./DataCells";
 import { formatDelimitedData } from "@/lib/editor/delimitedData";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_CHART, DEFAULT_TABLE, putDataVisual } from "@/lib/editor/dataVisualProject";
 import { CHART_KINDS, validDataVisuals, parseTableData, type ChartKind, type ChartData, type TableData } from "@/lib/editor/dataVisuals";
@@ -26,6 +26,7 @@ import { nanoid } from "nanoid";
 export function DataVisualPanel() {
   const { t } = useTranslation();
   const panelId = useId();
+  const projectId = useEditorStore(store => store.projectId);
   const previewSettings = useEditorStore(store => store.settings);
   const selected = useEditorStore(s => s.clips.find(c => s.selectedClipIds.length === 1 && c.id === s.selectedClipIds[0]));
   const chart = selected?.kind === "shape" ? selected.chart : undefined;
@@ -46,18 +47,20 @@ export function DataVisualPanel() {
   const [showValues, setShowValues] = useState(true);
   const [error, setError] = useState("");
   const importRequest = useRef(0);
-  useEffect(() => { setFocusedCell(""); importRequest.current++; return () => { importRequest.current++; }; }, [selected?.id, mode]);
+  const editData = useCallback((value: string) => { importRequest.current++; setData(value); setError(""); }, []);
+  useEffect(() => { setFocusedCell(""); importRequest.current++; return () => { importRequest.current++; }; }, [projectId, selected?.id, mode]);
   const importFile = async (file?: File) => {
     if (!file) return;
     const request = ++importRequest.current;
     try {
       if (file.size > 500000) throw new Error("Choose a CSV or TSV file smaller than 500 KB");
       const text = await file.text();
-      if (request !== importRequest.current) return;
+      if (request !== importRequest.current || useEditorStore.getState().projectId !== projectId) return;
       setData(text.replace(/^\uFEFF/, "")); setError("");
     } catch (error) { if (request === importRequest.current) setError(error instanceof Error ? error.message : "Could not read this file"); }
   };
   useEffect(() => {
+    importRequest.current++;
     const next = table ? "table" : "chart";
     setMode(next);
     if (next === "chart") {
@@ -69,9 +72,9 @@ export function DataVisualPanel() {
       setTableFormat({ ...value }); setData(formatDelimitedData(value.rows, "\t")); setForeground(value.textColour); setAccent(value.headerColour); setShowLabels(value.header);
     }
     setError("");
-  }, [selected?.id, chart, table]);
+  }, [projectId, selected?.id, chart, table]);
   const choose = (value: "chart" | "table") => {
-    setMode(value); setError("");
+    importRequest.current++; setMode(value); setError("");
     if (value === "table") {
       const next = table ?? DEFAULT_TABLE;
       setTableFormat({ ...next }); setData(formatDelimitedData(next.rows, "\t")); setForeground(next.textColour); setAccent(next.headerColour); setShowLabels(next.header);
@@ -99,6 +102,7 @@ export function DataVisualPanel() {
     setChartPalette(previous => { const next = Array.from({ length: 6 }, (_, i) => previous[i % previous.length] ?? DEFAULT_CHART.colours[i % DEFAULT_CHART.colours.length]); next[index] = colour; return next; });
   };
   const changeTableStructure = (axis: TableAxis, index: number, action: TableStructureAction) => {
+    importRequest.current++;
     try { const next = editTableStructure(data, { ...tableFormat, header: showLabels }, axis, index, action); setTableFormat(next.format); setData(next.source); setFocusedCell(axis === "row" ? `A${next.selected + 1}` : `${String.fromCharCode(65 + next.selected)}1`); setError(""); }
     catch (reason) { setError(reason instanceof Error ? reason.message : "Could not change this table"); }
   };
@@ -109,6 +113,7 @@ export function DataVisualPanel() {
     } catch { return null; }
   }, [mode, chart, kind, data, multiple, chartAppearance, stacked, stackPercent, showLegend, accent, chartPalette, foreground, showLabels, showValues, tableFormat]);
   const apply = () => {
+    importRequest.current++;
     try {
       const s = useEditorStore.getState(), before = s.toSnapshot();
       const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), ...chartAppearance, stacked, stackPercent, showLegend,
@@ -133,7 +138,7 @@ export function DataVisualPanel() {
     <p className="text-xs text-white/55">{t(mode === "chart" ? multiple ? "editor.dataVisual.seriesHint" : "editor.dataVisual.chartHint" : "editor.dataVisual.tableHint", { defaultValue: mode === "chart" ? multiple ? "First row: Label, followed by series names. Then one label and a number for each series per row. Up to 50 data rows and six series. Turning multiple series off keeps the first series." : "One label,value pair per line. Up to 50 rows. Paste tab-separated spreadsheet data too." : "One row per line. Separate cells with commas or tabs. Up to 20 rows and 12 columns." })}</p>
     <label className="inline-flex min-h-9 cursor-pointer items-center rounded-lg border border-white/20 px-3 text-xs hover:bg-white/10">{t("editor.dataVisual.import", { defaultValue: "Import CSV or TSV" })}<input type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" className="sr-only" onChange={e => { void importFile(e.target.files?.[0]); e.target.value = ""; }} /></label>
     <div className="flex gap-2">{(["cells", "source"] as const).map(view => <button type="button" key={view} aria-pressed={dataView === view} onClick={() => setDataView(view)} className={`min-h-9 rounded-lg border px-3 text-xs ${dataView === view ? "border-white bg-white/15" : "border-white/20"}`}>{t(`editor.dataVisual.view.${view}`, { defaultValue: view === "cells" ? "Edit cells" : "Source data" })}</button>)}</div>
-    {dataView === "cells" ? <DataCells value={data} onChange={setData} chart={mode === "chart"} multiSeries={multiple} onCellFocus={mode === "table" ? setFocusedCell : undefined} onStructure={mode === "table" ? changeTableStructure : undefined} /> : <textarea value={data} onChange={e => setData(e.target.value)} aria-label={t("editor.dataVisual.data", { defaultValue: "Data" })} rows={4} className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />}
+    {dataView === "cells" ? <DataCells value={data} onChange={editData} chart={mode === "chart"} multiSeries={multiple} onCellFocus={mode === "table" ? setFocusedCell : undefined} onStructure={mode === "table" ? changeTableStructure : undefined} /> : <textarea value={data} onChange={e => editData(e.target.value)} aria-label={t("editor.dataVisual.data", { defaultValue: "Data" })} rows={4} className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />}
     {mode === "chart" && kind === "scatter" && <p className="text-xs text-white/55">{t("editor.charts.scatterHint", { defaultValue: "Scatter plots use numeric X coordinates in the first column and Y values in the remaining columns. Multiple series share those X coordinates." })}</p>}
     {mode === "chart" && multiple && <ChartSeriesControls source={data} onChange={(source, order) => { importRequest.current++; const colours = chartSeriesEditColours([accent, ...chartPalette.slice(1)], order, DEFAULT_CHART.colours); setData(source); setChartPalette(colours); setAccent(colours[0]); setError(""); }} />}
     {mode === "chart" && <ChartTransposeControl source={data} multiple={multiple} disabled={kind === "scatter" || kind === "pie" || kind === "donut"} onChange={source => { importRequest.current++; setData(source); setMultiple(true); setError(""); }} />}
@@ -160,7 +165,7 @@ export function DataVisualPanel() {
     {mode === "chart" && <ChartFormattingPanel percentStack={multiple && stacked && stackPercent && (kind === "bar" || kind === "column")} multiple={multiple} kind={kind} value={chartAppearance} onChange={setChartAppearance} />}
     <div className="flex flex-wrap gap-2"><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setAccent} label={t("editor.colourPicker.accent", { defaultValue: "Pick accent from canvas" })} /><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setForeground} label={t("editor.colourPicker.ink", { defaultValue: "Pick text colour from canvas" })} /></div>
     {mode === "table" && <TableStyleGallery value={{ ...tableFormat, textColour: foreground, headerColour: accent }} onChange={value => { setTableFormat(value); setForeground(value.textColour); setAccent(value.headerColour); }} />}
-    {mode === "table" && <TableFormattingPanel focusedCell={focusedCell} value={{ ...tableFormat, header: showLabels }} source={data} onChange={value => { setTableFormat(value); setShowLabels(value.header); }} onSource={setData} />}
+    {mode === "table" && <TableFormattingPanel focusedCell={focusedCell} value={{ ...tableFormat, header: showLabels }} source={data} onChange={value => { setTableFormat(value); setShowLabels(value.header); }} onSource={editData} />}
     <div className="flex flex-wrap items-center gap-3 text-xs">
       <label className="flex items-center gap-2"><input type="checkbox" checked={showLabels} onChange={e => setShowLabels(e.target.checked)} />{t(mode === "chart" ? "editor.dataVisual.labels" : "editor.dataVisual.header", { defaultValue: mode === "chart" ? "Show labels" : "Header row" })}</label>
       {mode === "chart" && <label className="flex items-center gap-2"><input type="checkbox" checked={showValues} onChange={e => setShowValues(e.target.checked)} />{t("editor.dataVisual.values", { defaultValue: "Show values" })}</label>}
