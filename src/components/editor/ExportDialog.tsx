@@ -1,3 +1,5 @@
+import { DocumentImageQualityControls } from "./DocumentImageQualityControls";
+import { documentImageProfile, documentImageScale, type DocumentImageProfile } from "@/lib/editor/documentImageProfile";
 import { JpegQualityControl } from "./JpegQualityControl";
 import { presentationNotesText } from "@/lib/editor/presentationNotesText";
 import { SectionExportPicker } from "./SectionExportPicker";
@@ -77,6 +79,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [sectionName, setSectionName] = useState("");
   const [pageSelection, setPageSelection] = useState("1");
   const [filenamePattern, setFilenamePattern] = useState("");
+  const [documentQuality, setDocumentQuality] = useState<DocumentImageProfile>("standard");
   const [jpegQuality, setJpegQuality] = useState(0.92);
   const [transparent, setTransparent] = useState(false);
   const [cropMarks, setCropMarks] = useState(false);
@@ -98,7 +101,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const videoSupported = isExportSupported();
   const still = isStill(format);
   const gif = format === "gif";
-  const scale = parseFloat(scaleKey);
+  const scale = format === "pdf" || format === "pptx" ? documentImageScale(settings.width, settings.height, parseFloat(scaleKey), documentQuality) : parseFloat(scaleKey);
   const gifOutput = gifPlan(settings.width, settings.height, scale, BRAND_OUTRO_DURATION, settings.fps);
   const outW = gif ? gifOutput.width : Math.round(settings.width * scale);
   const outH = gif ? gifOutput.height : Math.round(settings.height * scale);
@@ -162,7 +165,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         let captured = 0;
         const blob = await exportPresentation(snapshot, currentTime, resolvePageExportScope(snapshot, pageScope, pageSelection, effectiveSection), async time => {
           check(); setLabel(t("editor.pages.exporting", { current: ++captured, total: frames.length }));
-          return exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, ignoreAnimations: true, time });
+          return exportStill({ snapshot, media, format: "jpg", quality: documentImageProfile(documentQuality).quality, scale, ignoreAnimations: true, time });
         }, ctl.signal, fraction => setProgress(Math.round(fraction * 100)));
         check(); download(blob, exportFilename(snapshot.title, "pptx", "", "design"));
       } else if (format === "pdf") {
@@ -171,7 +174,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           check();
           setProgress(Math.round(index / frames.length * 95));
           setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
-          const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, ignoreAnimations: true, time: frames[index].time });
+          const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: documentImageProfile(documentQuality).quality, scale, ignoreAnimations: true, time: frames[index].time });
           return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)), designWidth: snapshot.settings.width, designHeight: snapshot.settings.height, dpi: snapshot.settings.printDpi, cropMarks, links };
         }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal, frames.map(frame => frame.index), { title: snapshot.title, bookmarks, pageSections: frames.map(frame => snapshot.settings.pageDetails?.[frame.index]?.section ?? ""), pageTitles: frames.map(frame => snapshot.settings.pageDetails?.[frame.index]?.title ?? ""), pageLabels: frames.map(frame => String(frame.index + 1)) });
         check(); download(new Blob(parts, { type: "application/pdf" }), exportFilename(snapshot.title, "pdf", "", "design"));
@@ -341,6 +344,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </Row>}
+            {(format === "pdf" || format === "pptx") && <DocumentImageQualityControls value={documentQuality} onChange={setDocumentQuality} />}
             {format === "pdf" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={cropMarks} onChange={event => setCropMarks(event.target.checked)} />{t("editor.export.cropMarks", { defaultValue: "Crop marks and print margins" })}</label>}
             {format === "pdf" && multiPage && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={bookmarks} onChange={event => setBookmarks(event.target.checked)} />{t("editor.export.pageBookmarks", { defaultValue: "Page-name bookmarks" })}</label>}
             {format === "pdf" && cropMarks && <p className="text-xs text-white/45">{t("editor.export.cropMarkHint", { defaultValue: "Adds cutting marks outside the artwork. The saved print resolution sets the finished page size." })}</p>}
