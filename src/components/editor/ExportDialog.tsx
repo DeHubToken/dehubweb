@@ -32,13 +32,14 @@ import { GIF_CONTENT_LIMIT, gifPlan } from "@/lib/editor/gif";
 import { clipExportRanges, type ExportScope } from "@/lib/editor/exportRanges";
 import { ZIP_DOWNLOAD_LIMIT } from "@/lib/editor/zipArchive";
 import { zipDownloadFiles } from "@/lib/editor/zipDownloadFiles";
+import { writePdfDocument } from "@/lib/editor/pdfDocument";
 
 interface Props {
   open: boolean;
   onOpenChange: (v: boolean) => void;
 }
 
-type Format = ExportFormat | StillFormat;
+type Format = ExportFormat | StillFormat | "pdf";
 
 const QUALITY_PRESETS = {
   low: 2_500_000,
@@ -48,7 +49,7 @@ const QUALITY_PRESETS = {
 } as const;
 type Quality = keyof typeof QUALITY_PRESETS;
 
-const isStill = (f: Format): f is StillFormat => f === "png" || f === "jpg";
+const isStill = (f: Format): boolean => f === "png" || f === "jpg" || f === "pdf";
 
 export function ExportDialog({ open, onOpenChange }: Props) {
   const { t: _copy } = _useCopy();
@@ -136,8 +137,19 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     const check = () => { if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError"); };
     try {
       const snapshot = toSnapshot();
-      const frames = pageExportFrames(snapshot, currentTime, allPages ? "all" : "current", format as StillFormat);
-      if (multiPage && allPages) {
+      const imageFormat = format === "pdf" ? "jpg" : format as StillFormat;
+      const frames = pageExportFrames(snapshot, currentTime, allPages ? "all" : "current", imageFormat);
+      if (format === "pdf") {
+        const parts: ArrayBuffer[] = [];
+        await writePdfDocument(frames.length, async index => {
+          check();
+          setProgress(Math.round(index / frames.length * 95));
+          setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
+          const { blob } = await exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, time: frames[index].time });
+          return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)) };
+        }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal);
+        check(); download(new Blob(parts, { type: "application/pdf" }), exportFilename(snapshot.title, "pdf", "", "design"));
+      } else if (multiPage && allPages) {
         const files: { name: string; blob: Blob }[] = [];
         for (const frame of frames) {
           check();
@@ -264,6 +276,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
                   <SelectItem value="png">{t("editor.export.png")}</SelectItem>
                   <SelectItem value="jpg">{t("editor.export.jpg")}</SelectItem>
+                  <SelectItem value="pdf">{t("editor.export.pdf", { defaultValue: "PDF document" })}</SelectItem>
                   <SelectItem value="mp4">{t("editor.export.mp4")}</SelectItem>
                   <SelectItem value="webm">{t("editor.export.webm")}</SelectItem>
                   <SelectItem value="gif">{t("emojiPicker.tabGif")}</SelectItem>
@@ -302,7 +315,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 <Select value={allPages ? "all" : "one"} onValueChange={(v) => setAllPages(v === "all")}>
                   <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
                   <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
-                    <SelectItem value="all">{t("editor.pages.allZip", { count: pages.length })}</SelectItem>
+                    <SelectItem value="all">{format === "pdf" ? t("editor.pages.allPdf", { defaultValue: "All {{count}} pages in one PDF", count: pages.length }) : t("editor.pages.allZip", { count: pages.length })}</SelectItem>
                     <SelectItem value="one">{t("editor.pages.thisPage")}</SelectItem>
                   </SelectContent>
                 </Select>

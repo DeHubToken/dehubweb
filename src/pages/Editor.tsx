@@ -22,6 +22,7 @@ import { GenerationWindow } from "@/components/editor/GenerationWindow";
 import { MobileBottomBar } from "@/components/editor/MobileBottomBar";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
+import { DesignTools } from "@/components/editor/DesignTools";
 
 export default function EditorPage() {
   useEffect(() => () => useEditorStore.getState().cancelPendingEdits(), []);
@@ -59,6 +60,7 @@ export default function EditorPage() {
         <EditorPanelColumn />
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <DesignTools />
           <div className="flex min-h-0 min-w-0 flex-1">
             <div className="flex min-h-0 min-w-0 flex-1 flex-col">
               <Compositor />
