@@ -8,6 +8,8 @@ import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
 import { getTransform, isVisualClip, placementPatchAt } from "@/lib/editor/render";
 import { keyAllAt, resolveClipAt } from "@/lib/editor/keyframes";
+import { nanoid } from "nanoid";
+import { copyDesignSelection, cutDesignSelection, getDesignClipboard, pasteDesignSelection, reportDesignClipboard } from "@/lib/editor/designClipboard";
 
 function isControlKey(event: KeyboardEvent): boolean {
   if (event.defaultPrevented || event.isComposing) return true;
@@ -56,7 +58,7 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
       if (onCanvas && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "a") {
         e.preventDefault();
         const hidden = new Set(s.tracks.filter(track => track.hidden).map(track => track.id));
-        s.selectMany(s.clips.filter(c => isVisualClip(c) && !c.locked && !c.hidden && !hidden.has(c.trackId) &&
+        s.selectMany(s.clips.filter(c => isVisualClip(c) && !c.isPageBackground && !c.locked && !c.hidden && !hidden.has(c.trackId) &&
           s.currentTime >= c.start && s.currentTime < c.start + c.duration).map(c => c.id));
         return;
       }
@@ -94,7 +96,7 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
       // 1px, or 10px with Shift, in project pixels.
       if (onCanvas && e.key.startsWith("Arrow") && s.selectedClipIds.length) {
         if (s.clips.some(c => s.selectedClipIds.includes(c.id) && c.groupId && c.locked)) return;
-        const targets = s.clips.filter((c) => s.selectedClipIds.includes(c.id) && isVisualClip(c) && !c.locked);
+        const targets = s.clips.filter((c) => s.selectedClipIds.includes(c.id) && isVisualClip(c) && !c.isPageBackground && !c.locked);
         if (targets.length) {
           e.preventDefault();
           const step = e.shiftKey ? 10 : 1;
@@ -113,16 +115,34 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
           return;
         }
       }
+      if (onCanvas && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "x" && s.selectedClipIds.length) {
+        e.preventDefault();
+        try { const before = s.toSnapshot(), next = cutDesignSelection(before, s.selectedClipIds, s.currentTime, () => nanoid(10)); if (next !== before && s.applyDesignEdit(before, next)) { s.selectClip(null); reportDesignClipboard({ kind: "cut", count: getDesignClipboard()?.layers.length ?? 0 }); } }
+        catch (value) { reportDesignClipboard({ kind: "error", message: value instanceof Error ? value.message : "Could not cut these layers" }); }
+        return;
+      }
       // Copy
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c") {
         if (!s.selectedClipIds.length) return;
         e.preventDefault();
+        if (onCanvas) {
+          try { if (!copyDesignSelection(s.toSnapshot(), s.selectedClipIds, s.currentTime)) reportDesignClipboard({ kind: "error", message: "Select unlocked foreground layers on this page" }); }
+          catch (value) { reportDesignClipboard({ kind: "error", message: value instanceof Error ? value.message : "Could not copy these layers" }); }
+          return;
+        }
         s.copySelectedToClipboard();
         return;
       }
       // Paste
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "v") {
         e.preventDefault();
+        if (onCanvas) {
+          try {
+            const before = s.toSnapshot(), result = pasteDesignSelection(before, s.currentTime, getDesignClipboard(), () => nanoid(10));
+            if (result && s.applyDesignEdit(before, result.project)) { s.setIsPlaying(false); s.selectMany(result.ids); reportDesignClipboard({ kind: "pasted", count: result.ids.length, skipped: result.skipped }); }
+          } catch (value) { reportDesignClipboard({ kind: "error", message: value instanceof Error ? value.message : "Could not paste these layers" }); }
+          return;
+        }
         s.pasteFromClipboard();
         return;
       }

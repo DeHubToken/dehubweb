@@ -696,7 +696,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       const track: Track = { id: nanoid(8), kind: src.kind, name: `${label} ${count}`, muted: false, hidden: false };
       tracks.splice(tracks.indexOf(src) + 1, 0, track);
       const nudge = 0.03;
-      const copy = { ...orig, id: nanoid(10), trackId: track.id } as Clip;
+      const copy = { ...orig, id: nanoid(10), trackId: track.id, isPageBackground: undefined } as Clip;
       if (copy.kind === "text") {
         copy.x = Math.min(1, copy.x + nudge);
         copy.y = Math.min(1, copy.y + nudge);
@@ -775,7 +775,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       if (!track) continue;
       const desired = baseTime + c.start;
       const placed = findFreeStart(workingClips, track.id, desired, c.duration);
-      const copy = { ...c, id: nanoid(10), trackId: track.id, start: placed } as Clip;
+      const copy = { ...c, id: nanoid(10), trackId: track.id, start: placed, isPageBackground: undefined } as Clip;
       workingClips = [...workingClips, copy];
       newIds.push(copy.id);
     }
