@@ -2,7 +2,7 @@ import { QrBrandPalettes } from "./QrBrandPalettes";
 import { QrContentBuilder } from "./QrContentBuilder";
 import { QrVectorDownload } from "./QrVectorDownload";
 import { useQrPreview } from "@/lib/editor/useQrPreview";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
@@ -17,6 +17,9 @@ export function QrPanel() {
   const [correction, setCorrection] = useState<NonNullable<QrGraphic["errorCorrection"]>>("M"), [quietZone, setQuietZone] = useState(4);
   const preview = useQrPreview(content, foreground, background, correction, quietZone);
   const [error, setError] = useState(""), [draftEpoch, setDraftEpoch] = useState(0);
+  const [copyMessage, setCopyMessage] = useState(""), copyGeneration = useRef(0);
+  useEffect(() => { copyGeneration.current++; setCopyMessage(""); return () => { copyGeneration.current++; }; }, [content, selected?.id]);
+  const copyContent = async () => { const request = ++copyGeneration.current; try { if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable"); await navigator.clipboard.writeText(content); if (request === copyGeneration.current) { setCopyMessage(t("editor.qr.contentCopied", { defaultValue: "QR content copied" })); setError(""); } } catch { if (request === copyGeneration.current) { setCopyMessage(""); setError(t("editor.qr.copyFailed", { defaultValue: "Could not copy QR content" })); } } };
   const reset = () => { setContent(qr?.content ?? "https://dehub.io"); setForeground(qr?.foreground ?? "#000000"); setBackground(qr?.background ?? "#ffffff"); setCorrection(qr?.errorCorrection ?? "M"); setQuietZone(qr?.quietZone ?? 4); setError(""); setDraftEpoch(value => value + 1); };
   useEffect(() => { if (qr) { setContent(qr.content); setForeground(qr.foreground); setBackground(qr.background); setCorrection(qr.errorCorrection ?? "M"); setQuietZone(qr.quietZone ?? 4); } }, [selected?.id, qr]);
   const apply = () => {
@@ -38,8 +41,10 @@ export function QrPanel() {
     <div className="flex flex-wrap items-center gap-3 text-xs">
       <label className="flex items-center gap-2">{t("editor.qr.foreground", { defaultValue: "Foreground" })}<input type="color" value={foreground} onChange={e => setForeground(e.target.value)} className="h-9 w-10 bg-transparent" /></label>
       <label className="flex items-center gap-2">{t("editor.qr.background", { defaultValue: "Background" })}<input type="color" value={background} onChange={e => setBackground(e.target.value)} className="h-9 w-10 bg-transparent" /></label>
+      <button type="button" disabled={!content.trim()} onClick={() => { void copyContent(); }} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35">{t("editor.qr.copyContent", { defaultValue: "Copy QR content" })}</button>
       <button type="button" onClick={reset} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75">{t("editor.qr.resetDraft", { defaultValue: "Reset QR draft" })}</button>
       <button type="button" disabled={!preview.value || !content.trim() || foreground === background || (!!qr && !!selected?.locked)} onClick={apply} className="min-h-9 rounded-lg bg-white px-3 font-medium text-black disabled:opacity-35">{t(qr ? "editor.qr.update" : "editor.qr.insert", { defaultValue: qr ? "Update QR code" : "Insert QR code" })}</button>
+      {copyMessage && <span role="status" className="text-xs text-cyan-200">{copyMessage}</span>}
       {error && <span role="alert" className="text-red-300">{error}</span>}
     </div>
   </div>;
