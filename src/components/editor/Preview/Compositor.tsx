@@ -1,3 +1,5 @@
+import { SpacingGuides } from "../SpacingGuides";
+import { selectionSpacingBox, smartSpacingSnap, type SpacingGuide } from "@/lib/editor/smartSpacing";
 import { beginDesignColourSample, cancelDesignColourPick, finishDesignColourSample, useDesignColourPick } from "@/lib/editor/designColourPicker";
 import { designPrintDpi } from "@/lib/editor/documentDimensions";
 import { registerDesignPagePreview } from "@/lib/editor/designPagePreviews";
@@ -113,7 +115,7 @@ function halfExtents(b: ClipBox) {
 type Gesture =
   | { mode: "crop"; id: string; clip: MediaClip; box: ClipBox; px: number; py: number }
   | {
-      mode: "move"; id: string; px: number; py: number; box: ClipBox; ax: number; ay: number;
+      mode: "move"; id: string; px: number; py: number; box: ClipBox; snapBox?: ClipBox; ax: number; ay: number;
       /** Other selected layers that travel with this one. */
       group: { id: string; ax: number; ay: number }[];
     }
@@ -608,6 +610,7 @@ export function Compositor() {
     return c && isVisualClip(c) ? c : null;
   }, [selectedClipIds, clips]);
 
+  const [spacingGuides, setSpacingGuides] = useState<SpacingGuide[]>([]);
   const [guides, setGuides] = useState<{ v: number[]; h: number[] }>({ v: [], h: [] });
   // Drag-to-select rectangle, in canvas pixels.
   const [marquee, setMarqueeState] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
@@ -659,10 +662,11 @@ export function Compositor() {
     if (!clip) return;
 
     if (g.mode === "move") {
-      let cx = g.box.cx + (p.x - g.px);
-      let cy = g.box.cy + (p.y - g.py);
+      const snapBox = g.snapBox ?? g.box;
+      let cx = snapBox.cx + (p.x - g.px);
+      let cy = snapBox.cy + (p.y - g.py);
       const snapDist = SNAP_PX / Math.max(0.01, scale);
-      const { hw, hh } = halfExtents(g.box);
+      const { hw, hh } = halfExtents(snapBox);
       const moving = new Set([g.id, ...g.group.map((m) => m.id)]);
       const others = layersAt().filter((l) => !moving.has(l.clip.id));
       const xs = [0, W / 2, W];
@@ -692,8 +696,10 @@ export function Compositor() {
       if (sx) cx += sx.shift;
       if (sy) cy += sy.shift;
       setGuides({ v: sx ? [sx.line] : [], h: sy ? [sy.line] : [] });
-      const dx = (cx - g.box.cx) / W;
-      const dy = (cy - g.box.cy) / H;
+      const spacing = !e.altKey && persistent.spacing ? smartSpacingSnap({ ...snapBox, cx, cy }, others.filter(layer => !layer.clip.isPageBackground).map(layer => layer.box), snapDist, { horizontal: !sx, vertical: !sy }) : { dx: 0, dy: 0, guides: [] };
+      cx += spacing.dx; cy += spacing.dy; setSpacingGuides(spacing.guides);
+      const dx = (cx - snapBox.cx) / W;
+      const dy = (cy - snapBox.cy) / H;
       s.patchClipLive(g.id, placementPatchAt(clip, { x: g.ax + dx, y: g.ay + dy }, s.currentTime, recordOpts()));
       for (const m of g.group) {
         const other = s.clips.find((c) => c.id === m.id);
@@ -756,7 +762,7 @@ export function Compositor() {
     }
     gestureRef.current = null;
     gestureLease.current?.release(); gestureLease.current = null;
-    setGuides({ v: [], h: [] });
+    setGuides({ v: [], h: [] }); setSpacingGuides([]);
     window.removeEventListener("pointermove", onGestureMove);
     window.removeEventListener("pointerup", onGestureEnd);
     window.removeEventListener("pointercancel", onGestureEnd);
@@ -894,7 +900,7 @@ export function Compositor() {
           .filter((c): c is Clip => !!c && isVisualClip(c) && !c.locked)
           .map((c) => { const r = getTransform(resolveClipAt(c, now)); return { id: c.id, ax: r.x, ay: r.y }; })
       : [];
-    startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, ax: tr.x, ay: tr.y, group });
+    startGesture({ mode: "move", id: hit.clip.id, px: p.x, py: p.y, box: hit.box, snapBox: selectionSpacingBox(layersAt().filter(layer => actualSelection.includes(layer.clip.id)).map(layer => layer.box)), ax: tr.x, ay: tr.y, group });
   };
 
   const onHandleDown = (mode: "scale" | "rotate" | "stretch-x" | "stretch-y") => (e: React.PointerEvent) => {
@@ -1234,6 +1240,7 @@ export function Compositor() {
           }} />}
           <GuideEditorLayer active={editingGuides} disabled={sampling || presenting || (!editingGuides && (!!croppingId || !!editingTextId || !!draw || navigating))} rulers={layoutGuides.rulers || editingGuides} surface={surfaceRef} width={settings.width} height={settings.height} scale={scale} projectId={viewportProject} onActivate={() => { useEditorStore.getState().setIsPlaying(false); setEditingGuides(true); }} />
 
+          <SpacingGuides guides={spacingGuides} scale={scale} />
           {/* Selection box with resize and rotate handles. It may extend past
               the page edge, which is why the surface itself does not clip. */}
           {overlay && (
