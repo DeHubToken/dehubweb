@@ -23,7 +23,7 @@ import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
 import { getPages } from "@/lib/editor/pages";
-import { pageExportFrames } from "@/lib/editor/pageExports";
+import { pageExportFrames, parsePageSelection } from "@/lib/editor/pageExports";
 import { exportFilename } from "@/lib/editor/exportName";
 import { zipFiles } from "@/lib/editor/zip";
 import { useAuth } from "@/contexts/AuthContext";
@@ -67,7 +67,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [format, setFormat] = useState<Format>("mp4");
   const [scaleKey, setScaleKey] = useState("1");
   const [qualityKey, setQualityKey] = useState<Quality>("high");
-  const [allPages, setAllPages] = useState(true);
+  const [pageScope, setPageScope] = useState<"all" | "current" | "custom">("all");
+  const [pageSelection, setPageSelection] = useState("1");
   const [transparent, setTransparent] = useState(false);
   const [scope, setScope] = useState<ExportScope>("timeline");
   const rangeSnapshot = { ...toSnapshot(), clips, tracks };
@@ -139,7 +140,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     try {
       const snapshot = toSnapshot();
       const imageFormat = format === "pdf" ? "jpg" : format as StillFormat;
-      const frames = pageExportFrames(snapshot, currentTime, allPages ? "all" : "current", imageFormat);
+      const frames = pageExportFrames(snapshot, currentTime, pageScope === "custom" ? parsePageSelection(pageSelection, getPages(snapshot.settings, snapshot.clips).length) : pageScope, imageFormat);
       if (format === "pdf") {
         const parts: ArrayBuffer[] = [];
         await writePdfDocument(frames.length, async index => {
@@ -150,12 +151,12 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)), designWidth: snapshot.settings.width, designHeight: snapshot.settings.height, links };
         }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal);
         check(); download(new Blob(parts, { type: "application/pdf" }), exportFilename(snapshot.title, "pdf", "", "design"));
-      } else if (multiPage && allPages) {
+      } else if (frames.length > 1) {
         const files: { name: string; blob: Blob }[] = [];
-        for (const frame of frames) {
+        for (const [index, frame] of frames.entries()) {
           check();
-          setProgress(Math.round((frame.index / frames.length) * 100));
-          setLabel(t("editor.pages.exporting", { current: frame.index + 1, total: frames.length }));
+          setProgress(Math.round((index / frames.length) * 100));
+          setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
           const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: frame.time, transparent });
           check();
           files.push({ name: frame.filename, blob });
@@ -165,9 +166,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         download(zip, exportFilename(snapshot.title, "zip", "", "design"));
       } else {
         const time = frames[0].time;
-        const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time, transparent });
+        const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time, transparent });
         check();
-        download(blob, filename);
+        download(blob, frames[0].filename);
       }
       onOpenChange(false);
     } catch (e) {
@@ -314,15 +315,17 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
             {still && multiPage && (
               <Row label={t("editor.pages.label")}>
-                <Select value={allPages ? "all" : "one"} onValueChange={(v) => setAllPages(v === "all")}>
+                <Select value={pageScope} onValueChange={v => setPageScope(v as typeof pageScope)}>
                   <SelectTrigger className="h-9 border-white/10 bg-white/5 text-white"><SelectValue /></SelectTrigger>
                   <SelectContent className="border-white/10 bg-black/90 text-white backdrop-blur-[24px]">
                     <SelectItem value="all">{format === "pdf" ? t("editor.pages.allPdf", { defaultValue: "All {{count}} pages in one PDF", count: pages.length }) : t("editor.pages.allZip", { count: pages.length })}</SelectItem>
-                    <SelectItem value="one">{t("editor.pages.thisPage")}</SelectItem>
+                    <SelectItem value="current">{t("editor.pages.thisPage")}</SelectItem>
+                    <SelectItem value="custom">{t("editor.pages.choosePages", { defaultValue: "Choose pages" })}</SelectItem>
                   </SelectContent>
                 </Select>
               </Row>
             )}
+            {still && multiPage && pageScope === "custom" && <Row label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })}><Input value={pageSelection} onChange={e => setPageSelection(e.target.value)} placeholder="1,3-5" aria-label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })} className="h-9 border-white/10 bg-white/5 text-white" /></Row>}
             {!still && !gif && (
               <Row label={t("editor.export.quality")}>
                 <Select value={qualityKey} onValueChange={(v) => setQualityKey(v as Quality)}>
