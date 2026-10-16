@@ -1,30 +1,23 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useEditorStore } from "@/store/editorStore";
 import { findDesignText, replaceDesignText } from "@/lib/editor/designTools";
+import { designTextSnippet } from "@/lib/editor/designTextMatching";
+import { designTextScopeIds, type DesignTextScope } from "@/lib/editor/textSearchScope";
 import type { ProjectSnapshot } from "@/lib/editor/types";
 import { DocumentFonts } from "./DocumentFonts";
 
-export function DesignTextSearch({ project, apply, seek }: { project: ProjectSnapshot;
-  apply: (operation: (p: ProjectSnapshot) => ProjectSnapshot) => void; seek: (id: string, time: number) => void }) {
-  const { t } = useTranslation();
-  const [query, setQuery] = useState("");
-  const [replacement, setReplacement] = useState("");
-  const [matchCase, setMatchCase] = useState(false);
-  const results = findDesignText(project, query, matchCase);
-  const label = t("editor.designTools.find", { defaultValue: "Find text" });
-  const input = "min-h-9 min-w-0 rounded-lg border border-white/20 bg-white/5 px-3 text-sm outline-none focus:border-white/60";
-  return <div className="space-y-3">
-    <div className="flex flex-wrap gap-2">
-      <input aria-label={label} placeholder={label} value={query} onChange={e => setQuery(e.target.value)} className={input + " flex-1"} />
-      <input aria-label={t("editor.designTools.replaceWith", { defaultValue: "Replace with" })} placeholder={t("editor.designTools.replaceWith", { defaultValue: "Replace with" })} value={replacement} onChange={e => setReplacement(e.target.value)} className={input + " flex-1"} />
-      <label className="flex items-center gap-2 text-xs text-white/65"><input type="checkbox" checked={matchCase} onChange={e => setMatchCase(e.target.checked)} />{t("editor.designTools.matchCase", { defaultValue: "Match case" })}</label>
-      <button type="button" disabled={!results.some(c => !c.locked)} onClick={() => apply(p => replaceDesignText(p, query, replacement, matchCase))} className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black disabled:opacity-35">{t("editor.designTools.replaceAll", { defaultValue: "Replace all" })}</button>
-    </div>
+export function DesignTextSearch({ project, apply, seek }: { project: ProjectSnapshot; apply: (operation: (p: ProjectSnapshot) => ProjectSnapshot) => void; seek: (id: string, time: number) => void }) {
+  const { t } = useTranslation(), selected = useEditorStore(store => store.selectedClipIds), time = useEditorStore(store => store.currentTime);
+  const [query, setQuery] = useState(""), [replacement, setReplacement] = useState(""), [matchCase, setMatchCase] = useState(false), [wholeWords, setWholeWords] = useState(false), [scope, setScope] = useState<DesignTextScope>("all"), [offset, setOffset] = useState(0);
+  const scoped = designTextScopeIds(project, time, scope, selected), allowed = scoped ? new Set(scoped) : null;
+  const results = findDesignText(project, query, matchCase, wholeWords).filter(clip => !allowed || allowed.has(clip.id)), first = Math.min(offset, Math.max(0, Math.floor((results.length - 1) / 20) * 20));
+  const input = "min-h-9 min-w-0 rounded-lg border border-white/20 bg-white/5 px-3 text-sm outline-none focus:border-white/60", button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/65 disabled:opacity-35";
+  return <div className="space-y-3"><div className="flex flex-wrap gap-2"><input aria-label={t("editor.designTools.find", { defaultValue: "Find text" })} placeholder={t("editor.designTools.find", { defaultValue: "Find text" })} value={query} maxLength={2000} onChange={event => { setQuery(event.target.value); setOffset(0); }} className={input + " flex-1"} /><input aria-label={t("editor.designTools.replaceWith", { defaultValue: "Replace with" })} placeholder={t("editor.designTools.replaceWith", { defaultValue: "Replace with" })} value={replacement} maxLength={10000} onChange={event => setReplacement(event.target.value)} className={input + " flex-1"} /><button type="button" disabled={!results.some(clip => !clip.locked)} onClick={() => apply(value => { const store = useEditorStore.getState(); return replaceDesignText(value, query, replacement, matchCase, designTextScopeIds(value, store.currentTime, scope, store.selectedClipIds), wholeWords); })} className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black disabled:opacity-35">{t("editor.designTools.replaceAll", { defaultValue: "Replace all" })}</button></div>
+    <div className="flex flex-wrap items-center gap-3 text-xs text-white/65">{(["all", "page", "selection"] as const).map(value => <button type="button" key={value} aria-pressed={scope === value} onClick={() => { setScope(value); setOffset(0); }} className={`${button} ${scope === value ? "border-cyan-300 bg-cyan-300/10" : ""}`}>{t(`editor.textSearch.scope.${value}`, { defaultValue: ({ all: "Whole design", page: "Current page", selection: "Selection" })[value] })}</button>)}<label className="flex min-h-9 items-center gap-2"><input type="checkbox" checked={matchCase} onChange={event => { setMatchCase(event.target.checked); setOffset(0); }} />{t("editor.designTools.matchCase", { defaultValue: "Match case" })}</label><label className="flex min-h-9 items-center gap-2"><input type="checkbox" checked={wholeWords} onChange={event => { setWholeWords(event.target.checked); setOffset(0); }} />{t("editor.textSearch.wholeWords", { defaultValue: "Whole words" })}</label></div>
     {query && <p role="status" className="text-xs text-white/55">{t("editor.designTools.matches", { defaultValue: "{{count}} text layers found", count: results.length })}</p>}
-    <div className="flex flex-wrap gap-2">{results.map(clip => <div key={clip.id} className="flex max-w-full items-center rounded-lg border border-white/15">
-      <button type="button" onClick={() => seek(clip.id, clip.start)} className="min-h-9 max-w-56 truncate px-3 text-left text-xs text-white/80">{clip.text}</button>
-      <button type="button" disabled={clip.locked} onClick={() => apply(p => replaceDesignText(p, query, replacement, matchCase, [clip.id]))} className="min-h-9 border-l border-white/15 px-3 text-xs text-white/65 hover:bg-white/10 disabled:opacity-35">{t("editor.designTools.replace", { defaultValue: "Replace" })}</button>
-    </div>)}</div>
+    <div className="grid gap-2 sm:grid-cols-2">{results.slice(first, first + 20).map(clip => { const snippet = designTextSnippet(clip.text, query, matchCase, wholeWords); return <div key={clip.id} className="flex min-w-0 items-center rounded-lg border border-white/15"><button type="button" onClick={() => seek(clip.id, clip.start)} className="min-h-10 min-w-0 flex-1 truncate px-3 text-left text-xs text-white/80">{snippet.before}<mark className="rounded-sm bg-cyan-200/20 text-cyan-100">{snippet.match}</mark>{snippet.after}</button><button type="button" disabled={clip.locked} onClick={() => apply(value => replaceDesignText(value, query, replacement, matchCase, [clip.id], wholeWords))} className="min-h-10 shrink-0 border-l border-white/15 px-3 text-xs text-white/65 disabled:opacity-35">{t("editor.designTools.replace", { defaultValue: "Replace" })}</button></div>; })}</div>
+    {results.length > 20 && <div className="flex items-center gap-3"><button type="button" className={button} disabled={!first} onClick={() => setOffset(first - 20)}>{t("editor.textSearch.previous", { defaultValue: "Previous matches" })}</button><span className="text-xs text-white/45">{first + 1}–{Math.min(first + 20, results.length)} / {results.length}</span><button type="button" className={button} disabled={first + 20 >= results.length} onClick={() => setOffset(first + 20)}>{t("editor.textSearch.next", { defaultValue: "Next matches" })}</button></div>}
     <DocumentFonts project={project} apply={apply} />
   </div>;
 }
