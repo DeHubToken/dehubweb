@@ -1,3 +1,4 @@
+import { SimilarSelectionControls } from "./SimilarSelectionControls";
 import { useState } from "react";
 import type { Clip } from "@/lib/editor/types";
 import { useTranslation } from "react-i18next";
@@ -16,7 +17,7 @@ export function DesignLayoutPanel() {
   const apply = (action: LayoutAction) => {
     const s = useEditorStore.getState(), expected = s.toSnapshot(), time = s.currentTime;
     const chosen = new Set(groupedSelection(s.clips, ids, time));
-    const selected = s.clips.filter(c => chosen.has(c.id) && c.kind !== "audio" && !c.hidden && time >= c.start && time < c.start + c.duration && !s.tracks.find(track => track.id === c.trackId)?.hidden);
+    const selected = s.clips.filter(c => chosen.has(c.id) && c.kind !== "audio" && !c.isPageBackground && !c.hidden && time >= c.start && time < c.start + c.duration && !s.tracks.find(track => track.id === c.trackId)?.hidden);
     if (selected.some(c => c.locked)) return;
     const context = document.createElement("canvas").getContext("2d");
     if (!context) return;
@@ -35,6 +36,7 @@ export function DesignLayoutPanel() {
     }) });
   };
   return <div className="space-y-3">
+    <SimilarSelectionControls />
     <div className="flex flex-wrap gap-2">{(["selection", "page"] as const).map(value => <button type="button" key={value} aria-pressed={reference === value} onClick={() => setReference(value)} className={`min-h-9 rounded-lg border px-3 text-xs ${reference === value ? "border-white bg-white/15" : "border-white/20"}`}>{t(`editor.layout.reference.${value}`, { defaultValue: value === "page" ? "Align to page" : "Align to selection" })}</button>)}</div>
     <div className="grid grid-cols-3 gap-2">{LAYOUT_ACTIONS.map(({ action, label }) => <button type="button" key={action} disabled={!ids.length} onClick={() => apply(action)} className="min-h-9 rounded-lg border border-white/20 px-2 text-xs hover:bg-white/10 disabled:opacity-35">{t(`editor.layout.${action}`, { defaultValue: label })}</button>)}</div>
     <div className="flex flex-wrap items-center gap-3 text-xs text-white/65">
