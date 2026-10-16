@@ -566,6 +566,16 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     applyShadow(ctx, text, H);
   }
 
+  const drawEcho = (value: string, x: number, y: number) => {
+    const alpha = ctx.globalAlpha, fill = ctx.fillStyle;
+    for (const layer of (text.echo || []).slice(0, 3)) {
+      if (!/^#[\da-f]{6}$/i.test(layer.colour) || ![layer.x, layer.y, layer.opacity].every(Number.isFinite)) continue;
+      ctx.globalAlpha = alpha * Math.max(0, Math.min(1, layer.opacity));
+      ctx.fillStyle = layer.colour;
+      ctx.fillText(value, x + Math.max(-100, Math.min(100, layer.x)) / 1080 * H * l.scale, y + Math.max(-100, Math.min(100, layer.y)) / 1080 * H * l.scale);
+    }
+    ctx.globalAlpha = alpha; ctx.fillStyle = fill;
+  };
   if (l.curve) {
     ctx.textAlign = "center";
     setLetterSpacing(ctx, 0);
@@ -583,6 +593,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
       ctx.save();
       ctx.translate(glyph.x, glyph.y);
       ctx.rotate(glyph.rotation);
+      drawEcho(glyph.text, 0, 0);
       if (outline && outline.width > 0) ctx.strokeText(glyph.text, 0, 0);
       if (!text.hollow) ctx.fillText(glyph.text, 0, 0);
       clearShadow(ctx);
@@ -593,6 +604,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     clearShadow(ctx);
     return;
   }
+  lines.forEach((line, index) => drawEcho(line, drawX(index), startY + index * l.lh));
   const textStroke: TextStroke | null = text.stroke ?? (text.hollow ? { color: text.color, width: 3 } : null);
   if (textStroke && textStroke.width > 0) {
     ctx.setLineDash((Array.isArray(textStroke.dash) ? textStroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
