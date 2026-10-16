@@ -1,3 +1,4 @@
+import { clipFontFamilies } from "@/lib/editor/graphicFonts";
 import { ensureProjectFonts } from "@/lib/editor/googleFonts";
 import { nextDesignLayer } from "@/lib/editor/layerNavigation";
 import { SpacingGuides } from "../SpacingGuides";
@@ -143,7 +144,7 @@ export function Compositor() {
 
   const tracks = useEditorStore((s) => s.tracks);
   const clips = useEditorStore((s) => s.clips);
-  const fontFamilies = useMemo(() => [...new Set(clips.flatMap(clip => clip.kind === "text" ? [primaryFamily(clip.fontFamily)] : []))].sort().join("|"), [clips]);
+  const fontFamilies = useMemo(() => [...new Set(clipFontFamilies(clips).map(primaryFamily))].sort().join("|"), [clips]);
   useEffect(() => {
     for (const family of fontFamilies.split("|")) {
       const font = GOOGLE_FONTS.find(item => item.family === family);
