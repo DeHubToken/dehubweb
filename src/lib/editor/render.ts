@@ -1,3 +1,4 @@
+import { resolvedTextDirection } from "./textDirection";
 import { strokeDashOffset } from "./strokePatterns";
 import { paintOpacity } from "./paintOpacity";
 import { freehandPath } from "./freehand";
@@ -138,6 +139,7 @@ function setLetterSpacing(ctx: Ctx2D, px: number) {
 
 function layoutText(ctx: Ctx2D, text: TextClip, W: number, H: number) {
   ctx.save();
+  ctx.direction = resolvedTextDirection(text.text, text.direction);
   const result = measuredTextLayout(text, W, H, (line, size, spacing) => {
     ctx.font = fontFor(text, size);
     setLetterSpacing(ctx, spacing);
@@ -575,6 +577,8 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number, time?: 
 }
 
 function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number, progress?: number) {
+  ctx.direction = resolvedTextDirection(text.text, text.direction);
+  const rtl = ctx.direction === "rtl";
   const textAlpha = ctx.globalAlpha, fillAlpha = paintOpacity(text.fillOpacity);
   const l = layoutText(ctx, text, W, H);
   ctx.font = fontFor(text, l.size);
@@ -585,9 +589,9 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
   const ax = text.align === "centre" ? 0 : text.align === "left" ? -l.maxW / 2 : l.maxW / 2;
   const startY = -((l.lines.length - 1) * l.lh) / 2;
   const lines = progress === undefined ? l.lines : textRevealLines(l.lines, progress);
-  const leftFor = (i: number) => text.align === "centre" ? ax - l.widths[i] / 2 : text.align === "left" ? ax + (l.offsets?.[i] ?? 0) : ax - l.widths[i];
-  const drawX = (i: number) => progress === undefined ? ax + (l.offsets?.[i] ?? 0) : leftFor(i);
-  if (progress !== undefined) ctx.textAlign = "left";
+  const leftFor = (i: number) => text.align === "centre" ? ax - l.widths[i] / 2 : text.align === "left" ? ax + (l.offsets?.[i] ?? 0) : ax + (l.offsets?.[i] ?? 0) - l.widths[i];
+  const drawX = (i: number) => progress === undefined ? ax + (l.offsets?.[i] ?? 0) : rtl ? leftFor(i) + l.widths[i] : leftFor(i);
+  if (progress !== undefined) ctx.textAlign = rtl ? "right" : "left";
 
   if (text.background && text.background.opacity > 0) {
     const radius = Math.max(0, (text.background.radius / 1080) * H);
@@ -668,7 +672,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
 
   if (text.strikethrough) {
     l.lines.forEach((_, i) => {
-      const width = progress === undefined ? l.widths[i] : ctx.measureText(lines[i]).width, left = leftFor(i);
+      const width = progress === undefined ? l.widths[i] : ctx.measureText(lines[i]).width, left = rtl && progress !== undefined ? leftFor(i) + l.widths[i] - width : leftFor(i);
       ctx.fillRect(left, startY + i * l.lh, width, Math.max(1, l.size * 0.055));
     });
   }
@@ -676,7 +680,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     const thick = Math.max(1, l.size * 0.06);
     l.lines.forEach((_, i) => {
       const w = progress === undefined ? l.widths[i] : ctx.measureText(lines[i]).width;
-      const left = leftFor(i);
+      const left = rtl && progress !== undefined ? leftFor(i) + l.widths[i] - w : leftFor(i);
       ctx.fillRect(left, startY + i * l.lh + l.size * 0.45, w, thick);
     });
   }
