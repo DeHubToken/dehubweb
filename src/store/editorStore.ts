@@ -9,7 +9,7 @@ import { projectReviewSnapshotKey } from "@/lib/editor/cloudProjectReview";
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
-import { appendPage, getPages, pageAt, removePage, timelineDuration } from "@/lib/editor/pages";
+import { appendPage, getPages, pageAt, removePage, reorderPage, setPageDuration, timelineDuration } from "@/lib/editor/pages";
 import { applyTimelineOp, sliceTimelineClip } from "@/lib/editor/timelineAgent";
 import { fitCaptionTrack } from "@/lib/editor/textFit";
 import {
@@ -66,6 +66,7 @@ interface EditorState extends EditableState {
   applySharedSnapshot: (snap: ProjectSnapshot, expectedKey: string) => number;
   newProject: () => void;
   toSnapshot: () => ProjectSnapshot;
+  applyDesignEdit: (expected: ProjectSnapshot, next: ProjectSnapshot) => boolean;
 
   // --- media library ---
   setMedia: (items: MediaItem[]) => void;
@@ -135,6 +136,8 @@ interface EditorState extends EditableState {
   addPage: (opts?: { duplicate?: boolean }) => void;
   /** Delete a page and its layers; later pages move up to close the gap. */
   deletePage: (index: number) => void;
+  movePage: (from: number, to: number) => void;
+  resizePage: (index: number, duration: number) => void;
 
   editing: boolean;
   scopeVersion: number;
@@ -810,6 +813,17 @@ export const useEditorStore = create<EditorState>((set, get) => {
     });
   },
 
+  applyDesignEdit: (expected, next) => {
+    const s = get();
+    if (s.editing || expected.id !== s.projectId || next.id !== s.projectId ||
+      projectReviewSnapshotKey(s.toSnapshot()) !== projectReviewSnapshotKey(expected)) return false;
+    const existing = new Set(next.clips.map(c => c.id));
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], tracks: next.tracks,
+      clips: next.clips, settings: next.settings, selectedClipIds: s.selectedClipIds.filter(id => existing.has(id)),
+      currentTime: Math.min(s.currentTime, timelineDuration(next.settings, next.clips)), isPlaying: false });
+    return true;
+  },
+
   updateSettings: (patch) => {
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
@@ -844,6 +858,22 @@ export const useEditorStore = create<EditorState>((set, get) => {
       currentTime: page.start,
       selectedClipIds: [],
     });
+  },
+
+  movePage: (from, to) => {
+    const s = get();
+    const page = reorderPage(s.settings, s.clips, from, to, () => nanoid(10));
+    if (!page) return;
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [],
+      clips: page.clips, settings: page.settings, currentTime: page.start, selectedClipIds: [], isPlaying: false });
+  },
+
+  resizePage: (index, duration) => {
+    const s = get();
+    const page = setPageDuration(s.settings, s.clips, index, duration, () => nanoid(10));
+    if (!page) return;
+    set({ past: [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY), future: [], clips: page.clips,
+      settings: page.settings, currentTime: page.start, selectedClipIds: [], isPlaying: false });
   },
 
   beginGesture: () => {
