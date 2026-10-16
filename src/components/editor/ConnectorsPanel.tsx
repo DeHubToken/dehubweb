@@ -1,3 +1,4 @@
+import { DiagramTemplatesPanel } from "./DiagramTemplatesPanel";
 import { useEffect, useId, useState } from "react";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
@@ -30,5 +31,6 @@ export function ConnectorsPanel() {
     {style.route !== "straight" && <label className="flex items-center gap-3 text-xs text-white/60">{t("editor.connectors.bend", { defaultValue: "Bend position" })}<input type="range" min={10} max={90} value={Math.round(style.bend * 100)} onChange={e => setStyle(value => ({ ...value, bend: Number(e.target.value) / 100 }))} /><span>{Math.round(style.bend * 100)}%</span></label>}
     <button type="button" disabled={!!existing?.locked} onClick={() => { const store = useEditorStore.getState(), before = store.toSnapshot(); const result = putConnector(before, store.currentTime, style, colour, width, dash === "solid" ? [] : dash === "dashed" ? [width * 3, width * 2] : [1, width * 2], () => nanoid(10), existing?.id); if (result && store.applyDesignEdit(before, result.project)) store.selectClip(result.id); }} className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black disabled:opacity-35">{t(existing ? "editor.connectors.update" : "editor.connectors.insert", { defaultValue: existing ? "Update connector" : "Insert connector" })}</button>
     <p className="text-xs text-white/45">{t("editor.connectors.hint", { defaultValue: "Resize, stretch, rotate, or flip the connector on the canvas. Choose it again to edit its route and endpoints." })}</p>
+    <DiagramTemplatesPanel />
   </div>;
 }
