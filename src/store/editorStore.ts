@@ -791,7 +791,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       past,
       future: [],
       clips: s.clips.map((c) =>
-        c.id === id && c.kind === "text" ? ({ ...c, ...patch } as TextClip) : c,
+        c.id === id && c.kind === "text" ? ({ ...c, ...(patch.text !== undefined && patch.text !== c.text ? { pageNumber: undefined } : {}), ...patch } as TextClip) : c,
       ),
     });
   },

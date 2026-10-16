@@ -242,6 +242,7 @@ export interface TextStroke {
 }
 
 export interface TextClip extends BaseClip {
+  pageNumber?: import("./pageNumbering").PageNumberFormat;
   kind: "text";
   gradient?: import("./gradientFill").GradientFill | null;
   text: string;
