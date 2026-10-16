@@ -1,3 +1,4 @@
+import { shapeGeometryParameters } from "@/lib/editor/shapeGeometry";
 import { PenControls } from "../PenControls";
 import { penShapeStyle } from "@/lib/editor/freehand";
 import { MEDIA_FRAMES, MEDIA_FRAME_NAMES } from "@/lib/editor/mediaFrames";
@@ -169,6 +170,8 @@ export function LayerSection({ clip }: { clip: Clip }) {
 
       {shape && (
         <>
+          {!shape.locked && shapeGeometryParameters(shape.shape, shape.geometry).map(parameter => <div key={parameter.key}>{live(t(`editor.shape.geometry.${parameter.key}`, { defaultValue: parameter.label }) + ": " + (parameter.step < 1 ? Math.round(parameter.value * 100) + "%" : Math.round(parameter.value)), parameter.value, parameter.min, parameter.max, parameter.step, value => patchClipLive(shape.id, { geometry: { ...shape.geometry, [parameter.key]: value } }))}</div>)}
+          {shape.geometry && !shape.locked && <button type="button" onClick={() => patchClip(shape.id, { geometry: undefined })} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t("editor.shape.resetGeometry", { defaultValue: "Reset shape geometry" })}</button>}
           {shape.photoFrame && <button type="button" onClick={() => useEditorUiStore.getState().setPanel("media")} className="min-h-9 w-full rounded-lg bg-white px-3 text-xs font-medium text-black">{t("editor.grids.addPhoto", { defaultValue: "Choose a photo for this frame" })}</button>}
           <div className="grid grid-cols-2 gap-1">
             {iconBtn(t("editor.menu.flipH"), <FlipHorizontal2 className="h-3.5 w-3.5" />,
