@@ -44,7 +44,7 @@ export function MediaPanel() {
   const media = useEditorStore((s) => s.media).filter(m => !m.name.startsWith(".dehub-video-matte-"));
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
   const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
-  const replacementTarget = useEditorStore(s => s.selectedClipIds.length === 1 ? s.clips.find(c => c.id === s.selectedClipIds[0] && (c.kind === "image" || c.kind === "video" || c.kind === "audio")) : undefined);
+  const replacementTarget = useEditorStore(s => s.selectedClipIds.length === 1 ? s.clips.find(c => c.id === s.selectedClipIds[0] && (c.kind === "image" || c.kind === "video" || c.kind === "audio" || (c.kind === "shape" && c.photoFrame))) : undefined);
 
   const cloudAssets = useEditorMediaStore((s) => s.cloudAssets);
   const removeCloudAsset = useEditorMediaStore((s) => s.removeCloudAsset);

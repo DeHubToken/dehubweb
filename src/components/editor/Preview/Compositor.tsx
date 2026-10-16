@@ -814,10 +814,10 @@ export function Compositor() {
   const onCanvasDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const hit = hitTest(e.clientX, e.clientY);
     if (hit && hit.clip.kind === "text") {
-      selectClip(hit.clip.id);
+      if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       if (draftFocus.begin()) setEditingTextId(hit.clip.id);
     } else if (hit) {
-      selectClip(hit.clip.id);
+      if (hit.clip.groupId) useEditorStore.getState().selectGroupMember(hit.clip.id); else selectClip(hit.clip.id);
       window.dispatchEvent(new Event("editor:open-inspector"));
     }
   };
@@ -885,8 +885,8 @@ export function Compositor() {
           const s = useEditorStore.getState(), hit = hitTest(e.clientX, e.clientY);
           const source = s.media.find(media => media.id === parsed.mediaId);
           const target = hit?.clip;
-          if (target && (target.kind === "image" || target.kind === "video") && target.frame && source && source.kind !== "audio") {
-            const before = s.toSnapshot(), previous = s.media.find(media => media.id === target.mediaId);
+          if (target && (((target.kind === "image" || target.kind === "video") && target.frame) || (target.kind === "shape" && target.photoFrame)) && source && source.kind !== "audio") {
+            const before = s.toSnapshot(), previous = "mediaId" in target ? s.media.find(media => media.id === target.mediaId) : undefined;
             const next = replaceDesignMedia(before, target.id, source, previous);
             if (next !== before) { s.applyDesignEdit(before, next); s.selectClip(target.id); }
           } else placeAt(addClipFromMedia(parsed.mediaId), nx, ny);
@@ -898,7 +898,21 @@ export function Compositor() {
     if (e.dataTransfer.files?.length) {
       e.preventDefault();
       const files = Array.from(e.dataTransfer.files);
+      const scope = useEditorStore.getState().projectId;
+      const target = hitTest(e.clientX, e.clientY)?.clip;
+      const frameTarget = target && (((target.kind === "image" || target.kind === "video") && target.frame) || (target.kind === "shape" && target.photoFrame)) ? target : null;
       void importFiles(files, { wallet: quota.walletAddress }).then((ids) => {
+        const s = useEditorStore.getState();
+        if (s.projectId !== scope) return;
+        if (frameTarget && ids.length === 1) {
+          if (s.clips.find(c => c.id === frameTarget.id) !== frameTarget) return;
+          const source = s.media.find(media => media.id === ids[0]);
+          if (!source || source.kind === "audio") return;
+          const before = s.toSnapshot(), previous = "mediaId" in frameTarget ? s.media.find(media => media.id === frameTarget.mediaId) : undefined;
+          const next = replaceDesignMedia(before, frameTarget.id, source, previous);
+          if (next !== before) { s.applyDesignEdit(before, next); s.selectGroupMember(frameTarget.id); }
+          return;
+        }
         ids.forEach((id, i) => placeAt(addClipFromMedia(id), Math.min(1, nx + i * 0.03), Math.min(1, ny + i * 0.03)));
       });
     }

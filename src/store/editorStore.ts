@@ -83,6 +83,7 @@ interface EditorState extends EditableState {
   // --- selection ---
   selectClip: (id: string | null, additive?: boolean) => void;
   selectMany: (ids: string[]) => void;
+  selectGroupMember: (id: string) => void;
   groupSelected: () => void;
   ungroupSelected: () => void;
 
@@ -314,6 +315,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       return { selectedClipIds: group };
     }),
   selectMany: (ids) => set(s => ({ selectedClipIds: groupedSelection(s.clips, ids, s.currentTime) })),
+  selectGroupMember: (id) => set(s => ({ selectedClipIds: s.clips.some(c => c.id === id) ? [id] : [] })),
   groupSelected: () => {
     const s = get(), before = s.toSnapshot(), next = groupDesignLayers(before, s.selectedClipIds, () => nanoid(10));
     if (next !== before) s.applyDesignEdit(before, next);
