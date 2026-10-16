@@ -28,7 +28,7 @@ import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, exportStill, isExportSupported, type ExportFormat, type StillFormat } from "@/lib/editor/exporter";
 import { getPages } from "@/lib/editor/pages";
-import { pageExportFrames, resolvePageExportScope } from "@/lib/editor/pageExports";
+import { parsePageExportOrder, pageExportFrames, resolvePageExportScope } from "@/lib/editor/pageExports";
 import { exportFilename } from "@/lib/editor/exportName";
 import { zipFiles } from "@/lib/editor/zip";
 import { useAuth } from "@/contexts/AuthContext";
@@ -277,7 +277,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const scales = still ? ["0.5", "1", "2"] : ["1", "0.75", "0.5"];
   const gifTooLong = gif && (scope === "timeline" ? duration > GIF_CONTENT_LIMIT : ranges.some(r => r.end - r.start > GIF_CONTENT_LIMIT));
   const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : "";
-  const canDownload = !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
+  let pageOrderError = "";
+  if (still && pageScope === "custom") { try { parsePageExportOrder(pageSelection, pages.length); } catch (reason) { pageOrderError = reason instanceof Error ? reason.message : "Choose existing pages"; } }
+  const canDownload = !pageOrderError && !filenameError && !(still && pageScope === "section" && !effectiveSection) && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!busy) onOpenChange(v); }}>
@@ -361,6 +363,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
               </Row>
             )}
             {still && pageScope === "section" && <SectionExportPicker sections={sections} value={effectiveSection} onChange={setSectionName} />}
+            {still && multiPage && pageScope === "custom" && <p className="text-[10px] text-white/45">{t("editor.export.pageOrderHint", { defaultValue: "Pages follow the order entered. Use 3,1-2 to start with page 3, or 5-1 to reverse a range. Repeated page numbers appear once." })}</p>}
+            {still && pageOrderError && <p role="alert" className="text-xs text-red-300">{pageOrderError}</p>}
             {still && multiPage && pageScope === "custom" && <Row label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })}><Input value={pageSelection} onChange={e => setPageSelection(e.target.value)} placeholder="1,3-5" aria-label={t("editor.pages.pageNumbers", { defaultValue: "Page numbers" })} className="h-9 border-white/10 bg-white/5 text-white" /></Row>}
             {!still && !gif && (
               <Row label={t("editor.export.quality")}>
