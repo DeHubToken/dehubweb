@@ -1,3 +1,4 @@
+import { PageAnimationPanel } from "./PageAnimationPanel";
 import { BulkCreatePanel } from "./BulkCreatePanel";
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -29,7 +30,7 @@ export function DesignTools() {
   const settings = useEditorStore(s => s.settings);
   const projectId = useEditorStore(s => s.projectId);
   const [clipboard, setClipboard] = useState<{ projectId: string; style: DesignStyle } | null>(null);
-  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | "layout" | "notes" | "link" | "compositions" | "bulk" | null>(null);
+  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | "layout" | "notes" | "link" | "compositions" | "bulk" | "animate" | null>(null);
   const [insertOpen, setInsertOpen] = useState(false);
   const surfaceEpoch = useSurfaceEpoch();
   useCloseOnSurfaceSwitch(useCallback(() => { setInsertOpen(false); setPanel(null); finishDraft.current(); }, []));
@@ -60,6 +61,7 @@ export function DesignTools() {
       <button type="button" className={button} disabled={selected.length !== 1} onClick={copy}><Copy size={15} />{t("editor.designTools.copyStyle", { defaultValue: "Copy style" })}</button>
       <button type="button" className={button} disabled={!style || !selected.some(c => !c.locked)} onClick={() => style && apply(p => applyDesignStyle(p, ids, style))}><Paintbrush size={15} />{t("editor.designTools.pasteStyle", { defaultValue: "Paste style" })}</button>
       <button type="button" className={button} aria-expanded={panel === "search"} onClick={() => setPanel(panel === "search" ? null : "search")}><Search size={15} />{t("editor.designTools.findReplace", { defaultValue: "Find and replace" })}</button>
+      <button type="button" className={button} aria-expanded={panel === "animate"} onClick={() => setPanel(panel === "animate" ? null : "animate")}>{t("editor.pageAnimation.title", { defaultValue: "Animate page" })}</button>
       <button type="button" className={button} aria-expanded={panel === "notes"} onClick={() => setPanel(panel === "notes" ? null : "notes")}>{t("editor.notes.title", { defaultValue: "Page notes" })}</button>
       <button type="button" className={button} disabled={!selected.length} aria-expanded={panel === "link"} onClick={() => setPanel(panel === "link" ? null : "link")}>{t("editor.links.title", { defaultValue: "Link" })}</button>
       <DropdownMenu key={surfaceEpoch} open={insertOpen} onOpenChange={setInsertOpen}>
@@ -78,8 +80,8 @@ export function DesignTools() {
       {selected.length > 1 && <button type="button" className={button} onClick={() => useEditorStore.getState().groupSelected()}>{t("editor.groups.group", { defaultValue: "Group" })}</button>}
       {selected.some(c => c.groupId) && <button type="button" className={button} onClick={() => useEditorStore.getState().ungroupSelected()}>{t("editor.groups.ungroup", { defaultValue: "Ungroup" })}</button>}
     </div>
-    {panel && <section aria-label={t(`editor.designTools.panel.${panel}`, { defaultValue: ({ resize: "Resize", search: "Find and replace", colours: "Document colours", data: "Charts and tables", fill: "Fills and backgrounds", qr: "QR code", grid: "Photo grids", guides: "Guides and margins", layout: "Position and spacing", notes: "Page notes", link: "Link", compositions: "Text combinations", bulk: "Bulk create" })[panel] })} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
-      {panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    {panel && <section aria-label={t(`editor.designTools.panel.${panel}`, { defaultValue: ({ resize: "Resize", search: "Find and replace", colours: "Document colours", data: "Charts and tables", fill: "Fills and backgrounds", qr: "QR code", grid: "Photo grids", guides: "Guides and margins", layout: "Position and spacing", notes: "Page notes", link: "Link", compositions: "Text combinations", bulk: "Bulk create", animate: "Animate page" })[panel] })} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
+      {panel === "animate" ? <PageAnimationPanel key={projectId} /> : panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {DESIGN_SIZES.map(size => <button key={size.id} type="button" onClick={() => { apply(p => resizeDesign(p, size.width, size.height)); setPanel(null); }} className="rounded-lg border border-white/15 p-2 text-left text-xs hover:bg-white/10">
           <span className="block font-medium">{t(`editor.designTools.size.${size.id}`, { defaultValue: size.label })}</span><span className="text-white/45">{size.width} × {size.height}</span>
         </button>)}
