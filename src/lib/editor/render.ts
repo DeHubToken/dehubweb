@@ -585,8 +585,8 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
   const ax = text.align === "centre" ? 0 : text.align === "left" ? -l.maxW / 2 : l.maxW / 2;
   const startY = -((l.lines.length - 1) * l.lh) / 2;
   const lines = progress === undefined ? l.lines : textRevealLines(l.lines, progress);
-  const leftFor = (i: number) => text.align === "centre" ? ax - l.widths[i] / 2 : text.align === "left" ? ax : ax - l.widths[i];
-  const drawX = (i: number) => progress === undefined ? ax : leftFor(i);
+  const leftFor = (i: number) => text.align === "centre" ? ax - l.widths[i] / 2 : text.align === "left" ? ax + (l.offsets?.[i] ?? 0) : ax - l.widths[i];
+  const drawX = (i: number) => progress === undefined ? ax + (l.offsets?.[i] ?? 0) : leftFor(i);
   if (progress !== undefined) ctx.textAlign = "left";
 
   if (text.background && text.background.opacity > 0) {
