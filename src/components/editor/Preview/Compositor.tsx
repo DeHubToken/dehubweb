@@ -1,4 +1,6 @@
 import { SpacingGuides } from "../SpacingGuides";
+import { useTextDraftHistory } from "@/lib/editor/useTextDraftHistory";
+import { changeSelectedTextCase, type TextCase } from "@/lib/editor/textCase";
 import { selectionSpacingBox, smartSpacingSnap, type SpacingGuide } from "@/lib/editor/smartSpacing";
 import { beginDesignColourSample, cancelDesignColourPick, finishDesignColourSample, useDesignColourPick } from "@/lib/editor/designColourPicker";
 import { designPrintDpi } from "@/lib/editor/documentDimensions";
@@ -603,6 +605,41 @@ export function Compositor() {
     const c = clips.find((x) => x.id === editingTextId);
     return c && c.kind === "text" ? (c as TextClip) : null;
   }, [editingTextId, clips]);
+
+  const textEditLease = useRef<ProjectEditLease | null>(null);
+  const textEditOriginal = useRef<TextClip | null>(null);
+  const textInput = useRef<HTMLTextAreaElement>(null);
+  const finishTextEditing = useCallback(() => {
+    const lease = textEditLease.current;
+    textEditLease.current = null;
+    textEditOriginal.current = null;
+    lease?.release();
+    setEditingTextId(null);
+  }, []);
+  useLayoutEffect(() => () => {
+    const lease = textEditLease.current;
+    textEditLease.current = null;
+    textEditOriginal.current = null;
+    lease?.release();
+  }, [editingTextId, cropProject]);
+  useEffect(() => {
+    if (editingTextId && (!editingText || editingText.locked || selectedClipIds.length !== 1 || selectedClipIds[0] !== editingTextId)) finishTextEditing();
+  }, [editingTextId, editingText, selectedClipIds, finishTextEditing]);
+  useCloseOnSurfaceSwitch(finishTextEditing);
+  const textHistory = useTextDraftHistory(`${cropProject}:${editingTextId}`, editingText?.text ?? "", value => {
+    const store = useEditorStore.getState(), clip = store.clips.find(clip => clip.id === editingTextId);
+    if (store.projectId !== cropProject || !clip || clip.kind !== "text" || clip.locked) return;
+    if (!textEditLease.current) { textEditOriginal.current = clip; textEditLease.current = store.beginGesture(); }
+    const original = textEditOriginal.current;
+    if (textEditLease.current.isCurrent()) store.patchClipLive(clip.id, { text: value, pageNumber: original?.text === value ? original.pageNumber : undefined });
+  });
+  const applyTextCase = (mode: TextCase) => {
+    const input = textInput.current;
+    if (!input || !editingText) return;
+    const next = changeSelectedTextCase(editingText.text, { start: input.selectionStart, end: input.selectionEnd }, mode);
+    textHistory.change(next.value);
+    requestAnimationFrame(() => { if (textInput.current === input && input.isConnected) { input.focus(); input.setSelectionRange(next.selection.start, next.selection.end); } });
+  };
 
   const selectedClip = useMemo(() => {
     if (selectedClipIds.length !== 1) return null;
@@ -1310,14 +1347,29 @@ export function Compositor() {
               </div>
             </div>
           )}
-          {editingText && (
+          {editingText && (<>
+            <div data-inline-text-tools role="toolbar" aria-label={t("editor.text.editingTools", { defaultValue: "Text editing tools" })} className="absolute bottom-3 left-3 right-3 z-20 flex w-fit max-w-[calc(100%-1.5rem)] flex-wrap items-center gap-1 rounded-xl border border-white/20 bg-neutral-950/95 p-1.5 shadow-lg" onMouseDown={event => event.preventDefault()} onBlur={event => { const target = event.relatedTarget; if (target !== textInput.current && !(target instanceof Element && target.closest("[data-inline-text-tools]"))) finishTextEditing(); }} onKeyDown={event => { if (event.key === "Escape") { event.preventDefault(); finishTextEditing(); draftFocus.finish(); } }}>
+              <button type="button" disabled={!textHistory.canUndo} onClick={textHistory.undo} className="min-h-9 rounded-lg px-3 text-xs text-white disabled:opacity-35">{t("common.undo", { defaultValue: "Undo" })}</button>
+              <button type="button" disabled={!textHistory.canRedo} onClick={textHistory.redo} className="min-h-9 rounded-lg px-3 text-xs text-white disabled:opacity-35">{t("common.redo", { defaultValue: "Redo" })}</button>
+              {(["upper", "lower", "title"] as const).map(mode => <button type="button" key={mode} onClick={() => applyTextCase(mode)} className="min-h-9 rounded-lg px-3 text-xs text-white hover:bg-white/10">{t(`editor.text.case.${mode}`, { defaultValue: ({ upper: "UPPERCASE", lower: "lowercase", title: "Title Case" })[mode] })}</button>)}
+              <button type="button" onClick={() => { finishTextEditing(); draftFocus.finish(); }} className="min-h-9 rounded-lg bg-white px-3 text-xs text-black">{t("common.done")}</button>
+            </div>
             <textarea
+              ref={textInput}
               autoFocus
               value={editingText.text}
-              onChange={(e) => updateTextClip(editingText.id, { text: e.target.value })}
-              onBlur={() => setEditingTextId(null)}
+              aria-label={t("editor.menu.editText")}
+              onChange={(e) => textHistory.change(e.target.value)}
+              onBlur={event => { if (!(event.relatedTarget instanceof Element && event.relatedTarget.closest("[data-inline-text-tools]"))) finishTextEditing(); }}
               onKeyDown={(e) => {
-                if (e.key === "Escape") { e.preventDefault(); draftFocus.finish(); setEditingTextId(null); }
+                if (e.nativeEvent.isComposing) return;
+                if ((e.metaKey || e.ctrlKey) && ["z", "y"].includes(e.key.toLowerCase())) {
+                  e.preventDefault(); e.stopPropagation();
+                  if (e.key.toLowerCase() === "y" || e.shiftKey) textHistory.redo(); else textHistory.undo();
+                }
+                if (e.key === "Escape" || (e.key === "Enter" && (e.metaKey || e.ctrlKey))) {
+                  e.preventDefault(); e.stopPropagation(); finishTextEditing(); draftFocus.finish();
+                }
               }}
               style={{
                 position: "absolute",
@@ -1346,14 +1398,14 @@ export function Compositor() {
               }}
               rows={Math.max(1, editingText.text.split("\n").length)}
             />
-          )}
+          </>)}
         </div>
       </div>
 
 
       <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 overflow-x-auto whitespace-nowrap border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70 [&>button]:shrink-0 [&>span]:shrink-0">
-        <button type="button" onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); setEditingGuides(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
-        <button type="button" aria-pressed={editingGuides} onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); useEditorUiStore.getState().setDraw(null); useEditorStore.getState().setIsPlaying(false); setEditingGuides(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${editingGuides ? "border-cyan-300 bg-cyan-300/15" : "border-white/20"}`}>{t(editingGuides ? "editor.guides.done" : "editor.guides.edit", { defaultValue: editingGuides ? "Done guides" : "Edit guides" })}</button>
+        <button type="button" onClick={() => { onGestureEnd(); finishTextEditing(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setNavigating(false); setEditingGuides(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
+        <button type="button" aria-pressed={editingGuides} onClick={() => { onGestureEnd(); finishTextEditing(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setNavigating(false); useEditorUiStore.getState().setDraw(null); useEditorStore.getState().setIsPlaying(false); setEditingGuides(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${editingGuides ? "border-cyan-300 bg-cyan-300/15" : "border-white/20"}`}>{t(editingGuides ? "editor.guides.done" : "editor.guides.edit", { defaultValue: editingGuides ? "Done guides" : "Edit guides" })}</button>
         <button type="button" aria-pressed={navigating} onClick={() => { onGestureEnd(); setEditingGuides(false); setCroppingId(null); if (!navigating) useEditorUiStore.getState().setDraw(null); setNavigating(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${navigating ? "border-white bg-white/15" : "border-white/20"}`}>{t("editor.viewport.pan", { defaultValue: "Pan canvas" })}</button>
         <button type="button" aria-label={t("editor.viewport.zoomOut", { defaultValue: "Zoom canvas out" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom / 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">−</button>
         <span className="min-w-10 text-center tabular-nums">{Math.round(scale * 100)}%</span>
