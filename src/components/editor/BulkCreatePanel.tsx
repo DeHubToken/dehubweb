@@ -1,3 +1,5 @@
+import { BulkDataExportControls } from "./BulkDataExportControls";
+import { BulkPhotoNames } from "./BulkPhotoNames";
 import { BulkPhotoConnectionsControls } from "./BulkPhotoConnectionsControls";
 import { bulkImageFields, bulkPhotoNames } from "@/lib/editor/bulkPhotos";
 import { BulkLinkConnectionsControls } from "./BulkLinkConnectionsControls";
@@ -63,9 +65,10 @@ export function BulkCreatePanel() {
     <textarea value={source} onChange={e => { request.current++; changeSource(e.target.value); }} maxLength={500000} rows={4} aria-label={t("editor.bulk.data", { defaultValue: "Spreadsheet data with column headers" })} className="w-full rounded-lg border border-white/20 bg-white/5 p-2 font-mono text-xs text-white" />
     {data && <>
       <div className="flex flex-wrap items-center gap-2 text-xs text-white/65"><span>{data.rows.length} {t("editor.bulk.rows", { defaultValue: "data rows" })}</span><label>{t("editor.bulk.first", { defaultValue: "From row" })}<input type="number" min={1} max={data.rows.length} value={first} onChange={e => setFirst(e.target.value)} className="ml-2 min-h-9 w-16 rounded border border-white/20 bg-white/5 px-2" /></label><label>{t("editor.bulk.last", { defaultValue: "To row" })}<input type="number" min={1} max={data.rows.length} value={last || data.rows.length} onChange={e => setLast(e.target.value)} className="ml-2 min-h-9 w-16 rounded border border-white/20 bg-white/5 px-2" /></label></div>
+      <BulkDataExportControls key={projectId} source={source} first={Number(first)} last={end} filter={rowFilter} title={useEditorStore.getState().title} count={selectedRows.length} />
       <BulkRowFilterControls headers={data.headers} value={rowFilter} onChange={value => { setRowFilter(value); setMessage(""); }} />
       <BulkPhotoConnectionsControls fields={imageFields} headers={data.headers} row={previewRow} value={imageConnections} onChange={value => { setImageConnections(value); setMessage(""); }} />
-      {photoNames.length > 0 && <details className="rounded-lg border border-white/10 p-3"><summary className="cursor-pointer text-xs text-white/65">{t("editor.bulk.photoNames", { defaultValue: "Available source photo names ({{count}})", count: photoNames.length })}</summary><p className="mt-2 break-words text-xs text-white/50">{photoNames.slice(0, 40).join(" · ")}{photoNames.length > 40 ? " …" : ""}</p></details>}
+      <BulkPhotoNames names={photoNames} />
       <BulkLinkConnectionsControls fields={linkFields} headers={data.headers} row={previewRow} value={linkConnections} onChange={value => { setLinkConnections(value); setMessage(""); }} />
       <BulkPageFieldsControls headers={data.headers} row={previewRow} value={pageFields} onChange={value => { setPageFields(value); setMessage(""); }} />
       {!fields.length && <p className="text-xs text-white/60">{t("editor.bulk.noText", { defaultValue: "Add an unlocked text or QR layer to this page to connect your data." })}</p>}
