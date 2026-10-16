@@ -1,3 +1,4 @@
+import { ensureProjectFonts } from "./googleFonts";
 import { waitForEncoderCapacity } from "./encoderQueue";
 import { exportFilename } from "./exportName";
 import { waitForVideoFrame } from "./videoFrame";
@@ -253,6 +254,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
   const { snapshot, media, format, scale, videoBitrate, audioBitrate = 192_000, cutEndAt, onProgress, signal } = opts;
   const { settings, clips, tracks } = snapshot;
+  await ensureProjectFonts(clips.filter(c => !c.hidden && !tracks.find(track => track.id === c.trackId)?.hidden));
   const fps = settings.fps;
   const width = Math.max(2, Math.round(settings.width * scale) & ~1);
   const height = Math.max(2, Math.round(settings.height * scale) & ~1);
@@ -484,6 +486,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 async function exportGif(opts: ExportOptions): Promise<ExportResult> {
   const { snapshot, signal, onProgress } = opts;
   const { settings, clips, tracks } = snapshot;
+  await ensureProjectFonts(clips.filter(c => !c.hidden && !tracks.find(track => track.id === c.trackId)?.hidden));
   const fullDuration = timelineDuration(settings, clips);
   const range = exportTimeRange(fullDuration, opts.range ?? (opts.cutEndAt != null && opts.cutEndAt > 0 ? { start: 0, end: Math.min(opts.cutEndAt, fullDuration) } : undefined));
   const contentDuration = range.duration;

@@ -4,7 +4,8 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  * Searchable Google Font picker with in-line previews.
  * Fonts are lazily loaded on hover/selection so the initial menu is cheap.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";
 import { ChevronsUpDown } from "lucide-react";
 import Check from "@/components/ui/cut-icons/check";
 
@@ -36,6 +37,8 @@ export function FontPicker({ value, onChange }: Props) {
   const { t: _copy } = _useCopy();
   const currentName = primaryFamily(value);
   const [open, setOpen] = useState(false);
+  const surfaceEpoch = useSurfaceEpoch();
+  useCloseOnSurfaceSwitch(useCallback(() => setOpen(false), []));
   const [query, setQuery] = useSurfaceDraft("components/editor/FontPicker.tsx:query", "");
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("all");
   const listRef = useRef<HTMLDivElement>(null);
@@ -71,7 +74,7 @@ export function FontPicker({ value, onChange }: Props) {
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover key={surfaceEpoch} open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"

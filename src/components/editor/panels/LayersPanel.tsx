@@ -49,6 +49,7 @@ export function LayersPanel() {
   }, [clips, tracks, currentTime]);
 
   const labelFor = (c: Clip): string => {
+    if (c.kind === 'shape' && c.qr) return t('editor.qr.title', { defaultValue: 'QR code' });
     if (c.kind === 'shape' && c.chart) return t('editor.dataVisual.chart', { defaultValue: 'Chart' });
     if (c.kind === 'shape' && c.table) return t('editor.dataVisual.table', { defaultValue: 'Table' });
     if (c.kind === 'text') return c.text.split('\n')[0] || t('editor.layers.text');

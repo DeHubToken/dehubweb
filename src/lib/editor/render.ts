@@ -17,6 +17,7 @@ import { gifImageFrame } from "./gifImage";
 import { measuredTextLayout } from "./textLayout";
 import { drawDataVisual } from "./dataVisuals";
 import { createGradientFill } from "./gradientFill";
+import { drawQrGraphic } from "./qrGraphic";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -480,6 +481,7 @@ export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: n
 }
 
 function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
+  if (clip.qr) { drawQrGraphic(ctx, box.w, box.h, clip.qr); return; }
   if (clip.chart || clip.table) {
     drawDataVisual(ctx, box.w, box.h, clip.chart, clip.table);
     return;
