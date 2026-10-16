@@ -161,7 +161,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
           const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, ignoreAnimations: true, time: frames[index].time });
           return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)), designWidth: snapshot.settings.width, designHeight: snapshot.settings.height, dpi: snapshot.settings.printDpi, cropMarks, links };
-        }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal, frames.map(frame => frame.index), { title: snapshot.title, bookmarks, pageTitles: frames.map(frame => snapshot.settings.pageDetails?.[frame.index]?.title ?? ""), pageLabels: frames.map(frame => String(frame.index + 1)) });
+        }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal, frames.map(frame => frame.index), { title: snapshot.title, bookmarks, pageSections: frames.map(frame => snapshot.settings.pageDetails?.[frame.index]?.section ?? ""), pageTitles: frames.map(frame => snapshot.settings.pageDetails?.[frame.index]?.title ?? ""), pageLabels: frames.map(frame => String(frame.index + 1)) });
         check(); download(new Blob(parts, { type: "application/pdf" }), exportFilename(snapshot.title, "pdf", "", "design"));
       } else if (frames.length > 1) {
         const files: { name: string; blob: Blob }[] = [];
