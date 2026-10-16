@@ -147,7 +147,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           check();
           setProgress(Math.round(index / frames.length * 95));
           setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
-          const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, time: frames[index].time });
+          const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, ignoreAnimations: true, time: frames[index].time });
           return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)), designWidth: snapshot.settings.width, designHeight: snapshot.settings.height, links };
         }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal);
         check(); download(new Blob(parts, { type: "application/pdf" }), exportFilename(snapshot.title, "pdf", "", "design"));
@@ -157,7 +157,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           check();
           setProgress(Math.round((index / frames.length) * 100));
           setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
-          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: frame.time, transparent });
+          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, ignoreAnimations: true, time: frame.time, transparent });
           check();
           files.push({ name: frame.filename, blob });
         }
@@ -166,7 +166,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         download(zip, exportFilename(snapshot.title, "zip", "", "design"));
       } else {
         const time = frames[0].time;
-        const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time, transparent });
+        const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, ignoreAnimations: multiPage, time, transparent });
         check();
         download(blob, frames[0].filename);
       }

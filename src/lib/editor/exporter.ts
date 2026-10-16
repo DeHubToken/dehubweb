@@ -569,6 +569,8 @@ export interface StillOptions {
   quality?: number;
   /** PNG can retain the canvas alpha channel instead of painting a page colour. */
   transparent?: boolean;
+  /** Documents show their complete artwork rather than a partial entrance or exit animation. */
+  ignoreAnimations?: boolean;
 }
 
 /**
@@ -590,7 +592,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     return !!tr && !tr.hidden && tr.kind !== "audio";
   };
   const trackZ = (trackId: string) => tracks.findIndex((x) => x.id === trackId);
-  const ops = computeRenderOps(clips, isVisualTrack, t, width).sort(
+  const ops = computeRenderOps(clips, isVisualTrack, t, width).map(op => opts.ignoreAnimations ? { ...op, clip: { ...op.clip, animateIn: undefined, animateOut: undefined } } : op).sort(
     (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
   );
 
