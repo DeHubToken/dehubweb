@@ -1,3 +1,4 @@
+import { DesignRulers } from "../DesignRulers";
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
 import { stepTimelineFrame } from "@/lib/editor/frameStep";
@@ -1076,6 +1077,7 @@ export function Compositor() {
           )}
 
           {/* Snapping guides */}
+          {layoutGuides.rulers && <DesignRulers width={settings.width} height={settings.height} scale={scale} />}
           {layoutGuides.visible && layoutGuides.vertical.map(x => <div key={`layout-v${x}`} aria-hidden className="pointer-events-none absolute bottom-0 top-0 w-px bg-cyan-400/65" style={{ left: x * settings.width * scale }} />)}
           {layoutGuides.visible && layoutGuides.horizontal.map(y => <div key={`layout-h${y}`} aria-hidden className="pointer-events-none absolute left-0 right-0 h-px bg-cyan-400/65" style={{ top: y * settings.height * scale }} />)}
           {layoutGuides.visible && layoutGuides.margin > 0 && <div aria-hidden className="pointer-events-none absolute border border-dashed border-cyan-300/60" style={{ inset: layoutGuides.margin * Math.min(settings.width, settings.height) * scale }} />}
