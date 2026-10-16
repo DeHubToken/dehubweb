@@ -1,3 +1,4 @@
+import { DEFAULT_PEN, type PenSettings } from "@/lib/editor/freehand";
 /**
  * Editor shell state.
  * ===================
@@ -34,8 +35,9 @@ interface EditorUiState {
   generatorWindow: 'closed' | 'open' | 'minimized';
   setGeneratorWindow: (state: 'closed' | 'open' | 'minimized') => void;
   /** Freehand drawing: while set, dragging on the canvas draws instead of selecting. */
-  draw: { color: string; width: number } | null;
-  setDraw: (draw: { color: string; width: number } | null) => void;
+  draw: PenSettings | null;
+  lastPen: PenSettings;
+  setDraw: (draw: PenSettings | null) => void;
   /** Which inspector tab shows for a selected layer. */
   inspectorTab: 'layer' | 'motion';
   setInspectorTab: (tab: 'layer' | 'motion') => void;
@@ -55,7 +57,8 @@ export const useEditorUiStore = create<EditorUiState>((set) => ({
   canvasFocus: false,
   setCanvasFocus: (canvasFocus) => set({ canvasFocus }),
   draw: null,
-  setDraw: (draw) => set({ draw }),
+  lastPen: { ...DEFAULT_PEN },
+  setDraw: (draw) => set(draw ? { draw, lastPen: { ...draw, dash: draw.dash ? [...draw.dash] : undefined } } : { draw }),
   inspectorTab: 'layer',
   setInspectorTab: (inspectorTab) => set({ inspectorTab }),
   recordMotion: false,
