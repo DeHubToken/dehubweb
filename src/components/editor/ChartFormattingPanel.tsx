@@ -1,8 +1,9 @@
+import { ChartScaleControls } from "./ChartScaleControls";
 import { ChartGeometryControls } from "./ChartGeometryControls";
 import { useTranslation } from "react-i18next";
 import { chartValueLabel, type ChartValueFormat } from "@/lib/editor/chartValueFormat";
 import type { ChartData } from "@/lib/editor/dataVisuals";
-export type ChartAppearance = Pick<ChartData, "valueFormat" | "donutHole" | "lineWidth" | "pointSize" | "areaOpacity" | "barGap" | "showGrid" | "showAxisValues" | "legendPosition">;
+export type ChartAppearance = Pick<ChartData, "valueFormat" | "donutHole" | "lineWidth" | "pointSize" | "areaOpacity" | "barGap" | "showGrid" | "showAxisValues" | "legendPosition" | "scaleMin" | "scaleMax">;
 export function ChartFormattingPanel({ kind, value, onChange, multiple = false }: { kind: ChartData["kind"]; multiple?: boolean; value: ChartAppearance; onChange: (value: ChartAppearance) => void }) {
   const { t } = useTranslation(), format = value.valueFormat;
   const change = (patch: Partial<ChartValueFormat>) => onChange({ ...value, valueFormat: { style: "number", currency: "USD", decimals: 0, compact: false, ...format, ...patch } });
@@ -11,6 +12,7 @@ export function ChartFormattingPanel({ kind, value, onChange, multiple = false }
     {format?.style === "percent" && <p className="text-xs text-white/45">{t("editor.charts.percentHint", { defaultValue: "Enter percentage points: a value of 25 displays as 25%." })}</p>}
     {kind === "donut" && <label className="flex items-center gap-3 text-xs text-white/65">{t("editor.charts.donutHole", { defaultValue: "Donut hole" })}<input type="range" min={20} max={85} step={1} value={Math.round((value.donutHole ?? 0.57) * 100)} onChange={event => onChange({ ...value, donutHole: Number(event.target.value) / 100 })} /><span>{Math.round((value.donutHole ?? 0.57) * 100)}%</span></label>}
     {(multiple || kind === "pie" || kind === "donut") && <label className="flex flex-wrap items-center gap-3 text-xs text-white/65">{t("editor.charts.legendPosition", { defaultValue: "Legend position" })}<select value={value.legendPosition ?? (kind === "pie" || kind === "donut" ? "right" : "bottom")} onChange={event => onChange({ ...value, legendPosition: event.target.value as ChartData["legendPosition"] })} className="min-h-9 rounded-lg border border-white/20 bg-neutral-900 px-3">{(["top", "bottom", "left", "right"] as const).map(position => <option key={position} value={position}>{t(`editor.charts.legend.${position}`, { defaultValue: ({ top: "Top", bottom: "Bottom", left: "Left", right: "Right" })[position] })}</option>)}</select></label>}
+    {kind !== "pie" && kind !== "donut" && <ChartScaleControls value={value} onChange={scale => onChange({ ...value, ...scale })} />}
     <ChartGeometryControls value={value} kind={kind} multiple={multiple} onChange={geometry => onChange({ ...value, ...geometry })} />
   </div>;
 }
