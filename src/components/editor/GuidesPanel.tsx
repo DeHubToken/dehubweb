@@ -17,6 +17,7 @@ export function GuidesPanel() {
     <div className="flex flex-wrap items-center gap-3">
       <label className="flex items-center gap-2"><input type="checkbox" checked={guides.visible} onChange={e => apply({ visible: e.target.checked })} />{t("editor.guides.visible", { defaultValue: "Show guides" })}</label>
       <label className="flex items-center gap-2"><input type="checkbox" checked={guides.snap} onChange={e => apply({ snap: e.target.checked })} />{t("editor.guides.snap", { defaultValue: "Snap to guides" })}</label>
+      <label className="flex items-center gap-2"><input type="checkbox" checked={guides.spacing} onChange={event => apply({ spacing: event.target.checked })} />{t("editor.guides.smartSpacing", { defaultValue: "Snap equal spacing" })}</label>
       <label className="flex items-center gap-2"><input type="checkbox" checked={guides.rulers} onChange={e => apply({ rulers: e.target.checked })} />{t("editor.guides.rulers", { defaultValue: "Show rulers" })}</label>
       <button type="button" className={button} onClick={() => apply({ vertical: [0.5], horizontal: [0.5], visible: true })}>{t("editor.guides.centre", { defaultValue: "Centre" })}</button>
       <button type="button" className={button} onClick={() => apply({ vertical: [1 / 3, 2 / 3], horizontal: [1 / 3, 2 / 3], visible: true })}>{t("editor.guides.thirds", { defaultValue: "Thirds" })}</button>
