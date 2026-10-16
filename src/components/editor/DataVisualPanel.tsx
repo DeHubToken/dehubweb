@@ -1,3 +1,4 @@
+import { editTableStructure, type TableAxis, type TableStructureAction } from "@/lib/editor/tableStructure";
 import { ChartCategoryColours } from "./ChartCategoryColours";
 import { DataExportControls } from "./DataExportControls";
 import { ColourPickerButton } from "./ColourPickerButton";
@@ -22,6 +23,7 @@ export function DataVisualPanel() {
   const [mode, setMode] = useState<"chart" | "table">(table ? "table" : "chart");
   const [kind, setKind] = useState<ChartKind>(chart?.kind ?? "column");
   const [data, setData] = useState("");
+  const [focusedCell, setFocusedCell] = useState("");
   const [dataView, setDataView] = useState<"cells" | "source">("cells");
   const [foreground, setForeground] = useState("#ffffff");
   const [accent, setAccent] = useState("#38bdf8");
@@ -33,7 +35,7 @@ export function DataVisualPanel() {
   const [showValues, setShowValues] = useState(true);
   const [error, setError] = useState("");
   const importRequest = useRef(0);
-  useEffect(() => { importRequest.current++; return () => { importRequest.current++; }; }, [selected?.id, mode]);
+  useEffect(() => { setFocusedCell(""); importRequest.current++; return () => { importRequest.current++; }; }, [selected?.id, mode]);
   const importFile = async (file?: File) => {
     if (!file) return;
     const request = ++importRequest.current;
@@ -84,6 +86,10 @@ export function DataVisualPanel() {
     if (index === 0) { setAccent(colour); return; }
     setChartPalette(previous => { const next = Array.from({ length: 6 }, (_, i) => previous[i % previous.length] ?? DEFAULT_CHART.colours[i % DEFAULT_CHART.colours.length]); next[index] = colour; return next; });
   };
+  const changeTableStructure = (axis: TableAxis, index: number, action: TableStructureAction) => {
+    try { const next = editTableStructure(data, { ...tableFormat, header: showLabels }, axis, index, action); setTableFormat(next.format); setData(next.source); setFocusedCell(axis === "row" ? `A${next.selected + 1}` : `${String.fromCharCode(65 + next.selected)}1`); setError(""); }
+    catch (reason) { setError(reason instanceof Error ? reason.message : "Could not change this table"); }
+  };
   const apply = () => {
     try {
       const s = useEditorStore.getState(), before = s.toSnapshot();
@@ -118,10 +124,10 @@ export function DataVisualPanel() {
     <p className="text-xs text-white/55">{t(mode === "chart" ? multiple ? "editor.dataVisual.seriesHint" : "editor.dataVisual.chartHint" : "editor.dataVisual.tableHint", { defaultValue: mode === "chart" ? multiple ? "First row: Label, followed by series names. Then one label and a number for each series per row. Up to 50 data rows and six series. Turning multiple series off keeps the first series." : "One label,value pair per line. Up to 50 rows. Paste tab-separated spreadsheet data too." : "One row per line. Separate cells with commas or tabs. Up to 20 rows and 12 columns." })}</p>
     <label className="inline-flex min-h-9 cursor-pointer items-center rounded-lg border border-white/20 px-3 text-xs hover:bg-white/10">{t("editor.dataVisual.import", { defaultValue: "Import CSV or TSV" })}<input type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" className="sr-only" onChange={e => { void importFile(e.target.files?.[0]); e.target.value = ""; }} /></label>
     <div className="flex gap-2">{(["cells", "source"] as const).map(view => <button type="button" key={view} aria-pressed={dataView === view} onClick={() => setDataView(view)} className={`min-h-9 rounded-lg border px-3 text-xs ${dataView === view ? "border-white bg-white/15" : "border-white/20"}`}>{t(`editor.dataVisual.view.${view}`, { defaultValue: view === "cells" ? "Edit cells" : "Source data" })}</button>)}</div>
-    {dataView === "cells" ? <DataCells value={data} onChange={setData} chart={mode === "chart"} multiSeries={multiple} /> : <textarea value={data} onChange={e => setData(e.target.value)} aria-label={t("editor.dataVisual.data", { defaultValue: "Data" })} rows={4} className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />}
+    {dataView === "cells" ? <DataCells value={data} onChange={setData} chart={mode === "chart"} multiSeries={multiple} onCellFocus={mode === "table" ? setFocusedCell : undefined} onStructure={mode === "table" ? changeTableStructure : undefined} /> : <textarea value={data} onChange={e => setData(e.target.value)} aria-label={t("editor.dataVisual.data", { defaultValue: "Data" })} rows={4} className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />}
     {mode === "chart" && <ChartFormattingPanel kind={kind} value={chartAppearance} onChange={setChartAppearance} />}
     <div className="flex flex-wrap gap-2"><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setAccent} label={t("editor.colourPicker.accent", { defaultValue: "Pick accent from canvas" })} /><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setForeground} label={t("editor.colourPicker.ink", { defaultValue: "Pick text colour from canvas" })} /></div>
-    {mode === "table" && <TableFormattingPanel value={{ ...tableFormat, header: showLabels }} source={data} onChange={setTableFormat} onSource={setData} />}
+    {mode === "table" && <TableFormattingPanel focusedCell={focusedCell} value={{ ...tableFormat, header: showLabels }} source={data} onChange={setTableFormat} onSource={setData} />}
     <div className="flex flex-wrap items-center gap-3 text-xs">
       <label className="flex items-center gap-2"><input type="checkbox" checked={showLabels} onChange={e => setShowLabels(e.target.checked)} />{t(mode === "chart" ? "editor.dataVisual.labels" : "editor.dataVisual.header", { defaultValue: mode === "chart" ? "Show labels" : "Header row" })}</label>
       {mode === "chart" && <label className="flex items-center gap-2"><input type="checkbox" checked={showValues} onChange={e => setShowValues(e.target.checked)} />{t("editor.dataVisual.values", { defaultValue: "Show values" })}</label>}
