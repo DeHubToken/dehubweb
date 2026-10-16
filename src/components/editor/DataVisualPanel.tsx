@@ -1,3 +1,4 @@
+import { convertDataVisualSource } from "@/lib/editor/dataVisualConversion";
 import { ChartStyleFileControls } from "./ChartStyleFileControls";
 import { chartStyleAppearance } from "@/lib/editor/chartStyleFile";
 import { DataVisualVectorDownload } from "./DataVisualVectorDownload";
@@ -109,6 +110,16 @@ export function DataVisualPanel() {
     try { const next = editTableStructure(data, { ...tableFormat, header: showLabels }, axis, index, action); setTableFormat(next.format); setData(next.source); setFocusedCell(axis === "row" ? `A${next.selected + 1}` : `${String.fromCharCode(65 + next.selected)}1`); setError(""); }
     catch (reason) { setError(reason instanceof Error ? reason.message : "Could not change this table"); }
   };
+  const convertDraft = () => {
+    importRequest.current++;
+    try {
+      const next = convertDataVisualSource(data, mode, multiple, showLabels, chartAppearance.xAxisTitle);
+      choose(next.mode); setData(next.source); setMultiple(next.multiple);
+      if (next.mode === "table") setShowLabels(next.header);
+      else if (next.xAxisTitle) setChartAppearance(previous => ({ ...previous, xAxisTitle: next.xAxisTitle }));
+      setError(""); setDataView("cells");
+    } catch (reason) { setError(reason instanceof Error ? reason.message : "Could not convert this data"); }
+  };
   const previewValue = useMemo(() => {
     try {
       const value = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), ...chartAppearance, stacked, stackPercent, showLegend, colours: [accent, ...chartPalette.slice(1)], textColour: foreground, showLabels, showValues } } : { table: { ...tableFormat, rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
@@ -147,6 +158,7 @@ export function DataVisualPanel() {
     {mode === "chart" && <ChartTransposeControl source={data} multiple={multiple} disabled={kind === "scatter" || kind === "pie" || kind === "donut"} onChange={source => { importRequest.current++; setData(source); setMultiple(true); setError(""); }} />}
     {mode === "chart" && <ChartDataOrderControls source={data} multiple={multiple} onChange={(source, order) => { importRequest.current++; setData(source); if (!multiple && kind !== "radar") { const colours = reorderChartCategoryColours([accent, ...chartPalette.slice(1)], order); setChartPalette(colours); setAccent(colours[0]); } setError(""); }} />}
     <DataExportControls source={data} mode={mode} multiple={multiple} title={useEditorStore.getState().title} />
+    <button type="button" onClick={convertDraft} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75">{t(mode === "chart" ? "editor.dataVisual.convertToTable" : "editor.dataVisual.convertToChart", { defaultValue: mode === "chart" ? "Use this data as a table" : "Use this data as a chart" })}</button>
     </div>
     <div role="tabpanel" id={`${panelId}-design-panel`} aria-labelledby={`${panelId}-design-tab`} hidden={section !== "design"} className="space-y-3">
     <div className="flex flex-wrap items-center gap-3">
