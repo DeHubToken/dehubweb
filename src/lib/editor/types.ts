@@ -31,6 +31,8 @@ interface BaseClip {
   id: string;
   /** Persistent selection group; members retain independent content and styling. */
   groupId?: string;
+  /** Click destination retained by PDF exports. */
+  href?: string;
   trackId: string;
   start: number; // timeline seconds where clip starts
   duration: number; // length on timeline (s)

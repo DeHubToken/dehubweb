@@ -1,3 +1,6 @@
+import { designPdfLink, type DesignPdfLink } from "./designLinks";
+import { computeClipAnimation } from "./animationPresets";
+import { resolveClipAt } from "./keyframes";
 import { ensureProjectFonts } from "./googleFonts";
 import { waitForEncoderCapacity } from "./encoderQueue";
 import { exportFilename } from "./exportName";
@@ -17,7 +20,7 @@ import { stampEnding } from "./endingFile";
 import type { MediaClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
-import { drawClip } from "./render";
+import { drawClip, clipBox, getTransform } from "./render";
 import { timelineDuration } from "./pages";
 import { loadBrandOutroArtwork } from "./brandOutroArtwork";
 import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername } from "./brandOutro";
@@ -50,6 +53,7 @@ export interface ExportOptions {
 }
 
 export interface ExportResult {
+  links?: DesignPdfLink[];
   blob: Blob;
   filename: string;
 }
@@ -626,11 +630,19 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     ctx.restore();
   }
 
+  const links = ops.flatMap(op => {
+    if (!op.clip.href || op.alpha <= 0.001) return [];
+    const clip = resolveClipAt(op.clip, t);
+    if ((getTransform(clip).opacity ?? 1) <= 0.001) return [];
+    const box = clipBox(ctx, clip, width, height, { videos, images });
+    const link = box ? designPdfLink(clip.href, box, width, height, computeClipAnimation(clip, t), op.translateX, op.clipRect) : null;
+    return link ? [link] : [];
+  });
   const mime = format === "png" ? "image/png" : "image/jpeg";
   const blob = await new Promise<Blob>((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not encode image"))), mime, quality),
   );
-  return { blob, filename: exportFilename(snapshot.title, format, "", "design") };
+  return { blob, filename: exportFilename(snapshot.title, format, "", "design"), links };
   } finally {
     mattePages.dispose(); videos.forEach(v => { v.pause(); v.removeAttribute("src"); v.load(); }); images.forEach(image => { releaseGifImage(image); image.src = ""; });
   }
