@@ -1,9 +1,10 @@
+import { DESIGN_PALETTES } from "@/lib/editor/designTools";
 import { DataCells } from "./DataCells";
 import { formatDelimitedData } from "@/lib/editor/delimitedData";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_CHART, DEFAULT_TABLE, putDataVisual } from "@/lib/editor/dataVisualProject";
-import { CHART_KINDS, parseChartData, parseTableData, type ChartKind, type ChartData, type TableData } from "@/lib/editor/dataVisuals";
+import { CHART_KINDS, validDataVisuals, parseChartData, parseTableData, type ChartKind, type ChartData, type TableData } from "@/lib/editor/dataVisuals";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
 
@@ -18,6 +19,8 @@ export function DataVisualPanel() {
   const [dataView, setDataView] = useState<"cells" | "source">("cells");
   const [foreground, setForeground] = useState("#ffffff");
   const [accent, setAccent] = useState("#38bdf8");
+  const [chartPalette, setChartPalette] = useState<string[]>([...DEFAULT_CHART.colours]);
+  const [tableFormat, setTableFormat] = useState<Omit<TableData, "rows">>({ ...DEFAULT_TABLE });
   const [showLabels, setShowLabels] = useState(true);
   const [showValues, setShowValues] = useState(true);
   const [error, setError] = useState("");
@@ -38,11 +41,11 @@ export function DataVisualPanel() {
     setMode(next);
     if (next === "chart") {
       const value = chart ?? DEFAULT_CHART;
-      setKind(value.kind); setData(formatDelimitedData(value.rows.map(row => [row.label, row.value])));
+      setChartPalette([...value.colours]); setKind(value.kind); setData(formatDelimitedData(value.rows.map(row => [row.label, row.value])));
       setForeground(value.textColour); setAccent(value.colours[0] ?? "#38bdf8"); setShowLabels(value.showLabels); setShowValues(value.showValues);
     } else {
       const value = table ?? DEFAULT_TABLE;
-      setData(formatDelimitedData(value.rows, "\t")); setForeground(value.textColour); setAccent(value.headerColour); setShowLabels(value.header);
+      setTableFormat({ ...value }); setData(formatDelimitedData(value.rows, "\t")); setForeground(value.textColour); setAccent(value.headerColour); setShowLabels(value.header);
     }
     setError("");
   }, [selected?.id, chart, table]);
@@ -50,7 +53,7 @@ export function DataVisualPanel() {
     setMode(value); setError("");
     if (value === "table") {
       const next = table ?? DEFAULT_TABLE;
-      setData(formatDelimitedData(next.rows, "\t")); setForeground(next.textColour); setAccent(next.headerColour); setShowLabels(next.header);
+      setTableFormat({ ...next }); setData(formatDelimitedData(next.rows, "\t")); setForeground(next.textColour); setAccent(next.headerColour); setShowLabels(next.header);
     } else {
       const next = chart ?? DEFAULT_CHART;
       setData(formatDelimitedData(next.rows.map(row => [row.label, row.value]))); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
@@ -61,8 +64,9 @@ export function DataVisualPanel() {
     try {
       const s = useEditorStore.getState(), before = s.toSnapshot();
       const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, rows: parseChartData(data),
-        colours: [accent, ...(chart ?? DEFAULT_CHART).colours.slice(1)], textColour: foreground, showLabels, showValues } }
-        : { table: { ...(table ?? DEFAULT_TABLE), rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
+        colours: [accent, ...chartPalette.slice(1)], textColour: foreground, showLabels, showValues } }
+        : { table: { ...tableFormat, rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
+      if (!validDataVisuals(value)) throw new Error("Use valid colours and table formatting");
       if (("chart" in value && !value.chart.rows.length) || ("table" in value && !value.table.rows.length)) throw new Error("Enter at least one row");
       const result = putDataVisual(before, s.currentTime, value, () => nanoid(10), s.selectedClipIds.length === 1 ? s.selectedClipIds[0] : null);
       if (result && s.applyDesignEdit(before, result.project)) s.selectClip(result.id);
@@ -75,6 +79,14 @@ export function DataVisualPanel() {
       <label className="flex items-center gap-2 text-xs text-white/65">{t("editor.dataVisual.textColour", { defaultValue: "Text" })}<input type="color" value={foreground} onChange={e => setForeground(e.target.value)} className="h-8 w-9 bg-transparent" /></label>
       <label className="flex items-center gap-2 text-xs text-white/65">{t("editor.dataVisual.accent", { defaultValue: "Accent" })}<input type="color" value={accent} onChange={e => setAccent(e.target.value)} className="h-8 w-9 bg-transparent" /></label>
     </div>
+    {mode === "chart" && <div className="flex flex-wrap gap-2">{DESIGN_PALETTES.map(palette => <button type="button" key={palette.id} onClick={() => { setChartPalette([...palette.colours]); setAccent(palette.colours[0]); }} className="flex min-h-9 items-center gap-2 rounded-lg border border-white/15 px-2 text-xs hover:bg-white/10"><span className="flex overflow-hidden rounded">{palette.colours.map(colour => <span key={colour} className="h-4 w-3" style={{ background: colour }} />)}</span>{t(`editor.designTools.palette.${palette.id}`, { defaultValue: palette.label })}</button>)}</div>}
+    {mode === "table" && <div className="flex flex-wrap items-center gap-3 text-xs">
+      {(["cellColour", "headerTextColour", "borderColour"] as const).map(key => <label key={key} className="flex items-center gap-2">{t(`editor.dataVisual.tableStyle.${key}`, { defaultValue: ({ cellColour: "Cells", headerTextColour: "Header text", borderColour: "Grid" })[key] })}<input type="color" value={tableFormat[key]} onChange={e => setTableFormat(value => ({ ...value, [key]: e.target.value }))} className="h-8 w-9 bg-transparent" /></label>)}
+      <label className="flex items-center gap-2"><input type="checkbox" checked={!!tableFormat.stripeColour} onChange={e => setTableFormat(value => ({ ...value, stripeColour: e.target.checked ? "#262626" : null }))} />{t("editor.dataVisual.tableStyle.stripes", { defaultValue: "Alternating rows" })}</label>
+      {tableFormat.stripeColour && <input type="color" value={tableFormat.stripeColour} onChange={e => setTableFormat(value => ({ ...value, stripeColour: e.target.value }))} aria-label={t("editor.dataVisual.tableStyle.stripeColour", { defaultValue: "Alternating row colour" })} className="h-8 w-9 bg-transparent" />}
+      <select value={tableFormat.align ?? "left"} onChange={e => setTableFormat(value => ({ ...value, align: e.target.value as TableData["align"] }))} aria-label={t("editor.dataVisual.tableStyle.alignment", { defaultValue: "Cell alignment" })} className="min-h-9 rounded-lg border border-white/20 bg-neutral-900 px-2">{(["left", "centre", "right"] as const).map(align => <option key={align} value={align}>{t(`editor.dataVisual.tableStyle.${align}`, { defaultValue: align === "left" ? "Left" : align === "centre" ? "Centre" : "Right" })}</option>)}</select>
+      <label>{t("editor.dataVisual.tableStyle.borderWidth", { defaultValue: "Grid width" })}<input type="number" min={0} max={8} step={0.5} value={tableFormat.borderWidth ?? 1} onChange={e => setTableFormat(value => ({ ...value, borderWidth: Math.max(0, Math.min(8, Number(e.target.value) || 0)) }))} className="ml-2 min-h-9 w-16 rounded-lg border border-white/20 bg-white/5 px-2" /></label>
+    </div>}
     <p className="text-xs text-white/55">{t(mode === "chart" ? "editor.dataVisual.chartHint" : "editor.dataVisual.tableHint", { defaultValue: mode === "chart" ? "One label,value pair per line. Up to 50 rows. Paste tab-separated spreadsheet data too." : "One row per line. Separate cells with commas or tabs. Up to 20 rows and 12 columns." })}</p>
     <label className="inline-flex min-h-9 cursor-pointer items-center rounded-lg border border-white/20 px-3 text-xs hover:bg-white/10">{t("editor.dataVisual.import", { defaultValue: "Import CSV or TSV" })}<input type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" className="sr-only" onChange={e => { void importFile(e.target.files?.[0]); e.target.value = ""; }} /></label>
     <div className="flex gap-2">{(["cells", "source"] as const).map(view => <button type="button" key={view} aria-pressed={dataView === view} onClick={() => setDataView(view)} className={`min-h-9 rounded-lg border px-3 text-xs ${dataView === view ? "border-white bg-white/15" : "border-white/20"}`}>{t(`editor.dataVisual.view.${view}`, { defaultValue: view === "cells" ? "Edit cells" : "Source data" })}</button>)}</div>
