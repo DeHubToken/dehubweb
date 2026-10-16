@@ -56,7 +56,7 @@ export function DataVisualPanel() {
     setMode(next);
     if (next === "chart") {
       const value = chart ?? DEFAULT_CHART;
-      setChartAppearance({ valueFormat: value.valueFormat, donutHole: value.donutHole, lineWidth: value.lineWidth, pointSize: value.pointSize, areaOpacity: value.areaOpacity, barGap: value.barGap, showGrid: value.showGrid, showAxisValues: value.showAxisValues, legendPosition: value.legendPosition, scaleMin: value.scaleMin, scaleMax: value.scaleMax }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setShowLegend(value.showLegend !== false);
+      setChartAppearance({ valueFormat: value.valueFormat, donutHole: value.donutHole, lineWidth: value.lineWidth, lineStyle: value.lineStyle, pointSize: value.pointSize, areaOpacity: value.areaOpacity, barGap: value.barGap, showGrid: value.showGrid, showAxisValues: value.showAxisValues, legendPosition: value.legendPosition, scaleMin: value.scaleMin, scaleMax: value.scaleMax }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setShowLegend(value.showLegend !== false);
       setForeground(value.textColour); setAccent(value.colours[0] ?? "#38bdf8"); setShowLabels(value.showLabels); setShowValues(value.showValues);
     } else {
       const value = table ?? DEFAULT_TABLE;
@@ -71,7 +71,7 @@ export function DataVisualPanel() {
       setTableFormat({ ...next }); setData(formatDelimitedData(next.rows, "\t")); setForeground(next.textColour); setAccent(next.headerColour); setShowLabels(next.header);
     } else {
       const next = chart ?? DEFAULT_CHART;
-      setChartAppearance({ valueFormat: next.valueFormat, donutHole: next.donutHole, lineWidth: next.lineWidth, pointSize: next.pointSize, areaOpacity: next.areaOpacity, barGap: next.barGap, showGrid: next.showGrid, showAxisValues: next.showAxisValues, legendPosition: next.legendPosition, scaleMin: next.scaleMin, scaleMax: next.scaleMax });
+      setChartAppearance({ valueFormat: next.valueFormat, donutHole: next.donutHole, lineWidth: next.lineWidth, lineStyle: next.lineStyle, pointSize: next.pointSize, areaOpacity: next.areaOpacity, barGap: next.barGap, showGrid: next.showGrid, showAxisValues: next.showAxisValues, legendPosition: next.legendPosition, scaleMin: next.scaleMin, scaleMax: next.scaleMax });
       setData(chartDataSource(next)); setMultiple(!!next.series?.length); setStacked(!!next.stacked); setShowLegend(next.showLegend !== false); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
       setShowLabels(next.showLabels); setShowValues(next.showValues); setKind(next.kind);
     }
