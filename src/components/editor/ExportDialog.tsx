@@ -1,3 +1,4 @@
+import { JpegQualityControl } from "./JpegQualityControl";
 import { presentationNotesText } from "@/lib/editor/presentationNotesText";
 import { SectionExportPicker } from "./SectionExportPicker";
 import { designPageSections } from "@/lib/editor/pageDetails";
@@ -76,6 +77,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [sectionName, setSectionName] = useState("");
   const [pageSelection, setPageSelection] = useState("1");
   const [filenamePattern, setFilenamePattern] = useState("");
+  const [jpegQuality, setJpegQuality] = useState(0.92);
   const [transparent, setTransparent] = useState(false);
   const [cropMarks, setCropMarks] = useState(false);
   const [bookmarks, setBookmarks] = useState(true);
@@ -179,7 +181,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           check();
           setProgress(Math.round((index / frames.length) * 100));
           setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
-          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, ignoreAnimations: true, time: frame.time, transparent });
+          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, quality: jpegQuality, scale, ignoreAnimations: true, time: frame.time, transparent });
           check();
           files.push({ name: frame.filename, blob });
         }
@@ -188,7 +190,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         download(zip, exportFilename(snapshot.title, "zip", "", "design"));
       } else {
         const time = frames[0].time;
-        const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, ignoreAnimations: multiPage, time, transparent });
+        const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, quality: jpegQuality, scale, ignoreAnimations: multiPage, time, transparent });
         check();
         download(blob, frames[0].filename);
       }
@@ -341,6 +343,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             {format === "pdf" && multiPage && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={bookmarks} onChange={event => setBookmarks(event.target.checked)} />{t("editor.export.pageBookmarks", { defaultValue: "Page-name bookmarks" })}</label>}
             {format === "pdf" && cropMarks && <p className="text-xs text-white/45">{t("editor.export.cropMarkHint", { defaultValue: "Adds cutting marks outside the artwork. The saved print resolution sets the finished page size." })}</p>}
             {(format === "png" || format === "jpg") && <div className="space-y-2"><label className="text-xs text-white/65">{t("editor.export.filenamePattern", { defaultValue: "Page filename pattern" })}<Input value={filenamePattern} maxLength={160} onChange={event => setFilenamePattern(event.target.value)} placeholder="{title}-{page:2}-{name}" className="mt-2 h-9 border-white/10 bg-white/5 text-white" /></label><div className="flex flex-wrap gap-2">{[["", "Default"], ["{title}-{page:2}", "Title and number"], ["{page:2}-{name}", "Page names"]].map(([pattern, label]) => <button type="button" key={label} onClick={() => setFilenamePattern(pattern)} className="min-h-8 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t(`editor.export.filenamePreset.${label}`, { defaultValue: label })}</button>)}</div><p className="text-[10px] text-white/45">{t("editor.export.filenameHint", { defaultValue: "Leave blank for default names. Use {title}, {name}, {section}, {page}, or {page:3}. Add a prefix as plain text. Duplicate names receive a page-number suffix." })}</p>{filenameError && <p role="alert" className="text-xs text-red-300">{filenameError}</p>}</div>}
+            {format === "jpg" && <JpegQualityControl value={jpegQuality} onChange={setJpegQuality} />}
             {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
             {format === "notes" && <p className="text-xs text-white/55">{t("editor.export.notesTextHint", { defaultValue: "Downloads section headings, original page numbers, page names, and presenter notes as a text file." })}</p>}
             {format === "pptx" && <p className="text-xs text-white/55">{t("editor.export.pptxHint", { defaultValue: "Each page becomes one slide image, with presenter notes and links. Edit individual text and elements in the original design." })}</p>}
