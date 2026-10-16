@@ -2,7 +2,7 @@ import { ChartGeometryControls } from "./ChartGeometryControls";
 import { useTranslation } from "react-i18next";
 import { chartValueLabel, type ChartValueFormat } from "@/lib/editor/chartValueFormat";
 import type { ChartData } from "@/lib/editor/dataVisuals";
-export type ChartAppearance = Pick<ChartData, "valueFormat" | "donutHole" | "lineWidth" | "pointSize" | "areaOpacity" | "barGap" | "showGrid" | "legendPosition">;
+export type ChartAppearance = Pick<ChartData, "valueFormat" | "donutHole" | "lineWidth" | "pointSize" | "areaOpacity" | "barGap" | "showGrid" | "showAxisValues" | "legendPosition">;
 export function ChartFormattingPanel({ kind, value, onChange, multiple = false }: { kind: ChartData["kind"]; multiple?: boolean; value: ChartAppearance; onChange: (value: ChartAppearance) => void }) {
   const { t } = useTranslation(), format = value.valueFormat;
   const change = (patch: Partial<ChartValueFormat>) => onChange({ ...value, valueFormat: { style: "number", currency: "USD", decimals: 0, compact: false, ...format, ...patch } });
