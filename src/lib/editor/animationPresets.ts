@@ -21,6 +21,12 @@ export const ANIMATION_PRESETS: AnimationPreset[] = [
   { kind: "pop", label: "Pop" },
   { kind: "rise", label: "Rise" },
   { kind: "blur", label: "Blur" },
+  { kind: "spin", label: "Spin" },
+  { kind: "bounce", label: "Bounce" },
+  { kind: "wipe-left", label: "Wipe left" },
+  { kind: "wipe-right", label: "Wipe right" },
+  { kind: "wipe-up", label: "Wipe up" },
+  { kind: "wipe-down", label: "Wipe down" },
 ];
 
 export const DEFAULT_ANIM_DURATION = 0.4;
@@ -31,6 +37,8 @@ export interface ClipAnimState {
   dx: number; // fraction of canvas width
   dy: number; // fraction of canvas height
   blurPx: number;
+  rotation?: number;
+  reveals?: Array<{ axis: "x" | "y"; from: "start" | "end"; progress: number }>;
 }
 
 const IDENTITY: ClipAnimState = { alpha: 1, scale: 1, dx: 0, dy: 0, blurPx: 0 };
@@ -64,9 +72,22 @@ function stateFor(kind: ClipAnimationKind, p: number, direction: "in" | "out"): 
       return { ...IDENTITY, alpha: t, scale: 0.4 + t * (1.05 - 0.4) - (t > 0.85 ? (t - 0.85) * 0.33 : 0) };
     case "rise":
       return { ...IDENTITY, alpha: t, dy: inv * 0.06, scale: 0.95 + t * 0.05 };
+    case "spin":
+      return { ...IDENTITY, alpha: t, rotation: -180 * inv };
+    case "bounce":
+      return { ...IDENTITY, alpha: t, dy: -Math.abs(Math.sin(t * Math.PI * 2.5)) * inv * 0.13 };
+    case "wipe-left":
+      return { ...IDENTITY, reveals: [{ axis: "x", from: "end", progress: t }] };
+    case "wipe-right":
+      return { ...IDENTITY, reveals: [{ axis: "x", from: "start", progress: t }] };
+    case "wipe-up":
+      return { ...IDENTITY, reveals: [{ axis: "y", from: "end", progress: t }] };
+    case "wipe-down":
+      return { ...IDENTITY, reveals: [{ axis: "y", from: "start", progress: t }] };
     case "blur":
       return { ...IDENTITY, alpha: t, blurPx: inv * 12 };
   }
+  return { ...IDENTITY };
 }
 
 /** Compose the current animation state for a clip at absolute time t. */
@@ -95,6 +116,8 @@ function merge(a: ClipAnimState, b: ClipAnimState): ClipAnimState {
     dx: a.dx + b.dx,
     dy: a.dy + b.dy,
     blurPx: Math.max(a.blurPx, b.blurPx),
+    ...((a.rotation !== undefined || b.rotation !== undefined) ? { rotation: (a.rotation ?? 0) + (b.rotation ?? 0) } : {}),
+    ...((a.reveals || b.reveals) ? { reveals: [...(a.reveals ?? []), ...(b.reveals ?? [])] } : {}),
   };
 }
 

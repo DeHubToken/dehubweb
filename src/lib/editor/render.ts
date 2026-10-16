@@ -261,6 +261,17 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
   ctx.translate(box.cx, box.cy);
   if (tr.rotation) ctx.rotate((tr.rotation * Math.PI) / 180);
   if (tr.flipH || tr.flipV) ctx.scale(tr.flipH ? -1 : 1, tr.flipV ? -1 : 1);
+  if (anim.rotation) ctx.rotate(anim.rotation * Math.PI / 180);
+  for (const reveal of anim.reveals ?? []) {
+    const progress = Math.max(0, Math.min(1, reveal.progress));
+    const width = reveal.axis === "x" ? box.w * progress : box.w;
+    const height = reveal.axis === "y" ? box.h * progress : box.h;
+    const x = -box.w / 2 + (reveal.axis === "x" && reveal.from === "end" ? box.w - width : 0);
+    const y = -box.h / 2 + (reveal.axis === "y" && reveal.from === "end" ? box.h - height : 0);
+    ctx.beginPath();
+    ctx.rect(x, y, width, height);
+    ctx.clip();
+  }
 
   // Text used to fade in over its first 0.3s by default, which made every
   // title invisible at 0s: exactly where a still design sits and where PNG
