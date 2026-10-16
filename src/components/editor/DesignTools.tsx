@@ -1,3 +1,4 @@
+import { ResizeDesignPanel } from "./ResizeDesignPanel";
 import { DESIGN_PANEL_NAMES, designSelectionAction } from "@/lib/editor/designPanels";
 import { VectorSymbolsPanel } from "./VectorSymbolsPanel";
 import { DesignClipboardControls } from "./DesignClipboardControls";
@@ -9,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { Copy, Paintbrush, Palette, Scaling, Search, Plus } from "lucide-react";
 import { useEditorStore } from "@/store/editorStore";
 import type { ProjectSnapshot } from "@/lib/editor/types";
-import { applyDesignPalette, applyDesignStyle, copyDesignStyle, designColours, DESIGN_PALETTES, DESIGN_SIZES, replaceDesignColour, resizeDesign, type DesignStyle } from "@/lib/editor/designTools";
+import { applyDesignPalette, applyDesignStyle, copyDesignStyle, designColours, DESIGN_PALETTES, replaceDesignColour, type DesignStyle } from "@/lib/editor/designTools";
 import { DesignTextSearch } from "./DesignTextSearch";
 import { DataVisualPanel } from "./DataVisualPanel";
 import { FillPanel } from "./FillPanel";
@@ -38,8 +39,6 @@ export function DesignTools() {
   const [insertOpen, setInsertOpen] = useState(false);
   const surfaceEpoch = useSurfaceEpoch();
   useCloseOnSurfaceSwitch(useCallback(() => { setInsertOpen(false); setPanel(null); finishDraft.current(); }, []));
-  const [width, setWidth] = useState(String(settings.width));
-  const [height, setHeight] = useState(String(settings.height));
   const [colour, setColour] = useState<string | null>(null);
   const [replacement, setReplacement] = useState("#ffffff");
   const style = clipboard?.projectId === projectId ? clipboard.style : null;
@@ -82,7 +81,7 @@ export function DesignTools() {
           <DropdownMenuItem onSelect={() => setPanel("qr")}>{t("editor.qr.title", { defaultValue: "QR code" })}</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <button type="button" className={button} aria-expanded={panel === "resize"} onClick={() => { setWidth(String(settings.width)); setHeight(String(settings.height)); setPanel(panel === "resize" ? null : "resize"); }}><Scaling size={15} />{t("editor.designTools.resize", { defaultValue: "Resize" })}<span className="hidden text-white/40 xl:inline">{settings.width} × {settings.height}</span></button>
+      <button type="button" className={button} aria-expanded={panel === "resize"} onClick={() => setPanel(panel === "resize" ? null : "resize")}><Scaling size={15} />{t("editor.designTools.resize", { defaultValue: "Resize" })}<span className="hidden text-white/40 xl:inline">{settings.width} × {settings.height}</span></button>
       <button type="button" className={button} aria-expanded={panel === "colours"} onClick={() => setPanel(panel === "colours" ? null : "colours")}><Palette size={15} />{t("editor.designTools.colours", { defaultValue: "Document colours" })}</button>
       <button type="button" className={button} aria-expanded={panel === "layout"} onClick={() => setPanel(panel === "layout" ? null : "layout")}>{t("editor.layout.title", { defaultValue: "Position and spacing" })}</button>
       <span className="mx-1 h-4 w-px shrink-0 bg-white/15" />
@@ -100,15 +99,7 @@ export function DesignTools() {
     </div>
     {panel && <section aria-label={panelTitle} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
       <header className="sticky -top-3 z-10 -mx-3 -mt-3 mb-3 flex items-center justify-between gap-3 border-b border-white/10 bg-neutral-950 px-3 py-2"><h3 className="text-xs font-medium text-white/75">{panelTitle}</h3><button type="button" onClick={() => { draftFocus.finish(); setPanel(null); }} className="min-h-8 rounded-lg px-3 text-xs text-white/50 hover:bg-white/10">{t("editor.designTools.closePanel", { defaultValue: "Close panel" })}</button></header>
-      {panel === "symbols" ? <VectorSymbolsPanel key={projectId} /> : panel === "connectors" ? <ConnectorsPanel key={projectId} /> : panel === "animate" ? <PageAnimationPanel key={projectId} /> : panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {DESIGN_SIZES.map(size => <button key={size.id} type="button" onClick={() => { apply(p => resizeDesign(p, size.width, size.height)); setPanel(null); }} className="rounded-lg border border-white/15 p-2 text-left text-xs hover:bg-white/10">
-          <span className="block font-medium">{t(`editor.designTools.size.${size.id}`, { defaultValue: size.label })}</span><span className="text-white/45">{size.width} × {size.height}</span>
-        </button>)}
-      </div><form className="flex flex-wrap items-center gap-2" onSubmit={e => { e.preventDefault(); apply(p => resizeDesign(p, Number(width), Number(height))); }}>
-        <input type="number" min={64} max={8192} required value={width} onChange={e => setWidth(e.target.value)} aria-label={t("editor.designTools.width", { defaultValue: "Width in pixels" })} className="min-h-9 w-24 rounded-lg border border-white/20 bg-white/5 px-2 text-sm" />
-        <span className="text-white/40">×</span><input type="number" min={64} max={8192} required value={height} onChange={e => setHeight(e.target.value)} aria-label={t("editor.designTools.height", { defaultValue: "Height in pixels" })} className="min-h-9 w-24 rounded-lg border border-white/20 bg-white/5 px-2 text-sm" />
-        <button type="submit" className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black">{t("editor.designTools.applySize", { defaultValue: "Apply size" })}</button>
-      </form></div> : <div className="space-y-3">
+      {panel === "symbols" ? <VectorSymbolsPanel key={projectId} /> : panel === "connectors" ? <ConnectorsPanel key={projectId} /> : panel === "animate" ? <PageAnimationPanel key={projectId} /> : panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <ResizeDesignPanel key={projectId} /> : <div className="space-y-3">
         <p className="text-xs text-white/55">{t("editor.designTools.colourHint", { defaultValue: "Choose a colour to replace across this design. Locked layers are preserved." })}</p>
         <div className="flex flex-wrap gap-2">{designColours(useEditorStore.getState().toSnapshot()).map(value => <button key={value} type="button" aria-label={value} aria-pressed={colour === value} onClick={() => { setColour(value); setReplacement(value); }} className={`h-8 w-8 rounded-full border-2 ${colour === value ? "border-white ring-2 ring-sky-400" : "border-white/25"}`} style={{ background: value }} />)}</div>
         {colour && <div className="flex flex-wrap items-center gap-3">
