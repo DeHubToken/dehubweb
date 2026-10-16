@@ -1,3 +1,4 @@
+import { GradientVectorDownload } from "./GradientVectorDownload";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
@@ -11,6 +12,7 @@ import { BackgroundScopeControls } from "./BackgroundScopeControls";
 
 export function FillPanel() {
   const { t } = useTranslation();
+  const settings = useEditorStore(store => store.settings), title = useEditorStore(store => store.title);
   const ids = useEditorStore(store => store.selectedClipIds), clips = useEditorStore(store => store.clips);
   const selected = clips.find(clip => ids.includes(clip.id) && (clip.kind === "text" || clip.kind === "shape"));
   const { fill, setFill, first } = useGradientDraft(selected);
@@ -50,6 +52,7 @@ export function FillPanel() {
       <button type="button" onClick={() => { const store = useEditorStore.getState(), before = store.toSnapshot(); store.applyDesignEdit(before, removePageBackground(before, store.currentTime)); }} className={button}>{t("editor.fills.resetBackground", { defaultValue: "Reset page background" })}</button>
       <button type="button" disabled={!canFill} onClick={() => apply(null)} className={button}>{t("editor.fills.solid", { defaultValue: "Restore solid fill" })}</button>
     </div>
+    <GradientVectorDownload value={fill} width={settings.width} height={settings.height} title={title} />
     {error && <p role="alert" className="text-xs text-red-300">{error}</p>}
   </div>;
 }
