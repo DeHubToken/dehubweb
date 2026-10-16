@@ -1,3 +1,4 @@
+import { TextListControls } from "../TextListControls";
 import { ShapeStrokeEdges } from "../ShapeStrokeEdges";
 import { shapeGeometryParameters } from "@/lib/editor/shapeGeometry";
 import { PenControls } from "../PenControls";
@@ -358,6 +359,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           <select value={text.list ?? "none"} onChange={e => patchClip(clip.id, { list: e.target.value as TextClip["list"] })} aria-label={t("editor.text.listStyle", { defaultValue: "List style" })} className="min-h-9 w-full rounded-lg border border-white/15 bg-neutral-900 px-2 text-xs text-white">
             <option value="none">{t("editor.text.plain", { defaultValue: "Plain text" })}</option><option value="bullet">{t("editor.text.bullets", { defaultValue: "Bullet list" })}</option><option value="number">{t("editor.text.numbered", { defaultValue: "Numbered list" })}</option>
           </select>
+          <TextListControls value={text} onChange={listStyle => patchClip(clip.id, { listStyle })} />
           <div className="grid grid-cols-3 gap-1" role="group" aria-label={t("editor.text.effects", { defaultValue: "Text effects" })}>
             {TEXT_EFFECTS.map(effect => <button key={effect} type="button" onClick={() => patchClip(clip.id, textEffectPatch(text, effect))} className="min-h-9 rounded-lg border border-white/15 px-2 text-xs text-white/75 hover:bg-white/10">{t(`editor.text.effect.${effect}`, { defaultValue: TEXT_EFFECT_NAMES[effect] })}</button>)}
           </div>
