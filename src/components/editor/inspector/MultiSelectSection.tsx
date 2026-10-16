@@ -1,3 +1,4 @@
+import { layoutDesign, type LayoutAction } from "@/lib/editor/designLayout";
 /**
  * Inspector for several layers at once: align them to each other, spread
  * them evenly, duplicate or delete them. Every action is one undo step.
@@ -56,41 +57,19 @@ export function MultiSelectSection() {
     }, s.currentTime, recordOpts()));
   };
 
-  const align = (axis: "x" | "y", edge: Edge) => {
-    const items = measure();
-    if (items.length < 2) return;
-    const lo = Math.min(...items.map((i) => (axis === "x" ? i.box.cx - i.hw : i.box.cy - i.hh)));
-    const hi = Math.max(...items.map((i) => (axis === "x" ? i.box.cx + i.hw : i.box.cy + i.hh)));
-    void useEditorStore.getState().runAsOneStep(() => {
-      for (const i of items) {
-        const half = axis === "x" ? i.hw : i.hh;
-        const target = edge === "start" ? lo + half : edge === "end" ? hi - half : (lo + hi) / 2;
-        if (axis === "x") moveTo(i.clip, i.box, target, i.box.cy);
-        else moveTo(i.clip, i.box, i.box.cx, target);
+  const arrange = (action: LayoutAction) => {
+    const items = measure(), s = useEditorStore.getState();
+    const moves = layoutDesign(items.map(item => ({ ...item.box, id: item.clip.id, groupId: item.clip.groupId })), action, s.settings);
+    if (!moves.length) return;
+    void s.runAsOneStep(() => {
+      for (const move of moves) {
+        const item = items.find(value => value.clip.id === move.id);
+        if (item) moveTo(item.clip, item.box, item.box.cx + move.dx, item.box.cy + move.dy);
       }
     });
   };
-
-  /** Equal gaps between layers along an axis, keeping the outer two in place. */
-  const distribute = (axis: "x" | "y") => {
-    const items = measure().sort((a, b) => (axis === "x" ? a.box.cx - b.box.cx : a.box.cy - b.box.cy));
-    if (items.length < 3) return;
-    const size = (i: (typeof items)[number]) => (axis === "x" ? i.hw * 2 : i.hh * 2);
-    const first = items[0];
-    const last = items[items.length - 1];
-    const start = axis === "x" ? first.box.cx - first.hw : first.box.cy - first.hh;
-    const end = axis === "x" ? last.box.cx + last.hw : last.box.cy + last.hh;
-    const gap = (end - start - items.reduce((n, i) => n + size(i), 0)) / (items.length - 1);
-    let cursor = start;
-    void useEditorStore.getState().runAsOneStep(() => {
-      for (const i of items) {
-        const centre = cursor + size(i) / 2;
-        if (axis === "x") moveTo(i.clip, i.box, centre, i.box.cy);
-        else moveTo(i.clip, i.box, i.box.cx, centre);
-        cursor += size(i) + gap;
-      }
-    });
-  };
+  const align = (axis: "x" | "y", edge: Edge) => arrange(axis === "x" ? ({ start: "left", centre: "centre", end: "right" } as const)[edge] : ({ start: "top", centre: "middle", end: "bottom" } as const)[edge]);
+  const distribute = (axis: "x" | "y") => arrange(axis === "x" ? "horizontal" : "vertical");
 
   const btn = (label: string, icon: React.ReactNode, onClick: () => void, disabled = false) => (
     <button
@@ -155,6 +134,7 @@ export function MultiSelectSection() {
         {btn(t("editor.multi.spaceHorizontal"), <AlignHorizontalSpaceAround className="h-3.5 w-3.5" />, () => distribute("x"), layers.length < 3)}
         {btn(t("editor.multi.spaceVertical"), <AlignVerticalSpaceAround className="h-3.5 w-3.5" />, () => distribute("y"), layers.length < 3)}
       </div>
+      <button type="button" onClick={() => arrange("tidy")} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/80 hover:bg-white/10">{t("editor.layout.tidy", { defaultValue: "Tidy into a grid" })}</button>
       <div className="grid grid-cols-2 gap-1 pt-1">
         <button type="button" onClick={() => duplicateOnCanvas()}
           className="flex h-7 items-center justify-center gap-1.5 rounded-md border border-white/10 text-[11px] text-white/70 hover:bg-white/5 hover:text-white">

@@ -9,6 +9,7 @@ import { DataVisualPanel } from "./DataVisualPanel";
 import { FillPanel } from "./FillPanel";
 import { QrPanel } from "./QrPanel";
 import { PhotoGridPanel } from "./PhotoGridPanel";
+import { DesignLayoutPanel } from "./DesignLayoutPanel";
 import { GuidesPanel } from "./GuidesPanel";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";
@@ -24,7 +25,7 @@ export function DesignTools() {
   const settings = useEditorStore(s => s.settings);
   const projectId = useEditorStore(s => s.projectId);
   const [clipboard, setClipboard] = useState<{ projectId: string; style: DesignStyle } | null>(null);
-  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | null>(null);
+  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | "layout" | null>(null);
   const [insertOpen, setInsertOpen] = useState(false);
   const surfaceEpoch = useSurfaceEpoch();
   useCloseOnSurfaceSwitch(useCallback(() => { setInsertOpen(false); setPanel(null); finishDraft.current(); }, []));
@@ -50,6 +51,7 @@ export function DesignTools() {
     <div role="toolbar" aria-label={t("editor.designTools.toolbar", { defaultValue: "Design tools" })} className="flex min-h-11 items-center gap-1 overflow-x-auto px-2">
       <button type="button" className={button} aria-expanded={panel === "resize"} onClick={() => { setWidth(String(settings.width)); setHeight(String(settings.height)); setPanel(panel === "resize" ? null : "resize"); }}><Scaling size={15} />{t("editor.designTools.resize", { defaultValue: "Resize" })}<span className="hidden text-white/40 xl:inline">{settings.width} × {settings.height}</span></button>
       <button type="button" className={button} aria-expanded={panel === "colours"} onClick={() => setPanel(panel === "colours" ? null : "colours")}><Palette size={15} />{t("editor.designTools.colours", { defaultValue: "Document colours" })}</button>
+      <button type="button" className={button} aria-expanded={panel === "layout"} onClick={() => setPanel(panel === "layout" ? null : "layout")}>{t("editor.layout.title", { defaultValue: "Position and spacing" })}</button>
       <span className="mx-1 h-4 w-px shrink-0 bg-white/15" />
       <button type="button" className={button} disabled={selected.length !== 1} onClick={copy}><Copy size={15} />{t("editor.designTools.copyStyle", { defaultValue: "Copy style" })}</button>
       <button type="button" className={button} disabled={!style || !selected.some(c => !c.locked)} onClick={() => style && apply(p => applyDesignStyle(p, ids, style))}><Paintbrush size={15} />{t("editor.designTools.pasteStyle", { defaultValue: "Paste style" })}</button>
@@ -68,8 +70,8 @@ export function DesignTools() {
       {selected.length > 1 && <button type="button" className={button} onClick={() => useEditorStore.getState().groupSelected()}>{t("editor.groups.group", { defaultValue: "Group" })}</button>}
       {selected.some(c => c.groupId) && <button type="button" className={button} onClick={() => useEditorStore.getState().ungroupSelected()}>{t("editor.groups.ungroup", { defaultValue: "Ungroup" })}</button>}
     </div>
-    {panel && <section aria-label={t(`editor.designTools.panel.${panel}`, { defaultValue: ({ resize: "Resize", search: "Find and replace", colours: "Document colours", data: "Charts and tables", fill: "Gradient fills", qr: "QR code", grid: "Photo grids", guides: "Guides and margins" })[panel] })} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
-      {panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    {panel && <section aria-label={t(`editor.designTools.panel.${panel}`, { defaultValue: ({ resize: "Resize", search: "Find and replace", colours: "Document colours", data: "Charts and tables", fill: "Gradient fills", qr: "QR code", grid: "Photo grids", guides: "Guides and margins", layout: "Position and spacing" })[panel] })} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
+      {panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {DESIGN_SIZES.map(size => <button key={size.id} type="button" onClick={() => { apply(p => resizeDesign(p, size.width, size.height)); setPanel(null); }} className="rounded-lg border border-white/15 p-2 text-left text-xs hover:bg-white/10">
           <span className="block font-medium">{t(`editor.designTools.size.${size.id}`, { defaultValue: size.label })}</span><span className="text-white/45">{size.width} × {size.height}</span>
         </button>)}
