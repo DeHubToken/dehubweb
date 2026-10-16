@@ -343,6 +343,8 @@ export function LayerSection({ clip }: { clip: Clip }) {
           <div className="grid grid-cols-3 gap-1" role="group" aria-label={t("editor.text.effects", { defaultValue: "Text effects" })}>
             {TEXT_EFFECTS.map(effect => <button key={effect} type="button" onClick={() => patchClip(clip.id, textEffectPatch(text, effect))} className="min-h-9 rounded-lg border border-white/15 px-2 text-xs text-white/75 hover:bg-white/10">{t(`editor.text.effect.${effect}`, { defaultValue: TEXT_EFFECT_NAMES[effect] })}</button>)}
           </div>
+            {!!text.echo?.length && live(t("editor.text.echoDistance", { defaultValue: "Echo distance" }), Math.max(...text.echo.map(layer => Math.max(Math.abs(layer.x), Math.abs(layer.y)))), 1, 80, 1,
+              distance => { const max = Math.max(1, ...text.echo!.map(layer => Math.max(Math.abs(layer.x), Math.abs(layer.y)))); patchClipLive(clip.id, { echo: text.echo!.map(layer => ({ ...layer, x: layer.x ? layer.x / max * distance : layer.y ? 0 : distance, y: layer.y / max * distance })) }); })}
           {live(t("editor.layer.letterSpacing", { value: Math.round(text.letterSpacing ?? 0) }), text.letterSpacing ?? 0, -10, 80, 1,
             (v) => patchClipLive(clip.id, { letterSpacing: v }))}
           {live(t("editor.layer.lineSpacing", { value: (text.lineHeight ?? 1.2).toFixed(1) }), text.lineHeight ?? 1.2, 0.7, 3, 0.05,
