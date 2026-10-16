@@ -1,3 +1,4 @@
+import { pageFilenamePatternError } from "@/lib/editor/pageFilenamePattern";
 import { prepareFileShare } from "@/lib/editor/shareFile";
 import { hasTimelineMotion } from "@/lib/editor/projectMotion";
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -70,6 +71,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [qualityKey, setQualityKey] = useState<Quality>("high");
   const [pageScope, setPageScope] = useState<"all" | "current" | "custom">("all");
   const [pageSelection, setPageSelection] = useState("1");
+  const [filenamePattern, setFilenamePattern] = useState("");
   const [transparent, setTransparent] = useState(false);
   const [cropMarks, setCropMarks] = useState(false);
   const [bookmarks, setBookmarks] = useState(true);
@@ -100,7 +102,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     if (!open) return;
     const hasMotion = hasTimelineMotion(clips);
     setFormat(hasMotion ? "mp4" : "png");
-    setScaleKey("1");
+    setScaleKey("1"); setFilenamePattern("");
     setScope("timeline");
     // Only on open; changing clips while the dialog is up should not reset a choice.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -143,7 +145,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     try {
       const snapshot = toSnapshot();
       const imageFormat = format === "pdf" || format === "pptx" ? "jpg" : format as StillFormat;
-      const frames = pageExportFrames(snapshot, currentTime, pageScope === "custom" ? parsePageSelection(pageSelection, getPages(snapshot.settings, snapshot.clips).length) : pageScope, imageFormat);
+      const frames = pageExportFrames(snapshot, currentTime, pageScope === "custom" ? parsePageSelection(pageSelection, getPages(snapshot.settings, snapshot.clips).length) : pageScope, imageFormat, format === "png" || format === "jpg" ? filenamePattern : "");
       if (format === "pptx") {
         let captured = 0;
         const blob = await exportPresentation(snapshot, currentTime, pageScope === "custom" ? parsePageSelection(pageSelection, getPages(snapshot.settings, snapshot.clips).length) : pageScope, async time => {
@@ -262,7 +264,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   };
   const scales = still ? ["0.5", "1", "2"] : ["1", "0.75", "0.5"];
   const gifTooLong = gif && (scope === "timeline" ? duration > GIF_CONTENT_LIMIT : ranges.some(r => r.end - r.start > GIF_CONTENT_LIMIT));
-  const canDownload = duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
+  const filenameError = format === "png" || format === "jpg" ? pageFilenamePatternError(filenamePattern) : "";
+  const canDownload = !filenameError && duration > 0 && (still || motionSupported) && (still || scope === "timeline" || ranges.length > 0) && !gifTooLong;
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!busy) onOpenChange(v); }}>
@@ -326,6 +329,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             {format === "pdf" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={cropMarks} onChange={event => setCropMarks(event.target.checked)} />{t("editor.export.cropMarks", { defaultValue: "Crop marks and print margins" })}</label>}
             {format === "pdf" && multiPage && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={bookmarks} onChange={event => setBookmarks(event.target.checked)} />{t("editor.export.pageBookmarks", { defaultValue: "Page-name bookmarks" })}</label>}
             {format === "pdf" && cropMarks && <p className="text-xs text-white/45">{t("editor.export.cropMarkHint", { defaultValue: "Adds cutting marks outside the artwork. The saved print resolution sets the finished page size." })}</p>}
+            {(format === "png" || format === "jpg") && <div className="space-y-2"><label className="text-xs text-white/65">{t("editor.export.filenamePattern", { defaultValue: "Page filename pattern" })}<Input value={filenamePattern} maxLength={160} onChange={event => setFilenamePattern(event.target.value)} placeholder="{title}-{page:2}-{name}" className="mt-2 h-9 border-white/10 bg-white/5 text-white" /></label><div className="flex flex-wrap gap-2">{[["", "Default"], ["{title}-{page:2}", "Title and number"], ["{page:2}-{name}", "Page names"]].map(([pattern, label]) => <button type="button" key={label} onClick={() => setFilenamePattern(pattern)} className="min-h-8 rounded-lg border border-white/20 px-3 text-xs text-white/65">{t(`editor.export.filenamePreset.${label}`, { defaultValue: label })}</button>)}</div><p className="text-[10px] text-white/45">{t("editor.export.filenameHint", { defaultValue: "Leave blank for default names. Use {title}, {name}, {page}, or {page:3}. Add a section prefix as plain text. Duplicate names receive a page-number suffix." })}</p>{filenameError && <p role="alert" className="text-xs text-red-300">{filenameError}</p>}</div>}
             {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
             {format === "pptx" && <p className="text-xs text-white/55">{t("editor.export.pptxHint", { defaultValue: "Each page becomes one slide image, with presenter notes and links. Edit individual text and elements in the original design." })}</p>}
             {still && multiPage && (
