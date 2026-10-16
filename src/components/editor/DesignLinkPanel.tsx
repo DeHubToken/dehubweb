@@ -1,3 +1,4 @@
+import { groupedSelection } from "@/lib/editor/designGroups";
 import { QrContentBuilder } from "./QrContentBuilder";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,9 +8,10 @@ import { getPages } from "@/lib/editor/pages";
 
 export function DesignLinkPanel() {
   const ids = useEditorStore(s => s.selectedClipIds), clips = useEditorStore(s => s.clips);
-  const selected = clips.filter(c => ids.includes(c.id) && c.kind !== "audio");
+  const time = useEditorStore(store => store.currentTime), expanded = groupedSelection(clips, ids, time);
+  const selected = clips.filter(c => expanded.includes(c.id) && c.kind !== "audio");
   const mixed = new Set(selected.map(clip => clip.href || "")).size > 1;
-  return <LinkDraft mixed={mixed} key={`${useEditorStore.getState().projectId}:${ids.join(",")}`} initial={mixed ? "" : selected[0]?.href ?? ""} disabled={!selected.length || selected.some(c => c.locked)} />;
+  return <LinkDraft mixed={mixed} key={`${useEditorStore.getState().projectId}:${expanded.join(",")}`} initial={mixed ? "" : selected[0]?.href ?? ""} disabled={!selected.length || selected.some(c => c.locked)} />;
 }
 function LinkDraft({ initial, disabled, mixed }: { initial: string; disabled: boolean; mixed: boolean }) {
   const { t } = useTranslation();
@@ -20,7 +22,7 @@ function LinkDraft({ initial, disabled, mixed }: { initial: string; disabled: bo
   const pages = getPages(settings, clips);
   const apply = (href: string | null) => {
     const store = useEditorStore.getState(), before = store.toSnapshot();
-    store.applyDesignEdit(before, applyDesignLink(before, store.selectedClipIds, href));
+    store.applyDesignEdit(before, applyDesignLink(before, groupedSelection(before.clips, store.selectedClipIds, store.currentTime), href));
     if (href === null) setValue("");
   };
   const target = Number(pageNumber) - 1;
