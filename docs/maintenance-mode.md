@@ -22,6 +22,12 @@ attached to the existing Worker.
 
 ## Application screen
 
+After the October 16 API recovery, web and native apps reopen with both mode
+settings false. `MOBILE_MAINTENANCE_MODE: "false"` makes `/maintenance.json` return
+`{"enabled":false}` independently of `MAINTENANCE_MODE: "true"`. Omitting the
+mobile setting retains the outage default of enabled. Set it to `"true"` to
+close mobile again. Page and web proxy requests continue returning HTTP 503.
+
 The Intermission screen is shared across web and mobile. Preview it at
 https://dehub.io/maintenance without taking the platform offline.
 

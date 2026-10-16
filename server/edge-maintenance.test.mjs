@@ -37,6 +37,15 @@ test('API writes return maintenance JSON rather than HTML or an origin request',
   assert.equal(response.status, 503);
   assert.equal((await response.json()).error, 'MAINTENANCE');
 });
+test('mobile can reopen while web pages and web API routes remain in maintenance', async () => {
+  const recovered = { ...env, MOBILE_MAINTENANCE_MODE: 'false' };
+  const status = await edgeMaintenanceResponse(new Request('https://dehub.io/maintenance.json'), recovered);
+  assert.deepEqual(await status.json(), { enabled: false });
+  for (const path of ['/app', '/_api/api/feed']) {
+    const response = await edgeMaintenanceResponse(new Request('https://dehub.io' + path), recovered);
+    assert.equal(response.status, 503);
+  }
+});
 test('HEAD is empty and local artwork, app links and deployment receipts remain available', async () => {
   const response = await edgeMaintenanceResponse(new Request('https://dehub.io/', { method: 'HEAD' }), env);
   assert.equal(response.status, 503);
