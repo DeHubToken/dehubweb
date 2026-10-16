@@ -10,7 +10,7 @@
  * testing and the pixels that get drawn can never disagree about where a clip
  * is.
  */
-import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip } from "./types";
+import type { Clip, ClipTransform, KeyframeProp, MediaClip, ShapeClip, TextClip, TextStroke } from "./types";
 import { computeClipAnimation } from "./animationPresets";
 import { videoMatteFrame } from "./videoMatte";
 import { gifImageFrame } from "./gifImage";
@@ -508,7 +508,7 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     ctx.fill();
     clearShadow(ctx);
   }
-  const stroke = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
+  const stroke: TextStroke | null = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
   if (stroke && stroke.width > 0) {
     ctx.setLineDash((Array.isArray(stroke.dash) ? stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * k));
     ctx.lineWidth = stroke.width * k;
@@ -544,19 +544,26 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     applyShadow(ctx, text, H);
   }
 
-  if (text.stroke && text.stroke.width > 0) {
-    ctx.setLineDash((Array.isArray(text.stroke.dash) ? text.stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
-    ctx.lineWidth = (text.stroke.width / 1080) * H * l.scale;
-    ctx.strokeStyle = text.stroke.color;
+  const textStroke: TextStroke | null = text.stroke ?? (text.hollow ? { color: text.color, width: 3 } : null);
+  if (textStroke && textStroke.width > 0) {
+    ctx.setLineDash((Array.isArray(textStroke.dash) ? textStroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+    ctx.lineWidth = (textStroke.width / 1080) * H * l.scale;
+    ctx.strokeStyle = textStroke.color;
     ctx.lineJoin = "round";
     l.lines.forEach((ln, i) => ctx.strokeText(ln, ax, startY + i * l.lh));
     clearShadow(ctx);
   }
 
   ctx.fillStyle = createGradientFill(ctx, box.w, box.h, text.gradient) ?? text.color;
-  l.lines.forEach((ln, i) => ctx.fillText(ln, ax, startY + i * l.lh));
+  if (!text.hollow) l.lines.forEach((ln, i) => ctx.fillText(ln, ax, startY + i * l.lh));
   clearShadow(ctx);
 
+  if (text.strikethrough) {
+    l.lines.forEach((_, i) => {
+      const width = l.widths[i], left = text.align === "centre" ? ax - width / 2 : text.align === "left" ? ax : ax - width;
+      ctx.fillRect(left, startY + i * l.lh, width, Math.max(1, l.size * 0.055));
+    });
+  }
   if (text.underline) {
     const thick = Math.max(1, l.size * 0.06);
     l.lines.forEach((_, i) => {

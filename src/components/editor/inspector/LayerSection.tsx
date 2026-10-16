@@ -26,6 +26,7 @@ import { BLEND_MODES, type BlendMode, type Clip, type ClipShadow, type MediaClip
 import { clipBoxForSize, getTransform, placementPatch, placementPatchAt } from "@/lib/editor/render";
 import { isAnimated, resolveClipAt } from "@/lib/editor/keyframes";
 import { StrokePattern } from "@/components/editor/StrokePattern";
+import { TEXT_EFFECTS, TEXT_EFFECT_NAMES, textEffectPatch } from "@/lib/editor/textEffects";
 
 const DEFAULT_SHADOW: ClipShadow = { color: "#000000", opacity: 0.5, blur: 24, offsetX: 0, offsetY: 12 };
 
@@ -333,6 +334,13 @@ export function LayerSection({ clip }: { clip: Clip }) {
               () => patchClip(clip.id, { underline: !text.underline }), !!text.underline)}
             {iconBtn(t("editor.layer.uppercase"), <CaseUpper className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, { uppercase: !text.uppercase }), !!text.uppercase)}
+          </div>
+          <label className="flex min-h-8 items-center gap-2 text-xs text-white/70"><input type="checkbox" checked={!!text.strikethrough} onChange={e => patchClip(clip.id, { strikethrough: e.target.checked })} />{t("editor.text.strikethrough", { defaultValue: "Strikethrough" })}</label>
+          <select value={text.list ?? "none"} onChange={e => patchClip(clip.id, { list: e.target.value as TextClip["list"] })} aria-label={t("editor.text.listStyle", { defaultValue: "List style" })} className="min-h-9 w-full rounded-lg border border-white/15 bg-neutral-900 px-2 text-xs text-white">
+            <option value="none">{t("editor.text.plain", { defaultValue: "Plain text" })}</option><option value="bullet">{t("editor.text.bullets", { defaultValue: "Bullet list" })}</option><option value="number">{t("editor.text.numbered", { defaultValue: "Numbered list" })}</option>
+          </select>
+          <div className="grid grid-cols-3 gap-1" role="group" aria-label={t("editor.text.effects", { defaultValue: "Text effects" })}>
+            {TEXT_EFFECTS.map(effect => <button key={effect} type="button" onClick={() => patchClip(clip.id, textEffectPatch(text, effect))} className="min-h-9 rounded-lg border border-white/15 px-2 text-xs text-white/75 hover:bg-white/10">{t(`editor.text.effect.${effect}`, { defaultValue: TEXT_EFFECT_NAMES[effect] })}</button>)}
           </div>
           {live(t("editor.layer.letterSpacing", { value: Math.round(text.letterSpacing ?? 0) }), text.letterSpacing ?? 0, -10, 80, 1,
             (v) => patchClipLive(clip.id, { letterSpacing: v }))}
