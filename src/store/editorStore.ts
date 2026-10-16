@@ -1,3 +1,5 @@
+import { duplicateDesignPageSelection } from "@/lib/editor/designClone";
+import { reportDesignClipboard } from "@/lib/editor/designClipboard";
 import { projectEditGate, type ProjectEditLease } from "@/lib/editor/projectEditGate";
 /**
  * Editor state: media library, multi-track timeline, playback, project settings,
@@ -681,34 +683,11 @@ export const useEditorStore = create<EditorState>((set, get) => {
   },
 
   duplicateOnCanvas: () => {
-    const s = get();
-    if (!s.selectedClipIds.length) return;
-    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
-    let tracks = s.tracks.slice();
-    const additions: Clip[] = [];
-    for (const id of s.selectedClipIds) {
-      const orig = s.clips.find((c) => c.id === id);
-      if (!orig) continue;
-      const src = tracks.find((t) => t.id === orig.trackId);
-      if (!src) continue;
-      const count = tracks.filter((t) => t.kind === src.kind).length + 1;
-      const label = src.kind === "text" ? "Text" : src.kind === "audio" ? "Audio" : "Video";
-      const track: Track = { id: nanoid(8), kind: src.kind, name: `${label} ${count}`, muted: false, hidden: false };
-      tracks.splice(tracks.indexOf(src) + 1, 0, track);
-      const nudge = 0.03;
-      const copy = { ...orig, id: nanoid(10), trackId: track.id, isPageBackground: undefined } as Clip;
-      if (copy.kind === "text") {
-        copy.x = Math.min(1, copy.x + nudge);
-        copy.y = Math.min(1, copy.y + nudge);
-      } else if (copy.kind !== "audio") {
-        const tf = copy.transform ?? { x: 0.5, y: 0.5, scale: 1, rotation: 0 };
-        copy.transform = { ...tf, x: Math.min(1, tf.x + nudge), y: Math.min(1, tf.y + nudge) };
-      }
-      additions.push(copy);
-    }
-    if (!additions.length) return;
-    tracks = tracks.slice();
-    set({ past, future: [], tracks, clips: [...s.clips, ...remapDesignGroups(additions, () => nanoid(10))], selectedClipIds: additions.map((c) => c.id) });
+    const store = get(), before = store.toSnapshot();
+    try {
+      const result = duplicateDesignPageSelection(before, store.selectedClipIds, store.currentTime, () => nanoid(10));
+      if (result && store.applyDesignEdit(before, result.project)) { get().setIsPlaying(false); get().selectMany(result.ids); }
+    } catch (error) { reportDesignClipboard({ kind: "error", message: error instanceof Error ? error.message : String(error) }); }
   },
 
   copySelectedToClipboard: () => {
