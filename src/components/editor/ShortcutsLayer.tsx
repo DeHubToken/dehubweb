@@ -4,6 +4,7 @@
  */
 import { useEffect } from "react";
 import { stepTimelineFrame } from "@/lib/editor/frameStep";
+import { nextDesignLayer } from "@/lib/editor/layerNavigation";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
 import { getTransform, isVisualClip, placementPatchAt } from "@/lib/editor/render";
@@ -59,6 +60,13 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
         return;
       }
       const onCanvas = useEditorUiStore.getState().canvasFocus;
+      if (onCanvas && e.altKey && !e.metaKey && !e.ctrlKey && !e.shiftKey && ["PageUp", "PageDown"].includes(e.key)) {
+        if (e.target instanceof Element && e.target.closest('[role="dialog"], [role="alertdialog"]')) return;
+        e.preventDefault();
+        const next = nextDesignLayer(s.toSnapshot(), s.currentTime, s.selectedClipIds, e.key === "PageUp" ? -1 : 1);
+        if (next) { s.setIsPlaying(false); s.selectClip(next); }
+        return;
+      }
       if (onCanvas && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "a") {
         e.preventDefault();
         const hidden = new Set(s.tracks.filter(track => track.hidden).map(track => track.id));
