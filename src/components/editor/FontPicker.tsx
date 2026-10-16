@@ -1,4 +1,5 @@
 import { useTranslation as _useCopy } from 'react-i18next';
+import { useEditorLibrary } from "@/lib/editor/useEditorLibrary";
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 /**
  * Searchable Google Font picker with in-line previews.
@@ -6,7 +7,7 @@ import { useSurfaceDraft } from '@/hooks/use-surface-draft';
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, Star } from "lucide-react";
 import Check from "@/components/ui/cut-icons/check";
 
 import Search from "@/components/ui/cut-icons/search";
@@ -36,6 +37,8 @@ interface Props {
 export function FontPicker({ value, onChange }: Props) {
   const { t: _copy } = _useCopy();
   const currentName = primaryFamily(value);
+  const library = useEditorLibrary("fonts");
+  const [collection, setCollection] = useState<"all" | "saved" | "recent">("all");
   const [open, setOpen] = useState(false);
   const surfaceEpoch = useSurfaceEpoch();
   useCloseOnSurfaceSwitch(useCallback(() => setOpen(false), []));
@@ -47,10 +50,11 @@ export function FontPicker({ value, onChange }: Props) {
     const q = query.trim().toLowerCase();
     return GOOGLE_FONTS.filter((f) => {
       if (category !== "all" && f.category !== category) return false;
+      if (collection !== "all" && !library[collection].includes(f.family)) return false;
       if (!q) return true;
       return f.family.toLowerCase().includes(q);
-    });
-  }, [query, category]);
+    }).sort((a, b) => collection === "recent" ? library.recent.indexOf(a.family) - library.recent.indexOf(b.family) : 0);
+  }, [query, category, collection, library.saved, library.recent]);
 
   // Lazy-load the currently-selected font so the trigger previews it.
   useEffect(() => {
@@ -70,6 +74,7 @@ export function FontPicker({ value, onChange }: Props) {
   const pick = (font: GoogleFont) => {
     loadGoogleFont(font.family, font.weights);
     onChange(fontFamilyCss(font.family, font.category), font.weights);
+    library.record(font.family);
     setOpen(false);
   };
 
@@ -118,6 +123,7 @@ export function FontPicker({ value, onChange }: Props) {
             </button>
           ))}
         </div>
+        <div className="flex gap-1 border-b border-white/10 px-2 py-1.5">{(["all", "saved", "recent"] as const).map(value => <button type="button" key={value} aria-pressed={collection === value} onClick={() => setCollection(value)} className={cn("min-h-8 rounded-md px-2 text-xs", collection === value ? "bg-white/15 text-white" : "text-white/50 hover:bg-white/5")}>{_copy(`editor.library.${value}`, { defaultValue: ({ all: "All", saved: "Saved", recent: "Recent" })[value] })}</button>)}</div>
         <ScrollArea className="h-72">
           <div ref={listRef} className="p-1">
             {filtered.length === 0 && (
@@ -126,13 +132,13 @@ export function FontPicker({ value, onChange }: Props) {
             {filtered.map((f) => {
               const isSel = f.family.toLowerCase() === currentName.toLowerCase();
               return (
+                <div key={f.family} className="flex items-center gap-1">
                 <button
-                  key={f.family}
                   type="button"
                   onMouseEnter={() => loadGoogleFont(f.family, [Math.min(...f.weights)])}
                   onClick={() => pick(f)}
                   className={cn(
-                    "flex w-full items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-white/85 transition hover:bg-white/10",
+                    "flex min-w-0 flex-1 items-center justify-between gap-2 rounded-md px-2 py-1.5 text-left text-white/85 transition hover:bg-white/10",
                     isSel && "bg-white/10 text-white",
                   )}
                 >
@@ -149,6 +155,8 @@ export function FontPicker({ value, onChange }: Props) {
                   </span>
                   {isSel && <Check className="h-3.5 w-3.5 shrink-0 text-white" />}
                 </button>
+                <button type="button" aria-label={_copy(library.saved.includes(f.family) ? "editor.fonts.unsave" : "editor.fonts.save", { defaultValue: library.saved.includes(f.family) ? "Remove {{font}} from saved fonts" : "Save {{font}}", font: f.family })} aria-pressed={library.saved.includes(f.family)} onClick={() => library.toggle(f.family)} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-white/55 hover:bg-white/10"><Star className="h-3.5 w-3.5" fill={library.saved.includes(f.family) ? "currentColor" : "none"} /></button>
+                </div>
               );
             })}
           </div>

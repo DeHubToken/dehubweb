@@ -1,4 +1,6 @@
 import { SpacingGuides } from "../SpacingGuides";
+import { OverlapLayerPicker } from "../OverlapLayerPicker";
+import { nextOverlappingLayer } from "@/lib/editor/layerChoices";
 import { useTextDraftHistory } from "@/lib/editor/useTextDraftHistory";
 import { changeSelectedTextCase, type TextCase } from "@/lib/editor/textCase";
 import { selectionSpacingBox, smartSpacingSnap, type SpacingGuide } from "@/lib/editor/smartSpacing";
@@ -595,6 +597,9 @@ export function Compositor() {
   }, [toCanvas, layersAt]);
 
   const [croppingId, setCroppingId] = useState<string | null>(null);
+  const [overlapIds, setOverlapIds] = useState<string[] | null>(null), [contextLayerIds, setContextLayerIds] = useState<string[]>([]);
+  useEffect(() => setOverlapIds(null), [viewportProject, currentTime]);
+  useCloseOnSurfaceSwitch(useCallback(() => setOverlapIds(null), []));
   const cropProject = useEditorStore(s => s.projectId);
   useEffect(() => setCroppingId(null), [cropProject]);
   useEffect(() => { if (croppingId && (selectedClipIds.length !== 1 || selectedClipIds[0] !== croppingId || !clips.some(c => c.id === croppingId && !c.locked))) setCroppingId(null); }, [croppingId, selectedClipIds, clips]);
@@ -904,6 +909,13 @@ export function Compositor() {
     }
     const hit = hitTest(e.clientX, e.clientY);
     const p = toCanvas(e.clientX, e.clientY);
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !croppingId) {
+      e.preventDefault(); onGestureEnd();
+      const ids = layersAt().filter(layer => pointInBox(layer.box, p.x, p.y)).reverse().map(layer => layer.clip.id);
+      const next = nextOverlappingLayer(ids, selectedClipIds[0] ?? null);
+      if (next) selectClip(next);
+      return;
+    }
     if (croppingId && hit?.clip.id === croppingId && (hit.clip.kind === "image" || hit.clip.kind === "video")) {
       startGesture({ mode: "crop", id: hit.clip.id, clip: hit.clip, box: hit.box, px: p.x, py: p.y });
       return;
@@ -980,6 +992,8 @@ export function Compositor() {
     }
   };
   const onCanvasContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const point = toCanvas(e.clientX, e.clientY);
+    setContextLayerIds(layersAt().filter(layer => pointInBox(layer.box, point.x, point.y)).reverse().map(layer => layer.clip.id));
     const hit = hitTest(e.clientX, e.clientY);
     if (hit) selectClip(hit.clip.id);
     else selectClip(null);
@@ -1197,7 +1211,7 @@ export function Compositor() {
                   )}
                 />
               </ContextMenuTrigger>
-              <CanvasContextMenu clip={selectedClip} onEdit={(id) => { if (draftFocus.begin()) setEditingTextId(id); }} />
+              <CanvasContextMenu clip={selectedClip} overlapCount={contextLayerIds.length} onPickLayers={() => setOverlapIds(contextLayerIds)} onEdit={(id) => { if (draftFocus.begin()) setEditingTextId(id); }} />
             </ContextMenu>
           </div>
 
@@ -1403,6 +1417,7 @@ export function Compositor() {
       </div>
 
 
+      {overlapIds && <OverlapLayerPicker project={{ clips, tracks }} ids={overlapIds} selectedId={selectedClipIds[0] ?? null} onSelect={id => selectClip(id)} onClose={() => setOverlapIds(null)} />}
       <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 overflow-x-auto whitespace-nowrap border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70 [&>button]:shrink-0 [&>span]:shrink-0">
         <button type="button" onClick={() => { onGestureEnd(); finishTextEditing(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setNavigating(false); setEditingGuides(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
         <button type="button" aria-pressed={editingGuides} onClick={() => { onGestureEnd(); finishTextEditing(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setNavigating(false); useEditorUiStore.getState().setDraw(null); useEditorStore.getState().setIsPlaying(false); setEditingGuides(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${editingGuides ? "border-cyan-300 bg-cyan-300/15" : "border-white/20"}`}>{t(editingGuides ? "editor.guides.done" : "editor.guides.edit", { defaultValue: editingGuides ? "Done guides" : "Edit guides" })}</button>
@@ -1410,6 +1425,7 @@ export function Compositor() {
         <button type="button" aria-label={t("editor.viewport.zoomOut", { defaultValue: "Zoom canvas out" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom / 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">−</button>
         <span className="min-w-10 text-center tabular-nums">{Math.round(scale * 100)}%</span>
         <button type="button" aria-label={t("editor.viewport.zoomIn", { defaultValue: "Zoom canvas in" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom * 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">+</button>
+        <button type="button" disabled={!selectedClip || editingGuides || sampling || !!editingTextId} onClick={() => { if (!selBox) return; onGestureEnd(); useEditorStore.getState().setIsPlaying(false); setOverlapIds(layersAt().filter(layer => pointInBox(layer.box, selBox.cx, selBox.cy)).reverse().map(layer => layer.clip.id)); }} title={t("editor.layers.overlapShortcut", { defaultValue: "Ctrl or Command + click cycles overlapping layers" })} className="min-h-8 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.layers.overlapping", { defaultValue: "Overlapping layers" })}</button>
         <button type="button" disabled={!selectedClipIds.length} onClick={focusSelection} title={t("editor.viewport.selectionShortcut", { defaultValue: "Zoom to selection (Shift+2)" })} className="min-h-8 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.viewport.selection", { defaultValue: "Selection" })}</button>
         <button type="button" title={t("editor.viewport.fitShortcut", { defaultValue: "Fit page (Shift+1)" })} onClick={() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); }} className="min-h-8 rounded-lg border border-white/20 px-3">{t("editor.viewport.fit", { defaultValue: "Fit" })}</button>
       </div>
@@ -1493,9 +1509,13 @@ export function Compositor() {
 function CanvasContextMenu({
   clip,
   onEdit,
+  overlapCount,
+  onPickLayers,
 }: {
   clip: Clip | null;
   onEdit: (id: string) => void;
+  overlapCount: number;
+  onPickLayers: () => void;
 }) {
   const { t } = useTranslation();
   const moveTrack = useEditorStore((s) => s.moveTrack);
@@ -1527,6 +1547,7 @@ function CanvasContextMenu({
 
   return (
     <ContextMenuContent className={menuClass}>
+      {overlapCount > 1 && <><ContextMenuItem onSelect={onPickLayers}>{t("editor.layers.overlapping", { defaultValue: "Overlapping layers" })}</ContextMenuItem><ContextMenuSeparator className="bg-white/10" /></>}
       {clip.kind === "text" && (
         <>
           <ContextMenuItem onSelect={() => onEdit(clip.id)}>
