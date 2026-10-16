@@ -1,3 +1,6 @@
+import { RepeatPageScopeControls } from "./RepeatPageScopeControls";
+import { resolveRepeatPageScope, type RepeatPageScope } from "@/lib/editor/repeatPageScope";
+import { designPageSections } from "@/lib/editor/pageDetails";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
@@ -10,6 +13,7 @@ import type { ProjectSnapshot } from "@/lib/editor/types";
 export function DocumentElementsPanel() {
   const { t } = useTranslation();
   const ids = useEditorStore(s => s.selectedClipIds), clips = useEditorStore(s => s.clips), settings = useEditorStore(s => s.settings);
+  const [repeatScope, setRepeatScope] = useState<RepeatPageScope>({ mode: "all", range: "", section: "" });
   const [format, setFormat] = useState<PageNumberFormat>({ ...DEFAULT_PAGE_NUMBER_FORMAT });
   const [position, setPosition] = useState<PageNumberPosition>("bottom-centre"), [skipFirst, setSkipFirst] = useState(false), [colour, setColour] = useState("#ffffff"), [fontSize, setFontSize] = useState(28), [message, setMessage] = useState("");
   const apply = (operation: (project: ProjectSnapshot) => ProjectSnapshot, success: string) => {
@@ -33,7 +37,8 @@ export function DocumentElementsPanel() {
       <button type="button" onClick={() => apply(project => putPageNumbers(project, { format, position, skipFirst, colour, fontSize }, nanoid), t("editor.document.numbersApplied", { defaultValue: "Page numbers applied" }))} className="min-h-9 rounded-lg bg-white px-3 font-medium text-black">{t("editor.document.applyNumbers", { defaultValue: "Apply page numbers" })}</button>
       <button type="button" disabled={!clips.some(clip => clip.kind === "text" && clip.pageNumber && !clip.locked)} onClick={() => apply(removePageNumbers, t("editor.document.numbersRemoved", { defaultValue: "Unlocked page numbers removed" }))} className="min-h-9 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.document.removeNumbers", { defaultValue: "Remove page numbers" })}</button>
     </div>
-    <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-3"><p className="max-w-lg text-xs text-white/55">{t("editor.document.repeatHint", { defaultValue: "Select a header, footer, logo, or still artwork to copy it to the same position on every other page. Each copy stays independently editable." })}</p><button type="button" disabled={!ids.length || count < 2} onClick={() => apply(project => repeatPageElements(project, useEditorStore.getState().selectedClipIds, useEditorStore.getState().currentTime, nanoid).project, t("editor.document.repeated", { defaultValue: "Selected elements copied to the other pages" }))} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white disabled:opacity-35">{t("editor.document.repeat", { defaultValue: "Copy selection to other pages" })}</button></div>
+    <RepeatPageScopeControls value={repeatScope} sections={designPageSections(useEditorStore.getState().toSnapshot())} onChange={setRepeatScope} />
+    <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-3"><p className="max-w-lg text-xs text-white/55">{t("editor.document.repeatHint", { defaultValue: "Select a header, footer, logo, or still artwork to copy it to the same position on chosen pages. Each copy stays independently editable." })}</p><button type="button" disabled={!ids.length || count < 2} onClick={() => apply(project => repeatPageElements(project, useEditorStore.getState().selectedClipIds, useEditorStore.getState().currentTime, nanoid, resolveRepeatPageScope(project, repeatScope)).project, t("editor.document.repeated", { defaultValue: "Selected elements copied to the chosen pages" }))} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white disabled:opacity-35">{t("editor.document.repeat", { defaultValue: "Copy selection to other pages" })}</button></div>
     {message && <p role="status" className="text-xs text-cyan-100">{message}</p>}
   </div>;
 }
