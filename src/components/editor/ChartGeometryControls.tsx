@@ -1,9 +1,11 @@
+import { isProgressChart } from "@/lib/editor/progressCharts";
 import { useTranslation } from "react-i18next";
 import type { ChartData } from "@/lib/editor/dataVisuals";
 import { CHART_GEOMETRY_CONTROLS, defaultChartGeometry, chartGeometryLabel, type ChartGeometry } from "@/lib/editor/chartGeometry";
 
 export function ChartGeometryControls({ value, kind, multiple, onChange }: { value: ChartGeometry; kind: ChartData["kind"]; multiple: boolean; onChange: (value: ChartGeometry) => void }) {
   const { t } = useTranslation();
+  if (isProgressChart(kind)) return null;
   if (kind === "pictogram") return <label className="flex flex-wrap items-center gap-3 text-xs text-white/65">{t("editor.charts.symbolGap", { defaultValue: "Symbol spacing" })}<input type="range" min={8} max={80} step={1} value={Math.round(Math.max(0.08, Math.min(0.8, value.barGap ?? 0.22)) * 100)} onChange={event => onChange({ ...value, barGap: Number(event.target.value) / 100 })} /><span>{Math.round(Math.max(0.08, Math.min(0.8, value.barGap ?? 0.22)) * 100)}%</span></label>;
   if (kind === "treemap") return <label className="flex flex-wrap items-center gap-3 text-xs text-white/65">{t("editor.charts.tileGap", { defaultValue: "Tile spacing" })}<input type="range" min={0} max={90} step={1} value={Math.round((value.barGap ?? 0.12) * 100)} onChange={event => onChange({ ...value, barGap: Number(event.target.value) / 100 })} /><span>{Math.round((value.barGap ?? 0.12) * 100)}%</span></label>;
   if (kind === "funnel") return <label className="flex flex-wrap items-center gap-3 text-xs text-white/65">{t("editor.charts.funnelGap", { defaultValue: "Stage spacing" })}<input type="range" min={0} max={90} step={1} value={Math.round((value.barGap ?? 0.08) * 100)} onChange={event => onChange({ ...value, barGap: Number(event.target.value) / 100 })} /><span>{Math.round((value.barGap ?? 0.08) * 100)}%</span></label>;
