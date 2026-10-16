@@ -1,3 +1,4 @@
+import { PagesManagerPanel } from "./PagesManagerPanel";
 import { ResizeDesignPanel } from "./ResizeDesignPanel";
 import { DESIGN_PANEL_NAMES, designSelectionAction } from "@/lib/editor/designPanels";
 import { VectorSymbolsPanel } from "./VectorSymbolsPanel";
@@ -35,7 +36,7 @@ export function DesignTools() {
   const settings = useEditorStore(s => s.settings);
   const projectId = useEditorStore(s => s.projectId);
   const [clipboard, setClipboard] = useState<{ projectId: string; style: DesignStyle } | null>(null);
-  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | "layout" | "notes" | "link" | "compositions" | "bulk" | "animate" | "connectors" | "symbols" | null>(null);
+  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | "layout" | "notes" | "link" | "compositions" | "bulk" | "animate" | "connectors" | "symbols" | "pages" | null>(null);
   const [insertOpen, setInsertOpen] = useState(false);
   const surfaceEpoch = useSurfaceEpoch();
   useCloseOnSurfaceSwitch(useCallback(() => { setInsertOpen(false); setPanel(null); finishDraft.current(); }, []));
@@ -91,6 +92,7 @@ export function DesignTools() {
       <button type="button" className={button} disabled={!style || !selected.some(c => !c.locked)} onClick={() => style && apply(p => applyDesignStyle(p, ids, style))}><Paintbrush size={15} />{t("editor.designTools.pasteStyle", { defaultValue: "Paste style" })}</button>
       <button type="button" className={button} aria-expanded={panel === "search"} onClick={() => setPanel(panel === "search" ? null : "search")}><Search size={15} />{t("editor.designTools.findReplace", { defaultValue: "Find and replace" })}</button>
       <button type="button" className={button} aria-expanded={panel === "animate"} onClick={() => setPanel(panel === "animate" ? null : "animate")}>{t("editor.pageAnimation.title", { defaultValue: "Animate page" })}</button>
+      <button type="button" className={button} aria-expanded={panel === "pages"} onClick={() => { useEditorStore.getState().setIsPlaying(false); setPanel(panel === "pages" ? null : "pages"); }}>{t("editor.pageManager.title", { defaultValue: "Manage pages" })}</button>
       <button type="button" className={button} aria-expanded={panel === "notes"} onClick={() => setPanel(panel === "notes" ? null : "notes")}>{t("editor.notes.title", { defaultValue: "Page notes" })}</button>
       <button type="button" className={button} disabled={!selected.length} aria-expanded={panel === "link"} onClick={() => setPanel(panel === "link" ? null : "link")}>{t("editor.links.title", { defaultValue: "Link" })}</button>
       {style && <span role="status" className="sr-only">{t("editor.designTools.styleReady", { defaultValue: "Style ready to apply" })}</span>}
@@ -99,7 +101,7 @@ export function DesignTools() {
     </div>
     {panel && <section aria-label={panelTitle} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
       <header className="sticky -top-3 z-10 -mx-3 -mt-3 mb-3 flex items-center justify-between gap-3 border-b border-white/10 bg-neutral-950 px-3 py-2"><h3 className="text-xs font-medium text-white/75">{panelTitle}</h3><button type="button" onClick={() => { draftFocus.finish(); setPanel(null); }} className="min-h-8 rounded-lg px-3 text-xs text-white/50 hover:bg-white/10">{t("editor.designTools.closePanel", { defaultValue: "Close panel" })}</button></header>
-      {panel === "symbols" ? <VectorSymbolsPanel key={projectId} /> : panel === "connectors" ? <ConnectorsPanel key={projectId} /> : panel === "animate" ? <PageAnimationPanel key={projectId} /> : panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <ResizeDesignPanel key={projectId} /> : <div className="space-y-3">
+      {panel === "pages" ? <PagesManagerPanel key={projectId} /> : panel === "symbols" ? <VectorSymbolsPanel key={projectId} /> : panel === "connectors" ? <ConnectorsPanel key={projectId} /> : panel === "animate" ? <PageAnimationPanel key={projectId} /> : panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <ResizeDesignPanel key={projectId} /> : <div className="space-y-3">
         <p className="text-xs text-white/55">{t("editor.designTools.colourHint", { defaultValue: "Choose a colour to replace across this design. Locked layers are preserved." })}</p>
         <div className="flex flex-wrap gap-2">{designColours(useEditorStore.getState().toSnapshot()).map(value => <button key={value} type="button" aria-label={value} aria-pressed={colour === value} onClick={() => { setColour(value); setReplacement(value); }} className={`h-8 w-8 rounded-full border-2 ${colour === value ? "border-white ring-2 ring-sky-400" : "border-white/25"}`} style={{ background: value }} />)}</div>
         {colour && <div className="flex flex-wrap items-center gap-3">
