@@ -1,14 +1,17 @@
+import { designPageLinkIndex, designPdfLink, type DesignPdfLink } from "@/lib/editor/designLinks";
+import { resolveClipAt } from "@/lib/editor/keyframes";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
-import { drawClip, isVisualClip, type RenderSources } from "@/lib/editor/render";
+import { clipBox, drawClip, isVisualClip, type RenderSources } from "@/lib/editor/render";
 import { getPages, pageAt, pagePreviewTime } from "@/lib/editor/pages";
 
 export function PresentationView({ sources, onClose }: { sources: RenderSources; onClose: () => void }) {
   const { t } = useTranslation();
   const settings = useEditorStore(s => s.settings), clips = useEditorStore(s => s.clips), tracks = useEditorStore(s => s.tracks);
   const pages = getPages(settings, clips);
+  const [links, setLinks] = useState<DesignPdfLink[]>([]), previousLinks = useRef("");
   const [index, setIndex] = useState(() => pageAt(pages, useEditorStore.getState().currentTime).index);
   const [notes, setNotes] = useState(false), [black, setBlack] = useState(false), [auto, setAuto] = useState(false), [seconds, setSeconds] = useState(5);
   const page = pages[Math.min(index, pages.length - 1)], details = settings.pageDetails?.[page.index];
@@ -24,7 +27,7 @@ export function PresentationView({ sources, onClose }: { sources: RenderSources;
     return () => { if (document.fullscreenElement === root.current) void document.exitFullscreen().catch(() => {}); previous?.focus?.(); };
   }, []);
   useEffect(() => {
-    const store = useEditorStore.getState(); store.setIsPlaying(false); store.selectClip(null); store.setCurrentTime(pagePreviewTime(page)); setBlack(false);
+    const store = useEditorStore.getState(); store.setIsPlaying(false); store.selectClip(null); store.setCurrentTime(pagePreviewTime(page)); setBlack(false); setLinks([]); previousLinks.current = "";
   }, [page.index, page.start, page.end]);
   useEffect(() => {
     if (!auto || black) return;
@@ -72,7 +75,9 @@ export function PresentationView({ sources, onClose }: { sources: RenderSources;
         const ctx = element.getContext("2d");
         if (ctx) {
           ctx.setTransform(width / settings.width, 0, 0, height / settings.height, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = settings.background; ctx.fillRect(0, 0, settings.width, settings.height);
-          for (const clip of visible) { ctx.save(); try { drawClip(ctx, settings.width, settings.height, { ...clip, animateIn: undefined, animateOut: undefined }, at, sources); } finally { ctx.restore(); } }
+          const hotspots: DesignPdfLink[] = [];
+          for (const clip of visible) { const box = clip.href ? clipBox(ctx, resolveClipAt(clip, at), settings.width, settings.height, sources) : null; const link = box ? designPdfLink(clip.href, box, settings.width, settings.height, { alpha: 1, scale: 1, dx: 0, dy: 0 }) : null; if (link) hotspots.push(link); ctx.save(); try { drawClip(ctx, settings.width, settings.height, { ...clip, animateIn: undefined, animateOut: undefined }, at, sources); } finally { ctx.restore(); } }
+          const serialized = JSON.stringify(hotspots); if (serialized !== previousLinks.current) { previousLinks.current = serialized; setLinks(hotspots); }
         }
       }
       frame = requestAnimationFrame(draw);
@@ -82,7 +87,7 @@ export function PresentationView({ sources, onClose }: { sources: RenderSources;
   const button = "min-h-10 rounded-lg border border-white/20 px-3 text-xs text-white/80 hover:bg-white/10 disabled:opacity-30";
   return createPortal(<div ref={root} role="dialog" aria-modal="true" aria-label={t("editor.present.title", { defaultValue: "Present pages" })} tabIndex={-1} className="fixed inset-0 z-[200] flex flex-col bg-black text-white outline-none">
     <div className="flex shrink-0 items-center gap-3 px-4 py-3"><span aria-live="polite" className="min-w-0 flex-1 truncate text-sm">{details?.title || t("editor.pages.page", { number: page.index + 1 })}</span><button type="button" className={button} onClick={fullScreen}>{t("editor.present.fullscreen", { defaultValue: "Fullscreen" })}</button><button type="button" className={button} onClick={onClose}>{t("editor.present.close", { defaultValue: "Close presentation" })}</button></div>
-    <div ref={stage} className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden"><canvas ref={canvas} role="img" aria-label={details?.title || t("editor.pages.page", { number: page.index + 1 })} />{black && <div className="absolute inset-0 bg-black" aria-label={t("editor.present.blackout", { defaultValue: "Blackout" })} />}</div>
+    <div ref={stage} className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden"><div className="relative"><canvas ref={canvas} role="img" aria-label={details?.title || t("editor.pages.page", { number: page.index + 1 })} />{!black && links.map((link, index) => <button key={`${page.index}:${index}:${link.url}`} type="button" aria-label={designPageLinkIndex(link.url) === null ? link.url : t("editor.links.openPage", { defaultValue: "Go to page {{number}}", number: designPageLinkIndex(link.url)! + 1 })} onClick={() => { const target = designPageLinkIndex(link.url); if (target !== null) { if (pages[target]) { setAuto(false); setIndex(target); } } else window.open(link.url, "_blank", "noopener,noreferrer"); }} className="absolute cursor-pointer rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-cyan-300" style={{ left: `${link.x * 100}%`, top: `${link.y * 100}%`, width: `${link.width * 100}%`, height: `${link.height * 100}%` }} />)}</div>{black && <div className="absolute inset-0 bg-black" aria-label={t("editor.present.blackout", { defaultValue: "Blackout" })} />}</div>
     {notes && <aside className="max-h-[25vh] shrink-0 overflow-y-auto border-t border-white/15 px-4 py-3"><p className="mb-2 text-xs font-medium text-white/45">{t("editor.present.notes", { defaultValue: "Presenter notes" })}</p><p className="whitespace-pre-wrap break-words text-sm text-white/80">{details?.notes || t("editor.present.noNotes", { defaultValue: "No notes for this page" })}</p></aside>}
     <div className="flex shrink-0 flex-wrap items-center justify-center gap-2 border-t border-white/10 px-3 py-3"><button type="button" className={button} disabled={page.index === 0} onClick={() => setIndex(page.index - 1)}>{t("editor.present.previous", { defaultValue: "Previous" })}</button><span className="px-2 text-xs tabular-nums text-white/50">{page.index + 1} / {pages.length}</span><button type="button" className={button} disabled={page.index === pages.length - 1} onClick={() => setIndex(page.index + 1)}>{t("editor.present.next", { defaultValue: "Next" })}</button><button type="button" className={button} aria-pressed={auto} onClick={() => { if (!auto && page.index === pages.length - 1) setIndex(0); setAuto(value => !value); }}>{t(auto ? "editor.present.stopAuto" : "editor.present.startAuto", { defaultValue: auto ? "Stop auto advance" : "Auto advance" })}</button><select value={seconds} onChange={event => setSeconds(Number(event.target.value))} aria-label={t("editor.present.interval", { defaultValue: "Seconds per page" })} className="min-h-10 rounded-lg border border-white/20 bg-neutral-900 px-2 text-xs">{[3, 5, 10, 15, 30, 60].map(value => <option key={value} value={value}>{value}s</option>)}</select><button type="button" className={button} aria-pressed={black} onClick={() => setBlack(value => !value)}>{t("editor.present.blackout", { defaultValue: "Blackout" })}</button><button type="button" className={button} aria-pressed={notes} onClick={() => setNotes(value => !value)}>{t("editor.present.notes", { defaultValue: "Presenter notes" })}</button></div>
   </div>, document.body);
