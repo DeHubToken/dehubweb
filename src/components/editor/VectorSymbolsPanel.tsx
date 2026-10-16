@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
 import { VECTOR_SYMBOLS, putVectorSymbol, vectorSymbolSvg } from "@/lib/editor/vectorSymbols";
 
-const CATEGORY_NAMES: Record<string, string> = { all: "All", essentials: "Essentials", communication: "Communication", media: "Media and games", people: "People", objects: "Objects", nature: "Nature" };
+const CATEGORY_NAMES: Record<string, string> = { all: "All", essentials: "Essentials", communication: "Communication", media: "Media and games", people: "People", objects: "Objects", nature: "Nature", commerce: "Commerce", learning: "Learning", travel: "Travel", technology: "Technology", food: "Food and drink" };
 
 export function VectorSymbolsPanel() {
   const { t } = useTranslation();
