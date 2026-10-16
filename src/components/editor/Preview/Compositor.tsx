@@ -2,7 +2,7 @@ import { registerDesignPagePreview } from "@/lib/editor/designPagePreviews";
 import { freehandSvg, type PenSettings } from "@/lib/editor/freehand";
 import { insertFreehandStroke } from "@/lib/editor/freehandProject";
 import { nanoid } from "nanoid";
-import { FIT_VIEWPORT, zoomDesignViewport, type DesignViewport } from "@/lib/editor/designViewport";
+import { FIT_VIEWPORT, focusDesignSelection, zoomDesignViewport, type DesignViewport } from "@/lib/editor/designViewport";
 import { PresentationView } from "./PresentationView";
 import { panMediaCrop, zoomMediaCrop } from "@/lib/editor/mediaCrop";
 import { GuideEditorLayer } from "../GuideEditorLayer";
@@ -1086,6 +1086,23 @@ export function Compositor() {
       }
     : null;
 
+  const focusSelection = () => {
+    const store = useEditorStore.getState(), wrap = wrapRef.current;
+    if (!wrap) return;
+    const boxes = layersAt().filter(layer => store.selectedClipIds.includes(layer.clip.id)).map(layer => layer.box);
+    const next = focusDesignSelection(boxes, store.settings, fitScale, { width: wrap.clientWidth, height: wrap.clientHeight });
+    if (next) { onGestureEnd(); viewportCleanup.current?.(); store.setIsPlaying(false); setEditingGuides(false); setViewport(next); }
+  };
+  useEffect(() => {
+    const command = (event: Event) => {
+      if (!wrapRef.current?.getClientRects().length || presentingRef.current) return;
+      if (event.type === "editor:focus-selection") focusSelection();
+      else { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); }
+    };
+    window.addEventListener("editor:focus-selection", command); window.addEventListener("editor:fit-page", command);
+    return () => { window.removeEventListener("editor:focus-selection", command); window.removeEventListener("editor:fit-page", command); };
+  }, [fitScale, layersAt, onGestureEnd]);
+
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
       {presenting && <PresentationView sources={sources} onClose={() => setPresenting(false)} />}
@@ -1314,14 +1331,15 @@ export function Compositor() {
       </div>
 
 
-      <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70">
+      <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 overflow-x-auto whitespace-nowrap border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70 [&>button]:shrink-0 [&>span]:shrink-0">
         <button type="button" onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); setEditingGuides(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
         <button type="button" aria-pressed={editingGuides} onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); useEditorUiStore.getState().setDraw(null); useEditorStore.getState().setIsPlaying(false); setEditingGuides(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${editingGuides ? "border-cyan-300 bg-cyan-300/15" : "border-white/20"}`}>{t(editingGuides ? "editor.guides.done" : "editor.guides.edit", { defaultValue: editingGuides ? "Done guides" : "Edit guides" })}</button>
         <button type="button" aria-pressed={navigating} onClick={() => { onGestureEnd(); setEditingGuides(false); setCroppingId(null); if (!navigating) useEditorUiStore.getState().setDraw(null); setNavigating(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${navigating ? "border-white bg-white/15" : "border-white/20"}`}>{t("editor.viewport.pan", { defaultValue: "Pan canvas" })}</button>
         <button type="button" aria-label={t("editor.viewport.zoomOut", { defaultValue: "Zoom canvas out" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom / 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">−</button>
         <span className="min-w-10 text-center tabular-nums">{Math.round(scale * 100)}%</span>
         <button type="button" aria-label={t("editor.viewport.zoomIn", { defaultValue: "Zoom canvas in" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom * 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">+</button>
-        <button type="button" onClick={() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); }} className="min-h-8 rounded-lg border border-white/20 px-3">{t("editor.viewport.fit", { defaultValue: "Fit" })}</button>
+        <button type="button" disabled={!selectedClipIds.length} onClick={focusSelection} title={t("editor.viewport.selectionShortcut", { defaultValue: "Zoom to selection (Shift+2)" })} className="min-h-8 rounded-lg border border-white/20 px-3 disabled:opacity-35">{t("editor.viewport.selection", { defaultValue: "Selection" })}</button>
+        <button type="button" title={t("editor.viewport.fitShortcut", { defaultValue: "Fit page (Shift+1)" })} onClick={() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); }} className="min-h-8 rounded-lg border border-white/20 px-3">{t("editor.viewport.fit", { defaultValue: "Fit" })}</button>
       </div>
       <PagesStrip sources={sources} />
 
