@@ -411,6 +411,7 @@ export function Inspector() {
               </label>
               {text.background && (
                 <div className="mt-2 space-y-2">
+                  <label className="flex min-h-9 items-center gap-2 text-xs text-white/65"><input type="checkbox" checked={!!text.background.perLine} onChange={event => updateTextClip(text.id, { background: { ...text.background!, perLine: event.target.checked } })} />{t("editor.text.backgroundPerLine", { defaultValue: "Fit background to each line" })}</label>
                   <div className="grid grid-cols-2 gap-2">
                     <Field label={_copy("copy.3a9dfa58df63", { defaultValue: "Colour" })}>
                       <input type="color" value={text.background.color}

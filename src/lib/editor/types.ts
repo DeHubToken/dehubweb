@@ -223,6 +223,7 @@ export interface MediaClip extends BaseClip {
 }
 
 export interface TextBackground {
+  perLine?: boolean;
   /** Hex colour. */
   color: string;
   /** 0..1 opacity of the background fill. */
