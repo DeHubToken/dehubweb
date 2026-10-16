@@ -1,3 +1,4 @@
+import { applyPhotoTone, needsPhotoTone } from "./photoTone";
 import { textRevealLines } from "./textReveal";
 /**
  * Shared clip renderer.
@@ -294,6 +295,7 @@ export function drawClip(ctx: Ctx2D, W: number, H: number, keyed: Clip, t: numbe
 // pixels (destination-in against the source), so a cut-out never tints the
 // layers beneath it. One scratch canvas is reused for every clip and frame.
 let scratch: OffscreenCanvas | HTMLCanvasElement | null = null;
+const stillGradeCache = new WeakMap<HTMLImageElement, { key: string; el: CanvasImageSource; w: number; h: number }>();
 
 function scratchCanvas(w: number, h: number): OffscreenCanvas | HTMLCanvasElement | null {
   if (!scratch) {
@@ -307,7 +309,7 @@ function scratchCanvas(w: number, h: number): OffscreenCanvas | HTMLCanvasElemen
 }
 
 export function needsGrade(e: MediaClip["effects"]): boolean {
-  return !!e && (!!e.warmth || !!e.tint || !!e.vignette);
+  return !!e && (!!e.warmth || !!e.tint || !!e.vignette || needsPhotoTone(e));
 }
 
 function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: number, w: number, h: number, e: NonNullable<MediaClip["effects"]>) {
@@ -316,6 +318,10 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   const k = Math.min(1, 1600 / Math.max(w, h));
   const cw = Math.max(1, Math.round(w * k));
   const ch = Math.max(1, Math.round(h * k));
+  const still = typeof HTMLImageElement !== "undefined" && el instanceof HTMLImageElement ? el : null;
+  const cacheKey = still ? [still.currentSrc || still.src, sx, sy, sw, sh, cw, ch, JSON.stringify(e)].join("|") : "";
+  const cached = still ? stillGradeCache.get(still) : null;
+  if (cached?.key === cacheKey) return cached;
   const cvs = scratchCanvas(cw, ch);
   const g = cvs?.getContext("2d") as Ctx2D | null;
   if (!cvs || !g) return null;
@@ -324,6 +330,11 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   g.filter = "none";
   g.globalCompositeOperation = "copy";
   g.drawImage(el, sx, sy, sw, sh, 0, 0, cw, ch);
+  if (needsPhotoTone(e)) {
+    const image = g.getImageData(0, 0, cw, ch);
+    applyPhotoTone(image.data, e, true);
+    g.putImageData(image, 0, 0);
+  }
   const fillBlend = (colour: string, alpha: number, mode: GlobalCompositeOperation) => {
     g.globalCompositeOperation = mode;
     g.globalAlpha = alpha;
@@ -349,6 +360,12 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   g.globalAlpha = 1;
   g.drawImage(el, sx, sy, sw, sh, 0, 0, cw, ch);
   g.globalCompositeOperation = "source-over";
+  if (still) {
+    const copy = typeof OffscreenCanvas !== "undefined" ? new OffscreenCanvas(cw, ch) : document.createElement("canvas");
+    copy.width = cw; copy.height = ch;
+    const context = copy.getContext("2d") as Ctx2D | null;
+    if (context) { context.drawImage(cvs, 0, 0); const result = { key: cacheKey, el: copy as CanvasImageSource, w: cw, h: ch }; stillGradeCache.set(still, result); return result; }
+  }
   return { el: cvs as CanvasImageSource, w: cw, h: ch };
 }
 
