@@ -235,6 +235,8 @@ export interface TextBackground {
 }
 
 export interface TextStroke {
+  /** Paint opacity, independent of layer transparency. */
+  opacity?: number;
   color: string;
   /** Dash lengths in pixels relative to 1080p. Absent is a solid line. */
   dash?: number[];
@@ -243,6 +245,7 @@ export interface TextStroke {
 }
 
 export interface TextClip extends BaseClip {
+  fillOpacity?: number;
   pageNumber?: import("./pageNumbering").PageNumberFormat;
   kind: "text";
   gradient?: import("./gradientFill").GradientFill | null;
@@ -285,6 +288,7 @@ export type ShapeKind = (typeof SHAPE_KINDS)[number];
 
 /** A vector shape. Size is a fraction of the page, before transform.scale. */
 export interface ShapeClip extends BaseClip {
+  fillOpacity?: number;
   geometry?: import("./shapeGeometry").ShapeGeometryOptions;
   kind: "shape";
   gradient?: import("./gradientFill").GradientFill | null;
