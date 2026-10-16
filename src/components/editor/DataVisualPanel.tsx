@@ -70,7 +70,7 @@ export function DataVisualPanel() {
     setMode(next);
     if (next === "chart") {
       const value = chart ?? DEFAULT_CHART;
-      setChartAppearance({ xAxisTitle: value.xAxisTitle, yAxisTitle: value.yAxisTitle, valueFormat: value.valueFormat, donutHole: value.donutHole, donutLabel: value.donutLabel, donutTotal: value.donutTotal, lineWidth: value.lineWidth, scatterLines: value.scatterLines, lineStyle: value.lineStyle, pointSize: value.pointSize, areaOpacity: value.areaOpacity, barGap: value.barGap, showGrid: value.showGrid, showAxisValues: value.showAxisValues, legendPosition: value.legendPosition, scaleMin: value.scaleMin, scaleMax: value.scaleMax }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setStackPercent(!!value.stackPercent); setShowLegend(value.showLegend !== false);
+      setChartAppearance({ xAxisTitle: value.xAxisTitle, yAxisTitle: value.yAxisTitle, valueFormat: value.valueFormat, donutHole: value.donutHole, donutLabel: value.donutLabel, donutTotal: value.donutTotal, lineWidth: value.lineWidth, scatterLines: value.scatterLines, lineStyle: value.lineStyle, pointSize: value.pointSize, areaOpacity: value.areaOpacity, barGap: value.barGap, showGrid: value.showGrid, showAxisValues: value.showAxisValues, legendPosition: value.legendPosition, scaleXMin: value.scaleXMin, scaleXMax: value.scaleXMax, scaleMin: value.scaleMin, scaleMax: value.scaleMax }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setStackPercent(!!value.stackPercent); setShowLegend(value.showLegend !== false);
       setForeground(value.textColour); setAccent(value.colours[0] ?? "#38bdf8"); setShowLabels(value.showLabels); setShowValues(value.showValues);
     } else {
       const value = table ?? DEFAULT_TABLE;
@@ -86,7 +86,7 @@ export function DataVisualPanel() {
     } else {
       const next = chart ?? DEFAULT_CHART;
       setChartPalette([...next.colours]);
-      setChartAppearance({ xAxisTitle: next.xAxisTitle, yAxisTitle: next.yAxisTitle, valueFormat: next.valueFormat, donutHole: next.donutHole, donutLabel: next.donutLabel, donutTotal: next.donutTotal, lineWidth: next.lineWidth, scatterLines: next.scatterLines, lineStyle: next.lineStyle, pointSize: next.pointSize, areaOpacity: next.areaOpacity, barGap: next.barGap, showGrid: next.showGrid, showAxisValues: next.showAxisValues, legendPosition: next.legendPosition, scaleMin: next.scaleMin, scaleMax: next.scaleMax });
+      setChartAppearance({ xAxisTitle: next.xAxisTitle, yAxisTitle: next.yAxisTitle, valueFormat: next.valueFormat, donutHole: next.donutHole, donutLabel: next.donutLabel, donutTotal: next.donutTotal, lineWidth: next.lineWidth, scatterLines: next.scatterLines, lineStyle: next.lineStyle, pointSize: next.pointSize, areaOpacity: next.areaOpacity, barGap: next.barGap, showGrid: next.showGrid, showAxisValues: next.showAxisValues, legendPosition: next.legendPosition, scaleXMin: next.scaleXMin, scaleXMax: next.scaleXMax, scaleMin: next.scaleMin, scaleMax: next.scaleMax });
       setData(chartDataSource(next)); setMultiple(!!next.series?.length); setStacked(!!next.stacked); setStackPercent(!!next.stackPercent); setShowLegend(next.showLegend !== false); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
       setShowLabels(next.showLabels); setShowValues(next.showValues); setKind(next.kind);
     }
