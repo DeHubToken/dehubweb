@@ -108,6 +108,16 @@ export function PagesStrip({ sources }: { sources: RenderSources }) {
   const pages = useMemo(() => getPages(settings, clips), [settings, clips]);
   const current = pageAt(pages, currentTime);
   const multi = pages.length > 1;
+  const [query, setQuery] = useState("");
+  const [windowStart, setWindowStart] = useState(0);
+  const [jump, setJump] = useState("");
+  useEffect(() => { setWindowStart(Math.floor(current.index / 12) * 12); setQuery(""); }, [current.index]);
+  const matchingPages = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return needle ? pages.filter(page => `${page.index + 1} ${settings.pageDetails?.[page.index]?.title ?? ""}`.toLowerCase().includes(needle)) : pages;
+  }, [pages, settings.pageDetails, query]);
+  const firstVisible = Math.min(windowStart, Math.max(0, Math.floor((matchingPages.length - 1) / 12) * 12));
+  const visiblePages = matchingPages.slice(firstVisible, firstVisible + 12);
 
   const btn = "flex h-7 shrink-0 items-center gap-1 rounded-md border border-white/10 px-2 text-[11px] text-white/70 transition hover:bg-white/10 hover:text-white";
 
@@ -133,9 +143,16 @@ export function PagesStrip({ sources }: { sources: RenderSources }) {
         <button type="button" className={btn + " disabled:opacity-30"} disabled={current.index === 0} onClick={() => movePage(current.index, current.index - 1)}>{t("editor.pages.moveEarlier", { defaultValue: "Move page earlier" })}</button>
         <button type="button" className={btn + " disabled:opacity-30"} disabled={current.index === pages.length - 1} onClick={() => movePage(current.index, current.index + 1)}>{t("editor.pages.moveLater", { defaultValue: "Move page later" })}</button>
       </div>}
+      {pages.length > 12 && <div className="mb-2 flex flex-wrap items-center gap-2">
+        <input value={query} onChange={event => { setQuery(event.target.value); setWindowStart(0); }} placeholder={t("editor.pages.search", { defaultValue: "Find page by number or name" })} aria-label={t("editor.pages.search", { defaultValue: "Find page by number or name" })} className="h-8 min-w-0 flex-1 rounded-md border border-white/20 bg-white/5 px-2 text-xs text-white" />
+        <button type="button" className={btn + " disabled:opacity-30"} disabled={firstVisible === 0} onClick={() => setWindowStart(firstVisible - 12)}>{t("editor.pages.previousSet", { defaultValue: "Previous pages" })}</button>
+        <span role="status" className="text-[11px] tabular-nums text-white/50">{matchingPages.length ? firstVisible + 1 : 0}–{Math.min(firstVisible + 12, matchingPages.length)} / {matchingPages.length}</span>
+        <button type="button" className={btn + " disabled:opacity-30"} disabled={firstVisible + 12 >= matchingPages.length} onClick={() => setWindowStart(firstVisible + 12)}>{t("editor.pages.nextSet", { defaultValue: "Next pages" })}</button>
+        <form className="flex items-center gap-1" onSubmit={event => { event.preventDefault(); const page = pages[Number(jump) - 1]; if (page && Number.isInteger(Number(jump))) { pick(page); setJump(""); } }}><input type="number" min={1} max={pages.length} required value={jump} onChange={event => setJump(event.target.value)} aria-label={t("editor.pages.jump", { defaultValue: "Go to page" })} className="h-8 w-16 rounded-md border border-white/20 bg-white/5 px-2 text-xs text-white" /><button type="submit" className={btn}>{t("editor.pages.go", { defaultValue: "Go" })}</button></form>
+      </div>}
       <div className="flex min-w-0 items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
         <PageDuration key={current.index} seconds={current.end - current.start} onApply={seconds => resizePage(current.index, seconds)} />
-        {multi && pages.map(p => {
+        {multi && visiblePages.map(p => {
           const title = headline(p);
           return <div key={p.index} className="flex w-28 shrink-0 flex-col gap-1">
             <PageThumb page={p} active={p.index === current.index} sources={sources} onPick={() => pick(p)} />
@@ -145,6 +162,7 @@ export function PagesStrip({ sources }: { sources: RenderSources }) {
             </button>
           </div>;
         })}
+        {multi && !visiblePages.length && <p className="text-xs text-white/50">{t("editor.pages.noResults", { defaultValue: "No matching pages" })}</p>}
         <button type="button" onClick={() => addPage()} className={btn} title={t("editor.pages.add")}><Plus className="h-3.5 w-3.5" />{t("editor.pages.add")}</button>
         <button type="button" onClick={() => addPage({ duplicate: true })} className={btn} title={t("editor.pages.duplicate")}><Copy className="h-3.5 w-3.5" /><span className="hidden sm:inline">{t("editor.pages.duplicate")}</span></button>
         {multi && <button type="button" onClick={() => deletePage(current.index)} className={btn} title={t("editor.pages.delete")}><Trash2 className="h-3.5 w-3.5" /><span className="hidden sm:inline">{t("editor.pages.delete")}</span></button>}
