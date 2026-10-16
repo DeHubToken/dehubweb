@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { applyTableCellStyle, type TableCellStyle, type TableCellStyles } from "@/lib/editor/tableCellStyles";
 
-export function TableCellControls({ value, rows, columns, onChange }: { value?: TableCellStyles; rows: number; columns: number; onChange: (value: TableCellStyles | undefined) => void }) {
+export function TableCellControls({ value, rows, columns, onChange, focusedCell }: { value?: TableCellStyles; focusedCell?: string; rows: number; columns: number; onChange: (value: TableCellStyles | undefined) => void }) {
   const { t } = useTranslation(), [range, setRange] = useState("A1"), [fill, setFill] = useState("#22d3ee"), [colour, setColour] = useState("#111111"), [error, setError] = useState("");
+  useEffect(() => { setRange(focusedCell || "A1"); setError(""); }, [focusedCell]);
   const apply = (patch: TableCellStyle | null) => { try { onChange(applyTableCellStyle(value, range, rows, columns, patch)); setError(""); } catch (value) { setError(value instanceof Error ? value.message : String(value)); } };
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35";
   return <div className="space-y-2 border-t border-white/10 pt-3"><div className="flex flex-wrap items-center gap-2"><label className="text-xs text-white/65">{t("editor.tables.cellAppearance", { defaultValue: "Cell appearance" })}<input value={range} onChange={event => { setRange(event.target.value); setError(""); }} placeholder="A1:C2" maxLength={15} aria-label={t("editor.tables.cellRange", { defaultValue: "Cell range, for example A1:C2" })} className="ml-2 min-h-9 w-28 rounded-lg border border-white/20 bg-neutral-900 px-3 text-xs text-white" /></label><input type="color" value={fill} onChange={event => setFill(event.target.value)} aria-label={t("editor.tables.cellFill", { defaultValue: "Cell fill colour" })} className="h-9 w-10 bg-transparent" /><button type="button" onClick={() => apply({ fill })} className={button}>{t("editor.tables.applyCellFill", { defaultValue: "Apply fill" })}</button><input type="color" value={colour} onChange={event => setColour(event.target.value)} aria-label={t("editor.tables.cellInk", { defaultValue: "Cell text colour" })} className="h-9 w-10 bg-transparent" /><button type="button" onClick={() => apply({ colour })} className={button}>{t("editor.tables.applyCellInk", { defaultValue: "Apply text colour" })}</button></div>
