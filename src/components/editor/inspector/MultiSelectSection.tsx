@@ -1,3 +1,4 @@
+import { LayerNamingControls } from "../LayerNamingControls";
 import { SelectionTransformControls } from "../SelectionTransformControls";
 import { layoutDesign, type LayoutAction } from "@/lib/editor/designLayout";
 /**
@@ -96,6 +97,7 @@ export function MultiSelectSection() {
         <button type="button" onClick={() => useEditorStore.getState().ungroupSelected()} disabled={!clips.some(c => selectedClipIds.includes(c.id) && c.groupId)} className="min-h-9 rounded-lg border border-white/20 text-xs text-white/80 hover:bg-white/10 disabled:opacity-35">{t("editor.groups.ungroup", { defaultValue: "Ungroup" })}</button>
       </div>
       <SelectionTransformControls />
+      <LayerNamingControls />
       <p className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.multi.alignTogether")}</p>
       <div className="grid grid-cols-6 gap-1">
         {btn(t("editor.layer.alignLeft"), <AlignStartVertical className="h-3.5 w-3.5" />, () => align("x", "start"), layers.length < 2)}
