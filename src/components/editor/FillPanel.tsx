@@ -7,6 +7,7 @@ import { useGradientDraft } from "@/lib/editor/useGradientDraft";
 import { fillDesignLayers, putGradientBackground, putSolidBackground, solidDesignLayers, removePageBackground } from "@/lib/editor/fillProject";
 import { PhotoBackgroundControls } from "./PhotoBackgroundControls";
 import { GradientEditor } from "./GradientEditor";
+import { BackgroundScopeControls } from "./BackgroundScopeControls";
 
 export function FillPanel() {
   const { t } = useTranslation();
@@ -37,6 +38,7 @@ export function FillPanel() {
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/80 disabled:opacity-35";
   return <div className="space-y-3">
     <PhotoBackgroundControls />
+    <BackgroundScopeControls />
     <p className="text-xs text-white/55">{t("editor.fills.hint", { defaultValue: "Apply a gradient to selected text or shapes, or add it behind this page." })}</p>
     <div className="flex flex-wrap gap-2">{GRADIENT_PRESETS.map(preset => <button key={preset.id} type="button" onClick={() => { const next = { ...fill, stops: gradientFromColours(preset.colours).stops }; setFill(next); apply(next, !canFill); }} className="flex min-h-12 items-center gap-2 rounded-lg border border-white/15 px-3 text-xs hover:bg-white/10"><span className="h-8 w-12 rounded-md" style={{ background: `linear-gradient(45deg, ${preset.colours.join(",")})` }} />{t(`editor.fills.preset.${preset.id}`, { defaultValue: preset.label })}</button>)}</div>
     <GradientEditor value={fill} onChange={setFill} />
