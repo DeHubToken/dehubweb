@@ -54,6 +54,7 @@ import { useBgRemovalStore } from "@/store/editorBgRemovalStore";
 import { PagesStrip } from "./PagesStrip";
 import { GOOGLE_FONTS, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
 import { replaceDesignMedia } from "@/lib/editor/replaceMedia";
+import { getDesignGuides } from "@/lib/editor/designGuides";
 import { audioGainAt } from "@/lib/editor/audioEnvelope";
 import { leaseMedia } from "@/lib/editor/mediaLeases";
 
@@ -128,6 +129,7 @@ export function Compositor() {
   }, [fontFamilies]);
   const media = useEditorStore((s) => s.media);
   const settings = useEditorStore((s) => s.settings);
+  const layoutGuides = useMemo(() => getDesignGuides(settings.guides), [settings.guides]);
   const currentTime = useEditorStore((s) => s.currentTime);
   const isPlaying = useEditorStore((s) => s.isPlaying);
   const isLooping = useEditorStore((s) => s.isLooping);
@@ -589,6 +591,11 @@ export function Compositor() {
       const others = layersAt().filter((l) => !moving.has(l.clip.id));
       const xs = [0, W / 2, W];
       const ys = [0, H / 2, H];
+      const persistent = getDesignGuides(s.settings.guides);
+      if (persistent.snap) {
+        xs.push(...persistent.vertical.map(value => value * W)); ys.push(...persistent.horizontal.map(value => value * H));
+        if (persistent.margin) { const margin = persistent.margin * Math.min(W, H); xs.push(margin, W - margin); ys.push(margin, H - margin); }
+      }
       for (const o of others) {
         const e2 = halfExtents(o.box);
         xs.push(o.box.cx - e2.hw, o.box.cx, o.box.cx + e2.hw);
@@ -1069,6 +1076,9 @@ export function Compositor() {
           )}
 
           {/* Snapping guides */}
+          {layoutGuides.visible && layoutGuides.vertical.map(x => <div key={`layout-v${x}`} aria-hidden className="pointer-events-none absolute bottom-0 top-0 w-px bg-cyan-400/65" style={{ left: x * settings.width * scale }} />)}
+          {layoutGuides.visible && layoutGuides.horizontal.map(y => <div key={`layout-h${y}`} aria-hidden className="pointer-events-none absolute left-0 right-0 h-px bg-cyan-400/65" style={{ top: y * settings.height * scale }} />)}
+          {layoutGuides.visible && layoutGuides.margin > 0 && <div aria-hidden className="pointer-events-none absolute border border-dashed border-cyan-300/60" style={{ inset: layoutGuides.margin * Math.min(settings.width, settings.height) * scale }} />}
           {guides.v.map((x) => (
             <div key={`v${x}`} className="pointer-events-none absolute top-0 bottom-0 w-px bg-fuchsia-400"
               style={{ left: x * scale }} />

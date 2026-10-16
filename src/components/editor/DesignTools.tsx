@@ -9,6 +9,7 @@ import { DataVisualPanel } from "./DataVisualPanel";
 import { FillPanel } from "./FillPanel";
 import { QrPanel } from "./QrPanel";
 import { PhotoGridPanel } from "./PhotoGridPanel";
+import { GuidesPanel } from "./GuidesPanel";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";
 import { useEditorDraftFocus } from "./useEditorDraftFocus";
@@ -23,7 +24,7 @@ export function DesignTools() {
   const settings = useEditorStore(s => s.settings);
   const projectId = useEditorStore(s => s.projectId);
   const [clipboard, setClipboard] = useState<{ projectId: string; style: DesignStyle } | null>(null);
-  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | null>(null);
+  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | null>(null);
   const [insertOpen, setInsertOpen] = useState(false);
   const surfaceEpoch = useSurfaceEpoch();
   useCloseOnSurfaceSwitch(useCallback(() => { setInsertOpen(false); setPanel(null); finishDraft.current(); }, []));
@@ -58,6 +59,7 @@ export function DesignTools() {
         <DropdownMenuContent align="start" className="border-white/15 bg-neutral-950 text-white">
           <DropdownMenuItem onSelect={() => setPanel("data")}>{t("editor.dataVisual.title", { defaultValue: "Charts and tables" })}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setPanel("fill")}>{t("editor.fills.title", { defaultValue: "Gradient fills" })}</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setPanel("guides")}>{t("editor.guides.title", { defaultValue: "Guides and margins" })}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setPanel("grid")}>{t("editor.grids.title", { defaultValue: "Photo grids" })}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setPanel("qr")}>{t("editor.qr.title", { defaultValue: "QR code" })}</DropdownMenuItem>
         </DropdownMenuContent>
@@ -66,8 +68,8 @@ export function DesignTools() {
       {selected.length > 1 && <button type="button" className={button} onClick={() => useEditorStore.getState().groupSelected()}>{t("editor.groups.group", { defaultValue: "Group" })}</button>}
       {selected.some(c => c.groupId) && <button type="button" className={button} onClick={() => useEditorStore.getState().ungroupSelected()}>{t("editor.groups.ungroup", { defaultValue: "Ungroup" })}</button>}
     </div>
-    {panel && <section aria-label={t(`editor.designTools.panel.${panel}`, { defaultValue: ({ resize: "Resize", search: "Find and replace", colours: "Document colours", data: "Charts and tables", fill: "Gradient fills", qr: "QR code", grid: "Photo grids" })[panel] })} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
-      {panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+    {panel && <section aria-label={t(`editor.designTools.panel.${panel}`, { defaultValue: ({ resize: "Resize", search: "Find and replace", colours: "Document colours", data: "Charts and tables", fill: "Gradient fills", qr: "QR code", grid: "Photo grids", guides: "Guides and margins" })[panel] })} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
+      {panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {DESIGN_SIZES.map(size => <button key={size.id} type="button" onClick={() => { apply(p => resizeDesign(p, size.width, size.height)); setPanel(null); }} className="rounded-lg border border-white/15 p-2 text-left text-xs hover:bg-white/10">
           <span className="block font-medium">{t(`editor.designTools.size.${size.id}`, { defaultValue: size.label })}</span><span className="text-white/45">{size.width} × {size.height}</span>
         </button>)}
