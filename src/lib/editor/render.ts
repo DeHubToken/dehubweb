@@ -16,6 +16,7 @@ import { videoMatteFrame } from "./videoMatte";
 import { gifImageFrame } from "./gifImage";
 import { measuredTextLayout } from "./textLayout";
 import { drawDataVisual } from "./dataVisuals";
+import { createGradientFill } from "./gradientFill";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -377,18 +378,20 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
   const x = -box.w / 2;
   const y = -box.h / 2;
   const r = ((clip.radius ?? 0) / 1080) * H;
+  const framePath = () => clip.frame && clip.frame !== "rect"
+    ? shapePath(ctx, clip.frame, box.w, box.h) : roundRectPath(ctx, x, y, box.w, box.h, r);
 
-  if (r > 0) {
+  if (r > 0 || (clip.frame && clip.frame !== "rect")) {
     if (clip.shadow && clip.shadow.opacity > 0) {
       ctx.save();
       applyShadow(ctx, clip, H);
       ctx.fillStyle = "#000";
-      roundRectPath(ctx, x, y, box.w, box.h, r);
+      framePath();
       ctx.fill();
       ctx.restore();
     }
     ctx.save();
-    roundRectPath(ctx, x, y, box.w, box.h, r);
+    framePath();
     ctx.clip();
     ctx.drawImage(el, sx, sy, sw, sh, x, y, box.w, box.h);
     ctx.restore();
@@ -485,15 +488,16 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   const open = clip.shape === "line" || clip.shape === "arrow" || clip.shape === "path";
   shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points);
   applyShadow(ctx, clip, H);
-  if (!open && clip.fill) {
-    ctx.fillStyle = clip.fill;
+  const gradient = createGradientFill(ctx, box.w, box.h, clip.gradient);
+  if (!open && (clip.fill || gradient)) {
+    ctx.fillStyle = gradient ?? clip.fill!;
     ctx.fill();
     clearShadow(ctx);
   }
   const stroke = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
   if (stroke && stroke.width > 0) {
     ctx.lineWidth = stroke.width * k;
-    ctx.strokeStyle = stroke.color;
+    ctx.strokeStyle = open && gradient ? gradient : stroke.color;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.stroke();
@@ -533,7 +537,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     clearShadow(ctx);
   }
 
-  ctx.fillStyle = text.color;
+  ctx.fillStyle = createGradientFill(ctx, box.w, box.h, text.gradient) ?? text.color;
   l.lines.forEach((ln, i) => ctx.fillText(ln, ax, startY + i * l.lh));
   clearShadow(ctx);
 

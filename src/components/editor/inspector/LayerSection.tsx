@@ -239,6 +239,12 @@ export function LayerSection({ clip }: { clip: Clip }) {
 
       {mediaClip && (
         <>
+          <label className="block space-y-1 text-xs text-white/65">
+            <span>{t("editor.frames.title", { defaultValue: "Photo frame" })}</span>
+            <select disabled={!!clip.locked} value={mediaClip.frame ?? "rect"} onChange={e => patchClip(clip.id, { frame: e.target.value as MediaClip["frame"] })} className="h-9 w-full rounded-lg border border-white/15 bg-neutral-900 px-2 text-white disabled:opacity-35">
+              {(["rect", "ellipse", "triangle", "star", "heart", "hexagon"] as const).map(frame => <option key={frame} value={frame}>{t(`editor.frames.${frame}`, { defaultValue: ({ rect: "Rectangle", ellipse: "Oval", triangle: "Triangle", star: "Star", heart: "Heart", hexagon: "Hexagon" })[frame] })}</option>)}
+            </select>
+          </label>
           <div className="grid grid-cols-4 gap-1">
             {iconBtn(t("editor.menu.fitCanvas"), <Minimize className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, { fit: "contain", ...placementPatch(mediaClip, { x: 0.5, y: 0.5, scale: 1 }) }),
