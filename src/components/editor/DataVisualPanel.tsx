@@ -35,7 +35,7 @@ export function DataVisualPanel() {
   const [chartPalette, setChartPalette] = useState<string[]>([...DEFAULT_CHART.colours]);
   const [chartAppearance, setChartAppearance] = useState<ChartAppearance>({});
   const [tableFormat, setTableFormat] = useState<Omit<TableData, "rows">>({ ...DEFAULT_TABLE });
-  const [multiple, setMultiple] = useState(false), [stacked, setStacked] = useState(false), [showLegend, setShowLegend] = useState(true);
+  const [multiple, setMultiple] = useState(false), [stacked, setStacked] = useState(false), [stackPercent, setStackPercent] = useState(false), [showLegend, setShowLegend] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
   const [showValues, setShowValues] = useState(true);
   const [error, setError] = useState("");
@@ -56,7 +56,7 @@ export function DataVisualPanel() {
     setMode(next);
     if (next === "chart") {
       const value = chart ?? DEFAULT_CHART;
-      setChartAppearance({ valueFormat: value.valueFormat, donutHole: value.donutHole, lineWidth: value.lineWidth, lineStyle: value.lineStyle, pointSize: value.pointSize, areaOpacity: value.areaOpacity, barGap: value.barGap, showGrid: value.showGrid, showAxisValues: value.showAxisValues, legendPosition: value.legendPosition, scaleMin: value.scaleMin, scaleMax: value.scaleMax }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setShowLegend(value.showLegend !== false);
+      setChartAppearance({ valueFormat: value.valueFormat, donutHole: value.donutHole, lineWidth: value.lineWidth, lineStyle: value.lineStyle, pointSize: value.pointSize, areaOpacity: value.areaOpacity, barGap: value.barGap, showGrid: value.showGrid, showAxisValues: value.showAxisValues, legendPosition: value.legendPosition, scaleMin: value.scaleMin, scaleMax: value.scaleMax }); setChartPalette([...value.colours]); setKind(value.kind); setData(chartDataSource(value)); setMultiple(!!value.series?.length); setStacked(!!value.stacked); setStackPercent(!!value.stackPercent); setShowLegend(value.showLegend !== false);
       setForeground(value.textColour); setAccent(value.colours[0] ?? "#38bdf8"); setShowLabels(value.showLabels); setShowValues(value.showValues);
     } else {
       const value = table ?? DEFAULT_TABLE;
@@ -72,7 +72,7 @@ export function DataVisualPanel() {
     } else {
       const next = chart ?? DEFAULT_CHART;
       setChartAppearance({ valueFormat: next.valueFormat, donutHole: next.donutHole, lineWidth: next.lineWidth, lineStyle: next.lineStyle, pointSize: next.pointSize, areaOpacity: next.areaOpacity, barGap: next.barGap, showGrid: next.showGrid, showAxisValues: next.showAxisValues, legendPosition: next.legendPosition, scaleMin: next.scaleMin, scaleMax: next.scaleMax });
-      setData(chartDataSource(next)); setMultiple(!!next.series?.length); setStacked(!!next.stacked); setShowLegend(next.showLegend !== false); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
+      setData(chartDataSource(next)); setMultiple(!!next.series?.length); setStacked(!!next.stacked); setStackPercent(!!next.stackPercent); setShowLegend(next.showLegend !== false); setForeground(next.textColour); setAccent(next.colours[0] ?? "#38bdf8");
       setShowLabels(next.showLabels); setShowValues(next.showValues); setKind(next.kind);
     }
   };
@@ -98,7 +98,7 @@ export function DataVisualPanel() {
   const apply = () => {
     try {
       const s = useEditorStore.getState(), before = s.toSnapshot();
-      const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), ...chartAppearance, stacked, showLegend,
+      const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, ...parseChartSource(data, multiple), ...chartAppearance, stacked, stackPercent, showLegend,
         colours: [accent, ...chartPalette.slice(1)], textColour: foreground, showLabels, showValues } }
         : { table: { ...tableFormat, rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
       if (!validDataVisuals(value)) throw new Error("Use valid colours and table formatting");
@@ -130,9 +130,10 @@ export function DataVisualPanel() {
     <label className="inline-flex min-h-9 cursor-pointer items-center rounded-lg border border-white/20 px-3 text-xs hover:bg-white/10">{t("editor.dataVisual.import", { defaultValue: "Import CSV or TSV" })}<input type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" className="sr-only" onChange={e => { void importFile(e.target.files?.[0]); e.target.value = ""; }} /></label>
     <div className="flex gap-2">{(["cells", "source"] as const).map(view => <button type="button" key={view} aria-pressed={dataView === view} onClick={() => setDataView(view)} className={`min-h-9 rounded-lg border px-3 text-xs ${dataView === view ? "border-white bg-white/15" : "border-white/20"}`}>{t(`editor.dataVisual.view.${view}`, { defaultValue: view === "cells" ? "Edit cells" : "Source data" })}</button>)}</div>
     {dataView === "cells" ? <DataCells value={data} onChange={setData} chart={mode === "chart"} multiSeries={multiple} onCellFocus={mode === "table" ? setFocusedCell : undefined} onStructure={mode === "table" ? changeTableStructure : undefined} /> : <textarea value={data} onChange={e => setData(e.target.value)} aria-label={t("editor.dataVisual.data", { defaultValue: "Data" })} rows={4} className="w-full rounded-lg border border-white/20 bg-white/5 px-3 py-2 font-mono text-xs outline-none focus:border-white/60" />}
+    {mode === "chart" && multiple && stacked && (kind === "bar" || kind === "column") && <div className="space-y-2"><label className="flex items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={stackPercent} onChange={event => setStackPercent(event.target.checked)} />{t("editor.charts.percentStack", { defaultValue: "100% stacked" })}</label>{stackPercent && <p className="text-[10px] text-white/45">{t("editor.charts.percentStackHint", { defaultValue: "Each category shows percentage shares. Positive and negative values each total 100% on their side of zero. Source values stay in the data grid and CSV downloads." })}</p>}</div>}
     {mode === "chart" && multiple && <ChartSeriesControls source={data} onChange={(source, order) => { importRequest.current++; const colours = chartSeriesEditColours([accent, ...chartPalette.slice(1)], order, DEFAULT_CHART.colours); setData(source); setChartPalette(colours); setAccent(colours[0]); setError(""); }} />}
     {mode === "chart" && <ChartDataOrderControls source={data} multiple={multiple} onChange={(source, order) => { importRequest.current++; setData(source); if (!multiple && kind !== "radar") { const colours = reorderChartCategoryColours([accent, ...chartPalette.slice(1)], order); setChartPalette(colours); setAccent(colours[0]); } setError(""); }} />}
-    {mode === "chart" && <ChartFormattingPanel multiple={multiple} kind={kind} value={chartAppearance} onChange={setChartAppearance} />}
+    {mode === "chart" && <ChartFormattingPanel percentStack={multiple && stacked && stackPercent && (kind === "bar" || kind === "column")} multiple={multiple} kind={kind} value={chartAppearance} onChange={setChartAppearance} />}
     <div className="flex flex-wrap gap-2"><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setAccent} label={t("editor.colourPicker.accent", { defaultValue: "Pick accent from canvas" })} /><ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setForeground} label={t("editor.colourPicker.ink", { defaultValue: "Pick text colour from canvas" })} /></div>
     {mode === "table" && <TableStyleGallery value={{ ...tableFormat, textColour: foreground, headerColour: accent }} onChange={value => { setTableFormat(value); setForeground(value.textColour); setAccent(value.headerColour); }} />}
     {mode === "table" && <TableFormattingPanel focusedCell={focusedCell} value={{ ...tableFormat, header: showLabels }} source={data} onChange={value => { setTableFormat(value); setShowLabels(value.header); }} onSource={setData} />}
