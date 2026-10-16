@@ -1,3 +1,4 @@
+import { RepeatGridPanel } from "./RepeatGridPanel";
 import { DesignToolSearch } from "./DesignToolSearch";
 import { DocumentElementsPanel } from "./DocumentElementsPanel";
 import { PagesManagerPanel } from "./PagesManagerPanel";
@@ -38,7 +39,7 @@ export function DesignTools() {
   const settings = useEditorStore(s => s.settings);
   const projectId = useEditorStore(s => s.projectId);
   const [clipboard, setClipboard] = useState<{ projectId: string; style: DesignStyle } | null>(null);
-  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | "layout" | "notes" | "link" | "compositions" | "bulk" | "animate" | "connectors" | "symbols" | "pages" | "document" | null>(null);
+  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | "qr" | "grid" | "guides" | "layout" | "notes" | "link" | "compositions" | "bulk" | "animate" | "connectors" | "symbols" | "pages" | "document" | "repeat" | null>(null);
   const [insertOpen, setInsertOpen] = useState(false);
   const surfaceEpoch = useSurfaceEpoch();
   useCloseOnSurfaceSwitch(useCallback(() => { setInsertOpen(false); setPanel(null); finishDraft.current(); }, []));
@@ -74,6 +75,7 @@ export function DesignTools() {
       <DropdownMenu key={surfaceEpoch} open={insertOpen} onOpenChange={setInsertOpen}>
         <DropdownMenuTrigger asChild><button type="button" className={button + " bg-white/10 font-medium"}><Plus size={15} />{t("editor.designTools.insert", { defaultValue: "Insert" })}</button></DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="border-white/15 bg-neutral-950 text-white">
+          <DropdownMenuItem onSelect={() => setPanel("repeat")}>{t("editor.repeat.title", { defaultValue: "Repeat selection in a grid" })}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setPanel("document")}>{t("editor.document.title", { defaultValue: "Page numbers and repeated elements" })}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setPanel("symbols")}>{t("editor.symbols.title", { defaultValue: "Vector symbols" })}</DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setPanel("connectors")}>{t("editor.connectors.title", { defaultValue: "Lines and connectors" })}</DropdownMenuItem>
@@ -105,7 +107,7 @@ export function DesignTools() {
     </div>
     {panel && <section aria-label={panelTitle} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
       <header className="sticky -top-3 z-10 -mx-3 -mt-3 mb-3 flex items-center justify-between gap-3 border-b border-white/10 bg-neutral-950 px-3 py-2"><h3 className="text-xs font-medium text-white/75">{panelTitle}</h3><button type="button" onClick={() => { draftFocus.finish(); setPanel(null); }} className="min-h-8 rounded-lg px-3 text-xs text-white/50 hover:bg-white/10">{t("editor.designTools.closePanel", { defaultValue: "Close panel" })}</button></header>
-      {panel === "document" ? <DocumentElementsPanel key={projectId} /> : panel === "pages" ? <PagesManagerPanel key={projectId} /> : panel === "symbols" ? <VectorSymbolsPanel key={projectId} /> : panel === "connectors" ? <ConnectorsPanel key={projectId} /> : panel === "animate" ? <PageAnimationPanel key={projectId} /> : panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <ResizeDesignPanel key={projectId} /> : <div className="space-y-3">
+      {panel === "repeat" ? <RepeatGridPanel key={projectId} /> : panel === "document" ? <DocumentElementsPanel key={projectId} /> : panel === "pages" ? <PagesManagerPanel key={projectId} /> : panel === "symbols" ? <VectorSymbolsPanel key={projectId} /> : panel === "connectors" ? <ConnectorsPanel key={projectId} /> : panel === "animate" ? <PageAnimationPanel key={projectId} /> : panel === "bulk" ? <BulkCreatePanel key={projectId} /> : panel === "compositions" ? <TextCompositionsPanel /> : panel === "link" ? <DesignLinkPanel /> : panel === "notes" ? <PageNotesPanel /> : panel === "layout" ? <DesignLayoutPanel /> : panel === "guides" ? <GuidesPanel /> : panel === "grid" ? <PhotoGridPanel /> : panel === "qr" ? <QrPanel /> : panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <ResizeDesignPanel key={projectId} /> : <div className="space-y-3">
         <p className="text-xs text-white/55">{t("editor.designTools.colourHint", { defaultValue: "Choose a colour to replace across this design. Locked layers are preserved." })}</p>
         <div className="flex flex-wrap gap-2">{designColours(useEditorStore.getState().toSnapshot()).map(value => <button key={value} type="button" aria-label={value} aria-pressed={colour === value} onClick={() => { setColour(value); setReplacement(value); }} className={`h-8 w-8 rounded-full border-2 ${colour === value ? "border-white ring-2 ring-sky-400" : "border-white/25"}`} style={{ background: value }} />)}</div>
         {colour && <div className="flex flex-wrap items-center gap-3">
