@@ -140,7 +140,7 @@ export function PagesStrip({ sources }: { sources: RenderSources }) {
           return <div key={p.index} className="flex w-28 shrink-0 flex-col gap-1">
             <PageThumb page={p} active={p.index === current.index} sources={sources} onPick={() => pick(p)} />
             <button type="button" onClick={() => pick(p)} className="text-left text-[11px] leading-snug" aria-label={`${t("editor.pages.page", { number: p.index + 1 })}: ${title?.kind === "text" ? title.text : ""}`}>
-              <span className={p.index === current.index ? "text-white" : "text-white/65"}>{t("editor.pages.page", { number: p.index + 1 })} · {Number((p.end - p.start).toFixed(2))}s</span>
+              <span className={p.index === current.index ? "text-white" : "text-white/65"}>{settings.pageDetails?.[p.index]?.title || t("editor.pages.page", { number: p.index + 1 })} · {Number((p.end - p.start).toFixed(2))}s</span>
               <span className="block truncate text-white/45">{title?.kind === "text" ? title.text : ""}</span>
             </button>
           </div>;
