@@ -18,6 +18,7 @@ import { measuredTextLayout } from "./textLayout";
 import { drawDataVisual } from "./dataVisuals";
 import { createGradientFill } from "./gradientFill";
 import { drawQrGraphic } from "./qrGraphic";
+import { shapePolygon } from "./shapeGeometry";
 import { KEY_EPSILON, isAnimated, keyframeProps, resolveClipAt, setKey, staticValue } from "./keyframes";
 
 export type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
@@ -402,6 +403,12 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
     ctx.drawImage(el, sx, sy, sw, sh, x, y, box.w, box.h);
     clearShadow(ctx);
   }
+  if (clip.border && clip.border.width > 0) {
+    ctx.save(); framePath();
+    ctx.lineWidth = clip.border.width * H / 1080; ctx.strokeStyle = clip.border.color;
+    ctx.setLineDash((Array.isArray(clip.border.dash) ? clip.border.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+    ctx.stroke(); ctx.restore();
+  }
 }
 
 /** Build the outline of a shape centred on the origin. */
@@ -409,6 +416,11 @@ export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: n
   const hw = w / 2;
   const hh = h / 2;
   ctx.beginPath();
+  const polygon = shapePolygon(shape, w, h);
+  if (polygon) {
+    polygon.forEach((point, index) => { if (index === 0) ctx.moveTo(point[0], point[1]); else ctx.lineTo(point[0], point[1]); });
+    ctx.closePath(); return;
+  }
   switch (shape) {
     case "path": {
       // Midpoint quadratic smoothing: the curve passes through the midpoint of
@@ -498,6 +510,7 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   }
   const stroke = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
   if (stroke && stroke.width > 0) {
+    ctx.setLineDash((Array.isArray(stroke.dash) ? stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * k));
     ctx.lineWidth = stroke.width * k;
     ctx.strokeStyle = open && gradient ? gradient : stroke.color;
     ctx.lineJoin = "round";
@@ -532,6 +545,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
   }
 
   if (text.stroke && text.stroke.width > 0) {
+    ctx.setLineDash((Array.isArray(text.stroke.dash) ? text.stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
     ctx.lineWidth = (text.stroke.width / 1080) * H * l.scale;
     ctx.strokeStyle = text.stroke.color;
     ctx.lineJoin = "round";

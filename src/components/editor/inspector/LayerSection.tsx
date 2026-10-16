@@ -25,6 +25,7 @@ import { useEditorUiStore } from "@/store/editorUiStore";
 import { BLEND_MODES, type BlendMode, type Clip, type ClipShadow, type MediaClip, type TextClip } from "@/lib/editor/types";
 import { clipBoxForSize, getTransform, placementPatch, placementPatchAt } from "@/lib/editor/render";
 import { isAnimated, resolveClipAt } from "@/lib/editor/keyframes";
+import { StrokePattern } from "@/components/editor/StrokePattern";
 
 const DEFAULT_SHADOW: ClipShadow = { color: "#000000", opacity: 0.5, blur: 24, offsetX: 0, offsetY: 12 };
 
@@ -202,6 +203,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           </div>
           {shape.stroke && live(t("editor.shape.outlineWidth", { value: Math.round(shape.stroke.width) }), shape.stroke.width, 1, 60, 1,
             (v) => patchClipLive(clip.id, { stroke: { ...shape.stroke!, width: v } }))}
+          {shape.stroke && <StrokePattern stroke={shape.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
           {shape.shape === "rect" && live(t("editor.layer.cornerRounding", { value: Math.round(shape.radius ?? 0) }), shape.radius ?? 0, 0, 540, 1,
             (v) => patchClipLive(clip.id, { radius: v }))}
         </>
@@ -245,6 +247,12 @@ export function LayerSection({ clip }: { clip: Clip }) {
               {(["rect", "ellipse", "triangle", "star", "heart", "hexagon"] as const).map(frame => <option key={frame} value={frame}>{t(`editor.frames.${frame}`, { defaultValue: ({ rect: "Rectangle", ellipse: "Oval", triangle: "Triangle", star: "Star", heart: "Heart", hexagon: "Hexagon" })[frame] })}</option>)}
             </select>
           </label>
+          <label className="flex min-h-9 items-center gap-2 text-xs text-white/70"><input type="checkbox" checked={!!mediaClip.border} onChange={e => patchClip(clip.id, { border: e.target.checked ? { color: "#ffffff", width: 6 } : null })} />{t("editor.outline.border", { defaultValue: "Photo border" })}</label>
+          {mediaClip.border && <>
+            <input type="color" value={mediaClip.border.color} aria-label={t("editor.outline.colour", { defaultValue: "Border colour" })} onChange={e => patchClip(clip.id, { border: { ...mediaClip.border!, color: e.target.value } })} className="h-9 w-full bg-transparent" />
+            {live(t("editor.outline.width", { defaultValue: "Border width: {{value}}", value: Math.round(mediaClip.border.width) }), mediaClip.border.width, 1, 80, 1, value => patchClipLive(clip.id, { border: { ...mediaClip.border!, width: value } }))}
+            <StrokePattern stroke={mediaClip.border} onChange={border => patchClip(clip.id, { border })} />
+          </>}
           <div className="grid grid-cols-4 gap-1">
             {iconBtn(t("editor.menu.fitCanvas"), <Minimize className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, { fit: "contain", ...placementPatch(mediaClip, { x: 0.5, y: 0.5, scale: 1 }) }),

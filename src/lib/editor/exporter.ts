@@ -590,6 +590,7 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
     (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
   );
 
+  await ensureProjectFonts(ops.map(op => op.clip));
   const used = new Set(ops.map((op) => (op.clip.kind === "text" ? "" : (op.clip as MediaClip).mediaId)));
   const matteIds = new Set(ops.flatMap(op => op.clip.kind === "video" ? videoMatteMediaIds(op.clip.videoMatte) : []));
   for (const id of matteIds) used.add(id);

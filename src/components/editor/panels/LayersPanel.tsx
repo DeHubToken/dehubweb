@@ -18,6 +18,7 @@ import Video from "@/components/ui/cut-icons/video";
 import { cn } from '@/lib/utils';
 import { useEditorStore } from '@/store/editorStore';
 import { isVisualClip } from '@/lib/editor/render';
+import { SHAPE_NAMES } from "@/lib/editor/shapeGeometry";
 import type { Clip } from '@/lib/editor/types';
 
 function KindIcon({ clip }: { clip: Clip }) {
@@ -53,7 +54,7 @@ export function LayersPanel() {
     if (c.kind === 'shape' && c.chart) return t('editor.dataVisual.chart', { defaultValue: 'Chart' });
     if (c.kind === 'shape' && c.table) return t('editor.dataVisual.table', { defaultValue: 'Table' });
     if (c.kind === 'text') return c.text.split('\n')[0] || t('editor.layers.text');
-    if (c.kind === 'shape') return t(`editor.shape.${c.shape}`);
+    if (c.kind === 'shape') return t(`editor.shape.${c.shape}`, { defaultValue: SHAPE_NAMES[c.shape] });
     if ('mediaId' in c) return media.find((m) => m.id === c.mediaId)?.name ?? t('editor.layers.media');
     return '';
   };
