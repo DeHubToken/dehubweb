@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
 import { useEditorStore } from "@/store/editorStore";
-import { VECTOR_SYMBOLS, putVectorSymbol, vectorSymbolSvg } from "@/lib/editor/vectorSymbols";
+import { VECTOR_SYMBOLS, putVectorSymbol, searchVectorSymbols, vectorSymbolSvg } from "@/lib/editor/vectorSymbols";
 
 const CATEGORY_NAMES: Record<string, string> = { all: "All", essentials: "Essentials", communication: "Communication", media: "Media and games", people: "People", objects: "Objects", nature: "Nature", commerce: "Commerce", learning: "Learning", travel: "Travel", technology: "Technology", food: "Food and drink" };
 
@@ -15,10 +15,7 @@ export function VectorSymbolsPanel() {
   const [symbol, setSymbol] = useState("check-circle"), [query, setQuery] = useState(""), [category, setCategory] = useState("all"), [page, setPage] = useState(0);
   const [colour, setColour] = useState("#ffffff"), [weight, setWeight] = useState(8);
   useEffect(() => { if (existing) { setSymbol(existing.symbol!); setColour(existing.stroke?.color ?? "#ffffff"); setWeight(existing.stroke?.width ?? 8); } }, [existing?.id, existing?.symbol, existing?.stroke]);
-  const matches = useMemo(() => {
-    const needle = query.trim().toLowerCase();
-    return VECTOR_SYMBOLS.filter(item => (category === "all" || item.category === category) && (!needle || `${item.label} ${item.id} ${item.tags}`.toLowerCase().includes(needle)));
-  }, [query, category]);
+  const matches = useMemo(() => searchVectorSymbols(query, category), [query, category]);
   const index = Math.min(page, Math.max(0, Math.ceil(matches.length / 24) - 1)), chosen = VECTOR_SYMBOLS.find(item => item.id === symbol);
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35";
   return <div className="space-y-3">
