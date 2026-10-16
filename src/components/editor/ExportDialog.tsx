@@ -70,6 +70,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [pageScope, setPageScope] = useState<"all" | "current" | "custom">("all");
   const [pageSelection, setPageSelection] = useState("1");
   const [transparent, setTransparent] = useState(false);
+  const [cropMarks, setCropMarks] = useState(false);
   const [scope, setScope] = useState<ExportScope>("timeline");
   const rangeSnapshot = { ...toSnapshot(), clips, tracks };
   const allRanges = clipExportRanges(rangeSnapshot);
@@ -148,7 +149,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           setProgress(Math.round(index / frames.length * 95));
           setLabel(t("editor.pages.exporting", { current: index + 1, total: frames.length }));
           const { blob, links } = await exportStill({ snapshot, media, format: "jpg", quality: 0.95, scale, ignoreAnimations: true, time: frames[index].time });
-          return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)), designWidth: snapshot.settings.width, designHeight: snapshot.settings.height, dpi: snapshot.settings.printDpi, links };
+          return { jpeg: new Uint8Array(await blob.arrayBuffer()), width: Math.max(2, Math.round(snapshot.settings.width * scale)), height: Math.max(2, Math.round(snapshot.settings.height * scale)), designWidth: snapshot.settings.width, designHeight: snapshot.settings.height, dpi: snapshot.settings.printDpi, cropMarks, links };
         }, part => { parts.push(part.slice().buffer as ArrayBuffer); }, ctl.signal, frames.map(frame => frame.index));
         check(); download(new Blob(parts, { type: "application/pdf" }), exportFilename(snapshot.title, "pdf", "", "design"));
       } else if (frames.length > 1) {
@@ -312,6 +313,8 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </Row>
+            {format === "pdf" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={cropMarks} onChange={event => setCropMarks(event.target.checked)} />{t("editor.export.cropMarks", { defaultValue: "Crop marks and print margins" })}</label>}
+            {format === "pdf" && cropMarks && <p className="text-xs text-white/45">{t("editor.export.cropMarkHint", { defaultValue: "Adds cutting marks outside the artwork. The saved print resolution sets the finished page size." })}</p>}
             {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
             {still && multiPage && (
               <Row label={t("editor.pages.label")}>
