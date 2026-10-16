@@ -566,7 +566,7 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     ctx.setLineDash((Array.isArray(stroke.dash) ? stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * k));
     ctx.lineDashOffset = strokeDashOffset(stroke.dashOffset) * H / 1080;
     ctx.lineWidth = stroke.width * k;
-    ctx.strokeStyle = (open || clip.symbol) && gradient ? gradient : stroke.color;
+    ctx.strokeStyle = (open || clip.symbol && !clip.fill) && gradient ? gradient : stroke.color;
     ctx.lineJoin = clip.strokeJoin ?? "round";
     ctx.lineCap = clip.shape === "path" && clip.points?.length === 1 ? "round" : clip.strokeCap ?? "round";
     const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(stroke.opacity); ctx.stroke(); ctx.globalAlpha = alpha;
