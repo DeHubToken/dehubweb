@@ -1,3 +1,5 @@
+import { designPrintDpi } from "@/lib/editor/documentDimensions";
+import type { GuideUnit } from "@/lib/editor/designGuides";
 import { GuideGridControls } from "./GuideGridControls";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -27,6 +29,7 @@ export function GuidesPanel() {
       <label className="flex items-center gap-2 text-white/65">{t("editor.guides.margin", { defaultValue: "Margin" })}<input type="number" min={0} max={40} value={Math.round(guides.margin * 100)} onChange={e => apply({ margin: Number(e.target.value) / 100, visible: true })} className="min-h-9 w-16 rounded-lg border border-white/20 bg-white/5 px-2 text-white" />%</label>
     </form>
     <div className="flex flex-wrap gap-2">{(["vertical", "horizontal"] as const).flatMap(direction => guides[direction].map(n => <button key={`${direction}:${n}`} type="button" className={button} aria-label={t("editor.guides.remove", { defaultValue: "Remove {{direction}} guide at {{position}}%", direction: t(`editor.guides.${direction}`, { defaultValue: direction }), position: Number((n * 100).toFixed(1)) })} onClick={() => apply({ [direction]: guides[direction].filter(value => value !== n) })}>{direction === "vertical" ? "X" : "Y"} {Number((n * 100).toFixed(1))}% ×</button>))}</div>
+    <label className="flex min-h-9 flex-wrap items-center gap-3 text-xs text-white/65">{t("editor.guides.rulerUnits", { defaultValue: "Ruler units" })}<select value={guides.unit} onChange={event => apply({ unit: event.target.value as GuideUnit, rulers: true })} className="min-h-9 rounded-lg border border-white/20 bg-neutral-900 px-3">{["px", "in", "cm", "mm"].map(unit => <option key={unit} value={unit}>{unit}</option>)}</select><span className="text-white/40">{t("editor.guides.resolution", { defaultValue: "Based on {{dpi}} pixels per inch", dpi: designPrintDpi(useEditorStore.getState().settings) })}</span></label>
     <GuideGridControls />
   </div>;
 }
