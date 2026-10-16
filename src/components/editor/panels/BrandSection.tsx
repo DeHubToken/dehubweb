@@ -1,3 +1,4 @@
+import { normaliseBrandStyles } from "@/lib/editor/brandStyles";
 /**
  * Brand kit in the Design panel: colours, heading and body fonts, and a logo.
  * "Apply brand" restyles the whole design in one undo; the AI agent also uses
@@ -23,12 +24,18 @@ export function BrandSection() {
   const removeColor = useBrandStore((s) => s.removeColor);
   const media = useEditorStore((s) => s.media);
   const images = media.filter((m) => m.kind === 'image' && !m.name.startsWith('.dehub-video-matte-'));
+  const savedStyles = useEditorStore(s => s.settings.brandStyles);
   const logo = images.find((m) => m.id === kit.logoMediaId);
 
   return (
     <>
       <PanelHeading className="mt-5">{t('editor.brand.heading')}</PanelHeading>
       <div className="space-y-3 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/80 hover:bg-white/10" onClick={() => { useEditorStore.getState().updateSettings({ brandStyles: normaliseBrandStyles(kit) }); toast.success(t("editor.brand.stylesSaved", { defaultValue: "Brand styles saved with this design" })); }}>{t("editor.brand.saveStyles", { defaultValue: "Save styles with design" })}</button>
+          <button type="button" disabled={!savedStyles} className="min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/80 hover:bg-white/10 disabled:opacity-35" onClick={() => { if (savedStyles) update(normaliseBrandStyles(savedStyles)); }}>{t("editor.brand.loadStyles", { defaultValue: "Use design's brand styles" })}</button>
+        </div>
+
         <div>
           <p className="mb-1.5 text-[10px] uppercase tracking-wide text-white/40">{t('editor.brand.colors')}</p>
           <div className="flex flex-wrap gap-1.5">
