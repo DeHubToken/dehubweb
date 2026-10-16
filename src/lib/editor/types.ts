@@ -31,6 +31,8 @@ interface BaseClip {
   id: string;
   /** Persistent selection group; members retain independent content and styling. */
   groupId?: string;
+  /** Optional user-assigned layer name, separate from visible text and source filenames. */
+  label?: string;
   /** Click destination retained by PDF exports. */
   href?: string;
   trackId: string;
