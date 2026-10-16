@@ -416,7 +416,7 @@ export function Compositor() {
   const viewportCleanup = useRef<(() => void) | null>(null);
   const viewportProject = useEditorStore(s => s.projectId);
   const scale = fitScale * viewport.zoom;
-  useEffect(() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); setNavigating(false); }, [viewportProject, settings.width, settings.height]);
+  useEffect(() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); setNavigating(false); setPresenting(false); }, [viewportProject, settings.width, settings.height]);
   useEffect(() => () => viewportCleanup.current?.(), []);
   useCloseOnSurfaceSwitch(useCallback(() => { viewportCleanup.current?.(); setNavigating(false); }, []));
   const startViewportPan = (event: React.PointerEvent<Element>) => {
@@ -842,6 +842,7 @@ export function Compositor() {
       return;
     }
     if (croppingId) setCroppingId(null);
+    if (hit?.clip.isPageBackground) { selectClip(hit.clip.id); return; }
     if (!hit) {
       // Drag on empty canvas draws a selection box; a plain click clears.
       if (!e.shiftKey) selectClip(null);
@@ -1054,7 +1055,7 @@ export function Compositor() {
     return { pts, keys };
   }, [selectedClip, settings.width, settings.height, sources]);
 
-  const overlay = selBox && selectedClip && !selectedClip.locked && !editingTextId && !croppingId && !navigating && scale > 0
+  const overlay = selBox && selectedClip && !selectedClip.locked && !selectedClip.isPageBackground && !editingTextId && !croppingId && !navigating && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
         top: (selBox.cy - selBox.h / 2) * scale,
