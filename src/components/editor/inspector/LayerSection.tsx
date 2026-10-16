@@ -201,7 +201,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
             <div className="space-y-1">
               <Label className="text-[10px] uppercase tracking-wide text-white/40">{t("editor.shape.outline")}</Label>
               <input type="color" value={shape.stroke?.color ?? "#ffffff"} disabled={!shape.stroke}
-                onChange={(e) => patchClip(clip.id, { stroke: { width: shape.stroke?.width ?? 6, color: e.target.value } })}
+                onChange={(e) => patchClip(clip.id, { stroke: { ...shape.stroke, width: shape.stroke?.width ?? 6, color: e.target.value } })}
                 className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5 disabled:opacity-40" />
             </div>
             <label className="flex h-7 items-center gap-1.5 text-[11px] text-white/70">
@@ -210,10 +210,12 @@ export function LayerSection({ clip }: { clip: Clip }) {
               {t("editor.shape.outlineOn")}
             </label>
           </div>
+          {!shape.chart && !shape.table && !shape.qr && !shape.connector && (shape.fill || shape.gradient) && live(t("editor.paint.fillOpacity", { defaultValue: "Fill opacity: {{value}}%", value: Math.round((shape.fillOpacity ?? 1) * 100) }), shape.fillOpacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { fillOpacity: value }))}
+          {shape.stroke && live(t("editor.paint.strokeOpacity", { defaultValue: "Outline opacity: {{value}}%", value: Math.round((shape.stroke.opacity ?? 1) * 100) }), shape.stroke.opacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { stroke: { ...shape.stroke!, opacity: value } }))}
           {shape.stroke && live(t("editor.shape.outlineWidth", { value: Math.round(shape.stroke.width) }), shape.stroke.width, 1, 60, 1,
             (v) => patchClipLive(clip.id, { stroke: { ...shape.stroke!, width: v } }))}
           {shape.stroke && <StrokePattern stroke={shape.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
-          {shape.shape === "path" && <PenControls refineOnly value={{ color: shape.stroke?.color ?? "#ffffff", width: shape.stroke?.width ?? 8, smoothing: shape.pathSmoothing, cap: shape.strokeCap, join: shape.strokeJoin, closed: shape.closedPath, dash: shape.stroke?.dash }} onChange={value => { if (!clip.locked) patchClip(clip.id, penShapeStyle(value)); }} />}
+          {shape.shape === "path" && <PenControls refineOnly value={{ color: shape.stroke?.color ?? "#ffffff", width: shape.stroke?.width ?? 8, smoothing: shape.pathSmoothing, cap: shape.strokeCap, join: shape.strokeJoin, closed: shape.closedPath, dash: shape.stroke?.dash }} onChange={value => { if (!clip.locked) patchClip(clip.id, penShapeStyle(value, shape.stroke?.opacity)); }} />}
           {shape.shape === "rect" && live(t("editor.layer.cornerRounding", { value: Math.round(shape.radius ?? 0) }), shape.radius ?? 0, 0, 540, 1,
             (v) => patchClipLive(clip.id, { radius: v }))}
         </>
@@ -260,6 +262,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           <label className="flex min-h-9 items-center gap-2 text-xs text-white/70"><input type="checkbox" checked={!!mediaClip.border} onChange={e => patchClip(clip.id, { border: e.target.checked ? { color: "#ffffff", width: 6 } : null })} />{t("editor.outline.border", { defaultValue: "Photo border" })}</label>
           {mediaClip.border && <>
             <input type="color" value={mediaClip.border.color} aria-label={t("editor.outline.colour", { defaultValue: "Border colour" })} onChange={e => patchClip(clip.id, { border: { ...mediaClip.border!, color: e.target.value } })} className="h-9 w-full bg-transparent" />
+            {live(t("editor.paint.borderOpacity", { defaultValue: "Border opacity: {{value}}%", value: Math.round((mediaClip.border.opacity ?? 1) * 100) }), mediaClip.border.opacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { border: { ...mediaClip.border!, opacity: value } }))}
             {live(t("editor.outline.width", { defaultValue: "Border width: {{value}}", value: Math.round(mediaClip.border.width) }), mediaClip.border.width, 1, 80, 1, value => patchClipLive(clip.id, { border: { ...mediaClip.border!, width: value } }))}
             <StrokePattern stroke={mediaClip.border} onChange={border => patchClip(clip.id, { border })} />
           </>}
@@ -335,6 +338,8 @@ export function LayerSection({ clip }: { clip: Clip }) {
       {text && (
         <>
           <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.layer.textStyle")}</p>
+          {live(t("editor.paint.fillOpacity", { defaultValue: "Fill opacity: {{value}}%", value: Math.round((text.fillOpacity ?? 1) * 100) }), text.fillOpacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { fillOpacity: value }))}
+          {(text.stroke || text.hollow) && live(t("editor.paint.strokeOpacity", { defaultValue: "Outline opacity: {{value}}%", value: Math.round((text.stroke?.opacity ?? 1) * 100) }), text.stroke?.opacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { stroke: { color: text.color, width: 3, ...text.stroke, opacity: value } }))}
           <div className="grid grid-cols-4 gap-1">
             {iconBtn(t("editor.layer.bold"), <Bold className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, { fontWeight: text.fontWeight >= 600 ? 400 : 700 }), text.fontWeight >= 600)}

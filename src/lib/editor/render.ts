@@ -1,3 +1,4 @@
+import { paintOpacity } from "./paintOpacity";
 import { freehandPath } from "./freehand";
 import { vectorSymbolPath } from "./vectorSymbols";
 import { drawConnector } from "./connectors";
@@ -437,7 +438,7 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
   }
   if (clip.border && clip.border.width > 0) {
     ctx.save(); framePath();
-    ctx.lineWidth = clip.border.width * H / 1080; ctx.strokeStyle = clip.border.color;
+    ctx.globalAlpha *= paintOpacity(clip.border.opacity); ctx.lineWidth = clip.border.width * H / 1080; ctx.strokeStyle = clip.border.color;
     ctx.setLineDash((Array.isArray(clip.border.dash) ? clip.border.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
     ctx.stroke(); ctx.restore();
   }
@@ -543,7 +544,7 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     ctx.lineWidth = stroke.width * k;
     ctx.strokeStyle = createGradientFill(ctx, box.w, box.h, clip.gradient) || stroke.color;
     ctx.setLineDash((stroke.dash || []).filter(Number.isFinite).slice(0, 8).map(value => Math.max(0, value) * k));
-    applyShadow(ctx, clip, H); drawConnector(ctx, box.w, box.h, clip.connector); clearShadow(ctx); return;
+    const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(stroke.opacity); applyShadow(ctx, clip, H); drawConnector(ctx, box.w, box.h, clip.connector); clearShadow(ctx); ctx.globalAlpha = alpha; return;
   }
   const open = clip.shape === "line" || clip.shape === "arrow" || (clip.shape === "path" && !clip.closedPath);
   if (clip.symbol) vectorSymbolPath(ctx, box.w, box.h, clip.symbol);
@@ -553,7 +554,8 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   const gradient = createGradientFill(ctx, box.w, box.h, clip.gradient);
   if (!open && (clip.fill || (!clip.symbol && gradient))) {
     ctx.fillStyle = gradient ?? clip.fill!;
-    ctx.fill();
+    const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(clip.fillOpacity);
+    ctx.fill(); ctx.globalAlpha = alpha;
     clearShadow(ctx);
   }
   const stroke: TextStroke | null = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
@@ -563,12 +565,13 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     ctx.strokeStyle = (open || clip.symbol) && gradient ? gradient : stroke.color;
     ctx.lineJoin = clip.strokeJoin ?? "round";
     ctx.lineCap = clip.shape === "path" && clip.points?.length === 1 ? "round" : clip.strokeCap ?? "round";
-    ctx.stroke();
+    const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(stroke.opacity); ctx.stroke(); ctx.globalAlpha = alpha;
   }
   clearShadow(ctx);
 }
 
 function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number, progress?: number) {
+  const textAlpha = ctx.globalAlpha, fillAlpha = paintOpacity(text.fillOpacity);
   const l = layoutText(ctx, text, W, H);
   ctx.font = fontFor(text, l.size);
   setLetterSpacing(ctx, l.spacing);
@@ -604,7 +607,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     const alpha = ctx.globalAlpha, fill = ctx.fillStyle;
     for (const layer of (text.echo || []).slice(0, 3)) {
       if (!/^#[\da-f]{6}$/i.test(layer.colour) || ![layer.x, layer.y, layer.opacity].every(Number.isFinite)) continue;
-      ctx.globalAlpha = alpha * Math.max(0, Math.min(1, layer.opacity));
+      ctx.globalAlpha = alpha * fillAlpha * Math.max(0, Math.min(1, layer.opacity));
       ctx.fillStyle = layer.colour;
       ctx.fillText(value, x + Math.max(-100, Math.min(100, layer.x)) / 1080 * H * l.scale, y + Math.max(-100, Math.min(100, layer.y)) / 1080 * H * l.scale);
     }
@@ -628,7 +631,8 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
       ctx.translate(glyph.x, glyph.y);
       ctx.rotate(glyph.rotation);
       drawEcho(glyph.text, 0, 0);
-      if (outline && outline.width > 0) ctx.strokeText(glyph.text, 0, 0);
+      if (outline && outline.width > 0) { ctx.globalAlpha = textAlpha * paintOpacity(outline.opacity); ctx.strokeText(glyph.text, 0, 0); }
+      ctx.globalAlpha = textAlpha * fillAlpha;
       if (!text.hollow) ctx.fillText(glyph.text, 0, 0);
       clearShadow(ctx);
       if (text.strikethrough) ctx.fillRect(-glyph.width / 2, 0, glyph.width, Math.max(1, l.size * 0.055));
@@ -645,11 +649,14 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     ctx.lineWidth = (textStroke.width / 1080) * H * l.scale;
     ctx.strokeStyle = textStroke.color;
     ctx.lineJoin = "round";
+    ctx.globalAlpha = textAlpha * paintOpacity(textStroke.opacity);
     lines.forEach((ln, i) => ctx.strokeText(ln, drawX(i), startY + i * l.lh));
+    ctx.globalAlpha = textAlpha;
     clearShadow(ctx);
   }
 
   ctx.fillStyle = createGradientFill(ctx, box.w, box.h, text.gradient) ?? text.color;
+  ctx.globalAlpha = textAlpha * fillAlpha;
   if (!text.hollow) lines.forEach((ln, i) => ctx.fillText(ln, drawX(i), startY + i * l.lh));
   clearShadow(ctx);
 
@@ -667,4 +674,5 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
       ctx.fillRect(left, startY + i * l.lh + l.size * 0.45, w, thick);
     });
   }
+  ctx.globalAlpha = textAlpha;
 }
