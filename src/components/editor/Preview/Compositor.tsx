@@ -767,6 +767,18 @@ export function Compositor() {
     window.addEventListener("editor:crop-photo", begin);
     return () => window.removeEventListener("editor:crop-photo", begin);
   }, [onGestureEnd]);
+  useEffect(() => {
+    const begin = (event: Event) => {
+      if (!wrapRef.current?.getClientRects().length) return;
+      const id = (event as CustomEvent<{ id: string }>).detail?.id;
+      const store = useEditorStore.getState(), clip = store.clips.find(value => value.id === id);
+      if (clip?.kind !== "text" || clip.locked) return;
+      onGestureEnd(); setNavigating(false); setCroppingId(null); store.setIsPlaying(false); store.selectGroupMember(clip.id);
+      if (draftFocus.begin()) setEditingTextId(clip.id);
+    };
+    window.addEventListener("editor:edit-text", begin);
+    return () => window.removeEventListener("editor:edit-text", begin);
+  }, [onGestureEnd, draftFocus.begin]);
 
 
   const startStroke = (e: React.PointerEvent<HTMLCanvasElement>, pen: { color: string; width: number }) => {
