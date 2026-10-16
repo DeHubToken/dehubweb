@@ -11,10 +11,13 @@ import { useEditorUiStore } from '@/store/editorUiStore';
 import { SHAPE_KINDS, type ShapeKind } from '@/lib/editor/types';
 import { useEditorStore } from '@/store/editorStore';
 import { PanelHeading } from './DesignPanel';
+import { shapePolygon, SHAPE_NAMES } from '@/lib/editor/shapeGeometry';
 
 /** Preview glyph for each shape, drawn in a 40×40 box. */
 function ShapeIcon({ shape }: { shape: ShapeKind }) {
   const common = { fill: 'currentColor', stroke: 'none' };
+  const polygon = shapePolygon(shape, 28, 28);
+  if (polygon) return <polygon points={polygon.map(([x, y]) => `${x + 20},${y + 20}`).join(' ')} {...common} />;
   switch (shape) {
     case 'rect':
       return <rect x="6" y="9" width="28" height="22" rx="3" {...common} />;
@@ -46,16 +49,7 @@ export function ElementsPanel() {
   const draw = useEditorUiStore((s) => s.draw);
   const setDraw = useEditorUiStore((s) => s.setDraw);
   const pen = draw ?? { color: '#ffffff', width: 10 };
-  const names: Record<ShapeKind, string> = {
-    rect: t('editor.shape.rect'),
-    ellipse: t('editor.shape.ellipse'),
-    triangle: t('editor.shape.triangle'),
-    star: t('editor.shape.star'),
-    heart: t('editor.shape.heart'),
-    hexagon: t('editor.shape.hexagon'),
-    line: t('editor.shape.line'),
-    arrow: t('editor.shape.arrow'),
-  };
+  const names = Object.fromEntries(SHAPE_KINDS.map(shape => [shape, t(`editor.shape.${shape}`, { defaultValue: SHAPE_NAMES[shape] })])) as Record<ShapeKind, string>;
 
   return (
     <div className="h-full overflow-y-auto p-3">
