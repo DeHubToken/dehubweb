@@ -353,6 +353,9 @@ export function Inspector() {
                 </select>
               </Field>
             </div>
+            <EffectSlider label={t("editor.text.curve", { defaultValue: "Curve {{value}}", value: Math.round(text.curve ?? 0) })}
+              value={text.curve ?? 0} min={-100} max={100} step={1}
+              onChange={curve => updateTextClip(text.id, { curve })} />
             <Field label={_copy("copy.119ef3fa607e", { defaultValue: "Font family" })}>
               <FontPicker
                 value={text.fontFamily}
@@ -533,7 +536,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
             !inA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
           )}
         >{_copy("copy.dc937b598926", { defaultValue: "None" })}</button>
-        {ANIMATION_PRESETS.map((p) => {
+        {ANIMATION_PRESETS.filter(p => p.kind !== "typewriter" || clip.kind === "text").map((p) => {
           const active = inA?.kind === p.kind;
           return (
             <button
@@ -572,7 +575,7 @@ function AnimationSection({ clip }: { clip: Clip }) {
             !outA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
           )}
         >{_copy("copy.dc937b598926", { defaultValue: "None" })}</button>
-        {ANIMATION_PRESETS.map((p) => {
+        {ANIMATION_PRESETS.filter(p => p.kind !== "typewriter" || clip.kind === "text").map((p) => {
           const active = outA?.kind === p.kind;
           return (
             <button
