@@ -48,9 +48,9 @@ interface EditorUiState {
 }
 
 export const useEditorUiStore = create<EditorUiState>((set) => ({
-  panel: 'agent',
+  panel: 'design',
   inspectorOpen: true,
-  timelineOpen: true,
+  timelineOpen: false,
   setTimelineOpen: (timelineOpen) => set({ timelineOpen }),
   canvasFocus: false,
   setCanvasFocus: (canvasFocus) => set({ canvasFocus }),
