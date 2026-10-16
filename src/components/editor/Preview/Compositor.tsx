@@ -1230,7 +1230,7 @@ export function Compositor() {
             try { const canvas = canvasRef.current, point = toCanvas(event.clientX, event.clientY), context = canvas?.getContext("2d"); if (!canvas || !context) throw new Error("The canvas is not ready");
               const pixel = context.getImageData(Math.max(0, Math.min(canvas.width - 1, Math.floor(point.x))), Math.max(0, Math.min(canvas.height - 1, Math.floor(point.y))), 1, 1).data;
               finishDesignColourSample(token, "#" + Array.from(pixel.slice(0, 3)).map(value => value.toString(16).padStart(2, "0")).join(""));
-            } catch (error) { finishDesignColourSample(token, null, error instanceof Error ? error.message : String(error)); }
+            } catch { finishDesignColourSample(token, null, t("editor.colourPicker.failed", { defaultValue: "Could not read the canvas colour. Try again or enter a colour value." })); }
           }} />}
           <GuideEditorLayer active={editingGuides} disabled={sampling || presenting || (!editingGuides && (!!croppingId || !!editingTextId || !!draw || navigating))} rulers={layoutGuides.rulers || editingGuides} surface={surfaceRef} width={settings.width} height={settings.height} scale={scale} projectId={viewportProject} onActivate={() => { useEditorStore.getState().setIsPlaying(false); setEditingGuides(true); }} />
 

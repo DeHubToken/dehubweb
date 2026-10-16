@@ -1,3 +1,4 @@
+import { ColourPickerButton } from "./ColourPickerButton";
 import { useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 import { useTranslation } from "react-i18next";
@@ -21,6 +22,7 @@ export function VectorSymbolsPanel() {
   const index = Math.min(page, Math.max(0, Math.ceil(matches.length / 24) - 1)), chosen = VECTOR_SYMBOLS.find(item => item.id === symbol);
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35";
   return <div className="space-y-3">
+    <ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setColour} />
     <input value={query} onChange={event => { setQuery(event.target.value); setPage(0); }} type="search" aria-label={t("editor.symbols.search", { defaultValue: "Search vector symbols" })} placeholder={t("editor.symbols.search", { defaultValue: "Search vector symbols" })} className="min-h-9 w-full rounded-lg border border-white/20 bg-white/5 px-3 text-sm text-white" />
     <div className="flex flex-wrap gap-2">{Object.entries(CATEGORY_NAMES).map(([value, label]) => <button key={value} type="button" aria-pressed={category === value} onClick={() => { setCategory(value); setPage(0); }} className={`${button} ${category === value ? "border-white bg-white/15" : ""}`}>{t(`editor.symbols.category.${value}`, { defaultValue: label })}</button>)}</div>
     <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">{matches.slice(index * 24, index * 24 + 24).map(item => <button key={item.id} type="button" aria-pressed={symbol === item.id} title={t(`editor.symbols.item.${item.id}`, { defaultValue: item.label })} onClick={() => setSymbol(item.id)} className={`flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border p-2 text-white ${symbol === item.id ? "border-white bg-white/15" : "border-white/10 hover:bg-white/5"}`}><svg aria-hidden viewBox="-1 -1 26 26" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round"><path d={vectorSymbolSvg(item.id)} /></svg><span className="w-full truncate text-[10px]">{t(`editor.symbols.item.${item.id}`, { defaultValue: item.label })}</span></button>)}</div>

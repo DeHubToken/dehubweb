@@ -1,3 +1,4 @@
+import { ColourPickerButton } from "./ColourPickerButton";
 import { RepeatGridPanel } from "./RepeatGridPanel";
 import { DesignToolSearch } from "./DesignToolSearch";
 import { DocumentElementsPanel } from "./DocumentElementsPanel";
@@ -113,6 +114,7 @@ export function DesignTools() {
         {colour && <div className="flex flex-wrap items-center gap-3">
           <span className="text-xs text-white/65">{colour} →</span>
           <input type="color" value={replacement} onChange={e => setReplacement(e.target.value)} aria-label={t("editor.designTools.replacement", { defaultValue: "Replacement colour" })} className="h-8 w-12 cursor-pointer rounded bg-transparent" />
+          <ColourPickerButton projectId={projectId} onPick={setReplacement} />
           <button type="button" disabled={colour === replacement} className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black disabled:opacity-40" onClick={() => { apply(p => replaceDesignColour(p, colour, replacement)); setColour(replacement); }}>{t("editor.designTools.changeAll", { defaultValue: "Change all" })}</button>
         </div>}
         <div className="flex flex-wrap gap-2">{DESIGN_PALETTES.map(palette => <button type="button" key={palette.id} onClick={() => apply(p => applyDesignPalette(p, palette.colours))} className="flex min-h-10 items-center gap-2 rounded-lg border border-white/15 px-3 text-xs hover:bg-white/10">
