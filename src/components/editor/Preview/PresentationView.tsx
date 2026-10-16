@@ -58,6 +58,11 @@ export function PresentationView({ sources, onClose }: { sources: RenderSources;
       event.stopImmediatePropagation();
       if (event.key === "Escape") { event.preventDefault(); closeRef.current(); return; }
       if (event.key !== "Tab" && event.target instanceof Element && event.target.closest("input, select, textarea, [data-present-notes-body]")) return;
+      if (event.metaKey || event.ctrlKey || event.altKey) {
+        if ((event.metaKey || event.ctrlKey) && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "z") { event.preventDefault(); markupRef.current.undo(); }
+        return;
+      }
+      if (event.repeat && ["b", "w", "n", "g", "f", "l", "p", "c"].includes(event.key.toLowerCase())) return;
       if (["ArrowRight", "ArrowDown", "PageDown"].includes(event.key) || (event.code === "Space" && !(event.target instanceof Element && event.target.closest("button")))) { event.preventDefault(); setIndex(value => Math.min(pages.length - 1, value + 1)); }
       else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(event.key)) { event.preventDefault(); setIndex(value => Math.max(0, value - 1)); }
       else if (event.key === "Home") { event.preventDefault(); setIndex(0); }
@@ -70,7 +75,6 @@ export function PresentationView({ sources, onClose }: { sources: RenderSources;
       else if (event.key.toLowerCase() === "l") { setAuto(false); markupRef.current.setTool(markupRef.current.tool === "laser" ? "none" : "laser"); }
       else if (event.key.toLowerCase() === "p") { setAuto(false); markupRef.current.setTool(markupRef.current.tool === "pen" ? "none" : "pen"); }
       else if (event.key.toLowerCase() === "c") markupRef.current.clear();
-      else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") { event.preventDefault(); markupRef.current.undo(); }
       else if (event.key === "Tab") {
         const buttons = Array.from(root.current?.querySelectorAll<HTMLElement>("button:not(:disabled), select, input, [tabindex=\"0\"]") ?? []).filter(element => element.getClientRects().length > 0);
         if (!buttons.length) return;
