@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Copy, Paintbrush, Palette, Scaling, Search, ChartColumn } from "lucide-react";
+import { Copy, Paintbrush, Palette, Scaling, Search, ChartColumn, Blend } from "lucide-react";
 import { useEditorStore } from "@/store/editorStore";
 import type { ProjectSnapshot } from "@/lib/editor/types";
 import { applyDesignPalette, applyDesignStyle, copyDesignStyle, designColours, DESIGN_PALETTES, DESIGN_SIZES, replaceDesignColour, resizeDesign, type DesignStyle } from "@/lib/editor/designTools";
 import { DesignTextSearch } from "./DesignTextSearch";
 import { DataVisualPanel } from "./DataVisualPanel";
+import { FillPanel } from "./FillPanel";
 
 /** Contextual design actions stay within reach while the canvas remains visible. */
 export function DesignTools() {
@@ -15,7 +16,7 @@ export function DesignTools() {
   const settings = useEditorStore(s => s.settings);
   const projectId = useEditorStore(s => s.projectId);
   const [clipboard, setClipboard] = useState<{ projectId: string; style: DesignStyle } | null>(null);
-  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | null>(null);
+  const [panel, setPanel] = useState<"colours" | "resize" | "search" | "data" | "fill" | null>(null);
   const [width, setWidth] = useState(String(settings.width));
   const [height, setHeight] = useState(String(settings.height));
   const [colour, setColour] = useState<string | null>(null);
@@ -43,10 +44,11 @@ export function DesignTools() {
       <button type="button" className={button} disabled={!style || !selected.some(c => !c.locked)} onClick={() => style && apply(p => applyDesignStyle(p, ids, style))}><Paintbrush size={15} />{t("editor.designTools.pasteStyle", { defaultValue: "Paste style" })}</button>
       <button type="button" className={button} aria-expanded={panel === "search"} onClick={() => setPanel(panel === "search" ? null : "search")}><Search size={15} />{t("editor.designTools.findReplace", { defaultValue: "Find and replace" })}</button>
       <button type="button" className={button} aria-expanded={panel === "data"} onClick={() => setPanel(panel === "data" ? null : "data")}><ChartColumn size={15} />{t("editor.dataVisual.title", { defaultValue: "Charts and tables" })}</button>
+      <button type="button" className={button} aria-expanded={panel === "fill"} onClick={() => setPanel(panel === "fill" ? null : "fill")}><Blend size={15} />{t("editor.fills.title", { defaultValue: "Gradient fills" })}</button>
       {style && <span role="status" className="whitespace-nowrap px-2 text-[11px] text-white/45">{t("editor.designTools.styleReady", { defaultValue: "Style ready to apply" })}</span>}
     </div>
     {panel && <section aria-label={t(`editor.designTools.${panel}`, { defaultValue: panel === "resize" ? "Resize" : panel === "search" ? "Find and replace" : "Document colours" })} className="max-h-64 overflow-y-auto border-t border-white/10 p-3">
-      {panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {panel === "fill" ? <FillPanel /> : panel === "data" ? <DataVisualPanel /> : panel === "search" ? <DesignTextSearch project={useEditorStore.getState().toSnapshot()} apply={apply} seek={(id, time) => { const s = useEditorStore.getState(); s.setIsPlaying(false); s.setCurrentTime(time + 0.01); s.selectClip(id); }} /> : panel === "resize" ? <div className="space-y-3"><div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {DESIGN_SIZES.map(size => <button key={size.id} type="button" onClick={() => { apply(p => resizeDesign(p, size.width, size.height)); setPanel(null); }} className="rounded-lg border border-white/15 p-2 text-left text-xs hover:bg-white/10">
           <span className="block font-medium">{t(`editor.designTools.size.${size.id}`, { defaultValue: size.label })}</span><span className="text-white/45">{size.width} × {size.height}</span>
         </button>)}
