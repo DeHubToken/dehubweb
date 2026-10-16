@@ -28,6 +28,10 @@ export function ShortcutsLayer({ active = true }: { active?: boolean }) {
       const fps = s.settings.fps || 30;
       const dur = selectTimelineDuration(s);
 
+      if (e.shiftKey && !e.metaKey && !e.ctrlKey && !e.altKey && (e.code === "Digit1" || e.code === "Digit2")) {
+        e.preventDefault(); window.dispatchEvent(new Event(e.code === "Digit1" ? "editor:fit-page" : "editor:focus-selection")); return;
+      }
+
       // Ask the AI agent
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
