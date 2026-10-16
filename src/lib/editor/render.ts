@@ -1,3 +1,4 @@
+import { strokeDashOffset } from "./strokePatterns";
 import { paintOpacity } from "./paintOpacity";
 import { freehandPath } from "./freehand";
 import { vectorSymbolPath } from "./vectorSymbols";
@@ -440,6 +441,7 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
     ctx.save(); framePath();
     ctx.globalAlpha *= paintOpacity(clip.border.opacity); ctx.lineWidth = clip.border.width * H / 1080; ctx.strokeStyle = clip.border.color;
     ctx.setLineDash((Array.isArray(clip.border.dash) ? clip.border.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+    ctx.lineDashOffset = strokeDashOffset(clip.border.dashOffset) * H / 1080;
     ctx.stroke(); ctx.restore();
   }
 }
@@ -544,6 +546,7 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
     ctx.lineWidth = stroke.width * k;
     ctx.strokeStyle = createGradientFill(ctx, box.w, box.h, clip.gradient) || stroke.color;
     ctx.setLineDash((stroke.dash || []).filter(Number.isFinite).slice(0, 8).map(value => Math.max(0, value) * k));
+    ctx.lineDashOffset = strokeDashOffset(stroke.dashOffset) * H / 1080;
     const alpha = ctx.globalAlpha; ctx.globalAlpha *= paintOpacity(stroke.opacity); applyShadow(ctx, clip, H); drawConnector(ctx, box.w, box.h, clip.connector); clearShadow(ctx); ctx.globalAlpha = alpha; return;
   }
   const open = clip.shape === "line" || clip.shape === "arrow" || (clip.shape === "path" && !clip.closedPath);
@@ -561,6 +564,7 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   const stroke: TextStroke | null = clip.stroke ?? (open ? { color: clip.fill ?? "#ffffff", width: 8 } : null);
   if (stroke && stroke.width > 0) {
     ctx.setLineDash((Array.isArray(stroke.dash) ? stroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * k));
+    ctx.lineDashOffset = strokeDashOffset(stroke.dashOffset) * H / 1080;
     ctx.lineWidth = stroke.width * k;
     ctx.strokeStyle = (open || clip.symbol) && gradient ? gradient : stroke.color;
     ctx.lineJoin = clip.strokeJoin ?? "round";
@@ -625,6 +629,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
       ctx.lineWidth = outline.width / 1080 * H * l.scale;
       ctx.lineJoin = "round";
       ctx.setLineDash((Array.isArray(outline.dash) ? outline.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+      ctx.lineDashOffset = strokeDashOffset(outline.dashOffset) * H / 1080;
     }
     glyphs.slice(0, visible).forEach(glyph => {
       ctx.save();
@@ -646,6 +651,7 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
   const textStroke: TextStroke | null = text.stroke ?? (text.hollow ? { color: text.color, width: 3 } : null);
   if (textStroke && textStroke.width > 0) {
     ctx.setLineDash((Array.isArray(textStroke.dash) ? textStroke.dash : []).filter(n => Number.isFinite(n) && n >= 0).slice(0, 8).map(n => n * H / 1080));
+    ctx.lineDashOffset = strokeDashOffset(textStroke.dashOffset) * H / 1080;
     ctx.lineWidth = (textStroke.width / 1080) * H * l.scale;
     ctx.strokeStyle = textStroke.color;
     ctx.lineJoin = "round";

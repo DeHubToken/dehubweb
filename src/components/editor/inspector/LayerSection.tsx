@@ -1,3 +1,4 @@
+import { ShapeStrokeEdges } from "../ShapeStrokeEdges";
 import { shapeGeometryParameters } from "@/lib/editor/shapeGeometry";
 import { PenControls } from "../PenControls";
 import { penShapeStyle } from "@/lib/editor/freehand";
@@ -214,8 +215,9 @@ export function LayerSection({ clip }: { clip: Clip }) {
           {shape.stroke && live(t("editor.paint.strokeOpacity", { defaultValue: "Outline opacity: {{value}}%", value: Math.round((shape.stroke.opacity ?? 1) * 100) }), shape.stroke.opacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { stroke: { ...shape.stroke!, opacity: value } }))}
           {shape.stroke && live(t("editor.shape.outlineWidth", { value: Math.round(shape.stroke.width) }), shape.stroke.width, 1, 60, 1,
             (v) => patchClipLive(clip.id, { stroke: { ...shape.stroke!, width: v } }))}
+          <ShapeStrokeEdges value={shape} onChange={patch => patchClip(clip.id, patch)} />
           {shape.stroke && <StrokePattern stroke={shape.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
-          {shape.shape === "path" && <PenControls refineOnly value={{ color: shape.stroke?.color ?? "#ffffff", width: shape.stroke?.width ?? 8, smoothing: shape.pathSmoothing, cap: shape.strokeCap, join: shape.strokeJoin, closed: shape.closedPath, dash: shape.stroke?.dash }} onChange={value => { if (!clip.locked) patchClip(clip.id, penShapeStyle(value, shape.stroke?.opacity)); }} />}
+          {shape.shape === "path" && <PenControls refineOnly value={{ color: shape.stroke?.color ?? "#ffffff", width: shape.stroke?.width ?? 8, smoothing: shape.pathSmoothing, cap: shape.strokeCap, join: shape.strokeJoin, closed: shape.closedPath, dash: shape.stroke?.dash }} onChange={value => { if (!clip.locked) patchClip(clip.id, penShapeStyle(value, shape.stroke?.opacity, shape.stroke?.dashOffset)); }} />}
           {shape.shape === "rect" && live(t("editor.layer.cornerRounding", { value: Math.round(shape.radius ?? 0) }), shape.radius ?? 0, 0, 540, 1,
             (v) => patchClipLive(clip.id, { radius: v }))}
         </>
@@ -266,6 +268,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
             {live(t("editor.outline.width", { defaultValue: "Border width: {{value}}", value: Math.round(mediaClip.border.width) }), mediaClip.border.width, 1, 80, 1, value => patchClipLive(clip.id, { border: { ...mediaClip.border!, width: value } }))}
             <StrokePattern stroke={mediaClip.border} onChange={border => patchClip(clip.id, { border })} />
           </>}
+          {text.stroke && <StrokePattern stroke={text.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
           <div className="grid grid-cols-4 gap-1">
             {iconBtn(t("editor.menu.fitCanvas"), <Minimize className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, { fit: "contain", ...placementPatch(mediaClip, { x: 0.5, y: 0.5, scale: 1 }) }),
@@ -340,6 +343,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
           <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.layer.textStyle")}</p>
           {live(t("editor.paint.fillOpacity", { defaultValue: "Fill opacity: {{value}}%", value: Math.round((text.fillOpacity ?? 1) * 100) }), text.fillOpacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { fillOpacity: value }))}
           {(text.stroke || text.hollow) && live(t("editor.paint.strokeOpacity", { defaultValue: "Outline opacity: {{value}}%", value: Math.round((text.stroke?.opacity ?? 1) * 100) }), text.stroke?.opacity ?? 1, 0, 1, 0.01, value => patchClipLive(clip.id, { stroke: { color: text.color, width: 3, ...text.stroke, opacity: value } }))}
+          {text.stroke && <StrokePattern stroke={text.stroke} onChange={stroke => patchClip(clip.id, { stroke })} />}
           <div className="grid grid-cols-4 gap-1">
             {iconBtn(t("editor.layer.bold"), <Bold className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, { fontWeight: text.fontWeight >= 600 ? 400 : 700 }), text.fontWeight >= 600)}
