@@ -1,4 +1,4 @@
-import { matchesFilterPreset } from "@/lib/editor/filterMatching";
+import { inferFilterStrength, scaledFilterEffects } from "@/lib/editor/filterStrength";
 import { DUOTONE_PRESETS } from "@/lib/editor/photoTone";
 import { useTranslation as _useCopy } from 'react-i18next';
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
@@ -72,6 +72,7 @@ export function Inspector() {
     ? (selected as MediaClip)
     : null;
   const visualMedia = mediaClip && mediaClip.kind !== "audio" ? mediaClip : null;
+  const activeFilter = inferFilterStrength(visualMedia?.effects);
   const hasAudio = mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") ? mediaClip : null;
 
   const currentFontWeights = useMemo(() => {
@@ -195,10 +196,13 @@ export function Inspector() {
             <p className="text-[10px] uppercase tracking-wide text-white/40">{_copy("copy.ba4e64037fff", { defaultValue: "Vibes" })}</p>
             <div className="grid grid-cols-4 gap-1">
               {FILTER_PRESETS.map((p) => {
-                const active = presetMatches(visualMedia.effects, p.effects);
+                const active = activeFilter?.id === p.id;
                 return (
                   <button
                     key={p.id}
+                    type="button"
+                    disabled={visualMedia.locked}
+                    aria-pressed={active}
                     onClick={() => updateMediaClip(visualMedia.id, { effects: applyFilterPreset(p.id) })}
                     className={cn(
                       "rounded-md border px-1 py-1 text-[10px] transition",
@@ -206,14 +210,15 @@ export function Inspector() {
                         ? "border-white/50 bg-white/15 text-white"
                         : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
                     )}
-                    title={p.label}
+                    title={t(`editor.filters.${p.id}`, { defaultValue: p.label })}
                   >
-                    {p.label}
+                    {t(`editor.filters.${p.id}`, { defaultValue: p.label })}
                   </button>
                 );
               })}
             </div>
 
+            {activeFilter && activeFilter.id !== "none" && <EffectSlider label={t("editor.filters.strength", { defaultValue: "Filter strength: {{value}}%", value: Math.round(activeFilter.strength * 100) })} value={activeFilter.strength} min={0.01} max={1} step={0.01} onChange={strength => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: scaledFilterEffects(activeFilter.id, strength) }); }} />}
             <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.photoTone.duotone", { defaultValue: "Duotone" })}</p>
             <div className="grid grid-cols-3 gap-1">
               <button type="button" disabled={visualMedia.locked} onClick={() => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, duotone: null } })} className="min-h-9 rounded-lg border border-white/15 text-xs text-white/70 disabled:opacity-35">{t("editor.photoTone.original", { defaultValue: "Original colours" })}</button>
@@ -513,10 +518,6 @@ function EffectSlider({
   );
 }
 
-/** Shallow compare of two ClipEffects objects for preset highlight. */
-function presetMatches(current: MediaClip["effects"], preset: MediaClip["effects"]): boolean {
-  return matchesFilterPreset(current, preset);
-}
 
 function AnimationSection({ clip }: { clip: Clip }) {
   const { t: _copy } = _useCopy();
