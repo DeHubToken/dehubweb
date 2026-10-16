@@ -247,7 +247,7 @@ export function Inspector() {
             <EffectSlider label={t("editor.adjust.tint", { value: Math.round((visualMedia.effects?.tint ?? 0) * 100) })}
               value={visualMedia.effects?.tint ?? 0} min={-1} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, tint: v } })} />
-            {(["highlights", "shadows", "fade"] as const).map(key => <EffectSlider key={key} label={t(`editor.photoTone.${key}`, { defaultValue: ({ highlights: "Highlights", shadows: "Shadows", fade: "Fade" })[key] })} value={visualMedia.effects?.[key] ?? 0} min={key === "fade" ? 0 : -1} max={1} step={0.01} onChange={value => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, [key]: value } }); }} />)}
+            {(["vibrance", "highlights", "shadows", "fade"] as const).map(key => <EffectSlider key={key} label={t(`editor.photoTone.${key}`, { defaultValue: ({ vibrance: "Vibrance", highlights: "Highlights", shadows: "Shadows", fade: "Fade" })[key] })} value={visualMedia.effects?.[key] ?? 0} min={key === "fade" ? 0 : -1} max={1} step={0.01} onChange={value => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, [key]: value } }); }} />)}
             <EffectSlider label={t("editor.adjust.vignette", { value: Math.round((visualMedia.effects?.vignette ?? 0) * 100) })}
               value={visualMedia.effects?.vignette ?? 0} min={0} max={1} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, vignette: v } })} />
