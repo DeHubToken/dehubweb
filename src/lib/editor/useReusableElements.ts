@@ -7,5 +7,5 @@ const store = createReusableElementStore(key => typeof window === "undefined" ? 
 if (typeof window !== "undefined") window.addEventListener("storage", event => { if (event.key?.startsWith(prefix)) store.reload(event.key); });
 export function useReusableElements() {
   const key = prefix + useAccountDraftKey("preferences"), items = useSyncExternalStore(store.subscribe, useCallback(() => store.get(key), [key]), () => store.empty);
-  return { scope: key, items, create: (name: string, source: DesignClipboard) => store.create(key, name, source), remove: (id: string) => store.remove(key, id) };
+  return { scope: key, items, create: (name: string, source: DesignClipboard) => store.create(key, name, source), rename: (id: string, name: string) => store.rename(key, id, name), replace: (id: string, source: DesignClipboard) => store.replace(key, id, source), remove: (id: string) => store.remove(key, id) };
 }
