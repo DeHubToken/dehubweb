@@ -17,7 +17,7 @@ export async function edgeMaintenanceResponse(request, env) {
 
   if (path === '/maintenance.json') {
     const headers = { ...HEADERS, 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' };
-    return new Response(request.method === 'HEAD' ? null : JSON.stringify({ enabled: true }), { headers });
+    return new Response(request.method === 'HEAD' ? null : JSON.stringify({ enabled: env.MOBILE_MAINTENANCE_MODE !== 'false' }), { headers });
   }
 
   const headers = { ...HEADERS, 'Retry-After': '120', 'X-DeHub-Maintenance': 'edge' };
