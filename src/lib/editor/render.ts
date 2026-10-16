@@ -231,9 +231,9 @@ function clearShadow(ctx: Ctx2D) {
   ctx.shadowOffsetY = 0;
 }
 
-export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: number, r: number) {
+export function roundRectPath(ctx: Ctx2D, x: number, y: number, w: number, h: number, r: number, append = false) {
   const rr = Math.max(0, Math.min(r, w / 2, h / 2));
-  ctx.beginPath();
+  if (!append) ctx.beginPath();
   ctx.moveTo(x + rr, y);
   ctx.arcTo(x + w, y, x + w, y + h, rr);
   ctx.arcTo(x + w, y + h, x, y + h, rr);
@@ -588,7 +588,11 @@ function drawText(ctx: Ctx2D, text: TextClip, box: ClipBox, W: number, H: number
     ctx.globalAlpha = a * text.background.opacity;
     ctx.fillStyle = text.background.color;
     applyShadow(ctx, text, H);
-    roundRectPath(ctx, -box.w / 2, -box.h / 2, box.w, box.h, radius);
+    if (text.background.perLine && !l.curve) {
+      const padding = Math.max(0, text.background.padding / 1080 * H * l.scale);
+      ctx.beginPath();
+      l.lines.forEach((line, index) => { if (line.trim()) roundRectPath(ctx, leftFor(index) - padding, startY + index * l.lh - l.size / 2 - padding, l.widths[index] + padding * 2, l.size + padding * 2, radius * l.scale, true); });
+    } else roundRectPath(ctx, -box.w / 2, -box.h / 2, box.w, box.h, radius);
     ctx.fill();
     clearShadow(ctx);
     ctx.globalAlpha = a;
