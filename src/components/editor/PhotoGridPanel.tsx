@@ -1,3 +1,4 @@
+import { MockupFrameControls } from "./MockupFrameControls";
 import { useState } from "react";
 import { PhotoArrangementPanel } from "./PhotoArrangementPanel";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,7 @@ export function PhotoGridPanel() {
   const [frame, setFrame] = useState<MediaFrame>("rect"), [radius, setRadius] = useState(0);
   return <div className="space-y-3">
     <PhotoArrangementPanel />
+    <MockupFrameControls />
     <p className="text-xs text-white/60">{t("editor.grids.hint", { defaultValue: "Insert a photo layout, then drop pictures onto its frames. Double-click a frame to edit it inside the group." })}</p>
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">{PHOTO_GRIDS.map(preset => <button key={preset.id} type="button" aria-pressed={grid === preset.id} onClick={() => setGrid(preset.id)} className={`flex min-h-20 items-center gap-3 rounded-lg border p-3 text-left text-xs ${grid === preset.id ? "border-white bg-white/10" : "border-white/15 hover:bg-white/5"}`}>
       <span className="grid h-12 w-16 shrink-0 gap-0.5" style={{ gridTemplateColumns: `repeat(${preset.columns}, 1fr)`, gridTemplateRows: `repeat(${preset.rows}, 1fr)` }}>{preset.cells.map(([column, row, columns, rows], index) => <svg key={index} aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full fill-slate-400" style={{ gridColumn: `${column + 1} / span ${columns}`, gridRow: `${row + 1} / span ${rows}` }}><path d={mediaFramePreview(frame)} /></svg>)}</span>
