@@ -1,4 +1,5 @@
 import { FIT_VIEWPORT, zoomDesignViewport, type DesignViewport } from "@/lib/editor/designViewport";
+import { PresentationView } from "./PresentationView";
 import { panMediaCrop, zoomMediaCrop } from "@/lib/editor/mediaCrop";
 import { DesignRulers } from "../DesignRulers";
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
@@ -121,6 +122,9 @@ export function Compositor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
+  const [presenting, setPresenting] = useState(false);
+  const presentingRef = useRef(false); presentingRef.current = presenting;
+  useCloseOnSurfaceSwitch(useCallback(() => setPresenting(false), []));
 
   const tracks = useEditorStore((s) => s.tracks);
   const clips = useEditorStore((s) => s.clips);
@@ -359,7 +363,7 @@ export function Compositor() {
 
       // Draw to canvas.
       const canvas = canvasRef.current;
-      if (canvas) {
+      if (canvas && !presentingRef.current) {
         const W = state.settings.width;
         const H = state.settings.height;
         if (canvas.width !== W) canvas.width = W;
@@ -1062,6 +1066,7 @@ export function Compositor() {
 
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
+      {presenting && <PresentationView sources={sources} onClose={() => setPresenting(false)} />}
       {croppingId && <div className="flex shrink-0 items-center gap-2 border-b border-white/15 bg-neutral-950 px-3 py-2 text-xs text-white/70"><span className="min-w-0 flex-1">{t("editor.crop.canvasHint", { defaultValue: "Drag to move the image inside its frame." })}</span>{[0.9, 1.1].map(zoom => <button type="button" key={zoom} aria-label={t(zoom < 1 ? "editor.crop.zoomOut" : "editor.crop.zoomIn", { defaultValue: zoom < 1 ? "Zoom image out" : "Zoom image in" })} onClick={() => { const store = useEditorStore.getState(), clip = store.clips.find(c => c.id === croppingId); if (clip && (clip.kind === "image" || clip.kind === "video")) { const patch = zoomMediaCrop(clip, zoom); if (patch) store.patchClip(clip.id, patch); } }} className="min-h-8 min-w-8 rounded-lg border border-white/20 px-2">{zoom < 1 ? "−" : "+"}</button>)}<button type="button" onClick={() => { onGestureEnd(); setCroppingId(null); }} className="min-h-8 rounded-lg bg-white px-3 font-medium text-black">{t("editor.crop.done", { defaultValue: "Done" })}</button></div>}
 
       <div {...draftFocus.props}
@@ -1284,6 +1289,7 @@ export function Compositor() {
 
 
       <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70">
+        <button type="button" onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
         <button type="button" aria-pressed={navigating} onClick={() => { onGestureEnd(); setCroppingId(null); if (!navigating) useEditorUiStore.getState().setDraw(null); setNavigating(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${navigating ? "border-white bg-white/15" : "border-white/20"}`}>{t("editor.viewport.pan", { defaultValue: "Pan canvas" })}</button>
         <button type="button" aria-label={t("editor.viewport.zoomOut", { defaultValue: "Zoom canvas out" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom / 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">−</button>
         <span className="min-w-10 text-center tabular-nums">{Math.round(scale * 100)}%</span>
