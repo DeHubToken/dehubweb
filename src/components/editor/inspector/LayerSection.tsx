@@ -165,6 +165,7 @@ export function LayerSection({ clip }: { clip: Clip }) {
 
       {shape && (
         <>
+          {shape.photoFrame && <button type="button" onClick={() => useEditorUiStore.getState().setPanel("media")} className="min-h-9 w-full rounded-lg bg-white px-3 text-xs font-medium text-black">{t("editor.grids.addPhoto", { defaultValue: "Choose a photo for this frame" })}</button>}
           <div className="grid grid-cols-2 gap-1">
             {iconBtn(t("editor.menu.flipH"), <FlipHorizontal2 className="h-3.5 w-3.5" />,
               () => patchClip(clip.id, placementPatch(clip, { flipH: !tr.flipH })), !!tr.flipH)}

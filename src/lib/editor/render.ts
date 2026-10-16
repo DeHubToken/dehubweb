@@ -493,6 +493,12 @@ export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: n
 }
 
 function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
+  if (clip.photoFrame) {
+    drawShape(ctx, { ...clip, photoFrame: false }, box, H);
+    const size = Math.min(box.w, box.h) * 0.35;
+    ctx.fillStyle = "#94a3b8"; ctx.beginPath(); ctx.moveTo(-size, size * 0.65); ctx.lineTo(-size * 0.2, -size * 0.45); ctx.lineTo(size * 0.25, size * 0.2); ctx.lineTo(size * 0.55, -size * 0.2); ctx.lineTo(size, size * 0.65); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.arc(size * 0.55, -size * 0.65, size * 0.18, 0, Math.PI * 2); ctx.fill(); return;
+  }
   if (clip.qr) { drawQrGraphic(ctx, box.w, box.h, clip.qr); return; }
   if (clip.chart || clip.table) {
     drawDataVisual(ctx, box.w, box.h, clip.chart, clip.table);
