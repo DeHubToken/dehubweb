@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { PhotoBackgroundControls } from "./PhotoBackgroundControls";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid";
 import { useEditorStore } from "@/store/editorStore";
@@ -32,6 +33,7 @@ export function FillPanel() {
   };
   const canFill = clips.some(c => ids.includes(c.id) && !c.locked && (c.kind === "text" || (c.kind === "shape" && !c.chart && !c.table && !c.qr)));
   return <div className="space-y-3">
+    <PhotoBackgroundControls />
     <p className="text-xs text-white/55">{t("editor.fills.hint", { defaultValue: "Apply a gradient to selected text or shapes, or add it behind this page." })}</p>
     <div className="flex flex-wrap gap-2">{GRADIENT_PRESETS.map(preset => <button key={preset.id} type="button" onClick={() => { setFirst(preset.colours[0]); setLast(preset.colours[preset.colours.length - 1]); apply(gradientFromColours(preset.colours, type, angle), !canFill); }} className="flex min-h-12 items-center gap-2 rounded-lg border border-white/15 px-3 text-xs hover:bg-white/10">
       <span className="h-8 w-12 rounded-md" style={{ background: `linear-gradient(45deg, ${preset.colours.join(",")})` }} />{t(`editor.fills.preset.${preset.id}`, { defaultValue: preset.label })}
