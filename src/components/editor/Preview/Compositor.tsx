@@ -1380,6 +1380,7 @@ export function Compositor() {
               <button type="button" onClick={() => { finishTextEditing(); draftFocus.finish(); }} className="min-h-9 rounded-lg bg-white px-3 text-xs text-black">{t("common.done")}</button>
             </div>
             <textarea
+              dir={editingText?.direction ?? "auto"}
               ref={textInput}
               wrap={editingText.maxWidth ? "soft" : "off"}
               autoFocus
