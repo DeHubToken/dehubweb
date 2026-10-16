@@ -444,11 +444,11 @@ function drawMedia(ctx: Ctx2D, clip: MediaClip, box: ClipBox, H: number, src: Re
 }
 
 /** Build the outline of a shape centred on the origin. */
-export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: number, radius = 0, points?: [number, number][]) {
+export function shapePath(ctx: Ctx2D, shape: ShapeClip["shape"], w: number, h: number, radius = 0, points?: [number, number][], geometry?: ShapeClip["geometry"]) {
   const hw = w / 2;
   const hh = h / 2;
   ctx.beginPath();
-  const polygon = shapePolygon(shape, w, h);
+  const polygon = shapePolygon(shape, w, h, geometry);
   if (polygon) {
     polygon.forEach((point, index) => { if (index === 0) ctx.moveTo(point[0], point[1]); else ctx.lineTo(point[0], point[1]); });
     ctx.closePath(); return;
@@ -548,7 +548,7 @@ function drawShape(ctx: Ctx2D, clip: ShapeClip, box: ClipBox, H: number) {
   const open = clip.shape === "line" || clip.shape === "arrow" || (clip.shape === "path" && !clip.closedPath);
   if (clip.symbol) vectorSymbolPath(ctx, box.w, box.h, clip.symbol);
   else if (clip.shape === "path") freehandPath(ctx, box.w, box.h, clip.points ?? [], clip.pathSmoothing ?? 1, !!clip.closedPath);
-  else shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points);
+  else shapePath(ctx, clip.shape, box.w, box.h, (clip.radius ?? 0) * k, clip.points, clip.geometry);
   applyShadow(ctx, clip, H);
   const gradient = createGradientFill(ctx, box.w, box.h, clip.gradient);
   if (!open && (clip.fill || (!clip.symbol && gradient))) {
