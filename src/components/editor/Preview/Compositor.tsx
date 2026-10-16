@@ -42,7 +42,7 @@ import {
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import { recordOpts, useEditorUiStore } from "@/store/editorUiStore";
-import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
+import type { Clip, ClipTransform, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
 import { clipBox, drawClip, getTransform, isVisualClip, placementPatch, placementPatchAt, pointInBox, type ClipBox } from "@/lib/editor/render";
 import { isAnimated, keyTimes, resolveClipAt } from "@/lib/editor/keyframes";
@@ -103,6 +103,7 @@ type Gesture =
       group: { id: string; ax: number; ay: number }[];
     }
   | { mode: "marquee"; x0: number; y0: number; additive: boolean }
+  | { mode: "group-transform"; operation: "scale" | "rotate"; cx: number; cy: number; dist: number; angle: number; members: { clip: Clip; transform: ClipTransform }[] }
   | { mode: "scale"; id: string; box: ClipBox; dist: number; scale: number; font: number }
   | { mode: "rotate"; id: string; box: ClipBox; angle: number; rotation: number }
   | { mode: "stretch"; id: string; box: ClipBox; axis: "x" | "y"; scale: number };
@@ -551,6 +552,22 @@ export function Compositor() {
       return;
     }
 
+    if (g.mode === "group-transform") {
+      const ratio = g.operation === "scale" ? Math.max(0.05, Math.min(20, Math.hypot(p.x - g.cx, p.y - g.cy) / Math.max(1, g.dist))) : 1;
+      let degrees = g.operation === "rotate" ? (Math.atan2(p.y - g.cy, p.x - g.cx) - g.angle) * 180 / Math.PI : 0;
+      if (e.shiftKey) degrees = Math.round(degrees / 15) * 15;
+      const rad = degrees * Math.PI / 180, cos = Math.cos(rad), sin = Math.sin(rad);
+      for (const { clip: member, transform: tr } of g.members) {
+        const x = (tr.x * W - g.cx) * ratio, y = (tr.y * H - g.cy) * ratio;
+        const place = { x: (g.cx + x * cos - y * sin) / W, y: (g.cy + x * sin + y * cos) / H,
+          ...(g.operation === "rotate" ? { rotation: tr.rotation + degrees } : {}),
+          ...(g.operation === "scale" && member.kind !== "text" ? { scale: Math.max(0.05, Math.min(20, tr.scale * ratio)) } : {}) };
+        s.patchClipLive(member.id, { ...placementPatchAt(member, place, s.currentTime, recordOpts()),
+          ...(g.operation === "scale" && member.kind === "text" ? { fontSize: Math.max(6, Math.min(1000, member.fontSize * ratio)) } : {}) });
+      }
+      return;
+    }
+
     const clip = s.clips.find((c) => c.id === g.id);
     if (!clip) return;
 
@@ -746,11 +763,13 @@ export function Compositor() {
     // Grabbing a layer that is part of a multi-selection moves the whole group.
     const inGroup = selectedClipIds.length > 1 && selectedClipIds.includes(hit.clip.id);
     if (!inGroup && (selectedClipIds[0] !== hit.clip.id || selectedClipIds.length !== 1)) selectClip(hit.clip.id);
+    const actualSelection = useEditorStore.getState().selectedClipIds;
+    if (useEditorStore.getState().clips.some(c => actualSelection.includes(c.id) && c.locked)) return;
     const now = useEditorStore.getState().currentTime;
     const tr = getTransform(resolveClipAt(hit.clip, now));
     const all = useEditorStore.getState().clips;
-    const group = inGroup
-      ? selectedClipIds
+    const group = actualSelection.length > 1
+      ? actualSelection
           .filter((id) => id !== hit.clip.id)
           .map((id) => all.find((c) => c.id === id))
           .filter((c): c is Clip => !!c && isVisualClip(c) && !c.locked)
@@ -881,6 +900,17 @@ export function Compositor() {
     }
     return { left: x0 * scale, top: y0 * scale, width: (x1 - x0) * scale, height: (y1 - y0) * scale };
   })();
+  const onGroupHandleDown = (operation: "scale" | "rotate") => (event: React.PointerEvent) => {
+    event.preventDefault(); event.stopPropagation();
+    if (!groupBounds || scale <= 0) return;
+    const s = useEditorStore.getState();
+    const members = s.clips.filter(c => selectedClipIds.includes(c.id) && isVisualClip(c));
+    if (members.length < 2 || members.some(c => c.locked)) return;
+    const cx = (groupBounds.left + groupBounds.width / 2) / scale, cy = (groupBounds.top + groupBounds.height / 2) / scale;
+    const p = toCanvas(event.clientX, event.clientY);
+    startGesture({ mode: "group-transform", operation, cx, cy, dist: Math.hypot(p.x - cx, p.y - cy), angle: Math.atan2(p.y - cy, p.x - cx),
+      members: members.map(clip => ({ clip, transform: getTransform(resolveClipAt(clip, s.currentTime)) })) });
+  };
 
   // Where the selected layer travels over its clip: a dashed path with a
   // diamond at each keyframe, drawn only when its position is animated.
@@ -959,7 +989,10 @@ export function Compositor() {
 
           {groupBounds && (
             <div className="pointer-events-none absolute rounded-[2px] border-2 border-dashed border-white/90"
-              style={groupBounds} />
+              style={groupBounds}>
+              <button type="button" aria-label={t("editor.groups.resize", { defaultValue: "Resize selection" })} title={t("editor.groups.resize", { defaultValue: "Resize selection" })} onPointerDown={onGroupHandleDown("scale")} className="pointer-events-auto absolute -bottom-2 -right-2 h-4 w-4 cursor-nwse-resize rounded-sm border border-black bg-white" />
+              <button type="button" aria-label={t("editor.groups.rotate", { defaultValue: "Rotate selection" })} title={t("editor.groups.rotate", { defaultValue: "Rotate selection" })} onPointerDown={onGroupHandleDown("rotate")} className="pointer-events-auto absolute -top-8 left-1/2 h-5 w-5 -translate-x-1/2 cursor-grab rounded-full border border-black bg-white" />
+            </div>
           )}
           {marquee && (
             <div className="pointer-events-none absolute border border-sky-300 bg-sky-300/10"

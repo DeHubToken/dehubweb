@@ -17,8 +17,9 @@ function isControlKey(event: KeyboardEvent): boolean {
   return (event.key === " " || event.key === "Enter") && !!target.closest('button, [role="button"], a[href]');
 }
 
-export function ShortcutsLayer() {
+export function ShortcutsLayer({ active = true }: { active?: boolean }) {
   useEffect(() => {
+    if (!active) return;
     const onKey = (e: KeyboardEvent) => {
       if (isControlKey(e)) return;
       const s = useEditorStore.getState();
@@ -52,6 +53,25 @@ export function ShortcutsLayer() {
         return;
       }
       const onCanvas = useEditorUiStore.getState().canvasFocus;
+      if (onCanvas && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "a") {
+        e.preventDefault();
+        const hidden = new Set(s.tracks.filter(track => track.hidden).map(track => track.id));
+        s.selectMany(s.clips.filter(c => isVisualClip(c) && !c.locked && !c.hidden && !hidden.has(c.trackId) &&
+          s.currentTime >= c.start && s.currentTime < c.start + c.duration).map(c => c.id));
+        return;
+      }
+      if (onCanvas && !e.metaKey && !e.ctrlKey && !e.altKey && ["t", "r", "c", "l"].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        if (e.key.toLowerCase() === "t") s.addTextClip(undefined, s.currentTime, { layer: true });
+        else s.addShapeClip(e.key.toLowerCase() === "r" ? "rect" : e.key.toLowerCase() === "c" ? "ellipse" : "line");
+        window.dispatchEvent(new Event("editor:open-inspector"));
+        return;
+      }
+      if (onCanvas && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "g") {
+        e.preventDefault();
+        if (e.shiftKey) s.ungroupSelected(); else s.groupSelected();
+        return;
+      }
 
       // Duplicate: on the canvas it becomes a new layer at the same moment;
       // on the timeline it is the next clip in sequence.
@@ -73,6 +93,7 @@ export function ShortcutsLayer() {
       // Arrow keys nudge the selected layer while the canvas has focus:
       // 1px, or 10px with Shift, in project pixels.
       if (onCanvas && e.key.startsWith("Arrow") && s.selectedClipIds.length) {
+        if (s.clips.some(c => s.selectedClipIds.includes(c.id) && c.groupId && c.locked)) return;
         const targets = s.clips.filter((c) => s.selectedClipIds.includes(c.id) && isVisualClip(c) && !c.locked);
         if (targets.length) {
           e.preventDefault();
@@ -148,6 +169,6 @@ export function ShortcutsLayer() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [active]);
   return null;
 }

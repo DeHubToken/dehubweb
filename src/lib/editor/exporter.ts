@@ -560,6 +560,8 @@ export interface StillOptions {
   time: number;
   /** JPEG quality 0..1. */
   quality?: number;
+  /** PNG can retain the canvas alpha channel instead of painting a page colour. */
+  transparent?: boolean;
 }
 
 /**
@@ -597,8 +599,10 @@ export async function exportStill(opts: StillOptions): Promise<ExportResult> {
   canvas.height = height;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Could not acquire canvas context");
-  ctx.fillStyle = settings.background;
-  ctx.fillRect(0, 0, width, height);
+    if (!(format === "png" && opts.transparent)) {
+      ctx.fillStyle = settings.background;
+      ctx.fillRect(0, 0, width, height);
+    }
   await mattePages.select(videoMatteFramesForOps(ops, t));
   for (const op of ops) {
     if (op.clip.kind === "video") {

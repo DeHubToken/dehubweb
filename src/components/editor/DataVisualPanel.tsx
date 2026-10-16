@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_CHART, DEFAULT_TABLE, putDataVisual } from "@/lib/editor/dataVisualProject";
-import { parseChartData, parseTableData, type ChartKind } from "@/lib/editor/dataVisuals";
+import { parseChartData, parseTableData, type ChartKind, type ChartData, type TableData } from "@/lib/editor/dataVisuals";
 import { useEditorStore } from "@/store/editorStore";
 import { nanoid } from "nanoid";
 
@@ -45,7 +45,7 @@ export function DataVisualPanel() {
   const apply = () => {
     try {
       const s = useEditorStore.getState(), before = s.toSnapshot();
-      const value = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, rows: parseChartData(data),
+      const value: { chart: ChartData } | { table: TableData } = mode === "chart" ? { chart: { ...(chart ?? DEFAULT_CHART), kind, rows: parseChartData(data),
         colours: [accent, ...(chart ?? DEFAULT_CHART).colours.slice(1)], textColour: foreground, showLabels, showValues } }
         : { table: { ...(table ?? DEFAULT_TABLE), rows: parseTableData(data), textColour: foreground, headerColour: accent, header: showLabels } };
       if (("chart" in value && !value.chart.rows.length) || ("table" in value && !value.table.rows.length)) throw new Error("Enter at least one row");

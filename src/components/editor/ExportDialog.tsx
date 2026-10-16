@@ -68,6 +68,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const [scaleKey, setScaleKey] = useState("1");
   const [qualityKey, setQualityKey] = useState<Quality>("high");
   const [allPages, setAllPages] = useState(true);
+  const [transparent, setTransparent] = useState(false);
   const [scope, setScope] = useState<ExportScope>("timeline");
   const rangeSnapshot = { ...toSnapshot(), clips, tracks };
   const allRanges = clipExportRanges(rangeSnapshot);
@@ -155,7 +156,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
           check();
           setProgress(Math.round((frame.index / frames.length) * 100));
           setLabel(t("editor.pages.exporting", { current: frame.index + 1, total: frames.length }));
-          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: frame.time });
+          const { blob } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time: frame.time, transparent });
           check();
           files.push({ name: frame.filename, blob });
         }
@@ -164,7 +165,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         download(zip, exportFilename(snapshot.title, "zip", "", "design"));
       } else {
         const time = frames[0].time;
-        const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time });
+        const { blob, filename } = await exportStill({ snapshot, media, format: format as StillFormat, scale, time, transparent });
         check();
         download(blob, filename);
       }
@@ -310,6 +311,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
                 </SelectContent>
               </Select>
             </Row>
+            {format === "png" && <label className="flex min-h-9 items-center gap-2 text-xs text-white/75"><input type="checkbox" checked={transparent} onChange={e => setTransparent(e.target.checked)} />{t("editor.export.transparent", { defaultValue: "Transparent background" })}</label>}
             {still && multiPage && (
               <Row label={t("editor.pages.label")}>
                 <Select value={allPages ? "all" : "one"} onValueChange={(v) => setAllPages(v === "all")}>

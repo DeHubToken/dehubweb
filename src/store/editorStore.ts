@@ -12,6 +12,7 @@ import type { MediaMeta, StoredMedia } from "@/lib/editor/mediaStore";
 import { appendPage, getPages, pageAt, removePage, reorderPage, setPageDuration, timelineDuration } from "@/lib/editor/pages";
 import { applyTimelineOp, sliceTimelineClip } from "@/lib/editor/timelineAgent";
 import { fitCaptionTrack } from "@/lib/editor/textFit";
+import { groupedSelection, groupDesignLayers, ungroupDesignLayers, remapDesignGroups } from "@/lib/editor/designGroups";
 import {
   DEFAULT_SETTINGS,
   type Clip,
@@ -82,6 +83,8 @@ interface EditorState extends EditableState {
   // --- selection ---
   selectClip: (id: string | null, additive?: boolean) => void;
   selectMany: (ids: string[]) => void;
+  groupSelected: () => void;
+  ungroupSelected: () => void;
 
   // --- history ---
   undo: () => void;
@@ -299,17 +302,26 @@ export const useEditorStore = create<EditorState>((set, get) => {
   selectClip: (id, additive) =>
     set((s) => {
       if (id === null) return { selectedClipIds: [] };
+      const group = groupedSelection(s.clips, [id], s.currentTime);
       if (additive) {
         const exists = s.selectedClipIds.includes(id);
         return {
           selectedClipIds: exists
-            ? s.selectedClipIds.filter((x) => x !== id)
-            : [...s.selectedClipIds, id],
+            ? s.selectedClipIds.filter((x) => !group.includes(x))
+            : [...new Set([...s.selectedClipIds, ...group])],
         };
       }
-      return { selectedClipIds: [id] };
+      return { selectedClipIds: group };
     }),
-  selectMany: (ids) => set({ selectedClipIds: ids }),
+  selectMany: (ids) => set(s => ({ selectedClipIds: groupedSelection(s.clips, ids, s.currentTime) })),
+  groupSelected: () => {
+    const s = get(), before = s.toSnapshot(), next = groupDesignLayers(before, s.selectedClipIds, () => nanoid(10));
+    if (next !== before) s.applyDesignEdit(before, next);
+  },
+  ungroupSelected: () => {
+    const s = get(), before = s.toSnapshot(), next = ungroupDesignLayers(before, s.selectedClipIds);
+    if (next !== before) s.applyDesignEdit(before, next);
+  },
 
   // ── history ──
   undo: () =>
@@ -633,8 +645,9 @@ export const useEditorStore = create<EditorState>((set, get) => {
 
   rippleDelete: (ids) => {
     const s = get();
-    const target = ids ?? s.selectedClipIds;
+    const target = groupedSelection(s.clips, ids ?? s.selectedClipIds, s.currentTime);
     if (!target.length) return;
+    if (s.clips.some(c => target.includes(c.id) && c.groupId && c.locked)) return;
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({
       past,
@@ -662,7 +675,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
       newIds.push(copy.id);
     }
     if (!additions.length) return;
-    set({ past, future: [], clips: workingClips, selectedClipIds: newIds });
+    set({ past, future: [], clips: [...s.clips, ...remapDesignGroups(additions, () => nanoid(10))], selectedClipIds: newIds });
   },
 
   duplicateOnCanvas: () => {
@@ -693,7 +706,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
     }
     if (!additions.length) return;
     tracks = tracks.slice();
-    set({ past, future: [], tracks, clips: [...s.clips, ...additions], selectedClipIds: additions.map((c) => c.id) });
+    set({ past, future: [], tracks, clips: [...s.clips, ...remapDesignGroups(additions, () => nanoid(10))], selectedClipIds: additions.map((c) => c.id) });
   },
 
   copySelectedToClipboard: () => {
@@ -733,7 +746,7 @@ export const useEditorStore = create<EditorState>((set, get) => {
     // Default: paste immediately after the copied clips' end. Fallback to playhead.
     const baseTime = opts?.time ?? parsed.sourceEnd ?? s.currentTime;
     const overrideTrackId = opts?.trackId;
-    for (const c of parsed.relative) {
+    for (const c of remapDesignGroups(parsed.relative, () => nanoid(10))) {
       let track =
         (overrideTrackId ? s.tracks.find((t) => t.id === overrideTrackId) : null) ??
         s.tracks.find((t) => t.id === c.trackId) ??
