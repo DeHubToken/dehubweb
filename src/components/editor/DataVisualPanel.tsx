@@ -1,3 +1,4 @@
+import { DataExportControls } from "./DataExportControls";
 import { ColourPickerButton } from "./ColourPickerButton";
 import { ChartFormattingPanel, type ChartAppearance } from "./ChartFormattingPanel";
 import { chartDataSource, parseChartSource } from "@/lib/editor/chartSeries";
@@ -94,6 +95,7 @@ export function DataVisualPanel() {
     } catch (e) { setError(e instanceof Error ? e.message : "Invalid data"); }
   };
   return <div className="space-y-3">
+    <DataExportControls source={data} mode={mode} multiple={multiple} title={useEditorStore.getState().title} />
     {mode === "chart" && <div className="flex flex-wrap items-center gap-3 text-xs text-white/70"><label className="flex items-center gap-2"><input type="checkbox" checked={multiple} onChange={event => changeMultiple(event.target.checked)} />{t("editor.dataVisual.multipleSeries", { defaultValue: "Multiple data series" })}</label>{multiple && <><label className="flex items-center gap-2"><input type="checkbox" checked={showLegend} onChange={event => setShowLegend(event.target.checked)} />{t("editor.dataVisual.showLegend", { defaultValue: "Show legend" })}</label>{(kind === "bar" || kind === "column") && <label className="flex items-center gap-2"><input type="checkbox" checked={stacked} onChange={event => setStacked(event.target.checked)} />{t("editor.dataVisual.stacked", { defaultValue: "Stack series" })}</label>}{(kind === "pie" || kind === "donut") && <span className="text-white/45">{t("editor.dataVisual.pieSeriesHint", { defaultValue: "Pie and donut charts display the first data series." })}</span>}</>}</div>}
     <div className="flex flex-wrap items-center gap-2">
       {(["chart", "table"] as const).map(value => <button key={value} type="button" aria-pressed={mode === value} onClick={() => choose(value)} className={`min-h-9 rounded-lg border px-3 text-xs ${mode === value ? "border-white bg-white text-black" : "border-white/20 text-white/70"}`}>{t(`editor.dataVisual.${value}`, { defaultValue: value === "chart" ? "Chart" : "Table" })}</button>)}
