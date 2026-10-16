@@ -41,7 +41,7 @@ export function FillPanel() {
     <BackgroundScopeControls />
     <p className="text-xs text-white/55">{t("editor.fills.hint", { defaultValue: "Apply a gradient to selected text or shapes, or add it behind this page." })}</p>
     <div className="flex flex-wrap gap-2">{GRADIENT_PRESETS.map(preset => <button key={preset.id} type="button" onClick={() => { const next = { ...fill, stops: gradientFromColours(preset.colours).stops }; setFill(next); apply(next, !canFill); }} className="flex min-h-12 items-center gap-2 rounded-lg border border-white/15 px-3 text-xs hover:bg-white/10"><span className="h-8 w-12 rounded-md" style={{ background: `linear-gradient(45deg, ${preset.colours.join(",")})` }} />{t(`editor.fills.preset.${preset.id}`, { defaultValue: preset.label })}</button>)}</div>
-    <GradientEditor value={fill} onChange={setFill} />
+    <GradientEditor value={fill} onChange={setFill} projectId={useEditorStore.getState().projectId} />
     <div className="flex flex-wrap items-center gap-2">
       <button type="button" disabled={!canFill || !valid} onClick={() => apply(fill)} className="min-h-9 rounded-lg bg-white px-3 text-xs font-medium text-black disabled:opacity-35">{t("editor.fills.apply", { defaultValue: "Apply fill" })}</button>
       <button type="button" disabled={!valid} onClick={() => apply(fill, true)} className={button}>{t("editor.fills.background", { defaultValue: "Use as page background" })}</button>

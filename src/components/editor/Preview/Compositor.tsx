@@ -1,3 +1,4 @@
+import { beginDesignColourSample, cancelDesignColourPick, finishDesignColourSample, useDesignColourPick } from "@/lib/editor/designColourPicker";
 import { designPrintDpi } from "@/lib/editor/documentDimensions";
 import { registerDesignPagePreview } from "@/lib/editor/designPagePreviews";
 import { freehandSvg, type PenSettings } from "@/lib/editor/freehand";
@@ -173,6 +174,8 @@ export function Compositor() {
   const gifLoads = useRef(new Map<string, AbortController>());
   const sources = useMemo(() => ({ videos: videoPool.current, images: imagePool.current, videosByClip: new Map<string, HTMLVideoElement>() }), []);
   const previewProject = useEditorStore(state => state.projectId);
+  const colourPick = useDesignColourPick(), sampling = colourPick?.projectId === previewProject;
+  useEffect(() => { if (presenting && sampling) cancelDesignColourPick(colourPick.token); }, [presenting, sampling, colourPick?.token]);
   useLayoutEffect(() => registerDesignPagePreview(previewProject, async (snapshot, at, maxEdge) => {
     if (useEditorStore.getState().projectId !== snapshot.id) throw new Error("This design is no longer open");
     const { width, height, background } = snapshot.settings, ratio = Math.min(1, maxEdge / Math.max(width, height));
@@ -849,7 +852,7 @@ export function Compositor() {
   };
 
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (editingTextId || editingGuides) return;
+    if (editingTextId || editingGuides || sampling) return;
     if (e.button !== 0) return;
     if (navigating) { startViewportPan(e); return; }
     if (draw) {
@@ -1077,7 +1080,7 @@ export function Compositor() {
     return { pts, keys };
   }, [selectedClip, settings.width, settings.height, sources]);
 
-  const overlay = selBox && selectedClip && !selectedClip.locked && !selectedClip.isPageBackground && !editingTextId && !croppingId && !navigating && !editingGuides && scale > 0
+  const overlay = selBox && selectedClip && !selectedClip.locked && !selectedClip.isPageBackground && !editingTextId && !croppingId && !navigating && !editingGuides && !sampling && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
         top: (selBox.cy - selBox.h / 2) * scale,
@@ -1106,6 +1109,7 @@ export function Compositor() {
 
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
+      {sampling && <div role="status" className="flex shrink-0 items-center gap-3 border-b border-cyan-300/20 bg-neutral-950 px-3 py-2 text-xs text-cyan-100"><span className="min-w-0 flex-1">{colourPick.error || t("editor.colourPicker.canvasHint", { defaultValue: "Click a colour on the page. Escape cancels." })}</span><button type="button" onClick={() => cancelDesignColourPick(colourPick.token)} className="min-h-8 rounded-lg border border-white/20 px-3">{t("common.cancel", { defaultValue: "Cancel" })}</button></div>}
       {presenting && <PresentationView sources={sources} onClose={() => setPresenting(false)} />}
       {croppingId && <div className="flex shrink-0 items-center gap-2 border-b border-white/15 bg-neutral-950 px-3 py-2 text-xs text-white/70"><span className="min-w-0 flex-1">{t("editor.crop.canvasHint", { defaultValue: "Drag to move the image inside its frame." })}</span>{[0.9, 1.1].map(zoom => <button type="button" key={zoom} aria-label={t(zoom < 1 ? "editor.crop.zoomOut" : "editor.crop.zoomIn", { defaultValue: zoom < 1 ? "Zoom image out" : "Zoom image in" })} onClick={() => { const store = useEditorStore.getState(), clip = store.clips.find(c => c.id === croppingId); if (clip && (clip.kind === "image" || clip.kind === "video")) { const patch = zoomMediaCrop(clip, zoom); if (patch) store.patchClip(clip.id, patch); } }} className="min-h-8 min-w-8 rounded-lg border border-white/20 px-2">{zoom < 1 ? "−" : "+"}</button>)}<button type="button" onClick={() => { onGestureEnd(); setCroppingId(null); }} className="min-h-8 rounded-lg bg-white px-3 font-medium text-black">{t("editor.crop.done", { defaultValue: "Done" })}</button></div>}
 
@@ -1154,7 +1158,7 @@ export function Compositor() {
             </ContextMenu>
           </div>
 
-          {groupBounds && !navigating && !croppingId && !editingGuides && (
+          {groupBounds && !navigating && !croppingId && !editingGuides && !sampling && (
             <div className="pointer-events-none absolute rounded-[2px] border-2 border-dashed border-white/90"
               style={groupBounds}>
               <button type="button" aria-label={t("editor.groups.resize", { defaultValue: "Resize selection" })} title={t("editor.groups.resize", { defaultValue: "Resize selection" })} onPointerDown={onGroupHandleDown("scale")} className="pointer-events-auto absolute -bottom-2 -right-2 h-4 w-4 cursor-nwse-resize rounded-sm border border-black bg-white" />
@@ -1220,7 +1224,15 @@ export function Compositor() {
               style={{ top: y * scale }} />
           ))}
 
-          <GuideEditorLayer active={editingGuides} disabled={presenting || (!editingGuides && (!!croppingId || !!editingTextId || !!draw || navigating))} rulers={layoutGuides.rulers || editingGuides} surface={surfaceRef} width={settings.width} height={settings.height} scale={scale} projectId={viewportProject} onActivate={() => { useEditorStore.getState().setIsPlaying(false); setEditingGuides(true); }} />
+          {sampling && <div className="absolute inset-0 z-30 cursor-crosshair touch-none" onPointerDown={event => {
+            if (event.button !== 0) return; event.preventDefault(); event.stopPropagation();
+            const token = beginDesignColourSample(previewProject); if (token === null) return;
+            try { const canvas = canvasRef.current, point = toCanvas(event.clientX, event.clientY), context = canvas?.getContext("2d"); if (!canvas || !context) throw new Error("The canvas is not ready");
+              const pixel = context.getImageData(Math.max(0, Math.min(canvas.width - 1, Math.floor(point.x))), Math.max(0, Math.min(canvas.height - 1, Math.floor(point.y))), 1, 1).data;
+              finishDesignColourSample(token, "#" + Array.from(pixel.slice(0, 3)).map(value => value.toString(16).padStart(2, "0")).join(""));
+            } catch (error) { finishDesignColourSample(token, null, error instanceof Error ? error.message : String(error)); }
+          }} />}
+          <GuideEditorLayer active={editingGuides} disabled={sampling || presenting || (!editingGuides && (!!croppingId || !!editingTextId || !!draw || navigating))} rulers={layoutGuides.rulers || editingGuides} surface={surfaceRef} width={settings.width} height={settings.height} scale={scale} projectId={viewportProject} onActivate={() => { useEditorStore.getState().setIsPlaying(false); setEditingGuides(true); }} />
 
           {/* Selection box with resize and rotate handles. It may extend past
               the page edge, which is why the surface itself does not clip. */}
