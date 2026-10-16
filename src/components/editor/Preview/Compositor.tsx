@@ -646,6 +646,12 @@ export function Compositor() {
     requestAnimationFrame(() => { if (textInput.current === input && input.isConnected) { input.focus(); input.setSelectionRange(next.selection.start, next.selection.end); } });
   };
 
+  useLayoutEffect(() => {
+    const input = textInput.current; if (!input || !editingTextId) return;
+    input.style.height = "auto";
+    input.style.height = `${Math.min(Math.max(32, input.scrollHeight), Math.max(48, (surfaceRef.current?.clientHeight ?? 400) - 24))}px`;
+  }, [editingTextId, editingText?.text, editingText?.fontSize, editingText?.fontFamily, editingText?.fontWeight, editingText?.maxWidth, editingText?.lineHeight, editingText?.letterSpacing, scale]);
+
   const selectedClip = useMemo(() => {
     if (selectedClipIds.length !== 1) return null;
     const c = clips.find((x) => x.id === selectedClipIds[0]);
@@ -1370,6 +1376,7 @@ export function Compositor() {
             </div>
             <textarea
               ref={textInput}
+              wrap={editingText.maxWidth ? "soft" : "off"}
               autoFocus
               value={editingText.text}
               aria-label={t("editor.menu.editText")}
@@ -1407,7 +1414,13 @@ export function Compositor() {
                 outline: "none",
                 resize: "none",
                 minWidth: 80,
+                width: `${Math.max(80, (editingText.maxWidth ? editingText.maxWidth * settings.width : selBox?.w ?? 200) * scale + 12)}px`,
+                maxWidth: "calc(100% - 12px)",
+                maxHeight: "calc(100% - 24px)",
+                overflow: "auto",
                 lineHeight: editingText.lineHeight ?? 1.2,
+                letterSpacing: `${(editingText.letterSpacing ?? 0) / 1080 * settings.height * scale}px`,
+                textDecorationLine: [editingText.underline ? "underline" : "", editingText.strikethrough ? "line-through" : ""].filter(Boolean).join(" ") || "none",
                 caretColor: "#fff",
               }}
               rows={Math.max(1, editingText.text.split("\n").length)}
