@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { FIT_VIEWPORT, zoomDesignViewport, type DesignViewport } from "@/lib/editor/designViewport";
 import { PresentationView } from "./PresentationView";
 import { panMediaCrop, zoomMediaCrop } from "@/lib/editor/mediaCrop";
+import { GuideEditorLayer } from "../GuideEditorLayer";
 import { DesignRulers } from "../DesignRulers";
 import { useEditorDraftFocus } from "@/components/editor/useEditorDraftFocus";
 import type { ProjectEditLease } from "@/lib/editor/projectEditGate";
@@ -416,12 +417,18 @@ export function Compositor() {
   const [fitScale, setFitScale] = useState(0);
   const [viewport, setViewport] = useState<DesignViewport>(FIT_VIEWPORT);
   const [navigating, setNavigating] = useState(false);
+  const [editingGuides, setEditingGuides] = useState(false);
   const viewportCleanup = useRef<(() => void) | null>(null);
   const viewportProject = useEditorStore(s => s.projectId);
   const scale = fitScale * viewport.zoom;
-  useEffect(() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); setNavigating(false); setPresenting(false); }, [viewportProject, settings.width, settings.height]);
+  useEffect(() => { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); setNavigating(false); setEditingGuides(false); setPresenting(false); }, [viewportProject, settings.width, settings.height]);
   useEffect(() => () => viewportCleanup.current?.(), []);
-  useCloseOnSurfaceSwitch(useCallback(() => { viewportCleanup.current?.(); setNavigating(false); }, []));
+  useCloseOnSurfaceSwitch(useCallback(() => { viewportCleanup.current?.(); setNavigating(false); setEditingGuides(false); }, []));
+  useEffect(() => {
+    if (!editingGuides) return;
+    const close = (event: KeyboardEvent) => { if (event.key === "Escape") { event.preventDefault(); setEditingGuides(false); } };
+    window.addEventListener("keydown", close); return () => window.removeEventListener("keydown", close);
+  }, [editingGuides]);
   const startViewportPan = (event: React.PointerEvent<Element>) => {
     if (event.button !== 0) return;
     event.preventDefault(); event.stopPropagation(); viewportCleanup.current?.();
@@ -765,7 +772,7 @@ export function Compositor() {
       const id = (event as CustomEvent<{ id: string }>).detail?.id;
       const store = useEditorStore.getState(), clip = store.clips.find(value => value.id === id);
       if (!clip || clip.locked || (clip.kind !== "image" && clip.kind !== "video")) return;
-      onGestureEnd(); setNavigating(false); store.setIsPlaying(false); store.selectGroupMember(id); setCroppingId(id);
+      onGestureEnd(); setEditingGuides(false); setNavigating(false); store.setIsPlaying(false); store.selectGroupMember(id); setCroppingId(id);
     };
     window.addEventListener("editor:crop-photo", begin);
     return () => window.removeEventListener("editor:crop-photo", begin);
@@ -776,7 +783,7 @@ export function Compositor() {
       const id = (event as CustomEvent<{ id: string }>).detail?.id;
       const store = useEditorStore.getState(), clip = store.clips.find(value => value.id === id);
       if (clip?.kind !== "text" || clip.locked) return;
-      onGestureEnd(); setNavigating(false); setCroppingId(null); store.setIsPlaying(false); store.selectGroupMember(clip.id);
+      onGestureEnd(); setEditingGuides(false); setNavigating(false); setCroppingId(null); store.setIsPlaying(false); store.selectGroupMember(clip.id);
       if (draftFocus.begin()) setEditingTextId(clip.id);
     };
     window.addEventListener("editor:edit-text", begin);
@@ -828,7 +835,7 @@ export function Compositor() {
   };
 
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (editingTextId) return;
+    if (editingTextId || editingGuides) return;
     if (e.button !== 0) return;
     if (navigating) { startViewportPan(e); return; }
     if (draw) {
@@ -898,6 +905,7 @@ export function Compositor() {
   };
 
   const onCanvasDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (editingGuides) return;
     if (navigating) { viewportCleanup.current?.(); setViewport(FIT_VIEWPORT); return; }
     const hit = hitTest(e.clientX, e.clientY);
     if (hit && hit.clip.kind === "text") {
@@ -1055,7 +1063,7 @@ export function Compositor() {
     return { pts, keys };
   }, [selectedClip, settings.width, settings.height, sources]);
 
-  const overlay = selBox && selectedClip && !selectedClip.locked && !selectedClip.isPageBackground && !editingTextId && !croppingId && !navigating && scale > 0
+  const overlay = selBox && selectedClip && !selectedClip.locked && !selectedClip.isPageBackground && !editingTextId && !croppingId && !navigating && !editingGuides && scale > 0
     ? {
         left: (selBox.cx - selBox.w / 2) * scale,
         top: (selBox.cy - selBox.h / 2) * scale,
@@ -1115,7 +1123,7 @@ export function Compositor() {
             </ContextMenu>
           </div>
 
-          {groupBounds && !navigating && !croppingId && (
+          {groupBounds && !navigating && !croppingId && !editingGuides && (
             <div className="pointer-events-none absolute rounded-[2px] border-2 border-dashed border-white/90"
               style={groupBounds}>
               <button type="button" aria-label={t("editor.groups.resize", { defaultValue: "Resize selection" })} title={t("editor.groups.resize", { defaultValue: "Resize selection" })} onPointerDown={onGroupHandleDown("scale")} className="pointer-events-auto absolute -bottom-2 -right-2 h-4 w-4 cursor-nwse-resize rounded-sm border border-black bg-white" />
@@ -1142,7 +1150,7 @@ export function Compositor() {
             </svg>
           )}
 
-          {motionPath && !editingTextId && scale > 0 && (
+          {motionPath && !editingTextId && !editingGuides && scale > 0 && (
             <svg className="pointer-events-none absolute inset-0 h-full w-full overflow-visible">
               <polyline
                 points={motionPath.pts.map(([x, y]) => `${x * scale},${y * scale}`).join(" ")}
@@ -1168,9 +1176,9 @@ export function Compositor() {
 
           {croppingId && selBox && <div aria-hidden className="pointer-events-none absolute border-2 border-cyan-300" style={{ left: (selBox.cx - selBox.w / 2) * scale, top: (selBox.cy - selBox.h / 2) * scale, width: selBox.w * scale, height: selBox.h * scale, transform: `rotate(${selBox.rotation}deg)` }}>{[1 / 3, 2 / 3].map(n => <div key={n}><div className="absolute bottom-0 top-0 w-px bg-white/50" style={{ left: `${n * 100}%` }} /><div className="absolute left-0 right-0 h-px bg-white/50" style={{ top: `${n * 100}%` }} /></div>)}</div>}
           {/* Snapping guides */}
-          {layoutGuides.rulers && <DesignRulers width={settings.width} height={settings.height} scale={scale} />}
-          {layoutGuides.visible && layoutGuides.vertical.map(x => <div key={`layout-v${x}`} aria-hidden className="pointer-events-none absolute bottom-0 top-0 w-px bg-cyan-400/65" style={{ left: x * settings.width * scale }} />)}
-          {layoutGuides.visible && layoutGuides.horizontal.map(y => <div key={`layout-h${y}`} aria-hidden className="pointer-events-none absolute left-0 right-0 h-px bg-cyan-400/65" style={{ top: y * settings.height * scale }} />)}
+          {(layoutGuides.rulers || editingGuides) && <DesignRulers width={settings.width} height={settings.height} scale={scale} />}
+          {layoutGuides.visible && !editingGuides && layoutGuides.vertical.map(x => <div key={`layout-v${x}`} aria-hidden className="pointer-events-none absolute bottom-0 top-0 w-px bg-cyan-400/65" style={{ left: x * settings.width * scale }} />)}
+          {layoutGuides.visible && !editingGuides && layoutGuides.horizontal.map(y => <div key={`layout-h${y}`} aria-hidden className="pointer-events-none absolute left-0 right-0 h-px bg-cyan-400/65" style={{ top: y * settings.height * scale }} />)}
           {layoutGuides.visible && layoutGuides.margin > 0 && <div aria-hidden className="pointer-events-none absolute border border-dashed border-cyan-300/60" style={{ inset: layoutGuides.margin * Math.min(settings.width, settings.height) * scale }} />}
           {guides.v.map((x) => (
             <div key={`v${x}`} className="pointer-events-none absolute top-0 bottom-0 w-px bg-fuchsia-400"
@@ -1180,6 +1188,8 @@ export function Compositor() {
             <div key={`h${y}`} className="pointer-events-none absolute left-0 right-0 h-px bg-fuchsia-400"
               style={{ top: y * scale }} />
           ))}
+
+          <GuideEditorLayer active={editingGuides} disabled={presenting || (!editingGuides && (!!croppingId || !!editingTextId || !!draw || navigating))} rulers={layoutGuides.rulers || editingGuides} surface={surfaceRef} width={settings.width} height={settings.height} scale={scale} projectId={viewportProject} onActivate={() => { useEditorStore.getState().setIsPlaying(false); setEditingGuides(true); }} />
 
           {/* Selection box with resize and rotate handles. It may extend past
               the page edge, which is why the surface itself does not clip. */}
@@ -1292,8 +1302,9 @@ export function Compositor() {
 
 
       <div role="toolbar" aria-label={t("editor.viewport.toolbar", { defaultValue: "Canvas navigation" })} className="flex shrink-0 items-center justify-end gap-2 border-t border-white/10 bg-neutral-950 px-3 py-1.5 text-xs text-white/70">
-        <button type="button" onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
-        <button type="button" aria-pressed={navigating} onClick={() => { onGestureEnd(); setCroppingId(null); if (!navigating) useEditorUiStore.getState().setDraw(null); setNavigating(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${navigating ? "border-white bg-white/15" : "border-white/20"}`}>{t("editor.viewport.pan", { defaultValue: "Pan canvas" })}</button>
+        <button type="button" onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); setEditingGuides(false); useEditorStore.getState().setIsPlaying(false); setPresenting(true); }} className="mr-auto min-h-8 rounded-lg border border-white/20 px-3">{t("editor.present.title", { defaultValue: "Present pages" })}</button>
+        <button type="button" aria-pressed={editingGuides} onClick={() => { onGestureEnd(); draftFocus.finish(); viewportCleanup.current?.(); setCroppingId(null); setEditingTextId(null); setNavigating(false); useEditorUiStore.getState().setDraw(null); useEditorStore.getState().setIsPlaying(false); setEditingGuides(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${editingGuides ? "border-cyan-300 bg-cyan-300/15" : "border-white/20"}`}>{t(editingGuides ? "editor.guides.done" : "editor.guides.edit", { defaultValue: editingGuides ? "Done guides" : "Edit guides" })}</button>
+        <button type="button" aria-pressed={navigating} onClick={() => { onGestureEnd(); setEditingGuides(false); setCroppingId(null); if (!navigating) useEditorUiStore.getState().setDraw(null); setNavigating(value => !value); }} className={`min-h-8 rounded-lg border px-3 ${navigating ? "border-white bg-white/15" : "border-white/20"}`}>{t("editor.viewport.pan", { defaultValue: "Pan canvas" })}</button>
         <button type="button" aria-label={t("editor.viewport.zoomOut", { defaultValue: "Zoom canvas out" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom / 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">−</button>
         <span className="min-w-10 text-center tabular-nums">{Math.round(scale * 100)}%</span>
         <button type="button" aria-label={t("editor.viewport.zoomIn", { defaultValue: "Zoom canvas in" })} onClick={() => setViewport(before => zoomDesignViewport(before, before.zoom * 1.2))} className="min-h-8 min-w-8 rounded-lg border border-white/20">+</button>

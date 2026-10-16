@@ -10,7 +10,7 @@ export function GuidesPanel() {
   const apply = (patch: Partial<DesignGuides>) => { const s = useEditorStore.getState(), before = s.toSnapshot(); s.applyDesignEdit(before, changeDesignGuides(before, patch)); };
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/80 hover:bg-white/10";
   return <div className="space-y-3 text-xs">
-    <p className="text-white/55">{t("editor.guides.hint", { defaultValue: "Guides and margins help you align a layout. They are not included in downloads." })}</p>
+    <p className="text-white/55">{t("editor.guides.hint", { defaultValue: "Drag from a ruler to add a guide. Choose Edit guides to move guides, or drag them off the page to remove them. Guides and margins are not included in downloads." })}</p>
     <div className="flex flex-wrap items-center gap-3">
       <label className="flex items-center gap-2"><input type="checkbox" checked={guides.visible} onChange={e => apply({ visible: e.target.checked })} />{t("editor.guides.visible", { defaultValue: "Show guides" })}</label>
       <label className="flex items-center gap-2"><input type="checkbox" checked={guides.snap} onChange={e => apply({ snap: e.target.checked })} />{t("editor.guides.snap", { defaultValue: "Snap to guides" })}</label>
