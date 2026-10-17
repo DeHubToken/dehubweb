@@ -1429,6 +1429,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
         <motion.div
           ref={attachVideoContainer}
           data-media-full
+          data-keep-dark
           className={cn(
             "relative overflow-hidden",
             isMobile
@@ -1621,7 +1622,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       <button onClick={() => handleNavigateToProfile()} className="flex-shrink-0">
                         <Avatar className="w-11 h-11 rounded-xl border-2 border-white/20" key={currentShort.avatar || currentShort.id}>
                           <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                          <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                          <AvatarFallback data-keep-dark className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                         </Avatar>
                       </button>
                       <button onClick={() => handleNavigateToProfile()} className="flex flex-col items-start text-left min-w-0">
@@ -1636,6 +1637,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 )}
 
                 <div
+                  data-shorts-actions
+                  data-on-media
                   className={cn(
                     "relative flex items-center justify-between px-4 pt-2",
                     chromeHidden ? "pointer-events-none" : "pointer-events-auto",
@@ -1844,7 +1847,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                     >
                       <Avatar className="w-12 h-12 rounded-xl" key={currentShort.avatar || currentShort.id}>
                         <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                        <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                        <AvatarFallback data-keep-dark className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                       </Avatar>
                     </button>
                     <button
@@ -1871,6 +1874,8 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                 {/* Action bar — horizontal row evenly spread across the bottom,
                     matching the feed post card action bar (like at far right). */}
                 <div
+                  data-shorts-actions
+                  data-on-media
                   className={cn("mt-3 px-4 flex items-center justify-between pointer-events-auto", (showComments || chromeHidden) && "pointer-events-none")}
                   onTouchStart={handleOverlayGestureTouchStart}
                   onTouchEnd={handleOverlayGestureTouchEnd}
@@ -2057,7 +2062,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
               >
                 <Avatar className="w-10 h-10 lg:w-12 lg:h-12 border-2 border-white/20 flex-shrink-0 rounded-xl" key={currentShort.avatar || currentShort.id}>
                   <AvatarImage src={currentShort.avatar} alt={currentShort.creatorUsername || currentShort.username} className="rounded-xl" />
-                  <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
+                  <AvatarFallback data-keep-dark className="bg-zinc-700 text-white font-medium rounded-xl">{(currentShort.creatorUsername || currentShort.username)[0]?.toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col flex-1 min-w-0">
                   {currentShort.displayName && (
