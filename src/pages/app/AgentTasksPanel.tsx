@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSurfaceDraft } from '@/hooks/use-surface-draft';
 import { agentTaskRequest, type AgentTask, type AgentTaskAction } from '@/lib/agent-tasks';
+import { WINDOW_ACTIONS, WINDOW_PRESETS, windowPrompt, windowRange, type WindowAction, type WindowPreset } from '@/lib/agent-task-window';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
-const actionNames: Record<string, string> = { dehub_follow: 'agents.tasks.follow', dehub_vote: 'agents.tasks.reaction', dehub_post_create: 'agents.tasks.post', dehub_comment: 'agents.tasks.comment', dehub_update_profile: 'agents.tasks.profile' };
+const actionNames: Record<string, string> = { dehub_follow: 'agents.tasks.follow', dehub_vote: 'agents.tasks.reaction', dehub_post_create: 'agents.tasks.post', dehub_comment: 'agents.tasks.comment', dehub_update_profile: 'agents.tasks.profile', dehub_view: 'agents.tasks.window.view' };
 
 function postActionUrl(post?: { token_id?: string | number; url?: string }) {
   const id = String(post?.token_id ?? '');
@@ -45,16 +47,24 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
   const [swarm, setSwarm] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const [requestId, setRequestId] = useState(() => crypto.randomUUID());
+  const [windowMode, setWindowMode] = useState(false);
+  const [preset, setPreset] = useState<WindowPreset>('last24h');
+  const [custom, setCustom] = useState({ from: '', to: '' });
+  const [windowActions, setWindowActions] = useState<WindowAction[]>(['view']);
+  const [replyStyle, setReplyStyle] = useState('');
+  const range = windowRange(preset, custom);
+  const windowReady = !!range && windowActions.length > 0 && (!windowActions.includes('reply') || !!replyStyle.trim());
+  const changed = () => { setRequestId(crypto.randomUUID()); create.reset(); };
   const active = agents.filter(agent => agent.is_active);
   const agentId = active.some(agent => agent.id === chosen) ? chosen : active[0]?.id;
   const swarmIds = active.filter(agent => selected.includes(agent.id)).map(agent => agent.id);
   const tasks = useQuery({ queryKey: ['agent-tasks', wallet],
     queryFn: () => agentTaskRequest<{ tasks: AgentTask[] }>(wallet, { operation: 'list' }) });
   const refresh = () => { client.invalidateQueries({ queryKey: ['agent-tasks', wallet] }); client.invalidateQueries({ queryKey: ['agent-task-history', wallet] }); };
-  const create = useMutation({ mutationFn: () => agentTaskRequest(wallet, { operation: swarm ? 'create_swarm' : 'create',
+  const create = useMutation({ mutationFn: (text: string) => agentTaskRequest(wallet, { operation: swarm ? 'create_swarm' : 'create',
     ...(swarm ? { agent_ids: swarmIds } : { agent_id: agentId }),
-    prompt, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
-    onSuccess: () => { setPrompt.complete(prompt, ''); setRequestId(crypto.randomUUID()); refresh(); toast.success(t('agents.tasks.queued')); },
+    prompt: text, request_id: requestId, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+    onSuccess: (_data, text) => { if (text === prompt) setPrompt.complete(prompt, ''); setRequestId(crypto.randomUUID()); refresh(); toast.success(t('agents.tasks.queued')); },
     onError: (error: Error) => toast.error(error.message),
   });
   const control = useMutation({ mutationFn: ({ id, operation }: { id: string; operation: string }) => agentTaskRequest(wallet, { operation, task_id: id }), onSuccess: refresh, onError: (error: Error) => toast.error(error.message) });
@@ -88,8 +98,29 @@ export function AgentTasksPanel({ wallet, agents }: { wallet: string; agents: { 
           <SelectContent>{active.map(agent => <SelectItem key={agent.id} value={agent.id}>@{agent.name}</SelectItem>)}</SelectContent>
         </Select>
       </div>}
-      <Textarea value={prompt} disabled={create.isPending} maxLength={4000} onChange={event => { setPrompt(event.target.value); setRequestId(crypto.randomUUID()); create.reset(); }} aria-label={t('agents.tasks.instructions')} placeholder={t('agents.tasks.examples')} data-theme-control-surface className="min-h-36 rounded-xl border-white/25 bg-black/35 p-4 text-base leading-relaxed text-white placeholder:text-white/65 focus-visible:ring-2 focus-visible:ring-white/50" />
-      <div className="flex flex-wrap items-center gap-3"><Button disabled={!prompt.trim() || create.isPending || (swarm && swarmIds.length < 2)} onClick={() => create.mutate()}>{create.isPending ? t('agents.tasks.preparing') : swarm ? t('agents.tasks.runSwarm') : t('agents.tasks.run')}</Button><p className="min-w-0 flex-1 text-sm leading-relaxed text-white/75">{t('agents.tasks.limits')}</p></div>
+      <div className="flex flex-wrap gap-2" role="group" aria-label={t('agents.tasks.window.mode')}>
+        <Button type="button" size="sm" variant={!windowMode ? 'default' : 'outline'} onClick={() => { setWindowMode(false); changed(); }}>{t('agents.tasks.window.write')}</Button>
+        <Button type="button" size="sm" variant={windowMode ? 'default' : 'outline'} onClick={() => { setWindowMode(true); changed(); }}>{t('agents.tasks.window.title')}</Button>
+      </div>
+      {windowMode ? <div className="space-y-4 rounded-xl border border-white/15 bg-black/20 p-4">
+        <div className="space-y-2"><p className="text-sm font-medium text-white/85">{t('agents.tasks.window.period')}</p>
+          <div className="flex flex-wrap gap-2">{WINDOW_PRESETS.map(value => <button key={value} type="button" aria-pressed={preset === value} disabled={create.isPending}
+            onClick={() => { setPreset(value); changed(); }} className={`rounded-full border px-3 py-2 text-sm transition-colors ${preset === value ? 'border-white/70 bg-white/20 text-white' : 'border-white/20 bg-black/20 text-white/70'}`}>{t(`agents.tasks.window.${value}`)}</button>)}</div>
+          {preset === 'custom' && <div className="grid gap-3 sm:grid-cols-2">
+            <label className="space-y-1 text-sm text-white/80">{t('agents.tasks.window.from')}<Input type="datetime-local" value={custom.from} disabled={create.isPending} onChange={event => { setCustom(value => ({ ...value, from: event.target.value })); changed(); }} data-theme-control-surface className="border-white/20 bg-black/25 text-white" /></label>
+            <label className="space-y-1 text-sm text-white/80">{t('agents.tasks.window.to')}<Input type="datetime-local" value={custom.to} disabled={create.isPending} onChange={event => { setCustom(value => ({ ...value, to: event.target.value })); changed(); }} data-theme-control-surface className="border-white/20 bg-black/25 text-white" /></label>
+          </div>}
+          {preset === 'custom' && custom.from && custom.to && !range && <p role="alert" className="text-sm">{t('agents.tasks.window.invalid')}</p>}
+        </div>
+        <div className="space-y-2"><p className="text-sm font-medium text-white/85">{t('agents.tasks.window.actions')}</p>
+          <div className="flex flex-wrap gap-2">{WINDOW_ACTIONS.map(value => <button key={value} type="button" aria-pressed={windowActions.includes(value)} disabled={create.isPending}
+            onClick={() => { setWindowActions(list => list.includes(value) ? list.filter(item => item !== value) : [...list, value]); changed(); }}
+            className={`rounded-full border px-3 py-2 text-sm transition-colors ${windowActions.includes(value) ? 'border-white/70 bg-white/20 text-white' : 'border-white/20 bg-black/20 text-white/70'}`}>{t(`agents.tasks.window.${value}`)}</button>)}</div>
+        </div>
+        {windowActions.includes('reply') && <Textarea value={replyStyle} disabled={create.isPending} maxLength={500} onChange={event => { setReplyStyle(event.target.value); changed(); }} aria-label={t('agents.tasks.window.replyStyle')} placeholder={t('agents.tasks.window.replyPlaceholder')} data-theme-control-surface className="min-h-20 rounded-xl border-white/25 bg-black/35 p-3 text-base text-white placeholder:text-white/65" />}
+        <p className="text-sm leading-relaxed text-white/70">{t('agents.tasks.window.help')}</p>
+      </div> : <Textarea value={prompt} disabled={create.isPending} maxLength={4000} onChange={event => { setPrompt(event.target.value); setRequestId(crypto.randomUUID()); create.reset(); }} aria-label={t('agents.tasks.instructions')} placeholder={t('agents.tasks.examples')} data-theme-control-surface className="min-h-36 rounded-xl border-white/25 bg-black/35 p-4 text-base leading-relaxed text-white placeholder:text-white/65 focus-visible:ring-2 focus-visible:ring-white/50" />}
+      <div className="flex flex-wrap items-center gap-3"><Button disabled={(windowMode ? !windowReady : !prompt.trim()) || create.isPending || (swarm && swarmIds.length < 2)} onClick={() => create.mutate(windowMode && range ? windowPrompt(range, windowActions, replyStyle) : prompt)}>{create.isPending ? t('agents.tasks.preparing') : swarm ? t('agents.tasks.runSwarm') : t('agents.tasks.run')}</Button><p className="min-w-0 flex-1 text-sm leading-relaxed text-white/75">{t('agents.tasks.limits')}</p></div>
     </> : <p className="text-sm text-white/60">{t('agents.tasks.createFirst')}</p>}
     {create.error && <p role="alert" className="text-sm break-words">{create.error.message}</p>}
     {control.error && <p role="alert" className="text-sm break-words">{control.error.message}</p>}
