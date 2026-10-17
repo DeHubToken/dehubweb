@@ -47,16 +47,16 @@ export function useAutoplayPausePrompt(videoId: string) {
       try { lastPromptAt = Number(localStorage.getItem(AUTOPLAY_PROMPT_STORAGE_KEY)) || 0; } catch { /* session fallback */ }
       if (!tracker.recordPause(videoId, now, lastPromptAt)) return;
       try { localStorage.setItem(AUTOPLAY_PROMPT_STORAGE_KEY, String(now)); } catch { /* session fallback */ }
-      toast.message(i18n.t('settings.autoplayPausePrompt'), {
+      toast.message(i18n.t('settings.autoplayPausePrompt', 'Auto play setting'), {
         id: TOAST_ID,
         duration: Infinity,
         closeButton: true,
         description: (
           <label className="flex items-center justify-between gap-6 pt-2">
-            <span>{i18n.t('settings.autoPlay')}</span>
+            <span>{i18n.t('settings.autoPlay', 'Auto-play Videos')}</span>
             <Suspense fallback={<span className="h-6 w-11" />}><Switch
               checked
-              aria-label={i18n.t('settings.autoPlay')}
+              aria-label={i18n.t('settings.autoPlay', 'Auto-play Videos')}
               onCheckedChange={(enabled) => {
                 setAutoplayEnabled(enabled);
                 toast.dismiss(TOAST_ID);
