@@ -339,7 +339,7 @@ function grade(el: CanvasImageSource, sx: number, sy: number, sw: number, sh: nu
   g.drawImage(el, sx, sy, sw, sh, 0, 0, cw, ch);
   if (needsPhotoTone(e)) {
     const image = g.getImageData(0, 0, cw, ch);
-    applyPhotoTone(image.data, e, true);
+    applyPhotoTone(image.data, e, true, cw, ch);
     g.putImageData(image, 0, 0);
   }
   const fillBlend = (colour: string, alpha: number, mode: GlobalCompositeOperation) => {
