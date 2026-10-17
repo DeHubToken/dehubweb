@@ -61,6 +61,11 @@
   display: none !important;
 }
 
+/* Wide photos in Shorts letterbox on plain white in light themes (black otherwise). */
+:is(html[data-theme="light"], html[data-system-tone="light"]) [data-shorts-photo-slide] {
+  background-color: #fff;
+}
+
 /* 
 ================================================================================
 DEHUB DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS

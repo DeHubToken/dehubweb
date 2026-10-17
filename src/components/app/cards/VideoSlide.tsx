@@ -223,6 +223,8 @@ export const VideoSlide = memo(function VideoSlide({
 
   const slideId = useId();
   const fitWhole = letterbox || videoAspect !== 'portrait';
+  // Photo slides sit on a plain theme backdrop: tall photos fill the screen, wide ones letterbox.
+  const isPhotoSlide = !!short.imageUrls?.length;
   const { attachSlot } = useHandoffVideo({
     videoRef,
     handoffKey: handoffKey ?? `shorts:${slideId}`,
@@ -436,7 +438,7 @@ export const VideoSlide = memo(function VideoSlide({
   // each slide, and a transformed ancestor makes `fixed` resolve against that
   // wrapper rather than the viewport.
   return (
-    <div data-keep-dark className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
+    <div data-keep-dark data-shorts-photo-slide={isPhotoSlide || undefined} className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass fill behind letterboxed / non-portrait videos.
           One filtered layer plus a plain tint. It used to be a blurred layer
           with a second backdrop-blur pass stacked on it — blurring what was
@@ -444,7 +446,7 @@ export const VideoSlide = memo(function VideoSlide({
           on every frame the player resized (comments opening/closing) or
           moved, which is where those transitions lost frames. The two blur
           and saturate passes are folded into the one filter. */}
-      {fitWhole && thumbnail && (
+      {fitWhole && thumbnail && !isPhotoSlide && (
         <>
           <div
             className="absolute inset-0 z-0"
