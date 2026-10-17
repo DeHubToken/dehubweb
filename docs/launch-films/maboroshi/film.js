@@ -6,6 +6,8 @@ const W = +(Q.get('w') || 1920), H = +(Q.get('h') || 1080), VERT = H > W;
 const BPM = 140, B = 60 / BPM, bt = b => b * B;
 const END_B = 68, TOTAL = bt(END_B) + 1.4;
 const stage = document.getElementById('stage');
+const STY = +(Q.get('style') || 0); // text style: 0 chrome, 1 clean white, 2 sage, 3 outline, 4 sticker, 5 mono
+document.body.classList.add('sty' + STY);
 stage.style.width = W + 'px'; stage.style.height = H + 'px';
 const ACC = '#d4e0c8', ACC_RGB = '212,224,200';
 
@@ -34,7 +36,7 @@ const txt = (e, s) => { if (e._tx !== s) { e.textContent = s; e._tx = s; } };
 const CHROME = 'linear-gradient(180deg,#ffffff 0%,#f1f1f1 30%,#9a9a9a 49%,#5e5e5e 51%,#e9e9e9 66%,#bdbdbd 84%,#ffffff 100%)';
 const SHINE = 'linear-gradient(100deg, rgba(255,255,255,0) 44%, rgba(255,255,255,.98) 50%, rgba(255,255,255,0) 56%)';
 function shineInit(e) { e.style.backgroundImage = SHINE + ',' + CHROME; e.style.backgroundSize = '320% 100%, 100% 100%'; e.style.backgroundRepeat = 'no-repeat'; e.style.backgroundPosition = '130% 0, 0 0'; }
-function shine(e, p) { const v = p <= 0 || p >= 1 ? 130 : lerp(115, -15, p); const s = v.toFixed(1) + '% 0, 0 0'; if (e._sh !== s) { e.style.backgroundPosition = s; e._sh = s; } }
+function shine(e, p) { if (STY) return; const v = p <= 0 || p >= 1 ? 130 : lerp(115, -15, p); const s = v.toFixed(1) + '% 0, 0 0'; if (e._sh !== s) { e.style.backgroundPosition = s; e._sh = s; } }
 const ico = (n, size = 16, sw = 2, style = '') => `<svg class="i" width="${size}" height="${size}" viewBox="0 0 24 24" stroke-width="${sw}" style="${style}">${ICONS[n]}</svg>`;
 function cv(w, h, parent, css = '') { const c = mk('canvas', 'ab', `width:${w}px;height:${h}px;${css}`, parent); c.width = w; c.height = h; return c; }
 function ocv(w, h) { const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; }
@@ -533,10 +535,10 @@ function drawOutro(ctx, width, height, time, label) {
 function s7Update(b) {
   const on = b >= 60;
   vis(s7, on); if (!on) return;
-  const ty = drawOutro(cvEnd.getContext('2d'), W, H, bt(b) - bt(60), 'dehub.io/creator/maboroshi');
+  const ty = drawOutro(cvEnd.getContext('2d'), W, H, bt(b) - bt(60), 'dehub.io');
   endLine.style.top = (ty + Math.min(W, H) * .03) + 'px';
   const p = P(b, 63.2, 64);
-  op(endLine, oc(p) * .9);
+  op(endLine, 0); void p; // end card is just the logo + dehub.io
   tf(endLine, `translateY(${(1 - oc(p)) * 12}px)`);
 }
 // ======================================================================= global fx
