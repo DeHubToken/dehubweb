@@ -296,6 +296,7 @@
     "compactMode": "Khidsr rezhim",
     "compactModeDesc": "Krchatsnel harakavoroume aveli shat bovalandakoutyunn hamar",
     "autoPlay": "Inqnagortarkhoom",
+    "autoplayPausePrompt": "Ավտոմատ նվագարկման կարգավորում",
     "autoPlayDesc": "Inqnagortarkhel tesaholvakere inqnagortsab",
     "autoPlayMuted": "Ավտոնվագարկումը սկսել առանց ձայնի",
     "autoPlayMutedDesc": "Ինքնուրույն նվագարկվող տեսանյութերը միշտ սկսվում են անջատված ձայնով",
