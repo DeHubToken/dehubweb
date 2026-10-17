@@ -57,50 +57,29 @@ export function thumbUrl(url: string, width = 480): string {
 }
 
 /**
- * The hero's backdrop: a tilted wall of recent community stills, dimmed and
- * faded into the page. Decorative, so it is hidden from assistive tech and
- * simply stays empty if the gallery cannot load.
+ * The hero's backdrop: the studio's own 3D paint pad (each theme's version of
+ * the 'paint' icon, chrome on System), sat fully inside the hero with a soft
+ * glow behind it, dimmed and faded into the page. Decorative, so it is hidden
+ * from assistive tech.
  */
 export function CreatorHeroWall() {
-  const [items, setItems] = useState<GalleryItem[]>([]);
-  useEffect(() => {
-    let cancelled = false;
-    void loadCreatorGallery().then((all) => {
-      if (!cancelled) setItems(all.filter((i) => i.image_url).slice(0, 15));
-    });
-    return () => { cancelled = true; };
-  }, []);
-
   return (
     <div
       aria-hidden
+      data-creator-hero-art
       className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[600px] overflow-hidden sm:h-[640px]"
       // Faded out by a mask rather than painted over, so it melts into
       // whatever each theme draws behind the page.
-      style={{ WebkitMaskImage: 'linear-gradient(to bottom, #000 45%, transparent)', maskImage: 'linear-gradient(to bottom, #000 45%, transparent)' }}
+      style={{ WebkitMaskImage: 'linear-gradient(to bottom, #000 55%, transparent)', maskImage: 'linear-gradient(to bottom, #000 55%, transparent)' }}
     >
-      {items.length > 0 && (
-        <div className="absolute -inset-x-16 -top-10 grid rotate-[-4deg] grid-cols-3 gap-3 opacity-50 sm:grid-cols-5">
-          {items.map((item, i) => (
-            <div
-              key={item.id}
-              className={cn('aspect-[3/4] overflow-hidden rounded-2xl bg-white/5', i % 2 === 1 && '-translate-y-10', i >= 9 && 'hidden sm:block')}
-            >
-              <img
-                src={thumbUrl(item.image_url!, 320)}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                fetchPriority="low"
-                className="h-full w-full object-cover"
-                draggable={false}
-              />
-            </div>
-          ))}
-        </div>
-      )}
-      {/* Dims the wall so the headline and composer stay readable. */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 35%, rgba(9,10,11,0.45), rgba(9,10,11,0.8) 70%)' }} />
+      {/* Sized and placed so the whole pad always stays in frame: centred
+          behind the headline on phones, off to the right on wider screens. */}
+      <div className="absolute left-1/2 top-[56px] w-[210px] -translate-x-1/2 sm:left-auto sm:right-[7%] sm:top-[84px] sm:w-[240px] sm:translate-x-0 lg:w-[290px]">
+        <div className="absolute inset-[12%] rounded-full blur-3xl" style={{ background: 'var(--cr-glow, rgba(255,255,255,0.35))', opacity: 0.45 }} />
+        <ThemedIcon icon="paint" className="relative aspect-square w-full rotate-[-10deg] object-contain opacity-70" draggable={false} />
+      </div>
+      {/* Dims the art so the headline and composer stay readable. */}
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 35%, rgba(9,10,11,0.35), rgba(9,10,11,0.8) 75%)' }} />
     </div>
   );
 }
