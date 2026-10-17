@@ -1,4 +1,5 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
+import { LiveRipple } from '@/components/app/LiveRipple';
 /**
  * Card Header Component
  * =====================
@@ -156,10 +157,12 @@ export function CardHeader({
           aria-label={t('feed.viewProfile', { name: username })}
           className={`shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
         >
-          <Avatar className="w-9 h-9 rounded-md">
-            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
-            <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
-          </Avatar>
+          <LiveRipple ids={[creatorId, creatorUsername, handle]} className="rounded-md">
+            <Avatar className="w-9 h-9 rounded-md">
+              {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
+              <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </LiveRipple>
         </button>
       </ProfileHoverCard>
       {/* Only the name and the @handle open the profile. The blank space

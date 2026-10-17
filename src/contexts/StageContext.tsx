@@ -294,6 +294,15 @@ function subscribeLiveSpaces(cb: () => void) {
  * Ordering only. Nothing is added to or removed from the list, so a client
  * that cannot reach the endpoint shows exactly what it showed before.
  */
+/**
+ * The live stages as the realtime channel last reported them, without the
+ * Front Row reordering. For callers that only ask "is this person on a stage"
+ * and should not pull in the Front Row query to answer it.
+ */
+export function useLiveSpacesUnordered(): AudioSpace[] {
+  return useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
+}
+
 export function useLiveSpaces(): AudioSpace[] {
   const spaces = useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
   const { data: frontRow } = useFrontRow();
