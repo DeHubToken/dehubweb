@@ -210,7 +210,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
   const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   return (
-    <div className="px-1 pb-1 sm:px-2 sm:pb-2">
+    <div data-grid-feed className="px-2 pb-2 sm:px-3 sm:pb-3">
       <div 
         className={cn(
           "grid gap-0.5 sm:gap-1",
