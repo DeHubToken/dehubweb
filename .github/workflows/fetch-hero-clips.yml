@@ -1,0 +1,29 @@
+name: fetch hero clips
+on:
+  push:
+    branches: [fetch-hero-clips]
+permissions:
+  contents: write
+jobs:
+  f:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get install -y ffmpeg >/dev/null
+          mkdir -p hero-raw
+          python3 - <<'PY'
+          import json, subprocess
+          f = json.load(open('public/creator-clips/featured.json'))['clips']
+          skip = ('1029c09b00e3f4e20e1c','f77ce78d','60119f5b','4e0805f3','ad2cb876','f0db06b6')
+          for c in f:
+              if c['id'].startswith(skip): continue
+              srcs = [('o', c['url'])] + [(f'v{n}', v['url']) for n, v in enumerate(c.get('variants', []))]
+              for s, u in srcs:
+                  out = f"hero-raw/{c['id'][:10]}_{s}.mp4"
+                  subprocess.run(['bash','-c',f"curl -sSfL --max-time 120 -o /tmp/x.mp4 '{u}' && ffmpeg -v error -y -i /tmp/x.mp4 -t 8 -an -vf \"scale='if(gt(iw,ih),960,-2)':'if(gt(iw,ih),-2,960)'\" -c:v libx264 -crf 24 {out}"])
+          json.dump([[c['id'][:10], c['name'], len(c.get('variants',[]))] for c in f], open('hero-raw/index.json','w'))
+          PY
+          ls -la hero-raw
+          git config user.name maldoteth && git config user.email 116843671+maldoteth@users.noreply.github.com
+          git add hero-raw && git commit -m "clips" && git push
