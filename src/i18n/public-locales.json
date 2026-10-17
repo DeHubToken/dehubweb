@@ -1,5 +1,5 @@
 {
-  "version": "f1a6b17c8812a27f",
+  "version": "32b9575777db1775",
   "routes": {
     "/": [
       "ar",
@@ -1087,6 +1087,13 @@
       "tr"
     ],
     "/guides/q3-development-overview": [
+      "ar",
+      "es",
+      "fr",
+      "nl",
+      "tr"
+    ],
+    "/guides/q4-development-overview": [
       "ar",
       "es",
       "fr",
