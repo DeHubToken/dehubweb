@@ -169,13 +169,13 @@ html[data-theme] body [data-video-control-strip] [data-video-cc] {
   [data-video-control-strip] [data-video-time] { display: none; }
 }
 
-/* The strip is below the picture, so it follows the page palette. */
-html:is([data-theme="light"], [data-system-tone="light"]) [data-video-control-strip]:not(#_) {
-  background: var(--paper) !important;
-}
-html:is([data-theme="light"], [data-system-tone="light"]) [data-video-control-strip]:not(#_):not(#_):not(#_):not(#_):not(#_) * {
-  color: var(--ink) !important;
-}
-html:is([data-theme="light"], [data-system-tone="light"]) [data-video-control-strip]:not(#_) [data-scrubber-line] {
-  filter: invert(1);
+/* Viewer actions float over the picture in every theme. */
+[data-shorts-actions]:not(#_),
+[data-shorts-actions]:not(#_) > button,
+[data-shorts-actions]:not(#_) > span > button {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
