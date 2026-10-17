@@ -1,3 +1,4 @@
+import { SvgPathImportControls } from "./SvgPathImportControls";
 import { SvgArtworkDownload } from "./SvgArtworkDownload";
 import { vectorSymbolSvgDocument } from "@/lib/editor/vectorSymbolSvgDocument";
 import { useEditorLibrary } from "@/lib/editor/useEditorLibrary";
@@ -25,6 +26,7 @@ export function VectorSymbolsPanel() {
   const index = Math.min(page, Math.max(0, Math.ceil(matches.length / 24) - 1)), chosen = VECTOR_SYMBOLS.find(item => item.id === symbol);
   const button = "min-h-9 rounded-lg border border-white/20 px-3 text-xs text-white/75 disabled:opacity-35";
   return <div className="space-y-3">
+    <SvgPathImportControls />
     <ColourPickerButton projectId={useEditorStore.getState().projectId} onPick={setColour} />
     <input value={query} onChange={event => { setQuery(event.target.value); setPage(0); }} type="search" aria-label={t("editor.symbols.search", { defaultValue: "Search vector symbols" })} placeholder={t("editor.symbols.search", { defaultValue: "Search vector symbols" })} className="min-h-9 w-full rounded-lg border border-white/20 bg-white/5 px-3 text-sm text-white" />
     <div className="flex flex-wrap gap-2">{Object.entries(CATEGORY_NAMES).map(([value, label]) => <button key={value} type="button" aria-pressed={category === value} onClick={() => { setCategory(value); setPage(0); }} className={`${button} ${category === value ? "border-white bg-white/15" : ""}`}>{t(`editor.symbols.category.${value}`, { defaultValue: label })}</button>)}</div>
