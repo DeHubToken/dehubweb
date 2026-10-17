@@ -271,6 +271,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               key={tab}
               onClick={() => handleMainTabChange(tab)}
               aria-label={tabLabels[tab]}
+              title={tabLabels[tab]}
               aria-pressed={activeTab === tab}
               className={`relative flex-1 py-2.5 flex flex-col items-center justify-center transition-colors ${
                 activeTab === tab

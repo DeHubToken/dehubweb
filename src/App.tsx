@@ -941,6 +941,7 @@ const App = () => (
                       <ErrorBoundary fallback={null}>
                         <ThemedBackgrounds preview />
                       </ErrorBoundary>
+                      <NativeTitleTooltips />
                       <Suspense fallback={<PageLoader />}>
                         <StateGalleryPage />
                       </Suspense>

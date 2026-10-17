@@ -43,7 +43,7 @@ export function MinimizedAIChats({ onRestore }: MinimizedAIChatsProps) {
               className={`w-8 h-8 object-cover ${chat.type === 'dm' ? 'rounded-full' : 'rounded-lg'}`}
             />
             {/* Tooltip on hover */}
-            <div className="absolute right-14 bg-black/80 backdrop-blur-sm px-2 py-1 rounded-lg text-xs text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-w-[150px] truncate">
+            <div data-glass-tooltip className="absolute right-14 px-2 py-1 rounded-lg text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-w-[150px] truncate">
               {chat.title || _copy("copy.4390ee6449c2", { defaultValue: "{{value1}} chat", value1: chat.type })}
             </div>
           </motion.button>

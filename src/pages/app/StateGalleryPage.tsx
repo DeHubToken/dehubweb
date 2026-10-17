@@ -28,6 +28,9 @@ import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { STREAMER_BADGE_IDS, badgeMaterial, streamerBadgeSvg } from '@/lib/streamer-badge-art';
 import { LinkPreviews } from '@/features/post/components/LinkPreviews';
+import Trophy from '@/components/ui/cut-icons/leaderboard';
+import Star from '@/components/ui/cut-icons/new-members';
+import MessagesSquare from '@/components/ui/cut-icons/chat';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
@@ -141,6 +144,42 @@ const SAMPLE_REACTIONS: ReactionCounts = { like: 19, love: 4, hot: 2, lol: 1, di
  * the thumbs-up. One row as a stranger sees it, one as somebody who disliked
  * the post — the thumb wears their 👎, since there is no thumbs-down button.
  */
+/**
+ * Hover tooltips: every one is liquid glass (styles/glass-surfaces.css). The
+ * pinned labels sit over a bright stripe so the frost and tint floor show; the
+ * icon row below draws the live hover label, as the side panel tabs do.
+ */
+function TooltipsGallery() {
+  const { t: _copy } = _useCopy();
+  const tabs = [
+    { icon: Trophy, label: _copy("copy.d05e07b7c14e", { defaultValue: "Balance" }) },
+    { icon: Star, label: _copy("copy.18fdd549b2ed", { defaultValue: "New" }) },
+    { icon: MessagesSquare, label: _copy("copy.460b3a7da007", { defaultValue: "Chat" }) },
+  ];
+  return (
+    <section data-page-bento data-tooltips-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.1cfb0bd9a2d1", { defaultValue: "Tooltips" })}</h2>
+      <div
+        className="relative flex h-24 items-center justify-around overflow-hidden rounded-2xl"
+        style={{ backgroundImage: 'repeating-linear-gradient(115deg, #f43f5e 0 14px, #facc15 14px 28px, #22d3ee 28px 42px, #ffffff 42px 56px)' }}
+      >
+        {tabs.map(({ label }) => (
+          <span key={label} data-glass-tooltip className="rounded-md px-2 py-1 text-[11px] font-medium leading-tight">
+            {label}
+          </span>
+        ))}
+      </div>
+      <div data-tooltips-hover-row className="mt-3 flex">
+        {tabs.map(({ icon: Icon, label }) => (
+          <button key={label} type="button" title={label} aria-label={label} className="flex flex-1 items-center justify-center py-2.5 text-zinc-400 hover:text-white">
+            <Icon className="h-4 w-4" />
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ReactionsGallery() {
   const { t: _copy } = _useCopy();
   const rows = [
@@ -364,6 +403,7 @@ export default function StateGalleryPage() {
           </div>
         </section>
 
+        <TooltipsGallery />
         <ReactionsGallery />
 
         <ArticleGallery onAction={press} />
