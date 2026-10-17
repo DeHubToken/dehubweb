@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { exportFilename } from "@/lib/editor/exportName";
-export function TextArtworkDownload({ getContent, disabled = false, title, label, hint, suffix = "", extension, mime }: { getContent: (signal: AbortSignal) => string | Promise<string>; disabled?: boolean; title: string; label: string; hint: string; suffix?: string; extension: "svg" | "vcf"; mime: string }) {
+export function TextArtworkDownload({ getContent, disabled = false, title, label, hint, suffix = "", extension, mime }: { getContent: (signal: AbortSignal) => string | Promise<string>; disabled?: boolean; title: string; label: string; hint: string; suffix?: string; extension: "svg" | "vcf" | "ics"; mime: string }) {
   const [error, setError] = useState(""), [busy, setBusy] = useState(false), controller = useRef<AbortController | null>(null), mounted = useRef(true), working = useRef(false);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; controller.current?.abort(); }; }, []);
   const download = async () => {
