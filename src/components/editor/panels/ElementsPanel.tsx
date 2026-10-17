@@ -1,3 +1,5 @@
+import { PenControls } from "../PenControls";
+import type { PenSettings } from "@/lib/editor/freehand";
 /**
  * Elements — vector shapes. Click one to drop it on the page as a new layer at
  * the playhead; it is then moved, resized and styled like any other layer.
@@ -5,16 +7,18 @@
 import { useTranslation } from 'react-i18next';
 import PenLine from "@/components/ui/cut-icons/edit";
 
-import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { SHAPE_KINDS, type ShapeKind } from '@/lib/editor/types';
 import { useEditorStore } from '@/store/editorStore';
 import { PanelHeading } from './DesignPanel';
+import { shapePolygon, SHAPE_NAMES } from '@/lib/editor/shapeGeometry';
 
 /** Preview glyph for each shape, drawn in a 40×40 box. */
 function ShapeIcon({ shape }: { shape: ShapeKind }) {
   const common = { fill: 'currentColor', stroke: 'none' };
+  const polygon = shapePolygon(shape, 28, 28);
+  if (polygon) return <polygon points={polygon.map(([x, y]) => `${x + 20},${y + 20}`).join(' ')} {...common} />;
   switch (shape) {
     case 'rect':
       return <rect x="6" y="9" width="28" height="22" rx="3" {...common} />;
@@ -45,17 +49,10 @@ export function ElementsPanel() {
   const addShapeClip = useEditorStore((s) => s.addShapeClip);
   const draw = useEditorUiStore((s) => s.draw);
   const setDraw = useEditorUiStore((s) => s.setDraw);
-  const pen = draw ?? { color: '#ffffff', width: 10 };
-  const names: Record<ShapeKind, string> = {
-    rect: t('editor.shape.rect'),
-    ellipse: t('editor.shape.ellipse'),
-    triangle: t('editor.shape.triangle'),
-    star: t('editor.shape.star'),
-    heart: t('editor.shape.heart'),
-    hexagon: t('editor.shape.hexagon'),
-    line: t('editor.shape.line'),
-    arrow: t('editor.shape.arrow'),
-  };
+  const lastPen = useEditorUiStore(s => s.lastPen);
+  const pen = draw ?? lastPen;
+  const updatePen = (value: PenSettings | null) => { useEditorStore.getState().setIsPlaying(false); setDraw(value); };
+  const names = Object.fromEntries(SHAPE_KINDS.map(shape => [shape, t(`editor.shape.${shape}`, { defaultValue: SHAPE_NAMES[shape] })])) as Record<ShapeKind, string>;
 
   return (
     <div className="h-full overflow-y-auto p-3">
@@ -86,7 +83,7 @@ export function ElementsPanel() {
         <button
           type="button"
           aria-pressed={!!draw}
-          onClick={() => setDraw(draw ? null : pen)}
+          onClick={() => updatePen(draw ? null : pen)}
           className={cn(
             'flex h-9 w-full items-center justify-center gap-2 rounded-lg text-[12px] font-semibold transition',
             draw ? 'bg-white text-black' : 'border border-white/20 text-white hover:bg-white/10',
@@ -94,19 +91,7 @@ export function ElementsPanel() {
         >
           <PenLine className="h-4 w-4" /> {draw ? t('editor.draw.stop') : t('editor.draw.start')}
         </button>
-        <div className="grid grid-cols-[auto_1fr] items-center gap-3">
-          <input
-            type="color"
-            value={pen.color}
-            aria-label={t('editor.draw.colour')}
-            onChange={(e) => setDraw({ ...pen, color: e.target.value })}
-            className="h-8 w-10 cursor-pointer rounded-md border border-white/10 bg-white/5"
-          />
-          <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-wide text-white/40">{t('editor.draw.width', { value: pen.width })}</p>
-            <Slider value={[pen.width]} min={2} max={60} step={1} onValueChange={(v) => setDraw({ ...pen, width: v[0] ?? pen.width })} />
-          </div>
-        </div>
+        <PenControls value={pen} onChange={updatePen} />
         <p className="text-[10px] leading-relaxed text-white/40">{t('editor.draw.hint')}</p>
       </div>
     </div>

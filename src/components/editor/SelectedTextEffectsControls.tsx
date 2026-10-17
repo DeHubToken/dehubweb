@@ -1,0 +1,7 @@
+import { useTranslation } from "react-i18next";
+import { matchesTextEffect, TEXT_EFFECTS, TEXT_EFFECT_NAMES, type TextEffect } from "@/lib/editor/textEffects";
+import type { TextClip } from "@/lib/editor/types";
+export function SelectedTextEffectsControls({ clips, disabled, onApply }: { clips: TextClip[]; disabled: boolean; onApply: (operation: { kind: "effect"; value: TextEffect }) => void }) {
+  const { t } = useTranslation();
+  return <details className="rounded-lg border border-white/10 p-3"><summary className="cursor-pointer text-xs font-medium text-white/75">{t("editor.textSelection.effects", { defaultValue: "Text effects for selection" })}</summary><div className="mt-3 space-y-2"><div className="grid grid-cols-3 gap-2">{TEXT_EFFECTS.map(effect => { const active = clips.length > 0 && clips.every(clip => matchesTextEffect(clip, effect)); return <button type="button" key={effect} aria-pressed={active} disabled={disabled} onClick={() => onApply({ kind: "effect", value: effect })} className={`min-h-10 rounded-lg border px-2 text-xs text-white/75 disabled:opacity-35 ${active ? "border-cyan-300 bg-cyan-300/10" : "border-white/20"}`}>{t(`editor.textEffects.${effect}`, { defaultValue: TEXT_EFFECT_NAMES[effect] })}</button>; })}</div><p className="text-[10px] text-white/45">{t("editor.textSelection.effectsHint", { defaultValue: "Replaces shadow, outline, echo and label background while keeping fonts, wording, colour and placement." })}</p></div></details>;
+}

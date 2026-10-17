@@ -270,7 +270,7 @@ function shapePatch(op: AgentOp): Partial<ShapeClip> {
   if (stroke) p.stroke = { color: stroke, width: clamp(num(op.strokeWidth) ?? 6, 0, 80) };
   const r = num(op.radius);
   if (r !== undefined) p.radius = clamp(r, 0, 540);
-  if (SHAPE_KINDS.includes(op.shape as ShapeKind)) p.shape = op.shape as ShapeKind;
+  if (SHAPE_KINDS.includes(op.shape as ShapeKind)) { p.shape = op.shape as ShapeKind; p.symbol = undefined; if (op.shape !== "line") p.connector = undefined; }
   return p;
 }
 
@@ -278,10 +278,10 @@ function effectsPatch(op: AgentOp, current: ClipEffects | undefined): ClipEffect
   let next: ClipEffects | undefined = current ? { ...current } : undefined;
   const preset = str(op.preset);
   if (preset) next = preset === "none" ? undefined : applyFilterPreset(preset) ?? next;
-  const fields: [keyof ClipEffects, number, number][] = [
+  const fields: [Exclude<keyof ClipEffects, "duotone">, number, number][] = [
     ["brightness", 0, 2], ["contrast", 0, 2], ["saturation", 0, 2], ["blur", 0, 20],
     ["grayscale", 0, 1], ["sepia", 0, 1], ["invert", 0, 1], ["hueRotate", 0, 360],
-    ["warmth", -1, 1], ["tint", -1, 1], ["vignette", 0, 1],
+    ["sharpen", 0, 1], ["grain", 0, 1], ["warmth", -1, 1], ["tint", -1, 1], ["vignette", 0, 1], ["vibrance", -1, 1], ["highlights", -1, 1], ["shadows", -1, 1], ["fade", 0, 1],
   ];
   for (const [key, lo, hi] of fields) {
     const v = num(op[key]);

@@ -1,0 +1,10 @@
+import { tableFromBrandPalette } from "@/lib/editor/tableBrandPalette";
+import type { TableData } from "@/lib/editor/dataVisuals";
+import { SavePalettePreset } from "./SavePalettePreset";
+import { useTranslation } from "react-i18next";
+import { useBrandPresets } from "@/lib/editor/useBrandPresets";
+export function TableBrandPalettes({ value, onChange }: { value: Omit<TableData, "rows">; onChange: (value: Omit<TableData, "rows">) => void }) {
+  const { t } = useTranslation(), library = useBrandPresets(), palettes = library.presets.filter(preset => preset.styles.colors.length > 0);
+  const colours = [...new Set([value.headerColour, value.headerTextColour, value.cellColour, value.textColour, value.borderColour, ...(value.stripeColour ? [value.stripeColour] : [])])];
+  return <details className="rounded-lg border border-white/10 p-3"><summary className="cursor-pointer text-xs font-medium text-white/75">{t("editor.tables.brandPalettes", { defaultValue: "Saved header colours and table palette" })}</summary><div className="mt-3 space-y-3"><div className="flex flex-wrap gap-2">{palettes.map(preset => <button type="button" key={preset.id} onClick={() => onChange(tableFromBrandPalette(value, preset.styles.colors))} className="flex min-h-9 items-center gap-2 rounded-lg border border-white/20 px-3 text-xs text-white/75"><span aria-hidden="true" className="flex overflow-hidden rounded">{preset.styles.colors.map((colour, index) => <span key={index} className="h-4 w-2" style={{ background: colour }} />)}</span>{preset.name}</button>)}</div>{!palettes.length && <p className="text-xs text-white/45">{t("editor.tables.noBrandPalettes", { defaultValue: "Save a colour palette in Brand styles to use it here." })}</p>}<p className="text-xs text-white/45">{t("editor.tables.brandPaletteHint", { defaultValue: "Uses the first saved palette colour for the header, with matching borders, subtle stripes and automatic black or white text. Body fills and custom cell styles stay in place. Save palette stores the current table colours." })}</p><SavePalettePreset colours={colours} /></div></details>;
+}

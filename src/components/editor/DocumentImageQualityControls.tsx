@@ -1,0 +1,6 @@
+import { useTranslation } from "react-i18next";
+import { DOCUMENT_IMAGE_PROFILES, type DocumentImageProfile } from "@/lib/editor/documentImageProfile";
+export function DocumentImageQualityControls({ value, onChange }: { value: DocumentImageProfile; onChange: (value: DocumentImageProfile) => void }) {
+  const { t } = useTranslation();
+  return <div className="space-y-2 rounded-lg border border-white/10 p-3"><p className="text-xs text-white/65">{t("editor.export.documentImageQuality", { defaultValue: "Page image detail" })}</p><div className="flex flex-wrap gap-2">{DOCUMENT_IMAGE_PROFILES.map(profile => <button key={profile.id} type="button" aria-pressed={value === profile.id} onClick={() => onChange(profile.id)} className={`min-h-9 rounded-lg border px-3 text-xs text-white/75 ${value === profile.id ? "border-cyan-300 bg-cyan-300/10" : "border-white/20"}`}>{t(`editor.export.documentProfile.${profile.id}`, { defaultValue: profile.label })}</button>)}</div><p className="text-[10px] text-white/45">{t("editor.export.documentImageHint", { defaultValue: "Higher detail keeps larger page images. Smaller files reduce image dimensions and JPEG quality. Page size and links are preserved." })}</p></div>;
+}

@@ -9,7 +9,8 @@
  *
  * Adapted from OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { EditorTopBar } from "@/components/editor/EditorTopBar";
 import { EditorRail, EditorPanelColumn } from "@/components/editor/EditorRail";
 import { Compositor } from "@/components/editor/Preview/Compositor";
@@ -22,14 +23,25 @@ import { GenerationWindow } from "@/components/editor/GenerationWindow";
 import { MobileBottomBar } from "@/components/editor/MobileBottomBar";
 import { useEditorStore } from "@/store/editorStore";
 import { useEditorUiStore } from "@/store/editorUiStore";
+import { DesignTools } from "@/components/editor/DesignTools";
 
 export default function EditorPage() {
+  const { pathname } = useLocation();
   useEffect(() => () => useEditorStore.getState().cancelPendingEdits(), []);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
   const inspectorOpen = useEditorUiStore((s) => s.inspectorOpen);
   const setInspectorOpen = useEditorUiStore((s) => s.setInspectorOpen);
   const setPanel = useEditorUiStore((s) => s.setPanel);
   const timelineOpen = useEditorUiStore((s) => s.timelineOpen);
+  const projectId = useEditorStore(s => s.projectId);
+  const needsMediaTimeline = useEditorStore(s => s.clips.some(c => c.kind === "video" || c.kind === "audio") && (s.settings.pages?.length ?? 1) < 2);
+  const previousTimeline = useRef<{ id: string; media: boolean } | null>(null);
+  useEffect(() => {
+    const previous = previousTimeline.current;
+    if (!previous || previous.id !== projectId || (!previous.media && needsMediaTimeline)) useEditorUiStore.getState().setTimelineOpen(needsMediaTimeline);
+    previousTimeline.current = { id: projectId, media: needsMediaTimeline };
+  }, [projectId, needsMediaTimeline]);
+  useEffect(() => { if (!pathname.startsWith("/editor")) useEditorUiStore.getState().setCanvasFocus(false); }, [pathname]);
 
   // The inspector is contextual: it earns a column only once a clip is
   // selected, which leaves the canvas as wide as possible the rest of the time.
@@ -59,6 +71,7 @@ export default function EditorPage() {
         <EditorPanelColumn />
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <DesignTools />
           <div className="flex min-h-0 min-w-0 flex-1">
             <div className="flex min-h-0 min-w-0 flex-1 flex-col">
               <Compositor />
@@ -82,7 +95,7 @@ export default function EditorPage() {
         </div>
       </div>
 
-      <ShortcutsLayer />
+      <ShortcutsLayer active={pathname.startsWith("/editor")} />
       <Autosave />
       <MediaLibraryLoader />
       <GenerationWindow />
