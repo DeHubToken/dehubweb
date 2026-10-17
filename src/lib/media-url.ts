@@ -92,6 +92,26 @@ const IMAGE_TRANSFORM_ORIGIN = 'https://dehub.io';
 // `anim=true` is threaded through, so both are passed through untouched.
 const NON_TRANSFORMABLE = /\.(svg|gif)(\?|$)/i;
 
+// Some networks cannot reach dehub.io at all while the Spaces CDN still
+// answers (UK and Spanish ISPs block whole Cloudflare ranges during football
+// matches; the app shell still runs from the service worker). Every transform
+// then hangs and the feed shows empty image boxes. Once transforms are known
+// to be failing (see installImageOriginFallback), originals are served for the
+// rest of the session.
+const TRANSFORMS_DOWN_KEY = 'dehub:image-transforms-down';
+let transformsDown = (() => {
+  try { return sessionStorage.getItem(TRANSFORMS_DOWN_KEY) === '1'; } catch { return false; }
+})();
+
+export function areImageTransformsDown(): boolean {
+  return transformsDown;
+}
+
+export function markImageTransformsDown(): void {
+  transformsDown = true;
+  try { sessionStorage.setItem(TRANSFORMS_DOWN_KEY, '1'); } catch { /* session-only is fine */ }
+}
+
 export interface CdnImageOptions {
   /** Target width in DEVICE pixels — i.e. CSS px x DPR, not CSS px. */
   width?: number;
@@ -113,6 +133,7 @@ export function cdnImage(
   if (!url) return url;
   if (!url.startsWith(DEHUB_CDN_BASE)) return url;
   if (NON_TRANSFORMABLE.test(url)) return url;
+  if (transformsDown) return url;
 
   const params = [`format=auto`, `quality=${opts.quality ?? 80}`];
   if (opts.width) params.push(`width=${opts.width}`);
@@ -156,7 +177,7 @@ export function cdnImageSource(url: string | undefined): string | undefined {
  * delivery" savings on the 2026-09-02 Lighthouse run.
  */
 export function cdnImageSrcSet(url: string | undefined, widths: number[]): string | undefined {
-  if (!url) return undefined;
+  if (!url || transformsDown) return undefined;
   const prefix = `${IMAGE_TRANSFORM_ORIGIN}/cdn-cgi/image/`;
   let source = url;
   let quality: number | undefined;
