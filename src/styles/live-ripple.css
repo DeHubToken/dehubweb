@@ -1,0 +1,37 @@
+/* Broadcast ripple: two outlines of the avatar's own shape float outward and
+   fade, half a cycle apart, behind the photo. Nothing covers the face. The
+   wrapper carries the avatar's radius so the outlines match it. */
+[data-live-ripple] {
+  position: relative;
+  isolation: isolate;
+  --live-ripple-color: #ef4444;
+}
+[data-live-ripple] > [data-live-ripple-ring] {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  border: 2px solid var(--live-ripple-color);
+  pointer-events: none;
+  animation: live-ripple 2.2s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+[data-live-ripple] > [data-live-ripple-ring] + [data-live-ripple-ring] {
+  animation-delay: 1.1s;
+}
+[data-live-ripple='sm'] > [data-live-ripple-ring] { border-width: 1.5px; }
+[data-live-ripple='lg'] > [data-live-ripple-ring] { border-width: 3px; }
+
+@keyframes live-ripple {
+  0% { transform: scale(1); opacity: 0.95; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Reduce motion: one still outline, so "live" still reads. */
+@media (prefers-reduced-motion: reduce) {
+  [data-live-ripple] > [data-live-ripple-ring] {
+    animation: none;
+    transform: scale(1.12);
+    opacity: 0.9;
+  }
+  [data-live-ripple] > [data-live-ripple-ring] + [data-live-ripple-ring] { display: none; }
+}

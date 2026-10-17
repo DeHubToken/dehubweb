@@ -19,6 +19,7 @@ import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import MoreHorizontal from "@/components/ui/cut-icons/more";
 
 import { usePostStage } from './post-stage-context';
+import { LiveRipple } from '@/components/app/LiveRipple';
 
 interface StageCreatorRowProps {
   name: string;
@@ -83,19 +84,21 @@ export function StageCreatorRow({ name, avatar, handle, creatorId, badgeBalance,
         disabled={!cleanHandle && !creatorId}
         className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
       >
-        {avatar && avatar.startsWith('http') && !avatarError ? (
-          <img
-            src={avatar}
-            alt={name}
-            data-stage-avatar
-            className="h-10 w-10 shrink-0 rounded-lg object-cover"
-            onError={() => setAvatarError(true)}
-          />
-        ) : (
-          <span data-stage-avatar data-stage-avatar-fallback className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm font-bold">
-            {(name || '?').charAt(0).toUpperCase()}
-          </span>
-        )}
+        <LiveRipple ids={[creatorId, cleanHandle]} className="rounded-lg">
+          {avatar && avatar.startsWith('http') && !avatarError ? (
+            <img
+              src={avatar}
+              alt={name}
+              data-stage-avatar
+              className="h-10 w-10 shrink-0 rounded-lg object-cover"
+              onError={() => setAvatarError(true)}
+            />
+          ) : (
+            <span data-stage-avatar data-stage-avatar-fallback className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-sm font-bold">
+              {(name || '?').charAt(0).toUpperCase()}
+            </span>
+          )}
+        </LiveRipple>
         <span className="flex min-w-0 flex-col">
           <span className="flex min-w-0 items-center gap-1">
             <BadgedName
