@@ -1,0 +1,44 @@
+name: Maboroshi promo clips
+on:
+  push:
+    branches: [claude/maboroshi-clips]
+    paths: ['.github/workflows/maboroshi-promo-clips.yml']
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Download and shrink featured swap clips + Jean Phil clips
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          os.makedirs('promo-clips', exist_ok=True)
+          feat = json.load(open('public/creator-clips/featured.json'))['clips']
+          t = open('public/creator-clips/catalog.json').read(); dec = json.JSONDecoder(); allc = []; i = 0
+          while True:
+              j = t.find('{"id"', i)
+              if j < 0: break
+              o, k = dec.raw_decode(t, j); allc.append(o); i = k
+          jean = [c for c in allc if c['name'].startswith('Jean Phil')]
+          jobs = []
+          for c in feat + jean:
+              jobs.append((c['id'] + '_o', c['url']))
+              for n, v in enumerate(c.get('variants', [])): jobs.append((f"{c['id']}_v{n}", v['url']))
+          man = {'clips': feat + jean, 'files': {}}
+          for name, url in jobs:
+              raw = f'/tmp/{name}.mp4'
+              r = subprocess.run(['curl', '-sSfL', '--max-time', '120', '-A', 'Mozilla/5.0', '-o', raw, url])
+              if r.returncode: print('fail', name, url); continue
+              out = f'promo-clips/{name}.mp4'
+              r = subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', raw, '-t', '12', '-an', '-vf', "scale='if(gt(iw,ih),960,-2)':'if(gt(iw,ih),-2,960)',fps=30", '-c:v', 'libx264', '-crf', '24', '-preset', 'veryfast', '-pix_fmt', 'yuv420p', out])
+              if r.returncode: print('enc fail', name); continue
+              man['files'][name] = out; print('ok', name, os.path.getsize(out))
+          json.dump(man, open('promo-clips/manifest.json', 'w'))
+          PY
+      - run: |
+          git config user.name "mal.eth"; git config user.email "116843671+maldoteth@users.noreply.github.com"
+          git add promo-clips && git commit -q -m "Add promo clips" && git push -q origin HEAD:claude/maboroshi-clips
