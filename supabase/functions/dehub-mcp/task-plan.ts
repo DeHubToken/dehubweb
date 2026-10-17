@@ -4,7 +4,12 @@ export const AGENT_OWNER = "0x9324840523a5d17dd12a2f11a9472e5a199c1937";
 export const agentOwnerAllowed = (wallet: unknown): boolean =>
   typeof wallet === "string" && wallet.toLowerCase() === AGENT_OWNER;
 
-const tools = ["dehub_post_create", "dehub_follow", "dehub_vote", "dehub_comment", "dehub_update_profile"] as const;
+const tools = ["dehub_post_create", "dehub_follow", "dehub_vote", "dehub_comment", "dehub_update_profile", "dehub_view"] as const;
+/** How far ahead a post window may end. Until then the task keeps checking for new posts. */
+export const LIVE_WINDOW_MAX_DAYS = 31;
+/** How often a window that ends in the future is checked for new posts. */
+export const LIVE_WINDOW_RECHECK_MINUTES = 30;
+export const windowSteps = (step: { audience: string }) => step.audience === "posts" || step.audience === "post_authors";
 export const taskStepSchema = z.object({
   tool: z.enum(tools),
   arguments: z.record(z.unknown()),
@@ -25,12 +30,13 @@ export const taskPlanSchema = z.object({
     const invalid = (message: string) => ctx.addIssue({ code: "custom", message, path: ["steps", index] });
     if (step.audience === "all_users" && step.tool !== "dehub_follow") invalid("All users supports following only.");
     if (step.audience === "post_authors" && step.tool !== "dehub_follow") invalid("Post authors supports following only.");
-    if (step.audience === "posts" && !["dehub_vote", "dehub_comment"].includes(step.tool)) invalid("Posts supports reactions and comments only.");
+    if (step.audience === "posts" && !["dehub_vote", "dehub_comment", "dehub_view"].includes(step.tool)) invalid("Posts supports views, reactions and comments only.");
+    if (step.tool === "dehub_view" && !["single", "posts"].includes(step.audience)) invalid("Views are for one post or every post in a time window.");
     if (step.audience === "selected_posts" && (step.tool !== "dehub_vote" || step.arguments.vote_type !== "like" || !step.recent_keywords || !step.recent_limit || step.from || step.to)) invalid("Selected recent posts require a like, keywords, and a limit of up to three.");
     if (step.audience !== "selected_posts" && (step.recent_keywords || step.recent_limit)) invalid("Recent-post selection is only for selected posts.");
     if (["posts", "post_authors"].includes(step.audience) && (!step.from || !step.to)) invalid("Choose a start and end time for the posts.");
     if (step.from && step.to && Date.parse(step.from) >= Date.parse(step.to)) invalid("The start must precede the end.");
-    if (step.topic && step.tool !== "dehub_post_create") invalid("Topics are for generated posts.");
+    if (step.topic && step.tool !== "dehub_post_create" && !(step.tool === "dehub_comment" && step.audience === "posts")) invalid("Topics are for generated posts and replies to every post in a window.");
     if (step.media_pool && (step.tool !== "dehub_post_create" || !step.topic)) invalid("Curated media is for generated posts.");
     if (step.media_pool?.some(media => media.type === "video" && !media.thumbnail_url)) invalid("Videos need a thumbnail URL.");
     if (plan.interval_minutes && step.tool === "dehub_post_create" && step.arguments.media_url) invalid("Recurring posts need a curated media pool so the same file is not repeated.");
@@ -60,6 +66,8 @@ export function explicitTaskPlan(prompt: string): TaskPlan | null {
         { tool: 'dehub_post_create', arguments: {}, audience: 'single', from: null, to: null, topic },
       ] });
   }
+  const window = text.match(/^Every post from (\S+) to (\S+)\nActions: ([a-z, ]+)(?:\nReply style: ([^\n]{1,500}))?$/i);
+  if (window) return everyPostPlan(window[1], window[2], window[3], window[4]);
   const follow = text.match(/^follow\s+(@[a-z0-9_]{3,20}|0x[a-f0-9]{40})(?:\s+once)?[.!]?$/i);
   if (follow) return taskPlanSchema.parse({ summary: `Follow ${follow[1]} once.`, interval_minutes: null,
     steps: [{ tool: 'dehub_follow', arguments: { target_wallet: follow[1].replace(/^@/, ''), action: 'follow' }, audience: 'single', from: null, to: null, topic: null }] });
@@ -75,6 +83,27 @@ export function explicitTaskPlan(prompt: string): TaskPlan | null {
   if (topic.length > 2000) throw new Error('Keep the posting topic within 2,000 characters.');
   return taskPlanSchema.parse({ summary: `Post ${count} times per day about ${topic}`, interval_minutes: 1440 / count,
     steps: [{ tool: 'dehub_post_create', arguments: {}, audience: 'single', from: null, to: null, topic }] });
+}
+
+/** A readable UTC time for task summaries, e.g. "17 Oct 2026 12:00 UTC". */
+export const readableTime = (value: string | number | Date) =>
+  new Date(value).toLocaleString("en-GB", { timeZone: "UTC", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).replace(",", "") + " UTC";
+
+/** "Every post from A to B" from the task form: exact, so it never goes through the planner. */
+function everyPostPlan(from: string, to: string, list: string, style?: string): TaskPlan {
+  const start = new Date(from), end = new Date(to);
+  if (!Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime())) throw new Error("Choose a valid start and end time.");
+  const actions = [...new Set(list.toLowerCase().split(",").map(value => value.trim()).filter(Boolean))];
+  if (!actions.length || actions.some(action => !["view", "like", "reply"].includes(action))) throw new Error("Choose view, like or reply.");
+  if (actions.includes("reply") && !style?.trim()) throw new Error("Describe how the agent should reply.");
+  const window = { audience: "posts", from: start.toISOString(), to: end.toISOString(), topic: null };
+  const steps = [
+    ...(actions.includes("view") ? [{ ...window, tool: "dehub_view", arguments: {} }] : []),
+    ...(actions.includes("like") ? [{ ...window, tool: "dehub_vote", arguments: { vote_type: "like" } }] : []),
+    ...(actions.includes("reply") ? [{ ...window, tool: "dehub_comment", arguments: {}, topic: style!.trim() }] : []),
+  ];
+  const names = actions.map(action => ({ view: "view", like: "like", reply: "reply to" })[action]).join(", ").replace(/, ([^,]*)$/, " and $1");
+  return taskPlanSchema.parse({ summary: `${names[0].toUpperCase()}${names.slice(1)} every post from ${readableTime(start)} to ${readableTime(end)}.`, interval_minutes: null, steps });
 }
 
 export const PLAN_TOOL = {
@@ -107,8 +136,8 @@ export const PLAN_TOOL = {
                 },
                 audience: { type: "string", enum: ["single", "all_users", "post_authors", "posts", "selected_posts"] },
                 from: { type: ["string", "null"], description: "Inclusive ISO UTC start of a bulk post time window." },
-                to: { type: ["string", "null"], description: "Exclusive ISO UTC end of a bulk post time window, no later than now." },
-                topic: { type: ["string", "null"], description: "Instructions for an original post on each run; null for literal supplied content." },
+                to: { type: ["string", "null"], description: `Exclusive ISO UTC end of a bulk post time window. May be up to ${LIVE_WINDOW_MAX_DAYS} days ahead; new posts are then covered as they appear.` },
+                topic: { type: ["string", "null"], description: "Instructions for an original post on each run, or for a reply written to each post in a window; null for literal supplied content." },
                 recent_keywords: { type: ["array", "null"], items: { type: "string" }, description: "One to six exact interests for selected_posts; null otherwise." },
                 recent_limit: { type: ["integer", "null"], description: "Maximum one to three matching recent posts to like each run; null otherwise." },
                 media_pool: { type: ["array", "null"], description: "Owner-supplied or licensed media for recurring posts. Each asset is used once. An optional caption is posted verbatim; otherwise a new caption is written from the subject. Videos also need a thumbnail_url.", items: { type: "object", properties: { url: { type: "string" }, type: { type: "string", enum: ["image", "video"] }, subject: { type: "string" }, caption: { type: "string" }, thumbnail_url: { type: "string" } }, required: ["url", "type", "subject"], additionalProperties: false } },
