@@ -49,15 +49,15 @@ interface RowProps {
   account: LiveAudienceAccount;
   meta: React.ReactNode;
   right?: React.ReactNode;
-  ring?: boolean;
+  large?: boolean;
   onOpen: (a: LiveAudienceAccount) => void;
 }
 
-function Row({ account, meta, right, ring, onOpen }: RowProps) {
+function Row({ account, meta, right, large, onOpen }: RowProps) {
   const name = audienceName(account);
   return (
     <button type="button" data-live-audience-row onClick={() => onOpen(account)} className="flex w-full items-center gap-2.5 py-1.5 text-left">
-      <Avatar className={ring ? 'h-9 w-9 ring-2 ring-red-500 ring-offset-1 ring-offset-transparent' : 'h-8 w-8'}>
+      <Avatar className={large ? 'h-9 w-9' : 'h-8 w-8'}>
         <AvatarImage src={audienceAvatar(account)} alt={name} />
         <AvatarFallback className="bg-zinc-700 text-xs font-semibold text-white">{name[0]?.toUpperCase()}</AvatarFallback>
       </Avatar>
@@ -122,7 +122,7 @@ export function LiveAudienceSheet({ open, onOpenChange, audience, loading }: Pro
               <h4 data-live-audience-label>{t('liveAudience.host', 'Host')}</h4>
               <Row
                 account={host}
-                ring
+                large
                 onOpen={openProfile}
                 meta={ago(host.startedAt) ? t('liveAudience.startedAgo', { time: ago(host.startedAt), defaultValue: 'Started {{time}}' }) : null}
               />
