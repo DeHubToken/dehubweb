@@ -168,3 +168,14 @@ html[data-theme] body [data-video-control-strip] [data-video-cc] {
 @media (max-width: 359px) {
   [data-video-control-strip] [data-video-time] { display: none; }
 }
+
+/* The strip is below the picture, so it follows the page palette. */
+html:is([data-theme="light"], [data-system-tone="light"]) [data-video-control-strip]:not(#_) {
+  background: var(--paper) !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]) [data-video-control-strip]:not(#_) :is(button, span, svg) {
+  color: var(--ink) !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]) [data-video-control-strip]:not(#_) [data-scrubber-line] {
+  filter: invert(1);
+}
