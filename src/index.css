@@ -6864,3 +6864,13 @@ html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] :is([data
     border-bottom: 0 !important;
   }
 }
+
+/* Immersive phones: the home and video feeds run their media edge to edge, so
+   the Shorts and Images grids do too. Every other theme keeps the 8px gutter
+   all home tabs share. */
+@media (max-width: 639px) {
+  html[data-theme="immersive"] [data-grid-feed] {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
