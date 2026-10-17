@@ -57,7 +57,7 @@ export function thumbUrl(url: string, width = 480): string {
 }
 
 /**
- * The hero's backdrop: a short silent loop of Maboroshi swaps (no text in
+ * The hero's backdrop: a silent loop of Maboroshi before/after swaps (no text in
  * it), dimmed and faded into the page. Phones get a vertical cut. With
  * reduced motion only the still poster shows. Decorative, so hidden from
  * assistive tech.
