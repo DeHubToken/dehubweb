@@ -228,12 +228,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [isAllTranslated]);
 
-  // Auto-scroll when messages change
+  const followedRoom = useRef<string | null>(null);
+  const followLatest = useRef(true);
+  // Position initial history immediately, and follow new rows only while the
+  // reader is at the tail. Scroll this list without moving its ancestors.
   useEffect(() => {
-    if (filteredMessages.length > 0) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const container = scrollContainerRef.current;
+    if (container && filteredMessages.length > 0) {
+      if (followedRoom.current !== selectedRoomId) followLatest.current = true;
+      if (followLatest.current) container.scrollTop = container.scrollHeight;
+      followedRoom.current = selectedRoomId;
     }
-  }, [filteredMessages.length]);
+  }, [filteredMessages.length, selectedRoomId]);
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
@@ -466,6 +472,10 @@ export function PublicChat({ onBack }: PublicChatProps) {
       <div className="relative flex-1">
         <div
           ref={scrollContainerRef}
+          onScroll={(event) => {
+            const el = event.currentTarget;
+            followLatest.current = el.scrollHeight - el.clientHeight - el.scrollTop < 120;
+          }}
           onPointerDown={dismissKeyboard}
           className="absolute inset-0 overflow-y-auto py-2"
         >
