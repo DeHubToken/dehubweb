@@ -11,7 +11,7 @@ fs.mkdirSync(OUT, { recursive: true });
   const pg = await br.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   pg.on('console', m => { const s = m.text(); if (!s.startsWith('[vite]')) console.log('PAGE', s); });
   pg.on('pageerror', e => console.log('PAGEERR', e.message));
-  await pg.goto('file://' + path.join(__dirname, `film.html?w=${W}&h=${H}`));
+  await pg.goto('file://' + path.join(__dirname, `film.html?w=${W}&h=${H}${A.style ? '&style=' + A.style : ''}`));
   await pg.evaluate(() => window.ready);
   const cdp = await pg.context().newCDPSession(pg);
   const shot = async (file, t) => {
