@@ -6,6 +6,7 @@ import { recoverFromChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installScrollFreezeWatchdog } from "./lib/scroll-freeze-watchdog";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
+import { installImageOriginFallback } from "./lib/image-origin-fallback";
 import { installWalletSessionFetch } from "./lib/wallet-session";
 import { installTranslatorDomGuard } from "./i18n/translator-dom-guard";
 import "./lib/toast-i18n-interceptor";
@@ -34,6 +35,8 @@ import "./styles/pinned-community-stage.css";
 // stylesheet link is appended at the end of <head>.
 
 installSupabaseInterceptor();
+// Serve original images on networks that cannot reach the dehub.io transforms.
+installImageOriginFallback();
 // Signs wallet-scoped REST and storage requests; see src/lib/wallet-session.ts.
 installWalletSessionFetch();
 
