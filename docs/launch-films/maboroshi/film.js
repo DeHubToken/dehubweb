@@ -3,10 +3,10 @@
 // 140 BPM grid; all scene times below are in beats. The footage is real motion-library clips and their Maboroshi recasts.
 const Q = new URLSearchParams(location.search);
 const W = +(Q.get('w') || 1920), H = +(Q.get('h') || 1080), VERT = H > W;
-const BPM = 140, B = 60 / BPM, bt = b => b * B;
+const BPM = 170, B = 60 / BPM, bt = b => b * B;
 const END_B = 68, TOTAL = bt(END_B) + 1.4;
 const stage = document.getElementById('stage');
-const STY = +(Q.get('style') || 0); // text style: 0 chrome, 1 clean white, 2 sage, 3 outline, 4 sticker, 5 mono
+const STY = +(Q.get('style') || 5); // text style: 0 chrome, 1 clean white, 2 sage, 3 outline, 4 sticker, 5 mono
 document.body.classList.add('sty' + STY);
 stage.style.width = W + 'px'; stage.style.height = H + 'px';
 const ACC = '#d4e0c8', ACC_RGB = '212,224,200';
@@ -165,18 +165,18 @@ function shade(x, a, from = 0) { // darken towards the bottom (from = 0) or all 
 const JP_INTRO = [33, 39, 43, 46, 38, 40, 42, 49].map(i => K(i));
 const JP_QUAD = [32, 34, 35, 36, 37, 41, 44, 45, 48, 33, 43].map(i => K(i));
 const CAT = [K(31), K(31, 'v0')];
-const PAIRS = [[4], [7], [24], [30], [20], [19], [13], [18, 'o', 'v2']].map(([i, a = 'o', z = 'v0']) => [K(i, a), K(i, z)]);
+const PAIRS = [[4], [7], [24], [30], [20], [19]].map(([i, a = 'o', z = 'v0']) => [K(i, a), K(i, z)]);
 const DROP = [[22], [28], [8, 'v0', 'v2'], [29], [9, 'v0', 'v2'], [12], [5], [23], [16], [15], [21, 'v0', 'v2'], [22, 'v0', 'v2']].map(([i, a = 'o', z = 'v0']) => [K(i, a), K(i, z)]);
 const QCUTS = [K(47), K(29, 'v0'), K(50), K(31, 'v0'), K(30, 'v0'), K(4, 'v0')];
 const GRIDK = [4, 7, 30, 19, 13, 3, 29, 5, 15, 24, 20, 28].map(i => K(i, 'v0'));
 const WALLK = [...[3, 4, 5, 7, 13, 15, 19, 29, 30].map(i => K(i, 'v0')), ...[32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 48, 49].map(i => K(i))];
-const PAIR_B = i => 8 + 1.5 * i, DROP_B = j => 20 + .5 * j, QCUT_B = j => 26 + .25 * j;
+const PAIR_B = i => 8 + 2 * i, DROP_B = j => 20 + .5 * j, QCUT_B = j => 26 + .25 * j;
 
 const EVENTS = { slam: [], swap: [], cut: [], tick: [], pop: [], whoosh: [] };
 window.EVENTS = EVENTS;
 for (let k = 0; k < 8; k++) EVENTS.cut.push(bt(k * .5));
 EVENTS.cut.push(bt(4)); EVENTS.swap.push(bt(4.25));
-PAIRS.forEach((_, i) => { if (i) EVENTS.cut.push(bt(PAIR_B(i))); EVENTS.swap.push(bt(PAIR_B(i) + .5)); });
+PAIRS.forEach((_, i) => { if (i) EVENTS.cut.push(bt(PAIR_B(i))); EVENTS.swap.push(bt(PAIR_B(i) + .7)); });
 DROP.forEach((_, j) => EVENTS.swap.push(bt(DROP_B(j) + .06)));
 QCUTS.forEach((_, j) => EVENTS.cut.push(bt(QCUT_B(j))));
 for (let k = 1; k < 8; k++) EVENTS.cut.push(bt(40 + k));
@@ -375,7 +375,7 @@ function s6Update(b) {
 const punch = (b, b0, k = .08, d = 7) => b >= b0 ? 1 + k * Math.exp(-(b - b0) * d) : 1;
 const FULL = [0, 0, W, H];
 function pairShot(x, b, t, i) {
-  const [a, z] = PAIRS[i], b0 = PAIR_B(i), sec = t - bt(b0) + .6, p = P(b, b0 + .5, b0 + .95), zz = punch(b, b0, .06);
+  const [a, z] = PAIRS[i], b0 = PAIR_B(i), sec = t - bt(b0) + .6, p = P(b, b0 + .7, b0 + 1.2), zz = punch(b, b0, .06);
   const split = VERT ? !portrait(a) : portrait(a);
   if (split) {
     const g = 6;
@@ -387,14 +387,14 @@ function pairShot(x, b, t, i) {
     tag(x, 'ORIGINAL', R1[0] + m, R1[1] + m, false, isO(a) ? 1 : 0);
     tag(x, isO(z) ? 'ORIGINAL' : 'MABOROSHI', R2[0] + m, R2[1] + m, true, p >= .5 ? 1 : 0);
     tag(x, 'ORIGINAL', R2[0] + m, R2[1] + m, false, p < .5 && isO(a) ? 1 : 0);
-    seam(x, W / 2, H / 2, oc(P(b, b0 + .5, b0 + .7)));
+    seam(x, W / 2, H / 2, oc(P(b, b0 + .7, b0 + .9)));
   } else {
     drawWipe(x, a, z, sec, FULL, p, i * 17, { z: zz, full: true, dir: i % 2 ? 'v' : 'h' });
     const m = VERT ? 44 : 40;
     tag(x, 'ORIGINAL', m, m + (VERT ? 120 : 0), false, p < .5 && isO(a) ? 1 : 0);
     tag(x, 'MABOROSHI', m, m + (VERT ? 120 : 0), true, p >= .5 ? 1 : 0);
     // the original keeps playing in a corner once the swap lands
-    const ip = ob(P(b, b0 + .95, b0 + 1.2), 1.6);
+    const ip = ob(P(b, b0 + 1.2, b0 + 1.45), 1.6);
     if (ip > 0) {
       const c = CI[a], iw = (VERT ? W * .34 : W * .2) * (c.w > c.h ? 1.5 : 1), ih = iw * c.h / c.w;
       const ix = W - m - iw, iy = m + (VERT ? 120 : 0);
@@ -432,7 +432,7 @@ function drawAll(b, t) {
   } else if (b < 8) {
     wallBlur(x, t, .55);
   } else if (b < 20) {
-    pairShot(x, b, t, Math.min(PAIRS.length - 1, Math.floor((b - 8) / 1.5)));
+    pairShot(x, b, t, Math.min(PAIRS.length - 1, Math.floor((b - 8) / 2)));
     shade(x, .75);
   } else if (b < 26) {
     const j = Math.min(DROP.length - 1, Math.floor((b - 20) * 2)), b0 = DROP_B(j), [a, z] = DROP[j];
@@ -555,7 +555,7 @@ const FXE = [
   [60, 28, 1, .5, 14, .6],
 ];
 for (let k = 1; k < 8; k++) FXE.push([k * .5, 6, k % 2 ? 0 : .2, 0, 6, .3]);
-PAIRS.forEach((_, i) => { FXE.push([PAIR_B(i) + .5, 14, .4, .25, 8, .4]); if (i) FXE.push([PAIR_B(i), 6, 0, 0, 6, .25]); });
+PAIRS.forEach((_, i) => { FXE.push([PAIR_B(i) + .7, 14, .4, .25, 8, .4]); if (i) FXE.push([PAIR_B(i), 6, 0, 0, 6, .25]); });
 DROP.forEach((_, j) => { if (j) FXE.push([DROP_B(j), 14, .4, .3, 12, .4]); });
 QCUTS.forEach((_, j) => { if (j) FXE.push([QCUT_B(j), 16, .5, .3, 12, .22]); });
 for (let k = 41; k < 48; k++) if (k !== 44 && k !== 45) FXE.push([k, 6, 0, 0, 5, .3]);

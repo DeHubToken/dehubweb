@@ -1,12 +1,12 @@
-// DeHub Maboroshi launch film — soundtrack. Hard drift-phonk in F minor at 140 BPM: pitched cowbell riff,
-// distorted sliding 808, half-swung hats, claps on 2 and 4. Every cut and swap in the picture has its own
+// DeHub Maboroshi launch film — soundtrack. Clean, rolling drum and bass in F minor at 170 BPM: two-step breaks
+// with ghost snares, a reese bass over a clean sine sub, chord stabs and a pad. Every cut and swap in the picture has its own
 // synthesized sound on the exact frame (event times come from the film page). No samples.
 import fs from 'fs';
 const ev = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const OUT = process.argv[3] || 'music.wav';
 const E = ev.ev, TOTAL = ev.film.TOTAL;
 const SR = 48000, N = Math.ceil((TOTAL + .05) * SR);
-const BPM = 140, B = 60 / BPM, bt = b => b * B, ST = B / 4; // 16th
+const BPM = 170, B = 60 / BPM, bt = b => b * B, ST = B / 4; // 16th
 const bus = () => [new Float32Array(N), new Float32Array(N)];
 const DR = bus(), BS = bus(), MU = bus(), FX = bus(), REV = bus();
 const mtof = m => 440 * 2 ** ((m - 69) / 12);
@@ -137,7 +137,7 @@ function impact(t0, amp = .8, rv = .6) {
   for (let i = 0; i < 1.6 * SR; i++) {
     const t = i / SR; ph += 2 * Math.PI * (28 + 50 * Math.exp(-t * 6)) / SR;
     const x = Math.sin(ph) * Math.exp(-t * 2.6) * .9 + f.run(noise(), 2400, .1).lp * Math.exp(-t * 14) * .7;
-    const y = Math.tanh(x * 1.5) * amp * .7;
+    const y = x * amp * .55;
     put(FX, i0 + i, y); put(REV, i0 + i, y * rv);
   }
 }
@@ -253,105 +253,162 @@ function outroSoundSample(time) {
   return sample;
 }
 
-// ------------------------------------------------------------- arrangement
-// progression per bar: Fm | Db | Bbm | C   (808 roots, cowbell riff bar)
-const ROOT = [29, 37, 34, 36];
-const RIFF = [
-  [[0, 77], [3, 77], [6, 80], [8, 77], [10, 75], [11, 77], [14, 72]],
-  [[0, 73], [3, 73], [6, 77], [8, 73], [10, 72], [11, 73], [14, 70]],
-  [[0, 70], [3, 70], [6, 73], [8, 70], [10, 68], [11, 70], [14, 72]],
-  [[0, 72], [3, 72], [6, 76], [8, 72], [10, 67], [11, 72], [14, 76]],
-];
-const CHORD = [[53, 56, 60], [49, 53, 56], [46, 49, 53], [48, 52, 55]];
-const sw = s => s % 2 ? ST * .14 : 0; // swing on off-16ths
-function groove(b0, b1, o = {}) {
-  const { kick: K = true, bass = true, cow = true, clapOn = true, hats = 8, cowLP = 20000, cowAmp = .3, vox: VX = false, rollEnd = true, kickAmp = 1, bassAmp = 1 } = o;
-  for (let bar = Math.floor(b0 / 4); bar * 4 < b1; bar++) {
-    const k = ((bar - 2) % 4 + 4) % 4, base = bt(bar * 4);
-    for (let s = 0; s < 16; s++) {
-      const bb = bar * 4 + s / 4; if (bb < b0 - 1e-6 || bb >= b1 - 1e-6) continue;
-      const t = base + s * ST + sw(s);
-      if (K && [0, 6, 10].includes(s)) kick(t, kickAmp * (s ? .9 : 1));
-      if (bass) {
-        if (s === 0) b808(t, ST * 5.5, ROOT[k], bassAmp);
-        if (s === 6) b808(t, ST * 3.5, ROOT[k], bassAmp * .9);
-        if (s === 10) b808(t, ST * 3.6, ROOT[k], bassAmp * .9, k === 3 ? ROOT[k] + 5 : ROOT[k] + 12);
-        if (s === 14) b808(t, ST * 1.8, ROOT[k] + (k % 2 ? 7 : 0), bassAmp * .8);
-      }
-      if (clapOn && (s === 4 || s === 12)) clap(t, 1);
-      if (hats === 8 && s % 2 === 0) hat(t, s % 4 ? .13 : .2, false, .25);
-      if (hats === 16) hat(t, s % 4 === 0 ? .2 : s % 2 ? .1 : .15, false, .25);
-      if (rollEnd && k === 3 && s >= 13) { hat(t + ST / 3, .1, false, -.2); hat(t + 2 * ST / 3, .1, false, -.2); }
-      if (s === 2 && k % 2 === 1) hat(t, .12, true, -.3);
-      if (cow) for (const [cs, n] of RIFF[k]) if (cs === s) cowbell(t, n, cowAmp, .17, cowLP, s % 4 ? .25 : -.15);
-      if (VX && [2, 7, 13].includes(s)) vox(t, ST * (s === 7 ? 1.6 : .9), CHORD[k][s % 3] + 12, (s * 3 + k) % 4, .11, (s % 2 ? .3 : -.3));
+// ------------------------------------------------------------- drum and bass kit
+function dkick(t0, amp = 1) { // tight, clean: short pitch drop, no clipping
+  KICKS.push(t0);
+  const i0 = Math.round(t0 * SR); let ph = 0;
+  for (let i = 0; i < .3 * SR; i++) {
+    const t = i / SR, f = 52 + 110 * Math.exp(-t * 38);
+    ph += 2 * Math.PI * f / SR;
+    const env = Math.min(1, t / .002) * Math.exp(-t * 11);
+    const x = Math.sin(ph) * env * .85 + noise() * Math.exp(-t * 700) * .25;
+    put(DR, i0 + i, x * amp);
+  }
+}
+function snare(t0, amp = 1, rv = .22) { // body + crisp noise, the D&B crack
+  const i0 = Math.round(t0 * SR), f = new SVF(), h = new SVF(); let ph = 0;
+  for (let i = 0; i < .26 * SR; i++) {
+    const t = i / SR; ph += 2 * Math.PI * (185 + 60 * Math.exp(-t * 60)) / SR;
+    const body = Math.sin(ph) * Math.exp(-t * 28) * .55;
+    const nz = h.run(f.run(noise(), 5200, .25).lp, 900, .1).hp * Math.exp(-t * 22) * .8;
+    const x = (body + nz) * Math.min(1, t / .001) * amp * .7;
+    put(DR, i0 + i, x * .95, x); put(REV, i0 + i, x * rv);
+  }
+}
+function shaker(t0, amp = .08, p = .3) {
+  const i0 = Math.round(t0 * SR), f = new SVF();
+  for (let i = 0; i < .05 * SR; i++) { const t = i / SR; const x = f.run(noise(), 9000, .2).hp * Math.min(1, t / .006) * Math.exp(-t * 90) * amp; const [L, R] = pan(x, p); put(DR, i0 + i, L, R); }
+}
+function ride(t0, amp = .06) {
+  const i0 = Math.round(t0 * SR), f = new SVF();
+  for (let i = 0; i < .4 * SR; i++) { const t = i / SR; let x = 0; for (const m of [1, 1.47, 2.03, 2.76]) x += Math.sin(2 * Math.PI * 3200 * m * t); x = (x * .2 + f.run(noise(), 8000, .1).hp) * Math.exp(-t * 9) * amp; put(DR, i0 + i, x * .8, x); put(REV, i0 + i, x * .2); }
+}
+// bass: a clean sine sub under a reese (detuned saws, moving low-pass), both following one note line
+const SUB = [], REESE = [];
+function bassNote(t0, dur, note, amp = 1) { SUB.push([t0, dur, note, amp]); REESE.push([t0, dur, note, amp]); }
+function renderBass() {
+  for (const [t0, dur, note, amp] of SUB) {
+    const i0 = Math.round(t0 * SR), f = mtof(note); let ph = 0;
+    for (let i = 0; i < (dur + .03) * SR; i++) { const t = i / SR; ph += 2 * Math.PI * f / SR; const env = Math.min(1, t / .006) * (t < dur ? 1 : 1 - (t - dur) / .03); put(BS, i0 + i, Math.sin(ph) * env * .55 * amp); }
+  }
+  const fl = new SVF(), fr = new SVF();
+  for (const [t0, dur, note, amp] of REESE) {
+    const i0 = Math.round(t0 * SR), f = mtof(note + 12); const ps = [0, .31, .62, .13];
+    for (let i = 0; i < (dur + .03) * SR; i++) {
+      const t = i / SR, tt = t0 + t;
+      let l = 0, r = 0;
+      [-1, -.35, .35, 1].forEach((d, k) => { ps[k] += f * (1 + d * .009) / SR; const x = 2 * (ps[k] % 1) - 1; l += x * (k < 2 ? 1 : .6); r += x * (k < 2 ? .6 : 1); });
+      const fc = 260 + 520 * (.5 + .5 * Math.sin(tt * 2 * Math.PI / (B * 8)));
+      const env = Math.min(1, t / .01) * (t < dur ? 1 : 1 - (t - dur) / .03);
+      const g = .09 * amp * env;
+      put(BS, i0 + i, fl.run(l, fc, .35).lp * g, fr.run(r, fc, .35).lp * g);
     }
   }
 }
-// ---- hook: Jean Phil cuts on every half beat, the beat is already running
-groove(0, 4, { hats: 8, cowLP: 2600, kickAmp: .85, bassAmp: .8, rollEnd: false });
-E.cut.filter(t => t < bt(4)).forEach((t, i) => { flashHit(t, .22); if (i % 2) chop(t, .25); });
-E.slam.filter(t => t < bt(4)).forEach(t => { clap(t, .6, .2); thump(t, .4); });
-riser(bt(3), bt(4.25), .35); revCym(bt(3.25), bt(4.25), .3);
+function stab(t0, notes, amp = .14, dur = .18) { // short filtered chord
+  const i0 = Math.round(t0 * SR), fl = new SVF(); const ph = notes.map(() => rnd());
+  for (let i = 0; i < (dur + .25) * SR; i++) {
+    const t = i / SR; let x = 0;
+    notes.forEach((m, k) => { ph[k] += mtof(m) / SR; x += 2 * (ph[k] % 1) - 1; });
+    const env = Math.min(1, t / .003) * Math.exp(-t * (t < dur ? 6 : 18));
+    const y = fl.run(x / notes.length, 1400 + 3000 * Math.exp(-t * 14), .3).lp * env * amp;
+    put(MU, i0 + i, y * .9, y); put(REV, i0 + i, y * .55);
+  }
+}
+function subDrop(t0, amp = .7) { // clean sine boom
+  const i0 = Math.round(t0 * SR); let ph = 0;
+  for (let i = 0; i < 1.4 * SR; i++) { const t = i / SR; ph += 2 * Math.PI * (40 + 60 * Math.exp(-t * 5)) / SR; const y = Math.sin(ph) * Math.min(1, t / .003) * Math.exp(-t * 2.6) * .6 * amp; put(FX, i0 + i, y); }
+}
+// progression per bar: Fm | Db | Bbm | C
+const ROOT = [29, 25, 22, 24];
+const CHORD = [[65, 68, 72], [65, 68, 73], [65, 70, 73], [64, 67, 72]];
+function dnb(b0, b1, o = {}) {
+  const { kick: K = true, snr = true, ghosts = true, hats = true, bass = true, rideOn = false, amp = 1, stabs = false } = o;
+  for (let bar = Math.floor(b0 / 4); bar * 4 < b1; bar++) {
+    const k = ((bar % 4) + 4) % 4, base = bt(bar * 4);
+    for (let s = 0; s < 16; s++) {
+      const bb = bar * 4 + s / 4; if (bb < b0 - 1e-6 || bb >= b1 - 1e-6) continue;
+      const t = base + s * ST;
+      if (K && (s === 0 || s === 10 || (k === 3 && s === 11))) dkick(t, amp * (s ? .85 : 1));
+      if (snr && (s === 4 || s === 12)) snare(t, amp);
+      if (ghosts && [7, 9, 15].includes(s)) snare(t, amp * (s === 15 ? .22 : .16), .05);
+      if (hats) shaker(t + (s % 2 ? ST * .08 : 0), (s % 2 ? .05 : .085) * amp, s % 4 === 2 ? -.3 : .3);
+      if (rideOn && s % 4 === 2) ride(t, .05 * amp);
+      if (stabs && (s === 0 || (s === 6 && k % 2))) stab(t, CHORD[k], .12, s ? .1 : .2);
+    }
+    if (bass) {
+      const r = ROOT[k], bt0 = Math.max(base, bt(b0)), end = Math.min(base + bt(4), bt(b1));
+      if (end > bt0) {
+        const n1 = Math.min(end, base + bt(2.5));
+        if (n1 > bt0) bassNote(bt0, n1 - bt0 - .02, r, 1);
+        if (end > n1) bassNote(n1, end - n1 - .02, k === 3 ? r + 5 : r + 7, .9);
+      }
+    }
+  }
+}
+
+// ------------------------------------------------------------- arrangement
+// ---- hook: Jean Phil cuts on half beats, drums already rolling
+pad(0, bt(8), [53, 56, 60, 65], .08, 1600);
+dnb(0, 4, { bass: false, amp: .8 });
+E.cut.filter(t => t < bt(4)).forEach((t, i) => flashHit(t, .18));
+E.slam.filter(t => t < bt(4)).forEach(t => { snare(t, .5, .25); stab(t, CHORD[0], .1); });
+riser(bt(2.5), bt(4.25), .3); revCym(bt(3), bt(4.25), .28);
 // the cat swap
-impact(bt(4), .6); E.swap.filter(t => t < bt(5)).forEach(t => { impact(t, .9); boom(t, .45); shimmer(t, bt(1), .12); whoosh(t - .08, bt(.6), .5, 300, 9000, -.5, .5); flashHit(t, .35); });
-groove(4.5, 6, { hats: 8, kickAmp: .85, bassAmp: .85 });
-E.slam.filter(t => t > bt(4.8) && t < bt(5.9)).forEach(t => { clap(t, .6, .15); thump(t, .3); });
-// title card: one huge hit, then a rise into the side-by-sides
-impact(bt(6), 1, .8); kick(bt(6), 1); b808(bt(6), bt(1.8), 29, 1); boom(bt(6), .5);
-pad(bt(6), bt(8), [49, 53, 56, 61], .1, 1800);
-for (let b = 7; b < 8; b += b < 7.5 ? .25 : 1 / 8) clap(bt(b), .2 + .5 * (b - 7), .08);
+E.swap.filter(t => t < bt(5)).forEach(t => { impact(t, .7); subDrop(t, .7); shimmer(t, bt(1.5), .12); whoosh(t - .08, bt(.8), .45, 300, 9000, -.5, .5); });
+dnb(4.25, 6, { amp: .95 });
+E.slam.filter(t => t > bt(4.8) && t < bt(5.9)).forEach(t => stab(t, CHORD[1], .12));
+// title card
+impact(bt(6), .9, .8); dkick(bt(6), 1); subDrop(bt(6), .8); stab(bt(6), [53, 56, 60, 65], .16, .5);
+for (let b = 7; b < 8; b += b < 7.5 ? .25 : 1 / 8) snare(bt(b), .2 + .5 * (b - 7), .08);
 riser(bt(6.5), bt(8), .4); revCym(bt(7), bt(8), .3);
-// ---- original vs Maboroshi, one pair every bar and a half
-impact(bt(8), .9); whoosh(bt(7.85), .5, .5, 300, 7000, .6, -.6);
-groove(8, 19.5, { hats: 8, kickAmp: .9, bassAmp: .9 });
-E.swap.filter(t => t > bt(8) && t < bt(20)).forEach((t, i) => { whoosh(t - .05, B * .55, .4, 500, 9000, i % 2 ? -.5 : .5, i % 2 ? .5 : -.5); shimmer(t, B * .9, .08); flashHit(t, .28); });
-E.cut.filter(t => t > bt(8.5) && t < bt(20)).forEach(t => thump(t, .35));
-E.slam.filter(t => t > bt(8) && t < bt(20)).forEach(t => { clap(t, .45, .15); });
-riser(bt(17.5), bt(20), .5); revCym(bt(18.5), bt(20), .4);
-for (let b = 18.5; b < 19.75; b += b < 19 ? .25 : b < 19.5 ? 1 / 8 : 1 / 16) clap(bt(b), .25 + .55 * (b - 18.5) / 1.25, .08);
-whoosh(bt(19.3), bt(.7), .45, 300, 8000, .5, -.5);
-// ---- drop: a swap on every half beat, then hard cuts
-impact(bt(20), 1); boom(bt(20), .7);
-groove(20, 27.5, { hats: 16, vox: true, cowAmp: .32 });
-E.swap.filter(t => t >= bt(20) && t < bt(26)).forEach((t, i) => { if (i) impact(t, .35, .3); whoosh(t - .03, B * .35, .35, 600, 10000, i % 2 ? -.5 : .5, i % 2 ? .5 : -.5); flashHit(t, .3); });
-E.cut.filter(t => t >= bt(26) && t < bt(27.5)).forEach((t, i) => { thump(t, .5); flashHit(t, .3); if (i % 2) chop(t, .4); });
+// ---- original vs Maboroshi pairs
+impact(bt(8), .8); subDrop(bt(8), .6);
+dnb(8, 19.5, { stabs: true });
+E.swap.filter(t => t > bt(8) && t < bt(20)).forEach((t, i) => { whoosh(t - .05, B * .7, .35, 500, 9000, i % 2 ? -.5 : .5, i % 2 ? .5 : -.5); shimmer(t, B * 1.2, .08); flashHit(t, .22); });
+riser(bt(17.5), bt(20), .45); revCym(bt(18.5), bt(20), .35);
+for (let b = 18.5; b < 19.75; b += b < 19 ? .25 : b < 19.5 ? 1 / 8 : 1 / 16) snare(bt(b), .2 + .5 * (b - 18.5) / 1.25, .06);
+// ---- drop
+impact(bt(20), .9); subDrop(bt(20), .9);
+dnb(20, 27.5, { rideOn: true, stabs: true });
+E.swap.filter(t => t >= bt(20) && t < bt(26)).forEach((t, i) => { whoosh(t - .03, B * .4, .3, 600, 10000, i % 2 ? -.5 : .5, i % 2 ? .5 : -.5); flashHit(t, .25); });
+E.cut.filter(t => t >= bt(26) && t < bt(27.5)).forEach((t, i) => { snare(t, .35, .1); flashHit(t, .25); });
 for (let i = 0; i < 12; i++) pop(bt(27.5 + i * .04), .1, 600 + i * 70);
 // tape stop at 27.5 (applied after mixing), then the slams
 const TAPE = [bt(27.5), bt(28)];
-[[28, 29, 1], [28.5, 29, 1], [30, 25, .9], [30.5, 24, 1]].forEach(([b, n, a]) => { kick(bt(b), 1); b808(bt(b), bt(b === 28 ? .45 : b === 30 ? .45 : 1.0), n, 1.1 * a); impact(bt(b), .7 * a, .5); clap(bt(b), .8); });
+[[28, 0], [28.5, 0], [30, 1], [30.5, 3]].forEach(([b, k]) => { dkick(bt(b), 1); bassNote(bt(b), bt(b % 1 ? 1.4 : .45), ROOT[k], 1); impact(bt(b), .6, .5); snare(bt(b), .8); stab(bt(b), CHORD[k], .14, .2); });
 revCym(bt(29), bt(30), .25);
-riser(bt(31), bt(32), .4); whoosh(bt(31.5), bt(.5), .5, 400, 9000, -.6, .6);
-// ---- the library: pull back, the counter races, three steps
-impact(bt(32), .7);
-E.whoosh.filter(t => t < bt(40)).forEach(t => whoosh(t, bt(1.6), .5, 200, 5000, .4, -.4));
-groove(32, 40, { hats: 16, kickAmp: .9 });
-for (let b = 32.5, i = 0; b < 35; b += .125, i++) blip(bt(b), 65 + Math.min(26, i), .07 + .05 * (b - 32.5) / 2.5, i % 2 ? .3 : -.3);
-E.pop.forEach(t => { pop(t, .25, 700); bell(t, 1318.5, .16); });
-E.tick.filter(t => t < bt(40)).forEach((t, i) => { blip(t, [72, 75, 79][i], .2, 0); pop(t, .14, 900); });
-whoosh(bt(39.6), bt(.8), .6, 300, 9000, .7, -.7);
+riser(bt(31), bt(32), .4); whoosh(bt(31.5), bt(.5), .45, 400, 9000, -.6, .6);
+// ---- the library: counter, three steps
+impact(bt(32), .6);
+E.whoosh.filter(t => t < bt(40)).forEach(t => whoosh(t, bt(2), .45, 200, 5000, .4, -.4));
+dnb(32, 40, { rideOn: true });
+for (let b = 32.5, i = 0; b < 35; b += .25, i++) blip(bt(b), 65 + Math.min(24, i * 2), .06 + .05 * (b - 32.5) / 2.5, i % 2 ? .3 : -.3);
+E.pop.forEach(t => { pop(t, .22, 700); bell(t, 1318.5, .14); });
+E.tick.filter(t => t < bt(40)).forEach((t, i) => { blip(t, [72, 75, 79][i], .18, 0); stab(t, CHORD[i], .1); });
+whoosh(bt(39.4), bt(.8), .5, 300, 9000, .7, -.7);
 // ---- Jean Phil templates
-impact(bt(40), .8);
-groove(40, 48, { hats: 16, vox: true });
-E.slam.filter(t => t >= bt(40) && t < bt(48)).forEach(t => { clap(t, .55, .2); thump(t, .35); });
-E.cut.filter(t => t > bt(40.5) && t < bt(48)).forEach(t => flashHit(t, .22));
+impact(bt(40), .7); subDrop(bt(40), .6);
+dnb(40, 48, { rideOn: true, stabs: true });
+E.slam.filter(t => t >= bt(40) && t < bt(48)).forEach(t => snare(t, .4, .2));
+E.cut.filter(t => t > bt(40.5) && t < bt(48)).forEach(t => flashHit(t, .18));
 // ---- the promises
-E.whoosh.filter(t => t >= bt(47)).forEach(t => whoosh(t - .1, bt(.6), .45, 300, 7000, .4, -.4));
-groove(48, 51.5, { hats: 8, kickAmp: .9, bassAmp: .9 });
-E.tick.filter(t => t > bt(48)).forEach((t, i) => { blip(t, [72, 75, 79][i], .2, 0); pop(t, .14, 900); });
-bell(bt(50.5), 1568, .14);
-riser(bt(50.5), bt(52), .45); revCym(bt(51), bt(52), .35);
+E.whoosh.filter(t => t >= bt(47)).forEach(t => whoosh(t - .1, bt(.8), .4, 300, 7000, .4, -.4));
+dnb(48, 51.5, { ghosts: false, amp: .9 });
+E.tick.filter(t => t > bt(48)).forEach((t, i) => { blip(t, [72, 75, 79][i], .18, 0); pop(t, .12, 900); });
+riser(bt(50.5), bt(52), .4); revCym(bt(51), bt(52), .32);
 // ---- brand slam
-[52, 52.5, 53, 53.5].forEach((b, i) => { kick(bt(b), 1); b808(bt(b), bt(i < 3 ? .45 : .5), [29, 29, 32, 36][i], 1.1); impact(bt(b), .7 + i * .1, .5); clap(bt(b), .9); if (i === 3) boom(bt(b), .6); });
-pad(bt(54), bt(59.6), [49, 53, 56, 61], .1, 2600);
-groove(54, 59.5, { hats: 16 });
-shimmer(bt(54.1), bt(1.2), .12); shimmer(bt(57.6), bt(1.2), .1);
+[52, 52.5, 53, 53.5].forEach((b, i) => { dkick(bt(b), 1); bassNote(bt(b), bt(.45), [29, 29, 32, 36][i] - (i > 1 ? 12 : 0), 1); impact(bt(b), .6 + i * .08, .5); snare(bt(b), .8); if (i === 3) subDrop(bt(b), .7); });
+pad(bt(54), bt(59.6), [49, 53, 56, 61], .09, 2600);
+dnb(54, 59.5, { rideOn: true });
+shimmer(bt(54.1), bt(1.6), .11); shimmer(bt(57.6), bt(1.6), .09);
 pop(bt(54), .2, 700); pop(bt(54.5), .2, 900);
-revCym(bt(58.5), bt(60), .4); whoosh(bt(59.5), bt(.6), .5, 400, 9000, .5, -.5);
+revCym(bt(58.5), bt(60), .35); whoosh(bt(59.5), bt(.6), .45, 400, 9000, .5, -.5);
 // ---- end card
-impact(bt(60), 1, .8); kick(bt(60), 1); b808(bt(60), 2.4, 29, 1.1);
+impact(bt(60), .8, .8); dkick(bt(60), 1); subDrop(bt(60), .8); bassNote(bt(60), 2.2, 29, 1);
 pad(bt(60), bt(60) + 1.8, [53, 56, 60, 65], .07, 1400, .6);
 { const i0 = Math.round(bt(60) * SR); for (let i = 0; i < 1.8 * SR; i++) { const x = outroSoundSample(i / SR) * 2.4; put(FX, i0 + i, x); put(REV, i0 + i, x * .4); } }
+renderBass();
 
 // ------------------------------------------------------------- mix
 const tOf = i => i / SR;
@@ -403,13 +460,13 @@ const RV = reverb(REV);
 const L = new Float32Array(N), Rr = new Float32Array(N);
 for (let i = 0; i < N; i++) {
   for (let c = 0; c < 2; c++) {
-    const v = DR[c][i] * .95 + BS[c][i] * .95 + MU[c][i] * .85 + FX[c][i] * .9 + RV[c][i] * .55;
+    const v = (DR[c][i] * 1.0 + BS[c][i] * .9 + MU[c][i] * .8 + FX[c][i] * .8 + RV[c][i] * .45) * .4;
     (c ? Rr : L)[i] = v;
   }
 }
-// master: gentle glue saturation, end fade, then a look-ahead peak limiter
+// master: end fade, then a look-ahead peak limiter
 const fadeA = Math.round((TOTAL - .35) * SR);
-for (let i = 0; i < N; i++) { const f = i > fadeA ? Math.max(0, 1 - (i - fadeA) / (.35 * SR)) : 1; L[i] = Math.tanh(L[i] * 1.1) / 1.1 * f; Rr[i] = Math.tanh(Rr[i] * 1.1) / 1.1 * f; }
+for (let i = 0; i < N; i++) { const f = i > fadeA ? Math.max(0, 1 - (i - fadeA) / (.35 * SR)) : 1; L[i] *= f; Rr[i] *= f; }
 function limit(ch, ceil = .89) {
   const la = Math.round(.004 * SR); let g = 1; const out = new Float32Array(N);
   const pk = new Float32Array(N); for (let i = 0; i < N; i++) pk[i] = Math.max(Math.abs(ch[0][i]), Math.abs(ch[1][i]));
