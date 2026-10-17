@@ -11,6 +11,8 @@ export function ShortsPhotoPager({ images, galleryKey = '' }: { images: string[]
   const [index, setIndex] = useState(() => Math.min(galleryIndex(galleryKey), images.length - 1));
   const start = useRef<{ x: number; y: number } | null>(null);
   const wheel = useRef(0);
+  // Tall photos fill the screen; wide and square ones fit whole on the plain backdrop.
+  const [tall, setTall] = useState<Record<number, boolean>>({});
   const step = (delta: number) => setIndex(value => {
     const next = Math.max(0, Math.min(images.length - 1, value + delta));
     if (galleryKey) rememberGalleryIndex(galleryKey, next);
@@ -41,7 +43,10 @@ export function ShortsPhotoPager({ images, galleryKey = '' }: { images: string[]
       style={{ transform: `translateX(-${index * 100}%)` }}>
       {images.map((url, photo) => <img key={`${photo}-${url}`} src={url} alt={`${t('feed.images')} ${photo + 1} / ${images.length}`}
         aria-hidden={photo !== index} draggable={false} loading={Math.abs(photo - index) <= 1 ? 'eager' : 'lazy'}
-        className="w-full h-full flex-none object-contain select-none" />)}
+        onLoad={event => { const { naturalWidth: w, naturalHeight: h } = event.currentTarget;
+          if (w && h) setTall(value => value[photo] === h > w ? value : { ...value, [photo]: h > w }); }}
+        data-photo-fit={tall[photo] ? 'cover' : 'contain'}
+        className={`w-full h-full flex-none select-none ${tall[photo] ? 'object-cover' : 'object-contain'}`} />)}
     </div>
     {images.length > 1 && <>
       <span aria-live="polite" className="absolute top-20 right-4 rounded-full bg-black/60 px-3 py-1 text-sm text-white">{index + 1} / {images.length}</span>

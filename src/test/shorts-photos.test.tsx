@@ -141,3 +141,12 @@ it('retains the same playing soundtrack and position across photos, then pauses 
   fireEvent.play(player);
   expect(play).not.toHaveBeenCalled();
 });
+it('fills the screen with tall photos and fits wide ones whole', () => {
+  render(<ShortsPhotoPager images={['tall.jpg', 'wide.jpg']} />);
+  const [tall, wide] = Array.from(document.querySelectorAll('[data-shorts-photos] img')) as HTMLImageElement[];
+  Object.defineProperties(tall, { naturalWidth: { value: 900 }, naturalHeight: { value: 1600 } });
+  Object.defineProperties(wide, { naturalWidth: { value: 1600 }, naturalHeight: { value: 900 } });
+  fireEvent.load(tall); fireEvent.load(wide);
+  expect(tall.dataset.photoFit).toBe('cover');
+  expect(wide.dataset.photoFit).toBe('contain');
+});
