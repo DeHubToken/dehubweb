@@ -330,3 +330,29 @@ html[data-theme] [data-unread-chip]:not(#_):not(#_):not(#_) {
   mix-blend-mode: normal !important;
   isolation: isolate;
 }
+
+/* Hover tooltips are liquid glass too: the Radix <TooltipContent>, the label
+   NativeTitleTooltips draws for every `title=` attribute (side panel tabs,
+   reaction tray, icon buttons) and any hand-rolled hover label that opts in
+   with [data-glass-tooltip]. Same frost and tint floor as the other floating
+   surfaces, with a hairline rim so a 20px label still reads as a pane.
+
+   The id weight lifts this over the light/System Light popper rule in
+   index.css (opaque paper, no blur) and the theme sheets' bg-zinc remaps,
+   which washed the in-tree side panel labels down to 8% white. */
+html {
+  --tooltip-glass-ink: rgb(244 244 245);
+  --tooltip-glass-rim: rgb(255 255 255 / 0.14);
+}
+html[data-theme='light'],
+html[data-system-tone='light'] {
+  --tooltip-glass-ink: rgb(24 24 27);
+  --tooltip-glass-rim: rgb(0 0 0 / 0.08);
+}
+html[data-theme] [data-glass-tooltip]:not(#_):not(#_) {
+  background: var(--float-glass) !important;
+  backdrop-filter: var(--float-glass-blur) !important;
+  color: var(--tooltip-glass-ink) !important;
+  border: 0 !important;
+  box-shadow: inset 0 0 0 1px var(--tooltip-glass-rim), 0 8px 24px rgb(0 0 0 / 0.28) !important;
+}
