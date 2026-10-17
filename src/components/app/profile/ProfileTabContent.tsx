@@ -261,7 +261,7 @@ export function ProfileTabContent({
   return (
     <div style={{ position: 'relative' }}>
       {/* Loading overlay for content tabs on first load */}
-      {showLoading && ['home', 'posts', 'images', 'videos'].includes(activeTab) && (
+      {showLoading && ['home', 'posts', 'images', 'videos', 'songs', 'live'].includes(activeTab) && (
         <div className="flex flex-col items-center justify-center min-h-[200px]">
           <Loader2 className="w-8 h-8 text-muted-foreground animate-spin" />
         </div>
@@ -353,7 +353,21 @@ export function ProfileTabContent({
 
       {/* SONGS TAB */}
       <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="songs">
-        <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title={_copy("copy.f9a83d6ac749", { defaultValue: "No audio yet" })} subtitle={_copy("copy.0ff0f3e32eca", { defaultValue: "Audio tracks will appear here" })} />
+        {/* On this tab the content query asks for audio only, so the
+            video-card list holds this creator's tracks. */}
+        {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
+          isContentFiltered
+            ? <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" {...NO_MATCHES_COPY} />
+            : <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title={_copy("copy.f9a83d6ac749", { defaultValue: "No audio yet" })} subtitle={_copy("copy.0ff0f3e32eca", { defaultValue: "Audio tracks will appear here" })} />
+        ) : (
+          <div className="space-y-3">
+            {ALL_PROFILE_VIDEOS.map((track, index) => (
+              <div key={track.id} data-feed-item data-cinematic="video" className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3" style={offscreenCardStyle('video', index)}>
+                <VideoCard video={track} aboveFold={index < 3} />
+              </div>
+            ))}
+          </div>
+        )}
       </TabPanel>
 
       {/* LIVE TAB */}
@@ -387,7 +401,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* On-scroll loading for content-backed tabs */}
-      {fetchNextContentPage && ['home', 'posts', 'images', 'videos', 'live'].includes(activeTab) && (
+      {fetchNextContentPage && ['home', 'posts', 'images', 'videos', 'songs', 'live'].includes(activeTab) && (
         <LoadMoreSentinel
           hasNextPage={hasNextContentPage}
           isFetchingNextPage={isFetchingNextContentPage}
