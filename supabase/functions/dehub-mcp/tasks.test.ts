@@ -298,9 +298,12 @@ Deno.test('a window that ends in the future covers posts so far, then checks aga
     const scanned = (test.task.cursor as any).scanned?.[0];
     assert(scanned && Date.parse(scanned) <= Date.now(), 'did not remember how far it covered');
     assert(windows[0].from === from && Date.parse(windows[0].to!) <= Date.now(), 'first pass reached into the future');
+    // Pretend the recheck happens a minute later, so the next pass has new time to cover.
+    const resumeFrom = new Date(Date.now() - 60_000).toISOString();
+    (test.task.cursor as any).scanned[0] = resumeFrom;
     test.task.status = 'running';
     await runTask({ db: () => (test as any).db, token: async () => 'test', tools: () => test.registry }, new Request('https://example.test/tasks/tick'), structuredClone(test.task));
-    assert(windows[1].from === scanned, 'the next pass did not start where the last one stopped');
+    assert(windows[1]?.from === resumeFrom, 'the next pass did not start where the last one stopped');
   } finally { globalThis.fetch = originalFetch; }
 });
 
