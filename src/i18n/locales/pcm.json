@@ -289,6 +289,7 @@
     "compactMode": "Compact Mode",
     "compactModeDesc": "Reduce space make more content fit show",
     "autoPlay": "Make Video Dey Play By Imsef",
+    "autoplayPausePrompt": "Auto play setting",
     "autoPlayDesc": "Automatically play videos for feed",
     "autoPlayMuted": "Make autoplay start without sound",
     "autoPlayMutedDesc": "Video wey dey play by imsef go always start with sound off",

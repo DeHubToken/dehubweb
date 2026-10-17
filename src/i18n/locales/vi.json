@@ -296,6 +296,7 @@
     "compactMode": "Compact Mode",
     "compactModeDesc": "Giảm khoảng cách để hiển thị nhiều nội dung hơn",
     "autoPlay": "Auto-play Videos",
+    "autoplayPausePrompt": "Cài đặt tự động phát",
     "autoPlayDesc": "Tự động phát video trong luồng",
     "autoPlayMuted": "Tự động phát ở chế độ tắt tiếng",
     "autoPlayMutedDesc": "Video tự phát luôn bắt đầu với âm thanh tắt",
