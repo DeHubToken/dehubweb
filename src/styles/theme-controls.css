@@ -212,6 +212,14 @@ html[data-theme][data-theme] [data-side-panel]
   backdrop-filter: none !important;
 }
 
+/* Requests moves between cached routes and a scroll-clipped feed. Its parent
+   panels already own the frost; a second backdrop layer on each action can
+   retain an empty compositor surface when the cached page becomes visible. */
+html[data-theme][data-theme] [data-requests-page] [data-theme-button]:not(#_):not(#_) {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
 /* Bubble actions keep the theme's label colour when their white active
    material is replaced by the shared tinted surface. */
 html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'])

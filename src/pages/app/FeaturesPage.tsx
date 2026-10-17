@@ -876,7 +876,7 @@ export default function FeaturesPage() {
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]', [], { allThemes: true });
 
   return (
-    <div className="min-h-screen">
+    <div data-requests-page className="min-h-screen">
       <SEOHead title={_copy("copy.5d2d9bc248a3", { defaultValue: "Feature Requests & Bug Reporting — DeHub" })} description={_copy("copy.2c94a53da07c", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features." })} url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests & Bug Reporting', url: 'https://dehub.io/app/features', description: _copy("copy.d2c76d7df46f", { defaultValue: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap." }), isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">{_copy("copy.64ce9ca9f7d1", { defaultValue: "DeHub Features — Feature Requests, Bug Reporting & Community Roadmap" })}</h1>
       {/* Sticky nav pill. `data-feed-nav-outer` already rides the scroll on
