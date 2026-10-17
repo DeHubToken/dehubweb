@@ -106,3 +106,27 @@ it('never routes video or image-generation requests to the vision tier', async (
   expect(await tryFree({ modalities: ['image', 'text'], messages: [{ role: 'user', content: 'Generate a poster' }] }, { allowVision: true })).toBeNull();
   expect(requests).toHaveLength(0);
 });
+
+it('returns the mature verdict and sends extra photos to the vision tier', async () => {
+  answer = body => new Response(JSON.stringify({ model: body.model, choices: [{ message: { tool_calls: [{ function: {
+    name: 'categorize_post',
+    arguments: JSON.stringify({ categories: ['Science'], confidence: 0.9, reasoning: 'x', mature: true, mature_confidence: 0.8 }),
+  } }] } }] }));
+  const { classify } = await import('../../supabase/functions/_shared/categorize');
+  const result = await classify({
+    ...input,
+    imageUrl: 'https://cdn.example/1.jpg',
+    extraImageUrls: ['https://cdn.example/2.jpg', 'https://cdn.example/3.jpg'],
+  });
+  expect(result.mature).toBe(true);
+  expect(result.matureConfidence).toBe(0.8);
+  const parts = requests[0].body.messages[1].content;
+  expect(parts.filter((p: any) => p.type === 'image_url')).toHaveLength(3);
+});
+
+it('reads a missing mature verdict as not mature', async () => {
+  const { classify } = await import('../../supabase/functions/_shared/categorize');
+  const result = await classify(input);
+  expect(result.mature).toBe(false);
+  expect(result.matureConfidence).toBeNull();
+});

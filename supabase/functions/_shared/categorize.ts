@@ -58,6 +58,8 @@ export interface ClassifyInput {
    *  words must not reach a free tier that trains on its input. */
   transcriptPublic?: boolean;
   imageUrl?: string | null;
+  /** More photos of a multi-photo post, read for the mature check. */
+  extraImageUrls?: string[];
   availableCategories: string[];
   /** Categories the post already has. They are never returned as new, and they
    *  are shown to the model so it complements rather than repeats them. */
@@ -72,6 +74,23 @@ export interface ClassifyResult {
   reasoning: string;
   model: string;
   usedTranscript: boolean;
+  /** The model judged the post adult or graphic. */
+  mature: boolean;
+  matureConfidence: number | null;
+}
+
+/** Photos of a multi-photo post after the first, up to `max` (the vision tier takes three images per call). */
+export function postExtraImageUrls(post: any, max = 2): string[] {
+  if (post?.postType !== 'feed-images') return [];
+  const urls: any[] = Array.isArray(post?.imageUrls) ? post.imageUrls : [];
+  return urls
+    .filter((u: any) => typeof u === 'string' && u.trim())
+    .slice(1, 1 + max)
+    .map((u: string) => {
+      if (/^https?:\/\//i.test(u)) return u;
+      const filename = String(u).split('/').pop() || String(u);
+      return `${DEHUB_CDN_BASE}feed-images/${filename}`;
+    });
 }
 
 /** Build the CDN URL for a post's thumbnail, matching the panel's rules. */
@@ -106,7 +125,7 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
 
   if (!available.length) throw new Error('availableCategories required');
   if (!title && !description && !transcript && !imageUrl) {
-    return { categories: [], confidence: null, reasoning: 'Nothing to read', model: MODEL, usedTranscript: false };
+    return { categories: [], confidence: null, reasoning: 'Nothing to read', model: MODEL, usedTranscript: false, mature: false, matureConfidence: null };
   }
 
   const maxCount = Math.min(Math.max(1, input.maxCategories ?? 5), available.length);
@@ -131,13 +150,18 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
       ? `The transcript is the strongest signal about what this post is about - weight it above the title. `
       : '') +
     `Hints: laughing emoji (🤣😂) or jokes → "funny"; image/video with laughing emojis → "meme"; anything about launching, listing, tokens, presale, IDO, airdrops, mainnet, or "wen" → "dehub" (we are launching/listing again soon); mentions of Israel/IDF/Gaza/Palestine/Zionism/Jerusalem/Tel Aviv/Hamas → "israel"; mentions of Jews/Jewish/Judaism/Hebrew/Torah/synagogue/rabbi/kosher → "jews". Be inventive and thorough — apply identity, geography, religion, and topic tags freely when relevant; free speech, no filtering of sensitive-but-accurate tags. ` +
-    `Use exact spelling from the allowed list. No duplicates.`;
+    `Use exact spelling from the allowed list. No duplicates.\n\n` +
+    `Separately, set "mature" to true if the post is adult or graphic: nudity or near-nudity; lingerie, underwear or swimwear posed to be sexy; ` +
+    `cleavage, breasts, buttocks or crotch that the photo is clearly focused on; sexual poses, acts or fetish content; ` +
+    `selling or promoting adult content or subscriptions (OnlyFans, Fansly, "link in bio" for spicy content and similar); or gore. ` +
+    `Ordinary selfies, fitness, beach or fashion photos that are not sexualised are NOT mature. Judge the images first.`;
 
   // Scalar text is required by the text-provider gate. A text-only parts array
   // previously skipped every free provider, even when no thumbnail existed.
   const baseContent = textBlock;
-  const fullContent = imageUrl
-    ? [{ type: 'text', text: textBlock }, { type: 'image_url', image_url: { url: imageUrl } }]
+  const images = imageUrl ? [imageUrl, ...(input.extraImageUrls ?? []).filter(Boolean)] : [];
+  const fullContent = images.length
+    ? [{ type: 'text', text: textBlock }, ...images.map((url) => ({ type: 'image_url', image_url: { url } }))]
     : baseContent;
 
   const request = (content: string | any[]) => ({
@@ -151,7 +175,7 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
           (existing.length
             ? `The post is already partly tagged; return only categories that are MISSING, and an empty array if nothing is missing. `
             : `ALWAYS commit to at least 1 category - pick the closest fit rather than returning empty. Only return empty if the post is literally blank. `) +
-          `Never default to the platform's dominant theme (Crypto/Blockchain) unless the post is clearly about that. Return via the categorize_post tool.`,
+          `Never default to the platform's dominant theme (Crypto/Blockchain) unless the post is clearly about that. Also say whether the post is mature (adult, sexually suggestive or graphic). Return via the categorize_post tool.`,
       },
       { role: 'user', content },
     ],
@@ -172,8 +196,10 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
             },
             confidence: { type: 'number', minimum: 0, maximum: 1, description: 'Confidence 0-1 in the chosen categories' },
             reasoning: { type: 'string', description: 'Brief one-sentence reasoning' },
+            mature: { type: 'boolean', description: 'True if the post is adult, sexually suggestive or graphic (see the prompt)' },
+            mature_confidence: { type: 'number', minimum: 0, maximum: 1, description: 'Confidence 0-1 in the mature verdict' },
           },
-          required: ['categories', 'confidence', 'reasoning'],
+          required: ['categories', 'confidence', 'reasoning', 'mature', 'mature_confidence'],
           additionalProperties: false,
         },
       },
@@ -266,5 +292,19 @@ export async function classify(input: ClassifyInput): Promise<ClassifyResult> {
     }).slice(0, maxCount);
   }
 
-  return { categories, confidence, reasoning, model: typeof data.model === 'string' ? data.model : MODEL, usedTranscript: !!transcript };
+  // A text-only fallback never saw the photos, so its mature verdict is a
+  // guess from the caption. It still counts when it says yes (a caption
+  // selling adult content is mature on its own), but at its own confidence.
+  const mature = args.mature === true;
+  const matureConfidence = typeof args.mature_confidence === 'number' ? args.mature_confidence : null;
+
+  return {
+    categories,
+    confidence,
+    reasoning,
+    model: typeof data.model === 'string' ? data.model : MODEL,
+    usedTranscript: !!transcript,
+    mature,
+    matureConfidence,
+  };
 }
