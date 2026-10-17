@@ -220,6 +220,10 @@ const CachedPage = memo(function CachedPage({
       style={
         shouldStayVisible
           ? undefined
+          // A normal display toggle rebuilds the clipped composer's paint
+          // layers on return while keeping its React state and draft mounted.
+          : config.key === 'features'
+          ? { display: 'none' as const }
           : {
               visibility: 'hidden' as const,
               height: 0,
