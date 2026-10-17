@@ -228,7 +228,11 @@ const CachedPage = memo(function CachedPage({
               // Skip style/layout for the whole hidden subtree — with ~30
               // pages cached, this is the difference between the browser
               // laying out one page or all of them on every style change.
-              contentVisibility: 'hidden' as const,
+              // Requests contains live text controls inside a clipped feed.
+              // Skipping their paint subtree can leave text and actions blank
+              // after a theme change and return. Visibility and the zero-height
+              // clip still hide this page without discarding its paint layout.
+              contentVisibility: config.key === 'features' ? undefined : 'hidden' as const,
             }
       }
     >
