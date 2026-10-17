@@ -392,6 +392,9 @@ const Dapp = () => {
             <li><strong>{t('dapp.feedsMute')}</strong> {t('dapp.feedsMuteDesc')}</li>
             <li><strong>{t('dapp.feedsTranslate')}</strong> {t('dapp.feedsTranslateDesc')}</li>
             <li><strong>{t('dapp.feedsDub')}</strong> {t('dapp.feedsDubDesc')}</li>
+            <li><strong>{t('dapp.feedsMedia')}</strong> {t('dapp.feedsMediaDesc')}</li>
+            <li><strong>{t('dapp.feedsSoundtrack')}</strong> {t('dapp.feedsSoundtrackDesc')}</li>
+            <li><strong>{t('dapp.feedsShare')}</strong> {t('dapp.feedsShareDesc')}</li>
           </ul>
         </section>
 
@@ -414,6 +417,7 @@ const Dapp = () => {
             <li><strong>{t('dapp.labelGallery')}</strong> {t('dapp.uploadGallery')}</li>
             <li><strong>{t('dapp.labelAudio')}</strong> {t('dapp.uploadAudio')}</li>
             <li><strong>{t('dapp.labelComposerTools')}</strong> {t('dapp.uploadComposerTools')}</li>
+            <li><strong>{t('dapp.labelScheduleLive')}</strong> {t('dapp.uploadScheduleLive')}</li>
           </ul>
         </section>
 
@@ -750,7 +754,7 @@ const Dapp = () => {
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.profileTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.profileDesc')}</p>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-6 font-exo">
-            {[1, 2, 3, 4, 5, 6].map(n => <li key={n}><strong>{t(`dapp.profileB${n}`)}</strong> {t(`dapp.profileB${n}Desc`)}</li>)}
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(n => <li key={n}><strong>{t(`dapp.profileB${n}`)}</strong> {t(`dapp.profileB${n}Desc`)}</li>)}
           </ul>
           
           <div className="my-6">
@@ -1055,6 +1059,8 @@ const Dapp = () => {
                   <li>• {t('dapp.keyFeat4')}</li>
                   <li>• {t('dapp.keyFeat5')}</li>
                   <li>• {t('dapp.keyFeat6')}</li>
+                  <li>• {t('dapp.keyFeat7')}</li>
+                  <li>• {t('dapp.keyFeat8')}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -1807,6 +1813,7 @@ const Dapp = () => {
             <li><strong>{t('dapp.communitiesB1')}</strong> {t('dapp.communitiesB1Desc')}</li>
             <li><strong>{t('dapp.communitiesB2')}</strong> {t('dapp.communitiesB2Desc')}</li>
             <li><strong>{t('dapp.communitiesB3')}</strong> {t('dapp.communitiesB3Desc')}</li>
+            <li><strong>{t('dapp.communitiesB4')}</strong> {t('dapp.communitiesB4Desc')}</li>
           </ul>
         </section>
 
@@ -1948,6 +1955,7 @@ const Dapp = () => {
             <li><strong>{t('dapp.aiSuiteB3')}</strong> {t('dapp.aiSuiteB3Desc')}</li>
             <li><strong>{t('dapp.aiSuiteB4')}</strong> {t('dapp.aiSuiteB4Desc')}</li>
             <li><strong>{t('dapp.aiSuiteB5')}</strong> {t('dapp.aiSuiteB5Desc')}</li>
+            <li><strong>{t('dapp.aiSuiteB6')}</strong> {t('dapp.aiSuiteB6Desc')}</li>
           </ul>
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.aiSuiteCreditsTitle')}</h3>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.aiSuiteCreditsDesc')}</p>
@@ -1971,6 +1979,13 @@ const Dapp = () => {
             <li><strong>{t('dapp.studioB3')}</strong> {t('dapp.studioB3Desc')}</li>
             <li><strong>{t('dapp.studioB4')}</strong> {t('dapp.studioB4Desc')}</li>
             <li><strong>{t('dapp.studioB5')}</strong> {t('dapp.studioB5Desc')}</li>
+          </ul>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.studioDesc3')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.studioB6')}</strong> {t('dapp.studioB6Desc')}</li>
+            <li><strong>{t('dapp.studioB7')}</strong> {t('dapp.studioB7Desc')}</li>
+            <li><strong>{t('dapp.studioB8')}</strong> {t('dapp.studioB8Desc')}</li>
+            <li><strong>{t('dapp.studioB9')}</strong> {t('dapp.studioB9Desc')}</li>
           </ul>
         </section>
 
@@ -2026,6 +2041,7 @@ const Dapp = () => {
         <section id="feature-requests" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.featureBoardTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.featureBoardDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.featureBoardDesc2')}</p>
           <Shot src="/media/docs-features.png" alt={t('dapp.altFeatures')} />
         </section>
 
