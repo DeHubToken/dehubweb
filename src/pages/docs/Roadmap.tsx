@@ -104,7 +104,7 @@ const Roadmap = () => {
       quarters: [
         { id: 'q1q2-2026', title: t('roadmap.q1q2_2026'), items: t('roadmap.q1q2_2026_items') as unknown as string[], status: 'inProgress' },
         { id: 'q3-2026', title: t('roadmap.q3_2026'), items: t('roadmap.q3_2026_items') as unknown as string[], status: 'completed' },
-        { id: 'q2q4-2026', title: t('roadmap.q2q4_2026'), items: t('roadmap.q2q4_2026_items') as unknown as string[], status: 'planned' },
+        { id: 'q2q4-2026', title: t('roadmap.q2q4_2026'), items: t('roadmap.q2q4_2026_items') as unknown as string[], status: 'inProgress' },
       ],
     },
   ];
@@ -128,13 +128,22 @@ const Roadmap = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-muted-foreground leading-relaxed">{t('roadmap.latestUpdateDesc')}</p>
-          <Link
-            to="/guides/q3-development-overview"
-            className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
-          >
-            {t('roadmap.latestUpdateCta')}
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            <Link
+              to="/guides/q4-development-overview"
+              className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline underline-offset-4 hover:no-underline"
+            >
+              {t('roadmap.latestUpdateCta')}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link
+              to="/guides/q3-development-overview"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground underline underline-offset-4 hover:no-underline"
+            >
+              {t('roadmap.previousUpdateCta')}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </CardContent>
       </Card>
 
