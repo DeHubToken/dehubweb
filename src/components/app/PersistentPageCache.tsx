@@ -220,6 +220,10 @@ const CachedPage = memo(function CachedPage({
       style={
         shouldStayVisible
           ? undefined
+          // A normal display toggle rebuilds the clipped composer's paint
+          // layers on return while keeping its React state and draft mounted.
+          : config.key === 'features'
+          ? { display: 'none' as const }
           : {
               visibility: 'hidden' as const,
               height: 0,
@@ -228,11 +232,7 @@ const CachedPage = memo(function CachedPage({
               // Skip style/layout for the whole hidden subtree — with ~30
               // pages cached, this is the difference between the browser
               // laying out one page or all of them on every style change.
-              // Requests contains live text controls inside a clipped feed.
-              // Skipping their paint subtree can leave text and actions blank
-              // after a theme change and return. Visibility and the zero-height
-              // clip still hide this page without discarding its paint layout.
-              contentVisibility: config.key === 'features' ? undefined : 'hidden' as const,
+              contentVisibility: 'hidden' as const,
             }
       }
     >
