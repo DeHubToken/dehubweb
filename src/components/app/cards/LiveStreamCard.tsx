@@ -22,7 +22,6 @@ import {
   setMediaSessionPlaying,
 } from '@/lib/media-session';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import MoreVertical from "@/components/ui/cut-icons/morevertical";
 import { Heart, StopCircle, Activity, Loader2 } from "lucide-react";
 import AssistantNavIcon from "@/components/ui/AssistantNavIcon";
@@ -1203,18 +1202,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               it lives in the ActionBar below with the tray, the counts and the
               viewer's own state. A stream-only heart here kept a second
               counter nobody else could see and never showed as pressed. */}
-          {/* Gift button */}
-          {!streamEnded && (
-            <motion.button
-              onClick={() => setShowGiftDrawer(true)}
-              className="text-zinc-400 hover:text-white transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              aria-label={_copy("copy.9472b5b3c94a", { defaultValue: "Send gift" })}
-            >
-              <Gem className="w-5 h-5" />
-            </motion.button>
-          )}
+          {/* Gifting is the diamond in the action bar under the picture,
+              beside every other button; a second one up here was a copy. */}
           {optionsMenu}
         </div>
       </div>
