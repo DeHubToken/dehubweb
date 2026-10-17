@@ -45,6 +45,7 @@ import { DISPLAY_WALLET_OVERRIDES, getDefaultBanner, type TabValue } from './Pro
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { useNavigate } from 'react-router-dom';
 import { openDmDock } from '@/hooks/use-dm-dock';
+import { LiveRipple } from '@/components/app/LiveRipple';
 
 export interface ProfileHeaderProps {
   profile: ProfileData;
@@ -210,28 +211,30 @@ export function ProfileHeader({
         {/* Avatar */}
         <div className="relative -mt-12 sm:-mt-14 mb-1.5 flex items-end justify-between">
           <div className="relative">
-              <button 
-                data-keep-dark
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 backdrop-blur-none p-1 cursor-pointer disabled:cursor-default"
-                onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
-                disabled={!profile.avatarUrl}
-              >
-                {profile.avatarUrl && !avatarCdnFailed ? (
-                  <img
-                    src={avatarFailed ? cdnFallbackUrl : profile.avatarUrl}
-                    alt={profile.name}
-                    className="w-full h-full rounded-lg object-cover aspect-square"
-                    onError={() => avatarFailed ? setAvatarCdnFailed(true) : setAvatarFailed(true)}
-                  />
-                ) : (
-                  <UserAvatar
-                    name={profile.name}
-                    handle={profile.handle}
-                    size="lg"
-                    className="w-full h-full rounded-lg"
-                  />
-                )}
-              </button>
+              <LiveRipple ids={[apiProfile?.walletAddress ?? profile.walletAddress, profile.handle]} size="lg" className="rounded-xl">
+                <button 
+                  data-keep-dark
+                  className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-zinc-900 backdrop-blur-none p-1 cursor-pointer disabled:cursor-default"
+                  onClick={() => profile.avatarUrl && setFullscreenImage(profile.avatarUrl)}
+                  disabled={!profile.avatarUrl}
+                >
+                  {profile.avatarUrl && !avatarCdnFailed ? (
+                    <img
+                      src={avatarFailed ? cdnFallbackUrl : profile.avatarUrl}
+                      alt={profile.name}
+                      className="w-full h-full rounded-lg object-cover aspect-square"
+                      onError={() => avatarFailed ? setAvatarCdnFailed(true) : setAvatarFailed(true)}
+                    />
+                  ) : (
+                    <UserAvatar
+                      name={profile.name}
+                      handle={profile.handle}
+                      size="lg"
+                      className="w-full h-full rounded-lg"
+                    />
+                  )}
+                </button>
+              </LiveRipple>
           </div>
           <div data-profile-actions className="-mr-1 sm:-mr-3 mt-[60px] sm:mt-[68px] self-start flex items-center gap-2">
               {isViewingOwnProfile ? (

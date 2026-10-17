@@ -36,6 +36,7 @@ import { formatTimeAgo } from '@/lib/feed-utils';
 import { useStage, useLiveSpaces } from '@/contexts/StageContext';
 import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { useDiscoveryTab, type DiscoveryTab, type DiscoverySurface } from '@/hooks/use-discovery-tab';
+import { LiveRipple } from '@/components/app/LiveRipple';
 
 const COUNTRIES = [
   { code: 'global', flag: '🌍', name: 'Global' },
@@ -340,13 +341,15 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                   onClick={() => navigate(`/app/post/${stream.id}`, { state: { fromFeed: true } })}
                   className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0 overflow-hidden">
-                    {stream.avatar ? (
-                      <img src={stream.avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
-                    ) : (
-                      <Video className="w-4 h-4 text-red-400" />
-                    )}
-                  </div>
+                  <LiveRipple live size="sm" className="rounded-lg">
+                    <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0 overflow-hidden">
+                      {stream.avatar ? (
+                        <img src={stream.avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
+                      ) : (
+                        <Video className="w-4 h-4 text-red-400" />
+                      )}
+                    </div>
+                  </LiveRipple>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
                       {stream.title || stream.streamer}
