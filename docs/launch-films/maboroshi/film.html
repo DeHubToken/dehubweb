@@ -1,0 +1,35 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>DeHub Maboroshi launch film</title>
+<style>
+@font-face{font-family:'Exo';src:url(a/exo-500.ttf) format('truetype');font-weight:500}
+@font-face{font-family:'Exo';src:url(a/exo-700.ttf) format('truetype');font-weight:700}
+@font-face{font-family:'DMono';src:url(a/mono.ttf) format('truetype')}
+@font-face{font-family:'Kanji';src:url(a/kanji.woff2) format('woff2');font-weight:900}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#000;overflow:hidden}
+#stage{position:relative;overflow:hidden;background:#000;color:#fff;font-family:'Exo',sans-serif;font-weight:500;-webkit-font-smoothing:antialiased}
+.ab{position:absolute;left:0;top:0;transform-origin:0 0}
+.ac{position:absolute;left:0;top:0;transform-origin:50% 50%}
+.fill{position:absolute;inset:0}
+.mono{font-family:'DMono',monospace;text-transform:uppercase;letter-spacing:.2em}
+.kanji{font-family:'Kanji',serif;font-weight:900}
+svg.i{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;display:block}
+.chrome{background:linear-gradient(180deg,#ffffff 0%,#f1f1f1 30%,#9a9a9a 49%,#5e5e5e 51%,#e9e9e9 66%,#bdbdbd 84%,#ffffff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nowrap{white-space:nowrap}
+/* Maboroshi studio replica (services/maboroshi/static/style.css) */
+.st{position:absolute;left:0;top:0;transform-origin:0 0;background:#090a0b;color:#f2f3f5;font-family:Arial,Helvetica,'Liberation Sans',sans-serif;border-radius:28px;overflow:hidden;box-shadow:0 60px 140px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.08)}
+.st .eb{color:#aeb4bf;font-size:11px;letter-spacing:.14em;font-weight:700}
+.st .hint{color:#aeb4bf;font-size:14px;line-height:1.5}
+.st .panel{position:absolute;background:#121419;border:1px solid #343942;border-radius:16px}
+.st .h2{font-size:24px;font-weight:700;letter-spacing:-.025em}
+.st .inp{position:absolute;background:#0d0f12;border:1px solid #515967;border-radius:9px;display:flex;align-items:center;padding:0 14px;font-size:16px;gap:10px}
+.st .btn{position:absolute;border-radius:9px;background:#d4e0c8;color:#10160e;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;transform-origin:50% 50%;white-space:nowrap}
+.st .sec{background:#22272f;color:#f2f3f5;border:1px solid #3c434e}
+.st .tile{position:absolute;border-radius:12px;overflow:hidden;transform-origin:50% 50%}
+.st .tile .im{position:absolute;left:0;top:0;right:0;background-size:cover;background-position:50% 22%;border-radius:12px}
+.st .tile .nm{position:absolute;left:2px;bottom:0;font-size:15px;font-weight:700;white-space:nowrap}
+</style></head>
+<body><div id="stage"></div>
+<script src="icons.js"></script>
+<script src="film.js"></script>
+</body></html>
