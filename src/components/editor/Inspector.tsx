@@ -1,3 +1,4 @@
+import { SavedPhotoLooks } from "./SavedPhotoLooks";
 import { inferFilterStrength, scaledFilterEffects } from "@/lib/editor/filterStrength";
 import { DUOTONE_PRESETS } from "@/lib/editor/photoTone";
 import { useTranslation as _useCopy } from 'react-i18next';
@@ -219,6 +220,7 @@ export function Inspector() {
             </div>
 
             {activeFilter && activeFilter.id !== "none" && <EffectSlider label={t("editor.filters.strength", { defaultValue: "Filter strength: {{value}}%", value: Math.round(activeFilter.strength * 100) })} value={activeFilter.strength} min={0.01} max={1} step={0.01} onChange={strength => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects: scaledFilterEffects(activeFilter.id, strength) }); }} />}
+            <SavedPhotoLooks key={visualMedia.id} value={visualMedia.effects ?? {}} disabled={!!visualMedia.locked} onApply={effects => { if (!visualMedia.locked) updateMediaClip(visualMedia.id, { effects }); }} />
             <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">{t("editor.photoTone.duotone", { defaultValue: "Duotone" })}</p>
             <div className="grid grid-cols-3 gap-1">
               <button type="button" disabled={visualMedia.locked} onClick={() => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, duotone: null } })} className="min-h-9 rounded-lg border border-white/15 text-xs text-white/70 disabled:opacity-35">{t("editor.photoTone.original", { defaultValue: "Original colours" })}</button>
