@@ -46,6 +46,7 @@ import dehubLogo from '@/assets/dehub-logo.png';
 import { SEOHead } from '@/components/SEOHead';
 import { blockUser } from '@/lib/api/dehub/blocks';
 import { toast } from 'sonner';
+import { LiveRipple } from '@/components/app/LiveRipple';
 
 function ConversationBadge({ user }: { user?: DeHubUser }) {
   if (!user) return null;
@@ -135,14 +136,14 @@ function ConversationItem({
         isSelected ? 'bg-white/[0.07]' : ''
       }`}
     >
-      <div className="relative">
+      <LiveRipple ids={[otherUser?.address, otherUser?.username]} className="relative rounded-lg">
         <Avatar className="w-12 h-12">
           {avatarUrl && <AvatarImage src={avatarUrl} />}
           <AvatarFallback className="bg-zinc-700 text-white font-medium">
             {(fallbackName.startsWith('0x') ? fallbackName.charAt(2) : fallbackName.charAt(0)).toUpperCase()}
           </AvatarFallback>
         </Avatar>
-      </div>
+      </LiveRipple>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">

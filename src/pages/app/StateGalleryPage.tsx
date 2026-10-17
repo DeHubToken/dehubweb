@@ -5,6 +5,8 @@ import { PenSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
+import { LiveRipple } from '@/components/app/LiveRipple';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { Button } from '@/components/ui/button';
@@ -144,6 +146,36 @@ const SAMPLE_REACTIONS: ReactionCounts = { like: 19, love: 4, hot: 2, lol: 1, di
  * the thumbs-up. One row as a stranger sees it, one as somebody who disliked
  * the post — the thumb wears their 👎, since there is no thumbs-down button.
  */
+/**
+ * The ripple a live person's avatar wears, at the sizes it ships in: feed
+ * header (36), side panel Live tab (32), post page (40), chat list (48) and
+ * profile (112), with a non-live avatar for comparison.
+ */
+function LiveAvatarsGallery() {
+  const { t: _copy } = _useCopy();
+  const face = (className: string, letter: string) => (
+    <Avatar className={className}>
+      <AvatarFallback className={`bg-gradient-to-br from-orange-300 to-violet-700 font-semibold text-white ${className.includes('rounded-md') ? 'rounded-md' : ''}`}>{letter}</AvatarFallback>
+    </Avatar>
+  );
+  return (
+    <section data-page-bento data-live-avatars-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-5 text-sm font-semibold">{_copy("copy.7b97685eb19d", { defaultValue: "Live avatars" })}</h2>
+      <div className="flex flex-wrap items-end gap-8 px-3 pb-3">
+        <LiveRipple live size="sm" className="rounded-lg">{face('w-8 h-8', 'K')}</LiveRipple>
+        <LiveRipple live className="rounded-md">{face('w-9 h-9 rounded-md', 'M')}</LiveRipple>
+        <LiveRipple live className="rounded-lg">{face('w-10 h-10', 'D')}</LiveRipple>
+        <LiveRipple live className="rounded-lg">{face('w-12 h-12', 'L')}</LiveRipple>
+        <LiveRipple live size="lg" className="rounded-xl">{face('w-28 h-28 rounded-xl text-3xl', 'S')}</LiveRipple>
+        <div className="flex flex-col items-center gap-2">
+          {face('w-12 h-12', 'T')}
+          <span className="text-[11px] text-zinc-500">{_copy("copy.cf7d0ae846cb", { defaultValue: "Not live" })}</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /**
  * Hover tooltips: every one is liquid glass (styles/glass-surfaces.css). The
  * pinned labels sit over a bright stripe so the frost and tint floor show; the
@@ -404,6 +436,7 @@ export default function StateGalleryPage() {
         </section>
 
         <TooltipsGallery />
+        <LiveAvatarsGallery />
         <ReactionsGallery />
 
         <ArticleGallery onAction={press} />
