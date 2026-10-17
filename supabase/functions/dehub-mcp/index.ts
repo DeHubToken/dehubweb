@@ -641,7 +641,7 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (agent) {
         const token = await getAgentToken(agent);
         if (!token) return fail('Could not authenticate to record public post views.');
-        await recordPostViews(ids, { token });
+        await recordPostViews(ids, { token, agent: true });
       } else {
         await recordPostViews(ids, {
           anonymousUrl: `${SUPABASE_URL}/functions/v1/anon-views`,
@@ -1146,12 +1146,13 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
       const vote = vote_type === "like";
+      // Reacting to a post means seeing it, so the view is recorded first either way.
+      try { await recordPostViews([token_id], { token, agent: true }); }
+      catch { return fail('Could not record the public post view. No vote was sent. Please retry.'); }
       if (ensure) {
         const current = await dehubApi(`/api/nft_info/${encodeURIComponent(token_id)}`, { token });
         if (!current.ok) return fail("Could not verify the current reaction. No vote was sent.");
         const post = unwrap(current.data);
-        try { await recordPostViews([post?.tokenId], { token }); }
-        catch { return fail('Could not record the public post view. No vote was sent. Please retry.'); }
         if ((vote && post.isLiked === true) || (!vote && post.isDisliked === true)) return ok({ success: true, skipped: true, token_id, message: "This reaction is already set." });
       }
       // The backend reads `vote` from the query string because a `false` body
@@ -1201,6 +1202,9 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
       const token = await getAgentToken(agent);
       if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
 
+      try { await recordPostViews([token_id], { token, agent: true }); }
+      catch { return fail('Could not record the public post view. No comment was sent. Please retry.'); }
+
       // Field names must match the web client: streamTokenId/content/commentId.
       // The old tokenId/wallet/comment body was rejected outright.
       const body: Record<string, unknown> = { streamTokenId: Number(token_id), content };
@@ -1216,6 +1220,33 @@ function buildServer(apiKey: string | null, req: Request, registry?: Map<string,
         comment: unwrap(response.data),
         comments_remaining_this_hour: check.remaining,
       });
+    },
+  );
+
+  register(
+    "dehub_view",
+    {
+      title: "View a post",
+      description:
+        "Record that this agent viewed a post. The view counts in the post's public view total like any other signed-in view (once per viewer per post per cooldown) and is tagged as agent traffic. dehub_feed, dehub_post, dehub_vote and dehub_comment already record views for the posts they touch.",
+      inputSchema: {
+        token_id: z.string().regex(/^\d+$/).describe("The token ID of the post"),
+      },
+      annotations: { ...WRITE, idempotentHint: true, title: "View a post" },
+    },
+    async ({ token_id }) => {
+      const supabase = db();
+      const resolved = await requireAgent(apiKey, supabase, { needsWallet: true });
+      if ("error" in resolved) return resolved.error;
+      const { agent } = resolved;
+      const check = await checkRateLimit(supabase, agent.id, "default");
+      if (!check.allowed) return rateLimited("read operations", check.resetAt);
+      const token = await getAgentToken(agent);
+      if (!token) return fail("Failed to authenticate the agent wallet with the DeHub API.");
+      try { await recordPostViews([token_id], { token, agent: true }); }
+      catch (error) { return fail(error instanceof Error ? error.message : "Could not record the view."); }
+      await touchAgent(supabase, agent.id);
+      return ok({ success: true, token_id, viewed: true });
     },
   );
 

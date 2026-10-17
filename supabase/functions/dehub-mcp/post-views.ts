@@ -1,4 +1,5 @@
-type Viewer = { token: string } | { anonymousUrl: string; deviceId: string };
+/** `agent` tags signed-in views as agent traffic; they still count in the public totals. */
+type Viewer = { token: string; agent?: boolean } | { anonymousUrl: string; deviceId: string };
 
 /** Send impressions through the same public counters and cooldowns as the apps. */
 export async function recordPostViews(ids: unknown[], viewer: Viewer, request: typeof fetch = fetch): Promise<void> {
@@ -11,7 +12,7 @@ export async function recordPostViews(ids: unknown[], viewer: Viewer, request: t
     const response = await request(signedIn ? 'https://api.dehub.io/api/view/batch' : viewer.anonymousUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...(signedIn ? { Authorization: `Bearer ${viewer.token}` } : {}) },
-      body: JSON.stringify(signedIn ? { tokenIds: batch } : { tokenIds: batch.map(String), deviceId: viewer.deviceId }),
+      body: JSON.stringify(signedIn ? { tokenIds: batch, ...(viewer.agent ? { source: 'agent' } : {}) } : { tokenIds: batch.map(String), deviceId: viewer.deviceId }),
       signal: AbortSignal.timeout(10000),
     });
     if (!response.ok || (await response.json()).success !== true) {
