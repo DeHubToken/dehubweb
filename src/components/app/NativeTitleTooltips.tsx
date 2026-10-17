@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 /**
  * Replaces the browser's native `title=` tooltip with the app's own hover
- * label — the small dark pill used by the side panel tabs.
+ * label — the same liquid glass pill as every other tooltip.
  *
  * There are ~190 `title="…"` attributes spread across the app, and the browser
  * renders each as a square grey OS tooltip that ignores the theme entirely.
@@ -26,6 +26,8 @@ export function NativeTitleTooltips() {
     const bubble = document.createElement('div');
     bubble.setAttribute('role', 'tooltip');
     bubble.setAttribute('aria-hidden', 'true');
+    // Glass frost, tint and ink come from styles/glass-surfaces.css, per theme.
+    bubble.setAttribute('data-glass-tooltip', '');
     bubble.style.cssText = [
       'position:fixed',
       'z-index:2147483000',
@@ -33,12 +35,9 @@ export function NativeTitleTooltips() {
       'max-width:min(18rem,80vw)',
       'padding:4px 8px',
       'border-radius:6px',
-      'background:#27272a',
-      'color:#f4f4f5',
       'font-size:11px',
       'font-weight:500',
       'line-height:1.25',
-      'box-shadow:0 8px 24px rgba(0,0,0,0.35)',
       'opacity:0',
       'transition:opacity 150ms ease',
       'white-space:pre-line',
