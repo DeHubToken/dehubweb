@@ -109,7 +109,6 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
     }
   }, [isAuthenticated, openLoginModal, navigate]);
 
-  const isNotificationsActive = location.pathname === '/app/notifications' || location.pathname === '/notifications';
   // With or without the /app prefix — both spellings reach the same page.
   const isPostPage = /^\/(?:app\/)?(?:post|video)\//.test(location.pathname);
   // When the post overlay is opened from the feed, the home page's sticky tab bar hosts
@@ -207,12 +206,12 @@ export function MobileHeader({ isOpen, onOpenChange, children }: MobileHeaderPro
         {isAuthenticated && (
           <button
             onClick={() => openNotificationsDrawer()}
-            className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
+            className="relative flex h-9 w-9 items-center justify-center text-white transition-colors"
             aria-label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}
           >
             <Bell className="w-[26px] h-[26px]" />
             {totalNotifUnread > 0 && (
-              <span data-unread-chip className="absolute -top-1 -right-2 min-w-[18px] h-[18px] px-[4px] bg-red-500 text-white text-[10px] font-bold rounded-[6px] flex items-center justify-center leading-none">
+              <span data-unread-chip className="pointer-events-none absolute top-0 -right-1 min-w-[18px] h-[18px] px-[4px] bg-red-500 text-white text-[10px] font-bold rounded-[6px] flex items-center justify-center leading-none">
                 {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
               </span>
             )}

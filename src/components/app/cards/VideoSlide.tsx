@@ -436,7 +436,7 @@ export const VideoSlide = memo(function VideoSlide({
   // each slide, and a transformed ancestor makes `fixed` resolve against that
   // wrapper rather than the viewport.
   return (
-    <div className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
+    <div data-keep-dark className="absolute inset-0 bg-black" style={{ willChange: 'transform' }}>
       {/* Liquid glass fill behind letterboxed / non-portrait videos.
           One filtered layer plus a plain tint. It used to be a blurred layer
           with a second backdrop-blur pass stacked on it — blurring what was
@@ -456,7 +456,7 @@ export const VideoSlide = memo(function VideoSlide({
               transform: 'scale(1.1)',
             }}
           />
-          <div className="absolute inset-0 z-[1] bg-black/40" />
+          <div data-keep-dark className="absolute inset-0 z-[1] bg-black/40" />
         </>
       )}
 
@@ -474,11 +474,11 @@ export const VideoSlide = memo(function VideoSlide({
           /* Transcode job failed server-side — videoUrl was written
              optimistically at upload time and the file was never actually
              produced, so a player here would just sit on a dead src. */
-          <div className="relative w-full h-full bg-zinc-900">
+          <div data-keep-dark className="relative w-full h-full bg-zinc-900">
             {thumbnail && (
               <img src={thumbnail} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
             )}
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+            <div data-keep-dark className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
               {/* Retry is offered on the post itself, not here: a slide in the
                   carousel carries no ownership, and the creator reaching their
                   own broken short does so through their profile. */}
@@ -490,7 +490,7 @@ export const VideoSlide = memo(function VideoSlide({
         ) : transcodingStatus === 'pending' || transcodingStatus === 'on' ? (
           /* Still transcoding — same optimistic videoUrl, but recoverable
              once the job finishes, unlike the 'failed' branch above. */
-          <div className="relative w-full h-full bg-zinc-900">
+          <div data-keep-dark className="relative w-full h-full bg-zinc-900">
             {thumbnail && (
               <img src={thumbnail} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50" />
             )}
@@ -504,7 +504,7 @@ export const VideoSlide = memo(function VideoSlide({
         ) : (short.videoUrl || short.soundtrackUrl) ? (
           <div ref={attachSlot} className="w-full h-full" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-zinc-900">
+          <div data-keep-dark className="w-full h-full flex items-center justify-center bg-zinc-900">
             <img 
               src={thumbnail} 
               alt={short.description || _copy("copy.e8faa500e9f4", { defaultValue: "Short video" })}

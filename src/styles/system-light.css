@@ -69,7 +69,7 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is(
   background: rgba(11,11,13,.07) !important; border-color: rgba(11,11,13,.06) !important; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.1) !important;
 }
 /* Logo turns ink */
-html[data-theme="system"][data-system-tone="light"] header img[alt*="DeHub" i], html[data-theme="system"][data-system-tone="light"] [data-island-logo] img, html[data-theme="system"][data-system-tone="light"] header svg { filter: invert(1); }
+html[data-theme="system"][data-system-tone="light"] header img[alt*="DeHub" i], html[data-theme="system"][data-system-tone="light"] [data-island-logo] img { filter: invert(1); }
 /* Media keeps its own white chrome */
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) :is([data-media-full], [data-on-media], [data-video-controls], [data-video-topbar]) :is(*, svg) { color: #fff !important; }
 
