@@ -1,5 +1,5 @@
 // DeHub Maboroshi launch film — soundtrack. Hard drift-phonk in F minor at 140 BPM: pitched cowbell riff,
-// distorted sliding 808, half-swung hats, claps on 2 and 4. Every UI action in the picture has its own
+// distorted sliding 808, half-swung hats, claps on 2 and 4. Every cut and swap in the picture has its own
 // synthesized sound on the exact frame (event times come from the film page). No samples.
 import fs from 'fs';
 const ev = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
@@ -288,58 +288,58 @@ function groove(b0, b1, o = {}) {
     }
   }
 }
-// ---- intro: the alley through the wall, slams on the title words
-pad(0, bt(7.5), [53, 56, 60, 65], .09, 900);
-groove(0, 3.75, { kick: false, bass: false, clapOn: false, hats: 0, cowLP: 900, cowAmp: .26, rollEnd: false });
-b808(0, bt(3.6), 29, .45);
-E.slam.filter(t => t < bt(3)).forEach((t, i) => { kick(t, .8); clap(t, .5, .2); thump(t, .35); });
-riser(bt(2.5), bt(4), .3); revCym(bt(3), bt(4), .25);
-// the first swap: silhouette into liquid chrome
-impact(bt(4), .9); boom(bt(4), .4); shimmer(bt(4), bt(1), .12); whoosh(bt(3.9), bt(.5), .45, 300, 8000, -.5, .5);
-groove(4, 6, { kick: true, bass: true, cow: true, hats: 8, cowLP: 2400, kickAmp: .8, bassAmp: .8 });
-E.slam.filter(t => t > bt(4.2) && t < bt(5.9)).forEach(t => { clap(t, .6, .15); thump(t, .3); });
-// title card: one huge hit, then a rise into the studio
+// ---- hook: Jean Phil cuts on every half beat, the beat is already running
+groove(0, 4, { hats: 8, cowLP: 2600, kickAmp: .85, bassAmp: .8, rollEnd: false });
+E.cut.filter(t => t < bt(4)).forEach((t, i) => { flashHit(t, .22); if (i % 2) chop(t, .25); });
+E.slam.filter(t => t < bt(4)).forEach(t => { clap(t, .6, .2); thump(t, .4); });
+riser(bt(3), bt(4.25), .35); revCym(bt(3.25), bt(4.25), .3);
+// the cat swap
+impact(bt(4), .6); E.swap.filter(t => t < bt(5)).forEach(t => { impact(t, .9); boom(t, .45); shimmer(t, bt(1), .12); whoosh(t - .08, bt(.6), .5, 300, 9000, -.5, .5); flashHit(t, .35); });
+groove(4.5, 6, { hats: 8, kickAmp: .85, bassAmp: .85 });
+E.slam.filter(t => t > bt(4.8) && t < bt(5.9)).forEach(t => { clap(t, .6, .15); thump(t, .3); });
+// title card: one huge hit, then a rise into the side-by-sides
 impact(bt(6), 1, .8); kick(bt(6), 1); b808(bt(6), bt(1.8), 29, 1); boom(bt(6), .5);
 pad(bt(6), bt(8), [49, 53, 56, 61], .1, 1800);
 for (let b = 7; b < 8; b += b < 7.5 ? .25 : 1 / 8) clap(bt(b), .2 + .5 * (b - 7), .08);
 riser(bt(6.5), bt(8), .4); revCym(bt(7), bt(8), .3);
-// ---- the studio: beat under a low-pass so every UI sound reads
+// ---- original vs Maboroshi, one pair every bar and a half
 impact(bt(8), .9); whoosh(bt(7.85), .5, .5, 300, 7000, .6, -.6);
-groove(8, 19.5, { hats: 8, kickAmp: .85, bassAmp: .85 });
-E.click.forEach(t => uiClick(t, .55));
-E.type.forEach(t => typeClick(t, .24));
-E.pop.forEach((t, i) => pop(t, .25, 600 + i * 200));
-whoosh(bt(10.3), bt(.5), .3, 600, 5000, -.3, .3); whoosh(bt(13.4), bt(.6), .35, 500, 7000, .3, -.3);
-progressTone(bt(14.05), bt(15.0), .07); shimmer(bt(14.7), bt(.8), .08);
-bell(bt(15.75), 1318.5, .18);
-progressTone(bt(16.7), bt(19.5), .08);
+groove(8, 19.5, { hats: 8, kickAmp: .9, bassAmp: .9 });
+E.swap.filter(t => t > bt(8) && t < bt(20)).forEach((t, i) => { whoosh(t - .05, B * .55, .4, 500, 9000, i % 2 ? -.5 : .5, i % 2 ? .5 : -.5); shimmer(t, B * .9, .08); flashHit(t, .28); });
+E.cut.filter(t => t > bt(8.5) && t < bt(20)).forEach(t => thump(t, .35));
+E.slam.filter(t => t > bt(8) && t < bt(20)).forEach(t => { clap(t, .45, .15); });
 riser(bt(17.5), bt(20), .5); revCym(bt(18.5), bt(20), .4);
 for (let b = 18.5; b < 19.75; b += b < 19 ? .25 : b < 19.5 ? 1 / 8 : 1 / 16) clap(bt(b), .25 + .55 * (b - 18.5) / 1.25, .08);
 whoosh(bt(19.3), bt(.7), .45, 300, 8000, .5, -.5);
-// ---- drop: one look per beat, then hard cuts
+// ---- drop: a swap on every half beat, then hard cuts
 impact(bt(20), 1); boom(bt(20), .7);
 groove(20, 27.5, { hats: 16, vox: true, cowAmp: .32 });
-E.swap.filter(t => t >= bt(20) && t < bt(27)).forEach((t, i) => { if (i) impact(t, .45, .4); whoosh(t - .02, B * .4, .35, 500, 9000, i % 2 ? -.5 : .5, i % 2 ? .5 : -.5); shimmer(t, B * .7, .07); flashHit(t, .3); });
-E.cut.forEach((t, i) => { thump(t, .5); flashHit(t, .3); if (i % 2) chop(t, .4); });
-for (let i = 0; i < 6; i++) pop(bt(27.5 + i * .0625), .14, 700 + i * 120);
+E.swap.filter(t => t >= bt(20) && t < bt(26)).forEach((t, i) => { if (i) impact(t, .35, .3); whoosh(t - .03, B * .35, .35, 600, 10000, i % 2 ? -.5 : .5, i % 2 ? .5 : -.5); flashHit(t, .3); });
+E.cut.filter(t => t >= bt(26) && t < bt(27.5)).forEach((t, i) => { thump(t, .5); flashHit(t, .3); if (i % 2) chop(t, .4); });
+for (let i = 0; i < 12; i++) pop(bt(27.5 + i * .04), .1, 600 + i * 70);
 // tape stop at 27.5 (applied after mixing), then the slams
 const TAPE = [bt(27.5), bt(28)];
 [[28, 29, 1], [28.5, 29, 1], [30, 25, .9], [30.5, 24, 1]].forEach(([b, n, a]) => { kick(bt(b), 1); b808(bt(b), bt(b === 28 ? .45 : b === 30 ? .45 : 1.0), n, 1.1 * a); impact(bt(b), .7 * a, .5); clap(bt(b), .8); });
 revCym(bt(29), bt(30), .25);
 riser(bt(31), bt(32), .4); whoosh(bt(31.5), bt(.5), .5, 400, 9000, -.6, .6);
-// ---- barrage of looks
-groove(32, 40, { hats: 16 });
-const SCALE = [65, 67, 68, 70, 72, 73, 75, 77, 79, 80, 82, 84, 85, 87, 89, 91];
-E.tick.filter(t => t < bt(40)).forEach((t, i) => blip(t, SCALE[i], .16, i % 2 ? .35 : -.35));
+// ---- the library: pull back, the counter races, three steps
+impact(bt(32), .7);
+E.whoosh.filter(t => t < bt(40)).forEach(t => whoosh(t, bt(1.6), .5, 200, 5000, .4, -.4));
+groove(32, 40, { hats: 16, kickAmp: .9 });
+for (let b = 32.5, i = 0; b < 35; b += .125, i++) blip(bt(b), 65 + Math.min(26, i), .07 + .05 * (b - 32.5) / 2.5, i % 2 ? .3 : -.3);
+E.pop.forEach(t => { pop(t, .25, 700); bell(t, 1318.5, .16); });
+E.tick.filter(t => t < bt(40)).forEach((t, i) => { blip(t, [72, 75, 79][i], .2, 0); pop(t, .14, 900); });
 whoosh(bt(39.6), bt(.8), .6, 300, 9000, .7, -.7);
-// ---- the promises
+// ---- Jean Phil templates
 impact(bt(40), .8);
-groove(40, 51.5, { hats: 8, kickAmp: .9, bassAmp: .9, vox: true });
-E.slam.filter(t => t >= bt(40) && t < bt(49)).forEach(t => { clap(t, .5, .2); thump(t, .3); });
-E.tick.filter(t => t > bt(44)).forEach((t, i) => { blip(t, [72, 75, 77, 80][i], .18, 0); pop(t, .12, 900); });
-bell(bt(46.5), 1568, .14);
-E.whoosh.forEach(t => whoosh(t - .1, bt(.6), .45, 300, 7000, .4, -.4));
-E.swap.filter(t => t > bt(49)).forEach(t => { shimmer(t, B * .7, .07); flashHit(t, .22); });
+groove(40, 48, { hats: 16, vox: true });
+E.slam.filter(t => t >= bt(40) && t < bt(48)).forEach(t => { clap(t, .55, .2); thump(t, .35); });
+E.cut.filter(t => t > bt(40.5) && t < bt(48)).forEach(t => flashHit(t, .22));
+// ---- the promises
+E.whoosh.filter(t => t >= bt(47)).forEach(t => whoosh(t - .1, bt(.6), .45, 300, 7000, .4, -.4));
+groove(48, 51.5, { hats: 8, kickAmp: .9, bassAmp: .9 });
+E.tick.filter(t => t > bt(48)).forEach((t, i) => { blip(t, [72, 75, 79][i], .2, 0); pop(t, .14, 900); });
+bell(bt(50.5), 1568, .14);
 riser(bt(50.5), bt(52), .45); revCym(bt(51), bt(52), .35);
 // ---- brand slam
 [52, 52.5, 53, 53.5].forEach((b, i) => { kick(bt(b), 1); b808(bt(b), bt(i < 3 ? .45 : .5), [29, 29, 32, 36][i], 1.1); impact(bt(b), .7 + i * .1, .5); clap(bt(b), .9); if (i === 3) boom(bt(b), .6); });
@@ -365,8 +365,7 @@ for (let i = 0; i < N; i++) {
   const t = tOf(i), b = t / B;
   let g = 1;
   let fc = 20000;
-  if (b >= 8.1 && b < 20) fc = b < 8.5 ? 20000 * (2600 / 20000) ** ((b - 8.1) / .4) : b > 18.6 ? 2600 * (20000 / 2600) ** ((b - 18.6) / 1.4) : 2600;
-  for (let c = 0; c < 2; c++) {
+    for (let c = 0; c < 2; c++) {
     let m = MU[c][i] * g, bs = BS[c][i], d = DR[c][i];
     if (fc < 19999) { m = mf[c].run(m, fc, .15).lp; bs = bf[c].run(bs, Math.max(fc, 400), .1).lp; d = df[c].run(d, fc * 1.6, .1).lp; }
     MU[c][i] = m * duck[i]; BS[c][i] = bs * (.45 + .55 * duck[i]); DR[c][i] = d;
