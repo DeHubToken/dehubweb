@@ -563,7 +563,8 @@ function PromptComposer({ initialCategory, focusRequest, onPosted }: { initialCa
     if (!result.success) { setError(result.error.issues[0].message); return; }
     setError('');
     submitMutation.mutate({
-      ...result.data,
+      title: featurePromptFields(prompt, title).title,
+      category,
       description: featurePromptFields(prompt, title, deviceDetails).description,
       mediaFiles: attachments.map(a => a.file),
     }, { onSuccess: () => {
