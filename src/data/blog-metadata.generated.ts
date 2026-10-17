@@ -2857,6 +2857,31 @@ export const newPostsMetadata: BlogPost[] = [
     "seoDescription": "DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
   },
   {
+    "id": "q4-development-overview",
+    "slug": "q4-development-overview",
+    "title": "Q4 Development Overview",
+    "excerpt": "Everything we shipped since October across dehubweb, dehub-mobile, dehub-stream-backend and stream-admin-hub — the video editor, Creator and Maboroshi, AI agents, feeds, live, profiles, System Light, wallets and the stats page, with the pull request next to each entry.",
+    "content": "",
+    "bannerImage": "/media/q4-development-overview-banner.png",
+    "bannerImageAlt": "Q4 Development Overview - DeHub rocket banner",
+    "author": {
+      "name": "DeHub Team"
+    },
+    "publishedAt": "2026-10-17T12:00:00.000Z",
+    "tags": [
+      "Development",
+      "Update",
+      "Q4",
+      "Shipping",
+      "2026"
+    ],
+    "readingTime": 12,
+    "featured": false,
+    "status": "published",
+    "seoTitle": "Q4 Development Overview | DeHub",
+    "seoDescription": "Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout."
+  },
+  {
     "id": "q3-development-overview",
     "slug": "q3-development-overview",
     "title": "Q3 Development Overview",
@@ -3418,29 +3443,29 @@ export const newPostsMetadata: BlogPost[] = [
 
 // getLatestPost() result — docs home hero.
 export const latestPostMetadata: BlogPost | undefined = {
-  "id": "dehub-token-exchange-listings-update-2026",
-  "slug": "dehub-token-exchange-listings-update-2026",
-  "title": "DeHub Token and Exchange Listings Update",
-  "excerpt": "An update on the new token, AI credits, planned buybacks for stakers, and the expected timing of official exchange listings.",
+  "id": "q4-development-overview",
+  "slug": "q4-development-overview",
+  "title": "Q4 Development Overview",
+  "excerpt": "Everything we shipped since October across dehubweb, dehub-mobile, dehub-stream-backend and stream-admin-hub — the video editor, Creator and Maboroshi, AI agents, feeds, live, profiles, System Light, wallets and the stats page, with the pull request next to each entry.",
   "content": "",
-  "bannerImage": "/media/dehub-token-exchange-listings-2026.jpg",
-  "bannerImageAlt": "DeHub listing soon announcement banner",
+  "bannerImage": "/media/q4-development-overview-banner.png",
+  "bannerImageAlt": "Q4 Development Overview - DeHub rocket banner",
   "author": {
     "name": "DeHub Team"
   },
-  "publishedAt": "2026-09-18T19:32:10.000Z",
+  "publishedAt": "2026-10-17T12:00:00.000Z",
   "tags": [
-    "DHB",
-    "Token",
-    "Exchange Listings",
-    "AI Credits",
-    "Staking"
+    "Development",
+    "Update",
+    "Q4",
+    "Shipping",
+    "2026"
   ],
-  "readingTime": 3,
-  "featured": true,
+  "readingTime": 12,
+  "featured": false,
   "status": "published",
-  "seoTitle": "DeHub Token and Exchange Listings Update | DeHub",
-  "seoDescription": "DeHub shares its token utility, AI credit and buyback plans, DEX access, and the estimated timing for official exchange listings."
+  "seoTitle": "Q4 Development Overview | DeHub",
+  "seoDescription": "Everything DeHub shipped since October across web, mobile, the streaming backend and admin — the video editor, Creator, AI agents, live, profiles, System Light and wallets — with pull request links throughout."
 };
 
 export const excludedTitles: string[] = [
