@@ -108,8 +108,9 @@ export function useFeedSwallowClip(
           if (cut) resizeObserver.unobserve(cut);
           cut = next;
           if (cut) resizeObserver.observe(cut);
-          cutInset = (cut && parseFloat(getComputedStyle(cut).borderTopLeftRadius)) || PILL_CUT_INSET;
         }
+        // Themes change the pill's radius, so re-read it with the cut.
+        cutInset = (cut && parseFloat(getComputedStyle(cut).borderTopLeftRadius)) || PILL_CUT_INSET;
         source = scrollSource(el);
         findCut = false;
       }
