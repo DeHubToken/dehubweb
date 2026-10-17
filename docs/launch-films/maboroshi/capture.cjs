@@ -21,7 +21,7 @@ fs.mkdirSync(OUT, { recursive: true });
   };
   if (A.events) fs.writeFileSync(A.events, JSON.stringify(await pg.evaluate(() => ({ ev: window.EVENTS, film: window.FILM }))));
   if (A.stills) {
-    const B = 60 / 140;
+    const B = 60 / 170;
     let si = 0; for (const b of A.stills.split(',').map(Number)) await shot(path.join(OUT, (A.idx ? String(si++).padStart(2, '0') + '_' : '') + `b${b.toFixed(2)}.jpg`), b * B);
   } else {
     const total = await pg.evaluate(() => window.FILM.TOTAL);

@@ -1,17 +1,17 @@
 # Maboroshi launch film
 
-30.5-second launch film for Maboroshi in DeHub Creator, rendered as 1920×1080 and 1080×1920 at 60 fps with a -14 LUFS soundtrack. Same engine, length and format as the editor launch film (`../editor`).
+25-second launch film for Maboroshi in DeHub Creator, rendered as 1920×1080 and 1080×1920 at 60 fps with a -14 LUFS soundtrack. Same engine, length and format as the editor launch film (`../editor`).
 
 All footage is real: motion-library clips and their Maboroshi recasts from `public/creator-clips`, plus the Jean Phil templates. Every swap shows the original clip turning into the recast behind a wipe line, labelled ORIGINAL and MABOROSHI.
 
-Story, on a 140 BPM grid (beats in brackets):
+Story, on a 170 BPM grid (beats in brackets):
 
 | Beat | Scene |
 | --- | --- |
 | 0–4 | Jean Phil templates, a cut on every half beat. "JEAN PHIL'S MOVES." "YOUR FACE." |
 | 4–6 | Cat Performer: the dancer turns into a cat. "ANYONE. ANYTHING." |
 | 6–8 | 幻 / MABOROSHI title over the library wall. |
-| 8–20 | Eight original vs Maboroshi pairs, one every bar and a half (side by side, or full frame with the original in a corner). "ANY CLIP." "ANY PERSON." "SAME MOVES." |
+| 8–20 | Six original vs Maboroshi pairs, one every two beats (side by side, or full frame with the original in a corner). "ANY CLIP." "ANY PERSON." "SAME MOVES." |
 | 20–28 | The drop: a full-frame swap on every half beat, quarter-beat cuts, then twelve recasts at once. |
 | 28–32 | "YOUR SCENE. NEW YOU." over the wall. |
 | 32–40 | Pull back from one clip to the library, a counter to 19,537 clips, then Pick a clip · Add your character · Swap. |
@@ -24,7 +24,7 @@ Story, on a 140 BPM grid (beats in brackets):
 
 - `film.html`, `film.js`: the whole picture. `render(t)` sets every element from the time alone and waits for the clip frames it needs. `?w=1080&h=1920` switches to the vertical layout. Casting (which clips go where) is the block under `// casting`.
 - `prep-clips.py`: downloads the clips listed in `public/creator-clips` and cuts 4.2 s of each into `a/clips` at 30 fps.
-- `synth.mjs`: the soundtrack (the editor film's F minor phonk kit) plus a sound for every cut and swap, timed from the events the page exports.
+- `synth.mjs`: the soundtrack (a clean drum and bass track in F minor (two-step breaks, reese + sine sub, stabs)) plus a sound for every cut and swap, timed from the events the page exports.
 - `capture.cjs`, `post.py`, `scan.py`, `sheet.py`: frame capture with motion-blur subframes, the grain/glitch post pass and encode, a stray-flash check and contact sheets (shared with the editor film).
 
 ## Render
