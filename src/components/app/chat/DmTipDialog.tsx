@@ -29,6 +29,7 @@ import {
   getWalletAddress,
   switchChain,
   checkDHBPaused,
+  looksLikePausedRevert,
 } from '@/lib/contracts/aa-utils';
 import { toastTxError } from '@/lib/tx-error-toast';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
@@ -153,9 +154,9 @@ export function DmTipDialog({
     } catch (error: unknown) {
       console.error('[DmTip] Failed:', error);
       const errStr = String((error as any)?.message || error).toLowerCase();
-      const isPausedErr = errStr.includes('paused') || errStr.includes('erc20pausable');
+      const isPausedErr = looksLikePausedRevert(errStr);
       const isSTF = errStr.includes('stf') || errStr.includes('535446') || errStr.includes('safetransfer') || errStr.includes('token transfer failed');
-      if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
+      if ((isPausedErr || isSTF) && await checkDHBPaused().catch(() => false)) {
         toast.error(t('tokens.transactionsPaused'), {
           id: 'dm-tip',
           description: t('tokens.transactionsPausedDesc'),
