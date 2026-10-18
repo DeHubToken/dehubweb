@@ -1028,7 +1028,7 @@ function SendDialog({ open, onOpenChange, token, chainId, onSuccess, allTokens, 
                   <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-zinc-500" />
                 )}
                 {searchResults.length > 0 && (
-                  <div className="absolute z-50 top-full mt-1 left-0 right-0 bg-zinc-900 border border-white/10 rounded-lg overflow-hidden shadow-xl">
+                  <div data-glass-menu className="absolute z-50 top-full mt-1 left-0 right-0 bg-zinc-900 border border-white/10 rounded-lg overflow-hidden shadow-xl">
                     {searchResults.map((user: any, i: number) => {
                       const avatar = user.avatarImageUrl || user.avatarUrl || user.avatar_url;
                       const name = user.username || user.displayName || user.display_name;

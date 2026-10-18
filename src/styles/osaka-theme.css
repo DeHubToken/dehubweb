@@ -1573,8 +1573,8 @@ html[data-theme='osaka'] #app-root [data-inline-popover] {
   box-shadow: var(--osaka-edge-lift) !important;
 }
 
-/* The nine-emoji reaction tray. Not portalled — it is absolutely positioned
-   inside the card — so section 5 never saw it, and it is deliberately shipped
+/* The nine-emoji reaction tray. Portalled into #app-root rather than <body>,
+   so section 5 never saw it, and it is deliberately shipped
    at 0.9 opacity with a blur because nine glyphs have to read against whatever
    post is behind them. A floating menu is a portal-class surface even when it
    is not literally in a portal. */
