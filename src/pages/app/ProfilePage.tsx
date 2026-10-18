@@ -11,7 +11,6 @@ import { ThemedIcon } from '@/components/app/war/WarHudIcon';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -70,6 +69,38 @@ const CONTENT_BACKED_TABS: TabValue[] = ['home', 'posts', 'images', 'videos'];
  * The locked height is released after a brief delay so the container
  * can grow naturally if new content loads.
  */
+/**
+ * The profile tabs' selected mark: a short glowing line under the active tab
+ * ("Beam"), in place of the glass box other tab rows use. It takes the tab's
+ * own text colour, so every theme's ink (white on dark, near-black on light)
+ * carries through without a per-theme rule.
+ */
+function ProfileTabBeam({ rect, enableTransition }: {
+  rect: { x: number; y: number; width: number; height: number; ready: boolean };
+  enableTransition: boolean;
+}) {
+  if (!rect.ready) return null;
+  const width = Math.max(16, Math.round(rect.width * 0.4));
+  return (
+    <div
+      aria-hidden
+      data-profile-tab-beam
+      className="pointer-events-none absolute left-0 top-0 z-20 text-white"
+      style={{
+        width,
+        height: 3,
+        borderRadius: 3,
+        background: 'currentColor',
+        boxShadow: '0 0 10px currentColor, 0 0 2px currentColor',
+        transform: `translate(${rect.x + (rect.width - width) / 2}px, ${rect.y + rect.height - 4}px)`,
+        transition: enableTransition
+          ? 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), width 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+          : 'none',
+      }}
+    />
+  );
+}
+
 function StableHeightContainer({ activeTab, children }: { activeTab: string; children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const maxHeight = useRef(0);
@@ -676,7 +707,7 @@ export default function ProfilePage() {
           </>}
           <div className="relative min-w-0 flex-1 overflow-hidden rounded-xl">
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
-            <GlassIndicator rect={profileDragDisplayRect} borderRadius="0.75rem" enableTransition={!isProfileDragging && tabTransition} />
+            <ProfileTabBeam rect={profileDragDisplayRect} enableTransition={!isProfileDragging && tabTransition} />
             {/* Drag handle overlay */}
             {profileDragDisplayRect.ready && (
               <div
@@ -715,7 +746,8 @@ export default function ProfilePage() {
                     title={t(`profile.tabs.${tab.value}`, tab.label)}
                     data-feed-tab-btn data-active={isActive}
                     className={cn(
-                      'relative z-40 flex flex-col items-center justify-center gap-px px-2 rounded-xl transition-colors text-white',
+                      'relative z-40 flex flex-col items-center justify-center gap-px px-2 rounded-xl transition-[color,opacity] duration-300 text-white',
+                      !isActive && 'opacity-50 hover:opacity-80',
                       isTabsStuck ? 'shrink-0 w-14 h-11' : 'flex-1 min-w-[52px] py-[9px]',
                     )}
                   >
