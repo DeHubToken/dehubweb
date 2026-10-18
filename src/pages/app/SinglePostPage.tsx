@@ -1023,8 +1023,9 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
     };
   }, [isFullBleedLive, isVideoPost, isImmersiveImage]);
 
-  // The loaded video owns Back; the nav pill keeps its tabs and feed settings.
-  const hasMediaBack = isVideoPost && !isAudioPost && !!post && post.status !== 'pending';
+  // On phones/tablets the loaded video owns Back; the nav pill keeps its tabs
+  // and feed settings. Desktop keeps the nav pill's back like every other post.
+  const hasMediaBack = isMobileView && isVideoPost && !isAudioPost && !!post && post.status !== 'pending';
   useEffect(() => {
     if (hasMediaBack) document.body.classList.add('post-media-back');
     return () => document.body.classList.remove('post-media-back');
@@ -1077,7 +1078,7 @@ function SinglePostPageContent({ inOverlay = false, overrideId }: SinglePostPage
 
     switch (contentType) {
       case 'video':
-        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
+        return <VideoCard video={toVideoItem(post)} postPage onBack={isAudioPost || !isMobileView ? undefined : goBack} isImmersive={!isAudioPost} onOpenComments={handleOpenPageComments} />;
       case 'image':
         return <ImageCard post={toImagePost(post)} aboveFold postPage isImmersive={isImmersiveImage} onOpenComments={handleOpenPageComments} />;
       case 'live': {
