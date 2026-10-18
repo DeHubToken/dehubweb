@@ -226,30 +226,58 @@ html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::after {
   border-radius: inherit;
 }
 
-/* The new-posts bridge borrows the nav material in every theme. Light and
-   Minimal keep their flat file-tab finish; War keeps its gunmetal finish. */
-html[data-theme='light'] :is([data-feed-new-posts-bridge], [data-feed-new-posts-button]) {
-  background: var(--paper) !important;
-  color: var(--ink) !important;
-  border: 1px solid var(--hairline-strong);
-  box-shadow: none !important;
-  backdrop-filter: none !important;
+/* The new-posts bead hangs off the phone nav as part of it, so it wears the
+   nav's own material in every theme. Its outline is an SVG stroke along the
+   sides and bottom only (--bead-rim), leaving the top open where it joins
+   the bar. Light and Minimal keep their flat finish; War its gunmetal. */
+[data-feed-new-posts-bead-root] {
+  --bead-ink: #fff;
+  --bead-rim: rgb(255 255 255 / 0.22);
+  --bead-face-ring: rgb(0 0 0 / 0.45);
 }
-html[data-theme='minimal'] :is([data-feed-new-posts-bridge], [data-feed-new-posts-button]) {
-  background: #000 !important;
-  color: #fff !important;
-  border: 1px solid rgb(255 255 255 / 0.69);
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  border-radius: 0 !important;
+html[data-theme] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
+  background: linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base);
+  backdrop-filter: var(--nav-glass-blur);
 }
-html[data-theme='war'] :is([data-feed-new-posts-bridge], [data-feed-new-posts-button]) {
-  background: linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base) !important;
-  border: 1px solid rgb(79 227 224 / 0.35);
-  backdrop-filter: var(--nav-glass-blur) !important;
+/* Open the bar's bottom row where the bead joins (--bead-gap wide). The bead
+   overlaps that row with the same material, and its stroke carries on from
+   the bar's rim, so there is one outline and no line across the join. */
+html[data-theme][data-theme]:is([data-theme='system'], [data-theme='immersive'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']):not([data-system-tone='light'])
+  :is([data-new-posts-open] > [data-nav-glass-backdrop], [data-feed-island-surface][data-new-posts-open]) {
+  mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+  mask-position: 0 0, 50% 100%;
+  mask-size: 100% 100%, var(--bead-gap, 0px) 1px;
+  mask-repeat: no-repeat;
+  mask-composite: exclude;
 }
-[data-feed-new-posts-bridge] { border-bottom: 0 !important; }
-[data-feed-new-posts-button] { margin-top: -2px; }
+html[data-theme='light'] [data-feed-new-posts-bead-root] {
+  --bead-ink: var(--ink);
+  --bead-rim: var(--hairline-strong);
+  --bead-face-ring: var(--paper);
+}
+/* System Light: the same frosted white as its tab bar. */
+html[data-system-tone='light'] [data-feed-new-posts-bead-root] {
+  --bead-ink: #0b0b0d;
+  --bead-rim: rgb(0 0 0 / 0.1);
+  --bead-face-ring: #fff;
+}
+html[data-theme][data-system-tone='light'] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
+  background: rgb(255 255 255 / 0.62);
+  backdrop-filter: blur(22px) saturate(1.8);
+}
+html[data-theme='light'] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
+  background: var(--paper);
+  backdrop-filter: none;
+}
+html[data-theme='minimal'] [data-feed-new-posts-bead-root] {
+  --bead-rim: rgb(255 255 255 / 0.69);
+  --bead-face-ring: #000;
+}
+html[data-theme='minimal'] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
+  background: #000;
+  backdrop-filter: none;
+}
+html[data-theme='war'] [data-feed-new-posts-bead-root] { --bead-rim: rgb(79 227 224 / 0.35); }
 
 /* Bentos: page bentos, side panels and post cards on every canvas theme. Only
    the fill colour changes (the theme colour mixed into a thinner smoke), so
