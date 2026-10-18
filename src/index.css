@@ -6371,6 +6371,10 @@ html[data-system-tone="light"] [data-creator-page] .text-white {
     width: 1.25rem;
     height: 1.25rem;
   }
+  /* Over the media the buttons are centred in a row, not in a card corner. */
+  html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) [data-corner-dots] {
+    translate: none !important;
+  }
   html[data-theme="immersive"] [data-cinematic] [data-card-head]:not([data-card-head="plain"]) > :first-child {
     padding: 0;
     color: #fff;
