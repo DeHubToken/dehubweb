@@ -1828,12 +1828,12 @@ export const en = {
       'Wallet sign-in hardened with single-use proofs, passkeys that unlock on other browsers, and wallet resets that pick up where they stopped ✅',
       'Web startup bundled from hundreds of files into a handful, an Intermission maintenance screen served from the edge, and images that keep loading when the image service is unreachable ✅',
       'The Android app moved to Expo 55 with a faster start, screen recording straight into the editor, and message boxes that stay above the keyboard on every phone ✅',
+      'Photos, videos, voice notes and files in direct messages are end-to-end encrypted ✅',
       'Television and gaming console apps',
       'Apple App Store listing',
       'App launch marketing campaigns across X, TikTok, YouTube, Instagram, and Twitch',
       'LP farming with community yields',
       'Launch fiat off-ramp functionality for seamless token-to-cash conversion',
-      'End-to-end encryption for photos, video and files in direct messages',
     ],
   },
   brandAssets: {
