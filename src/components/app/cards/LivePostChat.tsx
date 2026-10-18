@@ -33,6 +33,8 @@ import { InlineEmoji } from '@/components/app/emoji/EmojiText';
 import { useTranslation as useTextTranslation } from '@/components/app/TranslatableText';
 import { useLiveChatMessages } from '@/hooks/use-livechat';
 import { useStreamAudience } from '@/hooks/use-stream-audience';
+import { useLiveAudience } from '@/hooks/use-live-audience';
+import { LiveAudienceSheet } from '@/components/app/live/LiveAudienceSheet';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken, uploadLiveChatVoice } from '@/lib/api/dehub';
@@ -214,6 +216,13 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
   // the host's own overlay. Null when the caller has no stream ObjectId to
   // resolve, and then nothing is drawn: no number beats a wrong one.
   const watching = useStreamAudience(liveStreamId, !isOffline);
+  // Tapping the count opens Who's here, the same sheet the phone live page
+  // and the app open from their "N here" pill. Fetched only while open.
+  const [audienceOpen, setAudienceOpen] = useState(false);
+  const { data: audience, isLoading: audienceLoading } = useLiveAudience(liveStreamId, {
+    open: audienceOpen,
+    enabled: audienceOpen,
+  });
 
   // Sync pinned message from server data
   useEffect(() => {
@@ -390,10 +399,19 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             exactly what the old global count looked like, so this one says
             what it is counting. */}
         {watching !== null && (
-          <div className="flex items-center gap-1.5 text-zinc-500 text-xs" title={_copy("copy.7c5784e7b79a", { defaultValue: "People watching this stream right now" })}>
+          <button
+            type="button"
+            onClick={() => setAudienceOpen(true)}
+            aria-label={t('liveAudience.whosHere', "Who's here")}
+            className="flex items-center gap-1.5 rounded-full px-2 py-1 -mr-2 text-zinc-500 text-xs transition-colors hover:text-white hover:bg-white/10"
+            title={_copy("copy.7c5784e7b79a", { defaultValue: "People watching this stream right now" })}
+          >
             <Eye className="w-3.5 h-3.5" />
             <span>{watching}{_copy("copy.dcb8e1a4fcaa", { defaultValue: " watching" })}</span>
-          </div>
+          </button>
+        )}
+        {watching !== null && (
+          <LiveAudienceSheet open={audienceOpen} onOpenChange={setAudienceOpen} audience={audience} loading={audienceLoading} />
         )}
       </div>
 

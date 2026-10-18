@@ -90,7 +90,8 @@ export interface ImmersiveLiveChromeProps {
   title?: string;
   isLive: boolean;
   isEnded: boolean;
-  viewers: string | number;
+  /** People in the room now, from the stream socket; null until it answers. */
+  viewers: number | null;
   /** DHB tipped to this stream, all told. Always drawn, zero included. */
   giftTotal?: number;
   likeCount?: number;
@@ -199,7 +200,8 @@ export function ImmersiveLiveChrome({
     open: audienceOpen,
     enabled: !hidden || audienceOpen,
   });
-  const watching = Math.max(typeof viewers === 'number' ? viewers : Number(viewers) || 0, audience?.watching ?? 0);
+  // The room now, never the post's all-time views (that is "tuned in").
+  const watching = viewers ?? audience?.watching ?? 0;
   const faces = (audience?.here ?? []).slice(0, 3);
   // Re-read every minute so "Started 3 minutes ago" moves on.
   const [, setMinute] = useState(0);

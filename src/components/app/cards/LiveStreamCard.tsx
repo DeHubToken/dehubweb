@@ -402,7 +402,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     stream.streamId,
     !!stream.isLive && !streamEnded && isPlaying && !isOwnStream
   );
-  const viewersLabel = livePresence != null ? String(livePresence) : stream.viewers;
 
   /*
    * Gift celebrations.
@@ -1423,7 +1422,6 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">{_copy("copy.35e0d0360a0a", { defaultValue: "LIVE" })}</span>
-                  <span className="text-white text-sm">{viewersLabel}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -1505,7 +1503,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             title={stream.title?.trim() || undefined}
             isLive={!!stream.isLive && !streamEnded}
             isEnded={streamEnded}
-            viewers={livePresence ?? viewersLabel}
+            viewers={livePresence}
             giftTotal={stream.totalTips ?? 0}
             startedAt={stream.startedAt ?? null}
             isMuted={isMuted}
@@ -1584,7 +1582,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             className="p-0 mb-2"
           />
           {!streamEnded && (
-            <p className="font-semibold text-white text-sm">{viewersLabel}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
+            // "Tuned in" is everyone who has ever opened this live, not the
+            // room right now; the room is the "watching" figure in the chat.
+            <p className="font-semibold text-white text-sm">{stream.viewers}{_copy("copy.8bd95a29c9cb", { defaultValue: " tuned in" })}</p>
           )}
           <h3 className="text-white text-sm mt-1">{stream.title}</h3>
           <p className="text-zinc-500 text-xs mt-1">{stream.game}</p>
