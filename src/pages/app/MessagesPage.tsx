@@ -34,6 +34,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
 import { conversationIdentity } from '@/lib/conversation-identity';
+import { encryptedMediaLabel } from '@/lib/dm-e2ee/media-label';
 import { useDraftText } from '@/hooks/use-draft';
 import { SwipeableRow } from '@/components/ui/swipeable-row';
 import { scheduleDelete, undoDelete, usePendingDeletes, UNDO_WINDOW_MS } from '@/lib/undoable-delete';
@@ -185,7 +186,9 @@ function ConversationItem({
           </p>
         ) : (
           <p className={`text-sm truncate text-white ${conversation.unreadCount > 0 ? 'font-bold' : 'font-normal'}`}>
-            {conversation.lastMessage?.type === 'image' ? _copy("copy.1b13ff986443", { defaultValue: "📷 Photo" }) :
+            {conversation.lastMessage?.encMedia
+              ? encryptedMediaLabel(conversation.lastMessage.encMedia, _copy) :
+             conversation.lastMessage?.type === 'image' ? _copy("copy.1b13ff986443", { defaultValue: "📷 Photo" }) :
              conversation.lastMessage?.type === 'gif' ? _copy("copy.fd0ce9669a4e", { defaultValue: "🎞️ GIF" }) :
              lastMessagePreview}
           </p>
