@@ -49,7 +49,7 @@ export function useAutoplayPausePrompt(videoId: string) {
       try { localStorage.setItem(AUTOPLAY_PROMPT_STORAGE_KEY, String(now)); } catch { /* session fallback */ }
       toast.message(i18n.t('settings.autoplayPausePrompt', 'Auto play setting'), {
         id: TOAST_ID,
-        duration: Infinity,
+        duration: 8000,
         closeButton: true,
         description: (
           <label className="flex items-center justify-between gap-6 pt-2">
