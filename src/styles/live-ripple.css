@@ -19,11 +19,24 @@
   animation-delay: 1.1s;
 }
 [data-live-ripple='sm'] > [data-live-ripple-ring] { border-width: 1.5px; }
-[data-live-ripple='lg'] > [data-live-ripple-ring] { border-width: 3px; }
+
+/* Profile page: the avatar is 4x a feed avatar, so the feed ripple (scale 1.6)
+   flew far past it. Here it is one thin, faint outline that drifts a few
+   pixels out and fades, slower. */
+[data-live-ripple='lg'] > [data-live-ripple-ring] {
+  border-width: 1.5px;
+  animation: live-ripple-soft 3.2s ease-out infinite;
+}
+[data-live-ripple='lg'] > [data-live-ripple-ring] + [data-live-ripple-ring] { display: none; }
 
 @keyframes live-ripple {
   0% { transform: scale(1); opacity: 0.95; }
   100% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes live-ripple-soft {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(1.1); opacity: 0; }
 }
 
 /* Reduce motion: one still outline, so "live" still reads. */
@@ -33,5 +46,6 @@
     transform: scale(1.12);
     opacity: 0.9;
   }
+  [data-live-ripple='lg'] > [data-live-ripple-ring] { transform: scale(1.04); opacity: 0.6; }
   [data-live-ripple] > [data-live-ripple-ring] + [data-live-ripple-ring] { display: none; }
 }
