@@ -1691,6 +1691,11 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* Page bentos can keep an ambient cast because their full outline is visible. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"], [data-theme="island"], [data-theme="hacker"], [data-theme="horror"]) [data-page-bento]:not([data-bento-flat]) {
   box-shadow: var(--glass-edge) !important;
+  /* Pin each bento to its own cached compositing layer: without it the slab's
+     backdrop-filter re-rasters when a sibling (the sidebar) animates, and the
+     redraw boundary shows as thin seam lines across the surface. */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Tall side panels use an inset rim without a cast that clips at the rail edge. */
