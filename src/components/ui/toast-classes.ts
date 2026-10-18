@@ -238,7 +238,7 @@ export const SLOT_BUTTON_CLASSES = [
  */
 export const CLOSE_CLASSES = [
   'start-auto end-2 top-2 h-7 w-7 transform-none border-0',
-  '!bg-transparent !text-white/60',
+  '!bg-transparent !text-white/80',
   'transition-colors hover:!bg-transparent hover:!text-white',
   'focus-visible:shadow-[0_0_0_2px_rgba(255,255,255,0.6)]',
 ].join(' ');
