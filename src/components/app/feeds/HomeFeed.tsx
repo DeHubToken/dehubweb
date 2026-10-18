@@ -43,6 +43,7 @@ import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { useFeedIslandPortal } from '@/lib/feed-island-portal';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { NewPostsBead } from '@/components/app/navigation/NewPostsBead';
 import { feedDrawerClosed, feedDrawerOpen, feedDrawerExit, feedDrawerTransition } from '@/components/app/navigation/feed-drawer-motion';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
@@ -533,8 +534,11 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   const islandPortal = useFeedIslandPortal();
   const isIslandViewport = useMediaQuery('(max-width: 1023px)');
   const newPostsTarget = isIslandViewport ? islandPortal : null;
+  // The phone tab bar the bead hangs from. System puts the filters portal
+  // beside the bar rather than inside it, so look among its siblings too.
   const mobileNavTarget = isIslandViewport && !newPostsTarget
     ? portalTarget?.closest<HTMLElement>('[data-feed-nav]')
+      ?? portalTarget?.parentElement?.querySelector<HTMLElement>(':scope > [data-feed-nav]')
     : null;
   const reduceMotion = useReducedMotion();
   const chipsTarget = resolvePortalTarget(chipsPortalRef) ?? portalTarget;
@@ -956,7 +960,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
   // ROUTE rather than the sort, because PersistentPageCache keeps this
   // component mounted for the rest of the session once home is visited — and
   // held behind railsEnabled so it never competes with the first page.
-  const { newPostCount, atCap: newPostsAtCap } = useNewPostsSignal({
+  const { newPostCount, atCap: newPostsAtCap, newPostAuthors } = useNewPostsSignal({
     ...commonParams,
     postType: deferredPostType === 'all' ? undefined : deferredPostType,
     enabled: isHomeActive && railsEnabled,
@@ -1884,58 +1888,33 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
         return chipsBar;
       })()}
 
-      {/* The bridge and button share the nav's material. Portaling keeps them
-          attached to the collapsing header and above the feed's swallow clip. */}
+      {/* The bead hangs off the phone nav (the capsule, or the tab bar) as
+          part of it. Portaling keeps it attached to the collapsing header and
+          above the feed's swallow clip. Desktop keeps its own pill below. */}
       {(() => {
+        const bead = (
+          <AnimatePresence initial={false}>
+            {isHomeActive && newPostCount > 0 && (
+              <NewPostsBead
+                key="new-posts-bead"
+                count={newPostCount}
+                authors={newPostAuthors}
+                square={theme === 'minimal'}
+                onShow={showNewPosts}
+              />
+            )}
+          </AnimatePresence>
+        );
         if (newPostsTarget) {
-          return createPortal(
-            <AnimatePresence initial={false}>
-              {isHomeActive && newPostCount > 0 && (
-                <motion.div
-                  key="new-posts-bridge"
-                  initial={{ opacity: 0, y: '-100%' }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: '-100%', pointerEvents: 'none' }}
-                  transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
-                  className="relative flex flex-col items-center pt-[50px]"
-                >
-                  <span data-feed-island-surface data-feed-new-posts-bridge aria-hidden="true" className="absolute top-10 h-[13px] w-9 rounded-b-sm" />
-                  <button
-                    type="button"
-                    onClick={showNewPosts}
-                    data-feed-island-surface
-                    data-feed-new-posts-button
-                    className="group relative flex min-h-9 w-[136px] items-center justify-center gap-1.5 rounded-[15px] px-2 py-2 text-xs font-semibold text-white"
-                  >
-                    <ArrowUp className="h-3.5 w-3.5 shrink-0" />
-                    <span className="opacity-70 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 group-active:opacity-100">{t('feed.newPosts', { defaultValue: '{{count}} new posts', count: newPostCount })}{newPostsAtCap ? '+' : ''}</span>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>,
-            newPostsTarget,
-          );
+          return createPortal(<div className="pointer-events-none flex justify-center pt-11">{bead}</div>, newPostsTarget);
         }
-        if (newPostCount <= 0) return null;
-
         if (mobileNavTarget) {
           return createPortal(
-            <div data-feed-new-posts-anchor className="pointer-events-none absolute inset-x-0 top-full z-20 flex flex-col items-center">
-              <span data-feed-island-surface data-feed-new-posts-bridge aria-hidden="true" className="h-[11px] w-9 rounded-b-sm" />
-              <button
-                type="button"
-                onClick={showNewPosts}
-                data-feed-island-surface
-                data-feed-new-posts-button
-                className="pointer-events-auto relative flex min-h-9 min-w-[136px] items-center justify-center gap-1.5 rounded-[15px] px-2 py-2 text-xs font-semibold text-white"
-              >
-                <ArrowUp className="h-3.5 w-3.5 shrink-0" />
-                <span className="opacity-70">{t('feed.newPosts', { defaultValue: '{{count}} new posts', count: newPostCount })}{newPostsAtCap ? '+' : ''}</span>
-              </button>
-            </div>,
+            <div data-feed-new-posts-anchor className="pointer-events-none absolute inset-x-0 top-full z-20 flex justify-center">{bead}</div>,
             mobileNavTarget,
           );
         }
+        if (newPostCount <= 0) return null;
 
         const pill = (
           <div
