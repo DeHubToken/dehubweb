@@ -639,16 +639,18 @@ function requestTranslation(text: string, targetLang: string, isPublic = false):
 // kana, hangul, Arabic and friends identify themselves on sight.
 const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
 
-// Live chat is the exception. Nearly every line in a stage or stream chat is
-// under 15 characters ("hoş geldiniz.", "turn it up"), so the post floor meant
-// chat never auto-translated at all. A chat line only has to carry a few
-// letters of actual words; "gm", "ok" and "lol" still stay as written. The
-// server's junk guard catches what MyMemory makes of the rest.
+// Live chat goes further: a Latin-script chat line is never translated without
+// being asked. Chat is slang, names and in-jokes ("hiya bashmo bro"), and the
+// translator turns those into a confident sentence nobody wrote ("its basmati
+// my friend"), shown in place of what the sender typed. Only scripts that
+// identify themselves on sight are auto-translated in chat, and even those need
+// a few letters ("gm", "ok" stay as written). The translate control stays.
 const MIN_CHAT_LETTERS_FOR_AUTO = 4;
 
 function skipsAutoTranslate(text: string, chat = false): boolean {
-  if (detectNonLatinScript(text)) return false;
-  if (!chat) return text.trim().length < MIN_TEXT_LENGTH_FOR_DETECTION;
+  const ownScript = !!detectNonLatinScript(text);
+  if (!chat) return !ownScript && text.trim().length < MIN_TEXT_LENGTH_FOR_DETECTION;
+  if (!ownScript) return true;
   const words = text
     .replace(/https?:\/\/\S+|www\.\S+/gi, ' ')
     .replace(/[@#$][\p{L}\p{N}_.-]+/gu, ' ');
