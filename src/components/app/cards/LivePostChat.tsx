@@ -582,6 +582,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       {/* Right-click context menu for host */}
       {contextMenuMsg && (isHost || isMine(contextMenuMsg)) && (
         <div
+          data-glass-menu
           className="fixed z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-2xl py-1 min-w-[140px]"
           style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
           onClick={(e) => e.stopPropagation()}

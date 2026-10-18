@@ -42,7 +42,7 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 z-50 bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-xl p-3 space-y-2.5 min-w-[200px] shadow-xl">
+        <div data-glass-menu className="absolute right-0 top-full mt-2 z-50 bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-xl p-3 space-y-2.5 min-w-[200px] shadow-xl">
           <p className="text-[11px] text-zinc-400 font-medium">{_copy("copy.e50f1f5e6029", { defaultValue: "Slippage Tolerance" })}</p>
           <div className="flex gap-1.5">
             {PRESETS.map(p => (
