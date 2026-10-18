@@ -747,7 +747,7 @@ export default function ProfilePage() {
                     data-feed-tab-btn data-active={isActive}
                     className={cn(
                       'relative z-40 flex flex-col items-center justify-center gap-px px-2 rounded-xl transition-[color,opacity] duration-300 text-white',
-                      !isActive && 'opacity-50 hover:opacity-80',
+                      !isActive && 'opacity-60 hover:opacity-90',
                       isTabsStuck ? 'shrink-0 w-14 h-11' : 'flex-1 min-w-[52px] py-[9px]',
                     )}
                   >

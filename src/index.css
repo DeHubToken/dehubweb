@@ -6851,3 +6851,21 @@ html:is([data-theme="minimal"], [data-theme="light"]) [data-feed-root] :is([data
     padding-right: 0;
   }
 }
+
+/* Profile tabs mark the selected tab with a glowing line (ProfileTabBeam),
+   not a filled tile, so the light themes' tile and outline stay off there.
+   Minimal keeps its folder tab and drops the line instead, like the app. */
+html[data-theme="light"] [data-profile-single-row] [data-feed-tab-btn][data-active="true"],
+html[data-system-tone="light"] [data-profile-single-row] [data-feed-tab-btn][data-active="true"] {
+  background-color: transparent !important;
+}
+html[data-theme="light"] [data-profile-single-row] [data-feed-tab-btn][data-active="true"]::before,
+html[data-system-tone="light"] [data-profile-single-row] [data-feed-tab-btn][data-active="true"]::before {
+  opacity: 0;
+}
+html[data-theme="minimal"] [data-profile-tab-beam] {
+  display: none;
+}
+html[data-theme="minimal"] [data-profile-single-row] [data-feed-tab-btn] {
+  opacity: 1;
+}
