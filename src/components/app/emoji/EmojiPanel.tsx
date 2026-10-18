@@ -349,7 +349,7 @@ export function EmojiPanel({ onSelect, selected, className, autoFocus = true }: 
             {SKIN_TONE_SWATCHES[tone]}
           </button>
           {toneOpen && (
-            <div className="absolute right-0 top-9 z-10 flex gap-0.5 p-1 rounded-lg bg-zinc-900 border border-white/10 shadow-lg">
+            <div data-glass-menu className="absolute right-0 top-9 z-10 flex gap-0.5 p-1 rounded-lg bg-zinc-900 border border-white/10 shadow-lg">
               {SKIN_TONE_SWATCHES.map((swatch, i) => (
                 <button
                   key={swatch}

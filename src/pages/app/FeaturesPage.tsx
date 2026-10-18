@@ -337,7 +337,7 @@ function FeatureCard({
               <MoreVertical className="w-4 h-4" />
             </button>
             {showMenu && (
-              <div className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
+              <div data-glass-menu className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
                 <button
                   type="button"
                   onClick={handleEdit}

@@ -129,7 +129,7 @@ export function SubscriptionCreditsPill() {
             className="fixed inset-0 z-[70] cursor-default"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute right-0 top-full mt-2 z-[71] w-64 rounded-2xl bg-zinc-950/95 backdrop-blur-md border border-white/10 p-3 shadow-2xl">
+          <div data-glass-menu className="absolute right-0 top-full mt-2 z-[71] w-64 rounded-2xl bg-zinc-950/95 backdrop-blur-md border border-white/10 p-3 shadow-2xl">
             <UsageCard
               usage={usage}
               onOpenWallet={() => {
