@@ -194,8 +194,17 @@ describe('auto-translate', () => {
     expect(screen.getByText('nice')).toBeInTheDocument();
   });
 
-  it('auto-translates a short live chat line', async () => {
-    const LINE = 'hoş geldiniz.';
+  it('never auto-translates a Latin-script live chat line', async () => {
+    const { TranslatableText } = await import('@/components/app/TranslatableText');
+    render(<TranslatableText text="hiya bashmo bro" as="p" auto="chat" />);
+
+    await new Promise((r) => setTimeout(r, 50));
+    expect(invoke).not.toHaveBeenCalled();
+    expect(screen.getByText('hiya bashmo bro')).toBeInTheDocument();
+  });
+
+  it('auto-translates a live chat line in a script that names itself', async () => {
+    const LINE = 'привет всем';
     const { TranslatableText } = await import('@/components/app/TranslatableText');
     render(<TranslatableText text={LINE} as="p" auto="chat" />);
 
