@@ -497,7 +497,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
             <ChevronDown className="w-3 h-3 transition-transform" style={{ transform: `rotate(${showCountryDropdown ? -90 : 90}deg)` }} />
           </button>
           {showCountryDropdown && (
-            <div data-inline-popover className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">
+            <div data-inline-popover data-glass-menu className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">
               <div className="px-2 py-1.5 border-b border-zinc-700/50">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-500" />

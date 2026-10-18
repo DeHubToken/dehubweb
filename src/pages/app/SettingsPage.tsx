@@ -400,7 +400,7 @@ export default function SettingsPage() {
             aria-controls="settings-search-results"
           />
           {settingsSearchFocused && settingsSearch.trim() && (
-            <div id="settings-search-results" role="listbox" className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
+            <div id="settings-search-results" role="listbox" data-glass-menu className="absolute left-0 right-0 top-full mt-2 z-40 bg-zinc-900 border border-white/10 rounded-xl overflow-hidden shadow-xl">
               {settingsSearchResults.length > 0 ? (
                 settingsSearchResults.map((result, i) => (
                   <button

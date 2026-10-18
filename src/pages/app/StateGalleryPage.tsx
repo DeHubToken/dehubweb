@@ -23,7 +23,8 @@ import { BadgedName } from '@/components/app/BadgedName';
 import { preloadBadgeShowcase } from '@/lib/badge-showcase';
 import { badgeAnimationStyle } from '@/lib/badge-animation-style';
 import { ActionBar } from '@/components/app/cards/ActionBar';
-import type { ReactionCounts } from '@/lib/reactions';
+import type { PostReaction, ReactionCounts } from '@/lib/reactions';
+import { ReactionEmoji } from '@/components/app/cards/ReactionEmoji';
 import { AuthContext, type AuthContextType } from '@/contexts/AuthContext';
 import { KitButton, PageEmpty, PageSection, PageTabs } from '@/components/app/page-kit/PageKit';
 import { FeedTabBarSkeleton } from '@/components/app/PageSkeletons';
@@ -207,6 +208,42 @@ function TooltipsGallery() {
             <Icon className="h-4 w-4" />
           </button>
         ))}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Floating menus: the reaction tray and the hand-rolled in-page menus
+ * ([data-glass-menu]) share the portalled menus' liquid glass
+ * (styles/glass-surfaces.css). Drawn over a bright stripe so the frost shows.
+ */
+function MenusGallery() {
+  const { t: _copy } = _useCopy();
+  const items = [
+    _copy("copy.d05e07b7c14e", { defaultValue: "Balance" }),
+    _copy("copy.18fdd549b2ed", { defaultValue: "New" }),
+    _copy("copy.460b3a7da007", { defaultValue: "Chat" }),
+  ];
+  return (
+    <section data-page-bento data-menus-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.93534e3e8a8d", { defaultValue: "Menus" })}</h2>
+      <div
+        className="relative flex flex-wrap items-center justify-around gap-4 overflow-hidden rounded-2xl p-5"
+        style={{ backgroundImage: 'repeating-linear-gradient(115deg, #f43f5e 0 14px, #facc15 14px 28px, #22d3ee 28px 42px, #ffffff 42px 56px)' }}
+      >
+        <div data-reaction-tray className="flex items-center gap-0.5 rounded-2xl border border-white/15 px-1.5 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_32px_rgba(0,0,0,0.45)]">
+          {['like', 'love', 'hot', 'lol', 'sad', 'dislike'].map((key) => (
+            <span key={key} className="flex h-9 w-9 items-center justify-center text-[22px] leading-none">
+              <ReactionEmoji reaction={key as PostReaction} />
+            </span>
+          ))}
+        </div>
+        <div data-glass-menu className="w-40 overflow-hidden rounded-xl border border-white/10 bg-zinc-800 py-1 shadow-xl">
+          {items.map((label) => (
+            <div key={label} className="px-3 py-2 text-sm text-white">{label}</div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -438,6 +475,7 @@ export default function StateGalleryPage() {
         <TooltipsGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
+        <MenusGallery />
 
         <ArticleGallery onAction={press} />
 
