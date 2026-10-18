@@ -852,6 +852,14 @@ const NEW_POSTS_HEAD_SIZE = 20;
  */
 export const LIVE_ENGAGEMENT_POLL_MS = 45_000;
 
+export interface NewPostAuthor {
+  address: string;
+  name: string;
+  avatarUrl?: string;
+}
+
+const NO_AUTHORS: NewPostAuthor[] = [];
+
 interface UseNewPostsSignalOptions extends Omit<UnifiedFeedParams, 'page'> {
   /**
    * Poll only while the feed is actually on screen. PersistentPageCache keeps
@@ -929,7 +937,7 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
 
   return useMemo(() => {
     const newest = chronological && newestCreatedAt ? Date.parse(newestCreatedAt) : NaN;
-    if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false };
+    if (!data || Number.isNaN(newest)) return { newPostCount: 0, atCap: false, newPostAuthors: NO_AUTHORS };
 
     // Only count rows the list would actually render. A stranded "live" post
     // from a failed stream launch never enters the feed (loadUnifiedFeedPage
@@ -962,10 +970,25 @@ export function useNewPostsSignal(options: UseNewPostsSignalOptions = {}) {
       return !Number.isNaN(stamp) && stamp > newest;
     });
 
+    // The faces on the pill: the newest few distinct authors, newest first.
+    const newPostAuthors: NewPostAuthor[] = [];
+    for (const item of newer) {
+      const address = item.minter?.toLowerCase();
+      if (!address || newPostAuthors.some((a) => a.address === address)) continue;
+      const avatarPath = extractAvatarPath(item);
+      newPostAuthors.push({
+        address,
+        name: item.minterDisplayName || item.minterUsername || item.mintername || '',
+        avatarUrl: avatarPath ? buildAvatarUrl(item.minter, avatarPath) : undefined,
+      });
+      if (newPostAuthors.length === 3) break;
+    }
+
     return {
       newPostCount: newer.length,
       // Every row came back newer, so there are likely more than were fetched.
       atCap: newer.length >= NEW_POSTS_HEAD_SIZE,
+      newPostAuthors,
     };
   }, [data, newestCreatedAt, chronological, queryClient]);
 }
