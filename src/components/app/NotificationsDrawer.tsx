@@ -1,11 +1,16 @@
 import { useTranslation as _useCopy } from 'react-i18next';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import X from "@/components/ui/cut-icons/close";
 
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { lazyWithRetry } from '@/lib/lazy-with-retry';
 
-const NotificationsPage = lazy(() => import('@/pages/app/NotificationsPage'));
+// Same loader as the /app/notifications route. A plain lazy() remembers a
+// failed chunk, and with no boundary of its own the throw replaced the whole
+// app with the dark full-page fallback that a reload could not clear.
+const NotificationsPage = lazyWithRetry(() => import('@/pages/app/NotificationsPage'));
 export const openNotificationsDrawer = () => window.dispatchEvent(new Event('open-notifications-drawer'));
 
 export function NotificationsDrawer() {
@@ -27,9 +32,11 @@ export function NotificationsDrawer() {
           <button onClick={() => setOpen(false)} aria-label={_copy("copy.25c57a564163", { defaultValue: "Close notifications" })} className="flex h-11 w-11 items-center justify-center"><X className="h-5 w-5" /></button>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          <Suspense fallback={<div role="status" className="p-4">{_copy("copy.eae12e0d3bab", { defaultValue: "Loading notifications…" })}</div>}>
-            {open && <NotificationsPage inDrawer />}
-          </Suspense>
+          <ErrorBoundary compact resetKey={String(open)} label={_copy("copy.788011833a5a", { defaultValue: "Notifications" })}>
+            <Suspense fallback={<div role="status" className="p-4">{_copy("copy.eae12e0d3bab", { defaultValue: "Loading notifications…" })}</div>}>
+              {open && <NotificationsPage inDrawer />}
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </DrawerContent>
     </Drawer>
