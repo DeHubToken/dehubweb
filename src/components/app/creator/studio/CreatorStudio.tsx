@@ -444,7 +444,7 @@ function ModeToggle({
             onClick={() => onChange(m.id)}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-full text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50',
-              compact ? 'px-1 py-1.5' : 'px-2.5 py-1.5',
+              compact ? 'h-full w-7 justify-center sm:w-8' : 'h-full px-2.5',
               active ? 'bg-white text-black' : 'text-white/60 hover:bg-white/10 hover:text-white',
             )}
           >
@@ -1668,8 +1668,8 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
       aria-label={t('creator.expandPrompt')}
       title={t('creator.expandPrompt')}
       className={cn(
-        'shrink-0 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white/70 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40',
-        compact ? 'hidden h-8 w-8 sm:inline-flex' : 'inline-flex h-[34px] w-[34px]',
+        'shrink-0 items-center justify-center border border-white/20 bg-white/10 text-white/70 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40',
+        compact ? 'hidden h-8 w-8 rounded-xl sm:inline-flex' : 'inline-flex h-10 w-10 rounded-full',
       )}
     >
       {enhancing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
@@ -1876,8 +1876,11 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
               )}
 
               {/* Compact primary controls share a row; additional tools can wrap. */}
-              <div data-creator-toolbar className="mt-2 flex items-end gap-2">
-                <div className="flex h-10 min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&>*]:shrink-0">
+              {/* Every control is h-10, the same as Create, so the row's outer
+                  buttons sit exactly the box padding in from both the side
+                  and the bottom edge of each corner. */}
+              <div data-creator-toolbar className="mt-2 flex items-center gap-2">
+                <div className="flex h-10 min-w-0 flex-1 items-center gap-1.5 overflow-x-auto whitespace-nowrap [mask-image:linear-gradient(to_right,#000_calc(100%-20px),transparent)] [scrollbar-width:none] [&>*]:h-10 [&>*]:shrink-0 [&>.contents>*]:h-10">
                 {/* Sound effects, music and voice design have nothing to attach
                     — offering a paperclip there is a control that can only
                     produce an error. */}
@@ -1890,7 +1893,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                         aria-label={
                           t(mode === 'audio' ? 'creator.attachRecording' : 'creator.attachReferenceImage')
                         }
-                        className="shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-1.5 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
+                        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/70 backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 hover:text-white disabled:opacity-40"
                       >
                         {attaching ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -2149,7 +2152,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
                   {mode === 'video' && (
                     <>
-                      {activeVideoModel?.requiresVideoInput || effectMode ? <span className="rounded-xl border border-white/15 px-3 py-2 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
+                      {activeVideoModel?.requiresVideoInput || effectMode ? <span className="inline-flex items-center rounded-full border border-white/15 px-3 text-xs text-white/65">{t('creator.referenceClipSeconds', { seconds: duration })}</span> : <CounterChip
                         draftScope={`creator:duration:${videoModel}`}
                         label={t('creator.secondsUnit')}
                         singular={t('creator.secondUnit')}
@@ -2184,7 +2187,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
 
                 {!effectMode && enhanceButton()}
                 </div>
-                  <div className="ml-auto flex shrink-0 items-end justify-end">
+                  <div className="ml-auto flex shrink-0 items-center justify-end">
                   {generateButton()}
                 </div>
               </div>
