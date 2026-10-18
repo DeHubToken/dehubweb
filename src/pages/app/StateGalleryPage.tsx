@@ -40,6 +40,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
+import { LivePostChat } from '@/components/app/cards/LivePostChat';
 import type { LiveAudience } from '@/lib/api/dehub/livestream';
 import type { DeHubPoll } from '@/lib/api/dehub';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
@@ -565,7 +566,11 @@ const GALLERY_AUDIENCE: LiveAudience = {
 function LiveViewerGallery() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  useState(() => queryClient.setQueryData(['live-audience', GALLERY_STREAM_ID], GALLERY_AUDIENCE));
+  useState(() => {
+    queryClient.setQueryData(['live-audience', GALLERY_STREAM_ID], GALLERY_AUDIENCE);
+    // The desktop chat's "N watching" reads this before the socket answers.
+    queryClient.setQueryData(['stream-audience', GALLERY_STREAM_ID], { result: { viewerCount: GALLERY_AUDIENCE.watching } });
+  });
   return (
     <section data-page-bento data-live-viewer-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
       <h2 className="mb-3 text-sm font-semibold">{t('liveAudience.whosHere')}</h2>
@@ -614,6 +619,10 @@ function LiveViewerGallery() {
             streamId={GALLERY_STREAM_ID}
           />
           <LiveClearedLayer onRestore={noop} onRotate={noop} />
+        </div>
+        {/* Desktop: the chat beside the stream. Its "N watching" opens Who's here. */}
+        <div data-live-chat-desktop-frame className="mx-auto mt-4 w-[380px] max-w-full rounded-2xl border border-white/10 bg-black/40 p-4">
+          <LivePostChat tokenId="0" streamId={GALLERY_STREAM_ID} />
         </div>
       </AuthContext.Provider>
     </section>
