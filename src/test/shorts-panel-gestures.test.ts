@@ -79,42 +79,50 @@ describe('shorts panel swipe arbitration', () => {
   });
 });
 
-describe('panel restore and playback taps', () => {
+describe('video tap zones', () => {
   function taps(overrides: Record<string, unknown> = {}) {
     const context = {
       useCallback: (callback: unknown) => callback, useRef: (value: unknown) => ({ current: value }),
-      useEffect: () => {}, isMobile: true, overlaysHidden: true, showComments: false,
-      isTransitioning: false, window: { innerHeight: 800 }, RESTORE_ZONE_TOP: 0.61, RESTORE_ZONE_BOTTOM: 0.85,
-      videoContainer: { getBoundingClientRect: () => ({ top: 0, height: 800 }) }, restoreTouchStart: { current: null },
-      suppressVideoTapRef: { current: false }, suppressVideoTapTimer: { current: null },
+      overlaysHidden: false, autoHidden: false, isTransitioning: false,
+      PAUSE_ZONE_START: 1 / 3, PAUSE_ZONE_END: 2 / 3,
+      videoContainer: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 400, height: 800 }) },
+      lastVideoTap: { current: null }, undoPlayPause: vi.fn(),
       setOverlaysHidden: vi.fn(), setAutoHidden: vi.fn(), setIsPaused: vi.fn(),
-      setShowPlayIndicator: vi.fn(), setTimeout: () => 1, clearTimeout: vi.fn(), ...overrides,
+      setIsDescriptionExpanded: vi.fn(), setShowPlayIndicator: vi.fn(), setTimeout: () => 1, ...overrides,
     };
     const toggle = source.slice(source.indexOf('  const lastToggleTookEffect ='), source.indexOf('  const undoPlayPause ='));
-    const restore = source.slice(source.indexOf('  const handleRestoreTouchStart ='), source.indexOf('  /**\n   * Clear the chrome once'));
-    const code = ts.transpileModule(toggle + restore + '\n({ togglePlayPause, handleRestoreTouchStart, handleRestoreTouchEnd })', {
+    const tap = source.slice(source.indexOf('  const handleVideoTap ='), source.indexOf('  /**\n   * Clear the chrome once'));
+    const code = ts.transpileModule(toggle + tap + '\n({ togglePlayPause, handleVideoTap, undoVideoTap })', {
       compilerOptions: { target: ts.ScriptTarget.ES2020 },
     }).outputText;
     return { ...context, ...runInNewContext(code, context) };
   }
 
-  it('consumes a captured restore tap before the slide playback callback', () => {
-    const v = taps();
-    v.handleRestoreTouchStart({ clientX: 150, clientY: 600 });
-    v.handleRestoreTouchEnd({ clientX: 150, clientY: 600 });
-    v.togglePlayPause();
-    expect(v.setOverlaysHidden).toHaveBeenCalledWith(false);
-    expect(v.setIsPaused).not.toHaveBeenCalled();
-    v.togglePlayPause();
-    expect(v.setIsPaused).toHaveBeenCalledTimes(1);
-  });
-
-  it.each([{ overlaysHidden: true }, { overlaysHidden: false }])('keeps central pause/play taps available: %o', (state) => {
+  it.each([{ overlaysHidden: true }, { overlaysHidden: false }])('a centre tap plays/pauses and leaves the buttons alone: %o', (state) => {
     const v = taps(state);
-    v.handleRestoreTouchStart({ clientX: 150, clientY: 300 });
-    v.handleRestoreTouchEnd({ clientX: 150, clientY: 300 });
-    v.togglePlayPause();
+    v.handleVideoTap({ clientX: 200, clientY: 400 });
     expect(v.setIsPaused).toHaveBeenCalledTimes(1);
     expect(v.setOverlaysHidden).not.toHaveBeenCalled();
+  });
+
+  it('a tap outside the centre hides every button without pausing', () => {
+    const v = taps();
+    v.handleVideoTap({ clientX: 40, clientY: 150 });
+    expect(v.setOverlaysHidden).toHaveBeenCalledWith(true);
+    expect(v.setIsPaused).not.toHaveBeenCalled();
+  });
+
+  it.each([{ overlaysHidden: true }, { autoHidden: true }])('the next outside tap brings them back: %o', (state) => {
+    const v = taps(state);
+    v.handleVideoTap({ clientX: 380, clientY: 700 });
+    expect(v.setOverlaysHidden).toHaveBeenCalledWith(false);
+    expect(v.setAutoHidden).toHaveBeenCalledWith(false);
+  });
+
+  it('a double tap puts the buttons back the way they were', () => {
+    const v = taps();
+    v.handleVideoTap({ clientX: 40, clientY: 150 });
+    v.undoVideoTap();
+    expect(v.setOverlaysHidden).toHaveBeenLastCalledWith(false);
   });
 });
