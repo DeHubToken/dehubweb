@@ -446,10 +446,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     speakTipMessage(gift.message);
   });
 
-  // Pull the ~590 kB synthesiser down while the viewer is watching rather than
-  // when the first gift lands, so the first message of a stream is not read out
-  // several seconds after its celebration has finished playing. Only for a
-  // stream actually live — it must never touch a feed scroll or the boot path.
+  // Get the device voices ready while the viewer is watching rather than when
+  // the first gift lands, so the first message of a stream is read on the beat
+  // of its celebration. Only for a stream actually live.
   useEffect(() => {
     if (stream.isLive && !streamEnded) warmTipTts();
   }, [stream.isLive, streamEnded]);
@@ -933,7 +932,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   // Muting the stream mutes the tip readings with it, and cuts one already
   // mid-sentence. They are synthesised locally, so nothing about the player's
   // own volume would otherwise touch them — a viewer who muted a stream in a
-  // quiet room would have had an old man start shouting tip messages at them.
+  // quiet room would otherwise have had tip messages read out loud at them.
   useEffect(() => {
     setTipTtsEnabled(!isMuted);
   }, [isMuted]);
