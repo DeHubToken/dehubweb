@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'framer-motion';
 import { useReactionFlow } from '@/hooks/use-reaction-flow';
-import { LIVE_REACTION_EMOJI } from '@/lib/live/reaction-flow';
+import { LIVE_REACTION_EMOJI, REACTION_LANE_WIDTH, REACTION_MOTION, REACTION_SIZE, REACTION_SIZE_BIG, reactionColumn, reactionPose, type ReactionParticle } from '@/lib/live/reaction-flow';
 import { useAuth } from '@/contexts/AuthContext';
 
 /**
@@ -58,19 +58,32 @@ export function LiveReactionFlow({ streamId, enabled, bottom = 24, self }: {
     addReaction(self.type, self.weight ?? 1);
   }, [self, addReaction]);
 
-  return <div aria-hidden="true" data-live-reaction-flow className="pointer-events-none absolute right-3 z-20 h-44 w-24 overflow-hidden" style={{ bottom }}>
-    {reactions.map(item => {
-      const seed = Number(item.id);
-      const drift = (seed % 5 - 2) * 7;
-      return <motion.span key={item.id} data-live-reaction={item.type}
-        className="absolute bottom-1 text-[22px] leading-none"
-        style={{ right: 12 + seed % 4 * 10 }}
-        initial={{ opacity: 0, scale: 0.6, x: 0, y: 0 }}
-        animate={reducedMotion
-          ? { opacity: [0, 1, 1, 0], scale: 1 }
-          : { opacity: [0, 1, 1, 0], scale: [0.6, 1, 1.15, 0], x: [0, drift / 2, drift, drift], y: [0, -30, -105, -120] }}
-        transition={{ duration: 1.5, times: [0, 0.12, 0.85, 1], ease: 'easeOut' }}
-      >{LIVE_REACTION_EMOJI[item.type]}</motion.span>;
-    })}
+  const lane = useRef<HTMLDivElement>(null);
+  return <div ref={lane} aria-hidden="true" data-live-reaction-flow className="pointer-events-none absolute right-1 z-20 overflow-hidden"
+    style={{ bottom, width: REACTION_LANE_WIDTH, height: `min(52%, 400px)` }}>
+    {reactions.map(item => <ReactionParticleView key={item.id} item={item} lane={lane} still={!!reducedMotion} />)}
   </div>;
+}
+
+/** One emoji on its climb. Driven by reactionPose, the same curve the app draws. */
+function ReactionParticleView({ item, lane, still }: { item: ReactionParticle; lane: React.RefObject<HTMLDivElement>; still: boolean }) {
+  const seed = Number(item.id);
+  const t = useMotionValue(0);
+  const height = useRef(Math.max(120, (lane.current?.clientHeight ?? 300) - (item.big ? REACTION_SIZE_BIG : REACTION_SIZE)));
+  useEffect(() => {
+    const controls = animate(t, 1, { duration: REACTION_MOTION[item.type].duration / 1000, ease: 'linear' });
+    return () => controls.stop();
+  }, [t, item.type]);
+  const pose = (v: number) => reactionPose(item.type, seed, v);
+  const x = useTransform(t, v => still ? 0 : pose(v).x);
+  const y = useTransform(t, v => still ? 0 : -pose(v).rise * height.current);
+  const rotate = useTransform(t, v => still ? 0 : pose(v).rotate);
+  const scale = useTransform(t, v => still ? 1 : pose(v).scale);
+  const opacity = useTransform(t, v => pose(v).opacity);
+  const size = item.big ? REACTION_SIZE_BIG : REACTION_SIZE;
+  return <motion.span data-live-reaction={item.type}
+    className="absolute bottom-0 leading-none will-change-transform"
+    style={{ right: reactionColumn(seed), fontSize: size, x, y, rotate, scale, opacity,
+      filter: 'drop-shadow(0 2px 6px rgba(0,0,0,.45))' }}
+  >{LIVE_REACTION_EMOJI[item.type]}</motion.span>;
 }
