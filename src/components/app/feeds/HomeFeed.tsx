@@ -1900,6 +1900,7 @@ export function HomeFeed({ active = true, shuffleKey, isRefreshing, showFilters 
                 count={newPostCount}
                 authors={newPostAuthors}
                 square={theme === 'minimal'}
+                host={(newPostsTarget?.closest('[data-feed-island]')?.querySelector(':scope > [data-feed-island-surface]') as HTMLElement | null | undefined) ?? mobileNavTarget ?? null}
                 onShow={showNewPosts}
               />
             )}

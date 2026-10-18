@@ -22,11 +22,14 @@ function beadPath(width: number, square: boolean, open = false) {
 
 /** "+N" with up to three faces, hanging off the bottom of the phone nav bar
  *  as part of it. Tapping it loads the new posts. */
-export function NewPostsBead({ count, authors, square, onShow }: {
+export function NewPostsBead({ count, authors, square, host, onShow }: {
   count: number;
   authors: NewPostAuthor[];
   /** Minimal: square corners, no curves. */
   square: boolean;
+  /** The bar it hangs from. Its rim is opened where the bead joins, so the
+   *  bar's outline runs straight into the bead's. */
+  host: HTMLElement | null;
   onShow: () => void;
 }) {
   const { t } = useTranslation();
@@ -43,6 +46,15 @@ export function NewPostsBead({ count, authors, square, onShow }: {
     if (node) setContentWidth(Math.ceil(node.offsetWidth));
   }, [label, faces.length]);
   const width = f * 2 + contentWidth + 18;
+  useLayoutEffect(() => {
+    if (!host) return;
+    host.setAttribute('data-new-posts-open', '');
+    host.style.setProperty('--bead-gap', `${width}px`);
+    return () => {
+      host.removeAttribute('data-new-posts-open');
+      host.style.removeProperty('--bead-gap');
+    };
+  }, [host, width]);
 
   return (
     <motion.div
