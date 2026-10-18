@@ -449,7 +449,7 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
       <div
         ref={messagesContainerRef}
         className={cn(
-          'overflow-y-auto scrollbar-hide',
+          'overflow-y-auto overscroll-contain scrollbar-hide',
           overlay
             // The mask lives on the scroller, so the dissolve stays pinned to
             // the top edge while messages travel under it. -webkit- kept for

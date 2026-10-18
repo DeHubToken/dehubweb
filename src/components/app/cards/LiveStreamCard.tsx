@@ -13,6 +13,7 @@ import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } fro
 import { useFeedPlaybackAllowed, visualActivity } from '@/lib/visual-activity';
 import { isVideoInPictureInPicture, releaseAfterPictureInPicture } from '@/lib/picture-in-picture';
 import { useVideoFullscreen } from '@/hooks/use-video-fullscreen';
+import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { AppState } from '@/components/app/AppState';
 import { ButtonLoader } from '@/components/app/DeHubLoader';
@@ -162,6 +163,13 @@ interface LiveStreamCardProps {
 export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
   const { t: _copy } = _useCopy();
   const keyboardOpen = useKeyboardOpen(immersive);
+  // Full-bleed sits `fixed` over the post page, so a swipe on it (or past the
+  // end of the chat) scrolled the page underneath and woke its videos. Hold
+  // the page still while the stream owns the screen.
+  useEffect(() => {
+    if (!immersive) return;
+    return lockBodyScroll('immersive-live');
+  }, [immersive]);
   // Android shrinks the fixed root with the keyboard (interactive-widget);
   // iOS keeps it full height and draws the keys over the chat box. Fit the
   // root to what is visible above the keys when that happens.
@@ -1178,7 +1186,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
           ? // The picture is the screen. `fixed` rather than a tall block in
             // the page: the post page still scrolls under it, and a stream
             // is not a thing you scroll past on a phone.
-            'fixed inset-0 z-[55] bg-black isolate'
+            'fixed inset-0 z-[55] bg-black isolate overscroll-contain'
           : 'rounded-xl border border-white/[0.08] bg-transparent p-3 isolate'
       )}
     >
