@@ -403,7 +403,8 @@ export function LivePostChat({ tokenId, streamId: liveStreamId, isOffline = fals
             type="button"
             onClick={() => setAudienceOpen(true)}
             aria-label={t('liveAudience.whosHere', "Who's here")}
-            className="flex items-center gap-1.5 rounded-full px-2 py-1 -mr-2 text-zinc-500 text-xs transition-colors hover:text-white hover:bg-white/10"
+            data-filter-chip
+            className="inline-flex shrink-0 items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
             title={_copy("copy.7c5784e7b79a", { defaultValue: "People watching this stream right now" })}
           >
             <Eye className="w-3.5 h-3.5" />
