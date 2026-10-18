@@ -26,7 +26,6 @@ import {
 } from './crypto';
 import type { MediaDescriptor } from './media';
 import { openMediaPlaintext } from './media-message';
-import { clearDecryptedMedia } from './media-cache';
 
 const STORAGE_PREFIX = 'dehub-dm-e2ee:';
 const PEER_KEY_TTL_MS = 5 * 60_000;
@@ -107,7 +106,8 @@ export function unloadIdentity() {
   current = null;
   sessionKeys.clear();
   peerKeys.clear();
-  clearDecryptedMedia();
+  // Only loaded once an attachment has been opened, so nothing to clear before.
+  void import('./media-cache').then(m => m.clearDecryptedMedia()).catch(() => {});
   notify();
 }
 

@@ -56,8 +56,6 @@ import type { QueryClient } from '@tanstack/react-query';
 import { isEncryptedContent } from '@/lib/dm-e2ee/crypto';
 import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
 import { openMediaPlaintext } from '@/lib/dm-e2ee/media-message';
-import { uploadDmMedia } from '@/lib/dm-e2ee/media-send';
-import { seedSentMedia } from '@/lib/dm-e2ee/media-cache';
 import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory } from '@/lib/dm-head';
 
 /**
@@ -918,6 +916,11 @@ export function useSendMessage(conversationId: string) {
       if (msgType === 'media' || msgType === 'voice') {
         if (!mediaFile) throw new Error('No file provided for media/voice message');
         const senderId = user?._id || walletAddress || '';
+        // Loaded on first send: none of this is needed to paint the app.
+        const [{ uploadDmMedia }, { seedSentMedia }] = await Promise.all([
+          import('@/lib/dm-e2ee/media-send'),
+          import('@/lib/dm-e2ee/media-cache'),
+        ]);
         const { message: sent, plain } = await uploadDmMedia(mediaFile, resolvedId, senderId, {
           peerAddress,
           caption: content,
