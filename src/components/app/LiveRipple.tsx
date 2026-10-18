@@ -43,11 +43,14 @@ export function LiveRipple({ children, ids = [], live, size = 'md', className }:
     navigate(path, { state: { fromFeed: true } });
   };
 
+  // align-top: an inline box sits on the text baseline, so around a photo
+  // (which has no baseline) the line grew by a descender and pushed the
+  // avatar's button taller than the avatar, dropping the name beside it.
   return (
     <span
       data-live-ripple={isLive ? size : undefined}
       onClickCapture={opensLive ? openLive : undefined}
-      className={cn('inline-flex shrink-0', opensLive && 'cursor-pointer', className)}
+      className={cn('inline-flex shrink-0 align-top', opensLive && 'cursor-pointer', className)}
     >
       {isLive && (
         <>

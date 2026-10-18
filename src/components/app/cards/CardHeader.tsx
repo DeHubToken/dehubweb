@@ -155,7 +155,7 @@ export function CardHeader({
              so the button needs a name of its own — one per card on the feed,
              and all of them were nameless on the 2026-09-02 Lighthouse run. */
           aria-label={t('feed.viewProfile', { name: username })}
-          className={`shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+          className={`flex shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
         >
           <LiveRipple ids={[creatorId, creatorUsername, handle]} className="rounded-md">
             <Avatar className="w-9 h-9 rounded-md">
@@ -199,7 +199,7 @@ export function CardHeader({
             )}
             {timestamp && (
               <>
-                <span className="text-zinc-600 text-[13px]">·</span>
+                <span className="text-zinc-600 text-[13px] leading-4">·</span>
                 <span className="text-zinc-500 text-[13px] leading-4 shrink-0">{timestamp}</span>
               </>
             )}
