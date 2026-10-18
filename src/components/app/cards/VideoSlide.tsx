@@ -40,7 +40,8 @@ interface VideoSlideProps {
   isMuted: boolean;
   playbackRate?: number;
   onTimeUpdate?: (currentTime: number, duration: number, loops?: boolean) => void;
-  onTap?: () => void;
+  /** Gets the tap itself, so the viewer can tell the centre from the edges. */
+  onTap?: (event?: React.PointerEvent) => void;
   /**
    * Reverses `onTap` silently. Supplying it is what lets the first tap act
    * immediately instead of waiting 260ms to see whether a second is coming —
@@ -155,7 +156,7 @@ export const VideoSlide = memo(function VideoSlide({
     // straight back if a second one turns up — no 260ms wait to find out. The
     // video never visibly pauses on a double tap, and tap-to-pause stays as
     // instant as it was before the ladder existed.
-    onSingleTap: () => onTap?.(),
+    onSingleTap: (event) => onTap?.(event),
     onUndoSingleTap: () => (onTapUndo ?? onTap)?.(),
   });
 
