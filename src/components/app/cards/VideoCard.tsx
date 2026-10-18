@@ -1415,6 +1415,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     && !video.isAudio && !video.isAd && !(video.isLivePost && video.isLiveNow) && !!video.videoUrl
     && !isContentGated && !isVideoNotReady;
   feedPreviewRef.current = feedPreview;
+  // An on-air post gets the same phone preview: it hugs the stream, plays
+  // muted with only unmute in the corner, and a tap opens the live page.
+  const liveFeedPreview = isPhone && !isImmersive && !isFullscreen && !hideActions
+    && !!video.isLivePost && !!video.isLiveNow && !isContentGated;
+  const phoneFeedFrame = feedPreview || liveFeedPreview;
+  const [liveSoundOn, setLiveSoundOn] = useState(false);
   useEffect(() => {
     if (!feedPreview || !bootSettled || !nearViewport || liteMode) return;
     // Warm the viewer code while its preview is visible. Queries still start
@@ -1872,7 +1878,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     // see. On gated media the tap belongs to the unlock overlay. ImageCard
     // already behaves this way: its gate branch replaces the carousel that
     // carries the gesture, so this only brings video into line.
-    disabled: hideActions || !!video.isAudio || isContentGated || feedPreview,
+    disabled: hideActions || !!video.isAudio || isContentGated || feedPreview || liveFeedPreview,
     onSingleTap: isImmersive ? () => {
       showControlsBriefly();
       handlePlayClick();
@@ -1902,13 +1908,17 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       openPreviewInShorts();
       return;
     }
+    if (liveFeedPreview) {
+      openPost();
+      return;
+    }
     if (!isImmersive) {
       showControlsBriefly();
       handlePlayClick();
       return;
     }
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, feedPreview, openPreviewInShorts]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, feedPreview, openPreviewInShorts, liveFeedPreview, openPost]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -1967,6 +1977,12 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       return;
     }
 
+    if (liveFeedPreview) {
+      e.preventDefault();
+      openPost();
+      return;
+    }
+
     if (!isImmersive) {
       e.preventDefault();
       showControlsBriefly();
@@ -1978,7 +1994,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
     // compatibility click so touch cannot run a second playback action.
     e.preventDefault();
     showControlsBriefly();
-  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedPreview, openPreviewInShorts]);
+  }, [isImmersive, showControlsBriefly, handlePlayClick, isFullscreen, swipeToShorts, swipeIntoShorts, feedPreview, openPreviewInShorts, liveFeedPreview, openPost]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -2143,7 +2159,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
       <div 
         ref={containerRef}
         tabIndex={0}
-        data-feed-preview={feedPreview || undefined}
+        data-feed-preview={phoneFeedFrame || undefined}
         data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
         data-media-frame-measured={resolvedVideoAspect == null ? undefined : measuredAspect}
         data-no-navigate
@@ -2163,7 +2179,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   width: `min(100%, calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} * ${mediaAspect.toFixed(4)}))`,
                   maxHeight: splitControls ? `calc(${IMMERSIVE_MAX_MEDIA_HEIGHT} - 47px)` : IMMERSIVE_MAX_MEDIA_HEIGHT,
                 }
-              : feedPreview
+              : phoneFeedFrame
                 ? {
                     // The frame hugs the clip, X style: up to 55% of the screen
                     // tall, left aligned, so a slim video leaves empty space on
@@ -2487,8 +2503,8 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   urls={video.livePlaybackUrls || [video.livePlaybackUrl]}
                   thumbnail={thumbnail}
                   fallbackLabel={t('feed.live')}
-                  muted={isMuted}
-                  controlsVisible={controlsVisible}
+                  muted={liveFeedPreview ? !liveSoundOn : isMuted}
+                  controlsVisible={liveFeedPreview ? false : controlsVisible}
                   onToggleMute={toggleMute}
                 />
               </Suspense>
@@ -2631,6 +2647,21 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             className="absolute right-1.5 top-1.5 z-20 flex h-9 w-9 items-center justify-center text-white"
           >
             <MediaControlIcon icon={isMuted ? VolumeX : Volume2} plain />
+          </button>
+        )}
+        {liveFeedPreview && (
+          <button
+            type="button"
+            data-video-controls data-video-bare data-preview-mute
+            aria-label={liveSoundOn ? t('common.mute', 'Mute') : t('common.unmute', 'Unmute')}
+            onPointerDown={(event) => event.stopPropagation()}
+            onPointerUp={(event) => event.stopPropagation()}
+            onTouchStart={(event) => event.stopPropagation()}
+            onTouchEnd={(event) => event.stopPropagation()}
+            onClick={(event) => { event.stopPropagation(); setLiveSoundOn(on => !on); }}
+            className="absolute right-1.5 top-1.5 z-20 flex h-9 w-9 items-center justify-center text-white"
+          >
+            <MediaControlIcon icon={liveSoundOn ? Volume2 : VolumeX} plain />
           </button>
         )}
         {!feedPreview && !splitControls && controlsVisible && !video.isAudio && !(video.isLivePost && video.isLiveNow) && (
