@@ -68,6 +68,10 @@ html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is(
 html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_) :is([data-feed-nav], [data-bottom-nav] > nav) :is([data-glass-indicator], [data-active="true"], [aria-current="page"], [data-state="active"]) {
   background: rgba(11,11,13,.07) !important; border-color: rgba(11,11,13,.06) !important; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.1) !important;
 }
+/* Profile tabs mark the selected tab with a glowing line, not a tile */
+html[data-theme="system"][data-system-tone="light"]:not(#_):not(#_):not(#_):not(#_) [data-profile-single-row] [data-feed-tab-btn][data-active="true"] {
+  background: transparent !important; border-color: transparent !important; box-shadow: none !important;
+}
 /* Logo turns ink */
 html[data-theme="system"][data-system-tone="light"] header img[alt*="DeHub" i], html[data-theme="system"][data-system-tone="light"] [data-island-logo] img { filter: invert(1); }
 /* Media keeps its own white chrome */
