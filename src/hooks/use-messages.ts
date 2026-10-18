@@ -13,8 +13,6 @@ import {
   getContacts,
   getConversations,
   getMessages,
-  uploadAndSendMedia,
-  
   createConversation,
   markConversationAsRead,
   deleteConversation,
@@ -57,6 +55,9 @@ import {
 import type { QueryClient } from '@tanstack/react-query';
 import { isEncryptedContent } from '@/lib/dm-e2ee/crypto';
 import { decryptFromPeer, decryptMessageInPlace, loadIdentity, onIdentityChange, prepareOutgoing } from '@/lib/dm-e2ee/keys';
+import { openMediaPlaintext } from '@/lib/dm-e2ee/media-message';
+import { uploadDmMedia } from '@/lib/dm-e2ee/media-send';
+import { seedSentMedia } from '@/lib/dm-e2ee/media-cache';
 import { messageHistoryItems, mergeMessageHead, needsMessageHistoryRecovery, nextMessagePage, type MessageHistory } from '@/lib/dm-head';
 
 /**
@@ -169,7 +170,13 @@ export async function decryptConversationPreviews(
       conv.otherUser?.address ||
       conv.participants?.find((p) => p.address && p.address.toLowerCase() !== me)?.address;
     const plain = peer ? await decryptFromPeer(peer, lm.content) : null;
-    return { ...conv, lastMessage: { ...lm, content: plain ?? '', encrypted: true, undecryptable: plain === null } };
+    // An attachment's descriptor is never preview text; the row labels it by kind.
+    return {
+      ...conv,
+      lastMessage: plain === null
+        ? { ...lm, content: '', encrypted: true, undecryptable: true }
+        : { ...lm, encrypted: true, undecryptable: false, ...openMediaPlaintext(plain) },
+    };
   }));
 }
 
@@ -905,22 +912,25 @@ export function useSendMessage(conversationId: string) {
       // session key is the same in both directions.
       const peerAddress = peerAddressForConversation(queryClient, conversationId, walletAddress)
         || peerAddressForConversation(queryClient, resolvedId, walletAddress);
-      const wire = await prepareOutgoing(peerAddress, content);
 
-      // Media/voice: upload file then return — resolvedId is now guaranteed real
+      // Media/voice: upload file then return — resolvedId is now guaranteed real.
+      // The file itself is encrypted on the same terms as the caption.
       if (msgType === 'media' || msgType === 'voice') {
         if (!mediaFile) throw new Error('No file provided for media/voice message');
         const senderId = user?._id || walletAddress || '';
-        const sent = await uploadAndSendMedia(mediaFile, resolvedId, senderId, {
-          content: wire.content,
+        const { message: sent, plain } = await uploadDmMedia(mediaFile, resolvedId, senderId, {
+          peerAddress,
+          caption: content,
           msgType,
           voiceDuration,
           replyTo,
           txHash,
         });
-        // The upload response echoes what we sent; keep the plaintext caption.
-        return wire.encrypted ? { ...sent, content, encrypted: true } : sent;
+        if (plain) seedSentMedia(sent._id, plain);
+        return sent;
       }
+
+      const wire = await prepareOutgoing(peerAddress, content);
 
       /*
        * Confirm the socket is up BEFORE emitting. socket.io's emit does not
