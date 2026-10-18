@@ -38,6 +38,7 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { LiveRipple } from '@/components/app/LiveRipple';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useAuth } from '@/contexts/AuthContext';
@@ -274,18 +275,19 @@ export function ImmersiveLiveChrome({
             do. Without `flex-1` this shrank to min-content and the name,
             which truncates, rendered at zero width — a capsule with an
             avatar and nothing beside it. */}
-        {/* One capsule for who started this: face with a live ring, name
+        {/* One capsule for who started this: face with the live ripple, name
             and badge, when they went live, and Follow inside it. */}
         <div className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-[14px] border border-white/15 bg-black/30 py-1 pl-1 pr-1.5 backdrop-blur-md">
           <button type="button" onClick={openCreatorProfile} className="flex min-w-0 flex-1 items-center gap-2 text-left">
-            <span className={cn('rounded-full p-[1px] ring-2', isLive && !isEnded ? 'ring-red-500' : 'ring-transparent')}>
+            {/* Same broadcast ripple every other live avatar wears. */}
+            <LiveRipple live={!!isLive && !isEnded} className="m-px rounded-lg">
               <Avatar className="h-8 w-8">
                 <AvatarImage src={avatar} alt={streamerName} />
                 <AvatarFallback className="bg-zinc-700 text-[11px] font-medium text-white">
                   {streamerName?.[0]?.toUpperCase() || '?'}
                 </AvatarFallback>
               </Avatar>
-            </span>
+            </LiveRipple>
             <span className="min-w-0 flex-1">
               <span className="flex min-w-0 items-baseline gap-1 text-[14px] font-extrabold leading-tight text-white">
                 <span className="truncate">{streamerName}</span>
