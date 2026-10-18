@@ -519,6 +519,7 @@ function MobileCreatorInfo({
               </button>
             )}
             {onMenuClick && <PostHeaderOptionsButton
+              corner={false}
               onClick={onMenuClick}
               style={{ marginTop: -4 }}
             />}
@@ -3006,7 +3007,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                 <Zap className="w-5 h-5" />
               </button>
             )}
-            <PostHeaderOptionsButton iconSize={20} className="text-white" onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
+            <PostHeaderOptionsButton iconSize={20} corner={false} className="text-white" onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />
           </div>
         )}
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
@@ -3115,7 +3116,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                     <Zap className="h-5 w-5" />
                   </button>
                 )}
-                {!stage && <PostHeaderOptionsButton iconSize={20} aria-label={t('postStage.more', 'Post options')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />}
+                {!stage && <PostHeaderOptionsButton iconSize={20} corner={false} aria-label={t('postStage.more', 'Post options')} onClick={(event) => { event.stopPropagation(); if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }} />}
               </div>
             )}
             {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}

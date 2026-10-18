@@ -938,7 +938,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false, onOp
   }, [openPost, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   const headerRow = (
-    <div data-card-head={stage ? undefined : 'plain'} className={stage ? 'contents' : 'flex items-end justify-between'} style={{ paddingBottom: 0 }}>
+    <div data-card-head={stage ? undefined : 'plain'} className={stage ? 'contents' : 'flex items-start justify-between'} style={{ paddingBottom: 0 }}>
       {stage ? (
         <StageCreatorRow
           name={post.username}
