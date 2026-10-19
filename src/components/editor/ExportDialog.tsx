@@ -32,6 +32,11 @@ import { GIF_CONTENT_LIMIT, gifPlan } from "@/lib/editor/gif";
 import { clipExportRanges, type ExportScope } from "@/lib/editor/exportRanges";
 import { ZIP_DOWNLOAD_LIMIT } from "@/lib/editor/zipArchive";
 import { zipDownloadFiles } from "@/lib/editor/zipDownloadFiles";
+import { startExportJournal } from "@/lib/editor/exportJournal";
+import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
+
+/** Finished exports up to this size are also kept in the creator's cloud storage. */
+const BACKUP_LIMIT = 200 * 1024 * 1024;
 
 interface Props {
   open: boolean;
@@ -53,7 +58,7 @@ const isStill = (f: Format): f is StillFormat => f === "png" || f === "jpg";
 export function ExportDialog({ open, onOpenChange }: Props) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, walletAddress } = useAuth();
   const toSnapshot = useEditorStore((s) => s.toSnapshot);
   const media = useEditorStore((s) => s.media);
   const clips = useEditorStore((s) => s.clips);
@@ -124,6 +129,15 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     } : undefined);
   };
 
+  // Keep a copy of the finished video in the creator's cloud storage, so a file
+  // lost on their device can still be recovered and handed back to them.
+  const backUpExport = (blob: Blob, filename: string, journal: ReturnType<typeof startExportJournal>) => {
+    if (!walletAddress || blob.size > BACKUP_LIMIT) return;
+    void uploadEditorAsset({ wallet: walletAddress, name: filename, kind: "export", blob, mimeType: blob.type || "video/mp4", preserved: true })
+      .then(asset => { journal.backedUp(asset.id); window.dispatchEvent(new CustomEvent("editor:storage-usage-changed")); })
+      .catch(error => { journal.backupFailed(error); console.warn("[editor] export backup failed", error); });
+  };
+
   const handleStill = async () => {
     if (duration <= 0) {
       toast.error(t("editor.export.empty"));
@@ -181,6 +195,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     setLabel(t("editor.export.preparing"));
     const ctl = new AbortController();
     abortRef.current = ctl;
+    const journal = startExportJournal({ surface: "download", format, width: outW, height: outH, durationSeconds: exportDuration });
     try {
       const baseOptions = {
         snapshot,
@@ -209,15 +224,19 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         const blob = files.length === 1 ? files[0].blob : await zipDownloadFiles(files, ctl.signal);
         if (ctl.signal.aborted) throw new DOMException("Export cancelled", "AbortError");
         const filename = files.length === 1 ? files[0].name : exportFilename(snapshot.title, "zip", "-clips");
+        journal.succeeded({ blob });
         download(blob, filename);
       } else {
-        const { blob, filename } = await exportProject({ ...baseOptions,
+        const result = await exportProject({ ...baseOptions,
           onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
         });
-        download(blob, filename);
+        journal.succeeded(result);
+        download(result.blob, result.filename);
+        backUpExport(result.blob, result.filename, journal);
       }
       onOpenChange(false);
     } catch (e) {
+      journal.failed(e);
       if ((e as Error).name === "AbortError") {
         toast.message(t("editor.export.cancelled"));
       } else {
