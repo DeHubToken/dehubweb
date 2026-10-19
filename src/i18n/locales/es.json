@@ -1906,6 +1906,9 @@
     "failedSubmit": "Error al enviar solicitud. Inténtalo de nuevo."
   },
   "loginModal": {
+    "restoreWalletTitle": "Recupera tu billetera",
+    "restoreOriginalWallet": "Tu perfil está en la billetera de tu inicio de sesión original, no en la guardada para este inicio de sesión. Inicia sesión como lo hiciste la primera vez en DeHub para recuperar esa billetera. Tu perfil y tus fondos no cambian.",
+    "useAnotherLogin": "Usar otro inicio de sesión",
     "unlockBiometricContinue": "Desbloquea tu billetera con tu huella digital o cara para continuar.",
     "unlockBiometricSignIn": "Desbloquea tu billetera con tu huella digital o cara para iniciar sesión.",
     "unlockPasswordContinue": "Introduce la contraseña de tu monedero para continuar.",
