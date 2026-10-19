@@ -23,6 +23,7 @@ import { PostModal } from "@/features/post";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
+import { startExportJournal } from "@/lib/editor/exportJournal";
 import { preserveEditorAssets, uploadEditorAsset } from "@/lib/editor/cloudMedia";
 
 
@@ -90,8 +91,9 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
     setLabel("Preparing…");
     const ctl = new AbortController();
     abortRef.current = ctl;
+    const journal = startExportJournal({ surface: "post", format: "mp4", durationSeconds: duration });
     try {
-      const { blob, filename } = await exportProject({
+      const result = await exportProject({
         snapshot: toSnapshot(),
         media,
         format: "mp4",
@@ -101,6 +103,8 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
         onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
         signal: ctl.signal,
       });
+      const { blob, filename } = result;
+      journal.succeeded(result);
       const file = new File([blob], filename, { type: "video/mp4" });
       setFiles(filesToFileList([file]));
       setRenderOpen(false);
@@ -122,11 +126,12 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
           mimeType: "video/mp4",
           preserved: true,
         })
-          .then(() => window.dispatchEvent(new CustomEvent("editor:storage-usage-changed")))
-          .catch((e) => console.warn("[editor] export upload failed", e));
+          .then((asset) => { journal.backedUp(asset.id); window.dispatchEvent(new CustomEvent("editor:storage-usage-changed")); })
+          .catch((e) => { journal.backupFailed(e); console.warn("[editor] export upload failed", e); });
       }
 
     } catch (e) {
+      journal.failed(e);
       if ((e as Error).name === "AbortError") {
         toast.message("Cancelled");
       } else {

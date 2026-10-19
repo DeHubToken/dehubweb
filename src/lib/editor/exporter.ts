@@ -51,6 +51,9 @@ export interface ExportOptions {
 export interface ExportResult {
   blob: Blob;
   filename: string;
+  /** WebCodecs codec strings actually used, for the export journal. */
+  videoCodec?: string;
+  audioCodec?: string | null;
 }
 
 export function isExportSupported(): boolean {
@@ -508,7 +511,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
   const blob = stampEnding(new Blob([muxer.target.buffer], { type: mime }), contentDuration, format === "mp4" ? "mp4" : "webm");
   const filename = exportFilename(snapshot.title, format);
   onProgress?.(1, "Done");
-  return { blob, filename };
+  return { blob, filename, videoCodec, audioCodec: haveAudio ? audioCodec : null };
   } finally {
     if (videoEncoder && videoEncoder.state !== "closed") videoEncoder.close();
     if (audioEncoder && audioEncoder.state !== "closed") audioEncoder.close();
