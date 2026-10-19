@@ -8033,5 +8033,14 @@
     "backToMedia": "Tilbage til indlægget",
     "like": "Synes godt om",
     "unlike": "Fjern som"
+  },
+  "postProcessing": {
+    "uploading": "Uploader…",
+    "preparing": "Forbereder…",
+    "ready": "Klar",
+    "preparingVideo": "Din video forberedes",
+    "posted": "Slået op",
+    "view": "Vis",
+    "failed": "Videoen kunne ikke behandles"
   }
 }

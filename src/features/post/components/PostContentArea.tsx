@@ -8,6 +8,7 @@ import { LinkPreviews } from './LinkPreviews';
 import { PollEditor } from './PollEditor';
 import type { MediaFile, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
+import type { DraftVideoSnapshot } from '../lib/draft-video';
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { Save, Clock, Square, Hash } from "lucide-react";
 import Upload from "@/components/ui/cut-icons/upload";
@@ -80,6 +81,8 @@ interface PostContentAreaProps {
   poll: PollData | null;
   onPollChange: (poll: PollData | null) => void;
   onMediaFullscreenChange?: (open: boolean) => void;
+  /** The attached video's early upload. */
+  draftVideo?: DraftVideoSnapshot | null;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -160,6 +163,7 @@ export function PostContentArea({
   poll,
   onPollChange,
   onMediaFullscreenChange,
+  draftVideo,
 }: PostContentAreaProps) {
   const { t: _copy } = _useCopy();
   const isLive = liveMode !== null;
@@ -785,6 +789,7 @@ export function PostContentArea({
             onApplyTrim={onApplyTrim}
             onReplaceImage={onReplaceImage}
             onFullscreenChange={onMediaFullscreenChange}
+            draftVideo={draftVideo}
           />
         </div>
 

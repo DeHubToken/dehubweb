@@ -8097,5 +8097,14 @@
     "backToMedia": "Rudi kwenye chapisho",
     "like": "Penda",
     "unlike": "Ondoa kama"
+  },
+  "postProcessing": {
+    "uploading": "Inapakia…",
+    "preparing": "Inaandaa…",
+    "ready": "Tayari",
+    "preparingVideo": "Tunaandaa video yako",
+    "posted": "Imechapishwa",
+    "view": "Tazama",
+    "failed": "Video haikuweza kuchakatwa"
   }
 }

@@ -1,6 +1,7 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { PenSquare } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
@@ -46,6 +47,9 @@ import type { DeHubPoll } from '@/lib/api/dehub';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import type { Community, PinnedCommunity } from '@/hooks/use-communities';
+import { DraftVideoProgress } from '@/features/post/components/DraftVideoProgress';
+import { PostProcessingPill } from '@/components/app/PostProcessingDock';
+import type { PostProcessingPhase } from '@/store/postProcessingStore';
 import galleryCover from '@/assets/banners/agent-marco_v.png';
 import galleryAvatar from '@/assets/avatars/marco_v.png';
 import galleryCommunityArt from '@/assets/banners/agent-vrgl.png';
@@ -283,6 +287,51 @@ function ReactionsGallery() {
   );
 }
 
+/**
+ * A new video's way to playable: the composer's bar under the attached video
+ * while it uploads early (lib/draft-video), and the glass dock pill that
+ * follows the post's transcode after Post. `?dock=processing|done|failed`
+ * also pins the pill where the app docks it, above the phone bottom nav.
+ */
+function VideoProcessingGallery({ docked }: { docked: PostProcessingPhase | null }) {
+  const { t } = useTranslation();
+  const drafts = [
+    { phase: 'uploading', uploadPercent: 40, processPercent: 0, draftId: null },
+    { phase: 'processing', uploadPercent: 100, processPercent: 62, draftId: 'gallery' },
+    { phase: 'ready', uploadPercent: 100, processPercent: 100, draftId: 'gallery' },
+  ] as const;
+  return (
+    <section data-page-bento data-video-processing-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('postProcessing.preparingVideo')}</h2>
+      <div className="flex flex-wrap gap-5" data-draft-progress-samples>
+        {drafts.map((draft) => (
+          <div key={draft.phase} data-draft-sample={draft.phase} className="flex flex-col gap-3">
+            <img src={galleryCover} alt="" className="aspect-video w-[280px] rounded-2xl object-cover sm:w-[320px] md:w-[380px]" />
+            <DraftVideoProgress draft={{ ...draft }} />
+          </div>
+        ))}
+      </div>
+      <div
+        data-dock-samples
+        className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl p-4"
+        style={{ backgroundImage: `url(${galleryCover})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        <PostProcessingPill phase="processing" progress={62} thumbnail={galleryCover} />
+        <PostProcessingPill phase="done" progress={100} thumbnail={galleryCover} onPress={() => undefined} />
+        <PostProcessingPill phase="failed" progress={0} thumbnail={galleryCover} onPress={() => undefined} />
+      </div>
+      {/* Portalled: the bento's backdrop filter would otherwise pin a fixed
+          child to the section instead of the viewport. */}
+      {docked && createPortal(
+        <div data-processing-dock-anchor>
+          <PostProcessingPill phase={docked} progress={docked === 'processing' ? 62 : 100} thumbnail={galleryCover} onPress={docked === 'processing' ? undefined : () => undefined} />
+        </div>,
+        document.body,
+      )}
+    </section>
+  );
+}
+
 const THEMES = [
   'system', 'system-light', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
   'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror',
@@ -356,6 +405,10 @@ export default function StateGalleryPage() {
         </div>
 
         {params.get('predictions') === '1' && <PredictionGallery />}
+
+        <VideoProcessingGallery
+          docked={(['processing', 'done', 'failed'] as const).find((phase) => phase === params.get('dock')) ?? null}
+        />
 
         <StreamerArtworkGallery />
 

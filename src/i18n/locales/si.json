@@ -8065,5 +8065,14 @@
     "backToBlog": "බ්ලොග් වෙත ආපසු",
     "sharePost": "පළකිරීම බෙදා ගන්න",
     "relatedPosts": "සම්බන්ධ පළකිරීම්"
+  },
+  "postProcessing": {
+    "uploading": "උඩුගත වෙමින්…",
+    "preparing": "සූදානම් වෙමින්…",
+    "ready": "සූදානම්",
+    "preparingVideo": "ඔබේ වීඩියෝව සූදානම් වෙමින්",
+    "posted": "පළ කළා",
+    "view": "බලන්න",
+    "failed": "වීඩියෝව සැකසීමට නොහැකි විය"
   }
 }

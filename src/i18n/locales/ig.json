@@ -8029,5 +8029,14 @@
     "backToMedia": "Laghachi na post",
     "like": "Dị ka",
     "unlike": "Wepụ dị ka"
+  },
+  "postProcessing": {
+    "uploading": "Na-ebugo…",
+    "preparing": "Na-akwado…",
+    "ready": "Ọ dị njikere",
+    "preparingVideo": "A na-akwado vidiyo gị",
+    "posted": "Ebipụtala ya",
+    "view": "Lee",
+    "failed": "Enweghị ike ịhazi vidiyo ahụ"
   }
 }

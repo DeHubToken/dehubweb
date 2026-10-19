@@ -8251,5 +8251,14 @@
     "phraseLoadFailed": "Não foi possível carregar a frase de recuperação. Tenta novamente ou abre o DeHub no dispositivo original.",
     "noPhrase": "Esta carteira foi guardada com uma chave privada, por isso o DeHub não tem uma frase de recuperação para mostrar. Guarda esta chave para restaurar a mesma carteira.",
     "keyWarning": "Qualquer pessoa com esta chave pode controlar a tua carteira. Guarda-a num local seguro e nunca a partilhes."
+  },
+  "postProcessing": {
+    "uploading": "Enviando…",
+    "preparing": "Preparando…",
+    "ready": "Pronto",
+    "preparingVideo": "Preparando seu vídeo",
+    "posted": "Publicado",
+    "view": "Ver",
+    "failed": "Não foi possível processar o vídeo"
   }
 }

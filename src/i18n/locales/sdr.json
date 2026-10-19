@@ -7641,5 +7641,14 @@
     "inProgress": "جاری ہے",
     "completed": "مکمل",
     "underReview": "جائزے میں"
+  },
+  "postProcessing": {
+    "uploading": "اپلوڈ ہوت ہے…",
+    "preparing": "تیار ہوت ہے…",
+    "ready": "تیار",
+    "preparingVideo": "توہر ویڈیو تیار ہوت ہے",
+    "posted": "پوسٹ ہوئے گیلک",
+    "view": "دیکھو",
+    "failed": "ویڈیو پروسیس نہیں ہوئے پاولک"
   }
 }

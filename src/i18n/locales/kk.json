@@ -8142,5 +8142,14 @@
     "backToBlog": "Блогқа қайту",
     "sharePost": "Жазбаны бөлісу",
     "relatedPosts": "Байланысты жазбалар"
+  },
+  "postProcessing": {
+    "uploading": "Жүктелуде…",
+    "preparing": "Дайындалуда…",
+    "ready": "Дайын",
+    "preparingVideo": "Бейнеңіз дайындалуда",
+    "posted": "Жарияланды",
+    "view": "Көру",
+    "failed": "Бейнені өңдеу мүмкін болмады"
   }
 }

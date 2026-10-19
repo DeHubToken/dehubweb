@@ -8006,5 +8006,14 @@
     "backToMedia": "Zpět na příspěvek",
     "like": "Líbí se",
     "unlike": "Odebrat lajk"
+  },
+  "postProcessing": {
+    "uploading": "Nahrávání…",
+    "preparing": "Připravuje se…",
+    "ready": "Hotovo",
+    "preparingVideo": "Připravujeme vaše video",
+    "posted": "Zveřejněno",
+    "view": "Zobrazit",
+    "failed": "Video se nepodařilo zpracovat"
   }
 }

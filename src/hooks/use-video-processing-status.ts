@@ -1,6 +1,7 @@
 import { useEffect, useState, type RefObject } from 'react';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { getNFTInfo } from '@/lib/api/dehub';
+import { subscribeJobChannel } from '@/lib/api/dehub/job-socket';
 
 export type VideoProcessingStatus = 'pending' | 'on' | 'done' | 'failed';
 const POLL_MS = 5_000;
@@ -9,6 +10,10 @@ const isPending = (status: VideoProcessingStatus | undefined) => status === 'pen
 
 export function markVideoProcessing(client: QueryClient, tokenId: number | string) {
   client.setQueryData(processingKey(tokenId), 'pending');
+}
+
+export function setVideoProcessingStatus(client: QueryClient, tokenId: number | string, status: VideoProcessingStatus) {
+  client.setQueryData(processingKey(tokenId), status);
 }
 
 /** Follow only visible, unfinished videos. A shared key keeps duplicate cards
@@ -54,5 +59,17 @@ export function useVideoProcessingStatus(
     refetchIntervalInBackground: false,
     retry: false,
   });
+  // The token's socket channel says `done` the moment the transcode lands, so
+  // a card on screen flips without waiting for its next poll. Shared through
+  // the same key, so every card showing this post flips together.
+  const listening = enabled && canFollow && isPending(query.data ?? cached ?? initialStatus);
+  useEffect(() => {
+    if (!listening) return;
+    return subscribeJobChannel(String(tokenId), (event) => {
+      if (event.stage === 'done') client.setQueryData(processingKey(tokenId), 'done');
+      else if (event.stage === 'failed') client.setQueryData(processingKey(tokenId), 'failed');
+    });
+  }, [listening, tokenId, client]);
+
   return canFollow ? query.data ?? initialStatus : initialStatus;
 }

@@ -7948,5 +7948,14 @@
     "backToMedia": "پوسټ ته بیرته ستنیدل",
     "like": "لکه څنګه چې",
     "unlike": "لرې کړئ لکه څنګه چې"
+  },
+  "postProcessing": {
+    "uploading": "اپلوډ کېږي…",
+    "preparing": "چمتو کېږي…",
+    "ready": "چمتو",
+    "preparingVideo": "ستاسو ویډیو چمتو کېږي",
+    "posted": "خپور شو",
+    "view": "وګورئ",
+    "failed": "ویډیو پروسس نه شوه"
   }
 }

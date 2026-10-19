@@ -8081,5 +8081,14 @@
     "backToMedia": "ກັບຄືນໄປບ່ອນ Post",
     "like": "ມັກ",
     "unlike": "ລຶບອອກເຊັ່ນ"
+  },
+  "postProcessing": {
+    "uploading": "ກຳລັງອັບໂຫລດ…",
+    "preparing": "ກຳລັງກະກຽມ…",
+    "ready": "ພ້ອມແລ້ວ",
+    "preparingVideo": "ກຳລັງກະກຽມວິດີໂອຂອງທ່ານ",
+    "posted": "ໂພສແລ້ວ",
+    "view": "ເບິ່ງ",
+    "failed": "ບໍ່ສາມາດປະມວນຜົນວິດີໂອໄດ້"
   }
 }

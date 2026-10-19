@@ -8020,5 +8020,14 @@
     "followers": "फॉलोअर",
     "subscribers": "सब्सक्राइबर",
     "mentioned": "जेकर नाम लिखे गइस"
+  },
+  "postProcessing": {
+    "uploading": "अपलोड होवत हे…",
+    "preparing": "तियार होवत हे…",
+    "ready": "तियार",
+    "preparingVideo": "तुंहर वीडियो तियार होवत हे",
+    "posted": "पोस्ट हो गे",
+    "view": "देखव",
+    "failed": "वीडियो प्रोसेस नइ हो सकिस"
   }
 }

@@ -8121,5 +8121,14 @@
     "backToMedia": "Buyela emuva ephostini",
     "like": "Thanda",
     "unlike": "Susa okufana"
+  },
+  "postProcessing": {
+    "uploading": "Kuyalayishwa…",
+    "preparing": "Kuyalungiswa…",
+    "ready": "Kulungile",
+    "preparingVideo": "Ividiyo yakho iyalungiswa",
+    "posted": "Kuthunyelwe",
+    "view": "Buka",
+    "failed": "Ividiyo ayikwazanga ukucutshungulwa"
   }
 }
