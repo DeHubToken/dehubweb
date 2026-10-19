@@ -8080,5 +8080,14 @@
     "followers": "关注者",
     "subscribers": "订阅者",
     "mentioned": "被提到的"
+  },
+  "postProcessing": {
+    "uploading": "上传中…",
+    "preparing": "准备中…",
+    "ready": "好了",
+    "preparingVideo": "正在准备你的视频",
+    "posted": "发好了",
+    "view": "看",
+    "failed": "视频处理不了"
   }
 }

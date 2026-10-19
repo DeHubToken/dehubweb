@@ -8124,5 +8124,14 @@
     "backToMedia": "Kembali ke postingan",
     "like": "Suka",
     "unlike": "Hapus suka"
+  },
+  "postProcessing": {
+    "uploading": "Mengunggah…",
+    "preparing": "Menyiapkan…",
+    "ready": "Siap",
+    "preparingVideo": "Menyiapkan videomu",
+    "posted": "Diposting",
+    "view": "Lihat",
+    "failed": "Video tidak dapat diproses"
   }
 }

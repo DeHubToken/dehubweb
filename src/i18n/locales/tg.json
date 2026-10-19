@@ -8048,5 +8048,14 @@
     "backToMedia": "Bumalik sa post",
     "like": "Мисли",
     "unlike": "Удалить включа"
+  },
+  "postProcessing": {
+    "uploading": "Боргузорӣ…",
+    "preparing": "Омода мешавад…",
+    "ready": "Омода",
+    "preparingVideo": "Видеои шумо омода мешавад",
+    "posted": "Нашр шуд",
+    "view": "Дидан",
+    "failed": "Видеоро коркард кардан нашуд"
   }
 }

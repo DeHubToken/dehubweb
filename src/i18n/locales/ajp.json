@@ -7498,5 +7498,14 @@
     "backToMedia": "الرجوع للمنشور",
     "like": "إعجاب",
     "unlike": "إزالة الإعجاب"
+  },
+  "postProcessing": {
+    "uploading": "عم يرفع…",
+    "preparing": "عم يحضّر…",
+    "ready": "جاهز",
+    "preparingVideo": "عم نحضّر الفيديو تبعك",
+    "posted": "انْشَر",
+    "view": "شوف",
+    "failed": "ما قدرنا نعالج الفيديو"
   }
 }

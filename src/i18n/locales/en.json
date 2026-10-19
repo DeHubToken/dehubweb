@@ -13570,5 +13570,14 @@
     "nobodyYet": "No one yet",
     "rotate": "Rotate screen",
     "showControls": "Show controls"
+  },
+  "postProcessing": {
+    "uploading": "Uploading…",
+    "preparing": "Preparing…",
+    "ready": "Ready",
+    "preparingVideo": "Preparing your video",
+    "posted": "Posted",
+    "view": "View",
+    "failed": "Video couldn't be processed"
   }
 }

@@ -7890,5 +7890,14 @@
     "backToMedia": "An ka segi o koo kan",
     "like": "O cogo la,",
     "unlike": "A tun be i ko"
+  },
+  "postProcessing": {
+    "uploading": "A bɛ ka bila…",
+    "preparing": "A bɛ ka labɛn…",
+    "ready": "A labɛnna",
+    "preparingVideo": "I ka widewo bɛ ka labɛn",
+    "posted": "A bilala",
+    "view": "Lajɛ",
+    "failed": "Widewo ma se ka labɛn"
   }
 }

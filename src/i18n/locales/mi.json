@@ -8087,5 +8087,14 @@
     "backToMedia": "Hoki ki te pou",
     "like": "Pāheko",
     "unlike": "Mukua te pāheko"
+  },
+  "postProcessing": {
+    "uploading": "E tuku ana…",
+    "preparing": "E whakarite ana…",
+    "ready": "Kua rite",
+    "preparingVideo": "E whakarite ana i tō ataata",
+    "posted": "Kua whakairia",
+    "view": "Tirohia",
+    "failed": "Kāore i taea te tukatuka i te ataata"
   }
 }

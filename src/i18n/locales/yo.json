@@ -8002,5 +8002,14 @@
     "backToMedia": "Pada sí ìfìkún",
     "like": "Fẹ́ràn",
     "unlike": "Yọfẹ́ràn"
+  },
+  "postProcessing": {
+    "uploading": "Ń gbé sókè…",
+    "preparing": "Ń múra sílẹ̀…",
+    "ready": "Ó ti ṣetán",
+    "preparingVideo": "À ń múra fídíò rẹ sílẹ̀",
+    "posted": "A ti fi sílẹ̀",
+    "view": "Wò ó",
+    "failed": "A kò lè ṣe fídíò náà"
   }
 }

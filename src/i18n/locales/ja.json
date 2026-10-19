@@ -8222,5 +8222,14 @@
     "backToMedia": "投稿に戻る",
     "like": "いいね",
     "unlike": "いいねを削除"
+  },
+  "postProcessing": {
+    "uploading": "アップロード中…",
+    "preparing": "準備中…",
+    "ready": "準備完了",
+    "preparingVideo": "動画を準備しています",
+    "posted": "投稿しました",
+    "view": "表示",
+    "failed": "動画を処理できませんでした"
   }
 }

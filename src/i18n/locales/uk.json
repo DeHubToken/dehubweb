@@ -8597,5 +8597,14 @@
     "footer": {
       "allRightsReserved": "Всі права захищені"
     }
+  },
+  "postProcessing": {
+    "uploading": "Завантаження…",
+    "preparing": "Підготовка…",
+    "ready": "Готово",
+    "preparingVideo": "Готуємо ваше відео",
+    "posted": "Опубліковано",
+    "view": "Переглянути",
+    "failed": "Не вдалося обробити відео"
   }
 }

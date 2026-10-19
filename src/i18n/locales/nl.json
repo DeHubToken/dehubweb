@@ -13851,5 +13851,14 @@
     "nobodyYet": "Nog niemand",
     "rotate": "Scherm draaien",
     "showControls": "Bediening tonen"
+  },
+  "postProcessing": {
+    "uploading": "Uploaden…",
+    "preparing": "Voorbereiden…",
+    "ready": "Klaar",
+    "preparingVideo": "Je video wordt voorbereid",
+    "posted": "Geplaatst",
+    "view": "Bekijken",
+    "failed": "De video kon niet worden verwerkt"
   }
 }

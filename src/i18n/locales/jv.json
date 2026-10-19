@@ -7868,5 +7868,14 @@
     "backToMedia": "Mbalik menyang kiriman",
     "like": "Senengi",
     "unlike": "Copot seneng"
+  },
+  "postProcessing": {
+    "uploading": "Ngunggah…",
+    "preparing": "Nyiapake…",
+    "ready": "Siap",
+    "preparingVideo": "Video sampeyan lagi disiapake",
+    "posted": "Wis dikirim",
+    "view": "Deleng",
+    "failed": "Video ora bisa diproses"
   }
 }

@@ -75,6 +75,9 @@ const PostModal = React.lazy(() =>
 const RadioMiniPlayer = React.lazy(() =>
   import('@/components/app/radio/RadioMiniPlayer').then(m => ({ default: m.RadioMiniPlayer }))
 );
+// Only fetched once a video post is actually being prepared.
+const PostProcessingDock = React.lazy(() => import('@/components/app/PostProcessingDock'));
+import { usePostProcessingStore } from '@/store/postProcessingStore';
 import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
 import { StageRecordingMiniPlayer } from '@/components/app/stages/StageRecordingMiniPlayer';
 import { useAudioPostPoppedOut } from '@/lib/audio-post-popout';
@@ -182,6 +185,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const mainRef = useRef<HTMLElement | null>(null);
   // Gate for the corner player's chunk — see its lazy import above.
   const hasPoppedOutAudio = useAudioPostPoppedOut();
+  const hasProcessingPost = usePostProcessingStore((s) => s.job !== null);
   const brainrotOpened = useBrainrotEverOpened();
 
   // "A stage you set a reminder for is starting soon / just started" — announced
@@ -508,6 +512,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       </Suspense>
       <StageMiniPlayer />
       <StageRecordingMiniPlayer />
+      {hasProcessingPost && (
+        <Suspense fallback={null}>
+          <PostProcessingDock />
+        </Suspense>
+      )}
       {hasPoppedOutAudio && (
         <Suspense fallback={null}>
           <AudioPostMiniPlayer />

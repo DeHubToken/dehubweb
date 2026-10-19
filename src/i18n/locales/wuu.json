@@ -7461,5 +7461,14 @@
     "backToMedia": "返回帖子",
     "like": "点赞",
     "unlike": "取消点赞"
+  },
+  "postProcessing": {
+    "uploading": "上传中…",
+    "preparing": "准备中…",
+    "ready": "好了",
+    "preparingVideo": "正在准备侬个视频",
+    "posted": "发好了",
+    "view": "看",
+    "failed": "视频处理勿了"
   }
 }

@@ -7968,5 +7968,14 @@
     "backToMedia": "ናብ'ቲ ልኡኽ ተመለስ",
     "like": "ከም",
     "unlike": "ከም"
+  },
+  "postProcessing": {
+    "uploading": "ይጽዓን ኣሎ…",
+    "preparing": "ይዳሎ ኣሎ…",
+    "ready": "ድሉው",
+    "preparingVideo": "ቪድዮኹም ይዳሎ ኣሎ",
+    "posted": "ተለጢፉ",
+    "view": "ርአ",
+    "failed": "ቪድዮ ክስራሕ ኣይከኣለን"
   }
 }

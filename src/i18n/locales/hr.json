@@ -8009,5 +8009,14 @@
     "backToMedia": "Natrag na objavu",
     "like": "Sviđa mi se",
     "unlike": "Ukloni lajk"
+  },
+  "postProcessing": {
+    "uploading": "Prijenos…",
+    "preparing": "Priprema…",
+    "ready": "Spremno",
+    "preparingVideo": "Pripremamo tvoj videozapis",
+    "posted": "Objavljeno",
+    "view": "Pogledaj",
+    "failed": "Videozapis nije moguće obraditi"
   }
 }

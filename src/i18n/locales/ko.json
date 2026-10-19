@@ -8147,5 +8147,14 @@
     "backToMedia": "포스트로 돌아가기",
     "like": "좋아요",
     "unlike": "좋아요 제거"
+  },
+  "postProcessing": {
+    "uploading": "업로드 중…",
+    "preparing": "준비 중…",
+    "ready": "준비 완료",
+    "preparingVideo": "동영상을 준비하고 있어요",
+    "posted": "게시됨",
+    "view": "보기",
+    "failed": "동영상을 처리할 수 없습니다"
   }
 }

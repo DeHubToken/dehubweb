@@ -8143,5 +8143,14 @@
     "backToMedia": "Powrót do posta",
     "like": "Polub",
     "unlike": "Usuń polubienie"
+  },
+  "postProcessing": {
+    "uploading": "Przesyłanie…",
+    "preparing": "Przygotowywanie…",
+    "ready": "Gotowe",
+    "preparingVideo": "Przygotowujemy Twój film",
+    "posted": "Opublikowano",
+    "view": "Zobacz",
+    "failed": "Nie udało się przetworzyć filmu"
   }
 }
