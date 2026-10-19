@@ -2908,7 +2908,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
                   [&::-moz-range-thumb]:rounded-full
                   [&::-moz-range-thumb]:border-0"
                 style={{
-                  backgroundImage: `linear-gradient(to right, white ${(currentTime / (duration || 1)) * 100}%, rgba(255,255,255,0.3) ${(currentTime / (duration || 1)) * 100}%), linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65))`,
+                  backgroundImage: `linear-gradient(to right, var(--video-strip-ink, white) ${(currentTime / (duration || 1)) * 100}%, var(--video-strip-track, rgba(255,255,255,0.3)) ${(currentTime / (duration || 1)) * 100}%), linear-gradient(var(--video-strip-rim, rgba(0,0,0,0.65)), var(--video-strip-rim, rgba(0,0,0,0.65)))`,
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: '100% 4px',
