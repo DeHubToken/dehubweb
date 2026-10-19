@@ -1,0 +1,13 @@
+a/
+.dl/
+frames_*/
+log_*.txt
+events*.json
+ev_test.json
+music*.wav
+test.wav
+*.mp4
+*.jpg
+tmpst/
+st_*/
+render_all.log
