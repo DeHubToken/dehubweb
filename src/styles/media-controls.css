@@ -179,3 +179,26 @@ html[data-theme] body [data-video-control-strip] [data-video-cc] {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+
+/* Light themes: the strip under a post page video is part of the page, so it
+   turns paper with ink controls. Controls drawn on the picture stay white. */
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) body [data-video-card] [data-video-control-strip]:not([data-video-fullscreen] *) {
+  background: var(--paper, #fff) !important;
+  border-top: 1px solid rgba(11, 11, 13, 0.08);
+  color: #0b0b0d !important;
+  --video-strip-ink: #0b0b0d;
+  --video-strip-track: rgba(11, 11, 13, 0.16);
+  --video-strip-rim: transparent;
+}
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) body [data-video-card] [data-video-control-strip]:not([data-video-fullscreen] *) :is(*, svg):not([data-video-glyph-active] svg) {
+  color: #0b0b0d !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_):not(#_) body [data-video-card] [data-video-control-strip]:not([data-video-fullscreen] *) [data-video-glyph-active] svg {
+  color: #2563eb !important;
+}
+html:is([data-theme="light"], [data-system-tone="light"]) body [data-video-card] [data-video-control-strip]:not([data-video-fullscreen] *) input[type="range"]::-webkit-slider-thumb { background: #0b0b0d; }
+html:is([data-theme="light"], [data-system-tone="light"]) body [data-video-card] [data-video-control-strip]:not([data-video-fullscreen] *) input[type="range"]::-moz-range-thumb { background: #0b0b0d; }
+/* The player frame itself stays black: the light themes repaint every
+   .bg-black as paper, which turned the letterbox beside a narrow video white
+   and hid the white back arrow drawn there. */
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_):not(#_) body [data-video-card] :is([data-video-split-controls], [data-feed-video-frame]).bg-black { background-color: #000 !important; }
