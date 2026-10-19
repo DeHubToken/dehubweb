@@ -61,7 +61,7 @@ import {
   type PostReaction,
   type ReactionCounts,
 } from '@/lib/reactions';
-import { ReactionEmoji, animatedReactionSrc } from './ReactionEmoji';
+import { ReactionEmoji, preloadAnimatedReaction } from './ReactionEmoji';
 
 /** How close to the edge of the screen the tray is allowed to sit, in px. */
 const EDGE_MARGIN = 8;
@@ -148,7 +148,7 @@ export function ReactionPicker({
   // rather than flashing the still emoji while the first file loads.
   useEffect(() => {
     if (!open || reduceMotion) return;
-    for (const reaction of reactions) new Image().src = animatedReactionSrc(reaction.key);
+    for (const reaction of reactions) preloadAnimatedReaction(reaction.key).catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, reduceMotion, polarity]);
   useEffect(() => {
