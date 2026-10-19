@@ -16,6 +16,9 @@
  * animated WebP in `public/emoji/animated/` — the 512px originals are 3.4MB
  * for the set, and the largest we draw is 36px. Reduced-motion viewers, and
  * anyone whose browser fails the file, get the static emoji instead.
+ *
+ * The still emoji stays on screen until the moving file has loaded and
+ * decoded, so a first hover never blinks to an empty box while it arrives.
  */
 
 import { useState } from 'react';
@@ -25,6 +28,13 @@ import { reactionMeta, type PostReaction } from '@/lib/reactions';
 
 export function animatedReactionSrc(reaction: PostReaction): string {
   return `/emoji/animated/${reaction}.webp`;
+}
+
+/** Fetches and decodes an animated file ahead of time, so a hover finds it warm. */
+export function preloadAnimatedReaction(reaction: PostReaction): Promise<void> {
+  const img = new Image();
+  img.src = animatedReactionSrc(reaction);
+  return img.decode();
 }
 
 interface ReactionEmojiProps {
@@ -37,18 +47,40 @@ interface ReactionEmojiProps {
 export function ReactionEmoji({ reaction, animate = false, className }: ReactionEmojiProps) {
   const reduceMotion = useReducedMotion();
   const [failed, setFailed] = useState(false);
+  const [shown, setShown] = useState<string | null>(null);
+  const src = animatedReactionSrc(reaction);
+  const emoji = reactionMeta(reaction).emoji;
 
-  if (!animate || reduceMotion || failed) return <>{reactionMeta(reaction).emoji}</>;
+  if (!animate || reduceMotion || failed) {
+    // A fresh <img> mounts next time, and it has to earn the swap again.
+    if (shown !== null) setShown(null);
+    return <>{emoji}</>;
+  }
 
+  // Even a file already in the cache paints blank for a beat in a new <img>,
+  // so the still emoji holds the spot until this element has decoded it.
+  const ready = shown === src;
   return (
-    <img
-      src={animatedReactionSrc(reaction)}
-      alt=""
-      aria-hidden="true"
-      draggable={false}
-      decoding="async"
-      onError={() => setFailed(true)}
-      className={cn('pointer-events-none h-full w-full select-none object-contain', className)}
-    />
+    <span className="relative flex h-full w-full items-center justify-center">
+      <img
+        src={src}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        onLoad={(e) => {
+          e.currentTarget
+            .decode()
+            .catch(() => {})
+            .then(() => setShown(src));
+        }}
+        onError={() => setFailed(true)}
+        className={cn(
+          'pointer-events-none absolute inset-0 h-full w-full select-none object-contain',
+          !ready && 'opacity-0',
+          className,
+        )}
+      />
+      {!ready && emoji}
+    </span>
   );
 }
