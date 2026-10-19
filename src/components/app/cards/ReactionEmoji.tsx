@@ -34,7 +34,12 @@ export function animatedReactionSrc(reaction: PostReaction): string {
 export function preloadAnimatedReaction(reaction: PostReaction): Promise<void> {
   const img = new Image();
   img.src = animatedReactionSrc(reaction);
-  return img.decode();
+  return decodeImage(img);
+}
+
+/** `decode()` where the browser has it; older engines just paint on load. */
+function decodeImage(img: HTMLImageElement): Promise<void> {
+  return typeof img.decode === 'function' ? img.decode() : Promise.resolve();
 }
 
 interface ReactionEmojiProps {
@@ -68,8 +73,7 @@ export function ReactionEmoji({ reaction, animate = false, className }: Reaction
         aria-hidden="true"
         draggable={false}
         onLoad={(e) => {
-          e.currentTarget
-            .decode()
+          decodeImage(e.currentTarget)
             .catch(() => {})
             .then(() => setShown(src));
         }}
