@@ -1906,6 +1906,9 @@
     "failedSubmit": "Başvuru gönderilemedi. Lütfen tekrar deneyin."
   },
   "loginModal": {
+    "restoreWalletTitle": "Cüzdanını geri getir",
+    "restoreOriginalWallet": "Profilin, bu giriş için kaydedilen cüzdanda değil, ilk girişindeki cüzdanda. O cüzdanı geri getirmek için DeHub'a ilk katıldığın şekilde giriş yap. Profilin ve bakiyen olduğu gibi kalır.",
+    "useAnotherLogin": "Başka bir giriş kullan",
     "unlockBiometricContinue": "Devam etmek için parmak izinizle veya yüzünüzle cüzdanınızın kilidini açın.",
     "unlockBiometricSignIn": "Oturum açmak için parmak izinizle veya yüzünüzle cüzdanınızın kilidini açın.",
     "unlockPasswordContinue": "Devam etmek için cüzdan şifrenizi girin.",

@@ -25,7 +25,7 @@ export type WalletProvider = 'metamask' | 'phantom' | 'trust';
  *  - 'create'  — Supabase-authed but no wallet row: show create flow
  *  - 'unlock'  — wallet exists: show password unlock
  */
-export type WalletPhase = 'none' | 'create' | 'unlock';
+export type WalletPhase = 'none' | 'create' | 'unlock' | 'restore';
 
 export interface AuthContextType {
   user: DeHubUser | null;

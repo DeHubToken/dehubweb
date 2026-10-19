@@ -189,7 +189,12 @@ const OLD_LOGIN_LABELS: Record<string, string> = {
   email: 'Email', email_passwordless: 'Email',
 };
 
-function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+/**
+ * Recover an old Web3Auth-era wallet and make it this login's active wallet.
+ * Shared by the Settings drawer and the login sheet, which opens it when the
+ * profile lives on the original wallet rather than the one saved since.
+ */
+export function SwitchOldAccountPanel({ open = true, onDone }: { open?: boolean; onDone: () => void }) {
   const { t: _copy } = _useCopy();
   const { switchActiveWallet, walletAddress } = useAuth();
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
@@ -236,7 +241,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
     setKnownAccounts([]); setKnownAccountsChecked(false);
     setPreviewSafeAddress(null); setSafeAddressChecked(false);
   };
-  const close = (v: boolean) => { if (!v) reset(); onOpenChange(v); };
+  const close = (v: boolean) => { if (!v) { reset(); onDone(); } };
 
   const previewAddress = migratedKey ? deriveFromSecret(migratedKey).ethAddress : null;
   const matchedAccount = previewAddress && safeAddressChecked
@@ -307,12 +312,7 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
   };
 
   return (
-    <Drawer open={open} onOpenChange={close}>
-      <DrawerContent column className="bg-black/95 border-white/10">
-        <DrawerHeader>
-          <DrawerTitle className="text-white text-center">{_copy("copy.90b92c105ff2", { defaultValue: "Switch to a different old account" })}</DrawerTitle>
-        </DrawerHeader>
-        <div className="px-6 pb-8 space-y-4">
+        <div className="space-y-4">
           {!migratedKey && (
             <>
               <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
@@ -465,6 +465,20 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
               </Button>
             </>
           )}
+        </div>
+  );
+}
+
+function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const { t: _copy } = _useCopy();
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent column className="bg-black/95 border-white/10">
+        <DrawerHeader>
+          <DrawerTitle className="text-white text-center">{_copy("copy.90b92c105ff2", { defaultValue: "Switch to a different old account" })}</DrawerTitle>
+        </DrawerHeader>
+        <div className="px-6 pb-8">
+          {open && <SwitchOldAccountPanel open={open} onDone={() => onOpenChange(false)} />}
         </div>
       </DrawerContent>
     </Drawer>

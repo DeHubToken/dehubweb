@@ -2099,6 +2099,9 @@
     "failedSubmit": "Aanvraag indienen mislukt. Probeer het opnieuw."
   },
   "loginModal": {
+    "restoreWalletTitle": "Haal je wallet terug",
+    "restoreOriginalWallet": "Je profiel staat op de wallet van je oorspronkelijke aanmelding, niet op de wallet die voor deze login is opgeslagen. Meld je aan zoals je dat de eerste keer bij DeHub deed om die wallet terug te halen. Je profiel en tegoeden blijven zoals ze zijn.",
+    "useAnotherLogin": "Een andere login gebruiken",
     "unlockBiometricContinue": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om door te gaan.",
     "unlockBiometricSignIn": "Ontgrendel je portemonnee met je vingerafdruk of gezicht om in te loggen.",
     "unlockPasswordContinue": "Voer het wachtwoord van je portemonnee in om door te",

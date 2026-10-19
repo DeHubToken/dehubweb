@@ -1906,6 +1906,9 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
+    "restoreWalletTitle": "Bring back your wallet",
+    "restoreOriginalWallet": "Your profile is on the wallet from your original sign-in, not the one saved for this login. Sign in the way you first joined DeHub to bring that wallet back. Your profile and funds stay as they are.",
+    "useAnotherLogin": "Use a different login",
     "unlockBiometricContinue": "Unlock your wallet with your fingerprint or face to continue.",
     "unlockBiometricSignIn": "Unlock your wallet with your fingerprint or face to sign in.",
     "unlockPasswordContinue": "Enter your wallet password to continue.",

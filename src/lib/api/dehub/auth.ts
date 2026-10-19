@@ -187,6 +187,18 @@ export class WalletNotLinkedError extends Error {
 }
 
 /**
+ * This login's profile lives on a different wallet from the one saved for it —
+ * usually the wallet from the original sign-in, after a newer wallet replaced
+ * it. Signing in needs that original wallet back, not a retry.
+ */
+export class ProfileLinkMismatchError extends Error {
+  constructor(message = 'Could not confirm your existing profile. Please try again.') {
+    super(message);
+    this.name = 'ProfileLinkMismatchError';
+  }
+}
+
+/**
  * Move this login's existing account onto the wallet this browser holds.
  *
  * For the case where the account is linked to one address and the browser can
@@ -291,6 +303,9 @@ export async function authenticateWithSupabaseSession(
         (errorData.message as string) || 'No wallet is linked to this login yet.',
       );
     }
+    if (code === 'PROFILE_LINK_MISMATCH') {
+      throw new ProfileLinkMismatchError(errorData.message as string | undefined);
+    }
     throw new Error(
       (errorData.message as string) || (errorData.error as string) || 'Authentication failed',
     );
@@ -306,7 +321,7 @@ export async function authenticateWithSupabaseSession(
   const linked = data.user.address.toLowerCase();
   if (expectedAddress && data.user.loginLinkSource !== 'wallet-email' &&
       linked !== expectedAddress.toLowerCase() && linked !== await predictSafeAddress(expectedAddress)) {
-    throw new Error('Could not confirm your existing profile. Please try again.');
+    throw new ProfileLinkMismatchError();
   }
 
   if (data.token) setAuthToken(data.token);
