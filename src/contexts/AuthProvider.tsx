@@ -31,6 +31,7 @@ import { fetchWalletChallenge, submitWalletProof, type WalletChallenge, type Wal
 import {
   authenticateWallet,
   rotateWallet,
+  ProfileLinkMismatchError,
   WalletNotLinkedError,
   WalletSignupBlockedError,
   WALLET_SIGNUP_BLOCKED_EVENT,
@@ -863,6 +864,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // restart in that gap makes profile login refuse the wallet hint.
         // Only a matching pending archive authorizes resuming the reset.
         const replacementAddress = await getReplacementToResume(userId);
+        if (!replacementAddress && error instanceof ProfileLinkMismatchError) {
+          // The saved wallet is not the one the profile lives on — typically
+          // a newer wallet replaced the one from the original sign-in. A
+          // retry can never pass, so offer to bring the original back.
+          authLogger.warn('Profile lives on a different wallet; offering restore', {});
+          setWalletPhase('restore');
+          openLoginModal();
+          return;
+        }
         if (!replacementAddress) throw error;
         authLogger.warn('Resuming pending wallet replacement', { address: replacementAddress });
         setWalletPhase('unlock');

@@ -11,7 +11,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { DEHUB_API_BASE } from '@/lib/api/dehub/core';
-import { authenticateWithSupabaseSession, WalletNotLinkedError } from '@/lib/api/dehub/auth';
+import { authenticateWithSupabaseSession, ProfileLinkMismatchError, WalletNotLinkedError } from '@/lib/api/dehub/auth';
 
 const predict = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/smart-account-address', () => ({ predictSafeAddress: predict }));
@@ -59,6 +59,17 @@ describe('authenticateWithSupabaseSession', () => {
     await expect(authenticateWithSupabaseSession('supabase-jwt', '0x1111111111111111111111111111111111111111')).rejects.toThrow('confirm your existing profile');
     expect(localStorage.getItem('dehub_token')).toBeNull();
     expect(localStorage.getItem('dehub_refresh_token')).toBeNull();
+  });
+
+  it('marks a profile that lives on a different wallet so login can offer a restore', async () => {
+    mockFetch({ code: 'PROFILE_LINK_MISMATCH', message: 'Could not confirm your existing profile. Please try again.' }, 409);
+    await expect(authenticateWithSupabaseSession('supabase-jwt', ADDRESS)).rejects.toBeInstanceOf(ProfileLinkMismatchError);
+  });
+
+  it('marks the client-side mismatch the same way', async () => {
+    predict.mockResolvedValue('0x2222222222222222222222222222222222222222');
+    mockFetch(successBody());
+    await expect(authenticateWithSupabaseSession('supabase-jwt', '0x1111111111111111111111111111111111111111')).rejects.toBeInstanceOf(ProfileLinkMismatchError);
   });
 
   it('posts to the supabase exchange endpoint', async () => {
