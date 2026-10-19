@@ -1910,6 +1910,9 @@
     "email": "Email"
   },
   "loginModal": {
+    "restoreWalletTitle": "Récupérez votre portefeuille",
+    "restoreOriginalWallet": "Votre profil se trouve sur le portefeuille de votre connexion d'origine, pas sur celui enregistré pour cette connexion. Connectez-vous comme lors de votre première inscription sur DeHub pour récupérer ce portefeuille. Votre profil et vos fonds restent intacts.",
+    "useAnotherLogin": "Utiliser une autre connexion",
     "unlockBiometricContinue": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour continuer.",
     "unlockBiometricSignIn": "Déverrouillez votre portefeuille avec votre empreinte digitale ou votre visage pour vous connecter.",
     "unlockPasswordContinue": "Saisissez le mot de passe de votre portefeuille pour continuer.",

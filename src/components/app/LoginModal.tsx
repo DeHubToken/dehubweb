@@ -194,6 +194,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         : t('loginModal.secureAccount', 'Secure account')
       )
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
+    : step === 'wallet-restore' ? t('loginModal.restoreWalletTitle', 'Bring back your wallet')
     : step === 'profile' ? t('settings.profile')
     : step === 'resuming' || step === 'wallet-signing' ? t('loginModal.signingIn', 'Signing you in…')
     : t('loginModal.connectWallet');
