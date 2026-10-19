@@ -1,7 +1,6 @@
 import { useEffect, useState, type RefObject } from 'react';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { getNFTInfo } from '@/lib/api/dehub';
-import { subscribeJobChannel } from '@/lib/api/dehub/job-socket';
 
 export type VideoProcessingStatus = 'pending' | 'on' | 'done' | 'failed';
 const POLL_MS = 5_000;
@@ -65,10 +64,20 @@ export function useVideoProcessingStatus(
   const listening = enabled && canFollow && isPending(query.data ?? cached ?? initialStatus);
   useEffect(() => {
     if (!listening) return;
-    return subscribeJobChannel(String(tokenId), (event) => {
-      if (event.stage === 'done') client.setQueryData(processingKey(tokenId), 'done');
-      else if (event.stage === 'failed') client.setQueryData(processingKey(tokenId), 'failed');
+    // Loaded on demand: feed cards are on the boot path, the socket is not.
+    let cancelled = false;
+    let unsubscribe: (() => void) | undefined;
+    void import('@/lib/api/dehub/job-socket').then(({ subscribeJobChannel }) => {
+      if (cancelled) return;
+      unsubscribe = subscribeJobChannel(String(tokenId), (event) => {
+        if (event.stage === 'done') client.setQueryData(processingKey(tokenId), 'done');
+        else if (event.stage === 'failed') client.setQueryData(processingKey(tokenId), 'failed');
+      });
     });
+    return () => {
+      cancelled = true;
+      unsubscribe?.();
+    };
   }, [listening, tokenId, client]);
 
   return canFollow ? query.data ?? initialStatus : initialStatus;
