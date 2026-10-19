@@ -1370,7 +1370,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       initial={false}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      data-media-full
+      // Phones are all picture, so the whole viewer keeps its white chrome.
+      // On desktop only the player is: the side panels sit on the page's own
+      // colours, so in System Light they read ink on white and the scrim
+      // becomes the white page instead of letting the feed show through.
+      data-media-full={isMobile ? '' : undefined}
+      data-shorts-viewer
       className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       // `overscroll-behavior: contain` stops scroll-chaining/rubber-banding
       // without the `touch-action: none` that used to freeze the comments

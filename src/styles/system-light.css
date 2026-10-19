@@ -198,3 +198,11 @@ html[data-theme="system"][data-system-tone="light"] #root:not(#_):not(#_):not(#_
 html[data-system-tone="light"] [data-dark-decor] { display: none !important; }
 html[data-theme="system"][data-system-tone="light"] :is(#root, [data-vaul-drawer], [role="dialog"]):not(#_):not(#_):not(#_) :is([class*="text-[#fff]"], [class*="text-[#ffffff]"], [class*="text-[#FFF]"]):not([data-media-full] *):not([data-keep-dark]):not([data-keep-dark] *):not([data-on-media] *) { color: var(--sl-ink) !important; }
 html[data-system-tone="light"] [data-builder-backdrop] header img { filter: invert(1); }
+/* Desktop shorts viewer: the light themes thin every black scrim to 5%, which
+   left the feed, chat and trending panels showing straight through the viewer
+   and its comments. Here the scrim is the page itself, frosted. */
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) { background-color: color-mix(in srgb, var(--paper, #fff) 94%, transparent) !important; backdrop-filter: blur(24px) saturate(1.4) !important; }
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) :is([class*="text-white/"], .text-zinc-400, .text-zinc-500):not([data-media-full] *) { color: var(--sl-ink-2, rgba(11,11,13,.62)) !important; }
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) :is(.text-white, .text-zinc-100, .text-zinc-200, .text-zinc-300):not([data-media-full] *) { color: var(--sl-ink, #0b0b0d) !important; }
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) > div > div > button.bg-zinc-800\/80 { background-color: #fff !important; color: var(--sl-ink, #0b0b0d) !important; box-shadow: 0 0 0 .5px rgba(11,11,13,.08), 0 2px 10px rgba(11,11,13,.08) !important; }
+html:is([data-theme="light"], [data-system-tone="light"]):not(#_):not(#_):not(#_) [data-shorts-viewer]:not([data-media-full]) > div > div > button.bg-zinc-800\/80 svg { color: inherit !important; }
