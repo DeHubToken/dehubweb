@@ -50,6 +50,8 @@ html[data-theme='glass'] :is(body, #app-root, #app-root > div > main, [data-main
 html[data-theme='glass'] [data-feed-nav-outer] {
   backdrop-filter: none !important;
 }
+html[data-theme='glass'] [data-sidebar-glass-backdrop] { box-shadow: var(--glass-edge-flat); }
+html[data-theme='glass'] [data-sidebar-assistant-icon] { background: transparent !important; }
 html[data-theme='glass'] :is([data-glass-loading-surface], [data-kit-section]) {
   background: var(--glass-highlight), var(--theme-control-fill);
   box-shadow: var(--glass-edge);
@@ -135,9 +137,14 @@ html[data-theme='glass'] [data-glass-audio] {
   position: relative;
   display: flex; flex-direction: column; justify-content: flex-end;
   min-height: 210px; padding: 12px 0 0; overflow: visible;
-  border-radius: 28px; color: #efffff;
+  border-radius: 32px 32px 48px 48px; color: #efffff;
   background: linear-gradient(145deg, color-mix(in srgb, var(--tint-accent) 24%, transparent), rgb(0 28 32 / .3));
   box-shadow: var(--glass-edge);
+}
+html[data-theme='glass'] [data-glass-audio]::before {
+  content: ''; position: absolute; pointer-events: none; inset: 38px 8% 106px;
+  border-radius: 50% 50% 0 0;
+  background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb,var(--tint-accent) 28%,transparent),transparent 72%);
 }
 html[data-theme='glass'] :is([data-audio-frame], [data-audio-backdrop]) { background: transparent !important; border: 0; border-radius: 28px; }
 html[data-theme='glass'] [data-audio-frame]:not([data-video-fullscreen]) { height: 220px !important; min-height: 210px; aspect-ratio: auto !important; width: 100% !important; }
