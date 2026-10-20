@@ -233,11 +233,15 @@ html[data-theme][data-theme] [data-feed-island-surface]:not(#_):not(#_)::after {
 [data-feed-new-posts-bead-root] {
   --bead-ink: #fff;
   --bead-rim: rgb(255 255 255 / 0.22);
-  --bead-face-ring: rgb(0 0 0 / 0.45);
+  --bead-face-ring: rgb(var(--glass-tint, 9 9 11));
 }
 html[data-theme] [data-feed-new-posts-bead]:not(#_):not(#_):not(#_) {
-  background: linear-gradient(var(--nav-glass), var(--nav-glass)), var(--nav-glass-base);
+  background: linear-gradient(var(--nav-glass), var(--nav-glass)), var(--bead-face-ring);
   backdrop-filter: var(--nav-glass-blur);
+}
+[data-feed-new-posts-face],
+[data-feed-new-posts-face] > [data-avatar-fallback] {
+  background-color: var(--bead-face-ring);
 }
 /* Open the bar's bottom row where the bead joins (--bead-gap wide). The bead
    overlaps that row with the same material, and its stroke carries on from
