@@ -159,7 +159,7 @@ export default function AppsPage() {
 
       <PageBody className="mx-auto max-w-4xl">
         <div data-feed-item className="space-y-2">
-          <div className="flex items-center gap-2 rounded-xl bg-zinc-900/60 px-3 ring-1 ring-white/[0.06]">
+          <div data-kit-section className="flex items-center gap-2 rounded-xl bg-zinc-900/60 px-3 ring-1 ring-white/[0.06]">
             <Search className="h-4 w-4 shrink-0 text-zinc-500" />
             <input
               value={query}
@@ -198,7 +198,7 @@ export default function AppsPage() {
             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
               {added.map((row) =>
                 row.miniapp_apps ? (
-                  <div key={row.app_id} className="flex items-center gap-3 rounded-2xl bg-zinc-900/60 p-3 ring-1 ring-white/[0.06]">
+                  <div data-kit-section key={row.app_id} className="flex items-center gap-3 rounded-2xl bg-zinc-900/60 p-3 ring-1 ring-white/[0.06]">
                     <Link to={`/apps/${row.miniapp_apps.slug}?from=store`} className="flex min-w-0 flex-1 items-center gap-3">
                       {row.miniapp_apps.icon_url ? (
                         <img src={row.miniapp_apps.icon_url} alt="" loading="lazy" className="h-12 w-12 shrink-0 rounded-xl object-cover" />
@@ -235,6 +235,7 @@ export default function AppsPage() {
               {ARCADE_GAMES.map((game) => (
                 <Link
                   key={game.slug}
+                  data-kit-section
                   to={`/arcade/${game.slug}`}
                   className="flex items-center gap-3 rounded-2xl bg-zinc-900/60 p-3 ring-1 ring-white/[0.06] transition-colors hover:bg-zinc-900"
                 >
