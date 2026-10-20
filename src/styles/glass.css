@@ -172,7 +172,7 @@ html[data-theme='glass'] [data-glass-audio-deck] > input { appearance: none; bac
 [data-glass-audio-deck] > input::-webkit-slider-thumb { appearance: none; width: 10px; height: 10px; margin-top: -4px; border-radius: 50%; background: #efffff; box-shadow: 0 0 12px rgb(210 255 255 / .7); }
 [data-glass-audio-deck] > input::-moz-range-track { height: 2px; border-radius: 2px; background: rgb(215 255 255 / .45); }
 [data-glass-audio-deck] > input::-moz-range-thumb { width: 10px; height: 10px; border: 0; border-radius: 50%; background: #efffff; box-shadow: 0 0 12px rgb(210 255 255 / .7); }
-html[data-theme='glass'] :is([data-comment-composer], [data-glass-mini-audio]) { background: var(--glass-highlight), var(--theme-control-raised) !important; box-shadow: var(--glass-edge-flat); border-radius: 24px; backdrop-filter: var(--glass-blur); }
+html[data-theme='glass'] :is([data-comment-tabs], [data-comment-composer], [data-glass-mini-audio]) { background: var(--glass-highlight), var(--theme-control-raised) !important; box-shadow: var(--glass-edge-flat); border-radius: 24px; backdrop-filter: var(--glass-blur); }
 html[data-theme='glass'] #app-root [data-comment-field] textarea { background: transparent !important; }
 html[data-theme='glass'] [data-glass-mini-audio] svg rect { fill: #d7ffff; opacity: .65; }
 html[data-theme='glass'] [data-glass-mini-audio] svg rect[data-waveform-played] { fill: #fff; opacity: 1; }
