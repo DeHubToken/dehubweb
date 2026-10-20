@@ -220,20 +220,12 @@ const CachedPage = memo(function CachedPage({
       style={
         shouldStayVisible
           ? undefined
-          // A normal display toggle rebuilds the clipped composer's paint
-          // layers on return while keeping its React state and draft mounted.
-          : config.key === 'features'
-          ? { display: 'none' as const }
-          : {
-              visibility: 'hidden' as const,
-              height: 0,
-              overflow: 'hidden',
-              position: 'absolute' as const,
-              // Skip style/layout for the whole hidden subtree — with ~30
-              // pages cached, this is the difference between the browser
-              // laying out one page or all of them on every style change.
-              contentVisibility: 'hidden' as const,
-            }
+          // Retire the hidden page's paint layers, not its React state. Keeping
+          // a skipped subtree inside a zero-width absolute box shrinks its
+          // glass headers to their padding width and retains those backdrop
+          // surfaces for reuse on return. Use the same normal display toggle
+          // for every route so glass and scroll clips rebuild at the live size.
+          : { display: 'none' as const }
       }
     >
       {/* Contained boundary: every page is mounted forever and all re-render
