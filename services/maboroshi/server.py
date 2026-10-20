@@ -397,6 +397,8 @@ def scan_remake(ident: str, wallet=Depends(owner)):
 def plan_remake(ident: str, cuts: str = Form('[]'), wallet=Depends(owner)):
     with lock:
         row = access.job(ident, wallet)
+        if len(cuts) > 512:
+            raise HTTPException(400, 'Enter at most seven cut times.')
         if shutil.disk_usage(access.DATA).free < 5 * 1024 ** 3:
             raise HTTPException(503, 'Storage is temporarily full. Nothing has been charged.')
         try:
@@ -433,6 +435,16 @@ def assemble_remake(ident: str, wallet=Depends(owner)):
             raise HTTPException(503, 'Processing is busy. Your shots are saved; try assembly later.')
         access.update(ident, state='queued', stage='assemble', status='Assembling shots and restoring the original soundtrack.')
         executor.submit(run_stage, ident, 'assemble')
+    return snapshot(access.job(ident, wallet))
+
+
+@app.post('/jobs/{ident}/remake/select')
+def select_remake(ident: str, shot: int = Form(...), version: str = Form(...), wallet=Depends(owner)):
+    with lock:
+        row = access.job(ident, wallet)
+        if row['state'] not in ('editing', 'edit_complete'):
+            raise HTTPException(409, 'Wait for assembly to finish before switching shot versions.')
+        remake.select_version(row, shot, version)
     return snapshot(access.job(ident, wallet))
 
 
