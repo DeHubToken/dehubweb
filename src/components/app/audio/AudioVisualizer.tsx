@@ -13,7 +13,7 @@ import {
   useAudioPostPlayback,
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
-import { Minimize, PictureInPicture2, RotateCcw, RotateCw } from "lucide-react";
+import { Minimize, PictureInPicture2, RotateCcw, RotateCw, Play as GlassPlay, Pause as GlassPause } from "lucide-react";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -968,7 +968,7 @@ export function AudioVisualizer({
           onChange={e => seekTo(Number(e.target.value) / 1000)} />
         <div data-glass-audio-transport>
           <button type="button" aria-label="−10 s" onClick={() => seekTo(duration ? (currentTime - 10) / duration : 0)}><RotateCcw /><small>10</small></button>
-          <button type="button" data-glass-audio-play aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}><MediaControlIcon icon={isPlaying ? Pause : Play} /></button>
+          <button type="button" data-glass-audio-play aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}>{isPlaying ? <GlassPause fill="currentColor" /> : <GlassPlay fill="currentColor" />}</button>
           <button type="button" aria-label="+10 s" onClick={() => seekTo(duration ? (currentTime + 10) / duration : 0)}><RotateCw /><small>10</small></button>
         </div>
       </div>
