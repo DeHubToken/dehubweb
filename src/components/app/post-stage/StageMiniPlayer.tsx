@@ -15,6 +15,7 @@ import ArrowLeft from "@/components/ui/cut-icons/back";
 import Pause from "@/components/ui/cut-icons/pause";
 import Play from "@/components/ui/cut-icons/play";
 import ThumbsUp from "@/components/ui/cut-icons/like";
+import { Music2 } from 'lucide-react';
 
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
@@ -126,7 +127,7 @@ export function StageMiniPlayer({ rootRef, kind, title, subtitle, thumbnail, onB
     findAnchor(rootRef.current, kind)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [rootRef, kind]);
 
-  const showThumb = !!thumbnail && !thumbFailed;
+  const showThumb = !!thumbnail && !thumbnail.endsWith('/placeholder.svg') && !thumbFailed;
 
   // Portalled: canvas themes put filters on the page frame, which would make
   // `position: fixed` relative to that frame instead of the screen.
@@ -163,7 +164,9 @@ export function StageMiniPlayer({ rootRef, kind, title, subtitle, thumbnail, onB
         <span data-stage-mini-thumb className="relative h-11 w-[72px] shrink-0 overflow-hidden rounded-lg">
           {showThumb ? (
             <img src={thumbnail} alt="" className="h-full w-full object-cover" onError={() => setThumbFailed(true)} />
-          ) : (
+            ) : kind === 'audio' ? (
+              <span className="flex h-full w-full items-center justify-center"><Music2 className="h-6 w-6" /></span>
+            ) : (
             <span className="flex h-full w-full items-center justify-center text-sm font-bold">{(subtitle || title || '?').charAt(0).toUpperCase()}</span>
           )}
           {plays && (
