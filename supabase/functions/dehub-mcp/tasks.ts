@@ -227,9 +227,15 @@ export async function runTask(context: Context, req: Request, task: any) {
   const plan = taskPlanSchema.parse(task.plan);
   const ownedAgents = checked(await db.from("ai_agents").select("owner_wallet_address").eq("human_owner_wallet", task.owner_wallet));
   const ownedWallets = new Set<string>(ownedAgents.map((row: any) => String(row.owner_wallet_address).toLowerCase()));
-  const save = async (extra: Record<string, unknown> = {}) => checked(await db.from("ai_agent_tasks").update({
-    cursor: task.cursor, completed_actions: task.completed_actions, updated_at: new Date().toISOString(), ...extra,
-  }).eq("id", task.id).eq("lease", task.lease).eq("status", "running"));
+  const save = async (extra: Record<string, unknown> = {}) => {
+    let query = db.from("ai_agent_tasks").update({
+      cursor: task.cursor, completed_actions: task.completed_actions, updated_at: new Date().toISOString(), ...extra,
+    }).eq("id", task.id).eq("lease", task.lease);
+    // Receipts and cursor progress survive a pause/cancel during an action.
+    // Only a runner-initiated state change must compare against running.
+    if ("status" in extra) query = query.eq("status", "running");
+    return checked(await query);
+  };
   // Move to the next step, remembering how far each window step has covered.
   const nextStep = () => {
     const done = plan.steps[task.cursor.step];
