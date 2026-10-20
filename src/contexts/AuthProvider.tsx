@@ -115,12 +115,18 @@ import {
 } from '@/lib/profiles';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 import { finishWalletUnlock, setWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
-import { finishWalletSecure, WALLET_SECURE_REQUIRED_EVENT } from '@/lib/wallet-secure-flow';
-import { saveDeviceSeed, readDeviceSeed } from '@/lib/wallet-core/device-seed';
 import { hasLegacyBrowserResidue, checkLegacyAccount } from '@/lib/wallet-core/legacy-detect';
 import { getWalletSetupIntent } from '@/lib/wallet-setup-intent';
 
 const authLogger = createLogger('Auth');
+
+// Off the boot path: only a sign-up, or a silent sign-up's first wallet
+// action, needs these.
+const loadDeviceSeed = () => import('@/lib/wallet-core/device-seed');
+const loadWalletSecureFlow = () => import('@/lib/wallet-secure-flow');
+// lib/wallet-secure-flow's WALLET_SECURE_REQUIRED_EVENT, inlined so that
+// listening for it loads nothing.
+const WALLET_SECURE_REQUIRED_EVENT = 'dehub:wallet-secure-required';
 
 /**
  * The wallet of a brand-new account, made with no screen at all.
@@ -149,6 +155,7 @@ async function makeSilentSignupWallet(userId: string): Promise<string | null> {
   if (hint?.exists !== false) return null;
   const { generateMnemonic12, deriveFromSecret } = await import('@/lib/wallet-core/derive');
   const derived = deriveFromSecret(generateMnemonic12());
+  const { saveDeviceSeed } = await loadDeviceSeed();
   if (!(await saveDeviceSeed(userId, derived.secret, derived.ethAddress))) return null;
   // No password wrap yet, exactly like a biometrics-only wallet.
   await saveWallet(userId, derived.ethAddress, null);
@@ -667,7 +674,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     finishWalletUnlock(false);
     // Closing "Secure your wallet" cancels the action that raised it; the offer
     // comes back at the next one.
-    finishWalletSecure(false);
+    void loadWalletSecureFlow().then((m) => m.finishWalletSecure(false));
     walletUnlockPromptActiveRef.current = false;
     toast.dismiss('wallet-unlock-required');
     connectionAbortedRef.current = true;
@@ -949,7 +956,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         authLogger.warn('Resuming an unfinished sign-up', { address: existing.ethAddress });
         // A silent sign-up whose sign-in did not finish: its words are still
         // on this browser, so it finishes the same way, asking nothing.
-        const seed = await readDeviceSeed(userId);
+        const seed = await (await loadDeviceSeed()).readDeviceSeed(userId);
         if (seed && seed.address === existing.ethAddress.toLowerCase()) {
           const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
           await completeSilentSignup(deriveFromSecret(seed.secret).ethPrivateKey);
@@ -1251,7 +1258,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // the ordinary sheet rather than ask the same question again.
       const seedUid = localStorage.getItem('dehub_supabase_uid');
       if (seedUid && !seedUnlockInFlightRef.current) {
-        void readDeviceSeed(seedUid).then((seed) => {
+        void loadDeviceSeed().then((m) => m.readDeviceSeed(seedUid)).then((seed) => {
           if (!seed) {
             showUnlockPrompt();
             return;
@@ -1316,7 +1323,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const handler = () => {
       const uid = supabaseUserId ?? localStorage.getItem('dehub_supabase_uid');
       if (!uid) {
-        finishWalletSecure(true);
+        void loadWalletSecureFlow().then((m) => m.finishWalletSecure(true));
         return;
       }
       setSupabaseUserId(uid);

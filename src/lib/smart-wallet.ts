@@ -34,8 +34,6 @@ import { saveVaultSession, readVaultSession, clearVaultSession } from "@/lib/wal
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_PUBLIC_RPC, ROBINHOOD_EXPLORER_URL } from "@/lib/chains/robinhood";
 import { ARC_CHAIN_ID, ARC_PUBLIC_RPC, ARC_EXPLORER_URL } from "@/lib/chains/arc";
 import { waitForWalletUnlock } from '@/lib/wallet-unlock-flow';
-import { offerWalletSecure } from '@/lib/wallet-secure-flow';
-import { readDeviceSeed } from '@/lib/wallet-core/device-seed';
 import { pimlicoUserOperationFees } from '@/lib/pimlico-fees';
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
@@ -361,6 +359,8 @@ export async function ensureWalletUnlocked(): Promise<void> {
   }
   // A wallet made silently at sign-up is secured here, at the first action
   // that uses it, rather than at the door (see lib/wallet-secure-flow.ts).
+  // Imported on demand to keep it off the boot path.
+  const { offerWalletSecure } = await import('@/lib/wallet-secure-flow');
   await offerWalletSecure();
 }
 
@@ -373,6 +373,7 @@ export async function ensureWalletUnlocked(): Promise<void> {
 async function unlockFromDeviceSeed(): Promise<boolean> {
   const uid = localStorage.getItem('dehub_supabase_uid');
   if (!uid) return false;
+  const { readDeviceSeed } = await import('@/lib/wallet-core/device-seed');
   const seed = await readDeviceSeed(uid);
   if (!seed) return false;
   const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
