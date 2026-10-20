@@ -89,6 +89,7 @@ function tool(name, title, description, shape, scope, handler, { destructive = f
   const securitySchemes = scope ? [{ type: 'oauth2', scopes: [scope] }] : [{ type: 'noauth' }];
   tools.push({ name, scope, schema, handler, descriptor: { name, title, description,
     inputSchema: zodToJsonSchema(schema, { $refStrategy: 'none' }),
+    ...(profile ? { outputSchema: { type: 'object', properties: { id: { type: 'string', minLength: 1, pattern: '\\S' }, name: { type: 'string' }, nickname: { type: 'string' } }, required: ['id'], additionalProperties: false } } : {}),
     annotations: { readOnlyHint: read, destructiveHint: destructive, openWorldHint: open, idempotentHint: idempotent },
     securitySchemes, _meta: { securitySchemes, ...(profile ? { 'openai/profile': true } : {}) },
   } });
@@ -133,6 +134,13 @@ tool('dehub_account', 'Get my connected DeHub account', 'Identify the connected 
   const p = unwrap(await api(ctx, `/account_info/${ctx.wallet}`));
   return success({ id: ctx.wallet, display_name: p.displayName || p.username || ctx.wallet, username: p.username,
     profile: p, url: `${ORIGIN}/${enc(p.username || ctx.wallet)}`, granted_scopes: ctx.scopes });
+}, { read: true });
+
+tool('dehub_connected_profile', 'Identify the linked DeHub profile', 'Return the immutable identity and display label of the profile represented by this request\'s validated credentials.', {}, 'dehub:read', async (_, ctx) => {
+  const p = unwrap(await api(ctx, `/account_info/${ctx.wallet}`));
+  const profileId = p?._id ?? p?.id;
+  if (!['string','number'].includes(typeof profileId) || !String(profileId).trim()) throw new Error('The connected profile has no persistent identity.');
+  return success({ id: String(profileId), name: p.displayName || p.username || ctx.wallet, ...(p.username ? { nickname: `@${p.username}` } : {}) });
 }, { read: true, profile: true });
 
 tool('dehub_update_profile', 'Update my DeHub profile', 'Change only the connected person\'s profile: bio, display name, username, avatar or cover. Images must come from DeHub uploads or the Creator library. Overwrites the selected profile fields.', {
