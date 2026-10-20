@@ -136,6 +136,13 @@ html[data-theme='glass'] [data-article] {
   }
 }
 
+html[data-theme='glass'] :is([data-glass-editor], [data-glass-editor-canvas]) { background: transparent; }
+html[data-theme='glass'] [data-glass-editor] :is(header, aside, nav, section):not([data-glass-editor-canvas]),
+html[data-theme='glass'] [data-glass-editor] [class*='bg-black/'] { background-color: var(--theme-control-fill); }
+html[data-theme='glass'] #app-root :is(button,a).bg-white:not([data-on-media]):not([data-keep-dark] *) {
+  background: var(--glass-highlight), var(--theme-control-fill); color: #efffff; box-shadow: var(--glass-edge-flat);
+}
+
 /* A tinted transport deck, shared by uploaded tracks in feeds and post pages. */
 html[data-theme='glass'] [data-glass-audio] {
   position: relative;
