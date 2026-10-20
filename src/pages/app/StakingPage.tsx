@@ -44,6 +44,7 @@ import { AppState } from '@/components/app/AppState';
 import { useAuth } from '@/contexts/AuthContext';
 import { confirmStake, recoverStake, readStakeEvidence, refreshConfirmedStake, stakeFromReplacement, type StakeAttempt } from '@/lib/stake-confirmation';
 import { createLogger } from '@/lib/logger';
+import { retiredStakeMessage } from '@/lib/stake-recovery-messages';
 const stakeLog = createLogger('Staking');
 const pendingStakeKey = (wallet: string) => `dehub:pending-stake:${wallet.toLowerCase()}`;
 const recordStakeEvent = (message: string, attempt: StakeAttempt, outcome?: string) => {
@@ -155,7 +156,7 @@ function StatCard({
 
 export default function StakingPage() {
   const { t: _copy } = _useCopy();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const isStakeRouteActive = useIsStakeRouteActive();
   const { data: stats, isLoading: statsLoading, isError: statsError, refetch: refetchStats } = useStakingStats();
@@ -375,7 +376,7 @@ export default function StakingPage() {
           ])).catch(() => {});
         }, 60_000);
       } else if (outcome === 'replaced' || outcome === 'not-found') {
-        toast.info(t('staking.pendingRetired'));
+        toast.info(retiredStakeMessage(i18n.resolvedLanguage || i18n.language));
         void refreshConfirmedStake(
           () => refreshStakePosition(attempt.wallet),
           async () => { await supabase.functions.invoke('sync-staking-deposits', { body: { wallet: attempt.wallet } }); },
