@@ -690,6 +690,8 @@ window.ready = (async () => {
   await Promise.all(loads);
   await document.fonts.ready;
   measure();
+  [head1, R.coBig, ...L3, ...SEL.map(f => f.word), ...QEL.map(q => q.e)].forEach(e => e.classList.add('hm'));
+  await document.fonts.ready;
   // fit the big words to the frame
   L3.forEach(l => { const w = [...l.children].reduce((a, c) => a + c.offsetWidth + FS3 * .24, 0); l._fit = Math.min(1, W * .9 / w); l.style.transformOrigin = '50% 50%'; });
   SEL.forEach(f => { vis(f.box, true); f.fit = Math.min(1, (W * (VERT ? .88 : .8)) / f.word.offsetWidth); vis(f.box, false); });

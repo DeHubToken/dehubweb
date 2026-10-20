@@ -1,6 +1,6 @@
 # Requests ad
 
-15-second ad for the Requests page (`/features`), rendered as 1080×1920 and 1920×1080 at 60 fps with a -14 LUFS soundtrack. Built on the editor launch film's engine (same chrome type, phonk kit, glitch post pass and logo ending).
+15-second ad for the Requests page (`/features`), rendered as 1080×1920 and 1920×1080 at 60 fps with a -14 LUFS soundtrack. Built on the editor launch film's engine (glitch post pass and logo ending), with mono headlines and a drum and bass soundtrack (175 BPM).
 
 | Beat | Scene |
 | --- | --- |
