@@ -10,11 +10,7 @@ import { Button } from "@/components/ui/button";
 import { SEOHead } from "@/components/SEOHead";
 import { toast } from "sonner";
 
-const projectRef = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-// dehub-mcp is the full server. The older /functions/v1/mcp endpoint is a
-// read-only mirror of four of its tools and stays up for anyone already
-// configured against it, but there is no reason to hand it out.
-const MCP_URL = `https://${projectRef}.supabase.co/functions/v1/dehub-mcp`;
+const MCP_URL = 'https://dehub.io/mcp';
 
 export default function ConnectPage() {
   const { t: _copy } = _useCopy();
