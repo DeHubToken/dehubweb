@@ -1,11 +1,12 @@
 import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
-import { PenSquare } from 'lucide-react';
+import { PenSquare, Cable } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { LiveRipple } from '@/components/app/LiveRipple';
+import { CaptureCardSetup } from '@/components/app/live/CaptureCardSetup';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -173,6 +174,32 @@ function LiveAvatarsGallery() {
           {face('w-12 h-12', 'T')}
           <span className="text-[11px] text-zinc-500">{_copy("copy.cf7d0ae846cb", { defaultValue: "Not live" })}</span>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Go Live > Capture card. Behind a button because it opens real devices and
+ * would otherwise ask every gallery visitor for camera access.
+ */
+function CaptureCardGallery() {
+  const { t: _copy } = _useCopy();
+  const [open, setOpen] = useState(false);
+  return (
+    <section data-page-bento data-capture-card-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+        <Cable className="h-4 w-4" />
+        {_copy("copy.4a1bd4a3aaf3", { defaultValue: "Capture card" })}
+      </h2>
+      <div className="max-w-md">
+        {open ? (
+          <CaptureCardSetup />
+        ) : (
+          <button type="button" onClick={() => setOpen(true)} className="rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs">
+            {_copy("copy.1929290e09aa", { defaultValue: "Open the capture card setup (asks for camera access)" })}
+          </button>
+        )}
       </div>
     </section>
   );
@@ -474,6 +501,7 @@ export default function StateGalleryPage() {
         </section>
 
         <TooltipsGallery />
+        <CaptureCardGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
         <MenusGallery />
