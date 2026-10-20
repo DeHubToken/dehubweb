@@ -70,6 +70,11 @@ const NAV_KEYS: Record<string, string> = {
 
 const tools: Tool[] = [
   {
+    id: 'remake', nameKey: 'creator.toolRemake', labelKey: 'creator.navVideo',
+    descriptionKey: 'creator.toolMaboroshiDesc', icon: Clapperboard, category: 'Video', badge: 'NEW',
+    action: { kind: 'navigate', to: '/creator/remake' },
+  },
+  {
     id: 'builder',
     nameKey: 'creator.toolBuilder',
     labelKey: 'creator.navApps',

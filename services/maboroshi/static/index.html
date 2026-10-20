@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="static/style.css">
   <script src="static/presets.js" defer></script>
   <script src="static/studio.js" defer></script>
+  <script src="static/remake.js" defer></script>
 </head>
 <body>
 <main>
@@ -82,6 +83,22 @@
       <p id="review-guidance" class="hint">Watch the full source clip and confirm the subject, motion and soundtrack.</p>
       <div id="input-review-actions"><label class="check"><input id="reviewed" type="checkbox"><span id="review-label">I reviewed the whole prepared clip and its alignment is correct.</span></label><div class="row"><button id="approve" disabled>Approve clip</button><button id="reject" class="secondary">Needs correction</button></div></div>
       <p id="review-status" class="hint" role="status"></p>
+    </section>
+    <section id="remake-section" class="stage-panel" hidden aria-labelledby="remake-heading">
+      <p class="eyebrow">REFERENCE TO EDIT</p><h2 id="remake-heading">Same rhythm. Your cast.</h2>
+      <p>Keep the reference's shot order and soundtrack. Replace the character or product in each shot, then assemble the edit.</p>
+      <p class="hint">Up to eight shots from a 3–15 second reference. Two image references. Generated motion, fine details and text can differ from the original.</p>
+      <div id="remake-planner">
+        <button id="remake-scan" type="button" class="secondary">Detect cuts · no generation charge</button>
+        <label for="remake-cuts">Cut times in seconds<input id="remake-cuts" placeholder="2.4, 5.1, 8.2" maxlength="200" inputmode="decimal"></label>
+        <p class="hint">Review the reference above. Edit the detected cuts or leave empty for one shot. Cuts must be in order, at least 0.2 seconds apart.</p>
+        <button id="remake-plan" type="button">Save shot plan · no generation charge</button>
+        <p id="remake-plan-note" class="hint" role="status">Save your character references and approve the reference clip first.</p>
+      </div>
+      <div id="remake-shots" class="remake-shots"></div>
+      <p id="remake-summary" class="hint" role="status"></p>
+      <button id="remake-assemble" type="button" hidden>Assemble edit · no generation charge</button>
+      <div id="remake-output" hidden><h3 id="remake-output-title">Your finished edit</h3><video id="remake-result" controls playsinline preload="metadata"></video><a id="remake-download" download>Download edit</a></div>
     </section>
     <section id="draft-section" class="stage-panel" hidden>
       <p class="eyebrow">BRING THE CHARACTER IN</p><h2>Create your preview</h2><p id="draft-guidance">Approve the prepared clip and choose a character to continue.</p>

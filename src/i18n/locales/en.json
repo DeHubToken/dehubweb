@@ -4475,6 +4475,7 @@
     "sellYourFractions": "Sell your fractions ({{held}} held)"
   },
   "creator": {
+    "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Replace characters and objects, review a draft, then export with your original soundtrack.",
     "editorAssetMissing": "That generation has no media to import yet.",
