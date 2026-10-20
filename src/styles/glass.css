@@ -163,7 +163,7 @@ html[data-theme='glass'] [data-glass-audio-transport] [data-glass-audio-play] { 
 html[data-theme='glass'] [data-glass-audio-transport] [data-glass-audio-popout] { position:absolute; right:14px; width:30px; height:30px; }
 [data-glass-audio-options] { position:absolute; top:14px; right:14px; z-index:30; }
 [data-glass-audio-options] summary { cursor:pointer; list-style:none; padding:6px; letter-spacing:2px; }
-[data-glass-audio-options] > div { display:flex; gap:12px; align-items:center; padding:12px; width:240px; border-radius:18px; background:var(--stage-solid); box-shadow:var(--glass-edge); }
+[data-glass-audio-options] > div { position:absolute; right:0; top:100%; display:flex; gap:12px; align-items:center; padding:12px; width:240px; border-radius:18px; background:var(--stage-solid); box-shadow:var(--glass-edge); }
 [data-glass-audio-options] select { max-width:100px; }
 @media (hover:hover) {
   html[data-theme='glass'] #app-root :is(button,a,[role='button']):not([data-on-media]):not([data-keep-dark] *):hover {

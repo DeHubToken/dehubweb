@@ -958,12 +958,12 @@ export function AudioVisualizer({
           <button type="button" aria-label="−10 s" onClick={() => seekTo(duration ? (currentTime - 10) / duration : 0)}><RotateCcw /><small>10</small></button>
           <button type="button" data-glass-audio-play aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}><MediaControlIcon icon={isPlaying ? Pause : Play} /></button>
           <button type="button" aria-label="+10 s" onClick={() => seekTo(duration ? (currentTime + 10) / duration : 0)}><RotateCw /><small>10</small></button>
-          {popoutTrack && <button type="button" data-glass-audio-popout aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
         </div>
       </div>
       <details data-glass-audio-options>
         <summary aria-label={t('nav.settings')}>•••</summary>
         <div>
+          {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
           <select aria-label={t('nav.settings')} value={style} onChange={e => setStyle(e.target.value as AnyStyle)}>{STYLES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}</select>
           <Slider value={[isEffectivelyMuted ? 0 : Math.round(volume * 100)]} min={0} max={100} step={1} aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} onValueChange={value => { setVolume(value[0] / 100); setSelfMuted(value[0] === 0); videoPlaybackManager.globalMuted = value[0] === 0; onMuteChange?.(value[0] === 0); }} />
           {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
