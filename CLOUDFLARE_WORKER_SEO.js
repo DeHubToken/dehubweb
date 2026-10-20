@@ -4,6 +4,8 @@ import { handleEditorPresence } from './server/editor-presence.ts';
 import { applyTextPostImage } from './server/post-share-card.js';
 import { handleFinanceRequest } from './server/finance-stats.js';
 import { handleCreatorMotionSource } from './server/creator-motion-source.js';
+import { handleAccountMcp, isAccountMcpRoute } from './server/account-mcp.js';
+export { AccountMcpAuth } from './server/account-mcp-auth.js';
 export { EditorPresenceRoom } from './server/editor-presence.ts';
 
 /**
@@ -5359,6 +5361,7 @@ function ssrCachePut(ctx, key, resp) {
 async function handleRequest(request, env, ctx) {
   const maintenance = await edgeMaintenanceResponse(request, env);
   if (maintenance) return maintenance;
+  if (isAccountMcpRoute(new URL(request.url).pathname)) return handleAccountMcp(request, env);
   if (new URL(request.url).pathname.startsWith('/api/editor/presence/')) {
     return handleEditorPresence(canonicalOriginRequest(request), env);
   }

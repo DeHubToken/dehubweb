@@ -266,6 +266,9 @@ jobs:
           printf '<!doctype html><title>Worker bundle check</title>' > dist/index.html
           pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/share-worker"
 
+      - name: Account MCP authentication and Creator controls
+        run: node --experimental-strip-types --test server/account-mcp.test.mjs
+
       - uses: actions/upload-artifact@v4
         with:
           name: post-card-checks

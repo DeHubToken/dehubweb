@@ -12,6 +12,7 @@ import ogImage from "@/assets/og-chatgpt.jpg";
 import dehubLogo from "@/assets/dehub-wordmark-white.png";
 import dehubIcon from "@/assets/dehub-mark-white.png";
 import openaiLogo from "@/assets/ai-logos/openai.png";
+import AccountConnection from '@/components/AccountConnection';
 
 const APP_URL =
   "https://chatgpt.com/apps#settings/Connectors?connector=asdk_app_6a4962fb2cdc8191afcda7ca74b6082c";
@@ -27,7 +28,7 @@ const steps = [
   },
   {
     get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
-    body: "Toggle DeHub on and approve the requested access. This lets ChatGPT read public DeHub posts, profiles and trending topics on your behalf.",
+    get body() { return _translateCopy('accountConnect.step'); },
   },
   {
     get title() { return _translateCopy("copy.1c353e8894fb", { defaultValue: "Start a new chat and use it" }); },
@@ -49,12 +50,12 @@ const faqs: { q: string; a: string; aKey?: string }[] = [
   },
   {
     q: "What can the DeHub connector do?",
-    a: "It exposes DeHub's public data via the Model Context Protocol (MCP): browsing posts, searching topics, and looking up creator profiles. It does not post on your behalf.",
+    get a() { return _translateCopy('accountConnect.what'); },
   },
   {
     q: "Do I need a DeHub account?",
     a: "No account is required to read public content through the connector. A DeHub account is only needed if you want to post, tip or hold tokens.",
-    aKey: "connect.chatgptFaqAccount",
+    aKey: "accountConnect.account",
   },
   {
     q: "Which ChatGPT models support this?",
@@ -129,7 +130,7 @@ export default function ConnectChatGPTPage() {
         </div>
 
         <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">{_copy("copy.81663fc4bc4b", { defaultValue: "Use DeHub inside ChatGPT" })}</h1>
-        <p className="mt-3 text-base text-white/60 md:text-lg">{_copy("copy.b9f17c370bf2", { defaultValue: "DeHub is available as a native ChatGPT app. Enable the connector once and ask ChatGPT anything about DeHub posts, creators and trends — right from the chat box." })}</p>
+        <p className="mt-3 text-base text-white/60 md:text-lg">{t('accountConnect.intro')}</p>
 
         <a
           href={APP_URL}
@@ -141,6 +142,7 @@ export default function ConnectChatGPTPage() {
         </a>
 
 
+        <AccountConnection />
         <section className="mt-14">
           <h2 className="text-xl font-bold md:text-2xl">{_copy("copy.c104151457b7", { defaultValue: "Setup in 3 steps" })}</h2>
           <ol className="mt-6 space-y-4">
@@ -166,7 +168,7 @@ export default function ConnectChatGPTPage() {
         <section className="mt-14">
           <h2 className="text-xl font-bold md:text-2xl">{_copy("copy.7887eb17f548", { defaultValue: "Prompts to try" })}</h2>
           <ul className="mt-6 space-y-2">
-            {examples.map((e) => (
+            {[...examples, t('accountConnect.profilePrompt'), t('accountConnect.generatePrompt'), t('accountConnect.libraryPrompt')].map((e) => (
               <li
                 key={e}
                 className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-4 text-sm text-white/80"
