@@ -23,6 +23,7 @@ function fixture(extra) {
       const token = new Headers(init.headers).get('Authorization');
       return token === 'Bearer one' ? Response.json({ address: A }) : token === 'Bearer two' ? Response.json({ address: B }) : Response.json({ error: 'Invalid token' }, { status: 401 });
     }
+    if (String(url).endsWith('/ai-quote')) return Response.json({ priceDhb: 100, priceUsd: 0.1 });
     if (extra) return extra(String(url), init);
     throw new Error(`Unexpected upstream request: ${url}`);
   };
@@ -150,7 +151,7 @@ test('generation uses verified account, original payment guards and deduplicates
     throw new Error(url);
   });
   const c = await connect(f), other = await connect(f, {}, 'two');
-  const args = { request_id: jobId, kind: 'video', model_id: 'kling-3-turbo-standard', prompt: 'A tree in the wind', payment: 'credits', duration_seconds: 5 };
+  const args = { request_id: jobId, kind: 'video', model_id: 'kling-3-turbo-standard', prompt: 'A tree in the wind', payment: 'credits', duration_seconds: 5, max_price_dhb: 100 };
   const responses = await Promise.all([rpc(f, 'dehub_generate_content', args, c.access_token), rpc(f, 'dehub_generate_content', args, c.access_token)]);
   assert.equal(starts, 1);
   for (const response of responses) assert.equal((await response.json()).result.isError, undefined);
@@ -164,7 +165,7 @@ test('generation uses verified account, original payment guards and deduplicates
 test('ambiguous generation errors cannot cause a second paid submission', async () => {
   let starts = 0;
   const f = fixture(() => { starts++; throw new Error('Connection lost'); });
-  const c = await connect(f), args = { request_id: jobId, kind: 'image', model_id: 'flux-2-pro', prompt: 'A portrait', payment: 'credits' };
+  const c = await connect(f), args = { request_id: jobId, kind: 'image', model_id: 'flux-2-pro', prompt: 'A portrait', payment: 'credits', max_price_dhb: 100 };
   for (let i = 0; i < 2; i++) { const response = await rpc(f, 'dehub_generate_content', args, c.access_token); assert.equal((await response.json()).result.isError, true); }
   assert.equal(starts, 1);
 });
@@ -175,6 +176,14 @@ test('media input rejects arbitrary hosts, credentials and wallet spoofing', asy
   }
   const response = await callAccountTool('dehub_create_post', { request_id: jobId, content: 'test', wallet: B }, { token: 'one', scopes: SCOPES });
   assert.equal(response.isError, true);
+});
+test('a price change cannot spend above the agreed maximum', async () => {
+  let generations = 0;
+  const f = fixture(() => { generations++; throw new Error('Generation must not run'); });
+  const c = await connect(f);
+  const response = await rpc(f, 'dehub_generate_content', { request_id: jobId, kind: 'image', model_id: 'flux-2-pro', prompt: 'A portrait', payment: 'credits', max_price_dhb: 50 }, c.access_token);
+  assert.equal((await response.json()).result.isError, true);
+  assert.equal(generations, 0);
 });
 test('expired connections are rejected and old records are collected', async () => {
   const f = fixture(), c = await connect(f);
