@@ -38,6 +38,7 @@ import MessagesSquare from '@/components/ui/cut-icons/chat';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
+import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
@@ -200,6 +201,32 @@ function CaptureCardGallery() {
             {_copy("copy.1929290e09aa", { defaultValue: "Open the capture card setup (asks for camera access)" })}
           </button>
         )}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Audio post player with its animation style chips: the selected style wears
+ * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
+ */
+function AudioGallery() {
+  const { t: _copy } = _useCopy();
+  const [playing, setPlaying] = useState(false);
+  return (
+    <section data-page-bento data-audio-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</h2>
+      <div className="relative h-56 overflow-hidden rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10">
+        <AudioVisualizer
+          audioUrl=""
+          isPlaying={playing}
+          onPlayPause={() => setPlaying((p) => !p)}
+          className="w-full h-full"
+          showStylePicker
+          seed="state-gallery"
+          decodeEnabled={false}
+          durationHint={184}
+        />
       </div>
     </section>
   );
@@ -501,6 +528,7 @@ export default function StateGalleryPage() {
         </section>
 
         <TooltipsGallery />
+        <AudioGallery />
         <CaptureCardGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
