@@ -107,7 +107,7 @@ html[data-theme='glass'] [data-article] {
   content: ''; position: absolute; inset: 0;
   background: var(--tint-accent);
   mask: url('/themes/glass/caustics.png') 70% 20% / 140% 140% no-repeat;
-  opacity: .35; transform: rotate(160deg);
+  opacity: .35; transform: rotate(160deg) scale(1.4);
 }
 [data-glass-light='three'] {
   background: radial-gradient(ellipse at 55% 100%, color-mix(in srgb, var(--tint-accent) 18%, transparent), transparent 45%);
