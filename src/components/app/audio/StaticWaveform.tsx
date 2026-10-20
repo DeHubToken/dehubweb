@@ -168,6 +168,7 @@ export function StaticWaveform({
         return (
           <rect
             key={i}
+            data-waveform-played={lit > 0 || undefined}
             x={x}
             y={y}
             width={barWidth}
