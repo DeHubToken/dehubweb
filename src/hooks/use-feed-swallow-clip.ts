@@ -1,7 +1,7 @@
 import { useContext, useLayoutEffect, type RefObject } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 
-const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
+const GLASS_NAV_THEMES = ['glass', 'cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror', 'system', 'immersive'];
 // The feed stops below the pill's rounded top corners, so nothing peeks past
 // them. Falls back to this when the pill reports no radius.
 const PILL_CUT_INSET = 4;

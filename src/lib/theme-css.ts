@@ -20,6 +20,7 @@
  * lives in index.css.
  */
 const loaders: Record<string, () => Promise<unknown>> = {
+  glass: () => import('@/styles/glass.css'),
   war: () => import('@/styles/war.css'),
   osaka: () => import('@/styles/osaka.css'),
   jungle: () => import('@/styles/jungle.css'),

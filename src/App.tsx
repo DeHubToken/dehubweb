@@ -141,6 +141,8 @@ const StateGalleryPage = (import.meta.env.DEV || window.location.hostname === 's
   ? React.lazy(() => import("@/pages/app/StateGalleryPage"))
   : null;
 
+const GlassBackground = React.lazy(() => import('@/components/app/GlassBackground').then(m => ({ default: m.GlassBackground })));
+
 function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
   const { theme } = useAppTheme();
   // Self-gating: only a canvas theme mounts a background. It renders on ALL
@@ -151,6 +153,7 @@ function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
   return (
     <Suspense fallback={null}>
       {theme === "cosmic" && !preview && <CosmicBackground />}
+      {theme === 'glass' && <GlassBackground />}
       {theme === "hazy" && <HazyNightsBackground />}
       {theme === "swarms" && <SwarmsBackground />}
       {theme === "winter" && !preview && <WinterSnow />}

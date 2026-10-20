@@ -275,7 +275,7 @@ const THEME_KEY_GLYPHS: Record<ThemeIconKey, LucideIcon> = {
 
 export function resolveThemeIconKey(src: string): ThemeIconKey | null {
   // Semantic URLs must resolve every key, including page identities and PNG powers.
-  const semanticKey = src.match(/\/theme-icons\/[^/]+\/([^/?]+)\.(?:webp|png)(?:\?|$)/)?.[1];
+  const semanticKey = src.match(/\/theme-icons\/[^/]+\/([^/?]+)\.(?:webp|png|svg)(?:\?|$)/)?.[1];
   if (semanticKey && semanticKey in THEME_KEY_GLYPHS) return semanticKey as ThemeIconKey;
   for (const [stem, key] of THEME_ICON_KEYS) {
     if (src.includes(stem)) return key;
@@ -288,6 +288,7 @@ export function resolveThemeIconAsset(src: string, requestedTheme: string): stri
   const theme = requestedTheme;
   const key = resolveThemeIconKey(src);
   if (!key) return null;
+  if (theme === 'glass') return `/theme-icons/glass/${key}.svg`;
   const extension = TRANSPARENT_PNG_KEYS.has(key) ? 'png' : 'webp';
   if (FULL_RASTER_THEMES.has(theme)) return `/theme-icons/${theme}/${key}.${extension}`;
   if ((theme === 'system' || theme === 'immersive') && SYSTEM_REFRESHED_KEYS.has(key)) {
@@ -406,6 +407,8 @@ type ThemedIconProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & 
  */
 export function ThemedIcon({ icon, alt = '', className, ...imgProps }: ThemedIconProps) {
   const { theme } = useAppTheme();
+
+  if (theme === 'glass') return <img src={`/theme-icons/glass/${icon}.svg?v=${THEME_ICON_REVISION}`} alt={alt} className={className} data-theme-icon-family="glass" {...imgProps} />;
 
   if (theme === 'war') {
     return (
