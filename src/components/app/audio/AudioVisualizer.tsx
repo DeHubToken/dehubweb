@@ -79,6 +79,7 @@ interface AudioVisualizerProps {
   isPlaying: boolean;
   onPlayPause: () => void;
   className?: string;
+  displayTitle?: string;
   showStylePicker?: boolean;
   /** When true the audio output is muted (visualizer still animates). */
   muted?: boolean;
@@ -185,6 +186,7 @@ export function AudioVisualizer({
   isPlaying: isPlayingProp,
   onPlayPause,
   className = '',
+  displayTitle,
   showStylePicker = true,
   muted = false,
   seed = 'default',
@@ -951,7 +953,7 @@ export function AudioVisualizer({
   if (theme === 'glass') return (
     <div data-no-swipe data-video-controls data-audio-player data-glass-audio className={className} onClick={stopBubble}>
       <div data-glass-audio-title>
-        <strong>{popoutTrack?.title || t('audioPost.untitled')}</strong>
+        <strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
         <span>{popoutTrack?.artist || t('audioPost.creator')}</span>
       </div>
       <canvas ref={canvasRef} width={canvasSize.w} height={canvasSize.h}
