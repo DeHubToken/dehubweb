@@ -34,6 +34,8 @@ import { saveVaultSession, readVaultSession, clearVaultSession } from "@/lib/wal
 import { ROBINHOOD_CHAIN_ID, ROBINHOOD_PUBLIC_RPC, ROBINHOOD_EXPLORER_URL } from "@/lib/chains/robinhood";
 import { ARC_CHAIN_ID, ARC_PUBLIC_RPC, ARC_EXPLORER_URL } from "@/lib/chains/arc";
 import { waitForWalletUnlock } from '@/lib/wallet-unlock-flow';
+import { offerWalletSecure } from '@/lib/wallet-secure-flow';
+import { readDeviceSeed } from '@/lib/wallet-core/device-seed';
 import { pimlicoUserOperationFees } from '@/lib/pimlico-fees';
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
@@ -353,10 +355,31 @@ export async function signDerivedSolanaVersionedTransaction(
 }
 
 export async function ensureWalletUnlocked(): Promise<void> {
-  if (isWalletUnlocked()) return;
-  if (await restoreWalletSession()) return;
-  await waitForWalletUnlock();
-  if (!isWalletUnlocked()) throw new Error('Wallet unlock did not complete. Please try again.');
+  if (!isWalletUnlocked() && !(await restoreWalletSession()) && !(await unlockFromDeviceSeed())) {
+    await waitForWalletUnlock();
+    if (!isWalletUnlocked()) throw new Error('Wallet unlock did not complete. Please try again.');
+  }
+  // A wallet made silently at sign-up is secured here, at the first action
+  // that uses it, rather than at the door (see lib/wallet-secure-flow.ts).
+  await offerWalletSecure();
+}
+
+/**
+ * Open a wallet made silently at sign-up and not yet secured. It has no
+ * password or biometric wrap to ask for, so an expired or missing vault session
+ * would otherwise leave an unlock sheet with nothing to offer; the words held
+ * on this browser open it, and offerWalletSecure follows immediately.
+ */
+async function unlockFromDeviceSeed(): Promise<boolean> {
+  const uid = localStorage.getItem('dehub_supabase_uid');
+  if (!uid) return false;
+  const seed = await readDeviceSeed(uid);
+  if (!seed) return false;
+  const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
+  const derived = deriveFromSecret(seed.secret);
+  if (derived.ethAddress.toLowerCase() !== seed.address) return false;
+  await activateWalletKey(derived.ethPrivateKey);
+  return isWalletUnlocked();
 }
 
 export async function signDerivedSolanaMessage(message: string): Promise<{ address: string; signature: string }> {
