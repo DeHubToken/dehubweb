@@ -116,6 +116,7 @@ import { EmailSignInSettings } from '@/components/app/settings/EmailSignInSettin
 import { EnsHandleSettings } from '@/components/app/settings/EnsHandleSettings';
 import { SolanaWalletSettings } from '@/components/app/settings/SolanaWalletSettings';
 import { StreamKeySettings } from '@/components/app/settings/StreamKeySettings';
+import { TwitchMirrorSettings } from '@/components/app/settings/TwitchMirrorSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { ProfilesSection } from '@/components/app/settings/ProfilesSection';
 import { CollapsibleStack } from '@/components/app/settings/CollapsibleStack';
@@ -1237,6 +1238,10 @@ function ProfileSettings() {
         <div data-setting-anchor="stream-key">
           <h3 className={SETTINGS_HEADING_CLASS}>{t('settings.streamKey.section', 'Stream key')}</h3>
           <StreamKeySettings />
+        </div>
+        <div data-setting-anchor="twitch-mirror" id="twitch-mirror">
+          <h3 className={SETTINGS_HEADING_CLASS}>{t('twitchMirror.title')}</h3>
+          <TwitchMirrorSettings />
         </div>
 
         {/* Badge delegation — a badge is a profile-facing thing (who holds
