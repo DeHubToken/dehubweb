@@ -65,6 +65,15 @@ function renderRemake() {
     const reference = document.createElement('video'); reference.src = shot.source; reference.controls = true; reference.playsInline = true; reference.preload = 'none'; reference.setAttribute('aria-label', `Reference shot ${shot.index + 1}`); media.append(reference);
     if (shot.results.length) {
       const result = document.createElement('video'); result.src = shot.results[0].url; result.controls = true; result.playsInline = true; result.preload = 'none'; result.setAttribute('aria-label', `Generated shot ${shot.index + 1}`); media.append(result);
+      if (shot.results.length > 1) {
+        const versions = document.createElement('select'); versions.setAttribute('aria-label', `Preview versions of shot ${shot.index + 1}`);
+        for (const saved of shot.results) versions.add(new Option(`Version ${shot.versions.indexOf(saved.id) + 1}${saved.id === shot.id ? ' · selected for assembly' : ''}`, saved.id));
+        versions.onchange = () => { result.src = shot.results.find(saved => saved.id === versions.value).url; };
+        media.append(versions, remakeButton('Use previewed version · no generation charge', () => void remakeAction(ident => {
+          const body = new FormData(); body.set('shot', String(shot.index)); body.set('version', versions.value);
+          return api(`jobs/${ident}/remake/select`, { method: 'POST', body });
+        })));
+      }
     }
     card.append(title, status, media);
     if (shot.state === 'prepared' && !plan.building) {

@@ -99,6 +99,16 @@ class RemakeTests(unittest.TestCase):
                 return [bytes(packet) for packet in media.demux(audio=0) if packet.dts is not None]
         self.assertEqual(packets(self.folder / 'upload.mp4'), packets(self.folder / 'remake-result.mp4'))
 
+    def test_provider_frame_rate_is_resampled_without_slowing_its_motion(self):
+        result = self.folder / 'resampled.mp4'
+        remake.encode_range(self.folder / 'upload.mp4', result, 0, 360, Fraction(60, 1))
+        with av.open(str(result)) as media:
+            frames = list(media.decode(video=0))
+        self.assertEqual(len(frames), 360)
+        self.assertEqual([int(frames[index].to_ndarray(format='rgb24').mean(axis=(0, 1)).argmax()) for index in (0, 120, 240)], [0, 1, 2])
+        with self.assertRaisesRegex(ValueError, 'shorter than'):
+            remake.encode_range(self.folder / 'upload.mp4', self.folder / 'too-long.mp4', 0, 240, Fraction(24, 1))
+
     def test_ownership_payment_isolation_and_duplicate_plan(self):
         project = self.plan()
         self.assertEqual([job['id'] for job in self.client.get('/jobs').json()['jobs']], [IDENT])
@@ -134,6 +144,9 @@ class RemakeTests(unittest.TestCase):
             self.assertEqual(revised[1]['id'], second['id'])
             debit.assert_not_called()
         self.assertEqual(self.client.post(f'/jobs/{IDENT}/remake/assemble').status_code, 409)
+        response = self.client.post(f'/jobs/{IDENT}/remake/select', data={'shot': 0, 'version': first['id']})
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()['remake']['shots'][0]['id'], first['id'])
 
     def test_uncertain_submission_only_collects_a_saved_request_without_payment(self):
         first = self.plan()['remake']['shots'][0]

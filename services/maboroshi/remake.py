@@ -96,37 +96,28 @@ def encode_range(source, destination, start, end, rate, minimum_seconds=0):
         stream.width, stream.height = video.width // 2 * 2, video.height // 2 * 2
         stream.pix_fmt = 'yuv420p'
         stream.options = {'crf': '18', 'preset': 'fast', 'threads': '1'}
-        first = None
-        origin = None
-        last = None
-        produced = 0
-        for frame in media.decode(video=0):
-            stamp = float(frame.time or 0)
-            if origin is None:
-                origin = stamp
-            position = (stamp - origin) * float(rate)
-            if position + 0.5 < start:
-                continue
-            if position >= end - 0.5:
-                break
-            if first is None:
-                first = frame
-            last = frame
-            target = min(end - start, max(produced + 1, round(position - start) + 1))
-            while produced < target:
-                encoded = frame.reformat(width=stream.width, height=stream.height, format='yuv420p')
-                encoded.pts, encoded.time_base = produced, 1 / rate
-                for packet in stream.encode(encoded):
-                    output.mux(packet)
-                produced += 1
-        if first is None or last is None:
+        frames = iter(media.decode(video=0))
+        current = next(frames, None)
+        if current is None:
             raise ValueError('The selected shot has no decoded frames.')
-        while produced < count:
-            encoded = last.reformat(width=stream.width, height=stream.height, format='yuv420p')
+        origin = float(current.time or 0)
+        current_at = origin
+        following = next(frames, None)
+        tolerance = 1.5 / float(video.average_rate or rate)
+        for produced in range(count):
+            # Resample by timestamps: provider and reference frame rates can differ.
+            target = origin + (start + min(produced, end - start - 1)) / float(rate)
+            while following is not None and float(following.time or 0) <= target + .000001:
+                current = following
+                current_at = float(current.time or 0)
+                following = next(frames, None)
+            if following is None and target - current_at > tolerance:
+                raise ValueError('The generated video is shorter than the required shot. Its saved render needs review.')
+            # Copy before assigning timestamps; reformat can return the input frame.
+            encoded = av.VideoFrame.from_ndarray(current.to_ndarray(format='rgb24'), format='rgb24').reformat(width=stream.width, height=stream.height, format='yuv420p')
             encoded.pts, encoded.time_base = produced, 1 / rate
             for packet in stream.encode(encoded):
                 output.mux(packet)
-            produced += 1
         for packet in stream.encode():
             output.mux(packet)
 
@@ -206,6 +197,22 @@ def finish_shot(generated, folder):
     info = child(folder)
     # Trim the padded generation back to the exact reference frame count.
     encode_range(generated, Path(folder) / 'final-preview.mp4', 0, info['end'] - info['start'], Fraction(info['rate']))
+
+
+def select_version(row, index, ident):
+    folder = access.folder(row['id'])
+    manifest = read(folder)
+    if not manifest or manifest.get('building') or not 0 <= index < len(manifest['shots']):
+        raise HTTPException(400, 'Choose a saved shot.')
+    selected = manifest['shots'][index]
+    if ident not in selected['versions'] or access.job(ident, row['wallet'])['state'] != 'complete':
+        raise HTTPException(409, 'Choose a completed version of this shot.')
+    active = access.job(selected['id'], row['wallet'])
+    if active['state'] not in ('complete', 'prepared') or active['state'] == 'prepared' and access.payment_reference(active, 'draft'):
+        raise HTTPException(409, 'Resolve the current paid render before switching versions.')
+    selected['id'] = ident
+    write(folder, manifest)
+    access.update(row['id'], state='editing', status='Shot version selected. Assemble again to include it in the edit.')
 
 
 def assemble(row):
