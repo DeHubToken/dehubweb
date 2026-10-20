@@ -84,14 +84,14 @@ async function completion(messages: unknown[], planning = false) {
 async function planPrompt(prompt: string, timezone: string, registry: Registry): Promise<TaskPlan> {
   const now = new Date();
   const local = new Intl.DateTimeFormat("en-GB", { timeZone: timezone, dateStyle: "full", timeStyle: "long" }).format(now);
-  let plan = explicitTaskPlan(prompt);
+  let plan = explicitTaskPlan(prompt, now, timezone);
   if (!plan) {
   const output = await completion([
     { role: "system", content: `Translate an owner's instruction into a precise DeHub task. UTC now: ${now.toISOString()}. Owner local time: ${local}; timezone ${timezone}.
 Act as the selected agent, never as the human owner. Only the six tools below are available. Unsupported requests, unspecified targets/time windows or ambiguous counts must return clarification, never a guessed action.
 Tools:
 dehub_follow: {target_wallet: 0x address or exact username, action: follow|unfollow}. Named users are resolved before queueing. all_users follows the public directory; post_authors follows unique creators of posts in a specified window.
-dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects all posts in a fixed time window. audience selected_posts likes at most recent_limit (1-3) posts from the last 24 hours whose title, description or category matches one of recent_keywords (1-6 interests). Leave from and to null for selected_posts. The runner preserves existing matching votes.
+dehub_vote: {token_id: string, vote_type: like|dislike}. audience posts selects EVERY post across ALL categories in a time window, with no keyword requirement and no three-like total cap. For "like every post today", use posts with local midnight to now. For "like every post in the last day", use posts with now minus 24 hours to now. Never ask for categories or keywords for an explicit all-post request. The 1-3 limit below applies ONLY to selective topic likes. audience selected_posts likes at most recent_limit (1-3) posts from the last 24 hours whose title, description or category matches one of recent_keywords (1-6 interests). Leave from and to null for selected_posts. The runner preserves existing matching votes.
 dehub_comment: {token_id: string, content: string, reply_to_comment_id?: string}. Use literal requested comment text. For a reply written to each post in a time window (audience posts), leave content out and set topic to the owner's reply instructions; a reply is then written from each post's own text. Never invent replies otherwise.
 dehub_view: {token_id: string}. Views a post; the view counts in its public view total. audience posts views every post in a fixed time window. Every like and comment also views its post, so add a view step only when views are requested on their own or explicitly.
 dehub_update_profile: {username?:string,bio?:string,display_name?:string,avatar_url?:string,banner_url?:string}.
@@ -213,7 +213,7 @@ async function loadTargets(step: TaskStep, task: any, token: string, ownedWallet
     cursor.done = !data.pagination.next_cursor;
   }
   // Every agent in a swarm views every post (each is its own viewer); other bulk work is divided.
-  if (task.swarm_size && step.tool !== "dehub_view") cursor.targets = cursor.targets.filter((target: string) => swarmBucket(target, task.swarm_size) === task.swarm_index);
+  if (task.swarm_size && task.swarm_mode !== "each" && step.tool !== "dehub_view") cursor.targets = cursor.targets.filter((target: string) => swarmBucket(target, task.swarm_size) === task.swarm_index);
   cursor.index = 0;
 }
 
@@ -229,7 +229,7 @@ export async function runTask(context: Context, req: Request, task: any) {
   const ownedWallets = new Set<string>(ownedAgents.map((row: any) => String(row.owner_wallet_address).toLowerCase()));
   const save = async (extra: Record<string, unknown> = {}) => checked(await db.from("ai_agent_tasks").update({
     cursor: task.cursor, completed_actions: task.completed_actions, updated_at: new Date().toISOString(), ...extra,
-  }).eq("id", task.id).eq("lease", task.lease));
+  }).eq("id", task.id).eq("lease", task.lease).eq("status", "running"));
   // Move to the next step, remembering how far each window step has covered.
   const nextStep = () => {
     const done = plan.steps[task.cursor.step];
@@ -263,7 +263,7 @@ export async function runTask(context: Context, req: Request, task: any) {
       }).eq("id", task.id).eq("lease", task.lease).eq("status", "running"));
       break;
     }
-    if (task.swarm_size && step.audience === 'single' && plan.interval_minutes === null && task.cursor.step % task.swarm_size !== task.swarm_index) {
+    if (task.swarm_size && task.swarm_mode !== 'each' && step.audience === 'single' && plan.interval_minutes === null && task.cursor.step % task.swarm_size !== task.swarm_index) {
       nextStep(); await save(); continue;
     }
     if (!task.cursor.targets || task.cursor.index >= task.cursor.targets.length) {
@@ -419,14 +419,14 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     return json(payload, result.isError ? 422 : 200);
   }
   if (input.operation === "list") {
-    const tasks = checked(await db.from("ai_agent_tasks").select("id,agent_id,prompt,plan,status,completed_actions,next_run_at,needs_review,message,created_at,swarm_id,swarm_index,swarm_size").eq("owner_wallet", auth.wallet).order("created_at", { ascending: false }).limit(50));
+    const tasks = checked(await db.from("ai_agent_tasks").select("id,agent_id,prompt,plan,status,completed_actions,next_run_at,needs_review,message,created_at,swarm_id,swarm_index,swarm_size,swarm_mode").eq("owner_wallet", auth.wallet).order("created_at", { ascending: false }).limit(200));
     return json({ tasks });
   }
   if (input.operation === "create_swarm") {
     if (typeof input.prompt !== "string" || !input.prompt.trim() || input.prompt.length > 4000 || !/^[0-9a-f-]{36}$/i.test(input.request_id ?? "")) return json({ error: "A prompt and request ID are required." }, 400);
-    if (!Array.isArray(input.agent_ids) || input.agent_ids.length < 2 || input.agent_ids.length > 20 ||
+    if (!Array.isArray(input.agent_ids) || input.agent_ids.length < 2 || input.agent_ids.length > 25 ||
       input.agent_ids.some((id: unknown) => typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) ||
-      new Set(input.agent_ids).size !== input.agent_ids.length) return json({ error: "Select at least two distinct agents (up to 20)." }, 400);
+      new Set(input.agent_ids).size !== input.agent_ids.length) return json({ error: "Select at least two distinct agents (up to 25)." }, 400);
     const existing = checked(await db.from("ai_agent_tasks").select("id").eq("owner_wallet", auth.wallet).eq("swarm_id", input.request_id));
     if (existing.length) return json({ tasks: existing });
     const agents = checked(await db.from("ai_agents").select("id,api_key").eq("human_owner_wallet", auth.wallet).eq("is_active", true).in("id", input.agent_ids));
@@ -436,16 +436,18 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     let plan: TaskPlan;
     try { plan = await planPrompt(input.prompt.trim(), timezone, context.tools(agents[0].api_key, req)); }
     catch (error) { return json({ error: message(error) }, 422); }
+    const mode = input.swarm_mode ?? 'shared';
+    if (!['shared', 'each'].includes(mode)) return json({ error: 'Choose shared work or each agent.' }, 400);
     const cadence = plan.interval_minutes;
-    if (cadence !== null) {
+    if (cadence !== null && mode === "shared") {
       const multiplied = cadence * input.agent_ids.length;
       if (multiplied > 525600) return json({ error: "That schedule is too far apart for this many agents." }, 422);
       plan = { ...plan, interval_minutes: multiplied };
     }
     try {
-      const tasks = checked(await db.rpc("create_agent_swarm_tasks", { p_owner_wallet: auth.wallet,
+      const tasks = checked(await db.rpc("create_agent_swarm_tasks_v2", { p_owner_wallet: auth.wallet,
         p_agent_ids: input.agent_ids, p_request_id: input.request_id, p_prompt: input.prompt.trim(),
-        p_plan: plan, p_interval_minutes: cadence }));
+        p_plan: plan, p_interval_minutes: mode === "shared" ? cadence : null, p_mode: mode }));
       return json({ tasks });
     } catch (error) { return json({ error: message(error) }, 409); }
   }
@@ -457,7 +459,7 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     if (!agent) return json({ error: "Select an active agent you own." }, 403);
     const active = await db.from("ai_agent_tasks").select("id", { count: "exact", head: true }).eq("owner_wallet", auth.wallet).in("status", ["queued", "running"]);
     checked(active);
-    if ((active.count ?? 0) >= 20) return json({ error: "Pause or finish a task before adding another (20 active tasks)." }, 409);
+    if ((active.count ?? 0) >= 100) return json({ error: "Pause or finish a task before adding another (100 active tasks)." }, 409);
     let timezone = typeof input.timezone === "string" ? input.timezone : "UTC";
     try { new Intl.DateTimeFormat("en", { timeZone: timezone }); } catch { timezone = "UTC"; }
     let plan: TaskPlan;
@@ -466,20 +468,33 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     const task = checked(await db.from("ai_agent_tasks").insert({ agent_id: agent.id, owner_wallet: auth.wallet, request_id: input.request_id, prompt: input.prompt.trim(), plan }).select("id").single());
     return json({ task });
   }
+  if (input.swarm_id && ['pause', 'resume', 'cancel'].includes(input.operation)) {
+    if (!/^[0-9a-f-]{36}$/i.test(input.swarm_id)) return json({ error: 'Invalid swarm.' }, 400);
+    const operation = input.operation;
+    let query = db.from('ai_agent_tasks').update({
+      status: operation === 'pause' ? 'paused' : operation === 'cancel' ? 'cancelled' : 'queued',
+      ...(operation === 'resume' ? { next_run_at: new Date().toISOString() } : {}),
+      updated_at: new Date().toISOString(),
+    }).eq('owner_wallet', auth.wallet).eq('swarm_id', input.swarm_id)
+      .in('status', operation === 'pause' ? ['queued', 'running'] : operation === 'cancel' ? ['queued', 'running', 'paused', 'failed'] : ['paused', 'failed']);
+    if (operation === 'resume') query = query.eq('needs_review', false).or(`lease_until.is.null,lease_until.lte.${new Date().toISOString()}`);
+    const updated = checked(await query.select('id'));
+    return json({ success: true, updated: updated.length });
+  }
   const task = checked(await db.from("ai_agent_tasks").select("id,status,needs_review,lease_until").eq("id", input.task_id).eq("owner_wallet", auth.wallet).maybeSingle());
   if (!task) return json({ error: "Task not found." }, 404);
   if (input.operation === "history") return json({ actions: checked(await db.from("ai_agent_task_actions").select("id,tool,target,status,result,created_at").eq("task_id", task.id).order("created_at", { ascending: false }).limit(100)) });
-  if (!["pause", "resume", "skip"].includes(input.operation)) return json({ error: "Unknown operation." }, 400);
+  if (!["pause", "resume", "skip", "cancel"].includes(input.operation)) return json({ error: "Unknown operation." }, 400);
   if (input.operation === 'pause' && !['queued', 'running'].includes(task.status)) return json({ error: "Only an active task can be paused." }, 409);
-  if (input.operation !== 'pause' && (!['paused', 'failed'].includes(task.status) || (task.lease_until && Date.parse(task.lease_until) > Date.now()))) return json({ error: "Wait for the in-flight action to finish before continuing." }, 409);
+  if (!['pause', 'cancel'].includes(input.operation) && (!['paused', 'failed'].includes(task.status) || (task.lease_until && Date.parse(task.lease_until) > Date.now()))) return json({ error: "Wait for the in-flight action to finish before continuing." }, 409);
   if (input.operation === 'skip' && !task.needs_review) return json({ error: "There is no unconfirmed action to skip." }, 409);
-  if (input.operation !== "pause" && task.status === "completed") return json({ error: "This task is complete. Submit a new prompt to run it again." }, 409);
+  if (task.status === "completed" || task.status === "cancelled") return json({ error: "This task is complete. Submit a new prompt to run it again." }, 409);
   if (task.needs_review && input.operation === "resume") return json({ error: "Review the unconfirmed action and choose Skip and resume." }, 409);
   if (input.operation === "skip") {
     checked(await db.from("ai_agent_task_actions").update({ status: "skipped" }).eq("task_id", task.id).in("status", ["pending", "uncertain"]));
   }
-  checked(await db.from("ai_agent_tasks").update({ status: input.operation === "pause" ? "paused" : "queued",
-    ...(input.operation !== "pause" ? { next_run_at: new Date().toISOString(), needs_review: false } : {}), updated_at: new Date().toISOString(),
-  }).eq("id", task.id));
+  checked(await db.from("ai_agent_tasks").update({ status: input.operation === "pause" ? "paused" : input.operation === "cancel" ? "cancelled" : "queued",
+    ...(["resume", "skip"].includes(input.operation) ? { next_run_at: new Date().toISOString(), needs_review: false } : {}), updated_at: new Date().toISOString(),
+  }).eq("id", task.id).eq("owner_wallet", auth.wallet).eq("status", task.status));
   return json({ success: true });
 }
