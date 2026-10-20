@@ -14,7 +14,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 
 import { useState, useRef, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SwitchCamera, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow } from "lucide-react";
+import { SwitchCamera, Cable, ScreenShare, ScreenShareOff, PictureInPicture2, Move, Wand2, Palette, Heart, Loader2, AlertTriangle, SignalLow } from "lucide-react";
 import MicOff from "@/components/ui/cut-icons/mic-off";
 import Video from "@/components/ui/cut-icons/video";
 import VideoOff from "@/components/ui/cut-icons/video-off";
@@ -35,7 +35,9 @@ import {
   type WhipHealth,
   type WhipSession,
   type WhipState,
+  type VideoEncoding,
 } from '@/lib/livepeer/whip';
+import { openCaptureCard, encodingForTrack } from '@/lib/livepeer/capture-card';
 import {
   composeCameraBubble,
   BUBBLE_CORNERS,
@@ -151,6 +153,11 @@ interface GoLiveBroadcasterProps {
    */
   initialScreenStream?: MediaStream | null;
   /**
+   * Broadcast from the capture card picked (and remembered) on the Go Live
+   * sheet instead of the front camera. See lib/livepeer/capture-card.
+   */
+  captureCard?: boolean;
+  /**
    * The Mongo ObjectId of the stream — what every /api/live/{id}/* route
    * takes, and never the NFT tokenId. Without it the console has no counts to
    * show and the chat has nothing to key on.
@@ -173,7 +180,7 @@ interface GoLiveBroadcasterProps {
 }
 
 type Phase = 'starting' | 'connecting' | 'live' | 'reconnecting' | 'error';
-type CaptureMode = 'camera' | 'screen';
+type CaptureMode = 'camera' | 'screen' | 'card';
 
 /** 720p is the sweet spot: 1080p routinely exceeds a phone's upstream. */
 const VIDEO_CONSTRAINTS: MediaTrackConstraints = {
@@ -319,7 +326,7 @@ function describeMediaError(error: unknown): string {
     case 'OverconstrainedError':
       return 'No camera or microphone was found on this device.';
     case 'NotReadableError':
-      return 'Your camera is already in use by another app. Close it and try again.';
+      return 'Your camera or capture card is already in use by another app (like OBS or Elgato Studio). Close it and try again.';
     default:
       return error instanceof Error ? error.message : 'Could not start your camera.';
   }
@@ -372,6 +379,7 @@ export function GoLiveBroadcaster({
   playbackId,
   provider,
   initialScreenStream = null,
+  captureCard = false,
   streamId,
   tokenId,
   onEnd,
@@ -388,13 +396,13 @@ export function GoLiveBroadcaster({
   // Seeded from the prop so the first paint already reads as a screen share
   // (no mirrored self-view frame, no "Starting camera…" on a desktop capture).
   const [captureMode, setCaptureMode] = useState<CaptureMode>(
-    initialScreenStream ? 'screen' : 'camera'
+    initialScreenStream ? 'screen' : captureCard ? 'card' : 'camera'
   );
   // Preview mirroring keyed to what the TRACK reports, not what was requested:
   // facingMode is an ideal constraint, so "environment" can be satisfied by a
   // second front camera (two-webcam desktops) — which would un-mirror a
   // still-front-facing self-view if the requested value drove the transform.
-  const [mirror, setMirror] = useState(!initialScreenStream);
+  const [mirror, setMirror] = useState(!initialScreenStream && !captureCard);
   const [bubbleOn, setBubbleOn] = useState(false);
   const [bubbleCorner, setBubbleCorner] = useState<BubbleCorner>('bottom-right');
   const [hasMultipleCameras, setHasMultipleCameras] = useState(false);
@@ -467,7 +475,15 @@ export function GoLiveBroadcaster({
   const videoOnRef = useRef(true);
   const facingModeRef = useRef<'user' | 'environment'>('user');
   const videoLookRef = useRef<VideoEffectId>('none');
-  const captureModeRef = useRef<CaptureMode>(initialScreenStream ? 'screen' : 'camera');
+  const captureModeRef = useRef<CaptureMode>(
+    initialScreenStream ? 'screen' : captureCard ? 'card' : 'camera'
+  );
+  // The card's own picture and sound, held like a screen share: the bubble
+  // composites over it and teardown has to release it by hand.
+  const cardStreamRef = useRef<MediaStream | null>(null);
+  // Read once on mount, like the handed-over screen.
+  const captureCardRef = useRef(captureCard);
+  const videoEncodingRef = useRef<VideoEncoding | undefined>(undefined);
   useEffect(() => { videoOnRef.current = videoOn; }, [videoOn]);
   useEffect(() => { facingModeRef.current = facingMode; }, [facingMode]);
   useEffect(() => { videoLookRef.current = videoLook; }, [videoLook]);
@@ -692,6 +708,8 @@ export function GoLiveBroadcaster({
     rawMicStreamRef.current = null;
     screenStreamRef.current?.getTracks().forEach((t) => t.stop());
     screenStreamRef.current = null;
+    cardStreamRef.current?.getTracks().forEach((t) => t.stop());
+    cardStreamRef.current = null;
     systemAudioRef.current = null;
     audioMixRef.current?.track.stop();
     void audioMixRef.current?.ctx.close().catch(() => undefined);
@@ -855,7 +873,7 @@ export function GoLiveBroadcaster({
       // panel — the look is re-applied when the share ends. Read through the
       // ref because stopScreenShare calls this in the same tick it flips the
       // mode, when the state closure still says 'screen'.
-      if (captureModeRef.current === 'screen') return;
+      if (captureModeRef.current !== 'camera') return;
       if (videoSwapRef.current) return;
       if (!streamRef.current || !sessionRef.current) return;
 
@@ -1089,7 +1107,9 @@ export function GoLiveBroadcaster({
    */
   const toggleCameraBubble = useCallback(async () => {
     if (videoSwapRef.current) return;
-    const screenTrack = screenStreamRef.current?.getVideoTracks()[0] ?? null;
+    // The bubble sits over whatever wide source is on air: a share or a card.
+    const screenTrack =
+      (screenStreamRef.current ?? cardStreamRef.current)?.getVideoTracks()[0] ?? null;
     if (!streamRef.current || !sessionRef.current || !screenTrack) return;
     videoSwapRef.current = true;
 
@@ -1104,9 +1124,23 @@ export function GoLiveBroadcaster({
         return;
       }
 
+      // Over a capture card, "the camera" must be some OTHER video device:
+      // left to the browser's default it can hand back the card itself.
+      const cardId = cardStreamRef.current?.getVideoTracks()[0]?.getSettings?.().deviceId;
+      const faceCam = cardId
+        ? (await navigator.mediaDevices.enumerateDevices().catch(() => [])).find(
+            (d) => d.kind === 'videoinput' && d.deviceId && d.deviceId !== cardId
+          )
+        : undefined;
+      if (cardId && !faceCam) {
+        logger.warn('No webcam besides the capture card for the bubble');
+        return;
+      }
       const capture = await navigator.mediaDevices
         .getUserMedia({
-          video: { ...cameraConstraints(), facingMode: facingModeRef.current },
+          video: faceCam
+            ? { ...VIDEO_CONSTRAINTS, deviceId: { exact: faceCam.deviceId } }
+            : { ...cameraConstraints(), facingMode: facingModeRef.current },
           audio: false,
         })
         .catch(() => null);
@@ -1180,6 +1214,43 @@ export function GoLiveBroadcaster({
             return;
           }
           setCaptureMode('screen');
+          setMirror(false);
+        } else if (captureCardRef.current) {
+          if (handed) handed.getTracks().forEach((t) => t.stop());
+          const card = await openCaptureCard();
+          if (cancelled) {
+            card.stream.getTracks().forEach((t) => t.stop());
+            return;
+          }
+          cardStreamRef.current = card.stream;
+          videoTrack = card.video;
+          // The card's sound rides where a screen share's tab audio does, so
+          // the mic (if one was picked) mixes over it the same way.
+          systemAudio = card.audio;
+          videoEncodingRef.current = encodingForTrack(card.video);
+          if (card.choice.micId) {
+            const mic = await navigator.mediaDevices
+              .getUserMedia({
+                audio: { ...AUDIO_CONSTRAINTS, deviceId: { exact: card.choice.micId } },
+              })
+              .catch((error) => {
+                logger.warn('Picked microphone unavailable; streaming the card alone', error);
+                return null;
+              });
+            micTrack = mic ? await acquireMic(mic) : null;
+          }
+          if (cancelled) {
+            card.stream.getTracks().forEach((t) => t.stop());
+            micTrack?.stop();
+            return;
+          }
+          logger.info('Capture card opened', {
+            label: card.video.label,
+            settings: card.video.getSettings?.(),
+            audio: card.audio?.label ?? null,
+            mic: Boolean(micTrack),
+          });
+          setCaptureMode('card');
           setMirror(false);
         } else {
           if (handed) handed.getTracks().forEach((t) => t.stop());
@@ -1289,6 +1360,7 @@ export function GoLiveBroadcaster({
           const session = await publishToWhip({
             streamKey,
             stream,
+            videoEncoding: videoEncodingRef.current,
             // Named explicitly, NEVER spread: endpointBits carries `url`, but
             // publishToWhip's option is `endpoint` — `...endpointBits` passed
             // a key the function ignores, `endpoint` stayed undefined, and
@@ -1681,12 +1753,18 @@ export function GoLiveBroadcaster({
   };
 
   const isScreen = captureMode === 'screen';
+  const isCard = captureMode === 'card';
+  // Screen shares and capture cards are both a landscape picture of something
+  // other than the host: no mirroring, no looks, no flip, bubble allowed.
+  const isWide = isScreen || isCard;
 
   const statusLabel =
     phase === 'starting'
       ? isScreen
         ? 'Starting screen share…'
-        : 'Starting camera…'
+        : isCard
+          ? 'Starting capture card…'
+          : 'Starting camera…'
       : phase === 'connecting'
         ? 'Connecting…'
         : phase === 'reconnecting'
@@ -1730,7 +1808,7 @@ export function GoLiveBroadcaster({
           playsInline
           className={cn(
             'h-full w-full',
-            isScreen ? 'object-contain' : 'object-cover',
+            isWide ? 'object-contain' : 'object-cover',
             mirror && 'scale-x-[-1]',
             !videoOn && 'opacity-0'
           )}
@@ -1741,7 +1819,7 @@ export function GoLiveBroadcaster({
         {!videoOn && phase !== 'error' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-500">
             <VideoOff className="h-8 w-8" />
-            <span className="text-xs">{isScreen ? _copy("copy.2d8c4ec9bd45", { defaultValue: "Screen paused" }) : _copy("copy.ce3ef7450f8e", { defaultValue: "Camera off" })}</span>
+            <span className="text-xs">{isScreen ? _copy("copy.2d8c4ec9bd45", { defaultValue: "Screen paused" }) : isCard ? _copy("copy.fedc5cda305d", { defaultValue: "Capture paused" }) : _copy("copy.ce3ef7450f8e", { defaultValue: "Camera off" })}</span>
           </div>
         )}
 
@@ -1818,6 +1896,11 @@ export function GoLiveBroadcaster({
           <span className="absolute right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] text-white backdrop-blur-xl">
             <ScreenShare className="h-3 w-3" />{_copy("copy.8a1f9acdfd25", { defaultValue: "Sharing screen" })}</span>
         )}
+
+        {isCard && phase !== 'error' && (
+          <span className="absolute right-3 top-[calc(max(0.75rem,env(safe-area-inset-top))+3rem)] flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-2.5 py-1 text-[11px] text-white backdrop-blur-xl">
+            <Cable className="h-3 w-3" />{_copy("copy.4a1bd4a3aaf3", { defaultValue: "Capture card" })}</span>
+        )}
       </div>
 
       <div
@@ -1855,16 +1938,20 @@ export function GoLiveBroadcaster({
             videoOn
               ? isScreen
                 ? _copy("copy.d49fd331d185", { defaultValue: "Pause the screen share" })
-                : _copy("copy.2050f56db225", { defaultValue: "Turn camera off" })
+                : isCard
+                  ? _copy("copy.c7ce89b32897", { defaultValue: "Pause the capture card" })
+                  : _copy("copy.2050f56db225", { defaultValue: "Turn camera off" })
               : isScreen
                 ? _copy("copy.3dd6e75d3b63", { defaultValue: "Resume the screen share" })
-                : _copy("copy.95e9fb569c93", { defaultValue: "Turn camera on" })
+                : isCard
+                  ? _copy("copy.05d0e1b9a76e", { defaultValue: "Resume the capture card" })
+                  : _copy("copy.95e9fb569c93", { defaultValue: "Turn camera on" })
           }
         >
           {videoOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
         </ControlButton>
 
-        {canShareScreen && (
+        {canShareScreen && !isCard && (
           <ControlButton
             floating={fullBleed}
             active={!isScreen}
@@ -1880,7 +1967,7 @@ export function GoLiveBroadcaster({
           </ControlButton>
         )}
 
-        {isScreen && (
+        {isWide && (
           <ControlButton
             floating={fullBleed}
             // Same convention as the share button: the tinted state is the
@@ -1894,7 +1981,7 @@ export function GoLiveBroadcaster({
           </ControlButton>
         )}
 
-        {isScreen && bubbleOn && (
+        {isWide && bubbleOn && (
           <ControlButton
             floating={fullBleed}
             active
@@ -1906,7 +1993,7 @@ export function GoLiveBroadcaster({
           </ControlButton>
         )}
 
-        {hasMultipleCameras && !isScreen && (
+        {hasMultipleCameras && !isWide && (
           <ControlButton
             floating={fullBleed}
             active
@@ -1920,7 +2007,7 @@ export function GoLiveBroadcaster({
 
         {/* Looks treat the camera, so the button goes where the camera controls
             are and leaves with them when a share takes the frame. */}
-        {!isScreen && (
+        {!isWide && (
           <ControlButton
             floating={fullBleed}
             active={openPanel !== 'looks'}
