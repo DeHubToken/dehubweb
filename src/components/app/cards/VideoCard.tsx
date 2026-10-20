@@ -2163,11 +2163,11 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         data-feed-preview={phoneFeedFrame || undefined}
         data-media-frame-key={!isImmersive && !isFullscreen ? `video:${video.id}` : undefined}
         data-media-frame-measured={resolvedVideoAspect == null ? undefined : measuredAspect}
+        data-audio-frame={video.isAudio || undefined}
         data-no-navigate
         data-feed-video-frame={cropFeedVideo || undefined}
         data-video-split-controls={splitControls || undefined}
         data-video-fullscreen={isFullscreen || undefined}
-        data-audio-frame={video.isAudio || undefined}
         data-media-full
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
         /* Fit the full picture within the media budget, reserving a separate
