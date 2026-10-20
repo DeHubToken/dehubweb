@@ -325,10 +325,12 @@ export default function StakingPage() {
     if (checkingStake.current) return;
     checkingStake.current = true;
     try {
-      const urls = [...new Set([
-        CHAIN_CONFIGS[attempt.chainId as 56 | 8453]?.rpcUrl,
-        attempt.chainId === 56 ? 'https://bsc-rpc.publicnode.com' : 'https://base.drpc.org',
-      ].filter(Boolean))];
+      // Recovery needs two RPCs that can answer an unknown historical hash.
+      // The token-read RPC can reject those as archive requests instead of
+      // returning null, which would keep old saved attempts pending forever.
+      const urls = attempt.chainId === 56
+        ? ['https://bsc-dataseed.binance.org', 'https://bsc-rpc.publicnode.com']
+        : ['https://mainnet.base.org', 'https://base.drpc.org'];
       const onReadError = (error: unknown) => {
         const diagnostic = `${attempt.hash}:${String(error)}`;
         if (receiptDiagnostics.current.has(diagnostic)) return;
