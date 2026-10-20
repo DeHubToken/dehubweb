@@ -2168,6 +2168,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
         data-video-split-controls={splitControls || undefined}
         data-video-fullscreen={isFullscreen || undefined}
         data-media-full
+        data-audio-frame={video.isAudio || undefined}
         className={`bg-black cursor-pointer group/thumb outline-none focus:outline-none focus-visible:outline-none overflow-hidden ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-[100dvh] flex items-center justify-center' : `relative ${isImmersive ? 'mx-auto' : ''} ${isImmersive && showComments ? 'aspect-[2/1]' : ''}`}`}
         /* Fit the full picture within the media budget, reserving a separate
            transport strip below it on feeds, post pages and fullscreen. */
@@ -2400,7 +2401,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
           <>
             {video.isAudio && video.audioUrl ? (
               /* Audio post: liquid glass container with static waveform backdrop */
-              <div className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
+              <div data-audio-backdrop className="relative w-full h-full bg-black/60 backdrop-blur-[24px] border border-white/10 overflow-hidden">
                 {/* Live AudioVisualizer */}
                 <div className="absolute inset-0">
                   <Suspense fallback={<div className="w-full h-full rounded-xl bg-black/40" />}>
