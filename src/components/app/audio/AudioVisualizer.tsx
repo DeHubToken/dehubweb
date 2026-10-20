@@ -158,9 +158,6 @@ const STYLES: { value: AnyStyle; label: string }[] = [
 
 /** One height for every control in the bottom row, so they line up. */
 const CONTROL_H = 'h-8';
-/** The liquid-glass surface all three controls share. */
-const GLASS_PILL =
-  'rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30';
 const HUE_GRADIENT =
   'linear-gradient(to right, hsl(0, 80%, 60%), hsl(60, 80%, 60%), hsl(120, 80%, 60%), hsl(180, 80%, 60%), hsl(240, 80%, 60%), hsl(300, 80%, 60%), hsl(360, 80%, 60%))';
 
@@ -938,9 +935,6 @@ export function AudioVisualizer({
   const displayRatio = scrubRatio ?? playedRatio;
   const displayTime = scrubRatio !== null ? scrubRatio * duration : currentTime;
   const isEffectivelyMuted = muted || selfMuted || volume === 0;
-  const glassShadow = isLightTheme
-    ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]'
-    : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]';
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
 
@@ -1131,18 +1125,21 @@ export function AudioVisualizer({
                       onTouchStart={stopBubble}
                       className={cn(
                         // Faint dark backing so labels stay readable over white-heavy themes.
-                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-full overflow-hidden whitespace-nowrap transition-colors text-white/75 hover:text-white bg-black/25',
+                        'relative inline-flex items-center px-2 text-[10px] font-medium rounded-full whitespace-nowrap transition-opacity duration-300 text-white bg-black/25',
+                        style !== s.value && 'opacity-60 hover:opacity-90',
                         CONTROL_H,
                       )}
                     >
+                      {/* "Beam", like the profile tabs: a short glowing line
+                          under the selected style instead of a filled pill. */}
                       {style === s.value && (
-                        <div
+                        <span
+                          aria-hidden
                           data-audio-style-active
-                          data-keep-round
-                          className={cn('absolute inset-0 rounded-full', GLASS_PILL, glassShadow)}
+                          className="pointer-events-none absolute bottom-1 left-1/2 h-[2px] w-[40%] min-w-[10px] -translate-x-1/2 rounded-full bg-current shadow-[0_0_8px_currentColor,0_0_2px_currentColor]"
                         />
                       )}
-                      <span className={`relative z-10 ${style === s.value ? 'text-white' : ''}`}>{s.label}</span>
+                      <span className="relative z-10">{s.label}</span>
                     </button>
                   ))}
                 </div>
