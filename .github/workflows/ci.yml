@@ -16,6 +16,21 @@ env:
   PNPM_VERSION: '9'
 
 jobs:
+  account-mcp:
+    name: Account MCP permissions and Creator jobs
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install only server schema dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/account-mcp" --no-package-lock --ignore-scripts zod@3.25.76 zod-to-json-schema@3.25.2
+          ln -s "$RUNNER_TEMP/account-mcp/node_modules" node_modules
+      - run: node --experimental-strip-types --test server/account-mcp.test.mjs
+
   dex-dehub-pool:
     name: DeHub pool market scope
     runs-on: ubuntu-latest
@@ -266,8 +281,6 @@ jobs:
           printf '<!doctype html><title>Worker bundle check</title>' > dist/index.html
           pnpm exec wrangler deploy --dry-run --outdir "$RUNNER_TEMP/share-worker"
 
-      - name: Account MCP authentication and Creator controls
-        run: node --experimental-strip-types --test server/account-mcp.test.mjs
 
       - uses: actions/upload-artifact@v4
         with:
