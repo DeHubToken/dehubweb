@@ -132,7 +132,7 @@ export class AccountMcpAuth {
         // This URL is returned by our generation endpoint, never a tool input.
         const url = new URL(data.imageUrl);
         if (url.protocol !== 'https:') throw new Error('Invalid generated image');
-        const response = await ctx.fetch(url.href, { redirect: 'error', signal: AbortSignal.timeout(30000) });
+        const response = await ctx.fetch(url.href, { redirect: 'manual', signal: AbortSignal.timeout(30000) });
         contentType = response.headers.get('Content-Type') || '';
         if (!response.ok || !contentType.startsWith('image/') || Number(response.headers.get('Content-Length')) > 15 * 1024 * 1024) throw new Error('Could not save generated image');
         const reader = response.body.getReader(), chunks = [];
