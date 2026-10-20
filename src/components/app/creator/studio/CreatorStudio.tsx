@@ -1599,7 +1599,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
           detail: m.description,
           meta: `${m.languages} langs`,
         }))
-      : [{ value: 'maboroshi', label: t('creator.toolMaboroshi'), detail: t('creator.toolMaboroshiDesc') }, ...VIDEO_MODEL_OPTIONS.map((m) => {
+      : [{ value: 'remake', label: t('creator.toolRemake'), detail: t('creator.toolMaboroshiDesc') }, { value: 'maboroshi', label: t('creator.toolMaboroshi'), detail: t('creator.toolMaboroshiDesc') }, ...VIDEO_MODEL_OPTIONS.map((m) => {
           const needsImage = !m.supports.includes('text-to-video');
           const rejectsImage = !m.supports.includes('image-to-video');
           return {
@@ -1945,6 +1945,7 @@ export const CreatorStudio = memo(function CreatorStudio({ onOpenEditor, stickyT
                       options={modelOptions}
                       onChange={(v) => {
                         if (mode === 'video' && v === 'maboroshi') { navigate('/creator/maboroshi'); return; }
+                        if (mode === 'video' && v === 'remake') { navigate('/creator/remake'); return; }
                         if (mode === 'image') setImageModel(v as ImageModelKey);
                         else if (mode === '3d') setModel3dModel(v as Model3dModelKey);
                         else if (mode === 'audio') setTtsModel(v as TtsModelKey);

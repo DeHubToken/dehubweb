@@ -5025,6 +5025,7 @@
       "speechLimit": "Bu {{length}} karakterdir. Sınır {{limit}}.",
       "musicTrackLength": "{{count}}s parkur"
     },
+    "toolRemake": "Remake",
     "toolMaboroshi": "Maboroshi",
     "toolMaboroshiDesc": "Karakterleri ve nesneleri değiştirin, bir taslağı gözden geçirin, ardından orijinal film müziğinizle dışa aktarın.",
     "editorAssetMissing": "O neslin henüz ithal edeceği bir medya yok.",
