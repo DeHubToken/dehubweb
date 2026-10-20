@@ -599,7 +599,7 @@ export function PostMediaPreview({
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {media.map((m, index) => (
-              <div key={m.preview} data-photo-index={m.type === 'image' ? index : undefined} className={`relative flex-shrink-0 snap-center ${dropIndex === index && draggingIndex !== index ? 'ring-2 ring-white rounded-2xl' : ''}`}>
+              <div key={m.preview} data-audio-preview-item={m.type === 'audio' || undefined} data-photo-index={m.type === 'image' ? index : undefined} className={`relative flex-shrink-0 snap-center ${dropIndex === index && draggingIndex !== index ? 'ring-2 ring-white rounded-2xl' : ''}`}>
                 {m.type === 'image' ? (
                   /* ==================== IMAGE PREVIEW ==================== */
                   <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">

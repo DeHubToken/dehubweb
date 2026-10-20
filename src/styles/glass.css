@@ -139,6 +139,7 @@ html[data-theme='glass'] #app-root :is(button,a).bg-white:not([data-on-media]):n
 }
 
 /* A tinted transport deck, shared by uploaded tracks in feeds and post pages. */
+html[data-theme='glass'] [data-audio-preview-item] { flex: 0 0 100%; width: 100%; min-width: 0; }
 html[data-theme='glass'] [data-glass-audio-preview] { width: 100%; background: transparent; overflow: visible; }
 html[data-theme='glass'] [data-glass-audio-preview] [data-audio-preview-label] { display: none; }
 html[data-theme='glass'] [data-glass-audio-preview] [data-glass-audio] { width: 100%; aspect-ratio: auto; }
