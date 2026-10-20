@@ -156,7 +156,7 @@ html[data-theme='glass'] [data-glass-audio]::before {
   border-radius: 50% 50% 0 0;
   background: radial-gradient(ellipse at 50% 100%, color-mix(in srgb,var(--tint-accent) 28%,transparent),transparent 72%);
 }
-html[data-theme='glass'] :is([data-audio-frame], [data-audio-backdrop]) { background: transparent !important; border: 0; border-radius: 28px; }
+html[data-theme='glass'] :is([data-audio-frame], [data-audio-backdrop]):not(#_):not(#_) { background: transparent !important; border: 0; border-radius: 32px 32px 48px 48px; }
 html[data-theme='glass'] [data-audio-frame]:not([data-video-fullscreen]) { height: 220px !important; min-height: 210px; aspect-ratio: auto !important; width: 100% !important; }
 [data-glass-audio-title] { display: grid; text-align: center; gap: 3px; margin: 0 45px 4px; }
 [data-glass-audio-title] strong { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
