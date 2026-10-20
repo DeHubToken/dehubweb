@@ -195,11 +195,11 @@ html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data
   background: var(--glass-highlight), var(--theme-control-raised) !important;
 }
 
-/* The feed bar already frosts everything behind it. Blurring its moving
+/* Each navigation header already frosts everything behind it. Blurring its moving
    selection again can leave a horizontal compositor seam inside the pill
    after a tab or scroll transition. Keep the themed fill and rim, with one
    backdrop sample owned by the bar on desktop and phone alike. */
-html[data-theme] [data-feed-nav] [data-theme-control-surface]:not(#_):not(#_) {
+html[data-theme] :is([data-feed-nav], [data-kit-island], [data-feed-nav-outer] > [data-page-bento]) [data-theme-control-surface]:not(#_):not(#_) {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
 }
