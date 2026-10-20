@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import type { NewPostAuthor } from '@/hooks/use-unified-feed';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 const SHOULDER = 8;
 const HEIGHT = 28;
@@ -86,16 +87,15 @@ export function NewPostsBead({ count, authors, square, host, onShow }: {
         {faces.length > 0 && (
           <span className="flex">
             {faces.map((author, i) => (
-              <span
+              <Avatar
                 key={author.address}
                 data-feed-new-posts-face
-                className="block shrink-0 overflow-hidden rounded-[6px] bg-white/20"
+                className="block shrink-0 overflow-hidden rounded-[6px]"
                 style={{ width: FACE, height: FACE, marginLeft: i ? -FACE_OVERLAP : 0, zIndex: 3 - i, boxShadow: '0 0 0 1.5px var(--bead-face-ring)' }}
               >
-                {author.avatarUrl
-                  ? <img src={author.avatarUrl} alt="" width={FACE} height={FACE} className="h-full w-full object-cover" />
-                  : <span className="flex h-full w-full items-center justify-center text-[9px] font-bold uppercase">{author.name.slice(0, 1)}</span>}
-              </span>
+                <AvatarImage src={author.avatarUrl} alt="" className="h-full w-full object-cover" />
+                <AvatarFallback className="rounded-[6px] text-[9px] font-bold uppercase">{author.name.slice(0, 1)}</AvatarFallback>
+              </Avatar>
             ))}
           </span>
         )}
