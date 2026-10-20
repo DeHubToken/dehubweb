@@ -16,17 +16,14 @@ import { Button } from '@/components/ui/button';
 import { completeMaboroshiPayment, getMaboroshiQuote, isMaboroshiPaymentRequest, maboroshiStageLabel, type MaboroshiQuote } from '@/lib/maboroshi-payment';
 import { MotionLibraryShowcase } from '@/components/app/creator/MotionLibraryShowcase';
 import { findMotionClip, type MotionClip } from '@/lib/creator/motionLibrary';
+import { maboroshiStudioUrl } from '@/lib/maboroshi-studio';
 
 const ORIGIN = 'https://live.dehub.io';
-const STUDIO = `${ORIGIN}/maboroshi/`;
 
 export default function MaboroshiPage({ remake = false }: { remake?: boolean }) {
   const [searchParams] = useSearchParams();
   const preset = searchParams.get('preset') || '';
-  const query = new URLSearchParams();
-  if (/^[a-z0-9-]{1,80}$/.test(preset)) query.set('preset', preset);
-  if (remake) query.set('workflow', 'remake');
-  const studioUrl = query.size ? `${STUDIO}?${query}` : STUDIO;
+  const studioUrl = maboroshiStudioUrl(preset, remake);
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
   const studioName = t(remake ? 'creator.toolRemake' : 'creator.toolMaboroshi');
