@@ -50,6 +50,10 @@ html[data-theme='glass'] :is(body, #app-root, #app-root > div > main, [data-main
 html[data-theme='glass'] [data-feed-nav-outer] {
   backdrop-filter: none !important;
 }
+html[data-theme='glass'] [data-glass-loading-surface] {
+  background: var(--glass-highlight), var(--theme-control-fill);
+  box-shadow: var(--glass-edge);
+}
 
 html[data-theme='glass'][data-theme] :is([data-feed-item], [data-page-bento], [data-side-panel]):not([data-bento-flat]):not(:has([data-page-bento])):not([data-keep-dark]):not(#_):not(#_) {
   border-radius: 24px;
