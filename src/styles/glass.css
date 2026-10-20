@@ -7,7 +7,7 @@ html[data-theme='glass'][data-theme] {
   --glass-raised: .72;
   --glass-blur: blur(18px) saturate(150%);
   --tint-glass-blur: var(--glass-blur);
-  --glass-highlight: linear-gradient(145deg, rgb(255 255 255 / .13), rgb(255 255 255 / .025) 40%, rgb(255 255 255 / .07));
+  --glass-highlight: linear-gradient(145deg, rgb(255 255 255 / .07), rgb(255 255 255 / .015) 40%, rgb(255 255 255 / .03));
   --glass-edge-flat: inset 0 0 0 1px rgb(225 255 255 / .65), inset 0 1.5px 1px rgb(255 255 255 / .95), inset 0 -2px 2px rgb(180 255 255 / .45), inset 0 -8px 16px -10px var(--tint-accent);
   --glass-edge: var(--glass-edge-flat), 0 2px 9px -4px color-mix(in srgb,var(--tint-accent) 70%,transparent), 0 14px 32px -22px rgb(0 0 0 / .65);
   --glass-edge-panel: var(--glass-edge);
