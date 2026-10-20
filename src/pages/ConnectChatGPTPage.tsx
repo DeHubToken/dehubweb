@@ -28,7 +28,7 @@ const steps = [
   },
   {
     get title() { return _translateCopy("copy.ae7947534d62", { defaultValue: "Enable the connector" }); },
-    get body() { return _translateCopy('accountConnect.step'); },
+    get body() { return _translateCopy('accountConnect.step', { defaultValue: 'For account controls, add https://dehub.io/mcp as an OAuth connector, sign in to DeHub and review the permissions before allowing access.' }); },
   },
   {
     get title() { return _translateCopy("copy.1c353e8894fb", { defaultValue: "Start a new chat and use it" }); },
@@ -50,7 +50,7 @@ const faqs: { q: string; a: string; aKey?: string }[] = [
   },
   {
     q: "What can the DeHub connector do?",
-    get a() { return _translateCopy('accountConnect.what'); },
+    get a() { return _translateCopy('accountConnect.what', { defaultValue: 'Browse public posts and profiles. With an OAuth account connection, manage your profile and privacy, publish posts and comments, follow people, read notifications, save bookmarks and generate images, video, audio and 3D assets. Generation uses DeHub\'s existing payment rules.' }); },
   },
   {
     q: "Do I need a DeHub account?",
