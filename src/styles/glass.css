@@ -8,8 +8,8 @@ html[data-theme='glass'][data-theme] {
   --glass-blur: blur(18px) saturate(150%);
   --tint-glass-blur: var(--glass-blur);
   --glass-highlight: linear-gradient(145deg, rgb(255 255 255 / .13), rgb(255 255 255 / .025) 40%, rgb(255 255 255 / .07));
-  --glass-edge-flat: inset 0 0 0 1px rgb(225 255 255 / .4), inset 0 1.5px 0 rgb(255 255 255 / .65), inset 0 -1px 0 rgb(255 255 255 / .16);
-  --glass-edge: var(--glass-edge-flat), 0 14px 32px -22px rgb(0 0 0 / .65);
+  --glass-edge-flat: inset 0 0 0 1px rgb(225 255 255 / .65), inset 0 1.5px 1px rgb(255 255 255 / .95), inset 0 -2px 2px rgb(180 255 255 / .45), inset 0 -8px 16px -10px var(--tint-accent);
+  --glass-edge: var(--glass-edge-flat), 0 2px 9px -4px color-mix(in srgb,var(--tint-accent) 70%,transparent), 0 14px 32px -22px rgb(0 0 0 / .65);
   --glass-edge-panel: var(--glass-edge);
   --tint-mix: color-mix(in srgb, var(--tint-accent) 32%, #04181c);
   --tint-card: .58;
@@ -78,46 +78,27 @@ html[data-theme='glass'] [data-article] {
 }
 
 [data-glass-background] {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 10%, color-mix(in srgb, var(--tint-accent) 32%, #003338), color-mix(in srgb, var(--tint-accent) 9%, #001b20));
+  position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+  background: radial-gradient(ellipse at 45% 25%, color-mix(in srgb, var(--tint-accent) 34%, #002c31), color-mix(in srgb, var(--tint-accent) 12%, #001b20));
 }
 [data-glass-light] {
-  position: absolute;
-  inset: -20%;
-  will-change: transform;
+  position: absolute; inset: -25%; width: 150%; height: 150%;
+  color: color-mix(in srgb, var(--tint-accent) 65%, #dfffff);
+  filter: blur(3px); will-change: transform;
   animation: glass-drift 36s ease-in-out infinite alternate;
-  background: radial-gradient(ellipse at 18% 30%, color-mix(in srgb, var(--tint-accent) 22%, transparent), transparent 42%);
 }
 [data-glass-light='two'] {
-  background: radial-gradient(ellipse at 80% 70%, rgb(185 255 250 / .12), transparent 38%);
-  animation-duration: 46s;
-  animation-direction: alternate-reverse;
-}
-[data-glass-light='one']::before {
-  content: ''; position: absolute; inset: 0;
-  background: color-mix(in srgb, var(--tint-accent) 70%, #dfffff);
-  mask: url('/themes/glass/caustics.png') center / cover no-repeat;
-  opacity: .9;
-}
-[data-glass-light='two']::before {
-  content: ''; position: absolute; inset: 0;
-  background: var(--tint-accent);
-  mask: url('/themes/glass/caustics.png') 70% 20% / 140% 140% no-repeat;
-  opacity: .35; transform: rotate(160deg) scale(1.4);
-}
-[data-glass-light='three'] {
-  background: radial-gradient(ellipse at 55% 100%, color-mix(in srgb, var(--tint-accent) 18%, transparent), transparent 45%);
-  animation-duration: 54s;
-  animation-delay: -17s;
+  color: var(--tint-accent); opacity: .4;
+  animation: glass-crossflow 49s ease-in-out infinite alternate;
 }
 [data-glass-background][data-paused='true'] [data-glass-light] { animation-play-state: paused; }
 @keyframes glass-drift {
-  from { transform: translate3d(-2%, -1%, 0) rotate(-4deg) scale(1); }
-  to { transform: translate3d(3%, 3%, 0) rotate(4deg) scale(1.08); }
+  from { transform: translate3d(-3%, -2%, 0) rotate(-12deg) scale(1.1); }
+  to { transform: translate3d(4%, 4%, 0) rotate(12deg) scale(1.18); }
+}
+@keyframes glass-crossflow {
+  from { transform: translate3d(3%, 3%, 0) rotate(-35deg) scale(1.4); }
+  to { transform: translate3d(-4%, -3%, 0) rotate(-18deg) scale(1.25); }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-glass-light] { animation: none; will-change: auto; }
@@ -153,18 +134,18 @@ html[data-theme='glass'] [data-glass-audio-preview] [data-glass-audio-options] {
 html[data-theme='glass'] [data-glass-audio] {
   position: relative;
   display: flex; flex-direction: column; justify-content: flex-end;
-  min-height: 240px; padding: 18px 20px 12px; overflow: visible;
+  min-height: 210px; padding: 12px 0 0; overflow: visible;
   border-radius: 28px; color: #efffff;
   background: linear-gradient(145deg, color-mix(in srgb, var(--tint-accent) 24%, transparent), rgb(0 28 32 / .3));
   box-shadow: var(--glass-edge);
 }
 html[data-theme='glass'] :is([data-audio-frame], [data-audio-backdrop]) { background: transparent !important; border: 0; border-radius: 28px; }
-html[data-theme='glass'] [data-audio-frame]:not([data-video-fullscreen]) { height: 300px !important; min-height: 270px; aspect-ratio: auto !important; width: 100% !important; }
+html[data-theme='glass'] [data-audio-frame]:not([data-video-fullscreen]) { height: 220px !important; min-height: 210px; aspect-ratio: auto !important; width: 100% !important; }
 [data-glass-audio-title] { display: grid; text-align: center; gap: 3px; margin: 0 45px 4px; }
 [data-glass-audio-title] strong { font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 [data-glass-audio-title] span { font-size: 11px; letter-spacing: .08em; opacity: .8; }
-html[data-theme='glass'] [data-glass-audio] > canvas { width: 100%; height: 80px !important; flex: 1; min-height: 45px; background: transparent !important; }
-[data-glass-audio-deck] { position: relative; padding: 10px 16px; border-radius: 44px; background: linear-gradient(160deg, rgb(210 255 255 / .13), rgb(0 20 24 / .38)); box-shadow: var(--glass-edge-flat), 0 0 30px color-mix(in srgb, var(--tint-accent) 18%, transparent); }
+html[data-theme='glass'] [data-glass-audio] > canvas { width: 100%; height: 48px !important; flex: 1; min-height: 32px; padding: 0 24px; background: transparent !important; }
+[data-glass-audio-deck] { position: relative; padding: 9px 24px 12px; border-radius: 48px; background: radial-gradient(ellipse at 50% 0%, color-mix(in srgb,var(--tint-accent) 32%,transparent),transparent 65%), linear-gradient(160deg, rgb(210 255 255 / .12), rgb(0 20 24 / .32)); box-shadow: var(--glass-edge-flat), 0 0 30px color-mix(in srgb, var(--tint-accent) 18%, transparent); }
 [data-glass-audio-time] { display:flex; justify-content:space-between; font-size:10px; font-variant-numeric:tabular-nums; }
 [data-glass-audio-deck] > input { width:100%; height:10px; accent-color: #d7ffff; cursor:pointer; }
 html[data-theme='glass'] [data-glass-audio-deck] > input { appearance: none; background: transparent; }
