@@ -28,6 +28,8 @@ def fixture(path):
         stream = output.add_stream('libx264', rate=24)
         stream.width, stream.height, stream.pix_fmt = 96, 96, 'yuv420p'
         stream.options = {'crf': '18', 'threads': '1'}
+        audio = output.add_stream('aac', rate=44100)
+        audio.layout = 'stereo'
         for index in range(144):
             pixels = np.zeros((96, 96, 3), dtype=np.uint8)
             pixels[:, :, index // 48] = 220
@@ -35,8 +37,6 @@ def fixture(path):
             frame.pts, frame.time_base = index, Fraction(1, 24)
             for packet in stream.encode(frame): output.mux(packet)
         for packet in stream.encode(): output.mux(packet)
-        audio = output.add_stream('aac', rate=44100)
-        audio.layout = 'stereo'
         samples = np.sin(np.arange(44100 * 6) * 2 * np.pi * 440 / 44100).astype(np.float32) * .1
         for index in range(0, len(samples), 1024):
             frame = av.AudioFrame.from_ndarray(np.stack([samples[index:index + 1024]] * 2), format='fltp', layout='stereo')
