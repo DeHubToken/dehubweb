@@ -172,6 +172,7 @@ class RemakeTests(unittest.TestCase):
             with self.assertRaises(OSError): remake.plan(access.job(IDENT), [2, 4])
         first = remake.read(self.folder)['shots'][0]['id']
         self.assertEqual(self.client.post(f'/jobs/{first}/draft', data={'price_micros': 1190000}).status_code, 409)
+        access.update(IDENT, state='editing')
         project = self.plan()
         self.assertEqual(project['remake']['shots'][0]['id'], first)
         self.assertFalse(project['remake']['building'])

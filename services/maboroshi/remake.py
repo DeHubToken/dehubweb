@@ -49,6 +49,13 @@ def metadata(path):
 
 def scan(path):
     """Decode small scene features on the hosted worker; never invoke generation."""
+    path = Path(path)
+    cache = path.with_name('remake-scan.json')
+    fingerprint = [path.stat().st_size, path.stat().st_mtime_ns]
+    if cache.exists():
+        saved = json.loads(cache.read_text())
+        if saved.get('source') == fingerprint:
+            return saved['result']
     rate, count, _, _ = metadata(path)
     previous = None
     candidates = []
@@ -72,7 +79,11 @@ def scan(path):
     for index, score in sorted(candidates, key=lambda item: -item[1]):
         if all(abs(index - saved) >= math.ceil(float(rate) * .2) for saved in chosen):
             chosen.append(index)
-    return {'fps': float(rate), 'frames': count, 'cuts': [round(index / float(rate), 4) for index in sorted(chosen)], 'maxShots': MAX_SHOTS}
+    result = {'fps': float(rate), 'frames': count, 'cuts': [round(index / float(rate), 4) for index in sorted(chosen)], 'maxShots': MAX_SHOTS}
+    temporary = cache.with_suffix('.tmp')
+    temporary.write_text(json.dumps({'source': fingerprint, 'result': result}))
+    temporary.replace(cache)
+    return result
 
 
 def ranges(cuts, rate, frames):
@@ -152,7 +163,8 @@ def plan(row, cuts):
     existing = read(folder)
     if existing and not existing.get('building'):
         raise HTTPException(409, 'This project already has a shot plan. Open its saved shots.')
-    if row['renderer'] != 'kling' or row['state'] != 'prepared' or not row['reference'] or child(folder):
+    resumable = row['state'] == 'editing' and existing and existing.get('building')
+    if row['renderer'] != 'kling' or row['state'] != 'prepared' and not resumable or not row['reference'] or child(folder):
         raise HTTPException(409, 'Save image references and approve a Kling source before making a shot plan.')
     mask_review.require_approved(folder)
     rate, frames, width, height = metadata(folder / 'upload.mp4')
@@ -165,9 +177,9 @@ def plan(row, cuts):
     for start, end in selected[len(manifest['shots']):]:
         manifest['shots'].append(create_shot(row, start, end, rate))
         write(folder, {**manifest, 'building': True})
+    access.update(row['id'], state='editing', status='Shot plan saved. Generate each shot, then assemble your edit.')
     manifest.pop('building', None)
     write(folder, manifest)
-    access.update(row['id'], state='editing', status='Shot plan saved. Generate each shot, then assemble your edit.')
     return manifest
 
 
@@ -188,8 +200,8 @@ def revise(row, index, prompt):
     next_shot = create_shot(row, selected['start'], selected['end'], Fraction(manifest['fps']), prompt, selected['id'])
     selected['versions'].append(next_shot['id'])
     selected['id'] = next_shot['id']
-    write(folder, manifest)
     access.update(row['id'], state='editing', status='Revision saved. Only this shot needs a new generation.')
+    write(folder, manifest)
     return manifest
 
 
@@ -211,8 +223,8 @@ def select_version(row, index, ident):
     if active['state'] not in ('complete', 'prepared') or active['state'] == 'prepared' and access.payment_reference(active, 'draft'):
         raise HTTPException(409, 'Resolve the current paid render before switching versions.')
     selected['id'] = ident
-    write(folder, manifest)
     access.update(row['id'], state='editing', status='Shot version selected. Assemble again to include it in the edit.')
+    write(folder, manifest)
 
 
 def assemble(row):
