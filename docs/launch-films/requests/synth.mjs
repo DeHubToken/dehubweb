@@ -1,4 +1,6 @@
-// DeHub Requests ad — soundtrack. Same phonk kit as the editor launch film (F minor, 140 BPM), cut to 15 s.
+// DeHub Requests ad — soundtrack. Drum and bass at 175 BPM in F minor: two-step breaks, reese bass and sub,
+// with the editor launch film's synth kit for the UI sounds. The picture runs on a 140 BPM grid and
+// 175 = 140 x 1.25, so each section's bars start exactly on its picture hit.
 // distorted sliding 808, half-swung hats, claps on 2 and 4. Every UI action in the picture has its own
 // synthesized sound on the exact frame (event times come from the film page). No samples.
 import fs from 'fs';
@@ -254,53 +256,75 @@ function outroSoundSample(time) {
 }
 
 // ------------------------------------------------------------- arrangement
-const ROOT = [29, 37, 34, 36];
-const RIFF = [
-  [[0, 77], [3, 77], [6, 80], [8, 77], [10, 75], [11, 77], [14, 72]],
-  [[0, 73], [3, 73], [6, 77], [8, 73], [10, 72], [11, 73], [14, 70]],
-  [[0, 70], [3, 70], [6, 73], [8, 70], [10, 68], [11, 70], [14, 72]],
-  [[0, 72], [3, 72], [6, 76], [8, 72], [10, 67], [11, 72], [14, 76]],
-];
-const CHORD = [[53, 56, 60], [49, 53, 56], [46, 49, 53], [48, 52, 55]];
-const sw = s => s % 2 ? ST * .14 : 0;
-function groove(b0, b1, o = {}) {
-  const { kick: K = true, bass = true, cow = true, clapOn = true, hats = 8, cowLP = 20000, cowAmp = .3, vox: VX = false, rollEnd = true, kickAmp = 1, bassAmp = 1 } = o;
-  for (let bar = Math.floor(b0 / 4); bar * 4 < b1; bar++) {
-    const k = ((bar - 1) % 4 + 4) % 4, base = bt(bar * 4);
+const DB = 60 / 175, D16 = DB / 4; // drum and bass grid
+function snare(t0, amp = 1, rv = .22) {
+  const i0 = Math.round(t0 * SR), f = new SVF(), hp = new SVF(); let ph = 0;
+  for (let i = 0; i < .26 * SR; i++) {
+    const t = i / SR; ph += 2 * Math.PI * (185 + 60 * Math.exp(-t * 60)) / SR;
+    const body = Math.sin(ph) * Math.exp(-t * 28) * .7;
+    const nz = hp.run(f.run(noise(), 7000, .1).lp, 900, .2).hp * Math.exp(-t * 17) * 1.1;
+    const y = Math.tanh((body + nz) * 1.8) * .55 * amp;
+    put(DR, i0 + i, y, y * .97); put(REV, i0 + i, y * rv);
+  }
+}
+function dkick(t0, amp = 1) {
+  KICKS.push(t0);
+  const i0 = Math.round(t0 * SR); let ph = 0;
+  for (let i = 0; i < .26 * SR; i++) {
+    const t = i / SR, fq = 52 + 170 * Math.exp(-t * 42);
+    ph += 2 * Math.PI * fq / SR;
+    const env = t < .002 ? t / .002 : Math.exp(-t * 13);
+    put(DR, i0 + i, Math.tanh((Math.sin(ph) * env + noise() * Math.exp(-t * 700) * .4) * 2.2) * .8 * amp);
+  }
+}
+function reese(t0, dur, note, amp = .5) { // two detuned saws, distorted, low-passed with a wobble; plus a clean sub
+  const i0 = Math.round(t0 * SR), f0 = mtof(note), fl = new SVF(), fr = new SVF();
+  let a = 0, b = 0, c = 0, sub = 0;
+  for (let i = 0; i < (dur + .05) * SR; i++) {
+    const t = i / SR;
+    a += f0 * 1.009 / SR; b += f0 * .991 / SR; c += f0 * 2.003 / SR; sub += 2 * Math.PI * f0 / 2 / SR;
+    const saw = (2 * (a % 1) - 1) + (2 * (b % 1) - 1) + .35 * (2 * (c % 1) - 1);
+    const wob = .5 + .5 * Math.sin(2 * Math.PI * t / (DB * 2) - Math.PI / 2);
+    const fc = 180 + 1700 * wob ** 1.5;
+    const env = Math.min(1, t / .01) * (t < dur ? 1 : Math.max(0, 1 - (t - dur) / .05));
+    const yl = Math.tanh(fl.run(saw, fc * 1.02, .35).lp * 1.6) * .32 * env * amp;
+    const yr = Math.tanh(fr.run(saw, fc * .98, .35).lp * 1.6) * .32 * env * amp;
+    const sb = Math.sin(sub) * .55 * env * amp;
+    put(BS, i0 + i, yl + sb, yr + sb);
+  }
+}
+const ROOT = [41, 37, 34, 36]; // F, Db, Bb, C (reese an octave above the sub)
+// Two-step break: kick 1 and the "and" of 3, snares on 2 and 4, ghosts and shuffled hats. Bars start at t0 (seconds).
+function dnb(t0, t1, o = {}) {
+  const { bass = true, ghosts = true, ride = true, roll = true, first = 0 } = o;
+  for (let bar = 0; t0 + bar * DB * 4 < t1 - 1e-4; bar++) {
+    const base = t0 + bar * DB * 4, k = (first + bar) % 4;
+    if (bass) reese(base, Math.min(DB * 4, t1 - base) - .02, ROOT[k], .9);
     for (let s = 0; s < 16; s++) {
-      const bb = bar * 4 + s / 4; if (bb < b0 - 1e-6 || bb >= b1 - 1e-6) continue;
-      const t = base + s * ST + sw(s);
-      if (K && [0, 6, 10].includes(s)) kick(t, kickAmp * (s ? .9 : 1));
-      if (bass) {
-        if (s === 0) b808(t, ST * 5.5, ROOT[k], bassAmp);
-        if (s === 6) b808(t, ST * 3.5, ROOT[k], bassAmp * .9);
-        if (s === 10) b808(t, ST * 3.6, ROOT[k], bassAmp * .9, k === 3 ? ROOT[k] + 5 : ROOT[k] + 12);
-        if (s === 14) b808(t, ST * 1.8, ROOT[k] + (k % 2 ? 7 : 0), bassAmp * .8);
-      }
-      if (clapOn && (s === 4 || s === 12)) clap(t, 1);
-      if (hats === 8 && s % 2 === 0) hat(t, s % 4 ? .13 : .2, false, .25);
-      if (hats === 16) hat(t, s % 4 === 0 ? .2 : s % 2 ? .1 : .15, false, .25);
-      if (rollEnd && k === 3 && s >= 13) { hat(t + ST / 3, .1, false, -.2); hat(t + 2 * ST / 3, .1, false, -.2); }
-      if (s === 2 && k % 2 === 1) hat(t, .12, true, -.3);
-      if (cow) for (const [cs, n] of RIFF[k]) if (cs === s) cowbell(t, n, cowAmp, .17, cowLP, s % 4 ? .25 : -.15);
-      if (VX && [2, 7, 13].includes(s)) vox(t, ST * (s === 7 ? 1.6 : .9), CHORD[k][s % 3] + 12, (s * 3 + k) % 4, .11, (s % 2 ? .3 : -.3));
+      const t = base + s * D16 + (s % 2 ? D16 * .1 : 0);
+      if (t >= t1 - 1e-4) break;
+      if (s === 0 || s === 10 || (bar % 2 === 1 && s === 7)) dkick(t, s ? .9 : 1);
+      if (s === 4 || s === 12) snare(t, 1);
+      if (ghosts && (s === 7 || s === 9 || s === 15)) snare(t, .22, .05);
+      if (s % 2 === 0) hat(t, s % 4 ? .16 : .1, false, .25);
+      else hat(t, .07, false, -.2);
+      if (ride && s % 4 === 2) hat(t, .09, true, -.3);
+      if (roll && bar % 2 === 1 && s >= 14) { snare(t + D16 / 2, .3, .05); }
     }
   }
 }
-const slam = (b, n, a = 1, len = .45) => { kick(bt(b), 1); b808(bt(b), bt(len), n, 1.1 * a); impact(bt(b), .7 * a, .5); clap(bt(b), .8); };
-// ---- intro: the riff through the wall, typing on top
-pad(0, bt(3.6), [53, 56, 60, 65], .09, 900);
-groove(0, 3.5, { kick: false, bass: false, clapOn: false, hats: 0, cowLP: 900, cowAmp: .26, rollEnd: false });
-b808(0, bt(3.4), 29, .45);
-for (let b = 2; b < 3.5; b += .5) hat(bt(b), .06 + .05 * (b - 2) / 1.5, false, .2);
-for (let b = 2.5; b < 3.5; b += .25) clap(bt(b), .12 + .3 * (b - 2.5), .1);
-riser(bt(2), bt(4), .38);
+const slam = (b, n, a = 1) => { dkick(bt(b), 1); reese(bt(b), bt(.45), n, .9 * a); impact(bt(b), .7 * a, .5); snare(bt(b), .8); };
+// ---- intro: pad and atmosphere, typing on top, a snare roll into the drop
+pad(0, bt(3.7), [53, 56, 60, 65], .1, 1200);
+for (let s = 0; bt(.5) + s * D16 < bt(4); s += 2) hat(bt(.5) + s * D16, .04 + .06 * s / 24, false, .2);
+{ const r0 = bt(4) - DB * 2; for (let s = 0; s < 8; s++) snare(r0 + s * D16, .12 + .5 * s / 8, .08); for (let s = 0; s < 8; s++) snare(r0 + DB * 2 * .5 + s * D16 / 2, .3 + .4 * s / 8, .06); }
+riser(bt(2), bt(4), .4);
 revCym(bt(3), bt(4), .3);
 E.type.forEach(t => typeClick(t));
 E.click.filter(t => t < bt(4)).forEach(t => uiClick(t, .5));
 // ---- drop: the page
-impact(bt(4), 1); boom(bt(4), .55); whoosh(bt(3.85), .5, .5, 300, 7000, .6, -.6);
-groove(4, 15.5, { hats: 16 });
+impact(bt(4), 1); boom(bt(4), .5); whoosh(bt(3.85), .5, .5, 300, 7000, .6, -.6);
+dnb(bt(4), bt(15.6), { first: 0 });
 pop(bt(4.4), .28, 520);
 E.float.forEach((t, i) => pop(t, .09, 800 + (i % 5) * 140));
 const SCALE = [72, 75, 77, 80];
@@ -310,28 +334,27 @@ bell(bt(12.4), 1318.5, .22); shimmer(bt(12.4), bt(1.2), .1); impact(bt(12.4), .5
 pop(bt(13.2), .25, 700); bell(bt(13.3), 1760, .14);
 E.pop.forEach(t => pop(t, .22, 600));
 E.click.filter(t => t > bt(4)).forEach(t => uiClick(t, .55));
-for (let b = 15; b < 15.9; b += b < 15.5 ? .25 : 1 / 8) clap(bt(b), .25 + .55 * (b - 15) / .9, .08);
 riser(bt(14), bt(16), .42); revCym(bt(15), bt(16), .35);
 // ---- YOU PROMPT IT. WE SHIP IT.
 impact(bt(16), 1); boom(bt(16), .6);
 const S3 = E.slam.filter(t => t < bt(19.9));
-[[29, 1, .45], [29, 1, 1.0], [25, .9, .45], [24, 1, 1.0]].forEach(([n, a, len], i) => { if (S3[i] != null) slam(S3[i] / B, n, a, len); });
-revCym(bt(17), bt(18), .25);
+[[41, 1], [41, 1], [37, .9], [36, 1]].forEach(([n, a], i) => { if (S3[i] != null) slam(S3[i] / B, n, a); });
+for (let s = 0; s < 8; s++) snare(bt(19) + s * D16, .15 + .5 * s / 8, .06);
 riser(bt(19), bt(20), .4); whoosh(bt(19.5), bt(.5), .5, 400, 9000, -.6, .6);
 // ---- PROMPT / VOTE / BUILD / SHIP
-groove(20, 23.5, { hats: 16, vox: true, cowAmp: .32 });
-E.tick.forEach((t, i) => { blip(t, SCALE[i] + 5, .18, i % 2 ? .35 : -.35); impact(t, .4, .3); });
+dnb(bt(20), bt(23.5), { first: 2 });
+E.tick.forEach((t, i) => { blip(t, SCALE[i] + 5, .18, i % 2 ? .35 : -.35); impact(t, .35, .3); });
 const TAPE = [bt(23.5), bt(24)];
 // ---- the question
 const S4 = E.slam.filter(t => t >= bt(23.9) && t < E.qmark - .01);
-S4.forEach((t, i) => slam(t / B, [29, 32, 34, 36, 37][i % 5], .9 + i * .03, .45));
+S4.forEach((t, i) => slam(t / B, [41, 44, 46, 48, 49][i % 5], .9 + i * .03));
 pad(bt(24), bt(29.6), [49, 53, 56, 61], .09, 2400);
-boom(E.qmark, .85); impact(E.qmark, 1, .7); kick(E.qmark, 1); b808(E.qmark, bt(1), 29, 1.1); scratch(E.qmark - .02, .35);
-groove(Math.ceil(E.qmark / B + .5), 29.5, { hats: 16, kickAmp: .9 });
+boom(E.qmark, .85); impact(E.qmark, 1, .7); dkick(E.qmark, 1); scratch(E.qmark - .02, .35);
+dnb(E.qmark + DB, bt(29.6), { first: 0, roll: false });
 shimmer(bt(27.4), bt(1.2), .11); shimmer(bt(28.4), bt(1), .09);
 revCym(bt(28.5), bt(30), .4); whoosh(bt(29.5), bt(.6), .5, 400, 9000, .5, -.5);
 // ---- end card
-impact(bt(30), 1, .8); kick(bt(30), 1); b808(bt(30), 2.2, 29, 1.1);
+impact(bt(30), 1, .8); dkick(bt(30), 1); reese(bt(30), 1.6, 41, .9);
 pad(bt(30), bt(30) + 1.8, [53, 56, 60, 65], .07, 1400, .6);
 { const i0 = Math.round(bt(30) * SR); for (let i = 0; i < 1.8 * SR; i++) { const x = outroSoundSample(i / SR) * 2.4; put(FX, i0 + i, x); put(REV, i0 + i, x * .4); } }
 
