@@ -16,7 +16,7 @@ html[data-system-tone="light"] [data-theme-page-surface] {
   color: var(--ink);
 }
 
-html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) [data-theme-page-surface] {
+html:is([data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror']) [data-theme-page-surface] {
   background-color: rgb(var(--glass-tint) / var(--glass-regular));
   color: #fff;
 }
@@ -172,25 +172,25 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
   [data-theme-control-active] > [data-theme-control-surface]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
   background: var(--control-sheen), var(--control-raised) !important;
 }
-html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *) {
   background: var(--glass-highlight), var(--theme-control-fill, rgb(var(--glass-tint) / var(--glass-regular))) !important;
   border-color: transparent !important;
   box-shadow: var(--glass-edge-flat) !important;
   backdrop-filter: var(--glass-blur) !important;
 }
-html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::before,
-html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-theme='light'], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::after {
   background-image: none !important;
 }
-html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
-  [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::before, html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+  [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::before, html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'], [data-system-tone="light"], [data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-surface]:not([data-on-media]):not([data-on-media] *):not([data-keep-dark]):not([data-keep-dark] *)::after {
   background-image: none !important;
 }
-html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-active] > [data-theme-control-surface]:not([data-on-media] *):not([data-keep-dark] *) {
   background: var(--glass-highlight), var(--theme-control-raised) !important;
 }
@@ -230,7 +230,7 @@ html:is([data-theme='system'], [data-theme='immersive'], [data-theme='minimal'],
   [data-theme-control-label]:not([data-on-media] *):not([data-keep-dark] *):not([data-keep-white] *) {
   color: var(--control-ink) !important;
 }
-html:is([data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
+html:is([data-theme='glass'], [data-theme='cosmic'], [data-theme='hazy'], [data-theme='swarms'], [data-theme='lavalamp'], [data-theme='winter'], [data-theme='war'], [data-theme='osaka'], [data-theme='jungle'], [data-theme='island'], [data-theme='hacker'], [data-theme='horror'])
   [data-theme-control-label]:not([data-on-media] *):not([data-keep-dark] *) {
   color: var(--theme-control-foreground, #fff) !important;
 }

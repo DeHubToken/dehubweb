@@ -19,6 +19,7 @@ const DEFAULT_DIM_STRENGTH = 50;
 // is a hue; negative values are special modes (see THEME_COLOR). Cosmic ships
 // as White to preserve its classic white/grey nebula look.
 export const DEFAULT_THEME_HUES: Record<string, number> = {
+  glass: 185,
   cosmic: THEME_COLOR.WHITE,
   hazy: 260,
   swarms: 200,
