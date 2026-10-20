@@ -567,7 +567,17 @@ export function AudioVisualizer({
         staticAnalyser.getByteFrequencyData(freq);
         staticData = freq;
       }
-      drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
+      if (theme === 'glass') {
+        ctx.clearRect(0, 0, width, height);
+        const shape = peaksRef.current?.length ? peaksRef.current : idleShape;
+        const step = width / shape.length;
+        shape.forEach((peak, index) => {
+          const level = staticData.length ? staticData[Math.floor(index / shape.length * staticData.length)] / 255 : 0;
+          const barHeight = Math.max(3, Math.min(1, peak + level * .15) * height * .88);
+          ctx.fillStyle = index / shape.length <= progress ? '#efffff' : 'rgba(190,255,250,.65)';
+          ctx.fillRect(index * step, height - barHeight, Math.max(1, step * .55), barHeight);
+        });
+      } else drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
       return;
     }
 
