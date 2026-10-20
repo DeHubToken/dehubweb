@@ -73,6 +73,7 @@ import {
   activateWalletKey,
   addressFromProvider,
   restoreWalletSession,
+  ensureWalletUnlocked,
   isWalletUnlocked,
   isUnlockAvailable,
   lockWallet,
@@ -114,8 +115,53 @@ import {
 } from '@/lib/profiles';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 import { finishWalletUnlock, setWalletUnlockPrompt } from '@/lib/wallet-unlock-flow';
+import { hasLegacyBrowserResidue, checkLegacyAccount } from '@/lib/wallet-core/legacy-detect';
+import { getWalletSetupIntent } from '@/lib/wallet-setup-intent';
 
 const authLogger = createLogger('Auth');
+
+// Off the boot path: only a sign-up, or a silent sign-up's first wallet
+// action, needs these.
+const loadDeviceSeed = () => import('@/lib/wallet-core/device-seed');
+const loadWalletSecureFlow = () => import('@/lib/wallet-secure-flow');
+// lib/wallet-secure-flow's WALLET_SECURE_REQUIRED_EVENT, inlined so that
+// listening for it loads nothing.
+const WALLET_SECURE_REQUIRED_EVENT = 'dehub:wallet-secure-required';
+
+/**
+ * The wallet of a brand-new account, made with no screen at all.
+ *
+ * Sign-up used to stop at "Secure account" before the app had even opened:
+ * Apple's review of the iOS app hit the same step and never got past it. The
+ * backend only creates an account from a wallet signature, so a wallet is
+ * still made here; its words are kept on this browser (wallet-core/device-seed)
+ * and "Secure your wallet" waits for the first action that uses it
+ * (lib/wallet-secure-flow.ts). Backing up stays the later reminder.
+ *
+ * Returns the key to sign in with, or null to keep the visible setup step:
+ *  - "Migrate account" / "Import" was chosen on the login sheet;
+ *  - this login may have an older DeHub account (the step offers to bring it
+ *    back — a silent wallet here would be a second account), or the check
+ *    could not answer;
+ *  - this browser cannot hold the words, so nothing could reopen the wallet.
+ */
+async function makeSilentSignupWallet(userId: string): Promise<string | null> {
+  if (getWalletSetupIntent()) return null;
+  // WalletCreateStep's MIGRATE_PENDING_KEY: a legacy migration redirect is
+  // mid-flight and lands on that step.
+  try { if (sessionStorage.getItem('dehub_legacy_migration_pending')) return null; } catch { /* storage blocked */ }
+  if (hasLegacyBrowserResidue()) return null;
+  const hint = await checkLegacyAccount().catch(() => null);
+  if (hint?.exists !== false) return null;
+  const { generateMnemonic12, deriveFromSecret } = await import('@/lib/wallet-core/derive');
+  const derived = deriveFromSecret(generateMnemonic12());
+  const { saveDeviceSeed } = await loadDeviceSeed();
+  if (!(await saveDeviceSeed(userId, derived.secret, derived.ethAddress))) return null;
+  // No password wrap yet, exactly like a biometrics-only wallet.
+  await saveWallet(userId, derived.ethAddress, null);
+  authLogger.trace?.('wallet-created-silently');
+  return derived.ethPrivateKey;
+}
 
 /**
  * Who asked for the wallet signature.
@@ -379,6 +425,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // unlock requests as one UI operation so they cannot repeatedly reopen the
   // same sheet while the user is already completing it.
   const walletUnlockPromptActiveRef = useRef(false);
+  // An unlock request is being answered from a silent sign-up's words.
+  const seedUnlockInFlightRef = useRef(false);
+  // proceedToWalletPhase is memoised long before completeSmartWalletLogin's
+  // latest render; the silent sign-up calls through this instead.
+  const completeSmartWalletLoginRef = useRef<((privKeyHex: string) => Promise<void>) | null>(null);
   // The address this Supabase identity is linked to, when it is NOT the wallet
   // this browser holds — set by completeLoginWithoutUnlock when it refuses the
   // exchange, and consumed by the signature that follows, which moves the
@@ -621,6 +672,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const closeLoginModal = useCallback(() => {
     finishWalletUnlock(false);
+    // Closing "Secure your wallet" cancels the action that raised it; the offer
+    // comes back at the next one.
+    void loadWalletSecureFlow().then((m) => m.finishWalletSecure(false));
     walletUnlockPromptActiveRef.current = false;
     toast.dismiss('wallet-unlock-required');
     connectionAbortedRef.current = true;
@@ -783,6 +837,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * from a DIFFERENT account keeps showing that account's data on screen
    * while this new identity's wallet flow runs underneath in the modal.
    */
+  /** Sign a silent sign-up in; on failure the "Try again" toast below replaces its own. */
+  const completeSilentSignup = async (privKeyHex: string) => {
+    try {
+      await completeSmartWalletLoginRef.current!(privKeyHex);
+    } catch (e) {
+      toast.dismiss('auth-smart-wallet');
+      throw e;
+    }
+  };
+
   const proceedToWalletPhase = useCallback(async (userId: string) => {
     if (!readAuthTrace().auth_attempt_id) beginAuthTrace('resume');
     advanceAuthTrace('identity-established', userId);
@@ -890,6 +954,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // the wallet's own signature is what finishes the sign-up. Refusing here
         // sent these people back to the login options on every attempt.
         authLogger.warn('Resuming an unfinished sign-up', { address: existing.ethAddress });
+        // A silent sign-up whose sign-in did not finish: its words are still
+        // on this browser, so it finishes the same way, asking nothing.
+        const seed = await (await loadDeviceSeed()).readDeviceSeed(userId);
+        if (seed && seed.address === existing.ethAddress.toLowerCase()) {
+          const { deriveFromSecret } = await import('@/lib/wallet-core/derive');
+          await completeSilentSignup(deriveFromSecret(seed.secret).ethPrivateKey);
+          return;
+        }
         setWalletPhase('unlock');
         openLoginModal();
         return;
@@ -897,6 +969,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: sessionData } = await supabase.auth.getSession();
       if (sessionData?.session?.user?.id !== userId) {
         throw new Error('Your sign-in session expired. Please sign in again.');
+      }
+      const silentKey = await makeSilentSignupWallet(userId);
+      if (silentKey) {
+        await completeSilentSignup(silentKey);
+        return;
       }
       setWalletPhase('create');
       authLogger.trace?.('wallet-setup-required');
@@ -1174,6 +1251,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       walletUnlockPromptActiveRef.current = true;
 
+      // A silent sign-up not yet secured has no password or biometrics for
+      // the unlock sheet to offer. ensureWalletUnlocked opens it from the
+      // words on this browser and then asks to secure it.
+      // In flight already means those words did not open it: fall through to
+      // the ordinary sheet rather than ask the same question again.
+      const seedUid = localStorage.getItem('dehub_supabase_uid');
+      if (seedUid && !seedUnlockInFlightRef.current) {
+        void loadDeviceSeed().then((m) => m.readDeviceSeed(seedUid)).then((seed) => {
+          if (!seed) {
+            showUnlockPrompt();
+            return;
+          }
+          walletUnlockPromptActiveRef.current = false;
+          seedUnlockInFlightRef.current = true;
+          ensureWalletUnlocked()
+            .then(() => finishWalletUnlock(true), () => finishWalletUnlock(false))
+            .finally(() => { seedUnlockInFlightRef.current = false; });
+        });
+        return;
+      }
+      showUnlockPrompt();
+    };
+    const showUnlockPrompt = () => {
       // How often this fires is the entire complaint about the built-in
       // wallet, and until now nothing counted it: authLogger.info is
       // console-only (lib/logger.ts drops info/debug before the network call),
@@ -1215,6 +1315,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener('dehub:wallet-unlock-required', handler);
     return () => window.removeEventListener('dehub:wallet-unlock-required', handler);
   }, [requestWalletUnlock]);
+
+  // "Secure your wallet": the first wallet action of a silent sign-up, raised
+  // by ensureWalletUnlocked (lib/wallet-secure-flow.ts). The sheet's
+  // 'wallet-secure' step answers it; closing the sheet cancels the action.
+  useEffect(() => {
+    const handler = () => {
+      const uid = supabaseUserId ?? localStorage.getItem('dehub_supabase_uid');
+      if (!uid) {
+        void loadWalletSecureFlow().then((m) => m.finishWalletSecure(true));
+        return;
+      }
+      setSupabaseUserId(uid);
+      setWalletPhase('secure');
+      openLoginModal();
+    };
+    window.addEventListener(WALLET_SECURE_REQUIRED_EVENT, handler);
+    return () => window.removeEventListener(WALLET_SECURE_REQUIRED_EVENT, handler);
+  }, [supabaseUserId, openLoginModal]);
 
   // Reconnect DM socket when user logs in
   useEffect(() => {
@@ -2595,6 +2713,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsConnecting(false);
     }
   };
+  completeSmartWalletLoginRef.current = completeSmartWalletLogin;
 
   /**
    * Social login via Supabase OAuth (full-page redirect).
