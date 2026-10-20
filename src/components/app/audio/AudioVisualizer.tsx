@@ -13,7 +13,7 @@ import {
   useAudioPostPlayback,
   type AudioPostTrack,
 } from '@/lib/audio-post-playback';
-import { Minimize, PictureInPicture2 } from "lucide-react";
+import { Minimize, PictureInPicture2, RotateCcw, RotateCw } from "lucide-react";
 import Volume2 from "@/components/ui/cut-icons/volume";
 import VolumeX from "@/components/ui/cut-icons/mute";
 import Maximize from "@/components/ui/cut-icons/fullscreen";
@@ -79,6 +79,7 @@ interface AudioVisualizerProps {
   isPlaying: boolean;
   onPlayPause: () => void;
   className?: string;
+  displayTitle?: string;
   showStylePicker?: boolean;
   /** When true the audio output is muted (visualizer still animates). */
   muted?: boolean;
@@ -185,6 +186,7 @@ export function AudioVisualizer({
   isPlaying: isPlayingProp,
   onPlayPause,
   className = '',
+  displayTitle,
   showStylePicker = true,
   muted = false,
   seed = 'default',
@@ -528,7 +530,7 @@ export function AudioVisualizer({
     const ro = new ResizeObserver(apply);
     ro.observe(canvas);
     return () => ro.disconnect();
-  }, []);
+  }, [theme]);
 
   /* ─── Drawing ─────────────────────────────────────────────────────────── */
 
@@ -567,7 +569,17 @@ export function AudioVisualizer({
         staticAnalyser.getByteFrequencyData(freq);
         staticData = freq;
       }
-      drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
+      if (theme === 'glass') {
+        ctx.clearRect(0, 0, width, height);
+        const shape = peaksRef.current?.length ? peaksRef.current : idleShape;
+        const step = width / shape.length;
+        shape.forEach((peak, index) => {
+          const level = staticData.length ? staticData[Math.floor(index / shape.length * staticData.length)] / 255 : 0;
+          const barHeight = Math.max(3, Math.min(1, peak + level * .15) * height * .88);
+          ctx.fillStyle = index / shape.length <= progress ? '#efffff' : 'rgba(190,255,250,.65)';
+          ctx.fillRect(index * step, height - barHeight, Math.max(1, step * .55), barHeight);
+        });
+      } else drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
       return;
     }
 
@@ -937,6 +949,40 @@ export function AudioVisualizer({
   const isEffectivelyMuted = muted || selfMuted || volume === 0;
 
   const stopBubble = (e: React.SyntheticEvent) => e.stopPropagation();
+
+  if (theme === 'glass') return (
+    <div data-no-swipe data-video-controls data-audio-player data-glass-audio className={className} onClick={stopBubble}>
+      <div data-glass-audio-title>
+        <strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
+        <span>{popoutTrack?.artist || t('audioPost.creator')}</span>
+      </div>
+      <canvas ref={canvasRef} width={canvasSize.w} height={canvasSize.h}
+        style={{ touchAction: 'pan-y' }}
+        onPointerDown={e => beginScrub(e.currentTarget, e, false)}
+        onPointerMove={e => moveScrub(e.currentTarget, e)}
+        onPointerUp={e => endScrub(e.currentTarget, e)} onPointerCancel={cancelScrub} />
+      <div data-glass-audio-deck>
+        <div data-glass-audio-time><span>{formatTime(displayTime)}</span><span>{formatTime(duration)}</span></div>
+        <input type="range" min={0} max={1000} step={1} value={Math.round(displayRatio * 1000)}
+          aria-label={_copy('copy.67ae3405bcd4', { defaultValue: 'Seek' })}
+          onChange={e => seekTo(Number(e.target.value) / 1000)} />
+        <div data-glass-audio-transport>
+          <button type="button" aria-label="−10 s" onClick={() => seekTo(duration ? (currentTime - 10) / duration : 0)}><RotateCcw /><small>10</small></button>
+          <button type="button" data-glass-audio-play aria-label={isPlaying ? t('audioPost.pause') : t('audioPost.play')} onClick={handlePlayPause}><MediaControlIcon icon={isPlaying ? Pause : Play} /></button>
+          <button type="button" aria-label="+10 s" onClick={() => seekTo(duration ? (currentTime + 10) / duration : 0)}><RotateCw /><small>10</small></button>
+        </div>
+      </div>
+      <details data-glass-audio-options>
+        <summary aria-label={t('nav.settings')}>•••</summary>
+        <div>
+          {popoutTrack && <button type="button" aria-label={isPoppedOut ? t('audioPost.closeCornerPlayer') : t('audioPost.popOut')} onClick={handlePopOut}><PictureInPicture2 /></button>}
+          <select aria-label={t('nav.settings')} value={style} onChange={e => setStyle(e.target.value as AnyStyle)}>{STYLES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}</select>
+          <Slider value={[isEffectivelyMuted ? 0 : Math.round(volume * 100)]} min={0} max={100} step={1} aria-label={_copy('copy.b10fb966d720', { defaultValue: 'Volume' })} onValueChange={value => { setVolume(value[0] / 100); setSelfMuted(value[0] === 0); videoPlaybackManager.globalMuted = value[0] === 0; onMuteChange?.(value[0] === 0); }} />
+          {onFullscreen && <button type="button" aria-label={isFullscreen ? _copy('copy.37fd4e355ba3', { defaultValue: 'Exit fullscreen' }) : _copy('copy.c461dbb2bab7', { defaultValue: 'Fullscreen' })} onClick={onFullscreen}><Maximize /></button>}
+        </div>
+      </details>
+    </div>
+  );
 
   return (
     <div data-no-swipe data-video-controls data-audio-player className={`relative ${className}`} {...bottomScrub}>
