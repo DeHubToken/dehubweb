@@ -311,7 +311,7 @@ function ReactionsGallery() {
 }
 
 const THEMES = [
-  'system', 'system-light', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
+  'system', 'system-light', 'minimal', 'light', 'glass', 'cosmic', 'hazy', 'swarms',
   'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror',
 ] as const;
 
