@@ -6,13 +6,14 @@ vi.mock("./render", () => ({ drawClip: calls.draw }));
 vi.mock("./brandOutro", async () => ({ ...await vi.importActual<typeof import("./brandOutro")>("./brandOutro"), drawBrandOutro: calls.outro }));
 vi.mock("./brandOutroArtwork", () => ({ loadBrandOutroArtwork: async () => ({ logo: {}, background: {}, globe: {}, star: {} }) }));
 vi.mock("./endingFile", () => ({ stampEnding: (blob: Blob) => blob }));
-vi.mock("mp4-muxer", () => ({ ArrayBufferTarget: class { buffer = new ArrayBuffer(4); }, Muxer: class { addVideoChunk() {} addAudioChunk() {} finalize() {} } }));
+const muxers = vi.hoisted(() => ({ options: [] as Array<{ video: { codec: string }; audio?: { codec: string } }> }));
+vi.mock("mp4-muxer", () => ({ ArrayBufferTarget: class { buffer = new ArrayBuffer(4); }, Muxer: class { constructor(options: { video: { codec: string }; audio?: { codec: string } }) { muxers.options.push(options); } addVideoChunk() {} addAudioChunk() {} finalize() {} } }));
 const snapshot = { title: "4K queue", settings: { width: 3840, height: 2160, fps: 30, background: "black" }, tracks: [{ id: "visual", kind: "video" }], clips: [{ id: "shape", trackId: "visual", kind: "shape", start: 0, duration: 1, trimIn: 0 }] } as unknown as ProjectSnapshot;
 type Input = { timestamp: number; close(): void };
 type Init = { output(chunk: unknown): void; error(error: Error): void };
 type Codec = { encodeQueueSize: number; state: string; config: Record<string, unknown>; close(): void };
 let videos: Codec[], audios: Codec[], timestamps: number[], audioTimes: number[], frameCloses: number, audioCloses: number, videoPeak: number, audioPeak: number;
-let failure: Error | undefined, stalled: boolean;
+let failure: Error | undefined, stalled: boolean, unsupported: string[];
 class Buffer {
   length: number; numberOfChannels: number; sampleRate: number; channels: Float32Array[];
   constructor(options: { length: number; numberOfChannels: number; sampleRate: number }) { Object.assign(this, options); this.length = options.length; this.numberOfChannels = options.numberOfChannels; this.sampleRate = options.sampleRate; this.channels = Array.from({ length: this.numberOfChannels }, () => new Float32Array(this.length)); }
@@ -20,6 +21,7 @@ class Buffer {
 }
 function codec(kind: "video" | "audio") {
   return class {
+    static isConfigSupported(config: { codec: string }) { return Promise.resolve({ supported: !unsupported.some(prefix => config.codec.startsWith(prefix)), config }); }
     encodeQueueSize = 0; state = "configured"; config: Record<string, unknown> = {}; init: Init;
     constructor(init: Init) { this.init = init; (kind === "video" ? videos : audios).push(this); }
     configure(config: Record<string, unknown>) { this.config = config; }
@@ -38,7 +40,7 @@ function codec(kind: "video" | "audio") {
   };
 }
 beforeEach(() => {
-  vi.useFakeTimers(); vi.clearAllMocks(); videos = []; audios = []; timestamps = []; audioTimes = []; frameCloses = 0; audioCloses = 0; videoPeak = 0; audioPeak = 0; stalled = false; failure = undefined;
+  vi.useFakeTimers(); vi.clearAllMocks(); muxers.options = []; videos = []; audios = []; timestamps = []; audioTimes = []; frameCloses = 0; audioCloses = 0; videoPeak = 0; audioPeak = 0; stalled = false; failure = undefined; unsupported = [];
   vi.stubGlobal("VideoEncoder", codec("video")); vi.stubGlobal("AudioEncoder", codec("audio"));
   vi.stubGlobal("VideoFrame", class { timestamp: number; constructor(_: unknown, options: { timestamp: number }) { this.timestamp = options.timestamp; } close() { frameCloses++; } });
   vi.stubGlobal("AudioData", class { timestamp: number; constructor(options: { timestamp: number }) { this.timestamp = options.timestamp; } close() { audioCloses++; } });
@@ -73,4 +75,15 @@ it("retains the asynchronous encoder failure after its queue is reset", async ()
   stalled = true; failure = new Error("Encoding device lost");
   const result = run().then(() => undefined, error => error); await vi.runAllTimersAsync();
   expect(await result).toBe(failure); expect(frameCloses).toBe(8); expect(videos[0].state).toBe("closed");
+});
+it("falls back to Opus and VP9 inside MP4 when the browser has no AAC or H.264 encoder", async () => {
+  unsupported = ["mp4a", "avc1"];
+  const result = run(); await vi.runAllTimersAsync(); await result;
+  expect(videos[0].config).toMatchObject({ codec: "vp09.00.10.08" }); expect(audios[0].config).toMatchObject({ codec: "opus" });
+  expect(muxers.options[0]).toMatchObject({ video: { codec: "vp9" }, audio: { codec: "opus" } });
+});
+it("still exports the picture when the browser cannot encode any audio", async () => {
+  unsupported = ["mp4a", "opus"];
+  const result = run(); await vi.runAllTimersAsync(); await result;
+  expect(audios).toHaveLength(0); expect(muxers.options[0].audio).toBeUndefined(); expect(timestamps).toHaveLength(96);
 });
