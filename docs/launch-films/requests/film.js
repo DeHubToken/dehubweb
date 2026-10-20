@@ -4,7 +4,12 @@
 const Q = new URLSearchParams(location.search);
 const W = +(Q.get('w') || 1920), H = +(Q.get('h') || 1080), VERT = H > W;
 const BPM = 140, B = 60 / BPM, bt = b => b * B;
-const END_B = 35, TOTAL = bt(END_B);
+// 18 s cut: the scenes are authored on the original 35-beat timeline; WARP stretches the prompt flow
+// (typing x1.5, the Requests page x1.42) and leaves the rest on the beat. [new beat, scene beat]
+const WARP = [[0, 0], [6, 4], [23, 16], [42, 35]];
+const warp = (x, i, o) => { for (let k = 0; k < WARP.length - 1; k++) { const a = WARP[k], c = WARP[k + 1]; if (x <= c[i] || k === WARP.length - 2) return a[o] + (c[o] - a[o]) * (x - a[i]) / (c[i] - a[i]); } };
+const sceneB = nb => warp(nb, 0, 1), filmB = sb => warp(sb, 1, 0);
+const END_B = 42, TOTAL = bt(END_B);
 const stage = document.getElementById('stage');
 stage.style.width = W + 'px'; stage.style.height = H + 'px';
 
@@ -35,8 +40,8 @@ const vis = (e, on) => { const d = on ? '' : 'none'; if (e._d !== d) { e.style.d
 const txt = (e, s) => { if (e._tx !== s) { e.textContent = s; e._tx = s; } };
 const CHROME = 'linear-gradient(180deg,#ffffff 0%,#f1f1f1 30%,#9a9a9a 49%,#5e5e5e 51%,#e9e9e9 66%,#bdbdbd 84%,#ffffff 100%)';
 const SHINE = 'linear-gradient(100deg, rgba(255,255,255,0) 44%, rgba(255,255,255,.98) 50%, rgba(255,255,255,0) 56%)';
-function shineInit(e) { e.style.backgroundImage = SHINE + ',' + CHROME; e.style.backgroundSize = '320% 100%, 100% 100%'; e.style.backgroundRepeat = 'no-repeat'; e.style.backgroundPosition = '130% 0, 0 0'; }
-function shine(e, p) { const v = p <= 0 || p >= 1 ? 130 : lerp(115, -15, p); const s = v.toFixed(1) + '% 0, 0 0'; if (e._sh !== s) { e.style.backgroundPosition = s; e._sh = s; } }
+function shineInit(e) { } // plain white type (no chrome)
+function shine(e, p) { }
 
 // The app's own icons: the "cut" set (32-unit grid, src/components/ui/cut-icons) and a few lucide ones.
 const CUT = {
@@ -390,6 +395,7 @@ function s2Update(b) {
   vis(s2, on); if (!on) return;
   const t = bt(b);
   const cam = camAt(b, CAM2);
+  if (VERT) { cam[0] = PW / 2; cam[2] = Math.min(cam[2], 1.06); cam[4] *= .5; } // phone: keep the whole page width on screen
   camApply(cam);
   // composer: posting, then cleared
   const posted = b >= 4.3;
@@ -563,7 +569,7 @@ function s4Update(b) {
   QEL.forEach(({ e, s, b0, fit }, qi) => {
     const p = P(b, b0, b0 + .3);
     op(e, P(b, b0 - .01, b0 + .04));
-    tf(e, `translateY(${(1 - ox(p)) * -60}px) rotateX(${(1 - ox(p)) * -60}deg) scale(${lerp(1.8, 1, ox(p)) * fit})`);
+    tf(e, `translateY(${(1 - ox(p)) * -60}px) rotateX(${(1 - ox(p)) * -60}deg) scale(${lerp(VERT ? 1.15 : 1.4, 1, ox(p)) * fit})`);
     shine(s, P(b, 27.4 + qi * .15, 28.3 + qi * .15));
   });
   const qp = P(b, QMARK_B, QMARK_B + .4);
@@ -647,13 +653,13 @@ FXE.push([QMARK_B, 22, .8, .35, 24, .6]);
 const MB = [[3.7, 4.9, 6, 1], [5.4, 5.8, 4, .7], [10.6, 12.5, 5, 1], [12.9, 13.7, 5, 1], [15.7, 16.8, 5, 1], [17.9, 18.8, 5, 1], [19.5, 20.4, 6, 1],
   [20.9, 21.3, 4, .8], [21.9, 22.3, 4, .8], [22.9, 23.3, 4, .8], [23.6, 24.4, 5, 1], [29.6, 30.3, 6, 1]];
 function fxAt(t) {
-  const b = t / B;
+  const b = sceneB(t / B);
   let rgb = 0, tear = 0, flash = 0, shake = 0, tearSeed = 0;
   for (const [eb, r, te, fl, sh, d] of FXE) {
     if (b < eb || b > eb + d) continue;
     const k = (1 - (b - eb) / d) ** 2;
-    rgb = Math.max(rgb, r * k); shake = Math.max(shake, sh * k); flash = Math.max(flash, fl * k ** 1.5);
-    if (te * k > tear) { tear = te * k; tearSeed = Math.round(eb * 100) + Math.floor((b - eb) / d * 6); }
+    rgb = Math.max(rgb, r * k * .5); shake = Math.max(shake, sh * k * .45); flash = Math.max(flash, fl * k ** 1.5 * .45);
+    if (te * k * .45 > tear) { tear = te * k * .45; tearSeed = Math.round(eb * 100) + Math.floor((b - eb) / d * 6); }
   }
   let mb = 1, sh = 0;
   for (const [a, z, n, s] of MB) if (b >= a && b < z) { mb = n; sh = s; }
@@ -664,7 +670,7 @@ const flashL = mk('div', 'fill', 'background:#fff;opacity:0;pointer-events:none'
 
 // ======================================================================= render
 function render(t) {
-  const b = t / B;
+  const b = sceneB(t / B);
   const fx = fxAt(t);
   const f = Math.floor(t * 60);
   const sx = fx.shake * (rnd(f * 1.37) - .5) * 2, sy = fx.shake * (rnd(f * 2.71 + 9) - .5) * 2;
@@ -697,6 +703,7 @@ window.ready = (async () => {
   SEL.forEach(f => { vis(f.box, true); f.fit = Math.min(1, (W * (VERT ? .88 : .8)) / f.word.offsetWidth); vis(f.box, false); });
   vis(s4, true);
   QEL.forEach(q => { const w = q.s.offsetWidth + (q === QEL[QEL.length - 1] ? qmark.offsetWidth : 0); q.fit = Math.min(1, (W * (VERT ? .9 : .86)) / w); });
+  for (const k in EVENTS) EVENTS[k] = Array.isArray(EVENTS[k]) ? EVENTS[k].map(x => bt(filmB(x / B))) : bt(filmB(EVENTS[k] / B));
   render(0);
   return true;
 })();

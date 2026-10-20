@@ -1,11 +1,13 @@
 # Requests ad
 
-15-second ad for the Requests page (`/features`), rendered as 1080×1920 and 1920×1080 at 60 fps with a -14 LUFS soundtrack. Built on the editor launch film's engine (glitch post pass and logo ending), with mono headlines and a drum and bass soundtrack (175 BPM).
+18-second ad for the Requests page (`/features`), rendered as 1080×1920 and 1920×1080 at 60 fps with a -14 LUFS soundtrack. Built on the editor launch film's engine (glitch post pass and logo ending), with plain white mono headlines and a drum and bass soundtrack (175 BPM).
 
-| Beat | Scene |
+Scene beats (140 BPM) are mapped to film time by `WARP` in `film.js` and `synth.mjs`: the typing and the Requests page play slower than the rest so the prompt flow is easy to follow.
+
+| Scene beat | Scene |
 | --- | --- |
-| 0–4 | "What should we build next?" A prompt is typed into the composer and posted. |
-| 4–16 | The Requests page in 3D: the new request drops in, votes climb, status goes Under Review → Planned → In Progress, the tab slides to Shipped, then "Your feedback shipped!". |
+| 0–4 (0–2.6s) | "What should we build next?" A prompt is typed into the composer and posted. |
+| 4–16 (2.6–9.9s) | The Requests page in 3D: the new request drops in, votes climb, status goes Under Review → Planned → In Progress, the tab slides to Shipped, then "Your feedback shipped!". |
 | 16–20 | "YOU PROMPT IT. WE SHIP IT." |
 | 20–24 | Prompt · Vote · Build · Ship. |
 | 24–30 | "The world's first truly community-built platform?" |

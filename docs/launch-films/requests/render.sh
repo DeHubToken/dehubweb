@@ -4,7 +4,7 @@ set -e
 cd "$(dirname "$0")"
 W=$1; H=$2; TAG=$3; FR=frames_$TAG
 rm -rf $FR; mkdir -p $FR
-NF=900
+NF=1080
 node capture.cjs --w $W --h $H --stills 0 --events events_$TAG.json --out tmpst > /dev/null 2>&1
 node synth.mjs events_$TAG.json music_$TAG.wav
 M=$(ffmpeg -hide_banner -i music_$TAG.wav -af loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json -f null - 2>&1 | python3 -c "import sys,json;t=sys.stdin.read();j=json.loads(t[t.rindex('{'):]);print(f\"measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}:measured_thresh={j['input_thresh']}:offset={j['target_offset']}\")")
