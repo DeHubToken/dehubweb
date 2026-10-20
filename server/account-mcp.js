@@ -54,17 +54,17 @@ async function api(ctx, path, method = 'GET', body) {
   return readJson(await ctx.fetch(`${API}${path}`, { method,
     headers: { ...(ctx.token ? { Authorization: `Bearer ${ctx.token}` } : {}), ...(body && !(body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}) },
     body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
-    redirect: 'error', signal: AbortSignal.timeout(25000),
+    redirect: 'manual', signal: AbortSignal.timeout(25000),
   }));
 }
 export async function edge(ctx, name, body) {
-  return readJson(await ctx.fetch(`${EDGE}/${name}`, { method: 'POST', redirect: 'error',
+  return readJson(await ctx.fetch(`${EDGE}/${name}`, { method: 'POST', redirect: 'manual',
     headers: { 'Content-Type': 'application/json', 'x-dehub-token': ctx.token, 'x-wallet-address': ctx.wallet },
     body: JSON.stringify(body),
   }));
 }
 async function file(ctx, url, kind, maxBytes = 12 * 1024 * 1024) {
-  const response = await ctx.fetch(media.parse(url), { redirect: 'error', signal: AbortSignal.timeout(30000) });
+  const response = await ctx.fetch(media.parse(url), { redirect: 'manual', signal: AbortSignal.timeout(30000) });
   if (!response.ok) throw new Error('Could not download the DeHub media.');
   const mime = (response.headers.get('Content-Type') || '').split(';')[0];
   if (!mime.startsWith(`${kind}/`)) throw new Error(`Expected ${kind} media.`);
