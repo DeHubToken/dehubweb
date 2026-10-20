@@ -8,7 +8,9 @@ const ev = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 const OUT = process.argv[3] || 'music.wav';
 const E = ev.ev, TOTAL = ev.film.TOTAL;
 const SR = 48000, N = Math.ceil((TOTAL + .05) * SR);
-const BPM = 140, B = 60 / BPM, bt = b => b * B, ST = B / 4; // 16th
+const WARP = [[0, 0], [6, 4], [23, 16], [42, 35]]; // [film beat, scene beat], same as film.js
+const warp = (x, i, o) => { for (let k = 0; k < WARP.length - 1; k++) { const a = WARP[k], c = WARP[k + 1]; if (x <= c[i] || k === WARP.length - 2) return a[o] + (c[o] - a[o]) * (x - a[i]) / (c[i] - a[i]); } };
+const BPM = 140, B = 60 / BPM, bt = b => warp(b, 1, 0) * B, ST = B / 4; // bt: scene beat -> film seconds
 const bus = () => [new Float32Array(N), new Float32Array(N)];
 const DR = bus(), BS = bus(), MU = bus(), FX = bus(), REV = bus();
 const mtof = m => 440 * 2 ** ((m - 69) / 12);
@@ -313,7 +315,8 @@ function dnb(t0, t1, o = {}) {
     }
   }
 }
-const slam = (b, n, a = 1) => { dkick(bt(b), 1); reese(bt(b), bt(.45), n, .9 * a); impact(bt(b), .7 * a, .5); snare(bt(b), .8); };
+const bd = b => b * B; // a length in beats -> seconds
+const slam = (t, n, a = 1) => { dkick(t, 1); reese(t, bd(.45), n, .9 * a); impact(t, .7 * a, .5); snare(t, .8); };
 // ---- intro: pad and atmosphere, typing on top, a snare roll into the drop
 pad(0, bt(3.7), [53, 56, 60, 65], .1, 1200);
 for (let s = 0; bt(.5) + s * D16 < bt(4); s += 2) hat(bt(.5) + s * D16, .04 + .06 * s / 24, false, .2);
@@ -324,13 +327,13 @@ E.type.forEach(t => typeClick(t));
 E.click.filter(t => t < bt(4)).forEach(t => uiClick(t, .5));
 // ---- drop: the page
 impact(bt(4), 1); boom(bt(4), .5); whoosh(bt(3.85), .5, .5, 300, 7000, .6, -.6);
-dnb(bt(4), bt(15.6), { first: 0 });
+dnb(bt(4), bt(15.6), { first: 0, ghosts: false, roll: false }); // lighter under the prompt flow
 pop(bt(4.4), .28, 520);
 E.float.forEach((t, i) => pop(t, .09, 800 + (i % 5) * 140));
 const SCALE = [72, 75, 77, 80];
 E.status.forEach((t, i) => { chop(t, .4); blip(t, SCALE[i], .17, i % 2 ? .3 : -.3); });
 E.tab.forEach(t => whoosh(t - .02, .22, .4, 900, 6000, -.6, .6));
-bell(bt(12.4), 1318.5, .22); shimmer(bt(12.4), bt(1.2), .1); impact(bt(12.4), .5, .5);
+bell(bt(12.4), 1318.5, .22); shimmer(bt(12.4), bd(1.2), .1); impact(bt(12.4), .5, .5);
 pop(bt(13.2), .25, 700); bell(bt(13.3), 1760, .14);
 E.pop.forEach(t => pop(t, .22, 600));
 E.click.filter(t => t > bt(4)).forEach(t => uiClick(t, .55));
@@ -338,21 +341,21 @@ riser(bt(14), bt(16), .42); revCym(bt(15), bt(16), .35);
 // ---- YOU PROMPT IT. WE SHIP IT.
 impact(bt(16), 1); boom(bt(16), .6);
 const S3 = E.slam.filter(t => t < bt(19.9));
-[[41, 1], [41, 1], [37, .9], [36, 1]].forEach(([n, a], i) => { if (S3[i] != null) slam(S3[i] / B, n, a); });
+[[41, 1], [41, 1], [37, .9], [36, 1]].forEach(([n, a], i) => { if (S3[i] != null) slam(S3[i], n, a); });
 for (let s = 0; s < 8; s++) snare(bt(19) + s * D16, .15 + .5 * s / 8, .06);
-riser(bt(19), bt(20), .4); whoosh(bt(19.5), bt(.5), .5, 400, 9000, -.6, .6);
+riser(bt(19), bt(20), .4); whoosh(bt(19.5), bd(.5), .5, 400, 9000, -.6, .6);
 // ---- PROMPT / VOTE / BUILD / SHIP
 dnb(bt(20), bt(23.5), { first: 2 });
 E.tick.forEach((t, i) => { blip(t, SCALE[i] + 5, .18, i % 2 ? .35 : -.35); impact(t, .35, .3); });
 const TAPE = [bt(23.5), bt(24)];
 // ---- the question
 const S4 = E.slam.filter(t => t >= bt(23.9) && t < E.qmark - .01);
-S4.forEach((t, i) => slam(t / B, [41, 44, 46, 48, 49][i % 5], .9 + i * .03));
+S4.forEach((t, i) => slam(t, [41, 44, 46, 48, 49][i % 5], .9 + i * .03));
 pad(bt(24), bt(29.6), [49, 53, 56, 61], .09, 2400);
 boom(E.qmark, .85); impact(E.qmark, 1, .7); dkick(E.qmark, 1); scratch(E.qmark - .02, .35);
 dnb(E.qmark + DB, bt(29.6), { first: 0, roll: false });
-shimmer(bt(27.4), bt(1.2), .11); shimmer(bt(28.4), bt(1), .09);
-revCym(bt(28.5), bt(30), .4); whoosh(bt(29.5), bt(.6), .5, 400, 9000, .5, -.5);
+shimmer(bt(27.4), bd(1.2), .11); shimmer(bt(28.4), bd(1), .09);
+revCym(bt(28.5), bt(30), .4); whoosh(bt(29.5), bd(.6), .5, 400, 9000, .5, -.5);
 // ---- end card
 impact(bt(30), 1, .8); dkick(bt(30), 1); reese(bt(30), 1.6, 41, .9);
 pad(bt(30), bt(30) + 1.8, [53, 56, 60, 65], .07, 1400, .6);
@@ -367,7 +370,7 @@ for (const tk of KICKS) { const i0 = Math.round(tk * SR); for (let i = 0; i < .2
 // music bus automation: intro low-pass handled per note; gate during the cuts; low-pass during the post flow
 const mf = [new SVF(), new SVF()], bf = [new SVF(), new SVF()], df = [new SVF(), new SVF()];
 for (let i = 0; i < N; i++) {
-  const t = tOf(i), b = t / B;
+  const t = tOf(i), b = warp(t / B, 0, 1);
   const g = 1;
   let fc = 20000;
   if (b >= 13.1 && b < 15.6) fc = b < 13.4 ? 20000 * (3000 / 20000) ** ((b - 13.1) / .3) : b > 15 ? 3000 * (20000 / 3000) ** ((b - 15) / .6) : 3000;
