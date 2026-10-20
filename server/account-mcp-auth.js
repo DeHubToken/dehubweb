@@ -77,18 +77,23 @@ export class AccountMcpAuth {
     }
     let response;
     try { response = await operation(); }
-    catch (error) { response = { ...fail(error.message || 'Request outcome is unknown. Check DeHub before retrying.'), ...(error.details ? { structuredContent: { error: error.message, ...error.details } } : {}) }; }
+    catch (error) { response = { ...fail(error.message || 'Request outcome is unknown. Check DeHub before retrying.'), ...(error.details ? { structuredContent: { error: error.message, ...error.details } } : {}), ...([401,403].includes(error.status) ? { _meta: { 'mcp/www_authenticate': [challenge()] } } : {}) }; }
     await this.put(key, { fingerprint, result: response }, DAY);
     return response;
   }
   async generate(args, ctx) {
     return this.once(ctx.wallet, 'generation', args.request_id, args, async () => {
       const endpoint = { image: 'generate-image', video: 'generate-video', model3d: 'generate-3d', audio: 'fal-ai-tools' }[args.kind];
+      if (args.payment !== 'free') {
+        const quote = await edge(ctx, 'ai-quote', { kind: args.kind === 'audio' ? 'tool' : args.kind, modelId: args.model_id, durationSeconds: args.duration_seconds, quality: args.quality });
+        if (!Number.isFinite(quote.priceDhb) || quote.priceDhb > args.max_price_dhb) return fail('The current price exceeds the agreed maximum. Get a new quote and agreement before submitting a new request.');
+      }
       const body = { clientJobId: args.request_id, model: args.model_id, prompt: args.prompt,
         ...(args.kind === 'audio' ? { tool: args.model_id } : {}),
         ...(args.source_image ? { sourceImage: args.source_image } : {}),
         ...(args.aspect_ratio ? { aspectRatio: args.aspect_ratio } : {}),
         ...(args.resolution ? { resolution: args.resolution } : {}),
+        ...(args.quality ? { textureQuality: args.quality } : {}),
         ...(args.duration_seconds ? { duration: args.kind === 'video' ? `${args.duration_seconds}s` : args.duration_seconds } : {}),
         ...(args.payment === 'credits' ? { paySource: 'credits', txHash: 'credits' } : args.payment === 'free' ? { useFree: true } : { txHash: args.tx_hash }),
       };

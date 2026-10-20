@@ -232,13 +232,15 @@ tool('dehub_creator_models', 'Explore Creator Studio models', 'Discover image, v
   }), creator_url: `${ORIGIN}/creator` });
 }, { read: true });
 tool('dehub_quote_generation', 'Quote a content generation', 'Get the current server price before spending credits or DHB. This does not generate or charge anything.', {
-  kind: z.enum(['image','video','model3d','audio']), model_id: text(150), duration_seconds: z.number().min(1).max(600).optional(), quality: text(50).optional(),
+  kind: z.enum(['image','video','model3d','audio']), model_id: text(150), duration_seconds: z.number().min(1).max(600).optional(), quality: z.enum(['none','standard','HD']).optional(),
 }, null, async (a, ctx) => success(await edge(ctx, 'ai-quote', { kind: a.kind === 'audio' ? 'tool' : a.kind, modelId: a.model_id, durationSeconds: a.duration_seconds, quality: a.quality })), { read: true });
 tool('dehub_generate_content', 'Generate content in Creator Studio', 'Create an image, video, 3D model or music using the connected account\'s existing Creator service. Quote first, obtain the person\'s agreement to the cost, then choose credits, a confirmed DHB transfer, or an eligible free starter image. Reuse request_id on retries. Returns a job immediately for queued renders. Never publish automatically. Results use the same library as web and mobile.', {
   request_id: z.string().uuid(), kind: z.enum(['image','video','model3d','audio']), model_id: text(150), prompt: text(10000),
   payment: z.enum(['credits','transfer','free']), tx_hash: z.string().regex(/^0x[0-9a-fA-F]{64}$/).optional(),
+  max_price_dhb: z.number().finite().min(0).describe('Maximum DHB-equivalent price the person agreed to after seeing the quote. Use 0 for an eligible free image.'),
   source_image: media.optional(), aspect_ratio: z.enum(['21:9','16:9','4:3','1:1','3:4','9:16']).optional(),
   duration_seconds: z.number().int().min(1).max(600).optional(), resolution: text(30).optional(),
+  quality: z.enum(['none','standard','HD']).optional().describe('3D texture quality; must match the quoted quality'),
 }, 'dehub:generate', async (a, ctx) => {
   if (a.payment === 'transfer' && !a.tx_hash) throw new Error('Provide the confirmed DHB transfer hash.');
   if (a.payment !== 'transfer' && a.tx_hash) throw new Error('A transfer hash is only valid with transfer payment.');
