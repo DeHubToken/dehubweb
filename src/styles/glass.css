@@ -54,6 +54,10 @@ html[data-theme='glass'] [data-glass-loading-surface] {
   background: var(--glass-highlight), var(--theme-control-fill);
   box-shadow: var(--glass-edge);
 }
+html[data-theme='glass'] #app-root :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']), textarea, select):not([data-on-media] *):not([data-keep-dark] *) {
+  background-color: var(--theme-control-fill) !important;
+  border-color: rgb(225 255 255 / .24);
+}
 
 html[data-theme='glass'][data-theme] :is([data-feed-item], [data-page-bento], [data-side-panel]):not([data-bento-flat]):not(:has([data-page-bento])):not([data-keep-dark]):not(#_):not(#_) {
   border-radius: 24px;
