@@ -2582,7 +2582,6 @@
     "max_available_on_chain": "Max available: {{amount}} tokens on {{chain}}"
   },
   "staking": {
-    "pendingRetired": "This deposit is no longer pending on the network. Tracking cleared; check your wallet activity before depositing again.",
     "title": "Staking",
     "subtitle": "Deposit to unlock profit share, lower fees, superpowers and more!",
     "stakeDhb": "Deposit",

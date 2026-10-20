@@ -2582,7 +2582,6 @@
     "max_available_on_chain": "Mevcut maksimum: {{chain}}'da {{amount}} jeton"
   },
   "staking": {
-    "pendingRetired": "Bu yatırma işlemi artık ağda beklemiyor. Takip temizlendi; tekrar yatırmadan önce cüzdan hareketlerinizi kontrol edin.",
     "title": "Staking",
     "subtitle": "Kâr payı, düşük ücretler, süper güçler ve daha fazlasının kilidini açmak için yatırın!",
     "stakeDhb": "Yatır",
