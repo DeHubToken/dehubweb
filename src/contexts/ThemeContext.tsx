@@ -283,8 +283,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const root = document.documentElement.style;
     if (tintValue === null) root.removeProperty('--tint-accent');
-    else root.setProperty('--tint-accent', themeTintAccent(tintValue, brandColors));
-  }, [tintValue, brandColors]);
+    else root.setProperty('--tint-accent', theme === 'glass' && tintValue >= 0
+      ? `hsl(${tintValue} 100% 45%)`
+      : themeTintAccent(tintValue, brandColors));
+  }, [theme, tintValue, brandColors]);
 
   // Memoized: ThemeProvider wraps the whole app and its consumers include the
   // feed and every themed component — a fresh value literal re-renders them all.
