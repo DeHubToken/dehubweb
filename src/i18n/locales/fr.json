@@ -2586,6 +2586,7 @@
     "max_available_on_chain": "Max disponible : {{amount}} jetons sur {{chain}}"
   },
   "staking": {
+    "pendingRetired": "Ce dépôt n’est plus en attente sur le réseau. Le suivi a été effacé ; vérifiez l’activité de votre portefeuille avant de déposer à nouveau.",
     "title": "Staking",
     "subtitle": "Déposez pour débloquer le partage des bénéfices, des frais réduits, des superpouvoirs et plus encore !",
     "stakeDhb": "Déposer",

@@ -2775,6 +2775,7 @@
     "max_available_on_chain": "Maximaal beschikbaar: {{amount}} tokens op {{chain}}"
   },
   "staking": {
+    "pendingRetired": "Deze storting staat niet meer in behandeling op het netwerk. De tracking is gewist; controleer je walletactiviteit voordat je opnieuw stort.",
     "title": "Uitzetten",
     "subtitle": "Leg in om winstdeling, lagere kosten, superkrachten en meer te ontgrendelen!",
     "stakeDhb": "Inleggen",
