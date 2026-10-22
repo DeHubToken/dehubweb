@@ -118,3 +118,78 @@ describe('stream presence socket', () => {
     expect(counts).toEqual([4]);
   });
 });
+
+/**
+ * Gifts arrive in a different shape from every other room event: the gateway
+ * sends `{ gift: <activity row> }`, with the stream id on the row. Filtering
+ * them like a count — top-level `streamId` or nothing — dropped all of them.
+ */
+describe('stream gift broadcasts', () => {
+  beforeEach(() => {
+    sockets = [];
+    token = 'token-a';
+  });
+
+  /** What the gateway actually emits for a recorded gift. */
+  const tipFor = (streamId: string, amount = 250000) => ({
+    gift: {
+      _id: 'activity-1',
+      streamId,
+      status: 'TIP',
+      address: '0xfa00000000000000000000000000000000000002',
+      meta: {
+        amount,
+        username: 'fan',
+        message: 'gm',
+        selectedTier: 'Crown',
+        address: '0xFA00000000000000000000000000000000000002',
+        transactionHash: '0xABC',
+      },
+    },
+  });
+
+  it('plays a gift sent to the stream being watched', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const gifts: unknown[] = [];
+    watchStreamGifts('stream-1', (g) => gifts.push(g));
+
+    sockets[0].deliver('streamer.tip', tipFor('stream-1'));
+    expect(gifts).toEqual([
+      {
+        amount: 250000,
+        selectedTier: 'Crown',
+        username: 'fan',
+        message: 'gm',
+        address: '0xfa00000000000000000000000000000000000002',
+        transactionHash: '0xabc',
+      },
+    ]);
+  });
+
+  it('ignores a gift sent to another stream on the same socket', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const gifts: unknown[] = [];
+    watchStreamGifts('stream-1', (g) => gifts.push(g));
+
+    sockets[0].deliver('streamer.tip', tipFor('stream-2'));
+    expect(gifts).toEqual([]);
+  });
+
+  it('ignores a gift that names no stream at all', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const gifts: unknown[] = [];
+    watchStreamGifts('stream-1', (g) => gifts.push(g));
+
+    sockets[0].deliver('streamer.tip', { gift: { meta: { amount: 10 } } });
+    expect(gifts).toEqual([]);
+  });
+
+  it('also reads a stream id sent beside the gift', async () => {
+    const { watchStreamGifts } = await loadModule();
+    const gifts: unknown[] = [];
+    watchStreamGifts('stream-1', (g) => gifts.push(g));
+
+    sockets[0].deliver('streamer.tip', { streamId: 'stream-1', gift: { meta: { amount: 10 } } });
+    expect(gifts).toHaveLength(1);
+  });
+});
