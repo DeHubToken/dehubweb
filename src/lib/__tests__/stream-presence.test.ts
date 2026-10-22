@@ -60,6 +60,11 @@ async function loadModule() {
   return import('@/lib/api/dehub/stream-presence');
 }
 
+async function loadControl() {
+  vi.resetModules();
+  return import('@/lib/api/dehub/overlay-control');
+}
+
 describe('stream presence socket', () => {
   beforeEach(() => {
     sockets = [];
@@ -333,5 +338,49 @@ describe('live room events for the overlay', () => {
     socket.deliver('stream.follow', { streamId: 'stream-1', user: { address: '0xA' } });
     expect(events).toEqual([]);
     expect(socket.disconnected).toBe(true);
+  });
+});
+
+/**
+ * Live Studio and the OBS page listen on the creator's control room. A test
+ * alert arrives there and nowhere else, already shaped like the room events a
+ * widget reads.
+ */
+describe('overlay control room', () => {
+  beforeEach(() => {
+    sockets = [];
+    token = 'token-a';
+  });
+
+  it('joins with its token and says what kind of surface it is', async () => {
+    const { watchOverlayControl } = await loadControl();
+    watchOverlayControl('A'.repeat(24), 'studio', {});
+    expect(sockets[0].emitted).toEqual([{ event: 'overlay.join', payload: { token: 'A'.repeat(24), surface: 'studio' } }]);
+  });
+
+  it('turns a test tip into both the tip and its confirmation', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const batches: unknown[] = [];
+    watchOverlayControl('A'.repeat(24), 'studio', { onTest: (events) => batches.push(events) });
+    sockets[0].deliver('overlay.test', { kind: 'tip', test: true, at: 'now', amount: 250000, message: 'hi', user: { address: '0xC' } });
+    const [events] = batches as any[];
+    expect(events.map((e: any) => e.type)).toEqual(['tip', 'tipConfirmed']);
+    expect(events[0]).toMatchObject({ amount: 250000, message: 'hi', transactionHash: 'test-now' });
+    expect(events[1]).toMatchObject({ paidAmount: 250000, transactionHash: 'test-now' });
+  });
+
+  it('passes a test follow through as a follow', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const batches: any[] = [];
+    watchOverlayControl('A'.repeat(24), 'studio', { onTest: (events) => batches.push(events) });
+    sockets[0].deliver('overlay.test', { kind: 'follow', user: { address: '0xD', username: 'dee' } });
+    expect(batches[0]).toMatchObject([{ type: 'follow', user: { username: 'dee' } }]);
+  });
+
+  it('leaves the room when it is done', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const sub = watchOverlayControl('A'.repeat(24), 'studio', {});
+    sub.leave();
+    expect(sockets[0].emitted.at(-1)).toEqual({ event: 'overlay.leave', payload: { token: 'A'.repeat(24) } });
   });
 });

@@ -395,20 +395,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       walletAddress.toLowerCase() === stream.creatorId.toLowerCase()
   );
   /*
-   * Counts this tab among the people watching, and reads the live number back.
-   *
-   * Web viewers were never counted at all — `addViewer` is reachable only
-   * through the stream gateway and only the mobile app connected, so the
-   * "tuned in" figure has always been mobile-only. Production streams show
-   * peaks of 0, 1 and 3 for exactly that reason.
-   *
-   * Falls back to the API's stored total when the socket has nothing to say
-   * yet, so the card never flashes a zero over a busy stream.
-   *
-   * The creator is never counted among their own audience. Joining bumps
-   * `totalViews` and moves `peakViewers`, so a host who scrolls past their own
-   * live post — or opens it to check how it looks — was inflating the figure
-   * they then read back off their broadcast console.
+   * Counts this tab among the viewers (web was never counted before) and
+   * reads the live number back, falling back to the stored total. The
+   * creator is never counted in their own audience.
    */
   const livePresence = useStreamPresence(
     stream.streamId,
@@ -527,14 +516,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   }, [showGiftDrawer, walletAddress, giftBalanceVersion]);
 
   /**
-   * WebRTC first, HLS second.
-   *
-   * HLS is a playlist of finished segments, so a viewer sits 10-20 seconds
-   * behind the broadcaster — long enough that a tip or a question lands on a
-   * host who has moved on. WHEP plays the same playbackId over WebRTC at about
-   * a second. It is not universal (no nearby node, a UDP-hostile network, a
-   * stream that never went live), so a failure or a silent connect falls
-   * straight back to the ladder below rather than leaving a black frame.
+   * WebRTC first (about a second behind), HLS second (10-20 seconds). A
+   * failure or a silent connect falls back to the ladder below.
    */
   useEffect(() => {
     if (transport !== 'whep' || streamEnded || !whepPlaybackId) return;
@@ -674,13 +657,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       void video.play().catch(() => setIsBuffering(false));
     };
 
-    // Prefer native HLS wherever the browser provides it (Safari + every iOS
-    // browser): the hardware media pipeline runs far cooler than hls.js's
-    // software MSE, and it skips the ~540 kB hls.js download. iOS 17+ added
-    // MediaSource, so the old `!('MediaSource' in window)` guard wrongly routed
-    // modern iPhones through the hls.js decoder that was overheating them.
-    // Self-hosted ladders may carry Opus audio. A positive native HLS probe
-    // does not establish codec support; use the same MSE path as the feed.
+    // Native HLS where the browser has it (Safari, iOS): cooler than hls.js
+    // and skips its download. Not for self-hosted ladders, which may carry
+    // Opus that a positive native probe does not promise to play.
     const selfHosted = liveSourceFromHlsUrl(currentUrl())?.provider === 'mediamtx';
     if (!selfHosted && video.canPlayType('application/vnd.apple.mpegurl')) {
       // Native playback has none of hls.js's built-in resilience, so re-create
@@ -894,16 +873,9 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   }, [isPlaying, isBuffering, videoId]);
 
   /**
-   * Hold the OS media session while this stream is actually audible.
-   *
-   * `videoId` rather than a fresh useId: the card already has a stable
-   * per-stream identity that the playback manager keys off, and reusing it
-   * keeps the two arbiters agreeing about which player is which.
-   *
-   * No seek handlers — a live broadcast has nowhere to scrub to, and offering
-   * a dead scrub bar on the lock screen is worse than offering none. `stop`
-   * is wired because leaving a stream is a real thing to want to do from a
-   * locked phone, unlike pausing one.
+   * Hold the OS media session while this stream is audible, keyed on the
+   * same `videoId` the playback manager uses. No seek handlers: live has
+   * nowhere to scrub to.
    */
   useEffect(() => {
     if (!isPlaying || isMuted || streamEnded) {
