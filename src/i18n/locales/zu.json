@@ -4793,9 +4793,51 @@
     "followersUnit": "abalandeli",
     "topSupporters": "Abasekeli abahamba phambili",
     "tipped": "{{name}} uthumele isipho",
-    "chatPreview": "Imiyalezo yokuxoxa iyavela lapha"
+    "chatPreview": "Imiyalezo yokuxoxa iyavela lapha",
+    "poll": {
+      "closed": "Ukuvota kuvaliwe",
+      "voteFor": "Votela i- {{option}}",
+      "signIn": "Ngena ngemvume ukuze uvote",
+      "failed": "Ivoti lakho alibalanga. Zama futhi.",
+      "voted_one": "Uvote · {{count}} vote",
+      "voted_other": "Ninhlangana · {{count}} nhlangana",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "howToVote_one": "Thayipha {{command}} nenombolo engxoxweni ukuze uvote · {{count}} ivoti",
+      "howToVote_other": "Thayipha {{command}} nenombolo engxoxweni ukuze uvote · {{count}} amavoti"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Amavoti",
+      "intro": "Buza abantu ababukela ukusakaza kwakho umbuzo. Baphendula ngenkinobho ku-app ye-DeHub, noma ngokuthayipha okuthi {{command}} nenombolo yenketho engxoxweni.",
+      "question": "Umbuzo",
+      "questionPlaceholder": "Yini okufanele ngiyidlale ngokulandelayo?",
+      "option": "Inketho {{n}}",
+      "addOption": "Faka okukhethwa kukho",
+      "removeOption": "Susa inketho {{n}}",
+      "duration": "Ukuhlala kwesikhathi esingakanani kokuvota kuvuliwe",
+      "seconds_one": "{{count}} umzuzwana",
+      "seconds_other": "{{count}} imizuzwana",
+      "minutes_one": "{{count}} umzuzu",
+      "minutes_other": "{{count}} minithi",
+      "start": "Qala ukuvota",
+      "end": "Qeda ukuvota manje",
+      "started": "Ukuvota kwakho kuvuliwe. Ababukeli bangavota manje.",
+      "notLive": "Iya bukhoma kuqala. Ukuvota kuyaqhubeka ekusakazeni okusakazayo njengamanje.",
+      "startFailed": "Ukuvota akuqalanga. Zama futhi.",
+      "live": "Ukuvota kuvuliwe · {{time}} kwesobunxele",
+      "ended": "Ukuvota kuvaliwe",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "replaceHint": "Ukuqala ukuvota okusha kuvala okuvuliwe.",
+      "widgetHint": "Ibonisa inhlolovo yakho ebukhoma. Kubabukeli be-app ye-DeHub thepha inketho yokuvota; ku-OBS itshela abantu ukuthi bathayiphe i-{{command}} nenombolo engxoxweni.",
+      "sample": {
+        "a": "Okuthile okusha",
+        "b": "Intandokazi yakudala",
+        "c": "Ukhetha"
+      }
+    },
     "title": "I-Live Studio",
     "subtitle": "Ama-alerts kanye ne-widgets yezindlela zakho zokusasaza",
     "h1": "I-Live Studio — ama-alerts ekusasazeni, izinjongo kanye ne-overlays para sa mga DeHub creators",
@@ -4886,7 +4928,8 @@
       "event_feed": "Okwenziwayo kwakamuva",
       "chat_box": "Ibhokisi lengxoxo",
       "ticker": "Umthumeli wamathikithi",
-      "rule_alert": "Izikhalo Zemithetho"
+      "rule_alert": "Izikhalo Zemithetho",
+      "poll": "Inhlolovo"
     },
     "hints": {
       "tip_alert": "Kusebenzisa umuntu ngamunye otiphu, osayizi ngokwesigaba sakhe",
@@ -4904,7 +4947,8 @@
       "event_feed": "Izipho zakamuva, abalandeli, ababhalisile nabantu ababelana ngokusakaza kwakho",
       "chat_box": "Ibonisa imiyalezo yengxoxo yokusakaza kwakho esikrinini",
       "ticker": "Umugqa wombhalo wakho siqu oskrola esikrinini",
-      "rule_alert": "Lapho izikhalo zemithetho zakho zivela khona"
+      "rule_alert": "Lapho izikhalo zemithetho zakho zivela khona",
+      "poll": "Ukuvota kwakho bukhoma, okunenkinobho yokuvota kukho konke ongakhetha kukho"
     },
     "fields": {
       "style": "Isitayela",
@@ -4968,6 +5012,7 @@
       "addAction": "Engeza isenzo",
       "removeAction": "Susa isenzo",
       "placeholders": "Sebenzisa {name}, {amount} no {message} embhalweni wakho. Amalinki emiyalezweni ayasuswa.",
+      "placeholdersLive": "Sebenzisa i-{name}, {title} no- {link} embhalweni wakho: igama lakho, isihloko sokusakaza nelinki yokuyibuka.",
       "alertText": "Umbhalo wesixwayiso",
       "sound": "Umsindo",
       "sayText": "Umbhalo wokufunda ngokuzwakalayo",
@@ -4981,6 +5026,7 @@
         "follow": "Kukhona olandelayo",
         "subscribe": "Othile uyabhalisa",
         "share": "Othile wabelana ngokusakaza",
+        "live": "Uqala ukusakaza",
         "command": "Umyalo wengxoxo uyasetshenziswa",
         "keyword": "Umlayezo wengxoxo uqukethe igama",
         "chat": "Noma yimuphi umyalezo wengxoxo"

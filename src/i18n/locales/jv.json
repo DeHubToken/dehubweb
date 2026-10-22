@@ -4598,9 +4598,50 @@
     "followersUnit": "pengikut",
     "topSupporters": "Pangrojong paling dhuwur",
     "tipped": "{{name}} nganti hadiah",
-    "chatPreview": "Pesanan chat ditampilin gini"
+    "chatPreview": "Pesanan chat ditampilin gini",
+    "poll": {
+      "closed": "Voting ditutup",
+      "voteFor": "Milih {{option}}",
+      "signIn": "Mlebu kanggo milih",
+      "failed": "Suaramu ora dihitung. Coba maneh.",
+      "voted_one": "Sampeyan milih · {{count}} suara",
+      "voted_other": "Sampeyan milih · {{count}} suara",
+      "votes_one": "{{count}} suara",
+      "votes_other": "{{count}} suara"
+    }
   },
   "liveStudio": {
+    "polls": {
+      "title": "Jajak Pendapat",
+      "intro": "Takon wong-wong sing nonton siaran sampeyan. Dheweke wangsul kanthi tombol ing aplikasi DeHub, utawa kanthi ngetik {{command}} lan nomer pilihan ing obrolan.",
+      "question": "Pitakon",
+      "questionPlaceholder": "Apa sing kudu tak mainake sabanjure?",
+      "option": "Pilihan {{n}}",
+      "addOption": "Tambah pilihan",
+      "removeOption": "Busak pilihan {{n}}",
+      "duration": "Suwe voting tetep mbukak",
+      "seconds_one": "{{count}} detik",
+      "seconds_other": "{{count}} detik",
+      "minutes_one": "{{count}} menit",
+      "minutes_other": "{{count}} menit",
+      "start": "Mulai jajak pendapat",
+      "end": "Akhiri voting saiki",
+      "started": "Jajak pendapatmu mbukak. Pemirsa bisa milih saiki.",
+      "notLive": "Mlebu langsung dhisik. Jajak pendapat mlaku ing siaran sing lagi sampeyan streaming saiki.",
+      "startFailed": "Jajak pendapat ora mulai. Coba maneh.",
+      "closeFailed": "Voting ora rampung. Coba maneh.",
+      "live": "Voting mbukak · {{time}} sisa",
+      "ended": "Voting ditutup",
+      "votes_one": "{{count}} ngabani",
+      "votes_other": "{{count}} ngabanian",
+      "replaceHint": "Mulane poll bareng ngabani poll yén udah dibuka.",
+      "widgetHint": "Nampilin pollmu yén live. Di DeHub app penonton tap pilihannya ngabani; di OBS ngabani ngomongin penonton ngabani {{command}} lan angka di chat.",
+      "sample": {
+        "a": "Yang baru",
+        "b": "Yang udah favorit",
+        "c": "Kamu pilih"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Peringatan lan widget kanggo streamingmu",
     "h1": "Live Studio — peringatan streaming, tujuan lan overlay kanggo kreator DeHub",
@@ -4672,7 +4713,6 @@
       "share": "Bareng"
     },
     "kinds": {
-      "rule_alert": "Peringatan aturan",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4685,7 +4725,9 @@
       "reaction_counter": "Pengitung reaksi",
       "event_feed": "Aktivitas terbaru",
       "chat_box": "Kotak chat",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "rule_alert": "Peringatan aturan",
+      "poll": "Poll"
     },
     "hints": {
       "tip_alert": "Ngrayakake saben tip, disesuaikan karo tingkaté",
@@ -4703,7 +4745,8 @@
       "event_feed": "Hadiah, pengikut, subscriber, dan orang yang share broadcastmu yang terbaru",
       "chat_box": "Nggawe pesanan chat broadcastmu ditampilin di layar",
       "ticker": "Baris tulisan sendiri yang berjalan di layar",
-      "rule_alert": "Endi aturan-aturan penting mu katon"
+      "rule_alert": "Endi aturan-aturan penting mu katon",
+      "poll": "Pollmu yén live, lan ngabani tombol ngabani untuk tiworo pilihannya"
     },
     "fields": {
       "celebration": "Ngabdulakehan",
@@ -4732,36 +4775,26 @@
       "fast": "Cepat"
     },
     "rules": {
-      "empty": "Belum ada aturan. Tambahkan satu untuk bereaksi terhadap tips, mengikuti, atau perintah obrolan.",
-      "test": "Tes",
-      "enabled": "Aturan tentang",
-      "save": "Simpan aturan",
-      "needsAlertWidget": "Beberapa aturan menunjukkan peringatan. Tambahkan widget Lansiran aturan sehingga ada tempat untuk ditampilkan.",
-      "command": "Perintah",
-      "removeAction": "Hapus tindakan",
-      "alertText": "Teks peringatan",
-      "sound": "Suara",
-      "sayText": "Teks untuk dibaca dengan suara keras",
-      "chatText": "Pesan untuk diposting",
-      "chatHint": "Diposting dari akun Anda ke obrolan streaming Anda. Tidak dapat mengulangi pesan pemirsa.",
-      "webhookHint": "Webhook Discord atau Slack, atau alamat https apa pun yang menerima POSTINGAN.",
-      "summary": {
-        "tip": "Tips dari {{amount}} DHB atau lebih"
-      },
       "title": "Rules",
       "intro": "Nalika ana sing kedadeyan ing streammu, DeHub nindakake apa sing kowe pilih: nampilake alert, muter swara, maca bab-bab kanthi swara, ngirim ing chatmu utawa ngandhani Discord-mu.",
       "add": "Tambah aturan",
       "limit": "Kamu udh capai batas aturan {{count}} ini.",
       "loadFailed": "Kloe atur-aturan ingkang ngajadi gak bisa ditulung. Klik \"Refresh\" gunae ngulik.",
+      "empty": "Belum ada aturan. Tambahkan satu untuk bereaksi terhadap tips, mengikuti, atau perintah obrolan.",
       "saved": "Kebijakan ini disimpan. Mereka berjalan di waktu tipmu selanjutnya, ikuti atau kirim pesan.",
       "saveFailed": "Klo atur-aturmu ga bisa disimpen.",
       "testFailed": "Kanggo uji coba ingkang kudu dijalani, nganggo gini nganggo gini. Coba lagi nglakoni ing ngantenan.",
       "saveToTest": "Simpen aturanmu kanggo nyoba aturan kasebut",
+      "test": "Tes",
+      "enabled": "Aturan tentang",
       "remove": "Kudu aturan-aturan.",
+      "save": "Simpan aturan",
+      "needsAlertWidget": "Beberapa aturan menunjukkan peringatan. Tambahkan widget Lansiran aturan sehingga ada tempat untuk ditampilkan.",
       "name": "Name",
       "when": "Kadha ngkapa",
       "then": "Kulon.",
       "minAmount": "Kecil-kecil tip (DHB)",
+      "command": "Perintah",
       "keyword": "Kata atau ungkapan",
       "audience": "Kénggo manéné kanggo ngaraniya?",
       "blockedWords": "Blocked words",
@@ -4769,35 +4802,47 @@
       "cooldown": "Waktu tunggu antar pakai (detik)",
       "userCooldown": "Waktu tunggu per penonton (detik)",
       "addAction": "Tambah sawijining aksi",
+      "removeAction": "Hapus tindakan",
       "placeholders": "Gunakake {name}, {amount} lan {message} ing teksmu. Link ing pesen dibusak.",
+      "placeholdersLive": "Gunakane {name}, {title}, lan {link} di teksmu: namamu, judul broadcast, lan link ngawasane.",
+      "alertText": "Teks peringatan",
+      "sound": "Suara",
+      "sayText": "Teks untuk dibaca dengan suara keras",
+      "chatText": "Pesan untuk diposting",
+      "chatHint": "Diposting dari akun Anda ke obrolan streaming Anda. Tidak dapat mengulangi pesan pemirsa.",
       "webhookUrl": "Alamat webhook",
+      "webhookHint": "Webhook Discord atau Slack, atau alamat https apa pun yang menerima POSTINGAN.",
       "webhookText": "Message to send",
       "triggers": {
+        "tip": "Sampiran sing ngarani.",
         "follow": "Seseorang mengikuti",
         "subscribe": "Seseorang berlangganan",
+        "share": "Kang ngarani stream dhuwur.",
+        "live": "Kamu mulane broadcast",
         "command": "Perintah obrolan digunakan",
         "keyword": "Pesan obrolan berisi kata",
-        "tip": "Sampiran sing ngarani.",
-        "share": "Kang ngarani stream dhuwur.",
         "chat": "Sembarang pesen obrolan"
       },
       "audiences": {
-        "subscribers": "Pelanggan",
         "everyone": "Kabeh",
-        "followers": "pengikut"
+        "followers": "pengikut",
+        "subscribers": "Pelanggan"
       },
       "actionTypes": {
         "alert": "Tampilkan pemberitahuan",
         "sound": "Putar suara",
-        "webhook": "Kirim ke webhook",
         "say": "Waca kanthi swara",
-        "chat": "Post in chat"
+        "chat": "Post in chat",
+        "webhook": "Kirim ke webhook"
+      },
+      "summary": {
+        "tip": "Tips dari {{amount}} DHB atau lebih"
       },
       "presets": {
-        "bigTip": "Klakson udara untuk tip besar",
-        "thankFollowers": "Ucapkan terima kasih kepada pengikut baru",
         "blank": "Blank rule",
         "readChat": "Waca obrolan kanthi swara",
+        "bigTip": "Klakson udara untuk tip besar",
+        "thankFollowers": "Ucapkan terima kasih kepada pengikut baru",
         "command": "Kode pesan nganti-nganti (chat command)"
       },
       "presetHints": {
