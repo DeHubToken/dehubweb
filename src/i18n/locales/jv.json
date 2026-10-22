@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klik ikon kamera kanggo ngunggah gambar",
     "displayName": "Jeneng Tampilan",
     "enterDisplayName": "Lebokna jenengmu",
+    "displayNameOptionalHint": "Jeneng umummu ing profil. Ora wajib — kosongna wae yen arep nganggo jeneng panggunamu.",
     "username": "Jeneng Pangguna",
     "usernamePlaceholder": "jeneng_pangguna",
     "usernameHint": "3-30 karakter, huruf, angka, garis ngisor",

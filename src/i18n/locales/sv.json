@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klicka på kameraikonen för att ladda upp",
     "displayName": "Visningsnamn",
     "enterDisplayName": "Ange ditt visningsnamn",
+    "displayNameOptionalHint": "Ditt offentliga namn på profilen. Valfritt — lämna tomt för att använda ditt användarnamn.",
     "username": "Användarnamn",
     "usernamePlaceholder": "användare",
     "usernameHint": "3–30 tecken, bokstäver, siffror och understreck",

@@ -123,6 +123,7 @@
     "clickCameraUpload": "Sakheq tesakhtsiki vra berneloou hamar",
     "displayName": "Tsoutsadrvats anoun",
     "enterDisplayName": "Moutqagreeq dzainor anounere",
+    "displayNameOptionalHint": "Ձեր հանրային անունը պրոֆիլում։ Պարտադիր չէ — թողեք դատարկ, որպեսզի օգտագործվի ձեր օգտանունը։",
     "username": "Ogtvoroghi anoun",
     "usernamePlaceholder": "ogtvoragh",
     "usernameHint": "3-30 nshan, tarrer, tvyalner, endgardzogher",

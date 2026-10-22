@@ -123,6 +123,7 @@
     "clickCameraUpload": "د اپلوډ لپاره د کیمرې آیکون کلیک کړئ",
     "displayName": "نمایشي نوم",
     "enterDisplayName": "خپل نمایشي نوم ولیکئ",
+    "displayNameOptionalHint": "ستاسو عامه نوم چې ستاسو په پروفایل کې ښکاري. اختیاري دی — که یې خالي پرېږدئ، ستاسو کارن نوم به وکارول شي.",
     "username": "کارن نوم",
     "usernamePlaceholder": "کارن_نوم",
     "usernameHint": "۳-۳۰ حروف، توري، شمیرې، لاندې کرښې",

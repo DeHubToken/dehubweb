@@ -123,6 +123,7 @@
     "clickCameraUpload": "Kliknij ikonę aparatu, aby przesłać",
     "displayName": "Nazwa wyświetlana",
     "enterDisplayName": "Wprowadź swoją nazwę wyświetlaną",
+    "displayNameOptionalHint": "Twoja publiczna nazwa widoczna w profilu. Opcjonalnie — zostaw puste, aby używać nazwy użytkownika.",
     "username": "Nazwa użytkownika",
     "usernamePlaceholder": "użytkownik",
     "usernameHint": "3-30 znaków, litery, cyfry, podkreślenia",

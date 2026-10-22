@@ -123,6 +123,7 @@
     "clickCameraUpload": "Napsauta kamerakuvaketta lähettääksesi",
     "displayName": "Näyttönimi",
     "enterDisplayName": "Syötä näyttönimesi",
+    "displayNameOptionalHint": "Julkinen nimesi profiilissasi. Valinnainen — jätä tyhjäksi, niin käytetään käyttäjätunnustasi.",
     "username": "Käyttäjätunnus",
     "usernamePlaceholder": "käyttäjä",
     "usernameHint": "3-30 merkkiä, kirjaimia, numeroita, alaviivoja",

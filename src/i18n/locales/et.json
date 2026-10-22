@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klõpsa kaamera ikoonil üleslaadimiseks",
     "displayName": "Kuvatav nimi",
     "enterDisplayName": "Sisesta oma kuvatav nimi",
+    "displayNameOptionalHint": "Sinu avalik nimi profiilil. Valikuline — jäta tühjaks, et kasutada oma kasutajanime.",
     "username": "Kasutajanimi",
     "usernamePlaceholder": "kasutajanimi",
     "usernameHint": "3-30 tähemärki, tähed, numbrid, allkriipsud",

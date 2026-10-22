@@ -123,6 +123,7 @@
     "clickCameraUpload": "Тасвири камераро пахш кунед",
     "displayName": "Номи намоишӣ",
     "enterDisplayName": "Номи намоишии худро ворид кунед",
+    "displayNameOptionalHint": "Номи оммавии шумо дар профил. Ихтиёрӣ — агар холӣ гузоред, номи корбари шумо истифода мешавад.",
     "username": "Номи корбар",
     "usernamePlaceholder": "корбар",
     "usernameHint": "3-30 ҳарф, рақам, зерхат",

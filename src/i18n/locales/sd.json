@@ -123,6 +123,7 @@
     "clickCameraUpload": "اپلوڊ ڪرڻ لاءِ ڪيمرا آئڪن ڪلڪ ڪريو",
     "displayName": "ڊسپلي نالو",
     "enterDisplayName": "پنهنجو ڊسپلي نالو داخل ڪريو",
+    "displayNameOptionalHint": "توهان جو عوامي نالو جيڪو پروفائل تي ڏيکاريو وڃي ٿو. اختياري — خالي ڇڏيو ته توهان جو يوزرنيم استعمال ٿيندو.",
     "username": "يوزرنيم",
     "usernamePlaceholder": "يوزرنيم",
     "usernameHint": "3-30 اکر، اکر، نمبر، انڊرسڪور",

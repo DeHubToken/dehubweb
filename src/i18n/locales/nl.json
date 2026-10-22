@@ -238,6 +238,7 @@
     "clickCameraUpload": "Klik op het camera-icoon om te uploaden",
     "displayName": "Weergavenaam",
     "enterDisplayName": "Voer je weergavenaam in",
+    "displayNameOptionalHint": "Je openbare naam die op je profiel staat. Optioneel — laat leeg om je gebruikersnaam te gebruiken.",
     "username": "Gebruikersnaam",
     "usernamePlaceholder": "gebruikersnaam",
     "usernameHint": "3-30 tekens, letters, cijfers, underscores",

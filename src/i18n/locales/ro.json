@@ -123,6 +123,7 @@
     "clickCameraUpload": "Apasă pe pictograma camerei pentru a încărca",
     "displayName": "Nume afișat",
     "enterDisplayName": "Introdu numele afișat",
+    "displayNameOptionalHint": "Numele tău public afișat pe profil. Opțional — lasă câmpul gol ca să se folosească numele de utilizator.",
     "username": "Nume de utilizator",
     "usernamePlaceholder": "numeutilizator",
     "usernameHint": "3-30 de caractere, doar litere, cifre și liniuțe de subliniere",

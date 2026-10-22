@@ -121,6 +121,7 @@
     "clickCameraUpload": "اضغط أيقونة الكاميرا لرفع صورة",
     "displayName": "الاسم الظاهر",
     "enterDisplayName": "أدخل اسمك",
+    "displayNameOptionalHint": "اسمك العلني البيظهر في ملفك. اختياري — خليهو فاضي عشان نستعمل اسم المستخدم حقك.",
     "username": "اسم المستخدم",
     "usernamePlaceholder": "اسم_المستخدم",
     "usernameHint": "3-30 حرف، حروف، أرقام، شرطة سفلية",

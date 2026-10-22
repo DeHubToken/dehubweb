@@ -123,6 +123,7 @@
     "clickCameraUpload": "I-click ang camera icon para mag-upload",
     "displayName": "Display Name",
     "enterDisplayName": "Ilagay ang iyong display name",
+    "displayNameOptionalHint": "Ang pampublikong pangalan mo sa profile. Opsyonal — iwanang blangko para gamitin ang username mo.",
     "username": "Username",
     "usernamePlaceholder": "username",
     "usernameHint": "3-30 character, mga letra, numero, at underscore lang",

@@ -123,6 +123,7 @@
     "clickCameraUpload": "Noklikšķiniet uz kameras ikonas, lai augšupielādētu",
     "displayName": "Attēlojamais vārds",
     "enterDisplayName": "Ievadiet savu attēlojamo vārdu",
+    "displayNameOptionalHint": "Tavs publiskais vārds profilā. Nav obligāts — atstāj tukšu, lai izmantotu savu lietotājvārdu.",
     "username": "Lietotājvārds",
     "usernamePlaceholder": "lietotājvārds",
     "usernameHint": "3-30 rakstzīmes, burti, cipari, pasvītrojumi",

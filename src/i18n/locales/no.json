@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klikk på kameraikonet for å laste opp",
     "displayName": "Visningsnavn",
     "enterDisplayName": "Skriv inn visningsnavnet ditt",
+    "displayNameOptionalHint": "Det offentlige navnet ditt som vises på profilen. Valgfritt — la feltet stå tomt for å bruke brukernavnet ditt.",
     "username": "Brukernavn",
     "usernamePlaceholder": "bruker",
     "usernameHint": "3-30 tegn, bokstaver, tall, understrek",

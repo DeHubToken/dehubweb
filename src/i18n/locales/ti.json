@@ -123,6 +123,7 @@
     "clickCameraUpload": "ስእሊ ንምስቓል ካሜራ ጠውቕ",
     "displayName": "ስም ምርኢት",
     "enterDisplayName": "ስምካ ኣእቱ",
+    "displayNameOptionalHint": "ኣብ መለለዪኻ ዝረአ ህዝባዊ ስምካ። ግዴታ ኣይኮነን — ባዶ እንተ ገዲፍካዮ ስም ተጠቃሚኻ ክንጥቀም ኢና።",
     "username": "ስም ተጠቃሚ",
     "usernamePlaceholder": "ስም ተጠቃሚ",
     "usernameHint": "3-30 ፊደላት፣ ቁጽርታት፣ ኣንደርስኮር ጥራይ",

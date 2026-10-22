@@ -123,6 +123,7 @@
     "clickCameraUpload": "카메라 아이콘을 클릭하여 업로드",
     "displayName": "표시 이름",
     "enterDisplayName": "표시 이름을 입력하세요",
+    "displayNameOptionalHint": "프로필에 표시되는 공개 이름입니다. 선택 사항이며, 비워 두면 사용자 이름이 사용됩니다.",
     "username": "사용자 이름",
     "usernamePlaceholder": "사용자이름",
     "usernameHint": "3-30자, 문자, 숫자, 밑줄만 가능",

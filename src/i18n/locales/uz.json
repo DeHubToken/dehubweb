@@ -123,6 +123,7 @@
     "clickCameraUpload": "Yuklash uchun kamera belgisini bosing",
     "displayName": "Koʻrsatiladigan nom",
     "enterDisplayName": "Nomni kiriting",
+    "displayNameOptionalHint": "Profilingizdagi ommaviy ismingiz. Ixtiyoriy — bo‘sh qoldirsangiz, foydalanuvchi nomingiz ishlatiladi.",
     "username": "Foydalanuvchi nomi",
     "usernamePlaceholder": "Foydalanuvchi nomi",
     "usernameHint": "3-30 belgi, harflar, raqamlar, pastki chiziq",

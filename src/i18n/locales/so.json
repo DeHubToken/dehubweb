@@ -123,6 +123,7 @@
     "clickCameraUpload": "Guji astaanta kamarada si aad u soo geliso",
     "displayName": "Magaca Muuqaalka",
     "enterDisplayName": "Geli magacaaga muuqaalka",
+    "displayNameOptionalHint": "Magacaaga dadweynaha ee boggaaga. Waa ikhtiyaari — haddii aad bannaan ka tagto, waxaa la isticmaalayaa magaca isticmaalahaaga.",
     "username": "Magaca isticmaalaha",
     "usernamePlaceholder": "magacaisticmaalaha",
     "usernameHint": "3-30 xaraf, xuruuf, nambar, oo keliya hoosta xariiq",

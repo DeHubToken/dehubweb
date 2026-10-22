@@ -123,6 +123,7 @@
     "clickCameraUpload": "Yükləmək üçün kamera ikonasına klikləyin",
     "displayName": "Görünən Ad",
     "enterDisplayName": "Görünən adınızı daxil edin",
+    "displayNameOptionalHint": "Profilində görünən ictimai adın. İstəyə bağlıdır — istifadəçi adını işlətmək üçün boş burax.",
     "username": "İstifadəçi adı",
     "usernamePlaceholder": "istifadəçiadı",
     "usernameHint": "3-30 simvol, hərflər, rəqəmlər, yalnız alt xətt",

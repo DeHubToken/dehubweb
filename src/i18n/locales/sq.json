@@ -123,6 +123,7 @@
     "clickCameraUpload": "Kliko ikonën e kamerës për të ngarkuar",
     "displayName": "Emri i Shfaqur",
     "enterDisplayName": "Shkruaj emrin tënd të shfaqur",
+    "displayNameOptionalHint": "Emri yt publik në profil. Opsional — lëre bosh dhe do të përdoret emri yt i përdoruesit.",
     "username": "Emri i përdoruesit",
     "usernamePlaceholder": "emripërdoruesi",
     "usernameHint": "3-30 karaktere, shkronja, numra, nënviza vetëm",

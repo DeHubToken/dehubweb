@@ -123,6 +123,7 @@
     "clickCameraUpload": "Bonyeza aikoni ya kamera kupakia",
     "displayName": "Jina la Kuonyesha",
     "enterDisplayName": "Ingiza jina lako la kuonyesha",
+    "displayNameOptionalHint": "Jina lako la umma kwenye wasifu wako. Si lazima — ukiliacha wazi, tutatumia jina lako la mtumiaji.",
     "username": "Jina la Mtumiaji",
     "usernamePlaceholder": "jinaLaMtumiaji",
     "usernameHint": "Herufi 3-30, herufi, nambari, mistari ya chini tu",

@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klik die kamera-ikoon om op te laai",
     "displayName": "Vertoonnaam",
     "enterDisplayName": "Voer jou vertoonnaam in",
+    "displayNameOptionalHint": "Jou openbare naam op jou profiel. Opsioneel — laat dit leeg om jou gebruikernaam te gebruik.",
     "username": "Gebruikersnaam",
     "usernamePlaceholder": "gebruikersnaam",
     "usernameHint": "3-30 karakters, slegs letters, syfers en onderstrepings",

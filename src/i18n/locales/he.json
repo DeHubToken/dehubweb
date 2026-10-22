@@ -123,6 +123,7 @@
     "clickCameraUpload": "לחץ על סמל המצלמה להעלאה",
     "displayName": "שם תצוגה",
     "enterDisplayName": "הכנס את שם התצוגה שלך",
+    "displayNameOptionalHint": "השם הפומבי שלך בפרופיל. לא חובה — אפשר להשאיר ריק כדי להשתמש בשם המשתמש שלך.",
     "username": "שם משתמש",
     "usernamePlaceholder": "משתמש",
     "usernameHint": "3-30 תווים, אותיות, מספרים וקו תחתון בלבד",

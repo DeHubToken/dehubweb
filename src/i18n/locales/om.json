@@ -123,6 +123,7 @@
     "clickCameraUpload": "Fe'uuf kaameraa cuqaasi",
     "displayName": "Maqaa Mul'atu",
     "enterDisplayName": "Maqaa galchi",
+    "displayNameOptionalHint": "Maqaa kee uummataa kan piroofaayilii kee irratti mul'atu. Dirqama miti — maqaa fayyadamaa kee akka fayyadamnuuf duwwaa dhiisi.",
     "username": "Maqaa fayyadamaa",
     "usernamePlaceholder": "Maqaa fayyadamaa",
     "usernameHint": "Arfii 3-30, qubee, lakkoofsa, sarara gadii",

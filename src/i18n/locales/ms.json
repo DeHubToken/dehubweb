@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klik ikon kamera untuk memuat naik",
     "displayName": "Nama Paparan",
     "enterDisplayName": "Masukkan nama paparan anda",
+    "displayNameOptionalHint": "Nama awam anda yang dipaparkan pada profil. Pilihan — biarkan kosong untuk menggunakan nama pengguna anda.",
     "username": "Nama pengguna",
     "usernamePlaceholder": "namapengguna",
     "usernameHint": "3-30 aksara, huruf, nombor dan garis bawah sahaja",

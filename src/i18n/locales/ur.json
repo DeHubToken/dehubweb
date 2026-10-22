@@ -123,6 +123,7 @@
     "clickCameraUpload": "اپ لوڈ کے لیے کیمرہ آئیکن پر کلک کریں",
     "displayName": "ظاہری نام",
     "enterDisplayName": "اپنا ظاہری نام درج کریں",
+    "displayNameOptionalHint": "آپ کے پروفائل پر آپ کا عوامی نام۔ اختیاری — خالی چھوڑ دیں تو آپ کا صارف نام استعمال ہوگا۔",
     "username": "صارف نام",
     "usernamePlaceholder": "صارف",
     "usernameHint": "3-30 حروف، صرف حروف، نمبر اور انڈرسکور",

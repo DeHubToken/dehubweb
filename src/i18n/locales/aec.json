@@ -122,6 +122,7 @@
     "clickCameraUpload": "دوس على الكاميرا علشان ترفع صورة",
     "displayName": "اسم العرض",
     "enterDisplayName": "أدخل اسم العرض بتاعك",
+    "displayNameOptionalHint": "اسمك العلني اللي بيظهر في ملفك. اختياري — سيبه فاضي وهنستخدم اسم المستخدم بتاعك.",
     "username": "اسم المستخدم",
     "usernamePlaceholder": "اسم المستخدم",
     "usernameHint": "3-30 حرف، حروف وأرقام وشرطات سفلية بس",
