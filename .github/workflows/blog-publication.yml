@@ -38,9 +38,11 @@ jobs:
       - run: pnpm install --no-frozen-lockfile
       - name: Generate versioned locale assets
         run: |
+          node scripts/generate-blog-manifest.mjs
           node scripts/build-seo-i18n.mjs
           version=$(node -p "require('./src/i18n/public-locales.json').version")
-          tar -czf /tmp/blog-locale-assets.tar.gz public/seo-i18n.json public/sitemap-static.xml src/i18n/public-locales.json "public/locale-pages/$version"
+          git diff --name-only -z > /tmp/generated-blog-files
+          tar -czf /tmp/blog-locale-assets.tar.gz --null -T /tmp/generated-blog-files "public/locale-pages/$version"
       - uses: actions/upload-artifact@v4
         with:
           name: blog-locale-assets
