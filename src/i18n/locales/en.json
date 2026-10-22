@@ -793,6 +793,8 @@
     "stagePay": "Paying DeHub Pay with {{symbol}}…",
     "stageDelivering": "DeHub Pay is sending your tokens…",
     "payViaDpay": "Paid to DeHub Pay, tokens arrive in about 30s",
+    "payDirect": "Sent straight to {{name}} in {{symbol}} on {{chain}}. No swap.",
+    "payDirectNoName": "Sent straight to the creator in {{symbol}} on {{chain}}. No swap.",
     "payViaBridgeDpay": "Moved to Base and paid to DeHub Pay, tokens arrive in about a minute",
     "dmSent": "Sent {{amount}} tokens to {{name}}!"
   },
@@ -897,6 +899,7 @@
     "price": "Price",
     "ppvDhbInfo": "Payments are in DeHub tokens on Base chain",
     "ppvUsdInfo": "Payments are in USD",
+    "ppvStableInfo": "Buyers pay in {{symbol}}, sent straight to you",
     "setupBounty": "Set Up Bounty",
     "viewersToReward": "Viewers to reward",
     "numberOfViewers": "Number of viewers",
@@ -7255,6 +7258,7 @@
     "weeksShort": "{{count}} wk"
   },
   "liveGift": {
+    "notEnoughToken": "Not enough {{symbol}} for this gift",
     "pickTier": "Pick a celebration",
     "plays": "Plays {{tier}} on the stream",
     "you": "You",

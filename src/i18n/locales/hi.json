@@ -603,6 +603,8 @@
     "stagePay": "{{symbol}} से DeHub Pay को भुगतान हो रहा है…",
     "stageDelivering": "DeHub Pay आपके टोकन भेज रहा है…",
     "payViaDpay": "DeHub Pay को भुगतान किया गया, टोकन लगभग 30 सेकंड में आते हैं",
+    "payDirect": "{{chain}} पर {{symbol}} में सीधे {{name}} को भेजा गया। कोई स्वैप नहीं।",
+    "payDirectNoName": "{{chain}} पर {{symbol}} में सीधे क्रिएटर को भेजा गया। कोई स्वैप नहीं।",
     "payViaBridgeDpay": "बेस पर ले जाया गया और DeHub Pay को भुगतान किया गया, टोकन लगभग एक मिनट में आते हैं",
     "dmSent": "{{name}} को {{amount}} टोकन भेजे गए!"
   },
@@ -702,6 +704,7 @@
     "price": "कीमत",
     "ppvDhbInfo": "भुगतान बेस पर DeHub टोकन में हैं",
     "ppvUsdInfo": "भुगतान USD में होता है",
+    "ppvStableInfo": "खरीदार {{symbol}} में भुगतान करते हैं, सीधे आपको मिलता है",
     "setupBounty": "पुरस्कार सेट करें",
     "viewersToReward": "पुरस्कार के लिए दर्शक",
     "numberOfViewers": "दर्शकों की संख्या",
@@ -6266,6 +6269,7 @@
     "weeksShort": "{{count}} सप्ताह"
   },
   "liveGift": {
+    "notEnoughToken": "इस उपहार के लिए पर्याप्त {{symbol}} नहीं है",
     "pickTier": "एक उत्सव चुनें",
     "plays": "स्ट्रीम पर {{tier}} चलाता है",
     "you": "आप",

@@ -603,6 +603,8 @@
     "stagePay": "{{symbol}}(으)로 DeHub Pay에 결제 중…",
     "stageDelivering": "DeHub Pay에서 토큰을 전송 중입니다…",
     "payViaDpay": "DeHub Pay로 결제됨, 토큰은 약 30초 후에 도착",
+    "payDirect": "{{chain}}의 {{symbol}}(으)로 {{name}}님에게 바로 전송됩니다. 스왑 없음.",
+    "payDirectNoName": "{{chain}}의 {{symbol}}(으)로 크리에이터에게 바로 전송됩니다. 스왑 없음.",
     "payViaBridgeDpay": "Base로 이동하여 DeHub Pay로 결제됨, 토큰은 약 1분 후에 도착",
     "dmSent": "{{name}}님에게 {{amount}} DHB를 보냈어요!"
   },
@@ -702,6 +704,7 @@
     "price": "가격",
     "ppvDhbInfo": "결제는 Base 체인의 DeHub 토큰으로 이루어집니다.",
     "ppvUsdInfo": "결제는 USD로 진행됩니다",
+    "ppvStableInfo": "구매자는 {{symbol}}(으)로 결제하며 바로 받게 됩니다",
     "setupBounty": "보상 설정",
     "viewersToReward": "보상할 시청자",
     "numberOfViewers": "시청자 수",
@@ -6250,6 +6253,7 @@
     "weeksShort": "{{count}} 주"
   },
   "liveGift": {
+    "notEnoughToken": "이 선물을 보내기에 {{symbol}}이(가) 부족합니다",
     "pickTier": "축하를 선택하세요",
     "plays": "스트림에서 {{tier}} 재생",
     "you": "당신",

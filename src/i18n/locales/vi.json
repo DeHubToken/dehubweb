@@ -617,6 +617,8 @@
     "stagePay": "Đang thanh toán DeHub Pay bằng {{symbol}}…",
     "stageDelivering": "DeHub Pay đang gửi token của bạn…",
     "payViaDpay": "Đã thanh toán cho DeHub Pay, token sẽ nhận được trong khoảng 30 giây",
+    "payDirect": "Gửi thẳng cho {{name}} bằng {{symbol}} trên {{chain}}. Không swap.",
+    "payDirectNoName": "Gửi thẳng cho nhà sáng tạo bằng {{symbol}} trên {{chain}}. Không swap.",
     "payViaBridgeDpay": "Đã chuyển sang Base và thanh toán cho DeHub Pay, token sẽ nhận được trong khoảng một phút",
     "dmSent": "Đã gửi {{amount}} token cho {{name}}!"
   },
@@ -716,6 +718,7 @@
     "price": "Price",
     "ppvDhbInfo": "Thanh toán bằng token DeHub trên chuỗi Base",
     "ppvUsdInfo": "Các thanh toán bằng USD",
+    "ppvStableInfo": "Người mua trả bằng {{symbol}}, gửi thẳng cho bạn",
     "setupBounty": "Set Up Bounty",
     "viewersToReward": "Viewers to reward",
     "numberOfViewers": "Number of viewers",
@@ -6268,6 +6271,7 @@
     "weeksShort": "{{count}} tuần"
   },
   "liveGift": {
+    "notEnoughToken": "Không đủ {{symbol}} cho món quà này",
     "pickTier": "Chọn một màn ăn mừng",
     "plays": "Phát {{tier}} trên luồng trực tiếp",
     "you": "Bạn",

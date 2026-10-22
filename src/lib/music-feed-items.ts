@@ -79,7 +79,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     isAudio: isAudioPost,
     isPPV: nft.is_ppv,
     ppvPrice: nft.ppv_price,
-    ppvCurrency: nft.ppv_currency,
+    ppvCurrency: nft.ppv_currency || nft.streamInfo?.payPerViewTokenSymbol,
     isW2E: nft.is_w2e,
     isLocked: nft.is_locked || nft.streamInfo?.isLockContent,
     lockedPrice: nft.locked_price || nft.streamInfo?.lockContentAmount,
