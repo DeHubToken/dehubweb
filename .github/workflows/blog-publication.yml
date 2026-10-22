@@ -1,0 +1,39 @@
+name: Blog publication
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/data/posts/**'
+      - 'src/data/newPosts.ts'
+      - 'scripts/public-page-translations/**'
+      - 'scripts/build-public-locales.mjs'
+      - '.github/workflows/blog-publication.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: blog-publication-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build blog and public locales
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm build
