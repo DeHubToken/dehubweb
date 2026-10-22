@@ -4872,6 +4872,7 @@
       "poll": "民调"
     },
     "hints": {
+      "poll": "您的实时投票，每个选项都有投票按钮",
       "tip_alert": "为每个打赏庆祝，大小随等级而定",
       "follow_alert": "显示每个新关注者",
       "subscribe_alert": "显示每个新订阅者",
@@ -4922,6 +4923,7 @@
       "fast": "快"
     },
     "rules": {
+      "placeholdersLive": "在文本中使用{name}、{title}和{link} ：您的姓名、广播标题和观看链接。",
       "title": "规则",
       "intro": "当您的直播中发生某些事情时，DeHub 会执行您选择的操作：显示提醒、播放声音、朗读文字、在聊天中发送或通知您的 Discord。",
       "add": "添加规则",

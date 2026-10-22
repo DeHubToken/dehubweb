@@ -4728,6 +4728,7 @@
   },
   "liveStudio": {
     "polls": {
+      "title": "Kuri'u",
       "intro": "Tambayi mutanen da ke kallon watsa shirye-shiryenku wata tambaya. Suna amsawa tare da maɓallin a cikin aikace-aikacen DeHub, ko ta hanyar buga {{command}} da lambar zaɓi a cikin hira.",
       "question": "Tambaya",
       "questionPlaceholder": "Me ya kamata in yi wasa na gaba?",

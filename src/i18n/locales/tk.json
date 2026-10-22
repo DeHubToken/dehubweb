@@ -4702,6 +4702,7 @@
     "topSupporters": "Ýolbaşçylyk maslahaty",
     "chatPreview": "Çat habarlary bu ýerde görünýär",
     "poll": {
+      "votes_other": "{{count}} ses",
       "closed": "Saýlama ýapyldy",
       "voteFor": "{{option}} üçin seslen",
       "signIn": "Saýlan",
@@ -4885,6 +4886,7 @@
       "fast": "Tiz"
     },
     "rules": {
+      "placeholdersLive": "Tekstiňizde {name}, {title} we {link} ulanyň: adyňyz, ýaýlymyň ady we tomaşa etmek üçin baglanyşyk.",
       "title": "Kanunlar",
       "intro": "Eger siz akmaňyzda bir zat bolanda, DeHub saýlan zadyňyzy edýär: duýduryş görkezip, ses çalýar, sesli bir zat okaýar, gürrüňdeşligiňizi goýýar ýa-da Discord-a habar berýär.",
       "add": "Ol bir düzgüni goýdy",

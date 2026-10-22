@@ -4019,6 +4019,18 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
+    "poll": {
+      "closed": "Dengdan girtî ye",
+      "voteFor": "Dengê xwe bide {{option}}",
+      "signIn": "Ji bo dengdanê têkeve",
+      "failed": "Dengê te nehat hejmartin. Dîsa biceribîne.",
+      "voted_one": "Te deng da · {{count}} deng",
+      "voted_other": "Te deng da · {{count}} deng",
+      "votes_one": "{{count}} deng",
+      "votes_other": "{{count}} deng",
+      "howToVote_one": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng",
+      "howToVote_other": "Ji bo dengdanê di sohbetê de {{command}} û hejmarekê binivîse · {{count}} deng"
+    },
     "someone": "Kesek",
     "newFollower": "Şopînerê nû: {{name}}",
     "newSubscriber": "Abonetiya nû: {{name}}",
@@ -4032,6 +4044,37 @@
     "chatPreview": "Peyamên chatê li vir xuya dibin"
   },
   "liveStudio": {
+    "polls": {
+      "title": "Rapirsî",
+      "intro": "Ji kesên ku weşana te temaşe dikin pirsekê bike. Ew bi bişkokekê di sepana DeHubê de, an jî bi nivîsandina {{command}} û hejmara vebijarkê di sohbetê de bersiv didin.",
+      "question": "Pirs",
+      "questionPlaceholder": "Ez paşê çi bilîzim?",
+      "option": "Vebijark {{n}}",
+      "addOption": "Vebijarkekê lê zêde bike",
+      "removeOption": "Vebijarka {{n}} rake",
+      "duration": "Dengdan çiqas vekirî dimîne",
+      "seconds_one": "{{count}} çirke",
+      "seconds_other": "{{count}} çirke",
+      "minutes_one": "{{count}} deqîqe",
+      "minutes_other": "{{count}} deqîqe",
+      "start": "Rapirsiyê dest pê bike",
+      "end": "Dengdanê niha biqedîne",
+      "started": "Rapirsiya te vekirî ye. Temaşevan niha dikarin deng bidin.",
+      "notLive": "Pêşî zindî bibe. Rapirsî li ser weşana ku tu niha dikî dimeşe.",
+      "startFailed": "Rapirsî dest pê nekir. Dîsa biceribîne.",
+      "closeFailed": "Dengdan neqediya. Dîsa biceribîne.",
+      "live": "Dengdan vekirî ye · {{time}} maye",
+      "ended": "Dengdan girtî ye",
+      "votes_one": "{{count}} deng",
+      "votes_other": "{{count}} deng",
+      "replaceHint": "Destpêkirina rapirsiyeke nû ya vekirî digire.",
+      "widgetHint": "Rapirsiya te ya zindî nîşan dide. Di sepana DeHubê de temaşevan ji bo dengdanê li vebijarkekê dixin; di OBSê de ji mirovan re dibêje ku di sohbetê de {{command}} û hejmarekê binivîsin.",
+      "sample": {
+        "a": "Tiştekî nû",
+        "b": "Bijareyeke kevn",
+        "c": "Tu hilbijêre"
+      }
+    },
     "title": "Live Studio",
     "subtitle": "Hişyarî û widget'ên bo navnîşanên te",
     "h1": "Live Studio — ئاگادارییەکانی ستریم، ئامانجەکان و ئۆڤەرلەیەکان بۆ دروستکەرانی DeHub",
@@ -4107,6 +4150,7 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
+      "poll": "Rapirsî",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4125,6 +4169,7 @@
       "rule_alert": "Hişyariyên qaîdeyan"
     },
     "hints": {
+      "poll": "Rapirsiya te ya zindî, bi bişkokeke dengdanê ji bo her vebijarkê",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4175,6 +4220,7 @@
       "fast": "Bilez"
     },
     "rules": {
+      "placeholdersLive": "Di nivîsa xwe de {name}, {title} û {link} bi kar bîne: navê te, sernavê weşanê û girêdanek ji bo temaşekirinê.",
       "title": "Rêgez",
       "intro": "Paşî ku li ser strîmê te karekî bêt kirin, DeHub dikare bêje ku te bêje: pêşengê bide pêşeng, zêdekeke bide pêşeng, peyva ku te bêje, li ser çatê te bêje an jî li ser Discordê te bêje.",
       "add": "Qaydeyek lê zêde bike",
@@ -4213,6 +4259,7 @@
       "webhookHint": "Webhookek Discord an Slack, an jî her navnîşana https-ê ku POST-ek qebûl dike.",
       "webhookText": "Peyama ji bo şandinê",
       "triggers": {
+        "live": "Tu dest bi weşanê dikî",
         "tip": "Serişteyek tê",
         "follow": "Kesek li pey digere",
         "subscribe": "Kesek abone dibe",

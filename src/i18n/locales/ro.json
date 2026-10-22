@@ -4789,6 +4789,9 @@
     "tipped": "{{name}} a trimis un cadou",
     "chatPreview": "Mesajele de chat apar aici",
     "poll": {
+      "howToVote_one": "Scrie {{command}} și un număr în chat ca să votezi · {{count}} vot",
+      "voted_one": "Ai votat · {{count}} vot",
+      "voted_other": "Ai votat · {{count}} voturi",
       "closed": "Votare închisă",
       "voteFor": "Vote pentru {{option}}",
       "signIn": "Conectează-te pentru a vota",

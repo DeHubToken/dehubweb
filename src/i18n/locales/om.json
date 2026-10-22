@@ -4749,6 +4749,7 @@
     "tipped": "{{name}} kennaa ergeera",
     "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu",
     "poll": {
+      "closed": "Sagalee kennuun cufameera",
       "voteFor": "Sagalee kennaa {{option}}",
       "signIn": "Filachuuf galmaa&#39;aa",
       "failed": "Sagaleen keessan hin lakkaa&#39;amne. Ammas yaalaa.",
@@ -4762,6 +4763,7 @@
   },
   "liveStudio": {
     "polls": {
+      "ended": "Sagalee kennuun cufameera",
       "title": "Filannoo",
       "intro": "Namoota tamsaasa kee ilaalaa jiran gaaffii gaafadhu. Isaanis appii DeHub keessatti button tokkoon, ykn chat keessatti {{command}} fi lakkoofsa filannoo sanaa barreessuudhaan deebii kennu.",
       "question": "Gaaffii",
@@ -4866,6 +4868,7 @@
       "join": "Itti makamuu"
     },
     "kinds": {
+      "poll": "Sagalee",
       "tip_alert": "Gorsa akeekkachiisa",
       "follow_alert": "Akeekkachiisa hordofaa",
       "subscribe_alert": "Akeekkachiisa maamilootaa",

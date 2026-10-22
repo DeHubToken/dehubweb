@@ -4600,6 +4600,8 @@
     "tipped": "{{name}} nganti hadiah",
     "chatPreview": "Pesanan chat ditampilin gini",
     "poll": {
+      "howToVote_one": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan",
+      "howToVote_other": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan",
       "closed": "Voting ditutup",
       "voteFor": "Milih {{option}}",
       "signIn": "Mlebu kanggo milih",

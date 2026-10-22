@@ -4350,12 +4350,44 @@
     "tipped": "{{name}} 送咱个礼物",
     "chatPreview": "聊天訊息會出現喔",
     "poll": {
+      "closed": "投票已关闭",
+      "voteFor": "投票给{{option}}",
+      "failed": "您的投票未计入。请重试。",
+      "voted_one": "您投了· {{count}}票",
+      "voted_other": "您投了· {{count}}票",
+      "votes_one": "{{count}}票",
+      "howToVote_one": "在聊天中输入{{command}}和一个数字进行投票· {{count}}投票",
+      "howToVote_other": "在聊天中输入{{command}}和一个数字进行投票· {{count}}票",
       "signIn": "登入投票",
       "votes_other": "{{count}} 票"
     }
   },
   "liveStudio": {
     "polls": {
+      "title": "投票",
+      "intro": "向观看您直播的人询问一个问题。他们可以在DeHub应用程序中使用按钮回答问题，也可以在聊天中输入{{command}}和选项的编号。",
+      "question": "问题",
+      "questionPlaceholder": "接下来我应该玩什么？",
+      "option": "选项{{n}}",
+      "addOption": "添加选项",
+      "removeOption": "删除选项{{n}}",
+      "duration": "投票时间持续多久？",
+      "seconds_one": "{{count}}秒",
+      "start": "开始投票",
+      "end": "立即停止投票",
+      "started": "您的投票已开放。观众现在可以投票了。",
+      "notLive": "先上线。民意调查将在您目前正在流式传输的广播上运行。",
+      "startFailed": "投票未开始。请重试。",
+      "closeFailed": "投票未结束。请重试。",
+      "ended": "投票已关闭",
+      "votes_one": "{{count}}票",
+      "replaceHint": "开始新的投票将关闭打开的投票。",
+      "widgetHint": "显示您的实时投票。 在DeHub应用程序中，查看者点击一个投票选项；在OBS中，它告诉人们在聊天中输入{{command}}和一个数字。",
+      "sample": {
+        "a": "新事物",
+        "b": "古老的最爱",
+        "c": "您选择"
+      },
       "seconds_other": "{{count}} 秒鐘",
       "minutes_one": "{{count}} 分錶",
       "minutes_other": "{{count}} 分錶",
@@ -4407,6 +4439,7 @@
       "join": "加入"
     },
     "kinds": {
+      "poll": "投票",
       "tip_alert": "打赏提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅提醒",
@@ -4425,6 +4458,7 @@
       "rule_alert": "规则警报"
     },
     "hints": {
+      "poll": "您的实时投票，每个选项都有投票按钮",
       "tip_alert": "为每笔打赏庆祝，按等级大小显示",
       "follow_alert": "显示每位新关注者",
       "subscribe_alert": "显示每位新订阅者",
@@ -4475,6 +4509,7 @@
       "fast": "快"
     },
     "rules": {
+      "placeholdersLive": "在文本中使用{name}、{title}和{link} ：您的姓名、广播标题和观看链接。",
       "title": "规则",
       "intro": "当您的视频流出现问题时， DeHub会执行您选择的操作：显示提醒、播放声音、大声朗读、在聊天中发布帖子或告诉您的Discord。",
       "add": "添加规则",
@@ -4513,6 +4548,7 @@
       "webhookHint": "Discord或Slack网络钩子，或接受帖子的任何https地址。",
       "webhookText": "要发送的消息",
       "triggers": {
+        "live": "您开始广播",
         "tip": "小费已到账",
         "follow": "有人关注",
         "subscribe": "有人订阅",

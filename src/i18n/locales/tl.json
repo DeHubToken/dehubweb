@@ -4959,6 +4959,7 @@
       "join": "Sumali"
     },
     "kinds": {
+      "poll": "Botohan",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",
