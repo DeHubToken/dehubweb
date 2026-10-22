@@ -5017,6 +5017,7 @@
         "command": "Mamaly ny !baiko ao amin'ny chat"
       },
       "presetText": {
+        "thankFollowers": "Misaotra tamin'ny fanarahana, {name}!",
         "readChat": "{name} says {message}",
         "bigTip": "{name} sent {amount} DHB!",
         "command": "Miarahaba ny {name} 0, tongasoa ato amin'ny onja!"

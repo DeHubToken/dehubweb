@@ -4960,10 +4960,14 @@
         "command": "Хариулсан! Таны чат дахь тушаал"
       },
       "presetText": {
+        "bigTip": "{name} {amount} DHB илгээлээ!",
+        "readChat": "{name}: {message}",
         "thankFollowers": "Дагаж байгаад баярлалаа, {name}!",
         "command": "Сайн байна уу {name}, урсгалд тавтай морилно уу!"
       },
       "sounds": {
+        "ba-dum-tish": "Ба дам тиш",
+        "drumroll": "Бөмбөрийн цохилт",
         "airhorn": "Эйр эвэр",
         "applause": "Алга ташилт",
         "cricket": "Цэцэрлэгүүд",

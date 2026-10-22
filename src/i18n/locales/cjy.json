@@ -4883,6 +4883,7 @@
       "chatText": "要发布的消息",
       "webhookText": "要发送的消息",
       "actionTypes": {
+        "say": "朗读",
         "alert": "显示提醒",
         "sound": "播放声音",
         "chat": "在聊天中发布",

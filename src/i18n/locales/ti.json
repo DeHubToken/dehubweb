@@ -4819,6 +4819,7 @@
       "fast": "ቀልጢፍካ"
     },
     "rules": {
+      "placeholders": "ኣብ ጽሑፍካ {name}፣ {amount}ን {message}ን ተጠቐም። ኣብ መልእኽቲ ዘለዉ ሊንክታት ይእለዩ።",
       "title": "ደንቦች",
       "intro": "በእንደገና ላይ ምንም ነገር ሲከሰት፣ DeHub ምን እንደምትመርጠው ያደርጋል፡ ማንቂያ ያሳያል፣ ድምጽ ይጫወታል፣ ምንዳ ይነግራል፣ በቻትህ ውስጥ ይልጥ ወይም ዲስኮርድህን ይነግራል።",
       "add": "ደንብ ጨምር",
@@ -4894,6 +4895,8 @@
         "command": "መልሲ ሀ !ትእዛዝ ኣብ ቻት"
       },
       "presetText": {
+        "bigTip": "{name} {amount} DHB ሰዲዱ!",
+        "readChat": "{name} ይብል {message}",
         "thankFollowers": "ስለቲ ዝስዕብኩም አመስግነኩም {name}!",
         "command": "ሰላም {name}, ናብ'ቲ ዥረት እንበጽሓኩም!"
       },

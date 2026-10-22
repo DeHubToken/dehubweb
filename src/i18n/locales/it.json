@@ -4933,6 +4933,7 @@
       "fast": "Veloce"
     },
     "rules": {
+      "test": "Prova",
       "title": "Regole",
       "intro": "Quando succede qualcosa sul tuo stream, DeHub fa ciò che scegli: mostra un avviso, riproduce un suono, legge qualcosa ad alta voce, pubblica nella tua chat o informa il tuo Discord.",
       "add": "Aggiungi una regola",
