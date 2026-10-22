@@ -126,7 +126,7 @@ export function NewMembersCarousel({
   const title = isWithinNewWindow(members[0].joinedAt) ? 'New members' : 'Latest members';
 
   return (
-    <div className={cn('py-4 border-y border-zinc-800/50', className)}>
+    <div data-discovery-section className={cn('py-4 border-y border-zinc-800/50', className)}>
       {showHeader && (
         <div className="flex items-center justify-between px-4 mb-3">
           <div className="flex items-center gap-2">
@@ -150,12 +150,13 @@ export function NewMembersCarousel({
       >
         {members.map((member) => (
           <div
+            data-discovery-card
             key={member.address}
             onClick={() => openProfile(member)}
             className="flex-shrink-0 w-[104px] bg-zinc-900 rounded-xl p-1 cursor-pointer hover:bg-zinc-800/80 transition-colors snap-start"
           >
             <div className="flex flex-col items-center text-center">
-              <Avatar className="w-24 h-24 mb-2">
+              <Avatar data-discovery-avatar className="w-24 h-24 mb-2">
                 {member.avatarUrl && <AvatarImage src={member.avatarUrl} />}
                 <AvatarFallback className="bg-zinc-700 text-white font-medium text-xl">
                   {member.displayName.charAt(0).toUpperCase()}
@@ -172,6 +173,7 @@ export function NewMembersCarousel({
               <span className="text-[10px] text-zinc-500 mb-1.5 truncate max-w-full">{_copy("copy.dbc44a64af92", { defaultValue: "joined " })}{joinedAgoLabel(member.joinedAt)}
               </span>
               <Button
+                data-discovery-follow
                 size="sm"
                 variant="outline"
                 onClick={(e) => handleFollow(e, member)}

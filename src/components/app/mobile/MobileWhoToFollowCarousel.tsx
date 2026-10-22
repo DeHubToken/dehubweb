@@ -167,7 +167,7 @@ export function MobileWhoToFollowCarousel() {
 
   if (isLoading) {
     return (
-      <div className="py-4">
+      <div data-discovery-section className="py-4">
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
         </div>
@@ -177,7 +177,7 @@ export function MobileWhoToFollowCarousel() {
 
   if (filteredSuggestions.length === 0) {
     return (
-      <div data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
+      <div data-discovery-section data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
         <AppState
           icon="subscriptions"
           title={_copy("copy.f45e06965f93", { defaultValue: "No follow suggestions yet" })}
@@ -190,7 +190,7 @@ export function MobileWhoToFollowCarousel() {
   }
 
   return (
-    <div data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
+    <div data-discovery-section data-who-to-follow data-no-swipe className="py-4 border-b border-zinc-800/50">
       {/* Header */}
       <div className="flex items-center justify-between px-4 mb-3">
         <div className="flex items-center gap-2">
@@ -212,12 +212,13 @@ export function MobileWhoToFollowCarousel() {
       >
         {filteredSuggestions.map((user) => (
           <div
+            data-discovery-card
             key={user.address}
             onClick={() => handleUserClick(user)}
             className="flex-shrink-0 w-[104px] bg-zinc-900 rounded-xl p-1 cursor-pointer hover:bg-zinc-800/80 transition-colors snap-start"
           >
             <div className="flex flex-col items-center text-center">
-              <Avatar className="w-24 h-24 mb-2">
+              <Avatar data-discovery-avatar className="w-24 h-24 mb-2">
                 {getAvatarUrl(user) && <AvatarImage src={getAvatarUrl(user)} />}
                 <AvatarFallback className="bg-zinc-700 text-white font-medium text-xl">
                   {getDisplayName(user).charAt(0).toUpperCase()}
@@ -236,6 +237,7 @@ export function MobileWhoToFollowCarousel() {
                 </BadgedName>
               </div>
               <Button
+                data-discovery-follow
                 size="sm"
                 variant="outline"
                 onClick={(e) => handleFollow(e, user)}

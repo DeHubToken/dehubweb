@@ -30,6 +30,10 @@ html[data-theme='glass'][data-theme] {
   --stage-accent: #d7ffff;
   --stage-on-accent: #04181c;
   --stage-avatar: var(--stage-solid);
+  --kit-chip-active-bg: linear-gradient(145deg, rgb(225 255 255 / .3), color-mix(in srgb, var(--tint-accent) 26%, transparent));
+  --kit-chip-active-ink: #f2ffff;
+  --kit-chip-bg: color-mix(in srgb, var(--tint-accent) 8%, transparent);
+  --kit-chip-ink: #c3e5e7;
   --background: 190 72% 7%;
   --foreground: 180 100% 97%;
   --card: 190 60% 10%;
@@ -68,6 +72,37 @@ html[data-theme='glass'] :is([data-glass-loading-surface], [data-kit-section]) {
 }
 html[data-theme='glass'] [data-notification-row] { background-color: transparent !important; }
 html[data-theme='glass'] [data-notification-row][data-unread] { background-color: color-mix(in srgb, var(--tint-accent) 10%, transparent) !important; }
+html[data-theme='glass'] [data-discovery-section] {
+  margin-block: 12px; padding-block: 16px; border: 0; border-radius: 24px;
+  background: var(--glass-highlight), color-mix(in srgb, var(--tint-mix) 58%, transparent);
+  box-shadow: var(--glass-edge); backdrop-filter: var(--glass-blur);
+}
+html[data-theme='glass'] [data-page-bento] [data-discovery-section] {
+  margin-block: 0; padding-block: 0; background: transparent; box-shadow: none; backdrop-filter: none;
+}
+html[data-theme='glass'] [data-discovery-card] {
+  width: 136px; padding: 12px; border-radius: 20px;
+  background: linear-gradient(155deg, rgb(225 255 255 / .12), transparent 45%), color-mix(in srgb, var(--tint-mix) 64%, transparent) !important;
+  box-shadow: inset 0 0 0 1px rgb(225 255 255 / .32), inset 0 1px 1px rgb(255 255 255 / .7), inset 0 -6px 12px -10px var(--tint-accent);
+  transition: box-shadow 160ms ease;
+}
+html[data-theme='glass'] [data-discovery-avatar] {
+  width: 88px; height: 88px; margin-bottom: 10px; border-radius: 24px;
+  box-shadow: 0 0 0 1px rgb(225 255 255 / .45), 0 6px 16px rgb(0 20 24 / .2);
+}
+html[data-theme='glass'] [data-discovery-avatar] > span { background: var(--theme-control-raised); color: #efffff; }
+html[data-theme='glass'] [data-discovery-follow] { width: 100%; height: 30px; border-radius: 999px; }
+html[data-theme='glass'] :is([data-kit-chip], [data-kit-square])[data-active='true'] { box-shadow: var(--glass-edge-flat), 0 0 18px -8px var(--tint-accent); }
+html[data-theme='glass'] :is([data-poll-card], [data-kit-empty], [data-app-state][data-app-state-size='page']) {
+  border-radius: 24px; border-color: transparent;
+  background: var(--glass-highlight), var(--theme-control-fill); box-shadow: var(--glass-edge);
+}
+html[data-theme='glass'] :is([data-page-bento], [data-feed-item], [data-side-panel]) :is([data-kit-empty], [data-app-state]) { background: transparent; box-shadow: none; }
+@media (hover: hover) {
+  html[data-theme='glass'] [data-discovery-card]:hover {
+    box-shadow: inset 0 0 0 1px rgb(225 255 255 / .65), inset 0 1px 1px #fff, inset 0 -8px 16px -10px var(--tint-accent);
+  }
+}
 html[data-theme='glass'] #app-root :is(input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='color']), textarea, select):not([data-on-media] *):not([data-keep-dark] *) {
   background-color: var(--theme-control-fill) !important;
   border-color: rgb(225 255 255 / .24);
@@ -91,12 +126,12 @@ html[data-theme='glass'] [data-article] {
 
 [data-glass-background] {
   position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
-  background: radial-gradient(ellipse at 45% 25%, color-mix(in srgb, var(--tint-accent) 34%, #002c31), color-mix(in srgb, var(--tint-accent) 12%, #001b20));
+  background: radial-gradient(ellipse at 45% 25%, color-mix(in srgb, var(--tint-accent) 42%, #002c31), color-mix(in srgb, var(--tint-accent) 18%, #001b20));
 }
 [data-glass-light] {
-  position: absolute; inset: -25%; width: 150%; height: 150%;
+  position: absolute; inset: -12%; width: 124%; height: 124%;
   color: color-mix(in srgb, var(--tint-accent) 65%, #dfffff);
-  filter: blur(3px); will-change: transform;
+  filter: blur(5px); will-change: transform;
   animation: glass-drift 36s ease-in-out infinite alternate;
 }
 [data-glass-light='two'] {
