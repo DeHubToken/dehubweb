@@ -4887,7 +4887,8 @@
       "reaction_counter": "Fanehoan-kevitra manohitra",
       "event_feed": "Hetsika vao haingana",
       "chat_box": "Efitrano firesahana",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "rule_alert": "Fampitandremana momba ny fitsipika"
     },
     "hints": {
       "tip_alert": "Mankalaza ny tip rehetra, arakaraka ny haavon'izy ireo",
@@ -4904,7 +4905,8 @@
       "reaction_counter": "Manisa ny fanehoan-kevitra rehetra ataon'ny fampielezam-peo",
       "event_feed": "Ny fanomezam-pahasoavana farany, ny mpanaraka, ny mpanjifany ary ny olona mizara ny fampielezam-peo",
       "chat_box": "Mampiseho ny hafatra amin'ny chat alefanao amin'ny efijery",
-      "ticker": "Tsipika avy amin'ny andinin-teninao manokana izay manavatsava ny fàfana"
+      "ticker": "Tsipika avy amin'ny andinin-teninao manokana izay manavatsava ny fàfana",
+      "rule_alert": "Toerana hita ny fampitandremana momba ny fitsipika"
     },
     "fields": {
       "style": "Endrika",
@@ -4937,6 +4939,102 @@
       "slow": "Meda",
       "normal": "Tokony ho izy",
       "fast": "Faingana"
+    },
+    "rules": {
+      "title": "Fitsipika",
+      "intro": "Rehefa mitranga zavatra amin'ny amin'ny stream, DeHub dia manao izay nofidianao: mampiseho fampitandremana, mijinja feo, mamaky zavatra amin'ny feo, manoratra amin'ny chat na milaza amin'ny Discord.",
+      "add": "Manampy fitsipika",
+      "limit": "Nakarating ianao ny fetra amin'ny {{count}} fitsipika.",
+      "loadFailed": "Tsy afaka naloaka ny fitsipika. Avereno ny pejy mba hiezaka indray.",
+      "empty": "Tsy misy fitsipika pa. Manampy iray mba hifampitaona amin'ny tips, follows na chat commands.",
+      "saved": "Voasaved ny fitsipika. Miasa izy ireo amin'ny tip, follow na hafatra manaraka.",
+      "saveFailed": "Tsy afaka nasaved ny fitsipika.",
+      "testFailed": "Tsy nandalo ny test. Ezaka indray rehefa kely.",
+      "saveToTest": "Voasaved ny fitsipika mba hizahana azy ireo",
+      "test": "Hizahana",
+      "enabled": "Fitsipika amin'ny",
+      "remove": "Fafana fitsipika",
+      "save": "Voasaved ny fitsipika",
+      "needsAlertWidget": "Ny fampitandremana sasany dia mampiseho fampitandremana. Manampy ny Rule alerts widget mba hisy toerana hita.",
+      "name": "Anarana",
+      "when": "Rehefa",
+      "then": "Avy eo",
+      "minAmount": "Tip kely indrindra (DHB)",
+      "command": "Baiko",
+      "keyword": "Teny na fehezanteny",
+      "audience": "Iza no afaka mamokatra azy",
+      "blockedWords": "Teny voarara",
+      "blockedWordsHint": "Misaraka amin'ny koma. Ny hafatra misy azy ireo dia tsy miangona ary tsy hamaky amin'ny feo.",
+      "cooldown": "Antoka eo amin'ny fampiasana (segondra)",
+      "userCooldown": "Antoka isaky ny mpijery (segondra)",
+      "addAction": "Manampy hetsika",
+      "removeAction": "Esorina ny hetsika",
+      "placeholders": "Ampiasao ny {name}, {amount} sy {message} ao amin'ny lahatsoratrao. Rohy mankany amin'ny hafatra dia maty.",
+      "alertText": "Lahabolana fanairana",
+      "sound": "Feo",
+      "sayText": "Lahatsoratra vakina mafy",
+      "chatText": "Hafatra ho an'ny lahatsoratra",
+      "chatHint": "Nalefa avy amin'ny kaonty ao amin'ny stream. Tsy mety averina ny hafatry ny mpijery.",
+      "webhookUrl": "Adiresin'ny Webhook",
+      "webhookHint": "Ny Discord na Slack webhook, na ny HTTPS adiresy izay manaiky ny lahatsoratra.",
+      "webhookText": "Ny hafatra ampitaiko",
+      "triggers": {
+        "tip": "Tonga ny SOSO-KEVITRA",
+        "follow": "Misy ny manaraka",
+        "subscribe": "Olona iray subscribes",
+        "share": "Nisy olona nizara ny renirano",
+        "command": "Misy baikom-piresahana ampiasaina",
+        "keyword": "Misy teny iray ao amin'ny hafatra amin'ny chat",
+        "chat": "Izay mety ho hafatra amin'ny chat"
+      },
+      "audiences": {
+        "everyone": "Ny rehetra",
+        "followers": "Mpanara-dia",
+        "subscribers": "Mpanjifa"
+      },
+      "actionTypes": {
+        "alert": "Asehoy ny fampilazana",
+        "sound": "Mamaky feo",
+        "say": "Vakio mafy",
+        "chat": "Alefaso mailaka amin'ny chat",
+        "webhook": "Alefaso any amin'ny webhook"
+      },
+      "summary": {
+        "tip": "Torohevitra avy amin'ny {{amount}} DHB na mihoatra"
+      },
+      "presets": {
+        "blank": "Fitsipika foana",
+        "readChat": "Vakio mafy ny resaka",
+        "bigTip": "Air tandroka ho an'ny toro-hevitra lehibe",
+        "thankFollowers": "Misaotra ireo mpanjohy vaovao",
+        "command": "Baikon'ny karajia"
+      },
+      "presetHints": {
+        "blank": "Manomboka amin'ny tsy misy na inona na inona",
+        "readChat": "Mamaky mafy ny hafatry ny mpanara-dia anao, iray isaky ny mpijery 30 segondra",
+        "bigTip": "Milalao anjomaran'ny rivotra ary mampiseho fanairana ho an'ny toro-hevitra 100,000 DHB na mihoatra",
+        "thankFollowers": "Mametraka ny misaotra anao amin'ny chat rehefa misy olona manaraka",
+        "command": "Mamaly ny !baiko ao amin'ny chat"
+      },
+      "presetText": {
+        "readChat": "{name} says {message}",
+        "bigTip": "{name} sent {amount} DHB!",
+        "command": "Miarahaba ny {name} 0, tongasoa ato amin'ny onja!"
+      },
+      "sounds": {
+        "airhorn": "Air anjomara",
+        "applause": "Tehaka",
+        "cricket": "Crickets",
+        "drumroll": "Drum horonan-taratasy",
+        "lol": "Mihomehy",
+        "ooh-ahh": "Ooh ahh",
+        "ooh-man": "Ooh (man)",
+        "ohh-girl": "Ohh (vehivavy)",
+        "ba-dum-tish": "Ba dum Tish",
+        "spooky": "Spooky",
+        "magic-spell": "Magic tsipelina",
+        "shhh": "Shhh"
+      }
     }
   },
   "live": {

@@ -4062,6 +4062,10 @@
     "save": "Tomarkirina",
     "saving": "Tomar dibe…",
     "saved": "Tomar bû. Navnîşana te sazkirina nû yê biryar dide bê dereng.",
+    "saveFailed": "نەتوانرا پاشەکەوت بکرێت. پەیوەندییەکەت بپشکنە و دووبارە هەوڵ بدەرەوە.",
+    "unsaved": "گۆڕانکارییە پاشەکەوت نەکراوەکان",
+    "loadFailed": "نەتوانرا ویجێتەکانت بار بکرێن. پەڕەکە نوێ بکەرەوە بۆ ئەوەی دووبارە هەوڵ بدەیتەوە.",
+    "limit": "تۆ گەیشتوویتە سنووری ٤٠ ویجێت.",
     "obs": {
       "title": "بەکارهێنان لەگەڵ OBS",
       "connected": "OBS پەیوەستە",
@@ -4095,10 +4099,6 @@
       "diagDead": "کار ناکات — لە Live Studio بەستەرێکی نوێ دروست بکە",
       "diagOffline": "ڕاستەوخۆ نییە"
     },
-    "saveFailed": "نەتوانرا پاشەکەوت بکرێت. پەیوەندییەکەت بپشکنە و دووبارە هەوڵ بدەرەوە.",
-    "unsaved": "گۆڕانکارییە پاشەکەوت نەکراوەکان",
-    "loadFailed": "نەتوانرا ویجێتەکانت بار بکرێن. پەڕەکە نوێ بکەرەوە بۆ ئەوەی دووبارە هەوڵ بدەیتەوە.",
-    "limit": "تۆ گەیشتوویتە سنووری ٤٠ ویجێت.",
     "tests": {
       "tip": "بەخشش",
       "follow": "فۆڵۆو",
@@ -4107,11 +4107,6 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
-      "stream_timer": "Demjimêra weşanê",
-      "reaction_counter": "Jimara reaksiyonan",
-      "event_feed": "Çalakiyên dawî",
-      "chat_box": "Qutiya chatê",
-      "ticker": "Nivîsa diherike",
       "tip_alert": "ئاگاداریی بەخشش",
       "follow_alert": "ئاگاداریی فۆڵۆو",
       "subscribe_alert": "ئاگاداریی سەبسکرایب",
@@ -4121,14 +4116,14 @@
       "top_supporters": "گەورەترین بەخشەرەکان",
       "viewer_count": "ژمارەی بینەران",
       "text": "دەق",
-      "frame": "چوارچێوە"
+      "frame": "چوارچێوە",
+      "stream_timer": "Demjimêra weşanê",
+      "reaction_counter": "Jimara reaksiyonan",
+      "event_feed": "Çalakiyên dawî",
+      "chat_box": "Qutiya chatê",
+      "ticker": "Nivîsa diherike"
     },
     "hints": {
-      "stream_timer": "Nîşan dide ku tu çiqas dem e weşanê dikî",
-      "reaction_counter": "Her reaksiyona ku weşana te distîne dijmêre",
-      "event_feed": "Diyariyên dawî, şopîner, abone û kesên ku weşana te parve dikin",
-      "chat_box": "Peyamên chatê yên weşana te li ser ekranê nîşan dide",
-      "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
       "follow_alert": "هەموو فۆڵۆوەرێکی نوێ نیشان دەدات",
       "subscribe_alert": "هەموو سەبسکرایبەرێکی نوێ نیشان دەدات",
@@ -4138,16 +4133,15 @@
       "top_supporters": "گەورەترین بەخشەرەکانت لەم ستریمەدا",
       "viewer_count": "چەند کەس سەیری دەکەن",
       "text": "هێڵێک لە دەق یان بەشی خوارەوەی شاشە",
-      "frame": "سنوورێک لە دەوری ستریمەکەت"
+      "frame": "سنوورێک لە دەوری ستریمەکەت",
+      "stream_timer": "Nîşan dide ku tu çiqas dem e weşanê dikî",
+      "reaction_counter": "Her reaksiyona ku weşana te distîne dijmêre",
+      "event_feed": "Diyariyên dawî, şopîner, abone û kesên ku weşana te parve dikin",
+      "chat_box": "Peyamên chatê yên weşana te li ser ekranê nîşan dide",
+      "ticker": "Rêzek ji nivîsa te ya ku li ser ekranê diherike"
     },
     "fields": {
-      "label": "Etîket",
-      "lines": "Rêzên tên nîşandan",
-      "showAvatars": "Wêneyên profîlê nîşan bide",
-      "speed": "Lez",
-      "slow": "Hêdî",
-      "normal": "Asayî",
-      "fast": "Bilez",
+      "style": "شێواز",
       "celebration": "Kêfî",
       "banner": "Banner",
       "minAmount": "Serê herî biçûk ê ku were nîşandan (DHB)",
@@ -4170,7 +4164,13 @@
       "thickness": "Qewîtî",
       "radius": "خڕکردنەوەی گۆشەکان",
       "accent": "Reng",
-      "style": "شێواز"
+      "label": "Etîket",
+      "lines": "Rêzên tên nîşandan",
+      "showAvatars": "Wêneyên profîlê nîşan bide",
+      "speed": "Lez",
+      "slow": "Hêdî",
+      "normal": "Asayî",
+      "fast": "Bilez"
     }
   },
   "live": {

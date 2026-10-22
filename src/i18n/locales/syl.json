@@ -4552,6 +4552,31 @@
       "slow": "স্লো",
       "normal": "নরমাল",
       "fast": "ফাস্ট"
+    },
+    "rules": {
+      "loadFailed": "আপনার নিয়মসমূহ লোড হ’লো না। পেজটা রিফ্রেশ করি’লে চেষ্টা করুন।",
+      "command": "কমান্ড",
+      "keyword": "শব্দ অথবা বাক্যাংশ",
+      "userCooldown": "ওৱাৰ ভিউৱাৰ পাৰ (সেকেন্ড)",
+      "webhookHint": "একটা ডিসকর্ড বা স্ল্যাক ওয়েবহুক, অথবা যেকোনো হট্টপট্টে ঠিকানা (https) যা POST পদ্ধতিতে ডেটা গ্রহণ করে।",
+      "audiences": {
+        "everyone": "সকল"
+      },
+      "presetText": {
+        "readChat": "{name} বললো: {message}",
+        "bigTip": "{name}-কে {amount} ডিএইচবি পাঠালো!",
+        "thankFollowers": "ধন্যবাদ ফলো করার জন্য, {name}!",
+        "command": "হ্যালো {name}, স্ট্রিমে স্বাগতম!"
+      },
+      "sounds": {
+        "ooh-ahh": "ওওহ আহহ",
+        "ooh-man": "ওওহ (পুরুষ)",
+        "ohh-girl": "ওহহ (মহিলা)",
+        "ba-dum-tish": "বা দাম তিশ",
+        "spooky": "স্পুকি",
+        "magic-spell": "মাজিক স্পেল",
+        "shhh": "শhh"
+      }
     }
   },
   "live": {

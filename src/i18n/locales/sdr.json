@@ -4558,6 +4558,39 @@
       "slow": "Slow",
       "normal": "Normal",
       "fast": "Fast"
+    },
+    "rules": {
+      "saved": "قواعدك محفوظة. ستعمل عند تيب أو تليك أو رسالتك التالية.",
+      "saveFailed": "کودهای شما ذخیره نشد.",
+      "saveToTest": "قوانین‌تو ذخیره کن تا امتحانشون کنم.",
+      "needsAlertWidget": "بَعضُ القَواعِدِ تُظْهِرُ تَحْذِيرًا. أَضِفِ وَجْهَةَ التَّحْذِيرَاتِ لِلْقَاعِدَةِ لِتَكُونَ لَهَا مَكَانًا لِلظَّهْرِ",
+      "name": "نام",
+      "when": "When",
+      "minAmount": "بەشەکەتەن تۆپ (DHB)",
+      "keyword": "کلمه یا عبارت",
+      "userCooldown": "دقیقه بر هر نگاهنده (ثانیه)",
+      "triggers": {
+        "chat": "Any chat message"
+      },
+      "audiences": {
+        "followers": "फॉलोअर्स"
+      },
+      "actionTypes": {
+        "alert": "Alert दिखाओ"
+      },
+      "presets": {
+        "blank": "Blank rule",
+        "bigTip": "बड़ा टिप्स के लिए एयर हॉर्न"
+      },
+      "presetText": {
+        "bigTip": "{name} sent {amount} DHB!"
+      },
+      "sounds": {
+        "ooh-ahh": "Ooh ahh",
+        "ooh-man": "ओह (मन)",
+        "ohh-girl": "Ohh (زنی)",
+        "ba-dum-tish": "Ba dum tish"
+      }
     }
   },
   "live": {
