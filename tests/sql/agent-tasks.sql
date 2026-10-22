@@ -96,6 +96,9 @@ END $$;
 RESET ROLE;
 SET ROLE service_role;
 DO $$ BEGIN
+ -- A task still holding the agent keeps its life session waiting.
+ IF public.claim_agent_life() IS NOT NULL THEN RAISE EXCEPTION 'Life claimed while a task holds the agent'; END IF;
+ UPDATE ai_agent_tasks SET lease=NULL,lease_until=NULL,status='paused';
  IF public.claim_agent_life() IS DISTINCT FROM '00000000-0000-0000-0000-000000000001'::uuid THEN RAISE EXCEPTION 'Due agent not claimed'; END IF;
  IF public.claim_agent_life() IS NOT NULL THEN RAISE EXCEPTION 'Leased agent claimed twice'; END IF;
 END $$;
