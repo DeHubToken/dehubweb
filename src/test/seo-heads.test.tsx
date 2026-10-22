@@ -257,6 +257,7 @@ const PAGE_CASES: { name: string; path: string; h1Substring: string }[] = [
   { name: 'Settings', path: 'src/pages/app/SettingsPage.tsx', h1Substring: 'Settings' },
   { name: 'Wallet', path: 'src/pages/app/FullWalletPage.tsx', h1Substring: 'Wallet' },
   { name: 'Command', path: 'src/pages/app/CommandCentrePage.tsx', h1Substring: 'Command' },
+  { name: 'Live Studio', path: 'src/pages/app/LiveStudioPage.tsx', h1Substring: "t('liveStudio.h1')" },
   { name: 'Explore', path: 'src/pages/app/ExplorePage.tsx', h1Substring: 'Explore' },
 ];
 

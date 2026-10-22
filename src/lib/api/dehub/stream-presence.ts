@@ -122,7 +122,7 @@ export function sendStreamReaction(streamId: string, value: unknown): void {
   }
 }
 
-interface StreamConnection {
+export interface StreamConnection {
   socket: Socket;
   /** The session token its handshake was built with. */
   token: string | null;
@@ -150,7 +150,7 @@ let active: StreamConnection | null = null;
  * So a rotated token retires the connection instead: it stops being handed out,
  * and closes itself once its last holder leaves.
  */
-function acquireStreamSocket(): StreamConnection {
+export function acquireStreamSocket(): StreamConnection {
   const token = getAuthToken();
 
   // Retire, don't close. Whoever still holds it keeps a working socket.
@@ -179,7 +179,7 @@ function acquireStreamSocket(): StreamConnection {
 }
 
 /** Give a share back. The socket closes when the last one is returned. */
-function releaseStreamSocket(conn: StreamConnection): void {
+export function releaseStreamSocket(conn: StreamConnection): void {
   conn.refs -= 1;
   if (conn.refs > 0) return;
   if (active === conn) active = null;
@@ -512,7 +512,7 @@ export type LiveRoomEvent =
   | { type: 'viewers'; count: number }
   | { type: 'overlayUpdated'; version: number };
 
-function roomUser(raw: any): StreamJoinUser {
+export function roomUser(raw: any): StreamJoinUser {
   const user = raw && typeof raw === 'object' ? raw : {};
   return {
     address: user.address ? String(user.address).toLowerCase() : undefined,
