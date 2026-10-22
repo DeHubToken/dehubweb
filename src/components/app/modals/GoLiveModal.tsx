@@ -1336,6 +1336,19 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                       keyLabel={t('goLive.streamKey')}
                       serverLabel={t('goLive.ingestUrl')}
                     />
+                    {/* Alerts and widgets live beside the key: the OBS overlay link is set up there. */}
+                    <a
+                      href="/live-studio"
+                      target="_blank"
+                      rel="noopener"
+                      className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs text-white hover:bg-white/10"
+                    >
+                      <span className="min-w-0">
+                        <span className="block font-medium">{t('liveStudio.settingsLinkTitle')}</span>
+                        <span className="block text-zinc-400">{t('liveStudio.settingsLinkBody')}</span>
+                      </span>
+                      <span className="shrink-0 font-medium">{t('liveStudio.open')}</span>
+                    </a>
                   </div>
                 )}
                 {replayBudget && (
