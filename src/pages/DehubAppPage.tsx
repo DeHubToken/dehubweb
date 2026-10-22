@@ -8,7 +8,6 @@ import {
   DEHUB_APP_LINKS,
   DEHUB_APP_PAGE,
   dehubAppFaqLd,
-  dehubAppSoftwareLd,
 } from "@/lib/dehub-app-page.js";
 import dehubWordmark from "@/assets/dehub-wordmark-white.png";
 
@@ -24,8 +23,9 @@ const JSON_LD = {
       name: DEHUB_APP_PAGE.title,
       description: DEHUB_APP_PAGE.description,
       url: PAGE_URL,
+      about: { "@type": "Thing", name: "DeHub", sameAs: [DEHUB_APP_LINKS.googlePlay, DEHUB_APP_LINKS.appStore] },
+      publisher: { "@type": "Organization", name: "DeHub", url: SITE_URL },
     },
-    dehubAppSoftwareLd(),
     dehubAppFaqLd(),
   ],
 };
