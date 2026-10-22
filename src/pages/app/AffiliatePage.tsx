@@ -31,6 +31,7 @@ import { useDeHubProfile } from "@/hooks/use-dehub-profile";
 import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, DEFAULT_AFFILIATE_LANDING, AFFILIATE_CTA_PRESETS, MAX_AFFILIATE_LANDING_CTAS, isSafeLandingDestination, loadAffiliateStats, saveAffiliateLanding, type AffiliateLandingCustomization, type AffiliateLandingCta, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 import { buildReferralDeepLink, sanitizeDeepLinkPath } from "@/lib/affiliateDeepLink";
+import { streamerInviteLink } from "@/lib/streamer-page.js";
 import { Input } from "@/components/ui/input";
 import { PageBody } from "@/components/app/page-kit/PageKit";
 
@@ -414,7 +415,10 @@ export default function AffiliatePage() {
               )}
 
               {stats?.code && (
-                <DeepLinkBuilder code={stats.code} onCopy={copy} />
+                <>
+                  <DeepLinkBuilder code={stats.code} onCopy={copy} />
+                  <StreamerInviteKit code={stats.code} onCopy={copy} />
+                </>
               )}
             </CardContent>
           </Card>
@@ -498,6 +502,27 @@ function DeepLinkBuilder({ code, onCopy }: { code: string; onCopy: (text: string
       <p className={`text-xs font-mono break-all ${invalid ? "text-red-400" : "text-white/50"}`}>
         {invalid ? _copy("copy.c184b8c9592f", { defaultValue: "That has to be a page on dehub.io." }) : link}
       </p>
+    </div>
+  );
+}
+
+/**
+ * Agency kit: a ready-to-send invite for live streamers. The link lands them on
+ * /stream with the visit already attributed (`/r/<CODE>?to=/stream`).
+ */
+function StreamerInviteKit({ code, onCopy }: { code: string; onCopy: (text: string, label?: string) => void }) {
+  const { t: _copy } = _useCopy();
+  const message = _copy("copy.cc96aaa18cf2", { defaultValue: "Come stream on DeHub with me. Tips land on-chain straight in your wallet, you own your audience, and you can keep posting to TikTok and everywhere else in one step. Sign up here: {{link}}", link: streamerInviteLink(SITE, code) });
+
+  return (
+    <div className="mt-5 pt-5 border-t border-white/10 space-y-3">
+      <div>
+        <h3 className="text-sm font-semibold text-white">{_copy("copy.b3412a3b86de", { defaultValue: "Invite streamers" })}</h3>
+        <p className="text-xs text-white/60">{_copy("copy.8c91325d901b", { defaultValue: "Send streamers to the DeHub streaming page with this message. Your link attributes them to you before they land." })}</p>
+      </div>
+      <p className="rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-white/80 whitespace-pre-line break-words">{message}</p>
+      <Button variant="secondary" onClick={() => onCopy(message, _copy("copy.846d8244b7d8", { defaultValue: "Invite message copied" }))}>
+        <Copy className="w-4 h-4 mr-2" />{_copy("copy.77db95ebd737", { defaultValue: " Copy message" })}</Button>
     </div>
   );
 }

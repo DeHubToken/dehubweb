@@ -9490,6 +9490,11 @@
     "reminderLater": "Pas maintenant"
   },
   "copy": {
+    "b3412a3b86de": "Invitez des streamers",
+    "8c91325d901b": "Envoyez des streamers vers la page streaming de DeHub avec ce message. Votre lien vous les attribue avant même qu’ils arrivent.",
+    "cc96aaa18cf2": "Viens streamer sur DeHub avec moi. Les pourboires arrivent on-chain directement dans ton portefeuille, ton audience t’appartient et tu peux continuer à publier sur TikTok et partout ailleurs en une seule étape. Inscris-toi ici : {{link}}",
+    "77db95ebd737": " Copier le message",
+    "846d8244b7d8": "Message d’invitation copié",
     "7af023c43013": "Documentation",
     "090940e73258": "Constructeur",
     "c3d4759d35d0": "Aperçu du constructeur",
