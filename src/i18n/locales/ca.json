@@ -4726,6 +4726,19 @@
     "tipped": "{{name}}ha enviat un regal",
     "chatPreview": "Els missatges de xat apareixen aquí"
   },
+  "liveChatModeration": {
+    "timeout1m": "Temps límit d'1 minut",
+    "timeout10m": "Temps límit de 10 minuts",
+    "timeout1h": "Temps límit d'1 hora",
+    "ban": "Bandejar d'aquestes transmissions",
+    "makeModerator": "Fer moderador",
+    "timedOut": "Temps límit aplicat.",
+    "banned": "Bandejat d'aquestes transmissions.",
+    "madeModerator": "Ara és moderador.",
+    "failed": "Això no ha funcionat. Torna-ho a intentar.",
+    "youAreBanned": "No pots xatejar a les transmissions d'aquest creador",
+    "youAreTimedOut": "Tens temps límit per un moment"
+  },
   "liveStudio": {
     "title": "Estudi en directe",
     "subtitle": "Avisos i ginys per als teus streams",
@@ -4870,9 +4883,9 @@
       "fast": "Ràpid"
     },
     "rules": {
-      "add": "Afegeix una regla",
       "title": "Normes",
       "intro": "Quan passa alguna cosa al teu flux, DeHub fa el que tu triïs: mostra una alerta, reprodueix un so, llegeix alguna cosa en veu alta, publica al teu xat o diu al teu Discord.",
+      "add": "Afegeix una regla",
       "limit": "Has arribat al límit de {{count}} normes.",
       "loadFailed": "No s'han pogut carregar les normes. Actualitza la pàgina per tornar-ho a provar.",
       "empty": "Encara no hi ha cap regla. Afegeix-ne una per respondre a suggeriments, seguiments o ordres de xat.",
@@ -4964,6 +4977,51 @@
         "spooky": "Espeluznant",
         "magic-spell": "Encantament màgic",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderació del xat",
+      "intro": "Regles per al xat sota totes les teves transmissions. Mai arriben al xat principal de DeHub: algú que baneges aquí pot seguir parlant a tot arreu.",
+      "loadFailed": "No s'han pogut carregar els teus paràmetres de moderació. Actualitza la pàgina per intentar-ho de nou.",
+      "save": "Desar regles del xat",
+      "saved": "Regles del xat desades.",
+      "saveFailed": "No s'ha pogut desar aquest canvi.",
+      "slowMode": "Mode lent",
+      "slowModeHint": "Quant de temps espera cada espectador entre missatges. Tu i els teus moderadors mai espereu.",
+      "off": "Desactivat",
+      "seconds_one": "{{count}} segon",
+      "seconds_other": "{{count}} segons",
+      "followersOnly": "Només seguidors",
+      "subscribersOnly": "Només subscriptors",
+      "subscribersOnlyHint": "Substitueix només seguidors.",
+      "bannedWords": "Paraules bandejades",
+      "bannedWordsHint": "Separa amb comes. Deletrejar una paraula lletra per lletra no ho evita.",
+      "wordAction": "Quan algú en fa servir una",
+      "wordBlock": "Aturar el missatge",
+      "wordTimeout": "Aturar-lo i aplicar-li temps límit d'un minut",
+      "moderators": "Moderadors",
+      "moderatorsHint": "Poden posar en espera i banar espectadors als teus streams. No poden actuar contra tu ni entre ells.",
+      "addModerator": "Afegir",
+      "usernamePlaceholder": "Nom d'usuari",
+      "moderatorAdded": "Moderador afegit.",
+      "moderatorNotFound": "No hi ha cap compte amb aquell nom d'usuari.",
+      "removeModerator": "Treure moderador",
+      "noModerators": "Encara no hi ha moderadors.",
+      "banned": "Banat dels teus streams",
+      "unban": "Desbanar",
+      "noBans": "No hi ha ningú banat.",
+      "log": "Accions recents",
+      "noLog": "Encara no hi ha res.",
+      "actions": {
+        "timeout_one": "{{actor}} va ser posat en espera {{target}} per {{count}} segon",
+        "timeout_other": "{{actor}} va ser posat en espera {{target}} per {{count}} segons",
+        "ban": "{{actor}} va banar {{target}}",
+        "unban": "{{actor}} va desbanar {{target}}",
+        "moderator-added": "{{target}} va esdevenir moderador",
+        "moderator-removed": "{{target}} ja no és moderador",
+        "word-blocked": "Va aturar un missatge de {{target}} per a \"{{word}}\"",
+        "word-timeout_one": "Va posar en espera {{target}} per {{count}} segon per a \"{{word}}\"",
+        "word-timeout_other": "Va posar en espera {{target}} per {{count}} segons per a \"{{word}}\""
       }
     }
   },

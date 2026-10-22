@@ -4789,6 +4789,19 @@
     "tipped": "{{name}} a trimis un cadou",
     "chatPreview": "Mesajele de chat apar aici"
   },
+  "liveChatModeration": {
+    "timeout1m": "Timed out for 1 minute",
+    "timeout10m": "Timed out for 10 minutes",
+    "timeout1h": "Timed out for 1 oră",
+    "ban": "Interzis din aceste difuziuni",
+    "makeModerator": "Face moderator",
+    "timedOut": "A fost timelined.",
+    "banned": "Interzis din aceste difuziuni.",
+    "madeModerator": "Acum sunt un moderator.",
+    "failed": "Nu a funcționat. Încercați din nou.",
+    "youAreBanned": "Nu puteți chatea în difuziunile acestui creator",
+    "youAreTimedOut": "Ați fost timelined pentru un moment"
+  },
   "liveStudio": {
     "title": "Studio live",
     "subtitle": "Alerte și widget-uri pentru fluxurile dvs.",
@@ -4933,7 +4946,6 @@
       "fast": "Rapid"
     },
     "rules": {
-      "test": "Testează",
       "title": "Reguli",
       "intro": "Când se întâmplă ceva în fluxul dvs., DeHub face ceea ce alegeți: afișează o alertă, redă un sunet, citește ceva cu voce tare, postează în chat sau vă spune Discord.",
       "add": "Adaugă o regulă",
@@ -4944,6 +4956,7 @@
       "saveFailed": "Regulile tale nu au putut fi salvate.",
       "testFailed": "Acel test nu a trecut. Încearcă din nou peste un moment.",
       "saveToTest": "Păstrează-ți regulile pentru a le testa",
+      "test": "Testează",
       "enabled": "Regulă privind",
       "remove": "Ștergeți regula",
       "save": "Salvează regulile",
@@ -5027,6 +5040,51 @@
         "spooky": "Înfricoșător",
         "magic-spell": "Vraja magică",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderarea chatului",
+      "intro": "Reguli pentru chat sub toate difuziunile tale. Acestea nu ajung niciodată în chat-ul principal DeHub: cineva pe care îl bani aici poate încă să vorbească oriunde altundeva.",
+      "loadFailed": "Setările tale de moderare nu au putut fi încărcate. Reîncărcați pagina pentru a încerca din nou.",
+      "save": "Salvează regulile chatului",
+      "saved": "Regulile chatului au fost salvate.",
+      "saveFailed": "Această schimbare nu a putut fi salvată.",
+      "slowMode": "Mod slow",
+      "slowModeHint": "Cât de mult trebuie să aștepte fiecare vizioner între mesaje. Tu și moderatorii tăi nu așteptați.",
+      "off": "Oprit",
+      "seconds_one": "{{count}} secundă",
+      "seconds_other": "{{count}} secunde",
+      "followersOnly": "Doar abonați",
+      "subscribersOnly": "Doar abonați",
+      "subscribersOnlyHint": "Acestea depășesc „doar abonați”.",
+      "bannedWords": "Cuvinte interzise",
+      "bannedWordsHint": "Separați cu virgule. Scrisul unui cuvânt literă cu literă nu îl ocolește.",
+      "wordAction": "Când cineva folosește unul",
+      "wordBlock": "Oprește mesajul",
+      "wordTimeout": "Oprește-l și timelindează-l pentru un minut",
+      "moderators": "Moderatori",
+      "moderatorsHint": "Pot pune pe timelimit și interzice vizionarii din stream-urile tale. Nu pot acționa asupra ta sau asupra lor.",
+      "addModerator": "Adaugă",
+      "usernamePlaceholder": "Nume utilizator",
+      "moderatorAdded": "Moderator adăugat.",
+      "moderatorNotFound": "Nu există un cont cu acest nume de utilizator.",
+      "removeModerator": "Elimină moderator",
+      "noModerators": "Nu sunt încă moderatori.",
+      "banned": "Interzis din stream-urile tale",
+      "unban": "Deinterzice",
+      "noBans": "Nimeni nu este interzis.",
+      "log": "Acțiuni recente",
+      "noLog": "Niciuna încă.",
+      "actions": {
+        "timeout_one": "{{actor}} a fost pus pe timelimit pentru {{target}} pentru {{count}} secundă",
+        "timeout_other": "{{actor}} a fost pus pe timelimit pentru {{target}} pentru {{count}} secunde",
+        "ban": "{{actor}} a interzis {{target}}",
+        "unban": "{{actor}} a deinterzis {{target}}",
+        "moderator-added": "{{target}} a devenit moderator",
+        "moderator-removed": "{{target}} nu mai este moderator",
+        "word-blocked": "A oprit un mesaj de la {{target}} pentru \"{{word}}\"",
+        "word-timeout_one": "A pus pe timelimit {{target}} pentru {{count}} secundă pentru \"{{word}}\"",
+        "word-timeout_other": "A pus pe timelimit {{target}} pentru {{count}} secunde pentru \"{{word}}\""
       }
     }
   },

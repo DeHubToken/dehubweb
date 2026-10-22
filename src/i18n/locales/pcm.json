@@ -4119,6 +4119,12 @@
     "followersUnit": "followers",
     "chatPreview": "Chat messages appear here"
   },
+  "liveChatModeration": {
+    "makeModerator": "Make moderator",
+    "timedOut": "Timed out.",
+    "failed": "Na dey go wrong. Try again.",
+    "youAreBanned": "Wahala! You no go chat inside dis creator's stream."
+  },
   "liveStudio": {
     "title": "Live Studio",
     "open": "Open Live Studio",
@@ -4185,9 +4191,9 @@
       "rule_alert": "Rule alerts"
     },
     "hints": {
-      "rule_alert": "Where your rules' alerts appear",
       "tip_alert": "Celebrate every tip, e size according to e tier",
-      "join_alert": "Welcomes each viewer as they arrive"
+      "join_alert": "Welcomes each viewer as they arrive",
+      "rule_alert": "Where your rules' alerts appear"
     },
     "fields": {
       "style": "Style",
@@ -4220,60 +4226,50 @@
       "fast": "Fast"
     },
     "rules": {
+      "title": "Rules",
       "intro": "When something happens on your stream, DeHub does what you choose: shows an alert, plays a sound, reads something aloud, posts in your chat or tells your Discord.",
+      "add": "Add a rule",
       "limit": "You have reached the limit of {{count}} rules.",
       "loadFailed": "Your rules could not be loaded. Refresh the page to try again.",
       "empty": "No rules yet. Add one to react to tips, follows or chat commands.",
       "saved": "Rules saved. They run on your next tip, follow or message.",
-      "saveToTest": "Save your rules to test them",
-      "needsAlertWidget": "Some rules show an alert. Add the Rule alerts widget so it has somewhere to appear.",
-      "audience": "Who can set it off",
-      "placeholders": "Use {name}, {amount} and {message} in your text. Links in messages are removed.",
-      "sayText": "Text to read aloud",
-      "chatHint": "Posted from your account into your stream's chat. It cannot repeat the viewer's message.",
-      "webhookHint": "A Discord or Slack webhook, or any https address that accepts a POST.",
-      "summary": {
-        "tip": "Tip of {{amount}} DHB or more"
-      },
-      "presetHints": {
-        "blank": "Start from nothing",
-        "readChat": "Reads your followers' messages aloud, one per viewer every 30 seconds",
-        "bigTip": "Plays an air horn and shows an alert for tips of 100,000 DHB or more",
-        "thankFollowers": "Posts a thank-you in your chat when someone follows",
-        "command": "Answers a !command in your chat"
-      },
-      "title": "Rules",
-      "add": "Add a rule",
       "saveFailed": "Na rules no dey save for you.",
       "testFailed": "Na dem test no go pass. Try again after a while.",
+      "saveToTest": "Save your rules to test them",
       "test": "Test",
       "enabled": "Rule on",
       "remove": "Delete rule",
       "save": "Save rules",
+      "needsAlertWidget": "Some rules show an alert. Add the Rule alerts widget so it has somewhere to appear.",
       "name": "Name",
       "when": "When",
       "then": "Then",
       "minAmount": "Smallest tip (DHB)",
       "command": "Command",
       "keyword": "Word or phrase",
+      "audience": "Who can set it off",
       "blockedWords": "Blocked words",
       "blockedWordsHint": "Separate wit' comma. Messages wey contain dem, dey go ignore for good, no read dem oga.",
       "cooldown": "Wait between uses (seconds)",
       "userCooldown": "Wait per viewer (seconds)",
       "addAction": "Add an action",
       "removeAction": "Remove action",
+      "placeholders": "Use {name}, {amount} and {message} in your text. Links in messages are removed.",
       "alertText": "Alert text",
       "sound": "Sound",
+      "sayText": "Text to read aloud",
       "chatText": "Message to post",
+      "chatHint": "Posted from your account into your stream's chat. It cannot repeat the viewer's message.",
       "webhookUrl": "Webhook address",
+      "webhookHint": "A Discord or Slack webhook, or any https address that accepts a POST.",
       "webhookText": "Message to send",
       "triggers": {
-        "share": "Someone shares the stream",
-        "command": "A chat command is used",
-        "keyword": "A chat message contains a word",
         "tip": "A tip arrives",
         "follow": "Someone follows",
         "subscribe": "Someone subscribes",
+        "share": "Someone shares the stream",
+        "command": "A chat command is used",
+        "keyword": "A chat message contains a word",
         "chat": "Any chat message"
       },
       "audiences": {
@@ -4288,18 +4284,28 @@
         "chat": "Post in chat",
         "webhook": "Send to a webhook"
       },
+      "summary": {
+        "tip": "Tip of {{amount}} DHB or more"
+      },
       "presets": {
-        "bigTip": "Air horn for big tips",
-        "thankFollowers": "Thank new followers",
         "blank": "Blank rule",
         "readChat": "Read chat aloud",
+        "bigTip": "Air horn for big tips",
+        "thankFollowers": "Thank new followers",
         "command": "Chat command"
       },
+      "presetHints": {
+        "blank": "Start from nothing",
+        "readChat": "Reads your followers' messages aloud, one per viewer every 30 seconds",
+        "bigTip": "Plays an air horn and shows an alert for tips of 100,000 DHB or more",
+        "thankFollowers": "Posts a thank-you in your chat when someone follows",
+        "command": "Answers a !command in your chat"
+      },
       "presetText": {
-        "thankFollowers": "Thanks for the follow, {name}!",
-        "command": "Hello {name}, welcome to the stream!",
         "readChat": "{name} says {message}",
-        "bigTip": "{name} sent {amount} DHB!"
+        "bigTip": "{name} sent {amount} DHB!",
+        "thankFollowers": "Thanks for the follow, {name}!",
+        "command": "Hello {name}, welcome to the stream!"
       },
       "sounds": {
         "airhorn": "Air horn",
@@ -4314,6 +4320,37 @@
         "spooky": "Spooky",
         "magic-spell": "Magic spell",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Chat moderation",
+      "intro": "Wahala na dem rule for chat under all my stream. Na dem never go reach DeHub main chat: any person you ban here still go talk anywhere else.",
+      "save": "Save chat rules",
+      "saved": "Chat rules saved.",
+      "saveFailed": "Na dem change no go save for you.",
+      "slowMode": "Slow mode",
+      "slowModeHint": "How long each person dey wait for message. You and your moderators no dey wait at all.",
+      "off": "Off",
+      "seconds_one": "{{count}} second",
+      "seconds_other": "{{count}} seconds",
+      "followersOnly": "Followers only",
+      "subscribersOnly": "Subscribers only",
+      "subscribersOnlyHint": "Overrides followers only.",
+      "bannedWords": "Banned words",
+      "moderators": "Moderators",
+      "moderatorsHint": "Dem can time out and ban people watchin' your stream. Dem can't do anything to you or to each other.",
+      "addModerator": "Add",
+      "usernamePlaceholder": "Username",
+      "moderatorAdded": "Moderator added.",
+      "removeModerator": "Remove moderator",
+      "noModerators": "No moderators yet.",
+      "unban": "Unban",
+      "noBans": "Nobody is banned.",
+      "log": "Recent actions",
+      "noLog": "Nothing yet.",
+      "actions": {
+        "ban": "{{actor}} banned {{target}}",
+        "unban": "{{actor}} unbanned {{target}}"
       }
     }
   },

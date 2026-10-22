@@ -4803,6 +4803,18 @@
     "tipped": "{{name}} huk regalota apachirqan",
     "chatPreview": "Kaypim rikurin rimanakuy willakuykuna"
   },
+  "liveChatModeration": {
+    "timeout1m": "1 minutopaq tiempo tukusqa",
+    "timeout10m": "10 minutopaq tiempo tukusqa",
+    "timeout1h": "1 horapaq pacha lluqsiy",
+    "ban": "Kay mayukunamanta harkay",
+    "makeModerator": "Moderador nisqa ruway",
+    "timedOut": "Tiempo tukusqa.",
+    "banned": "Kay mayukunamanta hark’asqa.",
+    "failed": "Chayqa manan allinchu karqan. Hukmanta kallpachakuy.",
+    "youAreBanned": "Kay kamaqpa mayukunapiqa manam rimayta atiwaqchu",
+    "youAreTimedOut": "Huk ratullapaqmi tiempoyki tukusqaña kanki"
+  },
   "liveStudio": {
     "title": "Live Studio",
     "subtitle": "Alerta y widget para ñawpa rikuyta",
@@ -5028,8 +5040,6 @@
         "command": "Allinllachu {name}, allin hamusqaykichik chay mayuman!"
       },
       "sounds": {
-        "ba-dum-tish": "Ba dum tis",
-        "shhh": "Ch'in",
         "airhorn": "Wayra waqra",
         "applause": "Aplausos",
         "cricket": "Grillokuna",
@@ -5038,8 +5048,54 @@
         "ooh-ahh": "Oy ay",
         "ooh-man": "Ooh (runa) .",
         "ohh-girl": "Ohh (warmi) .",
+        "ba-dum-tish": "Ba dum tis",
         "spooky": "Manchakuypaq",
-        "magic-spell": "Magia hechizo"
+        "magic-spell": "Magia hechizo",
+        "shhh": "Ch'in"
+      }
+    },
+    "moderation": {
+      "title": "Chat moderación nisqa",
+      "intro": "Llapan mayuykikuna urapi rimanakuypaq kamachiykuna. Mana hayk&#39;aqpas DeHubpa hatun rimanakuyninman chayankuchu: kaypi hark&#39;asqayki runaqa tukuy hinantinpi rimayta atinraqmi.",
+      "loadFailed": "Moderación nisqa churasqaykikunaqa manam kargayta atirqanchu. P&#39;anqata musuqmanta musuqmanta kallpachakunaykipaq.",
+      "save": "Chat kamachiykunata waqaychay",
+      "saved": "Chat kamachiykuna waqaychasqa.",
+      "saveFailed": "Chay cambioqa manan qespichiyta atirqankuchu.",
+      "slowMode": "Modo lento",
+      "slowModeHint": "Hayka unaytaq sapa qhawaq willakuykunata chawpipi suyan. Qampas, moderadornikikunapas manam haykapipas suyankichu.",
+      "off": "Wañuchisqa",
+      "seconds_one": "{{count}} iskay kaq",
+      "seconds_other": "{{count}} segundos nisqapi",
+      "followersOnly": "Qatiqninkunalla",
+      "subscribersOnlyHint": "Qatiqninkunallatam llallichin.",
+      "bannedWords": "Hark’asqa simikuna",
+      "bannedWordsHint": "Chikukunawan t’aqay. Huk simita letramanta letraman ortografiayqa manan muyurinchu.",
+      "wordAction": "Pipas hukninta servichikuptin",
+      "wordBlock": "Willakuyta sayachiy",
+      "wordTimeout": "Chayta sayachiy hinaspa huk minutolla tiempota tukuchiy",
+      "moderators": "Moderadores",
+      "moderatorsHint": "Alaychasunchu timeoutwan chaynallatak baneasunchu rikuqkunata qamapaq streampi. Manachu atisunchu qamapaq o huk-hukkunapaq.",
+      "addModerator": "Yapay",
+      "usernamePlaceholder": "Sutiyoc",
+      "moderatorAdded": "Moderador yapasqa.",
+      "moderatorNotFound": "Mana karuyoc sutiyoc.",
+      "removeModerator": "Moderadora qichuy",
+      "noModerators": "Mana moderador kaychu.",
+      "banned": "Baneasqa qamapaq streampi",
+      "unban": "Desbanea",
+      "noBans": "Mana baneasqa kaychu.",
+      "log": "Kunan rurasqakuna",
+      "noLog": "Mana kaychu.",
+      "actions": {
+        "timeout_one": "{{actor}} timeoutwan {{target}} {{count}} segundowan",
+        "timeout_other": "{{actor}} timeoutwan {{target}} {{count}} segundowan",
+        "ban": "{{actor}} baneasqa {{target}}",
+        "unban": "{{actor}} desbaneasqa {{target}}",
+        "moderator-added": "{{target}} moderador kasqa",
+        "moderator-removed": "{{target}} mana moderador kaychu",
+        "word-blocked": "Huk rimaykunata llakisqa {{target}} \"{{word}}\" hina",
+        "word-timeout_one": "Timeoutwan {{target}} {{count}} segundowan \"{{word}}\" hina",
+        "word-timeout_other": "Timeoutwan {{target}} {{count}} segundowan \"{{word}}\" hina"
       }
     }
   },

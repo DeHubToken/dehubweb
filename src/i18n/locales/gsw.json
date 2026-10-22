@@ -4780,6 +4780,19 @@
     "tipped": "{{name}} hätt a Geschenk gschickt",
     "chatPreview": "Chatnachrichten erscheinen hier"
   },
+  "liveChatModeration": {
+    "timeout1m": "Zeitlimit für 1 Minute",
+    "timeout10m": "Zeitlimit für 10 Minuten",
+    "timeout1h": "Zeitlimit für 1 Stunde",
+    "ban": "Gesperrt von diesen Streams",
+    "makeModerator": "Macher:in zum Moderator:in machen",
+    "timedOut": "Zeitlimit gesetzt.",
+    "banned": "Von diesen Streams gesperrt.",
+    "madeModerator": "Sie sind jetzt Moderator:in.",
+    "failed": "Das hat nicht funktioniert. Nochmal versuchen.",
+    "youAreBanned": "Du kannst in diesen Streams von der Creator:in nicht chatten.",
+    "youAreTimedOut": "Du bist für einen Moment zeitlimitiert."
+  },
   "liveStudio": {
     "title": "Live Studio",
     "subtitle": "Alarm und Widgets für dini Streams",
@@ -4918,15 +4931,6 @@
       "fast": "Schnell"
     },
     "rules": {
-      "placeholders": "Verwenden Sie {name}, {amount} und {message} in Ihrem Text. Links in Nachrichten werden entfernt.",
-      "alertText": "Benachrichtigungstext",
-      "sound": "Ton",
-      "sayText": "Vorzulesender Text",
-      "chatText": "Nachricht an Post",
-      "webhookText": "Zu sendende Nachricht",
-      "summary": {
-        "tip": "Tipp von {{amount}} DHB oder mehr"
-      },
       "title": "Regeln",
       "intro": "Wenn etwas auf deinem Stream passiert, macht DeHub, was du möchtest: zeigt eine Warnung, spielt ein Geräusch, liest etwas vor, postet in deinem Chat oder sagt etwas in deinem Discord.",
       "add": "Regel hinzufügen",
@@ -4955,9 +4959,15 @@
       "userCooldown": "Wartezeit pro Zuschauer (Sekunden)",
       "addAction": "Aktion hinzufügen",
       "removeAction": "Aktion entfernen",
+      "placeholders": "Verwenden Sie {name}, {amount} und {message} in Ihrem Text. Links in Nachrichten werden entfernt.",
+      "alertText": "Benachrichtigungstext",
+      "sound": "Ton",
+      "sayText": "Vorzulesender Text",
+      "chatText": "Nachricht an Post",
       "chatHint": "Geschrieben von deinem Konto in den Chat deiner Stream-Liveübertragung. Es darf nicht die Nachricht des Zuschauers wiederholen.",
       "webhookUrl": "Webhook-Adresse",
       "webhookHint": "Einer Discord- oder Slack-Webhook, oder ei Webadress (HTTPS) wo ei POST-Aufruf funktioniert.",
+      "webhookText": "Zu sendende Nachricht",
       "triggers": {
         "tip": "Eini Tipp kommt an.",
         "follow": "Jemänd follows dir.",
@@ -4969,27 +4979,30 @@
       },
       "audiences": {
         "everyone": "Alle",
-        "subscribers": "Abonnenten",
-        "followers": "Follower"
+        "followers": "Follower",
+        "subscribers": "Abonnenten"
       },
       "actionTypes": {
+        "alert": "Zeig a Alert.",
         "sound": "Einen Ton abspielen",
         "say": "Vorlesen",
         "chat": "Im Chat posten",
-        "alert": "Zeig a Alert.",
         "webhook": "Send zu einem Webhook."
       },
+      "summary": {
+        "tip": "Tipp von {{amount}} DHB oder mehr"
+      },
       "presets": {
-        "readChat": "Chat vorlesen",
-        "thankFollowers": "Vielen Dank an neue Follower",
-        "command": "Chat-Befehl",
         "blank": "Blank rule",
-        "bigTip": "Lufthorn für grosse Trinkgeldbeträge"
+        "readChat": "Chat vorlesen",
+        "bigTip": "Lufthorn für grosse Trinkgeldbeträge",
+        "thankFollowers": "Vielen Dank an neue Follower",
+        "command": "Chat-Befehl"
       },
       "presetHints": {
-        "bigTip": "Spielt eine Lufthupe und zeigt eine Warnung für Trinkgelder von 100.000 DHB oder mehr an",
         "blank": "Start mit nix.",
         "readChat": "Liest die Nachrichten deiner Follower laut vor, je eine pro Zuschauer alle 30 Sekunden.",
+        "bigTip": "Spielt eine Lufthupe und zeigt eine Warnung für Trinkgelder von 100.000 DHB oder mehr an",
         "thankFollowers": "Gschiib a Dankeschön in de Chat, wenn mer wer folgt.",
         "command": "Antworte auf ein `!command` in unserem Chat."
       },
@@ -5000,18 +5013,63 @@
         "command": "Grüezi {name}, willkommen beim Stream!"
       },
       "sounds": {
-        "cricket": "Grillen",
-        "drumroll": "Trommelrolle",
-        "spooky": "Gruselig",
         "airhorn": "Airhorn",
         "applause": "Applaus",
+        "cricket": "Grillen",
+        "drumroll": "Trommelrolle",
         "lol": "Lachen",
         "ooh-ahh": "Ooh äh",
         "ooh-man": "Ooh (Mensch)",
         "ohh-girl": "Ohh (Frau)",
         "ba-dum-tish": "Ba dum tish",
+        "spooky": "Gruselig",
         "magic-spell": "Mägi Zauberformel",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Chat-Moderation",
+      "intro": "Regeln für den Chat unter allen deinen Streams. Sie kommen nie in den Hauptchat von DeHub – jemanden, den du hier sperrst, kann trotzdem überall sonst reden.",
+      "loadFailed": "Deine Moderations-Einstellungen konnten nicht geladen werden. Aktualisiere die Seite und versuche es erneut.",
+      "save": "Chat-Regeln speichern",
+      "saved": "Chat-Regeln gespeichert.",
+      "saveFailed": "Diese Änderung konnte nicht gespeichert werden.",
+      "slowMode": "Langsam-Modus",
+      "slowModeHint": "Wie lange Zuschauer:innen zwischen Nachrichten warten müssen. Du und deine Moderator:innen wartet nie.",
+      "off": "Aus",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "followersOnly": "Nur Follower:innen",
+      "subscribersOnly": "Nur Abonnent:innen",
+      "subscribersOnlyHint": "Überschreibt «Nur Follower:innen».",
+      "bannedWords": "Gesperrte Wörter",
+      "bannedWordsHint": "Mit Kommas trennen. Ein Wort buchstabieren geht nicht drumherum.",
+      "wordAction": "Wenn jemand eines verwendet",
+      "wordBlock": "Nachricht stoppen",
+      "wordTimeout": "Stoppe sie und setze sie für eine Minute zeitlimitiert.",
+      "moderators": "Moderator",
+      "moderatorsHint": "Sie können Zuschauer in deinen Streams zeitlich begrenzen und sperren. Sie können aber niht auf dich oder auf sich selbst handeln.",
+      "addModerator": "Hinzufügen",
+      "usernamePlaceholder": "Benutzername",
+      "moderatorAdded": "Moderator hinzugefügt.",
+      "moderatorNotFound": "Kein Konto mit diesem Benutzernamen.",
+      "removeModerator": "Moderator entfernen",
+      "noModerators": "Noch keine Moderatoren.",
+      "banned": "Von deinen Streams gesperrt",
+      "unban": "Entsperren",
+      "noBans": "Niemand ist gesperrt.",
+      "log": "Letzte Aktionen",
+      "noLog": "Noch nichts.",
+      "actions": {
+        "timeout_one": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä",
+        "timeout_other": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä.",
+        "ban": "{{actor}} hat {{target}} gesperrt",
+        "unban": "{{actor}} hat {{target}} entsperrt",
+        "moderator-added": "{{target}} wurde Moderator",
+        "moderator-removed": "{{target}} ist nicht mehr Moderator",
+        "word-blocked": "Hat eine Nachricht von {{target}} für \"{{word}}\" gestoppt",
+        "word-timeout_one": "{{target}} wurde für {{count}} Sekunde zeitlich begrenzt für \"{{word}}\"",
+        "word-timeout_other": "{{target}} wurde für {{count}} Sekunden zeitlich begrenzt für \"{{word}}\""
       }
     }
   },
