@@ -90,6 +90,7 @@ import {
 import type { PostStageValue } from '@/components/app/post-stage/post-stage-context';
 const RepostShareSheet = lazy(() => import('@/components/app/post-stage/RepostShareSheet').then(m => ({ default: m.RepostShareSheet })));
 import { StageSaveTile } from '@/components/app/post-stage/StageSaveTile';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
 
 interface ActionBarProps {
   /** Post ID for info navigation and voting */
@@ -823,7 +824,7 @@ export function ActionBar({
         : window.location.href;
 
   const handleCopyLink = () => {
-    const url = shareUrlForPost();
+    const url = viewerShareUrl(shareUrlForPost());
     navigator.clipboard.writeText(url);
     toast.success(_copy("copy.e91de547a0b8", { defaultValue: "Post URL copied to clipboard" }));
     // A copy is a share: it counts once per actor per post, next to reposts.
@@ -1136,7 +1137,7 @@ export function ActionBar({
           onRepost={handleRepost}
           onUndoRepost={handleUndoRepost}
           onQuote={handleQuote}
-          shareUrl={shareUrlForPost()}
+          shareUrl={viewerShareUrl(shareUrlForPost())}
           onCopyLink={handleCopyLink}
           quoteCount={stage.quoteCount}
           repostCount={Math.max(0, stage.repostCount + repostDelta)}
