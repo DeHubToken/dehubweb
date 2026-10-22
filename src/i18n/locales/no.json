@@ -5199,8 +5199,8 @@
         "moderator-added": "{{target}} ble moderator",
         "moderator-removed": "{{target}} er ikke lenger en moderator",
         "word-blocked": "Stoppet en melding fra {{target}} for «{{word}}»",
-        "word-timeout_one": "Tidsavbrutt {{target}} for {{count}} sekund for &quot;{{word}}&quot;",
-        "word-timeout_other": "Tidsavbrutt {{target}} i {{count}} sekunder for &quot;{{word}}&quot;"
+        "word-timeout_one": "Tidsavbrutt {{target}} for {{count}} sekund for \"{{word}}\"",
+        "word-timeout_other": "Tidsavbrutt {{target}} i {{count}} sekunder for \"{{word}}\""
       }
     }
   },
@@ -6035,7 +6035,7 @@
     "descriptionLabel": "Hva skjedde",
     "descriptionPlaceholder": "Hva du gjorde, hva du forventet, og hva som skjedde i stedet.",
     "stepsLabel": "Fremgangsmåte for å reprodusere (valgfritt)",
-    "stepsPlaceholder": "1. Åpne feeden&#10; 2. Trykk på last opp&#10; 3. ...",
+    "stepsPlaceholder": "1. Åpne feeden\n2. Trykk på last opp\n3. ...",
     "contactEmailLabel": "Svar-e-post (valgfritt)",
     "contactEmailPlaceholder": "Vi bruker e-postadressen din hvis du lar dette stå tomt",
     "submit": "Send billett",
@@ -7560,9 +7560,9 @@
     "tokenAmount": "{{amount}} tokens",
     "assistant": {
       "question1": "Hva er den nåværende staking APY for DeHub-tokens?",
-      "answer1": "Den nåværende staking APY for DeHub-tokens er **12,4 %** for en 30-dagers låseperiode. Her er en oversikt:&#10;&#10; • 7-dagers lås: 8,2 % APY&#10; • 30-dagers låsing: 12,4 % APY&#10; • 90-dagers låsing: 18,7 % APY&#10;&#10; Vil du at jeg skal hjelpe deg med å beregne potensiell inntekt?",
+      "answer1": "Den nåværende staking APY for DeHub-tokens er **12,4 %** for en 30-dagers låseperiode. Her er en oversikt:\n\n• 7-dagers lås: 8,2 % APY\n• 30-dagers låsing: 12,4 % APY\n• 90-dagers låsing: 18,7 % APY\n\nVil du at jeg skal hjelpe deg med å beregne potensiell inntekt?",
       "question2": "Ja, hvis jeg satser 10 000 tokens i 90 dager",
-      "answer2": "For **10 000 tokens** satset til **18,7 % APY** i 90 dager:&#10;&#10; 📊 Estimert belønning: **~461 tokens**&#10;&#10; Det er omtrent 5,13 tokens per dag. Husk at APY kan variere basert på det totale innsatsbeløpet."
+      "answer2": "For **10 000 tokens** satset til **18,7 % APY** i 90 dager:\n\n📊 Estimert belønning: **~461 tokens**\n\nDet er omtrent 5,13 tokens per dag. Husk at APY kan variere basert på det totale innsatsbeløpet."
     },
     "bookmarks": {
       "stakingGuide": "Komplett guide til staking av DeHub-tokens: APY-fordeling, låseperioder og belønningsmultiplikatorer forklart."
