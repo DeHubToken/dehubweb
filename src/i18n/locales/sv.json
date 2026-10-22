@@ -4741,6 +4741,10 @@
     "creatorEarnsDirect": "Prenumeranter betalar i DeHub-tokens. Din andel hamnar i din plånbok så fort de prenumererar, minus plattformsavgiften för din märkesnivå."
   },
   "liveOverlay": {
+    "level": "Nivå {{level}}",
+    "streak_one": "{{count}}-veckor",
+    "streak_other": "{{count}}-veckor",
+    "tipJar": "Presentburk",
     "someone": "Någon",
     "newFollower": "Ny följare: {{name}}",
     "newSubscriber": "Ny prenumerant: {{name}}",
@@ -4925,6 +4929,8 @@
       "join": "Gå med"
     },
     "kinds": {
+      "streamer_level": "Streamernivå",
+      "tip_jar": "Presentburk",
       "tip_alert": "Dricksvarning",
       "follow_alert": "Följ varning",
       "subscribe_alert": "Prenumerantvarning",
@@ -4947,6 +4953,8 @@
       "points_board": "Lojala tittare"
     },
     "hints": {
+      "streamer_level": "Din streamernivå och veckosträcka, från din profil",
+      "tip_jar": "En burk som fylls när betalda gåvor kommer in",
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
       "follow_alert": "Visar varje ny följare",
       "subscribe_alert": "Visar varje ny prenumerant",
@@ -4969,6 +4977,7 @@
       "points_board": "Dina främsta tittare baserat på poäng från tittande och givande"
     },
     "fields": {
+      "showStreak": "Visa veckosträckan",
       "style": "Stil",
       "celebration": "Firande",
       "banner": "Banner",

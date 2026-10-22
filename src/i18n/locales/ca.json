@@ -4737,6 +4737,10 @@
     "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
   },
   "liveOverlay": {
+    "level": "Nivell {{level}}",
+    "streak_one": "Racha de {{count}}setmanes",
+    "streak_other": "Racha de {{count}}setmanes",
+    "tipJar": "Pot de regals",
     "someone": "Algú",
     "newFollower": "Nou seguidor: {{name}}",
     "newSubscriber": "Subscriptor nou: {{name}}",
@@ -4921,6 +4925,8 @@
       "join": "Unir-se"
     },
     "kinds": {
+      "streamer_level": "Nivell del streamer",
+      "tip_jar": "Pot de regals",
       "tip_alert": "Alerta de consell",
       "follow_alert": "Alerta de seguiment",
       "subscribe_alert": "Alerta de subscriptor",
@@ -4943,6 +4949,8 @@
       "points_board": "Espectadors lleials"
     },
     "hints": {
+      "streamer_level": "El teu nivell de streamer i la racha setmanal, des del teu perfil",
+      "tip_jar": "Un pot que s'omple a mesura que arriben els regals pagats",
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
       "follow_alert": "Mostra cada nou seguidor",
       "subscribe_alert": "Mostra cada nou subscriptor",
@@ -4965,6 +4973,7 @@
       "points_board": "Els teus espectadors més destacats per punts de visionat i regal"
     },
     "fields": {
+      "showStreak": "Mostra la racha setmanal",
       "style": "Estil",
       "celebration": "Celebració",
       "banner": "Banner",

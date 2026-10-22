@@ -4712,6 +4712,10 @@
     "creatorPaidDirectNote": "Ìpín olùṣẹ̀dá náà lọ tààrà sí àpamọ́ wọn ní àsìkò tí o bá ṣe ìforúkọsílẹ̀. DeHub máa ń san owó orí pẹpẹ kékeré."
   },
   "liveOverlay": {
+    "level": "Ipele {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Ìkòkò ẹ̀bùn",
     "someone": "Ẹnikan",
     "newFollower": "Àwọn ọmọlẹ́yìn tuntun: {{name}}",
     "newSubscriber": "Olùpèsè tuntun: {{name}}",
@@ -4896,6 +4900,8 @@
       "join": "Darapọ mọ"
     },
     "kinds": {
+      "streamer_level": "Ipele Streamer",
+      "tip_jar": "Ìkòkò ẹ̀bùn",
       "tip_alert": "Ìkìlọ̀ Ìmọ̀ràn",
       "follow_alert": "Tẹle itaniji",
       "subscribe_alert": "Ikilọ ti awọn alabapin",
@@ -4916,6 +4922,8 @@
       "points_board": "Àwọn olùwò olóòótọ́"
     },
     "hints": {
+      "streamer_level": "Ipele ṣiṣan rẹ àti ìlà ọ̀sọ̀ọ̀sẹ̀ rẹ, láti inú àkójọpọ̀ rẹ",
+      "tip_jar": "Igo ti o kun bi awọn ẹbun ti o sanwo ti n wọle",
       "tip_alert": "Ṣe ayẹyẹ gbogbo awọn imọran, iwọn si ipele rẹ.",
       "follow_alert": "Ṣàfihàn ọmọlẹ́yìn tuntun kọ̀ọ̀kan",
       "subscribe_alert": "Ṣe afihan alabapin tuntun kọọkan",
@@ -4938,6 +4946,7 @@
       "points_board": "Àwọn olùwoye tó ga jùlọ rẹ nípa àwọn kókó láti wíwo àti fífún wọn ní ẹ̀bùn."
     },
     "fields": {
+      "showStreak": "Fi ìlà ọ̀sọ̀ọ̀sẹ̀ hàn",
       "style": "Àṣà",
       "celebration": "Ayẹyẹ",
       "banner": "Àsìá ilẹ̀",

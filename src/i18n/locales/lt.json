@@ -4799,6 +4799,10 @@
     "creatorEarnsDirect": "Prenumeratoriai moka DeHub žetonais. Kai tik užsiprenumeruosi, tavo dalis atsidurs tavo piniginėje, atėmus platformos mokestį už tavo ženklelio lygį."
   },
   "liveOverlay": {
+    "level": "Lygis {{level}}",
+    "streak_one": "{{count}}-savaitės serija",
+    "streak_other": "{{count}}-savaitės serija",
+    "tipJar": "Dovanų stiklainis",
     "someone": "Kažkas",
     "newFollower": "Naujas sekėjas: {{name}}",
     "newSubscriber": "Naujas prenumeratorius: {{name}}",
@@ -4983,6 +4987,8 @@
       "join": "Prisijungti"
     },
     "kinds": {
+      "streamer_level": "Transliuotojo lygis",
+      "tip_jar": "Dovanų stiklainis",
       "tip_alert": "Įspėjimas apie arbatpinig",
       "follow_alert": "Sekti įspėjimą",
       "subscribe_alert": "Prenumeratoriaus įspėjimas",
@@ -5005,6 +5011,8 @@
       "points_board": "Sveriausi žiūrovai"
     },
     "hints": {
+      "streamer_level": "Srauto lygis ir savaitinė seka iš jūsų profilio",
+      "tip_jar": "Stiklainis, kuris prisipildo, kai ateina apmokamos dovanos",
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
       "follow_alert": "Rodo kiekvieną naują sekėją",
       "subscribe_alert": "Rodykimas kiekvienam naujam abonentui.",
@@ -5027,6 +5035,7 @@
       "points_board": "Tavo aukščiausiai taškų už žiūrimą ir dovanavimą žiūrovai"
     },
     "fields": {
+      "showStreak": "Rodyti savaitės eilutę",
       "style": "Stilius",
       "celebration": "Šventė",
       "banner": "Reklamjuostė",

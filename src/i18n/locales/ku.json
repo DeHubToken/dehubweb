@@ -4042,6 +4042,10 @@
     "creatorEarnsDirect": "بەشداربووان بە تۆکنی DeHub پارە دەدەن. کاتێک بەشداری دەکەن، بەشەکەت دەگاتە جزدانەکەت، دوای کرێی پلاتفۆرم بەپێی ئاستی باجەکەت."
   },
   "liveOverlay": {
+    "level": "Asta {{level}}",
+    "streak_one": "Rêzeya {{count}} hefteyî",
+    "streak_other": "Rêzeya {{count}} hefteyî",
+    "tipJar": "Kûpa diyariyan",
     "subathon": "Subathon",
     "subathonOver": "Dem qediya",
     "pointsTitle": "Temaşevanên herî dilsoz",
@@ -4226,6 +4230,8 @@
       "join": "بەشداریکردن"
     },
     "kinds": {
+      "streamer_level": "Asta weşanvan",
+      "tip_jar": "Kûpa diyariyan",
       "subathon_timer": "Demjimêra subathonê",
       "points_board": "Temaşevanên dilsoz",
       "tip_alert": "ئاگاداریی بەخشش",
@@ -4248,6 +4254,8 @@
       "spin_wheel": "Çerxa bextê"
     },
     "hints": {
+      "streamer_level": "Asta te ya weşanvaniyê û rêzeya hefteyî, ji profîla te",
+      "tip_jar": "Kûpek ku gava diyariyên dayî tên tije dibe",
       "subathon_timer": "Jimartinek berevajî ku diyarî, şopandin û abonetî wê dirêj dikin",
       "points_board": "Temaşevanên te yên sereke li gorî xalên ji temaşekirin û diyariyan",
       "tip_alert": "هەموو بەخششێک بەپێی ئاستەکەی دیاری دەکات",
@@ -4270,6 +4278,7 @@
       "spin_wheel": "Cihê ku çerxên di qaîdeyên te de dizivirin"
     },
     "fields": {
+      "showStreak": "Rêzeya hefteyî nîşan bide",
       "style": "شێواز",
       "celebration": "Kêfî",
       "banner": "Banner",

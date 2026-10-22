@@ -4684,6 +4684,10 @@
     "creatorPaidDirectNote": "मते कारकलक्षणादिकं शब्दार्थरत्नेऽस्मामिर्दर्शितं यथा देवदत्तः क्षुद्रं क्षुद्रं रक्षति ।"
   },
   "liveOverlay": {
+    "level": "स्तरः {{level}}",
+    "streak_one": "{{count}} सप्ताहस्य क्रमः",
+    "streak_other": "{{count}} सप्ताहानां क्रमः",
+    "tipJar": "उपहारः jar",
     "someone": "कश्चित्",
     "newSubscriber": "शुभ मुहूर्त: {{name}} 0",
     "subscribedTo": "{{name}} सदस्यत्वं कृतवान् {{plan}}",
@@ -4860,6 +4864,8 @@
       "join": "सम्मिल्यताम्"
     },
     "kinds": {
+      "streamer_level": "Streamer level",
+      "tip_jar": "उपहारः jar",
       "follow_alert": "सावधानम् अनुवर्तते",
       "subscribe_alert": "अभिदाता सतर्कता",
       "share_alert": "वितराण चेतावनी",
@@ -4881,6 +4887,8 @@
       "points_board": "निष्ठावान दर्शक"
     },
     "hints": {
+      "tip_jar": "दत्तेषु उपहारेषु आगच्छत्सु पूर्यमाणः कलशः",
+      "streamer_level": "तेरे दरम्यां, मेरे दरम्यां, तेरे दरम्यां",
       "follow_alert": "प्रत्येकं नूतनं अनुवर्तकं दर्शयतु",
       "subscribe_alert": "प्रति निवर्त्यताम् प्रति निवर्त्यताम्",
       "share_alert": "कोई तो दिखाओ अपना अपना जलवा",
@@ -4899,6 +4907,7 @@
       "points_board": "देखने और उपहार देने से अंकों द्वारा आपके शीर्ष दर्शक।"
     },
     "fields": {
+      "showStreak": "Tag: सप्ताहांत स्पेशल",
       "style": "शैलम्",
       "celebration": "उत्सवः",
       "banner": "ध्वजः",

@@ -4814,6 +4814,10 @@
     "creatorEarnsDirect": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Accionesniyki billeteraykipi chayan chay rato suscribisqanku, menos plataforma qullqita insignia nivelniykipaq."
   },
   "liveOverlay": {
+    "level": "Nivel {{level}} nisqapi.",
+    "streak_one": "{{count}}-semana qatiqninpi",
+    "streak_other": "{{count}}-semana qatiqninpi",
+    "tipJar": "Regalo jarra",
     "someone": "Pipas",
     "newFollower": "Musuq qatiq: {{name}}",
     "newSubscriber": "Musuq suscriptor: {{name}}",
@@ -4998,6 +5002,8 @@
       "join": "Taqruy"
     },
     "kinds": {
+      "streamer_level": "Nivel de corriente nisqa",
+      "tip_jar": "Regalo jarra",
       "tip_alert": "Alerta de consejo",
       "follow_alert": "Alertata qatipay",
       "subscribe_alert": "Suscriptor nisqamanta willakuy",
@@ -5019,6 +5025,8 @@
       "points_board": "Chiqap qawaqkuna"
     },
     "hints": {
+      "streamer_level": "Nivel de streamer nisqayki hinaspa sapa semana racha, perfilniykimanta",
+      "tip_jar": "Pagasqa regalokuna haykumusqanman hina hunt’akuq jarra",
       "tip_alert": "Sapa puntata raymichan, pataman hina sayayniyuq",
       "follow_alert": "Sapa musuq qatiqnintam qawachin",
       "subscribe_alert": "Sapa musuq suscriptor nisqatam qawachin",
@@ -5041,6 +5049,7 @@
       "points_board": "Aswan allin qhawaqniykikuna qhawaymanta chaymanta regalo quymanta puntokunawan"
     },
     "fields": {
+      "showStreak": "Sapa semana rachata qawachiy",
       "style": "Rikchay",
       "celebration": "Raymi raymi",
       "banner": "Bandera",

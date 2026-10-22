@@ -4716,6 +4716,10 @@
     "creatorEarnsDirect": "Abonentler DeHub tokensinde töleýärler. Siziň paýyňyz olaryň ýazylan pursadyna çenli pul çuwalyňyzda ýerleşýär, bu bolsa pul çuwalyňyz üçin platformyň tölegini azaltýar."
   },
   "liveOverlay": {
+    "level": "{{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Hediýe küýzesi",
     "someone": "Biriniň",
     "newFollower": "Täze şägirdi: {{name}}",
     "newSubscriber": "Täze abonent: {{name}}",
@@ -4893,6 +4897,8 @@
       "join": "Gir"
     },
     "kinds": {
+      "streamer_level": "Streamer derejesi",
+      "tip_jar": "Hediýe küýzesi",
       "tip_alert": "Tip Alarm",
       "follow_alert": "Ägä boluň",
       "subscribe_alert": "Abonent duýduryşy",
@@ -4914,6 +4920,8 @@
       "points_board": "Wepaly diňleýjiler"
     },
     "hints": {
+      "streamer_level": "Siziň akmaç derejäňiz we hepdede bir gezek, profilyňyzdan",
+      "tip_jar": "Bir çuwal pully sowgatlar ýaly dolup-daşýar",
       "tip_alert": "Ol her bir çüýreçini, her bir çüýreçini,",
       "follow_alert": "Her täze şägirdi görkez",
       "subscribe_alert": "Ähli täze abonentleri görkez",
@@ -4936,6 +4944,7 @@
       "points_board": "Seniň iň gowy diňleýjileriň seredýän we sowgat berýän ýerleri bilen"
     },
     "fields": {
+      "showStreak": "Ýekşenbe güni görkeziň",
       "style": "Şablony",
       "celebration": "Ýatlama",
       "banner": "Banner",

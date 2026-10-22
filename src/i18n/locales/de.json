@@ -4850,6 +4850,10 @@
     "creatorEarnsDirect": "Abonnenten zahlen in DeHub-Token. Deine Aktie landet in deinem Wallet, sobald sie abonniert wird, abzüglich der Plattformgebühr für dein Abzeichen-Level."
   },
   "liveOverlay": {
+    "level": "Level {{level}}",
+    "streak_one": "{{count}} -Wochensträhne",
+    "streak_other": "{{count}} -Wochensträhne",
+    "tipJar": "GESCHENKGEF",
     "subathon": "Subathon",
     "someone": "Jemand",
     "newFollower": "Neuer Follower: {{name}}",
@@ -5033,6 +5037,8 @@
       "join": "Beitreten"
     },
     "kinds": {
+      "streamer_level": "Streamer-Level",
+      "tip_jar": "GESCHENKGEF",
       "tip_alert": "TIPP-ALAR",
       "follow_alert": "Benachrichtigung folgen",
       "subscribe_alert": "Abonnenten-Alert",
@@ -5055,6 +5061,8 @@
       "points_board": "Loyale Zuschauer"
     },
     "hints": {
+      "streamer_level": "Dein Streamer-Level und deine wöchentliche Serie aus deinem Profil",
+      "tip_jar": "Ein Glas, das sich füllt, wenn bezahlte Geschenke hereinkommen",
       "tip_alert": "Feiern Sie jeden Tipp, der auf sein Level zugeschnitten ist",
       "follow_alert": "Zeigt jeden neuen Follower an",
       "subscribe_alert": "Zeigt jeden neuen Abonnenten an",
@@ -5077,6 +5085,7 @@
       "points_board": "Ihre Top-Zuschauer nach Punkten aus Zuschauen und Verschenken"
     },
     "fields": {
+      "showStreak": "Die wöchentliche Serie anzeigen",
       "style": "Stil",
       "celebration": "Feier",
       "banner": "Banner",

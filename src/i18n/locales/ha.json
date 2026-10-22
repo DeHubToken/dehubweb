@@ -4725,6 +4725,10 @@
     "creatorEarnsDirect": "Masu biyan kuɗi suna biyan kuɗi a cikin alamun DeHub. Kasashen rabon ku a cikin walat ɗin ku lokacin da suka yi rajista, ƙasa da kuɗin dandamali don ƙimar alamar ku."
   },
   "liveOverlay": {
+    "level": "Mataki {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Kyauta jar",
     "subathon": "Subathon",
     "someone": "Wani",
     "newFollower": "Sabon mabiya: {{name}}",
@@ -4909,6 +4913,8 @@
       "join": "Shiga"
     },
     "kinds": {
+      "streamer_level": "Streamer matakin",
+      "tip_jar": "Kyauta jar",
       "tip_alert": "Tip faert",
       "follow_alert": "Bi faɗakarwa",
       "subscribe_alert": "Subscriber faɗakarwa",
@@ -4929,6 +4935,8 @@
       "points_board": "Masu kallo masu aminci"
     },
     "hints": {
+      "streamer_level": "Your streamer matakin da mako-mako streak, daga your profile",
+      "tip_jar": "Gwangwani da ke cikawa yayin da aka biya kyauta ya shigo",
       "follow_alert": "Nuna kowane sabon mabiya",
       "subscribe_alert": "Nuna kowane sabon mai biyan kuɗi",
       "share_alert": "Nuna lokacin da wani ya raba rafi naka",
@@ -4950,6 +4958,7 @@
       "points_board": "Manyan masu kallon ku ta maki daga kallo da kyauta"
     },
     "fields": {
+      "showStreak": "Nuna streak na mako-mako",
       "style": "Salo",
       "celebration": "Gida",
       "banner": "Gida",

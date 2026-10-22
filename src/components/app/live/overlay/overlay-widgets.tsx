@@ -29,6 +29,7 @@ import { useAlertQueue } from './use-alert-queue';
 import { useRuleFired } from './rule-bus';
 import { PollWidget } from './poll';
 import { PointsBoard, SubathonTimer } from './subathon';
+import { StreamerLevel, TipJar } from './level-and-jar';
 
 export interface WidgetProps {
   settings: Record<string, unknown>;
@@ -652,6 +653,10 @@ export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: Over
       return <SubathonTimer settings={props.settings} />;
     case 'points_board':
       return <PointsBoard settings={props.settings} />;
+    case 'streamer_level':
+      return <StreamerLevel settings={props.settings} />;
+    case 'tip_jar':
+      return <TipJar settings={props.settings} stats={props.stats} />;
     default:
       return null;
   }

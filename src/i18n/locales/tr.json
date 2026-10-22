@@ -5834,6 +5834,10 @@
     "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "liveOverlay": {
+    "level": "Seviye {{level}}",
+    "streak_one": "{{count}}haftalık seri",
+    "streak_other": "{{count}}haftalık seri",
+    "tipJar": "Hediye kavanozu",
     "subathon": "Subathon",
     "someone": "Birisi",
     "newFollower": "Yeni takipçi: {{name}}",
@@ -6018,6 +6022,8 @@
       "join": "Katıl"
     },
     "kinds": {
+      "streamer_level": "Yayıncı seviyesi",
+      "tip_jar": "Hediye kavanozu",
       "subathon_timer": "Subathon sayacı",
       "tip_alert": "Bahşiş uyarısı",
       "follow_alert": "Takip uyarısı",
@@ -6040,6 +6046,8 @@
       "points_board": "Sadık izleyiciler"
     },
     "hints": {
+      "streamer_level": "Profilinizden yayıncı seviyeniz ve haftalık seriniz",
+      "tip_jar": "Ücretli hediyeler geldikçe dolan bir kavanoz",
       "tip_alert": "Seviyesine göre boyutlandırılmış her bahşişi kutlar",
       "follow_alert": "Her yeni takipçiyi gösterir",
       "subscribe_alert": "Her yeni aboneyi gösterir",
@@ -6062,6 +6070,7 @@
       "points_board": "İzleme ve hediye verme puanlarına göre en iyi izleyicileriniz"
     },
     "fields": {
+      "showStreak": "Haftalık seriyi göster",
       "style": "Stil",
       "celebration": "Celebration",
       "banner": "Banner",

@@ -4792,6 +4792,10 @@
     "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
   },
   "liveOverlay": {
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-Woche Streak",
+    "streak_other": "{{count}}-Woche Streak",
+    "tipJar": "Geschenkschrank",
     "subathon": "Subathon",
     "someone": "Irgendwer",
     "newFollower": "Neuer Follower: {{name}}",
@@ -4970,6 +4974,8 @@
       "join": "Mitmache"
     },
     "kinds": {
+      "streamer_level": "Streamer-Level",
+      "tip_jar": "Geschenkschrank",
       "subathon_timer": "Subathon-Timer",
       "tip_alert": "Tipp-Alarm",
       "follow_alert": "Folge-Alarm",
@@ -4992,6 +4998,8 @@
       "points_board": "Loyale Zuschauer"
     },
     "hints": {
+      "streamer_level": "Dein Streamer-Level und die wöchentliche Streak, von deinem Profil",
+      "tip_jar": "Ein Schrank, der sich mit bezahlten Geschenken füllt",
       "points_board": "Ihre Top-Zuschauer nach Punkten aus Zuschauen und Verschenken",
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
       "follow_alert": "Zeigt jede neue Follower",
@@ -5014,6 +5022,7 @@
       "subathon_timer": "Ene Zählrückwärts, wo Geschenke, Follower und Abonnements zurückgedrängt werden."
     },
     "fields": {
+      "showStreak": "Zeigt die wöchentliche Streak",
       "style": "Stil",
       "celebration": "Feier",
       "banner": "Banner",

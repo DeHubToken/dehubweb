@@ -4836,6 +4836,10 @@
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "liveOverlay": {
+    "level": "Vlak {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geskenkpot",
     "someone": "Iemand",
     "newFollower": "Nuwe volgeling: {{name}}",
     "newSubscriber": "Nuwe intekenaar: {{name}}",
@@ -5020,6 +5024,8 @@
       "join": "Sluit aan"
     },
     "kinds": {
+      "streamer_level": "Stroomvlak",
+      "tip_jar": "Geskenkpot",
       "tip_alert": "Wenk waarskuwing",
       "follow_alert": "Volg waarskuwing",
       "subscribe_alert": "Intekenaarwaarskuwing",
@@ -5042,6 +5048,8 @@
       "points_board": "Lojale kykers"
     },
     "hints": {
+      "streamer_level": "Jou streamer vlak en weeklikse streep, van jou profiel",
+      "tip_jar": "'N pot wat vul as betaalde geskenke kom in",
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
       "follow_alert": "Wys elke nuwe volgeling",
       "subscribe_alert": "Vertoon elke nuwe intekenaar",
@@ -5064,6 +5072,7 @@
       "points_board": "Jou top kykers volgens punte van kyk en geskenk"
     },
     "fields": {
+      "showStreak": "Wys die weeklikse streep",
       "celebration": "Viering",
       "banner": "Banier",
       "minAmount": "Kleinste punt om te wys (DHB)",

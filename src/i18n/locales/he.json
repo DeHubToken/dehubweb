@@ -4797,6 +4797,10 @@
     "creatorEarnsDirect": "מנויים משלמים באסימוני DeHub. החלק שלכם מגיע לארנק ברגע שהם נרשמים, בניכוי עמלת הפלטפורמה עבור רמת התג שלכם."
   },
   "liveOverlay": {
+    "level": "רמה {{level}}",
+    "streak_one": "רצף של {{count}}שבועות",
+    "streak_other": "רצף של {{count}}שבועות",
+    "tipJar": "צנצנת מתנות",
     "someone": "מישהו",
     "newFollower": "עוקב חדש: {{name}}",
     "newSubscriber": "מנוי חדש: {{name}}",
@@ -4981,6 +4985,8 @@
       "join": "להצטרף"
     },
     "kinds": {
+      "streamer_level": "רמת סטרימר",
+      "tip_jar": "צנצנת מתנות",
       "tip_alert": "אזהרת טיפ",
       "follow_alert": "אזהרת עקיבה",
       "subscribe_alert": "אזהרת מנוי",
@@ -5003,6 +5009,8 @@
       "points_board": "צופים נאמנים"
     },
     "hints": {
+      "streamer_level": "רמת הסטרימר והרצף השבועי שלכם, מהפרופיל שלכם",
+      "tip_jar": "צנצנת שמתמלאת כמתנות בתשלום נכנסת לתמונה",
       "tip_alert": "מחגג כל טיפ לפי רמתו",
       "follow_alert": "מציג את כל המעקבים החדשים",
       "subscribe_alert": "מציג את כל המנויים החדשים",
@@ -5025,6 +5033,7 @@
       "points_board": "צופים העליונים שלך לפי הנקודות מהצפייה והמתנות"
     },
     "fields": {
+      "showStreak": "הצגת הרצף השבועי",
       "style": "סגנון",
       "celebration": "חגיגה",
       "banner": "באנר",

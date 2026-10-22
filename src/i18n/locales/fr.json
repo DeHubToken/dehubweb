@@ -5838,6 +5838,10 @@
     "creatorEarnsDirect": "Les abonnés paient en jetons DeHub. Votre part atterrit dans votre portefeuille au moment où ils s'abonnent, moins les frais de plateforme pour votre niveau de badge."
   },
   "liveOverlay": {
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Pot cadeau",
     "someone": "Quelqu'un",
     "newFollower": "Nouveau follower : {{name}}",
     "newSubscriber": "Nouvel abonné : {{name}}",
@@ -6022,6 +6026,8 @@
       "join": "Rejoindre"
     },
     "kinds": {
+      "streamer_level": "Niveau du streamer",
+      "tip_jar": "Pot cadeau",
       "tip_alert": "Alerte de pourboire",
       "follow_alert": "Suivre l'alerte",
       "subscribe_alert": "Alerte abonné",
@@ -6044,6 +6050,8 @@
       "points_board": "Spectateurs fidèles"
     },
     "hints": {
+      "streamer_level": "Votre niveau de streamer et votre séquence hebdomadaire, à partir de votre profil",
+      "tip_jar": "Un pot qui se remplit au fur et à mesure que les cadeaux payants arrivent",
       "tip_alert": "Célèbre chaque pourboire, dimensionné à son niveau",
       "follow_alert": "Affiche chaque nouvel abonné",
       "subscribe_alert": "Affiche chaque nouvel abonné",
@@ -6066,6 +6074,7 @@
       "points_board": "Vos meilleurs spectateurs par points grâce à la visionnage et aux dons"
     },
     "fields": {
+      "showStreak": "Afficher la série hebdomadaire",
       "style": "Style",
       "celebration": "Célébration",
       "banner": "Bannière",

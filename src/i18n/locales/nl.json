@@ -6027,6 +6027,10 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Geschenkpot",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6211,6 +6215,8 @@
       "join": "Deelnemen"
     },
     "kinds": {
+      "streamer_level": "Streamer-niveau",
+      "tip_jar": "Geschenkpot",
       "tip_alert": "Tipmelding",
       "follow_alert": "Volgmelding",
       "subscribe_alert": "Abonneemelding",
@@ -6233,6 +6239,8 @@
       "points_board": "Loyale kijkers"
     },
     "hints": {
+      "streamer_level": "Je streamer-niveau en wekelijkse reeks, vanuit je profiel",
+      "tip_jar": "Een pot die volloopt als betaalde geschenken binnenkomen",
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
       "follow_alert": "Toont elke nieuwe volger",
       "subscribe_alert": "Toont elke nieuwe abonnee",
@@ -6255,6 +6263,7 @@
       "points_board": "Je topkijkers op basis van punten van kijken en geven"
     },
     "fields": {
+      "showStreak": "Toon de wekelijkse reeks",
       "style": "Stijl",
       "celebration": "Viering",
       "banner": "Banner",

@@ -4753,6 +4753,10 @@
     "creatorEarnsDirect": "Муштариён дар нишонаҳои DeHub пардохт мекунанд. Заминҳои саҳми шумо дар ҳамёни шумо лаҳзае, ки онҳо обуна мешаванд, камтар ҳаққи платформа барои дараҷаи нишони шумо."
   },
   "liveOverlay": {
+    "level": "Ҳамвор {{level}}",
+    "streak_one": "{{count}} - ҳафта сатр",
+    "streak_other": "{{count}} - ҳафта сатр",
+    "tipJar": "Кӯзаи атои",
     "someone": "Касе",
     "newFollower": "Пайравони нав: {{name}}",
     "newSubscriber": "Муштарии нав: {{name}}",
@@ -4934,6 +4938,8 @@
       "join": "Ба ҳамроҳ шудан"
     },
     "kinds": {
+      "streamer_level": "Сатҳи стример",
+      "tip_jar": "Кӯзаи атои",
       "tip_alert": "Пораи огоҳӣ",
       "follow_alert": "Огоҳии пайгирӣ",
       "subscribe_alert": "Огоҳии абони",
@@ -4956,6 +4962,8 @@
       "points_board": "Engastor bozorgodon"
     },
     "hints": {
+      "streamer_level": "Сатҳи ҷараён ва сатри ҳафтаинаи шумо, аз профили шумо",
+      "tip_jar": "Name",
       "tip_alert": "Ҳар порсаро, ки ба сатҳи худ мувофиқ аст, нишон медиҳад",
       "follow_alert": "Ҳар пайгирии навро нишон медиҳад",
       "subscribe_alert": "Ҳар абони навро нишон медиҳад",
@@ -4978,6 +4986,7 @@
       "points_board": "Ko'rib chiquvchilar nuqtalariga ko'ra sizning eng yuqori ko'rib chiquvchilaringizni ko'rsatadi."
     },
     "fields": {
+      "showStreak": "Намоиши сатри ҳарҳафтаина",
       "style": "Стил",
       "celebration": "Ҷашнвораҳо",
       "banner": "Паннер",

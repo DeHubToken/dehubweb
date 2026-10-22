@@ -5834,6 +5834,10 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
+    "level": "Nivel {{level}}",
+    "streak_one": "Racha de {{count}}semanas",
+    "streak_other": "Racha de {{count}}semanas",
+    "tipJar": "Tarro de regalo",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -6018,6 +6022,8 @@
       "join": "Unirse"
     },
     "kinds": {
+      "streamer_level": "Nivel de streamer",
+      "tip_jar": "Tarro de regalo",
       "tip_alert": "Alerta de propina",
       "follow_alert": "Seguir alerta",
       "subscribe_alert": "Alerta de suscriptor",
@@ -6040,6 +6046,8 @@
       "points_board": "Espectadores leales"
     },
     "hints": {
+      "streamer_level": "Tu nivel de streamer y racha semanal, desde tu perfil",
+      "tip_jar": "Un frasco que se llena a medida que llegan los regalos pagados",
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
       "follow_alert": "Muestra a cada nuevo seguidor",
       "subscribe_alert": "Muestra cada nuevo suscriptor",
@@ -6062,6 +6070,7 @@
       "points_board": "Tus espectadores más destacados por puntos de ver y regalar"
     },
     "fields": {
+      "showStreak": "Mostrar la racha semanal",
       "style": "Estilo",
       "celebration": "Celebración",
       "banner": "Banner",

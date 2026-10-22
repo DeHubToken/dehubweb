@@ -4800,6 +4800,10 @@
     "creatorEarnsDirect": "Abonații plătesc în jetoane DeHub. Cota ta ajunge în portofel în momentul în care se abonează, mai puțin taxa de platformă pentru nivelul insignei."
   },
   "liveOverlay": {
+    "level": "Nivel {{level}}",
+    "streak_one": "{{count}}-seară de streak",
+    "streak_other": "{{count}}-seară de streak",
+    "tipJar": "Pahar de cadouri",
     "someone": "Cineva",
     "newFollower": "Urmăritor nou: {{name}}",
     "newSubscriber": "Abonat nou: {{name}}",
@@ -4984,6 +4988,8 @@
       "join": "Alătură-te"
     },
     "kinds": {
+      "streamer_level": "Nivelul streamerului",
+      "tip_jar": "Pahar de cadouri",
       "tip_alert": "Alertă de sugestie",
       "follow_alert": "Alertă de urmărire",
       "subscribe_alert": "Alertă de abonat",
@@ -5006,6 +5012,8 @@
       "points_board": "Vizionari loiali"
     },
     "hints": {
+      "streamer_level": "Nivelul tău de streamer și streak-ul săptămânal, din profilul tău",
+      "tip_jar": "Un pahar care se umple pe măsură ce cadouri plătite sosesc",
       "tip_alert": "Celebrează fiecare sugestie, dimensionată în funcție de nivelul său",
       "follow_alert": "Afișează fiecare nou urmăritor",
       "subscribe_alert": "Afișează fiecare nou abonat",
@@ -5028,6 +5036,7 @@
       "points_board": "Topul vizionarilor tăi după puncte obținute prin privire și dăruire"
     },
     "fields": {
+      "showStreak": "Arată streak-ul săptămânal",
       "style": "Stil",
       "celebration": "Celebration",
       "banner": "Banner",
