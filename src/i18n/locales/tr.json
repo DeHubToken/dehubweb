@@ -7197,6 +7197,7 @@
     "weeksShort": "{{count}} hafta"
   },
   "liveGift": {
+    "notEnoughToken": "Bu hediye için yeterli {{symbol}} yok",
     "pickTier": "Bir kutlama seçin",
     "plays": "Yayında {{tier}} oynat",
     "you": "Siz",

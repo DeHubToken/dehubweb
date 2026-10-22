@@ -6166,6 +6166,7 @@
     "weeksShort": "{{count}}周"
   },
   "liveGift": {
+    "notEnoughToken": "{{symbol}} 不足，无法送出此礼物",
     "pickTier": "选择一个庆祝活动",
     "plays": "在直播中播放 {{tier}}",
     "you": "你",
