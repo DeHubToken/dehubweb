@@ -110,6 +110,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
 
   return (
     <div
+      data-glass-playback-surface
       ref={containerRef}
       className={cn(
         'w-full rounded-xl border border-white/10 bg-black/60 backdrop-blur-[24px] p-3',
@@ -133,6 +134,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
           <button
             type="button"
             onClick={handleWaveformSeek}
+            data-playback-seek
             className="relative h-10 w-full text-left"
             aria-label={_copy("copy.ca9fda1c17a9", { defaultValue: "Seek through audio waveform" })}
           >
