@@ -78,6 +78,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
             };
             return (
               <motion.div
+                data-glass-embed
                 key={preview.url}
                 role="button"
                 tabIndex={0}
@@ -106,6 +107,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
           }
           return (
             <motion.a
+              data-glass-embed
               key={preview.url}
               href={preview.url}
               target="_blank"
@@ -123,7 +125,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
       </AnimatePresence>
 
       {loading && (
-        <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+        <div data-glass-embed className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
           <div className="px-3 pb-3 pt-3.5 sm:pt-4 space-y-2">
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-4 w-full" />

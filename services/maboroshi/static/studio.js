@@ -1,5 +1,6 @@
 'use strict';
 const $ = (id) => document.getElementById(id);
+const remakeMode = new URLSearchParams(location.search).get('workflow') === 'remake';
 let token = '', account = '', current = null, ready = false, allowPayments = false, timer;
 let selectedInput = '', selectedResult = '', requestVersion = 0, sessionVersion = 0;
 let referencesChanged = false, working = false, pendingPayment = null, paymentNotice = '';
@@ -39,8 +40,8 @@ const editable = () => allowPayments && (!current || ['uploaded', 'prepared'].in
 const money = (micros) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(micros / 1e6);
 const stateLabel = (state) => ({ uploaded: 'Ready to prepare', prepared: 'Ready to review', queued: 'Queued', running: 'Processing', draft: 'Preview ready', complete: 'Video ready', failed: 'Needs attention', attention: 'Needs attention' })[state] || 'Saved';
 const message = (text) => { paymentNotice = ''; $('error').textContent = text || ''; $('error').hidden = !text; };
-const remember = (id) => { try { localStorage.setItem(`maboroshi:last:${account}`, id || ''); } catch { /* Storage may be unavailable in an embedded browser. */ } };
-const remembered = () => { try { return localStorage.getItem(`maboroshi:last:${account}`); } catch { return ''; } };
+const remember = (id) => { try { localStorage.setItem(`maboroshi:${remakeMode ? 'remake' : 'last'}:${account}`, id || ''); } catch { /* Storage may be unavailable in an embedded browser. */ } };
+const remembered = () => { try { return localStorage.getItem(`maboroshi:${remakeMode ? 'remake' : 'last'}:${account}`); } catch { return ''; } };
 async function api(path, options = {}) {
   const response = await fetch(path, { ...options, headers: { ...options.headers, 'x-dehub-token': token }, cache: 'no-store' });
   const data = await response.json().catch(() => ({}));
@@ -77,6 +78,8 @@ function clearProject() {
   for (const id of ['source', 'reference', 'second']) releaseLocal(id);
   for (const id of ['source-local', 'reference-preview', 'second-preview']) clearMedia(id);
   $('source-form').reset(); $('references-form').reset(); $('reviewed').checked = false; $('draft-reviewed').checked = false;
+  if (remakeMode) $('renderer').value = 'kling';
+  if (typeof resetRemake === 'function') resetRemake();
   $('character-options').open = false; referencesChanged = false; render();
   selectedPreset = linkedPreset; $('preset-applied').hidden = true; $('preset-browser').open = !!linkedPreset; renderPresets(); renderPresetDetail();
 }
@@ -85,6 +88,7 @@ async function list(restore = false) {
   if (version !== sessionVersion) return;
   $('jobs').replaceChildren(new Option('New project', ''));
   for (const job of data.jobs) {
+    if (remakeMode !== (job.workflow === 'remake')) continue;
     const date = new Date(job.created * 1000).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
     $('jobs').add(new Option(`${job.subject || 'Video'} · ${date} · ${stateLabel(job.state)}`, job.id));
   }
@@ -118,6 +122,7 @@ function nextStep() {
   if (busy()) return 'You can leave this page. Your project and progress are saved; return here when it is ready.';
   if (current.state === 'attention') return 'Your saved files are available below. A previous submission needs review before any further paid attempt.';
   if (current.state === 'failed') return 'Your original and any completed previews are available below. Check the processing message before starting a new project.';
+  if (current.remake) return current.remake.building ? 'Resume the saved shot plan below. No generation has started.' : current.state === 'edit_complete' ? 'Your assembled edit is ready to download.' : 'Generate the saved shots below. Each has its own price; assemble when every shot is ready.';
   if (current.state === 'uploaded') return 'Next: prepare the clip, then review the motion before generating.';
   if (current.state === 'prepared') return current.renderer === 'kling' ? current.review.approved ? 'Source approved. Choose your character and generate the complete Kling video.' : 'Next: watch and approve your entire original source clip.' : current.review.approved ? 'Clip approved. Choose your character and generate a preview.' : 'Next: watch the entire prepared clip and approve its alignment.';
   if (current.state === 'draft') return 'Next: watch or download the preview. Choose 1080p only if you want an HD version.';
@@ -143,8 +148,9 @@ function render() {
   $('reference-status').textContent = referencesChanged ? 'Character changes will save when you continue.' : current?.hasReference ? 'Character saved to this project.' : 'Choose a reference now, or add one before generating your preview.';
   mediaPreview('reference-preview', localMedia.get('reference') || current?.references?.reference);
   mediaPreview('second-preview', localMedia.get('second') || current?.references?.second);
-  const step = !current || current.state === 'uploaded' ? 'choose' : ['draft', 'complete'].includes(current.state) || current.stage === 'hd' || current.stage === 'draft' ? 'export' : 'prepare';
+  const step = !current || current.state === 'uploaded' ? 'choose' : current.remake || ['draft', 'complete'].includes(current.state) || current.stage === 'hd' || current.stage === 'draft' ? 'export' : 'prepare';
   for (const name of ['choose', 'prepare', 'export']) { if (name === step) $(`step-${name}`).setAttribute('aria-current', 'step'); else $(`step-${name}`).removeAttribute('aria-current'); }
+  if (typeof renderRemake === 'function') renderRemake();
   if (!current) return;
   $('project-status').textContent = pendingPayment ? 'Waiting for payment confirmation' : working ? 'Saving your changes…' : paymentNotice || current.status;
   $('progress').dataset.notice = String(!!paymentNotice && !working && !pendingPayment);
@@ -179,6 +185,7 @@ function render() {
     $(stage).disabled = !ready || !allowPayments || locked() || busy() || !cost || current.state !== state ||
       (stage === 'draft' && (!current.review.approved || !hasReference)) || (stage === 'hd' && !$('draft-reviewed').checked);
   }
+  if (remakeMode || current.remake) $('draft-section').hidden = true;
 }
 async function load(ident) {
   clearTimeout(timer); const version = ++requestVersion;
@@ -193,7 +200,7 @@ async function load(ident) {
     $('character-options').open = !!data.references?.second;
   }
   remember(data.id); render();
-  if (busy() && !document.hidden) timer = setTimeout(() => load(ident).catch(error => message(error.message)), 5000);
+  if ((busy() || current.remake?.shots.some(shot => ['queued', 'running'].includes(shot.state))) && !document.hidden) timer = setTimeout(() => load(ident).catch(error => message(error.message)), 5000);
 }
 async function authenticate(data) {
   if (typeof data.token !== 'string' || typeof data.wallet !== 'string') return;
@@ -255,9 +262,9 @@ function paymentResult(data) {
   if (data.cancelled === true || data.error === 'Payment cancelled.') { pending.resolve({ cancelled: true }); return; }
   if (typeof data.error === 'string' && data.error) pending.reject(Error(data.error)); else pending.resolve();
 }
-function requestPayment(stage) {
+function requestPayment(stage, ident = current?.id) {
   if (!current || !allowPayments || pendingPayment) throw Error('Payment is unavailable in this session.');
-  const input = { type: 'maboroshi:pay', requestId: crypto.randomUUID(), id: current.id, stage };
+  const input = { type: 'maboroshi:pay', requestId: crypto.randomUUID(), id: ident, stage };
   return new Promise((resolve, reject) => {
     pendingPayment = { requestId: input.requestId, resolve, reject }; render();
     if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(input));
@@ -304,6 +311,7 @@ $('source-form').onsubmit = async event => {
   const file = selectedSourceFile || $('source').files[0];
   if (!file || file.size > 100 * 1024 * 1024) { message('Choose a video smaller than 100 MB.'); return; }
   const body = new FormData(event.target), version = sessionVersion; body.set('video', file);
+  if (remakeMode) { body.set('workflow', 'remake'); body.set('renderer', 'kling'); }
   message(''); working = true; render();
   try {
     const data = await api('jobs', { method: 'POST', body });

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
-import { Loader2, ImagePlus, MonitorPlay, ScreenShare } from "lucide-react";
+import { Loader2, ImagePlus, MonitorPlay, ScreenShare, Cable } from "lucide-react";
 import Radio from "@/components/ui/cut-icons/live";
 import Copy from "@/components/ui/cut-icons/copy";
 import Check from "@/components/ui/cut-icons/check";
@@ -57,6 +58,7 @@ import { getAuthToken } from '@/lib/api/dehub/core';
 import { useAuth } from '@/contexts/AuthContext';
 import { useStreamerProgress } from '@/hooks/use-streamer-progress';
 import { hlsUrlFor } from '@/lib/live-ingest';
+import { CaptureCardSetup } from '@/components/app/live/CaptureCardSetup';
 
 // The WebRTC broadcaster pulls in getUserMedia + peer-connection code that
 // only the browser capture paths need, so it loads on demand rather than
@@ -132,7 +134,7 @@ type Step = 'setup' | 'ready' | 'broadcasting';
  * desktop encoders, which is now only needed for scenes, overlays and capture
  * cards.
  */
-type StreamSource = 'camera' | 'screen' | 'rtmp';
+type StreamSource = 'camera' | 'screen' | 'capture' | 'rtmp';
 
 /**
  * Screen capture is a desktop capability: getDisplayMedia is undefined on iOS
@@ -203,6 +205,7 @@ function formatGb(bytes: number): string {
 export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: GoLiveModalProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
+  const navigate = useNavigate();
   const [step, setStep] = useState<Step>('setup');
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [source, setSource] = useState<StreamSource>(initialSource ?? 'camera');
@@ -680,6 +683,8 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
     // mark-stream-live so the delete cannot be overwritten by a late upsert).
     clearLiveSession(streamData.tokenId);
     handleClose();
+    // The recap is waiting in Live Studio: length, peak, gifts, new followers.
+    if (streamData.streamId) navigate(`/live-studio?recap=${encodeURIComponent(streamData.streamId)}`);
   };
 
   /**
@@ -1272,7 +1277,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
               )}
               <div className="space-y-2">
                 <label className="text-sm text-zinc-400">{t('goLive.howToStream')}</label>
-                <div className={cn('grid gap-2', canShareScreen ? 'grid-cols-3' : 'grid-cols-2')}>
+                <div className="grid grid-cols-2 gap-2">
                   <SourceOption
                     selected={source === 'camera'}
                     onClick={() => setSource('camera')}
@@ -1289,6 +1294,17 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                       subtitle={t('goLive.sourceScreenHint')}
                     />
                   )}
+                  {/* Desktop only, same test as screen: a capture card is a
+                      USB device on a computer, phones can't take one. */}
+                  {canShareScreen && (
+                    <SourceOption
+                      selected={source === 'capture'}
+                      onClick={() => setSource('capture')}
+                      icon={<Cable className="w-4 h-4" />}
+                      title={t("copy.4a1bd4a3aaf3", { defaultValue: "Capture card" })}
+                      subtitle={t("copy.150d73bf85e7", { defaultValue: "Elgato, AVerMedia… no OBS" })}
+                    />
+                  )}
                   <SourceOption
                     selected={source === 'rtmp'}
                     onClick={() => setSource('rtmp')}
@@ -1302,6 +1318,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                     {t('goLive.screenPickHint')}
                   </p>
                 )}
+                {source === 'capture' && <CaptureCardSetup />}
                 {/*
                   The encoder's credentials, right here, before anything is
                   filled in. They never change, so somebody who set OBS or a
@@ -1323,6 +1340,19 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                       keyLabel={t('goLive.streamKey')}
                       serverLabel={t('goLive.ingestUrl')}
                     />
+                    {/* Alerts and widgets live beside the key: the OBS overlay link is set up there. */}
+                    <a
+                      href="/live-studio"
+                      target="_blank"
+                      rel="noopener"
+                      className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs text-white hover:bg-white/10"
+                    >
+                      <span className="min-w-0">
+                        <span className="block font-medium">{t('liveStudio.settingsLinkTitle')}</span>
+                        <span className="block text-zinc-400">{t('liveStudio.settingsLinkBody')}</span>
+                      </span>
+                      <span className="shrink-0 font-medium">{t('liveStudio.open')}</span>
+                    </a>
                   </div>
                 )}
                 {replayBudget && (
@@ -1495,6 +1525,7 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
                     playbackId={streamData.playbackId}
                     provider={streamData.provider}
                     initialScreenStream={screenStream}
+                    captureCard={source === 'capture'}
                     streamId={streamData.streamId}
                     tokenId={String(streamData.tokenId)}
                     onEnd={handleEndStream}

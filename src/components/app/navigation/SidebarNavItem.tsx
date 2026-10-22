@@ -190,6 +190,7 @@ export function SidebarNavItem({
       >
         {glassIndicator}
         <div className={cn(
+          theme === 'glass' && "!bg-transparent",
           "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
@@ -224,6 +225,7 @@ export function SidebarNavItem({
       >
         {glassIndicator}
         <div className={cn(
+          theme === 'glass' && "!bg-transparent",
           "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop
@@ -271,6 +273,7 @@ export function SidebarNavItem({
         </Avatar>
       ) : (
         <div className={cn(
+          theme === 'glass' && "!bg-transparent",
           "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
           isDesktop ? "w-9 h-9" : "w-10 h-10",
           isDesktop

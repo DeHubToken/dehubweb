@@ -604,7 +604,7 @@ export function PostMediaPreview({
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
           >
             {media.map((m, index) => (
-              <div key={m.preview} data-photo-index={m.type === 'image' ? index : undefined} className={`relative flex-shrink-0 snap-center ${dropIndex === index && draggingIndex !== index ? 'ring-2 ring-white rounded-2xl' : ''}`}>
+              <div key={m.preview} data-audio-preview-item={m.type === 'audio' || undefined} data-photo-index={m.type === 'image' ? index : undefined} className={`relative flex-shrink-0 snap-center ${dropIndex === index && draggingIndex !== index ? 'ring-2 ring-white rounded-2xl' : ''}`}>
                 {m.type === 'image' ? (
                   /* ==================== IMAGE PREVIEW ==================== */
                   <div className="relative h-[160px] sm:h-[200px] md:h-[240px] rounded-2xl overflow-hidden bg-zinc-900">
@@ -804,10 +804,11 @@ export function PostMediaPreview({
                 ) : m.type === 'audio' ? (
                   /* ==================== AUDIO PREVIEW ==================== */
                   <div className="flex flex-col gap-3">
-                    <div className="relative w-full sm:w-[320px] md:w-[360px] rounded-2xl overflow-hidden bg-zinc-900">
+                    <div data-glass-audio-preview className="relative w-full sm:w-[320px] md:w-[360px] rounded-2xl overflow-hidden bg-zinc-900">
                       <div className="relative h-full flex items-center justify-center">
                         <AudioVisualizer
                           audioUrl={m.preview}
+                          displayTitle={m.file.name}
                           isPlaying={playingIndex === index}
                           onPlayPause={() => setPlayingIndex(prev => prev === index ? null : index)}
                           className="h-full w-auto min-w-[200px] aspect-[2/1]"
@@ -818,7 +819,7 @@ export function PostMediaPreview({
                           showVolume={false}
                         />
                         
-                        <div className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
+                        <div data-audio-preview-label className="absolute top-3 left-3 right-3 flex items-center gap-3 pointer-events-none">
                           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm flex items-center justify-center border border-white/20">
                             <Music className="w-5 h-5 text-white" />
                           </div>

@@ -158,14 +158,17 @@ function useStageReminderRoster(spaceId: string | undefined) {
       staleTime: 30 * 60_000,
       queryFn: async (): Promise<StageReminderFace | null> => {
         try {
-          const profile = mapUserToProfile(await getAccountInfo(address));
+          const user = await getAccountInfo(address);
+          const profile = mapUserToProfile(user);
           return {
             address,
-            // `handle` is already `@name`, and every consumer prefixes its own
-            // `@` — the live room rendered `@@lastchad` and gave the seat an
-            // initial of "@". Bare is also what space_participants stores, so
-            // the crowd's real listeners and its pre-audience now agree.
-            username: (profile.handle || profile.name || '').replace(/^@+/, '') || undefined,
+            // Bare and from the account itself, never `profile.handle`: that is
+            // already `@name` (the live room rendered `@@lastchad`), and for an
+            // account with no username it is the placeholder `@unknown`, which
+            // the faces would then link to as /unknown. Bare is also what
+            // space_participants stores, so the crowd's real listeners and its
+            // pre-audience agree.
+            username: (user?.username || '').replace(/^@+/, '') || undefined,
             avatarUrl: profile.avatarUrl || undefined,
             followers: profile.followers ?? 0,
           };

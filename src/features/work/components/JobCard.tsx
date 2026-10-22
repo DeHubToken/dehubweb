@@ -27,7 +27,7 @@ export function JobCard({ job }: { job: WorkJob }) {
   const { t } = useTranslation();
   const isBoosted = job.boost_expires_at && new Date(job.boost_expires_at) > new Date();
   return (
-    <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 hover:border-white/20 transition-colors">
+    <div data-kit-section className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 hover:border-white/20 transition-colors">
     <Link to={bountyPath(job)} className="block">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 text-xs">

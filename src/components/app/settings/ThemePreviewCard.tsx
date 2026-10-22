@@ -36,6 +36,7 @@ export const THEME_SWATCHES: Record<string, Swatch> = {
   light: { page: '#f4f4f5', bento: '#ffffff', border: '#e4e4e7', line: '#18181b', faint: '#d4d4d8', accent: '#18181b' },
   immersive: { page: '#000000', bento: 'rgba(16,16,18,0.9)', border: 'rgba(255,255,255,0.12)', line: 'rgba(255,255,255,0.8)', faint: 'rgba(255,255,255,0.22)', accent: '#ffffff', flat: true },
   minimal: { page: '#000000', bento: 'transparent', border: 'rgba(255,255,255,0.1)', line: 'rgba(255,255,255,0.8)', faint: 'rgba(255,255,255,0.22)', accent: '#ffffff', square: true, flat: true },
+  glass: { page: '#10434b', bento: 'rgba(8,49,56,0.58)', border: 'rgba(225,255,255,0.55)', line: '#f2ffff', faint: 'rgba(210,255,255,0.3)', accent: '#d7ffff' },
   cosmic: { page: '#040407', image: 'cosmic', ...GLASS },
   hazy: { page: '#0a0714', image: 'hazy', ...GLASS },
   swarms: { page: '#03080d', image: 'swarms', ...GLASS },

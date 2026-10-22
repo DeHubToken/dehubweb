@@ -51,7 +51,11 @@ def wait_and_finish(folder, request_id, status=print):
             generated = folder / 'kling-result.mp4'
             generated.write_bytes(response.content)
             status('Restoring the complete original soundtrack')
-            finish_preview(generated, folder)
+            from remake import child, finish_shot
+            if child(folder):
+                finish_shot(generated, folder)
+            else:
+                finish_preview(generated, folder)
             return
         if result.get('status') in ('FAILED', 'CANCELED'):
             raise RuntimeError('Generation failed.')

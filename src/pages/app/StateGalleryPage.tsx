@@ -2,11 +2,15 @@ import { translateCopy as _translateCopy } from '@/i18n/copy';
 import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { PenSquare } from 'lucide-react';
+import { PenSquare, Cable } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { showUpdateToast } from '@/components/app/NewVersionToast';
+import type { BuildVersion } from '@/lib/version-check';
 import { useSearchParams } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { LiveRipple } from '@/components/app/LiveRipple';
+import { CaptureCardSetup } from '@/components/app/live/CaptureCardSetup';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ThemedIcon, type ThemeIconKey } from '@/components/app/war/WarHudIcon';
 import { useAppTheme } from '@/contexts/ThemeContext';
@@ -38,6 +42,7 @@ import MessagesSquare from '@/components/ui/cut-icons/chat';
 import { FeedLinkPreviews } from '@/components/app/cards/FeedLinkPreviews';
 import { ChatLinkPreviews } from '@/components/app/chat/ChatLinkPreviews';
 import { useQueryClient } from '@tanstack/react-query';
+import { AudioVisualizer } from '@/components/app/audio/AudioVisualizer';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { LiveClearedLayer } from '@/components/app/live/LiveClearedLayer';
 import { ImmersiveLiveChrome } from '@/components/app/live/ImmersiveLiveChrome';
@@ -183,10 +188,83 @@ function LiveAvatarsGallery() {
 }
 
 /**
+ * Go Live > Capture card. Behind a button because it opens real devices and
+ * would otherwise ask every gallery visitor for camera access.
+ */
+function CaptureCardGallery() {
+  const { t: _copy } = _useCopy();
+  const [open, setOpen] = useState(false);
+  return (
+    <section data-page-bento data-capture-card-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold">
+        <Cable className="h-4 w-4" />
+        {_copy("copy.4a1bd4a3aaf3", { defaultValue: "Capture card" })}
+      </h2>
+      <div className="max-w-md">
+        {open ? (
+          <CaptureCardSetup />
+        ) : (
+          <button type="button" onClick={() => setOpen(true)} className="rounded-xl border border-white/10 bg-white/10 px-3 py-2 text-xs">
+            {_copy("copy.1929290e09aa", { defaultValue: "Open the capture card setup (asks for camera access)" })}
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Audio post player with its animation style chips: the selected style wears
+ * the profile tabs' "Beam" (glowing line, idle chips dimmed), never a pill.
+ */
+function AudioGallery() {
+  const { t: _copy } = _useCopy();
+  const [playing, setPlaying] = useState(false);
+  return (
+    <section data-page-bento data-audio-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{_copy("copy.bc1b88907d3b", { defaultValue: "Audio" })}</h2>
+      <div className="relative h-56 overflow-hidden rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10">
+        <AudioVisualizer
+          audioUrl=""
+          isPlaying={playing}
+          onPlayPause={() => setPlaying((p) => !p)}
+          className="w-full h-full"
+          showStylePicker
+          seed="state-gallery"
+          decodeEnabled={false}
+          durationHint={184}
+        />
+      </div>
+    </section>
+  );
+}
+
+/**
  * Hover tooltips: every one is liquid glass (styles/glass-surfaces.css). The
  * pinned labels sit over a bright stripe so the frost and tint floor show; the
  * icon row below draws the live hover label, as the side panel tabs do.
  */
+/**
+ * Toasts: raises the real "new version" toast (and a plain one) so its text
+ * and buttons can be checked against every theme's toast glass.
+ */
+function ToastsGallery() {
+  const { t } = useTranslation();
+  const showUpdate = () => {
+    showUpdateToast({ id: 'gallery', note: t('toasts.refresh_to_pick_up_the_latest_changes'), url: 'https://dehub.io' } as BuildVersion,
+      t('toasts.refresh_to_pick_up_the_latest_changes'), false, () => {});
+    toast.success(t('toasts.rewards_claimed'), { description: t('toasts.rewards_sent_to_wallet') });
+  };
+  return (
+    <section data-page-bento data-toasts-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('toasts.new_version_available')}</h2>
+      <button type="button" data-kit-button="primary" onClick={showUpdate} className="rounded-xl px-4 py-2 text-sm font-medium">
+        {t('toasts.refresh')}
+      </button>
+    </section>
+  );
+}
+
 function TooltipsGallery() {
   const { t: _copy } = _useCopy();
   const tabs = [
@@ -333,7 +411,7 @@ function VideoProcessingGallery({ docked }: { docked: PostProcessingPhase | null
 }
 
 const THEMES = [
-  'system', 'system-light', 'minimal', 'light', 'cosmic', 'hazy', 'swarms',
+  'system', 'system-light', 'minimal', 'light', 'glass', 'cosmic', 'hazy', 'swarms',
   'lavalamp', 'winter', 'war', 'osaka', 'jungle', 'island', 'hacker', 'horror',
 ] as const;
 
@@ -526,7 +604,10 @@ export default function StateGalleryPage() {
           </div>
         </section>
 
+        <ToastsGallery />
         <TooltipsGallery />
+        <AudioGallery />
+        <CaptureCardGallery />
         <LiveAvatarsGallery />
         <ReactionsGallery />
         <MenusGallery />

@@ -33,6 +33,7 @@ import {
   PasskeyUnsupportedError,
 } from '@/lib/wallet-core/biometric-unlock';
 import { fetchWallet, saveWallet } from '@/lib/wallet-core/store';
+import { readDeviceSeed, type DeviceSeed } from '@/lib/wallet-core/device-seed';
 import { takePendingPasskeyEnrollment } from '@/lib/passkey-login';
 import { normalisePhoneHint } from '@/lib/wallet-core/phone-hint';
 import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint } from '@/lib/wallet-core/legacy-detect';
@@ -61,6 +62,14 @@ interface WalletCreateStepProps {
    * when the backend recognises the login and otherwise sets up a new account.
    */
   intent?: WalletSetupIntent | null;
+  /**
+   * The first wallet action of a silent sign-up (lib/wallet-secure-flow.ts):
+   * the wallet already exists, its words held on this browser
+   * (wallet-core/device-seed). Only the password-or-biometrics choice is
+   * shown, for that wallet, with no old-account detection and no recovery
+   * phrase — backing up is the later reminder. onComplete's key is unused.
+   */
+  securing?: boolean;
 }
 
 type Mode = 'new' | 'import' | 'migrate';
@@ -96,10 +105,24 @@ function legacyMigrationInFlight(): boolean {
   }
 }
 
-export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCreateStepProps) {
+export function WalletCreateStep({ userId, onComplete, intent = null, securing = false }: WalletCreateStepProps) {
   const { t: _copy } = _useCopy();
   const { t } = useTranslation();
-  const [mode, setMode] = useState<Mode>(intent ?? 'new');
+  const [mode, setMode] = useState<Mode>(securing ? 'new' : intent ?? 'new');
+  // securing only: the wallet being secured; undefined while it loads.
+  const [securingSeed, setSecuringSeed] = useState<DeviceSeed | null | undefined>(undefined);
+  useEffect(() => {
+    if (!securing) return;
+    let cancelled = false;
+    readDeviceSeed(userId).then((seed) => {
+      if (cancelled) return;
+      setSecuringSeed(seed);
+      // Secured meanwhile (another tab, Settings): nothing is left to ask.
+      if (!seed) void onComplete('');
+    });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [securing, userId]);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [importPhrase, setImportPhrase] = useState('');
@@ -179,6 +202,9 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
   }, []);
 
   useEffect(() => {
+    // Securing a wallet the account already signed in with: there is no
+    // other account for this step to find.
+    if (securing) return;
     let cancelled = false;
     if (hasLegacyBrowserResidue()) {
       setResidueDetected(true);
@@ -227,12 +253,13 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
       }
     });
     return () => { cancelled = true; };
-  }, [setMigrateEmail]);
+  }, [setMigrateEmail, securing]);
 
   // Resume the mobile/redirect leg of a legacy migration. Flags are checked
   // BEFORE importing the legacy module so the ~1 MB Web3Auth chunk only loads
   // when a migration round-trip is actually in progress.
   useEffect(() => {
+    if (securing) return;
     let pending = false;
     try { pending = !!sessionStorage.getItem(MIGRATE_PENDING_KEY); } catch { /* ignore */ }
     const url = window.location.hash + window.location.search;
@@ -259,7 +286,7 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
         setError(e instanceof Error ? e.message : 'Migration failed. Please try again.');
       })
       .finally(() => setMigrateBusy(null));
-  }, []);
+  }, [securing]);
 
   useEffect(() => {
     setMigratedSafeAddress(null);
@@ -345,6 +372,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
    * an inline error when the mode's input isn't usable yet.
    */
   const resolveSecret = (): string | null => {
+    // Rendered only once the seed has loaded (see the loader below).
+    if (securing) return securingSeed?.secret ?? null;
     if (mode === 'new') {
       if (!newWalletSecretRef.current) newWalletSecretRef.current = generateMnemonic12();
       return newWalletSecretRef.current;
@@ -430,7 +459,8 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
    * and migrated wallets came from a phrase or key they already hold.
    */
   const offerBackup = (derived: { secret: string; ethAddress: string; ethPrivateKey: string }) => {
-    if (mode !== 'new' || !isValidMnemonic(derived.secret)) return false;
+    // Securing leaves backing up to the later reminder.
+    if (securing || mode !== 'new' || !isValidMnemonic(derived.secret)) return false;
     setPendingBackup({ phrase: derived.secret, ethAddress: derived.ethAddress, privKey: derived.ethPrivateKey });
     return true;
   };
@@ -636,6 +666,14 @@ export function WalletCreateStep({ userId, onComplete, intent = null }: WalletCr
     mode !== 'migrate' || (!!migratedKey && !migratedKeyError && addressConfirmed);
   const showPasswordFields = showProtectionStep && protection === 'password';
   const showBiometricStep = showProtectionStep && protection === 'biometric';
+
+  if (securing && !securingSeed) {
+    return (
+      <div className="flex justify-center py-6">
+        <Loader2 className="w-5 h-5 animate-spin text-white/60" />
+      </div>
+    );
+  }
 
   if (pendingBackup) {
     return (

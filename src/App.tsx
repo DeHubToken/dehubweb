@@ -141,6 +141,8 @@ const StateGalleryPage = (import.meta.env.DEV || window.location.hostname === 's
   ? React.lazy(() => import("@/pages/app/StateGalleryPage"))
   : null;
 
+const GlassBackground = React.lazy(() => import('@/components/app/GlassBackground').then(m => ({ default: m.GlassBackground })));
+
 function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
   const { theme } = useAppTheme();
   // Self-gating: only a canvas theme mounts a background. It renders on ALL
@@ -151,6 +153,7 @@ function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
   return (
     <Suspense fallback={null}>
       {theme === "cosmic" && !preview && <CosmicBackground />}
+      {theme === 'glass' && <GlassBackground />}
       {theme === "hazy" && <HazyNightsBackground />}
       {theme === "swarms" && <SwarmsBackground />}
       {theme === "winter" && !preview && <WinterSnow />}
@@ -172,6 +175,9 @@ function ThemedBackgrounds({ preview = false }: { preview?: boolean }) {
 // Pages — lazy loaded
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
 const MaintenancePage = React.lazy(() => import('./pages/MaintenancePage'));
+// OBS browser source. Outside WalletProviders and the theme canvas on purpose:
+// it is composited over a live broadcast, so it carries nothing but widgets.
+const ObsOverlayPage = React.lazy(() => import('./pages/ObsOverlayPage'));
 const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const TelegramAuth = React.lazy(() => import("./pages/TelegramAuth"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
@@ -534,6 +540,7 @@ function AppContent() {
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator/flow" element={<Suspense fallback={<PageLoader />}><CreatorFlowPage /></Suspense>} />
+          <Route path="/creator/remake" element={<Suspense fallback={<PageLoader />}><MaboroshiPage remake /></Suspense>} />
           <Route path="/creator/maboroshi" element={<Suspense fallback={<PageLoader />}><MaboroshiPage /></Suspense>} />
           <Route path="/creator/flow/:id" element={<Suspense fallback={<PageLoader />}><CreatorFlowPublicPage /></Suspense>} />
           {/* /r/:code renders in the top-level Routes (outside WalletProviders) — see App below */}
@@ -784,6 +791,8 @@ function AppContent() {
                 (audio_spaces.short_id); the exact /stages path below still opens
                 the hub page — a param segment never matches the bare route. */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            {/* Stage 15 was replaced by stage 18; old links land on the new one. */}
+            <Route path="/stages/15" element={<Navigate to="/stages/18" replace />} />
             <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
             {/* An off-chain post's own URL — the canonical share form is top-level. */}
             <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
@@ -929,6 +938,9 @@ const App = () => (
              * paints without waiting for the ~1.5 MB wallet chunk.
              */}
             <Route path="/r/:code" element={<ReferralLanding />} />
+            {/* A creator's stream overlay, as an OBS browser source. index.html
+                makes these pages transparent before the bundle runs. */}
+            <Route path="/overlay/:token" element={<Suspense fallback={null}><ObsOverlayPage /></Suspense>} />
             {/* /r/<code>/<any/path> attributes the visit, then redirects to that
                 path — one shareable link that earns and lands somewhere specific. */}
             <Route path="/r/:code/*" element={<ReferralLanding />} />

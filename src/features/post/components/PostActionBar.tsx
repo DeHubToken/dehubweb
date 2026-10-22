@@ -2,7 +2,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay } from "lucide-react";
+import { Loader2, SpellCheck, Palette, ChevronLeft, Type, Hash, BarChart2, MonitorPlay, Cable } from "lucide-react";
 import Paperclip from "@/components/ui/cut-icons/attach";
 import Calendar from "@/components/ui/cut-icons/events";
 import Radio from "@/components/ui/cut-icons/live";
@@ -128,6 +128,9 @@ export function PostActionBar({
    * creator has actually asked for the credentials.
    */
   const [encoderSetup, setEncoderSetup] = useState(false);
+  // Same shape as the encoder: a capture card needs its picker and preview,
+  // which live on the Go Live sheet's own setup step.
+  const [captureSetup, setCaptureSetup] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
@@ -165,6 +168,12 @@ export function PostActionBar({
     setLiveMode(null);
     setLivePopoverOpen(false);
     setEncoderSetup(true);
+  };
+
+  const handleSelectCaptureCard = () => {
+    setLiveMode(null);
+    setLivePopoverOpen(false);
+    setCaptureSetup(true);
   };
 
   const handleSpellCheck = () => {
@@ -258,6 +267,7 @@ export function PostActionBar({
     const wasBroadcast = !!liveStream;
     setLiveMode(null);
     setEncoderSetup(false);
+    setCaptureSetup(false);
     if (wasBroadcast) onCloseModal?.();
   };
 
@@ -271,10 +281,11 @@ export function PostActionBar({
           own setup step instead, because an encoder stream needs a key handed
           back to it and the composer has no field for that. */}
       <GoLiveModal
-        isOpen={!!liveStream || encoderSetup}
+        isOpen={!!liveStream || encoderSetup || captureSetup}
         onClose={handleGoLiveModalClose}
         initialStream={liveStream}
         {...(encoderSetup && !liveStream ? { initialSource: 'rtmp' as const } : null)}
+        {...(captureSetup && !encoderSetup && !liveStream ? { initialSource: 'capture' as const } : null)}
       />
 
       {/* Upload progress bar — liquid glass bubble style */}
@@ -520,6 +531,19 @@ export function PostActionBar({
                   <MonitorPlay className="w-4 h-4 text-white shrink-0" />
                   <span className="text-sm text-white">{t('goLive.sourceEncoder')}</span>
                 </button>
+                {/* Desktop only: phones can't take a USB capture card, and
+                    getDisplayMedia is the same desktop test the sheet uses. */}
+                {typeof navigator !== 'undefined' &&
+                  typeof navigator.mediaDevices?.getDisplayMedia === 'function' && (
+                  <button
+                    type="button"
+                    onClick={handleSelectCaptureCard}
+                    className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-left hover:bg-white/10 transition-colors"
+                  >
+                    <Cable className="w-4 h-4 text-white shrink-0" />
+                    <span className="text-sm text-white">{_copy("copy.4a1bd4a3aaf3", { defaultValue: "Capture card" })}</span>
+                  </button>
+                )}
               </div>
             </PopoverContent>
           </Popover>

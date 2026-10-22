@@ -47,7 +47,7 @@ describe('the composer live menu', () => {
     // Not a LiveMode: an encoder stream ends in a key handed back, and the
     // composer has no field for that.
     expect(src).toMatch(/initialSource: 'rtmp'/);
-    expect(src).toMatch(/isOpen=\{!!liveStream \|\| encoderSetup\}/);
+    expect(src).toMatch(/isOpen=\{!!liveStream \|\| encoderSetup( \|\| captureSetup)?\}/);
   });
 });
 

@@ -262,7 +262,8 @@ export function useUserStakingData() {
         totalUnstakeQueued: unstakeQueuedNum,
         hasBNBBalance: bnbBalNum > 0,
         hasBaseBalance: baseBalNum > 0,
-        hasBothChains: bnbBalNum > 0 && baseBalNum > 0,
+        // Dust (under 1 DHB) is not worth a second deposit, so it gets no warning.
+        hasBothChains: bnbBalNum >= 1 && baseBalNum >= 1,
         userAddress: walletAddress,
       };
     },

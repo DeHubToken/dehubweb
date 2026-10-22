@@ -17,6 +17,7 @@ import { VIDEO_MODELS, getVideoCostUsd } from '@/constants/video-models.constant
 import { MODEL3D_MODELS, getModel3dCostUsd } from '@/constants/model3d-models.constants';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { cn } from '@/lib/utils';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 export type GalleryItem = { id: string; image_url: string | null; video_url: string | null; created_at: string };
 
@@ -63,9 +64,11 @@ export function thumbUrl(url: string, width = 480): string {
  * assistive tech.
  */
 export function CreatorHeroWall() {
+  const { theme } = useAppTheme();
   const [phone] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
   const [still] = useState(() => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const cut = phone ? '9x16' : '16x9';
+  if (theme === 'glass') return null;
 
   return (
     <div
