@@ -791,6 +791,8 @@ function AppContent() {
                 (audio_spaces.short_id); the exact /stages path below still opens
                 the hub page — a param segment never matches the bare route. */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+            {/* Stage 15 was replaced by stage 18; old links land on the new one. */}
+            <Route path="/stages/15" element={<Navigate to="/stages/18" replace />} />
             <Route path="/stages/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
             {/* An off-chain post's own URL — the canonical share form is top-level. */}
             <Route path="/newpost/:n" element={<Suspense fallback={<PageLoader />}><NewPostPage /></Suspense>} />
