@@ -4393,7 +4393,9 @@
     "joined": "{{name}} 加入了",
     "goalReached": "目標達成！",
     "followersUnit": "粉絲數",
-    "topSupporters": "贊助排行"
+    "topSupporters": "贊助排行",
+    "tipped": "{{name}} 送了個禮物",
+    "chatPreview": "聊天訊息會出現"
   },
   "liveStudio": {
     "title": "Live 工作室",
@@ -4429,14 +4431,24 @@
       "join_alert": "加入警报",
       "goal_bar": "目标栏",
       "top_supporters": "顶级支持者",
-      "frame": "框架"
+      "frame": "框架",
+      "stream_timer": "廣播計時器",
+      "reaction_counter": "反應計數器",
+      "event_feed": "最近活動",
+      "chat_box": "聊天框",
+      "ticker": "快訊"
     },
     "hints": {
       "follow_alert": "显示每个新关注者",
       "subscribe_alert": "显示每个新订阅者",
       "join_alert": "欢迎每位观众的到来",
       "goal_bar": "追踪小费或关注者到目标",
-      "viewer_count": "有多少人在观看"
+      "viewer_count": "有多少人在观看",
+      "stream_timer": "顯示你已經廣播了多久",
+      "reaction_counter": "每次你的廣播獲得的反應都會計數",
+      "event_feed": "最新的禮物、追隨者、訂閱者和分享你廣播的人",
+      "chat_box": "在螢幕上顯示你的廣播聊天訊息",
+      "ticker": "一行你自己的文字在螢幕上滾動"
     },
     "fields": {
       "style": "风格",
@@ -4461,7 +4473,14 @@
       "glow": "发光",
       "thickness": "厚度",
       "radius": "角落圆角",
-      "accent": "颜色"
+      "accent": "颜色",
+      "label": "標籤",
+      "lines": "顯示行數",
+      "showAvatars": "顯示個人資料圖片",
+      "speed": "速度",
+      "slow": "慢",
+      "normal": "普通",
+      "fast": "快"
     }
   },
   "live": {

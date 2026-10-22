@@ -4811,7 +4811,9 @@
     "joined": "{{name}} qo&#39;shildi",
     "goalReached": "Maqsadga erishildi!",
     "followersUnit": "izdoshlar",
-    "topSupporters": "Eng yaxshi tarafdorlar"
+    "topSupporters": "Eng yaxshi tarafdorlar",
+    "tipped": "{{name}} sovg&#39;a yubordi",
+    "chatPreview": "Xatlar bu yerda koʻrinadi"
   },
   "liveStudio": {
     "title": "Jonli studiya",
@@ -4865,7 +4867,12 @@
       "top_supporters": "Eng yaxshi tarafdorlar",
       "viewer_count": "Tomoshabinlar soni",
       "text": "Matn",
-      "frame": "Ramka"
+      "frame": "Ramka",
+      "stream_timer": "Eshittirish taymeri",
+      "reaction_counter": "Reaksiya hisoblagichi",
+      "event_feed": "So&#39;nggi faollik",
+      "chat_box": "Chat oynasi",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
@@ -4877,7 +4884,12 @@
       "top_supporters": "Bu oqimdagi eng katta chayqovchilaringiz",
       "viewer_count": "Qancha odam tomosha qilmoqda",
       "text": "Matn satri yoki pastki uchdan bir qismi",
-      "frame": "Oqimingiz atrofidagi chegara"
+      "frame": "Oqimingiz atrofidagi chegara",
+      "stream_timer": "Qancha vaqtdan beri efirga uzatayotganingizni ko&#39;rsatadi",
+      "reaction_counter": "Sizning eshittirishingizga berilgan har bir reaksiya hisobga olinadi",
+      "event_feed": "Eng so&#39;nggi sovg&#39;alar, izdoshlar, obunachilar va translyatsiyangizni baham ko&#39;rayotgan odamlar",
+      "chat_box": "Ekranda eshittirishingizning chat xabarlarini ko&#39;rsatadi",
+      "ticker": "Ekran bo&#39;ylab aylantiriladigan o&#39;zingizning matningiz qatori"
     },
     "fields": {
       "style": "Uslub",
@@ -4901,7 +4913,14 @@
       "glow": "Yorqinlik",
       "thickness": "Qalinligi",
       "radius": "Burchakni yaxlitlash",
-      "accent": "Rang"
+      "accent": "Rang",
+      "label": "Yorliq",
+      "lines": "Ko&#39;rsatilgan chiziqlar",
+      "showAvatars": "Profil rasmlarini ko&#39;rsatish",
+      "speed": "Tezlik",
+      "slow": "Sekin",
+      "normal": "Oddiy",
+      "fast": "Tez"
     }
   },
   "live": {

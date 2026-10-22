@@ -4831,7 +4831,9 @@
     "joined": "{{name}} beigetreten",
     "goalReached": "Ziel erreicht!",
     "followersUnit": "follower",
-    "topSupporters": "Top-Unterstützer"
+    "topSupporters": "Top-Unterstützer",
+    "tipped": "{{name}} hat ein Geschenk gesendet",
+    "chatPreview": "Chat-Nachrichten werden hier angezeigt"
   },
   "liveStudio": {
     "title": "Live-Studio",
@@ -4884,7 +4886,12 @@
       "top_supporters": "Top-Unterstützer",
       "viewer_count": "Zuschaueranzahl",
       "text": "Text",
-      "frame": "Rahmen"
+      "frame": "Rahmen",
+      "stream_timer": "BROADCAST-TIMER",
+      "reaction_counter": "Reaktionszähler",
+      "event_feed": "Letzte Aktivität",
+      "chat_box": "Chat-Box",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Feiern Sie jeden Tipp, der auf sein Level zugeschnitten ist",
@@ -4896,7 +4903,12 @@
       "top_supporters": "Deine größten Trinkgeldgeber in diesem Stream",
       "viewer_count": "Wie viele Leute schauen zu",
       "text": "Eine Textzeile oder ein unteres Drittel",
-      "frame": "Eine Grenze um Ihren Stream"
+      "frame": "Eine Grenze um Ihren Stream",
+      "stream_timer": "Zeigt an, wie lange Sie ausgestrahlt haben",
+      "reaction_counter": "Zählt jede Reaktion, die Ihre Sendung erhält",
+      "event_feed": "Die neuesten Geschenke, Follower, Abonnenten und Personen, die Ihre Sendung teilen",
+      "chat_box": "Zeigt die Chat-Nachrichten Ihrer Sendung auf dem Bildschirm an",
+      "ticker": "Eine Zeile Ihres eigenen Textes, der über den Bildschirm scrollt"
     },
     "fields": {
       "style": "Stil",
@@ -4921,7 +4933,14 @@
       "glow": "Leuchten",
       "thickness": "Dicke",
       "radius": "Eckenrundung",
-      "accent": "Farbe"
+      "accent": "Farbe",
+      "label": "Beschriftung",
+      "lines": "Angezeigte Linien",
+      "showAvatars": "Profilbilder anzeigen",
+      "speed": "Geschwindigkeit",
+      "slow": "Langsam",
+      "normal": "Normal",
+      "fast": "Schnell"
     }
   },
   "live": {

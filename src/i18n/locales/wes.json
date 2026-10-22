@@ -4369,7 +4369,9 @@
   "liveOverlay": {
     "someone": "Wetin dem say?",
     "joined": "{{name}} join",
-    "followersUnit": "foloas"
+    "followersUnit": "foloas",
+    "tipped": "{{name}} send gift",
+    "chatPreview": "Chat message dey show wey"
   },
   "liveStudio": {
     "signIn": "Sign in wey you go set up alert and widget for your stream.",
@@ -4407,13 +4409,23 @@
       "top_supporters": "Top supporters",
       "viewer_count": "Viewer count",
       "text": "Text",
-      "frame": "Frame"
+      "frame": "Frame",
+      "stream_timer": "Timer wey broadcast dey broadcast",
+      "reaction_counter": "Counter wey reaction dey count",
+      "event_feed": "Activity wey recent dey",
+      "chat_box": "Box wey chat dey",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Celebrate ebi tip, fit for ebi level.",
       "subscribe_alert": "Show every new subscriber",
       "share_alert": "Shɔ wen sɔmbɔdi shɛr yɔ strim",
-      "join_alert": "Welcomes each viewer as they arrive"
+      "join_alert": "Welcomes each viewer as they arrive",
+      "stream_timer": "Show how long you dey broadcast",
+      "reaction_counter": "Count every reaction broadcast get",
+      "event_feed": "Latest gift, follower, subscriber, person share broadcast wey",
+      "chat_box": "Show broadcast chat message on screen",
+      "ticker": "Line wey own text wey dey scroll cross screen"
     },
     "fields": {
       "style": "Style",
@@ -4435,7 +4447,14 @@
       "glow": "Glow",
       "thickness": "Thickness",
       "radius": "Corner rounding",
-      "accent": "Colour"
+      "accent": "Colour",
+      "label": "Label",
+      "lines": "Line wey show",
+      "showAvatars": "Show profile picture",
+      "speed": "Speed",
+      "slow": "Slow",
+      "normal": "Normal",
+      "fast": "Fast"
     }
   },
   "live": {

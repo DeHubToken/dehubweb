@@ -4785,7 +4785,9 @@
     "joined": "{{name}} iscritti",
     "goalReached": "Obiettivo raggiunto!",
     "followersUnit": "followers",
-    "topSupporters": "I migliori sostenitori"
+    "topSupporters": "I migliori sostenitori",
+    "tipped": "{{name}} ha inviato un regalo",
+    "chatPreview": "I messaggi della chat vengono visualizzati qui"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4839,7 +4841,12 @@
       "top_supporters": "Migliori sostenitori",
       "viewer_count": "Conteggio spettatori",
       "text": "Testo",
-      "frame": "Cornice"
+      "frame": "Cornice",
+      "stream_timer": "Timer di trasmissione",
+      "reaction_counter": "Contatore di reazione",
+      "event_feed": "Attività recente",
+      "chat_box": "Chat box",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Celebra ogni mancia, dimensionata al suo livello",
@@ -4851,7 +4858,12 @@
       "top_supporters": "I tuoi maggiori donatori in questo stream",
       "viewer_count": "Quante persone stanno guardando",
       "text": "Una riga di testo o un lower third",
-      "frame": "Un bordo attorno al tuo stream"
+      "frame": "Un bordo attorno al tuo stream",
+      "stream_timer": "Mostra da quanto tempo trasmetti",
+      "reaction_counter": "Conta ogni reazione che ottiene la tua trasmissione",
+      "event_feed": "Gli ultimi regali, follower, abbonati e persone che condividono la tua trasmissione",
+      "chat_box": "Mostra i messaggi di chat della trasmissione sullo schermo",
+      "ticker": "Una riga del tuo testo che scorre sullo schermo"
     },
     "fields": {
       "style": "Stile",
@@ -4876,7 +4888,14 @@
       "glow": "Bagliore",
       "thickness": "Spessore",
       "radius": "Arrotondamento",
-      "accent": "Colore"
+      "accent": "Colore",
+      "label": "Etichetta",
+      "lines": "Linee mostrate",
+      "showAvatars": "Mostra immagini del profilo",
+      "speed": "Velocità",
+      "slow": "Lento",
+      "normal": "Normale",
+      "fast": "Veloce"
     }
   },
   "live": {

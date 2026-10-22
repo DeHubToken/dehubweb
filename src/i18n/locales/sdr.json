@@ -4436,7 +4436,8 @@
     "joined": "{{name}} जुड़ गया",
     "goalReached": "लक्ष्य प्राप्त हुआ!",
     "followersUnit": "अनुयायी",
-    "topSupporters": "शीर्ष समर्थक"
+    "topSupporters": "शीर्ष समर्थक",
+    "chatPreview": "Chat messages appear here"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4490,7 +4491,12 @@
       "top_supporters": "टॉप सपोर्टर",
       "viewer_count": "व्यूअर काउंट",
       "text": "टेक्स्ट",
-      "frame": "फ़्रेम"
+      "frame": "फ़्रेम",
+      "stream_timer": "Broadcast timer",
+      "reaction_counter": "Reaction counter",
+      "event_feed": "Recent activity",
+      "chat_box": "Chat box",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "हर टिप के जश्न मनावै, ओकर टियर के हिसाब से साइज में",
@@ -4502,7 +4508,8 @@
       "top_supporters": "ए स्ट्रीम में आपके सबसे बड़ टिपर",
       "viewer_count": "कतेक लोग देख रहल बा",
       "text": "एक लाइन टेक्स्ट या लोअर थर्ड",
-      "frame": "आपके स्ट्रीम के चारो ओर बॉर्डर"
+      "frame": "आपके स्ट्रीम के चारो ओर बॉर्डर",
+      "ticker": "आपन सुद्ध पाठ जे स्क्रीन भर चलत रहे"
     },
     "fields": {
       "style": "स्टाइल",
@@ -4518,7 +4525,14 @@
       "lowerThird": "नीचे तिहाई",
       "solid": "سولید",
       "thickness": "بُردَك",
-      "radius": "कोना गोलाई"
+      "radius": "कोना गोलाई",
+      "label": "Label",
+      "lines": "Lines shown",
+      "showAvatars": "Show profile pictures",
+      "speed": "Speed",
+      "slow": "Slow",
+      "normal": "Normal",
+      "fast": "Fast"
     }
   },
   "live": {

@@ -4721,7 +4721,9 @@
     "joined": "{{name}} s'ha unit",
     "goalReached": "Objectiu assolit!",
     "followersUnit": "seguidors",
-    "topSupporters": "Els millors seguidors"
+    "topSupporters": "Els millors seguidors",
+    "tipped": "{{name}}ha enviat un regal",
+    "chatPreview": "Els missatges de xat apareixen aquí"
   },
   "liveStudio": {
     "title": "Estudi en directe",
@@ -4775,7 +4777,12 @@
       "top_supporters": "Principals suportadors",
       "viewer_count": "Recompte de espectadors",
       "text": "Text",
-      "frame": "Marc"
+      "frame": "Marc",
+      "stream_timer": "Temporitzador de difusió",
+      "reaction_counter": "Comptador de reaccions",
+      "event_feed": "Activitat recent",
+      "chat_box": "Quadre de xat",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
@@ -4787,7 +4794,12 @@
       "top_supporters": "Els vostres tippers més grans d'aquest flux",
       "viewer_count": "Quantes persones estan mirant",
       "text": "Una línia de text o un tercer inferior",
-      "frame": "Un contorn al voltant del vostre flux"
+      "frame": "Un contorn al voltant del vostre flux",
+      "stream_timer": "Mostra quant de temps portes emetent",
+      "reaction_counter": "Compta cada reacció que rep la teva emissió",
+      "event_feed": "Els últims regals, seguidors, subscriptors i persones que comparteixen la teva retransmissió",
+      "chat_box": "Mostra els missatges de xat de la teva emissió a la pantalla",
+      "ticker": "Una línia del teu propi text que es desplaça per la pantalla"
     },
     "fields": {
       "style": "Estil",
@@ -4812,7 +4824,14 @@
       "glow": "Brillantor",
       "thickness": "Gruix",
       "radius": "Arrodoniment de cantonades",
-      "accent": "Color"
+      "accent": "Color",
+      "label": "Etiqueta",
+      "lines": "Línies mostrades",
+      "showAvatars": "Mostra les fotos del perfil",
+      "speed": "Velocitat",
+      "slow": "Lent",
+      "normal": "Normal",
+      "fast": "Ràpid"
     }
   },
   "live": {

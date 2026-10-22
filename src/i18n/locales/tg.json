@@ -4737,7 +4737,9 @@
     "joined": "{{name}} info: whatsthis",
     "goalReached": "Nakatanggap ang Layunin!",
     "followersUnit": "пайравони",
-    "topSupporters": "Пуштибони боло"
+    "topSupporters": "Пуштибони боло",
+    "tipped": "{{name}}info: whatsthis",
+    "chatPreview": "Иттилооти чат дар ин ҷо пайдо мешавад"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4791,7 +4793,12 @@
       "top_supporters": "Пасткиравони беҳтарин",
       "viewer_count": "Шумораи тамошобон",
       "text": "Матн",
-      "frame": "Фрейм"
+      "frame": "Фрейм",
+      "stream_timer": "Таймери пахши барномаҳо",
+      "reaction_counter": "Ҳисобкунаки вокуниш",
+      "event_feed": "Фаъолияти охирин",
+      "chat_box": "Қуттии чат",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Ҳар порсаро, ки ба сатҳи худ мувофиқ аст, нишон медиҳад",
@@ -4803,7 +4810,12 @@
       "top_supporters": "Порсҳои калонтарин дар ин стрим",
       "viewer_count": "Қанча одам тамошо мекунанд",
       "text": "Ряд матн ё низак аз поён",
-      "frame": "Ҳавзи нав ороиши стриминг"
+      "frame": "Ҳавзи нав ороиши стриминг",
+      "stream_timer": "Ipinapakita kung gaano mo nagpapadala",
+      "reaction_counter": "Ҳисоб кардани ҳар як реаксияе, ки пахши шумо ба даст меорад",
+      "event_feed": "Охирин тӯҳфаҳо, пайравон, муштариён ва одамоне, ки пахши шуморо мубодила мекунанд",
+      "chat_box": "Name",
+      "ticker": "Хати матни худ, ки дар экран ҳаракат мекунад"
     },
     "fields": {
       "style": "Стил",
@@ -4828,7 +4840,14 @@
       "glow": "Равшанӣ",
       "thickness": "Ғафсӣ",
       "radius": "Гирдиҳамоии кунҷ",
-      "accent": "Ранг"
+      "accent": "Ранг",
+      "label": "Тамға",
+      "lines": "Хатҳои нишондодашуда",
+      "showAvatars": "Ipakita ang mga larawan ng profile",
+      "speed": "Суръат",
+      "slow": "Суст",
+      "normal": "Муқаррарӣ",
+      "fast": "Тез"
     }
   },
   "live": {

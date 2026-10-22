@@ -4784,7 +4784,9 @@
     "joined": "{{name}} amejiunga",
     "goalReached": "Lengo limefikiwa!",
     "followersUnit": "wafuasi",
-    "topSupporters": "Wafuasi wakuu"
+    "topSupporters": "Wafuasi wakuu",
+    "tipped": "{{name}} alituma zawadi",
+    "chatPreview": "Ujumbe wa gumzo unaonekana hapa"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4838,7 +4840,12 @@
       "top_supporters": "Wafuasi wakuu",
       "viewer_count": "Hesabu ya mtazamaji",
       "text": "Maandishi",
-      "frame": "Fremu"
+      "frame": "Fremu",
+      "stream_timer": "Kipima muda cha utangazaji",
+      "reaction_counter": "Kaunta ya majibu",
+      "event_feed": "Shughuli za hivi karibuni",
+      "chat_box": "Sanduku la gumzo",
+      "ticker": "Kileta tiketi"
     },
     "hints": {
       "tip_alert": "Husherehekea kila kiinua mgongo, kulingana na kiwango chake",
@@ -4849,7 +4856,12 @@
       "top_supporters": "Vidokezi vyako vikubwa zaidi kwenye mkondo huu",
       "viewer_count": "Ni watu wangapi wanaotazama",
       "text": "Mstari wa maandishi au theluthi ya chini",
-      "frame": "Mpaka karibu na mkondo wako"
+      "frame": "Mpaka karibu na mkondo wako",
+      "stream_timer": "Inaonyesha muda ambao umekuwa ukitangaza",
+      "reaction_counter": "Inahesabu kila mwitikio ambao matangazo yako hupata",
+      "event_feed": "Zawadi za hivi karibuni, wafuasi, wanachama na watu wanaoshiriki matangazo yako",
+      "chat_box": "Inaonyesha ujumbe wa gumzo wa matangazo yako kwenye skrini",
+      "ticker": "Mstari wa maandishi yako mwenyewe ambayo yanasonga kwenye skrini"
     },
     "fields": {
       "style": "Mtindo",
@@ -4874,7 +4886,14 @@
       "glow": "Mwangaza",
       "thickness": "Unene",
       "radius": "Mzunguko wa kona",
-      "accent": "Rangi"
+      "accent": "Rangi",
+      "label": "Lebo",
+      "lines": "Mistari imeonyeshwa",
+      "showAvatars": "Onyesha picha za wasifu",
+      "speed": "Kasi",
+      "slow": "Polepole",
+      "normal": "Kawaida",
+      "fast": "Haraka"
     }
   },
   "live": {

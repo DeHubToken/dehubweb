@@ -4026,7 +4026,8 @@
     "joined": "{{name}} شامل ہوا",
     "goalReached": "ہدف حاصل ہوا!",
     "followersUnit": "فالوورز",
-    "topSupporters": "ٹاپ سپورٹرز"
+    "topSupporters": "ٹاپ سپورٹرز",
+    "tipped": "{{name}} نے ایک دھنہ دے دیا"
   },
   "liveStudio": {
     "title": "لائیو سٹوڈیو",
@@ -4062,7 +4063,10 @@
     "kinds": {
       "follow_alert": "فالو الیرٹ",
       "share_alert": "شیئر الرٹ",
-      "frame": "فریم"
+      "frame": "فریم",
+      "stream_timer": "براڈکاسٹ ٹائمر",
+      "event_feed": "حالیہ سرگرمی",
+      "ticker": "ٹیکر"
     },
     "hints": {
       "share_alert": "جب کوئی آپ کے سٹریم کو شیئر کرے تو دکھاتا ہے",
@@ -4093,7 +4097,8 @@
       "glow": "چمک",
       "thickness": "موٹائی",
       "radius": "کونے کا گولائی",
-      "accent": "رنگ"
+      "accent": "رنگ",
+      "speed": "سپیڈ"
     }
   },
   "live": {

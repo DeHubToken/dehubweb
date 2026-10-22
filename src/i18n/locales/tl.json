@@ -4836,7 +4836,9 @@
     "joined": "{{name}} sumali",
     "goalReached": "Naabot na ang layunin!",
     "followersUnit": "mga tagasunod",
-    "topSupporters": "Mga nangungunang tagasuporta"
+    "topSupporters": "Mga nangungunang tagasuporta",
+    "tipped": "Nagpadala ng regalo si {{name}}",
+    "chatPreview": "Lilitaw ang mga mensahe ng chat dito"
   },
   "liveStudio": {
     "title": "Instagram",
@@ -4889,7 +4891,12 @@
       "top_supporters": "Mga nangungunang tagasuporta",
       "viewer_count": "Bilang ng viewer",
       "text": "Teksto",
-      "frame": "Balangkas"
+      "frame": "Balangkas",
+      "stream_timer": "Broadcast timer",
+      "reaction_counter": "Reaksyon counter",
+      "event_feed": "Kamakailang aktibidad",
+      "chat_box": "Chat box",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",
@@ -4901,7 +4908,12 @@
       "top_supporters": "Ang iyong mga pinakamalaking tipper sa stream na ito",
       "viewer_count": "Gaano karaming mga tao ang nanonood",
       "text": "Isang linya ng teksto o isang mas mababang ikatlong",
-      "frame": "Hangganan sa paligid ng iyong stream"
+      "frame": "Hangganan sa paligid ng iyong stream",
+      "stream_timer": "Ipinapakita kung gaano katagal ka nang nagsasahimpapawid",
+      "reaction_counter": "Binibilang ang bawat reaksyon na nakukuha ng iyong broadcast",
+      "event_feed": "Ang pinakabagong mga regalo, mga tagasunod, mga tagasuskribi at mga taong nagbabahagi ng iyong broadcast",
+      "chat_box": "Ipinapakita ang mga mensahe sa chat ng iyong broadcast sa screen",
+      "ticker": "Isang linya ng iyong sariling teksto na nag - scroll sa buong screen"
     },
     "fields": {
       "style": "Estilo",
@@ -4926,7 +4938,14 @@
       "glow": "Glow",
       "thickness": "Napapijri",
       "radius": "Pag - ikot ng sulok",
-      "accent": "Kulay"
+      "accent": "Kulay",
+      "label": "Label",
+      "lines": "Ipinapakita ang mga linya",
+      "showAvatars": "Ipakita ang mga larawan sa profile",
+      "speed": "Bilis",
+      "slow": "Mabagal",
+      "normal": "Normal",
+      "fast": "Mabilis"
     }
   },
   "live": {

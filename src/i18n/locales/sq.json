@@ -4778,7 +4778,9 @@
     "joined": "{{name}} u bashkua",
     "goalReached": "Qëllimi u arrit!",
     "followersUnit": "ndjekësit",
-    "topSupporters": "Mbështetësit më të mirë"
+    "topSupporters": "Mbështetësit më të mirë",
+    "tipped": "{{name}} dërgoi një dhuratë",
+    "chatPreview": "Mesazhet e bisedës shfaqen këtu"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4832,7 +4834,12 @@
       "top_supporters": "Mbështetësit më të mirë",
       "viewer_count": "Numri i shikuesve",
       "text": "Teksti",
-      "frame": "Korniza"
+      "frame": "Korniza",
+      "stream_timer": "Kohëmatësi i transmetimit",
+      "reaction_counter": "Numëratori i reagimit",
+      "event_feed": "Aktiviteti i fundit",
+      "chat_box": "Kutia e bisedës",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Feston çdo bakshish, të madhësisë sipas nivelit të tij",
@@ -4844,7 +4851,12 @@
       "top_supporters": "Këshillat e tua më të mëdha e japin këtë rrjedhë",
       "viewer_count": "Sa njerëz po shikojnë",
       "text": "Një rresht teksti ose një e treta më e ulët",
-      "frame": "Një kufi rreth rrjedhës tënde"
+      "frame": "Një kufi rreth rrjedhës tënde",
+      "stream_timer": "Tregon se sa kohë ke që transmeton",
+      "reaction_counter": "Numëron çdo reagim që merr transmetimi yt",
+      "event_feed": "Dhuratat më të fundit, ndjekësit, abonentët dhe njerëzit që ndajnë transmetimin tënd",
+      "chat_box": "Shfaq mesazhet e bisedës së transmetimit tënd në ekran",
+      "ticker": "Një rresht i tekstit tënd që lëviz nëpër ekran"
     },
     "fields": {
       "style": "Stili",
@@ -4869,7 +4881,14 @@
       "glow": "Shkëlqim",
       "thickness": "Trashësia",
       "radius": "Rrumbullakimi i këndit",
-      "accent": "Ngjyra"
+      "accent": "Ngjyra",
+      "label": "Etiketa",
+      "lines": "Rreshtat e shfaqur",
+      "showAvatars": "Shfaq fotografitë e profilit",
+      "speed": "Shpejtësia",
+      "slow": "I ngadaltë",
+      "normal": "Normale",
+      "fast": "Shpejt"
     }
   },
   "live": {
