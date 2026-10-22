@@ -5768,6 +5768,17 @@
     "creatorPaidDirectNote": "The creator's share goes straight to their wallet the moment you subscribe. DeHub keeps a small platform fee.",
     "creatorEarnsDirect": "Subscribers pay in DeHub tokens. Your share lands in your wallet the moment they subscribe, less the platform fee for your badge tier."
   },
+  "liveOverlay": {
+    "someone": "Someone",
+    "followed": "{{name}} followed",
+    "subscribed": "{{name}} subscribed",
+    "subscribedTo": "{{name}} subscribed to {{plan}}",
+    "shared": "{{name}} shared the stream",
+    "joined": "{{name}} joined",
+    "goalReached": "Goal reached!",
+    "followersUnit": "followers",
+    "topSupporters": "Top supporters"
+  },
   "live": {
     "chatJoined": "joined",
     "chatSentGift": "sent",

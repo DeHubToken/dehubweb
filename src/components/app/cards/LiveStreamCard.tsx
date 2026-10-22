@@ -90,6 +90,8 @@ import { useLivePlaybackFeedback } from '@/hooks/use-live-playback-feedback';
 import { useStreamGifts } from '@/hooks/use-stream-gifts';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
+import { useStreamOverlay } from '@/hooks/use-stream-overlay';
+import { REPLACES_BUILT_IN_CELEBRATION } from '@/lib/live-overlay/registry';
 import { LiveReactionFlow, type SelfReaction } from '@/components/app/live/LiveReactionFlow';
 import { useEngagementWeight } from '@/hooks/use-engagement-weight';
 import type { PostReaction } from '@/lib/reactions';
@@ -97,6 +99,9 @@ import { GIFT_TIERS, tierFromAmount } from '@/lib/live/gift-tiers';
 
 const LiveGiftBuyDrawer = lazy(() => import('@/components/app/live/LiveGiftBuyDrawer').then(m => ({ default: m.LiveGiftBuyDrawer })));
 const TipPayWith = lazy(() => import('@/components/app/tips/TipPayWith'));
+// The creator's own overlay. Off the boot path: most streams have none, and the
+// widgets, their stylesheet and the room listener only load for one that does.
+const LiveOverlayLayer = lazy(() => import('@/components/app/live/overlay/LiveOverlayLayer'));
 import { speakTipMessage, warmTipTts, setTipTtsEnabled, MAX_TTS_CHARS } from '@/lib/live/tip-tts';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
@@ -422,6 +427,15 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    * so that echo is dropped on the wallet address to avoid playing it twice.
    */
   const { items: giftCelebrations, enqueue: enqueueGift } = useGiftAnimations();
+  /**
+   * The creator's overlay. A creator who placed their own tip alert gets theirs
+   * instead of the built-in corner celebration — whether this card draws it or
+   * their OBS has already burned it into the picture — never both.
+   */
+  const { data: streamOverlay } = useStreamOverlay(stream.streamId, !!stream.isLive && !streamEnded);
+  const overlayOwnsCelebration = !!streamOverlay?.widgets.some(
+    (w) => w.enabled && (REPLACES_BUILT_IN_CELEBRATION as readonly string[]).includes(w.kind),
+  );
   /**
    * The tier the amount currently in the box will play — whether it was
    * picked from a tile or typed. A custom amount is not a lesser gift; it
@@ -1471,7 +1485,21 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             — and INSIDE the fullscreen container so the effect follows the
             player into fullscreen, where it lands over the chat column rather
             than animating behind it. */}
-        <GiftAnimationOverlay items={giftCelebrations} />
+        {!overlayOwnsCelebration && <GiftAnimationOverlay items={giftCelebrations} />}
+        {/* The creator's widgets, placed against the picture. Mounted only for a
+            creator who has saved an overlay at least once (version > 0), so a
+            stream with none loads nothing; inside the fullscreen container so
+            the widgets follow the picture there too. */}
+        {streamOverlay && streamOverlay.version > 0 && stream.streamId && stream.isLive && !streamEnded && (
+          <Suspense fallback={null}>
+            <LiveOverlayLayer
+              streamId={stream.streamId}
+              overlay={streamOverlay}
+              videoRef={videoRef}
+              initialViewers={Number(livePresence) || 0}
+            />
+          </Suspense>
+        )}
         <LiveReactionFlow streamId={stream.streamId} enabled={!!stream.isLive && !streamEnded} bottom={immersive ? 100 : 56} self={selfReaction} />
 
         {/* Full-bleed chrome. Inside the media container so it travels with
