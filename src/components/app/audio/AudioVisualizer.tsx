@@ -582,7 +582,8 @@ export function AudioVisualizer({
         const step = width / shape.length;
         shape.forEach((peak, index) => {
           const level = staticData.length ? staticData[Math.floor(index / shape.length * staticData.length)] / 255 : 0;
-          const barHeight = Math.max(3, Math.min(1, peak + level * .15) * height * .88);
+          const envelope = .16 + .84 * Math.pow(Math.sin(Math.PI * index / Math.max(1, shape.length - 1)), .8);
+          const barHeight = Math.max(2, Math.min(1, peak + level * .15) * envelope * height * .88);
           ctx.fillStyle = index / shape.length <= progress ? '#efffff' : 'rgba(190,255,250,.65)';
           ctx.fillRect(index * step, height - barHeight, Math.max(1, step * .55), barHeight);
         });
