@@ -102,6 +102,9 @@ export function TipModal({
   // Base first, so the tip itself always leaves from Base.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [funding, setFunding] = useState(false);
+  // Every open starts in DHB. A stablecoin picked last time would otherwise
+  // reinterpret a saved DHB draft as USDC.
+  useEffect(() => { if (open) setPayWith(null); }, [open]);
   const sendInFlight = useRef(false);
   const [preparing, setPreparing] = useState(false);
 

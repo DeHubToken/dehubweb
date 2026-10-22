@@ -73,6 +73,9 @@ export function DmTipDialog({
   // Another token to pay with; it becomes DHB on Base before the tip.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [recipientPrivate, setRecipientPrivate] = useState(false);
+  // Every open starts in DHB. A stablecoin picked last time would otherwise
+  // reinterpret a saved DHB draft as USDC.
+  useEffect(() => { if (open) setPayWith(null); }, [open]);
   const [privacyChecking, setPrivacyChecking] = useState(false);
 
   useEffect(() => {
