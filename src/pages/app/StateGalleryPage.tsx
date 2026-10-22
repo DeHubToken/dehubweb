@@ -3,6 +3,9 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { lazy, Suspense, useEffect, useId, useState } from 'react';
 import { PenSquare, Cable } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { showUpdateToast } from '@/components/app/NewVersionToast';
+import type { BuildVersion } from '@/lib/version-check';
 import { useSearchParams } from 'react-router-dom';
 import { AppState } from '@/components/app/AppState';
 import { LiveRipple } from '@/components/app/LiveRipple';
@@ -237,6 +240,27 @@ function AudioGallery() {
  * pinned labels sit over a bright stripe so the frost and tint floor show; the
  * icon row below draws the live hover label, as the side panel tabs do.
  */
+/**
+ * Toasts: raises the real "new version" toast (and a plain one) so its text
+ * and buttons can be checked against every theme's toast glass.
+ */
+function ToastsGallery() {
+  const { t } = useTranslation();
+  const showUpdate = () => {
+    showUpdateToast({ id: 'gallery', note: t('toasts.refresh_to_pick_up_the_latest_changes'), url: 'https://dehub.io' } as BuildVersion,
+      t('toasts.refresh_to_pick_up_the_latest_changes'), false, () => {});
+    toast.success(t('toasts.rewards_claimed'), { description: t('toasts.rewards_sent_to_wallet') });
+  };
+  return (
+    <section data-page-bento data-toasts-gallery className="mb-5 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
+      <h2 className="mb-3 text-sm font-semibold">{t('toasts.new_version_available')}</h2>
+      <button type="button" data-kit-button="primary" onClick={showUpdate} className="rounded-xl px-4 py-2 text-sm font-medium">
+        {t('toasts.refresh')}
+      </button>
+    </section>
+  );
+}
+
 function TooltipsGallery() {
   const { t: _copy } = _useCopy();
   const tabs = [
@@ -527,6 +551,7 @@ export default function StateGalleryPage() {
           </div>
         </section>
 
+        <ToastsGallery />
         <TooltipsGallery />
         <AudioGallery />
         <CaptureCardGallery />
