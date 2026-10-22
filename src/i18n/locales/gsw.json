@@ -4793,6 +4793,14 @@
     }
   },
   "liveRecap": {
+    "share": "Teilen",
+    "shareText": "Ich habe gerade \"{{title}}\" auf DeHub gestreamt: {{duration}} live, {{peak}} auf dem Gipfel und {{followers}} neue Follower.",
+    "newFollowers": "Neue Follower",
+    "chatMessages": "Chat-Nachrichten",
+    "reactions": "Reaktionen",
+    "shares": "Personen teilen",
+    "polls": "Umfragen",
+    "pollWinner": "{{option}} gewonnen",
     "title": "Stream-Rückblick",
     "justEnded": "De Stream-Zusammenfassung.",
     "lastStream": "Dei letze Stream",

@@ -4746,6 +4746,8 @@
     }
   },
   "liveRecap": {
+    "gifts_other": "Site na onyinye {{count}}",
+    "untitled": "Mgbasa ozi enweghị aha",
     "title": "Stream recap",
     "justEnded": "Gị iyi recap",
     "lastStream": "Ikpeazụ gị iyi",

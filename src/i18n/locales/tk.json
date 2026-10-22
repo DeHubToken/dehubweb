@@ -4715,6 +4715,7 @@
     }
   },
   "liveRecap": {
+    "pollWinner": "{{option}} ýeňdi",
     "title": "Stream Recap",
     "justEnded": "Seniň gaýdyp gelmegiň",
     "lastStream": "Seniň soňky akyşyň",

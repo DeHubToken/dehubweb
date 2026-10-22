@@ -4808,6 +4808,7 @@
     }
   },
   "liveRecap": {
+    "pollWinner": "{{option}} жеңді",
     "title": "Ағынның қайталануы",
     "justEnded": "Ағынды қайта өңдеу",
     "lastStream": "Сіздің соңғы ағыныңыз",

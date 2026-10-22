@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Kurteya weşanê",
+    "justEnded": "Kurteya weşana te",
+    "lastStream": "Weşana te ya dawî",
+    "share": "Parve bike",
+    "shareText": "Min nû li ser DeHubê \"{{title}}\" weşand: {{duration}} zindî, di herî zêde de {{peak}} temaşevan û {{followers}} şopînerên nû.",
+    "untitled": "Weşana bê sernav",
+    "copied": "Kurte hate kopîkirin. Li her derê bixe.",
+    "loadFailed": "Kurte nehat barkirin. Piştî demekê dîsa biceribîne.",
+    "duration": "Dema zindî",
+    "peakViewers": "Herî zêde temaşevan di carekê de",
+    "gifts_one": "Ji {{count}} diyariyê",
+    "gifts_other": "Ji {{count}} diyariyan",
+    "newFollowers": "Şopînerên nû",
+    "chatMessages": "Peyamên sohbetê",
+    "chatters": "Kesên ku sohbet kirin",
+    "reactions": "Bertek",
+    "shares": "Kesên ku parve kirin",
+    "topSupporters": "Piştgirên sereke",
+    "polls": "Rapirsî",
+    "pollWinner": "{{option}} bi ser ket",
+    "stillCounting": "Hîn tê hejmartin: diyarî dikarin deqîqeyekê bigrin heta ku bên pejirandin."
+  },
   "errors": {
     "sponsorshipUnavailable": "Danûstandinên belaş li aliyê me rawestiyane, ne li berîka we. Ji kerema xwe piştî demekê dîsa biceribîne.",
     "gasSponsorshipFailed": "Nekarî lêçûna vê danûstandinê were dayîn. Ji kerema xwe piştî demekê dîsa biceribîne."

@@ -4813,6 +4813,7 @@
     }
   },
   "liveRecap": {
+    "duration": "直播时长",
     "title": "流式摘要",
     "justEnded": "您的信息流总结",
     "lastStream": "您的最后一个流",

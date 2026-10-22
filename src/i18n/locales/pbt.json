@@ -4660,6 +4660,11 @@
     }
   },
   "liveRecap": {
+    "gifts_one": "له {{count}} ډالۍ",
+    "gifts_other": "له {{count}} ډالیو",
+    "pollWinner": "{{option}} وګټله",
+    "shareText": "ما همدا اوس په DeHub کې \"{{title}}\" خپور کړ: {{duration}} ژوندی، تر ټولو ډېر {{peak}} لیدونکي او {{followers}} نوي تعقیبوونکي.",
+    "untitled": "بې سرلیکه خپرونه",
     "title": "د بیرته راګرځیدو په اړه",
     "justEnded": "ستاسو د ریموټ بیرته راګرځیدل",
     "lastStream": "ستاسو د وروستي بلاګ پوسټ",
