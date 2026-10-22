@@ -296,8 +296,8 @@
     "compactMode": "संक्षिप्त मोड",
     "compactModeDesc": "अउ सामग्री बर दूरी कम करव",
     "autoPlay": "वीडियो अपने आप चलाव",
-    "autoplayPausePrompt": "ऑटो प्ले सेटिंग",
     "autoPlayDesc": "फीड मा वीडियो अपने आप चलाव",
+    "autoplayPausePrompt": "ऑटो प्ले सेटिंग",
     "autoPlayMuted": "ऑटोप्ले ल बिना आवाज के सुरू करव",
     "autoPlayMutedDesc": "अपन आप चलइया वीडियो हमेसा बिना आवाज के सुरू होही",
     "showAnimations": "एनिमेशन देखाव",
@@ -4690,6 +4690,14 @@
     "paidToCreatorWallet": "सृष्टिकर्ता के बटुआ म सीधा",
     "creatorPaidDirectNote": "रचनाकार के हिस्सा सीधे अपन पर्स म जाथे जब आप साइन अप करत हंवय । DeHub एक छोटे से मंच शुल्क बनाए रखत हवय ।",
     "creatorEarnsDirect": "सब्सक्राइबर DeHub टोकन म भुगतान करत हंवय । अपन शेयर जमीन ल अपन पर्स म जब ओमन साइन अप करत हंवय, तो आपके बैज स्तर बर मंच शुल्क कम होत हवय ।"
+  },
+  "liveOverlay": {
+    "someone": "केकरो",
+    "newFollower": "नवा अनुयायी: {{name}} action: inmenu",
+    "newSubscriber": "नवा सब्सक्राइबर: {{name}}label",
+    "goalReached": "लक्ष्य आ गे हवय!",
+    "followersUnit": "अनुयायी",
+    "topSupporters": "सर्वश्रेष्ठ समर्थक"
   },
   "live": {
     "chatJoined": "जुड़िस",

@@ -297,8 +297,8 @@
     "compactMode": "Kompaktne režiim",
     "compactModeDesc": "Vähenda vahesid rohkema sisu jaoks",
     "autoPlay": "Videode automaatesitus",
-    "autoplayPausePrompt": "Automaatesituse seade",
     "autoPlayDesc": "Mängi videoid voos automaatselt",
+    "autoplayPausePrompt": "Automaatesituse seade",
     "autoPlayMuted": "Alusta automaatesitust vaigistatult",
     "autoPlayMutedDesc": "Iseenesest mängivad videod algavad alati ilma helita",
     "showAnimations": "Näita animatsioone",
@@ -4760,6 +4760,17 @@
     "paidToCreatorWallet": "Avab otse looja rahakoti",
     "creatorPaidDirectNote": "Kohe, kui tellid, läheb looja osa otse tema rahakotti. DeHubil on väike platvormitasu.",
     "creatorEarnsDirect": "Tellijad maksavad DeHubi žetoonides. Sinu osa jõuab Sinu rahakotti kohe, kui nad tellimuse tellivad, millest on maha arvatud platvormi tasu Sinu erimärgi taseme eest."
+  },
+  "liveOverlay": {
+    "someone": "Keegi",
+    "newFollower": "Uus jälgija: {{name}}",
+    "newSubscriber": "Uus abonent: {{name}}",
+    "subscribedTo": "{{name}} tellis {{plan}}",
+    "shared": "{{name}} jagas voogu",
+    "joined": "{{name}} liitus",
+    "goalReached": "Eesmärk on saavutatud!",
+    "followersUnit": "jälgijad",
+    "topSupporters": "Parimad toetajad"
   },
   "live": {
     "chatJoined": "liitus",

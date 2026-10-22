@@ -297,8 +297,8 @@
     "compactMode": "Tiivis tila",
     "compactModeDesc": "Pienennä välistystä enemmän sisältöä varten",
     "autoPlay": "Automaattinen toisto",
-    "autoplayPausePrompt": "Automaattisen toiston asetus",
     "autoPlayDesc": "Toista videot automaattisesti",
+    "autoplayPausePrompt": "Automaattisen toiston asetus",
     "autoPlayMuted": "Aloita automaattinen toisto mykistettynä",
     "autoPlayMutedDesc": "Itsestään alkavat videot alkavat aina ilman ääntä",
     "showAnimations": "Näytä animaatiot",
@@ -4712,6 +4712,17 @@
     "paidToCreatorWallet": "Siirtyy suoraan tekijän lompakkoon",
     "creatorPaidDirectNote": "Tekijän osuus menee suoraan hänen lompakkoonsa heti, kun tilaat. DeHubilla on pieni palvelumaksu.",
     "creatorEarnsDirect": "Tilaajat maksavat DeHub-poletteina. Osuutesi siirtyy lompakkoosi heti, kun he tilaavat sen, vähennettynä erikoismerkkitasostasi perittävällä alustamaksulla."
+  },
+  "liveOverlay": {
+    "someone": "Joku",
+    "newFollower": "Uusi seuraaja: {{name}}",
+    "newSubscriber": "Uusi tilaaja: {{name}}",
+    "subscribedTo": "{{name}} tilasi {{plan}}",
+    "shared": "{{name}} jakoi streamin",
+    "joined": "{{name}} liittyi",
+    "goalReached": "Tavoite saavutettu!",
+    "followersUnit": "seuraajat",
+    "topSupporters": "Parhaat kannattajat"
   },
   "live": {
     "chatJoined": "liittyi",

@@ -297,8 +297,8 @@
     "compactMode": "Taqsqa kay",
     "compactModeDesc": "K'itikuna pisiyachiy aswan imaymana kananpaq",
     "autoPlay": "Kikin kuyuriy videokuna",
-    "autoplayPausePrompt": "Kikin kuyuriy churana",
     "autoPlayDesc": "Videokuna kikin kuyurichiy feed kaqpi",
+    "autoplayPausePrompt": "Kikin kuyuriy churana",
     "autoPlayMuted": "Kikinmanta pukllachiyta mana uyarisqa qallariy",
     "autoPlayMutedDesc": "Kikinmanta pukllaq vidiyokunaqa sapa kuti mana uyarisqa qallarinku",
     "showAnimations": "Kuyuriykuna rikuchiy",
@@ -4788,6 +4788,17 @@
     "paidToCreatorWallet": "Kamaqpa billeteranman chiqan rin",
     "creatorPaidDirectNote": "Ruwaqpa rakiyninqa derecho billeterankuman rin chay rato suscribisqayki. DeHub huk huch&#39;uy plataforma qullqita waqaychan.",
     "creatorEarnsDirect": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Accionesniyki billeteraykipi chayan chay rato suscribisqanku, menos plataforma qullqita insignia nivelniykipaq."
+  },
+  "liveOverlay": {
+    "someone": "Pipas",
+    "newFollower": "Musuq qatiq: {{name}}",
+    "newSubscriber": "Musuq suscriptor: {{name}}",
+    "subscribedTo": "{{name}} {{plan}} nisqaman suscribisqa.",
+    "shared": "{{name}} chay mayumanta rakinakurqan",
+    "joined": "{{name}} hukllawakurqa",
+    "goalReached": "¡Meta alcanzado!",
+    "followersUnit": "qatiqninkuna",
+    "topSupporters": "Hatun yanapaqkuna"
   },
   "live": {
     "chatJoined": "yaykurqan",

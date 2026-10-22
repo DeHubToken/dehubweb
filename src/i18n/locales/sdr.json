@@ -293,8 +293,8 @@
     "compactMode": "سمٹا ہوا موڈ",
     "compactModeDesc": "زیادہ مواد کے لیے فاصلہ کم کرو",
     "autoPlay": "خودکار ویڈیو چلاؤ",
-    "autoplayPausePrompt": "آٹو پلے سیٹنگ",
     "autoPlayDesc": "فیڈ میں ویڈیو خودکار چلائی جائیں",
+    "autoplayPausePrompt": "آٹو پلے سیٹنگ",
     "autoPlayMuted": "ऑटोप्ले बिना आवाज से शुरू करा",
     "autoPlayMutedDesc": "अपने से चलेक वाला वीडियो हमेशा बिना आवाज से शुरू होवी",
     "showAnimations": "اینیمیشن دکھاؤ",
@@ -4426,6 +4426,17 @@
     "paidToCreatorWallet": "सीधे क्रिएटर कर वॉलेट में जाएला",
     "creatorPaidDirectNote": "دھن ٺاھڻ واري جو حصو ان جي والٽ ۾ سڌو ويندو جڏهن توهان سبسڪرائب ڪندا. ڊي ھب هڪ ننڍڙو پليٽ فارم فيس رکي ٿو.",
     "creatorEarnsDirect": "सदस्य DeHub टोकन में भुगतान करयना। सदस्यता लेते ही रउरा हिस्सा रउरा वॉलेट में आएला, रउरा बैज लेवल कर प्लेटफॉर्म फीस काइट के।"
+  },
+  "liveOverlay": {
+    "someone": "कोई",
+    "newFollower": "नया अनुयायी: {{name}}",
+    "newSubscriber": "नया सदस्य: {{name}}",
+    "subscribedTo": "{{name}} ने {{plan}} को सब्सक्राइब किया",
+    "shared": "{{name}} ने स्ट्रीम साझा की",
+    "joined": "{{name}} जुड़ गया",
+    "goalReached": "लक्ष्य प्राप्त हुआ!",
+    "followersUnit": "अनुयायी",
+    "topSupporters": "शीर्ष समर्थक"
   },
   "live": {
     "chatJoined": "دخل",
