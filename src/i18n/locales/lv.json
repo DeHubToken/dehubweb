@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Straumes kopsavilkums",
+    "justEnded": "Jūsu straumes kopsavilkums",
+    "lastStream": "Jūsu pēdējā straume",
+    "share": "Kopīgot",
+    "shareText": "Es tikko straumēju \"{{title}}\" DeHub: {{duration}} tiešraidē, {{peak}} skatoties virsotnē un {{followers}} jaunus sekotājus.",
+    "untitled": "Straume bez nosaukuma",
+    "copied": "Kopsavilkums nokopēts. Ielīmējiet to jebkurā vietā.",
+    "loadFailed": "Kopsavilkums netika ielādēts. Pēc brīža mēģiniet vēlreiz.",
+    "duration": "Tiešraides laiks",
+    "peakViewers": "Visvairāk skatīšanās reizē",
+    "gifts_one": "No {{count}} dāvana",
+    "gifts_other": "No {{count}} dāvanas",
+    "newFollowers": "Jauni sekotāji",
+    "chatMessages": "Tērzēšanas ziņojumi",
+    "chatters": "Personas tērzē",
+    "reactions": "Reakcijas",
+    "shares": "Personas, kas dalās pieredzē",
+    "topSupporters": "Populārākie atbalstītāji",
+    "polls": "Aptaujas",
+    "pollWinner": "{{option}} uzvarēja",
+    "stillCounting": "Joprojām tiek skaitīts: dāvanu apstiprināšana var aizņemt kādu brīdi."
+  },
   "errors": {
     "sponsorshipUnavailable": "Bezmaksas darījumi ir apturēti mūsu pusē, nevis jūsu makā. Lūdzu, drīzumā mēģiniet vēlreiz.",
     "gasSponsorshipFailed": "Šo darījumu neizdevās segt. Lūdzu, pēc brīža mēģiniet vēlreiz."
@@ -4756,6 +4779,7 @@
     "creatorEarnsDirect": "Abonenti maksā DeHub žetonos. Abonēšanas brīdī jūsu daļa nonāk jūsu makā, atskaitot platformas nodevu par jūsu nozīmītes līmeni."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} iedarbināja: {{result}}",
     "someone": "Kāds",
     "newFollower": "Jauns sekotājs: {{name}}",
     "newSubscriber": "Jauns abonents: {{name}}",
@@ -4767,7 +4791,31 @@
     "topSupporters": "Populārākie atbalstītāji",
     "tipped": "{{name}} nosūtīja dāvanu",
     "chatPreview": "Tērzēšanas ziņojumi tiek parādīti šeit",
-    "wheelLanded": "{{name}} iedarbināja: {{result}}"
+    "poll": {
+      "closed": "Balsēs noslēgtas",
+      "voteFor": "Balsoti par {{option}}",
+      "signIn": "Ielogojieties, lai balsotu",
+      "failed": "Jūsu balsis nav skaitīta. Mēģiniet vēlreiz.",
+      "voted_one": "Jūs balsotāji · {{count}} balsis",
+      "voted_other": "Jūs balsotāji · {{count}} balsis",
+      "votes_one": "{{count}} balsis",
+      "votes_other": "{{count}} balsis",
+      "howToVote_one": "Ierakstiet {{command}} un skaitli chatā, lai balsotu · {{count}} balsis",
+      "howToVote_other": "Ierakstiet {{command}} un skaitli chatā, lai balsotu · {{count}} balsis"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Laiks izbeigts uz 1 minūti",
+    "timeout10m": "Laiks izbeigts uz 10 minūtēm",
+    "timeout1h": "Laiks izbeigts uz 1 stundu",
+    "ban": "Aizliegts no šīm straumēm",
+    "makeModerator": "Veido par moderatoru",
+    "timedOut": "Laiks izbeigts.",
+    "banned": "Aizliegts no šīm straumēm.",
+    "madeModerator": "Viņi tagad ir moderatori.",
+    "failed": "To neizdevās. Mēģiniet vēlreiz.",
+    "youAreBanned": "Jūs nevarat sarunāt šajā izstrādātāja straumēs",
+    "youAreTimedOut": "Jums ir izbeigts laiks uz brīdi"
   },
   "liveStudio": {
     "controls": {
@@ -4780,6 +4828,37 @@
       "readAloudMuted": "Apturēt audio lasīšanu",
       "readAloudMutedHint": "Dāvanu ziņojumi un noteikumu rindas vairs netiek nolasītas.",
       "failed": "Šis slēdzis nemainījās. Mēģiniet vēlreiz."
+    },
+    "polls": {
+      "title": "Apzināšanās",
+      "intro": "Ieteikiet skatītājiem, kas skatās jūsu pārraidījumā, jautājumu. Viņi atbild ar pogu DeHub priemakā, vai rakstot {{command}} un iespējas numuru chatā.",
+      "question": "Jautājums",
+      "questionPlaceholder": "Kas man jāspēlē nākamreiz?",
+      "option": "Iespēja {{n}}",
+      "addOption": "Pievienot iespēju",
+      "removeOption": "Noņemt iespēju {{n}}",
+      "duration": "Kā garu balsēs būs atvērtas",
+      "seconds_one": "{{count}} sekunde",
+      "seconds_other": "{{count}} sekundes",
+      "minutes_one": "{{count}} minūte",
+      "minutes_other": "{{count}} minūtes",
+      "start": "Sākt apzināšanos",
+      "end": "Beigt balsēšanu šim brīdim",
+      "started": "Jūsu apzināšana ir atvērta. Skatītāji var balsot šim brīdim.",
+      "notLive": "Jāiet uz dzīvi pirms tam. Apzināšana notiek pārraidījumā, ko šim brīdim pārraidās.",
+      "startFailed": "Apzināšana nav sākusies. Mēģiniet vēlreiz.",
+      "closeFailed": "Balsēšana nav beigusies. Mēģiniet vēlreiz.",
+      "live": "Balsēšana atvērta · {{time}} atlikušo",
+      "ended": "Balsēšana noslēgta",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} balsis",
+      "replaceHint": "Jaunas aptaujas sākšana aizver atvērto aptauju.",
+      "widgetHint": "Parāda jūsu tiešraides aptauju. DeHub lietotnes skatītājos pieskarieties opcijai balsot; OBS tas liek cilvēkiem ierakstīt {{command}} un numuru tērzēšanā.",
+      "sample": {
+        "a": "Kaut kas jauns",
+        "b": "Vecs favorīts",
+        "c": "Jūs izvēlaties"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Paziņojumi un logrīki jūsu straumēm",
@@ -4856,6 +4935,7 @@
       "join": "Pievienoties"
     },
     "kinds": {
+      "spin_wheel": "Griezējripa",
       "tip_alert": "Padoma brīdinājums",
       "follow_alert": "Sekot brīdinājumam",
       "subscribe_alert": "Abonenta brīdinājums",
@@ -4872,9 +4952,10 @@
       "chat_box": "Tērzēšanas lodziņš",
       "ticker": "Atzīme",
       "rule_alert": "Noteikumu brīdinājumi",
-      "spin_wheel": "Griezējripa"
+      "poll": "Aptauja"
     },
     "hints": {
+      "spin_wheel": "Kur griežas jūsu noteikumu riteņi",
       "tip_alert": "Godina ikvienu dzeramnaudu, kuras lielums atbilst tās līmenim",
       "follow_alert": "Rāda katru jauno sekotāju",
       "subscribe_alert": "Parāda katru jauno abonentu",
@@ -4891,7 +4972,7 @@
       "chat_box": "Rāda apraides tērzēšanas ziņojumus ekrānā",
       "ticker": "Jūsu teksta rindiņa, kas ritinās pa ekrānu",
       "rule_alert": "Kur tiek parādīti jūsu noteikumu paziņojumi",
-      "spin_wheel": "Kur griežas jūsu noteikumu riteņi"
+      "poll": "Jūsu tiešsaistes aptauja ar balsošanas pogu katrai opcijai"
     },
     "fields": {
       "style": "Stils",
@@ -4926,6 +5007,8 @@
       "fast": "Ātrs"
     },
     "rules": {
+      "wheelSegments": "Riteņu segmenti, viens rindā",
+      "wheelHint": "No 2 līdz 12. DeHub izvēlas vietu, kur ritenis apstājas, tāpēc visi skatītāji redz vienu un to pašu rezultātu. Izmantojiet {result} brīdinājumā, lasīšanas vai tērzēšanas darbībā, lai to nosauktu.",
       "title": "Noteikumi",
       "intro": "Kad jūsu straumē kaut kas notiek, DeHub dara to, ko jūs izvēlaties: parāda brīdinājumu, atskaņo skaņu, lasa kaut ko skaļi, publicē jūsu tērzēšanā vai stāsta jūsu Discord.",
       "add": "Pievienot noteikumu",
@@ -4955,8 +5038,7 @@
       "addAction": "Pievienot darbību",
       "removeAction": "Noņemt darbību",
       "placeholders": "{name}, {amount} un {message} jāizmanto tekstā",
-      "wheelSegments": "Riteņu segmenti, viens rindā",
-      "wheelHint": "No 2 līdz 12. DeHub izvēlas vietu, kur ritenis apstājas, tāpēc visi skatītāji redz vienu un to pašu rezultātu. Izmantojiet {result} brīdinājumā, lasīšanas vai tērzēšanas darbībā, lai to nosauktu.",
+      "placeholdersLive": "Izmantojiet {name}, {title} un {link} savā tekstā: savu vārdu, raidījuma nosaukumu un saiti, lai to skatītos.",
       "alertText": "Pazīstamā teksta ziņa",
       "sound": "Skana",
       "sayText": "Teksts, ko jālasa alust",
@@ -4970,6 +5052,7 @@
         "follow": "Kaut kas seko",
         "subscribe": "Kaut kas abonējas",
         "share": "Kaut kas dalās ar strīmu",
+        "live": "Jūs sākat apraidi",
         "command": "Chatā tiek izmantots komandu",
         "keyword": "Chatā ziņa satur vārdu",
         "chat": "Visas chatā ziņas"
@@ -4980,12 +5063,12 @@
         "subscribers": "Abonētāji"
       },
       "actionTypes": {
+        "wheel": "Pagrieziet riteni",
         "alert": "Rādīt uzmanību",
         "sound": "Atspēlēt skanu",
         "say": "Lasīt alust",
         "chat": "Publicēt chatā",
-        "webhook": "Nosūtīt uz webhuku",
-        "wheel": "Pagrieziet riteni"
+        "webhook": "Nosūtīt uz webhuku"
       },
       "summary": {
         "tip": "Tips no {{amount}} DHB vai vairāk"
@@ -5023,6 +5106,51 @@
         "spooky": "Spocīgs",
         "magic-spell": "Burvestību burvestība",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Sarunas moderācija",
+      "intro": "Noteikumi tērzēšanai visās jūsu straumēs. Viņi nekad nesaskaras ar DeHub galveno tērzēšanu: kāds, kuru jūs šeit aizliedzat, joprojām var runāt visur citur.",
+      "loadFailed": "Jūsu moderācijas iestatījumi nevarēja tikt ielādēti. Atjauniniet lapu, lai mēģinātu vēlreiz.",
+      "save": "Glabāt sarunas noteikumus",
+      "saved": "Sarunas noteikumi glabāti.",
+      "saveFailed": "Šī mainīšana nevarēja tikt glabāta.",
+      "slowMode": "Lēns režīms",
+      "slowModeHint": "Kā garu laiku skatītāji gaida starp ziņojumiem. Jūs un jūsu moderatori negaidījat.",
+      "off": "Izslēgts",
+      "seconds_one": "{{count}} sekunde",
+      "seconds_other": "{{count}} sekundes",
+      "followersOnly": "Tikai sekotāji",
+      "subscribersOnly": "Tikai abonenti",
+      "subscribersOnlyHint": "Nolauzīt \"tikai sekotāji\".",
+      "bannedWords": "Aizliegti vārdi",
+      "bannedWordsHint": "Atdalīt ar komām. Vārda izrunāšana burtu pēc burta to neapstādinās.",
+      "wordAction": "Kad kāds lieto vienu",
+      "wordBlock": "Aizturēt ziņojumu",
+      "wordTimeout": "Aizturēt un izbeigt laiku uz minūti.",
+      "moderators": "Moderators",
+      "moderatorsHint": "Viņi var pārtraukt un bloķēt skatītājus jūsu straumēs. Viņi nevar iedarboties ne uz jums, ne viens uz otru.",
+      "addModerator": "Pievienot",
+      "usernamePlaceholder": "Lietotājvārds",
+      "moderatorAdded": "Moderators ir pievienots.",
+      "moderatorNotFound": "Nav konta ar šo lietotājvārdu.",
+      "removeModerator": "Noņemt regulētāju",
+      "noModerators": "Vēl nav moderatoru.",
+      "banned": "Aizliegts jūsu straumēs",
+      "unban": "Atbloķēt",
+      "noBans": "Neviens nav aizliegts.",
+      "log": "Pēdējās darbības",
+      "noLog": "Pagaidām nekas.",
+      "actions": {
+        "timeout_one": "{{actor}} iestājās taimauts {{target}} uz {{count}} sekundi",
+        "timeout_other": "{{actor}} iestājās taimauts {{target}} uz {{count}} sekundēm",
+        "ban": "{{actor}} aizliegts {{target}}",
+        "unban": "{{actor}} neizbānēts {{target}}",
+        "moderator-added": "{{target}} kļuva par moderatoru",
+        "moderator-removed": "{{target}} vairs nav moderators",
+        "word-blocked": "Apturēts ziņojums no {{target}} par \"{{word}}\"",
+        "word-timeout_one": "{{target}} noildze {{count}} sekundei \"{{word}}\"",
+        "word-timeout_other": "Iestājās taimauts {{target}} {{count}} sekundēm \"{{word}}\""
       }
     }
   },

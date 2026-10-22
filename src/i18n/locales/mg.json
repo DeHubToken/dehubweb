@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "shareText": "Vao avy nandefa \"{{title}}\" tao amin'ny DeHub aho: {{duration}} mivantana, mpijery {{peak}} indrindra ary mpanaraka vaovao {{followers}}.",
+    "title": "Avereno alefa",
+    "justEnded": "Famerenana ny tosakao",
+    "lastStream": "Ny tosaka farany nataonao",
+    "share": "MIZARA",
+    "untitled": "Tsy misy anarana ilay tosaka",
+    "copied": "Recap kopia. Apetaho na aiza na aiza.",
+    "loadFailed": "Tsy naherisetra ny fakana an-tsokosoko. Miverena ao anatin'ny iray minitra.",
+    "duration": "Time velona",
+    "peakViewers": "Ny tena mijery avy hatrany",
+    "gifts_one": "Avy amin'i{{count}} gift",
+    "gifts_other": "Avy {{count}} gift",
+    "newFollowers": "Mpanara-dia vaovao",
+    "chatMessages": "Karajia hafatra",
+    "chatters": "Olona mifampiresaka",
+    "reactions": "Fanehoan-kevitra",
+    "shares": "Olona mizara",
+    "topSupporters": "TOP mpanohana",
+    "polls": "Fitsapan-kevitra",
+    "pollWinner": "{{option}} Won",
+    "stillCounting": "Mbola manisa: Afaka maka minitra iray ny fanomezam-pahasoavana mba hanamarinana."
+  },
   "errors": {
     "sponsorshipUnavailable": "Nampiatoana avy amin'ny anjaranay ny fifanakalozana maimaim-poana, fa tsy amin'ny kitapo-bolanao. Andramo indray afaka kelikely.",
     "gasSponsorshipFailed": "Tsy afaka nandoa ity fifanakalozana ity izahay. Andramo indray afaka kelikely."
@@ -4785,6 +4808,7 @@
     "creatorEarnsDirect": "Ny mpandraharaha mandoa ao DeHub famantarana. Ny anjara tany ao amin'ny kitapom-batsy ny fotoana izy ireo misoratra anarana, tsy ny sehatra saran'ny noho ny badge Tier."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} Spun: {{result}}",
     "someone": "Olona iray",
     "newFollower": "Mpanara-baovao: {{name}}",
     "newSubscriber": "Mpamandrika vaovao: {{name}}",
@@ -4796,7 +4820,31 @@
     "topSupporters": "TOP mpanohana",
     "tipped": "{{name}} nandefa fanomezana",
     "chatPreview": "Ny hafatra amin'ny Chat dia hita eto.",
-    "wheelLanded": "{{name}} Spun: {{result}}"
+    "poll": {
+      "closed": "Voting closed",
+      "voteFor": "Mifidiana ny {{option}}",
+      "signIn": "Sign in to vote",
+      "failed": "Tsy voaisa ny vatonao. Andramo indray.",
+      "voted_one": "Nifidy? {{count}} vote",
+      "voted_other": "Nifidy? {{count}} votes",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "howToVote_one": "Tadiavo ny {{command}} sy ny isa ao amin'ny karajia hifidianana · {{count}} vote",
+      "howToVote_other": "Mitendry {{command}} sy ny isa ao amin'ny karajia mba hifidy · {{count}} votes"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Miverena amin'ny hadisoana iray minitra",
+    "timeout10m": "Ho vonona ny handeha amin'ny minitra 10 ianao!",
+    "timeout1h": "Ora iray no nanaovana azy.",
+    "ban": "Fandraràna tsy hivoaka ireo renirano ireo",
+    "makeModerator": "Manaova mpandrindra",
+    "timedOut": "Lany ny fotoana.",
+    "banned": "Voasakana avy tao anaty kibay ireo.",
+    "madeModerator": "Ary ankehitriny dia efa tonga mpandrindra.",
+    "failed": "Tsy nandeha izany. Andramo indray.",
+    "youAreBanned": "Tsy afaka ny hiresaka amin'ny mpamorona ity ny renirano",
+    "youAreTimedOut": "Ianao no tapa-kevitra ny hanao ny fotoana."
   },
   "liveStudio": {
     "controls": {
@@ -4809,6 +4857,37 @@
       "readAloudMuted": "Ajanony vakiana-foana",
       "readAloudMutedHint": "Ny fanomezana ny hafatra sy fitsipika dia tsy atao intsony.",
       "failed": "Tsy niova izany fanovana izany. Andramo indray."
+    },
+    "polls": {
+      "title": "Polls",
+      "intro": "Anontanio ny olona izay mijery ny fandaharany amin'ny fanontaniana. Mamaly amin'ny bokotra ao amin'ny fampiharana DeHub izy ireo, na amin'ny alalan'ny fanoratana ny {{command}} sy ny laharan'ny safidy amin'ny karajia.",
+      "question": "Question",
+      "questionPlaceholder": "Inona no tokony hilalao?",
+      "option": "Option {{n}}",
+      "addOption": "Add an option",
+      "removeOption": "Remove option {{n}}",
+      "duration": "Mandra-pahoviana no hisokatra ny fandrotsaham-bato",
+      "seconds_one": "{{count}} second",
+      "seconds_other": "{{count}} seconds",
+      "minutes_one": "{{count}} minute",
+      "minutes_other": "{{count}} minutes",
+      "start": "Manomboha ny fifidianana",
+      "end": "Mifarana ny fandrotsaham-bato izao",
+      "started": "Misokatra ny fandatsaham-bato. Nanomboka tamin'izany fotoana izany dia afaka mifidy ny vahoaka.",
+      "notLive": "Mandehana mivantana aloha. Ny fitsapan-kevitra dia mandeha amin'ny fandaharana izay alefanao amin'izao fotoana izao.",
+      "startFailed": "Tsy nandeha ny fifidianana. Andramo indray.",
+      "closeFailed": "Tsy nifarana ny fifidianana. Andramo indray.",
+      "live": "Voting open · {{time}} left",
+      "ended": "Voting closed",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} Vato",
+      "replaceHint": "Nakatona ny birao fandatsaham-bato izay misokatra.",
+      "widgetHint": "Mampiseho ny fandrotsaham-bato mivantana nataonao izany. Ao amin'ny fampiharana DeHub, mahita safidy iray hifidianana ny mpijery; ao amin'ny OBS, milaza amin'ny vahoaka izy mba hitendry ny {{command}} sy ny maro amin'ny karajia.",
+      "sample": {
+        "a": "Zava-baovao",
+        "b": "Fa Andriamanitra tia mpanome amim-pifaliana.",
+        "c": "Misafidy ianao"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Fampahatsiahivana sy widgets ho an'ny fipetrahanao",
@@ -4885,6 +4964,8 @@
       "join": "Midira"
     },
     "kinds": {
+      "spin_wheel": "Kofehy ireny kodia",
+      "poll": "Fitsapan-kevitra",
       "tip_alert": "Fampandrenesana tip",
       "follow_alert": "Fampandrenesana arahana",
       "subscribe_alert": "Fampandrenesana mpisoratra",
@@ -4900,10 +4981,10 @@
       "event_feed": "Hetsika vao haingana",
       "chat_box": "Efitrano firesahana",
       "ticker": "Ticker",
-      "rule_alert": "Fampitandremana momba ny fitsipika",
-      "spin_wheel": "Kofehy ireny kodia"
+      "rule_alert": "Fampitandremana momba ny fitsipika"
     },
     "hints": {
+      "spin_wheel": "Aiza ny kodiarana ao amin'ny fitsipika mihodina",
       "tip_alert": "Mankalaza ny tip rehetra, arakaraka ny haavon'izy ireo",
       "follow_alert": "Maneho ny mpanaraka vaovao tsirairay",
       "subscribe_alert": "Maneho ny mpisoratra vaovao tsirairay",
@@ -4920,7 +5001,7 @@
       "chat_box": "Mampiseho ny hafatra amin'ny chat alefanao amin'ny efijery",
       "ticker": "Tsipika avy amin'ny andinin-teninao manokana izay manavatsava ny fàfana",
       "rule_alert": "Toerana hita ny fampitandremana momba ny fitsipika",
-      "spin_wheel": "Aiza ny kodiarana ao amin'ny fitsipika mihodina"
+      "poll": "Ny fifidianana mivantana, amin'ny bokotra fifidianana ho an'ny safidy tsirairay"
     },
     "fields": {
       "style": "Endrika",
@@ -4955,6 +5036,8 @@
       "fast": "Faingana"
     },
     "rules": {
+      "wheelSegments": "Kodiarana fizarana, iray isaky ny tsipika",
+      "wheelHint": "2 noho ny 0 indray ny baolina. DeHub dia maka ny toerana hijanonan'ny kodiarana, ka mahita ny valiny mitovy ny rehetra. Ampiasao ny {result} ao anaty fanairana, vakio-herisetra na karajia mba hanononana ny anarany.",
       "title": "Fitsipika",
       "intro": "Rehefa mitranga zavatra amin'ny amin'ny stream, DeHub dia manao izay nofidianao: mampiseho fampitandremana, mijinja feo, mamaky zavatra amin'ny feo, manoratra amin'ny chat na milaza amin'ny Discord.",
       "add": "Manampy fitsipika",
@@ -4984,8 +5067,7 @@
       "addAction": "Manampy hetsika",
       "removeAction": "Esorina ny hetsika",
       "placeholders": "Ampiasao ny {name}, {amount} sy {message} ao amin'ny lahatsoratrao. Rohy mankany amin'ny hafatra dia maty.",
-      "wheelSegments": "Kodiarana fizarana, iray isaky ny tsipika",
-      "wheelHint": "2 noho ny 0 indray ny baolina. DeHub dia maka ny toerana hijanonan'ny kodiarana, ka mahita ny valiny mitovy ny rehetra. Ampiasao ny {result} ao anaty fanairana, vakio-herisetra na karajia mba hanononana ny anarany.",
+      "placeholdersLive": "Ampiasao ny {name}, {title} sy {link} ao amin'ny lahatsoratrao: ny anaranao, ny lohatenin'ny fahitalavitra ary ny rohy hijerena azy.",
       "alertText": "Lahabolana fanairana",
       "sound": "Feo",
       "sayText": "Lahatsoratra vakina mafy",
@@ -4999,6 +5081,7 @@
         "follow": "Misy ny manaraka",
         "subscribe": "Olona iray subscribes",
         "share": "Nisy olona nizara ny renirano",
+        "live": "Manomboka mandefa ny onjam-peo",
         "command": "Misy baikom-piresahana ampiasaina",
         "keyword": "Misy teny iray ao amin'ny hafatra amin'ny chat",
         "chat": "Izay mety ho hafatra amin'ny chat"
@@ -5009,12 +5092,12 @@
         "subscribers": "Mpanjifa"
       },
       "actionTypes": {
+        "wheel": "Mihodina ny kodia",
         "alert": "Asehoy ny fampilazana",
         "sound": "Mamaky feo",
         "say": "Vakio mafy",
         "chat": "Alefaso mailaka amin'ny chat",
-        "webhook": "Alefaso any amin'ny webhook",
-        "wheel": "Mihodina ny kodia"
+        "webhook": "Alefaso any amin'ny webhook"
       },
       "summary": {
         "tip": "Torohevitra avy amin'ny {{amount}} DHB na mihoatra"
@@ -5036,6 +5119,7 @@
       "presetText": {
         "readChat": "{name} says {message}",
         "bigTip": "{name} sent {amount} DHB!",
+        "thankFollowers": "Misaotra tamin'ny fanarahana, {name}!",
         "command": "Miarahaba ny {name} 0, tongasoa ato amin'ny onja!"
       },
       "sounds": {
@@ -5051,6 +5135,51 @@
         "spooky": "Spooky",
         "magic-spell": "Magic tsipelina",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Fomba fandanjalanjana karajia",
+      "intro": "Fitsipika momba ny chat eo ambanin'ny renirano rehetra. Tsy tonga any amin'ny resaka lehiben'i DeHub mihitsy izy ireo: mbola afaka miresaka any an-kafa ny olona izay norarànao eto.",
+      "loadFailed": "Tsy mety aseho ny fandrindrana ny fandrindrana nataonao. Manavao ny pejy raha hanandrana indray.",
+      "save": "Vonjeo ny fitsipika amin'ny chat",
+      "saved": "Notehirizina ny fitsipiky ny karajia.",
+      "saveFailed": "Raha tsy izany dia tsy azo atao ny miova amin'izany.",
+      "slowMode": "Fiasan'ny meda",
+      "slowModeHint": "Hafiriana izay no iandrasan'ny mpijery tsirairay ny hafatra. Ianao sy ny mpandrindra anao dia tsy miandry velively.",
+      "off": "Off",
+      "seconds_one": "{{count}} second",
+      "seconds_other": "{{count}} segondra",
+      "followersOnly": "Mpanara-dia ihany",
+      "subscribersOnly": "Mpanjifa ihany",
+      "subscribersOnlyHint": "Ilay Mpahary irery ihany.",
+      "bannedWords": "Teny voarara",
+      "bannedWordsHint": "Manasaraka amin'ny commas. Ny fanoratana taratasy iray amin'ny taratasy dia tsy mihodina amin'izany.",
+      "wordAction": "Na dia olona iray aza",
+      "wordBlock": "Ajanony ilay hafatra",
+      "wordTimeout": "Tohizo izany ary tadiavo izy ireo iray minitra",
+      "moderators": "Fitantanam-pitondrana",
+      "moderatorsHint": "Afaka mandany fotoana mivoaka sy mandrara ny mpijery eo amin'ny renirano. Tsy mamela anao hanao izany na manao izany ny tontolo.",
+      "addModerator": "Ampidiro",
+      "usernamePlaceholder": "Anarana famantarana",
+      "moderatorAdded": "Nampian'ny mpandrindra.",
+      "moderatorNotFound": "Tsy mampiasa io anarana famantarana io aho.",
+      "removeModerator": "Hanesotra mpandrindra",
+      "noModerators": "Tsy mbola misy mpanazatra.",
+      "banned": "Voasakana avy ny renirano",
+      "unban": "Laha-daza soratra",
+      "noBans": "Tsy misy olona voaràra.",
+      "log": "Asa Vao Haingana",
+      "noLog": "Tsy mbola misy.",
+      "actions": {
+        "moderator-removed": "Tsy moderatera intsony i {{target}}",
+        "word-timeout_one": "Nampanginina {{count}} segondra i {{target}} noho ny \"{{word}}\"",
+        "timeout_one": "{{actor}} timed {{target}} for {{count}} second",
+        "timeout_other": "{{actor}} timed Tapitra {{target}} for {{count}} segondra",
+        "ban": "{{actor}}FANTARO {{target}}",
+        "unban": "{{actor}} tsy nanana fanaovana ny fanampiny {{target}}",
+        "moderator-added": "{{target}} lasa mpandrindra",
+        "word-blocked": "Naato ny hafatra avy amin'ny {{target}} for \"{{word}}\"",
+        "word-timeout_other": "Tapitra teo {{target}} {{count}} segondra ho an'ny \"{{word}}\""
       }
     }
   },

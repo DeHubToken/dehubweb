@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Resumen de la transmisión",
+    "justEnded": "Recapitulación de tu transmisión",
+    "lastStream": "Tu última transmisión",
+    "share": "Compartir",
+    "shareText": "Acabo de transmitir \"{{title}}\" en DeHub: {{duration}} en vivo, {{peak}} viendo en la cima y {{followers}} nuevos seguidores.",
+    "untitled": "Transmisión sin título",
+    "copied": "Resumen copiado. Pégalo en cualquier lugar.",
+    "loadFailed": "El resumen no se cargó. Inténtalo de nuevo en un momento.",
+    "duration": "Time Live",
+    "peakViewers": "La mayoría viendo a la vez",
+    "gifts_one": "De {{count}} regalo",
+    "gifts_other": "De {{count}} regalos",
+    "newFollowers": "Nuevos seguidores",
+    "chatMessages": "Mensajes de chat",
+    "chatters": "Gente chateando",
+    "reactions": "Reacciones",
+    "shares": "Personas compartiendo",
+    "topSupporters": "Principales simpatizantes",
+    "polls": "Encuestas",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Aún contando: los regalos pueden tardar un minuto en confirmarse."
+  },
   "accountConnect": {
     "title": "Conecta tu cuenta de DeHub",
     "body": "Conecta tu cuenta para gestionar tu perfil, publicar y crear contenido desde el chat. Las conexiones caducan en 24 horas. Puedes desconectarlas cuando quieras.",
@@ -830,6 +853,8 @@
     "stagePay": "Pagando a DeHub Pay con {{symbol}}…",
     "stageDelivering": "DeHub Pay está enviando tus tokens…",
     "payViaDpay": "Pagado a DeHub Pay, los tokens llegan en aproximadamente 30s",
+    "payDirect": "Enviado directamente a {{name}} en {{symbol}} en {{chain}}. Sin swap.",
+    "payDirectNoName": "Enviado directamente al creador en {{symbol}} en {{chain}}. Sin swap.",
     "payViaBridgeDpay": "Movido a Base y pagado a DeHub Pay, los tokens llegan en aproximadamente un minuto",
     "dmSent": "¡Enviaste {{amount}} tokens a {{name}}!"
   },
@@ -934,6 +959,7 @@
     "price": "Precio",
     "ppvDhbInfo": "Los pagos son en tokens DeHub en la cadena Base",
     "ppvUsdInfo": "Los pagos son en USD",
+    "ppvStableInfo": "Los compradores pagan en {{symbol}}, directo a ti",
     "setupBounty": "Configurar recompensa",
     "viewersToReward": "Espectadores a recompensar",
     "numberOfViewers": "Número de espectadores",
@@ -5808,6 +5834,7 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} giró: {{result}}",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -5819,7 +5846,31 @@
     "topSupporters": "Principales simpatizantes",
     "tipped": "{{name}} ha enviado un regalo",
     "chatPreview": "Los mensajes de chat aparecen aquí",
-    "wheelLanded": "{{name}} giró: {{result}}"
+    "poll": {
+      "closed": "Votación cerrada",
+      "voteFor": "Vota por {{option}}",
+      "signIn": "Inicia sesión para votar",
+      "failed": "Tu voto no ha contado. Inténtalo de nuevo.",
+      "voted_one": "Has votado · {{count}} voto",
+      "voted_other": "Has votado · {{count}} votos",
+      "votes_one": "{{count}} voto",
+      "votes_other": "{{count}} votos",
+      "howToVote_one": "Escribe {{command}} y un número en el chat para votar · {{count}} voto",
+      "howToVote_other": "Escribe {{command}} y un número en el chat para votar · {{count}} votos"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Tiempo de espera de 1 minuto",
+    "timeout10m": "Tiempo de espera de 10 minutos",
+    "timeout1h": "Tiempo de espera de 1 hora",
+    "ban": "Prohibido en estos streams",
+    "makeModerator": "Hacer moderador",
+    "timedOut": "Tiempo de espera.",
+    "banned": "Prohibido en estos streams.",
+    "madeModerator": "Ahora son moderador.",
+    "failed": "Eso no funcionó. Inténtalo de nuevo.",
+    "youAreBanned": "No puedes chatear en los streams de este creador",
+    "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "liveStudio": {
     "controls": {
@@ -5832,6 +5883,37 @@
       "readAloudMuted": "Detener lectura en voz alta",
       "readAloudMutedHint": "Los mensajes de regalo y las líneas de reglas ya no se leen.",
       "failed": "Ese interruptor no ha cambiado. Inténtalo de nuevo."
+    },
+    "polls": {
+      "title": "Encuestas",
+      "intro": "Haga una pregunta a las personas que ven su transmisión. Responden con un botón en la aplicación DeHub o escribiendo {{command}} y el número de la opción en el chat.",
+      "question": "Pregunta",
+      "questionPlaceholder": "¿Qué debo jugar a continuación?",
+      "option": "Opción {{n}}",
+      "addOption": "Añadir una opción",
+      "removeOption": "Eliminar opción {{n}}",
+      "duration": "Cuánto tiempo permanece abierta la votación",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundos",
+      "minutes_one": "{{count}} minuto",
+      "minutes_other": "{{count}} minutos",
+      "start": "Iniciar la encuesta",
+      "end": "Finalizar votación ahora",
+      "started": "Tu encuesta está abierta. Los espectadores pueden votar ahora.",
+      "notLive": "Entra en vivo primero. Se ejecuta una encuesta en la transmisión que estás transmitiendo en este momento.",
+      "startFailed": "La encuesta no ha comenzado. Inténtalo de nuevo.",
+      "closeFailed": "La votación no ha terminado. Inténtalo de nuevo.",
+      "live": "Votación abierta · {{time}} left",
+      "ended": "Votación cerrada",
+      "votes_one": "{{count}} voto",
+      "votes_other": "{{count}} votos",
+      "replaceHint": "Comenzar una nueva encuesta cierra la que está abierta.",
+      "widgetHint": "Muestra tu encuesta en directo. En los visores de la aplicación DeHub, toque una opción para votar; en OBS, le dice a la gente que escriba {{command}} y un número en el chat.",
+      "sample": {
+        "a": "Algo nuevo",
+        "b": "Un viejo favorito",
+        "c": "Tú eliges"
+      }
     },
     "title": "Estudio en directo",
     "subtitle": "Alertas y widgets para tus transmisiones",
@@ -5908,6 +5990,7 @@
       "join": "Unirse"
     },
     "kinds": {
+      "spin_wheel": "Rueda giratoria",
       "tip_alert": "Alerta de propina",
       "follow_alert": "Seguir alerta",
       "subscribe_alert": "Alerta de suscriptor",
@@ -5924,9 +6007,10 @@
       "chat_box": "Cuadro de chat",
       "ticker": "Marquesina",
       "rule_alert": "Alertas de reglas",
-      "spin_wheel": "Rueda giratoria"
+      "poll": "Encuesta"
     },
     "hints": {
+      "spin_wheel": "Donde las ruedas de tus reglas giran",
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
       "follow_alert": "Muestra a cada nuevo seguidor",
       "subscribe_alert": "Muestra cada nuevo suscriptor",
@@ -5943,7 +6027,7 @@
       "chat_box": "Muestra los mensajes de chat de tu transmisión en la pantalla",
       "ticker": "Una línea de tu propio texto que se desplaza por la pantalla",
       "rule_alert": "¿Dónde aparecen las alertas de tus reglas?",
-      "spin_wheel": "Donde las ruedas de tus reglas giran"
+      "poll": "Tu encuesta en vivo, con un botón de voto para cada opción"
     },
     "fields": {
       "style": "Estilo",
@@ -5978,6 +6062,8 @@
       "fast": "Rápido"
     },
     "rules": {
+      "wheelSegments": "Segmentos de rueda, uno por línea",
+      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
       "title": "Normas",
       "intro": "Cuando sucede algo en su transmisión, DeHub hace lo que usted elige: muestra una alerta, reproduce un sonido, lee algo en voz alta, publica en su chat o le dice a su Discord.",
       "add": "Añade una regla",
@@ -6007,8 +6093,7 @@
       "addAction": "Añadir una acción",
       "removeAction": "Eliminar acción",
       "placeholders": "Utiliza {name}, {amount} y {message} en tu texto. Los enlaces en los mensajes se eliminan.",
-      "wheelSegments": "Segmentos de rueda, uno por línea",
-      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
+      "placeholdersLive": "Utiliza {name}, {title} y {link} en tu texto: tu nombre, el título de la retransmisión y un enlace para verla.",
       "alertText": "Texto de alerta",
       "sound": "Sonido",
       "sayText": "Texto para leer en voz alta",
@@ -6022,6 +6107,7 @@
         "follow": "Alguien sigue",
         "subscribe": "Alguien se suscribe",
         "share": "Alguien comparte la transmisión",
+        "live": "Empiezas a transmitir",
         "command": "Se utiliza un comando de chat",
         "keyword": "Un mensaje de chat contiene una palabra",
         "chat": "Cualquier mensaje de chat"
@@ -6032,12 +6118,12 @@
         "subscribers": "Suscriptores"
       },
       "actionTypes": {
+        "wheel": "Gira una ruleta",
         "alert": "Mostrar una alerta",
         "sound": "Reproducir un sonido",
         "say": "Leer en voz alta",
         "chat": "Publicar en el chat",
-        "webhook": "Enviar a un webhook",
-        "wheel": "Gira una ruleta"
+        "webhook": "Enviar a un webhook"
       },
       "summary": {
         "tip": "Propina de {{amount}} DHB o más"
@@ -6075,6 +6161,51 @@
         "spooky": "Espeluznante",
         "magic-spell": "Hechizo mágico",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderación del chat",
+      "intro": "Reglas para el chat bajo todos tus streams. Nunca llegan al chat principal de DeHub: alguien que banees aquí aún puede hablar en todas partes.",
+      "loadFailed": "No se pudieron cargar tus ajustes de moderación. Recarga la página para intentar de nuevo.",
+      "save": "Guardar reglas del chat",
+      "saved": "Reglas del chat guardadas.",
+      "saveFailed": "Ese cambio no pudo guardarse.",
+      "slowMode": "Modo lento",
+      "slowModeHint": "Cuánto tiempo espera cada espectador entre mensajes. Tú y tus moderadores nunca esperan.",
+      "off": "Apagado",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundos",
+      "followersOnly": "Solo seguidores",
+      "subscribersOnly": "Solo suscriptores",
+      "subscribersOnlyHint": "Sobrescribe \"solo seguidores\".",
+      "bannedWords": "Palabras prohibidas",
+      "bannedWordsHint": "Sepáralas con comas. Escribir una palabra letra por letra no la evita.",
+      "wordAction": "Cuando alguien usa una",
+      "wordBlock": "Detener el mensaje",
+      "wordTimeout": "Detenerlo y ponerlo en tiempo de espera por un minuto",
+      "moderators": "Moderadores",
+      "moderatorsHint": "Pueden poner en *timeout* y prohibir a los espectadores en tus transmisiones. No pueden actuar sobre ti ni sobre ellos mismos.",
+      "addModerator": "Agregar",
+      "usernamePlaceholder": "Nombre de usuario",
+      "moderatorAdded": "Moderador agregado.",
+      "moderatorNotFound": "No hay una cuenta con ese nombre de usuario.",
+      "removeModerator": "Eliminar moderador",
+      "noModerators": "Aún no hay moderadores.",
+      "banned": "Prohibido en tus transmisiones",
+      "unban": "Desprohibir",
+      "noBans": "Nadie está prohibido.",
+      "log": "Acciones recientes",
+      "noLog": "Aún no hay nada.",
+      "actions": {
+        "timeout_one": "{{actor}} puso en *timeout* a {{target}} por {{count}} segundo",
+        "timeout_other": "{{actor}} puso en *timeout* a {{target}} por {{count}} segundos",
+        "ban": "{{actor}} prohibió a {{target}}",
+        "unban": "{{actor}} desprohibió a {{target}}",
+        "moderator-added": "{{target}} se convirtió en moderador",
+        "moderator-removed": "{{target}} ya no es moderador",
+        "word-blocked": "Detuvo un mensaje de {{target}} por \"{{word}}\"",
+        "word-timeout_one": "Puso en *timeout* a {{target}} por {{count}} segundo por \"{{word}}\"",
+        "word-timeout_other": "Puso en *timeout* a {{target}} por {{count}} segundos por \"{{word}}\""
       }
     }
   },
@@ -7310,6 +7441,7 @@
     "weeksShort": "{{count}} wk"
   },
   "liveGift": {
+    "notEnoughToken": "No tienes suficiente {{symbol}} para este regalo",
     "pickTier": "Elige una celebración",
     "plays": "Reproduce {{tier}} en el stream",
     "you": "Tú",

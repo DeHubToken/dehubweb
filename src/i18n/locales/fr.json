@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Récapitulatif du flux",
+    "justEnded": "Récapitulatif de votre flux",
+    "lastStream": "Votre dernier stream",
+    "share": "Partager",
+    "shareText": "Je viens de diffuser « {{title}} » sur DeHub : {{duration}} en direct, {{peak}} au sommet et {{followers}} nouveaux abonnés.",
+    "untitled": "Flux sans titre",
+    "copied": "Récapitulatif copié. Collez-le n'importe où.",
+    "loadFailed": "Le récapitulatif ne s'est pas chargé. Réessayez dans un instant.",
+    "duration": "Temps en direct",
+    "peakViewers": "La plupart regardent à la fois",
+    "gifts_one": "Du cadeau {{count}}",
+    "gifts_other": "De {{count}} cadeaux",
+    "newFollowers": "Nouveaux abonnés",
+    "chatMessages": "Messages de chat",
+    "chatters": "Personnes discutant",
+    "reactions": "Réactions",
+    "shares": "Partage de personnes",
+    "topSupporters": "Meilleurs supporters",
+    "polls": "Sondages",
+    "pollWinner": "{{option}} gagné",
+    "stillCounting": "Toujours à compter : les cadeaux peuvent prendre une minute pour être confirmés."
+  },
   "accountConnect": {
     "title": "Connecter votre compte DeHub",
     "body": "Connectez votre compte pour gérer votre profil, publier et créer du contenu depuis le chat. Les connexions expirent sous 24 heures. Vous pouvez les révoquer à tout moment.",
@@ -830,6 +853,8 @@
     "stagePay": "Paiement de DeHub Pay avec {{symbol}}…",
     "stageDelivering": "DeHub Pay envoie vos jetons…",
     "payViaDpay": "Payé à DeHub Pay, les jetons arrivent dans environ 30s",
+    "payDirect": "Envoyé directement à {{name}} en {{symbol}} sur {{chain}}. Sans swap.",
+    "payDirectNoName": "Envoyé directement au créateur en {{symbol}} sur {{chain}}. Sans swap.",
     "payViaBridgeDpay": "Déplacé vers Base et payé à DeHub Pay, les jetons arrivent dans environ une minute",
     "dmSent": "{{amount}} jetons envoyés à {{name}} !"
   },
@@ -934,6 +959,7 @@
     "price": "Prix",
     "ppvDhbInfo": "Les paiements sont en jetons DeHub sur la chaîne Base",
     "ppvUsdInfo": "Les paiements sont en USD",
+    "ppvStableInfo": "Les acheteurs paient en {{symbol}}, envoyé directement à vous",
     "setupBounty": "Configurer la récompense",
     "viewersToReward": "Spectateurs à récompenser",
     "numberOfViewers": "Nombre de spectateurs",
@@ -5812,6 +5838,7 @@
     "creatorEarnsDirect": "Les abonnés paient en jetons DeHub. Votre part atterrit dans votre portefeuille au moment où ils s'abonnent, moins les frais de plateforme pour votre niveau de badge."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun : {{result}}",
     "someone": "Quelqu'un",
     "newFollower": "Nouveau follower : {{name}}",
     "newSubscriber": "Nouvel abonné : {{name}}",
@@ -5823,7 +5850,31 @@
     "topSupporters": "Meilleurs supporters",
     "tipped": "{{name}} a envoyé un cadeau",
     "chatPreview": "Les messages de chat apparaissent ici",
-    "wheelLanded": "{{name}} spun : {{result}}"
+    "poll": {
+      "closed": "Voting fermé",
+      "voteFor": "Voter pour {{option}}",
+      "signIn": "Se connecter pour voter",
+      "failed": "Votre vote n'a pas été compté. Essayez à nouveau.",
+      "voted_one": "Vous avez voté · {{count}} vote",
+      "voted_other": "Vous avez voté · {{count}} votes",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "howToVote_one": "Tapez {{command}} et un nombre en chat pour voter · {{count}} vote",
+      "howToVote_other": "Tapez {{command}} et un nombre en chat pour voter · {{count}} votes"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Temps d'attente de 1 minute",
+    "timeout10m": "Temps d'attente de 10 minutes",
+    "timeout1h": "Temps d'attente de 1 heure",
+    "ban": "Interdit sur ces streams",
+    "makeModerator": "Nommer modérateur",
+    "timedOut": "Temps d'attente appliqué.",
+    "banned": "Interdit sur ces streams.",
+    "madeModerator": "Ils sont maintenant modérateurs.",
+    "failed": "Ça n'a pas fonctionné. Réessayer.",
+    "youAreBanned": "Vous ne pouvez pas discuter dans les streams de ce créateur",
+    "youAreTimedOut": "Vous êtes en temps d'attente pour un moment"
   },
   "liveStudio": {
     "controls": {
@@ -5836,6 +5887,37 @@
       "readAloudMuted": "Arrêter la lecture à voix haute",
       "readAloudMutedHint": "Les messages de cadeau et les lignes de règle ne sont plus lus.",
       "failed": "Ce commutateur n'a pas changé. Réessayez."
+    },
+    "polls": {
+      "title": "Sondages",
+      "intro": "Posez une question aux personnes regardant votre diffusion. Ils répondent avec un bouton dans l'application DeHub, ou en tapant {{command}} et le numéro de l'option dans le chat.",
+      "question": "Question",
+      "questionPlaceholder": "Que dois-je jouer ensuite ?",
+      "option": "Option {{n}}",
+      "addOption": "Ajouter une option",
+      "removeOption": "Supprimer l'option {{n}}",
+      "duration": "Durée pendant laquelle le vote reste ouvert",
+      "seconds_one": "{{count}} seconde",
+      "seconds_other": "{{count}} secondes",
+      "minutes_one": "{{count}} minute",
+      "minutes_other": "{{count}} minutes",
+      "start": "Lancer le sondage",
+      "end": "Terminer le vote maintenant",
+      "started": "Votre sondage est ouvert. Les spectateurs peuvent voter maintenant.",
+      "notLive": "Allez en direct d'abord. Un sondage fonctionne sur la diffusion que vous diffusez actuellement.",
+      "startFailed": "Le sondage n'a pas commencé. Essayez à nouveau.",
+      "closeFailed": "Le vote n'a pas pris fin. Essayez à nouveau.",
+      "live": "Vote en cours · {{time}} restant(e)s",
+      "ended": "Vote fermé",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} votes",
+      "replaceHint": "Lancer un nouveau sondage ferme celui qui est ouvert.",
+      "widgetHint": "Affiche votre sondage en direct. Dans l'application DeHub, les téléspectateurs tapent sur une option pour voter ; dans OBS, il indique aux gens de taper {{command}} et un numéro dans le chat.",
+      "sample": {
+        "a": "Quelque chose de nouveau",
+        "b": "Un ancien favori",
+        "c": "Vous choisissez"
+      }
     },
     "title": "Studio en direct",
     "subtitle": "Alertes et widgets pour vos flux",
@@ -5912,6 +5994,7 @@
       "join": "Rejoindre"
     },
     "kinds": {
+      "spin_wheel": "Roue rotative",
       "tip_alert": "Alerte de pourboire",
       "follow_alert": "Suivre l'alerte",
       "subscribe_alert": "Alerte abonné",
@@ -5928,9 +6011,10 @@
       "chat_box": "Boîte de discussion",
       "ticker": "Bandeau défilant",
       "rule_alert": "Alertes de règle",
-      "spin_wheel": "Roue rotative"
+      "poll": "Sondage"
     },
     "hints": {
+      "spin_wheel": "Où tournent les roues de vos règles",
       "tip_alert": "Célèbre chaque pourboire, dimensionné à son niveau",
       "follow_alert": "Affiche chaque nouvel abonné",
       "subscribe_alert": "Affiche chaque nouvel abonné",
@@ -5947,7 +6031,7 @@
       "chat_box": "Affiche les messages de chat de votre diffusion à l'écran",
       "ticker": "Une ligne de votre propre texte qui défile sur l'écran",
       "rule_alert": "Où les alertes de vos règles apparaissent",
-      "spin_wheel": "Où tournent les roues de vos règles"
+      "poll": "Votre sondage en direct, avec un bouton de vote pour chaque option"
     },
     "fields": {
       "style": "Style",
@@ -5982,6 +6066,8 @@
       "fast": "Rapide"
     },
     "rules": {
+      "wheelSegments": "Segments de roue, un par ligne",
+      "wheelHint": "Entre 2 et 12. DeHub choisit l'endroit où la roue s'arrête, de sorte que tous ceux qui regardent voient le même résultat. Utilisez {result} dans une action d'alerte, de lecture à voix haute ou de clavardage pour le nommer.",
       "title": "Règles",
       "intro": "Lorsque quelque chose se passe sur votre flux, DeHub fait ce que vous choisissez : affiche une alerte, émet un son, lit quelque chose à haute voix, publie dans votre chat ou le dit à votre Discord.",
       "add": "Ajouter une règle",
@@ -6011,8 +6097,7 @@
       "addAction": "Ajouter une action",
       "removeAction": "Supprimer l'action",
       "placeholders": "Utilisez {name}, {amount} et {message} dans votre texte. Les liens dans les messages sont supprimés.",
-      "wheelSegments": "Segments de roue, un par ligne",
-      "wheelHint": "Entre 2 et 12. DeHub choisit l'endroit où la roue s'arrête, de sorte que tous ceux qui regardent voient le même résultat. Utilisez {result} dans une action d'alerte, de lecture à voix haute ou de clavardage pour le nommer.",
+      "placeholdersLive": "Utilisez {name}, {title} et {link} dans votre texte : votre nom, le titre de l'émission et un lien pour la regarder.",
       "alertText": "Texte d'alerte",
       "sound": "Son",
       "sayText": "Texte à lire à haute voix",
@@ -6026,6 +6111,7 @@
         "follow": "Quelqu'un suit",
         "subscribe": "Quelqu'un s'abonne",
         "share": "Quelqu'un partage le flux",
+        "live": "Vous commencez à diffuser",
         "command": "Une commande de chat est utilisée",
         "keyword": "Un message de chat contient un mot",
         "chat": "Tout message de chat"
@@ -6036,12 +6122,12 @@
         "subscribers": "Abonnés"
       },
       "actionTypes": {
+        "wheel": "Faire tourner une roue",
         "alert": "Afficher une alerte",
         "sound": "Jouer un son",
         "say": "Lire à haute voix",
         "chat": "Publier dans le chat",
-        "webhook": "Envoyer à un webhook",
-        "wheel": "Faire tourner une roue"
+        "webhook": "Envoyer à un webhook"
       },
       "summary": {
         "tip": "Conseil de {{amount}} DHB ou plus"
@@ -6079,6 +6165,51 @@
         "spooky": "Effrayant",
         "magic-spell": "Sort magique",
         "shhh": "Chut"
+      }
+    },
+    "moderation": {
+      "title": "Modération de la salle de chat",
+      "intro": "Règles pour le chat sous tous vos streams. Elles ne s'appliquent jamais au chat principal de DeHub : quelqu'un que vous bannissez ici peut toujours parler ailleurs.",
+      "loadFailed": "Vos paramètres de modération ne pouvaient pas être chargés. Rafraîchissez la page pour réessayer.",
+      "save": "Enregistrer les règles du chat",
+      "saved": "Règles du chat enregistrées.",
+      "saveFailed": "Ce changement ne pouvait pas être enregistré.",
+      "slowMode": "Mode lent",
+      "slowModeHint": "Durée d'attente entre les messages pour chaque spectateur. Vous et vos modérateurs n'avez pas à attendre.",
+      "off": "Désactivé",
+      "seconds_one": "{{count}} seconde",
+      "seconds_other": "{{count}} secondes",
+      "followersOnly": "Abonnés uniquement",
+      "subscribersOnly": "Abonnés uniquement (souscripteurs).",
+      "subscribersOnlyHint": "Contourne les abonnés uniquement.",
+      "bannedWords": "Mots interdits",
+      "bannedWordsHint": "Séparer par des virgules. Épeler un mot lettre par lettre ne le contourne pas.",
+      "wordAction": "Quand quelqu'un utilise un mot interdit",
+      "wordBlock": "Arrêter le message",
+      "wordTimeout": "L'arrêter et le mettre en temps d'attente d'une minute",
+      "moderators": "Modérateurs",
+      "moderatorsHint": "Ils peuvent mettre en pause et bannir les spectateurs de vos streams. Ils ne peuvent pas agir sur vous ou sur eux-mêmes.",
+      "addModerator": "Ajouter",
+      "usernamePlaceholder": "Nom d'utilisateur",
+      "moderatorAdded": "Modérateur ajouté.",
+      "moderatorNotFound": "Aucun compte avec ce nom d'utilisateur.",
+      "removeModerator": "Retirer le modérateur",
+      "noModerators": "Aucun modérateur pour l'instant.",
+      "banned": "Banni de vos streams",
+      "unban": "Débannir",
+      "noBans": "Personne n'est banni.",
+      "log": "Actions récentes",
+      "noLog": "Rien pour l'instant.",
+      "actions": {
+        "timeout_one": "{{actor}} a été mis en pause {{target}} pendant {{count}} seconde",
+        "timeout_other": "{{actor}} a été mis en pause {{target}} pendant {{count}} secondes",
+        "ban": "{{actor}} a banni {{target}}",
+        "unban": "{{actor}} a débanni {{target}}",
+        "moderator-added": "{{target}} est devenu modérateur",
+        "moderator-removed": "{{target}} n'est plus modérateur",
+        "word-blocked": "A stoppé un message de {{target}} pour \"{{word}}\"",
+        "word-timeout_one": "{{target}} a été mis en pause {{count}} seconde pour \"{{word}}\"",
+        "word-timeout_other": "{{target}} a été mis en pause {{count}} secondes pour \"{{word}}\""
       }
     }
   },
@@ -7314,6 +7445,7 @@
     "weeksShort": "{{count}} sem"
   },
   "liveGift": {
+    "notEnoughToken": "Pas assez de {{symbol}} pour ce cadeau",
     "pickTier": "Choisissez une célébration",
     "plays": "Joue {{tier}} sur le stream",
     "you": "Vous",

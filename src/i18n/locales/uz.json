@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Strim xulosasi",
+    "justEnded": "Strimingiz xulosasi",
+    "lastStream": "Oxirgi translatsiyangiz",
+    "share": "Ulashish",
+    "shareText": "Men hozirgina DeHub’da &quot;{{title}}&quot; ni striming qildim: {{duration}} jonli efirda, {{peak}} eng yuqori cho‘qqida tomosha qilyapman va {{followers}} yangi obunachilar.",
+    "untitled": "Nomsiz oqim",
+    "copied": "Xulosa nusxalandi. Istalgan joyga joylashtiring.",
+    "loadFailed": "Xulosa yuklanmadi. Birozdan keyin qayta urinib ko&#39;ring.",
+    "duration": "Vaqt jonli",
+    "peakViewers": "Bir vaqtning o&#39;zida ko&#39;pchilik tomosha qiladi",
+    "gifts_one": "{{count}} sovg&#39;asidan",
+    "gifts_other": "{{count}} sovg&#39;alaridan",
+    "newFollowers": "Yangi izdoshlar",
+    "chatMessages": "Chat xabarlari",
+    "chatters": "Odamlar suhbatlashmoqda",
+    "reactions": "Reaksiyalar",
+    "shares": "Odamlar almashishmoqda",
+    "topSupporters": "Eng yaxshi tarafdorlar",
+    "polls": "So&#39;rovnomalar",
+    "pollWinner": "{{option}} yutdi",
+    "stillCounting": "Hali ham sanalmoqda: sovg&#39;alarni tasdiqlash bir daqiqa vaqt olishi mumkin."
+  },
   "errors": {
     "sponsorshipUnavailable": "Bepul tranzaksiyalar bizning tomonimizda toxtatilgan, hamyoningizda emas. Iltimos, birozdan keyin qayta urinib koring.",
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."
@@ -4804,6 +4827,7 @@
     "creatorEarnsDirect": "Obunachilar DeHub tokenlarida to&#39;lov qilishadi. Ular obuna bo&#39;lgan zahoti sizning ulushingiz hamyoningizga tushadi, nishon darajangiz uchun platforma to&#39;lovi chegiriladi."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} aylantirildi: {{result}}",
     "someone": "Kimdir",
     "newFollower": "Yangi obunachi: {{name}}",
     "newSubscriber": "Yangi obunachi: {{name}}",
@@ -4815,7 +4839,31 @@
     "topSupporters": "Eng yaxshi tarafdorlar",
     "tipped": "{{name}} sovg&#39;a yubordi",
     "chatPreview": "Xatlar bu yerda koʻrinadi",
-    "wheelLanded": "{{name}} aylantirildi: {{result}}"
+    "poll": {
+      "closed": "Ovozlar yakunlandi",
+      "voteFor": "{{option}} uchun ovoz bering",
+      "signIn": "Ovoz berish uchun kirishingiz kerak",
+      "failed": "Ovozingiz hisoblana olmadi. Yana urinib ko'ring",
+      "voted_one": "Siz ovoz berdingiz · {{count}} ovoz",
+      "voted_other": "Siz ovoz berdingiz · {{count}} ovoz",
+      "votes_one": "{{count}} ovoz",
+      "votes_other": "{{count}} ovozlar",
+      "howToVote_one": "Chatda {{command}} va raqam yozib ovoz berish uchun · {{count}} ovoz",
+      "howToVote_other": "Chatda {{command}} va raqam yozib ovoz berish uchun · {{count}} ovozlar"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "1 daqiqaga vaqt ajratildi",
+    "timeout10m": "10 daqiqaga vaqt ajrating",
+    "timeout1h": "1 soatlik tanaffus",
+    "ban": "Ushbu oqimlardan taqiqlash",
+    "makeModerator": "Moderator qiling",
+    "timedOut": "Vaqt cheklangan.",
+    "banned": "Ushbu oqimlardan taqiqlangan.",
+    "madeModerator": "Ular endi moderator.",
+    "failed": "Bu ishlamadi. Qayta urinib ko‘ring.",
+    "youAreBanned": "Siz bu ijodkorning strimlarida chatlasha olmaysiz",
+    "youAreTimedOut": "Siz bir zumga vaqtingiz tugadi"
   },
   "liveStudio": {
     "controls": {
@@ -4828,6 +4876,37 @@
       "readAloudMuted": "Ovoz chiqarib o&#39;qishni to&#39;xtating",
       "readAloudMutedHint": "Sovg&#39;a xabarlari va qoidalar satrlari endi o&#39;qib chiqilmaydi.",
       "failed": "Bu tugma o&#39;zgarmadi. Qaytadan urinib ko&#39;ring."
+    },
+    "polls": {
+      "title": "Savollar",
+      "intro": "Koʻrishchilaringizga tarjimonlik paytida savol bering. Ular DeHub ilovasidagi tugma bilan yoki chatda {{command}} va variant raqamini yozib javob berishadi.",
+      "question": "Savol",
+      "questionPlaceholder": "Qaysi kino o‘ynatish kerak?",
+      "option": "Variant {{n}}",
+      "addOption": "Variant qo‘shing",
+      "removeOption": "Variant {{n}} ni o‘chiring",
+      "duration": "Ovoz berish muddati",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekund",
+      "minutes_one": "{{count}} daqiqa",
+      "minutes_other": "{{count}} daqiqa",
+      "start": "Savolni boshlang",
+      "end": "Hozir ovoz berishni yakunlang",
+      "started": "Savolingiz ochiq. Koʻrishchilar ovoz berishlari mumkin.",
+      "notLive": "Avval livega chiqing. Savol hozirda tarjimonlik qilayotganingizga asoslanadi.",
+      "startFailed": "Savol boshlanmadi. Yana urinib ko‘ring.",
+      "closeFailed": "Ovoz berish yakunlanmadi. Yana urinib ko‘ring.",
+      "live": "Ovoz berish ochiq · {{time}} qoldi",
+      "ended": "Ovozlar yakunlandi",
+      "votes_one": "{{count}} ovoz berish",
+      "votes_other": "{{count}} ovozlar",
+      "replaceHint": "Yangi so&#39;rovnomani boshlash ochiq bo&#39;lgan so&#39;rovnomani yopadi.",
+      "widgetHint": "Jonli soʻrovnomangizni koʻrsatadi. DeHub ilovasida tomoshabinlar ovoz berish uchun variantni bosishadi; OBS ilovasida esa odamlarga chatda {{command}} va raqamni yozishni aytadi.",
+      "sample": {
+        "a": "Yangi narsa",
+        "b": "Eski sevimli",
+        "c": "Siz tanlaysiz"
+      }
     },
     "title": "Jonli studiya",
     "subtitle": "Strimlaringiz uchun ogohlantirishlar va vidjetlar",
@@ -4904,6 +4983,7 @@
       "join": "Qo&#39;shiling"
     },
     "kinds": {
+      "spin_wheel": "Aylanadigan g&#39;ildirak",
       "tip_alert": "Maslahat ogohlantirishi",
       "follow_alert": "Kuzatib borish haqida ogohlantirish",
       "subscribe_alert": "Obunachi ogohlantirishi",
@@ -4920,9 +5000,10 @@
       "chat_box": "Chat oynasi",
       "ticker": "Ticker",
       "rule_alert": "Qoida ogohlantirishlari",
-      "spin_wheel": "Aylanadigan g&#39;ildirak"
+      "poll": "So&#39;rovnoma"
     },
     "hints": {
+      "spin_wheel": "Qoidalaringizdagi g&#39;ildiraklar qayerda aylanadi",
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
       "follow_alert": "Har bir yangi izdoshni ko&#39;rsatadi",
       "subscribe_alert": "Har bir yangi obunachini ko&#39;rsatadi",
@@ -4939,7 +5020,7 @@
       "chat_box": "Ekranda eshittirishingizning chat xabarlarini ko&#39;rsatadi",
       "ticker": "Ekran bo&#39;ylab aylantiriladigan o&#39;zingizning matningiz qatori",
       "rule_alert": "Sizning qoidangizning xabarlarini koʻrish joyi",
-      "spin_wheel": "Qoidalaringizdagi g&#39;ildiraklar qayerda aylanadi"
+      "poll": "Jonli so&#39;rovnomangiz, har bir variant uchun ovoz berish tugmasi bilan"
     },
     "fields": {
       "style": "Uslub",
@@ -4973,6 +5054,8 @@
       "fast": "Tez"
     },
     "rules": {
+      "wheelSegments": "G&#39;ildirak segmentlari, har bir qatorda bittadan",
+      "wheelHint": "2 dan 12 gacha. DeHub g&#39;ildirak qayerda to&#39;xtashini tanlaydi, shuning uchun hamma tomosha qilayotganlar bir xil natijani ko&#39;rishadi. Ogohlantirish, ovoz chiqarib o&#39;qish yoki chat harakatlarida {result} dan foydalaning.",
       "title": "Qoidalar",
       "intro": "Sizning streamingizda bir narsa sodir boʻlganda, DeHub sizning tanlangichingizga koʻra amalga oshiradi: xabar koʻrsatadi, ovoz oʻynaydi, narsani aytib beradi, chatga yozib yuboradi yoki Discordingizga xabar yuboradi.",
       "add": "Qoidani qoʻshish",
@@ -5002,8 +5085,7 @@
       "addAction": "Amalni qoʻshish",
       "removeAction": "Amaldan olib tashlash",
       "placeholders": "Matningizda {name}, {amount} va {message} dan foydalaning. Xabarlardagi havolalar olib tashlandi.",
-      "wheelSegments": "G&#39;ildirak segmentlari, har bir qatorda bittadan",
-      "wheelHint": "2 dan 12 gacha. DeHub g&#39;ildirak qayerda to&#39;xtashini tanlaydi, shuning uchun hamma tomosha qilayotganlar bir xil natijani ko&#39;rishadi. Ogohlantirish, ovoz chiqarib o&#39;qish yoki chat harakatlarida {result} dan foydalaning.",
+      "placeholdersLive": "Matningizda {name}, {title} va {link} dan foydalaning: ismingiz, ko&#39;rsatuv sarlavhasi va uni tomosha qilish uchun havola.",
       "alertText": "Ogohlantirish matni",
       "sound": "Ovoz",
       "sayText": "Ovoz chiqarib o&#39;qish uchun matn",
@@ -5017,6 +5099,7 @@
         "follow": "Kimdir kuzatib bormoqda",
         "subscribe": "Kimdir obuna bo&#39;ladi",
         "share": "Kimdir oqimni ulashmoqda",
+        "live": "Siz efirga uzatishni boshlaysiz",
         "command": "Chat buyrug&#39;i ishlatiladi",
         "keyword": "Chat xabarida so&#39;z bor",
         "chat": "Har qanday chat xabari"
@@ -5027,12 +5110,12 @@
         "subscribers": "Obunachilar"
       },
       "actionTypes": {
+        "wheel": "G&#39;ildirakni aylantiring",
         "alert": "Ogohlantirishni ko&#39;rsatish",
         "sound": "Ovozni ijro etish",
         "say": "Ovoz chiqarib o&#39;qing",
         "chat": "Chatda post qoldiring",
-        "webhook": "Veb-hukka yuborish",
-        "wheel": "G&#39;ildirakni aylantiring"
+        "webhook": "Veb-hukka yuborish"
       },
       "summary": {
         "tip": "{{amount}} DHB yoki undan ko&#39;p choychaqa"
@@ -5066,9 +5149,55 @@
         "ooh-ahh": "Voy ahh",
         "ooh-man": "Voy (odam)",
         "ohh-girl": "Oh (ayol)",
+        "ba-dum-tish": "Ba dum tish!",
         "spooky": "Dahshatli",
         "magic-spell": "Sehrli sehr",
         "shhh": "Jim bo&#39;l"
+      }
+    },
+    "moderation": {
+      "title": "Chat moderatsiyasi",
+      "intro": "Barcha streamlaringiz ostidagi chat qoidalari. Ular DeHubning asosiy chatiga yetmaydi: siz burada cheklagan kishi hamma joyda gaplashishi mumkin.",
+      "loadFailed": "Moderatsiya sozlamangiz yuklanmadi. Yangi sahifa yuklang va qayta urinib ko‘ring.",
+      "save": "Chat qoidalarini saqlash",
+      "saved": "Chat qoidalari saqlangan.",
+      "saveFailed": "Bu o‘zgarish saqlanmadi.",
+      "slowMode": "Yengil rejim",
+      "slowModeHint": "Katta tomoshabinlar orasidagi so‘zlashuv oralig‘i. Siz va moderatorlaringiz bu oralig‘ni kutmaydi.",
+      "off": "Boshlanmagan",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekund",
+      "followersOnly": "Faqat abonentlar",
+      "subscribersOnly": "Faqat abonentlar",
+      "subscribersOnlyHint": "Abonentlarni ortda qoldiradi.",
+      "bannedWords": "Cheklangan so‘zlar",
+      "bannedWordsHint": "Virgul bilan ajrating. So‘zni harf-harf yozish uni cheklashdan qutqaradi.",
+      "wordAction": "Kishi birini ishlatganda",
+      "wordBlock": "Xabarni to‘xtatish",
+      "wordTimeout": "Uningni to‘xtatib, bir daqiqa uchun vaqt cheklang.",
+      "moderators": "Moderatorlar",
+      "moderatorsHint": "Ular sizning strimlaringizdagi tomoshabinlarni vaqt tugashi va taqiqlashi mumkin. Ular sizga yoki bir-biringizga qarshi harakat qila olmaydilar.",
+      "addModerator": "Qo'shish",
+      "usernamePlaceholder": "Foydalanuvchi nomi",
+      "moderatorAdded": "Moderator qo&#39;shildi.",
+      "moderatorNotFound": "Bu foydalanuvchi nomi bilan hisob yo&#39;q.",
+      "removeModerator": "Moderatorni olib tashlash",
+      "noModerators": "Hali moderatorlar yo&#39;q.",
+      "banned": "Strimlaringizdan taqiqlangan",
+      "unban": "Taqiqni bekor qilish",
+      "noBans": "Hech kim taqiqlanmagan.",
+      "log": "So&#39;nggi harakatlar",
+      "noLog": "Hali hech narsa yo&#39;q.",
+      "actions": {
+        "word-timeout_other": "\"{{word}}\" uchun {{target}} {{count}} soniyaga ovozsiz qilindi",
+        "timeout_one": "{{actor}} {{count}} soniya uchun {{target}} vaqti tugadi",
+        "timeout_other": "{{actor}} {{count}} soniya davomida {{target}} vaqti tugadi",
+        "ban": "{{actor}} taqiqlangan {{target}}",
+        "unban": "{{actor}} taqiqlanmagan {{target}}",
+        "moderator-added": "{{target}} moderator bo&#39;ldi",
+        "moderator-removed": "{{target}} endi moderator emas",
+        "word-blocked": "{{target}} dan &quot;{{word}}&quot; uchun xabarni to&#39;xtatdi",
+        "word-timeout_one": "&quot;{{word}}&quot; uchun {{count}} soniya uchun {{target}} vaqt tugadi"
       }
     }
   },

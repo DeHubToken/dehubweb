@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "Zeitlimit für 1 Minute",
+    "timeout10m": "Zeitlimit für 10 Minuten",
+    "timeout1h": "Zeitlimit für 1 Stunde",
+    "ban": "Gesperrt von diesen Streams",
+    "makeModerator": "Macher:in zum Moderator:in machen",
+    "timedOut": "Zeitlimit gesetzt.",
+    "banned": "Von diesen Streams gesperrt.",
+    "madeModerator": "Sie sind jetzt Moderator:in.",
+    "failed": "Das hat nicht funktioniert. Nochmal versuchen.",
+    "youAreBanned": "Du kannst in diesen Streams von der Creator:in nicht chatten.",
+    "youAreTimedOut": "Du bist für einen Moment zeitlimitiert."
+  },
   "errors": {
     "sponsorshipUnavailable": "Gratis Transaktione sind bi üs pausiert, nid bi dinere Wallet. Probier s glii nomol.",
     "gasSponsorshipFailed": "Die Transaktion het nid chöne übernoh werde. Probier s glii nomol."
@@ -4769,6 +4782,7 @@
     "creatorEarnsDirect": "Abonnente zahled mit DeHub Tokens. Din Anteil landet i dim Wallet, grad wenn sie abonniered, abzüglich de Plattformgebühr für din Badge-Tier."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} hüt: {{result}}",
     "someone": "Irgendwer",
     "newFollower": "Neuer Follower: {{name}}",
     "newSubscriber": "Neue Abonnentin: {{name}}",
@@ -4779,7 +4793,41 @@
     "topSupporters": "Top‑Unterstützer",
     "tipped": "{{name}} hätt a Geschenk gschickt",
     "chatPreview": "Chatnachrichten erscheinen hier",
-    "wheelLanded": "{{name}} hüt: {{result}}"
+    "poll": {
+      "closed": "Voting abgeschlossen",
+      "voteFor": "Stimm ab für {{option}}",
+      "signIn": "Anmelden, um abzustimmen",
+      "failed": "Deine Stimme zählte nicht. Versuche es nochmals.",
+      "voted_one": "Du hast abgestimmt · {{count}} Stimme",
+      "voted_other": "Du hast abgestimmt · {{count}} Stimmen",
+      "votes_one": "{{count}} Stimme",
+      "votes_other": "{{count}} Stimmen",
+      "howToVote_one": "Tippe {{command}} und eine Zahl in den Chat, um abzustimmen · {{count}} Stimme",
+      "howToVote_other": "Tippe {{command}} und eine Zahl in den Chat, um abzustimmen · {{count}} Stimmen"
+    }
+  },
+  "liveRecap": {
+    "share": "Teilen",
+    "shareText": "Ich habe gerade \"{{title}}\" auf DeHub gestreamt: {{duration}} live, {{peak}} auf dem Gipfel und {{followers}} neue Follower.",
+    "newFollowers": "Neue Follower",
+    "chatMessages": "Chat-Nachrichten",
+    "reactions": "Reaktionen",
+    "shares": "Personen teilen",
+    "polls": "Umfragen",
+    "pollWinner": "{{option}} gewonnen",
+    "title": "Stream-Rückblick",
+    "justEnded": "De Stream-Zusammenfassung.",
+    "lastStream": "Dei letze Stream",
+    "untitled": "Untitled Stream",
+    "copied": "Recap kopiert. Irgendwo einfügen.",
+    "loadFailed": "Der Recap hat sich nicht geladen. Versuchs nochmal in einer Weile.",
+    "duration": "Zeit live",
+    "peakViewers": "Meist gsiht amol zamm.",
+    "gifts_one": "Von {{count}} Geschenk",
+    "gifts_other": "Von {{count}} Geschenke",
+    "chatters": "Menschli chätta",
+    "topSupporters": "Top-Unterstützer",
+    "stillCounting": "Zäme noch am Zählä: Geschenke brauchä et Wile, bis se bestäät sünd."
   },
   "liveStudio": {
     "controls": {
@@ -4792,6 +4840,82 @@
       "soundsMutedHint": "Dei Regeln stoppe mit dem Abspielen vo Klänge.",
       "readAloudMutedHint": "Giftnachrichten und Regeln werden nicht mehr vorgelesen.",
       "failed": "Dä Schalter isch net umgeschaltet worde. Versuche’s nochma."
+    },
+    "moderation": {
+      "title": "Chat-Moderation",
+      "intro": "Regeln für den Chat unter allen deinen Streams. Sie kommen nie in den Hauptchat von DeHub – jemanden, den du hier sperrst, kann trotzdem überall sonst reden.",
+      "loadFailed": "Deine Moderations-Einstellungen konnten nicht geladen werden. Aktualisiere die Seite und versuche es erneut.",
+      "save": "Chat-Regeln speichern",
+      "saved": "Chat-Regeln gespeichert.",
+      "saveFailed": "Diese Änderung konnte nicht gespeichert werden.",
+      "slowMode": "Langsam-Modus",
+      "slowModeHint": "Wie lange Zuschauer:innen zwischen Nachrichten warten müssen. Du und deine Moderator:innen wartet nie.",
+      "off": "Aus",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "followersOnly": "Nur Follower:innen",
+      "subscribersOnly": "Nur Abonnent:innen",
+      "subscribersOnlyHint": "Überschreibt «Nur Follower:innen».",
+      "bannedWords": "Gesperrte Wörter",
+      "bannedWordsHint": "Mit Kommas trennen. Ein Wort buchstabieren geht nicht drumherum.",
+      "wordAction": "Wenn jemand eines verwendet",
+      "wordBlock": "Nachricht stoppen",
+      "wordTimeout": "Stoppe sie und setze sie für eine Minute zeitlimitiert.",
+      "moderators": "Moderator",
+      "moderatorsHint": "Sie können Zuschauer in deinen Streams zeitlich begrenzen und sperren. Sie können aber niht auf dich oder auf sich selbst handeln.",
+      "addModerator": "Hinzufügen",
+      "usernamePlaceholder": "Benutzername",
+      "moderatorAdded": "Moderator hinzugefügt.",
+      "moderatorNotFound": "Kein Konto mit diesem Benutzernamen.",
+      "removeModerator": "Moderator entfernen",
+      "noModerators": "Noch keine Moderatoren.",
+      "banned": "Von deinen Streams gesperrt",
+      "unban": "Entsperren",
+      "noBans": "Niemand ist gesperrt.",
+      "log": "Letzte Aktionen",
+      "noLog": "Noch nichts.",
+      "actions": {
+        "timeout_one": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä",
+        "timeout_other": "{{actor}} isch abgelaufen {{target}} für {{count}} Sekundä.",
+        "ban": "{{actor}} hat {{target}} gesperrt",
+        "unban": "{{actor}} hat {{target}} entsperrt",
+        "moderator-added": "{{target}} wurde Moderator",
+        "moderator-removed": "{{target}} ist nicht mehr Moderator",
+        "word-blocked": "Hat eine Nachricht von {{target}} für \"{{word}}\" gestoppt",
+        "word-timeout_one": "{{target}} wurde für {{count}} Sekunde zeitlich begrenzt für \"{{word}}\"",
+        "word-timeout_other": "{{target}} wurde für {{count}} Sekunden zeitlich begrenzt für \"{{word}}\""
+      }
+    },
+    "polls": {
+      "title": "Umfragen",
+      "intro": "Frage die Leute, die deinem Stream folgen, eine Frage. Sie antworten mit einem Button in der DeHub-App oder indem sie {{command}} und die Nummer der Option in den Chat schreiben.",
+      "question": "Frage",
+      "questionPlaceholder": "Was soll ich als Nächstes spielen?",
+      "option": "Option {{n}}",
+      "addOption": "Option hinzufügen",
+      "removeOption": "Option {{n}} entfernen",
+      "duration": "Wie lange die Abstimmung offen bleibt",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "minutes_one": "{{count}} Minute",
+      "minutes_other": "{{count}} Minuten",
+      "start": "Umfrage starten",
+      "end": "Jetzt Abstimmung beenden",
+      "started": "Deine Umfrage ist offen. Zuschauer können jetzt abstimmen.",
+      "notLive": "Gehe zuerst live. Eine Umfrage läuft während des aktuellen Streams.",
+      "startFailed": "Die Umfrage ist nicht gestartet. Versuche es nochmals.",
+      "closeFailed": "Die Abstimmung ist noch nicht beendet. Versuche es nochmals.",
+      "live": "Abstimmung offen · {{time}} übrig",
+      "ended": "Abstimmung abgeschlossen",
+      "votes_one": "{{count}} stimmen",
+      "votes_other": "{{count}} Stimmen",
+      "replaceHint": "Einen neuen Umfrage startet, schliesst aber die offene ab.",
+      "widgetHint": "Zeigt deine Live-Umfrage. In der DeHub-App tippen die Zuschauer eine Option, um abzustimmen; in OBS sagt man den Leuten, sie sollen in den Chat {{command}} und eine Nummer eintippen.",
+      "sample": {
+        "a": "Etwas Neues",
+        "b": "Ein alter Favorit",
+        "c": "Du entscheidest"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Alarm und Widgets für dini Streams",
@@ -4879,9 +5003,11 @@
       "event_feed": "Aktuelle Aktivität",
       "chat_box": "Chatbox",
       "ticker": "Ticker",
-      "rule_alert": "Regel-Warnungen"
+      "rule_alert": "Regel-Warnungen",
+      "poll": "Umfrage"
     },
     "hints": {
+      "spin_wheel": "Wo die Räder in deinen Regeln dreh’n",
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
       "follow_alert": "Zeigt jede neue Follower",
       "subscribe_alert": "Zeigt jede neue Abonnent",
@@ -4898,7 +5024,7 @@
       "chat_box": "Zeigt die Chatnachrichten deines Streams auf dem Bildschirm",
       "ticker": "Eine Zeile mit deinem eigenen Text, die über den Bildschirm scrollt",
       "rule_alert": "Wo deine Regel-Warnungen erscheinen",
-      "spin_wheel": "Wo die Räder in deinen Regeln dreh’n"
+      "poll": "Deine Live-Umfrage, mit einem Abstimmknopf für jede Option"
     },
     "fields": {
       "style": "Stil",
@@ -4932,6 +5058,8 @@
       "fast": "Schnell"
     },
     "rules": {
+      "wheelSegments": "Radsegment, eis pro Zeile",
+      "wheelHint": "Zwiisch 2 un 12. DeHub bestiimm, wo’s Rad stoppt, so sieht’s alle gleich. Nutzi {result} in eim Alert, eim Vorlesen oder eim Chat-Aktiön, um’s zu benämmi.",
       "title": "Regeln",
       "intro": "Wenn etwas auf deinem Stream passiert, macht DeHub, was du möchtest: zeigt eine Warnung, spielt ein Geräusch, liest etwas vor, postet in deinem Chat oder sagt etwas in deinem Discord.",
       "add": "Regel hinzufügen",
@@ -4960,35 +5088,53 @@
       "userCooldown": "Wartezeit pro Zuschauer (Sekunden)",
       "addAction": "Aktion hinzufügen",
       "removeAction": "Aktion entfernen",
-      "wheelSegments": "Radsegment, eis pro Zeile",
-      "wheelHint": "Zwiisch 2 un 12. DeHub bestiimm, wo’s Rad stoppt, so sieht’s alle gleich. Nutzi {result} in eim Alert, eim Vorlesen oder eim Chat-Aktiön, um’s zu benämmi.",
+      "placeholders": "Verwenden Sie {name}, {amount} und {message} in Ihrem Text. Links in Nachrichten werden entfernt.",
+      "placeholdersLive": "Benutze {name}, {title} und {link} in deinem Text: deinen Namen, den Titel der Sendung und einen Link, um sie zu schauen.",
+      "alertText": "Benachrichtigungstext",
+      "sound": "Ton",
+      "sayText": "Vorzulesender Text",
+      "chatText": "Nachricht an Post",
       "chatHint": "Geschrieben von deinem Konto in den Chat deiner Stream-Liveübertragung. Es darf nicht die Nachricht des Zuschauers wiederholen.",
       "webhookUrl": "Webhook-Adresse",
       "webhookHint": "Einer Discord- oder Slack-Webhook, oder ei Webadress (HTTPS) wo ei POST-Aufruf funktioniert.",
+      "webhookText": "Zu sendende Nachricht",
       "triggers": {
         "tip": "Eini Tipp kommt an.",
         "follow": "Jemänd follows dir.",
         "subscribe": "Jemand abonniert.",
         "share": "Jemand teilt den Stream.",
+        "live": "Du startest mit dem Streamen",
         "command": "E chattbefehl wird gnutzt.",
         "keyword": "A Chatnachricht enthält ein Wort.",
         "chat": "Any Chatnachricht"
       },
       "audiences": {
-        "followers": "Follower"
+        "everyone": "Alle",
+        "followers": "Follower",
+        "subscribers": "Abonnenten"
       },
       "actionTypes": {
+        "wheel": "Dreh das Rad!",
         "alert": "Zeig a Alert.",
-        "webhook": "Send zu einem Webhook.",
-        "wheel": "Dreh das Rad!"
+        "sound": "Einen Ton abspielen",
+        "say": "Vorlesen",
+        "chat": "Im Chat posten",
+        "webhook": "Send zu einem Webhook."
+      },
+      "summary": {
+        "tip": "Tipp von {{amount}} DHB oder mehr"
       },
       "presets": {
         "blank": "Blank rule",
-        "bigTip": "Lufthorn für grosse Trinkgeldbeträge"
+        "readChat": "Chat vorlesen",
+        "bigTip": "Lufthorn für grosse Trinkgeldbeträge",
+        "thankFollowers": "Vielen Dank an neue Follower",
+        "command": "Chat-Befehl"
       },
       "presetHints": {
         "blank": "Start mit nix.",
         "readChat": "Liest die Nachrichten deiner Follower laut vor, je eine pro Zuschauer alle 30 Sekunden.",
+        "bigTip": "Spielt eine Lufthupe und zeigt eine Warnung für Trinkgelder von 100.000 DHB oder mehr an",
         "thankFollowers": "Gschiib a Dankeschön in de Chat, wenn mer wer folgt.",
         "command": "Antworte auf ein `!command` in unserem Chat."
       },
@@ -5001,11 +5147,14 @@
       "sounds": {
         "airhorn": "Airhorn",
         "applause": "Applaus",
+        "cricket": "Grillen",
+        "drumroll": "Trommelrolle",
         "lol": "Lachen",
         "ooh-ahh": "Ooh äh",
         "ooh-man": "Ooh (Mensch)",
         "ohh-girl": "Ohh (Frau)",
         "ba-dum-tish": "Ba dum tish",
+        "spooky": "Gruselig",
         "magic-spell": "Mägi Zauberformel",
         "shhh": "Shhh"
       }

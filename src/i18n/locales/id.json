@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Rekap streaming",
+    "justEnded": "Rekap streaming Anda",
+    "lastStream": "Streaming terakhir Anda",
+    "share": "Bagikan",
+    "shareText": "Saya baru saja streaming \"{{title}}\" di DeHub: {{duration}} live, {{peak}} menonton di puncak dan {{followers}} pengikut baru.",
+    "untitled": "Streaming tanpa judul",
+    "copied": "Rekap disalin. Tempel di mana saja.",
+    "loadFailed": "Rekap tidak dimuat. Coba lagi sebentar lagi.",
+    "duration": "Waktu langsung",
+    "peakViewers": "Paling banyak menonton sekaligus",
+    "gifts_one": "Dari {{count}} hadiah",
+    "gifts_other": "Dari {{count}} hadiah",
+    "newFollowers": "Pengikut baru",
+    "chatMessages": "Pesan obrolan",
+    "chatters": "Orang mengobrol",
+    "reactions": "Reaksi",
+    "shares": "Orang yang berbagi",
+    "topSupporters": "Pendukung teratas",
+    "polls": "Jajak Pendapat",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Masih terus bertambah: hadiah bisa membutuhkan waktu satu menit untuk mengonfirmasi."
+  },
   "errors": {
     "sponsorshipUnavailable": "Transaksi gratis sedang dijeda di pihak kami, bukan di dompet Anda. Silakan coba lagi sebentar lagi.",
     "gasSponsorshipFailed": "Transaksi ini tidak dapat disponsori. Silakan coba lagi sebentar."
@@ -603,6 +626,8 @@
     "stagePay": "Membayar DeHub Pay dengan {{symbol}}…",
     "stageDelivering": "DeHub Pay sedang mengirim token Anda…",
     "payViaDpay": "Dibayar ke DeHub Pay, token tiba dalam waktu sekitar 30 detik",
+    "payDirect": "Dikirim langsung ke {{name}} dalam {{symbol}} di {{chain}}. Tanpa swap.",
+    "payDirectNoName": "Dikirim langsung ke kreator dalam {{symbol}} di {{chain}}. Tanpa swap.",
     "payViaBridgeDpay": "Dipindahkan ke Base dan dibayar ke DeHub Pay, token tiba dalam waktu sekitar satu menit",
     "dmSent": "Terkirim {{amount}} token ke {{name}}!"
   },
@@ -702,6 +727,7 @@
     "price": "Harga",
     "ppvDhbInfo": "Pembayaran dalam token DeHub di rantai Base",
     "ppvUsdInfo": "Pembayaran dalam USD",
+    "ppvStableInfo": "Pembeli membayar dengan {{symbol}}, langsung dikirim ke kamu",
     "setupBounty": "Atur hadiah",
     "viewersToReward": "Penonton untuk diberi hadiah",
     "numberOfViewers": "Jumlah penonton",
@@ -4782,6 +4808,7 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bagian Anda masuk ke dompet Anda saat mereka berlangganan, dikurangi biaya platform untuk tingkatan lencana Anda."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} berputar: {{result}}",
     "someone": "Seseorang",
     "newFollower": "Pengikut baru: {{name}}",
     "newSubscriber": "Pelanggan baru: {{name}}",
@@ -4793,7 +4820,31 @@
     "topSupporters": "Pendukung teratas",
     "tipped": "{{name}} mengirim hadiah",
     "chatPreview": "Pesan obrolan muncul di sini",
-    "wheelLanded": "{{name}} berputar: {{result}}"
+    "poll": {
+      "closed": "Voting telah ditutup",
+      "voteFor": "Pilih {{option}}",
+      "signIn": "Masuk untuk memilih",
+      "failed": "Pilihanmu tidak terhitung. Coba lagi.",
+      "voted_one": "Anda telah memilih · {{count}} pilihan",
+      "voted_other": "Anda telah memilih · {{count}} pilihan",
+      "votes_one": "{{count}} pilihan",
+      "votes_other": "{{count}} pilihan",
+      "howToVote_one": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan",
+      "howToVote_other": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Waktu untuk 1 menit",
+    "timeout10m": "Waktu untuk 10 menit",
+    "timeout1h": "Waktu untuk 1 jam",
+    "ban": "Diblokir dari siaran-siaran ini",
+    "makeModerator": "Membuat moderator",
+    "timedOut": "Ditimpa waktu.",
+    "banned": "Diblokir dari siaran-siaran ini.",
+    "madeModerator": "Mereka sekarang adalah moderator.",
+    "failed": "Itu tidak berhasil. Coba lagi.",
+    "youAreBanned": "Anda tidak bisa berbicara di siaran pembuat ini",
+    "youAreTimedOut": "Anda ditimpa waktu untuk sejenak"
   },
   "liveStudio": {
     "controls": {
@@ -4806,6 +4857,37 @@
       "readAloudMuted": "Hentikan pembacaan dengan suara keras",
       "readAloudMutedHint": "Pesan hadiah dan baris aturan tidak lagi dibaca.",
       "failed": "Tombol itu tidak berubah. Coba lagi."
+    },
+    "polls": {
+      "title": "Pemungutan suara",
+      "intro": "Tanyakan pertanyaan kepada penonton yang menonton siaran langsungmu. Mereka menjawab dengan tombol di aplikasi DeHub, atau dengan mengetik {{command}} dan nomor opsi di chat.",
+      "question": "Pertanyaan",
+      "questionPlaceholder": "Apa yang harus saya mainkan selanjutnya?",
+      "option": "Opsi {{n}}",
+      "addOption": "Tambahkan opsi",
+      "removeOption": "Hapus opsi {{n}}",
+      "duration": "Berapa lama pemungutan suara tetap terbuka",
+      "seconds_one": "{{count}} detik",
+      "seconds_other": "{{count}} detik",
+      "minutes_one": "{{count}} menit",
+      "minutes_other": "{{count}} menit",
+      "start": "Mulai pemungutan suara",
+      "end": "Selesaikan pemungutan suara sekarang",
+      "started": "Pemungutan suaramu terbuka. Penonton dapat memilih sekarang.",
+      "notLive": "Jadilah live terlebih dahulu. Pemungutan suara berjalan pada siaran langsung yang sedang kamu streaming sekarang.",
+      "startFailed": "Pemungutan suara tidak dimulai. Coba lagi.",
+      "closeFailed": "Pemungutan suara belum selesai. Coba lagi.",
+      "live": "Pemungutan suara terbuka · {{time}} tersisa",
+      "ended": "Pemungutan suara ditutup",
+      "votes_one": "{{count}} suara",
+      "votes_other": "{{count}} suara",
+      "replaceHint": "Memulai jajak pendapat baru menutup jajak pendapat yang terbuka.",
+      "widgetHint": "Menampilkan polling langsung Anda. Di aplikasi DeHub, pemirsa mengetuk opsi untuk memilih; di OBS, pengguna diminta untuk mengetik {{command}} dan nomor dalam obrolan.",
+      "sample": {
+        "a": "Sesuatu yang baru",
+        "b": "Favorit lama",
+        "c": "Anda memilih"
+      }
     },
     "title": "Studio Langsung",
     "subtitle": "Peringatan dan widget untuk streaming Anda",
@@ -4882,6 +4964,7 @@
       "join": "Gabung"
     },
     "kinds": {
+      "spin_wheel": "Roda putar",
       "tip_alert": "Peringatan tip",
       "follow_alert": "Ikuti pemberitahuan",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4898,9 +4981,10 @@
       "chat_box": "Kotak obrolan",
       "ticker": "Ticker",
       "rule_alert": "Peringatan aturan",
-      "spin_wheel": "Roda putar"
+      "poll": "Jajak Pendapat"
     },
     "hints": {
+      "spin_wheel": "Di mana roda dalam aturan Anda berputar",
       "tip_alert": "Rayakan setiap tip, ukuran sesuai tingkatannya",
       "follow_alert": "Menampilkan setiap pengikut baru",
       "subscribe_alert": "Menampilkan setiap pelanggan baru",
@@ -4917,7 +5001,7 @@
       "chat_box": "Menampilkan pesan obrolan siaran Anda di layar",
       "ticker": "Baris teks Anda sendiri yang bergulir di layar",
       "rule_alert": "Di mana pemberitahuan peraturan Anda muncul",
-      "spin_wheel": "Di mana roda dalam aturan Anda berputar"
+      "poll": "Jajak pendapat langsung Anda, dengan tombol suara untuk setiap opsi"
     },
     "fields": {
       "style": "Gaya",
@@ -4952,6 +5036,8 @@
       "fast": "Cepat"
     },
     "rules": {
+      "wheelSegments": "Segmen roda, satu per baris",
+      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, sehingga semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam peringatan, baca dengan keras, atau tindakan obrolan untuk menamainya.",
       "title": "Peraturan",
       "intro": "Ketika sesuatu terjadi di streaming Anda, DeHub melakukan apa yang Anda pilih: menunjukkan peringatan, memutar suara, membaca sesuatu dengan keras, memposting di obrolan Anda, atau memberi tahu Discord Anda.",
       "add": "Tambahkan aturan",
@@ -4981,8 +5067,7 @@
       "addAction": "Tambahkan tindakan",
       "removeAction": "Hapus tindakan",
       "placeholders": "Gunakan {name}, {amount}, dan {message} dalam SMS Anda. Tautan dalam pesan dihapus.",
-      "wheelSegments": "Segmen roda, satu per baris",
-      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, sehingga semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam peringatan, baca dengan keras, atau tindakan obrolan untuk menamainya.",
+      "placeholdersLive": "Gunakan {name},{title}, dan {link} dalam teks Anda: nama Anda, judul siaran, dan tautan untuk menontonnya.",
       "alertText": "Teks peringatan",
       "sound": "Suara",
       "sayText": "Teks untuk dibaca dengan suara keras",
@@ -4996,6 +5081,7 @@
         "follow": "Seseorang mengikuti",
         "subscribe": "Seseorang berlangganan",
         "share": "Seseorang membagikan streaming",
+        "live": "Anda mulai menyiarkan",
         "command": "Perintah obrolan digunakan",
         "keyword": "Pesan obrolan berisi kata",
         "chat": "Pesan obrolan apa saja"
@@ -5006,12 +5092,12 @@
         "subscribers": "Pelanggan"
       },
       "actionTypes": {
+        "wheel": "Putar roda",
         "alert": "Tampilkan pemberitahuan",
         "sound": "Putar suara",
         "say": "Baca dengan suara keras",
         "chat": "Posting di obrolan",
-        "webhook": "Kirim ke webhook",
-        "wheel": "Putar roda"
+        "webhook": "Kirim ke webhook"
       },
       "summary": {
         "tip": "Tips dari {{amount}} DHB atau lebih"
@@ -5049,6 +5135,51 @@
         "spooky": "Seram",
         "magic-spell": "Mantra sihir",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderasi obrolan",
+      "intro": "Aturan obrolan di bawah semua siaran Anda. Mereka tidak pernah mencapai obrolan utama DeHub: seseorang yang Anda blokir di sini masih bisa berbicara di tempat lain.",
+      "loadFailed": "Pengaturan moderasi Anda tidak dapat diisi. Refresh halaman untuk mencoba lagi.",
+      "save": "Simpan aturan obrolan",
+      "saved": "Aturan obrolan disimpan.",
+      "saveFailed": "Perubahan itu tidak dapat disimpan.",
+      "slowMode": "Mode lambat",
+      "slowModeHint": "Berapa lama setiap penonton menunggu antara pesan. Anda dan moderator Anda tidak menunggu.",
+      "off": "Mati",
+      "seconds_one": "{{count}} detik",
+      "seconds_other": "{{count}} detik",
+      "followersOnly": "Hanya pengikut",
+      "subscribersOnly": "Hanya pelanggan",
+      "subscribersOnlyHint": "Mengatasi hanya pengikut.",
+      "bannedWords": "Kata-kata yang diblokir",
+      "bannedWordsHint": "Terpisah dengan koma. Menyebutkan kata dengan huruf demi huruf tidak bisa mengelakinya.",
+      "wordAction": "Ketika seseorang menggunakan salah satu",
+      "wordBlock": "Hentikan pesan",
+      "wordTimeout": "Hentikan dan timpa waktu selama 1 menit",
+      "moderators": "Moderator",
+      "moderatorsHint": "Mereka dapat meluangkan waktu dan melarang pemirsa di streaming Anda. Mereka tidak dapat bertindak atas Anda atau satu sama lain.",
+      "addModerator": "Tambahkan",
+      "usernamePlaceholder": "Nama pengguna",
+      "moderatorAdded": "Moderator ditambahkan.",
+      "moderatorNotFound": "Tidak ada akun dengan nama pengguna tersebut.",
+      "removeModerator": "Hapus moderator",
+      "noModerators": "Belum ada moderator.",
+      "banned": "Dilarang dari streaming Anda",
+      "unban": "Unban",
+      "noBans": "Tidak ada yang dilarang.",
+      "log": "Tindakan terbaru",
+      "noLog": "Belum ada.",
+      "actions": {
+        "timeout_one": "{{actor}} batas waktu {{target}} untuk {{count}} detik",
+        "timeout_other": "{{actor}} batas waktu {{target}} selama {{count}} detik",
+        "ban": "{{actor}} melarang {{target}}",
+        "unban": "{{actor}} tidak dilarang {{target}}",
+        "moderator-added": "{{target}} menjadi moderator",
+        "moderator-removed": "{{target}} tidak lagi menjadi moderator",
+        "word-blocked": "Menghentikan pesan dari {{target}} untuk \"{{word}}\"",
+        "word-timeout_one": "Waktu {{target}} habis selama {{count}} detik untuk \"{{word}}\"",
+        "word-timeout_other": "Waktu {{target}} habis selama {{count}} detik untuk \"{{word}}\""
       }
     }
   },
@@ -6276,6 +6407,7 @@
     "weeksShort": "{{count}} minggu"
   },
   "liveGift": {
+    "notEnoughToken": "{{symbol}} tidak cukup untuk hadiah ini",
     "pickTier": "Pilih perayaan",
     "plays": "Memutar {{tier}} di stream",
     "you": "Anda",

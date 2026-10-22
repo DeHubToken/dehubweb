@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Stream recap",
+    "justEnded": "Je streamoverzicht",
+    "lastStream": "Je laatste stream",
+    "share": "Delen",
+    "shareText": "Ik heb zojuist \"{{title}}\" gestreamd op DeHub: {{duration}} live, {{peak}} kijken op de piek en {{followers}} nieuwe volgers.",
+    "untitled": "Stream zonder titel",
+    "copied": "Samenvatting gekopieerd. Plak het overal.",
+    "loadFailed": "De samenvatting is niet geladen. Probeer het zo opnieuw.",
+    "duration": "Tijd live",
+    "peakViewers": "De meeste kijken tegelijk",
+    "gifts_one": "Vanaf {{count}} cadeau",
+    "gifts_other": "Vanaf {{count}} geschenken",
+    "newFollowers": "Nieuwe volgers",
+    "chatMessages": "Chatberichten",
+    "chatters": "Mensen die chatten",
+    "reactions": "Reacties",
+    "shares": "Mensen die delen",
+    "topSupporters": "Topsupporters",
+    "polls": "Peilingen",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Nog steeds aan het tellen: het kan even duren voordat geschenken zijn bevestigd."
+  },
   "accountConnect": {
     "title": "Koppel je DeHub-account",
     "body": "Koppel je account om je profiel te beheren, berichten te plaatsen en inhoud te maken vanuit de chat. Verbindingen verlopen binnen 24 uur. Je kunt ze altijd verbreken.",
@@ -1023,6 +1046,8 @@
     "stagePay": "DeHub Pay betalen met {{symbol}}…",
     "stageDelivering": "DeHub Pay stuurt je tokens…",
     "payViaDpay": "Betaald aan DeHub Pay, tokens komen aan in ongeveer 30s",
+    "payDirect": "Rechtstreeks naar {{name}} gestuurd in {{symbol}} op {{chain}}. Geen swap.",
+    "payDirectNoName": "Rechtstreeks naar de maker gestuurd in {{symbol}} op {{chain}}. Geen swap.",
     "payViaBridgeDpay": "Verplaatst naar Base en betaald aan DeHub Pay, tokens komen aan in ongeveer een minuut",
     "dmSent": "{{amount}} tokens verzonden naar {{name}}!"
   },
@@ -1127,6 +1152,7 @@
     "price": "Prijs",
     "ppvDhbInfo": "Betalingen zijn in DeHub tokens op de Base chain",
     "ppvUsdInfo": "Betalingen zijn in USD",
+    "ppvStableInfo": "Kopers betalen in {{symbol}}, direct naar jou",
     "setupBounty": "Beloning instellen",
     "viewersToReward": "Kijkers om te belonen",
     "numberOfViewers": "Aantal kijkers",
@@ -6001,6 +6027,7 @@
     "creatorEarnsDirect": "Abonnees betalen in DeHub-tokens. Je aandeel komt in je portemonnee terecht op het moment dat ze zich abonneren, minus de platformkosten voor je badge-niveau."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} gesponnen: {{result}}",
     "someone": "Iemand",
     "newFollower": "Nieuwe volger: {{name}}",
     "newSubscriber": "Nieuwe abonnee: {{name}}",
@@ -6012,7 +6039,31 @@
     "topSupporters": "Topsupporters",
     "tipped": "{{name}} heeft een cadeau gestuurd",
     "chatPreview": "Chatberichten worden hier weergegeven",
-    "wheelLanded": "{{name}} gesponnen: {{result}}"
+    "poll": {
+      "closed": "Stemming gesloten",
+      "voteFor": "Stem op {{option}}",
+      "signIn": "Meld aan om te stemmen",
+      "failed": "Uw stem is niet geteld. Probeer het opnieuw.",
+      "voted_one": "U heeft gestemd · {{count}} stem",
+      "voted_other": "U heeft gestemd · {{count}} stemmen",
+      "votes_one": "{{count}} stem",
+      "votes_other": "{{count}} stemmen",
+      "howToVote_one": "Typ {{command}} en een nummer in de chat om te stemmen · {{count}} stem",
+      "howToVote_other": "Typ {{command}} en een nummer in de chat om te stemmen · {{count}} stemmen"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Tijd uit voor 1 minuut",
+    "timeout10m": "Tijd uit voor 10 minuten",
+    "timeout1h": "Tijd uit voor 1 uur",
+    "ban": "Gebannen van deze streams",
+    "makeModerator": "Maak tot moderator",
+    "timedOut": "Tijd uit.",
+    "banned": "Gebannen van deze streams.",
+    "madeModerator": "Ze zijn nu een moderator.",
+    "failed": "Dat heeft niet gewerkt. Probeer het opnieuw.",
+    "youAreBanned": "Je kunt niet chatten in deze stream van de creator.",
+    "youAreTimedOut": "Je bent even tijd uit."
   },
   "liveStudio": {
     "controls": {
@@ -6025,6 +6076,37 @@
       "readAloudMuted": "Voorlezen stoppen",
       "readAloudMutedHint": "Geschenkberichten en regelregels worden niet meer voorgelezen.",
       "failed": "Die schakelaar is niet veranderd. Probeer het opnieuw."
+    },
+    "polls": {
+      "title": "Enquêtes",
+      "intro": "Stel de kijkers die uw uitzending volgen een vraag. Zij antwoorden met een knop in de DeHub-app, of door {{command}} en het nummer van de optie in de chat te typen.",
+      "question": "Vraag",
+      "questionPlaceholder": "Wat moet ik als volgt spelen?",
+      "option": "Optie {{n}}",
+      "addOption": "Voeg een optie toe",
+      "removeOption": "Verwijder optie {{n}}",
+      "duration": "Hoe lang de stemming openblijft",
+      "seconds_one": "{{count}} seconde",
+      "seconds_other": "{{count}} seconden",
+      "minutes_one": "{{count}} minuut",
+      "minutes_other": "{{count}} minuten",
+      "start": "Start de enquête",
+      "end": "Beëindig het stemmen nu",
+      "started": "Uw enquête is open. Kijkers kunnen nu stemmen.",
+      "notLive": "Ga eerst live. Een enquête loopt op de uitzending die u momenteel streamt.",
+      "startFailed": "De enquête is niet gestart. Probeer het opnieuw.",
+      "closeFailed": "Het stemmen is nog niet beëindigd. Probeer het opnieuw.",
+      "live": "Stemming open · {{time}} over",
+      "ended": "Stemming gesloten",
+      "votes_one": "{{count}} vote",
+      "votes_other": "{{count}} stemmen",
+      "replaceHint": "Het starten van een nieuwe peiling sluit degene die open is.",
+      "widgetHint": "Toont uw live poll. In de DeHub-app tikken kijkers op een optie om te stemmen; in OBS vertelt het mensen om {{command}} en een nummer in de chat te typen.",
+      "sample": {
+        "a": "Iets nieuws",
+        "b": "Een oude favoriet",
+        "c": "U kiest"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Alerts en widgets voor je streams",
@@ -6101,6 +6183,7 @@
       "join": "Deelnemen"
     },
     "kinds": {
+      "spin_wheel": "Draaischijf",
       "tip_alert": "Tipmelding",
       "follow_alert": "Volgmelding",
       "subscribe_alert": "Abonneemelding",
@@ -6117,9 +6200,10 @@
       "chat_box": "Chatbox",
       "ticker": "Lichtkrant",
       "rule_alert": "Regelwaarschuwingen",
-      "spin_wheel": "Draaischijf"
+      "poll": "Poll"
     },
     "hints": {
+      "spin_wheel": "Waar de wielen in je regels draaien",
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
       "follow_alert": "Toont elke nieuwe volger",
       "subscribe_alert": "Toont elke nieuwe abonnee",
@@ -6136,7 +6220,7 @@
       "chat_box": "Toont de chatberichten van uw uitzending op het scherm",
       "ticker": "Een regel van je eigen tekst die over het scherm scrolt",
       "rule_alert": "Waar de waarschuwingen van je regels verschijnen",
-      "spin_wheel": "Waar de wielen in je regels draaien"
+      "poll": "Uw live poll, met een stemknop voor elke optie"
     },
     "fields": {
       "style": "Stijl",
@@ -6171,6 +6255,8 @@
       "fast": "Snel"
     },
     "rules": {
+      "wheelSegments": "Wielsegmenten, één per lijn",
+      "wheelHint": "Tussen 2 en 12. DeHub kiest waar het wiel stopt, zodat iedereen hetzelfde resultaat ziet. Gebruik {result} in een waarschuwing, voorlees- of chatactie om het een naam te geven.",
       "title": "Regels",
       "intro": "Wanneer er iets gebeurt tijdens je stream, doet DeHub wat jij kiest: toont een alert, speelt een geluid af, leest iets hardop voor, post in je chat of vertelt het aan je Discord.",
       "add": "Een regel toevoegen",
@@ -6200,8 +6286,7 @@
       "addAction": "Een actie toevoegen",
       "removeAction": "Actie verwijderen",
       "placeholders": "Gebruik {name}, {amount} en {message} in je sms. Links in berichten worden verwijderd.",
-      "wheelSegments": "Wielsegmenten, één per lijn",
-      "wheelHint": "Tussen 2 en 12. DeHub kiest waar het wiel stopt, zodat iedereen hetzelfde resultaat ziet. Gebruik {result} in een waarschuwing, voorlees- of chatactie om het een naam te geven.",
+      "placeholdersLive": "Gebruik {name}, {title} en {link} in je tekst: je naam, de titel van de uitzending en een link om deze te bekijken.",
       "alertText": "Alert tekst",
       "sound": "Geluid",
       "sayText": "Tekst om voor te lezen",
@@ -6215,6 +6300,7 @@
         "follow": "Iemand volgt",
         "subscribe": "Iemand schrijft zich in",
         "share": "Iemand deelt de stream",
+        "live": "Je begint met uitzenden",
         "command": "Er wordt een chatopdracht gebruikt",
         "keyword": "Een chatbericht bevat een woord",
         "chat": "Elk chatbericht"
@@ -6225,12 +6311,12 @@
         "subscribers": "Abonnees"
       },
       "actionTypes": {
+        "wheel": "Draai aan een wiel",
         "alert": "Toon een melding",
         "sound": "Een geluid afspelen",
         "say": "Voorlezen",
         "chat": "Bericht in de chat plaatsen.",
-        "webhook": "Naar een webhook sturen",
-        "wheel": "Draai aan een wiel"
+        "webhook": "Naar een webhook sturen"
       },
       "summary": {
         "tip": "Tip van {{amount}} DHB of meer"
@@ -6268,6 +6354,51 @@
         "spooky": "Spookachtig",
         "magic-spell": "Magische spreuk",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Chatmoderatie",
+      "intro": "Regels voor de chat onder alle je streams. Ze komen nooit in DeHub's hoofdchat: iemand die je hier bant kan nog steeds overal praten.",
+      "loadFailed": "Je moderatie-instellingen konden niet worden geladen. Ververs de pagina om het opnieuw te proberen.",
+      "save": "Chatregels opslaan",
+      "saved": "Chatregels opgeslagen.",
+      "saveFailed": "Die verandering kon niet worden opgeslagen.",
+      "slowMode": "Langzaam modus",
+      "slowModeHint": "Hoe lang elk kijker moet wachten tussen berichten. Jij en je moderators hoeven niet te wachten.",
+      "off": "Uit",
+      "seconds_one": "{{count}} seconde",
+      "seconds_other": "{{count}} seconden",
+      "followersOnly": "Volgers alleen",
+      "subscribersOnly": "Abonnees alleen",
+      "subscribersOnlyHint": "Overschrijdt volgers alleen.",
+      "bannedWords": "Gebannen woorden",
+      "bannedWordsHint": "Scheid met komma's. Het uitspreken van een woord letter voor letter werkt niet.",
+      "wordAction": "Wanneer iemand er een gebruikt",
+      "wordBlock": "Stop de boodschap",
+      "wordTimeout": "Stop het en zet ze tijd uit voor een minuut",
+      "moderators": "Moderators",
+      "moderatorsHint": "Ze kunnen kijkers tijdelijk uitschakelen en bannen tijdens je streams. Ze kunnen niet op jou of op elkaar handelen.",
+      "addModerator": "Toevoegen",
+      "usernamePlaceholder": "Gebruikersnaam",
+      "moderatorAdded": "Moderator toegevoegd.",
+      "moderatorNotFound": "Geen account met die gebruikersnaam.",
+      "removeModerator": "Moderator verwijderen",
+      "noModerators": "Nog geen moderators.",
+      "banned": "Gebannen van je streams",
+      "unban": "Ontbannen",
+      "noBans": "Niemand is gebannen.",
+      "log": "Recente acties",
+      "noLog": "Nog niets.",
+      "actions": {
+        "timeout_one": "{{actor}} heeft {{target}} tijdelijk uitgeschakeld voor {{count}} seconde",
+        "timeout_other": "{{actor}} heeft {{target}} tijdelijk uitgeschakeld voor {{count}} seconden",
+        "ban": "{{actor}} heeft {{target}} gebannen",
+        "unban": "{{actor}} heeft {{target}} ontbannen",
+        "moderator-added": "{{target}} is moderator geworden",
+        "moderator-removed": "{{target}} is niet langer moderator",
+        "word-blocked": "Stopte een bericht van {{target}} voor \"{{word}}\"",
+        "word-timeout_one": "Tijdelijk uitgeschakeld {{target}} voor {{count}} seconde voor \"{{word}}\"",
+        "word-timeout_other": "Tijdelijk uitgeschakeld {{target}} voor {{count}} seconden voor \"{{word}}\""
       }
     }
   },
@@ -7503,6 +7634,7 @@
     "weeksShort": "{{count}} wk"
   },
   "liveGift": {
+    "notEnoughToken": "Niet genoeg {{symbol}} voor dit cadeau",
     "pickTier": "Kies een viering",
     "plays": "Speelt {{tier}} op de stream",
     "you": "Jij",

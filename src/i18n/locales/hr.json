@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Rekapitulacija streama",
+    "justEnded": "Sažetak vašeg streama",
+    "lastStream": "Vaš posljednji stream",
+    "share": "Podijeli",
+    "shareText": "Upravo sam emitirao \"{{title}}\" na DeHubu: {{duration}} uživo, {{peak}} gledajući na vrhuncu i {{followers}} novih pratitelja.",
+    "untitled": "Stream bez naslova",
+    "copied": "Sažetak je kopiran. Zalijepite ga bilo gdje.",
+    "loadFailed": "Rekapitulacija se nije učitala. Pokušajte ponovno za nekoliko trenutaka.",
+    "duration": "Vrijeme uživo",
+    "peakViewers": "Većina gledatelja gleda odjednom",
+    "gifts_one": "Od dara {{count}}",
+    "gifts_other": "Od {{count}} darova",
+    "newFollowers": "Novi pratitelji",
+    "chatMessages": "Poruke razgovora",
+    "chatters": "Ljudi razgovaraju",
+    "reactions": "Reakcije",
+    "shares": "Dijeljenje sadržaja s drugima",
+    "topSupporters": "Najpopularniji podržavatelji",
+    "polls": "Ankete",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Još uvijek se broji: potvrda darova može potrajati minutu."
+  },
   "errors": {
     "sponsorshipUnavailable": "Besplatne transakcije pauzirane su na našoj strani, ne u vašem novčaniku. Pokušajte ponovno uskoro.",
     "gasSponsorshipFailed": "Ovu transakciju nije bilo moguće pokriti. Pokušajte ponovno za trenutak."
@@ -4719,6 +4742,7 @@
     "creatorEarnsDirect": "Pretplatnici plaćaju u DeHub žetonima. Tvoja dionica završava u novčaniku čim se pretplati, umanjena za naknadu za platformu za tvoju razinu značke."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spin: {{result}}",
     "someone": "Netko",
     "newFollower": "Novi pratitelj: {{name}}",
     "newSubscriber": "Novi pretplatnik: {{name}}",
@@ -4730,7 +4754,31 @@
     "topSupporters": "Najpopularniji podržavatelji",
     "tipped": "{{name}} šalje dar",
     "chatPreview": "Ovdje se prikazuju poruke putem chata",
-    "wheelLanded": "{{name}} spin: {{result}}"
+    "poll": {
+      "closed": "Glasanje je završeno",
+      "voteFor": "Glasaj za {{option}}",
+      "signIn": "Prijavi se da biste glasali",
+      "failed": "Vaš glas nije bio uziman. Pokusajte ponovo.",
+      "voted_one": "Glasali ste · {{count}} glas",
+      "voted_other": "Glasali ste · {{count}} glasa",
+      "votes_one": "{{count}} glas",
+      "votes_other": "{{count}} glasa",
+      "howToVote_one": "Upišite {{command}} i broj u chat da biste glasali · {{count}} glas",
+      "howToVote_other": "Upišite {{command}} i broj u chat da biste glasali · {{count}} glasa"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Vrijeme je isteklo za 1 minutu",
+    "timeout10m": "Vrijeme je isteklo za 10 minuta",
+    "timeout1h": "Vrijeme je isteklo za 1 sat",
+    "ban": "Zabranjeno za ove streamove",
+    "makeModerator": "Postavi kao moderatora",
+    "timedOut": "Izbaceno iz čata.",
+    "banned": "Zabranjen za ove streamove.",
+    "madeModerator": "Sada su moderator.",
+    "failed": "To nije uspjelo. Pokusaj ponovno.",
+    "youAreBanned": "Ne možete čatati u streamovima ovog kreatora.",
+    "youAreTimedOut": "Trenutno ste izbaceni iz čata."
   },
   "liveStudio": {
     "controls": {
@@ -4743,6 +4791,37 @@
       "readAloudMuted": "Zaustavi čitanje naglas",
       "readAloudMutedHint": "Darovne poruke i pravila više se ne čitaju.",
       "failed": "Taj se prekidač nije promijenio. Pokušajte ponovno."
+    },
+    "polls": {
+      "title": "Anketi",
+      "intro": "Pitajte gledatelje koji prate vašu emitaciju pitanje. Odgovaraju klikom na dugme u DeHub aplikaciji ili upisujući {{command}} i broj opcije u chat.",
+      "question": "Pitanje",
+      "questionPlaceholder": "Što trebam igrati sljedeći put?",
+      "option": "Opcija {{n}}",
+      "addOption": "Dodaj opciju",
+      "removeOption": "Ukloni opciju {{n}}",
+      "duration": "Koliko dugo glasanje ostaje otvoreno",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekunde",
+      "minutes_one": "{{count}} minuta",
+      "minutes_other": "{{count}} minuta",
+      "start": "Počnite anketu",
+      "end": "Završite glasanje sada",
+      "started": "Vaša anketa je otvorena. Gledatelji mogu glasati sada.",
+      "notLive": "Idite live prvo. Anketa se izvodi na trenutnoj emitaciji koju ste u živu.",
+      "startFailed": "Anketa nije počela. Pokusajte ponovo.",
+      "closeFailed": "Glasanje nije završeno. Pokusajte ponovo.",
+      "live": "Glasanje otvoreno · {{time}} ostalo",
+      "ended": "Glasanje završeno",
+      "votes_one": "{{count}} glas",
+      "votes_other": "{{count}} glasova",
+      "replaceHint": "Pokretanjem nove ankete zatvara se otvorena anketa.",
+      "widgetHint": "Prikazuje vašu anketu uživo. U aplikaciji DeHub gledatelji dodiruju opciju za glasovanje; u opsu se ljudima govori da upišu {{command}} i broj u razgovoru.",
+      "sample": {
+        "a": "Nešto novo",
+        "b": "Stari favorit",
+        "c": "Vi birate"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Obavestaji i widgetovi za vaše streamove",
@@ -4819,6 +4898,7 @@
       "join": "Pridruži se"
     },
     "kinds": {
+      "spin_wheel": "Okretni kotač",
       "tip_alert": "Obavijest o napojnici",
       "follow_alert": "Slijedi upozorenje",
       "subscribe_alert": "Upozorenje pretplatnika",
@@ -4835,9 +4915,10 @@
       "chat_box": "Okvir za razgovor",
       "ticker": "Ticker",
       "rule_alert": "Obavijesti o pravilima",
-      "spin_wheel": "Okretni kotač"
+      "poll": "Anketa"
     },
     "hints": {
+      "spin_wheel": "Gdje se okreću kotači u vašim pravilima",
       "tip_alert": "Slavi svaku napojnicu u skladu s njezinom veličinom",
       "follow_alert": "Prikazuje svakog novog pratitelja",
       "subscribe_alert": "Prikazuje svakog novog pretplatnika",
@@ -4854,7 +4935,7 @@
       "chat_box": "Prikazuje poruke chata vašeg emitiranja na zaslonu",
       "ticker": "Redak vlastitog teksta koji se pomiče po zaslonu",
       "rule_alert": "Gdje se prikazuju obavijesti o pravilima",
-      "spin_wheel": "Gdje se okreću kotači u vašim pravilima"
+      "poll": "Vaša anketa uživo, s gumbom za glasanje za svaku opciju"
     },
     "fields": {
       "style": "Stil",
@@ -4889,6 +4970,8 @@
       "fast": "Brzo"
     },
     "rules": {
+      "wheelSegments": "Segmenti kotača, jedan po liniji",
+      "wheelHint": "Između 2 i 12. DeHub odabire gdje se kotač zaustavlja, tako da svi koji gledaju vide isti rezultat. Upotrijebite {result} u upozorenju, glasnom čitanju ili čavrljanju kako biste ga imenovali.",
       "title": "Pravila",
       "intro": "Kada se nešto dogodi na vašem streamu, DeHub radi ono što odaberete: prikazuje upozorenje, reproducira zvuk, čita nešto naglas, objavljuje u vašem chatu ili govori vašem Discordu.",
       "add": "Dodajte pravilo",
@@ -4899,6 +4982,7 @@
       "saveFailed": "Vaše pravila nisu uspjela biti sačuvana.",
       "testFailed": "Taj test nije prošao. Pokušajte ponovno za nekoliko trenutaka.",
       "saveToTest": "Spremite pravila kako biste ih testirali",
+      "test": "Testiraj",
       "enabled": "Pravilo o",
       "remove": "Izbriši pravilo",
       "save": "Spremi pravila",
@@ -4917,8 +5001,7 @@
       "addAction": "Dodajte radnju",
       "removeAction": "Ukloni radnju",
       "placeholders": "Upotrijebite {name}, {amount} i {message} u svom tekstu. Uklanjaju se poveznice u porukama.",
-      "wheelSegments": "Segmenti kotača, jedan po liniji",
-      "wheelHint": "Između 2 i 12. DeHub odabire gdje se kotač zaustavlja, tako da svi koji gledaju vide isti rezultat. Upotrijebite {result} u upozorenju, glasnom čitanju ili čavrljanju kako biste ga imenovali.",
+      "placeholdersLive": "Upotrijebite {name}, {title} i {link} u svom tekstu: svoje ime, naslov emisije i poveznicu za gledanje.",
       "alertText": "Tekst upozorenja",
       "sound": "Zvuk",
       "sayText": "Tekst za čitanje naglas",
@@ -4932,6 +5015,7 @@
         "follow": "Netko prati",
         "subscribe": "Netko se pretplatio",
         "share": "Netko dijeli stream",
+        "live": "Počinjete emitirati",
         "command": "Koristi se naredba za chat",
         "keyword": "Poruka u chatu sadrži riječ",
         "chat": "Svaka poruka u čatu"
@@ -4942,12 +5026,12 @@
         "subscribers": "Pretplatnici"
       },
       "actionTypes": {
+        "wheel": "Zavrti kotač",
         "alert": "Prikaži obavijest",
         "sound": "Reproduciraj zvuk",
         "say": "Čitajte naglas",
         "chat": "Objavi u chatu",
-        "webhook": "Pošalji u webhook",
-        "wheel": "Zavrti kotač"
+        "webhook": "Pošalji u webhook"
       },
       "summary": {
         "tip": "Napojnica od {{amount}} DHB ili više"
@@ -4985,6 +5069,51 @@
         "spooky": "Sablasno",
         "magic-spell": "Čarolija",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderacija čata",
+      "intro": "Pravila za čat pod svim vašim streamovima. Nikad ne dosežu DeHubov glavni čat: osoba koju zabranite ovdje može i dalje govoriti svugdje drugdje.",
+      "loadFailed": "Vaša postavka moderacije nije uspjela učitati. Osvježite stranicu i pokušajte ponovno.",
+      "save": "Spremi pravila čata",
+      "saved": "Pravila čata uspješno spremljena.",
+      "saveFailed": "Ova promjena nije uspjela spremiti.",
+      "slowMode": "Spori način",
+      "slowModeHint": "Koliko dugo gledatelji čekaju između poruka. Vi i vaši moderatori nikad ne čekate.",
+      "off": "Isključeno",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekunde",
+      "followersOnly": "Samo pretplatnici",
+      "subscribersOnly": "Samo pretplatnici",
+      "subscribersOnlyHint": "Preuzima \"samo pretplatnike\".",
+      "bannedWords": "Zabranjene riječi",
+      "bannedWordsHint": "Odvojite zarezima. Pisanje riječi slovo po slovo neće je obići.",
+      "wordAction": "Kad netko koristi jednu",
+      "wordBlock": "Zaustavi poruku",
+      "wordTimeout": "Zaustavi je i izbaci ih za 1 minutu",
+      "moderators": "Moderator",
+      "moderatorsHint": "Mogu se odmoriti i zabraniti gledateljima u vašim streamingima. Ne mogu djelovati na vas ili jedni na druge.",
+      "addModerator": "Dodaj",
+      "usernamePlaceholder": "Korisničko ime",
+      "moderatorAdded": "Moderator je dodan.",
+      "moderatorNotFound": "Nema računa s tim korisničkim imenom.",
+      "removeModerator": "Ukloni moderatora",
+      "noModerators": "Još nema moderatora.",
+      "banned": "Zabranjen pristup streamingima",
+      "unban": "Poništi zabranu",
+      "noBans": "Nitko nije zabranjen.",
+      "log": "Nedavne radnje",
+      "noLog": "Još ništa.",
+      "actions": {
+        "timeout_one": "{{actor}} isteklo je {{target}} za {{count}} sekundu",
+        "timeout_other": "{{actor}} isteklo je {{target}} na {{count}} sekunde",
+        "ban": "{{actor}} zabranjen {{target}}",
+        "unban": "{{actor}} nebaniran {{target}}",
+        "moderator-added": "{{target}} je postao moderator",
+        "moderator-removed": "{{target}} više nije moderator",
+        "word-blocked": "Zaustavljena je poruka korisnika {{target}} za korisnika „{{word}}”",
+        "word-timeout_one": "Isteklo je vrijeme {{target}} za {{count}} sekundu za „{{word}}”",
+        "word-timeout_other": "Isteklo je vrijeme {{target}} za {{count}} s za „{{word}}”"
       }
     }
   },

@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "Daqiiqaa 1f yeroon xumuraa",
+    "timeout10m": "Daqiiqaa 10f yeroon xumuraa",
+    "timeout1h": "Yeroon sa&#39;aatii 1f ba&#39;e",
+    "ban": "Sululawwan kana irraa ugguruu",
+    "makeModerator": "Moderator gochuu",
+    "timedOut": "Yeroon isaa darbe.",
+    "banned": "Sululawwan kana irraa dhorkame.",
+    "madeModerator": "Amma moderator ta&#39;aniiru.",
+    "failed": "Sun hin milkoofne. Ammas yaalaa.",
+    "youAreBanned": "Stream uumaa kanaa keessatti chat gochuu hin dandeessan",
+    "youAreTimedOut": "Yeroo muraasaaf yeroon siif darbe"
+  },
   "errors": {
     "sponsorshipUnavailable": "Daldalli bilisaa karaa keenyaan dhaabbateera, mit'aa keessan irratti miti. Yeroo gabaabaa booda irra deebi'aa yaalaa.",
     "gasSponsorshipFailed": "Baasii daldala kanaa kaffaluu hin dandeenye. Yeroo gabaabaa booda yaalaa."
@@ -4737,6 +4750,7 @@
     "creatorEarnsDirect": "Maamiltoonni mallattoo DeHub tiin kaffalu. Aksiyooniin keessan yeroo isaan subscribe godhanitti boorsaa keessan keessa bu&#39;a, kaffaltii waltajjii sadarkaa baajii keessanii hir&#39;isuun."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} kan naanna&#39;e: {{result}}",
     "someone": "namni tokko",
     "newFollower": "Hordofaa haaraa: {{name}}",
     "newSubscriber": "Maamiltoonni haaraan: {{name}}",
@@ -4748,7 +4762,41 @@
     "topSupporters": "Deeggartoota olaanoo",
     "tipped": "{{name}} kennaa ergeera",
     "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu",
-    "wheelLanded": "{{name}} kan naanna&#39;e: {{result}}"
+    "poll": {
+      "closed": "Sagalee kennuun cufameera",
+      "voteFor": "Sagalee kennaa {{option}}",
+      "signIn": "Filachuuf galmaa&#39;aa",
+      "failed": "Sagaleen keessan hin lakkaa&#39;amne. Ammas yaalaa.",
+      "voted_one": "Sagalee kennite · {{count}} sagalee kenni",
+      "voted_other": "Sagalee kennite · {{count}} sagalee",
+      "votes_one": "{{count}} sagalee kennuu",
+      "votes_other": "{{count}} sagalee kenna",
+      "howToVote_one": "{{command}} fi lakkoofsa chat keessatti barreessi sagalee kennuu · {{count}} sagalee kennuu",
+      "howToVote_other": "{{command}} fi lakkoofsa chat keessatti barreessuudhaan sagalee kennuu · {{count}} sagalee kennuu"
+    }
+  },
+  "liveRecap": {
+    "title": "Cuunfaa tamsaasaa",
+    "justEnded": "Irra deebiin yaa&#39;aa keessan",
+    "lastStream": "Dhangala&#39;aa kee isa dhumaa",
+    "share": "Qooduu",
+    "shareText": "Reefu &quot;{{title}}&quot; DeHub irratti tamsaaseera: {{duration}} kallattiin, {{peak}} yeroo olka&#39;iinsaatti ilaalaa fi {{followers}} hordoftoota haaraa.",
+    "untitled": "Dhangala&#39;aa mata duree hin qabne",
+    "copied": "Irra deebiin kan waraabame. Bakka barbaadetti maxxansi.",
+    "loadFailed": "Irra deebiin hin fe&#39;amne. Yeroo muraasa booda irra deebi&#39;ii yaali.",
+    "duration": "Yeroon jiraadhu",
+    "peakViewers": "Irra caalaan isaanii yeroo tokkotti ilaaluu",
+    "gifts_one": "Kennaa {{count}} irraa",
+    "gifts_other": "{{count}} kennaa irraa",
+    "newFollowers": "Hordoftoota haaraa",
+    "chatMessages": "Ergaawwan chat",
+    "chatters": "Namoonni chatting",
+    "reactions": "Deebiin kennamu",
+    "shares": "Namoonni qooddachaa jiran",
+    "topSupporters": "Deeggartoota olaanoo",
+    "polls": "Filannoo",
+    "pollWinner": "{{option}} injifate",
+    "stillCounting": "Ammas lakkaa&#39;aa jira: kennaawwan mirkaneessuuf daqiiqaa tokko fudhachuu danda&#39;u."
   },
   "liveStudio": {
     "controls": {
@@ -4761,6 +4809,82 @@
       "readAloudMuted": "Sagalee ol kaastee dubbisuu dhiisi",
       "readAloudMutedHint": "Ergaan kennaa fi sararoonni seeraa kana booda hin dubbifaman.",
       "failed": "Jijjiirraan sun hin jijjiiramne. Ammas yaalaa."
+    },
+    "moderation": {
+      "unban": "Dhorkaa kaasi",
+      "title": "Chat moderation gochuu",
+      "intro": "Seerota chat streams keessan hunda jalatti. Isaan gonkumaa chat ijoo DeHub bira hin ga&#39;an: namni ati asitti ugguru ammallee bakka biraa hundatti haasa&#39;uu danda&#39;a.",
+      "loadFailed": "Sajoo jiddugaleessaa kee fe&#39;amuu hin dandeenye. Irra deebi&#39;ii yaaluuf fuula haaromsi.",
+      "save": "Seera chat save gochuu",
+      "saved": "Seerota chat save.",
+      "saveFailed": "Jijjiiramni sun baraaramuu hin dandeenye.",
+      "slowMode": "Haala suuta jedhu",
+      "slowModeHint": "Tokkoon tokkoon daawwataa ergaawwan gidduutti yeroo hammamii eega. Ati fi moderators kee gonkumaa hin eegdu.",
+      "off": "Dhaamsuu",
+      "seconds_one": "{{count}} lammaffaa",
+      "seconds_other": "{{count}} sekondii",
+      "followersOnly": "Hordoftoota qofa",
+      "subscribersOnly": "Subscribers qofa",
+      "subscribersOnlyHint": "Hordoftoota qofa irra darba.",
+      "bannedWords": "Jechoota dhorkaman",
+      "bannedWordsHint": "Koomaadhaan addaan baasi. Jecha tokko qubee qubeedhaan qubeessuun hin marsu.",
+      "wordAction": "Yeroo namni tokko fayyadamu",
+      "wordBlock": "Ergaa sana dhaabaa",
+      "wordTimeout": "Dhaabbadhuutii daqiiqaa tokkoof yeroo isaaniif dabarsi",
+      "moderators": "Giddugaleessaa",
+      "moderatorsHint": "Yeroo isaanii xumuranii daawwattoota stream keessan keessatti dhorkuu danda&#39;u. Sirrattis ta&#39;e walirrattis socho&#39;uu hin danda&#39;an.",
+      "addModerator": "Ida&#39;uu",
+      "usernamePlaceholder": "Maqaa fayyadamaa",
+      "moderatorAdded": "Moderator dabalaniiru.",
+      "moderatorNotFound": "Akkaawuntii maqaa fayyadamaa sana qabu hin jiru.",
+      "removeModerator": "Moderator irraa kaasi",
+      "noModerators": "Ammatti moderators hin jiru.",
+      "banned": "Sulula keessan irraa dhorkamee jira",
+      "noBans": "Namni dhorkame hin jiru.",
+      "log": "Tarkaanfiiwwan dhiheenya kana fudhataman",
+      "noLog": "Ammatti homaa hin jiru.",
+      "actions": {
+        "timeout_one": "{{actor}} yeroon {{target}} xumuree {{count}} lammaffaa",
+        "timeout_other": "{{actor}} yeroon {{target}} sekondii {{count}}f xumure",
+        "ban": "{{actor}} dhorkame {{target}}",
+        "unban": "{{actor}} hin dhorkamne {{target}}",
+        "moderator-added": "{{target}} moderator ta&#39;e",
+        "moderator-removed": "{{target}} kana booda moderator miti",
+        "word-blocked": "Ergaa {{target}} irraa &quot;{{word}}&quot; jedhu dhaabe.",
+        "word-timeout_one": "Yeroon isaa {{target}} {{count}}&#39;f &quot;{{word}}&quot;&#39;f lammaffaa.",
+        "word-timeout_other": "Yeroon {{target}} {{count}} sekondii &quot;{{word}}&quot;f xumurame."
+      }
+    },
+    "polls": {
+      "title": "Filannoo",
+      "intro": "Namoota tamsaasa kee ilaalaa jiran gaaffii gaafadhu. Isaanis appii DeHub keessatti button tokkoon, ykn chat keessatti {{command}} fi lakkoofsa filannoo sanaa barreessuudhaan deebii kennu.",
+      "question": "Gaaffii",
+      "questionPlaceholder": "Itti aansee maal taphachuu qaba?",
+      "option": "Filannoo {{n}}",
+      "addOption": "Filannoo itti dabali",
+      "removeOption": "Filannoo {{n}} haqi.",
+      "duration": "Sagalee kennuu hanga yoomiitti banaa ta&#39;a",
+      "seconds_one": "{{count}} lammaffaa",
+      "seconds_other": "{{count}} sekondii",
+      "minutes_one": "{{count}} daqiiqaa",
+      "minutes_other": "{{count}} daqiiqaa",
+      "start": "Filannoo jalqabaa",
+      "end": "Sagalee kennuu amma xumuri",
+      "started": "Filannoon keessan banaadha. Daawwattoonni amma sagalee kennuu danda&#39;u.",
+      "notLive": "Dursa live deemi. Tamsaasa yeroo ammaa kana tamsaasaa jirtan irratti filannoo ni gaggeeffama.",
+      "startFailed": "Filannoon hin jalqabne. Ammas yaalaa.",
+      "closeFailed": "Sagalee kennuunis hin xumuramne. Ammas yaalaa.",
+      "live": "Sagalee kennuu banaadha · {{time}} hafe",
+      "ended": "Sagalee kennuun cufameera",
+      "votes_one": "{{count}} sagalee kennuu",
+      "votes_other": "{{count}} sagalee kenna",
+      "replaceHint": "Filannoo haaraa jalqabuun isa banaa ta&#39;e cufa.",
+      "widgetHint": "Filannoo kallattiin keessan agarsiisa. Appii DeHub keessatti daawwattoonni filannoo sagalee kennuu tokko tuqaa; OBS keessatti namoonni {{command}} fi lakkoofsa tokko chat keessatti akka barreessan itti hima.",
+      "sample": {
+        "a": "Waan haaraa",
+        "b": "Jaallatamaa durii",
+        "c": "Ati filatta"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Akeekkachiisa fi wiijetoota yaa&#39;a keessaniif",
@@ -4837,6 +4961,7 @@
       "join": "Itti makamuu"
     },
     "kinds": {
+      "spin_wheel": "Wiil naanna&#39;uu",
       "tip_alert": "Gorsa akeekkachiisa",
       "follow_alert": "Akeekkachiisa hordofaa",
       "subscribe_alert": "Akeekkachiisa maamilootaa",
@@ -4852,9 +4977,10 @@
       "chat_box": "Sanduuqa marii",
       "ticker": "Ticker",
       "rule_alert": "Ogeeyyii Seera",
-      "spin_wheel": "Wiil naanna&#39;uu"
+      "poll": "Sagalee"
     },
     "hints": {
+      "spin_wheel": "Bakka girgiddaan seera kee keessa jiru itti naanna&#39;u",
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",
       "follow_alert": "Tokkoon tokkoon hordoftoota haaraa agarsiisa",
       "subscribe_alert": "Tokkoon tokkoon maamiloota haaraa agarsiisa",
@@ -4871,7 +4997,7 @@
       "chat_box": "Ergaawwan marii tamsaasa keessanii iskiriinii irratti agarsiisa",
       "ticker": "Sarara barruu mataa keetii kan iskiriinii irratti qaxxaamuru",
       "rule_alert": "Bakka ogeeyyii seera keessan mul'atu",
-      "spin_wheel": "Bakka girgiddaan seera kee keessa jiru itti naanna&#39;u"
+      "poll": "Filannoo kallattiin keessan, filannoo hundaaf button sagalee kan qabu"
     },
     "fields": {
       "style": "Akkaataa",
@@ -4905,6 +5031,8 @@
       "fast": "Ariifataa"
     },
     "rules": {
+      "wheelSegments": "Kutaalee wiilii, sarara tokkoof tokko",
+      "wheelHint": "Between 2 and 12. DeHub bakka wiiliin dhaabbatu waan filatuuf namni ilaalu hundi bu&#39;aa wal fakkaatu arga. Maqaa itti moggaasuuf tarkaanfii akeekkachiisaa, sagalee ol kaastee dubbisuu ykn marii keessatti {result} fayyadami.",
       "title": "Seerota",
       "intro": "Wanti tokko yeroo dhuma keessan keessa dhalachutti, DeHub waan ati filatte hojjeta: ogeeyyii mul'isa, sagalee facaasa, wanti tokko dubbisa, chaatii keessan keessa barreessa ykn Discord keessan jedha.",
       "add": "Seera dabalaa",
@@ -4933,8 +5061,8 @@
       "userCooldown": "Eeguu mul'ata tokko tokkoon (sekondii)",
       "addAction": "Hojii dabalaa",
       "removeAction": "Hojii balleessaa",
-      "wheelSegments": "Kutaalee wiilii, sarara tokkoof tokko",
-      "wheelHint": "Between 2 and 12. DeHub bakka wiiliin dhaabbatu waan filatuuf namni ilaalu hundi bu&#39;aa wal fakkaatu arga. Maqaa itti moggaasuuf tarkaanfii akeekkachiisaa, sagalee ol kaastee dubbisuu ykn marii keessatti {result} fayyadami.",
+      "placeholders": "Barreeffama kee keessatti {name}, {amount} fi {message} fayyadami. Liinkiiwwan ergaa keessaa ni haqamu.",
+      "placeholdersLive": "Barreeffama keessan keessatti {name}, {title} fi {link} fayyadamaa: maqaa keessan, mata duree tamsaasaa fi linkii ilaaluuf.",
       "alertText": "Barreeffama akeekkachiisaa",
       "sound": "Sagalee",
       "sayText": "Barreeffama sagalee ol kaastee dubbisuuf",
@@ -4948,6 +5076,7 @@
         "follow": "Namni tokko hordofa",
         "subscribe": "Namni tokko subscribe godha",
         "share": "Namni tokko sulula sana qooddata",
+        "live": "Tamsaasa ni jalqabda",
         "command": "Ajajni chaatii fayyadama",
         "keyword": "Ergaan chat jecha tokko of keessaa qaba",
         "chat": "Ergaa chat kamiyyuu"
@@ -4958,12 +5087,12 @@
         "subscribers": "Maamiltoota"
       },
       "actionTypes": {
+        "wheel": "Gingilchaan tokko naannessi",
         "alert": "Akeekkachiisa agarsiisi",
         "sound": "Sagalee tokko taphachiisi",
         "say": "Sagalee ol kaastee dubbisi",
         "chat": "Chat keessatti maxxansaa",
-        "webhook": "Gara webhook tokkotti ergaa",
-        "wheel": "Gingilchaan tokko naannessi"
+        "webhook": "Gara webhook tokkotti ergaa"
       },
       "summary": {
         "tip": "Gorsa {{amount}} DHB fi isaa ol"
@@ -4992,11 +5121,15 @@
         "airhorn": "Gaanfa qilleensaa",
         "applause": "Harka rukutuu",
         "cricket": "Kirikeeti",
+        "drumroll": "Rukutaa dibbee",
         "lol": "Kolfa",
         "ooh-ahh": "Ooh ahh",
         "ooh-man": "Ooh (nama) .",
         "ohh-girl": "Ohh (dubartii) .",
-        "spooky": "Spooky jechuun ni danda&#39;ama"
+        "ba-dum-tish": "Ba dum tis",
+        "spooky": "Spooky jechuun ni danda&#39;ama",
+        "magic-spell": "Falfala",
+        "shhh": "Ssss"
       }
     }
   },

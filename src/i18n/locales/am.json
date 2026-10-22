@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "ዥረት ዳግም አስጀምር",
+    "justEnded": "የእርስዎ ዥረት recap",
+    "lastStream": "የእርስዎ የመጨረሻ ዥረት",
+    "share": "አጋራ",
+    "shareText": "በቃ በ DeHub ላይ \"{{title}}\" ን ዥረት አደረግሁ: {{duration}} LIVE ፣ {{peak}} በመመልከት ጫፍ ላይ እና {{followers}} አዲስ ተከታዮች ።",
+    "untitled": "ያልተሰየመ ዥረት",
+    "copied": "Recap ኮፒ ተደርጓል. በማንኛውም ቦታ ይለጥፉ.",
+    "loadFailed": "መልሶ ማቋቋም አልተጫነም ። በአንድ ደቂቃ ውስጥ እንደገና ሞክር.",
+    "duration": "ጊዜ በቀጥታ",
+    "peakViewers": "አብዛኛዎቹ በአንድ ጊዜ ይመለከታሉ",
+    "gifts_one": "ከ {{count}} ስጦታ",
+    "gifts_other": "ከ {{count}} ስጦታዎች",
+    "newFollowers": "አዲስ ተከታዮች",
+    "chatMessages": "የውይይት መልዕክቶች",
+    "chatters": "ሰዎች በመወያየት ላይ",
+    "reactions": "ምላሾች",
+    "shares": "ሰዎች ያጋሩ",
+    "topSupporters": "ከፍተኛ ደጋፊዎች",
+    "polls": "ምርጫዎች",
+    "pollWinner": "{{option}} አሸነፈ",
+    "stillCounting": "አሁንም መቁጠር: ስጦታዎች ለማረጋገጥ አንድ ደቂቃ ሊወስድ ይችላል."
+  },
   "errors": {
     "sponsorshipUnavailable": "ነጻ ግብይቶች በእኛ በኩል ቆመዋል፣ በኪስ ቦርሳዎ ላይ አይደለም። እባክዎ በቅርቡ እንደገና ይሞክሩ።",
     "gasSponsorshipFailed": "ይህ ግብይት መደገፍ አልተቻለም። እባክዎ ከጥቂት ጊዜ በኋላ ይሞክሩ።"
@@ -4784,7 +4807,32 @@
     "followersUnit": "ተከታዮች",
     "topSupporters": "ከፍተኛ ደጋፊዎች",
     "tipped": "{{name}} አንድ ስጦታ ላከ",
-    "chatPreview": "የውይይት መልዕክቶች እዚህ ይታያሉ"
+    "chatPreview": "የውይይት መልዕክቶች እዚህ ይታያሉ",
+    "poll": {
+      "closed": "ድምጽ ማሰማት ተዘግቷል",
+      "voteFor": "ለ {{option}} ድምጽ ይስጡ",
+      "signIn": "ድምጽ ለመስጠት ይግቡ",
+      "failed": "የእርስዎ ድምጽ አልተቆጠረም. እንደገና ሞክር.",
+      "voted_one": "እርስዎ ድምጽ ሰጡ · {{count}} ድምጽ",
+      "voted_other": "እርስዎ ድምጽ ሰጡ · {{count}} ድምጾች",
+      "votes_one": "{{count}} ድምጽ",
+      "votes_other": "{{count}} ድምጾች",
+      "howToVote_one": "አይነት {{command}} እና ድምጽ ለመስጠት በውይይት ውስጥ ቁጥር · {{count}} ድምጽ",
+      "howToVote_other": "አይነት {{command}} እና ድምጽ ለመስጠት በውይይት ውስጥ ቁጥር · {{count}} ድምጾች"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "ጊዜ ለ 1 ደቂቃ",
+    "timeout10m": "ጊዜ ለ 10 ደቂቃዎች",
+    "timeout1h": "ሰዓት ለ 1 ሰዓት",
+    "ban": "ከነዚህ ጅረቶች እገዳ",
+    "makeModerator": "አስማሚ አድርግ",
+    "timedOut": "ጊዜው ያለፈበት ነው ።",
+    "banned": "ከእነዚህ ጅረቶች ታግዷል ።",
+    "madeModerator": "አሁን አስተባባሪ ናቸው ።",
+    "failed": "ያ አልሰራም እንደገና ሞክር ።",
+    "youAreBanned": "በዚህ ፈጣሪ ጅረቶች ውስጥ መወያየት አይችሉም",
+    "youAreTimedOut": "ለትንሽ ጊዜ ተዘጋጅተሃል"
   },
   "liveStudio": {
     "controls": {
@@ -4797,6 +4845,37 @@
       "readAloudMuted": "አንብብ-aloud አቁም",
       "readAloudMutedHint": "የስጦታ መልዕክቶች እና የአስተዳደር መስመሮች ከአሁን በኋላ አይነበቡም ።",
       "failed": "ያ ማብሪያ አልተለወጠም እንደገና ይሞክሩ ።"
+    },
+    "polls": {
+      "title": "ምርጫዎች",
+      "intro": "ብሮድካስትዎን የሚመለከቱ ሰዎችን አንድ ጥያቄ ይጠይቁ ። በ DeHub መተግበሪያ ውስጥ ባለው አዝራር ፣ ወይም በ {{command}} እና በቻት ውስጥ ባለው አማራጭ ቁጥር በመተየብ መልስ ይሰጣሉ ።",
+      "question": "ጥያቄ",
+      "questionPlaceholder": "ቀጥሎ ምን መጫወት አለብኝ?",
+      "option": "አማራጭ {{n}}",
+      "addOption": "አማራጭ ያክሉ",
+      "removeOption": "አማራጭን ያስወግዱ {{n}}",
+      "duration": "ድምጽ መስጫ ለምን ያህል ጊዜ ክፍት ይቆያል",
+      "seconds_one": "{{count}} ሰከንድ",
+      "seconds_other": "{{count}} ሰከንዶች",
+      "minutes_one": "{{count}} ደቂቃ",
+      "minutes_other": "{{count}} ደቂቃዎች",
+      "start": "ምርጫውን ይጀምሩ",
+      "end": "አሁን ድምጽ መስጠት ያቁሙ",
+      "started": "የእርስዎ ምርጫ ክፍት ነው. ተመልካቾች አሁን ድምጽ መስጠት ይችላሉ ።",
+      "notLive": "በቀጥታ ይሂዱ. አሁን በሚሰራጩት ስርጭት ላይ አንድ ምርጫ ያካሂዳል.",
+      "startFailed": "ምርጫው አልተጀመረም እንደገና ሞክር ።",
+      "closeFailed": "ድምጽ መስጠት አላበቃም. እንደገና ሞክር.",
+      "live": "ክፍት ድምጽ መስጠት · {{time}} ግራ",
+      "ended": "ድምጽ ማሰማት ተዘግቷል",
+      "votes_one": "{{count}} ድምጽ",
+      "votes_other": "{{count}} ድምጾች",
+      "replaceHint": "አዲስ ምርጫ መጀመር ክፍት የሆነውን ይዘጋል ።",
+      "widgetHint": "የቀጥታ ምርጫዎን ያሳዩ ። በ DeHub የመተግበሪያ ተመልካቾች የመምረጥ አማራጭን መታ ያድርጉ; በኦቢኤስ ውስጥ ሰዎች {{command}} እና በውይይት ውስጥ ቁጥር እንዲተይቡ ይነግራቸዋል ።",
+      "sample": {
+        "a": "አዲስ ነገር",
+        "b": "የድሮ ተወዳጅ",
+        "c": "እርስዎ ይመርጣሉ"
+      }
     },
     "title": "የቀጥታ ስቱዲዮ",
     "subtitle": "ለጅረቶችዎ ማንቂያዎች እና መግብርዎች",
@@ -4871,6 +4950,7 @@
       "join": "ይቀላቀሉ"
     },
     "kinds": {
+      "spin_wheel": "መንኮራኩር ያሽከርክሩ",
       "tip_alert": "ጠቃሚ ምክር ማንቂያ",
       "follow_alert": "ማንቂያ ይከተሉ",
       "subscribe_alert": "የደንበኝነት ምዝገባ ማንቂያ",
@@ -4887,9 +4967,10 @@
       "chat_box": "የውይይት ሳጥን",
       "ticker": "ቲከር",
       "rule_alert": "ደንብ ማንቂያዎች",
-      "spin_wheel": "መንኮራኩር ያሽከርክሩ"
+      "poll": "ድምጽ"
     },
     "hints": {
+      "spin_wheel": "በእርስዎ ደንቦች ውስጥ ጎማዎች የሚሽከረከሩበት ቦታ",
       "tip_alert": "እያንዳንዱን ጠቃሚ ምክር ያከብራል ፣ ወደ ደረጃው ይደርሳል",
       "follow_alert": "እያንዳንዱን አዲስ ተከታይ ያሳያል",
       "subscribe_alert": "እያንዳንዱን አዲስ ተመዝጋቢ ያሳያል",
@@ -4906,7 +4987,7 @@
       "chat_box": "በማያ ገጹ ላይ የብሮድካስትዎን የውይይት መልዕክቶች ያሳያል",
       "ticker": "በማያ ገጹ ላይ የሚንሸራተት የራስዎ ጽሑፍ መስመር",
       "rule_alert": "ደንብ ማንቂያዎችዎ የሚታዩበት ቦታ",
-      "spin_wheel": "በእርስዎ ደንቦች ውስጥ ጎማዎች የሚሽከረከሩበት ቦታ"
+      "poll": "የእርስዎ የቀጥታ ምርጫ, ለእያንዳንዱ አማራጭ የድምጽ አዝራር ጋር"
     },
     "fields": {
       "style": "ቅጥ",
@@ -4940,6 +5021,8 @@
       "fast": "ፈጣን"
     },
     "rules": {
+      "wheelSegments": "የጎማ ክፍሎች, በአንድ መስመር አንድ",
+      "wheelHint": "በ 2 እና 12 መካከል. DeHub መንኮራኩሩ የሚቆምበትን ቦታ ይመርጣል ፣ ስለሆነም ሁሉም ተመልካቾች ተመሳሳይ ውጤት ያያሉ ። ይጠቀሙ {result} እሱን ለመጥቀስ በማስጠንቀቂያ ፣ በንባብ-ድምፅ ወይም በውይይት እርምጃ ውስጥ ።",
       "title": "ደንቦች",
       "intro": "በእርስዎ ሰንሰለት ላይ ምንም ነገር ሲከሰት፣ DeHub እርስዎ የሚመርጡትን ያደርጋል፡ ማንቂያ ያሳያል፣ ድምጽ ይጫወታል፣ ምንዳ ይነግራል፣ በእርስዎ ቻት ውስጥ ይልጠፋል ወይም ለእርስዎ Discord ይነግራል።",
       "add": "ደንብ ጨምር",
@@ -4969,8 +5052,7 @@
       "addAction": "ተግባር ጨምር",
       "removeAction": "ተግባር ያስወግዱ",
       "placeholders": "ይጠቀሙ {name}, {amount} እና {message} በጽሑፍዎ ውስጥ. መልዕክቶች ውስጥ አገናኞች ይወገዳሉ.",
-      "wheelSegments": "የጎማ ክፍሎች, በአንድ መስመር አንድ",
-      "wheelHint": "በ 2 እና 12 መካከል. DeHub መንኮራኩሩ የሚቆምበትን ቦታ ይመርጣል ፣ ስለሆነም ሁሉም ተመልካቾች ተመሳሳይ ውጤት ያያሉ ። ይጠቀሙ {result} እሱን ለመጥቀስ በማስጠንቀቂያ ፣ በንባብ-ድምፅ ወይም በውይይት እርምጃ ውስጥ ።",
+      "placeholdersLive": "ይጠቀሙ {name}, {title} እና {link} በጽሑፍዎ ውስጥ-ስምዎ ፣ የብሮድካስቱ ርዕስ እና እሱን ለመመልከት አገናኝ ።",
       "alertText": "የጽሑፍ ማስጠንቀቂያ",
       "sound": "ድምጽ",
       "sayText": "ጮክ ብሎ ለማንበብ ጽሑፍ",
@@ -4984,6 +5066,7 @@
         "follow": "አንድ ሰው ይከተላል",
         "subscribe": "አንድ ሰው ይመዝገቡ",
         "share": "አንድ ሰው ዥረት ያጋራል",
+        "live": "ስርጭትን ትጀምራለህ",
         "command": "የውይይት ትዕዛዝ ጥቅም ላይ ይውላል",
         "keyword": "የውይይት መልእክት አንድ ቃል ይዟል",
         "chat": "ማንኛውም የውይይት መልእክት"
@@ -4994,11 +5077,12 @@
         "subscribers": "ተመዝጋቢዎች"
       },
       "actionTypes": {
+        "wheel": "መንኮራኩር ያሽከርክሩ",
         "alert": "ማንቂያ አሳይ",
         "sound": "ድምፅ አጫውት",
         "say": "ጮክ ብለህ አንብብ",
         "chat": "በቻት ውስጥ ይለጥፉ",
-        "wheel": "መንኮራኩር ያሽከርክሩ"
+        "webhook": "ወደ webhook ላክ"
       },
       "summary": {
         "tip": "ጠቃሚ ምክር {{amount}}DHB ወይም ከዚያ በላይ"
@@ -5029,12 +5113,58 @@
         "cricket": "ክሪኬቶች",
         "drumroll": "ከበሮ ጥቅል",
         "lol": "ሳቅ",
+        "ooh-ahh": "ኡ አህ",
         "ooh-man": "ኦህ (ሰው)",
         "ohh-girl": "ኦህ (ሴት)",
         "ba-dum-tish": "በዕድሜ ትስ",
         "spooky": "ስፖኪ",
         "magic-spell": "አስማታዊ ፊደል",
         "shhh": "ሰላም"
+      }
+    },
+    "moderation": {
+      "title": "የውይይት ሚዛናዊነት",
+      "intro": "በሁሉም ጅረቶችዎ ስር ለውይይት ደንቦች ። ወደ DeHub ዋና ውይይት በጭራሽ አይደርሱም- እዚህ የሚከለክሉት ሰው አሁንም በየትኛውም ቦታ ሊናገር ይችላል ።",
+      "loadFailed": "የእርስዎ የመጠባበቂያ ቅንብሮች መጫን አልተቻለም. እንደገና ለመሞከር ገጹን ያድሱ ።",
+      "save": "የውይይት ደንቦችን አስቀምጥ",
+      "saved": "የውይይት ደንቦች ተቀምጠዋል.",
+      "saveFailed": "ይህ ለውጥ ሊድን አልቻለም ።",
+      "slowMode": "የዘገየ ሁነታ",
+      "slowModeHint": "እያንዳንዱ ተመልካች በመልዕክቶች መካከል ምን ያህል ጊዜ ይጠብቃል? እርስዎ እና አስተባባሪዎችዎ በጭራሽ አይጠብቁም ።",
+      "off": "ጠፍቷል",
+      "seconds_one": "{{count}} ሰከንድ",
+      "seconds_other": "{{count}} ሰከንዶች",
+      "followersOnly": "ተከታዮች ብቻ",
+      "subscribersOnly": "ተመዝጋቢዎች ብቻ",
+      "subscribersOnlyHint": "ተከታዮችን ብቻ ያሸንፋል ።",
+      "bannedWords": "የተከለከሉ ቃላት",
+      "bannedWordsHint": "ከኮማዎች ጋር ተለያይተው አንድን ቃል በደብዳቤ መጻፍ አይዞርም ።",
+      "wordAction": "አንድ ሰው አንዱን ሲጠቀም",
+      "wordBlock": "መልዕክቱን ያቁሙ",
+      "wordTimeout": "አቁም እና ለደቂቃዎች ጊዜ ይስጧቸው",
+      "moderators": "አስተዳዳሪዎች",
+      "moderatorsHint": "ሰሪዎችን በእርስዎ ስትሪም ውስጥ ጊዜ ማቆም እና መከልከል ይችላሉ። በእርስዎ ላይ ወይም በአንዳቸው ላይ ምንም ማድረግ አይችሉም።",
+      "addModerator": "ጨምር",
+      "usernamePlaceholder": "ተጠቃሚ ስም",
+      "moderatorAdded": "አስተዳዳሪ ታክሏል።",
+      "moderatorNotFound": "ከዚያ የተጠቃሚ ስም ጋር ምንም መለያ የለም ።",
+      "removeModerator": "አስተዳዳሪ ያስወግዱ",
+      "noModerators": "ገና ምንም አስተዳዳሪ የለም።",
+      "banned": "ከእርስዎ ስትሪም ተከልክለዋል",
+      "unban": "ከመከልከል ይልቅ",
+      "noBans": "ምንም ሰው ተከልክሎ የለም።",
+      "log": "የቅርብ ጊዜ እርምጃዎች",
+      "noLog": "ገና ምንም የለም።",
+      "actions": {
+        "timeout_one": "{{actor}} {{target}} ለ {{count}} ሰከንድ ጊዜ ማቆም",
+        "timeout_other": "{{actor}} {{target}} ለ {{count}} ሰከንዶች ጊዜ ማቆም",
+        "ban": "{{actor}} {{target}} ከመከልከል",
+        "unban": "{{actor}} {{target}} ከመከልከል ተወግዷል",
+        "moderator-added": "{{target}} አስተዳዳሪ ሆነ",
+        "moderator-removed": "{{target}} ከአሁን በኋላ አስተዳዳሪ አይደለም",
+        "word-blocked": "{{target}} ከ \"{{word}}\" መልእክት ተከልክሏል",
+        "word-timeout_one": "{{target}} ለ {{count}} ሰከንድ ለ \"{{word}}\" ጊዜ ተከልክሏል",
+        "word-timeout_other": "{{target}} ለ {{count}} ሰከንዶች ለ \"{{word}}\" ጊዜ ተከልክሏል"
       }
     }
   },

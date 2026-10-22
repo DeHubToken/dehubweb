@@ -43,6 +43,7 @@ import { StageHostLink } from '@/components/app/stages/StageHostLink';
 import { BadgedName } from '@/components/app/BadgedName';
 import { StageReminderFaces } from '@/components/app/stages/StageReminderFaces';
 import { StageCoverArt } from '@/components/app/stages/StageCoverArt';
+import { StageAvatar } from '@/components/app/stages/StageAvatar';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useStageReminder } from '@/hooks/use-stage-reminders';
 import { useMyStages, myStagesKeys } from '@/hooks/use-my-stages';
@@ -156,15 +157,13 @@ function ScheduledStageCard({
             avatarUrl={avatar || undefined}
             className="group/host flex items-center gap-3 min-w-0 flex-1"
           >
-            <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
-              {avatar ? (
-                <img src={avatar} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
-                  {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
-                </div>
-              )}
-            </div>
+            <StageAvatar
+              address={space.host_wallet_address}
+              avatar={space.host_avatar}
+              name={space.host_username}
+              size={40}
+              className="w-10 h-10 rounded-lg ring-2 ring-white/20 text-sm"
+            />
             <div className="min-w-0 flex-1">
               <p className="text-zinc-500 text-[10px]">{t('stages.hostedBy')}</p>
               <BadgedName
@@ -329,15 +328,13 @@ function LiveStageCard({
             nested
             className="group/host flex items-center gap-3 min-w-0 flex-1"
           >
-            <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
-              {avatar ? (
-                <img src={avatar} alt="" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full bg-zinc-700 flex items-center justify-center text-white font-medium text-sm">
-                  {(space.host_username || space.host_wallet_address || 'U').charAt(0).toUpperCase()}
-                </div>
-              )}
-            </div>
+            <StageAvatar
+              address={space.host_wallet_address}
+              avatar={space.host_avatar}
+              name={space.host_username}
+              size={40}
+              className="w-10 h-10 rounded-lg ring-2 ring-white/20 text-sm"
+            />
             <div className="min-w-0 flex-1">
               <p className="text-zinc-500 text-[10px]">{t('stages.hostedBy')}</p>
               <BadgedName

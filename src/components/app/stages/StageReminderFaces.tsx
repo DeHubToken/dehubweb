@@ -27,7 +27,7 @@ import Bell from "@/components/ui/cut-icons/alerts";
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useStageReminderFaces } from '@/hooks/use-stage-reminders';
-import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
+import { StageAvatar } from './StageAvatar';
 
 export function StageReminderFaces({
   spaceId,
@@ -58,9 +58,6 @@ export function StageReminderFaces({
       {faces.length > 0 && (
         <div className="flex -space-x-1.5">
           {faces.map((face) => {
-            const src =
-              buildAvatarUrl(face.address, face.avatarUrl) ||
-              buildAvatarCdnFallbackUrl(face.address);
             const handle = face.username?.replace(/^@+/, '');
             const openProfile = (e: { stopPropagation: () => void; preventDefault: () => void }) => {
               e.stopPropagation();
@@ -79,28 +76,18 @@ export function StageReminderFaces({
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') openProfile(e);
                 }}
-                className="relative block w-6 h-6 rounded-md overflow-hidden ring-1 ring-black/40 bg-zinc-700 shrink-0 cursor-pointer transition-transform hover:z-10 hover:scale-110 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-white/70"
+                className="relative block w-6 h-6 rounded-md ring-1 ring-black/40 shrink-0 cursor-pointer transition-transform hover:z-10 hover:scale-110 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-white/70"
               >
-                {src ? (
-                  <img
-                    src={src}
-                    alt=""
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // Same CDN retry the friends bar uses — a stale avatar
-                      // path should degrade to the initial, not a broken icon.
-                      const img = e.currentTarget;
-                      const fallback = buildAvatarCdnFallbackUrl(face.address);
-                      if (fallback && img.src !== fallback) img.src = fallback;
-                      else img.style.display = 'none';
-                    }}
-                  />
-                ) : (
-                  <span className="w-full h-full flex items-center justify-center text-[8px] font-medium text-white">
-                    {(face.username || face.address).charAt(0).toUpperCase()}
-                  </span>
-                )}
+                {/* Falls through the same ladder as every stage picture and
+                    lands on the initial; a face whose picture 404d used to be
+                    an empty grey square in the row. */}
+                <StageAvatar
+                  address={face.address}
+                  avatar={face.avatarUrl}
+                  name={face.username}
+                  size={24}
+                  className="w-full h-full rounded-md text-[8px]"
+                />
               </span>
             );
           })}

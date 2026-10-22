@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "madeModerator": "Kunanqa moderador kanña.",
+    "timeout1m": "1 minutopaq tiempo tukusqa",
+    "timeout10m": "10 minutopaq tiempo tukusqa",
+    "timeout1h": "1 horapaq pacha lluqsiy",
+    "ban": "Kay mayukunamanta harkay",
+    "makeModerator": "Moderador nisqa ruway",
+    "timedOut": "Tiempo tukusqa.",
+    "banned": "Kay mayukunamanta hark’asqa.",
+    "failed": "Chayqa manan allinchu karqan. Hukmanta kallpachakuy.",
+    "youAreBanned": "Kay kamaqpa mayukunapiqa manam rimayta atiwaqchu",
+    "youAreTimedOut": "Huk ratullapaqmi tiempoyki tukusqaña kanki"
+  },
   "errors": {
     "sponsorshipUnavailable": "Mana qullqiyuq rurayku ñuqaykuq ladunpi sayachisqa, mana qullqi waqaychanaykipichu. Ama hina kaspa, pisi pachamanta yapamanta ruray.",
     "gasSponsorshipFailed": "Kay rurayta mana qullqichayta atirqaykuchu. Ama hina kaspa, pisi pachamanta yapamanta ruray."
@@ -4791,6 +4804,7 @@
     "creatorEarnsDirect": "Suscriptorkuna DeHub tokenkunapi qullqita qunku. Accionesniyki billeteraykipi chayan chay rato suscribisqanku, menos plataforma qullqita insignia nivelniykipaq."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} muyuchisqa: {{result}}",
     "someone": "Pipas",
     "newFollower": "Musuq qatiq: {{name}}",
     "newSubscriber": "Musuq suscriptor: {{name}}",
@@ -4802,7 +4816,41 @@
     "topSupporters": "Hatun yanapaqkuna",
     "tipped": "{{name}} huk regalota apachirqan",
     "chatPreview": "Kaypim rikurin rimanakuy willakuykuna",
-    "wheelLanded": "{{name}} muyuchisqa: {{result}}"
+    "poll": {
+      "closed": "Votacionqa wichqasqa",
+      "voteFor": "{{option}} nisqapaq votacionta ruway.",
+      "signIn": "Votanaykipaq yaykuy",
+      "failed": "Votoykiqa manam yupasqachu karqa. Hukmanta kallpachakuy.",
+      "voted_one": "Votarqanki · {{count}} voto",
+      "voted_other": "Votarqanki · {{count}} votokuna",
+      "votes_one": "{{count}} voto",
+      "votes_other": "{{count}} votokuna",
+      "howToVote_one": "Qillqay {{command}} hinaspa huk yupayta chat nisqapi votanaykipaq · {{count}} votanaykipaq",
+      "howToVote_other": "Qillqay {{command}} hinaspa huk yupayta chat nisqapi votanaykipaq · {{count}} votokuna"
+    }
+  },
+  "liveRecap": {
+    "title": "Stream recap nisqa",
+    "justEnded": "Qampa mayu recap",
+    "lastStream": "Qhipa mayuyki",
+    "share": "Qunakuy",
+    "shareText": "Chayraqmi &quot;{{title}}&quot; nisqa DeHub nisqapi purichirqani: {{duration}} kawsaq, {{peak}} pico nisqapi qawaspa hinaspa {{followers}} musuq qatiqninkuna.",
+    "untitled": "Mana tituluyuq mayu",
+    "copied": "Recap copiasqa. Maypipas k’askachiy.",
+    "loadFailed": "Chay recap nisqa mana cargakurqachu. Huk ratullapi hukmanta kallpachakuy.",
+    "duration": "Tiempo kawsan",
+    "peakViewers": "Yaqa llapanku huk kutillapi qhawaspa",
+    "gifts_one": "{{count}} regalomanta",
+    "gifts_other": "{{count}} regalokunamanta",
+    "newFollowers": "Musuq qatiqninkuna",
+    "chatMessages": "Chat nisqa willakuykunata",
+    "chatters": "Runakuna rimaspa",
+    "reactions": "Reacciones nisqakuna",
+    "shares": "Runakuna rakinakuy",
+    "topSupporters": "Hatun yanapaqkuna",
+    "polls": "Encuestas nisqamanta",
+    "pollWinner": "{{option}} atiparqan",
+    "stillCounting": "Yupachkanraqmi: regalokunaqa huk minutollapim takyachinman."
   },
   "liveStudio": {
     "controls": {
@@ -4815,6 +4863,82 @@
       "readAloudMuted": "Amaña kallpawan leeychu",
       "readAloudMutedHint": "Regalo willakuykunapas kamachikuy chirukunapas manañam ñawinchasqañachu.",
       "failed": "Chay cambioqa manan cambiarqanchu. Hukmanta kallpachakuy."
+    },
+    "moderation": {
+      "subscribersOnly": "Suscriptorkunallapaq",
+      "title": "Chat moderación nisqa",
+      "intro": "Llapan mayuykikuna urapi rimanakuypaq kamachiykuna. Mana hayk&#39;aqpas DeHubpa hatun rimanakuyninman chayankuchu: kaypi hark&#39;asqayki runaqa tukuy hinantinpi rimayta atinraqmi.",
+      "loadFailed": "Moderación nisqa churasqaykikunaqa manam kargayta atirqanchu. P&#39;anqata musuqmanta musuqmanta kallpachakunaykipaq.",
+      "save": "Chat kamachiykunata waqaychay",
+      "saved": "Chat kamachiykuna waqaychasqa.",
+      "saveFailed": "Chay cambioqa manan qespichiyta atirqankuchu.",
+      "slowMode": "Modo lento",
+      "slowModeHint": "Hayka unaytaq sapa qhawaq willakuykunata chawpipi suyan. Qampas, moderadornikikunapas manam haykapipas suyankichu.",
+      "off": "Wañuchisqa",
+      "seconds_one": "{{count}} iskay kaq",
+      "seconds_other": "{{count}} segundos nisqapi",
+      "followersOnly": "Qatiqninkunalla",
+      "subscribersOnlyHint": "Qatiqninkunallatam llallichin.",
+      "bannedWords": "Hark’asqa simikuna",
+      "bannedWordsHint": "Chikukunawan t’aqay. Huk simita letramanta letraman ortografiayqa manan muyurinchu.",
+      "wordAction": "Pipas hukninta servichikuptin",
+      "wordBlock": "Willakuyta sayachiy",
+      "wordTimeout": "Chayta sayachiy hinaspa huk minutolla tiempota tukuchiy",
+      "moderators": "Moderadores",
+      "moderatorsHint": "Alaychasunchu timeoutwan chaynallatak baneasunchu rikuqkunata qamapaq streampi. Manachu atisunchu qamapaq o huk-hukkunapaq.",
+      "addModerator": "Yapay",
+      "usernamePlaceholder": "Sutiyoc",
+      "moderatorAdded": "Moderador yapasqa.",
+      "moderatorNotFound": "Mana karuyoc sutiyoc.",
+      "removeModerator": "Moderadora qichuy",
+      "noModerators": "Mana moderador kaychu.",
+      "banned": "Baneasqa qamapaq streampi",
+      "unban": "Desbanea",
+      "noBans": "Mana baneasqa kaychu.",
+      "log": "Kunan rurasqakuna",
+      "noLog": "Mana kaychu.",
+      "actions": {
+        "timeout_one": "{{actor}} timeoutwan {{target}} {{count}} segundowan",
+        "timeout_other": "{{actor}} timeoutwan {{target}} {{count}} segundowan",
+        "ban": "{{actor}} baneasqa {{target}}",
+        "unban": "{{actor}} desbaneasqa {{target}}",
+        "moderator-added": "{{target}} moderador kasqa",
+        "moderator-removed": "{{target}} mana moderador kaychu",
+        "word-blocked": "Huk rimaykunata llakisqa {{target}} \"{{word}}\" hina",
+        "word-timeout_one": "Timeoutwan {{target}} {{count}} segundowan \"{{word}}\" hina",
+        "word-timeout_other": "Timeoutwan {{target}} {{count}} segundowan \"{{word}}\" hina"
+      }
+    },
+    "polls": {
+      "title": "Encuestas nisqamanta",
+      "intro": "Difusión nisqayki qhawaq runakunata tapuy. DeHub app kaqpi huk botón kaqwan kutichinku, utaq {{command}} chaymanta akllana yupayta rimanakuypi qillqaspa.",
+      "question": "Tapuy",
+      "questionPlaceholder": "¿Imatataq qatiqninpi pukllanay?",
+      "option": "Akllana {{n}} .",
+      "addOption": "Huk akllanata yapay",
+      "removeOption": "{{n}} akllanata hurquy.",
+      "duration": "Hayka unaytaq votacion kichasqa kachkan",
+      "seconds_one": "{{count}} iskay kaq",
+      "seconds_other": "{{count}} segundos nisqapi",
+      "minutes_one": "{{count}} minuto nisqapi",
+      "minutes_other": "{{count}} minutokuna",
+      "start": "Encuesta nisqa qallariy",
+      "end": "Kunanmantapacha votacionta tukuchiy",
+      "started": "Encuestaykiqa kichasqam kachkan. Qhawaqkuna kunan votayta atinku.",
+      "notLive": "Ñawpaqtaqa kawsaq riy. Huk encuesta purin chay transmisión kunan streaming nisqapi.",
+      "startFailed": "Chay encuestaqa manan qallarirqanchu. Hukmanta kallpachakuy.",
+      "closeFailed": "Votacionqa manam tukukurqachu. Hukmanta kallpachakuy.",
+      "live": "Votacion kichasqa · {{time}} lluq&#39;i",
+      "ended": "Votacionqa wichqasqa",
+      "votes_one": "{{count}} voto",
+      "votes_other": "{{count}} votokuna",
+      "replaceHint": "Musuq encuesta qallariyqa kichasqa kaqta wichqan.",
+      "widgetHint": "Kawsaq encuestaykita qawachin. DeHub app kaqpi qhawaqkuna huk akllanata ñit&#39;inku votanankupaq; OBS nisqapiqa runakunamanmi nin {{command}} nisqa qillqanankupaq hinaspa huk yupayta rimanakuypi.",
+      "sample": {
+        "a": "Imapas musuq",
+        "b": "Ñawpa munasqa",
+        "c": "Qamqa akllakunki"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Alerta y widget para ñawpa rikuyta",
@@ -4891,6 +5015,7 @@
       "join": "Taqruy"
     },
     "kinds": {
+      "spin_wheel": "Rueda de giro",
       "tip_alert": "Alerta de consejo",
       "follow_alert": "Alertata qatipay",
       "subscribe_alert": "Suscriptor nisqamanta willakuy",
@@ -4906,9 +5031,10 @@
       "event_feed": "Kunan pacha ruray",
       "chat_box": "Chat nisqa cuadro",
       "rule_alert": "Kamachiy willaykuna",
-      "spin_wheel": "Rueda de giro"
+      "poll": "Encuesta"
     },
     "hints": {
+      "spin_wheel": "Maypichus kamachiyniykipi ruedakuna muyurinku",
       "tip_alert": "Sapa puntata raymichan, pataman hina sayayniyuq",
       "follow_alert": "Sapa musuq qatiqnintam qawachin",
       "subscribe_alert": "Sapa musuq suscriptor nisqatam qawachin",
@@ -4925,7 +5051,7 @@
       "chat_box": "Pantallapi difusión nisqaykipa rimanakuy willakuykunata qawachin",
       "ticker": "Kikin qillqasqaykimanta chiru, pantallapi puriq",
       "rule_alert": "Maypichus kamachiykuna willasunki",
-      "spin_wheel": "Maypichus kamachiyniykipi ruedakuna muyurinku"
+      "poll": "Kawsaq encuestayki, sapa akllanapaq voto botón nisqawan"
     },
     "fields": {
       "style": "Rikchay",
@@ -4960,6 +5086,8 @@
       "fast": "Utqay"
     },
     "rules": {
+      "wheelSegments": "Rueda segmentos, sapa chirupi huk",
+      "wheelHint": "2manta 12kama.DeHub maypi rueda sayan chayta akllan, chayrayku llapa qhawaqkuna kikin ruwayta rikunku. {result} llamk&#39;achiy huk alerta, kallpawan ñawiriy utaq rimanakuy ruwaypi sutichaypaq.",
       "title": "Kamachiykuna",
       "intro": "Imapis streamniykipi kaptinqa, DeHub munashqaykita ruran: willayta rikuchin, qapariyninta uyarichin, imatapis ñawirin, chatniykipi qillqan, icha Discordniykiman willan.",
       "add": "Kamachiyta yapay",
@@ -4989,8 +5117,7 @@
       "addAction": "Huk rurayta yapay",
       "removeAction": "Rurayta qulluy",
       "placeholders": "Qillqasqaykipi {name}, {amount}, {message} nisqakunata llamk&#39;achiy. Willakuykunapi t&#39;inkikuna hurqusqa.",
-      "wheelSegments": "Rueda segmentos, sapa chirupi huk",
-      "wheelHint": "2manta 12kama.DeHub maypi rueda sayan chayta akllan, chayrayku llapa qhawaqkuna kikin ruwayta rikunku. {result} llamk&#39;achiy huk alerta, kallpawan ñawiriy utaq rimanakuy ruwaypi sutichaypaq.",
+      "placeholdersLive": "Qillqasqaykipi {name}, {title} hinaspa {link} nisqawan yanapachikuy: sutiyki, willakuypa titulon hinaspa huk link nisqa qawanaykipaq.",
       "alertText": "Alerta texto",
       "sound": "Qapariy",
       "sayText": "Kunkawan leenapaq texto",
@@ -5004,6 +5131,7 @@
         "follow": "Pipas qatin",
         "subscribe": "Pipas suscribikun",
         "share": "Pipas chay mayutam rakinakunku",
+        "live": "Qamqa difusión nisqatam qallarinki",
         "command": "Huk rimanakuy kamachiymi llamk&#39;achisqa",
         "keyword": "Huk rimanakuy willakuypiqa huk simim kachkan",
         "chat": "Ima rimanakuy willakuypas"
@@ -5014,12 +5142,12 @@
         "subscribers": "Suscriptores nisqakuna"
       },
       "actionTypes": {
+        "wheel": "Huk rueda muyuchiy",
         "alert": "Huk alertata qawachiy",
         "sound": "Huk t’uqyayta tocay",
         "say": "Sinchita leey",
         "chat": "Chat nisqapi qillqay",
-        "webhook": "Huk webhook nisqaman apachiy",
-        "wheel": "Huk rueda muyuchiy"
+        "webhook": "Huk webhook nisqaman apachiy"
       },
       "summary": {
         "tip": "Consejo de {{amount}} DHB o más"
@@ -5053,8 +5181,10 @@
         "ooh-ahh": "Oy ay",
         "ooh-man": "Ooh (runa) .",
         "ohh-girl": "Ohh (warmi) .",
+        "ba-dum-tish": "Ba dum tis",
         "spooky": "Manchakuypaq",
-        "magic-spell": "Magia hechizo"
+        "magic-spell": "Magia hechizo",
+        "shhh": "Ch'in"
       }
     }
   },

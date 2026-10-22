@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Resum de la transmissió",
+    "justEnded": "Resum de la teva transmissió",
+    "lastStream": "La teva última transmissió",
+    "share": "Comparteix",
+    "shareText": "Acabo de transmetre \"{{title}}\" a DeHub: {{duration}} en directe, {{peak}} mirant al cim i {{followers}} nous seguidors.",
+    "untitled": "Flux sense títol",
+    "copied": "Resum copiat. Enganxa'l a qualsevol lloc.",
+    "loadFailed": "El resum no s'ha carregat. Torna-ho a provar en un moment.",
+    "duration": "Temps en viu",
+    "peakViewers": "La majoria ho veuen a la vegada",
+    "gifts_one": "De regal de {{count}}",
+    "gifts_other": "De {{count}} regals",
+    "newFollowers": "Nous seguidors",
+    "chatMessages": "Missatges de xat",
+    "chatters": "Persones que xategen",
+    "reactions": "Reaccions",
+    "shares": "Persones que comparteixen",
+    "topSupporters": "Els millors seguidors",
+    "polls": "Enquestes",
+    "pollWinner": "{{option}} guanyats",
+    "stillCounting": "Segueix comptant: els regals poden trigar un minut a confirmar-se."
+  },
   "errors": {
     "sponsorshipUnavailable": "Les transaccions gratuïtes estan pausades a la nostra banda, no al teu moneder. Torna-ho a provar aviat.",
     "gasSponsorshipFailed": "No s'ha pogut patrocinar aquesta transacció. Torna-ho a provar d'aquí a un moment."
@@ -4714,6 +4737,7 @@
     "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} girat: {{result}}",
     "someone": "Algú",
     "newFollower": "Nou seguidor: {{name}}",
     "newSubscriber": "Subscriptor nou: {{name}}",
@@ -4725,7 +4749,31 @@
     "topSupporters": "Els millors seguidors",
     "tipped": "{{name}}ha enviat un regal",
     "chatPreview": "Els missatges de xat apareixen aquí",
-    "wheelLanded": "{{name}} girat: {{result}}"
+    "poll": {
+      "closed": "Votació tancada",
+      "voteFor": "Vota per {{option}}",
+      "signIn": "Inicia sessió per votar",
+      "failed": "El teu vot no va comptar. Torna a intentar-ho.",
+      "voted_one": "Has votat · {{count}} vot",
+      "voted_other": "Has votat · {{count}} vots",
+      "votes_one": "{{count}} vot",
+      "votes_other": "{{count}} vots",
+      "howToVote_one": "Escriu {{command}} i un nombre al xat per votar · {{count}} vot",
+      "howToVote_other": "Escriu {{command}} i un nombre al xat per votar · {{count}} vots"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Temps límit d'1 minut",
+    "timeout10m": "Temps límit de 10 minuts",
+    "timeout1h": "Temps límit d'1 hora",
+    "ban": "Bandejar d'aquestes transmissions",
+    "makeModerator": "Fer moderador",
+    "timedOut": "Temps límit aplicat.",
+    "banned": "Bandejat d'aquestes transmissions.",
+    "madeModerator": "Ara és moderador.",
+    "failed": "Això no ha funcionat. Torna-ho a intentar.",
+    "youAreBanned": "No pots xatejar a les transmissions d'aquest creador",
+    "youAreTimedOut": "Tens temps límit per un moment"
   },
   "liveStudio": {
     "controls": {
@@ -4738,6 +4786,37 @@
       "readAloudMuted": "Atura la lectura en veu alta",
       "readAloudMutedHint": "Els missatges de regals i les línies de regles ja no es llegeixen.",
       "failed": "Aquest canvi no ha canviat. Torna-ho a provar."
+    },
+    "polls": {
+      "title": "Enquestes",
+      "intro": "Pregunta a les persones que veuen el teu directe una pregunta. Responen amb un botó a l'aplicació DeHub, o escrivint {{command}} i el número de l'opció al xat.",
+      "question": "Pregunta",
+      "questionPlaceholder": "Què hauria de jugar després?",
+      "option": "Opció {{n}}",
+      "addOption": "Afegeix una opció",
+      "removeOption": "Elimina l'opció {{n}}",
+      "duration": "Quants segons dura la votació",
+      "seconds_one": "{{count}} segon",
+      "seconds_other": "{{count}} segons",
+      "minutes_one": "{{count}} minut",
+      "minutes_other": "{{count}} minuts",
+      "start": "Inicia l'enquesta",
+      "end": "Tanca la votació ara",
+      "started": "La teva enquesta està oberta. Els espectadors poden votar ara.",
+      "notLive": "Va en directe primer. Una enquesta es realitza en el directe que estàs emetent ara mateix.",
+      "startFailed": "L'enquesta no ha començat. Torna a intentar-ho.",
+      "closeFailed": "La votació no ha acabat. Torna a intentar-ho.",
+      "live": "Votació oberta · {{time}} queden",
+      "ended": "Votació tancada",
+      "votes_one": "{{count}} vota",
+      "votes_other": "{{count}} vots",
+      "replaceHint": "Començar una nova enquesta tanca la que està oberta.",
+      "widgetHint": "Mostra la teva enquesta en directe. En els visualitzadors de l'aplicació DeHub, toca una opció per votar; en OBS, diu a les persones que escriguin {{command}} i un número al xat.",
+      "sample": {
+        "a": "Alguna cosa nova",
+        "b": "Un vell favorit",
+        "c": "Tu decideixes"
+      }
     },
     "title": "Estudi en directe",
     "subtitle": "Avisos i ginys per als teus streams",
@@ -4814,6 +4893,7 @@
       "join": "Unir-se"
     },
     "kinds": {
+      "spin_wheel": "Roda giratòria",
       "tip_alert": "Alerta de consell",
       "follow_alert": "Alerta de seguiment",
       "subscribe_alert": "Alerta de subscriptor",
@@ -4830,9 +4910,10 @@
       "chat_box": "Quadre de xat",
       "ticker": "Ticker",
       "rule_alert": "Alertes de regles",
-      "spin_wheel": "Roda giratòria"
+      "poll": "Enquesta"
     },
     "hints": {
+      "spin_wheel": "On giren les rodes de les teves regles",
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
       "follow_alert": "Mostra cada nou seguidor",
       "subscribe_alert": "Mostra cada nou subscriptor",
@@ -4849,7 +4930,7 @@
       "chat_box": "Mostra els missatges de xat de la teva emissió a la pantalla",
       "ticker": "Una línia del teu propi text que es desplaça per la pantalla",
       "rule_alert": "On apareixen les alertes de les teves normes",
-      "spin_wheel": "On giren les rodes de les teves regles"
+      "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció"
     },
     "fields": {
       "style": "Estil",
@@ -4884,8 +4965,11 @@
       "fast": "Ràpid"
     },
     "rules": {
+      "wheelSegments": "Segments de rodes, un per línia",
+      "wheelHint": "Entre 2 i 12. DeHub tria on s'atura la roda per tal que tots els usuaris vegin el mateix resultat. Utilitza {result} en una acció d'alerta, lectura en veu alta o xat per donar-li un nom.",
       "title": "Normes",
       "intro": "Quan passa alguna cosa al teu flux, DeHub fa el que tu triïs: mostra una alerta, reprodueix un so, llegeix alguna cosa en veu alta, publica al teu xat o diu al teu Discord.",
+      "add": "Afegeix una regla",
       "limit": "Has arribat al límit de {{count}} normes.",
       "loadFailed": "No s'han pogut carregar les normes. Actualitza la pàgina per tornar-ho a provar.",
       "empty": "Encara no hi ha cap regla. Afegeix-ne una per respondre a suggeriments, seguiments o ordres de xat.",
@@ -4912,8 +4996,7 @@
       "addAction": "Afegeix una acció",
       "removeAction": "Elimina l'acció",
       "placeholders": "Fes servir {name}, {amount} i {message} al text. S'han eliminat els enllaços dels missatges.",
-      "wheelSegments": "Segments de rodes, un per línia",
-      "wheelHint": "Entre 2 i 12. DeHub tria on s'atura la roda per tal que tots els usuaris vegin el mateix resultat. Utilitza {result} en una acció d'alerta, lectura en veu alta o xat per donar-li un nom.",
+      "placeholdersLive": "Utilitza {name}, {title} i {link} al text: el teu nom, el títol de l'emissió i un enllaç per veure-la.",
       "alertText": "Text d'alerta",
       "sound": "So",
       "sayText": "Text per llegir en veu alta",
@@ -4927,6 +5010,7 @@
         "follow": "Algú segueix",
         "subscribe": "Algú s'hi subscriu",
         "share": "Algú comparteix el flux",
+        "live": "Comences a emetre",
         "command": "S'utilitza una ordre de xat",
         "keyword": "Un missatge de xat conté una paraula",
         "chat": "Qualsevol missatge de xat"
@@ -4937,12 +5021,12 @@
         "subscribers": "Subscriptors"
       },
       "actionTypes": {
+        "wheel": "Fes girar la roda",
         "alert": "Mostra un avís",
         "sound": "Reprodueix un so",
         "say": "Llegir en veu alta",
         "chat": "Publicar al xat",
-        "webhook": "Envia a un webhook",
-        "wheel": "Fes girar la roda"
+        "webhook": "Envia a un webhook"
       },
       "summary": {
         "tip": "Suggeriment de {{amount}} DHB o més"
@@ -4980,6 +5064,51 @@
         "spooky": "Espeluznant",
         "magic-spell": "Encantament màgic",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderació del xat",
+      "intro": "Regles per al xat sota totes les teves transmissions. Mai arriben al xat principal de DeHub: algú que baneges aquí pot seguir parlant a tot arreu.",
+      "loadFailed": "No s'han pogut carregar els teus paràmetres de moderació. Actualitza la pàgina per intentar-ho de nou.",
+      "save": "Desar regles del xat",
+      "saved": "Regles del xat desades.",
+      "saveFailed": "No s'ha pogut desar aquest canvi.",
+      "slowMode": "Mode lent",
+      "slowModeHint": "Quant de temps espera cada espectador entre missatges. Tu i els teus moderadors mai espereu.",
+      "off": "Desactivat",
+      "seconds_one": "{{count}} segon",
+      "seconds_other": "{{count}} segons",
+      "followersOnly": "Només seguidors",
+      "subscribersOnly": "Només subscriptors",
+      "subscribersOnlyHint": "Substitueix només seguidors.",
+      "bannedWords": "Paraules bandejades",
+      "bannedWordsHint": "Separa amb comes. Deletrejar una paraula lletra per lletra no ho evita.",
+      "wordAction": "Quan algú en fa servir una",
+      "wordBlock": "Aturar el missatge",
+      "wordTimeout": "Aturar-lo i aplicar-li temps límit d'un minut",
+      "moderators": "Moderadors",
+      "moderatorsHint": "Poden posar en espera i banar espectadors als teus streams. No poden actuar contra tu ni entre ells.",
+      "addModerator": "Afegir",
+      "usernamePlaceholder": "Nom d'usuari",
+      "moderatorAdded": "Moderador afegit.",
+      "moderatorNotFound": "No hi ha cap compte amb aquell nom d'usuari.",
+      "removeModerator": "Treure moderador",
+      "noModerators": "Encara no hi ha moderadors.",
+      "banned": "Banat dels teus streams",
+      "unban": "Desbanar",
+      "noBans": "No hi ha ningú banat.",
+      "log": "Accions recents",
+      "noLog": "Encara no hi ha res.",
+      "actions": {
+        "timeout_one": "{{actor}} va ser posat en espera {{target}} per {{count}} segon",
+        "timeout_other": "{{actor}} va ser posat en espera {{target}} per {{count}} segons",
+        "ban": "{{actor}} va banar {{target}}",
+        "unban": "{{actor}} va desbanar {{target}}",
+        "moderator-added": "{{target}} va esdevenir moderador",
+        "moderator-removed": "{{target}} ja no és moderador",
+        "word-blocked": "Va aturar un missatge de {{target}} per a \"{{word}}\"",
+        "word-timeout_one": "Va posar en espera {{target}} per {{count}} segon per a \"{{word}}\"",
+        "word-timeout_other": "Va posar en espera {{target}} per {{count}} segons per a \"{{word}}\""
       }
     }
   },

@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "ストリームのまとめ",
+    "justEnded": "ストリームのまとめ",
+    "lastStream": "最後のストリーム",
+    "share": "共有",
+    "shareText": "DeHubで「{{title}}」をストリーミングしました：{{duration}}ライブ、{{peak}}ピーク時に視聴、{{followers}}新しいフォロワー。",
+    "untitled": "無題のストリーム",
+    "copied": "まとめをコピーしました。任意の場所に貼り付けます。",
+    "loadFailed": "要約が読み込まれませんでした。 しばらくしてからもう一度お試しください。",
+    "duration": "ライブ中です",
+    "peakViewers": "一度に最も視聴している",
+    "gifts_one": "{{count}}からの贈り物",
+    "gifts_other": "{{count}}からのギフト",
+    "newFollowers": "新しいフォロワー",
+    "chatMessages": "チャットメッセージ",
+    "chatters": "チャットしている人",
+    "reactions": "リアクション",
+    "shares": "共有しているユーザー",
+    "topSupporters": "トップサポーター",
+    "polls": "投票",
+    "pollWinner": "{{option}}ウォン",
+    "stillCounting": "まだまだ続きます。ギフトの確認には少し時間がかかる場合があります。"
+  },
   "errors": {
     "sponsorshipUnavailable": "無料取引はこちら側で一時停止しています。お客様のウォレットの問題ではありません。しばらくしてからお試しください。",
     "gasSponsorshipFailed": "この取引の手数料を負担できませんでした。しばらくしてからお試しください。"
@@ -602,6 +625,8 @@
     "stagePay": "{{symbol}}でDeHub Payに支払い中…",
     "stageDelivering": "DeHub Payがトークンを送信しています…",
     "payViaDpay": "DeHub Payに支払い済み、トークンは約30秒で到着",
+    "payDirect": "{{chain}}上の{{symbol}}で{{name}}に直接送られます。スワップなし。",
+    "payDirectNoName": "{{chain}}上の{{symbol}}でクリエイターに直接送られます。スワップなし。",
     "payViaBridgeDpay": "Baseに移動しDeHub Payに支払い済み、トークンは約1分で到着",
     "dmSent": "{{name}}に{{amount}} DHBを送りました！"
   },
@@ -701,6 +726,7 @@
     "price": "価格",
     "ppvDhbInfo": "Baseチェーン上のDeHubトークンでの支払い",
     "ppvUsdInfo": "支払いはUSDで行われます",
+    "ppvStableInfo": "購入者は{{symbol}}で支払い、あなたに直接届きます",
     "setupBounty": "報酬を設定",
     "viewersToReward": "報酬対象の視聴者",
     "numberOfViewers": "視聴者数",
@@ -4771,6 +4797,7 @@
     "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}}回転：{{result}}",
     "someone": "誰か",
     "newFollower": "新規フォロワー：{{name}}",
     "newSubscriber": "新規購読者: {{name}}",
@@ -4782,7 +4809,31 @@
     "topSupporters": "トップサポーター",
     "tipped": "{{name}}さんがギフトを贈りました",
     "chatPreview": "チャットメッセージがここに表示されます",
-    "wheelLanded": "{{name}}回転：{{result}}"
+    "poll": {
+      "closed": "投票は終了しました",
+      "voteFor": "{{option}}に投票する",
+      "signIn": "サインインして投票",
+      "failed": "あなたの投票はカウントされませんでした。もう一度やり直してください。",
+      "voted_one": "投票しました·{{count}}票",
+      "voted_other": "あなたが投票しました·{{count}}票",
+      "votes_one": "{{count}}票",
+      "votes_other": "{{count}}票",
+      "howToVote_one": "チャットに{{command}}と数字を入力して投票してください· {{count}}票",
+      "howToVote_other": "チャットに{{command}}と数字を入力して投票してください· {{count}}票"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "1分間のタイムアウト",
+    "timeout10m": "10分間のタイムアウト",
+    "timeout1h": "1時間のタイムアウト",
+    "ban": "これらのストリームからの禁止",
+    "makeModerator": "モデレーターにする",
+    "timedOut": "タイムアウトしました。",
+    "banned": "これらのストリームから禁止されています。",
+    "madeModerator": "モデレーターになりました。",
+    "failed": "うまくいきませんでした。もう一度やり直してください。",
+    "youAreBanned": "このクリエイターのストリームではチャットできません",
+    "youAreTimedOut": "しばらくタイムアウトしました"
   },
   "liveStudio": {
     "controls": {
@@ -4795,6 +4846,37 @@
       "readAloudMuted": "読み上げ音声を停止する",
       "readAloudMutedHint": "ギフトメッセージとルールラインは読み上げられなくなりました。",
       "failed": "そのスイッチは変更されませんでした。もう一度やり直してください。"
+    },
+    "polls": {
+      "title": "投票",
+      "intro": "放送を視聴している人に質問をします。DeHubアプリでボタンを押すか、チャットで{{command}}とオプションの番号を入力して回答します。",
+      "question": "質問",
+      "questionPlaceholder": "次に何をプレイすればいいですか？",
+      "option": "オプション{{n}}",
+      "addOption": "オプションを追加",
+      "removeOption": "オプション{{n}}を削除",
+      "duration": "投票はどのくらいの期間開いていますか",
+      "seconds_one": "{{count}}秒",
+      "seconds_other": "{{count}} 秒",
+      "minutes_one": "{{count}}分",
+      "minutes_other": "{{count}}分",
+      "start": "アンケートを開始する",
+      "end": "今すぐ投票を終了する",
+      "started": "アンケートが開始されました。視聴者は今すぐ投票できます。",
+      "notLive": "最初にライブ配信してください。現在ストリーミングしているブロードキャストで投票が実行されます。",
+      "startFailed": "アンケートが開始されませんでした。もう一度やり直してください。",
+      "closeFailed": "投票は終了しませんでした。もう一度お試しください。",
+      "live": "投票開始・残り{{time}}",
+      "ended": "投票は終了しました",
+      "votes_one": "{{count}}票",
+      "votes_other": "{{count}}票",
+      "replaceHint": "新しいアンケートを開始すると、開いているアンケートが閉じられます。",
+      "widgetHint": "ライブ投票を表示します。 DeHubアプリの閲覧者は、投票するオプションをタップします。OBSでは、チャットで{{command}}と数字を入力するように指示されます。",
+      "sample": {
+        "a": "何か新しいもの",
+        "b": "昔からのお気に入り",
+        "c": "あなたが選ぶのは"
+      }
     },
     "title": "ライブスタジオ",
     "subtitle": "ストリームのアラートとウィジェット",
@@ -4871,6 +4953,7 @@
       "join": "参加"
     },
     "kinds": {
+      "spin_wheel": "ルーレットを回す",
       "tip_alert": "ヒントアラート",
       "follow_alert": "フォローアラート",
       "subscribe_alert": "購読者アラート",
@@ -4887,9 +4970,10 @@
       "chat_box": "チャットボックス",
       "ticker": "ティッカー",
       "rule_alert": "ルールアラート",
-      "spin_wheel": "ルーレットを回す"
+      "poll": "投票"
     },
     "hints": {
+      "spin_wheel": "ルール内のホイールが回転する場所",
       "tip_alert": "各ティップをそのティアに合わせて祝う",
       "follow_alert": "新しいフォロワーを表示",
       "subscribe_alert": "新しい購読者を表示",
@@ -4906,7 +4990,7 @@
       "chat_box": "ブロードキャストのチャットメッセージを画面に表示します",
       "ticker": "画面をスクロールする独自のテキストの行",
       "rule_alert": "ルールのアラートが表示される場所",
-      "spin_wheel": "ルール内のホイールが回転する場所"
+      "poll": "すべてのオプションに投票ボタンが付いたライブ投票"
     },
     "fields": {
       "style": "スタイル",
@@ -4941,6 +5025,8 @@
       "fast": "高速"
     },
     "rules": {
+      "wheelSegments": "ホイールセグメント、1ラインに1つ",
+      "wheelHint": "2歳から12歳の間。DeHubはホイールが停止する場所を選択するので、すべての視聴者が同じ結果を見ることができます。アラート、読み取り音声、またはチャットアクションで{result}を使用して名前を付けます。",
       "title": "ルール",
       "intro": "ストリームで何かが起こると、DeHubはアラートを表示したり、サウンドを再生したり、何かを声に出して読んだり、チャットで投稿したり、Discordに伝えたりします。",
       "add": "ルールを追加",
@@ -4970,8 +5056,7 @@
       "addAction": "アクションを追加",
       "removeAction": "アクションを削除",
       "placeholders": "テキストに{name}、{amount}、{message}を使用してください。メッセージ内のリンクは削除されます。",
-      "wheelSegments": "ホイールセグメント、1ラインに1つ",
-      "wheelHint": "2歳から12歳の間。DeHubはホイールが停止する場所を選択するので、すべての視聴者が同じ結果を見ることができます。アラート、読み取り音声、またはチャットアクションで{result}を使用して名前を付けます。",
+      "placeholdersLive": "テキストに{name}、{title}、{link}を使用してください。名前、放送のタイトル、視聴するためのリンク。",
       "alertText": "アラートテキスト",
       "sound": "サウンド",
       "sayText": "声に出して読むテキスト",
@@ -4985,6 +5070,7 @@
         "follow": "誰かがフォローしています",
         "subscribe": "誰かが購読しています",
         "share": "誰かがストリームを共有しています",
+        "live": "ブロードキャストを開始します",
         "command": "チャットコマンドが使用されます",
         "keyword": "チャットメッセージに単語が含まれています",
         "chat": "任意のチャットメッセージ"
@@ -4995,12 +5081,12 @@
         "subscribers": "購読者"
       },
       "actionTypes": {
+        "wheel": "ルーレットを回す",
         "alert": "アラートを表示",
         "sound": "サウンドを再生",
         "say": "声に出して読む",
         "chat": "チャットに投稿",
-        "webhook": "Webhookに送信",
-        "wheel": "ルーレットを回す"
+        "webhook": "Webhookに送信"
       },
       "summary": {
         "tip": "{{amount}} DHB以上のヒント"
@@ -5038,6 +5124,51 @@
         "spooky": "不気味",
         "magic-spell": "魔法の呪文",
         "shhh": "しーっ"
+      }
+    },
+    "moderation": {
+      "title": "チャットモデレーション",
+      "intro": "すべてのストリームでのチャットのルール。彼らはDeHubのメインチャットにアクセスすることはありません。ここで禁止されている人は、他のどこでも話すことができます。",
+      "loadFailed": "モデレート設定を読み込めませんでした。ページを更新してもう一度お試しください。",
+      "save": "チャットルールを保存",
+      "saved": "チャットルールを保存しました。",
+      "saveFailed": "その変更を保存できませんでした。",
+      "slowMode": "スローモード",
+      "slowModeHint": "各視聴者がメッセージ間で待機する時間。あなたとあなたのモデレーターは待つことはありません。",
+      "off": "オフ",
+      "seconds_one": "{{count}}秒",
+      "seconds_other": "{{count}} 秒",
+      "followersOnly": "フォロワーのみ",
+      "subscribersOnly": "購読者のみ",
+      "subscribersOnlyHint": "フォロワーのみを上書きします。",
+      "bannedWords": "禁止された言葉",
+      "bannedWordsHint": "カンマで区切ってください。1文字ずつ単語を綴ると、囲まれません。",
+      "wordAction": "誰かが1つを使用した場合",
+      "wordBlock": "メッセージを停止する",
+      "wordTimeout": "停止して、1分間タイムアウトします",
+      "moderators": "モデレーター",
+      "moderatorsHint": "ストリームの視聴者をタイムアウトして禁止することができます。彼らはあなたやお互いに行動することはできません。",
+      "addModerator": "追加",
+      "usernamePlaceholder": "ユーザー名",
+      "moderatorAdded": "モデレーターを追加しました。",
+      "moderatorNotFound": "そのユーザー名のアカウントはありません。",
+      "removeModerator": "モデレーターから除外",
+      "noModerators": "モデレーターはまだいません。",
+      "banned": "ストリームからのアクセス禁止",
+      "unban": "同時",
+      "noBans": "誰も禁止されていません。",
+      "log": "最近の行動",
+      "noLog": "- まだ泳いでいます",
+      "actions": {
+        "ban": "{{actor}} が {{target}} をBANしました",
+        "timeout_one": "{{actor}}は{{target}}を{{count}}秒間タイムアウトしました",
+        "timeout_other": "{{actor}}は{{target}}を{{count}}秒間タイムアウトしました",
+        "unban": "{{actor}}禁止解除{{target}}",
+        "moderator-added": "{{target}}さんがモデレーターになりました",
+        "moderator-removed": "{{target}}さんはモデレーターではなくなりました",
+        "word-blocked": "「{{word}}」の{{target}}からのメッセージを停止しました",
+        "word-timeout_one": "「{{word}}」で{{count}}秒間{{target}}がタイムアウトしました",
+        "word-timeout_other": "\"{{word}}\"の{{count}}秒間{{target}}がタイムアウトしました"
       }
     }
   },
@@ -6263,6 +6394,7 @@
     "weeksShort": "{{count}}週"
   },
   "liveGift": {
+    "notEnoughToken": "このギフトには{{symbol}}が足りません",
     "pickTier": "お祝いを選択",
     "plays": "配信で{{tier}}を再生",
     "you": "あなた",

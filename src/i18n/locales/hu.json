@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Adatfolyam-összefoglaló",
+    "justEnded": "Adatfolyam-összefoglalód",
+    "lastStream": "Az utolsó adatfolyamod",
+    "share": "Megosztás",
+    "shareText": "„{{title}}” -t közvetítettem a DeHubon: {{duration}} live, {{peak}} nézés a csúcson és {{followers}} új követők.",
+    "untitled": "Névtelen adatfolyam",
+    "copied": "Ismétlés másolva. Illessze be bárhová.",
+    "loadFailed": "Az újraelosztás nem töltődött be. Próbálkozz újra egy pillanat múlva.",
+    "duration": "Élő idő",
+    "peakViewers": "Legtöbbször egyszerre nézik",
+    "gifts_one": "{{count}} ajándéktól",
+    "gifts_other": "{{count}} ajándéktól",
+    "newFollowers": "Új követők",
+    "chatMessages": "Csevegési üzenetek",
+    "chatters": "Csevegő emberek",
+    "reactions": "Reakciók",
+    "shares": "Megosztott személyek",
+    "topSupporters": "Kiemelt támogatók",
+    "polls": "Szavazások",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Még mindig számít: az ajándékok megerősítése eltarthat egy percig."
+  },
   "errors": {
     "sponsorshipUnavailable": "Az ingyenes tranzakciók a mi oldalunkon szünetelnek, nem a tárcádban. Próbáld újra hamarosan.",
     "gasSponsorshipFailed": "Ezt a tranzakciót nem sikerült átvállalni. Próbáld újra egy pillanat múlva."
@@ -4716,6 +4739,7 @@
     "creatorEarnsDirect": "Az előfizetők DeHub tokenekben fizetnek. A részvényed az előfizetés pillanatában a pénztárcádba kerül, levonva belőle a jelvényszinted platformdíját."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} fordította: {{result}}",
     "someone": "Valaki",
     "newFollower": "Új követő: {{name}}",
     "newSubscriber": "Új előfizető: {{name}}",
@@ -4727,7 +4751,31 @@
     "topSupporters": "Kiemelt támogatók",
     "tipped": "{{name}} ajándékot küldött",
     "chatPreview": "Itt jelennek meg a csevegési üzenetek",
-    "wheelLanded": "{{name}} fordította: {{result}}"
+    "poll": {
+      "closed": "A szavazás lezárult",
+      "voteFor": "Szavazz erre: {{option}}",
+      "signIn": "Jelentkezzen be a szavazáshoz",
+      "failed": "A szavazatod nem számít. Próbálkozz újra.",
+      "voted_one": "Ön · {{count}} szavazott",
+      "voted_other": "Ön · {{count}} szavazattal szavazott",
+      "votes_one": "{{count}} szavazat",
+      "votes_other": "{{count}} szavazat",
+      "howToVote_one": "Írd be {{command}} nevét és egy számot a csevegésben a szavazáshoz · {{count}} szavazat",
+      "howToVote_other": "Írd be {{command}} nevét és egy számot a csevegésben a szavazáshoz · {{count}} szavazat"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Időtúllépés 1 percre",
+    "timeout10m": "Időtúllépés 10 percre",
+    "timeout1h": "Időtúllépés 1 órára",
+    "ban": "Kitiltás ezekből az adatfolyamokból",
+    "makeModerator": "Legyen moderátor",
+    "timedOut": "Időtúllépés.",
+    "banned": "Kitiltották ezekről a patakokról.",
+    "madeModerator": "Ők most már moderátorok.",
+    "failed": "Ez nem sikerült. Próbálkozz újra.",
+    "youAreBanned": "Nem cseveghetsz az alkotó közvetítéseiben",
+    "youAreTimedOut": "Egy pillanatra lejárt az időd"
   },
   "liveStudio": {
     "controls": {
@@ -4740,6 +4788,37 @@
       "readAloudMuted": "Olvasás leállítása hangosan",
       "readAloudMutedHint": "Az ajándéküzenetek és a szabálysorok már nem olvashatók fel.",
       "failed": "Ez a kapcsoló nem változott. Próbálkozz újra."
+    },
+    "polls": {
+      "title": "Szavazások",
+      "intro": "Tegyél fel egy kérdést azoknak, akik nézik az adást. Egy gombbal válaszolnak a DeHub alkalmazásban, vagy beírják {{command}} és az opció számát a csevegésbe.",
+      "question": "Kérdés",
+      "questionPlaceholder": "Mit játsszak legközelebb?",
+      "option": "{{n}}. lehetőség",
+      "addOption": "Opció hozzáadása",
+      "removeOption": "{{n}} opció eltávolítása",
+      "duration": "Mennyi ideig tart nyitva a szavazás?",
+      "seconds_one": "{{count}} másodperc",
+      "seconds_other": "{{count}} másodperc",
+      "minutes_one": "{{count}} perc",
+      "minutes_other": "{{count}} perc",
+      "start": "Szavazás indítása",
+      "end": "Szavazás befejezése most",
+      "started": "Szavazásod nyitott. A nézők most szavazhatnak.",
+      "notLive": "Először lépj be az élő közvetítésbe. A most közvetített közvetítésen egy közvélemény-kutatás fut le.",
+      "startFailed": "A szavazás nem indult el. Próbálja újra.",
+      "closeFailed": "A szavazás nem fejeződött be. Próbálkozz újra.",
+      "live": "Szavazás nyitva · {{time}} maradt",
+      "ended": "A szavazás lezárult",
+      "votes_one": "{{count}} szavazat",
+      "votes_other": "{{count}} szavazat",
+      "replaceHint": "Egy új szavazás indítása bezárja a nyitottat.",
+      "widgetHint": "Megjeleníti az élő szavazást. A DeHub alkalmazásban a nézők koppintanak egy választási lehetőségre a szavazáshoz; az OBS-ben azt mondja az embereknek, hogy írjanak be {{command}} -t és egy számot a csevegésbe.",
+      "sample": {
+        "a": "Valami új",
+        "b": "Egy régi kedvenc",
+        "c": "Te választasz"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Értesítések és widget-ek a streamedjeidhez",
@@ -4816,6 +4895,7 @@
       "join": "Adományozás"
     },
     "kinds": {
+      "spin_wheel": "Centrifugáló kerék",
       "tip_alert": "Tanács-alert",
       "follow_alert": "Követés-alert",
       "subscribe_alert": "Feliratkozó-alert",
@@ -4832,9 +4912,10 @@
       "chat_box": "Csevegőmező",
       "ticker": "Ticker",
       "rule_alert": "Szabályriasztások",
-      "spin_wheel": "Centrifugáló kerék"
+      "poll": "Szavazás"
     },
     "hints": {
+      "spin_wheel": "Ahol a szabályaid kerekei forognak",
       "tip_alert": "Üdvözöl minden tippeket, méretük a szintjükhöz igazodva",
       "follow_alert": "Mutatja meg minden új követőt",
       "subscribe_alert": "Mutatja meg minden új feliratkozót",
@@ -4851,7 +4932,7 @@
       "chat_box": "Megjeleníti az adás csevegési üzeneteit a képernyőn",
       "ticker": "A saját szöveged egy sora, amely végiggörgeti a képernyőt",
       "rule_alert": "Itt jelennek meg a szabályaidra vonatkozó értesítések",
-      "spin_wheel": "Ahol a szabályaid kerekei forognak"
+      "poll": "Élő szavazásod, szavazógombbal minden opcióhoz"
     },
     "fields": {
       "style": "Stílus",
@@ -4886,6 +4967,8 @@
       "fast": "Gyors"
     },
     "rules": {
+      "wheelSegments": "Kerékszegmensek, soronként egy",
+      "wheelHint": "2 és 12 között. A DeHub kiválasztja, hol álljon meg a kerék, így mindenki ugyanazt az eredményt látja. Használd a (z){result} karaktert értesítésben, olvasási hangon vagy csevegési műveletben a megnevezéséhez.",
       "title": "Szabályok",
       "intro": "Amikor valami történik az adatfolyamodban, a DeHub azt teszi, amit te választasz: figyelmeztetést jelenít meg, hangot játszik le, hangosan felolvas valamit, bejegyzéseket tesz közzé a csevegésedben, vagy elmondja a Discordnak.",
       "add": "Szabály hozzáadása",
@@ -4915,8 +4998,7 @@
       "addAction": "Művelet hozzáadása",
       "removeAction": "Művelet eltávolítása",
       "placeholders": "{name}, {amount} és {message} használata a szövegben. Az üzenetekben lévő hivatkozások eltávolításra kerülnek.",
-      "wheelSegments": "Kerékszegmensek, soronként egy",
-      "wheelHint": "2 és 12 között. A DeHub kiválasztja, hol álljon meg a kerék, így mindenki ugyanazt az eredményt látja. Használd a (z){result} karaktert értesítésben, olvasási hangon vagy csevegési műveletben a megnevezéséhez.",
+      "placeholdersLive": "Használd {name}, {title} és {link} karaktereket a szövegedben: a nevedet, a közvetítés címét és egy linket a megtekintéséhez.",
       "alertText": "Figyelmeztető szöveg",
       "sound": "Hang",
       "sayText": "Hangosan felolvasandó szöveg",
@@ -4930,6 +5012,7 @@
         "follow": "Valaki követi",
         "subscribe": "Valaki feliratkozott",
         "share": "Valaki megosztja a streamet",
+        "live": "Elkezdesz sugározni",
         "command": "Csevegési parancs van használatban",
         "keyword": "A csevegőüzenet egy szót tartalmaz",
         "chat": "Bármilyen csevegési üzenet"
@@ -4940,12 +5023,12 @@
         "subscribers": "Feliratkozók"
       },
       "actionTypes": {
+        "wheel": "Pörgess meg egy kereket",
         "alert": "Értesítés megjelenítése",
         "sound": "Hang lejátszása",
         "say": "Olvasd fel hangosan",
         "chat": "Közzététel csevegésben",
-        "webhook": "Küldés webhookba",
-        "wheel": "Pörgess meg egy kereket"
+        "webhook": "Küldés webhookba"
       },
       "summary": {
         "tip": "Legalább {{amount}} DHB borravaló"
@@ -4983,6 +5066,51 @@
         "spooky": "Kísérteties",
         "magic-spell": "Varázslat varázslat",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Csevegés moderálása",
+      "intro": "A csevegés szabályai az összes adatfolyam alatt. Soha nem érik el a DeHub fő csevegését: valaki, akit itt kitiltasz, még mindig beszélhet bárhol máshol.",
+      "loadFailed": "A moderálási beállításokat nem sikerült betölteni. Frissítsd az oldalt az újabb próbálkozáshoz.",
+      "save": "Csevegési szabályok mentése",
+      "saved": "Csevegési szabályok mentve.",
+      "saveFailed": "Ez a módosítás nem menthető.",
+      "slowMode": "Lassú üzemmód",
+      "slowModeHint": "Mennyi ideig várnak az egyes nézők az üzenetek között. Te és a moderátoraid sosem vártok.",
+      "off": "Ki",
+      "seconds_one": "{{count}} másodperc",
+      "seconds_other": "{{count}} másodperc",
+      "followersOnly": "Csak követők",
+      "subscribersOnly": "Csak előfizetők",
+      "subscribersOnlyHint": "Csak a követőket bírálja felül.",
+      "bannedWords": "Betiltott szavak",
+      "bannedWordsHint": "Vesszővel elválasztva. Egy szó betűről betűre történő betűzése nem kerüli meg a kört.",
+      "wordAction": "Ha valaki ilyet használ,",
+      "wordBlock": "Állítsa le az üzenetet",
+      "wordTimeout": "Állítsa le, és állítsa le őket egy percre",
+      "moderators": "Moderátorok",
+      "moderatorsHint": "Előidőzíthetik és tiltanak nézőket a streamedjeidben. Nem tudnak cselekedni a te vagy egymásuk ellen.",
+      "addModerator": "Hozzáadás",
+      "usernamePlaceholder": "Felhasználónév",
+      "moderatorAdded": "Moderátor hozzáadva.",
+      "moderatorNotFound": "Nincs ilyen felhasználónév.",
+      "removeModerator": "Moderátor eltávolítása",
+      "noModerators": "Még nincs moderátor.",
+      "banned": "Tiltva a streamedjeidben",
+      "unban": "Tiltás feloldása",
+      "noBans": "Senki nem tiltva.",
+      "log": "Legutóbbi cselekvések",
+      "noLog": "Még nincs semmi.",
+      "actions": {
+        "timeout_one": "{{actor}} időzítésre került {{target}}-re {{count}} másodpercre",
+        "timeout_other": "{{actor}} időzítésre került {{target}}-re {{count}} másodpercre",
+        "ban": "{{actor}} tiltott {{target}}-t",
+        "unban": "{{actor}} feloldotta a tiltást {{target}}-nél",
+        "moderator-added": "{{target}} moderátorként lett",
+        "moderator-removed": "{{target}} már nem moderátor",
+        "word-blocked": "Megállította a üzenetet {{target}}-tól: \"{{word}}\"",
+        "word-timeout_one": "Időzítésre került {{target}}-t {{count}} másodpercre: \"{{word}}\"",
+        "word-timeout_other": "Időzítésre került {{target}}-t {{count}} másodpercre: \"{{word}}\""
       }
     }
   },

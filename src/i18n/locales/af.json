@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Stroom oorskakeling",
+    "justEnded": "Jou stroomherhaling",
+    "lastStream": "Jou laaste stroom",
+    "share": "Deel",
+    "shareText": "Ek het net gestroom \"{{title}}\" op DeHub: {{duration}} LIVE, {{peak}} kyk op die piek en {{followers}} nuwe volgelinge.",
+    "untitled": "Ongetiteld stroom",
+    "copied": "Herskryf gekopieer. Plak dit op enige plek.",
+    "loadFailed": "Die terugslag het nie gelaai nie. Probeer weer in 'n oomblik.",
+    "duration": "Tyd leef",
+    "peakViewers": "Die meeste kyk dadelik",
+    "gifts_one": "Van {{count}} cadeau",
+    "gifts_other": "Van {{count}} geskenke",
+    "newFollowers": "Nuwe volgelinge",
+    "chatMessages": "Geselsboodskappe",
+    "chatters": "Mense gesels",
+    "reactions": "Reaksies",
+    "shares": "Mense deel",
+    "topSupporters": "Top ondersteuners",
+    "polls": "Stembusse",
+    "pollWinner": "{{option}} wen",
+    "stillCounting": "Nog steeds tel: geskenke kan 'n minuut neem om te bevestig."
+  },
   "errors": {
     "sponsorshipUnavailable": "Gratis transaksies is aan ons kant onderbreek, nie by jou beursie nie. Probeer binnekort weer.",
     "gasSponsorshipFailed": "Hierdie transaksie kon nie geborg word nie. Probeer oor 'n oomblik weer."
@@ -4813,6 +4836,7 @@
     "creatorEarnsDirect": "Intekenare betaal in DeHub-tokens. Jou aandeel land in jou beursie die oomblik dat hulle inteken, minder die platformfooi vir jou wapenvlak."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}} spun: {{result}}",
     "someone": "Iemand",
     "newFollower": "Nuwe volgeling: {{name}}",
     "newSubscriber": "Nuwe intekenaar: {{name}}",
@@ -4824,7 +4848,31 @@
     "topSupporters": "Top ondersteuners",
     "tipped": "{{name}} stuur 'n geskenk",
     "chatPreview": "Geselsboodskappe verskyn hier",
-    "wheelLanded": "{{name}} spun: {{result}}"
+    "poll": {
+      "closed": "Stemming gesluit",
+      "voteFor": "Stem vir {{option}}",
+      "signIn": "Teken in om te stem",
+      "failed": "Jou stem het nie getel nie. Probeer weer.",
+      "voted_one": "Jy het gestem · {{count}} stem",
+      "voted_other": "Jy het gestem · {{count}} stemme",
+      "votes_one": "{{count}} stem",
+      "votes_other": "{{count}} stemme",
+      "howToVote_one": "Tik {{command}} en 'n nommer in die klets om te stem · {{count}} stem",
+      "howToVote_other": "Tik {{command}} en 'n nommer in die klets om te stem · {{count}} stemme"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Tyd uit vir 1 minuut",
+    "timeout10m": "Tyd uit vir 10 minute",
+    "timeout1h": "Tyd uit vir 1 uur",
+    "ban": "Geban van hierdie streams",
+    "makeModerator": "Maak moderator",
+    "timedOut": "Tyd uit.",
+    "banned": "Geban van hierdie streams.",
+    "madeModerator": "Hulle is nou ’n moderator.",
+    "failed": "Daar het nie gewerk nie. Probeer weer.",
+    "youAreBanned": "Jy kan nie in hierdie skepper se streams praat nie",
+    "youAreTimedOut": "Jy is vir ’n oomblik tyd uit"
   },
   "liveStudio": {
     "controls": {
@@ -4837,6 +4885,37 @@
       "readAloudMuted": "Hou op om hardop te lees",
       "readAloudMutedHint": "Geskenkboodskappe en reëllyne word nie meer gelees nie.",
       "failed": "Die skakelaar het nie verander nie. Probeer weer."
+    },
+    "polls": {
+      "title": "Stembusse",
+      "intro": "Vra die mense wat na jou uitsending kyk, 'n vraag. Hulle antwoord met 'n knoppie in die DeHub-app, of deur {{command}} en die opsie se nommer in die klets te tik.",
+      "question": "Vraag",
+      "questionPlaceholder": "Wat moet ek volgende speel?",
+      "option": "Opsie {{n}}",
+      "addOption": "Voeg 'n opsie by",
+      "removeOption": "Verwyder opsie {{n}}",
+      "duration": "Hoe lank om te stem",
+      "seconds_one": "{{count}} tweede",
+      "seconds_other": "{{count}} sekondes",
+      "minutes_one": "{{count}} minuut",
+      "minutes_other": "{{count}} minute",
+      "start": "Begin die stembus",
+      "end": "Sluit nou aan om te stem",
+      "started": "Jou stem is oop. Besoekers kan nou stem.",
+      "notLive": "Gaan eers regstreeks. 'N Peiling loop op die uitsending wat jy nou stroom.",
+      "startFailed": "Die meningspeiling het nie begin nie. Probeer weer.",
+      "closeFailed": "Stem het nie geëindig nie. Probeer weer.",
+      "live": "Stem oop · {{time}} links",
+      "ended": "Stemming gesluit",
+      "votes_one": "{{count}} stem",
+      "votes_other": "{{count}} stemme",
+      "replaceHint": "Begin 'n nuwe stembus sluit die een wat oop is.",
+      "widgetHint": "Wys jou live stembus. In die DeHub-app klik kykers op 'n opsie om te stem; in OBS sê dit vir mense om {{command}} en 'n nommer in die klets in te tik.",
+      "sample": {
+        "a": "Iets nuuts",
+        "b": "'n Ou gunsteling",
+        "c": "Jy kies"
+      }
     },
     "title": "Live Studio",
     "subtitle": "Aankondigings en widgets vir jou streams",
@@ -4913,6 +4992,7 @@
       "join": "Sluit aan"
     },
     "kinds": {
+      "spin_wheel": "Spin wiel",
       "tip_alert": "Wenk waarskuwing",
       "follow_alert": "Volg waarskuwing",
       "subscribe_alert": "Intekenaarwaarskuwing",
@@ -4929,9 +5009,10 @@
       "chat_box": "Geselsdoos",
       "ticker": "Ticker",
       "rule_alert": "Reël waarskuwings",
-      "spin_wheel": "Spin wiel"
+      "poll": "Peiling"
     },
     "hints": {
+      "spin_wheel": "Waar die wiele in jou reëls draai",
       "tip_alert": "Vier elke punt, grootte tot sy vlak",
       "follow_alert": "Wys elke nuwe volgeling",
       "subscribe_alert": "Vertoon elke nuwe intekenaar",
@@ -4948,7 +5029,7 @@
       "chat_box": "Wys jou uitsending se kletsboodskappe op die skerm",
       "ticker": "'n Reël van jou eie teks wat oor die skerm blaai",
       "rule_alert": "Waar jou reëls se waarskuwings verskyn",
-      "spin_wheel": "Waar die wiele in jou reëls draai"
+      "poll": "Jou regstreekse peiling, met 'n stemknoppie vir elke opsie"
     },
     "fields": {
       "celebration": "Viering",
@@ -4982,6 +5063,8 @@
       "fast": "Vinnig"
     },
     "rules": {
+      "wheelSegments": "Wielsegmente, een per lyn",
+      "wheelHint": "Tussen twee en twaalf. DeHub kies waar die wiel stop, sodat almal wat kyk dieselfde resultaat sien. Gebruik {result} in 'n waarskuwing, lees hardop of gesels aksie om dit te noem.",
       "title": "Reëls",
       "intro": "Wanneer iets op jou stroom gebeur, doen DeHub wat jy kies: wys 'n waarskuwing, speel 'n geluid, lees iets hardop, plaas in jou klets of vertel jou Discord.",
       "add": "Voeg 'n reël by",
@@ -5011,8 +5094,7 @@
       "addAction": "Voeg 'n aksie by",
       "removeAction": "Verwyder aksie",
       "placeholders": "Gebruik {name}, {amount} en {message} in jou teks. Links in messages delete.",
-      "wheelSegments": "Wielsegmente, een per lyn",
-      "wheelHint": "Tussen twee en twaalf. DeHub kies waar die wiel stop, sodat almal wat kyk dieselfde resultaat sien. Gebruik {result} in 'n waarskuwing, lees hardop of gesels aksie om dit te noem.",
+      "placeholdersLive": "Gebruik {name}, {title} en {link} in jou teks: jou naam, die titel van die uitsending en 'n skakel om dit te kyk.",
       "alertText": "Waarskuwing teks",
       "sound": "Klank",
       "sayText": "Teks om hardop te lees",
@@ -5026,6 +5108,7 @@
         "follow": "Iemand volg",
         "subscribe": "Iemand onderskryf",
         "share": "Iemand deel die stroom",
+        "live": "Jy begin uitsaai",
         "command": "'n Geselsopdrag word gebruik",
         "keyword": "Chatboodskap bevat 'n woord",
         "chat": "Enige kletsboodskap"
@@ -5036,12 +5119,12 @@
         "subscribers": "Intekenaars"
       },
       "actionTypes": {
+        "wheel": "Draai 'n wiel",
         "alert": "Wys 'n waarskuwing",
         "sound": "Speel 'n klank",
         "say": "Lees hardop",
         "chat": "Skryf berig in die gespreksvenster.",
-        "webhook": "Stuur na 'n webhaak",
-        "wheel": "Draai 'n wiel"
+        "webhook": "Stuur na 'n webhaak"
       },
       "summary": {
         "tip": "Wenk van {{amount}} DHB of meer"
@@ -5050,7 +5133,8 @@
         "blank": "Leë reël",
         "readChat": "Lees hardop klets",
         "bigTip": "Lug horing vir groot wenke",
-        "thankFollowers": "Dankie aan nuwe volgelinge"
+        "thankFollowers": "Dankie aan nuwe volgelinge",
+        "command": "Kletsopdrag"
       },
       "presetHints": {
         "blank": "Begin van niks",
@@ -5078,6 +5162,51 @@
         "spooky": "Spooky",
         "magic-spell": "Magiese spel",
         "shhh": "SHH"
+      }
+    },
+    "moderation": {
+      "title": "Praatmoderasie",
+      "intro": "Reëls vir die praat onder al jou streams. Hulle kom nooit by DeHub se hoofpraat nie: iemand wat jy hier ban, kan steeds ooral praat.",
+      "loadFailed": "Jou moderasie-instellings kon nie gelas word nie. Verver die blad om weer te probeer.",
+      "save": "Spaar praatreëls",
+      "saved": "Praatreëls gespaar.",
+      "saveFailed": "Daar het nie gewerk nie om dié verandering te spaar nie.",
+      "slowMode": "Slangmodus",
+      "slowModeHint": "Hoe lank elke kykenaar tussen boodskappe moet wag. Jy en jou moderators hoef nie te wag nie.",
+      "off": "Uit",
+      "seconds_one": "{{count}} sekonde",
+      "seconds_other": "{{count}} sekondes",
+      "followersOnly": "Sleutelvolgers",
+      "subscribersOnly": "Abonnees slegs",
+      "subscribersOnlyHint": "Oorskry sleutelvolgers.",
+      "bannedWords": "Gebane woorde",
+      "bannedWordsHint": "Skei met kommas. ’n Woord letter vir letter uitspreek sal dit nie omseil nie.",
+      "wordAction": "Wanneer iemand een gebruik",
+      "wordBlock": "Stop die boodskap",
+      "wordTimeout": "Stop dit en tyd hulle vir ’n minuut uit.",
+      "moderators": "Moderator",
+      "moderatorsHint": "Hulle kan tyd uit en verbied kykers in jou strome. Hulle kan nie op jou of op mekaar reageer nie.",
+      "addModerator": "Voeg by",
+      "usernamePlaceholder": "Gebruikernaam",
+      "moderatorAdded": "Moderator bygevoeg.",
+      "moderatorNotFound": "Geen rekening met daardie gebruikersnaam nie.",
+      "removeModerator": "Verwyder moderator",
+      "noModerators": "Geen moderators nie.",
+      "banned": "Verban uit jou strome",
+      "unban": "Unban",
+      "noBans": "Niemand word verbied nie.",
+      "log": "Onlangse aksies",
+      "noLog": "Nog niks.",
+      "actions": {
+        "timeout_one": "{{actor}} uitgetel {{target}} vir {{count}} tweede",
+        "timeout_other": "{{actor}} afgetel {{target}} vir {{count}} sekondes",
+        "ban": "{{actor}} verban {{target}}",
+        "unban": "{{actor}} Unbanned {{target}}",
+        "moderator-added": "{{target}} word moderator",
+        "moderator-removed": "{{target}} is nie meer 'n moderator nie",
+        "word-blocked": "Stop 'n boodskap van {{target}} vir \"{{word}}\"",
+        "word-timeout_one": "{{target}}{{count}} tweede vir \"{{word}}\"",
+        "word-timeout_other": "{{target}} {{count}} sekondes vir \"{{word}}\""
       }
     }
   },

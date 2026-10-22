@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "ئېقىم رېكاپ",
+    "justEnded": "ئېقىمنى ئەسلىگە كەلتۈرۈش پروگراممىسى",
+    "lastStream": "ئەڭ ئاخىرقى ئېقىمى",
+    "share": "ھەمبەھىرلەش",
+    "shareText": "مەن \"{{title}}\" نى DeHub دا تارقاتتىم: {{duration}}LIVE، {{peak}} ئەڭ يۇقىرى پەللىگە قاراپ، {{followers}} يېڭى ئەگەشكۈچىلەر.",
+    "untitled": "نامسىز ئېقىم",
+    "copied": "قايتا كۆچۈرۈڭ. ئۇنى ھەرقانداق يەرگە كۆچۈرۈڭ.",
+    "loadFailed": "ھېساباتى يۈكلەنمىدى. بىر مىنۇتتىن كېيىن قايتا سىناپ بېقىڭ.",
+    "duration": "ۋاقىت LIVE",
+    "peakViewers": "كۆپىنچىسى بىرلا ۋاقىتتا كۆرۈۋاتىدۇ",
+    "gifts_one": "From {{count}} ھەدىيە",
+    "gifts_other": "From {{count}} ھەدىسلەر",
+    "newFollowers": "يېڭى ئەگەشكۈچىلەر",
+    "chatMessages": "پاراڭلىشىش ئۇچۇرلىرى",
+    "chatters": "كىشىلەر پاراڭلىشىدۇ",
+    "reactions": "Reactions",
+    "shares": "كىشىلەر ئورتاقلىشىدۇ",
+    "topSupporters": "ئەڭ يۇقىرى مەدەتكارلار",
+    "polls": "Polls",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "ھېلىمۇ ساناپ باقايلى: سوۋغاتلار تەستىقلاش ئۈچۈن بىر مىنۇت ۋاقىت كېتىدۇ."
+  },
   "errors": {
     "sponsorshipUnavailable": "ھەقسىز مامىلىلەر بىز تەرەپتە توختىتىلدى، ھەميانىڭىزدا ئەمەس. بىردەمدىن كېيىن قايتا سىناڭ.",
     "gasSponsorshipFailed": "بۇ مامىلىنىڭ خىراجىتىنى كۆتۈرەلمىدۇق. بىردەمدىن كېيىن قايتا سىناڭ."
@@ -4716,6 +4739,7 @@
     "creatorEarnsDirect": "ئابونتلار DeHub توكېنلىرىدا پۇل تۆلەيدۇ. ئۇلار تىزىملىتىپ بولغاندىن كېيىن، سىزنىڭ پاي چېكىڭىز يانچۇقىڭىزغا كىرىدۇ، سىگنال سەۋىيەڭىزگە نىسبەتەن سۇپا ھەققى ئاز بولىدۇ."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}}spun: {{result}}",
     "someone": "بىرسى",
     "newFollower": "يېڭى ئەگەشكۈچى: {{name}}",
     "newSubscriber": "يېڭى ئابونت: {{name}}",
@@ -4727,7 +4751,31 @@
     "topSupporters": "ئەڭ يۇقىرى مەدەتكارلار",
     "tipped": "{{name}} ھەدىيە ئەۋەتتى",
     "chatPreview": "بۇ يەردە پاراڭلىشىش ئۇچۇرلىرى كۆرۈنىدۇ",
-    "wheelLanded": "{{name}}spun: {{result}}"
+    "poll": {
+      "closed": "Soyghush qopqaldi",
+      "voteFor": "{{option}} bo'yicha soygulash",
+      "signIn": "Soyghush uchun kirish qiling",
+      "failed": "Soyghushingiz hisoblana olmadi. Yana urinib ko'ring.",
+      "voted_one": "Siz soygulashdingiz · {{count}} soygulash",
+      "voted_other": "Siz soygulashdingiz · {{count}} soygulashlar",
+      "votes_one": "{{count}} soygulash",
+      "votes_other": "{{count}} soygulashlar",
+      "howToVote_one": "Chatda {{command}} va raqam yozib soygulash · {{count}} soygulash",
+      "howToVote_other": "Chatda {{command}} va raqam yozib soygulash · {{count}} soygulashlar"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "1 مىنۇت ۋاقىت چىقىرىش",
+    "timeout10m": "10 مىنۇت ۋاقىت چىقتى",
+    "timeout1h": "ۋاقىت 1 سائەتكە چىقتى",
+    "ban": "بۇ ئېقىشلارنى چەكلەش",
+    "makeModerator": "Moderator ياساش",
+    "timedOut": "ۋاقىت توشتى.",
+    "banned": "بۇ دەريالارنىڭ سۈيى سىڭىپ كېتىشتىن توسىدۇ",
+    "madeModerator": "ئۇلار (يەنى مەككە كۇففارلىرى) دىن ئىلگىرى ئۆتكەن كاپىرلار (ئۆز پەيغەمبەرلىرىگە) ھىيلە -",
+    "failed": "بۇ ئۈنۈم بەرمىدى، قايتا سىناپ بېقىڭ.",
+    "youAreBanned": "بۇ ياراتقۇچىنىڭ ئېقىمىدا پاراڭلاشقىلى بولمايدۇ",
+    "youAreTimedOut": "(ئى مۇھەممەد!) سەن ھەقىقەتەن بۈيۈك ئەخلاققا ئىگىسەن"
   },
   "liveStudio": {
     "controls": {
@@ -4740,6 +4788,37 @@
       "readAloudMuted": "ئاۋازلىق ئوقۇشنى توختىتىش پروگراممىسى",
       "readAloudMutedHint": "سوۋغات ئۇچۇرلىرى ۋە قائىدىلەر ئەمدى ئوقۇلمايدۇ.",
       "failed": "بۇ ئالماشتۇرغۇچ ئۆزگەرمىدى، قايتا سىناپ بېقىڭ."
+    },
+    "polls": {
+      "title": "Soyghushlar",
+      "intro": "Kanaliiz ko'rganlar orasida savol bering. Ular DeHub ilovasida tugma bilan javob berishlar yoki chatda {{command}} va tanlov raqamini yozishlar.",
+      "question": "Savol",
+      "questionPlaceholder": "Qaysi o'yinni keyingi o'ynash kerak?",
+      "option": "Tanlov {{n}}",
+      "addOption": "Tanlov qo'shing",
+      "removeOption": "Tanlov {{n}} ni o'chiring",
+      "duration": "Soyghush qanchalik ochiq qoladi",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekundlar",
+      "minutes_one": "{{count}} daqiqa",
+      "minutes_other": "{{count}} daqiqa",
+      "start": "Soyghushni boshlang",
+      "end": "Hozir soygulashni tugatding",
+      "started": "Soyghushingiz ochiq. Ko'rganlar soygulash qila oladilar.",
+      "notLive": "Avval canli ko'rsatuvga chiqing. Soyghush siz hozirda stream qilib turganingizda o'tadi.",
+      "startFailed": "Soyghush boshlanmadi. Yana urinib ko'ring.",
+      "closeFailed": "Soyghush tugamadi. Yana urinib ko'ring.",
+      "live": "Soyghush ochiq · {{time}} qoldi",
+      "ended": "Soyghush qopqaldi",
+      "votes_one": "{{count}} VOOT",
+      "votes_other": "{{count}} votes",
+      "replaceHint": "يېڭى بىر سايلامنى باشلاش ئېچىۋېتىلگەن سايلامنى تاقايدۇ.",
+      "widgetHint": "ھاياتلىق ئاۋازىڭىزنى كۆرسىتىڭ. DeHub ئەپ كۆرگۈچلىرى ئاۋاز بېرىش تاللانمىسىنى تاللايدۇ ؛ OBS دىكى كىشىلەرگە {{command}} ۋە پاراڭدىكى ساننى كىرگۈزۈشنى ئېيتىدۇ.",
+      "sample": {
+        "a": "بىرەر يېڭىلىق",
+        "b": "قەدىمىي ياقتۇرىدىغان",
+        "c": "سىز تاللايسىز"
+      }
     },
     "title": "ياۋرۇ ستىدىي",
     "subtitle": "ئېقىمىڭىزغا ماس كېلىدىغان ئاگاھلاندۇرۇش ۋە ۋىجېتلار",
@@ -4825,9 +4904,11 @@
       "event_feed": "يېقىندا ئېلىپ بېرىلغان پائالىيەت",
       "chat_box": "پاراڭلىشىش ساندۇقى",
       "ticker": "Ticker",
-      "rule_alert": "قائىدە ئاگاھلاندۇرۇشلار"
+      "rule_alert": "قائىدە ئاگاھلاندۇرۇشلار",
+      "poll": "Poll"
     },
     "hints": {
+      "spin_wheel": "قائىدىلىرىڭىزدىكى چولپانلار ئايلىنىدىغان جاي",
       "tip_alert": "(اﷲ تائالانىڭ ئىلمىي ئەزەلىسىدە ھىدايەتتىن) بۇرۇۋېتىلگەن ئادەم (قۇرئانغا ۋە مۇھەممەد ئەلەيھىسسالامغا ئىمان كەلتۈرۈش",
       "follow_alert": "ھەربىر يېڭى ئەگەشكۈچىنى كۆرسىتىدۇ",
       "subscribe_alert": "ھەربىر يېڭى ئابونتنى كۆرسىتىدۇ",
@@ -4844,7 +4925,7 @@
       "chat_box": "ئېكراندا تارقىتىشنىڭ پاراڭلىشىش ئۇچۇرلىرىنى كۆرسىتىدۇ",
       "ticker": "ئېكراننى ئايلاندۇرىدىغان ئۆز تېكىستىڭىزدىكى بىر سىزىق",
       "rule_alert": "قائىدىلىرىڭىزنىڭ ئاگاھلاندۇرۇشلىرى قەيەردە كۆرۈنىدۇ",
-      "spin_wheel": "قائىدىلىرىڭىزدىكى چولپانلار ئايلىنىدىغان جاي"
+      "poll": "ھاياتلىق ئاۋازىڭىز، ھەر بىر تاللاش ئۈچۈن ئاۋاز بېتى بار"
     },
     "fields": {
       "celebration": "ھېيت",
@@ -4878,6 +4959,8 @@
       "fast": "Fast"
     },
     "rules": {
+      "wheelSegments": "شوتا بۆلەكلىرى، بىر سېرىق",
+      "wheelHint": "2 دىن 12 گىچە. DeHub، شوپۇر توختىغان يەرنى تاللايدۇ، شۇڭا ھەممە ئادەم ئوخشاش نەتىجىنى كۆرىدۇ. {result} نى ئاگاھلاندۇرۇش، ئاۋازلىق ئوقۇش ياكى پاراڭلىشىش ھەرىكىتىدە ئىشلەتكىلى بولىدۇ.",
       "title": "قائىدە",
       "intro": "ئېقىمىڭىزدا بىرەر ئىش يۈز بەرگەندە، DeHub ئۆزىڭىز تاللىغاننى قىلىدۇ: ئاگاھلاندۇرۇشنى كۆرسىتىدۇ، ئاۋاز چىقىرىدۇ، يۇقىرى ئاۋازدا بىر نەرسە ئوقۇيدۇ، پاراڭلىشىدۇ ياكى پاراڭلىشىدۇ.",
       "add": "قائىدە قوشۇش",
@@ -4907,8 +4990,7 @@
       "addAction": "ھەرىكەت قوشۇش",
       "removeAction": "ھەرىكەتنى چىقىرىۋېتىش",
       "placeholders": "تېكىستىڭىزدە {name}, {amount} ۋە {message} نى ئىشلىتىڭ. ئۇچۇرلاردىكى ئۇلانمىلار ئۆچۈرۈۋېتىلدى.",
-      "wheelSegments": "شوتا بۆلەكلىرى، بىر سېرىق",
-      "wheelHint": "2 دىن 12 گىچە. DeHub، شوپۇر توختىغان يەرنى تاللايدۇ، شۇڭا ھەممە ئادەم ئوخشاش نەتىجىنى كۆرىدۇ. {result} نى ئاگاھلاندۇرۇش، ئاۋازلىق ئوقۇش ياكى پاراڭلىشىش ھەرىكىتىدە ئىشلەتكىلى بولىدۇ.",
+      "placeholdersLive": "تېكىستىڭىزدە {name}, {title} ۋە {link} نى ئىشلىتىڭ: ئىسمىڭىز، تېلېۋىزىيە تىياتىرىنىڭ بېتى ۋە ئۇنى كۆرۈش ئۇلىنىشى.",
       "alertText": "ئاگاھلاندۇرۇش تېكىستى",
       "sound": "ئاۋازى",
       "sayText": "ئۈنلۈك ئوقۇش تېكىستى",
@@ -4922,6 +5004,7 @@
         "follow": "بىرسى ئەگىشىدۇ",
         "subscribe": "بىرەرسى ئىمزا قويىدۇ",
         "share": "بىرسى ئېقىمىنى ئورتاق تەقسىم قىلىدۇ",
+        "live": "سىز تارقىتىشنى باشلايسىز",
         "command": "سۆھبەت بۇيرۇقى ئىشلىتىلىدۇ",
         "keyword": "سۆھبەت خېتىدە بىر سۆز بار",
         "chat": "ھەرقانداق پاراڭلاشقۇچ ئۇچۇر"
@@ -4932,12 +5015,12 @@
         "subscribers": "ئابونتلار"
       },
       "actionTypes": {
+        "wheel": "چاقنى ئايلاندۇرۇش پروگراممىسى",
         "alert": "Show an alert",
         "sound": "ئاۋازنى ئىجرا قىلىش پروگراممىسى",
         "say": "يۇقىرى ئاۋازدا ئوقۇش پروگراممىسى",
         "chat": "پاراڭدا يوللاش",
-        "webhook": "توركۆرگۈگە ئەۋەتىش",
-        "wheel": "چاقنى ئايلاندۇرۇش پروگراممىسى"
+        "webhook": "توركۆرگۈگە ئەۋەتىش"
       },
       "summary": {
         "tip": "{{amount}} DHB ياكى ئۇنىڭدىن يۇقىرىنىڭ تەكلىپى"
@@ -4975,6 +5058,51 @@
         "spooky": "Spooky",
         "magic-spell": "سېھىرلىك سېھىرگەرلىك",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "unban": "چەكلەشنى بىكار قىلىش",
+      "title": "پاراڭلىشىش مۇداپىئەسى",
+      "intro": "بارلىق ئېقىمىڭىزنىڭ ئاستىدىكى پاراڭلىشىش قائىدىلىرى ئۇلار ھېچقاچان DeHub نىڭ ئاساسلىق پاراڭلىشىشىغا ئېرىشەلمەيدۇ: سىز بۇ يەردە چەكلىگەن ئادەم باشقا يەردە سۆزلىيەلەيدۇ.",
+      "loadFailed": "ئۆلچەم تەڭشەكلىرىڭىز يۈكلەنمىدى. قايتا سىناش ئۈچۈن بەتنى يېڭىلىۋېلىڭ.",
+      "save": "پاراڭلىشىش قائىدىلىرىنى ساقلاش پروگراممىسى",
+      "saved": "پاراڭلىشىش قائىدىلىرى ساقلاندى.",
+      "saveFailed": "بۇ ئۆزگەرتىشنى ساقلىغىلى بولمىدى.",
+      "slowMode": "ئەسۋال مود",
+      "slowModeHint": "ھەربىر كۆزەتكۈچى (يەنى ئابدۇللاھ ئىبن ئۇبەي ۋە مۇناپىقلارنىڭ ئىپتىداسى) نىڭ خەۋەر (ئى مۇھەممەد!) سەن ۋە سېنىڭ قەۋمىڭ ھەرگىزمۇ (اﷲ نىڭ ئازابىدىن) قورقمايسىلەر",
+      "off": "ئۆچۈرۈش",
+      "seconds_one": "{{count}} ئىككىنچى",
+      "seconds_other": "{{count}} seconds",
+      "followersOnly": "پەقەت ئەگەشكۈچىلەر",
+      "subscribersOnly": "پەقەت ئابونتلار",
+      "subscribersOnlyHint": "ئۇ (يەنى قۇرئان ئايەتلىرى) قىممەتلىك، (قەدرى) يۇقىرى پاك سەھ",
+      "bannedWords": "چەكلەنگەن سۆزلەر",
+      "bannedWordsHint": "كىرگۈزگۈچ بىلەن ئايرىش. ھەرپ ئارقىلىق بىر سۆزنى يېزىش ئۇنى ئايلاندۇرالمايدۇ.",
+      "wordAction": "بىر ئادەم بىرنى ئىشلەتكەندە",
+      "wordBlock": "ئۇچۇرنى توختىتىش پروگراممىسى",
+      "wordTimeout": "ئۇنى توختىتىپ، بىر مىنۇت ۋاقىت چىقىرىپ قويۇڭ",
+      "moderators": "Moderator",
+      "moderatorsHint": "ئۇلار ۋاقىت چىقىرىپ سىزنىڭ ئېقىمىڭىزدىكى تاماشىبىنلارنى توسۇپ قالالايدۇ. ئۇلار سىزگە ۋە بىر- بىرىگە قىلچە تەسىر كۆرسىتەلمەيدۇ.",
+      "addModerator": "قوشۇش",
+      "usernamePlaceholder": "ئىشلەتكۈچى ئىسمى",
+      "moderatorAdded": "Moderator قوشۇلدى.",
+      "moderatorNotFound": "بۇ ئىشلەتكۈچى ئىسىمدا ھېساب يوق.",
+      "removeModerator": "تەھرىرلىگۈچنى چىقىرىۋېتىش",
+      "noModerators": "تېخىچە مۇداپىئەچى يوق.",
+      "banned": "ئېقىمىڭىزدىن مەنئى قىلىندى",
+      "noBans": "ھېچ كىشىگە ھارام قىلىنمايدۇ.",
+      "log": "يېقىنقى ھەركەتلەر",
+      "noLog": "ھازىرغىچە ھېچنېمە يوق.",
+      "actions": {
+        "timeout_one": "{{actor}} {{target}} نى {{count}} سېكۇنت ئۈنسىزلەشتۈردى",
+        "timeout_other": "{{actor}} {{target}} نى {{count}} سېكۇنت ئۈنسىزلەشتۈردى",
+        "word-timeout_one": "\"{{word}}\" سەۋەبىدىن {{target}} {{count}} سېكۇنت ئۈنسىزلەشتۈرۈلدى",
+        "ban": "{{actor}} bend{{target}}",
+        "unban": "{{actor}}unbined {{target}}",
+        "moderator-added": "{{target}} moderator بولدى",
+        "moderator-removed": "{{target}} ئەمدى moderator ئەمەس",
+        "word-blocked": "\"{{word}}\" ئۈچۈن {{target}} دىن كەلگەن ئۇچۇرنى توختىتىپ قويدى",
+        "word-timeout_other": "ۋاقىت بەلگىلەنگەن {{target}} {{count}} seconds for \"{{word}}\""
       }
     }
   },

@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "I - recap ang stream",
+    "justEnded": "I - recap ang iyong stream",
+    "lastStream": "Huling stream mo",
+    "share": "Ibahagi",
+    "shareText": "Nag - stream ako ng \"{{title}}\" sa DeHub: {{duration}} live, {{peak}} nanonood sa rurok at {{followers}} mga bagong tagasunod.",
+    "untitled": "Walang pamagat na stream",
+    "copied": "Kinopya ang recap. I - paste ito kahit saan.",
+    "loadFailed": "Hindi nag - load ang recap. Subukan muli sa ilang sandali.",
+    "duration": "Live ang oras",
+    "peakViewers": "Karamihan sa mga nanonood nang sabay - sabay",
+    "gifts_one": "Mula {{count}}regalo",
+    "gifts_other": "Mula {{count}} mga regalo",
+    "newFollowers": "Mga bagong tagasunod",
+    "chatMessages": "Mga mensahe sa chat",
+    "chatters": "Mga taong nakikipag - chat",
+    "reactions": "Mga Reaksyon",
+    "shares": "Mga taong nagbabahagi",
+    "topSupporters": "Mga nangungunang tagasuporta",
+    "polls": "Mga botohan",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Nagbibilang pa rin: ang mga regalo ay maaaring tumagal ng isang minuto upang kumpirmahin."
+  },
   "errors": {
     "sponsorshipUnavailable": "Naka-pause ang mga libreng transaksyon sa panig namin, hindi sa wallet mo. Pakisubukan ulit mamaya.",
     "gasSponsorshipFailed": "Hindi nasagot ang bayad para sa transaksyong ito. Pakisubukan ulit mamaya."
@@ -4829,6 +4852,7 @@
     "creatorEarnsDirect": "Nagbabayad ang mga subscriber sa mga token ng DeHub. Ang iyong share ay nasa iyong wallet sa sandaling mag - subscribe sila, mas mababa ang bayarin sa platform para sa iyong badge tier."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}}spun:{{result}}",
     "someone": "Isang tao",
     "newFollower": "Bagong tagasunod:{{name}}",
     "newSubscriber": "Bagong subscriber:{{name}}",
@@ -4840,7 +4864,31 @@
     "topSupporters": "Mga nangungunang tagasuporta",
     "tipped": "Nagpadala ng regalo si {{name}}",
     "chatPreview": "Lilitaw ang mga mensahe ng chat dito",
-    "wheelLanded": "{{name}}spun:{{result}}"
+    "poll": {
+      "closed": "Boto na natapos",
+      "voteFor": "Boto para sa {{option}}",
+      "signIn": "Mag-log in para bumoto",
+      "failed": "Ang iyong boto ay hindi nakapag-count. Subukan muli.",
+      "voted_one": "Iyong boto: {{count}} boto",
+      "voted_other": "Iyong boto: {{count}} boto",
+      "votes_one": "{{count}} boto",
+      "votes_other": "{{count}} boto",
+      "howToVote_one": "I-type ang {{command}} at isang numero sa chat para bumoto: {{count}} boto",
+      "howToVote_other": "I-type ang {{command}} at isang numero sa chat para bumoto: {{count}} boto"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "Time out para sa 1 minuto",
+    "timeout10m": "Time out para sa 10 minuto",
+    "timeout1h": "Time out para sa 1 oras",
+    "ban": "Ipagbawal mula sa mga stream na ito",
+    "makeModerator": "Gumawa ng moderator",
+    "timedOut": "Nag - time out.",
+    "banned": "Ipagbawal mula sa mga stream na ito.",
+    "madeModerator": "Sila ngayon ay isang moderator.",
+    "failed": "Hindi iyon gumana. Subukan muli.",
+    "youAreBanned": "Hindi ka maaaring makipag - chat sa mga stream ng tagalikha na ito",
+    "youAreTimedOut": "Naka - time out ka nang ilang sandali"
   },
   "liveStudio": {
     "controls": {
@@ -4853,6 +4901,37 @@
       "readAloudMuted": "Itigil ang read - loud",
       "readAloudMutedHint": "Hindi na nababasa ang mga mensahe ng regalo at mga linya ng panuntunan.",
       "failed": "Hindi nagbago ang switch na iyon. Subukan muli."
+    },
+    "polls": {
+      "title": "Pagboto",
+      "intro": "Tanungin ang mga tao na nakatingin sa iyong broadcast. Sagot sila sa pamamagitan ng isang button sa DeHub app, o sa pamamagitan ng pag-type ng {{command}} at ang numero ng opsyon sa chat.",
+      "question": "Tanong",
+      "questionPlaceholder": "Ano ang dapat kong maglaro na?",
+      "option": "Opsyun {{n}}",
+      "addOption": "Idagdag ang isang opsyon",
+      "removeOption": "Alisin ang opsyon {{n}}",
+      "duration": "Kailan ang pagboto ay magtatapos",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundo",
+      "minutes_one": "{{count}} minuto",
+      "minutes_other": "{{count}} minuto",
+      "start": "Simulan ang pagboto",
+      "end": "Tapusin ang pagboto ngayon",
+      "started": "Ang iyong pagboto ay bukas. Mga manonood ay maaaring bumoto na.",
+      "notLive": "Mag-live muna. Ang pagboto ay nagrerun sa broadcast na iyong ginagawad ngayon.",
+      "startFailed": "Hindi nagsimula ang pagboto. Subukan muli.",
+      "closeFailed": "Hindi natapos ang pagboto. Subukan muli.",
+      "live": "Pagboto bukas · {{time}} na nagtatagpo",
+      "ended": "Pagboto natapos",
+      "votes_one": "{{count}} bumoto",
+      "votes_other": "{{count}} mga boto",
+      "replaceHint": "Ang pagsisimula ng isang bagong poll ay nagsasara sa isa na bukas.",
+      "widgetHint": "Ipakita ang iyong live poll. Sa DeHub app, mag - tap ang mga manonood ng opsyon para bumoto; sa OBS, sinasabi nito sa mga tao na mag - type ng {{command}} at numero sa chat.",
+      "sample": {
+        "a": "May bago",
+        "b": "Isang lumang paborito",
+        "c": "Ikaw ang pipili"
+      }
     },
     "title": "Instagram",
     "subtitle": "Mga alerto at widget para sa iyong mga stream",
@@ -4928,6 +5007,8 @@
       "join": "Sumali"
     },
     "kinds": {
+      "spin_wheel": "Paikutin ang gulong",
+      "poll": "Botohan",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
       "subscribe_alert": "Alerto sa subscriber",
@@ -4943,10 +5024,10 @@
       "event_feed": "Kamakailang aktibidad",
       "chat_box": "Chat box",
       "ticker": "Ticker",
-      "rule_alert": "Mga alerto sa panuntunan",
-      "spin_wheel": "Paikutin ang gulong"
+      "rule_alert": "Mga alerto sa panuntunan"
     },
     "hints": {
+      "spin_wheel": "Kung saan ang mga gulong sa iyong mga panuntunan ay umiikot",
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",
       "follow_alert": "Ipinapakita ang bawat bagong tagasunod",
       "subscribe_alert": "Ipinapakita ang bawat bagong subscriber",
@@ -4963,7 +5044,7 @@
       "chat_box": "Ipinapakita ang mga mensahe sa chat ng iyong broadcast sa screen",
       "ticker": "Isang linya ng iyong sariling teksto na nag - scroll sa buong screen",
       "rule_alert": "Kung saan lumilitaw ang mga alerto ng iyong mga panuntunan",
-      "spin_wheel": "Kung saan ang mga gulong sa iyong mga panuntunan ay umiikot"
+      "poll": "Ang iyong live poll, na may isang pindutan ng boto para sa bawat pagpipilian"
     },
     "fields": {
       "style": "Estilo",
@@ -4998,6 +5079,8 @@
       "fast": "Mabilis"
     },
     "rules": {
+      "wheelSegments": "Mga segment ng gulong, isa bawat linya",
+      "wheelHint": "Sa pagitan ng 2 at 12. Pinipili ng DeHub kung saan humihinto ang gulong, kaya nakikita ng lahat ng nanonood ang parehong resulta. Gamitin ang {result} sa isang alerto, read - loud o chat action para pangalanan ito.",
       "title": "Mga Panuntunan",
       "intro": "Kapag may nangyari sa iyong stream, ginagawa ng DeHub ang iyong pinili: nagpapakita ng alerto, nagpe - play ng tunog, nagbabasa ng isang bagay nang malakas, mga post sa iyong chat o nagsasabi sa iyong Discord.",
       "add": "Magdagdag ng alituntunin",
@@ -5008,6 +5091,7 @@
       "saveFailed": "Hindi mase - save ang iyong mga alituntunin.",
       "testFailed": "Ang pagsusulit na iyon ay hindi dumaan. Subukan muli sa ilang sandali.",
       "saveToTest": "I - save ang iyong mga alituntunin para subukan ang mga ito",
+      "test": "Subukan",
       "enabled": "Panuntunan sa",
       "remove": "Tanggalin ang panuntunan",
       "save": "I - save ang mga alituntunin",
@@ -5026,8 +5110,7 @@
       "addAction": "Magdagdag ng aksyon",
       "removeAction": "Alisin ang aksyon",
       "placeholders": "Gamitin ang {name}, {amount} at {message} sa iyong text. Tinanggal ang mga link sa mga mensahe.",
-      "wheelSegments": "Mga segment ng gulong, isa bawat linya",
-      "wheelHint": "Sa pagitan ng 2 at 12. Pinipili ng DeHub kung saan humihinto ang gulong, kaya nakikita ng lahat ng nanonood ang parehong resulta. Gamitin ang {result} sa isang alerto, read - loud o chat action para pangalanan ito.",
+      "placeholdersLive": "Gamitin ang {name}, {title} at {link} sa iyong text: ang iyong pangalan, pamagat ng broadcast at link para mapanood ito.",
       "alertText": "Teksto ng alerto",
       "sound": "Tunog",
       "sayText": "Tekstong babasahin nang malakas",
@@ -5041,6 +5124,7 @@
         "follow": "Sinusundan ng isang tao",
         "subscribe": "May nag - subscribe",
         "share": "May nagbabahagi ng stream",
+        "live": "Nagsisimula kang mag - broadcast",
         "command": "Ginagamit ang isang chat command",
         "keyword": "Ang isang mensahe sa chat ay naglalaman ng isang salita",
         "chat": "Anumang mensahe sa chat"
@@ -5051,12 +5135,12 @@
         "subscribers": "Mga Subscriber"
       },
       "actionTypes": {
+        "wheel": "Paikutin ang isang wheel",
         "alert": "Magpakita ng alerto",
         "sound": "Magpatugtog ng tunog",
         "say": "Magbasa nang malakas",
         "chat": "Mag - post sa chat",
-        "webhook": "Ipadala sa isang webhook",
-        "wheel": "Paikutin ang isang wheel"
+        "webhook": "Ipadala sa isang webhook"
       },
       "summary": {
         "tip": "Tip na {{amount}} DHB o higit pa"
@@ -5094,6 +5178,51 @@
         "spooky": "Nakakatakot",
         "magic-spell": "Magic spell",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "save": "I-save ang mga patakaran ng chat",
+      "title": "Pagmo - moderate ng chat",
+      "intro": "Mga panuntunan para sa chat sa ilalim ng lahat ng iyong mga stream. Hindi nila kailanman maabot ang pangunahing chat ng DeHub: ang isang taong pinagbawalan mo dito ay maaari pa ring makipag - usap sa lahat ng dako.",
+      "loadFailed": "Hindi ma - load ang iyong mga setting ng pag - moderate. I - refresh ang page para subukang muli.",
+      "saved": "Na - save ang mga panuntunan sa chat.",
+      "saveFailed": "Hindi mase - save ang pagbabagong iyon.",
+      "slowMode": "Mabagal na mode",
+      "slowModeHint": "Gaano katagal naghihintay ang bawat viewer sa pagitan ng mga mensahe. Ikaw at ang iyong mga moderator ay hindi kailanman naghihintay.",
+      "off": "Naka - off",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundo",
+      "followersOnly": "Mga tagasunod lamang",
+      "subscribersOnly": "Mga subscriber lang",
+      "subscribersOnlyHint": "Overrides mga tagasunod lamang.",
+      "bannedWords": "Mga ipinagbabawal na salita",
+      "bannedWordsHint": "Paghiwalayin sa mga kuwit. Ang pagbaybay ng isang salita sa pamamagitan ng sulat ay hindi nakakakuha ng bilog na ito.",
+      "wordAction": "Kapag ang isang tao ay gumagamit ng isang",
+      "wordBlock": "Itigil ang mensahe",
+      "wordTimeout": "Itigil ito at oras ang mga ito para sa isang minuto",
+      "moderators": "Moderator",
+      "moderatorsHint": "Maaari silang *timeout* at *ban* ang mga *viewers* sa mga *stream* mo. Hindi sila maaaring gumawa ng aksyon sa iyo o sa kanila.",
+      "addModerator": "Magdagdag",
+      "usernamePlaceholder": "Username",
+      "moderatorAdded": "Idinagdag ang moderator.",
+      "moderatorNotFound": "Walang account na may ganitong username.",
+      "removeModerator": "Alisin ang moderator",
+      "noModerators": "Walang mga moderator pa.",
+      "banned": "Ipinagbabawal sa iyong mga stream",
+      "unban": "Unban",
+      "noBans": "Walang sinuman ang *banned*.",
+      "log": "Mga kamakailang aksyon",
+      "noLog": "Walang mga aksyon pa.",
+      "actions": {
+        "timeout_one": "{{actor}} *timed out* ang {{target}} para sa {{count}} segundo",
+        "timeout_other": "{{actor}} *timed out* ang {{target}} para sa {{count}} mga segundo",
+        "ban": "{{actor}} *banned* ang {{target}}",
+        "unban": "{{actor}} *unbanned* ang {{target}}",
+        "moderator-added": "Naging moderator na ang {{target}}",
+        "moderator-removed": "Hindi na moderator ang {{target}}",
+        "word-blocked": "Nagstop sa isang mensahe mula sa {{target}} para sa \"{{word}}\"",
+        "word-timeout_one": "*Timed out* ang {{target}} para sa {{count}} segundo para sa \"{{word}}\"",
+        "word-timeout_other": "*Timed out* ang {{target}} para sa {{count}} mga segundo para sa \"{{word}}\""
       }
     }
   },

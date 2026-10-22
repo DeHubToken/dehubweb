@@ -112,6 +112,9 @@ import { useTipPayment, MIN_TIP_DHB } from '@/hooks/use-tip-payment';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
+import type { DirectTipToken } from '@/lib/direct-tip-tokens';
+import { DHB_PRELISTING_USD } from '@/lib/subscription-pricing';
+
 import type { TipFundingSource } from '@/lib/tip-funding';
 import { formatDistanceToNow } from 'date-fns';
 // NOTE: stream-controller reaches wallet/contract code (aa-utils → wagmi) and
@@ -163,6 +166,9 @@ interface LiveStreamCardProps {
    */
   immersive?: boolean;
 }
+
+/** What a gift of `dhb` costs in a dollar stablecoin, at the DHB sale peg. */
+const giftCostIn = (dhb: number) => Math.round(dhb * DHB_PRELISTING_USD * 1e6) / 1e6;
 
 export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStreamCardProps) {
   const { t: _copy } = _useCopy();
@@ -276,8 +282,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const [error, setError] = useState<string | null>(null);
   const [giftAmount, setGiftAmount] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftAmount", '', draftIdentity(stream));
   const [giftMessage, setGiftMessage] = useSurfaceDraft("components/app/cards/LiveStreamCard.tsx:giftMessage", '', draftIdentity(stream));
-  // Another token to pay the gift with; it becomes DHB on Base before the tip.
+  // USDC/USDT to pay the gift with, sent straight to the creator. The gift is
+  // still picked in DHB tiers; it costs those DHB at the sale peg in dollars.
   const [giftPayWith, setGiftPayWith] = useState<TipFundingSource | null>(null);
+  const giftDirect = giftPayWith?.direct ?? null;
+  // The token of the gift on its way, read when it is submitted (the payment
+  // reports the stablecoin amount; the room counts the DHB it stands for).
+  const sendingGiftToken = useRef<DirectTipToken | null>(null);
   const [fundingGift, setFundingGift] = useState(false);
   const [dhbBalance, setDhbBalance] = useState<string | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
@@ -938,9 +949,13 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   const { tip: sendGiftTip, isTipping: isSendingGift } = useTipPayment({
     creatorAddress: stream.creatorId,
     tokenId: numericTokenId,
-    onSubmitted: (txHash, amount) => {
+    onSubmitted: (txHash, paid) => {
       ownGiftHashes.current.add(String(txHash).toLowerCase());
-      queryClient.setQueryData(['post-tip-count', stream.id], (old: number | undefined) => (old || 0) + amount);
+      const paidToken = sendingGiftToken.current;
+      sendingGiftToken.current = null;
+      // Tiers, celebrations and the stream total are all in DHB.
+      const amount = paidToken ? Math.round(paid / DHB_PRELISTING_USD) : paid;
+      if (!paidToken) queryClient.setQueryData(['post-tip-count', stream.id], (old: number | undefined) => (old || 0) + amount);
       if (!apiStreamId || !stream.creatorId) return;
       // Play the celebration the sender paid for straight away, before the
       // record round-trips.
@@ -960,7 +975,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
         tokenId: stream.id,
         amount,
         recipient: stream.creatorId,
-        tokenAddress: DHB_TOKEN.address,
+        tokenAddress: paidToken?.address ?? DHB_TOKEN.address,
         // The tier the amount bought, by its English name. Mobile's viewer
         // reads exactly this field to choose which celebration to play, so a
         // web gift without it was downgraded to the bottom tier on every
@@ -1019,6 +1034,18 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     // sheet watching a spinner for a payment that is already on its way. The
     // amount and message stay in state until it succeeds, so a failed send
     // reopens with everything still filled in.
+    if (giftDirect) {
+      const cost = giftCostIn(amount);
+      const balance = giftPayWith ? Number(giftPayWith.balance) / 10 ** giftPayWith.decimals : 0;
+      if (cost > balance) {
+        toast.error(t('liveGift.notEnoughToken', { symbol: giftDirect.symbol, defaultValue: 'Not enough {{symbol}} for this gift' }));
+        return;
+      }
+      setShowGiftDrawer(false);
+      sendingGiftToken.current = giftDirect;
+      void sendGiftTip(cost, giftDirect).finally(() => { sendingGiftToken.current = null; });
+      return;
+    }
     setShowGiftDrawer(false);
     if (!giftPayWith || !walletAddress) {
       void sendGiftTip(amount);
@@ -1028,7 +1055,7 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
     void fundTipFromSource(giftPayWith, amount, walletAddress, t)
       .then(ready => { if (ready) return sendGiftTip(amount); })
       .finally(() => setFundingGift(false));
-  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, walletAddress, t, _copy]);
+  }, [isAuthenticated, streamEnded, numericTokenId, giftAmount, sendGiftTip, giftPayWith, giftDirect, walletAddress, t, _copy]);
 
   const handleEndStream = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -1733,9 +1760,11 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
             {showGiftDrawer && walletAddress ? (
               <Suspense fallback={null}>
                 <TipPayWith
-                  amountDhb={Number(giftAmount) >= MIN_TIP_DHB ? Number(giftAmount) : 0}
+                  amountDhb={0}
                   value={giftPayWith}
                   onChange={setGiftPayWith}
+                  direct
+                  recipientName={stream.streamer || stream.creatorUsername}
                 />
               </Suspense>
             ) : null}
@@ -1746,7 +1775,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
                 disabled={isSendingGift || fundingGift || !giftAmount}
                 className="w-full bg-white hover:bg-zinc-200 text-black py-5 font-semibold rounded-xl"
               >
-                {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}{_copy("copy.1c5ccbd708df", { defaultValue: "Send Gift" })}</Button>
+                {isSendingGift || fundingGift ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Gem className="w-4 h-4 mr-2" />}{_copy("copy.1c5ccbd708df", { defaultValue: "Send Gift" })}
+                {giftDirect && Number(giftAmount) > 0 ? <span className="ml-1.5 tabular-nums">· {giftCostIn(Number(giftAmount))} <span>{giftDirect.symbol}</span></span> : null}</Button>
               <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowBuyDrawer(true)}>{_copy("copy.1dffe3aad33c", { defaultValue: "Buy tokens" })}</Button>
               <Button variant="glass" className="w-full py-5 rounded-xl" onClick={() => setShowGiftDrawer(false)}>{_copy("copy.19766ed6ccb2", { defaultValue: "Cancel" })}</Button>
             </div>

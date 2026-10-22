@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Axının xülasəsi",
+    "justEnded": "Axınının xülasəsi",
+    "lastStream": "Son axınınız",
+    "share": "Paylaş",
+    "shareText": "İndicə DeHub-da \"{{title}}\" yayımladım: {{duration}} canlı, {{peak}} zirvədə seyr və {{followers}} yeni izləyicilər.",
+    "untitled": "Adsız axın",
+    "copied": "Kopyalandı. İstənilən yerə yapışdırın.",
+    "loadFailed": "Xülasə yüklənmədi. Bir an sonra yenidən cəhd edin.",
+    "duration": "Canlı vaxt",
+    "peakViewers": "Eyni anda ən çox izlənənlər",
+    "gifts_one": "{{count}} hədiyyəsindən başlayaraq",
+    "gifts_other": "{{count}} hədiyyələr",
+    "newFollowers": "Yeni izləyicilər",
+    "chatMessages": "Söhbət mesajları",
+    "chatters": "Söhbət edən insanlar",
+    "reactions": "Reaksiyalar",
+    "shares": "İnsanlar paylaşır",
+    "topSupporters": "Ən yaxşı dəstəkçilər",
+    "polls": "Sorğular",
+    "pollWinner": "{{option}} qalib gəldi",
+    "stillCounting": "Hələ də hesablama aparılır: hədiyyələrin təsdiqlənməsi bir dəqiqə çəkə bilər."
+  },
   "errors": {
     "sponsorshipUnavailable": "Pulsuz əməliyyatlar bizim tərəfimizdə dayandırılıb, cüzdanınızda deyil. Bir azdan yenidən cəhd edin.",
     "gasSponsorshipFailed": "Bu əməliyyat sponsorluq edilə bilmədi. Bir azdan yenidən cəhd edin."
@@ -4685,6 +4708,7 @@
     "creatorEarnsDirect": "Abunəçilər DeHub tokenlərində ödəniş edirlər. Pay torpaqlarınız abunə olduqları an cüzdanınızda olur, nişan səviyyəniz üçün platforma haqqını azaldın."
   },
   "liveOverlay": {
+    "wheelLanded": "{{name}}spun: {{result}}",
     "someone": "Kimsə",
     "newFollower": "Yeni izləyici: {{name}}",
     "newSubscriber": "Yeni abunəçi: {{name}}",
@@ -4695,7 +4719,31 @@
     "topSupporters": "Ən yaxşı dəstəkçilər",
     "tipped": "{{name}} hədiyyə göndərdi",
     "chatPreview": "Söhbət mesajları burada görünür",
-    "wheelLanded": "{{name}}spun: {{result}}"
+    "poll": {
+      "closed": "Səsvermə başa çatdı",
+      "voteFor": "{{option}} üçün səs ver",
+      "signIn": "Səs vermək üçün daxil olun",
+      "failed": "Səsverməniz qəbul edilmədi. Yenidən cəhd edin.",
+      "voted_one": "Sən səs verdin · {{count}} səs",
+      "voted_other": "Sən səs verdin · {{count}} səs",
+      "votes_one": "{{count}} səs",
+      "votes_other": "{{count}} səs",
+      "howToVote_one": "Chatda {{command}} və bir rəqəm yazaraq səs ver · {{count}} səs",
+      "howToVote_other": "Chatda {{command}} və bir rəqəm yazaraq səs ver · {{count}} səs"
+    }
+  },
+  "liveChatModeration": {
+    "timeout1m": "1 dəqiqəlik vaxt bitməsi",
+    "timeout10m": "10 dəqiqəlik vaxt bitməsi",
+    "timeout1h": "1 saatlıq vaxt bitməsi",
+    "ban": "Bu axınlardan məhkum olun",
+    "makeModerator": "Moderator edin",
+    "timedOut": "Vaxt bitdi.",
+    "banned": "Bu axınlardan məhkum olundu.",
+    "madeModerator": "İndi moderator oldu.",
+    "failed": "Bu işə yaramadı. Yenidən cəhd edin.",
+    "youAreBanned": "Bu yaradıcının axınlarında söhbət edə bilməzsiniz",
+    "youAreTimedOut": "Bir müddət vaxt bitdiniz"
   },
   "liveStudio": {
     "controls": {
@@ -4708,6 +4756,37 @@
       "readAloudMuted": "Ucadan oxumağı dayandırın",
       "readAloudMutedHint": "Hədiyyə mesajları və qayda xətləri artıq oxunmur.",
       "failed": "Bu keçid dəyişmədi. Yenidən cəhd edin."
+    },
+    "polls": {
+      "title": "Səsvermələr",
+      "intro": "Canlı yayını izləyənlərə bir sual sorun. Onlar DeHub tətbiqində düymə ilə cavab verir, yaxud da chatda {{command}} və seçənin rəqəmini yazırlar.",
+      "question": "Sual",
+      "questionPlaceholder": "Nə oynamağa davam etməliyəm?",
+      "option": "Seçənək {{n}}",
+      "addOption": "Seçənək əlavə et",
+      "removeOption": "Seçənək {{n}}-ni sil",
+      "duration": "Səsvermənin neçə dəqiqə açıq qalacağı",
+      "seconds_one": "{{count}} saniyə",
+      "seconds_other": "{{count}} saniyə",
+      "minutes_one": "{{count}} dəqiqə",
+      "minutes_other": "{{count}} dəqiqə",
+      "start": "Səsverməni başlat",
+      "end": "Şimdi səsverməni bitir",
+      "started": "Səsverməniz açılıb. İzləyicilər səs verə bilər.",
+      "notLive": "Öncə canlı yayına gedin. Səsvermə şimdi canlı yayınızda aparılır.",
+      "startFailed": "Səsvermə başlanmadı. Yenidən cəhd edin.",
+      "closeFailed": "Səsvermə bitmədi. Yenidən cəhd edin.",
+      "live": "Səsvermə açılıb · {{time}} qalıb",
+      "ended": "Səsvermə başa çatdı",
+      "votes_one": "{{count}} səs",
+      "votes_other": "{{count}} səs",
+      "replaceHint": "Yeni sorğuya başlamaq açıq olanı bağlayır.",
+      "widgetHint": "Canlı sorğunuzu göstərir. DeHub tətbiqində izləyicilər səs vermək seçiminə basır; OBS-də insanlara {{command}} və söhbət zamanı bir sıra yazın deyir.",
+      "sample": {
+        "a": "Yeni bir şey",
+        "b": "Köhnə favorit",
+        "c": "Seçdiyiniz"
+      }
     },
     "title": "Canlı Studio",
     "subtitle": "Sizə aid xəbərdarlıqlar və vidjetlər",
@@ -4784,6 +4863,7 @@
       "join": "Qoşul"
     },
     "kinds": {
+      "spin_wheel": "Fırlatma çarxı",
       "tip_alert": "İpucu xəbərdarlığı",
       "follow_alert": "Xəbərdarlığa əməl edin",
       "subscribe_alert": "Abunəçi xəbərdarlığı",
@@ -4800,9 +4880,10 @@
       "chat_box": "Söhbət qutusu",
       "ticker": "Etiketçi",
       "rule_alert": "Qayda xəbərdarlıqları",
-      "spin_wheel": "Fırlatma çarxı"
+      "poll": "Sorğu"
     },
     "hints": {
+      "spin_wheel": "Qaydalarınızdakı təkərlərin fırlandığı yer",
       "tip_alert": "Hər bir təklifə təşəkkür edir, boyu təyinatına görə dəyişir.",
       "follow_alert": "Hər yeni izləyicini göstərir",
       "subscribe_alert": "Hər yeni abunəçini göstərir",
@@ -4819,7 +4900,7 @@
       "chat_box": "Yayımınızın söhbət mesajlarını ekranda göstərir",
       "ticker": "Ekranda sürüşdürülən öz mətninizin sətri",
       "rule_alert": "Sizin quranızın xəbərləri yerə düşür",
-      "spin_wheel": "Qaydalarınızdakı təkərlərin fırlandığı yer"
+      "poll": "Canlı sorğunuz, hər bir seçim üçün səs düyməsi ilə"
     },
     "fields": {
       "style": "Üslub",
@@ -4854,6 +4935,8 @@
       "fast": "Sürətli"
     },
     "rules": {
+      "wheelSegments": "Hər sətirdə bir təkər seqmentləri",
+      "wheelHint": "2-12 yaş arası. DeHub təkərin dayandığı yeri seçir, buna görə də izləyən hər kəs eyni nəticəni görür. Ad vermək üçün xəbərdarlıq, ucadan oxumaq və ya söhbət hərəkətində {result} istifadə edin.",
       "title": "Quranlar",
       "intro": "Sizin stream-inizdə bir şey baş verdikdə, DeHub sizin seçdiyiniz kimi işləyir: xəbər göstərir, səs çıxarır, bir şeyi səsli oxuyur, sizin çatınızda yazıb yoxsa Discord-ınıza bildirir.",
       "add": "Quran əlavə et",
@@ -4883,8 +4966,7 @@
       "addAction": "Əməli əlavə et",
       "removeAction": "Əməli sil",
       "placeholders": "Mətninizdə {name}, {amount} və {message} istifadə edin. Mesajlardakı linklər silinir.",
-      "wheelSegments": "Hər sətirdə bir təkər seqmentləri",
-      "wheelHint": "2-12 yaş arası. DeHub təkərin dayandığı yeri seçir, buna görə də izləyən hər kəs eyni nəticəni görür. Ad vermək üçün xəbərdarlıq, ucadan oxumaq və ya söhbət hərəkətində {result} istifadə edin.",
+      "placeholdersLive": "Mətninizdə {name}, {title} və {link} istifadə edin: adınız, yayımın başlığı və onu izləmək üçün link.",
       "alertText": "Xəbərdarlıq mətni",
       "sound": "Səs",
       "sayText": "Ucadan oxumaq üçün mətn",
@@ -4898,6 +4980,7 @@
         "follow": "Kimsə aşağıdakıları edir",
         "subscribe": "Kimsə abunə olur",
         "share": "Kimsə axını paylaşır",
+        "live": "Yayıma başlayırsınız",
         "command": "Söhbət əmri istifadə olunur",
         "keyword": "Söhbət mesajında bir kəlmə var",
         "chat": "Hər hansı söhbət mesajı"
@@ -4908,12 +4991,12 @@
         "subscribers": "Abunəçilər"
       },
       "actionTypes": {
+        "wheel": "Təkər fırladın",
         "alert": "Xəbərdarlığı göstər",
         "sound": "Səs çalın",
         "say": "Ucadan oxuyun",
         "chat": "Söhbətdə dərc et",
-        "webhook": "Webhook-a göndərin",
-        "wheel": "Təkər fırladın"
+        "webhook": "Webhook-a göndərin"
       },
       "summary": {
         "tip": "İpucu {{amount}}DHB və ya daha çox"
@@ -4951,6 +5034,51 @@
         "spooky": "Cılız",
         "magic-spell": "Sehrli sehr",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Söhbət moderasiyası",
+      "intro": "Bütün axınlarınız üçün söhbət qaydaları. Onlar DeHub-un əsas söhbətinə heç vaxt çatmır: burada məhkum etdiyiniz şəxs hələ də hər yerdə danışa bilər.",
+      "loadFailed": "Moderasiya parametrləriniz yüklənə bilmədi. Yenidən cəhd etmək üçün səhifəni yeniləyin.",
+      "save": "Söhbət qaydalarını saxla",
+      "saved": "Söhbət qaydaları saxlanıldı.",
+      "saveFailed": "Bu dəyişiklik saxlanıla bilmədi.",
+      "slowMode": "Yavaş rejim",
+      "slowModeHint": "Hər bir izləyicinin mesajlar arasında gözləmə müddəti. Siz və moderatorlarınız heç vaxt gözləmirsiniz.",
+      "off": "Söndürülmüş",
+      "seconds_one": "{{count}} saniyə",
+      "seconds_other": "{{count}} saniyələr",
+      "followersOnly": "Yalnız izləyicilər",
+      "subscribersOnly": "Yalnız abunəçilər",
+      "subscribersOnlyHint": "Yalnız izləyiciləri keçid edir.",
+      "bannedWords": "Məhkum edilən sözlər",
+      "bannedWordsHint": "Vergüllə ayırın. Hər hərfi ayrı yazmaq onu keçməyəcək.",
+      "wordAction": "Birisi birini istifadə etdikdə",
+      "wordBlock": "Mesajı dayandır",
+      "wordTimeout": "Onu dayandır və bir dəqiqəlik vaxt bitdirmə tətbiq et",
+      "moderators": "Moderator",
+      "moderatorsHint": "Onlar vaxt ayıra və izləyicilərə axınlarınızda qadağa qoya bilər. O, nə sizdə, nə də bir-birinizdə hərəkət edə bilməz.",
+      "addModerator": "Əlavə et",
+      "usernamePlaceholder": "İstifadəçi adı",
+      "moderatorAdded": "Moderator əlavə edildi.",
+      "moderatorNotFound": "Bu istifadəçi adı ilə hesab yoxdur.",
+      "removeModerator": "Moderatoru sil",
+      "noModerators": "Hələ moderator yoxdur.",
+      "banned": "Axınlarınızdan qadağan edildi",
+      "unban": "Dondur",
+      "noBans": "Heç kimə qadağa qoyulmayıb.",
+      "log": "Son fəaliyyətlər",
+      "noLog": "Hələ heç nə yoxdur.",
+      "actions": {
+        "timeout_one": "{{actor}} {{target}} istifadəçisini {{count}} saniyəlik susdurdu",
+        "timeout_other": "{{actor}} {{target}} istifadəçisini {{count}} saniyəlik susdurdu",
+        "ban": "{{actor}} qadağan {{target}}",
+        "unban": "{{actor}}unbned {{target}}",
+        "moderator-added": "{{target}} moderator oldu",
+        "moderator-removed": "{{target}} artıq moderator deyil",
+        "word-blocked": "\"{{word}}\" üçün {{target}} mesajı dayandırıldı",
+        "word-timeout_one": "Zamanı {{target}} üçün {{count}} saniyə {{word}} üçün bitdi",
+        "word-timeout_other": "\"{{word}}\" üçün {{count}} saniyə üçün {{target}}vaxtı bitdi"
       }
     }
   },
