@@ -24,6 +24,8 @@ export interface OverlayControlHandlers {
   onUpdated?: (version: number) => void;
   /** The token was rotated; this connection no longer means anything. */
   onRevoked?: () => void;
+  /** The server's answer to each join: false means the token is not (or no longer) real. */
+  onJoined?: (ok: boolean) => void;
 }
 
 export function watchOverlayControl(
@@ -40,7 +42,10 @@ export function watchOverlayControl(
   // Joined on every connect: a socket that reconnects is a new socket to the
   // server, and its rooms are gone until it asks again.
   const join = () => {
-    if (!left) s.emit('overlay.join', { token, surface });
+    if (left) return;
+    s.emit('overlay.join', { token, surface }, (ack: { ok?: boolean } | undefined) => {
+      if (!left) handlers.onJoined?.(!!ack?.ok);
+    });
   };
 
   const onTest = (data: any) => {

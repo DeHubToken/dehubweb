@@ -32,6 +32,7 @@ import X from "@/components/ui/cut-icons/close";
 
 
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
 import { updateProfile, checkUsernameAvailability } from '@/lib/api/dehub';
 import { Button } from '@/components/ui/button';
@@ -77,6 +78,20 @@ export function LoginProfileStep() {
   const [displayName, setDisplayName] = useSurfaceDraft("src/components/app/login/LoginProfileStep.tsx:displayName", '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Start from the name Apple or Google already gave us (Apple sends it only
+  // on the first authorization). Never overwrites typing, and the field stays
+  // optional when there is none.
+  useEffect(() => {
+    let cancelled = false;
+    supabase.auth.getUser().then(({ data }) => {
+      const md = (data?.user?.user_metadata ?? {}) as Record<string, unknown>;
+      const raw = md.full_name ?? md.name;
+      const name = typeof raw === 'string' ? raw.trim().slice(0, 50).trim() : '';
+      if (!cancelled && name) setDisplayName((current) => current || name);
+    }).catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   // Username availability state
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
@@ -239,11 +254,6 @@ export function LoginProfileStep() {
       return;
     }
 
-    if (!trimmedDisplayName) {
-      setError('Display name is required');
-      return;
-    }
-
     if (trimmedDisplayName.length > 50) {
       setError('Display name must be less than 50 characters');
       return;
@@ -254,7 +264,8 @@ export function LoginProfileStep() {
     try {
       await updateProfile({
         username: trimmedUsername,
-        displayName: trimmedDisplayName,
+        // Optional: left blank, the username stands in.
+        displayName: trimmedDisplayName || trimmedUsername,
         ...(avatarFile ? { avatarImg: avatarFile } : {}),
       });
 
@@ -331,7 +342,6 @@ export function LoginProfileStep() {
   // button sat inert long enough to read as a missed tap.
   const { pending: isLoggingOut, run: runLogout } = usePendingAction(handleLogout);
   const canSubmit = username.trim().length >= 1 &&
-                    displayName.trim().length > 0 &&
                     usernameAvailable === true &&
                     !isCheckingUsername;
 
@@ -390,6 +400,7 @@ export function LoginProfileStep() {
           disabled={isSubmitting}
           autoComplete="off"
         />
+        <p className="text-xs text-white/40">{t('settings.displayNameOptionalHint')}</p>
       </div>
 
       {/* Picture — optional, and deliberately not part of canSubmit. */}
