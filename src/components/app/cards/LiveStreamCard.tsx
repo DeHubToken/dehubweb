@@ -416,14 +416,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   );
 
   /*
-   * Gift celebrations.
-   *
-   * Two sources feed the same queue. The sender's own gift is enqueued the
-   * moment the tip transaction is submitted, because the round trip through
-   * the backend and back out over the socket takes seconds and a paid-for
-   * celebration should not lag the payment. Everyone else's arrives on the
-   * `streamer.tip` broadcast — which also echoes the sender's own gift back,
-   * so that echo is dropped on the wallet address to avoid playing it twice.
+   * Gift celebrations: the sender's own plays at submit, everyone else's off
+   * `streamer.tip`, whose echo of the sender's own is dropped below.
    */
   const { items: giftCelebrations, enqueue: enqueueGift } = useGiftAnimations();
   // A creator's own tip alert replaces the built-in celebration, never both.
@@ -447,18 +441,25 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
    * and the miss was a paid-for celebration playing twice.
    */
   const ownGiftHashes = useRef<Set<string>>(new Set());
-  useStreamGifts(stream.streamId, !!stream.isLive, (gift) => {
-    if (gift.transactionHash && ownGiftHashes.current.has(gift.transactionHash)) return;
+  const isOwnGift = (gift: { address?: string; transactionHash?: string }) => {
+    if (gift.transactionHash && ownGiftHashes.current.has(gift.transactionHash)) return true;
     const me = walletAddress?.toLowerCase();
-    if (me && gift.address && gift.address === me) return;
-    enqueueGift(gift);
-    // Read the sender's line out over the stream. Every client in the room
-    // synthesises the same sentence off this one broadcast, so the whole
-    // audience hears it at once — and within a second of the tip, rather than
-    // behind the HLS buffer. The sender's own copy is spoken at submit time
-    // below, which is why their echo is dropped above before reaching here.
-    speakTipMessage(gift.message);
-  });
+    return !!(me && gift.address && gift.address === me);
+  };
+  useStreamGifts(
+    stream.streamId,
+    !!stream.isLive,
+    (gift) => {
+      if (isOwnGift(gift)) return;
+      enqueueGift(gift);
+    },
+    // Read aloud only once PAID: the unpaid broadcast carries whatever any
+    // client posted. The sender's own copy is spoken at submit time below.
+    (paid) => {
+      if (isOwnGift(paid)) return;
+      speakTipMessage(paid.message);
+    },
+  );
 
   // Get the device voices ready while the viewer is watching rather than when
   // the first gift lands, so the first message of a stream is read on the beat
