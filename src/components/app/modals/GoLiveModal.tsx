@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 import { useFormDraft } from '@/hooks/use-form-draft';
@@ -204,6 +205,7 @@ function formatGb(bytes: number): string {
 export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: GoLiveModalProps) {
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
+  const navigate = useNavigate();
   const [step, setStep] = useState<Step>('setup');
   const [confirmEnd, setConfirmEnd] = useState(false);
   const [source, setSource] = useState<StreamSource>(initialSource ?? 'camera');
@@ -681,6 +683,8 @@ export function GoLiveModal({ isOpen, onClose, initialSource, initialStream }: G
     // mark-stream-live so the delete cannot be overwritten by a late upsert).
     clearLiveSession(streamData.tokenId);
     handleClose();
+    // The recap is waiting in Live Studio: length, peak, gifts, new followers.
+    if (streamData.streamId) navigate(`/live-studio?recap=${encodeURIComponent(streamData.streamId)}`);
   };
 
   /**

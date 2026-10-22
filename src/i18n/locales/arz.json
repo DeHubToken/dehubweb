@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "ملخص الدفق",
+    "justEnded": "ملخص البث الخاص بك",
+    "lastStream": "آخر بث لك",
+    "share": "مشاركة",
+    "shareText": "لقد بثت للتو \"{{title}}\" على DeHub: {{duration}} مباشر، {{peak}} يشاهد في الذروة و {{followers}} متابعين جدد.",
+    "untitled": "دفق بدون عنوان",
+    "copied": "تم نسخ الملخص. الصقه في أي مكان.",
+    "loadFailed": "لم يتم تحميل الملخص. حاول مرة أخرى خلال لحظات.",
+    "duration": "وقت البث المباشر",
+    "peakViewers": "الأكثر مشاهدة في وقت واحد",
+    "gifts_one": "من هدية {{count}}",
+    "gifts_other": "من {{count}} هدايا",
+    "newFollowers": "متابعون جدد",
+    "chatMessages": "رسائل الدردشة",
+    "chatters": "الأشخاص الذين يدردشون",
+    "reactions": "ردود الفعل",
+    "shares": "مشاركة الأشخاص",
+    "topSupporters": "أفضل المؤيدين",
+    "polls": "استطلاعات الرأي",
+    "pollWinner": "{{option}} فاز",
+    "stillCounting": "لا يزال العد مستمراً: قد تستغرق الهدايا دقيقة للتأكيد."
+  },
   "errors": {
     "sponsorshipUnavailable": "المعاملات المجانيه واقفه من عندنا، مش من محفظتك. جرب تانى كمان شويه.",
     "gasSponsorshipFailed": "ماقدرناش نغطى المعامله دى. جرب تانى بعد شويه."

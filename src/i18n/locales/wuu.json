@@ -4365,15 +4365,38 @@
     "poll": {
       "closed": "投票已关闭",
       "voteFor": "投票给{{option}}",
+      "signIn": "登入投票",
       "failed": "您的投票未计入。请重试。",
       "voted_one": "您投了· {{count}}票",
       "voted_other": "您投了· {{count}}票",
       "votes_one": "{{count}}票",
+      "votes_other": "{{count}} 票",
       "howToVote_one": "在聊天中输入{{command}}和一个数字进行投票· {{count}}投票",
-      "howToVote_other": "在聊天中输入{{command}}和一个数字进行投票· {{count}}票",
-      "signIn": "登入投票",
-      "votes_other": "{{count}} 票"
+      "howToVote_other": "在聊天中输入{{command}}和一个数字进行投票· {{count}}票"
     }
+  },
+  "liveRecap": {
+    "duration": "直播时长",
+    "title": "流式摘要",
+    "justEnded": "您的信息流总结",
+    "lastStream": "您的最后一个流",
+    "share": "分享",
+    "shareText": "我刚刚在DeHub上播放了“{{title}}” ： {{duration}}直播， {{peak}}在高峰期观看， {{followers}}新粉丝。",
+    "untitled": "无标题流",
+    "copied": "已复制摘要。将其粘贴到任意位置。",
+    "loadFailed": "摘要未加载。 请稍后重试。",
+    "peakViewers": "一次观看次数最多",
+    "gifts_one": "来自{{count}}的礼物",
+    "gifts_other": "来自{{count}}的礼物",
+    "newFollowers": "新关注者",
+    "chatMessages": "聊天消息",
+    "chatters": "人们在聊天",
+    "shares": "人员共享",
+    "topSupporters": "顶级支持者",
+    "polls": "投票",
+    "pollWinner": "{{option}}韩元",
+    "stillCounting": "还在计数：礼品可能需要一分钟才能确认。",
+    "reactions": "反应"
   },
   "liveStudio": {
     "moderation": {
@@ -4431,26 +4454,26 @@
       "removeOption": "删除选项{{n}}",
       "duration": "投票时间持续多久？",
       "seconds_one": "{{count}}秒",
+      "seconds_other": "{{count}} 秒鐘",
+      "minutes_one": "{{count}} 分錶",
+      "minutes_other": "{{count}} 分錶",
       "start": "开始投票",
       "end": "立即停止投票",
       "started": "您的投票已开放。观众现在可以投票了。",
       "notLive": "先上线。民意调查将在您目前正在流式传输的广播上运行。",
       "startFailed": "投票未开始。请重试。",
       "closeFailed": "投票未结束。请重试。",
+      "live": "投票开啓 · {{time}} 个剩下",
       "ended": "投票已关闭",
       "votes_one": "{{count}}票",
+      "votes_other": "{{count}} 票",
       "replaceHint": "开始新的投票将关闭打开的投票。",
       "widgetHint": "显示您的实时投票。 在DeHub应用程序中，查看者点击一个投票选项；在OBS中，它告诉人们在聊天中输入{{command}}和一个数字。",
       "sample": {
         "a": "新事物",
         "b": "古老的最爱",
         "c": "您选择"
-      },
-      "seconds_other": "{{count}} 秒鐘",
-      "minutes_one": "{{count}} 分錶",
-      "minutes_other": "{{count}} 分錶",
-      "live": "投票开啓 · {{time}} 个剩下",
-      "votes_other": "{{count}} 票"
+      }
     },
     "seoTitle": "Live Studio — 直播通知、目标与叠图 | DeHub",
     "signIn": "登入以設定你直播的通知及小組件。",
@@ -4497,7 +4520,6 @@
       "join": "加入"
     },
     "kinds": {
-      "poll": "投票",
       "tip_alert": "打赏提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅提醒",
@@ -4513,10 +4535,10 @@
       "event_feed": "最近活動",
       "chat_box": "聊天框",
       "ticker": "滾動字幕",
-      "rule_alert": "规则警报"
+      "rule_alert": "规则警报",
+      "poll": "投票"
     },
     "hints": {
-      "poll": "您的实时投票，每个选项都有投票按钮",
       "tip_alert": "为每笔打赏庆祝，按等级大小显示",
       "follow_alert": "显示每位新关注者",
       "subscribe_alert": "显示每位新订阅者",
@@ -4532,7 +4554,8 @@
       "event_feed": "最新的禮物、追蹤者、訂閱者跟分享你廣播的人",
       "chat_box": "在螢幕上顯示你廣播的聊天訊息",
       "ticker": "一行你自訂的文字，在螢幕上滾動",
-      "rule_alert": "规则提醒的显示位置"
+      "rule_alert": "规则提醒的显示位置",
+      "poll": "您的实时投票，每个选项都有投票按钮"
     },
     "fields": {
       "style": "样式",
@@ -4567,7 +4590,6 @@
       "fast": "快"
     },
     "rules": {
-      "placeholdersLive": "在文本中使用{name}、{title}和{link} ：您的姓名、广播标题和观看链接。",
       "title": "规则",
       "intro": "当您的视频流出现问题时， DeHub会执行您选择的操作：显示提醒、播放声音、大声朗读、在聊天中发布帖子或告诉您的Discord。",
       "add": "添加规则",
@@ -4597,6 +4619,7 @@
       "addAction": "添加操作",
       "removeAction": "删除操作",
       "placeholders": "在文本中使用{name}、{amount}和{message}。消息中的链接将被删除。",
+      "placeholdersLive": "在文本中使用{name}、{title}和{link} ：您的姓名、广播标题和观看链接。",
       "alertText": "警报文本",
       "sound": "声音",
       "sayText": "要读出来的文本",
@@ -4606,11 +4629,11 @@
       "webhookHint": "Discord或Slack网络钩子，或接受帖子的任何https地址。",
       "webhookText": "要发送的消息",
       "triggers": {
-        "live": "您开始广播",
         "tip": "小费已到账",
         "follow": "有人关注",
         "subscribe": "有人订阅",
         "share": "有人分享了信息流",
+        "live": "您开始广播",
         "command": "一个聊天指令被用",
         "keyword": "聊天消息包含一个单词",
         "chat": "任何聊天消息"

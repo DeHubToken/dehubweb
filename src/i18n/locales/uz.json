@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Strim xulosasi",
+    "justEnded": "Strimingiz xulosasi",
+    "lastStream": "Oxirgi translatsiyangiz",
+    "share": "Ulashish",
+    "shareText": "Men hozirgina DeHub’da &quot;{{title}}&quot; ni striming qildim: {{duration}} jonli efirda, {{peak}} eng yuqori cho‘qqida tomosha qilyapman va {{followers}} yangi obunachilar.",
+    "untitled": "Nomsiz oqim",
+    "copied": "Xulosa nusxalandi. Istalgan joyga joylashtiring.",
+    "loadFailed": "Xulosa yuklanmadi. Birozdan keyin qayta urinib ko&#39;ring.",
+    "duration": "Vaqt jonli",
+    "peakViewers": "Bir vaqtning o&#39;zida ko&#39;pchilik tomosha qiladi",
+    "gifts_one": "{{count}} sovg&#39;asidan",
+    "gifts_other": "{{count}} sovg&#39;alaridan",
+    "newFollowers": "Yangi izdoshlar",
+    "chatMessages": "Chat xabarlari",
+    "chatters": "Odamlar suhbatlashmoqda",
+    "reactions": "Reaksiyalar",
+    "shares": "Odamlar almashishmoqda",
+    "topSupporters": "Eng yaxshi tarafdorlar",
+    "polls": "So&#39;rovnomalar",
+    "pollWinner": "{{option}} yutdi",
+    "stillCounting": "Hali ham sanalmoqda: sovg&#39;alarni tasdiqlash bir daqiqa vaqt olishi mumkin."
+  },
   "errors": {
     "sponsorshipUnavailable": "Bepul tranzaksiyalar bizning tomonimizda toxtatilgan, hamyoningizda emas. Iltimos, birozdan keyin qayta urinib koring.",
     "gasSponsorshipFailed": "Bu tranzaksiya xarajati qoplanmadi. Iltimos, birozdan keyin urinib koring."

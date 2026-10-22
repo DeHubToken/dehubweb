@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Resum de la transmissió",
+    "justEnded": "Resum de la teva transmissió",
+    "lastStream": "La teva última transmissió",
+    "share": "Comparteix",
+    "shareText": "Acabo de transmetre \"{{title}}\" a DeHub: {{duration}} en directe, {{peak}} mirant al cim i {{followers}} nous seguidors.",
+    "untitled": "Flux sense títol",
+    "copied": "Resum copiat. Enganxa'l a qualsevol lloc.",
+    "loadFailed": "El resum no s'ha carregat. Torna-ho a provar en un moment.",
+    "duration": "Temps en viu",
+    "peakViewers": "La majoria ho veuen a la vegada",
+    "gifts_one": "De regal de {{count}}",
+    "gifts_other": "De {{count}} regals",
+    "newFollowers": "Nous seguidors",
+    "chatMessages": "Missatges de xat",
+    "chatters": "Persones que xategen",
+    "reactions": "Reaccions",
+    "shares": "Persones que comparteixen",
+    "topSupporters": "Els millors seguidors",
+    "polls": "Enquestes",
+    "pollWinner": "{{option}} guanyats",
+    "stillCounting": "Segueix comptant: els regals poden trigar un minut a confirmar-se."
+  },
   "errors": {
     "sponsorshipUnavailable": "Les transaccions gratuïtes estan pausades a la nostra banda, no al teu moneder. Torna-ho a provar aviat.",
     "gasSponsorshipFailed": "No s'ha pogut patrocinar aquesta transacció. Torna-ho a provar d'aquí a un moment."

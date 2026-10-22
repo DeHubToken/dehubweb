@@ -1,4 +1,27 @@
 {
+  "liveRecap": {
+    "title": "Rekapitulace streamu",
+    "justEnded": "Rekapitulace vašeho streamu",
+    "lastStream": "Váš poslední stream",
+    "share": "Sdílet",
+    "shareText": "Právě jsem vysílal „{{title}}“ na DeHubu: {{duration}} live, {{peak}} sledování na vrcholu a {{followers}} nových sledujících.",
+    "untitled": "Stream bez názvu",
+    "copied": "Rekapitulace zkopírována. Vložte ji kamkoli.",
+    "loadFailed": "Rekapitulace se nenačetla. Zkuste to znovu za chvíli.",
+    "duration": "Čas živě",
+    "peakViewers": "Nejsledovanější najednou",
+    "gifts_one": "Od {{count}} dárek",
+    "gifts_other": "Od {{count}} dárků",
+    "newFollowers": "Noví sledující",
+    "chatMessages": "Zprávy z chatu",
+    "chatters": "Chatování s lidmi",
+    "reactions": "Reakce",
+    "shares": "Sdílení lidí",
+    "topSupporters": "Nejlepší podporovatelé",
+    "polls": "Ankety",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Stále se počítá: potvrzení dárků může chvíli trvat."
+  },
   "errors": {
     "sponsorshipUnavailable": "Bezplatné transakce jsou pozastavené na naší straně, ne ve vaší peněžence. Zkuste to prosím za chvíli.",
     "gasSponsorshipFailed": "Tuto transakci se nepodařilo uhradit. Zkuste to prosím za chvíli."

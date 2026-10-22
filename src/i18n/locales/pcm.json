@@ -4132,17 +4132,40 @@
     "followersUnit": "followers",
     "chatPreview": "Chat messages appear here",
     "poll": {
+      "closed": "Voting closed",
       "voteFor": "Vote for {{option}}",
+      "signIn": "Sign in to vote",
       "failed": "Your vote did not count. Try again.",
       "voted_one": "You voted · {{count}} vote",
       "voted_other": "You voted · {{count}} votes",
-      "howToVote_one": "Type {{command}} and a number in chat to vote · {{count}} vote",
-      "howToVote_other": "Type {{command}} and a number in chat to vote · {{count}} votes",
-      "closed": "Voting closed",
-      "signIn": "Sign in to vote",
       "votes_one": "{{count}} vote",
-      "votes_other": "{{count}} votes"
+      "votes_other": "{{count}} votes",
+      "howToVote_one": "Type {{command}} and a number in chat to vote · {{count}} vote",
+      "howToVote_other": "Type {{command}} and a number in chat to vote · {{count}} votes"
     }
+  },
+  "liveRecap": {
+    "justEnded": "Your stream recap",
+    "lastStream": "Your last stream",
+    "shareText": "I just streamed \"{{title}}\" on DeHub: {{duration}} live, {{peak}} watching at the peak and {{followers}} new followers.",
+    "copied": "Recap copied. Paste it anywhere.",
+    "peakViewers": "Most watching at once",
+    "gifts_one": "From {{count}} gift",
+    "gifts_other": "From {{count}} gifts",
+    "stillCounting": "Still counting: gifts can take a minute to confirm.",
+    "title": "Stream recap",
+    "share": "Share",
+    "untitled": "Untitled stream",
+    "loadFailed": "Na dem load no recap dey fail. Try again after a while.",
+    "duration": "Time live",
+    "newFollowers": "New followers",
+    "chatMessages": "Chat messages",
+    "chatters": "People chatting",
+    "reactions": "Reactions",
+    "shares": "People sharing",
+    "topSupporters": "Top supporters",
+    "polls": "Polls",
+    "pollWinner": "{{option}} won"
   },
   "liveStudio": {
     "moderation": {
@@ -4191,22 +4214,22 @@
       }
     },
     "polls": {
-      "intro": "Ask the people watching your broadcast a question. They answer with a button in the DeHub app, or by typing {{command}} and the option's number in chat.",
-      "questionPlaceholder": "What should I play next?",
-      "duration": "How long voting stays open",
-      "start": "Start the poll",
-      "end": "End voting now",
-      "started": "Your poll is open. Viewers can vote now.",
-      "notLive": "Go live first. A poll runs on the broadcast you are streaming right now.",
       "title": "Polls",
+      "intro": "Ask the people watching your broadcast a question. They answer with a button in the DeHub app, or by typing {{command}} and the option's number in chat.",
       "question": "Question",
+      "questionPlaceholder": "What should I play next?",
       "option": "Option {{n}}",
       "addOption": "Add an option",
       "removeOption": "Remove option {{n}}",
+      "duration": "How long voting stays open",
       "seconds_one": "{{count}} second",
       "seconds_other": "{{count}} seconds",
       "minutes_one": "{{count}} minute",
       "minutes_other": "{{count}} minutes",
+      "start": "Start the poll",
+      "end": "End voting now",
+      "started": "Your poll is open. Viewers can vote now.",
+      "notLive": "Go live first. A poll runs on the broadcast you are streaming right now.",
       "startFailed": "Poll no dey start yet. Try again.",
       "closeFailed": "Vote no finish yet. Try again.",
       "live": "Voting open · {{time}} left",
@@ -4287,10 +4310,10 @@
       "poll": "Poll"
     },
     "hints": {
-      "poll": "Your live poll, with a vote button for every option",
       "tip_alert": "Celebrate every tip, e size according to e tier",
       "join_alert": "Welcomes each viewer as they arrive",
-      "rule_alert": "Where your rules' alerts appear"
+      "rule_alert": "Where your rules' alerts appear",
+      "poll": "Your live poll, with a vote button for every option"
     },
     "fields": {
       "style": "Style",
@@ -4362,11 +4385,11 @@
       "webhookHint": "A Discord or Slack webhook, or any https address that accepts a POST.",
       "webhookText": "Message to send",
       "triggers": {
-        "live": "You start broadcasting",
         "tip": "A tip arrives",
         "follow": "Someone follows",
         "subscribe": "Someone subscribes",
         "share": "Someone shares the stream",
+        "live": "You start broadcasting",
         "command": "A chat command is used",
         "keyword": "A chat message contains a word",
         "chat": "Any chat message"
