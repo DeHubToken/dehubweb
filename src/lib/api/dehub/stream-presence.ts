@@ -190,6 +190,20 @@ function isForStream(data: { streamId?: string } | undefined, streamId: string):
   return data?.streamId === streamId;
 }
 
+/**
+ * Which stream a gift broadcast belongs to.
+ *
+ * Every other room event carries `streamId` beside its payload. A gift does
+ * not: the gateway sends `{ gift: <activity row> }`, and the id is on the row.
+ * Checking only the top level — which `isForStream` does, correctly, for
+ * counts — threw away every gift a web viewer was sent, so the room saw no
+ * celebration and heard no message unless they had sent it themselves.
+ */
+function giftStreamId(payload: any): string | undefined {
+  const id = payload?.streamId ?? payload?.gift?.streamId;
+  return id == null ? undefined : String(id);
+}
+
 export interface StreamPresence {
   /** Stop counting this tab as a viewer. Safe to call twice. */
   leave: () => void;
@@ -407,7 +421,7 @@ export function watchStreamGifts(
   };
 
   const handleGift = (payload: any) => {
-    if (!isForStream(payload, streamId)) return;
+    if (giftStreamId(payload) !== streamId) return;
     const meta = payload?.gift?.meta ?? payload?.meta ?? payload?.gift ?? payload ?? {};
     const amount = Number(meta.amount ?? payload?.amount ?? 0);
     if (!Number.isFinite(amount) || amount <= 0) return;
