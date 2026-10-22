@@ -27,6 +27,8 @@ import { MAX_WIDGETS, OVERLAY_KINDS, isKnownKind, newWidget, type OverlayKind } 
 import type { CreatorOverlay, OverlayRect, OverlayRenderIn, OverlayWidget } from '@/lib/live-overlay/types';
 import { ObsPanel } from './ObsPanel';
 import { createOverlayEventBus, OverlayEventContext } from '../overlay/overlay-events';
+import { createRuleBus, RuleAudio, RuleBusContext } from '../overlay/rule-bus';
+import { RulesPanel } from './RulesPanel';
 import { StudioStage } from './StudioStage';
 import { WidgetSettings } from './WidgetSettings';
 
@@ -109,6 +111,7 @@ export function LiveStudio() {
 
   // Test alerts come back through the control room and play on the preview.
   const bus = useMemo(() => createOverlayEventBus(), []);
+  const ruleBus = useMemo(() => createRuleBus(), []);
   const token = data?.token;
   useEffect(() => {
     if (!token) return;
@@ -119,6 +122,7 @@ export function LiveStudio() {
         if (cancelled) return;
         sub = watchOverlayControl(token, 'studio', {
           onTest: (events) => events.forEach((event) => bus.publish(event)),
+          onRule: (fired) => ruleBus.publish(fired),
         });
       })
       .catch(() => undefined);
@@ -126,7 +130,7 @@ export function LiveStudio() {
       cancelled = true;
       sub?.leave();
     };
-  }, [token, bus]);
+  }, [token, bus, ruleBus]);
 
   const test = useMutation({
     mutationFn: (kind: OverlayTestKind) =>
@@ -173,14 +177,17 @@ export function LiveStudio() {
             }
           >
             <OverlayEventContext.Provider value={bus}>
-              <StudioStage
-                widgets={widgets}
-                portrait={portrait}
-                selectedId={selectedId}
-                stats={PREVIEW_STATS}
-                onSelect={setSelectedId}
-                onMove={move}
-              />
+              <RuleBusContext.Provider value={ruleBus}>
+                <RuleAudio playLive={false} />
+                <StudioStage
+                  widgets={widgets}
+                  portrait={portrait}
+                  selectedId={selectedId}
+                  stats={PREVIEW_STATS}
+                  onSelect={setSelectedId}
+                  onMove={move}
+                />
+              </RuleBusContext.Provider>
             </OverlayEventContext.Provider>
             <p className="mt-3 text-xs text-zinc-500">{t('liveStudio.layoutHint')}</p>
           </PageSection>
@@ -275,6 +282,8 @@ export function LiveStudio() {
           </PageSection>
         </div>
       </div>
+
+      <RulesPanel hasAlertWidget={widgets.some((w) => w.kind === 'rule_alert' && w.enabled)} />
 
       <div className="sticky bottom-4 z-10 flex justify-end">
         <div className="flex items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-900/95 px-3 py-2 shadow-lg backdrop-blur">

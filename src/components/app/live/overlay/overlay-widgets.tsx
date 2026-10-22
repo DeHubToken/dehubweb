@@ -25,6 +25,7 @@ import type { OverlayStats } from '@/lib/live-overlay/types';
 import type { LiveRoomEvent, StreamJoinUser } from '@/lib/api/dehub/stream-presence';
 import { useOverlayEvent } from './overlay-events';
 import { useAlertQueue } from './use-alert-queue';
+import { useRuleFired } from './rule-bus';
 
 export interface WidgetProps {
   settings: Record<string, unknown>;
@@ -505,6 +506,34 @@ function Ticker({ settings }: WidgetProps) {
   );
 }
 
+// ─── Rule alerts ──────────────────────────────────────────────────────────────
+
+interface RuleAlertItem {
+  text: string;
+  user: StreamJoinUser;
+  durationMs: number;
+}
+
+/** Where a fired stream rule's alert text appears. Sounds and read-aloud need no place. */
+function RuleAlert(_: WidgetProps) {
+  const queue = useAlertQueue<RuleAlertItem>((item) => item.durationMs);
+  useRuleFired((fired) => {
+    for (const alert of fired.alerts) queue.push({ text: alert.text, user: fired.user, durationMs: alert.durationMs });
+  });
+  if (!queue.current) return null;
+  const { item, leaving, id } = queue.current;
+  return (
+    <div key={id} data-ow-alert data-leaving={leaving || undefined}>
+      <div data-ow-card>
+        <Avatar user={item.user} />
+        <div data-ow-lines>
+          <div data-ow-title>{item.text}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Registry ─────────────────────────────────────────────────────────────────
 
 export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: OverlayKind }) {
@@ -536,6 +565,8 @@ export function OverlayWidgetView({ kind, ...props }: WidgetProps & { kind: Over
       return <ChatBox {...props} />;
     case 'ticker':
       return <Ticker {...props} />;
+    case 'rule_alert':
+      return <RuleAlert {...props} />;
     default:
       return null;
   }
