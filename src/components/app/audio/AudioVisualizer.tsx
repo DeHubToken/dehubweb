@@ -3,6 +3,7 @@ import { useTranslation as _useCopy } from 'react-i18next';
 import { useMediaVolume, useMediaMuted, setVolume, setMediaMuted as setSelfMuted } from '@/lib/video-preferences';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
 import * as React from 'react';
+import { GlassAudioShoulder } from './GlassAudioShoulder';
 import { useRef, useContext, useEffect, useLayoutEffect, useState, useCallback, useMemo } from 'react';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import { useTranslation } from 'react-i18next';
@@ -582,10 +583,13 @@ export function AudioVisualizer({
         const step = width / shape.length;
         shape.forEach((peak, index) => {
           const level = staticData.length ? staticData[Math.floor(index / shape.length * staticData.length)] / 255 : 0;
-          const envelope = .16 + .84 * Math.pow(Math.sin(Math.PI * index / Math.max(1, shape.length - 1)), .8);
-          const barHeight = Math.max(2, Math.min(1, peak + level * .15) * envelope * height * .88);
+          const envelope = .025 + .975 * Math.pow(Math.sin(Math.PI * index / Math.max(1, shape.length - 1)), 1.5);
+          const barHeight = Math.max(1, Math.min(1, peak + level * .15) * envelope * height * .88);
           ctx.fillStyle = index / shape.length <= progress ? '#efffff' : 'rgba(190,255,250,.65)';
-          ctx.fillRect(index * step, height - barHeight, Math.max(1, step * .55), barHeight);
+          const barWidth = Math.max(1, step * .5);
+          ctx.beginPath();
+          ctx.roundRect(index * step, height - barHeight, barWidth, barHeight, Math.min(barWidth / 2, barHeight / 2));
+          ctx.fill();
         });
       } else drawStatic(ctx, staticData, width, height, hue, seed, progress, peaksRef.current, STATIC_BAR_COUNT);
       return;
@@ -966,6 +970,8 @@ export function AudioVisualizer({
 
   if (theme === 'glass') return (
     <div data-no-swipe data-video-controls data-audio-player data-glass-audio className={className} onClick={stopBubble}>
+      <div data-glass-audio-crown>
+      <GlassAudioShoulder />
       <div data-glass-audio-title>
         <strong>{displayTitle || popoutTrack?.title || t('audioPost.untitled')}</strong>
         <span>{popoutTrack?.artist || t('audioPost.creator')}</span>
@@ -975,6 +981,7 @@ export function AudioVisualizer({
         onPointerDown={e => beginScrub(e.currentTarget, e, false)}
         onPointerMove={e => moveScrub(e.currentTarget, e)}
         onPointerUp={e => endScrub(e.currentTarget, e)} onPointerCancel={cancelScrub} />
+      </div>
       <div data-glass-audio-deck>
         <div data-glass-audio-time><span>{formatTime(displayTime)}</span><span>{formatTime(duration)}</span></div>
         <input type="range" min={0} max={1000} step={1} value={Math.round(displayRatio * 1000)}
