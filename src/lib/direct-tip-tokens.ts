@@ -30,10 +30,6 @@ export const DIRECT_TIP_TOKENS: DirectTipToken[] = [
   { chainId: BNB_CHAIN_ID, address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT', decimals: 18 },
 ];
 
-/** Smallest direct tip, in the token. Ten cents. */
-export const MIN_DIRECT_TIP = 0.1;
-/** Quick amounts for a stablecoin tip, in dollars. */
-export const DIRECT_QUICK_AMOUNTS = [1, 5, 10, 25, 50, 100];
 
 /** The direct tip token matching a wallet balance, or null when it has to go through DHB. */
 export function directTipToken(source: { chainId: number; address: string } | null | undefined): DirectTipToken | null {

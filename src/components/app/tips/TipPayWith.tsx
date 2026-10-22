@@ -161,7 +161,10 @@ export default function TipPayWith({ amountDhb, value, onChange, requireSource =
 
   const pick = (source: TipFundingSource | null) => {
     userPicked.current = true;
-    onChange(source);
+    // The surface reads the direct token off the source, so it never has to
+    // import the token list into its own (eager) chunk.
+    const token = direct ? directTipToken(source) : null;
+    onChange(source && token ? { ...source, direct: token } : source);
     setOpen(false);
   };
   const selectedRow = value ? rows.find(r => sameSource(r, value)) ?? (value as Row) : null;

@@ -40,7 +40,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { getChainById, type ChainId } from '@/components/app/ChainSelector';
-import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB } from '@/hooks/use-tip-payment';
+import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB, MIN_DIRECT_TIP, DIRECT_QUICK_AMOUNTS } from '@/hooks/use-tip-payment';
 import { useTipNetwork } from '@/hooks/use-tip-network';
 import { useAuth } from '@/contexts/AuthContext';
 // NOTE: stream-controller and pay-chain reach wallet/contract code (wagmi +
@@ -53,7 +53,6 @@ import { getAccountInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { TipFundingSource } from '@/lib/tip-funding';
-import { DIRECT_QUICK_AMOUNTS, MIN_DIRECT_TIP, directTipToken } from '@/lib/direct-tip-tokens';
 import usdcLogo from '@/assets/usdc-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 
@@ -102,21 +101,18 @@ export function TipModal({
   // Base first, so the tip itself always leaves from Base.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [funding, setFunding] = useState(false);
-  // Every open starts in DHB. A stablecoin picked last time would otherwise
-  // reinterpret a saved DHB draft as USDC.
+  // Each open starts in DHB, so a saved DHB draft is never read as USDC.
   useEffect(() => { if (open) setPayWith(null); }, [open]);
   const sendInFlight = useRef(false);
   const [preparing, setPreparing] = useState(false);
 
-  // USDC/USDT on Base or BNB: the tip is paid in that token, straight to the
-  // creator, and the amount the tipper types is in it too.
-  const directToken = directTipToken(payWith);
+  // USDC/USDT: paid as is to the creator; the typed amount is in that token.
+  const directToken = payWith?.direct ?? null;
   const directLogo = directToken?.symbol === 'USDT' ? usdtLogo : usdcLogo;
   const directBalance = directToken && payWith ? Number(payWith.balance) / 10 ** payWith.decimals : null;
   const changePayWith = (source: TipFundingSource | null) => {
-    // A new unit makes the typed amount mean something else: 5,000 DHB is not
-    // 5,000 USDC. Clear it rather than carry it over.
-    if (directTipToken(source) || directToken) setAmount('');
+    // 5,000 DHB is not 5,000 USDC: a new unit clears the amount.
+    if (source?.direct || directToken) setAmount('');
     setPayWith(source);
   };
 
@@ -230,7 +226,6 @@ export function TipModal({
         return;
       }
       if (directToken) {
-        // Not DHB, so the post's DHB tip counter is left alone.
         lastTipAmount.current = 0;
         await tip(parsedAmount, directToken);
         return;

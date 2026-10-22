@@ -39,7 +39,7 @@ import { getAccountInfo } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { fundTipFromSource } from '@/lib/tip-funding-run';
 import type { TipFundingSource } from '@/lib/tip-funding';
-import { DIRECT_QUICK_AMOUNTS, MIN_DIRECT_TIP, directTipToken } from '@/lib/direct-tip-tokens';
+import { DIRECT_QUICK_AMOUNTS, MIN_DIRECT_TIP } from '@/hooks/use-tip-payment';
 import usdcLogo from '@/assets/usdc-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 
@@ -73,8 +73,7 @@ export function DmTipDialog({
   // Another token to pay with; it becomes DHB on Base before the tip.
   const [payWith, setPayWith] = useState<TipFundingSource | null>(null);
   const [recipientPrivate, setRecipientPrivate] = useState(false);
-  // Every open starts in DHB. A stablecoin picked last time would otherwise
-  // reinterpret a saved DHB draft as USDC.
+  // Each open starts in DHB, so a saved DHB draft is never read as USDC.
   useEffect(() => { if (open) setPayWith(null); }, [open]);
   const [privacyChecking, setPrivacyChecking] = useState(false);
 
@@ -89,14 +88,12 @@ export function DmTipDialog({
     return () => { cancelled = true; };
   }, [open, recipientAddress]);
 
-  // USDC/USDT on Base or BNB is paid as it is, straight to the recipient. Not
-  // offered when their DM plan sets a minimum: that minimum is in DHB.
-  const directToken = minAmount > 0 ? null : directTipToken(payWith);
+  // USDC/USDT paid as is; not with a DM plan minimum, which is in DHB.
+  const directToken = minAmount > 0 ? null : payWith?.direct ?? null;
   const directLogo = directToken?.symbol === 'USDT' ? usdtLogo : usdcLogo;
   const coin = directToken ? directLogo : dehubCoin;
   const changePayWith = (source: TipFundingSource | null) => {
-    // 5,000 DHB is not 5,000 USDC: a new unit clears the typed amount.
-    if (directTipToken(source) || directToken) setAmount('');
+    if (source?.direct || directToken) setAmount('');
     setPayWith(source);
   };
 

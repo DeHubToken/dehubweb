@@ -23,10 +23,12 @@ import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
 import i18n from 'i18next';
-import { MIN_DIRECT_TIP, type DirectTipToken } from '@/lib/direct-tip-tokens';
+import type { DirectTipToken } from '@/lib/direct-tip-tokens';
 
 export const MIN_TIP_DHB = 1;
 export const MAX_TIP_DHB = Infinity;
+export const MIN_DIRECT_TIP = 0.1;
+export const DIRECT_QUICK_AMOUNTS = [1, 5, 10, 25, 50, 100];
 
 const MAX_DB_RETRIES = 3;
 
@@ -104,12 +106,7 @@ export function useTipPayment({
   const inFlight = useRef(false);
   const { walletAddress, openLoginModal } = useAuth();
 
-  /**
-   * Send a tip of `amount` DHB, or, with `token`, of `amount` USDC/USDT paid
-   * straight to the creator on that token's chain. A stablecoin tip is not a
-   * DHB tip: it never touches the post's DHB tip count or tip_records (both
-   * count DHB), and the backend records and notifies it with its own ticker.
-   */
+  /** `amount` DHB, or with `token` USDC/USDT on its chain; those skip the DHB tip_records. */
   const tip = useCallback(
     async (amount: number, token?: DirectTipToken | null) => {
       if (inFlight.current) return;
