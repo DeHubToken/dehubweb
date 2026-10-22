@@ -462,6 +462,11 @@ export default function StakingPage() {
         await stakeTransferFlow(formatUnits(amountWei, 18), BASE_CHAIN_ID, 'Base', walletAddress);
       }
     } catch (err: any) {
+      if (err?.message === 'INSUFFICIENT_TOKEN_BALANCE') {
+        toast.dismiss();
+        toast.error(t('toasts.insufficient_balance', 'Insufficient balance'));
+        return;
+      }
       void stakeLog.error('Stake request unresolved', { error: String(err), wallet: currentWallet }, err);
       toast.dismiss();
       // Locked wallet: the unlock sheet and its toast are already up, and
