@@ -127,6 +127,7 @@
     "clickCameraUpload": "Kliknite na ikonu fotoaparátu na nahranie",
     "displayName": "Zobrazované meno",
     "enterDisplayName": "Zadajte zobrazované meno",
+    "displayNameOptionalHint": "Vaše verejné meno v profile. Nepovinné — ak ho necháte prázdne, použije sa vaše používateľské meno.",
     "username": "Používateľské meno",
     "usernamePlaceholder": "používateľ",
     "usernameHint": "3-30 znakov, písmená, čísla, podčiarkovníky",

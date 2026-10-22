@@ -120,6 +120,7 @@
     "clickCameraUpload": "تصویر اپلوڈ کرݨ کیتے کیمرا آئیکن دبو",
     "displayName": "ظاہری ناں",
     "enterDisplayName": "اپݨا ظاہری ناں لکھو",
+    "displayNameOptionalHint": "پروفائل تے ݙسݨ آلا تہاڈا عوامی ناں۔ اختیاری ہے — خالی چھوڑ ݙیوو تاں تہاڈا یوزرنیم ورتیا ویسی۔",
     "username": "یوزرنیم",
     "usernamePlaceholder": "یوزرنیم",
     "usernameHint": "3-30 حروف، حروف، نمبر، انڈرسکور",

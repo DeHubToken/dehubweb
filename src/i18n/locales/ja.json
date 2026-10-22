@@ -122,6 +122,7 @@
     "clickCameraUpload": "カメラアイコンをクリックしてアップロード",
     "displayName": "表示名",
     "enterDisplayName": "表示名を入力",
+    "displayNameOptionalHint": "プロフィールに表示される公開名です。任意です。空欄のままにするとユーザー名が使われます。",
     "username": "ユーザー名",
     "usernamePlaceholder": "ユーザー名",
     "usernameHint": "3〜30文字、英字、数字、アンダースコアのみ",

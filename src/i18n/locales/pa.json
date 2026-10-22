@@ -123,6 +123,7 @@
     "clickCameraUpload": "ਅੱਪਲੋਡ ਲਈ ਕੈਮਰਾ ਆਈਕਨ ਕਲਿੱਕ ਕਰੋ",
     "displayName": "ਦਿਸਣ ਵਾਲਾ ਨਾਮ",
     "enterDisplayName": "ਆਪਣਾ ਦਿਸਣ ਵਾਲਾ ਨਾਮ ਦਰਜ ਕਰੋ",
+    "displayNameOptionalHint": "ਤੁਹਾਡਾ ਜਨਤਕ ਨਾਂ ਜੋ ਪ੍ਰੋਫਾਈਲ 'ਤੇ ਦਿਖਦਾ ਹੈ। ਵਿਕਲਪਿਕ — ਖਾਲੀ ਛੱਡ ਦਿਓ ਤਾਂ ਤੁਹਾਡਾ ਯੂਜ਼ਰ ਨਾਮ ਵਰਤਿਆ ਜਾਵੇਗਾ।",
     "username": "ਯੂਜ਼ਰ ਨਾਮ",
     "usernamePlaceholder": "ਯੂਜ਼ਰ",
     "usernameHint": "3-30 ਅੱਖਰ, ਸਿਰਫ਼ ਅੱਖਰ, ਨੰਬਰ ਅਤੇ ਅੰਡਰਸਕੋਰ",

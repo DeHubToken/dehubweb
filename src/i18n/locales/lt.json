@@ -123,6 +123,7 @@
     "clickCameraUpload": "Spustelėkite kameros piktogramą, kad įkeltumėte",
     "displayName": "Rodomas vardas",
     "enterDisplayName": "Įveskite savo rodomą vardą",
+    "displayNameOptionalHint": "Jūsų viešas vardas profilyje. Neprivaloma — palikite tuščią, kad būtų naudojamas jūsų naudotojo vardas.",
     "username": "Naudotojo vardas",
     "usernamePlaceholder": "naudotojo vardas",
     "usernameHint": "3-30 simbolių, raidės, skaičiai, pabraukimai",

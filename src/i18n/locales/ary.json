@@ -123,6 +123,7 @@
     "clickCameraUpload": "كليكي على الكاميرا باش تطلع",
     "displayName": "الاسم المعروض",
     "enterDisplayName": "دخل الاسم ديالك",
+    "displayNameOptionalHint": "سميتك العلنية اللي كتبان فالبروفيل ديالك. ماشي ضرورية — خليها خاوية وغادي نستعملو اسم المستخدم ديالك.",
     "username": "اسم المستخدم",
     "usernamePlaceholder": "اسم المستخدم",
     "usernameHint": "3-30 حرف، حروف وأرقام و _ بوحدهم",

@@ -123,6 +123,7 @@
     "clickCameraUpload": "Pāwhiritia te tohu kāmera ki te tuku ake",
     "displayName": "Ingoa whakaatu",
     "enterDisplayName": "Tāurua tō ingoa whakaatu",
+    "displayNameOptionalHint": "Tō ingoa tūmatanui e whakaatuhia ana i tō kōtaha. Kāore e herea — waiho kia wātea, ā, ka whakamahia tō ingoa kaiwhakamahi.",
     "username": "Ingoa kaiwhakamahi",
     "usernamePlaceholder": "ingoa kaiwhakamahi",
     "usernameHint": "3-30 pūāhua, reta, tau, rārangi raro",
