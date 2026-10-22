@@ -4906,7 +4906,8 @@
       "reaction_counter": "Reaksiya hisoblagichi",
       "event_feed": "So&#39;nggi faollik",
       "chat_box": "Chat oynasi",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "rule_alert": "Qoida ogohlantirishlari"
     },
     "hints": {
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
@@ -4923,7 +4924,8 @@
       "reaction_counter": "Sizning eshittirishingizga berilgan har bir reaksiya hisobga olinadi",
       "event_feed": "Eng so&#39;nggi sovg&#39;alar, izdoshlar, obunachilar va translyatsiyangizni baham ko&#39;rayotgan odamlar",
       "chat_box": "Ekranda eshittirishingizning chat xabarlarini ko&#39;rsatadi",
-      "ticker": "Ekran bo&#39;ylab aylantiriladigan o&#39;zingizning matningiz qatori"
+      "ticker": "Ekran bo&#39;ylab aylantiriladigan o&#39;zingizning matningiz qatori",
+      "rule_alert": "Sizning qoidangizning xabarlarini koʻrish joyi"
     },
     "fields": {
       "style": "Uslub",
@@ -4955,6 +4957,102 @@
       "slow": "Sekin",
       "normal": "Oddiy",
       "fast": "Tez"
+    },
+    "rules": {
+      "title": "Qoidalar",
+      "intro": "Sizning streamingizda bir narsa sodir boʻlganda, DeHub sizning tanlangichingizga koʻra amalga oshiradi: xabar koʻrsatadi, ovoz oʻynaydi, narsani aytib beradi, chatga yozib yuboradi yoki Discordingizga xabar yuboradi.",
+      "add": "Qoidani qoʻshish",
+      "limit": "Siz {{count}} qoidalarining chegarasiga yetdingiz.",
+      "loadFailed": "Qoidangiz yuklanmadi. Saytni qayta yuklang va qayta urinib koʻring.",
+      "empty": "Hali qoidalar yoʻq. Tip, taklif yoki chat buyrugʻini reaksiyalash uchun birini qoʻshing.",
+      "saved": "Qoidalar saqlandi. Ular sizning keyingi tip, taklif yoki xabaringizda ishga tushadi.",
+      "saveFailed": "Qoidalar saqlanmadi.",
+      "testFailed": "Bu sinov oʻtkazilmadi. Bir oz kutilib, qayta urinib koʻring.",
+      "saveToTest": "Qoidangizni sinab koʻring",
+      "test": "Sinov",
+      "enabled": "Qoidani ochish",
+      "remove": "Qoidani oʻchirish",
+      "save": "Qoidalarni saqlash",
+      "needsAlertWidget": "Baʼzi qoidalar xabar koʻrsatadi. Qoidalar xabarlarini koʻrish paneli qoʻshib, u uchun koʻrinish joyini yaratishingiz mumkin.",
+      "name": "Nom",
+      "when": "Qanday paytda",
+      "then": "Sodir boʻlganda",
+      "minAmount": "Eng kichik tip (DHB)",
+      "command": "Buyruq",
+      "keyword": "Soʻz yoki ifoda",
+      "audience": "Qaysi odam bu xabarga sabab boʻlishi mumkin",
+      "blockedWords": "Bloklangan soʻzlar",
+      "blockedWordsHint": "Virgul bilan ajrating. Ular bor boʻlgan xabarlar eʼtiborsiz qoldirilib, hammasi aytilmaydi.",
+      "cooldown": "Foydalanish orasidagi vaqt (sekund)",
+      "userCooldown": "Kuzovchi boʻyicha vaqt (sekund)",
+      "addAction": "Amalni qoʻshish",
+      "removeAction": "Amaldan olib tashlash",
+      "placeholders": "Matningizda {name}, {amount} va {message} dan foydalaning. Xabarlardagi havolalar olib tashlandi.",
+      "alertText": "Ogohlantirish matni",
+      "sound": "Ovoz",
+      "sayText": "Ovoz chiqarib o&#39;qish uchun matn",
+      "chatText": "Joylashtirish uchun xabar",
+      "chatHint": "Hisobingizdan oqim chatiga joylashtirildi. U tomoshabinning xabarini takrorlay olmaydi.",
+      "webhookUrl": "Vebhuk manzili",
+      "webhookHint": "Ushbu Discord yoki Slack webhook yoki POST so‘rovlarini qabul qiladigan barcha https manzilidir.",
+      "webhookText": "Yuborish uchun xabar",
+      "triggers": {
+        "tip": "Choy puli keldi",
+        "follow": "Kimdir kuzatib bormoqda",
+        "subscribe": "Kimdir obuna bo&#39;ladi",
+        "share": "Kimdir oqimni ulashmoqda",
+        "command": "Chat buyrug&#39;i ishlatiladi",
+        "keyword": "Chat xabarida so&#39;z bor",
+        "chat": "Har qanday chat xabari"
+      },
+      "audiences": {
+        "everyone": "Hamma",
+        "followers": "Kuzatuvchilar",
+        "subscribers": "Obunachilar"
+      },
+      "actionTypes": {
+        "alert": "Ogohlantirishni ko&#39;rsatish",
+        "sound": "Ovozni ijro etish",
+        "say": "Ovoz chiqarib o&#39;qing",
+        "chat": "Chatda post qoldiring",
+        "webhook": "Veb-hukka yuborish"
+      },
+      "summary": {
+        "tip": "{{amount}} DHB yoki undan ko&#39;p choychaqa"
+      },
+      "presets": {
+        "blank": "Bo&#39;sh qoida",
+        "readChat": "Chatni ovoz chiqarib o&#39;qing",
+        "bigTip": "Katta uchlar uchun havo shoxi",
+        "thankFollowers": "Yangi obunachilarga rahmat",
+        "command": "Chat buyrug&#39;i"
+      },
+      "presetHints": {
+        "blank": "Hech narsadan boshlang",
+        "readChat": "Obunachilaringizning xabarlarini ovoz chiqarib o&#39;qiydi, har bir tomoshabin uchun har 30 soniyada bittadan",
+        "bigTip": "Havo signalini chaladi va 100 000 DHB yoki undan ko&#39;proq pul o&#39;tkazmalari haqida ogohlantirish beradi",
+        "thankFollowers": "Kimdir obuna bo&#39;lganda chatingizda minnatdorchilik bildiradi",
+        "command": "Chatingizdagi ! buyrug&#39;iga javob beradi"
+      },
+      "presetText": {
+        "readChat": "{name} deydi {message}",
+        "bigTip": "{name} kech {amount} DHB!",
+        "thankFollowers": "Kuzatib borganingiz uchun tashakkur, {name}!",
+        "command": "Salom {name}, oqimga xush kelibsiz!"
+      },
+      "sounds": {
+        "airhorn": "Havo shoxi",
+        "applause": "Qarsaklar",
+        "cricket": "Kriketlar",
+        "drumroll": "Baraban rolli",
+        "lol": "Kulgi",
+        "ooh-ahh": "Voy ahh",
+        "ooh-man": "Voy (odam)",
+        "ohh-girl": "Oh (ayol)",
+        "spooky": "Dahshatli",
+        "magic-spell": "Sehrli sehr",
+        "shhh": "Jim bo&#39;l"
+      }
     }
   },
   "live": {

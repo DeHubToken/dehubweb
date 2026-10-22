@@ -4838,7 +4838,8 @@
       "reaction_counter": "Lakkaawwii deebii kennuu",
       "event_feed": "Sochii dhiheenya kanaa",
       "chat_box": "Sanduuqa marii",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "rule_alert": "Ogeeyyii Seera"
     },
     "hints": {
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",
@@ -4855,7 +4856,8 @@
       "reaction_counter": "Deebiin tamsaasa kee argatu hunda lakkaa&#39;a",
       "event_feed": "Kennaawwan haaraa, hordoftoota, subscribers fi namoota tamsaasa keessan qooddatan",
       "chat_box": "Ergaawwan marii tamsaasa keessanii iskiriinii irratti agarsiisa",
-      "ticker": "Sarara barruu mataa keetii kan iskiriinii irratti qaxxaamuru"
+      "ticker": "Sarara barruu mataa keetii kan iskiriinii irratti qaxxaamuru",
+      "rule_alert": "Bakka ogeeyyii seera keessan mul'atu"
     },
     "fields": {
       "style": "Akkaataa",
@@ -4887,6 +4889,98 @@
       "slow": "Suuta",
       "normal": "Baratamaa",
       "fast": "Ariifataa"
+    },
+    "rules": {
+      "title": "Seerota",
+      "intro": "Wanti tokko yeroo dhuma keessan keessa dhalachutti, DeHub waan ati filatte hojjeta: ogeeyyii mul'isa, sagalee facaasa, wanti tokko dubbisa, chaatii keessan keessa barreessa ykn Discord keessan jedha.",
+      "add": "Seera dabalaa",
+      "limit": "Daangaa seera {{count}} gaadhee jirta.",
+      "loadFailed": "Seerota keessan fe'uu hin dandeenye. Fuula irra haaromsa itti yaaliif.",
+      "empty": "Seera tokko iyyuu hin jiru. Tokko dabalaa gorsaa, hordofaa ykn ajajaa chaatii irratti deebii kennuuf.",
+      "saved": "Seerota kuufame. Isaan gorsaa, hordofaa ykn ergaa itti aaniin ni hojjatu.",
+      "saveFailed": "Seerota keessan kuufuu hin dandeenye.",
+      "testFailed": "Yaali kun itti hin galfne. Yeroo muraasaa booda yaaliif.",
+      "saveToTest": "Seerota keessan kuufa yaaliif",
+      "test": "Yaali",
+      "enabled": "Seera on",
+      "remove": "Seera haqaa",
+      "save": "Seerota kuufa",
+      "needsAlertWidget": "Seera tokko tokko ogeeyyii mul'isa. Widijet Rule alerts dabalaa akka bakka mul'atu qabaatu.",
+      "name": "Maqaa",
+      "when": "Yeroo",
+      "then": "Sana booda",
+      "minAmount": "Gorsaa xiqqaa (DHB)",
+      "command": "Ajaja",
+      "keyword": "Jecha ykn ibsa",
+      "audience": "Eenyu isaa on gochuu danda'a",
+      "blockedWords": "Jechota marfaman",
+      "blockedWordsHint": "Qamaa waliin gargar. Ergaan isaan of keessaa qabu ilaalaman hin dubbifamuu.",
+      "cooldown": "Eeguu gidduugaleessa (sekondii)",
+      "userCooldown": "Eeguu mul'ata tokko tokkoon (sekondii)",
+      "addAction": "Hojii dabalaa",
+      "removeAction": "Hojii balleessaa",
+      "alertText": "Barreeffama akeekkachiisaa",
+      "sound": "Sagalee",
+      "sayText": "Barreeffama sagalee ol kaastee dubbisuuf",
+      "chatText": "Ergaa maxxansuuf",
+      "chatHint": "Akkaawuntii keessan irraa gara chat stream keessaniitti maxxanfame. Ergaa nama ilaalu irra deebi&#39;uu hin danda&#39;u.",
+      "webhookUrl": "Teessoo Webhook",
+      "webhookHint": "Webhook Discord ykn Slack, ykn teessoo https kamiyyuu kan POST fudhatu.",
+      "webhookText": "Ergaa erguuf",
+      "triggers": {
+        "tip": "Gorsi tokko ni dhufa",
+        "follow": "Namni tokko hordofa",
+        "subscribe": "Namni tokko subscribe godha",
+        "share": "Namni tokko sulula sana qooddata",
+        "command": "Ajajni chaatii fayyadama",
+        "keyword": "Ergaan chat jecha tokko of keessaa qaba",
+        "chat": "Ergaa chat kamiyyuu"
+      },
+      "audiences": {
+        "everyone": "Nama hundumaa",
+        "followers": "Hordoftoota",
+        "subscribers": "Maamiltoota"
+      },
+      "actionTypes": {
+        "alert": "Akeekkachiisa agarsiisi",
+        "sound": "Sagalee tokko taphachiisi",
+        "say": "Sagalee ol kaastee dubbisi",
+        "chat": "Chat keessatti maxxansaa",
+        "webhook": "Gara webhook tokkotti ergaa"
+      },
+      "summary": {
+        "tip": "Gorsa {{amount}} DHB fi isaa ol"
+      },
+      "presets": {
+        "blank": "Seera duwwaa",
+        "readChat": "Sagalee ol kaastee chat dubbisi",
+        "bigTip": "Gaanfa qilleensaa gorsa gurguddoof",
+        "thankFollowers": "Hordoftoota haaraa galatoomaa",
+        "command": "Ajaja chat"
+      },
+      "presetHints": {
+        "blank": "Homaa irraa jalqabi",
+        "readChat": "Ergaa hordoftoota keessanii sagalee ol kaasee dubbisa, daawwataa tokkoof sekondii 30 keessatti tokko",
+        "bigTip": "Gaanfa qilleensaa taphachuun gorsa DHB 100,000 fi isaa ol ta&#39;eef akeekkachiisa agarsiisa",
+        "thankFollowers": "Yeroo namni tokko hordofu chat keessan irratti galateeffannaa maxxansa",
+        "command": "Chat keessan keessatti ajaja !deebisa"
+      },
+      "presetText": {
+        "readChat": "{name} jedha {message}",
+        "bigTip": "{name} boqonnaa {amount} DHB!",
+        "thankFollowers": "Hordoffii keessaniif galatoomaa, {name}!",
+        "command": "Akkam jirtu {name}, baga gara stream dhuftan!"
+      },
+      "sounds": {
+        "airhorn": "Gaanfa qilleensaa",
+        "applause": "Harka rukutuu",
+        "cricket": "Kirikeeti",
+        "lol": "Kolfa",
+        "ooh-ahh": "Ooh ahh",
+        "ooh-man": "Ooh (nama) .",
+        "ohh-girl": "Ohh (dubartii) .",
+        "spooky": "Spooky jechuun ni danda&#39;ama"
+      }
     }
   },
   "live": {

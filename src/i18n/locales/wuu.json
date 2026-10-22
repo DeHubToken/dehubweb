@@ -4460,6 +4460,32 @@
       "slow": "慢",
       "normal": "普通",
       "fast": "快"
+    },
+    "rules": {
+      "enabled": "规则关于",
+      "remove": "删脱规则",
+      "cooldown": "等一下用 (秒)",
+      "userCooldown": "等人頭 (秒)",
+      "sayText": "要读出来的文本",
+      "triggers": {
+        "command": "一个聊天指令被用"
+      },
+      "presets": {
+        "thankFollowers": "歡迎新粉絲！"
+      },
+      "presetHints": {
+        "blank": "啥都無，從零開始",
+        "readChat": "朗读你粉丝的消息，每30秒对每位观众朗读一条",
+        "thankFollowers": "有人关注时，在你个聊天里发个感谢。"
+      },
+      "presetText": {
+        "readChat": "{name} 吾𠀀{message}",
+        "bigTip": "{name} 送 {amount} DHB!"
+      },
+      "sounds": {
+        "ooh-man": "Ooh (阿𠀀)",
+        "ohh-girl": "Ohh (女仔)"
+      }
     }
   },
   "live": {

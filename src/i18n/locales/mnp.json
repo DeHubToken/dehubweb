@@ -4514,6 +4514,27 @@
       "slow": "慢",
       "normal": "普通",
       "fast": "快"
+    },
+    "rules": {
+      "testFailed": "𠮷𠮷，那個測試沒過。過一陣子再試一次。",
+      "cooldown": "等一下用 (秒)",
+      "userCooldown": "等一下 (每位觀眾幾秒鐘)",
+      "sayText": "要朗读的文字",
+      "audiences": {
+        "subscribers": "訂閱者"
+      },
+      "presetHints": {
+        "blank": "啥都無，從零開始。"
+      },
+      "presetText": {
+        "readChat": "{name}講{message}",
+        "bigTip": "{name} 送 {amount} DHB!",
+        "command": "喔{name}，歡迎來到直播間！"
+      },
+      "sounds": {
+        "ohh-girl": "Ohh (女仔)",
+        "spooky": "恐怖"
+      }
     }
   },
   "live": {
