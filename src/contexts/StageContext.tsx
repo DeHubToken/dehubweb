@@ -2312,9 +2312,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
           status: 'pending',
         }),
       );
-      // The table is UNIQUE on (space_id, wallet_address, status), and a
-      // pending row survives a disconnect while the local hasRaisedHand state
-      // does not — so a listener who dropped and rejoined got "Failed to raise
+      // Only one pending row per person per stage is allowed, and a pending
+      // row survives a disconnect while the local hasRaisedHand state does
+      // not — so a listener who dropped and rejoined got "Failed to raise
       // hand" on every press for the rest of the stage. A duplicate pending
       // row IS the state being asked for; treat it as success.
       if (error && error.code !== '23505') throw error;
