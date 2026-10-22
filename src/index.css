@@ -2896,10 +2896,10 @@ html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]:last-child::bef
  * ========================================================================== */
 html[data-theme="light"] {
   --paper: #f9f8f4;
-  --zinc-500: 113 113 122; /* stock zinc-500 (#71717a): 4.9:1 on paper; the dark-surface value in :root would drop to 3.9:1 here */
+  --zinc-500: 74 74 80; /* AAA: ~8:1 on paper (stock #71717a was 4.9:1) */
   --paper-deep: #ece8df;
   --ink: #1a1a1a;
-  --ink-muted: #5a5a5a;
+  --ink-muted: #444444; /* AAA: 9:1 on paper, 7.3:1 on grey chips */
   --hairline: rgba(0, 0, 0, 0.08);
   --hairline-strong: rgba(0, 0, 0, 0.12);
   --hover-wash: rgba(0, 0, 0, 0.05);
@@ -2907,10 +2907,10 @@ html[data-theme="light"] {
 }
 html[data-system-tone="light"] {
   --paper: #f9f8f4;
-  --zinc-500: 113 113 122;
+  --zinc-500: 74 74 80;
   --paper-deep: #ece8df;
   --ink: #1a1a1a;
-  --ink-muted: #5a5a5a;
+  --ink-muted: #444444; /* AAA: 9:1 on paper, 7.3:1 on grey chips */
   --hairline: rgba(0, 0, 0, 0.08);
   --hairline-strong: rgba(0, 0, 0, 0.12);
   --hover-wash: rgba(0, 0, 0, 0.05);
@@ -3080,10 +3080,10 @@ html[data-system-tone="light"] .toaster .toast {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
 }
 html[data-theme="light"] .text-zinc-600 {
-  color: #707070 !important;
+  color: var(--ink-muted) !important;
 }
 html[data-system-tone="light"] .text-zinc-600 {
-  color: #707070 !important;
+  color: var(--ink-muted) !important;
 }
 
 /* Active filter chip close icon: white/40 is invisible on light paper; use ink
@@ -3878,10 +3878,10 @@ html[data-system-tone="light"] [data-reaction-tray] [data-reaction-option]:focus
    `.text-white → ink` remap only catches the bare utility, not `text-white/70`,
    so the numbers under each emoji need their own flip. */
 html[data-theme="light"] [data-reaction-tray] [data-reaction-count] {
-  color: rgba(0, 0, 0, 0.62) !important;
+  color: rgba(0, 0, 0, 0.74) !important;
 }
 html[data-system-tone="light"] [data-reaction-tray] [data-reaction-count] {
-  color: rgba(0, 0, 0, 0.62) !important;
+  color: rgba(0, 0, 0, 0.74) !important;
 }
 html[data-theme="light"] [data-reaction-tray] [data-reaction-count][data-zero="true"] {
   color: rgba(0, 0, 0, 0.28) !important;
