@@ -8378,5 +8378,14 @@
     "backToMedia": "Return to कार्यसमिति",
     "like": "यथा",
     "unlike": "निष्कासितं यथा"
+  },
+  "postProcessing": {
+    "uploading": "उत्तार्यते…",
+    "preparing": "सज्जीक्रियते…",
+    "ready": "सज्जम्",
+    "preparingVideo": "भवतः चलचित्रं सज्जीक्रियते",
+    "posted": "प्रकाशितम्",
+    "view": "पश्यतु",
+    "failed": "चलचित्रं संसाधयितुं न शक्तम्"
   }
 }

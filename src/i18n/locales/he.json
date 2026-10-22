@@ -8556,5 +8556,14 @@
     "backToMedia": "חזרה לפוסט",
     "like": "אהבתי",
     "unlike": "הסרת סימון 'אהבתי'"
+  },
+  "postProcessing": {
+    "uploading": "מעלה…",
+    "preparing": "מכין…",
+    "ready": "מוכן",
+    "preparingVideo": "מכינים את הסרטון שלך",
+    "posted": "פורסם",
+    "view": "הצגה",
+    "failed": "לא ניתן היה לעבד את הסרטון"
   }
 }

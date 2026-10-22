@@ -8730,5 +8730,14 @@
     "inProgress": "V realizácii",
     "completed": "Dokončené",
     "underReview": "V recenzii"
+  },
+  "postProcessing": {
+    "uploading": "Nahráva sa…",
+    "preparing": "Pripravuje sa…",
+    "ready": "Hotovo",
+    "preparingVideo": "Pripravujeme vaše video",
+    "posted": "Zverejnené",
+    "view": "Zobraziť",
+    "failed": "Video sa nepodarilo spracovať"
   }
 }

@@ -8651,5 +8651,14 @@
     "backToMedia": "Quay lại bài đăng",
     "like": "Thích",
     "unlike": "Xóa lượt thích"
+  },
+  "postProcessing": {
+    "uploading": "Đang tải lên…",
+    "preparing": "Đang chuẩn bị…",
+    "ready": "Sẵn sàng",
+    "preparingVideo": "Đang chuẩn bị video của bạn",
+    "posted": "Đã đăng",
+    "view": "Xem",
+    "failed": "Không thể xử lý video"
   }
 }

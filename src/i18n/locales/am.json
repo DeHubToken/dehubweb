@@ -8530,5 +8530,14 @@
     "backToMedia": "ወደ ልኡክ ጽሁፍ ተመለስ",
     "like": "እንደ",
     "unlike": "እንደ አስወግድ"
+  },
+  "postProcessing": {
+    "uploading": "በመስቀል ላይ…",
+    "preparing": "በማዘጋጀት ላይ…",
+    "ready": "ዝግጁ",
+    "preparingVideo": "ቪዲዮዎ እየተዘጋጀ ነው",
+    "posted": "ተለጠፈ",
+    "view": "ተመልከት",
+    "failed": "ቪዲዮው ሊሰራ አልቻለም"
   }
 }

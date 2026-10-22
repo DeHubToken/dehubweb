@@ -8390,5 +8390,14 @@
     "backToMedia": "फिर Post पे क्लिक करे",
     "like": "जइसे कि",
     "unlike": "ऐसे निकालें"
+  },
+  "postProcessing": {
+    "uploading": "अपलोड हो रहल बा…",
+    "preparing": "तइयार हो रहल बा…",
+    "ready": "तइयार",
+    "preparingVideo": "रउआ वीडियो तइयार हो रहल बा",
+    "posted": "पोस्ट हो गइल",
+    "view": "देखीं",
+    "failed": "वीडियो प्रोसेस ना हो पावल"
   }
 }

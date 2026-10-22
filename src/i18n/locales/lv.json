@@ -8539,5 +8539,14 @@
     "backToMedia": "Atpakaļ uz ziņu",
     "like": "Patīk",
     "unlike": "Noņemt atzīmi \"Patīk"
+  },
+  "postProcessing": {
+    "uploading": "Augšupielādē…",
+    "preparing": "Sagatavo…",
+    "ready": "Gatavs",
+    "preparingVideo": "Tavs video tiek sagatavots",
+    "posted": "Publicēts",
+    "view": "Skatīt",
+    "failed": "Video nevarēja apstrādāt"
   }
 }

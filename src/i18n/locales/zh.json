@@ -8684,5 +8684,14 @@
     "backToMedia": "返回帖子",
     "like": "喜欢",
     "unlike": "移除赞"
+  },
+  "postProcessing": {
+    "uploading": "上传中…",
+    "preparing": "准备中…",
+    "ready": "就绪",
+    "preparingVideo": "正在准备你的视频",
+    "posted": "已发布",
+    "view": "查看",
+    "failed": "视频无法处理"
   }
 }

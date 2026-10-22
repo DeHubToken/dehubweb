@@ -8503,5 +8503,14 @@
     "backToMedia": "Tagasi postituse juurde",
     "like": "Meeldib",
     "unlike": "Eemalda meeldimine"
+  },
+  "postProcessing": {
+    "uploading": "Üleslaadimine…",
+    "preparing": "Ettevalmistamine…",
+    "ready": "Valmis",
+    "preparingVideo": "Valmistame su videot ette",
+    "posted": "Postitatud",
+    "view": "Vaata",
+    "failed": "Videot ei õnnestunud töödelda"
   }
 }

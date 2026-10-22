@@ -7140,5 +7140,14 @@
     "backToMedia": "بیک ٹو دی پوسٹ",
     "like": "لائک",
     "unlike": "ریموو لائک"
+  },
+  "postProcessing": {
+    "uploading": "اپلوڈ ہو رہا…",
+    "preparing": "تیار ہو رہا…",
+    "ready": "تیار",
+    "preparingVideo": "تمارا ویڈیو تیار ہو رہا",
+    "posted": "پوسٹ ہوگیا",
+    "view": "دیکھو",
+    "failed": "ویڈیو پروسیس نئیں ہوسکا"
   }
 }

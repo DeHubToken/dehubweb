@@ -7349,5 +7349,14 @@
     "shareFacebook": "هاوبەشکردن لە Facebook",
     "shareTelegram": "هاوبەشکردن لە Telegram",
     "copyLink": "لینکەکە کۆپی بکە"
+  },
+  "postProcessing": {
+    "uploading": "بار دەکرێت…",
+    "preparing": "ئامادە دەکرێت…",
+    "ready": "ئامادەیە",
+    "preparingVideo": "ڤیدیۆکەت ئامادە دەکرێت",
+    "posted": "بڵاوکرایەوە",
+    "view": "بینین",
+    "failed": "ڤیدیۆکە نەتوانرا پرۆسێس بکرێت"
   }
 }

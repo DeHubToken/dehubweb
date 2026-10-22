@@ -7839,5 +7839,14 @@
     "inProgress": "চলতাসে",
     "completed": "শেষ অইসে",
     "underReview": "পর্যালোচনায়"
+  },
+  "postProcessing": {
+    "uploading": "আপলোড অইরার…",
+    "preparing": "রেডি অইরার…",
+    "ready": "রেডি",
+    "preparingVideo": "আপনার ভিডিও রেডি অইরার",
+    "posted": "পোস্ট অই গেছে",
+    "view": "দেখো",
+    "failed": "ভিডিও প্রসেস করা গেলো না"
   }
 }

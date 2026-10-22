@@ -8550,5 +8550,14 @@
     "backToMedia": "Kthehu te postimi",
     "like": "Më pëlqen",
     "unlike": "Hiq pëlqimin"
+  },
+  "postProcessing": {
+    "uploading": "Po ngarkohet…",
+    "preparing": "Po përgatitet…",
+    "ready": "Gati",
+    "preparingVideo": "Po përgatisim videon tënde",
+    "posted": "U postua",
+    "view": "Shiko",
+    "failed": "Videoja nuk mund të përpunohej"
   }
 }

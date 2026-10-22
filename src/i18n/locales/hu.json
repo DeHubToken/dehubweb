@@ -8448,5 +8448,14 @@
     "backToMedia": "Vissza a bejegyzéshez",
     "like": "Tetszik",
     "unlike": "Kedvelések eltávolítása"
+  },
+  "postProcessing": {
+    "uploading": "Feltöltés…",
+    "preparing": "Előkészítés…",
+    "ready": "Kész",
+    "preparingVideo": "Készül a videód",
+    "posted": "Közzétéve",
+    "view": "Megnézem",
+    "failed": "A videót nem sikerült feldolgozni"
   }
 }

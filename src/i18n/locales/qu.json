@@ -8568,5 +8568,14 @@
     "backToMedia": "Post nisqaman kutiy",
     "like": "Munasqa",
     "unlike": "Saqiy imayna"
+  },
+  "postProcessing": {
+    "uploading": "Qatichkan…",
+    "preparing": "Wakichichkan…",
+    "ready": "Wakichisqa",
+    "preparingVideo": "Videoykita wakichichkan",
+    "posted": "Churasqa",
+    "view": "Qhaway",
+    "failed": "Manam videota ruwayta atikurqanchu"
   }
 }

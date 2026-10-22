@@ -8446,5 +8446,14 @@
     "backToMedia": "Torna a l'entrada",
     "like": "M'agrada",
     "unlike": "Elimina els \"m'agrada\""
+  },
+  "postProcessing": {
+    "uploading": "Pujant…",
+    "preparing": "Preparant…",
+    "ready": "A punt",
+    "preparingVideo": "Preparant el teu vídeo",
+    "posted": "Publicat",
+    "view": "Mostra",
+    "failed": "No s'ha pogut processar el vídeo"
   }
 }

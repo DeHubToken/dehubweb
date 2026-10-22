@@ -7707,5 +7707,14 @@
     "backToComments": "Back to comments",
     "like": "Like",
     "unlike": "Remove like"
+  },
+  "postProcessing": {
+    "uploading": "E di upload…",
+    "preparing": "E di prepare…",
+    "ready": "E don ready",
+    "preparingVideo": "We di prepare ya video",
+    "posted": "E don post",
+    "view": "Look am",
+    "failed": "We no fit process di video"
   }
 }

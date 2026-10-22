@@ -7778,5 +7778,14 @@
     "inProgress": "চলতাছে",
     "completed": "শেষ হইছে",
     "underReview": "পর্যালোচনায়"
+  },
+  "postProcessing": {
+    "uploading": "আপলোড হইতেছে…",
+    "preparing": "তৈয়ার হইতেছে…",
+    "ready": "তৈয়ার",
+    "preparingVideo": "তোমার ভিডিও তৈয়ার হইতেছে",
+    "posted": "পোস্ট হইল",
+    "view": "দেখো",
+    "failed": "ভিডিও প্রসেস করা গেইল না"
   }
 }

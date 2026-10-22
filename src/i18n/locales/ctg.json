@@ -8007,5 +8007,14 @@
     "inProgress": "চলতাছে",
     "completed": "সম্পূর্ণ",
     "underReview": "পর্যালোচনায়"
+  },
+  "postProcessing": {
+    "uploading": "আপলোড অইতেছে…",
+    "preparing": "রেডি অইতেছে…",
+    "ready": "রেডি",
+    "preparingVideo": "তোঁয়ার ভিডিও রেডি অইতেছে",
+    "posted": "পোস্ট অইয়ে",
+    "view": "দেখো",
+    "failed": "ভিডিও প্রসেস গরা ন গেল"
   }
 }

@@ -14086,5 +14086,14 @@
     "nobodyYet": "Henüz kimse yok",
     "rotate": "Ekranı döndür",
     "showControls": "Kontrolleri göster"
+  },
+  "postProcessing": {
+    "uploading": "Yükleniyor…",
+    "preparing": "Hazırlanıyor…",
+    "ready": "Hazır",
+    "preparingVideo": "Videon hazırlanıyor",
+    "posted": "Paylaşıldı",
+    "view": "Görüntüle",
+    "failed": "Video işlenemedi"
   }
 }

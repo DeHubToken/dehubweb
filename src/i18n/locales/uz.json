@@ -8613,5 +8613,14 @@
     "backToBlog": "Blogga qaytish",
     "sharePost": "Postni ulashish",
     "relatedPosts": "Bogʻliq postlar"
+  },
+  "postProcessing": {
+    "uploading": "Yuklanmoqda…",
+    "preparing": "Tayyorlanmoqda…",
+    "ready": "Tayyor",
+    "preparingVideo": "Videongiz tayyorlanmoqda",
+    "posted": "Joylandi",
+    "view": "Ko‘rish",
+    "failed": "Videoni qayta ishlab bo‘lmadi"
   }
 }

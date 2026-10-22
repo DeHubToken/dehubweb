@@ -8565,5 +8565,14 @@
     "contact": "Contact",
     "privacy": "Politica de confidențialitate",
     "terms": "Termeni și condiții"
+  },
+  "postProcessing": {
+    "uploading": "Se încarcă…",
+    "preparing": "Se pregătește…",
+    "ready": "Gata",
+    "preparingVideo": "Îți pregătim videoclipul",
+    "posted": "Publicat",
+    "view": "Vezi",
+    "failed": "Videoclipul nu a putut fi procesat"
   }
 }

@@ -8447,5 +8447,14 @@
     "backToMedia": "Takaisin postaukseen",
     "like": "Tykkää",
     "unlike": "Poista tykkäys"
+  },
+  "postProcessing": {
+    "uploading": "Ladataan…",
+    "preparing": "Valmistellaan…",
+    "ready": "Valmis",
+    "preparingVideo": "Videotasi valmistellaan",
+    "posted": "Julkaistu",
+    "view": "Näytä",
+    "failed": "Videota ei voitu käsitellä"
   }
 }
