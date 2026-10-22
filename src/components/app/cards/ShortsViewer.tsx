@@ -99,6 +99,7 @@ import { createWheelGesture } from '@/lib/wheel-gesture';
 import { lockBodyScroll } from '@/lib/body-scroll-lock';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { usePostLinkCopyCount, useLinkCopyFloor, useTrackPostLinkCopy } from '@/hooks/use-link-copy-count';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
 import {
   DOUBLE_TAP_LIKE_EVENT,
   OPEN_REACTIONS_EVENT,
@@ -1323,7 +1324,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const chromeHidden = overlaysHidden || autoHidden;
 
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/app/post/${currentShort.id}`;
+    const url = viewerShareUrl(`${window.location.origin}/app/post/${currentShort.id}`);
     navigator.clipboard.writeText(url);
     toast.success(_copy("copy.e91de547a0b8", { defaultValue: "Post URL copied to clipboard" }));
     // A copy is a share: it counts once per actor per post, next to reposts.

@@ -30,6 +30,8 @@ import { searchNFTs, type DeHubNFT } from '@/lib/api/dehub';
 import { formatViews } from '@/lib/feed-utils';
 import { isBlockedCreator, mapNFTToVideoItem } from '@/lib/music-feed-items';
 import type { VideoItem } from '@/types/feed.types';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { trackShare } from '@/lib/analytics';
 
 type Chip = 'top' | 'radio' | 'stages' | 'new';
 
@@ -85,14 +87,16 @@ function RadioHero({ station }: { station: RadioStation }) {
   };
 
   const share = async () => {
-    const url = `${window.location.origin}/app`;
+    const url = viewerShareUrl(`${window.location.origin}/app`);
     const text = `Listening to ${station.name} on DeHub`;
     try {
       if (navigator.share) {
         await navigator.share({ title: station.name, text, url });
+        trackShare('native', { kind: 'music' });
         return;
       }
       await navigator.clipboard.writeText(`${text} ${url}`);
+      trackShare('copy_link', { kind: 'music' });
       toast.success(_copy("copy.d12860c21e78", { defaultValue: "Link copied" }));
     } catch {
       // Share sheet dismissed.

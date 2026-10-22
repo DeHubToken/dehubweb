@@ -25,6 +25,8 @@ import { toast } from 'sonner';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { parseDehubLink, dehubLinkLabel } from '@/lib/dehub-links';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { trackShare } from '@/lib/analytics';
 
 const ShareToDmModal = lazy(() =>
   import('@/components/app/modals/ShareToDmModal').then((m) => ({ default: m.ShareToDmModal }))
@@ -102,15 +104,19 @@ export function ShareEntityDrawer({
   // in-app routes stay reachable everywhere.
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
+  // Links that leave DeHub carry the sharer's referral code; the in-app routes
+  // (message, feed) keep the plain link, which renders as a card.
   const handleCopy = () => {
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(viewerShareUrl(url));
+    trackShare('copy_link', { kind: link?.kind });
     toast.success(_copy("copy.d12860c21e78", { defaultValue: "Link copied" }));
     onOpenChange(false);
   };
 
   const handleNativeShare = async () => {
     try {
-      await navigator.share({ title: shareTitle, url });
+      await navigator.share({ title: shareTitle, url: viewerShareUrl(url) });
+      trackShare('native', { kind: link?.kind });
       onOpenChange(false);
     } catch {
       // Dismissing the OS sheet rejects; nothing to report.
@@ -148,6 +154,7 @@ export function ShareEntityDrawer({
               detail="Share it directly with someone"
               onClick={() => {
                 onOpenChange(false);
+                trackShare('dm', { kind: link?.kind });
                 // The sheet animates out first; opening both at once leaves the
                 // outgoing drawer's scrim over the new one.
                 setTimeout(() => setDmOpen(true), 250);
@@ -167,6 +174,7 @@ export function ShareEntityDrawer({
               detail="Write a post with it attached"
               onClick={() => {
                 onOpenChange(false);
+                trackShare('feed', { kind: link?.kind });
                 setTimeout(() => openPostModal(url, postCategory), 250);
               }}
             />

@@ -46,6 +46,8 @@ import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { useNavigate } from 'react-router-dom';
 import { openDmDock } from '@/hooks/use-dm-dock';
 import { LiveRipple } from '@/components/app/LiveRipple';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { trackShare } from '@/lib/analytics';
 
 export interface ProfileHeaderProps {
   profile: ProfileData;
@@ -363,7 +365,8 @@ export function ProfileHeader({
               <button
                 onClick={() => {
                   const username = profile.handle.replace('@', '');
-                  navigator.clipboard.writeText(`https://dehub.io/${username}`);
+                  navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${username}`));
+                  trackShare('copy_link', { kind: 'profile' });
                   toast.success(_copy("copy.04a12cab619d", { defaultValue: "Profile URL copied to clipboard" }));
                 }}
                 className="min-w-0 max-w-full truncate text-zinc-500 text-lg hover:text-zinc-300 transition-colors"
@@ -378,7 +381,8 @@ export function ProfileHeader({
                    the .eth URL because that is the one worth showing off. */
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(`https://dehub.io/${profile.ensName}`);
+                    navigator.clipboard.writeText(viewerShareUrl(`https://dehub.io/${profile.ensName}`));
+                    trackShare('copy_link', { kind: 'profile' });
                     toast.success(_copy("copy.0877581001b8", { defaultValue: "ENS profile URL copied to clipboard" }));
                   }}
                   title={_copy("copy.9f8fb573515e", { defaultValue: "Verified ENS name — dehub.io/{{value1}}", value1: profile.ensName })}

@@ -49,6 +49,8 @@ import { normaliseShortcode, parseEmojiSource, probeImage } from '@/lib/emoji/cu
 import { PackCover } from '@/components/app/packs/PackPickerParts';
 import { packErrorMessage } from '@/components/app/packs/PackGate';
 import { IslandAction, PageBody, PageEmpty, PageIsland } from '@/components/app/page-kit/PageKit';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { trackShare } from '@/lib/analytics';
 
 const KIND_LABEL: Record<PackKind, string> = {
   emoji: 'creatorPacks.kind.emoji',
@@ -141,7 +143,8 @@ export default function PackPage() {
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      await navigator.clipboard.writeText(viewerShareUrl(shareUrl));
+      trackShare('copy_link', { kind: 'pack' });
       toast.success(t('creatorPacks.linkCopied'));
     } catch {
       toast.error(t('creatorPacks.errors.generic'));

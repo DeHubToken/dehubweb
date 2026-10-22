@@ -48,6 +48,7 @@ import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 import type { PostChainId } from '@/components/app/ChainSelector';
 import { normalizeCategoryList } from '@/lib/category-names';
+import { trackFirstPost } from '@/lib/analytics';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -2205,6 +2206,7 @@ export function usePostForm(
       } else {
         toast.success(_copy("copy.eb1d942a2e5a", { defaultValue: "Posted successfully" }));
       }
+      trackFirstPost(user?.address);
 
       if (mintResponse.homeFeedRestricted) {
         toast.warning(_copy("copy.5b4f3729a48e", { defaultValue: "Home feed limit reached" }), {

@@ -133,6 +133,8 @@ import { useConversationCoach, COACH_MIN_CHARS } from '@/hooks/use-conversation-
 import { useCoachEnabled } from '@/hooks/use-coach-enabled';
 import { CoachSuggestions } from './CoachSuggestions';
 import { CommonGroundSheet } from './CommonGroundSheet';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
+import { trackShare } from '@/lib/analytics';
 
 // The comment data shape and its API mapper live in @/lib/comment-mapper so
 // non-component consumers can share them. Re-exported here for the surfaces
@@ -850,7 +852,8 @@ const CommentItem = memo(function CommentItem({ comment, tokenId, onLike, onShow
                     const url = isThreadEntry
                       ? dehubLinkFor.threadEntry(tokenId, comment.id)
                       : `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
-                    navigator.clipboard.writeText(url);
+                    navigator.clipboard.writeText(viewerShareUrl(url));
+                    trackShare('copy_link', { kind: 'comment' });
                     toast.success(i18n.t('comments.linkCopied'));
                   }}
                   className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"

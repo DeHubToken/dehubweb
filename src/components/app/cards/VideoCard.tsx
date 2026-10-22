@@ -196,6 +196,7 @@ import { cancelVideoPlayback, requestVideoPlayback } from '@/lib/video-start';
 import { usePlaybackRecovery } from '@/hooks/use-playback-recovery';
 import { usePostStage } from '@/components/app/post-stage/post-stage-context';
 import { StageCreatorRow } from '@/components/app/post-stage/StageCreatorRow';
+import { viewerShareUrl } from '@/lib/useAffiliateShareUrl';
 
 /**
  * How far a touch may travel and still count as a tap on the player. Matches the
@@ -3315,7 +3316,7 @@ export const VideoCard = memo(function VideoCard({ video, postPage = false, onBa
             )}
             <button 
               onClick={() => {
-                const url = `${window.location.origin}/app/post/${video.id}`;
+                const url = viewerShareUrl(`${window.location.origin}/app/post/${video.id}`);
                 navigator.clipboard.writeText(url);
                 toast.success(t('postOptions.linkCopied'));
                 trackLinkCopy(video.id, walletAddress, linkCopyCount);
