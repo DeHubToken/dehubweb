@@ -123,6 +123,7 @@
     "clickCameraUpload": "Kliknite ikonu kamere za prijenos",
     "displayName": "Ime za prikaz",
     "enterDisplayName": "Unesite ime za prikaz",
+    "displayNameOptionalHint": "Tvoje javno ime na profilu. Nije obavezno — ostavi prazno i koristit će se tvoje korisničko ime.",
     "username": "Korisničko ime",
     "usernamePlaceholder": "korisnickoime",
     "usernameHint": "3-30 znakova, slova, brojevi, samo podvlake",

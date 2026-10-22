@@ -122,6 +122,7 @@
     "clickCameraUpload": "अपलोड करे बर कैमरा आइकन दबाव",
     "displayName": "दिखे वाला नाम",
     "enterDisplayName": "अपन दिखे वाला नाम डालव",
+    "displayNameOptionalHint": "तुम्हार प्रोफाइल म तुम्हार सार्वजनिक नाव। जरूरी नइ हे — अपन यूजरनेम लगाय बर एला खाली छोड़ देव।",
     "username": "यूजरनेम",
     "usernamePlaceholder": "यूजरनेम",
     "usernameHint": "3-30 अक्षर, अक्षर, नंबर, अंडरस्कोर",

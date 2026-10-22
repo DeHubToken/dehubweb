@@ -123,6 +123,7 @@
     "clickCameraUpload": "Tsindrio ny kisary fakan-tsary mba hampiditra sary",
     "displayName": "Anarana aseho",
     "enterDisplayName": "Ampidiro ny anaranao aseho",
+    "displayNameOptionalHint": "Ny anaranao ampahibemaso miseho amin'ny mombamomba anao. Tsy voatery — avelao ho banga mba hampiasana ny anaram-pikambanao.",
     "username": "Anaram-pikambana",
     "usernamePlaceholder": "anaram-pikambana",
     "usernameHint": "3-30 marika, litera, isa, tsipika ambany",

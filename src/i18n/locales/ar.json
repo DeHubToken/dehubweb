@@ -238,6 +238,7 @@
     "clickCameraUpload": "انقر على أيقونة الكاميرا للرفع",
     "displayName": "الاسم المعروض",
     "enterDisplayName": "أدخل اسمك المعروض",
+    "displayNameOptionalHint": "اسمك العلني الذي يظهر في ملفك الشخصي. اختياري — اتركه فارغًا لاستخدام اسم المستخدم.",
     "username": "اسم المستخدم",
     "usernamePlaceholder": "مستخدم",
     "usernameHint": "3-30 حرف، أحرف وأرقام وشرطات سفلية فقط",

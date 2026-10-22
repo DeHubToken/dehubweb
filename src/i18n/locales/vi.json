@@ -123,6 +123,7 @@
     "clickCameraUpload": "Nhấp vào biểu tượng máy ảnh để tải lên",
     "displayName": "Display Name",
     "enterDisplayName": "Nhập tên hiển thị của bạn",
+    "displayNameOptionalHint": "Tên công khai trên hồ sơ của bạn. Không bắt buộc — để trống để dùng tên người dùng của bạn.",
     "username": "Username",
     "usernamePlaceholder": "username",
     "usernameHint": "3-30 characters, letters, numbers, underscores only",

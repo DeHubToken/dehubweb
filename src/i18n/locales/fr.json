@@ -238,6 +238,7 @@
     "clickCameraUpload": "Cliquez sur l'icône caméra pour télécharger",
     "displayName": "Nom d'affichage",
     "enterDisplayName": "Entrez votre nom d'affichage",
+    "displayNameOptionalHint": "Votre nom public sur votre profil. Facultatif — laissez-le vide pour utiliser votre nom d'utilisateur.",
     "username": "Nom d'utilisateur",
     "usernamePlaceholder": "utilisateur",
     "usernameHint": "3-30 caractères, lettres, chiffres, tirets bas uniquement",

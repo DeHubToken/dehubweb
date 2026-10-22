@@ -123,6 +123,7 @@
     "clickCameraUpload": "Clicca l'icona della fotocamera per caricare",
     "displayName": "Nome visualizzato",
     "enterDisplayName": "Inserisci il nome visualizzato",
+    "displayNameOptionalHint": "Il tuo nome pubblico sul profilo. Facoltativo: lascialo vuoto per usare il tuo nome utente.",
     "username": "Nome utente",
     "usernamePlaceholder": "nomeutente",
     "usernameHint": "3-30 caratteri, lettere, numeri, underscore",

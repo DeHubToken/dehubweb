@@ -238,6 +238,7 @@
     "clickCameraUpload": "Yüklemek için kamera simgesine tıklayın",
     "displayName": "Görünen Ad",
     "enterDisplayName": "Görünen adınızı girin",
+    "displayNameOptionalHint": "Profilindeki herkese açık adın. İsteğe bağlı — boş bırakırsan kullanıcı adın kullanılır.",
     "username": "Kullanıcı Adı",
     "usernamePlaceholder": "kullanıcıadı",
     "usernameHint": "3-30 karakter, harf, rakam ve alt çizgi",

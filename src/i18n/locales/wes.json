@@ -123,6 +123,7 @@
     "clickCameraUpload": "Click di camera icon for upload",
     "displayName": "Name weh e go show",
     "enterDisplayName": "Put your display name",
+    "displayNameOptionalHint": "Your public nem for your profile. You no must put am — leave am empty and we go use your username.",
     "username": "Username",
     "usernamePlaceholder": "username",
     "usernameHint": "3-30 characters, letter, number, underscore only",

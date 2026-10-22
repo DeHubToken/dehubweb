@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klick ufs Kamera-Symbol zum Ufelade",
     "displayName": "Aazeigname",
     "enterDisplayName": "Gib din Aazeigname i",
+    "displayNameOptionalHint": "Din öffentliche Name im Profil. Freiwillig — lahn s Fäld leer, denn wird din Benutzername bruucht.",
     "username": "Benutzername",
     "usernamePlaceholder": "benutzername",
     "usernameHint": "3-30 Zeiche, Buechstabe, Zahle, Unterstrich",
