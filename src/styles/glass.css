@@ -180,7 +180,7 @@ html[data-theme='glass'] .docs-root h1 .text-transparent {
 html[data-theme='glass'] .docs-root :is(
   [data-theme-button]:not([data-button-variant='ghost']):not([data-button-variant='destructive']),
   [data-theme-button][data-button-variant='ghost'][class*='bg-muted'],
-  button.bg-muted, a.bg-primary
+  button.bg-muted, a.bg-primary, [data-docs-sidebar] a.bg-muted
 ) {
   background: var(--glass-highlight), var(--theme-control-fill) !important;
   color: #efffff !important; border-color: transparent !important; box-shadow: var(--glass-edge-flat) !important;
