@@ -268,6 +268,76 @@ export function WidgetSettings({ widget, onChange }: Props) {
       );
       break;
 
+    case 'stream_timer':
+      body = (
+        <>
+          <Field label={t('liveStudio.fields.label')}>
+            {(id) => (
+              <Input id={id} maxLength={30} value={setting(s, 'label', '')} onChange={(e) => set('label', e.target.value)} className={SETTINGS_FIELD_CLASS} />
+            )}
+          </Field>
+          {accentField}
+        </>
+      );
+      break;
+
+    case 'reaction_counter':
+      body = accentField;
+      break;
+
+    case 'event_feed':
+    case 'chat_box':
+      body = (
+        <>
+          <Field label={t('liveStudio.fields.lines')}>
+            {(id) => (
+              <Input
+                id={id}
+                type="number"
+                inputMode="numeric"
+                min={1}
+                max={kind === 'chat_box' ? 12 : 8}
+                value={setting(s, 'count', kind === 'chat_box' ? 6 : 4)}
+                onChange={(e) => num('count', e.target.value, 1, kind === 'chat_box' ? 12 : 8)}
+                className={SETTINGS_FIELD_CLASS}
+              />
+            )}
+          </Field>
+          {kind === 'event_feed' ? (
+            <Field label={t('liveStudio.fields.title')}>
+              {(id) => (
+                <Input id={id} maxLength={40} value={setting(s, 'title', '')} onChange={(e) => set('title', e.target.value)} className={SETTINGS_FIELD_CLASS} />
+              )}
+            </Field>
+          ) : (
+            <Toggle label={t('liveStudio.fields.showAvatars')} checked={setting(s, 'showAvatars', true)} onChange={(v) => set('showAvatars', v)} />
+          )}
+        </>
+      );
+      break;
+
+    case 'ticker':
+      body = (
+        <>
+          <Field label={t('liveStudio.fields.text')}>
+            {(id) => (
+              <Input id={id} maxLength={200} value={setting(s, 'text', '')} onChange={(e) => set('text', e.target.value)} className={SETTINGS_FIELD_CLASS} />
+            )}
+          </Field>
+          <Field label={t('liveStudio.fields.speed')}>
+            {(id) => (
+              <select id={id} className={selectClass} value={setting(s, 'speed', 'normal')} onChange={(e) => set('speed', e.target.value)}>
+                <option value="slow">{t('liveStudio.fields.slow')}</option>
+                <option value="normal">{t('liveStudio.fields.normal')}</option>
+                <option value="fast">{t('liveStudio.fields.fast')}</option>
+              </select>
+            )}
+          </Field>
+          {accentField}
+        </>
+      );
+      break;
+
     default:
       body = null;
   }

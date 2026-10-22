@@ -4774,7 +4774,9 @@
     "joined": "{{name}} ble med",
     "goalReached": "Målet er nådd!",
     "followersUnit": "følgere",
-    "topSupporters": "Toppstøttespillere"
+    "topSupporters": "Toppstøttespillere",
+    "tipped": "{{name}} sendte en gave",
+    "chatPreview": "Chatmeldinger vises her"
   },
   "liveStudio": {
     "title": "Livestudio",
@@ -4861,7 +4863,12 @@
       "top_supporters": "Toppstøttespillere",
       "viewer_count": "Seertall",
       "text": "Tekst",
-      "frame": "Ramme"
+      "frame": "Ramme",
+      "stream_timer": "Kringkastingstimer",
+      "reaction_counter": "Reaksjonsteller",
+      "event_feed": "Nylig aktivitet",
+      "chat_box": "Chatboks",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Feirer hvert tips, tilpasset nivået",
@@ -4873,7 +4880,12 @@
       "top_supporters": "Dine største tippere i denne strømmen",
       "viewer_count": "Hvor mange som ser på",
       "text": "En tekstlinje eller en lower third",
-      "frame": "En ramme rundt strømmen din"
+      "frame": "En ramme rundt strømmen din",
+      "stream_timer": "Viser hvor lenge du har kringkastet",
+      "reaction_counter": "Teller alle reaksjoner sendingen din får",
+      "event_feed": "De nyeste gavene, følgerne, abonnentene og personene som deler sendingen din",
+      "chat_box": "Viser chatmeldingene fra kringkastingen din på skjermen",
+      "ticker": "En linje med din egen tekst som ruller over skjermen"
     },
     "fields": {
       "style": "Stil",
@@ -4898,7 +4910,13 @@
       "glow": "Gløde",
       "thickness": "Tykkelse",
       "radius": "Hjørneavrunding",
-      "accent": "Farge"
+      "accent": "Farge",
+      "label": "Merkelapp",
+      "lines": "Linjene vist",
+      "showAvatars": "Vis profilbilder",
+      "speed": "Fart",
+      "slow": "Langsom",
+      "fast": "Rask"
     }
   },
   "live": {

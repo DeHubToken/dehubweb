@@ -4776,7 +4776,9 @@
     "shared": "{{name}} hat den Stream geteilt",
     "goalReached": "Ziel erreicht!",
     "followersUnit": "Folligend",
-    "topSupporters": "Top‑Unterstützer"
+    "topSupporters": "Top‑Unterstützer",
+    "tipped": "{{name}} hätt a Geschenk gschickt",
+    "chatPreview": "Chatnachrichten erscheinen hier"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4858,7 +4860,12 @@
       "top_supporters": "Top-Unterstützer",
       "viewer_count": "Zuel vo Zuschauer",
       "text": "Text",
-      "frame": "Rahmen"
+      "frame": "Rahmen",
+      "stream_timer": "Live-Timer",
+      "reaction_counter": "Reaktionszähler",
+      "event_feed": "Aktuelle Aktivität",
+      "chat_box": "Chatbox",
+      "ticker": "Ticker"
     },
     "hints": {
       "tip_alert": "Feiert jede Tipp, passend zu sim Level",
@@ -4870,7 +4877,12 @@
       "top_supporters": "Dini grösste Tipper in däm Stream",
       "viewer_count": "Wie viu Lüüt lueged zue",
       "text": "E Zeile Text oder e Untertitel",
-      "frame": "E Rand um din Stream"
+      "frame": "E Rand um din Stream",
+      "stream_timer": "Zeigt, wie lange du live bist",
+      "reaction_counter": "Zählt jede Reaktion, die dein Live-Stream bekommt",
+      "event_feed": "Die neuesten Geschenke, Follower, Abonnenten und Leute, die deinen Stream teilen",
+      "chat_box": "Zeigt die Chatnachrichten deines Streams auf dem Bildschirm",
+      "ticker": "Eine Zeile mit deinem eigenen Text, die über den Bildschirm scrollt"
     },
     "fields": {
       "style": "Stil",
@@ -4894,7 +4906,14 @@
       "solid": "Solid",
       "glow": "Glühen",
       "radius": "Eckabgerundig",
-      "accent": "Farbe"
+      "accent": "Farbe",
+      "label": "Label",
+      "lines": "Anzahl der Zeilen",
+      "showAvatars": "Profilbilder anzeigen",
+      "speed": "Geschwindigkeit",
+      "slow": "Langsam",
+      "normal": "Normal",
+      "fast": "Schnell"
     }
   },
   "live": {

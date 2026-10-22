@@ -4771,7 +4771,9 @@
     "joined": "{{name}} liitus",
     "goalReached": "Eesmärk on saavutatud!",
     "followersUnit": "jälgijad",
-    "topSupporters": "Parimad toetajad"
+    "topSupporters": "Parimad toetajad",
+    "tipped": "{{name}} saatis kingituse",
+    "chatPreview": "Vestlussõnumid kuvatakse siin"
   },
   "liveStudio": {
     "title": "Live Studio",
@@ -4858,7 +4860,12 @@
       "top_supporters": "Parimad toetajad",
       "viewer_count": "Vaatajate arv",
       "text": "Tekst",
-      "frame": "Raam"
+      "frame": "Raam",
+      "stream_timer": "Levitaimer",
+      "reaction_counter": "Reaktsiooniloendur",
+      "event_feed": "Hiljutine tegevus",
+      "chat_box": "Vestluskast",
+      "ticker": "Tiksuja"
     },
     "hints": {
       "tip_alert": "Tähistab igat oma tasemele vastavat jootraha",
@@ -4870,7 +4877,12 @@
       "top_supporters": "Sinu suurimad jootraha andjad selles voos",
       "viewer_count": "Mitu inimest vaatab",
       "text": "Tekstirea või alumine kolmandik",
-      "frame": "Sinu oja ümber olev ääris"
+      "frame": "Sinu oja ümber olev ääris",
+      "stream_timer": "Näitab, kui kaua oled edastanud",
+      "reaction_counter": "Loendab iga reaktsiooni, mille saade saab",
+      "event_feed": "Viimased kingitused, jälgijad, tellijad ja inimesed, kes jagavad sinu saadet",
+      "chat_box": "Kuvab sinu ringhäälingu vestlussõnumid ekraanil",
+      "ticker": "Sinu enda teksti rida, mis kerib üle ekraani"
     },
     "fields": {
       "style": "Stiil",
@@ -4895,7 +4907,14 @@
       "glow": "Sära",
       "thickness": "Paksus",
       "radius": "Nurga ümardamine",
-      "accent": "Värv"
+      "accent": "Värv",
+      "label": "Silt",
+      "lines": "Näidatud read",
+      "showAvatars": "Näita profiilipilte",
+      "speed": "Kiirus",
+      "slow": "Aeglane",
+      "normal": "Normaalne",
+      "fast": "Kiire"
     }
   },
   "live": {

@@ -14,6 +14,7 @@ import { useMemo, useRef, type CSSProperties, type RefObject } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import '@/styles/live-overlay.css';
 import { useLiveRoomEvents } from '@/hooks/use-live-room-events';
+import { useOverlayChat } from '@/hooks/use-overlay-chat';
 import { streamOverlayKey } from '@/hooks/use-stream-overlay';
 import { useVideoPictureRect } from '@/hooks/use-video-picture-rect';
 import { drawOrder, placeWidget, rectFor } from '@/lib/live-overlay/layout';
@@ -26,11 +27,13 @@ interface Props {
   streamId: string;
   overlay: PublicOverlay;
   videoRef: RefObject<HTMLVideoElement | null>;
+  /** The post's token id: the stream's chat room is keyed on it, not on streamId. */
+  tokenId?: string | number | null;
   /** The audience figure the card already shows, until the room sends one. */
   initialViewers: number;
 }
 
-export default function LiveOverlayLayer({ streamId, overlay, videoRef, initialViewers }: Props) {
+export default function LiveOverlayLayer({ streamId, tokenId, overlay, videoRef, initialViewers }: Props) {
   const layerRef = useRef<HTMLDivElement>(null);
   const picture = useVideoPictureRect(layerRef, videoRef);
   const queryClient = useQueryClient();
@@ -50,6 +53,7 @@ export default function LiveOverlayLayer({ streamId, overlay, videoRef, initialV
     }
     bus.publish(event);
   });
+  useOverlayChat(tokenId, visible.some((w) => w.kind === 'chat_box'), bus.publish);
 
   return (
     <OverlayEventContext.Provider value={bus}>
