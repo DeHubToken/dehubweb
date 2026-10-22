@@ -129,7 +129,7 @@ export function RecapPanel({ address, streamId }: Props) {
                       <span className="w-4 text-center text-zinc-500">{i + 1}</span>
                       <img src={buildAvatarUrl(p.address, p.avatarImageUrl)} alt="" className="h-7 w-7 rounded-full object-cover" loading="lazy" />
                       <span className="min-w-0 flex-1 truncate text-white">{p.displayName || p.username || `${p.address.slice(0, 6)}…`}</span>
-                      <span className="tabular-nums text-zinc-300">{whole(p.total)} DHB</span>
+                      <span className="tabular-nums text-zinc-300">{`${whole(p.total)} DHB`}</span>
                     </li>
                   ))}
                 </ol>
