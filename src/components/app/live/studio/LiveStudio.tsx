@@ -116,6 +116,8 @@ export function LiveStudio() {
   // The creator's live poll, kept current by the control room below. The
   // preview shows it, or a stand-in so the poll widget can be placed offline.
   const [poll, setPoll] = useState<LivePoll | null>(null);
+  const pollRef = useRef<LivePoll | null>(null);
+  pollRef.current = poll;
   useEffect(() => {
     let cancelled = false;
     getMyPoll()
@@ -150,7 +152,14 @@ export function LiveStudio() {
         sub = watchOverlayControl(token, 'studio', {
           onTest: (events) => events.forEach((event) => bus.publish(event)),
           onRule: (fired) => ruleBus.publish(fired),
-          onPoll: setPoll,
+          // The socket is shared with any live card still mounted, so a poll
+          // from someone else's stream can arrive here too: only ours counts.
+          onPoll: (incoming) =>
+            pollRef.current?.id === incoming.id
+              ? setPoll(incoming)
+              : void getMyPoll()
+                  .then(setPoll)
+                  .catch(() => undefined),
         });
       })
       .catch(() => undefined);
