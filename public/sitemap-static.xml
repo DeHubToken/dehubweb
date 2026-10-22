@@ -4135,6 +4135,12 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dehub.io/top-100"/>
   </url>
   <url>
+    <loc>https://dehub.io/live-studio</loc>
+    <lastmod>2026-10-22T00:00:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://dehub.io/stats</loc>
     <lastmod>2026-09-01T00:00:00.000Z</lastmod>
     <changefreq>daily</changefreq>

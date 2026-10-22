@@ -17,6 +17,7 @@ import { DhbCoin } from '@/components/app/DhbAmount';
 import { GiftAnimationOverlay } from '@/components/app/live/GiftAnimationOverlay';
 import { useGiftAnimations } from '@/hooks/use-gift-animations';
 import { useLiveAudience } from '@/hooks/use-live-audience';
+import type { LiveAudience } from '@/lib/api/dehub/livestream';
 import { tierFromGift } from '@/lib/live/gift-tiers';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { setting, type OverlayKind } from '@/lib/live-overlay/registry';
@@ -227,6 +228,10 @@ function GoalBar({ settings, stats }: WidgetProps) {
 
 // ─── Top supporters ───────────────────────────────────────────────────────────
 
+const PREVIEW_SUPPORTERS: LiveAudience['topTippers'] = [
+  500_000, 250_000, 100_000, 50_000, 25_000, 10_000, 5_000, 2_500, 1_000, 500,
+].map((total, i) => ({ address: `preview-${i}`, displayName: '—', total, count: 1 }));
+
 function TopSupporters({ settings, streamId }: WidgetProps) {
   const { t } = useTranslation();
   const count = Math.min(10, Math.max(1, setting(settings, 'count', 3)));
@@ -246,7 +251,9 @@ function TopSupporters({ settings, streamId }: WidgetProps) {
     }, 1500);
   });
 
-  const rows = (data?.topTippers ?? []).slice(0, count);
+  // With no stream behind it (Live Studio's preview) the board shows the shape
+  // it will have, so a creator can size it before anyone has tipped.
+  const rows = (streamId ? data?.topTippers ?? [] : PREVIEW_SUPPORTERS).slice(0, count);
   return (
     <div data-ow-list style={{ '--ow-row': `calc(var(--ow-h) / ${count + 1})` } as CSSProperties}>
       <div data-ow-list-title>{title}</div>

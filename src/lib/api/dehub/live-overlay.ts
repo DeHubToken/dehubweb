@@ -49,3 +49,10 @@ export async function saveMyOverlay(overlay: { renderIn: OverlayRenderIn; widget
     }),
   );
 }
+
+export type OverlayTestKind = 'tip' | 'follow' | 'subscribe' | 'share' | 'join';
+
+/** A pretend alert for the creator's own screens. Never reaches viewers. */
+export async function sendOverlayTest(kind: OverlayTestKind, extra: { amount?: number; message?: string } = {}): Promise<void> {
+  await apiCall('/api/live-overlay/mine/test', { method: 'POST', body: { kind, ...extra }, requiresAuth: true });
+}
