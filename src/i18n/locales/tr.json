@@ -5834,7 +5834,7 @@
     "creatorEarnsDirect": "Aboneler DeHub tokenleri ile ödeme yapar. Payınız, abone oldukları anda cüzdanınıza düşer ve rozet seviyenizin platform ücreti düşülür."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spun :{{result}}",
+    "subathon": "Subathon",
     "someone": "Birisi",
     "newFollower": "Yeni takipçi: {{name}}",
     "newSubscriber": "Yeni abone: {{name}}",
@@ -5846,6 +5846,11 @@
     "topSupporters": "En iyi destekçiler",
     "tipped": "{{name}} bir hediye gönderdi",
     "chatPreview": "Sohbet mesajları burada görünür",
+    "wheelLanded": "{{name}} spun :{{result}}",
+    "subathonOver": "Süre doldu",
+    "pointsTitle": "En sadık izleyiciler",
+    "points_one": "{{formatted}} puan",
+    "points_other": "{{formatted}} puan",
     "poll": {
       "closed": "Oylama kapandı",
       "voteFor": "{{option}} için oy ver",
@@ -5873,6 +5878,29 @@
     "youAreTimedOut": "Bir an için zaman aşımına uğradınız"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Akışınızda bir geri sayım. Ödenen her hediye, takip ve abonelik size zaman kazandırır, böylece oda sizi canlı tutar.",
+      "secondsPerThousand": "Hediye edilen 1.000 DHB başına saniye eklendi",
+      "secondsPerFollow": "Takip başına saniye eklendi",
+      "secondsPerSubscribe": "Abonelik başına saniye eklendi",
+      "capHours": "Çalışabileceği en uzun süre (saat)",
+      "save": "Tutarları kaydedin",
+      "saved": "Subathon miktarları kaydedildi.",
+      "startMinutes": "(dakika) ile başlayın",
+      "start": "Geri sayımı başlat",
+      "stop": "Durdur",
+      "addFive": "5 dakika ekleyin",
+      "removeFive": "Kalkış 5 dakika",
+      "failed": "Bu işe yaramadı. Tekrar deneyin.",
+      "widgetHint": "Subathon geri sayımınızı gösterir. Live Studio'daki Subathon panelinden başlatın."
+    },
+    "points": {
+      "title": "Sadık izleyiciler",
+      "intro": "İzleyiciler sizi izledikleri her dakika için bir puan ve hediye ettikleri her 100 DHB için bir puan kazanırlar. Sohbet ve tepkiler hiçbir şey kazandırmaz, bu nedenle puan kazanılamaz.",
+      "empty": "Henüz puan yok. İnsanlar izledikçe ve hediye ettikçe birikirler.",
+      "widgetHint": "Bu listeyi akışta göstermek için Sadık görüntüleyenler widget'ını ekleyin."
+    },
     "controls": {
       "title": "Hızlı kontroller",
       "intro": "Akış ortasında. Her anahtar, siz geri çevirene kadar uygulamada ve OBS'de izleyen herkes için geçerlidir.",
@@ -5990,7 +6018,7 @@
       "join": "Katıl"
     },
     "kinds": {
-      "spin_wheel": "Döner çark",
+      "subathon_timer": "Subathon sayacı",
       "tip_alert": "Bahşiş uyarısı",
       "follow_alert": "Takip uyarısı",
       "subscribe_alert": "Abone uyarısı",
@@ -6007,10 +6035,11 @@
       "chat_box": "Sohbet kutusu",
       "ticker": "Kayan yazı",
       "rule_alert": "Kural uyarıları",
-      "poll": "Anket"
+      "poll": "Anket",
+      "spin_wheel": "Döner çark",
+      "points_board": "Sadık izleyiciler"
     },
     "hints": {
-      "spin_wheel": "Kurallarınızdaki çarkların döndüğü yer",
       "tip_alert": "Seviyesine göre boyutlandırılmış her bahşişi kutlar",
       "follow_alert": "Her yeni takipçiyi gösterir",
       "subscribe_alert": "Her yeni aboneyi gösterir",
@@ -6027,7 +6056,10 @@
       "chat_box": "Yayınınızın sohbet mesajlarını ekranda gösterir",
       "ticker": "Ekranda kayan kendi metninizin bir satırı",
       "rule_alert": "Kurallarınızın uyarılarının göründüğü yer",
-      "poll": "Her seçenek için bir oy düğmesiyle canlı anketiniz"
+      "poll": "Her seçenek için bir oy düğmesiyle canlı anketiniz",
+      "spin_wheel": "Kurallarınızdaki çarkların döndüğü yer",
+      "subathon_timer": "Hediye, takip ve aboneliklerin geri çekildiği bir geri sayım",
+      "points_board": "İzleme ve hediye verme puanlarına göre en iyi izleyicileriniz"
     },
     "fields": {
       "style": "Stil",
@@ -6062,8 +6094,6 @@
       "fast": "Hızlı"
     },
     "rules": {
-      "wheelSegments": "Tekerlek segmentleri, hat başına bir adet",
-      "wheelHint": "2 ile 12 arasında. DeHub tekerleğin durduğu yeri seçer, böylece izleyen herkes aynı sonucu görür. Bir uyarı, sesli okuma veya sohbet eyleminde {result} kullanın.",
       "title": "Kurallar",
       "intro": "Akışınızda bir şey olduğunda, DeHub seçtiğiniz şeyi yapar: bir uyarı gösterir, bir ses çalar, yüksek sesle bir şeyler okur, sohbetinizde yayınlar veya Discord'unuza söyler.",
       "add": "Kural ekle",
@@ -6094,6 +6124,8 @@
       "removeAction": "Eylemi kaldır",
       "placeholders": "Mesajınızda {name}, {amount} ve {message} kullanın. Mesajlardaki bağlantılar kaldırılır.",
       "placeholdersLive": "Metninizde {name}, {title} ve {link} kullanın: adınız, yayının başlığı ve izlemek için bir bağlantı.",
+      "wheelSegments": "Tekerlek segmentleri, hat başına bir adet",
+      "wheelHint": "2 ile 12 arasında. DeHub tekerleğin durduğu yeri seçer, böylece izleyen herkes aynı sonucu görür. Bir uyarı, sesli okuma veya sohbet eyleminde {result} kullanın.",
       "alertText": "Uyarı metni",
       "sound": "Ses",
       "sayText": "Yüksek sesle okunacak metin",
@@ -6118,12 +6150,12 @@
         "subscribers": "Aboneler"
       },
       "actionTypes": {
-        "wheel": "Tekerleği döndür",
         "alert": "Uyarı göster",
         "sound": "Ses çal",
         "say": "Yüksek sesle oku",
         "chat": "Sohbete gönder",
-        "webhook": "Bir web kancasına gönder"
+        "webhook": "Bir web kancasına gönder",
+        "wheel": "Tekerleği döndür"
       },
       "summary": {
         "tip": "{{amount}} DHB veya daha fazlasının bahşişi"

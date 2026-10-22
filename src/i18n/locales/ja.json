@@ -4797,7 +4797,6 @@
     "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}}回転：{{result}}",
     "someone": "誰か",
     "newFollower": "新規フォロワー：{{name}}",
     "newSubscriber": "新規購読者: {{name}}",
@@ -4809,6 +4808,12 @@
     "topSupporters": "トップサポーター",
     "tipped": "{{name}}さんがギフトを贈りました",
     "chatPreview": "チャットメッセージがここに表示されます",
+    "wheelLanded": "{{name}}回転：{{result}}",
+    "subathon": "サバソン",
+    "subathonOver": "時間切れ",
+    "pointsTitle": "最も忠実な視聴者",
+    "points_one": "{{formatted}} ポイント",
+    "points_other": "{{formatted}} ポイント",
     "poll": {
       "closed": "投票は終了しました",
       "voteFor": "{{option}}に投票する",
@@ -4836,6 +4841,29 @@
     "youAreTimedOut": "しばらくタイムアウトしました"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "サバソン",
+      "intro": "ストリーム上のカウントダウン。すべての有料ギフト、フォロー、および購読が時間を追加するため、部屋はあなたを生放送で維持します。",
+      "secondsPerThousand": "1,000 DHB ギフトあたり追加される秒数",
+      "secondsPerFollow": "フォローあたり追加される秒数",
+      "secondsPerSubscribe": "購読あたり追加される秒数",
+      "capHours": "最長で走ることができる時間（時間）",
+      "save": "保存額",
+      "saved": "サバソンで保存された額。",
+      "startMinutes": "開始時間（分）",
+      "start": "カウントダウンを開始",
+      "stop": "停止",
+      "addFive": "5分追加",
+      "removeFive": "5分引く",
+      "failed": "それはうまくいきませんでした。もう一度試してください。",
+      "widgetHint": "ストリーム上でサバソンのカウントダウンを表示します。Live Studioのサバソンパネルから開始してください。"
+    },
+    "points": {
+      "title": "忠実な視聴者",
+      "intro": "視聴者は、あなたを見ている毎分1ポイントと、100 DHBのギフトごとに1ポイントを獲得します。チャットやリアクションはポイントを得られないため、ポイントは農場化できません。",
+      "empty": "まだポイントはありません。視聴者やギフトが増えるにつれて蓄積されます。",
+      "widgetHint": "「忠実な視聴者」ウィジェットを追加して、このリストをストリーム上で表示します。"
+    },
     "controls": {
       "title": "クイックコントロール",
       "intro": "ミッドストリーム用。各スイッチは、アプリやOBSで視聴しているすべての人が元に戻すまで保持されます。",
@@ -4953,7 +4981,6 @@
       "join": "参加"
     },
     "kinds": {
-      "spin_wheel": "ルーレットを回す",
       "tip_alert": "ヒントアラート",
       "follow_alert": "フォローアラート",
       "subscribe_alert": "購読者アラート",
@@ -4970,10 +4997,12 @@
       "chat_box": "チャットボックス",
       "ticker": "ティッカー",
       "rule_alert": "ルールアラート",
-      "poll": "投票"
+      "poll": "投票",
+      "spin_wheel": "ルーレットを回す",
+      "subathon_timer": "サバソンタイマー",
+      "points_board": "忠実な視聴者"
     },
     "hints": {
-      "spin_wheel": "ルール内のホイールが回転する場所",
       "tip_alert": "各ティップをそのティアに合わせて祝う",
       "follow_alert": "新しいフォロワーを表示",
       "subscribe_alert": "新しい購読者を表示",
@@ -4990,7 +5019,10 @@
       "chat_box": "ブロードキャストのチャットメッセージを画面に表示します",
       "ticker": "画面をスクロールする独自のテキストの行",
       "rule_alert": "ルールのアラートが表示される場所",
-      "poll": "すべてのオプションに投票ボタンが付いたライブ投票"
+      "poll": "すべてのオプションに投票ボタンが付いたライブ投票",
+      "spin_wheel": "ルール内のホイールが回転する場所",
+      "subathon_timer": "ギフト、フォロー、購読によって後退するカウントダウン",
+      "points_board": "視聴とギフトによるポイントで上位視聴者"
     },
     "fields": {
       "style": "スタイル",
@@ -5025,8 +5057,6 @@
       "fast": "高速"
     },
     "rules": {
-      "wheelSegments": "ホイールセグメント、1ラインに1つ",
-      "wheelHint": "2歳から12歳の間。DeHubはホイールが停止する場所を選択するので、すべての視聴者が同じ結果を見ることができます。アラート、読み取り音声、またはチャットアクションで{result}を使用して名前を付けます。",
       "title": "ルール",
       "intro": "ストリームで何かが起こると、DeHubはアラートを表示したり、サウンドを再生したり、何かを声に出して読んだり、チャットで投稿したり、Discordに伝えたりします。",
       "add": "ルールを追加",
@@ -5057,6 +5087,8 @@
       "removeAction": "アクションを削除",
       "placeholders": "テキストに{name}、{amount}、{message}を使用してください。メッセージ内のリンクは削除されます。",
       "placeholdersLive": "テキストに{name}、{title}、{link}を使用してください。名前、放送のタイトル、視聴するためのリンク。",
+      "wheelSegments": "ホイールセグメント、1ラインに1つ",
+      "wheelHint": "2歳から12歳の間。DeHubはホイールが停止する場所を選択するので、すべての視聴者が同じ結果を見ることができます。アラート、読み取り音声、またはチャットアクションで{result}を使用して名前を付けます。",
       "alertText": "アラートテキスト",
       "sound": "サウンド",
       "sayText": "声に出して読むテキスト",
@@ -5081,12 +5113,12 @@
         "subscribers": "購読者"
       },
       "actionTypes": {
-        "wheel": "ルーレットを回す",
         "alert": "アラートを表示",
         "sound": "サウンドを再生",
         "say": "声に出して読む",
         "chat": "チャットに投稿",
-        "webhook": "Webhookに送信"
+        "webhook": "Webhookに送信",
+        "wheel": "ルーレットを回す"
       },
       "summary": {
         "tip": "{{amount}} DHB以上のヒント"
@@ -5160,9 +5192,9 @@
       "log": "最近の行動",
       "noLog": "- まだ泳いでいます",
       "actions": {
-        "ban": "{{actor}} が {{target}} をBANしました",
         "timeout_one": "{{actor}}は{{target}}を{{count}}秒間タイムアウトしました",
         "timeout_other": "{{actor}}は{{target}}を{{count}}秒間タイムアウトしました",
+        "ban": "{{actor}} が {{target}} をBANしました",
         "unban": "{{actor}}禁止解除{{target}}",
         "moderator-added": "{{target}}さんがモデレーターになりました",
         "moderator-removed": "{{target}}さんはモデレーターではなくなりました",

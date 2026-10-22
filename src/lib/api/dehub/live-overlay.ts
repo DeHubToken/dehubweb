@@ -1,5 +1,5 @@
 import { apiCall } from './core';
-import { parseControls, type CreatorOverlay, type OverlayControls, type OverlayRenderIn, type OverlayWidget, type PublicOverlay } from '@/lib/live-overlay/types';
+import { parseControls, parseSubathon, type CreatorOverlay, type OverlayControls, type OverlayRenderIn, type OverlayWidget, type PublicOverlay } from '@/lib/live-overlay/types';
 import type { LiveRule } from '@/lib/live-overlay/rules';
 
 /**
@@ -28,6 +28,7 @@ function publicOverlay(raw: Partial<PublicOverlay> | undefined): PublicOverlay {
       reactions: Number(raw?.stats?.reactions) || 0,
     },
     controls: parseControls(raw?.controls),
+    subathon: parseSubathon(raw?.subathon),
   };
 }
 

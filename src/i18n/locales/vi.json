@@ -4818,7 +4818,6 @@
     "creatorEarnsDirect": "Người đăng ký thanh toán bằng mã thông báo DeHub. Cổ phần của bạn nằm trong ví của bạn ngay khi họ đăng ký, trừ đi phí nền tảng cho cấp độ huy hiệu của bạn."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} đã spin: {{result}}",
     "someone": "Ai đó",
     "newFollower": "Người theo dõi mới: {{name}}",
     "newSubscriber": "Người đăng ký mới: {{name}}",
@@ -4830,6 +4829,12 @@
     "topSupporters": "Những người ủng hộ hàng đầu",
     "tipped": "{{name}} đã gửi một món quà",
     "chatPreview": "Tin nhắn trò chuyện xuất hiện ở đây",
+    "wheelLanded": "{{name}} đã spin: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Thời gian đã hết",
+    "pointsTitle": "Người xem trung thành nhất",
+    "points_one": "{{formatted}} điểm",
+    "points_other": "{{formatted}} điểm",
     "poll": {
       "closed": "Đã kết thúc bỏ phiếu",
       "voteFor": "Bỏ phiếu cho {{option}}",
@@ -4857,6 +4862,29 @@
     "youAreTimedOut": "Bạn đang bị time out một lúc."
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Một đếm ngược trên stream của bạn. Mỗi món quà trả tiền, theo dõi và đăng ký sẽ thêm thời gian, giúp phòng chat giữ bạn online.",
+      "secondsPerThousand": "Giây được thêm mỗi 1.000 DHB tặng",
+      "secondsPerFollow": "Giây được thêm mỗi lần theo dõi",
+      "secondsPerSubscribe": "Giây được thêm mỗi lần đăng ký",
+      "capHours": "Thời gian dài nhất có thể chạy (giờ)",
+      "save": "Lưu số lượng",
+      "saved": "Số lượng Subathon đã lưu.",
+      "startMinutes": "Bắt đầu với (phút)",
+      "start": "Bắt đầu đếm ngược",
+      "stop": "Dừng",
+      "addFive": "Thêm 5 phút",
+      "removeFive": "Trừ 5 phút",
+      "failed": "Đó không hoạt động. Hãy thử lại.",
+      "widgetHint": "Hiển thị đếm ngược Subathon của bạn. Bắt đầu từ bảng Subathon trong Live Studio."
+    },
+    "points": {
+      "title": "Người xem trung thành",
+      "intro": "Người xem sẽ được một điểm cho mỗi phút họ xem bạn và một điểm cho mỗi 100 DHB họ tặng. Chat và phản ứng không được tính, vì vậy điểm không thể được \"nông\" (làm giả).",
+      "empty": "Chưa có điểm nào. Chúng tích lũy khi người xem và tặng quà.",
+      "widgetHint": "Thêm tiện ích Người xem trung thành để hiển thị danh sách này trên luồng."
+    },
     "controls": {
       "title": "Điều khiển nhanh",
       "intro": "Đối với giữa luồng. Mỗi công tắc giữ cho tất cả mọi người đang xem, trong ứng dụng và trong OBS, cho đến khi bạn lật lại.",
@@ -4974,7 +5002,6 @@
       "join": "Tham gia"
     },
     "kinds": {
-      "spin_wheel": "Bánh xe quay",
       "tip_alert": "Cảnh báo gợi ý",
       "follow_alert": "Cảnh báo theo dõi",
       "subscribe_alert": "Cảnh báo người đăng ký",
@@ -4991,10 +5018,12 @@
       "chat_box": "Hộp trò chuyện",
       "ticker": "Ticker",
       "rule_alert": "Cảnh báo quy tắc",
-      "poll": "Thăm dò ý kiến"
+      "poll": "Thăm dò ý kiến",
+      "spin_wheel": "Bánh xe quay",
+      "subathon_timer": "Bộ hẹn giờ Subathon",
+      "points_board": "Người xem trung thành"
     },
     "hints": {
-      "spin_wheel": "Khi các bánh xe trong quy tắc của bạn quay",
       "tip_alert": "Tưởng thưởng cho mỗi gợi ý, kích thước theo cấp bậc",
       "follow_alert": "Hiển thị từng người theo dõi mới",
       "subscribe_alert": "Hiển thị từng người đăng ký mới",
@@ -5011,7 +5040,10 @@
       "chat_box": "Hiển thị tin nhắn trò chuyện của chương trình phát sóng của bạn trên màn hình",
       "ticker": "Một dòng văn bản của riêng bạn cuộn trên màn hình",
       "rule_alert": "Đây là nơi hiển thị cảnh báo của quy tắc của bạn",
-      "poll": "Cuộc thăm dò trực tiếp của bạn, với nút bỏ phiếu cho mọi lựa chọn"
+      "poll": "Cuộc thăm dò trực tiếp của bạn, với nút bỏ phiếu cho mọi lựa chọn",
+      "spin_wheel": "Khi các bánh xe trong quy tắc của bạn quay",
+      "subathon_timer": "Một đếm ngược mà các món quà, theo dõi và đăng ký sẽ kéo dài",
+      "points_board": "Top người xem của bạn theo điểm từ việc xem và tặng quà"
     },
     "fields": {
       "style": "Phong cách",
@@ -5046,8 +5078,6 @@
       "fast": "Nhanh"
     },
     "rules": {
-      "wheelSegments": "Phân khúc bánh xe, một trên mỗi dòng",
-      "wheelHint": "Từ 2 đến 12 tuổi. DeHub chọn nơi bánh xe dừng lại, vì vậy mọi người xem đều thấy kết quả tương tự. Sử dụng {result} trong cảnh báo, đọc to hoặc trò chuyện để đặt tên cho nó.",
       "title": "Quy tắc",
       "intro": "Khi có điều gì xảy ra trên luồng trực tiếp của bạn, DeHub sẽ thực hiện theo yêu cầu của bạn: hiển thị cảnh báo, phát âm thanh, đọc aloud, đăng lên chat của bạn hoặc thông báo cho Discord của bạn.",
       "add": "Thêm quy tắc",
@@ -5078,6 +5108,8 @@
       "removeAction": "Xóa hành động",
       "placeholders": "Sử dụng {name}, {amount} và {message} trong tin nhắn. Các liên kết trong tin nhắn sẽ bị xóa.",
       "placeholdersLive": "Sử dụng {name}, {title} và {link} trong tin nhắn: tên của bạn, tiêu đề chương trình phát sóng và liên kết để xem.",
+      "wheelSegments": "Phân khúc bánh xe, một trên mỗi dòng",
+      "wheelHint": "Từ 2 đến 12 tuổi. DeHub chọn nơi bánh xe dừng lại, vì vậy mọi người xem đều thấy kết quả tương tự. Sử dụng {result} trong cảnh báo, đọc to hoặc trò chuyện để đặt tên cho nó.",
       "alertText": "Văn bản cảnh báo",
       "sound": "Âm thanh",
       "sayText": "Văn bản để đọc to",
@@ -5102,12 +5134,12 @@
         "subscribers": "Người đăng ký"
       },
       "actionTypes": {
-        "wheel": "Quay bánh xe",
         "alert": "Hiển thị cảnh báo",
         "sound": "Phát âm thanh",
         "say": "Đọc to",
         "chat": "Đăng trong trò chuyện",
-        "webhook": "Gửi đến một webhook"
+        "webhook": "Gửi đến một webhook",
+        "wheel": "Quay bánh xe"
       },
       "summary": {
         "tip": "Tiền boa từ {{amount}} DHB trở lên"

@@ -4827,7 +4827,6 @@
     "creatorEarnsDirect": "Obunachilar DeHub tokenlarida to&#39;lov qilishadi. Ular obuna bo&#39;lgan zahoti sizning ulushingiz hamyoningizga tushadi, nishon darajangiz uchun platforma to&#39;lovi chegiriladi."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} aylantirildi: {{result}}",
     "someone": "Kimdir",
     "newFollower": "Yangi obunachi: {{name}}",
     "newSubscriber": "Yangi obunachi: {{name}}",
@@ -4839,6 +4838,12 @@
     "topSupporters": "Eng yaxshi tarafdorlar",
     "tipped": "{{name}} sovg&#39;a yubordi",
     "chatPreview": "Xatlar bu yerda koʻrinadi",
+    "wheelLanded": "{{name}} aylantirildi: {{result}}",
+    "subathon": "Subaton",
+    "subathonOver": "Vaqt tugadi",
+    "pointsTitle": "Eng sadoqatli tomoshabinlar",
+    "points_one": "{{formatted}} ochko",
+    "points_other": "{{formatted}} ochko",
     "poll": {
       "closed": "Ovozlar yakunlandi",
       "voteFor": "{{option}} uchun ovoz bering",
@@ -4866,6 +4871,29 @@
     "youAreTimedOut": "Siz bir zumga vaqtingiz tugadi"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subaton",
+      "intro": "Oʻyingizda streamda qoldirib turish uchun har bir toʻlovli hodiya, taklif va abonentlik vaqtni qoʻshadi.",
+      "secondsPerThousand": "1000 DHB hodiya uchun qoʻshilgan sekundlar",
+      "secondsPerFollow": "Taklif uchun qoʻshilgan sekundlar",
+      "secondsPerSubscribe": "Abonentlik uchun qoʻshilgan sekundlar",
+      "capHours": "Eng uzun davom etishi mumkin boʻlgan vaqt (soat)",
+      "save": "Saqlangan miqdorlar",
+      "saved": "Subathonda saqlangan miqdorlar.",
+      "startMinutes": "Boshida (daqiqa)",
+      "start": "Sanovni boshlash",
+      "stop": "Toʻxtatish",
+      "addFive": "5 daqiqani qoʻshish",
+      "removeFive": "5 daqiqani olib tashlash",
+      "failed": "Bu ishlamadi. Yana urinib koʻring.",
+      "widgetHint": "Streamingda subathon sanovini koʻrsatadi. Live Studioʼdan Subathon paneli orqali boshlang."
+    },
+    "points": {
+      "title": "Sodiq tomoshabinlar",
+      "intro": "Tomoshabinlar har bir minut sizni tomosha qilish uchun bir ochko va 100 DHB hodiya qilish uchun bir ochko oladilar. Chat va reaksiyalar ochko bermaydi, shuning uchun ochkolarni yetishtirish mumkin emas.",
+      "empty": "Hali ochko yoʻq. Tomoshabinlar va hodiya qilish bilan ochkolari toʻplanib boradi.",
+      "widgetHint": "Ushbu ro&#39;yxatni jonli efirda ko&#39;rsatish uchun sodiq tomoshabinlar vidjetini qo&#39;shing."
+    },
     "controls": {
       "title": "Tezkor boshqaruv elementlari",
       "intro": "Strim o&#39;rtasida. Har bir tugma ilovada va OBSda tomosha qilayotgan har bir kishi uchun uni orqaga qaytarmaguningizcha ushlab turiladi.",
@@ -4983,7 +5011,6 @@
       "join": "Qo&#39;shiling"
     },
     "kinds": {
-      "spin_wheel": "Aylanadigan g&#39;ildirak",
       "tip_alert": "Maslahat ogohlantirishi",
       "follow_alert": "Kuzatib borish haqida ogohlantirish",
       "subscribe_alert": "Obunachi ogohlantirishi",
@@ -5000,10 +5027,12 @@
       "chat_box": "Chat oynasi",
       "ticker": "Ticker",
       "rule_alert": "Qoida ogohlantirishlari",
-      "poll": "So&#39;rovnoma"
+      "poll": "So&#39;rovnoma",
+      "spin_wheel": "Aylanadigan g&#39;ildirak",
+      "subathon_timer": "Subaton taymeri",
+      "points_board": "Sodiq tomoshabinlar"
     },
     "hints": {
-      "spin_wheel": "Qoidalaringizdagi g&#39;ildiraklar qayerda aylanadi",
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
       "follow_alert": "Har bir yangi izdoshni ko&#39;rsatadi",
       "subscribe_alert": "Har bir yangi obunachini ko&#39;rsatadi",
@@ -5020,7 +5049,10 @@
       "chat_box": "Ekranda eshittirishingizning chat xabarlarini ko&#39;rsatadi",
       "ticker": "Ekran bo&#39;ylab aylantiriladigan o&#39;zingizning matningiz qatori",
       "rule_alert": "Sizning qoidangizning xabarlarini koʻrish joyi",
-      "poll": "Jonli so&#39;rovnomangiz, har bir variant uchun ovoz berish tugmasi bilan"
+      "poll": "Jonli so&#39;rovnomangiz, har bir variant uchun ovoz berish tugmasi bilan",
+      "spin_wheel": "Qoidalaringizdagi g&#39;ildiraklar qayerda aylanadi",
+      "subathon_timer": "Tomoshabinlar, hodiya, taklif va abonentlik sanovini orqaga siljitadi",
+      "points_board": "Tomoshabinlar va hodiya qilishdan olingan ochkolari boʻyicha sizning eng yuqori tomoshabinlar roʻyxati"
     },
     "fields": {
       "style": "Uslub",
@@ -5054,8 +5086,6 @@
       "fast": "Tez"
     },
     "rules": {
-      "wheelSegments": "G&#39;ildirak segmentlari, har bir qatorda bittadan",
-      "wheelHint": "2 dan 12 gacha. DeHub g&#39;ildirak qayerda to&#39;xtashini tanlaydi, shuning uchun hamma tomosha qilayotganlar bir xil natijani ko&#39;rishadi. Ogohlantirish, ovoz chiqarib o&#39;qish yoki chat harakatlarida {result} dan foydalaning.",
       "title": "Qoidalar",
       "intro": "Sizning streamingizda bir narsa sodir boʻlganda, DeHub sizning tanlangichingizga koʻra amalga oshiradi: xabar koʻrsatadi, ovoz oʻynaydi, narsani aytib beradi, chatga yozib yuboradi yoki Discordingizga xabar yuboradi.",
       "add": "Qoidani qoʻshish",
@@ -5086,6 +5116,8 @@
       "removeAction": "Amaldan olib tashlash",
       "placeholders": "Matningizda {name}, {amount} va {message} dan foydalaning. Xabarlardagi havolalar olib tashlandi.",
       "placeholdersLive": "Matningizda {name}, {title} va {link} dan foydalaning: ismingiz, ko&#39;rsatuv sarlavhasi va uni tomosha qilish uchun havola.",
+      "wheelSegments": "G&#39;ildirak segmentlari, har bir qatorda bittadan",
+      "wheelHint": "2 dan 12 gacha. DeHub g&#39;ildirak qayerda to&#39;xtashini tanlaydi, shuning uchun hamma tomosha qilayotganlar bir xil natijani ko&#39;rishadi. Ogohlantirish, ovoz chiqarib o&#39;qish yoki chat harakatlarida {result} dan foydalaning.",
       "alertText": "Ogohlantirish matni",
       "sound": "Ovoz",
       "sayText": "Ovoz chiqarib o&#39;qish uchun matn",
@@ -5110,12 +5142,12 @@
         "subscribers": "Obunachilar"
       },
       "actionTypes": {
-        "wheel": "G&#39;ildirakni aylantiring",
         "alert": "Ogohlantirishni ko&#39;rsatish",
         "sound": "Ovozni ijro etish",
         "say": "Ovoz chiqarib o&#39;qing",
         "chat": "Chatda post qoldiring",
-        "webhook": "Veb-hukka yuborish"
+        "webhook": "Veb-hukka yuborish",
+        "wheel": "G&#39;ildirakni aylantiring"
       },
       "summary": {
         "tip": "{{amount}} DHB yoki undan ko&#39;p choychaqa"
@@ -5189,7 +5221,6 @@
       "log": "So&#39;nggi harakatlar",
       "noLog": "Hali hech narsa yo&#39;q.",
       "actions": {
-        "word-timeout_other": "\"{{word}}\" uchun {{target}} {{count}} soniyaga ovozsiz qilindi",
         "timeout_one": "{{actor}} {{count}} soniya uchun {{target}} vaqti tugadi",
         "timeout_other": "{{actor}} {{count}} soniya davomida {{target}} vaqti tugadi",
         "ban": "{{actor}} taqiqlangan {{target}}",
@@ -5197,7 +5228,8 @@
         "moderator-added": "{{target}} moderator bo&#39;ldi",
         "moderator-removed": "{{target}} endi moderator emas",
         "word-blocked": "{{target}} dan &quot;{{word}}&quot; uchun xabarni to&#39;xtatdi",
-        "word-timeout_one": "&quot;{{word}}&quot; uchun {{count}} soniya uchun {{target}} vaqt tugadi"
+        "word-timeout_one": "&quot;{{word}}&quot; uchun {{count}} soniya uchun {{target}} vaqt tugadi",
+        "word-timeout_other": "\"{{word}}\" uchun {{target}} {{count}} soniyaga ovozsiz qilindi"
       }
     }
   },

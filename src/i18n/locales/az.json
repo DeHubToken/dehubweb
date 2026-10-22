@@ -4708,7 +4708,6 @@
     "creatorEarnsDirect": "Abunəçilər DeHub tokenlərində ödəniş edirlər. Pay torpaqlarınız abunə olduqları an cüzdanınızda olur, nişan səviyyəniz üçün platforma haqqını azaldın."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}}spun: {{result}}",
     "someone": "Kimsə",
     "newFollower": "Yeni izləyici: {{name}}",
     "newSubscriber": "Yeni abunəçi: {{name}}",
@@ -4719,6 +4718,12 @@
     "topSupporters": "Ən yaxşı dəstəkçilər",
     "tipped": "{{name}} hədiyyə göndərdi",
     "chatPreview": "Söhbət mesajları burada görünür",
+    "wheelLanded": "{{name}}spun: {{result}}",
+    "subathon": "Subafon",
+    "subathonOver": "Zaman bitdi",
+    "pointsTitle": "Ən sadıq izləyicilər",
+    "points_one": "{{formatted}} xal",
+    "points_other": "{{formatted}} xal",
     "poll": {
       "closed": "Səsvermə başa çatdı",
       "voteFor": "{{option}} üçün səs ver",
@@ -4746,6 +4751,29 @@
     "youAreTimedOut": "Bir müddət vaxt bitdiniz"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subafon",
+      "intro": "Canlı qalmaq üçün hər ödənişli hədiyyə, izləmə və abunə vaxt əlavə edir. Otaq sizin canlı qalmanızı təmin edir.",
+      "secondsPerThousand": "1000 DHB hədiyyə üçün əlavə olunan saniyələr",
+      "secondsPerFollow": "İzləmə üçün əlavə olunan saniyələr",
+      "secondsPerSubscribe": "Abunə üçün əlavə olunan saniyələr",
+      "capHours": "Uzun müddətlə (saat)",
+      "save": "Qorunan miqdarlar",
+      "saved": "Subathon məbləğləri yaddaşda saxlanıldı.",
+      "startMinutes": "Başlama (dərəcə)",
+      "start": "Sayğıyı başlat",
+      "stop": "Dayandır",
+      "addFive": "5 dəqiqə əlavə et",
+      "removeFive": "5 dəqiqə çıxar",
+      "failed": "Bu işləmədi. Yenidən cəhd edin.",
+      "widgetHint": "Subathon üzrə geri ödənişinizi göstərir. Onu Live Studio-da Subathon panelindən başlayın."
+    },
+    "points": {
+      "title": "Sadiq izləyicilər",
+      "intro": "İzləyicilər sizin canlı olmanız üçün hər dəqiqə bir xal və hər 100 DHB hədiyyə üçün bir xal qazır. Çat və reaksiyalar xal qazandırmaz, bu səbəbdən xallar əldə edilmir.",
+      "empty": "Hələ xal yoxdur. Xallar izləyicilər tərəfindən izləndikcə və hədiyyələr verildikcə toplanır.",
+      "widgetHint": "Bu siyahını yayımda göstərmək üçün Sadiq izləyicilər vidcetini əlavə edin."
+    },
     "controls": {
       "title": "Cəld nəzarətlər",
       "intro": "Orta axın üçün. Hər bir keçid onu geri çevirənə qədər tətbiqdə və OBS-də izləyən hər kəs üçün nəzərdə tutulur.",
@@ -4863,7 +4891,6 @@
       "join": "Qoşul"
     },
     "kinds": {
-      "spin_wheel": "Fırlatma çarxı",
       "tip_alert": "İpucu xəbərdarlığı",
       "follow_alert": "Xəbərdarlığa əməl edin",
       "subscribe_alert": "Abunəçi xəbərdarlığı",
@@ -4880,10 +4907,12 @@
       "chat_box": "Söhbət qutusu",
       "ticker": "Etiketçi",
       "rule_alert": "Qayda xəbərdarlıqları",
-      "poll": "Sorğu"
+      "poll": "Sorğu",
+      "spin_wheel": "Fırlatma çarxı",
+      "subathon_timer": "Yarmarka taymeri",
+      "points_board": "Sadiq izləyicilər"
     },
     "hints": {
-      "spin_wheel": "Qaydalarınızdakı təkərlərin fırlandığı yer",
       "tip_alert": "Hər bir təklifə təşəkkür edir, boyu təyinatına görə dəyişir.",
       "follow_alert": "Hər yeni izləyicini göstərir",
       "subscribe_alert": "Hər yeni abunəçini göstərir",
@@ -4900,7 +4929,10 @@
       "chat_box": "Yayımınızın söhbət mesajlarını ekranda göstərir",
       "ticker": "Ekranda sürüşdürülən öz mətninizin sətri",
       "rule_alert": "Sizin quranızın xəbərləri yerə düşür",
-      "poll": "Canlı sorğunuz, hər bir seçim üçün səs düyməsi ilə"
+      "poll": "Canlı sorğunuz, hər bir seçim üçün səs düyməsi ilə",
+      "spin_wheel": "Qaydalarınızdakı təkərlərin fırlandığı yer",
+      "subathon_timer": "Hədiyyələr, izləmələr və abunələrlə geri atılan bir sayğı",
+      "points_board": "İzləmə və hədiyyə ilə qazandıqları xallar üzrə sizin ən yaxşı izləyiciləriniz"
     },
     "fields": {
       "style": "Üslub",
@@ -4935,8 +4967,6 @@
       "fast": "Sürətli"
     },
     "rules": {
-      "wheelSegments": "Hər sətirdə bir təkər seqmentləri",
-      "wheelHint": "2-12 yaş arası. DeHub təkərin dayandığı yeri seçir, buna görə də izləyən hər kəs eyni nəticəni görür. Ad vermək üçün xəbərdarlıq, ucadan oxumaq və ya söhbət hərəkətində {result} istifadə edin.",
       "title": "Quranlar",
       "intro": "Sizin stream-inizdə bir şey baş verdikdə, DeHub sizin seçdiyiniz kimi işləyir: xəbər göstərir, səs çıxarır, bir şeyi səsli oxuyur, sizin çatınızda yazıb yoxsa Discord-ınıza bildirir.",
       "add": "Quran əlavə et",
@@ -4967,6 +4997,8 @@
       "removeAction": "Əməli sil",
       "placeholders": "Mətninizdə {name}, {amount} və {message} istifadə edin. Mesajlardakı linklər silinir.",
       "placeholdersLive": "Mətninizdə {name}, {title} və {link} istifadə edin: adınız, yayımın başlığı və onu izləmək üçün link.",
+      "wheelSegments": "Hər sətirdə bir təkər seqmentləri",
+      "wheelHint": "2-12 yaş arası. DeHub təkərin dayandığı yeri seçir, buna görə də izləyən hər kəs eyni nəticəni görür. Ad vermək üçün xəbərdarlıq, ucadan oxumaq və ya söhbət hərəkətində {result} istifadə edin.",
       "alertText": "Xəbərdarlıq mətni",
       "sound": "Səs",
       "sayText": "Ucadan oxumaq üçün mətn",
@@ -4991,12 +5023,12 @@
         "subscribers": "Abunəçilər"
       },
       "actionTypes": {
-        "wheel": "Təkər fırladın",
         "alert": "Xəbərdarlığı göstər",
         "sound": "Səs çalın",
         "say": "Ucadan oxuyun",
         "chat": "Söhbətdə dərc et",
-        "webhook": "Webhook-a göndərin"
+        "webhook": "Webhook-a göndərin",
+        "wheel": "Təkər fırladın"
       },
       "summary": {
         "tip": "İpucu {{amount}}DHB və ya daha çox"

@@ -4737,7 +4737,6 @@
     "creatorEarnsDirect": "Els subscriptors paguen amb fitxes DeHub. La teva participació arribarà a la teva cartera en el moment en què es subscriguin, menys la tarifa de la plataforma per al teu nivell d'distintiu."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} girat: {{result}}",
     "someone": "Algú",
     "newFollower": "Nou seguidor: {{name}}",
     "newSubscriber": "Subscriptor nou: {{name}}",
@@ -4749,6 +4748,12 @@
     "topSupporters": "Els millors seguidors",
     "tipped": "{{name}}ha enviat un regal",
     "chatPreview": "Els missatges de xat apareixen aquí",
+    "wheelLanded": "{{name}} girat: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "S'ha acabat el temps",
+    "pointsTitle": "Els espectadors més lleials",
+    "points_one": "{{formatted}} punt",
+    "points_other": "{{formatted}} punts",
     "poll": {
       "closed": "Votació tancada",
       "voteFor": "Vota per {{option}}",
@@ -4776,6 +4781,29 @@
     "youAreTimedOut": "Tens temps límit per un moment"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Un comptador enrere en el teu stream. Cada regal pagat, seguiment i subscripció afegix temps, així que la sala et manté en directe.",
+      "secondsPerThousand": "Segons afegits per cada 1.000 DHB regalats",
+      "secondsPerFollow": "Segons afegits per seguiment",
+      "secondsPerSubscribe": "Segons afegits per subscripció",
+      "capHours": "Màxim que pot durar (hores)",
+      "save": "Guardar quantitats",
+      "saved": "Quantitats de Subathon guardades.",
+      "startMinutes": "Començar amb (minuts)",
+      "start": "Iniciar el comptador enrere",
+      "stop": "Aturar",
+      "addFive": "Afegir 5 minuts",
+      "removeFive": "Treure 5 minuts",
+      "failed": "Això no ha funcionat. Torna a provar-ho.",
+      "widgetHint": "Mostra el comptador enrere del Subathon. Inicia'l des del panell Subathon a Live Studio."
+    },
+    "points": {
+      "title": "Espectadors lleials",
+      "intro": "Els espectadors guanyen un punt per cada minut que et veuen i un altre per cada 100 DHB que regalen. Els missatges i reaccions no valen, així que els punts no es poden \"fer\" artificialment.",
+      "empty": "Encara no hi ha punts. Es van acumulant mentre la gent et mira i regala.",
+      "widgetHint": "Afegeix el widget d’Espectadors lleials per mostrar aquesta llista en stream."
+    },
     "controls": {
       "title": "Controls ràpids",
       "intro": "Per a mid-stream. Cada interruptor es manté per a tothom que ho vegi, a l'aplicació i a OBS, fins que el tornis a girar.",
@@ -4893,7 +4921,6 @@
       "join": "Unir-se"
     },
     "kinds": {
-      "spin_wheel": "Roda giratòria",
       "tip_alert": "Alerta de consell",
       "follow_alert": "Alerta de seguiment",
       "subscribe_alert": "Alerta de subscriptor",
@@ -4910,10 +4937,12 @@
       "chat_box": "Quadre de xat",
       "ticker": "Ticker",
       "rule_alert": "Alertes de regles",
-      "poll": "Enquesta"
+      "poll": "Enquesta",
+      "spin_wheel": "Roda giratòria",
+      "subathon_timer": "Comptador enrere del Subathon",
+      "points_board": "Espectadors lleials"
     },
     "hints": {
-      "spin_wheel": "On giren les rodes de les teves regles",
       "tip_alert": "Celebra cada consell, dimensionat segons el seu nivell",
       "follow_alert": "Mostra cada nou seguidor",
       "subscribe_alert": "Mostra cada nou subscriptor",
@@ -4930,7 +4959,10 @@
       "chat_box": "Mostra els missatges de xat de la teva emissió a la pantalla",
       "ticker": "Una línia del teu propi text que es desplaça per la pantalla",
       "rule_alert": "On apareixen les alertes de les teves normes",
-      "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció"
+      "poll": "La teva enquesta en directe, amb un botó de vot per a cada opció",
+      "spin_wheel": "On giren les rodes de les teves regles",
+      "subathon_timer": "Un comptador enrere que els regals, seguiments i subscripcions empenten enrere",
+      "points_board": "Els teus espectadors més destacats per punts de visionat i regal"
     },
     "fields": {
       "style": "Estil",
@@ -4965,8 +4997,6 @@
       "fast": "Ràpid"
     },
     "rules": {
-      "wheelSegments": "Segments de rodes, un per línia",
-      "wheelHint": "Entre 2 i 12. DeHub tria on s'atura la roda per tal que tots els usuaris vegin el mateix resultat. Utilitza {result} en una acció d'alerta, lectura en veu alta o xat per donar-li un nom.",
       "title": "Normes",
       "intro": "Quan passa alguna cosa al teu flux, DeHub fa el que tu triïs: mostra una alerta, reprodueix un so, llegeix alguna cosa en veu alta, publica al teu xat o diu al teu Discord.",
       "add": "Afegeix una regla",
@@ -4997,6 +5027,8 @@
       "removeAction": "Elimina l'acció",
       "placeholders": "Fes servir {name}, {amount} i {message} al text. S'han eliminat els enllaços dels missatges.",
       "placeholdersLive": "Utilitza {name}, {title} i {link} al text: el teu nom, el títol de l'emissió i un enllaç per veure-la.",
+      "wheelSegments": "Segments de rodes, un per línia",
+      "wheelHint": "Entre 2 i 12. DeHub tria on s'atura la roda per tal que tots els usuaris vegin el mateix resultat. Utilitza {result} en una acció d'alerta, lectura en veu alta o xat per donar-li un nom.",
       "alertText": "Text d'alerta",
       "sound": "So",
       "sayText": "Text per llegir en veu alta",
@@ -5021,12 +5053,12 @@
         "subscribers": "Subscriptors"
       },
       "actionTypes": {
-        "wheel": "Fes girar la roda",
         "alert": "Mostra un avís",
         "sound": "Reprodueix un so",
         "say": "Llegir en veu alta",
         "chat": "Publicar al xat",
-        "webhook": "Envia a un webhook"
+        "webhook": "Envia a un webhook",
+        "wheel": "Fes girar la roda"
       },
       "summary": {
         "tip": "Suggeriment de {{amount}} DHB o més"
