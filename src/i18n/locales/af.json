@@ -4825,6 +4825,19 @@
     "tipped": "{{name}} stuur 'n geskenk",
     "chatPreview": "Geselsboodskappe verskyn hier"
   },
+  "liveChatModeration": {
+    "timeout1m": "Tyd uit vir 1 minuut",
+    "timeout10m": "Tyd uit vir 10 minute",
+    "timeout1h": "Tyd uit vir 1 uur",
+    "ban": "Geban van hierdie streams",
+    "makeModerator": "Maak moderator",
+    "timedOut": "Tyd uit.",
+    "banned": "Geban van hierdie streams.",
+    "madeModerator": "Hulle is nou ’n moderator.",
+    "failed": "Daar het nie gewerk nie. Probeer weer.",
+    "youAreBanned": "Jy kan nie in hierdie skepper se streams praat nie",
+    "youAreTimedOut": "Jy is vir ’n oomblik tyd uit"
+  },
   "liveStudio": {
     "title": "Live Studio",
     "subtitle": "Aankondigings en widgets vir jou streams",
@@ -5030,11 +5043,11 @@
         "tip": "Wenk van {{amount}} DHB of meer"
       },
       "presets": {
-        "command": "Kletsopdrag",
         "blank": "Leë reël",
         "readChat": "Lees hardop klets",
         "bigTip": "Lug horing vir groot wenke",
-        "thankFollowers": "Dankie aan nuwe volgelinge"
+        "thankFollowers": "Dankie aan nuwe volgelinge",
+        "command": "Kletsopdrag"
       },
       "presetHints": {
         "blank": "Begin van niks",
@@ -5062,6 +5075,51 @@
         "spooky": "Spooky",
         "magic-spell": "Magiese spel",
         "shhh": "SHH"
+      }
+    },
+    "moderation": {
+      "title": "Praatmoderasie",
+      "intro": "Reëls vir die praat onder al jou streams. Hulle kom nooit by DeHub se hoofpraat nie: iemand wat jy hier ban, kan steeds ooral praat.",
+      "loadFailed": "Jou moderasie-instellings kon nie gelas word nie. Verver die blad om weer te probeer.",
+      "save": "Spaar praatreëls",
+      "saved": "Praatreëls gespaar.",
+      "saveFailed": "Daar het nie gewerk nie om dié verandering te spaar nie.",
+      "slowMode": "Slangmodus",
+      "slowModeHint": "Hoe lank elke kykenaar tussen boodskappe moet wag. Jy en jou moderators hoef nie te wag nie.",
+      "off": "Uit",
+      "seconds_one": "{{count}} sekonde",
+      "seconds_other": "{{count}} sekondes",
+      "followersOnly": "Sleutelvolgers",
+      "subscribersOnly": "Abonnees slegs",
+      "subscribersOnlyHint": "Oorskry sleutelvolgers.",
+      "bannedWords": "Gebane woorde",
+      "bannedWordsHint": "Skei met kommas. ’n Woord letter vir letter uitspreek sal dit nie omseil nie.",
+      "wordAction": "Wanneer iemand een gebruik",
+      "wordBlock": "Stop die boodskap",
+      "wordTimeout": "Stop dit en tyd hulle vir ’n minuut uit.",
+      "moderators": "Moderator",
+      "moderatorsHint": "Hulle kan tyd uit en verbied kykers in jou strome. Hulle kan nie op jou of op mekaar reageer nie.",
+      "addModerator": "Voeg by",
+      "usernamePlaceholder": "Gebruikernaam",
+      "moderatorAdded": "Moderator bygevoeg.",
+      "moderatorNotFound": "Geen rekening met daardie gebruikersnaam nie.",
+      "removeModerator": "Verwyder moderator",
+      "noModerators": "Geen moderators nie.",
+      "banned": "Verban uit jou strome",
+      "unban": "Unban",
+      "noBans": "Niemand word verbied nie.",
+      "log": "Onlangse aksies",
+      "noLog": "Nog niks.",
+      "actions": {
+        "timeout_one": "{{actor}} uitgetel {{target}} vir {{count}} tweede",
+        "timeout_other": "{{actor}} afgetel {{target}} vir {{count}} sekondes",
+        "ban": "{{actor}} verban {{target}}",
+        "unban": "{{actor}} Unbanned {{target}}",
+        "moderator-added": "{{target}} word moderator",
+        "moderator-removed": "{{target}} is nie meer 'n moderator nie",
+        "word-blocked": "Stop 'n boodskap van {{target}} vir \"{{word}}\"",
+        "word-timeout_one": "{{target}}{{count}} tweede vir \"{{word}}\"",
+        "word-timeout_other": "{{target}} {{count}} sekondes vir \"{{word}}\""
       }
     }
   },

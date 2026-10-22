@@ -4731,6 +4731,19 @@
     "tipped": "{{name}} šalje dar",
     "chatPreview": "Ovdje se prikazuju poruke putem chata"
   },
+  "liveChatModeration": {
+    "timeout1m": "Vrijeme je isteklo za 1 minutu",
+    "timeout10m": "Vrijeme je isteklo za 10 minuta",
+    "timeout1h": "Vrijeme je isteklo za 1 sat",
+    "ban": "Zabranjeno za ove streamove",
+    "makeModerator": "Postavi kao moderatora",
+    "timedOut": "Izbaceno iz čata.",
+    "banned": "Zabranjen za ove streamove.",
+    "madeModerator": "Sada su moderator.",
+    "failed": "To nije uspjelo. Pokusaj ponovno.",
+    "youAreBanned": "Ne možete čatati u streamovima ovog kreatora.",
+    "youAreTimedOut": "Trenutno ste izbaceni iz čata."
+  },
   "liveStudio": {
     "title": "Live Studio",
     "subtitle": "Obavestaji i widgetovi za vaše streamove",
@@ -4875,7 +4888,6 @@
       "fast": "Brzo"
     },
     "rules": {
-      "test": "Testiraj",
       "title": "Pravila",
       "intro": "Kada se nešto dogodi na vašem streamu, DeHub radi ono što odaberete: prikazuje upozorenje, reproducira zvuk, čita nešto naglas, objavljuje u vašem chatu ili govori vašem Discordu.",
       "add": "Dodajte pravilo",
@@ -4886,6 +4898,7 @@
       "saveFailed": "Vaše pravila nisu uspjela biti sačuvana.",
       "testFailed": "Taj test nije prošao. Pokušajte ponovno za nekoliko trenutaka.",
       "saveToTest": "Spremite pravila kako biste ih testirali",
+      "test": "Testiraj",
       "enabled": "Pravilo o",
       "remove": "Izbriši pravilo",
       "save": "Spremi pravila",
@@ -4969,6 +4982,51 @@
         "spooky": "Sablasno",
         "magic-spell": "Čarolija",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderacija čata",
+      "intro": "Pravila za čat pod svim vašim streamovima. Nikad ne dosežu DeHubov glavni čat: osoba koju zabranite ovdje može i dalje govoriti svugdje drugdje.",
+      "loadFailed": "Vaša postavka moderacije nije uspjela učitati. Osvježite stranicu i pokušajte ponovno.",
+      "save": "Spremi pravila čata",
+      "saved": "Pravila čata uspješno spremljena.",
+      "saveFailed": "Ova promjena nije uspjela spremiti.",
+      "slowMode": "Spori način",
+      "slowModeHint": "Koliko dugo gledatelji čekaju između poruka. Vi i vaši moderatori nikad ne čekate.",
+      "off": "Isključeno",
+      "seconds_one": "{{count}} sekunda",
+      "seconds_other": "{{count}} sekunde",
+      "followersOnly": "Samo pretplatnici",
+      "subscribersOnly": "Samo pretplatnici",
+      "subscribersOnlyHint": "Preuzima \"samo pretplatnike\".",
+      "bannedWords": "Zabranjene riječi",
+      "bannedWordsHint": "Odvojite zarezima. Pisanje riječi slovo po slovo neće je obići.",
+      "wordAction": "Kad netko koristi jednu",
+      "wordBlock": "Zaustavi poruku",
+      "wordTimeout": "Zaustavi je i izbaci ih za 1 minutu",
+      "moderators": "Moderator",
+      "moderatorsHint": "Mogu se odmoriti i zabraniti gledateljima u vašim streamingima. Ne mogu djelovati na vas ili jedni na druge.",
+      "addModerator": "Dodaj",
+      "usernamePlaceholder": "Korisničko ime",
+      "moderatorAdded": "Moderator je dodan.",
+      "moderatorNotFound": "Nema računa s tim korisničkim imenom.",
+      "removeModerator": "Ukloni moderatora",
+      "noModerators": "Još nema moderatora.",
+      "banned": "Zabranjen pristup streamingima",
+      "unban": "Poništi zabranu",
+      "noBans": "Nitko nije zabranjen.",
+      "log": "Nedavne radnje",
+      "noLog": "Još ništa.",
+      "actions": {
+        "timeout_one": "{{actor}} isteklo je {{target}} za {{count}} sekundu",
+        "timeout_other": "{{actor}} isteklo je {{target}} na {{count}} sekunde",
+        "ban": "{{actor}} zabranjen {{target}}",
+        "unban": "{{actor}} nebaniran {{target}}",
+        "moderator-added": "{{target}} je postao moderator",
+        "moderator-removed": "{{target}} više nije moderator",
+        "word-blocked": "Zaustavljena je poruka korisnika {{target}} za korisnika „{{word}}”",
+        "word-timeout_one": "Isteklo je vrijeme {{target}} za {{count}} sekundu za „{{word}}”",
+        "word-timeout_other": "Isteklo je vrijeme {{target}} za {{count}} s za „{{word}}”"
       }
     }
   },

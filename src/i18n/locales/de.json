@@ -4839,6 +4839,19 @@
     "tipped": "{{name}} hat ein Geschenk gesendet",
     "chatPreview": "Chat-Nachrichten werden hier angezeigt"
   },
+  "liveChatModeration": {
+    "timeout1m": "Zeitlimit für 1 Minute",
+    "timeout10m": "Zeitlimit für 10 Minuten",
+    "timeout1h": "Zeitlimit für 1 Stunde",
+    "ban": "Gesperrt von diesen Streams",
+    "makeModerator": "Mache zum Moderator",
+    "timedOut": "Zeitlimit gesetzt.",
+    "banned": "Von diesen Streams gesperrt.",
+    "madeModerator": "Sie sind jetzt ein Moderator.",
+    "failed": "Das hat nicht funktioniert. Versuche es nochmal.",
+    "youAreBanned": "Du kannst in den Streams dieses Creators nicht chatten.",
+    "youAreTimedOut": "Du bist für einen Moment zeitlich begrenzt."
+  },
   "liveStudio": {
     "title": "Live-Studio",
     "subtitle": "Alerts und Widgets für Ihre Streams",
@@ -4982,7 +4995,6 @@
       "fast": "Schnell"
     },
     "rules": {
-      "test": "Testen",
       "title": "Regeln",
       "intro": "Wenn etwas in Ihrem Stream passiert, tut DeHub, was Sie möchten: Zeigt eine Warnung an, spielt einen Ton ab, liest etwas laut vor, postet in Ihrem Chat oder teilt es Ihrem Discord mit.",
       "add": "Eine Regel hinzufügen",
@@ -4993,6 +5005,7 @@
       "saveFailed": "Deine Regeln konnten nicht gespeichert werden.",
       "testFailed": "Dieser Test wurde nicht bestanden. Versuchen Sie es gleich noch einmal.",
       "saveToTest": "Speichern Sie Ihre Regeln, um sie zu testen",
+      "test": "Testen",
       "enabled": "Regel über",
       "remove": "Regel löschen",
       "save": "Regeln speichern",
@@ -5076,6 +5089,51 @@
         "spooky": "Gruselig",
         "magic-spell": "Zauberspruch",
         "shhh": "Pssst."
+      }
+    },
+    "moderation": {
+      "title": "Chat-Moderation",
+      "intro": "Regeln für den Chat unter allen deinen Streams. Sie erreichen nie den Hauptchat von DeHub – jemand, den du hier bannst, kann trotzdem überall sonst sprechen.",
+      "loadFailed": "Deine Moderations-Einstellungen konnten nicht geladen werden. Aktualisiere die Seite und versuche es erneut.",
+      "save": "Chat-Regeln speichern",
+      "saved": "Chat-Regeln gespeichert.",
+      "saveFailed": "Diese Änderung konnte nicht gespeichert werden.",
+      "slowMode": "Langsam-Modus",
+      "slowModeHint": "Wie lange Zuschauer zwischen Nachrichten warten müssen. Du und deine Moderatoren wartet nie.",
+      "off": "Aus",
+      "seconds_one": "{{count}} Sekunde",
+      "seconds_other": "{{count}} Sekunden",
+      "followersOnly": "Nur Follower",
+      "subscribersOnly": "Nur Abonnenten",
+      "subscribersOnlyHint": "Überschreibt \"Nur Follower\".",
+      "bannedWords": "Gesperrte Wörter",
+      "bannedWordsHint": "Trenne sie durch Kommas. Buchstabieren eines Wortes Buchstabe für Buchstabe umgehst es nicht.",
+      "wordAction": "Wenn jemand eines verwendet",
+      "wordBlock": "Stoppe die Nachricht",
+      "wordTimeout": "Stoppe sie und setze ein Zeitlimit von einer Minute.",
+      "moderators": "Moderatoren",
+      "moderatorsHint": "Sie können eine Zeitüberschreitung vornehmen und Zuschauer in deinen Streams sperren. Sie können nicht auf dich oder aufeinander einwirken.",
+      "addModerator": "Hinzufügen",
+      "usernamePlaceholder": "Benutzername",
+      "moderatorAdded": "Moderator hinzugefügt.",
+      "moderatorNotFound": "Kein Konto mit diesem Benutzernamen.",
+      "removeModerator": "Moderator entfernen",
+      "noModerators": "Noch keine Moderatoren.",
+      "banned": "Aus deinen Streams verbannt",
+      "unban": "Entsperren",
+      "noBans": "Niemand wird gebannt.",
+      "log": "Letze Änderungen",
+      "noLog": "Noch nichts zu sehen…",
+      "actions": {
+        "timeout_one": "{{actor}} Zeitüberschreitung {{target}} für {{count}} Sekunde",
+        "timeout_other": "{{actor}} Zeitüberschreitung {{target}} für {{count}} Sekunden",
+        "ban": "{{actor}} gesperrt {{target}}",
+        "unban": "{{actor}} ungebannt {{target}}",
+        "moderator-added": "{{target}} wurde Moderator",
+        "moderator-removed": "{{target}} ist kein Moderator mehr",
+        "word-blocked": "Eine Nachricht von {{target}} für \"{{word}}\" wurde gestoppt",
+        "word-timeout_one": "Zeitüberschreitung {{target}} für {{count}} Sekunde für \"{{word}}\"",
+        "word-timeout_other": "Zeitüberschreitung {{target}} für {{count}} Sekunden für \"{{word}}\""
       }
     }
   },

@@ -4841,6 +4841,19 @@
     "tipped": "Nagpadala ng regalo si {{name}}",
     "chatPreview": "Lilitaw ang mga mensahe ng chat dito"
   },
+  "liveChatModeration": {
+    "timeout1m": "Time out para sa 1 minuto",
+    "timeout10m": "Time out para sa 10 minuto",
+    "timeout1h": "Time out para sa 1 oras",
+    "ban": "Ipagbawal mula sa mga stream na ito",
+    "makeModerator": "Gumawa ng moderator",
+    "timedOut": "Nag - time out.",
+    "banned": "Ipagbawal mula sa mga stream na ito.",
+    "madeModerator": "Sila ngayon ay isang moderator.",
+    "failed": "Hindi iyon gumana. Subukan muli.",
+    "youAreBanned": "Hindi ka maaaring makipag - chat sa mga stream ng tagalikha na ito",
+    "youAreTimedOut": "Naka - time out ka nang ilang sandali"
+  },
   "liveStudio": {
     "title": "Instagram",
     "subtitle": "Mga alerto at widget para sa iyong mga stream",
@@ -4984,7 +4997,6 @@
       "fast": "Mabilis"
     },
     "rules": {
-      "test": "Subukan",
       "title": "Mga Panuntunan",
       "intro": "Kapag may nangyari sa iyong stream, ginagawa ng DeHub ang iyong pinili: nagpapakita ng alerto, nagpe - play ng tunog, nagbabasa ng isang bagay nang malakas, mga post sa iyong chat o nagsasabi sa iyong Discord.",
       "add": "Magdagdag ng alituntunin",
@@ -4995,6 +5007,7 @@
       "saveFailed": "Hindi mase - save ang iyong mga alituntunin.",
       "testFailed": "Ang pagsusulit na iyon ay hindi dumaan. Subukan muli sa ilang sandali.",
       "saveToTest": "I - save ang iyong mga alituntunin para subukan ang mga ito",
+      "test": "Subukan",
       "enabled": "Panuntunan sa",
       "remove": "Tanggalin ang panuntunan",
       "save": "I - save ang mga alituntunin",
@@ -5078,6 +5091,50 @@
         "spooky": "Nakakatakot",
         "magic-spell": "Magic spell",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Pagmo - moderate ng chat",
+      "intro": "Mga panuntunan para sa chat sa ilalim ng lahat ng iyong mga stream. Hindi nila kailanman maabot ang pangunahing chat ng DeHub: ang isang taong pinagbawalan mo dito ay maaari pa ring makipag - usap sa lahat ng dako.",
+      "loadFailed": "Hindi ma - load ang iyong mga setting ng pag - moderate. I - refresh ang page para subukang muli.",
+      "saved": "Na - save ang mga panuntunan sa chat.",
+      "saveFailed": "Hindi mase - save ang pagbabagong iyon.",
+      "slowMode": "Mabagal na mode",
+      "slowModeHint": "Gaano katagal naghihintay ang bawat viewer sa pagitan ng mga mensahe. Ikaw at ang iyong mga moderator ay hindi kailanman naghihintay.",
+      "off": "Naka - off",
+      "seconds_one": "{{count}} segundo",
+      "seconds_other": "{{count}} segundo",
+      "followersOnly": "Mga tagasunod lamang",
+      "subscribersOnly": "Mga subscriber lang",
+      "subscribersOnlyHint": "Overrides mga tagasunod lamang.",
+      "bannedWords": "Mga ipinagbabawal na salita",
+      "bannedWordsHint": "Paghiwalayin sa mga kuwit. Ang pagbaybay ng isang salita sa pamamagitan ng sulat ay hindi nakakakuha ng bilog na ito.",
+      "wordAction": "Kapag ang isang tao ay gumagamit ng isang",
+      "wordBlock": "Itigil ang mensahe",
+      "wordTimeout": "Itigil ito at oras ang mga ito para sa isang minuto",
+      "moderators": "Moderator",
+      "moderatorsHint": "Maaari silang *timeout* at *ban* ang mga *viewers* sa mga *stream* mo. Hindi sila maaaring gumawa ng aksyon sa iyo o sa kanila.",
+      "addModerator": "Magdagdag",
+      "usernamePlaceholder": "Username",
+      "moderatorAdded": "Idinagdag ang moderator.",
+      "moderatorNotFound": "Walang account na may ganitong username.",
+      "removeModerator": "Alisin ang moderator",
+      "noModerators": "Walang mga moderator pa.",
+      "banned": "Ipinagbabawal sa iyong mga stream",
+      "unban": "Unban",
+      "noBans": "Walang sinuman ang *banned*.",
+      "log": "Mga kamakailang aksyon",
+      "noLog": "Walang mga aksyon pa.",
+      "actions": {
+        "timeout_one": "{{actor}} *timed out* ang {{target}} para sa {{count}} segundo",
+        "timeout_other": "{{actor}} *timed out* ang {{target}} para sa {{count}} mga segundo",
+        "ban": "{{actor}} *banned* ang {{target}}",
+        "unban": "{{actor}} *unbanned* ang {{target}}",
+        "moderator-added": "Naging moderator na ang {{target}}",
+        "moderator-removed": "Hindi na moderator ang {{target}}",
+        "word-blocked": "Nagstop sa isang mensahe mula sa {{target}} para sa \"{{word}}\"",
+        "word-timeout_one": "*Timed out* ang {{target}} para sa {{count}} segundo para sa \"{{word}}\"",
+        "word-timeout_other": "*Timed out* ang {{target}} para sa {{count}} mga segundo para sa \"{{word}}\""
       }
     }
   },

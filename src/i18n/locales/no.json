@@ -4778,6 +4778,19 @@
     "tipped": "{{name}} sendte en gave",
     "chatPreview": "Chatmeldinger vises her"
   },
+  "liveChatModeration": {
+    "timeout1m": "Tidsutløp i 1 minutt",
+    "timeout10m": "Tidsutløp i 10 minutter",
+    "timeout1h": "Tidsutløp i 1 time",
+    "ban": "Bann fra disse strømmene",
+    "makeModerator": "Gjør til moderator",
+    "timedOut": "Tidsutløpt.",
+    "banned": "Bannet fra disse strømmene.",
+    "madeModerator": "De er nå en moderator.",
+    "failed": "Det fungerte ikke. Prøv igjen.",
+    "youAreBanned": "Du kan ikke chatte i denne skaperens strømmer",
+    "youAreTimedOut": "Du er tidsutløpt i et øyeblikk"
+  },
   "liveStudio": {
     "title": "Livestudio",
     "subtitle": "Varsler og widgeter for strømmingene dine",
@@ -4921,7 +4934,6 @@
       "fast": "Rask"
     },
     "rules": {
-      "test": "Prøv",
       "title": "Regler",
       "intro": "Når noe skjer på strømmen din, gjør DeHub det du velger: viser et varsel, spiller av en lyd, leser noe høyt, legger ut innlegg i chatten din eller forteller det til Discord-brukeren din.",
       "add": "Legg til en regel",
@@ -4932,6 +4944,7 @@
       "saveFailed": "Reglene dine kunne ikke lagres.",
       "testFailed": "Den testen gikk ikke gjennom. Prøv igjen om et øyeblikk.",
       "saveToTest": "Lagre reglene dine for å teste dem",
+      "test": "Prøv",
       "enabled": "Regel om",
       "remove": "Slett regel",
       "save": "Lagre regler",
@@ -5015,6 +5028,51 @@
         "spooky": "Skummel",
         "magic-spell": "Magisk trylleformel",
         "shhh": "Ssjh"
+      }
+    },
+    "moderation": {
+      "title": "Chat-moderasjon",
+      "intro": "Regler for chatten under alle dine strømmer. De når aldri DeHubs hovedchat: noen du banner her kan fortsatt snakke andre steder.",
+      "loadFailed": "Dine moderasjonsinnstillinger kunne ikke lastes. Oppfrisk siden for å prøve igjen.",
+      "save": "Lagre chat-regler",
+      "saved": "Chat-reglene er lagret.",
+      "saveFailed": "Den endringen kunne ikke lagres.",
+      "slowMode": "Sakte modus",
+      "slowModeHint": "Hvor lenge hver visning må vente mellom meldinger. Du og dine moderatorer må ikke vente.",
+      "off": "Av",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekunder",
+      "followersOnly": "Bare følger",
+      "subscribersOnly": "Bare abonnenter",
+      "subscribersOnlyHint": "Overskrider bare følger.",
+      "bannedWords": "Bannede ord",
+      "bannedWordsHint": "Skille med kommaer. Å stave ut et ord bokstav for bokstav unngår ikke det.",
+      "wordAction": "Når noen bruker ett",
+      "wordBlock": "Stopp meldingen",
+      "wordTimeout": "Stopp det og tidsutløp dem i en minutt",
+      "moderators": "Moderatorer",
+      "moderatorsHint": "De kan ta en timeout og utestenge seere i strømmingene dine. De kan ikke handle mot deg eller hverandre.",
+      "addModerator": "Legg inn",
+      "usernamePlaceholder": "Brukernavn",
+      "moderatorAdded": "Moderator lagt til.",
+      "moderatorNotFound": "Ingen konto med det brukernavnet.",
+      "removeModerator": "Fjern moderator",
+      "noModerators": "Ingen moderatorer ennå.",
+      "banned": "Utestengt fra strømmingene dine",
+      "unban": "Forby",
+      "noBans": "Ingen er utestengt.",
+      "log": "Siste handlinger",
+      "noLog": "Ingenting ennå.",
+      "actions": {
+        "timeout_one": "{{actor}} gikk ut på {{target}} i {{count}} sekunder",
+        "timeout_other": "{{actor}} ble tidsavbrutt {{target}} i {{count}} sekunder",
+        "ban": "{{actor}} utestengt {{target}}",
+        "unban": "{{actor}} opphevet utestengelse {{target}}",
+        "moderator-added": "{{target}} ble moderator",
+        "moderator-removed": "{{target}} er ikke lenger en moderator",
+        "word-blocked": "Stoppet en melding fra {{target}} for «{{word}}»",
+        "word-timeout_one": "Tidsavbrutt {{target}} for {{count}} sekund for &quot;{{word}}&quot;",
+        "word-timeout_other": "Tidsavbrutt {{target}} i {{count}} sekunder for &quot;{{word}}&quot;"
       }
     }
   },

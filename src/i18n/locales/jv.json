@@ -4600,6 +4600,19 @@
     "tipped": "{{name}} nganti hadiah",
     "chatPreview": "Pesanan chat ditampilin gini"
   },
+  "liveChatModeration": {
+    "timeout1m": "Waktu timeout 1 menit",
+    "timeout10m": "Waktu timeout 10 menit",
+    "timeout1h": "Waktu timeout 1 jam",
+    "ban": "Dilarang dari stream-stream ini",
+    "makeModerator": "Dijadikan moderator",
+    "timedOut": "Timeout.",
+    "banned": "Dilarang dari stream-stream ini.",
+    "madeModerator": "Kini dia jadi moderator.",
+    "failed": "Gak beres. Coba lagi.",
+    "youAreBanned": "Gak bisa ngetik di stream-stream kreator ini",
+    "youAreTimedOut": "Timeout sebentar."
+  },
   "liveStudio": {
     "title": "Live Studio",
     "subtitle": "Peringatan lan widget kanggo streamingmu",
@@ -4672,7 +4685,6 @@
       "share": "Bareng"
     },
     "kinds": {
-      "rule_alert": "Peringatan aturan",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4685,7 +4697,8 @@
       "reaction_counter": "Pengitung reaksi",
       "event_feed": "Aktivitas terbaru",
       "chat_box": "Kotak chat",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "rule_alert": "Peringatan aturan"
     },
     "hints": {
       "tip_alert": "Ngrayakake saben tip, disesuaikan karo tingkaté",
@@ -4732,36 +4745,26 @@
       "fast": "Cepat"
     },
     "rules": {
-      "empty": "Belum ada aturan. Tambahkan satu untuk bereaksi terhadap tips, mengikuti, atau perintah obrolan.",
-      "test": "Tes",
-      "enabled": "Aturan tentang",
-      "save": "Simpan aturan",
-      "needsAlertWidget": "Beberapa aturan menunjukkan peringatan. Tambahkan widget Lansiran aturan sehingga ada tempat untuk ditampilkan.",
-      "command": "Perintah",
-      "removeAction": "Hapus tindakan",
-      "alertText": "Teks peringatan",
-      "sound": "Suara",
-      "sayText": "Teks untuk dibaca dengan suara keras",
-      "chatText": "Pesan untuk diposting",
-      "chatHint": "Diposting dari akun Anda ke obrolan streaming Anda. Tidak dapat mengulangi pesan pemirsa.",
-      "webhookHint": "Webhook Discord atau Slack, atau alamat https apa pun yang menerima POSTINGAN.",
-      "summary": {
-        "tip": "Tips dari {{amount}} DHB atau lebih"
-      },
       "title": "Rules",
       "intro": "Nalika ana sing kedadeyan ing streammu, DeHub nindakake apa sing kowe pilih: nampilake alert, muter swara, maca bab-bab kanthi swara, ngirim ing chatmu utawa ngandhani Discord-mu.",
       "add": "Tambah aturan",
       "limit": "Kamu udh capai batas aturan {{count}} ini.",
       "loadFailed": "Kloe atur-aturan ingkang ngajadi gak bisa ditulung. Klik \"Refresh\" gunae ngulik.",
+      "empty": "Belum ada aturan. Tambahkan satu untuk bereaksi terhadap tips, mengikuti, atau perintah obrolan.",
       "saved": "Kebijakan ini disimpan. Mereka berjalan di waktu tipmu selanjutnya, ikuti atau kirim pesan.",
       "saveFailed": "Klo atur-aturmu ga bisa disimpen.",
       "testFailed": "Kanggo uji coba ingkang kudu dijalani, nganggo gini nganggo gini. Coba lagi nglakoni ing ngantenan.",
       "saveToTest": "Simpen aturanmu kanggo nyoba aturan kasebut",
+      "test": "Tes",
+      "enabled": "Aturan tentang",
       "remove": "Kudu aturan-aturan.",
+      "save": "Simpan aturan",
+      "needsAlertWidget": "Beberapa aturan menunjukkan peringatan. Tambahkan widget Lansiran aturan sehingga ada tempat untuk ditampilkan.",
       "name": "Name",
       "when": "Kadha ngkapa",
       "then": "Kulon.",
       "minAmount": "Kecil-kecil tip (DHB)",
+      "command": "Perintah",
       "keyword": "Kata atau ungkapan",
       "audience": "Kénggo manéné kanggo ngaraniya?",
       "blockedWords": "Blocked words",
@@ -4769,35 +4772,45 @@
       "cooldown": "Waktu tunggu antar pakai (detik)",
       "userCooldown": "Waktu tunggu per penonton (detik)",
       "addAction": "Tambah sawijining aksi",
+      "removeAction": "Hapus tindakan",
       "placeholders": "Gunakake {name}, {amount} lan {message} ing teksmu. Link ing pesen dibusak.",
+      "alertText": "Teks peringatan",
+      "sound": "Suara",
+      "sayText": "Teks untuk dibaca dengan suara keras",
+      "chatText": "Pesan untuk diposting",
+      "chatHint": "Diposting dari akun Anda ke obrolan streaming Anda. Tidak dapat mengulangi pesan pemirsa.",
       "webhookUrl": "Alamat webhook",
+      "webhookHint": "Webhook Discord atau Slack, atau alamat https apa pun yang menerima POSTINGAN.",
       "webhookText": "Message to send",
       "triggers": {
+        "tip": "Sampiran sing ngarani.",
         "follow": "Seseorang mengikuti",
         "subscribe": "Seseorang berlangganan",
+        "share": "Kang ngarani stream dhuwur.",
         "command": "Perintah obrolan digunakan",
         "keyword": "Pesan obrolan berisi kata",
-        "tip": "Sampiran sing ngarani.",
-        "share": "Kang ngarani stream dhuwur.",
         "chat": "Sembarang pesen obrolan"
       },
       "audiences": {
-        "subscribers": "Pelanggan",
         "everyone": "Kabeh",
-        "followers": "pengikut"
+        "followers": "pengikut",
+        "subscribers": "Pelanggan"
       },
       "actionTypes": {
         "alert": "Tampilkan pemberitahuan",
         "sound": "Putar suara",
-        "webhook": "Kirim ke webhook",
         "say": "Waca kanthi swara",
-        "chat": "Post in chat"
+        "chat": "Post in chat",
+        "webhook": "Kirim ke webhook"
+      },
+      "summary": {
+        "tip": "Tips dari {{amount}} DHB atau lebih"
       },
       "presets": {
-        "bigTip": "Klakson udara untuk tip besar",
-        "thankFollowers": "Ucapkan terima kasih kepada pengikut baru",
         "blank": "Blank rule",
         "readChat": "Waca obrolan kanthi swara",
+        "bigTip": "Klakson udara untuk tip besar",
+        "thankFollowers": "Ucapkan terima kasih kepada pengikut baru",
         "command": "Kode pesan nganti-nganti (chat command)"
       },
       "presetHints": {
@@ -4826,6 +4839,51 @@
         "spooky": "Spooky",
         "magic-spell": "Sajen",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderasi chat",
+      "intro": "Aturan chat di bawah semua streammu. Gak pernah sampai ke chat utama DeHub: orang yang kamu ban di sini masih bisa ngetik di mana-mana lain.",
+      "loadFailed": "Pengaturan moderasi kamu gak bisa dimuat. Segarkan halaman untuk coba lagi.",
+      "save": "Simpan aturan chat",
+      "saved": "Aturan chat udah disimpan.",
+      "saveFailed": "Perubahan ini gak bisa disimpan.",
+      "slowMode": "Mode lambat",
+      "slowModeHint": "Berapa lama penonton tunggu antar pesan. Kamu dan moderator gak usah tunggu.",
+      "off": "Mati",
+      "seconds_one": "{{count}} detik",
+      "seconds_other": "{{count}} detik",
+      "followersOnly": "Hanya pengikut",
+      "subscribersOnly": "Hanya subscriber",
+      "subscribersOnlyHint": "Menghapus \"hanya pengikut\".",
+      "bannedWords": "Kata-kata terlarang",
+      "bannedWordsHint": "Pisahkan dengan koma. Menulis kata huruf per huruf gak bisa meloloskan.",
+      "wordAction": "Kalo seseorang pakai salah satu",
+      "wordBlock": "Hentikan pesan",
+      "wordTimeout": "Hentikan dan timeout dia 1 menit",
+      "moderators": "Moderator",
+      "moderatorsHint": "Kang bisa ngatur waktu out dan ban penonton di stream mo. Kang ga bisa ngarani mo atawa ngarani kanggo rekan-rekan mo.",
+      "addModerator": "Tambah",
+      "usernamePlaceholder": "Username",
+      "moderatorAdded": "Moderator ditambah.",
+      "moderatorNotFound": "Gak ada akun dinaweh username gini.",
+      "removeModerator": "Hapus moderator",
+      "noModerators": "Belum ada moderator.",
+      "banned": "Dilarang di stream mo",
+      "unban": "Unban",
+      "noBans": "Gak ada yang dilarang.",
+      "log": "Aksi-aksi baru",
+      "noLog": "Belum ada.",
+      "actions": {
+        "timeout_one": "{{actor}} ditunaikan {{target}} untuk {{count}} detik",
+        "timeout_other": "{{actor}} ditunaikan {{target}} untuk {{count}} detik",
+        "ban": "{{actor}} dilarang {{target}}",
+        "unban": "{{actor}} dibebaskan {{target}}",
+        "moderator-added": "{{target}} jadi moderator",
+        "moderator-removed": "{{target}} gak lagi moderator",
+        "word-blocked": "Menghentikan pesan dari {{target}} untuk \"{{word}}\"",
+        "word-timeout_one": "Ditunaikan {{target}} untuk {{count}} detik untuk \"{{word}}\"",
+        "word-timeout_other": "Ditunaikan {{target}} untuk {{count}} detik untuk \"{{word}}\""
       }
     }
   },
