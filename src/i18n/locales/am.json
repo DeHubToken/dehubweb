@@ -4797,6 +4797,29 @@
       "howToVote_other": "አይነት {{command}} እና ድምጽ ለመስጠት በውይይት ውስጥ ቁጥር · {{count}} ድምጾች"
     }
   },
+  "liveRecap": {
+    "title": "ዥረት ዳግም አስጀምር",
+    "justEnded": "የእርስዎ ዥረት recap",
+    "lastStream": "የእርስዎ የመጨረሻ ዥረት",
+    "share": "አጋራ",
+    "shareText": "በቃ በ DeHub ላይ \"{{title}}\" ን ዥረት አደረግሁ: {{duration}} LIVE ፣ {{peak}} በመመልከት ጫፍ ላይ እና {{followers}} አዲስ ተከታዮች ።",
+    "untitled": "ያልተሰየመ ዥረት",
+    "copied": "Recap ኮፒ ተደርጓል. በማንኛውም ቦታ ይለጥፉ.",
+    "loadFailed": "መልሶ ማቋቋም አልተጫነም ። በአንድ ደቂቃ ውስጥ እንደገና ሞክር.",
+    "duration": "ጊዜ በቀጥታ",
+    "peakViewers": "አብዛኛዎቹ በአንድ ጊዜ ይመለከታሉ",
+    "gifts_one": "ከ {{count}} ስጦታ",
+    "gifts_other": "ከ {{count}} ስጦታዎች",
+    "newFollowers": "አዲስ ተከታዮች",
+    "chatMessages": "የውይይት መልዕክቶች",
+    "chatters": "ሰዎች በመወያየት ላይ",
+    "reactions": "ምላሾች",
+    "shares": "ሰዎች ያጋሩ",
+    "topSupporters": "ከፍተኛ ደጋፊዎች",
+    "polls": "ምርጫዎች",
+    "pollWinner": "{{option}} አሸነፈ",
+    "stillCounting": "አሁንም መቁጠር: ስጦታዎች ለማረጋገጥ አንድ ደቂቃ ሊወስድ ይችላል."
+  },
   "liveStudio": {
     "polls": {
       "title": "ምርጫዎች",

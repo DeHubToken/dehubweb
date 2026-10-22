@@ -4410,6 +4410,15 @@
       "howToVote_other": "在聊天中輸入{{command}}和一個數字以投票 · {{count}}張票"
     }
   },
+  "liveRecap": {
+    "share": "分享",
+    "shareText": "我剛剛在DeHub直播{{title}}：{{duration}}線上，{{peak}}人同時觀看，{{followers}}新粉絲。",
+    "untitled": "未命名的流",
+    "duration": "時間直播",
+    "gifts_one": "{{count}} 送啥？",
+    "gifts_other": "{{count}} 送啥？",
+    "topSupporters": "顶级支持者"
+  },
   "liveStudio": {
     "polls": {
       "title": "民調",

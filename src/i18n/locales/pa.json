@@ -4798,6 +4798,29 @@
       "howToVote_other": "ਟਾਈਪ ਕਰੋ {{command}} ਅਤੇ ਵੋਟ ਪਾਉਣ ਲਈ ਚੈਟ ਵਿੱਚ ਇੱਕ ਨੰਬਰ · {{count}} ਵੋਟਾਂ"
     }
   },
+  "liveRecap": {
+    "title": "ਸਟਰੀਮ ਰੀਕੈਪ",
+    "justEnded": "ਤੁਹਾਡਾ ਸਟਰੀਮ ਰੀਕੈਪ",
+    "lastStream": "ਤੁਹਾਡੀ ਆਖਰੀ ਸਟ੍ਰੀਮ",
+    "share": "ਸਾਂਝਾ ਕਰੋ",
+    "shareText": "ਮੈਂ ਹੁਣੇ ਹੀ ਡੀਹਬ 'ਤੇ \"{{title}}\" ਸਟ੍ਰੀਮ ਕੀਤਾਃ {{duration}} ਲਾਈਵ, {{peak}} ਪੀਕ' ਤੇ ਦੇਖ ਰਹੇ ਹਨ ਅਤੇ {{followers}} ਨਵੇਂ ਪੈਰੋਕਾਰ.",
+    "untitled": "ਬਿਨਾਂ- ਟਾਈਟਲ ਸਟਰੀਮ",
+    "copied": "ਰੀਕੈਪ ਕਾਪੀ ਕੀਤਾ ਗਿਆ । ਇਸ ਨੂੰ ਕਿਤੇ ਵੀ ਚਿਪਕਾਓ ।",
+    "loadFailed": "ਰੀਕੈਪ ਲੋਡ ਨਹੀਂ ਹੋਇਆ. ਇੱਕ ਪਲ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.",
+    "duration": "ਲਾਈਵ ਟਾਈਮ",
+    "peakViewers": "ਇੱਕ ਵਾਰ ਵਿੱਚ ਸਭ ਤੋਂ ਵੱਧ ਦੇਖਣਾ",
+    "gifts_one": "{{count}} ਗਿਫਟ ਤੋਂ",
+    "gifts_other": "{{count}} ਤੋਹਫ਼ਿਆਂ ਤੋਂ",
+    "newFollowers": "ਨਵੇਂ ਪੈਰੋਕਾਰ",
+    "chatMessages": "ਚੈਟ ਸੁਨੇਹੇ",
+    "chatters": "ਲੋਕ ਚੈਟ ਕਰਦੇ ਹਨ",
+    "reactions": "ਪ੍ਰਤੀਕਰਮ",
+    "shares": "ਸਾਂਝਾ ਕਰਨ ਵਾਲੇ ਲੋਕ",
+    "topSupporters": "ਪ੍ਰਮੁੱਖ ਸਮਰਥਕ",
+    "polls": "ਪੋਲ",
+    "pollWinner": "{{option}} ਜਿੱਤਿਆ",
+    "stillCounting": "ਫਿਰ ਵੀ ਗਿਣਤੀਃ ਤੋਹਫ਼ੇ ਦੀ ਪੁਸ਼ਟੀ ਕਰਨ ਲਈ ਇੱਕ ਮਿੰਟ ਲੱਗ ਸਕਦਾ ਹੈ."
+  },
   "liveStudio": {
     "polls": {
       "title": "ਪੋਲ",

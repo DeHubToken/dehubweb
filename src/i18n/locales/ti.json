@@ -4676,8 +4676,8 @@
     "tipped": "{{name}} ህያብ ልኢኹ",
     "chatPreview": "ናይ ቻት መልእኽትታት ኣብዚ ይረኣዩ",
     "poll": {
-      "voteFor": "ንዓ {{option}} ድምጺ ሃብ",
       "closed": "ድምጺ ተዓጽዩ",
+      "voteFor": "ንዓ {{option}} ድምጺ ሃብ",
       "signIn": "ንድምጺ ንምውሳድ ተጸምቢሩ",
       "failed": "ድምጺኻ ኣይቆጸረን ። ደጊምካ ፈትኖ ።",
       "voted_one": "You vote · {{count}} ድምጺ",
@@ -4688,9 +4688,30 @@
       "howToVote_other": "ዓይነት {{command}} ን ቁጽሪ ኣብ ቻት ንድምጺ ንምውሳድ · {{count}} ድምጺ"
     }
   },
+  "liveRecap": {
+    "title": "ናይ ዥረት ዳግመ-ምግቢ",
+    "justEnded": "እቲ ዥረትካ እንደገና ይዕምብብብ",
+    "lastStream": "ናይ መወዳእታ ዥረትካ",
+    "share": "ምዝርጋሕ",
+    "untitled": "ዘይፍለጥ ዥረት",
+    "copied": "ኣብ ዝኾነ ቦታ ክትስሕቦ ትኽእል ኢኻ ።",
+    "loadFailed": "እቲ ክሲ ኣብ ጽሑፍካ ኣይተቐመጠን ። ኣብ ሓደ እዋን እንደገና ፈትኖ ።",
+    "duration": "ግዜ ህያው",
+    "peakViewers": "መብዛሕትኦም ሰባት ብሓንሳብ ይርእዩ",
+    "gifts_one": "ካብ {{count}} ህያብ",
+    "gifts_other": "ካብ {{count}} ህያባት",
+    "newFollowers": "ሓድሽ ተኸታተልቲ",
+    "chatMessages": "መልእኽቲ ቻት",
+    "chatters": "ሰባት ይዛረቡ",
+    "reactions": "ግብረ መልሲ",
+    "shares": "ሰባት ይካፈሉ",
+    "topSupporters": "ላዕለዎት ደገፍቲ",
+    "polls": "ድምጺ",
+    "pollWinner": "{{option}} ተዓዊቱ",
+    "stillCounting": "ሕጂ እውን እንተ ዀነ ፡ ህያባት ንምእማን ፡ ሓደ ደቒቕ ኪወስድ ይኽእል እዩ ።"
+  },
   "liveStudio": {
     "polls": {
-      "minutes_one": "{{count}} ደቒቕ",
       "title": "ድምጺ",
       "intro": "ነቶም ኣብ ስርሒትካ ዚርእዩ ሰባት ሕቶ ሕተቶም ። ኣብ DeHub App ዘሎ ጠውቑር ወይ ድማ {{command}} ብምጽሓፍ ከምኡ'ውን ኣብ ቻት ዘሎ ቁጽሪ እቲ ኣማራጺ ይምልሱ ።",
       "question": "ሕቶ",
@@ -4701,6 +4722,7 @@
       "duration": "ምስ ምርጫ ክፍሊት ምስ ምርጫ ክፍሊት ክሳብ መዓልቱ ምስ ምርጫ ክፍሊት ክሳብ መዓልቱ ምስ ምርጫ ክፍሊት ክሳብ መዓልቱ",
       "seconds_one": "{{count}} ካልኣይቲ",
       "seconds_other": "{{count}} ሰከንድ",
+      "minutes_one": "{{count}} ደቒቕ",
       "minutes_other": "{{count}} ደቓይቕ",
       "start": "ነቲ ምርጫ ምጅማር",
       "end": "ሕጂ ድምጺ ምሃብ ኣቋሪጽካ",
@@ -4864,7 +4886,6 @@
       "fast": "ቀልጢፍካ"
     },
     "rules": {
-      "placeholdersLive": "ኣብ ጽሑፍካ {name}፣ {title}ን {link}ን ተጠቐም፡ ስምካ፣ ኣርእስቲ ፈነወን ንምርኣይ ሊንክን።",
       "title": "ደንቦች",
       "intro": "በእንደገና ላይ ምንም ነገር ሲከሰት፣ DeHub ምን እንደምትመርጠው ያደርጋል፡ ማንቂያ ያሳያል፣ ድምጽ ይጫወታል፣ ምንዳ ይነግራል፣ በቻትህ ውስጥ ይልጥ ወይም ዲስኮርድህን ይነግራል።",
       "add": "ደንብ ጨምር",
@@ -4894,6 +4915,7 @@
       "addAction": "ተግባር ጨምር",
       "removeAction": "ተግባር ወግድ",
       "placeholders": "ኣብ ጽሑፍካ {name}፣ {amount}ን {message}ን ተጠቐም። ኣብ መልእኽቲ ዘለዉ ሊንክታት ይእለዩ።",
+      "placeholdersLive": "ኣብ ጽሑፍካ {name}፣ {title}ን {link}ን ተጠቐም፡ ስምካ፣ ኣርእስቲ ፈነወን ንምርኣይ ሊንክን።",
       "alertText": "ጽሑፍ ኣጠንቂቕካ",
       "sound": "ድምጺ",
       "sayText": "ብድምጺ ዝንበብ ጽሑፍ",

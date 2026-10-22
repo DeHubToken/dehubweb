@@ -4811,6 +4811,29 @@
       "howToVote_other": "Digite {{command}} e um número no chat para votar · {{count}} votos"
     }
   },
+  "liveRecap": {
+    "title": "Recapitulação do fluxo",
+    "justEnded": "Recapitulação da sua transmissão",
+    "lastStream": "A sua última transmissão",
+    "share": "Partilhar",
+    "shareText": "Acabei de transmitir \"{{title}}\" no DeHub: {{duration}} ao vivo, {{peak}} assistindo no auge e {{followers}} novos seguidores.",
+    "untitled": "Fluxo sem título",
+    "copied": "Recapitulação copiada. Cole em qualquer lugar.",
+    "loadFailed": "A recapitulação não foi carregada. Tente novamente daqui a pouco.",
+    "duration": "Tempo ao vivo",
+    "peakViewers": "A maioria assiste ao mesmo tempo",
+    "gifts_one": "Do presente {{count}}",
+    "gifts_other": "De {{count}} presentes",
+    "newFollowers": "Novos seguidores",
+    "chatMessages": "Mensagens de chat",
+    "chatters": "Pessoas a conversar",
+    "reactions": "Reacções",
+    "shares": "Partilha de pessoas",
+    "topSupporters": "Principais apoiadores",
+    "polls": "Enquetes",
+    "pollWinner": "{{option}} ganhou",
+    "stillCounting": "Ainda contando: os presentes podem levar um minuto para serem confirmados."
+  },
   "liveStudio": {
     "polls": {
       "title": "Pesquisas",

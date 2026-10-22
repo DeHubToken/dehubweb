@@ -4740,6 +4740,29 @@
       "howToVote_other": "Chatda {{command}} va raqam yozib soygulash · {{count}} soygulashlar"
     }
   },
+  "liveRecap": {
+    "title": "ئېقىم رېكاپ",
+    "justEnded": "ئېقىمنى ئەسلىگە كەلتۈرۈش پروگراممىسى",
+    "lastStream": "ئەڭ ئاخىرقى ئېقىمى",
+    "share": "ھەمبەھىرلەش",
+    "shareText": "مەن \"{{title}}\" نى DeHub دا تارقاتتىم: {{duration}}LIVE، {{peak}} ئەڭ يۇقىرى پەللىگە قاراپ، {{followers}} يېڭى ئەگەشكۈچىلەر.",
+    "untitled": "نامسىز ئېقىم",
+    "copied": "قايتا كۆچۈرۈڭ. ئۇنى ھەرقانداق يەرگە كۆچۈرۈڭ.",
+    "loadFailed": "ھېساباتى يۈكلەنمىدى. بىر مىنۇتتىن كېيىن قايتا سىناپ بېقىڭ.",
+    "duration": "ۋاقىت LIVE",
+    "peakViewers": "كۆپىنچىسى بىرلا ۋاقىتتا كۆرۈۋاتىدۇ",
+    "gifts_one": "From {{count}} ھەدىيە",
+    "gifts_other": "From {{count}} ھەدىسلەر",
+    "newFollowers": "يېڭى ئەگەشكۈچىلەر",
+    "chatMessages": "پاراڭلىشىش ئۇچۇرلىرى",
+    "chatters": "كىشىلەر پاراڭلىشىدۇ",
+    "reactions": "Reactions",
+    "shares": "كىشىلەر ئورتاقلىشىدۇ",
+    "topSupporters": "ئەڭ يۇقىرى مەدەتكارلار",
+    "polls": "Polls",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "ھېلىمۇ ساناپ باقايلى: سوۋغاتلار تەستىقلاش ئۈچۈن بىر مىنۇت ۋاقىت كېتىدۇ."
+  },
   "liveStudio": {
     "polls": {
       "title": "Soyghushlar",

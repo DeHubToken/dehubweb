@@ -4806,6 +4806,29 @@
       "howToVote_other": "Wpisz {{command}} i liczbę głosów na czacie, aby zagłosować · {{count}}"
     }
   },
+  "liveRecap": {
+    "title": "Streszczenie strumienia",
+    "justEnded": "Podsumowanie Twojego strumienia",
+    "lastStream": "Twój ostatni strumień",
+    "share": "Udostępnij",
+    "shareText": "Właśnie streamowałem „{{title}}” na DeHub: {{duration}} na żywo, {{peak}} oglądanie na szczycie i {{followers}} nowych obserwujących.",
+    "untitled": "Strumień bez nazwy",
+    "copied": "Podsumowanie zostało skopiowane. Wklej je w dowolnym miejscu.",
+    "loadFailed": "Podsumowanie nie zostało załadowane. Spróbuj ponownie za chwilę.",
+    "duration": "Czas na żywo",
+    "peakViewers": "Większość ogląda jednocześnie",
+    "gifts_one": "Od {{count}} prezent",
+    "gifts_other": "Od {{count}} prezentów",
+    "newFollowers": "Nowi obserwujący",
+    "chatMessages": "Wiadomości na czacie",
+    "chatters": "Czatowanie osób",
+    "reactions": "Reakcje",
+    "shares": "Udostępnianie osób",
+    "topSupporters": "Najlepsi kibice",
+    "polls": "Ankiety",
+    "pollWinner": "{{option}} won",
+    "stillCounting": "Nadal się liczy: potwierdzanie prezentów może chwilę potrwać."
+  },
   "liveStudio": {
     "polls": {
       "title": "Ankiety",
