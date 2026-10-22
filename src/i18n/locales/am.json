@@ -4796,6 +4796,8 @@
     "creatorEarnsDirect": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የእርስዎ ድርሻ መሬቶች በኪስ ቦርሳዎ ውስጥ በሚመዘገቡበት ቅጽበት ፣ ለባጅ ደረጃዎ የመድረክ ክፍያ ያነሰ ።"
   },
   "liveOverlay": {
+    "streak_one": "የ{{count}} ሳምንት ተከታታይ",
+    "streak_other": "የ{{count}} ሳምንታት ተከታታይ",
     "someone": "የሆነ ሰው",
     "newFollower": "አዲስ ተከታይ: {{name}}",
     "newSubscriber": "አዲስ ተመዝጋቢ: {{name}}",

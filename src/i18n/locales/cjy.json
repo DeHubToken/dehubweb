@@ -4753,6 +4753,7 @@
     "creatorEarnsDirect": "订阅者以 DeHub 代币支付。一旦他们订阅，您的份额就会立即进入您的钱包，减去您徽章级别的平台费用。"
   },
   "liveOverlay": {
+    "level": "等级{{level}}",
     "someone": "有人",
     "newFollower": "新粉丝：{{name}}",
     "newSubscriber": "新订阅用户：{{name}}",

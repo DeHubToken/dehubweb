@@ -4539,6 +4539,8 @@
       "tip_jar": "Gift jar"
     },
     "hints": {
+      "streamer_level": "Your streamer level and weekly streak, from your profile",
+      "tip_jar": "A jar that fills up as paid gifts come in",
       "tip_alert": "Celebrate ebi tip, fit for ebi level.",
       "subscribe_alert": "Show every new subscriber",
       "share_alert": "Shɔ wen sɔmbɔdi shɛr yɔ strim",
@@ -4553,6 +4555,7 @@
       "spin_wheel": "Where the wheels in your rules spin"
     },
     "fields": {
+      "showStreak": "Show the weekly streak",
       "style": "Style",
       "celebration": "Celebration",
       "banner": "Banner",

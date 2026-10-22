@@ -4664,6 +4664,9 @@
     "creatorEarnsDirect": "پیرودونکي په DeHub توکیو کې پیسې ورکوي. ستاسو د ونډې ځمکه په هغه شیبه کې چې دوی ګډون کوي، ستاسو د بیج ټایر لپاره د پلیټ فارم فیس کموي."
   },
   "liveOverlay": {
+    "level": "کچه {{level}}",
+    "streak_one": "{{count}} اونۍ پرله پسې",
+    "streak_other": "{{count}} اونۍ پرله پسې",
     "someone": "څوک په",
     "goalReached": "موخې ته د رسېدو لار!",
     "followersUnit": "پيروان په په",
