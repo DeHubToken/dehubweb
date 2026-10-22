@@ -297,8 +297,8 @@
     "compactMode": "Kompakt mód",
     "compactModeDesc": "Csökkentse a térközt több tartalom megjelenítéséhez",
     "autoPlay": "Videók automatikus lejátszása",
-    "autoplayPausePrompt": "Automatikus lejátszás beállítása",
     "autoPlayDesc": "Videók automatikusan lejátszódnak",
+    "autoplayPausePrompt": "Automatikus lejátszás beállítása",
     "autoPlayMuted": "Automatikus lejátszás némítva",
     "autoPlayMutedDesc": "A maguktól induló videók mindig hang nélkül kezdődnek",
     "showAnimations": "Animációk megjelenítése",
@@ -4713,6 +4713,17 @@
     "paidToCreatorWallet": "Egyenesen az alkotó pénztárcájára ugrik",
     "creatorPaidDirectNote": "Az alkotó részesedése azonnal a pénztárcájába kerül, amint feliratkozol. A DeHub egy kis platformdíjat tart fenn.",
     "creatorEarnsDirect": "Az előfizetők DeHub tokenekben fizetnek. A részvényed az előfizetés pillanatában a pénztárcádba kerül, levonva belőle a jelvényszinted platformdíját."
+  },
+  "liveOverlay": {
+    "someone": "Valaki",
+    "newFollower": "Új követő: {{name}}",
+    "newSubscriber": "Új előfizető: {{name}}",
+    "subscribedTo": "{{name}} feliratkozott erre: {{plan}}",
+    "shared": "{{name}} megosztotta a falat",
+    "joined": "{{name}} csatlakozott",
+    "goalReached": "Cél elérve!",
+    "followersUnit": "követők",
+    "topSupporters": "Kiemelt támogatók"
   },
   "live": {
     "chatJoined": "csatlakozott",

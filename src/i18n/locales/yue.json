@@ -297,8 +297,8 @@
     "compactMode": "緊湊模式",
     "compactModeDesc": "縮小間距睇多啲內容",
     "autoPlay": "自動播放影片",
-    "autoplayPausePrompt": "自動播放設定",
     "autoPlayDesc": "動態入面嘅影片自動播放",
+    "autoplayPausePrompt": "自動播放設定",
     "autoPlayMuted": "自動播放時靜音開始",
     "autoPlayMutedDesc": "自己播放嘅影片一律靜音開始",
     "showAnimations": "顯示動畫",
@@ -4771,6 +4771,17 @@
     "paidToCreatorWallet": "直接去創作者嘅銀包",
     "creatorPaidDirectNote": "當你訂閱嗰一刻，創作者嘅分享就會直接去到佢哋嘅銀包。 DeHub 會保留少少平台費。",
     "creatorEarnsDirect": "訂閱者用 DeHub 代幣付款。當佢哋訂閱嗰陣，你嘅份額就會喺你嘅銀包入面，減去你嘅徽章層嘅平台費用。"
+  },
+  "liveOverlay": {
+    "someone": "有人",
+    "newFollower": "新追隨者： {{name}}",
+    "newSubscriber": "新訂閱者： {{name}}",
+    "subscribedTo": "{{name}} 訂閱咗 {{plan}}",
+    "shared": "{{name}} 分享咗個串流",
+    "joined": "{{name}} 加入咗",
+    "goalReached": "目標達到喇！",
+    "followersUnit": "追隨者",
+    "topSupporters": "頂尖支持者"
   },
   "live": {
     "chatJoined": "加入咗",

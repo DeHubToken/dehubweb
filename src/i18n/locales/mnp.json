@@ -297,8 +297,8 @@
     "compactMode": "紧凑模式",
     "compactModeDesc": "减少间距看更多内容",
     "autoPlay": "自动播放视频",
-    "autoplayPausePrompt": "自动播放设置",
     "autoPlayDesc": "在信息流中自动播放视频",
+    "autoplayPausePrompt": "自动播放设置",
     "autoPlayMuted": "自動播放時靜音開始",
     "autoPlayMutedDesc": "自家播放个視頻總是靜音開始",
     "showAnimations": "显示动画",
@@ -4383,6 +4383,17 @@
     "paidToCreatorWallet": "直落创作者个荷包",
     "creatorPaidDirectNote": "訂閱了，創作者的份額就直接進到他們的錢包。DeHub 留一小筆平台費。",
     "creatorEarnsDirect": "订阅者用DeHub代币支付。一旦他们订阅，你的份额就会立即进入你的钱包，减去你徽章等级的平台费用。"
+  },
+  "liveOverlay": {
+    "someone": "𠮷人",
+    "newFollower": "新粉絲：{{name}}",
+    "newSubscriber": "新訂閱：{{name}}",
+    "subscribedTo": "{{name}} 訂閱了 {{plan}}",
+    "shared": "{{name}} 分享了直播",
+    "joined": "{{name}} 加入了",
+    "goalReached": "目標達成！",
+    "followersUnit": "粉絲數",
+    "topSupporters": "贊助排行"
   },
   "live": {
     "chatJoined": "加入了",

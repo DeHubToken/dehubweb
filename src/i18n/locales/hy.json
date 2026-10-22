@@ -297,8 +297,8 @@
     "compactMode": "Khidsr rezhim",
     "compactModeDesc": "Krchatsnel harakavoroume aveli shat bovalandakoutyunn hamar",
     "autoPlay": "Inqnagortarkhoom",
-    "autoplayPausePrompt": "Ավտոմատ նվագարկման կարգավորում",
     "autoPlayDesc": "Inqnagortarkhel tesaholvakere inqnagortsab",
+    "autoplayPausePrompt": "Ավտոմատ նվագարկման կարգավորում",
     "autoPlayMuted": "Ավտոնվագարկումը սկսել առանց ձայնի",
     "autoPlayMutedDesc": "Ինքնուրույն նվագարկվող տեսանյութերը միշտ սկսվում են անջատված ձայնով",
     "showAnimations": "Tsoutsel animitsiyanere",
@@ -4775,6 +4775,17 @@
     "paidToCreatorWallet": "Ուղիղ գնում է դեպի ստեղծողի դրամապանակը",
     "creatorPaidDirectNote": "Ստեղծողի բաժինը փոխանցվում է անմիջապես նրա դրամապանակին, երբ դուք բաժանորդագրվում եք ։ DeHub - ը պահում է հարթակի փոքր վճար ։",
     "creatorEarnsDirect": "Բաժանորդները վճարում են DeHub տոկեններով: Ձեր բաժնետոմսերը տեղաբաշխվում են դրամապանակում բաժանորդագրվելու պահին ՝ նվազեցնելով ձեր նշանակի աստիճանի համար նախատեսված հարթակի վճարը ։"
+  },
+  "liveOverlay": {
+    "someone": "Ինչ - որ մեկը",
+    "newFollower": "Նոր հետևորդ ՝ {{name}}",
+    "newSubscriber": "Նոր բաժանորդ ՝ {{name}}",
+    "subscribedTo": "{{name}} բաժանորդագրված է {{plan}}",
+    "shared": "{{name}} կիսվել է հոսքով",
+    "joined": "{{name}} միացել է",
+    "goalReached": "Նպատակը հասավ:",
+    "followersUnit": "հետևորդներ",
+    "topSupporters": "Լավագույն աջակիցներ"
   },
   "live": {
     "chatJoined": "միացավ",

@@ -297,8 +297,8 @@
     "compactMode": "Kompaktní režim",
     "compactModeDesc": "Zmenšete mezery pro zobrazení více obsahu",
     "autoPlay": "Automatické přehrávání videí",
-    "autoplayPausePrompt": "Nastavení automatického přehrávání",
     "autoPlayDesc": "Videa se přehrávají automaticky",
+    "autoplayPausePrompt": "Nastavení automatického přehrávání",
     "autoPlayMuted": "Spouštět automatické přehrávání ztlumeně",
     "autoPlayMutedDesc": "Videa, která se přehrají sama, vždy začnou bez zvuku",
     "showAnimations": "Zobrazit animace",
@@ -4714,6 +4714,17 @@
     "paidToCreatorWallet": "Přejde přímo do peněženky tvůrce",
     "creatorPaidDirectNote": "Podíl tvůrce jde přímo do jeho peněženky v okamžiku, kdy se přihlásíš k odběru. DeHub si ponechává malý poplatek za platformu.",
     "creatorEarnsDirect": "Předplatitelé platí v žetonech DeHub. Váš podíl se dostane do peněženky v okamžiku, kdy se přihlásí k odběru, po odečtení poplatku za platformu pro vaši úroveň odznaku."
+  },
+  "liveOverlay": {
+    "someone": "Někdo",
+    "newFollower": "Nový sledující: {{name}}",
+    "newSubscriber": "Nový odběratel: {{name}}",
+    "subscribedTo": "{{name}} přihlášeni k odběru {{plan}}",
+    "shared": "{{name}} sdílel (a) stream",
+    "joined": "Připojil se uživatel {{name}}",
+    "goalReached": "Cíl dosažen!",
+    "followersUnit": "následovníci",
+    "topSupporters": "Nejlepší podporovatelé"
   },
   "live": {
     "chatJoined": "se připojil/a",

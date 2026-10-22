@@ -297,8 +297,8 @@
     "compactMode": "Ҳолати ихчам",
     "compactModeDesc": "Кам кардани фосила барои мундариҷаи бештар",
     "autoPlay": "Пахши худкор",
-    "autoplayPausePrompt": "Танзимоти пахши худкор",
     "autoPlayDesc": "Видеоҳоро худкор пахш кардан",
+    "autoplayPausePrompt": "Танзимоти пахши худкор",
     "autoPlayMuted": "Пахши худкорро бесадо оғоз кунед",
     "autoPlayMutedDesc": "Видеоҳое, ки худ ба худ пахш мешаванд, ҳамеша бесадо оғоз мешаванд",
     "showAnimations": "Намоиши аниматсияҳо",
@@ -4727,6 +4727,17 @@
     "paidToCreatorWallet": "Ба ҳамёни Офаридгор рост меравад",
     "creatorPaidDirectNote": "Ҳиссаи эҷодкор ҳамон лаҳзае, ки шумо обуна мешавед, мустақиман ба ҳамёни ӯ меравад. DeHub ҳаққи хурди платформаро нигоҳ медорад.",
     "creatorEarnsDirect": "Муштариён дар нишонаҳои DeHub пардохт мекунанд. Заминҳои саҳми шумо дар ҳамёни шумо лаҳзае, ки онҳо обуна мешаванд, камтар ҳаққи платформа барои дараҷаи нишони шумо."
+  },
+  "liveOverlay": {
+    "someone": "Касе",
+    "newFollower": "Пайравони нав: {{name}}",
+    "newSubscriber": "Муштарии нав: {{name}}",
+    "subscribedTo": "{{name}}subscribe to {{plan}}",
+    "shared": "{{name}}info: whatsthis",
+    "joined": "{{name}} info: whatsthis",
+    "goalReached": "Nakatanggap ang Layunin!",
+    "followersUnit": "пайравони",
+    "topSupporters": "Пуштибони боло"
   },
   "live": {
     "chatJoined": "ҳамроҳ шуд",

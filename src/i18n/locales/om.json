@@ -297,8 +297,8 @@
     "compactMode": "Haala Walitti Qabamaa",
     "compactModeDesc": "Qabiyyee dabalataaf gargar hir'isi",
     "autoPlay": "Ofiin Taphadhu",
-    "autoplayPausePrompt": "Qindaa'ina ofiin taphachiisuu",
     "autoPlayDesc": "Viidiyoowwan fiidii keessaa ofiin taphadhu",
+    "autoplayPausePrompt": "Qindaa'ina ofiin taphachiisuu",
     "autoPlayMuted": "Taphachiisa ofumaa sagalee malee jalqabi",
     "autoPlayMutedDesc": "Viidiyoon ofumaan taphatan yeroo hunda sagalee malee jalqabu",
     "showAnimations": "Sochii Agarsiisi",
@@ -4734,6 +4734,17 @@
     "paidToCreatorWallet": "Kallattiin gara boorsaa uumaa deema",
     "creatorPaidDirectNote": "Share uumaa yeroo subscribe gootan kallattiin gara boorsaa isaaniitti deema. DeHub kaffaltii waltajjii xiqqaa qaba.",
     "creatorEarnsDirect": "Maamiltoonni mallattoo DeHub tiin kaffalu. Aksiyooniin keessan yeroo isaan subscribe godhanitti boorsaa keessan keessa bu&#39;a, kaffaltii waltajjii sadarkaa baajii keessanii hir&#39;isuun."
+  },
+  "liveOverlay": {
+    "someone": "namni tokko",
+    "newFollower": "Hordofaa haaraa: {{name}}",
+    "newSubscriber": "Maamiltoonni haaraan: {{name}}",
+    "subscribedTo": "{{name}} {{plan}} irratti subscribe godhaniiru.",
+    "shared": "{{name}} jechuun tamsaasa kana qoodeera",
+    "joined": "{{name}} itti makame",
+    "goalReached": "Galma gahe!",
+    "followersUnit": "hordoftoota",
+    "topSupporters": "Deeggartoota olaanoo"
   },
   "live": {
     "chatJoined": "makaate",

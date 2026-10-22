@@ -297,8 +297,8 @@
     "compactMode": "حالت فشرده",
     "compactModeDesc": "کاهش فاصله‌گذاری برای محتوای بیشتر",
     "autoPlay": "پخش خودکار ویدیوها",
-    "autoplayPausePrompt": "تنظیم پخش خودکار",
     "autoPlayDesc": "پخش خودکار ویدیوها در فید",
+    "autoplayPausePrompt": "تنظیم پخش خودکار",
     "autoPlayMuted": "شروع پخش خودکار بدون صدا",
     "autoPlayMutedDesc": "ویدیوهایی که خودکار پخش می‌شوند همیشه بدون صدا شروع می‌شوند",
     "showAnimations": "نمایش انیمیشن‌ها",
@@ -4788,6 +4788,17 @@
     "paidToCreatorWallet": "مستقیماً به کیف پول خالق می‌رود",
     "creatorPaidDirectNote": "سهم سازنده به محض عضویت شما مستقیماً به کیف پولش واریز می‌شود. DeHub کارمزد کمی از پلتفرم را برای خود نگه می‌دارد.",
     "creatorEarnsDirect": "مشترکین با توکن‌های DeHub پرداخت می‌کنند. سهم شما به محض اشتراک، منهای هزینه پلتفرم برای سطح نشان شما، در کیف پولتان قرار می‌گیرد."
+  },
+  "liveOverlay": {
+    "someone": "کسی",
+    "newFollower": "فالوور جدید: {{name}}",
+    "newSubscriber": "مشترک جدید: {{name}}",
+    "subscribedTo": "{{name}} مشترک {{plan}} شد",
+    "shared": "{{name}} پخش زنده را به اشتراک گذاشت",
+    "joined": "{{name}} عضو شد",
+    "goalReached": "به هدف رسید!",
+    "followersUnit": "پیروان",
+    "topSupporters": "حامیان برتر"
   },
   "live": {
     "chatJoined": "پیوست",

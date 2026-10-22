@@ -296,8 +296,8 @@
     "compactMode": "فشرده حالت",
     "compactModeDesc": "د ډیرې منځپانګې لپاره فاصله کمه کړئ",
     "autoPlay": "آتومات ویډیو پلی",
-    "autoplayPausePrompt": "د اتومات پلې تنظیم",
     "autoPlayDesc": "په فیډ کې ویډیوګانې آتومات پلی کړئ",
+    "autoplayPausePrompt": "د اتومات پلې تنظیم",
     "autoPlayMuted": "اتومات غږول بې غږه پيل کړئ",
     "autoPlayMutedDesc": "هغه ویډیوګانې چې پخپله غږېږي تل بې غږه پيلېږي",
     "showAnimations": "انیمیشنونه ښکاره کړئ",
@@ -4638,6 +4638,12 @@
     "paidToCreatorWallet": "د خالق په لار روان دی د خالق په لار روان دی",
     "creatorPaidDirectNote": "د خالق برخه مستقیم د دوی جیب ته ځي کله چې تاسو ګډون کوئ. DeHub د کوچني پلیټ فارم فیس ساتي.",
     "creatorEarnsDirect": "پیرودونکي په DeHub توکیو کې پیسې ورکوي. ستاسو د ونډې ځمکه په هغه شیبه کې چې دوی ګډون کوي، ستاسو د بیج ټایر لپاره د پلیټ فارم فیس کموي."
+  },
+  "liveOverlay": {
+    "someone": "څوک په",
+    "goalReached": "موخې ته د رسېدو لار!",
+    "followersUnit": "پيروان په په",
+    "topSupporters": "تر ټولو لوړ ملاتړ کونکي"
   },
   "live": {
     "chatJoined": "ورګډ شو",

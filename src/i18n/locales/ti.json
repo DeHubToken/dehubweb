@@ -297,8 +297,8 @@
     "compactMode": "ጽፉቕ ሞድ",
     "compactModeDesc": "ንዝያዳ ትሕዝቶ ሓፍታ ጸብብ",
     "autoPlay": "ቪድዮ ባዕሉ ጀምር",
-    "autoplayPausePrompt": "ናይ ባዕሉ ምጽዋት ቅጥዒ",
     "autoPlayDesc": "ኣብ ፊድ ቪድዮ ብቐጥታ ጀምር",
+    "autoplayPausePrompt": "ናይ ባዕሉ ምጽዋት ቅጥዒ",
     "autoPlayMuted": "ባዕሉ ዝጻወት ድምጺ ብዘይብሉ ጀምር",
     "autoPlayMutedDesc": "ባዕሎም ዝጻወቱ ቪድዮታት ኩሉ ግዜ ድምጺ ብዘይብሉ ይጅምሩ",
     "showAnimations": "ኣኒሜሽን ኣርኢ",
@@ -4663,6 +4663,15 @@
     "paidToCreatorWallet": "ብቐጥታ ናብ ናይ ፈጣሪ ቦርሳ ይኸይድ",
     "creatorPaidDirectNote": "እቲ ናይ ፈጣሪ ክፋል ፡ ኣብ እትመዝገቡሉ እዋን ፡ ብቐጥታ ናብ ቦርሳኦም ይኸይድ ። DeHub ንእሽቶ ናይ መድረኽ ክፍሊት ይሕዝ ።",
     "creatorEarnsDirect": "እቶም ተመዝጋቢታት ኣብ DeHub ምልክታት ይኽፈሉ እዮም ። እቲ ናይ ባጅ ደረጃኻ ናይ መድረኽ ክፍሊት ዝሕተተሉ እዋን ፡ ኣብ ቦርሳኻ ዘሎ መሬትካ ።"
+  },
+  "liveOverlay": {
+    "someone": "ሓደ ሰብ",
+    "newFollower": "ሓድሽ ተኸታሊ ፦ {{name}}",
+    "newSubscriber": "ሓድሽ ኣባል ፦ {{name}}",
+    "joined": "{{name}} ተጸምቢሩ",
+    "goalReached": "ሸቶታት በጺሑ!",
+    "followersUnit": "ተኸታተልቲ",
+    "topSupporters": "ላዕለዎት ደገፍቲ"
   },
   "live": {
     "chatJoined": "ተጸንበረ",

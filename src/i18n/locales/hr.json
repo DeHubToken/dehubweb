@@ -297,8 +297,8 @@
     "compactMode": "Kompaktni način",
     "compactModeDesc": "Smanjite razmak za više sadržaja",
     "autoPlay": "Automatsko pokretanje videa",
-    "autoplayPausePrompt": "Postavka automatske reprodukcije",
     "autoPlayDesc": "Automatski pokreni videozapise u feedu",
+    "autoplayPausePrompt": "Postavka automatske reprodukcije",
     "autoPlayMuted": "Pokreni automatsku reprodukciju bez zvuka",
     "autoPlayMutedDesc": "Videozapisi koji se sami pokreću uvijek počinju bez zvuka",
     "showAnimations": "Prikaži animacije",
@@ -4716,6 +4716,17 @@
     "paidToCreatorWallet": "Ide izravno u kreatorov novčanik",
     "creatorPaidDirectNote": "Kreatorov udio ide izravno u njegov novčanik čim se pretplatiš. DeHub zadržava malu naknadu za platformu.",
     "creatorEarnsDirect": "Pretplatnici plaćaju u DeHub žetonima. Tvoja dionica završava u novčaniku čim se pretplati, umanjena za naknadu za platformu za tvoju razinu značke."
+  },
+  "liveOverlay": {
+    "someone": "Netko",
+    "newFollower": "Novi pratitelj: {{name}}",
+    "newSubscriber": "Novi pretplatnik: {{name}}",
+    "subscribedTo": "{{name}} je pretplaćen/a na {{plan}}",
+    "shared": "{{name}} dijeli stream",
+    "joined": "{{name}} se pridružio/la",
+    "goalReached": "Cilj je postignut!",
+    "followersUnit": "pratitelji",
+    "topSupporters": "Najpopularniji podržavatelji"
   },
   "live": {
     "chatJoined": "se pridružio/la",
