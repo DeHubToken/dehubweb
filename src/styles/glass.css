@@ -158,6 +158,18 @@ html[data-theme='glass'] [data-creator-page] :is([data-clear-top-bar], [data-cre
 }
 html[data-theme='glass'] [data-creator-banner] button { color: #efffff; }
 html[data-theme='glass'] [data-creator-create] { box-shadow: var(--glass-edge-flat); }
+html[data-theme='glass'] .docs-root { --muted-foreground: 185 32% 78%; }
+html[data-theme='glass'] .docs-root h1 .text-transparent {
+  background-image: linear-gradient(135deg, #efffff, #a6f5f2) !important;
+}
+html[data-theme='glass'] .docs-root :is(
+  [data-theme-button]:not([data-button-variant='ghost']):not([data-button-variant='destructive']),
+  [data-theme-button][data-button-variant='ghost'][class*='bg-muted'],
+  button.bg-muted
+) {
+  background: var(--glass-highlight), var(--theme-control-fill) !important;
+  color: #efffff !important; border-color: transparent !important; box-shadow: var(--glass-edge-flat) !important;
+}
 
 [data-glass-background] {
   position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
