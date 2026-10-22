@@ -19,7 +19,7 @@ export function RichLinkCard({ preview, onRemove }: { preview: RichPreview; onRe
     return number(item.value);
   };
   return (
-    <div className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5" data-no-navigate>
+    <div data-glass-embed className="relative overflow-hidden rounded-xl border border-white/10 bg-white/5" data-no-navigate>
       <a href={preview.url} target="_blank" rel="noopener noreferrer" className="block p-3 text-white hover:bg-white/5" onClick={e => e.stopPropagation()}>
         <div className="flex items-center gap-2 text-xs text-white/65">
           <span className="font-semibold">{preview.siteName}</span>

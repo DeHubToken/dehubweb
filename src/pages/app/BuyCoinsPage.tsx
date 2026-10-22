@@ -46,6 +46,7 @@ import { format } from 'date-fns';
 import { invalidateSelfBadgeBalance } from '@/hooks/use-self-badge-balance';
 import { NearIntentBuy } from '@/components/app/NearIntentBuy';
 import { isBuyRoute } from '@/lib/buy-route';
+import { DHB_SALES_PAUSED } from '@/lib/dhb-sales';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 
 const PRESET_AMOUNTS = [0.5, 10, 25, 50, 100, 500];
@@ -373,6 +374,7 @@ export default function BuyCoinsPage() {
   };
 
   const handlePurchase = () => {
+    if (DHB_SALES_PAUSED) return;
     if (!walletAddress) {
       toast.error(t('buyCoins.walletNotConnected'));
       return;
@@ -474,7 +476,7 @@ export default function BuyCoinsPage() {
               {t('buyCoins.minDhbPurchase')}
             </p>
           )}
-          {paymentMethod === 'card' &&
+          {!DHB_SALES_PAUSED && paymentMethod === 'card' &&
             availableSupply !== undefined &&
             availableSupply !== Infinity &&
             Math.floor(estimatedTokens) > availableSupply && (
@@ -542,14 +544,14 @@ export default function BuyCoinsPage() {
           )}
 
           {/* Available Supply */}
-          {availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0 && (
+          {(DHB_SALES_PAUSED || (availableSupply !== undefined && availableSupply !== Infinity && availableSupply > 0)) && (
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-zinc-400">{_copy("copy.4010422b82f8", { defaultValue: "Available to buy now" })}</span>
                 <div className="flex items-center gap-2">
                   <img src={dehubCoin} alt={t('buyCoins.tokensUnit')} className="w-5 h-5" />
                   <span className="text-white font-semibold">
-                    {Math.floor(availableSupply).toLocaleString()}
+                    {DHB_SALES_PAUSED ? '0' : Math.floor(availableSupply!).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -597,13 +599,14 @@ export default function BuyCoinsPage() {
 
         </div>
 
-        {paymentMethod === 'crypto' && <NearIntentBuy tokensToReceive={estimatedTokens} />}
+        {paymentMethod === 'crypto' && !DHB_SALES_PAUSED && <NearIntentBuy tokensToReceive={estimatedTokens} />}
 
         {/* Buy Button */}
-        {paymentMethod === 'card' && <div className="relative group">
+        {(paymentMethod === 'card' || DHB_SALES_PAUSED) && <div className="relative group">
           <Button
             onClick={handlePurchase}
             disabled={
+              DHB_SALES_PAUSED ||
               effectiveAmount < MIN_DHB_PURCHASE_USD ||
               isPending ||
               (paymentMethod === 'card' && estimatedTokens <= 0) ||
@@ -620,7 +623,7 @@ export default function BuyCoinsPage() {
             ) : (
               <Wallet className="w-5 h-5 mr-2" />
             )}
-            {isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: displaySymbol })}
+            {DHB_SALES_PAUSED ? t('stores.soldOutButton') : isPending ? t('buyCoins.processing') : t('buyCoins.buy', { symbol: displaySymbol })}
             <ShimmerHoverEffect />
           </Button>
         </div>}
