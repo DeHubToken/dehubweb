@@ -74,7 +74,7 @@ export function StageRecordingMiniPlayer() {
       role="region"
       aria-label={t('stages.recordingPlayback')}
     >
-      <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl p-3">
+      <div data-glass-playback-surface className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl shadow-2xl p-3">
         {/* Title and close share a line: the X wants the corner it is always
             looked for in, and the title has nowhere else to go. */}
         <div className="flex items-start gap-2">
