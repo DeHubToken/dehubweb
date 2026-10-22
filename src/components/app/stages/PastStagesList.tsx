@@ -240,49 +240,65 @@ export function PastStagesList({
             buildAvatarCdnFallbackUrl(space.host_wallet_address || '');
           const duration = stageDuration(space);
 
+          const stagePath = space.short_id != null ? `/stages/${space.short_id}` : `/stage/${space.id}`;
+          const openStage = () => navigate(stagePath);
+          const iconBtn = 'w-8 h-8 rounded-lg flex items-center justify-center transition-all';
+
           return (
             <div
               key={space.id}
               data-page-bento
-              className="bg-zinc-900 rounded-2xl p-3 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3"
+              data-recorded-stage
+              // The whole card opens the stage's own page. Anything that does
+              // its own thing on press (play, the bar, host, speed, comments)
+              // is left alone, so a scrub never turns into a page change.
+              onClick={(e) => {
+                const el = e.target as HTMLElement;
+                if (el.closest('button, a, input, textarea, svg, [role="button"], [data-no-navigate]')) return;
+                openStage();
+              }}
+              className="group/rec bg-zinc-900 rounded-2xl p-3 flex flex-col gap-3 cursor-pointer transition-colors hover:bg-zinc-800/70"
             >
-              {/* The host's artwork, through the shared component so it is the
-                  same whole-image 16:9 the live and upcoming cards show. This
-                  was the one stage surface with no cover on it, which left the
-                  Recorded tab — the part people actually browse — as an
-                  anonymous stack of rows. Full width on a phone, a fixed
-                  thumbnail once the row goes horizontal. */}
-              {space.cover_image_url && (
-                <StageCoverArt
-                  src={space.cover_image_url}
-                  title={space.title}
-                  className="w-full sm:w-40 shrink-0 rounded-xl overflow-hidden"
-                />
-              )}
+              <div className="flex flex-col sm:flex-row gap-3 min-w-0">
+                {/* The host's artwork, through the shared component so it is
+                    the same whole image the live and upcoming cards show. Full
+                    width on a phone, a fixed thumbnail beside the details on
+                    wider screens. It sits beside the text, never beside the
+                    bar: the bar used to share its row with the artwork and got
+                    squeezed to a sliver nobody could drag. */}
+                {space.cover_image_url && (
+                  <StageCoverArt
+                    src={space.cover_image_url}
+                    title={space.title}
+                    className="w-full sm:w-44 shrink-0 rounded-xl overflow-hidden self-start"
+                  />
+                )}
 
-              <div className="flex items-center gap-3 shrink-0 min-w-0 sm:max-w-[380px]">
-                <button
-                  type="button"
-                  onClick={() => togglePlay(space)}
-                  className={cn(
-                    'shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all',
-                    isLoaded
-                      ? 'bg-zinc-700/60 text-white'
-                      : space.recording_url
-                        ? 'bg-zinc-800/60 hover:bg-zinc-700/60 text-white'
-                        : 'bg-zinc-800/60 text-zinc-600',
-                  )}
-                  aria-label={isPlaying ? t('stages.pause') : t('stages.playRecording')}
-                >
-                  {isPlaying ? (
-                    <Pause className="w-3.5 h-3.5" fill="currentColor" />
-                  ) : (
-                    <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
-                  )}
-                </button>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-white text-sm truncate">{space.title}</h4>
-                  <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500 whitespace-nowrap">
+                <div className="flex-1 min-w-0 flex flex-col gap-1.5">
+                  <div className="flex items-start gap-2">
+                    <a
+                      href={stagePath}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        openStage();
+                      }}
+                      className="flex-1 min-w-0 font-semibold text-white text-[15px] leading-snug line-clamp-2 hover:underline underline-offset-2"
+                    >
+                      {space.title}
+                    </a>
+                    {isOwnStage && (
+                      <button
+                        onClick={() => handleDelete(space)}
+                        className={cn(iconBtn, '-mt-1 text-zinc-600 hover:text-red-400 hover:bg-red-500/10')}
+                        title={t('stages.deleteStage')}
+                        aria-label={t('stages.deleteStage')}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-500">
                     <ProfileHoverCard
                       creatorId={space.host_wallet_address || undefined}
                       creatorUsername={space.host_username || undefined}
@@ -293,12 +309,12 @@ export function PastStagesList({
                         type="button"
                         onClick={() => openHostProfile(space)}
                         onMouseDown={(e) => e.preventDefault()}
-                        className="flex items-center gap-1 min-w-0 hover:text-white transition-colors cursor-pointer"
+                        className="flex items-center gap-1.5 min-w-0 hover:text-white transition-colors cursor-pointer"
                       >
                         {avatar ? (
-                          <img src={avatar} alt="" className="w-4 h-4 rounded-md object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                          <img src={avatar} alt="" className="w-5 h-5 rounded-md object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                         ) : (
-                          <span className="w-4 h-4 rounded-md bg-zinc-700 flex items-center justify-center text-[8px] text-white font-medium">
+                          <span className="w-5 h-5 rounded-md bg-zinc-700 flex items-center justify-center text-[9px] text-white font-medium">
                             {(space.host_username || 'A').charAt(0).toUpperCase()}
                           </span>
                         )}
@@ -319,53 +335,109 @@ export function PastStagesList({
                       </span>
                     )}
                   </div>
+
+                  {/* Comments and transcript sit under the details on wide
+                      screens, so the player row below is all bar. */}
+                  <div className="hidden sm:flex items-center gap-1 mt-auto pt-1">
+                    <button
+                      onClick={() => setCommentsFor((id) => (id === space.id ? null : space.id))}
+                      aria-expanded={commentsFor === space.id}
+                      className={cn(
+                        'h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-xs transition-all',
+                        commentsFor === space.id
+                          ? 'text-white bg-zinc-800/60'
+                          : 'text-zinc-500 hover:text-white hover:bg-zinc-800/60',
+                      )}
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                      {t('stages.comments')}
+                    </button>
+                    {space.recording_url && (
+                      <button
+                        onClick={() => setTranscriptStage(space)}
+                        className="h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-xs text-zinc-500 hover:text-white hover:bg-zinc-800/60 transition-all"
+                      >
+                        <FileText className="w-4 h-4" />
+                        {t('stages.viewTranscript')}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Waveform — seek starts playback or scrubs */}
+              {/* The player: its own full-width line on every screen. */}
               <div
+                data-no-navigate
+                // A dark well on dark themes so the bars read even over a
+                // textured card (Jungle's wood); a faint ink wash on paper.
                 className={cn(
-                  'flex items-center gap-2 flex-1 min-w-0 h-10 transition-all duration-300',
-                  isLoaded ? 'opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]' : 'opacity-40',
+                  'flex items-center gap-2 rounded-xl border p-1.5 pr-2',
+                  isPaper ? 'bg-black/[0.03] border-black/[0.06]' : 'bg-black/35 border-white/[0.06]',
                 )}
               >
-                <StaticWaveform
-                  seed={space.id}
-                  className="w-full min-w-0 h-full flex-1"
-                  animated={isPlaying}
-                  volumeLevel={isPlaying ? playbackVolume : 0}
-                  color={
-                    isPaper
-                      ? isLoaded
-                        ? 'rgba(0,0,0,0.9)'
-                        : 'rgba(0,0,0,0.5)'
-                      : isLoaded
-                        ? 'rgba(255,255,255,0.95)'
-                        : undefined
-                  }
-                  progress={isLoaded ? playbackProgress : undefined}
-                  onSeek={space.recording_url ? (pos) => seek(space, pos) : undefined}
-                />
-                {isLoaded && playbackTimeLeft && (
-                  <span className="text-[10px] text-zinc-500 font-mono shrink-0 w-10 text-right">
-                    {playbackTimeLeft}
-                  </span>
-                )}
-              </div>
+                <button
+                  type="button"
+                  onClick={() => togglePlay(space)}
+                  disabled={!space.recording_url}
+                  className={cn(
+                    'shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-all',
+                    isLoaded
+                      ? 'bg-zinc-700/60 text-white'
+                      : space.recording_url
+                        ? 'bg-white text-black hover:bg-white/90'
+                        : 'bg-zinc-800/60 text-zinc-600',
+                  )}
+                  aria-label={isPlaying ? t('stages.pause') : t('stages.playRecording')}
+                >
+                  {isPlaying ? (
+                    <Pause className="w-3.5 h-3.5" fill="currentColor" />
+                  ) : (
+                    <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                  )}
+                </button>
 
-              <div className="flex items-center gap-1 shrink-0 self-end sm:self-auto">
+                {/* Seek starts playback or scrubs */}
+                <div
+                  className={cn(
+                    'flex items-center gap-2 flex-1 min-w-[96px] h-10 transition-all duration-300',
+                    isLoaded ? 'opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]' : 'opacity-90',
+                  )}
+                >
+                  <StaticWaveform
+                    seed={space.id}
+                    className="w-full min-w-0 h-full flex-1"
+                    animated={isPlaying}
+                    volumeLevel={isPlaying ? playbackVolume : 0}
+                    color={
+                      isPaper
+                        ? isLoaded
+                          ? 'rgba(0,0,0,0.9)'
+                          : 'rgba(0,0,0,0.5)'
+                        : isLoaded
+                          ? 'rgba(255,255,255,0.95)'
+                          : 'rgba(255,255,255,0.7)'
+                    }
+                    progress={isLoaded ? playbackProgress : undefined}
+                    onSeek={space.recording_url ? (pos) => seek(space, pos) : undefined}
+                  />
+                  {isLoaded && playbackTimeLeft && (
+                    <span className="text-[10px] text-zinc-500 font-mono shrink-0 w-10 text-right">
+                      {playbackTimeLeft}
+                    </span>
+                  )}
+                </div>
+
                 {/* Playback speed — persisted, shared with every other surface
                     that plays a recording. */}
-                {space.recording_url && <StageRateButton className="mr-1" />}
-                {/* The corner player, on request. It used to arrive by itself
-                    the moment anything played; popping out is what you press
-                    when you are about to leave this page and keep listening. */}
+                {space.recording_url && <StageRateButton />}
+                {/* The corner player, on request: what you press when you are
+                    about to leave this page and keep listening. */}
                 {space.recording_url && (
                   <button
                     onClick={() => (isPoppedOut ? closeStagePopout() : popOutStageRecording(space))}
                     aria-pressed={isPoppedOut}
                     className={cn(
-                      'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
+                      iconBtn,
                       isPoppedOut
                         ? 'text-white bg-zinc-800/60'
                         : 'text-zinc-500 hover:text-white hover:bg-zinc-800/60',
@@ -375,46 +447,41 @@ export function PastStagesList({
                     <PictureInPicture2 className="w-4 h-4" />
                   </button>
                 )}
+              </div>
+
+              {/* Phones: comments and transcript under the player. */}
+              <div className="flex sm:hidden items-center gap-1 -mt-1">
                 <button
                   onClick={() => setCommentsFor((id) => (id === space.id ? null : space.id))}
                   aria-expanded={commentsFor === space.id}
                   className={cn(
-                    'w-8 h-8 rounded-lg flex items-center justify-center transition-all',
+                    'h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-xs transition-all',
                     commentsFor === space.id
                       ? 'text-white bg-zinc-800/60'
                       : 'text-zinc-500 hover:text-white hover:bg-zinc-800/60',
                   )}
-                  title={t('stages.comments')}
                 >
                   <MessageSquare className="w-4 h-4" />
+                  {t('stages.comments')}
                 </button>
                 {space.recording_url && (
                   <button
                     onClick={() => setTranscriptStage(space)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-500 hover:text-white hover:bg-zinc-800/60 transition-all"
-                    title={t('stages.viewTranscript')}
+                    className="h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-xs text-zinc-500 hover:text-white hover:bg-zinc-800/60 transition-all"
                   >
                     <FileText className="w-4 h-4" />
-                  </button>
-                )}
-                {isOwnStage && (
-                  <button
-                    onClick={() => handleDelete(space)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-600 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                    title={t('stages.deleteStage')}
-                  >
-                    <Trash2 className="w-4 h-4" />
+                    {t('stages.viewTranscript')}
                   </button>
                 )}
               </div>
 
-              {/* The stage's chat, carried on past the stage. Anything said
-                  while it was live is already in here, so opening this reads
-                  as the room's conversation rather than an empty comment box
-                  bolted onto a recording. Mounted only while open — each one
-                  holds a realtime subscription, and this list can be long. */}
+              {/* The stage's chat, carried on past the stage. Mounted only
+                  while open — each one holds a realtime subscription, and this
+                  list can be long. */}
               {commentsFor === space.id && (
-                <StageChat space={space} className="basis-full w-full" listClassName="h-52" />
+                <div data-no-navigate className="cursor-auto">
+                  <StageChat space={space} className="w-full" listClassName="h-52" />
+                </div>
               )}
             </div>
           );
