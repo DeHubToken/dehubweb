@@ -1,0 +1,48 @@
+name: Blog publication
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/data/posts/**'
+      - 'src/data/newPosts.ts'
+      - 'scripts/public-page-translations/**'
+      - 'scripts/build-public-locales.mjs'
+      - '.github/workflows/blog-publication.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: blog-publication-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build blog and public locales
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '9'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - name: Generate versioned locale assets
+        run: |
+          node scripts/build-seo-i18n.mjs
+          version=$(node -p "require('./src/i18n/public-locales.json').version")
+          tar -czf /tmp/blog-locale-assets.tar.gz public/seo-i18n.json public/sitemap-static.xml src/i18n/public-locales.json "public/locale-pages/$version"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blog-locale-assets
+          path: /tmp/blog-locale-assets.tar.gz
+      - run: pnpm build
