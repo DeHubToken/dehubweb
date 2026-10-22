@@ -6172,6 +6172,7 @@
     "weeksShort": "{{count}} tuần"
   },
   "liveGift": {
+    "notEnoughToken": "Không đủ {{symbol}} cho món quà này",
     "pickTier": "Chọn một màn ăn mừng",
     "plays": "Phát {{tier}} trên luồng trực tiếp",
     "you": "Bạn",

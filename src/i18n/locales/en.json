@@ -7159,6 +7159,7 @@
     "weeksShort": "{{count}} wk"
   },
   "liveGift": {
+    "notEnoughToken": "Not enough {{symbol}} for this gift",
     "pickTier": "Pick a celebration",
     "plays": "Plays {{tier}} on the stream",
     "you": "You",

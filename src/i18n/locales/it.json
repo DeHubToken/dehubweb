@@ -6158,6 +6158,7 @@
     "weeksShort": "{{count}} sett."
   },
   "liveGift": {
+    "notEnoughToken": "{{symbol}} insufficienti per questo regalo",
     "pickTier": "Scegli una celebrazione",
     "plays": "Riproduce {{tier}} in streaming",
     "you": "Tu",

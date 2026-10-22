@@ -6204,6 +6204,7 @@
     "weeksShort": "{{count}} Woche"
   },
   "liveGift": {
+    "notEnoughToken": "Nicht genug {{symbol}} für dieses Geschenk",
     "pickTier": "Wähle eine Feier",
     "plays": "Spielt {{tier}} im Stream",
     "you": "Du",

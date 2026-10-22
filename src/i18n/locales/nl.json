@@ -7390,6 +7390,7 @@
     "weeksShort": "{{count}} wk"
   },
   "liveGift": {
+    "notEnoughToken": "Niet genoeg {{symbol}} voor dit cadeau",
     "pickTier": "Kies een viering",
     "plays": "Speelt {{tier}} op de stream",
     "you": "Jij",
