@@ -296,8 +296,8 @@
     "compactMode": "संक्षिप्तविधा",
     "compactModeDesc": "अधिकविषयार्थं अन्तरालं न्यूनीकुर्वन्तु",
     "autoPlay": "स्वतःचालनं चलच्चित्राणि",
-    "autoplayPausePrompt": "स्वतःचालनस्य व्यवस्था",
     "autoPlayDesc": "प्रवाहे चलच्चित्राणि स्वतः चालयतु",
+    "autoplayPausePrompt": "स्वतःचालनस्य व्यवस्था",
     "autoPlayMuted": "स्वयंचालनं निःशब्दं आरभताम्",
     "autoPlayMutedDesc": "स्वयं चलन्ति चलचित्राणि सर्वदा निःशब्दानि आरभन्ते",
     "showAnimations": "सजीवताः दर्शयतु",
@@ -4658,6 +4658,14 @@
     "youPayNow": "त्वं वेतनं",
     "paidToCreatorWallet": "जाऊं तो सीधे साहिब पे जाऊं",
     "creatorPaidDirectNote": "मते कारकलक्षणादिकं शब्दार्थरत्नेऽस्मामिर्दर्शितं यथा देवदत्तः क्षुद्रं क्षुद्रं रक्षति ।"
+  },
+  "liveOverlay": {
+    "someone": "कश्चित्",
+    "newSubscriber": "शुभ मुहूर्त: {{name}} 0",
+    "subscribedTo": "{{name}} सदस्यत्वं कृतवान् {{plan}}",
+    "goalReached": "ध्येयः प्राप्तः!",
+    "followersUnit": "अनुयायी",
+    "topSupporters": "उत्तमानि समर्थकानि"
   },
   "live": {
     "chatJoined": "सम्मिलितः",

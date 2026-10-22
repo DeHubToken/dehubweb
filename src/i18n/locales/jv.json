@@ -297,8 +297,8 @@
     "compactMode": "Mode Kompak",
     "compactModeDesc": "Cilikake jarak kanggo ndeleng luwih akeh konten",
     "autoPlay": "Putar Otomatis Video",
-    "autoplayPausePrompt": "Setelan putar otomatis",
     "autoPlayDesc": "Video ing feed diputer otomatis",
+    "autoplayPausePrompt": "Setelan putar otomatis",
     "autoPlayMuted": "Wiwiti puter otomatis tanpa swara",
     "autoPlayMutedDesc": "Video sing muter dhewe tansah diwiwiti kanthi swara mati",
     "showAnimations": "Tampilake Animasi",
@@ -4585,6 +4585,17 @@
     "paidToCreatorWallet": "Mlebu langsung menyang dompet pangripta",
     "creatorPaidDirectNote": "Bagean kreator langsung mlebu menyang dompete nalika sampeyan langganan. DeHub njupuk biaya platform cilik.",
     "creatorEarnsDirect": "Pelanggan mbayar nganggo token DeHub. Bagianmu mlebu ing dompetmu nalika dheweke langganan, dikurangi biaya platform kanggo tingkatan lencana."
+  },
+  "liveOverlay": {
+    "someone": "Sapa wae",
+    "newFollower": "Pengikut anyar: {{name}}",
+    "newSubscriber": "Langganan anyar: {{name}}",
+    "subscribedTo": "{{name}} wis langganan menyang {{plan}}",
+    "shared": "{{name}} nuduhake streaming",
+    "joined": "{{name}} melu",
+    "goalReached": "Tujuan wis kasil!",
+    "followersUnit": "pengikut",
+    "topSupporters": "Pangrojong paling dhuwur"
   },
   "live": {
     "chatJoined": "gabung",

@@ -290,8 +290,8 @@
     "compactMode": "Compact Mode",
     "compactModeDesc": "Reduce space make more content fit show",
     "autoPlay": "Make Video Dey Play By Imsef",
-    "autoplayPausePrompt": "Auto play setting",
     "autoPlayDesc": "Automatically play videos for feed",
+    "autoplayPausePrompt": "Auto play setting",
     "autoPlayMuted": "Make autoplay start without sound",
     "autoPlayMutedDesc": "Video wey dey play by imsef go always start with sound off",
     "showAnimations": "Show Animation Dem",
@@ -4111,6 +4111,11 @@
     "paidToCreatorWallet": "E go straight enter di creator wallet",
     "creatorPaidDirectNote": "Di creator share go enter dia wallet di moment you subscribe. DeHub dey keep small platform fee.",
     "creatorEarnsDirect": "Subscribers dey pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
+  },
+  "liveOverlay": {
+    "joined": "{{name}} joined",
+    "goalReached": "Goal reached!",
+    "followersUnit": "followers"
   },
   "live": {
     "chatJoined": "don join",

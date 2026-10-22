@@ -4777,6 +4777,17 @@
     "creatorPaidDirectNote": "Udział twórcy trafia bezpośrednio do jego portfela w momencie subskrypcji. DeHub zachowuje niewielką opłatę za platformę.",
     "creatorEarnsDirect": "Abonenci płacą w tokenach DeHub. Twój udział pojawi się w portfelu w momencie subskrypcji, pomniejszony o opłatę platformową za próg odznaki."
   },
+  "liveOverlay": {
+    "someone": "Ktoś",
+    "newFollower": "Nowy obserwujący: {{name}}",
+    "newSubscriber": "Nowy subskrybent: {{name}}",
+    "subscribedTo": "{{name}} subskrybuje {{plan}}",
+    "shared": "{{name}} udostępnił strumień",
+    "joined": "{{name}} dołączył",
+    "goalReached": "Osiągnięto cel!",
+    "followersUnit": "obserwujący",
+    "topSupporters": "Najlepsi kibice"
+  },
   "live": {
     "chatJoined": "dołączył(a)",
     "chatSentGift": "wysłał(a)",

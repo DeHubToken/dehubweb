@@ -297,8 +297,8 @@
     "compactMode": "কম্প্যাক্ট মোড",
     "compactModeDesc": "আরও বিষয়বস্তুর জন্য ব্যবধান কমান",
     "autoPlay": "স্বয়ংক্রিয় ভিডিও চালান",
-    "autoplayPausePrompt": "অটো প্লে সেটিং",
     "autoPlayDesc": "ফিডে স্বয়ংক্রিয়ভাবে ভিডিও চালান",
+    "autoplayPausePrompt": "অটো প্লে সেটিং",
     "autoPlayMuted": "অটোপ্লে মিউট করে শুরু করুন",
     "autoPlayMutedDesc": "নিজে থেকে চলা ভিডিও সবসময় শব্দ বন্ধ রেখে শুরু হবে",
     "showAnimations": "অ্যানিমেশন দেখান",
@@ -4772,6 +4772,17 @@
     "paidToCreatorWallet": "সরাসরি নির্মাতার ওয়ালেটে যায়",
     "creatorPaidDirectNote": "আপনি সাবস্ক্রাইব করার মুহূর্তে নির্মাতার শেয়ার সরাসরি তাদের ওয়ালেটে চলে যায় । DeHub একটি ছোট প্ল্যাটফর্ম ফি রাখে ।",
     "creatorEarnsDirect": "সাবস্ক্রাইবাররা DeHub টোকেনে পেমেন্ট করে । আপনার শেয়ারটি সাবস্ক্রাইব করার মুহূর্তে আপনার ওয়ালেটে ল্যান্ড করে, আপনার ব্যাজ স্তরের জন্য প্ল্যাটফর্ম ফি কম ।"
+  },
+  "liveOverlay": {
+    "someone": "কেউ",
+    "newFollower": "নতুন অনুসারী: {{name}}",
+    "newSubscriber": "নতুন গ্রাহক: {{name}}",
+    "subscribedTo": "{{name}} সাবস্ক্রাইব করুন {{plan}}",
+    "shared": "{{name}} স্ট্রিমটি শেয়ার করেছেন",
+    "joined": "{{name}} যোগ দিয়েছেন",
+    "goalReached": "লক্ষ্য অর্জিত হয়েছে!",
+    "followersUnit": "অনুগামীদের",
+    "topSupporters": "শীর্ষ সমর্থক"
   },
   "live": {
     "chatJoined": "যোগ দিয়েছেন",

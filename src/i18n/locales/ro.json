@@ -297,8 +297,8 @@
     "compactMode": "Mod compact",
     "compactModeDesc": "Reduce spațierea pentru mai mult conținut",
     "autoPlay": "Redare automată videoclipuri",
-    "autoplayPausePrompt": "Setare redare automată",
     "autoPlayDesc": "Redă automat videoclipurile din flux",
+    "autoplayPausePrompt": "Setare redare automată",
     "autoPlayMuted": "Pornește redarea automată fără sunet",
     "autoPlayMutedDesc": "Videoclipurile care pornesc singure încep mereu cu sunetul oprit",
     "showAnimations": "Afișează animații",
@@ -4774,6 +4774,17 @@
     "paidToCreatorWallet": "Merge direct la portofelul creatorului",
     "creatorPaidDirectNote": "Cota creatorului ajunge direct în portofel în momentul în care te abonezi. DeHub păstrează o mică taxă de platformă.",
     "creatorEarnsDirect": "Abonații plătesc în jetoane DeHub. Cota ta ajunge în portofel în momentul în care se abonează, mai puțin taxa de platformă pentru nivelul insignei."
+  },
+  "liveOverlay": {
+    "someone": "Cineva",
+    "newFollower": "Urmăritor nou: {{name}}",
+    "newSubscriber": "Abonat nou: {{name}}",
+    "subscribedTo": "{{name}} s-a abonat la {{plan}}",
+    "shared": "{{name}} a distribuit fluxul",
+    "joined": "{{name}} s-au alăturat",
+    "goalReached": "Obiectiv atins!",
+    "followersUnit": "urmăritori",
+    "topSupporters": "Susținători de top"
   },
   "live": {
     "chatJoined": "s-a alăturat",

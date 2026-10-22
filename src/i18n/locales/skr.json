@@ -293,8 +293,8 @@
     "compactMode": "مختصر موڈ",
     "compactModeDesc": "ودھ مواد کیتے فاصلہ کم کرو",
     "autoPlay": "ویڈیو خودکار چلاؤ",
-    "autoplayPausePrompt": "آٹو پلے سیٹنگ",
     "autoPlayDesc": "فیڈ وِچ ویڈیو خودکار چلن",
+    "autoplayPausePrompt": "آٹو پلے سیٹنگ",
     "autoPlayMuted": "آٹو پلے بغیر آواز دے شروع کرو",
     "autoPlayMutedDesc": "آپ چلݨ آلیاں ویڈیوز ہمیشہ بغیر آواز دے شروع تھیسن",
     "showAnimations": "اینیمیشن ݙکھاؤ",
@@ -4250,6 +4250,17 @@
     "paidToCreatorWallet": "سِیدھا خالق دے والٹ وچ ویندے",
     "creatorPaidDirectNote": "جڏهن توهان سبسڪرائب ڪندا آهيو ته ٺاهيندڙ جو حصو سڌو سندس والٽ ۾ ويندو آهي. ڊي هب هڪ ننڍي پليٽ فارم فيس رکي ٿو.",
     "creatorEarnsDirect": "سبسکرائبرز ڈی ہب ٹوکنز وچ ادائیگی کریندن۔ تہاڈی حصہ تہاڈے والٹ وچ اوہو ویلے پے ویندا اے جدو ں اوہ سبسکرائب کریندن، تہاڈے بیج ٹائر واسطے پلیٹ فارم فیس کٹ کے۔"
+  },
+  "liveOverlay": {
+    "someone": "کوئی",
+    "newFollower": "نواں فالوور: {{name}}",
+    "newSubscriber": "نواں سبسکرائبر: {{name}}",
+    "subscribedTo": "{{name}} نے {{plan}} کو سبسکرائب کیا",
+    "shared": "{{name}} نے سٹریم شیئر کی",
+    "joined": "{{name}} شامل ہوا",
+    "goalReached": "مقصد حاصل ہوا!",
+    "followersUnit": "فالوورز",
+    "topSupporters": "ٹاپ سپورٹرز"
   },
   "live": {
     "chatJoined": "شامل تھیا",
