@@ -1,8 +1,3 @@
-  // The locale holds a plain value where English now has a group of keys —
-  // an old string English has since split into a namespace (`chat` is "Чат"
-  // in bg, a dozen keys in en). Keep what the locale has; there is nothing to
-  // reorder inside a string, and walking into one threw for every such file.
-  if (!filled || typeof filled !== 'object' || Array.isArray(filled)) return filled;
 #!/usr/bin/env node
 /**
  * Fills the keys a locale is missing from en.json, using the deployed
