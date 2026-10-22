@@ -4814,9 +4814,21 @@
     "followersUnit": "izdoshlar",
     "topSupporters": "Eng yaxshi tarafdorlar",
     "tipped": "{{name}} sovg&#39;a yubordi",
-    "chatPreview": "Xatlar bu yerda koʻrinadi"
+    "chatPreview": "Xatlar bu yerda koʻrinadi",
+    "wheelLanded": "{{name}} aylantirildi: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Tezkor boshqaruv elementlari",
+      "intro": "Strim o&#39;rtasida. Har bir tugma ilovada va OBSda tomosha qilayotgan har bir kishi uchun uni orqaga qaytarmaguningizcha ushlab turiladi.",
+      "alertsPaused": "Bildirishnomalarni to&#39;xtatib turish",
+      "alertsPausedHint": "Ekranda sovg&#39;a, amal qilish yoki qoida bo&#39;yicha ogohlantirishlar yo&#39;q. Hisoblagichlar, gollar va chat oynasi ishlashda davom etadi.",
+      "soundsMuted": "Ogohlantirish tovushlarini o&#39;chirish",
+      "soundsMutedHint": "Sizning qoidalaringiz tovushlarni ijro etishni to&#39;xtatadi.",
+      "readAloudMuted": "Ovoz chiqarib o&#39;qishni to&#39;xtating",
+      "readAloudMutedHint": "Sovg&#39;a xabarlari va qoidalar satrlari endi o&#39;qib chiqilmaydi.",
+      "failed": "Bu tugma o&#39;zgarmadi. Qaytadan urinib ko&#39;ring."
+    },
     "title": "Jonli studiya",
     "subtitle": "Strimlaringiz uchun ogohlantirishlar va vidjetlar",
     "h1": "Jonli studiya — DeHub ijodkorlari uchun ogohlantirishlar, maqsadlar va overlaylar",
@@ -4907,7 +4919,8 @@
       "event_feed": "So&#39;nggi faollik",
       "chat_box": "Chat oynasi",
       "ticker": "Ticker",
-      "rule_alert": "Qoida ogohlantirishlari"
+      "rule_alert": "Qoida ogohlantirishlari",
+      "spin_wheel": "Aylanadigan g&#39;ildirak"
     },
     "hints": {
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
@@ -4925,7 +4938,8 @@
       "event_feed": "Eng so&#39;nggi sovg&#39;alar, izdoshlar, obunachilar va translyatsiyangizni baham ko&#39;rayotgan odamlar",
       "chat_box": "Ekranda eshittirishingizning chat xabarlarini ko&#39;rsatadi",
       "ticker": "Ekran bo&#39;ylab aylantiriladigan o&#39;zingizning matningiz qatori",
-      "rule_alert": "Sizning qoidangizning xabarlarini koʻrish joyi"
+      "rule_alert": "Sizning qoidangizning xabarlarini koʻrish joyi",
+      "spin_wheel": "Qoidalaringizdagi g&#39;ildiraklar qayerda aylanadi"
     },
     "fields": {
       "style": "Uslub",
@@ -4988,6 +5002,9 @@
       "addAction": "Amalni qoʻshish",
       "removeAction": "Amaldan olib tashlash",
       "placeholders": "Matningizda {name}, {amount} va {message} dan foydalaning. Xabarlardagi havolalar olib tashlandi.",
+      "wheelSegments": "G&#39;ildirak segmentlari, har bir qatorda bittadan",
+      "wheelHint": "2 dan 12 gacha. DeHub g&#39;ildirak qayerda to&#39;xtashini tanlaydi, shuning uchun hamma tomosha qilayotganlar bir xil natijani ko&#39;rishadi. Ogohlantirish, ovoz chiqarib o&#39;qish yoki chat harakatlarida {result} dan foydalaning.",
+      "wheelPlaceholder": "Qo&#39;shiq kuylang&#10; 10 ta push-up mashqini bajaring&#10; Keyingi o&#39;yinni tanlang",
       "alertText": "Ogohlantirish matni",
       "sound": "Ovoz",
       "sayText": "Ovoz chiqarib o&#39;qish uchun matn",
@@ -5015,7 +5032,8 @@
         "sound": "Ovozni ijro etish",
         "say": "Ovoz chiqarib o&#39;qing",
         "chat": "Chatda post qoldiring",
-        "webhook": "Veb-hukka yuborish"
+        "webhook": "Veb-hukka yuborish",
+        "wheel": "G&#39;ildirakni aylantiring"
       },
       "summary": {
         "tip": "{{amount}} DHB yoki undan ko&#39;p choychaqa"

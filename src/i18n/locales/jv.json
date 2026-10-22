@@ -4598,9 +4598,19 @@
     "followersUnit": "pengikut",
     "topSupporters": "Pangrojong paling dhuwur",
     "tipped": "{{name}} nganti hadiah",
-    "chatPreview": "Pesanan chat ditampilin gini"
+    "chatPreview": "Pesanan chat ditampilin gini",
+    "wheelLanded": "{{name}} ngeluk-ngeluk: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kontrol cepet",
+      "intro": "Kanggo ngisor-midstream. Tiwa tiwa ngandhok pike pisan kanggo semuanya ngandhok ngliwat di app lan di OBS, sampe kanggo ngelungguh kanggo ngembok.",
+      "alertsPausedHint": "Gak ada pemberian hadiah, notifikasi follow, atau peringatan aturan di layar. Angka-angka counter, tujuan, dan kotak obrolan tetap berjalan.",
+      "soundsMutedHint": "Aturan mu mandheg main swara.",
+      "readAloudMuted": "Gak usah baca ngelantur.",
+      "readAloudMutedHint": "Pesen hadiah lan baris aturan ora maneh diwaca.",
+      "failed": "Gwé switch ini gak nganti. Coba lanang."
+    },
     "title": "Live Studio",
     "subtitle": "Peringatan lan widget kanggo streamingmu",
     "h1": "Live Studio — peringatan streaming, tujuan lan overlay kanggo kreator DeHub",
@@ -4702,7 +4712,8 @@
       "event_feed": "Hadiah, pengikut, subscriber, dan orang yang share broadcastmu yang terbaru",
       "chat_box": "Nggawe pesanan chat broadcastmu ditampilin di layar",
       "ticker": "Baris tulisan sendiri yang berjalan di layar",
-      "rule_alert": "Endi aturan-aturan penting mu katon"
+      "rule_alert": "Endi aturan-aturan penting mu katon",
+      "spin_wheel": "Ngendi roda-roda ing aturan-aturanmu muter"
     },
     "fields": {
       "celebration": "Ngabdulakehan",
@@ -4753,6 +4764,7 @@
       "userCooldown": "Waktu tunggu per penonton (detik)",
       "addAction": "Tambah sawijining aksi",
       "placeholders": "Gunakake {name}, {amount} lan {message} ing teksmu. Link ing pesen dibusak.",
+      "wheelHint": "Antara 2 lan 12. DeHub milih ngendi roda mandheg, supaya kabeh sing nonton weruh asil sing padha. Gunakake {result} ing alert, read-aloud utawa chat action kanggo jenenge.",
       "webhookUrl": "Alamat webhook",
       "webhookText": "Message to send",
       "triggers": {

@@ -4120,6 +4120,11 @@
     "chatPreview": "Chat messages appear here"
   },
   "liveStudio": {
+    "controls": {
+      "alertsPausedHint": "No gift, no follow, no rule alert o go show on screen. Counter, goal, and chat box still dey move.",
+      "soundsMutedHint": "Yours rules dey stop play sound wey.",
+      "failed": "Na di switch no dey change. Try again."
+    },
     "title": "Live Studio",
     "open": "Open Live Studio",
     "preview": "Preview",
@@ -4239,6 +4244,8 @@
       "userCooldown": "Wait per viewer (seconds)",
       "addAction": "Add an action",
       "removeAction": "Remove action",
+      "wheelSegments": "Wheel segments, one per line",
+      "wheelHint": "Between 2 and 12. DeHub go choose where de wheel stop, so everybody dey watch see same result. Use {result} inside alert, read-out loud or chat action for name it.",
       "alertText": "Alert text",
       "sound": "Sound",
       "chatText": "Message to post",
@@ -4260,7 +4267,8 @@
         "sound": "Play a sound",
         "say": "Read aloud",
         "chat": "Post in chat",
-        "webhook": "Send to a webhook"
+        "webhook": "Send to a webhook",
+        "wheel": "Spin a wheel"
       },
       "presets": {
         "blank": "Blank rule",

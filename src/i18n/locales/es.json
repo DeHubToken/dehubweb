@@ -5818,9 +5818,21 @@
     "followersUnit": "seguidores",
     "topSupporters": "Principales simpatizantes",
     "tipped": "{{name}} ha enviado un regalo",
-    "chatPreview": "Los mensajes de chat aparecen aquí"
+    "chatPreview": "Los mensajes de chat aparecen aquí",
+    "wheelLanded": "{{name}} giró: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Controles rápidos",
+      "intro": "Para mid-stream. Cada interruptor se mantiene para que todos lo vean, en la aplicación y en OBS, hasta que lo voltees hacia atrás.",
+      "alertsPaused": "Pausar alertas",
+      "alertsPausedHint": "No hay alertas de regalo, seguimiento o reglas en la pantalla. Los contadores, los goles y el cuadro de chat continúan.",
+      "soundsMuted": "Silenciar sonidos de alerta",
+      "soundsMutedHint": "Tus reglas dejan de reproducir sonidos.",
+      "readAloudMuted": "Detener lectura en voz alta",
+      "readAloudMutedHint": "Los mensajes de regalo y las líneas de reglas ya no se leen.",
+      "failed": "Ese interruptor no ha cambiado. Inténtalo de nuevo."
+    },
     "title": "Estudio en directo",
     "subtitle": "Alertas y widgets para tus transmisiones",
     "h1": "Live Studio: transmite alertas, objetivos y superposiciones para los creadores de DeHub",
@@ -5911,7 +5923,8 @@
       "event_feed": "Actividad reciente",
       "chat_box": "Cuadro de chat",
       "ticker": "Marquesina",
-      "rule_alert": "Alertas de reglas"
+      "rule_alert": "Alertas de reglas",
+      "spin_wheel": "Rueda giratoria"
     },
     "hints": {
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
@@ -5929,7 +5942,8 @@
       "event_feed": "Los últimos regalos, seguidores, suscriptores y personas que comparten tu transmisión",
       "chat_box": "Muestra los mensajes de chat de tu transmisión en la pantalla",
       "ticker": "Una línea de tu propio texto que se desplaza por la pantalla",
-      "rule_alert": "¿Dónde aparecen las alertas de tus reglas?"
+      "rule_alert": "¿Dónde aparecen las alertas de tus reglas?",
+      "spin_wheel": "Donde las ruedas de tus reglas giran"
     },
     "fields": {
       "style": "Estilo",
@@ -5993,6 +6007,8 @@
       "addAction": "Añadir una acción",
       "removeAction": "Eliminar acción",
       "placeholders": "Utiliza {name}, {amount} y {message} en tu texto. Los enlaces en los mensajes se eliminan.",
+      "wheelSegments": "Segmentos de rueda, uno por línea",
+      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
       "alertText": "Texto de alerta",
       "sound": "Sonido",
       "sayText": "Texto para leer en voz alta",
@@ -6020,7 +6036,8 @@
         "sound": "Reproducir un sonido",
         "say": "Leer en voz alta",
         "chat": "Publicar en el chat",
-        "webhook": "Enviar a un webhook"
+        "webhook": "Enviar a un webhook",
+        "wheel": "Gira una ruleta"
       },
       "summary": {
         "tip": "Propina de {{amount}} DHB o más"

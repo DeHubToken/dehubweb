@@ -4747,9 +4747,21 @@
     "followersUnit": "hordoftoota",
     "topSupporters": "Deeggartoota olaanoo",
     "tipped": "{{name}} kennaa ergeera",
-    "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu"
+    "chatPreview": "Ergaawwan chaatii asitti mul&#39;atu",
+    "wheelLanded": "{{name}} kan naanna&#39;e: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "To&#39;annoo saffisaa",
+      "intro": "Walakkaa sululaaf. Tokkoon tokkoon switch nama ilaalu hundaaf, appii keessatti fi OBS keessatti, hanga duubatti garagalchitanitti qabata.",
+      "alertsPaused": "Akeekkachiisa dhaabbii",
+      "alertsPausedHint": "Kenna, hordoffii ykn seera akeekkachiisa iskiriinii irratti hin jiru. Lakkaawwattoota, goolii fi saanduqa marii itti fufa.",
+      "soundsMuted": "Sagalee akeekkachiisa afaan qabachiisu",
+      "soundsMutedHint": "Seerri kee sagalee taphachuu dhiisa.",
+      "readAloudMuted": "Sagalee ol kaastee dubbisuu dhiisi",
+      "readAloudMutedHint": "Ergaan kennaa fi sararoonni seeraa kana booda hin dubbifaman.",
+      "failed": "Jijjiirraan sun hin jijjiiramne. Ammas yaalaa."
+    },
     "title": "Live Studio",
     "subtitle": "Akeekkachiisa fi wiijetoota yaa&#39;a keessaniif",
     "h1": "Live Studio — akeekkachiisa yaa&#39;aa, galmootaa fi uwwisa uumamtoota DeHub",
@@ -4839,7 +4851,8 @@
       "event_feed": "Sochii dhiheenya kanaa",
       "chat_box": "Sanduuqa marii",
       "ticker": "Ticker",
-      "rule_alert": "Ogeeyyii Seera"
+      "rule_alert": "Ogeeyyii Seera",
+      "spin_wheel": "Wiil naanna&#39;uu"
     },
     "hints": {
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",
@@ -4857,7 +4870,8 @@
       "event_feed": "Kennaawwan haaraa, hordoftoota, subscribers fi namoota tamsaasa keessan qooddatan",
       "chat_box": "Ergaawwan marii tamsaasa keessanii iskiriinii irratti agarsiisa",
       "ticker": "Sarara barruu mataa keetii kan iskiriinii irratti qaxxaamuru",
-      "rule_alert": "Bakka ogeeyyii seera keessan mul'atu"
+      "rule_alert": "Bakka ogeeyyii seera keessan mul'atu",
+      "spin_wheel": "Bakka girgiddaan seera kee keessa jiru itti naanna&#39;u"
     },
     "fields": {
       "style": "Akkaataa",
@@ -4919,6 +4933,9 @@
       "userCooldown": "Eeguu mul'ata tokko tokkoon (sekondii)",
       "addAction": "Hojii dabalaa",
       "removeAction": "Hojii balleessaa",
+      "wheelSegments": "Kutaalee wiilii, sarara tokkoof tokko",
+      "wheelHint": "Between 2 and 12. DeHub bakka wiiliin dhaabbatu waan filatuuf namni ilaalu hundi bu&#39;aa wal fakkaatu arga. Maqaa itti moggaasuuf tarkaanfii akeekkachiisaa, sagalee ol kaastee dubbisuu ykn marii keessatti {result} fayyadami.",
+      "wheelPlaceholder": "Faarfannaa tokko faarfadhaa&#10; Dhiibbaa 10 hojjedhu&#10; Tapha itti aanu filadhu",
       "alertText": "Barreeffama akeekkachiisaa",
       "sound": "Sagalee",
       "sayText": "Barreeffama sagalee ol kaastee dubbisuuf",
@@ -4946,7 +4963,8 @@
         "sound": "Sagalee tokko taphachiisi",
         "say": "Sagalee ol kaastee dubbisi",
         "chat": "Chat keessatti maxxansaa",
-        "webhook": "Gara webhook tokkotti ergaa"
+        "webhook": "Gara webhook tokkotti ergaa",
+        "wheel": "Gingilchaan tokko naannessi"
       },
       "summary": {
         "tip": "Gorsa {{amount}} DHB fi isaa ol"

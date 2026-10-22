@@ -4739,9 +4739,21 @@
     "followersUnit": "粉丝",
     "topSupporters": "顶级支持者",
     "tipped": "{{name}} 发送了一个礼物",
-    "chatPreview": "聊天信息显示在这里"
+    "chatPreview": "聊天信息显示在这里",
+    "wheelLanded": "{{name}} 转动了：{{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "快速操作",
+      "intro": "中间流程时，每个开关在应用程序和OBS中对所有人观看者生效，直到你再次翻回。",
+      "alertsPaused": "暂停通知",
+      "alertsPausedHint": "没有礼物、关注或规则提示。计分板、进球数和聊天框仍在持续更新。",
+      "soundsMuted": "静音提示音",
+      "soundsMutedHint": "你的规则不再播放声音。",
+      "readAloudMuted": "停止朗读。",
+      "readAloudMutedHint": "赠送信息和规则行不再朗读。",
+      "failed": "那个开关没有变化。再试一次。"
+    },
     "subtitle": "用于您的直播的提醒和小部件",
     "h1": "Live Studio — 直播间警报、进球和叠加屏幕，为 DeHub 创作者提供服务",
     "seoTitle": "Live Studio — 流媒体提醒、目标和覆盖层 | DeHub",
@@ -4843,7 +4855,8 @@
       "event_feed": "最新的礼物、粉丝、订阅者以及分享你直播的人",
       "chat_box": "在屏幕上显示你的直播聊天信息",
       "ticker": "一行你自定义的文字在屏幕上滚动",
-      "rule_alert": "您的规则提醒出现位置"
+      "rule_alert": "您的规则提醒出现位置",
+      "spin_wheel": "在我的规则里，哪里出了问题？"
     },
     "fields": {
       "style": "样式",
@@ -4906,6 +4919,8 @@
       "userCooldown": "每位观众间隔（秒）",
       "addAction": "添加动作",
       "removeAction": "移除动作",
+      "wheelSegments": "车轮段，每行一个",
+      "wheelHint": "2到12之间。DeHub决定轮盘停在哪里，所有人观看的结果相同。在警报、朗读或聊天动作中使用{result}来命名它。",
       "alertText": "警报文本",
       "sound": "声音",
       "chatHint": "发布到你的账户并进入你的直播聊天中。它不能重复观众的消息。",

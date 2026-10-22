@@ -4731,9 +4731,20 @@
     "followersUnit": "na-eso ụzọ",
     "topSupporters": "Top akwado",
     "tipped": "{{name}} zitere onyinye",
-    "chatPreview": "Chat ozi egosi ebe a"
+    "chatPreview": "Chat ozi egosi ebe a",
+    "wheelLanded": "{{name}}spun: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Njikwa ngwa ngwa",
+      "alertsPaused": "Kwụsị alerts",
+      "alertsPausedHint": "Enweghị onyinye, soro ma ọ bụ chịkwaa ịdọ aka ná ntị na ihuenyo. Counters, ihe mgbaru ọsọ na chat igbe na-aga n 'ihu.",
+      "soundsMuted": "Mechie ụda ịdọ aka na ntị",
+      "soundsMutedHint": "Iwu gị na-akwụsị ịkpọ ụda.",
+      "readAloudMuted": "Kwụsị ịgụ n 'olu dara ụda",
+      "readAloudMutedHint": "A naghị agụzi ozi onyinye na ahịrị iwu.",
+      "failed": "Mgbanwe ahụ agbanweghị. Gbalịa ọzọ."
+    },
     "title": "Live Studio",
     "subtitle": "Ọkwa na ihe ngosi maka ọsọ gị",
     "h1": "Live Studio — ọkwa ọsọ, ebumnobi na ihe ngosi maka ndị na-emepụta DeHub",
@@ -4824,7 +4835,8 @@
       "event_feed": "Omume ọfụụ",
       "chat_box": "Igbe nkata",
       "ticker": "Ticker",
-      "rule_alert": "Ọkwa iwu"
+      "rule_alert": "Ọkwa iwu",
+      "spin_wheel": "Atụ ogho wheel"
     },
     "hints": {
       "tip_alert": "Na-eme ememe ọ bụla n 'ọnụ, size ya tier",
@@ -4842,7 +4854,8 @@
       "event_feed": "Onyinye kachasị ọhụrụ, ndị na-eso ụzọ, ndị debanyere aha na ndị mmadụ na-ekerịta mgbasa ozi gị",
       "chat_box": "Egosi gị agbasa ozi n 'ikuku chat ozi na ihuenyo",
       "ticker": "Ahịrị nke ederede nke gị nke na-agagharị na ihuenyo",
-      "rule_alert": "Ebe ọkwa iwu gị na-apụta"
+      "rule_alert": "Ebe ọkwa iwu gị na-apụta",
+      "spin_wheel": "Ebe wiil gị iwu atụ ogho"
     },
     "fields": {
       "style": "Ụdị",
@@ -4906,6 +4919,8 @@
       "addAction": "Tinye omume",
       "removeAction": "Wepụ omume",
       "placeholders": "Jiri {name}, {amount} na {message} na ederede gị. A na-ewepụ ụzọ njikọ dị na ozi.",
+      "wheelSegments": "Wheel nkebi, otu kwa akara",
+      "wheelHint": "Nzọụkwụ 2 ruo 12. DeHub na-ahọrọ ebe wiil ahụ na-akwụsị, yabụ onye ọ bụla na-ekiri na-ahụ otu nsonaazụ ahụ. Jiri {result} n 'ime mkpachapụ anya, gụọ-olu dara ụda maọbụ kpaa nkata iji kpọọ ya aha.",
       "alertText": "Alert text",
       "sound": "Sound",
       "sayText": "Ngwe ka a gụọ n 'olu dara ụda",
@@ -4933,7 +4948,8 @@
         "sound": "Play a sound",
         "say": "Read aloud",
         "chat": "Post in chat",
-        "webhook": "Send to a webhook"
+        "webhook": "Send to a webhook",
+        "wheel": "Atụ ogho a wheel"
       },
       "summary": {
         "tip": "NDỤMỌDỤ nke {{amount}} DHB ma ọ bụ karịa"

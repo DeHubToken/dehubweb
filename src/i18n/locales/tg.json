@@ -4740,9 +4740,21 @@
     "followersUnit": "пайравони",
     "topSupporters": "Пуштибони боло",
     "tipped": "{{name}}info: whatsthis",
-    "chatPreview": "Иттилооти чат дар ин ҷо пайдо мешавад"
+    "chatPreview": "Иттилооти чат дар ин ҷо пайдо мешавад",
+    "wheelLanded": "{{name}} spun: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kontrola mabilis",
+      "intro": "Барои ҷараёни миёна. Ҳар як гузариш барои ҳамаи тамошобинон, дар барнома ва дар OBS, то он даме, ки шумо онро баргардонед.",
+      "alertsPaused": "Таваққуфи хотиррасонӣ",
+      "alertsPausedHint": "Walang gift, sundin o patakaran ang mga alerto sa screen. Nagpatuloy ang mga konsulta, layunin at kahon ng chat.",
+      "soundsMuted": "Овозҳои ҳушдор",
+      "soundsMutedHint": "Қоидаҳои шумо аз навохтани садоҳо даст мекашанд.",
+      "readAloudMuted": "QShortcut",
+      "readAloudMutedHint": "Иттилооти тӯҳфаҳо ва сатрҳои қоидаҳо дигар хонда намешаванд.",
+      "failed": "Ин коммутатор дигаргун нашуд. Бори дигар кӯшиш кунед."
+    },
     "title": "Live Studio",
     "subtitle": "Огоҳиҳо ва виджетҳо барои ҷараёнҳои шумо",
     "h1": "Live Studio — огоҳиҳои ҷараён, ҳадафҳо ва қаллабҳо барои сохтанандагони DeHub",
@@ -4830,7 +4842,8 @@
       "event_feed": "Фаъолияти охирин",
       "chat_box": "Қуттии чат",
       "ticker": "Ticker",
-      "rule_alert": "Огӣҳои қоида"
+      "rule_alert": "Огӣҳои қоида",
+      "spin_wheel": "Чархи чархиш"
     },
     "hints": {
       "tip_alert": "Ҳар порсаро, ки ба сатҳи худ мувофиқ аст, нишон медиҳад",
@@ -4848,7 +4861,8 @@
       "event_feed": "Охирин тӯҳфаҳо, пайравон, муштариён ва одамоне, ки пахши шуморо мубодила мекунанд",
       "chat_box": "Name",
       "ticker": "Хати матни худ, ки дар экран ҳаракат мекунад",
-      "rule_alert": "Ҷойе ки огӣҳои қоидаҳои шумо пайдо мешаванд"
+      "rule_alert": "Ҷойе ки огӣҳои қоидаҳои шумо пайдо мешаванд",
+      "spin_wheel": "Дар куҷо чархҳо дар қоидаҳои шумо чарх мезананд"
     },
     "fields": {
       "style": "Стил",
@@ -4912,6 +4926,8 @@
       "addAction": "Амали илова кунед",
       "removeAction": "Амалро ҳазф кунед",
       "placeholders": "{name}, {amount} ва {message} дар матни худ истифода баред. Ang mga link sa mga mensahe ay tinanggal.",
+      "wheelSegments": "Сегментҳои чарх, як сатр",
+      "wheelHint": "Байни 2 ва 12. DeHub дар куҷое, ки чарх қатъ мешавад, интихоб мекунад, аз ин рӯ ҳама тамошо мекунанд, ки ҳамон натиҷаро мебинанд. {result} in a alert, read-aloud or chat action to name it.",
       "alertText": "Матни хотиррасонӣ",
       "sound": "Садо",
       "sayText": "Матн барои хондан бо овози баланд",
@@ -4938,7 +4954,8 @@
         "sound": "Пахш кардани садо",
         "say": "Бо овози баланд хонед",
         "chat": "Садо дар чат",
-        "webhook": "Magpadala sa webhook"
+        "webhook": "Magpadala sa webhook",
+        "wheel": "Чарх задани чарх"
       },
       "summary": {
         "tip": "{{amount}} DHB o higit pa"

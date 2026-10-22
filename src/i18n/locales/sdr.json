@@ -4441,6 +4441,9 @@
     "chatPreview": "Chat messages appear here"
   },
   "liveStudio": {
+    "controls": {
+      "alertsPausedHint": "نکته‌ای نیست، پیگیری‌ها یا هشدارهای قوانین روی صفحه نیست. شمارنده‌ها، اهداف و کادر گفتگو همچنان ادامه دارند."
+    },
     "title": "Live Studio",
     "subtitle": "Alerts و ویجت‌ها برای استریم‌های شما",
     "h1": "Live Studio — آلرت‌های استریم، اهداف و لایه‌های رویایی برای سازندگان DeHub",
@@ -4521,7 +4524,8 @@
       "reaction_counter": "Reaction counter",
       "event_feed": "Recent activity",
       "chat_box": "Chat box",
-      "ticker": "Ticker"
+      "ticker": "Ticker",
+      "spin_wheel": "चक्र घुमाओ"
     },
     "hints": {
       "tip_alert": "हर टिप के जश्न मनावै, ओकर टियर के हिसाब से साइज में",
@@ -4569,6 +4573,7 @@
       "minAmount": "بەشەکەتەن تۆپ (DHB)",
       "keyword": "کلمه یا عبارت",
       "userCooldown": "دقیقه بر هر نگاهنده (ثانیه)",
+      "wheelHint": "بین ۲ و ۱۲. DeHub می‌گه کجای چرخه می‌تونه بگیره، پس همه‌ایی که می‌بینن نتیجه یکسان می‌بینن. از {result} در یک هشدار، خواندن صدا یا عمل چت استفاده کن تا نامش رو بگی.",
       "triggers": {
         "chat": "Any chat message"
       },
