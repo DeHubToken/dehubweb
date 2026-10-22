@@ -23,6 +23,7 @@ import { BRAND_OUTRO_DURATION, drawBrandOutro, outroSoundSample, outroUsername }
 import { GIF_CONTENT_LIMIT, gifPlan, gifFrameDelay, gifWorkerSession } from "./gif";
 import { GIF_WORKER } from "./gifRuntime";
 import { exportTimeRange, exportAudioSegment, type ExportRange } from "./exportRanges";
+import { videoDecoderConfigFixer } from "./videoDecoderConfig";
 
 
 export type ExportFormat = "mp4" | "webm" | "gif";
@@ -354,8 +355,12 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         : {}),
       fastStart: "in-memory",
     });
+    const fixVideoChunk = videoDecoderConfigFixer({ codec: videoCodec, muxerCodec: videoMuxerCodec, width, height });
     muxer = {
-      addVideoChunk: (c, meta) => m.addVideoChunk(c, meta),
+      addVideoChunk: (c, meta) => {
+        const fixed = fixVideoChunk(c, meta);
+        m.addVideoChunk(fixed.chunk, fixed.meta);
+      },
       addAudioChunk: haveAudio ? (c, meta) => m.addAudioChunk(c, meta) : undefined,
       finalize: () => m.finalize(),
       target,
