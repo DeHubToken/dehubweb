@@ -123,7 +123,7 @@ export async function setMyControls(change: Partial<OverlayControls>): Promise<C
   return unwrap(
     await apiCall<CreatorOverlay | { result: CreatorOverlay }>('/api/live-overlay/mine/controls', {
       method: 'PUT',
-      body: change,
+      body: { ...change },
       requiresAuth: true,
     }),
   );
