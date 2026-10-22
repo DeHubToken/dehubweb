@@ -166,11 +166,11 @@ function PersonBanner({ kind, item, leaving }: { kind: OverlayKind; item: Person
   const name = useName(item.user);
   const line =
     kind === 'follow_alert'
-      ? t('liveOverlay.followed', { name })
+      ? t('liveOverlay.newFollower', { name })
       : kind === 'subscribe_alert'
         ? item.planName
           ? t('liveOverlay.subscribedTo', { name, plan: item.planName })
-          : t('liveOverlay.subscribed', { name })
+          : t('liveOverlay.newSubscriber', { name })
         : kind === 'share_alert'
           ? t('liveOverlay.shared', { name })
           : t('liveOverlay.joined', { name });
