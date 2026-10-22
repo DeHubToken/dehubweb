@@ -268,6 +268,48 @@ export function WidgetSettings({ widget, onChange }: Props) {
       );
       break;
 
+    case 'streamer_level':
+      body = (
+        <>
+          <Toggle label={t('liveStudio.fields.showStreak')} checked={setting(s, 'showStreak', true)} onChange={(v) => set('showStreak', v)} />
+          {accentField}
+        </>
+      );
+      break;
+
+    case 'tip_jar':
+      body = (
+        <>
+          <Field label={t('liveStudio.fields.target')}>
+            {(id) => (
+              <Input
+                id={id}
+                type="number"
+                inputMode="numeric"
+                min={1}
+                value={setting(s, 'target', 100_000)}
+                onChange={(e) => num('target', e.target.value, 1, 1_000_000_000_000)}
+                className={SETTINGS_FIELD_CLASS}
+              />
+            )}
+          </Field>
+          <Field label={t('liveStudio.fields.title')}>
+            {(id) => (
+              <Input
+                id={id}
+                maxLength={40}
+                placeholder={t('liveOverlay.tipJar')}
+                value={setting(s, 'title', '')}
+                onChange={(e) => set('title', e.target.value)}
+                className={SETTINGS_FIELD_CLASS}
+              />
+            )}
+          </Field>
+          {accentField}
+        </>
+      );
+      break;
+
     case 'subathon_timer':
       body = (
         <>
