@@ -35,6 +35,10 @@ project_id = "aigxuutjaqsywioxjefr"
   # against GET /api/admin/me. Not a Supabase JWT.
   [functions.admin-transcripts]
     verify_jwt = false
+  # Cron sends the vault scheduler key, the panel an admin JWT from api.dehub.io;
+  # neither is a Supabase JWT.
+  [functions.growth-autopost]
+    verify_jwt = false
   [functions.anon-views]
     verify_jwt = false
   [functions.ads-admin]
