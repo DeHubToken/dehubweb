@@ -29,6 +29,7 @@ import { ObsPanel } from './ObsPanel';
 import { createOverlayEventBus, OverlayEventContext } from '../overlay/overlay-events';
 import { createRuleBus, RuleAudio, RuleBusContext } from '../overlay/rule-bus';
 import { RulesPanel } from './RulesPanel';
+import { ModerationPanel } from './ModerationPanel';
 import { StudioStage } from './StudioStage';
 import { WidgetSettings } from './WidgetSettings';
 
@@ -284,6 +285,8 @@ export function LiveStudio() {
       </div>
 
       <RulesPanel hasAlertWidget={widgets.some((w) => w.kind === 'rule_alert' && w.enabled)} />
+
+      <ModerationPanel />
 
       <div className="sticky bottom-4 z-10 flex justify-end">
         <div className="flex items-center gap-3 rounded-xl border border-zinc-700 bg-zinc-900/95 px-3 py-2 shadow-lg backdrop-blur">
