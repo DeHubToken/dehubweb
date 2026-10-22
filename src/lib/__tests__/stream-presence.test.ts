@@ -31,7 +31,12 @@ class FakeSocket {
     return this;
   }
   off(event: string, cb: Handler) { this.handlers.get(event)?.delete(cb); return this; }
-  emit(event: string, payload: unknown) { this.emitted.push({ event, payload }); return this; }
+  acks: Array<(ack: unknown) => void> = [];
+  emit(event: string, payload: unknown, ack?: (ack: unknown) => void) {
+    this.emitted.push({ event, payload });
+    if (ack) this.acks.push(ack);
+    return this;
+  }
   disconnect() { this.disconnected = true; this.connected = false; return this; }
 
   /** Deliver a server event to whoever is listening. */
@@ -382,5 +387,20 @@ describe('overlay control room', () => {
     const sub = watchOverlayControl('A'.repeat(24), 'studio', {});
     sub.leave();
     expect(sockets[0].emitted.at(-1)).toEqual({ event: 'overlay.leave', payload: { token: 'A'.repeat(24) } });
+  });
+});
+
+describe('overlay control room join', () => {
+  beforeEach(() => {
+    sockets = [];
+    token = 'token-a';
+  });
+
+  it('reports whether the server accepted the token', async () => {
+    const { watchOverlayControl } = await loadControl();
+    const answers: boolean[] = [];
+    watchOverlayControl('A'.repeat(24), 'obs', { onJoined: (ok) => answers.push(ok) });
+    sockets[0].acks[0]({ ok: false });
+    expect(answers).toEqual([false]);
   });
 });

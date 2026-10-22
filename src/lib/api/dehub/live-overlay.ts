@@ -56,3 +56,39 @@ export type OverlayTestKind = 'tip' | 'follow' | 'subscribe' | 'share' | 'join';
 export async function sendOverlayTest(kind: OverlayTestKind, extra: { amount?: number; message?: string } = {}): Promise<void> {
   await apiCall('/api/live-overlay/mine/test', { method: 'POST', body: { kind, ...extra }, requiresAuth: true });
 }
+
+/** What an OBS page draws, by its token: the widgets, whose they are, and the stream to join. */
+export interface TokenOverlay extends PublicOverlay {
+  creator: { address: string; username?: string; displayName?: string; avatarImageUrl?: string };
+  live: { streamId: string; tokenId: number | null } | null;
+}
+
+export class OverlayNotFoundError extends Error {}
+
+export async function getOverlayByToken(token: string): Promise<TokenOverlay> {
+  let res: TokenOverlay | { result: TokenOverlay };
+  try {
+    res = await apiCall<TokenOverlay | { result: TokenOverlay }>(`/api/live-overlay/public/${encodeURIComponent(token)}`);
+  } catch (err) {
+    // A rotated or mistyped token is the one failure an OBS page must tell
+    // apart from a network blip: it should stop retrying, not keep polling.
+    if ((err as { httpStatus?: number })?.httpStatus === 404) throw new OverlayNotFoundError('Overlay not found');
+    throw err;
+  }
+  const raw = unwrap(res);
+  return {
+    ...publicOverlay(raw),
+    creator: raw?.creator ?? { address: '' },
+    live: raw?.live?.streamId ? { streamId: String(raw.live.streamId), tokenId: raw.live.tokenId ?? null } : null,
+  };
+}
+
+/** Retire the OBS URL and issue a new one. Anything still open on the old URL goes blank. */
+export async function rotateOverlayToken(): Promise<CreatorOverlay> {
+  return unwrap(
+    await apiCall<CreatorOverlay | { result: CreatorOverlay }>('/api/live-overlay/mine/rotate', {
+      method: 'POST',
+      requiresAuth: true,
+    }),
+  );
+}

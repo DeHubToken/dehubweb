@@ -24,7 +24,8 @@ import { PageSection } from '@/components/app/page-kit/PageKit';
 import { cn } from '@/lib/utils';
 import { getMyOverlay, saveMyOverlay, sendOverlayTest, type OverlayTestKind } from '@/lib/api/dehub/live-overlay';
 import { MAX_WIDGETS, OVERLAY_KINDS, isKnownKind, newWidget, type OverlayKind } from '@/lib/live-overlay/registry';
-import type { CreatorOverlay, OverlayRect, OverlayWidget } from '@/lib/live-overlay/types';
+import type { CreatorOverlay, OverlayRect, OverlayRenderIn, OverlayWidget } from '@/lib/live-overlay/types';
+import { ObsPanel } from './ObsPanel';
 import { createOverlayEventBus, OverlayEventContext } from '../overlay/overlay-events';
 import { StudioStage } from './StudioStage';
 import { WidgetSettings } from './WidgetSettings';
@@ -40,10 +41,14 @@ export function LiveStudio() {
   const { data, isLoading, isError } = useQuery<CreatorOverlay>({
     queryKey: myOverlayKey,
     queryFn: getMyOverlay,
-    staleTime: 60_000,
+    staleTime: 15_000,
+    // Keeps "OBS connected" honest while the page is open: an OBS page checks
+    // in every minute and the server forgets it after ninety seconds.
+    refetchInterval: 30_000,
   });
 
   const [widgets, setWidgets] = useState<OverlayWidget[]>([]);
+  const [renderIn, setRenderIn] = useState<OverlayRenderIn>('app');
   const [dirty, setDirty] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [portrait, setPortrait] = useState(false);
@@ -57,7 +62,13 @@ export function LiveStudio() {
     if (dirty && loadedVersion.current !== null) return;
     loadedVersion.current = data.version;
     setWidgets(data.widgets);
+    setRenderIn(data.renderIn);
   }, [data, dirty]);
+
+  const chooseRenderIn = (next: OverlayRenderIn) => {
+    setRenderIn(next);
+    setDirty(true);
+  };
 
   const edit = (next: OverlayWidget[]) => {
     setWidgets(next);
@@ -86,7 +97,7 @@ export function LiveStudio() {
   const move = (id: string, rect: OverlayRect) => update(id, portrait ? { portrait: rect } : { landscape: rect });
 
   const save = useMutation({
-    mutationFn: () => saveMyOverlay({ renderIn: data?.renderIn ?? 'app', widgets }),
+    mutationFn: () => saveMyOverlay({ renderIn, widgets }),
     onSuccess: (saved) => {
       loadedVersion.current = saved.version;
       queryClient.setQueryData(myOverlayKey, saved);
@@ -193,6 +204,14 @@ export function LiveStudio() {
         </div>
 
         <div className="space-y-4">
+          <ObsPanel
+            token={data.token}
+            renderIn={renderIn}
+            obsConnected={data.obsConnected}
+            selectedWidgetId={selectedId}
+            onRenderIn={chooseRenderIn}
+          />
+
           <PageSection
             title={t('liveStudio.widgets')}
             action={
