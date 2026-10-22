@@ -17,6 +17,7 @@ export default function LiveStudioPage() {
       title={t('liveStudio.seoTitle')}
       description={t('liveStudio.seoDescription')}
       url="https://dehub.io/live-studio"
+      image="https://dehub.io/og/live-studio.jpg"
       jsonLd={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',

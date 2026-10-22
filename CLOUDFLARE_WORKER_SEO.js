@@ -181,6 +181,7 @@ const OG_CARD_ROUTES = new Set([
   // Public app pages that unfurled as the homepage: the SPA had SEO for them,
   // the edge did not, so crawlers got the shell under a noindex.
   'dex', 'ads', 'buy',
+  'live-studio',
 ]);
 
 /** A route's own share card, or the shared one when it has none. */
