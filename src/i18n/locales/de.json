@@ -647,6 +647,8 @@
     "stagePay": "DeHub Pay wird mit {{symbol}} bezahlt…",
     "stageDelivering": "DeHub Pay sendet Ihre Token…",
     "payViaDpay": "An DeHub Pay bezahlt, Token kommen in ca. 30s an",
+    "payDirect": "Direkt an {{name}} in {{symbol}} auf {{chain}} gesendet. Kein Swap.",
+    "payDirectNoName": "Direkt an den Creator in {{symbol}} auf {{chain}} gesendet. Kein Swap.",
     "payViaBridgeDpay": "Auf Base verschoben und an DeHub Pay bezahlt, Token kommen in ca. einer Minute an",
     "dmSent": "{{amount}} Tokens an {{name}} gesendet!"
   },
@@ -746,6 +748,7 @@
     "price": "Preis",
     "ppvDhbInfo": "Zahlungen erfolgen in DeHub-Token auf der Base-Kette",
     "ppvUsdInfo": "Zahlungen erfolgen in USD",
+    "ppvStableInfo": "Käufer zahlen in {{symbol}}, direkt an dich",
     "setupBounty": "Belohnung einrichten",
     "viewersToReward": "Zu belohnende Zuschauer",
     "numberOfViewers": "Anzahl der Zuschauer",
@@ -4979,6 +4982,7 @@
       "fast": "Schnell"
     },
     "rules": {
+      "test": "Testen",
       "title": "Regeln",
       "intro": "Wenn etwas in Ihrem Stream passiert, tut DeHub, was Sie möchten: Zeigt eine Warnung an, spielt einen Ton ab, liest etwas laut vor, postet in Ihrem Chat oder teilt es Ihrem Discord mit.",
       "add": "Eine Regel hinzufügen",
@@ -6299,6 +6303,7 @@
     "weeksShort": "{{count}} Woche"
   },
   "liveGift": {
+    "notEnoughToken": "Nicht genug {{symbol}} für dieses Geschenk",
     "pickTier": "Wähle eine Feier",
     "plays": "Spielt {{tier}} im Stream",
     "you": "Du",

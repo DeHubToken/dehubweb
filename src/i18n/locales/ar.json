@@ -830,6 +830,8 @@
     "stagePay": "جارٍ الدفع إلى DeHub Pay بـ {{symbol}}…",
     "stageDelivering": "DeHub Pay يرسل رموزك…",
     "payViaDpay": "تم الدفع إلى DeHub Pay، تصل الرموز في حوالي 30 ثانية",
+    "payDirect": "يُرسل مباشرة إلى {{name}} بعملة {{symbol}} على {{chain}}. بدون مبادلة.",
+    "payDirectNoName": "يُرسل مباشرة إلى صانع المحتوى بعملة {{symbol}} على {{chain}}. بدون مبادلة.",
     "payViaBridgeDpay": "تم النقل إلى Base والدفع إلى DeHub Pay، تصل الرموز في حوالي دقيقة",
     "dmSent": "تم إرسال {{amount}} عملات إلى {{name}}!"
   },
@@ -934,6 +936,7 @@
     "price": "السعر",
     "ppvDhbInfo": "المدفوعات برموز DeHub على سلسلة Base",
     "ppvUsdInfo": "المدفوعات بالدولار الأمريكي",
+    "ppvStableInfo": "يدفع المشترون بعملة {{symbol}} وتصلك مباشرة",
     "setupBounty": "إعداد المكافأة",
     "viewersToReward": "المشاهدون للمكافأة",
     "numberOfViewers": "عدد المشاهدين",
@@ -7297,6 +7300,7 @@
     "weeksShort": "{{count}} أسبوع"
   },
   "liveGift": {
+    "notEnoughToken": "لا يوجد {{symbol}} كافٍ لهذه الهدية",
     "pickTier": "اختر احتفالاً",
     "plays": "يعرض {{tier}} على البث",
     "you": "أنت",

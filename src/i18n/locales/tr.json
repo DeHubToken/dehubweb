@@ -830,6 +830,8 @@
     "stagePay": "DeHub Pay'e {{symbol}} ile ödeniyor…",
     "stageDelivering": "DeHub Pay tokenlarınızı gönderiyor…",
     "payViaDpay": "DeHub Pay'e ödendi, tokenlar yaklaşık 30 saniye içinde gelir",
+    "payDirect": "{{chain}} üzerinde {{symbol}} olarak doğrudan {{name}} kişisine gönderilir. Takas yok.",
+    "payDirectNoName": "{{chain}} üzerinde {{symbol}} olarak doğrudan içerik üreticisine gönderilir. Takas yok.",
     "payViaBridgeDpay": "Base'e taşındı ve DeHub Pay'e ödendi, tokenlar yaklaşık bir dakika içinde gelir",
     "dmSent": "{{name}} adlı kişiye {{amount}} jeton gönderildi!"
   },
@@ -934,6 +936,7 @@
     "price": "Fiyat",
     "ppvDhbInfo": "Ödemeler Base zincirinde DeHub tokenları ile yapılır",
     "ppvUsdInfo": "Ödemeler USD ile yapılır",
+    "ppvStableInfo": "Alıcılar {{symbol}} ile öder, doğrudan size gönderilir",
     "setupBounty": "Ödül ayarla",
     "viewersToReward": "Ödüllendirilecek izleyiciler",
     "numberOfViewers": "İzleyici sayısı",
@@ -7293,6 +7296,7 @@
     "weeksShort": "{{count}} hafta"
   },
   "liveGift": {
+    "notEnoughToken": "Bu hediye için yeterli {{symbol}} yok",
     "pickTier": "Bir kutlama seçin",
     "plays": "Yayında {{tier}} oynat",
     "you": "Siz",

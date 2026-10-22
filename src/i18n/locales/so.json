@@ -4874,9 +4874,11 @@
       "audience": "Yaa ka saari kara",
       "blockedWords": "Ereyada la xannibay",
       "blockedWordsHint": "Kala sooc komas. farriimo ay ku jiraan waa la iska indho tirayaa marna si qayaxan loo akhriyo.",
+      "cooldown": "Sug inta u dhaxaysa isticmaalka (seconds)",
       "userCooldown": "Sug qof kasta oo daawadayaal ah (seconds)",
       "addAction": "Ku dar ficil",
       "removeAction": "Ka saar ficil",
+      "placeholders": "Isticmaal {name}, {amount} iyo {message} qoraalkaaga. Xiriirada farriimaha waa laga saaraa.",
       "alertText": "Qoraalka digniinta",
       "sound": "Cod",
       "sayText": "Qoraalka si aad u akhrido cod dheer",
@@ -4900,8 +4902,10 @@
         "subscribers": "Macaamiisha"
       },
       "actionTypes": {
+        "sound": "Shid cod",
         "alert": "Muuji digniin",
         "say": "Si weyn u akhri",
+        "chat": "Ku dhaji sheekaysiga",
         "webhook": "U dir websaydhka"
       },
       "summary": {
@@ -4928,6 +4932,7 @@
         "command": "Waad salaaman tahay {name}, soo dhawow qulqulka!"
       },
       "sounds": {
+        "ohh-girl": "Ohh (naag)",
         "airhorn": "Hordhaca Hawada",
         "applause": "Raali Gelinta",
         "cricket": "Crickets",

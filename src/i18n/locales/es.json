@@ -830,6 +830,8 @@
     "stagePay": "Pagando a DeHub Pay con {{symbol}}…",
     "stageDelivering": "DeHub Pay está enviando tus tokens…",
     "payViaDpay": "Pagado a DeHub Pay, los tokens llegan en aproximadamente 30s",
+    "payDirect": "Enviado directamente a {{name}} en {{symbol}} en {{chain}}. Sin swap.",
+    "payDirectNoName": "Enviado directamente al creador en {{symbol}} en {{chain}}. Sin swap.",
     "payViaBridgeDpay": "Movido a Base y pagado a DeHub Pay, los tokens llegan en aproximadamente un minuto",
     "dmSent": "¡Enviaste {{amount}} tokens a {{name}}!"
   },
@@ -934,6 +936,7 @@
     "price": "Precio",
     "ppvDhbInfo": "Los pagos son en tokens DeHub en la cadena Base",
     "ppvUsdInfo": "Los pagos son en USD",
+    "ppvStableInfo": "Los compradores pagan en {{symbol}}, directo a ti",
     "setupBounty": "Configurar recompensa",
     "viewersToReward": "Espectadores a recompensar",
     "numberOfViewers": "Número de espectadores",
@@ -7293,6 +7296,7 @@
     "weeksShort": "{{count}} wk"
   },
   "liveGift": {
+    "notEnoughToken": "No tienes suficiente {{symbol}} para este regalo",
     "pickTier": "Elige una celebración",
     "plays": "Reproduce {{tier}} en el stream",
     "you": "Tú",

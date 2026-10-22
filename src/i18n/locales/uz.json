@@ -5041,6 +5041,7 @@
         "command": "Salom {name}, oqimga xush kelibsiz!"
       },
       "sounds": {
+        "ba-dum-tish": "Ba dum tish!",
         "airhorn": "Havo shoxi",
         "applause": "Qarsaklar",
         "cricket": "Kriketlar",

@@ -4672,6 +4672,7 @@
       "share": "Bareng"
     },
     "kinds": {
+      "rule_alert": "Peringatan aturan",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4731,6 +4732,22 @@
       "fast": "Cepat"
     },
     "rules": {
+      "empty": "Belum ada aturan. Tambahkan satu untuk bereaksi terhadap tips, mengikuti, atau perintah obrolan.",
+      "test": "Tes",
+      "enabled": "Aturan tentang",
+      "save": "Simpan aturan",
+      "needsAlertWidget": "Beberapa aturan menunjukkan peringatan. Tambahkan widget Lansiran aturan sehingga ada tempat untuk ditampilkan.",
+      "command": "Perintah",
+      "removeAction": "Hapus tindakan",
+      "alertText": "Teks peringatan",
+      "sound": "Suara",
+      "sayText": "Teks untuk dibaca dengan suara keras",
+      "chatText": "Pesan untuk diposting",
+      "chatHint": "Diposting dari akun Anda ke obrolan streaming Anda. Tidak dapat mengulangi pesan pemirsa.",
+      "webhookHint": "Webhook Discord atau Slack, atau alamat https apa pun yang menerima POSTINGAN.",
+      "summary": {
+        "tip": "Tips dari {{amount}} DHB atau lebih"
+      },
       "title": "Rules",
       "intro": "Nalika ana sing kedadeyan ing streammu, DeHub nindakake apa sing kowe pilih: nampilake alert, muter swara, maca bab-bab kanthi swara, ngirim ing chatmu utawa ngandhani Discord-mu.",
       "add": "Tambah aturan",
@@ -4756,20 +4773,31 @@
       "webhookUrl": "Alamat webhook",
       "webhookText": "Message to send",
       "triggers": {
+        "follow": "Seseorang mengikuti",
+        "subscribe": "Seseorang berlangganan",
+        "command": "Perintah obrolan digunakan",
+        "keyword": "Pesan obrolan berisi kata",
         "tip": "Sampiran sing ngarani.",
         "share": "Kang ngarani stream dhuwur.",
         "chat": "Sembarang pesen obrolan"
       },
       "audiences": {
+        "subscribers": "Pelanggan",
         "everyone": "Kabeh",
         "followers": "pengikut"
       },
       "actionTypes": {
+        "alert": "Tampilkan pemberitahuan",
+        "sound": "Putar suara",
+        "webhook": "Kirim ke webhook",
         "say": "Waca kanthi swara",
         "chat": "Post in chat"
       },
       "presets": {
+        "bigTip": "Klakson udara untuk tip besar",
+        "thankFollowers": "Ucapkan terima kasih kepada pengikut baru",
         "blank": "Blank rule",
+        "readChat": "Waca obrolan kanthi swara",
         "command": "Kode pesan nganti-nganti (chat command)"
       },
       "presetHints": {

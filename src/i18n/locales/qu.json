@@ -5028,6 +5028,8 @@
         "command": "Allinllachu {name}, allin hamusqaykichik chay mayuman!"
       },
       "sounds": {
+        "ba-dum-tish": "Ba dum tis",
+        "shhh": "Ch'in",
         "airhorn": "Wayra waqra",
         "applause": "Aplausos",
         "cricket": "Grillokuna",

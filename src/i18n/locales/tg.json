@@ -4921,6 +4921,7 @@
       "webhookHint": "Ang isang Discord o Slack webhook, o anumang html address na nagpapatanggap ng isang POST.",
       "webhookText": "Иттилоот барои фиристодан",
       "triggers": {
+        "tip": "Тӯҳфа меояд",
         "follow": "Name",
         "subscribe": "Касе обуна мешавад",
         "share": "Name",
@@ -4958,6 +4959,8 @@
         "command": "Ҷавоби а !фармон дар чат"
       },
       "presetText": {
+        "bigTip": "{name} {amount} DHB фиристод!",
+        "readChat": "{name} мегӯяд: {message}",
         "thankFollowers": "Ташаккур барои пайгирӣ, {name}!",
         "command": "{name}, welcome to the stream!"
       },

@@ -602,6 +602,8 @@
     "stagePay": "{{symbol}}でDeHub Payに支払い中…",
     "stageDelivering": "DeHub Payがトークンを送信しています…",
     "payViaDpay": "DeHub Payに支払い済み、トークンは約30秒で到着",
+    "payDirect": "{{chain}}上の{{symbol}}で{{name}}に直接送られます。スワップなし。",
+    "payDirectNoName": "{{chain}}上の{{symbol}}でクリエイターに直接送られます。スワップなし。",
     "payViaBridgeDpay": "Baseに移動しDeHub Payに支払い済み、トークンは約1分で到着",
     "dmSent": "{{name}}に{{amount}} DHBを送りました！"
   },
@@ -701,6 +703,7 @@
     "price": "価格",
     "ppvDhbInfo": "Baseチェーン上のDeHubトークンでの支払い",
     "ppvUsdInfo": "支払いはUSDで行われます",
+    "ppvStableInfo": "購入者は{{symbol}}で支払い、あなたに直接届きます",
     "setupBounty": "報酬を設定",
     "viewersToReward": "報酬対象の視聴者",
     "numberOfViewers": "視聴者数",
@@ -6246,6 +6249,7 @@
     "weeksShort": "{{count}}週"
   },
   "liveGift": {
+    "notEnoughToken": "このギフトには{{symbol}}が足りません",
     "pickTier": "お祝いを選択",
     "plays": "配信で{{tier}}を再生",
     "you": "あなた",

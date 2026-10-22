@@ -5030,6 +5030,7 @@
         "tip": "Wenk van {{amount}} DHB of meer"
       },
       "presets": {
+        "command": "Kletsopdrag",
         "blank": "Leë reël",
         "readChat": "Lees hardop klets",
         "bigTip": "Lug horing vir groot wenke",

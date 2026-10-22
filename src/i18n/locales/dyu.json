@@ -4772,6 +4772,7 @@
       "fast": "Fanga be min na"
     },
     "rules": {
+      "cooldown": "Attendre entre les utilisations (secondes)",
       "title": "Sariya",
       "intro": "Ni koo dɔ kɛra i ka site web kan, DeHub b'a fɛ ka min kɛ, a b'o kɛ: a be lasɔmini dɔ yira, a be mankan dɔ bɔ, a be fɛɛn dɔ kalan ni kaanba ye, a be kuma i ka site web kɔnɔ wala a be kuma i ka Discord koo la.",
       "add": "A ka sariya sigi",
@@ -4793,6 +4794,7 @@
       "minAmount": "Fanga min be mɔgɔ la, o ye ka mɔgɔ lafili.",
       "command": "Kɛlɛkɛyɔrɔ",
       "keyword": "Kuma wala kumaden",
+      "audience": "Jɔn tun be se k'a miiri ko a bena bɔ?",
       "blockedWords": "Kuma minw be se ka mɔgɔ bali ka kuma",
       "blockedWordsHint": "Minw b'a fɔ u ma ko u bena koo minw kɛ, olu be miiri u la.",
       "userCooldown": "Mɔgɔ min be filɛli kɛ, o tigi ka kan ka kɔnɔni kɛ.",
@@ -4805,6 +4807,7 @@
       "chatText": "Message to post",
       "chatHint": "I ka site web ka kunnafoniw bila ka bɔ i ka site web kan. A tɛ se ka mɔgɔ filɛbaga ka kumaw fɔ tugun.",
       "webhookUrl": "Webhook address",
+      "webhookHint": "Webhook min be weele ko Discord wala Slack, walima https ka ladɛrɛsi min be sɔn ka baara dɔ kɛ.",
       "webhookText": "Message to send",
       "triggers": {
         "tip": "A tip arrives",
@@ -4845,10 +4848,13 @@
         "command": "I ka kan ka min fɔ, o ye tiɲɛ ye."
       },
       "presetText": {
+        "thankFollowers": "Merci de nous avoir suivis, {name} !",
+        "command": "Bonjour {name}, bienvenue sur la chaîne !",
         "readChat": "{name} says {message}",
         "bigTip": "{name} sent {amount} DHB!"
       },
       "sounds": {
+        "spooky": "Effrayant",
         "airhorn": "Fanga min be fɔɲɔ kan",
         "applause": "Ne b'i fo kosɔbɛ",
         "cricket": "Kɛlɛkɛyɔrɔ",

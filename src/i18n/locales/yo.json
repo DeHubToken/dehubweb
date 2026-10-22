@@ -4843,6 +4843,8 @@
       "fast": "Yara"
     },
     "rules": {
+      "audience": "Ta ni o le mu u ṣiṣẹ",
+      "sayText": "Ọ̀rọ̀ tí a ó kà sókè",
       "title": "Àwọn ìlànà",
       "intro": "Nígbà tí nǹkan bá ṣẹlẹ̀ lórí ẹ̀rọ rẹ, DeHub máa ń ṣe ohun tí o yàn: ó máa ń fi ìkìlọ̀ hàn, ó máa ń gbọ́ ohùn, ó máa ń ka ohun kan lókè, ó máa ń fi àwọn ohun kan sínú ìjíròrò rẹ tàbí ó máa ń sọ fún Discord rẹ.",
       "add": "Ṣafikun ofin kan",

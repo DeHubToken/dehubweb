@@ -4921,6 +4921,7 @@
       "fast": "Rask"
     },
     "rules": {
+      "test": "Prøv",
       "title": "Regler",
       "intro": "Når noe skjer på strømmen din, gjør DeHub det du velger: viser et varsel, spiller av en lyd, leser noe høyt, legger ut innlegg i chatten din eller forteller det til Discord-brukeren din.",
       "add": "Legg til en regel",

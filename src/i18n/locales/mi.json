@@ -4946,6 +4946,7 @@
       "webhookHint": "He paetukutuku Discord, Slack ranei, tetahi wāhitau https ranei e whakaae ana ki te pou.",
       "webhookText": "He karere ki te tuku",
       "triggers": {
+        "command": "Ka whakamahia he tono kōrerorero",
         "tip": "Ka tae mai he tohu",
         "follow": "Ko te tangata e whai ake nei",
         "subscribe": "He tangata e haina ana",

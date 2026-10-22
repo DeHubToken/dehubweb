@@ -603,6 +603,8 @@
     "stagePay": "Pagamento a DeHub Pay con {{symbol}}…",
     "stageDelivering": "DeHub Pay sta inviando i tuoi token…",
     "payViaDpay": "Pagato a DeHub Pay, i token arrivano in circa 30s",
+    "payDirect": "Inviato direttamente a {{name}} in {{symbol}} su {{chain}}. Nessuno swap.",
+    "payDirectNoName": "Inviato direttamente al creator in {{symbol}} su {{chain}}. Nessuno swap.",
     "payViaBridgeDpay": "Spostati su Base e pagati a DeHub Pay, i token arrivano in circa un minuto",
     "dmSent": "Inviati {{amount}} token a {{name}}!"
   },
@@ -702,6 +704,7 @@
     "price": "Prezzo",
     "ppvDhbInfo": "I pagamenti sono in token DeHub sulla catena Base",
     "ppvUsdInfo": "I pagamenti sono in USD",
+    "ppvStableInfo": "Gli acquirenti pagano in {{symbol}}, inviato direttamente a te",
     "setupBounty": "Configura ricompensa",
     "viewersToReward": "Spettatori da premiare",
     "numberOfViewers": "Numero di spettatori",
@@ -4933,6 +4936,7 @@
       "fast": "Veloce"
     },
     "rules": {
+      "test": "Prova",
       "title": "Regole",
       "intro": "Quando succede qualcosa sul tuo stream, DeHub fa ciò che scegli: mostra un avviso, riproduce un suono, legge qualcosa ad alta voce, pubblica nella tua chat o informa il tuo Discord.",
       "add": "Aggiungi una regola",
@@ -6253,6 +6257,7 @@
     "weeksShort": "{{count}} sett."
   },
   "liveGift": {
+    "notEnoughToken": "{{symbol}} insufficienti per questo regalo",
     "pickTier": "Scegli una celebrazione",
     "plays": "Riproduce {{tier}} in streaming",
     "you": "Tu",
