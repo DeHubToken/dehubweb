@@ -416,14 +416,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
   );
 
   /*
-   * Gift celebrations.
-   *
-   * Two sources feed the same queue. The sender's own gift is enqueued the
-   * moment the tip transaction is submitted, because the round trip through
-   * the backend and back out over the socket takes seconds and a paid-for
-   * celebration should not lag the payment. Everyone else's arrives on the
-   * `streamer.tip` broadcast — which also echoes the sender's own gift back,
-   * so that echo is dropped on the wallet address to avoid playing it twice.
+   * Gift celebrations: the sender's own plays at submit, everyone else's off
+   * `streamer.tip`, whose echo of the sender's own is dropped below.
    */
   const { items: giftCelebrations, enqueue: enqueueGift } = useGiftAnimations();
   // A creator's own tip alert replaces the built-in celebration, never both.
@@ -459,12 +453,8 @@ export function LiveStreamCard({ stream, chatSlot, immersive = false }: LiveStre
       if (isOwnGift(gift)) return;
       enqueueGift(gift);
     },
-    // Read the sender's line out over the stream once the tip is PAID. The
-    // unpaid broadcast carries whatever a client posted with any well-formed
-    // hash, and reading that aloud let anyone put words in every viewer's
-    // speakers for free. Every client synthesises the same sentence off this
-    // one event, so the room still hears it together, ahead of the HLS buffer.
-    // The sender's own copy is spoken at submit time below.
+    // Read aloud only once PAID: the unpaid broadcast carries whatever any
+    // client posted. The sender's own copy is spoken at submit time below.
     (paid) => {
       if (isOwnGift(paid)) return;
       speakTipMessage(paid.message);
