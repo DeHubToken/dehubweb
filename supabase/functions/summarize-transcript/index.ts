@@ -210,6 +210,18 @@ Deno.serve(async (req) => {
       summary_status: overview ? 'ready' : 'failed',
     }).eq('id', row.id);
 
+    // A public stage now has everything the clip picker reads. stage-clips
+    // checks the rest (recording, host, wording) and is safe to call twice.
+    if (target.kind === 'stage' && isPublic && serviceKey) {
+      const clips = fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/stage-clips`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${serviceKey}` },
+        body: JSON.stringify({ stageId: target.ref }),
+      }).then((r) => r.body?.cancel()).catch((e) => console.warn('stage-clips kick failed', e));
+      // @ts-ignore EdgeRuntime is provided by Supabase
+      if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(clips);
+    }
+
     return json({ overview, summary: overview, chapters });
   } catch (e: any) {
     console.error('summarize-transcript error', e);

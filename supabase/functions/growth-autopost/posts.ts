@@ -5,7 +5,7 @@
 import { CAST_MAX_BYTES, TEXT_LIMIT, clip, clipCastText } from '../_shared/social-text.ts';
 import type { MediaItem } from '../_shared/zernio.ts';
 
-export const KINDS = ['creator_of_day', 'growth_pulse', 'live_now', 'leaderboard', 'dhb_update', 'shorts_of_week'] as const;
+export const KINDS = ['creator_of_day', 'growth_pulse', 'live_now', 'leaderboard', 'dhb_update', 'shorts_of_week', 'stage_clip'] as const;
 export type Kind = typeof KINDS[number];
 
 export const SITE = 'https://dehub.io';
@@ -306,8 +306,41 @@ export function stage(row: StageRow, at: Date): Draft {
     head: soon ? `Starting soon on DeHub Stages, hosted by ${host}:` : `Live now on DeHub Stages, hosted by ${host}:`,
     quote: plainText(row.title),
     tail: soon ? 'Pull up a chair.' : `${compact(row.listener_count ?? 0)} listening. Pull up a chair.`,
-    link: row.short_id != null ? `${SITE}/stages/${row.short_id}` : `${SITE}/stage/${row.id}`,
+    link: stageLink(row),
     media: [],
+    scheduledFor: at,
+  };
+}
+
+/** The public link to a stage, the short form when it has one. */
+export const stageLink = (row: { id: string; short_id?: number | null }) =>
+  row.short_id != null ? `${SITE}/stages/${row.short_id}` : `${SITE}/stage/${row.id}`;
+
+export interface StageClipSource {
+  stage: { id: string; short_id?: number | null; title: string; host_username?: string | null };
+  /** 0-based position of the clip within its stage. */
+  index: number;
+  /** The clip's opening line. */
+  hook: string;
+  videoUrl: string;
+}
+
+/**
+ * A short cut from a finished Stage (stage-clips renders it and queues this).
+ * Not built by generate: it arrives when the render does, and always waits for
+ * an admin, because it puts a member's own voice on the brand accounts.
+ */
+export function stageClip(src: StageClipSource, at: Date): Draft {
+  const host = plainText(src.stage.host_username) || 'a DeHub host';
+  const title = clip(plainText(src.stage.title), 80);
+  return {
+    kind: 'stage_clip',
+    sourceRef: `stage:${src.stage.id}:${src.index}`,
+    head: title ? `From “${title}”, a DeHub Stage hosted by ${host}` : `From a DeHub Stage hosted by ${host}`,
+    quote: plainText(src.hook),
+    tail: 'Hear the whole conversation on DeHub.',
+    link: stageLink(src.stage),
+    media: [{ url: src.videoUrl, type: 'video' }],
     scheduledFor: at,
   };
 }
