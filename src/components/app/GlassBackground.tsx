@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 import { isBackgroundPaused, subscribeBackgroundPaused } from '@/lib/background-gate';
 
 // Curved light ribbons are vector geometry, composited without per-frame React work.
-const ribbons = Array.from({ length: 14 }, (_, index) => {
-  const vertical = index >= 7;
-  const lane = index % 7;
+const ribbons = Array.from({ length: 18 }, (_, index) => {
+  const vertical = index >= 9;
+  const lane = index % 9;
   const points = Array.from({ length: 10 }, (_, step) => {
     const along = step * 200 - 300;
-    const across = lane * 240 - 120 + Math.sin(step * 1.37 + lane * 1.8) * 115 + Math.cos(step * .71 - lane) * 65;
+    const across = lane * 170 - 120 + Math.sin(step * 1.37 + lane * 1.8) * 100 + Math.cos(step * .71 - lane) * 60;
     return vertical ? [across, along] : [along, across];
   });
   let d = `M${points[0].join(' ')}`;
@@ -21,10 +21,10 @@ const ribbons = Array.from({ length: 14 }, (_, index) => {
 function LightRibbons({ layer }: { layer: string }) {
   return <svg data-glass-light={layer} viewBox="0 0 1200 1200" preserveAspectRatio="xMidYMid slice" fill="none">
     {ribbons.map((d, i) => <g key={i}>
-      <path d={d} stroke="currentColor" strokeWidth="52" opacity=".035" />
-      <path d={d} stroke="currentColor" strokeWidth="24" opacity=".065" />
-      <path d={d} stroke="currentColor" strokeWidth="9" opacity=".14" />
-      <path d={d} stroke="currentColor" strokeWidth="3" opacity=".36" />
+      <path d={d} stroke="currentColor" strokeWidth="80" opacity=".045" />
+      <path d={d} stroke="currentColor" strokeWidth="38" opacity=".09" />
+      <path d={d} stroke="currentColor" strokeWidth="16" opacity=".2" />
+      <path d={d} stroke="currentColor" strokeWidth="5" opacity=".5" />
     </g>)}
   </svg>;
 }
