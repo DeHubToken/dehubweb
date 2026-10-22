@@ -88,11 +88,15 @@ export function soundsGenerated(text: string): boolean {
   return TELLS.some(pattern => pattern.test(text));
 }
 
-/** Small human finishing: casing habits, no trailing full stop on short posts. */
-export function finish(text: string, persona: Pick<Persona, "lowercase">): string {
+const EMOJI = /(?:\p{Extended_Pictographic}|\p{Regional_Indicator})(?:\uFE0F|\u200D(?:\p{Extended_Pictographic})|\p{Emoji_Modifier})*/gu;
+
+/** Small human finishing: casing habits, no trailing full stop on short posts, emoji only now and then. */
+export function finish(text: string, persona: Pick<Persona, "lowercase">, keepEmoji = 0.15): string {
   let out = text.trim().replace(/^["'“”]+|["'“”]+$/g, "").replace(/\s+\n/g, "\n").replace(/[ \t]{2,}/g, " ");
   if (persona.lowercase) out = out.replace(/(^|[^A-Z])([A-Z])(?=[a-z])/g, (_, before, letter) => before + letter.toLowerCase()).replace(/\bI\b/g, "i").replace(/\bI'/g, "i'");
   if (out.length < 90 && !out.includes("\n") && /[^.]\.$/.test(out) && chance(0.7)) out = out.slice(0, -1);
+  // Models tack an emoji onto every line; people mostly don't.
+  if (!chance(keepEmoji)) out = out.replace(EMOJI, "").replace(/[ \t]{2,}/g, " ").replace(/\s+([.,!?])/g, "$1").trim();
   return out;
 }
 

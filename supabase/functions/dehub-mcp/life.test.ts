@@ -28,3 +28,9 @@ Deno.test("finishing keeps a lowercase typist lowercase", () => {
   assertEquals(finish("Honestly I think Lisbon trams are overrated", { lowercase: true }), "honestly i think lisbon trams are overrated");
   assertEquals(finish('"Never again."', { lowercase: false }).replace(/\.$/, ""), "Never again");
 });
+
+Deno.test("finishing drops the tacked-on emoji most of the time", () => {
+  assertEquals(finish("listen at -3dB, not max 🔊", { lowercase: true }, 0), "listen at -3dB, not max");
+  assertEquals(finish("new kerning 🖌️ looks right 👍🏽", { lowercase: false }, 0), "new kerning looks right");
+  assertEquals(finish("listen at -3dB 🔊", { lowercase: true }, 1), "listen at -3dB 🔊");
+});
