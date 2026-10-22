@@ -4828,6 +4828,19 @@
       "howToVote_other": "Chatda {{command}} va raqam yozib ovoz berish uchun · {{count}} ovozlar"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "1 daqiqaga vaqt ajratildi",
+    "timeout10m": "10 daqiqaga vaqt ajrating",
+    "timeout1h": "1 soatlik tanaffus",
+    "ban": "Ushbu oqimlardan taqiqlash",
+    "makeModerator": "Moderator qiling",
+    "timedOut": "Vaqt cheklangan.",
+    "banned": "Ushbu oqimlardan taqiqlangan.",
+    "madeModerator": "Ular endi moderator.",
+    "failed": "Bu ishlamadi. Qayta urinib ko‘ring.",
+    "youAreBanned": "Siz bu ijodkorning strimlarida chatlasha olmaysiz",
+    "youAreTimedOut": "Siz bir zumga vaqtingiz tugadi"
+  },
   "liveStudio": {
     "polls": {
       "title": "Savollar",
@@ -5100,6 +5113,51 @@
         "spooky": "Dahshatli",
         "magic-spell": "Sehrli sehr",
         "shhh": "Jim bo&#39;l"
+      }
+    },
+    "moderation": {
+      "title": "Chat moderatsiyasi",
+      "intro": "Barcha streamlaringiz ostidagi chat qoidalari. Ular DeHubning asosiy chatiga yetmaydi: siz burada cheklagan kishi hamma joyda gaplashishi mumkin.",
+      "loadFailed": "Moderatsiya sozlamangiz yuklanmadi. Yangi sahifa yuklang va qayta urinib ko‘ring.",
+      "save": "Chat qoidalarini saqlash",
+      "saved": "Chat qoidalari saqlangan.",
+      "saveFailed": "Bu o‘zgarish saqlanmadi.",
+      "slowMode": "Yengil rejim",
+      "slowModeHint": "Katta tomoshabinlar orasidagi so‘zlashuv oralig‘i. Siz va moderatorlaringiz bu oralig‘ni kutmaydi.",
+      "off": "Boshlanmagan",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekund",
+      "followersOnly": "Faqat abonentlar",
+      "subscribersOnly": "Faqat abonentlar",
+      "subscribersOnlyHint": "Abonentlarni ortda qoldiradi.",
+      "bannedWords": "Cheklangan so‘zlar",
+      "bannedWordsHint": "Virgul bilan ajrating. So‘zni harf-harf yozish uni cheklashdan qutqaradi.",
+      "wordAction": "Kishi birini ishlatganda",
+      "wordBlock": "Xabarni to‘xtatish",
+      "wordTimeout": "Uningni to‘xtatib, bir daqiqa uchun vaqt cheklang.",
+      "moderators": "Moderatorlar",
+      "moderatorsHint": "Ular sizning strimlaringizdagi tomoshabinlarni vaqt tugashi va taqiqlashi mumkin. Ular sizga yoki bir-biringizga qarshi harakat qila olmaydilar.",
+      "addModerator": "Qo'shish",
+      "usernamePlaceholder": "Foydalanuvchi nomi",
+      "moderatorAdded": "Moderator qo&#39;shildi.",
+      "moderatorNotFound": "Bu foydalanuvchi nomi bilan hisob yo&#39;q.",
+      "removeModerator": "Moderatorni olib tashlash",
+      "noModerators": "Hali moderatorlar yo&#39;q.",
+      "banned": "Strimlaringizdan taqiqlangan",
+      "unban": "Taqiqni bekor qilish",
+      "noBans": "Hech kim taqiqlanmagan.",
+      "log": "So&#39;nggi harakatlar",
+      "noLog": "Hali hech narsa yo&#39;q.",
+      "actions": {
+        "word-timeout_other": "\"{{word}}\" uchun {{target}} {{count}} soniyaga ovozsiz qilindi",
+        "timeout_one": "{{actor}} {{count}} soniya uchun {{target}} vaqti tugadi",
+        "timeout_other": "{{actor}} {{count}} soniya davomida {{target}} vaqti tugadi",
+        "ban": "{{actor}} taqiqlangan {{target}}",
+        "unban": "{{actor}} taqiqlanmagan {{target}}",
+        "moderator-added": "{{target}} moderator bo&#39;ldi",
+        "moderator-removed": "{{target}} endi moderator emas",
+        "word-blocked": "{{target}} dan &quot;{{word}}&quot; uchun xabarni to&#39;xtatdi",
+        "word-timeout_one": "&quot;{{word}}&quot; uchun {{count}} soniya uchun {{target}} vaqt tugadi"
       }
     }
   },

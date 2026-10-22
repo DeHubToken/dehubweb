@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1h": "超时1小时",
+    "ban": "禁止观看这些视频流",
+    "makeModerator": "设为版主",
+    "timedOut": "超时。",
+    "banned": "禁止使用这些流媒体。",
+    "failed": "无效。请重试。",
+    "youAreBanned": "您无法在此创作者的视频流中聊天",
+    "youAreTimedOut": "您暂时超时了",
+    "timeout1m": "1分錯過",
+    "timeout10m": "10分錯過",
+    "madeModerator": "伊拉现在是一个主持人。"
+  },
   "errors": {
     "sponsorshipUnavailable": "免费交易辣阿拉搿面停脱了，勿是侬钱包个问题。歇歇再试。",
     "gasSponsorshipFailed": "搿笔交易垫勿出。歇歇再试。"
@@ -4363,6 +4376,51 @@
     }
   },
   "liveStudio": {
+    "moderation": {
+      "title": "聊天审核",
+      "intro": "所有直播下的聊天规则。他们永远无法联系到DeHub的主聊天：您在这里禁止的人仍然可以在其他任何地方交谈。",
+      "loadFailed": "无法加载您的审核设置。请刷新页面以重试。",
+      "save": "保存聊天规则",
+      "saved": "聊天规则已保存。",
+      "saveFailed": "无法保存该更改。",
+      "slowMode": "慢速模式",
+      "slowModeHint": "每个查看者在消息之间等待的时间。您和您的版主永远不会等待。",
+      "off": "关",
+      "seconds_one": "{{count}}秒",
+      "followersOnly": "仅关注者",
+      "subscribersOnly": "仅限订阅者",
+      "bannedWords": "禁止使用的词语",
+      "bannedWordsHint": "用逗号分隔。逐个字母拼写单词不会绕过它。",
+      "wordAction": "当有人使用一个",
+      "wordBlock": "停止消息",
+      "wordTimeout": "停止并超时一分钟",
+      "moderators": "版主",
+      "moderatorsHint": "他们可以超时并禁止观众观看您的视频流。他们不能对你或对彼此采取行动。",
+      "addModerator": "视需要增加填充棉。",
+      "usernamePlaceholder": "用户名",
+      "moderatorAdded": "版主已添加。",
+      "moderatorNotFound": "没有使用该用户名的帐户。",
+      "removeModerator": "删除负责人",
+      "noModerators": "还没有版主。",
+      "banned": "已从您的直播中禁用",
+      "unban": "不再屏蔽",
+      "noBans": "没有人被禁止。",
+      "log": "最近的操作",
+      "noLog": "还没有。",
+      "seconds_other": "{{count}} 秒鐘",
+      "subscribersOnlyHint": "過濾追蹤者喔。",
+      "actions": {
+        "ban": "{{actor}}已禁用{{target}}",
+        "moderator-removed": "{{target}}不再是版主",
+        "word-blocked": "已为“{{word}}”停止一条来自{{target}}的消息",
+        "word-timeout_one": "\"{{word}}\"在{{count}}秒内超时{{target}}",
+        "word-timeout_other": "\"{{word}}\"在{{count}}秒内超时{{target}}",
+        "timeout_one": "{{actor}} 過時{{target}} 好幾{{count}} 秒",
+        "timeout_other": "{{actor}} 過時{{target}} 好幾{{count}} 秒",
+        "unban": "{{actor}} 咱家未封 {{target}}",
+        "moderator-added": "{{target}} 成了个管理员"
+      }
+    },
     "polls": {
       "title": "投票",
       "intro": "向观看您直播的人询问一个问题。他们可以在DeHub应用程序中使用按钮回答问题，也可以在聊天中输入{{command}}和选项的编号。",

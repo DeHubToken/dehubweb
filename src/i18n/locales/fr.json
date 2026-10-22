@@ -5839,6 +5839,19 @@
       "howToVote_other": "Tapez {{command}} et un nombre en chat pour voter · {{count}} votes"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Temps d'attente de 1 minute",
+    "timeout10m": "Temps d'attente de 10 minutes",
+    "timeout1h": "Temps d'attente de 1 heure",
+    "ban": "Interdit sur ces streams",
+    "makeModerator": "Nommer modérateur",
+    "timedOut": "Temps d'attente appliqué.",
+    "banned": "Interdit sur ces streams.",
+    "madeModerator": "Ils sont maintenant modérateurs.",
+    "failed": "Ça n'a pas fonctionné. Réessayer.",
+    "youAreBanned": "Vous ne pouvez pas discuter dans les streams de ce créateur",
+    "youAreTimedOut": "Vous êtes en temps d'attente pour un moment"
+  },
   "liveStudio": {
     "polls": {
       "title": "Sondages",
@@ -6112,6 +6125,51 @@
         "spooky": "Effrayant",
         "magic-spell": "Sort magique",
         "shhh": "Chut"
+      }
+    },
+    "moderation": {
+      "title": "Modération de la salle de chat",
+      "intro": "Règles pour le chat sous tous vos streams. Elles ne s'appliquent jamais au chat principal de DeHub : quelqu'un que vous bannissez ici peut toujours parler ailleurs.",
+      "loadFailed": "Vos paramètres de modération ne pouvaient pas être chargés. Rafraîchissez la page pour réessayer.",
+      "save": "Enregistrer les règles du chat",
+      "saved": "Règles du chat enregistrées.",
+      "saveFailed": "Ce changement ne pouvait pas être enregistré.",
+      "slowMode": "Mode lent",
+      "slowModeHint": "Durée d'attente entre les messages pour chaque spectateur. Vous et vos modérateurs n'avez pas à attendre.",
+      "off": "Désactivé",
+      "seconds_one": "{{count}} seconde",
+      "seconds_other": "{{count}} secondes",
+      "followersOnly": "Abonnés uniquement",
+      "subscribersOnly": "Abonnés uniquement (souscripteurs).",
+      "subscribersOnlyHint": "Contourne les abonnés uniquement.",
+      "bannedWords": "Mots interdits",
+      "bannedWordsHint": "Séparer par des virgules. Épeler un mot lettre par lettre ne le contourne pas.",
+      "wordAction": "Quand quelqu'un utilise un mot interdit",
+      "wordBlock": "Arrêter le message",
+      "wordTimeout": "L'arrêter et le mettre en temps d'attente d'une minute",
+      "moderators": "Modérateurs",
+      "moderatorsHint": "Ils peuvent mettre en pause et bannir les spectateurs de vos streams. Ils ne peuvent pas agir sur vous ou sur eux-mêmes.",
+      "addModerator": "Ajouter",
+      "usernamePlaceholder": "Nom d'utilisateur",
+      "moderatorAdded": "Modérateur ajouté.",
+      "moderatorNotFound": "Aucun compte avec ce nom d'utilisateur.",
+      "removeModerator": "Retirer le modérateur",
+      "noModerators": "Aucun modérateur pour l'instant.",
+      "banned": "Banni de vos streams",
+      "unban": "Débannir",
+      "noBans": "Personne n'est banni.",
+      "log": "Actions récentes",
+      "noLog": "Rien pour l'instant.",
+      "actions": {
+        "timeout_one": "{{actor}} a été mis en pause {{target}} pendant {{count}} seconde",
+        "timeout_other": "{{actor}} a été mis en pause {{target}} pendant {{count}} secondes",
+        "ban": "{{actor}} a banni {{target}}",
+        "unban": "{{actor}} a débanni {{target}}",
+        "moderator-added": "{{target}} est devenu modérateur",
+        "moderator-removed": "{{target}} n'est plus modérateur",
+        "word-blocked": "A stoppé un message de {{target}} pour \"{{word}}\"",
+        "word-timeout_one": "{{target}} a été mis en pause {{count}} seconde pour \"{{word}}\"",
+        "word-timeout_other": "{{target}} a été mis en pause {{count}} secondes pour \"{{word}}\""
       }
     }
   },

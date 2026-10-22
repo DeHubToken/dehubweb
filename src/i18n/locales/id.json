@@ -4809,6 +4809,19 @@
       "howToVote_other": "Ketik {{command}} dan angka di chat untuk memilih · {{count}} pilihan"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Waktu untuk 1 menit",
+    "timeout10m": "Waktu untuk 10 menit",
+    "timeout1h": "Waktu untuk 1 jam",
+    "ban": "Diblokir dari siaran-siaran ini",
+    "makeModerator": "Membuat moderator",
+    "timedOut": "Ditimpa waktu.",
+    "banned": "Diblokir dari siaran-siaran ini.",
+    "madeModerator": "Mereka sekarang adalah moderator.",
+    "failed": "Itu tidak berhasil. Coba lagi.",
+    "youAreBanned": "Anda tidak bisa berbicara di siaran pembuat ini",
+    "youAreTimedOut": "Anda ditimpa waktu untuk sejenak"
+  },
   "liveStudio": {
     "polls": {
       "title": "Pemungutan suara",
@@ -5082,6 +5095,51 @@
         "spooky": "Seram",
         "magic-spell": "Mantra sihir",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Moderasi obrolan",
+      "intro": "Aturan obrolan di bawah semua siaran Anda. Mereka tidak pernah mencapai obrolan utama DeHub: seseorang yang Anda blokir di sini masih bisa berbicara di tempat lain.",
+      "loadFailed": "Pengaturan moderasi Anda tidak dapat diisi. Refresh halaman untuk mencoba lagi.",
+      "save": "Simpan aturan obrolan",
+      "saved": "Aturan obrolan disimpan.",
+      "saveFailed": "Perubahan itu tidak dapat disimpan.",
+      "slowMode": "Mode lambat",
+      "slowModeHint": "Berapa lama setiap penonton menunggu antara pesan. Anda dan moderator Anda tidak menunggu.",
+      "off": "Mati",
+      "seconds_one": "{{count}} detik",
+      "seconds_other": "{{count}} detik",
+      "followersOnly": "Hanya pengikut",
+      "subscribersOnly": "Hanya pelanggan",
+      "subscribersOnlyHint": "Mengatasi hanya pengikut.",
+      "bannedWords": "Kata-kata yang diblokir",
+      "bannedWordsHint": "Terpisah dengan koma. Menyebutkan kata dengan huruf demi huruf tidak bisa mengelakinya.",
+      "wordAction": "Ketika seseorang menggunakan salah satu",
+      "wordBlock": "Hentikan pesan",
+      "wordTimeout": "Hentikan dan timpa waktu selama 1 menit",
+      "moderators": "Moderator",
+      "moderatorsHint": "Mereka dapat meluangkan waktu dan melarang pemirsa di streaming Anda. Mereka tidak dapat bertindak atas Anda atau satu sama lain.",
+      "addModerator": "Tambahkan",
+      "usernamePlaceholder": "Nama pengguna",
+      "moderatorAdded": "Moderator ditambahkan.",
+      "moderatorNotFound": "Tidak ada akun dengan nama pengguna tersebut.",
+      "removeModerator": "Hapus moderator",
+      "noModerators": "Belum ada moderator.",
+      "banned": "Dilarang dari streaming Anda",
+      "unban": "Unban",
+      "noBans": "Tidak ada yang dilarang.",
+      "log": "Tindakan terbaru",
+      "noLog": "Belum ada.",
+      "actions": {
+        "timeout_one": "{{actor}} batas waktu {{target}} untuk {{count}} detik",
+        "timeout_other": "{{actor}} batas waktu {{target}} selama {{count}} detik",
+        "ban": "{{actor}} melarang {{target}}",
+        "unban": "{{actor}} tidak dilarang {{target}}",
+        "moderator-added": "{{target}} menjadi moderator",
+        "moderator-removed": "{{target}} tidak lagi menjadi moderator",
+        "word-blocked": "Menghentikan pesan dari {{target}} untuk \"{{word}}\"",
+        "word-timeout_one": "Waktu {{target}} habis selama {{count}} detik untuk \"{{word}}\"",
+        "word-timeout_other": "Waktu {{target}} habis selama {{count}} detik untuk \"{{word}}\""
       }
     }
   },

@@ -4798,6 +4798,19 @@
       "howToVote_other": "הכנסו את {{command}} ואת המספר בחדר השיחה כדי להצביע · {{count}} הצבעות"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "זמן חסימה של דקה",
+    "timeout10m": "זמן חסימה של 10 דקות",
+    "timeout1h": "זמן חסימה של שעה",
+    "ban": "חסום מהזרימות הללו",
+    "makeModerator": "הפוך למתווך",
+    "timedOut": "חוסם זמנית.",
+    "banned": "חוסם מהזרימות הללו.",
+    "madeModerator": "הם עכשיו מתווכים.",
+    "failed": "זה לא עבד. נסה שוב.",
+    "youAreBanned": "אתה לא יכול לדבר בחדר השיחה בזרימות של יצרן זה",
+    "youAreTimedOut": "אתה חוסם זמנית עכשיו"
+  },
   "liveStudio": {
     "polls": {
       "title": "סקרים",
@@ -5071,6 +5084,51 @@
         "spooky": "רוע",
         "magic-spell": "סימן קסם",
         "shhh": "ששש"
+      }
+    },
+    "moderation": {
+      "title": "שליטה על שיחת החדר",
+      "intro": "קווים מנהלתיים לשיחה בחדר תחת כל זרימותיך. הם מעולם לא מגיעים לשיחת הראשית של DeHub: אם אתה מחסים אותם כאן, הם עדיין יכולים לדבר בכל מקום אחר.",
+      "loadFailed": "הגדרות השליטה שלך לא נטענו. התעדכן בדף כדי לנסות שוב.",
+      "save": "שמור על קווים מנהלתיים לשיחה",
+      "saved": "קווים מנהלתיים לשיחה נשמרו.",
+      "saveFailed": "שינוי זה לא הצליח להישמר.",
+      "slowMode": "סלידת מהירות",
+      "slowModeHint": "כמה זמן כל צופה מחכה בין הודעות. אתה ואנשי השירות שלך לא מחכים.",
+      "off": "ביטול",
+      "seconds_one": "{{count}} שניה",
+      "seconds_other": "{{count}} שניות",
+      "followersOnly": "רק מעריצים",
+      "subscribersOnly": "רק מנויים",
+      "subscribersOnlyHint": "מעקף את \"רק מעריצים\".",
+      "bannedWords": "מילים אסורות",
+      "bannedWordsHint": "הפרידו באמצעות פיסוק. כתיבה מילה על ידי אות לא תעבור את זה.",
+      "wordAction": "כשאדם משתמש במילה אחת",
+      "wordBlock": "הפסיק את ההודעה",
+      "wordTimeout": "הפסיק אותה וחסם אותם לדקה.",
+      "moderators": "מנחים",
+      "moderatorsHint": "הם יכולים להשהות ולהחרים צופים בזרמים שלכם. הם לא יכולים לפעול עליכם או אחד על השני.",
+      "addModerator": "הוספה",
+      "usernamePlaceholder": "שם משתמש",
+      "moderatorAdded": "מנהל המערכת נוסף.",
+      "moderatorNotFound": "אין חשבון עם שם המשתמש הזה.",
+      "removeModerator": "הסר מנחה",
+      "noModerators": "עדיין אין מנחים.",
+      "banned": "נחסם מהזרמים שלכם",
+      "unban": "בטל חסימה",
+      "noBans": "אף אחד לא מורחק.",
+      "log": "פעולות אחרונות",
+      "noLog": "עדיין כלום.",
+      "actions": {
+        "timeout_one": "{{actor}} תם הזמן הקצוב {{target}} למשך {{count}} שניות",
+        "timeout_other": "{{actor}} תם הזמן הקצוב {{target}} למשך {{count}} שניות",
+        "ban": "{{actor}} מוחרם {{target}}",
+        "unban": "{{actor}} לא אסורים {{target}}",
+        "moderator-added": "{{target}} הפכה למנהלת",
+        "moderator-removed": "{{target}} כבר לא מנחה",
+        "word-blocked": "עצרנו את שליחת ההודעה אל{{target}} עבור \"{{word}}\"",
+        "word-timeout_one": "תם הזמן הקצוב {{target}} עבור {{count}} שניות עבור \"{{word}}\"",
+        "word-timeout_other": "תם הזמן הקצוב {{target}} למשך {{count}} שניות עבור \"{{word}}\""
       }
     }
   },

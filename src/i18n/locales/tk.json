@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "Bir minutdan soň",
+    "timeout10m": "Gotdibz 10",
+    "timeout1h": "Bir sagatdan soň,",
+    "ban": "Bu stream'lerden ban edildi",
+    "makeModerator": "Moderatör edildi",
+    "timedOut": "Timeout edildi.",
+    "banned": "Bu stream'lerden ban edildi.",
+    "madeModerator": "O artık moderatör.",
+    "failed": "Bu işlem yapılamadı. Tekrar deneyin.",
+    "youAreBanned": "Bu yaradıcının stream'lerinde sohbet edemezsiniz.",
+    "youAreTimedOut": "Anlık olarak timeout oldunuz."
+  },
   "errors": {
     "sponsorshipUnavailable": "Mugt amallar biziň tarapymyzda saklandy, siziň gapjygyňyzda däl. Haýyş, biraz wagtdan gaýtadan synanyşyň.",
     "gasSponsorshipFailed": "Bu amalyň çykdajysy tölenip bilinmedi. Haýyş, biraz wagtdan synanyşyň."
@@ -4715,6 +4728,51 @@
     }
   },
   "liveStudio": {
+    "moderation": {
+      "title": "Sohbet moderasyonu",
+      "intro": "Tüm stream'lerinizin altında sohbet kuralları. Bunlar DeHub'un ana sohbetine ulaşmaz: buradan ban ettiğin birisi diğer yerlerde konuşmaya devam edebilir.",
+      "loadFailed": "Moderatör ayarlarınız yüklenemedi. Sayfayı yenileyip tekrar deneyin.",
+      "save": "Sohbet kurallarını kaydet",
+      "saved": "Sohbet kuralları kaydedildi.",
+      "saveFailed": "Bu değişiklik kaydedilemedi.",
+      "slowMode": "Yavaş rejim",
+      "slowModeHint": "Her izleyici mesajlar arasında ne kadar beklemeli. Siz ve moderatörleriniz beklemezsiniz.",
+      "off": "Kapalı",
+      "seconds_one": "{{count}} saniye",
+      "seconds_other": "{{count}} saniye",
+      "followersOnly": "Takipçiler sadece",
+      "subscribersOnly": "Abone'lar sadece",
+      "subscribersOnlyHint": "Takipçileri geçersiz kılar.",
+      "bannedWords": "Yasaklı sözcükler",
+      "bannedWordsHint": "Virgülle ayırın. Bir sözcüğü harf harf yazmak onu engellemez.",
+      "wordAction": "Birisi bunlardan birini kullanırsa",
+      "wordBlock": "Mesajı durdur",
+      "wordTimeout": "Durdur ve dakika için timeout et",
+      "moderators": "Moderator",
+      "moderatorsHint": "Olar siziň akmalaryňyzda wagt sarp edip, seredýänleri gadagan edip bilerler. Olar saňa ýa-da biri-birlerine garşy hereket edip bilmeýärler.",
+      "addModerator": "Ekle",
+      "usernamePlaceholder": "Ulyjynyň ady",
+      "moderatorAdded": "Moderator goşuldy.",
+      "moderatorNotFound": "Bu ulanýan ady bilen hiç hili hasabat ýok.",
+      "removeModerator": "Moderatory ewez et",
+      "noModerators": "Häzir moderator ýok.",
+      "banned": "Seniň akmalaryňdan aýrylyşmak",
+      "unban": "Unban",
+      "noBans": "Hiç kim gadagan edilmedi.",
+      "log": "Soňky hereketler",
+      "noLog": "Häzir däl.",
+      "actions": {
+        "ban": "{{actor}} {{target}} ulanyjyny gadagan etdi",
+        "moderator-added": "{{target}} moderator boldy",
+        "timeout_one": "{{actor}} {{target}} ulanyjyny {{count}} sekunt sesini kesdi",
+        "timeout_other": "{{actor}} {{target}} ulanyjyny {{count}} sekunt sesini kesdi",
+        "word-timeout_one": "\"{{word}}\" üçin {{target}} {{count}} sekunt sesi kesildi",
+        "word-timeout_other": "\"{{word}}\" üçin {{target}} {{count}} sekunt sesi kesildi",
+        "unban": "{{actor}}unbained {{target}}",
+        "moderator-removed": "{{target}} indi moderator däl",
+        "word-blocked": "\"{{word}}\" üçin {{target}} -den habar goýuldy"
+      }
+    },
     "polls": {
       "title": "Saýlamalar",
       "intro": "Siziň telegepleşikleriňizi görýän adamlara bir sorag beriň. Olar DeHub-da bir düýş bilen jogap berýärler ýa-da {{command}} we çatda saýlama sanyny ýazýarlar.",

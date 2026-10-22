@@ -4742,6 +4742,19 @@
       "howToVote_other": "Skriv {{command}} och ett nummer i chatt för att rösta · {{count}} röster"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Tidsutgång för 1 minut",
+    "timeout10m": "Tidsutgång för 10 minuter",
+    "timeout1h": "Tidsutgång för 1 timme",
+    "ban": "Bannad från dessa streamar",
+    "makeModerator": "Gör till moderator",
+    "timedOut": "Tidsutgång.",
+    "banned": "Bannad från dessa streamar.",
+    "madeModerator": "De är nu en moderator.",
+    "failed": "Det fungerade inte. Försök igen.",
+    "youAreBanned": "Du kan inte chatta i denna skapares streamar",
+    "youAreTimedOut": "Du är tidsutgång för en stund"
+  },
   "liveStudio": {
     "polls": {
       "title": "Omröstningar",
@@ -5015,6 +5028,51 @@
         "spooky": "Spöklikt",
         "magic-spell": "Magisk trollformel",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Chatmoderering",
+      "intro": "Regler för chatt under alla dina streamar. De når aldrig DeHubs huvudchatt: någon du bannar här kan fortfarande prata överallt annat.",
+      "loadFailed": "Dina modereringsinställningar kunde inte laddas. Uppdatera sidan för att försöka igen.",
+      "save": "Spara chatregler",
+      "saved": "Chatreglerna har sparats.",
+      "saveFailed": "Den här ändringen kunde inte sparas.",
+      "slowMode": "Långsam läge",
+      "slowModeHint": "Hur länge varje tittare väntar mellan meddelanden. Du och dina moderatorer väntar aldrig.",
+      "off": "Av",
+      "seconds_one": "{{count}} sekund",
+      "seconds_other": "{{count}} sekunder",
+      "followersOnly": "Endast följare",
+      "subscribersOnly": "Endast prenumeranter",
+      "subscribersOnlyHint": "Överskrider endast följare.",
+      "bannedWords": "Bannade ord",
+      "bannedWordsHint": "Skilja med kommatecken. Att ställa ut ett ord bokstav för bokstav går inte runt det.",
+      "wordAction": "När någon använder ett",
+      "wordBlock": "Stopp meddelandet",
+      "wordTimeout": "Stopp det och tidsutgång dem för en minut",
+      "moderators": "Moderatorer",
+      "moderatorsHint": "De kan stänga av och banna tittare under dina streamar. De kan inte agera mot dig eller mot varandra.",
+      "addModerator": "Lägg till",
+      "usernamePlaceholder": "Användarnamn",
+      "moderatorAdded": "Moderator tillagd.",
+      "moderatorNotFound": "Ingen konto med det användarnamnet.",
+      "removeModerator": "Ta bort moderator",
+      "noModerators": "Inga moderatorer ännu.",
+      "banned": "Bannad från dina streamar",
+      "unban": "Avbanna",
+      "noBans": "Ingen är bannad.",
+      "log": "Senaste åtgärder",
+      "noLog": "Inget ännu.",
+      "actions": {
+        "timeout_one": "{{actor}} stängde av {{target}} för {{count}} sekund",
+        "timeout_other": "{{actor}} stängde av {{target}} för {{count}} sekunder",
+        "ban": "{{actor}} bannade {{target}}",
+        "unban": "{{actor}} avbannade {{target}}",
+        "moderator-added": "{{target}} blev moderator",
+        "moderator-removed": "{{target}} är inte längre moderator",
+        "word-blocked": "Stoppade ett meddelande från {{target}} för \"{{word}}\"",
+        "word-timeout_one": "Stängde av {{target}} för {{count}} sekund för \"{{word}}\"",
+        "word-timeout_other": "Stängde av {{target}} för {{count}} sekunder för \"{{word}}\""
       }
     }
   },

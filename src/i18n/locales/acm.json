@@ -1,4 +1,17 @@
 {
+  "liveChatModeration": {
+    "timeout1m": "انتهاء الوقت لمدة دقيقة",
+    "timeout10m": "انتهاء الوقت لمدة 10 دقائق",
+    "timeout1h": "انتهاء الوقت لمدة ساعة",
+    "ban": "حظر من هذه البثوث",
+    "makeModerator": "اجعل مشرف",
+    "timedOut": "انتهى الوقت.",
+    "banned": "محظور من هذه البثوث.",
+    "madeModerator": "صار الآن مشرف.",
+    "failed": "هذا ما نفعش. جرّب مرة ثانية.",
+    "youAreBanned": "ما تگدر تدردش بهالبثوث مال هالمبدع",
+    "youAreTimedOut": "انتهى وقتك لحظة"
+  },
   "errors": {
     "sponsorshipUnavailable": "المعاملات المجانية موقوفة من طرفنا، مو من محفظتك. جرب مرة ثانية بعد شوي.",
     "gasSponsorshipFailed": "ما كدرنا نتكفل بهاي المعاملة. جرب مرة ثانية بعد شوية."
@@ -4256,6 +4269,51 @@
     }
   },
   "liveStudio": {
+    "moderation": {
+      "title": "إدارة الدردشة",
+      "intro": "قوانين الدردشة تحت كل بثوثك. ما توصل للـ DeHub الرئيسي: الشخص اللي تحذره هنا يگدر يگول بكل مكان ثاني.",
+      "loadFailed": "ما قدرنا نحمل إعدادات الإدارة. عاود ريفريش الصفحة وجرب مرة ثانية.",
+      "save": "احفظ قوانين الدردشة",
+      "saved": "قوانين الدردشة انحفظت.",
+      "saveFailed": "ما قدرنا نحفظ التغيير.",
+      "slowMode": "وضع بطيء",
+      "slowModeHint": "كمية الوقت اللي ينتظر كل مشاهد بين الرسائل. إنت ومشرفيك ما تنتظرون أبداً.",
+      "off": "إيقاف",
+      "seconds_one": "{{count}} ثانية",
+      "seconds_other": "{{count}} ثواني",
+      "followersOnly": "المتابعين فقط",
+      "subscribersOnly": "المشتركين فقط",
+      "subscribersOnlyHint": "يتجاوز المتابعين فقط.",
+      "bannedWords": "كلمات محظورة",
+      "bannedWordsHint": "افصلهم بفواصل. كتابة كلمة حرف بحرف ما يطيق يلتف حولها.",
+      "wordAction": "لما أحد يستخدم وحدة",
+      "wordBlock": "وقف الرسالة",
+      "wordTimeout": "وقفها وحط له وقت دقيقة.",
+      "moderators": "المشرفون",
+      "moderatorsHint": "يقدرون يوقفون ويمنعون المشاهدين من البثوث. ما يقدرون يتصرفون عليك أو مع بعضهم.",
+      "addModerator": "أضف",
+      "usernamePlaceholder": "اسم المستخدم",
+      "moderatorAdded": "تم إضافة المشرف.",
+      "moderatorNotFound": "لا يوجد حساب بهذا الاسم.",
+      "removeModerator": "إزالة المشرف",
+      "noModerators": "ماكو مشرفين بعد.",
+      "banned": "منع من البثوث",
+      "unban": "إلغاء الحظر",
+      "noBans": "ماكو أحد ممنوع.",
+      "log": "الإجراءات الأخيرة",
+      "noLog": "ماكو شيء بعد.",
+      "actions": {
+        "timeout_one": "{{actor}} تم توقيفه {{target}} لمدة {{count}} ثانية",
+        "timeout_other": "{{actor}} تم توقيفه {{target}} لمدة {{count}} ثواني",
+        "ban": "{{actor}} حظر {{target}}",
+        "unban": "{{actor}} ألغى حظر {{target}}",
+        "moderator-added": "{{target}} صار مشرف",
+        "moderator-removed": "{{target}} ما عاد مشرف",
+        "word-blocked": "وقف رسالة من {{target}} لـ \"{{word}}\"",
+        "word-timeout_one": "تم توقيف {{target}} لمدة {{count}} ثانية لـ \"{{word}}\"",
+        "word-timeout_other": "تم توقيف {{target}} لمدة {{count}} ثواني لـ \"{{word}}\""
+      }
+    },
     "polls": {
       "title": "استطلاعات الرأي",
       "option": "الخيار {{n}}",

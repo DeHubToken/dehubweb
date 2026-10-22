@@ -4754,6 +4754,19 @@
       "howToVote_other": "{{command}} ва рақамро барои барадан ба чат даст кардан · {{count}} бара"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Вақт барои 1 дақиқа",
+    "timeout10m": "Вақт барои дақиқаҳои 10",
+    "timeout1h": "Вақт барои 1 соат",
+    "ban": "Манъ кардани ин ҷараёнҳо",
+    "makeModerator": "Эҷод кардани модератор",
+    "timedOut": "Вақт тамом шуд.",
+    "banned": "Аз ин ҷараёнҳо манъ аст.",
+    "madeModerator": "Огоҳ бош, ки инҳо худ дар гуноҳ афтодаанд.",
+    "failed": "Ин кор накард. Бори дигар кӯшиш кунед.",
+    "youAreBanned": "Шумо наметавонед дар ҷараёнҳои ин эҷодкор сӯҳбат кунед",
+    "youAreTimedOut": "Шумо барои лаҳзае мӯҳлат дода шудаед"
+  },
   "liveStudio": {
     "polls": {
       "widgetHint": "Пурсиши зиндаи шуморо нишон медиҳад. Дар барномаи DeHub тамошобинон барои овоз додан ба вариант ангушт мезананд; дар OBS ба одамон мегӯяд, ки дар чат {{command}} ва рақамро нависанд.",
@@ -5024,6 +5037,51 @@
         "spooky": "Таърих Бознигарии Давомно",
         "magic-spell": "Сеҳрнок",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "moderatorAdded": "Модератор илова шуд.",
+      "seconds_one": "{{count}} сония",
+      "seconds_other": "{{count}} сония",
+      "slowModeHint": "Ҳар тамошобин байни паёмҳо чӣ қадар интизор мешавад. Шумо ва модераторонатон ҳеҷ гоҳ интизор намешавед.",
+      "title": "Мудирияти чат",
+      "intro": "Mga patakaran para sa chat sa ilalim ng lahat ng iyong mga stream. Онҳо ҳеҷ гоҳ ба сӯҳбати асосии DeHub намерасанд: касе, ки шумо дар ин ҷо манъ мекунед, метавонад дар ҳама ҷо гап занад.",
+      "loadFailed": "Hindi mai-load ang iyong mga setting ng moderasyon. I-refresh ang pahina upang subukan muli.",
+      "save": "Нигоҳ доштани қоидаҳои чат",
+      "saved": "Қоидаҳои чат нигоҳ дошта шуд.",
+      "saveFailed": "Ин тағирот захира карда нашуд.",
+      "slowMode": "Ҳолати суст",
+      "off": "Хомӯш",
+      "followersOnly": "Танҳо пайравон",
+      "subscribersOnly": "Mga Subscribe lamang",
+      "subscribersOnlyHint": "Танҳо пайравонро бозпас мегардонад.",
+      "bannedWords": "Калимаҳои манъшуда",
+      "bannedWordsHint": "Ҷудо кардан бо кома. Ифодаи ҳарфи калима бо ҳарфи он гирд намеояд.",
+      "wordAction": "Kapag gumagamit ng isang ta",
+      "wordBlock": "Қатъ кардани иттилоот",
+      "wordTimeout": "Ito at oras ang mga ito para sa isang minuto",
+      "moderators": "Модераторҳо",
+      "moderatorsHint": "Ang mga ito ay maaaring mag-abiso at magbahintulutan ng mga tao sa Наметавонанд бо шумо ё бо якдигар рафтор кунанд.",
+      "addModerator": "Илова кардан",
+      "usernamePlaceholder": "Номи корбар",
+      "moderatorNotFound": "Walang account na may gumagamit na pangalan.",
+      "removeModerator": "Удалить модератор",
+      "noModerators": "Ҳанӯз модераторҳо вуҷуд надоранд.",
+      "banned": "Аз ҷараёнҳои шумо манъ аст",
+      "unban": "Бекор кардан",
+      "noBans": "Ҳеҷ кас манъ карда нашудааст.",
+      "log": "Амалҳои охирин",
+      "noLog": "Чизе ҳанӯз нест.",
+      "actions": {
+        "ban": "{{actor}} {{target}}-ро манъ кард",
+        "moderator-added": "{{target}} модератор шуд",
+        "timeout_other": "{{actor}} {{target}}-ро барои {{count}} сония хомӯш кард",
+        "word-timeout_one": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд",
+        "word-timeout_other": "{{target}} барои \"{{word}}\" ба {{count}} сония хомӯш карда шуд",
+        "timeout_one": "{{actor}} timed out {{target}} {{count}} second",
+        "unban": "{{actor}} unbanned{{target}}",
+        "moderator-removed": "{{target}}info: whatsthis",
+        "word-blocked": "Иттилоотро аз {{target}} барои \"{{word}}\" боздошта шуд"
       }
     }
   },

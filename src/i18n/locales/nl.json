@@ -6028,6 +6028,19 @@
       "howToVote_other": "Typ {{command}} en een nummer in de chat om te stemmen · {{count}} stemmen"
     }
   },
+  "liveChatModeration": {
+    "timeout1m": "Tijd uit voor 1 minuut",
+    "timeout10m": "Tijd uit voor 10 minuten",
+    "timeout1h": "Tijd uit voor 1 uur",
+    "ban": "Gebannen van deze streams",
+    "makeModerator": "Maak tot moderator",
+    "timedOut": "Tijd uit.",
+    "banned": "Gebannen van deze streams.",
+    "madeModerator": "Ze zijn nu een moderator.",
+    "failed": "Dat heeft niet gewerkt. Probeer het opnieuw.",
+    "youAreBanned": "Je kunt niet chatten in deze stream van de creator.",
+    "youAreTimedOut": "Je bent even tijd uit."
+  },
   "liveStudio": {
     "polls": {
       "title": "Enquêtes",
@@ -6301,6 +6314,51 @@
         "spooky": "Spookachtig",
         "magic-spell": "Magische spreuk",
         "shhh": "Shhh"
+      }
+    },
+    "moderation": {
+      "title": "Chatmoderatie",
+      "intro": "Regels voor de chat onder alle je streams. Ze komen nooit in DeHub's hoofdchat: iemand die je hier bant kan nog steeds overal praten.",
+      "loadFailed": "Je moderatie-instellingen konden niet worden geladen. Ververs de pagina om het opnieuw te proberen.",
+      "save": "Chatregels opslaan",
+      "saved": "Chatregels opgeslagen.",
+      "saveFailed": "Die verandering kon niet worden opgeslagen.",
+      "slowMode": "Langzaam modus",
+      "slowModeHint": "Hoe lang elk kijker moet wachten tussen berichten. Jij en je moderators hoeven niet te wachten.",
+      "off": "Uit",
+      "seconds_one": "{{count}} seconde",
+      "seconds_other": "{{count}} seconden",
+      "followersOnly": "Volgers alleen",
+      "subscribersOnly": "Abonnees alleen",
+      "subscribersOnlyHint": "Overschrijdt volgers alleen.",
+      "bannedWords": "Gebannen woorden",
+      "bannedWordsHint": "Scheid met komma's. Het uitspreken van een woord letter voor letter werkt niet.",
+      "wordAction": "Wanneer iemand er een gebruikt",
+      "wordBlock": "Stop de boodschap",
+      "wordTimeout": "Stop het en zet ze tijd uit voor een minuut",
+      "moderators": "Moderators",
+      "moderatorsHint": "Ze kunnen kijkers tijdelijk uitschakelen en bannen tijdens je streams. Ze kunnen niet op jou of op elkaar handelen.",
+      "addModerator": "Toevoegen",
+      "usernamePlaceholder": "Gebruikersnaam",
+      "moderatorAdded": "Moderator toegevoegd.",
+      "moderatorNotFound": "Geen account met die gebruikersnaam.",
+      "removeModerator": "Moderator verwijderen",
+      "noModerators": "Nog geen moderators.",
+      "banned": "Gebannen van je streams",
+      "unban": "Ontbannen",
+      "noBans": "Niemand is gebannen.",
+      "log": "Recente acties",
+      "noLog": "Nog niets.",
+      "actions": {
+        "timeout_one": "{{actor}} heeft {{target}} tijdelijk uitgeschakeld voor {{count}} seconde",
+        "timeout_other": "{{actor}} heeft {{target}} tijdelijk uitgeschakeld voor {{count}} seconden",
+        "ban": "{{actor}} heeft {{target}} gebannen",
+        "unban": "{{actor}} heeft {{target}} ontbannen",
+        "moderator-added": "{{target}} is moderator geworden",
+        "moderator-removed": "{{target}} is niet langer moderator",
+        "word-blocked": "Stopte een bericht van {{target}} voor \"{{word}}\"",
+        "word-timeout_one": "Tijdelijk uitgeschakeld {{target}} voor {{count}} seconde voor \"{{word}}\"",
+        "word-timeout_other": "Tijdelijk uitgeschakeld {{target}} voor {{count}} seconden voor \"{{word}}\""
       }
     }
   },
