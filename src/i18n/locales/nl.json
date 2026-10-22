@@ -1023,6 +1023,8 @@
     "stagePay": "DeHub Pay betalen met {{symbol}}…",
     "stageDelivering": "DeHub Pay stuurt je tokens…",
     "payViaDpay": "Betaald aan DeHub Pay, tokens komen aan in ongeveer 30s",
+    "payDirect": "Rechtstreeks naar {{name}} gestuurd in {{symbol}} op {{chain}}. Geen swap.",
+    "payDirectNoName": "Rechtstreeks naar de maker gestuurd in {{symbol}} op {{chain}}. Geen swap.",
     "payViaBridgeDpay": "Verplaatst naar Base en betaald aan DeHub Pay, tokens komen aan in ongeveer een minuut",
     "dmSent": "{{amount}} tokens verzonden naar {{name}}!"
   },

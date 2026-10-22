@@ -602,6 +602,8 @@
     "stagePay": "{{symbol}}でDeHub Payに支払い中…",
     "stageDelivering": "DeHub Payがトークンを送信しています…",
     "payViaDpay": "DeHub Payに支払い済み、トークンは約30秒で到着",
+    "payDirect": "{{chain}}上の{{symbol}}で{{name}}に直接送られます。スワップなし。",
+    "payDirectNoName": "{{chain}}上の{{symbol}}でクリエイターに直接送られます。スワップなし。",
     "payViaBridgeDpay": "Baseに移動しDeHub Payに支払い済み、トークンは約1分で到着",
     "dmSent": "{{name}}に{{amount}} DHBを送りました！"
   },

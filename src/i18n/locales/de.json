@@ -647,6 +647,8 @@
     "stagePay": "DeHub Pay wird mit {{symbol}} bezahlt…",
     "stageDelivering": "DeHub Pay sendet Ihre Token…",
     "payViaDpay": "An DeHub Pay bezahlt, Token kommen in ca. 30s an",
+    "payDirect": "Direkt an {{name}} in {{symbol}} auf {{chain}} gesendet. Kein Swap.",
+    "payDirectNoName": "Direkt an den Creator in {{symbol}} auf {{chain}} gesendet. Kein Swap.",
     "payViaBridgeDpay": "Auf Base verschoben und an DeHub Pay bezahlt, Token kommen in ca. einer Minute an",
     "dmSent": "{{amount}} Tokens an {{name}} gesendet!"
   },
