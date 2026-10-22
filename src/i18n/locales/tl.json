@@ -4852,6 +4852,10 @@
     "creatorEarnsDirect": "Nagbabayad ang mga subscriber sa mga token ng DeHub. Ang iyong share ay nasa iyong wallet sa sandaling mag - subscribe sila, mas mababa ang bayarin sa platform para sa iyong badge tier."
   },
   "liveOverlay": {
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-linggo ng streak",
+    "streak_other": "{{count}}-linggo ng streak",
+    "tipJar": "Garapon na regalo",
     "subathon": "Subathon",
     "someone": "Isang tao",
     "newFollower": "Bagong tagasunod:{{name}}",
@@ -5035,6 +5039,8 @@
       "join": "Sumali"
     },
     "kinds": {
+      "streamer_level": "Antas ng streamer",
+      "tip_jar": "Garapon na regalo",
       "subathon_timer": "Timer ng subathon",
       "tip_alert": "Alerto sa tip",
       "follow_alert": "Subaybayan ang alerto",
@@ -5057,6 +5063,8 @@
       "points_board": "Mga tapat na manonood"
     },
     "hints": {
+      "streamer_level": "Ang iyong antas ng streamer at lingguhang streak, mula sa iyong profile",
+      "tip_jar": "Ang isang garapon na pumupuno bilang bayad na mga regalo ay pumapasok",
       "tip_alert": "Ipinagdiriwang ang bawat tip, laki hanggang sa tier nito",
       "follow_alert": "Ipinapakita ang bawat bagong tagasunod",
       "subscribe_alert": "Ipinapakita ang bawat bagong subscriber",
@@ -5079,6 +5087,7 @@
       "points_board": "Ang iyong mga nangungunang manonood ayon sa mga puntos mula sa panonood at pagbibigay ng regalo"
     },
     "fields": {
+      "showStreak": "Ipakita ang weekly streak",
       "style": "Estilo",
       "celebration": "Pagdiriwang",
       "banner": "Banner",

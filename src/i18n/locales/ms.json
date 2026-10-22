@@ -5060,6 +5060,10 @@
     "creatorEarnsDirect": "Pelanggan membayar dalam token DeHub. Bahagian anda masuk ke dalam dompet anda sebaik sahaja mereka melanggan, tolak yuran platform untuk peringkat lencana anda."
   },
   "liveOverlay": {
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}minggu berturut-turut",
+    "streak_other": "{{count}}minggu berturut-turut",
+    "tipJar": "Balang hadiah",
     "subathon": "Subathon",
     "someone": "Seseorang",
     "newFollower": "Pengikut baharu: {{name}}",
@@ -5244,6 +5248,8 @@
       "join": "Sertai"
     },
     "kinds": {
+      "streamer_level": "Tahap penstrim",
+      "tip_jar": "Balang hadiah",
       "tip_alert": "Makluman tip",
       "follow_alert": "Ikuti makluman",
       "subscribe_alert": "Makluman pelanggan",
@@ -5266,6 +5272,8 @@
       "points_board": "Penonton setia"
     },
     "hints": {
+      "streamer_level": "Tahap penstrim dan rentetan mingguan anda, daripada profil anda",
+      "tip_jar": "Balang yang terisi apabila hadiah berbayar masuk",
       "tip_alert": "Meraikan setiap tip, bersaiz mengikut peringkatnya",
       "follow_alert": "Menunjukkan setiap pengikut baharu",
       "subscribe_alert": "Menunjukkan setiap pelanggan baharu",
@@ -5288,6 +5296,7 @@
       "points_board": "Pengikut teratas anda berdasarkan poin dari menonton dan menghadiahkan"
     },
     "fields": {
+      "showStreak": "Tunjukkan rentetan mingguan",
       "style": "Gaya",
       "celebration": "Perayaan",
       "banner": "Sepanduk",

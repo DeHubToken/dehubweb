@@ -4744,6 +4744,10 @@
     "creatorEarnsDirect": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Gị òkè ala gị obere akpa mgbe ha debanyere aha, obere n 'elu ikpo okwu ego maka gị baajị tier."
   },
   "liveOverlay": {
+    "level": "Ọkwa {{level}}",
+    "streak_one": "{{count}}-Week streak",
+    "streak_other": "{{count}}-Week streak",
+    "tipJar": "Onyinye ite",
     "subathon": "Subathon",
     "someone": "Mmadụ",
     "newFollower": "Ọhụrụ na-eso ụzọ: {{name}}",
@@ -4928,6 +4932,8 @@
       "join": "Jikọọ"
     },
     "kinds": {
+      "streamer_level": "Streamer larịị",
+      "tip_jar": "Onyinye ite",
       "tip_alert": "NDỤMỌDỤ",
       "follow_alert": "Soro ọkwa",
       "subscribe_alert": "Ịdọ aka ná ntị ndị debanyere aha",
@@ -4950,6 +4956,8 @@
       "points_board": "Ndị na-ekiri na-eguzosi ike n 'ihe"
     },
     "hints": {
+      "streamer_level": "Gị streamer larịị na kwa izu streak, si gị profaịlụ",
+      "tip_jar": "A ite na-ejuputa dị ka ugwo onyinye na-abata",
       "tip_alert": "Na-eme ememe ọ bụla n 'ọnụ, size ya tier",
       "follow_alert": "Na-egosi ọ bụla ọhụrụ na-eso ụzọ",
       "subscribe_alert": "Na-egosi ọ bụla ọhụrụ ụtụ magazin",
@@ -4972,6 +4980,7 @@
       "points_board": "Ndị na-ekiri gị n 'elu site na isi site na ikiri na onyinye"
     },
     "fields": {
+      "showStreak": "Gosi usoro nke izuụka",
       "style": "Ụdị",
       "celebration": "Ememe",
       "banner": "Banner",

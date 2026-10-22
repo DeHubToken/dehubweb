@@ -4786,6 +4786,10 @@
     "creatorEarnsDirect": "Tellijad maksavad DeHubi žetoonides. Sinu osa jõuab Sinu rahakotti kohe, kui nad tellimuse tellivad, millest on maha arvatud platvormi tasu Sinu erimärgi taseme eest."
   },
   "liveOverlay": {
+    "level": "Tase {{level}}",
+    "streak_one": "{{count}}nädala triip",
+    "streak_other": "{{count}}nädala triip",
+    "tipJar": "Kinkepurk",
     "someone": "Keegi",
     "newFollower": "Uus jälgija: {{name}}",
     "newSubscriber": "Uus abonent: {{name}}",
@@ -4970,6 +4974,8 @@
       "join": "Liitu"
     },
     "kinds": {
+      "streamer_level": "Voogedastaja tase",
+      "tip_jar": "Kinkepurk",
       "tip_alert": "Jootraha hoiatus",
       "follow_alert": "Jälgi teadet",
       "subscribe_alert": "Abonendi hoiatus",
@@ -4992,6 +4998,8 @@
       "points_board": "Tõeliselt lojaalsed vaatajad"
     },
     "hints": {
+      "streamer_level": "Sinu voogedastaja tase ja iganädalane triip sinu profiililt",
+      "tip_jar": "Purk, mis täidetakse, kui saabuvad tasulised kingitused",
       "tip_alert": "Tähistab igat oma tasemele vastavat jootraha",
       "follow_alert": "Kuvab iga uue jälgija",
       "subscribe_alert": "Kuvab iga uue tellija",
@@ -5014,6 +5022,7 @@
       "points_board": "Teie parimad vaatajad punktide järgi vaatamisest ja lahutamisest"
     },
     "fields": {
+      "showStreak": "Kuva iganädalane triip",
       "style": "Stiil",
       "celebration": "Tähistamine",
       "banner": "Bänner",

@@ -4784,6 +4784,10 @@
     "creatorEarnsDirect": "Abonnenter betaler i DeHub-tokens. Din andel lander i din tegnebog, så snart vedkommende abonnerer, minus platformsgebyret for dit badgeniveau."
   },
   "liveOverlay": {
+    "level": "Niveau {{level}}",
+    "streak_one": "{{count}}-ugers stribe",
+    "streak_other": "{{count}}-ugers stribe",
+    "tipJar": "Gavekrukke",
     "someone": "Nogen",
     "newFollower": "Ny følger:{{name}}",
     "newSubscriber": "Ny abonnent:{{name}}",
@@ -4968,6 +4972,8 @@
       "join": "Tilføj"
     },
     "kinds": {
+      "streamer_level": "Streamerniveau",
+      "tip_jar": "Gavekrukke",
       "tip_alert": "Tip-alert",
       "follow_alert": "Følg-alert",
       "subscribe_alert": "Abonnent-alert",
@@ -4990,6 +4996,8 @@
       "points_board": "Lojale seere"
     },
     "hints": {
+      "streamer_level": "Dit streamerniveau og ugentlige streak fra din profil",
+      "tip_jar": "En krukke, der fyldes op, når betalte gaver kommer ind",
       "tip_alert": "Festiger hvert tip, tilpasset dets niveau",
       "follow_alert": "Viser hver nye følger",
       "subscribe_alert": "Viser hver nye abonnent",
@@ -5012,6 +5020,7 @@
       "points_board": "Dine top-seere efter point fra at se og give"
     },
     "fields": {
+      "showStreak": "Vis den ugentlige stribe",
       "style": "Stil",
       "celebration": "Fejring",
       "banner": "Banner",

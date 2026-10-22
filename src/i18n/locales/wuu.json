@@ -4361,6 +4361,10 @@
     "creatorEarnsDirect": "订户用DeHub代币支付。一旦他们订阅，您的份额就会立即进入您的钱包，减去您徽章级别的平台费用。"
   },
   "liveOverlay": {
+    "level": "等级{{level}}",
+    "streak_one": "{{count}}周连胜",
+    "streak_other": "{{count}}周连胜",
+    "tipJar": "礼品罐",
     "subathon": "苏巴吞",
     "someone": "有人",
     "newFollower": "新关注者：{{name}}",
@@ -4515,6 +4519,8 @@
       "join": "加入"
     },
     "kinds": {
+      "streamer_level": "主播级别",
+      "tip_jar": "礼品罐",
       "tip_alert": "打赏提醒",
       "follow_alert": "关注提醒",
       "subscribe_alert": "订阅提醒",
@@ -4537,6 +4543,8 @@
       "points_board": "忠心觀眾"
     },
     "hints": {
+      "streamer_level": "您的个人资料中的流媒体播放器级别和每周连续播放次数",
+      "tip_jar": "当有偿礼物进来时，一个罐子会装满",
       "tip_alert": "为每笔打赏庆祝，按等级大小显示",
       "follow_alert": "显示每位新关注者",
       "subscribe_alert": "显示每位新订阅者",
@@ -4559,6 +4567,7 @@
       "points_board": "你觀看和贈送中最高的觀眾點數"
     },
     "fields": {
+      "showStreak": "显示每周连胜记录",
       "style": "样式",
       "celebration": "庆祝",
       "banner": "横幅",

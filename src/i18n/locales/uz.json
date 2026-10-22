@@ -4827,6 +4827,10 @@
     "creatorEarnsDirect": "Obunachilar DeHub tokenlarida to&#39;lov qilishadi. Ular obuna bo&#39;lgan zahoti sizning ulushingiz hamyoningizga tushadi, nishon darajangiz uchun platforma to&#39;lovi chegiriladi."
   },
   "liveOverlay": {
+    "level": "Daraja {{level}}",
+    "streak_one": "{{count}}-haftalik seriya",
+    "streak_other": "{{count}}-haftalik seriya",
+    "tipJar": "Sovg&#39;a idishi",
     "someone": "Kimdir",
     "newFollower": "Yangi obunachi: {{name}}",
     "newSubscriber": "Yangi obunachi: {{name}}",
@@ -5011,6 +5015,8 @@
       "join": "Qo&#39;shiling"
     },
     "kinds": {
+      "streamer_level": "Striming darajasi",
+      "tip_jar": "Sovg&#39;a idishi",
       "tip_alert": "Maslahat ogohlantirishi",
       "follow_alert": "Kuzatib borish haqida ogohlantirish",
       "subscribe_alert": "Obunachi ogohlantirishi",
@@ -5033,6 +5039,8 @@
       "points_board": "Sodiq tomoshabinlar"
     },
     "hints": {
+      "streamer_level": "Profilingizdan olingan strimer darajangiz va haftalik seriyangiz",
+      "tip_jar": "Changʻida toʻldiriladigan jar, chunki pul evaziga berilgan sovgʻalar keladi.",
       "tip_alert": "Har bir choychaqani, o&#39;z darajasiga mos ravishda nishonlaydi",
       "follow_alert": "Har bir yangi izdoshni ko&#39;rsatadi",
       "subscribe_alert": "Har bir yangi obunachini ko&#39;rsatadi",
@@ -5055,6 +5063,7 @@
       "points_board": "Tomoshabinlar va hodiya qilishdan olingan ochkolari boʻyicha sizning eng yuqori tomoshabinlar roʻyxati"
     },
     "fields": {
+      "showStreak": "Haftalik seriyani ko&#39;rsatish",
       "style": "Uslub",
       "celebration": "Bayram",
       "minAmount": "Ko&#39;rsatish uchun eng kichik uchi (DHB)",

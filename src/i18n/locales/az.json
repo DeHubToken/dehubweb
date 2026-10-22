@@ -4708,6 +4708,10 @@
     "creatorEarnsDirect": "Abunəçilər DeHub tokenlərində ödəniş edirlər. Pay torpaqlarınız abunə olduqları an cüzdanınızda olur, nişan səviyyəniz üçün platforma haqqını azaldın."
   },
   "liveOverlay": {
+    "level": "Səviyyə {{level}}",
+    "streak_one": "{{count}}-həftə zolağı",
+    "streak_other": "{{count}}-həftə zolağı",
+    "tipJar": "Hədiyyə bankası",
     "someone": "Kimsə",
     "newFollower": "Yeni izləyici: {{name}}",
     "newSubscriber": "Yeni abunəçi: {{name}}",
@@ -4891,6 +4895,8 @@
       "join": "Qoşul"
     },
     "kinds": {
+      "streamer_level": "Axınçı səviyyəsi",
+      "tip_jar": "Hədiyyə bankası",
       "tip_alert": "İpucu xəbərdarlığı",
       "follow_alert": "Xəbərdarlığa əməl edin",
       "subscribe_alert": "Abunəçi xəbərdarlığı",
@@ -4913,6 +4919,8 @@
       "points_board": "Sadiq izləyicilər"
     },
     "hints": {
+      "streamer_level": "Profilinizdən axın səviyyəsi və həftəlik zolağınız",
+      "tip_jar": "Ödənişli hədiyyələrin daxil olduğu banka",
       "tip_alert": "Hər bir təklifə təşəkkür edir, boyu təyinatına görə dəyişir.",
       "follow_alert": "Hər yeni izləyicini göstərir",
       "subscribe_alert": "Hər yeni abunəçini göstərir",
@@ -4935,6 +4943,7 @@
       "points_board": "İzləmə və hədiyyə ilə qazandıqları xallar üzrə sizin ən yaxşı izləyiciləriniz"
     },
     "fields": {
+      "showStreak": "Həftəlik zolağı göstər",
       "style": "Üslub",
       "celebration": "Qeyd",
       "banner": "Banner",

@@ -4742,6 +4742,10 @@
     "creatorEarnsDirect": "Pretplatnici plaćaju u DeHub žetonima. Tvoja dionica završava u novčaniku čim se pretplati, umanjena za naknadu za platformu za tvoju razinu značke."
   },
   "liveOverlay": {
+    "level": "Razina {{level}}",
+    "streak_one": "{{count}}-tjedni period",
+    "streak_other": "{{count}}-tjedni period",
+    "tipJar": "Posuda za darove",
     "someone": "Netko",
     "newFollower": "Novi pratitelj: {{name}}",
     "newSubscriber": "Novi pretplatnik: {{name}}",
@@ -4926,6 +4930,8 @@
       "join": "Pridruži se"
     },
     "kinds": {
+      "streamer_level": "Razina streamera",
+      "tip_jar": "Posuda za darove",
       "tip_alert": "Obavijest o napojnici",
       "follow_alert": "Slijedi upozorenje",
       "subscribe_alert": "Upozorenje pretplatnika",
@@ -4948,6 +4954,8 @@
       "points_board": "Najlojalniji gledatelji"
     },
     "hints": {
+      "streamer_level": "Razina streamera i tjedni raspon, s tvog profila",
+      "tip_jar": "Staklenka koja se puni kad stignu plaćeni darovi",
       "tip_alert": "Slavi svaku napojnicu u skladu s njezinom veličinom",
       "follow_alert": "Prikazuje svakog novog pratitelja",
       "subscribe_alert": "Prikazuje svakog novog pretplatnika",
@@ -4970,6 +4978,7 @@
       "points_board": "Vaši najviše bodovani gledatelji prema bodovima stičenim gledanjem i darovanjem"
     },
     "fields": {
+      "showStreak": "Prikaži tjedni raspon",
       "style": "Stil",
       "celebration": "Proslava",
       "banner": "Baner",

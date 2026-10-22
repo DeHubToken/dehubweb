@@ -4794,6 +4794,10 @@
     "creatorEarnsDirect": "Abonentët paguajnë në tokenët DeHub. Pjesa jote vendoset në portofolin tënd në momentin që ata regjistrohen, minus tarifën e platformës për nivelin e distinktivit tënd."
   },
   "liveOverlay": {
+    "level": "Niveli {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Kavanoz dhuratë",
     "someone": "Dikush",
     "newFollower": "Ndjekës i ri: {{name}}",
     "newSubscriber": "Abonent i ri: {{name}}",
@@ -4978,6 +4982,8 @@
       "join": "Bashkohu"
     },
     "kinds": {
+      "streamer_level": "Niveli i transmetuesit",
+      "tip_jar": "Kavanoz dhuratë",
       "tip_alert": "Lajmërim sugjerimi",
       "follow_alert": "Ndiq alarmin",
       "subscribe_alert": "Lajmërim i pajtimtarit",
@@ -5000,6 +5006,8 @@
       "points_board": "Shikuesit të besnikë"
     },
     "hints": {
+      "streamer_level": "Niveli i streamer-it dhe intervali javor, nga profili yt",
+      "tip_jar": "Vjen një kavanoz që mbushet me dhurata të paguara",
       "tip_alert": "Feston çdo bakshish, të madhësisë sipas nivelit të tij",
       "follow_alert": "Shfaq çdo ndjekës të ri",
       "subscribe_alert": "Shfaq çdo pajtimtar të ri",
@@ -5022,6 +5030,7 @@
       "points_board": "Shikuesit më të mëdhenj sipas pikëve nga shikimi dhe donacionimi"
     },
     "fields": {
+      "showStreak": "Shfaq intervalin javor",
       "style": "Stili",
       "celebration": "Festim",
       "banner": "Baneri",

@@ -4805,6 +4805,10 @@
     "creatorEarnsDirect": "Abonenci płacą w tokenach DeHub. Twój udział pojawi się w portfelu w momencie subskrypcji, pomniejszony o opłatę platformową za próg odznaki."
   },
   "liveOverlay": {
+    "level": "Poziom {{level}}",
+    "streak_one": "{{count}}-tygodniowa seria",
+    "streak_other": "{{count}}-tygodniowa seria",
+    "tipJar": "Słoik na prezenty",
     "someone": "Ktoś",
     "newFollower": "Nowy obserwujący: {{name}}",
     "newSubscriber": "Nowy subskrybent: {{name}}",
@@ -4989,6 +4993,8 @@
       "join": "Join"
     },
     "kinds": {
+      "streamer_level": "Poziom streamera",
+      "tip_jar": "Słoik na prezenty",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -5011,6 +5017,8 @@
       "points_board": "Wierni widzowie"
     },
     "hints": {
+      "streamer_level": "Twój poziom streamera i cotygodniowa seria z Twojego profilu",
+      "tip_jar": "Słoik, który napełnia się w formie płatnych prezentów",
       "tip_alert": "Świętuje każdą wskazówkę, dostosowaną do jej progu",
       "follow_alert": "Pokazuje każdego nowego obserwującego",
       "subscribe_alert": "Pokazuje każdego nowego subskrybenta",
@@ -5033,6 +5041,7 @@
       "points_board": "Twoi najlepsi widzowie według punktów zdobywanych przez oglądanie i prezentowanie"
     },
     "fields": {
+      "showStreak": "Pokaż tygodniową serię",
       "style": "Style",
       "celebration": "Świętowanie",
       "banner": "Baner",

@@ -4801,6 +4801,10 @@
     "creatorEarnsDirect": "구독자는 DeHub 토큰으로 결제합니다. 구독하는 순간 지갑에 공유가 들어오므로 배지 등급에 대한 플랫폼 수수료가 줄어듭니다."
   },
   "liveOverlay": {
+    "level": "레벨 {{level}}",
+    "streak_one": "{{count}} -주 연속",
+    "streak_other": "{{count}} -주 연속",
+    "tipJar": "선물 항아리",
     "someone": "누군가",
     "newFollower": "새 팔로워: {{name}}",
     "newSubscriber": "신규 구독자: {{name}}",
@@ -4985,6 +4989,8 @@
       "join": "가입하기"
     },
     "kinds": {
+      "streamer_level": "스트리머 레벨",
+      "tip_jar": "선물 항아리",
       "points_board": "충성 시청자",
       "tip_alert": "팁 알림",
       "follow_alert": "경보 준수",
@@ -5007,6 +5013,8 @@
       "subathon_timer": "서브아톤 타이머"
     },
     "hints": {
+      "streamer_level": "프로필에서 스트리머 레벨 및 주간 연속 기록 확인",
+      "tip_jar": "유료 선물이 들어올 때 채워지는 항아리",
       "tip_alert": "등급에 맞게 조정된 모든 팁을 축하하세요",
       "follow_alert": "각 새 팔로워 표시",
       "subscribe_alert": "각 신규 가입자를 표시합니다",
@@ -5029,6 +5037,7 @@
       "points_board": "시청 및 선물의 포인트로 최고 시청자"
     },
     "fields": {
+      "showStreak": "주간 연속 운행 표시",
       "style": "스타일",
       "celebration": "축하",
       "banner": "배너",

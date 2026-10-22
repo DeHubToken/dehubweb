@@ -4611,6 +4611,10 @@
     "creatorEarnsDirect": "Pelanggan mbayar nganggo token DeHub. Bagianmu mlebu ing dompetmu nalika dheweke langganan, dikurangi biaya platform kanggo tingkatan lencana."
   },
   "liveOverlay": {
+    "level": "Tingkatan {{level}}",
+    "streak_one": "{{count}}-mingguan *streak*",
+    "streak_other": "{{count}}-mingguan *streak*",
+    "tipJar": "Wadah hadiah",
     "someone": "Sapa wae",
     "newFollower": "Pengikut anyar: {{name}}",
     "newSubscriber": "Langganan anyar: {{name}}",
@@ -4791,6 +4795,8 @@
       "share": "Bareng"
     },
     "kinds": {
+      "streamer_level": "Tingkatan streamer",
+      "tip_jar": "Wadah hadiah",
       "tip_alert": "Peringatan Tip",
       "follow_alert": "Awas",
       "subscribe_alert": "Peringatan pelanggan",
@@ -4811,6 +4817,8 @@
       "points_board": "Tontonan yang setia"
     },
     "hints": {
+      "streamer_level": "Tingkatanmu sebagai streamer dan *streak* mingguan dari profilmu",
+      "tip_jar": "Wadah yang penuh karena hadiah yang dibayar masuk",
       "tip_alert": "Ngrayakake saben tip, disesuaikan karo tingkaté",
       "follow_alert": "Nampilake saben pangikut anyar",
       "subscribe_alert": "Nuduhake saben pelanggan anyar",
@@ -4833,6 +4841,7 @@
       "points_board": "Tontonan teratasmu berdasarkan poin dari nonton dan hadiah"
     },
     "fields": {
+      "showStreak": "Tampilkan *streak* mingguan",
       "celebration": "Ngabdulakehan",
       "minAmount": "Tip paling cilik kanggo dituduhake (DHB)",
       "confirmedOnly": "Mung sawisé pembayaran dikonfirmasi",

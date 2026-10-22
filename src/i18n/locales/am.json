@@ -4796,6 +4796,10 @@
     "creatorEarnsDirect": "ተመዝጋቢዎች በ DeHub ምልክቶች ውስጥ ይከፍላሉ ። የእርስዎ ድርሻ መሬቶች በኪስ ቦርሳዎ ውስጥ በሚመዘገቡበት ቅጽበት ፣ ለባጅ ደረጃዎ የመድረክ ክፍያ ያነሰ ።"
   },
   "liveOverlay": {
+    "streak_one": "የ{{count}} ሳምንት ተከታታይ",
+    "streak_other": "የ{{count}} ሳምንታት ተከታታይ",
+    "level": "ደረጃ {{level}}",
+    "tipJar": "የስጦታ ማሰሮ",
     "someone": "የሆነ ሰው",
     "newFollower": "አዲስ ተከታይ: {{name}}",
     "newSubscriber": "አዲስ ተመዝጋቢ: {{name}}",
@@ -4978,6 +4982,8 @@
       "join": "ይቀላቀሉ"
     },
     "kinds": {
+      "streamer_level": "የዥረት ደረጃ",
+      "tip_jar": "የስጦታ ማሰሮ",
       "tip_alert": "ጠቃሚ ምክር ማንቂያ",
       "follow_alert": "ማንቂያ ይከተሉ",
       "subscribe_alert": "የደንበኝነት ምዝገባ ማንቂያ",
@@ -5000,6 +5006,8 @@
       "points_board": "ታማኝ ተመልካቾች"
     },
     "hints": {
+      "streamer_level": "የእርስዎ ዥረት ደረጃ እና ሳምንታዊ ቁልል ፣ ከመገለጫዎ",
+      "tip_jar": "የተከፈለ ስጦታዎች ሲገቡ የሚሞላ ማሰሮ",
       "tip_alert": "እያንዳንዱን ጠቃሚ ምክር ያከብራል ፣ ወደ ደረጃው ይደርሳል",
       "follow_alert": "እያንዳንዱን አዲስ ተከታይ ያሳያል",
       "subscribe_alert": "እያንዳንዱን አዲስ ተመዝጋቢ ያሳያል",
@@ -5022,6 +5030,7 @@
       "points_board": "ከመመልከት እና ከስጦታ ነጥቦች ሊሉ ከፍተኛ ተመልካቾች"
     },
     "fields": {
+      "showStreak": "የሳምንቱን ስክሪፕት አሳይ",
       "style": "ቅጥ",
       "celebration": "ክብረ በዓል",
       "banner": "ሰንደቅ",

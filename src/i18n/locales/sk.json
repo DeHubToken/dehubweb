@@ -4919,6 +4919,10 @@
     "creatorEarnsDirect": "Predplatitelia platia v žetónoch DeHub. Váš podiel sa dostane do peňaženky v okamihu, keď sa prihlásia na odber, po odpočítaní poplatku za platformu pre vašu úroveň odznaku."
   },
   "liveOverlay": {
+    "level": "Úroveň {{level}}",
+    "streak_one": "{{count}}-týždňová séria",
+    "streak_other": "{{count}}-týždňová séria",
+    "tipJar": "Darčeková nádoba",
     "someone": "Niekto",
     "newFollower": "Nový sledovateľ: {{name}}",
     "newSubscriber": "Nový odberateľ: {{name}}",
@@ -5103,6 +5107,8 @@
       "join": "Pripojiť sa"
     },
     "kinds": {
+      "streamer_level": "Úroveň streamera",
+      "tip_jar": "Darčeková nádoba",
       "tip_alert": "Upozornenie NA prepitné",
       "follow_alert": "Sledovať upozornenie",
       "subscribe_alert": "Upozornenie účastníka",
@@ -5125,6 +5131,8 @@
       "points_board": "Lojálni diváci"
     },
     "hints": {
+      "streamer_level": "Vaša úroveň streamera a týždenná séria vo vašom profile",
+      "tip_jar": "Pohár, ktorý sa naplní pri príchode zaplatených darčekov",
       "tip_alert": "Oslavuje každé prepitné vo veľkosti podľa jeho úrovne",
       "follow_alert": "Zobrazí každého nového sledovateľa",
       "subscribe_alert": "Zobrazí každého nového odberateľa",
@@ -5147,6 +5155,7 @@
       "points_board": "Tvoj top diváci podľa bodov z sledovania a darovania"
     },
     "fields": {
+      "showStreak": "Zobraziť týždennú sériu",
       "style": "Štýl",
       "celebration": "Oslava",
       "banner": "Banner",

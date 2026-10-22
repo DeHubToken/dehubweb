@@ -4776,6 +4776,10 @@
     "creatorEarnsDirect": "Ka utua e nga kaiohauru nga tohu DeHub. Ko to koutou wahi whenua i roto i to koutou putea i te wa e rēhita ratou, iti iho i te utu papa mo to koutou taumata badge."
   },
   "liveOverlay": {
+    "level": "Taumata {{level}}",
+    "streak_one": "{{count}} - wiki streak",
+    "streak_other": "{{count}} - wiki streak",
+    "tipJar": "Kohikohinga",
     "someone": "He tangata",
     "newFollower": "Tō muri mai: {{name}}",
     "newSubscriber": "Kaihoko hou: {{name}}",
@@ -4959,6 +4963,8 @@
       "join": "Hono mai"
     },
     "kinds": {
+      "streamer_level": "Taumata Streamer",
+      "tip_jar": "Kohikohinga",
       "tip_alert": "Whakaaturanga Whakaaturanga",
       "follow_alert": "Te whai i te whakatupato",
       "subscribe_alert": "Whakapā mai",
@@ -4981,6 +4987,8 @@
       "points_board": "Ngā kaitirotiro whakapono"
     },
     "hints": {
+      "streamer_level": "Ko to taumata rere me te streak wiki, mai i to tohu",
+      "tip_jar": "He potae e whakakii ana i nga taonga utu ka tae mai ki roto",
       "tip_alert": "E whakanui ana i nga tohu katoa, e whakanuia ana ki tona taumata",
       "follow_alert": "Whakaatuhia nga akonga hou katoa",
       "subscribe_alert": "Whakaatuhia nga kaiohauru hou katoa",
@@ -5003,6 +5011,7 @@
       "points_board": "Ō ngā kaitirotiro tohu nui i te titiro me te taonga"
     },
     "fields": {
+      "showStreak": "Whakaatu i te whārangi wiki",
       "style": "Kāhua",
       "celebration": "Te whakanui",
       "banner": "Banner",

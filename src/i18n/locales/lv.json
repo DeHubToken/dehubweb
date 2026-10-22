@@ -4779,6 +4779,10 @@
     "creatorEarnsDirect": "Abonenti maksā DeHub žetonos. Abonēšanas brīdī jūsu daļa nonāk jūsu makā, atskaitot platformas nodevu par jūsu nozīmītes līmeni."
   },
   "liveOverlay": {
+    "level": "Līmenis {{level}}",
+    "streak_one": "{{count}}-nedēļu sērija",
+    "streak_other": "{{count}}-nedēļu sērija",
+    "tipJar": "Dāvanu trauciņš",
     "someone": "Kāds",
     "newFollower": "Jauns sekotājs: {{name}}",
     "newSubscriber": "Jauns abonents: {{name}}",
@@ -4963,6 +4967,8 @@
       "join": "Pievienoties"
     },
     "kinds": {
+      "streamer_level": "Straumētāja līmenis",
+      "tip_jar": "Dāvanu trauciņš",
       "tip_alert": "Padoma brīdinājums",
       "follow_alert": "Sekot brīdinājumam",
       "subscribe_alert": "Abonenta brīdinājums",
@@ -4985,6 +4991,8 @@
       "points_board": "Lojālie skatītāji"
     },
     "hints": {
+      "streamer_level": "Jūsu straumētāja līmenis un iknedēļas sērija no jūsu profila",
+      "tip_jar": "Burka, kas piepildās, kad ienāk apmaksātas dāvanas",
       "tip_alert": "Godina ikvienu dzeramnaudu, kuras lielums atbilst tās līmenim",
       "follow_alert": "Rāda katru jauno sekotāju",
       "subscribe_alert": "Parāda katru jauno abonentu",
@@ -5007,6 +5015,7 @@
       "points_board": "Jūsu augstākie skatītāji pēc punktiem no skatīšanas un dāvināšanas."
     },
     "fields": {
+      "showStreak": "Rādīt iknedēļas sēriju",
       "style": "Stils",
       "celebration": "Svinības",
       "banner": "Reklāmkarogs",

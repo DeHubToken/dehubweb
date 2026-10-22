@@ -4818,6 +4818,10 @@
     "creatorEarnsDirect": "Người đăng ký thanh toán bằng mã thông báo DeHub. Cổ phần của bạn nằm trong ví của bạn ngay khi họ đăng ký, trừ đi phí nền tảng cho cấp độ huy hiệu của bạn."
   },
   "liveOverlay": {
+    "level": "Cấp {{level}}",
+    "streak_one": "Chuỗi {{count}}tuần",
+    "streak_other": "Chuỗi {{count}}tuần",
+    "tipJar": "Lọ quà tặng",
     "someone": "Ai đó",
     "newFollower": "Người theo dõi mới: {{name}}",
     "newSubscriber": "Người đăng ký mới: {{name}}",
@@ -5002,6 +5006,8 @@
       "join": "Tham gia"
     },
     "kinds": {
+      "streamer_level": "Cấp độ streamer",
+      "tip_jar": "Lọ quà tặng",
       "tip_alert": "Cảnh báo gợi ý",
       "follow_alert": "Cảnh báo theo dõi",
       "subscribe_alert": "Cảnh báo người đăng ký",
@@ -5024,6 +5030,8 @@
       "points_board": "Người xem trung thành"
     },
     "hints": {
+      "streamer_level": "Cấp độ streamer và streak hàng tuần của bạn, từ hồ sơ của bạn",
+      "tip_jar": "Một cái lọ được đổ đầy khi quà tặng trả tiền được gửi đến",
       "tip_alert": "Tưởng thưởng cho mỗi gợi ý, kích thước theo cấp bậc",
       "follow_alert": "Hiển thị từng người theo dõi mới",
       "subscribe_alert": "Hiển thị từng người đăng ký mới",
@@ -5046,6 +5054,7 @@
       "points_board": "Top người xem của bạn theo điểm từ việc xem và tặng quà"
     },
     "fields": {
+      "showStreak": "Hiển thị chuỗi hàng tuần",
       "style": "Phong cách",
       "celebration": "Lễ kỷ niệm",
       "banner": "Biểu ngữ",

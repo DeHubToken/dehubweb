@@ -4760,6 +4760,10 @@
     "creatorEarnsDirect": "Maamiltoonni mallattoo DeHub tiin kaffalu. Aksiyooniin keessan yeroo isaan subscribe godhanitti boorsaa keessan keessa bu&#39;a, kaffaltii waltajjii sadarkaa baajii keessanii hir&#39;isuun."
   },
   "liveOverlay": {
+    "level": "Sadarkaa {{level}}",
+    "streak_one": "{{count}}-torban walitti aansuun",
+    "streak_other": "{{count}}-torban walitti aansuun",
+    "tipJar": "Jaarsa kennaa",
     "someone": "namni tokko",
     "newFollower": "Hordofaa haaraa: {{name}}",
     "newSubscriber": "Maamiltoonni haaraan: {{name}}",
@@ -4944,6 +4948,8 @@
       "join": "Itti makamuu"
     },
     "kinds": {
+      "streamer_level": "Sadarkaa Streamer",
+      "tip_jar": "Jaarsa kennaa",
       "tip_alert": "Gorsa akeekkachiisa",
       "follow_alert": "Akeekkachiisa hordofaa",
       "subscribe_alert": "Akeekkachiisa maamilootaa",
@@ -4965,6 +4971,8 @@
       "points_board": "Ilaaltoota itti gaafatamtuu"
     },
     "hints": {
+      "streamer_level": "Sadarkaa streamer keessanii fi streak torban torbaniin, profile keessan irraa",
+      "tip_jar": "Jaarsi akka kennaa kaffaltii qabuutti guutu ni seena",
       "tip_alert": "Gorsa hunda kabaja, hamma sadarkaa isaatti",
       "follow_alert": "Tokkoon tokkoon hordoftoota haaraa agarsiisa",
       "subscribe_alert": "Tokkoon tokkoon maamiloota haaraa agarsiisa",
@@ -4987,6 +4995,7 @@
       "points_board": "Ilaaltoota kee guddaa qabxii irraa ilaaluu fi handeessuu"
     },
     "fields": {
+      "showStreak": "Tartiiba torbanitti agarsiisi",
       "style": "Akkaataa",
       "celebration": "Kabaja",
       "minAmount": "Gorsa xiqqaa agarsiisuuf (DHB) .",

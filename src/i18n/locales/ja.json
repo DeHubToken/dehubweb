@@ -4797,6 +4797,10 @@
     "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
   "liveOverlay": {
+    "level": "レベル{{level}}",
+    "streak_one": "{{count}}週連続",
+    "streak_other": "{{count}}週連続",
+    "tipJar": "ギフトジャー",
     "someone": "誰か",
     "newFollower": "新規フォロワー：{{name}}",
     "newSubscriber": "新規購読者: {{name}}",
@@ -4981,6 +4985,8 @@
       "join": "参加"
     },
     "kinds": {
+      "streamer_level": "ストリーマーレベル",
+      "tip_jar": "ギフトジャー",
       "tip_alert": "ヒントアラート",
       "follow_alert": "フォローアラート",
       "subscribe_alert": "購読者アラート",
@@ -5003,6 +5009,8 @@
       "points_board": "忠実な視聴者"
     },
     "hints": {
+      "streamer_level": "プロフィールからのストリーマーのレベルと週連続記録",
+      "tip_jar": "有料ギフトが入るといっぱいになる瓶",
       "tip_alert": "各ティップをそのティアに合わせて祝う",
       "follow_alert": "新しいフォロワーを表示",
       "subscribe_alert": "新しい購読者を表示",
@@ -5025,6 +5033,7 @@
       "points_board": "視聴とギフトによるポイントで上位視聴者"
     },
     "fields": {
+      "showStreak": "週単位の連続記録を表示",
       "style": "スタイル",
       "celebration": "お祝い",
       "banner": "バナー",

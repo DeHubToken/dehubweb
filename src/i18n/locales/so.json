@@ -4718,6 +4718,10 @@
     "creatorEarnsDirect": "Macaamiisha waxay bixiyaan calaamadaha DeHub. Dhulalka saamigaaga ee boorsadaada marka ay isdiiwaangeliyaan, ka yar qiimaha boosteejada ee heerka calaamaddaada."
   },
   "liveOverlay": {
+    "level": "Heerka {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Jar hadiyad ah",
     "someone": "Qof",
     "newFollower": "Raacaha Cusub: {{name}}",
     "newSubscriber": "Isticmaale cusub: {{name}}",
@@ -4901,6 +4905,8 @@
       "join": "Join"
     },
     "kinds": {
+      "streamer_level": "Heerka Streamer",
+      "tip_jar": "Jar hadiyad ah",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4923,6 +4929,8 @@
       "points_board": "Daawadayaasha Daacadnimada ah"
     },
     "hints": {
+      "streamer_level": "Heerkaaga qulqulka iyo isbuuclaha, laga soo bilaabo astaantaada",
+      "tip_jar": "Dheriga oo buuxiya sida hadiyadaha la bixiyo ay u soo galaan",
       "tip_alert": "Waxay u dabaaldegtaa talooyin kasta, oo si weyn loo cabbiray heerarkeeda",
       "follow_alert": "Muuji raac kasta oo cusub",
       "subscribe_alert": "Muuji isticmaale kasta oo cusub",
@@ -4945,6 +4953,7 @@
       "points_board": "Daawadayaashaada ugu sareeya by dhibcood ka daawashada iyo hibada"
     },
     "fields": {
+      "showStreak": "Muuji streak-ka toddobaadlaha ah",
       "style": "Style",
       "celebration": "Dabaaldegga",
       "banner": "Banner",

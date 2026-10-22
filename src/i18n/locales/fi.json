@@ -4738,6 +4738,10 @@
     "creatorEarnsDirect": "Tilaajat maksavat DeHub-poletteina. Osuutesi siirtyy lompakkoosi heti, kun he tilaavat sen, vähennettynä erikoismerkkitasostasi perittävällä alustamaksulla."
   },
   "liveOverlay": {
+    "level": "Taso {{level}}",
+    "streak_one": "{{count}}viikon putki",
+    "streak_other": "{{count}}viikon putki",
+    "tipJar": "Lahjapurkki",
     "someone": "Joku",
     "newFollower": "Uusi seuraaja: {{name}}",
     "newSubscriber": "Uusi tilaaja: {{name}}",
@@ -4922,6 +4926,8 @@
       "join": "Liity"
     },
     "kinds": {
+      "streamer_level": "Suoratoistotaso",
+      "tip_jar": "Lahjapurkki",
       "tip_alert": "Vinkkihälytys",
       "follow_alert": "Seuraa hälytystä",
       "subscribe_alert": "Tilaajan hälytys",
@@ -4944,6 +4950,8 @@
       "points_board": "Arvostetuimmat katsojat"
     },
     "hints": {
+      "streamer_level": "Suoratoistotasosi ja viikoittainen putkesi profiilistasi",
+      "tip_jar": "Purkki, joka täyttyy maksettujen lahjojen tullessa",
       "tip_alert": "Juhlii jokaista tippiä sen tason mukaan",
       "follow_alert": "Näyttää jokaisen uuden seuraajan",
       "subscribe_alert": "Näyttää jokaisen uuden tilaajan",
@@ -4966,6 +4974,7 @@
       "points_board": "Parhaat katsojasi pisteistä katselusta ja lahjoituksista"
     },
     "fields": {
+      "showStreak": "Näytä viikoittainen putki",
       "style": "Tyyli",
       "celebration": "Juhla",
       "banner": "Banneri",

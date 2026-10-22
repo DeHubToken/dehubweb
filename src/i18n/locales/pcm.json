@@ -4137,6 +4137,10 @@
     "creatorEarnsDirect": "Subscribers dey pay with DeHub tokens. Your share go land for your wallet di moment dem subscribe, minus di platform fee for your badge level."
   },
   "liveOverlay": {
+    "level": "Level {{level}}",
+    "streak_one": "{{count}}-week streak",
+    "streak_other": "{{count}}-week streak",
+    "tipJar": "Gift jar",
     "joined": "{{name}} joined",
     "goalReached": "Goal reached!",
     "followersUnit": "followers",
@@ -4286,6 +4290,8 @@
       "join": "Join"
     },
     "kinds": {
+      "streamer_level": "Streamer level",
+      "tip_jar": "Gift jar",
       "tip_alert": "Tip alert",
       "follow_alert": "Follow alert",
       "subscribe_alert": "Subscriber alert",
@@ -4308,6 +4314,8 @@
       "points_board": "Loyal viewers"
     },
     "hints": {
+      "streamer_level": "Your streamer level and weekly streak, from your profile",
+      "tip_jar": "A jar that fills up as paid gifts come in",
       "subathon_timer": "A countdown that gifts, follows and subscriptions push back",
       "points_board": "Your top viewers by points from watching and gifting",
       "tip_alert": "Celebrate every tip, e size according to e tier",
@@ -4317,6 +4325,7 @@
       "spin_wheel": "Where the wheels in your rules spin"
     },
     "fields": {
+      "showStreak": "Show the weekly streak",
       "style": "Style",
       "celebration": "Celebration",
       "banner": "Banner",
