@@ -175,11 +175,12 @@ html[data-theme='glass'] .docs-root .bg-card :is(.bg-card, .bg-muted, .bg-second
 }
 html[data-theme='glass'] .docs-root h1 .text-transparent {
   background-image: linear-gradient(135deg, #efffff, #a6f5f2) !important;
+  text-shadow: none !important;
 }
 html[data-theme='glass'] .docs-root :is(
   [data-theme-button]:not([data-button-variant='ghost']):not([data-button-variant='destructive']),
   [data-theme-button][data-button-variant='ghost'][class*='bg-muted'],
-  button.bg-muted
+  button.bg-muted, a.bg-primary
 ) {
   background: var(--glass-highlight), var(--theme-control-fill) !important;
   color: #efffff !important; border-color: transparent !important; box-shadow: var(--glass-edge-flat) !important;
