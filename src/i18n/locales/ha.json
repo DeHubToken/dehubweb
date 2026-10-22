@@ -4712,9 +4712,21 @@
     "followersUnit": "mabiya",
     "topSupporters": "Manyan magoya baya",
     "tipped": "{{name}} aika kyauta",
-    "chatPreview": "Saƙonnin hira sun bayyana a nan"
+    "chatPreview": "Saƙonnin hira sun bayyana a nan",
+    "wheelLanded": "{{name}} spun: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Saurin sarrafawa",
+      "intro": "Domin tsakiyar-lokaci. Kowane canji rike ga kowa da kowa kallo, a cikin app da kuma a OBS, har sai ka flip shi baya.",
+      "alertsPaused": "Dakatar da faɗakarwa",
+      "alertsPausedHint": "Babu kyauta, bi ko mulkin faɗakarwa akan allo. Masu ba da shawara, manufofi da akwatin tattaunawa suna ci gaba.",
+      "soundsMuted": "Sautunan faɗakarwa na Mute",
+      "soundsMutedHint": "Ka dokokinka sun daina yin sauti.",
+      "readAloudMuted": "Dakatar da karanta-aloud",
+      "readAloudMutedHint": "Saƙonnin kyauta da layukan mulki ba a sake karantawa ba.",
+      "failed": "Wannan canjin bai canza ba. sake gwadawa."
+    },
     "title": "Live Studio",
     "subtitle": "Alerts da widgets don kayan aiki na streams naka",
     "h1": "Live Studio — stream alerts, goals da overlays don DeHub creators",
@@ -4803,7 +4815,8 @@
       "event_feed": "Ayyukan kwanan nan",
       "chat_box": "Akwatin tattaunawa",
       "ticker": "Ticker",
-      "rule_alert": "Gargajiya na Dokoki"
+      "rule_alert": "Gargajiya na Dokoki",
+      "spin_wheel": "Spin dabaran"
     },
     "hints": {
       "follow_alert": "Nuna kowane sabon mabiya",
@@ -4820,7 +4833,8 @@
       "event_feed": "Sabbin kyaututtuka, mabiya, masu biyan kuɗi da mutane suna raba watsa shirye-shiryen ku",
       "chat_box": "Nuna saƙonnin tattaunawar watsa shirye-shiryenku akan allon",
       "ticker": "Layin rubutunku wanda ke gungurawa a duk faɗin allon",
-      "rule_alert": "Inda gargajiyar dokoki ta bayyana"
+      "rule_alert": "Inda gargajiyar dokoki ta bayyana",
+      "spin_wheel": "Inda ƙafafun da ke cikin dokokinku ke juyawa"
     },
     "fields": {
       "style": "Salo",
@@ -4883,6 +4897,8 @@
       "addAction": "Ƙara aiki",
       "removeAction": "Cire aiki",
       "placeholders": "Yi amfani da {name}, {amount} da {message} a cikin rubutunku. Ana cire hanyoyin haɗi a cikin saƙonni.",
+      "wheelSegments": "Sassan Wheel, ɗaya ta kowane layi",
+      "wheelHint": "Tsakanin 2 zuwa 12. DeHub yana zaɓar inda dabaran ke tsayawa, don haka kowa da kowa yana kallo yana ganin irin wannan sakamako. Yi amfani da {result} a cikin faɗakarwa, karanta-aloud ko aikin hira don suna shi.",
       "alertText": "Alert text",
       "sound": "Sound",
       "sayText": "Rubutun da za a karanta da ƙarfi",
@@ -4909,7 +4925,8 @@
         "sound": "Play a sound",
         "say": "Read aloud",
         "chat": "Post in chat",
-        "webhook": "Send to a webhook"
+        "webhook": "Send to a webhook",
+        "wheel": "Juya dabaran"
       },
       "summary": {
         "tip": "Tukwici na {{amount}} DHB ko fiye"

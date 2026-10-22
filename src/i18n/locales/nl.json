@@ -6011,9 +6011,21 @@
     "followersUnit": "volgers",
     "topSupporters": "Topsupporters",
     "tipped": "{{name}} heeft een cadeau gestuurd",
-    "chatPreview": "Chatberichten worden hier weergegeven"
+    "chatPreview": "Chatberichten worden hier weergegeven",
+    "wheelLanded": "{{name}} gesponnen: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Snelle bediening",
+      "intro": "Voor mid-stream. Elke schakelaar houdt vast voor iedereen die kijkt, in de app en in OBS, totdat je hem terugdraait.",
+      "alertsPaused": "Waarschuwingen pauzeren",
+      "alertsPausedHint": "Geen cadeau-, volg- of regelwaarschuwingen op het scherm. Tellers, doelen en de chatbox gaan door.",
+      "soundsMuted": "Waarschuwingsgeluiden dempen",
+      "soundsMutedHint": "Je regels stoppen met het spelen van geluiden.",
+      "readAloudMuted": "Voorlezen stoppen",
+      "readAloudMutedHint": "Geschenkberichten en regelregels worden niet meer voorgelezen.",
+      "failed": "Die schakelaar is niet veranderd. Probeer het opnieuw."
+    },
     "title": "Live Studio",
     "subtitle": "Alerts en widgets voor je streams",
     "h1": "Live Studio — stream alerts, doelen en overlays voor DeHub makers",
@@ -6104,7 +6116,8 @@
       "event_feed": "Recente activiteit",
       "chat_box": "Chatbox",
       "ticker": "Lichtkrant",
-      "rule_alert": "Regelwaarschuwingen"
+      "rule_alert": "Regelwaarschuwingen",
+      "spin_wheel": "Draaischijf"
     },
     "hints": {
       "tip_alert": "Viirt elke tip, aangepast aan zijn niveau",
@@ -6122,7 +6135,8 @@
       "event_feed": "De nieuwste cadeaus, volgers, abonnees en mensen die je uitzending delen",
       "chat_box": "Toont de chatberichten van uw uitzending op het scherm",
       "ticker": "Een regel van je eigen tekst die over het scherm scrolt",
-      "rule_alert": "Waar de waarschuwingen van je regels verschijnen"
+      "rule_alert": "Waar de waarschuwingen van je regels verschijnen",
+      "spin_wheel": "Waar de wielen in je regels draaien"
     },
     "fields": {
       "style": "Stijl",
@@ -6157,7 +6171,6 @@
       "fast": "Snel"
     },
     "rules": {
-      "test": "Testen",
       "title": "Regels",
       "intro": "Wanneer er iets gebeurt tijdens je stream, doet DeHub wat jij kiest: toont een alert, speelt een geluid af, leest iets hardop voor, post in je chat of vertelt het aan je Discord.",
       "add": "Een regel toevoegen",
@@ -6168,6 +6181,7 @@
       "saveFailed": "Uw regels konden niet worden opgeslagen.",
       "testFailed": "Die test is niet doorgegaan. Probeer het zo opnieuw.",
       "saveToTest": "Sla je regels op om ze te testen",
+      "test": "Testen",
       "enabled": "Regel op",
       "remove": "Regel verwijderen",
       "save": "Regels opslaan",
@@ -6186,6 +6200,8 @@
       "addAction": "Een actie toevoegen",
       "removeAction": "Actie verwijderen",
       "placeholders": "Gebruik {name}, {amount} en {message} in je sms. Links in berichten worden verwijderd.",
+      "wheelSegments": "Wielsegmenten, één per lijn",
+      "wheelHint": "Tussen 2 en 12. DeHub kiest waar het wiel stopt, zodat iedereen hetzelfde resultaat ziet. Gebruik {result} in een waarschuwing, voorlees- of chatactie om het een naam te geven.",
       "alertText": "Alert tekst",
       "sound": "Geluid",
       "sayText": "Tekst om voor te lezen",
@@ -6213,7 +6229,8 @@
         "sound": "Een geluid afspelen",
         "say": "Voorlezen",
         "chat": "Bericht in de chat plaatsen.",
-        "webhook": "Naar een webhook sturen"
+        "webhook": "Naar een webhook sturen",
+        "wheel": "Draai aan een wiel"
       },
       "summary": {
         "tip": "Tip van {{amount}} DHB of meer"

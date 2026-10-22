@@ -4726,9 +4726,21 @@
     "followersUnit": "követők",
     "topSupporters": "Kiemelt támogatók",
     "tipped": "{{name}} ajándékot küldött",
-    "chatPreview": "Itt jelennek meg a csevegési üzenetek"
+    "chatPreview": "Itt jelennek meg a csevegési üzenetek",
+    "wheelLanded": "{{name}} fordította: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Gyorsvezérlés",
+      "intro": "Az adatfolyam közepére. Minden kapcsoló mindenki számára elérhető, aki nézi, az alkalmazásban és az OBS-ben, amíg vissza nem fordítja.",
+      "alertsPaused": "Riasztások szüneteltetése",
+      "alertsPausedHint": "Nincsenek ajándék-, követési vagy szabályértesítések a képernyőn. Folytassa a számlálókat, a célokat és a csevegődobozt.",
+      "soundsMuted": "Figyelmeztető hangok elnémítása",
+      "soundsMutedHint": "A szabályaid nem játszanak le hangokat.",
+      "readAloudMuted": "Olvasás leállítása hangosan",
+      "readAloudMutedHint": "Az ajándéküzenetek és a szabálysorok már nem olvashatók fel.",
+      "failed": "Ez a kapcsoló nem változott. Próbálkozz újra."
+    },
     "title": "Live Studio",
     "subtitle": "Értesítések és widget-ek a streamedjeidhez",
     "h1": "Live Studio — streamedjére értesítések, célok és feliratok DeHub alkotóknak",
@@ -4819,7 +4831,8 @@
       "event_feed": "Legutóbbi tevékenység",
       "chat_box": "Csevegőmező",
       "ticker": "Ticker",
-      "rule_alert": "Szabályriasztások"
+      "rule_alert": "Szabályriasztások",
+      "spin_wheel": "Centrifugáló kerék"
     },
     "hints": {
       "tip_alert": "Üdvözöl minden tippeket, méretük a szintjükhöz igazodva",
@@ -4837,7 +4850,8 @@
       "event_feed": "A legújabb ajándékok, követők, előfizetők és az adásodat megosztó emberek",
       "chat_box": "Megjeleníti az adás csevegési üzeneteit a képernyőn",
       "ticker": "A saját szöveged egy sora, amely végiggörgeti a képernyőt",
-      "rule_alert": "Itt jelennek meg a szabályaidra vonatkozó értesítések"
+      "rule_alert": "Itt jelennek meg a szabályaidra vonatkozó értesítések",
+      "spin_wheel": "Ahol a szabályaid kerekei forognak"
     },
     "fields": {
       "style": "Stílus",
@@ -4901,6 +4915,8 @@
       "addAction": "Művelet hozzáadása",
       "removeAction": "Művelet eltávolítása",
       "placeholders": "{name}, {amount} és {message} használata a szövegben. Az üzenetekben lévő hivatkozások eltávolításra kerülnek.",
+      "wheelSegments": "Kerékszegmensek, soronként egy",
+      "wheelHint": "2 és 12 között. A DeHub kiválasztja, hol álljon meg a kerék, így mindenki ugyanazt az eredményt látja. Használd a (z){result} karaktert értesítésben, olvasási hangon vagy csevegési műveletben a megnevezéséhez.",
       "alertText": "Figyelmeztető szöveg",
       "sound": "Hang",
       "sayText": "Hangosan felolvasandó szöveg",
@@ -4928,7 +4944,8 @@
         "sound": "Hang lejátszása",
         "say": "Olvasd fel hangosan",
         "chat": "Közzététel csevegésben",
-        "webhook": "Küldés webhookba"
+        "webhook": "Küldés webhookba",
+        "wheel": "Pörgess meg egy kereket"
       },
       "summary": {
         "tip": "Legalább {{amount}} DHB borravaló"

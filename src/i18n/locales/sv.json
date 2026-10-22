@@ -4728,9 +4728,21 @@
     "followersUnit": "följare",
     "topSupporters": "Toppanhängare",
     "tipped": "{{name}} skickade en gåva",
-    "chatPreview": "Chattmeddelanden visas här"
+    "chatPreview": "Chattmeddelanden visas här",
+    "wheelLanded": "{{name}} spinnade: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Snabbkontroller",
+      "intro": "För mitten av strömmen. Varje strömbrytare håller för alla som tittar, i appen och i OBS, tills du vänder tillbaka den.",
+      "alertsPaused": "Pausa varningar",
+      "alertsPausedHint": "Inga gåvo-, följ- eller regelvarningar på skärmen. Räknare, mål och chattrutan fortsätter.",
+      "soundsMuted": "Stäng av varningsljud",
+      "soundsMutedHint": "Dina regler slutar spela ljud.",
+      "readAloudMuted": "Stoppa uppläsning",
+      "readAloudMutedHint": "Presentmeddelanden och regelrader läses inte längre upp.",
+      "failed": "Den omkopplaren ändrades inte. Försök igen."
+    },
     "title": "Live Studio",
     "subtitle": "Alerts och widgetar för dina streamar",
     "h1": "Live Studio — stream-alertar, mål och överlagringar för DeHub-skapare",
@@ -4821,7 +4833,8 @@
       "event_feed": "Senaste aktivitet",
       "chat_box": "Chattruta",
       "ticker": "Ticker",
-      "rule_alert": "Regelvarningar"
+      "rule_alert": "Regelvarningar",
+      "spin_wheel": "Spinnhjul"
     },
     "hints": {
       "tip_alert": "Firar varje dricks, storleksanpassad till sin nivå",
@@ -4839,7 +4852,8 @@
       "event_feed": "De senaste gåvorna, följarna, prenumeranterna och personerna som delar din sändning",
       "chat_box": "Visar din sändnings chattmeddelanden på skärmen",
       "ticker": "En rad med din egen text som rullar över skärmen",
-      "rule_alert": "Där dina regler visas"
+      "rule_alert": "Där dina regler visas",
+      "spin_wheel": "Där hjulen i dina regler snurrar"
     },
     "fields": {
       "style": "Stil",
@@ -4902,6 +4916,8 @@
       "addAction": "Lägg till en åtgärd",
       "removeAction": "Ta bort åtgärd",
       "placeholders": "Använd {name}, {amount} och {message} i din text. Länkar i meddelanden tas bort.",
+      "wheelSegments": "Hjulsegment, en per linje",
+      "wheelHint": "Mellan 2 och 12. DeHub väljer var hjulet stannar, så att alla som tittar ser samma resultat. Använd {result} i en varning, högläsning eller chattåtgärd för att namnge den.",
       "alertText": "Varningstext",
       "sound": "Ljud",
       "sayText": "Text att läsa högt",
@@ -4928,7 +4944,8 @@
         "sound": "Spela upp ett ljud",
         "say": "Läs högt",
         "chat": "Publicera i chatten",
-        "webhook": "Skicka till en webhook"
+        "webhook": "Skicka till en webhook",
+        "wheel": "Snurra ett hjul"
       },
       "summary": {
         "tip": "Tips på {{amount}} DHB eller mer"

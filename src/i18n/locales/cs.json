@@ -4727,9 +4727,21 @@
     "followersUnit": "následovníci",
     "topSupporters": "Nejlepší podporovatelé",
     "tipped": "{{name}} poslal/a dárek",
-    "chatPreview": "Zde se zobrazují zprávy z chatu"
+    "chatPreview": "Zde se zobrazují zprávy z chatu",
+    "wheelLanded": "{{name}} přetáčel: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Rychlé ovládání",
+      "intro": "Pro střední proud. Každý přepínač drží pro každého, kdo sleduje, v aplikaci a v OBS, dokud jej nepřepnete zpět.",
+      "alertsPaused": "Pozastavit upozornění",
+      "alertsPausedHint": "Na obrazovce nejsou žádná upozornění na dárky, sledování nebo pravidla. Počítadla, cíle a chatovací pole pokračují.",
+      "soundsMuted": "Ztlumit zvuky upozornění",
+      "soundsMutedHint": "Vaše pravidla přestanou hrát zvuky.",
+      "readAloudMuted": "Zastavit čtení nahlas",
+      "readAloudMutedHint": "Dárkové zprávy a řádky pravidel se již nečtou.",
+      "failed": "Tento přepínač se nezměnil. Zkuste to znovu."
+    },
     "title": "Live Studio",
     "subtitle": "Upozornění a widgety pro vaše streamy",
     "h1": "Live Studio — upozornění na stream, cíle a overlayy pro tvůrce DeHub",
@@ -4819,7 +4831,8 @@
       "event_feed": "Nedávná aktivita",
       "chat_box": "Chat box",
       "ticker": "Ticker",
-      "rule_alert": "Přidávám upozornění na pravidla."
+      "rule_alert": "Přidávám upozornění na pravidla.",
+      "spin_wheel": "Rotační kolo"
     },
     "hints": {
       "tip_alert": "Oslavuje každé spropitné, dimenzované podle úrovně",
@@ -4837,7 +4850,8 @@
       "event_feed": "Nejnovější dárky, následovníci, odběratelé a lidé sdílející vaše vysílání",
       "chat_box": "Zobrazí chatové zprávy vašeho vysílání na obrazovce",
       "ticker": "Řádek vlastního textu, který se posouvá po obrazovce",
-      "rule_alert": "Kde se zobrazují upozornění na tvá pravidla"
+      "rule_alert": "Kde se zobrazují upozornění na tvá pravidla",
+      "spin_wheel": "Kde se točí kola ve vašich pravidlech"
     },
     "fields": {
       "style": "Styl",
@@ -4900,6 +4914,8 @@
       "addAction": "Přidat akci",
       "removeAction": "Odstranit akci",
       "placeholders": "V textu použij {name}, {amount} a {message}. Odkazy ve zprávách jsou odstraněny.",
+      "wheelSegments": "Segmenty kol, jeden na řádek",
+      "wheelHint": "Mezi 2 a 12. DeHub vybírá, kde se kolo zastaví, takže každý, kdo se dívá, vidí stejný výsledek. K pojmenování použijte {result} v upozornění, nahlas při čtení nebo v chatu.",
       "alertText": "Text upozornění",
       "sound": "Zvuk",
       "sayText": "Text k přečtení nahlas",
@@ -4927,7 +4943,8 @@
         "sound": "Přehrát zvuk",
         "say": "Číst nahlas",
         "chat": "Zveřejnit v chatu",
-        "webhook": "Odeslat na webhook"
+        "webhook": "Odeslat na webhook",
+        "wheel": "Roztočte kolo"
       },
       "summary": {
         "tip": "Tip na {{amount}} DHB nebo víc"

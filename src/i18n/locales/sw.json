@@ -4787,9 +4787,21 @@
     "followersUnit": "wafuasi",
     "topSupporters": "Wafuasi wakuu",
     "tipped": "{{name}} alituma zawadi",
-    "chatPreview": "Ujumbe wa gumzo unaonekana hapa"
+    "chatPreview": "Ujumbe wa gumzo unaonekana hapa",
+    "wheelLanded": "{{name}} spun: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Vidhibiti vya haraka",
+      "intro": "Kwa mkondo wa katikati. Kila swichi hushikilia kila mtu anayetazama, kwenye programu na katika OBS, hadi uirudishe nyuma.",
+      "alertsPaused": "Arifa za kusitisha",
+      "alertsPausedHint": "Hakuna zawadi, fuata au tahadhari za sheria kwenye skrini. Kaunta, malengo na sanduku la gumzo linaendelea.",
+      "soundsMuted": "Nyamazisha sauti za arifa",
+      "soundsMutedHint": "Sheria zako huacha kucheza sauti.",
+      "readAloudMuted": "Simamisha usome kwa sauti",
+      "readAloudMutedHint": "Ujumbe wa zawadi na mistari ya sheria haisomeki tena.",
+      "failed": "Kubadilisha huko hakukubadilika. Jaribu tena."
+    },
     "title": "Live Studio",
     "subtitle": "Onyo na widgets kwa ajili ya mtiririko wako",
     "h1": "Live Studio — onyo za mtiririko, malengo na overlays kwa waundaji wa DeHub",
@@ -4880,7 +4892,8 @@
       "event_feed": "Shughuli za hivi karibuni",
       "chat_box": "Sanduku la gumzo",
       "ticker": "Kileta tiketi",
-      "rule_alert": "Arifa za sheria"
+      "rule_alert": "Arifa za sheria",
+      "spin_wheel": "Gurudumu la mzunguko"
     },
     "hints": {
       "tip_alert": "Husherehekea kila kiinua mgongo, kulingana na kiwango chake",
@@ -4897,7 +4910,8 @@
       "event_feed": "Zawadi za hivi karibuni, wafuasi, wanachama na watu wanaoshiriki matangazo yako",
       "chat_box": "Inaonyesha ujumbe wa gumzo wa matangazo yako kwenye skrini",
       "ticker": "Mstari wa maandishi yako mwenyewe ambayo yanasonga kwenye skrini",
-      "rule_alert": "Hapa ni jina la matatizo ya kawaida yako"
+      "rule_alert": "Hapa ni jina la matatizo ya kawaida yako",
+      "spin_wheel": "Ambapo magurudumu katika sheria zako huzunguka"
     },
     "fields": {
       "style": "Mtindo",
@@ -4961,6 +4975,8 @@
       "addAction": "Pata kazi",
       "removeAction": "Kufuta kazi",
       "placeholders": "Tumia {name}, {amount} na {message} katika maandishi yako. Viunganishi katika ujumbe vinaondolewa.",
+      "wheelSegments": "Sehemu za magurudumu, moja kwa kila mstari",
+      "wheelHint": "Kati ya 2 na 12. DeHub huchagua mahali ambapo gurudumu linasimama, kwa hivyo kila mtu anayetazama anaona matokeo sawa. Tumia {result} katika arifa, soma kwa sauti au gumzo ili uitaje.",
       "alertText": "Maandishi ya arifa",
       "sound": "Sauti",
       "sayText": "Maandishi ya kusoma kwa sauti",
@@ -4988,7 +5004,8 @@
         "sound": "Piga sauti",
         "say": "Soma kwa sauti",
         "chat": "Chapisha kwenye gumzo",
-        "webhook": "Tuma kwenye tovuti"
+        "webhook": "Tuma kwenye tovuti",
+        "wheel": "Zungusha gurudumu"
       },
       "summary": {
         "tip": "Kidokezi cha {{amount}} DHB au zaidi"

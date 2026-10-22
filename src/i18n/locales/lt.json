@@ -4786,9 +4786,21 @@
     "followersUnit": "sekėjai",
     "topSupporters": "Geriausi rėmėjai",
     "tipped": "{{name}} išsiuntė dovaną",
-    "chatPreview": "Pokalbio žinutės rodomos čia"
+    "chatPreview": "Pokalbio žinutės rodomos čia",
+    "wheelLanded": "{{name}} pasukė: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Spartieji valdikliai",
+      "intro": "Skirta viduriniajam srautui. Kiekvienas jungiklis skirtas visiems žiūrintiesiems programėlėje ir OBS, kol jį apversite.",
+      "alertsPaused": "Pristabdyti pranešimus",
+      "alertsPausedHint": "Ekrane nėra pranešimų apie dovanas, sekimą ar taisykles. Skaitikliai, tikslai ir pokalbių dėžutė nesustoja.",
+      "soundsMuted": "Nutildyti įspėjimo garsus",
+      "soundsMutedHint": "Jūsų taisyklės nustoja leisti garsus.",
+      "readAloudMuted": "Stabdyti garsinį skaitymą",
+      "readAloudMutedHint": "Dovanų žinutės ir taisyklių eilutės nebeskaitomos.",
+      "failed": "Šis jungiklis nepasikeitė. Bandykite dar kartą."
+    },
     "title": "Live Studio",
     "subtitle": "Žinutės ir viduriai tavo streamams",
     "h1": "Live Studio — streamo žinutės, tiksmai ir viršūnės DeHub kūrėjams",
@@ -4879,7 +4891,8 @@
       "event_feed": "Naujausia veikla",
       "chat_box": "Pokalbio laukelis",
       "ticker": "Žymeklis",
-      "rule_alert": "Pranešimai apie taisyklę"
+      "rule_alert": "Pranešimai apie taisyklę",
+      "spin_wheel": "Sukimo ratas"
     },
     "hints": {
       "tip_alert": "Pagerbia kiekvieną patarimą, prilygstantį jo lygiui",
@@ -4897,7 +4910,8 @@
       "event_feed": "Naujausios dovanos, sekėjai, prenumeratoriai ir žmonės, kurie dalijasi jūsų transliacija",
       "chat_box": "Rodo transliacijos pokalbių žinutes ekrane",
       "ticker": "Jūsų teksto eilutė, slenkanti per ekraną",
-      "rule_alert": "Kur rodomi jūsų taisyklių pranešimai"
+      "rule_alert": "Kur rodomi jūsų taisyklių pranešimai",
+      "spin_wheel": "Kur sukasi jūsų taisyklių ratai"
     },
     "fields": {
       "style": "Stilius",
@@ -4961,6 +4975,8 @@
       "addAction": "Pridėti veiksmą",
       "removeAction": "Pašalinti veiksmą",
       "placeholders": "Tekste naudokite {name}, {amount} ir {message}. Žinutėse esančios nuorodos pašalintos.",
+      "wheelSegments": "Ratų segmentai, po vieną eilutėje",
+      "wheelHint": "Nuo 2 iki 12. „DeHub“ renkasi, kur sustoja ratas, todėl visi žiūrintys mato tą patį rezultatą. Naudokite {result} įspėjime, garso skaitymo ar pokalbio veiksme, kad jį pavadintumėte.",
       "alertText": "Įspėjimo tekstas",
       "sound": "Garsas",
       "sayText": "Garsiai skaitomas tekstas",
@@ -4988,7 +5004,8 @@
         "sound": "Paleisti garsą",
         "say": "Skaityti garsiai",
         "chat": "Paskelbti pokalbyje",
-        "webhook": "Siųsti į žiniatinklio kablį"
+        "webhook": "Siųsti į žiniatinklio kablį",
+        "wheel": "Pasukite ratą"
       },
       "summary": {
         "tip": "{{amount}} DHB ar daugiau patarimų"

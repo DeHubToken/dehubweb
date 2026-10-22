@@ -4348,7 +4348,8 @@
     "followersUnit": "粉丝",
     "topSupporters": "最高支持者",
     "tipped": "{{name}} 送咱个礼物",
-    "chatPreview": "聊天訊息會出現喔"
+    "chatPreview": "聊天訊息會出現喔",
+    "wheelLanded": "{{name}} 吾𠀀{{result}}"
   },
   "liveStudio": {
     "seoTitle": "Live Studio — 直播通知、目标与叠图 | DeHub",

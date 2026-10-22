@@ -4396,7 +4396,8 @@
     "followersUnit": "粉絲數",
     "topSupporters": "贊助排行",
     "tipped": "{{name}} 送了個禮物",
-    "chatPreview": "聊天訊息會出現"
+    "chatPreview": "聊天訊息會出現",
+    "wheelLanded": "{{name}} 吾𠀀{{result}}"
   },
   "liveStudio": {
     "title": "Live 工作室",
@@ -4519,6 +4520,7 @@
       "testFailed": "𠮷𠮷，那個測試沒過。過一陣子再試一次。",
       "cooldown": "等一下用 (秒)",
       "userCooldown": "等一下 (每位觀眾幾秒鐘)",
+      "wheelHint": "2到12之間。DeHub會決定轉盤停在哪裡，所以所有看的人都會看到同樣的結果。在警告、朗讀或聊天動作裡用{result}來命名它。",
       "sayText": "要朗读的文字",
       "audiences": {
         "subscribers": "訂閱者"

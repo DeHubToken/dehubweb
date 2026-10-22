@@ -4792,9 +4792,21 @@
     "followersUnit": "pengikut",
     "topSupporters": "Pendukung teratas",
     "tipped": "{{name}} mengirim hadiah",
-    "chatPreview": "Pesan obrolan muncul di sini"
+    "chatPreview": "Pesan obrolan muncul di sini",
+    "wheelLanded": "{{name}} berputar: {{result}}"
   },
   "liveStudio": {
+    "controls": {
+      "title": "Kontrol cepat",
+      "intro": "Untuk mid - stream. Setiap sakelar berlaku untuk semua orang yang menonton, di aplikasi dan di OBS, sampai Anda membalikkannya kembali.",
+      "alertsPaused": "Jeda pemberitahuan",
+      "alertsPausedHint": "Tidak ada pemberitahuan hadiah, ikuti, atau aturan di layar. Penghitung, sasaran, dan kotak obrolan terus berjalan.",
+      "soundsMuted": "Bunyi peringatan bisu",
+      "soundsMutedHint": "Aturan Anda berhenti memainkan suara.",
+      "readAloudMuted": "Hentikan pembacaan dengan suara keras",
+      "readAloudMutedHint": "Pesan hadiah dan baris aturan tidak lagi dibaca.",
+      "failed": "Tombol itu tidak berubah. Coba lagi."
+    },
     "title": "Studio Langsung",
     "subtitle": "Peringatan dan widget untuk streaming Anda",
     "h1": "Studio Langsung — pemberitahuan streaming, gol, dan hamparan untuk kreator DeHub",
@@ -4885,7 +4897,8 @@
       "event_feed": "Aktivitas terbaru",
       "chat_box": "Kotak obrolan",
       "ticker": "Ticker",
-      "rule_alert": "Peringatan aturan"
+      "rule_alert": "Peringatan aturan",
+      "spin_wheel": "Roda putar"
     },
     "hints": {
       "tip_alert": "Rayakan setiap tip, ukuran sesuai tingkatannya",
@@ -4903,7 +4916,8 @@
       "event_feed": "Hadiah, pengikut, pelanggan, dan orang terbaru yang membagikan siaran Anda",
       "chat_box": "Menampilkan pesan obrolan siaran Anda di layar",
       "ticker": "Baris teks Anda sendiri yang bergulir di layar",
-      "rule_alert": "Di mana pemberitahuan peraturan Anda muncul"
+      "rule_alert": "Di mana pemberitahuan peraturan Anda muncul",
+      "spin_wheel": "Di mana roda dalam aturan Anda berputar"
     },
     "fields": {
       "style": "Gaya",
@@ -4967,6 +4981,8 @@
       "addAction": "Tambahkan tindakan",
       "removeAction": "Hapus tindakan",
       "placeholders": "Gunakan {name}, {amount}, dan {message} dalam SMS Anda. Tautan dalam pesan dihapus.",
+      "wheelSegments": "Segmen roda, satu per baris",
+      "wheelHint": "Antara 2 dan 12. DeHub memilih di mana roda berhenti, sehingga semua orang yang menonton melihat hasil yang sama. Gunakan {result} dalam peringatan, baca dengan keras, atau tindakan obrolan untuk menamainya.",
       "alertText": "Teks peringatan",
       "sound": "Suara",
       "sayText": "Teks untuk dibaca dengan suara keras",
@@ -4994,7 +5010,8 @@
         "sound": "Putar suara",
         "say": "Baca dengan suara keras",
         "chat": "Posting di obrolan",
-        "webhook": "Kirim ke webhook"
+        "webhook": "Kirim ke webhook",
+        "wheel": "Putar roda"
       },
       "summary": {
         "tip": "Tips dari {{amount}} DHB atau lebih"
