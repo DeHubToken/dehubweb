@@ -70,7 +70,7 @@ async function translateNote(note: string, lang: string): Promise<string> {
  * The description is a React element, which that interceptor skips by design, so
  * everything inside it is resolved here instead.
  */
-function showUpdateToast(version: BuildVersion, note: string, isMobile: boolean, onDismiss: () => void) {
+export function showUpdateToast(version: BuildVersion, note: string, isMobile: boolean, onDismiss: () => void) {
   return toast.message('New version available', {
     id: 'app-new-version',
     onDismiss,
