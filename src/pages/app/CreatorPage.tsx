@@ -283,7 +283,7 @@ export default function CreatorPage() {
 
         <div ref={headerRef} className="sticky top-0 z-50">
         {!bannerDismissed && (
-          <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
+          <div data-creator-banner className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
             <span>{t('creator.bannerCopy')}</span>
             <button
               type="button"
