@@ -83,6 +83,9 @@ export function StageAvatar({
       className={cn(
         'relative inline-flex shrink-0 items-center justify-center overflow-hidden bg-zinc-700 font-medium leading-none text-white',
         className,
+        // The tile colour is only for the initial; a loaded picture sits on
+        // nothing, exactly as the plain <img> it replaces did.
+        attempt.loaded && 'bg-transparent',
       )}
     >
       {!attempt.loaded && <span aria-hidden>{initialOf(name, address)}</span>}
