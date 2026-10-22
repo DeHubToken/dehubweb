@@ -134,6 +134,17 @@ html[data-theme='glass'] [data-article] {
   --art-accent: #d7ffff;
   --art-glass: var(--theme-control-fill);
 }
+html[data-theme='glass'] [data-creator-page] {
+  --cr-accent: linear-gradient(145deg, rgb(225 255 255 / .28), color-mix(in srgb, var(--tint-accent) 24%, transparent));
+  --cr-accent-ink: #efffff;
+  --cr-glow: color-mix(in srgb, var(--tint-accent) 40%, transparent);
+}
+html[data-theme='glass'] [data-creator-page] :is([data-clear-top-bar], [data-creator-banner], [data-creator-composer], [data-creator-compact] > div) {
+  background: var(--glass-highlight), var(--theme-control-fill) !important;
+  box-shadow: var(--glass-edge); border-color: transparent; backdrop-filter: var(--glass-blur); color: #efffff;
+}
+html[data-theme='glass'] [data-creator-banner] button { color: #efffff; }
+html[data-theme='glass'] [data-creator-create] { box-shadow: var(--glass-edge-flat); }
 
 [data-glass-background] {
   position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
