@@ -201,6 +201,7 @@
     "clickCameraUpload": "Click the camera icon to upload",
     "displayName": "Display Name",
     "enterDisplayName": "Enter your display name",
+    "displayNameOptionalHint": "Your public name on your profile. Optional — leave it blank to use your username.",
     "username": "Username",
     "usernamePlaceholder": "username",
     "usernameHint": "3-30 characters, letters, numbers, underscores only",

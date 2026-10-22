@@ -123,6 +123,7 @@
     "clickCameraUpload": "Fes clic a la icona de la càmera per pujar",
     "displayName": "Nom visible",
     "enterDisplayName": "Introdueix el teu nom visible",
+    "displayNameOptionalHint": "El teu nom públic al perfil. Opcional: deixa'l en blanc per fer servir el teu nom d'usuari.",
     "username": "Nom d'usuari",
     "usernamePlaceholder": "nom d'usuari",
     "usernameHint": "3-30 caràcters, lletres, números i guions baixos",

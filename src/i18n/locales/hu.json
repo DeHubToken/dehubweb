@@ -123,6 +123,7 @@
     "clickCameraUpload": "Kattintson a kamera ikonra a feltöltéshez",
     "displayName": "Megjelenítendő név",
     "enterDisplayName": "Adja meg a megjelenítendő nevet",
+    "displayNameOptionalHint": "Nyilvános neved a profilodon. Nem kötelező — hagyd üresen, ha a felhasználónevedet szeretnéd használni.",
     "username": "Felhasználónév",
     "usernamePlaceholder": "felhasználó",
     "usernameHint": "3–30 karakter, betűk, számok és aláhúzás",

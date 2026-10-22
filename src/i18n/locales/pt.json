@@ -123,6 +123,7 @@
     "clickCameraUpload": "Clique no ícone da câmera para enviar",
     "displayName": "Nome de exibição",
     "enterDisplayName": "Digite seu nome de exibição",
+    "displayNameOptionalHint": "Seu nome público exibido no perfil. Opcional — deixe em branco para usar seu nome de usuário.",
     "username": "Nome de usuário",
     "usernamePlaceholder": "usuario",
     "usernameHint": "3-30 caracteres, letras, números, sublinhados",

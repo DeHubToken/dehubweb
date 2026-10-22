@@ -238,6 +238,7 @@
     "clickCameraUpload": "Haz clic en el icono de cámara para subir",
     "displayName": "Nombre visible",
     "enterDisplayName": "Ingresa tu nombre visible",
+    "displayNameOptionalHint": "Tu nombre público en tu perfil. Opcional: déjalo en blanco para usar tu nombre de usuario.",
     "username": "Nombre de usuario",
     "usernamePlaceholder": "usuario",
     "usernameHint": "3-30 caracteres, letras, números, guiones bajos",

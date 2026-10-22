@@ -123,6 +123,7 @@
     "clickCameraUpload": "Danna alamar kyamara don ɗora hoto",
     "displayName": "Sunan Nuni",
     "enterDisplayName": "Shigar da sunan nuninka",
+    "displayNameOptionalHint": "Sunanka na jama'a a bayananka. Ba dole ba ne — ka bar shi a wofi don a yi amfani da sunan mai amfani naka.",
     "username": "Sunan mai amfani",
     "usernamePlaceholder": "sunan_mai_amfani",
     "usernameHint": "Haruffa 3-30, lambobi, da ƙarƙashin layi kaɗai",

@@ -123,6 +123,7 @@
     "clickCameraUpload": "Kamera nisqapi ñit'iy churanaykipaq",
     "displayName": "Rikuchiy suti",
     "enterDisplayName": "Rikuchiy sutiykita qillqay",
+    "displayNameOptionalHint": "Perfilniykipi rikuchikuq sutiyki. Munaspallam — ch'usaqta saqiptiykiqa runa sutiykitam llamkachisaqku.",
     "username": "Runa suti",
     "usernamePlaceholder": "runa suti",
     "usernameHint": "3-30 sanampakuna, qillqakuna, yupay, _ sapalla",

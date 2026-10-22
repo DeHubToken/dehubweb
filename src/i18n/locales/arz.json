@@ -123,6 +123,7 @@
     "clickCameraUpload": "اضغط على أيقونة الكاميرا للرفع",
     "displayName": "الاسم المعروض",
     "enterDisplayName": "أدخل اسمك المعروض",
+    "displayNameOptionalHint": "اسمك العلني اللي بيظهر في بروفايلك. اختياري — سيبه فاضي وهنستخدم اسم المستخدم بتاعك.",
     "username": "اسم المستخدم",
     "usernamePlaceholder": "اسم المستخدم",
     "usernameHint": "٣-٣٠ حرف، حروف، أرقام، شرطة سفلية",

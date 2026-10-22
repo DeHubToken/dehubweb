@@ -123,6 +123,7 @@
     "clickCameraUpload": "Kamera nyşanyny basyp ýükläň",
     "displayName": "Görkezilýän at",
     "enterDisplayName": "Görkezilýän adyňyzy giriziň",
+    "displayNameOptionalHint": "Profiliňizdäki köpçülik adyňyz. Hökmany däl — boş goýsaňyz, ulanyjy adyňyz ulanylar.",
     "username": "Ulanyjy ady",
     "usernamePlaceholder": "ulanyjy",
     "usernameHint": "3-30 harp, san, aşaky çyzyk",

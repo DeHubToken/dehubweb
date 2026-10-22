@@ -123,6 +123,7 @@
     "clickCameraUpload": "Klikněte na ikonu fotoaparátu pro nahrání",
     "displayName": "Zobrazované jméno",
     "enterDisplayName": "Zadejte své zobrazované jméno",
+    "displayNameOptionalHint": "Vaše veřejné jméno v profilu. Nepovinné — když ho necháte prázdné, použije se vaše uživatelské jméno.",
     "username": "Uživatelské jméno",
     "usernamePlaceholder": "uživatel",
     "usernameHint": "3–30 znaků, písmena, čísla a podtržítka",

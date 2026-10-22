@@ -167,6 +167,7 @@
     "clickCameraUpload": "Klicke auf das Kamerasymbol zum Hochladen",
     "displayName": "Anzeigename",
     "enterDisplayName": "Gib deinen Anzeigenamen ein",
+    "displayNameOptionalHint": "Dein öffentlicher Name in deinem Profil. Optional — lass das Feld leer, um deinen Benutzernamen zu verwenden.",
     "username": "Benutzername",
     "usernamePlaceholder": "benutzername",
     "usernameHint": "3-30 Zeichen, Buchstaben, Zahlen, Unterstriche",
