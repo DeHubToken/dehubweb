@@ -14,14 +14,16 @@ function localSource(root, prefix) {
     .map(name => ({ name, text: fs.readFileSync(path.join(directory, name), 'utf8').replace(/\r\n/g, '\n') }));
 }
 
-function metadata(source) {
-  const hash = crypto.createHash('sha256').update(policyText);
+function metadata(source, sourcePolicyText = policyText) {
+  const sourcePolicy = JSON.parse(sourcePolicyText);
+  const sourceGroupFor = key => Object.entries(sourcePolicy).find(([, keys]) => keys.includes(key))?.[0] || 'features';
+  const hash = crypto.createHash('sha256').update(sourcePolicyText);
   for (const { name, text } of source) hash.update(name).update(text);
   const english = JSON.parse(source.find(file => file.name === 'en.json').text);
   const manifest = {
     version: hash.digest('hex').slice(0, 16),
     languages: source.map(file => file.name.slice(0, -5)),
-    groups: Object.fromEntries(Object.keys(english).map(key => [key, groupFor(key)])),
+    groups: Object.fromEntries(Object.keys(english).map(key => [key, sourceGroupFor(key)])),
   };
   return { manifest, core: Object.fromEntries(Object.entries(english).filter(([key]) => groupFor(key) === 'core')) };
 }
@@ -39,12 +41,12 @@ function writeMetadata(prefix, source) {
   return manifest;
 }
 
-function writePacks(source, client, expectedVersion) {
-  const { manifest } = metadata(source);
+function writePacks(source, client, expectedVersion, sourcePolicyText = policyText) {
+  const { manifest } = metadata(source, sourcePolicyText);
   if (expectedVersion && manifest.version !== expectedVersion) throw new Error(`${client}: pinned language source does not match its manifest`);
   for (const { name, text } of source) {
     const packs = Object.fromEntries(groups.map(group => [group, {}]));
-    for (const [key, value] of Object.entries(JSON.parse(text))) packs[groupFor(key)][key] = value;
+    for (const [key, value] of Object.entries(JSON.parse(text))) packs[manifest.groups[key] || 'features'][key] = value;
     const directory = path.join('public/locale-packs', client, manifest.version, name.slice(0, -5));
     fs.mkdirSync(directory, { recursive: true });
     for (const group of groups) fs.writeFileSync(path.join(directory, `${group}.json`), JSON.stringify(packs[group]));
@@ -77,7 +79,8 @@ async function pinnedMobileSource() {
     }
   }));
   source.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
-  return { source, version: manifest.version };
+  const sourcePolicyText = await fetchText(`https://raw.githubusercontent.com/DeHubToken/dehub-mobile/${pin.ref}/scripts/locale-policy.json`);
+  return { source, version: manifest.version, sourcePolicyText };
 }
 
 const isWeb = fs.existsSync('src/i18n/locales');
@@ -89,9 +92,10 @@ if (isWeb && !process.argv.includes('--metadata-only')) {
   const mobileRoot = process.argv[2];
   if (mobileRoot) {
     const manifest = JSON.parse(fs.readFileSync(path.join(mobileRoot, 'i18n/locale-manifest.json'), 'utf8'));
-    writePacks(localSource(mobileRoot, 'i18n'), 'mobile', manifest.version);
+    const sourcePolicyText = fs.readFileSync(path.join(mobileRoot, 'scripts/locale-policy.json'), 'utf8').replace(/\r\n/g, '\n');
+    writePacks(localSource(mobileRoot, 'i18n'), 'mobile', manifest.version, sourcePolicyText);
   } else {
     const mobile = await pinnedMobileSource();
-    writePacks(mobile.source, 'mobile', mobile.version);
+    writePacks(mobile.source, 'mobile', mobile.version, mobile.sourcePolicyText);
   }
 }
