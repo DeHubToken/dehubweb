@@ -1,6 +1,7 @@
 import { aiChat } from "../_shared/ai-chat.ts";
 import { requireDeHubAuth } from "../_shared/auth.ts";
 import { recordPostViews } from "./post-views.ts";
+import { handleLifeTick, lifeStatus, setSentient } from "./life.ts";
 import { agentOwnerAllowed, explicitTaskPlan, LIVE_WINDOW_MAX_DAYS, LIVE_WINDOW_RECHECK_MINUTES, nextScheduledRun, readableTime, parseTaskPlan, PLAN_TOOL, taskPlanSchema, windowSteps, type TaskPlan, type TaskStep } from "./task-plan.ts";
 
 // The same validated callbacks serve MCP clients and the durable task runner.
@@ -371,7 +372,13 @@ export async function runTask(context: Context, req: Request, task: any) {
 
 export async function handleTaskRequest(req: Request, context: Context): Promise<Response> {
   const db = context.db();
-  if (new URL(req.url).pathname.endsWith("/tasks/tick")) {
+  const path = new URL(req.url).pathname;
+  if (path.endsWith("/life/tick")) {
+    const config = checked(await db.from("ai_agent_runner").select("secret").eq("id", true).single());
+    if (!req.headers.get("x-agent-runner-secret") || req.headers.get("x-agent-runner-secret") !== config.secret) return json({ error: "Forbidden" }, 403);
+    return handleLifeTick(context, req);
+  }
+  if (path.endsWith("/tasks/tick")) {
     const config = checked(await db.from("ai_agent_runner").select("secret").eq("id", true).single());
     if (!req.headers.get("x-agent-runner-secret") || req.headers.get("x-agent-runner-secret") !== config.secret) return json({ error: "Forbidden" }, 403);
     const task = checked(await db.rpc("claim_agent_task"));
@@ -417,6 +424,16 @@ export async function handleTaskRequest(req: Request, context: Context): Promise
     const result = await tool.call(args);
     const payload = result.structuredContent ?? JSON.parse(result.content?.[0]?.text ?? '{}');
     return json(payload, result.isError ? 422 : 200);
+  }
+  if (input.operation === "life" || input.operation === "set_alive") {
+    const agent = checked(await db.from("ai_agents").select("id,name,description").eq("id", input.agent_id).eq("human_owner_wallet", auth.wallet).eq("is_active", true).maybeSingle());
+    if (!agent) return json({ error: "Select an active agent you own." }, 403);
+    if (input.operation === "set_alive") {
+      if (typeof input.alive !== "boolean") return json({ error: "Choose on or off." }, 400);
+      const result = await setSentient(db, agent, input.alive);
+      if ("error" in result) return json(result, 503);
+    }
+    return json(await lifeStatus(db, agent.id));
   }
   if (input.operation === "list") {
     const tasks = checked(await db.from("ai_agent_tasks").select("id,agent_id,prompt,plan,status,completed_actions,next_run_at,needs_review,message,created_at,swarm_id,swarm_index,swarm_size").eq("owner_wallet", auth.wallet).order("created_at", { ascending: false }).limit(50));
