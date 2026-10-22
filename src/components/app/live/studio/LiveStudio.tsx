@@ -35,6 +35,10 @@ import { ModerationPanel } from './ModerationPanel';
 import { PollPanel } from './PollPanel';
 import { RecapPanel } from './RecapPanel';
 import { QuickControls } from './QuickControls';
+import { SubathonPanel } from './SubathonPanel';
+import { PointsPanel } from './PointsPanel';
+import { OverlayCreatorContext, SubathonContext } from '../overlay/subathon';
+import { getMySubathon, type MySubathon } from '@/lib/api/dehub/live-subathon';
 import { PollContext } from '../overlay/poll';
 import { getMyPoll } from '@/lib/api/dehub/live-polls';
 import { samplePoll, type LivePoll } from '@/lib/live-overlay/polls';
@@ -136,6 +140,26 @@ export function LiveStudio() {
       cancelled = true;
     };
   }, []);
+  // The creator's subathon, kept current by the control room below. The
+  // preview runs a stand-in countdown so the timer can be placed offline.
+  const [subathon, setSubathon] = useState<MySubathon | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    getMySubathon()
+      .then((s) => !cancelled && setSubathon(s))
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const previewSubathon = useMemo(
+    () =>
+      subathon?.running && subathon.endsAt
+        ? { running: true, endsAt: subathon.endsAt, lastAdd: null }
+        : { running: true, endsAt: new Date(Date.now() + 3_600_000).toISOString(), lastAdd: null },
+    [subathon],
+  );
+
   const previewPoll = useMemo(
     () =>
       poll ??
@@ -163,6 +187,7 @@ export function LiveStudio() {
           onRule: (fired) => ruleBus.publish(fired),
           // The socket is shared with any live card still mounted, so a poll
           // from someone else's stream can arrive here too: only ours counts.
+          onSubathon: (update) => setSubathon((prev) => (prev ? { ...prev, running: update.running, endsAt: update.endsAt } : prev)),
           onPoll: (incoming) =>
             pollRef.current?.id === incoming.id
               ? setPoll(incoming)
@@ -230,6 +255,8 @@ export function LiveStudio() {
               <RuleBusContext.Provider value={ruleBus}>
                 <RuleAudio playLive={false} />
                 <PollContext.Provider value={{ poll: previewPoll, myVote: null, interactive: false }}>
+                <SubathonContext.Provider value={previewSubathon}>
+                <OverlayCreatorContext.Provider value={walletAddress ?? ''}>
                   <StudioStage
                     widgets={widgets}
                     portrait={portrait}
@@ -238,6 +265,8 @@ export function LiveStudio() {
                     onSelect={setSelectedId}
                     onMove={move}
                   />
+                </OverlayCreatorContext.Provider>
+                </SubathonContext.Provider>
                 </PollContext.Provider>
               </RuleBusContext.Provider>
             </OverlayEventContext.Provider>
@@ -336,6 +365,10 @@ export function LiveStudio() {
       </div>
 
       <PollPanel poll={poll} onPoll={setPoll} />
+
+      <SubathonPanel subathon={subathon} onChange={setSubathon} />
+
+      <PointsPanel address={walletAddress} />
 
       {!justEnded && <RecapPanel address={walletAddress} />}
 

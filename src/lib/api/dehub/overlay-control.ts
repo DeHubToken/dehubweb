@@ -28,6 +28,8 @@ export interface OverlayControlHandlers {
   onRevoked?: () => void;
   /** A stream rule tested from Live Studio: what it shows, plays and reads. */
   onRule?: (fired: RuleFired) => void;
+  /** The creator's subathon started, moved or stopped. */
+  onSubathon?: (update: SubathonUpdate) => void;
   /** The creator's live poll opened, moved or closed. */
   onPoll?: (poll: LivePoll) => void;
   /** The server's answer to each join: false means the token is not (or no longer) real. */
@@ -82,6 +84,10 @@ export function watchOverlayControl(
   };
   const onUpdated = (data: any) => handlers.onUpdated?.(Number(data?.version) || 0);
   const onRevoked = () => handlers.onRevoked?.();
+  // Only events without a stream id: the control room's copy. The stream room's copy names its stream.
+  const onSubathon = (data: any) => {
+    if (data?.streamId == null) handlers.onSubathon?.(parseSubathonUpdate(data));
+  };
   const onPoll = (data: any) => {
     const poll = parsePoll(data);
     if (poll) handlers.onPoll?.(poll);
@@ -100,6 +106,7 @@ export function watchOverlayControl(
   s.on('overlay.revoked', onRevoked);
   s.on('overlay.rule', onRule);
   if (handlers.onPoll) s.on('stream.poll', onPoll);
+  if (handlers.onSubathon) s.on('stream.subathon', onSubathon);
   if (s.connected) join();
 
   return {
@@ -114,6 +121,7 @@ export function watchOverlayControl(
       s.off('overlay.revoked', onRevoked);
       s.off('overlay.rule', onRule);
       s.off('stream.poll', onPoll);
+      s.off('stream.subathon', onSubathon);
       releaseStreamSocket(conn);
     },
   };
@@ -185,6 +193,47 @@ export function watchStreamPoll(streamId: string, onPoll: (poll: LivePoll) => vo
       left = true;
       s.off('connect', join);
       s.off('stream.poll', onEvent);
+      releaseStreamSocket(conn);
+    },
+  };
+}
+
+/** A subathon moving: `stream.subathon` in the stream's room. Null when it stopped. */
+export type SubathonUpdate = { running: boolean; endsAt: string | null; addedSec?: number };
+
+function parseSubathonUpdate(data: any): SubathonUpdate {
+  return {
+    running: !!data?.running && typeof data?.endsAt === 'string',
+    endsAt: typeof data?.endsAt === 'string' ? data.endsAt : null,
+    addedSec: Number.isFinite(Number(data?.addedSec)) ? Number(data.addedSec) : undefined,
+  };
+}
+
+export function watchStreamSubathon(streamId: string, onUpdate: (update: SubathonUpdate) => void): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
+
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
+  let left = false;
+
+  const join = () => {
+    if (!left) s.emit('stream.join.room', { streamId });
+  };
+  const onEvent = (data: any) => {
+    if (String(data?.streamId ?? '') !== streamId) return;
+    onUpdate(parseSubathonUpdate(data));
+  };
+
+  s.on('connect', join);
+  s.on('stream.subathon', onEvent);
+  if (s.connected) join();
+
+  return {
+    leave: () => {
+      if (left) return;
+      left = true;
+      s.off('connect', join);
+      s.off('stream.subathon', onEvent);
       releaseStreamSocket(conn);
     },
   };

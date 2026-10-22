@@ -4919,7 +4919,6 @@
     "creatorEarnsDirect": "Predplatitelia platia v žetónoch DeHub. Váš podiel sa dostane do peňaženky v okamihu, keď sa prihlásia na odber, po odpočítaní poplatku za platformu pre vašu úroveň odznaku."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} spôsobil: {{result}}",
     "someone": "Niekto",
     "newFollower": "Nový sledovateľ: {{name}}",
     "newSubscriber": "Nový odberateľ: {{name}}",
@@ -4931,6 +4930,12 @@
     "topSupporters": "Najlepší priaznivci",
     "tipped": "{{name}} odoslal/a darček",
     "chatPreview": "Správy z chatu sa zobrazujú tu",
+    "wheelLanded": "{{name}} spôsobil: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Čas je vypršaný",
+    "pointsTitle": "Najloajálnejší diváci",
+    "points_one": "{{formatted}} bod",
+    "points_other": "{{formatted}} body",
     "poll": {
       "closed": "Hlasovanie skončilo",
       "voteFor": "Hlasuj pre {{option}}",
@@ -4958,6 +4963,29 @@
     "youAreTimedOut": "Momentálne ste časovo omezení"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Počítadlo na tvojom streami. Každá zaplatená darček, sledovanie a predplatné pridáva čas, takže si v priestore udržíš živý.",
+      "secondsPerThousand": "Sekundy pridané za 1 000 DHB darovaných",
+      "secondsPerFollow": "Sekundy pridané za sledovanie",
+      "secondsPerSubscribe": "Sekundy pridané za predplatné",
+      "capHours": "Najdlhšie, čo môže bežať (hodiny)",
+      "save": "Uložiť sumy",
+      "saved": "Uložené sumy Subathonu.",
+      "startMinutes": "Začiatočná hodnota (minúty)",
+      "start": "Spustiť počítadlo",
+      "stop": "Stop",
+      "addFive": "Pridať 5 minút",
+      "removeFive": "Odstrániť 5 minút",
+      "failed": "To nefungovalo. Skúšaj znovu.",
+      "widgetHint": "Zobrazuje tvoj Subathon počítadlo. Spusti ho z panelu Subathon v Live Studio."
+    },
+    "points": {
+      "title": "Lojálni diváci",
+      "intro": "Diváci získajú bod za každú minútu, ktorú ti sledujú, a jeden za každých 100 DHB, ktoré darujú. Chat a reakcie nepridávajú body, takže body sa nedajú farmať.",
+      "empty": "Ešte žiadne body. Budú sa hromadit, keď ľudia sledujú a darujú.",
+      "widgetHint": "Pridať widget Lojálni diváci na zobrazenie tohto zoznamu na streami."
+    },
     "controls": {
       "title": "Rýchle ovládacie prvky",
       "intro": "Pre stredný prúd. Každý prepínač drží pre každého, kto sa pozerá, v aplikácii a v OBS, kým ho nevrátite späť.",
@@ -5075,7 +5103,6 @@
       "join": "Pripojiť sa"
     },
     "kinds": {
-      "spin_wheel": "Rotačné koleso",
       "tip_alert": "Upozornenie NA prepitné",
       "follow_alert": "Sledovať upozornenie",
       "subscribe_alert": "Upozornenie účastníka",
@@ -5092,10 +5119,12 @@
       "chat_box": "Chat box",
       "ticker": "Ticker",
       "rule_alert": "Upozornenia na pravidlá",
-      "poll": "Anketa"
+      "poll": "Anketa",
+      "spin_wheel": "Rotačné koleso",
+      "subathon_timer": "Subathon časovač",
+      "points_board": "Lojálni diváci"
     },
     "hints": {
-      "spin_wheel": "Kde sa točia kolesá vo vašich pravidlách",
       "tip_alert": "Oslavuje každé prepitné vo veľkosti podľa jeho úrovne",
       "follow_alert": "Zobrazí každého nového sledovateľa",
       "subscribe_alert": "Zobrazí každého nového odberateľa",
@@ -5112,7 +5141,10 @@
       "chat_box": "Zobrazuje chatové správy vášho vysielania na obrazovke",
       "ticker": "Riadok vlastného textu, ktorý sa posúva po obrazovke",
       "rule_alert": "Kde sa zobrazujú upozornenia na vaše pravidlá",
-      "poll": "Vaša živá anketa s hlasovacím tlačidlom pre každú možnosť"
+      "poll": "Vaša živá anketa s hlasovacím tlačidlom pre každú možnosť",
+      "spin_wheel": "Kde sa točia kolesá vo vašich pravidlách",
+      "subathon_timer": "Počítadlo, ktoré odkladá čas darčekmi, sledovaním a predplatnými",
+      "points_board": "Tvoj top diváci podľa bodov z sledovania a darovania"
     },
     "fields": {
       "style": "Štýl",
@@ -5147,8 +5179,6 @@
       "fast": "Rýchlo"
     },
     "rules": {
-      "wheelSegments": "Segmenty kolies, jeden na riadok",
-      "wheelHint": "Medzi 2 a 12. DeHub vyberá, kde sa koleso zastaví, takže všetci sledujúci vidia rovnaký výsledok. Použite {result} v upozornení, nahlas na čítanie alebo akciu chatu, aby ste ho pomenovali.",
       "title": "Pravidlá",
       "intro": "Keď sa na vašom streame niečo stane, DeHub urobí to, čo si vyberiete: zobrazí upozornenie, prehrá zvuk, prečíta niečo nahlas, uverejní príspevok vo vašom chate alebo povie vášmu Discordu.",
       "add": "Pridať pravidlo",
@@ -5179,6 +5209,8 @@
       "removeAction": "Odstrániť akciu",
       "placeholders": "V texte použite {name}, {amount} a {message}. Odkazy v správach sa odstránia.",
       "placeholdersLive": "V texte použite {name}, {title} a {link}: svoje meno, názov vysielania a odkaz na jeho sledovanie.",
+      "wheelSegments": "Segmenty kolies, jeden na riadok",
+      "wheelHint": "Medzi 2 a 12. DeHub vyberá, kde sa koleso zastaví, takže všetci sledujúci vidia rovnaký výsledok. Použite {result} v upozornení, nahlas na čítanie alebo akciu chatu, aby ste ho pomenovali.",
       "alertText": "Text upozornenia",
       "sound": "Zvuk",
       "sayText": "Text na čítanie nahlas",
@@ -5203,12 +5235,12 @@
         "subscribers": "Odberatelia"
       },
       "actionTypes": {
-        "wheel": "Roztočte koleso",
         "alert": "Zobraziť upozornenie",
         "sound": "Prehrať zvuk",
         "say": "Čítať nahlas",
         "chat": "Uverejniť v chate",
-        "webhook": "Odoslať na webhook"
+        "webhook": "Odoslať na webhook",
+        "wheel": "Roztočte koleso"
       },
       "summary": {
         "tip": "Prepitné vo výške {{amount}} DHB alebo viac"

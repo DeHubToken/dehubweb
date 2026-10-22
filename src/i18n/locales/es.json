@@ -5834,7 +5834,6 @@
     "creatorEarnsDirect": "Los suscriptores pagan en tokens DeHub. Tu acción llega a tu billetera en el momento en que se suscriben, menos la tarifa de la plataforma para tu nivel de insignia."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}} giró: {{result}}",
     "someone": "Alguien",
     "newFollower": "Nuevo seguidor: {{name}}",
     "newSubscriber": "Nuevo suscriptor: {{name}}",
@@ -5846,6 +5845,12 @@
     "topSupporters": "Principales simpatizantes",
     "tipped": "{{name}} ha enviado un regalo",
     "chatPreview": "Los mensajes de chat aparecen aquí",
+    "wheelLanded": "{{name}} giró: {{result}}",
+    "subathon": "Subathon",
+    "subathonOver": "Se acabó el tiempo",
+    "pointsTitle": "Los espectadores más leales",
+    "points_one": "{{formatted}} punto",
+    "points_other": "{{formatted}} puntos",
     "poll": {
       "closed": "Votación cerrada",
       "voteFor": "Vota por {{option}}",
@@ -5873,6 +5878,29 @@
     "youAreTimedOut": "Estás en tiempo de espera por un momento"
   },
   "liveStudio": {
+    "subathon": {
+      "title": "Subathon",
+      "intro": "Un conteo regresivo en tu transmisión. Cada regalo pagado, seguimiento y suscripción añade tiempo, así que la sala te mantiene en vivo.",
+      "secondsPerThousand": "Segundos añadidos por cada 1,000 DHB regalados",
+      "secondsPerFollow": "Segundos añadidos por seguimiento",
+      "secondsPerSubscribe": "Segundos añadidos por suscripción",
+      "capHours": "Duración máxima (horas)",
+      "save": "Guardar cantidades",
+      "saved": "Cantidad guardada en Subathon.",
+      "startMinutes": "Comenzar con (minutos)",
+      "start": "Iniciar el conteo regresivo",
+      "stop": "Detener",
+      "addFive": "Añadir 5 minutos",
+      "removeFive": "Restar 5 minutos",
+      "failed": "Eso no funcionó. Inténtalo de nuevo.",
+      "widgetHint": "Muestra el conteo regresivo de Subathon. Inicia desde el panel Subathon en Live Studio."
+    },
+    "points": {
+      "title": "Espectadores leales",
+      "intro": "Los espectadores ganan un punto por cada minuto que te ven y uno por cada 100 DHB que regalan. El chat y las reacciones no suman puntos, así que no se pueden \"cosechar\" puntos.",
+      "empty": "Aún no hay puntos. Se acumulan mientras la gente te ve y regala.",
+      "widgetHint": "Añade el widget de Espectadores leales para mostrar esta lista en tu transmisión."
+    },
     "controls": {
       "title": "Controles rápidos",
       "intro": "Para mid-stream. Cada interruptor se mantiene para que todos lo vean, en la aplicación y en OBS, hasta que lo voltees hacia atrás.",
@@ -5990,7 +6018,6 @@
       "join": "Unirse"
     },
     "kinds": {
-      "spin_wheel": "Rueda giratoria",
       "tip_alert": "Alerta de propina",
       "follow_alert": "Seguir alerta",
       "subscribe_alert": "Alerta de suscriptor",
@@ -6007,10 +6034,12 @@
       "chat_box": "Cuadro de chat",
       "ticker": "Marquesina",
       "rule_alert": "Alertas de reglas",
-      "poll": "Encuesta"
+      "poll": "Encuesta",
+      "spin_wheel": "Rueda giratoria",
+      "subathon_timer": "Cronómetro Subathon",
+      "points_board": "Espectadores leales"
     },
     "hints": {
-      "spin_wheel": "Donde las ruedas de tus reglas giran",
       "tip_alert": "Celebra cada propina, ajustada a su nivel",
       "follow_alert": "Muestra a cada nuevo seguidor",
       "subscribe_alert": "Muestra cada nuevo suscriptor",
@@ -6027,7 +6056,10 @@
       "chat_box": "Muestra los mensajes de chat de tu transmisión en la pantalla",
       "ticker": "Una línea de tu propio texto que se desplaza por la pantalla",
       "rule_alert": "¿Dónde aparecen las alertas de tus reglas?",
-      "poll": "Tu encuesta en vivo, con un botón de voto para cada opción"
+      "poll": "Tu encuesta en vivo, con un botón de voto para cada opción",
+      "spin_wheel": "Donde las ruedas de tus reglas giran",
+      "subathon_timer": "Un conteo regresivo que los regalos, seguimientos y suscripciones hacen retroceder",
+      "points_board": "Tus espectadores más destacados por puntos de ver y regalar"
     },
     "fields": {
       "style": "Estilo",
@@ -6062,8 +6094,6 @@
       "fast": "Rápido"
     },
     "rules": {
-      "wheelSegments": "Segmentos de rueda, uno por línea",
-      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
       "title": "Normas",
       "intro": "Cuando sucede algo en su transmisión, DeHub hace lo que usted elige: muestra una alerta, reproduce un sonido, lee algo en voz alta, publica en su chat o le dice a su Discord.",
       "add": "Añade una regla",
@@ -6094,6 +6124,8 @@
       "removeAction": "Eliminar acción",
       "placeholders": "Utiliza {name}, {amount} y {message} en tu texto. Los enlaces en los mensajes se eliminan.",
       "placeholdersLive": "Utiliza {name}, {title} y {link} en tu texto: tu nombre, el título de la retransmisión y un enlace para verla.",
+      "wheelSegments": "Segmentos de rueda, uno por línea",
+      "wheelHint": "Entre 2 y 12. DeHub elige dónde se detiene la rueda, para que todos los espectadores vean el mismo resultado. Usa {result} en una acción de alerta, lectura en voz alta o chat para nombrarla.",
       "alertText": "Texto de alerta",
       "sound": "Sonido",
       "sayText": "Texto para leer en voz alta",
@@ -6118,12 +6150,12 @@
         "subscribers": "Suscriptores"
       },
       "actionTypes": {
-        "wheel": "Gira una ruleta",
         "alert": "Mostrar una alerta",
         "sound": "Reproducir un sonido",
         "say": "Leer en voz alta",
         "chat": "Publicar en el chat",
-        "webhook": "Enviar a un webhook"
+        "webhook": "Enviar a un webhook",
+        "wheel": "Gira una ruleta"
       },
       "summary": {
         "tip": "Propina de {{amount}} DHB o más"

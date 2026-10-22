@@ -49,6 +49,7 @@ export interface PublicOverlay {
   stats: OverlayStats;
   /** Missing from an older API: read as all off. */
   controls?: OverlayControls;
+  subathon?: OverlaySubathon | null;
 }
 
 export interface CreatorOverlay {
@@ -77,4 +78,17 @@ export const NO_CONTROLS: OverlayControls = { alertsPaused: false, soundsMuted: 
 export function parseControls(raw: unknown): OverlayControls {
   const c = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
   return { alertsPaused: c.alertsPaused === true, soundsMuted: c.soundsMuted === true, readAloudMuted: c.readAloudMuted === true };
+}
+
+/** A subathon counting down right now. Viewers only ever see one that is running. */
+export interface OverlaySubathon {
+  running: true;
+  /** When it reaches zero (ISO). Gifts, follows and subscriptions move it later. */
+  endsAt: string;
+}
+
+export function parseSubathon(raw: unknown): OverlaySubathon | null {
+  const s = raw as { running?: unknown; endsAt?: unknown } | null | undefined;
+  if (!s || s.running !== true || typeof s.endsAt !== 'string' || Number.isNaN(Date.parse(s.endsAt))) return null;
+  return { running: true, endsAt: s.endsAt };
 }
