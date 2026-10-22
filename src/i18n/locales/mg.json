@@ -297,8 +297,8 @@
     "compactMode": "Fomba mihafaoka",
     "compactModeDesc": "Ahena ny elanelana mba hahitana atiny bebe kokoa",
     "autoPlay": "Mitanjaka ho azy",
-    "autoplayPausePrompt": "Fikirana fandefasana ho azy",
     "autoPlayDesc": "Alefaso ho azy ny horonan-tsary amin'ny vaovao",
+    "autoplayPausePrompt": "Fikirana fandefasana ho azy",
     "autoPlayMuted": "Atombohy tsy misy feo ny fandefasana ho azy",
     "autoPlayMutedDesc": "Ny horonan-tsary mandeha ho azy dia manomboka tsy misy feo foana",
     "showAnimations": "Asehoy ny hetsika",
@@ -4782,6 +4782,17 @@
     "paidToCreatorWallet": "Mandeha mivantana any amin'ny kitapom-bolan'ny mpamorona",
     "creatorPaidDirectNote": "Mivantana avy hatrany any amin'ny kitapon'izy ireo ny fizarana ny mpamorona raha vao misoratra anarana ianao. Ny tranonkala DeHub dia manana rindran-damina kely.",
     "creatorEarnsDirect": "Ny mpandraharaha mandoa ao DeHub famantarana. Ny anjara tany ao amin'ny kitapom-batsy ny fotoana izy ireo misoratra anarana, tsy ny sehatra saran'ny noho ny badge Tier."
+  },
+  "liveOverlay": {
+    "someone": "Olona iray",
+    "newFollower": "Mpanara-baovao: {{name}}",
+    "newSubscriber": "Mpamandrika vaovao: {{name}}",
+    "subscribedTo": "{{name}} subscribed ho {{plan}}",
+    "shared": "{{name}} nizara ilay tosaka",
+    "joined": "{{name}} nandray anjara",
+    "goalReached": "Tratra ny tanjona!",
+    "followersUnit": "mpanara-dia",
+    "topSupporters": "TOP mpanohana"
   },
   "live": {
     "chatJoined": "niditra",

@@ -4769,6 +4769,17 @@
     "creatorPaidDirectNote": "サブスクリプションを購入すると、クリエイターのシェアはウォレットに直接送られます。DeHubは少額のプラットフォーム料金を保持しています。",
     "creatorEarnsDirect": "加入者はDeHubトークンで支払います。購読した瞬間にシェアがウォレットに表示されますが、バッジランクのプラットフォーム手数料は差し引かれます。"
   },
+  "liveOverlay": {
+    "someone": "誰か",
+    "newFollower": "新規フォロワー：{{name}}",
+    "newSubscriber": "新規購読者: {{name}}",
+    "subscribedTo": "{{name}}さんが{{plan}}に登録しました",
+    "shared": "{{name}}さんがストリームを共有しました",
+    "joined": "{{name}}が参加しました",
+    "goalReached": "目標に到達しました！",
+    "followersUnit": "フォロワー",
+    "topSupporters": "トップサポーター"
+  },
   "live": {
     "chatJoined": "が参加しました",
     "chatSentGift": "が送りました",

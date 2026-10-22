@@ -297,8 +297,8 @@
     "compactMode": "Ixcham rejim",
     "compactModeDesc": "Koʻproq kontent uchun intervalni kamaytiring",
     "autoPlay": "Avtomatik ijro",
-    "autoplayPausePrompt": "Avtomatik ijro sozlamasi",
     "autoPlayDesc": "Lentada videolarni avtomatik ijro etish",
+    "autoplayPausePrompt": "Avtomatik ijro sozlamasi",
     "autoPlayMuted": "Avtomatik ijroni ovozsiz boshlash",
     "autoPlayMutedDesc": "O'zi ijro etiladigan videolar har doim ovozsiz boshlanadi",
     "showAnimations": "Animatsiyalarni koʻrsatish",
@@ -4801,6 +4801,17 @@
     "paidToCreatorWallet": "To&#39;g&#39;ridan-to&#39;g&#39;ri ijodkorning hamyoniga tushadi",
     "creatorPaidDirectNote": "Obuna bo&#39;lishingiz bilan ijodkorning ulushi to&#39;g&#39;ridan-to&#39;g&#39;ri ularning hamyoniga tushadi. DeHub kichik platforma to&#39;lovini ushlab qoladi.",
     "creatorEarnsDirect": "Obunachilar DeHub tokenlarida to&#39;lov qilishadi. Ular obuna bo&#39;lgan zahoti sizning ulushingiz hamyoningizga tushadi, nishon darajangiz uchun platforma to&#39;lovi chegiriladi."
+  },
+  "liveOverlay": {
+    "someone": "Kimdir",
+    "newFollower": "Yangi obunachi: {{name}}",
+    "newSubscriber": "Yangi obunachi: {{name}}",
+    "subscribedTo": "{{name}} {{plan}} ga obuna bo&#39;ldi",
+    "shared": "{{name}} oqimni ulashdi",
+    "joined": "{{name}} qo&#39;shildi",
+    "goalReached": "Maqsadga erishildi!",
+    "followersUnit": "izdoshlar",
+    "topSupporters": "Eng yaxshi tarafdorlar"
   },
   "live": {
     "chatJoined": "qoʻshildi",

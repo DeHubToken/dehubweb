@@ -297,8 +297,8 @@
     "compactMode": "Hali ya Kushikana",
     "compactModeDesc": "Punguza nafasi kwa maudhui zaidi",
     "autoPlay": "Cheza Video Kiotomatiki",
-    "autoplayPausePrompt": "Mpangilio wa kucheza kiotomatiki",
     "autoPlayDesc": "Cheza video kiotomatiki kwenye mlisho",
+    "autoplayPausePrompt": "Mpangilio wa kucheza kiotomatiki",
     "autoPlayMuted": "Anza kucheza kiotomatiki bila sauti",
     "autoPlayMutedDesc": "Video zinazocheza zenyewe huanza bila sauti kila wakati",
     "showAnimations": "Onyesha Michoro",
@@ -4774,6 +4774,17 @@
     "paidToCreatorWallet": "Huenda moja kwa moja kwenye pochi ya mtengenezaji",
     "creatorPaidDirectNote": "Sehemu ya mtengenezaji huenda moja kwa moja kwenye pochi yake wakati unapojisajili. DeHub huweka ada ndogo ya tovuti.",
     "creatorEarnsDirect": "Wasajili hulipa kwa ishara za DeHub. Gawio lako linatua kwenye mkoba wako pindi wanapojisajili, punguza ada ya tovuti ya kiwango cha beji yako."
+  },
+  "liveOverlay": {
+    "someone": "Mtu",
+    "newFollower": "Mfuasi mpya: {{name}}",
+    "newSubscriber": "Mteja mpya: {{name}}",
+    "subscribedTo": "{{name}} amejisajili kwa {{plan}}",
+    "shared": "{{name}} alituma mkondo",
+    "joined": "{{name}} amejiunga",
+    "goalReached": "Lengo limefikiwa!",
+    "followersUnit": "wafuasi",
+    "topSupporters": "Wafuasi wakuu"
   },
   "live": {
     "chatJoined": "amejiunga",

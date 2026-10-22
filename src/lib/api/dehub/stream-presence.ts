@@ -43,6 +43,13 @@ const EVENT = {
   viewCountUpdate: 'stream.viewers.update',
   /** A gift landed. The same event the mobile viewer plays its tiers off. */
   tipStreamer: 'streamer.tip',
+  /** The chain paid for a gift. Carries the paid amount, never the claim. */
+  tipConfirmed: 'streamer.tip.confirmed',
+  follow: 'stream.follow',
+  subscribe: 'stream.subscribe',
+  share: 'stream.share',
+  /** The live creator saved their overlay; redraw it. */
+  overlayUpdated: 'stream.overlay.updated',
 } as const;
 
 export interface StreamReactionBroadcast {
@@ -446,6 +453,143 @@ export function watchStreamGifts(
       left = true;
       s.off('connect', join);
       s.off(EVENT.tipStreamer, handleGift);
+      releaseStreamSocket(conn);
+    },
+  };
+}
+
+/**
+ * Everything an overlay reacts to, in one shape.
+ *
+ * `tip` is the instant event, carrying the amount the sender typed;
+ * `tipConfirmed` follows once the chain has paid, with the paid amount. A
+ * widget that counts money — a goal, a leaderboard — reads only the second.
+ */
+export type LiveRoomEvent =
+  | {
+      type: 'tip';
+      amount: number;
+      selectedTier?: string;
+      user: StreamJoinUser;
+      message?: string;
+      transactionHash?: string;
+    }
+  | { type: 'tipConfirmed'; paidAmount: number; address: string; transactionHash: string }
+  | { type: 'follow' | 'share' | 'join'; user: StreamJoinUser }
+  | { type: 'subscribe'; user: StreamJoinUser; planName?: string }
+  | { type: 'viewers'; count: number }
+  | { type: 'overlayUpdated'; version: number };
+
+function roomUser(raw: any): StreamJoinUser {
+  const user = raw && typeof raw === 'object' ? raw : {};
+  return {
+    address: user.address ? String(user.address).toLowerCase() : undefined,
+    username: user.username || undefined,
+    displayName: user.displayName || undefined,
+    avatarImageUrl: user.avatarImageUrl || undefined,
+  };
+}
+
+/**
+ * Hear a stream's room for its overlay, without counting the listener as a
+ * viewer — the same unguarded room join the gift and reaction watchers use, so
+ * the host's own preview and an OBS page see everything and inflate nothing.
+ */
+export function watchLiveRoomEvents(streamId: string, onEvent: (event: LiveRoomEvent) => void): StreamPresence {
+  if (!streamId) return { leave: () => undefined };
+
+  const conn = acquireStreamSocket();
+  const s = conn.socket;
+  let left = false;
+
+  const join = () => {
+    if (!left) s.emit(EVENT.joinRoom, { streamId });
+  };
+
+  const onTip = (payload: any) => {
+    if (giftStreamId(payload) !== streamId) return;
+    const meta = payload?.gift?.meta ?? payload?.meta ?? {};
+    const amount = Number(meta.amount ?? 0);
+    if (!Number.isFinite(amount) || amount <= 0) return;
+    onEvent({
+      type: 'tip',
+      amount,
+      selectedTier: meta.selectedTier || undefined,
+      user: roomUser({
+        address: meta.address || payload?.gift?.address,
+        username: meta.username,
+        displayName: meta.displayName,
+        avatarImageUrl: meta.avatarImageUrl,
+      }),
+      message: meta.message || undefined,
+      transactionHash: String(meta.transactionHash || '').toLowerCase() || undefined,
+    });
+  };
+
+  const onTipConfirmed = (data: any) => {
+    if (!isForStream(data, streamId)) return;
+    const paidAmount = Number(data?.paidAmount);
+    if (!Number.isFinite(paidAmount) || paidAmount <= 0) return;
+    onEvent({
+      type: 'tipConfirmed',
+      paidAmount,
+      address: String(data?.address || '').toLowerCase(),
+      transactionHash: String(data?.transactionHash || '').toLowerCase(),
+    });
+  };
+
+  const person = (type: 'follow' | 'share') => (data: any) => {
+    if (!isForStream(data, streamId)) return;
+    onEvent({ type, user: roomUser(data?.user) });
+  };
+  const onFollow = person('follow');
+  const onShare = person('share');
+
+  const onSubscribe = (data: any) => {
+    if (!isForStream(data, streamId)) return;
+    onEvent({ type: 'subscribe', user: roomUser(data?.user), planName: data?.planName || undefined });
+  };
+
+  // The gateway re-sends a viewer's join on every reconnect; telling a real
+  // arrival from a returning socket is the widget's job, by address.
+  const onJoin = (data: any) => {
+    if (!isForStream(data, streamId)) return;
+    if (data?.user?.address) onEvent({ type: 'join', user: roomUser(data.user) });
+    if (typeof data?.viewerCount === 'number') onEvent({ type: 'viewers', count: data.viewerCount });
+  };
+
+  const onCount = (data: any) => {
+    if (!isForStream(data, streamId)) return;
+    if (typeof data?.viewerCount === 'number') onEvent({ type: 'viewers', count: data.viewerCount });
+  };
+
+  const onOverlay = (data: any) => {
+    if (!isForStream(data, streamId)) return;
+    onEvent({ type: 'overlayUpdated', version: Number(data?.version) || 0 });
+  };
+
+  const handlers: Array<[string, (data: any) => void]> = [
+    [EVENT.tipStreamer, onTip],
+    [EVENT.tipConfirmed, onTipConfirmed],
+    [EVENT.follow, onFollow],
+    [EVENT.share, onShare],
+    [EVENT.subscribe, onSubscribe],
+    [EVENT.joinStream, onJoin],
+    [EVENT.viewCountUpdate, onCount],
+    [EVENT.leaveStream, onCount],
+    [EVENT.overlayUpdated, onOverlay],
+  ];
+
+  s.on('connect', join);
+  for (const [event, handler] of handlers) s.on(event, handler);
+  if (s.connected) join();
+
+  return {
+    leave: () => {
+      if (left) return;
+      left = true;
+      s.off('connect', join);
+      for (const [event, handler] of handlers) s.off(event, handler);
       releaseStreamSocket(conn);
     },
   };

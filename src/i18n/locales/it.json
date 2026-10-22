@@ -4776,6 +4776,17 @@
     "creatorPaidDirectNote": "La quota del creator va direttamente al suo portafoglio nel momento in cui ti iscrivi. DeHub mantiene una piccola commissione per la piattaforma.",
     "creatorEarnsDirect": "Gli abbonati pagano in token DeHub. La tua quota arriva nel tuo portafoglio nel momento in cui si iscrivono, meno la commissione della piattaforma per il tuo livello di badge."
   },
+  "liveOverlay": {
+    "someone": "Qualcuno",
+    "newFollower": "Nuovo follower: {{name}}",
+    "newSubscriber": "Nuovo abbonato: {{name}}",
+    "subscribedTo": "{{name}} iscritto a {{plan}}",
+    "shared": "{{name}} ha condiviso lo stream",
+    "joined": "{{name}} iscritti",
+    "goalReached": "Obiettivo raggiunto!",
+    "followersUnit": "followers",
+    "topSupporters": "I migliori sostenitori"
+  },
   "live": {
     "chatJoined": "si è unito/a",
     "chatSentGift": "ha inviato",

@@ -193,3 +193,99 @@ describe('stream gift broadcasts', () => {
     expect(gifts).toHaveLength(1);
   });
 });
+
+/**
+ * The overlay hears the whole room through one watcher. Money has two events:
+ * the instant tip, at the amount the sender typed, and the confirmation, at
+ * the amount the chain paid — and a widget that counts must only see the
+ * second.
+ */
+describe('live room events for the overlay', () => {
+  beforeEach(() => {
+    sockets = [];
+    token = 'token-a';
+  });
+
+  async function watch(streamId = 'stream-1') {
+    const { watchLiveRoomEvents } = await loadModule();
+    const events: unknown[] = [];
+    const sub = watchLiveRoomEvents(streamId, (e) => events.push(e));
+    return { events, sub, socket: sockets[0] };
+  }
+
+  it('joins the room without counting itself as a viewer', async () => {
+    const { socket } = await watch();
+    expect(socket.emitted).toEqual([{ event: 'stream.join.room', payload: { streamId: 'stream-1' } }]);
+  });
+
+  it('keeps the claimed tip and the paid confirmation apart', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('streamer.tip', {
+      streamId: 'stream-1',
+      gift: { meta: { amount: 10000, username: 'fan', address: '0xFAN', transactionHash: '0xHASH' } },
+    });
+    socket.deliver('streamer.tip.confirmed', {
+      streamId: 'stream-1',
+      paidAmount: 1,
+      claimedAmount: 10000,
+      address: '0xFAN',
+      transactionHash: '0xHASH',
+    });
+    expect(events).toEqual([
+      {
+        type: 'tip',
+        amount: 10000,
+        selectedTier: undefined,
+        user: { address: '0xfan', username: 'fan', displayName: undefined, avatarImageUrl: undefined },
+        message: undefined,
+        transactionHash: '0xhash',
+      },
+      { type: 'tipConfirmed', paidAmount: 1, address: '0xfan', transactionHash: '0xhash' },
+    ]);
+  });
+
+  it('turns follows, subscriptions and shares into people', async () => {
+    const { events, socket } = await watch();
+    const user = { address: '0xA', username: 'ann' };
+    socket.deliver('stream.follow', { streamId: 'stream-1', user });
+    socket.deliver('stream.subscribe', { streamId: 'stream-1', user, planName: 'Gold' });
+    socket.deliver('stream.share', { streamId: 'stream-1', user });
+    expect(events.map((e: any) => [e.type, e.user.username, e.planName])).toEqual([
+      ['follow', 'ann', undefined],
+      ['subscribe', 'ann', 'Gold'],
+      ['share', 'ann', undefined],
+    ]);
+  });
+
+  it('reports joins with a face, and the count that came with them', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('stream.join', { streamId: 'stream-1', viewerCount: 7, user: { address: '0xB' } });
+    expect(events).toEqual([
+      { type: 'join', user: { address: '0xb', username: undefined, displayName: undefined, avatarImageUrl: undefined } },
+      { type: 'viewers', count: 7 },
+    ]);
+  });
+
+  it('passes on an overlay change so viewers redraw', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('stream.overlay.updated', { streamId: 'stream-1', version: 5, renderIn: 'app' });
+    expect(events).toEqual([{ type: 'overlayUpdated', version: 5 }]);
+  });
+
+  it('ignores every event meant for another stream', async () => {
+    const { events, socket } = await watch();
+    socket.deliver('stream.follow', { streamId: 'stream-2', user: { address: '0xA' } });
+    socket.deliver('streamer.tip.confirmed', { streamId: 'stream-2', paidAmount: 5 });
+    socket.deliver('streamer.tip', { gift: { streamId: 'stream-2', meta: { amount: 5 } } });
+    socket.deliver('stream.viewers.update', { streamId: 'stream-2', viewerCount: 9 });
+    expect(events).toEqual([]);
+  });
+
+  it('stops listening when it leaves', async () => {
+    const { events, socket, sub } = await watch();
+    sub.leave();
+    socket.deliver('stream.follow', { streamId: 'stream-1', user: { address: '0xA' } });
+    expect(events).toEqual([]);
+    expect(socket.disconnected).toBe(true);
+  });
+});

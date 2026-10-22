@@ -297,8 +297,8 @@
     "compactMode": "Жыш режим",
     "compactModeDesc": "Көбүрөөк мазмун үчүн аралыкты кичирейтүү",
     "autoPlay": "Авто ойнотуу",
-    "autoplayPausePrompt": "Авто ойнотуу жөндөөсү",
     "autoPlayDesc": "Видеолорду автоматтык түрдө ойнотуу",
+    "autoplayPausePrompt": "Авто ойнотуу жөндөөсү",
     "autoPlayMuted": "Автоойнотууну үнсүз баштоо",
     "autoPlayMutedDesc": "Өзү ойноочу видеолор ар дайым үнсүз башталат",
     "showAnimations": "Анимацияларды көрсөтүү",
@@ -4767,6 +4767,17 @@
     "paidToCreatorWallet": "Түздөн-түз Жараткандын капчыгына барат",
     "creatorPaidDirectNote": "Жаратуучунун үлүшү түздөн-түз жазылуу учурунда алардын капчыгына түшөт. DeHub чакан платформа акысын сактайт.",
     "creatorEarnsDirect": "Абоненттер DeHub токендеринде төлөшөт. Сиздин үлүшүңүз кошулган учурда капчыгыңызга түшөт, белги баскычы үчүн платформа акысы азыраак."
+  },
+  "liveOverlay": {
+    "someone": "Кимдир бирөө",
+    "newFollower": "Жаңы жолдоочусу: {{name}}",
+    "newSubscriber": "Жаңы жазылуучу: {{name}}",
+    "subscribedTo": "{{name}} {{plan}} катталган",
+    "shared": "{{name}} агым менен бөлүштү",
+    "joined": "{{name}} кошулду",
+    "goalReached": "Максатка жетүү!",
+    "followersUnit": "жолдоочулар",
+    "topSupporters": "Top жактоочулары"
   },
   "live": {
     "chatJoined": "кошулду",

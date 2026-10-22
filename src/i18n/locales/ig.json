@@ -297,8 +297,8 @@
     "compactMode": "Ụdị nkenke",
     "compactModeDesc": "Belata oghere maka ọdịnaya karịa",
     "autoPlay": "Kpọọ vidio na-akpaghị aka",
-    "autoplayPausePrompt": "Ntọala ịkpọ na-akpaghị aka",
     "autoPlayDesc": "Kpọọ vidio na-akpaghị aka na nri",
+    "autoplayPausePrompt": "Ntọala ịkpọ na-akpaghị aka",
     "autoPlayMuted": "Malite ịkpọ akpaaka na-enweghị ụda",
     "autoPlayMutedDesc": "Vidiyo na-akpọ onwe ha ga-amalite mgbe niile na-enweghị ụda",
     "showAnimations": "Gosi mmegharị ahụ",
@@ -4718,6 +4718,17 @@
     "paidToCreatorWallet": "Na-aga ozugbo na obere akpa nke onye mmepụta",
     "creatorPaidDirectNote": "Akụkụ onye mmepụta na-aga ozugbo na obere akpa ha mgbe ị debanyere aha. DeHub na-edebe obere ego n 'elu ikpo okwu.",
     "creatorEarnsDirect": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Gị òkè ala gị obere akpa mgbe ha debanyere aha, obere n 'elu ikpo okwu ego maka gị baajị tier."
+  },
+  "liveOverlay": {
+    "someone": "Mmadụ",
+    "newFollower": "Ọhụrụ na-eso ụzọ: {{name}}",
+    "newSubscriber": "Onye debanyere aha ọhụrụ: {{name}}",
+    "subscribedTo": "{{name}} debanyere aha na {{plan}}",
+    "shared": "{{name}} kesara iyi ahụ",
+    "joined": "{{name}} sonyere",
+    "goalReached": "Ihe mgbaru ọsọ ruru!",
+    "followersUnit": "na-eso ụzọ",
+    "topSupporters": "Top akwado"
   },
   "live": {
     "chatJoined": "sonyere",
