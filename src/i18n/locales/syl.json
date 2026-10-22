@@ -4562,6 +4562,9 @@
       "audiences": {
         "everyone": "সকল"
       },
+      "presets": {
+        "readChat": "চ্যাট জোরে পড়ো"
+      },
       "presetText": {
         "readChat": "{name} বললো: {message}",
         "bigTip": "{name}-কে {amount} ডিএইচবি পাঠালো!",

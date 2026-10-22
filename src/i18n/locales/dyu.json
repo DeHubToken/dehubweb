@@ -4793,6 +4793,7 @@
       "minAmount": "Fanga min be mɔgɔ la, o ye ka mɔgɔ lafili.",
       "command": "Kɛlɛkɛyɔrɔ",
       "keyword": "Kuma wala kumaden",
+      "audience": "Jɔn tun be se k'a miiri ko a bena bɔ?",
       "blockedWords": "Kuma minw be se ka mɔgɔ bali ka kuma",
       "blockedWordsHint": "Minw b'a fɔ u ma ko u bena koo minw kɛ, olu be miiri u la.",
       "userCooldown": "Mɔgɔ min be filɛli kɛ, o tigi ka kan ka kɔnɔni kɛ.",
@@ -4805,6 +4806,7 @@
       "chatText": "Message to post",
       "chatHint": "I ka site web ka kunnafoniw bila ka bɔ i ka site web kan. A tɛ se ka mɔgɔ filɛbaga ka kumaw fɔ tugun.",
       "webhookUrl": "Webhook address",
+      "webhookHint": "Webhook min be weele ko Discord wala Slack, walima https ka ladɛrɛsi min be sɔn ka baara dɔ kɛ.",
       "webhookText": "Message to send",
       "triggers": {
         "tip": "A tip arrives",

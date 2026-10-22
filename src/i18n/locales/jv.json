@@ -4770,6 +4770,7 @@
       },
       "presets": {
         "blank": "Blank rule",
+        "readChat": "Waca obrolan kanthi swara",
         "command": "Kode pesan nganti-nganti (chat command)"
       },
       "presetHints": {
