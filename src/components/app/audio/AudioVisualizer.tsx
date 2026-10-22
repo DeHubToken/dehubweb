@@ -476,6 +476,13 @@ export function AudioVisualizer({
       // silently breaking later visualizers. Per-element sources/analysers
       // still attach to the shared context (one source per element is fine).
       if (!sharedVisualizerContext) {
+        // The track plays through Web Audio, which iPhone Safari silences when
+        // the ring switch is on mute. A 'playback' session plays like a music
+        // app instead (Safari 16.4+; other browsers lack it and ignore this).
+        const session = (navigator as Navigator & { audioSession?: { type: string } }).audioSession;
+        if (session && session.type !== 'playback') {
+          try { session.type = 'playback'; } catch { /* read-only on some builds */ }
+        }
         sharedVisualizerContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
       audioContextRef.current = sharedVisualizerContext;
@@ -796,7 +803,13 @@ export function AudioVisualizer({
     }
 
     if (isPlaying) {
-      audioRef.current.play().catch(console.error);
+      audioRef.current.play().catch((err) => {
+        console.error(err);
+        // Refused or unplayable (iPhone rejects some formats): show the play
+        // button again rather than a pause button stuck at 0:00. An AbortError
+        // is just a pause landing first, which already put the button back.
+        if (err?.name !== 'AbortError' && isPlayingRef.current) onPlayPauseRef.current();
+      });
     } else {
       audioRef.current.pause();
     }
