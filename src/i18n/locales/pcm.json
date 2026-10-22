@@ -4117,6 +4117,26 @@
     "goalReached": "Goal reached!",
     "followersUnit": "followers"
   },
+  "liveStudio": {
+    "obs": {
+      "connected": "OBS connected",
+      "inVideo": "In my video (OBS)",
+      "inVideoHint": "OBS dey burn am for your picture, so e dey for your replays and anywhere wey dem dey watch your stream.",
+      "warnDoubles": "Yah OBS overlay of you connect, but widgets of you set wey dey show for DeHub app too, so viewers see every alert twice.",
+      "link": "Browser source link",
+      "copy": "Copy link",
+      "copyFailed": "I no fit copy. Select di link and copy am yourself.",
+      "rotateFailed": "No go make new link. Try again after a while.",
+      "pageTitle": "DeHub stream overlay",
+      "diagLink": "Link",
+      "diagControl": "Test alerts",
+      "diagStream": "Stream",
+      "diagWidgets": "Widgets",
+      "diagLastEvent": "Last event",
+      "diagOk": "working",
+      "diagOffline": "no live"
+    }
+  },
   "live": {
     "chatJoined": "don join",
     "chatSentGift": "don send",
