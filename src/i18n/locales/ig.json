@@ -1,17 +1,17 @@
 {
   "liveRecap": {
-    "gifts_other": "Site na onyinye {{count}}",
-    "untitled": "Mgbasa ozi enweghị aha",
     "title": "Stream recap",
     "justEnded": "Gị iyi recap",
     "lastStream": "Ikpeazụ gị iyi",
     "share": "Ekekọrịta",
     "shareText": "M nnọọ streamed \"{{title}}\" na DeHub: {{duration}} ndụ, {{peak}} ekiri na elu na {{followers}} ọhụrụ na-eso ụzọ.",
+    "untitled": "Mgbasa ozi enweghị aha",
     "copied": "Edepụtagharị. Tapawa ya ebe ọbụla.",
     "loadFailed": "Ntughari ahụ ebughị ibu. Gbalịa ọzọ n 'otu ntabi anya.",
     "duration": "Oge LIVE",
     "peakViewers": "Ọtụtụ na-ekiri n 'otu oge",
     "gifts_one": "Site na {{count}} onyinye",
+    "gifts_other": "Site na onyinye {{count}}",
     "newFollowers": "New na-eso ụzọ",
     "chatMessages": "Ozi nkata",
     "chatters": "Ndị mmadụ na-akparịta ụka",
@@ -4744,7 +4744,6 @@
     "creatorEarnsDirect": "Ndị debanyere aha na-akwụ ụgwọ na akara ngosi DeHub. Gị òkè ala gị obere akpa mgbe ha debanyere aha, obere n 'elu ikpo okwu ego maka gị baajị tier."
   },
   "liveOverlay": {
-    "wheelLanded": "{{name}}spun: {{result}}",
     "someone": "Mmadụ",
     "newFollower": "Ọhụrụ na-eso ụzọ: {{name}}",
     "newSubscriber": "Onye debanyere aha ọhụrụ: {{name}}",
@@ -4756,6 +4755,11 @@
     "topSupporters": "Top akwado",
     "tipped": "{{name}} zitere onyinye",
     "chatPreview": "Chat ozi egosi ebe a",
+    "wheelLanded": "{{name}}spun: {{result}}",
+    "subathonOver": "Oge agwụla",
+    "pointsTitle": "Kasị eguzosi ike n 'ihe na-ekiri",
+    "points_one": "{{formatted}} isi",
+    "points_other": "{{formatted}} ihe",
     "poll": {
       "closed": "Votu mechiri emechi",
       "voteFor": "Vote maka {{option}}",
@@ -4783,9 +4787,31 @@
     "youAreTimedOut": "A chụpụla gị n 'oge obere oge."
   },
   "liveStudio": {
+    "subathon": {
+      "intro": "Ngụkọ ọnụ na iyi gị. Onyinye ọ bụla a kwụrụ ụgwọ, soro na ndenye aha na-agbakwụnye oge, ya mere ime ụlọ ahụ na-eme ka ị dị ndụ.",
+      "secondsPerThousand": "Sekọnd kwukwara kwa 1,000 DHB onyinye",
+      "secondsPerFollow": "Nke abụọ agbakwunyere kwa na-eso",
+      "secondsPerSubscribe": "Nke abụọ agbakwunyere kwa ndenye aha",
+      "capHours": "Ogologo oge ọ nwere ike ịgba ọsọ (awa)",
+      "save": "Chekwaa ego",
+      "saved": "Subathon ego zọpụta.",
+      "startMinutes": "Malite na (nkeji)",
+      "start": "Bido ngụkọ ahụ",
+      "stop": "Kwụsị",
+      "addFive": "Tinye nkeji 5",
+      "removeFive": "Wepụ 5 nkeji",
+      "failed": "Nke ahụ arụghị ọrụ. Gbalịa ọzọ.",
+      "widgetHint": "Na-egosi gị subathon ngụkọta oge. Malite ya site na Subathon panel na Live Studio."
+    },
+    "points": {
+      "title": "Ndị na-ekiri na-eguzosi ike n 'ihe",
+      "intro": "Ndị na-ekiri ihe na-enweta otu isi maka nkeji ọ bụla ha na-ele gị na otu maka 100 DHB ọ bụla ha nyere. Mkparịta ụka na mmeghachi omume anaghị enweta ihe ọ bụla, yabụ enweghị ike ịkọ ihe.",
+      "empty": "Enweghị isi okwu. Ha na-ewuli elu ka ndị mmadụ na-ekiri ma na-enye onyinye.",
+      "widgetHint": "Tinye wijetị ndị nlegharị anya na-eguzosi ike n 'ihe iji gosi ndepụta a na iyi."
+    },
     "controls": {
-      "intro": "Maka n'etiti mgbasa ozi. Mgbanwe ọ bụla na-adịgide maka onye ọ bụla na-ekiri, na ngwa na na OBS, ruo mgbe ị gbanwere ya.",
       "title": "Njikwa ngwa ngwa",
+      "intro": "Maka n'etiti mgbasa ozi. Mgbanwe ọ bụla na-adịgide maka onye ọ bụla na-ekiri, na ngwa na na OBS, ruo mgbe ị gbanwere ya.",
       "alertsPaused": "Kwụsị alerts",
       "alertsPausedHint": "Enweghị onyinye, soro ma ọ bụ chịkwaa ịdọ aka ná ntị na ihuenyo. Counters, ihe mgbaru ọsọ na chat igbe na-aga n 'ihu.",
       "soundsMuted": "Mechie ụda ịdọ aka na ntị",
@@ -4900,7 +4926,6 @@
       "join": "Jikọọ"
     },
     "kinds": {
-      "spin_wheel": "Atụ ogho wheel",
       "tip_alert": "NDỤMỌDỤ",
       "follow_alert": "Soro ọkwa",
       "subscribe_alert": "Ịdọ aka ná ntị ndị debanyere aha",
@@ -4917,10 +4942,12 @@
       "chat_box": "Igbe nkata",
       "ticker": "Ticker",
       "rule_alert": "Ọkwa iwu",
-      "poll": "Pọtụfoliyo"
+      "poll": "Pọtụfoliyo",
+      "spin_wheel": "Atụ ogho wheel",
+      "subathon_timer": "Subathon ngụ oge",
+      "points_board": "Ndị na-ekiri na-eguzosi ike n 'ihe"
     },
     "hints": {
-      "spin_wheel": "Ebe wiil gị iwu atụ ogho",
       "tip_alert": "Na-eme ememe ọ bụla n 'ọnụ, size ya tier",
       "follow_alert": "Na-egosi ọ bụla ọhụrụ na-eso ụzọ",
       "subscribe_alert": "Na-egosi ọ bụla ọhụrụ ụtụ magazin",
@@ -4937,7 +4964,10 @@
       "chat_box": "Egosi gị agbasa ozi n 'ikuku chat ozi na ihuenyo",
       "ticker": "Ahịrị nke ederede nke gị nke na-agagharị na ihuenyo",
       "rule_alert": "Ebe ọkwa iwu gị na-apụta",
-      "poll": "Gị ndụ ntuli aka, na a votu button maka ọ bụla nhọrọ"
+      "poll": "Gị ndụ ntuli aka, na a votu button maka ọ bụla nhọrọ",
+      "spin_wheel": "Ebe wiil gị iwu atụ ogho",
+      "subathon_timer": "A countdown na onyinye, na-eso na ndenye aha push azụ",
+      "points_board": "Ndị na-ekiri gị n 'elu site na isi site na ikiri na onyinye"
     },
     "fields": {
       "style": "Ụdị",
@@ -4972,8 +5002,6 @@
       "fast": "Ọsọ"
     },
     "rules": {
-      "wheelSegments": "Wheel nkebi, otu kwa akara",
-      "wheelHint": "Nzọụkwụ 2 ruo 12. DeHub na-ahọrọ ebe wiil ahụ na-akwụsị, yabụ onye ọ bụla na-ekiri na-ahụ otu nsonaazụ ahụ. Jiri {result} n 'ime mkpachapụ anya, gụọ-olu dara ụda maọbụ kpaa nkata iji kpọọ ya aha.",
       "title": "Iwu",
       "intro": "Mgbe ihe mere na mgbasa ozi gị, DeHub na-eme ihe ị họọrọ: ọ na-egosi ọkwa, na-akpọ ụda, na-agụ ihe n'olu dara ụda, na-ebipụta na nkata gị ma ọ bụ na-agwa Discord gị.",
       "add": "Tinye iwu",
@@ -5004,6 +5032,8 @@
       "removeAction": "Wepụ omume",
       "placeholders": "Jiri {name}, {amount} na {message} na ederede gị. A na-ewepụ ụzọ njikọ dị na ozi.",
       "placeholdersLive": "Jiri {name}, {title} na {link} na ederede gị: aha gị, aha mgbasa ozi na njikọ iji lelee ya.",
+      "wheelSegments": "Wheel nkebi, otu kwa akara",
+      "wheelHint": "Nzọụkwụ 2 ruo 12. DeHub na-ahọrọ ebe wiil ahụ na-akwụsị, yabụ onye ọ bụla na-ekiri na-ahụ otu nsonaazụ ahụ. Jiri {result} n 'ime mkpachapụ anya, gụọ-olu dara ụda maọbụ kpaa nkata iji kpọọ ya aha.",
       "alertText": "Alert text",
       "sound": "Sound",
       "sayText": "Ngwe ka a gụọ n 'olu dara ụda",
@@ -5028,12 +5058,12 @@
         "subscribers": "Subscribers"
       },
       "actionTypes": {
-        "wheel": "Atụ ogho a wheel",
         "alert": "Show an alert",
         "sound": "Play a sound",
         "say": "Read aloud",
         "chat": "Post in chat",
-        "webhook": "Send to a webhook"
+        "webhook": "Send to a webhook",
+        "wheel": "Atụ ogho a wheel"
       },
       "summary": {
         "tip": "NDỤMỌDỤ nke {{amount}} DHB ma ọ bụ karịa"
