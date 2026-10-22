@@ -6074,7 +6074,7 @@
       "diagStream": "Stream",
       "diagWidgets": "Widgets",
       "diagLastEvent": "Laatste gebeurtenis",
-      "diagOk": "werkend",
+      "diagOk": "werkt",
       "diagDead": "niet werkend — maak een nieuwe link in Live Studio",
       "diagOffline": "niet live"
     },

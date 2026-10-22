@@ -5878,8 +5878,10 @@
       "pageTitle": "Superposición de flujo de DeHub",
       "diagLink": "Enlace",
       "diagControl": "Alertas de prueba",
+      "diagStream": "Transmisión",
+      "diagWidgets": "Elementos en pantalla",
       "diagLastEvent": "Último evento",
-      "diagOk": "trabajando",
+      "diagOk": "funciona",
       "diagDead": "no funciona: crea un nuevo enlace en Live Studio",
       "diagOffline": "no en directo"
     },

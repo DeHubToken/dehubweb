@@ -4850,7 +4850,7 @@
       "diagStream": "Flusso",
       "diagWidgets": "Widget",
       "diagLastEvent": "Ultimo evento",
-      "diagOk": "lavorare",
+      "diagOk": "funziona",
       "diagDead": "non funziona — crea un nuovo link in Live Studio",
       "diagOffline": "non in diretta"
     },
